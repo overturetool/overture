@@ -33,6 +33,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PMultipleBind;
@@ -97,6 +98,18 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
+	public void caseAModuleModules(AModuleModules node)
+			throws AnalysisException
+	{
+		if(enclosingDef != null)
+		{
+			return;
+		}
+
+		visitModuleDefs(node.getDefs());
+	}
+	
+	@Override
 	public void caseAClassClassDefinition(AClassClassDefinition node)
 			throws AnalysisException
 	{
@@ -105,7 +118,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		visitClassDefs(node.getDefinitions());
+		visitModuleDefs(node.getDefinitions());
 	}
 
 	@Override
@@ -117,7 +130,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		visitClassDefs(node.getDefinitions());
+		visitModuleDefs(node.getDefinitions());
 	}
 
 	// For operations and functions it works as a single pattern
@@ -681,7 +694,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		return newNameSuggestion;
 	}
 
-	private void visitClassDefs(List<PDefinition> defs)
+	private void visitModuleDefs(List<PDefinition> defs)
 			throws AnalysisException
 	{
 		for (PDefinition def : defs)
