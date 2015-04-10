@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
@@ -37,9 +38,9 @@ public abstract class ExecutableTestHandler extends TestHandler
 	public static final String MAIN_CLASS = "Exp";
 
 	public static final String SERIALIZE_METHOD =
-			"  public static void serialize(){\n" 
+			"  public static void serialize(File file){\n" 
 			+ "     try{\n"
-			+ "       File file = new File(\"myData.bin\");\n"
+			+ "       //File file = new File(\"myData.bin\");\n"
 			+ "	      FileOutputStream fout = new FileOutputStream( file );\n"
 			+ "	      ObjectOutputStream oos = new ObjectOutputStream(fout);\n"
 			+ "       Object exp = null;\n"
@@ -79,15 +80,18 @@ public abstract class ExecutableTestHandler extends TestHandler
 				+ "  }\n\n"
 				+ "  public static void main(String[] args)"
 				+ "  {\n"
-				+ "      serialize();\n" 
+				+ "  if(args.length < 1)\n"
+				+ "  {\n"
+				+ " \t System.err.println(\"Error: Missing serilization file path\"); System.exit( 1);"
+				+ "  }\n"
+				+ "      serialize(new File(args[0]));\n" 
 				+ "  }\n\n" 
 				+    SERIALIZE_METHOD
 				+    methodsMerged
 				+ "}\n";
 	}
 	
-	private static final String CG_VALUE_BINARY_FILE = "target"
-			+ File.separatorChar + "cgtest" + File.separatorChar + "myData.bin";
+	final static Random rand = new Random(100);
 	
 	public ExecutableTestHandler(Release release, Dialect dialect)
 	{
@@ -121,9 +125,14 @@ public abstract class ExecutableTestHandler extends TestHandler
 		
 		try
 		{
-			String processOutput =  JavaExecution.run(folder, ExecutableTestHandler.MAIN_CLASS);
+			File cgRuntime = new File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
 			
-			File dataFile = new File(CG_VALUE_BINARY_FILE);
+			String resultFilename = String.format("serilizedExecutionResult-%d.bin" ,rand.nextLong());
+			
+			String processOutput =  JavaExecution.run(ExecutableTestHandler.MAIN_CLASS, new String[]{resultFilename},folder,folder,cgRuntime);
+			
+			File dataFile = new File(folder,resultFilename);
+			dataFile.deleteOnExit();
 			fin = new FileInputStream(dataFile);
 			ois = new ObjectInputStream(fin);
 			Object cgValue = (Object) ois.readObject();

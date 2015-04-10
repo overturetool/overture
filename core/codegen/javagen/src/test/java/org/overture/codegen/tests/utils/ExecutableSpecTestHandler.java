@@ -53,7 +53,7 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 			return;
 		}
 
-		injectArgIntoMainClassFile(parent, rootPackage != null ? (rootPackage  + "." + getJavaEntry()) : getJavaEntry());
+		writeMainClass(parent, rootPackage);
 		
 		if (rootPackage != null)
 		{
@@ -82,6 +82,12 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 
 			writeToFile(classCgStr.toString(), tempFile);
 		}
+	}
+
+	public void writeMainClass(File parent, String rootPackage)
+			throws IOException
+	{
+		injectArgIntoMainClassFile(parent, rootPackage != null ? (rootPackage  + "." + getJavaEntry()) : getJavaEntry());
 	}
 
 	private void injectSerializableInterface(StringBuffer classCgStr,

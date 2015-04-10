@@ -70,7 +70,7 @@ public class CompileTests
 
 	private static final List<String> FOLDER_NAMES_TO_AVOID = Arrays.asList(new String[] { "runtime" });
 
-	private static final String RESULT_FILE_EXTENSION = ".result";
+	public static final String RESULT_FILE_EXTENSION = ".result";
 
 	public static final boolean RUN_EXP_TESTS = true;
 	public static final boolean RUN_SL_TESTS = true;
@@ -492,7 +492,7 @@ public class CompileTests
 		System.out.println("********\n");
 	}
 
-	private void addPath(File f)
+	public static void addPath(File f)
 	{
 		try
 		{
