@@ -154,7 +154,6 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 				{
 					// First condition: 'not local' means we are accessing state
 					// Second condition: if the variable represents a field of the state then it must be explicit
-					// TODO: This assumes hiding to be removed?
 					AExplicitVarExpCG eVar = new AExplicitVarExpCG();
 					eVar.setClassType(transAssistant.consClassType(stateDecl.getName()));
 					eVar.setIsLambda(false);
@@ -175,7 +174,6 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			public void caseAIdentifierStateDesignatorCG(
 					AIdentifierStateDesignatorCG node) throws AnalysisException
 			{
-				// 'not local' means we are accessing state
 				if (!node.getIsLocal()
 						&& !node.getName().equals(stateDecl.getName()))
 				{
