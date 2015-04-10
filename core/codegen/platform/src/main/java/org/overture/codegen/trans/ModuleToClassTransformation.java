@@ -16,9 +16,11 @@ import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
-import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
+import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.logging.Logger;
@@ -45,13 +47,6 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		clazz.setName(node.getName());
 
 		makeStateAccessExplicit(node);
-		
-		/*
-		 * else if (declCg instanceof AMethodDeclCG || declCg instanceof AFuncDeclCG || declCg instanceof ATypeDeclCG ||
-		 * declCg instanceof AStateDeclCG || declCg instanceof ANamedTraceDeclCG || declCg instanceof AFieldDeclCG)
-		 */
-
-		// TODO: exploit isLocal for state designators (no this should be transformed out of the tree) + variable expressions
 		
 		for (SDeclCG decl : node.getDecls())
 		{
@@ -136,11 +131,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 						+ decl + " in '" + this.getClass().getSimpleName()
 						+ "'");
 			}
-
 		}
-
-		// TODO Auto-generated method stub
-		super.caseAModuleDeclCG(node);
 	}
 
 	private void makeStateAccessExplicit(final AModuleDeclCG module) throws AnalysisException
@@ -159,17 +150,12 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			public void caseAIdentifierVarExpCG(AIdentifierVarExpCG node)
 					throws AnalysisException
 			{
-				if(node.parent() instanceof AFieldExpCG)
+				if (!node.getIsLocal()
+						&& !node.getName().equals(stateDecl.getName()))
 				{
-					return;
-				}
-				
-				if(!node.getIsLocal())
-				{
-					// Then it must be made explicit
-					
-					
-					
+					// First condition: 'not local' means we are accessing state
+					// Second condition: if the variable represents a field of the state then it must be explicit
+					// TODO: This assumes hiding to be removed?
 					AExplicitVarExpCG eVar = new AExplicitVarExpCG();
 					eVar.setClassType(transAssistant.consClassType(stateDecl.getName()));
 					eVar.setIsLambda(false);
@@ -178,14 +164,49 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 					eVar.setSourceNode(node.getSourceNode());
 					eVar.setTag(node.getTag());
 					eVar.setType(node.getType().clone());
-					
-					
+
 					transAssistant.replaceNodeWith(node, eVar);
-					
 				}
 			}
-			
-			//TODO: STate designators?
+		});
+		
+		module.apply(new DepthFirstAnalysisAdaptor()
+		{	
+			@Override
+			public void caseAIdentifierStateDesignatorCG(
+					AIdentifierStateDesignatorCG node) throws AnalysisException
+			{
+				// 'not local' means we are accessing state
+				if(!node.getIsLocal() && !node.getName().equals(stateDecl.getName()))
+				{
+					ATypeNameCG stateName = new  ATypeNameCG();
+					stateName.setDefiningClass(getEnclosingModuleName(stateDecl));
+					stateName.setName(stateDecl.getName());
+					
+					ARecordTypeCG stateType = new ARecordTypeCG();
+					stateType.setName(stateName);
+					
+					AIdentifierStateDesignatorCG idState = new AIdentifierStateDesignatorCG();
+					idState.setClassName(null);
+					idState.setExplicit(false);
+					idState.setIsLocal(false);
+					idState.setName(stateDecl.getName());
+					idState.setType(stateType);
+					
+					AFieldStateDesignatorCG field = new AFieldStateDesignatorCG();
+					field.setField(node.getName());
+					field.setObject(idState);
+					for(AFieldDeclCG f : stateDecl.getFields())
+					{
+						if(f.getName().equals(node.getName()))
+						{
+							field.setType(f.getType().clone());
+						}
+					}
+					
+					transAssistant.replaceNodeWith(node, field);
+				}
+			}
 		});
 	}
 
@@ -212,6 +233,48 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
+			// TODO: this should really be a call to a default constructor of a record or 
+			return new ANullExpCG();
+			// It is not true for the following model:
+			/*
+			 * 	module Entry
+
+				exports all
+				definitions 
+				
+				types
+				
+				state St of
+				x : nat
+				end
+				
+				operations 
+				
+				Run : () ==> ?
+				Run () ==
+				(
+				  x := 11;
+				  return x;
+				);
+				
+				end Entry
+			 */
+		}
+	}
+	
+	private String getEnclosingModuleName(AStateDeclCG stateDecl)
+	{
+		AModuleDeclCG module = stateDecl.getAncestor(AModuleDeclCG.class);
+
+		if (module != null)
+		{
+			return module.getName();
+		} else
+		{
+			Logger.getLog().printErrorln("Could not find enclosing module name of state declaration "
+					+ stateDecl.getName()
+					+ " in '"
+					+ this.getClass().getSimpleName() + "'");
 			return null;
 		}
 	}
