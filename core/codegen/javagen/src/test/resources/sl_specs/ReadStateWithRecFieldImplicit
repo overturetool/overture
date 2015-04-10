@@ -1,0 +1,22 @@
+module Entry
+
+exports all
+definitions 
+
+types
+
+R ::
+  r : nat;
+
+state St of
+x : R
+init s == s = mk_St(mk_R(42))
+end
+
+operations 
+
+Run : () ==> ?
+Run () ==
+  return x.r;
+
+end Entry
