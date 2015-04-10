@@ -13,10 +13,12 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
@@ -92,6 +94,34 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 		{
 			// Check only explicit operations or threads within the enclosing class
 			if(def instanceof AExplicitOperationDefinition || def instanceof AThreadDefinition)
+			{
+				def.apply(this);
+			}
+		}
+	}
+	
+	@Override
+	public void caseAModuleModules(AModuleModules node)
+			throws AnalysisException
+	{
+		if(!proceed(node))
+		{
+			return;
+		}
+		
+		for(PDefinition def : node.getDefs())
+		{
+			if (def instanceof AStateDefinition
+					|| def instanceof AValueDefinition)
+			{
+				defsInScope.addAll(af.createPDefinitionAssistant().getDefinitions(def));
+			}
+		}
+		
+		for(PDefinition def : node.getDefs())
+		{
+			// Check only explicit operations
+			if(def instanceof AExplicitOperationDefinition)
 			{
 				def.apply(this);
 			}
