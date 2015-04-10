@@ -11,11 +11,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.tests.utils.ComparisonCG;
 import org.overture.codegen.tests.utils.CompileTests;
-import org.overture.codegen.tests.utils.ExecutableSpecTestHandler;
 import org.overture.codegen.tests.utils.ExecutableTestHandler;
 import org.overture.codegen.tests.utils.ExecutionResult;
 import org.overture.codegen.tests.utils.JavaCommandLineCompiler;
@@ -23,10 +21,8 @@ import org.overture.codegen.tests.utils.TestHandler;
 import org.overture.codegen.tests.utils.TestUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.JavaCodeGen;
-import org.overture.codegen.vdm2java.JavaCodeGenMain;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
-import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.values.Value;
@@ -88,7 +84,8 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 	@Before
 	public void setUp() throws Exception
 	{
-		testHandler.initVdmEnv();;
+		testHandler.initVdmEnv();
+		;
 
 		outputDir = new File(new File(new File("target"), getClass().getSimpleName()), file.getName());
 	}
@@ -109,11 +106,11 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 	}
 
 	File outputDir;
-	
+
 	private void generateJavaSources(File vdmSource)
 	{
-//		Settings.release = Release.VDM_10;
-//		Dialect dialect = Dialect.VDM_PP;
+		// Settings.release = Release.VDM_10;
+		// Dialect dialect = Dialect.VDM_PP;
 
 		IRSettings irSettings = new IRSettings();
 		irSettings.setCharSeqAsString(false);
@@ -124,31 +121,30 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
-		
+
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
 		vdmCodGen.setSettings(irSettings);
 		vdmCodGen.setJavaSettings(javaSettings);
-//		List<File> tmp = new Vector<File>();
-//		tmp.add(vdmSource);
-//		JavaCodeGenMain.handleOo(tmp, irSettings, javaSettings, Settings.dialect, false, outputDir);
-//		
-		
-	String fileContent;
-	try
-	{
-		fileContent = GeneralUtils.readFromFile(file);
-		String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent, vdmCodGen, Settings.dialect).getContent().trim();
-System.out.println(generatedJava);
-	} catch (IOException e)
-	{
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (AnalysisException e)
-	{
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	
+		// List<File> tmp = new Vector<File>();
+		// tmp.add(vdmSource);
+		// JavaCodeGenMain.handleOo(tmp, irSettings, javaSettings, Settings.dialect, false, outputDir);
+		//
+
+		String fileContent;
+		try
+		{
+			fileContent = GeneralUtils.readFromFile(file);
+			String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent, vdmCodGen, Settings.dialect).getContent().trim();
+			System.out.println(generatedJava);
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (AnalysisException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -160,18 +156,18 @@ System.out.println(generatedJava);
 		// GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID, false);
 
 		// Calculating the Java result:
-//		File currentResultFile = javaGeneratedFiles;
+		// File currentResultFile = javaGeneratedFiles;
 
 		testHandler.setCurrentResultFile(javaGeneratedFile);
 		testHandler.writeGeneratedCode(outputDir, javaGeneratedFile, rootPackage);
-		
-//		if(testHandler instanceof ExecutableSpecTestHandler)
-//		{
-//			ExecutableSpecTestHandler execHandler = (ExecutableSpecTestHandler) testHandler;
-//			execHandler.writeMainClass(outputDir, rootPackage);
-//		}
-		
-//		generateJavaSources(file);
+
+		// if(testHandler instanceof ExecutableSpecTestHandler)
+		// {
+		// ExecutableSpecTestHandler execHandler = (ExecutableSpecTestHandler) testHandler;
+		// execHandler.writeMainClass(outputDir, rootPackage);
+		// }
+
+		// generateJavaSources(file);
 
 		long s1 = System.currentTimeMillis();
 
@@ -194,10 +190,10 @@ System.out.println(generatedJava);
 				return new Result<Object>(vdmResult, new Vector<IMessage>(), new Vector<IMessage>());
 			}
 			long s = System.currentTimeMillis();
-			
-			//extend the current class loader class path
-			CompileTests.addPath(outputDir);//FIXME remove the addition again
-			
+
+			// extend the current class loader class path
+			CompileTests.addPath(outputDir);// FIXME remove the addition again
+
 			ExecutionResult javaResult = executableTestHandler.runJava(outputDir);
 			// System.out.println(" + java: "+(System.currentTimeMillis()-s));
 
@@ -258,10 +254,11 @@ System.out.println(generatedJava);
 		{
 			String cgValueStr = javaResult.getExecutionResult().toString();
 			equal = expected.toString().contains(cgValueStr);
-			
-			if(!equal)
+
+			if (!equal)
 			{
-				out.println(String.format("Actual result: '%s' is not compatible with Expected: '%s'",""+cgValueStr,""+expected));
+				out.println(String.format("Actual result: '%s' is not compatible with Expected: '%s'", ""
+						+ cgValueStr, "" + expected));
 			}
 		} else
 		{
@@ -270,15 +267,13 @@ System.out.println(generatedJava);
 			// Comparison of VDM and Java results
 			ComparisonCG comp = new ComparisonCG(file);
 			equal = comp.compare(javaResult.getExecutionResult(), vdmResult);
-			
-			if(!equal)
+
+			if (!equal)
 			{
-				out.println(String.format("Actual result: %s does not match Expected: %s",""+actual,""+expected));
+				out.println(String.format("Actual result: %s does not match Expected: %s", ""
+						+ actual, "" + expected));
 			}
 		}
-		
-		
-		
 
 		if (printInput)
 		{
