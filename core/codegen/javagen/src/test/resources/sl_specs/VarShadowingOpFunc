@@ -1,0 +1,29 @@
+module Entry
+
+exports all
+definitions 
+	
+types
+	
+state St of
+ x : nat
+end
+	
+operations 
+	
+Run : () ==> ?
+Run () ==
+( dcl a : nat := 1;
+  dcl a : nat := a + f(a);
+  return a;
+);
+
+functions
+
+f :  nat -> nat
+f (x) ==
+let x = x + 2
+in
+  x + 3;
+	
+end Entry

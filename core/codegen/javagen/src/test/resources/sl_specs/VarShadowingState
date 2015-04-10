@@ -1,0 +1,21 @@
+module Entry
+
+exports all
+definitions 
+	
+types
+	
+state St of
+ x : nat
+ init s == s = mk_St(5)
+end
+	
+operations 
+	
+Run : () ==> ?
+Run () ==
+let x = 10
+in
+  return x + St.x;
+	
+end Entry
