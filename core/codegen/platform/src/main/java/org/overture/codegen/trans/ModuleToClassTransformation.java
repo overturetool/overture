@@ -48,36 +48,37 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 
 		makeStateAccessExplicit(node);
 
-		for (SDeclCG decl : node.getDecls())
+		for (int i = 0; i < node.getDecls().size(); i++)
 		{
-			decl = decl.clone();
+			// Note that this declaration is disconnected from the IR
+			SDeclCG declCopy = node.getDecls().get(i).clone();
 
-			if (decl instanceof AMethodDeclCG)
+			if (declCopy instanceof AMethodDeclCG)
 			{
-				AMethodDeclCG method = (AMethodDeclCG) decl;
+				AMethodDeclCG method = (AMethodDeclCG) declCopy;
 				method.setAccess(IRConstants.PUBLIC);
 				method.setStatic(true);
 
 				clazz.getMethods().add(method);
 
-			} else if (decl instanceof AFuncDeclCG)
+			} else if (declCopy instanceof AFuncDeclCG)
 			{
 				// Functions are static by definition
-				AFuncDeclCG func = (AFuncDeclCG) decl;
+				AFuncDeclCG func = (AFuncDeclCG) declCopy;
 				func.setAccess(IRConstants.PUBLIC);
 
 				clazz.getFunctions().add(func);
 
-			} else if (decl instanceof ATypeDeclCG)
+			} else if (declCopy instanceof ATypeDeclCG)
 			{
-				ATypeDeclCG typeDecl = (ATypeDeclCG) decl;
+				ATypeDeclCG typeDecl = (ATypeDeclCG) declCopy;
 				typeDecl.setAccess(IRConstants.PUBLIC);
 
 				clazz.getTypeDecls().add(typeDecl);
 
-			} else if (decl instanceof AStateDeclCG)
+			} else if (declCopy instanceof AStateDeclCG)
 			{
-				AStateDeclCG stateDecl = (AStateDeclCG) decl;
+				AStateDeclCG stateDecl = (AStateDeclCG) declCopy;
 
 				ARecordDeclCG record = new ARecordDeclCG();
 				record.setName(stateDecl.getName());
@@ -103,7 +104,8 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 				AFieldDeclCG stateField = new AFieldDeclCG();
 				stateField.setAccess(IRConstants.PRIVATE);
 				stateField.setFinal(true);
-				stateField.setInitial(getInitExp(stateDecl));
+				// We need the context the declaration appears in so we cannot use the copy
+				stateField.setInitial(getInitExp((AStateDeclCG) node.getDecls().get(i)));
 				stateField.setName(stateDecl.getName());
 				stateField.setStatic(true);
 				stateField.setType(stateType);
@@ -111,20 +113,20 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 
 				clazz.getFields().add(stateField);
 
-			} else if (decl instanceof ANamedTraceDeclCG)
+			} else if (declCopy instanceof ANamedTraceDeclCG)
 			{
-				clazz.getTraces().add((ANamedTraceDeclCG) decl);
+				clazz.getTraces().add((ANamedTraceDeclCG) declCopy);
 
-			} else if (decl instanceof AFieldDeclCG)
+			} else if (declCopy instanceof AFieldDeclCG)
 			{
-				AFieldDeclCG field = (AFieldDeclCG) decl;
+				AFieldDeclCG field = (AFieldDeclCG) declCopy;
 				field.setStatic(true);
 
 				clazz.getFields().add(field);
 			} else
 			{
 				Logger.getLog().printErrorln("Got unexpected declaration: "
-						+ decl + " in '" + this.getClass().getSimpleName()
+						+ declCopy + " in '" + this.getClass().getSimpleName()
 						+ "'");
 			}
 		}
