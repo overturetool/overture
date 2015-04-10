@@ -88,7 +88,15 @@ public abstract class JavaCodeGenTestCase extends
 			{
 				try
 				{
-					Object nodeType = fromString(cn.getAttributes().getNamedItem("object").getNodeValue());
+
+					Node attribute = cn.getAttributes().getNamedItem("object");
+					
+					if(attribute==null)
+					{
+						return null;
+					}
+					
+					Object nodeType = fromString(attribute.getNodeValue());
 					return nodeType;
 				} catch (Exception e)
 				{

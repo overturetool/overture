@@ -205,7 +205,7 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 
 		}
 
-		return null;
+		return new Result<Object>(null, new Vector<IMessage>(), new Vector<IMessage>());
 	}
 
 	/**
