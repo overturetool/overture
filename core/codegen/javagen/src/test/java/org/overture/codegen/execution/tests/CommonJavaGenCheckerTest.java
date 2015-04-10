@@ -85,7 +85,7 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 	public void setUp() throws Exception
 	{
 		testHandler.initVdmEnv();
-		;
+		
 
 		outputDir = new File(new File(new File("target"), getClass().getSimpleName()), file.getName());
 	}

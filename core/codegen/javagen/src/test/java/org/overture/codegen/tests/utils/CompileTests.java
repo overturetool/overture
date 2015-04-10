@@ -443,7 +443,7 @@ public class CompileTests
 		testInputFiles = TestUtils.getTestInputFiles(new File(SpecificationTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(SpecificationTest.ROOT), RESULT_FILE_EXTENSION);
 
-		runTests(testInputFiles, resultFiles, new NonExecutableSpecTestHandler(), false);
+		runTests(testInputFiles, resultFiles, new NonExecutableSpecTestHandler(Release.VDM_10,Dialect.VDM_PP), false);
 
 		System.out.println("\n********");
 		System.out.println("Finished with specification tests");

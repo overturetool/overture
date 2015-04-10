@@ -31,7 +31,6 @@ import java.util.Random;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
-import org.overture.config.Settings;
 
 public abstract class ExecutableTestHandler extends TestHandler
 {
@@ -95,8 +94,7 @@ public abstract class ExecutableTestHandler extends TestHandler
 	
 	public ExecutableTestHandler(Release release, Dialect dialect)
 	{
-		Settings.release = release;
-		Settings.dialect = dialect;
+		super(release,dialect);
 	}
 	
 	public abstract ExecutionResult interpretVdm(File intputFile) throws Exception;
