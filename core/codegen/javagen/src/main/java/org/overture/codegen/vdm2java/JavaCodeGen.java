@@ -265,7 +265,7 @@ public class JavaCodeGen extends CodeGenBase
 		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
 		List<IRStatus<org.overture.codegen.cgast.INode>> modulesAsNodes = IRStatus.extract(moduleStatuses);
 			
-		ModuleToClassTransformation moduleTransformation = new ModuleToClassTransformation(transAssistant);
+		ModuleToClassTransformation moduleTransformation = new ModuleToClassTransformation(transAssistant, getModuleDecls(moduleStatuses));
 		
 		for(IRStatus<org.overture.codegen.cgast.INode> moduleStatus : modulesAsNodes)
 		{
@@ -590,6 +590,18 @@ public class JavaCodeGen extends CodeGenBase
 		}
 
 		return classDecls;
+	}
+	
+	private List<AModuleDeclCG> getModuleDecls(List<IRStatus<AModuleDeclCG>> statuses)
+	{
+		List<AModuleDeclCG> modules = new LinkedList<AModuleDeclCG>();
+		
+		for(IRStatus<AModuleDeclCG> status : statuses)
+		{
+			modules.add(status.getIrNode());
+		}
+		
+		return modules;
 	}
 
 	public Generated generateJavaFromVdmExp(PExp exp) throws AnalysisException

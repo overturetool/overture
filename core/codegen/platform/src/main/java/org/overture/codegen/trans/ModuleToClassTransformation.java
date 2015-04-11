@@ -1,19 +1,29 @@
 package org.overture.codegen.trans;
 
+import java.util.List;
+
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SImportCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.declarations.AAllImportCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AFromModuleImportsCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
+import org.overture.codegen.cgast.declarations.AFunctionValueImportCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.codegen.cgast.declarations.AModuleImportsCG;
 import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
+import org.overture.codegen.cgast.declarations.AOperationValueImportCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeImportCG;
+import org.overture.codegen.cgast.declarations.AValueValueImportCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
@@ -31,11 +41,14 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		implements ITotalTransformation
 {
 	private AClassDeclCG clazz = null;
+	
 	private TransAssistantCG transAssistant;
+	private List<AModuleDeclCG> allModules;
 
-	public ModuleToClassTransformation(TransAssistantCG transAssistant)
+	public ModuleToClassTransformation(TransAssistantCG transAssistant, List<AModuleDeclCG> allModules)
 	{
 		this.transAssistant = transAssistant;
+		this.allModules = allModules;
 	}
 
 	@Override
@@ -47,6 +60,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		clazz.setName(node.getName());
 
 		makeStateAccessExplicit(node);
+		handleImports(node.getImport(), clazz);
 		
 		for (SDeclCG decl : node.getDecls())
 		{
@@ -87,6 +101,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			} else if (decl instanceof AFieldDeclCG)
 			{
 				AFieldDeclCG field = (AFieldDeclCG) decl;
+				field.setAccess(IRConstants.PUBLIC);
 				field.setStatic(true);
 
 				clazz.getFields().add(field);
@@ -123,16 +138,83 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			ARecordTypeCG stateType = new ARecordTypeCG();
 			stateType.setName(typeName);
 
-			AFieldDeclCG stateField = new AFieldDeclCG();
-			stateField.setAccess(IRConstants.PRIVATE);
-			stateField.setFinal(true);
-			stateField.setInitial(getInitExp(stateDecl));
-			stateField.setName(stateDecl.getName());
-			stateField.setStatic(true);
-			stateField.setType(stateType);
-			stateField.setVolatile(false);
+			clazz.getFields().add(transAssistant.consConstField(IRConstants.PRIVATE, stateType, stateDecl.getName(), getInitExp(stateDecl)));
+		}
+	}
 
-			clazz.getFields().add(stateField);
+	private void handleImports(final AModuleImportsCG moduleImports, final AClassDeclCG clazz) throws AnalysisException
+	{
+		//name = moduleImports.getName();
+		
+		if(moduleImports == null)
+		{
+			return;
+		}
+		
+		for(AFromModuleImportsCG fromImports : moduleImports.getImports())
+		{
+			//String fromName = fromImports.getName();
+			
+			for(List<SImportCG> sig : fromImports.getSignatures())
+			{
+				for(SImportCG imp : sig)
+				{
+					// TODO Implement the import analysis cases
+					imp.apply(new DepthFirstAnalysisAdaptor()
+					{
+						@Override
+						public void caseAAllImportCG(AAllImportCG node)
+								throws AnalysisException
+						{
+						}
+						
+						@Override
+						public void caseATypeImportCG(ATypeImportCG node)
+								throws AnalysisException
+						{
+						}
+						
+						@Override
+						public void caseAFunctionValueImportCG(
+								AFunctionValueImportCG node)
+								throws AnalysisException
+						{
+						}
+						
+						@Override
+						public void caseAOperationValueImportCG(
+								AOperationValueImportCG node)
+								throws AnalysisException
+						{
+						}
+						
+						@Override
+						public void caseAValueValueImportCG(
+								AValueValueImportCG node)
+								throws AnalysisException
+						{
+							/*
+							String renamed = node.getRenamed();
+							
+							if (renamed != null)
+							{
+								//STypeCG impType = node.getImportType();
+								String from = node.getFromModuleName();
+								String name = node.getName();
+
+								AFieldDeclCG impFieldCopy = getValue(name, from).clone();
+								impFieldCopy.setAccess(IRConstants.PUBLIC);
+								impFieldCopy.setName(renamed);
+
+								clazz.getFields().add(impFieldCopy);
+								
+								//clazz.getFields().add(transAssistant.consConstField(access, type, fromName, initExp));
+
+							}*/
+						}
+					});
+				}
+			}
 		}
 	}
 
@@ -274,6 +356,34 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 					+ this.getClass().getSimpleName() + "'");
 			return null;
 		}
+	}
+	
+	@SuppressWarnings("unused")
+	private AFieldDeclCG getValue(String fieldName, String moduleName)
+	{
+		for (AModuleDeclCG module : allModules)
+		{
+			if (module.getName().equals(moduleName))
+			{
+				for (SDeclCG decl : module.getDecls())
+				{
+					if (decl instanceof AFieldDeclCG)
+					{
+						AFieldDeclCG fieldDecl = (AFieldDeclCG) decl;
+						if (fieldDecl.getName().equals(fieldName))
+						{
+							return fieldDecl;
+						}
+					}
+				}
+			}
+		}
+
+		Logger.getLog().printErrorln("Could not find field " + fieldName
+				+ " in module " + moduleName + " in '"
+				+ this.getClass().getSimpleName() + "'");
+
+		return null;
 	}
 
 	@Override
