@@ -34,6 +34,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
@@ -105,6 +106,7 @@ import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
+import org.overture.config.Settings;
 
 public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 {
@@ -439,7 +441,8 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			}
 		}
 		
-		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(rootdef);
+		boolean isStaticOrSl = Settings.dialect == Dialect.VDM_SL ||
+				question.getTcFactory().createPDefinitionAssistant().isStatic(rootdef);
 
 		while (rootdef instanceof AInheritedDefinition)
 		{
@@ -473,7 +476,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		
 		
-		if(!isStatic)
+		if(!isStaticOrSl)
 		{
 			ILexNameToken rootDefClassName = node.getRootdef().getClassDefinition().getName();
 			ILexNameToken enclosingClassName = node.getAncestor(SClassDefinition.class).getName();
@@ -482,7 +485,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			{
 
 				ASuperCallStmCG superCall = new ASuperCallStmCG();
-				superCall.setIsStatic(isStatic);
+				superCall.setIsStatic(isStaticOrSl);
 				superCall.setType(typeCg);
 				superCall.setName(name);
 				superCall.setArgs(argsCg);
@@ -490,7 +493,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 				return superCall;
 			}
 		}
-		else if (nameToken != null && nameToken.getExplicit() && isStatic)
+		else if (nameToken != null && nameToken.getExplicit() && isStaticOrSl)
 		{
 			String className = nameToken.getModule();
 			classType = new AClassTypeCG();
@@ -500,7 +503,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		APlainCallStmCG callStm = new APlainCallStmCG();
 		
 		callStm.setType(typeCg);
-		callStm.setIsStatic(isStatic);
+		callStm.setIsStatic(isStaticOrSl);
 		callStm.setName(name);
 		callStm.setClassType(classType);
 		callStm.setArgs(argsCg);
