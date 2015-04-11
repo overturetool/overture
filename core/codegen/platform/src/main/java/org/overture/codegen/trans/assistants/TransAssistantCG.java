@@ -32,6 +32,7 @@ import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
@@ -596,6 +597,20 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		var.setName(name);
 
 		return var;
+	}
+	
+	public AFieldDeclCG consConstField(String access, STypeCG type, String name, SExpCG initExp)
+	{
+		AFieldDeclCG stateField = new AFieldDeclCG();
+		stateField.setAccess(access);
+		stateField.setType(type);
+		stateField.setStatic(true);
+		stateField.setFinal(true);
+		stateField.setVolatile(false);
+		stateField.setName(name);
+		stateField.setInitial(initExp);
+		
+		return stateField;
 	}
 
 	public AApplyExpCG consConditionalCall(AMethodDeclCG node,
