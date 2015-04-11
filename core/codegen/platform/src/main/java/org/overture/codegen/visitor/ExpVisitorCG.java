@@ -1430,7 +1430,17 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		else if(Settings.dialect == Dialect.VDM_SL)
 		{
 			String defModuleName = varDef.getLocation().getModule();
-			boolean inOwningModule = defModuleName == node.getAncestor(AModuleModules.class).getName().getName();
+			
+			String nodeModuleName = "DEFAULT";
+			
+			AModuleModules nodeModule = node.getAncestor(AModuleModules.class);
+			
+			if(nodeModule != null)
+			{
+				nodeModuleName = nodeModule.getName().getName();
+			}
+			
+			boolean inOwningModule = defModuleName.equals(nodeModuleName);
 			boolean isLocalDef = varDef.getAncestor(AStateDefinition.class) == null;
 			
 			if(inOwningModule)
