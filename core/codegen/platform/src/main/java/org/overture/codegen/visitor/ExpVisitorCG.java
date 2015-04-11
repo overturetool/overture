@@ -1430,10 +1430,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		}
 		else if(Settings.dialect == Dialect.VDM_SL)
 		{
-			AModuleModules owningModule = varDef.getAncestor(AModuleModules.class);
-			AModuleModules nodeParentModule = node.getAncestor(AModuleModules.class);
-			
-			boolean inOwningModule = owningModule == nodeParentModule;
+			String defModuleName = varDef.getLocation().getModule();
+			boolean inOwningModule = defModuleName == node.getAncestor(AModuleModules.class).getName().getName();
 			boolean isLocalDef = varDef.getAncestor(AStateDefinition.class) == null;
 			
 			if(inOwningModule)
@@ -1442,7 +1440,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			}
 			else
 			{
-				return consExplicitVar(node.getName().getModule(), name, isLambda, typeCg, isLocalDef);
+				return consExplicitVar(defModuleName, name, isLambda, typeCg, isLocalDef);
 			}
 		}
 		else
