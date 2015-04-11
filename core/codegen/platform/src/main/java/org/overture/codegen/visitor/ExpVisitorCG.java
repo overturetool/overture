@@ -1030,18 +1030,17 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		PType leftType = node.getLeft().getType();
-
-		if (leftType instanceof SSeqType)
+		if (node.getType() instanceof SSeqType)
 		{
 			return question.getExpAssistant().handleBinaryExp(node, new ASeqModificationBinaryExpCG(), question);
-		} else if (leftType instanceof SMapType)
+		} else if (node.getType() instanceof SMapType)
 		{
 			return question.getExpAssistant().handleBinaryExp(node, new AMapOverrideBinaryExpCG(), question);
 		}
 
 		question.addUnsupportedNode(node, "Expected sequence or map type for '++' binary expression but got: "
-				+ leftType);
+				+ node.getType());
+		
 		return null;
 	}
 
