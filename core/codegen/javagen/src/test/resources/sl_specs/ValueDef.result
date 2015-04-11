@@ -4,8 +4,8 @@ import java.util.*;
 
 
 public class Entry {
-    private static final Number x = 78L;
-    private static final St St = new St(Entry.x);
+    public static final Number x = 78L;
+    private static final St St = new St(x);
 
     public static Object Run() {
         return St.p;
