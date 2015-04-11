@@ -42,6 +42,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
+import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
@@ -436,15 +437,30 @@ public class JavaCodeGen extends CodeGenBase
 			List<? extends INode> mergedParseLists)
 	{
 		List<INode> userModules = new LinkedList<INode>();
-
-		for (INode node : mergedParseLists)
+		
+		if(mergedParseLists.size() == 1 && mergedParseLists.get(0) instanceof CombinedDefaultModule)
 		{
-			if(!getInfo().getDeclAssistant().isLibrary(node))
+			CombinedDefaultModule combined = (CombinedDefaultModule) mergedParseLists.get(0);
+			
+			for(AModuleModules m : combined.getModules())
 			{
-				userModules.add(node);
+				userModules.add(m);
 			}
+			
+			return userModules;
 		}
-		return userModules;
+		else
+		{
+			for (INode node : mergedParseLists)
+			{
+				if(!getInfo().getDeclAssistant().isLibrary(node))
+				{
+					userModules.add(node);
+				}
+			}
+			
+			return userModules;
+		}
 	}
 
 	private List<Renaming> normaliseIdentifiers(
