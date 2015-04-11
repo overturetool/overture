@@ -13,8 +13,11 @@ import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
@@ -775,12 +778,27 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			if (def == null)
 			{
 				def = node.getAncestor(ANamedTraceDefinition.class);
+				
+				if(def == null)
+				{
+					def = node.getAncestor(AValueDefinition.class);
+					
+					if(def == null)
+					{
+						def = node.getAncestor(AInstanceVariableDefinition.class);
+						
+						if(def == null)
+						{
+							def = node.getAncestor(ATypeDefinition.class);
+						}
+					}
+				}
 			}
 		}
 
 		if (def == null)
 		{
-			Logger.getLog().printError("Expected operation, function or named trace definition in HiddenVarRenamer. Got: "
+			Logger.getLog().printError("Expected operation, function or named trace definition in '" + this.getClass().getSimpleName() + "'. Got: "
 					+ enclosingDef);
 		}
 
