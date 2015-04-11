@@ -15,6 +15,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
@@ -791,6 +792,8 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 						{
 							def = node.getAncestor(ATypeDefinition.class);
 						}
+						
+						def = node.getAncestor(AStateDefinition.class);
 					}
 				}
 			}
@@ -798,7 +801,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		if (def == null)
 		{
-			Logger.getLog().printError("Expected operation, function or named trace definition in '" + this.getClass().getSimpleName() + "'. Got: "
+			Logger.getLog().printError("Got unexpected definition in '" + this.getClass().getSimpleName() + "'. Got: "
 					+ enclosingDef);
 		}
 
