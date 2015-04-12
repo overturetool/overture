@@ -27,8 +27,8 @@ import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.values.Value;
-import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
 import org.overture.test.framework.ConditionalIgnoreMethodRule;
+import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
 import org.overture.test.framework.Properties;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Result;
@@ -90,8 +90,9 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		testHandler.initVdmEnv();
 
 		outputDir = new File(new File(new File("target"), getClass().getSimpleName()), file.getName());
+		outputDir.mkdirs();
 	}
-	
+
 	@Rule
 	public ConditionalIgnoreMethodRule rule = new ConditionalIgnoreMethodRule();
 
@@ -113,8 +114,22 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 
 	File outputDir;
 
-	private void generateJavaSources(File vdmSource)
+	protected void generateJavaSources(File vdmSource)
 	{
+		try
+		{
+			restoreGeneratedJavaCode();
+		} catch (IOException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		if (true)
+		{
+			return;
+		}
+
 		// Settings.release = Release.VDM_10;
 		// Dialect dialect = Dialect.VDM_PP;
 
@@ -156,26 +171,7 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 
 	private Result<Object> runJavaGenTest() throws IOException
 	{
-		testHandler.setCurrentInputFile(file);
-
-		outputDir.mkdirs();
-		// GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID, false);
-
-		// Calculating the Java result:
-		// File currentResultFile = javaGeneratedFiles;
-
-		testHandler.setCurrentResultFile(javaGeneratedFile);
-		testHandler.writeGeneratedCode(outputDir, javaGeneratedFile, rootPackage);
-
-		// if(testHandler instanceof ExecutableSpecTestHandler)
-		// {
-		// ExecutableSpecTestHandler execHandler = (ExecutableSpecTestHandler) testHandler;
-		// execHandler.writeMainClass(outputDir, rootPackage);
-		// }
-
-		// generateJavaSources(file);
-
-		long s1 = System.currentTimeMillis();
+		generateJavaSources(file);
 
 		File cgRuntime = new File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
 
@@ -195,7 +191,6 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 				Object vdmResult = evalVdm(file, executableTestHandler);
 				return new Result<Object>(vdmResult, new Vector<IMessage>(), new Vector<IMessage>());
 			}
-			long s = System.currentTimeMillis();
 
 			// Note that the classes returned in javaResult may be loaded by another class loader. This is the case for
 			// classes representing VDM classes, Quotes etc. that's not part of the cg-runtime
@@ -211,6 +206,13 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		}
 
 		return new Result<Object>(null, new Vector<IMessage>(), new Vector<IMessage>());
+	}
+
+	private void restoreGeneratedJavaCode() throws IOException
+	{
+		testHandler.setCurrentInputFile(file);
+		testHandler.setCurrentResultFile(javaGeneratedFile);
+		testHandler.writeGeneratedCode(outputDir, javaGeneratedFile, rootPackage);
 	}
 
 	/**
