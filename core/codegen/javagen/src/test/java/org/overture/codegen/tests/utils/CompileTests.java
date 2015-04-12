@@ -125,7 +125,7 @@ public class CompileTests
 		
 		if(RUN_SL_TESTS)
 		{
-			runSlTests();
+			runSlTests();//not moved to unit test
 		}
 
 		if (RUN_COMPLEX_EXP_TESTS)
@@ -135,7 +135,7 @@ public class CompileTests
 		
 		if (RUN_NON_EXECUTING_VDM10_SPEC_TESTS)
 		{
-			runNonExecutingVdm10Tests();
+			runNonExecutingVdm10Tests();//not moved to unit test
 		}
 		
 		if (RUN_FUNCTION_VALUE_TESTS)
