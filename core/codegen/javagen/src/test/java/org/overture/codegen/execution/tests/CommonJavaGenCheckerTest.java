@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.ir.IRSettings;
@@ -26,6 +27,8 @@ import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.values.Value;
+import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
+import org.overture.test.framework.ConditionalIgnoreMethodRule;
 import org.overture.test.framework.Properties;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Result;
@@ -85,12 +88,15 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 	public void setUp() throws Exception
 	{
 		testHandler.initVdmEnv();
-		
 
 		outputDir = new File(new File(new File("target"), getClass().getSimpleName()), file.getName());
 	}
+	
+	@Rule
+	public ConditionalIgnoreMethodRule rule = new ConditionalIgnoreMethodRule();
 
 	@Test
+	@ConditionalIgnore(condition = JavaCodeGenJavacEnabledCondition.class)
 	public void test() throws Exception
 	{
 		configureResultGeneration();
@@ -191,9 +197,8 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 			}
 			long s = System.currentTimeMillis();
 
-			// extend the current class loader class path
-			CompileTests.addPath(outputDir);// FIXME remove the addition again
-
+			// Note that the classes returned in javaResult may be loaded by another class loader. This is the case for
+			// classes representing VDM classes, Quotes etc. that's not part of the cg-runtime
 			ExecutionResult javaResult = executableTestHandler.runJava(outputDir);
 			// System.out.println(" + java: "+(System.currentTimeMillis()-s));
 
