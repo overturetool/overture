@@ -1,0 +1,28 @@
+module Entry
+
+exports all
+imports from Other all
+definitions
+
+values
+
+state Other of
+x : nat
+init s == s = mk_Other(10) 
+end
+
+operations
+
+Run : () ==> ?
+Run () == return Other.x;
+
+end Entry
+
+module Other
+
+exports all
+definitions
+values
+x = 5;
+
+end Other
