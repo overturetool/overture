@@ -1,0 +1,17 @@
+class Entry
+
+types
+
+public MapNatOrBool = map nat to nat | map bool to bool;
+
+values
+
+xs : MapNatOrBool = {1 |-> 1, 2 |-> 2};
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return {e |-> (e + 1) | e in set dom xs & e = 2}
+
+end Entry

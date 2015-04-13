@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="3" line="43" message="Operation A`op1(nat) is not static" messageType="error" number="3324" resource="static-05.vpp"/>
+<message column="10" line="59" message="Inaccessible member A`i of class A" messageType="error" number="3180" resource="static-05.vpp"/>
+<result/>
+</testResult>

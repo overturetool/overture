@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="1" line="89" message="Definition 'ReturnState' not used" messageType="warning" number="5000" resource="EngineSL"/>
+<message column="1" line="104" message="Definition 'StarterOn' not used" messageType="warning" number="5000" resource="EngineSL"/>
+<message column="1" line="112" message="Definition 'StarterOff' not used" messageType="warning" number="5000" resource="EngineSL"/>
+<message column="1" line="119" message="Definition 'OpenSOV' not used" messageType="warning" number="5000" resource="EngineSL"/>
+<message column="1" line="129" message="Definition 'IgnOn' not used" messageType="warning" number="5000" resource="EngineSL"/>
+<message column="1" line="135" message="Definition 'IgnOff' not used" messageType="warning" number="5000" resource="EngineSL"/>
+<message column="1" line="141" message="Definition 'StartComplete' not used" messageType="warning" number="5000" resource="EngineSL"/>
+<message column="1" line="148" message="Definition 'SequenceAbort' not used" messageType="warning" number="5000" resource="EngineSL"/>
+<message column="1" line="157" message="Definition 'CoolFlush' not used" messageType="warning" number="5000" resource="EngineSL"/>
+<message column="27" line="72" message="Value is not of the right type" messageType="error" number="3327" resource="EngineSL"/>
+<message column="6" line="109" message="State variable 'DEFAULT`fuelswitch' cannot be accessed from this context" messageType="error" number="3302" resource="EngineSL"/>
+<message column="28" line="152" message="State variable 'DEFAULT`ign_flt' cannot be accessed from this context" messageType="error" number="3302" resource="EngineSL"/>
+<message column="37" line="152" message="State variable 'DEFAULT`starter_flt' cannot be accessed from this context" messageType="error" number="3302" resource="EngineSL"/>
+<message column="50" line="152" message="State variable 'DEFAULT`sov_flt' cannot be accessed from this context" messageType="error" number="3302" resource="EngineSL"/>
+<message column="59" line="152" message="State variable 'DEFAULT`n2_flt' cannot be accessed from this context" messageType="error" number="3302" resource="EngineSL"/>
+<message column="67" line="152" message="State variable 'DEFAULT`tgt_flt' cannot be accessed from this context" messageType="error" number="3302" resource="EngineSL"/>
+<message column="76" line="152" message="State variable 'DEFAULT`n2' cannot be accessed from this context" messageType="error" number="3302" resource="EngineSL"/>
+<result/>
+</testResult>

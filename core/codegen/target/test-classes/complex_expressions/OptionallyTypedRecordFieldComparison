@@ -1,0 +1,21 @@
+class Entry
+
+types
+
+NatList ::
+	e : int
+	t : [NatList];
+	
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a = mk_NatList(1,nil),
+		b = mk_NatList(1,mk_NatList(2, nil)),
+		c = mk_NatList(1,mk_NatList(2, mk_NatList(3,nil))),
+		d = mk_NatList(1,mk_NatList(2, mk_NatList(3,nil)))
+in
+	return [a = a, a = b, a = c, a = d, b = b, b = c, b = d, c = c,
+					c = d, d = d, b = a, c = a, d = a, c = b, d = b, d = c]; 
+
+end Entry

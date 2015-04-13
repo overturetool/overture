@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite tests="107" failures="0" name="org.overture.pog.tests.newtests.PogAllExamplesTest" time="33.226" errors="0" skipped="0">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="c:\Program Files\Java\jdk1.8.0_20\jre\bin"/>
+    <property name="java.vm.version" value="25.20-b23"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="maven.multiModuleProjectDirectory" value="c:/Users/Jpereira/overtureRep"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="path.separator" value=";"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.script" value=""/>
+    <property name="user.country" value="PT"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="Service Pack 1"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="c:\Users\Jpereira\overtureRep"/>
+    <property name="java.runtime.version" value="1.8.0_20-b26"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="c:\Program Files\Java\jdk1.8.0_20\jre\lib\endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="C:\Users\Jpereira\AppData\Local\Temp\"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.variant" value=""/>
+    <property name="os.name" value="Windows 7"/>
+    <property name="classworlds.conf" value="c:/apache-maven-3.3.1/bin/m2.conf"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="c:\Program Files\Java\jdk1.8.0_20\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;c:\Users\Jpereira\bin;.;C:\Program Files (x86)\Git\local\bin;C:\Program Files (x86)\Git\mingw\bin;C:\Program Files (x86)\Git\bin;C:\Program Files (x86)\Git\bin;c:\Program Files\ImageMagick-6.9.0-Q8;c:\Program Files\ImageMagick-6.9.0-Q16;c:\Program Files\Haskell\bin;c:\Program Files\Haskell Platform\2014.2.0.0\lib\extralibs\bin;c:\Program Files\Haskell Platform\2014.2.0.0\bin;c:\ProgramData\Oracle\Java\javapath;c:\Windows\system32;c:\Windows;c:\Windows\System32\Wbem;c:\Windows\System32\WindowsPowerShell\v1.0\;c:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x86;c:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x64;c:\Program Files\Java\jdk1.8.0_20\bin;c:\Program Files\Haskell Platform\2014.2.0.0\mingw\bin;c:\Python34;c:\Python34\Scripts;c:\Strawberry\c\bin;c:\Strawberry\perl\site\bin;c:\Strawberry\perl\bin;c:\Program Files\MiKTeX 2.9\miktex\bin\x64\;c:\apache-maven-3.3.1\bin;c:\Users\Jpereira\AppData\Roaming\cabal\bin;c:\opencv\build\java\x64\;c:\apache-maven-3.2.5\bin;."/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="52.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="6.1"/>
+    <property name="user.home" value="C:\Users\Jpereira"/>
+    <property name="user.timezone" value="Europe/London"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="java.specification.version" value="1.8"/>
+    <property name="file.encoding" value="Cp1252"/>
+    <property name="user.name" value="Jpereira"/>
+    <property name="java.class.path" value="c:/apache-maven-3.3.1/boot/plexus-classworlds-2.5.2.jar"/>
+    <property name="java.vm.specification.version" value="1.8"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="c:\Program Files\Java\jdk1.8.0_20\jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher install"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language" value="pt"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.8.0_20"/>
+    <property name="java.ext.dirs" value="c:\Program Files\Java\jdk1.8.0_20\jre\lib\ext;C:\Windows\Sun\Java\lib\ext"/>
+    <property name="sun.boot.class.path" value="c:\Program Files\Java\jdk1.8.0_20\jre\lib\resources.jar;c:\Program Files\Java\jdk1.8.0_20\jre\lib\rt.jar;c:\Program Files\Java\jdk1.8.0_20\jre\lib\sunrsasign.jar;c:\Program Files\Java\jdk1.8.0_20\jre\lib\jsse.jar;c:\Program Files\Java\jdk1.8.0_20\jre\lib\jce.jar;c:\Program Files\Java\jdk1.8.0_20\jre\lib\charsets.jar;c:\Program Files\Java\jdk1.8.0_20\jre\lib\jfr.jar;c:\Program Files\Java\jdk1.8.0_20\jre\classes"/>
+    <property name="sun.stderr.encoding" value="cp850"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="c:\apache-maven-3.3.1"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.stdout.encoding" value="cp850"/>
+    <property name="sun.desktop" value="windows"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+  </properties>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[0] VDM_SL &gt; AbstractPacemakerSL (testCase)" time="0.921"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[1] VDM_SL &gt; AccountSysSL (testCase)" time="0.196"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[2] VDM_SL &gt; ACSSL (testCase)" time="1.011"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[3] VDM_SL &gt; ADTSL (testCase)" time="1.688"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[4] VDM_SL &gt; AlarmSL (testCase)" time="0.226"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[5] VDM_SL &gt; ATCSL (testCase)" time="1.524"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[6] VDM_SL &gt; barSL (testCase)" time="0.396"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[7] VDM_SL &gt; BOMSL (testCase)" time="0.056"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[8] VDM_SL &gt; cashdispenserSL (testCase)" time="0.13"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[9] VDM_SL &gt; CMSL (testCase)" time="0.064"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[10] VDM_SL &gt; ConwayGameLifeSL (testCase)" time="0.092"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[11] VDM_SL &gt; CountryColouringSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[12] VDM_SL &gt; crosswordSL (testCase)" time="0.284"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[13] VDM_SL &gt; DFDexampleSL (testCase)" time="0.574"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[14] VDM_SL &gt; DigraphSL (testCase)" time="0.09"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[15] VDM_SL &gt; dwarfSL (testCase)" time="0.054"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[16] VDM_SL &gt; EngineSL (testCase)" time="0.011"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[17] VDM_SL &gt; expressSL (testCase)" time="0.096"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[18] VDM_SL &gt; gatewaySL (testCase)" time="0.012"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[19] VDM_SL &gt; graph-edSL (testCase)" time="0.318"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[20] VDM_SL &gt; HASLSL (testCase)" time="0.033"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[21] VDM_SL &gt; hotelSL (testCase)" time="0.037"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[22] VDM_SL &gt; librarySL (testCase)" time="0.587"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[23] VDM_SL &gt; looseSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[24] VDM_SL &gt; LUHNSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[25] VDM_SL &gt; LUPSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[26] VDM_SL &gt; MAASL (testCase)" time="0.64"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[27] VDM_SL &gt; metroSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[28] VDM_SL &gt; monitorSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[29] VDM_SL &gt; NDBSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[30] VDM_SL &gt; newspeakSL (testCase)" time="2.216"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[31] VDM_SL &gt; pacemakerSL (testCase)" time="0.108"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[32] VDM_SL &gt; PlannerSL (testCase)" time="0.034"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[33] VDM_SL &gt; ProgLangSL (testCase)" time="0.138"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[34] VDM_SL &gt; raildirSL (testCase)" time="0.218"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[35] VDM_SL &gt; realmSL (testCase)" time="0.147"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[36] VDM_SL &gt; recursiveSL (testCase)" time="0.082"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[37] VDM_SL &gt; SAFERSL (testCase)" time="0.411"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[38] VDM_SL &gt; shmemSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[39] VDM_SL &gt; simulatorSL (testCase)" time="1.344"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[40] VDM_SL &gt; soccerSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[41] VDM_SL &gt; STVSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[42] VDM_SL &gt; telephoneSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[43] VDM_SL &gt; Tic-tac-toeSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[44] VDM_SL &gt; TrackerSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[45] VDM_SL &gt; trafficSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[46] VDM_SL &gt; VCParser-masterSL (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[47] VDM_PP &gt; access-controlPP (testCase)" time="0.427"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[48] VDM_PP &gt; AlarmPP (testCase)" time="0.063"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[49] VDM_PP &gt; Alarm++proofPP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[50] VDM_PP &gt; Alarm++tracesPP (testCase)" time="0.13"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[51] VDM_PP &gt; AutomatedStockBrokerPP (testCase)" time="0.946"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[52] VDM_PP &gt; AutopilotPP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[53] VDM_PP &gt; buffersPP (testCase)" time="0.071"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[54] VDM_PP &gt; BuslinesPP (testCase)" time="1.237"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[55] VDM_PP &gt; BuslinesWithDBPP (testCase)" time="0.159"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[56] VDM_PP &gt; CashDispenserPP (testCase)" time="0.271"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[57] VDM_PP &gt; CashDispenserConcPP (testCase)" time="0.838"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[58] VDM_PP &gt; CMConcPP (testCase)" time="0.271"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[59] VDM_PP &gt; CMSeqPP (testCase)" time="0.164"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[60] VDM_PP &gt; CodegenPP (testCase)" time="0.68"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[61] VDM_PP &gt; concfactorialPP (testCase)" time="0.028"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[62] VDM_PP &gt; diet2japanPP (testCase)" time="0.034"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[63] VDM_PP &gt; DiningPP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[64] VDM_PP &gt; ElectronicPursePP (testCase)" time="0.073"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[65] VDM_PP &gt; EnigmaPP (testCase)" time="0.713"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[66] VDM_PP &gt; HomeAutomationConcPP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[67] VDM_PP &gt; HomeautomationSeqPP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[68] VDM_PP &gt; HubInSafeModePP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[69] VDM_PP &gt; KLVPP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[70] VDM_PP &gt; memoryproofPP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[71] VDM_PP &gt; MondexPP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[72] VDM_PP &gt; MSAWconcurPP (testCase)" time="0.341"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[73] VDM_PP &gt; MSAWseqPP (testCase)" time="0.902"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[74] VDM_PP &gt; PacemakerConcPP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[75] VDM_PP &gt; PacemakerSeqPP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[76] VDM_PP &gt; PacemakerSimplePP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[77] VDM_PP &gt; POP3PP (testCase)" time="0.311"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[78] VDM_PP &gt; ProductLinePP (testCase)" time="0.033"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[79] VDM_PP &gt; QuadilateralPP (testCase)" time="0.096"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[80] VDM_PP &gt; ReaderWriterPP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[81] VDM_PP &gt; SAFERPP (testCase)" time="0.335"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[82] VDM_PP &gt; SAFERProofPP (testCase)" time="0.204"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[83] VDM_PP &gt; SmokingPP (testCase)" time="0.033"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[84] VDM_PP &gt; SortingParcelsPP (testCase)" time="0.033"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[85] VDM_PP &gt; sortPPPP (testCase)" time="0.119"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[86] VDM_PP &gt; SSlibE2PP (testCase)" time="7.582"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[87] VDM_PP &gt; stackPP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[88] VDM_PP &gt; trackerproofPP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[89] VDM_PP &gt; trayallocationPP (testCase)" time="0.203"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[90] VDM_PP &gt; treePP (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[91] VDM_PP &gt; VFSPP (testCase)" time="0.041"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[92] VDM_PP &gt; webserverPP (testCase)" time="0.094"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[93] VDM_PP &gt; worldcupPP (testCase)" time="0.433"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[94] VDM_RT &gt; CarNaviRadioRT (testCase)" time="0.124"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[95] VDM_RT &gt; CarNaviRadioValConjRT (testCase)" time="0"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[96] VDM_RT &gt; ChessWayRT (testCase)" time="0.588"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[97] VDM_RT &gt; CMRT (testCase)" time="0.396"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[98] VDM_RT &gt; CyberRailRT (testCase)" time="0.319"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[99] VDM_RT &gt; HomeAutomationRT (testCase)" time="0.064"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[100] VDM_RT &gt; iiossRT (testCase)" time="0.101"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[101] VDM_RT &gt; MSAWRT (testCase)" time="0.127"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[102] VDM_RT &gt; oldcarradioRT (testCase)" time="0.096"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[103] VDM_RT &gt; PacemakerRT (testCase)" time="0.111"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[104] VDM_RT &gt; RobotRT (testCase)" time="0.148"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[105] VDM_RT &gt; VDMRT (testCase)" time="0.291"/>
+  <testcase classname="org.overture.pog.tests.newtests.PogAllExamplesTest" name="[106] VDM_RT &gt; VeMoRT (testCase)" time="0.258"/>
+</testsuite>

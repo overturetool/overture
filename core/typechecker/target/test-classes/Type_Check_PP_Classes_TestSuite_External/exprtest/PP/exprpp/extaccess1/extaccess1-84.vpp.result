@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="10" line="73" message="Value type visibility less than value definition" messageType="error" number="3052" resource="extaccess1-84.vpp"/>
+<message column="5" line="43" message="Function parameter visibility less than function definition" messageType="error" number="3019" resource="extaccess1-84.vpp"/>
+<message column="34" line="86" message="Inaccessible member A`priv_val of class A" messageType="error" number="3092" resource="extaccess1-84.vpp"/>
+<result/>
+</testResult>

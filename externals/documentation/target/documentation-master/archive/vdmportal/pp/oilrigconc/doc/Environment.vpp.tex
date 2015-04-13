@@ -1,0 +1,151 @@
+\kClass $Environment$ \kISO $GLOBAL$
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}
+\assdef{ctl}{AccessController}
+\end{insvar}
+\begin{insvar}
+\assdef{Linlines}{\seqof*{Linline}}[{\seq{}}]
+\end{insvar}
+\begin{insvar}
+\assdef{Pinlines}{\seqof*{Pinline}}[{\seq{}}]
+\end{insvar}
+\begin{insvar}
+\assdef{events}{\seqof*{event}}[{\seq{}}]
+\end{insvar}
+\begin{insvar}
+\assdef{busy}{\Bool }[{\True }]
+\end{insvar}
+\begin{insvar}
+\assdef{running}{\Bool }[{\True }]
+\end{insvar}
+\begin{insvar}
+\assdef{outlines}{\seqof*{outline}}[{\seq{}}]
+\end{insvar}
+\begin{insvar}
+\assdef{io}{IO}[{\fnapply{\new{IO}}{}}]
+\end{insvar}
+\par
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{Environment}%
+\signature{String \Oto Environment}
+\parms{sfname}
+\annlab[o]{Environment`Environment}
+\begin{blockstmt}
+\ass{ctl}{\fnapply{\new{AccessController}}{}} ; \\
+\begin{defstmt}
+\eqdef{\reccons{\kw{mk-}}{-,input1}}{\fnapply{io.freadval[\seqof*{event}]}{sfname}}
+\end{defstmt} \\
+\ass{events}{input1} ; \\
+\call{init}{}
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{sendEvents}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{Environment`sendEvents}
+\begin{blockstmt}
+\If  \Len events > 0
+\Then \\
+\begin{blockstmt}
+\begin{dclstmt}
+\assdef{curtime}{Time}[{\fnapply{World`timer.GetTime}{}}]
+\assdef{done}{\Bool }[{\False }]
+\end{dclstmt}
+\begin{while}{ \Not done}
+\begin{defstmt}
+\eqdef{\reccons{\kw{mk-}}{type,id1,id2,intend,pt}}{ \Hd events}
+\end{defstmt} \\
+\If pt \Le curtime
+\Then \\
+\begin{blockstmt}
+$ctl$.\call{addEvent}{\reccons{\kw{mk\textunderscore}}{type,id1,id2,intend,pt}} ; \\
+\ass{events}{ \Tl events} ; \\
+\ass{done}{ \Len events = 0}
+\end{blockstmt}
+\Else \\
+\ass{done}{\True }
+\Fi
+\end{while}
+\end{blockstmt}
+\Else \\
+\ass{running}{\False }
+\Fi
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{addOutline}%
+\signature{outline \Oto ()}
+\parms{line}
+\annlab[o]{Environment`addOutline}
+\begin{blockstmt}
+\ass{outlines}{outlines \Sconc \seq{line}}
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{showResult}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{Environment`showResult}
+\begin{defstmt}
+\eqdef{-}{\fnapply{io.writeval[\seqof*{outline}]}{outlines}}
+\end{defstmt} \\
+\Skip ;
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{init}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{Environment`init}
+\begin{blockstmt}
+ORAMS`a1.\call{addBoat}{ORAMS`l1} ; \\
+ORAMS`a1.\call{addEquipment}{ORAMS`f1} ; \\
+ORAMS`a1.\call{addEquipment}{ORAMS`f2} ; \\
+ORAMS`a1.\call{addEquipment}{ORAMS`f3} ; \\
+ORAMS`a2.\call{addBoat}{ORAMS`l2} ; \\
+ORAMS`a2.\call{addBoat}{ORAMS`l3} ; \\
+ORAMS`a2.\call{addEquipment}{ORAMS`f4} ; \\
+ORAMS`a2.\call{addEquipment}{ORAMS`f5} ; \\
+ORAMS`a2.\call{addEquipment}{ORAMS`f6} ; \\
+ORAMS`a3.\call{addBoat}{ORAMS`l3} ; \\
+ORAMS`a3.\call{addBoat}{ORAMS`l4} ; \\
+ORAMS`a3.\call{addEquipment}{ORAMS`f7} ; \\
+ORAMS`a3.\call{addEquipment}{ORAMS`f8} ; \\
+ORAMS`a3.\call{addEquipment}{ORAMS`f9} ; \\
+ORAMS`a3.\call{addEquipment}{ORAMS`f10}
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{isFinished}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{Environment`isFinished}
+\Skip 
+\end{op}
+\kSync
+\per{isFinished}{ \Not busy}
+\kThreadDef
+\begin{thread}
+\begin{blockstmt}
+\start{\fnapply{\new{ClockTick}}{\kw{threadid}}} ; \\
+\start{ctl} ; \\
+\begin{setfor}{a}{ \Rng ORAMS`areas}
+\start{a}
+\end{setfor} ; \\
+\begin{while}{running}
+\begin{blockstmt}
+\call{sendEvents}{} ; \\
+World`timer.\call{NotifyAndIncTime}{} ; \\
+World`timer.\call{WaitRelative}{0}
+\end{blockstmt}
+\end{while} ; \\
+\begin{defstmt}
+\eqdef{-}{\fnapply{io.writeval[\seqof*{\Char }]}{\Dquote Done\hspace{0.5em}sending\hspace{0.5em}events \Dquote }}
+\end{defstmt} \\
+\Skip  ; \\
+$ctl$.\call{isFinished}{} ; \\
+\begin{setfor}{a}{ \Rng ORAMS`areas}
+$a$.\call{isFinished}{}
+\end{setfor} ; \\
+\ass{busy}{\False }
+\end{blockstmt}
+\end{thread}
+\kEnd $Environment$
+

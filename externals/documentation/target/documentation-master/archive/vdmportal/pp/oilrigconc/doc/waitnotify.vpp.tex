@@ -1,0 +1,99 @@
+\begin{vdm}\kClass $WaitNotify$
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}
+\assdef{waitset}{\setof{\Nat }}[{\set{}}]
+\end{insvar}
+\par
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{Wait}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{WaitNotify`Wait}
+\begin{blockstmt}
+\call{AddToWaitSet}{\kw{threadid}} ; \\
+\call{Awake}{}
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{Notify}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{WaitNotify`Notify}
+\Letbe* p \In waitset \Lin \\
+\ass{waitset}{waitset \Setdiff \set{p}};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{NotifyThread}%
+\signature{\Nat  \Oto ()}
+\parms{tId}
+\annlab[o]{WaitNotify`NotifyThread}
+\ass{waitset}{waitset \Setdiff \set{tId}};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{NotifyAll}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{WaitNotify`NotifyAll}
+\ass{waitset}{\set{}};
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{AddToWaitSet}%
+\signature{\Nat  \Oto ()}
+\parms{n}
+\annlab[o]{WaitNotify`AddToWaitSet}
+\ass{waitset}{waitset \Union \set{n}};
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{Awake}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{WaitNotify`Awake}
+\Skip 
+\end{op}
+\kSync
+\per{Awake}{\kw{threadid} \Notin waitset;}
+\mutex{AddToWaitSet}
+\kEnd $WaitNotify$
+
+\end{vdm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

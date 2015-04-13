@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="15" line="17" message="Matching expression is not a product of cardinality 2" messageType="error" number="3205" resource="defexpr-02.vdm"/>
+<message column="40" line="17" message="Name 'DefExprTest`b' is not in scope" messageType="error" number="3182" resource="defexpr-02.vdm"/>
+<result/>
+</testResult>

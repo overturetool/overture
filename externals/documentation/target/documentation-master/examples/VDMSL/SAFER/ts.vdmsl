@@ -1,0 +1,162 @@
+\begin{vdm_al}
+
+
+module TS
+
+imports from AUX all,
+        from AAH all
+
+exports all
+
+definitions
+
+types 
+
+  ThrusterName = <B1> | <B2> | <B3> | <B4> | <F1> | <F2> | <F3> | <F4> |
+                 <L1R>| <L1F>| <R2R>| <R2F>| <L3R>| <L3F>| <R4R>| <R4F>|
+                 <D1R>| <D1F>| <D2R>| <D2F>| <U3R>| <U3F>| <U4R>| <U4F>;
+
+  ThrusterSet = set of ThrusterName
+
+functions
+
+  RotCmdsPresent: AUX`RotCommand +> bool 
+  RotCmdsPresent(cmd) ==
+    exists a in set dom cmd & cmd(a) <> <Zero>;
+
+  PrioritizedTranCmd: AUX`TranCommand +> AUX`TranCommand
+  PrioritizedTranCmd(tran) ==
+    if tran(<X>) <> <Zero> 
+    then AUX`null_tran_command ++ {<X> |-> tran(<X>)}
+    elseif tran(<Y>) <> <Zero> 
+    then AUX`null_tran_command ++ {<Y> |-> tran(<Y>)}
+    elseif tran(<Z>) <> <Zero> 
+    then AUX`null_tran_command ++ {<Z> |-> tran(<Z>)}
+    else AUX`null_tran_command;
+
+  CombinedRotCmds: AUX`RotCommand * AUX`RotCommand * set of AUX`RotAxis +> 
+                   AUX`RotCommand
+  CombinedRotCmds(hcm_rot,aah,ignore_hcm) ==
+    let aah_axes = ignore_hcm union 
+                   {a | a in set AUX`rot_axis_set & hcm_rot(a) = <Zero>}
+    in {a |-> aah(a) | a in set aah_axes} munion 
+       {a |-> hcm_rot(a) | a in set AUX`rot_axis_set\aah_axes};
+
+  IntegratedCommands: AUX`SixDofCommand * AUX`RotCommand * 
+                      set of AUX`RotAxis * set of AUX`RotAxis +> 
+                      AUX`SixDofCommand
+  IntegratedCommands(mk_AUX`SixDofCommand(tran,rot),aah,
+                     active_axes,ignore_hcm) == 
+    if AAH`AllAxesOff(active_axes) 
+    then if RotCmdsPresent(rot) 
+         then mk_AUX`SixDofCommand(AUX`null_tran_command,rot)
+         else mk_AUX`SixDofCommand(PrioritizedTranCmd(tran),
+                                   AUX`null_rot_command)
+    else if RotCmdsPresent(rot) 
+         then mk_AUX`SixDofCommand(AUX`null_tran_command,
+                                   CombinedRotCmds(rot,aah,ignore_hcm))
+         else mk_AUX`SixDofCommand(PrioritizedTranCmd(tran),aah);
+
+  BFThrusters: AUX`AxisCommand * AUX`AxisCommand * AUX`AxisCommand +> 
+    ThrusterSet * ThrusterSet 
+  BFThrusters(A,B,C) == 
+    cases mk_(A,B,C) :
+      mk_(<Neg>,<Neg>,<Neg>) -> mk_({<B4>},{<B2>,<B3>}),
+      mk_(<Neg>,<Neg>,<Zero>) -> mk_({<B3>,<B4>},{}),
+      mk_(<Neg>,<Neg>,<Pos>) -> mk_({<B3>},{<B1>,<B4>}),
+--
+      mk_(<Neg>,<Zero>,<Neg>) -> mk_({<B2>,<B4>},{}),
+      mk_(<Neg>,<Zero>,<Zero>) -> mk_({<B1>,<B4>},{<B2>,<B3>}),
+      mk_(<Neg>,<Zero>,<Pos>) -> mk_({<B1>,<B3>},{}),
+----
+      mk_(<Neg>,<Pos>,<Neg>) -> mk_({<B2>},{<B1>,<B4>}),
+      mk_(<Neg>,<Pos>,<Zero>) -> mk_({<B1>,<B2>},{}),
+      mk_(<Neg>,<Pos>,<Pos>) -> mk_({<B1>},{<B2>,<B3>}),
+------
+      mk_(<Zero>,<Neg>,<Neg>) -> mk_({<B4>,<F1>},{}),
+      mk_(<Zero>,<Neg>,<Zero>) -> mk_({<B4>,<F2>},{}),
+      mk_(<Zero>,<Neg>,<Pos>) -> mk_({<B3>,<F2>},{}),
+--
+      mk_(<Zero>,<Zero>,<Neg>) -> mk_({<B2>,<F1>},{}),
+      mk_(<Zero>,<Zero>,<Zero>) -> mk_({},{}),
+      mk_(<Zero>,<Zero>,<Pos>) -> mk_({<B3>,<F4>},{}),
+----
+      mk_(<Zero>,<Pos>,<Neg>) -> mk_({<B2>,<F3>},{}),
+      mk_(<Zero>,<Pos>,<Zero>) -> mk_({<B1>,<F3>},{}),
+      mk_(<Zero>,<Pos>,<Pos>) -> mk_({<B1>,<F4>},{}),
+------
+      mk_(<Pos>,<Neg>,<Neg>) -> mk_({<F1>},{<F2>,<F3>}),
+      mk_(<Pos>,<Neg>,<Zero>) -> mk_({<F1>,<F2>},{}),
+      mk_(<Pos>,<Neg>,<Pos>) -> mk_({<F2>},{<F1>,<F4>}),
+--
+      mk_(<Pos>,<Zero>,<Neg>) -> mk_({<F1>,<F3>},{}),
+      mk_(<Pos>,<Zero>,<Zero>) -> mk_({<F2>,<F3>},{<F1>,<F4>}),
+      mk_(<Pos>,<Zero>,<Pos>) -> mk_({<F2>,<F4>},{}),
+----
+      mk_(<Pos>,<Pos>,<Neg>) -> mk_({<F3>},{<F1>,<F4>}),
+      mk_(<Pos>,<Pos>,<Zero>) -> mk_({<F3>,<F4>},{}),
+      mk_(<Pos>,<Pos>,<Pos>) -> mk_({<F4>},{<F2>,<F3>})
+    end;
+
+  LRUDThrusters: AUX`AxisCommand * AUX`AxisCommand * AUX`AxisCommand +> 
+    ThrusterSet * ThrusterSet 
+  LRUDThrusters(A,B,C) == 
+    cases mk_(A,B,C) :
+      mk_(<Neg>,<Neg>,<Neg>) -> mk_({},{}),
+      mk_(<Neg>,<Neg>,<Zero>) -> mk_({},{}),
+      mk_(<Neg>,<Neg>,<Pos>) -> mk_({},{}),
+--
+      mk_(<Neg>,<Zero>,<Neg>) -> mk_({<L1R>},{<L1F>,<L3F>}),
+      mk_(<Neg>,<Zero>,<Zero>) -> mk_({<L1R>,<L3R>},{<L1F>,<L3F>}),
+      mk_(<Neg>,<Zero>,<Pos>) -> mk_({<L3R>},{<L1F>,<L3F>}),
+----
+      mk_(<Neg>,<Pos>,<Neg>) -> mk_({},{}),
+      mk_(<Neg>,<Pos>,<Zero>) -> mk_({},{}),
+      mk_(<Neg>,<Pos>,<Pos>) -> mk_({},{}),
+------
+      mk_(<Zero>,<Neg>,<Neg>) -> mk_({<U3R>},{<U3F>,<U4F>}),
+      mk_(<Zero>,<Neg>,<Zero>) -> mk_({<U3R>,<U4R>},{<U3F>,<U4F>}),
+      mk_(<Zero>,<Neg>,<Pos>) -> mk_({<U4R>},{<U3F>,<U4F>}),
+--
+      mk_(<Zero>,<Zero>,<Neg>) -> mk_({<L1R>,<R4R>},{}),
+      mk_(<Zero>,<Zero>,<Zero>) -> mk_({},{}),
+      mk_(<Zero>,<Zero>,<Pos>) -> mk_({<R2R>,<L3R>},{}),
+----
+      mk_(<Zero>,<Pos>,<Neg>) -> mk_({<D2R>},{<D1F>,<D2F>}),
+      mk_(<Zero>,<Pos>,<Zero>) -> mk_({<D1R>,<D2R>},{<D1F>,<D2F>}),
+      mk_(<Zero>,<Pos>,<Pos>) -> mk_({<D1R>},{<D1F>,<D2F>}),
+------
+      mk_(<Pos>,<Neg>,<Neg>) -> mk_({},{}),
+      mk_(<Pos>,<Neg>,<Zero>) -> mk_({},{}),
+      mk_(<Pos>,<Neg>,<Pos>) -> mk_({},{}),
+--
+      mk_(<Pos>,<Zero>,<Neg>) -> mk_({<R4R>},{<R2F>,<R4F>}),
+      mk_(<Pos>,<Zero>,<Zero>) -> mk_({<R2R>,<R4R>},{<R2F>,<R4F>}),
+      mk_(<Pos>,<Zero>,<Pos>) -> mk_({<R2R>},{<R2F>,<R4F>}),
+----
+      mk_(<Pos>,<Pos>,<Neg>) -> mk_({},{}),
+      mk_(<Pos>,<Pos>,<Zero>) -> mk_({},{}),
+      mk_(<Pos>,<Pos>,<Pos>) -> mk_({},{})
+    end;
+
+  SelectedThrusters: AUX`SixDofCommand * AUX`RotCommand * set of AUX`RotAxis * 
+                     set of AUX`RotAxis +> ThrusterSet
+  SelectedThrusters(hcm,aah,active_axes,ignore_hcm) ==
+    let mk_AUX`SixDofCommand(tran,rot) = 
+        IntegratedCommands(hcm,aah,active_axes,ignore_hcm),
+        mk_(bf_mandatory,bf_optional) = 
+               BFThrusters(tran(<X>),rot(<Pitch>),rot(<Yaw>)),
+        mk_(lrud_mandatory,lrud_optional) = 
+               LRUDThrusters(tran(<Y>),tran(<Z>),rot(<Roll>)),
+        bf_thr = if rot(<Roll>) = <Zero> 
+                 then bf_optional union bf_mandatory
+                 else bf_mandatory,
+        lrud_thr = if rot(<Pitch>) = <Zero> and rot(<Yaw>) = <Zero> 
+                   then lrud_optional union lrud_mandatory
+                   else lrud_mandatory
+    in bf_thr union lrud_thr
+
+end TS
+
+
+\end{vdm_al}

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="13" line="5" message="Instance variable 'v' is not initialized" messageType="warning" number="5001" resource="trapstmt2.vpp"/>
+<result/>
+</testResult>

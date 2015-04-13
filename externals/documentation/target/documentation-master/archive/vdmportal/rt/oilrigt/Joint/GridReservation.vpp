@@ -1,0 +1,152 @@
+\section{CyberRail class}
+\begin{vdm_al}
+
+class GridReservation
+
+instance variables	
+--List of Reservation records containing all reservations for the specific section
+public reservations : SectionPlan := {|->};
+public curTime : nat := 0;
+private io : IO := new IO();
+public routeList : set of Route := {}; 
+
+--Configuration Parameters-----------------------------------------
+--The minimal time resolution used in the time table
+private minDelta : nat := 50000;
+--The number of trains which can occupy the grid at the same time
+private noTrain : nat :=1;
+--Length of period which the reservations be calc.
+private periode : nat :=1000000;
+--Max delay between train station stop and start
+private maxDelay : nat :=minDelta * 2;
+--Number of instances each train should run
+private noInstances : nat := 2;
+
+types
+
+public TimeEntry = set of nat;
+public SectionPlan = map TransportPlan`Section to TimeEntry;
+	
+--GridResConfig - DTO record type for reading persisted configuration.
+public GridResConfig ::
+	minDelta : nat
+	maxDelta : nat
+	noTrain : nat
+	periode : nat
+	noInstances : nat;
+	
+
+operations
+
+public GridReservation : () ==> GridReservation
+GridReservation() == return;
+
+public GridReservation : RailwayGrid`Grid * set of TransportPlan`Section ==> GridReservation
+GridReservation(staticgrid, sectionList) ==
+(
+	initializeReservations(sectionList);
+	calculateReservations(staticgrid);
+	def - = io.fwriteval[SectionPlan]("reservation.txt",reservations,<start>) in skip;
+
+	return;
+);	
+
+public getRoutePlan : () ==> RailwayGrid`RoutePlan
+getRoutePlan() == (
+
+	return routeList;
+);
+
+
+private initializeReservations : set of TransportPlan`Section ==> ()
+initializeReservations(sectionList)==
+(
+	--Initialize all active sections in reservation map. Sec to empty list. 
+	for all sec in set sectionList do
+	(
+		reservations := reservations ++ {sec |-> {}};
+	);
+);
+
+private calculateReservations : RailwayGrid`Grid ==> ()
+calculateReservations(staticgrid)==
+(
+	dcl accomulateDuration : nat := 0;
+	dcl standInSection : TransportPlan`Section;
+	dcl iterations : nat := noInstances; -- How many times should a route be executed.
+	dcl tempgrid : seq of TransportPlan`Section;
+
+	while iterations > 0 do
+	(
+		for all gridsegment in set staticgrid do
+		(
+			curTime := 0;
+			accomulateDuration := 300000;
+			def - = io.fwriteval[seq of TransportPlan`Section]("gridsegment.txt",gridsegment,<append>) in skip;
+			tempgrid := gridsegment;
+			while len tempgrid > 0 do
+			(
+				standInSection := hd tempgrid; 
+				curTime := findFreeTimeSlot(standInSection, standInSection.dur, accomulateDuration);
+				accomulateDuration := curTime + standInSection.dur;
+				
+				if(len tempgrid = len gridsegment) then
+					routeList := routeList union {new Route(gridsegment, curTime)};
+								
+				--Reserve time for current section.
+				while curTime < accomulateDuration do
+				(
+					dcl temp : set of nat := reservations(standInSection) union {curTime};
+					reservations(standInSection) :=  temp;		
+					curTime := curTime + minDelta; --minDelta = lowest possible time resolution
+				);	
+				tempgrid := tl tempgrid;
+			);
+		);
+		def - = io.fwriteval[SectionPlan]("reservations.txt",reservations,<start>) in skip;
+		def - = io.fwriteval[set of Route]("routeList.txt",routeList,<start>) in skip;
+		iterations := iterations - 1;
+	)
+);
+
+public getSectionPlan : () ==> SectionPlan
+getSectionPlan() == return reservations;
+
+private findFreeTimeSlot : TransportPlan`Section *  nat * nat==> nat
+findFreeTimeSlot(section, sectionDuration, minStartTime)==
+(
+	dcl tempRes : set of nat := reservations(section);
+	dcl freeSlot : nat :=minStartTime;
+	dcl next : nat := freeSlot;
+	dcl dur : nat := sectionDuration;
+	
+	while(dur > 0 ) do
+	(
+		if(next not in set tempRes) then
+		(
+			dur := dur - minDelta;
+			next := next + minDelta;
+		)
+		else
+		(
+			dur := sectionDuration;
+			freeSlot := next + minDelta;
+			next := freeSlot; --new starting point 
+		);
+	);
+	return freeSlot;
+);
+
+-- public getRouteList : () ==> set of Route
+-- getRouteList() ==
+-- (
+-- 	return routeList;
+-- )
+
+
+
+
+
+end GridReservation
+
+\end{vdm_al}

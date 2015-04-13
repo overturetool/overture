@@ -1,0 +1,16 @@
+[mk_(<movePerson>, mk_token(<p1>), mk_token(<a1>), <Stay>, 2000),
+mk_(<movePerson>, mk_token(<p2>), mk_token(<a1>), <Stay>, 2000),
+mk_(<movePerson>, mk_token(<p3>), mk_token(<a2>), <Stay>, 2000),
+mk_(<movePerson>, mk_token(<p4>), mk_token(<a2>), <Stay>, 2000),
+mk_(<movePerson>, mk_token(<p5>), mk_token(<a3>), <Stay>, 2000),
+mk_(<removeBoat>, mk_token(<b1>), nil, nil, 2000),
+mk_(<movePerson>, mk_token(<p3>), mk_token(<a1>), <Stay>, 3000),
+mk_(<movePerson>, mk_token(<p1>), mk_token(<a2>), <Stay>, 4000),
+mk_(<movePerson>, mk_token(<p2>), mk_token(<a2>), <Stay>, 4000),
+mk_(<movePerson>, mk_token(<p5>), mk_token(<a2>), <Transit>, 4000),
+mk_(<removeBoat>, mk_token(<b2>), nil, nil, 4000),
+mk_(<movePerson>, mk_token(<p3>), mk_token(<a3>), <Stay>, 6000),
+mk_(<movePerson>, mk_token(<p4>), mk_token(<a3>), <Stay>, 6000),
+mk_(<movePerson>, mk_token(<p5>), mk_token(<a1>), <Stay>, 6000),
+mk_(<removeBoat>, mk_token(<b3>), nil, nil, 6000)]
+

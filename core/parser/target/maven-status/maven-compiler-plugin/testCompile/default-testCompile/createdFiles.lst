@@ -1,0 +1,17 @@
+org\overture\parser\tests\DefinitionTestCase.class
+org\overture\parser\tests\SpecificationSlTestSuite.class
+org\overture\parser\tests\SpecificatopnRtTestCase.class
+org\overture\parser\tests\TypeTestSuite.class
+org\overture\parser\tests\ExpressionTestCase.class
+org\overture\parser\tests\SpecificationRtTestSuite.class
+org\overture\parser\tests\PatternTestCase.class
+org\overture\parser\tests\TypeTestCase.class
+org\overture\parser\tests\SpecificatopnPpTestCase.class
+org\overture\parser\tests\DefinitionTestSuite.class
+org\overture\parser\tests\SpecificationPpTestSuite.class
+org\overture\parser\tests\PatternTestSuite.class
+org\overture\parser\tests\framework\BaseParserTestCase.class
+org\overture\parser\tests\ExpressionTestSuite.class
+org\overture\parser\tests\SpecificatopnSlTestCase.class
+org\overture\parser\tests\StatementTestSuite.class
+org\overture\parser\tests\StatementTestCase.class

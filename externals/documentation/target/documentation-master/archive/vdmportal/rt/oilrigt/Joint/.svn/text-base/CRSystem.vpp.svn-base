@@ -1,0 +1,68 @@
+\section{CRSystem}
+
+\begin{vdm_al}
+system CRSystem
+
+instance variables
+
+-- cpu for TPC
+cpu1 : CPU := new CPU (<FCFS>,1E20);
+-- cpu for APM
+cpu2 : CPU := new CPU (<FCFS>,1E12);
+-- cpu for the controller
+cpu3 : CPU := new CPU (<FCFS>,1E12);
+-- cpu for the TokenDevice
+--cpu4 : CPU := new CPU(<FCFS>,1E12);
+-- cpu for the SMSGateway, VERY fast!
+cpu5 : CPU := new CPU (<FCFS>,1E20 );
+
+-- bus to connect TokenDevice and SMSGateway
+--bus4 : BUS := new BUS(<FCFS>,1E3,{cpu4,cpu5});
+-- bus to connect TokenDevice and Controller (virtual);
+--bus5 : BUS := new BUS(<FCFS>,1E3,{cpu3,cpu4}); 
+-- bus to connect Controller and APM
+bus2 : BUS := new BUS (<FCFS>,1E3,{cpu2,cpu3});
+-- bus to connect APM and SMSGateway
+bus3 : BUS := new BUS (<FCFS>,1E3,{cpu2,cpu5});
+-- bus to connect APM and TokenDevice
+--bus1 : BUS := new BUS (<FCFS>,1E3,{cpu2,cpu4});
+
+cpu7 : CPU := new CPU(<FCFS>,105E6);
+
+
+bus7 : BUS := new BUS(<FCFS>,1E18,{cpu2,cpu7});
+
+
+bus8 : BUS := new BUS(<FCFS>,1E18,{cpu5,cpu7});
+
+
+bus9 : BUS := new BUS(<FCFS>,1E18,{cpu3,cpu7});
+
+
+public static tok7 : TokenDevice := new TokenDevice(0);
+
+
+
+
+
+--Static Objects
+public static tok0 : TokenDevice := new TokenDevice(0);
+public static apm : ActivePlanManager := new ActivePlanManager();
+public static ctrl : Controller := new Controller();
+public static gateway : SMSGateway := new SMSGateway();
+
+operations
+
+CRSystem : () ==> CRSystem
+CRSystem()==
+(
+	cpu5.deploy(gateway);
+	cpu2.deploy(apm);
+	cpu3.deploy(ctrl);
+	--cpu4.deploy(tok0);
+	cpu7.deploy(tok7);
+
+)
+
+end CRSystem
+\end{vdm_al}

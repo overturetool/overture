@@ -1,0 +1,25 @@
+int
+bool
+rat
+nat
+nat1
+token
+real
+char
+<OO>
+()
+(int)
+A
+int * real -> bool
+int * real ==> bool
+@parmeterType
+int * int
+seq of int
+seq1 of int
+set of int
+[int]
+A | int
+nil
+hej
+cl.name
+?

@@ -1,0 +1,25 @@
+class TransmitTMC
+  is subclass of EnvironmentTask
+
+operations
+  public TransmitTMC: nat ==> TransmitTMC
+  TransmitTMC (pno) == max_stimuli := pno;
+
+  public HandleEvent: nat ==> ()
+  HandleEvent (pev) == logSysToEnv(pev)
+  post checkResponseTimes(e2s,s2e,40000000000);
+
+  public Run: () ==> ()
+  Run () == start(self); --,TransmitTMCT);
+
+  createSignal: () ==> ()
+  createSignal () ==
+    ( dcl num2 : nat := getNum();
+      logEnvToSys(num2);
+      RadNavSys`radio.HandleTMC(num2) )
+
+thread
+  periodic (4000E6,400,3910,0) 
+    (createSignal)
+
+end TransmitTMC

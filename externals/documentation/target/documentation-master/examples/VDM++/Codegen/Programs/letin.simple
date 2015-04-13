@@ -1,0 +1,6 @@
+function x() == 
+	let x = 32,
+		y = x + 9
+	in
+		let x = y + 1
+		in x

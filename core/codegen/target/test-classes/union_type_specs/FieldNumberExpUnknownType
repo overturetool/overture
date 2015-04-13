@@ -1,0 +1,13 @@
+class Entry
+
+types
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let hr = if 1 = 1 then {[mk_(5,true)]} else {[]}
+in
+  return {1 |-> ss(1).#2 | ss in set hr}
+ 
+end Entry

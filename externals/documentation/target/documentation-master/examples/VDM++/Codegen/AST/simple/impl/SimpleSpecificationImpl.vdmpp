@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleSpecificationImpl is subclass of SimpleSpecification
+instance variables
+    private iv_defs:seq of SimpleDefinition;
+
+operations
+    public SimpleSpecificationImpl: seq of SimpleDefinition ==> SimpleSpecificationImpl
+    SimpleSpecificationImpl(p_defs) ==
+    (
+        iv_defs := p_defs;
+    );
+
+    public getDefs: () ==> seq of SimpleDefinition
+    getDefs() == return iv_defs;
+
+end SimpleSpecificationImpl

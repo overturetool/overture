@@ -1,0 +1,1 @@
+class Readerinstance variablesb : Bufferoperationspublic Reader: Buffer ==> ReaderReader(buf) ==	b := buf;--public Read: nat ==> ()--Read(d) == skip;thread  while true do  ( let x = b.Read() in     (skip;    --Read(x);    )  )end Reader

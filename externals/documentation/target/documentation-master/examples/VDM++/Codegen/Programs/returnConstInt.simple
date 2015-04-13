@@ -1,0 +1,82 @@
+/* A simple test of definition parsing... 
+
+type T = int		-- real, int, nat, bool or a user type name
+type T2 = T
+
+function f(a:T, b:int) ==				
+	let first = a + b, second = b in
+		cases first:
+			1 -> -equals(),
+			second and third -> not whatever(),
+			others -> 1.23e10 mod true
+		end
+
+function ifTest() == 
+	if 8=10
+	
+function addSubTest() ==
+10+40-8
+
+function ifTest() ==
+	if 10=8 then 32 else 42
+
+function max(a:int,b:int) ==
+	if a > b then a
+	else b
+	
+function foo2(a:int, b:int) ==
+	(let exp1 = a + b,
+		exp2 = b - exp1
+	in
+		let exp1 = 2
+		in exp1 + exp2) + 2
+	
+public int foo2(int a, int b){
+	int v1 = a + b;
+	int v2 = b - v1;
+	int v3 = 2;
+	return v3 + v2 + 2;
+}
+	
+public int max(int a, int b){
+	return a > b ? a : b;
+}	
+	
+	elseif a < b then 2
+	
+	
+	
+public Run : () ==> (bool|int|seq of char)
+Run() ==
+	let x = 3
+	in return showType(4);
+--	let programs = util.getSimpleFiles() in
+--	return programs(1);
+--	for program in programs do
+--		let
+--			z = parseSimpleProgram(program)
+--			a = compiler.Compile(program, z),
+--			b = codegen.Generate(a),
+--			real_b = b ^ " public static void main(String[] argv){ System.exit(x()); }}",
+--			c = writeProgram(program, real_b),
+--			d = compileProgram(program),
+--			e = runProgram(program)
+--		in
+--			if 41 <> 42 then
+--				io.echo("Test " ^ program ^ " failed")
+--			else
+--				io.echo("Test " ^ program ^ " success");
+			
+	
+function x() == 42
+
+function x() == if 10=8 then 32 else 42
+
+function x() == let x = 32, y = x + 9 in let x = y + 1 in x
+
+function x() == cases 32:
+					32 -> 42,
+					others -> 2
+				end
+*/
+function x() == 42

@@ -1,0 +1,31 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public Number op() {
+        A a = new A();
+
+        return a.f(1L);
+    }
+
+    public Number op1() {
+        A a = new A();
+
+        return a.f(1L);
+    }
+
+    public static Number f(final Number x) {
+        return x;
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+}
+
+##########

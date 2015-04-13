@@ -1,0 +1,1 @@
+new A().Test() = [ true,true,false,true,false,false,true,false ]

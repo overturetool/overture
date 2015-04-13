@@ -1,0 +1,93 @@
+\begin{vdm_al} 
+class Transmitter is subclass of GLOBAL
+
+values 
+
+public POLL_DRAIN = 1; 
+public EMERGENCY_DRAIN = 10; 
+
+public COMMUNICATION_DRAIN = 4;
+
+public drainVolume: map nat to nat =
+    { 1 |-> EMERGENCY_DRAIN,
+      2 |-> EMERGENCY_DRAIN,
+      10 |-> COMMUNICATION_DRAIN };
+
+instance variables
+
+private prioritizedBuffer : seq of Message :=[];
+private cpr : CprNr;
+private battery : BatteryMonitor;
+private busy : bool:=false;
+
+thread
+    while true do
+        sendMessage();
+
+operations
+
+public Transmitter: CprNr ==> Transmitter
+Transmitter(cprnr) == 
+(
+    cpr:=cprnr
+);
+
+sortByPriority: Message * seq of Message ==> seq of Message
+sortByPriority(val, sorted) == 
+(
+    cases true:
+        (sorted = []) -> return [val],
+        (val.priority <= (hd sorted).priority) -> return [val] ^ sorted,
+        others -> return [hd sorted] ^ sortByPriority(val, tl sorted)
+    end
+);
+
+public transmit: Message ==> ()
+transmit(message) ==
+(   
+    Printer`Out("TX: Message received for transmission");
+    prioritizedBuffer := sortByPriority(message, prioritizedBuffer);
+    busy:= true;
+);
+
+private sendMessage: () ==> ()
+sendMessage() ==
+(
+        dcl msg : Message := getData();
+        battery.drain(lookUpDrainValue(msg.priority));
+        NewWorld`env.handleEvent(NewWorld`timerRef.GetTime(), msg);
+        
+        busy:=len prioritizedBuffer > 0;
+);
+
+private getData: () ==> Message 
+getData() == 
+(
+    dcl msg : Message := hd prioritizedBuffer;
+    prioritizedBuffer := tl prioritizedBuffer;
+    return msg; 
+);
+
+private lookUpDrainValue: nat ==> nat 
+lookUpDrainValue(type) == 
+(
+     return drainVolume(type);
+) 
+pre exists t in set dom drainVolume & t = type;
+
+public attachBattery: BatteryMonitor ==> ()
+attachBattery(theBattery) == battery:= theBattery;
+
+public isFinished: () ==> ()
+isFinished() == skip;
+
+
+sync
+
+mutex(transmit); mutex(transmit, getData);
+
+per getData => prioritizedBuffer <> []; 
+per isFinished => not busy;
+
+end Transmitter 
+\end{vdm_al}

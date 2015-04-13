@@ -1,0 +1,32 @@
+class A
+
+instance variables
+
+functions
+
+public fun : () -> nat
+fun () == 2;
+
+end A
+
+class B
+
+end B
+
+class Entry
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+let xs : seq of (A|B) = [new A(), new A()]
+in
+(
+	dcl sum : nat := 0;
+	for x in xs do
+		sum := sum + x.fun();
+		
+	return sum;
+)
+
+end Entry

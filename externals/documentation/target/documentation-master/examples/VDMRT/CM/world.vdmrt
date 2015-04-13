@@ -1,0 +1,61 @@
+\begin{vdm_al}
+class World
+
+instance variables
+
+-- maintain a link to the environment
+public static timerRef : RTTimeStamp := RTTimeStamp`GetInstance();
+public static env : [Environment] := nil;
+
+operations
+
+public World: () ==> World
+World () ==
+  (-- set-up the sensors
+   env := new Environment("scenario.txt", mk_BaseRTThread`ThreadDef(1000E6,true,10,900,0));
+   env.addSensor(CM`sensor0);
+   env.addSensor(CM`sensor1);
+   env.addSensor(CM`sensor2);
+   env.addSensor(CM`sensor3);
+
+   -- add the first controller with four dispensers
+   CM`controller0.addDispenser(CM`dispenser0);
+   CM`controller0.addDispenser(CM`dispenser1);
+   CM`controller0.addDispenser(CM`dispenser2);
+   CM`controller0.addDispenser(CM`dispenser3);
+   CM`detector.addController(CM`controller0);
+
+   -- add the second controller with four dispensers
+   CM`controller1.addDispenser(CM`dispenser4);
+   CM`controller1.addDispenser(CM`dispenser5);
+   CM`controller1.addDispenser(CM`dispenser6);
+   CM`controller1.addDispenser(CM`dispenser7);
+   CM`detector.addController(CM`controller1);
+ 
+   -- add the third controller with four dispensers
+   CM`controller2.addDispenser(CM`dispenser8);
+   CM`controller2.addDispenser(CM`dispenser9);
+   CM`controller2.addDispenser(CM`dispenser10);
+   CM`controller2.addDispenser(CM`dispenser11);
+   CM`detector.addController(CM`controller2);
+   );
+
+-- the run function blocks the user-interface thread
+-- until all missiles in the file have been processed
+public Run: () ==> ()
+Run () == 
+  (-- start the environment 
+   timerRef.DoneInitialising();
+   -- wait for the environment to handle all input
+   env.isFinished();
+   -- wait for the missile detector to finish
+   CM`detector.isFinished();
+   -- print the result
+   env.showResult())
+
+end World
+\end{vdm_al}
+
+\begin{rtinfo}[World`World]
+{vdm.tc}[World]
+\end{rtinfo}

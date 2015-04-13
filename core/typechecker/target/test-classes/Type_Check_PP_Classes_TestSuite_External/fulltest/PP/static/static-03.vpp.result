@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="3" line="11" message="Cannot call op() from static context" messageType="error" number="3214" resource="static-03.vpp"/>
+<result/>
+</testResult>

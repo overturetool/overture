@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesRtTypeCheckTest">
+<message column="10" line="66" message="Definition 'i' not used" messageType="warning" number="5000" resource="sysinherit-03.vpp"/>
+<message column="9" line="33" message="Cannot use 'CPU' outside system class" messageType="error" number="3296" resource="sysinherit-03.vpp"/>
+<message column="9" line="46" message="Cannot use 'BUS' outside system class" messageType="error" number="3296" resource="sysinherit-03.vpp"/>
+<message column="17" line="61" message="Cannot instantiate system class Simple" messageType="error" number="3279" resource="sysinherit-03.vpp"/>
+<result/>
+</testResult>

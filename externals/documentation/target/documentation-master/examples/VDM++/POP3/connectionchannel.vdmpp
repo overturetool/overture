@@ -1,0 +1,48 @@
+\section{The Connection Channel Class}
+
+\begin{vdm_al}
+class MessageChannelBuffer
+
+instance variables
+\end{vdm_al}
+
+\begin{vdm_al}
+instance variables
+
+data : [MessageChannel] := nil;
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+
+public Put: MessageChannel ==> ()
+Put(msg) ==
+  data := msg;
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+
+public Get: () ==> MessageChannel
+Get() ==
+let d = data in
+  ( data := nil;
+    return d
+  )
+\end{vdm_al}
+
+\begin{vdm_al}
+sync
+
+per Get => data <> nil;
+per Put   => data = nil;
+\end{vdm_al}
+
+\begin{vdm_al}
+sync
+  mutex(Put, Get);
+  mutex(Put);
+  mutex(Get);
+
+end MessageChannelBuffer
+\end{vdm_al}

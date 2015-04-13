@@ -1,0 +1,17 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+trap mk_(a,a)
+with
+  let mk_(a,a) = mk_(a,a)
+  in
+    return a
+in
+  let mk_(a,a) = mk_(1,1)
+  in
+    return a
+    
+end Entry

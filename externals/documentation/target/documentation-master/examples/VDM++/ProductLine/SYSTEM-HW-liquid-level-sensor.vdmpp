@@ -1,0 +1,17 @@
+class LiquidLevelSensor
+
+instance variables
+  realworld_liquid : Liquid;
+
+operations
+  public
+  Setup: RealWorld1 | RealWorld2 ==> ()
+  Setup(realworld) ==
+    realworld_liquid := realworld.liquid;
+
+  public
+  IsOn: () ==> bool
+  IsOn() ==
+    return realworld_liquid.GetAmount() > 0;
+
+end LiquidLevelSensor

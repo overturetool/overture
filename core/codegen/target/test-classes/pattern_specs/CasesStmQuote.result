@@ -1,0 +1,42 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object casesQuote(final Object e) {
+        Object quotePattern_1 = e;
+        Boolean success_1 = Utils.equals(quotePattern_1, quotes.A.getInstance());
+
+        if (!(success_1)) {
+            Object quotePattern_2 = e;
+            success_1 = Utils.equals(quotePattern_2, quotes.B.getInstance());
+
+            if (success_1) {
+                return quotes.B.getInstance();
+            } else {
+                return quotes.C.getInstance();
+            }
+        } else {
+            return quotes.A.getInstance();
+        }
+    }
+
+    public static Object Run() {
+        return SeqUtil.seq(casesQuote(quotes.A.getInstance()),
+            casesQuote(quotes.B.getInstance()),
+            casesQuote(quotes.C.getInstance()));
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+*Quotes*
+A,B,C
+##########

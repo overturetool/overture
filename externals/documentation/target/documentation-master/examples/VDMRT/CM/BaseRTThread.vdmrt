@@ -1,0 +1,41 @@
+class BaseRTThread
+
+types
+
+public static ThreadDef ::
+  p : nat1
+  isP : bool
+  j : nat
+  d : nat
+  o : nat;
+	
+instance variables
+
+protected period : nat1 := 1000E6;
+protected isPeriodic : bool := true;
+protected jitter : nat := 0;
+protected delay : nat := 0;
+protected offset : nat := 0;
+
+protected registeredSelf : BaseRTThread;
+protected timeStamp : RTTimeStamp := RTTimeStamp`GetInstance();
+
+operations
+
+protected BaseRTThread : BaseRTThread ==> BaseRTThread
+BaseRTThread(t) ==
+ (registeredSelf := t;
+  timeStamp.RegisterThread(registeredSelf);
+  if(not timeStamp.IsInitialising())
+  then start(registeredSelf);   
+ );
+
+protected Step : () ==> ()
+Step() ==
+  is subclass responsibility;
+
+thread
+
+periodic(period, jitter, delay, offset)(Step);
+
+end BaseRTThread

@@ -1,0 +1,27 @@
+\begin{vdm_al}
+-----------------------------------------------
+-- Author:	Kim Christensen
+-- Created:	4/03-2009
+-- Updated:
+-- Description: FireEquipment class for ORAMS
+-----------------------------------------------
+
+class FireEquipment is subclass of SafetyEquipment
+
+
+instance variables
+
+types
+
+
+operations
+    public FireEquipment : () ==> FireEquipment
+        FireEquipment() == 
+            capacity := 1;
+
+functions
+
+
+values
+end FireEquipment
+\end{vdm_al}

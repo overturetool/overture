@@ -1,0 +1,23 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public Number op1() {
+        return 1L;
+    }
+
+    public Number q2() {
+        return op1();
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+}
+
+##########

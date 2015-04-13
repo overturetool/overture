@@ -1,0 +1,124 @@
+--The Environment Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		20/4 - 2008
+-- Updated:
+-- Description: 	Environment class of the HomeAutomation project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Environment
+
+--
+-- instance variables
+--
+instance variables
+
+private envTemp		: nat;
+private envHumid	: nat;
+
+private ha       : HA;
+private io       : IO := new IO();
+private inlines	 : seq of inline := [];
+private simtime	 : nat;
+
+private finished : bool := false;
+
+--
+-- Types definition section
+--
+types
+
+-- Input file: Temp, Humid, Time
+public inline	= nat * nat * nat;
+
+--
+-- Operations definition section
+--
+operations
+
+public Environment: seq of char ==> Environment
+  Environment(fname) ==
+   (def mk_ (-,mk_(t,input)) = io.freadval[nat * seq of inline](fname) 
+    in
+     (inlines := input;
+      simtime := t;
+     );
+  
+    ha := new HA();
+    envTemp := 20;
+    envHumid := 85;
+   );
+   
+public Run: () ==> ()
+Run () == 
+ (while not isFinished() do
+    (CreateSignal();
+     -- step rest of model
+     HA`Host.Step();
+     World`timerRef.StepTime();
+    );
+ );
+
+private CreateSignal: () ==> ()
+CreateSignal() ==
+ (if len inlines > 0
+  then (dcl curtime : nat := World`timerRef.GetTime();
+  def mk_ (temp, humid, time) = hd inlines 
+  in
+   (if time <= curtime
+    then (SetTemp(temp);
+          SetHumid(humid);
+          IO`print("\n\nNew env values set");
+          IO`print("\nAt time: ");
+          IO`print(time);
+          inlines := tl inlines;
+          return
+         );
+   );
+  )
+  else (finished := true;
+        return
+       );
+ );	
+
+public ReadTemp: () ==> nat
+	ReadTemp() ==
+		return envTemp;
+
+public IncTemp: () ==> ()
+	IncTemp() ==
+		envTemp := envTemp + 1;
+
+public DecTemp: () ==> ()
+	DecTemp() ==
+		envTemp := envTemp - 1;
+
+public SetTemp: nat ==> ()
+	SetTemp(t) ==
+		envTemp := t;
+
+public ReadHumid: () ==> nat
+	ReadHumid() ==
+		return envHumid;
+
+public IncHumid: () ==> ()
+	IncHumid() ==
+		envHumid := envHumid + 1;
+
+public DecHumid: () ==> ()
+	DecHumid() ==
+		envHumid := envHumid - 1;
+
+public SetHumid: nat ==> ()
+	SetHumid(h) ==
+		envHumid := h;
+
+public isFinished : () ==> bool
+isFinished () == 
+  return inlines = [] and finished;
+
+end Environment

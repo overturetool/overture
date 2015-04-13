@@ -1,0 +1,20 @@
+\begin{vdm_al}
+class MMIUpdateScreenVolume is subclass of BasicTask
+
+operations
+  public MMIUpdateScreenVolume: EventDispatcher ==> MMIUpdateScreenVolume
+  MMIUpdateScreenVolume (pde) == BasicTask("UpdateScreenVolume",pde);
+
+  -- we do not specify *what* the operation does
+  -- we only specify its execution time
+  public UpdateScreen: () ==> ()
+  UpdateScreen () == duration (500) skip;
+
+  protected handleEvent: Event ==> ()
+  handleEvent (pe) ==
+    ( UpdateScreen();
+	-- scenario finished. signal response back to the environment
+      raiseInterrupt("VolumeKnob", pe.getEvent()) )
+
+end MMIUpdateScreenVolume
+\end{vdm_al}

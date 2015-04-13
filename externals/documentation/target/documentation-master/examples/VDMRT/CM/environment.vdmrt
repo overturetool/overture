@@ -1,0 +1,108 @@
+\begin{vdm_al}
+class Environment is subclass of GLOBAL, BaseRTThread
+
+types
+
+public inline  = EventId * MissileType * Angle * Time;
+public outline = EventId * FlareType * Angle * nat * Time
+
+instance variables
+
+-- access to the VDMTools stdio
+io : IO := new IO();
+
+-- the input file to process
+inlines : seq of inline := [];
+
+-- the output file to print
+outlines : seq of outline := [];
+
+-- maintain a link to all sensors
+ranges : map nat to (Angle * Angle) := {|->};
+sensors : map nat to Sensor := {|->};
+inv dom ranges = dom sensors;
+
+busy : bool := true;
+
+operations
+
+ public getAperture: () ==> Angle * Angle
+  getAperture () == is not yet specified;
+
+public Environment: seq of char * [ThreadDef] ==> Environment
+Environment (fname, tDef) ==
+ (def mk_ (-,input) = io.freadval[seq of inline](fname) in
+    inlines := input;
+   
+  if tDef <> nil
+  then (period := tDef.p;
+        jitter := tDef.j;
+        delay := tDef.d;
+        offset := tDef.o;
+       ); 
+   BaseRTThread(self);
+ );
+
+public addSensor: Sensor ==> ()
+addSensor (psens) ==
+  duration (0)
+  (dcl id : nat := card dom ranges + 1;
+   atomic (
+    ranges := ranges munion {id |-> psens.getAperture()};
+    sensors := sensors munion {id |-> psens} 
+   )
+  );
+
+private createSignal: () ==> ()
+createSignal () ==
+  duration (0) 
+  (if len inlines > 0
+   then (dcl curtime : Time := time, done : bool := false;
+         while not done do
+           def mk_ (eventid, pmt, pa, pt) = hd inlines in
+             if pt <= curtime
+             then (for all id in set dom ranges do
+                     def mk_(papplhs,pappsize) = ranges(id) in
+                       if canObserve(pa,papplhs,pappsize)
+                       then sensors(id).trip(eventid,pmt,pa);
+                   inlines := tl inlines;
+                   done := len inlines = 0)
+             else done := true)
+   else busy := false);
+
+public handleEvent: EventId * FlareType * Angle * Time * Time ==> ()
+handleEvent (evid,pfltp,angle,pt1,pt2) ==
+  duration (0) 
+  (outlines := outlines ^ [mk_ (evid,pfltp,angle,pt1,pt2)] );
+
+public showResult: () ==> ()
+showResult () ==
+  def - = io.writeval[seq of outline](outlines) in skip;
+
+public isFinished : () ==> ()
+isFinished () == skip;
+
+public GetAndPurgeOutlines: () ==> seq of outline
+GetAndPurgeOutlines() ==
+  let res = outlines
+  in
+    (outlines := [];
+     return res);
+
+public Step : () ==> ()
+Step() ==
+ (createSignal();
+ );
+
+sync
+
+mutex (handleEvent);
+mutex (createSignal);
+per isFinished => not busy;
+
+end Environment
+\end{vdm_al}
+
+\begin{rtinfo}[Environment`GetAndPurgeOutlines]
+{vdm.tc}[Environment]
+\end{rtinfo}

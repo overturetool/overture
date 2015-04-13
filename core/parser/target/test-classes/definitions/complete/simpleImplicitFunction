@@ -1,0 +1,6 @@
+functions
+map_inter2 (m1,m2: map nat to nat) m: map nat to nat
+pre forall d in set dom m1 inter dom m2 & m1(d) = m2(d)
+post dom m = dom m1 inter dom m2 and
+forall d in set dom m & m(d) = m1(d)/*add ; here to get strange error location with msg "Expecting new function identifier."*/
+measure b

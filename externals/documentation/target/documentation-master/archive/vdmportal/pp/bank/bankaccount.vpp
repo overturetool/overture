@@ -1,0 +1,15 @@
+class BankAccount
+
+  types
+
+  public
+  digit = nat
+  inv d == d < 10
+
+  instance variables
+    holder : seq1 of char;
+    number : seq1 of digit;
+    branchcode : seq1 of digit;
+  inv len number = 8 and len branchcode = 6
+
+end BankAccount

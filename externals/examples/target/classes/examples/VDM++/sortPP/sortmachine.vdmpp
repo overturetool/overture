@@ -1,0 +1,52 @@
+
+\section{Sort Machine}
+
+\begin{vdm_al}
+
+class SortMachine
+
+instance variables
+  srt: Sorter := new MergeSort();
+
+\end{vdm_al}
+
+The instance variable ``srt'' is an object reference to the sorting
+algorithm currently in use. The initial sorting algorithm is MergeSort.
+
+Setting/changing which sorting algorithm to use. 
+\begin{vdm_al}
+
+operations
+
+  public SetSort: Sorter ==> ()
+  SetSort(s) ==
+    srt := s;
+\end{vdm_al}
+
+Sorting with the sorting algorithm currently in use. 
+
+\begin{vdm_al}
+  public GoSorting: seq of int ==> seq of int  
+  GoSorting(arr) ==
+    return srt.Sort(arr);
+\end{vdm_al}
+
+Set/change first the sorting algorithm and sort afterwards.
+
+\begin{vdm_al}
+  public SetAndSort: Sorter * seq of int ==> seq of int
+  SetAndSort(s, arr) ==
+  ( srt := s;
+    return srt.Sort(arr)
+  )
+
+traces
+
+  DiffSorting: let srt in set {new DoSort(),new ExplSort(),new ImplSort(),
+                               new MergeSort()}
+              in
+                 SetAndSort(srt,[3,1,66,11,5,3,99])
+
+end SortMachine
+
+\end{vdm_al}

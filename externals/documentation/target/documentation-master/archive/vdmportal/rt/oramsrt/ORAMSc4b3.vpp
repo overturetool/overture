@@ -1,0 +1,103 @@
+\begin{vdm_al}
+-----------------------------------------------
+-- Author:	Kim Christensen
+-- Created:	26/02-2009
+-- Updated: 17/03-2009
+-- Description: ORAMS class for ORAMS
+-----------------------------------------------
+system ORAMS
+--class ORAMS is subclass of GLOBAL
+
+
+instance variables
+	
+	cpu0 : CPU := new CPU(<FCFS>, 1E6);
+	cpu1 : CPU := new CPU(<FCFS>, 1E6);
+	cpu2 : CPU := new CPU(<FCFS>, 1E6);
+	cpu3 : CPU := new CPU(<FCFS>, 1E6);
+	cpu4 : CPU := new CPU(<FCFS>, 1E6);
+	
+	bus0 : BUS := new BUS(<FCFS>, 1E6, {cpu0, cpu1});
+	bus1 : BUS := new BUS(<FCFS>, 1E6, {cpu0, cpu2});
+	bus2 : BUS := new BUS(<FCFS>, 1E6, {cpu0, cpu3});
+	bus3 : BUS := new BUS(<FCFS>, 1E6, {cpu0, cpu1, cpu2, cpu3, cpu4});
+	
+	
+	--public ACTL : AccessController := new AccessController();
+	
+	-- Areas:
+	public static a1 : AreaController := new AreaController(mk_token(<a1>));
+	public static a2 : AreaController := new AreaController(mk_token(<a2>));
+	public static a3 : AreaController := new AreaController(mk_token(<a3>));
+	
+	public static ctl : AccessController := new AccessController();
+	
+	
+	-- Lifeboats:
+	public static l1 : Lifeboat := new Lifeboat(2,mk_token(<b1>));
+	public static l2 : Lifeboat := new Lifeboat(2,mk_token(<b2>));
+	public static l3 : Lifeboat := new Lifeboat(2,mk_token(<b3>));
+	public static l4 : Lifeboat := new Lifeboat(2,mk_token(<b4>));
+	
+	-- Persons:
+	public static p1 : Person := new Person(mk_token(<p1>));
+	public static p2 : Person := new Person(mk_token(<p2>));
+	public static p3 : Person := new Person(mk_token(<p3>));
+	public static p4 : Person := new Person(mk_token(<p4>));
+	public static p5 : Person := new Person(mk_token(<p5>));
+		
+	-- FireProtectionGear:
+	public static f1 : FireEquipment := new FireEquipment();
+	public static f2 : FireEquipment := new FireEquipment();
+	public static f3 : FireEquipment := new FireEquipment();
+	public static f4 : FireEquipment := new FireEquipment();
+	public static f5 : FireEquipment := new FireEquipment();
+	public static f6 : FireEquipment := new FireEquipment();
+	public static f7 : FireEquipment := new FireEquipment();
+	public static f8 : FireEquipment := new FireEquipment();
+	public static f9 : FireEquipment := new FireEquipment();
+	public static f10 : FireEquipment := new FireEquipment();
+	-- Mappings:
+	public static persons : inmap Pid to Person := {p1.getId() |-> p1, 
+													p2.getId() |-> p2, 
+													p3.getId() |-> p3, 
+													p4.getId() |-> p4, 
+													p5.getId() |-> p5};
+													
+	public static Lifeboats : inmap Bid to Lifeboat := {l1.getId() |-> l1, 
+														l2.getId() |-> l2,
+														l3.getId() |-> l3,
+														l4.getId() |-> l4};
+														
+	public static areas : inmap Aid to AreaController := {a1.getId() |-> a1,
+														  a2.getId() |-> a2,
+														  a3.getId() |-> a3};
+	
+	
+types
+	public Bid = token;
+	public Aid = token;
+	public Pid = token;
+					
+
+operations
+	public ORAMS : () ==> ORAMS
+		ORAMS() ==
+		 (
+		 	cpu0.deploy(ctl);
+		 	cpu1.deploy(a1);
+		 	cpu2.deploy(a2);
+		 	cpu3.deploy(a3);
+		 	cpu4.deploy(l1);
+		 	cpu4.deploy(l2);
+		 	cpu4.deploy(l3);
+		 	cpu4.deploy(l4);
+		 );
+	
+
+functions
+
+
+values
+end ORAMS
+\end{vdm_al}

@@ -1,0 +1,33 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:54 CET 2010
+--
+
+class SimpleBinaryOperator is subclass of SimpleNode
+values
+    public AND = new SimpleBinaryOperator("AND");
+    public DIV = new SimpleBinaryOperator("DIV");
+    public DIVIDE = new SimpleBinaryOperator("DIVIDE");
+    public EQUALS = new SimpleBinaryOperator("EQUALS");
+    public EQUIVALENT = new SimpleBinaryOperator("EQUIVALENT");
+    public GE = new SimpleBinaryOperator("GE");
+    public GT = new SimpleBinaryOperator("GT");
+    public IMPLIES = new SimpleBinaryOperator("IMPLIES");
+    public LE = new SimpleBinaryOperator("LE");
+    public LT = new SimpleBinaryOperator("LT");
+    public MINUS = new SimpleBinaryOperator("MINUS");
+    public MOD = new SimpleBinaryOperator("MOD");
+    public NE = new SimpleBinaryOperator("NE");
+    public OR = new SimpleBinaryOperator("OR");
+    public PLUS = new SimpleBinaryOperator("PLUS");
+    public REM = new SimpleBinaryOperator("REM");
+    public TIMES = new SimpleBinaryOperator("TIMES");
+
+instance variables
+    public name:[seq of char] := nil;
+
+operations
+    public SimpleBinaryOperator: seq of char ==> SimpleBinaryOperator
+    SimpleBinaryOperator(n) == name := n;
+
+end SimpleBinaryOperator

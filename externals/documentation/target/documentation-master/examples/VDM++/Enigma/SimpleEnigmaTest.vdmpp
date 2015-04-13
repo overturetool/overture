@@ -1,0 +1,21 @@
+class SimpleEnigmaTest is subclass of TestCase
+
+operations
+  public SimpleEnigmaTest: seq of char ==> SimpleEnigmaTest
+  SimpleEnigmaTest(nm) == name := nm;
+
+  protected SetUp: () ==> ()
+  SetUp () == skip;
+
+  protected RunTest: () ==> ()
+  RunTest () == 
+    (dcl se1 : SimpleEnigma := new SimpleEnigma(),
+         se2 : SimpleEnigma := new SimpleEnigma();
+     for ch in "ABCDDCBAABCDDCBAAABBCCDD" do
+       AssertTrue(
+         se1.Keystroke(se2.Keystroke(ch)) = ch));
+
+  protected TearDown: () ==> ()
+  TearDown () == skip
+
+end SimpleEnigmaTest

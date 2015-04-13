@@ -1,0 +1,7 @@
+#set($Q = '"')
+#set( $value = "null")
+#if (!$node.getIsNull())
+	#set( $value = "${Q}$JavaFormat.escapeStr($node.getValue())${Q}")
+#end
+##
+$value

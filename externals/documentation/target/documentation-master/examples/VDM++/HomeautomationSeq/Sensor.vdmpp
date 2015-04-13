@@ -1,0 +1,46 @@
+--The Sensor Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		20/4 - 2008
+-- Updated:
+-- Description: 	Sensor superclass for HomeAutomation project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Sensor
+
+--
+-- instance variables
+--
+instance variables
+
+protected ID	: nat;
+protected Type	: NetworkTypes`nodeType;
+protected Value	: nat;
+protected Env	: Environment;
+
+--
+-- Operations definition section
+--
+operations
+
+public GetID: () ==> nat
+	GetID() ==
+		return ID;
+
+public GetType: () ==> NetworkTypes`nodeType
+	GetType() ==
+		return Type;
+
+public ReadValue: () ==> nat
+	ReadValue() ==
+		return Value;
+
+public Step: () ==> ()
+	Step() ==
+		is subclass responsibility
+
+end Sensor

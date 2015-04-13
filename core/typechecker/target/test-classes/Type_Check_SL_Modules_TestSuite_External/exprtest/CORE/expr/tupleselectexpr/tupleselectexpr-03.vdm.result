@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="26" line="23" message="Field '#1' applied to non-tuple type" messageType="error" number="3094" resource="tupleselectexpr-03.vdm"/>
+<result/>
+</testResult>

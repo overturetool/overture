@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesRtTypeCheckTest">
+<message column="10" line="55" message="Definition 'i' not used" messageType="warning" number="5000" resource="sysinherit-01.vpp"/>
+<message column="7" line="30" message="Cannot inherit from CPU" messageType="error" number="3298" resource="sysinherit-01.vpp"/>
+<message column="7" line="39" message="Cannot inherit from BUS" messageType="error" number="3299" resource="sysinherit-01.vpp"/>
+<message column="7" line="50" message="Cannot inherit from system class Simple" messageType="error" number="3278" resource="sysinherit-01.vpp"/>
+<result/>
+</testResult>

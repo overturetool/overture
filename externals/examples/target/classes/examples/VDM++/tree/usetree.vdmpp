@@ -1,0 +1,19 @@
+class UseTree
+
+instance variables
+
+  t1 : BinarySearchTree := new BinarySearchTree();
+  t2 : Tree := new BinarySearchTree()
+
+traces
+
+  insertion_BST : 
+    (let n in set {1,...,5} in
+       t1.Insert(n)
+    ){2};  (t1.breadth_first_search() | 
+            t1.depth_first_search() |
+            t1.inorder () |
+            t1.isEmpty()
+           )
+
+end UseTree

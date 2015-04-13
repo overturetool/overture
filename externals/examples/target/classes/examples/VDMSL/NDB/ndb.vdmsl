@@ -1,0 +1,116 @@
+types
+
+	Eid = token;
+	Value = token; 
+	Esetnm = token;
+	Rnm = token;
+	
+	Maptp = <ONETOONE>|<ONETOMANY>|<MANYTOONE>|<MANYTOMANY>;
+
+	Tuple :: fv : Eid
+		 tv : Eid;
+
+	Rinf :: tp : Maptp
+		 r : set of Tuple;
+		 
+	Rkey :: nm : [Rnm]
+		fs : Esetnm
+		ts : Esetnm
+
+functions
+
+checkinv : map Esetnm to set of Eid * map Eid to [Value] * map Rkey to
+Rinf -> bool
+checkinv (esm,em,rm) ==
+dom em = dunion rng esm and
+              forall rk in set dom rm &
+                 let mk_Rkey(-,fs,ts)=rk in
+                 let mk_Rinf(tp,r) = rm(rk) in
+                        {fs,ts} subset dom esm and
+                        (tp = <ONETOMANY> => forall t1,t2 in
+                        set r & t1.tv = t2.tv  => t1.fv = t2.fv) and
+                        (tp = <MANYTOONE> => forall t1,t2 in
+                        set r & t1.fv = t2.fv =>t1.tv = t2.tv) and
+                        (tp = <ONETOONE> => forall t1,t2 in
+                        set r & t1.fv = t2.fv <=> t1.tv = t2.tv) and
+                        forall mk_Tuple(fv,tv) in set r & fv
+                        in set esm(fs) and tv in set esm(ts)
+
+
+
+state Ndb of
+
+	 esm : map Esetnm to set of Eid
+	 em  : map Eid to [Value]
+	 rm  : map Rkey to Rinf
+
+	 inv mk_Ndb(esm,em,rm) == checkinv (esm,em,rm)
+
+init  ndb == ndb = mk_Ndb({|->},{|->},{|->})
+end
+
+	operations
+
+	
+	ADDES(es:Esetnm)
+	ext wr esm : map Esetnm to set of Eid
+	pre es not in set dom esm
+	post esm = esm~ munion {es |-> {}};
+
+	DELES(es:Esetnm)
+	ext wr esm : map Esetnm to set of Eid
+	    rd rm  : map Rkey to Rinf
+	pre es in set dom esm and esm(es) = {} and
+	    es not in set {rk.fs | rk in set dom rm } union {rk.ts |
+	    rk in set dom rm}
+	post esm = {es} <-: esm~;
+
+
+	ADDENT(memb : set of Esetnm, val : [Value]) eid :Eid
+	ext wr esm : map Esetnm to set of Eid
+	    wr em  : map Eid to [Value]
+	pre memb subset dom esm
+	post eid not in set dom em~ and
+	     em = em~ munion {eid |-> val} and
+	     esm = esm~ ++ {es |-> esm~(es) union {eid} | es in set
+	     memb };
+
+	DELENT(eid:Eid)
+	ext wr esm : map Esetnm to set of Eid
+	    wr em  : map Eid to [Value]
+	    rd rm  : map Rkey to Rinf
+	pre eid in set dom em and
+	    forall t in set dunion{ri.r|ri in set rng rm}& t.fv <>
+	    eid and t.tv <> eid
+	post esm = {es |-> esm~(es) \ {eid} | es in set dom esm~} and
+	     em = {eid} <-: em~;
+
+	ADDREL( rk:Rkey, tp:Maptp)
+	ext rd esm : map Esetnm to set of Eid
+	    wr rm  : map Rkey to Rinf
+	pre {rk.fs,rk.ts} subset dom esm and
+	    rk not in set dom rm
+	post rm = rm~ munion {rk |-> mk_Rinf(tp,{})};
+
+	DELREL (rk:Rkey)
+	ext wr rm : map Rkey to Rinf
+	pre rk in set dom rm and (rm(rk)).r ={}
+	post rm ={rk} <-:rm~;
+
+	ADDTUP (fval,tval : Eid, rk:Rkey)
+	ext wr rm  : map Rkey to Rinf
+	    rd esm : map Esetnm to set of Eid 
+        rd em  : map Eid to [Value]
+	pre rk in set dom rm and 
+	    let ri = mu(rm(rk),r |-> (rm(rk)).r union
+	    {mk_Tuple(fval,tval)}) in
+		checkinv (esm,em,rm ++ {rk |->ri})
+	post let ri =mu(rm~(rk),r |-> (rm~(rk)).r union
+	{mk_Tuple(fval,tval)}) in rm =rm~ ++ {rk |->ri};
+
+	DELTUP(fval,tval:Eid, rk:Rkey)
+	ext wr rm : map Rkey to Rinf
+	pre rk in set dom rm
+	post let ri = mu(rm~(rk),r |-> (rm~(rk)).r \
+	     {mk_Tuple(fval,tval)}) in
+	     rm =rm~ ++ {rk |->ri}

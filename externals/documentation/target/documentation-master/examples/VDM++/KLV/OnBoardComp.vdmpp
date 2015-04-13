@@ -1,0 +1,43 @@
+\section{The OnBoardComp Class}
+
+The OnBoardComp class models the onboard computer of a train. The
+onboard computer is responsible for checking if the speed of the train
+is an allowed speed, an alarm speed, or an emergency break speed. The
+values AlarmSpeedAdd and EmergencySpeedAdd represent the addition to
+the maximal speed that is allowed before the alarm or emergency break
+respectively is invoked.
+
+\begin{vdm_al}
+class OnBoardComp
+
+types
+
+  public 
+  AlarmLevel = <SpeedOk> | <AlarmSpeed> | <EmergencyBreakSpeed>;
+
+values 
+
+  AlarmSpeedAdd = 5;
+  EmergencySpeedAdd = 10;
+\end{vdm_al}
+
+The checkSpeed functions is the only function of the OnBoard
+Computer. It checks whether a speed is less than the alarm speed
+(maximal speed plus AlarmSpeedAdd) and the emergency break speed
+(maximal speed plus EmergencySpeedAdd).
+
+\begin{vdm_al}
+functions
+
+  public
+  checkSpeed : real * real -> AlarmLevel
+  checkSpeed (speed, maxspeed) ==
+    if speed < maxspeed + AlarmSpeedAdd
+    then <SpeedOk>
+    elseif speed < maxspeed + EmergencySpeedAdd
+    then <AlarmSpeed>
+    else <EmergencyBreakSpeed>
+
+end OnBoardComp
+\end{vdm_al}
+

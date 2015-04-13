@@ -1,0 +1,46 @@
+\section{IntegratedCommand Class}
+
+\begin{vdm_al}
+class IntegratedCommand is subclass of SixDOfCommand
+
+instance variables
+  aah : AAH;
+
+operations
+  public
+  SetAAHLink : AAH ==> ()
+  SetAAHLink(a) == 
+    aah := a;
+
+  public
+  IntegrateCmds : () ==> ()
+  IntegrateCmds() ==
+    if aah.AllAxesOff()
+    then (if rotcmd.RotCmdsPresent()
+          then trancmd.SuppressAllAxes() 
+          else trancmd.Prioritize())
+    else (if rotcmd.RotCmdsPresent()
+          then (trancmd.SuppressAllAxes();
+                CombineRotCmds())
+          else (trancmd.Prioritize();
+                rotcmd.SetAxesdir(aah.GetRotcmd())));
+
+  CombineRotCmds : () ==> ()
+  CombineRotCmds() ==
+    let aah_axes = 
+          aah.GetIgnore_hcm() union 
+           {a | a in set Command`allaxes & rotcmd.GetAxesdir()(a) = <Zero>} 
+    in rotcmd.SetAxesdir
+         ({a |-> aah.GetRotcmd()(a) | a in set aah_axes} munion 
+          {a |-> rotcmd.GetAxesdir()(a) | a in set Command`allaxes\aah_axes});
+
+
+end IntegratedCommand
+\end{vdm_al}
+
+The test coverage table for the IntegratedCommand class looks like:
+
+\begin{rtinfo}{vdm.tc}[IntegratedCommand]
+\end{rtinfo}
+
+

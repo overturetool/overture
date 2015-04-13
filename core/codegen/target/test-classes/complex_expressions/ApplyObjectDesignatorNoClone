@@ -1,0 +1,26 @@
+class A
+
+instance variables
+
+  public n : nat := 60;
+
+operations
+
+  public op : A ==> A
+  op(pa) ==
+    pa.op1(n).op1(4);
+    
+  public op1 : nat ==> A
+	op1 (pa) == return self;
+
+end A
+
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () == return new A().op(new A()).n;
+
+end Entry

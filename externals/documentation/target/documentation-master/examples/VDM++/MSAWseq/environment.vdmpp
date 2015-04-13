@@ -1,0 +1,86 @@
+class Environment is subclass of GLOBAL
+
+types 
+
+inline  = FOId * int * int * Altitude * Time;
+  
+protected FOOut = FOId * Coordinates * Altitude * FOWarning * 
+        MinimumSafetyAltitude * Time;
+protected RadarOut = Coordinates * nat1 * RadarWarning * nat *  Time;
+  
+  
+protected outline = FOOut | RadarOut; 
+
+instance variables 
+
+  io : IO := new IO();
+  inlines  : seq of inline  := [];
+  outlines : seq of outline := [];
+
+  airspace : [AirSpace] := nil;
+  busy : bool := true;
+  
+operations
+  
+public Environment : String ==> Environment
+Environment(fname) == 
+  def mk_(-,input) = io.freadval[seq of inline](fname) 
+  in
+    inlines := input;
+    
+      
+public setAirSpace : AirSpace ==> ()
+setAirSpace(as) ==
+  airspace := as;
+      
+public handleFOWarningEvent : FOId * Coordinates * Altitude * FOWarning * 
+                              MinimumSafetyAltitude * Time ==> ()
+handleFOWarningEvent(id,coord,alt,warn,msa,time) ==
+  outlines := outlines ^ [mk_(id,coord,alt,warn,msa,time)];
+ 
+public handleRadarWarningEvent : Coordinates * nat1 * 
+                                 RadarWarning * nat *  Time ==> ()
+handleRadarWarningEvent(coord,range,radWarn,num,pt) ==
+  outlines := outlines ^ [mk_(coord,range,radWarn,num,pt)];
+ 
+
+public showResult : () ==> ()
+showResult() ==
+  def - = io.writeval[seq of outline](outlines) in skip;
+ 
+
+
+public Run : () ==> ()
+Run() ==
+ (while not isFinished()
+  do 
+   (updateFOs();
+    MSAW`atc.Step();
+    World`timerRef.StepTime();
+   );  
+  showResult()
+ );
+  
+private updateFOs : () ==> ()
+updateFOs() ==
+ (if len inlines > 0 
+  then (dcl curtime : Time := World`timerRef.GetTime(),
+        done : bool := false;
+        while not done do
+          def mk_(id,x,y, altitude,pt) = hd inlines
+          in 
+            if pt <= curtime 
+            then (airspace.updateFO(id,mk_Coordinates(x,y),altitude);
+                  inlines := tl inlines; 
+                  done := len inlines = 0 )
+            else done := true
+       )
+  else busy := false
+ );
+     
+
+public isFinished : () ==> bool 
+isFinished() == 
+  return inlines = [];
+
+end Environment

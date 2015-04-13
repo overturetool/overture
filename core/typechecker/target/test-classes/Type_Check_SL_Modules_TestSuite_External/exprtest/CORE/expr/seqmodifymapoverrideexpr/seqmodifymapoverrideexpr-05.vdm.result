@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="19" line="28" message="Domain of right hand of '++' must be nat1" messageType="error" number="3143" resource="seqmodifymapoverrideexpr-05.vdm"/>
+<result/>
+</testResult>

@@ -1,0 +1,1 @@
+class Writerinstance variablesb : Buffer;index : nat := 0;operationspublic Writer: Buffer ==> WriterWriter(buf) == 	b := buf;public Write: () ==> natWrite() ==  (    index := index + 1;   return index; )thread ( while true do  ( let x = Write() in     ( b.Write(x);            )  ) )end Writer

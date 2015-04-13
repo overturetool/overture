@@ -1,0 +1,109 @@
+class Simple
+values
+	package = "simple";
+
+--
+-- The AST structures for the "Simple" language
+--
+
+types
+
+Specification ::
+	defs	: seq of Definition;
+	
+Definition = TypeDefinition | FunctionDefinition;
+
+TypeDefinition ::
+	name	: Identifier
+	type	: Type;
+	
+FunctionDefinition ::
+	name	: Identifier
+	params	: seq of Parameter
+	body	: Expression;
+	
+Parameter ::
+	name	: Identifier
+	type	: Type;
+	
+Type = BasicType | Identifier;
+
+BasicType = <REAL> | <INT> | <NAT> | <BOOL>;
+
+Expression =
+	LetExpression |
+	IfExpression |
+	CasesExpression |
+	ApplyExpression |
+	BinaryExpression |
+	UnaryExpression |
+	LiteralExpression |
+	VariableExpression;
+	
+Identifier ::
+	name	: seq of char;
+
+VariableExpression ::
+	name	: Identifier;
+	
+UnaryExpression ::
+	op	: UnaryOperator
+	exp	: Expression;
+	
+UnaryOperator = <NOT> | <PLUS> | <MINUS>;
+
+LiteralExpression =
+	RealLiteralExpression |
+	IntegerLiteralExpression |
+	BooleanLiteralExpression;
+	
+RealLiteralExpression ::
+	value	: real;
+	
+IntegerLiteralExpression ::
+	value	: int;
+	
+BooleanLiteralExpression ::
+	value	: bool;
+	
+BinaryExpression ::
+	lhs	: Expression
+	op	: BinaryOperator
+	rhs	: Expression;
+	
+BinaryOperator = <AND> | <EQUIVALENT> | <IMPLIES> | <OR> | <EQUALS> | <NE> |
+	<DIV> | <DIVIDE> | <GE> | <GT> | <LE> | <LT> | <MOD> | <PLUS> |
+	<REM> | <MINUS> | <TIMES>;
+
+LetExpression ::
+	defs	: seq of LocalDefinition
+	body	: Expression;
+	
+LocalDefinition ::
+	name	: Identifier
+	value	: Expression;
+	
+ApplyExpression ::
+	func	: Expression
+	args	: seq of Expression;
+
+IfExpression ::
+	test	: Expression
+	thn	: Expression
+	elif	: seq of ElseIfExpression
+	ese	: Expression;
+	
+ElseIfExpression ::
+	test	: Expression
+	thn	: Expression;
+	
+CasesExpression ::
+	test	: Expression
+	alts	: seq of CaseAlternative
+	deflt	: [Expression];
+	
+CaseAlternative ::
+	test	: Expression
+	exp	: Expression;
+
+end Simple

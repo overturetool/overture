@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="1" line="5" message="Definition 'a' not used" messageType="warning" number="5000" resource="oldname-02.vdm"/>
+<message column="1" line="12" message="Definition 'Test' not used" messageType="warning" number="5000" resource="oldname-02.vdm"/>
+<message column="11" line="14" message="Name 'OldNameTest`b~' is not in scope" messageType="error" number="3182" resource="oldname-02.vdm"/>
+<result/>
+</testResult>

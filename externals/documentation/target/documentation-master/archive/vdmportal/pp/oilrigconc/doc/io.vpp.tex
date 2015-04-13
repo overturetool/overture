@@ -1,0 +1,53 @@
+\kClass $IO$
+\par
+\kTypes
+\type{\kw{public}\hspace{0.5em}filedirective}{\const{start} | \const{append}}
+\kFunctions
+\kw{\kw{public}}\begin{fn}[e]{writeval}%
+\signature[@p]{@p \Pto \Bool }
+\parms*{\Lp val\Rp }
+\annlab[o]{IO`writeval}
+\isnotyetspec;
+\end{fn}
+\kw{\kw{public}}\begin{fn}[e]{fwriteval}%
+\signature[@p]{\seqof+{\Char } \X @p \X filedirective \Pto \Bool }
+\parms*{\Lp filename,val,fdir\Rp }
+\annlab[o]{IO`fwriteval}
+\isnotyetspec;
+\end{fn}
+\kw{\kw{public}}\begin{fn}[e]{freadval}%
+\signature[@p]{\seqof+{\Char } \Pto \Bool  \X \Opt{@p}}
+\parms*{\Lp f\Rp }
+\annlab[o]{IO`freadval}
+\isnotyetspec
+\begin{postcond}
+\begin{letexpr}
+\patdef{\reccons{\kw{mk-}}{b,t}}{RESULT}
+\end{letexpr} \\
+ \Not b \Implies t = \Nil 
+\end{postcond}
+\end{fn}
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{echo}%
+\signature{\seqof*{\Char } \Oto \Bool }
+\parms{text}
+\annlab[o]{IO`echo}
+\call{fecho}{\Dquote  \Dquote ,text,\Nil };
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{fecho}%
+\signature{\seqof*{\Char } \X \seqof*{\Char } \X \Opt{filedirective} \Oto \Bool }
+\parms{filename,text,fdir}
+\annlab[o]{IO`fecho}
+\isnotyetspec
+\begin{precond}
+filename = \Dquote  \Dquote  \Equiv fdir = \Nil 
+\end{precond};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{ferror}%
+\signature{() \Oto \seqof*{\Char }}
+\parms{}
+\annlab[o]{IO`ferror}
+\isnotyetspec
+\end{op}
+\kEnd $IO$
+

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="11" line="10" message="Undefined class type: B" messageType="error" number="3115" resource="isofclassexpr-03.vpp"/>
+<message column="23" line="10" message="Argument is not an object" messageType="error" number="3266" resource="isofclassexpr-03.vpp"/>
+<result/>
+</testResult>

@@ -1,0 +1,338 @@
+\begin{vdm}\kClass $AccessController$ \kISO $GLOBAL$\index{AccessController|ClassDef}
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}
+\assdef{eventQueue}{\seqof*{event\index{event|TypeOcc}}}[{\seq{}}]
+\end{insvar}
+\begin{insvar}
+\assdef{busy}{\Bool }[{\True }]
+\end{insvar}
+\par
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{AccessController}\index{AccessController|FuncDef}%
+\signature{() \Oto AccessController\index{AccessController|TypeOcc}}
+\parms{}
+\annlab[o]{AccessController`AccessController}
+\return{\mbox{}};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{addEvent}\index{addEvent|FuncDef}%
+\signature{event\index{event|TypeOcc} \Oto ()}
+\parms{evt}
+\annlab[o]{AccessController`addEvent}
+\ass{eventQueue}{eventQueue \Sconc \seq{evt}};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{isFinished}\index{isFinished|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{AccessController`isFinished}
+\Skip ;
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{step}\index{step|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{AccessController`step}
+\duration{\color{not-covered}10\color{covered}}{\begin{blockstmt}
+\If  \Len eventQueue > 0
+\Then \\
+\begin{while}{ \Len eventQueue > 0}
+\begin{blockstmt}
+\begin{defstmt}
+\eqdef{\reccons{\kw{mk-}}{type,id1,id2,intend,-}}{ \Hd eventQueue}
+\end{defstmt} \\
+\begin{blockstmt}
+\begin{Cases}{type}
+\alt{\const{removeBoat}}{\call{AttemptRemoveLifeboat}{id1}}
+\alt{\const{movePerson}}{\call{movePerson}{id1,id2,intend}}
+\end{Cases} ; \\
+\ass{eventQueue}{ \Tl eventQueue}
+\end{blockstmt}
+\end{blockstmt}
+\end{while}
+\Fi
+\end{blockstmt}};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{movePerson}\index{movePerson|FuncDef}%
+\signature{Pid\index{Pid|TypeOcc} \X Aid\index{Aid|TypeOcc} \X Intend\index{Intend|TypeOcc} \Oto ()}
+\parms{person,area,intend}
+\annlab[o]{AccessController`movePerson}
+\begin{blockstmt}
+\begin{letstmt}
+\patdef{success}{\fnapply{\fnapply{ORAMS`areas\index{areas|FuncOcc}}{area}.enterPerson}{person,intend}}
+\end{letstmt} \\
+World`env.\call{addOutline}{\reccons{\kw{mk\textunderscore}}{\kw{time}, \\
+\Dquote Person\hspace{0.5em}move\hspace{0.5em} \Dquote , \\
+person, \\
+area, \\
+intend, \\
+success, \\
+\Quote {\backslash}n \Quote }}
+\end{blockstmt}
+\begin{precond}
+\color{not-covered}person \In  \Dom ORAMS`persons\color{covered}
+\end{precond};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{AttemptRemoveLifeboat}\index{AttemptRemoveLifeboat|FuncDef}%
+\signature{Bid\index{Bid|TypeOcc} \Oto ()}
+\parms{boat}
+\annlab[o]{AccessController`AttemptRemoveLifeboat}
+\begin{blockstmt}
+\If \fnapply{isRemovable}{boat}
+\Then \\
+\begin{blockstmt}
+\call{removeLifeboat}{boat} ; \\
+World`env.\call{addOutline}{\reccons{\kw{mk\textunderscore}}{\kw{time}, \\
+\Dquote Lifeboat\hspace{0.5em}disable\hspace{0.5em} \Dquote , \\
+boat, \\
+\True , \\
+\Quote {\backslash}n \Quote }}
+\end{blockstmt}
+\Else \\
+World`env.\call{addOutline}{\reccons{\kw{mk\textunderscore}}{\kw{time}, \\
+\Dquote Lifeboat\hspace{0.5em}disable\hspace{0.5em} \Dquote , \\
+boat, \\
+\False , \\
+\Quote {\backslash}n \Quote }}
+\Fi
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{removeLifeboat}\index{removeLifeboat|FuncDef}%
+\signature{Bid\index{Bid|TypeOcc} \Oto ()}
+\parms{boat}
+\annlab[o]{AccessController`removeLifeboat}
+\begin{blockstmt}
+\fnapply{ORAMS`Lifeboats\index{Lifeboats|FuncOcc}}{boat}.\call{disable}{} ; \\
+\call{redistribute}{boat} ; \\
+\begin{setfor}{a}{\fnapply{\fnapply{ORAMS`Lifeboats\index{Lifeboats|FuncOcc}}{boat}.getAreas}{}}
+\fnapply{ORAMS`areas\index{areas|FuncOcc}}{a}.\call{removeBoat}{boat}
+\end{setfor}
+\end{blockstmt}
+\begin{precond}
+\color{not-covered}\fnapply{isRemovable}{boat} \And boat \In  \Dom ORAMS`Lifeboats\color{covered}
+\end{precond};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{isRemovable}\index{isRemovable|FuncDef}%
+\signature{Bid\index{Bid|TypeOcc} \Oto \Bool }
+\parms{boat}
+\annlab[o]{AccessController`isRemovable}
+\begin{blockstmt}
+\begin{letstmt}
+\patdef{crew}{\fnapply{\fnapply{ORAMS`Lifeboats\index{Lifeboats|FuncOcc}}{boat}.getCrew}{}}
+\patdef{areas}{\fnapply{\fnapply{ORAMS`Lifeboats\index{Lifeboats|FuncOcc}}{boat}.getAreas}{}}
+\end{letstmt} \\
+\begin{blockstmt}
+\If \exists{p \In crew}{\fnapply{\fnapply{ORAMS`persons\index{persons|FuncOcc}}{p}.getArea}{} \Notin areas}
+\Then \\
+\color{not-covered}\return{\False }\color{covered}
+\Else \\
+\begin{blockstmt}
+\begin{setfor}{a}{areas}
+\If  \Not \fnapply{\fnapply{ORAMS`areas\index{areas|FuncOcc}}{a}.canRemoveBoat}{boat}
+\Then \\
+\return{\False }
+\Fi
+\end{setfor}
+\end{blockstmt}
+\Fi ; \\
+\return{\True }
+\end{blockstmt}
+\end{blockstmt}
+\begin{precond}
+\color{not-covered}boat \In  \Dom ORAMS`Lifeboats\color{covered}
+\end{precond};
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{redistribute}\index{redistribute|FuncDef}%
+\signature{Bid\index{Bid|TypeOcc} \Oto ()}
+\parms{boat}
+\annlab[o]{AccessController`redistribute}
+\begin{blockstmt}
+\begin{letstmt}
+\patdef{crew}{\fnapply{\pex{\fnapply{ORAMS`Lifeboats\index{Lifeboats|FuncOcc}}{boat}}.getCrew}{}}
+\end{letstmt} \\
+\begin{setfor}{p}{crew}
+\fnapply{ORAMS`areas\index{areas|FuncOcc}}{\fnapply{\fnapply{ORAMS`persons\index{persons|FuncOcc}}{p}.getArea}{}}.\call{changeBoat}{p}
+\end{setfor}
+\end{blockstmt}
+\begin{precond}
+\color{not-covered}boat \In  \Dom ORAMS`Lifeboats\color{covered}
+\end{precond}
+\end{op}
+\kSync
+\mutex{step};
+\mutex{step,addEvent};
+\index{isFinished|MethodOcc}\per{isFinished}{ \Len eventQueue = 0}
+\kThreadDef
+\index{step|MethodOcc}\periodic{\color{not-covered}250\color{covered},\color{not-covered}1\color{covered},\color{not-covered}3\color{covered},\color{not-covered}0\color{covered}}{step}
+\kEnd $AccessController$
+
+\end{vdm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{tabular}{p{25mm}l}
+{\bf Test Suite :} & vdm.tc \\ 
+{\bf Class :} & AccessController \\ 
+\end{tabular}
+
+\begin{longtable}{|l|r|r|}\hline
+{\bf Name} & {\bf \#Calls} & {\bf Coverage} \\ \hline\hline
+\endhead
+AccessController`step & 81 & 0\% \\ \hline
+AccessController`addEvent & 24 & $\surd$ \\ \hline
+AccessController`isFinished & 2 & $\surd$ \\ \hline
+AccessController`movePerson & 23 & 73\% \\ \hline
+AccessController`isRemovable & 5 & 82\% \\ \hline
+AccessController`redistribute & 2 & 76\% \\ \hline
+AccessController`removeLifeboat & 2 & 69\% \\ \hline
+AccessController`AccessController & 2 & $\surd$ \\ \hline
+AccessController`AttemptRemoveLifeboat & 3 & $\surd$ \\ \hline
+\hline
+{\bf Total Coverage} & & {\bf 81\%} \\ \hline
+\end{longtable}
+

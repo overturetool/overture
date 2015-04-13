@@ -1,0 +1,114 @@
+\section{TrafficLight Class}
+
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			TrafficLight
+-- Description: 	TrafficLight the VDM project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TrafficLight
+
+--
+-- instance variables
+--
+instance variables
+
+private pos: Position;
+private greenLightTime : nat1;
+private greenDir: Types`Direction;
+private id : nat;
+--
+-- Types definition section
+--
+types   
+
+--
+-- Operations definition section
+--
+operations
+
+public TrafficLight: nat * Position * nat1 ==> TrafficLight
+TrafficLight(identifier ,p, t) ==
+(
+	pos := p ;
+	greenLightTime := t;
+	id := identifier;
+	
+	greenDir := <NORTH>
+);
+
+public AddTrafficData: TrafficData ==> ()
+AddTrafficData(data) ==
+is not yet specified;
+
+public GetTrafficData: () ==> set of TrafficData 
+GetTrafficData() ==
+is not yet specified;
+
+public GetPosition: () ==> Position 
+GetPosition() ==
+ return pos;
+	
+public GreenLightPath: () ==> Types`Direction 
+GreenLightPath() ==
+ return greenDir;
+
+public GetID: () ==> nat
+GetID() ==
+ return id;
+	
+private Step: () ==> ()
+Step() ==
+(
+    if (time mod greenLightTime) = 0
+    then 
+    (
+	 greenDir := CrossDirection(greenDir);  
+    )
+);
+	
+--
+-- Functions definition section
+--
+functions
+
+public static CrossDirection : Types`Direction -> Types`Direction
+CrossDirection(d) ==
+cases d:
+<NORTH> -> <EAST>,  
+<SOUTH> -> <WEST>,  
+<EAST>  -> <NORTH>, 
+<WEST>  -> <SOUTH>
+end;
+
+--
+-- Values definition section
+--
+values
+
+--
+-- Thread definition section
+--
+thread
+ periodic (1000,10,900,0) (Step)
+    
+
+--
+-- sync definition section
+--
+sync
+mutex(GreenLightPath);
+mutex(Step,GreenLightPath);
+
+end TrafficLight
+
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[TrafficLight]
+\end{rtinfo}

@@ -1,0 +1,1 @@
+Utils.equals(new Token(SetUtil.set(1L)), new Token(SetUtil.set(2L)))

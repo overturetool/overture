@@ -1,0 +1,9 @@
+function x() ==
+	if 10=8 then
+		32
+	else if 41 = 42 then
+		33
+	else if 2 = 2 then
+		42
+	else
+		31

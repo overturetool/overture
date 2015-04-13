@@ -1,0 +1,5 @@
+[mk_Types`VechicleRun(1,0),   
+mk_Types`VehicleLowGrip (1,true, 0),
+mk_Types`VehicleLowGrip (1,false, 0),
+mk_Types`VechicleRun(9,0)
+]

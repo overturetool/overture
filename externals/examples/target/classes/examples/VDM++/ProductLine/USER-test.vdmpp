@@ -1,0 +1,18 @@
+class UserTest
+
+instance variables
+  realworld : RealWorld1;
+  sw : Software;
+
+operations
+  public
+  test: () ==> bool
+  test() ==
+    (realworld := new RealWorld1();
+     realworld.Setup();
+     sw := new Software();
+     sw.Setup(realworld);
+     sw.Boil();
+     return true);
+
+end UserTest

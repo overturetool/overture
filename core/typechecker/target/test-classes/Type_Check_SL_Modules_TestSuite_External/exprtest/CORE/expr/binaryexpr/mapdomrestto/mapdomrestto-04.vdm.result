@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="19" line="11" message="Restriction of map should be set of bool" messageType="error" number="3084" resource="mapdomrestto-04.vdm"/>
+<result/>
+</testResult>

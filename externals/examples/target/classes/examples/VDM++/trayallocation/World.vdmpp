@@ -1,0 +1,107 @@
+-- ===============================================================================================================
+-- World in tray allocation for a sortation system
+-- By José Antonio Esparza and Kim Bjerge - spring 2010
+-- ===============================================================================================================
+
+class World
+	types
+
+	values
+
+	instance variables
+		env : [SorterEnviroment] := nil;
+		loader : [ItemLoader] := nil;
+		
+		-- Test files that contains test scenarios 
+		---     of items to be feeded on inductions
+	    testfile1 : seq1 of char := "scenario1.txt";
+	    testfile2 : seq1 of char := "scenario2.txt";
+	    testfile3 : seq1 of char := "scenario3.txt";
+	    testfile4 : seq1 of char := "scenario4.txt";
+	    testfile5 : seq1 of char := "scenario5.txt";
+	    
+	    testfiles : seq of seq1 of char := [testfile1,
+	    									testfile2,
+	    									testfile3,
+	    									testfile4,
+	    									testfile5];
+	operations
+	
+   -- World constructor
+--	public World: () ==> World
+--	World() ==
+--	(
+--	);
+
+    -- Prints configuration and result of tray allocation model simulation
+    public PrintSimulationResult: () ==> ()
+    PrintSimulationResult() ==
+    (
+		-- Prints configuration of simulation
+		IO`print("---------------------------------------------\n");
+		IO`print("Simulation completed for sorter configuration\n");
+		IO`print("---------------------------------------------\n");
+        IO`print("Specified throughput [items/hour]: " ^ String`NatToStr(SorterEnviroment`Throughput) ^ "\n");
+        IO`print("Sorter speed             [mm/sec]: " ^ String`NatToStr(SorterEnviroment`Speed) ^ "\n");
+        IO`print("Item max size                [mm]: " ^ String`NatToStr(Item`ItemMaxSize) ^ "\n");
+        IO`print("Item min size                [mm]: " ^ String`NatToStr(Item`ItemMinSize) ^ "\n");
+        IO`print("Tray size                    [mm]: " ^ String`NatToStr(Tray`TraySize) ^ "\n");
+        IO`print("Number of trays                  : " ^ String`NatToStr(TrayAllocator`NumOfTrays) ^ "\n");
+        IO`print("Number of inductions             : " ^ String`NatToStr(TrayAllocator`NumOfInductions) ^ "\n");
+        IO`print("Induction rate                   : " ^ String`NatToStr(InductionController`InductionRate) ^ "\n");
+        IO`print("Induction separation      [trays]: " ^ String`NatToStr(TrayAllocator`InductionSeperation) ^ "\n");
+		IO`print("----------------------------------------------\n");
+	
+		-- Prints result of simulation
+		let r : TrayAllocator`ThroughputResult = env.sc.allocator.GetThroughput()
+		in
+		(
+			IO`print("Number of trays with items       : " ^ String`NatToStr(r.traysWithItemOnSorter) ^ "\n");
+			IO`print("Two tray items on sorter         : " ^ String`NatToStr(r.twoTrayItemsOnSorter) ^ "\n");
+			IO`print("Number of tray steps             : " ^ String`NatToStr(r.traySteps) ^ "\n");
+			IO`print("Number of inducted items         : " ^ String`NatToStr(r.inductedItems) ^ "\n");
+			IO`print("Calculated throughput[items/hour]: " ^ String`NatToStr(floor(r.calcThroughput)) ^ "\n");
+		);    
+
+		IO`print("----------------------------------------------\n");
+		if env.sc.allocator.IsSorterFull() = true
+		then
+			IO`print("      ****    Sorter is full   *****\n")
+	    else
+			IO`print("      ****  Sorter is not full  ****\n");
+		IO`print("----------------------------------------------\n");
+    );
+    
+	public Run: () ==> ()
+	Run() ==
+	(
+		-- Performs model testing for each scenarios specified in test file
+		for all test in set {1,...,len testfiles}
+		do	
+		(	
+			env := new SorterEnviroment();
+			loader := new ItemLoader(testfiles(test));
+			env.AssignItemLoader(loader);
+			
+			IO`print("---------------------------------------------\n");
+			IO`print("Tray allocation model test #" ^ String`NatToStr(test)^ ": " ^ testfiles(test) ^ "\n");
+			IO`print("---------------------------------------------\n");
+			
+			-- Performs simulation based on time steps	
+			for all t in set {0,...,loader.GetNumTimeSteps()} 
+			do 
+				env.TimeStep(t);
+				
+			PrintSimulationResult();
+		);
+	);
+
+	functions
+
+	sync
+
+	--thread
+
+	traces
+
+end World

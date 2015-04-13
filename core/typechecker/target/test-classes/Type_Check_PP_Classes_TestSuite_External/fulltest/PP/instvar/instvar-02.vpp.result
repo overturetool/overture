@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="1" line="9" message="Class invariant is not a boolean expression" messageType="error" number="3013" resource="instvar-02.vpp"/>
+<result/>
+</testResult>

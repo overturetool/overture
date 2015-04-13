@@ -1,0 +1,154 @@
+\documentclass[a4paper,dvips]{article}
+\usepackage[dvips]{color}
+\usepackage{vdmsl-2e}
+\usepackage{longtable}
+\usepackage{alltt}
+\usepackage{makeidx}
+\usepackage{ifad}
+
+\definecolor{covered}{rgb}{0,0,0}      %black
+%\definecolor{not_covered}{gray}{0.5}   %gray for previewing
+%\definecolor{not_covered}{gray}{0.6}   %gray for printing
+\definecolor{not_covered}{rgb}{1,0,0}  %red
+
+\title{VDM-SL Sorting Algorithms}
+\author{IFAD}
+\date{February 17, 1994}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This document is part of the examples released with the {\it IFAD
+VDM-SL Toolbox} and it is located in the {\tt vdmhome/examples}
+directory. The document illustrates a number of specifications of
+sorting algorithms and it is used in the {\it Getting Started} 
+section in the {\it Users Manual} to introduce the basic 
+functionalities of the Toolbox.
+
+\section{Specifications} 
+The first example shows the standard merge sort algorithm well known 
+from standard text books.  
+
+\begin{vdm_al}
+
+functions
+
+  MergeSort: seq of real -> seq of real
+  MergeSort(l) ==
+    cases l:
+      []      -> l,
+      [e]     -> l,
+      others  -> let l1^l2 in set {l} be st abs (len l1 - len l2) < 2
+                 in
+                   let l_l = MergeSort(l1),
+                       l_r = MergeSort(l2) in
+                    Merge(l_l, l_r)
+    end;
+
+
+  Merge: seq of int * seq of int -> seq of int
+  Merge(l1,l2) ==
+    cases mk_(l1,l2):
+      mk_([],l),mk_(l,[]) -> l,
+      others              -> if hd l1 <= hd l2 then 
+                               [hd l1] ^ Merge(tl l1, l2)
+                             else
+                               [hd l2] ^ Merge(l1, tl l2)
+    end
+
+\end{vdm_al}
+
+
+The next example shows an implicit specification of a sorting
+algoritm. The {\tt ImplSort} function cannot be interpreted as it is
+described here, but the other VDM-SL tools like the latex generator,
+the type checker and the syntax checker can process the full VDM-SL
+language and therefore also this specification.
+
+\begin{vdm_al}
+
+types
+
+  PosReal = real
+  inv r == r >= 0
+
+  
+functions
+
+  ImplSort(l: seq of PosReal) r: seq of PosReal
+  post IsPermutation(r,l) and IsOrdered(r);
+
+  IsPermutation: seq of real * seq of real -> bool
+  IsPermutation(l1,l2) ==
+    forall e in set (elems l1 union elems l2) &
+      card {i | i in set inds l1 & l1(i) = e} =
+      card {i | i in set inds l2 & l2(i) = e};
+
+  IsOrdered: seq of real -> bool
+  IsOrdered(l) ==
+    forall i,j in set inds l & i > j => l(i) >= l(j);
+
+\end{vdm_al}
+
+
+In the following example we have changed the implicit function {\tt
+ImplSort} to an explicit version {\tt ExplSort}. This is done by
+changing the IsPermutation test to a generator function.
+
+\begin{vdm_al}
+
+  ExplSort : seq of PosReal -> seq of PosReal
+  ExplSort (l) ==
+    let r in set Permutations(l) be st IsOrdered(r) in r;
+
+  Permutations: seq of real -> set of seq of real
+  Permutations(l) ==
+    cases l:
+      [],[-] -> {l},
+      others -> dunion {{[l(i)]^j | 
+                         j in set Permutations(RestSeq(l,i))} | 
+                         i in set inds l}
+    end;
+
+  RestSeq: seq of real * nat -> seq of real
+  RestSeq(l,i) ==
+    [l(j) | j in set (inds l \ {i})];
+
+\end{vdm_al}
+
+
+The last example is also a standard algorithm based on the principle 
+of sorting by insertion.
+
+\begin{vdm_al}
+
+  DoSort: seq of real -> seq of real
+  DoSort(l) ==
+    if l = [] then
+      []
+    else
+      let sorted = DoSort (tl l) in
+        InsertSorted (hd l, sorted);
+
+  InsertSorted: PosReal * seq of PosReal -> seq of PosReal
+  InsertSorted(i,l) ==
+    cases true :
+      (l = [])    -> [i],
+      (i <= hd l) -> [i] ^ l,
+      others      -> [hd l] ^ InsertSorted(i,tl l)
+    end
+
+
+\end{vdm_al}
+
+\vspace{0.5cm}
+
+\begin{rtinfo}
+[InsertSorted]{sort.vdm.ts}[DefaultMod]
+DoSort
+InsertSorted
+\end{rtinfo}
+
+\end{document}

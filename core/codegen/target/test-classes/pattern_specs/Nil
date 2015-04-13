@@ -1,0 +1,29 @@
+class A
+
+operations
+
+public nilPatternOp : [A] ==> [A]
+nilPatternOp (nil) ==
+let nil = nil
+in
+	return nil;
+
+functions
+
+public nilPatternFun : [A] -> [A]
+nilPatternFun (nil) ==
+let nil = nil
+in
+	nil;
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return [new A().nilPatternOp(nil), A`nilPatternFun(nil)];
+
+end Entry

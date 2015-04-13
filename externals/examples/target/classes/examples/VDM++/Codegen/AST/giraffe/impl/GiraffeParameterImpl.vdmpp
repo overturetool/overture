@@ -1,0 +1,25 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:16 CET 2010
+--
+
+class GiraffeParameterImpl is subclass of GiraffeParameter
+instance variables
+    private iv_type:GiraffeType;
+    private iv_name:GiraffeIdentifier;
+
+operations
+    public GiraffeParameterImpl: GiraffeType * GiraffeIdentifier ==> GiraffeParameterImpl
+    GiraffeParameterImpl(p_type, p_name) ==
+    (
+        iv_type := p_type;
+        iv_name := p_name;
+    );
+
+    public getType: () ==> GiraffeType
+    getType() == return iv_type;
+
+    public getName: () ==> GiraffeIdentifier
+    getName() == return iv_name;
+
+end GiraffeParameterImpl

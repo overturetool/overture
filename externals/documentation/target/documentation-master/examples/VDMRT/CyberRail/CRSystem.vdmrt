@@ -1,0 +1,92 @@
+\section{CRSystem}
+
+\begin{vdm_al}
+system CRSystem
+
+instance variables
+
+-- cpu for CyberRail
+cpu1 : CPU := new CPU (<FCFS>,1E6);
+ 
+-- cpu for TokenDevice
+cpu3 : CPU := new CPU (<FCFS>,1E6);
+cpu4 : CPU := new CPU (<FCFS>,1E6);
+cpu5 : CPU := new CPU (<FCFS>,1E6);
+cpu6 : CPU := new CPU (<FCFS>,1E6);
+cpu7 : CPU := new CPU (<FCFS>,1E6);
+cpu8 : CPU := new CPU (<FCFS>,1E6);
+cpu9 : CPU := new CPU (<FCFS>,1E6);
+cpu10 : CPU := new CPU (<FCFS>,1E6);
+cpu11 : CPU := new CPU (<FCFS>,1E6);
+cpu12 : CPU := new CPU (<FCFS>,1E6);
+--cpu13 : CPU := new CPU (<FCFS>,1E6);
+--cpu14 : CPU := new CPU (<FCFS>,1E6);
+--cpu15 : CPU := new CPU (<FCFS>,1E6);
+
+-- cpu for APM
+cpu2 : CPU := new CPU (<FCFS>,1E6);
+
+-- bus to connect CyberRail and APM
+bus1 : BUS := new BUS (<FCFS>,1E3,{cpu1,cpu2});
+
+-- bus to connect TokenDevice to APM
+bus2 : BUS := new BUS (<FCFS>,5,{cpu3,cpu2});
+bus3 : BUS := new BUS (<FCFS>,5,{cpu4,cpu2});
+bus4 : BUS := new BUS (<FCFS>,5,{cpu5,cpu2});
+bus5 : BUS := new BUS (<FCFS>,5,{cpu6,cpu2});
+bus6 : BUS := new BUS (<FCFS>,5,{cpu7,cpu2});
+bus7 : BUS := new BUS (<FCFS>,5,{cpu8,cpu2});
+bus8 : BUS := new BUS (<FCFS>,5,{cpu9,cpu2});
+bus9 : BUS := new BUS (<FCFS>,5,{cpu10,cpu2});
+bus10 : BUS := new BUS (<FCFS>,5,{cpu11,cpu2});
+bus12 : BUS := new BUS (<FCFS>,5,{cpu12,cpu2});
+--bus13 : BUS := new BUS (<FCFS>,5,{cpu13,cpu2});
+--bus14 : BUS := new BUS (<FCFS>,5,{cpu14,cpu2});
+--bus15 : BUS := new BUS (<FCFS>,5,{cpu15,cpu2});
+  
+--bus to connect cb token device
+--bus3 : BUS := new BUS (<FCFS>,1E6,{cpu1, cpu3});
+
+public static tok1 : TokenDevice := new TokenDevice(1);
+public static tok2 : TokenDevice := new TokenDevice(2);
+public static tok3 : TokenDevice := new TokenDevice(3);
+public static tok4 : TokenDevice := new TokenDevice(4);
+public static tok5 : TokenDevice := new TokenDevice(5);
+public static tok6 : TokenDevice := new TokenDevice(6);
+public static tok7 : TokenDevice := new TokenDevice(7);
+public static tok8 : TokenDevice := new TokenDevice(8);
+public static tok9 : TokenDevice := new TokenDevice(9);
+public static tok10 : TokenDevice := new TokenDevice(10);
+--public static tok11: TokenDevice := new TokenDevice(11);
+--public static tok12: TokenDevice := new TokenDevice(12);
+--public static tok13 : TokenDevice := new TokenDevice(13);
+public static cb : CyberRail := new CyberRail();
+public static apm : ActivePlanManager := new ActivePlanManager();
+public static grid :  RailwayGrid := new RailwayGrid();
+
+operations
+
+CRSystem : () ==> CRSystem
+CRSystem()==
+(
+	cpu1.deploy(cb);
+	cpu2.deploy(apm);
+	cpu1.deploy(grid);
+	cpu3.deploy(tok1);
+	cpu4.deploy(tok2);
+	cpu5.deploy(tok3);
+	cpu6.deploy(tok4);
+	cpu7.deploy(tok5);
+	cpu8.deploy(tok6);
+	cpu9.deploy(tok7);
+	cpu10.deploy(tok8);
+	cpu11.deploy(tok9);
+	cpu12.deploy(tok10);
+	--cpu13.deploy(tok11);
+	--cpu14.deploy(tok12);
+	--cpu15.deploy(tok13);
+
+)
+
+end CRSystem
+\end{vdm_al}

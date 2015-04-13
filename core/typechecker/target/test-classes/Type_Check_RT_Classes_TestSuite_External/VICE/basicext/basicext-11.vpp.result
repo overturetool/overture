@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesRtTypeCheckTest">
+<message column="7" line="1" message="Class BUS duplicates BUS" messageType="error" number="3426" resource="basicext-11.vpp"/>
+<message column="0" line="0" message="Class BUS duplicates BUS" messageType="error" number="3426" resource="?"/>
+<result/>
+</testResult>

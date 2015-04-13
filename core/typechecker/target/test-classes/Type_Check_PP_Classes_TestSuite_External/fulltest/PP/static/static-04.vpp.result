@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="5" line="14" message="Definition 'n' not used" messageType="warning" number="5000" resource="static-04.vpp"/>
+<message column="11" line="15" message="self not in scope" messageType="error" number="3154" resource="static-04.vpp"/>
+<result/>
+</testResult>

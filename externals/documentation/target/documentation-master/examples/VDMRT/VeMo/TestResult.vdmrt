@@ -1,0 +1,31 @@
+\begin{vdm_al}
+class TestResult
+
+instance variables
+  failures : seq of TestCase := []
+  
+operations
+  public AddFailure: TestCase ==> ()
+  AddFailure (ptst) == failures := failures ^ [ptst];
+
+  public Print: seq of char ==> ()
+  Print (pstr) ==
+    -- include IO.vpp from the VDMTools distribution (stdlib directory)
+    -- if you are getting a type error while checking this specification
+    def - = new IO().echo(pstr ^ "\n") in skip;
+    
+  public Show: () ==> ()
+  Show () ==
+    if failures = [] then
+      Print ("No failures detected")
+    else
+      for failure in failures do
+        Print (failure.GetName() ^ " failed")
+  
+end TestResult
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[TestResult]
+\end{rtinfo}

@@ -1,0 +1,13 @@
+
+class URL
+
+  operations
+
+    -- for a given configuration, translate maps this URL to the 
+    -- location of the corresponding file on the server.
+    public
+    translate : () ==> Filename
+    translate () == is not yet specified;
+     
+
+end URL

@@ -1,0 +1,9 @@
+[mk_(<movePerson>, mk_token(<p1>), mk_token(<a2>), <Stay>, 4000),
+mk_(<movePerson>, mk_token(<p2>), mk_token(<a2>), <Stay>, 4000),
+mk_(<movePerson>, mk_token(<p3>), mk_token(<a2>), <Stay>, 4000),
+mk_(<movePerson>, mk_token(<p4>), mk_token(<a3>), <Stay>, 4000),
+mk_(<movePerson>, mk_token(<p5>), mk_token(<a3>), <Stay>, 4000),
+mk_(<movePerson>, mk_token(<p2>), mk_token(<a1>), <Stay>, 10000),
+mk_(<movePerson>, mk_token(<p1>), mk_token(<a1>), <Stay>, 10000),
+mk_(<movePerson>, mk_token(<p2>), mk_token(<a3>), <Stay>, 11000),
+mk_(<movePerson>, mk_token(<p1>), mk_token(<a3>), <Stay>, 11000)]

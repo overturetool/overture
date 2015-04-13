@@ -1,0 +1,17 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:15 CET 2010
+--
+
+class GiraffeVariableDeclStatement is subclass of GiraffeStatement
+operations
+    public getType: () ==> GiraffeType
+    getType() == is subclass responsibility;
+
+    public getName: () ==> GiraffeIdentifier
+    getName() == is subclass responsibility;
+
+    public getValue: () ==> GiraffeExpression
+    getValue() == is subclass responsibility;
+
+end GiraffeVariableDeclStatement

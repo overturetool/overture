@@ -1,0 +1,36 @@
+class Request
+
+instance variables
+  
+-- Request targets must have a single subject AND a single resource.   
+
+subject  : PDP`Subject;
+resource : PDP`Resource;
+actions  : set of PDP`Action;
+
+types
+
+Inst :: map token to FExp`Id;
+
+ operations
+
+public Request: PDP`Subject * PDP`Resource * set of PDP`Action ==> Request
+Request(s,r,aset) ==
+ (subject  := s;
+  resource := r;
+  actions  := aset;
+); 
+
+public GetSubject: () ==> PDP`Subject
+GetSubject() == 
+  return subject;
+
+public GetResource: () ==> PDP`Resource
+GetResource() == 
+  return resource;
+
+public GetActions: () ==> set of PDP`Action
+GetActions() == 
+  return actions;
+
+end Request

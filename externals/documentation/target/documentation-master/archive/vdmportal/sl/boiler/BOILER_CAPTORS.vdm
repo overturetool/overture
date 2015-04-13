@@ -1,0 +1,110 @@
+\subsection{Combining the boiler with captors}\label{BOILER_CAPTORS}
+
+$BOILER-CAPTORS$ establishes the relation between the captors information and
+the boiler state.
+
+\begin{vdm_al}
+module  BOILER_CAPTORS
+imports 	from BOILER_TYPES all, 
+		from CAPTORS_TYPES all 
+exports all
+
+definitions
+
+functions
+\end{vdm_al}
+
+\subsubsection{Converting state information}
+
+The following functions convert the state information into the information
+reported by the captors. First, functions are introduced for a single pump. Then 
+they are grouped for the set of pumps.  
+%the real pumps state (Stopped/Starting/Pumping) is capted 
+%by the On/Off mode of each pump and the flow of water in
+%each pump. The two following functions link convert the real pump state
+%to the captor information. 
+$captors-mode-one-pump$ extracts the $On$/$Off$ status of the pump from its
+state. 
+\begin{vdm_al}
+
+captors_mode_one_pump :BOILER_TYPES`pump_state +> CAPTORS_TYPES`pump_mode 
+
+captors_mode_one_pump (s) ==
+
+cases s :
+	<Stopped> -> <Off>,
+      <Starting>, <Pumping> ->  <On> 
+end ;
+\end{vdm_al}
+$captors-flow-one-pump$ extracts the information about the water flow of the
+pump from its state.  
+\begin{vdm_al}
+captors_flow_one_pump :BOILER_TYPES`pump_state +> CAPTORS_TYPES`pump_flow 
+
+captors_flow_one_pump (s) ==
+
+cases s :
+        <Stopped>, <Starting> -> <Outflow>,
+      <Pumping> ->  <Flow> 
+end ;
+\end{vdm_al}
+$captors-mode-pumps$ combines the $On$/$Off$ information into a map.
+\begin{vdm_al}
+
+captors_mode_pumps :   BOILER_TYPES`pump_to_state_map +>
+                CAPTORS_TYPES`pump_to_mode_map 
+
+ captors_mode_pumps(pe) == 
+{ i |-> m |  i : BOILER_TYPES`pump_nb, m :CAPTORS_TYPES`pump_mode  
+& m=captors_mode_one_pump(pe(i))} ; 
+\end{vdm_al}
+$captors-flow-pumps$ combines the flow information into a map.
+\begin{vdm_al}
+
+captors_flow_pumps :   BOILER_TYPES`pump_to_state_map +>
+                CAPTORS_TYPES`pump_to_flow_map 
+
+captors_flow_pumps  (pe) == 
+{ i |-> f |  i : BOILER_TYPES`pump_nb, f :CAPTORS_TYPES`pump_flow
+& f=captors_flow_one_pump (pe(i))} ; 
+\end{vdm_al}
+
+\subsubsection{Consistency between the boiler and the captors}
+
+$boiler-captors$ is a Boolean function that establishes the consistency between
+the captors information and the state variables of the boiler at the time of
+acquisition.
+
+\begin{itemize}
+\item The level captor is equal to the water level.
+\item The steam outcome captor is equal to the steam outcome.
+\item The $On$/$Off$ captors and flow captors for the pumps correspond to the
+conversion of the current pump state.
+\end{itemize}
+
+
+One might notice that this model takes the simplifying assumption that captors
+return real values. In practice, this function could also be used  to specify the precision
+of the captors and the conversion of analog signals to digital values.
+
+\begin{vdm_al}
+
+boiler_captors :BOILER_TYPES`water_level * 
+	BOILER_TYPES`water_level *
+BOILER_TYPES`steam_outcome * 
+BOILER_TYPES`steam_outcome *
+BOILER_TYPES`pump_to_state_map 
+* CAPTORS_TYPES`pump_to_mode_map *
+CAPTORS_TYPES`pump_to_flow_map  -> bool
+
+boiler_captors(qe,qc,se,sc,pe,p_mode,p_flow)
+==
+
+qe = qc and se = sc and p_mode=captors_mode_pumps(pe) and p_flow=captors_flow_pumps(pe)
+   
+end  BOILER_CAPTORS
+\end{vdm_al}
+
+
+
+

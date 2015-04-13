@@ -1,0 +1,17 @@
+operations
+public static Win (wt,lt: Team)
+ext wr gps : map GroupName to set of Score
+pre exists gp in set dom gps &
+{wt,lt} subset {sc.team | sc in set gps(gp)}
+post exists gp in set dom gps &
+{wt,lt} subset {sc.team | sc in set gps(gp)}
+and gps = gps~++
+{ gp |->
+{if sc.team = wt
+then mu(sc, won |-> sc.won + 1,
+points |-> sc.points + 3)
+elseif sc.team = lt
+then mu(sc, lost |-> sc.lost + 1)
+else sc
+| sc in set gps(gp)}}
+errs QUEUE_EMPTY: q = [] -> q = q~ and e = nil

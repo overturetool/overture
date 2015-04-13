@@ -1,0 +1,52 @@
+--The TestActuator Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		14/5 - 2008
+-- Updated:
+-- Description: 	Testing all actuator classes
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestActuator is subclass of TestCase
+
+--
+-- instance variables
+--
+instance variables
+
+win 		: Window;
+therm		: Thermostat;
+
+--
+-- Operations definition section
+--
+operations
+
+public TestActuator: seq of char ==> TestActuator
+	TestActuator(nm) == name := nm;
+
+protected SetUp: () ==> ()
+	SetUp() ==
+	(win := new Window(3, <WINDOW>);
+therm := new Thermostat(4, <THERMOSTAT>);
+	);
+
+protected Test: () ==> ()
+	Test() ==
+		(AssertTrue(win.GetID() = 3);
+		AssertTrue(win.GetType() = <WINDOW>);
+
+		AssertTrue(therm.GetID() = 4);
+		AssertTrue(therm.GetType() = <THERMOSTAT>);
+		);
+
+protected RunTest: () ==> ()
+	RunTest() == Test();
+
+protected TearDown: () ==> ()
+	TearDown() == skip;
+
+end TestActuator

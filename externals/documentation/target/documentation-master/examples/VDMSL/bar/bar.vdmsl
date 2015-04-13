@@ -1,0 +1,175 @@
+\section{Modelling of a Bar}
+
+\begin{vdm_al}
+module BAR
+imports
+
+from BAG
+
+types
+  Bag;
+  Elem = <A> | <B> | <C> | <D> | <E>
+
+functions
+
+  Empty: () -> BAG`Bag;
+  Add: BAG`Elem * BAG`Bag -> BAG`Bag;
+  Remove: BAG`Elem * BAG`Bag -> BAG`Bag;
+  Count: BAG`Elem * BAG`Bag -> nat;
+  In: BAG`Elem * BAG`Bag -> bool;
+  Join: BAG`Bag * BAG`Bag -> BAG`Bag;
+  Union: BAG`Bag * BAG`Bag -> BAG`Bag;
+  SubBag: BAG`Bag * BAG`Bag -> bool;
+  Difference: BAG`Bag * BAG`Bag -> BAG`Bag;
+  Size: BAG`Bag -> nat;
+  Intersection: BAG`Bag * BAG`Bag -> BAG`Bag;
+  SeqToBag: seq of BAG`Elem -> BAG`Bag
+
+values
+  baga:BAG`Bag;
+  bagb: BAG`Bag
+
+exports all
+
+definitions
+
+types
+  Drink = BAG`Elem;
+  Cellar = BAG`Bag; 
+  -- i.e. various quantities of various drinks
+  Bar = BAG`Bag;    -- as cellar
+  Supplier = seq of char; 
+  -- Don't care about representation of suppliers
+  Pub = Cellar * Bar;  
+  -- all that matters is the drink stocks in the pub
+  BarLevel = BAG`Bag;      
+  -- target stocking level of bar
+  CellarLevel = BAG`Bag;    
+  -- target stocking level of cellar
+  Stock = BAG`Bag;
+  Order = BAG`Bag
+\end{vdm_al}
+
+\begin{vdm_al}
+functions
+  -- Buy an arbitrary amount of stock from 
+  -- a supplier, assuming they have it
+  BuyStock : map Supplier to Stock * Supplier * 
+             Order * Pub -> Pub
+  BuyStock (supps, s, stock, mk_(c,r)) ==
+    mk_(BAG`Union (c, stock), r )
+  pre s in set dom supps and
+      BAG`SubBag( stock, supps(s));
+
+  -- Given a level of bar stocking, 
+  -- try refilling the bar from the cellar,
+  -- doing the best possible
+  RestockBar : Pub * BarLevel -> Pub
+  RestockBar (mk_(c,r), bl) ==
+    let missing = BAG`Difference(bl, r)
+    in
+    let can_restock = BAG`Intersection(missing, c)
+    in
+    mk_(BAG`Difference(c, can_restock),
+        BAG`Union(r, can_restock));
+
+  -- A patron buys a round (list) of drinks from the bar
+  Round : seq of Drink * Pub -> Pub
+  Round (sold, mk_(c,r)) ==
+    mk_(c,
+        BAG`Difference(r, BAG`SeqToBag(sold))
+    )
+  pre BAG`SubBag(BAG`SeqToBag(sold), r);
+\end{vdm_al}
+
+\begin{vdm_al}
+  -- Given a map of suppliers and what they have, 
+  -- work through the list of suppliers until either 
+  -- filled requirements of cellar level or run out 
+  -- of suppliers
+  RestockCellar : CellarLevel * Pub * 
+                  map Supplier to Stock -> Pub
+  RestockCellar (cl, mk_(c, r), sb) ==
+    if sb = { |-> }
+    then mk_(c, r)
+    else 
+      let s in set dom sb
+      in
+      let missing = BAG`Difference(cl, c)
+      in
+      if BAG`Size(missing) > 0
+      then 
+        let can_restock = BAG`Intersection(missing, sb(s))
+        in
+        RestockCellar(cl,
+                      mk_(BAG`Union(c, can_restock), r), 
+                      {s} <-: sb)
+      else
+        mk_(c, r)
+   measure CardCellar;
+   
+   CardCellar: CellarLevel * Pub * 
+               map Supplier to Stock -> nat
+   CardCellar(-,-,sb) ==
+     card dom sb;
+
+  -- Sell one drink to a patron
+  Drink1 : Drink * Pub -> Pub
+  Drink1 (dr, mk_(c,r)) ==
+    mk_(c,
+        BAG`Remove(dr, r))
+    pre BAG`In(dr, r);
+
+  -- The pub is devoid of alcohol
+  Disaster : Pub -> bool
+  Disaster (mk_(c,r)) ==
+    c = BAG`Empty() and r = BAG`Empty();
+
+  -- Return by a patron of an unopenned bottle
+  Unwanted : Drink * Pub -> Pub
+  Unwanted (dr, mk_(c,r)) ==
+    mk_(c, 
+        BAG`Add(dr, r));
+
+  -- Work out the highest single stock for 
+  -- each kind of drink
+  HighestStock : map Supplier to Stock -> BAG`Bag
+  HighestStock (supps) ==
+    if dom supps = {}
+    then BAG`Empty()
+    else 
+      let s in set dom supps
+      in
+        BAG`Join(supps(s), HighestStock({s} <-: supps))
+  measure CardDom;
+  
+  CardDom: map Supplier to Stock -> nat CardDom(m) ==
+    card dom m;
+
+  -- How many drinks are there in the pub
+  TotalDrinks : Pub -> nat
+  TotalDrinks (mk_(c,r)) ==
+    BAG`Size(c) + BAG`Size(r)
+
+values -- introduced for the purposes of testing
+  cellarlevel1 = {<A> |-> 5, <B> |-> 5, <C> |-> 3};
+  barlevel1 = {<A> |-> 2, <B> |-> 2, <C> |-> 5};
+  cellar1 = {<A> |-> 8, <B> |-> 5, <C> |-> 4};
+  cellar2 = {<B> |-> 1, <C> |-> 4};
+  bar1 = {<A> |-> 2, <B> |-> 3, <C> |-> 6};
+  bar2 = {<A> |-> 3, <C> |-> 2};
+  bar3 = {<A> |-> 3, <B> |-> 3};
+  pub1 = mk_(cellar1, bar1);
+  pub2 = mk_(cellar1, bar2);
+  pub3 = mk_(cellar2, bar1);
+  pub4 = mk_(cellar2, bar2);
+  pub5 = mk_(cellar1, bar3);
+  supps1 = {"Fizz" |-> {<A> |-> 10},
+            "Real" |-> {<B> |-> 10, <C> |-> 2},
+            "Scrumpy" |-> {<B> |-> 1, <C> |-> 10}};
+  supps2 = {"Fizz" |-> {<A> |-> 10},
+            "Real" |-> {<B> |-> 1, <C> |-> 5},
+            "Scrumpy" |-> {<B> |-> 1, <C> |-> 10}}
+  
+end BAR 
+\end{vdm_al}

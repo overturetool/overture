@@ -1,0 +1,138 @@
+\documentstyle[11pt]{article}
+\parindent 0em 
+\begin{document}
+\title{ Combining a Specification with an User Interface in the
+IFAD VDM-SL Toolbox}
+\author{Brigitte Froehlich  TU Graz}
+\date{1996--02--21}
+\maketitle
+
+\section{Advanced Database Example}
+This example combines a specification of a map database with an
+user interface implemented in tcl-tk and C++ and can be executed by
+the interpreter of the IFAD VDM-SL Toolbox. The most important feature 
+of this application is such that the user determines the sequence of 
+modifications on the database by an user interface. 
+
+The database is implemented with the map type and provides functions
+to insert an item pair( {\sl Insert}), to look for a certain key
+({\sl Lookup}), to check either the key is defined in the database 
+({\sl Defined}) and to remove an item pair ({\sl Remove}). 
+In order to support prototyping with an user interface,
+a specification has been developed which build around this functions,
+I/0 functions implemented in code and defined also in a VDM-SL
+implementation module. This specification  contains a function 
+({\tt GUI\_Menu()}) which simulates a kind of a menu structure in order 
+to direct the control flow. The menu is implemented as part of the the user 
+interface and  enables the user to select the next function to execute. 
+
+The interpreter of the Toolbox uses the functions provided by the user 
+interface also in order to get the argument value for key and data 
+if these are required by the executed function of the map database. 
+The result values of the function other than the database are displayed  
+on the screen as well as error messages and status information.
+
+\section{Integration into the IFAD VDM-SL Toolbox}
+\begin{enumerate}
+\item Creating a shared library\\
+Update the paths in the Makefile and create the shared library 
+{\tt ./my\_gui.so}. The gnu c++ compiler versions 2.7.2 and installations of
+tcl7.4 and tk4.0 are required in order to compile c++ the sources.
+
+\item Interpreting the specification\\
+In order to execute the specification a VDM-SL script {\tt demo} has been
+developed. This script reads in every VDM-SL module of the system, initializes
+the system, pushes the module {\tt GuiDB} on top of the module stack and
+displays all functions and operations defined in this module.
+The function which contains the menu loop is started and from now on the
+user direct the flow of control by the user interface.
+You will enjoy this new way of executing a specification.
+
+\begin{verbatim}
+vdm> script demo
+
+vdm> r MapDB.vdm
+Parsing and installing "/temp/bfroeh/phd/paper2/tcl-tk/demo/MapDB.vdm" ...
+ERRORS: 0
+vdm> r GuiDB.vdm
+Parsing and installing "/temp/bfroeh/phd/paper2/tcl-tk/demo/GuiDB.vdm" ...
+ERRORS: 0
+vdm> unset tex
+tex unset
+vdm> r gui.vdm
+Parsing and installing "/temp/bfroeh/phd/paper2/tcl-tk/demo/gui.vdm" ...
+ERRORS: 0
+vdm> init
+Initializing specification ...
+vdm> push GuiDB
+Current module is now: GuiDB
+vdm> functions
+Explicit functions and operations defined in current module:
+GUI_Defined  GUI_Insert  GUI_LookUp  GUI_Menu  GUI_Remove  init_database  
+vdm> p GUI_Menu()
+\end{verbatim}
+
+\item Executing the selected function\\
+In order to get the arguments for a certain function of the
+ map database specification, the interpreter will always execute a 
+function defined in the shared library.
+(e.g The function {\tt GUI\_Insert} executes the {\tt Insert} function of the
+map database specification. This function takes as arguments a key value, and
+data value, which are taken from the user inputs in the user interface.)
+The return values of functions which are different from the database, are
+displayed in the user interface, too.
+\end{enumerate}
+
+\begin{appendix}
+\section{An Overview of the Files}
+\begin{tabular}{|l|l|}
+\hline
+\multicolumn{2}{|c|}{\bf VDM-SL Specifications}\\
+\hline
+MapDB.vdm & Specification of a map database\\
+DB.vdm & Extends the map database with the functions of an user interface\\
+& implemented in code and imported from the implementation module\\
+gui.vdm & Implementation module which contains VDM-SL definitions \\
+&  related to the intergrated C++ code\\
+\hline
+\multicolumn{2}{|c|}{ }\\
+\hline
+\multicolumn{2}{|c|}{\bf C++ code}\\
+\hline
+tcl\_init.cc & Functions to generate a tcl interpreter and open a main window \\
+my\_gui.cc & Type conversion functions related to the implementation module\\
+gui\_func.cc & Functions which generates the user interfaces by evaluating \\
+& a tcl script\\
+\hline
+\multicolumn{2}{|c|}{ }\\
+\hline
+\multicolumn{2}{|c|}{\bf Header files}\\
+\hline
+tcl\_init.h &\\
+gui\_func.h&\\
+\hline
+\multicolumn{2}{|c|}{ }\\
+\hline
+\multicolumn{2}{|c|}{\bf Tcl Scripts}\\
+\hline
+getdata.tcl & Input of a key vale and data value\\
+getkey.tcl & Input of a key value\\
+showdata.tcl & Display key value and related data value on the screen\\
+showdef.tcl & Display information either the key is defined or is not defined in\\
+& the database.\\
+menu.tcl & Provides the menu in order to select the next function to execute\\
+showmsg.tcl & Display an message or status information related to a function on the \\
+&screen.\\
+\hline
+\multicolumn{2}{|c|}{ }\\
+\hline
+\multicolumn{2}{|c|}{\bf Auxiliary Files}\\
+\hline
+Makefile & Makefile for creating the shared library\\
+demo & VDM-SL script which parse and initialize the specifications in order \\
+& to execute the system\\
+info.tex & Describes the example\\
+\hline
+\end{tabular}
+\end{appendix}
+\end{document}

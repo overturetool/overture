@@ -1,0 +1,12 @@
+\section{The FLTV Class}
+
+The FLTV class represents the FLTV beacon and implements the abstract
+Beacon class. The class does not contain any instance variables or
+operations as the presence of the beacon defines the action to
+perform.
+
+\begin{vdm_al}
+class FLTV is subclass of Beacon
+
+end FLTV
+\end{vdm_al}

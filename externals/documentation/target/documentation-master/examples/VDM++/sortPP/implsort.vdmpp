@@ -1,0 +1,33 @@
+
+\section{ImplSort}
+
+The class {\em ImplSort} is an example of an sorting algorithm defined
+by implicit functions. 
+
+
+\begin{vdm_al}
+class ImplSort is subclass of Sorter
+
+operations
+
+  public Sort: seq of int ==> seq of int
+  Sort(l) ==
+    return ImplSorter(l);
+
+functions
+
+  public ImplSorter(l: seq of int) r: seq of int
+  post IsPermutation(r,l) and IsOrdered(r);
+
+  IsPermutation: seq of int * seq of int -> bool
+  IsPermutation(l1,l2) ==    
+    forall e in set (elems l1 union elems l2) &
+      card {i | i in set inds l1 & l1(i) = e} =
+      card {i | i in set inds l2 & l2(i) = e};
+
+  IsOrdered: seq of int -> bool
+  IsOrdered(l) ==
+    forall i,j in set inds l & i > j => l(i) >= l(j)
+
+end ImplSort
+\end{vdm_al}

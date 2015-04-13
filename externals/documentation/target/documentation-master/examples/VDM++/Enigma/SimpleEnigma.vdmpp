@@ -1,0 +1,42 @@
+class SimpleEnigma
+  is subclass of Component
+
+values
+   refcfg : inmap nat to nat =
+     {1 |-> 3, 2 |-> 4};
+   rotcfg : inmap nat to nat =
+     {1 |-> 2, 2 |-> 4, 3 |-> 3, 4 |-> 1};
+   pbcfg : inmap nat to nat =
+     {2 |-> 3}
+
+operations
+  public SimpleEnigma: () ==> SimpleEnigma
+  SimpleEnigma () ==
+    (dcl cp : Component ;
+     alph := new Alphabet("ABCD");
+     next := new Reflector(4,alph,refcfg);
+     cp := new Rotor(3,3,alph,rotcfg);
+     cp.SetNext(next);
+     next := cp;
+     cp := new Rotor(2,2,alph,rotcfg);
+     cp.SetNext(next);
+     next := cp;
+     cp := new Rotor(1,1,alph,rotcfg);
+     cp.SetNext(next);
+     next := cp;
+     cp := new Plugboard(alph,pbcfg);
+     cp.SetNext(next);
+     next := cp);
+
+  public Keystroke : char ==> char
+  Keystroke (pch) ==
+    let pidx = alph.GetIndex(pch) in
+      return alph.GetChar(next.Substitute(pidx))
+  pre isofclass(Plugboard,next);
+
+  -- this is needed to make this a non-abstract class
+  public Substitute: nat ==> nat
+  Substitute (-) == return 1;
+  
+
+end SimpleEnigma

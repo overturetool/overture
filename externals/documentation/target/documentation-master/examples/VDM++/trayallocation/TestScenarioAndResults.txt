@@ -1,0 +1,529 @@
+-- ===================================================================================
+-- APPENDIX C - Complete test scenarios of TrayAllocator VDM++ Model
+-- ===================================================================================
+
+-- ===================================================================================
+scenario1.txt: - Only 1 tray items
+-- ===================================================================================
+
+mk_(21,[mk_(0,1,100),
+        mk_(0,2,200),
+        mk_(0,3,300),
+        mk_(1,1,400),
+        mk_(1,2,500),
+        mk_(1,3,100),
+        mk_(2,1,200),
+        mk_(2,2,300),
+        mk_(2,3,400),
+        mk_(3,1,500),
+        mk_(3,2,100),
+        mk_(3,3,200),
+        mk_(4,1,300),
+        mk_(4,2,400),
+        mk_(4,3,500),
+        mk_(5,1,100),
+        mk_(5,2,200),
+        mk_(5,3,300),
+        mk_(6,1,100),
+        mk_(6,2,200),
+        mk_(6,3,300),
+        mk_(7,1,100),
+        mk_(7,2,200),
+        mk_(7,3,300)])
+        
+ ---------------------------------------------
+Tray allocation model test #1 : scenario1.txt
+---------------------------------------------
+Card reader tray id 1 
+Card reader tray id 2 
+*Induction id 1 
+-> Item id 1 size 100 on tray id 5 
+*Induction id 2 
+-> Item id 2 size 200 on tray id 7 
+*Induction id 3 
+-> Item id 3 size 300 on tray id 9 
+Card reader tray id 3 
+Card reader tray id 4 
+Card reader tray id 5 
+*Induction id 1 
+-> Item id 4 size 400 on tray id 8 
+*Induction id 2 
+-> Item id 5 size 500 on tray id 10 
+*Induction id 3 
+-> Item id 6 size 100 on tray id 12 
+Card reader tray id 6 
+Card reader tray id 7 
+Card reader tray id 8 
+*Induction id 1 
+-> Item id 7 size 200 on tray id 11 
+*Induction id 2 
+-> Item id 8 size 300 on tray id 13 
+*Induction id 3 
+-> Item id 9 size 400 on tray id 15 
+Card reader tray id 9 
+Card reader tray id 10 
+Card reader tray id 11 
+*Induction id 1 
+-> Item id 10 size 500 on tray id 14 
+*Induction id 2 
+-> Item id 11 size 100 on tray id 16 
+*Induction id 3 
+-> Item id 12 size 200 on tray id 18 
+Card reader tray id 12 
+Card reader tray id 13 
+Card reader tray id 14 
+*Induction id 1 
+-> Item id 13 size 300 on tray id 17 
+*Induction id 2 
+-> Item id 14 size 400 on tray id 19 
+*Induction id 3 
+-> Item id 15 size 500 on tray id 1 
+Card reader tray id 15 
+Card reader tray id 16 
+Card reader tray id 17 
+*Induction id 1 
+-> Item id 16 size 100 on tray id 20 
+*Induction id 2 
+-> Item id 17 size 200 on tray id 2 
+*Induction id 3 
+-> Item id 18 size 300 on tray id 4 
+Card reader tray id 18 
+Card reader tray id 19 
+Card reader tray id 20 
+*Induction id 1 
+-> Item id 19 size 100 on tray id 3 
+Card reader tray id 1 
+*Induction id 2 
+-> Item id 20 size 200 on tray id 6 
+Card reader tray id 2 
+---------------------------------------------
+Simulation completed for sorter configuration
+---------------------------------------------
+Specified throughput [items/hour]: 10000 
+Sorter speed             [mm/sec]: 2000 
+Item max size                [mm]: 1500 
+Item min size                [mm]: 100 
+Tray size                    [mm]: 600 
+Number of trays                  : 20 
+Number of inductions             : 3 
+Induction rate                   : 2 
+Induction separation      [trays]: 2 
+----------------------------------------------
+Number of trays with items       : 20 
+Two tray items on sorter         : 0
+Number of tray steps             : 22 
+Number of inducted items         : 20 
+Calculated throughput[items/hour]: 10909 
+----------------------------------------------
+      ****    Sorter is full   *****
+----------------------------------------------
+
+-- ===================================================================================
+scenario2.txt: Only 2 tray items
+-- ===================================================================================
+
+mk_(21,[mk_(0,1,600),
+        mk_(0,2,700),
+        mk_(0,3,800),
+        mk_(2,1,900),
+        mk_(2,2,600),
+        mk_(2,3,700),
+        mk_(4,1,700),
+        mk_(4,2,800),
+        mk_(4,3,900),
+        mk_(6,1,600),
+        mk_(6,2,700),
+        mk_(6,3,800),
+        mk_(8,1,900),
+        mk_(8,2,600),
+        mk_(8,3,700),
+        mk_(10,1,800),
+        mk_(10,2,900),
+        mk_(10,3,600)])
+
+---------------------------------------------
+Tray allocation model test #2 : scenario2.txt
+---------------------------------------------
+Card reader tray id 1 
+Card reader tray id 2 
+*Induction id 1 
+-> Item id 1 size 600 on tray id 5 
+-> Item id 1 size 600 on tray id 4 
+*Induction id 2 
+-> Item id 2 size 700 on tray id 7 
+-> Item id 2 size 700 on tray id 6 
+*Induction id 3 
+-> Item id 3 size 800 on tray id 9 
+-> Item id 3 size 800 on tray id 8 
+Card reader tray id 3 
+Card reader tray id 4 
+Card reader tray id 5 
+Card reader tray id 6 
+Card reader tray id 7 
+Card reader tray id 8 
+*Induction id 1 
+-> Item id 4 size 900 on tray id 11 
+-> Item id 4 size 900 on tray id 10 
+*Induction id 2 
+-> Item id 5 size 600 on tray id 13 
+-> Item id 5 size 600 on tray id 12 
+*Induction id 3 
+-> Item id 6 size 700 on tray id 15 
+-> Item id 6 size 700 on tray id 14 
+Card reader tray id 9 
+Card reader tray id 10 
+Card reader tray id 11 
+Card reader tray id 12 
+Card reader tray id 13 
+Card reader tray id 14 
+*Induction id 1 
+-> Item id 7 size 700 on tray id 17 
+-> Item id 7 size 700 on tray id 16 
+*Induction id 2 
+-> Item id 8 size 800 on tray id 19 
+-> Item id 8 size 800 on tray id 18 
+*Induction id 3 
+-> Item id 9 size 900 on tray id 1 
+-> Item id 9 size 900 on tray id 20 
+Card reader tray id 15 
+Card reader tray id 16 
+Card reader tray id 17 
+Card reader tray id 18 
+Card reader tray id 19 
+Card reader tray id 20 
+*Induction id 1 
+-> Item id 10 size 600 on tray id 3 
+-> Item id 10 size 600 on tray id 2 
+Card reader tray id 1 
+Card reader tray id 2 
+---------------------------------------------
+Simulation completed for sorter configuration
+---------------------------------------------
+Specified throughput [items/hour]: 10000 
+Sorter speed             [mm/sec]: 2000 
+Item max size                [mm]: 1500 
+Item min size                [mm]: 100 
+Tray size                    [mm]: 600 
+Number of trays                  : 20 
+Number of inductions             : 3 
+Induction rate                   : 2 
+Induction separation      [trays]: 2 
+----------------------------------------------
+Number of trays with items       : 20 
+Two tray items on sorter         : 20 
+Number of tray steps             : 22 
+Number of inducted items         : 10 
+Calculated throughput[items/hour]: 10909 
+----------------------------------------------
+      ****    Sorter is full   *****
+----------------------------------------------
+
+-- ===================================================================================
+scenario3.txt: Mix 1 of one and two tray items 
+-- ===================================================================================
+
+mk_(21,[mk_(0,1,100),
+        mk_(0,2,800),
+        mk_(0,3,200),
+        mk_(2,1,200),
+        mk_(2,2,400),
+        mk_(2,3,700),
+        mk_(4,1,800),
+        mk_(4,2,300),
+        mk_(4,3,400),
+        mk_(5,1,900),
+        mk_(5,2,800),
+        mk_(5,3,200),
+        mk_(6,1,600),
+        mk_(6,2,400),
+        mk_(6,3,300),
+        mk_(8,1,900),
+        mk_(8,2,300),
+        mk_(8,3,200),
+        mk_(10,1,500),
+        mk_(10,2,300),
+        mk_(10,3,200)])
+
+---------------------------------------------
+Tray allocation model test #3 : scenario3.txt
+---------------------------------------------
+Card reader tray id 1 
+Card reader tray id 2 
+*Induction id 1 
+-> Item id 1 size 100 on tray id 5 
+*Induction id 2 
+-> Item id 2 size 800 on tray id 7 
+-> Item id 2 size 800 on tray id 6 
+*Induction id 3 
+-> Item id 3 size 200 on tray id 9 
+Card reader tray id 3 
+Card reader tray id 4 
+Card reader tray id 5 
+*Induction id 1 
+-> Item id 4 size 200 on tray id 8 
+*Induction id 2 
+-> Item id 5 size 400 on tray id 10 
+*Induction id 3 
+-> Item id 6 size 700 on tray id 12 
+-> Item id 6 size 700 on tray id 11 
+Card reader tray id 6 
+Card reader tray id 7 
+Card reader tray id 8 
+Card reader tray id 9 
+Card reader tray id 10 
+Card reader tray id 11 
+*Induction id 1 
+-> Item id 7 size 800 on tray id 14 
+-> Item id 7 size 800 on tray id 13 
+*Induction id 2 
+-> Item id 8 size 300 on tray id 16 
+*Induction id 3 
+-> Item id 9 size 400 on tray id 18 
+Card reader tray id 12 
+Card reader tray id 13 
+Card reader tray id 14 
+Card reader tray id 15 
+Card reader tray id 16 
+Card reader tray id 17 
+*Induction id 1 
+-> Item id 10 size 900 on tray id 20 
+-> Item id 10 size 900 on tray id 19 
+*Induction id 2 
+-> Item id 11 size 800 on tray id 2 
+-> Item id 11 size 800 on tray id 1 
+*Induction id 3 
+-> Item id 12 size 200 on tray id 4 
+Card reader tray id 18 
+Card reader tray id 19 
+Card reader tray id 20 
+Card reader tray id 1 
+Card reader tray id 2 
+---------------------------------------------
+Simulation completed for sorter configuration
+---------------------------------------------
+Specified throughput [items/hour]: 10000 
+Sorter speed             [mm/sec]: 2000 
+Item max size                [mm]: 1500 
+Item min size                [mm]: 100 
+Tray size                    [mm]: 600 
+Number of trays                  : 20 
+Number of inductions             : 3 
+Induction rate                   : 2 
+Induction separation      [trays]: 2 
+----------------------------------------------
+Number of trays with items       : 17 
+Two tray items on sorter         : 10 
+Number of tray steps             : 22 
+Number of inducted items         : 12 
+Calculated throughput[items/hour]: 9272 
+----------------------------------------------
+      ****  Sorter is not full  ****
+----------------------------------------------
+
+-- ===================================================================================
+scenario4.txt: Mix 2 of one and two tray items 
+-- ===================================================================================
+
+mk_(21,[mk_(0,1,700),
+        mk_(0,2,400),
+        mk_(0,3,200),
+        mk_(2,1,700),
+        mk_(2,2,400),
+        mk_(2,3,100),
+        mk_(4,1,900),
+        mk_(4,2,300),
+        mk_(4,3,400),
+        mk_(6,1,700),
+        mk_(6,2,400),
+        mk_(6,3,300),
+        mk_(8,1,700),
+        mk_(8,2,300),
+        mk_(8,3,200),
+        mk_(9,1,700),
+        mk_(9,2,300),
+        mk_(9,3,200),
+        mk_(10,1,800),
+        mk_(10,2,300),
+        mk_(10,3,200)])
+
+---------------------------------------------
+Tray allocation model test #4 : scenario4.txt
+---------------------------------------------
+Card reader tray id 1 
+Card reader tray id 2 
+*Induction id 1 
+-> Item id 1 size 700 on tray id 5 
+-> Item id 1 size 700 on tray id 4 
+*Induction id 2 
+-> Item id 2 size 400 on tray id 7 
+*Induction id 3 
+-> Item id 3 size 200 on tray id 9 
+Card reader tray id 3 
+Card reader tray id 4 
+Card reader tray id 5 
+Card reader tray id 6 
+Card reader tray id 7 
+Card reader tray id 8 
+*Induction id 1 
+-> Item id 4 size 700 on tray id 11 
+-> Item id 4 size 700 on tray id 10 
+*Induction id 2 
+-> Item id 5 size 400 on tray id 13 
+*Induction id 3 
+-> Item id 6 size 100 on tray id 15 
+Card reader tray id 9 
+Card reader tray id 10 
+Card reader tray id 11 
+Card reader tray id 12 
+Card reader tray id 13 
+Card reader tray id 14 
+*Induction id 1 
+-> Item id 7 size 900 on tray id 17 
+-> Item id 7 size 900 on tray id 16 
+*Induction id 2 
+-> Item id 8 size 300 on tray id 19 
+*Induction id 3 
+-> Item id 9 size 400 on tray id 1 
+Card reader tray id 15 
+Card reader tray id 16 
+Card reader tray id 17 
+Card reader tray id 18 
+Card reader tray id 19 
+Card reader tray id 20 
+*Induction id 1 
+-> Item id 10 size 700 on tray id 3 
+-> Item id 10 size 700 on tray id 2 
+Card reader tray id 1 
+*Induction id 2 
+-> Item id 11 size 400 on tray id 6 
+*Induction id 3 
+-> Item id 12 size 300 on tray id 8 
+Card reader tray id 2 
+---------------------------------------------
+Simulation completed for sorter configuration
+---------------------------------------------
+Specified throughput [items/hour]: 10000 
+Sorter speed             [mm/sec]: 2000 
+Item max size                [mm]: 1500 
+Item min size                [mm]: 100 
+Tray size                    [mm]: 600 
+Number of trays                  : 20 
+Number of inductions             : 3 
+Induction rate                   : 2 
+Induction separation      [trays]: 2 
+----------------------------------------------
+Number of trays with items       : 16 
+Two tray items on sorter         : 8 
+Number of tray steps             : 22 
+Number of inducted items         : 12 
+Calculated throughput[items/hour]: 8727 
+----------------------------------------------
+      ****  Sorter is not full  ****
+----------------------------------------------
+
+-- ===================================================================================
+scenario5.txt: Mix 3 of one and two tray items 
+-- ===================================================================================
+
+mk_(21,[mk_(0,1,100),
+        mk_(1,2,200),
+        mk_(1,3,900),
+        mk_(3,1,200),
+        mk_(3,2,600),
+        mk_(4,3,700),
+        mk_(4,1,800),
+        mk_(5,2,300),
+        mk_(5,3,600),
+        mk_(5,1,600),
+        mk_(6,2,800),
+        mk_(6,3,300),
+        mk_(6,1,900),
+        mk_(8,2,300),
+        mk_(8,3,800),
+        mk_(9,1,300),
+        mk_(9,2,800),
+        mk_(10,1,500),
+        mk_(10,2,600),
+        mk_(10,3,200)])
+
+---------------------------------------------
+Tray allocation model test #5 : scenario5.txt
+---------------------------------------------
+Card reader tray id 1 
+Card reader tray id 2 
+*Induction id 1 
+-> Item id 1 size 100 on tray id 5 
+*Induction id 2 
+-> Item id 2 size 200 on tray id 7 
+*Induction id 3 
+-> Item id 3 size 900 on tray id 9 
+-> Item id 3 size 900 on tray id 8 
+Card reader tray id 3 
+Card reader tray id 4 
+Card reader tray id 5 
+Card reader tray id 6 
+Card reader tray id 7 
+*Induction id 1 
+-> Item id 4 size 200 on tray id 10 
+*Induction id 2 
+-> Item id 5 size 600 on tray id 12 
+-> Item id 5 size 600 on tray id 11 
+*Induction id 3 
+-> Item id 7 size 700 on tray id 14 
+-> Item id 7 size 700 on tray id 13 
+Card reader tray id 8 
+Card reader tray id 9 
+Card reader tray id 10 
+Card reader tray id 11 
+Card reader tray id 12 
+Card reader tray id 13 
+*Induction id 1 
+-> Item id 6 size 800 on tray id 16 
+-> Item id 6 size 800 on tray id 15 
+*Induction id 2 
+-> Item id 9 size 300 on tray id 18 
+*Induction id 3 
+-> Item id 10 size 600 on tray id 20 
+-> Item id 10 size 600 on tray id 19 
+Card reader tray id 14 
+Card reader tray id 15 
+Card reader tray id 16 
+Card reader tray id 17 
+Card reader tray id 18 
+Card reader tray id 19 
+*Induction id 1 
+-> Item id 8 size 600 on tray id 2 
+-> Item id 8 size 600 on tray id 1 
+*Induction id 2 
+-> Item id 12 size 800 on tray id 4 
+-> Item id 12 size 800 on tray id 3 
+*Induction id 3 
+-> Item id 13 size 300 on tray id 6 
+Card reader tray id 20 
+Card reader tray id 1 
+Card reader tray id 2 
+---------------------------------------------
+Simulation completed for sorter configuration
+---------------------------------------------
+Specified throughput [items/hour]: 10000 
+Sorter speed             [mm/sec]: 2000 
+Item max size                [mm]: 1500 
+Item min size                [mm]: 100 
+Tray size                    [mm]: 600 
+Number of trays                  : 20 
+Number of inductions             : 3 
+Induction rate                   : 2 
+Induction separation      [trays]: 2 
+----------------------------------------------
+Number of trays with items       : 19 
+Two tray items on sorter         : 14 
+Number of tray steps             : 22 
+Number of inducted items         : 12 
+Calculated throughput[items/hour]: 10363 
+----------------------------------------------
+      ****  Sorter is not full  ****
+----------------------------------------------
+
+
+
+       

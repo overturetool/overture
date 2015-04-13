@@ -1,0 +1,34 @@
+\begin{vdm}\kClass $ORAMSTest$\index{ORAMSTest|ClassDef}
+\par
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{Execute}\index{Execute|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{ORAMSTest`Execute}
+\begin{blockstmt}
+\begin{dclstmt}
+\assdef{ts}{TestSuite\index{TestSuite|TypeOcc}}[{\fnapply{\new{TestSuite}}{}}]
+\end{dclstmt}
+$ts$.\call{AddTest}{\fnapply{\new{PersonTest}}{\Dquote PersonTest \Dquote }} ; \\
+$ts$.\call{AddTest}{\fnapply{\new{LifeboatTest}}{\Dquote LifeboatTest \Dquote }} ; \\
+$ts$.\call{AddTest}{\fnapply{\new{AreaControllerTest}}{\Dquote AreaControllerTest \Dquote }} ; \\
+$ts$.\call{AddTest}{\fnapply{\new{AccessControllerTest}}{\Dquote AccessControllerTest \Dquote }} ; \\
+$ts$.\call{Run}{}
+\end{blockstmt}
+\end{op}
+\kEnd $ORAMSTest$
+
+\end{vdm}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1 @@
+new B().Test() = mk_B`AA( 1,'<' )

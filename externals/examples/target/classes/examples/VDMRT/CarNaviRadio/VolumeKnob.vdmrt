@@ -1,0 +1,25 @@
+class VolumeKnob
+  is subclass of EnvironmentTask
+
+operations
+  public VolumeKnob: nat ==> VolumeKnob
+  VolumeKnob (pno) == max_stimuli := pno;
+
+  public HandleEvent: nat ==> ()
+  HandleEvent (pev) == logSysToEnv(pev)
+  post checkResponseTimes(e2s,s2e,22000000000);
+
+  public Run: () ==> ()
+  Run () == start(self); --,VolumeKnobT);
+
+  createSignal: () ==> ()
+  createSignal () ==
+    ( dcl num2 : nat := getNum();
+      logEnvToSys(num2);
+      RadNavSys`mmi.HandleKeyPress(1,num2) )
+
+thread
+  periodic (1000E6,50,500,0) 
+    (createSignal)
+
+end VolumeKnob

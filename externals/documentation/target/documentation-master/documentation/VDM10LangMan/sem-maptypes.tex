@@ -1,0 +1,59 @@
+\item[Semantics of Operators:] Two maps {\tt m1} and {\tt m2} are
+  compatible if any common element of {\bf\ttfamily dom}{\tt m1} and {\bf\ttfamily dom}{\tt m2} is
+  mapped to the same value by both maps.
+
+\vspace{1ex}
+\begin{TypeSemantics}
+Domain & yields the domain (the set of keys) of {\tt m}. \\ \hline
+
+Range & yields the range (the set of information values) of {\tt
+m}. \\ \hline
+
+Merge & yields a map combined by {\tt m1} and {\tt m2} such that the 
+resulting map maps the elements of {\bf\ttfamily dom}{\tt m1} as does {\tt m1}, and 
+the elements of {\bf\ttfamily \tt dom}{\tt m2} as does {\tt m2}. The two maps must 
+be compatible. \\ \hline
+
+Override & overrides and merges {\tt m1} with {\tt m2}, i.e.\ it is
+like a merge except that {\tt m1} and {\tt m2} need not be compatible;
+any common elements are mapped as by {\tt m2} (so {\tt m2} overrides
+{\tt m1}). \\ \hline
+
+Distributed merge & yields the map that is constructed by merging all
+the maps in {\tt ms}. The maps in {\tt ms} must be
+compatible. \\ \hline
+
+Domain restricted to & creates the map consisting of the elements in
+{\tt m} whose key is in {\tt s}. {\tt s} need not be a subset of {\bf\ttfamily  dom}{\tt m}. \\ \hline
+
+Domain restricted by & creates the map consisting of the elements in
+{\tt m} whose key is not in {\tt s}. {\tt s} need not be a subset of 
+{\bf\ttfamily dom}{\tt m}. \\ \hline
+
+Range restricted to & creates the map consisting of the elements in
+{\tt m} whose information value is in {\tt s}. {\tt s} need not be a 
+subset of {\bf\ttfamily rng}{\tt m}. \\ \hline
+
+Range restricted by & creates the map consisting of the elements in
+{\tt m} whose information value is not in {\tt s}. {\tt s} need not be 
+a subset of {\bf\ttfamily rng}{\tt m}. \\ \hline
+
+Map apply & yields the information value whose key is {\tt d}. {\tt
+d} must be in the domain of {\tt m}. \\ \hline
+
+Map composition & yields the the map that is created by composing {\tt
+  m2} elements with {\tt m1} elements. The resulting map is a map with
+the same domain as {\tt m2}. The information value corresponding to a
+key is the one found by first applying {\tt m2} to the key and then
+applying {\tt m1} to the result. {\bf\ttfamily rng}{\tt m2} must be a subset of {\bf\ttfamily 
+  dom}{\tt m1}. \\ \hline
+
+Map iteration & yields the map where {\tt m} is composed with itself
+{\tt n} times. {\tt n=0} yields the identity map where each element of
+{\bf\ttfamily dom}{\tt m} is map into itself; {\tt n=1} yields {\tt m} itself. For
+{\tt n>1}, the range of {\tt m} must be a subset of {\bf\ttfamily dom}{\tt m}.  \\ \hline
+
+Map inverse & yields the inverse map of {\tt m}. {\tt m} must be a
+1-to-1 mapping. \\ \hline
+\end{TypeSemantics}
+

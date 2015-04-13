@@ -1,0 +1,16 @@
+class Q
+functions
+		
+	public entry: () -> bool
+	entry() ==
+		let obj = new Q()
+		in
+			obj.size[bool]() = 2 and
+			obj.size[bool * bool]() = 4 and
+			obj.size[[bool]]() = 3;
+	
+	public size[@T]: () -> nat
+	size() ==
+		card { x | x:@T };
+		
+end Q

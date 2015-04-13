@@ -1,0 +1,16 @@
+class Entry
+
+operations
+
+public static Run :  () ==> nat
+Run () ==
+  return 1;
+
+traces
+
+T1:
+let a,a,a : bool
+in
+    Run();
+
+end Entry

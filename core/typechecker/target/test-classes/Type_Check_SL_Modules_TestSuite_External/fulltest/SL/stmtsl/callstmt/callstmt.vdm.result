@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="9" line="12" message="Definition 'n' not used" messageType="warning" number="5000" resource="callstmt.vdm"/>
+<message column="9" line="28" message="b at 6:3 hidden by b" messageType="warning" number="5008" resource="callstmt.vdm"/>
+<message column="3" line="22" message="Definition 'Call3' not used" messageType="warning" number="5000" resource="callstmt.vdm"/>
+<message column="10" line="30" message="Unexpected type for argument 1" messageType="error" number="3217" resource="callstmt.vdm"/>
+<result/>
+</testResult>

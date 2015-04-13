@@ -1,0 +1,33 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleCasesExpressionImpl is subclass of SimpleCasesExpression
+instance variables
+    private iv_test:SimpleExpression;
+    private iv_alts:seq of SimpleCaseAlternative;
+    private iv_deflt:[SimpleExpression];
+
+operations
+    public SimpleCasesExpressionImpl: SimpleExpression * seq of SimpleCaseAlternative * [SimpleExpression] ==> SimpleCasesExpressionImpl
+    SimpleCasesExpressionImpl(p_test, p_alts, p_deflt) ==
+    (
+        iv_test := p_test;
+        iv_alts := p_alts;
+        iv_deflt := p_deflt;
+    );
+
+    public getTest: () ==> SimpleExpression
+    getTest() == return iv_test;
+
+    public getAlts: () ==> seq of SimpleCaseAlternative
+    getAlts() == return iv_alts;
+
+    public hasDeflt: () ==> bool
+    hasDeflt() == return (iv_deflt = nil);
+
+    public getDeflt: () ==> SimpleExpression
+    getDeflt() == return iv_deflt;
+
+end SimpleCasesExpressionImpl

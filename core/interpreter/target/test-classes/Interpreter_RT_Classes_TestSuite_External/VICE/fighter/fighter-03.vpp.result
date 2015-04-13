@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.external.ExternalClassesRtTest">
+<message column="17" line="304" message="Error 68: Periodic threads overlapping in 'FlareDispenser' (fighter-03.vpp) at line 304:17" messageType="error" number="68" resource="fighter-03.vpp"/>
+<result>
+<output object="[]" resource="fighter-03.vpp" value="[]"/>
+</result>
+</testResult>

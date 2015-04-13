@@ -1,0 +1,23 @@
+\section{The Validate Testing Class}
+
+\begin{vdm_al}
+class Validate is subclass of Event
+
+instance variables
+
+  tillid : System`TillId;
+  code : Card`PinCode;
+
+operations
+  public Init : System`TillId * Card`PinCode ==> Validate
+  Init(tid, pin) ==
+    (tillid := tid;
+     code := pin;
+     return self);
+
+  public execute : System ==> Test`TestResult
+  execute(sys) ==
+    sys.GetTill(tillid).Validate(code);
+
+end Validate
+\end{vdm_al}

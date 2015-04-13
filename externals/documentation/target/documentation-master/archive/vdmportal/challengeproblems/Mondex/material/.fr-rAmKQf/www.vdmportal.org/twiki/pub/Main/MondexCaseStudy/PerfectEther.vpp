@@ -1,0 +1,33 @@
+class PerfectEther is subclass of Ether
+
+operations
+
+-- external choice
+
+public StartFrom : ConWorld`PurseId * ConPurse`CounterPartyDetails ==> ()
+StartFrom(name, cpd) == world.GetPurse(name).RecMsg(mk_ConPurse`StartFrom(cpd));
+
+public StartTo : ConWorld`PurseId * ConPurse`CounterPartyDetails ==> ()
+StartTo(name, cpd) == world.GetPurse(name).RecMsg(mk_ConPurse`StartTo(cpd));
+
+public ExceptionLogClear : ConWorld`PurseId * token ==> ()
+ExceptionLogClear(name, clear) == world.GetPurse(name).RecMsg(mk_ConPurse`ExceptionLogClear(name, clear));
+
+public ReadExceptionLog : ConWorld`PurseId ==> ()
+ReadExceptionLog(name) == world.GetPurse(name).RecMsg(<ReadExceptionLog>);
+
+
+-- purse messages
+
+public SendMsg : ConPurse`Message ==> ()
+SendMsg(m) == 
+    cases m:
+        mk_ConPurse`Req(td)                 -> world.GetPurse(td.fromPurse).RecMsg(m),
+        mk_ConPurse`Val(td)                 -> world.GetPurse(td.toPurse).RecMsg(m),
+        mk_ConPurse`Ack(td)                 -> world.GetPurse(td.fromPurse).RecMsg(m),
+        mk_ConPurse`ExceptionLogResult(-,-) -> skip,
+        <Unprotected>                       -> skip,
+        others                              -> skip
+    end
+
+end PerfectEther

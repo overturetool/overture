@@ -1,0 +1,16 @@
+\section{Sorter class}
+
+\begin{vdm_al}
+class Sorter
+ 
+operations
+
+  public
+  Sort: seq of int ==> seq of int 
+  Sort(arg) ==
+    is subclass responsibility
+
+end Sorter
+\end{vdm_al}
+
+

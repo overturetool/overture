@@ -1,0 +1,23 @@
+--The Test Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		14/5 - 2008
+-- Updated:
+-- Description: 	Test class
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Test
+
+--
+-- Operations definition section
+--
+operations
+
+public Run: TestResult ==> ()
+	Run(-) == is subclass responsibility
+
+end Test

@@ -1,0 +1,30 @@
+class Software
+
+instance variables
+  heater : Heater;
+  thermistor : Thermistor;
+  liquid_level_sensor : LiquidLevelSensor;
+
+operations
+  public
+  Setup: RealWorld1 | RealWorld2 ==> ()
+  Setup(realworld) ==
+    (heater := new Heater();
+     heater.Setup(realworld);
+     thermistor := new Thermistor();
+     thermistor.Setup(realworld);
+     liquid_level_sensor := new LiquidLevelSensor();
+     liquid_level_sensor.Setup(realworld);
+     );
+
+  public
+  Boil: () ==> ()
+  Boil() ==
+    while thermistor.GetTemperature() < 100.0 and
+          liquid_level_sensor.IsOn()
+      do
+        heater.On()
+  pre  liquid_level_sensor.IsOn()
+  post liquid_level_sensor.IsOn();
+
+end Software

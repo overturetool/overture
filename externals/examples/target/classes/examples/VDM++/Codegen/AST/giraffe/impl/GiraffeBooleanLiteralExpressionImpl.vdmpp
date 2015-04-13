@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:16 CET 2010
+--
+
+class GiraffeBooleanLiteralExpressionImpl is subclass of GiraffeBooleanLiteralExpression
+instance variables
+    private iv_value:bool;
+
+operations
+    public GiraffeBooleanLiteralExpressionImpl: bool ==> GiraffeBooleanLiteralExpressionImpl
+    GiraffeBooleanLiteralExpressionImpl(p_value) ==
+    (
+        iv_value := p_value;
+    );
+
+    public getValue: () ==> bool
+    getValue() == return iv_value;
+
+end GiraffeBooleanLiteralExpressionImpl

@@ -1,0 +1,1 @@
+Test() = [ "Newline:",  '\012',  "Esc_quote:",  ''',  "Esc_backslash:",  '\\',  "Return:",  '\015',  "Tab:",  '\011',  "Formfeed:",  '\014',  "Escape:",  '\033',  "Alarm:",  '\007',  "Hex 41 :",  'A',  "Control char A:",  '\x01',  "Double qoute:",  '"',  "Esc_double_quote:",  '"',  "Octal:",  '\e',  "\"",  "\"Hello \012 World",  "Hello \011 \\ World" ]

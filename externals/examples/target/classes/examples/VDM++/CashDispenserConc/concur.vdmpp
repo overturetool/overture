@@ -1,0 +1,232 @@
+class Main
+
+instance variables
+
+  ltills : map TillId to LocalTill := {|->};
+  tills : map TillId to Till := {|->};
+  cards : seq of Card := [];
+  resource : CentralResource;
+  clock : Clock := new Clock();
+  letterbox : Letterbox := new Letterbox();
+  mb : MessageBuffer := new MessageBuffer();
+
+types
+
+  public TillId = nat;
+
+values
+
+  nat2char : map nat to char =
+    { 0 |-> '0', 1 |-> '1', 2 |-> '2', 3 |-> '3', 4 |-> '4', 
+      5 |-> '5', 6 |-> '6', 7 |-> '7', 8 |-> '8', 9 |-> '9' };
+
+functions
+
+  tStr : nat -> seq of char
+  tStr(n) == "Till " ^ nat2string(n) ^":\t";
+
+  nat2chars : nat -> seq of char
+  nat2chars(n) ==
+    if n = 0
+    then []
+    elseif n < 10
+    then [nat2char(n)]
+    else (nat2chars(n div 10)) ^ [ nat2char(n mod 10)];
+
+  nat2string : nat -> seq of char
+  nat2string(n) ==
+    if n = 0
+    then "0"
+    else nat2chars(n)
+
+operations
+
+  public GetTill: TillId ==> Till
+  GetTill(tid) ==
+    return tills(tid);
+
+  public Main: () ==> Main
+  Main() ==
+    (clock.SetDate("150999");
+    let c1 = new Card(123456,1,1),
+        c2 = new Card(123457,2,2),
+        c3 = new Card(123458,3,3),
+        c4 = new Card(123459,4,4), 
+        c5 = new Card(123460,5,5),
+        c6 = new Card(123461,6,5),
+        c7 = new Card(123462,7,5)
+    in
+    let peter = new Cardholder("Peter Gorm Larsen",
+                                        "Granvej 24"),
+        paul = new Cardholder("Paul Mukherjee",
+                                        "Rugaardsvej 47"),
+        sten = new Cardholder("Sten Agerholm",
+                                        "Teisensvej ??"),
+        kim = new Cardholder("Kim Sunesen",
+                                      "??"),
+        CSK = new Cardholder("CSK","Forskerparken 10A")
+     in
+       let pglacc1 = new Account({1 |-> peter},5000),
+           saacc1  = new Account({2 |-> sten},0),
+           ksacc1  = new Account({3 |-> kim},9000),
+           pmacc1  = new Account({4 |-> paul},6000),
+           ifacc1  = new Account({5 |-> peter,
+                                  6 |-> sten,
+                                  7 |-> CSK},3000),
+           pglid1 = 1,
+           said1  = 2,
+           ksid1  = 3,
+           pmid1  = 4,
+           ifid1  = 5
+       in 
+         (resource := new CentralResource(clock,new Letterbox());
+          resource.AddAccount(pglid1,pglacc1);
+          resource.AddAccount(said1,saacc1);              
+          resource.AddAccount(ksid1,ksacc1);
+          resource.AddAccount(pmid1,pmacc1);
+          resource.AddAccount(ifid1,ifacc1);
+          tills := {1 |-> SetupTill(1,new Till()),
+                    2 |-> SetupTill(2,new Till()),
+                    3 |-> SetupTill(3,new Till()),
+                    4 |-> SetupTill(4,new Till())};
+          cards := [c1,c2,c3,c4,c5,c6,c7];
+         ));
+
+    SetupTill : nat * Till ==> Till
+    SetupTill(i,t) ==
+       let c = new Channel(),
+           lt = new LocalTill(c, resource),
+           lr = new LocalResource(c) in
+         (start(lt);
+          ltills := ltills ++ { i |-> lt};
+          t.Set(lr));
+
+    public RepairTill : nat  ==> ()
+    RepairTill(tillNum) ==
+      tills(tillNum) := SetupTill(tillNum, tills(tillNum));
+
+    public EnterCardAtTill : nat * nat * nat ==> ()
+    EnterCardAtTill(tillNum, cardNum, pin) ==
+      (tills(tillNum).InsertCard(cards(cardNum));
+       let validRes1 = tills(tillNum).Validate(pin) in
+       let msg = cases validRes1:
+              <Fail> ->     tStr(tillNum) ^"Validate card failed",
+              <Retained> -> tStr(tillNum) ^"Card Retained",
+              <PinNotOk> -> "Validate Unsuccessful",
+              <PinOk> ->    tStr(tillNum) ^"Validate Successful",
+              others ->     tStr(tillNum) ^"Unknown Message"
+              end in
+       mb.put(msg);
+       -- Make till 1 fail as soon as the card is entered
+       if tillNum = 1
+       then Fail(tillNum))
+    pre tillNum in set dom tills;
+
+    public WithdrawalAtTill : nat * nat ==> ()
+    WithdrawalAtTill(tillNum, amount) ==
+         let wd1 = tills(tillNum).MakeWithdrawal(amount) in
+         let msghdr =tStr(tillNum) ^"Withdrawal ("^nat2string(amount) ^")" in
+         if <Fail> = wd1
+         then mb.put(msghdr ^ " Failed")
+         elseif not wd1
+         then mb.put(msghdr ^ " Unsuccessful")
+         else mb.put(msghdr ^ " Successful");
+
+    public GetBalanceAtTill : nat ==> ()
+    GetBalanceAtTill (tillNum) ==    
+         let bal1 = tills(tillNum).GetBalance() in
+         if nil = bal1
+         then mb.put(tStr(tillNum) ^
+                     "Balance not known for this account")
+         elseif <Fail> = bal1
+         then mb.put(tStr(tillNum) ^"Balance Failed")
+         else mb.put(tStr(tillNum) ^
+                     "Balance is " ^ nat2string(bal1) );
+
+    public Fail : nat ==> ()
+    Fail(tillNum) ==
+      (ltills(tillNum).Fail();
+       mb.put(tStr(tillNum) ^ "LocalTill Fail"));
+
+    public ReturnCard : nat ==> ()
+    ReturnCard(tillNum) ==
+     (tills(tillNum).ReturnCard();
+      mb.put(tStr(tillNum) ^"Card Returned"));
+
+    Wait: () ==> ()
+    Wait () == skip;
+
+    public Run : () ==> seq of char
+    Run() ==
+      (dcl user1:User := new User(1,1,123456,self),
+           user2:User := new User(2,5,123460,self),
+           user3:User := new User(3,6,123461,self),
+           user4:User := new User(4,7,123462,self);
+       start(user1);
+       start(user2);
+       start(user3);
+       start(user4);
+       Wait();
+       return mb.get());
+
+sync
+
+  mutex(SetupTill);
+  mutex(ReturnCard);
+  per Wait => #fin(ReturnCard) >= 3
+      
+
+end Main
+
+class MessageBuffer
+
+instance variables
+
+  data : seq of char := [];
+
+operations
+
+  public put : seq of char ==> ()
+  put(msg) ==
+    data := data ^ "\n" ^ msg ;
+
+  public get : () ==> seq of char
+  get() == return data;
+
+sync
+  mutex(all);
+
+end MessageBuffer
+
+class User
+
+instance variables
+
+  tillNum : nat;
+  cardNum : nat;
+  pin : nat;
+  m : Main
+
+operations
+
+  public User : nat * nat * nat * Main ==> User 
+  User (nt, nc, np, nm) ==
+    (tillNum := nt;
+     cardNum := nc;
+     pin := np;
+     m := nm);
+
+  Test1 : () ==> ()
+  Test1() ==
+    (m.EnterCardAtTill(tillNum,cardNum,pin);
+     m.GetBalanceAtTill(tillNum);
+     m.WithdrawalAtTill(tillNum,100);
+     m.GetBalanceAtTill(tillNum);
+     m.ReturnCard(tillNum))
+
+    
+
+thread
+  Test1()
+
+end User

@@ -1,0 +1,2 @@
+A Personal Medical Unit System (PMU) (Kasper H.J. Nielsen, Martin Kjelsen and Lars Sarbæk Kristiansen): 
+A concurrent and a realtime VDM++ model of a real-time medico system: This project was completed at The Engineering College of Aarhus as a part of the course ”Model-driven development with VDM++ and UML 2” (tivdm2), with emphasis on concurrent and real-time development in VDMTools VICE toolbox.

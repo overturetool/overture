@@ -1,0 +1,81 @@
+-----------------------------------------------
+-- Class:			TestTrafficLight
+-- Description: 	Test the TrafficLight class 
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestTrafficLight is subclass of TestCase
+
+--
+-- instance variables
+--
+instance variables
+private world : World := new World();
+private pos : Position;
+--
+-- Operations definition section
+--
+operations
+
+protected SetUp: () ==> ()
+SetUp () == pos := new Position(5,1); 
+
+protected RunTest: () ==> ()
+RunTest () ==
+(
+ dcl trfLgt : TrafficLight := new TrafficLight(1, pos, 5);
+skip;
+ --AssertTrue(trfLgt.GetID() = 1);
+ --AssertTrue(trfLgt.GetPosition().X() = 5);
+ --AssertTrue(trfLgt.GetPosition().Y() = 1); 
+ --AssertTrue(trfLgt.GreenLightPath() = <NORTH>);
+ 
+ --testGreenLightPath();
+ --testCrossDirection();
+);
+  
+protected TearDown: () ==> ()
+TearDown () == skip;
+
+
+--sequential model only
+--public testGreenLightPath : () ==> ()
+--testGreenLightPath() ==
+--(
+--  dcl trfLgt : TrafficLight := new TrafficLight(1, pos, 2);
+-- 
+--  AssertTrue(trfLgt.GreenLightPath() = <NORTH>);
+--  trfLgt.Step();
+--  trfLgt.Step();
+--  AssertTrue(trfLgt.GreenLightPath() = <NORTH>);
+--  Timer`Tick();
+--  Timer`Tick();
+--  trfLgt.Step();
+--  AssertTrue(trfLgt.GreenLightPath() = <EAST>);
+--);
+
+public testGreenLightPath : () ==> ()
+testGreenLightPath() ==
+(
+  dcl world : World := new World(), trfLgt : TrafficLight := new TrafficLight(1, pos, 2);
+ 
+  AssertTrue(trfLgt.GreenLightPath() = <NORTH>);
+  AssertTrue(trfLgt.GreenLightPath() = <NORTH>);
+  AssertTrue(trfLgt.GreenLightPath() = <EAST>);
+);
+
+
+public testCrossDirection : () ==> ()
+testCrossDirection() ==
+(
+  AssertTrue(TrafficLight`CrossDirection(<NORTH>) = <EAST>);
+  AssertTrue(TrafficLight`CrossDirection(<SOUTH>) = <WEST>);
+  AssertTrue(TrafficLight`CrossDirection(<EAST>) = <NORTH>);
+  AssertTrue(TrafficLight`CrossDirection(<WEST>) = <SOUTH>);
+
+);
+
+
+end TestTrafficLight

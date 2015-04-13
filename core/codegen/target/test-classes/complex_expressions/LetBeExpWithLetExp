@@ -1,0 +1,20 @@
+class Entry 
+
+functions
+
+public f :  () -> nat
+f () ==
+
+	let a in set {1}
+	in
+		let b = 2
+		in
+		 3;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return f();
+
+end Entry

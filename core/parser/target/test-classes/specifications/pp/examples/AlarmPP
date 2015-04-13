@@ -1,0 +1,182 @@
+
+
+--alarm.vdmpp
+
+\begin{vdm_al}
+class Alarm
+types
+\end{vdm_al}
+
+\begin{vdm_al}
+types
+
+public String = seq of char;
+
+instance variables 
+
+descr    : String;
+reqQuali : Expert`Qualification;
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+
+public Alarm: Expert`Qualification * String ==> Alarm
+Alarm(quali,str) ==
+( descr := str;
+  reqQuali := quali
+);
+\end{vdm_al}
+
+\begin{vdm_al}   
+public GetReqQuali: () ==> Expert`Qualification
+GetReqQuali() ==
+  return reqQuali;
+  
+end Alarm
+\end{vdm_al}
+
+
+--expert.vdmpp
+
+\begin{vdm_al}
+class Expert
+
+instance variables
+
+quali : set of Qualification;
+\end{vdm_al}
+
+\begin{vdm_al}
+types 
+ 
+public Qualification = <Mech> | <Chem> | <Bio> | <Elec>;
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+
+public Expert: set of Qualification ==> Expert
+Expert(qs) ==
+  quali := qs;
+\end{vdm_al}
+  
+\begin{vdm_al}
+public GetQuali: () ==> set of Qualification
+GetQuali() ==
+  return quali;
+  
+end Expert
+\end{vdm_al}
+
+
+--plant.vdmpp
+
+\begin{vdm_al}
+class Plant
+
+instance variables
+
+alarms   : set of Alarm;
+schedule : map Period to set of Expert;
+inv PlantInv(alarms,schedule);
+
+operations
+
+PlantInv: set of Alarm * map Period to set of Expert ==> 
+          bool
+PlantInv(as,sch) ==
+  return
+  (forall p in set dom sch & sch(p) <> {}) and
+  (forall a in set as &
+     forall p in set dom sch &
+       exists expert in set sch(p) &
+         a.GetReqQuali() in set expert.GetQuali());
+\end{vdm_al}
+
+\begin{vdm_al}
+types
+
+public Period = token;
+\end{vdm_al}
+  
+\begin{vdm_al}
+operations
+
+public ExpertToPage: Alarm * Period ==> Expert
+ExpertToPage(a, p) ==
+  let expert in set schedule(p) be st
+      a.GetReqQuali() in set expert.GetQuali()
+  in
+    return expert
+pre a in set alarms and
+    p in set dom schedule
+post let expert = RESULT
+     in
+       expert in set schedule(p) and
+       a.GetReqQuali() in set expert.GetQuali();
+\end{vdm_al}
+	 
+\begin{vdm_al}
+public NumberOfExperts: Period ==> nat
+NumberOfExperts(p) ==
+  return card schedule(p)
+pre p in set dom schedule;
+\end{vdm_al}
+
+\begin{vdm_al}
+public ExpertIsOnDuty: Expert ==> set of Period
+ExpertIsOnDuty(ex) ==
+  return {p | p in set dom schedule & 
+              ex in set schedule(p)};
+\end{vdm_al}
+
+\begin{vdm_al}
+public Plant: set of Alarm * 
+              map Period to set of Expert ==> Plant
+Plant(als,sch) ==
+( alarms := als;
+  schedule := sch
+)
+pre PlantInv(als,sch);
+\end{vdm_al}
+
+\begin{vdm_al}    
+end Plant
+\end{vdm_al}
+
+
+--test1.vdmpp
+
+\begin{vdm_al}
+class Test1
+
+instance variables
+
+a1   : Alarm  := new Alarm(<Mech>,"Mechanical fault");
+a2   : Alarm  := new Alarm(<Chem>,"Tank overflow");
+ex1  : Expert := new Expert({<Mech>,<Bio>});
+ex2  : Expert := new Expert({<Elec>});
+ex3  : Expert := new Expert({<Chem>,<Bio>,<Mech>});
+ex4  : Expert := new Expert({<Elec>,<Chem>});
+plant: Plant  := new Plant({a1},{p1 |-> {ex1,ex4},
+                                 p2 |-> {ex2,ex3}});
+
+values
+
+p1: Plant`Period = mk_token("Monday day");
+p2: Plant`Period = mk_token("Monday night");
+p3: Plant`Period = mk_token("Tuesday day");
+p4: Plant`Period = mk_token("Tuesday night");
+
+operations
+
+public Run: () ==> set of Plant`Period * Expert
+Run() == 
+  let periods = plant.ExpertIsOnDuty(ex1),
+      expert  = plant.ExpertToPage(a1,p1)
+  in 
+    return mk_(periods,expert);
+
+end Test1
+\end{vdm_al}

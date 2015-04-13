@@ -1,0 +1,41 @@
+\begin{vdm_al}
+class PMUSystem is subclass of GLOBAL
+
+instance variables
+
+-- create cpu's and busses
+--cpu1 : CPU := new CPU (<FCFS>,1E6);
+--cpu2 : CPU := new CPU (<FCFS>,1E6);
+--cpu3 : CPU := new CPU (<FP>,1E9);
+--cpu4 : CPU := new CPU (<FCFS>,1E6);
+--cpu5 : CPU := new CPU (<FCFS>,1E6);
+--cpu6 : CPU := new CPU (<FCFS>,1E6);
+--bus1 : BUS := new BUS (<FCFS>,1E6,{cpu1,cpu3});
+--bus2 : BUS := new BUS (<FCFS>,1E6,{cpu2,cpu3});
+--bus3 : BUS := new BUS (<FCFS>,1E6,{cpu3,cpu4,cpu5,cpu6});
+
+-- create medical devices
+public static medicalDevice0 : MedicalDevice := new MedicalDevice(2508821401, HEARTRATE);
+
+-- create PMU's
+public static pmu0 : PMU := new PMU(2508821401);
+
+-- create analyzers
+public static analyzer0 : Analyzer := new Analyzer(HEARTRATE);
+
+public static batteryMonitor0 : BatteryMonitor := new BatteryMonitor(1000);
+
+public static transmitter0 : Transmitter := new Transmitter();
+
+operations 
+
+PMUSystem : () ==> PMUSystem
+PMUSystem() ==
+(
+skip
+    --cpu1.deploy(something);
+    --cpu1.setPriority(something,100);
+);
+
+end PMUSystem
+\end{vdm_al}

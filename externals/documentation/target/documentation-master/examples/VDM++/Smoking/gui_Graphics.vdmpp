@@ -1,0 +1,32 @@
+class gui_Graphics
+	operations
+
+    public init : () ==> ()
+	init() == is not yet specified;
+
+	public tobaccoAdded : () ==> ()
+	tobaccoAdded() == is not yet specified; 
+
+	public paperAdded : () ==> ()
+	paperAdded() == is not yet specified; 
+
+	public matchAdded : () ==> ()
+	matchAdded() == is not yet specified; 
+
+	public tableCleared : () ==> ()
+	tableCleared() == is not yet specified;  
+
+	public nowSmoking : nat ==> ()
+	nowSmoking(smokerNumber) == is not yet specified;
+
+	functions
+	public static ElementToNat : Table`Element -> nat
+    ElementToNat(elm) == 
+		cases elm:
+			<Tobacco> -> 1,
+			<Paper> -> 2,
+			<Match> -> 3
+	 	end;
+
+end gui_Graphics
+

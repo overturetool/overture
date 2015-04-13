@@ -1,0 +1,1 @@
+SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq('h', 'e', 'j'), SeqUtil.seq('k', 'a', 't'), SeqUtil.seq('m', 'o', 'u', 's', 'e')))

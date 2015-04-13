@@ -1,0 +1,123 @@
+class Radar is subclass of GLOBAL
+
+types 
+
+instance variables
+  busy     : bool := true;
+  location : Coordinates;
+  range    : nat1;
+  detected : map FOId to FO;
+  priority : seq of FO := [];
+inv forall foid in set dom detected & detected(foid).getId() = foid
+  
+operations
+
+public Radar : int * int * nat1 ==> Radar
+Radar(x,y,r) ==
+ (location := mk_Coordinates(x,y);
+  range := r;
+  detected := {|->};
+ );
+
+public Scan : AirSpace ==> ()
+Scan(as) ==
+ (detected := { x.getId() |-> x | x in set as.getAirspace() & InRange(x) };
+  UpdatePriorityList()
+ );
+    
+private InRange : FO ==> bool
+InRange(fo) ==
+  let foLocation = fo.getCoordinates()
+  in 
+    return isPointInRange(location,range,foLocation); 
+   
+public getDetected : () ==> set of FO
+getDetected() == 
+  return rng detected;
+
+public getDetectedMap : () ==> map FOId to FO
+getDetectedMap() ==
+  return detected;
+
+public saturatedRadar : () ==> bool
+saturatedRadar() == 
+  return card dom detected > range / 4;
+  
+public getSaturatingFOs : () ==> set of FOId
+getSaturatingFOs() ==
+  return {priority(i).getId() | i in set inds priority & i > floor(range/4)};
+
+public getLocation : () ==> Coordinates
+getLocation() == 
+  return location;
+
+public getRange : () ==> nat1
+getRange() ==
+  return range;
+  
+private UpdatePriorityList : () ==> ()
+UpdatePriorityList() == 
+  let notDetect = elems priority \ rng detected,
+      newlyDet  = detected :-> elems priority
+  in 
+    ( removeNotDetected(notDetect);
+      addNewlyDetected(newlyDet);
+      
+    );
+
+private removeNotDetected : set of FO ==> ()
+removeNotDetected(fos) == 
+  priority := [priority(i) | i in set inds priority 
+                           & priority(i) in set fos];    
+  
+private addNewlyDetected : map FOId to FO ==> ()
+addNewlyDetected(newlyDetect) == 
+  priority := priority ^ set2seqFO(rng newlyDetect);    
+
+public isFinished: () ==> ()
+isFinished() == skip;
+
+functions
+set2seqFO : set of FO -> seq of FO
+set2seqFO(fos) ==
+  if fos = {}
+  then []
+  else 
+    let fo in set fos
+    in
+      [fo] ^ set2seqFO(fos\{fo})
+measure set2seqFOm;  
+      
+set2seqFOm : set of FO -> nat
+set2seqFOm(fos) == card fos;
+  
+  
+operations
+  
+detectFOs : () ==> ()
+detectFOs() ==
+let as = MSAW`airspace
+  in 
+   detected := { x.getId() |-> x | x in set as.getAirspace() & InRange(x) };
+
+
+Step : () ==> ()
+Step() ==
+ (busy := true;
+  detectFOs();
+  UpdatePriorityList();
+  busy := false;
+ );
+     
+thread
+
+periodic(2000E6,0,0,0) (Step)
+
+sync 
+mutex(UpdatePriorityList);
+mutex(removeNotDetected,addNewlyDetected);
+per isFinished => not busy;
+--per Step => not busy;
+
+      
+end Radar

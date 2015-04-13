@@ -1,0 +1,23 @@
+class Entry
+
+types
+
+public Vec ::
+	x : int
+	y : int;
+
+operations
+
+public static op :  () ==> nat
+op () ==
+	let mk_Vec(a,33) in set {mk_Vec(1,11), mk_Vec(2,22), mk_Vec(3,33), mk_Vec(4,44)}
+	in
+		return a;
+		
+operations
+	
+public static Run : () ==> ?
+Run () ==
+	op();
+
+end Entry

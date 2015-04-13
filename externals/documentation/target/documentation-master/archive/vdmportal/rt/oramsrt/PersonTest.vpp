@@ -1,0 +1,26 @@
+\begin{vdm_al}
+class PersonTest is subclass of TestCase
+
+operations
+  protected SetUp: () ==> ()
+  SetUp () == skip;
+
+  protected RunTest: () ==> ()
+  RunTest () == 
+    (
+    dcl p1 : Person := new Person(mk_token(<testperson>));
+    AssertTrue(p1.getId() = mk_token(<testperson>));
+    AssertTrue(p1.getArea() = nil);
+    AssertTrue(p1.getBoat() = nil);
+    
+    p1.changeArea(ORAMS`a1.getId());
+    p1.changeBoat(ORAMS`l1.getId());
+    AssertTrue(p1.getArea() = ORAMS`a1.getId());
+    AssertTrue(p1.getBoat() = ORAMS`l1.getId());
+    );
+
+  protected TearDown: () ==> ()
+  TearDown () == skip
+
+end PersonTest
+\end{vdm_al}

@@ -1,0 +1,259 @@
+\begin{vdm}\kClass $Lifeboat$ \kISO $SafetyEquipment$\index{Lifeboat|ClassDef}
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}
+\assdef{id}{Bid\index{Bid|TypeOcc}}
+\end{insvar}
+\begin{insvar}
+\assdef{acceptingCrew}{\Bool }
+\end{insvar}
+\begin{insvar}
+\assdef{crew}{\setof{Pid\index{Pid|TypeOcc}}}[{\set{}}]
+\end{insvar}
+\begin{insvar}
+\assdef{areas}{\setof{Aid\index{Aid|TypeOcc}}}[{\set{}}]
+\end{insvar}
+\begin{instinvfn}
+\color{not-covered} \Card crew \Le capacity\color{covered}\end{instinvfn}
+\par
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{Lifeboat}\index{Lifeboat|FuncDef}%
+\signature{\Nat  \X Bid\index{Bid|TypeOcc} \Oto Lifeboat\index{Lifeboat|TypeOcc}}
+\parms{cap,bid}
+\annlab[o]{Lifeboat`Lifeboat}
+\begin{blockstmt}
+\ass{acceptingCrew}{\True } ; \\
+\ass{capacity}{cap} ; \\
+\ass{id}{bid}
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{getId}\index{getId|FuncDef}%
+\signature{() \Oto Bid\index{Bid|TypeOcc}}
+\parms{}
+\annlab[o]{Lifeboat`getId}
+\return{id};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{getRemainingCap}\index{getRemainingCap|FuncDef}%
+\signature{() \Oto \Nat }
+\parms{}
+\annlab[o]{Lifeboat`getRemainingCap}
+\If acceptingCrew
+\Then \\
+\return{capacity \Minus  \Card crew}
+\Else \\
+\return{0}
+\Fi;
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{addPerson}\index{addPerson|FuncDef}%
+\signature{Pid\index{Pid|TypeOcc} \Oto ()}
+\parms{p}
+\annlab[o]{Lifeboat`addPerson}
+\ass{crew}{crew \Union \set{p}}
+\begin{precond}
+\color{not-covered}capacity \Minus  \Card crew > 0 \And acceptingCrew\color{covered}
+\end{precond}
+\begin{postcond}
+\color{not-covered}p \In crew\color{covered}
+\end{postcond};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{removePerson}\index{removePerson|FuncDef}%
+\signature{Pid\index{Pid|TypeOcc} \Oto ()}
+\parms{p}
+\annlab[o]{Lifeboat`removePerson}
+\ass{crew}{crew \Setdiff \set{p}}
+\begin{precond}
+\color{not-covered}p \In crew\color{covered}
+\end{precond}
+\begin{postcond}
+\color{not-covered}p \Notin crew\color{covered}
+\end{postcond};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{addArea}\index{addArea|FuncDef}%
+\signature{Aid\index{Aid|TypeOcc} \Oto ()}
+\parms{a}
+\annlab[o]{Lifeboat`addArea}
+\ass{areas}{areas \Union \set{a}};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{removeArea}\index{removeArea|FuncDef}%
+\signature{Aid\index{Aid|TypeOcc} \Oto ()}
+\parms{a}
+\annlab[o]{Lifeboat`removeArea}
+\ass{areas}{areas \Setdiff \set{a}};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{isDedicated}\index{isDedicated|FuncDef}%
+\signature{() \Oto \Bool }
+\parms{}
+\annlab[o]{Lifeboat`isDedicated}
+\return{ \Card areas = 1};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{getAreas}\index{getAreas|FuncDef}%
+\signature{() \Oto \setof{Aid\index{Aid|TypeOcc}}}
+\parms{}
+\annlab[o]{Lifeboat`getAreas}
+\return{areas};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{disable}\index{disable|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{Lifeboat`disable}
+\ass{acceptingCrew}{\False };
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{enable}\index{enable|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{Lifeboat`enable}
+\ass{acceptingCrew}{\True };
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{getInterCrew}\index{getInterCrew|FuncDef}%
+\signature{\setof{Pid\index{Pid|TypeOcc}} \Oto \setof{Pid\index{Pid|TypeOcc}}}
+\parms{ps}
+\annlab[o]{Lifeboat`getInterCrew}
+\return{crew \Inter ps};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{getCrew}\index{getCrew|FuncDef}%
+\signature{() \Oto \setof{Pid\index{Pid|TypeOcc}}}
+\parms{}
+\annlab[o]{Lifeboat`getCrew}
+\return{crew}
+\end{op}
+\kSync
+\mutex{addPerson};
+\mutex{addPerson,removePerson,getRemainingCap,getCrew,getInterCrew};
+\mutex{addArea,removeArea,getAreas,isDedicated};
+\mutex{disable,enable,getRemainingCap}
+\kEnd $Lifeboat$
+
+\end{vdm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{tabular}{p{25mm}l}
+{\bf Test Suite :} & vdm.tc \\ 
+{\bf Class :} & Lifeboat \\ 
+\end{tabular}
+
+\begin{longtable}{|l|r|r|}\hline
+{\bf Name} & {\bf \#Calls} & {\bf Coverage} \\ \hline\hline
+\endhead
+Lifeboat`getId & 44 & $\surd$ \\ \hline
+Lifeboat`enable & 8 & $\surd$ \\ \hline
+Lifeboat`addArea & 20 & $\surd$ \\ \hline
+Lifeboat`disable & 10 & $\surd$ \\ \hline
+Lifeboat`getCrew & 20 & $\surd$ \\ \hline
+Lifeboat`Lifeboat & 9 & $\surd$ \\ \hline
+Lifeboat`getAreas & 9 & $\surd$ \\ \hline
+Lifeboat`addPerson & 29 & 31\% \\ \hline
+Lifeboat`removeArea & 8 & $\surd$ \\ \hline
+Lifeboat`isDedicated & 462 & $\surd$ \\ \hline
+Lifeboat`getInterCrew & 94 & $\surd$ \\ \hline
+Lifeboat`removePerson & 18 & 45\% \\ \hline
+Lifeboat`getRemainingCap & 376 & $\surd$ \\ \hline
+\hline
+{\bf Total Coverage} & & {\bf 76\%} \\ \hline
+\end{longtable}
+

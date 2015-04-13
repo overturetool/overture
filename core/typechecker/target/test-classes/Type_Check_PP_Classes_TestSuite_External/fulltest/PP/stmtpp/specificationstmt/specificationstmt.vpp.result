@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="3" line="5" message="Instance variable 'inst1' is not initialized" messageType="warning" number="5001" resource="specificationstmt.vpp"/>
+<message column="3" line="6" message="Instance variable 'inst2' is not initialized" messageType="warning" number="5001" resource="specificationstmt.vpp"/>
+<message column="16" line="19" message="Map application argument is incompatible type" messageType="error" number="3058" resource="specificationstmt.vpp"/>
+<message column="8" line="23" message="Precondition is not a boolean expression" messageType="error" number="3233" resource="specificationstmt.vpp"/>
+<message column="15" line="31" message="Left and right of '=' are incompatible types" messageType="error" number="3087" resource="specificationstmt.vpp"/>
+<result/>
+</testResult>

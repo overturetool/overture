@@ -1,0 +1,9 @@
+class Printer
+
+operations
+
+  public static Out: seq of char ==> ()
+  Out (pstr) ==
+    def - = new IO().echo(pstr ^ "\n") in skip;
+
+end Printer

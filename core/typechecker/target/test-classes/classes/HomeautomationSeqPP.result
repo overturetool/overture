@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
+<message column="11" line="24" message="Instance variable 'ID' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="11" line="25" message="Instance variable 'Type' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="11" line="26" message="Instance variable 'Corr' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="11" line="27" message="Instance variable 'Env' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="11" line="619" message="Instance variable 'ID' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="11" line="620" message="Instance variable 'Type' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="11" line="621" message="Instance variable 'Value' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="11" line="622" message="Instance variable 'Env' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="1" line="802" message="Instance variable 'win' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="1" line="803" message="Instance variable 'therm' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="1" line="956" message="Instance variable 'world' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="1" line="957" message="Instance variable 'host' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="1" line="958" message="Instance variable 'tempSensor' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="1" line="959" message="Instance variable 'humidSensor' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="1" line="960" message="Instance variable 'win' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="1" line="961" message="Instance variable 'therm' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="1" line="1184" message="Instance variable 'tempSensor' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="1" line="1185" message="Instance variable 'humidSensor' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<message column="1" line="1290" message="Instance variable 'env' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP"/>
+<result/>
+</testResult>

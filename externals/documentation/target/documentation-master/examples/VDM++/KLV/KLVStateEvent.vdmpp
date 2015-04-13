@@ -1,0 +1,21 @@
+\section{The KLVStateEvent Test Class}
+
+The KLVStateEvent class implements a test event that does not perform
+any action, but returns the status of the Cab Display and the
+Emergency Break.
+
+\begin{vdm_al}
+class KLVStateEvent is subclass of Event
+
+operations 
+
+  public
+  execute : KLV ==> Test`TestResult
+  execute (klv) ==
+    (let mk_(a,e,g) = klv.getCabDisplay().getDisplay(),
+         e' =  klv.getEmergencyBreak().getEmergencyBreak() in
+     return mk_Test`KLVstate(mk_Test`CabDisp(a,e,g), 
+                             mk_Test`EmerBreak(e')) );
+
+end KLVStateEvent
+\end{vdm_al}

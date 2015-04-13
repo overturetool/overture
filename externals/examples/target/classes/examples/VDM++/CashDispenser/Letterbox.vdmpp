@@ -1,0 +1,25 @@
+\section{The Class Letterbox}
+
+This class stores account statements sent to cardholders. 
+
+\begin{vdm_al}
+class Letterbox
+
+instance variables
+  statements : seq of Letter := [];
+
+operations
+  public PostStatement : Letter ==> ()
+  PostStatement(letter) == 
+    statements := statements ^ [letter];
+
+  public GetLastStatement : () ==> Letter
+  GetLastStatement() == 
+    return statements(len statements)
+  pre statements <> [];
+
+end Letterbox
+\end{vdm_al}
+
+
+

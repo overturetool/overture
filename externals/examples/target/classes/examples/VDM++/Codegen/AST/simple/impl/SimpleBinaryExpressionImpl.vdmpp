@@ -1,0 +1,30 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleBinaryExpressionImpl is subclass of SimpleBinaryExpression
+instance variables
+    private iv_lhs:SimpleExpression;
+    private iv_op:SimpleBinaryOperator;
+    private iv_rhs:SimpleExpression;
+
+operations
+    public SimpleBinaryExpressionImpl: SimpleExpression * SimpleBinaryOperator * SimpleExpression ==> SimpleBinaryExpressionImpl
+    SimpleBinaryExpressionImpl(p_lhs, p_op, p_rhs) ==
+    (
+        iv_lhs := p_lhs;
+        iv_op := p_op;
+        iv_rhs := p_rhs;
+    );
+
+    public getLhs: () ==> SimpleExpression
+    getLhs() == return iv_lhs;
+
+    public getOp: () ==> SimpleBinaryOperator
+    getOp() == return iv_op;
+
+    public getRhs: () ==> SimpleExpression
+    getRhs() == return iv_rhs;
+
+end SimpleBinaryExpressionImpl

@@ -1,0 +1,25 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleLocalDefinitionImpl is subclass of SimpleLocalDefinition
+instance variables
+    private iv_name:SimpleIdentifier;
+    private iv_value:SimpleExpression;
+
+operations
+    public SimpleLocalDefinitionImpl: SimpleIdentifier * SimpleExpression ==> SimpleLocalDefinitionImpl
+    SimpleLocalDefinitionImpl(p_name, p_value) ==
+    (
+        iv_name := p_name;
+        iv_value := p_value;
+    );
+
+    public getName: () ==> SimpleIdentifier
+    getName() == return iv_name;
+
+    public getValue: () ==> SimpleExpression
+    getValue() == return iv_value;
+
+end SimpleLocalDefinitionImpl

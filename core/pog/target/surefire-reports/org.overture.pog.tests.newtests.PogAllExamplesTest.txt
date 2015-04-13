@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.overture.pog.tests.newtests.PogAllExamplesTest
+-------------------------------------------------------------------------------
+Tests run: 107, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 35.447 sec

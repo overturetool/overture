@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="30" line="25" message="State init expression cannot be executed" messageType="warning" number="5010" resource="hotelSL"/>
+<message column="1" line="33" message="Definition 'CheckIn' not used" messageType="warning" number="5000" resource="hotelSL"/>
+<message column="1" line="51" message="Definition 'Enter' not used" messageType="warning" number="5000" resource="hotelSL"/>
+<message column="1" line="64" message="Definition 'CheckInExpl' not used" messageType="warning" number="5000" resource="hotelSL"/>
+<message column="1" line="82" message="Definition 'EnterExpl' not used" messageType="warning" number="5000" resource="hotelSL"/>
+<message column="1" line="92" message="Definition 'IssueCard' not used" messageType="warning" number="5000" resource="hotelSL"/>
+<message column="1" line="100" message="Definition 'AddRoom' not used" messageType="warning" number="5000" resource="hotelSL"/>
+<message column="1" line="107" message="Definition 'AddGuest' not used" messageType="warning" number="5000" resource="hotelSL"/>
+<result/>
+</testResult>

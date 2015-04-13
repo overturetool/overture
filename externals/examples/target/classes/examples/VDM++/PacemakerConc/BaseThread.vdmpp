@@ -1,0 +1,39 @@
+class BaseThread
+	
+instance variables
+
+protected period : nat1 := 1;
+protected isPeriodic : bool := true;
+
+operations
+
+protected BaseThread : () ==> BaseThread
+BaseThread() ==
+ (World`timerRef.RegisterThread(self);
+  if(not World`timerRef.IsInitialising())
+  then start(self);  
+ );
+
+public SetPeriod : nat1 ==> ()
+SetPeriod(p) ==
+  period := p;
+
+protected Step : () ==> ()
+Step() ==
+  is subclass responsibility
+
+thread
+ (if isPeriodic
+  then (while true
+        do 
+         (Step();
+          World`timerRef.WaitRelative(period);
+         )
+       )
+  else (Step();
+        World`timerRef.WaitRelative(0);
+        World`timerRef.UnRegisterThread();
+       )
+ );
+
+end BaseThread

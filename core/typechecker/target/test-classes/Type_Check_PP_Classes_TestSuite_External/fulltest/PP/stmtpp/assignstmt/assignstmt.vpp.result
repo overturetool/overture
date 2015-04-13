@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="3" line="14" message="Instance variable 'a' is not initialized" messageType="warning" number="5001" resource="assignstmt.vpp"/>
+<message column="3" line="15" message="Instance variable 'b' is not initialized" messageType="warning" number="5001" resource="assignstmt.vpp"/>
+<message column="3" line="16" message="Instance variable 'c' is not initialized" messageType="warning" number="5001" resource="assignstmt.vpp"/>
+<message column="3" line="17" message="Instance variable 'd' is not initialized" messageType="warning" number="5001" resource="assignstmt.vpp"/>
+<message column="3" line="18" message="Instance variable 'e' is not initialized" messageType="warning" number="5001" resource="assignstmt.vpp"/>
+<message column="13" line="20" message="Right hand of and is not bool" messageType="error" number="3066" resource="assignstmt.vpp"/>
+<message column="5" line="31" message="Incompatible types in assignment" messageType="error" number="3239" resource="assignstmt.vpp"/>
+<result/>
+</testResult>

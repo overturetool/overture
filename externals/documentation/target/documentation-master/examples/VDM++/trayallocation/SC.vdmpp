@@ -1,0 +1,40 @@
+-- ===============================================================================================================
+-- SorterController in tray allocation for a sortation system
+-- By José Antonio Esparza and Kim Bjerge - spring 2010
+-- ===============================================================================================================
+
+class SC
+	types
+
+	values
+		
+	instance variables
+		public allocator : TrayAllocator;
+	
+	operations
+	
+    -- SystemController constructor
+	public SC: SorterEnviroment ==> SC
+	SC(e) ==
+	(
+        allocator := new TrayAllocator(e); 
+	);
+
+	
+	-- Notified each time sorter-ring has moved one tray step
+	public TrayStep: Tray`UID * Tray`State  ==> ()
+	TrayStep(uid, state) ==
+	(
+		IO`print("Card reader tray id " ^ String`NatToStr(uid) ^ "\n");
+		allocator.CardReader(uid, state);
+	);
+
+	functions
+
+	sync
+
+	--thread
+
+	traces
+
+end SC

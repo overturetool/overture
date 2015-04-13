@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
+<message column="7" line="54" message="Error 4000: Cannot instantiate abstract class AA in 'AA' (depend-05.vpp) at line 54:7" messageType="error" number="4000" resource="depend-05.vpp.result"/>
+<result>
+<output object="[]" resource="depend-05.vpp" value="[]"/>
+</result>
+</testResult>

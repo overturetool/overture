@@ -1,0 +1,16 @@
+if ( $JavaFormat.format($node.getIfExp()) )
+{
+	$JavaFormat.format($node.getThenStm())
+}
+#foreach( $stm in $node.getElseIf() )
+else if ( $JavaFormat.format($stm.getElseIf()) )
+{
+	$JavaFormat.format($stm.getThenStm())
+}
+#end
+#if ( !$JavaFormat.isNull($node.getElseStm()) )
+else
+{
+	$JavaFormat.format($node.getElseStm())
+}
+#end

@@ -1,0 +1,79 @@
+\section{A few test values}
+
+\begin{vdm_al}
+module TEST
+
+imports from REALM all
+
+exports all
+
+definitions
+
+values
+
+  p1: REALM`NPoint = mk_REALM`NPoint(1,1);
+
+  p2: REALM`NPoint = mk_REALM`NPoint(5,3);
+
+  p3: REALM`NPoint = mk_REALM`NPoint(1,9);
+
+  p4: REALM`NPoint = mk_REALM`NPoint(2,3);
+
+  p5: REALM`NPoint = mk_REALM`NPoint(9,5);
+
+  p6: REALM`NPoint = mk_REALM`NPoint(6,9);
+
+  p7: REALM`NPoint = mk_REALM`NPoint(4,5);
+
+  p8: REALM`NPoint = mk_REALM`NPoint(4,6);
+
+  p9: REALM`NPoint = mk_REALM`NPoint(1,6);
+
+  p10:REALM`NPoint = mk_REALM`NPoint(5,0);
+
+  p11:REALM`NPoint = mk_REALM`NPoint(5,1);
+
+  p12:REALM`NPoint = mk_REALM`NPoint(6,0);
+
+  p13:REALM`NPoint = mk_REALM`NPoint(6,1);
+
+  s1: REALM`NSeg = mk_REALM`NSeg({p1,p2});
+
+  s2: REALM`NSeg = mk_REALM`NSeg({p1,p3});
+
+  s3: REALM`NSeg = mk_REALM`NSeg({p2,p4});
+
+  s4: REALM`NSeg = mk_REALM`NSeg({p4,p3});
+
+  s5: REALM`NSeg = mk_REALM`NSeg({p3,p2});
+
+  s6: REALM`NSeg = mk_REALM`NSeg({p5,p4});
+
+  s7: REALM`NSeg = mk_REALM`NSeg({p6,p1});
+
+  s8: REALM`NSeg = mk_REALM`NSeg({p5,p3});
+
+  s9: REALM`NSeg = mk_REALM`NSeg({p5,p7});
+
+  s10:REALM`NSeg = mk_REALM`NSeg({p9,p3});
+
+  s11:REALM`NSeg = mk_REALM`NSeg({p10,p8});
+
+  s12:REALM`NSeg = mk_REALM`NSeg({p1,p5});
+
+  s13:REALM`NSeg = mk_REALM`NSeg({p10,p13});
+
+  s14:REALM`NSeg = mk_REALM`NSeg({p11,p12});
+
+  r1: REALM`Realm = mk_REALM`Realm({p1,p2},{s1});
+
+  r2: REALM`Realm = mk_REALM`Realm({p5,p4},{s6});
+
+  r3: REALM`Realm = mk_REALM`Realm({p5,p4,p3},{s6,s8});
+
+  r4: REALM`Realm = mk_REALM`Realm({p1,p3,p4,p5,p6,p7,p8},{s6,s8});
+
+  r5: REALM`Realm = mk_REALM`Realm({p10,p13},{s13})
+
+end TEST
+\end{vdm_al}

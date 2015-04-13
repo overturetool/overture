@@ -1,0 +1,52 @@
+
+
+\section{Third specification}
+
+This is the most abstract specification.
+
+\begin{vdm_al}
+
+state #S0 of
+
+ b : bool
+ ms : set of MName
+
+inv mk_#S0(b, ms) == 
+       b = false => ms = {}
+
+init s == s = mk_#S0(false, {})
+end
+
+\end{vdm_al}
+
+The operations are specified as follows:
+
+\begin{vdm_al}
+
+operations
+
+slave ()
+ext wr b : bool
+
+pre true
+
+post b = true; 
+
+acq (l:MName)
+
+ext rd b : bool
+    wr ms : (set of MName)
+
+pre b = true and not (l in set ms)
+
+post ms = ms~ union {l} ;
+
+rel (l:MName)
+
+ext wr ms : (set of MName)
+
+pre l in set ms
+
+post ms = ms~ \ {l}
+
+\end{vdm_al}

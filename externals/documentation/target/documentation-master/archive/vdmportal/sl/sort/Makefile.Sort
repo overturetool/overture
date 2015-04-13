@@ -1,0 +1,40 @@
+#
+# WHAT
+#    Makefile for the code generated VDM-SL sort example.
+#    (C) 1994, IFAD, Denmark
+# ID
+#    $Id: Makefile.Sort,v 1.1 2005/11/28 07:14:45 vdmtools Exp $
+# PROJECT
+#    Toolbox
+# COPYRIGHT
+#    (C) 1994 IFAD, Denmark
+#
+# REMEMBER to change the macro VDMHOME to fit to your directory
+# structure.
+#
+# Note that this version of the code generator must be used 
+# with g++ version 2.7.2
+#
+
+VDMHOME = /opt/toolbox
+INCL    = -I$(VDMHOME)/cg/include
+LIB     = -L$(VDMHOME)/cg/lib -lvdm -lCG -lm 
+
+CC      = g++ -g -fno-for-scope -Wall
+VDMDE   = vdmde
+
+sort_ex: sort.o sort_ex.o 
+	${CC} -o sort_ex sort_ex.o sort.o ${LIB}
+
+sort_ex.o: sort_ex.cc
+	${CC} -c -o sort_ex.o sort_ex.cc ${INCL} 
+
+sort.o: DefaultMod.h DefaultMod.cc
+	${CC} -c -o sort.o  DefaultMod.cc ${INCL} 
+
+DefaultMod.h  DefaultMod.cc: sort.vdm
+	$(VDMDE) -cxr sort.vdm
+
+clean: 
+	rm -f *~ *.o DefaultMod.* sort_ex
+

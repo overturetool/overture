@@ -1,0 +1,19 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:15 CET 2010
+--
+
+class GiraffeUnaryOperator is subclass of GiraffeNode
+values
+    public MINUS = new GiraffeUnaryOperator("MINUS");
+    public NOT = new GiraffeUnaryOperator("NOT");
+    public PLUS = new GiraffeUnaryOperator("PLUS");
+
+instance variables
+    public name:[seq of char] := nil;
+
+operations
+    public GiraffeUnaryOperator: seq of char ==> GiraffeUnaryOperator
+    GiraffeUnaryOperator(n) == name := n;
+
+end GiraffeUnaryOperator

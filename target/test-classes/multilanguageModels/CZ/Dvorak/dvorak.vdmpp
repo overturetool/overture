@@ -1,0 +1,9 @@
+class Dvořák
+operations
+	public static op: () ==> seq of char
+		op() == return "Antonín Dvořák";
+		
+	public static ch: () ==> char
+		ch() == return '€';
+		
+end Dvořák

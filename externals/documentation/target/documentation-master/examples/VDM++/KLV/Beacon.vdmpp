@@ -1,0 +1,19 @@
+\section{The Beacon Class}
+
+The beacon class is an abstract class representing the possible kinds
+of beacons. Four different kinds of beacons exist:
+
+\begin{description}
+\item[TIV\_D:] speed restriction announcement beacon, 
+\item[TIV\_E:] speed restriction beacon, 
+\item[TIV\_A:] TIV\_D cancellation beacon, 
+\item[FLTV:] end of speed restriction area beacon.
+\end{description}
+
+A class implementing the Beacon class exists for each of these four kinds.
+
+\begin{vdm_al}
+class Beacon
+ 
+end Beacon
+\end{vdm_al}

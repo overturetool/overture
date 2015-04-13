@@ -1,0 +1,37 @@
+\section{Thruster Class}
+
+\begin{vdm_al}
+class Thruster
+
+types
+  public On_Off = <On> | <Off>;
+
+instance variables
+  state : On_Off := <Off>;
+
+ 
+operations
+  public
+  SetOn : () ==> ()
+  SetOn() ==
+    state := <On>;
+
+  public
+  SetOff : () ==> ()
+  SetOff() ==
+    state := <Off>;
+
+  public
+  GetState : () ==> On_Off
+  GetState() ==
+    return state;
+
+end Thruster
+\end{vdm_al}
+
+The test coverage table for the Thruster class looks like:
+
+\begin{rtinfo}{vdm.tc}[Thruster]
+\end{rtinfo}
+
+

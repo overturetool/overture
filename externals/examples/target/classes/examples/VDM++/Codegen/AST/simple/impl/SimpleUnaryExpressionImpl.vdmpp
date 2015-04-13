@@ -1,0 +1,25 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleUnaryExpressionImpl is subclass of SimpleUnaryExpression
+instance variables
+    private iv_op:SimpleUnaryOperator;
+    private iv_exp:SimpleExpression;
+
+operations
+    public SimpleUnaryExpressionImpl: SimpleUnaryOperator * SimpleExpression ==> SimpleUnaryExpressionImpl
+    SimpleUnaryExpressionImpl(p_op, p_exp) ==
+    (
+        iv_op := p_op;
+        iv_exp := p_exp;
+    );
+
+    public getOp: () ==> SimpleUnaryOperator
+    getOp() == return iv_op;
+
+    public getExp: () ==> SimpleExpression
+    getExp() == return iv_exp;
+
+end SimpleUnaryExpressionImpl

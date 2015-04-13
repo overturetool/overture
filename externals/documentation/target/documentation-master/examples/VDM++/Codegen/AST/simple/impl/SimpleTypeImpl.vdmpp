@@ -1,0 +1,8 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleTypeImpl is subclass of SimpleNodeImpl
+    -- empty
+end SimpleTypeImpl

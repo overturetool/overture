@@ -1,0 +1,92 @@
+\begin{vdm}\kClass $World$ \kISO $GLOBAL$\index{World|ClassDef}
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}\kw{public}\hspace{0.5em}\kw{static}
+\assdef{env}{\Opt{Environment\index{Environment|TypeOcc}}}[{\Nil }]
+\end{insvar}
+\par
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{World}\index{World|FuncDef}%
+\signature{String\index{String|TypeOcc} \Oto World\index{World|TypeOcc}}
+\parms{scenario}
+\annlab[o]{World`World}
+\begin{blockstmt}
+\ass{env}{\fnapply{\new{Environment}}{scenario}} ; \\
+$env$.\call{setController}{ORAMS`ctl}
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{Run}\index{Run|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{World`Run}
+\begin{blockstmt}
+\start{env} ; \\
+\start{ORAMS`ctl} ; \\
+\start{ORAMS`a1} ; \\
+\start{ORAMS`a2} ; \\
+\start{ORAMS`a3} ; \\
+$env$.\call{isFinished}{} ; \\
+ORAMS`ctl.\call{isFinished}{} ; \\
+ORAMS`a1.\call{isFinished}{} ; \\
+ORAMS`a2.\call{isFinished}{} ; \\
+ORAMS`a3.\call{isFinished}{} ; \\
+$env$.\call{showResult}{}
+\end{blockstmt}
+\end{op}
+\kEnd $World$
+
+\end{vdm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

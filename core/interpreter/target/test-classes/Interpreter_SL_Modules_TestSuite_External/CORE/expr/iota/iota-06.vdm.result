@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
+<message column="17" line="12" message="Error 4: Cannot get bind values for type nat in 'A' (iota-06.vdm) at line 12:17" messageType="error" number="4" resource="iota-06.vdm"/>
+<result>
+<output object="[]" resource="iota-06.vdm" value="[]"/>
+</result>
+</testResult>

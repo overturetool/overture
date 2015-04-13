@@ -1,0 +1,98 @@
+class Environment is subclass of GLOBAL
+
+types 
+
+InputTP   = (Time * seq of inline);
+
+inline  = FOId * int * int * Altitude * Time;
+  
+FOOut = FOId * Coordinates * Altitude * FOWarning * 
+        MinimumSafetyAltitude * Time;
+RadarOut = Coordinates * nat1 * RadarWarning * nat *  Time;
+  
+  
+outline = FOOut | RadarOut; 
+
+
+instance variables 
+
+  io : IO := new IO();
+  inlines  : seq of inline  := [];
+  outlines : seq of outline := [];
+
+  airspace : [AirSpace] := nil;
+  busy : bool := true;
+  updating : bool := false;
+  simtime : Time;  
+operations
+  
+public Environment : String ==> Environment
+Environment(fname) == 
+  def mk_(-,mk_(timeval,input)) = io.freadval[InputTP](fname) 
+  in
+    (inlines := input;
+     simtime := timeval);    
+      
+public setAirSpace : AirSpace ==> ()
+setAirSpace(as) ==
+  airspace := as;
+      
+public handleFOWarningEvent : FOId * Coordinates * Altitude * FOWarning * 
+                              MinimumSafetyAltitude * Time ==> ()
+handleFOWarningEvent(id,coord,alt,warn,msa,t) ==
+  outlines := outlines ^ [mk_(id,coord,alt,warn,msa,t)];
+ 
+public handleRadarWarningEvent : Coordinates * nat1 * RadarWarning * 
+                                 nat *  Time ==> ()
+handleRadarWarningEvent(coord,range,radWarn,num,pt) ==
+  outlines := outlines ^ [mk_(coord,range,radWarn,num,pt)];
+ 
+
+public showResult : () ==> ()
+showResult() ==
+  def - = io.writeval[seq of outline](outlines) in skip;
+ 
+
+private updateFOs : () ==> ()
+updateFOs() ==
+ (if len inlines > 0 
+  then 
+    (dcl curtime : Time := time, 
+         done : bool := false;
+     while not done do
+       def mk_(id,x,y, altitude,pt) = hd inlines
+       in 
+         if pt <= curtime 
+         then 
+          (airspace.updateFO(id,mk_Coordinates(x,y),altitude);
+           inlines := tl inlines; 
+           updating := true;
+           done := len inlines = 0 
+           )
+         else done := true
+     )
+  else busy := false
+ );
+     
+
+public isFinished : () ==> () 
+isFinished() == skip;
+
+sync
+
+mutex(updateFOs);
+mutex(handleFOWarningEvent,updateFOs,handleRadarWarningEvent);
+
+mutex(handleFOWarningEvent);
+
+per isFinished => not busy;
+
+
+mutex(handleRadarWarningEvent);
+mutex(handleRadarWarningEvent,handleFOWarningEvent);
+
+thread
+ periodic (1000E6,10,30,0)(updateFOs)
+
+
+end Environment

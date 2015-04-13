@@ -1,0 +1,8 @@
+class A
+
+functions
+
+public f2: (nat * nat) -> (nat * nat)
+f2(x) == mk_(1,2);
+	
+end A

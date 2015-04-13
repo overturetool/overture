@@ -1,0 +1,86 @@
+
+class A
+
+instance variables
+  private 	var0 : real := 0;
+  					var1 : real := 0;
+  					
+  protected var2 : real := 0;		
+  		
+  public 		var3 : real := 0;
+  		  
+end A
+
+class B
+
+instance variables 
+  a : A := new A()
+  
+operations
+
+	--Access to instance variable in A explicitly declared as private
+  set0: nat ==> ()
+  set0(n) == a.var0 := n;
+  
+  get0: () ==> real
+  get0() == return a.var0;
+  
+  --Access to instance variable in A implcitly declared as private
+ 	set1: nat ==> ()
+  set1(n) == a.var1 := n;
+
+  get1: () ==> real
+  get1() == return a.var1;
+  
+  --Access to instance variable in A declared as protected
+  set2: nat ==> ()
+  set2(n) == a.var2 := n;
+
+  get2: () ==> real
+  get2() == return a.var2;
+    
+  --Access to instance variable in A declared as public
+  set3: nat ==> ()
+  set3(n) == a.var3 := n;
+  
+  get3: () ==> real
+  get3() == return a.var3;
+  
+end B
+
+class C is subclass of A
+
+instance variables
+	a : A := new A()
+ 
+operations
+
+	--Access to instance variable in A explicitly declared as private
+  set0: nat ==> ()
+  set0(n) == a.var0 := n;
+  
+  get0: () ==> real
+  get0() == return a.var0;
+  
+  --Access to instance variable in A implcitly declared as private
+ 	set1: nat ==> ()
+  set1(n) == a.var1 := n;
+
+  get1: () ==> real
+  get1() == return a.var1;
+  
+  --Access to instance variable in A declared as protected
+  set2: nat ==> ()
+  set2(n) == a.var2 := n;
+
+  get2: () ==> real
+  get2() == return a.var2;
+    
+  --Access to instance variable in A declared as public
+  set3: nat ==> ()
+  set3(n) == a.var3 := n;
+  
+  get3: () ==> real
+  get3() == return a.var3;
+
+end C

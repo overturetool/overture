@@ -1,0 +1,34 @@
+class World
+
+instance variables
+
+private env				: Environment;
+public static timerRef	: TimeStamp := new TimeStamp(); --(6);
+private ha : HA;
+
+operations
+
+public World: () ==> World
+World() ==
+ (ha := new HA();  
+  env := new Environment("scenario.txt", 1, true);
+  
+  ha.Host.AddNode(ha.TempNode.GetID(), ha.TempNode.GetType());
+  ha.Host.AddNode(ha.HumidNode.GetID(), ha.HumidNode.GetType());
+  ha.Host.AddNode(ha.ThermNode.GetID(), ha.ThermNode.GetType());
+  ha.Host.AddNode(ha.WinNode.GetID(), ha.WinNode.GetType());
+
+  -- End the initialisation phase of system threads
+  World`timerRef.DoneInitialising();  
+ );
+
+public Run: () ==> ()
+Run() ==
+ (-- wait til environment has finished creating input
+  env.IsFinished();
+  -- print simulation finishing message
+  IO`print("Test run finished at time: ");
+  IO`print(timerRef.GetTime());
+ );
+
+end World

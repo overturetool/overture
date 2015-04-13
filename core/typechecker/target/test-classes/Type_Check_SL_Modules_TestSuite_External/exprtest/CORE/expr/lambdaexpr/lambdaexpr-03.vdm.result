@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="27" line="18" message="Definition 's2' not used" messageType="warning" number="5000" resource="lambdaexpr-03.vdm"/>
+<message column="21" line="18" message="Matching expression is not a set type" messageType="error" number="3206" resource="lambdaexpr-03.vdm"/>
+<message column="32" line="18" message="At least one bind cannot match this type" messageType="error" number="3265" resource="lambdaexpr-03.vdm"/>
+<message column="21" line="18" message="Matching expression is not a set type" messageType="error" number="3206" resource="lambdaexpr-03.vdm"/>
+<result/>
+</testResult>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="1" line="27" message="Definition 'cid1' not used" messageType="warning" number="5000" resource="TrackerSL"/>
+<message column="1" line="39" message="Definition 'SetUp' not used" messageType="warning" number="5000" resource="TrackerSL"/>
+<message column="3" line="80" message="Definition 'Introduce' not used" messageType="warning" number="5000" resource="TrackerSL"/>
+<message column="1" line="110" message="Definition 'Move' not used" messageType="warning" number="5000" resource="TrackerSL"/>
+<message column="1" line="126" message="Definition 'Delete' not used" messageType="warning" number="5000" resource="TrackerSL"/>
+<result/>
+</testResult>

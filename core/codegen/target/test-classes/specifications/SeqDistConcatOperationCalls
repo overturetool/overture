@@ -1,0 +1,12 @@
+class A
+
+instance variables
+
+y : seq of nat := conc [op(), op()];
+
+operations
+
+public op : () ==> seq of nat
+op () == return [1,2];
+
+end A

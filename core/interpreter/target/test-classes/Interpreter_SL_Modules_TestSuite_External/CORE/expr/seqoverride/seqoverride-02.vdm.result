@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
+<message column="8" line="21" message="Error 4091: Can't get int value of bool in 'A' (seqoverride-02.vdm) at line 21:8" messageType="error" number="4091" resource="seqoverride-02.vdm"/>
+<result>
+<output object="[]" resource="seqoverride-02.vdm" value="[]"/>
+</result>
+</testResult>

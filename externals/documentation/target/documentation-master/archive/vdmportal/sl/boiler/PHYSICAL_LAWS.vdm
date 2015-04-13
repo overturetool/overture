@@ -1,0 +1,329 @@
+\section{Approximations of physical laws}\label{PHYSICAL_LAWS}
+
+
+The physical laws that rule the behaviour of the boiler have been expressed in
+section \ref{boiler_intro} as differential equations. Unfortunately, VDM does
+not allow to constrain the behaviour of its variables by such elaborate
+mathematical formulae. In this section, several approximations of these
+physical laws are presented. They define upper and lower bounds on the physical
+variables for an evolution ranging over a given duration $dt$ and starting from
+a given state.
+Within this $dt$ interval, possible evolutions of the pumps state and valve state are allowed.
+These evolutions may both result from actions from the
+controller or defects of the units. Thus the $PHYSICAL-LAWS$
+module is parametrized by two functions $reachable-pump-states$ and
+$reachable-valve-states$ which characterize these evolutions.
+$Reachable-pump-states$ takes an initial pump state and a duration and returns
+the set of states which can be reached after this duration.
+
+\vspace{0.5cm}
+
+\begin{vdm_al}
+module PHYSICAL_LAWS
+
+
+parameters
+   functions 
+      reachable_pump_states : BOILER_TYPES`pump_state * BOILER_TYPES`duration
+        +> set of BOILER_TYPES`pump_state ;
+      reachable_valve_states : BOILER_TYPES`valve_state * BOILER_TYPES`duration
+
+        -> set of BOILER_TYPES`valve_state
+
+imports from BOILER_TYPES all
+
+
+exports all
+
+definitions
+\end{vdm_al}
+
+\subsection{Steam}
+
+\begin{figure}[htb]
+\hspace{4cm}{\epsfbox{../pictures/steam_picture.eps}}
+\caption{The evolution of the steam outcome}\label{steam_picture}
+\end{figure}
+The first physical law is an estimate on the evolution of the steam. The following
+functions compute the maximum and minimum flow of steam that can be reached
+after $dt$ starting from a given flow $s0$. Fig. \ref{steam_picture} shows that
+the evolution of the steam outcome ($s$) is a function of $dt$. $max-steam$ and
+$min-steam$ define an envelope on the set of physical functions of $s$ (which
+does not mean that any function that fits into this envelope is admissible).
+They give thus a first estimate on $s$. Obviously, this estimate is more accurate if $dt$
+is small. Function $max-steam$ increases linearly until it reaches the maximum
+steam outcome $W$.
+
+\vspace{0.5cm}
+
+\begin{vdm_al}
+
+
+
+functions
+
+max_steam : 	BOILER_TYPES`steam_outcome * BOILER_TYPES`duration 
+		+> BOILER_TYPES`steam_outcome
+ max_steam(s0,dt) ==
+ if dt <=  (BOILER_TYPES`W - s0) / BOILER_TYPES`U1
+    then s0 + dt*BOILER_TYPES`U1
+    else BOILER_TYPES`W
+  ;
+\end{vdm_al}
+
+The minimal value may be computed similarly. Please note that $U2$ is the
+absolute value of the gradient. A misunderstanding on this point may lead to
+errors on the $-$ sign. To avoid this problem, this property has been  enforced
+by the type of gradients in section \ref{BOILER_TYPES}.
+
+\begin{vdm_al}
+ min_steam : BOILER_TYPES`steam_outcome * BOILER_TYPES`duration 
+		+> BOILER_TYPES`steam_outcome
+ min_steam(s0,dt) ==
+ if dt <=  s0 / BOILER_TYPES`U2
+    then s0 - dt*BOILER_TYPES`U2
+    else 0
+  ;
+\end{vdm_al}
+
+Now the amount of vaporized water is estimated. It is the integral
+of the
+steam outcome. Its computation is thus similar to the
+computation of the extreme values of the steam outcome.
+The types of these functions is $kilogram$
+because it is not guaranteed that these extreme values remain in 
+the range of the $water-level$.
+
+
+\begin{vdm_al}
+max_steamed_water : BOILER_TYPES`steam_outcome * BOILER_TYPES`duration
+
+                        +> BOILER_TYPES`kilograms
+ max_steamed_water (s0,dt) ==
+ let dtime_up = (BOILER_TYPES`W - s0) / BOILER_TYPES`U1
+ in if dt <= dtime_up
+    then dt*(s0 + max_steam(s0,dt))/2
+    else dt * BOILER_TYPES`W - (dtime_up*(BOILER_TYPES`W - s0)/2)
+  ;
+
+ min_steamed_water : BOILER_TYPES`steam_outcome 
+			* BOILER_TYPES`duration
+                        +> BOILER_TYPES`kilograms
+ min_steamed_water (s0,dt) ==
+ let dtime_down = s0 / BOILER_TYPES`U2
+ in if dt <= dtime_down
+    then dt*(s0 + min_steam(s0,dt))/2
+    else dtime_down*s0/2
+  ;
+\end{vdm_al}
+
+\subsection{Pumps}
+
+The following functions compute the maximum and the minimum quantity
+of water  that goes through the set of pumps. At first, we define 
+the quantity of water  that goes through a pump, for a given state of the pump.
+Unfortunately, if the pump is $Starting$ it is difficult to know with a good
+precision when it will start pouring water in the boiler. Therefore,
+two functions must be defined: the maximum and the minimum amounts of water.
+
+In these functions, several assumptions are made on the reachable states
+function: 
+\begin{itemize}
+\item if the pump starts in either $Stopped$ or $Pumping$ modes, this state is
+always in the reachable states after $dt$. In other words, these states may be
+stable. 
+\item This stability hypothesis may be extended to the $Starting$ state: once
+in $Starting$ mode, $Pumping$ may be reached at any time within the pump
+starting time.
+\item The transition from $Pumping$ to $Starting$ is always forbidden, i.e.\
+the only way to stop the flow of the pump is to switch it off, or to break it.
+\end{itemize}
+
+$max-one-pump-water$ computes the maximum flow of water for one pump that
+starts in state $p$ and evolves during $dt$. 
+In this specification $dt1$ is the first instant in time where $Pumping$ may be
+reached. If such an instant exist, the maximum flow is the nominal flow of the
+pump ($P$) times the remaining time between $dt1$ and $dt$.
+\begin{vdm_al}
+
+max_one_pump_water : BOILER_TYPES`pump_state * BOILER_TYPES`duration
+                        +> BOILER_TYPES`kilograms
+max_one_pump_water (p,dt)==
+if <Pumping> in set reachable_pump_states(p,dt)
+then let dt1 :BOILER_TYPES`duration be st
+	<Pumping> in set reachable_pump_states(p,dt1)
+	and forall dt2: BOILER_TYPES`duration & 
+		dt2 < dt1 => <Pumping> not in set reachable_pump_states(p,dt2) 
+	in BOILER_TYPES`P * (dt - dt1)
+else 0
+;
+\end{vdm_al}
+The specification of $min-one-pump-water$ is similar to $max-one-pump-water$.
+If the pump is initially stopped then it may remain in this state and the flow
+is null. Otherwise, if there exists an instant before $dt$ where $Stopped$ may
+be reached, let $dt1$ be the first such instant then the flow is null after
+this instant, otherwise this instant may be considered to be $dt$.
+Finally, the minimum flow of water before this instant must be computed. In
+this period, the pump is either $Starting$ or $Pumping$. If it is $Pumping$, it
+may not become $Starting$ so it must remain $Pumping$. If it is $Starting$, it
+may remain so for at most the pump starting time.
+\begin{vdm_al}
+min_one_pump_water : BOILER_TYPES`pump_state * BOILER_TYPES`duration
+                        +> BOILER_TYPES`kilograms
+min_one_pump_water (p,dt)==
+if p = <Stopped> then 0
+else if <Stopped> in set reachable_pump_states(p,dt)
+	then let dt1 :BOILER_TYPES`duration be st
+		<Stopped> in set reachable_pump_states(p,dt1)
+		and forall dt2: BOILER_TYPES`duration & 
+			dt2 < dt1 => <Stopped> not in set reachable_pump_states(p,dt2) 
+	     in if p = <Pumping> then BOILER_TYPES`P * dt1
+		else if dt1 <= BOILER_TYPES`Pump_starting_time then 0
+		     else BOILER_TYPES`P *(dt1 -  BOILER_TYPES`Pump_starting_time)
+	else if p = <Pumping> then BOILER_TYPES`P * dt
+		else if dt <= BOILER_TYPES`Pump_starting_time then 0
+		     else BOILER_TYPES`P *(dt -  BOILER_TYPES`Pump_starting_time)
+;
+\end{vdm_al}
+These functions may be generalized to the map from pumps to
+ states. In the
+following functions, pump numbers are partitioned depending
+ on their associated
+states. Then the sum of the water produced by these categories is performed.
+\begin{vdm_al}
+
+max_pumped_water : BOILER_TYPES`pump_to_state_map 
+		* BOILER_TYPES`duration
+                 +> BOILER_TYPES`kilograms
+ max_pumped_water (pe,dt) ==
+  let stopped_pumps : set of BOILER_TYPES`pump_nb
+      = dom(pe :> {<Stopped>}) ,
+      starting_pumps : set of BOILER_TYPES`pump_nb
+      = dom(pe :> {<Starting>}) ,
+      pumping_pumps : set of BOILER_TYPES`pump_nb
+      = dom(pe :> {<Pumping>})
+ in
+    card stopped_pumps * max_one_pump_water(<Stopped>, dt)
+    + card  starting_pumps * max_one_pump_water(<Starting>, dt)
+    + card  pumping_pumps * max_one_pump_water(<Pumping>, dt)
+  ;
+
+min_pumped_water : BOILER_TYPES`pump_to_state_map 
+		* BOILER_TYPES`duration
+                         +> BOILER_TYPES`kilograms
+ min_pumped_water (pe,dt) ==
+ let stopped_pumps : set of BOILER_TYPES`pump_nb
+      = dom(pe :> {<Stopped>}) ,
+      starting_pumps : set of BOILER_TYPES`pump_nb
+      = dom(pe :> {<Starting>}) ,
+      pumping_pumps : set of BOILER_TYPES`pump_nb
+      = dom(pe :> {<Pumping>})
+ in
+    card stopped_pumps * min_one_pump_water(<Stopped>, dt)
+    + card  starting_pumps * min_one_pump_water(<Starting>, dt)
+    + card  pumping_pumps * min_one_pump_water(<Pumping>, dt)
+  ;
+
+\end{vdm_al}
+
+\subsection{Valves}
+
+A similar computation must be done for the valve. Nevertheless,
+for a given state of the valve the quantity of the water that
+goes through the valve is a functional value (no uncertainty on the duration
+of the starting time exists here).
+
+Moreover, the same stability assumption is made on the $reachable-valve-states$
+function:
+the states $Opened$ and $Closed$ may always be stable.
+The statement of the functions if similar to $max-one-pump-water$.
+\begin{vdm_al}
+max_valved_water : BOILER_TYPES`valve_state * BOILER_TYPES`duration
+                         +> BOILER_TYPES`kilograms
+max_valved_water (v,dt) == 
+if <Opened> in set reachable_valve_states(v,dt)
+then let dt1 :BOILER_TYPES`duration be st
+	<Opened> in set reachable_valve_states(v,dt1)
+	and forall dt2: BOILER_TYPES`duration & 
+		dt2 < dt1 => <Opened> not in set reachable_valve_states(v,dt2) 
+	in BOILER_TYPES`V * (dt - dt1)
+else 0
+;
+min_valved_water : BOILER_TYPES`valve_state * BOILER_TYPES`duration
+                         +> BOILER_TYPES`kilograms
+min_valved_water (v,dt) ==  
+if <Closed> in set reachable_valve_states(v,dt)
+then let dt1 :BOILER_TYPES`duration be st
+	<Closed> in set reachable_valve_states(v,dt1)
+	and forall dt2: BOILER_TYPES`duration & 
+		dt2 < dt1 => <Closed> not in set reachable_valve_states(v,dt2) 
+	in BOILER_TYPES`V * dt1
+else BOILER_TYPES`V * dt
+;
+\end{vdm_al}
+
+\subsection{Quantity of water}
+
+
+The extreme values for the water level may thus be computed.
+The maximum level is obtained when the maximum amount of water is pumped into
+the boiler and the minimum amount is vaporized or goes through the valve, and
+similarly for the minimum level. To ensure that the result is still a
+$water-level$, the resulting level is compared to $C$ and if greater, bounded
+to this value.
+
+
+\begin{vdm_al}
+max_water : BOILER_TYPES`water_level * BOILER_TYPES`pump_to_state_map *
+		BOILER_TYPES`steam_outcome *BOILER_TYPES`valve_state *
+		 BOILER_TYPES`duration 
+	+> BOILER_TYPES`water_level  
+ max_water (q,p,s,v,dt) == 
+	let max=q + max_pumped_water(p,dt) 
+		- min_steamed_water(s,dt) - min_valved_water(v,dt)
+    in if max > BOILER_TYPES`C then  BOILER_TYPES`C else max
+  ;
+min_water : BOILER_TYPES`water_level * BOILER_TYPES`pump_to_state_map *
+		BOILER_TYPES`steam_outcome * BOILER_TYPES`valve_state * 
+		BOILER_TYPES`duration
+	 +> BOILER_TYPES`water_level  
+ min_water (q,p,s,v,dt) == 
+	let min=q + min_pumped_water(p,dt)
+		 - max_steamed_water(s,dt) - max_valved_water(v,dt) 
+   in if min<0 then 0 else min
+ ;  
+\end{vdm_al}
+
+\subsection{Boiler evolution}
+
+Finally, 
+the evolution of the boiler variables, starting from a given configuration
+ ($qe,se,pe,ve$) and evolving during $dt$ is defined as a boolean function
+which characterizes the set of possible resulting states.
+This function expresses the upper and lower bounds on the final level of water,
+the steam outcome, and the sets of possible pump and valve states.
+
+\begin{vdm_al}
+
+evolution  : BOILER_TYPES`water_level *
+	BOILER_TYPES`steam_outcome 
+
+*
+
+	BOILER_TYPES`pump_to_state_map *
+	BOILER_TYPES`valve_state *
+	BOILER_TYPES`duration *
+	BOILER_TYPES`water_level *
+	BOILER_TYPES`steam_outcome *
+	BOILER_TYPES`pump_to_state_map *
+	BOILER_TYPES`valve_state 
+	+> bool
+evolution (qe , se , pe , ve , dt , qn , sn , pn , vn )
+==
+   min_water(qe,pe,se,ve,dt) <= qn and qn <=  max_water (qe,pe,se,ve,dt)
+   and  min_steam(se,dt) <= sn and sn <= max_steam(se,dt)
+   and vn in set  reachable_valve_states(ve, dt)
+   and forall i in set BOILER_TYPES`Pump_nb_set & pn(i) in set  reachable_pump_states(pe(i),dt) 
+
+end PHYSICAL_LAWS
+\end{vdm_al}

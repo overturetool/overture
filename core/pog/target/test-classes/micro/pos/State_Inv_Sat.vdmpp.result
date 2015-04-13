@@ -1,0 +1,1 @@
+["state invariant initialized obligation:(x \u003e 10)","state invariant satisfiable obligation:(exists x:int \u0026 (x \u003e 10))"]

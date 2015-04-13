@@ -1,0 +1,126 @@
+\section{Lead class}
+
+The Lead models a Pacemaker lead that read and write pulse values from and to the heart. Each lead its attached to a specific chamber and this is captured using the instance variable chamber.
+
+
+\begin{vdm_al}
+class Lead is subclass of GLOBAL, BaseThread
+
+instance variables
+
+ private chamber : Chamber;       
+ private scheduledPulse : [(Time * Pulse)];
+
+operations
+
+ public 
+ Lead: Chamber * nat1 * bool ==> Lead
+ Lead(chm, p, isP) ==   
+   (
+    chamber := chm;
+    scheduledPulse := nil;
+    period := p;
+    isPeriodic := isP;
+   );
+\end{vdm_al}
+
+This is an auxiliar function that inspect the chamber where this lead is 
+attached to.
+
+\begin{vdm_al} 
+
+ public 
+ getChamber: () ==> Chamber
+ getChamber () == return chamber;
+\end{vdm_al}
+
+Whenever theres an electrical pulse in that chamber the environment will call the following stimulate operation.
+
+\begin{vdm_al}
+
+ public 
+ stimulate : Sense ==> ()
+ stimulate (s) == Pacemaker`heartController.sensorNotify(s,chamber);
+
+\end{vdm_al}
+
+\begin{vdm_al}
+ public 
+ isFinished : () ==> ()
+ isFinished () == skip;
+
+\end{vdm_al}
+
+The following operation discharges a pulse to the heart.
+
+\begin{vdm_al}
+ public 
+ addLeadPace : Pulse * Time ==> ()
+ addLeadPace (p,t) ==  
+   if t <= World`timerRef.GetTime()
+   then dischargePulse(p)
+   else (scheduledPulse := mk_(t,p);
+         return);
+\end{vdm_al}
+
+\begin{vdm_al}
+ private 
+ followPlan : () ==> ()
+ followPlan () ==
+    (
+     dcl curTime : Time := World`timerRef.GetTime();
+     if scheduledPulse <> nil
+     then if(curTime >= scheduledPulse.#1) 
+          then (dischargePulse(scheduledPulse.#2);
+                scheduledPulse := nil);
+     
+   );
+   
+      
+\end{vdm_al}
+
+
+
+\begin{vdm_al}
+ private 
+ dischargePulse : Pulse ==> ()
+ dischargePulse (p) ==
+    World`env.handleEvent(p,chamber,World`timerRef.GetTime());
+
+public Step: () ==> ()
+Step() ==
+ (if(scheduledPulse <> nil)
+  then followPlan();
+  --    World`timerRef.WaitRelative(5);
+ );
+
+\end{vdm_al}
+
+To the lead class the changes are the same a thread definition substitutes the Step function.
+\begin{vdm_al}
+--thread
+--  while true do 
+--    ( if(scheduledPulse <> nil)
+--      then followPlan();
+--      World`timerRef.WaitRelative(5);
+--      World`timerRef.NotifyAll();
+--      World`timerRef.Awake();
+--    );
+    
+\end{vdm_al}
+
+And syncronization premission predicates are introduced.
+
+\begin{vdm_al}
+
+sync
+
+--per followPlan => scheduledPulse <> nil;
+per isFinished => scheduledPulse = nil;
+
+mutex(Step);
+mutex(addLeadPace);
+mutex(dischargePulse);
+
+end Lead 
+\end{vdm_al}

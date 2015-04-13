@@ -1,0 +1,92 @@
+------------------
+-- abworld.vdm
+--
+-- Ken Pierce
+-- 2007-09-05
+------------------
+module abworld
+
+exports all
+
+definitions
+
+--
+-- Types
+--
+types
+
+PurseId = token;
+
+AbPurse :: bal  : nat
+           lost : nat;
+
+           
+--
+-- State
+--           
+state AbWorld of
+    abauth   : set of PurseId
+    abpurses : map PurseId to AbPurse
+inv mk_AbWorld(abauth,abpurses) == dom abpurses subset abauth
+end
+  
+  
+--
+-- Operations
+--        
+operations
+
+Ignore : () ==> ()
+Ignore() == skip
+post abauth~ = abauth and abpurses~ = abpurses;
+
+
+AbTransferOk: PurseId * PurseId * nat ==> ()
+AbTransferOk(fid, tid, val) == 
+( 
+    abpurses(fid).bal := abpurses(fid).bal - val;
+    abpurses(tid).bal := abpurses(tid).bal + val
+)
+pre fid <> tid and 
+    fid in set dom abpurses and 
+    tid in set dom abpurses and
+    abpurses(fid).bal >= val	 
+post (total(abpurses(fid)) + total(abpurses(tid))) = 
+   	 (total(abpurses~(fid)) + total(abpurses~(tid))) and
+     (abpurses~(fid).bal + abpurses~(tid).bal) >= 
+     (abpurses(fid).bal + abpurses(tid).bal) and
+     (abpurses~(fid).lost = abpurses(fid).lost) and
+     (abpurses~(tid).lost = abpurses(tid).lost) and
+     (dom abpurses~ = dom abpurses) and
+     (abauth~ = abauth) and
+     forall pid in set (dom abpurses) \ {fid, tid} & 
+         abpurses~(pid) = abpurses(pid);        
+
+     
+AbTransferLost: PurseId * PurseId * nat ==> ()
+AbTransferLost(fid, tid, val) == 
+(
+	abpurses(fid).bal := abpurses(fid).bal - val;
+	abpurses(fid).lost := abpurses(fid).lost + val;
+)
+pre fid <> tid and 
+    fid in set dom abpurses and 
+    tid in set dom abpurses and
+    abpurses(fid).bal >= val
+post total(abpurses(fid)) = total(abpurses~(fid)) and
+     abpurses~(fid).bal >= abpurses(fid).bal and
+     (dom abpurses~ = dom abpurses) and
+     (abauth~ = abauth) and
+     forall pid in set (dom abpurses) \ {fid} & 
+         abpurses~(pid) = abpurses(pid);  
+       
+       
+--
+-- Functions
+--
+functions
+
+total : AbPurse -> nat
+total(mk_AbPurse(bal,lost)) == bal + lost;
+
+end abworld

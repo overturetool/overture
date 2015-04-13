@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="15" line="16" message="i at 9:3 hidden by i" messageType="warning" number="5008" resource="defexpr-06.vpp"/>
+<message column="15" line="16" message="Definition 'i' not used" messageType="warning" number="5000" resource="defexpr-06.vpp"/>
+<result/>
+</testResult>

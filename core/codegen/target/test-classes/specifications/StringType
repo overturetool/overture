@@ -1,0 +1,8 @@
+class StringType
+
+operations
+
+public op1: () ==> seq of char
+op1 () == return "kattebakke";
+
+end StringType

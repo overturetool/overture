@@ -1,0 +1,30 @@
+
+class CashAccount is subclass of BankAccount
+
+  instance variables
+    balance: real;
+    epin: nat;
+
+  operations
+
+    public
+    Deposit: real ==> ()
+    Deposit(r) == 
+      balance := balance + r;
+
+    public
+    Withdrawal : real ==> ()
+    Withdrawal (r) == 
+      balance := balance - r;
+
+    public
+    IsPin : nat ==> bool
+    IsPin(ep) ==
+      return(ep = epin);
+
+    public
+    RequestWithdrawal : nat ==> bool
+    RequestWithdrawal (amt) ==
+      return (balance > amt)
+
+end CashAccount

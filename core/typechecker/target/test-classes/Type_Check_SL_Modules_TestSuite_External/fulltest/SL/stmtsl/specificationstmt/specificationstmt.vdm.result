@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="16" line="23" message="Map application argument is incompatible type" messageType="error" number="3058" resource="specificationstmt.vdm"/>
+<message column="8" line="27" message="Precondition is not a boolean expression" messageType="error" number="3233" resource="specificationstmt.vdm"/>
+<message column="15" line="35" message="Left and right of '=' are incompatible types" messageType="error" number="3087" resource="specificationstmt.vdm"/>
+<result/>
+</testResult>

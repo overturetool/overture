@@ -1,0 +1,119 @@
+\section{TransportPlan class}
+
+\begin{vdm_al}
+
+
+class TransportPlan
+
+instance variables
+  private id_token : nat;
+  private totalFee : real;
+  private totalDuration : nat;
+  private choice : TPC`Choice;
+  private sectionList : seq of Section := [];
+  private sectionTravled : seq of Section := [];
+  private departureTime : nat;
+
+inv len sectionList > 0 => forall i in set inds sectionList 
+  & i < len sectionList => 
+  sectionList(i).arrivalLocation = sectionList(i+1).departureLocation;
+
+
+types
+
+public Section ::
+departureLocation : TPC`String
+arrivalLocation : TPC`String
+fee : real
+platform : TPC`String
+dur : nat
+id_section : nat
+inv r == len r.platform > 0 and
+			len r.arrivalLocation > 0 and
+			len r.departureLocation > 0 and
+			r.fee >= 0 ;
+
+public DTO ::
+	id_token : nat
+	sectionList : seq of TransportPlan`Section
+	choice : TPC`Choice
+	depTime : nat;
+
+
+
+operations
+
+--Constructor
+public TransportPlan : TransportPlan`DTO ==> TransportPlan
+TransportPlan(dto) ==
+(
+	id_token := dto.id_token;
+	choice := dto.choice;
+	sectionList := dto.sectionList;
+	departureTime := dto.depTime;
+);
+
+public assignNewPlan : TransportPlan`DTO ==> ()
+assignNewPlan(dto) ==
+(
+	choice := dto.choice;
+	sectionList := dto.sectionList;
+	departureTime := dto.depTime;
+);
+
+
+public getNextSection : () ==> [TransportPlan`Section]
+getNextSection () == (
+	if len sectionList > 0 then
+		return hd sectionList
+	else
+		return nil;
+)
+pre len sectionList > 0;
+
+public containsSection: nat ==> bool
+containsSection(id_section) == 
+return exists r in set elems sectionList & r.id_section = id_section
+pre len sectionList > 0;
+
+public addSection: Section ==> ()
+addSection(section) ==(
+ sectionList := sectionList^[section];
+ totalFee:= totalFee + section.fee
+)
+pre sectionList(len sectionList).arrivalLocation = section.departureLocation;
+
+public sectionTraveled: () ==> ()
+sectionTraveled () == (
+	sectionTravled := sectionTravled ^ [hd sectionList];
+	sectionList := tl sectionList;
+	Logger`write(mk_Logger`RouteStatus("RouteStatus","RouteTraveled", id_token)); Logger`write(time);
+)
+pre len sectionList > 0;
+
+public sectionsRemaining : () ==> nat
+sectionsRemaining() == ( return len sectionList;);
+
+public getByValue : () ==> DTO
+getByValue()== return mk_TransportPlan`DTO(id_token, sectionList, choice, departureTime);
+
+
+public getPlanAsNaviInput: () ==> TPC`NavigationInput
+getPlanAsNaviInput() ==(
+return mk_TPC`NavigationInput((hd sectionList).departureLocation, (sectionList(len sectionList)).arrivalLocation, choice, id_token, departureTime )
+)
+pre len sectionList > 0;
+
+public getTokenId: () ==> nat
+getTokenId() == return id_token;
+
+--debug
+public getSectionList: () ==> seq of Section
+getSectionList()==
+	return sectionList;
+
+sync
+	--mutex(routeTraveled);
+	
+end TransportPlan
+\end{vdm_al}

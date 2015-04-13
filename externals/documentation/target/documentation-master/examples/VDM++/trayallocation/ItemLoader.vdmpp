@@ -1,0 +1,85 @@
+-- ===============================================================================================================
+-- ItemLoader in tray allocation for a sortation system
+-- By José Antonio Esparza and Kim Bjerge - spring 2010
+-- ===============================================================================================================
+
+class ItemLoader
+	types
+
+		inline  =  nat * nat * nat;
+		InputTP = int * seq of inline;
+	
+	values
+
+	instance variables
+   	    -- Not working in Overture version 0.1.9
+		io : IO := new IO(); 
+		
+		-- Test with mix of 1 and 2 tray items 
+	    inlines  : seq of inline := [mk_(0,1,100), --  mk_(timeStep, icid, itemSize)
+        							 mk_(0,2,800),
+        							 mk_(0,3,200),
+        							 mk_(2,1,200),
+        							 mk_(2,2,400),
+        							 mk_(2,3,700),
+        							 mk_(4,1,800),
+        							 mk_(4,2,300),
+        							 mk_(4,3,400),
+        							 mk_(6,1,600),
+        							 mk_(6,2,400),
+        							 mk_(6,3,300),
+        							 mk_(8,1,900),
+        							 mk_(8,2,300),
+        							 mk_(8,3,200),
+        							 mk_(10,1,500),
+        							 mk_(10,2,300),
+        							 mk_(10,3,200)
+        							 ];
+        							 
+	    numTimeSteps : nat := 21;
+		
+	operations
+	
+	-- Loads test scenario from file
+	public ItemLoader : seq1 of char ==> ItemLoader
+	ItemLoader(fname) ==
+	(
+	  -- Not working in Overture version 0.1.9
+	  def mk_(-,mk_(timeval,input)) = io.freadval[InputTP](fname) 
+	  in
+	    (
+	   		numTimeSteps := timeval;
+	     	inlines := input
+	     );    
+	); 
+	
+	-- Returns number of time steps to simulate
+	public GetNumTimeSteps : () ==> nat
+	GetNumTimeSteps() ==
+		return numTimeSteps;
+	
+	-- Returns size of item if found in test scenario
+	-- Returns zero if no item is found for time step and induction id
+	public GetItemAtTimeStep : nat * nat1 ==> nat
+	GetItemAtTimeStep(timeStep, icid) ==
+	(
+		-- {size | mk_(time, id, size) in set elems inlines & time = timestep and id = icid};
+		let elm = {e | e in set elems inlines & e.#1 = timeStep and e.#2 = icid}
+		in
+	 		if elm = {}
+	 		then return 0
+	 		else
+	 			let {mk_(-,-,size)} = elm
+	 			in 
+	 				return size;
+	);
+			
+	functions
+
+	sync
+
+	--thread
+
+	traces
+
+end ItemLoader

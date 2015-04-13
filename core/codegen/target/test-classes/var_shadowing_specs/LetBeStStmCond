@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+  let a,a in set {1,2,3} be st a = 1
+  in
+    return a;
+
+end Entry

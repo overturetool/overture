@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="8" line="19" message="Overriding a superclass member of a different kind: f(nat)" messageType="error" number="3005" resource="overload-22.vpp"/>
+<message column="8" line="19" message="Overriding a superclass member of a different kind: f(nat)" messageType="error" number="3005" resource="overload-22.vpp"/>
+<result/>
+</testResult>

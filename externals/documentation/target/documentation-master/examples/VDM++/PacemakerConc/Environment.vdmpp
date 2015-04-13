@@ -1,0 +1,175 @@
+\section{Environment class}
+
+The environment class is the class responsible for read a file containing inputs labelled by time and deliver them to the correct system sensor at the right time. It also collects the (re)actions from the system and provides functionality to enable the inspection of them.
+
+\begin{vdm_al}
+class Environment is subclass of GLOBAL, BaseThread
+
+ types 
+public InputTP   = (Time * seq of Inpline)
+inv inp == forall line in set elems inp.#2 & inp.#1 >= line.#4;
+
+public Inpline = (Sense * Chamber * ActivityData * Time);
+
+public Outline = (Pulse * Chamber * Time);  
+
+ instance variables
+
+-- Input/Output 
+io : IO := new IO();
+
+inplines : seq of Inpline := [];
+outlines : seq of Outline := [];
+
+-- Environment  
+
+busy : bool := true;
+
+-- Amount of time we want to simulate
+simtime : Time;
+\end{vdm_al}
+
+Then we define the sensors attachment place where the physician will screw the leads and where the accelerometer is set up.
+
+\begin{vdm_al}
+ instance variables
+-- Sensors
+
+-- Leads
+
+leads : map Chamber to Lead := {|->};
+
+-- Accelerometer
+accelerometer : Accelerometer;
+
+\end{vdm_al}
+
+The environment constructor reads the test file which name is provided in the variable fname, extracting the amount of time we want to simulate and the inputs in that amount of time.
+
+\begin{vdm_al}
+ operations
+
+-- Constructor
+public 
+Environment : seq of char * nat1 * bool ==> Environment
+Environment (fname, p, isP) ==
+  def mk_(-,mk_(timeval,input)) = io.freadval[InputTP](fname) 
+  in (inplines := input;
+      simtime  := timeval;
+      period := p;
+      isPeriodic := isP;
+     );
+
+\end{vdm_al}
+
+The operations to connect the environment with the system.
+
+\begin{vdm_al}
+public 
+addLeadSensor : Lead ==> ()
+addLeadSensor(lsens) == 
+   leads := leads ++ {lsens.getChamber() |-> lsens};
+
+public 
+addAccelerometer : Accelerometer ==> ()
+addAccelerometer(acc) == 
+   accelerometer := acc;
+
+\end{vdm_al}
+
+createSignal delivers stimuli to the different components
+
+\begin{vdm_al}
+
+private 
+createSignal : () ==> ()
+createSignal () == 
+   ( 
+    if len inplines > 0 
+    then (dcl curtime : Time := World`timerRef.GetTime(),
+              done : bool := false;
+          while not done do
+             let mk_(sensed,chamber,accinfo,stime) = hd inplines 
+             in if stime <= curtime
+                then
+                (
+                 leads(chamber).stimulate(sensed);
+                 accelerometer.stimulate(accinfo);
+                 inplines := tl inplines;
+                 done := len inplines = 0
+                )
+                else done := true
+           );
+     if len inplines = 0 then busy := false;
+    );
+
+\end{vdm_al}
+
+The (re)actions from the pacemaker are delivered to the environment through the handleEvent operation which updates the collection of outputs.
+
+\begin{vdm_al}
+
+public 
+handleEvent : Pulse * Chamber * Time ==> ()
+handleEvent(p,c,t) == outlines := outlines ^ [mk_(p,c,t)]; 
+
+\end{vdm_al}
+
+ShowResult is an operation used to inspect that collection.
+
+\begin{vdm_al}
+public
+showResult : () ==> ()
+showResult () ==
+   def - = io.writeval[seq of Outline](outlines) in skip;
+
+\end{vdm_al}
+
+The isFinished operation is redefined and blocks until the simulation is finished because of a permission predicate defined below.
+
+\begin{vdm_al}
+public 
+isFinished: () ==> ()
+isFinished () == skip;
+
+public Step: () ==> ()
+Step() ==
+ (if busy
+  then createSignal();
+  
+  if World`timerRef.GetTime() >= simtime
+  then (Pacemaker`heartController.finish();
+        Pacemaker`rateController.finish()
+       );
+ );
+\end{vdm_al}
+
+The Run function it's substituted by a thread definition.	
+
+\begin{vdm_al}
+--thread
+--  (
+--   while true do
+--     ( if busy
+--       then createSignal();
+--       if World`timerRef.GetTime() >= simtime
+--       then (Pacemaker`heartController.finish();
+--             Pacemaker`rateController.finish());
+--       World`timerRef.WaitRelative(1);
+--     );
+
+--  );
+\end{vdm_al}  
+
+Because of the concurrency introduction handleEvent and showResult that both manipulate the outlines instance variable are made mutex. The operation isFinished is released just when the Environment is not busy (no more inputs to be delivered) and the whole amount of simulation time is equal or above the desired.
+
+\begin{vdm_al}
+sync 
+
+mutex (handleEvent,showResult);
+
+per isFinished => not busy;
+
+end Environment
+
+\end{vdm_al}

@@ -1,0 +1,64 @@
+\section{Test Class}
+
+\begin{vdm_al}
+class Test is subclass of WorkSpace
+ 
+values
+  DirectionSet : set of Command`Direction = {<Neg>, <Pos>, <Zero>};
+  ModeSet : set of HandControlUnit`Mode = {<Tran>, <Rot>};
+  AAHButtonSet : set of HandControlUnit`Button = {<Up>, <Down>};
+  RotCmdSet : set of Command`AxisMap =
+    {{<axis1> |-> a, <axis2> |-> b, <axis3> |-> c} 
+    | a,b,c in set {<Zero>,<Pos>,<Neg>}}
+
+instance variables
+
+  w : WorkSpace := new WorkSpace();
+
+operations
+  public BigTest: () ==> nat 
+  BigTest() ==
+    (SetupTopology();
+     return
+     (card dom 
+      {mk_(x, pitch, yaw_y, roll_z, modeswitch, <Up>) |-> 
+       ControlCycle(x, pitch, yaw_y, roll_z, modeswitch, <Up>,
+                    Command`nullaxesdir) 
+      | x, pitch, yaw_y, roll_z in set DirectionSet, 
+        modeswitch in set ModeSet}));
+
+  public HugeTest: () ==> nat
+  HugeTest() ==
+    (SetupTopology();
+     return
+     (card dom
+     {mk_(x, pitch, yaw_y, roll_z, modeswitch, aahbutton, aahcmd) |-> 
+       ControlCycle(x, pitch, yaw_y, roll_z, modeswitch, aahbutton,
+                    aahcmd) 
+     | x, pitch, yaw_y, roll_z in set DirectionSet, 
+       modeswitch in set ModeSet, aahbutton in set AAHButtonSet,
+       aahcmd in set RotCmdSet}));
+ 
+traces
+ 
+BT : w.SetupTopology(); let x, pitch, yaw_y, roll_z in set DirectionSet in 
+                     let modeswitch in set ModeSet in
+                     w.ControlCycle(x, pitch, yaw_y, roll_z, modeswitch, <Up>,
+                                    Command`nullaxesdir)
+                                    
+HT: w.SetupTopology();
+    let x, pitch, yaw_y, roll_z in set DirectionSet in 
+    let modeswitch in set ModeSet in
+    let aahbutton in set AAHButtonSet in
+    let aahcmd in set RotCmdSet in
+     w.ControlCycle(x, pitch, yaw_y, roll_z, modeswitch, aahbutton, aahcmd) 
+
+end Test
+\end{vdm_al}
+ 
+The test coverage table for the Test class looks like:
+
+\begin{rtinfo}{vdm.tc}[Test]
+\end{rtinfo}
+
+

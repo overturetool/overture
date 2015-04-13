@@ -1,0 +1,10 @@
+\section{departure}
+
+\begin{vdm_al}
+class Departure
+instance variables
+
+operations
+
+end Departure
+\end{vdm_al}

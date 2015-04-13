@@ -1,0 +1,25 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleLetExpressionImpl is subclass of SimpleLetExpression
+instance variables
+    private iv_defs:seq of SimpleLocalDefinition;
+    private iv_body:SimpleExpression;
+
+operations
+    public SimpleLetExpressionImpl: seq of SimpleLocalDefinition * SimpleExpression ==> SimpleLetExpressionImpl
+    SimpleLetExpressionImpl(p_defs, p_body) ==
+    (
+        iv_defs := p_defs;
+        iv_body := p_body;
+    );
+
+    public getDefs: () ==> seq of SimpleLocalDefinition
+    getDefs() == return iv_defs;
+
+    public getBody: () ==> SimpleExpression
+    getBody() == return iv_body;
+
+end SimpleLetExpressionImpl

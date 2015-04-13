@@ -1,0 +1,60 @@
+--The TestSurroundings Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		14/5 - 2008
+-- Updated:
+-- Description: 	Testing the Surroundings class
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestSurroundings is subclass of TestCase
+
+--
+-- instance variables
+--
+instance variables
+
+env		: Environment;
+
+--
+-- Operations definition section
+--
+operations
+
+public TestSurroundings: seq of char ==> TestSurroundings
+	TestSurroundings(nm) == name := nm;
+
+protected SetUp: () ==> ()
+	SetUp() ==
+env := new Environment();
+
+protected Test: () ==> ()
+	Test() ==
+		(AssertTrue(env.ReadTemp() = 20);
+		AssertTrue(env.ReadHumid() = 85);
+
+		env.IncTemp();
+		AssertTrue(env.ReadTemp() = 21);
+		env.DecTemp();
+		AssertTrue(env.ReadTemp() = 20);		
+		env.SetTemp(23);
+		AssertTrue(env.ReadTemp() = 23);
+
+		env.IncHumid();
+		AssertTrue(env.ReadHumid() = 86);
+		env.DecHumid();
+		AssertTrue(env.ReadHumid() = 85);		
+		env.SetHumid(71);
+		AssertTrue(env.ReadHumid() = 71);
+		);
+
+protected RunTest: () ==> ()
+	RunTest() == Test();
+
+protected TearDown: () ==> ()
+	TearDown() == skip;
+
+end TestSurroundings

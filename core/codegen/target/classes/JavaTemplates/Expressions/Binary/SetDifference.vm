@@ -1,0 +1,4 @@
+#set( $left = $JavaFormat.format($node.getLeft()) )
+#set( $right = $JavaFormat.format($node.getRight()) )
+##
+SetUtil.diff(${left}, ${right})

@@ -1,0 +1,34 @@
+
+class AccountDB
+
+  types
+ 
+    public 
+    digit = BankAccount`digit
+
+  instance variables
+    db : map (seq of digit) to CashAccount
+
+  operations
+
+    public
+    CheckPin : nat * (seq of digit) ==> bool
+    CheckPin(epin, accnum) ==
+      return (db(accnum).IsPin(epin))
+    pre accnum in set dom db;
+
+    public
+    RequestWithdrawal : (seq of digit) * nat ==> bool
+    RequestWithdrawal (accnum,amt) ==
+      return (db(accnum).RequestWithdrawal(amt))
+    pre accnum in set dom db;
+
+    public
+    Withdraw : (seq of digit) * nat ==> ()
+    Withdraw (accnum,amt) ==
+      db(accnum).Withdrawal(amt)
+    pre accnum in set dom db;
+
+
+
+end AccountDB

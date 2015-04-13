@@ -1,0 +1,57 @@
+class Window is subclass of Actuator, BaseThread
+
+instance variables
+
+finished	: bool := false;
+
+operations
+
+public Window: nat * NetworkTypes`nodeType * Surroundings * nat1 * bool ==> Window
+Window (id, type, envir, p, isP) ==
+ (ID := id;
+  Type := type;
+  Corr := <CLOSE>;
+  Env := envir;
+  period := p;
+  isPeriodic := isP;
+ );
+
+public SetCorrection: NetworkTypes`correction ==> ()
+SetCorrection(cor) ==
+  Corr := cor
+pre (cor = <OPEN>) or (cor = <CLOSE>);
+
+public Finish: () ==> ()
+Finish() ==
+  finished := true;
+
+public IsFinished: () ==> ()
+IsFinished() ==
+  skip;
+
+protected Step: () ==> ()
+Step() ==
+ (if (GetCorr() = <OPEN>)
+  then (HA`Sur.DecHumid();
+        HA`Sur.DecTemp();
+       );
+ );
+
+sync
+	
+  per IsFinished => finished;
+
+--thread
+-- (--World`timerRef.RegisterThread();
+ 
+--  while true 
+--  do
+--   (if (GetCorr() = <OPEN>)
+--    then (HA`Env.DecHumid();
+--          HA`Env.DecTemp();
+--         );
+--    World`timerRef.WaitRelative(5);--World`timerRef.stepLength);
+--   )
+-- )
+
+end Window

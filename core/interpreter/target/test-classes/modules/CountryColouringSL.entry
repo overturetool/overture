@@ -1,0 +1,1 @@
+DEFAULT`colMapExpl({mk_("Denmark","Sweden"),mk_("Denmark","Germany"),mk_("Germany","Poland")})

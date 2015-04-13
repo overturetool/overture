@@ -1,0 +1,43 @@
+--The NetworkTypes Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		15/4 - 2008
+-- Updated:
+-- Description: 	NetworkTypes class for NetworkModel project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class NetworkTypes
+
+--
+-- instance variables
+--
+instance variables
+
+--
+-- Types definition section
+--
+types   
+
+public nodeType 	= <TEMPSENSOR> | <HUMIDSENSOR> | <WINDOW> | <THERMOSTAT> | <HOSTCONTROL> | <NONE>;
+public correction = <INC> | <DEC> | <OPEN> | <CLOSE> | <NONE>;
+
+--
+-- Operations definition section
+--
+operations
+
+--
+-- Functions definition section
+--
+functions
+
+--
+-- Values definition section
+--
+values
+
+end NetworkTypes

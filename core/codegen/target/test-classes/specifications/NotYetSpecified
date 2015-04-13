@@ -1,0 +1,14 @@
+class A
+    
+operations 
+
+public op : () ==> ()
+op () ==
+	is not yet specified;
+	
+functions
+
+public f :  () -> nat
+f () == is not yet specified;
+    
+end A

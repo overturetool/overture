@@ -1,0 +1,192 @@
+\section{HeartController class}
+
+This is the core class monitoring and regulating the heart. 
+
+\begin{vdm_al}
+class HeartController is subclass of GLOBAL
+
+instance variables 
+
+ leads     : map Chamber to Lead;
+ sensed    : map Chamber to Sense;
+ mode      : Mode;
+ FixedAV   : Time;
+ lastPulse : Time;
+ ARP       : Time;
+ interval  : Time;
+\end{vdm_al}
+
+\begin{itemize}
+\item leads: the leads attached to the pacemaker
+\item sensed: keeps track of the last sense for each chamber
+\item mode: current operation mode 
+\item lastPulse: stores the time of the last atrial pace event
+\item ARP : the ARP parameter
+\item interval : is the interval between paces to achieve the expeced rate
+\end{itemize}
+
+The following operation is the constructor with the default values for the instance variables.
+
+\begin{vdm_al}
+operations
+ 
+ public 
+ HeartController : () ==> HeartController
+ HeartController() == 
+   (
+    leads     := {|->};
+    sensed    := {|->};
+    mode      := <OFF>;
+    FixedAV   := 150;
+    lastPulse := 0;
+    ARP       := 250;
+    interval:= Pacemaker`rateController.getInterval();
+   );
+
+\end{vdm_al}
+
+The addLeadPacer operation its used to attach a lead to the Pacemaker.
+
+\begin{vdm_al}
+ public 
+ addLeadPacer : Lead ==> ()
+ addLeadPacer (lead) == 
+   leads := leads ++ {lead.getChamber() |-> lead};
+\end{vdm_al}
+
+The right pacing mode its choosed by pace that also refreshes the sensed map.
+
+\begin{vdm_al}
+ public 
+ pace : ()  ==> ()
+ pace () == 
+   (cases mode :
+         <AOO>  -> PaceAOO(),
+         <AAT>  -> PaceAAT(),
+         <DOO>  -> PaceDOO(),
+         <OFF>  -> skip,
+         others -> error
+    end;
+    sensed := {|->}
+   );
+
+\end{vdm_al}
+
+And each time step we pace and after it we call step in the leads
+
+\begin{vdm_al}
+ public 
+ Step : ()  ==> ()
+ Step () == 
+   (pace();
+    for all key in set dom leads 
+    do leads(key).Step();
+   );
+\end{vdm_al}
+
+\newpage
+
+Pace in the AOO mode follows from the VDM-SL specification discarding all the sensed activity and pacing each time interval.
+
+\begin{vdm_al}
+ private
+ PaceAOO : () ==> ()
+ PaceAOO () == 
+   let curTime : Time = World`timerRef.GetTime()
+   in if (interval + lastPulse <= curTime)
+      then (
+            lastPulse := curTime;
+            leads(<ATRIA>).addLeadPace(<PULSE>,curTime)
+           )
+      else skip
+  pre <ATRIA> in set dom leads
+  ;
+\end{vdm_al}
+
+AAT mode follows from the VDM-SL specification..
+
+\begin{vdm_al}
+ private
+ PaceAAT : () ==> ()
+ PaceAAT () == 
+   let curTime : Time = World`timerRef.GetTime()
+   in if <ATRIA> in set dom sensed and sensed(<ATRIA>) = <PULSE>
+      then if curTime - lastPulse <= ARP 
+           then skip
+           else (
+                 lastPulse := curTime;
+                 leads(<ATRIA>).addLeadPace(<TRI_PULSE>,curTime)
+                 )
+      elseif (interval + lastPulse <= curTime)
+      then (
+            lastPulse  := curTime;
+            leads(<ATRIA>).addLeadPace(<PULSE>,curTime)
+           )
+      else skip
+  pre <ATRIA> in set dom leads
+  ;
+\end{vdm_al}
+
+Pace in the DOO mode follows from the VDM-SL specification discarding all the sensed activity and pacing each time interval.
+
+\begin{vdm_al}
+ private
+ PaceDOO : () ==> ()
+ PaceDOO () == 
+   let curTime : Time = World`timerRef.GetTime()
+   in (if (interval + lastPulse <= curTime)
+       then (
+            lastPulse := curTime;
+            leads(<ATRIA>).addLeadPace(<PULSE>,curTime);
+            leads(<VENTRICLE>).addLeadPace(<PULSE>,curTime + FixedAV)
+           )
+       else skip;
+       )
+  pre {<ATRIA>,<VENTRICLE>} subset dom leads
+  ;
+\end{vdm_al}
+
+\newpage
+Is finished depends on the leads isFinished.
+
+\begin{vdm_al}
+ public 
+ isFinished : () ==> bool
+ isFinished () == 
+   return forall key in set dom leads &
+                 leads(key).isFinished();
+\end{vdm_al}
+
+This is the lead handler that its called each time a pulse is sensed.
+
+\begin{vdm_al}
+ public 
+ sensorNotify : Sense * Chamber ==> ()
+ sensorNotify (s,c) == 
+   (sensed := sensed ++ {c |-> s});
+\end{vdm_al}
+
+To switch the operating modes one should use
+
+\begin{vdm_al}
+ public 
+ setMode : Mode ==> ()
+ setMode (m) == 
+   (mode := m);
+\end{vdm_al}
+
+And setInterval is the operation used by the RateController to adjust the interval.
+
+\begin{vdm_al}
+ public 
+ setInterval : Time ==> ()
+ setInterval (t) == interval := t;
+
+end HeartController
+\end{vdm_al}
+
+\subsection*{Test coverage}
+
+\begin{rtinfo}
+{tc.info}[HeartController]
+\end{rtinfo}

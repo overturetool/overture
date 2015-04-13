@@ -1,0 +1,2021 @@
+% Name: vdmsl-2e.sty
+% Version: 1.1.35b
+% $Id: vdmsl-2e.sty,v 1.4 2006/04/07 04:55:51 vdmtools Exp $
+% Updated 980907, IFAD. 
+% Based on:  
+% @(#) vdmsl.sty version 1.1.35 dated 95/07/06 at 11:46:19
+% Contact: gip@ditc.npl.co.uk
+%
+%% ------------------------------------------------------------------%
+%%  vdmsl.sty:                                                      -%
+%%                                                                  -%
+%%      BSI (Proto Standard) VDM SL documentstyle option for LaTeX  -%
+%%                                                                  -%
+%%       Written by         Jan-Bert Oostenenk, 1990                -%
+%%                                                                  -%
+%%      I am a student Hoger Informatica Onderwijs (HIO),           -%
+%%                     Hogeschool Enschede, The Netherlands.        -%
+%%                                                                  -%
+%%                                                                  -%
+%%      e-mail to Graeme I Parkin  gip@ditc.npl.co.uk               -%
+%%                                                                  -%
+%%                                                                  -%
+%%                                                                  -%
+%%                                                                  -%
+%%                                                                  -%
+%%      Version  1.1.35
+%%                                                                  -%
+%%      Some parts of this file are copied with permission from     -%
+%%      Mario Wolczko from vdm.sty. Mainly the symbols and the      -%
+%%      definition of the mathcodes.                                -%
+%%      Debugging carried out by I.P.Dickinson                      -%
+%%      Debugging and further development by K.J.Lines              -%
+%%      Thanks to Derek Andrews and Paul Makherjeei                 -% 
+%%                                                                  -%
+ \typeout{BSI VDM SL style option <96/05/07> version 1.1.35b for LaTeX2e}
+\typeout{This version of the macros contains some changes}
+\typeout{which are not backwards compatible with previous}
+\typeout{versions. See sections 6.4.10, 12.4.1 and 12.4.2}
+\typeout{of the user guide.}
+\typeout{Also see sections 5.4.1, 5.5.1, 5.5.7 and 5.6.1}
+%% --Customizing------------------------------------------------------%
+                     %% Because of changes to latex.tex                       -%
+                     %% change order of \begingroup and \def\@currenvir{...}, -%
+                     %% necessary for latex versions before 24 May 1989       -%
+                     %% Check in latex.tex if \begin, \end and, \@checkend    -%
+                     %% are changed on 24 May 1989                            -%
+\def\@@precond{\begingroup \def\@currenvir{precond}}%       % if
+                                                    %       changed
+                                                    %       -%
+
+ % \def\@@precond{\def\@currenvir{precond}\begingroup}    % if not changed -%
+\def\@@postcond{\begingroup \def\@currenvir{postcond}}%       % if
+                                                    %       changed
+                                                    %       -%
+
+ % \def\@@postcond{\def\@currenvir{postcond}\begingroup}    % if not changed -%
+
+\def\VdmSlAuthor{{\sffamily Jan-Bert Oostenenk}}
+ \def\VdmSlVersion{\VdmSl\ version 1.1.35}
+\def\VdmSl{{\rm\leavevmode{\raise .15ex\hbox{V}\kern-.3em%
+            \raise-.4ex\hbox{\sc d\kern-.11em m}\kern-.15em%
+            \raise.15ex\hbox{S}\kern-.12em%
+            \raise-.4ex\hbox{\sc l}}}}
+
+\newif\ifoldams@
+\newif\ifams@
+\ams@true
+\oldams@false
+\ifoldams@
+     \ifams@
+          \@latexerr{Can't use both AMSFonts 2.0 and the previous version}%
+                     {VDMSL.STY has been set up so that it is trying to
+                      use both AMSFonts 2.0 and the previous version of the
+                      AMS fonts.
+                      Tell your system manager to have VDMSL.STY installed
+                      correctly.}
+     \fi
+\fi
+\newif\ifps@ \ps@false % PostScript-based
+\def\@fmtname{LaTeX2e}
+\def\@psfmtname{pslplain}
+\def\@testcmsy{\if@usecmsy 
+               \else 
+                   \@latexerr{Can't use vdm with this PSLaTeX}%
+                             {This PSLaTeX does not have the CMSY symbols
+                              available, and cannot be used with VDM style.  Get
+                              a guru to rebuild PSLaTeX with the CMSY and CMMI
+                              fonts included.}
+               \fi}
+\def\@testcmmi{\if@usecmmi 
+               \else
+                   \@latexerr{Can't use vdm with this PSLaTeX}%
+                             {This PSLaTeX does not have the CMMI symbols
+                              available, and cannot be used with VDM style.  Get
+                              a guru to rebuild PSLaTeX with the CMSY and CMMI
+                              fonts included.}
+              \fi}
+\ifx\fmtname\@fmtname % standard LaTeX is OK
+\else 
+    \ifx\fmtname\@psfmtname 
+           \global\ps@true 
+           \@testcmsy 
+           \@testcmmi
+    \else 
+           \ams@false 
+    \fi
+\fi % don't use AMS for SliTeX 
+\ifams@
+        \DeclareFontFamily{U}{msa}{}
+        \DeclareFontFamily{U}{msb}{}
+\else
+        \ifoldams@
+                \DeclareFontFamily{U}{msy}{}
+                \DeclareFontFamily{U}{msx}{}
+        \fi
+\fi
+\ifams@
+     \DeclareFontShape{U}{msa}{m}{n}
+                  { <5> <6> <7> <8> <9> gen * msam
+                    <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> msam10}{}
+      \DeclareFontShape{U}{msb}{m}{n}
+                  { <5> <6> <7> <8> <9> gen * msbm
+                    <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> msbm10}{}
+\else
+        \ifoldams@
+             \DeclareFontShape{U}{msy}{m}{n}
+                   { <5> <6> <7> <8> <9> gen * msym
+                    <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> msym10}{}
+              \DeclareFontShape{U}{msx}{m}{n}
+                   { <5> <6> <7> <8> <9> gen * msxm
+                    <10> <10.95> <12> <14.4> <17.28> <20.74> <24.88> msxm10}{}
+        \fi
+\fi
+\ifams@
+        \DeclareSymbolFont{AMSa}{U}{msa}{m}{n}
+        \DeclareSymbolFont{AMSb}{U}{msb}{m}{n}
+\else
+        \ifoldams@
+                \DeclareSymbolFont{AMSx}{U}{msx}{m}{n}
+                \DeclareSymbolFont{AMSy}{U}{msy}{m}{n}
+        \fi
+\fi
+\DeclareMathAlphabet{\mathit}{OT1}{cmr}{m}{it}
+\DeclareOldFontCommand{\vdm@it}{\relax}{\mathit}
+\let\saved@vdm@it\vdm@it
+\everymath=\expandafter{\the\everymath\vdm@it
+                        \@changeMathmodeCatcodes}
+\everydisplay=\expandafter{\the\everydisplay\vdm@it 
+                           \@changeMathmodeCatcodes}
+\mathcode`\0="0030
+\mathcode`\1="0031
+\mathcode`\2="0032
+\mathcode`\3="0033
+\mathcode`\4="0034
+\mathcode`\5="0035
+\mathcode`\6="0036
+\mathcode`\7="0037
+\mathcode`\8="0038
+\mathcode`\9="0039
+\def\defaultMathcodes{\let\vdm@it\relax}
+\def\vdmMathcodes{\let\vdm@it\saved@vdm@it}
+{\catcode`\"=\active
+ \gdef\@changeMathmodeCatcodes{%
+        % make ~ mean \old, " do text, %@ mean subscript
+        \let~=\old
+        %\catcode`\@=8
+        \catcode`\"=\active  \let"=\@mathText}
+ \gdef\@mathText#1"{\hbox{\Dquote\MathTextFont{#1}\/\Dquote}}}
+ 
+\ifps@
+        \def\@changeOtherMathcodes{
+                \mathcode`\:="203A
+                \mathcode`\-="002D
+                \mathcode`\|="327C 
+                \mathchardef\Or="32DA % this is a rel to get 5mu spacing
+                \mathcode`\f="0166} % normal letter spacing
+\else
+        \def\@changeOtherMathcodes{
+                \mathcode`\:="203A 
+                \mathcode`\-="002D
+                \mathcode`\|="326A 
+                \mathchardef\Or="325F}% this is a rel to get 5mu spacing
+\fi
+\def\To{\penalty-100\rightarrow}        % function arrow \ifams@
+\def\Pto{ \tilde{\rightarrow}}          % Partial function arrow.
+\ifams@
+        \DeclareMathSymbol{\Bool}{\mathord}{AMSb}{"42}
+        \DeclareMathSymbol{\Nat}{\mathord}{AMSb}{"4E}
+        \def\Nati{\Nat_1}
+        \DeclareMathSymbol{\Int}{\mathord}{AMSb}{"5A}
+        \DeclareMathSymbol{\Real}{\mathord}{AMSb}{"52} 
+        \DeclareMathSymbol{\Rat}{\mathord}{AMSb}{"51}
+        \DeclareMathSymbol{\@Sconc}{\mathbin}{AMSb}{"079} 
+        \def\Sconc{\mathbin{\hbox{\raise.75ex\hbox{$\@Sconc$}}}}
+        \DeclareMathSymbol{\Dto}{\mathbin}{AMSa}{"43}   
+        \DeclareMathSymbol{\Rto}{\mathbin}{AMSa}{"42}  
+\else 
+        \ifoldams@
+                \DeclareMathSymbol{\Bool}{\mathord}{AMSy}{"42}
+                \DeclareMathSymbol{\Nat}{\mathord}{AMSy}{"4E}
+                \def\Nati{\Nat_1}
+                \DeclareMathSymbol{\Int}{\mathord}{AMSy}{"5A}
+                \DeclareMathSymbol{\Real}{\mathord}{AMSy}{"52}
+                \DeclareMathSymbol{\Rat}{\mathord}{AMSy}{"51}
+                \DeclareMathSymbol{\@Sconc}{\mathbin}{AMSy}{"079}  
+                \def\Sconc{\mathbin{\hbox{\raise.75ex\hbox{$\@Sconc$}}}}
+                \DeclareMathSymbol{\Dto}{\mathbin}{AMSx}{"43}
+                \DeclareMathSymbol{\Rto}{\mathbin}{AMSx}{"42}
+        \else
+                \def\Bool{\hbox{\bfseries B\/}}
+                \def\Nat{\hbox{\bfseries N\/}}
+                \def\Nati{\hbox{$\hbox{\bf N}_1$}}
+                \def\Int{\hbox{\bfseries Z\/}}
+                \def\Real{\hbox{\bfseries R\/}}
+                \def\Rat{\hbox{\bfseries Q\/}}
+                \def\Sconc{\mathbin{\hbox{\raise.75ex\hbox{$\frown$}\kern-0.47em
+                \raise0.2ex\hbox{\it\char"12}}}} 
+                \def\Dto{\mathbin{\triangleleft}}
+                \def\Rto{\mathbin{\triangleright}}
+        \fi
+\fi
+\let\Natone=\Nati                        % just for an alternative
+\def\Set{-\kw{set}}       
+\def\Emptyset{\lbrace\mskip\thinmuskip\rbrace}
+\def\Emptymap{\lbrace\Mapsto\rbrace}
+\def\Seq#1{\seqof{#1}{}}
+\def\Emptyseq{[\,]}
+
+\def\mapof#1{#1}
+\def\Gmap{\buildrel m\over\longrightarrow}
+\def\Bmap{\buildrel m\over\longleftrightarrow}
+\let\X=\times
+\def\Setdiff{\mathbin{\hbox{$\backslash$}}}
+\ifps@
+          \def\Fdef{\raise.5ex
+                    \hbox{\hskip.4em\relax
+                    \footnotesize\underline{$\mathchar"3\cmsy@34$}%
+                    \hskip.5em\/}}    %      a triangle
+        \mathchardef\Minus="222D
+  % domain subtraction % range subtraction
+        \def\Dby{\mathbin{\hbox{$\rlap{$\mathord\Minus$}\mkern-3mu\hbox{$\Dto$}$}}}
+        \def\Rby{\mathbin{\hbox{$\rlap{$\mathord\Minus$}\mkern-1.6mu\Rto$}}}
+  \mathchardef\@Exists="0224
+  \mathchardef\@All="0222
+  \mathchardef\Dot="22D7
+\else
+  \def\Fdef{\raise.5ex
+    \hbox{\hskip.4em\relax
+      \footnotesize\underline{$\mathchar"3234$}%
+      \hskip.5em\/}}                                         % a triangle
+  \mathchardef\Minus="2200
+  \def\Dby{\mathbin{\hbox{$\rlap{$\mathord\Minus$}\mkern-1.6mu
+        \lower.1ex\hbox{$\Dto$}$}}}
+  \def\Rby{\mathbin{\hbox{$\rlap{$\mathord\Minus$}\mkern-1.6mu
+        \lower.1ex\hbox{$\Rto$}$}}}
+  \mathchardef\@Exists="0239
+  \mathchardef\@All="0238
+  \mathchardef\Dot="2201
+\fi
+\def\Oto{\buildrel o\over\rightarrow} % Operation arrow
+\let\Mapsto=\mapsto \let\Seqmod=\mapsto \let\Recmod=\mapsto
+\def\Ass{\mathrel{:\!=}}
+\def\Nondet{\parallel\mskip\medmuskip}
+\let\In=\in
+\def\Uminus{\hbox{$\Minus\mskip\medmuskip$}}
+\def\Uplus{\hbox{$+\mskip\medmuskip$}}
+\def\Not{\neg\,}
+\def\Power{{\cal F\mskip\medmuskip}}
+\let\Dunion=\bigcup
+\let\Dinter=\bigcap 
+\def\Inverse{^{-1}}
+\def\Exponent{\hbox{$\X10\raise.37ex\hbox{$\uparrow$}$}%
+  \@ifnextchar+{\def\@tmpa+{\hbox{$+$}}\@tmpa}
+    {\@ifnextchar-{\def\@tmpa-{\hbox{$\Minus$}}\@tmpa}{}}}
+\let\Exp=\uparrow
+\let\Iterate=\uparrow
+\let\Union=\cup 
+\def\Mapmerge{\mathbin{\shortstack{\tiny m \\[-1.8ex] $\bigcup$}}}
+\let\Inter=\cap 
+\let\Diff=\setminus
+% Swopped around
+\let\Psubset=\subset
+\let\Subset=\subseteq
+\def\Notin{\not\in}
+\let\Override=\dagger 
+\let\Compose=\circ
+\let\And=\land
+\let\@and=\and
+\def\and{\ifmmode\And\else\@and\fi}
+\def\Implies{\penalty-35\mskip 6mu plus 2mu minus 1mu \Rightarrow
+        \mskip 6mu plus 2mu minus 1mu}
+\def\Equiv{\penalty-50\mskip 7mu plus 2mu minus 2mu
+           \Leftrightarrow\mskip 7mu plus 2mu minus 2mu}
+\let\Neq=\neq
+\let\Le=\leq
+\let\Ge=\geq
+\def\Exists{\@Exists\,}
+\def\All{\@All\,}
+\def\Unique{\@Exists!\,}
+% Replaced line below to remove clash with LaTeX macro
+% \def\Iota{\@iota\,}
+\def\Iotaop{\@iota\,}
+\let\Lb=\lbrace
+\let\Rb=\rbrace
+\def\Dcolon{\mskip\thinmuskip\hbox{:\kern.1em:\/}\mskip\thinmuskip}
+\let\Range=\ldots
+% Replaced line below because clashed with LaTeX macro
+% \let\Mu=\mu
+\let\Muop=\mu
+\def\Lambdaop{\@lambda\,}
+\def\Quote{{\mathcode`\'='047 '}}
+\def\Dquote{\hbox{\tt\char34}}
+\def\Old{\old{\rule{0pt}{1em}}}
+\def\Comment{\hbox{ --{--} }}
+%_
+\gdef\initialise@fonts{
+        \gdef\LineNrFont{\footnotesize\rmfamily\upshape}
+        \let\ModuleNrFont=\LineNrFont 
+        \DeclareTextFontCommand{\ConstantFont}{\scshape}
+        \DeclareTextFontCommand{\MathTextFont}{\rmfamily}
+        \gdef\CommentFont{\rmfamily}
+        \gdef\AnnotationsFont{\rmfamily}
+}
+\ifx\fmtname\@fmtname       
+        \DeclareTextFontCommand{\KeywordFont}{\small\sffamily}
+\else
+        \ifx\fmtname\@psfmtname
+                \DeclareTextFontCommand{\KeywordFont}{\sffamily}
+        \else 
+                \DeclareTextFontCommand{\KeywordFont}{\bfseries}
+        \fi
+\fi
+
+\newif\ifVDM@                           \VDM@false
+\def\vdm{%
+  \ifVDM@\else
+    \par 
+    \VDM@true
+    \set@linebreaks
+    \@changeSkips
+    \@changeMathmodeCatcodes
+    \@changeMargins
+    \interlinepenalty\@M   
+  \fi \@ignorespaces}
+\def\endvdm{\par}                                
+
+\newenvironment{vpp}
+{\noindent \rule{\columnwidth}{0.5pt} \begin{alltt}}
+{\end{alltt} \rule{\columnwidth}{0.5pt}}
+
+
+\def\b@mathmode{%\@raggedRight
+  \iffn@in@let@ \strut\relax \else \leavevmode$\strut\relax \fi}
+\def\e@mathmode{\iffn@in@let@ \relax\strut \else \relax\strut$ \fi}
+\newdimen\w@Rindent \w@Rindent=\parindent
+\let\VdmBaselineskip=\baselineskip
+\def\@changeMargins{\advance\hsize by -\w@Rindent\parindent=\z@}
+\def\@restoreMargins{\advance\hsize by\w@Rindent}
+\def\@changeSkips{\baselineskip=\VdmBaselineskip
+  \lineskip=\z@\lineskiplimit=\z@\parskip=\z@
+  % need to alter the size of struts, too
+  \setbox\strutbox\hbox{\vrule height.7\baselineskip
+      depth.3\baselineskip width\z@}}
+\def\Vdmus{\leavevmode \kern.06em\vbox{\hrule\@height .2ex\@width .3em}
+  \hskip 0.1em}
+\def\kw#1{\hbox{\KeywordFont{#1}\/}}
+ 
+\def\makeNewKeyword#1#2{%        
+          \newcommand{#1}{\hbox{\KeywordFont{#2}\/}}}
+\def\@mNK#1#2{\def#1{\hbox{\KeywordFont{#2}\/}}}
+ 
+\def\const#1{\hbox{\ConstantFont{#1}\/}}
+  
+\def\makeNewConstant#1#2{%       
+        \newcommand{#1}{\hbox{\ConstantFont{#2}\/}}}
+\@mNK\Abs{abs }
+\@mNK\Card{card }
+\@mNK\Conc{conc }
+\@mNK\Char{char}
+\@mNK\Div{ div }
+\@mNK\Dom{dom }
+\@mNK\Elems{elems }
+\@mNK\False{false}
+\@mNK\Floor{floor }
+\@mNK\Hd{hd }
+\@mNK\Inds{inds }
+\@mNK\Len{len }
+\@mNK\Merge{merge }
+\@mNK\Mod{ mod }
+\@mNK\Nil{nil }
+\@mNK\Rd{rd }
+\@mNK\Rem{ rem }
+\@mNK\Rng{rng }
+\@mNK\Tl{tl }
+\@mNK\Token{token}
+\@mNK\True{true}
+\@mNK\Undefined{undefined }
+\@mNK\Using{ using }
+\@mNK\Wr{wr }
+\@mNK\kAs{as }
+\@mNK\kAlways{always }
+\@mNK\kBeSt{be st }
+\@mNK\kBy{by }
+\@mNK\kCases{cases }
+\@mNK\kCompose{compose }
+\@mNK\kDcl{dcl }
+\@mNK\kDef{def }
+\@mNK\kDefinitions{definitions }
+\@mNK\kDo{do }
+\@mNK\kElse{else }
+\@mNK\kElseif{elseif }
+\@mNK\kEnd{end }
+\@mNK\kErrs{errs }
+\@mNK\kExit{exit }
+\@mNK\kExports{exports }
+\@mNK\kExt{ext }
+\@mNK\kFor{for }
+\@mNK\kForAll{for all }
+\@mNK\kFrom{from }
+\@mNK\kFunctions{functions }
+\@mNK\kIf{if }
+\@mNK\kImports{imports }
+\@mNK\kIn{in }
+\@mNK\kInit{init }
+\@mNK\kInstantiation{instantiation }
+\@mNK\kInv{inv }
+\@mNK\kLet{let }
+\@mNK\kModule{module }
+\@mNK\DLModule{dlmodule }
+\@mNK\kOf{of }
+\@mNK\kOperations{operations }
+\@mNK\kOthers{others }
+\@mNK\kParameters{parameters }
+\@mNK\kPost{post }
+\@mNK\kPre{pre }
+\@mNK\kReturn{return }
+\@mNK\kReverse{reverse }
+\@mNK\kState{state }
+\@mNK\kThen{then }
+\@mNK\kTixe{tixe }
+\@mNK\kTo{to }
+\@mNK\kTrap{trap }
+\@mNK\kTypes{types }
+\@mNK\kValue{value }
+\@mNK\kValues{values }
+\@mNK\kWith{with }
+\@mNK\kWhile{while }
+\newcount\c@module  \c@module=\z@                         
+\newcount\c@outer   \c@module=\z@                       
+\newcount\c@inner                           
+\newdimen\w@outer                              
+\newdimen\w@inner                              
+\newdimen\wi@ln                   
+\def\setindent#1#2{\expandafter \csname w@#1\endcsname=#2 \relax
+  \@iflnw{#1}\@ifannw{#1}\ignorespaces}
+\def\addtoindent#1#2{
+  \def\@ann{AnnIndent}
+  \def\@@firstarg{#1}
+  \expandafter\global
+  \expandafter\advance
+  \expandafter\csname w@#1\endcsname by #2\relax
+  \ifx \@ann\@@firstarg
+      \@ifannw{#1}
+  \else
+      \@iflnw{#1}
+  \fi 
+  \ignorespaces}
+\def\setindenttowidth#1#2{\ifmmode\setbox\tmp@box=\hbox{$\strut#2\strut$}%
+ \else\setbox\tmp@box=\hbox{#2}\fi
+ \expandafter\csname w@#1\endcsname=\wd\tmp@box
+ \@iflnw{\wd\tmp@box}\@ifannw{\wd\tmp@box}\ignorespaces}
+\def\width#1{\csname w@#1\endcsname}
+\def\newindent#1#2{\expandafter\@ifdefinable \csname w@#1\endcsname
+  {\expandafter\newdimen \csname w@#1\endcsname\setindent{#1}{#2}}}
+\def\@iflnw#1{{
+   \def\@inner{inner}
+   \def\@outer{outer}
+   \def\@tmpa{#1}%
+   \ifx \@inner\@tmpa
+        \global\let\@gtmpa=\setw@ln
+   \else 
+        \ifx \@outer\@tmpa 
+             \global\let\@gtmpa=\setw@ln
+        \fi 
+   \fi}
+% macro works on the assumption that #1 is either 'inner'
+% or 'outer'     kjl 24/7/92
+   \@gtmpa}
+\def\@ifannw#1{{%
+   \def\@tann{AnnIndent}
+   \def\@tmpa{#1}%
+   \ifx \@tann\@tmpa 
+       \global\let\@gtmpa\setw@ann 
+   \fi}
+% macro works on the assumption that #1 is 'AnnIndent'  kjl 24/7/92
+   \@gtmpa}
+\def\setw@ln{\wi@ln=\w@outer \advance\wi@ln by\w@inner \relax}
+\def\lninc@outer{\global\advance\c@outer by \@ne \global\c@inner=\z@}           
+\def\lninc@inner{\global\advance\c@inner by \@ne}      
+    
+\def\lnput@module{\ModuleNrFont\themodule}    
+\def\lnput@outer{\LineNrFont\the\c@outer}                
+\def\lnput@inner{\LineNrFont.\the\c@inner}              
+\def\lnput@.{\LineNrFont.}
+\def\lnbox@module{%                                              
+  \hbox to \wi@ln{\hss\lnput@module\hskip \w@inner}}
+\def\lnbox@outer@inner{%                                         
+  \hbox to \wi@ln{\hss\lnput@outer\hbox to\w@inner{\lnput@inner\hss}}}
+\def\lnbox@outer@{%                                              
+  \hbox to \wi@ln{\hss\lnput@outer\hbox to\w@inner{\lnput@.\hss}}}
+\def\lnbox@@inner{%                                              
+  \hbox to\wi@ln{\hss\hbox to\w@inner{\lnput@inner\hss}}}
+\def\lnbox@{\hbox to\wi@ln{}}
+\def\lnout@{\lnbox@\penalty\@M\@indent\penalty\@M}
+\def\linenumbering{%
+  \def\lnout@m{\lninc@module \lnbox@module \penalty\@M \@indent \penalty\@M}%
+  \def\lnout@oi{\lninc@outer \lnbox@outer@inner \penalty\@M
+    \@indent \penalty\@M}%
+  \def\lnout@o{\lninc@outer \lnbox@outer@ \penalty\@M 
+    \@indent \penalty\@M}%
+  \def\lnout@i{\lninc@inner \lnbox@@inner \penalty\@M \@indent \penalty\@M}%
+  \let\annlab=\@annlab}
+\def\nolinenumbering{\let\lnout@m=\lnout@ \let\lnout@oi=\lnout@
+  \let\lnout@o=\lnout@ \let\lnout@i=\lnout@
+  \def\annlab[##1]##2{\ignorespaces}}
+\def\modulenumbering#1{\gdef\themodule{\csname @#1\endcsname\c@module}
+  \gdef\lninc@module{\global\advance\c@module by \@ne \global\c@outer=\z@}}
+\def\nomodulenumbering{\global\let\themodule=\@empty
+  \gdef\lninc@module{\global\advance\c@module by \@ne}}
+\def\set@linebreaks{%
+    \let\@old@linebr=\\%                                           
+                    %  ^ this is a bug in TeX if no '%' a space is inserted
+    \def\@linebr{\newline \lnout@i \ignorespaces}%
+    \let\\=\@linebr}
+\def\@par@linebr{\@par\leavevmode \lnout@i \@ignorespaces}
+\def\@linebr{%                            
+  \newline \lnout@i \ignorespaces}
+\def\reset@linebreaks{%
+  \let\\=\@old@linebr
+  \let\@linebr=\\}
+\def\I#1{\\\hskip #1\relax}
+\def\R{\\\hspace*{\fill}}
+\def\V{\@ifoptarg{\@V@linebr}{\@V@linebr\z@]}}
+\def\@V@linebr#1]{\ifmmode $\@@par\vskip#1\relax\leavevmode \lnout@i $%
+  \else\@par\vskip#1\relax\leavevmode \lnout@i \fi \@ignorespaces}% 
+\newdimen\w@small@indent        \w@small@indent=0.3em  %kjl 17/3/93
+\newdimen\w@Indent              \w@Indent=1em  
+\newdimen\w@IIndent             \w@IIndent=1em
+\newdimen\w@IIIndent            \w@IIIndent=1em
+\newdimen\w@DIndent             \w@DIndent=2em
+\newdimen\wi@indent \wi@indent\z@        
+\def\@indent{\hskip\wi@indent\relax}    
+                                        
+\def\add@indent#1{\global\advance\wi@indent by #1\relax}
+\def\sub@indent#1{\global\advance\wi@indent by -#1}
+\def\copy@indent#1{\setbox\tmp@box=\hbox{$\copy\strutbox\relax
+  #1\copy\strutbox$}\global\advance\wi@indent by\wd\tmp@box\box\tmp@box\relax}
+\def\addw@indent#1{\setbox\tmp@box=\hbox{$\copy\strutbox\relax
+  #1\copy\strutbox$}\global\advance\wi@indent by \wd\tmp@box\relax}
+\def\subw@indent#1{\setbox\tmp@box=\hbox{$\copy\strutbox\relax
+  #1\copy\strutbox$}\global\advance\wi@indent by -\wd\tmp@box\relax}
+\def\add@small{\global\advance\wi@indent by\w@small@indent\relax}
+\def\sub@small{\global\advance\wi@indent by-\w@small@indent\relax}
+\def\add@I{\global\advance\wi@indent by\w@Indent\relax}
+\def\sub@I{\global\advance\wi@indent by-\w@Indent\relax}
+\def\add@II{\global\advance\wi@indent by\w@IIndent\relax}
+\def\sub@II{\global\advance\wi@indent by-\w@IIndent\relax}
+\def\add@III{\global\advance\wi@indent by\w@IIIndent\relax}
+\def\sub@III{\global\advance\wi@indent by-\w@IIIndent\relax}
+\def\add@DI{\global\advance\wi@indent by\w@DIndent\relax}
+\def\sub@DI{\global\advance\wi@indent by-\w@DIndent\relax}
+\def\kw@indent#1{\setbox\tmp@box=\kw{#1}%
+  \global\advance\wi@indent by \wd\tmp@box \box\tmp@box \relax}
+\def\sub@kw@indent#1{\setbox\tmp@box=\kw{#1}%
+  \global\advance\wi@indent -\wd\tmp@box\relax}
+\def\sb@indent#1{\setbox\tmp@box=\hbox{$\copy\strutbox\relax#1\copy\strutbox$}%
+  \global\advance\wi@indent by\wd\tmp@box \box\tmp@box\relax}
+\def\@nopagebreak{\gdef\par{\@@par \penalty\@M \global\let\par=\@@par
+  \penalty\@M}}
+\def\startpagebreaks{\interlinepenalty=400}
+\def\@ignorespaces{\global\@ignoretrue\ignorespaces}
+\def\@emptyHooks#1{%                                          
+  \expandafter\gdef\csname pre#1Hook\endcsname{} 
+  \expandafter\gdef\csname post#1Hook\endcsname{}}
+\def\@newSkip#1#2{%                                 
+  \expandafter\newskip\csname pre#1Skip\endcsname
+  \expandafter\csname pre#1Skip\endcsname=#2\relax}
+\def\@newSkips#1#2#3{%              
+  \expandafter\newskip\csname pre#1Skip\endcsname
+  \expandafter\csname pre#1Skip\endcsname=#2\relax
+  \expandafter\newskip\csname post#1Skip\endcsname
+  \expandafter\csname post#1Skip\endcsname=#3\relax}
+
+% kjl 30/7/91
+\def\b@Macro#1#2{%
+  \par \vskip#1 \relax#2\leavevmode}
+\def\e@Macro#1#2{#1\vskip#2\relax}
+\def\endMacroHook{}
+\newskip\endMacroSkip           \endMacroSkip=1ex plus .2ex minus .2ex
+\def\endMacro{\e@Macro\endMacroHook\endMacroSkip}
+\def\b@Kw@I#1#2#3#4{%
+  \par \vskip#3 \relax #4\First@true \leavevmode \lnout@ \kw{#2}%
+  \def\e@Kw@I##1##2{\sub@indent{#1}##1\vskip##2\relax\ignorespaces}%
+  \add@indent{#1}\@nopagebreak\ignorespaces}
+\def\b@Kw@II#1#2#3#4{%
+  \par \vskip #2\relax #3\First@true \leavevmode \lnout@ \kw{#1}%
+  \add@indent{#4}\def\ei@Kw@II{\sub@indent{#4}}%
+  \def\e@Kw@II##1##2{\sub@indent{#4}##1\vskip##2\relax\ignorespaces}
+  \@nopagebreak\ignorespaces}
+\newif\ifnl@                    \nl@false              
+ \def\@iflinebr#1#2{\@ifnextchar\\{\nl@true\def\@tmpa\\{#1}\@tmpa}
+                                 {\global\nl@false#2}}
+\def\@ifoptarg#1#2{\@ifnextchar[{\def\@tmpa[{#1}\@tmpa}{#2}}
+\def\@iflinebrarg#1#2#3#4{%
+ \@iflinebr{\@ifnextchar[{\def\@tmpa[{#1}\@tmpa}{#2}}
+           {\@ifnextchar[{\def\@tmpa[{#3}\@tmpa}{#4}}}
+\def\@iflinebrstar#1#2#3#4{%
+  \@iflinebr{\@ifnextchar*{\def\tmpa*{#1}\tmpa}{#2}}
+            {\@ifnextchar*{\def\tmpa*{#3}\tmpa}{#4}}}
+\newif\ifempty@
+\def\@ifempty#1{%\empty@true\ifx#1\else\empty@false\fi\ifempty@}
+  \def\@tmpa{#1x}\def\@tmpb{x}\ifx\@tmpa\@tmpb}
+\newif\ifFirst@                 \First@false
+\def\F@comma{%
+        \ifpunct@set@it@
+                \global\punct@set@it@false
+        \else
+                \ifFirst@ 
+                        \global\First@false 
+                \else ,
+                \fi
+        \fi}                            
+                                              
+% kjl 18/3/93
+\def\F@comma@pl{%
+        \ifpunct@set@it@
+                \global\punct@set@it@false
+                \@par@linebr
+        \else
+                \ifFirst@ 
+                        \global\First@false 
+                \else
+                        ,%
+                        \@par@linebr
+                \fi
+        \fi}
+% kjl 18/3/93    26/3/93
+\def\F@comma@linebr{%
+        \ifpunct@set@it@
+                \global\punct@set@it@false
+                \@linebr
+        \else
+                \ifFirst@ 
+                        \global\First@false 
+                \else,%
+                     \@linebr 
+                \fi
+        \fi}
+\def\F@linebr{\ifFirst@% 
+                  \global\First@false 
+              \else 
+                  \@linebr 
+              \fi}
+\def\F@par@linebr{\ifFirst@ 
+                     \global\First@false 
+                  \else 
+                      \@par@linebr 
+                  \fi}
+\newdimen\wi@id                  \wi@id=0pt
+\newif\ifId@w@                   \Id@w@false
+\def\leftalignment{\let\@left@hss\@empty \let\@mid@hss\hss \let\@right@hss=\hss}
+\def\rightalignment{\let\@left@hss\hss \let\@mid@hss\@empty 
+  \let\@right@hss\@empty}
+\def\b@id@indent#1#2{%
+ \@ifempty{#2} \hskip\wi@id \setbox\tmp@box=\hbox{$\strut #1\strut$}%
+   \hskip\wd\tmp@box \add@indent{\wd\tmp@box}% 
+ \else 
+    \ifId@w@ \let\\=\w@id@linebr
+      \hbox to \wi@id \bgroup \@left@hss$#2$\@mid@hss \egroup%
+    \else \let\\=\id@linebr
+      \setbox \tmp@box=\hbox \bgroup $#2$\egroup
+      \wi@id=\wd\tmp@box \box\tmp@box \fi
+    \sb@indent{#1}%
+  \fi 
+  \def\e@id@indent{\sub@indent\wi@id \subw@indent{#1}}%
+  \let\\=\@linebr \add@indent\wi@id}
+\def\setw@id#1{\@ifoptarg{\@setw@id{#1}}{\Id@w@false#1}}
+\def\@setw@id#1#2]{\Id@w@true \setbox \tmp@box=\hbox{$#2$}%
+  \wi@id=\wd\tmp@box \relax #1}
+\def\w@id@linebr{\strut $\@mid@hss \egroup \@linebr 
+  \hbox to \wi@id \bgroup \@left@hss$}
+\def\id@linebr{\strut $\egroup \box\tmp@box \@linebr 
+  \setbox\tmp@box \hbox \bgroup $}
+\def\F@bls#1{\F@bl@cl\t@bl@one={#1}\@bls}
+\def\@bls{\@iflinebr{\ml@bls}{\sl@bls}}
+\def\sl@bls#1{\b@bl@one@indent\bl@sep
+  \M@bl@two\b@bl@two#1\e@bl@two\M@bl@two\e@bl\e@bls\ignorespaces%
+  }
+\def\ml@bls#1{\M@bl@one\the\t@bl@one\@sep\M@bl@one\add@DI\\
+  \M@bl@two#1\M@bl@two\sub@DI\e@bls\ignorespaces}
+\let\b@bl@two=\@empty\let\e@bl@two=\@empty\let\e@bls=\@empty
+\def\IM@bls{\let\M@bl@one=\@empty\let\M@bl@two=\@empty       
+  \let\F@bl@cl=\F@comma@linebr}
+\def\MN@bls{\let\M@bl@two=\@empty                
+  \ifmmode\let\M@bl@one=\empty\let\F@bl@cl=\F@comma@linebr
+  \else \let\M@bl@one=$\let\F@bl@cl=\F@comma@pl \fi}
+\def\MM@bls{\let\M@bl@one=$\let\M@bl@two=$%             
+  \let\F@bl@cl=\F@comma@pl}
+\def\AM@bls{\ifmmode\IM@bls\else\MM@bls\fi}        
+\def\MC@bls{\ifmmode\IM@bls\else\MN@bls\fi}          
+\newdimen\wi@blo
+\newdimen\wi@sep                                \wi@sep=\z@
+\newdimen\wi@old@indent
+\newdimen\wi@w@blo
+\newtoks\t@bl@one
+\newbox\tmp@box
+\newif\ifWidth@bl@one                   \Width@bl@onefalse
+\def\setw@bl#1{\@ifoptarg{\setw@@bl@one{#1}}{\Width@bl@onefalse#1}}
+\def\setw@@bl@one#1#2]{\Width@bl@onetrue
+  \setbox\tmp@box=\hbox{$\strut#2\strut$}\wi@blo=\wd\tmp@box\relax#1}
+\def\b@bl@one@indent{%
+  \wi@old@indent=\wi@indent
+  \ifWidth@bl@one 
+    \let\\=\bl@w@linebr
+    \hbox to \wi@blo \bgroup \@left@hss $
+      \the\t@bl@one \strut $\@right@hss \egroup
+  \else
+    \let\\=\bl@linebr
+    \wi@w@blo=\wi@indent 
+    \setbox\tmp@box=\hbox \bgroup $ \the\t@bl@one \strut $\egroup
+    \wi@blo=\wd \tmp@box \box \tmp@box
+    \advance\wi@blo -\wi@old@indent
+    \advance\wi@blo\wi@w@blo
+  \fi
+  \let\\=\@linebr
+  \add@indent\wi@blo}
+\def\e@bl{\sub@indent{\wi@blo}\sub@indent{\wi@sep}}
+\def\bl@w@linebr{\strut $\@right@hss \egroup \@linebr
+  \wi@w@blo=\wi@blo \advance\wi@w@blo\wi@old@indent
+  \advance\wi@w@blo -\wi@indent
+  \hbox to\wi@w@blo \bgroup \@left@hss $}
+\def\bl@linebr{\strut $ \egroup \box\tmp@box \@linebr
+  \wi@w@blo=\wi@indent 
+  \setbox\tmp@box=\hbox \bgroup $}
+\def\bl@sep{\setbox\tmp@box=\hbox{$\strut\@sep\strut$}%
+  \wi@sep=\wd\tmp@box\add@indent{\wi@sep}\box\tmp@box}
+\def\b@bl{\b@bl@one@indent\bl@sep}
+\def\@bl{\M@bl@one\m@bl\M@bl@one}
+\def\m@bl{\the\t@bl@one\@sep}
+\newtoks\t@ModuleName                        
+\@newSkips{Module}{2ex plus .5ex minus .3ex}{2ex plus .5ex minus .3ex}
+\@emptyHooks{Module}
+\def\module{\@ifoptarg{\@module}{\@module\w@Indent]}}
+\def\@module#1]#2{%
+  \global\wi@indent=\z@
+  \def\endmodule{\leavevmode\sub@indent{#1}\lnout@ \kw{end }$#2$%
+    \e@Macro\postModuleHook\postModuleSkip}
+  \b@Macro\preModuleSkip\preModuleHook\lnout@m
+  \t@ModuleName={#2}                       
+  \kw{module }$#2$%                    
+  \add@indent{#1}\def\ei@module{\sub@indent{#1}}
+  \@ifoptarg{\opt@annlab{m}}{}}
+\@newSkips{Interface}{1ex plus .3ex minus .2ex}{1ex plus .3ex minus .2ex}
+\@emptyHooks{Interface}
+\def\interface{\@ifoptarg{\@interface}{\@interface\w@Indent]}}
+\def\@interface#1]#2{%
+  \b@Kw@I{#1}{#2 }{\preInterfaceSkip}{\preInterfaceHook}}
+\def\endinterface{\e@Kw@I\postInterfaceHook\postInterfaceSkip}
+  
+\@newSkip{From}{1ex plus .3ex minus .2ex}
+\@emptyHooks{From}
+\def\from{\@ifoptarg\@from{\@from\w@IIndent]}}
+\def\@from#1]#2{\def\endfrom{\sub@indent{#1}\postFromHook\@ignorespaces}%
+  \F@comma                              
+  \b@Macro\preFromSkip\preFromHook\lnout@oi
+  \kw{from }$#2$\add@indent{#1}\@nopagebreak}
+\@newSkip{Instance}{1ex plus .3ex minus .2ex}
+\@emptyHooks{Instance}
+\def\instance{\@ifoptarg\@instance{\@instance\w@IIndent]}}
+\def\@instance#1]{%
+  \def\endinstance{\sub@indent{#1}\postInstanceHook\@ignorespaces}%
+  \def\e@inst{\add@indent{#1}\@nopagebreak\ignorespaces}%
+  \inst}
+\def\inst#1#2{\t@bl@one={#1\ \kw{as }#2}%
+  \F@comma
+  \b@Macro\preInstanceSkip\preInstanceHook\lnout@oi
+  \@iflinebrarg{\nl@subst}
+               {\@as$\mskip\thinmuskip()$\e@inst}
+               {\sl@subst}
+               {\@as$\mskip\thinmuskip()$\e@inst}}
+\def\@as{\add@II$\the\t@bl@one $\sub@II}
+\def\nl@subst#1]{\@as \add@DI \\\Lp $#1$\Rp \sub@DI \e@inst}
+\def\sl@subst#1]{\def\@sep{\mskip\thinmuskip(}\b@bl $#1)$\e@bl\e@inst}
+\def\e@inst{\postInstanceHook\ignorespaces}
+\@newSkip{Modulesignature}{1ex plus .3ex minus .2ex}
+\@emptyHooks{Modulesignature}
+\def\modulesignature{\@ifoptarg\@modsignature{\@modsignature]}}
+\def\modsig{\@ifoptarg{\@modsig}{\@modsig]}}
+\def\@modsig#1]#2#3{\@modsignature#1]{#2}#3\endmodulesignature}
+\def\@modsignature#1]#2{\First@true            
+  \b@Macro\preModulesignatureSkip\preModulesignatureHook
+  \@ifempty{#1}%
+    \lnout@oi\kw@indent{#2 }%
+    \def\endmodulesignature{\e@mathmode\sub@kw@indent{#2 }%
+      \postModulesignatureHook\@ignorespaces}%
+  \else
+    \lnout@ \kw{#2}\newline\add@indent{#1}\lnout@oi%
+    \def\endmodulesignature{\e@mathmode\sub@indent{#1}%
+      \postModulesignatureHook\@ignorespaces}%
+  \fi
+  \b@mathmode}
+\@newSkips{Definitions}{2ex plus .5ex minus .3ex}{2ex plus .5ex minus .3ex}
+\@emptyHooks{Definitions}
+\def\definitions{\@ifoptarg{\@definitions}{\@definitions\w@Indent]}}
+\def\@definitions#1]{%
+  \b@Kw@I{#1}{definitions}{\preDefinitionsSkip}{\preDefinitionsHook}}
+\def\enddefinitions{\e@Kw@I{\postDefinitionsHook}{\postDefinitionsSkip}}
+\@newSkips{Typesdef}{1ex plus .3ex minus .2ex}{1.75ex plus .4ex minus .2ex}
+\@emptyHooks{Typesdef}
+\def\typedef{\@ifoptarg{\@typedef}{\@typedef\w@IIndent]}}
+\def\@typedef#1]{\Def@true\FirstDef@true
+  \b@Kw@II{types}{\preTypesdefSkip}{\preTypesdefHook}{#1}}
+\def\endtypedef{\e@Kw@II\postTypesdefHook\postTypesdefSkip}
+\@emptyHooks{Type}
+\@newSkips{Type}{1.75ex plus .4ex minus .2ex}{1.75ex plus .4ex minus .2ex}
+\def\type{\b@type \setw@id\@type}
+\def\@type#1{\@iflinebr{\nl@type{#1}}{\sl@type{#1}}}
+\def\sl@type#1#2{\ifx \Inyd #2 \b@id@indent{}{#1}#2%
+  \else \b@id@indent{=}{#1}#2\fi \e@id@indent \e@type}
+\def\nl@type#1#2{%
+  \ifx #2\Inyd #1\else#1 =\fi\add@DI\\#2\sub@DI\e@type}
+\def\b@type{\begingroup \@semicolon \b@Macro\preTypeSkip\preTypeHook\lnout@oi $}
+\def\e@type{$\ifDef@ \postTypeHook%
+  \else \e@Macro\postTypeHook\postTypeSkip\fi\endgroup\ignorespaces%
+  }
+\def\record{\setw@id\@record}
+\def\@record#1{%
+  \ifmmode \def\endrecord{\subw@indent{#1\Dcolon}}%
+  \else \b@type \def\endrecord{\subw@indent{#1\Dcolon}\e@type}\fi%
+  \copy@indent{#1\Dcolon}\First@true%
+  \@ifnextchar:\@rfl\@rfl} 
+\def\@rfl#1:#2\\{\F@linebr%
+  \b@id@indent{:}{#1}#2\e@id@indent \@ifnextchar\end{}{\@rfl}}
+\def\composite{%
+  \ifmmode \def\endcomposite{\sub@III \\\kw{end}}%
+  \else \def\endcomposite{\sub@III \\\kw{end}\e@type}%
+    \b@type \fi
+  \add@III \setw@id\@composite}
+\def\@composite#1{\kw{compose }#1\kw{ of}%
+  \@ifnextchar:\@cfl\@cfl} 
+\def\@cfl#1:#2\\{\\ \b@id@indent{:}{#1}#2\e@id@indent 
+  \@ifnextchar \end{}{\@cfl}}
+\def\compose#1#2{% 
+  \ifmmode \kw{compose }#1\kw{ of }#2\kw{ end}%
+  \else \b@type \kw{compose }#1\kw{ of }#2\kw{ end}\e@type \fi}
+\def\setof#1{#1\kw{-set}}
+\def\seqof#1#2{\ifx #1*{{#2}^*}\else\ifx #1+{{#2}^+}%
+  \else{{#2}^{??}}\fi\fi}
+\@newSkips{Statedef}{1ex plus .3ex minus .2ex}{1.75ex plus .4ex minus .2ex}
+\@emptyHooks{Statedef}
+\def\statedef{\Def@true\setw@id\@statedef}
+\def\endstatedef{\sub@III \\\kw{end}%
+  \e@Macro\postStatedefHook\postStatedefSkip}
+\def\@statedef#1{%
+  \b@Macro\preStatedefSkip\preStatedefHook\lnout@oi
+  \kw@indent{state }$#1$\sub@kw@indent{state }\kw{ of}\add@III
+  \@ifnextchar:\@sfl\@sfl} 
+\def\state#1#2{%
+  \b@Macro\preStatedefSkip\preStatedefHook\lnout@oi
+  \kw{state }$#1\kw{ of }#2$\kw{ end}%
+  \e@Macro\postStatedefHook\postStatedefSkip}
+\def\@sfl#1:#2\\{\\$%
+  \b@id@indent{:}{#1}#2\e@id@indent $%
+  \@ifnextchar\begin{}{%
+    \@ifnextchar\inv{}{%
+      \@ifnextchar\init{}{%
+        \@ifnextchar\end{}{\@sfl}}}}}
+  
+\@emptyHooks{Invfn}
+\@newSkips{Invfn}{1ex plus .3ex minus .2ex}{1.75ex plus .4ex minus .2ex}
+\def\inv#1#2{\invfn{#1}#2\endinvfn}
+\def\invfn#1{%
+  \ifDef@ \b@Macro\preInvfnSkip\preInvfnHook%
+  \else \b@Macro\z@\preInvfnHook\fi \lnout@i%
+  $\kw@indent{inv }\add@DI #1\sub@DI \Fdef}
+\def\endinvfn{\sub@kw@indent{inv }$\ifDef@ \postInvfnHook%
+  \else \e@Macro\postInvfnHook\postInvfnSkip\fi\@ignorespaces%
+}
+\@emptyHooks{Initfn}
+\@newSkip{Initfn}{1ex plus .3ex minus .2ex}
+\def\init#1#2{\initfn{#1}#2\endinitfn}
+\def\initfn#1{%
+  \b@Macro\preInitfnSkip\preInitfnHook\lnout@i $%
+  \kw@indent{init }\add@DI #1\sub@DI \Fdef}
+\def\endinitfn{\sub@kw@indent{init }$\postInitfnHook\@ignorespaces%
+}
+\@newSkips{Valuesdef}{1ex plus .3ex minus .2ex}{1.75ex plus .4ex minus .2ex}
+\@emptyHooks{Valuesdef}
+\def\valuedef{\@ifoptarg{\@valuedef}{\@valuedef\w@IIndent]}}
+\def\@valuedef#1]{\Def@true\FirstDef@true
+  \b@Kw@II{values}\preValuesdefSkip \preValuesdefHook{#1}}
+\def\endvaluedef{\e@Kw@II\postValuesdefHook\postValuesdefSkip}
+\let\valdef=\valuedef
+\let\endvaldef=\endvaluedef
+\@newSkips{Valdef}{1ex plus .3ex minus .2ex}{1.75ex plus .4ex minus
+.2ex}
+\@emptyHooks{Valdef}
+\@emptyHooks{Value}
+\@newSkips{Value}{1.75ex plus .4ex minus .2ex}{1.75ex plus .4ex minus .2ex}
+% kjl 15/3/93
+\def\oldvalue{\begingroup 
+                  \@semicolon 
+                  \b@Macro\preValueSkip\preValueHook
+                  \lnout@oi 
+                  \setw@id\@oldvalue}
+\def\@oldvalue#1{$\@iflinebr{%
+                             \nl@value{#1}}
+                             {\sl@value{#1}}
+                }
+\def\sl@value#1#2{%
+  \def\@@@tempa{#2}
+  \def\@@@tempb{\Inyd}
+  \ifx\@@@tempa\@@@tempb
+       \b@id@indent{}{#1}
+       \def\ei@value{\Inyd\e@id@indent}%
+       \let\esi@value=\@empty
+  \else
+       \b@id@indent{}{#1}
+       \def\ei@value{\sb@indent{=}#2\e@id@indent}
+       \def\esi@value{\subw@indent{=}}
+  \fi
+  \sl@val@type}
+\def\nl@value#1#2{% 
+    \def\@@@tempa{#2}
+    \def\@@@tempb{\Inyd}
+    \ifx\@@@tempa\@@@tempb
+        #1%
+        \def\ei@value{\add@DI\\\kw {is not yet defined}\sub@DI}
+    \else
+        #1 
+        \def\ei@value{=\add@DI \\#2 \sub@DI}
+    \fi
+    \nl@val@type }
+% kjl 16/3/93
+\def\sl@val@type{\@iflinebrarg {\sl@nl@val@type}
+                               {\ei@value\esi@value\e@value}
+                               {\sl@sl@val@type}
+                               {\ei@value\esi@value\e@value}
+                }
+\def\nl@val@type{\@iflinebrarg {\nl@nl@val@type}
+                               {\ei@value\e@value}
+                               {\sl@nl@val@type}
+                               {\ei@value\e@value}
+                }
+\def\sl@sl@val@type#1]{:#1 \esi@value \ei@value \e@value}
+\def\nl@nl@val@type#1]{:\add@DI \\#1\sub@DI \ei@value \e@value}
+\def\sl@nl@val@type#1]{:#1\ei@value\e@value}
+\def\e@value{$\ifDef@ \postValueHook
+  \else \e@Macro\postValueHook\postValueSkip \fi\endgroup\ignorespaces%
+  }
+\def\val{\begingroup
+              \@semicolon
+              \b@Macro\preValueSkip\preValueHook
+              \lnout@oi
+              \setw@id\@val}
+\def\@val#1{%
+        $
+        \b@id@indent{}{#1}
+        \@ifoptarg{\need@type}{\no@type}
+}
+\def\need@type#1]{\copy@indent{: #1} 
+                  \def\sub@type@indent{\subw@indent{: #1}}
+                  \rest@of@type}
+\def\no@type{\let\sub@type@indent=\@empty
+             \rest@of@type}
+\def\rest@of@type{\@iflinebr{\out@newline@value}{\out@value}}
+\def\out@value#1{%
+        \def\@@@tempa{#1}
+        \def\@@@tempb{\Inyd}
+        \ifx\@@@tempa\@@@tempb
+                \Inyd%
+                \let\sub@eq@ind=\@empty
+        \else
+                \sb@indent{=}#1%
+                \def\sub@eq@ind{\subw@indent{=}}
+        \fi
+        \fin@val}
+\def\out@newline@value#1{%
+        \def\@@@tempa{#1}
+        \def\@@@tempb{\Inyd}
+        \ifx\@@@tempa\@@@tempb
+                \add@DI\\\kw {is not yet defined}\sub@DI
+        \else
+                 %=\add@DI \\#1 \sub@DI
+                 %\sb@indent{=} \\ #1 \subw@indent{=}
+                 =\add@small \\ #1 \sub@small 
+        \fi
+        \let\sub@eq@ind=\@empty
+        \fin@val}
+\def\fin@val{%
+        \sub@type@indent
+        \sub@eq@ind
+        \e@id@indent
+        \e@value}
+\def\e@value{$% 
+             \ifDef@ 
+                 \postValueHook
+             \else 
+                 \e@Macro\postValueHook\postValueSkip 
+             \fi
+             \endgroup%
+             \ignorespaces%
+             }
+\def\Opt#1{[#1]}
+\newif\ifDef@                   \Def@false %if in definition
+\newif\ifFirstDef@      %first in definition    
+\@newSkips{Funcdef}{1ex plus .3ex minus .2ex}{1.75ex plus .4ex minus .2ex}
+\@emptyHooks{Funcdef}
+\def\funcdef{\@ifoptarg\@funcdef{\@funcdef\w@IIndent]}}
+\def\@funcdef#1]{\Def@true\FirstDef@true
+  \b@Kw@II{functions}{\preFuncdefSkip}{\preFuncdefHook}{#1}}
+\def\endfuncdef{\e@Kw@II\postFuncdefHook\postFuncdefSkip}
+\let\fndef=\funcdef
+\let\endfndef=\endfuncdef
+\@newSkips{Fndef}{1ex plus .3ex minus .2ex}{1.75ex plus .4ex minus .2ex}
+\@emptyHooks{Fndef}
+\@newSkips{Fn}{2ex plus .4ex minus .2ex}{2ex plus .4ex minus .2ex}
+\@emptyHooks{Fn}
+\newtoks\t@fnop@name
+\newif\ifSignatured@            \Signatured@false
+\newif\ifImplicit@              
+\newif\ifSignature@             \Signature@false
+%  function to be used within a let statement. It will be set true 
+%  by \@letstmt  (kjl 16/7/91)
+\newif\iffirst@let@fn              \first@let@fnfalse
+% \fn@in@let@stmt@ is set true when \fn@in@let@ is true but TeX is not in
+% maths mode. This indicates that the function is being defined within a
+% let statement, and that this let statement is being defined within a
+% \begin{stmt} ... \end{stmt} environment (i.e. not within a function).
+% So if \fn@in@let@in@stmt is true we have:
+%
+%       \begin{stmt}
+%          \begin{letstmt}
+%             \begin{fn}{fred}
+%                ...etc...
+%             \end{fn}
+%          \end{letstmt}
+%       \end{stmt}
+%
+%  rather than:
+%
+%       \begin{fn}{bert}
+%          \signature{A \To B}
+%          \parms{x}
+%          \begin{letstmt}
+%               \begin{fn}{fred}
+%                  ...etc...
+%               \end{fn}
+%         \end{letstmt}
+%       \end{fn}
+%
+% This flag will be used by \funmath.       (kjl, 10/10/91)
+% kjl (25/9/91)
+\newif\iffn@in@let@in@stmt@       \fn@in@let@in@stmt@false
+\def\e@sfn@parms{\ei@parms\ifImplicit@\funmath%
+  \else\add@III\Fdef \fi\ignorespaces}
+\def\fn{%
+      \@fnsemicolon% 
+      \iffn@in@let@% 
+            \global\First@false% 
+            \ifmmode% 
+            \else%
+                \fn@in@let@in@stmt@true%
+            \fi%
+      \fi%
+      \let\e@parms=\e@fn@parms%
+      \@ifoptarg\@fnst{\@fnst e]}}
+\def\@fnst#1]{%
+  \ifx#1i\Implicit@true\else%
+  \ifx#1s\Implicit@false\let\e@parms=\e@sfn@parms% % -- dja
+  \else\Implicit@false\fi\fi\@fn}
+%  (kjl 16/7/91)
+%  be global, otherwise it will not work. (kjl 30/7/91)
+\def\endfn{%
+      \ifmmode \funmath \sub@III\fi 
+      \ifDef@ 
+            \postFnHook 
+      \else 
+            \iffn@in@let@ \else \e@Macro\postFnHook\postFnSkip \fi
+      \fi
+      \@ignorespaces%
+      \global\Signature@false}
+% \line@break@after@let is concerned with adding a line break before a
+% function signature. It is called by \@fn and only used for functions within 
+% let statements/expressions).
+%
+% It checks if this the first function to be used within a let statement
+% then, if there has not been a patdef preceeding, it will NOT add a line
+% break. I.e. the macro typesets:
+%
+%     let fred : A -> B
+%               ..etc...
+%
+% rather than
+%
+%    let
+%       fred : A -> B
+%             ..etc...
+%
+% \line@break@after@let also re-initialises  \first@let@fn and \after@pat@
+% to false.  (kjl, 18/9/91)
+\def\line@break@after@let{%
+          \iffirst@let@fn
+              \ifafter@pat@
+                  \@linebr
+              \fi
+          \else
+              \@linebr
+          \fi
+          \global\first@let@fnfalse
+          \global\after@pat@false}
+\def\@fn#1{%
+      \t@fnop@name={#1}%
+      \iffn@in@let@%
+            \preFnHook%
+            \line@break@after@let%
+      \else%
+            \b@Macro\preFnSkip\preFnHook%
+            \lnout@oi
+      \fi%
+      \@ifoptarg{\opt@annlab{o}}{}}
+\def\opt@annlab#1#2]{\annlab[#1]{#2}\ignorespaces}
+\newskip\postSignatureSkip      \postSignatureSkip=1ex 
+\def\signature{\Signature@true\@iflinebrarg{\@signature}{\@signature{}]}
+{\@signature}{\@signature{}]}}
+% \funmath will be used by \signature and \parms. 
+% It will sometimes be necessary for \signature and \parms to put TeX
+% into and take it out of maths mode using '$', EXCEPT IF TeX IS ALREADY 
+% IN MATHS MODE. In which case they should do nothing. 
+%
+% TeX will be in maths mode if the function is being typeset within a
+% let statement that is itself being typeset within a function (confused?).
+% This will be indicated by \fn@in@let@ being true and \fn@in@let@in@stmt
+% being false (even more confused? See the comment above the declaration of
+% fn@in@let@in@stmt!).
+%
+% If this is the case \funmath will do nothing, otherwise it will '$'.
+%                                         (kjl, 10/10/91).
+\def\funmath{\iffn@in@let@ \iffn@in@let@in@stmt@ $\fi\else $\fi\ignorespaces}
+\def\@signature#1]#2{\Signatured@true%
+  \ifnl@ 
+      \nl@false
+      \funmath \the\t@fnop@name\ifx#1\@empty\else[#1]\fi :\add@DI \\#2 \funmath \sub@DI
+  \else 
+      \b@id@indent{:}{\the\t@fnop@name\ifx#1\@empty\else[#1]\fi}%
+      \funmath #2 \funmath\e@id@indent 
+  \fi
+  \@nopagebreak \iffn@in@let@ \@old@linebr \else \par \fi
+  \iffn@in@let@ 
+  \else 
+      \vskip \postSignatureSkip 
+  \fi 
+  \leavevmode 
+  \ignorespaces}
+\newif\ifParentheses@   
+\def\parms{\@iflinebrstar{\Parentheses@false\@parms}
+                         {\Parentheses@true\@parms}
+                         {\Parentheses@false\@parms}
+                         {\Parentheses@true\@parms}}
+\def\@parms#1{\Signatured@false%
+   \ifSignature@ \lnout@i\else\fi \funmath 
+   \ifnl@ \add@DI\the\t@fnop@name\\\global\nl@false
+     \ifParentheses@\sb@indent{(}#1)\subw@indent{(}\else#1\fi
+     \let\ei@parms=\sub@DI
+   \else
+     \b@id@indent{}{\the\t@fnop@name\mskip\thinmuskip}
+     \ifParentheses@ \Lp #1\Rp \else#1\fi
+     \let\ei@parms=\e@id@indent
+   \fi \@iflinebrarg{\@res}{\e@parms\\}{\@res}{\e@parms}}
+\def\@res#1:#2]{%
+ \ifSignature@ \@vdmslwarning{result by signature heading or ^^J
+    \@spaces \@spaces \@spaces \@spaces \space \space
+    signature by colon heading on page \thepage}\fi
+ \ifnl@ \\#1:#2\global\nl@false\else\ #1:#2\fi\e@parms}
+\def\e@fn@parms{\ei@parms\ifImplicit@\funmath%
+  \else\add@III\Fdef\\ \fi\ignorespaces}
+\def\@if@i@e#1#2{%
+  \@ifnextchar i{\Implicit@true\def\@tmpa i]{#1}\@tmpa}
+                {\Implicit@false\def\@tmpa e]{#2}\@tmpa}}
+\newif\ifpunct@set@it@      \punct@set@it@false
+\def\punct{\ifDef@
+              \@fnsemicolon
+           \else
+              \F@comma
+           \fi\global\punct@set@it@true
+           }
+\def\@semicolon{%
+        \ifpunct@set@it@
+                \global\punct@set@it@false
+        \else
+                \ifDef@% 
+                        \ifFirstDef@% 
+                                \global\FirstDef@false%
+                        \else%
+                                ;%
+                        \fi%
+                \else% 
+                        \vdm% 
+                \fi
+        \fi}              
+\def\@fnsemicolon{%
+      \ifpunct@set@it@
+           \global\punct@set@it@false
+      \else
+           \iffn@in@let@
+                \@comma
+           \else
+                \@semicolon
+           \fi
+      \fi}
+\def\@comma{%
+      \iffirst@let@fn
+            \ifafter@pat@
+                  ,
+            \fi
+      \else
+            ,
+      \fi}
+  
+\@newSkip{Precond}{.5ex plus .1ex minus .1ex}
+\@emptyHooks{Precond}
+\def\pre#1{\begingroup\precond#1\endprecond\endgroup}
+\def\precond{
+  \endgroup 
+  \ifmmode 
+     \iffn@in@let@
+        \ifImplicit@ 
+              \global\let\e@precond=\@empty
+         \else 
+              \@expl@Def \sub@III 
+              \global\let\e@precond=\add@III  
+         \fi
+     \else
+        \sub@III $%
+        \global\def\e@precond{\add@III $}%
+     \fi 
+  \else
+     \ifImplicit@ 
+         \global\let\e@precond=\@empty
+     \else 
+         \@expl@Def \sub@III \global\let\e@precond=\add@III  
+     \fi
+  \fi
+  \iffn@in@let@
+     \@old@linebr
+  \else
+     \b@Macro\prePrecondSkip\prePrecondHook 
+  \fi
+  \lnout@i
+  \kw@indent{pre } 
+  \b@mathmode}
+\def\endprecond{\e@mathmode \e@precond \sub@kw@indent{pre }%
+  \postPrecondHook \@@precond \@ignorespaces}   
+\@newSkip{Postcond}{.5ex plus .1ex minus .1ex}
+\@emptyHooks{Postcond}
+\def\post#1{\begingroup\postcond #1 \endpostcond\endgroup}
+% kjl 
+\def\postcond{%
+  \endgroup
+  \ifmmode 
+     \iffn@in@let@
+        \ifImplicit@ 
+              \global\let\e@postcond=\@empty
+         \else 
+              \@expl@Def \sub@III 
+              \global\let\e@postcond=\add@III  
+         \fi
+     \else
+        \sub@III $%
+        \global\def\e@postcond{\add@III $}%
+     \fi 
+  \else
+     \ifImplicit@ 
+         \global\let\e@postcond=\@empty
+     \else 
+         \@expl@Def \sub@III \global\let\e@postcond=\add@III  
+     \fi
+  \fi
+  \iffn@in@let@
+    \@old@linebr 
+  \else
+     \b@Macro\prePostcondSkip\prePostcondHook
+  \fi 
+  \lnout@i
+  \kw@indent{post }%
+  \b@mathmode}
+%kjl
+\def\endpostcond{\e@mathmode 
+%                 \iffn@in@let@
+%                    \ifImplicit@
+%                        \add@III
+%                    \fi
+%                 \fi
+                \e@postcond
+                \sub@kw@indent{post }\postPostcondHook
+                 \@@postcond \@ignorespaces}
+\@newSkips{Operdef}{1ex plus .3ex minus .2ex}{1.75ex plus .4ex minus .2ex}
+\@emptyHooks{Operdef}
+\def\operdef{\@ifoptarg{\@operdef}{\@operdef\w@IIndent]}}
+\def\@operdef#1]{\Def@true\FirstDef@true
+  \b@Kw@II{operations}{\preOperdefSkip}{\preOperdefHook}{#1}}
+\def\endoperdef{\e@Kw@II{\postOperdefHook}{\postOperdefSkip}}
+\let\opdef=\operdef
+\let\endopdef=\endoperdef
+\@newSkips{Opdef}{1ex plus .3ex minus .2ex}{1.75ex plus .4ex minus .2ex}
+\@emptyHooks{Opdef}
+\@newSkips{Op}{2ex plus .4ex minus .2ex}{2ex plus .4ex minus .2ex}
+\@emptyHooks{Op}
+\def\op{%
+  \@semicolon\let\e@parms=\e@op@parms
+  \@ifoptarg{\@if@i@e{\@op}{\@op}}{\Implicit@true\@op}}
+\def\endop{\ei@op \ifDef@ \postOpHook \else 
+  \e@Macro\postOpHook\postOpSkip \fi \@ignorespaces%
+}
+\def\@op#1{\t@fnop@name={#1}%
+  \b@Macro\preOpSkip\preOpHook\lnout@oi
+  \@ifoptarg{\opt@annlab{o}}{}}
+\def\e@op@parms{%
+  \ei@parms$%
+  \ifImplicit@ \gdef\ei@op{}\gdef\@expl@Def{}%
+  \else 
+    $\Fdef$%
+    \def\@expl@Def{\add@III\\
+                   \gdef\@expl@Def{}%
+                   \gdef\ei@op{\sub@III}}%
+  \fi\ignorespaces}
+                   
+\let\@expl@Def\@empty
+\newdimen\wi@wr                 \setbox\tmp@box=\Wr \wi@wr=\wd\tmp@box\relax
+\def\ext{\ifImplicit@ 
+             \global\let\e@ext=\@empty
+                \else
+                     \sub@III
+                     \global\let\e@ext=\add@III
+                \fi 
+                \setw@id\@ext}
+\def\@ext#1{\@externals#1\endexternals\e@ext}
+\def\externals{\ifImplicit@ 
+                     \global\let\e@ext=\@empty
+                \else
+                     \sub@III
+                     \global\let\e@ext=\add@III
+                \fi 
+                \setw@id\@externals}
+\def\@externals{\\\kw@indent{ext }\First@true$\@rd@wr}
+\def\endexternals{$\sub@kw@indent{ext }\@ignorespaces\e@ext}
+\def\@rd@wr{\@ifnextchar\Rd{\def\@tmpa\Rd{\@@ext{\Rd}}\@tmpa}
+                           {\@ifnextchar\Wr{\def\@tmpa\Wr{\@@ext{\Wr}}\@tmpa}
+                                           {}}}
+ 
+ \def\@@ext#1#2\\{\F@linebr
+         \hbox to \wi@wr{#1\hss}\add@indent\wi@wr
+         \@@ext@colon#2:{}
+         \sub@indent\wi@wr\@rd@wr}       
+  
+                   
+\def\@@ext@colon#1:#2{
+           \@ifempty{#2}
+                   \@@ext@notype{#1}
+           \else
+                   \ifx#2:
+                        \@@ext@notype@colon{#1}
+                   \else
+                        \@@ext@type{#1}{#2}
+                   \fi
+           \fi}
+                                                                                    
+\def\@@ext@notype#1{\b@id@indent{}{#1}\e@id@indent}
+\def\@@ext@notype@colon#1{\b@id@indent{:}{#1}\e@id@indent}
+                                                     
+\def\@@ext@type#1#2:{\b@id@indent{:}{#1}#2\e@id@indent}
+\@newSkip{Exceptions}{.5ex plus .1ex minus .1ex}
+\@emptyHooks{Exceptions}
+\def\exceptions{\ifImplicit@ 
+                     \global\let\e@exceptions=\@empty
+                \else
+                     \sub@III
+                     \global\let\e@exceptions=\add@III
+                \fi
+                \setw@id\@exceptions}
+%%% \@exceptions}
+\def\endexceptions{\sub@kw@indent{errs }\@ignorespaces\e@exceptions}
+\def\@exceptions{%
+ \b@Macro\preExceptionsSkip\preExceptionsHook\lnout@i
+ \First@true\kw@indent{errs }\@ignorespaces}
+\def\err#1{\F@par@linebr\@iflinebr{\nl@err{#1}}{\sl@err{#1}}}
+\def\sl@err#1#2{\b@id@indent{:}{#1}$#2$\e@id@indent\ignorespaces}
+\def\nl@err#1#2{$#1:\add@DI\\#2\sub@DI$\ignorespaces}
+\@newSkips{Stmt}{2ex plus .5ex minus .3ex}{2ex plus .5ex minus .3ex}
+\@emptyHooks{Stmt}
+\def\stmt{\@ifoptarg{\@stmt}{\@stmt\z@]}}
+\def\@stmt#1]{
+  \add@indent{#1}\relax
+  \def\endstmt{\sub@indent{#1}\e@Macro\postStmtHook\postStmtSkip}
+  \parindent=\z@ \let\par=\@@par%
+  \vdm%
+  \b@Macro\preStmtSkip\preStmtHook\lnout@oi
+  \ignorespaces}
+%  kjl 5/3/93
+\def\blockstmt{\@expl@Def \Lp \ignorespaces} 
+\def\endblockstmt{\Rp \@ignorespaces}
+\def\always#1{%
+  \@expl@Def
+  \kw@indent{always }#1\sub@kw@indent{always }\kw{ in}\@par@linebr}
+\def\@trap#1{\@expl@Def \kw@indent{trap }$#1$\ \sub@kw@indent{trap }%
+  \@iflinebr{\\\@with}{\@with}}
+\def\@with#1{\kw@indent{with }#1\sub@kw@indent{with }\kw{ in}\@par@linebr}
+% kjl 5/3/93
+\let\trap=\@trap
+\def\rectrap{\@expl@Def\setw@bl{\@rectrap}}
+%kjl 5/3/93
+\def\endrectrap{%
+  \}\kw{ in}\subw@indent{\kw{tixe }\{}\@par@linebr}
+\def\@rectrap{%
+    \let\trap=\F@bls\MN@bls% 
+    \let\@sep=\Mapsto% 
+    \First@true%
+    \def\b@bl@two{\let\trap=\@trap}%
+    \def\e@bl@two{\let\trap=\F@bls}%
+    \copy@indent{\kw{tixe }\{}%
+    \ignorespaces}
+\def\dclstmt{\@expl@Def\setw@bl{\@dclstmt}}
+\def\enddclstmt{;\sub@kw@indent{dcl }\@par@linebr}
+\def\@dclstmt{\First@true\def\@sep{:}\MM@bls
+  \kw@indent{dcl }\ignorespaces}
+\def\assdef#1{\F@comma@pl\t@bl@one={#1}$\@iflinebr{\ml@assdef}{\sl@assdef}}
+\def\sl@assdef#1{\let\ei@assdef=\e@bl\b@bl#1\add@DI
+  \@iflinebrarg{\Ass\\\arg@assdef}{\e@assdef}{\Ass\arg@assdef}{\e@assdef}}
+\def\ml@assdef#1{\m@bl\add@DI\let\ei@assdef=\sub@DI\\#1\add@DI
+  \@iflinebrarg{\Ass\\\arg@assdef}{\e@assdef}{\Ass\arg@assdef}{\e@assdef}}
+\def\arg@assdef#1]{#1\e@assdef}
+\def\e@assdef{\ei@assdef\sub@DI$\ignorespaces}
+  
+\def\defstmt{\@expl@Def\setw@bl{\@defstmt}}
+%  required.  (kjl, 28/8/91)
+\def\enddefstmt{\sub@kw@indent{def }% tixe goes wrong here
+%  \ifmmode \def\@tmpa{\kw{ in }}\else \def\@tmpa{;\@par@linebr}\fi \@tmpa}
+    \def\@tmpa{\kw{ in }}\@tmpa} 
+\def\@defstmt{\def\@sep{=}\First@true\let\eqdef=\F@bls\AM@bls
+  \kw@indent{def }\ignorespaces}
+\def\Def{\@expl@Def\begingroup\setw@bl{\@Def}}
+\def\@Def#1={\AM@bls\kw@indent{def }\def\@sep{=}%
+  \t@bl@one={#1}\@iflinebr{\ml@def@expr}{\sl@def@expr}}
+\def\ml@def@expr#1\Din{\@bl \add@DI \\ \M@bl@two#1\M@bl@two \sub@DI 
+  \endgroup \enddefstmt}
+\def\sl@def@expr#1\Din{\b@bl \M@bl@two#1\M@bl@two \e@bl \endgroup \enddefstmt}
+\def\letstmt{\@expl@Def\setw@bl{\@letstmt}}
+% This always had a line-break after the `Lin' part, now the user
+% must put one in if so desired.
+\def\endletstmt{%
+      \fn@in@let@false
+      \kw{ in }\sub@kw@indent{let }}
+\newif\iffn@in@let@     \fn@in@let@false
+\newif\iffirst@let@fn   \first@let@fnfalse
+\newif\ifafter@pat@       \after@pat@false
+\def\patdef{%
+      \let\e@bls\relax%
+      \iffn@in@let@\after@pat@true\def\@sep{=}\fi\AM@bls\F@bls}
+\def\@letstmt{%
+\First@true\fn@in@let@true\first@let@fntrue\kw@indent{let }\ignorespaces}
+\def\Let{\@expl@Def\begingroup\setw@bl{\@Let}}
+\def\@Let#1={\AM@bls\t@bl@one={#1}\def\@sep{=}%
+  \kw@indent{let }\@iflinebr{\ml@let@expr}{\sl@let@expr}}
+\def\ml@let@expr#1\Lin{\@bl \add@DI \\ \M@bl@two#1\M@bl@two \sub@DI 
+  \endgroup \endletstmt}
+\def\sl@let@expr#1\Lin{\b@bl \M@bl@two#1\M@bl@two \e@bl \endgroup \endletstmt}
+\def\letbestmt{\@expl@Def \let\endletbestmt=\endletstmt \setw@bl{\@letbestmt}}
+\def\@letbestmt{\def\@sep{\kw{ be st }}\AM@bls
+  \First@true
+  \kw@indent{let }\ignorespaces}
+\def\such#1{\F@comma@linebr\t@bl@one={#1}%
+  \@iflinebrarg{\@arg@such}{\M@bl@two#1\M@bl@two}
+               {\@arg@such}{\M@bl@two#1\M@bl@two}}
+\def\@arg@such#1]{\ifnl@\nl@false \ml@bls{#1}\else\sl@bls{#1}\fi%
+  }
+\def\Letbe{\@expl@Def \begingroup \AM@bls \kw@indent{let }%
+  \@ifstar{\@letbe}{\@letbest}}
+\def\@letbe#1\Lin{\M@bl@one#1\M@bl@one\endletstmt\endgroup}
+\def\@letbest{\setw@bl{\@@letbest}}
+\def\@@letbest#1\Best{\t@bl@one={#1}\def\@sep{\kw{ be st }}%
+  \@iflinebr{\ml@let@expr}{\sl@let@expr}}
+\def\ass#1{\@expl@Def
+           \begingroup\Width@bl@onefalse\AM@bls%
+           \t@bl@one={#1}\let\@sep=\Ass
+           \let\e@bls=\endgroup\@bls}
+\def\nondetstmt{\@expl@Def\sb@indent\Nondet\Lp\ignorespaces}
+\def\endnondetstmt{\Rp\subw@indent\Nondet\@ignorespaces}
+\def\@Do{\@par@linebr \kw@indent{do }\ignorespaces}
+\def\@Od{\sub@kw@indent{do }\@ignorespaces}
+\def\seqfor#1{\@expl@Def
+  \kw@indent{for }$#1\ $\sub@kw@indent{for }%
+  \@iflinebrarg{\\\@rev}{\\\@in{}}{\@rev}{\@in{}}}
+  
+\let\endseqfor=\@Od
+\def\@rev#1rev#2]{\@in{reverse }}
+\def\@in#1#2{\kw@indent{in #1}$#2$\sub@kw@indent{in #1}\@Do}
+\def\setfor#1{\@expl@Def \let\endsetfor=\@Od
+  \kw@indent{for all }$#1 \In\mskip\medmuskip\sub@kw@indent{for all }\add@DI
+  \@iflinebr{\\\fa@expr}{\fa@expr}}
+\def\fa@expr#1{#1$\sub@DI\@Do}
+\def\indfor#1{\@expl@Def \let\endindfor=\@Od
+  \kw@indent{for }$#1 =\mskip\medmuskip\sub@kw@indent{for }\add@DI
+  \@iflinebr{\\\ind@is}{\ind@is}}
+\def\ind@is#1{#1\mskip\medmuskip\sub@DI
+  \@iflinebr{\\\ind@to}{\ind@to}}
+\def\ind@to#1{\kw@indent{to }#1\mskip\medmuskip\sub@kw@indent{to }%
+  \@iflinebrarg{\\\ind@by}{$\@Do}{\ind@by}{$\@Do}}
+\def\ind@by#1]{\kw@indent{by }#1\sub@kw@indent{by }$\@Do}
+\def\while#1{\@expl@Def \let\endwhile=\@Od
+  \kw@indent{while }$#1$\sub@kw@indent{while }\@Do}
+\def\Call#1(#2){\call{#1}{#2}}
+\def\call#1{\@expl@Def\begingroup\Width@bl@onefalse\AM@bls\def\@sep{\,(}%
+  \t@bl@one={#1}%
+  \ifmmode\def\e@call{\endgroup\ignorespaces}% kjl 5/3/93
+  \else$\def\e@call{$\endgroup\ignorespaces}\fi
+  \@iflinebr{\ml@call}{\sl@call}}
+\def\sl@call#1{\the\t@bl@one \add@DI \Lp #1 \sub@DI \Rp \@@call}
+\def\ml@call#1{\the\t@bl@one\add@DI
+  \\\Lp #1\sub@DI \Rp \@@call}
+\def\@@call{\mskip\medmuskip
+  \@iflinebrarg{\\\arg@call}{\e@call\\}{\arg@call}{\e@call}}
+\def\arg@call#1]{\kw@indent{using }#1\sub@kw@indent{using }\e@call}
+\def\If#1\Then{\@expl@Def\begingroup
+  \let\endIf=\Fi
+  \kw@indent{if }\ifmmode#1\else$#1$\fi
+  \def\e@if{\sub@kw@indent{if }}\b@then}
+\def\b@then{\e@if
+  \@iflinebr{\\\kw@indent{then }%
+             \def\e@then@else{\sub@kw@indent{then }}\ignorespaces}
+            {\kw{ then }\let\e@then@else=\@empty}}
+\def\Else{\e@then@else
+  \@iflinebr{\ifmmode\\\else\@par@linebr\fi\kw@indent{else }%
+             \def\e@then@else{\sub@kw@indent{else }}\ignorespaces}
+            {\kw{ else }\let\e@then@else\@empty}}
+\def\Elseif{ \e@then@else
+  \ifmmode\\\else\@par@linebr\fi\kw@indent{elseif }%
+  \def\e@if{\sub@kw@indent{elseif }}\b@elseif}
+\def\b@elseif#1\Then{\ifmmode#1\else$#1$\fi\b@then}
+\def\Fi{\e@then@else\endgroup\ignorespaces}
+\def\@endMcCarthy{\Rp}
+\def\McCarthy{\@expl@Def\let\endMcCarthy=\@endMcCarthy%
+\setw@bl\@McCarthy}
+\def\@McCarthy{\First@true\Lp\MN@bls
+  \let\@sep=\To \let\gustmt=\F@bls \ignorespaces}
+\def\Cases{\@expl@Def
+           \def\endCases{%
+                         \sub@III\\\kw{end}}
+           \setw@bl\@cases}
+\def\@cases#1{%
+        \First@true\let\@sep=\To 
+        \let\e@bls=\relax    % kjl 26/2/93
+        \let\alt=\F@bls\MN@bls
+        \kw@indent{cases }
+        \ifmmode
+            #1:
+        \else
+            $#1:$
+        \fi
+        \sub@kw@indent{cases }%
+        \add@III\\\ignorespaces}
+\def\others{\F@bls{\kw{others}}}
+\def\return#1{\@expl@Def$\kw@indent{return }#1\sub@kw@indent{return }$}
+\def\isnotyetspec{\@expl@Def$\kw@indent{is not yet specified}\sub@kw@indent{is not yet specfied}$}
+\def\exit#1{\@expl@Def$\kw@indent{exit }#1\sub@kw@indent{exit }$}
+\def\Error{\@expl@Def\kw{error}} 
+\def\Skip{\@expl@Def\kw{skip}} 
+\def\Inyd{\@expl@Def\kw{ is not yet defined}}%
+\@newSkips{Expr}{2ex plus .5ex minus .3ex}{2ex plus .5ex minus .3ex}
+\@emptyHooks{Expr}
+\def\expr{\@ifoptarg{\@expr}{\@expr\z@]}}
+% Have moved \vdm from its orignal position, just before \b@mathmode,
+% for the same reason as described in the comment before \@stmt 
+% kjl 24/7/92
+\def\@expr#1]{%
+  \add@indent{#1}\relax
+  {\let\sub@indent=\relax\xdef\ei@expr{\sub@indent{#1}}}%
+  \parindent=\z@ \let\par=\@@par
+  \vdm%
+  \b@Macro\preExprSkip\preExprHook\lnout@oi
+  \b@mathmode \@ignorespaces}
+\def\endexpr{\ei@expr \e@mathmode \e@Macro\postExprHook\postExprSkip}
+\let\defexpr=\defstmt
+\let\enddefexpr=\enddefstmt
+\let\letexpr=\letstmt
+\let\endletexpr=\endletstmt
+\let\letbeexpr=\letbestmt
+% Caused problems with the end of letbeexpr environments.
+%\let\endletbeexpr=\endletbestmt
+\let\endletbeexpr=\endletstmt
+\def\mapinv#1{#1^{-1}}
+\newdimen\wi@q@expr
+\def\q@expr#1#2{\@expl@Def\@iflinebr{\ml@q@expr{#1}{#2}}{\sl@q@expr{#1}{#2}}}
+\def\sl@q@expr#1#2#3{\begingroup \Id@w@false 
+  \b@id@indent{\Dot}{#1#2}#3\e@id@indent \endgroup}
+\def\ml@q@expr#1#2#3{#1#2\Dot\add@DI\\#3\sub@DI}
+\def\all{\q@expr\All}
+\let\@exists=\exists 
+\def\restoreExists{\let\exists=\@exists}
+\def\useExists{\gdef\exists{\q@expr\Exists }}
+\useExists
+\def\unique{\q@expr\Unique }
+\let\@iota=\iota 
+\def\restoreIota{\let\iota=\@iota}
+% Replaced line below because clashed with LaTeX macro
+% \def\useIota{\gdef\iota{\q@expr\Iota }}
+\def\useIota{\gdef\iota{\q@expr\Iotaop }}
+\useIota
+\let\@lambda=\lambda 
+\def\restoreLambda{\let\lambda=\@lambda}
+% Replaced line below because clashed with LaTeX macro
+% \def\useLambda{\gdef\lambda{\q@expr\Lambda }}
+\def\useLambda{\gdef\lambda{\q@expr\Lambdaop }}
+\useLambda
+\def\set#1{\sb@indent\lbrace #1\rbrace \subw@indent\lbrace}
+% The \endgroups match the \begingroup in \setcomp or \seqcomp.
+\def\@compr#1{\sb@indent\@lb@sb #1|\subw@indent\@lb@sb
+  \@iflinebr{\@@compr\\}{\@@compr{}}}
+\def\@@compr#1#2{\add@DI #1#2 \@if@compr@expr}
+\def\@if@compr@expr{%
+  \@iflinebr{\@ifoptarg{\@compr@expr{\\}}{\sub@DI\@rb@sb\endgroup\\}}
+            {\@ifoptarg{\@compr@expr}{\sub@DI\@rb@sb\endgroup}}}
+\def\@compr@expr#1#2]{\add@DI \Dot\strut #1#2\sub@DI\sub@DI
+  \@rb@sb\endgroup}
+  
+% The \begingroup keeps \@rb@sb and \@lb@sb local.
+% The corresponding \endgroup is in \@compr.
+\def\setcomp{\begingroup\let\@rb@sb=\rbrace \let\@lb@sb=\lbrace \@compr}
+\def\setrange#1{\@iflinebr{\@setrange{#1,\\}}{\@setrange{#1,}}}
+\def\@setrange#1#2{\set{#1\ldots,#2}}
+\def\seq#1{\addw@indent[[#1]\subw@indent]}
+% The \begingroup keeps \@rb@sb and \@lb@sb local.
+% The corresponding \endgroup is in \@compr.
+\def\seqcomp{\begingroup\let\@rb@sb=]\let\@lb@sb=[\@compr}
+\def\subseq#1{\def\@fexpr{#1\mskip\thinmuskip}%
+  \@iflinebr{\ml@subseq}{\sl@subseq}}
+\def\sl@subseq#1{\let\@@subseq=\sl@expex
+  \@iflinebr{\@l@subseq{#1,\\}}{\@l@subseq{#1,}}}
+\def\ml@subseq#1{\let\@@subseq=\ml@expex%
+  \@iflinebr{\@l@subseq{#1,\\}}{\@l@subseq{#1,}}}
+\def\@l@subseq#1#2{\@@subseq{#1\ldots,#2}}
+\def\seqmod#1{\def\@smod{#1\Override}\@iflinebr{\ml@seqmod}{\sl@seqmod}}
+\def\ml@seqmod#1{\@smod \add@DI \\ \sb@indent\lbrace #1\rbrace 
+  \subw@indent\lbrace \sub@DI}
+\def\sl@seqmod#1{\b@expr@box \@smod \e@expr@box
+  \sb@indent\lbrace #1\rbrace\subw@indent\lbrace \ei@expr@box}
+\let\map=\set
+\let\mapcomp=\setcomp
+% NDN: changed from \let\reccons\=expex as \expex not defined at
+% this point.
+\def\reccons{\expex}
+\def\recmod#1{\def\@rmod{#1,}%
+  \sb@indent{\Muop \mskip\medmuskip(}%
+  \def\ei@recmod{\subw@indent{\Muop\mskip\medmuskip(}}
+  \@iflinebr{\ml@recmod}{\sl@recmod}}
+\def\ml@recmod#1{\@rmod%
+                 \ei@recmod%
+                 \add@DI \\%
+                 \save@indent@and@expr
+                  #1)
+                 \restore@indent@and@expr
+                 \sub@DI}
+\def\sl@recmod#1{
+       \b@expr@box 
+             \@rmod 
+       \e@expr@box 
+       \save@indent@and@expr
+       #1)
+       \restore@indent@and@expr
+       \ei@expr@box 
+       \ei@recmod}
+\newdimen\car@out
+\def\@lil{}
+\def\@@cons#1#2{%
+              \xdef#1{{\the#2} #1} 
+}
+\def\@@car#1#2\@lil{\car@out=0.0pt
+           \car@out=#1
+}
+\def\@@cdr#1#2\@lil{#2}
+\def\@@head#1{%
+      \expandafter\@@car#1\@lil
+      \xdef#1{\expandafter\@@cdr#1\@lil}   
+}
+\def\@@tail#1{%
+      \xdef#1{\expandafter\@@cdr#1\@lil}    
+}
+\newcount\coun@car@out
+\def\@@coun@car#1#2\@lil{\coun@car@out=0
+           \coun@car@out=#1
+}
+\def\@@coun@head#1{%
+%      \typeout{>>>> #1}
+      \expandafter\@@coun@car#1\@lil
+      \xdef#1{\expandafter\@@cdr#1\@lil}
+}
+\def\fnapply{\@ifstar{\Parentheses@false\@fnapply}{\Parentheses@true\@fnapply}}
+\def\@fnapply#1{\def\@fnname{#1}\let\@fnapp=\@fnname
+  \@iflinebrarg {\type@fnapply{\\}}{\ml@fnapply}
+                {\type@fnapply{\mskip\medmuskip\relax}}{\sl@fnapply}
+}
+\def\type@fnapply#1#2]{%
+  \def\@fnapp{\@fnname \add@DI [#1#2]\sub@DI}%
+  \@iflinebr{\ml@fnapply}{\sl@fnapply}}
+\newdimen\old@indent   
+\newdimen\old@expr        
+\def\wi@stack{}
+\def\save@indent@and@expr{%
+         \old@indent=\wi@indent
+         \old@expr=\wi@expr
+         \@@cons{\wi@stack}{\old@indent}
+         \@@cons{\wi@stack}{\old@expr}
+}
+\def\restore@indent@and@expr{%
+         \@@head\wi@stack  
+         \global\wi@expr=\car@out
+         \@@head\wi@stack  
+         \global\wi@indent=\car@out
+}
+\def\sl@fnapply#1{%
+                  \b@expr@box 
+                  \@fnapp
+                  \mskip\thinmuskip
+                  \e@expr@box
+                  \save@indent@and@expr
+                  \ifParentheses@
+                        \Lp #1 \Rp
+                  \else
+                            #1
+                  \fi
+                  \restore@indent@and@expr
+                  \ei@expr@box        
+}
+\def\ml@fnapply#1{%
+           \@fnapp%
+           \add@DI\\
+           \save@indent@and@expr
+           \ifParentheses@ 
+                 \Lp #1\Rp 
+           \else 
+                     #1
+           \fi 
+           \restore@indent@and@expr 
+           \sub@DI}
+\def\@cmtline{\ifSignatured@%
+                 \global\Signatured@false%
+              \else%
+                 \newline%
+              \fi%
+              \lnout@i%
+              \hbox\bgroup\CommentFont\Comment
+            } 
+\newif\ifSignatureDealt@
+\def\comms{\begingroup%
+              \ifSignatured@%
+                 \global\SignatureDealt@true%
+              \else%
+                 \global\SignatureDealt@false%
+              \fi%
+              \def\\{\egroup\@cmtline}%
+              \@cmtline
+             }
+\def\endcomms{\egroup%
+                 \endgroup%
+                 \ifSignatureDealt@%
+                    \newline
+                 \else \\%
+                 \fi
+                }   
+\def\comm#1{\hbox{\Comment\CommentFont #1}}
+\newdimen\w@AnnIndent                   \w@AnnIndent=1em\relax
+\newdimen\wi@ann
+\newdimen\wi@ainn
+\newskip\AnnSkip \AnnSkip=1ex plus .3ex minus .2ex
+\@newSkips{Annotations}{1.75ex plus .4ex minus .2ex}{1.75ex plus .4ex minus.2ex}
+\@emptyHooks{Annotations}
+\newif\ifannrefused@
+\global\annrefused@false
+\def\annotations{\global\annrefused@true%
+\@ifoptarg{\@annotations}{\annotations[\z@]}}
+\long\def\@annotations#1]#2{%
+  \b@Macro\preAnnotationsSkip\preAnnotationsHook{}%
+  \hskip\wi@ln\kw{annotations}%
+  \@restoreMargins \VDM@false
+  \AnnotationsFont
+  \newdimen\wi@old@indent\wi@old@indent=\wi@indent
+  \addtoindent{AnnIndent}{#1}%
+  \nolinenumbering \reset@linebreaks \def@ann
+  \def\@ao{\@num{#2}}%
+  \def\par{\@@par\penalty\@M\hangindent\wi@ann
+    \def\par{\@@par\hangindent\wi@ann}}}
+\def\endannotations{%
+  \rmfamily
+  \global\wi@indent=\wi@old@indent
+  \parindent=\wi@ln\@@par
+  \vskip\AnnSkip\leavevmode \kw{end annotations}%
+  \ifDef@\postAnnotationsHook\else
+    \e@Macro\postAnnotationsHook\postAnnotationsSkip\fi\@ignorespaces}
+\def\setw@ann{\wi@ainn=\w@inner \advance\wi@ainn by \w@AnnIndent\relax
+  \wi@ann=\wi@ln \advance\wi@ann by \w@AnnIndent \relax
+  \wi@indent=\wi@old@indent \add@indent\w@IIIndent \add@indent\w@AnnIndent
+  \hangindent\wi@ann\parindent=\wi@ann}
+\def\@annlab[#1]{\@bsphack
+  \ifx#1i\def\@tmpa{\@labeldef{\the\c@inner}\themodule}%
+  \else \ifx#1o\def\@tmpa{\@labeldef{\the\c@outer}\themodule}%
+  \else \ifx#1m\def\@tmpa{\@labeldef{}\themodule}%
+  \else \ifx#1p\def\@tmpa{\@labeldef{}{}}%
+  \else \def\@tmpa{??
+    \@vdmslwarning{wrong \string\annlab\space format [#1] on page \thepage}}%
+  \fi\fi\fi\fi\@esphack\@tmpa}
+\def\@labeldef#1#2#3{\@bsphack\if@filesw {\let\thepage\relax
+   \def\protect{\noexpand\noexpand\noexpand}%
+   \xdef\@gtmpa{\write\@auxout{\string
+      \annlabdef{#3}{{#1}{\thepage}{#2}}}}}\@gtmpa \fi
+  \edef\@gtmpa{\noexpand\annlabdef{#3}{{#1}{\thepage}{#2}}}\@gtmpa
+  \@esphack}
+\def\annlabdef#1#2{\expandafter\gdef\csname @r@#1\endcsname{#2}}
+\def\annref{\global\annrefused@true%
+\@ifoptarg{\@annref}{\@lnrannref{}{}}}
+\def\@annref#1]{\def\@tmpa{a#1}%
+  \ifx\@tmpa\@a@di \def\@tmpb{\@lnrannref .{}}%
+  \else\ifx\@tmpa\@a@od \def\@tmpb{\@lnrannref {}.}%
+  \else\ifx\@tmpa\@a@odi
+    \def\@tmpb##1{\@lnrannref{\@num{##1}.}{}}%
+  \else\ifx\@tmpa\@a@o \def\@tmpb{\@lnrannref{}{}}%
+  \else\ifx\@tmpa\@a@i \def\@tmpb{\@lnrannref{}{}}%
+  \else\ifx\@tmpa\@a@p \let\@tmpb=\@pannref
+  \else\ifx\@tmpa\@a@m \let\@tmpb=\@mannref
+  \else \def\@tmpb{%
+    \@vdmslwarning{wrong \string\annref\space format [#1] on page \thepage}??}%
+  \fi\fi\fi\fi\fi\fi\fi\@tmpb}
+\def\@lnrannref#1#2#3{{\LineNrFont#1\@num{#3}#2}}
+\def\@pannref#1{\@ifundefined{@r@#1}
+  {\@vdmslwarning{page reference #1 on page \thepage\space undefined}??}%
+  {\edef\@tmpb{\@nameuse{@r@#1}}\expandafter\@carcdr\@tmpb \@nil\null}}
+\def\@mannref#1{{\ModuleNrFont\@ifundefined{@r@#1}
+  {\@vdmslwarning{module reference #1 on page \thepage\space undefined}??}%
+  {\edef\@tmpb{\@nameuse{@r@#1}}\expandafter\@cdrcdr\@tmpb \@nil\null}}}
+\def\@carcdr#1#2#3\@nil{#2}
+\def\@cdrcdr#1#2#3\@nil{#3}
+\def\@num#1{%
+  \def\@tmpe{%                                        
+    \@vdmslwarning{wrong argument #1 by \string\ann\space on page \thepage}??}%
+  \ifcase \catcode`#1
+  \or\or\or\or\or\or\or\or\or\or
+  \or \def\@tmpe{\@ifundefined{@r@#1}                 
+    {\@vdmslwarning{reference #1 on page \thepage\space undefined}??}%
+  {\edef\@tmpf{\@nameuse{@r@#1}}%      
+                \expandafter\@car\@tmpf \@nil\null}}%
+  \or \def\@tmpe{#1}%                               
+  \fi\@tmpe}
+\def\ann{\@ifoptarg{\lnr@ann}{\b@Macro\AnnSkip{}\ignorespaces}}
+\def\lnr@ann#1]{\def\@a@a{a#1}%
+  \ifx\@a@a\@a@di \def\@ann##1{\@annlnr{}{\@num{##1}}}%
+  \else\ifx\@a@a\@a@didi \def\@ann##1##2{\@annlnr{}
+    {\@num{##1}--.\@num{##2}}}%
+  \else\ifx\@a@a\@a@od \def\@ann{\@annlnr{\@ao}{}}%
+  \else\ifx\@a@a\@a@odi \def\@ann##1{\@annlnr{\@ao}{\@num{##1}}}%
+  \else\ifx\@a@a\@a@odidi
+    \def\@ann##1##2{\@annlnr{\@ao}{\@num{##1}--.\@num{##2}}}%
+  \else\ifx\@a@a\@a@fdf \let\@ann=\@annlnr
+  \else\ifx\@a@a\@a@fd \def\@ann##1{\@annlnr{##1}{}}%
+  \else\ifx\@a@a\@a@df \def\@ann{\@annlnr{}}%
+  \else\ifx\@a@a\@a@f \let\@ann=\@annf
+  \else 
+    \def\@ann{\@annf{\@vdmslwarning{wrong \string\ann\space 
+                                    format [#1] on page \thepage}??}}%
+  \fi\fi\fi\fi\fi\fi\fi\fi\fi\@esphack \@ann}
+\def\b@ann{ \par\vskip\AnnSkip \leavevmode \hbox to \z@\bgroup\hss}
+\def\e@ann{\egroup\ignorespaces}
+\def\@annlnr#1#2{\b@ann \LineNrFont #1% 
+  \hbox to \wi@ainn{\LineNrFont.#2\hss}\e@ann}
+\def\@annf#1{\b@ann \hbox to \wi@ann{\LineNrFont#1\hss}\e@ann}
+\def\def@ann{\@bsphack
+  \def\@a@f{af} \def\@a@df{a.f} \def\@a@fd{af.} \def\@a@fdf{af.f}\def\@a@od{ao.}
+  \def\@a@di{a.i} \def\@a@odi{ao.i} \def\@a@odidi{ao.i-.i} \def\@a@didi{a.i-.i}
+  \def\@a@p{ap} \def\@a@m{am}\def\@a@i{ai}\def\@a@o{ao}\@esphack}
+\def\@vdmslwarning#1{\typeout{!!! VdmSl warning: #1.}}
+% kjl 20/8/93
+\def\lineup{\@ifoptarg\@lineup{\@lineup w]}}
+\def\@lineup#1]{%
+  \ifx#1c\let\@tmpa=\@lineupc
+    \else\ifx#1w\let\@tmpa=\@lineupw
+      \else\ifx#1k\let\@tmpa=\@lineupk
+        \else\ifx#1t\let\@tmpa=\@lineupt
+          \else \def\@tmpa{??\@vdmslwarning{wrong \string\lineup\space format [#1]
+                                              on page \thepage}}%
+                                                \fi\fi\fi\fi\@tmpa}
+\def\@lineupc#1{\ifmmode\setbox\tmp@box\hbox{$\strut#1\strut$}\else
+  \setbox\tmp@box\hbox{#1}\fi
+  {\let\@@lineupw\relax \xdef\@gtmpa{\@@lineupw{\the\wd\tmp@box}}}%
+  \box\tmp@box\@gtmpa}
+\def\@lineupk#1{\ifmmode\setbox\tmp@box\hbox {$\strut#1\strut$}%
+  \else \setbox\tmp@box\hbox {#1}\fi
+  {\let\@lineupw\relax \xdef\@gtmpa{\@lineupw{\the\wd\tmp@box}}}\@gtmpa}
+\def\@@lineupw#1#2{\add@indent{#1}#2\sub@indent{#1}} 
+\def\@lineupw#1#2{\hskip#1\relax\add@indent{#1}#2\sub@indent{#1}}
+\def\@lineupt#1#2{\ifmmode\hbox to #1{$\strut#2\strut$\hss}\else
+  \hbox to #1{#2}\fi
+  {\let\@@lineupw\relax \xdef\@gtmpa{\@@lineupw{#1}}}\@gtmpa}
+\def\blkindent{\@ifoptarg\@blkindent{\@blkindent w]}}
+\def\@blkindent#1]#2{%
+  \ifx #1w\hskip #2\add@indent{#2}\def\endblkindent{\sub@indent{#2}}%
+  \else \ifx #1i%
+    \expandafter\hskip\@nameuse{w@#2}\relax
+    {\let\add@indent=\relax
+     \xdef\@gtmpa{\add@indent\@nameuse{w@#2}}}\@gtmpa
+    \def\endblkindent{{\let\sub@indent=\relax
+      \xdef\@gtmpa{\sub@indent\@nameuse{w@#2}}}\@gtmpa}%
+  \else ??\@vdmslwarning{wrong \string\begin{blkindent}\space format [#1]
+                                    on page \thepage}%
+  \fi\fi}
+\ifps@
+ \def\leftharpoonupfill{$\m@th \mathord\leftharpoonup \mkern-6mu
+  \cleaders\hbox{$\mkern-2mu \mathchar"0\cmsy@00 \mkern-2mu$}\hfill
+  \mkern-6mu \mathchar"0\cmsy@00$}  % p.357, \leftarrowfill
+\else
+ \def\leftharpoonupfill{$\m@th \mathord\leftharpoonup \mkern-6mu
+  \cleaders\hbox{$\mkern-2mu \mathord\Minus \mkern-2mu$}\hfill % !!! Minus
+  \mkern-6mu \mathord\Minus$}  % p.357, \leftarrowfill
+\fi
+\def\old#1{{%
+  \boxmaxdepth=\maxdimen % this fixes Lamport's figures, but isn't necessary
+                         % for versions after 15 Dec 87
+  \vbox{\ialign{##\crcr % p.359, \overleftarrow
+    \leftharpoonupfill\crcr\noalign{\kern-\p@\nointerlineskip}
+    $\hfil\displaystyle{#1}\hfil$\crcr}}}}
+\def\pex#1{\Lp #1\Rp}                                    
+\def\Lp{\@expl@Def\sb@indent(}                           
+\def\Rp{)\subw@indent(}
+\def\parentheses{\Lp \def\endparentheses{\Rp \@ignorespaces}} 
+                                                              %.. \end{..} -%
+\def\expex#1{%
+     \@expl@Def
+     \def\@fexpr{#1\mskip\thinmuskip}%
+     \@iflinebr{\ml@expex}{\sl@expex}
+}
+% \sl@expex makes use of macros \b@expr@box, \e@expr@box and
+% \ei@expr@box. They will affect the values \wi@indent and \wi@expr
+% globally and therefore cause problems after \expex is used. 
+% And so the values of \wi@expr and \wi@indent must be saved 
+% at the start of \sl@expex and restored at the end.  kjl 21/8/92
+\def\sl@expex#1{%
+      \begingroup
+      \save@indent@and@expr
+         \b@expr@box 
+            \@fexpr 
+         \e@expr@box 
+         \Lp #1\Rp 
+         \ei@expr@box
+      \restore@indent@and@expr
+      \endgroup
+}
+\def\ml@expex#1{\@fexpr \add@DI\\ \Lp #1\Rp \sub@DI}
+\newbox\@expr@box
+\newdimen\wi@expr
+\def\b@expr@box{\setbox\@expr@box=\hbox \bgroup \let\\=\@expr@linebr $}
+\def\e@expr@box{\strut$\egroup 
+  \wi@expr=\wd\@expr@box \box \@expr@box \global\advance\wi@indent by\wi@expr
+}
+\def\ei@expr@box{\global\advance\wi@indent by -\wi@expr}
+\def\@expr@linebr{\strut$\egroup \box\@expr@box \@linebr \b@expr@box}
+%       Proofs
+\@newSkips{Proof}{1.2ex plus .2ex minus .1ex}{1.2ex plus .2ex minus .1ex}
+\@emptyHooks{Proof}
+\newdimen\w@ProofIndent \w@ProofIndent=\parindent
+\newdimen\w@ProofNumber \w@ProofNumber=\parindent
+\long\def\proof{\par\vskip\preProofSkip\preProofHook
+  \def\From{\@indentProof\kw{from }\=%
+            \global\advance\@indentLevel by \@ne
+            \@enterMathMode}%
+  \def\Infer{\global\advance\@indentLevel by-\@ne
+             \@indentProof\kw{infer }\@enterMathMode}%
+  \def\By{\`}%
+  \def\&{\@indentProof\@enterMathMode}
+  \let\Line\&
+        % this enters math mode and sets the LaTeX macros \@stopfield up
+        % to exit math mode
+  \def\@enterMathMode{\def\@stopfield{$\egroup}$}
+  \reset@linebreaks
+  \moveright\w@ProofIndent\vtop\bgroup
+    \@indentLevel=1
+    \advance\linewidth by-\w@ProofIndent
+    \begin{tabbing}%
+    \hbox to\w@ProofNumber{}\=\kill}    % template line
+\def\endproof{\end{tabbing}\egroup % ends the \vtop
+        \e@Macro\postProofHook\postProofSkip}
+\newcount\@indentLevel
+\newcount\@indentCount
+\def\@indentProof{% do \>, \@indentLevel times
+        \global\@indentCount=\@indentLevel
+        \@gloop \>\global\advance\@indentCount by-\@ne
+        \ifnum\@indentCount>0
+        \repeat}
+\def\@gloop#1\repeat{\gdef\@body{#1}\@giterate}
+\def\@giterate{\@body \global\let\@gloopNext=\@giterate
+        \else \global\let\@gloopNext=\relax \fi \@gloopNext}
+\def\trace{\tracingcommands=2\tracingmacros2}
+\@changeOtherMathcodes 
+\let\@@@end=\@@end
+\def\@@end{%
+  \ifannrefused@\@vdmslwarning{%
+  To get references right it is necessary to run ^^J
+  \@spaces\@spaces\@spaces\@spaces\space\space LaTeX TWICE.
+}\fi\@@@end}
+\leftalignment
+\linenumbering
+\nomodulenumbering
+\initialise@fonts     
+\setindent{inner}{1.7em}   
+\setindent{outer}{1.5em}  
+\endinput

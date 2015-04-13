@@ -1,0 +1,25 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleCaseAlternativeImpl is subclass of SimpleCaseAlternative
+instance variables
+    private iv_test:SimpleExpression;
+    private iv_exp:SimpleExpression;
+
+operations
+    public SimpleCaseAlternativeImpl: SimpleExpression * SimpleExpression ==> SimpleCaseAlternativeImpl
+    SimpleCaseAlternativeImpl(p_test, p_exp) ==
+    (
+        iv_test := p_test;
+        iv_exp := p_exp;
+    );
+
+    public getTest: () ==> SimpleExpression
+    getTest() == return iv_test;
+
+    public getExp: () ==> SimpleExpression
+    getExp() == return iv_exp;
+
+end SimpleCaseAlternativeImpl

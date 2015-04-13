@@ -1,0 +1,28 @@
+--The World Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		20/4 - 2008
+-- Updated:	
+-- Description: 	World class in the HomeAutomation project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class World
+
+instance variables
+
+static public env : Environment := new Environment("scenario.txt");
+static public timerRef : Timer := new Timer();
+  
+operations
+
+public Run: () ==> ()
+Run() ==
+ (-- start environment creating input
+  env.Run();
+ );
+
+end World

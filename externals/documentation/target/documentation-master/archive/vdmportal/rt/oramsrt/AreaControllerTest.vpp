@@ -1,0 +1,68 @@
+\begin{vdm_al}
+class AreaControllerTest is subclass of TestCase
+
+operations
+  protected SetUp: () ==> ()
+  SetUp () == 
+  	(
+    ORAMS`a1.addEquipment(ORAMS`f1);
+    ORAMS`a1.addEquipment(ORAMS`f2);
+    ORAMS`a1.addEquipment(ORAMS`f3);
+    );
+
+  protected RunTest: () ==> ()
+  RunTest () == 
+    (
+    AssertTrue(ORAMS`a1.getId() = mk_token(<a1>));    
+	AssertTrue(ORAMS`p1.getArea() = nil);	    
+    AssertFalse(ORAMS`a1.enterPerson(mk_token(<p1>), <Stay>));
+    AssertTrue(ORAMS`p1.getArea() = nil);
+    ORAMS`a1.addBoat(ORAMS`l1);
+    AssertTrue(ORAMS`a1.enterPerson(mk_token(<p1>), <Stay>));
+    AssertTrue(ORAMS`p1.getArea() = mk_token(<a1>));
+    AssertTrue(ORAMS`p1.getBoat() = ORAMS`l1.getId());
+    AssertFalse(ORAMS`a1.canRemoveBoat(ORAMS`l1.getId()));
+    AssertTrue(ORAMS`a1.enterPerson(mk_token(<p2>), <Transit>));
+    AssertTrue(ORAMS`p2.getArea() = mk_token(<a1>));
+    ORAMS`a2.addEquipment(ORAMS`f4);
+    ORAMS`a2.addBoat(ORAMS`l3);
+    AssertTrue(ORAMS`a2.enterPerson(mk_token(<p2>), <Stay>));
+    AssertFalse(ORAMS`p2.getArea() = mk_token(<a1>));
+    ORAMS`a1.addBoat(ORAMS`l3);
+    ORAMS`a1.changeBoat(mk_token(<p1>));
+    AssertTrue(ORAMS`p1.getBoat() = ORAMS`l3.getId());
+    AssertTrue(ORAMS`Lifeboats(ORAMS`l1.getId()).getCrew() inter {mk_token(<p1>)} = {});
+    AssertTrue(ORAMS`a1.canRemoveBoat(ORAMS`l1.getId()));
+    ORAMS`a1.removeBoat(ORAMS`l1.getId());
+    AssertTrue(ORAMS`l1.getAreas() inter {mk_token(<a1>)} = {});
+    AssertTrue(ORAMS`a1.canRemoveEquipment());
+    ORAMS`a1.removeEquipment(ORAMS`f3);
+    AssertTrue(ORAMS`a1.canRemoveEquipment());
+    ORAMS`a1.removeEquipment(ORAMS`f2);
+    AssertFalse(ORAMS`a1.canRemoveEquipment());
+    ORAMS`a2.leave(mk_token(<p2>));
+    AssertTrue(ORAMS`a2.enterPerson(mk_token(<p1>), <Transit>));
+    ORAMS`a2.leave(mk_token(<p1>));
+    AssertTrue(ORAMS`a2.canRemoveBoat(ORAMS`l3.getId()));
+    ORAMS`a2.removeBoat(ORAMS`l3.getId());
+    AssertTrue(ORAMS`a1.canRemoveBoat(ORAMS`l3.getId()));
+    ORAMS`a1.removeBoat(ORAMS`l3.getId());
+    AssertTrue(ORAMS`a1.canRemoveEquipment());
+    ORAMS`a1.removeEquipment(ORAMS`f1);
+    AssertTrue(ORAMS`a2.canRemoveEquipment());
+    ORAMS`a1.removeEquipment(ORAMS`f4);
+    AssertTrue(ORAMS`p1.getBoat() = mk_token(<b3>));
+    AssertTrue(ORAMS`p2.getBoat() = mk_token(<b3>));
+    ORAMS`l3.removePerson(mk_token(<p1>));
+    ORAMS`l3.removePerson(mk_token(<p2>));
+  );
+
+
+  protected TearDown: () ==> ()
+  TearDown () == 
+  	(
+  		skip
+   );
+
+end AreaControllerTest
+\end{vdm_al}

@@ -1,0 +1,180 @@
+ThreadCreate -> id: 1 period: false objref: nil clnm: nil cpunm: 0 time: 0
+ThreadSwapIn -> id: 1 objref: nil clnm: nil cpunm: 0 overhead: 2 time: 0
+DeployObj ->  objref: 23 clnm: "MedicalDevice" cpunm: 0 time: 0
+OpRequest -> id: 1 opname: "MedicalDevice`MedicalDevice" objref: 23 clnm: "MedicalDevice" cpunm: 0 async: false time: 0
+OpActivate -> id: 1 opname: "MedicalDevice`MedicalDevice" objref: 23 clnm: "MedicalDevice" cpunm: 0 async: false time: 0
+OpCompleted -> id: 1 opname: "MedicalDevice`MedicalDevice" objref: 23 clnm: "MedicalDevice" cpunm: 0 async: false time: 14
+DeployObj ->  objref: 24 clnm: "PMU" cpunm: 0 time: 14
+OpRequest -> id: 1 opname: "PMU`PMU" objref: 24 clnm: "PMU" cpunm: 0 async: false time: 14
+OpActivate -> id: 1 opname: "PMU`PMU" objref: 24 clnm: "PMU" cpunm: 0 async: false time: 14
+OpCompleted -> id: 1 opname: "PMU`PMU" objref: 24 clnm: "PMU" cpunm: 0 async: false time: 20
+DeployObj ->  objref: 25 clnm: "Analyzer" cpunm: 0 time: 20
+OpRequest -> id: 1 opname: "Analyzer`Analyzer" objref: 25 clnm: "Analyzer" cpunm: 0 async: false time: 20
+OpActivate -> id: 1 opname: "Analyzer`Analyzer" objref: 25 clnm: "Analyzer" cpunm: 0 async: false time: 20
+OpCompleted -> id: 1 opname: "Analyzer`Analyzer" objref: 25 clnm: "Analyzer" cpunm: 0 async: false time: 28
+DeployObj ->  objref: 26 clnm: "BatteryMonitor" cpunm: 0 time: 28
+OpRequest -> id: 1 opname: "BatteryMonitor`BatteryMonitor" objref: 26 clnm: "BatteryMonitor" cpunm: 0 async: false time: 28
+OpActivate -> id: 1 opname: "BatteryMonitor`BatteryMonitor" objref: 26 clnm: "BatteryMonitor" cpunm: 0 async: false time: 28
+OpCompleted -> id: 1 opname: "BatteryMonitor`BatteryMonitor" objref: 26 clnm: "BatteryMonitor" cpunm: 0 async: false time: 42
+DeployObj ->  objref: 27 clnm: "Transmitter" cpunm: 0 time: 42
+CPUdecl ->  id: 1 expl: true sys: "PMUSystem" name: "medicalDevice1CPU"
+CPUdecl ->  id: 2 expl: true sys: "PMUSystem" name: "medicalDevice2CPU"
+CPUdecl ->  id: 3 expl: true sys: "PMUSystem" name: "pmu1CPU"
+CPUdecl ->  id: 4 expl: true sys: "PMUSystem" name: "heartRateAnalyzerCPU"
+BUSdecl ->  id: 1 topo: {3, 1} name: "wirelessBus"
+BUSdecl ->  id: 2 topo: {4, 3} name: "wiredBus"
+DeployObj ->  objref: 23 clnm: "MedicalDevice" cpunm: 1 time: 42
+DeployObj ->  objref: 24 clnm: "PMU" cpunm: 3 time: 42
+DeployObj ->  objref: 27 clnm: "Transmitter" cpunm: 3 time: 42
+DeployObj ->  objref: 26 clnm: "BatteryMonitor" cpunm: 3 time: 42
+DeployObj ->  objref: 25 clnm: "Analyzer" cpunm: 4 time: 42
+DeployObj ->  objref: 28 clnm: "PMUSystem" cpunm: 0 time: 42
+DeployObj ->  objref: 29 clnm: "NewWorld" cpunm: 0 time: 42
+DeployObj ->  objref: 30 clnm: "Printer" cpunm: 0 time: 42
+DeployObj ->  objref: 31 clnm: "GLOBAL" cpunm: 0 time: 42
+DeployObj ->  objref: 32 clnm: "BatteryMonitor" cpunm: 0 time: 42
+DeployObj ->  objref: 33 clnm: "MedicalDevice" cpunm: 0 time: 42
+DeployObj ->  objref: 34 clnm: "Transmitter" cpunm: 0 time: 42
+DeployObj ->  objref: 35 clnm: "Environment" cpunm: 0 time: 42
+DeployObj ->  objref: 36 clnm: "Analyzer" cpunm: 0 time: 42
+DeployObj ->  objref: 37 clnm: "PMU" cpunm: 0 time: 42
+DeployObj ->  objref: 38 clnm: "IO" cpunm: 0 time: 42
+DeployObj ->  objref: 39 clnm: "NewWorld" cpunm: 0 time: 42
+OpRequest -> id: 1 opname: "NewWorld`NewWorld" objref: 39 clnm: "NewWorld" cpunm: 0 async: false time: 42
+OpActivate -> id: 1 opname: "NewWorld`NewWorld" objref: 39 clnm: "NewWorld" cpunm: 0 async: false time: 42
+DeployObj ->  objref: 40 clnm: "Environment" cpunm: 0 time: 42
+DeployObj ->  objref: 41 clnm: "IO" cpunm: 0 time: 42
+OpRequest -> id: 1 opname: "Environment`Environment" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 42
+OpActivate -> id: 1 opname: "Environment`Environment" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 42
+OpCompleted -> id: 1 opname: "Environment`Environment" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 226
+OpRequest -> id: 1 opname: "Environment`addMedicalDevice" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 246
+OpActivate -> id: 1 opname: "Environment`addMedicalDevice" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 246
+OpRequest -> id: 1 opname: "Printer`Out" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 246
+OpActivate -> id: 1 opname: "Printer`Out" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 246
+DeployObj ->  objref: 42 clnm: "IO" cpunm: 0 time: 246
+OpRequest -> id: 1 opname: "IO`echo" objref: 42 clnm: "IO" cpunm: 0 async: false time: 302
+OpActivate -> id: 1 opname: "IO`echo" objref: 42 clnm: "IO" cpunm: 0 async: false time: 302
+OpRequest -> id: 1 opname: "IO`fecho" objref: 42 clnm: "IO" cpunm: 0 async: false time: 304
+OpActivate -> id: 1 opname: "IO`fecho" objref: 42 clnm: "IO" cpunm: 0 async: false time: 304
+OpCompleted -> id: 1 opname: "IO`fecho" objref: 42 clnm: "IO" cpunm: 0 async: false time: 304
+OpCompleted -> id: 1 opname: "IO`echo" objref: 42 clnm: "IO" cpunm: 0 async: false time: 306
+OpCompleted -> id: 1 opname: "Printer`Out" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 310
+OpCompleted -> id: 1 opname: "Environment`addMedicalDevice" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 326
+OpRequest -> id: 1 opname: "MedicalDevice`setupMedicalDevice" objref: 23 clnm: "MedicalDevice" cpunm: 0 async: false time: 332
+MessageRequest -> busid: 0 fromcpu: 0 tocpu: 1 msgid: 1 callthr: 1 opname: "MedicalDevice`setupMedicalDevice" objref: 23 size: 16 time: 332
+MessageActivate -> msgid: 1 time: 332
+MessageCompleted -> msgid: 1 time: 332
+ThreadCreate -> id: 2 period: false objref: 23 clnm: "MedicalDevice" cpunm: 1 time: 332
+ThreadSwapIn -> id: 2 objref: 23 clnm: "MedicalDevice" cpunm: 1 overhead: 2 time: 332
+OpActivate -> id: 2 opname: "MedicalDevice`setupMedicalDevice" objref: 23 clnm: "MedicalDevice" cpunm: 1 async: false time: 332
+OpRequest -> id: 2 opname: "Printer`Out" objref: 23 clnm: "MedicalDevice" cpunm: 1 async: false time: 332
+OpActivate -> id: 2 opname: "Printer`Out" objref: 23 clnm: "MedicalDevice" cpunm: 1 async: false time: 332
+DeployObj ->  objref: 43 clnm: "IO" cpunm: 1 time: 332
+OpRequest -> id: 2 opname: "IO`echo" objref: 43 clnm: "IO" cpunm: 1 async: false time: 400
+OpActivate -> id: 2 opname: "IO`echo" objref: 43 clnm: "IO" cpunm: 1 async: false time: 400
+OpRequest -> id: 2 opname: "IO`fecho" objref: 43 clnm: "IO" cpunm: 1 async: false time: 402
+OpActivate -> id: 2 opname: "IO`fecho" objref: 43 clnm: "IO" cpunm: 1 async: false time: 402
+OpCompleted -> id: 2 opname: "IO`fecho" objref: 43 clnm: "IO" cpunm: 1 async: false time: 402
+OpCompleted -> id: 2 opname: "IO`echo" objref: 43 clnm: "IO" cpunm: 1 async: false time: 404
+OpCompleted -> id: 2 opname: "Printer`Out" objref: 23 clnm: "MedicalDevice" cpunm: 1 async: false time: 408
+OpCompleted -> id: 2 opname: "MedicalDevice`setupMedicalDevice" objref: 23 clnm: "MedicalDevice" cpunm: 1 async: false time: 418
+ReplyRequest -> busid: 0 fromcpu: 1 tocpu: 0 msgid: 2 origmsgid: 1 callthr: 1 calleethr: 2 size: 1 time: 418
+ThreadSwapOut -> id: 2 objref: 23 clnm: "MedicalDevice" cpunm: 1 overhead: 2 time: 418
+ThreadKill -> id: 2 cpunm: 1 time: 420
+MessageActivate -> msgid: 2 time: 418
+MessageCompleted -> msgid: 2 time: 418
+OpRequest -> id: 1 opname: "Analyzer`setTransmitter" objref: 25 clnm: "Analyzer" cpunm: 0 async: false time: 424
+MessageRequest -> busid: 0 fromcpu: 0 tocpu: 4 msgid: 3 callthr: 1 opname: "Analyzer`setTransmitter" objref: 25 size: 16 time: 424
+MessageActivate -> msgid: 3 time: 424
+MessageCompleted -> msgid: 3 time: 424
+ThreadCreate -> id: 3 period: false objref: 25 clnm: "Analyzer" cpunm: 4 time: 424
+ThreadSwapIn -> id: 3 objref: 25 clnm: "Analyzer" cpunm: 4 overhead: 2 time: 424
+OpActivate -> id: 3 opname: "Analyzer`setTransmitter" objref: 25 clnm: "Analyzer" cpunm: 4 async: false time: 424
+ThreadCreate -> id: 4 period: true objref: 27 clnm: "Transmitter" cpunm: 3 time: 432
+OpCompleted -> id: 3 opname: "Analyzer`setTransmitter" objref: 25 clnm: "Analyzer" cpunm: 4 async: false time: 436
+ReplyRequest -> busid: 0 fromcpu: 4 tocpu: 0 msgid: 4 origmsgid: 3 callthr: 1 calleethr: 3 size: 1 time: 436
+ThreadSwapOut -> id: 3 objref: 25 clnm: "Analyzer" cpunm: 4 overhead: 2 time: 436
+ThreadKill -> id: 3 cpunm: 4 time: 438
+MessageActivate -> msgid: 4 time: 436
+MessageCompleted -> msgid: 4 time: 436
+OpRequest -> id: 1 opname: "PMU`setBatteryMonitor" objref: 24 clnm: "PMU" cpunm: 0 async: false time: 442
+MessageRequest -> busid: 0 fromcpu: 0 tocpu: 3 msgid: 5 callthr: 1 opname: "PMU`setBatteryMonitor" objref: 24 size: 16 time: 442
+MessageActivate -> msgid: 5 time: 442
+MessageCompleted -> msgid: 5 time: 442
+ThreadCreate -> id: 5 period: false objref: 24 clnm: "PMU" cpunm: 3 time: 442
+ThreadSwapIn -> id: 5 objref: 24 clnm: "PMU" cpunm: 3 overhead: 2 time: 442
+OpActivate -> id: 5 opname: "PMU`setBatteryMonitor" objref: 24 clnm: "PMU" cpunm: 3 async: false time: 442
+OpCompleted -> id: 5 opname: "PMU`setBatteryMonitor" objref: 24 clnm: "PMU" cpunm: 3 async: false time: 450
+ReplyRequest -> busid: 0 fromcpu: 3 tocpu: 0 msgid: 6 origmsgid: 5 callthr: 1 calleethr: 5 size: 1 time: 450
+ThreadSwapOut -> id: 5 objref: 24 clnm: "PMU" cpunm: 3 overhead: 2 time: 450
+ThreadKill -> id: 5 cpunm: 3 time: 452
+MessageActivate -> msgid: 6 time: 450
+MessageCompleted -> msgid: 6 time: 450
+OpRequest -> id: 1 opname: "PMU`addAnalyzer" objref: 24 clnm: "PMU" cpunm: 0 async: false time: 456
+MessageRequest -> busid: 0 fromcpu: 0 tocpu: 3 msgid: 7 callthr: 1 opname: "PMU`addAnalyzer" objref: 24 size: 16 time: 456
+ThreadSwapIn -> id: 4 objref: 27 clnm: "Transmitter" cpunm: 3 overhead: 2 time: 452
+OpRequest -> id: 4 opname: "Transmitter`sendMessage" objref: 27 clnm: "Transmitter" cpunm: 3 async: false time: 452
+MessageActivate -> msgid: 7 time: 456
+MessageCompleted -> msgid: 7 time: 456
+ThreadSwapOut -> id: 4 objref: 27 clnm: "Transmitter" cpunm: 3 overhead: 2 time: 456
+ThreadCreate -> id: 6 period: false objref: 24 clnm: "PMU" cpunm: 3 time: 458
+ThreadSwapIn -> id: 6 objref: 24 clnm: "PMU" cpunm: 3 overhead: 2 time: 458
+OpActivate -> id: 6 opname: "PMU`addAnalyzer" objref: 24 clnm: "PMU" cpunm: 3 async: false time: 458
+OpRequest -> id: 6 opname: "Analyzer`getDataType" objref: 25 clnm: "Analyzer" cpunm: 3 async: false time: 462
+MessageRequest -> busid: 2 fromcpu: 3 tocpu: 4 msgid: 8 callthr: 6 opname: "Analyzer`getDataType" objref: 25 size: 8 time: 462
+MessageActivate -> msgid: 8 time: 462
+MessageCompleted -> msgid: 8 time: 463
+ThreadCreate -> id: 7 period: false objref: 25 clnm: "Analyzer" cpunm: 4 time: 463
+ThreadSwapIn -> id: 7 objref: 25 clnm: "Analyzer" cpunm: 4 overhead: 2 time: 463
+OpActivate -> id: 7 opname: "Analyzer`getDataType" objref: 25 clnm: "Analyzer" cpunm: 4 async: false time: 463
+OpCompleted -> id: 7 opname: "Analyzer`getDataType" objref: 25 clnm: "Analyzer" cpunm: 4 async: false time: 467
+ReplyRequest -> busid: 2 fromcpu: 4 tocpu: 3 msgid: 9 origmsgid: 8 callthr: 6 calleethr: 7 size: 64 time: 467
+ThreadSwapOut -> id: 7 objref: 25 clnm: "Analyzer" cpunm: 4 overhead: 2 time: 467
+ThreadKill -> id: 7 cpunm: 4 time: 469
+MessageActivate -> msgid: 9 time: 468
+MessageCompleted -> msgid: 9 time: 469
+OpRequest -> id: 6 opname: "Analyzer`setBatteryMonitor" objref: 25 clnm: "Analyzer" cpunm: 3 async: false time: 489
+MessageRequest -> busid: 2 fromcpu: 3 tocpu: 4 msgid: 10 callthr: 6 opname: "Analyzer`setBatteryMonitor" objref: 25 size: 16 time: 489
+MessageActivate -> msgid: 10 time: 489
+MessageCompleted -> msgid: 10 time: 490
+ThreadCreate -> id: 8 period: false objref: 25 clnm: "Analyzer" cpunm: 4 time: 490
+ThreadSwapIn -> id: 8 objref: 25 clnm: "Analyzer" cpunm: 4 overhead: 2 time: 490
+OpActivate -> id: 8 opname: "Analyzer`setBatteryMonitor" objref: 25 clnm: "Analyzer" cpunm: 4 async: false time: 490
+OpCompleted -> id: 8 opname: "Analyzer`setBatteryMonitor" objref: 25 clnm: "Analyzer" cpunm: 4 async: false time: 502
+ReplyRequest -> busid: 2 fromcpu: 4 tocpu: 3 msgid: 11 origmsgid: 10 callthr: 6 calleethr: 8 size: 1 time: 502
+ThreadSwapOut -> id: 8 objref: 25 clnm: "Analyzer" cpunm: 4 overhead: 2 time: 502
+ThreadKill -> id: 8 cpunm: 4 time: 504
+MessageActivate -> msgid: 11 time: 503
+MessageCompleted -> msgid: 11 time: 504
+ThreadCreate -> id: 9 period: true objref: 27 clnm: "Transmitter" cpunm: 3 time: 504
+ThreadSwapOut -> id: 6 objref: 24 clnm: "PMU" cpunm: 3 overhead: 2 time: 504
+ThreadSwapIn -> id: 9 objref: 27 clnm: "Transmitter" cpunm: 3 overhead: 2 time: 506
+OpRequest -> id: 9 opname: "Transmitter`sendMessage" objref: 27 clnm: "Transmitter" cpunm: 3 async: false time: 506
+ThreadCreate -> id: 10 period: true objref: 27 clnm: "Transmitter" cpunm: 3 time: 506
+ThreadSwapOut -> id: 9 objref: 27 clnm: "Transmitter" cpunm: 3 overhead: 2 time: 506
+DelayedThreadSwapIn -> id: 10 objref: 27 clnm: "Transmitter" delay: 2 cpunm: 3 overhead: 2 time: 508
+OpRequest -> id: 10 opname: "Transmitter`sendMessage" objref: 27 clnm: "Transmitter" cpunm: 3 async: false time: 508
+ThreadSwapOut -> id: 10 objref: 27 clnm: "Transmitter" cpunm: 3 overhead: 2 time: 508
+ThreadSwapIn -> id: 6 objref: 24 clnm: "PMU" cpunm: 3 overhead: 2 time: 510
+ThreadCreate -> id: 11 period: true objref: 25 clnm: "Analyzer" cpunm: 4 time: 514
+OpCompleted -> id: 6 opname: "PMU`addAnalyzer" objref: 24 clnm: "PMU" cpunm: 3 async: false time: 522
+ReplyRequest -> busid: 0 fromcpu: 3 tocpu: 0 msgid: 12 origmsgid: 7 callthr: 1 calleethr: 6 size: 1 time: 522
+ThreadSwapOut -> id: 6 objref: 24 clnm: "PMU" cpunm: 3 overhead: 2 time: 522
+ThreadKill -> id: 6 cpunm: 3 time: 524
+MessageActivate -> msgid: 12 time: 522
+MessageCompleted -> msgid: 12 time: 522
+OpRequest -> id: 1 opname: "Environment`addPMU" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 528
+OpActivate -> id: 1 opname: "Environment`addPMU" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 528
+OpRequest -> id: 1 opname: "Printer`Out" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 528
+OpActivate -> id: 1 opname: "Printer`Out" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 528
+DeployObj ->  objref: 44 clnm: "IO" cpunm: 0 time: 528
+OpRequest -> id: 1 opname: "IO`echo" objref: 44 clnm: "IO" cpunm: 0 async: false time: 562
+OpActivate -> id: 1 opname: "IO`echo" objref: 44 clnm: "IO" cpunm: 0 async: false time: 562
+OpRequest -> id: 1 opname: "IO`fecho" objref: 44 clnm: "IO" cpunm: 0 async: false time: 564
+OpActivate -> id: 1 opname: "IO`fecho" objref: 44 clnm: "IO" cpunm: 0 async: false time: 564
+OpCompleted -> id: 1 opname: "IO`fecho" objref: 44 clnm: "IO" cpunm: 0 async: false time: 564
+OpCompleted -> id: 1 opname: "IO`echo" objref: 44 clnm: "IO" cpunm: 0 async: false time: 566
+OpCompleted -> id: 1 opname: "Printer`Out" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 570
+OpCompleted -> id: 1 opname: "Environment`addPMU" objref: 40 clnm: "Environment" cpunm: 0 async: false time: 586
+ThreadCreate -> id: 12 period: true objref: 24 clnm: "PMU" cpunm: 3 time: 590
+OpCompleted -> id: 1 opname: "NewWorld`NewWorld" objref: 39 clnm: "NewWorld" cpunm: 0 async: false time: 594

@@ -1,0 +1,14 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () == op(1,1);
+
+public static op : nat * nat ==> nat
+op (func,p) ==
+let func = (lambda p : nat & p * p)
+in
+  return func(5);
+
+ end Entry

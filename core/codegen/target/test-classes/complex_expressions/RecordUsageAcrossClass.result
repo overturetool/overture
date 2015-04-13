@@ -1,0 +1,58 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+
+    public static class Rec implements Record {
+        public Rec() {
+        }
+
+        public boolean equals(final Object obj) {
+            return obj instanceof Rec;
+        }
+
+        public int hashCode() {
+            return 0;
+        }
+
+        public Rec clone() {
+            return new Rec();
+        }
+
+        public String toString() {
+            return "mk_A`Rec()";
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        VDMSeq recs = SeqUtil.seq(new A.Rec());
+        A.Rec r = Utils.clone(((A.Rec) recs.get(Utils.index(1L))));
+
+        return 42L;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

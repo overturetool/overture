@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="19" line="99" message="State init expression cannot be executed" messageType="warning" number="5010" resource="crosswordSL"/>
+<message column="1" line="291" message="Definition 'VALIDATE_WORD' not used" messageType="warning" number="5000" resource="crosswordSL"/>
+<message column="1" line="326" message="Definition 'ADD_WORD' not used" messageType="warning" number="5000" resource="crosswordSL"/>
+<message column="1" line="351" message="Definition 'ADD_BLACK' not used" messageType="warning" number="5000" resource="crosswordSL"/>
+<message column="1" line="417" message="Definition 'DELETE_BLACK' not used" messageType="warning" number="5000" resource="crosswordSL"/>
+<message column="1" line="434" message="Definition 'STRONG_DELETE' not used" messageType="warning" number="5000" resource="crosswordSL"/>
+<message column="1" line="456" message="Definition 'SOFT_DELETE' not used" messageType="warning" number="5000" resource="crosswordSL"/>
+<result/>
+</testResult>

@@ -1,0 +1,146 @@
+\section{Reaching AOOR mode}
+
+The AOOR mode is identical to the AOO mode except that the LRL value is adjusted
+dynamicaly using the values of the Pacemaker accelerometer
+
+\subsection{Requirements}
+
+In this mode the following programmable parameters must be taken into account
+while pacing:
+
+\begin{itemize}
+\item The device shall have the ability to adjust the cardiac cycle in response to metabolic need as measured from body motion using an accelerometer. 
+%Page 32
+\item LRL number of generator pulses delivered per minute.
+\item LRLs LRL interval start. Shall start at a sensed or paced event.
+\item LRLf The end of the LRL interval.
+\item MSR  Maximum pacing rate allowed as a resolt of sensor control.
+\item ActivityThreshold The value the accelerometer sensor output shall exceed  before the pacemaker's rate is afected by activity data.
+\item ResponseFactor \ldots
+\item ReactionTime is the time required to drive the rate from LRL to MSR. 
+\item RecoveryTime is the time required to drive the rate from MSR to LRL.
+\end{itemize}
+
+The accelerometer shall determine the rate of increse of the pacing rate. (page 33 s 5.7.4)
+The accelerometer shall determine the rate decrease of the pacing rate. (page 33 s 5.7.5)
+
+
+\subsection{VDM-SL module}
+
+In this operational mode the system will accept as input a sequence of
+triples where
+
+\begin{itemize}
+\item LeadSense models the absence or not of a pulse.
+\item Chamber the heart cavity from which the sence comes.
+\item ActivityOutput the values outputed from the Accelerometer.
+\end{itemize}
+
+Each element in the sequence represents 1/4 of second.
+
+Because this is a rate-adaptive mode we must take into account the values comming from the accelerometer. We will only model three of this values oposing to the seven in the requirements because theres an well defined abstraction between this two linear orders.
+
+\begin{itemize}
+\item{LOW} 0
+\item{MED} 1
+\item{HIGH} 2
+\end{itemize}  
+
+
+\begin{vdm_al}
+module PacemakerAOOR
+
+definitions 
+
+types 
+
+Time = nat;
+
+SenseTimeline = seq of (Sense * [AccelerometerData] * Time)
+inv stl == let l = [stl(i).#2 | i in set inds stl & stl(i).#2 <> nil]
+           in l(1) = HIGH and forall i in set inds l & l(i) < MED => l(i-1) > MED;
+
+AccelerometerData = nat
+inv n == n < 3;
+
+Sense = <NONE> | <PULSE>;
+
+\end{vdm_al}
+
+The reaction of our system will be a sequence of Lead paces or absence of it in each chamber.
+ 
+\begin{vdm_al}
+
+ReactionTimeline = seq of (Reaction * Time); 
+
+Reaction = <NONE> | <PULSE>;
+\end{vdm_al}
+
+\begin{vdm_al}
+state Sigma of
+   LRL                : nat
+   LRLs               : nat
+   LRLf               : nat
+   MSR                : nat
+   ActivityThreshold  : AccelerometerData
+   ReactionTime       : nat
+   RecoveryTime       : nat
+   rateChangePlan     : map nat to (<INC> | <DEC>)
+init s == s = mk_Sigma(60,0,2,120,MED,10,2,{|->})
+end   
+   
+
+operations
+
+Pacemaker : SenseTimeline ==> ReactionTimeline
+Pacemaker(inp) == 
+   return if inp = [] 
+          then []
+          else [HeartController(hd inp)] ^ Pacemaker(tl inp);
+                         
+HeartController : (Sense * [AccelerometerData] * Time) ==> (Reaction * Time)
+HeartController (mk_(-,acc,time)) == 
+  (
+   if acc <> nil then AdjustRate(acc,time);        
+   if time in set dom rateChangePlan then applyChange(rateChangePlan(time));
+   if LRLf <= LRLs 
+   then (
+          LRLs := 1; 
+          return mk_(<PULSE>,time)
+        )
+   else (
+          LRLs := LRLs + 1; 
+          return mk_(<NONE>,time)
+        ); 
+
+   );   
+
+ applyChange : <INC> | <DEC> ==> ()
+ applyChange (a) == if a = <INC> then LRLf := 1
+                                 else LRLf := 2;
+ 
+ AdjustRate : AccelerometerData * Time ==> ()
+ AdjustRate(act,time) == 
+    if act > ActivityThreshold
+    then rateChangePlan := {time + 10*2 |-> <INC>}
+    else rateChangePlan := {time + 120*2 |-> <DEC>}
+
+
+ 
+
+                             
+values 
+
+LOW  : AccelerometerData = 0;
+MED  : AccelerometerData = 1;
+HIGH : AccelerometerData = 2;
+
+sensedData : seq of (Sense * [AccelerometerData] * Time) = 
+[mk_(<NONE>,nil,i) | i in set {1,...,120}]^
+[mk_(<NONE>,HIGH,121)]^
+[mk_(<NONE>,nil,i) | i in set {121,...,190}]^
+[mk_(<NONE>,LOW,191)]^
+[mk_(<NONE>,nil,i) | i in set {192,...,436}];	
+
+end PacemakerAOOR
+\end{vdm_al}

@@ -1,0 +1,36 @@
+class Types
+
+types   
+public Time = nat;
+public Direction = <NORTH> | <SOUTH> | <EAST> | <WEST>;
+
+public Event = BusRoute | Inflow | Simulate | WasteTime;
+
+public BusRoute ::
+        ID : nat
+		route : seq of Road`RoadNumber
+		t : Time;
+        
+public Inflow ::
+        flow : nat
+        t : Time; 
+        
+public Simulate ::
+        t : nat;   
+        
+public WasteTime ::
+        t : Time;
+            
+functions 
+  public static DirectionToGraphics : Direction -> nat
+  DirectionToGraphics(d) ==
+  (
+    cases d:
+    <NORTH>-> 1,
+    <SOUTH>-> 5,
+    <EAST>->  3,
+    <WEST>->  7
+    end
+  );
+  
+end Types

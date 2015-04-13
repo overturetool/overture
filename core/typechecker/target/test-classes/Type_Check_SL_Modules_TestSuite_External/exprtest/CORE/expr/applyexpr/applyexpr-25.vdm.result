@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="7" line="15" message="Expecting identifier Test after type in definition" messageType="error" number="2019" resource="applyexpr-25.vdm"/>
+<result/>
+</testResult>

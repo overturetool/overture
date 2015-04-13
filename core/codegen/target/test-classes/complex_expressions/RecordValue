@@ -1,0 +1,27 @@
+class A
+
+types
+
+public Node ::
+	e : int
+	r : [Node]; 
+
+operations
+
+public op : () ==> Node
+op () ==
+	return mk_Node(1, mk_Node(2, mk_Node(3, mk_Node(4, mk_Node(5, nil)))));
+
+end A
+
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	let r = new A().op()
+	in
+		return r.r.r.r.r.e;
+	  
+end Entry

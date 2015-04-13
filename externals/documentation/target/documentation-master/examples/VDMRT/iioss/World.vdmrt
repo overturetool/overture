@@ -1,0 +1,71 @@
+\begin{vdm_al}
+class World
+
+instance variables
+	
+	-- maintain a link to the environment
+	public static env : [Environment] := nil;
+	
+operations
+	
+	public World: () ==> World
+	World () ==
+	(
+	   -- set-up the sensors
+	   env := new Environment("scenario.txt");
+	   
+		-- add sensors
+	   env.addSensor(IIOSS`sensor1);
+	   env.addSensor(IIOSS`sensor2);
+	   env.addSensor(IIOSS`sensor3);
+	   env.addSensor(IIOSS`sensor4);
+	   
+	   --server
+	   env.addServer(IIOSS`server);
+	
+		-- controller 1
+										--AddSensor(sensor, PigStyId)
+	   IIOSS`StableController1.AddSensor(IIOSS`sensor1,1);
+	   IIOSS`StableController1.AddSensor(IIOSS`sensor2,2); 
+	   
+	   IIOSS`StableController1.AddActuator(IIOSS`actuator1,1);
+	   IIOSS`StableController1.AddActuator(IIOSS`actuator2,2);
+	     
+		
+		-- controller 2
+							--AddSensor(sensor, PigStyId)
+	   IIOSS`StableController2.AddSensor(IIOSS`sensor3,3);
+	   IIOSS`StableController2.AddSensor(IIOSS`sensor4,4);
+	   
+	   IIOSS`StableController2.AddActuator(IIOSS`actuator3,3);
+	   IIOSS`StableController2.AddActuator(IIOSS`actuator4,4);
+	   
+	   --env.isFinished();
+	   	
+		start(IIOSS`server);
+	
+	 );  
+	   
+
+	public Run: () ==> ()
+	Run () == 
+	(
+	   IIOSSTYPES`DebugPrint("************************************************");
+	   IIOSSTYPES`DebugPrint("** World class started ");
+	   IIOSSTYPES`DebugPrint("************************************************");
+	   start (env);
+	   env.isFinished();
+	   IIOSS`server.isFinished();
+	   env.showResult();
+   	   IIOSSTYPES`DebugPrint("************************************************");
+	   IIOSSTYPES`DebugPrint("** World class ended ");
+	   IIOSSTYPES`DebugPrint("************************************************");
+	)
+
+end World
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[World]
+\end{rtinfo}

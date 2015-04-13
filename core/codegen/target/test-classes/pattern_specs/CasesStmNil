@@ -1,0 +1,16 @@
+class Entry
+
+operations
+
+public static casesNil : ([Entry]) ==> bool
+casesNil (e) ==
+	cases e:
+		nil -> return true,
+		others -> return false
+	end;
+	
+public static Run : () ==> ?
+Run () ==
+	return [casesNil(new Entry()), casesNil(nil)];
+
+end Entry

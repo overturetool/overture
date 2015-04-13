@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:16 CET 2010
+--
+
+class GiraffeIdentifierImpl is subclass of GiraffeIdentifier
+instance variables
+    private iv_name:seq of char;
+
+operations
+    public GiraffeIdentifierImpl: seq of char ==> GiraffeIdentifierImpl
+    GiraffeIdentifierImpl(p_name) ==
+    (
+        iv_name := p_name;
+    );
+
+    public getName: () ==> seq of char
+    getName() == return iv_name;
+
+end GiraffeIdentifierImpl

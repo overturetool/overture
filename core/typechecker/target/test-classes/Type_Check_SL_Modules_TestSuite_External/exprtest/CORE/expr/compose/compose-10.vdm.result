@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="13" line="30" message="Right hand function must have a single parameter" messageType="error" number="3072" resource="compose-10.vdm"/>
+<result/>
+</testResult>

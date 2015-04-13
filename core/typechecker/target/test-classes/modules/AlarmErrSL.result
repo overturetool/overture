@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="parser">
+<message column="27" line="50" message="Expecting '&amp;' after bind list in exists" messageType="error" number="2154" resource="AlarmErrSL.result"/>
+<message column="3" line="42" message="Missing ';' after function definition" messageType="error" number="2079" resource="AlarmErrSL.result"/>
+<message column="27" line="26" message="Missing ';' after type definition" messageType="error" number="2078" resource="AlarmErrSL.result"/>
+</testResult>

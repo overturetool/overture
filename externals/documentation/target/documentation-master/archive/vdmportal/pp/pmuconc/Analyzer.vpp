@@ -1,0 +1,138 @@
+\begin{vdm_al}
+class Analyzer is subclass of GLOBAL
+-- when sending analysis. put timestamp on
+
+types
+
+public AnalysisData  = seq of (nat * nat * nat);
+public Emergency = EventId * EmergencyType * nat; 
+public Tendency = nat;
+
+Buffer = seq of Data; 
+
+values
+
+instance variables
+
+dataBuffer : Buffer := [];
+eventid : [EventId];
+dataType : [DataType];
+batMonitor : [BatteryMonitor] := nil;
+busy : bool := false; -- we never want to be done, do we?
+transmitter : [Transmitter];
+curValue : nat := 0;
+oldValue : nat := 0;
+hasBattery : bool := false;
+
+operations
+
+public Analyzer: DataType ==> Analyzer
+Analyzer(type) ==
+(
+    dataType := type; 
+);
+
+
+public setTransmitter : Transmitter ==> ()
+setTransmitter(tnsmt) ==
+(
+    transmitter := tnsmt;
+);
+
+public setBatteryMonitor : BatteryMonitor ==> ()
+setBatteryMonitor ( monitor ) ==
+(
+    batMonitor := monitor; 
+    hasBattery := true;   
+);
+
+public addData : Data ==> ()
+addData(data) ==
+(
+    Printer`Out("Analyzer received data");
+    dataBuffer := dataBuffer ^ [data];
+    
+    --dataBuffer := dataBuffer ^ [mk_Data(1,100000,3,[mk_(1,2),mk_(2,3)])];
+    if len dataBuffer >0 then Printer`Out("Buffer not empty");
+    busy := true;
+
+);
+
+public isFinished: () ==> ()
+isFinished () == skip;
+    
+
+  --return if TX is finished
+
+done: () ==> ()
+    done() == skip;   
+    
+public sendAnalysis: () ==> ()
+sendAnalysis() ==
+    skip;
+    -- send to TX, which determines transmit and calls handleEvent;
+
+public getDataType: () ==> nat
+getDataType () ==
+    return dataType;
+
+public getData: () ==> Data 
+getData() == 
+
+   -- seperate buffer for processed stuff
+    def mk_Data(evid, cpr, datatype, devicedata) = hd dataBuffer in
+        return mk_Data(evid, cpr, datatype, devicedata);
+        
+
+public analysis: () ==> ()
+analysis() ==
+(
+    Printer`Out("Analyzer: something");
+     --call getdata
+  (dcl curData : Data := hd dataBuffer;
+    def mk_Data(evid, cpr, datatype, devicedata) = curData in
+    (
+        if hasBattery then
+            batMonitor.drain(100);
+        
+        --for all value in set elems devicedata      
+        --(
+        --    def mk_(val, timestamp) = value in
+        --    (
+        --        oldValue := curValue;
+        --        curValue : = val;
+        --        if(curValue - oldValue > 5)
+        --            transmitter.send(evid, HEART_RATE_SPIKE, devicedata, NewWorld`timerRef.GetTime());
+        --    );   
+        --                            
+        --)             
+            
+        Printer`Out("Analyzer: Transmit emergency ! Waaaaaaaaauuuuuuuu Waaaaaaaauuuuu");
+        --NewWorld`env.handleEvent(mk_Data(evid, cpr, datatype, devicedata), NewWorld`timerRef.GetTime());
+        transmitter.transmit(mk_EmergencyData(1, cpr, 1, devicedata));
+        
+        dataBuffer := tl dataBuffer;
+        busy := len dataBuffer > 0;
+    )
+  ) 
+);
+
+
+thread
+    (
+    while true do
+        (
+           analysis();
+        )
+    );
+    
+sync
+    --mutex(addData,getData);
+    mutex(addData, analysis);
+    per analysis => len dataBuffer > 0;
+    per getData => len dataBuffer > 0;
+    per isFinished => not busy;
+        
+end Analyzer
+
+\end{vdm_al}

@@ -1,0 +1,36 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class C {
+    public C() {
+    }
+
+    public Number op() {
+        return Q.pi;
+    }
+
+    public String toString() {
+        return "C{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Q {
+    public static final Number pi = 3.14;
+
+    public Q() {
+    }
+
+    public String toString() {
+        return "Q{" + "pi = " + Utils.toString(pi) + "}";
+    }
+}
+
+##########

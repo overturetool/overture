@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassRtTestCase">
+<result>
+<output object="" resource="extension-16.vpp" value="null"/>
+</result>
+</testResult>

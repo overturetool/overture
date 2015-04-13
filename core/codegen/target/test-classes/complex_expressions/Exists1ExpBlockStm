@@ -1,0 +1,20 @@
+class Entry
+
+values
+
+s = [1,2,3];
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	Test();
+		
+public static Test : () ==> bool 
+Test () ==
+(
+	dcl a : bool := exists1 x in set {1,2,3} & x > 3;
+	return a;
+);
+
+end Entry

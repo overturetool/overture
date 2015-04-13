@@ -1,0 +1,191 @@
+class TimeT is subclass of TestDriver 
+functions
+public tests : () -> seq of TestCase
+tests() == 
+	[ 
+	new TimeT06(), new TimeT05(), new TimeT04(),
+	new TimeT03(), new TimeT02(), new TimeT01()
+	];
+end TimeT
+----------------------------------------------------------
+
+class TimeT01 is subclass of TestCase, CalendarDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	cal = new JapaneseCalendar(),
+		d1 = cal.getDateFrom_yyyy_mm_dd(2003, 7, 30),
+		d3 = cal.getDateFrom_yyyy_mm_dd(2003, 8, 15),
+		t1 = new Time(cal, 2003, 7, 30, 14, 29, 30, 20),
+		t2 = new Time(cal, 2003, 8, 1) ,
+		t3 = new Time(d3)
+	in
+	return
+		t1.getDate().EQ(d1) and 
+		t1.Time2IntProduct(t1.getTime()) = mk_(14, 29, 30, 20) and 
+		mk_(t1.hour(), t1.minute(), t1.second()) = mk_(14, 29, 30) and
+		mk_(t2.Year(), t2.Month(), t2.day()) = mk_(2003, 8, 1) and 
+		t2.getTime() = t2.IntProduct2TimeMillieSeconds(0, 0, 0, 0) and
+		t3.getDate().EQ(d3) and 
+		t3.getTime() = t2.IntProduct2TimeMillieSeconds(0, 0, 0, 0) 
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "Ｔｉｍｅ０１：¥tＴｅｓｔ　ｏｆ　ｃｏｎｓｔｒｕｃｔｏｒ．";
+protected tearDown: () ==> ()
+tearDown() == return;
+end TimeT01
+----------------------------------------------------------
+
+class TimeT02 is subclass of TestCase, CalendarDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	cal = new JapaneseCalendar(),
+		t1 = new Time(cal, 2003, 7, 30, 14, 29, 30, 0),
+		t2 = new Time(cal, 2003, 8, 1) ,
+		t4 = new Time(cal, 2003, 7, 30, 14, 29, 31, 0),
+		t5 = new Time(cal, 2003, 7, 30, 14, 29, 31, 0),
+		t6 = t1
+	in
+	return 
+		t1.LT(t2) and
+		t1.LT(t4) and
+		t1.LE(t2) and
+		t1.LE(t4) and
+		t2.GT(t1) and
+		t4.GT(t1) and
+		t2.GE(t1) and
+		t4.GE(t1) and
+		t4.EQ(t5) and
+		t4.NE(t1) and
+		t4 <> t5 and
+		t1 = t6
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "TimeT02:\tATime comparing.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end TimeT02
+----------------------------------------------------------
+
+class TimeT03 is subclass of TestCase, CalendarDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	cal = new JapaneseCalendar(),
+		t = new Time(cal, 2003, 7, 30, 14, 29, 30, 0),
+		t1 = t.plussecond(20),
+		t2 = t.plussecond(30),
+		t3 = t.plussecond(50),
+		t4 = t.plussecond(90),
+		t5 = t.plussecond(150),
+		t6 = t.plussecond(3600),
+		t7 = t.plusminute(30),
+		t8 = t.plusminute(31),
+		t9 = t.plusminute(40),
+		t10 = t.plusminute(91),
+		t11 = t.plusminute(1440),
+		t12 = t.plus(9, 30, 30, 123),
+		t13 = t.plushour(48),
+		t14 = t.plus(0, 0, 0, 0)
+	in
+	return 
+		t1.minute() = 29 and t1.second() = 50 and
+		t2.minute() = 30 and t2.second() = 0 and
+		t3.minute() = 30 and t3.second() = 20 and
+		t4.minute() = 31 and t4.second() = 0 and
+		t5.hour() = 14 and t5.minute() = 32 and t5.second() = 0 and  
+		t6.hour() = 15 and t6.minute() = 29 and t6.second() = 30 and  
+		t7.hour() = 14 and t7.minute() = 59 and
+		t8.hour() = 15 and t8.minute() = 0 and
+		t9.hour() = 15 and t9.minute() = 9 and
+		t10.hour() = 16 and t10.minute() = 0 and t10.second() = 30 and
+		t11.Year() = 2003 and t11.Month() = 7 and t11.day() = 31 and t11.hour() = 14 and t11.minute() = 29 and t11.second() = 30 and
+		t12.Year() = 2003 and t12.Month() = 7 and t12.day() = 31 and t12.hour() = 0 and t12.minute() = 0 and t12.second() = 0 and t12.milliSecond() = 123 and
+		t13.Year() = 2003 and t13.Month() = 8 and t13.day() = 1 and t13.hour() = 14 and t13.minute() = 29 and t13.second() = 30 and t13.milliSecond() = 0 and
+		t13.asString() = "20030801142930000" and
+		t13.print() = "Year=2003, Month=08, Day=01, 14Hour, 29Minute, 30Second, 000MilliSecond" and
+		t14.asString() = "20030730142930000"
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "TimeT03:\tTime ading.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end TimeT03
+----------------------------------------------------------
+
+class TimeT04 is subclass of TestCase, CalendarDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	cal = new JapaneseCalendar(),
+		t = new Time(cal, 2003, 7, 30, 14, 29, 30, 0),
+		t1 = t.minus(14, 30, 30, 0) ,
+		t2 = t.minus(38, 30, 30, 0) ,
+		t3 = t.plus(-38, -30, -30, 0),
+		t4 = t.plus(-0, -0, -0, -0)
+	in
+	return 
+		t1.Time2IntProduct(t1.getTime())  = mk_(23,59,0,0) and
+		t1.getDate().date2Str() = "20030729" and
+		t2.Time2IntProduct(t2.getTime())  = mk_(23,59,0,0) and
+		t2.getDate().date2Str() = "20030728" and
+		t3.Time2IntProduct(t3.getTime())  = mk_(23,59,0,0) and
+		t3.getDate().date2Str() = "20030728" and
+		t4.print() = "Year=2003, Month=07, Day=30, 14Hour, 29Minute, 30Second, 000MilliSecond"
+		
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "TimeT04:\tATime subtracting.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end TimeT04
+----------------------------------------------------------
+
+class TimeT05 is subclass of TestCase, CalendarDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	cal = new JapaneseCalendar(),
+		t1 = new Time(cal, 2003, 7, 30, 14, 29, 30, 0),
+		t2 = new Time(cal, 2003, 7, 30, 14, 29, 30, 0),
+		t3 = new Time(cal, 2003, 7, 30, 14, 29, 30, 0),
+		t4 = new Time(cal, 2003, 7, 30, 14, 29, 30, 0)
+	in
+	(
+	t1.setTimeFromNat(15);
+	t2.setMinuteFromNat(19);
+	t3.setSecond(47);
+	t4.setMilliSecond(789);
+	return 
+		t1.Time2IntProduct(t1.getTime())  = mk_(15, 29, 30, 0) and
+		t2.Time2IntProduct(t2.getTime())  = mk_(14, 19, 30, 0) and
+		t3.Time2IntProduct(t3.getTime())  = mk_(14, 29, 47, 0) and
+		t4.Time2IntProduct(t4.getTime())  = mk_(14, 29, 30, 789) and
+		t4.getDate().date2Str() = "20030730" 
+	)	
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "TimeT05:\tSet instance variables.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end TimeT05
+----------------------------------------------------------
+
+class TimeT06 is subclass of TestCase, CalendarDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	cal = new SBCalendar()
+	in
+	(
+	return 
+		new Time(cal).EQ(new Time(cal, 2001, 3, 1, 10, 11, 23, 456)) and
+		new Time(homedir ^ "/temp/BaseDay.txt", homedir ^ "/temp/Now2.txt", cal).EQ(new Time(cal, 2003, 10, 24, 12, 34, 56, 789))
+	)	
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "TimeT06:\tTest currentDateTime from file.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end TimeT06

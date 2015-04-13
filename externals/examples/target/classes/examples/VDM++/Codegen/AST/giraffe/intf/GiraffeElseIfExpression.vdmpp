@@ -1,0 +1,14 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Thu Mar 11 11:27:03 CET 2010
+--
+
+class GiraffeElseIfExpression is subclass of GiraffeNode
+operations
+    public getTest: () ==> GiraffeExpression
+    getTest() == is subclass responsibility;
+
+    public getThn: () ==> GiraffeExpression
+    getThn() == is subclass responsibility;
+
+end GiraffeElseIfExpression

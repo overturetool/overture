@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="44" line="23" message="Expecting field number after .#" messageType="error" number="2031" resource="tupleselectexpr-07.vdm"/>
+<result/>
+</testResult>

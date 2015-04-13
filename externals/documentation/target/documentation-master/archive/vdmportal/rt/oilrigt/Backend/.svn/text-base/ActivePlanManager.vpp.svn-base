@@ -1,0 +1,142 @@
+
+\section{ActivePlanManager class}
+\begin{vdm_al}
+
+class ActivePlanManager is subclass of Strategy
+
+
+instance variables
+
+private activeTokens : inmap TokenDevice to TransportPlan := {|->};
+inv forall x,y in set dom activeTokens &
+ x = y =>  activeTokens(x) = activeTokens(y);
+--Ensure only uniqu TokenDevice reside in the map.
+--Tests if 2 elements from domain is equal then (implication) they point
+--to the same entity. 
+
+private busy : bool := false;
+
+private filler : Types`String;
+
+private CR: TPC; 
+private io : IO := new IO();
+
+private tokenDevices : set of TokenDevice;
+
+operations
+
+public setCR : TPC ==> ()
+setCR(cr) == CR := cr;
+
+public ActivePlanManager : ()  ==> ActivePlanManager
+  ActivePlanManager() == (
+	skip;
+  
+  );
+  
+public initAPM : () ==> ()
+initAPM() == ( 
+  	def mk_ (-,input) = io.freadval[Types`String]("filler.txt") in
+   filler := input;
+);
+
+public getFiller :() ==> Types`String
+getFiller() == (
+initAPM();
+return filler;
+);
+
+public isFinished : () ==> ()
+isFinished () == skip;
+
+private addTransportPlan : TransportPlan * TokenDevice ==> ()
+  addTransportPlan(plan,tokenDevice) ==(	
+   activeTokens := activeTokens ++ {tokenDevice|-> plan};	
+	);	
+
+private removeTransportPlan : TransportPlan * TokenDevice ==> ()
+  removeTransportPlan(plan,tokenDevice) ==(
+  activeTokens := {tokenDevice} <-: activeTokens;  
+  --Restrict map to not contain a mapplet containing tokenDevice
+ );
+
+public getPlans : () ==> set of TransportPlan
+  getPlans() == return rng activeTokens;
+  
+
+async public inactiveSection : nat ==> ()
+  inactiveSection(id_route) ==
+  (
+		RTLog`RTWrite("APM Inactive Section",time);
+		for all t in set rng activeTokens do
+		(
+		cycles(13720000)
+		(
+
+			if t.containsSection(id_route) then
+			(
+				let p = inverse activeTokens in (
+				RTLog`RTWrite("APM inactive section requesting plan",time);
+				CR.calcTransportPlan(mk_MessageTypes`REQUESTPLAN(t.getPlanAsNaviInput(),p(t)));
+				);
+			)
+		)
+ 	 	);
+ 	 	RTLog`RTWrite("APM Inacive Done",time);
+	);
+
+public returnTransportPlan :  MessageTypes`RETURNPLAN ==> ()
+returnTransportPlan(msg) ==
+(	
+	RTLog`RTWrite("APM Return Plan",time);
+	cycles(43960000)
+	(
+	let mk_MessageTypes`RETURNPLAN(dto, tok) = msg in
+	(		
+		let plan = new TransportPlan(dto) in (
+			if tok in set dom activeTokens then (
+				activeTokens(tok).assignNewPlan(dto);
+				CRSystem`sms.send(tok,mk_SMSGateway`SMSMessage(<setInactive>,[plan]),time);
+				tok.notifyPassenger(activeTokens(tok),filler);			
+			)
+			else(
+				addTransportPlan(plan, tok);
+				CRSystem`sms.send(tok,mk_SMSGateway`SMSMessage(<setInactive>,[plan]),time);
+				Station`getStation(plan.getNextSection().departureLocation).addPassenger(plan);
+			);
+		);
+	);
+	);
+	RTLog`RTWrite("APM Return Plan Done",time);
+);
+
+public requestTransportPlan : MessageTypes`REQUESTPLAN ==> ()
+requestTransportPlan(msg) ==
+(
+	RTLog`RTWrite("APM Request Plan",time);
+	cycles(2800000)
+	(
+		CR.calcTransportPlan(msg);
+	);
+);							
+
+
+
+--public requestTransportPlan : TPC`NavigationInput * TokenDevice ==> TransportPlan
+--requestTransportPlan(navIn, tok) == (
+--	 let dto = q_CR_out.calculateTransportPlan(navIn,tok) in (
+--		let plan = new TransportPlan(dto.routeList, dto.choice, dto.id_token) in (
+--		addTransportPlan(plan,tok);
+--		return plan;
+--		);
+--	)
+--
+--);
+
+sync
+--mutex(returnTransportPlan);
+--mutex(inactiveSection)
+
+end ActivePlanManager
+
+\end{vdm_al}

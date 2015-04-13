@@ -1,0 +1,43 @@
+-- ===============================================================================================================
+-- AllocatorTwoTray in tray allocation for a sortation system
+-- By José Antonio Esparza and Kim Bjerge - spring 2010
+-- (strategy pattern)
+-- ===============================================================================================================
+
+class AllocatorTwoTray is subclass of AllocatorStrategy
+
+	operations
+		
+		-- AllocatorTwoTray constructor
+		public AllocatorTwoTray: TrayAllocator==> AllocatorTwoTray
+		AllocatorTwoTray(ta) ==
+		(
+			trayAllocator := ta;
+		);
+	
+		-- Allocates trays if empty at induction offset and offset + 1
+		public AllocateTray: nat ==> set of Tray
+		AllocateTray (icid) ==
+			let posTray = InductionOffset(trayAllocator.trayAtCardReader, icid),
+			    posTrayNext = if (posTray - 1) = 0 then TrayAllocator`NumOfTrays else posTray - 1
+			in 
+				if trayAllocator.sorterRing(posTray).IsTrayEmpty() and  -- Tray at induction
+				   trayAllocator.sorterRing(posTrayNext).IsTrayEmpty()	-- Tray at induction-1
+				then return {trayAllocator.sorterRing(posTray), trayAllocator.sorterRing(posTrayNext)} -- Return the set of 2 empty trays
+				else return {}
+		pre icid in set inds trayAllocator.inductionGroup;
+
+        -- Returns true if higher priority inductions in induction group
+		public InductionsWithHigherPriority: InductionController ==> bool
+		InductionsWithHigherPriority(ic) ==
+			return exists i in set elems trayAllocator.inductionGroup(1,...,len  trayAllocator.inductionGroup) 
+					        & i.GetId() <> ic.GetId() 
+					        and i.GetPriority() > ic.GetPriority()
+            -- Waiting with items of same size (two tray items)
+			--				and i.GetSizeOfWaitingItem() = ic.GetSizeOfWaitingItem()	
+			--  Looking at induction infront this ic causes starvation of the first induction in group
+			--  return exists i in set elems inductionGroup(ic.GetId()+1,...,len inductionGroup) & i.GetPriority() > ic.GetPriority()
+		pre ic in set elems trayAllocator.inductionGroup;
+
+
+end AllocatorTwoTray

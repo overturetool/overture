@@ -1,0 +1,43 @@
+--The TestSuite Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		14/5 - 2008
+-- Updated:
+-- Description: 	TestSuite class
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestSuite is subclass of Test
+
+--
+-- instance variables
+--
+instance variables
+
+tests : seq of Test := [];
+
+--
+-- Operations definition section
+--
+operations
+
+public Run: () ==> ()
+	Run () ==
+		(dcl ntr : TestResult := new TestResult();
+		Run(ntr);
+		ntr.Show();
+		);
+
+public Run: TestResult ==> ()
+	Run(result) ==
+		for test in tests do
+			test.Run(result);
+
+public AddTest: Test ==> ()
+	AddTest(test) ==
+		tests := tests ^ [test];
+
+end TestSuite

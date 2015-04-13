@@ -1,0 +1,49 @@
+-----------------------------------------------
+-- Author:	Kim Christensen
+-- Created:	15/04-2009
+-- Updated:
+-- Description: Person class for ORAMS concurrent model
+-----------------------------------------------
+
+class Person is subclass of GLOBAL
+
+
+instance variables
+	area : [Aid] := nil;
+	boat : [Bid] := nil;
+	id : Pid
+
+types
+
+
+operations
+    public Person : Pid ==> Person
+        Person(pid) == 
+            id := pid ;
+
+	public getArea : () ==> [Aid]
+		getArea() == 
+			return area;
+			
+	public getBoat : () ==> [Bid]
+		getBoat() == 
+			return boat;
+			
+
+	public changeArea : Aid ==> ()
+		changeArea(a) ==
+			area := a;
+			
+	public changeBoat : Bid ==> ()
+		changeBoat(b) == 
+			boat := b;
+		
+	public getId : () ==> Pid
+		getId() == 
+			return id;	
+	
+functions
+
+
+values
+end Person

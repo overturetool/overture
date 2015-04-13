@@ -1,0 +1,50 @@
+class Heart
+
+types
+
+public Trace = seq of [Event];
+
+public Event = <A> | <V>;
+	values
+
+instance variables
+
+aperiod : nat := 15;
+vdelay  : nat := 10;
+
+operations
+
+public Heart: nat * nat ==> Heart
+Heart(aperi,vdel) ==
+  (aperiod := aperi;
+   vdelay := vdel);
+    
+public IdealHeart: () ==> Trace
+IdealHeart() ==
+  return [ if i mod aperiod = 1
+           then <A>
+           elseif i mod aperiod = vdelay + 1
+           then <V>
+           else nil
+         | i in set {1,...,100}];
+     
+public FaultyHeart() tr : Trace
+ext rd aperiod : nat
+post len tr = 100 and
+     Periodic(tr,<A>,aperiod) and 
+     not Periodic(tr,<V>,aperiod); 
+         
+functions
+
+public Periodic: Trace * Event * nat1 -> bool
+Periodic(tr,e,p) ==
+  forall t in set inds tr &
+     (tr(t) = e) =>
+     (t + p <= len tr =>
+     ((tr(t+p) = e and
+       forall i in set {t+1, ..., t+p-1} & tr(i) <> e))
+      and
+      (t + p > len tr =>
+       forall i in set {t+1, ..., len tr} & tr(i) <> e));
+
+end Heart

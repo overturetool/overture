@@ -2728,7 +2728,6 @@ public class DBGPReader
 			File data = new File(coverage.getPath() + File.separator
 					+ f.getName() + ".cov");
 			PrintWriter pw = new PrintWriter(data);
-			source.writeCoverage(pw);
 			pw.close();
 		}
 	}

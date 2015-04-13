@@ -1,0 +1,9 @@
+[mk_Types`VechicleRun(1,0),  
+mk_Types`VechicleRun(2,0), 
+mk_Types`VechicleRun(3,0), 
+mk_Types`VechicleRun(4,0), 
+mk_Types`VehicleUpdateDirection(2,<WEST>, 20000),
+mk_Types`VehicleUpdateDirection(3,<EAST>, 20000),
+mk_Types`VechicleRun(5,30000)
+]
+

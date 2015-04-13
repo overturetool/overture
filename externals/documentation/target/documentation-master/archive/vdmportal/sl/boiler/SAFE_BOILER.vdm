@@ -1,0 +1,450 @@
+\section{A safer boiler}
+%\label{CONTROLLED}
+
+In order to express that the transitions from $Running$ or $Init$ to
+$Explosion$ may not take place at any time, a notion of "safe time" is 
+introduced. It expresses the remaining amount of time before the explosion may
+take place. Then, this notion is used to constrain the behaviour of the boiler,
+resulting in a safer boiler that has less freedom to explode.
+
+\subsection{Safe periods of time}\label{SAFE_TIME}
+
+Based on the statement of the physical laws, a notion of ``safe period'' is
+introduced. It is an estimate on the lower bound on the remaining time before
+the explosion for given initial conditions.
+
+
+An $evolution$ function is given as parameter to the module. It is a boolean
+function which specifies the acceptable  evolutions of the boiler variables
+(except $mode$) for
+a given duration.
+
+\begin{vdm_al}
+module SAFE_TIME
+
+parameters
+   functions
+evolution  :
+         BOILER_TYPES`water_level*
+         BOILER_TYPES`steam_outcome*
+         BOILER_TYPES`pump_to_state_map*
+         BOILER_TYPES`valve_state*
+         BOILER_TYPES`duration*
+         BOILER_TYPES`water_level *
+         BOILER_TYPES`steam_outcome *
+         BOILER_TYPES`pump_to_state_map *
+         BOILER_TYPES`valve_state +> bool
+
+imports from BOILER_TYPES all
+
+exports all
+
+definitions
+\end{vdm_al}
+
+First, a boolean funtion, $unsafe-time$ is defined which estimates whether it
+is safe to let the boiler evolve during $dt$ from initial values of the water
+level, the pump states, the steam outcome and the state of the valve. This
+function corresponds to a worst case analysis. It returns $true$ if either
+$max-water$ or $min-water$ are outside the allowed limits $M1$ and $M2$ after
+$dt$.
+
+\begin{vdm_al}
+
+functions
+ unsafe_time :         BOILER_TYPES`water_level  *
+                BOILER_TYPES`pump_to_state_map *
+                BOILER_TYPES`steam_outcome  *
+                BOILER_TYPES`valve_state   *
+                BOILER_TYPES`duration 
+                +> bool 
+ unsafe_time(q,p,s,v,dt) == 
+exists
+        qi : BOILER_TYPES`water_level ,
+        si : BOILER_TYPES`steam_outcome ,
+        pi : BOILER_TYPES`pump_to_state_map,
+        vi : BOILER_TYPES`valve_state
+& evolution(q, s, p, v, dt, qi, si, pi, vi)
+=> qi >= BOILER_TYPES`M2 or qi <= BOILER_TYPES`M1
+;
+
+\end{vdm_al}
+
+Then $first-unsafe-time$ computes the lower limit on $dt$. It returns a $dt$
+that is unsafe and such that any $t$ lower than $dt$ is safe. The expression of
+this function takes benefit of the implicit style of specification. 
+
+\begin{vdm_al}
+ first_unsafe_time (        q : BOILER_TYPES`water_level,
+                p : BOILER_TYPES`pump_to_state_map,
+                s : BOILER_TYPES`steam_outcome,
+                v : BOILER_TYPES`valve_state)
+                dt : BOILER_TYPES`duration
+ post         (unsafe_time(q,p,s,v,dt) or dt = Nearly_infinite_time)
+         and forall t : BOILER_TYPES`duration & t < dt => not unsafe_time(q,p,s,v,dt)
+\end{vdm_al}
+The specification of $first-unsafe-time$ involves a proof that the function is
+total, i.e. that an unsafe time may be found for any configuration of the
+initial conditions and that it is the lowest. This leads to two reflexions.
+
+\begin{itemize}
+\item It is at purpose that the function computes the first unsafe time and
+not the latest safe time. Since $dt$ is a real, it is necessary to prove that
+the set of unsafe times is a closed interval, i.e. that its lower bound is part
+of it. This is the case here, since $dt$ corresponds to the first of the
+intersections of $max-water$ and $min-water$ with either $M2$ or $M1$.
+\item It is also necessary to prove that such intersections exist, which is
+not guaranteed for any possible configuration of the constants. For example,
+the nominal steam outcome and pump throughput are null, the level will remain
+constant  and the first unsafe time corresponds to some infinite number. 
+Therefore, a constant $Nearly-infinite-time$ is added which defines a very long
+time. 
+\end{itemize}
+
+The definition of $Nearly-infinite-time$ is given here with respect to other
+physical time constants of the system. Here, the constant is one thousand times
+greater than the time needed to empty the boiler through the steam outcome.
+\begin{vdm_al}
+
+values
+   To_empty_boiler =  BOILER_TYPES`C / BOILER_TYPES`W ;
+   Nearly_infinite_time : BOILER_TYPES`seconds
+                                =
+10000 *  To_empty_boiler
+
+end SAFE_TIME
+\end{vdm_al}
+
+\subsection {Refinement of the boiler model}\label{SAFER_BOILER}
+
+Based on this notion of safe time, it is now possible to propose a refinement
+of the $PHYSICAL-BOILER$ whose behaviour is more constrained, as shown in
+figure \ref{phys_mode3_picture}. In this picture two of the dangerous
+transitions may no longer take place arbitrarily. They are only enabled after
+the ``safe time'' has elapsed. This new modelisation of the boiler corresponds a safer
+boiler. 
+
+
+\begin{figure}[htb]
+\hspace{4cm}{\epsfbox{../pictures/phys_mode3_picture.eps}}
+\caption{A safer evolution of the mode}\label{phys_mode3_picture}
+\end{figure}
+
+\vspace{0.5cm}
+
+\begin{vdm_al}
+
+
+module SAFER_BOILER
+imports 	from BOILER_TYPES all,
+		from REACHABLE_STATES 
+functions reachable_pump_states renamed reachable_pump_states;
+reachable_valve_states renamed reachable_valve_states
+
+instantiations
+
+NON_CONTROLLED as PHYSICAL_LAWS
+   (reachable_pump_states -> reachable_pump_states,
+    reachable_valve_states -> reachable_valve_states) all ,
+
+SAFE_TIME as SAFE_TIME
+   (evolution -> NON_CONTROLLED`evolution) all
+
+
+exports all
+
+definitions
+
+\end{vdm_al}
+
+The state of this abstract machine is equal to the state of $PHYSICAL-BOILER$.
+
+\begin{vdm_al}
+state BOILER of
+        qe : BOILER_TYPES`water_level
+        se : BOILER_TYPES`steam_outcome
+        pe : BOILER_TYPES`pump_to_state_map
+        ve : BOILER_TYPES`valve_state
+        he : BOILER_TYPES`watts
+        te : BOILER_TYPES`seconds
+        mode : BOILER_TYPES`boiler_mode
+inv mk_BOILER(qe, se, pe, ve, he, te, mode) ==
+mode=<Running> or mode=<Init>  
+=> ( qe > BOILER_TYPES`M1 and qe < BOILER_TYPES`M2)
+
+end
+
+functions 
+\end{vdm_al}
+
+\subsubsection{Mode evolution}
+
+The evolution of the boiler mode is refined, i.e.\ less freedom is allowed. 
+Here,
+$Explosion$ is reachable only if the water level in the boiler threatens to
+reach one of the limit values {\it M1} or {\it M2}.
+
+
+\begin{vdm_al}
+
+reachable_modes : BOILER_TYPES`boiler_mode  *
+                BOILER_TYPES`duration *
+                BOILER_TYPES`water_level *
+                BOILER_TYPES`steam_outcome *
+                BOILER_TYPES`pump_to_state_map *
+                BOILER_TYPES`valve_state
+                +> set of BOILER_TYPES`boiler_mode
+reachable_modes(m, dt, qe, se, pe, ve) ==
+let explosion = if dt < SAFE_TIME`first_unsafe_time(qe, pe,se,ve) then {}
+else { <Explosion>}
+in
+ cases m :
+        <Init> -> {<Init>, <Running>, <Stopped>} union explosion,
+        <Running> -> {<Running>, <Stopped>} union explosion,
+        <Stopped> -> {<Stopped>, <Explosion>},
+        <Explosion> -> {<Explosion>}
+  end  ;
+
+
+\end{vdm_al}
+This function is a refinement of  $PHYSICAL-BOILER`reachable-modes$: 
+its result is always included in the corresponding result of the more abstract
+function. The refinement restricts thus the possible behaviours of the abstract
+function. It must be noted that this function is not transitive: $Stopped$ is a
+quite dangerous mode because explosion may take place at any time. As a
+consequence of Fig. \ref{phys_mode3_picture}, if the boiler is safe and in mode $Running$, and if it switches to
+emergency stop, it ``forgets'' about its safe status and may explode at any
+time. The $reachable-mode$ function takes the hypothesis that if the boiler is
+safe for $dt$ it remains safe even if it switches to emergency stop.
+
+
+
+As in module $PHYSICAL-BOILER$, $boiler-evolution$ combines this new
+$reachable-modes$ function with the $evolution$ function. Since reachable modes
+is a refinement of $PHYSICAL-BOILER`reachable-modes$, this evolution function
+whose text is identical to the one of $PHYSICAL-BOILER$ is a refinement of
+$PHYSICAL-BOILER`boiler-evolution$.
+
+\begin{vdm_al}
+boiler_evolution   :
+          BOILER_TYPES`water_level*
+         BOILER_TYPES`steam_outcome*
+         BOILER_TYPES`pump_to_state_map*
+         BOILER_TYPES`valve_state*
+	BOILER_TYPES`boiler_mode*
+         BOILER_TYPES`duration*
+         BOILER_TYPES`water_level *
+         BOILER_TYPES`steam_outcome *
+        BOILER_TYPES`pump_to_state_map *
+        BOILER_TYPES`valve_state*
+        BOILER_TYPES`boiler_mode  +> bool
+
+boiler_evolution (qe , se,  pe,  ve,  mode, dt,  qn,  sn,  pn,  vn, mn) ==
+ mn in set reachable_modes(mode, dt, qe, se, pe, ve)
+        and ((mn = <Init> or mn = <Running>)
+        => NON_CONTROLLED`evolution(qe, se, pe , ve,dt, qn, sn, pn, vn))
+
+\end{vdm_al}
+
+\subsubsection{ Safer Advance\_time }
+
+$Advance-time$ is identical to the previous version but now refers to this new
+version of $reachable-modes$, it it also a refinement of $PHYSICAL-BOILER`Advance-time$.
+
+\begin{vdm_al}
+
+operations
+
+Advance_time ()
+ext wr  qe : BOILER_TYPES`water_level
+   wr  se : BOILER_TYPES`steam_outcome
+   wr  pe : BOILER_TYPES`pump_to_state_map
+   wr  ve : BOILER_TYPES`valve_state
+   wr  he : BOILER_TYPES`watts
+   wr  te : BOILER_TYPES`seconds
+   wr  mode : BOILER_TYPES`boiler_mode
+pre true
+post    let dt : BOILER_TYPES`duration in
+	te=te~+dt and 
+boiler_evolution(qe~, se~, pe~ , ve~,   mode~, dt, qe, se, pe, ve, mode)
+
+end SAFER_BOILER
+
+\end{vdm_al}
+
+
+
+\section {A safe boiler}\label{SAFE_BOILER}
+
+It is now possible to specify the expected behaviour of a controlled boiler,
+i.e.\ a ``safe'' boiler. A safe boiler is a refinement of the previous model
+which never reaches $Explosion$ while in $Init$ or $Running$ mode. Figure
+\ref{phys_mode4_picture} shows such a behaviour which is a refinement of
+Fig. \ref{phys_mode3_picture} where two dangerous transitions have
+disappeared. 
+
+You may notice that this picture still allows the explosion of the boiler, but
+it may only take place in state $Stopped$, under the responsability of the
+engineers who run the boiler manually.
+
+$SAFE-BOILER$ corresponds to the same state variables and physical laws as
+$SAFER-BOILER$, but the operation $Advance-time$ will be refined into a pair
+of operations: a safe $Advance-time-Init-Running$ combined with an unsafe $Advance-time-other-modes$.
+
+\begin{figure}[htb]
+\hspace{4cm}{\epsfbox{../pictures/phys_mode4_picture.eps}}
+\caption{A safe boiler}\label{phys_mode4_picture}
+\end{figure}
+
+\begin{vdm_al}
+module SAFE_BOILER
+imports 	from BOILER_TYPES all,
+		from REACHABLE_STATES 
+functions reachable_pump_states renamed reachable_pump_states;
+reachable_valve_states renamed reachable_valve_states
+,
+		from SAFER_BOILER functions reachable_modes ; boiler_evolution
+
+instantiations
+
+NON_CONTROLLED as PHYSICAL_LAWS
+   (reachable_pump_states ->  reachable_pump_states,
+    reachable_valve_states -> reachable_valve_states) all ,
+
+SAFE_TIME as SAFE_TIME
+   (evolution -> NON_CONTROLLED`evolution) all
+
+
+exports all
+
+definitions
+\end{vdm_al}
+This module imports the same modules as $SAFER-BOILER$. It also imports
+$reachable-modes$ and $boiler-evolution$ from $SAFE-BOILER$. Care must be taken
+to perform the same instantiations of $PHYSICAL-LAWS$ and $SAFE-TIME$ than in
+$SAFER-BOILER$; otherwise, $boiler-evolution$ could be inconsistent with
+$first-unsafe-time$, i.e.\ it would not share its physical model.
+
+The state variables are the  ones of $SAFER-BOILER$.
+\begin{vdm_al}
+state BOILER of
+        qe : BOILER_TYPES`water_level
+        se : BOILER_TYPES`steam_outcome
+        pe : BOILER_TYPES`pump_to_state_map
+        ve : BOILER_TYPES`valve_state
+        he : BOILER_TYPES`watts
+        te : BOILER_TYPES`seconds
+        mode : BOILER_TYPES`boiler_mode
+inv mk_BOILER(qe, se, pe, ve, he, te, mode) ==
+mode=<Running> or mode=<Init> 
+=> ( qe > BOILER_TYPES`M1 and qe < BOILER_TYPES`M2)
+
+end
+\end{vdm_al}
+
+\subsubsection{ Safe Advance\_time }
+
+The implementation of a safe version of advance time is based on two
+sub-operations:
+
+\begin{itemize}
+\item $Advance-time-Init-Running$ causes the evolution of the time while in
+modes $Init$ or $Running$. But this operation does not allow the time to go
+beyond the first unsafe time. Hence, it never ends in $Explosion$ mode.
+\item  $Advance-time-other-modes$ causes the evolution of the time in modes
+$Stopped$ and $Explosion$. It corresponds to the previous version of
+$Advance-time$ where the evolution of the time variable is no longer
+constrained.
+\end{itemize}
+
+
+
+\begin{vdm_al}
+
+operations
+
+Advance_time_Init_Running ()
+ext wr  qe : BOILER_TYPES`water_level
+   wr  se : BOILER_TYPES`steam_outcome
+   wr  pe : BOILER_TYPES`pump_to_state_map
+   wr  ve : BOILER_TYPES`valve_state
+   wr  he : BOILER_TYPES`watts
+   wr  te : BOILER_TYPES`seconds
+   wr  mode : BOILER_TYPES`boiler_mode
+
+pre  mode=<Init> or mode=<Running>
+post
+   let dt : BOILER_TYPES`duration be st 
+   dt < SAFE_TIME`first_unsafe_time(qe, pe, se, ve)
+   in
+   te = te~ + dt and 
+
+SAFER_BOILER`boiler_evolution(qe~, se~, pe~ , ve~,   mode~, dt, qe, se, pe, ve, mode)
+;
+
+Advance_time_other_modes ()
+ext wr  qe : BOILER_TYPES`water_level
+   wr  se : BOILER_TYPES`steam_outcome
+   wr  pe : BOILER_TYPES`pump_to_state_map
+   wr  ve : BOILER_TYPES`valve_state
+   wr  he : BOILER_TYPES`watts
+   wr  te : BOILER_TYPES`seconds
+   wr  mode : BOILER_TYPES`boiler_mode
+
+pre  mode <> <Init> and  mode <> <Running>
+post    let dt : BOILER_TYPES`duration in
+	te=te~+dt and 
+SAFER_BOILER`boiler_evolution(qe~, se~, pe~ , ve~,   mode~, dt, qe, se, pe, ve, mode)
+
+;
+
+ Advance_time : () ==> ()
+ 
+ Advance_time() ==
+ cases mode :
+    <Running>, <Init> -> Advance_time_Init_Running() ,
+    <Explosion>, <Stopped> -> Advance_time_other_modes()
+ end
+ 
+ pre   true
+
+end SAFE_BOILER
+
+\end{vdm_al}
+
+\vspace{0.5cm}
+
+Now two results can be proved :
+\begin{itemize}
+\item The $Explosion$ mode may only be reached after mode $Stopped$ has
+been visited. While in mode $Running$ or $Init$, if the safe time is zero, then the only
+possibilities to evolve safely are to either stop the time (which is quite
+difficult to implement) or to switch to $Stopped$ mode.
+\item $SAFE-BOILER$ is a refinement of $SAFER-BOILER$. It must be noted that
+the main characteristic of this refinement is that, in $Init$ and $Running$,
+$dt$ is no longer arbitrary but must be safe.
+\end{itemize}
+
+An interesting property of the safe boiler is that its operation may go on
+forever. It is like driving a car in the fog: at a given instant, you see that
+you can drive safely for 50 meters, but after you have driven these 50 meters,
+you see that you may proceed for 50 further meters. The safe boiler is exactly
+like that: you know that the boiler may operate safely during $dt$, but after
+$dt$ the state of the boiler may allow a further operation for a new period of
+time. 
+
+
+
+\vspace{0.5cm}
+
+In summary, this first part of the specification has introduced the physical
+and logical laws that rule the steam boiler. It has then modeled the boiler as
+a state machine. Finally, a refinement of the behaviour of the boiler has been
+selected because it corresponds to a safe boiler.
+
+\vspace{0.5cm}
+
+Now the aim is to specify an implementation of this safe boiler. In the next
+sections, the remaining 
+physical components, i.e.\ the captors and actuators, will be modelled.
+Then  a controller will be specified to achieve a safe boiler.

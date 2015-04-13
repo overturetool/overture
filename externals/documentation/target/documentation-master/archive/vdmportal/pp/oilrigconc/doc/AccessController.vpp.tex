@@ -1,0 +1,171 @@
+\kClass $AccessController$ \kISO $GLOBAL$
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}
+\assdef{eventQueue}{\seqof*{event}}[{\seq{}}]
+\end{insvar}
+\begin{insvar}
+\assdef{busy}{\Bool }[{\True }]
+\end{insvar}
+\par
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{AccessController}%
+\signature{() \Oto AccessController}
+\parms{}
+\annlab[o]{AccessController`AccessController}
+\return{\mbox{}};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{addEvent}%
+\signature{event \Oto ()}
+\parms{evt}
+\annlab[o]{AccessController`addEvent}
+\ass{eventQueue}{eventQueue \Sconc \seq{evt}};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{isFinished}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{AccessController`isFinished}
+\Skip ;
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{step}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{AccessController`step}
+\begin{blockstmt}
+\If  \Len eventQueue > 0
+\Then \\
+\begin{while}{ \Len eventQueue > 0}
+\begin{blockstmt}
+\begin{defstmt}
+\eqdef{\reccons{\kw{mk-}}{type,id1,id2,intend,-}}{ \Hd eventQueue}
+\end{defstmt} \\
+\begin{blockstmt}
+\begin{Cases}{type}
+\alt{\const{removeBoat}}{\call{AttemptRemoveLifeboat}{id1}}
+\alt{\const{movePerson}}{\call{movePerson}{id1,id2,intend}}
+\end{Cases} ; \\
+\ass{eventQueue}{ \Tl eventQueue}
+\end{blockstmt}
+\end{blockstmt}
+\end{while}
+\Fi
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{movePerson}%
+\signature{Pid \X Aid \X Intend \Oto ()}
+\parms{person,area,intend}
+\annlab[o]{AccessController`movePerson}
+\begin{blockstmt}
+\begin{letstmt}
+\patdef{success}{\fnapply{\fnapply{ORAMS`areas}{area}.enterPerson}{person,intend}}
+\end{letstmt} \\
+World`env.\call{addOutline}{\reccons{\kw{mk\textunderscore}}{\fnapply{World`timer.GetTime}{}, \\
+\Dquote Person\hspace{0.5em}move\hspace{0.5em} \Dquote , \\
+person, \\
+area, \\
+intend, \\
+success, \\
+\Quote {\backslash}n \Quote }}
+\end{blockstmt}
+\begin{precond}
+person \In  \Dom ORAMS`persons
+\end{precond};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{AttemptRemoveLifeboat}%
+\signature{Bid \Oto ()}
+\parms{boat}
+\annlab[o]{AccessController`AttemptRemoveLifeboat}
+\begin{blockstmt}
+\If \fnapply{isRemovable}{boat}
+\Then \\
+\begin{blockstmt}
+\call{removeLifeboat}{boat} ; \\
+World`env.\call{addOutline}{\reccons{\kw{mk\textunderscore}}{\fnapply{World`timer.GetTime}{}, \\
+\Dquote Lifeboat\hspace{0.5em}disable\hspace{0.5em} \Dquote , \\
+boat, \\
+\True , \\
+\Quote {\backslash}n \Quote }}
+\end{blockstmt}
+\Else \\
+World`env.\call{addOutline}{\reccons{\kw{mk\textunderscore}}{\fnapply{World`timer.GetTime}{}, \\
+\Dquote Lifeboat\hspace{0.5em}disable\hspace{0.5em} \Dquote , \\
+boat, \\
+\False , \\
+\Quote {\backslash}n \Quote }}
+\Fi
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{removeLifeboat}%
+\signature{Bid \Oto ()}
+\parms{boat}
+\annlab[o]{AccessController`removeLifeboat}
+\begin{blockstmt}
+\fnapply{ORAMS`Lifeboats}{boat}.\call{disable}{} ; \\
+\call{redistribute}{boat} ; \\
+\begin{setfor}{a}{\fnapply{\fnapply{ORAMS`Lifeboats}{boat}.getAreas}{}}
+\fnapply{ORAMS`areas}{a}.\call{removeBoat}{boat}
+\end{setfor}
+\end{blockstmt}
+\begin{precond}
+\fnapply{isRemovable}{boat} \And boat \In  \Dom ORAMS`Lifeboats
+\end{precond};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{isRemovable}%
+\signature{Bid \Oto \Bool }
+\parms{boat}
+\annlab[o]{AccessController`isRemovable}
+\begin{blockstmt}
+\begin{letstmt}
+\patdef{crew}{\fnapply{\fnapply{ORAMS`Lifeboats}{boat}.getCrew}{}}
+\patdef{areas}{\fnapply{\fnapply{ORAMS`Lifeboats}{boat}.getAreas}{}}
+\end{letstmt} \\
+\begin{blockstmt}
+\If \exists{p \In crew}{\fnapply{\fnapply{ORAMS`persons}{p}.getArea}{} \Notin areas}
+\Then \\
+\return{\False }
+\Else \\
+\begin{blockstmt}
+\begin{setfor}{a}{areas}
+\If  \Not \fnapply{\fnapply{ORAMS`areas}{a}.canRemoveBoat}{boat}
+\Then \\
+\return{\False }
+\Fi
+\end{setfor}
+\end{blockstmt}
+\Fi ; \\
+\return{\True }
+\end{blockstmt}
+\end{blockstmt}
+\begin{precond}
+boat \In  \Dom ORAMS`Lifeboats
+\end{precond};
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{redistribute}%
+\signature{Bid \Oto ()}
+\parms{boat}
+\annlab[o]{AccessController`redistribute}
+\begin{blockstmt}
+\begin{letstmt}
+\patdef{crew}{\fnapply{\pex{\fnapply{ORAMS`Lifeboats}{boat}}.getCrew}{}}
+\end{letstmt} \\
+\begin{setfor}{p}{crew}
+\fnapply{ORAMS`areas}{\fnapply{\fnapply{ORAMS`persons}{p}.getArea}{}}.\call{changeBoat}{p}
+\end{setfor}
+\end{blockstmt}
+\begin{precond}
+boat \In  \Dom ORAMS`Lifeboats
+\end{precond}
+\end{op}
+\kSync
+\per{isFinished}{ \Len eventQueue = 0}
+\kThreadDef
+\begin{thread}
+\begin{blockstmt}
+\begin{while}{\True }
+\call{step}{}
+\end{while}
+\end{blockstmt}
+\end{thread}
+\kEnd $AccessController$
+

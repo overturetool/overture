@@ -1,0 +1,13 @@
+seq1 of (char)      $"fu" ^ "bar"
+real                $1.4 ** 2.3
+int                 $2 div 3
+real                $3/5
+bool                $4 >= 9
+bool                $4 > 9
+bool                $4 <= 9
+bool                $4 < 9
+nat                 $4 mod 9
+nat1                $4 + 9
+int                 $4 rem 9
+int                 $4 - 9
+nat1                $4 * 9

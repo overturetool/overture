@@ -1,0 +1,23 @@
+\section{TranslationCommand Class}
+
+\begin{vdm_al}
+class TranslationCommand is subclass of Command
+operations
+  public
+  Prioritize : () ==> ()
+  Prioritize() ==
+    axesdir := if axesdir(X) <> <Zero> 
+               then axesdir ++ {Y |-> <Zero>, Z |-> <Zero>}
+               elseif axesdir(Y) <> <Zero> 
+               then axesdir ++ {Z |-> <Zero>}
+               else axesdir;
+
+end TranslationCommand
+\end{vdm_al}
+
+The test coverage table for the TranslationCommand class looks like:
+
+\begin{rtinfo}{vdm.tc}[TranslationCommand]
+\end{rtinfo}
+
+

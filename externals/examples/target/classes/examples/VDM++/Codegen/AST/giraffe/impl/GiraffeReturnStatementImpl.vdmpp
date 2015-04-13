@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:16 CET 2010
+--
+
+class GiraffeReturnStatementImpl is subclass of GiraffeReturnStatement
+instance variables
+    private iv_value:GiraffeExpression;
+
+operations
+    public GiraffeReturnStatementImpl: GiraffeExpression ==> GiraffeReturnStatementImpl
+    GiraffeReturnStatementImpl(p_value) ==
+    (
+        iv_value := p_value;
+    );
+
+    public getValue: () ==> GiraffeExpression
+    getValue() == return iv_value;
+
+end GiraffeReturnStatementImpl

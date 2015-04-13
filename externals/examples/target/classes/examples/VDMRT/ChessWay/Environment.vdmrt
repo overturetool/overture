@@ -1,0 +1,404 @@
+% Environment.vdmrt
+
+\subsubsection{Mimicing the continuous time world -- The \texttt{Environment} class}
+
+The \texttt{Environment} class is used to mimic the behavior of the otherwise
+continuous time world in our discrete time setting in VDM-RT. In a sense, it
+implements a basic continous time simulator running in a seperate thread
+of our model in order to provide the appropriate stimuli and observe the responses
+from the ChessWay system model. We have created a generic interface between the
+two models, based on the exchange of a set of floating point (real) values,
+that can be referenced by name. A set of reserved names is listed below.
+
+\begin{vdm_al}
+class Environment
+
+values
+  reserved : set of seq of char = {
+    -- the accelerometer on to the LEFT controller
+    "LEFT_ACC_X", "LEFT_ACC_Y", "LEFT_ACC_Z",
+    -- the wheel connected to the LEFT controller
+    "LEFT_HALL1", "LEFT_HALL2", "LEFT_HALL3",
+    "LEFT_PWM", "LEFT_ACTUATED",
+    -- the gyroscope connected to the LEFT controller
+    "LEFT_YAW_RATE",
+    -- the wheel connected to the RIGHT controller
+    "RIGHT_HALL1", "RIGHT_HALL2", "RIGHT_HALL3",
+    "RIGHT_PWM", "RIGHT_ACTUATED",
+    -- the direction switch on the RIGHT controller
+    "RIGHT_DIRECTION",
+    -- the ON/OFF switch on the RIGHT controller
+    "RIGHT_ONOFF",
+    -- the safety switch on the RIGHT controller
+    "RIGHT_SAFETY",
+    -- the user behavior
+    "USER",
+    -- alternate interface model (using KP CT model)
+    "LEFT_ACC", "RIGHT_VEL"
+  }
+\end{vdm_al}
+
+This list of names will be the basis of the contract and interface definition in
+phase two of the project, where we will use proper co-models instead of running
+this discrete time model in isolation.
+ 
+\begin{vdm_al}
+types
+  -- all actuators are represented by a 3-tuple containing
+  -- start time, start value, direction coefficient
+  public tCtCurve = real * real * real;
+
+  -- map open-loop sensor name to non-empty sequence of 3-tuples
+  public tCtBehavior = map seq of char to seq1 of tCtCurve
+  inv tcb == forall tc in set rng tcb & 
+               forall i in set inds tc \ {1} &
+                 tc(i-1).#1 < tc(i).#1 
+
+instance variables
+  -- collection of CT open-loop sensor signals
+  -- these will be read from a file (scenario)
+  private mCtBehavior : tCtBehavior := {|->}
+\end{vdm_al}
+
+The evolution over time of these environment variables is described by 
+straightforward linear approximation. Each named variable in the domain of
+\texttt{tCtBehavior} is bound to a non-empty list of \texttt{tCtCurve} elements.
+Each \texttt{tCtCurve} element defines a three-tuple $(t, y, dydt)$, whereby
+$y$ is the value that is valid exactly at time $t$. Future values of this
+variable can be calculated by simply computing $y + dydt * (T - t)$,
+$T \ge t$. The elements in the range of the \texttt{tCtBehavior}
+are ordered such that the first element of each three tuple, which
+defines the starting time of the curve element, are strict monotone
+increasing, which is shown by the invariant. 
+
+\begin{vdm_al}
+operations
+  public loadCsvFile: seq of char * seq of char ==> ()
+  loadCsvFile (pctvar, pfname) ==
+    ( dcl lcnt : nat := 1, lctc : seq of tCtCurve := [mk_(0.0, 0.0, 0.0)];
+      -- diagnostics
+      IO`printf("Reading CSV file %s\n", [pfname]);
+      def mk_(rb, rv) = CSV`flinecount(pfname) in
+        if rb
+        then ( dcl cx : real := 0, cy : real := 0;
+               -- print diagnostics
+               IO`printf("Reading %s lines from CSV file\n", [rv]);
+               -- read all lines
+               while rv >= lcnt do
+                 let mk_(-, vs) = CSV`freadval[seq of real](pfname, lcnt) in
+                   ( -- time must be strict monotone increasing
+                     if vs(1) > cx
+                     then ( lctc := lctc ^ [mk_ (cx+0.5, cy, 0.0)];
+                            cx := vs(1);
+                            cy := vs(2) )
+                     else cy := (cy + vs(2)) / 2;
+                     lcnt := lcnt + 1 );
+               -- conditionally add the last value read
+               if lctc(len lctc).#1 < cx
+               then lctc := lctc ^ [mk_ (cx+0.5, cy, 0.0)];
+               -- store the continuous time behavior
+               mCtBehavior := mCtBehavior ++ {pctvar |-> lctc};
+               -- create initial sensor settings
+               evalSensors(0);
+               -- create initial user behavior
+               mUser.evaluate() )
+        else ( IO`println("Loading CSV file failed");
+               -- cause overture tool to abort execution
+               error ) )
+  pre pctvar in set reserved;
+
+  -- auxiliary operation to load a simulation scenario
+  public loadScenario: seq of char ==> ()
+  loadScenario (pfname) ==
+    ( -- diagnostics
+      IO`printf("Reading scenario %s\n", [pfname]);
+      def mk_(rb,rv) = IO`freadval[tCtBehavior](pfname) in
+        if rb
+        then ( -- print diagnostics
+               IO`println("Scenario loaded successfully");
+               -- store the behaviors
+               mCtBehavior := rv;
+               -- create initial sensor settings
+               evalSensors(0);
+               -- create initial user behavior
+               mUser.evaluate() )
+        else ( IO`println("Loading scenario failed");
+               -- cause Overture tool to abort execution
+               error ) );
+
+  -- auxiliary operation executed by the main loop
+  -- computes and updates the open-loop sensor values
+  public evalSensors: real ==> ()
+  evalSensors (ptime) ==
+    -- iterate over all actuation signals
+    for all iname in set dom mCtBehavior do
+      -- retrieve the behavior descriptions
+      def behaviors = mCtBehavior(iname) in
+      def behavior = hd behaviors in
+        -- single or multiple behavior descriptors
+        if len behaviors = 1
+        then
+          evalSingle(ptime, iname, behavior)
+        else
+          -- retrieve the next behavior description
+          def mk_(ltime, -, -) = hd tl behaviors in
+            if ltime <= ptime
+            then ( -- remove the current behavior if time passed
+                   mCtBehavior := mCtBehavior ++
+                     {iname |-> tl behaviors};
+                   -- set the new open-loop sensor value
+                   evalSingle(ptime, iname, hd tl behaviors) )
+            else evalSingle(ptime, iname, behavior);
+
+  public evalSingle: real * seq of char * tCtCurve ==> ()
+  evalSingle (ptime, pname, mk_(ltime, lvalue, ldir)) ==
+    setValue(pname, lvalue + ldir * (ptime - ltime))
+  pre ptime >= ltime
+\end{vdm_al}
+
+The operation \texttt{loadScenario} is used to initialise the \texttt{mCtBehavior}
+instance variable, which is the database of all continuous time enviroment variable
+descriptors described previously. The initial values for this mapping is kept in a
+separate file that is read from the file system, using the \texttt{IO}-library.
+This allows for multiple scenarios being executed, without the need to have to
+change the models. This corresponds to the need for scenarios in phase two of
+the project. Once the file is read succesfully, all descriptors are evaluated
+for $t=0$ in order to intialise all environment variables, before the execution of
+the system model commences.
+
+\begin{vdm_al}
+instance variables
+  -- flag to enable debugging logging in Environment classes
+  static public debug : nat := 1
+
+instance variables
+  -- maintain a link to the World class
+  private mWorld : World;
+
+  -- the maximum simulation time
+  private mMaxSimTime : nat;
+
+  -- the wheel model
+  private mLeftWheel : Wheel;
+  private mRightWheel : Wheel;
+
+  -- the hall sensor model
+  private mLeftHall : HallSensor;
+  private mRightHall : HallSensor;
+
+  -- the user model
+  private mUser : User;
+
+operations
+  -- constructor of the Environment class
+  public Environment : World * nat ==> Environment
+  Environment (pWorld, pMaxSimTime) == 
+    ( -- link the environment to the World
+      mWorld := pWorld;
+
+      -- set the maximum simulation time
+      mMaxSimTime := pMaxSimTime;
+
+      -- create the wheel models
+      mLeftWheel := new Wheel("LEFT", self);
+      mRightWheel := new Wheel("RIGHT", self);
+
+      -- create the hall sensor models
+      mLeftHall := new HallSensor("LEFT", self, mLeftWheel);
+      mRightHall := new HallSensor("RIGHT", self, mRightWheel);
+
+      -- force the initial values for the Hall sensors
+      mLeftHall.evaluate();
+      mRightHall.evaluate();
+
+      -- create the user model
+      mUser := new User(self, mLeftWheel, mRightWheel) )
+\end{vdm_al}
+
+The constructor of the \texttt{Environment} class establishes static links
+to the objects that are part of the environment model: the \texttt{Wheel}
+and \texttt{User}. Each wheel has a separate \texttt{HallSensor} connected to it.
+The values of the named interface are kept in the \texttt{mValues} instance variables.
+
+\begin{vdm_al}
+instance variables
+  -- sensors
+  private ain: ISensorReal := ChessWay`acc_in;
+  private vin: ISensorReal := ChessWay`vel_in;
+
+  -- actuators
+  private aout: IActuatorReal := ChessWay`acc_out;
+  private vout: IActuatorReal := ChessWay`vel_out
+\end{vdm_al}
+
+\begin{vdm_al}
+instance variables
+  -- maintain the list of simulation values
+  private mValues: map seq of char to real := {|->}
+\end{vdm_al}
+
+The instance variable \texttt{mValues} is declared private, and two access operations,
+\texttt{getValue} and \texttt{setValue} are provided to access these late-bound named
+interface elements. Both operations have a \texttt{duration(0)} clause in the body, which
+assures that calling these operations from the system model is perceived as instanteneous.
+
+\begin{vdm_al}
+operations
+  -- auxiliary operation to store actuator data
+  public setValue: seq of char * real ==> ()
+  setValue (pName, pValue) ==
+    duration (0)
+      ( dcl currentValue : [real] :=
+          if pName in set dom mValues
+          then mValues(pName)
+          else nil;
+        -- update the value map
+        mValues := mValues ++ {pName |-> pValue};
+        -- check for co-sim variables
+        setCosimValue(pName, pValue);
+        -- print optional diagnostics
+        if debug > 1 and pValue <> currentValue 
+        then ( IO`print(pName ^ " is set to ");
+               IO`print(pValue);
+               IO`print(" at ");
+               IO`print(time/1E9);
+               IO`print("\n") ) )
+  -- protect against illegal late bound names
+  pre pName in set reserved;
+
+  private setCosimValue: seq of char * real ==> ()
+  setCosimValue (pName, pValue) ==
+    if mWorld.cosim
+    then cases (pName) :
+           "LEFT_ACC" -> ChessWay`acc_out.SetValue(pValue),
+           "RIGHT_VEL" -> ChessWay`vel_out.SetValue(pValue),
+           others -> skip
+         end;
+
+  -- auxiliary operation to retrieve sensor data
+  public getValue: seq of char ==> real
+  getValue (pName) ==
+    duration (0) 
+      if pName not in set dom mValues
+      then ( -- release warning
+             IO`print("warning: "^pName^
+               " read before initialised\n");
+             -- return defined value
+             return 0.0 )
+      else ( -- obtain the current value
+             dcl retval : real := getCosimValue(pName);
+             -- print optional diagnostics
+             if debug > 1 
+             then ( IO`print(pName ^ " was ");
+                    IO`print(retval);
+                    IO`print(" at ");
+                    IO`print(time/1E9);
+                    IO`print("\n") );
+             -- return the value
+             return retval )
+  -- protect against illegal late bound names
+  pre pName in set reserved;
+
+  private getCosimValue: seq of char ==> real
+  getCosimValue (pName) ==
+    cases (pName) :
+      "LEFT_ACC"  -> return ChessWay`acc_in.GetValue(),
+      "RIGHT_VEL" -> return ChessWay`vel_in.GetValue(),
+      others      -> return mValues(pName)
+    end
+\end{vdm_al}
+
+The operations \texttt{getValue} and \texttt{setValue} both check whether the named
+interface elements actually exist in the reserved word table specified earlier, before
+look up or modification. Furthermore, these operations are declared \textit{mutual exclusive}
+by means of permission predicates, in order to guarantee consistency at run-time. Only one
+thread in our model shall be able to read or modify any of the values at the same time.
+
+\begin{vdm_al}   
+sync
+  -- environment access must be atomic 
+  mutex (setValue);
+  mutex (getValue);
+  mutex (setValue,getValue)
+\end{vdm_al}
+
+The operation \texttt{mainLoop} is the core function in the \texttt{Environment} class,
+which is executed as a periodic thread. Each iteration, it starts by determining the
+actual system time and then updates the environment model. A specific procedure is 
+followed: first it evaluates the sensors by looking at the scenario, then it updates
+the wheel model, followed by updating the hall sensors and finally the user. This
+specific procedure reflects the causal relationship between these submodels. Another
+ordering will yield different (wrong) results!
+
+\begin{vdm_al}
+operations
+  private mainLoop: () ==> ()
+  mainLoop () ==
+    ( -- determine the current time
+      dcl ticks : nat := time,
+          clock : real := ticks / World`SIM_RESOLUTION;
+
+      -- update the open-loop sensor values and user behavior
+      evalSensors(clock);
+
+      -- update the wheel models
+      mLeftWheel.evaluate();
+      mRightWheel.evaluate();
+
+      -- update the Hall sensor models
+      mLeftHall.evaluate();
+      mRightHall.evaluate();
+
+      -- update the user model
+      mUser.evaluate();
+
+      -- optional diagnostics
+      if debug > 0 then printDiagnostics();
+
+      -- check if the maximum simulation time was reached
+      if (ticks >= mMaxSimTime) then terminate() );
+
+  -- operation to signal the main thread once we're done
+  private terminate: () ==> ()
+  terminate () == ( printEnvironment(); mWorld.signal() ) 
+
+thread
+  -- run this thread 1000 times per second
+  -- with a 250 msec offset
+  periodic (1, 0, 0, 0) (mainLoop)
+\end{vdm_al}
+
+Note that the \texttt{mainLoop} operation also determines whether or not the end
+of the simulation run has been reached, by checking the current simulation wall clock
+against the maximum simulation target time. Once this is reached, the \texttt{terminate}
+operation is called, which will set the \texttt{finish} variable in the \texttt{World}
+class. This will cause the main DESTECS interpreter thread to become unblocked. Since
+this thread has the highest priority, it will stop execution of the model and provide
+control back to the user.
+
+\begin{vdm_al}
+operations
+  -- auxiliary diagnostics operations
+  private printDiagnostics: () ==> ()
+  printDiagnostics () == 
+    ( -- diagnostics
+      IO`print("\nEnvironment.mainLoop         = ");
+      IO`print(time/1E9);
+      IO`print("\n") );
+
+  public printEnvironment: () ==> ()
+  printEnvironment () ==
+    ( -- diagnostics
+      IO`print("Dump of the environment\n");
+      -- iterate over all key/value pairs
+      for all pKey in set dom mValues do
+        ( IO`print(pKey);
+          IO`print(" = ");
+          IO`print(mValues(pKey));
+          IO`print("\n") ) )
+
+end Environment
+\end{vdm_al}
+
+The \texttt{printDiagnostics} and \texttt{printEnvironment} operations are used to show
+the status of the simulation.

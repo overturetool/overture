@@ -1,0 +1,21 @@
+class Entry
+
+values
+
+s = {}
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+(
+	if true then return true;	
+	(
+		dcl a : set of nat := let x in set s in x; 
+		skip;skip;skip;
+	
+		return 2;
+	)
+)
+
+end Entry

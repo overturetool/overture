@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="'c'" resource="reperr-23.vpp" value="'c'"/>
+</result>
+</testResult>

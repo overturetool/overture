@@ -1,0 +1,14 @@
+
+values
+
+a: int=0;
+b :bool=true;
+c : rat=3/4;
+d : nat=-1;
+e : nat1 = 3;
+f : token = mk_token(1);
+g : real = 233565.3445;
+h : char = 'f';
+--j <OO>
+k :  [int] = nil;
+

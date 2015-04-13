@@ -1,0 +1,38 @@
+class gui_Graphics
+	operations
+
+	    public init : () ==> ()
+		init() == is not yet specified;
+	
+		public busInRouteTo : nat * seq of char * seq of char * nat ==> ()
+		busInRouteTo(busid, roadid, waypoint, time) == is not yet specified; 
+	
+		public move : () ==> ()
+		move() == is not yet specified;
+
+		public sleep : () ==> ()
+		sleep() == is not yet specified;
+	
+		public passengerAtCentral : nat * seq of char  ==> ()
+		passengerAtCentral(id, waypoint) == is not yet specified;
+
+		public passengerAnnoyed : nat==> ()
+		passengerAnnoyed(id) == is not yet specified;
+	
+		public passengerGotOnBus : nat ==> ()
+		passengerGotOnBus(id) == is not yet specified;
+
+		public inflowChanged : nat ==> ()
+		inflowChanged(id) == is not yet specified;
+
+		public busAdded : nat ==> ()
+		busAdded(id) == is not yet specified;
+
+		public busStopping : nat ==> ()
+		busStopping(id) == is not yet specified;
+
+		public busPassengerCountChanged : nat * nat ==> ()
+		busPassengerCountChanged(busid, count) == is not yet specified;
+
+end gui_Graphics
+

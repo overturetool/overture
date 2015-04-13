@@ -1,0 +1,32 @@
+\begin{vdm_al}
+class AccessControllerTest is subclass of TestCase
+
+instance variables 
+	public static w : [World] := nil; 
+
+operations
+  protected SetUp: () ==> ()
+  SetUp () == (
+  	w := new World("ballancing.txt");
+  	);
+
+  protected RunTest: () ==> ()
+  RunTest () == 
+    (
+    ORAMS`ctl.movePerson(mk_token(<p1>), mk_token(<a1>), <Stay>);
+	AssertTrue(ORAMS`p1.getArea() = mk_token(<a1>));
+	AssertTrue(ORAMS`p1.getBoat() = ORAMS`l1.getId());
+	AssertFalse(ORAMS`ctl.isRemovable(ORAMS`l1.getId()));
+	ORAMS`ctl.movePerson(mk_token(<p1>), mk_token(<a2>), <Stay>);
+	AssertTrue(ORAMS`p1.getArea() = mk_token(<a2>));
+	AssertTrue(ORAMS`p1.getBoat() = ORAMS`l2.getId());
+	AssertTrue(ORAMS`ctl.isRemovable(ORAMS`l3.getId()));
+	ORAMS`ctl.removeLifeboat(ORAMS`l3.getId());
+	AssertFalse(ORAMS`l3.isDedicated()); --A boat is only dedicated when attached to excatly one area, not zero or more. 	
+);
+
+  protected TearDown: () ==> ()
+  TearDown () == skip
+
+end AccessControllerTest
+\end{vdm_al}

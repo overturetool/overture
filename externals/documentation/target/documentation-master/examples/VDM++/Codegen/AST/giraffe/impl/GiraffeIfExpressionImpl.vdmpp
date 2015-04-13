@@ -1,0 +1,30 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:16 CET 2010
+--
+
+class GiraffeIfExpressionImpl is subclass of GiraffeIfExpression
+instance variables
+    private iv_test:GiraffeExpression;
+    private iv_thn:GiraffeExpression;
+    private iv_els:GiraffeExpression;
+
+operations
+    public GiraffeIfExpressionImpl: GiraffeExpression * GiraffeExpression * GiraffeExpression ==> GiraffeIfExpressionImpl
+    GiraffeIfExpressionImpl(p_test, p_thn, p_els) ==
+    (
+        iv_test := p_test;
+        iv_thn := p_thn;
+        iv_els := p_els;
+    );
+
+    public getTest: () ==> GiraffeExpression
+    getTest() == return iv_test;
+
+    public getThn: () ==> GiraffeExpression
+    getThn() == return iv_thn;
+
+    public getEls: () ==> GiraffeExpression
+    getEls() == return iv_els;
+
+end GiraffeIfExpressionImpl

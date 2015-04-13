@@ -1,0 +1,28 @@
+class A
+operations
+
+public op : nat ==> nat
+op (x) == return 1;
+
+end A
+
+class B
+operations
+
+public op : nat ==> nat
+op (x) == return 1;
+
+end B
+
+class Entry
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+	let xs = {1 |-> new A(), 2 |-> new B()},
+			x = xs(1),
+			q = x.op(x.op(1))
+	in
+		return 1;
+end Entry

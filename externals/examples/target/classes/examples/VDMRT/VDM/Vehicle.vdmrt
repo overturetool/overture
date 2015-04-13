@@ -1,0 +1,174 @@
+\section{Vehicle Class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			Vehicle
+-- Description: 	Vehicle class describes the physical moving 
+--					elements in the system
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Vehicle
+
+--
+-- instance variables
+--
+instance variables
+
+private dir: Types`Direction;
+private speed : nat;
+private lowgrip : bool;
+private turnIndicator : Indicator := <NONE>;
+private pos : Position;
+private id : nat;
+--
+-- Types definition section
+--
+types  
+public Indicator = <LEFT> | <RIGHT> | <NONE>;
+--
+-- Operations definition section
+--
+operations
+
+public Vehicle:  nat * Position * nat * Types`Direction ==> Vehicle
+Vehicle(identifier, p, s, d) ==
+(
+  pos := p;
+  speed := s;
+  dir := d;
+  id := identifier;
+  lowgrip := false;
+);
+
+
+public Vehicle:  VehicleData ==> Vehicle
+Vehicle(vdDTO) ==
+(
+  pos := vdDTO.GetPosition();
+  speed := vdDTO.GetSpeed();
+  dir := vdDTO.GetDirection();
+  id := vdDTO.GetID();
+  lowgrip := vdDTO.getLowGrip();
+);
+
+
+public GetDirection: () ==> Types`Direction 
+GetDirection() ==
+return dir;
+
+async public SetDirection: Types`Direction  ==> ()
+SetDirection(d) ==
+(
+dir := d;
+);
+
+public GetSpeed: () ==> nat 
+GetSpeed() ==
+return speed;
+	
+async public SetSpeed: nat ==> () 
+SetSpeed(s) ==
+speed := s;
+
+public getLowGrip: () ==> bool 
+getLowGrip() ==
+(
+return lowgrip
+);
+
+async public setLowGrip: bool ==> () 
+setLowGrip(lg) ==
+(
+lowgrip := lg;
+);
+	
+public TurnIndicator: () ==> Indicator 
+TurnIndicator() ==
+return turnIndicator;	
+	
+async public setTurnIndicator: Indicator ==> () 
+setTurnIndicator(indicator) ==
+( 
+ turnIndicator := indicator;
+);
+	
+public GetPosition: () ==> Position 
+GetPosition() ==
+return pos.deepCopy();
+
+async public SetPosition: Position ==> () 
+SetPosition(p) ==
+pos := p;
+
+public GetID: () ==> nat
+GetID() ==
+return id;
+
+public Move : () ==> ()
+Move() ==
+(
+ cases dir:
+ <NORTH> -> pos.setY(pos.Y() + speed),  
+ <SOUTH> -> pos.setY(pos.Y() - speed),  
+ <EAST>  -> pos.setX(pos.X() + speed), 
+ <WEST>  -> pos.setX(pos.X() - speed) 
+ end;
+
+);
+  
+public getDTO : () ==> VehicleData
+getDTO() ==
+(
+ let vd = new VehicleData(id, pos, speed, dir, lowgrip) in 
+ return vd;
+)
+  
+--
+-- Functions definition section
+--
+functions
+  
+public static IndicatorToString : Indicator -> seq of char 
+IndicatorToString(i) ==
+(
+cases i:
+<LEFT>-> "LEFT",
+<RIGHT>-> "RIGHT",
+<NONE>-> "NONE"
+end
+)
+
+
+
+--
+-- Values definition section
+--
+values
+
+--
+-- sync definition section
+--
+sync
+ mutex(Move);
+ mutex(Move, SetPosition, GetPosition);
+ mutex(SetPosition);
+ mutex(SetDirection);
+ mutex(GetDirection, SetDirection);
+ mutex(SetSpeed);
+ mutex(GetSpeed, SetSpeed);
+ mutex(setLowGrip);
+ mutex(getLowGrip, setLowGrip);
+ mutex(setTurnIndicator);
+ mutex(TurnIndicator,setTurnIndicator);
+ 
+end Vehicle
+
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Vehicle]
+\end{rtinfo}

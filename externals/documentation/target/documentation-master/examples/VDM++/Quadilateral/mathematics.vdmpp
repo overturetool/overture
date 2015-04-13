@@ -1,0 +1,17 @@
+class Mathematics
+ 
+  values
+    pi: real = 3.14
+ 
+  types
+    Angle = real
+    inv a == a >= 0 and a <= 2*pi
+ 
+  functions
+    acos (x: real) res: Angle
+    post inv_Angle (res);
+ 
+    sqrt (r: real) res: real
+    post res**2 = r
+
+end Mathematics

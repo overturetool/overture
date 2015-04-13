@@ -1,0 +1,66 @@
+\section{Logger class}
+
+\begin{vdm_al}
+
+class Logger
+
+types
+	public logType =  (TPC`String | InactiveRoute | TP | RouteStatus | nat | set of Train | bool | set of TransportPlan | set of Station | TransportPlan);
+	
+	public InactiveRoute::
+				name:TPC`String
+				routeid : nat
+				curtime : nat;
+	
+	public TP::
+				name:TPC`String
+				tp: TransportPlan;
+				
+	public RouteStatus::
+				name:TPC`String
+				action:TPC`String
+				tokenId: nat;
+				
+
+instance variables 
+	public static log : seq of logType := [];
+	private static initLog : bool := true;
+
+operations
+
+	public static write : logType ==> () 
+	write(o)== 	( 
+		duration(0)(	
+		log := log ^ [o] ^ ["\n"];
+		Logger`flush();
+		);
+	);
+	
+	public static write2 : logType * nat * nat ==> () 
+	write2(o, tr, ti)== 	( 
+		duration(0)(	
+		log := log ^ [o] ^ [tr] ^ [ti] ^ ["\n"];
+		Logger`flush();
+		);
+	);
+
+	public static flush : () ==> ()
+	flush()== (
+	dcl io: IO := new IO();
+	if(initLog = true) then
+		 def - = io.fwriteval[seq of logType]("logger.log",log,<start>) in skip
+	else
+		 def - = io.fwriteval[seq of logType]("logger.log",log,<append>) in skip;
+	);
+
+	public static printLog : () ==> seq of logType	
+	printLog() == return log;
+
+sync
+mutex(write);
+mutex(write2);
+mutex(write, write2);
+
+end Logger
+
+\end{vdm_al}

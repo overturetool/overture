@@ -1,0 +1,17 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:15 CET 2010
+--
+
+class GiraffeBinaryExpression is subclass of GiraffeExpression
+operations
+    public getLhs: () ==> GiraffeExpression
+    getLhs() == is subclass responsibility;
+
+    public getOp: () ==> GiraffeBinaryOperator
+    getOp() == is subclass responsibility;
+
+    public getRhs: () ==> GiraffeExpression
+    getRhs() == is subclass responsibility;
+
+end GiraffeBinaryExpression

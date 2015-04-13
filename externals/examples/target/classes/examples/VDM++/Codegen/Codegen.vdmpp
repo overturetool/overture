@@ -1,0 +1,101 @@
+class Codegen
+	types
+	
+	values
+	
+	instance variables
+	
+	operations
+	
+	public Generate : GiraffeSpecification ==> seq of char
+	Generate(spec) ==
+		let clazz : GiraffeClassDefinition = spec.getClazz(),
+			genClasses : seq of char = Generate(clazz)
+		in	
+			return conc ["public class ", genClasses];
+
+	public Generate : GiraffeClassDefinition ==> seq of char
+	Generate(classDef) ==
+		let methods : set of GiraffeMethodDefinition = classDef.getMethods(),
+			mlist : seq of GiraffeMethodDefinition = VDMUtil`set2seq[GiraffeMethodDefinition](methods),
+			genMethods : seq of char = conc [Generate(mlist(i)) | i in set inds mlist]
+		in
+			return conc [classDef.getName().getName(), " { ", genMethods];--, " } "];
+		
+	public Generate : GiraffeMethodDefinition ==> seq of char
+	Generate(method) ==
+		let params : seq of GiraffeParameter = method.getParameters(),
+			genParams : seq of char = conc tail(conc [[", ", Generate(params(i))] | i in set inds params]),
+			body : seq of GiraffeStatement = method.getBody(),
+			genBody : seq of char = conc conc [[Generate(body(i)), ";"] | i in set inds body]
+		in	return conc ["public static ", Generate(method.getType()), " ", Generate(method.getName()), "(", genParams, ")", "{", genBody, "}"];
+	
+	public Generate : GiraffeParameter ==> seq of char
+	Generate(param) == return conc [Generate(param.getType()), " ", param.getName().getName()];
+	
+	public Generate : GiraffeType ==> seq of char
+	Generate(type) ==
+		if isofclass(GiraffeIdentifier, type) then
+			let i : GiraffeIdentifier = type
+			in return i.getName()
+		else
+			let t : GiraffeBasicType = type
+			in 
+				cases t.name:
+					"INT"	-> return "int",
+					"DOUBLE"-> return "double",
+					"BOOL"	-> return "boolean",
+					others -> error
+				end;
+	
+	public Generate : GiraffeStatement ==> seq of char
+	Generate(stm) == 
+		cases (true):
+			(isofclass(GiraffeVariableDeclStatement, stm)) ->
+				let s : GiraffeVariableDeclStatement = stm
+				in	return conc [Generate(s.getType()), " ", Generate(s.getName()), " = ", GenerateExpression(s.getValue())],
+			(isofclass(GiraffeReturnStatement, stm)) ->	let	s : GiraffeReturnStatement = stm
+														in	return conc ["return ", GenerateExpression(s.getValue())],
+			others -> error
+		end;
+	
+	public GenerateExpression : GiraffeExpression ==> seq of char
+	GenerateExpression(exp) ==
+		cases (true):
+			(isofclass(GiraffeIntegerLiteralExpression, exp)) ->
+				let	e : GiraffeIntegerLiteralExpression = exp
+				in 	return new codegen_Util().iToS(e.getValue()),
+			(isofclass(GiraffeVariableExpression, exp)) ->
+				let	e : GiraffeVariableExpression = exp
+				in return e.getName().getName(),
+			(isofclass(GiraffeBinaryExpression, exp)) -> 
+				let e : GiraffeBinaryExpression = exp
+				in return GenerateBinaryExpression(e),
+			(isofclass(GiraffeIfExpression, exp)) ->
+				let e : GiraffeIfExpression = exp
+				in return " ( (" ^ GenerateExpression(e.getTest()) ^ ") ? (" ^ GenerateExpression(e.getThn()) ^ ") : (" ^ GenerateExpression(e.getEls()) ^ ") ) ",
+				others -> error
+		end;
+	
+	public GenerateBinaryExpression : GiraffeBinaryExpression ==> seq of char
+	GenerateBinaryExpression(binexp) ==
+		let op : GiraffeBinaryOperator = binexp.getOp(),
+			lhs : GiraffeExpression = binexp.getLhs(),
+			rhs : GiraffeExpression = binexp.getRhs()
+		in
+			cases op.name:
+				("EQUALS") -> return " ( " ^ GenerateExpression(lhs) ^ " == " ^ GenerateExpression(rhs) ^ " ) ",
+				("PLUS") -> return " ( " ^ GenerateExpression(lhs) ^ " + " ^ GenerateExpression(rhs) ^ " ) ",
+				others -> error
+			end;
+			
+	functions
+	
+	public tail : seq of seq of char -> seq of seq of char
+	tail(x) == 
+		if (x = []) then
+			[]
+		else
+			tl x;
+	
+end Codegen

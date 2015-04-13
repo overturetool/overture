@@ -1,0 +1,19 @@
+class MSAW is subclass of GLOBAL
+
+instance variables 
+
+public static atc : AirTrafficController := new AirTrafficController();
+  
+
+public static radar1 : Radar := new Radar(6,11,20);
+  
+
+public static radar2 : Radar := new Radar (30,30,5);  
+
+public static airspace : AirSpace := new AirSpace();
+
+public static militaryZone : Obstacle := 
+  new Obstacle(<NotAllowed>,mk_Coordinates(25,0),5,5,<Military_Area>);
+
+
+end MSAW

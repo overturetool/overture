@@ -1,0 +1,33 @@
+\section{ValveDriveAssembly Class}
+
+\begin{vdm_al}
+class ValveDriveAssembly
+
+instance variables
+  thrusters : map ThrusterControl`ThrusterPosition to Thruster := 
+    {thr |-> new Thruster() | thr in set ThrusterControl`ThrusterSet};
+
+operations
+  public
+  UpdateThrusters : set of ThrusterControl`ThrusterPosition ==> ()
+  UpdateThrusters(selected) ==
+    (for all a in set selected
+     do thrusters(a).SetOn(); 
+     for all a in set ThrusterControl`ThrusterSet\selected 
+     do thrusters(a).SetOff());  
+   
+  public
+  ThrustersOn : () ==> set of ThrusterControl`ThrusterPosition
+  ThrustersOn() == 
+    return {thr | thr in set ThrusterControl`ThrusterSet & 
+            thrusters(thr).GetState() = <On>}
+
+end ValveDriveAssembly
+\end{vdm_al}
+
+The test coverage table for the ValveDriveAssembly class looks like:
+
+\begin{rtinfo}{vdm.tc}[ValveDriveAssembly]
+\end{rtinfo}
+
+

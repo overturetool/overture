@@ -1,0 +1,40 @@
+\begin{vdm_al}
+module CYLINDER
+  imports
+    from MATH
+      functions
+        ExtSin : real -> real
+      values 
+        ExtPI : real,
+
+    from CYLIO
+      functions
+        ExtGetCylinder : () -> CircCyl
+   
+      operations
+        ExtShowCircCylVol : CircCyl * real ==> ()
+
+   exports
+     operations
+       CircCylOp:() ==> ()
+     types  
+       CircCyl  
+
+  definitions
+    types
+      CircCyl :: rad : real
+                 height : real
+                 slope : real
+
+    functions
+      CircCylVol : CircCyl -> real
+      CircCylVol(cyl) == MATH`ExtPI * cyl.rad * cyl.rad * cyl.height * MATH`ExtSin(cyl.slope)
+
+    operations
+      CircCylOp : () ==> ()
+      CircCylOp() == ( let cyl = CYLIO`ExtGetCylinder() in 
+                         let vol = CircCylVol(cyl) in
+                           CYLIO`ExtShowCircCylVol(cyl, vol))
+end CYLINDER
+\end{vdm_al} 
+

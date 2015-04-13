@@ -1,0 +1,114 @@
+\begin{vdm_al}
+class FlareDispenser is subclass of GLOBAL, BaseRTThread
+
+values
+
+responseDB : map MissileType to Plan =
+  {<MissileA> |-> [mk_(<FlareOneA>,900),
+                   mk_(<FlareTwoA>,500),
+                   mk_(<DoNothingA>,100),
+                   mk_(<FlareOneA>,500)],
+   <MissileB> |-> [mk_(<FlareTwoB>,500),
+                   mk_(<FlareTwoB>,700)],
+   <MissileC> |-> [mk_(<FlareOneC>,400),
+                   mk_(<DoNothingC>,100),
+                   mk_(<FlareTwoC>,400),
+                   mk_(<FlareOneC>,500)] };
+
+missilePriority : map MissileType to nat =
+  {<MissileA> |-> 1,
+   <MissileB> |-> 2,
+   <MissileC> |-> 3 }
+
+types
+
+public Plan = seq of PlanStep;
+
+public PlanStep = FlareType * Time;
+
+instance variables
+
+public curplan : Plan := [];
+curprio        : nat := 0;
+busy           : bool := false;
+aparature      : Angle;
+eventid        : [EventId];
+
+operations
+
+public FlareDispenser: Angle * [ThreadDef] ==> FlareDispenser
+FlareDispenser(ang, tDef) ==
+ (aparature := ang;
+ 
+  if tDef <> nil
+  then (period := tDef.p;
+        jitter := tDef.j;
+        delay := tDef.d;
+        offset := tDef.o;
+       ); 
+  BaseRTThread(self);
+ );
+
+public GetAngle: () ==> nat
+GetAngle() ==
+  return aparature;
+
+async public addThreat: EventId * MissileType * Time ==> ()
+addThreat (evid, pmt, ptime) ==
+  if missilePriority(pmt) > curprio
+  then (dcl newplan : Plan :=  [],
+            newtime : Time := ptime;
+        -- construct an absolute time plan
+        for mk_(fltp, fltime) in responseDB(pmt) do
+          (newplan := newplan ^ [mk_ (fltp, newtime)];
+           newtime := newtime + fltime );
+        -- immediately release the first action
+        def mk_(fltp, fltime) = hd newplan in
+          releaseFlare(evid,fltp,fltime,time);
+        -- store the rest of the plan
+        curplan := tl newplan;
+        eventid := evid;
+        curprio := missilePriority(pmt);
+        busy := true )
+pre pmt in set dom missilePriority and
+    pmt in set dom responseDB;
+
+protected async Step: () ==> ()
+Step () ==
+  cycles (1E5) 
+  (if len curplan > 0
+   then (dcl curtime : Time := time, done : bool := false;
+         while not done do
+           (dcl first : PlanStep := hd curplan,
+                next : Plan := tl curplan;
+            let mk_(fltp, fltime) = first in
+              if fltime <= curtime
+              then (releaseFlare(eventid,fltp,fltime,curtime);
+                    curplan := next;
+                    if len next = 0
+                    then (curprio := 0; 
+                          done := true; 
+                          busy := false ) )
+              else done := true ) ) );
+
+private releaseFlare: EventId * FlareType * Time * Time ==> ()
+releaseFlare (evid, pfltp, pt1, pt2) == 
+  World`env.handleEvent(evid,pfltp,aparature,pt1,pt2);
+
+public isFinished: () ==> ()
+isFinished () == skip;
+
+  public getAperture: () ==> Angle * Angle
+  getAperture () == is not yet specified;
+
+sync
+
+mutex (addThreat,Step);
+per isFinished => not busy;
+
+end FlareDispenser
+\end{vdm_al}
+
+\begin{rtinfo}[FlareDispenser`FlareDispenser]
+{vdm.tc}[FlareDispenser]
+\end{rtinfo}

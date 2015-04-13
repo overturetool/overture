@@ -1,0 +1,1 @@
+$JavaFormat.format($node.getExp()) instanceof $JavaFormat.format($node.getCheckedType())

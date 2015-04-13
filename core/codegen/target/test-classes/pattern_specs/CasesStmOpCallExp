@@ -1,0 +1,24 @@
+class Entry
+
+types
+
+public A :: a : int;  
+public B :: b : int;  
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+  cases rec():
+    mk_A(9) -> return 11,
+    mk_B(9) -> return 111, 
+    mk_B(10) -> return 1111
+  end;
+  return -1;
+);
+
+public static rec : () ==> A|B
+rec () == return mk_B(10);
+
+end Entry

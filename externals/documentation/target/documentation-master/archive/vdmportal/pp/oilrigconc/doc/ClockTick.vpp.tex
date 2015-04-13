@@ -1,0 +1,26 @@
+\kClass $ClockTick$ \kISO $GLOBAL$
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}
+\assdef{tid}{\Int }[{ \Uminus 1}]
+\end{insvar}
+\par
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{ClockTick}%
+\signature{Time \Oto ClockTick}
+\parms{t}
+\annlab[o]{ClockTick`ClockTick}
+\ass{tid}{t}
+\end{op}
+\kThreadDef
+\begin{thread}
+\begin{while}{\True }
+\begin{blockstmt}
+World`timer.\call{NotifyThread}{tid} ; \\
+World`timer.\call{WaitRelative}{1}
+\end{blockstmt}
+\end{while}
+\end{thread}
+\kEnd $ClockTick$
+

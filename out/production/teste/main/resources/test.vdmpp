@@ -1,0 +1,8 @@
+class Test
+
+operations
+
+public Run : int * int * bool ==> int
+Run(a,b,c) == if (a>b and (c or c) and not(c)) then return a else return b ;
+
+end Test

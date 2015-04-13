@@ -1,0 +1,63 @@
+\section{Command Class}
+
+\begin{vdm_al}
+class Command
+types
+  public
+  Axis = <axis1> | <axis2> | <axis3>;
+  
+  public
+  Direction = <Neg> | <Pos> | <Zero>;
+
+  public
+  AxisMap = map Axis to Direction
+  inv dir == dom dir = {<axis1>, <axis2>, <axis3>};
+
+values
+  public allaxes : set of Axis = {<axis1>, <axis2>, <axis3>};
+  public X = <axis1>;
+  public Y = <axis2>;
+  public Z = <axis3>;
+  public PITCH = <axis1>;
+  public YAW = <axis2>;
+  public ROLL = <axis3>;
+  public nullaxesdir : AxisMap = {a |-> <Zero> | a in set allaxes};
+
+instance variables
+  protected axesdir : AxisMap := nullaxesdir;
+
+operations
+  public
+  GetAxesdir : () ==> AxisMap
+  GetAxesdir() ==
+    return axesdir;
+
+  public
+  SetAxesdir : AxisMap ==> ()
+  SetAxesdir(a) == 
+    axesdir := a;
+
+  public
+  GetDirection : Axis ==> Direction
+  GetDirection(a) == 
+    return axesdir(a);
+
+  public
+  SetDirection : Axis * Direction ==> ()
+  SetDirection(a, d) ==
+    axesdir := axesdir ++ {a |-> d};
+
+  public
+  SuppressAllAxes : () ==> ()
+  SuppressAllAxes() ==
+    axesdir := nullaxesdir;
+
+
+end Command
+\end{vdm_al}
+
+The test coverage table for the Command class looks like:
+\begin{rtinfo}{vdm.tc}[Command]
+\end{rtinfo}
+
+

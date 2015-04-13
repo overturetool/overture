@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="13" line="31" message="Matching expression is not a set type" messageType="error" number="3206" resource="casesexpr-04.vdm"/>
+<message column="13" line="31" message="Pattern cannot match" messageType="error" number="3311" resource="casesexpr-04.vdm"/>
+<message column="28" line="31" message="Left hand of / is not numeric" messageType="error" number="3139" resource="casesexpr-04.vdm"/>
+<message column="28" line="31" message="Right hand of / is not numeric" messageType="error" number="3140" resource="casesexpr-04.vdm"/>
+<message column="10" line="32" message="Matching expression is not a product of cardinality 3" messageType="error" number="3205" resource="casesexpr-04.vdm"/>
+<message column="10" line="32" message="Pattern cannot match" messageType="error" number="3311" resource="casesexpr-04.vdm"/>
+<message column="24" line="32" message="Name 'CasesExprTest`a' is not in scope" messageType="error" number="3182" resource="casesexpr-04.vdm"/>
+<message column="28" line="32" message="Name 'CasesExprTest`b' is not in scope" messageType="error" number="3182" resource="casesexpr-04.vdm"/>
+<result/>
+</testResult>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="7" line="29" message="s at 52:3 hidden by s" messageType="warning" number="5008" resource="modules08.vdm"/>
+<message column="9" line="139" message="Definition 's' not used" messageType="warning" number="5000" resource="modules08.vdm"/>
+<message column="3" line="91" message="Definition 'A' not used" messageType="warning" number="5000" resource="modules08.vdm"/>
+<message column="3" line="92" message="Definition 'B' not used" messageType="warning" number="5000" resource="modules08.vdm"/>
+<result/>
+</testResult>

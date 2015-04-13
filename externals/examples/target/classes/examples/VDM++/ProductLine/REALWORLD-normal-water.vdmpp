@@ -1,0 +1,26 @@
+class RealWorld2
+
+instance variables
+  public aap: NormalAtmosphericAirPressure;
+  public liquid : Water;
+
+  -- only realworld_liquid variable can be accessed
+  -- from a system (heater, thermistor, and liquid level sensor)
+
+  -- CONTEXT-atmospheric-air-pressureplace-normal and
+  -- CONTEXT-liquid-water
+  -- are selected
+
+operations
+  public
+  Setup: () ==> ()
+  Setup() ==
+    (aap := new NormalAtmosphericAirPressure();
+     aap.SetAtm(1.0);
+     liquid := new Water();
+     liquid.SetAap(aap);
+     liquid.SetBoilingPoint();
+     liquid.SetTemperature(35.0);
+     liquid.SetAmount(1000.0));
+
+end RealWorld2

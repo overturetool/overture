@@ -1,0 +1,96 @@
+-- ===============================================================================================================
+-- Tray in tray allocation for a sortation system
+-- By José Antonio Esparza and Kim Bjerge - spring 2010
+-- ===============================================================================================================
+
+class Tray
+	types
+		public State = <Empty> | <Full>;
+	    public UID = nat
+	    inv u == u <= TrayAllocator`NumOfTrays;  	-- Limitation on UID 
+
+	values
+		public TraySize    : nat1 = 600    			-- Size of any tray mm 
+
+	instance variables
+	    
+		-- It is allowed for a tray to be <Full> with no item associated 
+		-- in this case an unknown item is detected by the card reader
+		state : State := <Empty>;
+		item : [Item] := nil;
+		
+		-- If an item is associated with a tray the state must be <Full>
+		inv item <> nil => state = <Full>;
+		
+		id : UID;									 -- Tray UID
+
+	operations
+
+    -- Tray constructor
+	public Tray: UID ==> Tray
+	Tray(i) ==
+	(
+		id := i;
+	);
+
+ 	-- Return tray id
+	public GetId: () ==> nat
+	GetId() == 
+		return id;
+		
+    -- Returns true if tray is empty
+	public IsTrayEmpty: () ==> bool
+	IsTrayEmpty () ==
+		return state = <Empty>;
+
+    -- Returns true if tray is full
+	public IsTrayFull: () ==> bool
+	IsTrayFull () ==
+		return state = <Full>;
+	
+	-- Returns item on tray
+	public GetItem: () ==> [Item]
+	GetItem () ==
+		return item;
+		
+	-- Set state of tray	
+	public SetState: State ==> ()
+	SetState (s) ==
+	(
+		if s = <Empty> 
+		then -- Remove item if tray is empty
+			item := nil;
+		state := s;
+	);
+	
+	-- Returns state of tray ==> <empty> or <full>	
+	public GetState: () ==> State
+	GetState () ==
+		return state;
+
+    -- Puts an item on the tray and creates association between tray and item 
+	public ItemOnTray: Item ==> ()
+	ItemOnTray (i) ==
+	(
+		atomic -- Only needed if item is assigned before state
+		(
+			item := i;
+			state := <Full>;
+		);
+		item.AssignItemToTray(self);
+
+		IO`print("-> Item id " ^ String`NatToStr(item.GetId()) ^ 
+		         "size " ^ String`NatToStr(item.GetSize()) ^ 
+		         "on tray id " ^ String`NatToStr(id) ^ "\n");
+	)
+	pre state = <Empty> and item = nil;
+		
+	functions
+
+	sync
+
+	--thread
+
+	traces
+
+end Tray

@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let x0 = -1.1
+in
+  return abs x0;
+
+end Entry

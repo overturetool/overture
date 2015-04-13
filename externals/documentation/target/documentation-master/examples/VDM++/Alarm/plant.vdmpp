@@ -1,0 +1,63 @@
+\begin{vdm_al}
+class Plant
+
+instance variables
+
+alarms   : set of Alarm;
+st1 : nat := 1;
+schedule : map Period to set of Expert;
+inv PlantInv(alarms,schedule);
+
+operations
+
+PlantInv: set of Alarm * map Period to set of Expert ==> 
+          bool
+PlantInv(as,sch) ==
+  return
+  (forall p in set dom sch & sch(p) <> {}) and
+  (forall a in set as &
+     forall p in set dom sch &
+       exists expert in set sch(p) &
+         a.GetReqQuali() in set expert.GetQuali());
+
+types
+
+public Period = token;
+
+operations
+
+public ExpertToPage: Alarm * Period ==> Expert
+ExpertToPage(a, p) ==
+  let expert in set schedule(p) be st
+      a.GetReqQuali() in set expert.GetQuali()
+  in
+    return expert
+pre a in set alarms and
+    p in set dom schedule
+post let expert = RESULT
+     in
+       expert in set schedule(p) and
+       a.GetReqQuali() in set expert.GetQuali();
+\end{vdm_al}
+	 
+\begin{vdm_al}
+public NumberOfExperts: Period ==> nat
+NumberOfExperts(p) ==
+  return card schedule(p)
+pre p in set dom schedule;
+
+public ExpertIsOnDuty: Expert ==> set of Period
+ExpertIsOnDuty(ex) ==
+  return {p | p in set dom schedule & 
+              ex in set schedule(p)};
+
+public Plant: set of Alarm * 
+              map Period to set of Expert ==> Plant
+Plant(als,sch) ==
+( alarms := als;
+  schedule := sch
+)
+pre PlantInv(als,sch);
+
+end Plant
+\end{vdm_al}

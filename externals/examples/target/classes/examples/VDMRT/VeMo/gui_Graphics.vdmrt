@@ -1,0 +1,31 @@
+class gui_Graphics
+
+	instance variables
+-- TODO Define instance variables here
+	operations
+    
+    public init : () ==> ()
+    init()== is not yet specified;
+
+    public sleep: () ==> ()
+    sleep()== is not yet specified;
+
+    public addVehicle: int ==> ()
+    addVehicle(vecID)== is not yet specified;
+
+    public connectVehicles: int * int ==> ()
+    connectVehicles(vecID, vecID2)== is not yet specified;
+
+    public disconnectVehicles: int * int ==> ()
+    disconnectVehicles(vecID, vecID2)== is not yet specified;
+
+    public updatePosition: int * int * int ==> ()
+    updatePosition(vecID, x, y)== is not yet specified;
+
+    public updateDirection: int * int ==> ()
+    updateDirection(vecID, dir)== is not yet specified;
+
+    public receivedMessage : int ==> ()
+    receivedMessage(vecID) == is not yet specified;
+
+end gui_Graphics

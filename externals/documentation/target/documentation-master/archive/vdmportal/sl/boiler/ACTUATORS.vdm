@@ -1,0 +1,27 @@
+\subsection{The actuators}\label{ACTUATORS}
+
+Like for the captors, a series of variables are introduced for the actuators which report on the last  action performed on the boiler.
+
+\begin{itemize}
+\item $pa$ is a map that assigns an action to each pump;
+\item $ea$ is the last emergency action performed;
+\item $va$ is the last action performed on the valve.
+\end{itemize}
+
+\begin{vdm_al}
+module ACTUATORS
+
+imports from BOILER_TYPES all , from ACTUATORS_TYPES all
+
+exports all
+
+definitions
+
+state ACTUATORS of
+	pa :  ACTUATORS_TYPES`pump_to_action_map
+	ea : ACTUATORS_TYPES`emergency_action
+        va : ACTUATORS_TYPES`open_close_action
+end
+
+end ACTUATORS
+\end{vdm_al}

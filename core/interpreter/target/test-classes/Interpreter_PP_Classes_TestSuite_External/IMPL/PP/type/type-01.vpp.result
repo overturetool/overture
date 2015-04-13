@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
+<message column="7" line="57" message="Error 4087: Cannot convert 'a' (char) to set of (real) in 'A' (type-01.vpp) at line 57:7" messageType="error" number="4087" resource="type-01.vpp.result"/>
+<result>
+<output object="[]" resource="type-01.vpp" value="[]"/>
+</result>
+</testResult>

@@ -1,0 +1,57 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    private static final Tuple a = Tuple.mk_(Tuple.mk_(1L, true), 3L);
+    private static final Tuple b = Utils.clone(a);
+    private static final Tuple c = Utils.clone(((Tuple) a.get(0)));
+    private static final Number d = ((Number) ((Tuple) a.get(0)).get(0));
+    private static final Boolean e = ((Boolean) ((Tuple) a.get(0)).get(1));
+    private static final Number f = ((Number) a.get(1));
+
+    public A() {
+    }
+
+    public Number op1() {
+        Tuple r = Tuple.mk_(1L, 2L);
+
+        return ((Number) r.get(0));
+    }
+
+    public Number op2() {
+        Tuple a = Tuple.mk_(1L, 2L);
+        Tuple b = Utils.clone(a);
+
+        return ((Number) b.get(0));
+    }
+
+    public Number op3() {
+        Tuple a = Tuple.mk_(Tuple.mk_(1L, 2L), 3L);
+        Tuple b = Utils.clone(((Tuple) a.get(0)));
+
+        return ((Number) ((Tuple) a.get(0)).get(0));
+    }
+
+    public Tuple op4() {
+        Tuple a = Tuple.mk_(Tuple.mk_(1L, 2L), 3L);
+
+        return Utils.clone(a);
+    }
+
+    public Tuple op5() {
+        Tuple a = Tuple.mk_(Tuple.mk_(1L, 2L), 3L);
+
+        return Utils.clone(((Tuple) a.get(0)));
+    }
+
+    public String toString() {
+        return "A{" + "a = " + Utils.toString(a) + ", b = " +
+        Utils.toString(b) + ", c = " + Utils.toString(c) + ", d = " +
+        Utils.toString(d) + ", e = " + Utils.toString(e) + ", f = " +
+        Utils.toString(f) + "}";
+    }
+}
+
+##########

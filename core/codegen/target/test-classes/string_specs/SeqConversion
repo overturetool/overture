@@ -1,0 +1,68 @@
+class Entry
+
+values
+
+x = "x" ^ [];
+
+functions
+
+public f :  () -> seq of char
+f () ==
+if 1 = 1 then
+  []
+else
+  "a";
+
+operations
+
+public static op1 : () ==> seq of char
+op1 () ==
+if 1 = 1 then
+  return [] ^ "ab"
+else
+  return "b";
+
+
+public static op2 : () ==> seq of char
+op2 () ==
+if 1 = 1 then
+  return [] ^ []
+else
+  return "b";
+
+
+public static op3 : () ==> seq of char
+op3 () ==
+if 1 = 1 then
+  return conc[[], []]
+else
+  return "b";
+  
+public static op4 : () ==> seq of char
+op4 () ==
+let a = [] ^ "a"
+in
+  return a;
+
+public static op5 : () ==> seq of char
+op5 () ==
+if 1 = 1 then
+  return conc[[], [], "a"]
+else
+  return "b";
+  
+public static op6 : () ==> seq of ?
+op6 () == return [] ^ "a";
+
+public static op7 : () ==> seq of char
+op7 () ==
+if 1 = 1 then
+  return [] ^ "xy" ^ [] ^ [] ^ "mm" ^ conc[[], []]
+else
+  return "b";
+
+public static Run : () ==> seq of char
+Run () ==
+  return x ^ f() ^ op1() ^ op2() ^ op3() ^ op5() ^ op6() ^ op7();-- ^ op4();
+
+end Entry

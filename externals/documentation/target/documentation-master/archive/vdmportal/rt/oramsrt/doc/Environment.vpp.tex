@@ -1,0 +1,294 @@
+\begin{vdm}\kClass $Environment$ \kISO $GLOBAL$\index{Environment|ClassDef}
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}
+\assdef{ctl}{\Opt{AccessController\index{AccessController|TypeOcc}}}[{\Nil }]
+\end{insvar}
+\begin{insvar}
+\assdef{Linlines}{\seqof*{Linline\index{Linline|TypeOcc}}}[{\seq{}}]
+\end{insvar}
+\begin{insvar}
+\assdef{Pinlines}{\seqof*{Pinline\index{Pinline|TypeOcc}}}[{\seq{}}]
+\end{insvar}
+\begin{insvar}
+\assdef{events}{\seqof*{event\index{event|TypeOcc}}}[{\seq{}}]
+\end{insvar}
+\begin{insvar}
+\assdef{busy}{\Bool }[{\True }]
+\end{insvar}
+\begin{insvar}
+\assdef{running}{\Bool }[{\True }]
+\end{insvar}
+\begin{insvar}
+\assdef{outlines}{\seqof*{outline\index{outline|TypeOcc}}}[{\seq{}}]
+\end{insvar}
+\begin{insvar}
+\assdef{io}{IO\index{IO|TypeOcc}}[{\fnapply{\new{IO}}{}}]
+\end{insvar}
+\par
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{Environment}\index{Environment|FuncDef}%
+\signature{String\index{String|TypeOcc} \Oto Environment\index{Environment|TypeOcc}}
+\parms{sfname}
+\annlab[o]{Environment`Environment}
+\begin{blockstmt}
+\begin{defstmt}
+\eqdef{\reccons{\kw{mk-}}{-,input1}}{\fnapply{io.freadval[\seqof*{event\index{event|TypeOcc}}]}{sfname}}
+\end{defstmt} \\
+\ass{events}{input1} ; \\
+\call{init}{}
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{setController}\index{setController|FuncDef}%
+\signature{AccessController\index{AccessController|TypeOcc} \Oto ()}
+\parms{actl}
+\annlab[o]{Environment`setController}
+\ass{ctl}{actl};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{sendEvents}\index{sendEvents|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{Environment`sendEvents}
+\begin{blockstmt}
+\If  \Len events > 0
+\Then \\
+\begin{blockstmt}
+\begin{dclstmt}
+\assdef{curtime}{Time\index{Time|TypeOcc}}[{\kw{time}}]
+\assdef{done}{\Bool }[{\False }]
+\end{dclstmt}
+\begin{while}{ \Not done}
+\begin{defstmt}
+\eqdef{\reccons{\kw{mk-}}{type,id1,id2,intend,pt}}{ \Hd events}
+\end{defstmt} \\
+\If pt \Le curtime
+\Then \\
+\begin{blockstmt}
+$ctl$.\call{addEvent}{\reccons{\kw{mk\textunderscore}}{type,id1,id2,intend,pt}} ; \\
+\ass{events}{ \Tl events} ; \\
+\ass{done}{ \Len events = 0}
+\end{blockstmt}
+\Else \\
+\ass{done}{\True }
+\Fi
+\end{while}
+\end{blockstmt}
+\Else \\
+\begin{blockstmt}
+\ass{running}{\False }
+\end{blockstmt}
+\Fi
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{addOutline}\index{addOutline|FuncDef}%
+\signature{outline\index{outline|TypeOcc} \Oto ()}
+\parms{line}
+\annlab[o]{Environment`addOutline}
+\begin{blockstmt}
+\ass{outlines}{outlines \Sconc \seq{line}}
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{showResult}\index{showResult|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{Environment`showResult}
+\begin{defstmt}
+\eqdef{-}{\fnapply{io.writeval[\seqof*{outline\index{outline|TypeOcc}}]}{outlines}}
+\end{defstmt} \\
+\Skip ;
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{init}\index{init|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{Environment`init}
+\begin{blockstmt}
+ORAMS`a1.\call{addBoat}{ORAMS`l1} ; \\
+ORAMS`a1.\call{addEquipment}{ORAMS`f1} ; \\
+ORAMS`a1.\call{addEquipment}{ORAMS`f2} ; \\
+ORAMS`a1.\call{addEquipment}{ORAMS`f3} ; \\
+ORAMS`a2.\call{addBoat}{ORAMS`l2} ; \\
+ORAMS`a2.\call{addBoat}{ORAMS`l3} ; \\
+ORAMS`a2.\call{addEquipment}{ORAMS`f4} ; \\
+ORAMS`a2.\call{addEquipment}{ORAMS`f5} ; \\
+ORAMS`a2.\call{addEquipment}{ORAMS`f6} ; \\
+ORAMS`a3.\call{addBoat}{ORAMS`l3} ; \\
+ORAMS`a3.\call{addBoat}{ORAMS`l4} ; \\
+ORAMS`a3.\call{addEquipment}{ORAMS`f7} ; \\
+ORAMS`a3.\call{addEquipment}{ORAMS`f8} ; \\
+ORAMS`a3.\call{addEquipment}{ORAMS`f9} ; \\
+ORAMS`a3.\call{addEquipment}{ORAMS`f10}
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{isFinished}\index{isFinished|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{Environment`isFinished}
+\Skip 
+\end{op}
+\kSync
+\mutex{sendEvents};
+\index{isFinished|MethodOcc}\per{isFinished}{ \Not running}
+\kThreadDef
+\index{sendEvents|MethodOcc}\periodic{\color{not-covered}1000\color{covered},\color{not-covered}1\color{covered},\color{not-covered}3\color{covered},\color{not-covered}0\color{covered}}{sendEvents}
+\kEnd $Environment$
+
+\end{vdm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{tabular}{p{25mm}l}
+{\bf Test Suite :} & vdm.tc \\ 
+{\bf Class :} & Environment \\ 
+\end{tabular}
+
+\begin{longtable}{|l|r|r|}\hline
+{\bf Name} & {\bf \#Calls} & {\bf Coverage} \\ \hline\hline
+\endhead
+Environment`init & 3 & $\surd$ \\ \hline
+Environment`addOutline & 27 & $\surd$ \\ \hline
+Environment`isFinished & 2 & $\surd$ \\ \hline
+Environment`sendEvents & 21 & $\surd$ \\ \hline
+Environment`showResult & 2 & $\surd$ \\ \hline
+Environment`Environment & 3 & $\surd$ \\ \hline
+Environment`setController & 3 & $\surd$ \\ \hline
+\hline
+{\bf Total Coverage} & & {\bf 100\%} \\ \hline
+\end{longtable}
+

@@ -1,0 +1,31 @@
+##----------------------------------------------------------------------------
+##                             Make file for SunOS 4
+##----------------------------------------------------------------------------
+VDMLIB  = /home/henrik/toolbox/SunOS4
+INCL    = -I/home/henrik/toolbox/SunOS4
+
+## Nothing below this line should be changed.
+CC      = /usr/local/package/gcc-2.7.2/bin/g++
+LIB     = -L$(VDMLIB) -lvdm -lm
+
+all: libcylio.so libmath.so
+
+libcylio.so: cylio.o tcfcylio.o 
+	ld -o libcylio.so cylio.o tcfcylio.o ${LIB}
+
+cylio.o: cylio.cc
+	${CC} -c -fpic -o cylio.o cylio.cc ${INCL}
+
+tcfcylio.o: tcfcylio.cc
+	${CC} -c -fpic -o tcfcylio.o tcfcylio.cc ${INCL}
+
+libmath.so: tcfmath.cc
+	${CC} -c -fpic -o tcfmath.o  tcfmath.cc ${INCL}
+	ld -o libmath.so tcfmath.o ${LIB} 
+clean:
+	rm *.o *.so
+
+# target for debuging
+debug: cylio.o tcfcylio.o main.cc
+	${CC} -c main.cc -o main.o ${INCL}
+	${CC} -o debug cylio.o tcfcylio.o main.o ${LIB}

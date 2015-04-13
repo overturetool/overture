@@ -1,0 +1,173 @@
+\section{CyberRail class}
+\begin{vdm_al}
+
+class RailwayGrid
+
+instance variables
+
+private sectionList : set of TransportPlan`Section; 
+private grid : Grid := {};
+private inactiveGrid : Grid := {};
+private inactiveSectionID : set of nat := {};
+private io : IO := new IO();
+private routePlan : RoutePlan := {};
+private gridReservation : GridReservation;
+
+types
+
+public Plan = seq of TransportPlan`Section;
+public GridSegment = seq of TransportPlan`Section;
+public Grid = set of GridSegment;
+public RoutePlan = set of Route;
+--public Schedule = set of Plan;
+
+operations
+
+--Constructor	
+public RailwayGrid : () ==> RailwayGrid	
+RailwayGrid()==
+(	
+	initGrid();
+	return self;
+);
+
+
+public getSectionPlan : () ==> GridReservation`SectionPlan
+getSectionPlan() == return gridReservation.getSectionPlan();
+
+private recAlgo : Grid * GridSegment * Types`String ==> Grid
+recAlgo(grid, gridsegment, station) ==
+(
+	dcl grid_temp : Grid := grid;
+	for all r in set sectionList  do
+	(
+		if( r.departureLocation = station and 	
+				not (exists p in set elems gridsegment & 
+				r.arrivalLocation = p.arrivalLocation or
+				r.arrivalLocation = p.departureLocation) )
+		then (
+					dcl temp : GridSegment :=  gridsegment ^ [r];
+					grid_temp := grid_temp union {temp};
+			 		grid_temp := recAlgo( grid_temp, temp, r.arrivalLocation);
+			  );
+	);
+ 	return grid_temp;
+);
+
+--------------------------------------------------------------------------
+ -- This method creates a railway grid and a timetable and is contructed  
+ -- through several layers as follows: All sections -> all segments -> 
+ -- all sections mapped to reservations times -> filter = final grid & 
+ -- time table
+ -------------------------------------------------------------------------
+ public initGrid : () ==> ()
+ initGrid() == (
+ 
+ 	duration(0)
+	(
+	
+		--Define all potential sections to travel.
+		dcl 	R1  : TransportPlan`Section := mk_TransportPlan`Section("A", "B", 42, "P1", 200000, 1), 
+				R2  : TransportPlan`Section := mk_TransportPlan`Section("A", "C", 42, "P1", 250000, 2),
+				R3  : TransportPlan`Section := mk_TransportPlan`Section("B", "C", 99, "P1", 200000, 3),	
+				R4  : TransportPlan`Section := mk_TransportPlan`Section("B", "D", 42, "P1", 200000, 4),
+				R5  : TransportPlan`Section := mk_TransportPlan`Section("B", "A", 42, "P1", 200000, 5),	
+				R6  : TransportPlan`Section := mk_TransportPlan`Section("C", "D", 42, "P1", 200000, 6),
+				R7  : TransportPlan`Section := mk_TransportPlan`Section("C", "A", 42, "P1", 200000, 7),
+				R8  : TransportPlan`Section := mk_TransportPlan`Section("D", "B", 42, "P1", 200000, 8),	
+				R9  : TransportPlan`Section := mk_TransportPlan`Section("D", "C", 42, "P1", 200000, 9),
+				R10 : TransportPlan`Section := mk_TransportPlan`Section("C", "B", 99, "P1", 200000,10),
+				R11 : TransportPlan`Section := mk_TransportPlan`Section("B", "E", 99, "P1", 200000,11),
+				R12 : TransportPlan`Section := mk_TransportPlan`Section("C", "F", 99, "P1", 200000,12),
+				R13 : TransportPlan`Section := mk_TransportPlan`Section("F", "D", 99, "P1", 200000,13),
+				R14 : TransportPlan`Section := mk_TransportPlan`Section("E", "D", 99, "P1", 200000,14);
+ 		
+ 		--Define active sections to use in grid
+		sectionList := {R1,R3,R4,R5,R6,R7,R9,R10,R11,R12,R13,R14}; 
+ 
+ 		--Calculate all possible segments (aka grid) based on active sections.
+		grid := recAlgo({},[], "A") union 
+				recAlgo({},[], "B") union 
+				recAlgo({},[], "C") union 
+				recAlgo({},[], "D") union
+				recAlgo({},[], "E") union
+				recAlgo({},[], "F");
+					
+		
+		--Filter grid to obtain a semi random grid and hence time table. 
+		(dcl filteredGrid : Grid := filter(3, grid);
+		
+		--Calculate time table based on the grid.
+		gridReservation :=  new GridReservation(filteredGrid, sectionList););
+		
+		def - = io.fwriteval[Grid]("grid.txt",grid,<start>) in skip;
+		
+ 		routePlan := gridReservation.getRoutePlan();
+ 		def - = io.fwriteval[RoutePlan]("routePlan.txt",routePlan,<start>) in skip;
+ 		def - = io.fwriteval[set of TransportPlan`Section]("sectionList.txt",sectionList,<start>) in skip;
+
+ 	);
+ );
+
+public getRoutePlan: () ==> RoutePlan
+getRoutePlan()==
+(
+	return routePlan;
+);
+
+public getGrid : () ==> Grid
+getGrid() == return grid;
+
+public isSectionActive : nat ==> bool
+isSectionActive(id) == (
+		if id in set inactiveSectionID then
+			return false
+		else
+			return true;
+);
+
+public setInactiveSection : nat ==> ()
+setInactiveSection(id)==
+(
+	duration(0) (
+	Logger`write("RailwayGrid inactive route");
+	inactiveSectionID := inactiveSectionID union {id};
+	inactiveGrid := inactiveGrid union  {tp | tp in set grid & exists x in set elems tp & x.id_section = id};
+	grid := {x | x in set grid & id not in set {section.id_section | section in set elems x}}; 
+	);
+)
+pre exists x in set sectionList & x.id_section = id;
+
+public filter : nat * Grid ==> Grid
+filter(id, agrid) ==
+(
+	return {x | x in set agrid & len x > id};
+);
+
+public getInactiveSectionsAsIds : () ==> set of nat
+getInactiveSectionsAsIds() == return inactiveSectionID;
+
+	
+
+
+
+---------------------------------------------------------------------------------------------------------------
+public test : () ==> ()
+test()== 
+(
+	writef (recAlgo({},[], "A") union recAlgo({},[], "B") union recAlgo({},[], "C") union recAlgo({},[], "D") );
+);
+
+private writef : Grid ==> ()
+	writef(grid)==
+	(
+		def - = io.fwriteval[Grid]("railway.txt",grid,<append>) in skip;
+	);
+
+sync
+--mutex (isRouteActive);
+	
+end RailwayGrid
+\end{vdm_al}
+
+

@@ -1,0 +1,38 @@
+\section{The Class Cardholder}
+
+This class models a cardholder's name and address. This information is
+used to post an account statement. The class provides standard
+read/write operations.
+
+\begin{vdm_al}
+class Cardholder
+
+types
+  public Address = seq of char;
+  public Name = seq of char;
+
+instance variables
+  name : Name;
+  address : Address;
+
+operations
+  public Create : Name * Address ==> Cardholder
+  Create(nm,addr) ==
+    (name := nm;
+     address := addr;
+     return self);
+
+  public GetName : () ==> Name 
+  GetName () ==
+    return name;
+
+  public GetAddress : () ==> Address 
+  GetAddress() ==
+    return address;
+
+end Cardholder
+\end{vdm_al}
+
+
+
+

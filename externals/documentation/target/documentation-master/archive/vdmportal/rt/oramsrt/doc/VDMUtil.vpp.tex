@@ -1,0 +1,35 @@
+\kClass $VDMUtil$\index{VDMUtil|ClassDef}
+\par
+\kFunctions
+\kw{\kw{public}\hspace{0.5em}\kw{static}}\begin{fn}[e]{set2seq}\index{set2seq|FuncDef}%
+\signature[@T]{\setof{@T} \To \seqof*{@T}}
+\parms*{\Lp x\Rp }
+\annlab[o]{VDMUtil`set2seq}
+\isnotyetspec;
+\end{fn}
+\kw{\kw{public}\hspace{0.5em}\kw{static}}\begin{fn}[e]{get\hbox{\textunderscore}file\hbox{\textunderscore}pos}\index{get\hbox{\textunderscore}file\hbox{\textunderscore}pos|FuncDef}%
+\signature{() \To \Opt{\seqof*{\Char } \X \Nat  \X \Nat  \X \seqof*{\Char } \X \seqof*{\Char }}}
+\parms*{\Lp \Rp }
+\annlab[o]{VDMUtil`get\hbox{\textunderscore}file\hbox{\textunderscore}pos}
+\isnotyetspec;
+\end{fn}
+\kw{\kw{public}\hspace{0.5em}\kw{static}}\begin{fn}[e]{val2seq\hbox{\textunderscore}of\hbox{\textunderscore}char}\index{val2seq\hbox{\textunderscore}of\hbox{\textunderscore}char|FuncDef}%
+\signature[@T]{@T \To \seqof*{\Char }}
+\parms*{\Lp x\Rp }
+\annlab[o]{VDMUtil`val2seq\hbox{\textunderscore}of\hbox{\textunderscore}char}
+\isnotyetspec;
+\end{fn}
+\kw{\kw{public}\hspace{0.5em}\kw{static}}\begin{fn}[e]{seq\hbox{\textunderscore}of\hbox{\textunderscore}char2val}\index{seq\hbox{\textunderscore}of\hbox{\textunderscore}char2val|FuncDef}%
+\signature[@p]{\seqof+{\Char } \Pto \Bool  \X \Opt{@p}}
+\parms*{\Lp s\Rp }
+\annlab[o]{VDMUtil`seq\hbox{\textunderscore}of\hbox{\textunderscore}char2val}
+\isnotyetspec
+\begin{postcond}
+\begin{letexpr}
+\patdef{\reccons{\kw{mk-}}{b,t}}{RESULT}
+\end{letexpr} \\
+ \Not b \Implies t = \Nil 
+\end{postcond}
+\end{fn}
+\kEnd $VDMUtil$
+

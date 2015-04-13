@@ -1,0 +1,30 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleFunctionDefinitionImpl is subclass of SimpleFunctionDefinition
+instance variables
+    private iv_name:SimpleIdentifier;
+    private iv_params:seq of SimpleParameter;
+    private iv_body:SimpleExpression;
+
+operations
+    public SimpleFunctionDefinitionImpl: SimpleIdentifier * seq of SimpleParameter * SimpleExpression ==> SimpleFunctionDefinitionImpl
+    SimpleFunctionDefinitionImpl(p_name, p_params, p_body) ==
+    (
+        iv_name := p_name;
+        iv_params := p_params;
+        iv_body := p_body;
+    );
+
+    public getName: () ==> SimpleIdentifier
+    getName() == return iv_name;
+
+    public getParams: () ==> seq of SimpleParameter
+    getParams() == return iv_params;
+
+    public getBody: () ==> SimpleExpression
+    getBody() == return iv_body;
+
+end SimpleFunctionDefinitionImpl

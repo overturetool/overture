@@ -1,0 +1,6 @@
+#set( $types = "")
+#if ($node.getTypes().size() > 0)
+	#set( $types = $JavaFormat.formatTemplateTypes($node.getTypes()))
+#end
+##
+$node.getName()${types}

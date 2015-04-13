@@ -1,0 +1,89 @@
+% MotorActuator.vdmrt
+
+\subsubsection{Controlling the direct drive motor -- the \texttt{MotorActuator} class}
+
+The \texttt{MotorActuator} class provides the functionality to drive the motor.
+The motor is either \texttt{<FREERUNNING>} or \texttt{<ACTUATED>} and operations
+are provided to modify the state of the actuator. If the actuator is in 
+\texttt{<FREERUNNING>} state then setting the pulse width modulation (PWM)
+value has no effect, it will simply not be propagated to the environment.
+Note that the PWM value must be set between $[-1.0, 1.0]$ whereby the sign
+influences the direction of the rotation. 
+
+\begin{vdm_al}
+class MotorActuator
+  is subclass of IActuatorReal
+
+types
+  -- motor is either free running or actuated
+  private tDriveStatus = <ACTUATED> | <FREERUNNING>
+
+instance variables
+  -- motor is initially free running
+  private mDriveStatus : tDriveStatus := <FREERUNNING>;
+
+  -- link back to the controller managing this resource
+  private mController : Controller;
+
+operations
+  public MotorActuator: Controller ==> MotorActuator
+  MotorActuator (pController) == mController := pController;
+
+  public initActuator: () ==> ()
+  initActuator () ==  
+    ( -- set drive status to free running
+      mDriveStatus := <FREERUNNING>;
+      -- push initial motor drive status to environment
+      mController.setValue("ACTUATED", 0);
+      -- reset the motor PWM start-up value
+      mController.setValue("PWM", 0) );
+
+  public isActuated: () ==> bool
+  isActuated () == return mDriveStatus = <ACTUATED>;
+
+  public setFreeRunning: () ==> ()
+  setFreeRunning () ==
+    if isActuated()
+    then ( -- update the motor actuation state
+           mDriveStatus := <FREERUNNING>;
+           -- push the drive status to the environment
+           duration (0) mController.setValue("ACTUATED", 0);
+           -- conditional diagnostics
+           duration (0) if ChessWay`debug
+                        then printDiagnostics() );
+
+  public setActuated: () ==> ()
+  setActuated () ==
+    if not isActuated()
+    then ( -- update the motor actuation state
+           mDriveStatus := <ACTUATED>;
+           -- push the drive state to the environment
+           duration (0) mController.setValue("ACTUATED", 1);
+           -- conditional diagnostics
+           duration (0) if ChessWay`debug
+                        then printDiagnostics() );
+
+  public SetValue: real ==> ()
+  SetValue(v) ==
+    if mController.mName = "LEFT"
+    then mController.setValue("ACC", v)
+    else mController.setValue("VEL", v);
+
+  public setPWM: real ==> ()
+  setPWM (pPWM) ==
+    if isActuated()
+    -- store the PWM value (push to environment)
+    then duration (0) mController.setValue("PWM", pPWM)
+    else skip
+  pre pPWM >= -1.0 and pPWM <= 1.0;
+
+  public printDiagnostics: () ==> ()
+  printDiagnostics () ==
+    ( IO`print(mController.mName ^ " motor is ");
+      IO`print(mDriveStatus);
+      IO`print(" at ");
+      IO`print(time/1E9);
+      IO`print("\n") );
+
+end MotorActuator
+\end{vdm_al}

@@ -1,0 +1,126 @@
+\begin{vdm}\kClass $Person$ \kISO $GLOBAL$\index{Person|ClassDef}
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}
+\assdef{area}{\Opt{Aid\index{Aid|TypeOcc}}}[{\Nil }]
+\end{insvar}
+\begin{insvar}
+\assdef{boat}{\Opt{Bid\index{Bid|TypeOcc}}}[{\Nil }]
+\end{insvar}
+\begin{insvar}
+\assdef{id}{Pid\index{Pid|TypeOcc}}
+\end{insvar}
+\par
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{Person}\index{Person|FuncDef}%
+\signature{Pid\index{Pid|TypeOcc} \Oto Person\index{Person|TypeOcc}}
+\parms{pid}
+\annlab[o]{Person`Person}
+\ass{id}{pid};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{getArea}\index{getArea|FuncDef}%
+\signature{() \Oto \Opt{Aid\index{Aid|TypeOcc}}}
+\parms{}
+\annlab[o]{Person`getArea}
+\return{area};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{getBoat}\index{getBoat|FuncDef}%
+\signature{() \Oto \Opt{Bid\index{Bid|TypeOcc}}}
+\parms{}
+\annlab[o]{Person`getBoat}
+\return{boat};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{changeArea}\index{changeArea|FuncDef}%
+\signature{Aid\index{Aid|TypeOcc} \Oto ()}
+\parms{a}
+\annlab[o]{Person`changeArea}
+\ass{area}{a}
+\begin{precond}
+\color{not-covered}a \In  \Dom ORAMS`areas\color{covered}
+\end{precond};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{changeBoat}\index{changeBoat|FuncDef}%
+\signature{Bid\index{Bid|TypeOcc} \Oto ()}
+\parms{b}
+\annlab[o]{Person`changeBoat}
+\ass{boat}{b}
+\begin{precond}
+\color{not-covered}b \In  \Dom ORAMS`Lifeboats\color{covered}
+\end{precond};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{getId}\index{getId|FuncDef}%
+\signature{() \Oto Pid\index{Pid|TypeOcc}}
+\parms{}
+\annlab[o]{Person`getId}
+\return{id}
+\end{op}
+\kEnd $Person$
+
+\end{vdm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{tabular}{p{25mm}l}
+{\bf Test Suite :} & vdm.tc \\ 
+{\bf Class :} & AreaController \\ 
+\end{tabular}
+
+\begin{longtable}{|l|r|r|}\hline
+{\bf Name} & {\bf \#Calls} & {\bf Coverage} \\ \hline\hline
+\endhead
+\hline
+{\bf Total Coverage} & & {\bf 1\%} \\ \hline
+\end{longtable}
+

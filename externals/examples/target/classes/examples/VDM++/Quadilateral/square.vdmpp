@@ -1,0 +1,3 @@
+class Square is subclass of Rhombus, Rectangle
+ 
+end Square

@@ -1,0 +1,25 @@
+class A
+
+functions
+
+public static Sum: seq of real +> real
+Sum(rs) ==
+	if rs = [] then
+		0
+	else
+		hd rs + Sum(tl rs);
+		
+public static add : seq of nat * seq of real -> real
+add (natSeq, realSeq) == hd natSeq + hd realSeq;		
+		
+		
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () == return A`Sum([1,2,3]) + A`add([5],[1.1]);
+
+end Entry

@@ -1,0 +1,119 @@
+\section{The Class Till}
+
+The Till class is virtually identical to the one presented in Appendix B 
+except that some of the operations have been modified to be able to deliver 
+the value <Fail> to represent failed communication with the CentralResource. 
+Also, the resource instance variable is now a reference to a LocalResource, 
+though since LocalResource and CentralResource have an identical calling 
+interface, this change is minimal. The remaining changes are self-explanatory, 
+so in the sequel we merely present the class, with any changes from the 
+previous version indicated by underlining.
+
+\begin{vdm_al}
+class Till
+
+instance variables
+  curCard : [Card] := nil;
+  cardOk : bool := false;
+  retainedCards : set of Card := {};
+  resource : LocalResource;
+
+  inv curCard = nil => not cardOk;
+
+operations
+  public Till: LocalResource ==> Till
+  Till(res) == 
+    resource := res;
+
+  public Set: LocalResource ==> Till
+  Set(res) ==
+   (resource := res;
+    return self);
+    
+  public InsertCard : Card ==> ()
+  InsertCard(c) ==
+    curCard := c
+  pre not CardInside();
+
+  public Validate : Card`PinCode ==> <PinOk> | <PinNotOk> | <Retained> 
+                              | <Fail>  
+  Validate(pin) ==
+    let cardId = curCard.GetCardId(),
+        codeOk = curCard.GetCode() = Encode(pin),
+        cardLegal = IsLegalCard()
+    in if cardLegal = <Fail>
+       then return <Fail>
+       else
+          (cardOk := codeOk and cardLegal;
+           if not cardLegal 
+           then (retainedCards := retainedCards union {curCard};
+                 curCard := nil;
+                 return <Retained>)
+           elseif codeOk 
+           then if resource.ResetNumberOfTries(cardId) = <Fail>
+                then return <Fail> 
+                else return <PinOk>
+           else
+             (let incTries = resource.IncrNumberOfTries(cardId),
+                  numTriesExceeded = 
+                             resource.NumberOfTriesExceeded(cardId) in
+              if <Fail> in set {incTries, numTriesExceeded}
+              then return <Fail>
+              elseif numTriesExceeded then
+                (retainedCards := retainedCards union {curCard};
+                 cardOk := false;
+                 curCard := nil;
+                 return <Retained>)
+              else return <PinNotOk>
+             )
+          )
+  pre CardInside() and not cardOk;
+
+  public ReturnCard : () ==> ()
+  ReturnCard() ==
+    (cardOk := false;
+     curCard:= nil)
+  pre CardInside();
+
+  public GetBalance : () ==> [nat]|<Fail>
+  GetBalance() ==
+    resource.GetBalance(curCard.GetAccountId())
+  pre CardValidated();
+
+  public MakeWithdrawal : nat ==> bool | <Fail>
+  MakeWithdrawal(amount) ==
+    resource.Withdrawal
+      (curCard.GetAccountId(),curCard.GetCardId(),amount)
+  pre CardValidated();
+
+  public RequestStatement : () ==> bool | <Fail>
+  RequestStatement() ==
+    resource.PostStatement(curCard.GetAccountId(),curCard.GetCardId())
+  pre CardValidated();
+\end{vdm_al}
+
+The IsLegalCard operation below is only used internally to validate a card.
+
+\begin{vdm_al}
+  public IsLegalCard : () ==> bool | <Fail>
+  IsLegalCard() ==
+    return 
+      resource.IsLegalCard(curCard.GetAccountId(),curCard.GetCardId())
+  pre CardInside();
+
+  public CardValidated: () ==> bool
+  CardValidated() ==
+    return curCard <> nil and cardOk;
+
+  public CardInside: () ==> bool
+  CardInside() ==
+   return curCard <> nil;
+
+functions
+
+  Encode: Card`PinCode +> Card`Code
+  Encode(pin) ==
+    pin; -- NB The actual encoding procedure has not yet been chosen
+
+end Till
+\end{vdm_al}

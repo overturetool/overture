@@ -1,0 +1,11 @@
+[mk_(mk_TPC`NavigationInput("A","D",<Cheapest>,1,3000),0,nil,3000),
+mk_(mk_TPC`NavigationInput("A","D",<Cheapest>,1,3000),1,nil,3000),
+mk_(mk_TPC`NavigationInput("A","D",<Cheapest>,1,3000),2,nil,3000),
+mk_(mk_TPC`NavigationInput("A","D",<Cheapest>,1,3000),3,nil,3000),
+mk_(mk_TPC`NavigationInput("A","D",<Cheapest>,1,3000),4,nil,3000),
+mk_(mk_TPC`NavigationInput("A","D",<Cheapest>,1,3000),5,nil,3000),
+mk_(mk_TPC`NavigationInput("A","D",<Cheapest>,1,3000),6,nil,3000),
+mk_(mk_TPC`NavigationInput("A","D",<Cheapest>,1,3000),7,nil,3000),
+mk_(mk_TPC`NavigationInput("A","D",<Cheapest>,1,3000),8,nil,3000),
+mk_(mk_TPC`NavigationInput("A","D",<Cheapest>,1,3000),9,nil,3000)
+]

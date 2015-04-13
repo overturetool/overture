@@ -1,0 +1,63 @@
+\section{The Test Class}
+
+The Test class defines an environment for executing test cases. The
+class maintains a reference to a KLV instance, and it provides two
+operations, runOneTest for execution of one test event, and runTests
+for execution of a sequence of test events. Different kinds of test
+events can be executed. These are defined by the Event class hierarchy
+defined below.
+
+The data types represent different kinds of categories of results.
+
+\begin{vdm_al}
+class Test
+
+types
+
+  public
+  TestResult = KLVstate | BeaconsMet | MaxSpeed;
+
+  public
+  KLVstate :: cd : CabDisp
+              eb : EmerBreak;
+
+  public
+  CabDisp :: alarm   : bool
+             emerbr  : bool
+             grfault : bool;
+
+  public
+  EmerBreak :: break : bool;
+
+  public
+  BeaconsMet :: ann : seq of TIVD
+                res : seq of TIVE;
+
+  public
+  TIVD :: ts : real;
+
+  public
+  TIVE :: sp : real;
+
+  public
+  MaxSpeed :: ms: real;
+
+instance variables
+
+  klv : KLV := new KLV();
+
+operations
+
+  public
+  runTests : seq of Event ==> seq of TestResult
+  runTests (events) ==
+    return [events(i).execute(klv) | i in set inds events ];
+
+  public
+  runOneTest : Event ==> TestResult
+  runOneTest (event) ==
+    return event.execute(klv)
+--  pre isofclass() => ;
+
+end Test
+\end{vdm_al}

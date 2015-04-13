@@ -1,0 +1,63 @@
+\section{Variables of the boiler}\label{PHYSICAL_BOILER}\label{BOILER_STATE}
+
+\begin{vdm_al}
+module BOILER_STATE
+
+imports from BOILER_TYPES all
+
+definitions
+\end{vdm_al}
+
+A state model of the boiler is provided by a collection of the physical
+variables. 
+
+\begin{itemize}
+\item $qe$ the quantity of water in the steam-boiler;
+\item $se$ the quantity of steam exiting the steam-boiler;
+\item $pe$ a map from pump numbers to pump states;
+\item $ve$ the $opened$/$closed$ status of the valve;
+\item $he$ the quantity of heat provided to the boiler;
+\item $te$ the current real-time;
+\item $mode$ the current physical mode.
+\end{itemize}
+
+These variables evolve with time but the VDM state provides a
+snapshot of these at a given time $te$.
+
+\begin{vdm_al}
+state BOILER of
+	qe : BOILER_TYPES`water_level
+	se : BOILER_TYPES`steam_outcome
+	pe : BOILER_TYPES`pump_to_state_map
+	ve : BOILER_TYPES`valve_state
+	he : BOILER_TYPES`watts
+	te : BOILER_TYPES`seconds
+	mode : BOILER_TYPES`boiler_mode
+inv mk_BOILER(qe, se, pe, ve, he, te, mode) == 
+mode=<Running> or mode = <Init> 
+=> ( qe > BOILER_TYPES`M1 and qe < BOILER_TYPES`M2)
+end	
+
+end BOILER_STATE
+\end{vdm_al}
+
+Several physical constraints are enforced by the invariants associated to the
+types of these variables, e.g.\ an upper bound is set on $se$.
+A further invariant states a property involving $qe$ and $mode$:
+in $Running$ and $Init$ modes, the level of water must stay between $M1$ and
+$M2$. 
+
+The modelisation of the pumps could have been more precise: the last
+``switch-on/off'' time could be recorded for each pump and the invariant could
+enforce the relation between the state of the pump and the corresponding
+time.
+% Actually, this constraint will be modeled later. 
+
+Nevertheless, this specification  does not model the
+behaviour of the boiler, it only puts bounds on variables. Moreover, since no
+operation appears in this state machine, it is not possible to change the
+state. Therefore, the next section will introduce the physical laws associated
+to the boiler.
+
+
+

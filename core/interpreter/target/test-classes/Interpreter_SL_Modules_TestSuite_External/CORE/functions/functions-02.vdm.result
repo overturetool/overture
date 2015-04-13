@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
+<message column="7" line="35" message="Error 4051: Cannot apply implicit function: g in 'A' (functions-02.vdm) at line 35:7" messageType="error" number="4051" resource="functions-02.vdm"/>
+<result>
+<output object="[]" resource="functions-02.vdm" value="[]"/>
+</result>
+</testResult>

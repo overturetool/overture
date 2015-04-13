@@ -1,0 +1,29 @@
+\section{The Withdrawal Testing Class}
+
+The event Withdraval corresponds to a client asking for withdrawing money at one of the tills in this system.
+
+\begin{vdm_al}
+class Withdrawal is subclass of Event
+
+instance variables
+
+  tillid : System`TillId;
+  amount : nat;
+
+operations
+  public Init : System`TillId * nat ==> Withdrawal
+  Init(t, a) ==
+    (tillid := t;
+     amount := a;
+     return self);
+
+  public execute : System ==> Test`TestResult
+  execute(sys) ==
+    let till = sys.GetTill(tillid)
+    in
+      if till.CardValidated()
+      then till.MakeWithdrawal(amount)
+      else return false;
+
+end Withdrawal
+\end{vdm_al}

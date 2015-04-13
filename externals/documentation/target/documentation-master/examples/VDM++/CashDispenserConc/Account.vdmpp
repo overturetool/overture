@@ -1,0 +1,113 @@
+\section{The Class Account}
+
+This class models an account. A number of cards held by individual cardholders 
+are associated with an account. An account has a balance and records transactions.
+
+\begin{vdm_al}
+class Account
+
+instance variables
+  cards : map Card`CardId to Cardholder;
+  balance : nat;
+  transactions : seq of Transaction := [];
+  
+  inv TransactionsInvariant(transactions);
+\end{vdm_al}
+
+The invariant ensures that transactions performed on the same day do not 
+exceed the daily limit, which is a constant value defined below. Note that 
+we have chosen to not allow a negative balance.
+
+\begin{vdm_al}
+values
+  dailyLimit : nat = 2000;
+
+types
+  public AccountId = nat;
+  public Transaction :: date : Clock`Date
+                 cardId : Card`CardId
+                 amount : nat;
+\end{vdm_al}
+
+In this specification we have chosen to model transaction as a type. 
+Alternatively it could have been modeled as a class, but it has no obvious 
+functionality except trivial read/write operations. Moreover, transaction 
+objects/values do not need to be shared among many objects. Our choice also 
+illustrates the power of the VDM++ type system.
+
+\begin{vdm_al}
+operations
+  public Account : map Card`CardId to Cardholder * nat ==> Account
+  Account(cs,b) ==
+    (cards := cs;
+     balance := b);
+
+  public GetBalance : () ==> nat
+  GetBalance() ==
+    return balance;
+\end{vdm_al}
+
+The Withdrawal operation checks that an account and the daily limit are not overdrawn. 
+
+\begin{vdm_al}
+  public Withdrawal : Card`CardId * nat * Clock`Date ==> bool
+  Withdrawal(cardId,amount,date) ==
+    let transaction = mk_Transaction(date,cardId,amount)
+    in
+      if balance - amount >= 0 and 
+         DateTotal(date,transactions^[transaction]) <= dailyLimit 
+      then
+       (balance := balance - amount;
+        transactions := transactions ^ [transaction];
+        return true)
+      else 
+        return false
+  pre cardId in set dom cards;
+
+  public MakeStatement : Card`CardId * Clock`Date ==> Letter
+  MakeStatement(cardId,date) ==
+    let nm = cards(cardId).GetName(),
+        addr = cards(cardId).GetAddress()
+    in 
+      return new Letter(nm,addr,date,transactions,balance)
+  pre cardId in set dom cards;
+\end{vdm_al}
+
+The GetCardIds operation is used to obtain all cards associated with the account.
+
+\begin{vdm_al}
+  public GetCardIds: () ==> set of Card`CardId
+  GetCardIds() == 
+    return dom cards;
+\end{vdm_al}
+
+The following operations and functions provide auxiliary functionality of various sorts.
+
+\begin{vdm_al}
+  AddCard : Card`CardId * Cardholder ==> ()
+  AddCard(cId,ch) ==
+    cards := cards munion {cId |-> ch}
+  pre cId not in set dom cards;
+
+functions
+  TransactionsInvariant: seq of Transaction +> bool
+  TransactionsInvariant(ts) ==
+    forall date in set {ts(i).date | i in set inds ts} &
+      DateTotal(date,ts) <= dailyLimit;
+\end{vdm_al}
+
+The transactions invariant first computes all dates in the sequence of transactions and then compares the sum of the drawn amounts for each day with the daily limit.
+
+\begin{vdm_al}
+  DateTotal : Clock`Date * seq of Transaction +> nat
+  DateTotal(date,ts) ==
+    Sum([ts(i).amount | i in set inds ts & ts(i).date = date]);
+
+  Sum: seq of real +> real
+  Sum(rs) ==
+    if rs = [] then 0
+    else
+      hd rs + Sum(tl rs);
+
+end Account
+\end{vdm_al}

@@ -1,0 +1,15 @@
+class Entry
+
+types
+
+public Rec :: x : int;
+
+operations
+
+public static Run : () ==> map nat1 to nat1
+Run () ==
+let hr = if 1 = 1 then {[mk_Rec(2)]} else {[]}
+in
+  return {1 |-> ss(1).x | ss in set hr}
+ 
+end Entry

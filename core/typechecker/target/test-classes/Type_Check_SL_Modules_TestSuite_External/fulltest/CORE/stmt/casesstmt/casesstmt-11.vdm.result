@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="17" line="11" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt-11.vdm"/>
+<message column="14" line="13" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt-11.vdm"/>
+<message column="19" line="12" message="Not expression is not a boolean" messageType="error" number="3137" resource="casesstmt-11.vdm"/>
+<message column="5" line="13" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-11.vdm"/>
+<message column="5" line="15" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-11.vdm"/>
+<message column="10" line="15" message="For all statement does not contain a set type" messageType="error" number="3219" resource="casesstmt-11.vdm"/>
+<message column="5" line="17" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-11.vdm"/>
+<message column="5" line="19" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-11.vdm"/>
+<message column="12" line="20" message="Statement may return void value" messageType="error" number="3328" resource="casesstmt-11.vdm"/>
+<result/>
+</testResult>

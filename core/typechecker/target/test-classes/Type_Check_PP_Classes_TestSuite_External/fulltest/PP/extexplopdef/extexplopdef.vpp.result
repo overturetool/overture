@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="26" line="14" message="Definition 's' not used" messageType="warning" number="5000" resource="extexplopdef.vpp"/>
+<message column="26" line="20" message="Definition 's' not used" messageType="warning" number="5000" resource="extexplopdef.vpp"/>
+<message column="35" line="20" message="Definition 't' not used" messageType="warning" number="5000" resource="extexplopdef.vpp"/>
+<message column="17" line="27" message="Definition 'r' not used" messageType="warning" number="5000" resource="extexplopdef.vpp"/>
+<message column="7" line="48" message="Duplicate definition: a" messageType="warning" number="5007" resource="extexplopdef.vpp"/>
+<message column="7" line="48" message="a at 3:7 hidden by a" messageType="warning" number="5008" resource="extexplopdef.vpp"/>
+<message column="7" line="3" message="Duplicate definition: a" messageType="warning" number="5007" resource="extexplopdef.vpp"/>
+<message column="8" line="31" message="Name 'OpDefTest`a~' is not in scope" messageType="error" number="3182" resource="extexplopdef.vpp"/>
+<message column="13" line="31" message="Name 'OpDefTest`s' is not in scope" messageType="error" number="3182" resource="extexplopdef.vpp"/>
+<message column="3" line="33" message="Operation returns unexpected type" messageType="error" number="3035" resource="extexplopdef.vpp"/>
+<message column="18" line="45" message="Name 'OpDefTest`b~' is not in scope" messageType="error" number="3182" resource="extexplopdef.vpp"/>
+<message column="9" line="51" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="extexplopdef.vpp"/>
+<message column="15" line="52" message="Left hand of + is not numeric" messageType="error" number="3139" resource="extexplopdef.vpp"/>
+<message column="3" line="59" message="Postcondition returns unexpected type" messageType="error" number="3018" resource="extexplopdef.vpp"/>
+<message column="3" line="64" message="State variable a is not this type" messageType="error" number="3032" resource="extexplopdef.vpp"/>
+<message column="14" line="72" message="Errs clause is not bool -&gt; bool" messageType="error" number="3307" resource="extexplopdef.vpp"/>
+<result/>
+</testResult>

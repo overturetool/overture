@@ -1,0 +1,89 @@
+\begin{vdm}\kClass $LifeboatTest$ \kISO $TestCase$\index{LifeboatTest|ClassDef}
+\par
+\kOperations
+\kw{\kw{protected}}\begin{op}[e]{SetUp}\index{SetUp|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{LifeboatTest`SetUp}
+\Skip ;
+\end{op}
+\kw{\kw{protected}}\begin{op}[e]{RunTest}\index{RunTest|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{LifeboatTest`RunTest}
+\begin{blockstmt}
+\begin{dclstmt}
+\assdef{l1}{Lifeboat\index{Lifeboat|TypeOcc}}[{\fnapply{\new{Lifeboat}}{2,\reccons{\kw{mk\textunderscore} \Token}{\const{testboat}}}}]
+\end{dclstmt}
+\call{AssertTrue}{\fnapply{l1.getId}{} = \reccons{\kw{mk\textunderscore} \Token}{\const{testboat}}} ; \\
+\call{AssertTrue}{\fnapply{l1.getRemainingCap}{} = 2} ; \\
+$l1$.\call{disable}{} ; \\
+\call{AssertFalse}{\fnapply{l1.getRemainingCap}{} = 2} ; \\
+$l1$.\call{enable}{} ; \\
+$l1$.\call{addArea}{\fnapply{ORAMS`a1.getId}{}} ; \\
+\call{AssertTrue}{\fnapply{l1.isDedicated}{}} ; \\
+$l1$.\call{addArea}{\fnapply{ORAMS`a2.getId}{}} ; \\
+\call{AssertFalse}{\fnapply{l1.isDedicated}{}} ; \\
+\call{AssertTrue}{\fnapply{l1.getAreas}{} = \set{\fnapply{ORAMS`a1.getId}{},\fnapply{ORAMS`a2.getId}{}}} ; \\
+$l1$.\call{removeArea}{\fnapply{ORAMS`a1.getId}{}} ; \\
+\call{AssertTrue}{\fnapply{l1.isDedicated}{}} ; \\
+$l1$.\call{addPerson}{\fnapply{ORAMS`p1.getId}{}} ; \\
+$l1$.\call{addPerson}{\fnapply{ORAMS`p2.getId}{}} ; \\
+\call{AssertTrue}{\fnapply{l1.getCrew}{} = \set{\fnapply{ORAMS`p1.getId}{},\fnapply{ORAMS`p2.getId}{}}} ; \\
+\call{AssertTrue}{\fnapply{l1.getInterCrew}{\set{\fnapply{ORAMS`p1.getId}{}}} = \set{\fnapply{ORAMS`p1.getId}{}}} ; \\
+\call{AssertFalse}{\fnapply{l1.getInterCrew}{\set{\fnapply{ORAMS`p3.getId}{}}} = \set{\fnapply{ORAMS`p1.getId}{}}} ; \\
+\call{AssertTrue}{\fnapply{l1.getRemainingCap}{} = 0} ; \\
+$l1$.\call{removePerson}{\fnapply{ORAMS`p1.getId}{}} ; \\
+\call{AssertTrue}{\fnapply{l1.getRemainingCap}{} = 1} ; \\
+\call{AssertFalse}{\fnapply{l1.getInterCrew}{\set{\fnapply{ORAMS`p1.getId}{}}} = \set{\fnapply{ORAMS`p1.getId}{}}}
+\end{blockstmt};
+\end{op}
+\kw{\kw{protected}}\begin{op}[e]{TearDown}\index{TearDown|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{LifeboatTest`TearDown}
+\Skip 
+\end{op}
+\kEnd $LifeboatTest$
+
+\end{vdm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

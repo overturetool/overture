@@ -1,0 +1,58 @@
+types
+
+Trace = seq of [Event];
+
+Event = <A> | <V>;
+
+state Pacemaker of
+  aperiod : nat 
+  vdelay  : nat
+init p == p = mk_Pacemaker(15,10)
+end
+operations
+
+Init: nat * nat ==> ()
+Init(aperi,vdel) ==
+  (aperiod := aperi;
+   vdelay := vdel);
+    
+IdealHeart: () ==> Trace
+IdealHeart() ==
+  return [ if i mod aperiod = 1
+           then <A>
+           elseif i mod aperiod = vdelay + 1
+           then <V>
+           else nil
+         | i in set {1,...,100}];
+     
+FaultyHeart() tr : Trace
+post len tr = 100 and
+     Periodic(tr,<A>,aperiod) and 
+     not Periodic(tr,<V>,aperiod); 
+         
+functions
+
+Periodic: Trace * Event * nat1 -> bool
+Periodic(tr,e,p) ==
+  forall t in set inds tr &
+     (tr(t) = e) =>
+     (t + p <= len tr =>
+     ((tr(t+p) = e and
+       forall i in set {t+1, ..., t+p-1} & tr(i) <> e))
+      and
+      (t + p > len tr =>
+       forall i in set {t+1, ..., len tr} & tr(i) <> e));
+       
+values
+
+ wrongTR: Trace = [<A>, nil, <V>, nil, nil, <A>, nil, nil, nil, nil ];
+  
+operations
+
+Pace: Trace * nat1 * nat1 ==> Trace
+Pace(tr,aperi,vdel) ==
+  return [nil] ^
+         [ if (i mod aperi = vdel + 1) and tr(i) <> <V> 
+           then <V>
+           else nil
+         | i in set inds tl tr];

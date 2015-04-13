@@ -1,0 +1,63 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        VDMSeq result = SeqUtil.seq();
+        long toVar_1 = 4L;
+
+        for (Long i = 1L; i <= toVar_1; i++) {
+            result = SeqUtil.conc(Utils.clone(result), SeqUtil.seq(f(i)));
+        }
+
+        return Utils.clone(result);
+    }
+
+    public static Number f(final Number n) {
+        Number dummy1 = 10L;
+        Number dummy2 = 20L;
+
+        Number casesExpResult_1 = null;
+
+        Number intPattern_1 = n;
+        Boolean success_1 = Utils.equals(intPattern_1, 1L);
+
+        if (!(success_1)) {
+            Number intPattern_2 = n;
+            success_1 = Utils.equals(intPattern_2, 2L);
+
+            if (!(success_1)) {
+                Number a = n;
+
+                success_1 = true;
+
+                if (success_1) {
+                    casesExpResult_1 = a;
+                } else {
+                    casesExpResult_1 = 3L;
+                }
+            } else {
+                {
+                    Number b = 5L;
+
+                    casesExpResult_1 = b;
+                }
+            }
+        } else {
+            casesExpResult_1 = 50L;
+        }
+
+        return casesExpResult_1;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

@@ -1,0 +1,4 @@
+#set( $decl = $node.getDecl())
+#if (!$JavaFormat.isNull($decl))
+	$node.getAccess() $JavaFormat.format(${decl})
+#end

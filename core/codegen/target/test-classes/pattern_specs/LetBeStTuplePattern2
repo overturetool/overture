@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+  let mk_(a,b) in set {"one", 1,2, mk_(3,'x'),5, mk_('x', 2), 6, mk_(7,8)} be st a = 3 
+  in 
+    return b;
+
+end Entry

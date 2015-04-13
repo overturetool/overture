@@ -1,0 +1,3 @@
+operations
+negative() mx : int
+    post mx = -2

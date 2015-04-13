@@ -1,0 +1,42 @@
+--The TestResult Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		14/5 - 2008
+-- Updated:
+-- Description: 	TestResult class
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestResult
+
+--
+-- instance variables
+--
+instance variables
+
+failures : seq of TestCase := []
+
+--
+-- Operations definition section
+--
+operations
+
+public AddFailure: TestCase ==> ()
+	AddFailure(ptst) == failures := failures ^ [ptst];
+
+public Print: seq of char ==> ()
+	Print(pstr) ==
+		def - = new IO().echo(pstr ^ "\n") in skip;
+
+public Show: () ==> ()
+	Show() ==
+		if failures = [] then
+			Print("No failures detected")
+		else 
+			for failure in failures do
+				Print(failure.GetName() ^ " failed");
+
+end TestResult

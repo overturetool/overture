@@ -1,0 +1,31 @@
+class Quadrilateral is subclass of Vector
+ 
+  instance variables
+    position: vector := NullVector;
+    protected v1 : vector := NullVector;
+    protected v2 : vector := NullVector;
+    protected v3 : vector := NullVector;
+    protected v4 : vector := NullVector;
+    inv add (add (v1, v2), add (v3, v4)) = NullVector;
+ 
+  operations
+    public
+    Move: Position * Position ==> ()
+    Move(p1, p2) ==
+      position := add(position, mk_vector(p1, p2));
+
+    public
+    SetShape: Position * Position * Position * Position ==> ()
+    SetShape(p1, p2, p3, p4) ==
+    ( atomic (
+      v1 := mk_vector(p1, p2);
+      v2 := mk_vector(p2, p3);
+      v3 := mk_vector(p3, p4);
+      v4 := mk_vector(p4, p1) ));
+
+    public
+    Display: () ==> ()
+    Display() == is not yet specified
+ 
+end Quadrilateral
+

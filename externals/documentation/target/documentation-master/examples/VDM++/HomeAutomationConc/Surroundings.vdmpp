@@ -1,0 +1,59 @@
+class Surroundings
+
+instance variables
+
+private envTemp	 : nat;
+private envHumid : nat;
+
+operations
+
+public Surroundings: () ==> Surroundings
+Surroundings() ==
+ (envTemp := 20;
+  envHumid := 75;
+ );
+
+public SetTemp: nat ==> ()
+SetTemp(t) ==
+  envTemp := t;
+
+public SetHumid: nat ==> ()
+SetHumid(h) ==
+  envHumid := h;
+
+public ReadTemp: () ==> nat
+ReadTemp() ==
+  return envTemp;
+
+public IncTemp: () ==> ()
+IncTemp() ==
+  envTemp := envTemp + 1;
+
+public DecTemp: () ==> ()
+DecTemp() ==
+  envTemp := envTemp - 1;
+
+public ReadHumid: () ==> nat
+ReadHumid() ==
+  return envHumid;
+
+public IncHumid: () ==> ()
+IncHumid() ==
+  envHumid := envHumid + 1;
+
+public DecHumid: () ==> ()
+DecHumid() ==
+  envHumid := envHumid - 1;
+
+sync
+
+  mutex(IncTemp);
+  mutex(DecTemp);
+  mutex(SetTemp);
+  mutex(ReadTemp, IncTemp, DecTemp, SetTemp);
+  mutex(IncHumid);
+  mutex(DecHumid); 
+  mutex(SetHumid);
+  mutex(ReadHumid, IncHumid, DecHumid, SetHumid);
+
+end Surroundings

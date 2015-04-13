@@ -1,0 +1,478 @@
+
+\section{A specification of the data structures}
+
+
+\subsection{Constants}
+
+The specification of the crosswords assistant starts with a series of constant
+declarations:
+
+\begin{itemize}
+\item the size of the grid,
+\item the set of allowed letters,
+\item the character meant to represent a black square,
+\item the character meant to represent an empty location.
+\end{itemize}
+
+\begin{vdm_al}
+values size : nat = 8;
+       letters : set of char =
+		{'a','b','c','d','e','f','g','h',
+		'i','j','k','l','m','n','o','p',
+		'q','r','s','t','u','v','w','x','y','z'};
+	black : char = '*';
+	white : char = '_'
+\end{vdm_al}
+
+\subsection{Types}
+
+The type $word$ is a sequence of characters that only includes
+$letters$. It corresponds to the words that will appear on the grid.
+Moreover, in a crossword grid a word is a sequence of at least two characters. 
+
+\begin{vdm_al}
+types  word = seq of char 
+	inv w == elems(w) subset letters 
+		and len w >= 2  ;
+\end{vdm_al}
+
+A second type is $pos$, i.e.\ strictly  positive natural numbers that are less
+than or equal to the size of the grid. They will be used to refer to horizontal and
+vertical positions on the grid. 
+A third type, $position$, is a composite with two fields: the horizontal and
+vertical offsets of a square in the grid.
+
+\begin{vdm_al}
+        pos = nat1 
+        inv pos_v == pos_v <= size;
+	position :: h : pos
+		    v : pos;
+\end{vdm_al}
+
+The $grid$ is then introduced as a map from positions to characters. The
+invariant ensures that:
+
+\begin{itemize}
+\item the grid only stores letters, empty locations  and black squares;
+\item the domain of the map includes all locations of the grid. 
+\end{itemize}
+
+\begin{vdm_al}
+	grid = map position to char
+	inv gr == rng gr subset (letters union {white, black}) and 
+	          dom gr = {mk_position(i,j) | i in set {1,...,size}, 
+	                                       j in set {1,...,size}};
+\end{vdm_al}
+
+Finally, a quote type $HV$ is introduced to denote the horizontal and vertical
+directions. 
+
+\begin{vdm_al}
+	HV = <H> | <V>
+\end{vdm_al}
+
+
+\newpage
+\subsection{Global state}
+
+The global state features three variables:
+
+\begin{itemize}
+\item the crossword grid 
+\item two sets of words: the words to validate ($waiting-words$) and the ones
+already validated ($valid-words$).
+\end{itemize}
+
+The invariant will be defined later as a function. The initial state specifies
+that both sets of words are empty, and that all locations of the grid are
+empty, i.e.\ store the $white$ character. 
+\begin{vdm_al}
+state  crosswords of
+	 cwgrid : grid
+	 valid_words : set of word
+	 waiting_words : set of word
+       inv mk_crosswords(gr,val,wait) == 
+		CW_INVARIANT(gr,val,wait)
+init mk_crosswords(gr,val,wait) ==
+        val = { } and wait = { } and 
+	forall i in set {1,...,size} &
+	forall j in set {1,...,size} &
+	gr(mk_position(i,j)) = white
+end
+\end{vdm_al}
+
+
+\section{Functions}
+
+\subsection{State invariant}
+
+A first function is the state invariant. It takes three arguments corresponding
+to the three variables of the global state and states that:
+
+\begin{itemize}
+\item the $valid-words$ and $waiting-words$ are disjoint, i.e.\ a word is
+either valid or waiting;
+\item every word of the grid appears in one of both sets;
+\item the words of the waiting list all appear on the grid.
+\end{itemize}
+
+The invariant does not force the list of valid words to only store words of the
+grid. It may also be filled in with input from an electronic dictionnary.
+\begin{vdm_al}
+functions
+\end{vdm_al}
+
+\begin{vdm_al}
+CW_INVARIANT: grid * set of word * set of word +> bool
+CW_INVARIANT(gr,val,wait) ==
+val inter wait = {} 
+and WORDS(gr) subset (val union wait)
+and wait subset WORDS(gr)
+;
+\end{vdm_al}
+
+\subsection{Words of a grid}
+
+In this definition of the invariant, the $WORDS$ function was introduced. It is
+a function which returns the set of all words that appear on the grid, given as
+argument. It has been chosen to specify this as an explicit boolean function
+which returns the union of the words that appear horizontally in the grid, and
+the words that appear vertically.
+\begin{vdm_al}
+WORDS : grid +> set of word
+WORDS(g) == HOR_WORDS(g) union VER_WORDS(g)
+;
+\end{vdm_al}
+
+$HOR-WORDS$ and $VER-WORDS$ are also explicit functions. They are expressed as
+the distributed union of the words that appear on every line or every column of
+the grid respectively.
+\begin{vdm_al}
+HOR_WORDS : grid +> set of word
+HOR_WORDS(g) == dunion { WORDS_OF_SEQ(LINE(i,g)) | i in set {1,...,size}}
+;
+VER_WORDS : grid +> set of word
+VER_WORDS(g) == dunion { WORDS_OF_SEQ(COL(i,g)) | i in set {1,...,size}}
+;
+\end{vdm_al}
+
+$LINE$ and $COL$ are functions that extract from a grid the ith line or column
+respectively and return it as a sequence of characters.
+
+\begin{vdm_al}
+LINE : pos *  grid +> seq of char
+LINE(i,g) == [g(mk_position(i,c)) | c in set {1,...,size}]
+;
+COL : pos *  grid +> seq of char
+COL(i,g) == [g(mk_position(l,i)) | l in set {1,...,size}]
+;
+\end{vdm_al}
+
+$WORDS-OF-SEQ$ returns the set of words that appear in a sequence of
+characters. A word is defined as a sequence of letters such that its neighbour
+characters (if any) are $white$ or $black$. The code of the explicit function
+is rather implicit since it refers to a set comprehension definition which is
+not executable.
+\begin{vdm_al}
+WORDS_OF_SEQ : seq of char +> set of word
+WORDS_OF_SEQ(s) == {w | w : word & 
+		exists s1, s2 : seq of char &
+			s = s1 ^ w ^ s2
+		        and (s1 = [] or s1(len s1) = black or s1(len s1) = white)
+			and (s2 = [] or s2(1) = black or s2(1) = white)}
+;
+\end{vdm_al}
+
+\newpage
+\subsection{Compatibility with the grid}
+
+When a new word will be added to the grid, it is necessary to check that :
+\begin{itemize}
+\item the length of the word fits in the grid;
+\item this word will not destroy existing information, i.e.\ the grid locations
+that will be overwritten by the word are either $white$ or already store the
+corresponding letter of the word.
+\end{itemize}
+
+\begin{vdm_al}
+COMPATIBLE : grid * word * position * HV +> bool
+COMPATIBLE (g, w, p, d ) == 
+	    (d = <H> => 
+		(p.h + len w -1 <= size)
+		and forall i in set inds w &
+		    	g(mk_position(p.h + i -1, p.v)) = white
+			or g(mk_position(p.h + i -1, p.v)) = w(i)
+			)
+	    and
+	    (d = <V> => 
+		(p.v + len w -1 <= size)
+		and forall i in set inds w &
+			g(mk_position(p.h, p.v + i -1)) = white
+			or g(mk_position(p.h, p.v + i -1)) = w(i))
+;
+\end{vdm_al}   
+
+When a word is deleted from the grid, it is necessary to check that a given
+word appears at a given location in a given direction. This boolean function is
+expressed hereafter.
+
+\begin{vdm_al}
+IS_LOCATED : grid * word * position * HV +> bool
+IS_LOCATED (g, w, p, d ) == 
+	    (d = <H> => 
+		 forall i in set inds w &
+		    g(mk_position(p.h + i -1, p.v)) = w(i))
+	    and
+	    (d = <V> => 
+		 forall i in set inds w &
+			g(mk_position(p.h, p.v + i -1)) = w(i))
+;
+\end{vdm_al}
+
+\subsection{Detection of words}
+
+In the deletion operation, it will be necessary to decide wheter a letter in a
+given position on
+the grid  is part of a word in a given direction. To be part of a word means
+that there exists a sequence of positions on the grid that features  a word and
+includes the given position. 
+
+
+\begin{vdm_al}
+IN_WORD: grid * position * HV +> bool
+IN_WORD(g,p,d) ==
+(d = <H> => 
+	exists i,j : pos &
+		i <= p.h and j >= p.h and i < j and
+		forall k in set {i,..., j} &
+			g(mk_position(k,p.v)) in set letters)
+and
+(d = <V> => 
+	exists i,j : pos &
+		i <= p.v and j >= p.v and i < j and
+		forall k in set {i,..., j} &
+			g(mk_position(p.h,k)) in set letters)
+
+\end{vdm_al}   
+
+\section{Operations}
+
+
+The operations are of three kinds:
+
+\begin{itemize}
+\item validation of a word of the waiting list;
+\item adding information to the grid;
+\item deleting information from the grid.
+\end{itemize}
+
+
+\subsection{Validation of words}
+
+This section only features a single operation $VALIDATE-WORD$ which transfers a
+word of the waiting list into the valid list. The pre-condition states that the
+word must be in the waiting list, while the post-condition expresses that the
+two sets have been modified by deleting the word from the one and adding it to
+the second. The state invariant is preserved by this operation since
+
+\begin{itemize}
+\item the two sets remain disjoint
+\item No new word has been added to  $waiting-words$ and the grid has not been
+affected. The elements of $waiting-words$ remain thus
+members of the grid.
+\end{itemize}
+
+\begin{vdm_al}
+operations
+\end{vdm_al}   
+\begin{vdm_al}
+VALIDATE_WORD (w : word)
+ext wr valid_words : set of word
+    wr waiting_words : set of word
+   pre w in set waiting_words
+  post valid_words = valid_words~ union {w}
+       and waiting_words = waiting_words~ \ {w}
+;
+\end{vdm_al}   
+
+\subsection{Adding information to the grid}
+
+There are actually two ways to modify the grid: either by adding new words
+($ADD-WORD$) or by adding black squares ($ADD-BLACK$). 
+
+To add a word to the grid, three inputs are needed: the actual word to add, the
+position where it must be added and the horizontal/vertical direction of this
+addition. The pre-condition must ensure that the word is compatible with the
+existing grid, i.e.\ that it will only modify $white$ locations. The
+compatibility also ensures that the length of the word fits in the grid.  The
+post-condition expresses the modification of the grid in terms of an
+overwriting map, given in comprehension. It also includes  the state invariant
+in order to guarantee it. Obviously, this operation preserves the state
+invariant, but it is necessary to check that it is implementable, i.e.\ that
+there exists a final state corresponding to this post-condition. 
+
+This proof may be informally stated as follows. Since $d$ is either $H$ or $V$,
+the new grid will be the previous one overwritten by a map. Since this map only
+adds letters to the grid and the length of the word has been checked to fit in
+the grid, the grid will keep its type. It must then be checked that it is
+possible to extract a list of waiting words from this grid, given an untouched
+list of valid words. This is achieved by extracting the set of words of the
+grid and substracting the valid words from this set.
+
+
+\begin{vdm_al}
+ADD_WORD (w : word, p : position, d : HV)
+ext wr cwgrid : grid
+    rd valid_words : set of word
+    wr waiting_words : set of word
+   pre COMPATIBLE(cwgrid, w, p, d)
+  post (d = <H> =>
+	cwgrid = cwgrid~ ++ {mk_position(p.h + i - 1, p.v) |-> w(i) 
+	                    | i in set inds w})
+	and
+ 	(d = <V> =>
+	cwgrid = cwgrid~ ++ {mk_position(p.h, p.v + i - 1) |-> w(i) 
+	                    | i in set inds w})
+	and
+	CW_INVARIANT(cwgrid, valid_words,waiting_words)
+;
+\end{vdm_al}   
+
+
+The $ADD-BLACK$ operations replaces an empty location by  a black square. 
+The precondition checks that the position given as input stores an empty
+location, and the post-condition overwrites the grid with a single maplet.
+This operation preserves the state invariant since it does not destroy letters
+from the grid and thus preserves the existing words.
+
+\begin{vdm_al}
+ADD_BLACK ( p : position)
+ext wr cwgrid : grid
+   pre cwgrid(p) = white
+  post cwgrid = cwgrid~ ++ { p |-> black }
+;
+\end{vdm_al}   
+
+\subsection{Deleting information from  the grid}
+
+Three operations are proposed to delete information from the grid. The simplest
+operation is the deletion of a black square. The remaining operations are
+concerned with deleting an existing word. Two operations are proposed. A ``strong''
+delete wipes out every letter of the word. Its application to word {\tt
+cord} in the example would result in : 
+
+\vspace{0.5cm}
+
+{\tt \begin{tabular}{r|c|c|c|c|c|c|c|c|}
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\
+\hline
+\multicolumn{9}{l}{\ldots}\\
+\hline
+3 & & & &w& & & & \\
+\hline
+4 & & &c &o &a &l & & \\
+\hline
+5 & & &a &r&t & & & \\
+\hline
+6 & & & && & & & \\
+\hline
+\multicolumn{9}{l}{\ldots}\\
+\end{tabular}} 
+
+\vspace{0.5cm}
+
+This is probably too destructive because the words {\tt car} and {\tt word} have
+been modified as a consequence of this operation. So a ``soft'' delete is
+proposed which checks if a letter is member of a word in the orthogonal
+direction. In our example, it would result in :
+
+\vspace{0.5cm}
+
+{\tt \begin{tabular}{r|c|c|c|c|c|c|c|c|}
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\
+\hline
+\multicolumn{9}{l}{\ldots}\\
+\hline
+3 & & & &w& & & & \\
+\hline
+4 & & &c &o &a &l & & \\
+\hline
+5 & & &a &r&t & & & \\
+\hline
+6 & & &r &d& & & & \\
+\hline
+\multicolumn{9}{l}{\ldots}\\
+\end{tabular}}
+\vspace{0.5cm}
+
+where {\tt rd} will appear as a new word in the $waiting-words$.
+
+
+The first operation is $DELETE-BLACK$ which is the dual of $ADD-BLACK$. It
+similarly preserves the state invariant.
+
+\begin{vdm_al}
+DELETE_BLACK ( p : position)
+ext wr cwgrid : grid
+   pre cwgrid(p) = black
+  post cwgrid = cwgrid~ ++ { p |-> white }
+;
+\end{vdm_al}   
+
+
+The $STRONG-DELETE$ receives three inputs: the word to delete, its position,
+and its direction. The operation may not affect the list of valid words but may
+modify the grid and the waiting list. The precondition checks that the word is
+effectively located in the grid at the given position. The post-condition
+overwrites the grid with a map of empty locations and states that the invariant
+is preserved. The informal proof of the implementability of this operation is
+similar to the $ADD-WORD$ one.
+
+\begin{vdm_al}
+STRONG_DELETE (w : word, p : position, d : HV)
+ext wr cwgrid : grid
+    rd valid_words : set of word
+    wr waiting_words : set of word
+   pre IS_LOCATED(cwgrid, w, p, d)
+  post (d = <H> =>
+	cwgrid = cwgrid~ ++ {mk_position(p.h + i - 1, p.v) |-> white 
+	                    | i in set inds w})
+	and
+ 	(d = <V> =>
+	cwgrid = cwgrid~ ++ {mk_position(p.h, p.v + i - 1) |-> white 
+	                    | i in set inds w})
+	and
+	CW_INVARIANT(cwgrid,valid_words, waiting_words)
+;
+\end{vdm_al}   
+
+
+The $SOFT-DELETE$ is very similar to $STRONG-DELETE$. The major difference is
+that the overwriting map is filtered by the $IN-WORD$ function: a letter is
+overwritten  only if it does not appear in a word in the orthogonal direction.
+\begin{vdm_al}
+SOFT_DELETE (w : word, p : position, d : HV)
+ext wr cwgrid : grid
+    rd valid_words : set of word
+    wr waiting_words : set of word
+   pre IS_LOCATED(cwgrid, w, p, d)
+  post (d = <H> =>
+	cwgrid = cwgrid~ ++ 
+		{mk_position(p.h + i - 1, p.v) |-> white 
+			| i in set inds w 
+			& not IN_WORD(cwgrid~,mk_position(p.h + i - 1, p.v),<V>) })
+	and
+	(d = <V> =>
+	cwgrid = cwgrid~ ++ 
+		{mk_position(p.h, p.v + i - 1) |-> white 
+			| i in set inds w 
+			& not IN_WORD(cwgrid~,mk_position(p.h, p.v + i - 1),<H>) })
+	and
+	CW_INVARIANT(cwgrid,valid_words, waiting_words)
+\end{vdm_al}
+
+
+An alternate version of $SOFT-DELETE$ could be designed that would only leave
+on the grid the letters of validated words. This could be easily performed by
+checking that the word that the location belongs to is in the valid list.
+\end{document}

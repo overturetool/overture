@@ -1,0 +1,6 @@
+[mk_Types`VechicleRun(11,5000),  
+mk_Types`VechicleRun(12,5000), 
+mk_Types`VehicleTurnIndication(11,<LEFT>,5000),
+mk_Types`VehicleTurnIndication(11,<NONE>,8000),
+mk_Types`VechicleRun(13,9000)
+]

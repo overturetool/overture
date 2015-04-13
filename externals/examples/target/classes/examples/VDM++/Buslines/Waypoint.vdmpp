@@ -1,0 +1,25 @@
+class Waypoint
+
+	types
+		public BusStops = <A> | <B> | <C> | <D> | <E> | <F> | <Central>;
+		public WaypointsEnum = <WP1> | <WP2> | <WP3> | <WP4> | BusStops;	
+
+	instance variables
+		protected id : WaypointsEnum;
+		protected isStop : bool := false;
+
+	operations
+		public Waypoint : Waypoint`WaypointsEnum ==> Waypoint
+		Waypoint(s) == 
+		(
+			id := s;
+		);
+
+		public GetId : () ==> WaypointsEnum
+		GetId()== return id;
+
+		public IsStop: () ==> bool
+		IsStop()== return isStop;
+
+
+end Waypoint

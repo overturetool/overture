@@ -1,0 +1,41 @@
+class UseKLV
+
+values
+
+  ev60 : HeadMeetBeaconEvent = new HeadMeetBeaconEvent(new TIV_D(60));
+  ev40 : HeadMeetBeaconEvent = new HeadMeetBeaconEvent(new TIV_D(40));
+  ev70 : HeadMeetBeaconEvent = new HeadMeetBeaconEvent(new TIV_D(70));
+  eve1 : HeadMeetBeaconEvent = new HeadMeetBeaconEvent(new TIV_E());
+  eve2 : TailMeetBeaconEvent = new TailMeetBeaconEvent(new TIV_E());
+  eve3 : TailMeetBeaconEvent = new TailMeetBeaconEvent(new FLTV());
+  ev_s : set of Event = {ev60,ev40,ev70,eve1,eve2,eve3};
+
+instance variables
+
+  test : Test := new Test();
+  klv : KLV := new KLV()
+ 
+traces
+
+Seq1 : let ev1 in set ev_s
+       in
+        let ev2 in set ev_s \ {ev1}
+        in
+         let ev3 in set ev_s  \ {ev1,ev2}
+         in
+          let ev4 in set ev_s \ {ev1,ev2,ev3}
+          in
+            let ev5 in set ev_s \ {ev1,ev2,ev3,ev4}
+            in
+           let ev6 in set ev_s \ {ev1,ev2,ev3,ev4,ev5}
+           in
+          (test.runOneTest(ev1);
+           test.runOneTest(ev2);
+           test.runOneTest(ev3);
+           test.runOneTest(ev1);
+           test.runOneTest(ev4);
+           test.runOneTest(ev5);
+           test.runOneTest(ev6)) --[ev1,ev2,ev3,ev4,ev5,ev4,ev5,ev6])
+
+
+end UseKLV

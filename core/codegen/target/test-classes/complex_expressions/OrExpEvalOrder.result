@@ -1,0 +1,75 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public static Number a = 0L;
+    public Number n;
+
+    public A(final Number pn) {
+        cg_init_A_1(pn);
+    }
+
+    public A() {
+    }
+
+    public void cg_init_A_1(final Number pn) {
+        n = pn;
+    }
+
+    public Boolean test() {
+        a = a.longValue() + 1L;
+
+        return n.longValue() > 6L;
+    }
+
+    public String toString() {
+        return "A{" + "a := " + Utils.toString(a) + ", n := " +
+        Utils.toString(n) + "}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        VDMSet setCompResult_1 = SetUtil.set();
+        VDMSet set_1 = SetUtil.set(new A(1L), new A(2L), new A(3L), new A(4L),
+                new A(5L), new A(6L), new A(7L));
+
+        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
+            A x = ((A) iterator_1.next());
+            Boolean orResult_1 = false;
+
+            if (Utils.equals(Utils.mod(x.n.longValue(), 2L), 0L)) {
+                orResult_1 = true;
+            } else {
+                orResult_1 = x.test();
+            }
+
+            if (orResult_1) {
+                setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
+                        SetUtil.set(x.n));
+            }
+        }
+
+        VDMSet s = Utils.clone(setCompResult_1);
+        Number a = A.a;
+
+        return Tuple.mk_(Utils.clone(s), a);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

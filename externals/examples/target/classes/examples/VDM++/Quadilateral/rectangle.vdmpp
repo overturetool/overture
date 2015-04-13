@@ -1,0 +1,6 @@
+class Rectangle is subclass of Parallelogram
+ 
+  instance variables
+  inv inproduct (v1 , v2) = 0 
+ 
+end Rectangle

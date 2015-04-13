@@ -1,0 +1,13 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	Test();
+
+public static Test : () ==> map nat to nat 
+Test () ==
+	return {a+b+c+d+e+f |-> f+e+d+c+b+a | a,b in set {1,2}, c,d in set {2,3}, e,f in set {3,4}};
+
+end Entry

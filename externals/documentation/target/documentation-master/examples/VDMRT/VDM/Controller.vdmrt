@@ -1,0 +1,250 @@
+\section{Controller Class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			Controller
+-- Description: 	Controller is main class in 
+--					every independent VDM element
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Controller
+
+--
+-- instance variables
+--
+instance variables
+-- traffic data issued by this controller, that will be passed on 
+-- other controllers.
+private internalTrafficData : seq of TrafficData := []; 	    
+inv len internalTrafficData <=  Config`TrafficDataKeeptNumber;
+-- traffic data from other controllers moving in the opposite direction,
+private externalTrafficData : seq of TrafficData := [];  		
+-- this will not be passes on as it makes no sense with the current 
+-- warning types.  
+inv len externalTrafficData <= Config`TrafficDataKeeptNumber;    
+
+--keep track of whom we have communicated with.
+private communicatedWith : seq of nat := [];
+inv len communicatedWith <= Config`TrafficDataKeeptNumber; 		 
+
+private traffic : Traffic;
+ -- the vehicle the VDM system Controller is placed in.
+private vdmVehicle : Vehicle;
+--
+-- Types definition section
+--
+types   
+
+--
+-- Operations definition section
+--
+operations
+
+public Controller : Vehicle ==> Controller
+Controller (vehicle) ==
+(
+vdmVehicle := vehicle;
+traffic := new Traffic();
+);
+
+
+async public AddOncomingVehicle: VehicleData ==> ()
+AddOncomingVehicle(vd) ==
+(
+if not traffic.ExistVehicleData(vd)
+then
+let v = new Vehicle(vd) in
+traffic.AddVehicle(v);
+);
+
+
+async public AddTrafficData:  nat * seq of TrafficData ==> ()
+AddTrafficData(vdmUnitID, data) ==
+(
+ --we cant use empty data
+ if data = [] 
+ then 
+ return;
+ 
+ --did we already exchange information?
+ if vdmUnitID in set elems communicatedWith 
+ then 
+ return;
+
+ -- add traffic 
+ if(len externalTrafficData < Config`TrafficDataKeeptNumber)
+ then 
+ externalTrafficData := externalTrafficData ^ data
+ else
+ externalTrafficData :=  tl externalTrafficData ^ data;
+ 
+ for d in data do 
+ ( 
+  World`env.handleEvent("Vehicle: " ^ Printer`natToString(GetVehicleID()) ^ 
+  						" received " ^  d.ToString());
+ );
+ --keep track of who we have communicated with
+ if len communicatedWith < Config`TrafficDataKeeptNumber
+ then
+ communicatedWith := communicatedWith ^ [vdmUnitID]
+ else
+ communicatedWith := tl communicatedWith ^ [vdmUnitID];
+);
+ 
+
+private AddInternalTrafficData: TrafficData ==> ()
+AddInternalTrafficData(data) ==
+(
+ if(len internalTrafficData < Config`TrafficDataKeeptNumber)
+ then 
+ internalTrafficData := internalTrafficData ^ [data]
+ else
+ internalTrafficData :=  tl internalTrafficData ^ [data];
+ 
+);
+
+
+public GetTrafficData: () ==> seq of TrafficData 
+GetTrafficData() ==
+-- deep copy
+return [ new TrafficData(internalTrafficData(i).GetMessage(), 
+						 internalTrafficData(i).GetPosition(), 
+				 		 internalTrafficData(i).GetDirection()) 
+						| i in set inds internalTrafficData ];
+
+
+public GetVehicleID : () ==> nat
+GetVehicleID()== return vdmVehicle.GetID();
+
+
+public GetPosition : () ==> Position
+GetPosition() ==
+return vdmVehicle.GetPosition();
+
+
+public GetDirection: () ==> Types`Direction 
+GetDirection() ==
+return vdmVehicle.GetDirection();
+
+
+public getVehicle : () ==> Vehicle
+getVehicle() ==
+return vdmVehicle;
+
+
+public getVehicleDTO : () ==> VehicleData
+getVehicleDTO() == return vdmVehicle.getDTO(); 
+
+
+public Step: () ==> ()
+Step() ==
+(
+  vdmVehicle.Move();
+   
+ --check expired internal data
+ for all td in set elems internalTrafficData do
+ (
+  if td.Expired()
+  then 
+  (
+  --remove td
+  internalTrafficData := [internalTrafficData(i) 
+  					| i in set inds internalTrafficData 
+  					& internalTrafficData(i) <> td];
+  )
+ );
+ 
+ --check for lowgrip, and check if already set at position.  
+ if vdmVehicle.getLowGrip() = true 
+ then 
+ (
+ --The position check will only be relevant if the car has speed 0
+ if vdmVehicle.GetSpeed() = 0 => 
+ not exists data in set elems internalTrafficData 
+ 				& Position`Compare(data.GetPosition(), GetPosition()) 
+ 				and  data.GetMessage() = <LowGrip> 
+ then 
+ let lowGripMsg = new TrafficData(<LowGrip>, GetPosition().deepCopy()
+ 								 , GetDirection()) 
+ in  
+ AddInternalTrafficData(lowGripMsg);
+ );
+ 
+ --check for turnindicator, and check if already set at position.  
+ if vdmVehicle.TurnIndicator() = <LEFT> 
+ then 
+ (
+ --The position check will only be relevant if the car has speed 0
+ if vdmVehicle.GetSpeed() = 0 =>
+ not exists data in set elems internalTrafficData 
+ 				& Position`Compare(data.GetPosition(), GetPosition()) 
+ 				and  data.GetMessage() = <LeftTurn> 
+ then 
+ let turnMsg = new TrafficData(<LeftTurn>, GetPosition().deepCopy()
+ 								,GetDirection()) 
+ in  
+ AddInternalTrafficData(turnMsg);
+ );
+ 
+  --check for congestion, and check if already set at position.  
+ if traffic.Congestion() = true
+ then 
+ (
+ --The position check will only be relevant if the car has speed 0
+ if vdmVehicle.GetSpeed() = 0 =>
+ not exists data in set elems internalTrafficData 
+ 				& Position`Compare(data.GetPosition(), GetPosition()) 
+ 				  and  data.GetMessage() = <Congestion> 
+ then
+  ( 
+  let congMsg = new TrafficData(<Congestion>, GetPosition().deepCopy()
+  								, GetDirection()) 
+   in  
+   (
+    AddInternalTrafficData(congMsg);
+   )
+  )
+ );
+ 
+);
+
+
+async public run : () ==> ()
+run() == start(self)
+ 
+--
+-- Functions definition section
+--
+functions
+
+--
+-- Values definition section
+--
+values
+
+
+--
+-- Thread definition section
+--
+thread
+ periodic (10000,10,9000,0) (Step);
+
+--
+-- sync definition section
+--
+sync
+mutex(AddInternalTrafficData,GetTrafficData);
+mutex(AddInternalTrafficData);
+mutex(Step)
+
+end Controller
+
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Controller]
+\end{rtinfo}

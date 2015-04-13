@@ -1,0 +1,16 @@
+class Entry
+
+types
+
+public M :: ;
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+let m0 = mk_M(),
+	m1 = mk_M()
+in
+	return [m0 = m0, m0 = m1, m1 = m1, m1 = m0];
+
+end Entry

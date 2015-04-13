@@ -1,0 +1,66 @@
+class PID is subclass of DTControl
+
+instance variables
+
+-- design parameters
+protected k: real;
+protected tauI: real;
+protected tauD: real; 
+protected beta: real;
+
+-- variables
+protected uP: real;
+protected uD: real;
+protected uI: real;
+protected prev_err: real
+
+operations
+
+-- constructor for PID
+public PID: real * real * real * real ==> PID
+PID(k_, tauI_, tauD_, beta_) ==
+(
+	k := k_;
+	tauI := tauI_;
+    tauD := tauD_;
+    beta := beta_;
+	-- initial values
+	uP := 0;
+    uD := 0;
+    uI := 0;
+	prev_err := 0
+)
+pre tauI_ <> 0 and tauD_ <> 0 and
+    beta_ > 0 and beta_ <= 1;
+
+-- constructor for PID
+public PID: real * real * real ==> PID
+PID(k_, tauI_, tauD_) ==
+	PID(k_, tauI_, tauD_, DEF_BETA)
+pre tauI_ <> 0 and tauD_ <> 0;
+
+-- default constructor for PID
+public PID: () ==> PID
+PID() ==
+	PID(DEF_K, DEF_TAUI, DEF_TAUD, DEF_BETA);
+
+-- calculates output, based on the error
+public Output: real ==> real
+Output(err) == 
+(
+	dcl factor: real :=  1 / (sampletime + tauD * beta);
+	uD := factor * (tauD *  uD  * beta + tauD * k * (err - prev_err) + sampletime * k * err);
+	uI := uI + sampletime * tauD / tauI;
+	prev_err := err;
+	return uI + uD
+);
+
+values
+
+-- defaults
+DEF_K: real = 0.2;
+DEF_TAUI: real = 0.5;
+DEF_TAUD: real = 1.0;
+DEF_BETA: real = 0.1;
+
+end PID

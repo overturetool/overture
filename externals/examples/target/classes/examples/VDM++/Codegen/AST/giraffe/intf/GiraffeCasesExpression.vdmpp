@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:15 CET 2010
+--
+
+class GiraffeCasesExpression is subclass of GiraffeExpression
+operations
+    public getTest: () ==> GiraffeExpression
+    getTest() == is subclass responsibility;
+
+    public getAlts: () ==> seq of GiraffeCaseAlternative
+    getAlts() == is subclass responsibility;
+
+    public hasDeflt: () ==> bool
+    hasDeflt() == is subclass responsibility;
+
+    public getDeflt: () ==> GiraffeExpression
+    getDeflt() == is subclass responsibility;
+
+end GiraffeCasesExpression

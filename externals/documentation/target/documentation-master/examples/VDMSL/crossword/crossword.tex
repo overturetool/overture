@@ -1,0 +1,137 @@
+\documentclass{article}
+\usepackage{a4}
+\usepackage{makeidx}
+\usepackage{overture}
+
+\newcommand{\StateDef}[1]{{\bf #1}}
+\newcommand{\TypeDef}[1]{{\bf #1}}
+\newcommand{\TypeOcc}[1]{{\it #1}}
+\newcommand{\FuncDef}[1]{{\bf #1}}
+\newcommand{\FuncOcc}[1]{#1}
+\newcommand{\ModDef}[1]{{\tiny #1}}
+
+\makeindex
+
+\title{A crosswords assistant}
+\author{Yves LEDRU\footnotemark}
+\date{March 14, 1995}
+
+\begin{document}
+\maketitle
+\footnotetext{Laboratoire de G\'enie Informatique - Institut IMAG (UJF - INPG-
+CNRS), BP 
+53x 38041 Grenoble
+Cedex (FRANCE) - Tel + 33 76827214 - Fax + 33 76446675 - e-mail
+Yves.Ledru@Imag.fr}
+
+
+This tutorial example is taken out of a  VDM course given
+to the students of the Dipl\^{o}me d'Etudes Sup\'erieures Sp\'ecialis\'ees en
+G\'enie Informatique (5th year) at the Universit\'e Joseph Fourier.
+This
+example uses the implicit style of specification of VDM-SL and thus may not be
+executed with the IFAD toolbox.
+
+
+\section{Informal statement}
+
+The crosswords assistant is a simple system which helps writing crosswords. 
+Its user places words or black squares on a a crossword grid. 
+The system  helps him keep a log of the words that appear on the grid.
+These words  appear in a list of words (waiting list). 
+The user will then informally check that these words effectively exist. Once a
+word has been checked by the user, it will be validated and stored in a second
+list. 
+
+\subsection*{Example}
+
+The user has placed sucessively the words {\tt word}, {\tt coal} and {\tt art}
+on the grid. 
+
+\vspace{0.5cm}
+
+{\tt \begin{tabular}{r|c|c|c|c|c|c|c|c|}
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\
+\hline
+1 & & & & & & & & \\
+\hline
+2 & & & & & & & & \\
+\hline
+3 & & & &w& & & & \\
+\hline
+4 & & &c &o &a &l & & \\
+\hline
+5 & & &a &r&t & & & \\
+\hline
+6 & & & &d& & & & \\
+\hline
+7 & & & & & & & & \\
+\hline
+8 & & & & & & & & \\
+\hline
+\end{tabular}}
+
+\vspace{0.5cm}
+
+As a result, the words {\tt at} and {\tt ca} are also on the grid. The list of
+words to validate is thus:
+
+\begin{itemize}
+\item[ ] words to validate : {\tt word, coal, art, at, ca}
+\end{itemize}
+
+The user then checks in his (paper) dictionary that all words but {\tt ca} are
+english words. The two lists become:
+
+\begin{itemize}
+\item[ ] words to validate : {\tt ca}
+\item[ ] valid words : {\tt word, coal, art, at}
+\end{itemize}
+
+In the sequel, the list of words to validate will also be referred to as the
+``waiting list''.
+
+\newpage
+The user may now add the word {\tt cord} to the grid.
+
+\vspace{0.5cm}
+
+{\tt \begin{tabular}{r|c|c|c|c|c|c|c|c|}
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\
+\hline
+\multicolumn{9}{l}{\ldots}\\
+\hline
+3 & & & &w& & & & \\
+\hline
+4 & & &c &o &a &l & & \\
+\hline
+5 & & &a &r&t & & & \\
+\hline
+6 &c &o &r &d& & & & \\
+\hline
+\multicolumn{9}{l}{\ldots}\\
+\end{tabular}}
+
+\vspace{0.5cm}
+
+{\tt ca} has now disappeared from the grid and the waiting list
+is updated accordingly.
+
+\begin{itemize}
+\item[ ] words to validate : {\tt car, cord}
+\item[ ] valid words : {\tt word, coal, art, at}
+\end{itemize}
+
+Other operations on the grid include:
+
+\begin{itemize}
+\item adding ``black'' squares
+\item deleting some letters
+\end{itemize}
+
+The objective of the user is to fill in the whole grid with either black
+squares or letters and to end up with an empty waiting list. 
+
+\include{generated/latex/specification/crossword.vdmsl}
+
+\end{document}

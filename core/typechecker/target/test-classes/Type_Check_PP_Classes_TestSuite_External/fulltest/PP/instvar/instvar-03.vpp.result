@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="7" line="14" message="i1 at 5:8 hidden by i1" messageType="warning" number="5008" resource="instvar-03.vpp"/>
+<result/>
+</testResult>

@@ -1,0 +1,66 @@
+--The Surroundings Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		21/4 - 2008
+-- Updated:
+-- Description: 	Class containing surrounding variables
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Surroundings
+
+--
+-- instance variables
+--
+instance variables
+
+private envTemp	: nat;
+private envHumid	: nat;
+
+--
+-- Operations definition section
+--
+operations
+
+public Surroundings: () ==> Surroundings
+	Surroundings() ==
+		(envTemp := 20;
+		envHumid := 85;
+		);
+
+public ReadTemp: () ==> nat
+	ReadTemp() ==
+		return envTemp;
+
+public IncTemp: () ==> ()
+	IncTemp() ==
+		envTemp := envTemp + 1;
+
+public DecTemp: () ==> ()
+	DecTemp() ==
+		envTemp := envTemp - 1;
+
+public SetTemp: nat ==> ()
+	SetTemp(t) ==
+		envTemp := t;
+
+public ReadHumid: () ==> nat
+	ReadHumid() ==
+		return envHumid;
+
+public IncHumid: () ==> ()
+	IncHumid() ==
+		envHumid := envHumid + 1;
+
+public DecHumid: () ==> ()
+	DecHumid() ==
+		envHumid := envHumid - 1;
+
+public SetHumid: nat ==> ()
+	SetHumid(h) ==
+		envHumid := h;
+
+end Surroundings

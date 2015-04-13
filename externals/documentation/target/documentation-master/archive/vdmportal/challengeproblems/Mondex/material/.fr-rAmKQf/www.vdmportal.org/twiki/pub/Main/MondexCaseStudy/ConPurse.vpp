@@ -1,0 +1,237 @@
+class ConPurse
+
+types
+
+private Status = <Idle> | <EPR> | <EPV> | <EPA>;
+
+-- details of a single transaction
+public  TransDetails :: fromPurse : ConWorld`PurseId
+                          toPurse : ConWorld`PurseId
+                        fromSeqNo : nat
+                          toSeqNo : nat
+                              val : nat;
+
+-- details to initiate a transaction
+public CounterPartyDetails :: name : ConWorld`PurseId
+                               val : nat
+                             seqNo : nat;
+
+                             
+-- MESSAGES --
+
+public Message = StartFrom | StartTo | <ReadExceptionLog> | Req | Val | Ack |
+                 ExceptionLogResult | ExceptionLogClear | <Unprotected>; 
+
+-- transaction initiating messages                 
+public StartFrom :: CounterPartyDetails;
+public StartTo ::   CounterPartyDetails;
+
+-- protocol messages
+public Req :: TransDetails;
+public Val :: TransDetails;
+public Ack :: TransDetails;
+
+-- message to hold the result of reading an exception log
+public ExceptionLogResult :: name : ConWorld`PurseId
+                               td : TransDetails;
+
+-- request to clear the exception log
+public ExceptionLogClear ::  name : ConWorld`PurseId
+                            clear : token; 
+
+                            
+instance variables
+
+name : ConWorld`PurseId;
+balance : nat;
+nextSeqNo : nat;
+status : Status;
+currTrans : [TransDetails];
+exLog : set of TransDetails;
+
+ether : [Ether];
+
+
+operations
+
+-- INVISIBLE OPERATIONS
+
+-- increase sequence number (p.29)
+-- private Increase()
+-- ext wr nextSeqNo
+-- post nextSeqNo > nextSeqNo~;
+
+private Increase : () ==> ()
+Increase() ==
+    let delta in set {1,...,10} in
+        nextSeqNo := nextSeqNo + delta;
+        
+-- abort current transaction (p.30)
+private Abort : () ==> ()
+Abort() ==
+(
+    self.LogIfNecessary();
+    status := <Idle>;
+    self.Increase()
+);
+
+-- log current transaction (p.13)
+private LogIfNecessary : () ==> ()
+LogIfNecessary() == 
+    if status = <EPV> or status = <EPA>
+    then exLog := exLog union {currTrans}
+pre currTrans <> nil;
+
+-- calculate 'clear codes' (p.25)     
+private Image(tds: set of TransDetails) c:token
+pre true
+post true; -- c in set Clear;
+
+
+-- MESSAGING OPERATIONS
+
+-- respond to receiving a message    
+public RecMsg : Message ==> ()
+RecMsg (m) == 
+cases m:
+    mk_StartFrom(cpd)               -> StartFromOkay(cpd),
+    mk_StartTo(cpd)                 -> StartToOkay(cpd),
+    <ReadExceptionLog>              -> (Abort(); ReadExceptionLog()),
+    mk_Req(td)                      -> OpReq(td),
+    mk_Val(td)                      -> OpVal(td),
+    mk_Ack(td)                      -> OpAck(td),
+    mk_ExceptionLogClear(nm,clear)  -> (Abort(); ClearExceptionLog(nm, clear)),
+    others                          -> skip
+end;
+
+-- initiate sending money (p.31)
+private StartFromOkay : CounterPartyDetails ==> ()
+StartFromOkay(cpd) ==
+(
+    currTrans := mk_TransDetails(name, cpd.name, nextSeqNo, cpd.seqNo, cpd.val);
+    status := <EPR>;
+    
+    -- for next time
+    self.Increase(); 
+    
+    ether.SendMsg(<Unprotected>)
+)
+pre cpd.name <> name and cpd.val <= balance and status = <Idle> and ether <> nil;
+
+-- initiate receiving money (p.32)
+private StartToOkay : CounterPartyDetails ==> ()
+StartToOkay(cpd) ==
+(
+    currTrans := mk_TransDetails(cpd.name, name, cpd.seqNo, nextSeqNo, cpd.val);
+    status := <EPV>;
+
+    -- for next time
+    self.Increase();
+    
+    ether.SendMsg(mk_Req(currTrans))
+)
+pre cpd.name <> name and status = <Idle> and ether <> nil;
+
+-- processing a request message (p.33)
+private OpReq : TransDetails ==> ()
+OpReq(td) ==
+(
+    balance := balance - td.val;
+    status := <EPA>;
+    ether.SendMsg(mk_Val(td))
+)
+pre status = <EPR> and currTrans = td and ether <> nil;
+     
+-- processing a value message (p.34)    
+private OpVal : TransDetails ==> ()
+OpVal(td) ==
+(
+    balance := balance + td.val;
+    status := <Idle>;
+    ether.SendMsg(mk_Ack(td))
+)
+pre status = <EPV> and currTrans = td and ether <> nil;
+
+-- processing an ack message (pp.34-35)       
+private OpAck : TransDetails ==> ()
+OpAck(td) ==
+(
+    status := <Idle>;
+    ether.SendMsg(<Unprotected>)
+)
+pre status = <EPA> and currTrans = td and ether <> nil;
+
+-- processing a request to read exception log (p.35)
+private ReadExceptionLog : () ==> ()
+ReadExceptionLog() ==
+(
+    if exLog = {} 
+    then ether.SendMsg(<Unprotected>)
+    else let logtd in set exLog in
+        ether.SendMsg(mk_ExceptionLogResult(name, logtd))
+)
+pre status = <Idle> and ether <> nil;
+
+-- processing a request to clear the exception log (p.36)
+private ClearExceptionLog : ConWorld`PurseId * token ==> ()
+ClearExceptionLog(nm,c) ==
+(
+    exLog := {};
+    ether.SendMsg(<Unprotected>)
+)
+pre exLog <> {} and status = <Idle> and 
+nm = name and c = Image(exLog) and ether <> nil;  -- the exceptionLogClear message is valid 
+
+
+-- ACCESSORS
+
+-- return the balance of this purse
+public GetBalance : () ==> nat
+GetBalance() ==
+    return balance;
+
+-- return the 'lost' component of this purse
+public GetLost : () ==> nat
+GetLost() ==
+(
+    dcl lost : nat := 0;
+    for all td in set exLog do lost := lost + td.val;
+    return lost
+);    
+    
+-- return the total value this purse (balance + lost)
+public GetTotal : () ==> nat
+GetTotal() ==
+    return self.GetBalance() + self.GetLost();    
+
+-- required for world to create start transaction messages
+public GetSeqNo : () ==> nat
+GetSeqNo() ==
+    return nextSeqNo;
+    
+    
+-- HOUSEKEEPING
+    
+-- connect purse to ether
+public DiscoverEther : Ether ==> ()
+DiscoverEther(ethr) ==
+    ether := ethr;
+    
+-- constructor
+public ConPurse : ConWorld`PurseId * nat ==> ConPurse
+ConPurse(nm, bal) ==
+(
+    name := nm;
+    balance := bal;
+    
+    -- status / seqno
+    status := <Idle>;
+    nextSeqNo := 0;
+    
+    currTrans := nil;
+    exLog := {};
+    
+    ether := nil;
+);
+
+end ConPurse

@@ -1,0 +1,46 @@
+##----------------------------------------------------------------------------
+##          Make file for the whole system with shared librarires
+## 
+##  
+## tcl_init.cc		Tcl Interpreter generation and initialisation
+## gui_func.cc		Function which evaluates a tcl script for I/O
+## my_gui.cc            Type conversions functions
+## 
+##   
+##   update by bf					1996/02/16
+##----------------------------------------------------------------------------
+
+# VDM Meta IV Classes:  include files  and libraries
+VDMLIB  = /home/henrik/toolbox/SunOS4
+VDMINCL = /home/henrik/toolbox/SunOS4
+
+# X Windows and Tcl-Tk: include files and libraries
+TCLINCL = /usr/local/package/tcl-7.4p3/include
+TCLLIB = /usr/local/package/tcl-7.4p3/lib
+XINCL = /usr/local/package/X11R5/include
+XLIB = /usr/local/package/X11R5/lib
+
+## Nothing below this line should be changed.
+CCPATH = /usr/local/package/gcc-2.7.2/bin/
+CC      = $(CCPATH)gcc
+CCC     = $(CCPATH)g++
+LIB     =   -L${VDMLIB} -lvdm -L${TCLLIB} -Bstatic -ltcl -ltk -lm  -Bstatic -L${XLIB} -lX11  
+INCL    =  -I${VDMINCL} -I${XINCL} -I${TCLINCL}
+
+all : my_gui.so
+
+my_gui.so : my_gui.o gui_func.o tcl_init.o
+	ld -o my_gui.so my_gui.o gui_func.o tcl_init.o ${LIB}
+
+my_gui.o : my_gui.cc
+	${CCC} -c -fpic -o my_gui.o my_gui.cc ${INCL}
+
+tcl_init.o : tcl_init.cc
+	${CCC} -c  -fpic -o tcl_init.o tcl_init.cc ${INCL}
+
+gui_func.o : gui_func.cc
+	${CCC} -c  -fpic -o gui_func.o gui_func.cc ${INCL}
+
+clean:
+	rm *.o *.so
+

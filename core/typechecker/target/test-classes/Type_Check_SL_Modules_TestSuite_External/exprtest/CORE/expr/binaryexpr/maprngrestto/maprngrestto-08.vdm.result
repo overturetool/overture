@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="15" line="18" message="Restriction of map should be set of seq1 of (char)" messageType="error" number="3153" resource="maprngrestto-08.vdm"/>
+<result/>
+</testResult>

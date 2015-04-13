@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="18" line="31" message="Definition 'al' not used" messageType="warning" number="5000" resource="modules12.vdm"/>
+<message column="3" line="26" message="Definition 'BO' not used" messageType="warning" number="5000" resource="modules12.vdm"/>
+<message column="1" line="30" message="Definition 'EvalTCR' not used" messageType="warning" number="5000" resource="modules12.vdm"/>
+<result/>
+</testResult>

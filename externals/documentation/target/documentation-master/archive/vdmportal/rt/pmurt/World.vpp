@@ -1,0 +1,52 @@
+\begin{vdm_al}
+class NewWorld
+
+types
+
+instance variables
+
+public static env : [Environment] := nil;
+--public static testThread : [TestThread] := nil;
+--public static timerRef : TimeStamp := new TimeStamp(); --delete in real time model
+
+operations
+
+public NewWorld: () ==> NewWorld
+NewWorld() ==
+(
+    env := new Environment("testvalues.txt");
+    
+    -- add stuff to env
+    env.addMedicalDevice(PMUSystem`medicalDevice0);
+    PMUSystem`medicalDevice0.setupMedicalDevice(PMUSystem`pmu0);
+     
+    -- add stuff to system
+    PMUSystem`pmu0.setBatteryMonitor(PMUSystem`batteryMonitor0);   
+    PMUSystem`pmu0.addAnalyzer(PMUSystem`analyzer0);
+    PMUSystem`pmu0.addTransmitter(PMUSystem`transmitter0);
+    
+    env.addPMU(PMUSystem`pmu0);
+    
+    -- start threads
+    start(PMUSystem`pmu0);
+    
+);
+
+public Run: () ==> ()
+Run () == 
+  (
+  
+   start (env);
+   -- wait for the environment to handle all input
+   env.isFinished();
+   -- wait for others to be finished  
+   PMUSystem`pmu0.isFinished();
+   -- print the result
+   env.showResult())
+
+end NewWorld
+
+
+\end{vdm_al}
+
+

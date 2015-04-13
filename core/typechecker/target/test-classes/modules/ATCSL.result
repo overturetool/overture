@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="1" line="551" message="Definition 'Add_Area' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="558" message="Definition 'Change_Area' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="567" message="Definition 'Del_Area' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="577" message="Definition 'Add_Connect' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="597" message="Definition 'Del_Connect' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="606" message="Definition 'Line_Add_TrackC' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="625" message="Definition 'Line_Del_TrackC' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="640" message="Definition 'Line_Add_Joint' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="661" message="Definition 'Line_Del_Joint' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="682" message="Definition 'Line_Add_Path' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="701" message="Definition 'Line_Del_Path' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="714" message="Definition 'Line_Add_Route' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="727" message="Definition 'Line_Del_Route' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="739" message="Definition 'Line_Add_Condition' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="746" message="Definition 'Line_Del_Condition' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<message column="1" line="760" message="Definition 'Is_wf_Line_DB' not used" messageType="warning" number="5000" resource="ATCSL"/>
+<result/>
+</testResult>

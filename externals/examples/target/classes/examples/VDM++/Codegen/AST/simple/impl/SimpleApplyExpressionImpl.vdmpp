@@ -1,0 +1,25 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleApplyExpressionImpl is subclass of SimpleApplyExpression
+instance variables
+    private iv_func:SimpleExpression;
+    private iv_args:seq of SimpleExpression;
+
+operations
+    public SimpleApplyExpressionImpl: SimpleExpression * seq of SimpleExpression ==> SimpleApplyExpressionImpl
+    SimpleApplyExpressionImpl(p_func, p_args) ==
+    (
+        iv_func := p_func;
+        iv_args := p_args;
+    );
+
+    public getFunc: () ==> SimpleExpression
+    getFunc() == return iv_func;
+
+    public getArgs: () ==> seq of SimpleExpression
+    getArgs() == return iv_args;
+
+end SimpleApplyExpressionImpl

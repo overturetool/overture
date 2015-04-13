@@ -1,0 +1,94 @@
+\begin{vdm_al}
+class MissileDetector is subclass of GLOBAL, BaseRTThread
+
+-- the primary task of the MissileDetector is to
+-- collect all sensor data and dispatch each event
+-- to the appropriate FlareController
+
+instance variables
+
+-- maintain a link to each controller
+ranges : map nat to (Angle * Angle) := {|->};
+controllers : map nat to FlareController := {|->};
+inv dom ranges = dom controllers;
+
+-- collects the observations from all attached sensors
+threats : seq of (EventId * MissileType * Angle * Time) := [];
+
+-- status of the missile detector
+busy : bool := false
+
+operations
+
+public MissileDetector: [ThreadDef] ==> MissileDetector
+MissileDetector(tDef)==
+ (if tDef <> nil
+  then (period := tDef.p;
+        jitter := tDef.j;
+        delay := tDef.d;
+        offset := tDef.o;
+       ); 
+  BaseRTThread(self);
+ );
+
+-- addController is only used to instantiate the model
+public addController: FlareController ==> ()
+addController (pctrl) ==
+  (dcl nid : nat := card dom ranges + 1;
+   atomic 
+    (ranges := ranges munion {nid |-> pctrl.getAperture()};
+     controllers := controllers munion {nid |-> pctrl}
+    );
+   );
+
+-- addThreat is a helper operation to modify the event
+-- list. currently events are stored first come first served.
+-- one could imagine using a different ordering instead.
+async public addThreat: EventId * MissileType * Angle * Time ==> ()
+addThreat (evid,pmt,pa,pt) == 
+  (threats := threats ^ [mk_ (evid,pmt,pa,pt)];
+   busy := true );
+
+-- getThreat is a local helper operation to modify the event list
+private getThreat: () ==> EventId * MissileType * Angle * Time
+getThreat () ==
+  (dcl res : EventId * MissileType * Angle * Time := hd threats;
+   threats := tl threats;
+   return res );
+
+public isFinished: () ==> ()
+isFinished () ==
+  for all id in set dom controllers do
+    controllers(id).isFinished();
+
+protected Step: () ==> ()
+Step() ==
+ (if threats <> []
+  then (def mk_ (evid,pmt, pa, pt) = getThreat() in
+          for all id in set dom ranges do
+            def mk_(papplhs, pappsize) = ranges(id) in
+              if canObserve(pa, papplhs, pappsize)
+              then controllers(id).addThreat(evid,pmt,pa,pt);
+        busy := len threats > 0);
+ );
+
+  public getAperture: () ==> Angle * Angle
+  getAperture () == is not yet specified;
+
+sync
+
+-- addThreat and getThreat modify the same instance variables
+-- therefore they need to be declared mutual exclusive
+mutex (addThreat,getThreat);
+
+-- getThreat is used as a 'blocking read' from the main
+-- thread of control of the missile detector
+per getThreat => len threats > 0;
+per isFinished => not busy
+
+end MissileDetector
+\end{vdm_al}
+
+\begin{rtinfo}[MissileDetector`addController]
+{vdm.tc}[MissileDetector]
+\end{rtinfo}

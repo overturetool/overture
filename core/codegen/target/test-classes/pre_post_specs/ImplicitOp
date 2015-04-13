@@ -1,0 +1,18 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let b = not true
+in
+  if b then
+    return addImpl(5, 7)
+  else
+    return 5 + 7;
+
+static addImpl (left,right: nat) res: nat
+pre true
+post left + right = res;
+
+end Entry

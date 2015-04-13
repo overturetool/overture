@@ -1,0 +1,41 @@
+\begin{vdm_al}
+class Table
+
+instance variables
+  forks : nat := 0;
+  guests : set of Philosopher := {};
+  done : nat := 0
+
+operations
+  public Table: nat1 ==> Table
+  Table (noGuests) ==
+    while forks < noGuests do
+      ( guests := guests union
+          {new Philosopher(self)};
+        forks := forks + 1 )
+    pre noGuests >= 2;
+
+  public takeFork: () ==> ()
+  takeFork () == forks := forks - 1;
+
+  public releaseFork: () ==> ()
+  releaseFork () == forks := forks + 1;
+
+  public IamDone: () ==> ()
+  IamDone () == done := done + 1;
+
+  wait: () ==> ()
+  wait () == skip;
+
+  public LetsEat: () ==> ()
+  LetsEat () ==
+   ( startlist(guests); wait() )
+
+sync
+   per takeFork => forks > 0;
+   per wait => done = card guests;
+   mutex(takeFork,releaseFork);
+   mutex(IamDone)
+
+end Table
+\end{vdm_al}

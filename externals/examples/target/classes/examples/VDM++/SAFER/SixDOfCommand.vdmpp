@@ -1,0 +1,62 @@
+\section{SixDOfCommand Class}
+
+\begin{vdm_al}
+class SixDOfCommand
+instance variables
+  protected
+  hcu : HandControlUnit;
+  protected
+  rotcmd : RotationCommand := new RotationCommand();
+  protected
+  trancmd : TranslationCommand := new TranslationCommand();
+
+operations
+  public
+  GetCommand : () ==> Command`AxisMap * Command`AxisMap
+  GetCommand() ==
+    return(mk_(trancmd.GetAxesdir(), rotcmd.GetAxesdir()));
+
+  public
+  SetHCULink : HandControlUnit ==> ()
+  SetHCULink(h) ==
+    hcu := h;
+
+  public
+  ConvertGrip : () ==> ()
+  ConvertGrip() ==
+    let mk_(x, pitch, yaw_y, roll_z, modeswitch) = hcu.ReadGrip(),
+        tran = {Command`X |-> x,
+                Command`Y |-> if modeswitch = <Tran> 
+                              then yaw_y else <Zero>,
+                Command`Z |-> if modeswitch = <Tran> 
+                              then roll_z else <Zero>},
+        rot = {Command`ROLL |-> if modeswitch = <Rot> 
+                                then roll_z else <Zero>,
+               Command`PITCH |->pitch,
+               Command`YAW |-> if modeswitch = <Rot> 
+                               then yaw_y else <Zero>}
+    in (trancmd.SetAxesdir(tran);
+        rotcmd.SetAxesdir(rot));
+
+-- Alternative formulation of ConvertGrip
+--    let mk_(x, pitch, yaw_y, roll_z, modeswitch) = hcu.ReadGrip(),
+--    in (trancmd.SuppressAllAxes();
+--        rotcmd.SuppressAllAxes();
+--        trancmd.SetDirection(Command`X, x);
+--        rotcmd.SetDirection(Command`PITCH, pitch);
+--        if modeswitch = <Tran> 
+--        then (trancmd.SetDirection(Command`Y, yaw_y);
+--              trancmd.SetDirection(Command`Z, roll_z))
+--        else (rotcmd.SetDirection(Command`YAW, yaw_y);
+--               rotcmd.SetDirection(Command`ROLL, roll_z)));
+
+
+end SixDOfCommand
+\end{vdm_al}
+
+The test coverage table for the SixDOfCommand class looks like:
+
+\begin{rtinfo}{vdm.tc}[SixDOfCommand]
+\end{rtinfo}
+
+

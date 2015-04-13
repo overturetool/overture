@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
+<message column="5" line="21" message="Error 4060: Type invariant violated for Even in 'A' (letexpr-08.vdm) at line 21:5" messageType="error" number="4060" resource="letexpr-08.vdm"/>
+<result>
+<output object="[]" resource="letexpr-08.vdm" value="[]"/>
+</result>
+</testResult>

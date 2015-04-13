@@ -1,0 +1,69 @@
+\section{The CabDisplay Class}
+
+The CabDisplay class models the three lamps of the Cab Display. The
+three instance variables each represents one of the lamps.
+
+\begin{vdm_al}
+class CabDisplay
+
+instance variables
+ 
+  alarm : bool := false;
+
+  emergencybreak : bool := false;
+
+  groundfault : bool := false;
+\end{vdm_al}
+
+set and unset operations exist for each lamp. Setting the alarm lamp
+requires that neither the emergency break lamp nor the ground fault
+lamp is set. A side effect of setting the emergency lamp is unsetting
+the alarm lamp.  
+
+\begin{vdm_al}
+operations
+
+  public
+  setAlarm: () ==> ()
+  setAlarm () ==
+    alarm := true
+  pre not emergencybreak and not groundfault;
+
+  public
+  unsetAlarm: () ==> ()
+  unsetAlarm () ==
+    alarm := false;
+
+  public
+  setEmergencyBreak: () ==> ()
+  setEmergencyBreak () ==
+    ( alarm := false;
+      emergencybreak := true );
+
+  public
+  unsetEmergencyBreak: () ==> ()
+  unsetEmergencyBreak () ==
+    emergencybreak := false;
+
+  public
+  setGroundFault: () ==> ()
+  setGroundFault () ==
+    groundfault := true;
+
+  public
+  unsetGroundFault: () ==> ()
+  unsetGroundFault () ==
+    groundfault := false;
+\end{vdm_al}
+
+The getDisplay operation returns the state of the lamps.
+
+\begin{vdm_al}
+  public
+  getDisplay: () ==> bool * bool * bool
+  getDisplay () ==
+    return mk_(alarm, emergencybreak, groundfault);
+
+end CabDisplay
+\end{vdm_al}
+

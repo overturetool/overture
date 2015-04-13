@@ -1,0 +1,28 @@
+class Component
+
+instance variables
+  protected next : [Component] := nil;
+  protected alph : Alphabet
+
+operations
+  public Successors: () ==> set of Component
+  Successors () ==
+    if next = nil
+    then return {self}
+    else return {self} union next.Successors();
+
+  public SetNext: Component ==> ()
+  SetNext (pcom) == next := pcom
+    pre next = nil and
+        self not in set pcom.Successors();
+
+  public Substitute: nat ==> nat
+  Substitute (-) == is subclass responsibility;
+
+  public Rotate: () ==> ()
+  Rotate () == skip;
+
+  public Rotate: nat ==> ()
+  Rotate (-) == skip
+
+end Component

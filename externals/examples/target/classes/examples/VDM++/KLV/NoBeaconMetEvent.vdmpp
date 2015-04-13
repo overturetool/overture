@@ -1,0 +1,23 @@
+\section{The NoBeaconMetEvent Test Class}
+
+The NoBeaconMetEvent class implements the event that an announced
+TIV\_E was not met in the distance it was supposed to be located. It
+provides an execute operation that returns the status of the Cab
+Display and of the Emergency Break.
+
+\begin{vdm_al}
+class NoBeaconMetEvent is subclass of Event
+
+operations 
+
+  public
+  execute : KLV ==> Test`TestResult
+  execute (klv) ==
+    ( klv.noBeaconMet();
+      let mk_(a,e,g) = klv.getCabDisplay().getDisplay(),
+          e' =  klv.getEmergencyBreak().getEmergencyBreak() in
+       return mk_Test`KLVstate(mk_Test`CabDisp(a,e,g), 
+                               mk_Test`EmerBreak(e')) );
+
+end NoBeaconMetEvent
+\end{vdm_al}

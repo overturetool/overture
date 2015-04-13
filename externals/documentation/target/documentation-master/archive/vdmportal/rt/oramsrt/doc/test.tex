@@ -1,0 +1,166 @@
+\documentclass[a4paper,twoside,12pt,english,notitlepage]{report}
+\usepackage[english]{babel}
+%\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage[ansinew]{inputenc}
+\usepackage{geometry}               % muligg�r definition af margin
+\usepackage{fancyhdr}
+%\usepackage{amsmath,amssymb}       % pakke til matematik
+\usepackage[fleqn]{amsmath}         % pakke til matematik
+\usepackage{amssymb}
+\usepackage{dcolumn,booktabs}       % til tabeller
+\usepackage{layout}                 % man kan vise \layout
+\usepackage[english]{varioref}      % laver smarte henvisninger
+\usepackage{comment}                % man kan bruge \begin{comment} og \end{comment}
+\usepackage[amssymb,Gray]{SIunits}  % fysiske enheder
+%\usepackage[version=2]{mhchem}     % til at lave kemiske formler med
+\usepackage{caption}                % tillader andringer af caption
+\usepackage{rotating}		            % G�r det muligt at rotere tabeller
+\usepackage{float}
+\usepackage{color}                  % tekst farver
+\usepackage{natbib}
+
+\usepackage{wrapfig}
+
+\usepackage{vdmsl-2e}
+\usepackage{vpp}
+\usepackage{makeidx}
+\usepackage{longtable}
+
+ 
+
+\setlength{\voffset}{-1.5cm}	     % distance from papertop to doc-top
+\setlength{\topmargin}{0.0cm}      % distance from top to header
+\setlength{\topskip}{0.7cm}        % between header and text
+\setlength{\footskip}{1.0cm}       % between text and foot
+\setlength{\textheight}{23.3cm}    % height of main text
+\setlength{\textwidth}{15.3cm}     % width of text
+\setlength{\oddsidemargin}{0.3cm}  % odd page left margin
+\setlength{\evensidemargin}{0.3cm} % even page left margin
+\setlength{\marginparwidth}{0.0cm} % margin notes width
+\setlength{\marginparsep}{0.0cm}   % margin to text width
+\setlength{\parindent}{0cm}        % indrykning efter nyt afsnit
+\headheight48pt
+\pagestyle{fancyplain}
+%\lhead{\includegraphics[height=1.5cm]{billeder/AAUE.jpg}}
+% \chead{Control of ball and beam system}
+% \rhead{19th December 2007}
+\captionsetup{font=small,labelfont=small,labelfont=bf}          % format for caption
+
+
+%Orddeling
+\hyphenation{}
+
+
+%---------Chapter ops�tning---------------------------
+% http://zoonek.free.fr/LaTeX/LaTeX_samples_chapter/0.html
+%\begin{comment}
+\makeatletter
+\def\thickhrulefill{\leavevmode \leaders \hrule height 1ex \hfill \kern \z@}
+\def\@makechapterhead#1{%
+  {\parindent \z@ \raggedright
+    \reset@font
+    \hrule
+    \vspace*{10\p@}%
+    \par
+    \Large \scshape \@chapapp{} \Huge\bfseries \thechapter
+    \par\nobreak
+    \vspace*{10\p@}%
+    \hrule
+    \par
+    \vspace*{1\p@}%
+    \hrule
+    %\vskip 40\p@
+    \vspace*{20\p@}
+    \Huge \bfseries #1\par\nobreak
+    \vskip 20\p@
+  }}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PDF compatibility code. 
+\makeatletter
+\newif\ifpdflatex@
+\ifx\pdftexversion\@undefined
+\pdflatex@false
+%\message{Not using pdf}
+\else
+\pdflatex@true
+%\message{Using pdf}
+\fi
+
+\newcommand{\latexorpdf}[2]{
+  \ifpdflatex@ #2
+  \else #1
+  \fi
+}
+
+\newcommand{\pformat}{a4paper}
+
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%VDM specifik%%%%%%%%%
+\definecolor{covered}{rgb}{0,0,0}      %black
+%\definecolor{not_covered}{gray}{0.5}   %gray for previewing
+%\definecolor{not_covered}{gray}{0.6}   %gray for printing
+\definecolor{not-covered}{rgb}{1,0,0}  %red
+
+
+\newcommand{\InstVarDef}[1]{{\bf #1}}
+\newcommand{\TypeDef}[1]{{\bf #1}}
+\newcommand{\TypeOcc}[1]{{\it #1}}
+\newcommand{\FuncDef}[1]{{\bf #1}}
+\newcommand{\FuncOcc}[1]{#1}
+\newcommand{\ClassDef}[1]{{\sf #1}}
+\newcommand{\ClassOcc}[1]{#1}
+
+%self hack
+\newcommand{\MethodOcc}[1]{#1}
+
+\makeindex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\title{Oil rig access management system\\
+TI-VDM2 project}
+\author{Kim Christensen \\
+Delivery date: 19/03-2009 \\
+Supervisor: Peter Gorm Larsen}
+\date{\today}
+\maketitle
+\cleardoublepage
+\newpage
+
+\tableofcontents
+
+% \include{introduction}
+% \include{orams}
+% \include{model}
+% \include{testing}
+% \include{conclusions}
+% \include{appendix}
+
+\printindex
+
+\newpage
+% \begin{rtinfo}{ORAMS.tc}
+% \end{rtinfo}
+
+
+\input{World.vpp.tex}
+\input{global.vpp.tex}
+\input{AccessController.vpp.tex}
+\input{AreaController.vpp.tex}
+\input{Environment.vpp.tex}
+\input{Lifeboat.vpp.tex}
+\input{ORAMS.vpp.tex}
+\input{Person.vpp.tex}
+\input{SafeyEquipment.vpp.tex}
+\input{LifeboatTest.vpp.tex}
+\input{PersonTest.vpp.tex}
+\input{AreaControllerTest.vpp.tex}
+\input{AccessControllerTest.vpp.tex}
+
+
+\end{document}

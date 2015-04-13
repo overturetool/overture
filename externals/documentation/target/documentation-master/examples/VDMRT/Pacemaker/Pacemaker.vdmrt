@@ -1,0 +1,82 @@
+\section{Pacemaker class}
+
+This is the pacemaker system and will contain the components of it as 
+static variables the first ones are the atrial and ventricular leads 
+responsibles for discharge and sense electrical pulses.
+
+
+\begin{vdm_al}
+system Pacemaker 
+
+ instance variables
+
+ public static 
+ atriaLead       : Lead       := new Lead(<ATRIA>);
+
+ public static 
+ ventricleLead   : Lead       := new Lead(<VENTRICLE>);
+
+\end{vdm_al}
+
+The accelerometer component and the RateContoller.
+
+\begin{vdm_al}
+instance variables
+
+ public static 
+ accelerometer       : Accelerometer   := new Accelerometer();
+
+ public static 
+ rateController      : RateController  := new RateController();
+
+\end{vdm_al}
+
+\begin{vdm_al}
+ instance variables
+
+ public static 
+ heartController : HeartController := new HeartController();
+\end{vdm_al}
+
+Below we define the physical architecture.
+
+\begin{vdm_al}
+instance variables
+
+ cpu1 : CPU := new CPU(<FCFS>,1E3); 
+ cpu2 : CPU := new CPU(<FCFS>,1E3); 
+ cpu3 : CPU := new CPU(<FCFS>,1E3); 
+ cpu4 : CPU := new CPU(<FP>,1E3); 
+
+ -- Lead (artia) <-> HeartController
+ bus1 : BUS := new BUS(<FCFS>,1E6,{cpu1,cpu4});
+
+ -- Lead (ventricle) <-> HeartController
+ bus2 : BUS := new BUS(<FCFS>,1E6,{cpu2,cpu4});
+
+ -- Accelerometer <-> RateController
+ bus3 : BUS := new BUS(<FCFS>,1E6,{cpu3,cpu4});
+
+\end{vdm_al}
+
+And now we need ...
+
+\begin{vdm_al}
+
+operations
+ 
+ public Pacemaker: () ==> Pacemaker
+ Pacemaker () == 
+   ( 
+    cpu1.deploy(atriaLead);
+    cpu2.deploy(ventricleLead);
+    cpu3.deploy(accelerometer);
+    cpu4.deploy(rateController);
+    cpu4.deploy(heartController);
+ --   cpu4.setPriority(HeartController`pace,3);
+ --   cpu4.setPriority(RateController`increaseRate,1);
+ --   cpu4.setPriority(RateController`decreaseRate,1);
+   );
+   
+end Pacemaker
+\end{vdm_al}

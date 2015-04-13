@@ -1,0 +1,40 @@
+nat                 $abs -1
+nat                 $abs -1
+nat                 $card {1,2}
+nat                 $abs -1
+nat                 $card {1,2}
+seq1 of (nat1)      $conc [[1,2],[3,4]]
+set of (nat1)       $dinter {{1,2,3},{1,2,3,4}}
+map (nat1) to (nat1)$merge {{1|->2},{2|->4}}
+set of (nat1)       $dunion {{1,2,3},{1,2,3,4}}
+set of (nat1)       $elems [1,2,3]
+int                 $floor 2.3
+nat1                $hd [1,2,34]
+set of (nat1)       $inds [1,2,3]
+nat                 $len [1,2]
+bool                $not true
+set of (set of (nat1))$power {1,2,3}
+seq1 of (nat1)      $reverse [1,2,3,4,5,6,7,8,9,10]
+seq1 of (nat1)      $tl [1,2]
+int                 $-4
+nat1                $+4
+nat                 $abs -1
+nat                 $card {1,2}
+seq1 of (nat1)      $conc [[1,2],[3,4]]
+set of (nat1)       $dinter {{1,2,3},{1,2,3,4}}
+map (nat1) to (nat1)$merge {{1|->2},{2|->4}}
+set of (nat1)       $dunion {{1,2,3},{1,2,3,4}}
+set of (nat1)       $elems [1,2,3]
+int                 $floor 2.3
+nat1                $hd [1,2,34]
+set of (nat1)       $inds [1,2,3]
+nat                 $len [1,2]
+set of (nat1)       $dom {1|->2}
+map (nat1) to (nat1)$inverse {1|->2}
+set of (nat1)       $rng {1|->2}
+bool                $not true
+set of (set of (nat1))$power {1,2,3}
+seq1 of (nat1)      $reverse [1,2,3,4,5,6,7,8,9,10]
+seq1 of (nat1)      $tl [1,2]
+int                 $-4
+nat1                $+4

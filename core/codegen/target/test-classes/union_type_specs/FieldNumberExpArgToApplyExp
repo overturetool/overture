@@ -1,0 +1,17 @@
+class Entry
+
+functions
+
+id :  bool -> bool
+id (x) == x;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let xs =  [mk_(5,true), mk_(true, 2, 3)],
+    x = xs(2)
+in
+  return id(x.#1);
+ 
+end Entry

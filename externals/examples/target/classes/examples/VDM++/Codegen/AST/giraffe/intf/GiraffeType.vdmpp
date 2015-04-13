@@ -1,0 +1,8 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:15 CET 2010
+--
+
+class GiraffeType is subclass of GiraffeNode
+    -- Abstract
+end GiraffeType

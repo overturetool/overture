@@ -1,0 +1,37 @@
+\begin{vdm_al}
+class TestSuite
+  is subclass of Test
+
+instance variables
+  tests : seq of Test := [];
+
+types
+
+public
+  TestKinds = TestVehicle | TestPosition | TestTrafficLight | TestTrafficData |
+              TestTraffic | TestController | TestVDMController;
+  
+operations
+  public Run: () ==> ()
+  Run () ==
+    (dcl ntr : TestResult := new TestResult();
+     Run(ntr);
+     ntr.Show());
+
+  public Run: TestResult ==> ()
+  Run (result) ==
+    for test in tests do
+      test.Run(result);
+
+  public AddTest: TestKinds ==> ()
+  AddTest(test) ==
+    tests := tests ^ [test];
+
+end TestSuite
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[TestSuite]
+\end{rtinfo}
+

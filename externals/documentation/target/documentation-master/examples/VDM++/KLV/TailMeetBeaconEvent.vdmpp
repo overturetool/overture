@@ -1,0 +1,35 @@
+\section{The TailMeetBeaconEvent Test Class}
+
+The TailMeetBeaconEvent class implements a test event where the tail
+of a train meets a beacon. It provides a setBeacon and an execute
+operation. The execute operation returns the current announcements and
+speed restrictions.
+
+\begin{vdm_al}
+class TailMeetBeaconEvent is subclass of Event
+
+instance variables
+  
+  beacon : Beacon;
+
+operations
+
+  public
+  TailMeetBeaconEvent: Beacon ==> TailMeetBeaconEvent
+  TailMeetBeaconEvent (b) ==
+    beacon := b;
+
+  public
+  execute : KLV ==> Test`TestResult
+  execute (klv) ==
+    ( klv.tailMeetsBeacon(beacon); 
+      let anns = klv.getAnnouncements(),
+          restr = klv.getSpeedRestrictions() in
+        return mk_Test`BeaconsMet(
+            [ mk_Test`TIVD(anns(i).getTargetSpeed())  |
+              i in set inds anns ],
+            [ mk_Test`TIVE(restr(i).getSpeedRestriction()) |
+              i in set inds restr ]) );
+
+end TailMeetBeaconEvent
+\end{vdm_al}

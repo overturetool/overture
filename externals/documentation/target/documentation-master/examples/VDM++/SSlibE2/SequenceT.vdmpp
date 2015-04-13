@@ -1,0 +1,530 @@
+class SequenceT is subclass of TestDriver
+functions
+public tests : () -> seq of TestCase
+tests() == 
+	[ 
+	new SequenceT25(), 
+	new SequenceT23(), new SequenceT24(),
+	new SequenceT19(), new SequenceT20(),
+	new SequenceT21(), new SequenceT22(),
+	new SequenceT01(), new SequenceT02(),
+	new SequenceT03(), new SequenceT04(),
+	new SequenceT05(), new SequenceT06(),
+	new SequenceT07(), new SequenceT08(),
+	new SequenceT09(), new SequenceT10(),
+	new SequenceT11(), new SequenceT12(),
+	new SequenceT13(), new SequenceT14(),
+	new SequenceT15(), new SequenceT16(),
+	new SequenceT17(), new SequenceT18()
+	];
+end SequenceT
+
+class SequenceT01 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	sq = new Sequence()	in
+       return (sq.Sum[int]([1,2,3,4,5,6,7,8,9]) = 45 and
+       sq.Sum[int]([]) = 0) and
+       Sequence`Product[int]([2, 3, 4]) = 24 and
+       Sequence`Product[int]([]) = 1
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT01:\t Integer sum and product.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT01
+
+class SequenceT02 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	sq = new Sequence()	in
+	return sq.Sum[real]([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]) = 4.5 and
+	sq.Sum[real]([]) = 0.0 and
+	Sequence`Product[real]([2.0, 3.0, 4.0]) = 24.0 and
+	Sequence`Product[real]([]) = 1.0 and
+	Sequence`Product[real]([2.1, 3.2, 4.3]) = 2.1 * 3.2 * 4.3
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT02:\t Real sum and product.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT02
+
+class SequenceT03 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	sq = new Sequence()	in
+	return sq.isAscendingOrder[int]([1,2,4,4,7,8,8,8]) and
+	not sq.isAscendingOrder[real]([1.0,2.0,3.0,1.5])
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT03:\t Test isAscendingOrder (integer and real)";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT03
+
+class SequenceT04 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	sq = new Sequence()	in
+	return 
+		sq.isDescendingOrder[int]([3,2,2,1,1]) and
+		Sequence`isDescendingTotalOrder[int] (lambda x : int, y : int & x < y)([3,2,2,1,1]) and
+		Sequence`isDescendingTotalOrder[int] (lambda x : int, y : int & x < y)([3,2,2,1,2]) = false
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT04:\t Test isDescendingTotalOrder (integer).";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT04
+
+class SequenceT05 is subclass of TestCase
+types
+	public TestType = int|seq of char|char;
+	public RecordType ::
+		val : int
+		str : seq of char
+		chr : char;
+operations 
+public  test: () ==> bool
+test() == 
+	let	sq = new Sequence(),
+		decideOrderFuncSeq =
+			[(lambda x : int, y : int & x < y),
+			lambda x : seq of char, y : seq of char & String`LT(x,y),
+			lambda x : char, y : char & Character`LT(x,y)
+			],
+		decideOrderFunc =
+			lambda x : RecordType, y :  RecordType &
+				Sequence`isOrdered[SequenceT05`TestType]
+					(decideOrderFuncSeq)([x.val,x.str,x.chr])([y.val,y.str,y.chr])
+		in
+	return 
+		Sequence`sort[int](lambda x : int, y : int & x < y)([3,1,5,4]) = [1,3,4,5] and
+		Sequence`sort[seq of char]
+			(lambda x : seq of char, y : seq of char & String`LT(x,y))
+			(["12", "111", "01"]) = ["01","111","12"] and
+		Sequence`sort[SequenceT05`RecordType](decideOrderFunc)
+			([mk_RecordType(10,"sahara",'c'),mk_RecordType(10,"sahara",'a')]) =
+			[mk_RecordType(10,"sahara",'a'),mk_RecordType(10,"sahara",'c')] and
+		sq.isOrdered[SequenceT05`TestType](decideOrderFuncSeq)([3,"123",'a'])([3,"123",'A']) = true and
+		sq.isOrdered[SequenceT05`TestType](decideOrderFuncSeq)([3,"123",'a'])([3,"123",'0']) = false and
+		sq.isOrdered[int|seq of char|char](decideOrderFuncSeq)([])([]) = false and
+		sq.isOrdered[int|seq of char|char](decideOrderFuncSeq)([])([3,"123",'0']) = true and
+		sq.isOrdered[int|seq of char|char](decideOrderFuncSeq)([3,"123",'0'])([]) = false
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT05:\t test sort and isOrdered.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT05
+
+class SequenceT06 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	let	sq = new Sequence(),
+		decideOrderFunc1 = lambda x : int, y : int & x < y,
+		decideOrderFunc2 = lambda x : char, y : char & Character`LT(x,y)		in
+	return
+		sq.Merge[int](decideOrderFunc1)([1,4,6])([2,3,4,5]) = [1,2,3,4,4,5,6] and
+		sq.Merge[char](decideOrderFunc2)("146")("2345") = "1234456" and
+		sq.Merge[char](decideOrderFunc2)("")("2345") = "2345" and
+		sq.Merge[char](decideOrderFunc2)("146")("") = "146"
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT06:\t Merge sequences.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT06
+
+class SequenceT07 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	let	sq = new Sequence()		in
+	return
+		sq.take[int](2)([2,3,4,5]) = [2,3] and
+		sq.drop[char](5)("Shin Sahara") = "Sahara" and
+		sq.last[int]([1,2,3]) = 3 and
+		sq.filter[int](lambda x:int & x mod 2 = 0)([1,2,3,4,5,6]) = [2,4,6] and
+		Sequence`SubSeq[char](4)(3)("1234567890") = "456" and
+		Sequence`flatten[int]([[1,2,3], [3,4], [4,5,6]]) = [ 1,2,3,3,4,4,5,6 ]
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT07:\t Handling sequences.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT07
+
+class SequenceT08 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	return
+		Sequence`ascendingOrderSort[int]([3,1,6,4,2,6,5]) = [1,2,3,4,5,6,6] and
+		Sequence`descendingOrderSort[int]([3,1,6,4,2,6,5]) = [6,6,5,4,3,2,1] 
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT08:\t Test sort.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT08
+
+class SequenceT09 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	return
+		Sequence`compact[[int]]([3,1,6,4,nil,2,6,5,nil]) = [3,1,6,4,2,6,5] and
+		Sequence`compact[[int]]([nil,nil]) = [] and
+		Sequence`compact[[int]]([]) = [] 
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT09:\t Delete nil elements.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT09
+
+class SequenceT10 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	return
+		Sequence`freverse[[int]]([3,1,6,4,nil,2,6,5,nil]) = [nil, 5, 6, 2, nil, 4, 6, 1, 3] and
+		Sequence`freverse[[int]]([]) = [] 
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT10:\t Get inverse sequence.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT10
+
+class SequenceT11 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	return
+		Sequence`Permutations[[int]]([1,2,3]) =
+			{ [ 1,2,3 ],
+			  [ 1,3,2 ],
+			  [ 2,1,3 ],
+			  [ 2,3,1 ],
+			  [ 3,1,2 ],
+			  [ 3,2,1 ] } and
+		Sequence`Permutations[[int]]([]) = {[]}
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT11:\t Get permutation.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT11
+
+class SequenceT12 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	return
+		Sequence`isMember[int](2)([1,2,3,4,5,6]) and
+		Sequence`isMember[int](0)([1,2,3,4,5,6]) = false and
+		Sequence`isMember[int](6)([1,2,3,4,5,6]) and
+		Sequence`isAnyMember[int]([6])([1,2,3,4,5,6]) and
+		Sequence`isAnyMember[int]([0,7])([1,2,3,4,5,6]) = false and
+		Sequence`isAnyMember[int]([4,6])([1,2,3,4,5,6]) and
+		Sequence`isAnyMember[int]([])([1,2,3,4,5,6]) = false 
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT12:\t Search sequence.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT12
+-------------------------------------------------------------
+class SequenceT13 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	return
+		Sequence`fmap[int, int](lambda x:int & x mod 3)([1,2,3,4,5])  = [1, 2, 0, 1, 2] and
+		Sequence`fmap[seq of char, seq of char]
+			(Sequence`take[char](2))(["Shin Sahara", "Hiroshi Sakoh"]) = ["Sh", "Hi"]
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT13:\tTest fmap.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT13
+-------------------------------------------------------------
+class SequenceT14 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	let	index = Sequence`Index,
+		indexAll = Sequence`IndexAll2
+	in
+	return
+		index[int](1)([1,2,3,4,5])  = 1 and
+		index[int](5)([1,2,3,4,5])  = 5 and
+		index[int](9)([1,2,3,4,5])  = 0 and
+		index[char]('b')(['a', 'b', 'c'])  = 2 and
+		index[char]('z')(['a', 'b', 'c'])  = 0 and
+		indexAll[int](9)([1,2,3,4,5]) = {} and
+		indexAll[int](9)([]) = {} and
+		indexAll[int](1)([1,2,3,4,1]) = {1,5} and
+		indexAll[int](1)([1,2,3,4,1,1]) = {1,5,6} 
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT14:\t Test Index.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT14
+-------------------------------------------------------------
+class SequenceT15 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	let	avg1 = Sequence`GetAverage[int],
+		avg2 = Sequence`GetAverage[real]
+	in
+	return
+		avg1([]) = nil and
+		avg1([1,2,3,4]) = (1+2+3+4) / 4 and
+		avg2([1.3, 2.4, 3.5]) = 7.2 / 3
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT15:\t Test GetAverage.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT15
+-------------------------------------------------------------
+class SequenceT16 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	let	ins1 = Sequence`InsertAt[int],
+		ins2 = Sequence`InsertAt[char]
+	in
+	return
+		ins1(1)(1)([2,3,4,5]) = [1,2,3,4,5] and
+		ins1(3)(3)([1,2,4,5]) = [1,2,3,4,5] and
+		ins1(3)(3)([1,2]) = [1,2,3] and
+		ins1(4)(3)([1,2]) = [1,2,3] and
+		ins1(5)(3)([1,2]) = [1,2,3] and
+		ins2(1)('1')("2345") = "12345" and
+		ins2(3)('3')("1245") = "12345" and
+		ins2(3)('3')("12") = "123"
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT16:\t Test InsertAt.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT16
+-------------------------------------------------------------
+class SequenceT17 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	let	rm1 = Sequence`RemoveAt[int],
+		rm2 = Sequence`RemoveAt[char]
+	in
+	return
+		rm1(1)([1,2,3,4,5]) = [2,3,4,5] and
+		rm1(3)([1,2,4,3]) = [1,2,3] and
+		rm1(3)([1,2]) = [1,2] and
+		rm1(4)([1,2]) = [1,2] and
+		rm1(5)([1,2]) = [1,2] and
+		rm2(1)("12345") = "2345" and
+		rm2(3)("1243") = "123" and
+		rm2(3)("12") = "12"
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT17:\t Test RemoveAt.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT17
+-------------------------------------------------------------
+class SequenceT18 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	let	up1 = Sequence`UpdateAt[int],
+		up2 = Sequence`UpdateAt[char]
+	in
+	return
+		up1(1)(10)([1,2,3,4,5]) = [10,2,3,4,5] and
+		up1(3)(40)([1,2,4,3]) = [1,2,40,3] and
+		up1(2)(30)([1,2]) = [1,30] and
+		up1(3)(30)([1,2]) = [1,2] and
+		up1(4)(30)([1,2]) = [1,2] and
+		up2(1)('a')("12345") = "a2345" and
+		up2(3)('b')("1243") = "12b3" and
+		up2(3)('c')("123") = "12c" and
+		up2(3)('c')("12") = "12"
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT18:\t Test UpdateAt.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT18
+-------------------------------------------------------------
+class SequenceT19 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	let	removeDup = Sequence`RemoveDup[int],
+		removeMember = Sequence`RemoveMember[int],
+		removeMembers = Sequence`RemoveMembers[int]
+	in
+	return
+		removeDup([]) = [] and
+		removeDup([1,1,2,2,2,3,4,4,4,4]) = [1,2,3,4] and
+		removeDup([1,2,3,4]) = [1,2,3,4] and
+		removeMember(1)([]) = [] and
+		removeMember(1)([1,2,3]) = [2,3] and
+		removeMember(4)([1,2,3]) = [1,2,3] and
+		removeMembers([])([]) = [] and
+		removeMembers([])([1,2,3]) = [1,2,3] and
+		removeMembers([1,2,3])([]) = [] and
+		removeMembers([1,2,3])([1,2,3]) = [] and
+		removeMembers([1,4,5])([1,2,3,4]) = [2,3] 
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT19:\t Test removes.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT19
+-------------------------------------------------------------
+class SequenceT20 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	let	zip = Sequence`Zip[int, char],
+		zip2 = Sequence`Zip2[int,char],
+		unzip = Sequence`Unzip[int, char]
+	in
+	return
+		zip([], []) = [] and
+		zip([1,2,3], ['a', 'b', 'c']) = [mk_(1, 'a'), mk_(2, 'b'), mk_(3, 'c')] and
+		zip([1,2], ['a', 'b', 'c']) = [mk_(1, 'a'), mk_(2, 'b')] and
+		zip([1,2,3], ['a', 'b']) = [mk_(1, 'a'), mk_(2, 'b')] and
+		zip2([])([]) = [] and
+		zip2([1,2,3])(['a', 'b', 'c']) = [mk_(1, 'a'), mk_(2, 'b'), mk_(3, 'c')] and
+		unzip([]) = mk_([], []) and
+		unzip([mk_(1, 'a'), mk_(2, 'b'), mk_(3, 'c')]) = mk_([1,2,3], ['a', 'b', 'c']) 
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT20:\t Test zip related functions.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT20
+-------------------------------------------------------------
+class SequenceT21 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	let	span = Sequence`Span[int],
+		p1 = lambda x : int & x mod 2 = 0,
+		p2 = lambda x : int & x < 10
+ 	in
+	return
+		span(p1)([]) = mk_([], []) and
+		span(p1)([2,4,6,1,3]) = mk_([2,4,6], [1,3]) and
+		span(p2)([1,2,3,4,5]) = mk_([1,2,3,4,5], []) and
+		span(p2)([1,2,12,13,4,15]) = mk_([1,2], [12,13,4,15])
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT21:\t Test span.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT21
+-------------------------------------------------------------
+class SequenceT22 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	let	takeWhile = Sequence`TakeWhile[int],
+		dropWhile = Sequence`DropWhile[int],
+		p1 = lambda x : int & x mod 2 = 0
+ 	in
+	return
+		takeWhile(p1)([]) = [] and
+		takeWhile(p1)([2,4,6,8,1,3,5,2,4]) = [2,4,6,8] and
+		dropWhile(p1)([]) = [] and
+		dropWhile(p1)([2,4,6,8,1,2,3,4,5]) = [1,2,3,4,5] 
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT22:\t Test TakeWhile and DropWhile.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT22
+-------------------------------------------------------------
+class SequenceT23 is subclass of TestCase
+functions
+public plus : int -> int -> int
+plus(a)(b) == a + b;
+
+public product : int -> int -> int
+product(a)(b) == a * b;
+
+public append : seq of char -> char -> seq of char
+append(s)(e) == s ^ [e];
+
+operations 
+public  test: () ==> bool
+test() == 
+	let	foldl = Sequence`Foldl[int, int],
+		f2 = Sequence`Foldl[seq of char, char]
+ 	in
+	return
+		foldl(plus)(0)([1,2,3]) = 6 and
+		foldl(product)(1)([2,3,4]) = 24 and
+		f2(append)([])("abc") = "abc" 
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT23:\t Test Foldl.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT23
+-------------------------------------------------------------
+class SequenceT24 is subclass of TestCase
+functions
+public plus : int -> int -> int
+plus(a)(b) == a + b;
+
+public product : int -> int -> int
+product(a)(b) == a * b;
+operations 
+public  test: () ==> bool
+test() == 
+	let	removeAt = Sequence`RemoveAt[char],
+		foldr = Sequence`Foldr[int, int],
+		f3 = Sequence`Foldr[nat1, seq of char]
+ 	in
+	return
+		foldr(plus)(0)([1,2,3]) = 6 and
+		foldr(product)(1)([2,3,4]) = 24 and
+		f3(removeAt)("12345")([1,3,5]) = "24"
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT24:\t Test Foldr.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT24
+-------------------------------------------------------------
+class SequenceT25 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	let	sq = new Sequence()	in
+	return
+		Real`EQ(sq.GetAverage[real]([1.1,2.2,3.3]))(2.2) and
+		Real`EQ(sq.GetAverage[real]([1,2,3,4,5,6,7,8,9,10]))(5.5)
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SequenceT25:\t Test GetAverage";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SequenceT25

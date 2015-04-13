@@ -1,0 +1,252 @@
+/* Responsibility：
+ *	Hash Table
+ 
+ * Usage：
+ *	（１） Object in Hashtable have to have hashCode() function and equals() function.
+ 
+ * From historical reason, there are functional programming style and object-oriented style functions.
+ * if function name starts chapital letter, the function is functional programming style
+ * else the function is object-oriented style.
+*/
+class Hashtable is subclass of CommonDefinition 
+
+types
+public Contents = map Object to Object;
+public Bucket = map int to Contents;
+
+instance variables
+sBucket : Bucket := { |->};
+
+operations
+
+public Hashtable : () ==> Hashtable
+Hashtable() == 
+	(
+	sBucket := { |-> };
+	return self
+	);
+	
+public Hashtable : Contents ==> Hashtable
+Hashtable(aContents) == 
+	(
+	self.putAll(aContents);
+	return self
+	);
+
+--Hashtableのクリアー
+public clear : () ==> ()
+clear() == setBuckets({ |-> });
+
+public getBuckets : () ==> Bucket 
+getBuckets() == return sBucket;
+
+public setBuckets : Bucket ==> ()
+setBuckets(aBucket) == sBucket := aBucket;
+
+public keySet : () ==> set of Object
+keySet() ==
+	let	buckets = self.getBuckets()
+	in
+	(
+	dcl allKeySet : set of Object := {};
+	for all aContents in set rng buckets do
+		allKeySet := allKeySet union dom aContents;
+	return allKeySet
+	);
+
+public put : Object * Object ==> ()
+put(akey, aValue) ==
+	let	buckets = self.getBuckets(),
+		hashcode = akey.hashCode()
+	in
+	(
+	if hashcode in set dom buckets then
+		self.setBuckets(buckets ++ {hashcode |-> (buckets(hashcode) ++ {akey |-> aValue})})
+	else
+		self.setBuckets(buckets munion {hashcode |-> {akey |-> aValue}})
+	);
+
+public putAll : Contents ==> ()
+putAll(aContents) == 
+	for all key in set dom aContents do (
+		self.put(key, aContents(key))
+	);
+
+public get : Object  ==> [Object]
+get(key) ==
+	let	buckets = self.getBuckets(),
+		hashcode = key.hashCode()
+	in
+	(
+	if hashcode in set dom buckets then
+		let	aContents = buckets(hashcode)
+		in
+		for all aKey in set dom aContents do (
+			if key.equals(aKey) then
+				return aContents(aKey)
+		);
+	return nil
+	);
+
+public remove : Object ==> [Object]
+remove(key) ==
+	let	buckets = self.getBuckets(),
+		hashcode = key.hashCode(),
+		deleteObj = self.get(key)
+	in
+	(
+	if deleteObj <> nil then
+		let	aContents = buckets(hashcode),
+			newContents = aContents :-> {deleteObj}
+		in
+		(
+		self.setBuckets(buckets ++ {hashcode |-> newContents});
+		return deleteObj
+		)
+	else
+		return nil
+	);
+
+public valueSet : () ==> set of Object
+valueSet() ==
+	let	buckets = self.getBuckets()
+	in
+	(
+	dcl aValueSet : set of Object := {};
+	for all aContents in set rng buckets do
+		aValueSet := aValueSet union rng aContents;
+	return aValueSet
+	);
+
+functions
+
+public size : () -> nat
+size() == card self.keySet();
+
+public isEmpty : () -> bool
+isEmpty() == self.keySet() = {};
+		
+public contains : Object -> bool
+contains(anObject) ==
+	let	buckets = self.getBuckets()
+	in
+	exists hashcode in set dom buckets &
+		let	aContents = buckets(hashcode)
+		in
+		exists key in set dom aContents &
+			 aContents(key).equals(anObject);
+		
+public containsKey : Object -> bool
+containsKey(aKey) ==
+	let	buckets = self.getBuckets()
+	in
+	exists hashcode in set dom buckets & 
+		exists key in set dom buckets(hashcode) &
+			aKey.equals(key);
+
+
+-----------Functional Programming part
+
+functions
+
+static public Put[@T1, @T2] : 
+	(map @T1 to (map @T1 to  @T2)) -> (@T1 -> @T1) -> @T1 -> @T2 
+	-> (map @T1 to (map @T1 to  @T2))
+Put(aHashtable)(aHashCode)(aKey)(aValue) ==
+	let	hashcode = aHashCode(aKey)
+	in
+	if hashcode in set dom aHashtable then
+		aHashtable ++ {hashcode |-> (aHashtable(hashcode) ++ {aKey |-> aValue})}
+	else
+		aHashtable munion {hashcode |-> {aKey |-> aValue}}
+	;
+
+static public PutAll[@T1, @T2] : 
+	(map @T1 to (map @T1 to  @T2)) -> (@T1 -> @T1) -> (map @T1 to  @T2) 
+	-> (map @T1 to (map @T1 to  @T2)) 
+PutAll(aHashtable)(aHashCode)(aMap) == 
+	PutAllAux[@T1, @T2](aHashtable)(aHashCode)(aMap)(dom aMap);
+
+static public PutAllAux[@T1, @T2] :
+	(map @T1 to (map @T1 to  @T2)) -> (@T1 -> @T1) -> (map @T1 to  @T2)  -> set of @T1
+	-> (map @T1 to (map @T1 to  @T2)) 
+PutAllAux(aHashtable)(aHashCode)(aMap)(aKeySet) ==
+	if aKeySet = {} then
+		aHashtable
+	else
+		let	aKey in set aKeySet	in
+		let	newHashtable = Put[@T1, @T2](aHashtable)(aHashCode)(aKey)(aMap(aKey))	
+		in
+		PutAllAux[@T1, @T2](newHashtable)(aHashCode)(aMap)(aKeySet \ {aKey})
+	;
+
+static public Get[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> (@T1 -> @T1) -> @T1  -> [@T2]
+Get(aHashtable)(aHashCode)(aKey) ==
+	let	hashcode = aHashCode(aKey)
+	in
+	if hashcode in set dom aHashtable then
+		Map`Get[@T1, @T2](aHashtable(hashcode))(aKey)
+	else
+		nil
+	;
+
+static public Remove[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> (@T1 -> @T1) -> @T1 -> (map @T1 to (map @T1 to  @T2))
+Remove(aHashtable)(aHashCode)(aKey) == 
+	let	hashcode = aHashCode(aKey)
+	in
+	{h |-> ({aKey} <-: aHashtable(hashcode)) | h in set {hashcode}} munion 
+		{hashcode} <-: aHashtable ;
+
+--Hashtableのクリアー
+static public Clear[@T1, @T2] : () -> (map @T1 to (map @T1 to  @T2))
+Clear() == ({ |-> });
+
+static public KeySet[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> set of  @T1
+KeySet(aHashtable) == 
+	--let	aMapSet = rng aHashtable,
+		--f = lambda x : map @T1 to  @T2 & dom x
+	let	aMapSet = rng aHashtable
+	in
+	if aMapSet <> {} then
+		--dunion Set`fmap[map @T1 to  @T2, @T2](f)(aMapSet)
+		dunion  {dom s | s in set aMapSet} 
+	else
+		{};
+
+static public ValueSet[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> set of  @T2
+ValueSet(aHashtable) == 
+	--let	aMapSet = rng aHashtable,
+		--f = lambda x : map @T1 to  @T2 & rng x
+	let	aMapSet = rng aHashtable
+	in
+	if aMapSet <> {} then
+		--dunion Set`fmap[map @T1 to  @T2, @T2](f)(aMapSet)
+		dunion  {rng s | s in set aMapSet} 
+	else
+		{};
+	
+static public Size[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> nat
+Size(aHashtable) == card KeySet[@T1, @T2](aHashtable) ;
+
+static public IsEmpty[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> bool
+IsEmpty(aHashtable) == KeySet[@T1, @T2](aHashtable) = {};
+		
+static public Contains[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> @T2 -> bool
+Contains(aHashtable)(aValue) == 
+	let	aMapSet = rng aHashtable	
+	in
+	if aMapSet <> {} then
+		exists aMap in set aMapSet & aValue in set rng aMap
+	else
+		false;
+		
+static public ContainsKey[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> @T1 -> bool
+ContainsKey(aHashtable)(aKey) == 
+	let	aMapSet = rng aHashtable	
+	in
+	if aMapSet <> {} then
+		exists aMap in set aMapSet & aKey in set dom aMap
+	else
+		false;
+
+end Hashtable

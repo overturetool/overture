@@ -1,0 +1,53 @@
+\section{Timer class}
+
+In the sequential model time abstraction is provided via the Timer class.
+
+\begin{vdm_al}
+class Timer is subclass of GLOBAL
+
+ instance variables
+\end{vdm_al}
+
+The instance variable currentTime keeps track of time.
+
+\begin{vdm_al} 
+currentTime : Time := 0;
+
+\end{vdm_al}
+
+Time is steping 50 units each time\ldots 
+
+\begin{vdm_al}
+ values
+
+stepLength : Time = 50;
+
+\end{vdm_al}
+
+\ldots the operation StepTime is called.
+
+\begin{vdm_al}
+ operations
+
+public 
+StepTime : () ==> ()
+StepTime () == currentTime := currentTime + stepLength;
+
+\end{vdm_al}
+
+And time can be consulted through GetTime.
+
+\begin{vdm_al}
+public 
+GetTime : () ==> Time
+GetTime () == return currentTime;
+
+
+end Timer
+\end{vdm_al}
+
+\subsection*{Test coverage}
+
+\begin{rtinfo}
+{tc.info}[Timer]
+\end{rtinfo}

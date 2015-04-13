@@ -1,0 +1,44 @@
+
+\begin{vdm_al}
+
+module HCM
+
+imports from AUX all
+
+exports all
+
+definitions
+
+types
+
+  SwitchPositions ::
+    mode: ControlModeSwitch
+    aah : ControlButton;
+
+  ControlModeSwitch = <Rot> | <Tran>;
+
+  ControlButton = <Up> | <Down>;
+  
+  HandGripPosition:: vert  : AUX`AxisCommand
+                     horiz : AUX`AxisCommand
+                     trans : AUX`AxisCommand
+                     twist : AUX`AxisCommand
+
+-- add inv to exclude impossible combinations???
+
+functions
+
+  GripCommand: HandGripPosition * ControlModeSwitch +> AUX`SixDofCommand
+  GripCommand(mk_HandGripPosition(vert,horiz,trans,twist),mode) ==
+    let tran = {<X>    |-> horiz,
+                <Y>    |-> if mode = <Tran> then trans else <Zero>,
+                <Z>    |-> if mode = <Tran> then vert else <Zero>},
+        rot  = {<Roll> |-> if mode = <Rot> then vert else <Zero>,
+                <Pitch>|-> twist,
+                <Yaw>  |->  if mode = <Rot> then trans else <Zero>}
+    in
+      mk_AUX`SixDofCommand(tran,rot)
+
+end HCM
+
+\end{vdm_al}

@@ -1,0 +1,16 @@
+class A
+
+operations 
+
+public double : nat ==> nat
+double (Character) == 
+	if 1 <> 2 then
+	(
+		return double(3) 
+	) 
+	else 
+	(
+		return double(3)
+	)
+			
+end A

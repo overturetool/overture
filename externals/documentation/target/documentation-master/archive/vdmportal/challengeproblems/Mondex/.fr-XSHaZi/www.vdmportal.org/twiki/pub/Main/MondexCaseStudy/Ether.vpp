@@ -1,0 +1,36 @@
+class Ether
+
+instance variables
+
+protected world : ConWorld;
+
+
+operations
+
+-- external choice
+-- allowing world to inject messages
+
+public StartFrom : ConWorld`PurseId * ConPurse`CounterPartyDetails ==> ()
+StartFrom(pid, cpd) == is subclass responsibility;
+
+public StartTo : ConWorld`PurseId * ConPurse`CounterPartyDetails ==> ()
+StartTo(pid, cpd) == is subclass responsibility;
+
+public ExceptionLogClear : ConWorld`PurseId * token ==> ()
+ExceptionLogClear(pid, clear) == is subclass responsibility;
+
+public ReadExceptionLog : ConWorld`PurseId ==> ()
+ReadExceptionLog(pid) == is subclass responsibility;
+
+
+-- allow purses to send messages
+public SendMsg : ConPurse`Message ==> ()
+SendMsg(m) == is subclass responsibility;
+
+
+-- constructor
+public Ether : ConWorld ==> Ether
+Ether(w) ==
+    world := w;
+
+end Ether

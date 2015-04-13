@@ -1,0 +1,44 @@
+--The Thermostat Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		21/4 - 2008
+-- Updated:
+-- Description: 	Thermostat sub class
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Thermostat is subclass of Actuator
+
+--
+-- Operations definition section
+--
+operations
+
+public Thermostat: nat * NetworkTypes`nodeType ==> Thermostat
+	Thermostat (id, type) ==
+		(ID := id;
+		Type := type;
+		Corr := <NONE>;
+		);
+
+public Step: () ==> ()
+	Step() ==
+		(if (Corr = <INC>)
+		then World`env.IncTemp()
+		elseif (Corr = <DEC>)
+		then World`env.DecTemp();
+		);
+
+public SetCorrection: NetworkTypes`correction ==> ()
+	SetCorrection(cor) ==
+		Corr := cor
+pre (cor = <INC>) or (cor = <DEC>) or (cor = <NONE>);
+
+public GetCorrection: () ==> NetworkTypes`correction
+	GetCorrection() ==
+		return Corr;
+
+end Thermostat

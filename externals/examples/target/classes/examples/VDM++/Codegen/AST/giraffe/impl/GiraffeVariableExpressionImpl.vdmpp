@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:16 CET 2010
+--
+
+class GiraffeVariableExpressionImpl is subclass of GiraffeVariableExpression
+instance variables
+    private iv_name:GiraffeIdentifier;
+
+operations
+    public GiraffeVariableExpressionImpl: GiraffeIdentifier ==> GiraffeVariableExpressionImpl
+    GiraffeVariableExpressionImpl(p_name) ==
+    (
+        iv_name := p_name;
+    );
+
+    public getName: () ==> GiraffeIdentifier
+    getName() == return iv_name;
+
+end GiraffeVariableExpressionImpl

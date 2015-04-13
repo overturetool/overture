@@ -1,0 +1,25 @@
+class Entry
+
+operations
+
+public static casesInt : (nat) ==> nat
+casesInt (n) ==
+	cases n:
+		1 -> return n + 1,
+		2 -> return n + 2,
+		3 -> return n + 3,
+		a -> let x = 1, y = 2 in return a + x + y,
+		others -> return 999
+	end;
+	
+public static Run : () ==> ?
+Run () ==
+(
+	dcl result : seq of nat := [];
+	for i = 0 to 5 do
+		result := result ^ [casesInt(i)];
+	
+	return result;
+)
+
+end Entry

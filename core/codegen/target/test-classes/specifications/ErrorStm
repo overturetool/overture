@@ -1,0 +1,10 @@
+class Entry
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+	error;
+
+
+end Entry

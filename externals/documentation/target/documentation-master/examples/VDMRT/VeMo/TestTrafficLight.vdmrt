@@ -1,0 +1,91 @@
+\section{Test of TrafficLight}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			TestTrafficLight
+-- Description: 	Test the TrafficLight class 
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestTrafficLight is subclass of TestCase
+
+--
+-- instance variables
+--
+instance variables
+private pos : Position;
+--
+-- Operations definition section
+--
+operations
+public TestTrafficLight: seq of char ==> TestTrafficLight
+TestTrafficLight(s) ==
+(
+	TestCase(s);
+);
+
+protected SetUp: () ==> ()
+SetUp () == pos := new Position(5,1); 
+
+protected RunTest: () ==> ()
+RunTest () ==
+(
+ dcl trfLgt : TrafficLight := new TrafficLight(1, pos, 5);
+ AssertTrue(trfLgt.GetID() = 1);
+ AssertTrue(trfLgt.GetPosition().X() = 5);
+ AssertTrue(trfLgt.GetPosition().Y() = 1); 
+ AssertTrue(trfLgt.GreenLightPath() = <NORTH>);
+ 
+ testGreenLightPath();
+ testCrossDirection();
+);
+  
+protected TearDown: () ==> ()
+TearDown () == skip;
+
+
+--sequential model only
+--public testGreenLightPath : () ==> ()
+--testGreenLightPath() ==
+--(
+--  dcl trfLgt : TrafficLight := new TrafficLight(1, pos, 2);
+-- 
+--  AssertTrue(trfLgt.GreenLightPath() = <NORTH>);
+--  trfLgt.Step();
+--  trfLgt.Step();
+--  AssertTrue(trfLgt.GreenLightPath() = <NORTH>);
+--  Timer`Tick();
+--  Timer`Tick();
+--  trfLgt.Step();
+--  AssertTrue(trfLgt.GreenLightPath() = <EAST>);
+--);
+
+public testGreenLightPath : () ==> ()
+testGreenLightPath() ==
+(
+  dcl trfLgt : TrafficLight := new TrafficLight(1, pos, 2);
+  start(trfLgt);
+  AssertTrue(trfLgt.GreenLightPath() = <NORTH>);
+);
+
+
+public testCrossDirection : () ==> ()
+testCrossDirection() ==
+(
+  AssertTrue(TrafficLight`CrossDirection(<NORTH>) = <EAST>);
+  AssertTrue(TrafficLight`CrossDirection(<SOUTH>) = <WEST>);
+  AssertTrue(TrafficLight`CrossDirection(<EAST>) = <NORTH>);
+  AssertTrue(TrafficLight`CrossDirection(<WEST>) = <SOUTH>);
+
+);
+
+
+end TestTrafficLight
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[TestTrafficLight]
+\end{rtinfo}

@@ -1,0 +1,12 @@
+\section{The TIV\_A Class}
+
+The TIV_A class represents the TIV_A beacon and implements the
+abstract Beacon class. The class does not contain any instance
+variables nor operations as the presence of the beacon defines the
+action to perform.
+
+\begin{vdm_al}
+class TIV_A is subclass of Beacon
+ 
+end TIV_A
+\end{vdm_al}

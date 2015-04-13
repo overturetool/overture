@@ -1,0 +1,45 @@
+\begin{vdm_al}
+class WaitNotify
+
+instance variables
+
+waitset : set of nat := {}
+
+operations
+
+public Wait : () ==> ()
+Wait() ==
+( AddToWaitSet (threadid);
+  Awake()
+);
+	
+public Notify : () ==> ()
+Notify() ==
+  let p in set waitset in
+    waitset := waitset \ {p};
+
+public NotifyThread: nat ==> ()
+NotifyThread(tId) ==
+  waitset :=  waitset \ {tId};
+
+public NotifyAll: () ==> ()
+NotifyAll() ==
+  waitset :=  {};
+
+private AddToWaitSet : nat ==> ()
+AddToWaitSet(n) ==
+  waitset := waitset union {n};
+
+private Awake : () ==> ()
+Awake() == skip
+
+sync
+per Awake => threadid not in set waitset;
+mutex(AddToWaitSet)
+
+end WaitNotify
+\end{vdm_al}
+
+\begin{rtinfo}[WaitNotify`AddToWaitSet]
+{vdm.tc}[WaitNotify]
+\end{rtinfo}

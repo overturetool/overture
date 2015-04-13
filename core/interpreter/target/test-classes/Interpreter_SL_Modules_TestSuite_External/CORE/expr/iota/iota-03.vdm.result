@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
+<message column="10" line="11" message="Error 4013: Iota selects more than one result in 'A' (iota-03.vdm) at line 11:10" messageType="error" number="4013" resource="iota-03.vdm"/>
+<result>
+<output object="[]" resource="iota-03.vdm" value="[]"/>
+</result>
+</testResult>

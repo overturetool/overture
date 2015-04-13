@@ -1,0 +1,411 @@
+\subsection*{B.1 The Specification}
+
+{-- -- \bf 3.2 Technical}
+\begin{vdm_al}
+
+values
+   Word_Length = 32;
+   Maximum_Number_Size = 2 ** Word_Length - 1;
+   Maximum_Number_Size_plus_1 = Maximum_Number_Size + 1;
+   Maximum_Number_Size_plus_1_div_2 = Maximum_Number_Size_plus_1 div 2;
+   Maximum_No_of_Message_blocks = 1000000;
+
+\end{vdm_al}
+{\ \\[-0.3cm]}
+{-- -- \bf 4.2.2 The main loop}
+\begin{vdm_al}
+
+   A = 2 * 2 **24 + 4 * 2 **16 + 8 * 2 **8 + 1;
+   B = 0 * 2 **24 + 128 * 2 **16 + 64 * 2 **8 + 33;
+   C = 191 * 2 **24 + 239 * 2 **16 + 127 * 2 **8 + 223;
+   D = 125 * 2 **24 + 254 * 2 **16 + 251 * 2 **8 + 255;
+
+\end{vdm_al}
+\newpage
+{\ \\[-0.3cm]}
+{-- -- \bf 5 Specification of the mode of operation}
+\begin{vdm_al}
+
+   Maximum_No_of_blocks_for_MAC = 1024 div 4;
+   Maximum_No_of_blocks_for_MAC_plus_1 = Maximum_No_of_blocks_for_MAC + 1
+
+\end{vdm_al}
+{\ \\[-0.3cm]}
+{-- -- \bf 3.2 Technical}       
+\begin{vdm_al}
+
+types
+   Number = nat
+   inv N == N  < Maximum_Number_Size_plus_1;
+
+   Bit = nat
+   inv b == b in set {0,1};
+
+   Message_in_bits = seq of Bit
+   inv M ==  
+    if  len M mod Word_Length  = 0 
+    then ( len M div Word_Length  <= Maximum_No_of_Message_blocks) and 
+       ( len M  > 0)  
+    else  len M div Word_Length + 1  <= Maximum_No_of_Message_blocks;
+
+   Message_in_blocks_plus_empty_Message = seq of Number
+   inv M ==  len M  <= Maximum_No_of_Message_blocks;
+
+   Message_in_blocks = Message_in_blocks_plus_empty_Message
+   inv M == 1  <=  len M;
+
+\end{vdm_al} 
+{\ \\[-0.3cm]}
+{-- -- \bf 3.2 Technical\\}
+{-- -- \bf 4.1.1 General definitions}
+\begin{vdm_al}
+
+   Double_Number = seq of Number
+   inv d ==  len d  = 2;
+
+   Key = Double_Number;
+
+\end{vdm_al}  
+{\ \\[-0.3cm]}
+{-- -- \bf 4.2.1 The prelude}        
+\begin{vdm_al}
+
+   Key_Constant :: X0 : Number
+       Y0 : Number
+       V0 : Number
+       W : Number
+       S : Number
+       T : Number
+    
+\end{vdm_al}  
+\newpage
+{\ \\[-0.3cm]}
+{-- -- \bf 3.2 Technical}             
+\begin{vdm_al}
+
+functions
+   Pad_out_Message: Message_in_bits -> Message_in_bits
+   Pad_out_Message(M) ==  
+   let No_Extra_bits = Word_Length -  len M mod Word_Length in  
+    if No_Extra_bits  = Word_Length  
+    then M   
+    else M  ^  Get_Application_defined_bits(M,No_Extra_bits);
+      
+   Get_Application_defined_bits(M: Message_in_bits, No_bits: nat) 
+                               Extra : Message_in_bits
+   pre No_bits  < Word_Length
+   post  len Extra  = No_bits;
+      
+   Form_Message_into_blocks: Message_in_bits -> Message_in_blocks
+   Form_Message_into_blocks(M) ==   
+    if  len M  = Word_Length  
+    then [Form_Number(M)]  
+    else [Form_Number(Get_head_in_bits(M,Word_Length))] ^ 
+         Form_Message_into_blocks(Get_tail_in_bits(M,Word_Length))
+   pre ( len M  >= Word_Length) and ( len M mod Word_Length  = 0);
+      
+   Form_Number: Message_in_bits -> Number
+   Form_Number(M) ==   
+    if  len M  = 1 then  hd M  
+    else  hd M + 2 * Form_Number( tl M)
+   pre  len M  <= Word_Length;
+      
+\end{vdm_al}
+{\ \\[-0.3cm]}
+{-- -- \bf 4  The segment algorithm\\}
+{-- -- \bf 4.1 Definition of the functions used in the algorithm\\}
+{-- -- \bf 4.1.1 General definitions}
+\begin{vdm_al}
+
+   CYC: Number -> Number
+   CYC(X) ==   
+   ADD(X,X) + CAR(X,X);
+      
+   AND: Number * Number -> Number
+   AND(X,Y) ==   
+    if (X  = 0) or (Y  = 0)  
+    then 0  
+    else X mod 2 * Y mod 2 + 2 * AND(X div 2,Y div 2);
+      
+   OR: Number * Number -> Number
+   OR(X,Y) ==   
+    if (X  = 0) or (Y  = 0)  
+    then X + Y  
+    else max(X mod 2,Y mod 2) + 2 * OR(X div 2,Y div 2);
+      
+   max: int * int -> int
+   max(X,Y) ==   
+    if X  >= Y  
+    then X  
+    else Y;
+      
+   XOR: Number * Number -> Number
+   XOR(X,Y) ==   
+    if (X  = 0) or (Y  = 0)  
+    then X + Y  
+    else (X + Y) mod 2 + 2 * XOR(X div 2,Y div 2);
+      
+   ADD: Number * Number -> Number
+   ADD(X,Y) ==   
+   (X + Y) mod Maximum_Number_Size_plus_1;
+      
+   CAR: Number * Number -> Number
+   CAR(X,Y) ==   
+   (X + Y) div Maximum_Number_Size_plus_1;
+      
+\end{vdm_al}
+{\ \\[-0.3cm]}
+{-- -- \bf 4.1.2 Definition of multiplication functions\\}
+{-- -- \bf 4.1.2.1 To calculate MUL1(X,Y)}
+\begin{vdm_al}
+
+   MUL1: Number * Number -> Number
+   MUL1(X,Y) ==   
+   let L = (X * Y) mod Maximum_Number_Size_plus_1,
+   U = X * Y div Maximum_Number_Size_plus_1 in   
+   let S = ADD(U,L),
+   C = CAR(U,L) in ADD(S,C);
+      
+
+\end{vdm_al}
+{\ \\[-0.3cm]}
+{-- -- \bf 4.1.2.2 To calculate MUL2(X,Y)}
+\begin{vdm_al}
+
+   MUL2: Number * Number -> Number
+   MUL2(X,Y) == let L = (X * Y) mod Maximum_Number_Size_plus_1,
+   U = X * Y div Maximum_Number_Size_plus_1 in let D = ADD(U,U),
+   E = CAR(U,U) in let F = ADD(D,2 * E) in let S = ADD(F,L),
+   C = CAR(F,L) in ADD(S,2 * C);
+      
+\end{vdm_al}
+\newpage
+{\ \\[-0.3cm]}
+{-- -- \bf 4.1.2.3 To calculate MUL2A(X,Y)}
+\begin{vdm_al}
+
+   MUL2A: Number * Number -> Number
+   MUL2A(X,Y) ==   
+   let L = (X * Y) mod Maximum_Number_Size_plus_1,
+   U = X * Y div Maximum_Number_Size_plus_1 in   
+   let D = ADD(U,U) in   
+   let S = ADD(D,L),
+   C = CAR(D,L) in ADD(S,2 * C)
+   pre (X div Maximum_Number_Size_plus_1_div_2  = 0) or 
+       (Y div Maximum_Number_Size_plus_1_div_2  = 0);
+      
+\end{vdm_al}
+{\ \\[-0.3cm]}
+{-- -- \bf 4.1.3 Definitions of the functions BYT[X,Y] and PAT[X,Y]}
+\begin{vdm_al}
+
+   BYT: Double_Number -> Double_Number
+   BYT(K) ==   
+   let X =  hd K,
+       Y =  hd  tl K in   
+   let X' = [Byte(X,3),Byte(X,2),Byte(X,1),Byte(X,0)],
+       Y' = [Byte(Y,3),Byte(Y,2),Byte(Y,1),Byte(X,0)] in   
+   let XY = X'  ^  Y',
+       P = 0 in   
+   let XY' = Condition_Sequence(XY,P) in   
+   let X'' = Get_head_in_blocks(XY',4),
+       Y'' = Get_tail_in_blocks(XY',4) in   
+   [Convert_Bytes_to_Number(X'')]  ^  [Convert_Bytes_to_Number(Y'')];
+      
+   Byte: Number * nat -> Number
+   Byte(N,B) ==   
+    if B  = 0  
+    then N mod 2 **8  
+    else Byte(N div 2 **8,B - 1)
+   pre (B  >= 0) and (B  <= 3);
+      
+   Condition_Sequence: Message_in_blocks * Number -> Message_in_blocks
+   Condition_Sequence(M,P) ==   
+    if  len M  = 1  
+    then [Condition_value( hd M,P)]  
+    else [Condition_value( hd M,P)] ^ 
+         Condition_Sequence( tl M,Changes( hd M,P));
+      
+   Condition_value: Number * Number -> Number
+   Condition_value(B,P) ==   
+   let P' = 2 * P in   
+   let P'' = P' + 1 in   
+    if B  = 0 then P''  
+    else  if B  = 2 **8 - 1  
+        then 2 **8 - 1 - P''  
+        else B;
+      
+   Changes: Number * Number -> Number
+   Changes(B,P) ==   
+   let P' = 2 * P in   
+   let P'' = P' + 1 in   
+    if (B  = 0) or (B  = 2 **8 - 1)  
+    then P''  
+    else P';
+      
+   Convert_Bytes_to_Number: Message_in_blocks -> Number
+   Convert_Bytes_to_Number(M) ==   
+    if  len M  = 1  
+    then  hd M  
+    else Convert_Bytes_to_Number( tl M) +  hd M * 2 **(8 * ( len M - 1));
+      
+   PAT: Double_Number -> Number
+   PAT(D) ==   
+   let X =  hd D,
+       Y =  hd  tl D in   
+   let X' = [Byte(X,3),Byte(X,2),Byte(Y,1),Byte(Y,0)],
+       Y' = [Byte(Y,3),Byte(Y,2),Byte(Y,1),Byte(Y,0)] in   
+   let XY = X'  ^  Y',
+       P = 0 in   
+   Record_Changes(XY,P);
+      
+   Record_Changes: Message_in_blocks * Number -> Number
+   Record_Changes(M,P) ==   
+    if  len M  = 1  
+    then Changes( hd M,P)  
+    else Record_Changes( tl M,Changes( hd M,P));
+      
+\end{vdm_al}
+\newpage
+{\ \\[-0.3cm]}
+{-- -- \bf 4.2 Specification of the algorithm\\}
+{-- -- \bf 4.2.1 The prelude}
+\begin{vdm_al}
+
+   Prelude: Key -> Key_Constant
+   Prelude(K) ==   
+   let J1K1 = BYT(K) in   
+   let J1 =  hd J1K1,
+       K1 =  hd  tl J1K1,
+       P = PAT(K),
+       Q = (1 + P) * (1 + P) in   
+   let J12 = MUL1(J1,J1),
+       J22 = MUL2(J1,J1) in   
+   let J14 = MUL1(J12,J12),
+       J24 = MUL2(J22,J22) in   
+   let J16 = MUL1(J12,J14),
+       J26 = MUL2(J22,J24) in   
+   let J18 = MUL1(J12,J16),
+       J28 = MUL2(J22,J26) in 
+   let H4 = XOR(J14,J28),
+       H6 = XOR(J16,J26),
+       H8 = XOR(J18,J28) in   
+   let K12 = MUL1(K1,K1),
+       K22 = MUL2(K1,K1) in   
+   let K14 = MUL1(K12,K12),
+       K24 = MUL2(K22,K22) in   
+   let K15 = MUL1(K1,K14),
+       K25 = MUL2(K1,K24) in   
+   let K17 = MUL1(K12,K15),
+       K27 = MUL2(K22,K25) in   
+   let K19 = MUL1(K12,K17),
+       K29 = MUL2(K22,K27) in   
+   let H' = XOR(K15,K25) in   
+   let H5 = MUL2(H',Q),
+       H7 = XOR(K17,K27),
+       H9 = XOR(K19,K29) in 
+   let X0Y0 = BYT([H4,H5]),
+       V0W = BYT([H6,H7]),
+       ST = BYT([H8,H9]) in   
+   mk_Key_Constant( hd X0Y0, hd  tl X0Y0, hd V0W, hd  tl V0W, hd ST, hd  tl ST);
+      
+\end{vdm_al}
+\newpage
+{\ \\[-0.3cm]}
+{-- -- \bf 4.2.2 The main loop}
+\begin{vdm_al}
+
+   Main_loop: Message_in_blocks_plus_empty_Message * Key_Constant -> Number
+   Main_loop(M,KC) ==   
+   let mk_Key_Constant(X,Y,V,W,S,T) = KC in   
+    if  len M  = 0  
+    then XOR(X,Y)  
+    else let Mi =  hd M in   
+         let V' = CYC(V) in   
+         let E = XOR(V',W),
+             X' = XOR(X,Mi),
+             Y' = XOR(Y,Mi) in   
+         let F = ADD(E,Y'),
+             G = ADD(E,X') in   
+         let F' = OR(F,A),
+             G' = OR(G,B) in   
+         let F'' = AND(F',C),
+             G'' = AND(G',D) in   
+         let X'' = MUL1(X',F''),
+             Y'' = MUL2A(Y',G'') in   
+   Main_loop( tl M,mk_Key_Constant(X'',Y'',V',W,S,T));
+      
+
+\end{vdm_al}
+{\ \\[-0.3cm]}
+{-- -- \bf 4.2.3 The coda}
+\begin{vdm_al}
+
+   Z: Message_in_blocks * Key -> Number
+   Z(M,K) ==   
+   let KC = Prelude(K) in   
+   let S = KC.S,
+       T = KC.T in   
+   let M' = M  ^  [S]  ^  [T] in   
+   Main_loop(M',KC);
+      
+\end{vdm_al}
+{\ \\[-0.3cm]}
+{-- -- \bf 5 Specification of the mode of operation}
+\begin{vdm_al}
+
+   MAC: Message_in_bits * Key -> Number
+   MAC(M,K) ==   
+   let M' = Pad_out_Message(M) in   
+   let M'' = Form_Message_into_blocks(M') in   
+    if  len M''  <= Maximum_No_of_blocks_for_MAC  
+    then Z(M'',K)  
+    else let M''' =   
+               [Z(Get_head_in_blocks(M'',Maximum_No_of_blocks_for_MAC),K)] 
+                 ^  Get_tail_in_blocks(M'',Maximum_No_of_blocks_for_MAC) in   
+       Z_of_SEG(M''',K,Maximum_No_of_blocks_for_MAC_plus_1);
+      
+   Z_of_SEG: Message_in_blocks * Key * nat -> Number
+   Z_of_SEG(M,K,No_blocks) ==   
+    if  len M  <= No_blocks  
+    then Z(M,K)  
+    else let M' = [Z(Get_head_in_blocks(M,No_blocks),K)]  ^   
+               Get_tail_in_blocks(M,No_blocks) in   
+       Z_of_SEG(M',K,No_blocks);
+      
+\end{vdm_al}
+{\ \\[-0.3cm]}
+{-- -- \bf Auxiliary functions\\}
+{-- -- (These are not directly derived from the main text of the standard)}
+\begin{vdm_al}
+
+   Get_tail_in_bits: Message_in_bits * nat -> Message_in_bits
+   Get_tail_in_bits(M,No_bits) ==   
+    if No_bits  = 0  
+    then M  
+    else Get_tail_in_bits( tl M,No_bits - 1)
+   pre  len M  >= No_bits;
+      
+   Get_head_in_bits: Message_in_bits * nat -> Message_in_bits
+   Get_head_in_bits(M,No_bits) ==   
+    if No_bits  = 0  
+    then [ hd M]  
+    else [ hd M]  ^  Get_head_in_bits( tl M,No_bits - 1)
+   pre ( len M  >= No_bits) and (No_bits  >= 1);
+      
+   Get_tail_in_blocks: Message_in_blocks * nat -> Message_in_blocks
+   Get_tail_in_blocks(M,No_blocks) ==   
+    if No_blocks  = 0  
+    then M  
+    else Get_tail_in_blocks( tl M,No_blocks - 1)
+   pre  len M  >= No_blocks;
+      
+   Get_head_in_blocks: Message_in_blocks * nat -> Message_in_blocks
+   Get_head_in_blocks(M,No_blocks) ==   
+    if No_blocks  = 0  
+    then [ hd M]  
+    else [ hd M]  ^  Get_head_in_blocks( tl M,No_blocks - 1)
+   pre ( len M  >= No_blocks) and (No_blocks  >= 1)
+
+\end{vdm_al}
+

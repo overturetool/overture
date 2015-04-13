@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
+<message column="3" line="18" message="Error 4099: Can't get sequence value of nat in 'A' (seqloop-03.vdm) at line 18:3" messageType="error" number="4099" resource="seqloop-03.vdm"/>
+<result>
+<output object="[]" resource="seqloop-03.vdm" value="[]"/>
+</result>
+</testResult>

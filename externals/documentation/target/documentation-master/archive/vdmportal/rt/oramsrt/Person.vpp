@@ -1,0 +1,57 @@
+\begin{vdm_al}
+-----------------------------------------------
+-- Author:	Kim Christensen
+-- Created:	15/04-2009
+-- Updated:
+-- Description: Person class for ORAMS concurrent model
+-----------------------------------------------
+
+class Person is subclass of GLOBAL
+
+
+instance variables
+	area : [Aid] := nil;
+	boat : [Bid] := nil;
+	id : Pid
+
+
+types
+
+
+operations
+    public Person : Pid ==> Person
+        Person(pid) == 
+            id := pid ;
+
+	public getArea : () ==> [Aid]
+		getArea() == 
+			return area;
+			
+	public getBoat : () ==> [Bid]
+		getBoat() == 
+			return boat;
+			
+
+	public changeArea : Aid ==> ()
+		changeArea(a) ==
+			area := a
+	pre a in set dom ORAMS`areas;
+			
+	public changeBoat : Bid ==> ()
+		changeBoat(b) == 
+			boat := b
+	pre b in set dom ORAMS`Lifeboats;
+		
+	public getId : () ==> Pid
+		getId() == 
+			return id;	
+	
+functions
+
+
+values
+end Person
+\end{vdm_al}
+
+\begin{rtinfo}{vdm.tc}[AreaController]
+\end{rtinfo}

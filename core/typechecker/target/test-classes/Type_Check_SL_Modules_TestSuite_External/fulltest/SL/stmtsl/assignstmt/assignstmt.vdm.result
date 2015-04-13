@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="9" line="36" message="a at 5:3 hidden by a" messageType="warning" number="5008" resource="assignstmt.vdm"/>
+<message column="10" line="42" message="Definition 'c' not used" messageType="warning" number="5000" resource="assignstmt.vdm"/>
+<message column="13" line="46" message="b at 6:3 hidden by b" messageType="warning" number="5008" resource="assignstmt.vdm"/>
+<message column="3" line="17" message="Definition 'Assign1' not used" messageType="warning" number="5000" resource="assignstmt.vdm"/>
+<message column="3" line="21" message="Definition 'Assign2' not used" messageType="warning" number="5000" resource="assignstmt.vdm"/>
+<message column="3" line="25" message="Definition 'Assign3' not used" messageType="warning" number="5000" resource="assignstmt.vdm"/>
+<message column="3" line="29" message="Definition 'Assign4' not used" messageType="warning" number="5000" resource="assignstmt.vdm"/>
+<message column="3" line="34" message="Definition 'Assign5' not used" messageType="warning" number="5000" resource="assignstmt.vdm"/>
+<message column="3" line="40" message="Definition 'Assign6' not used" messageType="warning" number="5000" resource="assignstmt.vdm"/>
+<message column="3" line="45" message="Definition 'Assign7' not used" messageType="warning" number="5000" resource="assignstmt.vdm"/>
+<message column="5" line="27" message="Unknown state variable 'c' in assignment" messageType="error" number="3247" resource="assignstmt.vdm"/>
+<result/>
+</testResult>

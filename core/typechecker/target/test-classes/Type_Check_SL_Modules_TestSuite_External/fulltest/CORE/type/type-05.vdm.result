@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="15" line="14" message="Definition 'c' not used" messageType="warning" number="5000" resource="type-05.vdm"/>
+<message column="13" line="21" message="Definition 'x' not used" messageType="warning" number="5000" resource="type-05.vdm"/>
+<message column="4" line="21" message="Map application argument is incompatible type" messageType="warning" number="3058" resource="type-05.vdm"/>
+<result/>
+</testResult>

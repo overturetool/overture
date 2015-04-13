@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a : (nat | set of nat | set of bool) = {1,2}
+in 
+	return card a;
+	
+end Entry

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="13" line="25" message="Left hand of in 'BinaryTest' (setintersect-03.vdm) at line 25:13 is not a set" messageType="error" number="3163" resource="setintersect-03.vdm"/>
+<result/>
+</testResult>

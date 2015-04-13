@@ -1,0 +1,28 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Number x = 1.1;
+        Boolean orResult_1 = false;
+
+        if (Utils.equals(x, null)) {
+            orResult_1 = true;
+        } else {
+            orResult_1 = Utils.equals(null, x);
+        }
+
+        return orResult_1;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

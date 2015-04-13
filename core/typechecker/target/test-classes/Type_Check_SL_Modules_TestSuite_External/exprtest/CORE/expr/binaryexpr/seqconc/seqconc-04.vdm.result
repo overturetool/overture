@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="15" line="13" message="Name 'BinaryTest`a' is not in scope" messageType="error" number="3182" resource="seqconc-04.vdm"/>
+<message column="13" line="13" message="Left hand of '^' is not a sequence" messageType="error" number="3157" resource="seqconc-04.vdm"/>
+<result/>
+</testResult>

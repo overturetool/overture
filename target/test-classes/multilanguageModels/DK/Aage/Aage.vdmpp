@@ -1,0 +1,9 @@
+class Åge
+
+	operations
+	
+	public Drik : () ==> seq of char
+	Drik() == return "Åge drikker nu vand fra en å fra den ø han bor på, når han er færdig kan han ikke være tørstig mere.";
+
+
+end Åge

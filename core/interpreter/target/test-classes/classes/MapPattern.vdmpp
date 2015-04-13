@@ -1,0 +1,12 @@
+class A
+
+	functions
+	
+	public
+	entry: () -> bool
+	entry() ==
+		let {a |-> b} = {1 |-> 2}
+		in
+			mk_(a,b) = mk_(1,2) 
+
+end A

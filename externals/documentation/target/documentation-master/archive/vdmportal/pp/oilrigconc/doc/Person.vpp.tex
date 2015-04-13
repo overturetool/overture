@@ -1,0 +1,53 @@
+\kClass $Person$ \kISO $GLOBAL$
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}
+\assdef{area}{\Opt{Aid}}[{\Nil }]
+\end{insvar}
+\begin{insvar}
+\assdef{boat}{\Opt{Bid}}[{\Nil }]
+\end{insvar}
+\begin{insvar}
+\assdef{id}{Pid}
+\end{insvar}
+\par
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{Person}%
+\signature{Pid \Oto Person}
+\parms{pid}
+\annlab[o]{Person`Person}
+\ass{id}{pid};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{getArea}%
+\signature{() \Oto \Opt{Aid}}
+\parms{}
+\annlab[o]{Person`getArea}
+\return{area};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{getBoat}%
+\signature{() \Oto \Opt{Bid}}
+\parms{}
+\annlab[o]{Person`getBoat}
+\return{boat};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{changeArea}%
+\signature{Aid \Oto ()}
+\parms{a}
+\annlab[o]{Person`changeArea}
+\ass{area}{a};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{changeBoat}%
+\signature{Bid \Oto ()}
+\parms{b}
+\annlab[o]{Person`changeBoat}
+\ass{boat}{b};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{getId}%
+\signature{() \Oto Pid}
+\parms{}
+\annlab[o]{Person`getId}
+\return{id}
+\end{op}
+\kEnd $Person$
+

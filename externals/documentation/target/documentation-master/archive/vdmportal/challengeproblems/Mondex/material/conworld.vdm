@@ -1,0 +1,367 @@
+------------------
+-- conworld.vdm
+--
+-- Ken Pierce
+-- 2007-10-05
+------------------
+module conworld
+
+imports from abworld types PurseId
+
+
+definitions
+
+--
+-- Types
+--
+types
+
+--PurseId = token;
+
+ConPurse ::    bal : nat
+             seqno : nat
+            status : Status
+            ctrans : [TransDetails]
+             exlog : set of TransDetails;
+            
+Status = <Idle> | <EPR> | <EPV> | <EPA>;
+
+-- details of a single transaction
+TransDetails ::    fid : abworld`PurseId
+                   tid : abworld`PurseId
+                fseqno : nat
+                tseqno : nat
+                   val : nat;
+                        
+-- details to initiate a transaction
+CounterPartyDetails ::   pid : abworld`PurseId
+                         val : nat
+                       seqno : nat;                        
+
+            
+--
+-- State
+--           
+state ConWorld of
+    conauth   : set of abworld`PurseId
+    conpurses : map abworld`PurseId to ConPurse
+inv mk_ConWorld(conauth,conpurses) == dom conpurses subset conauth
+init c == c = mk_ConWorld({},{|->})
+end        
+  
+  
+--
+-- Operations
+--        
+operations
+
+
+-- INVISIBLE OPERATIONS --
+
+-- increase sequence number (p.29)
+Increase : abworld`PurseId ==> ()
+Increase(pid) ==
+    let delta in set {1,...,10} in
+        conpurses(pid).seqno := conpurses(pid).seqno + delta;
+
+        
+-- abort current transaction (p.30)        
+Abort : abworld`PurseId ==> ()
+Abort(pid) ==
+(
+    LogIfNecessary(pid);
+    conpurses(pid).status := <Idle>;
+    Increase(pid)
+);
+
+
+-- log current transaction (p.13)
+LogIfNecessary : abworld`PurseId ==> ()
+LogIfNecessary(pid) == 
+    if conpurses(pid).status = <EPV> or conpurses(pid).status = <EPA>
+    then conpurses(pid).exlog := 
+            conpurses(pid).exlog union {conpurses(pid).ctrans}
+pre conpurses(pid).ctrans <> nil;
+
+
+-- TOP LEVEL OPERATIONS --
+
+-- successful transfer
+public ConTransferOk: PurseId * PurseId * nat ==> ()
+ConTransferOk(fid, tid, val) == 
+    let fseqno = conpurses(fid).seqno,
+        tseqno = conpurses(tid).seqno,
+        td = mk_TransDetails(fid, tid, fseqno, tseqno, val) in
+        (   
+            StartFromOkay(fid, mk_CounterPartyDetails(tid, val, tseqno));
+            StartToOkay(tid, mk_CounterPartyDetails(fid, val, fseqno));
+            
+            OpReq(fid,td);
+            OpVal(tid,td);
+            OpAck(fid,td)
+        )
+pre fid <> tid and 
+    fid in set dom conpurses and 
+    tid in set dom conpurses and
+    conpurses(fid).bal >= val
+post (total(conpurses(fid)) + total(conpurses(tid))) = 
+   	 (total(conpurses~(fid)) + total(conpurses~(tid))) and
+     (conpurses~(fid).bal + conpurses~(tid).bal) >= 
+     (conpurses(fid).bal + conpurses(tid).bal) and
+     conpurses(fid).exlog = conpurses~(fid).exlog and
+     conpurses(tid).exlog = conpurses~(tid).exlog and
+     conpurses(fid).seqno >= conpurses~(fid).seqno and
+     conpurses(tid).seqno >= conpurses~(tid).seqno and
+     conpurses(fid).status = <Idle> and
+     conpurses(tid).status = <Idle> and
+     (dom conpurses~ = dom conpurses) and
+     (conauth~ = conauth) and
+     forall pid in set (dom conpurses) \ {fid, tid} & 
+         conpurses~(pid) = conpurses(pid);
+
+
+-- request missing (refines Ignore)         
+public ConTransferLostReq: PurseId * PurseId * nat ==> ()
+ConTransferLostReq(fid, tid, val) == 
+    let fseqno = conpurses(fid).seqno,
+        tseqno = conpurses(tid).seqno,
+        td = mk_TransDetails(fid, tid, fseqno, tseqno, val) in
+        (
+            StartFromOkay(fid, mk_CounterPartyDetails(tid, val, tseqno));
+            StartToOkay(tid, mk_CounterPartyDetails(fid, val, fseqno));        
+        
+            -- fail
+            Abort(fid); 
+            Abort(tid);
+        
+            -- RESOLVE -- 
+            conpurses(td.tid).exlog := conpurses(td.tid).exlog \ {td}
+        )
+pre fid <> tid and 
+    fid in set dom conpurses and 
+    tid in set dom conpurses and
+    conpurses(fid).bal >= val
+post conpurses(fid).bal = conpurses~(fid).bal and
+     conpurses(tid).bal = conpurses~(tid).bal and
+     conpurses(fid).exlog = conpurses~(fid).exlog and
+     conpurses(tid).exlog = conpurses~(tid).exlog and
+     conpurses(fid).seqno >= conpurses~(fid).seqno and
+     conpurses(tid).seqno >= conpurses~(tid).seqno and
+     conpurses(fid).status = <Idle> and
+     conpurses(tid).status = <Idle> and
+     conauth~ = conauth and 
+     forall pid in set (dom conpurses) \ {fid, tid} & 
+         conpurses~(pid) = conpurses(pid);
+
+
+-- val missing, it was lost (refines AbTransferLost)    
+public ConTransferLostValFail: PurseId * PurseId * nat ==> ()
+ConTransferLostValFail(fid, tid, val) == 
+    let fseqno = conpurses(fid).seqno,
+        tseqno = conpurses(tid).seqno,
+        td = mk_TransDetails(fid, tid, fseqno, tseqno, val) in
+        (
+            StartFromOkay(fid, mk_CounterPartyDetails(tid, val, tseqno));
+            StartToOkay(tid, mk_CounterPartyDetails(fid, val, fseqno));        
+        
+            OpReq(fid,td);
+        
+            -- fail
+            Abort(fid); 
+            Abort(tid);
+        
+            -- RESOLVE --
+            conpurses(td.tid).exlog := conpurses(td.tid).exlog \ {td}        
+        )
+pre fid <> tid and 
+    fid in set dom conpurses and 
+    tid in set dom conpurses and
+    conpurses(fid).bal >= val
+post total(conpurses(fid)) = total(conpurses(fid)) and
+     conpurses~(fid).bal >= conpurses(fid).bal and
+     conpurses(tid).bal = conpurses~(tid).bal and
+     conpurses(tid).exlog = conpurses~(tid).exlog and     
+     conpurses(fid).seqno >= conpurses~(fid).seqno and
+     conpurses(tid).seqno >= conpurses~(tid).seqno and
+     conpurses(fid).status = <Idle> and
+     conpurses(tid).status = <Idle> and     
+     (dom conpurses~ = dom conpurses) and
+     (conauth~ = conauth) and
+     forall pid in set (dom conpurses) \ {fid,tid} & 
+         conpurses~(pid) = conpurses(pid);
+
+
+-- val missing, it wasn't lost (refines AbTransferOk)
+public ConTransferLostValSucceed: PurseId * PurseId * nat ==> ()
+ConTransferLostValSucceed(fid, tid, val) == 
+    let fseqno = conpurses(fid).seqno,
+        tseqno = conpurses(tid).seqno,
+        td = mk_TransDetails(fid, tid, fseqno, tseqno, val) in
+        (
+            StartFromOkay(fid, mk_CounterPartyDetails(tid, val, tseqno));
+            StartToOkay(tid, mk_CounterPartyDetails(fid, val, fseqno));        
+
+            OpReq(fid,td);     
+            
+            -- fail
+            Abort(fid); 
+            Abort(tid);            
+        
+            -- RESOLVE --
+            conpurses(td.fid).exlog := conpurses(td.fid).exlog \ {td};
+            conpurses(td.tid).exlog := conpurses(td.tid).exlog \ {td};         
+            conpurses(td.tid).bal := conpurses(td.tid).bal + td.val        
+        )
+pre fid <> tid and 
+    fid in set dom conpurses and 
+    tid in set dom conpurses and
+    conpurses(fid).bal >= val
+post (total(conpurses(fid)) + total(conpurses(tid))) = 
+   	 (total(conpurses~(fid)) + total(conpurses~(tid))) and
+     (conpurses~(fid).bal + conpurses~(tid).bal) >= 
+     (conpurses(fid).bal + conpurses(tid).bal) and
+     conpurses(fid).exlog = conpurses~(fid).exlog and
+     conpurses(tid).exlog = conpurses~(tid).exlog and
+     conpurses(fid).seqno >= conpurses~(fid).seqno and
+     conpurses(tid).seqno >= conpurses~(tid).seqno and
+     conpurses(fid).status = <Idle> and
+     conpurses(tid).status = <Idle> and
+     (dom conpurses~ = dom conpurses) and
+     (conauth~ = conauth) and
+     forall pid in set (dom conpurses) \ {fid, tid} & 
+         conpurses~(pid) = conpurses(pid);
+
+
+-- ack missing (refines AbTransferOk)
+public ConTransferLostAck: PurseId * PurseId * nat ==> ()
+ConTransferLostAck(fid, tid, val) == 
+    let fseqno = conpurses(fid).seqno,
+        tseqno = conpurses(tid).seqno,
+        td = mk_TransDetails(fid, tid, fseqno, tseqno, val) in
+        (
+            StartFromOkay(fid, mk_CounterPartyDetails(tid, val, tseqno));
+            StartToOkay(tid, mk_CounterPartyDetails(fid, val, fseqno));        
+        
+            OpReq(fid,td);
+            OpVal(tid,td);
+            
+            -- fail
+            Abort(fid); 
+            Abort(tid);        
+        
+            -- RESOLVE --
+            conpurses(td.fid).exlog := conpurses(td.fid).exlog \ {td}        
+        )
+pre fid <> tid and 
+    fid in set dom conpurses and 
+    tid in set dom conpurses and
+    conpurses(fid).bal >= val
+post (total(conpurses(fid)) + total(conpurses(tid))) = 
+   	 (total(conpurses~(fid)) + total(conpurses~(tid))) and
+     (conpurses~(fid).bal + conpurses~(tid).bal) >= 
+     (conpurses(fid).bal + conpurses(tid).bal) and
+     conpurses(fid).exlog = conpurses~(fid).exlog and
+     conpurses(tid).exlog = conpurses~(tid).exlog and
+     conpurses(fid).seqno >= conpurses~(fid).seqno and
+     conpurses(tid).seqno >= conpurses~(tid).seqno and
+     conpurses(fid).status = <Idle> and
+     conpurses(tid).status = <Idle> and
+     (dom conpurses~ = dom conpurses) and
+     (conauth~ = conauth) and
+     forall pid in set (dom conpurses) \ {fid, tid} & 
+         conpurses~(pid) = conpurses(pid);         
+
+
+-- MESSAGING OPERATIONS --
+
+-- initiate sending money (p.31)
+StartFromOkay : abworld`PurseId * CounterPartyDetails ==> ()
+StartFromOkay(pid, cpd) ==
+(
+    conpurses(pid).ctrans := 
+      mk_TransDetails(pid, cpd.pid, conpurses(pid).seqno, cpd.seqno, cpd.val);
+    conpurses(pid).status := <EPR>;
+    
+    -- for next time
+    Increase(pid); 
+    
+    -- send unprotected status message
+    --return mk_token("Waiting for Request")
+)
+pre cpd.pid <> pid and 
+    cpd.val <= conpurses(pid).bal and 
+    conpurses(pid).status = <Idle>;
+
+
+-- initiate receiving money (p.32)
+StartToOkay : abworld`PurseId * CounterPartyDetails ==> ()
+StartToOkay(pid, cpd) ==
+def 
+  td = mk_TransDetails(cpd.pid, pid, cpd.seqno, conpurses(pid).seqno, cpd.val)
+in
+(
+    conpurses(pid).ctrans := td;
+    conpurses(pid).status := <EPV>;
+
+    -- for next time
+    Increase(pid);
+)
+pre cpd.pid <> pid and 
+    conpurses(pid).status = <Idle>;
+
+
+-- processing a request message (p.33)
+OpReq : abworld`PurseId * TransDetails ==> ()
+OpReq(pid, td) ==
+(
+    conpurses(pid).bal := conpurses(pid).bal - td.val;
+    conpurses(pid).status := <EPA>;
+)
+pre conpurses(pid).status = <EPR> and 
+    conpurses(pid).ctrans = td;
+
+
+-- processing a value message (p.34) 
+OpVal : abworld`PurseId * TransDetails ==> ()
+OpVal(pid, td) ==
+(
+    conpurses(pid).bal := conpurses(pid).bal + td.val;
+    conpurses(pid).status := <Idle>;
+)
+pre conpurses(pid).status = <EPV> and 
+    conpurses(pid).ctrans = td;
+
+
+-- processing an ack message (pp.34-35) 
+OpAck : abworld`PurseId * TransDetails ==> ()
+OpAck(pid, td) ==
+(
+    conpurses(pid).status := <Idle>;
+    
+    -- send unprotected status message
+    --return mk_token("Transaction Complete")
+)
+pre conpurses(pid).status = <EPA> and 
+    conpurses(pid).ctrans = td;
+
+
+--
+-- Functions
+--    
+functions
+
+total : ConPurse -> nat
+total(mk_ConPurse(bal,-,-,-,exlog)) == bal + sumval(exlog);
+
+sumval : set of TransDetails -> nat
+sumval(s) ==
+    if s = {} then 0 else let x in set s in x.val + sumval(s \ {x});
+    
+--retr : ConWorld -> abworld`AbWorld
+--retr(mk_ConWorld(cauth,cp)) ==
+--    mk_abworld`AbWorld(cauth, 
+--        {pid |-> mk_abworld`AbPurse(cp(pid).bal, sumval(cp(pid).exlog)) 
+--                                                        | pid in set dom cp})
+
+
+end conworld

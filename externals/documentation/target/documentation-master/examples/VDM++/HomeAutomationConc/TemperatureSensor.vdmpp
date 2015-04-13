@@ -1,0 +1,45 @@
+class TemperatureSensor is subclass of Sensor, BaseThread
+
+instance variables
+
+finished	: bool := false;
+
+operations
+
+public TemperatureSensor: nat * NetworkTypes`nodeType * nat * Surroundings * nat1 * bool ==> TemperatureSensor
+TemperatureSensor (id, type, val, envir, p, isP) ==
+ (ID := id;
+  Type := type;
+  Value := val;
+  Env := envir;
+  period := p;
+  isPeriodic := isP;
+ );
+
+public Finish: () ==> ()
+Finish() ==
+  finished := true;
+
+public IsFinished: () ==> ()
+IsFinished() ==
+  skip;
+
+protected Step: () ==> ()
+Step() ==
+  Value := Env.ReadTemp();
+
+sync
+	
+  per IsFinished => finished;
+
+--thread
+-- (--World`timerRef.RegisterThread();
+ 
+--  while true 
+--  do
+--   (Value := Env.ReadTemp();
+--    World`timerRef.WaitRelative(3);--World`timerRef.stepLength);
+--   )
+-- )
+
+end TemperatureSensor

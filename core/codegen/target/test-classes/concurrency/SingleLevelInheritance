@@ -1,0 +1,41 @@
+class A
+instance variables
+ public predA : nat := 0
+operations
+ public opA : () ==> ()
+ opA () == skip;
+
+sync
+ per opA => predA = 0;
+end A
+
+class B is subclass of A
+instance variables
+ public predB : nat := 1;
+operations
+ public  opB : () ==> ()
+ opB () == predA := 1;
+thread
+(
+ opB();
+ opA();
+)
+sync
+ per opA => predB = 1; 
+end B
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let i1 = new A(),
+    i2 = new B()
+in 
+(
+  start(i2);
+  
+  return i1.predA;
+);
+
+end Entry

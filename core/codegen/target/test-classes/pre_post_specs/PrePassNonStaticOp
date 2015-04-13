@@ -1,0 +1,16 @@
+class Entry
+
+operations
+
+public op : nat ==> nat
+op (x) == return x
+pre x > 1;
+
+public static Run : () ==> ?
+Run () ==
+let e = new Entry(),
+    r = e.op(42)
+in
+  return r;
+
+end Entry

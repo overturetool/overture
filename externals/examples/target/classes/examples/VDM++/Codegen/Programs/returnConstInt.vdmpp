@@ -1,0 +1,11 @@
+class returnConstInt
+values
+public returnConstInt = 
+new SimpleSpecificationImpl([
+    new SimpleFunctionDefinitionImpl(new SimpleIdentifierImpl("x"),
+        [
+        ],
+        new SimpleIntegerLiteralExpressionImpl(13))
+])
+;
+end returnConstInt

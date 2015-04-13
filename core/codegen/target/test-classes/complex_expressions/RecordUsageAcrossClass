@@ -1,0 +1,22 @@
+class A
+
+types
+
+public
+Rec :: ;
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return
+	let recs = [mk_A`Rec()],
+		r = recs(1)
+	in
+		42;
+
+end Entry

@@ -1,0 +1,203 @@
+---------------------------------------------------------------------------
+-- transcript of the autopilot example of the hol98 Taupo-2 release
+---------------------------------------------------------------------------
+
+class Autopilot
+
+types 
+
+events = <press_att_cws> 
+       | <press_cas_eng> 
+       | <press_alt_eng> 
+       | <press_fpa_sel>
+       | <input_alt>     
+       | <input_fpa>
+       | <input_cas>
+       | <alt_reached>   
+       | <fpa_reached>   
+       | <alt_gets_near>;
+
+off_eng = <off> | <engaged>;
+
+mode_status = <armed_mode> | <off_mode> | <engaged_mode>; 
+
+ 
+disp_status = <pre_selected> | <current>;
+
+
+altitude_vals = <away> 
+              | <near_pre_selected> 
+              | <at_pre_selected>;
+
+
+---------------------------------------------------------------------------
+-- Define state-type projection and update functions.                       
+---------------------------------------------------------------------------
+
+
+states :: att_cws  : off_eng
+          cas_eng  : off_eng
+          fpa_sel  : off_eng
+          alt_eng  : mode_status
+          alt_disp : disp_status
+          fpa_disp : disp_status
+          cas_disp : disp_status
+          altitude : altitude_vals
+inv sta == 
+         ((sta.att_cws = <engaged>) or (sta.fpa_sel = <engaged>) or 
+          (sta.alt_eng = <engaged_mode>))
+     and  (not (sta.alt_eng = <engaged_mode>) or not (sta.fpa_sel = <engaged>))
+     and  ((sta.att_cws = <engaged>) 
+           => not (sta.alt_eng = <engaged_mode>) and 
+               not (sta.fpa_sel = <engaged>)) 
+     and  ((sta.alt_eng = <armed_mode>) => (sta.fpa_sel = <engaged>));
+
+
+
+
+
+functions 
+---------------------------------------------------------------------------
+-- State predicates.                                                        
+---------------------------------------------------------------------------
+
+tran_att_cws : states -> states
+tran_att_cws (sta) ==
+  if sta.att_cws = <off> 
+  then mu(sta, att_cws |-> <engaged>, 
+               fpa_sel |-> <off>,
+               alt_eng |-> <off_mode>,
+               fpa_disp |-> <current>, 
+               alt_disp |-> <current>)
+  else sta;
+
+tran_cas_eng : states -> states
+tran_cas_eng (sta) ==
+ if sta.cas_eng = <off> 
+ then mu(sta, cas_eng |-> <engaged>)
+ else mu(sta, cas_disp |-> <current>, cas_eng |-> <off>);
+
+tran_fpa_sel : states -> states
+tran_fpa_sel (sta) ==
+  if sta.fpa_sel = <off> 
+  then mu(sta, fpa_sel |-> <engaged>, 
+               att_cws |-> <off>, 
+               alt_eng |-> <off_mode>,
+               alt_disp |-> <current>)
+  else mu(sta, fpa_sel |-> <off>, 
+               fpa_disp |-> <current>, 
+               att_cws |-> <engaged>,
+               alt_eng |-> <off_mode>, 
+               alt_disp |-> <current>);
+
+tran_alt_eng : states -> states
+tran_alt_eng (sta) ==
+  if sta.alt_eng = <off_mode> and sta.alt_disp = <pre_selected> 
+  then if not (sta.altitude = <away>) 
+       then mu(sta, att_cws |-> <off>, 
+                    fpa_sel |-> <off>, 
+                    alt_eng |-> <engaged_mode>,
+                    fpa_disp |-> <current>)
+       else mu(sta,att_cws |-> <off>, 
+                   fpa_sel |-> <engaged>, 
+                   alt_eng |-> <armed_mode>)
+  else sta;
+
+tran_input_alt : states -> states
+tran_input_alt (sta) ==
+  if sta.alt_eng = <off_mode> 
+  then mu(sta, alt_disp |-> <pre_selected>)
+  elseif (sta.alt_eng = <armed_mode>) or 
+         (sta.alt_eng = <engaged_mode>) 
+  then mu(sta,alt_eng |-> <off_mode>,
+              alt_disp |-> <pre_selected>,
+              att_cws |-> <engaged>, 
+              fpa_sel |-> <off>, 
+              fpa_disp |-> <current>)
+  else sta;
+
+tran_input_fpa : states -> states 
+tran_input_fpa (sta) ==
+  if sta.fpa_sel = <off> 
+  then mu(sta,fpa_disp |-> <pre_selected>)
+  else sta;
+
+tran_input_cas : states -> states 
+tran_input_cas (sta) ==
+  if sta.cas_eng = <off> 
+  then mu(sta, cas_disp |-> <pre_selected>)
+  else sta;
+
+tran_alt_gets_near : states -> states
+tran_alt_gets_near (sta) ==
+  if sta.alt_eng = <armed_mode> 
+  then mu(sta,altitude |-> <near_pre_selected>, 
+              alt_eng |-> <engaged_mode>,
+              fpa_sel |-> <off>, 
+              fpa_disp |-> <current>)
+   else mu(sta,altitude |-> <near_pre_selected>);
+
+tran_alt_reached  : states -> states
+tran_alt_reached (sta) ==
+  if sta.alt_eng = <armed_mode> 
+  then mu(sta,altitude |-> <at_pre_selected>, 
+              alt_disp |-> <current>,
+              alt_eng |-> <engaged_mode>, 
+              fpa_sel |-> <off>, 
+              fpa_disp |-> <current>)
+  else mu(sta,altitude |-> <at_pre_selected>, 
+              alt_disp |-> <current>);
+
+tran_fpa_reached : states -> states 
+tran_fpa_reached (sta) == 
+  mu(sta,fpa_disp |-> <current>);
+
+---------------------------------------------------------------------------
+-- The transition function.                                                  
+---------------------------------------------------------------------------
+
+nextstate : states * events -> states 
+nextstate (sta,evts) ==
+  cases evts: 
+    <press_att_cws> -> tran_att_cws (sta),     
+    <press_alt_eng> -> tran_alt_eng (sta),
+    <press_fpa_sel> -> tran_fpa_sel (sta),
+    <press_cas_eng> -> tran_cas_eng (sta),
+    <input_alt>     -> tran_input_alt (sta),
+    <input_fpa>     -> tran_input_fpa (sta),
+    <input_cas>     -> tran_input_cas (sta),
+    <alt_reached>   -> tran_alt_reached (sta),
+    <fpa_reached>   -> tran_fpa_reached (sta),
+    <alt_gets_near> -> tran_alt_gets_near (sta)
+  end;
+
+values 
+
+---------------------------------------------------------------------------
+-- Initial state.                                                            
+---------------------------------------------------------------------------
+
+st0 : states = 
+    mk_states(
+      <engaged>,
+      <off>,
+      <off>,
+      <off_mode>,
+      <current>,
+      <current>,
+      <current>,
+      <away>);
+
+functions 
+
+isInitial : states -> bool
+isInitial (sta) ==
+   (sta.att_cws = <engaged>)  and 
+   (sta.cas_eng = <off>)      and
+   (sta.fpa_sel = <off>)      and
+   (sta.alt_eng = <off_mode>) and 
+   (sta.alt_disp = <current>) and
+   (sta.fpa_disp = <current>) and 
+   (sta.cas_disp = <current>);
+
+end Autopilot

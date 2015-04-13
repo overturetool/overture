@@ -1,0 +1,64 @@
+
+class Thermostat is subclass of Actuator, BaseThread
+
+instance variables
+
+finished	: bool := false;
+
+
+operations
+
+public Thermostat: nat * NetworkTypes`nodeType * Surroundings * nat1 * bool ==> Thermostat
+Thermostat (id, type, envir, p, isP) ==
+ (ID := id;
+  Type := type;
+  Corr := <NONE>;
+  Env := envir;
+  period := p;
+  isPeriodic := isP;
+ );
+
+public SetCorrection: NetworkTypes`correction ==> ()
+SetCorrection(cor) ==
+  Corr := cor
+pre (cor = <INC>) or (cor = <DEC>) or (cor = <NONE>);
+
+public Finish: () ==> ()
+Finish() ==
+  finished := true;
+
+public IsFinished: () ==> ()
+IsFinished() ==
+  skip;
+
+protected Step: () ==> ()
+Step() ==
+ (dcl tempCorr: NetworkTypes`correction := GetCorr();
+
+  if tempCorr = <INC>
+  then HA`Sur.IncTemp()
+  elseif tempCorr = <DEC>
+  then HA`Sur.DecTemp();
+ );
+
+sync
+	
+  per IsFinished => finished;
+
+--thread
+-- (--World`timerRef.RegisterThread();
+  
+--  while true 
+--  do 
+--   (dcl tempCorr: NetworkTypes`correction := GetCorr();
+
+--    if tempCorr = <INC>
+--    then HA`Env.IncTemp()
+--    elseif tempCorr = <DEC>
+--    then HA`Env.DecTemp();
+	
+--    World`timerRef.WaitRelative(5);--World`timerRef.stepLength);
+--   )
+-- )
+
+end Thermostat

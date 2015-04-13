@@ -1,0 +1,1 @@
+mk_(10000,[mk_(1,<MissileA>,50,100), mk_(2,<MissileB>,55,200), mk_(3,<MissileC>,88,300),mk_(4,<MissileA>,300,500),mk_(5,<MissileB>,170,600),mk_(6,<MissileC>,290,700),mk_(7,<MissileC>,190,800)])

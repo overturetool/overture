@@ -1,0 +1,105 @@
+-----------------------------------------------
+-- Author:	Kim Christensen
+-- Created:	3/03-2009
+-- Updated: 17/03-2009
+-- Description: Lifeboat class for ORAMS
+-----------------------------------------------
+
+class Lifeboat is subclass of SafetyEquipment
+
+
+instance variables
+	id : Bid;
+	acceptingCrew : bool;
+	crew : set of Pid := {};
+	areas : set of Aid := {};
+	
+	inv card crew <= capacity;
+	
+types
+
+
+operations
+	
+	public Lifeboat : nat * Bid ==> Lifeboat
+		Lifeboat(cap, bid) == 
+			(
+			acceptingCrew := true;
+			capacity := cap;
+			id := bid;
+			);
+			
+	public getId : () ==> Bid
+		getId() == 
+			return id;
+	
+	public getRemainingCap : () ==> nat
+		getRemainingCap() ==
+			if acceptingCrew
+			then return capacity - card crew
+			else return 0;
+			
+	
+	public addPerson : Pid ==> ()
+		addPerson(p) ==
+				crew := crew union {p}
+	pre capacity - card crew > 0 and acceptingCrew
+	post p in set crew;
+	
+	
+	public removePerson : Pid ==> ()
+		removePerson(p) ==
+			crew := crew \ {p}
+	pre p in set crew
+	post p not in set crew;
+
+	
+	public addArea : Aid ==> ()
+		addArea(a) ==
+			areas := areas union {a};
+
+			
+	public removeArea : Aid ==> ()
+		removeArea(a) ==
+			areas := areas \ {a};
+
+	
+	public isDedicated : () ==> bool
+		isDedicated() ==
+			return card areas = 1;
+				 
+	
+	public getAreas : () ==> set of Aid
+		getAreas() ==
+			return areas;
+	
+	
+	public disable : () ==> () 
+		disable()==
+			acceptingCrew := false;
+
+	public enable : () ==> () 
+		enable()==
+			acceptingCrew := true;
+	
+	
+	public getInterCrew : set of Pid ==> set of Pid
+		getInterCrew(ps) ==
+			return crew inter ps;
+			
+	
+	public getCrew : () ==> set of Pid
+		getCrew() ==
+			return crew;
+	
+		
+functions
+
+sync 
+mutex(addPerson);
+mutex(addPerson, removePerson, getRemainingCap, getCrew, getInterCrew);
+mutex(addArea, removeArea, getAreas, isDedicated);
+mutex(disable, enable, getRemainingCap);
+
+values
+end Lifeboat

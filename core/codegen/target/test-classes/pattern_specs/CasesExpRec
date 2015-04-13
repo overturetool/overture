@@ -1,0 +1,36 @@
+class Entry
+
+types
+
+public Rec ::
+	a : int
+	b : int
+	c : int
+
+functions
+
+public static casesRec : Rec -> int
+casesRec (t) ==
+	cases t:
+		mk_Rec(2,2,2) -> 6,
+		mk_Rec(a,-,1) -> a + 1,
+		mk_Rec(1,b,c) -> 1 + b + c,
+		mk_Rec(-,-,-) -> -1,
+		others -> 0
+	end;
+
+operations	
+
+public static Run : () ==> ?
+Run () ==
+(
+	dcl result : seq of int := [];
+	for i = 1 to 2 do
+		for j = 1 to 2 do
+			for k = 1 to 3 do
+				result := result ^ [casesRec(mk_Rec(i, j, k))];
+	
+	return result;
+)
+
+end Entry

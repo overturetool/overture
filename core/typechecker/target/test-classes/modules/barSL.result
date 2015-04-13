@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="3" line="317" message="Definition 'Count' not used" messageType="warning" number="5000" resource="barSL"/>
+<message column="3" line="328" message="Definition 'baga' not used" messageType="warning" number="5000" resource="barSL"/>
+<message column="3" line="329" message="Definition 'bagb' not used" messageType="warning" number="5000" resource="barSL"/>
+<result/>
+</testResult>

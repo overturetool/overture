@@ -1,0 +1,124 @@
+class Radar is subclass of GLOBAL
+
+types 
+    
+ 
+instance variables
+
+  location : Coordinates;
+  range : nat1;
+  detected : map FOId to FO;
+  priority : seq of FO := [];
+  radarDisplay: dk_au_eng_Radar;
+  static rc:int := 0;   
+  
+operations
+
+public Radar : int * int * nat1 ==> Radar
+Radar(x,y,r) ==
+ (location := mk_Coordinates(x,y);
+  range := r;
+  detected := {|->};
+  radarDisplay := new dk_au_eng_Radar();
+  setupRadar(radarDisplay);
+ );
+
+public Scan : AirSpace ==> ()
+Scan(as) ==
+ (detected := { x.getId() |-> x | x in set as.getAirspace() & InRange(x) };
+  UpdatePriorityList();
+  DisplayScan();
+ );
+    
+private InRange : FO ==> bool
+InRange(fo) ==
+  let foLocation = fo.getCoordinates()
+  in 
+    return isPointInRange(location,range,foLocation); 
+   
+public getDetected : () ==> set of FO
+getDetected() == 
+  return rng detected;
+
+public getDetectedMap : () ==> map FOId to FO
+getDetectedMap() ==
+  return detected;
+
+public saturatedRadar : () ==> bool
+saturatedRadar() == 
+  return card dom detected > range / 4;
+  
+public getSaturatingFOs : () ==> set of FOId
+getSaturatingFOs() ==
+  return {priority(i).getId() | i in set inds priority & i > floor(range/4)};
+
+public getLocation : () ==> Coordinates
+getLocation() == 
+  return location;
+
+public getRange : () ==> nat1
+getRange() ==
+  return range;
+  
+private UpdatePriorityList : () ==> ()
+UpdatePriorityList() == 
+  let notDetect = elems priority \ rng detected,
+      newlyDet  = rng detected \ elems priority
+  in 
+    ( 
+      for all fobj in set notDetect do
+        let
+            id: seq of char = VDMUtil`val2seq_of_char[FOId](fobj.getId())
+        in
+            radarDisplay.RemFlyingObject(id);
+      for all fobj in set newlyDet do
+        let
+            mk_Coordinates(X,Y) = fobj.getCoordinates(),
+            token2seq_of_char = VDMUtil`val2seq_of_char[token]
+         in 
+            radarDisplay.AddFlyingObject(X,Y,0,token2seq_of_char(fobj.getId()));
+      removeNotDetected(notDetect);
+      addNewlyDetected(newlyDet);
+    );
+
+private removeNotDetected : set of FO ==> ()
+removeNotDetected(fos) == 
+  priority := [priority(i) | i in set inds priority 
+                           & priority(i) in set fos];    
+  
+private addNewlyDetected : set of FO ==> ()
+addNewlyDetected(newlyDetect) == 
+  priority := priority ^ set2seqFO(newlyDetect);    
+
+private setupRadar: dk_au_eng_Radar ==> ()
+setupRadar(r) == (r.SetWindowPosition(450*rc+50,100);
+                  r.SetStepSize(5);
+                  r.SetScanTime(60);
+                  r.SetScanWidth(350);
+                  let
+                    int2seq_of_char = VDMUtil`val2seq_of_char[int],
+                    mk_Coordinates(x,y) = location
+                  in
+                    r.SetTitle("MSAW Radar: (" ^ int2seq_of_char(x) ^ "," ^ int2seq_of_char(y) ^ ")");
+                  rc:=rc+1;);
+
+private DisplayScan: () ==> ()
+DisplayScan() == for all x in set {1,...,360/5} do radarDisplay.StepRadar();
+
+functions
+set2seqFO : set of FO -> seq of FO
+set2seqFO(fos) ==
+  if fos = {}
+  then []
+  else 
+    let fo in set fos
+    in
+      [fo] ^ set2seqFO(fos\{fo})
+measure set2seqFOm;  
+
+      
+set2seqFOm : set of FO -> nat
+set2seqFOm(fos) == card fos;
+
+
+end Radar

@@ -1,0 +1,293 @@
+class Time is subclass of CalendarDefinition
+/*
+Responsibility
+	時間を表す。
+Abstract
+	私は時間あるいはアナリシス・パターンで言うところの時点であり、aDateの時間を表す。
+	例えば2003年7月28日14時15分59秒を表す。
+*/
+
+values
+public hoursPerDay = 24;	--１日の時間数
+public minutesPerHour = 60;	--１時間の分数
+public secondsPerMinute = 60;	--１分の秒数
+public ミリ = 1000;		--ミリを通常の単位にするための倍数
+public milliSecondsPerDay = hoursPerDay * minutesPerHour * secondsPerMinute * ミリ;	--１日=２４時間をmilliSecondで表した数
+public milliSecondsPerHour = minutesPerHour * secondsPerMinute * ミリ;	--１時間をmilliSecondで表した数
+private io = new IO();
+
+types
+public TimeInMilliSeconds = nat;	--１日の時刻を０時を0としたmilliSecond単位で持つ。
+	
+instance variables
+/*　本来は、Javaのようにdate・時間を合わせてmilliSecond単位で持つべきだろうが、
+　　Dateは倍精度浮動小数点数でModifiedJulianDateを持っているため、時間の精度は５分程度となる。
+　　このため、dateと時刻を分けて持つことにした。
+*/
+sDate : Date;
+sTime : TimeInMilliSeconds;
+	
+operations
+--Constructor
+public Time : Calendar * int * int * int * nat * nat * nat  * nat ==> Time
+Time(cal, year, month, 日, 時, aMinute, aSecond, milliSecond) ==
+	(
+	sDate := cal.getDateFrom_yyyy_mm_dd(year, month, 日);
+	sTime := self.IntProduct2TimeMillieSeconds(時, aMinute, aSecond, milliSecond);
+	return self
+	);
+
+public Time : Calendar * int * int * int ==> Time
+Time(cal, year, month, 日) ==
+	(
+	sDate := cal.getDateFrom_yyyy_mm_dd(year, month, 日);
+	sTime := self.IntProduct2TimeMillieSeconds(0, 0, 0, 0);
+	return self
+	);
+	
+public Time : Date ==> Time
+Time(aDate) ==
+	(
+	sDate := aDate;
+	sTime := self.IntProduct2TimeMillieSeconds(0, 0, 0, 0);
+	return self
+	);
+	
+--currentDateTimeを求める単体テスト用関数。
+public Time: Calendar ==> Time
+Time(cal) == 
+	(
+	let	currentDateTime = readCurrentDateTime(homedir ^ "/temp/Today.txt", homedir ^ "/temp/Now.txt", cal)
+	in
+	(
+	sDate := currentDateTime.getDate();
+	sTime := currentDateTime.getTime();
+	);
+	return self
+	);
+
+
+--currentDateTimeを指定したreadFromFile単体テスト用関数。
+public Time: seq of char * seq of char * Calendar ==> Time
+Time(dateFileName, 時間fname, cal) ==
+	(
+	let	currentDateTime = readCurrentDateTime(dateFileName, 時間fname, cal)
+	in
+	(
+	sDate := currentDateTime.getDate();
+	sTime := currentDateTime.getTime();
+	);
+	return self
+	);
+		
+--currentDateTimeをreadFromFile
+public readCurrentDateTime : seq of char * seq of char * Calendar ==> [Time]
+readCurrentDateTime(dateFileName, 時間fname, cal) ==
+	let	mk_(結果, mk_(h, m, s, ms)) = io.freadval[int * int * int * int](時間fname)
+	in
+	if 結果 then
+		let	d = cal.readFromFiletoday(dateFileName)	in
+		return new Time(cal, d.Year(),  d.Month(), d.day(), h, m, s, ms)
+	else
+		let	- = io.echo("Can't read Current Date-Time data file.")
+		in
+		return nil;
+
+--インスタンス変数操作
+
+public getDate : () ==> Date
+getDate() == return sDate;	
+
+public setDate : Date ==> ()
+setDate(aDate) == sDate := aDate;
+
+public getTime : () ==> TimeInMilliSeconds
+getTime() == return sTime;
+
+public setTime : TimeInMilliSeconds ==> ()
+setTime(aTime) == sTime :=aTime;
+
+public hour: () ==> nat
+hour() == 
+	let	mk_(hour, -, -, -) = self.Time2IntProduct(self.getTime())
+	in
+	return hour;
+
+public setTimeFromNat : nat ==> ()
+setTimeFromNat(aTime) ==
+	let	mk_(-, aMinute, aSecond, milliSecond) = self.Time2IntProduct(self.getTime())
+	in
+	self.setTime(IntProduct2TimeMillieSeconds(aTime, aMinute, aSecond, milliSecond));
+	
+public minute: () ==> nat
+minute() == 
+	let	mk_(-, aMinute, -, -) = self.Time2IntProduct(self.getTime())
+	in
+	return aMinute;
+	
+public setMinuteFromNat : nat ==> ()
+setMinuteFromNat(minute) ==
+	let	mk_(hour, -, aSecond, milliSecond) = self.Time2IntProduct(self.getTime())
+	in
+	self.setTime(IntProduct2TimeMillieSeconds(hour, minute, aSecond, milliSecond));
+		
+public second: () ==> nat
+second() ==
+	let	mk_(-, -, aSecond, -) = self.Time2IntProduct(self.getTime())
+	in
+	return aSecond;
+	
+public setSecond : nat ==> ()
+setSecond(aSecond) ==
+	let	mk_(hour, aMinute, -, milliSecond) = self.Time2IntProduct(self.getTime())
+	in
+	self.setTime(IntProduct2TimeMillieSeconds(hour, aMinute, aSecond, milliSecond));
+		
+public milliSecond: () ==> nat
+milliSecond() ==
+	let	mk_(-, -, -, milliSecond) = self.Time2IntProduct(self.getTime())
+	in
+	return milliSecond;
+	
+public setMilliSecond : nat ==> ()
+setMilliSecond(aMilliSecond) ==
+	let	mk_(hour, aMinute, aSecond, -) = self.Time2IntProduct(self.getTime())
+	in
+	self.setTime(IntProduct2TimeMillieSeconds(hour, aMinute, aSecond, aMilliSecond));
+	
+functions
+-- Get attribute.
+
+--時間から、その時間の属する暦を求める。
+public calendar : () -> Calendar
+calendar() == getDate().calendar();
+
+--時間から、その時間の属する年を求める。
+public Year: () -> int
+Year() == self.getDate().calendar().Year(self.getDate());
+		
+--時間から、その時間の属する月を求める。
+public Month: () -> int
+Month() == self.getDate().calendar().Month(self.getDate());
+		
+--時間から、日を求める。
+public day: () -> int
+day() == self.getDate().calendar().day(self.getDate());
+
+public getTimeAsNat : () -> nat
+getTimeAsNat() == self.getTime();
+
+----Compare
+
+public LT: Time -> bool
+LT(aTime) == 
+	let	date1 = floor self.getDate().getModifiedJulianDate(),
+		date2 = floor aTime.getDate().getModifiedJulianDate()
+	in
+	cases true :
+	(date1 < date2)	-> true,
+	(date1 = date2)	-> 
+		if self.getTimeAsNat() < aTime.getTimeAsNat() then
+			true
+		else
+			false,
+	others		-> false
+	end;
+
+public GT: Time -> bool
+GT(aTime) == not (self.LT(aTime) or self.EQ(aTime));
+
+public LE: Time -> bool
+LE(aTime) == not self.GT(aTime);
+
+public GE: Time -> bool
+GE(aTime) == not self.LT(aTime);
+
+--自身と与えられた時間がEQか判定する。
+public EQ: Time  ->  bool
+EQ(aTime) == 
+	self.getDate().EQ(aTime.getDate()) and self.getTimeAsNat() = aTime.getTimeAsNat();
+
+--自身と与えられた時間が等しくないか判定する。
+public NE: Time ->  bool
+NE(aTime) ==  not self.EQ(aTime);
+
+--変換
+
+public IntProduct2TimeMillieSeconds : int * int * int * int -> int
+IntProduct2TimeMillieSeconds(hour, aMinute, aSecond, milliSecond) ==((hour * minutesPerHour + aMinute) * secondsPerMinute + aSecond) * ミリ + milliSecond;
+
+public Time2IntProduct : TimeInMilliSeconds -> nat * nat * nat * nat
+Time2IntProduct(aTime) ==
+	let	hms = aTime div ミリ,
+		milliSecond = aTime mod ミリ,
+		hm = hms div secondsPerMinute,
+		aSecond = hms mod secondsPerMinute,
+		hour = hm div minutesPerHour,
+		aMinute = hm mod minutesPerHour
+	in
+	mk_(hour, aMinute, aSecond, milliSecond);
+
+operations
+public asString : () ==> seq of char
+asString() == 
+	let	mk_(hour, aMinute, aSecond, milliSecond) = self.Time2IntProduct(self.getTime())
+	in
+	return 
+		self.getDate().asString() ^ 
+		Integer`asString(hour) ^
+		Integer`asString(aMinute) ^
+		Integer`asString(aSecond) ^
+		Integer`asStringZ("009")(milliSecond);
+
+public print : () ==> seq of char
+print() == 
+	let	mk_(hour, aMinute, aSecond, milliSecond) = self.Time2IntProduct(self.getTime())
+	in
+	return 
+		self.getDate().print() ^ 
+		Integer`asString(hour) ^ "Hour, " ^
+		Integer`asString(aMinute) ^ "Minute, " ^
+		Integer`asString(aSecond) ^ "Second, " ^
+		Integer`asStringZ("009")(milliSecond) ^ "MilliSecond" ;
+
+----calculation
+
+--milliSecondを加算する
+public plusmilliSecond : int ==> Time
+plusmilliSecond(aMilliSecond) == 
+	let	time = self.getTime() + aMilliSecond,
+		CarriedNumOfDays = 
+			if time >= 0 then
+				time div milliSecondsPerDay
+			else
+				time div milliSecondsPerDay - 1,
+		newTime = time mod milliSecondsPerDay
+	in
+	(
+	dcl aTime : Time := new Time(self.calendar(), self.Year(), self.Month(), self.day()) ;
+	aTime.setTime(newTime);
+	aTime.setDate(aTime.getDate().plus(CarriedNumOfDays));
+	return aTime
+	);
+	
+public plussecond : int ==> Time
+plussecond(aSecond) == self.plusmilliSecond(aSecond * ミリ);
+	
+public plusminute : int ==> Time
+plusminute(minute) == self.plusmilliSecond(minute * secondsPerMinute * ミリ);
+	
+public plushour : int ==> Time
+plushour(hour) == self.plusmilliSecond(hour * minutesPerHour * secondsPerMinute * ミリ);
+	
+public plus: int * int * int * int ==> Time
+plus(hour, aMinute, aSecond, milliSecond) == self.plusmilliSecond(IntProduct2TimeMillieSeconds(hour, aMinute, aSecond, milliSecond));
+	
+--milliSecondを減算する
+public minusmilliSecond : int ==> Time
+minusmilliSecond(aMilliSecond) == return self.plusmilliSecond(-aMilliSecond);
+		
+public minus: int * int * int * int  ==> Time
+minus(hour, aMinute, aSecond, milliSecond) == self.minusmilliSecond(IntProduct2TimeMillieSeconds(hour, aMinute, aSecond, milliSecond));
+		
+end Time

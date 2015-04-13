@@ -1,0 +1,18 @@
+\begin{vdm_al}
+class BasicTask is subclass of AbstractTask
+
+operations
+  public BasicTask: seq of char * EventDispatcher ==> BasicTask
+  BasicTask (pnm, ped) == AbstractTask(pnm, ped);
+
+protected handleEvent: Event ==> ()
+handleEvent (e) == skip;
+
+-- BasicTask just implements the standard event handling loop
+-- handleEvent is still left to the responsibility of the subclass of BasicTask
+thread
+  while (true) do
+    handleEvent(getEvent())
+
+end BasicTask
+\end{vdm_al}

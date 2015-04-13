@@ -1,0 +1,27 @@
+\begin{vdm_al}
+dlmodule GUI
+
+  imports 
+    from MapDB
+    types
+     key;
+     data
+
+  exports
+    functions 
+      GetData : () -> MapDB`key * MapDB`data;
+      GetKey : () -> MapDB`key
+
+    operations
+      ShowData : MapDB`key * MapDB`data ==> ();
+      ShowMsg : nat  ==> ();
+      ShowDefined : MapDB`key * bool ==> ();
+      SelectFunc : () ==> int;
+      GUI_Init : () ==>()
+
+  uselib
+    "my_gui.so"
+
+end GUI
+\end{vdm_al}
+

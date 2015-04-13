@@ -1,0 +1,104 @@
+\section{TransportPlan class}
+
+\begin{vdm_al}
+
+
+class TransportPlan
+
+instance variables
+  private id_token : nat;
+  private totalFee : real;
+  private totalDuration : nat;
+  private choice : CyberRail`Choice;
+  public routeList : seq of Route := [];
+  private routesTravled : seq of Route := [];
+
+inv len routeList > 0 => forall i in set inds routeList 
+  & i < len routeList => 
+  routeList(i).arrivalLocation = routeList(i+1).departureLocation;
+
+
+types
+
+public Route ::
+departureLocation : CyberRail`String
+arrivalLocation : CyberRail`String
+fee : real
+platform : CyberRail`String
+dur : nat
+id_route : nat
+inv r == len r.platform > 0 and
+			len r.arrivalLocation > 0 and
+			len r.departureLocation > 0 and
+			r.fee >= 0 ;
+
+public DTO ::
+	id_token : nat
+	routeList : seq of Route
+	choice : CyberRail`Choice
+
+
+
+operations
+
+--Constructor
+public TransportPlan : seq of Route * CyberRail`Choice * nat ==> TransportPlan
+TransportPlan(routes, pChoice, id_tok) ==
+(
+	id_token := id_tok;
+	choice := pChoice;
+	routeList := routes;
+);
+
+public getNextRoute : () ==> TransportPlan`Route
+getNextRoute () == (
+	return hd routeList;
+)
+pre len routeList > 0;
+
+public containsRoute: nat ==> bool
+containsRoute(id_route) == 
+return exists r in set elems routeList & r.id_route = id_route
+pre len routeList > 0;
+
+public addRoute: Route ==> ()
+addRoute(route) ==(
+ routeList := routeList^[route];
+ totalFee:= totalFee + route.fee
+)
+pre routeList(len routeList).arrivalLocation = route.departureLocation;
+
+public routeTraveled: () ==> ()
+routeTraveled () == (
+	routesTravled := routesTravled ^ [hd routeList];
+	routeList := tl routeList;
+)
+pre len routeList > 0;
+
+public routesRemaining : () ==> nat
+routesRemaining() == ( return len routeList;);
+
+public getByValue : () ==> DTO
+getByValue()== return mk_TransportPlan`DTO(id_token, routeList, choice);
+
+
+public getPlanAsNaviInput: () ==> CyberRail`NavigationInput
+getPlanAsNaviInput() ==(
+return mk_CyberRail`NavigationInput((hd routeList).departureLocation,
+(routeList(len routeList)).arrivalLocation, 	choice, id_token )
+)
+pre len routeList > 0;
+
+public getTokenId: () ==> nat
+getTokenId() == return id_token;
+
+--debug
+public getRouteList: () ==> seq of Route
+getRouteList()==
+	return routeList;
+
+sync
+	mutex(routeTraveled);
+	
+end TransportPlan
+\end{vdm_al}

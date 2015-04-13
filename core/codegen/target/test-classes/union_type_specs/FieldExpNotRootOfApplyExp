@@ -1,0 +1,24 @@
+class Entry
+
+types
+
+public Rec :: x : int;
+
+instance variables
+
+public x : Rec := mk_Rec(10);
+
+operations
+
+public static S : Rec ==> seq of Rec
+S (p) == return [p];
+
+public static Run : () ==> ?
+Run () ==
+let
+	  ss = if 1 = 1 then {[new Entry()]} else {[]},
+	  s = if 1 = 1 then {hr|->Entry`S(hr(len hr).x) | hr in set ss} else {hr|->[] | hr in set ss}
+in
+  return card dom s;
+ 
+end Entry

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
+<message column="4" line="13" message="Error 4131: State invariant violated: inv_Sigma in 'A' (atomic-02.vdm) at line 13:4" messageType="error" number="4131" resource="atomic-02.vdm"/>
+<result>
+<output object="[]" resource="atomic-02.vdm" value="[]"/>
+</result>
+</testResult>

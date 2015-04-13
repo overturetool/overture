@@ -1,0 +1,22 @@
+class Entry
+
+types
+
+public Rec ::
+  x : int
+  b : bool;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+  dcl r1 : Rec := mk_Rec(5,true);
+  dcl x : nat := 1;
+  dcl r2 : Rec := mu(r1, x |-> 6, b |-> exists1 p in set {1,2,3} & p = 2);
+  dcl y : nat := 2;
+  
+  return mk_(r2.x, r2.b); 
+);
+
+end Entry

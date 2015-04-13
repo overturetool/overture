@@ -1,0 +1,113 @@
+class Giraffe
+
+
+values
+	package = "giraffe";
+
+--
+-- AST
+--
+
+
+types
+
+Specification ::
+	clazz	: ClassDefinition;
+	
+ClassDefinition ::
+	name	: Identifier
+	methods : set of MethodDefinition;
+
+MethodDefinition ::		
+	name 		: Identifier
+	parameters 	: seq of Parameter
+	type 		: Type
+	body 		: seq of Statement;
+
+Parameter ::
+	type : Type
+	name : Identifier;
+	
+Statement =
+	VariableDeclStatement |
+	ReturnStatement;
+	
+VariableDeclStatement ::
+	type : Type
+	name : Identifier
+	value : Expression;
+
+ReturnStatement ::
+	value : Expression;
+	
+Expression =
+	VariableExpression |	
+	LiteralExpression |
+	BinaryExpression |
+	IfExpression |
+	UnaryExpression;
+	
+VariableExpression ::
+	name : Identifier;
+
+LiteralExpression =
+	DoubleLiteralExpression | 
+	IntegerLiteralExpression | 
+	BooleanLiteralExpression;
+	
+DoubleLiteralExpression ::
+	value	: real;
+	
+IntegerLiteralExpression ::
+	value	: int;
+	
+BooleanLiteralExpression ::
+	value	: bool;
+
+Type = 
+	BasicType | 
+	Identifier;
+
+BasicType = 
+	<BOOL> | 
+	<INT> | 
+	<DOUBLE>;
+	
+Identifier ::
+	name	: seq of char;
+	
+UnaryExpression ::
+	op	: UnaryOperator
+	exp	: Expression;
+	
+UnaryOperator = 
+	<NOT> | 
+	<PLUS> | 
+	<MINUS>;
+	
+BinaryExpression ::
+	lhs	: Expression
+	op	: BinaryOperator
+	rhs	: Expression;
+	
+BinaryOperator = 
+	<AND> | 
+	<OR> | 
+	<EQUALS> | 
+	<NE> |
+	<DIV> | 
+	<GE> | 
+	<GT> | 
+	<LE> | 
+	<LT> | 
+	<MOD> |
+	<PLUS> |
+	<MINUS> | 
+	<TIMES>;
+	
+IfExpression ::
+	test	: Expression
+	thn	: Expression
+	els	: Expression; 
+
+end Giraffe

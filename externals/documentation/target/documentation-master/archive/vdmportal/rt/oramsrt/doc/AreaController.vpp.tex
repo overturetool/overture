@@ -1,0 +1,795 @@
+\begin{vdm}\kClass $AreaController$ \kISO $GLOBAL$\index{AreaController|ClassDef}
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}
+\assdef{id}{Aid\index{Aid|TypeOcc}}
+\end{insvar}
+\begin{insvar}
+\assdef{boats}{\mapof{Bid\index{Bid|TypeOcc}\Gmap Lifeboat\index{Lifeboat|TypeOcc}}}[{\Emptymap }]
+\end{insvar}
+\begin{insvar}
+\assdef{equip}{\setof{FireEquipment\index{FireEquipment|TypeOcc}}}[{\set{}}]
+\end{insvar}
+\begin{insvar}
+\assdef{pStay}{\mapof{Pid\index{Pid|TypeOcc}\Gmap Person\index{Person|TypeOcc}}}[{\Emptymap }]
+\end{insvar}
+\begin{insvar}
+\assdef{pTransit}{\setof{tPerson\index{tPerson|TypeOcc}}}[{\set{}}]
+\end{insvar}
+\begin{insvar}
+\assdef{stayCap}{\Nat }[{0}]
+\end{insvar}
+\begin{insvar}
+\assdef{transCap}{\Nat }[{0}]
+\end{insvar}
+\begin{insvar}
+\assdef{busy}{\Bool }[{\True }]
+\end{insvar}
+\begin{instinvfn}
+\color{not-covered} \Card  \Dom pStay \Le stayCap\color{covered}\end{instinvfn}
+\begin{instinvfn}
+\color{not-covered} \Card pTransit \Le transCap\color{covered}\end{instinvfn}
+\par
+\kTypes
+\begin{record}{tPerson\index{tPerson|TypeDef}}person :{Pid\index{Pid|TypeOcc}} \\
+outTime :{\Nat } \\
+late :{\Bool } \\
+\end{record}
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{AreaController}\index{AreaController|FuncDef}%
+\signature{Aid\index{Aid|TypeOcc} \Oto AreaController\index{AreaController|TypeOcc}}
+\parms{aid}
+\annlab[o]{AreaController`AreaController}
+\begin{blockstmt}
+\ass{id}{aid} ; \\
+\ass{transCap}{2}
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{step}\index{step|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{AreaController`step}
+\duration{\color{not-covered}1\color{covered}}{\begin{blockstmt}
+\begin{dclstmt}
+\assdef{curtime}{Time\index{Time|TypeOcc}}[{\kw{time}}]
+\end{dclstmt}
+\call{boatMaintenance}{} ; \\
+\begin{setfor}{p}{pTransit}
+\If p.outTime \Le curtime \And  \Not p.late
+\Then \\
+\begin{blockstmt}
+\begin{dclstmt}
+\assdef{ap}{tPerson\index{tPerson|TypeOcc}}[{\recmod{p}{late \Mapsto \True }}]
+\end{dclstmt}
+\ass{pTransit}{pTransit \Setdiff \set{p}} ; \\
+\ass{pTransit}{pTransit \Union \set{ap}} ; \\
+World`env.\call{addOutline}{\reccons{\kw{mk\textunderscore}} \\
+{ \\
+curtime, \\
+\Dquote Error\hspace{0.5em}person\hspace{0.5em}stayed\hspace{0.5em}too\hspace{0.5em}long\hspace{0.5em} \Dquote , \\
+id, \\
+p.person, \\
+p.outTime, \\
+\Quote {\backslash}n \Quote }}
+\end{blockstmt}
+\Fi
+\end{setfor}
+\end{blockstmt}};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{isFinished}\index{isFinished|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{AreaController`isFinished}
+\ass{busy}{\False };
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{getId}\index{getId|FuncDef}%
+\signature{() \Oto Aid\index{Aid|TypeOcc}}
+\parms{}
+\annlab[o]{AreaController`getId}
+\return{id};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{addEquipment}\index{addEquipment|FuncDef}%
+\signature{FireEquipment\index{FireEquipment|TypeOcc} \Oto ()}
+\parms{fe}
+\annlab[o]{AreaController`addEquipment}
+\ass{equip}{\set{fe} \Union equip};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{removeEquipment}\index{removeEquipment|FuncDef}%
+\signature{FireEquipment\index{FireEquipment|TypeOcc} \Oto ()}
+\parms{fe}
+\annlab[o]{AreaController`removeEquipment}
+\ass{equip}{equip \Setdiff \set{fe}}
+\begin{precond}
+\color{not-covered}stayCap \Minus  \Card  \Dom pStay > 0\color{covered}
+\end{precond};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{canRemoveEquipment}\index{canRemoveEquipment|FuncDef}%
+\signature{() \Oto \Bool }
+\parms{}
+\annlab[o]{AreaController`canRemoveEquipment}
+\begin{blockstmt}
+\call{updateCap}{} ; \\
+\If  \Card equip > stayCap
+\Then \\
+\return{\True }
+\Else \\
+\return{\pex{stayCap \Minus 1 \Minus  \Card  \Dom pStay} \Ge 0}
+\Fi
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{addBoat}\index{addBoat|FuncDef}%
+\signature{Lifeboat\index{Lifeboat|TypeOcc} \Oto ()}
+\parms{boat}
+\annlab[o]{AreaController`addBoat}
+\begin{blockstmt}
+\ass{boats}{boats \Mapmerge \map{\fnapply{boat.getId}{} \Mapsto boat}} ; \\
+$boat$.\call{addArea}{id}
+\end{blockstmt}
+\begin{precond}
+\color{not-covered}\fnapply{boat.getId}{} \Notin  \Dom boats\color{covered}
+\end{precond};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{canRemoveBoat}\index{canRemoveBoat|FuncDef}%
+\signature{Bid\index{Bid|TypeOcc} \Oto \Bool }
+\parms{boat}
+\annlab[o]{AreaController`canRemoveBoat}
+\begin{blockstmt}
+\return{ \Card \pex{\fnapply{\fnapply{ORAMS`Lifeboats\index{Lifeboats|FuncOcc}}{boat}.getCrew}{} \Inter  \Dom pStay} \Le  \\
+\fnapply{getCap}{ \Dom \pex{\set{boat} \Dby boats}}}
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{removeBoat}\index{removeBoat|FuncDef}%
+\signature{Bid\index{Bid|TypeOcc} \Oto ()}
+\parms{bid}
+\annlab[o]{AreaController`removeBoat}
+\begin{blockstmt}
+\fnapply{boats}{bid}.\call{disable}{} ; \\
+\begin{letstmt}
+\patdef{ps}{\fnapply{\fnapply{boats}{bid}.getInterCrew}{ \Dom pStay}}
+\end{letstmt} \\
+\begin{setfor}{p}{ps}
+\color{not-covered}\call{changeBoat}{p}\color{covered}
+\end{setfor} ; \\
+\fnapply{boats}{bid}.\call{removeArea}{id} ; \\
+\fnapply{boats}{bid}.\call{enable}{} ; \\
+\ass{boats}{\set{bid} \Dby boats}
+\end{blockstmt}
+\begin{precond}
+\color{not-covered}id \In  \Dom boats \And \fnapply{canRemoveBoat}{bid}\color{covered}
+\end{precond}
+\begin{postcond}
+\color{not-covered}id \Notin  \Dom boats\color{covered}
+\end{postcond};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{leave}\index{leave|FuncDef}%
+\signature{Pid\index{Pid|TypeOcc} \Oto ()}
+\parms{person}
+\annlab[o]{AreaController`leave}
+\If \pex{\exists{p \In  \Dom pStay}{p = person}}
+\Then \\
+\begin{blockstmt}
+\ass{pStay}{\set{person} \Dby pStay}
+\end{blockstmt}
+\Elseif \pex{\exists{p \In pTransit}{p.person = person}}
+\Then \\
+\begin{blockstmt}
+\Letbe\hspace{0.5em}pT \In pTransit \Best\hspace{0.5em}pT.person = person \Lin \\
+\ass{pTransit}{pTransit \Setdiff \set{pT}}
+\end{blockstmt}
+\Fi
+\begin{precond}
+\color{not-covered}person \In  \Dom pStay \Or \exists{p \In pTransit}{p.person = person}\color{covered}
+\end{precond};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{changeBoat}\index{changeBoat|FuncDef}%
+\signature{Pid\index{Pid|TypeOcc} \Oto ()}
+\parms{p}
+\annlab[o]{AreaController`changeBoat}
+\begin{blockstmt}
+\begin{letstmt}
+\patdef{b}{\fnapply{\fnapply{pStay}{p}.getBoat}{}}
+\end{letstmt} \\
+\begin{blockstmt}
+\begin{letstmt}
+\patdef{newBoat}{\fnapply{findBoat}{b}}
+\end{letstmt} \\
+\begin{blockstmt}
+\fnapply{ORAMS`Lifeboats\index{Lifeboats|FuncOcc}}{b}.\call{removePerson}{p} ; \\
+\fnapply{boats}{newBoat}.\call{addPerson}{p} ; \\
+\fnapply{pStay}{p}.\call{changeBoat}{newBoat}
+\end{blockstmt}
+\end{blockstmt}
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{enterPerson}\index{enterPerson|FuncDef}%
+\signature{Pid\index{Pid|TypeOcc} \X Intend\index{Intend|TypeOcc} \Oto \Bool }
+\parms{person,intend}
+\annlab[o]{AreaController`enterPerson}
+\begin{blockstmt}
+\call{updateCap}{} ; \\
+\begin{Cases}{intend}
+\alt{\const{Stay}}{\return{\fnapply{doAddStaying}{person}}}
+\alt{\const{Transit}}{\return{\fnapply{doAddTransit}{person}}}
+\end{Cases}
+\end{blockstmt}
+\begin{precond}
+\color{not-covered}person \Notin  \Dom pStay \Or  \\
+\exists{p \In pTransit}{p.person = person}\color{covered}
+\end{precond};
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{doAddStaying}\index{doAddStaying|FuncDef}%
+\signature{Pid\index{Pid|TypeOcc} \Oto \Bool }
+\parms{person}
+\annlab[o]{AreaController`doAddStaying}
+\If \fnapply{isRoomForStay}{}
+\Then \\
+\begin{blockstmt}
+\begin{letstmt}
+\patdef{boat}{\fnapply{findBoat}{}}
+\end{letstmt} \\
+\begin{blockstmt}
+\fnapply{boats}{boat}.\call{addPerson}{person} ; \\
+\ass{pStay}{\map{person \Mapsto \fnapply{ORAMS`persons\index{persons|FuncOcc}}{person}} \Mapmerge pStay} ; \\
+\If \fnapply{\fnapply{pStay}{person}.getArea}{} \Neq \Nil 
+\Then \\
+\fnapply{ORAMS`areas\index{areas|FuncOcc}}{\fnapply{\fnapply{ORAMS`persons\index{persons|FuncOcc}}{person}.getArea}{}}.\call{leave}{person}
+\Fi ; \\
+\If \fnapply{\fnapply{pStay}{person}.getBoat}{} \Neq \Nil 
+\Then \\
+\fnapply{ORAMS`Lifeboats\index{Lifeboats|FuncOcc}}{\fnapply{\fnapply{ORAMS`persons\index{persons|FuncOcc}}{person}.getBoat}{}}.\call{removePerson}{person}
+\Fi ; \\
+\fnapply{pStay}{person}.\call{changeArea}{\fnapply{\pex{\mapinv{ORAMS`areas}}}{\kSelf }} ; \\
+\fnapply{pStay}{person}.\call{changeBoat}{boat} ; \\
+\return{\True }
+\end{blockstmt}
+\end{blockstmt}
+\Else \\
+\return{\False }
+\Fi;
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{doAddTransit}\index{doAddTransit|FuncDef}%
+\signature{Pid\index{Pid|TypeOcc} \Oto \Bool }
+\parms{person}
+\annlab[o]{AreaController`doAddTransit}
+\If \fnapply{isRoomForTransit}{}
+\Then \\
+\begin{blockstmt}
+\begin{dclstmt}
+\assdef{p}{tPerson\index{tPerson|TypeOcc}}[{\reccons{\kw{mk\textunderscore} tPerson\index{tPerson|TypeOcc}}{person, \\
+\kw{time} + 250, \\
+\False }}]
+\end{dclstmt}
+\ass{pTransit}{\set{p} \Union pTransit} ; \\
+\If \fnapply{\fnapply{ORAMS`persons\index{persons|FuncOcc}}{person}.getArea}{} \Neq \Nil 
+\Then \\
+\fnapply{ORAMS`areas\index{areas|FuncOcc}}{\fnapply{\fnapply{ORAMS`persons\index{persons|FuncOcc}}{person}.getArea}{}}.\call{leave}{person}
+\Fi ; \\
+\fnapply{ORAMS`persons\index{persons|FuncOcc}}{person}.\call{changeArea}{\fnapply{\pex{\mapinv{ORAMS`areas}}}{\kSelf }} ; \\
+\return{\True }
+\end{blockstmt}
+\Else \\
+\color{not-covered}\return{\False }\color{covered}
+\Fi;
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{findBoat}\index{findBoat|FuncDef}%
+\signature{Bid\index{Bid|TypeOcc} \Oto Bid\index{Bid|TypeOcc}}
+\parms{b}
+\annlab[o]{AreaController`findBoat}
+\begin{blockstmt}
+\begin{letstmt}
+\patdef{bids}{\set{b} \Dby boats}
+\end{letstmt} \\
+\begin{blockstmt}
+\begin{letstmt}
+\patdef{bs}{\setcomp{boat}{boat \In  \Dom bids} \\
+[\fnapply{\fnapply{bids}{boat}.getRemainingCap}{} > 0]}
+\end{letstmt} \\
+\begin{blockstmt}
+\If \exists{boat \In bs}{\fnapply{\fnapply{boats}{boat}.isDedicated}{}}
+\Then \\
+\begin{blockstmt}
+\Letbe\hspace{0.5em}boat \In bs \Best\hspace{0.5em}\fnapply{\fnapply{boats}{boat}.isDedicated}{} \Lin \\
+\return{boat}
+\end{blockstmt}
+\Else \\
+\begin{blockstmt}
+\Letbe* boat \In bs \Lin \\
+\return{boat}
+\end{blockstmt}
+\Fi
+\end{blockstmt}
+\end{blockstmt}
+\end{blockstmt};
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{findBoat}\index{findBoat|FuncDef}%
+\signature{() \Oto Bid\index{Bid|TypeOcc}}
+\parms{}
+\annlab[o]{AreaController`findBoat}
+\begin{blockstmt}
+\begin{letstmt}
+\patdef{bs}{\setcomp{b}{b \In  \Dom boats}[\fnapply{\fnapply{boats}{b}.getRemainingCap}{} > 0]}
+\end{letstmt} \\
+\begin{blockstmt}
+\If \exists{b \In bs}{\fnapply{\fnapply{boats}{b}.isDedicated}{}}
+\Then \\
+\begin{blockstmt}
+\Letbe\hspace{0.5em}b \In bs \Best\hspace{0.5em}\fnapply{\fnapply{boats}{b}.isDedicated}{} \Lin \\
+\return{b}
+\end{blockstmt}
+\Else \\
+\begin{blockstmt}
+\Letbe* b \In bs \Lin \\
+\return{b}
+\end{blockstmt}
+\Fi
+\end{blockstmt}
+\end{blockstmt};
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{boatMaintenance}\index{boatMaintenance|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{AreaController`boatMaintenance}
+\begin{blockstmt}
+\begin{dclstmt}
+\assdef{remCap}{\Nat }[{0}]
+\end{dclstmt}
+\begin{letstmt}
+\patdef{bs}{\setcomp{b}{b \In  \Rng boats}[\fnapply{b.isDedicated}{}]}
+\end{letstmt} \\
+\begin{blockstmt}
+\begin{setfor}{b}{bs}
+\ass{remCap}{remCap + \fnapply{b.getRemainingCap}{}}
+\end{setfor} ; \\
+\If remCap > 0
+\Then \\
+\begin{blockstmt}
+\begin{letstmt}
+\patdef{sharedBoats}{ \Rng boats \Setdiff bs}
+\end{letstmt} \\
+\begin{blockstmt}
+\begin{dclstmt}
+\assdef{crew}{\setof{Pid\index{Pid|TypeOcc}}}[{ \Dunion \setcomp{\fnapply{cs.getInterCrew}{ \Dom pStay}}{cs \In sharedBoats}}]
+\end{dclstmt}
+\begin{while}{remCap > 0 \And crew \Neq \set{}}
+\begin{blockstmt}
+\Letbe* p \In crew \Lin \\
+\begin{blockstmt}
+\call{changeBoat}{p} ; \\
+\ass{crew}{crew \Setdiff \set{p}}
+\end{blockstmt} ; \\
+\ass{remCap}{remCap \Minus 1}
+\end{blockstmt}
+\end{while}
+\end{blockstmt}
+\end{blockstmt}
+\Fi
+\end{blockstmt}
+\end{blockstmt};
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{isRoomForStay}\index{isRoomForStay|FuncDef}%
+\signature{() \Oto \Bool }
+\parms{}
+\annlab[o]{AreaController`isRoomForStay}
+\begin{blockstmt}
+\call{updateCap}{} ; \\
+\return{stayCap \Minus  \Card  \Dom pStay > 0}
+\end{blockstmt};
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{isRoomForTransit}\index{isRoomForTransit|FuncDef}%
+\signature{() \Oto \Bool }
+\parms{}
+\annlab[o]{AreaController`isRoomForTransit}
+\return{transCap \Minus  \Card pTransit > 0};
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{updateCap}\index{updateCap|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{AreaController`updateCap}
+\begin{blockstmt}
+\begin{dclstmt}
+\assdef{bCap}{\Nat }[{0}]
+\end{dclstmt}
+\begin{setfor}{b}{ \Dom boats}
+\ass{bCap}{bCap + \fnapply{\fnapply{ORAMS`Lifeboats\index{Lifeboats|FuncOcc}}{b}.getRemainingCap}{}}
+\end{setfor} ; \\
+\ass{stayCap}{\fnapply{min}{bCap +  \Card  \Dom pStay, \Card equip}}
+\end{blockstmt};
+\end{op}
+\kw{\kw{private}}\begin{op}[e]{getCap}\index{getCap|FuncDef}%
+\signature{\setof{Bid\index{Bid|TypeOcc}} \Oto \Nat }
+\parms{bs}
+\annlab[o]{AreaController`getCap}
+\begin{blockstmt}
+\begin{dclstmt}
+\assdef{bCap}{\Nat }[{0}]
+\end{dclstmt}
+\begin{setfor}{b}{bs}
+\ass{bCap}{bCap + \fnapply{\fnapply{boats}{b}.getRemainingCap}{}}
+\end{setfor} ; \\
+\return{bCap}
+\end{blockstmt}
+\end{op}
+\kFunctions
+\kw{\kw{private}}\begin{fn}[e]{min}\index{min|FuncDef}%
+\signature{\Nat  \X \Nat  \Pto \Nat }
+\parms*{\Lp n1,n2\Rp }
+\annlab[o]{AreaController`min}
+\If n1 < n2
+\Then \\
+n1
+\Else \\
+n2
+\Fi
+\end{fn}
+\kSync
+\index{isFinished|MethodOcc}\per{isFinished}{\actminusfin{step} = 0;}
+\mutex{leave,step};
+\mutex{enterPerson,step}
+\kThreadDef
+\index{step|MethodOcc}\periodic{\color{not-covered}250\color{covered},\color{not-covered}1\color{covered},\color{not-covered}3\color{covered},\color{not-covered}0\color{covered}}{step}
+\kEnd $AreaController$
+
+\end{vdm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{tabular}{p{25mm}l}
+{\bf Test Suite :} & vdm.tc \\ 
+{\bf Class :} & AreaController \\ 
+\end{tabular}
+
+\begin{longtable}{|l|r|r|}\hline
+{\bf Name} & {\bf \#Calls} & {\bf Coverage} \\ \hline\hline
+\endhead
+AreaController`min & 58 & $\surd$ \\ \hline
+AreaController`step & 240 & 0\% \\ \hline
+AreaController`getId & 14 & $\surd$ \\ \hline
+AreaController`leave & 15 & 75\% \\ \hline
+AreaController`getCap & 11 & $\surd$ \\ \hline
+AreaController`addBoat & 18 & 66\% \\ \hline
+AreaController`updateCap & 58 & $\surd$ \\ \hline
+AreaController`changeBoat & 5 & $\surd$ \\ \hline
+AreaController`isFinished & 6 & $\surd$ \\ \hline
+AreaController`removeBoat & 7 & 61\% \\ \hline
+AreaController`enterPerson & 28 & 56\% \\ \hline
+AreaController`findBoat & 22 & $\surd$ \\ \hline
+AreaController`addEquipment & 34 & $\surd$ \\ \hline
+AreaController`doAddStaying & 25 & $\surd$ \\ \hline
+AreaController`doAddTransit & 3 & 95\% \\ \hline
+AreaController`canRemoveBoat & 11 & $\surd$ \\ \hline
+AreaController`isRoomForStay & 25 & $\surd$ \\ \hline
+AreaController`AreaController & 6 & $\surd$ \\ \hline
+AreaController`boatMaintenance & 240 & $\surd$ \\ \hline
+AreaController`removeEquipment & 4 & 41\% \\ \hline
+AreaController`findBoat & 5 & $\surd$ \\ \hline
+AreaController`isRoomForTransit & 3 & $\surd$ \\ \hline
+AreaController`canRemoveEquipment & 5 & $\surd$ \\ \hline
+\hline
+{\bf Total Coverage} & & {\bf 89\%} \\ \hline
+\end{longtable}
+

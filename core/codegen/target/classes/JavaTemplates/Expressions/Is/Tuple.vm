@@ -1,0 +1,3 @@
+#set( $exp = $JavaFormat.format($node.getExp()) )
+#set( $typeArgs = $JavaFormat.formatTypeArgs($node.getCheckedType()) )
+Utils.is_Tuple(${exp}, ${typeArgs})

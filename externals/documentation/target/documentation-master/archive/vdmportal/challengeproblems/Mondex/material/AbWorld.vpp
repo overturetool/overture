@@ -1,0 +1,114 @@
+--last edited: 5/09/2007
+
+class AbWorld
+
+types
+
+public PurseId = token;
+
+
+instance variables
+private authentic : set of PurseId;
+
+private abPurses : map PurseId to AbPurse := {|->};
+inv forall name in set dom abPurses & name in set authentic;
+
+
+operations
+
+public AbWorld : map PurseId to AbPurse * set of PurseId ==> AbWorld
+AbWorld(purses, auth) ==
+(
+	abPurses := purses;
+	authentic := auth
+)
+pre dom purses subset auth;
+
+-- Ignore operation, which models the option of doing nothing
+--
+-- Postcondition: - All authentic purses in the world remain unchanged 
+-- 			(SP2: All Value Accounted (pg 12))
+public Ignore : () ==> ()
+Ignore() == return
+post authentic = authentic~ and
+     abPurses = abPurses~;
+
+
+-- Transfer OK operation models a transfer of a value from one 
+-- purses' balance to the balance of another purse
+--
+-- Preconditions: - Purses must be unique, 
+--		  - purses must be authentic (SP3: Authentic Purses (pg
+-- 			12)), 
+--		  - there must be sufficient funds in the 'from' purse 
+-- 			(SP4: Sufficient Funds (pg 12)).
+-- Postconditions: - The total (balance + lost) of both purses involved in -- 			the transfer must be unchanged (SP 2: All Value 
+-- 			accounted (pg 12)),
+--		   - No value must be created (SP1: No Value Creation (pg 
+-- 			11), as stated in footnote on pg 11 - the sum of 
+-- 			the 'before' balance must be greater or equal to 
+-- 			the 'after' balance,
+--		   - All other purses remain unchanged.
+--		   - Lost of 'from' purse does not change
+--		   - Lost of 'to' purse does not change
+--		   - Domain of abPurses does not change - no purses are 
+-- 			created
+--		   - Authentic does not change
+public TransferOk: PurseId * PurseId * nat ==> ()
+TransferOk(fromId, toId, val) == 
+( 
+	abPurses(fromId).ReduceBalance(val);
+	abPurses(toId).IncreaseBalance(val)
+)
+pre fromId <> toId and 
+    fromId in set dom abPurses and 
+    toId in set dom abPurses and
+    abPurses(fromId).GetBalance() >= val	 
+post (abPurses(fromId).GetTotal() + abPurses(toId).GetTotal()) = 
+	 (abPurses~(fromId).GetTotal() + abPurses~(toId).GetTotal()) and
+     (abPurses~(fromId).GetBalance() + abPurses~(toId).GetBalance()) >= 
+	 (abPurses(fromId).GetBalance() + abPurses(toId).GetBalance()) and
+     forall name in set (dom abPurses) \ {fromId, toId} & 
+	  (abPurses~(name).GetBalance() = abPurses(name).GetBalance()) and 
+	  (abPurses~(name).GetLost() = abPurses(name).GetLost()) and
+     (abPurses~(fromId).lost = abPurses(fromId).lost) and
+     (abPurses~(toId).lost = abPurses(toId).lost) and
+     (dom abPurses~ = dom abPurses) and
+     (authentic~ = authentic);       
+
+-- Transfer Lost operation models a failed transfer where a value is 
+-- moved from one purses' balance the lost variable of the same purse
+--
+-- Preconditions: - 'from' purses must be authentic (SP3: Authentic Purses 
+-- 			(pg 12)), and 
+--		  - there must be sufficient funds in the 'from' purse 
+-- 			(SP4:Sufficient Funds (pg 12)).
+-- Postconditions: - The total (balance + lost) of the from purse must be 
+-- 			unchanged(SP 2: All Value accounted(pg 12)),
+--		   - No value must be created (SP1: No Value Creation (pg 
+-- 			11), as stated in footnote on pg 11 - the 'before' 
+-- 			balance must be greater or equal to the 'after' 
+-- 			balance,
+--		   - All other purses remain unchanged.
+--		   - Domain of abPurses does not change - no purses are 
+-- 			created
+--		   - Authentic does not change
+public TransferLost: PurseId * PurseId * nat ==> ()
+TransferLost(fromId, toId, val) == 
+(
+	abPurses(fromId).ReduceBalance(val);
+	abPurses(fromId).IncreaseLost(val)
+)
+pre fromId <> toId and 
+    fromId in set dom abPurses and 
+    toId in set dom abPurses and
+    abPurses(fromId).GetBalance() >= val
+post abPurses(fromId).GetTotal() = abPurses~(fromId).GetTotal() and
+     abPurses~(fromId).GetBalance() >= abPurses(fromId).GetBalance() and
+     forall name in set (dom abPurses) \ {fromId} & 
+	abPurses~(name).GetBalance() = abPurses(name).GetBalance() and
+	abPurses~(name).GetLost() = abPurses(name).GetLost() and
+     (dom abPurses~ = dom abPurses) and
+     (authentic~ = authentic);  
+
+end AbWorld

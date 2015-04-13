@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="11" line="40" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="15" line="43" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="26" line="46" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="28" line="46" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="30" line="46" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="35" line="46" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="37" line="46" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="39" line="46" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="15" line="52" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="23" line="55" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="27" line="55" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="34" line="55" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="36" line="55" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="28" line="58" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="33" line="58" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="36" line="58" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="41" line="58" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="15" line="61" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="24" line="76" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="37" line="76" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="43" line="76" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<message column="20" line="81" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-43.vdm"/>
+<result/>
+</testResult>

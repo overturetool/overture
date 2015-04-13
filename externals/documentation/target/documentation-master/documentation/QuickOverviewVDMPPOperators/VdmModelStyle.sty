@@ -1,0 +1,71 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% LstListing set up style for VDM
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{customlangdef}
+% define the layout for listings
+\lstdefinestyle{tool}{basicstyle=\ttfamily,
+                         frame=trBL, 
+			 showstringspaces=false, 
+			 frameround=ffff, 
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+\lstdefinestyle{vdmRoundCorner}{basicstyle=\footnotesize\ttfamily,
+                         frame=trBL, 
+                       %  numbers=left, 
+			 gobble=0, 
+			 basewidth=0.51em,
+                         showstringspaces=false, 
+ captionpos=b,
+			 linewidth=\textwidth, 
+			 frameround=fttt, 
+			 aboveskip=2mm,
+			 belowskip=2mm,
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+\lstdefinestyle{vdmNoRoundCorner}{basicstyle=\footnotesize\ttfamily,
+                         frame=trBL, 
+                         numbers=left, 
+			 gobble=0, 
+			 basewidth=0.51em,
+                         showstringspaces=false, 
+			 linewidth=\textwidth, 
+			 frameround=fttt, 
+			 aboveskip=2mm,
+			 belowskip=2mm,
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+\lstdefinestyle{ast}{basicstyle=\ttfamily\small,
+			 frame=tb,
+%                         numbers=left,
+			 gobble=0,
+			 showstringspaces=false,
+			 linewidth=345pt,
+			 frameround=ffff,
+			 framexleftmargin=8mm,
+			 framexrightmargin=8mm,
+			 framextopmargin=1mm,
+			 framexbottommargin=1mm,
+			 aboveskip=7mm,
+			 belowskip=5mm,
+			 xleftmargin=10mm,}
+
+\lstset{style=vdmRoundCorner}
+\lstset{language=VDM++}
+\lstset{alsolanguage=Java}
+% The command below enables you to escape into normal LaTeX mode inside your 
+% VDM chunks by starting with a `!´ character and ending with a `£´
+\lstset{escapeinside=!£}
+
+
+%\lstdefinestyle{javaStyle}{basicstyle=\footnotesize\ttfamily,
+%                         frame=trBL, 
+%                         numbers=left, 
+%			 gobble=0, 
+%			 basewidth=0.51em,
+%                         showstringspaces=false, 
+%			 linewidth=\textwidth, 
+%			 frameround=fttt, 
+%			 aboveskip=2mm,
+%			 belowskip=2mm,
+%			 framexleftmargin=0mm, 
+%			 framexrightmargin=0mm}

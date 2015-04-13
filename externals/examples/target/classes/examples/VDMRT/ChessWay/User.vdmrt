@@ -1,0 +1,70 @@
+% USER.vdmrt
+
+\subsubsection{Modelling the human operator -- The \texttt{User} class}
+
+The \texttt{User} class is used to monitor the behavior of the user standing
+on top of the ChessWay. The general idea here is that when the user moves
+the handle bar forward or backward, then this influences the values measured
+by the accelerometer, since gravity is no longer pointing straight downwards.
+The \texttt{User} class converts the handle bar angle, which is provided from
+the current scenario running in the \texttt{Environment}, into the values
+measured by the 3-D accelerometer, by setting values to the appropriate
+named interface elements in the \texttt{Environment}. 
+
+\begin{vdm_al}
+class User
+
+values
+  gravity : real = 9.80665
+
+instance variables
+  -- link to the environment
+  mEnvironment : Environment;
+
+  -- link to both wheels
+  mLeftWheel : Wheel;
+  mRightWheel : Wheel;
+
+  -- last evaluated at time step
+  last : nat := 0;
+
+  -- current deviation from upright
+  angle : real := 0.0
+
+operations
+  public User: Environment * Wheel * Wheel ==> User
+  User (pEnvironment, pLeftWheel, pRightWheel) ==
+    ( mEnvironment := pEnvironment;
+      mLeftWheel := pLeftWheel;
+      mRightWheel := pRightWheel );
+
+  public evaluate: () ==> ()
+  evaluate () == 
+    ( dcl user : real := mEnvironment.getValue("USER"),
+          now : nat := time;
+      -- compute and update the yaw rate
+      def dt = (now - last) / World`SIM_RESOLUTION in
+      def rate = if dt = 0 then 0 else (angle - user) / dt in
+        mEnvironment.setValue("LEFT_YAW_RATE", rate);
+      -- compute and update the acceleration
+      def dx = MATH`cos(user) * gravity in
+        mEnvironment.setValue("LEFT_ACC_X", dx);
+      def dy = MATH`sin(user) * gravity in
+        mEnvironment.setValue("LEFT_ACC_Y", dy);
+      -- delta between the left and right wheel acceleration
+      def dz = mLeftWheel.acc - mRightWheel.acc in
+        mEnvironment.setValue("LEFT_ACC_Z", dz);
+      -- update the angle
+      angle := user;
+      -- remember when we where executed
+      last := now )
+
+end User
+\end{vdm_al}
+
+In the \texttt{User} model shown here, we have abstracted away from the
+acceleration caused by the wheels in the $X$ and $Y$ directions. However,
+as a first order of magnitude approximation, the acceleration in the $Z$
+direction is computed by calculating the difference between the
+acceleration in either wheel, causing the device to steer in another
+direction.

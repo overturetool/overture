@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.overture.core.tests.ParseTcAllExamplesTest
+-------------------------------------------------------------------------------
+Tests run: 107, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 20.798 sec

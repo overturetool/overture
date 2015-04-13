@@ -1,0 +1,25 @@
+% OnOffSwitch.vdmrt
+
+\subsubsection{Turning the ChessWay ON or OFF -- the \texttt{OnOffSwitch} class}
+
+The \texttt{OnOffSwitch} class obtains the main power switch status from the environment
+and returns a Boolean value.
+
+\begin{vdm_al}
+class OnOffSwitch
+
+instance variables
+  -- link back to the controller managing this resource
+  private mController : Controller;
+
+operations
+  public OnOffSwitch: Controller ==> OnOffSwitch
+  OnOffSwitch (pController) == mController := pController;
+
+  public getStatus: () ==> bool
+  getStatus () == 
+    duration (0)
+      return mController.getValue("ONOFF") > 0;
+
+end OnOffSwitch
+\end{vdm_al}

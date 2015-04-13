@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
+<message column="8" line="15" message="Error 4: Cannot get bind values for type nat in 'A' (setcomp-02.vdm) at line 15:8" messageType="error" number="4" resource="setcomp-02.vdm"/>
+<result>
+<output object="[]" resource="setcomp-02.vdm" value="[]"/>
+</result>
+</testResult>

@@ -1,0 +1,56 @@
+\section{Printer Class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			Printer
+-- Description: 	Printes text seq via IO
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Printer
+
+instance variables
+  private static echo : bool := true
+
+
+--
+-- Operations definition section
+--
+operations
+
+  public static Echo : bool ==> ()
+  Echo(v) ==
+  echo := v;
+
+  public static OutAlways: seq of char ==> ()
+  OutAlways (pstr) ==
+    def - = new IO().echo(pstr ^ "\n") in skip;
+    
+  
+  public static OutWithTS: seq of char ==> ()
+  OutWithTS (pstr) ==
+    def - = new IO().echo(Printer`natToString(time) 
+    					  ^ ": " ^ pstr ^ "\n") 
+    					  in skip;
+
+  public static natToString : nat ==> seq of char 
+  natToString(n) ==
+  (
+    return VDMUtil`val2seq_of_char[nat](n);
+  );
+  
+  public static intToString : int ==> seq of char 
+  intToString(i) ==
+  (
+    return VDMUtil`val2seq_of_char[int](i);
+  );
+  
+end Printer
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Printer]
+\end{rtinfo}

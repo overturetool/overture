@@ -1,0 +1,94 @@
+\section{First specification} 
+
+This is the first specification given in the report.
+
+\begin{vdm_al}
+
+functions
+ count[@T] : @T * seq of @T -> nat
+ count (s, ss) == 
+    cases ss :
+        [] -> 0,
+        others -> if hd ss = s then
+                     1 + count[@T] (s, tl ss)
+                  else
+                     count[@T] (s, tl ss)
+   end
+
+types
+
+  Status = <s> | <m> | <n> | <i> ;
+  MName = token 
+
+state #S of
+ b : seq of Status
+ ms : set of MName
+
+inv mk_#S(b, ms) == 
+       len b = 3 and
+       count[Status] (<s>,b) = 1 and
+       count[Status] (<m>, b) in set {0,1} and
+       count[Status] (<n>, b) in set {0,1} and
+       (count[Status] (<m>, b) = 0 <=> ms = {}) 
+
+init s == s = mk_#S([<s>, <i>, <i>], {})
+end
+
+\end{vdm_al}
+
+The slave operation is specified as follows:
+
+\begin{vdm_al}
+
+operations
+
+slave ()
+ext wr b : (seq of Status) 
+
+pre true
+
+post forall i in set {1,2,3} &
+  (b~ (i) = <s> => b (i) = <n>) and
+  (b~ (i) = <m> => b (i) = <m>);
+
+
+\end{vdm_al}
+Next is the acquire operation:
+
+\begin{vdm_al}
+
+acq (l:MName)
+
+ext wr b : (seq of Status)
+    wr ms : (set of MName)
+
+pre (not (l in set ms)) and
+    (exists i in set {1,2,3} & b(i) = <n> or b(i) = <m>)
+
+post ms = ms~ union {l} and
+     forall i in set {1,2,3} & 
+        if b~(i) = <n> and ms~ = {} 
+        then b(i) = <m>
+        else b(i) = b~(i)
+;
+\end{vdm_al}
+
+Now comes the release operation.
+
+\begin{vdm_al}
+
+rel (l:MName)
+
+ext wr b : (seq of Status)
+    wr ms : (set of MName)
+
+pre l in set ms
+
+post ms = ms~ \ {l} and
+     forall i in set {1,2,3} &
+        if b~(i) = <m> and ms = {}
+        then b(i) in set {<n>,<i>} and count[Status](<n>,b) = 1
+        else b(i) = b~(i)
+
+
+\end{vdm_al}

@@ -1,0 +1,54 @@
+class RTTimeStamp
+
+instance variables
+
+registeredThreads : set of BaseRTThread := {};
+isInitialising : bool := true;
+-- singleton instance of class
+private static rtTimeStamp : RTTimeStamp := new RTTimeStamp();
+
+operations
+
+-- private constructor (singleton pattern)
+private RTTimeStamp : () ==> RTTimeStamp
+RTTimeStamp() ==
+  skip;
+
+-- public operation to get the singleton instance
+public static GetInstance: () ==> RTTimeStamp
+GetInstance() ==
+  return rtTimeStamp;
+
+public RegisterThread : BaseRTThread ==> ()
+RegisterThread(t) ==
+ (registeredThreads := registeredThreads union {t};  
+ );
+ 
+public UnRegisterThread : BaseRTThread ==> ()
+UnRegisterThread(t) ==
+ (registeredThreads := registeredThreads \ {t};
+ );
+ 
+public IsInitialising: () ==> bool
+IsInitialising() ==
+  return isInitialising;
+ 
+public DoneInitialising: () ==> ()
+DoneInitialising() ==
+ (if isInitialising
+  then (isInitialising := false;
+        for all t in set registeredThreads 
+        do
+          start(t);
+       );
+ );
+ 
+sync 
+
+mutex (RegisterThread);
+mutex (UnRegisterThread);
+mutex (RegisterThread, UnRegisterThread);
+mutex (IsInitialising);
+mutex (DoneInitialising);
+
+end RTTimeStamp

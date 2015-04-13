@@ -1,0 +1,7 @@
+class NormalAtmosphericAirPressure is subclass of AtmosphericAirPressure
+
+instance variables
+  inv
+    atm = 1
+
+end NormalAtmosphericAirPressure

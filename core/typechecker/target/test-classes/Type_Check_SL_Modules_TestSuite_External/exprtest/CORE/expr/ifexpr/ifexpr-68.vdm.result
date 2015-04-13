@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="10" line="37" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-68.vdm"/>
+<message column="10" line="43" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-68.vdm"/>
+<message column="10" line="45" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-68.vdm"/>
+<message column="10" line="47" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-68.vdm"/>
+<message column="10" line="49" message="Too many arguments" messageType="error" number="3059" resource="ifexpr-68.vdm"/>
+<message column="10" line="49" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-68.vdm"/>
+<message column="11" line="55" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-68.vdm"/>
+<message column="19" line="55" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-68.vdm"/>
+<message column="31" line="55" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-68.vdm"/>
+<message column="41" line="55" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-68.vdm"/>
+<message column="12" line="57" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-68.vdm"/>
+<message column="10" line="59" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-68.vdm"/>
+<message column="10" line="60" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-68.vdm"/>
+<message column="14" line="35" message="Expression does not match declared type" messageType="error" number="3051" resource="ifexpr-68.vdm"/>
+<result/>
+</testResult>

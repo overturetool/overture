@@ -1,0 +1,50 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[]{article}
+\usepackage{overture}
+%\usepackage{vdmsl-2e}
+%\usepackage{german}
+\usepackage{alltt}
+\usepackage{a4wide}
+\usepackage{longtable}
+\usepackage{fullpage}
+
+\title{Static and Dynamic Semantics of a Simple Programming Language}
+\author{Bernhard K. Aichernig and Andreas Kerschbaumer\footnote{Institute for
+Software Technology, Technical University Graz. M\"unzgrabenstr. 11/II, 
+A-8010 Graz, Austria. E-mail: {\tt \{aichernig | kerschbaumer\}@ist.tu-graz.ac.at}.}}
+\date{21. May 1998}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+
+\section{Introduction}
+The following example has been an assignment in the
+exercises of the software technology course at the Technical 
+University Graz, Austria. 
+
+A VDM-SL specification of the static and dynamic semantics of a
+typed imperative programming language is to be developed. The abstract
+syntax and an informal description of the semantics of the language
+is given. 
+
+{\bf Static semantics.} The static semantics should define and
+check the well-formedness of programs in the given language. This
+includes static type checking, the complete and unambiguous 
+definition of all variables inside program blocks, and scoping.
+
+{\bf Dynamic semantics.} The dynamic semantics associates a 
+meaning to a programming language. In this example the dynamic 
+semantics is a function mapping a program to its final global
+environment, which is the  state of all global 
+variables after execution. 
+
+\include{generated/latex/specification/ast.vdmsl}
+
+\include{generated/latex/specification/statsem.vdmsl}
+
+\include{generated/latex/specification/dynsem.vdmsl}
+
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

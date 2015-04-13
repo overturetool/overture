@@ -1,0 +1,94 @@
+ 	\section{World2}
+
+\begin{vdm_al}
+class Controller
+
+instance variables
+
+private railwayGrid : RailwayGrid;
+private APM : ActivePlanManager;
+private trains : set of Train := {};
+private stations : set of Station := {};
+--Ensure that 2 different trains doesn´t service the same route. 
+inv forall x,y in set trains & 
+	not (x = y) => x.currentRoute <> y.currentRoute 
+	
+
+operations
+
+
+public Controller : () ==> Controller
+Controller() ==
+(
+	railwayGrid := new RailwayGrid();
+);
+
+-- public setRailwayGrid : RailwayGrid ==> ()
+-- setRailwayGrid(grid) == (
+-- 	railwayGrid := grid;
+-- );
+
+public initTrains : () ==> ()
+initTrains() == (
+	dcl i : nat := 0;
+	for all s in set railwayGrid.getRoutePlan() do
+	(
+			trains := trains union {new Train(i,s, self)};
+			i := i + 1;
+	);
+	i := 0;
+	Logger`write(trains);
+);
+
+public startTrains : () ==> ()
+startTrains() == (
+	for all s in set trains do
+	(
+		start(s);
+	)
+);
+
+public initStations : () ==> ()
+initStations() == (
+	Station`addStation(new Station(0,"A"));
+	Station`addStation(new Station(1,"B"));
+	Station`addStation(new Station(2,"C"));
+	Station`addStation(new Station(3,"D"));
+	Station`addStation(new Station(4,"E"));
+	Station`addStation(new Station(5,"F"));
+	
+);
+
+public setAPM : ActivePlanManager ==> ()
+setAPM(apm) == (
+	APM := apm;
+);
+
+async public inactiveSection : nat ==> ()
+inactiveSection(routeid) ==
+(	
+		Logger`write("Ctrl InactiveSection Called");
+		railwayGrid.setInactiveSection(routeid);
+		APM.inactiveSection(routeid);
+		Logger`write("Ctrl InactiveSection executed");
+	
+);
+
+public isSectionActive : nat ==> bool
+isSectionActive(id) == return railwayGrid.isSectionActive(id); 
+
+public isFinished : () ==> ()
+isFinished() == (
+	for all s in set trains do(
+		s.isFinished();
+	);
+	Logger`write("This is right before the end");
+);
+
+sync
+--mutex(isSectionActive);
+--mutex(inactiveSection);
+--mutex(isSectionActive,inactiveSection);
+
+end Controller
+\end{vdm_al}

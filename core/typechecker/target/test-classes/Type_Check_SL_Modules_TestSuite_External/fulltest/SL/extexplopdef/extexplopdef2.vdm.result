@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="1" line="15" message="Definition 'expf' not used" messageType="warning" number="5000" resource="extexplopdef2.vdm"/>
+<message column="1" line="18" message="Definition 'implf' not used" messageType="warning" number="5000" resource="extexplopdef2.vdm"/>
+<message column="1" line="24" message="Definition 'expop' not used" messageType="warning" number="5000" resource="extexplopdef2.vdm"/>
+<message column="1" line="29" message="Definition 'implop' not used" messageType="warning" number="5000" resource="extexplopdef2.vdm"/>
+<message column="20" line="32" message="State variable 'A`S2' cannot be accessed from this context" messageType="error" number="3302" resource="extexplopdef2.vdm"/>
+<message column="25" line="30" message="Cannot assign to 'ext rd' state S1" messageType="error" number="3248" resource="extexplopdef2.vdm"/>
+<message column="59" line="30" message="State variable 'A`S2' cannot be accessed from this context" messageType="error" number="3302" resource="extexplopdef2.vdm"/>
+<message column="21" line="33" message="State variable 'A`S2' cannot be accessed from this context" messageType="error" number="3302" resource="extexplopdef2.vdm"/>
+<result/>
+</testResult>

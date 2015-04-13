@@ -1,0 +1,17 @@
+class Entry
+
+types
+
+public A :: x : map nat to bool; 
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+(
+	dcl a : A := mk_A({1 |-> true});
+	a.x(10) := false;
+	return a.x;
+)
+
+end Entry

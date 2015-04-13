@@ -1,0 +1,50 @@
+class PlugboardTest
+  is subclass of TestCase
+
+values
+  refcfg : inmap nat to nat =
+    {1 |-> 2, 3 |-> 4};
+
+  rotcfg : inmap nat to nat =
+    {1 |-> 2, 2 |-> 1, 3 |-> 4, 4 |-> 3};
+
+  pbcfg : inmap nat to nat =
+    {1 |-> 3}
+
+instance variables
+  alph : Alphabet
+  
+operations
+  public PlugboardTest: seq of char ==> PlugboardTest
+  PlugboardTest(nm) == name := nm;
+
+  protected SetUp: () ==> ()
+  SetUp () == alph := new Alphabet("ABCD");
+
+  protected SimpleTest: () ==> ()
+  SimpleTest () ==
+    (dcl tc : Plugboard := new Plugboard(alph,pbcfg);
+     tc.SetNext(new Reflector(1,alph,refcfg));
+     AssertTrue(tc.Substitute(1) = 4);
+     AssertTrue(tc.Substitute(2) = 3);
+     AssertTrue(tc.Substitute(3) = 2);
+     AssertTrue(tc.Substitute(4) = 1));
+
+  protected ComplexTest: () ==> ()
+  ComplexTest () ==
+    (dcl tc : Plugboard := new Plugboard(alph,pbcfg),
+         rot : Rotor := new Rotor(1,1,alph,rotcfg);
+     rot.SetNext(new Reflector(1,alph,refcfg));
+     tc.SetNext(rot);
+     AssertTrue(tc.Substitute(1) = 4);
+     AssertTrue(tc.Substitute(2) = 3);
+     AssertTrue(tc.Substitute(3) = 2);
+     AssertTrue(tc.Substitute(4) = 1));
+
+  protected RunTest: () ==> ()
+  RunTest () == (SimpleTest(); ComplexTest());
+
+  protected TearDown: () ==> ()
+  TearDown () == skip;
+
+end PlugboardTest

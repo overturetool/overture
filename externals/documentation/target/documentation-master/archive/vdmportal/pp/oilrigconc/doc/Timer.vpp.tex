@@ -1,0 +1,25 @@
+\kClass $Timer$
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}
+\assdef{currentTime}{\Nat }[{0}]
+\end{insvar}
+\par
+\kValues
+\val{stepLength}[\Nat ]{100}
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{stepTime}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{Timer`stepTime}
+\ass{currentTime}{currentTime + stepLength};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{getTime}%
+\signature{() \Oto \Nat }
+\parms{}
+\annlab[o]{Timer`getTime}
+\return{currentTime}
+\end{op}
+\kEnd $Timer$
+

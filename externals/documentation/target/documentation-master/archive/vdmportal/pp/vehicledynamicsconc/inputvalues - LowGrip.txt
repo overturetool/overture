@@ -1,0 +1,10 @@
+mk_(
+1000,
+[mk_Types`VechicleData(1,1,1,1,<NORTH>, 0),
+mk_Types`VechicleData(2,1,5,1,<SOUTH>, 0), 
+mk_Types`VehicleLowGrip (1,true, 200),
+mk_Types`VehicleLowGrip (1,false, 300),
+mk_Types`VechicleData(3,1,6,1,<SOUTH>, 400),
+mk_Types`VechicleData(4,1,8,1,<SOUTH>, 600),
+mk_Types`WasteTime(600)
+])

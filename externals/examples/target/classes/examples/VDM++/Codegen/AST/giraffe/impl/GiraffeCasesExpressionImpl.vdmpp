@@ -1,0 +1,33 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:16 CET 2010
+--
+
+class GiraffeCasesExpressionImpl is subclass of GiraffeCasesExpression
+instance variables
+    private iv_test:GiraffeExpression;
+    private iv_alts:seq of GiraffeCaseAlternative;
+    private iv_deflt:[GiraffeExpression];
+
+operations
+    public GiraffeCasesExpressionImpl: GiraffeExpression * seq of GiraffeCaseAlternative * [GiraffeExpression] ==> GiraffeCasesExpressionImpl
+    GiraffeCasesExpressionImpl(p_test, p_alts, p_deflt) ==
+    (
+        iv_test := p_test;
+        iv_alts := p_alts;
+        iv_deflt := p_deflt;
+    );
+
+    public getTest: () ==> GiraffeExpression
+    getTest() == return iv_test;
+
+    public getAlts: () ==> seq of GiraffeCaseAlternative
+    getAlts() == return iv_alts;
+
+    public hasDeflt: () ==> bool
+    hasDeflt() == return (iv_deflt = nil);
+
+    public getDeflt: () ==> GiraffeExpression
+    getDeflt() == return iv_deflt;
+
+end GiraffeCasesExpressionImpl

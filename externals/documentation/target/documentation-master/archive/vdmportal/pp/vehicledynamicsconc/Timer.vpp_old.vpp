@@ -1,0 +1,66 @@
+-----------------------------------------------
+-- Class:			Timer
+-- Description: 	Time is of the essence
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Timer
+
+--
+-- instance variables
+--
+instance variables
+
+private static currentTime : nat := 0;
+
+--
+-- Types definition section
+--
+types   
+
+--
+-- Values definition section
+--
+values 
+step : nat = 1;
+
+--
+-- Operations definition section
+--
+operations
+
+public Timer : () ==> Timer
+Timer() ==
+(
+ Printer`Out("Timer created: Time is what prevents everything from happening at once.");
+);
+
+
+--sequential model only
+--public static Ticka: () ==> ()
+--Ticka() ==
+--(
+--  currentTime := currentTime + step;
+--  Printer`Out("Timer: Current Time " ^ Printer`natToString(currentTime))
+--);
+
+public static GetTime : () ==> nat
+GetTime() ==
+ --sequential model only
+ -- return currentTime;
+ World`timerRef.GetTime()
+
+
+--
+-- Functions definition section
+--
+functions
+
+--
+-- Values definition section
+--
+values
+
+end Timer

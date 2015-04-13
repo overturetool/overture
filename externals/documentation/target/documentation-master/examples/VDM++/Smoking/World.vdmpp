@@ -1,0 +1,47 @@
+class World
+
+instance variables
+public static graphics : gui_Graphics:= new gui_Graphics();
+
+table: Table := new Table();
+public agent: Agent := new Agent(table);
+smokers : set of Smoker := {new Smoker("Smoker 1", <Tobacco>, table),
+                            new Smoker("Smoker 2", <Paper>, table),
+                            new Smoker("Smoker 3", <Match>, table)};
+limit : nat;
+finished : bool := false;
+
+operations
+
+public World: nat ==> World
+World(simtime) ==
+(
+  IO`print("World Ctor");
+  limit := simtime;
+  
+);
+
+public Yield: () ==> ()
+Yield() == skip;
+
+Finished: () ==> nat
+Finished() ==
+  agent.GetTime();
+
+public Run: () ==> ()
+Run() ==
+(
+   startlist(smokers);
+    graphics.init();
+ )
+
+thread
+(
+while agent.GetTime() <= limit do
+  skip; 
+  finished := true)
+
+sync
+
+per Finished => finished;
+end World

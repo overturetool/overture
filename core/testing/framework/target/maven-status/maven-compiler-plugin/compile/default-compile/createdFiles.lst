@@ -1,0 +1,7 @@
+org\overture\core\tests\ParamFineGrainTest.class
+org\overture\core\tests\ParamExternalsTest.class
+org\overture\core\tests\PathsProvider.class
+org\overture\core\tests\AbsResultTest.class
+org\overture\core\tests\ParseTcFacade$1.class
+org\overture\core\tests\ParamStandardTest.class
+org\overture\core\tests\ParseTcFacade.class

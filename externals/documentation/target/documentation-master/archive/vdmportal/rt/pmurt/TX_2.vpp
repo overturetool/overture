@@ -1,0 +1,71 @@
+class Transmitter is subclass of GLOBAL
+
+instance variables
+
+private prioritizedBuffer : seq of TransmitData;
+private buffer : seq of TransmitData;
+private cpr : CprNr;
+private battery : BatteryMonitor;
+private busy : bool:=false;
+
+thread
+    while true do
+        (
+        --NewWorld`timerRef.WaitRelative(TimeStamp`stepLength);
+        sendMessage();
+        );
+
+operations
+
+public Transmitter: CprNr ==> Transmitter
+Transmitter(cprnr) == 
+(
+    cpr:=cprnr
+);
+
+sortByPriority: TransmitData * seq of TransmitData ==> seq of TransmitData
+sortByPriority(val, sorted) ==
+(
+    cases true:
+        (len sorted = 0) -> return [val],
+        (val.#2 <= (hd sorted).#2) -> return [val] ^ sorted,
+        others -> return [hd sorted] ^ sortByPriority(val, tl sorted)
+    end
+);
+
+public transmit: TransmitData ==> ()
+transmit(data) ==
+(
+    buffer := sortByPriority(data, buffer);
+    busy:= true;
+);
+
+private sendMessage: () ==> ()
+sendMessage() ==
+(
+    if busy then
+    (
+        dcl msg : TransmitData := hd prioritizedBuffer;
+        prioritizedBuffer := tl prioritizedBuffer;
+        --Environment'handleEvent(msg, NewWorld`timerRef.GetTime());
+        --battery drain based on message type
+        battery.drain(drainVolume(msg.#2));
+        busy:=len buffer > 0
+    )
+);
+
+public attachBattery: BatteryMonitor ==> ()
+attachBattery(theBattery) == battery:= theBattery;
+
+public isFinished: () ==> ()
+isFinished() == skip;
+
+
+sync
+
+mutex(transmit, sendMessage);
+
+per sendMessage => len prioritizedBuffer > 0;
+per isFinished => not busy;
+
+end Transmitter

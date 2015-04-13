@@ -1,0 +1,65 @@
+------------------------------------------------
+-- Class:			TestController
+-- Description: 	Test the Controller class 
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestController is subclass of TestCase
+
+--
+-- instance variables
+--
+instance variables
+private pos : Position;
+--
+-- Operations definition section
+--
+operations
+
+protected SetUp: () ==> ()
+SetUp () == pos := new Position(1,1); 
+
+protected RunTest: () ==> ()
+RunTest () ==
+(
+ dcl vec : Vehicle := new Vehicle(2, pos, 1, <NORTH>),
+ ctrl : Controller := new Controller(vec);
+ 
+  AssertTrue(ctrl.getVehicle() = vec);
+  AssertTrue(ctrl.GetDirection() = <NORTH>);
+  AssertTrue(ctrl.GetVehicleID() = 2);
+  AssertTrue(ctrl.GetPosition().X() = pos.X());
+  AssertTrue(ctrl.GetPosition().Y() = pos.Y());
+ 
+  --test get traffic data
+  vec.setLowGrip(true);
+  vec.setTurnIndicator(<LEFT>);
+  ctrl.Step();
+  let vs = ctrl.GetTrafficData() in
+  (
+   let v = vs(1) in
+   (
+   AssertTrue(v.GetPosition().X() = 1);
+   AssertTrue(v.GetPosition().Y() = 2);
+   AssertTrue(v.GetMessage() = <LowGrip>);
+   AssertTrue(v.GetDirection() = <NORTH>);
+  skip;
+   );
+   let v = vs(2) in
+   (
+   AssertTrue(v.GetPosition().X() = 1);
+   AssertTrue(v.GetPosition().Y() = 2);
+   AssertTrue(v.GetMessage() = <LeftTurn>);
+   AssertTrue(v.GetDirection() = <NORTH>);
+  skip;
+   )
+  );
+  
+);
+  
+protected TearDown: () ==> ()
+TearDown () == skip;
+
+end TestController

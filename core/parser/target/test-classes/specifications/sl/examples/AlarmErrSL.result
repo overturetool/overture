@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.parser.tests.SpecificatopnSlTestCase">
+<message column="27" line="25" message="Missing ';' after type definition" messageType="error" number="2078" resource="AlarmErrSL.result"/>
+<message column="3" line="41" message="Missing ';' after function definition" messageType="error" number="2079" resource="AlarmErrSL.result"/>
+<message column="27" line="49" message="Expecting '&amp;' after bind list in exists" messageType="error" number="2154" resource="AlarmErrSL.result"/>
+<result/>
+</testResult>

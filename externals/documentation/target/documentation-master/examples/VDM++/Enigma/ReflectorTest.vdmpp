@@ -1,0 +1,47 @@
+\begin{vdm_al}
+class ReflectorTest
+  is subclass of TestCase
+
+values
+  cfg : inmap nat to nat =
+    { 1 |-> 2, 3 |-> 4 }
+    
+instance variables
+  alph : Alphabet;
+
+operations
+  public ReflectorTest: seq of char ==> ReflectorTest
+  ReflectorTest(nm) == name := nm;
+
+  protected SetUp: () ==> ()
+  SetUp () == alph := new Alphabet("ABCD");
+
+  SimpleTest: () ==> ()
+  SimpleTest () ==
+    ( dcl tc1 : Reflector := new Reflector(1, alph, cfg),
+          tc2 : Reflector := new Reflector(2, alph, cfg);
+      AssertTrue (tc1.Substitute(1) = 2);
+      AssertTrue (tc1.Substitute(2) = 1);
+      AssertTrue (tc1.Substitute(3) = 4);
+      AssertTrue (tc1.Substitute(4) = 3);
+      AssertTrue (tc2.Substitute(1) = 4);
+      AssertTrue (tc2.Substitute(2) = 3);
+      AssertTrue (tc2.Substitute(3) = 2);
+      AssertTrue (tc2.Substitute(4) = 1) );
+
+
+  ComplexTest: () ==> ()
+  ComplexTest () ==
+    for all x in set alph.GetIndices() do
+      ( dcl tc : Reflector := new Reflector(x, alph, cfg);
+        for all y in set alph.GetIndices() do
+          AssertTrue(tc.Substitute(tc.Substitute(y)) = y) );
+
+  protected RunTest: () ==> ()
+  RunTest () == ( SimpleTest(); ComplexTest() );
+
+  protected TearDown: () ==> ()
+  TearDown () == skip
+
+end ReflectorTest
+\end{vdm_al}

@@ -1,0 +1,10 @@
+types
+  A = map nat to set of nat
+  inv a == true;
+
+	B :: field1 : seq of char
+			 field2 : A;
+values
+  a : map nat to set of nat = {1|->{3}};
+  b : B = mk_B( "test",a);
+  

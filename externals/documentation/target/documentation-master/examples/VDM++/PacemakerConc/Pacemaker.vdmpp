@@ -1,0 +1,38 @@
+\section{Pacemaker class}
+
+This class models the pacemaker system and will contain the components of it as 
+static variables the first ones are the atrial and ventricular leads responsibles for discharge and sense electrical pulses.
+
+\begin{vdm_al}
+class Pacemaker 
+
+ instance variables
+
+ public static 
+ atriaLead     : Lead      := new Lead(<ATRIA>, 5, true);
+
+ public static 
+ ventricleLead : Lead      := new Lead(<VENTRICLE>, 5, true);
+\end{vdm_al}
+
+The accelerometer component and the RateContoller.
+
+\begin{vdm_al}
+
+ instance variables
+
+ public static 
+ accelerometer       : Accelerometer   := new Accelerometer();
+
+ public static 
+ rateController      : RateController  := new RateController(1, true);
+\end{vdm_al}
+
+\begin{vdm_al}
+ instance variables
+ 
+ public static 
+ heartController     : HeartController := new HeartController(1000, true);
+
+end Pacemaker
+\end{vdm_al}

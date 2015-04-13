@@ -1,0 +1,33 @@
+always skip in skip
+a := b
+atomic( a:=b;h := u;)
+a.b(a,b,c)
+a(a,b,c)
+cases true : true -> skip, others -> b() end
+//%stm->classInvariant
+cycles(0)
+duration(0)
+//elseif true then skip
+error
+exit true
+for all true in set {} do skip
+for a = true to false in set {} do skip;
+for true in set true in true do skip
+if true then skip
+let i in set inds l be st l(i) = x in skip
+def p = 4; q={} in skip
+is not yet specified
+return
+return 3
+return a
+skip;skip
+x:=d;v:=4
+||(skip)
+skip
+start( a )
+is subclass responsibility
+tixe {- |-> skip} in skip
+//
+trap true with skip in skip
+while true do skip
+//for some reason this is parsed by the definition reader and not statement periodic(1,1,1,1)(op)

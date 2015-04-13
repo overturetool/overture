@@ -1,0 +1,15 @@
+class Parallelogram is subclass of Quadrilateral
+ 
+   instance variables
+      inv (length (v1) = length (v3)) and (length (v2) = length (v4))
+ 
+   operations
+      public
+      GetAngle: () ==> real
+      GetAngle() ==
+        let math = new MATH() 
+        in
+        return math.acos (inproduct (v1, v2) / (length (v1) * length (v2)))
+ 
+end Parallelogram
+

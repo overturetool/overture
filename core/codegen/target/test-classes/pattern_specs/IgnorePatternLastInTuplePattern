@@ -1,0 +1,15 @@
+class Entry
+
+functions
+
+public f :  () -> nat
+f () == let mk_(a,2,-) = mk_(5,2,10)
+in
+	a;
+	
+operations
+
+public static Run : () ==> ?
+Run () == f();
+
+end Entry

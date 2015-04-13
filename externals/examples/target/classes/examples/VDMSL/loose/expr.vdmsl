@@ -1,0 +1,303 @@
+\section{Loose Expression Evaluation}
+
+The loose expression evaluation operations which are presented in this
+section takes a syntactic expression and yields a ``loose value''. This
+loose value is a set of pairs with a return value and its
+corresponding model as explained in Section~\ref{semantic}.
+
+The general strategy behind the loose evaluation of expressions is
+that whenever an syntactic expression contains more than one
+subexpression the loose values from these subexpressions are
+combined such that only ``consistent'' models are considered. In addition
+it should be noticed that {\it PatternMatch} operation
+which performs matching
+of a syntactic pattern to a value yields the set of all possible
+bindings of the pattern identifiers in case of looseness.
+
+\begin{vdm_al}
+
+operations
+
+  LooseEvalExpr: Expr ==> LVAL
+  LooseEvalExpr(expr) ==
+    cases true :
+     (is_LetExpr(expr))                  -> LooseEvalLetExpr(expr),
+     (is_LetBeSTExpr(expr))              -> LooseEvalLetBeSTExpr(expr),
+     (is_IfExpr(expr))                   -> LooseEvalIfExpr(expr),
+     (is_CasesExpr(expr))                -> LooseEvalCasesExpr(expr),
+     (is_BinaryExpr(expr))               -> LooseEvalBinaryExpr(expr),
+     (is_SetEnumerationExpr(expr))       -> LooseEvalSetEnumerationExpr(expr),
+     (is_ApplyExpr(expr))                -> LooseEvalApplyExpr(expr),
+     (is_NumLit(expr)),
+     (is_BoolLit(expr))                  -> LooseEvalLiteral(expr),
+     (is_Name(expr))                     -> LooseLookUp(expr),
+     (is_BracketedExpr(expr))            -> LooseEvalBracketedExpr(expr),
+     others                              -> error
+    end;
+
+  LooseEvalBracketedExpr : BracketedExpr ==> LVAL
+  LooseEvalBracketedExpr (mk_BracketedExpr(expr)) ==
+    LooseEvalExpr(expr);
+\end{vdm_al}
+
+\subsection{Let Expressions}
+
+\begin{vdm_al}
+  LooseEvalLetExpr : LetExpr ==> LVAL
+  LooseEvalLetExpr ( mk_LetExpr(pat,expr,in_e)) ==
+  ( dcl lval: LVAL := {};
+
+    let val_lv = LooseEvalExpr(expr) in
+     for all mk_(val_v,m) in set val_lv do
+       let env_s = PatternMatch(pat,val_v) in
+         if env_s <> {}
+         then for all env in set env_s do
+	       (PushBlkEnv(env) ;
+                let in_lv = LooseEvalExpr(in_e) in
+                ( PopBlkEnv() ;
+                  lval := lval union Consistent(in_lv,m)
+                )
+              )
+         else error;
+  return lval);
+\end{vdm_al}
+Here in {\it LooseEvalLetExpr} it can be seen how the right-hand-side expression,
+{\it expr} is evaluated first. For each of the loose value pairs
+(value and corresponding model) the value is matched against the
+pattern and given that this succeeds ($env-s \Neq \Emptyset$) the
+in-expression is evaluated in a context where each of the bindings from the
+pattern matching is visible (by $PushBlkEnv$). The loose value pairs which are
+consistent with the model for the loose value pair of the first
+expression are added to the resulting loose value for the entire
+let-expression.
+
+\begin{vdm_al}
+  LooseEvalLetBeSTExpr : LetBeSTExpr ==> LVAL
+  LooseEvalLetBeSTExpr ( mk_LetBeSTExpr(lhs, st_e, in_e)) ==
+   (dcl lval : LVAL := {};
+    dcl em_s: set of (BlkEnv * Model) := {};
+    
+    for all mk_(env,m) in set EvalBind(lhs) do 
+    (PushBlkEnv(env);
+     let st_lv = LooseEvalExpr(st_e) in
+       for all mk_(val,m2) in set Consistent(st_lv,m) do
+         if val = mk_BOOL(true)
+	 then em_s := em_s union {mk_(env,m2 munion m)};
+    PopBlkEnv());
+    if em_s <> {}
+    then for all mk_(env,m3) in set em_s do
+          (PushBlkEnv(env) ;
+           let in_lv = LooseEvalExpr(in_e) in
+             (PopBlkEnv();
+              lval := lval union Consistent(in_lv,m3)
+             )
+          )
+    else error;
+    return lval);
+\end{vdm_al}
+For let-be-such-that expressions all possible environments arising
+from matching the left-hand-side (set) binding are taken into account
+(with the corresponding models). If there is an additional
+``such-that'' predicate it is evaluated where one of these
+environments are in context. The consistent loose values from the
+predicate must then be tested whether they yield true. For all such
+loose values the corresponding environment is put in context for
+evaluation of the body expression, where the consistency again must be
+ensured. 
+
+\subsection{Conditional Expressions}
+
+\begin{vdm_al}
+  LooseEvalIfExpr : IfExpr ==> LVAL
+  LooseEvalIfExpr(mk_IfExpr (test, cons, altn)) ==
+  (dcl lval : set of (VAL * Model) := {};
+  
+  let test_lv = LooseEvalExpr(test) in
+   for all mk_(test_v,m) in set test_lv do
+    if is_BOOL(test_v)
+    then let mk_BOOL(b) = test_v in
+         if b
+         then lval := lval union Consistent(LooseEvalExpr(cons),m)
+         else lval := lval union Consistent(LooseEvalExpr(altn),m)
+    else error;
+  return lval);
+\end{vdm_al}
+
+Conditional expressions are relatively simple because it simply is all
+loose values from the evaluation of the test expression which must be
+to calculate the consistent loose values from the consequence
+expression or the alternative expression (depending upon the the value
+of the test expression in a particular model).
+
+\begin{vdm_al}
+  LooseEvalCasesExpr: CasesExpr ==> LVAL
+  LooseEvalCasesExpr (mk_CasesExpr(sel,altns,Others)) ==
+  (dcl lval : set of (VAL * Model) := {},
+       alt_l : seq of CaseAltn := altns,
+       cont : bool := true;
+
+   let sel_lv = LooseEvalExpr(sel)
+   in
+     for all mk_(sel_v,m) in set sel_lv do
+       (while alt_l <> [] and cont do
+        (let mk_CaseAltn(pat,body) = hd alt_l
+	 in
+	   let env_s = PatternMatch(pat,sel_v)
+	   in
+	     if env_s <> {}
+	     then (cont := false;
+	           for all env in set env_s do
+	            (PushBlkEnv(env);
+	             lval := lval union Consistent(LooseEvalExpr(body),m);
+		     PopBlkEnv()));
+	 alt_l := tl alt_l);
+      if not cont
+      then cont := true
+      elseif Others = nil
+      then error
+      else lval := lval union LooseEvalExpr(Others));
+    return lval);
+\end{vdm_al}
+For cases expressions all loose values from the evaluation of the
+selector expression are used for further matching against the patterns
+in the different case alternatives. When a matching pattern is found
+all the matching environments are used as context for the body of the
+case alternative. If none of the alternatives matches an others clause
+must be present.
+
+\subsection{Binary Expressions}
+
+\begin{vdm_al}
+  LooseEvalBinaryExpr: BinaryExpr ==> LVAL
+  LooseEvalBinaryExpr (mk_BinaryExpr(left_e, opr, right_e)) ==
+    let left_lv  = LooseEvalExpr(left_e),
+        right_lv = LooseEvalExpr(right_e)
+    in
+      if opr = <SETMINUS>
+      then LooseEvalSetBinaryExpr(left_lv, right_lv)
+      elseif opr = <EQ>
+      then LooseEvalEqBinaryExpr(left_lv, right_lv)
+      else LooseEvalNumBinaryExpr(left_lv, opr, right_lv);
+\end{vdm_al}
+
+Since all the binary operators we have selected in our subset are
+strict (we have not included any of the logical connectives) we can
+safely evaluate both the of the operands to the binary operator. The
+actual work is done by seperate auxiliary functions (one for set
+difference, one for equality and one for the remaining numerical
+operators which are included).
+
+\begin{vdm_al}
+  LooseEvalSetBinaryExpr: LVAL * LVAL ==> LVAL
+  LooseEvalSetBinaryExpr(l_lv, r_lv) ==
+   (dcl lval : LVAL := {};
+    for all mk_(mk_SET(lv),lm) in set l_lv do
+      for all mk_(mk_SET(rv),rm) in set Consistent(r_lv,lm) do
+        lval := lval union {mk_(mk_SET(lv \ rv),rm munion lm)};
+    return lval)
+  pre forall mk_(v,-) in set l_lv union r_lv & is_SET(v);
+
+  LooseEvalEqBinaryExpr: LVAL * LVAL ==> LVAL
+  LooseEvalEqBinaryExpr(l_lv, r_lv) ==
+   (dcl lval : LVAL := {};
+    for all mk_(lv,lm) in set l_lv do
+      for all mk_(rv,rm) in set Consistent(r_lv,lm) do
+        lval := lval union {mk_(mk_BOOL(lv = rv),rm munion lm)};
+    return lval);
+
+  LooseEvalNumBinaryExpr: LVAL * BinaryOp * LVAL ==> LVAL
+  LooseEvalNumBinaryExpr(l_lv, opr, r_lv) ==
+   (dcl lval : LVAL := {};
+    for all mk_(mk_NUM(lv),lm) in set l_lv do
+      for all mk_(mk_NUM(rv),rm) in set Consistent(r_lv,lm) do
+        cases opr:
+          <NUMMINUS> -> lval := lval union {mk_(mk_NUM(lv - rv),rm munion lm)},
+          <NUMPLUS>  -> lval := lval union {mk_(mk_NUM(lv + rv),rm munion lm)},
+          <NUMMULT>  -> lval := lval union {mk_(mk_NUM(lv * rv),rm munion lm)}
+    end;
+    return lval)
+  pre forall mk_(v,-) in set l_lv union r_lv & is_NUM(v);
+\end{vdm_al}
+
+\subsection{Set Enumeration Expressions}
+
+\begin{vdm_al}
+  LooseEvalSetEnumerationExpr: SetEnumerationExpr ==> LVAL
+  LooseEvalSetEnumerationExpr(mk_SetEnumerationExpr(els)) ==
+    (dcl sm_s : set of ((set of VAL) * Model) := {};
+
+     if len els = 0
+     then return {mk_(mk_SET({}),{|->})}
+     else (sm_s := {mk_({elem},m) | mk_(elem,m) in set LooseEvalExpr(els(1))};
+     
+           for index = 2 to len els do
+            let elm_llv = LooseEvalExpr(els(index)) in
+              sm_s := {mk_(s union {e},m munion m2)
+	              | mk_(s,m) in set sm_s, mk_(e,m2) in set elm_llv &
+		        forall id in set (dom m inter dom m2) &
+			m(id) = m2(id)};
+           return {mk_(mk_SET(s),m) | mk_(s,m) in set sm_s})); 
+\end{vdm_al}
+For set enumeration expressions it is first tested whether we are
+dealing with an empty set. Otherwise a set of loose values are created
+with pairs of a singleton set with the first element and its
+corresponding model. This set of loose values is then gradually
+updated to include larger set values and larger corresponding models
+(with the usual consistency check).
+
+\subsection{Function Application Expressions}
+
+\begin{vdm_al}
+  LooseEvalApplyExpr: ApplyExpr ==> LVAL
+  LooseEvalApplyExpr(mk_ApplyExpr(fct_e, arg_e)) ==
+   (dcl lval: LVAL := {};
+   
+    let arg_lv = LooseEvalExpr(arg_e),
+        mk_(pat,body) = LookUpFn(fct_e)
+    in
+     (PushEmptyEnv();
+      for all mk_(arg_v,m) in set arg_lv do
+        let env_s = PatternMatch(pat,arg_v)
+	in
+	  (InstallCurFn(fct_e, arg_v, PatternIds(pat));
+	   for all env in set env_s do
+	     (PushBlkEnv(env);
+	      let ap_lv = LooseEvalExpr(body)
+	      in
+	        (PopBlkEnv();
+	         lval := lval union Consistent(ap_lv,m))));
+           LeaveCurFn());
+    PopEnvL();
+    return lval);
+\end{vdm_al}
+Here it is worth noting how function application is treated. For all
+possible matches of the argument value against the formal parameter
+pattern, the global state is updated (by $InstallCurFn$)
+with information about the current function
+application (to be used to create unique identifiers) and the
+pattern identifiers from the formal parameter are installed as well,
+such that bindings to these are not made a part of the resulting
+model. The body is then evaluated in a context where these bindings
+are visible and the consistent models are added to the resulting loose
+evaluator. Here it can also be seen how the stack of environments are
+used by pushing and popping environments at the outermost levels
+(using $PushEmptyEnv$ and $PopEnvL$). This
+is then taken into account by the corresponding lookup operation which
+will only search for a binding in the top-most function application
+environment.
+
+\subsection{Literal Expressions}
+
+\begin{vdm_al}
+  LooseEvalLiteral: Literal ==> LVAL
+  LooseEvalLiteral(lit) ==
+    return if is_NumLit(lit)
+           then {mk_(mk_NUM(lit.val),{|->})}
+	   else {mk_(mk_BOOL(lit.val),{|->})}
+
+  
+\end{vdm_al}
+Literal expressions naturally contains no looseness and do not rely on
+any particular model. Therefore this is modeled as singleton sets with
+emthy models.
+  

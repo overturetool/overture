@@ -1,0 +1,13 @@
+
+class HA
+
+instance variables
+
+public static Sur		: Surroundings := new Surroundings();
+public static TempNode	: TemperatureSensor := new TemperatureSensor(1, <TEMPSENSOR>, 0, Sur, 3, true);
+public static HumidNode	: HumidSensor := new HumidSensor(2, <HUMIDSENSOR>, 0, Sur, 3, true);
+public static ThermNode	: Thermostat := new Thermostat(3, <THERMOSTAT>, Sur, 5, true);
+public static WinNode	: Window := new Window(4, <WINDOW>, Sur, 5, true);
+public static Host		: HostController := new HostController(22, 75, 3, true);
+
+end HA

@@ -1,0 +1,162 @@
+\section{RateController class}
+
+The RateController is the class that models the rate adaptation control.
+
+\begin{vdm_al}
+class RateController is subclass of GLOBAL, BaseThread
+
+instance variables
+ rateplan : map Time to Time;
+ sensed   : [ActivityData];
+ interval : Time;
+ finished : bool;
+
+ 
+\end{vdm_al}
+
+\begin{vdm_al}
+instance variables
+-- programmable values
+ LRL       : PPM;
+ MSR       : PPM;
+ threshold : nat1;
+ reactionT : Time;
+ recoveryT : Time;
+ responseF : nat1;
+
+inv threshold < 8
+    and
+    reactionT in set {10,...,50}
+    and
+    recoveryT in set {2,...,16}
+    and 
+    responseF <= 16;
+\end{vdm_al} 
+
+The Constructor initializes the instance variables with the default values as consulted in (citation needed);
+
+\begin{vdm_al}
+operations
+  
+ public 
+ RateController: nat1 * bool ==> RateController
+ RateController(p, isP) ==
+   (LRL       := 60;
+    MSR       := 120;
+    threshold := MED;
+    reactionT := 10; -- 10 s
+    recoveryT := 2; -- 2 minutes;
+    responseF := 8;
+    sensed    := nil; 
+    interval  := 1/((LRL/60)/1000);
+    finished  := false;
+    period := p;
+    isPeriodic := isP;
+   );
+\end{vdm_al} 
+
+\begin{vdm_al}
+public
+getInterval : () ==> Time
+getInterval () == return interval;
+\end{vdm_al}
+
+\begin{vdm_al}
+ private
+ controlRate : () ==> ()
+ controlRate () == 
+    (
+    if sensed > threshold
+    then increaseRate()
+    elseif sensed < threshold
+    then decreaseRate()
+    else skip;
+    sensed := nil;
+    );
+\end{vdm_al}
+
+\begin{vdm_al}
+
+ public 
+ stimulate : ActivityData ==> ()
+ stimulate (ad) == sensed := ad;
+\end{vdm_al} 
+
+
+\begin{vdm_al}
+ private
+ increaseRate : () ==> ()
+ increaseRate () == 
+   (
+    interval := 1 / ((MSR / 60) / 1000);
+    Pacemaker`heartController.SetPeriod(interval); --setInterval(interval)
+   );
+
+\end{vdm_al}
+
+\begin{vdm_al}
+ private
+ decreaseRate : () ==> ()
+ decreaseRate () == 
+   (
+    interval := 1 / ((LRL / 60) / 1000);
+    Pacemaker`heartController.setInterval(interval)
+   );
+\end{vdm_al}
+
+
+\begin{vdm_al}
+ public 
+ finish : () ==> ()
+ finish () == finished := true; 
+
+ public 
+ isFinished : () ==> ()
+ isFinished () == skip; 
+
+public Step: () ==> ()
+Step() ==
+  if (sensed <> nil)
+  then controlRate();
+
+\end{vdm_al}
+
+The usual Step by thread substitution is done in the RateController class.
+\begin{vdm_al}
+
+--thread
+-- while true do
+--    controlRate();
+\end{vdm_al}
+
+And syncronization is added.
+
+\begin{vdm_al}    
+
+sync
+mutex(stimulate);
+
+mutex(increaseRate,decreaseRate,getInterval);
+
+per isFinished => finished;
+
+mutex(Step);
+--per controlRate => sensed <> nil;
+
+\end{vdm_al} 
+
+\begin{vdm_al}
+values
+
+--V-LOW 1
+--LOW 2
+--MED-LOW 4
+MED : ActivityData = 4;
+--MED-HIGH 4
+--HIGH 6
+--V-HIGH 6
+
+end RateController
+\end{vdm_al} 
+
+

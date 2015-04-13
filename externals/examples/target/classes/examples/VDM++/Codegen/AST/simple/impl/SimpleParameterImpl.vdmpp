@@ -1,0 +1,25 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleParameterImpl is subclass of SimpleParameter
+instance variables
+    private iv_name:SimpleIdentifier;
+    private iv_type:SimpleType;
+
+operations
+    public SimpleParameterImpl: SimpleIdentifier * SimpleType ==> SimpleParameterImpl
+    SimpleParameterImpl(p_name, p_type) ==
+    (
+        iv_name := p_name;
+        iv_type := p_type;
+    );
+
+    public getName: () ==> SimpleIdentifier
+    getName() == return iv_name;
+
+    public getType: () ==> SimpleType
+    getType() == return iv_type;
+
+end SimpleParameterImpl

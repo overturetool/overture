@@ -1,0 +1,101 @@
+-----------------------------------------------
+-- Class:			TrafficData
+-- Description: 	TrafficData is the base for different types of messages in the system.
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TrafficData
+
+--
+-- instance variables
+--
+instance variables
+private dir: Types`Direction;
+private pos: Position;
+private message: MessageType;
+private timeToLive : nat;
+
+--
+-- Types definition section
+--
+types   
+public MessageType = <LowGrip> | <Congestion> | <LeftTurn> | <RedLight>;
+
+--
+-- Operations definition section
+--
+operations
+public TrafficData: MessageType * Position * Types`Direction ==> TrafficData
+	TrafficData(m,p,d) ==
+		(
+		pos := p ;
+		message := m;
+		dir := d;
+		timeToLive := Timer`GetTime() + Config`TrafficDataLifeTime;
+		Printer`Out("Traffic data created of type '" ^ MessageTypeToString(m) ^ "'. It is a capital mistake to theorize before one has data.");
+		);
+		
+public TrafficData: MessageType * Position * Types`Direction * nat ==> TrafficData
+	TrafficData(m,p,d,timetolive) ==
+		(
+		pos := p ;
+		message := m;
+		dir := d;
+		timeToLive := timetolive;
+		Printer`Out("Traffic data created of type '" ^ MessageTypeToString(m) ^ "'. It is a capital mistake to theorize before one has data.");
+		);
+
+public GetPosition: () ==> Position 
+	GetPosition() ==
+	return pos;
+	
+public GetMessage: () ==> MessageType
+	GetMessage() ==
+	return message;
+
+public GetDirection: () ==> Types`Direction 
+GetDirection() ==
+return dir;
+
+public GetTimeTolive: () ==> nat 
+GetTimeTolive() ==
+return timeToLive;
+	
+--public Step: () ==> ()
+--Step() == skip;
+--timeToLive := timeToLive -1;
+
+
+public Expired : () ==> bool
+Expired() ==
+return Timer`GetTime() >= timeToLive;
+
+public ToString : () ==> seq of char 
+ToString() ==
+return "traffic data reporting " ^ MessageTypeToString(message) ^ " moved " ^ Types`DirectionToString(dir) ^ " at " ^ pos.toString()  ^ " with lifetime " ^ Printer`natToString(timeToLive - Timer`GetTime());
+
+
+--
+-- Functions definition section
+--
+functions
+
+public static MessageTypeToString : MessageType -> seq of char 
+MessageTypeToString(m) ==
+(
+cases m:
+<LowGrip>-> "Low Grip",
+<Congestion>-> "Congestion ",
+<LeftTurn>-> "Left Turn",
+<RedLight> -> "Red Light"
+end
+)
+
+--
+-- Values definition section
+--
+values
+
+end TrafficData

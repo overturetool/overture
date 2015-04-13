@@ -1,0 +1,134 @@
+% Controller.vdmrt
+
+\subsubsection{Abstraction by inheritance -- the \texttt{Controller} class}
+
+Since there are two controllers in our system model, it is good engineering practice
+to put common functions in a base class and use VDM++ inheritance to overload
+functionality if and when required. Note that each controller is linked to
+a \texttt{MotorActuator} and a \texttt{MotorSensor}.
+ 
+\begin{vdm_al}
+class Controller
+
+values
+  -- control loop sample time (1 ms)
+  public SAMPLETIME = 0.001
+
+instance variables
+  -- identify the controller by name
+  public mName : seq of char;
+
+  -- the motor that is controlled
+  public mMotorActuator : MotorActuator;
+  public mMotorSensor : MotorSensor;
+
+operations
+  -- constructor
+  public Controller: seq of char ==> Controller
+  Controller (pName) ==
+    ( -- initialise the name of the controller
+      mName := pName;
+      -- initialise the motor actuator and sensor
+      mMotorActuator := new MotorActuator(self);
+      mMotorSensor := new MotorSensor(self) )
+\end{vdm_al}
+
+The constructor initialises the name of the controller and creates the \texttt{MotorActuator}
+and \texttt{MotorSensor} instances, passing the \texttt{self} object reference to these
+constructors, such that these objects know to which controller they belong. The name of the
+controller is used to provide meaningful log information. Furthermore, a link to the
+environment model is maintained, such that the database of named values can be accessed
+through the \texttt{setValue} and \texttt{getValue} operations. Both operations add
+the name of the controller as a prefix to the named variable, such that the two controllers
+are distinguishable in the database.
+
+\begin{vdm_al}
+instance variables
+  -- link back to the environment
+  protected mEnvironment : [Environment] := nil;
+
+operations
+  -- establish a link to the environment model
+  public setEnvironment: Environment ==> ()
+  setEnvironment (pEnvironment) == mEnvironment := pEnvironment;
+
+  -- push a value to the environment
+  public setValue: seq of char * real ==> ()
+  setValue (pName, pValue) ==
+    mEnvironment.setValue(mName^"_"^pName, pValue)
+  pre mEnvironment <> nil;
+
+  -- get a value from the environment
+  public getValue: seq of char ==> real
+  getValue (pName) ==
+    return mEnvironment.getValue(mName^"_"^pName)
+  pre mEnvironment <> nil
+\end{vdm_al}
+
+Three operation prototypes are provided with deferred implementations. The
+\texttt{PowerUp} operation is used to start the main thread of the controller
+and all subsidiary processes required at startup. This operation is called
+by the environment. The \texttt{CtrlLoop} operation is the prototype for
+the periodic thread that implements the actual control loop. Note that
+the periodic thread is actually specified here, instead of inside the
+subclass. Hence, both controllers will execute with the same periodicy
+and offset. They will actually run in parallel in our model since they
+are deployed on different CPUs.
+
+\begin{vdm_al}
+values
+  protected DEBUGCTRLLOOP = 2
+ 
+operations
+  -- prototype used for simulation diagnostics
+  protected printDiagnostics: nat ==> ()
+  printDiagnostics (pLoopCnt) ==
+    duration (0)
+      ( -- generic diagnostics announcement
+        IO`printf(mName ^ " controller at %s on %s\n",
+          [pLoopCnt, time / 1E9]);
+        -- print the actuator internal state
+        mMotorActuator.printDiagnostics() )
+
+operations
+  -- prototype for the device power-up
+  public PowerUp: () ==> ()
+  PowerUp () == is subclass responsibility
+
+operations
+  -- prototype of the main control loop
+  async private CtrlLoop: () ==> ()
+  CtrlLoop () == 
+    ( -- use standard GoF behavior pattern
+      duration (0) CtrlLoopEntry();
+      CtrlLoopBody();
+      duration (0) CtrlLoopExit() );
+
+  -- auxiliary operation are used for diagnostics
+  -- always executes with zero duration
+  public CtrlLoopEntry: () ==> ()
+  CtrlLoopEntry () == skip;
+
+  public CtrlLoopBody: () ==> ()
+  CtrlLoopBody () == is subclass responsibility;
+
+  -- auxiliary operation are used for diagnostics
+  -- always executes with zero duration
+  public CtrlLoopExit: () ==> ()
+  CtrlLoopExit () == skip;
+
+thread
+  -- the control loop runs at 1kHz with a 750 msec initial offset
+  periodic (1, 0, 0, 0) (CtrlLoop)
+
+end Controller
+\end{vdm_al}
+
+The periodic thread in the \texttt{Environment} and the periodic threads
+of the controllers in the system model have the same parameters, except
+for the initial offset. This causes the simulation to be totally deterministic,
+since the environment is always evaluated before the controller threads.
+If jitter is added to the periodic threads of the controllers, or the 
+computations inside the control loop take longer than 0.5~second, than
+this may cause unrealistic simulations. It is another abstraction made
+in this model to simplify the design.

@@ -1,0 +1,61 @@
+\begin{vdm}\kClass $TestSuite$ \kISO $Test$\index{TestSuite|ClassDef}
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}
+\assdef{tests}{\seqof*{Test\index{Test|TypeOcc}}}[{\seq{}}]
+\end{insvar}
+\par
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{Run}\index{Run|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{TestSuite`Run}
+\begin{blockstmt}
+\begin{dclstmt}
+\assdef{ntr}{TestResult\index{TestResult|TypeOcc}}[{\fnapply{\new{TestResult}}{}}]
+\end{dclstmt}
+\call{Run}{ntr} ; \\
+$ntr$.\call{Show}{}
+\end{blockstmt};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{Run}\index{Run|FuncDef}%
+\signature{TestResult\index{TestResult|TypeOcc} \Oto ()}
+\parms{result}
+\annlab[o]{TestSuite`Run}
+\begin{seqfor}{test}{tests}
+$test$.\call{Run}{result}
+\end{seqfor};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{AddTest}\index{AddTest|FuncDef}%
+\signature{Test\index{Test|TypeOcc} \Oto ()}
+\parms{test}
+\annlab[o]{TestSuite`AddTest}
+\ass{tests}{tests \Sconc \seq{test}}
+\end{op}
+\kEnd $TestSuite$
+
+\end{vdm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="1" line="4" message="Instance variable 'a' is not initialized" messageType="warning" number="5001" resource="oldname-02.vpp"/>
+<message column="11" line="13" message="Name 'OldNameTest`b~' is not in scope" messageType="error" number="3182" resource="oldname-02.vpp"/>
+<result/>
+</testResult>

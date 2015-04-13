@@ -1,0 +1,11 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:54 CET 2010
+--
+
+class SimpleIntegerLiteralExpression is subclass of SimpleLiteralExpression
+operations
+    public getValue: () ==> int
+    getValue() == is subclass responsibility;
+
+end SimpleIntegerLiteralExpression

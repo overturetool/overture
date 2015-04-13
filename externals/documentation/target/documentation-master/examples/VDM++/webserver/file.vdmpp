@@ -1,0 +1,14 @@
+class File
+
+  instance variables
+
+    data: seq of char := ""
+
+  operations 
+
+    public
+    write : seq of char ==> ()
+    write(chs) == 
+      data := chs
+
+end File

@@ -1,0 +1,138 @@
+\begin{vdm_al}
+class TimeStamp
+
+\end{vdm_al}
+Class used for concurrent VDM++ models. All threads should call the following operations:
+- WaitRelative(t): makes the thread periodic with t = the period
+- NotifyAll(): notified all threads sleeping in the wakeUpMap
+- Awake(): puts the thread to sleep - will wakeup when t time units has passed  
+
+The step length with which the currentTime is incremented
+\begin{vdm_al}
+values
+
+public stepLength : nat = 1;
+
+instance variables
+
+currentTime  : nat   := 0;
+wakeUpMap    : map nat to nat := {|->};
+--syncWithTimeInc : set of nat := {};
+--syncWithTimeIncCurrent : set of nat := {};
+
+operations
+
+\end{vdm_al}
+WaitRelative: sleeps the calling thread for 'val' time units - relative to the currentTime
+\begin{vdm_al}
+
+public WaitRelative : nat ==> ()
+WaitRelative(val) ==
+  AddToWakeUpMap(threadid, currentTime + val);
+ 
+\end{vdm_al}
+WaitAbsolute: sleeps the calling thread undtil a specific time
+\begin{vdm_al}
+ 
+public WaitAbsolute : nat ==> ()
+WaitAbsolute(val) ==
+  AddToWakeUpMap(threadid, val);
+
+\end{vdm_al}
+AddToWakeUpMap: Utility operation - adding the thread to the wakeUpMap
+\begin{vdm_al}
+
+AddToWakeUpMap : nat * nat ==> ()
+AddToWakeUpMap(tId, val) ==
+   wakeUpMap := wakeUpMap ++ { tId |-> val };
+
+\end{vdm_al}
+NotifyThread: notified a specific thread - removing it from the wakeUpMap
+\begin{vdm_al}
+
+public NotifyThread : nat ==> ()
+NotifyThread(tId) ==
+ wakeUpMap := {tId} <-: wakeUpMap;
+
+\end{vdm_al}
+NotifyAll: notifies all threads - waking up threads which wakeUpTime is up 
+\begin{vdm_al}
+
+public NotifyAll : () ==> ()
+NotifyAll() ==
+  let threadSet : set of nat = {th | th in set dom wakeUpMap & wakeUpMap(th) <= currentTime }
+  in
+    for all t in set threadSet 
+    do
+      NotifyThread(t);
+
+\end{vdm_al}
+NotifyAndIncTime: Must only be used by ONE thread - usually the Environment thread.
+Increments the currentTime with stepLength time units, and notifies all threads.
+\begin{vdm_al}
+
+public NotifyAndIncTime : () ==> ()
+NotifyAndIncTime() ==
+ (
+  		currentTime := currentTime + stepLength;
+ 	 	NotifyAll();
+--		syncWithTimeIncCurrent := syncWithTimeInc; 
+ );
+
+\end{vdm_al}
+GetTime: Returns the currentTime.
+\begin{vdm_al}
+
+public GetTime : () ==> nat
+GetTime() ==
+  return currentTime;
+
+\end{vdm_al}
+Awake: Used to sleep threads - will not wake up until threadid is removed from wakeUpMap
+\begin{vdm_al}
+
+public Awake: () ==> ()
+Awake() == skip;
+
+\end{vdm_al}
+SyncWithTimeIncrement: Called by threads which need to finish their loop/operation before time can be increased. 
+YieldTimeIncrement is call when a thread is ready to a time increment. 
+Once a thread has call SyncWithTimeIncrement is must call YieldTimeIncrement eventually, otherwise time increment 
+will be prevented
+\begin{vdm_al}
+
+--public SyncWithTimeIncrement : () ==> ()
+--SyncWithTimeIncrement() ==	
+--(
+--	syncWithTimeInc := syncWithTimeInc union {threadid}; --keep track of all
+--	syncWithTimeIncCurrent := syncWithTimeIncCurrent union {threadid}; --include in current sync round
+--	skip;
+--);
+
+--public YieldTimeIncrement: () ==> ()
+--YieldTimeIncrement()==
+--(
+--	syncWithTimeIncCurrent := syncWithTimeIncCurrent \ {threadid};
+--	skip
+--);
+
+
+sync
+  per Awake => threadid not in set dom wakeUpMap;
+
+  per NotifyAndIncTime => (card {th | th in set dom wakeUpMap & wakeUpMap(th) = currentTime +1} > 0) ;  --The magic one,  only allow run
+--  per NotifyAndIncTime => ({th | th in set dom wakeUpMap & wakeUpMap(th) <= currentTime} inter syncWithTimeIncCurrent) = {};
+
+  mutex(NotifyAll);
+  mutex(AddToWakeUpMap);
+  mutex(AddToWakeUpMap, NotifyAll); 
+--  mutex(SyncWithTimeIncrement);
+--  mutex(YieldTimeIncrement);
+--  mutex(SyncWithTimeIncrement, YieldTimeIncrement, NotifyAndIncTime);
+
+end TimeStamp
+\end{vdm_al}
+
+\begin{rtinfo}[TimeStamp`NotifyAndIncTime]
+{vdm.tc}[TimeStamp]
+\end{rtinfo}

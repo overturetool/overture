@@ -1,0 +1,737 @@
+
+class IO
+
+--  Overture STANDARD LIBRARY: INPUT/OUTPUT
+--      --------------------------------------------
+-- 
+-- Standard library for the Overture Interpreter. When the interpreter
+-- evaluates the preliminary functions/operations in this file,
+-- corresponding internal functions is called instead of issuing a run
+-- time error. Signatures should not be changed, as well as name of
+-- module (VDM-SL) or class (VDM++). Pre/post conditions is 
+-- fully user customizable. 
+-- Don't care's may NOT be used in the parameter lists.
+--
+-- The in/out functions  will return false if an error occurs. In this
+-- case an internal error string will be set (see 'ferror').
+--
+-- File path:
+--  * An absolute path is accepted and used as specified.
+--  * A relative path is relative to the debugger or if running in the 
+--      Overture IDE relative to the project root.
+--
+
+types
+ 
+/**
+ * The file directive used in in/out functions.
+ */
+public filedirective = <start>|<append> 
+
+functions
+
+/**
+ * Write VDM value in ASCII format to the console.
+ *
+ * @param val the VDM value to be written
+ * @return true if successful else false
+ */
+public static writeval[@p]: @p -> bool
+writeval(val)==
+  is not yet specified;
+
+/**
+ * Write VDM value in ASCII format to file. The type of the val must be
+ * specified as fwriteval[seq of char](...) when calling the function.
+ *
+ * @param filename the name of the file
+ * @param val the VDM value to be written.
+ * @param fdir if <start> then it will overwrite an existing file, 
+ *  else <append> will append output to the existing file
+ * @return true if successful else false
+ */
+public static fwriteval[@p]:seq1 of char * @p * filedirective -> bool
+fwriteval(filename,val,fdir) ==
+  is not yet specified;
+
+/**
+ * Read VDM value in ASCII format from file. The type which should be read must be
+ * specified as freadval[seq of char](...) when calling the function.
+ *
+ * @param filename the name of the file
+ * @return mk_(success,@p) if successful success will be 
+ * set to true else false. @p will hold nil if unsuccessful or the value read.
+ */
+public static freadval[@p]:seq1 of char -> bool * [@p]
+freadval(filename) ==
+  is not yet specified
+  post let mk_(b,t) = RESULT in not b => t = nil;
+
+operations
+
+/**
+ * Write text to std out. Surrounding double quotes will be stripped,
+ * backslashed characters should be interpreted.
+ *
+ * @param text the text to write to the console
+ * @return if successful true else false.
+ */
+public echo: seq of char ==> bool
+echo(text) ==
+  fecho ("",text,nil);
+
+/**
+ * Write text to file like <code>echo</code>.
+ *
+ * @param filename the name of the file
+ * @param text the text to write to be written.
+ * @param fdir if nil or <start> then it will overwrite an existing file, 
+ *  else <append> will append output to the existing file.
+ * @return true if successful else false
+ */
+public fecho: seq of char * seq of char * [filedirective] ==> bool
+fecho (filename,text,fdir) ==
+  is not yet specified
+  pre filename = "" <=> fdir = nil;
+
+/**
+ * Returns the last error which may have occurred by any of the io/out functions
+ *
+ * @return the last error message
+ */
+public ferror:()  ==> seq of char
+ferror () ==
+  is not yet specified;
+  
+-- New simplified format printing operations
+
+
+/**
+ * Prints any VDM value to the console
+ *
+ * @param arg a VDM value of any type
+ */
+public static print: ? ==> ()
+print(arg) ==
+    is not yet specified;
+
+/**
+ * Prints any VDM value to the console as a new line
+ *
+ * @param arg a VDM value of any type
+ */
+public static println: ? ==> ()
+println(arg) ==
+    is not yet specified;
+
+/**
+ * Prints any VDM value to the console
+ *
+ * @param format standard format string used in 
+  *  Java by <code>String.format(format,value)</code>
+ * @param arg a sequence of VDM values of any type
+ */
+public static printf: seq of char * seq of ? ==> ()
+printf(format, args) ==
+    is not yet specified;
+
+end IO
+
+class Brake
+ instance variables
+ mLowLimit : MainShaftController`RPMType;
+ mHighLimit : MainShaftController`RPMType;
+ 
+ operations
+ public Brake : MainShaftController`RPMType * MainShaftController`RPMType ==> Brake
+ Brake(low, high) ==
+ (
+  mLowLimit := low;
+  mHighLimit := high
+ )
+ pre low < high;
+
+ public GetLow : () ==> MainShaftController`RPMType
+ GetLow() ==
+  return mLowLimit;
+
+ public GetHigh : () ==> MainShaftController`RPMType
+ GetHigh() ==
+  return mHighLimit;
+
+ public IsEqual : Brake ==> bool
+ IsEqual(brake) ==
+  return GetLow() = brake.GetLow() and GetHigh() = brake.GetHigh();
+
+ public ApplyBrake : MainShaftController`RPMType ==> 
+                     MainShaftController`RPMType
+ ApplyBrake(rpm) ==
+  return if InRange(rpm) 
+         then mLowLimit
+         else rpm;
+
+ public InterSect : Brake ==> bool
+ InterSect(brake) ==
+  return brake.InRange(mLowLimit) or brake.InRange(mHighLimit);
+ 
+ public InRange : (MainShaftController`RPMType) ==> bool
+ InRange(rpm) ==
+  return rpm >= mLowLimit and rpm <= mHighLimit;
+
+end Brake
+
+class Enviroment
+
+ types
+ public TestData ::
+     Wind : WindMeasurementController`WindSpeedType
+     Cmds : OperatingPanel`CmdType
+     EStop : bool
+
+ functions
+ static CreateTestSeq : WindMeasurementController`WindSpeedType * bool -> 
+                        seq of TestData
+ CreateTestSeq(wind, eStop) ==
+  [if x mod 10 = 1 
+   then mk_TestData(wind,<E>,false)
+   elseif x mod 10 = 5 
+   then mk_TestData(wind,<L>,false)
+   else mk_TestData(wind,<N>,x mod 10 = 6 and eStop) 
+  | x in set {1,...,10}];
+
+ operations
+ public static Run : () ==> ()
+ Run() ==
+  let TestSeq = CreateTestSeq(14, false) ^ 
+                CreateTestSeq(15, true) ^ 
+                CreateTestSeq(15, false) ^ 
+                CreateTestSeq(16, false),
+       WindTurbine = new WindTurbine(TestSeq)
+  in
+   WindTurbine.Run()
+
+end Enviroment
+
+class Hub
+ instance variables
+ mSpeaker : Speaker;
+ mIsLocked : bool := true;
+ mIsEStopPressed: bool := false;
+
+ operations
+ public Hub : () ==> Hub
+ Hub() ==
+  mSpeaker := new Speaker();
+
+ public Open : () ==> ()
+ Open() ==
+ (
+  mIsLocked := false;
+  mSpeaker.StopAlarm()
+ )
+ pre not IsOpen();
+
+ public Close : () ==> ()
+ Close() ==
+ (
+  mIsLocked := true;
+  mSpeaker.StartAlarm()
+ )
+ pre IsOpen();
+
+ public IsOpen : () ==> bool
+ IsOpen() ==
+  return not mIsLocked;
+
+ public IsAlarmActive : () ==> bool
+ IsAlarmActive() ==
+  return mSpeaker.IsActive();
+
+ public PressEStop : () ==> ()
+ PressEStop() ==
+  mIsEStopPressed := true;
+
+ public ReleaseEStop : () ==> ()
+ ReleaseEStop() ==
+  mIsEStopPressed := false;
+ 
+ public IsEStopPressed : () ==> bool
+ IsEStopPressed() ==
+  return mIsEStopPressed;
+ 
+ public Run : () ==> ()
+ Run() ==
+  mSpeaker.Run();
+
+end Hub
+
+class HubController
+ instance variables
+ mHub : Hub;
+ mMainShaftController : MainShaftController;
+ mMode : Mode;
+ inv Mode`HubInSafeModeInv(mMode, mMainShaftController.GetRPM(), 
+                           mMainShaftController.IsLocked(), mHub.IsOpen());
+ mEStopSeq : seq of bool := []; 
+
+ operations
+ public HubController : seq of bool * MainShaftController ==> HubController
+ HubController(eStopSeq, mainShaftController) ==
+ (
+  mHub := new Hub();
+  mEStopSeq := eStopSeq;
+  mMainShaftController := mainShaftController;
+  mMode := new ModeOperational();
+  Mode`SetHubController(self);
+ );
+
+ public GetHub : () ==> Hub
+ GetHub() ==
+  return mHub;
+
+ public GetMainShaftController : () ==> MainShaftController
+ GetMainShaftController() ==
+  return mMainShaftController;
+
+ public SetMode : Mode ==> ()
+ SetMode(mode) ==
+  mMode := mode
+ pre Mode`StateChangeInv(mMode, mode) and 
+     Mode`HubInSafeModeInv(mode, mMainShaftController.GetRPM(), 
+                           mMainShaftController.IsLocked(), mHub.IsOpen());
+ 
+ public GetMode : () ==> Mode
+ GetMode() ==
+  return mMode;
+
+ public Run : () ==> ()
+ Run() ==
+ (if len mEStopSeq >= 1 
+  then let eStop = hd mEStopSeq
+       in
+        (mEStopSeq := tl mEStopSeq;
+
+         if eStop 
+         then mHub.PressEStop()
+         else mHub.ReleaseEStop()
+        );
+
+  mHub.Run();
+  mMode.Run();
+ );
+
+end HubController
+
+class MainShaftController
+ values
+ public static LOCK_LIMIT : RPMType = 1;
+ public static MAX_RPM : RPMType = WindMeasurementController`MAX_WIND * 10;
+
+ types
+ public RPMType = nat
+ inv rpm == rpm <= WindMeasurementController`MAX_WIND * 10;
+
+ instance variables
+ mIsLocked : bool := false;
+ mBrakeSeq :seq of Brake := [];
+ inv BrakeSeqInv(mBrakeSeq);
+ mRPM : RPMType := 0;
+ mIsBrakeApplied : bool := false;
+
+ functions
+ static BrakeSeqInv : seq of Brake -> bool
+ BrakeSeqInv(brakeSeq) ==
+  forall i in set inds brakeSeq & 
+     i>1 => brakeSeq(i-1).GetLow() = brakeSeq(i).GetHigh();
+
+ operations
+ public MainShaftController : () ==> MainShaftController
+ MainShaftController() ==
+ (--Blade Pitch
+  AddBrake(new Brake(100,MAX_RPM));
+  --Generator
+  AddBrake(new Brake(50,100));
+  --Disc Brake
+  AddBrake(new Brake(LOCK_LIMIT,50));
+  --Lock
+  AddBrake(new Brake(0, LOCK_LIMIT));
+ );
+
+ public CloseLock : () ==> ()
+ CloseLock() == 
+  mIsLocked := true
+ pre not IsLocked() and GetRPM() = 0 and IsBrakeApplied();
+
+ public OpenLock : () ==> ()
+ OpenLock() == 
+  mIsLocked := false
+ pre IsLocked() and GetRPM() = 0 and IsBrakeApplied();
+
+ public IsLocked : () ==> bool
+ IsLocked() == 
+  return mIsLocked;
+
+ AddBrake : Brake ==> ()
+ AddBrake(brake) ==
+  mBrakeSeq := mBrakeSeq ^ [brake]
+ pre BrakeSeqInv(mBrakeSeq ^ [brake]);
+
+ RemoveBrake : Brake ==> ()
+ RemoveBrake(brake) ==
+  mBrakeSeq := [mBrakeSeq(i)|i in set inds mBrakeSeq & not mBrakeSeq(i).IsEqual(brake)]
+ pre (exists i in set inds mBrakeSeq & mBrakeSeq(i).IsEqual(brake)) and
+   BrakeSeqInv([mBrakeSeq(i)|i in set inds mBrakeSeq & not mBrakeSeq(i).IsEqual(brake)]);
+
+ public ApplyBrake : () ==> ()
+ ApplyBrake() ==
+  mIsBrakeApplied := true
+ pre len mBrakeSeq <> 0;
+
+ public ReleaseBrake : () ==> ()
+ ReleaseBrake() ==
+  mIsBrakeApplied := false
+ pre len mBrakeSeq <> 0;
+
+ public IsBrakeApplied : () ==> bool
+ IsBrakeApplied() == 
+  return mIsBrakeApplied
+ pre len mBrakeSeq <> 0;
+
+ -- return current rotational speed of main shaft in RPM.
+ public GetRPM : () ==> RPMType
+ GetRPM() ==
+  return mRPM;
+
+ public Run : () ==> ()
+ Run() ==
+ (if mIsBrakeApplied 
+  then for all i in set inds mBrakeSeq do
+         mRPM := mBrakeSeq(i).ApplyBrake(mRPM)
+  else mRPM := WindMeasurementController`GetInstance().GetWindSpeed() * 10; 
+ )
+ pre len mBrakeSeq <> 0
+ post mRPM <= MAX_RPM;
+
+end MainShaftController
+
+class Mode
+ instance variables
+ protected static mHubController : [HubController] := nil;
+ protected static mEnterHubInSafeMode : bool := false;
+
+ operations
+ public static SetHubController : HubController ==> ()
+ SetHubController(hubController) ==
+  mHubController := hubController;
+
+ public Run : () ==> ()
+ Run() ==
+  OnRun();
+
+ public EnterHubInSafeMode : () ==> ()
+ EnterHubInSafeMode() ==
+  mEnterHubInSafeMode := true;
+
+ public LeaveHubInSafeMode : () ==> ()
+ LeaveHubInSafeMode() ==
+  mEnterHubInSafeMode := false;
+
+ protected ChangeMode : Mode ==> ()
+ ChangeMode(newMode) ==
+ (OnExit();
+  newMode.OnEntry();
+  mHubController.SetMode(newMode);
+ )
+ pre Mode`StateChangeInv(mHubController.GetMode(), newMode) and 
+     let mainShaftController = mHubController.GetMainShaftController(),
+         hub = mHubController.GetHub()
+     in
+       Mode`HubInSafeModeInv(mHubController.GetMode(), 
+                             mainShaftController.GetRPM(), 
+                             mainShaftController.IsLocked(), hub.IsOpen());
+
+ protected OnEntry : () ==> ()
+ OnEntry() == skip;
+
+ protected OnRun : () ==> ()
+ OnRun() == is subclass responsibility;
+
+ protected OnExit : () ==> ()
+ OnExit() == skip;
+
+ functions
+ public static StateChangeInv : Mode * Mode -> bool
+ StateChangeInv(oldMode, newMode) ==
+  (isofclass(ModeOperational, oldMode) and isofclass(ModeEnterHubInSafeMode, newMode)) or
+  (isofclass(ModeEnterHubInSafeMode, oldMode) and isofclass(ModeHubInSafeMode, newMode)) or
+  (isofclass(ModeHubInSafeMode, oldMode) and isofclass(ModeLeaveHubInSafeMode, newMode)) or
+  (isofclass(ModeLeaveHubInSafeMode, oldMode) and isofclass(ModeOperational, newMode)) or
+  (isofclass(ModeLeaveHubInSafeMode, oldMode) and isofclass(ModeHubInSafeMode, newMode));
+
+ public static HubInSafeModeInv : Mode * MainShaftController`RPMType * bool * bool -> bool
+ HubInSafeModeInv(mode, rpm, isLocked, isOpen) ==
+  --if hub in safe mode then RPM must be 0, mainshaft must be locked, hub door must be unlocked and open
+  (isofclass(ModeHubInSafeMode, mode) and rpm = 0 and isLocked and isOpen) or
+   --if not in hub in safe mode hub door must be closed and locked
+  (not isofclass(ModeHubInSafeMode, mode) and not isOpen);
+ 
+end Mode
+class ModeEnterHubInSafeMode is subclass of Mode
+ values
+ static public MAX_WINDSPEED : WindMeasurementController`WindSpeedType = 15;
+
+ operations
+ protected OnRun : () ==> ()
+ OnRun() ==
+  let mainShaftController = mHubController.GetMainShaftController()
+  in
+  (
+   if not mainShaftController.IsBrakeApplied() then
+   (
+    mainShaftController.ApplyBrake();
+    mainShaftController.Run()
+   );
+   
+   if not mainShaftController.IsLocked() and 
+      mainShaftController.GetRPM() <= MainShaftController`LOCK_LIMIT 
+   then (mainShaftController.CloseLock();
+         ChangeMode(new ModeHubInSafeMode())
+        )
+  )
+
+end ModeEnterHubInSafeMode
+
+class ModeHubInSafeMode is subclass of Mode
+
+ operations
+ protected OnEntry : () ==> ()
+ OnEntry() ==
+  mHubController.GetHub().Open();
+
+ protected OnRun : () ==> ()
+ OnRun() ==
+  if not mEnterHubInSafeMode then
+   ChangeMode(new ModeLeaveHubInSafeMode());
+
+ protected OnExit : () ==> ()
+ OnExit() ==
+  mHubController.GetHub().Close();
+
+end ModeHubInSafeMode
+
+class ModeLeaveHubInSafeMode is subclass of Mode
+ operations
+ protected OnRun : () ==> ()
+ OnRun() ==
+ let hub = mHubController.GetHub()
+ in
+  if hub.IsEStopPressed() then
+  (
+   IO`print("EStop\n");
+   EnterHubInSafeMode();
+   ChangeMode(new ModeHubInSafeMode())
+  )
+  else if not hub.IsAlarmActive() then
+   ChangeMode(new ModeOperational());
+ 
+end ModeLeaveHubInSafeMode
+
+class ModeOperational is subclass of Mode
+
+ operations
+ protected OnEntry : () ==> ()
+ OnEntry() ==
+  let mainShaftController = mHubController.GetMainShaftController()
+  in
+  (
+   mainShaftController.OpenLock();
+   mainShaftController.ReleaseBrake();
+   mainShaftController.Run()
+  );
+
+ protected OnRun : () ==> ()
+ OnRun() ==
+  if mEnterHubInSafeMode and 
+     WindMeasurementController`GetInstance().GetWindSpeed() <= 
+     ModeEnterHubInSafeMode`MAX_WINDSPEED 
+  then ChangeMode(new ModeEnterHubInSafeMode())
+
+end ModeOperational
+
+class OperatingPanel
+ types
+ --Enter Hub In Safe Mode (E) | Leave Hub In Safe Mode (L) | No Command (N)
+ public CmdType = <E> | <L> | <N>;
+ 
+ instance variables
+ mCmdSeq : seq of CmdType;
+ mHubController : HubController;
+ mTime : nat := 0;
+
+ operations
+ public OperatingPanel : seq of CmdType * HubController ==> OperatingPanel
+ OperatingPanel(cmdSeq, hubController) ==
+ (
+  mCmdSeq := cmdSeq;
+  mHubController := hubController;
+ );
+
+ EnterHubInSafeMode : () ==> ()
+ EnterHubInSafeMode() ==
+  mHubController.GetMode().EnterHubInSafeMode();
+   
+
+ LeaveHubInSafeMode : () ==> ()
+ LeaveHubInSafeMode() ==
+  mHubController.GetMode().LeaveHubInSafeMode();
+
+ Print : nat1 * seq of char ==> ()
+ Print(time, string) ==
+ (
+  IO`print("T");
+  IO`print(time);
+  IO`print(" " ^ string ^ "\n");
+ );
+
+ public RunCmdInterface : () ==> ()
+ RunCmdInterface() ==
+ (
+  if len mCmdSeq >= 1 then
+   let cmd = hd mCmdSeq
+   in
+   (
+    mCmdSeq := tl mCmdSeq;
+    mTime := len mCmdSeq + 1;    
+
+    if cmd = <E> then
+    (
+     Print(mTime, "Command <E>");
+     EnterHubInSafeMode()
+    )
+    else if cmd = <L> then
+    ( 
+     Print(mTime, "Command <L>");
+     LeaveHubInSafeMode()
+    )
+   )
+ );
+
+ public RunDisplayInterface : () ==> ()
+ RunDisplayInterface() ==
+ (
+  --todo klaus cases
+  if  isofclass(ModeEnterHubInSafeMode, mHubController.GetMode()) then
+   Print(mTime, "Entering Hub In Safe Mode")
+  else if isofclass(ModeHubInSafeMode, mHubController.GetMode()) then
+   Print(mTime, "Hub In Safe Mode")
+  else if isofclass(ModeLeaveHubInSafeMode, mHubController.GetMode()) then
+   Print(mTime, "Leaving Hub In Safe Mode")
+  else 
+   Print(mTime, "Operational")
+ ); 
+end OperatingPanel
+
+class Speaker
+ instance variables
+ mAlarm : nat := 0;
+
+ operations
+ public StartAlarm : () ==> ()
+ --Start alarm for max duration of one minute
+ StartAlarm() ==
+  mAlarm := 3;
+
+ --Stop alarm. If alarm already stopped this has no effect.
+ public StopAlarm : () ==> ()
+ StopAlarm() ==
+  mAlarm := 0;
+
+ --return true if alarm is currently active, false otherwise.
+ public IsActive : () ==> bool
+ IsActive() ==
+  return mAlarm <> 0;
+
+ public Run : () ==> ()
+ Run() ==
+  if (mAlarm > 0) 
+  then mAlarm := mAlarm - 1
+
+end Speaker
+
+class WindMeasurementController
+ types
+ public WindSpeedType = nat
+ inv w == w <= 50
+
+ values
+ public static MAX_WIND : WindSpeedType = 50;
+
+ instance variables
+ mWindSpeedSeq : seq of WindSpeedType;
+ static mInstance : [WindMeasurementController] := nil;
+
+ operations
+ WindMeasurementController : seq of WindSpeedType ==> WindMeasurementController
+ WindMeasurementController(windSpeedSeq) ==
+  mWindSpeedSeq := windSpeedSeq;
+
+ public static CreateInstance : seq of WindSpeedType ==> ()
+ CreateInstance(windSpeedSeq) ==
+  if mInstance = nil 
+  then mInstance := new WindMeasurementController(windSpeedSeq);
+
+ public static GetInstance : () ==> WindMeasurementController
+ GetInstance() ==
+  return mInstance
+ pre mInstance <> nil;
+
+ public GetWindSpeed : () ==> WindSpeedType
+ GetWindSpeed() ==
+  return hd mWindSpeedSeq
+ pre mWindSpeedSeq <> [];
+
+ public IsFinished : () ==> bool
+ IsFinished() ==
+  return mWindSpeedSeq = []; 
+
+ public Run : () ==> ()
+ Run() ==
+  if mWindSpeedSeq <> [] 
+  then mWindSpeedSeq := tl mWindSpeedSeq;
+
+end WindMeasurementController
+
+class WindTurbine
+ instance variables
+ mHubController : HubController;
+ mMainShaftController : MainShaftController;
+ mOperatingPanel : OperatingPanel;
+
+ operations
+ public WindTurbine : seq of Enviroment`TestData ==> WindTurbine
+ WindTurbine(testData) ==
+ (
+  WindMeasurementController`CreateInstance([testData(i).Wind | i in set inds testData]);
+  mMainShaftController := new MainShaftController();
+  mHubController := new HubController([testData(i).EStop | i in set inds testData], 
+                                      mMainShaftController);
+  mOperatingPanel := new OperatingPanel( [testData(i).Cmds | i in set inds testData], 
+                                         mHubController );
+ );
+
+ public Run : () ==> ()
+ Run() ==
+  while(not WindMeasurementController`GetInstance().IsFinished())
+  do
+  (
+   mOperatingPanel.RunCmdInterface();
+   
+   mMainShaftController.Run();
+   mHubController.Run();
+
+   mOperatingPanel.RunDisplayInterface();
+      
+   WindMeasurementController`GetInstance().Run();
+  )
+
+end WindTurbine

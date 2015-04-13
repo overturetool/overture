@@ -1,0 +1,29 @@
+-classpath
+'C:/Users/Jpereira/overtureRep/core/parser/target/classes;C:/Users/Jpereira/overtureRep/core/testframework/target/testframework-2.2.3-SNAPSHOT.jar;C:/Users/Jpereira/overtureRep/core/ast/target/ast-2.2.3-SNAPSHOT.jar'
+-encoding
+'UTF-8'
+-protected
+-quiet
+-sourcepath
+'C:/Users/Jpereira/overtureRep/core/parser/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2008-2015 <a href="http://overturetool.org/">Overture</a>. All Rights Reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/Jpereira/overtureRep/core/parser/target/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'The VDM parser 2.2.3-SNAPSHOT API'
+-linkoffline
+'http://docs.oracle.com/javase/7/docs/api' 'C:/Users/Jpereira/overtureRep/core/parser/target/javadoc-bundle-options'
+-linkoffline
+'http://nexus.sonatype.org/oss-repository-hosting.html/root/core/ast/apidocs' 'C:/Users/Jpereira/overtureRep/core/ast/target/apidocs'
+-linkoffline
+'http://nexus.sonatype.org/oss-repository-hosting.html/root/core/testframework/apidocs' 'C:/Users/Jpereira/overtureRep/core/testframework/target/apidocs'
+-use
+-version
+-windowtitle
+'The VDM parser 2.2.3-SNAPSHOT API'

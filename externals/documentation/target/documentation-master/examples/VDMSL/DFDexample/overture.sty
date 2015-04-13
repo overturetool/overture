@@ -1,0 +1,41 @@
+\usepackage{longtable}
+\usepackage{times}
+\usepackage{graphics}
+\usepackage[pdftex,dvipsnames]{color}
+\definecolor{notovered}{rgb}{1,0,0}  %red
+% definition of VDM++, JavaCC, JJTree, JTB, ANTLR and SableCC for listings
+\usepackage{listings}
+
+% use package for VDM language definition
+\usepackage{overturelanguagedef}
+% Define Overture listing for The VDM language
+\lstdefinestyle{overtureLanguageStyle}{basicstyle=\ttfamily,
+			frame=trBL, 
+%			numbers=left, 
+%			gobble=0, 
+			showstringspaces=false, 
+%			linewidth=\textwidth, 
+			frameround=fttt, 
+			aboveskip=5mm,
+			belowskip=5mm,
+			framexleftmargin=0mm, 
+			framexrightmargin=0mm}
+% Set escape for inserting coverage macros
+\lstset{escapeinside=!!}
+% Set the default style for lstlistings
+\lstset{style=overtureLanguageStyle}
+
+% Custom macro used to color uncoverage model parts in listings
+\newcommand{\notcovered}[1]{\textcolor{notovered}{#1}}
+
+% Environment definition for VDM blocks
+%  The listing style is reset to overture and the language is set to the active one in the project where the model has been generated from.
+\lstnewenvironment{vdm_al}{\lstset{style=overtureLanguageStyle}\lstset{language=OVERTURE_LANGUAGE}}
+{}
+
+% Environment definition for test coverage use by VDM Tools
+\lstnewenvironment{rtinfo}{}
+{}
+
+
+

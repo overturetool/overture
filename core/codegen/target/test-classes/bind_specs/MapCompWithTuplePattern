@@ -1,0 +1,15 @@
+class Entry
+
+functions
+
+public op :  () -> map nat to nat
+op () ==
+	{ a |-> a | mk_(a,2,-) in set {mk_(10,1,1), mk_(20,2,3), mk_(30,2,5), mk_(40,1,2), mk_(50,2,2)} & 1 = 1 };
+	
+operations
+	
+public static Run : () ==> ?
+Run () ==
+	op();
+
+end Entry

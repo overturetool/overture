@@ -1,0 +1,40 @@
+system RadNavSys
+
+instance variables
+  -- create an MMI class instance
+  static public mmi : MMI := new MMI();
+  -- define the first CPU with fixed priority scheduling and 22E6 MIPS
+  CPU1 : CPU := new CPU (<FP>, 22E6);
+
+  -- create an Radio class instance
+  static public radio : Radio := new Radio();
+  -- define the second CPU with fixed priority scheduling and 11E6 MIPS
+  CPU2 : CPU := new CPU (<FP>, 11E6);
+
+  -- create an Navigation class instance
+  static public navigation : Navigation := new Navigation();
+  -- define the third CPU with fixed priority scheduling and 113 MIPS
+  CPU3 : CPU := new CPU (<FP>, 113E6); 
+
+  -- create a communication bus that links the three CPU's together
+  BUS1 : BUS := new BUS (<CSMACD>, 72E3, {CPU1, CPU2, CPU3})
+
+operations
+  public RadNavSys: () ==> RadNavSys
+  RadNavSys () ==
+    ( -- deploy mmi on CPU1
+      CPU1.deploy(mmi,"MMIT");
+      CPU1.setPriority(MMI`HandleKeyPress,100);
+      CPU1.setPriority(MMI`UpdateScreen,90);
+      -- deploy radio on CPU2
+      CPU2.deploy(radio,"RadioT");
+      CPU2.setPriority(Radio`AdjustVolume,100);
+--      CPU2.setPriority(Radio`DecodeTMC,90);
+      -- deploy navigation on CPU3
+      CPU3.deploy(navigation,"NavT");
+      CPU3.setPriority(Navigation`DatabaseLookup, 100);
+      CPU3.setPriority(Navigation`DecodeTMC, 90)
+      -- starting the CPUs and BUS is implicit
+    );
+
+end RadNavSys

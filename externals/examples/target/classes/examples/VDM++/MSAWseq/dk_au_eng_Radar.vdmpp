@@ -1,0 +1,71 @@
+class dk_au_eng_Radar
+--
+-- External Java implementation of radar screen
+--
+--
+	operations
+
+        
+		-- Add a FO to the radar to track
+		public AddFlyingObject: int * int * int * seq of char ==> ()
+		AddFlyingObject(longtitude, latitude, altitude, transpondercode) == is not yet specified;
+
+		-- Remove a FO from the radar
+		public RemFlyingObject: seq of char ==> ()
+		RemFlyingObject(transpondercode) == is not yet specified;
+
+		-- Make the scan line progress one step
+		public StepRadar: () ==> ()
+		StepRadar() == is not yet specified;
+
+        -- Update the position of a flying object given its transponder code 
+        public UpdateFlyingObject: seq of char * int * int ==> ()
+        UpdateFlyingObject(transponder,long,lat) == is not yet specified;
+
+        -- Set the step size, that is the angle by which the scan line is progressed when
+        -- stepping
+        public SetStepSize: int ==> ()
+        SetStepSize(size) == is not yet specified;
+
+        -- Set the width of the scan cone
+        public SetScanWidth: int ==> ()
+        SetScanWidth(width) == is not yet specified;
+
+        -- Set the time a scan takes
+        public SetScanTime: int ==> ()
+        SetScanTime(time) == is not yet specified;
+
+        -- Set the position of the Radar window (a nice model with two radars would want to 
+        -- position the radars next to each other).
+        public SetWindowPosition: int * int ==> ()
+        SetWindowPosition(x,y) == is not yet specified;
+
+        -- Set the title of the Radar Window
+        public SetTitle: seq of char ==> ()
+        SetTitle(title) == is not yet specified;
+
+        -- Force the Scan Angle to be angle
+        public SetScanAngle: int ==> ()
+        SetScanAngle(angle) == is not yet specified;
+
+		-- Run operation that makes 400 steps with two planes one of which is moving across.
+		public static TestRadar: () ==> int
+		TestRadar() == (
+            let
+                rad1:dk_au_eng_Radar = new dk_au_eng_Radar(),
+                rad2:dk_au_eng_Radar = new dk_au_eng_Radar()
+            in (
+                rad2.SetWindowPosition(300,300);
+                rad1.SetScanWidth(60);
+                rad1.SetScanTime(80);
+                rad1.AddFlyingObject(120, 120, 0, "LAN256");
+                rad1.AddFlyingObject(0, 80, 0, "BA512");
+                rad1.SetStepSize(6);
+                for all x in set { -200,...,200 } do
+                    (rad2.StepRadar();rad1.UpdateFlyingObject("BA512",x,80);rad1.SetWindowPosition(x+250, 100);rad1.StepRadar());
+                
+            return 0);
+        );
+
+
+end dk_au_eng_Radar

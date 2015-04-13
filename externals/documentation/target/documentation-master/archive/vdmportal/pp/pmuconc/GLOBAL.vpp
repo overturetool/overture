@@ -1,0 +1,67 @@
+\begin{vdm_al}
+class GLOBAL
+
+types
+public CprNr = nat;
+public EventId = nat;
+public DataType = nat;
+public TimeStamp = nat;
+public HeartRateData = nat * TimeStamp;
+public WeightData = nat * TimeStamp;
+public DeviceData = HeartRateData | WeightData;
+public EmergencyType = nat;
+
+public ProximityEvent ::
+        eventid : nat
+        cprnr : nat;
+
+public Data ::
+        eventid : nat
+        cprnr : nat
+        datatype : nat
+        devicedata : seq of DeviceData;
+        
+public RechargeEvent ::
+        eventid : nat
+        cprnr : nat;
+        
+public Event = Data | ProximityEvent | RechargeEvent;
+public EventData =  TimeStamp * Event;
+
+public ProximityData ::
+        priority : nat
+        cprnr : nat
+        datatype : nat
+        proximitydata : seq of DeviceData;
+        
+public EmergencyData ::
+        priority : nat
+        cprnr : nat
+        emergencytype : nat
+        emergencydata : seq of DeviceData;        
+
+public Message = ProximityData | EmergencyData;
+public ResultData = TimeStamp * Message;
+
+public Tendency = nat;
+public BatteryDrain = nat;
+
+values
+  
+public HEART_FAILURE_MESSAGE = 1;
+public HEART_RATE_SPIKE = 2;
+public DATA_MESSAGE = 10;  
+
+public HEARTRATE = 3;
+public TAKEMEDICINE = 2;
+public WEIGHT = 1;
+    
+instance variables
+
+operations
+    
+end GLOBAL
+
+
+\end{vdm_al}
+

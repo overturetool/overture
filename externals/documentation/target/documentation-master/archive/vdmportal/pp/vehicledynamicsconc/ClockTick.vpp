@@ -1,0 +1,23 @@
+class ClockTick
+
+instance variables
+
+tid : int := -1;
+
+operations
+
+public ClockTick : Types`Time ==> ClockTick
+ClockTick(t) == tid := t;
+
+
+types
+
+thread 
+
+while true do
+ (
+  World`timerRef.NotifyThread(tid);
+  World`timerRef.WaitRelative(1);
+ )
+
+ end ClockTick

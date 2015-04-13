@@ -1,0 +1,13 @@
+dlmodule GEOM
+
+exports
+  
+  operations
+    InitGeom : () ==> ();
+    ShowThrust : seq of seq of char ==> ();
+  
+  
+  uselib
+    "geom_lib.so"
+
+end GEOM

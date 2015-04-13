@@ -1,0 +1,27 @@
+\begin{vdm_al}
+class Timer
+
+instance variables
+
+currentTime : nat := 0;
+
+values
+
+stepLength : nat = 10;
+
+operations
+
+public StepTime : () ==> ()
+StepTime() ==
+  currentTime := currentTime + stepLength;
+
+public GetTime : () ==> nat
+GetTime() ==
+  return currentTime;
+
+end Timer
+\end{vdm_al}
+
+\begin{rtinfo}[Timer`StepTime]
+{vdm.tc}[Timer]
+\end{rtinfo}

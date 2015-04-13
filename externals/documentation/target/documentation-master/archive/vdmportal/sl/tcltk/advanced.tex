@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage{a4}
+\usepackage{makeidx}
+\usepackage{vdmsl-2e}
+
+\newcommand{\StateDef}[1]{{\bf #1}}
+\newcommand{\TypeDef}[1]{{\bf #1}}
+\newcommand{\TypeOcc}[1]{{\it #1}}
+\newcommand{\FuncDef}[1]{{\bf #1}}
+\newcommand{\FuncOcc}[1]{#1}
+\newcommand{\ModDef}[1]{{\tiny #1}}
+
+\makeindex
+
+\begin{document}
+
+\title{Using Tcl/TK in a Database Specification}
+\author{Submitted by Brigitte Fr\"{o}lich}
+\maketitle
+
+\section{The GUI Database Module}
+
+\begin{vdm}
+\input{GuiDB.vdm.tex}
+\end{vdm}
+
+\section{The Database Module}
+
+\begin{vdm}
+\input{MapDB.vdm.tex}
+\end{vdm}
+
+\section{The GUI DL Module}
+
+\begin{vdm}
+\input{gui.vdm.tex}
+\end{vdm}
+
+\printindex
+\end{document}

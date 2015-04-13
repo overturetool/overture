@@ -1,0 +1,41 @@
+/*
+Test Group
+	Test of all test cases
+Written by
+	Shin Sahara
+*/
+class AllT
+operations
+public run : () ==>bool
+run () == 
+	let	ResultOfTest =
+		[
+			new TermT().run(),
+			new TimeT().run(),
+			new MapT().run(),
+			new HashtableT().run(),
+			new FHashtableT().run(),
+			new DoubleListQueueT().run(),
+			new QueueT().run(),
+			new ＵｎｉｑｕｅＮｕｍｂｅｒＴ().run(),
+			new RealT().run(), 
+			new SetT().run(),
+			new SequenceT().run(),
+			new StringT().run(),
+			new IntegerT().run(),
+			new NumberT().run(),
+			new CalendarT().run(),
+			new SBCalendarT().run(),
+			new DateT().run(),
+			new FunctionT().run()
+			],
+		Message = "Result of all test cases."
+		
+	in
+	if   forall i in set inds ResultOfTest & ResultOfTest(i) then
+		return new TestLogger().succeededInAllTestcases(Message)
+	else
+		return new TestLogger().notSucceededInAllTestcases(Message)
+	
+end AllT
+ 

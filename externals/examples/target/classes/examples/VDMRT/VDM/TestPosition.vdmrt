@@ -1,0 +1,105 @@
+\section{Test of Position}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			TestPosition
+-- Description: 	Test the Position class 
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestPosition is subclass of TestCase
+
+--
+-- instance variables
+--
+instance variables
+
+--
+-- Operations definition section
+--
+operations
+public TestPosition: seq of char ==> TestPosition
+TestPosition(s) ==
+(
+	TestCase(s);
+);
+
+protected SetUp: () ==> ()
+SetUp () == skip;
+
+protected RunTest: () ==> ()
+RunTest () ==
+(
+ dcl pos : Position := new Position(2, 1);
+
+ AssertTrue(pos.X() = 2);
+ AssertTrue(pos.Y() = 1); 
+
+ pos.setX(10);
+ AssertTrue(pos.X() = 10); 
+ 
+ pos.setY(4);
+ AssertTrue(pos.Y() = 4); 
+ 							 
+ AssertTrue(pos.toString() = "position X: 10 Y: 4");
+ 
+ testInRange();
+ testDeepCopy();
+ testCompare();
+);
+  
+protected TearDown: () ==> ()
+TearDown () == skip;
+
+
+public testInRange : () ==> ()
+testInRange() ==
+(
+ dcl p  : Position := new Position(0, 0),
+ p2 : Position := new Position(1, 0);
+ 
+  AssertTrue(p.inRange(p2 , 1));
+  AssertFalse(p.inRange(p2, 0));
+  p2.setY(4);
+  p2.setX(4);
+  AssertTrue(p.inRange(p2 , 5));
+);
+
+
+public testDeepCopy : () ==> ()
+testDeepCopy() ==
+(
+ dcl p  : Position := new Position(5, 3),
+ p2 : Position := p.deepCopy();
+ 
+ AssertFalse(p = p2);
+ AssertTrue(p.X() = p2.X());
+ AssertTrue(p.Y() = p2.Y());
+ p.setX(10);
+ AssertTrue(p.X() <> p2.X());
+);
+
+
+public testCompare : () ==> ()
+testCompare() ==
+(
+ dcl p  : Position := new Position(5, 3),
+ p2 : Position := p.deepCopy();
+ 
+ AssertTrue(Position`Compare(p,p2));
+ AssertTrue(Position`Compare(p2,p));
+ p.setX(10);
+ AssertFalse(Position`Compare(p,p2));
+);
+
+
+
+end TestPosition
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[TestPosition]
+\end{rtinfo}

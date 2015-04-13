@@ -1,0 +1,330 @@
+\begin{vdm_al}
+-----------------------------------------------
+-- Author:	Kim Christensen
+-- Created:	2/03-2009
+-- Updated: 17/03-2009
+-- Description: AreaController class for ORAMS
+-----------------------------------------------
+
+class AreaController is subclass of GLOBAL
+
+
+instance variables
+	id : Aid;
+	boats : map Bid to Lifeboat := {|->};
+	equip : set of FireEquipment := {};
+	pStay : map Pid to Person := {|->};
+	pTransit : set of tPerson := {};
+	stayCap : nat := 0;
+	transCap : nat := 0;
+	busy : bool := true;
+
+	
+	inv card dom pStay <= stayCap;
+	inv card pTransit <= transCap;
+	
+	
+types	
+	tPerson :: 	person 	: Pid
+				outTime : nat
+				late 	: bool;
+
+operations
+	public AreaController : Aid ==> AreaController
+		AreaController(aid) == 
+			(id := aid;
+			transCap := 2;
+			);
+
+
+	public step : () ==> ()
+		step() ==
+			duration(100)
+			(
+			--dcl curtime : Time := World`timer.GetTime();
+			dcl curtime : Time := time;
+			boatMaintenance();
+			for all p in set pTransit 
+			do
+				if p.outTime <= curtime and not p.late
+				then (					
+					dcl ap : tPerson := mu(p, late |-> true);
+					pTransit := pTransit \ {p};
+					pTransit := pTransit union {ap};
+					World`env.addOutline(mk_(
+											curtime, 
+											"Error person stayed too long ", 
+											id, 
+											p.person, 
+											p.outTime, 
+											'\n'));
+					)
+			);	
+			
+			
+	public isFinished : () ==> ()
+		isFinished() == 
+			busy := false;		
+			
+	public getId : () ==> Aid 
+		getId() == 
+			return id;
+			
+	public addEquipment : FireEquipment ==> ()
+		addEquipment(fe) ==
+			equip := {fe} union equip;		
+
+	
+	public removeEquipment : FireEquipment ==> ()
+		removeEquipment(fe) ==
+			equip := equip \ {fe}
+	pre stayCap - card dom pStay > 0;
+	
+	
+	public canRemoveEquipment : () ==> bool
+		canRemoveEquipment() ==
+			(
+			updateCap();
+			if card equip > stayCap
+			then return true
+			else return (stayCap - 1 - card dom pStay) >= 0;
+			);
+			
+	
+	public addBoat : Lifeboat ==> ()
+		addBoat(boat) == 
+			(
+			boats := boats munion {boat.getId() |-> boat};
+			boat.addArea(id);
+			)
+	pre boat.getId() not in set dom boats;
+	
+				 
+	public canRemoveBoat : Bid ==> bool
+		canRemoveBoat(boat) == 
+			(
+			return card (ORAMS`Lifeboats(boat).getCrew() inter dom pStay) 
+						<= getCap(dom({boat} <-: boats));
+			);
+				 
+	public removeBoat : Bid ==> ()
+		removeBoat(bid) ==
+			(
+			boats(bid).disable();
+			let ps = boats(bid).getInterCrew(dom pStay)
+			in
+				for all p in set ps do 
+					changeBoat(p);
+			boats(bid).removeArea(id);
+			boats(bid).enable();
+			boats := {bid} <-: boats;				
+			)
+	pre bid in set dom boats and canRemoveBoat(bid)
+	post bid not in set dom boats;
+			
+		
+
+			
+				
+	
+	public leave : Pid ==> ()
+		leave(person) ==
+			if (exists p in set dom pStay & p = person) --can be done smarter...
+			then (pStay := {person} <-: pStay;)
+			elseif (exists p in set pTransit & p.person = person)
+			then (let pT in set pTransit be st pT.person = person
+				  in pTransit := pTransit \ {pT};)
+	pre person in set dom pStay or exists p in set pTransit & p.person = person; --unpack p.person first..
+	
+	
+	public changeBoat : Pid ==> ()
+		changeBoat(p) ==
+			(
+			let b = pStay(p).getBoat() 
+			in (
+				let newBoat = findBoat(b)
+				in ( 
+					ORAMS`Lifeboats(b).removePerson(p);
+					boats(newBoat).addPerson(p);
+					pStay(p).changeBoat(newBoat);
+					)
+				)
+			);
+	
+	public enterPerson : Pid * Intend ==> bool 
+		enterPerson(person, intend) ==
+			(updateCap();
+			cases intend :
+				<Stay> -> return doAddStaying(person),
+				<Transit> -> return doAddTransit(person)
+			end)
+	pre person not in set dom pStay or 
+		exists p in set pTransit & p.person = person;	
+		
+		
+	private doAddStaying : Pid ==> bool 
+		doAddStaying(person) ==
+			if isRoomForStay() 
+			then (
+				let boat = findBoat()
+				in (
+				  	boats(boat).addPerson(person);
+				  	pStay := {person |-> ORAMS`persons(person)} munion pStay;
+				  	if pStay(person).getArea() <> nil  
+				  	then 
+				  		ORAMS`areas(ORAMS`persons(person).getArea()).leave(person);
+				  	if pStay(person).getBoat() <> nil  
+				  	then 
+				  		ORAMS`Lifeboats(ORAMS`persons(person).getBoat()).removePerson(person);
+				   	pStay(person).changeArea((inverse ORAMS`areas)(self));
+				  	pStay(person).changeBoat(boat);
+					
+					return true;
+					)
+				)
+			else return false;
+			
+	
+	private doAddTransit : Pid ==> bool 
+		doAddTransit(person) ==
+			if isRoomForTransit() 
+			then ( dcl p : tPerson := mk_tPerson(person, 
+												 time + 250, --World`timer.GetTime() + 100, 
+												 false);
+				  pTransit := {p} union pTransit;
+				  if ORAMS`persons(person).getArea() <> nil 
+				  then ORAMS`areas(ORAMS`persons(person).getArea()).leave(person);	  	
+				  	ORAMS`persons(person).changeArea((inverse ORAMS`areas)(self));
+				  return true;
+				  )
+			else return false;
+			
+	
+	private findBoat : Bid ==> Bid
+		findBoat(b) ==
+			( let bids = {b} <-:boats 
+			in ( 
+				let bs = {boat | boat in set dom bids 
+							   & bids(boat).getRemainingCap() > 0}
+				in (
+					if exists boat in set bs & boats(boat).isDedicated()
+					then (let boat in set bs be st boats(boat).isDedicated()
+					in 
+						return boat
+					)
+					else 
+						(let boat in set bs
+						in 
+							return boat
+					)
+				)
+			)
+			);
+	
+	
+	private findBoat : () ==> Bid
+		findBoat() ==
+			( 
+			let bs = {b | b in set dom boats & boats(b).getRemainingCap() > 0}
+			in (
+				if exists b in set bs & boats(b).isDedicated()
+				then (let b in set bs be st boats(b).isDedicated()
+					in 
+						return b
+					)
+				else 
+					(let b in set bs
+					in 
+						return b
+					)
+				)
+			);
+	
+	private boatMaintenance : () ==> ()
+		boatMaintenance() ==
+			(
+			dcl remCap : nat := 0;
+			let bs = {b | b in set rng boats & b.isDedicated()}
+			in (
+				for all b in set bs do 
+					remCap := remCap + b.getRemainingCap();
+				if remCap > 0
+				then (
+					let sharedBoats = rng boats \ bs
+					in (
+					dcl crew : set of Pid := dunion {cs.getInterCrew(dom pStay) | cs in set sharedBoats};
+							while remCap > 0 and crew <> {} do 
+							(
+								let p in set crew
+								in (
+									changeBoat(p);
+									crew := crew \ {p};
+									);
+								remCap := remCap - 1;
+							)
+						)
+					)
+				)
+			);
+			
+			
+	private isRoomForStay : () ==> bool
+		isRoomForStay() == 
+			(
+			updateCap();
+			return stayCap - card dom pStay > 0;
+			);
+
+	
+	private isRoomForTransit : () ==> bool
+		isRoomForTransit() ==
+			return transCap - card pTransit > 0;
+			
+			
+	private updateCap : () ==> ()
+		updateCap() ==
+			(dcl bCap : nat := 0;
+			for all b in set dom boats
+			do bCap := bCap + ORAMS`Lifeboats(b).getRemainingCap();				
+			stayCap := min(bCap + card dom pStay, card equip)
+			);
+	
+	
+	private getCap : set of Bid ==> nat
+		getCap(bs) ==
+			(dcl bCap : nat := 0;
+			for all b in set bs
+			do bCap := bCap + boats(b).getRemainingCap();				
+			return bCap
+			);
+			
+
+functions
+	private min : nat * nat -> nat
+		min(n1,n2) ==
+			if n1 < n2 
+			then n1
+			else n2; 
+
+
+values
+
+sync
+per isFinished => #active(step) = 0;
+mutex(leave, step);
+mutex(enterPerson, step);
+
+thread
+	periodic (250,1,3,0)(step) 
+	 
+--	(
+--		while busy do 
+--			step();
+--			World`timer.WaitRelative(TimeStamp`stepLength); --Hmm, how long should I sleep?
+--	)
+
+end AreaController
+\end{vdm_al}
+
+\begin{rtinfo}{vdm.tc}[AreaController]
+\end{rtinfo}

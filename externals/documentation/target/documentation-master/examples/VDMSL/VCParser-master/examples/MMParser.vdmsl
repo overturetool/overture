@@ -1,0 +1,92 @@
+module MMParser
+/***
+MMParser
+Author: Tomohiro Oda
+Version: 0.01
+License: the MIT License
+
+Copyright (c) 2013 Tomohiro Oda and Software Research Associates, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+***/
+imports from VCParser all
+exports functions eval: seq of char -> [int]
+definitions
+types
+    TREE = VCParser`TREE;
+    PARSED = VCParser`PARSED;
+
+values
+	concat = VCParser`concat;
+    series = VCParser`series;
+    either = VCParser`either;
+    star = VCParser`star;
+    trimBlanks = VCParser`trimBlanks;
+    integer = VCParser`integer;
+    takeChar = VCParser`takeChar;
+    label = VCParser`label;
+    transtree = VCParser`transtree;
+    
+	parseInt = trimBlanks(integer);
+    parseMul = series([takeChar('*'), parseInt]);
+    parseDiv = series([takeChar('/'), parseInt]);
+	parseTerm = transtree(liftOperator, series([
+    	parseInt,
+        star(either([parseMul, parseDiv]))]));
+    parseAdd = series([takeChar('+'), parseTerm]);
+    parseSub = series([takeChar('-'), parseTerm]);
+    parseExpression = transtree(liftOperator, series([
+    	parseTerm,
+        star(either([parseAdd, parseSub]))]));
+        
+    liftOperator = lambda tree:VCParser`TREE & 
+      let mk_VCParser`TREE(-, [left, right]) = tree in
+    	let mk_VCParser`TREE(-, rights) = right in cases rights:
+        	[] -> left,
+            [mk_VCParser`TREE(-, [mk_VCParser`TREE(-, operator), operand])]^rest ->
+            	liftOperator(mk_VCParser`TREE(nil, [
+                	mk_VCParser`TREE(operator, [left, operand]), 
+                    mk_VCParser`TREE(nil, rest)]))
+        end;
+        
+ functions
+	evalInt : seq of char -> int
+    evalInt(string) == cases string:
+    	"-"^rest -> evalInt(rest) * -1,
+        [] -> 0,
+        others -> evalInt([string(i) | i in set {1,...,len string -1}]) * 10 + 
+                 {'0' |-> 0, '1' |-> 1, '2' |-> 2, '3' |-> 3, '4' |-> 4, '5' |-> 5, 
+                  '6' |-> 6, '7' |-> 7, '8' |-> 8, '9'|-> 9}(string(len string))
+    	end;
+   	evalTree : TREE -> int
+   	evalTree(tree) == cases tree:
+   		mk_VCParser`TREE("int", contents) -> evalInt(contents),
+      mk_VCParser`TREE("*", [e1, e2]) -> evalTree(e1) * evalTree(e2),
+      mk_VCParser`TREE("/", [e1, e2]) -> evalTree(e1) / evalTree(e2),
+      mk_VCParser`TREE("+", [e1, e2]) -> evalTree(e1) + evalTree(e2),
+      mk_VCParser`TREE("-", [e1, e2]) -> evalTree(e1) - evalTree(e2)
+    end;
+    
+    eval : seq of char -> [int]
+    eval(string) == cases parseExpression(string):
+    		mk_VCParser`PARSED(tree, []) -> evalTree(tree),
+        	others -> nil
+    	end;
+            
+end MMParser

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="30" line="135" message="a at 133:6 hidden by a" messageType="warning" number="5008" resource="class.vpp"/>
+<message column="7" line="96" message="Undefined superclass: NoClass" messageType="error" number="3003" resource="class.vpp"/>
+<message column="7" line="99" message="Circular class hierarchy detected: Circular1" messageType="error" number="3002" resource="class.vpp"/>
+<message column="7" line="102" message="Circular class hierarchy detected: Circular2" messageType="error" number="3009" resource="class.vpp"/>
+<message column="7" line="105" message="Circular class hierarchy detected: Circular3" messageType="error" number="3009" resource="class.vpp"/>
+<message column="7" line="99" message="Circular class hierarchy detected: Circular1" messageType="error" number="3009" resource="class.vpp"/>
+<message column="7" line="102" message="Circular class hierarchy detected: Circular2" messageType="error" number="3009" resource="class.vpp"/>
+<message column="7" line="105" message="Circular class hierarchy detected: Circular3" messageType="error" number="3009" resource="class.vpp"/>
+<message column="7" line="99" message="Circular class hierarchy detected: Circular1" messageType="error" number="3009" resource="class.vpp"/>
+<result/>
+</testResult>

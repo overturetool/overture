@@ -1,0 +1,37 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Character casesChar(final Character c) {
+        Character charPattern_1 = c;
+        Boolean success_1 = Utils.equals(charPattern_1, 'a');
+
+        if (!(success_1)) {
+            Character charPattern_2 = c;
+            success_1 = Utils.equals(charPattern_2, 'b');
+
+            if (success_1) {
+                return 'y';
+            } else {
+                return 'q';
+            }
+        } else {
+            return 'x';
+        }
+    }
+
+    public static Object Run() {
+        return SeqUtil.seq(casesChar('u'), casesChar('a'), casesChar('b'));
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

@@ -1,0 +1,129 @@
+\begin{vdm_al}
+
+class Route 
+
+instance variables
+public sections : seq of TransportPlan`Section;
+public traveledSections : seq of TransportPlan`Section;
+public departureTime : nat := 0;
+public departureLocation : TPC`String := ""; --REPLACE!!
+public arrivalLocation : TPC`String := ""; --REPLACE!
+public totalDuration : nat := 0;
+public arrivalTime : nat := 0;
+
+inv len sections > 0 => forall i in set inds sections 
+  & i < len sections => 
+  sections(i).arrivalLocation = sections(i+1).departureLocation;
+  
+inv arrivalTime >= departureTime;
+
+operations
+
+--Constructor
+public Route : seq of TransportPlan`Section * nat ==>  Route
+Route(a_sections, a_departureTime)==
+(
+	sections := []; traveledSections := [];
+	totalDuration := 0;
+	sections := a_sections;
+	(dcl tempSections : seq of TransportPlan`Section := sections;
+	
+		while len tempSections > 0 do
+		(
+			totalDuration := totalDuration + (hd tempSections).dur;
+			tempSections := tl tempSections;
+		);
+	);
+	atomic(
+	departureTime := a_departureTime;
+	arrivalTime := a_departureTime + totalDuration;
+	);
+	departureLocation := (hd sections).departureLocation;
+	arrivalLocation := sections(len sections).arrivalLocation;
+);
+
+public Route : () ==> Route
+Route() == (sections := []; traveledSections := [];);
+
+public getLength : () ==> nat
+getLength() == return len sections;
+
+public getRouteLength : () ==> nat
+getRouteLength() == return len sections;
+
+public getSection : () ==> [TransportPlan`Section]
+getSection() == (
+	if len sections > 0 then
+		return hd sections
+	else
+		return nil;
+);
+
+public sectionTraveled : () ==> ()
+sectionTraveled() == (
+	duration(0)(
+	traveledSections := traveledSections ^ [hd sections];
+	sections := tl sections;
+	);
+)
+pre len sections > 0;
+	
+public getDuration : () ==> nat
+getDuration()==
+(
+	return totalDuration
+);
+
+public getNextArrivalTime : () ==> nat
+getNextArrivalTime() ==
+(
+	duration(0)(
+	dcl x : nat :=  departureTime;
+	if len sections > 0 then (
+		for s in traveledSections do
+		(
+			x := x + s.dur;
+		);
+		
+		x := x + (hd sections).dur;
+		return x;	
+	);
+	return -1;
+	);
+);
+
+public getDepartureTime : () ==> nat
+getDepartureTime()==
+(
+	return departureTime;
+);
+
+public getDepartureLocation : () ==> TPC`String
+getDepartureLocation()==
+(
+	return departureLocation;
+);
+
+public getArrivalTime : () ==> nat
+getArrivalTime()==
+(
+	return departureTime + totalDuration
+);
+
+public getArrivalLocation : () ==> TPC`String
+getArrivalLocation()==
+(
+	return arrivalLocation;
+);
+	
+
+sync 
+--mutex (sectionTraveled);
+
+
+
+end Route
+
+\end{vdm_al}
+
+

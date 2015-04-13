@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
+<message column="14" line="11" message="Error 4094: Can't get bool value of undefined in 'A' (oldname-02.vdm) at line 11:14" messageType="error" number="4094" resource="oldname-02.vdm"/>
+<result>
+<output object="[]" resource="oldname-02.vdm" value="[]"/>
+</result>
+</testResult>

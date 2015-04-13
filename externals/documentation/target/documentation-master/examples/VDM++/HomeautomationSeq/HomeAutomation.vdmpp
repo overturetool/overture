@@ -1,0 +1,54 @@
+--The HA Class
+
+-----------------------------------------------
+-- Author:		Sune Wolf - 20022462
+-- Created:		20/4 - 2008
+-- Updated:
+-- Description: 	System class in the HomeAutomation project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class HA
+
+--
+-- instance variables
+--
+instance variables
+
+public static Host	: HostController := new HostController(22, 75);
+public static TempNode	: TemperatureSensor := new TemperatureSensor(1, <TEMPSENSOR>, 0);
+public static HumidNode	: HumidSensor := new HumidSensor(2, <HUMIDSENSOR>, 0);
+public static ThermNode	: Thermostat := new Thermostat(3, <THERMOSTAT>);
+public static WinNode	: Window := new Window(4, <WINDOW>);
+
+--
+-- Types definition section
+--
+types   
+
+--
+-- Operations definition section
+--
+operations
+
+public HA: () ==> HA
+	HA() ==
+		(Host.AddNode(TempNode.GetID(), TempNode.GetType());
+		Host.AddNode(HumidNode.GetID(), HumidNode.GetType());
+		Host.AddNode(ThermNode.GetID(), ThermNode.GetType());
+		Host.AddNode(WinNode.GetID(), WinNode.GetType());
+		);
+
+--
+-- Functions definition section
+--
+functions
+
+--
+-- Values definition section
+--
+values
+
+end HA

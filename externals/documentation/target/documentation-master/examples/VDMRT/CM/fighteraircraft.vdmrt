@@ -1,0 +1,107 @@
+\begin{vdm_al}
+system CM
+
+instance variables
+
+-- cpu to deploy sensor 1 and 2
+cpu1 : CPU := new CPU (<FCFS>,1E6);
+
+-- cpu to deploy sensor 3 and 4
+cpu2 : CPU := new CPU (<FCFS>,1E6);
+
+-- cpu to deploy the MissileDetector
+-- and the FlareControllers
+cpu3 : CPU := new CPU (<FP>,1E9);
+
+-- cpus for the flare dispensers
+cpu4 : CPU := new CPU (<FCFS>,1E8);
+cpu5 : CPU := new CPU (<FCFS>,1E8);
+cpu6 : CPU := new CPU (<FCFS>,1E8);
+
+-- bus to connect sensors 1 and 2 to the missile detector
+bus1 : BUS := new BUS (<FCFS>,1E3,{cpu1,cpu3});
+
+-- bus to connect sensors 3 and 4 to the missile detector
+bus2 : BUS := new BUS (<FCFS>,1E3,{cpu2,cpu3});
+  
+-- bus to connect flare controllers to the dispensers
+bus3 : BUS := new BUS (<FCFS>,1E3,{cpu3,cpu4,cpu5,cpu6});
+
+-- maintain a link to the detector
+public static detector : MissileDetector := new MissileDetector(nil);
+
+public static sensor0 : Sensor := new Sensor(detector,0);
+public static sensor1 : Sensor := new Sensor(detector,90);
+public static sensor2 : Sensor := new Sensor(detector,180);
+public static sensor3 : Sensor := new Sensor(detector,270);
+
+public static controller0 : FlareController := new FlareController(0, nil);
+public static controller1 : FlareController := new FlareController(120, nil);
+public static controller2 : FlareController := new FlareController(240, nil);
+
+public static dispenser0 : FlareDispenser := new FlareDispenser(0, mk_BaseRTThread`ThreadDef(1000E6,true,0,0,0));
+public static dispenser1 : FlareDispenser := new FlareDispenser(30, mk_BaseRTThread`ThreadDef(1000E6,true,0,0,0));
+public static dispenser2 : FlareDispenser := new FlareDispenser(60, mk_BaseRTThread`ThreadDef(1000E6,true,0,0,0));
+public static dispenser3 : FlareDispenser := new FlareDispenser(90, mk_BaseRTThread`ThreadDef(1000E6,true,0,0,0));
+
+public static dispenser4 : FlareDispenser := new FlareDispenser(0, mk_BaseRTThread`ThreadDef(1000E6,true,0,0,0));
+public static dispenser5 : FlareDispenser := new FlareDispenser(30, mk_BaseRTThread`ThreadDef(1000E6,true,0,0,0));
+public static dispenser6 : FlareDispenser := new FlareDispenser(60, mk_BaseRTThread`ThreadDef(1000E6,true,0,0,0));
+public static dispenser7 : FlareDispenser := new FlareDispenser(90, mk_BaseRTThread`ThreadDef(1000E6,true,0,0,0));
+
+public static dispenser8 : FlareDispenser := new FlareDispenser(0, mk_BaseRTThread`ThreadDef(1000E6,true,0,0,0));
+public static dispenser9 : FlareDispenser := new FlareDispenser(30, mk_BaseRTThread`ThreadDef(1000E6,true,0,0,0));
+public static dispenser10 : FlareDispenser := new FlareDispenser(60, mk_BaseRTThread`ThreadDef(1000E6,true,0,0,0));
+public static dispenser11 : FlareDispenser := new FlareDispenser(90, mk_BaseRTThread`ThreadDef(1000E6,true,0,0,0));
+  
+operations
+ 
+public CM: () ==> CM
+CM () ==
+  (cpu3.deploy(detector);
+--   cpu3.setPriority(MissileDetector`addThreat,100);
+
+   -- set-up sensor 0 and 1
+   cpu1.deploy(sensor0);
+--   cpu1.setPriority(Sensor`trip,100);
+   cpu1.deploy(sensor1);
+
+   -- set-up sensor 2 and 3
+   cpu2.deploy(sensor2);
+--   cpu2.setPriority(Sensor`trip,100);
+   cpu2.deploy(sensor3);
+
+   -- add the first controller with four dispensers
+   cpu3.deploy(controller0);
+--   cpu3.setPriority(FlareController`addThreat,80);
+   -- add the dispensers to the controller
+   cpu4.deploy(dispenser0);
+--   cpu4.setPriority(FlareDispenser`addThreat,100);
+--   cpu4.setPriority(FlareDispenser`evalQueue,80);
+   cpu4.deploy(dispenser1);
+   cpu4.deploy(dispenser2);
+   cpu4.deploy(dispenser3);
+
+   -- add the second controller with four dispensers
+   cpu3.deploy(controller1);
+   -- add the dispensers to the controller
+   cpu5.deploy(dispenser4);
+--   cpu5.setPriority(FlareDispenser`addThreat,100);
+--   cpu5.setPriority(FlareDispenser`evalQueue,80);
+   cpu5.deploy(dispenser5);
+   cpu5.deploy(dispenser6);
+   cpu5.deploy(dispenser7);
+
+   -- add the third controller with four dispensers
+   cpu3.deploy(controller2);
+   -- add the dispensers to the controller
+   cpu6.deploy(dispenser8);
+--   cpu6.setPriority(FlareDispenser`addThreat,100);
+--   cpu6.setPriority(FlareDispenser`evalQueue,80);
+   cpu6.deploy(dispenser9);
+   cpu6.deploy(dispenser10);
+   cpu6.deploy(dispenser11);
+   )
+
+end CM
+\end{vdm_al}

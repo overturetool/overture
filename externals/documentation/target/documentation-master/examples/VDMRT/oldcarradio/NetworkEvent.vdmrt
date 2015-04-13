@@ -1,0 +1,9 @@
+\begin{vdm_al}
+class NetworkEvent is subclass of Event
+
+operations
+  public NetworkEvent: nat ==> NetworkEvent
+  NetworkEvent (pne) == Event(pne)
+
+end NetworkEvent
+\end{vdm_al}

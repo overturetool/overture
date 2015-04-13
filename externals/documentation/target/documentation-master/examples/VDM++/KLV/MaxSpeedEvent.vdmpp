@@ -1,0 +1,19 @@
+\section{The MaxSpeedEvent Test Class}
+
+The MaxSpeedEvent class implements a test event that does not perform
+any action, but returns the status of the maximal allowed speed of the
+train.
+
+\begin{vdm_al}
+class MaxSpeedEvent is subclass of Event
+
+operations 
+
+  public
+  execute : KLV ==> Test`TestResult
+  execute (klv) ==
+    ( let ms = klv.getMaxSpeed() in
+      return mk_Test`MaxSpeed(ms) );
+
+end MaxSpeedEvent
+\end{vdm_al}

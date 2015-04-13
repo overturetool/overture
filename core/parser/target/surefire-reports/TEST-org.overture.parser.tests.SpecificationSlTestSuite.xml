@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite tests="41" failures="0" name="org.overture.parser.tests.SpecificationSlTestSuite" time="3.687" errors="0" skipped="0">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="c:\Program Files\Java\jdk1.8.0_20\jre\bin"/>
+    <property name="java.vm.version" value="25.20-b23"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="maven.multiModuleProjectDirectory" value="c:/Users/Jpereira/overtureRep"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="path.separator" value=";"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.script" value=""/>
+    <property name="user.country" value="PT"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="Service Pack 1"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="c:\Users\Jpereira\overtureRep"/>
+    <property name="java.runtime.version" value="1.8.0_20-b26"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="c:\Program Files\Java\jdk1.8.0_20\jre\lib\endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="C:\Users\Jpereira\AppData\Local\Temp\"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.variant" value=""/>
+    <property name="os.name" value="Windows 7"/>
+    <property name="classworlds.conf" value="c:/apache-maven-3.3.1/bin/m2.conf"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="c:\Program Files\Java\jdk1.8.0_20\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;c:\Users\Jpereira\bin;.;C:\Program Files (x86)\Git\local\bin;C:\Program Files (x86)\Git\mingw\bin;C:\Program Files (x86)\Git\bin;C:\Program Files (x86)\Git\bin;c:\Program Files\ImageMagick-6.9.0-Q8;c:\Program Files\ImageMagick-6.9.0-Q16;c:\Program Files\Haskell\bin;c:\Program Files\Haskell Platform\2014.2.0.0\lib\extralibs\bin;c:\Program Files\Haskell Platform\2014.2.0.0\bin;c:\ProgramData\Oracle\Java\javapath;c:\Windows\system32;c:\Windows;c:\Windows\System32\Wbem;c:\Windows\System32\WindowsPowerShell\v1.0\;c:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x86;c:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x64;c:\Program Files\Java\jdk1.8.0_20\bin;c:\Program Files\Haskell Platform\2014.2.0.0\mingw\bin;c:\Python34;c:\Python34\Scripts;c:\Strawberry\c\bin;c:\Strawberry\perl\site\bin;c:\Strawberry\perl\bin;c:\Program Files\MiKTeX 2.9\miktex\bin\x64\;c:\apache-maven-3.3.1\bin;c:\Users\Jpereira\AppData\Roaming\cabal\bin;c:\opencv\build\java\x64\;c:\apache-maven-3.2.5\bin;."/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="52.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="6.1"/>
+    <property name="user.home" value="C:\Users\Jpereira"/>
+    <property name="user.timezone" value="Europe/London"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="java.specification.version" value="1.8"/>
+    <property name="file.encoding" value="Cp1252"/>
+    <property name="user.name" value="Jpereira"/>
+    <property name="java.class.path" value="c:/apache-maven-3.3.1/boot/plexus-classworlds-2.5.2.jar"/>
+    <property name="java.vm.specification.version" value="1.8"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="c:\Program Files\Java\jdk1.8.0_20\jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher install"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language" value="pt"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.8.0_20"/>
+    <property name="java.ext.dirs" value="c:\Program Files\Java\jdk1.8.0_20\jre\lib\ext;C:\Windows\Sun\Java\lib\ext"/>
+    <property name="sun.boot.class.path" value="c:\Program Files\Java\jdk1.8.0_20\jre\lib\resources.jar;c:\Program Files\Java\jdk1.8.0_20\jre\lib\rt.jar;c:\Program Files\Java\jdk1.8.0_20\jre\lib\sunrsasign.jar;c:\Program Files\Java\jdk1.8.0_20\jre\lib\jsse.jar;c:\Program Files\Java\jdk1.8.0_20\jre\lib\jce.jar;c:\Program Files\Java\jdk1.8.0_20\jre\lib\charsets.jar;c:\Program Files\Java\jdk1.8.0_20\jre\lib\jfr.jar;c:\Program Files\Java\jdk1.8.0_20\jre\classes"/>
+    <property name="sun.stderr.encoding" value="cp850"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="c:\apache-maven-3.3.1"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.stdout.encoding" value="cp850"/>
+    <property name="sun.desktop" value="windows"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+  </properties>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="ACSSL &lt;examples&gt;" time="0.006"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="ADTSL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="AlarmErrSL &lt;examples&gt;" time="0.001"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="AlarmSL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="ATCSL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="barSL &lt;examples&gt;" time="0.017"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="BOMSL &lt;examples&gt;" time="0.077"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="cashdispenserSL &lt;examples&gt;" time="0.037"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="CMSL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="CountryColouringSL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="crosswordSL &lt;examples&gt;" time="0.059"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="DFDexampleSL &lt;examples&gt;" time="0.332"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="DigraphSL &lt;examples&gt;" time="0.077"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="dwarfSL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="EngineSL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="expressSL &lt;examples&gt;" time="0.019"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="gatewaySL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="graphedSL &lt;examples&gt;" time="0.015"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="hotelSL &lt;examples&gt;" time="0.072"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="librarySL &lt;examples&gt;" time="0.006"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="looseSL &lt;examples&gt;" time="0.103"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="LUPSLSL &lt;examples&gt;" time="0.007"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="MAASL &lt;examples&gt;" time="0.257"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="metroSL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="monitorSL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="NDBSL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="newspeakSL &lt;examples&gt;" time="1.714"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="pacemakerSL &lt;examples&gt;" time="0.013"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="PlannerSL &lt;examples&gt;" time="0.026"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="ProgLangSL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="raildirSL &lt;examples&gt;" time="0.021"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="realmSL &lt;examples&gt;" time="0.017"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="recursiveSL &lt;examples&gt;" time="0.007"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="SAFERSL &lt;examples&gt;" time="0.683"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="shmemSL &lt;examples&gt;" time="0.042"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="simulatorSL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="soccerSL &lt;examples&gt;" time="0"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="STVSL &lt;examples&gt;" time="0.062"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="telephoneSL &lt;examples&gt;" time="0.005"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="TrackerSL &lt;examples&gt;" time="0.007"/>
+  <testcase classname="org.overture.parser.tests.SpecificatopnSlTestCase" name="trafficSL &lt;examples&gt;" time="0.005"/>
+</testsuite>

@@ -1,0 +1,37 @@
+class CommonDefinition is subclass of Object
+
+/*
+values
+public StringOrder	= lambda x : seq of char , y : seq of char & String`LT(x,y);
+public NumericOrder	= lambda x : NumericalValue, y : NumericalValue & x < y;
+public DateOrder	= lambda x : Date, y : Date & x.LT(y);
+public AmountOfMoneyOrder	= lambda x : AmountOfMoney, y : AmountOfMoney & x < y;
+*/
+
+functions
+public StringOrder : seq of char * seq of char -> bool
+StringOrder(x, y) == String`LT(x,y);
+
+public NumericOrder : NumericalValue * NumericalValue -> bool
+NumericOrder(x, y) == x < y;
+
+public DateOrder : Date * Date -> bool
+DateOrder(x, y) ==  x.LT(y);
+
+public AmountOfMoneyOrder : AmountOfMoney * AmountOfMoney -> bool
+AmountOfMoneyOrder(x, y) == x < y;
+	
+types
+public Identifier = seq of char
+inv - ==  forall s1, s2 : seq of char, id1, id2 : Identifier & id1 <> id2 => s1 <> s2;
+public Quantity = int;
+public NumericalValue = int;
+public Percent = real
+inv p == 0 <= p and p <= 100;
+public AmountOfMoney = int;
+public NonNegativeAmountOfMoney = nat;
+public PositiveAmountOfMoney = nat1;
+public AmountOfMoney2 = real
+	inv am == new Real().isNDigitsAfterTheDecimalPoint(am,2) ;	-- 2 digits after the decimal point
+
+end CommonDefinition

@@ -1,0 +1,64 @@
+\begin{vdm}\kClass $TestResult$\index{TestResult|ClassDef}
+\par
+\kInstanceVarDef
+\parlinebr
+\begin{insvar}
+\assdef{failures}{\seqof*{TestCase\index{TestCase|TypeOcc}}}[{\seq{}}]
+\end{insvar}
+\par
+\kOperations
+\kw{\kw{public}}\begin{op}[e]{AddFailure}\index{AddFailure|FuncDef}%
+\signature{TestCase\index{TestCase|TypeOcc} \Oto ()}
+\parms{ptst}
+\annlab[o]{TestResult`AddFailure}
+\ass{failures}{failures \Sconc \seq{ptst}};
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{Print}\index{Print|FuncDef}%
+\signature{\seqof*{\Char } \Oto ()}
+\parms{pstr}
+\annlab[o]{TestResult`Print}
+\begin{defstmt}
+\eqdef{-}{\fnapply{\fnapply{\new{IO}}{}.echo}{pstr \Sconc \Dquote {\backslash}n \Dquote }}
+\end{defstmt} \\
+\Skip ;
+\end{op}
+\kw{\kw{public}}\begin{op}[e]{Show}\index{Show|FuncDef}%
+\signature{() \Oto ()}
+\parms{}
+\annlab[o]{TestResult`Show}
+\If failures = \seq{}
+\Then \\
+\call{Print}{\Dquote No\hspace{0.5em}failures\hspace{0.5em}detected \Dquote }
+\Else \\
+\begin{seqfor}{failure}{failures}
+\call{Print}{\fnapply{failure.GetName}{} \Sconc \Dquote \hspace{0.5em}failed \Dquote }
+\end{seqfor}
+\Fi
+\end{op}
+\kEnd $TestResult$
+
+\end{vdm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

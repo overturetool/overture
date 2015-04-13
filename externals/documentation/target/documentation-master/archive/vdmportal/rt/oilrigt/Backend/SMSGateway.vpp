@@ -1,0 +1,97 @@
+\section{SMSGateway class}
+
+\begin{vdm_al}
+
+class SMSGateway
+
+instance variables
+delay : nat;
+queue : seq of Message := [];
+size : nat := 0;
+
+types
+public String = seq of char;
+public FunctionType = <setInactive> | <setActive>; 
+public ParamType = nat | TokenDevice | TransportPlan;
+public SMSMessage::
+	funct : FunctionType
+	params : seq of ParamType;
+private Message ::
+	rcv  : TokenDevice
+	sendTime : nat
+	msg : SMSMessage;
+
+	
+operations
+
+public SMSGateway : () ==> SMSGateway
+SMSGateway()==
+(
+	skip;
+);
+
+public initialize : nat * nat ==> ()
+initialize(a_delay, capacity)== (
+	delay := a_delay;
+	size := capacity;
+);
+
+
+async public send : TokenDevice * SMSMessage * nat ==> ()
+send(rcv, msg, a_time) ==
+(
+	push(mk_Message(rcv, a_time + delay, msg));
+);
+
+private pop: () ==> Message
+pop() == (
+	let rtn_data = hd queue in (
+		queue := tl queue;
+		return rtn_data;
+	)
+);
+
+private peek : () ==> Message
+peek() == (
+	let data = hd queue in (
+		return data;
+	)
+);
+
+
+private push: Message ==> ()
+push(message) ==
+	queue := queue ^ [message];
+	
+
+private process : () ==> ()
+process() ==
+(
+	if len queue > 0 and peek().sendTime <= time then (
+		let entry = pop() in (
+			--cases entry.msg.funct:
+			--		<setInactive> -> entry.rcv.notify(entry.msg.params(0)), 
+			--		<setActive> -> skip
+			--	end;	
+			entry.rcv.notifyPassenger(entry.msg.params(1),"");	
+			Logger`write2("SMSGateway.send ", time, time );	
+		);
+		
+	)
+);
+
+thread 
+
+periodic(1000, 100, 900, 0)	(process);		
+
+
+
+sync
+--per push => #fin(push) - #fin(pop) < size; 		--ensure that there's space in the queue
+--per pop => #fin(push) - #fin(pop) > 0;			--ensure that there's data in the queue
+--mutex(pop,push);								--Only a single activation of pop at a time.
+
+end SMSGateway
+
+
+\end{vdm_al}

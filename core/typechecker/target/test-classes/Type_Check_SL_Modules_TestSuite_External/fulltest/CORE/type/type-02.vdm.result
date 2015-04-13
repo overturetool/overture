@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="14" line="9" message="Duplicate field names in record type" messageType="error" number="2073" resource="type-02.vdm"/>
+<result/>
+</testResult>

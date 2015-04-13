@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesRtTypeCheckTest">
+<message column="1" line="5" message="Instance variable 's' is not initialized" messageType="warning" number="5001" resource="purecooperative-02.vpp"/>
+<message column="1" line="26" message="Instance variable 's' is not initialized" messageType="warning" number="5001" resource="purecooperative-02.vpp"/>
+<result/>
+</testResult>

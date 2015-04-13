@@ -1,0 +1,44 @@
+--The Window Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		21/4 - 2008
+-- Updated:
+-- Description: 	Window actuator sub class
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Window is subclass of Actuator
+
+--
+-- Operations definition section
+--
+operations
+
+public Window: nat * NetworkTypes`nodeType ==> Window
+	Window (id, type) ==
+		(ID := id;
+		Type := type;
+		Corr := <CLOSE>;
+		);
+
+public Step: () ==> ()
+	Step() ==
+		(if (Corr = <OPEN>)
+		then (World`env.DecHumid();
+		      World`env.DecTemp();
+			);
+		);
+
+public SetCorrection: NetworkTypes`correction ==> ()
+	SetCorrection(cor) ==
+		Corr := cor
+pre (cor = <OPEN>) or (cor = <CLOSE>);
+
+public GetCorrection: () ==> NetworkTypes`correction
+	GetCorrection() ==
+		return Corr;
+
+end Window

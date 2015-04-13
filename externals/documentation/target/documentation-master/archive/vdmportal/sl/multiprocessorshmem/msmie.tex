@@ -1,0 +1,50 @@
+\documentclass{article}
+\usepackage{a4}
+\usepackage{makeidx}
+\usepackage{vdmsl-2e}
+
+\newcommand{\StateDef}[1]{{\bf #1}}
+\newcommand{\TypeDef}[1]{{\bf #1}}
+\newcommand{\TypeOcc}[1]{{\it #1}}
+\newcommand{\FuncDef}[1]{{\bf #1}}
+\newcommand{\FuncOcc}[1]{#1}
+\newcommand{\ModDef}[1]{{\tiny #1}}
+
+\makeindex
+
+\begin{document}
+
+\title{Multiprocessor Shared-Memory Information Exchange (MSMIE)}
+\author{Submitted by Savi Maharaj}
+\date{July 12, 1996}
+\maketitle
+
+\section{Introduction}
+
+The Multiprocessor Shared-Memory Information Exchange (MSMIE) is a
+protocol for ``inter-processor communications in distributed,
+microprocessor-based nuclear safety systems'' which has been used in
+the embedded software of Westinghouse nucear systems designs.
+This small note contains three level of abstract descriptions
+expressed using VDM-SL (and one alternative modelling strategy). 
+
+More information about the protocol can be found in ``Multiprocessor
+Shared-Memory Information Exchange'' by L.L.\ Santoline et al. This
+was published in IEEE Transactions on Nuclear Science, 16(1),
+1989. More information about the VDM model (and a corresponding PVS
+model) and the analysis of it can be found in ``Proof in VDM: Case
+Studies'' edited by J.C.\ Bicarregui. This is published by Springer in
+the FACIT series with ISBN 3540761861.
+
+\input{msmie2.vdm}
+
+\input{msmie1.vdm}
+
+\input{msmie0.vdm}
+
+\input{alt_msmie.vdm}
+
+
+\printindex
+\end{document}
+

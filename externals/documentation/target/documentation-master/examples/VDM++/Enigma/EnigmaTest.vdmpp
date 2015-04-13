@@ -1,0 +1,14 @@
+class EnigmaTest
+operations
+  public Execute: () ==> ()
+  Execute () ==
+    (dcl ts : TestSuite := new TestSuite();
+     ts.AddTest(new AlphabetTest("Alphabet"));
+     ts.AddTest(new ConfigurationTest("Configuration"));
+     ts.AddTest(new ReflectorTest("Reflector"));
+     ts.AddTest(new RotorTest("Rotor"));
+     ts.AddTest(new PlugboardTest("Plugboard"));
+     ts.AddTest(new SimpleEnigmaTest("SimpleEnigma"));
+     ts.Run())
+     
+end EnigmaTest

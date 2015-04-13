@@ -1,0 +1,76 @@
+class Passenger
+
+	instance variables
+		static nextPassengerId : nat := 1;
+
+		passengerId : nat;
+		goal :  Waypoint;
+		inv goal.IsStop() = true;		
+
+		annoyanceLimit : nat;
+		pickedUp : bool;
+		alreadyAnnoyed : bool;
+
+	operations
+		public Passenger : Busstop==> Passenger 
+		Passenger(destination) == 
+		(
+			passengerId := GetNextId();
+			goal := destination;
+			annoyanceLimit := World`timerRef.GetTime() + Config`PassengerAnnoyanceLimit;
+			pickedUp := false;
+			alreadyAnnoyed := false;
+
+			World`env.PassengerCount();
+		)
+		pre destination.IsStop() = true;
+		
+		public GetDestination : () ==>  Waypoint
+		GetDestination()== 
+			return goal;
+
+		public GotOnBus : () ==> () 
+		GotOnBus()== 
+		(
+			World`graphics.passengerGotOnBus(passengerId);
+			pickedUp := true;
+		);
+
+		public IsAnnoyedOfWaiting : () ==> bool
+		IsAnnoyedOfWaiting() == return annoyanceLimit < World`timerRef.GetTime() 
+									and not pickedUp;
+
+		-- report to environment when  passenger becomes annoyed.
+		public AnnoyedOfWaiting : () ==> ()
+		AnnoyedOfWaiting() == 
+		(
+			if(IsAnnoyedOfWaiting() and not alreadyAnnoyed) then
+			(
+				alreadyAnnoyed := true;
+				World`env.handleEvent("Passenger " ^ Printer`natToString(passengerId) ^ " heading for " ^ 
+				 VDMUtil`val2seq_of_char[Waypoint`WaypointsEnum](goal.GetId()) ^ " is annoyed of waiting.");			
+				World`env.AnnoyedPassenger(1, goal.GetId());
+				World`graphics.passengerAnnoyed(passengerId);
+			)
+		);
+
+		public Id : () ==> nat
+		Id()== 
+			return passengerId;
+	
+		private GetNextId : () ==> nat
+		GetNextId() ==
+		(
+			let pid = nextPassengerId 
+			in 
+			(
+				nextPassengerId := nextPassengerId +1;
+				return pid;
+			)
+
+		);
+
+	sync
+		mutex(GotOnBus, AnnoyedOfWaiting);
+
+end Passenger

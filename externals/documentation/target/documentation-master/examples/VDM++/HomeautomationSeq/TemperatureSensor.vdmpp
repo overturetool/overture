@@ -1,0 +1,32 @@
+--The TemperatureSensor Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		20/4 - 2008
+-- Updated:
+-- Description: 	TemperatureSensor subclass for HomeAutomation project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TemperatureSensor is subclass of Sensor
+
+--
+-- Operations definition section
+--
+operations
+
+public TemperatureSensor: nat * NetworkTypes`nodeType * nat ==> TemperatureSensor
+	TemperatureSensor (id, type, val) ==
+		(ID := id;
+		Type := type;
+		Value := val;
+		);
+
+public Step: () ==> ()
+	Step() ==
+		(Value := World`env.ReadTemp();
+		);
+
+end TemperatureSensor

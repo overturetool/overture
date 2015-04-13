@@ -1,0 +1,14 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:54 CET 2010
+--
+
+class SimpleUnaryExpression is subclass of SimpleExpression
+operations
+    public getOp: () ==> SimpleUnaryOperator
+    getOp() == is subclass responsibility;
+
+    public getExp: () ==> SimpleExpression
+    getExp() == is subclass responsibility;
+
+end SimpleUnaryExpression

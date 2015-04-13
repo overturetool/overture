@@ -1,0 +1,43 @@
+% With old latex you can use these lines instead
+%\documentstyle[a4,makeidx,vdmsl_v1.1.35]{article}
+
+\documentclass{article}
+\usepackage{a4}
+\usepackage{makeidx}
+\usepackage{vdmsl-2e}
+
+\newcommand{\StateDef}[1]{{\bf #1}}
+\newcommand{\TypeDef}[1]{{\bf #1}}
+\newcommand{\TypeOcc}[1]{{\it #1}}
+\newcommand{\FuncDef}[1]{{\bf #1}}
+\newcommand{\FuncOcc}[1]{#1}
+\newcommand{\ModDef}[1]{{\tiny #1}}
+
+\makeindex
+
+\begin{document}
+
+\title{Using simple I/O and Math in a Cylinder Specification}
+\author{Submitted by Brigitte Fr\"{o}lich}
+\maketitle
+
+\section{The Cylinder Module}
+
+\begin{vdm}
+\input{cylinder.vdm}
+\end{vdm}
+
+\section{The Cylio DL Module}
+
+\begin{vdm}
+\input{cylio.vdm}
+\end{vdm}
+
+\section{The Math DL Module}
+
+\begin{vdm}
+\input{math.vdm}
+\end{vdm}
+
+\printindex
+\end{document}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="9" line="9" message="Definition 'n' not used" messageType="warning" number="5000" resource="callstmt.vdm"/>
+<message column="10" line="27" message="Unexpected type for argument 1" messageType="error" number="3217" resource="callstmt.vdm"/>
+<message column="5" line="31" message="Operation DummyCall is not in scope" messageType="error" number="3213" resource="callstmt.vdm"/>
+<message column="5" line="35" message="Expecting 0 arguments" messageType="error" number="3216" resource="callstmt.vdm"/>
+<result/>
+</testResult>

@@ -1,0 +1,53 @@
+% @(#)Appendix-B-ISO8731-2.IFAD.vdm	1.2
+% 1/28/97
+%\documentstyle[a4wide,vdmsl]{article}
+%\pagestyle{empty}
+\documentclass{article}
+\usepackage{a4}
+\usepackage{makeidx}
+\usepackage{vdmsl-2e}
+
+\setlength{\parindent}{0in}        % Paragraph indent is 0
+\setlength{\parskip}{0.1cm}        % Paragraph separation
+
+\nolinenumbering                    %Turn line numbering off
+\setindent{Rindent}{0in}
+\setindent{outer}{0in}
+\setindent{inner}{\parindent}
+
+\begin{document}
+\begin{center}
+\section*{{Annex B} \\
+  {\normalsize (Informative)} \\
+          {\ } \\
+  {Specification of MAA in VDM} \\
+          {\ }} 
+\end{center}
+\subsection*{B.0 Introduction}
+ 
+In the following section is a complete specification of the MAA in the
+specification language called the Vienna Development Method (VDM). The
+notation  for the VDM is that of the emerging standard for VDM as described
+in {\sl VDM Specification Language Proto-Standard, 
+ISO/IEC JTC1/SC22/WG19, Document Reference IN9}.
+  
+It demonstrates how it is possible to write a standard in an unambiguous
+formal language.
+The style of the VDM has been guided by the following:
+\begin{itemize}
+\item It has been written in a functional way so that it could be
+      implemented easily although not necessarily efficiently
+      in a functional, logic or imperative programming language.
+\item It retains as much of the naming, structure etc. used in the
+      main part of this standard.
+\end{itemize}
+
+The VDM in the next section is written purely in VDM, including the comments.
+The comments point to sections of the main text of the standard from which
+the VDM is derived.
+ The VDM models a message as a sequence of natural numbers
+$0$ and $1$ ($Bits$).
+
+\include{maa.vdmsl}
+
+\end{document}

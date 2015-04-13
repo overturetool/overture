@@ -1,0 +1,13 @@
+class A
+
+values
+
+a = op()(mk_(1,true));
+
+operations 
+
+public static op : () ==> map (nat * bool) to (bool * nat)
+op () == return {mk_(1, true) |-> mk_(false, 2)};
+
+
+end A

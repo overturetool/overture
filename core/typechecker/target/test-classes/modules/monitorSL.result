@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="3" line="15" message="Definition 'Rising' not used" messageType="warning" number="5000" resource="monitorSL"/>
+<message column="3" line="21" message="Definition 'OverLimit' not used" messageType="warning" number="5000" resource="monitorSL"/>
+<message column="3" line="29" message="Definition 'OverLimit2' not used" messageType="warning" number="5000" resource="monitorSL"/>
+<message column="3" line="35" message="Definition 'ContOverLimit' not used" messageType="warning" number="5000" resource="monitorSL"/>
+<message column="3" line="43" message="Definition 'ContOverLimit2' not used" messageType="warning" number="5000" resource="monitorSL"/>
+<message column="3" line="55" message="Definition 'RaiseAlarm' not used" messageType="warning" number="5000" resource="monitorSL"/>
+<message column="3" line="58" message="Definition 'MixQuant' not used" messageType="warning" number="5000" resource="monitorSL"/>
+<result/>
+</testResult>

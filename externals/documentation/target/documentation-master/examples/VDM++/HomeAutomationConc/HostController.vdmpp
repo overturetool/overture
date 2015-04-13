@@ -1,0 +1,227 @@
+
+class HostController is subclass of BaseThread
+
+instance variables
+
+private finished    : bool := false;
+private print       : bool := true;
+
+private TargetTemp  : nat;
+private Temp        : nat := 0;
+private TargetHumid : nat;
+private Humid       : nat := 0;
+
+private NodeList    : map nat to NetworkTypes`nodeType := { |-> };
+private Algo        : algType := <NONE>;
+
+
+types   
+
+private algType	= <THTW> | <TTW> | <TT> | <TW> | <HW> | <NONE>;
+
+
+operations
+
+public HostController: nat * nat * nat1 * bool ==> HostController
+HostController(t, h, p, isP) ==
+ (TargetTemp := t;
+  TargetHumid := h;
+  period := p;
+  isPeriodic := isP;
+ );
+
+private UpdateValues: () ==> ()
+UpdateValues() ==
+ (for all r in set rng NodeList 
+  do
+   (if (r = <HUMIDSENSOR>)
+    then Humid := HA`HumidNode.ReadValue();
+    if (r = <TEMPSENSOR>)
+    then Temp := HA`TempNode.ReadValue();
+   );
+ );
+
+private Algorithm: () ==> ()
+Algorithm() ==
+ (cases Algo:
+    <THTW> -> THTWAlgo(),
+    <TTW>  -> TTWAlgo(),
+    <TT>   -> TTAlgo(),
+    <TW>   -> TWAlgo(),
+    <HW>   -> HWAlgo(),
+    <NONE> -> return
+  end
+ );
+
+private THTWAlgo: () ==> ()
+THTWAlgo() ==
+ (if (Humid > TargetHumid)
+  then (HA`WinNode.SetCorrection(<OPEN>);
+        HA`ThermNode.SetCorrection(<NONE>);
+        print := true;
+       )
+  elseif (Temp > TargetTemp+1)
+  then (HA`WinNode.SetCorrection(<CLOSE>);
+        HA`ThermNode.SetCorrection(<DEC>);
+        print := true;
+       )
+  elseif (Temp < TargetTemp-1)
+  then (HA`WinNode.SetCorrection(<CLOSE>);
+        HA`ThermNode.SetCorrection(<INC>);
+        print := true;
+       )
+  else (HA`WinNode.SetCorrection(<CLOSE>);
+        HA`ThermNode.SetCorrection(<NONE>);
+        if print
+        then (IO`print([World`timerRef.GetTime()] ^ ["Target values reached"]);
+              IO`print(" \n");
+             );
+        print := false;
+       );
+ );
+
+private TTWAlgo: () ==> ()
+TTWAlgo() ==
+ (if (Temp > TargetTemp + 2)
+  then (HA`WinNode.SetCorrection(<OPEN>);
+        HA`ThermNode.SetCorrection(<DEC>);
+        print := true;
+       )
+  elseif (Temp > TargetTemp + 1)
+  then (HA`WinNode.SetCorrection(<CLOSE>);
+        HA`ThermNode.SetCorrection(<DEC>);
+        print := true;
+       )
+  elseif (Temp < TargetTemp - 1)
+  then (HA`WinNode.SetCorrection(<CLOSE>);
+        HA`ThermNode.SetCorrection(<INC>);
+        print := true;
+       )
+  else (HA`WinNode.SetCorrection(<CLOSE>);
+        HA`ThermNode.SetCorrection(<NONE>);
+        if print
+        then (IO`print([World`timerRef.GetTime()] ^ ["Target values reached"]);
+              IO`print(" \n");
+             );
+        print := false;
+       );
+ );
+
+private TTAlgo: () ==> ()
+TTAlgo() ==
+ (if (Temp > TargetTemp + 1)
+  then (HA`ThermNode.SetCorrection(<DEC>);
+        print := true;
+       )
+  elseif (Temp < TargetTemp - 1)
+  then (HA`ThermNode.SetCorrection(<DEC>);
+        print := true;
+       )
+  else (HA`ThermNode.SetCorrection(<NONE>);
+        if print
+        then (IO`print([World`timerRef.GetTime()] ^ ["Target values reached"]);
+              IO`print(" \n");
+             );
+        print := false;
+       );
+ );
+
+private TWAlgo: () ==> ()
+TWAlgo() ==
+ (if (Temp > TargetTemp + 1)
+  then (HA`WinNode.SetCorrection(<OPEN>);
+        print := true;
+       ) 
+  else (HA`WinNode.SetCorrection(<CLOSE>);
+        if print
+        then (IO`print([World`timerRef.GetTime()] ^ ["Target values reached"]);
+              IO`print(" \n");
+             );
+        print := false;
+       );
+ );
+
+private HWAlgo: () ==> ()
+HWAlgo() ==
+ (if (Humid > TargetHumid)
+  then (HA`WinNode.SetCorrection(<OPEN>);
+        print := true;
+       )
+  else (HA`WinNode.SetCorrection(<CLOSE>);
+        if print
+        then (IO`print([World`timerRef.GetTime()] ^ ["Target values reached"]);
+              IO`print(" \n");
+             );
+        print := false;
+       );
+ );
+
+private UpdateAlgorithm: () ==> ()
+UpdateAlgorithm() ==
+ (if (rng NodeList = {})
+  then Algo := <NONE>
+  elseif (rng NodeList = {<TEMPSENSOR>, <HUMIDSENSOR>, <THERMOSTAT>, <WINDOW>})
+  then Algo := <THTW>
+  elseif (rng NodeList = {<TEMPSENSOR>, <THERMOSTAT>,<WINDOW>})
+  then Algo := <TTW>
+  elseif (rng NodeList = {<TEMPSENSOR>, <THERMOSTAT>})
+  then Algo := <TT>
+  elseif (rng NodeList = {<TEMPSENSOR>, <WINDOW>})
+  then Algo := <TW>
+  elseif (rng NodeList = {<HUMIDSENSOR>, <WINDOW>})
+  then Algo := <HW>
+  else Algo := <NONE>;
+ );
+
+private printStr: seq of char ==> ()
+printStr(str) ==
+ (print := false;
+  IO`print(str);
+ );
+
+public AddNode: nat * NetworkTypes`nodeType ==> ()
+AddNode(id, type) ==
+ (NodeList := NodeList ++ {id |-> type};
+  UpdateAlgorithm();
+ )
+pre id not in set dom NodeList
+post card(dom NodeList) = card(dom NodeList~) + 1;
+
+public RemoveNode: nat * NetworkTypes`nodeType ==> ()
+RemoveNode(id, type) ==
+ (if (NodeList(id) = type)
+  then NodeList := {id} <-: NodeList;
+ )
+pre id in set dom NodeList
+post card(dom NodeList) = card(dom NodeList~) - 1;
+
+public IsFinished: () ==> ()
+IsFinished() == 
+  skip;
+
+public Finish: () ==> ()
+Finish() == 
+  finished := true;
+
+protected Step: () ==> ()
+Step() ==
+ (UpdateValues();
+  Algorithm();
+ );
+
+sync
+
+per IsFinished => finished;
+per printStr => print;
+
+
+--thread
+-- (while true 
+--  do
+--   (UpdateValues();
+--    Algorithm();
+--    World`timerRef.WaitRelative(3);--World`timerRef.stepLength);
+--   )
+-- )
+
+end HostController

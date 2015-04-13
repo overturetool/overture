@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="18" line="38" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesexpr-97.vdm"/>
+<message column="18" line="41" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesexpr-97.vdm"/>
+<message column="19" line="44" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesexpr-97.vdm"/>
+<message column="16" line="47" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesexpr-97.vdm"/>
+<result/>
+</testResult>

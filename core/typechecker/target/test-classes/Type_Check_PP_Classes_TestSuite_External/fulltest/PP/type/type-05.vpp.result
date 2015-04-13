@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="8" line="4" message="Parameter type @T not defined" messageType="error" number="3433" resource="type-05.vpp"/>
+<result/>
+</testResult>

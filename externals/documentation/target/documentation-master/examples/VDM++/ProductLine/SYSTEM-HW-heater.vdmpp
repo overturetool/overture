@@ -1,0 +1,24 @@
+class Heater
+
+types
+  Switch = <On> | <Off>;
+
+instance variables
+  sw : Switch;
+  realworld_liquid : Liquid;
+
+operations
+  public Setup: RealWorld1 | RealWorld2 ==> ()
+  Setup(realworld) ==
+    realworld_liquid := realworld.liquid;
+
+  public On: () ==> ()
+  On() ==
+   (sw := <On>;
+    realworld_liquid.AddTemperature());
+
+  public Off: () ==> ()
+  Off() ==
+    sw := <Off>;
+
+end Heater

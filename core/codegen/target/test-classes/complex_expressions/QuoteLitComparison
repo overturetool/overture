@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a = <A>
+in
+	return a = <A>;
+
+end Entry
