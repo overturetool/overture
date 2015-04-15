@@ -7,12 +7,12 @@ To make the release notes with the process below, you will need `curl` and a uti
 Once the version that will be released is set and the `development` branch points to the appropriate commit, they release notes can be made.  The process of generating the list of fixed issues involves using issues tracker for the Overture repository, tidying up the list of open issues for the release.  Several things need to be done:
 
 * Create a new milestone for the next release.
+* Sort through the list of issues. Fixed bugs should be closed and assigned to the current release milestone. Unfixed bugs are moved to the next milestone.
 * Close the milestone for the current release.
-* Sort through the list of issues, closing fixed bugs and moving unfixed bugs to the next milestone.
 
 When the issues have been sorted, all of the issues in the current release milestone should be closed.
 
-Typically, two files are created for the release notes: one with the a name fitting the format `ReleaseNotes_<version>.md`, and one with the format `ReleaseNotes_<version>_abbrev.md`.  The former is the full release notes, the latter is abbreviated and used on the GitHub Releases page for the release.
+Typically, two files are created for the release notes: one with the a name fitting the format `ReleaseNotes_<version>.md`, and one with the format `ReleaseNotes_<version>_abbrev.md`.  The former is the full release notes, the latter is abbreviated and used on the GitHub Releases page for the release. Copy the notes from a previous release and update them -- Title, What's New? and Bug fixes.
 
 
 ## Generation
