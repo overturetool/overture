@@ -75,6 +75,10 @@ target/
 .project
 bin
 
+# IntelliJ noise #
+##################
+*.iml
+
 # Added by Jenkins for local mvn repos #
 ########################################
 .repository/
