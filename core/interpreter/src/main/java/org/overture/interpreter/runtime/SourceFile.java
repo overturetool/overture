@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Vector;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
@@ -41,6 +42,8 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.*;
 import org.overture.ast.intf.lex.ILexLocation;
+=======
+>>>>>>> parent of a95ffde... XML gen
 =======
 >>>>>>> parent of a95ffde... XML gen
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -54,6 +57,7 @@ import org.overture.parser.lex.BacktrackInputReader;
  * A class to hold a source file for source debug output.
  */
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 public class SourceFile {
     public final File filename;
@@ -338,6 +342,8 @@ public class SourceFile {
 
 
 =======
+=======
+>>>>>>> parent of a95ffde... XML gen
 public class SourceFile
 {
 	public final File filename;
@@ -655,5 +661,8 @@ public class SourceFile
 			}
 		}
 	}
+<<<<<<< HEAD
+>>>>>>> parent of a95ffde... XML gen
+=======
 >>>>>>> parent of a95ffde... XML gen
 }

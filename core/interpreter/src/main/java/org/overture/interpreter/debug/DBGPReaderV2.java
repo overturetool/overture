@@ -2054,8 +2054,13 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 					+ f.getName() + ".covtbl");
 			PrintWriter pw = new PrintWriter(data);
 <<<<<<< HEAD
+<<<<<<< HEAD
             source.writeCoverage(pw,interpreter);
             pw.close();
+=======
+			source.writeCoverage(pw);
+			pw.close();
+>>>>>>> parent of a95ffde... XML gen
 =======
 			source.writeCoverage(pw);
 			pw.close();
