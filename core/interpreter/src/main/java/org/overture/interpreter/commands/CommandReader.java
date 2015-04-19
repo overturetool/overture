@@ -1545,7 +1545,7 @@ abstract public class CommandReader
 			File cov = new File(dir.getPath() + File.separator + f.getName()
 					+ ".cov");
 			PrintWriter pw = new PrintWriter(cov);
-			source.writeCoverage(pw,interpreter);
+			source.writeCoverage(pw);
 			pw.close();
 			println("Written coverage for " + f);
 		}

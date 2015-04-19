@@ -70,7 +70,17 @@ import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.messages.rtlog.RTTextLogger;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
-import org.overture.interpreter.runtime.*;
+import org.overture.interpreter.runtime.ClassContext;
+import org.overture.interpreter.runtime.ClassInterpreter;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ModuleInterpreter;
+import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.runtime.RuntimeValidator;
+import org.overture.interpreter.runtime.SourceFile;
+import org.overture.interpreter.runtime.StateContext;
+import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.traces.TraceReductionType;
@@ -99,7 +109,6 @@ import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.util.Base64;
-import org.w3c.dom.Document;
 
 /**
  * Extended DBGPReader adding support for:
@@ -2030,27 +2039,32 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		}
 	}
 
-    public static void writeCoverage(Interpreter interpreter, File coverage)
-            throws IOException
-    {
+	public static void writeCoverage(Interpreter interpreter, File coverage)
+			throws IOException
+	{
 
-        Properties.init(); // Read properties file, if any
+		Properties.init(); // Read properties file, if any
 
-        for (File f : interpreter.getSourceFiles())
-        {
+		for (File f : interpreter.getSourceFiles())
+		{
 
-            SourceFile source = interpreter.getSourceFile(f);
+			SourceFile source = interpreter.getSourceFile(f);
 
 			File data = new File(coverage.getPath() + File.separator
 					+ f.getName() + ".covtbl");
 			PrintWriter pw = new PrintWriter(data);
+<<<<<<< HEAD
             source.writeCoverage(pw,interpreter);
             pw.close();
+=======
+			source.writeCoverage(pw);
+			pw.close();
+>>>>>>> parent of a95ffde... XML gen
 
-        }
+		}
 
-        Properties.parser_tabstop = 1;// required to match locations with the editor representation
-    }
+		Properties.parser_tabstop = 1;// required to match locations with the editor representation
+	}
 
 	public static String getStackTrace(Throwable t)
 	{
