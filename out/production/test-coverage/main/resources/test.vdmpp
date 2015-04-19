@@ -1,8 +1,0 @@
-class Test
-
-operations
-
-public Run : int * int * bool * bool ==> int
-Run(a,b,c,d) == if (a<b and (c or c) and not(d)) then return a else return b ;
-
-end Test
