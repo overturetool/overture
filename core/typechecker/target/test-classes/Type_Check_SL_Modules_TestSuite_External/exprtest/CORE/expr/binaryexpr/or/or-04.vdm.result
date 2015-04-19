@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="13" line="14" message="Left hand of or is not bool" messageType="error" number="3065" resource="or-04.vdm"/>
-<message column="13" line="14" message="Right hand of or is not bool" messageType="error" number="3066" resource="or-04.vdm"/>
-<result/>
-</testResult>

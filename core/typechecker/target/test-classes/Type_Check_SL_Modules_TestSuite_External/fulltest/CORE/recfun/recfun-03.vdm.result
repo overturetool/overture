@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="32" line="11" message="Name 'f' is not in scope" messageType="error" number="3182" resource="recfun-03.vdm"/>
-<result/>
-</testResult>

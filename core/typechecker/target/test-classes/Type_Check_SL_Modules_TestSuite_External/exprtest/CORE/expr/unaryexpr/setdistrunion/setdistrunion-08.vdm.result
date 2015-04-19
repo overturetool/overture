@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="11" line="20" message="dunion argument is not a set of sets" messageType="error" number="3078" resource="setdistrunion-08.vdm"/>
-<result/>
-</testResult>

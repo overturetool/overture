@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="9" line="10" message="If expression is not boolean" messageType="error" number="3224" resource="if-03.vdm"/>
-<message column="36" line="12" message="Right hand of and is not bool" messageType="error" number="3066" resource="if-03.vdm"/>
-<result/>
-</testResult>

@@ -1,4 +1,0 @@
-operations
-
-mapiterate() m : map nat to nat
-  post m = ({1 |-> 3, 2|->1, 3 |->2} ** 3)

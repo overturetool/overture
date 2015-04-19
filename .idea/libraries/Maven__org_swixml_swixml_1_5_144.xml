@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.swixml:swixml:1.5.144">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/swixml/swixml/1.5.144/swixml-1.5.144.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/swixml/swixml/1.5.144/swixml-1.5.144-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/swixml/swixml/1.5.144/swixml-1.5.144-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

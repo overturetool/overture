@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="39" line="23" message="Field number does not match tuple size" messageType="error" number="3095" resource="tupleselectexpr-02.vdm"/>
-<result/>
-</testResult>

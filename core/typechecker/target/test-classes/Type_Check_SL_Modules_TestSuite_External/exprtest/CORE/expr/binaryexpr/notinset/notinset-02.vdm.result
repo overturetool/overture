@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="15" line="13" message="Argument of 'not in set' is not a set" messageType="error" number="3138" resource="notinset-02.vdm"/>
-<result/>
-</testResult>

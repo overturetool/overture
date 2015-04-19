@@ -1,4 +1,0 @@
-operations
-
-    times() r : nat
-    post 3*2 = r;

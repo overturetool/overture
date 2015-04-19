@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
-<message column="3" line="51" message="Definition 'testval1' not used" messageType="warning" number="5000" resource="CMSL"/>
-<message column="3" line="56" message="Definition 'testval2' not used" messageType="warning" number="5000" resource="CMSL"/>
-<message column="3" line="61" message="Definition 'testval3' not used" messageType="warning" number="5000" resource="CMSL"/>
-<message column="1" line="68" message="Definition 'CounterMeasures' not used" messageType="warning" number="5000" resource="CMSL"/>
-<result/>
-</testResult>

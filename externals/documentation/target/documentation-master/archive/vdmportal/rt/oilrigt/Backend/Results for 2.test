@@ -1,8 +1,0 @@
-[ mk_( objref81(TransportPlan):
-  < TransportPlan`choice = <Cheapest>,
-    TransportPlan`departureTime = 3000,
-    TransportPlan`id_token = 1,
-    TransportPlan`sectionList = [  ],
-    TransportPlan`sectionTravled = [ mk_TransportPlan`Section( "A", "C", 42, "P1", 250000, 2 ),mk_TransportPlan`Section( "C", "D", 42, "P1", 200000, 6 ) ],
-    TransportPlan`totalDuration = <<UNDEFINED>>,
-    TransportPlan`totalFee = <<UNDEFINED>> >, nil, 26657 ) ]

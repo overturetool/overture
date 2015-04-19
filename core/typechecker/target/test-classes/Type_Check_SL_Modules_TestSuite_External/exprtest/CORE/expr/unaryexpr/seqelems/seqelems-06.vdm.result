@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="11" line="13" message="Argument of 'elems' is not a sequence" messageType="error" number="3085" resource="seqelems-06.vdm"/>
-<result/>
-</testResult>

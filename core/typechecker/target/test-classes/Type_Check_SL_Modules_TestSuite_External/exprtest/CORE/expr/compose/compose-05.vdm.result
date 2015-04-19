@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="36" line="31" message="Right hand of function 'comp' is not a function" messageType="error" number="3070" resource="compose-05.vdm"/>
-<result/>
-</testResult>

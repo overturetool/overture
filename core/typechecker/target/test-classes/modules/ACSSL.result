@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
-<message column="8" line="420" message="Definition 'r' not used" messageType="warning" number="5000" resource="ACSSL"/>
-<message column="1" line="425" message="Definition 'ADD_OBJECT' not used" messageType="warning" number="5000" resource="ACSSL"/>
-<message column="1" line="438" message="Definition 'REMOVE_OBJECT' not used" messageType="warning" number="5000" resource="ACSSL"/>
-<message column="1" line="448" message="Definition 'ADD_PES' not used" messageType="warning" number="5000" resource="ACSSL"/>
-<message column="1" line="470" message="Definition 'ADD_EXP' not used" messageType="warning" number="5000" resource="ACSSL"/>
-<result/>
-</testResult>

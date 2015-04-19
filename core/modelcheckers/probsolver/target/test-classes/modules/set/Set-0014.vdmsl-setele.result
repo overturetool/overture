@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.modelcheckers.probsolver.SetTests">
-<result>
-<output object="(&#10;return (2)&#10;)" resource="Set-0014.vdmsl" value="(&#10;return (2)&#10;)"/>
-</result>
-</testResult>

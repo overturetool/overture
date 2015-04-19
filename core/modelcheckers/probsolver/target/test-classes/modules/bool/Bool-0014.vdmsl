@@ -1,4 +1,0 @@
-operations
-
-    calc() r : nat
-   post (1+2)*3/4 = r;

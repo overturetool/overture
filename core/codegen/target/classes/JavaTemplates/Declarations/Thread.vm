@@ -1,3 +1,0 @@
-public void run(){
-	$JavaFormat.format($node.getStm())
-}

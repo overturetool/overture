@@ -1,4 +1,0 @@
-operations
-
-neqseq1() n : nat
- post [1,2] <> [1,2] => n=0;

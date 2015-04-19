@@ -1,5 +1,0 @@
-operations
-public static async a : int * int ==> int
-a(b,c) == return 1
-pre true
-post true;

@@ -1,4 +1,0 @@
-operations
-
-prodcttest10() m : nat*nat*nat*nat*nat
-  post m = mk_(1, 2, 3, 4, 5)

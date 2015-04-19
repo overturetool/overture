@@ -1,4 +1,0 @@
-operations
-div1() m : nat
-  post m = 7 div 2
-

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="9" line="16" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="instvar-01.vpp"/>
-<message column="9" line="18" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="instvar-01.vpp"/>
-<message column="9" line="27" message="Overriding a superclass member of a different kind: i1" messageType="error" number="3005" resource="instvar-01.vpp"/>
-<message column="9" line="29" message="Overriding a superclass member of a different kind: i3" messageType="error" number="3005" resource="instvar-01.vpp"/>
-<result/>
-</testResult>

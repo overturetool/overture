@@ -1,5 +1,0 @@
-#if ($ValueSemantics.shouldClone($node))
-Utils.clone(${node.getName()})##
-#else
-$node.getName()##
-#end

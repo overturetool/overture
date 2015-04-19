@@ -1,1 +1,0 @@
-new A().Test() = [mk_(1, <FlareOneA>, 30, 100, 110), mk_(2, <FlareTwoB>, 30, 200, 210), mk_(3, <FlareOneC>, 60, 300, 310), mk_(2, <FlareTwoB>, 30, 700, 700), mk_(3, <DoNothingC>, 60, 700, 700), mk_(3, <FlareTwoC>, 60, 800, 800), mk_(3, <FlareOneC>, 60, 1200, 1200)]

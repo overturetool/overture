@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
-<message column="6" line="18" message="Error 4053: Parameter patterns do not match arguments in 'A' (functions-04.vdm) at line 18:6" messageType="error" number="4053" resource="functions-04.vdm"/>
-<result>
-<output object="[]" resource="functions-04.vdm" value="[]"/>
-</result>
-</testResult>

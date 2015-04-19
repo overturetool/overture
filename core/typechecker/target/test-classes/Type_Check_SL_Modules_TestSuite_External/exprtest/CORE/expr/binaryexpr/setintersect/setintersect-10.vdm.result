@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="18" line="26" message="Left and right of intersect are different types" messageType="error" number="3165" resource="setintersect-10.vdm"/>
-<result/>
-</testResult>

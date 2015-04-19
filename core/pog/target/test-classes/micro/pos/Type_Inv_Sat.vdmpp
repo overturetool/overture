@@ -1,7 +1,0 @@
-class A
-
-types
-A = int
-inv x == x>10
-
-end A

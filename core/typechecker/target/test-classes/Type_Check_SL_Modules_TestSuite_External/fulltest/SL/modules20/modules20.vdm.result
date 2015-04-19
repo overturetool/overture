@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="25" line="17" message="Duplicate definition: g" messageType="warning" number="5007" resource="modules20.vdm"/>
-<message column="1" line="21" message="Duplicate definition: g" messageType="warning" number="5007" resource="modules20.vdm"/>
-<message column="25" line="17" message="Definition 'g' not used" messageType="warning" number="5000" resource="modules20.vdm"/>
-<message column="1" line="21" message="Definition 'g' not used" messageType="warning" number="5000" resource="modules20.vdm"/>
-<result/>
-</testResult>

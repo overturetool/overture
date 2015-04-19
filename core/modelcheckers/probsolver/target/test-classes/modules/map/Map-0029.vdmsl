@@ -1,4 +1,0 @@
-operations
-
-maptest m : map map nat1 to nat1 to nat1
-  post m = {{1|->2}|->3}

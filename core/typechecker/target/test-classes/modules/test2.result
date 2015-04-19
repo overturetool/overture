@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
-<message column="3" line="7" message="Definition 'b' not used" messageType="warning" number="5000" resource="test2"/>
-<message column="1" line="6" message="Definition 'a' not used" messageType="warning" number="5000" resource="test2"/>
-<result/>
-</testResult>

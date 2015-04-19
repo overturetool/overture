@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.modelcheckers.probsolver.CompleteTests">
-<result>
-<output object="(&#10;atomic (on_field_players := {2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, potential_substitutes := {12, 13, 14, 15, 16}, goalkeeper := 1, nb_gk_subs := 0, nb_fp_subs := 0)&#10;)" resource="soccer-inlined-functions.vdmsl" value="(&#10;atomic (on_field_players := {2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, potential_substitutes := {12, 13, 14, 15, 16}, goalkeeper := 1, nb_gk_subs := 0, nb_fp_subs := 0)&#10;)"/>
-</result>
-</testResult>

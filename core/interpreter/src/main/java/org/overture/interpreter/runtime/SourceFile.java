@@ -35,6 +35,7 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.*;
@@ -341,28 +342,6 @@ public class SourceFile {
         return sb.toString();
     }
 
-
-    public CoverageToXML writeCoverage2(final Interpreter interpreter) {
-        final CoverageToXML ctx = new CoverageToXML();
-        if (interpreter instanceof ClassInterpreter) {
-            ClassInterpreter ci = (ClassInterpreter) interpreter;
-
-            for (final SClassDefinition cdef : ci.getClasses()) {
-                try {
-                    cdef.apply(new DepthFirstAnalysisAdaptor() {
-
-                        @Override
-                        public void caseAIfStm(AIfStm node) throws AnalysisException {
-                            ctx.if_statement(node);
-                        }
-                    });
-                } catch (AnalysisException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return ctx;
-    }
 
     public void writeCoverage(PrintWriter out,Interpreter interpreter) {
         for (LexLocation l : LexLocation.getSourceLocations(filename)) {

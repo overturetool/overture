@@ -1,1 +1,0 @@
-#if ($JavaFormat.isStringType($node.getType()))$JavaFormat.buildString($node.getMembers())#elseSeqUtil.seq($JavaFormat.formatArgs($node.getMembers()))###end

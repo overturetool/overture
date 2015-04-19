@@ -680,6 +680,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	@Override
 	public Value caseAIfStm(AIfStm node, Context ctxt) throws AnalysisException
 	{
+
 		return evalIf(node, node.getLocation(), node.getIfExp(), node.getThenStm(), node.getElseIf(), node.getElseStm(), ctxt);
 	}
 

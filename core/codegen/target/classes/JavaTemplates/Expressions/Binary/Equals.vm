@@ -1,2 +1,0 @@
-##Only supports basic types
-$JavaFormat.formatEqualsBinaryExp($node)

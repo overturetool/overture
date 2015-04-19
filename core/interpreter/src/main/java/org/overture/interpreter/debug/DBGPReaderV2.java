@@ -2041,13 +2041,11 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 
             SourceFile source = interpreter.getSourceFile(f);
 
-			/*File data = new File(coverage.getPath() + File.separator
+			File data = new File(coverage.getPath() + File.separator
 					+ f.getName() + ".covtbl");
-			PrintWriter pw = new PrintWriter(data);*/
-            //source.writeCoverage(pw,interpreter);
-            CoverageToXML ctx=source.writeCoverage2(interpreter);
-            ctx.saveCoverageXml(coverage, f);
-            //pw.close();
+			PrintWriter pw = new PrintWriter(data);
+            source.writeCoverage(pw,interpreter);
+            pw.close();
 
         }
 

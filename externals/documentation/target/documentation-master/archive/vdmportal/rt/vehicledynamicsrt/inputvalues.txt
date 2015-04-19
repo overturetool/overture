@@ -1,5 +1,0 @@
-[mk_Types`VechicleRun(1,5000),   
-mk_Types`VehicleLowGrip (1,true, 5000),
-mk_Types`VehicleLowGrip (1,false, 6000),
-mk_Types`VechicleRun(9,6000)
-]

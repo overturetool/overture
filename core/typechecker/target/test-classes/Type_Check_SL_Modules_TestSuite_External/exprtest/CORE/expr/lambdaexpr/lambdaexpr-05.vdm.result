@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="42" line="18" message="Left hand of + is not numeric" messageType="error" number="3139" resource="lambdaexpr-05.vdm"/>
-<result/>
-</testResult>

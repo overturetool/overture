@@ -1,6 +1,0 @@
-functions
-  Sum: seq of real +> real
-  Sum(rs) ==
-    if rs = [] then 0
-    else
-      hd rs

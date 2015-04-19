@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="68" line="63" message="Function has no type parameters" messageType="warning" number="3100" resource="fcttypeinstexpr-23.vpp"/>
-<result/>
-</testResult>

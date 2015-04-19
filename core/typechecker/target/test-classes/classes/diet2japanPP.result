@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
-<message column="15" line="52" message="Recursive function has no measure" messageType="warning" number="5012" resource="diet2japanPP"/>
-<result/>
-</testResult>

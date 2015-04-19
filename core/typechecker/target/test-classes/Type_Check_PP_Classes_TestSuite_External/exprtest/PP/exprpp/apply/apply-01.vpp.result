@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="9" line="36" message="Definition 'n' not used" messageType="warning" number="5000" resource="apply-01.vpp"/>
-<result/>
-</testResult>

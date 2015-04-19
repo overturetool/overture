@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="5" line="40" message="Definition 'f' not used" messageType="warning" number="5000" resource="modules02.vdm"/>
-<message column="11" line="83" message="Unable to resolve type name 'B`Z'" messageType="error" number="3432" resource="modules02.vdm"/>
-<result/>
-</testResult>

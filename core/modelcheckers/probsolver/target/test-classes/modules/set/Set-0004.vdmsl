@@ -1,5 +1,0 @@
-operations
-
-
-  sekiseki() s : set of nat
-    post s = dinter {{1,2}, {2,3,4}, {2,4}, {2,5}}

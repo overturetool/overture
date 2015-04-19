@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.modelcheckers.probsolver.QuotesTests">
-<result>
-<output object="(&#10;return (&lt;England&gt;)&#10;)" resource="quotes-0001.vdmsl" value="(&#10;return (&lt;England&gt;)&#10;)"/>
-</result>
-</testResult>

@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="parser">
-<message column="13" line="4858" message="Expecting ':' or '(' after name in function definition" messageType="error" number="2017" resource="SSlibEPP"/>
-</testResult>

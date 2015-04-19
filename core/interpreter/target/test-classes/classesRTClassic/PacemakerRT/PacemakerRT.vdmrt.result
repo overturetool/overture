@@ -1,1 +1,0 @@
-{"result":"[]","warnings":[],"errors":[{"number":4105,"line":1183,"col":4,"message":"Error 4105: Can\u0027t get object value of nil in \u0027World\u0027 (PacemakerRT.vdmrt) at line 1183:4","resource":"PacemakerRT.vdmrt"}]}

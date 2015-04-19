@@ -1,5 +1,0 @@
-operations
-
-
-    ispsubset() r : set of nat
-    post {1,2} psubset {1,2,3} => r = {1,2}

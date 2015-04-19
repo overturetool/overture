@@ -1,5 +1,0 @@
-#set( $from = $JavaFormat.format($node.getFrom()) )
-#set( $to = $JavaFormat.format($node.getTo()) )
-#set( $seq = $JavaFormat.format($node.getSeq()) )
-##
-SeqUtil.subSeq(${seq}, ${from}, ${to})

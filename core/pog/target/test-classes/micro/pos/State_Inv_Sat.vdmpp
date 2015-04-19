@@ -1,7 +1,0 @@
-class A
-
-instance variables
-x : int;
-inv x>10;
-
-end A

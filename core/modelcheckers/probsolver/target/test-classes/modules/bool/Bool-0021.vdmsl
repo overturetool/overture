@@ -1,5 +1,0 @@
-operations
-
--- -- operator ** for NumericExps
-  pow() r : nat
-  post 2 ** 3 = r;

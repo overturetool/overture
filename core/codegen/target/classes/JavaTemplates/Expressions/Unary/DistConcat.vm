@@ -1,6 +1,0 @@
-#set( $exp = $JavaFormat.format($node.getExp()) )
-#if ($JavaFormat.isStringType($node.getType()))
-	SeqUtil.distConcStrings($exp)
-#else
-	SeqUtil.distConc($exp)
-#end

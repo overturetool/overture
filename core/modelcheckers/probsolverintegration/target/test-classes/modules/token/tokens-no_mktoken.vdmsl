@@ -1,9 +1,0 @@
-functions
-
-compare(a:token , b : token) r:bool
-pre true
-post r=b=a;
-
-test:()-> bool
-test()== compare(mk_token(1),mk_token(1))
-

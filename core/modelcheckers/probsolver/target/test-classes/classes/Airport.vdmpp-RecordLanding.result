@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.modelcheckers.probsolver.AirportPPTest">
-<message column="0" line="0" message="cannot be solved" messageType="error" number="0" resource="Airport.vdmpp"/>
-<result>
-<output object="null" resource="Airport.vdmpp" value="null"/>
-</result>
-</testResult>

@@ -1,9 +1,0 @@
-<traces>
-	<class name="DEFAULT">
-		<trace name="T1" testcount="1" filename="TestSL2.vdmsl" line="6" column="2" subset="1.0" reduction="NONE" seed="999">
-			<test no="1">op(mk_R(11))</test>
-			<result no="1" verdict="PASSED">12</result>
-			<status verdict="PASSED" testcount="1" skippedcount="0" faildcount="0" inconclusivecount="0"></status>
-		</trace>
-	</class>
-</traces>

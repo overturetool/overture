@@ -97,7 +97,9 @@ public class Context extends LexNameTokenMap<Value>
 		}
 	}
 
-	/**
+
+
+    /**
 	 * Set the current thread state. Note this must be called from the thread where the context will run, which may not
 	 * be where the thread is created. And it must be called before any context chaining is performed.
 	 * 

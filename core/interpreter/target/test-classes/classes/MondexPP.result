@@ -1,1 +1,0 @@
-{"result":"mk_AbWorld({mk_token(1), mk_token(2)}, {mk_token(1) |-\u003e mk_AbPurse(70, 0), mk_token(2) |-\u003e mk_AbPurse(40, 0)})","warnings":[],"errors":[]}

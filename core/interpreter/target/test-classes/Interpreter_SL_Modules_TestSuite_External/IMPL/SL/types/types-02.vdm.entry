@@ -1,1 +1,0 @@
-Test() = [ false,  true,  true,  true,  false,  true,  true,  true,  true,  true,  true,  true,  50,  40,  32,  30,  21,  10,  30,  { 100,20 },  true,  true,  true,  false,  true,  true,  false ]

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
-<message column="13" line="18" message="Inaccessible class member name, 'a'" messageType="error" number="3260" resource="ObjectDesignatorInTrace"/>
-<message column="13" line="18" message="Member op(nat1) is not in scope" messageType="error" number="3209" resource="ObjectDesignatorInTrace"/>
-<result/>
-</testResult>

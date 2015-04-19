@@ -1,1 +1,0 @@
-Test() = [ true,  true,  mk_A`sigma( 1,2 ) ]

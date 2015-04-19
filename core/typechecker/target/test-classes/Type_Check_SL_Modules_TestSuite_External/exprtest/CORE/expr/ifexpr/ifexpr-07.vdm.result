@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="25" line="30" message="Name 'IfExprTest`a' is not in scope" messageType="error" number="3182" resource="ifexpr-07.vdm"/>
-<result/>
-</testResult>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
-<message column="5" line="26" message="Instance variable 'i' is not initialized" messageType="warning" number="5001" resource="concfactorialPP"/>
-<message column="5" line="27" message="Instance variable 'j' is not initialized" messageType="warning" number="5001" resource="concfactorialPP"/>
-<message column="5" line="28" message="Instance variable 'k' is not initialized" messageType="warning" number="5001" resource="concfactorialPP"/>
-<message column="5" line="29" message="Instance variable 'result' is not initialized" messageType="warning" number="5001" resource="concfactorialPP"/>
-<result/>
-</testResult>

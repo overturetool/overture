@@ -1,4 +1,0 @@
-operations
-
-mapoverride() m : map nat to nat
-  post m = {1|->10, 2|->20, 3|->30, 4|->40} ++ {2|->25, 5|->50};

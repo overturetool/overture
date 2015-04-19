@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="13" line="13" message="Right hand of * is not numeric" messageType="error" number="3140" resource="nummult-04.vdm"/>
-<result/>
-</testResult>

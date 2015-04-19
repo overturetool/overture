@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
-<message column="10" line="10" message="Error 4099: Can't get sequence value of nat1 in 'A' (unaryexpr-10.vdm) at line 10:10" messageType="error" number="4099" resource="unaryexpr-10.vdm"/>
-<result>
-<output object="[]" resource="unaryexpr-10.vdm" value="[]"/>
-</result>
-</testResult>

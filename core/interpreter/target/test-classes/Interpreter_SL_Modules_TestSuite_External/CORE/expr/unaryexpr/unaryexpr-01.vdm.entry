@@ -1,1 +1,0 @@
-Test() = { "NOT" |->   [ false,true,false,false,false,false,true ],  "FLOOR" |->   [ -4,3,3,0,2,0,4 ],  "NUMABS" |->   [ 3,6,9.3,3,6,3,5,1 ],  "NUMMINS" |->   [ -3,-3.6,0,3.6,-2,-3,11.6,-10,-1 ],  "NUMPLUS" |->   [ 3,3.6,-9.6,2,18,-6 ] }

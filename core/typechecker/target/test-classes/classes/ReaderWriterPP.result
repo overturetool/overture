@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
-<message column="9" line="151" message="Definition 'x' not used" messageType="warning" number="5000" resource="ReaderWriterPP"/>
-<message column="1" line="168" message="Instance variable 'B' is not initialized" messageType="warning" number="5001" resource="ReaderWriterPP"/>
-<result/>
-</testResult>

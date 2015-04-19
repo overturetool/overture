@@ -1,5 +1,0 @@
-operations
-  setcompset() m : set of nat
-    post m = { x | x in set {1,2,3,4,5} & x > 3 }
-
- 

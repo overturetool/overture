@@ -1,5 +1,0 @@
-operations
-  setcompset2() m : nat
-    post m in set {1,2,3,4,5}
-
- 

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
-<message column="10" line="11" message="Error 4099: Can't get sequence value of &lt;ERROR&gt; in 'A' (subseq-02.vdm) at line 11:10" messageType="error" number="4099" resource="subseq-02.vdm"/>
-<result>
-<output object="[]" resource="subseq-02.vdm" value="[]"/>
-</result>
-</testResult>

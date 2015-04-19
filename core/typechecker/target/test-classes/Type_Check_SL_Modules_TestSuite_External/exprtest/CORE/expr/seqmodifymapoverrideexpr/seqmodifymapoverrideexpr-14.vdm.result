@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="21" line="27" message="Right hand of '++' is not a map" messageType="warning" number="3141" resource="seqmodifymapoverrideexpr-14.vdm"/>
-<result/>
-</testResult>

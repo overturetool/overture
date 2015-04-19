@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="24" line="16" message="Right of ':-&gt;' is not a set" messageType="error" number="3149" resource="maprngrestby-02.vdm"/>
-<result/>
-</testResult>

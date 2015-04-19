@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.QuotesSlTest">
-<result>
-<output object="mk_(true, &lt;C&gt;)" resource="quotes.vdmsl" value="mk_(true, &lt;C&gt;)"/>
-</result>
-</testResult>

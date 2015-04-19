@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="8" line="7" message="Instance variable 'c' is not initialized" messageType="warning" number="5001" resource="newexpr-01.vpp"/>
-<result/>
-</testResult>

@@ -1,6 +1,0 @@
-operations
-
-  quuniex1() mx : bool
-    post mx = (exists1 n in set {1,3,2,4} & n mod 2 = 0)
-
-

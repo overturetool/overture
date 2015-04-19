@@ -1,1 +1,0 @@
-new $JavaFormat.formatName($node)($JavaFormat.formatArgs($node.getArgs()))

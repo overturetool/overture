@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="7" line="33" message="Ambiguous definitions inherited by C" messageType="error" number="3276" resource="overload-06.vpp"/>
-<message column="7" line="33" message="Ambiguous definitions inherited by C" messageType="error" number="3276" resource="overload-06.vpp"/>
-<message column="3" line="39" message="Name 'fn(nat)' is not in scope" messageType="error" number="3182" resource="overload-06.vpp"/>
-<result/>
-</testResult>

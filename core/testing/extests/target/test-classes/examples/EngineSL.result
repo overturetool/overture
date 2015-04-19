@@ -1,1 +1,0 @@
-{"exampleName":"EngineSL","defNames":["ValvePos","SwitchPos","StartAttempt","StartState","StartingSystem","LightUpDetect","FOCDetect","ReturnState","LightupTimeOutDetect","GroundFailureDetected","StarterOn","StarterOff","OpenSOV","IgnOn","IgnOff","StartComplete","SequenceAbort","CoolFlush"]}

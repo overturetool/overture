@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: org.overture.parser.tests.SpecificationSlTestSuite
--------------------------------------------------------------------------------
-Tests run: 41, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.291 sec

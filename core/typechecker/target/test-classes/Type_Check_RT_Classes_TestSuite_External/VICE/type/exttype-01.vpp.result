@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesRtTypeCheckTest">
-<message column="1" line="3" message="System class can only define instance variables and a constructor" messageType="error" number="2290" resource="exttype-01.vpp"/>
-<result/>
-</testResult>

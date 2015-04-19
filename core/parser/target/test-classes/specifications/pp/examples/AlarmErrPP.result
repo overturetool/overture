@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="parser">
-<message column="8" line="75" message="Expecting '&amp;' after bind list in forall" messageType="error" number="2153" resource="AlarmErrPP"/>
-<message column="31" line="42" message="Missing ';' after type definition" messageType="error" number="2078" resource="AlarmErrPP"/>
-<message column="1" line="64" message="Missing ';' after instance variable definition" messageType="error" number="2084" resource="AlarmErrPP"/>
-</testResult>

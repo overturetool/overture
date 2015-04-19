@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
-<result>
-<output object="false" resource="patmat-15.vdm" value="false"/>
-</result>
-</testResult>

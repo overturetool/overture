@@ -1,1 +1,0 @@
-((Character) SeqUtil.seq('k', 'i', 't', 't', 'e', 'n').get(Utils.index(1L)))

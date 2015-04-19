@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="43" line="10" message="Argument is not an object" messageType="error" number="3266" resource="samebaseclassexpr-03.vpp"/>
-<result/>
-</testResult>

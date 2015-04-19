@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="11" line="13" message="Argument to 'inds' is not a sequence" messageType="error" number="3109" resource="seqindices-04.vdm"/>
-<result/>
-</testResult>

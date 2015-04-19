@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="24" line="34" message="Unknown field g in record B" messageType="error" number="3090" resource="fieldselectexpr-03.vdm"/>
-<result/>
-</testResult>

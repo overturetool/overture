@@ -1,1 +1,0 @@
-{"exampleName":"dwarfSL","defNames":["LampId","Signal","LogCom","Message","Errors","Control","AllowedCommand","Trace","Dwarf","NormalTrans","ErrorCorrection","NoCorrection","MaxOneLampChange","StopToDriveOrWarning","ToAndFromDark","ToOrFromStop","AlwaysDefinedState","SeqTest"]}

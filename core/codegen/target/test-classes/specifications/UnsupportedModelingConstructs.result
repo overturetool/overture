@@ -1,2 +1,0 @@
-[Violation in module A: 'Implicit functions cannot be instantiated since they are not supported.'. Location: line 19 at position: 11 in UnsupportedModelingConstructs]
-[Violation in module C: 'Multiple inheritance not supported.'. Location: line 36 at position: 7 in UnsupportedModelingConstructs]

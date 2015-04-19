@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="13" line="31" message="Left hand of 'comp' is neither a map nor a function" messageType="error" number="3074" resource="compose-06.vdm"/>
-<result/>
-</testResult>

@@ -1,4 +1,0 @@
-operations
-
-domaintest() m : set of nat
-  post m = dom { 1|->2, 2|->2, 3|->1 }

@@ -1,5 +1,0 @@
-operations
-
-ImplOp(x : nat) 
-pre x <> 42
-post x = 6

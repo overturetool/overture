@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
-<message column="8" line="6" message="Definition 'n' not used" messageType="warning" number="5000" resource="NonExistingOpCallInTrace"/>
-<message column="22" line="13" message="Operation getn(bool) is not in scope" messageType="error" number="3213" resource="NonExistingOpCallInTrace"/>
-<result/>
-</testResult>

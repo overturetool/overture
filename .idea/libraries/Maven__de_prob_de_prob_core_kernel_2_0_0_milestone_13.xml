@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: de.prob:de.prob.core.kernel:2.0.0-milestone-13">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/de/prob/de.prob.core.kernel/2.0.0-milestone-13/de.prob.core.kernel-2.0.0-milestone-13.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/de/prob/de.prob.core.kernel/2.0.0-milestone-13/de.prob.core.kernel-2.0.0-milestone-13-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/de/prob/de.prob.core.kernel/2.0.0-milestone-13/de.prob.core.kernel-2.0.0-milestone-13-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

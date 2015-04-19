@@ -1,5 +1,0 @@
-operations
-
-  wa() s : set of nat
-    post  s = {1,2} union {1,3} inter {3,4}
- 

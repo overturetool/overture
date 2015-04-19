@@ -1,4 +1,0 @@
-operations
-
-prodcttest2() b : bool
-  post b = mk_(2, 3) in set {mk_(1, 3),mk_(2, 3),mk_(3, 2)}

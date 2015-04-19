@@ -1,4 +1,0 @@
-operations
-
-maptest() m : map nat to nat
-  post m = { 1|->2, 2|->2, 3|->1 }

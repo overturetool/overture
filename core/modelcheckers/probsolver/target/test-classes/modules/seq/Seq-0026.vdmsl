@@ -1,4 +1,0 @@
-operations
-
-str() m : token
-  post m = mk_token("This is a string")

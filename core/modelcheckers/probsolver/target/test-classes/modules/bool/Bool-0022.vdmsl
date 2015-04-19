@@ -1,4 +1,0 @@
-operations
-
-powpow() m : nat
-  post m = 2 ** 3 ** 2

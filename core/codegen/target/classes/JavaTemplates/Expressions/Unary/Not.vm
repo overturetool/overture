@@ -1,1 +1,0 @@
-$JavaFormat.formatNotUnary($node.getExp())

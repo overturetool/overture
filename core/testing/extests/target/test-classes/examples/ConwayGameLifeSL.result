@@ -1,1 +1,0 @@
-{"exampleName":"ConwayGameLifeSL","defNames":["Point","Population","around","neighbourCount","newCells","deadCells","generation","generations","measureGenerations","offset","isOffset","periodN","disappearN","gliderN","periodNP","disappearNP","gliderNP","tests","Configuration","generations_animate","animate_step","measure_animate_step","initialise","newLivingCell","newRound"]}

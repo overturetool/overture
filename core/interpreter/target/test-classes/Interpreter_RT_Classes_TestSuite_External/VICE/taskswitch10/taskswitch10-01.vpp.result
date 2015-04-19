@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalClassesRtTest">
-<result>
-<output object="true" resource="taskswitch10-01.vpp" value="true"/>
-</result>
-</testResult>

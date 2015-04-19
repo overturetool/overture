@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="11" line="13" message="Argument to 'inverse' is not a map" messageType="error" number="3111" resource="mapinverseexpr-04.vdm"/>
-<result/>
-</testResult>

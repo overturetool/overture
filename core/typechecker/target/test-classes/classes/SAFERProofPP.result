@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
-<message column="9" line="90" message="Field type visibility less than type's definition" messageType="error" number="3321" resource="SAFERProofPP"/>
-<message column="5" line="164" message="Field type visibility less than type's definition" messageType="error" number="3321" resource="SAFERProofPP"/>
-<message column="5" line="165" message="Field type visibility less than type's definition" messageType="error" number="3321" resource="SAFERProofPP"/>
-<message column="9" line="201" message="Type component visibility less than type's definition" messageType="error" number="3321" resource="SAFERProofPP"/>
-<result/>
-</testResult>

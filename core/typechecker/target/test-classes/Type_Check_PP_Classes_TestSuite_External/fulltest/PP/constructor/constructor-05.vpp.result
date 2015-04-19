@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="10" line="24" message="Constructor is not accessible" messageType="error" number="3292" resource="constructor-05.vpp"/>
-<result/>
-</testResult>

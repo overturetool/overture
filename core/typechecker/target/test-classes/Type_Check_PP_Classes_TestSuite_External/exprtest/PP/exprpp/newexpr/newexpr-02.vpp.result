@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="8" line="7" message="Instance variable 'c' is not initialized" messageType="warning" number="5001" resource="newexpr-02.vpp"/>
-<message column="11" line="15" message="Class name B not in scope" messageType="error" number="3133" resource="newexpr-02.vpp"/>
-<result/>
-</testResult>

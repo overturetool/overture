@@ -1,6 +1,0 @@
-org\overture\ct\ctruntime\tests\CtRandomReductionSlTestCase.class
-org\overture\ct\ctruntime\tests\CtTestCaseBase.class
-org\overture\ct\ctruntime\tests\util\TestSourceFinder.class
-org\overture\ct\ctruntime\tests\CtNoReductionSlTestCase.class
-org\overture\ct\ctruntime\tests\CtMultiFileNoReductionSlTestCase.class
-org\overture\ct\ctruntime\tests\CtNoReductionPpTestCase.class

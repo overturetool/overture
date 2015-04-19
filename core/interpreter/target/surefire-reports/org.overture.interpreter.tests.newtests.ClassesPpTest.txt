@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: org.overture.interpreter.tests.newtests.ClassesPpTest
--------------------------------------------------------------------------------
-Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.996 sec

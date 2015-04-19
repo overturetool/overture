@@ -1,4 +1,0 @@
-operations
-
-mktkntest1() t : token
-  post t = mk_token({1,2})

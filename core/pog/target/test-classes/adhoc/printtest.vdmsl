@@ -1,7 +1,0 @@
-module A
-definitions
-functions
-	f: () -> map bool to bool
-	f() == { a |-> b | a:bool, b:bool & a = b };
-
-end A

@@ -1,4 +1,0 @@
-operations
-
-seqapp2() m : nat
- post m = [10,20,30,40](4);

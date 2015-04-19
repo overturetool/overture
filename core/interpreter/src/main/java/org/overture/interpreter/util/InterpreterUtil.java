@@ -58,7 +58,7 @@ public class InterpreterUtil
 		}
 	}
 
-	public static Value interpret(String content) throws Exception
+	public static Value interpret(Dialect vdmPp, String content, File file) throws Exception
 	{
 
 		Interpreter interpreter = getInterpreter(new ModuleListInterpreter());
@@ -67,7 +67,7 @@ public class InterpreterUtil
 		return val;
 	}
 
-	public static Value interpret(Dialect dialect, String entry, File file)
+	public static Value interpret(Dialect dialect, String entry, File file, boolean b)
 			throws Exception
 	{
 		switch (dialect)
@@ -91,7 +91,6 @@ public class InterpreterUtil
 			case VDM_PP:
 			{
 				TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil.typeCheckPp(file);
-                if(!result.errors.isEmpty())System.out.println(result.errors.toString());
 
 				if (result.errors.isEmpty())
 				{

@@ -1,3 +1,0 @@
-types
-	R :: f:nat
-	inv t == t.f > 10;

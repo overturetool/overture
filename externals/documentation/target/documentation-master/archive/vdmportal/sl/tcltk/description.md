@@ -1,2 +1,0 @@
-A combination of a Tcl/Tk User Interface with VDM (Brigitte Fröhlich): 
-This small example illustrates how the Dynamic Link facility can be used to combine a VDM-SL specification with a general user interface using TCL/TK. The example here is a small database where one can insert new entries and make enquires about the data. Parts of the code which is available in this example does not properly take care of users pressing the cancel button and the entire Toolbox may disappear when such errors are encountered.

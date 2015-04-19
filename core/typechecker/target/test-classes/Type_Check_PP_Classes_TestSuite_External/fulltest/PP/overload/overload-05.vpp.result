@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="3" line="24" message="Name 'fn(nat)' is not in scope" messageType="error" number="3182" resource="overload-05.vpp"/>
-<result/>
-</testResult>

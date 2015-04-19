@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
-<message column="10" line="16" message="Error 4020: State value is neither a sequence nor a map in 'A' (assignstmt-19.vdm) at line 16:10" messageType="error" number="4020" resource="assignstmt-19.vdm"/>
-<result>
-<output object="[]" resource="assignstmt-19.vdm" value="[]"/>
-</result>
-</testResult>

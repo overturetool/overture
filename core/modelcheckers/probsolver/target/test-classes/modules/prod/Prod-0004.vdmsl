@@ -1,4 +1,0 @@
-operations
-
-prodcttest4() b : bool
-  post b = (mk_(2, 3) = mk_(1, 3))

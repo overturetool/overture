@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="12" line="31" message="Argument to 'dom' is not a map" messageType="error" number="3120" resource="mapdom-07.vdm"/>
-<result/>
-</testResult>

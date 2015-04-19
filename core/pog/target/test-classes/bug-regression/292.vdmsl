@@ -1,6 +1,0 @@
-operations
-
-Test : () ==> ()
-Test() ==
-  (dcl m : map nat to nat := {1 |-> 2};
-   m := m munion{7 |-> 5})

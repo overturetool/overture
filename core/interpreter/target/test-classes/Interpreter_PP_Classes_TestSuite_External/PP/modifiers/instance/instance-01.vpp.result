@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
-<result>
-<output object="Error 4034: Name 'B`n' not in scope in 'B' (instance-01.vpp) at line 14:6" resource="instance-01.vpp" value="Error 4034: Name 'B`n' not in scope in 'B' (instance-01.vpp) at line 14:6"/>
-</result>
-</testResult>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="15" line="86" message="Definition 'a' not used" messageType="warning" number="5000" resource="extaccess1-29.vpp"/>
-<message column="10" line="73" message="Value type visibility less than value definition" messageType="error" number="3052" resource="extaccess1-29.vpp"/>
-<message column="5" line="43" message="Function parameter visibility less than function definition" messageType="error" number="3019" resource="extaccess1-29.vpp"/>
-<result/>
-</testResult>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
-<message column="3" line="18" message="Error 4100: Can't get set value of nat in 'A' (setloop-03.vdm) at line 18:3" messageType="error" number="4100" resource="setloop-03.vdm"/>
-<result>
-<output object="[]" resource="setloop-03.vdm" value="[]"/>
-</result>
-</testResult>

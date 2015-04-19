@@ -1,1 +1,0 @@
-!(Utils.equals(SetUtil.set(1L, 2L, 3L), SetUtil.set(1L, 2L, 3L)))

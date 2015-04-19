@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="10" line="14" message="Some statements will not be reached" messageType="warning" number="5016" resource="if-16.vdm"/>
-<message column="10" line="16" message="Some statements will not be reached" messageType="warning" number="5016" resource="if-16.vdm"/>
-<message column="3" line="8" message="Operation returns void value" messageType="error" number="3313" resource="if-16.vdm"/>
-<result/>
-</testResult>

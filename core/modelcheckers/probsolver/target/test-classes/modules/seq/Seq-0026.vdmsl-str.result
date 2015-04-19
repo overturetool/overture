@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.modelcheckers.probsolver.SeqTests">
-<result>
-<output object="(&#10;return (&quot;This is a string&quot;)&#10;)" resource="Seq-0026.vdmsl" value="(&#10;return (&quot;This is a string&quot;)&#10;)"/>
-</result>
-</testResult>

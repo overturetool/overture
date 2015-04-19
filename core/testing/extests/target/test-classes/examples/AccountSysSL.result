@@ -1,1 +1,0 @@
-{"exampleName":"AccountSysSL","defNames":["AccNum","Date","Details","TransactionType","Transaction","Account","AccountSys","balanceOf","sum","Len","addAccount","removeAccount","deposit","withdraw","changeDetails","changeLimits","getDetails","getBalance","getLimit","getAllTransactions","contains","isEmpty","getTotal"]}

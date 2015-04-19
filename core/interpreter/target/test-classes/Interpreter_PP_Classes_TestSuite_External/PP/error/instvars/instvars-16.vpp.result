@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
-<result>
-<output object="Error 4087: Cannot convert true (bool) to nat in 'A' (instvars-16.vpp) at line 17:7" resource="instvars-16.vpp" value="Error 4087: Cannot convert true (bool) to nat in 'A' (instvars-16.vpp) at line 17:7"/>
-</result>
-</testResult>

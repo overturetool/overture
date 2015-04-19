@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="61" line="15" message="Restriction of map should be set of (bool * nat)" messageType="error" number="3081" resource="mapdomrestby-07.vdm"/>
-<result/>
-</testResult>

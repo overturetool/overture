@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesRtTypeCheckTest">
-<message column="9" line="58" message="Definition 'i' not used" messageType="warning" number="5000" resource="extension-04.vpp"/>
-<result/>
-</testResult>

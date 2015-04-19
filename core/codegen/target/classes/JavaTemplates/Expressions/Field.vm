@@ -1,7 +1,0 @@
-#set ( $field = "$JavaFormat.format($node.getObject()).$node.getMemberName()" )
-##
-#if ($ValueSemantics.cloneMember($node))
-	Utils.clone(${field})##
-#else
-	${field}##
-#end

@@ -1,1 +1,0 @@
-Utils.is_rat(Utils.divide((1.0 * 1L), 4L))

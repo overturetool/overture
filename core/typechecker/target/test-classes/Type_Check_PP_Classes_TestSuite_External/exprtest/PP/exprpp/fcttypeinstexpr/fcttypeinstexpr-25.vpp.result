@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="1" line="50" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="fcttypeinstexpr-25.vpp"/>
-<message column="68" line="63" message="Expecting 1 type parameters" messageType="error" number="3101" resource="fcttypeinstexpr-25.vpp"/>
-<result/>
-</testResult>

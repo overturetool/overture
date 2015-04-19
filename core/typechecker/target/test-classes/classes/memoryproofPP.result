@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
-<message column="18" line="19" message="Definition 'access' not used" messageType="warning" number="5000" resource="memoryproofPP"/>
-<result/>
-</testResult>

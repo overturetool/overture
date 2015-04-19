@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="34" line="12" message="At least one bind cannot match set" messageType="error" number="3264" resource="quantexpr-01.vdm"/>
-<message column="18" line="12" message="Matching expression is not a product of cardinality 2" messageType="error" number="3205" resource="quantexpr-01.vdm"/>
-<message column="47" line="12" message="Name 'QuantExprTest`a' is not in scope" messageType="error" number="3182" resource="quantexpr-01.vdm"/>
-<message column="51" line="12" message="Name 'QuantExprTest`b' is not in scope" messageType="error" number="3182" resource="quantexpr-01.vdm"/>
-<result/>
-</testResult>

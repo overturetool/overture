@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="23" line="15" message="Left of '&lt;-:' is not a set" messageType="error" number="3079" resource="mapdomrestby-01.vdm"/>
-<result/>
-</testResult>

@@ -1,9 +1,0 @@
-class Entry
-
-operations
-
-public static Run : () ==> ?
-Run () ==
-	return "abcde"(0,...,0);
-	
-end Entry

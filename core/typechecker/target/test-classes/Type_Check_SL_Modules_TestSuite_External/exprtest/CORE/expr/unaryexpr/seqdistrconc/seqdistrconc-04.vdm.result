@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="11" line="13" message="Argument of 'conc' is not a seq of seq" messageType="error" number="3075" resource="seqdistrconc-04.vdm"/>
-<result/>
-</testResult>

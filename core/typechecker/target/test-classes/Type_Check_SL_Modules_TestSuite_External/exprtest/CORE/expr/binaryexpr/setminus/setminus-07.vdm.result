@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="18" line="14" message="Left and right of '\' are different types" messageType="error" number="3162" resource="setminus-07.vdm"/>
-<result/>
-</testResult>

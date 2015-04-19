@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="7" line="14" message="i1 at 5:8 hidden by i1" messageType="warning" number="5008" resource="instvar-04.vpp"/>
-<message column="3" line="18" message="Such that clause is not boolean" messageType="error" number="3225" resource="instvar-04.vpp"/>
-<result/>
-</testResult>

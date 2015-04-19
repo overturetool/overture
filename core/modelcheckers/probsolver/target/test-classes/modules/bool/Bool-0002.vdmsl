@@ -1,4 +1,0 @@
-operations
-
-  complesseql() r : nat
-    post 1<=2 => r=2

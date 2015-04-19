@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="27" line="21" message="Unknown type 'C' in constructor" messageType="error" number="3126" resource="recordmodifierexpr-12.vdm"/>
-<message column="41" line="21" message="Unknown type 'D' in constructor" messageType="error" number="3126" resource="recordmodifierexpr-12.vdm"/>
-<result/>
-</testResult>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
-<message column="3" line="17" message="Error 4091: Can't get int value of char in 'A' (indexloop-07.vdm) at line 17:3" messageType="error" number="4091" resource="indexloop-07.vdm"/>
-<result>
-<output object="[]" resource="indexloop-07.vdm" value="[]"/>
-</result>
-</testResult>

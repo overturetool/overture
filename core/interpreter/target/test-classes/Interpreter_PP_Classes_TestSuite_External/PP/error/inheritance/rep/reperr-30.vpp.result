@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
-<message column="7" line="29" message="Error 4000: Cannot instantiate abstract class E in 'E' (reperr-30.vpp) at line 29:7" messageType="error" number="4000" resource="reperr-30.vpp.result"/>
-<result>
-<output object="[]" resource="reperr-30.vpp" value="[]"/>
-</result>
-</testResult>

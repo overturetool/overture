@@ -1,4 +1,0 @@
-operations
-
-  quall() mx : nat1
-    post forall n in set {1,3,2,4} & mx>=n

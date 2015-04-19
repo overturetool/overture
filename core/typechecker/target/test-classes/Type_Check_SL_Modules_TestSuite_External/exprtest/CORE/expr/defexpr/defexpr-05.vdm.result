@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="24" line="18" message="Pattern cannot match" messageType="error" number="3311" resource="defexpr-05.vdm"/>
-<result/>
-</testResult>

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
-<result>
-<output object="[false]" resource="isofbaseclass-03.vpp" value="[false]"/>
-</result>
-</testResult>

@@ -1,4 +1,0 @@
-operations
-
-mapcomp3() m : map nat1 to nat1
-  post m = {a |-> [10,20,30,40,50](a)+2*a | a in set {1,2,3,4,5} }

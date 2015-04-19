@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
-<result>
-<output object="Error 3091: Unknown member Test() of class A in 'A' (console) at line 1:9" resource="functions-11.vpp" value="Error 3091: Unknown member Test() of class A in 'A' (console) at line 1:9"/>
-</result>
-</testResult>

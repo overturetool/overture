@@ -1,4 +1,0 @@
-operations
-
-seqmod() m : seq of nat
-  post m = [10,20, 30,40, 50] ++ {2|->2, 4|->4}

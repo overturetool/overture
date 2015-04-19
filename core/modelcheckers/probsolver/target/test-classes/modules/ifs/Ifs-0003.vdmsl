@@ -1,5 +1,0 @@
-operations
-
-  if3() m : bool
-    post if 2 in set {1,2,3,4,5} then m = true else m = false
- 

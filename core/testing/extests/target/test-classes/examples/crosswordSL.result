@@ -1,1 +1,0 @@
-{"exampleName":"crosswordSL","defNames":["word","pos","position","grid","HV","crosswords","CW_INVARIANT","WORDS","HOR_WORDS","VER_WORDS","LINE","COL","WORDS_OF_SEQ","COMPATIBLE","IS_LOCATED","IN_WORD","VALIDATE_WORD","ADD_WORD","ADD_BLACK","DELETE_BLACK","STRONG_DELETE","SOFT_DELETE"]}

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
-<result>
-<output object="Error 4087: Cannot convert 7 (nat1) to bool in 'B' (full-14.vpp) at line 50:10" resource="full-14.vpp" value="Error 4087: Cannot convert 7 (nat1) to bool in 'B' (full-14.vpp) at line 50:10"/>
-</result>
-</testResult>

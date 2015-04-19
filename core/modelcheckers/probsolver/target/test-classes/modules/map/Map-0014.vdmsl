@@ -1,4 +1,0 @@
-operations
-
-mapcomp() m : map nat to nat
-  post m = ({10 |-> 100, 30 |-> 300 } comp {1|->10, 2|->20,3|->30,4|->40});

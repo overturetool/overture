@@ -1,9 +1,0 @@
-<traces>
-	<class name="Entry">
-		<trace name="T1" testcount="1" filename="NestingLetsWithObjBind" line="10" column="3" subset="1.0" reduction="NONE" seed="999">
-			<test no="1">x.op(y)</test>
-			<result no="1" verdict="PASSED">()</result>
-			<status verdict="PASSED" testcount="1" skippedcount="0" faildcount="0" inconclusivecount="0"></status>
-		</trace>
-	</class>
-</traces>
