@@ -78,6 +78,7 @@ bin
 # IntelliJ noise #
 ##################
 *.iml
+.idea
 
 # Added by Jenkins for local mvn repos #
 ########################################
