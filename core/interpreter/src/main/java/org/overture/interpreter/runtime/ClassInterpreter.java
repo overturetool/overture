@@ -176,7 +176,7 @@ public class ClassInterpreter extends Interpreter
 	public void init(DBGPReader dbgp)
 	{
 		BasicSchedulableThread.terminateAll();
-		VdmRuntime.initialize();
+		CoverageToXML ctx = VdmRuntime.initialize();
 
 		RuntimeValidator.init(this);
 		InitThread iniThread = new InitThread(Thread.currentThread());
@@ -198,6 +198,7 @@ public class ClassInterpreter extends Interpreter
 
 		scheduler.reset(); // Required before a run, as well as init above
 		BUSValue.start(); // Start any BUS threads first...
+        ctx.saveCoverageXml(new File("test-coverage/test/target/vdm-coverage"),"test");
 	}
 
 	@Override

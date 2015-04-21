@@ -1,5 +1,6 @@
 package org.overture.interpreter.runtime;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.eval.DelegateStatementEvaluator;
+import org.overture.interpreter.eval.DelegateStatementEvaluatorWithCoverage;
 import org.overture.interpreter.runtime.state.AExplicitFunctionDefinitionRuntimeState;
 import org.overture.interpreter.runtime.state.AImplicitFunctionDefinitionRuntimeState;
 import org.overture.interpreter.runtime.state.AModuleModulesRuntime;
@@ -39,11 +41,23 @@ public class VdmRuntime
 		initialize();
 	}
 
-	public static void initialize()
+	public static CoverageToXML initialize()
 	{
-		expressionRuntime = new DelegateStatementEvaluator();
+        Boolean coverage = true;
+        CoverageToXML ctx = null;
+        if (coverage) {
+            ctx = new CoverageToXML();
+            DelegateStatementEvaluatorWithCoverage dsewc = new DelegateStatementEvaluatorWithCoverage(ctx);
+            expressionRuntime = dsewc;
+        }
+        else {
+            DelegateStatementEvaluator dse = new DelegateStatementEvaluator();
+            expressionRuntime = dse;
+        }
+
 		statementRuntime = expressionRuntime;
 		runtimeState.clear();
+        return ctx;
 	}
 
 	public static void initialize(

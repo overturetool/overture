@@ -66,7 +66,7 @@ public class CoverageToXML implements IAnalysis{
         and.setAttribute("end_column", Integer.toString(local.getEndPos()));
     }
 
-    public void saveCoverageXml(File coverage,File f) {
+    public void saveCoverageXml(File coverage,String  filename) {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = null;
         try {
@@ -77,7 +77,7 @@ public class CoverageToXML implements IAnalysis{
             e.printStackTrace();
         }
         DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(new File(coverage.getPath() + File.separator + f.getName() + ".covtbl.xml"));
+        StreamResult result = new StreamResult(new File(coverage.getPath() + File.separator + filename + ".xml"));
         try {
             transformer.transform(source, result);
         } catch (TransformerException e) {

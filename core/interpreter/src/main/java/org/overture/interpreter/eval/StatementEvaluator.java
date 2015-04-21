@@ -60,13 +60,7 @@ import org.overture.config.Settings;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
-import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ContextException;
-import org.overture.interpreter.runtime.ExitException;
-import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.ValueException;
-import org.overture.interpreter.runtime.VdmRuntime;
-import org.overture.interpreter.runtime.VdmRuntimeError;
+import org.overture.interpreter.runtime.*;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.scheduler.ObjectThread;
@@ -680,7 +674,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	@Override
 	public Value caseAIfStm(AIfStm node, Context ctxt) throws AnalysisException
 	{
-
+        node.apply(new CoverageToXML());
 		return evalIf(node, node.getLocation(), node.getIfExp(), node.getThenStm(), node.getElseIf(), node.getElseStm(), ctxt);
 	}
 

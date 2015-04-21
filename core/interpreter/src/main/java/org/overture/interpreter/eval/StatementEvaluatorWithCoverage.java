@@ -31,7 +31,7 @@ public class StatementEvaluatorWithCoverage extends DelegateExpressionEvaluator
         coverage_to_xml=new CoverageToXML();
     }
 
-    public void saveXml(File coverage, File f){
+    public void saveXml(File coverage, String f){
         coverage_to_xml.saveCoverageXml(coverage, f);
     }
 
