@@ -39,6 +39,7 @@ public class CoverageToXML implements IAnalysis{
     private Element rootElement;
     private Element currentElement;
     private Context ctx;
+    private int iteration;
 
     public CoverageToXML(){
         DocumentBuilder db = null;
@@ -53,6 +54,7 @@ public class CoverageToXML implements IAnalysis{
         this.currentElement = rootElement;
         this.doc.appendChild(rootElement);
         this.ctx = null;
+        this.iteration = 0;
     }
 
     public void setContext(Context context){
@@ -454,9 +456,9 @@ public class CoverageToXML implements IAnalysis{
     public void caseAVariableExp(AVariableExp node) throws AnalysisException {
         ILexLocation local=node.getLocation();
         Element eval=doc.createElement("evaluation");
+        fill_source_file_location(eval, local);
         eval.setTextContent(ctx.lookup(node.getName()).toString());
-        System.out.println("-->"+ctx.lookup(node.getName()));
-        eval.setAttribute("n","1");
+        eval.setAttribute("n", Integer.toString(this.iteration));
         currentElement.appendChild(eval);
     }
 
@@ -568,16 +570,7 @@ public class CoverageToXML implements IAnalysis{
 
     @Override
     public void defaultSBooleanBinaryExp(SBooleanBinaryExp node) throws AnalysisException {
-        Element op=doc.createElement(node.getOp().toString());
-        ILexLocation local=node.getLocation();
-        fill_source_file_location(op, local);
-        PExp left = node.getLeft();
-        PExp right = node.getRight();
-        currentElement.appendChild(op);
-        currentElement = op;
-        left.apply(this);
-        currentElement = op;
-        right.apply(this);
+
     }
 
     @Override
@@ -677,22 +670,58 @@ public class CoverageToXML implements IAnalysis{
 
     @Override
     public void caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node) throws AnalysisException {
-
+        Element op=doc.createElement(node.getOp().toString());
+        ILexLocation local=node.getLocation();
+        fill_source_file_location(op, local);
+        PExp left = node.getLeft();
+        PExp right = node.getRight();
+        currentElement.appendChild(op);
+        currentElement = op;
+        left.apply(this);
+        currentElement = op;
+        right.apply(this);
     }
 
     @Override
     public void caseAEquivalentBooleanBinaryExp(AEquivalentBooleanBinaryExp node) throws AnalysisException {
-
+        Element op=doc.createElement(node.getOp().toString());
+        ILexLocation local=node.getLocation();
+        fill_source_file_location(op, local);
+        PExp left = node.getLeft();
+        PExp right = node.getRight();
+        currentElement.appendChild(op);
+        currentElement = op;
+        left.apply(this);
+        currentElement = op;
+        right.apply(this);
     }
 
     @Override
     public void caseAImpliesBooleanBinaryExp(AImpliesBooleanBinaryExp node) throws AnalysisException {
-
+        Element op=doc.createElement(node.getOp().toString());
+        ILexLocation local=node.getLocation();
+        fill_source_file_location(op, local);
+        PExp left = node.getLeft();
+        PExp right = node.getRight();
+        currentElement.appendChild(op);
+        currentElement = op;
+        left.apply(this);
+        currentElement = op;
+        right.apply(this);
     }
 
     @Override
     public void caseAOrBooleanBinaryExp(AOrBooleanBinaryExp node) throws AnalysisException {
-
+        Element op=doc.createElement(node.getOp().toString());
+        ILexLocation local=node.getLocation();
+        fill_source_file_location(op, local);
+        PExp left = node.getLeft();
+        PExp right = node.getRight();
+        currentElement.appendChild(op);
+        currentElement = op;
+        left.apply(this);
+        currentElement = op;
+        right.apply(this);
     }
 
     @Override
@@ -1577,12 +1606,14 @@ public class CoverageToXML implements IAnalysis{
 
     @Override
     public void caseAIfStm(AIfStm node) throws AnalysisException {
+        this.iteration = (int) node.getLocation().getHits();
         ILexLocation local=node.getLocation();
-
         Element if_statement =doc.createElement("if_statement");
+        Element eval = doc.createElement("evaluation");
+        if_statement.appendChild(eval);
+        eval.setAttribute("n",Integer.toString(iteration));
         rootElement.appendChild(if_statement);
         fill_source_file_location(if_statement, local);
-
         PExp exp=node.getIfExp();
         Element expression=doc.createElement("expression");
         if_statement.appendChild(expression);

@@ -76,6 +76,9 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 abstract public class Interpreter
 {
+    /** the object to keep MC/DC coverage information */
+    public CoverageToXML ctx;
+
 	/** the assistant factory used by this interpreter for e.g. FunctionValues */
 	protected final IInterpreterAssistantFactory assistantFactory;
 
@@ -97,7 +100,9 @@ abstract public class Interpreter
 	/** A static instance pointer to the interpreter. */
 	protected static Interpreter instance = null;
 
-	/**
+
+
+    /**
 	 * Create an Interpreter.
 	 * 
 	 * @param assistantFactory
@@ -729,4 +734,9 @@ abstract public class Interpreter
 	abstract public Context getInitialTraceContext(
 			ANamedTraceDefinition tracedef, boolean debug)
 			throws ValueException, AnalysisException;
+
+    public CoverageToXML getCoverage_to_xml() {
+        return ctx;
+    }
 }
+

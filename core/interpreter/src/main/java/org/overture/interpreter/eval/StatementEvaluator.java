@@ -88,6 +88,7 @@ import org.overture.parser.config.Properties;
 
 public class StatementEvaluator extends DelegateExpressionEvaluator
 {
+    public CoverageToXML ctx;
 
 	@Override
 	public Value caseAAlwaysStm(AAlwaysStm node, Context ctxt)
@@ -673,8 +674,8 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 	@Override
 	public Value caseAIfStm(AIfStm node, Context ctxt) throws AnalysisException
-	{
-        node.apply(new CoverageToXML());
+	{   ctx.setContext(ctxt);
+        node.apply(ctx);
 		return evalIf(node, node.getLocation(), node.getIfExp(), node.getThenStm(), node.getElseIf(), node.getElseStm(), ctxt);
 	}
 

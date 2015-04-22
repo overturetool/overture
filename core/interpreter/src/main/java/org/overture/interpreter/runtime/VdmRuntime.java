@@ -14,7 +14,6 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.eval.DelegateStatementEvaluator;
-import org.overture.interpreter.eval.DelegateStatementEvaluatorWithCoverage;
 import org.overture.interpreter.runtime.state.AExplicitFunctionDefinitionRuntimeState;
 import org.overture.interpreter.runtime.state.AImplicitFunctionDefinitionRuntimeState;
 import org.overture.interpreter.runtime.state.AModuleModulesRuntime;
@@ -43,21 +42,12 @@ public class VdmRuntime
 
 	public static CoverageToXML initialize()
 	{
-        Boolean coverage = true;
-        CoverageToXML ctx = null;
-        if (coverage) {
-            ctx = new CoverageToXML();
-            DelegateStatementEvaluatorWithCoverage dsewc = new DelegateStatementEvaluatorWithCoverage(ctx);
-            expressionRuntime = dsewc;
-        }
-        else {
-            DelegateStatementEvaluator dse = new DelegateStatementEvaluator();
-            expressionRuntime = dse;
-        }
 
+        DelegateStatementEvaluator dse = new DelegateStatementEvaluator();
+        expressionRuntime = dse;
 		statementRuntime = expressionRuntime;
 		runtimeState.clear();
-        return ctx;
+        return dse.ctx;
 	}
 
 	public static void initialize(
@@ -72,7 +62,7 @@ public class VdmRuntime
 	{
 		if (expressionRuntime == null)
 		{
-			initialize();
+			initialize(statementRuntime);
 		}
 
 		return expressionRuntime;

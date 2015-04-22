@@ -3,12 +3,15 @@ package org.overture.interpreter.eval;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.CoverageToXML;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.Value;
 
 public class DelegateStatementEvaluator extends StatementEvaluator
 {
-
+    public DelegateStatementEvaluator(){
+        ctx = new CoverageToXML();
+    }
 	@Override
 	public Value caseANotYetSpecifiedStm(ANotYetSpecifiedStm node, Context ctxt)
 			throws AnalysisException

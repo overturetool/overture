@@ -86,6 +86,7 @@ import org.overture.typechecker.assistant.definition.PDefinitionSet;
 
 public class ClassInterpreter extends Interpreter
 {
+
 	private final ClassListInterpreter classes;
 	private SClassDefinition defaultClass;
 	private NameValuePairMap createdValues;
@@ -176,7 +177,7 @@ public class ClassInterpreter extends Interpreter
 	public void init(DBGPReader dbgp)
 	{
 		BasicSchedulableThread.terminateAll();
-		CoverageToXML ctx = VdmRuntime.initialize();
+		ctx = VdmRuntime.initialize();
 
 		RuntimeValidator.init(this);
 		InitThread iniThread = new InitThread(Thread.currentThread());
@@ -198,7 +199,6 @@ public class ClassInterpreter extends Interpreter
 
 		scheduler.reset(); // Required before a run, as well as init above
 		BUSValue.start(); // Start any BUS threads first...
-        ctx.saveCoverageXml(new File("test-coverage/test/target/vdm-coverage"),"test");
 	}
 
 	@Override

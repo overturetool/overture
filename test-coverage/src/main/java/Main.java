@@ -24,11 +24,11 @@ public class Main
 	{
 		Settings.release = Release.VDM_10;
 		Settings.dialect = Dialect.VDM_PP;
-		Value test = InterpreterUtil.interpret(Dialect.VDM_PP, "new Test().Run(1,2,true,false)", new File("test-coverage/src/main/resources/test.vdmpp".replace('/', File.separatorChar)),true);
-        System.out.println("The interpreter executed test1 with the result: "
+		Value test = InterpreterUtil.interpret(Dialect.VDM_PP, "new Test().Run(2,1,true,false)", new File("test-coverage/src/main/resources/test.vdmpp".replace('/', File.separatorChar)),true);
+        System.out.println("The interpreter executed test with the result: "
                 + test);
 		Interpreter interpreter = Interpreter.getInstance();
-		File coverageFolder = new File("teste/test/target/vdm-coverage".replace('/', File.separatorChar));
+		File coverageFolder = new File("test-coverage/test/target/vdm-coverage".replace('/', File.separatorChar));
 		coverageFolder.mkdirs();
 
         if (interpreter instanceof ClassInterpreter)
