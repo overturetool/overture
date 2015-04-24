@@ -192,7 +192,7 @@ public class PluginVdm2JavaUtil
 	public static void addMarkers(String generalMessage,
 			Set<Violation> violations)
 	{
-		List<Violation> list = JavaCodeGenUtil.asSortedList(violations);
+		List<Violation> list = GeneralCodeGenUtils.asSortedList(violations);
 
 		for (Violation violation : list)
 		{
