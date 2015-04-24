@@ -278,12 +278,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			AExplicitFunctionDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		if (node.getIsTypeInvariant())
-		{
-			question.addUnsupportedNode(node, "Explicit functions that are type invariants are not supported");
-			return null;
-		}
-
 		String accessCg = node.getAccess().getAccess().toString();
 		String funcNameCg = node.getName().getName();
 
