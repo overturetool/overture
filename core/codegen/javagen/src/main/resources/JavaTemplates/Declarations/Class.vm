@@ -41,7 +41,8 @@ $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSupe
 	$JavaFormat.format($field)
 	#end
 	##
-	
+	$JavaFormat.formatMetaData($node.getMetaData())##
+	##
 	#foreach( $method in $node.getMethods() )
 	$JavaFormat.format($method)
 	#end

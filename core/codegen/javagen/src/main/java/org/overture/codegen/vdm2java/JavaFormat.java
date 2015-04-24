@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.ClonableString;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
@@ -949,5 +950,17 @@ public class JavaFormat
 		}
 		
 		return clazz.getInvariant() != null;
+	}
+	
+	public static String formatMetaData(List<ClonableString> metaData)
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		for(ClonableString str : metaData)
+		{
+			sb.append(str.value).append('\n');
+		}
+		
+		return sb.append('\n').toString();
 	}
 }
