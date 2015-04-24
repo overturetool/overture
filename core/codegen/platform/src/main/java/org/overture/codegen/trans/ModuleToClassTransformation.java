@@ -1,5 +1,6 @@
 package org.overture.codegen.trans;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.INode;
@@ -62,11 +63,10 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		makeStateAccessExplicit(node);
 		handleImports(node.getImport(), clazz);
 		
-		for (SDeclCG decl : node.getDecls())
+		// Wrap declarations in a new list to avoid a concurrent modifications
+		// exception when moving the module declarations to the class
+		for (SDeclCG decl : new LinkedList<>(node.getDecls()))
 		{
-			// Note that this declaration is disconnected from the IR
-			decl = decl.clone();
-
 			if (decl instanceof AMethodDeclCG)
 			{
 				AMethodDeclCG method = (AMethodDeclCG) decl;
@@ -137,6 +137,11 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 
 			ARecordTypeCG stateType = new ARecordTypeCG();
 			stateType.setName(typeName);
+			
+			if(stateDecl.getInvDecl() != null)
+			{
+				clazz.setInvariant(stateDecl.getInvDecl().clone());
+			}
 
 			clazz.getFields().add(transAssistant.consConstField(IRConstants.PRIVATE, stateType, stateDecl.getName(), getInitExp(stateDecl)));
 		}
