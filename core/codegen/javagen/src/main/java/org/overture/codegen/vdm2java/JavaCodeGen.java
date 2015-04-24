@@ -65,6 +65,8 @@ import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IREventCoordinator;
+import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
@@ -82,7 +84,7 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Settings;
 
-public class JavaCodeGen extends CodeGenBase
+public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 {
 	public static final String JAVA_TEMPLATES_ROOT_FOLDER = "JavaTemplates";
 
@@ -96,6 +98,8 @@ public class JavaCodeGen extends CodeGenBase
 
 	private JavaFormat javaFormat;
 	private TemplateStructure javaTemplateStructure;
+	
+	private List<IREventObserver> irObservers;
 
 	public JavaCodeGen()
 	{
@@ -103,6 +107,22 @@ public class JavaCodeGen extends CodeGenBase
 		init();
 	}
 
+	public JavaCodeGen(ILogger log)
+	{
+		super(log);
+		init();
+	}
+
+	private void init()
+	{
+		this.irObservers = new LinkedList<IREventObserver>();
+		initVelocity();
+
+		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
+		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
+		this.javaFormat = new JavaFormat(varPrefixes, javaTemplateStructure, generator.getIRInfo());
+	}
+	
 	public void setJavaTemplateStructure(TemplateStructure javaTemplateStructure)
 	{
 		this.javaTemplateStructure = javaTemplateStructure;
@@ -121,21 +141,6 @@ public class JavaCodeGen extends CodeGenBase
 	public JavaSettings getJavaSettings()
 	{
 		return this.javaFormat.getJavaSettings();
-	}
-
-	public JavaCodeGen(ILogger log)
-	{
-		super(log);
-		init();
-	}
-
-	private void init()
-	{
-		initVelocity();
-
-		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
-		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
-		this.javaFormat = new JavaFormat(varPrefixes, javaTemplateStructure, generator.getIRInfo());
 	}
 
 	public void clear()
@@ -263,6 +268,9 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 		
+		// Event notification
+		initialIrEvent(statuses);
+		
 		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
 		List<IRStatus<org.overture.codegen.cgast.INode>> modulesAsNodes = IRStatus.extract(moduleStatuses);
 			
@@ -340,6 +348,9 @@ public class JavaCodeGen extends CodeGenBase
 				}
 			}
 		}
+		
+		// Event notification
+		finalIrEvent(IRStatus.extract(canBeGenerated));
 
 		List<String> skipping = new LinkedList<String>();
 
@@ -766,5 +777,36 @@ public class JavaCodeGen extends CodeGenBase
 		// }
 
 		return true;
+	}
+
+	@Override
+	public void register(IREventObserver obs)
+	{
+		if(obs != null && !irObservers.contains(obs))
+		{
+			irObservers.add(obs);
+		}
+	}
+
+	@Override
+	public void unregister(IREventObserver obs)
+	{
+		irObservers.remove(obs);
+	}
+
+	public void initialIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
+	{
+		for(IREventObserver obs : irObservers)
+		{
+			obs.initialIRConstructed(ast);
+		}
+	}
+	
+	public void finalIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
+	{
+		for(IREventObserver obs : irObservers)
+		{
+			obs.finalIRConstructed(ast);
+		}
 	}
 }
