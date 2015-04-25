@@ -2052,7 +2052,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 
 			File data = new File(coverage.getPath() + File.separator
 					+ f.getName() + ".covtbl");
-			interpreter.getCoverage_to_xml().saveCoverageXml(coverage, "aa");
+			interpreter.getCoverage_to_xml().saveCoverageXml(coverage, f.getName());
 		}
 
 		Properties.parser_tabstop = 1;// required to match locations with the editor representation

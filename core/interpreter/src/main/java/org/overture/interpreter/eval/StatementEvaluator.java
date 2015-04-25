@@ -466,6 +466,8 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	public Value caseAElseIfStm(AElseIfStm node, Context ctxt)
 			throws AnalysisException
 	{
+        ctx.setContext(ctxt);
+        node.apply(ctx);
 		return evalElseIf(node, node.getLocation(), node.getElseIf(), node.getThenStm(), ctxt);
 	}
 
