@@ -599,4 +599,40 @@ public class DeclAssistantCG extends AssistantBase
 			return idDef instanceof AAssignmentDefinition;
 		}
 	}
+	
+	public boolean inFunc(INode node)
+	{
+		if(node.getAncestor(SFunctionDefinition.class) != null)
+		{
+			return true;
+		}
+	
+		// If a node appears in a pre or post condition of an operation then the pre/post
+		// expression might be directly linked to the operation. Therefore the above ancestor
+		// check will not work.
+		
+		SOperationDefinition encOp = node.getAncestor(SOperationDefinition.class);
+		
+		if(encOp != null)
+		{
+			INode next = node;
+			Set<INode> visited = new HashSet<INode>();
+			while(next.parent() != null && !(next.parent() instanceof SOperationDefinition) && !visited.contains(next))
+			{
+				visited.add(next);
+				next = next.parent();
+			}
+			
+			if(next != null)
+			{
+				// If we are in a pre or post condition then 'next' should point to the
+				// pre or post expression of the operation
+				
+				return encOp.getPrecondition() == next || encOp.getPostcondition() == next;
+			}
+			
+		}
+		
+		return false;
+	}
 }
