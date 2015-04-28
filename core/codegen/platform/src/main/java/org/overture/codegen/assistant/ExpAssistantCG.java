@@ -593,4 +593,21 @@ public class ExpAssistantCG extends AssistantBase
 			return idVar;
 		}
 	}
+	
+	public boolean isOld(String name)
+	{
+		return name != null && name.startsWith("_");
+	}
+	
+	public String oldNameToCurrentName(String oldName)
+	{
+		if(oldName != null && oldName.startsWith("_"))
+		{
+			return oldName.substring(1);
+		}
+		else
+		{
+			return oldName;
+		}
+	}
 }
