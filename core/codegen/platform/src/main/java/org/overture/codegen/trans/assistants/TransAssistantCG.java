@@ -61,6 +61,7 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
@@ -681,6 +682,18 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return block;
 	}
 
+	public ARecordTypeCG consRecType(String definingModule, String  recName)
+	{
+		ATypeNameCG typeName = new ATypeNameCG();
+		typeName.setDefiningClass(definingModule);
+		typeName.setName(recName);
+		
+		ARecordTypeCG recType = new ARecordTypeCG();
+		recType.setName(typeName);
+
+		return recType;
+	}
+	
 	public ABlockStmCG wrap(SStmCG stm)
 	{
 		ABlockStmCG block = new ABlockStmCG();
