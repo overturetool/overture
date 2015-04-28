@@ -26,7 +26,7 @@ import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeImportCG;
 import org.overture.codegen.cgast.declarations.AValueValueImportCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
+import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
@@ -35,6 +35,7 @@ import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
@@ -43,11 +44,13 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 {
 	private AClassDeclCG clazz = null;
 	
+	private IRInfo info;
 	private TransAssistantCG transAssistant;
 	private List<AModuleDeclCG> allModules;
 
-	public ModuleToClassTransformation(TransAssistantCG transAssistant, List<AModuleDeclCG> allModules)
+	public ModuleToClassTransformation(IRInfo info, TransAssistantCG transAssistant, List<AModuleDeclCG> allModules)
 	{
+		this.info = info;
 		this.transAssistant = transAssistant;
 		this.allModules = allModules;
 	}
@@ -240,21 +243,47 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			public void caseAIdentifierVarExpCG(AIdentifierVarExpCG node)
 					throws AnalysisException
 			{
-				if (!node.getIsLocal()
-						&& !node.getName().equals(stateDecl.getName()))
+				if ((info.getExpAssistant().isOld(node.getName()) && !node.getName().equals("_" + stateDecl.getName())) ||
+						!node.getIsLocal() && !node.getName().equals(stateDecl.getName()))
 				{
-					// First condition: 'not local' means we are accessing state
-					// Second condition: if the variable represents a field of the state then it must be explicit
-					AExplicitVarExpCG eVar = new AExplicitVarExpCG();
-					eVar.setClassType(transAssistant.consClassType(stateDecl.getName()));
-					eVar.setIsLambda(false);
-					eVar.setIsLocal(node.getIsLocal());
-					eVar.setName(node.getName());
-					eVar.setSourceNode(node.getSourceNode());
-					eVar.setTag(node.getTag());
-					eVar.setType(node.getType().clone());
+					// Given a state named 'St' with a field named 'f'
+					// Note: If a variable is 'old' then it is local since state is passed
+					// as an argument to the post condition function
+					
+					// Also note that the IR uses underscore to denote old names: _St corresponds to St~ (in VDM)
+					// and _f corresponds to f~ (in VDM)
+					
+					// In case we are in a post condition the left hand side
+					// of the OR checks if the variable expression is implicit access
+					// to a field of the old state in the post condition, i.e._f (or f~ in VDM)
+					//
+					// Any other place in the model: The right hand side of the OR checks if
+					// the variable expression is implicit access to a field of the current state
+					
+					AFieldExpCG fieldExp = new AFieldExpCG();
+					fieldExp.setSourceNode(node.getSourceNode());
+					fieldExp.setTag(node.getTag());
+					fieldExp.setType(node.getType().clone());
+					setFieldNames(fieldExp, stateDecl, node.getName());
 
-					transAssistant.replaceNodeWith(node, eVar);
+					transAssistant.replaceNodeWith(node, fieldExp);
+				}
+			}
+
+			private void setFieldNames(AFieldExpCG field, AStateDeclCG stateDecl, String name)
+			{
+				ARecordTypeCG recType = getRecType(stateDecl);
+				String stateName = stateDecl.getName();
+				
+				if(info.getExpAssistant().isOld(name))
+				{
+					field.setObject(transAssistant.consIdentifierVar("_" + stateName, recType));
+					field.setMemberName(info.getExpAssistant().oldNameToCurrentName(name));	
+				}
+				else
+				{
+					field.setObject(transAssistant.consIdentifierVar(stateName, recType));
+					field.setMemberName(name);
 				}
 			}
 		});
