@@ -75,6 +75,7 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.ModuleToClassTransformation;
+import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -236,6 +237,8 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			throws AnalysisException, UnsupportedModelingException {
 		
 		List<INode> userModules = getUserModules(ast);
+		
+		handleOldNames(ast);
 
 		List<Renaming> allRenamings = normaliseIdentifiers(userModules);
 		computeDefTable(userModules);
@@ -274,7 +277,8 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
 		List<IRStatus<org.overture.codegen.cgast.INode>> modulesAsNodes = IRStatus.extract(moduleStatuses);
 			
-		ModuleToClassTransformation moduleTransformation = new ModuleToClassTransformation(transAssistant, getModuleDecls(moduleStatuses));
+		ModuleToClassTransformation moduleTransformation = new ModuleToClassTransformation(getInfo(),
+				transAssistant, getModuleDecls(moduleStatuses));
 		
 		for(IRStatus<org.overture.codegen.cgast.INode> moduleStatus : modulesAsNodes)
 		{
@@ -442,6 +446,16 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		data.setWarnings(warnings);
 
 		return data;
+	}
+
+	private void handleOldNames(List<? extends INode> ast) throws AnalysisException
+	{
+		OldNameRenamer oldNameRenamer = new OldNameRenamer();
+		
+		for(INode module : ast)
+		{
+			module.apply(oldNameRenamer);
+		}
 	}
 
 	private List<INode> getUserModules(
@@ -798,7 +812,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	{
 		for(IREventObserver obs : irObservers)
 		{
-			obs.initialIRConstructed(ast);
+			obs.initialIRConstructed(ast, getInfo());
 		}
 	}
 	
@@ -806,7 +820,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	{
 		for(IREventObserver obs : irObservers)
 		{
-			obs.finalIRConstructed(ast);
+			obs.finalIRConstructed(ast, getInfo());
 		}
 	}
 }
