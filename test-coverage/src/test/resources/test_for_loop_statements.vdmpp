@@ -1,0 +1,16 @@
+class TestFor
+
+operations
+
+public Remove : (seq of int) * int ==> seq of int
+Remove (k,z) ==
+(dcl nk : seq of int := [];
+    for elem in k do
+    if elem <> z
+        then nk := nk^[elem];
+        return nk
+    );
+
+
+
+end TestFor
