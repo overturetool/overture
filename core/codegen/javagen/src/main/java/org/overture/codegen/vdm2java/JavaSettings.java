@@ -30,6 +30,7 @@ public class JavaSettings
 	private List<String> modulesToSkip;
 	private String vdmEntryExp;
 	private String javaRootPackage;
+	private boolean genRecsAsInnerClasses;
 	
 	public JavaSettings()
 	{
@@ -37,6 +38,7 @@ public class JavaSettings
 		this.modulesToSkip = new LinkedList<String>();
 		this.vdmEntryExp = null;
 		this.javaRootPackage = null;
+		this.genRecsAsInnerClasses = true;
 	}
 	
 	public List<String> getModulesToSkip()
@@ -83,5 +85,15 @@ public class JavaSettings
 		{
 			this.javaRootPackage = javaRootPackage.trim();
 		}
+	}
+
+	public boolean genRecsAsInnerClasses()
+	{
+		return genRecsAsInnerClasses;
+	}
+
+	public void setGenRecsAsInnerClasses(boolean genRecsAsInnerClasses)
+	{
+		this.genRecsAsInnerClasses = genRecsAsInnerClasses;
 	}
 }

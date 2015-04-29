@@ -909,9 +909,10 @@ public class JavaFormat
 		}
 	}
 	
-	public static boolean isNamedTypeDecl(ATypeDeclCG node)
+	public boolean genTypeDecl(ATypeDeclCG node)
 	{
-		return node.getDecl() instanceof ANamedTypeDeclCG;
+		return getJavaSettings().genRecsAsInnerClasses()
+				&& !(node.getDecl() instanceof ANamedTypeDeclCG);
 	}
 	
 	public static boolean isSeqConversion(AFieldNumberExpCG node)
