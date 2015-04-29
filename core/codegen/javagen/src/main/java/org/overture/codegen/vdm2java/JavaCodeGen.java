@@ -100,7 +100,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	private JavaFormat javaFormat;
 	private TemplateStructure javaTemplateStructure;
 	
-	private List<IREventObserver> irObservers;
+	private IREventObserver irObserver;
 
 	public JavaCodeGen()
 	{
@@ -116,7 +116,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 	private void init()
 	{
-		this.irObservers = new LinkedList<IREventObserver>();
+		this.irObserver = null;
 		initVelocity();
 
 		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
@@ -272,7 +272,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		}
 		
 		// Event notification
-		initialIrEvent(statuses);
+		statuses = initialIrEvent(statuses);
 		
 		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
 		List<IRStatus<org.overture.codegen.cgast.INode>> modulesAsNodes = IRStatus.extract(moduleStatuses);
@@ -313,7 +313,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		List<AClassDeclCG> classes = getClassDecls(classStatuses);
 		javaFormat.setClasses(classes);
 
-		LinkedList<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
+		List<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
 		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
 
 		for (IRStatus<AClassDeclCG> status : classStatuses)
@@ -354,7 +354,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		}
 		
 		// Event notification
-		finalIrEvent(IRStatus.extract(canBeGenerated));
+		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), AClassDeclCG.class);
 
 		List<String> skipping = new LinkedList<String>();
 
@@ -796,31 +796,38 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	@Override
 	public void register(IREventObserver obs)
 	{
-		if(obs != null && !irObservers.contains(obs))
+		if(obs != null && irObserver == null)
 		{
-			irObservers.add(obs);
+			irObserver = obs;
 		}
 	}
 
 	@Override
 	public void unregister(IREventObserver obs)
 	{
-		irObservers.remove(obs);
+		if(obs != null && irObserver == obs)
+		{
+			irObserver = null;
+		}
 	}
 
-	public void initialIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
+	public List<IRStatus<org.overture.codegen.cgast.INode>> initialIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
 	{
-		for(IREventObserver obs : irObservers)
+		if(irObserver != null)
 		{
-			obs.initialIRConstructed(ast, getInfo());
+			return irObserver.initialIRConstructed(ast, getInfo());
 		}
+		
+		return ast;
 	}
 	
-	public void finalIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
+	public List<IRStatus<org.overture.codegen.cgast.INode>> finalIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
 	{
-		for(IREventObserver obs : irObservers)
+		if(irObserver != null)
 		{
-			obs.finalIRConstructed(ast, getInfo());
+			return irObserver.finalIRConstructed(ast, getInfo());
 		}
+		
+		return ast;
 	}
 }
