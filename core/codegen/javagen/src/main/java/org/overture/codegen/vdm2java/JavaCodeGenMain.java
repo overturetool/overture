@@ -35,6 +35,7 @@ import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
@@ -324,16 +325,6 @@ public class JavaCodeGenMain
 
 		Logger.getLog().println("");
 		
-		if (outputDir != null)
-		{
-			String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
-			if(JavaCodeGenUtil.isValidJavaPackage(javaPackage))
-			{
-				String packageFolderPath = JavaCodeGenUtil.getFolderFromJavaRootPackage(javaPackage);
-				outputDir = new File(outputDir, packageFolderPath);
-			}
-		}
-		
 		if(!generatedClasses.isEmpty())
 		{
 			for (GeneratedModule generatedClass : generatedClasses)
@@ -362,9 +353,32 @@ public class JavaCodeGenMain
 	
 				} else
 				{
+					File moduleOutputDir = outputDir;
+					
 					if (outputDir != null)
 					{
-						vdmCodGen.generateJavaSourceFile(outputDir, generatedClass);
+						String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
+						
+						if(generatedClass.getIrNode() instanceof AClassDeclCG)
+						{
+							javaPackage = ((AClassDeclCG) generatedClass.getIrNode()).getPackage();
+						}
+						else
+						{
+							Logger.getLog().printErrorln("Expected IR node of "
+									+ generatedClass.getName()
+									+ " to be a class declaration at this point. Got: "
+									+ generatedClass.getIrNode());
+							continue;
+						}
+						
+						if (JavaCodeGenUtil.isValidJavaPackage(javaPackage))
+						{
+							String packageFolderPath = JavaCodeGenUtil.getFolderFromJavaRootPackage(javaPackage);
+							moduleOutputDir = new File(outputDir, packageFolderPath);
+						}
+						
+						vdmCodGen.generateJavaSourceFile(moduleOutputDir, generatedClass);
 					}
 					
 					if (printCode)
