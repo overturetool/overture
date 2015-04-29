@@ -121,6 +121,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		if (stateDecl != null)
 		{
 			ARecordDeclCG record = new ARecordDeclCG();
+			record.setSourceNode(stateDecl.getSourceNode());
 			record.setName(stateDecl.getName());
 
 			for (AFieldDeclCG field : stateDecl.getFields())
