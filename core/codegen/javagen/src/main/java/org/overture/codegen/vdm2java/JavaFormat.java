@@ -103,7 +103,8 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class JavaFormat
 {
-	private static final String CLASS_EXTENSION = ".class";
+	public static final String TYPE_DECL_PACKAGE_SUFFIX = "types";
+	public static final String CLASS_EXTENSION = ".class";
 	public static final String UTILS_FILE = "Utils";
 	public static final String SEQ_UTIL_FILE = "SeqUtil";
 	public static final String SET_UTIL_FILE = "SetUtil";
@@ -368,6 +369,22 @@ public class JavaFormat
 
 	public String formatTypeName(INode node, ATypeNameCG typeName)
 	{
+		if(!getJavaSettings().genRecsAsInnerClasses())
+		{
+			String typeNameStr = "";
+			
+			if(JavaCodeGenUtil.isValidJavaPackage(getJavaSettings().getJavaRootPackage()))
+			{
+				typeNameStr += getJavaSettings().getJavaRootPackage() + ".";
+			}
+			
+			typeNameStr += typeName.getDefiningClass() + TYPE_DECL_PACKAGE_SUFFIX + ".";
+			
+			typeNameStr += typeName.getName();
+			
+			return typeNameStr;
+		}
+		
 		AClassDeclCG classDef = node.getAncestor(AClassDeclCG.class);
 
 		String definingClass = typeName.getDefiningClass() != null
@@ -376,9 +393,7 @@ public class JavaFormat
 				+ "."
 				: "";
 
-		String name = typeName.getName();
-
-		return definingClass + name;
+		return definingClass + typeName.getName();
 	}
 
 	public String format(SExpCG exp, boolean leftChild)
