@@ -91,7 +91,6 @@ public class InterpreterUtil
 			case VDM_PP:
 			{
 				TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil.typeCheckPp(file);
-
 				if (result.errors.isEmpty())
 				{
 					ClassListInterpreter list = new ClassListInterpreter();

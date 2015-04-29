@@ -14,6 +14,7 @@ import org.overture.interpreter.util.InterpreterUtil;
 import org.overture.interpreter.values.Value;
 import org.overture.prettyprinter.PrettyPrinterEnv;
 import org.overture.prettyprinter.PrettyPrinterVisitor;
+import org.overture.test.framework.BaseTestCase;
 
 import java.io.File;
 
