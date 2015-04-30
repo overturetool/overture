@@ -610,4 +610,9 @@ public class ExpAssistantCG extends AssistantBase
 			return oldName;
 		}
 	}
+	
+	public boolean isResult(String name)
+	{
+		return name != null && name.equals("RESULT");
+	}
 }
