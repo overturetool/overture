@@ -31,7 +31,7 @@ public class Entry {
 
         public NatList(final Number _e, final NatList _t) {
             e = _e;
-            t = (_t != null) ? Utils.clone(_t) : null;
+            t = (_t != null) ? Utils.copy(_t) : null;
         }
 
         public boolean equals(final Object obj) {

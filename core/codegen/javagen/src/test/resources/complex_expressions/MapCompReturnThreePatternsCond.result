@@ -22,7 +22,7 @@ public class Entry {
                     Number z = ((Number) iterator_3.next());
 
                     if (Utils.equals(1L, 1L)) {
-                        mapCompResult_1 = MapUtil.munion(Utils.clone(
+                        mapCompResult_1 = MapUtil.munion(Utils.copy(
                                     mapCompResult_1),
                                 MapUtil.map(
                                     new Maplet(x.longValue() + y.longValue() +
@@ -34,7 +34,7 @@ public class Entry {
             }
         }
 
-        return Utils.clone(mapCompResult_1);
+        return Utils.copy(mapCompResult_1);
     }
 
     public String toString() {

@@ -13,7 +13,7 @@ public class Entry {
 
         while (whileCond1) {
             Boolean forAllExpResult_1 = true;
-            VDMSet set_1 = Utils.clone(s);
+            VDMSet set_1 = Utils.copy(s);
 
             for (Iterator iterator_1 = set_1.iterator();
                     iterator_1.hasNext() && forAllExpResult_1;) {
@@ -28,10 +28,10 @@ public class Entry {
                 break;
             }
 
-            s = SetUtil.union(Utils.clone(s), SetUtil.set(3L));
+            s = SetUtil.union(Utils.copy(s), SetUtil.set(3L));
         }
 
-        return Utils.clone(s);
+        return Utils.copy(s);
     }
 
     public String toString() {

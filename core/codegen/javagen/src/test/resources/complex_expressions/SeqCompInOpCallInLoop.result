@@ -23,12 +23,12 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (pick()) {
-                seqCompResult_1 = SeqUtil.conc(Utils.clone(seqCompResult_1),
+                seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
                         SeqUtil.seq(x.longValue() * 2L));
             }
         }
 
-        return Utils.clone(seqCompResult_1);
+        return Utils.copy(seqCompResult_1);
     }
 
     public static Number Test() {

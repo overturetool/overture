@@ -10,7 +10,7 @@ public class Entry {
     public static Object Run() {
         Rec r1 = new Rec(5L, true);
         Number x = 1L;
-        Rec recModifierExp_1 = Utils.clone(r1);
+        Rec recModifierExp_1 = Utils.copy(r1);
 
         recModifierExp_1.x = 6L;
 
@@ -28,7 +28,7 @@ public class Entry {
 
         recModifierExp_1.b = Utils.equals(exists1Counter_1, 1L);
 
-        Rec r2 = Utils.clone(recModifierExp_1);
+        Rec r2 = Utils.copy(recModifierExp_1);
         Number y = 2L;
 
         return Tuple.mk_(r2.x, r2.b);

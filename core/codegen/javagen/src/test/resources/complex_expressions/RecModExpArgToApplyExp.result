@@ -17,12 +17,12 @@ public class Entry {
 
     public static Object Run() {
         Rec r1 = new Rec(5L, true);
-        Rec recModifierExp_1 = Utils.clone(r1);
+        Rec recModifierExp_1 = Utils.copy(r1);
 
         recModifierExp_1.a = 11L;
         recModifierExp_1.b = false;
 
-        return fst(Utils.clone(recModifierExp_1));
+        return fst(Utils.copy(recModifierExp_1));
     }
 
     public String toString() {

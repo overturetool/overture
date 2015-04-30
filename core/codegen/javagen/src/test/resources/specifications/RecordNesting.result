@@ -5,7 +5,7 @@ import java.util.*;
 
 public class A {
     private static final R3 x = new R3(1L, new R2(new R1(2L)));
-    private static final R3 y = Utils.clone(x);
+    private static final R3 y = Utils.copy(x);
 
     public A() {
     }
@@ -49,7 +49,7 @@ public class A {
         public R1 r;
 
         public R2(final R1 _r) {
-            r = (_r != null) ? Utils.clone(_r) : null;
+            r = (_r != null) ? Utils.copy(_r) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -81,7 +81,7 @@ public class A {
 
         public R3(final Number _x, final R2 _r) {
             x = _x;
-            r = (_r != null) ? Utils.clone(_r) : null;
+            r = (_r != null) ? Utils.copy(_r) : null;
         }
 
         public boolean equals(final Object obj) {

@@ -27,12 +27,12 @@ public class A {
                     success_1 = Utils.equals(realPattern_1, 1.5);
 
                     if (success_1) {
-                        VDMSeq stringPattern_1 = Utils.clone(recordPattern_1.s);
+                        VDMSeq stringPattern_1 = Utils.copy(recordPattern_1.s);
                         success_1 = Utils.equals(stringPattern_1,
                                 SeqUtil.seq('a', 'a', 'a'));
 
                         if (success_1) {
-                            Rec nullPattern_1 = Utils.clone(recordPattern_1.next);
+                            Rec nullPattern_1 = Utils.copy(recordPattern_1.next);
                             success_1 = Utils.equals(nullPattern_1, null);
                         }
                     }
@@ -65,8 +65,8 @@ public class A {
             b = _b;
             c = _c;
             r = _r;
-            s = (_s != null) ? Utils.clone(_s) : null;
-            next = (_next != null) ? Utils.clone(_next) : null;
+            s = (_s != null) ? Utils.copy(_s) : null;
+            next = (_next != null) ? Utils.copy(_next) : null;
         }
 
         public boolean equals(final Object obj) {

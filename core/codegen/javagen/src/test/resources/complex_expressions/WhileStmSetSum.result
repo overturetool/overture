@@ -22,7 +22,7 @@ public class Entry {
             {
                 Number x = null;
                 Boolean success_1 = false;
-                VDMSet set_1 = Utils.clone(xs);
+                VDMSet set_1 = Utils.copy(xs);
 
                 for (Iterator iterator_1 = set_1.iterator();
                         iterator_1.hasNext() && !(success_1);) {
@@ -36,7 +36,7 @@ public class Entry {
                 }
 
                 sum = sum.longValue() + x.longValue();
-                xs = SetUtil.diff(Utils.clone(xs), SetUtil.set(x));
+                xs = SetUtil.diff(Utils.copy(xs), SetUtil.set(x));
             }
         }
 

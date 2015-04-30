@@ -27,7 +27,7 @@ public class Entry {
         public R2 r2;
 
         public R1(final R2 _r2) {
-            r2 = (_r2 != null) ? Utils.clone(_r2) : null;
+            r2 = (_r2 != null) ? Utils.copy(_r2) : null;
         }
 
         public boolean equals(final Object obj) {

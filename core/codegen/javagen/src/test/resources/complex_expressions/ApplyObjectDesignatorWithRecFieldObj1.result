@@ -10,7 +10,7 @@ public class Entry {
     public static Object Run() {
         A a = new A(SeqUtil.seq(new Entry()));
 
-        return op(Utils.clone(a));
+        return op(Utils.copy(a));
     }
 
     public static Number op(final A a) {
@@ -29,7 +29,7 @@ public class Entry {
         public VDMSeq es;
 
         public A(final VDMSeq _es) {
-            es = (_es != null) ? Utils.clone(_es) : null;
+            es = (_es != null) ? Utils.copy(_es) : null;
         }
 
         public boolean equals(final Object obj) {

@@ -18,19 +18,19 @@ public class Entry {
                 long toVar_1 = 3L;
 
                 for (Long k = 1L; k <= toVar_1; k++) {
-                    result = SeqUtil.conc(Utils.clone(result),
+                    result = SeqUtil.conc(Utils.copy(result),
                             SeqUtil.seq(casesRec(new Rec(i, j, k))));
                 }
             }
         }
 
-        return Utils.clone(result);
+        return Utils.copy(result);
     }
 
     public static Number casesRec(final Rec t) {
         Number casesExpResult_1 = null;
 
-        Rec recordPattern_1 = Utils.clone(t);
+        Rec recordPattern_1 = Utils.copy(t);
         Boolean success_1 = true;
         Number intPattern_1 = recordPattern_1.a;
         success_1 = Utils.equals(intPattern_1, 2L);
@@ -46,7 +46,7 @@ public class Entry {
         }
 
         if (!(success_1)) {
-            Rec recordPattern_2 = Utils.clone(t);
+            Rec recordPattern_2 = Utils.copy(t);
             Number a = null;
             success_1 = true;
             a = recordPattern_2.a;
@@ -55,7 +55,7 @@ public class Entry {
             success_1 = Utils.equals(intPattern_4, 1L);
 
             if (!(success_1)) {
-                Rec recordPattern_3 = Utils.clone(t);
+                Rec recordPattern_3 = Utils.copy(t);
                 Number b = null;
                 Number c = null;
                 success_1 = true;
@@ -69,7 +69,7 @@ public class Entry {
                 }
 
                 if (!(success_1)) {
-                    Rec recordPattern_4 = Utils.clone(t);
+                    Rec recordPattern_4 = Utils.copy(t);
                     success_1 = true;
 
                     if (success_1) {

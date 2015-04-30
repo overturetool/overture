@@ -5,8 +5,8 @@ import java.util.*;
 
 public class A {
     private static final R2 a = new R2(new R1(2L), 3L);
-    private static final R2 b = Utils.clone(a);
-    private static final R1 c = Utils.clone(a.r1);
+    private static final R2 b = Utils.copy(a);
+    private static final R1 c = Utils.copy(a.r1);
     private static final Number d = a.r1.x;
 
     public A() {
@@ -21,14 +21,14 @@ public class A {
 
     public Number op2() {
         R1 a = new R1(5L);
-        R1 b = Utils.clone(a);
+        R1 b = Utils.copy(a);
 
         return b.x;
     }
 
     public Number op3() {
         R2 a = new R2(new R1(2L), 3L);
-        R1 b = Utils.clone(a.r1);
+        R1 b = Utils.copy(a.r1);
         a.x = 1L;
         a.r1.x = 2L;
 
@@ -38,13 +38,13 @@ public class A {
     public R2 op4() {
         R2 a = new R2(new R1(2L), 3L);
 
-        return Utils.clone(a);
+        return Utils.copy(a);
     }
 
     public R1 op5() {
         R2 a = new R2(new R1(2L), 3L);
 
-        return Utils.clone(a.r1);
+        return Utils.copy(a.r1);
     }
 
     public String toString() {
@@ -88,7 +88,7 @@ public class A {
         public Number x;
 
         public R2(final R1 _r1, final Number _x) {
-            r1 = (_r1 != null) ? Utils.clone(_r1) : null;
+            r1 = (_r1 != null) ? Utils.copy(_r1) : null;
             x = _x;
         }
 

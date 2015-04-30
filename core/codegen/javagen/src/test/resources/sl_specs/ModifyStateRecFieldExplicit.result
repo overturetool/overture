@@ -50,7 +50,7 @@ public class Entry {
         public R x;
 
         public St(final R _x) {
-            x = (_x != null) ? Utils.clone(_x) : null;
+            x = (_x != null) ? Utils.copy(_x) : null;
         }
 
         public boolean equals(final Object obj) {
