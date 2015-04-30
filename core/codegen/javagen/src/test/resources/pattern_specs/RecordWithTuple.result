@@ -64,7 +64,7 @@ public class A {
             return Utils.hashCode(t);
         }
 
-        public Rec clone() {
+        public Rec copy() {
             return new Rec(t);
         }
 

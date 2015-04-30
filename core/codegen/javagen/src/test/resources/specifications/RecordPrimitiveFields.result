@@ -45,7 +45,7 @@ public class A {
             return Utils.hashCode(i, c, r, q, n, n1);
         }
 
-        public RecA clone() {
+        public RecA copy() {
             return new RecA(i, c, r, q, n, n1);
         }
 

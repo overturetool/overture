@@ -51,7 +51,7 @@ public class Entry {
             return Utils.hashCode(_X_, _X__1);
         }
 
-        public A clone() {
+        public A copy() {
             return new A(_X_, _X__1);
         }
 

@@ -46,7 +46,7 @@ public class Entry {
             return Utils.hashCode(bs);
         }
 
-        public A clone() {
+        public A copy() {
             return new A(bs);
         }
 
@@ -76,7 +76,7 @@ public class Entry {
             return Utils.hashCode(c);
         }
 
-        public B clone() {
+        public B copy() {
             return new B(c);
         }
 
@@ -106,7 +106,7 @@ public class Entry {
             return Utils.hashCode(e);
         }
 
-        public C clone() {
+        public C copy() {
             return new C(e);
         }
 

@@ -40,7 +40,7 @@ public class Records {
             return Utils.hashCode(x, y);
         }
 
-        public Vector2D clone() {
+        public Vector2D copy() {
             return new Vector2D(x, y);
         }
 

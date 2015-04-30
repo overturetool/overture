@@ -48,7 +48,7 @@ public class Entry {
             return Utils.hashCode(e, t);
         }
 
-        public NatList clone() {
+        public NatList copy() {
             return new NatList(e, t);
         }
 

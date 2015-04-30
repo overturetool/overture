@@ -37,7 +37,7 @@ public class Entry {
             return Utils.hashCode(p);
         }
 
-        public St clone() {
+        public St copy() {
             return new St(p);
         }
 

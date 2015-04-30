@@ -74,7 +74,7 @@ public class A {
             return Utils.hashCode(x);
         }
 
-        public R1 clone() {
+        public R1 copy() {
             return new R1(x);
         }
 
@@ -106,7 +106,7 @@ public class A {
             return Utils.hashCode(r1, x);
         }
 
-        public R2 clone() {
+        public R2 copy() {
             return new R2(r1, x);
         }
 

@@ -23,7 +23,7 @@ public class A {
             return 0;
         }
 
-        public Rec clone() {
+        public Rec copy() {
             return new Rec();
         }
 

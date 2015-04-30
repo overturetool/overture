@@ -39,7 +39,7 @@ public class Entry {
             return Utils.hashCode(x);
         }
 
-        public A clone() {
+        public A copy() {
             return new A(x);
         }
 

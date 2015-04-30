@@ -44,7 +44,7 @@ public class Entry {
             return Utils.hashCode(r2);
         }
 
-        public R1 clone() {
+        public R1 copy() {
             return new R1(r2);
         }
 
@@ -74,7 +74,7 @@ public class Entry {
             return Utils.hashCode(r3);
         }
 
-        public R2 clone() {
+        public R2 copy() {
             return new R2(r3);
         }
 
@@ -104,7 +104,7 @@ public class Entry {
             return Utils.hashCode(e);
         }
 
-        public R3 clone() {
+        public R3 copy() {
             return new R3(e);
         }
 

@@ -94,7 +94,7 @@ public class Entry implements java.io.Serializable {
             return Utils.hashCode(a);
         }
 
-        public A clone() {
+        public A copy() {
             return new A(a);
         }
 

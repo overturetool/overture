@@ -2065,7 +2065,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             return Utils.hashCode(index, size);
         }
 
-        public MessageInfo clone() {
+        public MessageInfo copy() {
             return new MessageInfo(index, size);
         }
 
@@ -2099,7 +2099,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             return Utils.hashCode(msgs, locked);
         }
 
-        public MailBox clone() {
+        public MailBox copy() {
             return new MailBox(msgs, locked);
         }
 
@@ -2630,7 +2630,7 @@ public class POP3Types implements EvaluatePP {
             return 0;
         }
 
-        public QUIT clone() {
+        public QUIT copy() {
             return new QUIT();
         }
 
@@ -2651,7 +2651,7 @@ public class POP3Types implements EvaluatePP {
             return 0;
         }
 
-        public STAT clone() {
+        public STAT copy() {
             return new STAT();
         }
 
@@ -2681,7 +2681,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(messageNumber);
         }
 
-        public LIST clone() {
+        public LIST copy() {
             return new LIST(messageNumber);
         }
 
@@ -2711,7 +2711,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(messageNumber);
         }
 
-        public RETR clone() {
+        public RETR copy() {
             return new RETR(messageNumber);
         }
 
@@ -2741,7 +2741,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(messageNumber);
         }
 
-        public DELE clone() {
+        public DELE copy() {
             return new DELE(messageNumber);
         }
 
@@ -2762,7 +2762,7 @@ public class POP3Types implements EvaluatePP {
             return 0;
         }
 
-        public NOOP clone() {
+        public NOOP copy() {
             return new NOOP();
         }
 
@@ -2783,7 +2783,7 @@ public class POP3Types implements EvaluatePP {
             return 0;
         }
 
-        public RSET clone() {
+        public RSET copy() {
             return new RSET();
         }
 
@@ -2816,7 +2816,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(messageNumber, numLines);
         }
 
-        public TOP clone() {
+        public TOP copy() {
             return new TOP(messageNumber, numLines);
         }
 
@@ -2847,7 +2847,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(messageNumber);
         }
 
-        public UIDL clone() {
+        public UIDL copy() {
             return new UIDL(messageNumber);
         }
 
@@ -2877,7 +2877,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(name);
         }
 
-        public USER clone() {
+        public USER copy() {
             return new USER(name);
         }
 
@@ -2907,7 +2907,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(string);
         }
 
-        public PASS clone() {
+        public PASS copy() {
             return new PASS(string);
         }
 
@@ -2940,7 +2940,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(name, digest);
         }
 
-        public APOP clone() {
+        public APOP copy() {
             return new APOP(name, digest);
         }
 
@@ -2970,7 +2970,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(data);
         }
 
-        public OkResponse clone() {
+        public OkResponse copy() {
             return new OkResponse(data);
         }
 
@@ -3000,7 +3000,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(data);
         }
 
-        public ErrResponse clone() {
+        public ErrResponse copy() {
             return new ErrResponse(data);
         }
 

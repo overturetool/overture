@@ -120,7 +120,7 @@ public class Entry {
             return Utils.hashCode(a, b, c);
         }
 
-        public Rec clone() {
+        public Rec copy() {
             return new Rec(a, b, c);
         }
 

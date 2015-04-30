@@ -36,7 +36,7 @@ public class A {
             return Utils.hashCode(b);
         }
 
-        public RecA clone() {
+        public RecA copy() {
             return new RecA(b);
         }
 
@@ -81,7 +81,7 @@ public class B {
             return Utils.hashCode(b);
         }
 
-        public RecB clone() {
+        public RecB copy() {
             return new RecB(b);
         }
 

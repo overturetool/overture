@@ -39,7 +39,7 @@ public class A {
             return Utils.hashCode(e, r);
         }
 
-        public Node clone() {
+        public Node copy() {
             return new Node(e, r);
         }
 

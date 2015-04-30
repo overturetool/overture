@@ -54,7 +54,7 @@ public class Entry {
             return Utils.hashCode(a, b);
         }
 
-        public Rec1 clone() {
+        public Rec1 copy() {
             return new Rec1(a, b);
         }
 
@@ -86,7 +86,7 @@ public class Entry {
             return Utils.hashCode(c, d);
         }
 
-        public Rec2 clone() {
+        public Rec2 copy() {
             return new Rec2(c, d);
         }
 
