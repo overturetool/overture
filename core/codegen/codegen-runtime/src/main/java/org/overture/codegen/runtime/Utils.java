@@ -128,9 +128,9 @@ public class Utils
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends ValueType> T clone(T t)
+	public static <T extends ValueType> T copy(T t)
 	{
-		return (T) (t != null ? t.clone() : t);
+		return (T) (t != null ? t.copy() : t);
 	}
 	
 	public static String toString(Object obj)

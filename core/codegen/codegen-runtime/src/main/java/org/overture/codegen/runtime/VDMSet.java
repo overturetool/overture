@@ -30,14 +30,14 @@ public class VDMSet extends LinkedHashSet implements ValueType
 	private static final long serialVersionUID = 2984495719595419443L;
 
 	@SuppressWarnings("unchecked")
-	public VDMSet clone()
+	public VDMSet copy()
 	{
 		VDMSet setClone = new VDMSet();
 
 		for (Object element: this)
 		{
 			if (element instanceof ValueType)
-				element = ((ValueType)element).clone();
+				element = ((ValueType)element).copy();
 			
 			setClone.add(element);
 		}
