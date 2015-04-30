@@ -128,7 +128,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		return constructor;
 	}
 
-	public AMethodDeclCG genCloneMethod(ARecordDeclCG record)
+	public AMethodDeclCG genCopyMethod(ARecordDeclCG record)
 			throws AnalysisException
 	{
 
@@ -143,7 +143,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(returnType);
 
-		AMethodDeclCG method = consCloneSignature(methodType);
+		AMethodDeclCG method = consCopySignature(methodType);
 
 		ANewExpCG newExp = new ANewExpCG();
 		newExp.setType(returnType.clone());

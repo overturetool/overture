@@ -29,12 +29,12 @@ abstract public class JavaClassCreatorBase
 		return constructor;
 	}
 
-	public AMethodDeclCG consCloneSignature(AMethodTypeCG methodType)
+	public AMethodDeclCG consCopySignature(AMethodTypeCG methodType)
 	{
 		AMethodDeclCG method = new AMethodDeclCG();
 		method.setIsConstructor(false);
 		method.setAccess(JavaFormat.JAVA_PUBLIC);
-		method.setName("clone");
+		method.setName("copy");
 		method.setMethodType(methodType);
 		
 		return method;

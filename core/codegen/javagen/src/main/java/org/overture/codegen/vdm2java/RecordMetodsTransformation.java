@@ -27,7 +27,7 @@ public class RecordMetodsTransformation extends DepthFirstAnalysisAdaptor
 				rec.getMethods().add(recCreator.genRecConstructor(rec));
 				rec.getMethods().add(recCreator.genEqualsMethod(rec));
 				rec.getMethods().add(recCreator.genHashcodeMethod(rec));
-				rec.getMethods().add(recCreator.genCloneMethod(rec));
+				rec.getMethods().add(recCreator.genCopyMethod(rec));
 				rec.getMethods().add(recCreator.genToStringMethod(rec));
 			}
 		}
