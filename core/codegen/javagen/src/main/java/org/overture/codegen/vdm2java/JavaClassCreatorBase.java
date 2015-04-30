@@ -32,6 +32,7 @@ abstract public class JavaClassCreatorBase
 	public AMethodDeclCG consCloneSignature(AMethodTypeCG methodType)
 	{
 		AMethodDeclCG method = new AMethodDeclCG();
+		method.setIsConstructor(false);
 		method.setAccess(JavaFormat.JAVA_PUBLIC);
 		method.setName("clone");
 		method.setMethodType(methodType);
@@ -53,6 +54,7 @@ abstract public class JavaClassCreatorBase
 		methodType.setResult(returnType);
 	
 		equalsMethod.setAccess(JavaFormat.JAVA_PUBLIC);
+		equalsMethod.setIsConstructor(false);
 		equalsMethod.setName("equals");
 		equalsMethod.setMethodType(methodType);
 	
@@ -75,7 +77,7 @@ abstract public class JavaClassCreatorBase
 		String hashCode = "hashCode";
 	
 		AMethodDeclCG hashcodeMethod = new AMethodDeclCG();
-	
+		hashcodeMethod.setIsConstructor(false);
 		hashcodeMethod.setAccess(JavaFormat.JAVA_PUBLIC);
 		hashcodeMethod.setName(hashCode);
 	
