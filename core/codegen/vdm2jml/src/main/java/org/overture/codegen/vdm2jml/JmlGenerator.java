@@ -51,7 +51,7 @@ public class JmlGenerator implements IREventObserver
 
 	private static final String JML_RESULT = "\\result";
 
-	private JavaCodeGen javaGen = new JavaCodeGen();
+	private JavaCodeGen javaGen;
 
 	public JmlGenerator()
 	{
@@ -195,7 +195,7 @@ public class JmlGenerator implements IREventObserver
 		return records;
 	}
 
-	public void makePure(SDeclCG cond)
+	private void makePure(SDeclCG cond)
 	{
 		if (cond != null)
 		{
@@ -203,7 +203,7 @@ public class JmlGenerator implements IREventObserver
 		}
 	}
 
-	public void makeCondPublic(SDeclCG cond)
+	private void makeCondPublic(SDeclCG cond)
 	{
 		if (cond instanceof AMethodDeclCG)
 		{
@@ -280,7 +280,7 @@ public class JmlGenerator implements IREventObserver
 					recClass.setPackage(recPackage);
 				} else
 				{
-					recClass.setPackage(clazz.getName());
+					recClass.setPackage(clazz.getName() + JavaFormat.TYPE_DECL_PACKAGE_SUFFIX);
 				}
 
 				extraClasses.add(new IRStatus<INode>(recClass.getName(), recClass, new HashSet<VdmNodeInfo>()));
@@ -391,7 +391,7 @@ public class JmlGenerator implements IREventObserver
 	 * @param clazz
 	 *            The class to compute class invariant information for
 	 */
-	public void computeClassInvInfo(AClassDeclCG clazz)
+	private void computeClassInvInfo(AClassDeclCG clazz)
 	{
 		if (clazz.getInvariant() != null)
 		{
@@ -409,7 +409,7 @@ public class JmlGenerator implements IREventObserver
 		}
 	}
 
-	public List<ClonableString> consAnno(String jmlAnno, String name,
+	private List<ClonableString> consAnno(String jmlAnno, String name,
 			List<String> fieldNames)
 	{
 		StringBuilder sb = new StringBuilder();
