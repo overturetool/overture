@@ -11,6 +11,7 @@ import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.util.ClonableString;
 import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
+import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.ir.IRSettings;
@@ -101,6 +102,19 @@ abstract public class AnnotationTestsBase
 
 		return genFuncs;
 	}
+	
+	public static AMethodDeclCG getMethod(List<AMethodDeclCG> methods, String name)
+	{
+		for(AMethodDeclCG m : methods)
+		{
+			if(m.getName().equals(name))
+			{
+				return m;
+			}
+		}
+		
+		return null;
+	}
 
 	public static List<AMethodDeclCG> getGenMethods(List<AMethodDeclCG> methods)
 	{
@@ -134,14 +148,38 @@ abstract public class AnnotationTestsBase
 		return AnnotationTestsBase.getClasses(data);
 	}
 
-	public static String getLastAnnotation(List<? extends ClonableString> metaData)
+	public static String getLastAnnotation(PCG node)
 	{
-		if (metaData != null && !metaData.isEmpty())
+		if (node.getMetaData() != null)
 		{
-			return metaData.get(metaData.size() - 1).value;
+			return getAnnotation(node, node.getMetaData().size() - 1);
+		} else
+		{
+			return null;
+		}
+	}
+	
+	public static String getAnnotation(PCG node, int idx)
+	{
+		List<? extends ClonableString> metaData = node.getMetaData();
+		
+		if (metaData != null && idx >= 0 && idx < metaData.size())
+		{
+			return metaData.get(idx).value;
 		}
 
 		return null;
+	}
+	
+	public void assertFuncIsPureOnly(String funcName)
+	{
+		AMethodDeclCG preCondFunc = getMethod(genModule.getMethods(), funcName);
+
+		Assert.assertTrue("Expected only a @pure annotaton for the pre condition function",
+				preCondFunc.getMetaData().size() == 1);
+
+		Assert.assertEquals("Expected pre condition function to be pure",
+				AnnotationTestsBase.PURE_ANNOTATION, AnnotationTestsBase.getLastAnnotation(preCondFunc));
 	}
 
 	public static void assertGenFuncsPure(List<AMethodDeclCG> genFuncs)
@@ -158,7 +196,7 @@ abstract public class AnnotationTestsBase
 
 			Assert.assertTrue(failureMsg, metaData != null
 					&& !metaData.isEmpty());
-			Assert.assertEquals(failureMsg, PURE_ANNOTATION, getLastAnnotation(metaData));
+			Assert.assertEquals(failureMsg, PURE_ANNOTATION, getLastAnnotation(func));
 		}
 	}
 }

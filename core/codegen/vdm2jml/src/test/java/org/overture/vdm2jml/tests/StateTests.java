@@ -46,7 +46,7 @@ public class StateTests extends StateTestBase
 		{
 			if (!m.getIsConstructor())
 			{
-				String actual = AnnotationTestsBase.getLastAnnotation(m.getMetaData());
+				String actual = AnnotationTestsBase.getLastAnnotation(m);
 				Assert.assertEquals("Expected non-constructor methods of state class to be pure", AnnotationTestsBase.PURE_ANNOTATION, actual);
 			}
 		}
