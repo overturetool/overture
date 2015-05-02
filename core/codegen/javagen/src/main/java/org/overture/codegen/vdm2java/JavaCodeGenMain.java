@@ -36,6 +36,7 @@ import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
@@ -363,11 +364,15 @@ public class JavaCodeGenMain
 						{
 							javaPackage = ((AClassDeclCG) generatedClass.getIrNode()).getPackage();
 						}
+						else if(generatedClass.getIrNode() instanceof AInterfaceDeclCG)
+						{
+							javaPackage = ((AInterfaceDeclCG) generatedClass.getIrNode()).getPackage();
+						}
 						else
 						{
 							Logger.getLog().printErrorln("Expected IR node of "
 									+ generatedClass.getName()
-									+ " to be a class declaration at this point. Got: "
+									+ " to be a class or interface  declaration at this point. Got: "
 									+ generatedClass.getIrNode());
 							continue;
 						}
