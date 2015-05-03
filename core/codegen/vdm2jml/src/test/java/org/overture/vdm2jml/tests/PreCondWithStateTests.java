@@ -34,6 +34,6 @@ public class PreCondWithStateTests extends PreCondNoStateTests
 		// pre condition function
 		Assert.assertEquals("Got unexpected requires annotation for operation 'op'",
 				"//@ requires pre_op(a,St);",
-				AnnotationTestsBase.getAnnotation(op, 0));
+				getAnnotation(op, 0));
 	}
 }

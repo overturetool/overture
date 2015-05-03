@@ -34,13 +34,13 @@ public class PurityTests extends AnnotationTestsBase
 	@Test
 	public void testGenModuleFuncsArePure()
 	{
-		AnnotationTestsBase.assertGenFuncsPure(AnnotationTestsBase.getGenFunctions(genModule.getMethods()));
+		assertGenFuncsPure(getGenFunctions(genModule.getMethods()));
 	}
 
 	@Test
 	public void operationsNotAnnotated()
 	{
-		List<AMethodDeclCG> genOps = AnnotationTestsBase.getGenMethods(genModule.getMethods());
+		List<AMethodDeclCG> genOps = getGenMethods(genModule.getMethods());
 
 		Assert.assertTrue("Expected the generated module to have operations", !genOps.isEmpty());
 

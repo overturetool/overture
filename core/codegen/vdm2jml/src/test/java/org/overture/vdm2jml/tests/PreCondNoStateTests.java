@@ -29,7 +29,7 @@ public class PreCondNoStateTests extends AnnotationTestsBase
 		
 		Assert.assertEquals("Got unexpected requires annotation for function 'f'",
 				"//@ requires pre_f(a,b);",
-				AnnotationTestsBase.getAnnotation(func, 0));
+				getAnnotation(func, 0));
 	}
 
 	@Test
@@ -47,6 +47,6 @@ public class PreCondNoStateTests extends AnnotationTestsBase
 		// to the pre condition (the module has no state)
 		Assert.assertEquals("Got unexpected requires annotation for operation 'op'",
 				"//@ requires pre_op(a);",
-				AnnotationTestsBase.getAnnotation(op, 0));
+				getAnnotation(op, 0));
 	}
 }

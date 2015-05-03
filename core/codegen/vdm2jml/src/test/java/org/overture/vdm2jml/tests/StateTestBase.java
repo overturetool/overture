@@ -15,7 +15,7 @@ abstract public class StateTestBase extends AnnotationTestsBase
 	
 	public static void init(String fileName) throws AnalysisException, UnsupportedModelingException
 	{
-		List<AClassDeclCG> classes = AnnotationTestsBase.getClasses(fileName);
+		List<AClassDeclCG> classes = getClasses(fileName);
 
 		// Two classes are expected - one for the module and
 		// another class to represent the state of the module

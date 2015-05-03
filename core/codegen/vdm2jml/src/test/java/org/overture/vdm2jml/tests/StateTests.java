@@ -34,7 +34,7 @@ public class StateTests extends StateTestBase
 
 		String annotation = stateField.getMetaData().get(0).value;
 
-		Assert.assertEquals("Expected state field to be @spec_public", AnnotationTestsBase.SPEC_PUBLIC_ANNOTATION, annotation);
+		Assert.assertEquals("Expected state field to be @spec_public", SPEC_PUBLIC_ANNOTATION, annotation);
 	}
 	
 	@Test
@@ -46,8 +46,9 @@ public class StateTests extends StateTestBase
 		{
 			if (!m.getIsConstructor())
 			{
-				String actual = AnnotationTestsBase.getLastAnnotation(m);
-				Assert.assertEquals("Expected non-constructor methods of state class to be pure", AnnotationTestsBase.PURE_ANNOTATION, actual);
+				String actual = getLastAnnotation(m);
+				Assert.assertEquals("Expected non-constructor methods of state class to be pure",
+						PURE_ANNOTATION, actual);
 			}
 		}
 	}

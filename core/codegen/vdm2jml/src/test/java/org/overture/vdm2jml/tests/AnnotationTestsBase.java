@@ -136,16 +136,16 @@ abstract public class AnnotationTestsBase
 			throws AnalysisException, UnsupportedModelingException
 	{
 		List<File> files = new LinkedList<File>();
-		files.add(new File(AnnotationTestsBase.TEST_RESOURCES_ROOT + fileName));
+		files.add(new File(TEST_RESOURCES_ROOT + fileName));
 
 		ModuleList modules = GeneralCodeGenUtils.consModuleList(files);
 
 		JmlGenerator jmlGen = new JmlGenerator();
-		AnnotationTestsBase.initJmlGen(jmlGen);
+		initJmlGen(jmlGen);
 
 		GeneratedData data = jmlGen.generateJml(modules);
 
-		return AnnotationTestsBase.getClasses(data);
+		return getClasses(data);
 	}
 
 	public static String getLastAnnotation(PCG node)
@@ -179,7 +179,8 @@ abstract public class AnnotationTestsBase
 				preCondFunc.getMetaData().size() == 1);
 
 		Assert.assertEquals("Expected pre condition function to be pure",
-				AnnotationTestsBase.PURE_ANNOTATION, AnnotationTestsBase.getLastAnnotation(preCondFunc));
+				PURE_ANNOTATION,
+				getLastAnnotation(preCondFunc));
 	}
 
 	public static void assertGenFuncsPure(List<AMethodDeclCG> genFuncs)
