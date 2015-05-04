@@ -54,6 +54,14 @@ public class StateTests extends StateTestBase
 	}
 	
 	@Test
+	public void testInvFuncIsHelper()
+	{
+		Assert.assertEquals("Expected invariant function to be a helper",
+				HELPER_ANNOTATION,
+				getAnnotation(genModule.getInvariant(), 0));
+	}
+	
+	@Test
 	public void testInv()
 	{
 		Assert.assertTrue("Expected state invariant to exist", !genModule.getMetaData().isEmpty());

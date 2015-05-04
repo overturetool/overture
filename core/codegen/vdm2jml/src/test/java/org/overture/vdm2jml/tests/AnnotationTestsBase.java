@@ -27,8 +27,9 @@ abstract public class AnnotationTestsBase
 	public static final String TEST_RESOURCES_ROOT = "src" + File.separatorChar
 			+ "test" + File.separatorChar + "resources" + File.separatorChar;
 
-	public static String SPEC_PUBLIC_ANNOTATION = "/*@ spec_public @*/";
-	public static String PURE_ANNOTATION = "/*@ pure @*/";
+	public static final String SPEC_PUBLIC_ANNOTATION = "/*@ spec_public @*/";
+	public static final String PURE_ANNOTATION = "/*@ pure @*/";
+	public static final String HELPER_ANNOTATION = "/*@ helper @*/";
 	
 	private static final boolean VERBOSE = false;
 	
