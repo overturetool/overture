@@ -23,7 +23,9 @@ import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
+import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRInfo;
@@ -39,7 +41,7 @@ import org.overture.codegen.vdm2java.JavaSettings;
 
 public class JmlGenerator implements IREventObserver
 {
-	private static final String JML_INV_ANNOTATION = "invariant";
+	private static final String JML_STATIC_INV_ANNOTATION = "static invariant";
 	private static final String JML_REQ_ANNOTATION = "requires";
 	private static final String JML_ENS_ANNOTATION = "ensures";
 
@@ -105,13 +107,12 @@ public class JmlGenerator implements IREventObserver
 		
 		// All the record methods are JML pure
 		makeRecMethodsPure(ast);
-
 		
 		List<IRStatus<INode>> newAst = new LinkedList<IRStatus<INode>>(ast);
 
 		// To circumvent a problem with OpenJML. See documentation of makeRecsOuterClasses
 		newAst.addAll(makeRecsOuterClasses(ast));
-
+		
 		for (IRStatus<AClassDeclCG> status : IRStatus.extract(ast, AClassDeclCG.class))
 		{
 			AClassDeclCG clazz = status.getIrNode();
@@ -127,7 +128,7 @@ public class JmlGenerator implements IREventObserver
 			for (AFieldDeclCG f : clazz.getFields())
 			{
 				// Make fields JML @spec_public so they can be passed to post conditions
-				addMetaData(f, consMetaData(JML_SPEC_PUBLIC));
+				appendMetaData(f, consMetaData(JML_SPEC_PUBLIC));
 			}
 
 			List<ClonableString> inv = classInvInfo.get(status.getIrNodeName());
@@ -146,13 +147,13 @@ public class JmlGenerator implements IREventObserver
 					// We need to make pre and post conditions functions public in order to
 					// be able to call them in the @requires and @ensures clauses, respectively.
 					makeCondPublic(m.getPreCond());
-					addMetaData(m, consMethodCond(m.getPreCond(), m.getFormalParams(), JML_REQ_ANNOTATION));
+					appendMetaData(m, consMethodCond(m.getPreCond(), m.getFormalParams(), JML_REQ_ANNOTATION));
 				}
 
 				if (m.getPostCond() != null)
 				{
 					makeCondPublic(m.getPostCond());
-					addMetaData(m, consMethodCond(m.getPostCond(), m.getFormalParams(), JML_ENS_ANNOTATION));
+					appendMetaData(m, consMethodCond(m.getPostCond(), m.getFormalParams(), JML_ENS_ANNOTATION));
 				}
 
 				// Some methods such as those in record classes
@@ -186,7 +187,7 @@ public class JmlGenerator implements IREventObserver
 			}
 		}
 	}
-
+	
 	private List<ARecordDeclCG> getRecords(List<IRStatus<INode>> ast)
 	{
 		List<ARecordDeclCG> records = new LinkedList<ARecordDeclCG>();
@@ -209,7 +210,7 @@ public class JmlGenerator implements IREventObserver
 	{
 		if (cond != null)
 		{
-			addMetaData(cond, consMetaData(JML_PURE));
+			appendMetaData(cond, consMetaData(JML_PURE));
 		}
 	}
 
@@ -388,8 +389,22 @@ public class JmlGenerator implements IREventObserver
 					List<String> fieldNames = new LinkedList<String>();
 					fieldNames.add(state.getName());
 
-					classInvInfo.put(module.getName(), consAnno(JML_INV_ANNOTATION, JML_INV_PREFIX
-							+ state.getName(), fieldNames));
+					// The static invariant requires that either the state of the module is uninitialized
+					// or inv_St(St) holds.
+					//
+					//@ static invariant St == null || inv_St(St);
+					classInvInfo.put(module.getName(), consAnno(JML_STATIC_INV_ANNOTATION,
+							String.format("%s == null", state.getName())  + " || " +
+							JML_INV_PREFIX + state.getName(), fieldNames));
+					// Without the St == null check the initialization of the state field, i.e.
+					// St = new my.pack.Mtypes.St(<args>) would try to check that inv_St(St) holds
+					// before the state of the module is initialized but that will cause a null
+					// pointer exception.
+					//
+					// If OpenJML did allow the state record to be an inner class (which it does not
+					// due to a bug) then the constructor of the state class could have been made private,
+					// inv_St(St) would not be checked during initialization of
+					// the module. If that was possible, then the null check could have been omitted.
 				}
 			}
 		}
@@ -414,7 +429,7 @@ public class JmlGenerator implements IREventObserver
 				}
 			}
 
-			classInvInfo.put(clazz.getName(), consAnno(JML_INV_ANNOTATION, JML_INV_PREFIX
+			classInvInfo.put(clazz.getName(), consAnno(JML_STATIC_INV_ANNOTATION, JML_INV_PREFIX
 					+ clazz.getName(), fieldNames));
 		}
 	}
@@ -452,7 +467,17 @@ public class JmlGenerator implements IREventObserver
 		return inv;
 	}
 
-	private void addMetaData(PCG node, List<ClonableString> extraMetaData)
+//	private void prependMetaData(PCG node, List<ClonableString> extraMetaData)
+//	{
+//		addMetaData(node, extraMetaData, true);
+//	}
+	
+	private void appendMetaData(PCG node, List<ClonableString> extraMetaData)
+	{
+		addMetaData(node, extraMetaData, false);
+	}
+	
+	private void addMetaData(PCG node, List<ClonableString> extraMetaData, boolean prepend)
 	{
 		if (extraMetaData == null || extraMetaData.isEmpty())
 		{
@@ -461,8 +486,16 @@ public class JmlGenerator implements IREventObserver
 
 		List<ClonableString> allMetaData = new LinkedList<ClonableString>();
 
-		allMetaData.addAll(node.getMetaData());
-		allMetaData.addAll(extraMetaData);
+		if(prepend)
+		{
+			allMetaData.addAll(extraMetaData);
+			allMetaData.addAll(node.getMetaData());
+		}
+		else
+		{
+			allMetaData.addAll(node.getMetaData());
+			allMetaData.addAll(extraMetaData);
+		}
 
 		node.setMetaData(allMetaData);
 	}
