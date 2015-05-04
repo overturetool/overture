@@ -100,18 +100,27 @@ public class FuncTransformation extends DepthFirstAnalysisAdaptor
 		if(parent instanceof AClassDeclCG)
 		{
 			AClassDeclCG enclosingClass = (AClassDeclCG) parent;
-			enclosingClass.getFunctions().remove(node);
-			enclosingClass.getMethods().add(method);
 			
-			if(method.getPreCond() != null)
+			if(enclosingClass.getInvariant() == node)
 			{
-				method.getPreCond().apply(this);
+				transformationAssistant.replaceNodeWith(node, method);
+			}
+			else
+			{
+				enclosingClass.getFunctions().remove(node);
+				enclosingClass.getMethods().add(method);
+				
+				if(method.getPreCond() != null)
+				{
+					method.getPreCond().apply(this);
+				}
+				
+				if(method.getPostCond() != null)
+				{
+					method.getPostCond().apply(this);
+				}
 			}
 			
-			if(method.getPostCond() != null)
-			{
-				method.getPostCond().apply(this);
-			}
 		}
 		else
 		{
