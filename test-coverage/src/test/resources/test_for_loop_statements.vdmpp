@@ -11,6 +11,4 @@ Remove (k,z) ==
         return nk
     );
 
-
-
 end TestFor

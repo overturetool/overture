@@ -199,7 +199,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public void init(DBGPReader dbgp)
 	{
-		VdmRuntime.initialize();
+		ctx= VdmRuntime.initialize();
 		InitThread iniThread = new InitThread(Thread.currentThread());
 		BasicSchedulableThread.setInitialThread(iniThread);
 		scheduler.init();

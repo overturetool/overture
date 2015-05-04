@@ -1,12 +1,19 @@
 package org.overture.interpreter.runtime;
 
 
+import com.sun.org.apache.xpath.internal.WhitespaceStrippingElementMatcher;
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.*;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AElseIfStm;
+import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AIfStm;
+import org.overture.interpreter.eval.ExpressionEvaluator;
+import org.overture.interpreter.eval.StatementEvaluator;
+import org.overture.interpreter.values.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -261,7 +268,6 @@ public class CoverageToXML extends AnalysisAdaptor {
 
     }
 
-
     @Override
     public void caseAElseIfStm(AElseIfStm node) throws AnalysisException {
         ILexLocation local=node.getLocation();
@@ -291,5 +297,78 @@ public class CoverageToXML extends AnalysisAdaptor {
             exp.apply(this);
         }
     }
+
+
+    @Override
+    public void caseAForAllExp(AForAllExp node) throws AnalysisException {
+        Element for_all=doc.createElement("for_all");
+        fill_source_file_location(for_all, node.getLocation());
+        Element evaluation = doc.createElement("evaluation");
+        evaluation.setAttribute("n",String.valueOf(iteration));
+        evaluation.setTextContent("true");
+        for_all.appendChild(evaluation);
+        Element expression = doc.createElement("expression");
+        for_all.appendChild(expression);
+        currentElement.appendChild(for_all);
+        currentElement = expression;
+        try
+        {
+            QuantifierList quantifiers = new QuantifierList();
+
+            for (PMultipleBind mb : node.getBindList())
+            {
+                ValueList bvals = ctx.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctx);
+
+                for (PPattern p : mb.getPlist())
+                {
+                    Quantifier q = new Quantifier(p, bvals);
+                    quantifiers.add(q);
+                }
+            }
+
+            quantifiers.init(ctx, false);
+
+            while (quantifiers.hasNext())
+            {
+                Context evalContext = new Context(ctx.assistantFactory, node.getLocation(), "forall", ctx);
+                NameValuePairList nvpl = quantifiers.next();
+                boolean matches = true;
+
+                for (NameValuePair nvp : nvpl)
+                {
+                    Value v = evalContext.get(nvp.name);
+
+                    if (v == null)
+                    {
+                        evalContext.put(nvp.name, nvp.value);
+                    } else
+                    {
+                        if (!v.equals(nvp.value))
+                        {
+                            matches = false;
+                            break; // This quantifier set does not match
+                        }
+                    }
+                }
+
+                Context aux=ctx;
+                ctx=evalContext;
+                if (!node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctx)){
+                    evaluation.setTextContent("false");
+                    node.getPredicate().apply(this);
+                    ctx=aux;
+                    break;
+                }
+                node.getPredicate().apply(this);
+                ctx=aux;
+
+            }
+        } catch (ValueException e)
+        {
+            System.out.println(VdmRuntimeError.abort(node.getLocation(), e));
+        }
+    }
 }
+
+
 

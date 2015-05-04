@@ -1,0 +1,22 @@
+values
+nums = {1,2,3,4,5,6}
+
+operations
+
+foo1 : () ==> int
+foo1 () ==
+	if forall x in set nums & x < 10
+	then return 0
+	else return 1;
+	
+foo2 : () ==> int
+foo2 () ==
+	if exists1 x in set nums & x mod 2 = 0
+	then return 0
+	else return 1;
+	
+foo3 : () ==> int
+foo3 () ==
+	if exists x in set nums & x mod 2 = 0
+	then return 0
+	else return 1

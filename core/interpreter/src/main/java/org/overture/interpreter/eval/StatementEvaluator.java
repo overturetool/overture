@@ -502,7 +502,6 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-
 		try
 		{
 			ValueSet values = node.getSet().apply(VdmRuntime.getStatementEvaluator(), ctxt).setValue(ctxt);
@@ -514,7 +513,6 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "for all", ctxt);
 					evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getPattern(), val, ctxt));
 					Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(), evalContext);
-
 					if (!rv.isVoid())
 					{
 						return rv;
