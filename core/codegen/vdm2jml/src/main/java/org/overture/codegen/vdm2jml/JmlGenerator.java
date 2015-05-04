@@ -359,9 +359,7 @@ public class JmlGenerator implements IREventObserver
 				paramName = toJmlOldExp(paramName);
 			} else if (this.javaGen.getInfo().getExpAssistant().isResult(paramName))
 			{
-				// TODO: This builds on the assumption that RESULT can't really
-				// be used as an identifier name. There is an issue open for that
-				// Link: https://github.com/overturetool/overture/issues/443
+				// The type checker prohibits use of 'RESULT' as name of a user specified identifier
 				paramName = JML_RESULT;
 			}
 
