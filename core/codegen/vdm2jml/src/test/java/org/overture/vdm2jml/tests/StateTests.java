@@ -60,7 +60,7 @@ public class StateTests extends StateTestBase
 		
 		String fieldName = genModule.getFields().getFirst().getName();
 		
-		String expected = String.format("//@ invariant inv_%1$s(%1$s);", fieldName);
+		String expected = String.format("//@ static invariant St == null || inv_%1$s(%1$s);", fieldName);
 		
 		Assert.assertEquals("Got unexpected invariant", expected, genModule.getMetaData().get(0).value);
 	}
