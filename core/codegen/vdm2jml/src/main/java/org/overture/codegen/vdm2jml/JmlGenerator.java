@@ -48,6 +48,7 @@ public class JmlGenerator implements IREventObserver
 
 	private static final String JML_SPEC_PUBLIC = "/*@ spec_public @*/";
 	private static final String JML_PURE = "/*@ pure @*/";
+	private static final String JML_HELPER = "/*@ helper @*/";
 
 	private static final String JML_RESULT = "\\result";
 
@@ -117,9 +118,14 @@ public class JmlGenerator implements IREventObserver
 			
 			if(clazz.getInvariant() != null)
 			{
-				// We need to make the class invariant function public so it can be
-				// invoked in the invariant annotation
-				makeCondPublic(clazz.getInvariant());
+				// Now that the static invariant is private there is no need
+				// to make the invariant function public
+				//
+				//makeCondPublic(clazz.getInvariant());
+
+				// Now make the invariant function a pure helper so we can invoke it from
+				// the invariant annotation and avoid runtime errors and JML warnings
+				makeHelper(clazz.getInvariant());
 				makePure(clazz.getInvariant());
 			}
 
@@ -209,6 +215,14 @@ public class JmlGenerator implements IREventObserver
 		if (cond != null)
 		{
 			appendMetaData(cond, consMetaData(JML_PURE));
+		}
+	}
+	
+	private void makeHelper(SDeclCG cond)
+	{
+		if(cond != null)
+		{
+			appendMetaData(cond, consMetaData(JML_HELPER));
 		}
 	}
 
@@ -390,8 +404,8 @@ public class JmlGenerator implements IREventObserver
 					// The static invariant requires that either the state of the module is uninitialized
 					// or inv_St(St) holds.
 					//
-					//@ static invariant St == null || inv_St(St);
-					classInvInfo.put(module.getName(), consAnno(JML_STATIC_INV_ANNOTATION,
+					//@ private static invariant St == null || inv_St(St);
+					classInvInfo.put(module.getName(), consAnno("private " + JML_STATIC_INV_ANNOTATION,
 							String.format("%s == null", state.getName())  + " || " +
 							JML_INV_PREFIX + state.getName(), fieldNames));
 					// Without the St == null check the initialization of the state field, i.e.
