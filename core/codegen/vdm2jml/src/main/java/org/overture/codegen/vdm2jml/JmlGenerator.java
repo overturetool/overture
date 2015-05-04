@@ -98,9 +98,15 @@ public class JmlGenerator implements IREventObserver
 		// In the final version of the IR, received by the Java code generator, all
 		// top level containers are classes
 
+		// Functions are JML pure so we will annotate them as so.
+		// Note that @pure is a JML modifier so this annotation should go last
+		// to prevent the error: "no modifiers are allowed prior to a lightweight
+		// specification case"
+		
 		// All the record methods are JML pure
 		makeRecMethodsPure(ast);
 
+		
 		List<IRStatus<INode>> newAst = new LinkedList<IRStatus<INode>>(ast);
 
 		// To circumvent a problem with OpenJML. See documentation of makeRecsOuterClasses
@@ -109,6 +115,14 @@ public class JmlGenerator implements IREventObserver
 		for (IRStatus<AClassDeclCG> status : IRStatus.extract(ast, AClassDeclCG.class))
 		{
 			AClassDeclCG clazz = status.getIrNode();
+			
+			if(clazz.getInvariant() != null)
+			{
+				// We need to make the class invariant function public so it can be
+				// invoked in the invariant annotation
+				makeCondPublic(clazz.getInvariant());
+				makePure(clazz.getInvariant());
+			}
 
 			for (AFieldDeclCG f : clazz.getFields())
 			{
@@ -147,10 +161,6 @@ public class JmlGenerator implements IREventObserver
 				{
 					if (m.getSourceNode().getVdmNode() instanceof SFunctionDefinition)
 					{
-						// Functions are JML pure so we will annotate them as so
-						// Note that @pure is a JML modifier so this annotation should go last
-						// to prevent the error: "no modifiers are allowed prior to a lightweight
-						// specification case"
 						makePure(m);
 					}
 				}
@@ -379,7 +389,7 @@ public class JmlGenerator implements IREventObserver
 					fieldNames.add(state.getName());
 
 					classInvInfo.put(module.getName(), consAnno(JML_INV_ANNOTATION, JML_INV_PREFIX
-							+ module.getName(), fieldNames));
+							+ state.getName(), fieldNames));
 				}
 			}
 		}
