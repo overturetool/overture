@@ -138,13 +138,13 @@ public class IO {
 
     }
 
-    public static void printf(String format, List<Object> args) {
+    public static void printf(String format, VDMSeq args) {
         
 		System.out.printf(format, formatList(args));
 		System.out.flush();
     }
     
-    public static void printf(VDMSeq seq, List<Object> args) {
+    public static void printf(VDMSeq seq, VDMSeq args) {
 		
     	System.out.printf(seq.toString(), formatList(args));
 		System.out.flush();
@@ -155,12 +155,13 @@ public class IO {
 		return String.format(format, args.toArray());
     }
     
-    public static VDMSeq sprintf(VDMSeq seq, List<Object> args) {
+    public static VDMSeq sprintf(VDMSeq seq, VDMSeq args) {
 		
     	throw new UnsupportedOperationException("sprintf is only supported for formats of type String");
     }
     
-    private static Object[] formatList(List<Object> args)
+    @SuppressWarnings("unchecked")
+	private static Object[] formatList(VDMSeq args)
     {
     	for(int i = 0; i < args.size(); i++)
     	{
