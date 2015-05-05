@@ -116,6 +116,11 @@ public class JmlGenerator implements IREventObserver
 		{
 			AClassDeclCG clazz = status.getIrNode();
 			
+			if(info.getDeclAssistant().isLibraryName(clazz.getName()))
+			{
+				continue;
+			}
+			
 			if(clazz.getInvariant() != null)
 			{
 				// Now that the static invariant is private there is no need
