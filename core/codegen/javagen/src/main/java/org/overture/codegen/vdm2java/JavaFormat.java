@@ -369,7 +369,8 @@ public class JavaFormat
 
 	public String formatTypeName(INode node, ATypeNameCG typeName)
 	{
-		if(!getJavaSettings().genRecsAsInnerClasses())
+		// Type names are also used for quotes, which do not have a defining class.
+		if(typeName.getDefiningClass() != null && !getJavaSettings().genRecsAsInnerClasses())
 		{
 			String typeNameStr = "";
 			
