@@ -128,9 +128,14 @@ public class Utils
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends ValueType> T copy(T t)
+	public static <T> T copy(T t)
 	{
-		return (T) (t != null ? t.copy() : t);
+		if(t instanceof ValueType)
+		{
+			return (T) ((ValueType)t).copy();
+		}
+		
+		return null;
 	}
 	
 	public static String toString(Object obj)
