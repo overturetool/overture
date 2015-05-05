@@ -284,10 +284,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		{
 			try
 			{
-				if (!getInfo().getDeclAssistant().isLibraryName(moduleStatus.getIrNodeName()))
-				{
-					generator.applyTotalTransformation(moduleStatus, moduleTransformation);
-				}
+				generator.applyTotalTransformation(moduleStatus, moduleTransformation);
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
