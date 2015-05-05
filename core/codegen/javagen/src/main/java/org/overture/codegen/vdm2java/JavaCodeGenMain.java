@@ -354,33 +354,14 @@ public class JavaCodeGenMain
 	
 				} else
 				{
-					File moduleOutputDir = outputDir;
 					
 					if (outputDir != null)
 					{
-						String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
+						File moduleOutputDir = getModuleOutputDir(outputDir, vdmCodGen, generatedClass);
 						
-						if(generatedClass.getIrNode() instanceof AClassDeclCG)
+						if(moduleOutputDir == null)
 						{
-							javaPackage = ((AClassDeclCG) generatedClass.getIrNode()).getPackage();
-						}
-						else if(generatedClass.getIrNode() instanceof AInterfaceDeclCG)
-						{
-							javaPackage = ((AInterfaceDeclCG) generatedClass.getIrNode()).getPackage();
-						}
-						else
-						{
-							Logger.getLog().printErrorln("Expected IR node of "
-									+ generatedClass.getName()
-									+ " to be a class or interface  declaration at this point. Got: "
-									+ generatedClass.getIrNode());
 							continue;
-						}
-						
-						if (JavaCodeGenUtil.isValidJavaPackage(javaPackage))
-						{
-							String packageFolderPath = JavaCodeGenUtil.getFolderFromJavaRootPackage(javaPackage);
-							moduleOutputDir = new File(outputDir, packageFolderPath);
 						}
 						
 						vdmCodGen.generateJavaSourceFile(moduleOutputDir, generatedClass);
@@ -420,11 +401,16 @@ public class JavaCodeGenMain
 		{
 			if(outputDir != null)
 			{
-				outputDir = new File(outputDir, JavaCodeGen.QUOTES);
-				
 				for (GeneratedModule q : quotes)
 				{
-					vdmCodGen.generateJavaSourceFile(outputDir, q);
+					File moduleOutputDir = getModuleOutputDir(outputDir, vdmCodGen, q);
+					
+					if(moduleOutputDir == null)
+					{
+						continue;
+					}
+					
+					vdmCodGen.generateJavaSourceFile(moduleOutputDir, q);
 				}
 			}
 			
@@ -460,6 +446,38 @@ public class JavaCodeGenMain
 				Logger.getLog().println("[WARNING] " + w);
 			}
 		}
+	}
+
+	private static File getModuleOutputDir(File outputDir, JavaCodeGen vdmCodGen,
+			GeneratedModule generatedClass)
+	{
+		File moduleOutputDir = outputDir;
+		String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
+		
+		if(generatedClass.getIrNode() instanceof AClassDeclCG)
+		{
+			javaPackage = ((AClassDeclCG) generatedClass.getIrNode()).getPackage();
+		}
+		else if(generatedClass.getIrNode() instanceof AInterfaceDeclCG)
+		{
+			javaPackage = ((AInterfaceDeclCG) generatedClass.getIrNode()).getPackage();
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Expected IR node of "
+					+ generatedClass.getName()
+					+ " to be a class or interface  declaration at this point. Got: "
+					+ generatedClass.getIrNode());
+			return null;
+		}
+		
+		if (JavaCodeGenUtil.isValidJavaPackage(javaPackage))
+		{
+			String packageFolderPath = JavaCodeGenUtil.getFolderFromJavaRootPackage(javaPackage);
+			moduleOutputDir = new File(outputDir, packageFolderPath);
+		}
+		
+		return moduleOutputDir;
 	}
 	
 	public static List<File> filterFiles(List<File> files)
