@@ -18,12 +18,15 @@ import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
+import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRInfo;
@@ -281,6 +284,24 @@ public class JmlGenerator implements IREventObserver
 				recClass.setSourceNode(recDecl.getSourceNode());
 				recClass.setStatic(false);
 				recClass.setName(recDecl.getName());
+				
+				AInterfaceDeclCG recInterface = new AInterfaceDeclCG();
+				recInterface.setPackage("org.overture.codegen.runtime");
+				
+				final String RECORD_NAME = "Record";
+				recInterface.setName(RECORD_NAME);
+				AExternalTypeCG recInterfaceType = new AExternalTypeCG();
+				recInterfaceType.setName(RECORD_NAME);
+				AMethodTypeCG copyMethodType = new AMethodTypeCG();
+				copyMethodType.setResult(recInterfaceType);
+				
+				AMethodDeclCG copyMethod = javaGen.getJavaFormat().
+						getRecCreator().consCopySignature(copyMethodType);
+				copyMethod.setAbstract(true);
+				
+				recInterface.getMethodSignatures().add(copyMethod);
+				
+				recClass.getInterfaces().add(recInterface);
 
 				// Copy the record methods to the class
 				List<AMethodDeclCG> methods = new LinkedList<AMethodDeclCG>();
