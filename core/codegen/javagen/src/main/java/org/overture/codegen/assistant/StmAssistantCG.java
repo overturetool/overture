@@ -41,6 +41,7 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.statements.AAtomicStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
@@ -102,6 +103,11 @@ public class StmAssistantCG extends AssistantBase
 				altCg.setPatternType(expTypeCg.clone());
 			}
 		}
+	}
+	
+	public boolean inAtomic(SStmCG stm)
+	{
+		return stm.getAncestor(AAtomicStmCG.class) != null;
 	}
 	
 	public String getSuperClassName(ASuperCallStmCG stm)

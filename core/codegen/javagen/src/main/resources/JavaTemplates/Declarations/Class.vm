@@ -49,6 +49,10 @@ $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSupe
 	#if ($JavaFormat.isMainClass($node))
 	$node.getTag().getMainMethod()
 	#end
+	##
+	#if ($JavaFormat.genInvariant($node))
+	$JavaFormat.format($node.getInvariant())
+	#end	
 	
 	#foreach( $typeDecl in $node.getTypeDecls() )
 		#if (!$JavaFormat.isNamedTypeDecl($typeDecl))

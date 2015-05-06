@@ -46,6 +46,7 @@ import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.AAtomicStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ABreakStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
@@ -62,6 +63,7 @@ import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
+import org.overture.codegen.cgast.statements.AInvCheckStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
@@ -348,6 +350,13 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AMapSeqUpdateStmCG.class, templateStructure.STM_PATH 
 				+ "MapSeqUpdate");
+		
+		nodeTemplateFileNames.put(AInvCheckStmCG.class, templateStructure.STM_PATH 
+				+ "InvCheck");
+
+		// The template used for the block statement also works here
+		nodeTemplateFileNames.put(AAtomicStmCG.class, templateStructure.STM_PATH 
+				+ "Atomic");
 		
 		// Expressions
 

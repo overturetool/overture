@@ -407,21 +407,22 @@ public class CentralResource {
     }
 
     public void AddAccount(final Number accId, final Account acc) {
-        accounts = MapUtil.override(Utils.clone(accounts),
-                MapUtil.map(new Maplet(accId, acc)));
+        { /* Start of atomic statement */
+            accounts = MapUtil.override(Utils.clone(accounts),
+                    MapUtil.map(new Maplet(accId, acc)));
 
-        VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_4 = acc.GetCardIds();
+            VDMMap mapCompResult_1 = MapUtil.map();
+            VDMSet set_4 = acc.GetCardIds();
 
-        for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
-            Number cId = ((Number) iterator_4.next());
-            mapCompResult_1 = MapUtil.munion(Utils.clone(mapCompResult_1),
-                    MapUtil.map(new Maplet(cId, 0L)));
-        }
+            for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
+                Number cId = ((Number) iterator_4.next());
+                mapCompResult_1 = MapUtil.munion(Utils.clone(mapCompResult_1),
+                        MapUtil.map(new Maplet(cId, 0L)));
+            }
 
-        numberOfTries = MapUtil.override(Utils.clone(numberOfTries),
-                Utils.clone(mapCompResult_1));
-    }
+            numberOfTries = MapUtil.override(Utils.clone(numberOfTries),
+                    Utils.clone(mapCompResult_1));
+        } /* End of atomic statement */}
 
     public void AddIllegalCard(final Number cId) {
         illegalCards = SetUtil.union(Utils.clone(illegalCards), SetUtil.set(cId));
