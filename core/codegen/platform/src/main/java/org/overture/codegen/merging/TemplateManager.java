@@ -67,6 +67,7 @@ import org.overture.codegen.cgast.statements.AInvCheckStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
+import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
@@ -353,6 +354,9 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AInvCheckStmCG.class, templateStructure.STM_PATH 
 				+ "InvCheck");
+		
+		nodeTemplateFileNames.put(AMetaStmCG.class, templateStructure.STM_PATH
+				+ "Meta");
 
 		// The template used for the block statement also works here
 		nodeTemplateFileNames.put(AAtomicStmCG.class, templateStructure.STM_PATH 

@@ -294,6 +294,7 @@ CG {-> package='org.overture.codegen.cgast'
 			|	{mapSeqUpdate} [col]:CG.#exp [index]:CG.#exp [value]:CG.#exp
 			|	{invCheck} [subject]:CG.#exp
 			|	{atomic} [statements]:CG.#stm*
+			|	{meta}
            ;
 
 #call {-> package='org.overture.codegen.cgast.statements'
