@@ -1,9 +1,12 @@
 package org.overture.codegen.tests;
 
 import java.io.StringWriter;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ACatchClauseDeclCG;
@@ -12,6 +15,7 @@ import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ATypeArgExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ATryStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -114,7 +118,22 @@ public class IRTest
 		String expected = "final Number x = null;";
 		
 		compare(expected, varDecl);
+	}
+	
+	@Test
+	public void testMetaStm()
+	{
+		String metaDataStr = "/*@ some meta data @*/";
 		
+		List<ClonableString> metaData = new LinkedList<ClonableString>();
+		metaData.add(new ClonableString("/*@ some meta data @*/"));
+		
+		AMetaStmCG meta = new AMetaStmCG();
+		meta.setMetaData(metaData);
+	
+		String expected = metaDataStr;
+		
+		compare(expected, meta);
 	}
 
 	private void compare(String expected, INode node)
