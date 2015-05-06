@@ -179,9 +179,34 @@ public class JmlGenerator implements IREventObserver
 				}
 			}
 		}
+		
+		addModuleStateInvAssertions(newAst);
 
 		// Return back the modified AST to the Java code generator
 		return newAst;
+	}
+
+	private void addModuleStateInvAssertions(List<IRStatus<INode>> ast)
+	{
+		ModuleStateInvTransformation assertTr = new ModuleStateInvTransformation(javaGen);
+		
+		for (IRStatus<AClassDeclCG> status : IRStatus.extract(ast, AClassDeclCG.class))
+		{
+			AClassDeclCG clazz = status.getIrNode();
+
+			if (!this.javaGen.getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
+			{
+				try
+				{
+					this.javaGen.getIRGenerator().applyPartialTransformation(status, assertTr);
+				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+				{
+					Logger.getLog().printErrorln("Unexpected problem occured when applying transformation in '"
+							+ this.getClass().getSimpleName() + "'");
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	private void makeRecMethodsPure(List<IRStatus<INode>> ast)
@@ -494,7 +519,7 @@ public class JmlGenerator implements IREventObserver
 		return consMetaData(sb.toString());
 	}
 
-	private List<ClonableString> consMetaData(String str)
+	public static List<ClonableString> consMetaData(String str)
 	{
 		List<ClonableString> inv = new LinkedList<ClonableString>();
 
@@ -508,12 +533,12 @@ public class JmlGenerator implements IREventObserver
 //		addMetaData(node, extraMetaData, true);
 //	}
 	
-	private void appendMetaData(PCG node, List<ClonableString> extraMetaData)
+	public static void appendMetaData(PCG node, List<ClonableString> extraMetaData)
 	{
 		addMetaData(node, extraMetaData, false);
 	}
 	
-	private void addMetaData(PCG node, List<ClonableString> extraMetaData, boolean prepend)
+	public static void addMetaData(PCG node, List<ClonableString> extraMetaData, boolean prepend)
 	{
 		if (extraMetaData == null || extraMetaData.isEmpty())
 		{
