@@ -4,7 +4,7 @@ import java.util.*;
 
 
 public class Entry {
-    private static final St St = new St(null);
+    private static St St = new St(null);
 
     public static Object Run() {
         St.x = 150L;
@@ -13,7 +13,7 @@ public class Entry {
     }
 
     public String toString() {
-        return "Entry{" + "St = " + Utils.toString(St) + "}";
+        return "Entry{" + "St := " + Utils.toString(St) + "}";
     }
 
     public static class St implements Record {

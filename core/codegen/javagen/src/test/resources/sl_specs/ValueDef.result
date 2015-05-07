@@ -5,14 +5,14 @@ import java.util.*;
 
 public class Entry {
     public static final Number x = 78L;
-    private static final St St = new St(x);
+    private static St St = new St(x);
 
     public static Object Run() {
         return St.p;
     }
 
     public String toString() {
-        return "Entry{" + "x = " + Utils.toString(x) + ", St = " +
+        return "Entry{" + "x = " + Utils.toString(x) + ", St := " +
         Utils.toString(St) + "}";
     }
 

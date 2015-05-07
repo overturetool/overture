@@ -4,14 +4,14 @@ import java.util.*;
 
 
 public class Entry {
-    private static final St St = new St(10L);
+    private static St St = new St(10L);
 
     public static Object Run() {
         return St.x;
     }
 
     public String toString() {
-        return "Entry{" + "St = " + Utils.toString(St) + "}";
+        return "Entry{" + "St := " + Utils.toString(St) + "}";
     }
 
     public static class St implements Record {

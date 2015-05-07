@@ -4,7 +4,7 @@ import java.util.*;
 
 
 public class Entry {
-    private static final St St = new St(5L);
+    private static St St = new St(5L);
 
     public static Object Run() {
         Number y_X_ = 9L;
@@ -17,7 +17,7 @@ public class Entry {
     }
 
     public String toString() {
-        return "Entry{" + "St = " + Utils.toString(St) + "}";
+        return "Entry{" + "St := " + Utils.toString(St) + "}";
     }
 
     public static class St implements Record {
