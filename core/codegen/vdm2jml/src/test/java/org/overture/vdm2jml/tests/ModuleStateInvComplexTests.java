@@ -15,7 +15,7 @@ public class ModuleStateInvComplexTests extends StateTestBase
 	public static void init() throws AnalysisException,
 			UnsupportedModelingException
 	{
-		List<AClassDeclCG> classes = getClasses("ModuleStateInvComplex");
+		List<AClassDeclCG> classes = getClasses("ModuleStateInvComplex.vdmsl");
 
 		for (AClassDeclCG clazz : classes)
 		{

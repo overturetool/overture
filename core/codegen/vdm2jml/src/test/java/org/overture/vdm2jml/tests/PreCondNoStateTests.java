@@ -13,7 +13,7 @@ public class PreCondNoStateTests extends AnnotationTestsBase
 	public static void init() throws AnalysisException,
 			UnsupportedModelingException
 	{
-		AnnotationTestsBase.init("PreCondNoState");
+		AnnotationTestsBase.init("PreCondNoState.vdmsl");
 	}
 
 	@Test

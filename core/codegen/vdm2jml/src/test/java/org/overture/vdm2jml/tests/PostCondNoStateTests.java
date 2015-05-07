@@ -13,7 +13,7 @@ public class PostCondNoStateTests extends AnnotationTestsBase
 	public static void init() throws AnalysisException,
 			UnsupportedModelingException
 	{
-		AnnotationTestsBase.init("PostCondNoState");
+		AnnotationTestsBase.init("PostCondNoState.vdmsl");
 	}
 	
 	@Test

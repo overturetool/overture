@@ -16,7 +16,7 @@ public class PurityTests extends AnnotationTestsBase
 	public static void init() throws AnalysisException,
 			UnsupportedModelingException
 	{
-		AnnotationTestsBase.init("FuncsOpsOnly");
+		AnnotationTestsBase.init("FuncsOpsOnly.vdmsl");
 	}
 
 	@Before

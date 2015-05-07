@@ -17,7 +17,7 @@ public class ModuleStateInvTests extends StateTestBase
 	public static void init() throws AnalysisException,
 			UnsupportedModelingException
 	{
-		StateTestBase.init("ModuleStateInv");
+		StateTestBase.init("ModuleStateInv.vdmsl");
 	}
 
 	public static void checkAssertion(String methodName, boolean expectAssignment,
