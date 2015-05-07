@@ -600,13 +600,13 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return var;
 	}
 	
-	public AFieldDeclCG consConstField(String access, STypeCG type, String name, SExpCG initExp)
+	public AFieldDeclCG consField(String access, STypeCG type, String name, SExpCG initExp)
 	{
 		AFieldDeclCG stateField = new AFieldDeclCG();
 		stateField.setAccess(access);
 		stateField.setType(type);
 		stateField.setStatic(true);
-		stateField.setFinal(true);
+		stateField.setFinal(false);
 		stateField.setVolatile(false);
 		stateField.setName(name);
 		stateField.setInitial(initExp);

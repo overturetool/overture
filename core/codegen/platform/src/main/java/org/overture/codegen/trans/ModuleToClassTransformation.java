@@ -147,7 +147,9 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 				clazz.setInvariant(stateDecl.getInvDecl().clone());
 			}
 
-			clazz.getFields().add(transAssistant.consConstField(IRConstants.PRIVATE, stateType, stateDecl.getName(), getInitExp(stateDecl)));
+			// The state field can't be final since you are allow to assign to it in
+			// VDM-SL, e.g. St := mk_St(...)
+			clazz.getFields().add(transAssistant.consField(IRConstants.PRIVATE, stateType, stateDecl.getName(), getInitExp(stateDecl)));
 		}
 	}
 
