@@ -46,21 +46,21 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 		// So by now we know that 1) the statement does not occur inside an atomic statement
 		// and 2) the enclosing class has an invariant
 
-		SExpCG target = node.getTarget();
+		SExpCG subject = findSubject(node.getTarget());
 
 		// Note that this case method does not have to consider
 		// state updates on the form stateComp(52) := 4
 		// since they get transformed into AMapSeqUpdateStmCGs
 		// which are treated using a separate case method in this
 		// visitor
-		while (target instanceof AFieldExpCG)
+		while (subject instanceof AFieldExpCG)
 		{
-			target = ((AFieldExpCG) target).getObject();
+			subject = ((AFieldExpCG) subject).getObject();
 		}
 
-		if (target instanceof SVarExpCG)
+		if (subject instanceof SVarExpCG)
 		{
-			SVarExpCG var = (SVarExpCG) target;
+			SVarExpCG var = (SVarExpCG) subject;
 
 			if (!var.getIsLocal())
 			{
@@ -70,7 +70,7 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 		} else
 		{
 			Logger.getLog().printErrorln("Expected target to a variable expression at this point. Got "
-					+ target + " in '" + this.getClass().getSimpleName() + "'");
+					+ subject + " in '" + this.getClass().getSimpleName() + "'");
 
 			// Append the assertion just in case...
 			appendAssertion(node, consAssertStr(node));
@@ -86,8 +86,27 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		SExpCG next = node.getCol();
+		SExpCG subject = findSubject(node.getCol());
 
+		if (subject instanceof SVarExpCG)
+		{
+			if (!((SVarExpCG) subject).getIsLocal())
+			{
+				// The map/seq update is NOT an update to a local variable so we'll assert the invariant check
+				appendAssertion(node, consAssertStr(node));
+			}
+		} else
+		{
+			Logger.getLog().printErrorln("Expected 'next' to be a variable expression at this point. Got: "
+					+ subject + " in '" + this.getClass().getSimpleName() + "'");
+
+			// Append the assertion just in case...
+			appendAssertion(node, consAssertStr(node));
+		}
+	}
+
+	private SExpCG findSubject(SExpCG next)
+	{
 		while (next instanceof AFieldExpCG || next instanceof AMapSeqGetExpCG)
 		{
 			if (next instanceof AFieldExpCG)
@@ -98,22 +117,8 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 				next = ((AMapSeqGetExpCG) next).getCol();
 			}
 		}
-
-		if (next instanceof SVarExpCG)
-		{
-			if (!((SVarExpCG) next).getIsLocal())
-			{
-				// The map/seq update is NOT an update to a local variable so we'll assert the invariant check
-				appendAssertion(node, consAssertStr(node));
-			}
-		} else
-		{
-			Logger.getLog().printErrorln("Expected 'next' to be a variable expression at this point. Got: "
-					+ next + " in '" + this.getClass().getSimpleName() + "'");
-
-			// Append the assertion just in case...
-			appendAssertion(node, consAssertStr(node));
-		}
+		
+		return next;
 	}
 
 	public void appendAssertion(SStmCG stm, String str)
