@@ -126,10 +126,9 @@ public class JmlGenerator implements IREventObserver
 			
 			if(clazz.getInvariant() != null)
 			{
-				// Now that the static invariant is private there is no need
-				// to make the invariant function public
-				//
-				//makeCondPublic(clazz.getInvariant());
+				// Now that the static invariant is public the invariant function
+				// must also be made public
+				makeCondPublic(clazz.getInvariant());
 
 				// Now make the invariant function a pure helper so we can invoke it from
 				// the invariant annotation and avoid runtime errors and JML warnings
@@ -453,10 +452,15 @@ public class JmlGenerator implements IREventObserver
 					// The static invariant requires that either the state of the module is uninitialized
 					// or inv_St(St) holds.
 					//
-					//@ private static invariant St == null || inv_St(St);
-					classInvInfo.put(module.getName(), consAnno("private " + JML_STATIC_INV_ANNOTATION,
+					//@ public static invariant St == null || inv_St(St);
+					classInvInfo.put(module.getName(), consAnno("public " + JML_STATIC_INV_ANNOTATION,
 							String.format("%s == null", state.getName())  + " || " +
 							JML_INV_PREFIX + state.getName(), fieldNames));
+					//
+					// Note that the invariant is public. Otherwise we would get the error
+					// 'An identifier with public visibility may not be used in a invariant clause with private '
+					// .. because the state field is private.
+					//
 					// Without the St == null check the initialization of the state field, i.e.
 					// St = new my.pack.Mtypes.St(<args>) would try to check that inv_St(St) holds
 					// before the state of the module is initialized but that will cause a null
