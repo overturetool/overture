@@ -20,7 +20,7 @@ public class ModuleStateInvTests extends StateTestBase
 		StateTestBase.init("ModuleStateInv");
 	}
 
-	private void checkAssertion(String methodName, boolean expectAssignment,
+	public static void checkAssertion(String methodName, boolean expectAssignment,
 			boolean expectMetaData)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{

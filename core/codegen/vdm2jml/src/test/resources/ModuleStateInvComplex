@@ -1,0 +1,39 @@
+module M
+
+exports all
+definitions
+
+types
+
+R :: x : int;
+
+R1 :: s : seq of R
+
+state St of
+s : seq of R
+m : map nat to R
+r : R1
+ss : seq of seq of R
+init s == s = mk_St([mk_R(1)],{1 |-> mk_R(5)}, mk_R1([mk_R(5)]), [[mk_R(1)]])
+inv s == s.s(1).x > 0
+end
+
+operations
+
+seqField : () ==> ()
+seqField () ==
+  s(1).x := 5;
+
+mapField : () ==> ()
+mapField () ==
+  m(1).x := 5;
+
+fieldSeqField : () ==> ()
+fieldSeqField () ==
+  r.s(1).x := 5;
+
+seqSeqField : () ==> ()
+seqSeqField () ==
+  ss(1)(1).x := 5;
+
+end M

@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.vdm2java.JavaFormat;
 
 abstract public class StateTestBase extends AnnotationTestsBase
@@ -32,6 +33,10 @@ abstract public class StateTestBase extends AnnotationTestsBase
 			}
 
 			// We expect the generated class to be in the default package
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Expected two classes for this type of test");
 		}
 	}
 	
