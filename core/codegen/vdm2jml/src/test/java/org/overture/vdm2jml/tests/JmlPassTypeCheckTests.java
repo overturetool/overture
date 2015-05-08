@@ -134,8 +134,7 @@ public class JmlPassTypeCheckTests
 			String[] openJmlConfig = new String[] { JavaToolsUtils.JAVA,
 					JavaToolsUtils.JAR_ARG, openJml.getAbsolutePath(),
 					IOpenJmlConsts.CP_ARG, cgRuntime.getAbsolutePath(),
-					IOpenJmlConsts.RAC_ARG, IOpenJmlConsts.RAC_TO_ASSERT_ARG,
-					IOpenJmlConsts.NO_PURITY_CHECKS_ARG };
+					IOpenJmlConsts.TC };
 
 			String[] javaFiles = findJavaFilePathsRec(genJavaFolder);
 
