@@ -19,6 +19,7 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.vdm2java.JavaFormat;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 
@@ -36,13 +37,22 @@ abstract public class AnnotationTestsBase
 	// The IR class that the input module generates to
 	protected static AClassDeclCG genModule;
 	
+	// The IR class that is used to represent the type of the module state
+	protected static AClassDeclCG genStateType;
+	
 	public static void init(String fileName) throws AnalysisException, UnsupportedModelingException
 	{
 		List<AClassDeclCG> classes = getClasses(fileName);
 
-		if (classes.size() == 1)
+		for (AClassDeclCG clazz : classes)
 		{
-			genModule = classes.get(0);
+			if (clazz.getName().equals("M"))
+			{
+				genModule = clazz;
+			} else if (clazz.getName().equals("St"))
+			{
+				genStateType = clazz;
+			}
 		}
 	}
 	
@@ -50,6 +60,16 @@ abstract public class AnnotationTestsBase
 	{
 		Assert.assertTrue("No module was generated", genModule != null);
 		Assert.assertEquals("Expected generated module to be in the default package", null, genModule.getPackage());
+	}
+	
+	public static void validateGenModuleAndStateType()
+	{
+		validGeneratedModule();
+		
+		Assert.assertTrue("State type was not generated", genStateType != null);
+		String stateClassPackage = genModule.getName()
+				+ JavaFormat.TYPE_DECL_PACKAGE_SUFFIX;
+		Assert.assertEquals("Generated state type is located in a wrong package", stateClassPackage, genStateType.getPackage());
 	}
 	
 	public static void initJmlGen(JmlGenerator jmlGen)

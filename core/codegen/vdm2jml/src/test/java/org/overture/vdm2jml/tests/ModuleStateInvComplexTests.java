@@ -1,38 +1,17 @@
 package org.overture.vdm2jml.tests;
 
-import java.util.List;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.logging.Logger;
 
-public class ModuleStateInvComplexTests extends StateTestBase
+public class ModuleStateInvComplexTests extends AnnotationTestsBase
 {
 	@BeforeClass
 	public static void init() throws AnalysisException,
 			UnsupportedModelingException
 	{
-		List<AClassDeclCG> classes = getClasses("ModuleStateInvComplex.vdmsl");
-
-		for (AClassDeclCG clazz : classes)
-		{
-			if (clazz.getName().equals("M"))
-			{
-				genModule = clazz;
-			} else if (clazz.getName().equals("St"))
-			{
-				genStateType = clazz;
-			}
-		}
-		
-		if (genModule == null || genStateType == null)
-		{
-			Logger.getLog().printErrorln("Problems generating the module "
-					+ "and state type in ModuleStateInvComplexTests");
-		}
+		AnnotationTestsBase.init("ModuleStateInvComplex.vdmsl");
 	}
 
 	@Test

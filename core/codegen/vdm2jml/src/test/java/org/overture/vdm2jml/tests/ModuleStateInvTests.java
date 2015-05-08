@@ -11,13 +11,13 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.vdm2jml.tests.util.TestDataCollector;
 
-public class ModuleStateInvTests extends StateTestBase
+public class ModuleStateInvTests extends AnnotationTestsBase
 {
 	@BeforeClass
 	public static void init() throws AnalysisException,
 			UnsupportedModelingException
 	{
-		StateTestBase.init("ModuleStateInv.vdmsl");
+		AnnotationTestsBase.init("ModuleStateInv.vdmsl");
 	}
 
 	public static void checkAssertion(String methodName, boolean expectAssignment,

@@ -9,12 +9,12 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 
-public class StateTests extends StateTestBase
+public class StateTests extends AnnotationTestsBase
 {
 	@BeforeClass
 	public static void init() throws AnalysisException, UnsupportedModelingException
 	{
-		StateTestBase.init("State.vdmsl");
+		AnnotationTestsBase.init("State.vdmsl");
 	}
 	
 	@Before
