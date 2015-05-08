@@ -15,9 +15,6 @@ import org.overture.codegen.vdm2jml.IOpenJmlConsts;
 @RunWith(Parameterized.class)
 public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 {
-	private static final String TEST_INPUT_FOLDER = "src" + File.separatorChar
-			+ "test" + File.separatorChar + "resources";
-
 	public JmlPassTypeCheckTests(File inputFile)
 	{
 		this.inputFile = inputFile;
@@ -26,7 +23,8 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 	@Parameters(name = "{index}: {0}")
 	public static Collection<Object[]> data()
 	{
-		List<File> files = GeneralUtils.getFiles(new File(TEST_INPUT_FOLDER));
+		File folder = new File(AnnotationTestsBase.TEST_RESOURCES_ROOT);
+		List<File> files = GeneralUtils.getFiles(folder);
 
 		return collectVdmslFiles(files);
 	}
