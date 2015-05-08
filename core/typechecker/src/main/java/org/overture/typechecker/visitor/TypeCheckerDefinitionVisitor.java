@@ -1248,7 +1248,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		for (ATraceDefinitionTerm term : node.getTerms())
 		{
-			question.assistantFactory.createPTraceDefinitionAssistant().typeCheck(term.getList(), THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE));
+			typeCheck(term.getList(), THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE));
 		}
 
 		return null;
@@ -1609,6 +1609,18 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		return node.getCallStatement().apply(THIS, question);
+
+	}
+	
+	public void typeCheck(List<PTraceDefinition> term,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) throws AnalysisException
+	{
+
+		for (PTraceDefinition def : term)
+		{
+			def.apply(rootVisitor, question);
+		}
 
 	}
 

@@ -67,12 +67,9 @@ import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
-import org.overture.typechecker.assistant.definition.PTraceDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.expression.SBinaryExpAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
-import org.overture.typechecker.assistant.pattern.AMapletPatternMapletAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
@@ -149,7 +146,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	PDefinitionSet createPDefinitionSet();
 
-	PTraceDefinitionAssistantTC createPTraceDefinitionAssistant();
+//	PTraceDefinitionAssistantTC createPTraceDefinitionAssistant();
 
 	SClassDefinitionAssistantTC createSClassDefinitionAssistant();
 
@@ -160,7 +157,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	//PExpAssistantTC createPExpAssistant();
 
-	SBinaryExpAssistantTC createSBinaryExpAssistant();
+//	SBinaryExpAssistantTC createSBinaryExpAssistant();
 
 	// module
 
@@ -185,7 +182,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	
 	// AExpressionPatternAssistantTC createAExpressionPatternAssistant();
 
-	AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant();
+//	AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant();
 
 	// AMapPatternAssistantTC createAMapPatternAssistant();
 

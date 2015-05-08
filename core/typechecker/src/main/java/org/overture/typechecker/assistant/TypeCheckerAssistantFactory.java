@@ -67,12 +67,9 @@ import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
-import org.overture.typechecker.assistant.definition.PTraceDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.expression.SBinaryExpAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
-import org.overture.typechecker.assistant.pattern.AMapletPatternMapletAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
@@ -349,11 +346,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new PDefinitionSet(this);
 	}
 
-	@Override
-	public PTraceDefinitionAssistantTC createPTraceDefinitionAssistant()
-	{
-		return new PTraceDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public PTraceDefinitionAssistantTC createPTraceDefinitionAssistant()
+//	{
+//		return new PTraceDefinitionAssistantTC(this);
+//	}
 
 	@Override
 	public SClassDefinitionAssistantTC createSClassDefinitionAssistant()
@@ -381,11 +378,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 //		return new PExpAssistantTC(this);
 //	}
 
-	@Override
-	public SBinaryExpAssistantTC createSBinaryExpAssistant()
-	{
-		return new SBinaryExpAssistantTC(this);
-	}
+//	@Override
+//	public SBinaryExpAssistantTC createSBinaryExpAssistant()
+//	{
+//		return new SBinaryExpAssistantTC(this);
+//	}
 
 	// module
 
@@ -453,11 +450,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new AExpressionPatternAssistantTC(this);
 	// }
 
-	@Override
-	public AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant()
-	{
-		return new AMapletPatternMapletAssistantTC(this);
-	}
+//	@Override
+//	public AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant()
+//	{
+//		return new AMapletPatternMapletAssistantTC(this);
+//	}
 
 	// @Override
 	// public AMapPatternAssistantTC createAMapPatternAssistant()
