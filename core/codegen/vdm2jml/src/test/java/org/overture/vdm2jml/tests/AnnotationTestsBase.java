@@ -25,6 +25,9 @@ import org.overture.codegen.vdm2jml.JmlGenerator;
 
 abstract public class AnnotationTestsBase
 {
+	private static final String MODULE_STATE_NAME = "St";
+	private static final String MODULE_NAME = "M";
+
 	public static final String TEST_RESOURCES_ROOT = "src" + File.separatorChar
 			+ "test" + File.separatorChar + "resources" + File.separatorChar;
 
@@ -46,10 +49,10 @@ abstract public class AnnotationTestsBase
 
 		for (AClassDeclCG clazz : classes)
 		{
-			if (clazz.getName().equals("M"))
+			if (clazz.getName().equals(MODULE_NAME))
 			{
 				genModule = clazz;
-			} else if (clazz.getName().equals("St"))
+			} else if (clazz.getName().equals(MODULE_STATE_NAME))
 			{
 				genStateType = clazz;
 			}
