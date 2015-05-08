@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.tests.utils;
+package org.overture.codegen.vdm2java;
 
 public class JavaToolsUtils
 {
@@ -31,6 +31,8 @@ public class JavaToolsUtils
 	public static final String JAVAC = "javac";
 	public static final String JAVA = "java";
 
+	public static final String JAR_ARG = "-jar";
+	
 	public static Boolean isWindows()
 	{
 		String osName = System.getProperty("os.name");
