@@ -21,6 +21,7 @@
  */
 package org.overture.typechecker.visitor;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
@@ -98,6 +99,7 @@ import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.type.QualifiedDefinition;
@@ -488,7 +490,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		for (APatternListTypePair pltp : node.getParamPatterns())
 		{
-			argdefs.addAll(question.assistantFactory.createAPatternListTypePairAssistant().getDefinitions(pltp, NameScope.LOCAL));
+			argdefs.addAll(getDefinitions(pltp, NameScope.LOCAL, question.assistantFactory));
 		}
 
 		defs.addAll(question.assistantFactory.createPDefinitionAssistant().checkDuplicatePatterns(node, argdefs));
@@ -865,7 +867,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		for (APatternListTypePair ptp : node.getParameterPatterns())
 		{
-			argdefs.addAll(question.assistantFactory.createAPatternListTypePairAssistant().getDefinitions(ptp, NameScope.LOCAL));
+			argdefs.addAll(getDefinitions(ptp, NameScope.LOCAL, question.assistantFactory));
 		}
 
 		defs.addAll(question.assistantFactory.createPDefinitionAssistant().checkDuplicatePatterns(node, argdefs));
@@ -1622,6 +1624,19 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			def.apply(rootVisitor, question);
 		}
 
+	}
+	
+	public Collection<? extends PDefinition> getDefinitions(
+			APatternListTypePair pltp, NameScope scope, ITypeCheckerAssistantFactory assistantFactory)
+	{
+		List<PDefinition> list = new Vector<PDefinition>();
+
+		for (PPattern p : pltp.getPatterns())
+		{
+			list.addAll(assistantFactory.createPPatternAssistant().getDefinitions(p, pltp.getType(), scope));
+		}
+
+		return list;
 	}
 
 }
