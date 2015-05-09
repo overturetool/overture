@@ -33,6 +33,10 @@ public class JavaToolsUtils
 
 	public static final String JAR_ARG = "-jar";
 	
+	public static final String ENABLE_ASSERTIONS_ARG = "-ea";
+	
+	public static final String CP_ARG = "-classpath";
+	
 	public static Boolean isWindows()
 	{
 		String osName = System.getProperty("os.name");
