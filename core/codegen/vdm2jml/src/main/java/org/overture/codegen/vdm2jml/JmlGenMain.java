@@ -12,7 +12,6 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
-import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGenMain;
 import org.overture.codegen.vdm2java.JavaSettings;
@@ -45,7 +44,7 @@ public class JmlGenMain
 
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
-		javaSettings.setJavaRootPackage("my.pack");
+		//javaSettings.setJavaRootPackage("my.pack");
 		javaSettings.setGenRecsAsInnerClasses(false);
 
 		List<String> listArgs = Arrays.asList(args);
@@ -102,7 +101,7 @@ public class JmlGenMain
 		jmlGen.setIrSettings(irSettings);
 		jmlGen.setJavaSettings(javaSettings);
 
-		GeneralUtils.deleteFolderContents(outputDir, true);
+		//GeneralUtils.deleteFolderContents(outputDir, true);
 
 		try
 		{
