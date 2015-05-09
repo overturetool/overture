@@ -29,9 +29,14 @@ abstract public class AnnotationTestsBase
 	private static final String MODULE_NAME = "M";
 
 	public static final String TEST_RESOURCES_ROOT = "src" + File.separatorChar
-			+ "test" + File.separatorChar + "resources" + File.separatorChar
+			+ "test" + File.separatorChar + "resources" + File.separatorChar;
+
+	public static final String TEST_RES_STATIC_ANALYSIS_ROOT = TEST_RESOURCES_ROOT
 			+ "static_analysis" + File.separatorChar;
 
+	public static final String TEST_RES_DYNAMIC_ANALYSIS_ROOT = TEST_RESOURCES_ROOT
+			+ "dynamic_analysis" + File.separatorChar;
+	
 	public static final String SPEC_PUBLIC_ANNOTATION = "/*@ spec_public @*/";
 	public static final String PURE_ANNOTATION = "/*@ pure @*/";
 	public static final String HELPER_ANNOTATION = "/*@ helper @*/";
@@ -161,7 +166,7 @@ abstract public class AnnotationTestsBase
 			throws AnalysisException, UnsupportedModelingException
 	{
 		List<File> files = new LinkedList<File>();
-		files.add(new File(TEST_RESOURCES_ROOT + fileName));
+		files.add(new File(TEST_RES_STATIC_ANALYSIS_ROOT + fileName));
 
 		ModuleList modules = GeneralCodeGenUtils.consModuleList(files);
 
