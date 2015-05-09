@@ -39,6 +39,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
@@ -359,5 +360,22 @@ public class JavaCodeGenUtil
 		}
 
 		return correctionIndices;
+	}
+	
+	public static String[] findJavaFilePathsRec(File srcCodeFolder)
+	{
+		List<File> files = GeneralUtils.getFilesRecursive(srcCodeFolder);
+
+		List<String> javaFilePaths = new LinkedList<String>();
+
+		for (File f : files)
+		{
+			if (f.getName().endsWith(IJavaCodeGenConstants.JAVA_FILE_EXTENSION))
+			{
+				javaFilePaths.add(f.getAbsolutePath());
+			}
+		}
+
+		return javaFilePaths.toArray(new String[] {});
 	}
 }
