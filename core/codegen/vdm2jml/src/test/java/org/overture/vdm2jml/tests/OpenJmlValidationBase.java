@@ -11,7 +11,6 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralUtils;
-import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
 import org.overture.codegen.vdm2jml.JmlGenMain;
 
 abstract public class OpenJmlValidationBase
@@ -21,6 +20,8 @@ abstract public class OpenJmlValidationBase
 	public static final String OPENJML_ENV_VAR = "OPENJML";
 
 	public static final String OPEN_JML = "openjml.jar";
+	
+	public static final String JML_RUNTIME = "jmlruntime.jar";
 
 	public static final String TEST_EXEC_FOLDER_PATH = "target"
 			+ File.separatorChar + "jml";
@@ -34,47 +35,56 @@ abstract public class OpenJmlValidationBase
 
 	public static final int EXIT_OK = 0;
 
-	private static final boolean VERBOSE = false;
+	private static final boolean VERBOSE = true;
 
 	protected File inputFile;
 
-	public OpenJmlValidationBase()
+	protected File openJml;
+	protected File jmlRuntime;
+	protected File cgRuntime;
+	protected File genJavaFolder;
+	
+	public OpenJmlValidationBase(File inputFile)
 	{
-		super();
+		this.inputFile = inputFile;
+		this.cgRuntime = new File(CODEGEN_RUNTIME);
+		
+		int dotIdx = inputFile.getName().indexOf('.');
+
+		Assert.assertTrue("Got unexpected file name '" + inputFile.getName()
+				+ "'", dotIdx > 0);
+
+		String inputFileNameNoExt = inputFile.getName().substring(0, dotIdx);
+		genJavaFolder = new File(GEN_JAVA_FOLDER, inputFileNameNoExt);
+		
+		setOpenJmlTools();
 	}
 
-	public static File getOpenJml()
+	public void setOpenJmlTools()
 	{
 		String openJmlDir = System.getenv(OPENJML_ENV_VAR);
 
 		if (openJmlDir != null)
 		{
-			File file = new File(openJmlDir, OPEN_JML);
-
-			if (file.exists())
-			{
-				return file;
-			}
+			openJml = new File(openJmlDir, OPEN_JML);
+			jmlRuntime = new File(openJmlDir, JML_RUNTIME);
 		}
-
-		return null;
+	}
+	
+	public void assumeOpenJml()
+	{
+		assumeFile(openJml);
 	}
 
-	public String[] findJavaFilePathsRec(File srcCodeFolder)
+	public void assumeJmlRuntime()
 	{
-		List<File> files = GeneralUtils.getFilesRecursive(srcCodeFolder);
-
-		List<String> javaFilePaths = new LinkedList<String>();
-
-		for (File f : files)
-		{
-			if (f.getName().endsWith(IJavaCodeGenConstants.JAVA_FILE_EXTENSION))
-			{
-				javaFilePaths.add(f.getAbsolutePath());
-			}
-		}
-
-		return javaFilePaths.toArray(new String[] {});
+		assumeFile(jmlRuntime);
+	}
+	
+	private void assumeFile(File file)
+	{
+		Assume.assumeTrue("Could not find " + file.getName(), file != null
+				&& file.exists());
 	}
 
 	public static Collection<Object[]> collectVdmslFiles(List<File> files)
@@ -92,22 +102,9 @@ abstract public class OpenJmlValidationBase
 		return testInputFiles;
 	}
 
-	public void tcFiles()
+	public void runOpenJmlProcess()
 	{
-		File openJml = getOpenJml();
-
-		Assume.assumeTrue("Could not find OpenJML installation", openJml != null);
-
-		int dotIdx = inputFile.getName().indexOf('.');
-
-		Assert.assertTrue("Got unexpected file name '" + inputFile.getName()
-				+ "'", dotIdx > 0);
-
-		String inputFileNameNoExt = inputFile.getName().substring(0, dotIdx);
-		File genJavaFolder = new File(GEN_JAVA_FOLDER, inputFileNameNoExt);
-
-		// Just make sure that the folder we are using is empty
-		GeneralUtils.deleteFolderContents(genJavaFolder, true);
+		beforeRunningOpenJmlProcess();
 
 		JmlGenMain.main(new String[] { inputFile.getAbsolutePath(),
 				JmlGenMain.OUTPUT_ARG, genJavaFolder.getAbsolutePath() });
@@ -116,25 +113,7 @@ abstract public class OpenJmlValidationBase
 		Process p;
 		try
 		{
-			File cgRuntime = new File(CODEGEN_RUNTIME);
-
-			String[] openJmlConfig = getOpenJmlConfig(openJml, cgRuntime);
-
-			String[] javaFiles = findJavaFilePathsRec(genJavaFolder);
-
-			String[] openJmlArgs = GeneralUtils.concat(openJmlConfig, javaFiles);
-
-			// Arguments to run the OpenJML type checker on a set of Java files.
-			// A requirement is to have OpenJML installed in $OPENJML
-			// java
-			// -jar
-			// $OPENJML/openjml.jar
-			// -classpath
-			// "codegen-runtime.jar"
-			// -rac
-			// -racCompileToJavaAssert
-			// -no-purityCheck
-			// <javafiles>
+			String[] openJmlArgs = getProcessArgs();
 
 			ProcessBuilder pb = new ProcessBuilder(openJmlArgs);
 
@@ -180,5 +159,11 @@ abstract public class OpenJmlValidationBase
 		}
 	}
 
-	abstract public String[] getOpenJmlConfig(File openJml, File cgRuntime);
+	public void beforeRunningOpenJmlProcess()
+	{
+		// Just make sure that the folder we are using is empty
+		GeneralUtils.deleteFolderContents(genJavaFolder, true);
+	}
+
+	abstract public String[] getProcessArgs();
 }
