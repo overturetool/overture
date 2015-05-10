@@ -13,6 +13,7 @@ import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaToolsUtils;
 import org.overture.codegen.vdm2jml.IOpenJmlConsts;
+import org.overture.vdm2jml.tests.util.ProcessResult;
 
 @RunWith(Parameterized.class)
 public class JmlPassTypeCheckTests extends OpenJmlValidationBase
@@ -40,9 +41,10 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 	@Test
 	public void typeCheckJml()
 	{
-		runOpenJmlProcess();
+		ProcessResult processResult = runOpenJmlProcess();
+		assertNoProcessErrors(processResult);
 	}
-	
+
 	@Override
 	public String[] getProcessArgs()
 	{
