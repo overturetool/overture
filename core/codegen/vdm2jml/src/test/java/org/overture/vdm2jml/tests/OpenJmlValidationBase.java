@@ -12,6 +12,7 @@ import org.junit.Assume;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2jml.JmlGenMain;
+import org.overture.vdm2jml.tests.util.ProcessResult;
 
 abstract public class OpenJmlValidationBase
 {
@@ -101,8 +102,14 @@ abstract public class OpenJmlValidationBase
 
 		return testInputFiles;
 	}
+	
+	public void assertNoProcessErrors(ProcessResult processResult)
+	{
+		Assert.assertTrue("Expected test to type check without any error. Got: "
+				+ processResult.getOutput(), processResult.getExitCode() == OpenJmlValidationBase.EXIT_OK);
+	}
 
-	public void runOpenJmlProcess()
+	public ProcessResult runOpenJmlProcess()
 	{
 		beforeRunningOpenJmlProcess();
 
@@ -111,6 +118,10 @@ abstract public class OpenJmlValidationBase
 
 		String s;
 		Process p;
+		
+		int exitCode = 1;
+		StringBuilder openJmlOutput = new StringBuilder();
+		
 		try
 		{
 			String[] openJmlArgs = getProcessArgs();
@@ -118,8 +129,6 @@ abstract public class OpenJmlValidationBase
 			ProcessBuilder pb = new ProcessBuilder(openJmlArgs);
 
 			p = pb.start();
-
-			StringBuilder openJmlOutput = new StringBuilder();
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
@@ -139,10 +148,7 @@ abstract public class OpenJmlValidationBase
 
 			br.close();
 
-			p.waitFor();
-
-			Assert.assertTrue("OpenJML exiting with error:\n"
-					+ openJmlOutput.toString(), p.exitValue() == EXIT_OK);
+			exitCode = p.waitFor();
 
 			if (VERBOSE)
 			{
@@ -157,6 +163,8 @@ abstract public class OpenJmlValidationBase
 			e.printStackTrace();
 			Assume.assumeTrue("Problems launching OpenJML", false);
 		}
+		
+		return new ProcessResult(exitCode, openJmlOutput);
 	}
 
 	public void beforeRunningOpenJmlProcess()
