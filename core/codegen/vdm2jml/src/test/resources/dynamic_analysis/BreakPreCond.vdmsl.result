@@ -1,0 +1,6 @@
+/home/peter/dev/ovtgit/core/codegen/vdm2jml/target/jml/code/BreakPreCond/Entry.java:8: JML precondition is false
+        return id(-1L);
+                 ^
+/home/peter/dev/ovtgit/core/codegen/vdm2jml/target/jml/code/BreakPreCond/Entry.java:13: Associated declaration: /home/peter/dev/ovtgit/core/codegen/vdm2jml/target/jml/code/BreakPreCond/Entry.java:8: 
+    public static Number id(final Number x) {
+                                         ^
