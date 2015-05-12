@@ -20,6 +20,7 @@ import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
@@ -111,7 +112,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		visitModuleDefs(node.getDefs());
+		visitModuleDefs(node.getDefs(), node);
 	}
 	
 	@Override
@@ -123,7 +124,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		visitModuleDefs(node.getDefinitions());
+		visitModuleDefs(node.getDefinitions(), node);
 	}
 
 	@Override
@@ -135,7 +136,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		visitModuleDefs(node.getDefinitions());
+		visitModuleDefs(node.getDefinitions(), node);
 	}
 
 	// For operations and functions it works as a single pattern
@@ -700,10 +701,10 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 
 	// Note that this methods is intended to work both for SL modules and PP/RT classes
-	private void visitModuleDefs(List<PDefinition> defs)
+	private void visitModuleDefs(List<PDefinition> defs, INode module)
 			throws AnalysisException
 	{
-		DefinitionInfo defInfo = getStateDefs(defs);
+		DefinitionInfo defInfo = getStateDefs(defs, module);
 		
 		if(defInfo != null)
 		{
@@ -735,31 +736,57 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private DefinitionInfo getStateDefs(List<PDefinition> defs)
+	private DefinitionInfo getStateDefs(List<PDefinition> defs, INode module)
 	{
-		AStateDefinition stateDef = getStateDef(defs);
-		
-		if(stateDef != null)
+		if(module instanceof AModuleModules)
 		{
-			List<PDefinition> fieldDefs = findFieldDefs(stateDef.getStateDefs(), stateDef.getFields());
+			List<PDefinition> fieldDefs = new LinkedList<PDefinition>();
+
+			AStateDefinition stateDef = getStateDef(defs);
 			
+			if(stateDef != null)
+			{
+				fieldDefs.addAll(findFieldDefs(stateDef.getStateDefs(), stateDef.getFields()));
+			}
+			
+			for(PDefinition def : defs)
+			{
+				if(def instanceof AValueDefinition)
+				{
+					fieldDefs.add(def);
+				}
+			}
+
 			return new DefinitionInfo(fieldDefs, af);
+		}
+		else if(module instanceof SClassDefinition)
+		{
+			SClassDefinition classDef = (SClassDefinition) module;
+			List<PDefinition> allDefs = new LinkedList<PDefinition>();
+
+			LinkedList<PDefinition> enclosedDefs = classDef.getDefinitions();
+			LinkedList<PDefinition> inheritedDefs = classDef.getAllInheritedDefinitions();
+
+			allDefs.addAll(enclosedDefs);
+			allDefs.addAll(inheritedDefs);
+			
+			List<PDefinition> fields = new LinkedList<PDefinition>();
+			
+			for (PDefinition def : allDefs)
+			{
+				if (def instanceof AInstanceVariableDefinition
+						|| def instanceof AValueDefinition)
+				{
+					fields.add(def);
+				}
+			}
+			
+			return new DefinitionInfo(fields, af);
 		}
 		else
 		{
-			//TODO: PP/RT case not implemented
-//			List<PDefinition> allDefs = new LinkedList<PDefinition>();
-//
-//			LinkedList<PDefinition> defs = classDef.getDefinitions();
-//			LinkedList<PDefinition> inheritedDefs = classDef.getAllInheritedDefinitions();
-//
-//			allDefs.addAll(defs);
-//			allDefs.addAll(inheritedDefs);
-//
-//			
-//			List<PDefinition> fieldDefs = findFieldDefs(stateDefs, fields)
+			Logger.getLog().printErrorln("Expected module or class definition. Got: " + module + " in '" + this.getClass().getSimpleName() +"'");
 			return null;
-			//return new DefinitionInfo(fieldDefs, af);
 		}
 	}
 	
