@@ -20,10 +20,10 @@ public class A {
     }
 
     public Number op2() {
-        R1 a = new R1(5L);
-        R1 b = Utils.copy(a);
+        R1 a_1 = new R1(5L);
+        R1 b_1 = Utils.copy(a_1);
 
-        return b.x;
+        return b_1.x;
     }
 
     public Number op3() {

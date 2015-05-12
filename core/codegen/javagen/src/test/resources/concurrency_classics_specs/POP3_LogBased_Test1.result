@@ -2164,14 +2164,14 @@ public class POP3Test implements EvaluatePP {
         sentinel.entering(((POP3Test_sentinel) sentinel).Test1);
 
         try {
-            MessageChannelBuffer ch = new MessageChannelBuffer();
-            POP3Server server = new POP3Server(MakeMailDrop(), ch,
+            MessageChannelBuffer ch_1 = new MessageChannelBuffer();
+            POP3Server server_1 = new POP3Server(MakeMailDrop(), ch_1,
                     MakePasswordMap());
 
             {
                 MessageChannel mc = new MessageChannel();
-                server.start();
-                ch.Put(mc);
+                server_1.start();
+                ch_1.Put(mc);
 
                 {
                     VDMSeq run = TestRun1();
@@ -2199,26 +2199,28 @@ public class POP3Test implements EvaluatePP {
                     MakePasswordMap());
 
             {
-                MessageChannel mc1 = new MessageChannel();
-                MessageChannel mc2 = new MessageChannel();
+                MessageChannel mc1_1 = new MessageChannel();
+                MessageChannel mc2_1 = new MessageChannel();
                 server.start();
-                ch.Put(mc1);
-                ch.Put(mc2);
+                ch.Put(mc1_1);
+                ch.Put(mc2_1);
 
                 {
                     VDMSeq run = TestRun1();
-                    POP3TestSender send1 = new POP3TestSender("c1",
-                            Utils.copy(run), mc1);
-                    POP3TestSender send2 = new POP3TestSender("c2",
-                            Utils.copy(run), mc2);
-                    POP3TestListener listen1 = new POP3TestListener("l1", mc1);
-                    POP3TestListener listen2 = new POP3TestListener("l2", mc2);
-                    send1.start();
-                    send2.start();
-                    listen1.start();
-                    listen2.start();
-                    listen1.IsFinished();
-                    listen2.IsFinished();
+                    POP3TestSender send1_1 = new POP3TestSender("c1",
+                            Utils.copy(run), mc1_1);
+                    POP3TestSender send2_1 = new POP3TestSender("c2",
+                            Utils.copy(run), mc2_1);
+                    POP3TestListener listen1_1 = new POP3TestListener("l1",
+                            mc1_1);
+                    POP3TestListener listen2_1 = new POP3TestListener("l2",
+                            mc2_1);
+                    send1_1.start();
+                    send2_1.start();
+                    listen1_1.start();
+                    listen2_1.start();
+                    listen1_1.IsFinished();
+                    listen2_1.IsFinished();
                 }
 
                 return Log.getInstance().output();
