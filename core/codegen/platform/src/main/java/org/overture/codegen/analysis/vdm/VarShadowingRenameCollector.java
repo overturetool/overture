@@ -56,6 +56,7 @@ import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.PType;
 import org.overture.codegen.ir.TempVarNameGen;
 import org.overture.codegen.logging.Logger;
@@ -154,11 +155,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		
 		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
 		
-		addLocalDefs(defInfo);
+		openScope(defInfo, node);
 
 		node.getBody().apply(this);
 
-		removeLocalDefs(defInfo);
+		endScope(defInfo);
 	}
 
 	@Override
@@ -172,11 +173,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		DefinitionInfo defInfo = new DefinitionInfo(getParamDefs(node), af);
 		
-		addLocalDefs(defInfo);
+		openScope(defInfo, node);
 
 		node.getBody().apply(this);
 
-		removeLocalDefs(defInfo);
+		endScope(defInfo);
 	}
 
 	@Override
@@ -698,8 +699,25 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		return newNameSuggestion;
 	}
 
+	// Note that this methods is intended to work both for SL modules and PP/RT classes
 	private void visitModuleDefs(List<PDefinition> defs)
 			throws AnalysisException
+	{
+		DefinitionInfo defInfo = getStateDefs(defs);
+		
+		if(defInfo != null)
+		{
+			addLocalDefs(defInfo);
+			handleExecutables(defs);
+			removeLocalDefs(defInfo);
+		}
+		else
+		{
+			handleExecutables(defs);
+		}
+	}
+
+	private void handleExecutables(List<PDefinition> defs) throws AnalysisException
 	{
 		for (PDefinition def : defs)
 		{
@@ -715,6 +733,65 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 				def.apply(this);
 			}
 		}
+	}
+
+	private DefinitionInfo getStateDefs(List<PDefinition> defs)
+	{
+		AStateDefinition stateDef = getStateDef(defs);
+		
+		if(stateDef != null)
+		{
+			List<PDefinition> fieldDefs = findFieldDefs(stateDef.getStateDefs(), stateDef.getFields());
+			
+			return new DefinitionInfo(fieldDefs, af);
+		}
+		else
+		{
+			//TODO: PP/RT case not implemented
+//			List<PDefinition> allDefs = new LinkedList<PDefinition>();
+//
+//			LinkedList<PDefinition> defs = classDef.getDefinitions();
+//			LinkedList<PDefinition> inheritedDefs = classDef.getAllInheritedDefinitions();
+//
+//			allDefs.addAll(defs);
+//			allDefs.addAll(inheritedDefs);
+//
+//			
+//			List<PDefinition> fieldDefs = findFieldDefs(stateDefs, fields)
+			return null;
+			//return new DefinitionInfo(fieldDefs, af);
+		}
+	}
+	
+	private AStateDefinition getStateDef(List<PDefinition> defs)
+	{
+		for (PDefinition def : defs)
+		{
+			if (def instanceof AStateDefinition)
+			{
+				return (AStateDefinition) def;
+			}
+		}
+		
+		return null;
+	}
+
+	private List<PDefinition> findFieldDefs(List<PDefinition> stateDefs, List<AFieldField> fields)
+	{
+		List<PDefinition> fieldDefs = new LinkedList<PDefinition>();
+		
+		for(PDefinition d : stateDefs)
+		{
+			for(AFieldField f : fields)
+			{
+				if(f.getTagname().equals(d.getName()))
+				{
+					fieldDefs.add(d);
+					break;
+				}
+			}
+		}
+		return fieldDefs;
 	}
 
 	private void setNamesToAvoid(PDefinition def) throws AnalysisException
