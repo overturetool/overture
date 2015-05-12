@@ -17,7 +17,6 @@ import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantIn
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
@@ -116,7 +115,7 @@ public interface IInterpreterAssistantFactory extends
 
 	PDefinitionListAssistantInterpreter createPDefinitionListAssistant();
 
-	PTraceCoreDefinitionAssistantInterpreter createPTraceCoreDefinitionAssistant();
+	//PTraceCoreDefinitionAssistantInterpreter createPTraceCoreDefinitionAssistant();
 
 	SClassDefinitionAssistantInterpreter createSClassDefinitionAssistant();
 

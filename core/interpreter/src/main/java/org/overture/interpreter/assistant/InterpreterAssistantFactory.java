@@ -18,7 +18,6 @@ import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantIn
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
@@ -247,10 +246,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new PDefinitionListAssistantInterpreter(this);
 	}
 
-	public PTraceCoreDefinitionAssistantInterpreter createPTraceCoreDefinitionAssistant()
-	{
-		return new PTraceCoreDefinitionAssistantInterpreter(this);
-	}
+//	public PTraceCoreDefinitionAssistantInterpreter createPTraceCoreDefinitionAssistant()
+//	{
+//		return new PTraceCoreDefinitionAssistantInterpreter(this);
+//	}
 
 	public SClassDefinitionAssistantInterpreter createSClassDefinitionAssistant()
 	{
