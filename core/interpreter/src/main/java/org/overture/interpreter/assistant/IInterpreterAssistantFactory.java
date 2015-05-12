@@ -30,7 +30,6 @@ import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInte
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.PPatternListAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
@@ -273,7 +272,7 @@ public interface IInterpreterAssistantFactory extends
 
 	PPatternAssistantInterpreter createPPatternAssistant();
 
-	PPatternListAssistantInterpreter createPPatternListAssistant();
+	//PPatternListAssistantInterpreter createPPatternListAssistant();
 
 	// statement
 
