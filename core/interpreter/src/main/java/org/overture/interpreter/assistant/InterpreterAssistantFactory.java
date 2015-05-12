@@ -10,7 +10,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.PStm;
-import org.overture.interpreter.assistant.definition.ABusClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AMutexSyncDefinitionAssistantInterpreter;
@@ -98,10 +97,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public ABusClassDefinitionAssistantInterpreter createABusClassDefinitionAssitant()
-	{
-		return new ABusClassDefinitionAssistantInterpreter(this);
-	}
+//	public ABusClassDefinitionAssistantInterpreter createABusClassDefinitionAssitant()
+//	{
+//		return new ABusClassDefinitionAssistantInterpreter(this);
+//	}
 
 //	public AClassClassDefinitionAssistantInterpreter createAClassClassDefinitionAssistant()
 //	{
