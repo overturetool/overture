@@ -932,7 +932,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		PType bt = body.apply(THIS, question);
 		rtypes.add(bt);
 
-		PTypeSet extype = question.assistantFactory.createPStmAssistant().exitCheck(body);
+		PTypeSet extype = exitCheck(body, question);
 		PType ptype = null;
 
 		if (extype.isEmpty())
@@ -1251,7 +1251,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	{
 
 		PType rt = node.getBody().apply(THIS, question);
-		PTypeSet extypes = question.assistantFactory.createPStmAssistant().exitCheck(node.getBody());
+		PTypeSet extypes = exitCheck(node.getBody(), question);
 
 		if (!extypes.isEmpty())
 		{
@@ -1342,6 +1342,18 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		assert patternBind.getDefs() != null : "PatternBind must be type checked before getDefinitions";
 
 		return patternBind.getDefs();
+	}
+	
+	public PTypeSet exitCheck(PStm statement, TypeCheckInfo question)
+	{
+		try
+		{
+			return statement.apply(question.assistantFactory.getExitTypeCollector());
+		} catch (AnalysisException e)
+		{
+			return new PTypeSet(question.assistantFactory);
+		}
+
 	}
 
 }
