@@ -1849,7 +1849,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 
 			ObjectValue ov = v.objectValue(ctxt);
-			return new BooleanValue(ctxt.assistantFactory.createAIsOfBaseClassExpAssistant().search(node, ov));
+			return new BooleanValue(search(node, ov));
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -1927,5 +1927,24 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		polyfuncs.put(actualTypes, rv);
 		return rv;
+	}
+	
+	public boolean search(AIsOfBaseClassExp node, ObjectValue from)
+	{
+		if (from.type.getName().getName().equals(node.getBaseClass().getName())
+				&& from.superobjects.isEmpty())
+		{
+			return true;
+		}
+
+		for (ObjectValue svalue : from.superobjects)
+		{
+			if (search(node, svalue))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

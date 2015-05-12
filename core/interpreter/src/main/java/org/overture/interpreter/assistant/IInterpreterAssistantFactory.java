@@ -20,7 +20,6 @@ import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInt
 import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
@@ -151,7 +150,7 @@ public interface IInterpreterAssistantFactory extends
 
 	// AIsExpAssistantInterpreter createAIsExpAssistant();
 
-	AIsOfBaseClassExpAssistantInterpreter createAIsOfBaseClassExpAssistant();
+//	AIsOfBaseClassExpAssistantInterpreter createAIsOfBaseClassExpAssistant();
 
 	AIsOfClassExpAssistantInterpreter createAIsOfClassExpAssistant();
 
