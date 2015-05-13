@@ -54,8 +54,10 @@ public class JmlGenerator implements IREventObserver
 	private static final String JML_HELPER = "/*@ helper @*/";
 
 	private static final String JML_RESULT = "\\result";
+	
+	static final String REPORT_CALL = "report";
 
-	private JavaCodeGen javaGen;
+	JavaCodeGen javaGen;
 
 	public JmlGenerator()
 	{
@@ -159,12 +161,14 @@ public class JmlGenerator implements IREventObserver
 					// be able to call them in the @requires and @ensures clauses, respectively.
 					makeCondPublic(m.getPreCond());
 					appendMetaData(m, consMethodCond(m.getPreCond(), m.getFormalParams(), JML_REQ_ANNOTATION));
+					injectReportCalls(m.getPreCond());
 				}
 
 				if (m.getPostCond() != null)
 				{
 					makeCondPublic(m.getPostCond());
 					appendMetaData(m, consMethodCond(m.getPostCond(), m.getFormalParams(), JML_ENS_ANNOTATION));
+					injectReportCalls(m.getPostCond());
 				}
 
 				// Some methods such as those in record classes
@@ -183,6 +187,30 @@ public class JmlGenerator implements IREventObserver
 
 		// Return back the modified AST to the Java code generator
 		return newAst;
+	}
+
+	private void injectReportCalls(SDeclCG cond)
+	{
+		if (cond instanceof AMethodDeclCG)
+		{
+			final AMethodDeclCG method = (AMethodDeclCG) cond;
+
+			try
+			{
+				method.apply(new ReportInjector(javaGen, method));
+			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			{
+				Logger.getLog().printErrorln("Problem encountered when injecting report calls in '"
+						+ this.getClass().getSimpleName()
+						+ " ' "
+						+ e.getMessage());
+				e.printStackTrace();
+			}
+		} else
+		{
+			Logger.getLog().printErrorln("Expected condition to be a method declaration at this point. Got: "
+					+ cond + " in '" + this.getClass().getSimpleName() + "'");
+		}
 	}
 
 	private void addModuleStateInvAssertions(List<IRStatus<INode>> ast)
