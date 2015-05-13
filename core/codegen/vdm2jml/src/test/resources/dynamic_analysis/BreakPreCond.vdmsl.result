@@ -1,6 +1,7 @@
-/home/peter/dev/ovtgit/core/codegen/vdm2jml/target/jml/code/BreakPreCond/Entry.java:8: JML precondition is false
-        return id(-1L);
-                 ^
-/home/peter/dev/ovtgit/core/codegen/vdm2jml/target/jml/code/BreakPreCond/Entry.java:13: Associated declaration: /home/peter/dev/ovtgit/core/codegen/vdm2jml/target/jml/code/BreakPreCond/Entry.java:8: 
-    public static Number id(final Number x) {
-                                         ^
+pre_id(x = -1) is false
+
+java.lang.AssertionError
+	at org.overture.codegen.runtime.Utils.report(Utils.java:419)
+	at Entry.pre_id(Entry.java:19)
+	at Entry.Run(Entry.java:11)
+	at Main.main(Main.java:7)
