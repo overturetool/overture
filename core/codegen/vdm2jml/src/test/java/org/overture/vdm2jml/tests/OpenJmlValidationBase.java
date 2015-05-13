@@ -105,7 +105,7 @@ abstract public class OpenJmlValidationBase
 	
 	public void assertNoProcessErrors(ProcessResult processResult)
 	{
-		Assert.assertTrue("Expected test to type check without any error. Got: "
+		Assert.assertTrue("Expected test to exit without any errors. Got: "
 				+ processResult.getOutput(), processResult.getExitCode() == OpenJmlValidationBase.EXIT_OK);
 	}
 
