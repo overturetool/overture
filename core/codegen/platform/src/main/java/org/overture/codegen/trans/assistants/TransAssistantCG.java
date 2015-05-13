@@ -35,6 +35,8 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -692,6 +694,40 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		recType.setName(typeName);
 
 		return recType;
+	}
+	
+	public ARecordTypeCG getRecType(final AStateDeclCG stateDecl)
+	{
+		ARecordTypeCG stateType = new ARecordTypeCG();
+		stateType.setName(getTypeName(stateDecl));
+
+		return stateType;
+	}
+
+	public ATypeNameCG getTypeName(final AStateDeclCG stateDecl)
+	{
+		ATypeNameCG stateName = new ATypeNameCG();
+		stateName.setDefiningClass(getEnclosingModuleName(stateDecl));
+		stateName.setName(stateDecl.getName());
+
+		return stateName;
+	}
+
+	public String getEnclosingModuleName(AStateDeclCG stateDecl)
+	{
+		AModuleDeclCG module = stateDecl.getAncestor(AModuleDeclCG.class);
+
+		if (module != null)
+		{
+			return module.getName();
+		} else
+		{
+			Logger.getLog().printErrorln("Could not find enclosing module name of state declaration "
+					+ stateDecl.getName()
+					+ " in '"
+					+ this.getClass().getSimpleName() + "'");
+			return null;
+		}
 	}
 	
 	public ABlockStmCG wrap(SStmCG stm)
