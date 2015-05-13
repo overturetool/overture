@@ -21,6 +21,7 @@
  */
 package org.overture.codegen.runtime;
 
+
 public class Utils
 {
 	public static final Object VOID_VALUE = new Object();
@@ -379,4 +380,44 @@ public class Utils
 		
 		return Math.pow(a.doubleValue(), b.doubleValue());	
 	}
+	
+    /*@ pure @*/
+    public static boolean report(String name, boolean res, Object... params)
+    {
+    	if(res)
+    	{
+    		return true;
+    	}
+    	
+    	StringBuilder sb = new StringBuilder();
+    	sb.append(name);
+    	sb.append('(');
+    	
+    	if(params.length > 1)
+    	{
+    		String del = ", ";
+    		String eq = " = ";
+    		
+    		sb.append(params[0]);
+			sb.append(eq);
+    		sb.append(Utils.toString(params[1]));
+    		
+    		for(int i = 2; i < params.length; i = i + 2)
+    		{
+				sb.append(del);
+    			sb.append(params[i]);
+    			sb.append(eq);
+    			sb.append(Utils.toString(params[i+1]));
+    		}
+    	}
+    	
+    	sb.append(')');
+    	sb.append(" is " + res);
+    	sb.append('\n');
+
+		System.out.println(sb.toString());
+		AssertionError error = new AssertionError();
+		error.printStackTrace(System.out);
+		throw error;
+    }
 }
