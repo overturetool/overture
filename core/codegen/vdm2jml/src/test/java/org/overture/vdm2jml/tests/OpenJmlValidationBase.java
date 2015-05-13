@@ -112,7 +112,8 @@ abstract public class OpenJmlValidationBase
 	public void codeGenerateInputFile()
 	{
 		JmlGenMain.main(new String[] { inputFile.getAbsolutePath(),
-				JmlGenMain.OUTPUT_ARG, genJavaFolder.getAbsolutePath() });
+				JmlGenMain.OUTPUT_ARG, genJavaFolder.getAbsolutePath(),
+				JmlGenMain.REPORT_VIOLATIONS_ARG});
 	}
 	
 	public ProcessResult runOpenJmlProcess()
