@@ -26,13 +26,9 @@ import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeImportCG;
 import org.overture.codegen.cgast.declarations.AValueValueImportCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AFieldExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
-import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
@@ -240,175 +236,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		module.apply(new DepthFirstAnalysisAdaptor()
-		{
-			private boolean inPreOrPost = false;
-
-			@Override
-			public void caseAFuncDeclCG(AFuncDeclCG node)
-					throws AnalysisException
-			{
-				handleMethodOrFunc(node.getBody(), node.getPreCond(), node.getPostCond());
-			}
-			
-			@Override
-			public void caseAMethodDeclCG(AMethodDeclCG node)
-					throws AnalysisException
-			{
-				handleMethodOrFunc(node.getBody(), node.getPreCond(), node.getPostCond());
-			}
-
-			private void handleMethodOrFunc(INode body, SDeclCG preCond,
-					SDeclCG postCond) throws AnalysisException
-			{
-				if(body != null)
-				{
-					body.apply(this);
-				}
-				
-				handleCond(preCond);
-				handleCond(postCond);
-			}
-
-			private void handleCond(SDeclCG cond) throws AnalysisException
-			{
-				if(cond != null)
-				{
-					inPreOrPost = true;
-					cond.apply(this);
-					inPreOrPost = false;
-				}
-			}
-			
-			@Override
-			public void caseAIdentifierVarExpCG(AIdentifierVarExpCG node)
-					throws AnalysisException
-			{
-				if (isOldFieldRead(stateDecl, node) /*1*/
-						|| isFieldRead(stateDecl, node) /*2*/
-						|| isFieldReadInPreOrPost(stateDecl, node) /*3*/)
-				{
-					// Given a state named 'St' with a field named 'f'
-					// Note: If a variable is 'old' then it is local since state is passed
-					// as an argument to the post condition function
-					
-					// Also note that the IR uses underscore to denote old names: _St corresponds to St~ (in VDM)
-					// and _f corresponds to f~ (in VDM)
-					
-					// /*1*/ In case we are in a post condition the variable expression may represent a
-					// field of the old state, i.e._f (or f~ in VDM)
-					//
-					// /*3*/ Another possibility is that the variable expression represents
-					// a field of the current state in a pre or post condition of a function or
-					// an operation. This is a special case since the state field can be
-					// read as 'f' although it is only the entire state that is being passed as an argument
-					// to the function. Below is a Java example showin this (result, old state,
-					// current state):
-					//
-					// public static Boolean post_op(final Number RESULT, final St _St, final St St)
-					//
-					// /*2*/ Any other place in the model:
-					// The variable expression represents a field of the current state
-					//
-					// If /*1*/ or /*2*/ or /*3*/ is true we make the field access explicit since IR modules
-					// use a single field to represent state.
-					//
-					AFieldExpCG fieldExp = new AFieldExpCG();
-					fieldExp.setSourceNode(node.getSourceNode());
-					fieldExp.setTag(node.getTag());
-					fieldExp.setType(node.getType().clone());
-					setFieldNames(fieldExp, stateDecl, node.getName());
-
-					transAssistant.replaceNodeWith(node, fieldExp);
-				}
-			}
-
-			private boolean isFieldReadInPreOrPost(
-					final AStateDeclCG stateDecl, AIdentifierVarExpCG node)
-			{
-				if(!inPreOrPost)
-				{
-					return false;
-				}
-				
-				boolean matches = false;
-				for(AFieldDeclCG f : stateDecl.getFields())
-				{
-					if(f.getName().equals(node.getName()))
-					{
-						matches = true;
-						break;
-					}
-				}
-				
-				return matches;
-			}
-			
-			private boolean isFieldRead(
-					final AStateDeclCG stateDecl, AIdentifierVarExpCG node)
-			{
-				return !node.getIsLocal()
-						&& !node.getName().equals(stateDecl.getName());
-			}
-
-			private boolean isOldFieldRead(final AStateDeclCG stateDecl,
-					AIdentifierVarExpCG node)
-			{
-				return info.getExpAssistant().isOld(node.getName())
-						&& !node.getName().equals("_" + stateDecl.getName());
-			}
-
-			private void setFieldNames(AFieldExpCG field, AStateDeclCG stateDecl, String name)
-			{
-				ARecordTypeCG recType = getRecType(stateDecl);
-				String stateName = stateDecl.getName();
-				
-				if(info.getExpAssistant().isOld(name))
-				{
-					field.setObject(transAssistant.consIdentifierVar("_" + stateName, recType));
-					field.setMemberName(info.getExpAssistant().oldNameToCurrentName(name));	
-				}
-				else
-				{
-					field.setObject(transAssistant.consIdentifierVar(stateName, recType));
-					field.setMemberName(name);
-				}
-			}
-		});
-
-		module.apply(new DepthFirstAnalysisAdaptor()
-		{
-			@Override
-			public void caseAIdentifierStateDesignatorCG(
-					AIdentifierStateDesignatorCG node) throws AnalysisException
-			{
-				if (!node.getIsLocal()
-						&& !node.getName().equals(stateDecl.getName()))
-				{
-					ARecordTypeCG stateType = getRecType(stateDecl);
-
-					AIdentifierStateDesignatorCG idState = new AIdentifierStateDesignatorCG();
-					idState.setClassName(null);
-					idState.setExplicit(false);
-					idState.setIsLocal(false);
-					idState.setName(stateDecl.getName());
-					idState.setType(stateType);
-
-					AFieldStateDesignatorCG field = new AFieldStateDesignatorCG();
-					field.setField(node.getName());
-					field.setObject(idState);
-					for (AFieldDeclCG f : stateDecl.getFields())
-					{
-						if (f.getName().equals(node.getName()))
-						{
-							field.setType(f.getType().clone());
-						}
-					}
-
-					transAssistant.replaceNodeWith(node, field);
-				}
-			}
-		});
+		module.apply(new SlStateAccessTrans(stateDecl, info, transAssistant));
 	}
 
 	public AStateDeclCG getStateDecl(AModuleDeclCG module)
@@ -434,8 +262,8 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		} else
 		{
 			ANewExpCG defaultRecInit = new ANewExpCG();
-			defaultRecInit.setName(getTypeName(stateDecl));
-			defaultRecInit.setType(getRecType(stateDecl));
+			defaultRecInit.setName(transAssistant.getTypeName(stateDecl));
+			defaultRecInit.setType(transAssistant.getRecType(stateDecl));
 
 			for (int i = 0; i < stateDecl.getFields().size(); i++)
 			{
@@ -443,40 +271,6 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			}
 
 			return defaultRecInit;
-		}
-	}
-
-	private ARecordTypeCG getRecType(final AStateDeclCG stateDecl)
-	{
-		ARecordTypeCG stateType = new ARecordTypeCG();
-		stateType.setName(getTypeName(stateDecl));
-
-		return stateType;
-	}
-
-	private ATypeNameCG getTypeName(final AStateDeclCG stateDecl)
-	{
-		ATypeNameCG stateName = new ATypeNameCG();
-		stateName.setDefiningClass(getEnclosingModuleName(stateDecl));
-		stateName.setName(stateDecl.getName());
-
-		return stateName;
-	}
-
-	private String getEnclosingModuleName(AStateDeclCG stateDecl)
-	{
-		AModuleDeclCG module = stateDecl.getAncestor(AModuleDeclCG.class);
-
-		if (module != null)
-		{
-			return module.getName();
-		} else
-		{
-			Logger.getLog().printErrorln("Could not find enclosing module name of state declaration "
-					+ stateDecl.getName()
-					+ " in '"
-					+ this.getClass().getSimpleName() + "'");
-			return null;
 		}
 	}
 	
