@@ -1,8 +1,8 @@
-post_op(a = 3, RESULT = 2, _St = mk_Entry`St(1), St = mk_Entry`St(2)) is false
+post_opRet(a = 4, RESULT = 3, _St = mk_Entry`St(2), St = mk_Entry`St(3)) is false
 
 java.lang.AssertionError
 	at org.overture.codegen.runtime.Utils.report(Utils.java:419)
-	at Entry.post_op(Entry.java:35)
-	at Entry.op(Entry.java:17)
-	at Entry.Run(Entry.java:12)
+	at Entry.post_opRet(Entry.java:58)
+	at Entry.opRet(Entry.java:23)
+	at Entry.Run(Entry.java:15)
 	at Main.main(Main.java:7)
