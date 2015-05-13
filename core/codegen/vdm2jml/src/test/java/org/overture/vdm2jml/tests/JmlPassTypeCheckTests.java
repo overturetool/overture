@@ -71,4 +71,11 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 				openJml.getAbsolutePath(), IOpenJmlConsts.CP_ARG,
 				cgRuntime.getAbsolutePath(), IOpenJmlConsts.TC };
 	}
+
+	@Override
+	public void beforeRunningOpenJmlProcess()
+	{
+		clearCodeFolder();
+		codeGenerateInputFile();
+	}
 }

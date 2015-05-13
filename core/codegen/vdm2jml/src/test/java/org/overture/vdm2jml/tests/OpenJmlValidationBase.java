@@ -109,12 +109,15 @@ abstract public class OpenJmlValidationBase
 				+ processResult.getOutput(), processResult.getExitCode() == OpenJmlValidationBase.EXIT_OK);
 	}
 
+	public void codeGenerateInputFile()
+	{
+		JmlGenMain.main(new String[] { inputFile.getAbsolutePath(),
+				JmlGenMain.OUTPUT_ARG, genJavaFolder.getAbsolutePath() });
+	}
+	
 	public ProcessResult runOpenJmlProcess()
 	{
 		beforeRunningOpenJmlProcess();
-
-		JmlGenMain.main(new String[] { inputFile.getAbsolutePath(),
-				JmlGenMain.OUTPUT_ARG, genJavaFolder.getAbsolutePath() });
 
 		String s;
 		Process p;
@@ -166,12 +169,15 @@ abstract public class OpenJmlValidationBase
 		
 		return new ProcessResult(exitCode, openJmlOutput);
 	}
-
-	public void beforeRunningOpenJmlProcess()
+	
+	public void clearCodeFolder()
 	{
 		// Just make sure that the folder we are using is empty
 		GeneralUtils.deleteFolderContents(genJavaFolder, true);
+
 	}
+
+	abstract public void beforeRunningOpenJmlProcess();
 
 	abstract public String[] getProcessArgs();
 }

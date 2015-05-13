@@ -69,6 +69,8 @@ public class JmlExecTests extends OpenJmlValidationBase
 	{
 		try
 		{
+			codeGenerateInputFile();
+			
 			configureResultGeneration();
 
 			compileJmlJava();
@@ -236,8 +238,9 @@ public class JmlExecTests extends OpenJmlValidationBase
 	{
 		if (!isTypeChecked)
 		{
-			super.beforeRunningOpenJmlProcess();
+			clearCodeFolder();
 			createExecEntryPoint();
+			codeGenerateInputFile();
 		}
 	}
 
