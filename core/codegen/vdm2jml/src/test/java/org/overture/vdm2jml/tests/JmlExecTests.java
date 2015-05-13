@@ -198,8 +198,9 @@ public class JmlExecTests extends OpenJmlValidationBase
 		// of the classpath
 		String runtimes = jmlRuntime.getAbsolutePath() + File.pathSeparatorChar
 				+ openJml.getAbsolutePath() + File.pathSeparatorChar
-				+ genJavaFolder.getAbsolutePath();
-
+				+ genJavaFolder.getAbsolutePath() + File.pathSeparatorChar
+				+ cgRuntime.getAbsolutePath();
+		
 		String[] args = new String[] { JavaToolsUtils.JAVA,
 				JavaToolsUtils.CP_ARG, runtimes,
 				JavaToolsUtils.ENABLE_ASSERTIONS_ARG, MAIN_CLASS_NAME };
