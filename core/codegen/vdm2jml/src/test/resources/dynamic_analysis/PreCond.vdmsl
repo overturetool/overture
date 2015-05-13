@@ -1,0 +1,41 @@
+module Entry
+
+exports all
+definitions
+
+state St of
+x : nat
+init s == s = mk_St(5)
+end
+
+operations
+
+Run : () ==> ?
+Run () ==
+let - = opRet(1)
+in
+(
+  opVoid(2);
+  id(-1);
+);
+
+opRet : nat ==> nat
+opRet (a) ==
+(
+  x := a + 1;
+  return x;
+)
+pre x > 0;
+
+opVoid : nat ==> ()
+opVoid (a) ==
+  x := a + 1
+pre St.x > 0;
+
+functions
+
+id : int -> int
+id (a) == a
+pre a > 0; 
+
+end Entry

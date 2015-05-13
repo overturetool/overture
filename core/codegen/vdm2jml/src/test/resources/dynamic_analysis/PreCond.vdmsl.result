@@ -1,7 +1,7 @@
-pre_id(x = -1) is false
+pre_id(a = -1) is false
 
 java.lang.AssertionError
 	at org.overture.codegen.runtime.Utils.report(Utils.java:419)
-	at Entry.pre_id(Entry.java:19)
-	at Entry.Run(Entry.java:11)
+	at Entry.pre_id(Entry.java:48)
+	at Entry.Run(Entry.java:29)
 	at Main.main(Main.java:7)
