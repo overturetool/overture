@@ -1,0 +1,29 @@
+module Entry
+
+exports all
+definitions
+
+state St of
+  x : nat
+init s == s = mk_St(0)
+end
+
+operations
+
+Run : () ==> ?
+Run () ==
+let a = op(1),
+    b = op(3)
+in
+  return a+b;
+
+
+op : nat ==> nat
+op (a) ==
+(
+  x := x + 1;
+  return x;
+)
+post x = x~+1 and RESULT = a;
+
+end Entry
