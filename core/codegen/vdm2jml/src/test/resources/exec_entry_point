@@ -5,9 +5,9 @@ public class Main
 		try
 		{
 			Entry.Run();
-		} catch(Exception e)
+		} catch(AssertionError e)
 		{
-			System.out.println(e.getMessage());
+			// Terminate silently
 		}
 	}
 }
