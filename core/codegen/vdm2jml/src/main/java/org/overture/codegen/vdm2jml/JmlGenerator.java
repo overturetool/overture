@@ -55,20 +55,28 @@ public class JmlGenerator implements IREventObserver
 
 	private static final String JML_RESULT = "\\result";
 	
-	static final String REPORT_CALL = "report";
+	public static final String REPORT_CALL = "report";
 
-	JavaCodeGen javaGen;
+	private JavaCodeGen javaGen;
 
+	private JmlSettings jmlSettings;
+	
 	public JmlGenerator()
 	{
 		this.javaGen = new JavaCodeGen();
+		this.jmlSettings = new JmlSettings();
 	}
-
+	
 	public JavaCodeGen getJavaGen()
 	{
 		return javaGen;
 	}
 
+	public JmlSettings getJmlSettings()
+	{
+		return jmlSettings;
+	}
+	
 	public GeneratedData generateJml(List<AModuleModules> ast)
 			throws AnalysisException, UnsupportedModelingException
 	{
@@ -191,6 +199,11 @@ public class JmlGenerator implements IREventObserver
 
 	private void injectReportCalls(SDeclCG cond)
 	{
+		if(!jmlSettings.injectReportCalls())
+		{
+			return;
+		}
+		
 		if (cond instanceof AMethodDeclCG)
 		{
 			final AMethodDeclCG method = (AMethodDeclCG) cond;
