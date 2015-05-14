@@ -229,6 +229,11 @@ public class JmlGenerator implements IREventObserver
 
 	private void addModuleStateInvAssertions(List<IRStatus<INode>> ast)
 	{
+		// In addition to specifying the static invariant we must assert the invariant
+		// every time we change the state. Remember that an invariant of a module can not
+		// depend on the state of another module since the invariant is a function and
+		// functions cannot access state.
+		
 		ModuleStateInvTransformation assertTr = new ModuleStateInvTransformation(javaGen);
 		
 		for (IRStatus<AClassDeclCG> status : IRStatus.extract(ast, AClassDeclCG.class))
