@@ -46,23 +46,6 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.interpreter.VDMJ;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.BacktrackInputReader;
-<<<<<<< Updated upstream
-=======
-import org.overture.prettyprinter.PrettyPrinterEnv;
-import org.overture.prettyprinter.PrettyPrinterVisitor;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import sun.awt.PeerEvent;
-import org.overture.interpreter.runtime.Context;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
->>>>>>> Stashed changes
 
 /**
  * A class to hold a source file for source debug output.
@@ -341,34 +324,8 @@ public class SourceFile {
     }
 
 
-<<<<<<< Updated upstream
     public void writeCoverage(PrintWriter out) {
-=======
-    public CoverageToXML writeCoverage2(final Interpreter interpreter) {
-        final CoverageToXML ctx = new CoverageToXML();
-        Context ctxt
-        if (interpreter instanceof ClassInterpreter) {
-            ClassInterpreter ci = (ClassInterpreter) interpreter;
 
-            for (final SClassDefinition cdef : ci.getClasses()) {
-                try {
-                    cdef.apply(new DepthFirstAnalysisAdaptor() {
-
-                        @Override
-                        public void caseAIfStm(AIfStm node) throws AnalysisException {
-                            ctx.if_statement(node);
-                        }
-                    });
-                } catch (AnalysisException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return ctx;
-    }
-
-    public void writeCoverage(PrintWriter out,Interpreter interpreter) {
->>>>>>> Stashed changes
         for (LexLocation l : LexLocation.getSourceLocations(filename)) {
             if (l.hits > 0) {
                 out.println("+" + l.startLine + " " + l.startPos + "-"
