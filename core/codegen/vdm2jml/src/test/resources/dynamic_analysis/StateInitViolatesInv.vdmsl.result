@@ -1,0 +1,7 @@
+inv_St(s = mk_Entry`St(-5)) is false
+
+java.lang.AssertionError
+	at org.overture.codegen.runtime.Utils.report(Utils.java:419)
+	at Entry.inv_St(Entry.java:22)
+	at Entry.<clinit>(Entry.java:10)
+	at Main.main(Main.java:13)
