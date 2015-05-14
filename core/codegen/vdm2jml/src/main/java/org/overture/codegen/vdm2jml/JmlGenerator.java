@@ -144,6 +144,7 @@ public class JmlGenerator implements IREventObserver
 				// the invariant annotation and avoid runtime errors and JML warnings
 				makeHelper(clazz.getInvariant());
 				makePure(clazz.getInvariant());
+				injectReportCalls(clazz.getInvariant());
 			}
 
 			for (AFieldDeclCG f : clazz.getFields())
