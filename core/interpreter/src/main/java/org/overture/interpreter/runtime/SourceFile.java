@@ -325,6 +325,7 @@ public class SourceFile {
 
 
     public void writeCoverage(PrintWriter out) {
+
         for (LexLocation l : LexLocation.getSourceLocations(filename)) {
             if (l.hits > 0) {
                 out.println("+" + l.startLine + " " + l.startPos + "-"
