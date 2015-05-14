@@ -36,7 +36,7 @@ abstract public class OpenJmlValidationBase
 
 	public static final int EXIT_OK = 0;
 
-	private static final boolean VERBOSE = true;
+	private static final boolean VERBOSE = false;
 
 	protected File inputFile;
 
@@ -111,9 +111,18 @@ abstract public class OpenJmlValidationBase
 
 	public void codeGenerateInputFile()
 	{
-		JmlGenMain.main(new String[] { inputFile.getAbsolutePath(),
-				JmlGenMain.OUTPUT_ARG, genJavaFolder.getAbsolutePath(),
-				JmlGenMain.REPORT_VIOLATIONS_ARG});
+		List<String> javaCgArgs = new LinkedList<String>();
+		
+		javaCgArgs.add(inputFile.getAbsolutePath());
+		if(VERBOSE)
+		{
+			javaCgArgs.add(JmlGenMain.PRINT_ARG);
+		}
+		javaCgArgs.add(JmlGenMain.OUTPUT_ARG);
+		javaCgArgs.add(genJavaFolder.getAbsolutePath());
+		javaCgArgs.add(JmlGenMain.REPORT_VIOLATIONS_ARG);
+		
+		JmlGenMain.main(javaCgArgs.toArray(new String[]{}));
 	}
 	
 	public ProcessResult runOpenJmlProcess()
