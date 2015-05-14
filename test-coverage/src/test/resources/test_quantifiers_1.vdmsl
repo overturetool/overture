@@ -1,0 +1,11 @@
+values
+nums = {1,2,3,4,5,6}
+
+operations
+
+foo1 : () ==> int
+foo1 () ==
+	if forall x in set nums & x < 10
+	then return 0
+	else return 1;
+	

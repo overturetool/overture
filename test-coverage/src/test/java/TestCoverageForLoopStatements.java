@@ -11,10 +11,7 @@ import org.overture.test.framework.BaseTestCase;
 
 import java.io.File;
 
-/**
- * Created by Jpereira on 28-04-2015.
- */
-public class TestForLoopStatements extends BaseTestCase {
+public class TestCoverageForLoopStatements extends BaseTestCase {
 
     @Override
     public void test() throws Exception {

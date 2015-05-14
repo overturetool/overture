@@ -11,6 +11,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.AWhileStm;
 import org.overture.interpreter.eval.ExpressionEvaluator;
 import org.overture.interpreter.eval.StatementEvaluator;
 import org.overture.interpreter.values.*;
@@ -94,27 +95,44 @@ public class CoverageToXML extends AnalysisAdaptor {
 
     @Override
     public void caseANotUnaryExp(ANotUnaryExp node) throws AnalysisException {
-        Element not=doc.createElement("not");
+
         ILexLocation local=node.getLocation();
-        fill_source_file_location(not, local);
+        if(!xml_nodes.containsKey(local)){
+            Element not=doc.createElement("not");
+            fill_source_file_location(not, local);
+            currentElement.appendChild(not);
+            currentElement = not;
+            xml_nodes.put(local, not);
+        }else{
+            currentElement = xml_nodes.get(local);
+        }
         PExp expression = node.getExp();
-        currentElement.appendChild(not);
-        currentElement = not;
         expression.apply(this);
     }
 
     @Override
     public void defaultSBooleanBinaryExp(SBooleanBinaryExp node) throws AnalysisException {
-        Element op=doc.createElement(node.getOp().toString());
+
         ILexLocation local=node.getLocation();
-        fill_source_file_location(op, local);
         PExp left = node.getLeft();
         PExp right = node.getRight();
-        currentElement.appendChild(op);
-        currentElement = op;
-        left.apply(this);
-        currentElement = op;
-        right.apply(this);
+
+        if(!xml_nodes.containsKey(local)){
+            Element op=doc.createElement(node.getOp().toString());
+            fill_source_file_location(op, local);
+            currentElement.appendChild(op);
+            currentElement = op;
+            xml_nodes.put(local, op);
+            left.apply(this);
+            currentElement = op;
+            right.apply(this);
+        }else{
+            currentElement=xml_nodes.get(local);
+            left.apply(this);
+            currentElement = xml_nodes.get(local);
+            right.apply(this);
+        }
+
     }
 
     @Override
@@ -151,11 +169,10 @@ public class CoverageToXML extends AnalysisAdaptor {
     @Override
     public void caseANotEqualBinaryExp(ANotEqualBinaryExp node) throws AnalysisException {
         ILexLocation local=node.getLocation();
-        PExp left = node.getLeft();
-        PExp right = node.getRight();
         Element eval = doc.createElement("evaluation");
         eval.setAttribute("n", String.valueOf(iteration));
         eval.setTextContent(String.valueOf(node.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
+
         if(!xml_nodes.containsKey(local)){
             Element op=doc.createElement("not_equal");
             fill_source_file_location(op, local);
@@ -173,8 +190,6 @@ public class CoverageToXML extends AnalysisAdaptor {
     @Override
     public void caseAGreaterEqualNumericBinaryExp(AGreaterEqualNumericBinaryExp node) throws AnalysisException {
         ILexLocation local=node.getLocation();
-        PExp left = node.getLeft();
-        PExp right = node.getRight();
         Element eval = doc.createElement("evaluation");
         eval.setAttribute("n", String.valueOf(iteration));
         eval.setTextContent(String.valueOf(node.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
@@ -194,8 +209,6 @@ public class CoverageToXML extends AnalysisAdaptor {
     @Override
     public void caseAGreaterNumericBinaryExp(AGreaterNumericBinaryExp node) throws AnalysisException {
         ILexLocation local=node.getLocation();
-        PExp left = node.getLeft();
-        PExp right = node.getRight();
         Element eval = doc.createElement("evaluation");
         eval.setAttribute("n", String.valueOf(iteration));
         eval.setTextContent(String.valueOf(node.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
@@ -215,8 +228,6 @@ public class CoverageToXML extends AnalysisAdaptor {
     @Override
     public void caseALessEqualNumericBinaryExp(ALessEqualNumericBinaryExp node) throws AnalysisException {
         ILexLocation local=node.getLocation();
-        PExp left = node.getLeft();
-        PExp right = node.getRight();
         Element eval = doc.createElement("evaluation");
         eval.setAttribute("n", String.valueOf(iteration));
         eval.setTextContent(String.valueOf(node.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
@@ -236,8 +247,6 @@ public class CoverageToXML extends AnalysisAdaptor {
     @Override
     public void caseALessNumericBinaryExp(ALessNumericBinaryExp node) throws AnalysisException {
         ILexLocation local=node.getLocation();
-        PExp left = node.getLeft();
-        PExp right = node.getRight();
         Element eval = doc.createElement("evaluation");
         eval.setAttribute("n", String.valueOf(iteration));
         eval.setTextContent(String.valueOf(node.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
@@ -253,19 +262,172 @@ public class CoverageToXML extends AnalysisAdaptor {
         }
     }
 
-    @Override
-    public void defaultSBinaryExp(SBinaryExp node) throws AnalysisException {
-        Element op=doc.createElement("numeric_expression");
-        ILexLocation local=node.getLocation();
-        fill_source_file_location(op, local);
-        PExp left = node.getLeft();
-        PExp right = node.getRight();
-        currentElement.appendChild(op);
-        currentElement = op;
-        left.apply(this);
-        currentElement = op;
-        right.apply(this);
 
+    @Override
+    public void caseAEqualsBinaryExp(AEqualsBinaryExp node) throws AnalysisException {
+        ILexLocation local=node.getLocation();
+        Element eval = doc.createElement("evaluation");
+        eval.setAttribute("n", String.valueOf(iteration));
+        eval.setTextContent(String.valueOf(node.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
+        if(!xml_nodes.containsKey(local)){
+            Element op=doc.createElement("equals");
+            fill_source_file_location(op, local);
+            op.appendChild(eval);
+            currentElement.appendChild(op);
+            xml_nodes.put(local, op);
+        }
+        else {
+            xml_nodes.get(local).appendChild(eval);
+        }
+    }
+
+    @Override
+    public void caseAExists1Exp(AExists1Exp node) throws AnalysisException {
+        ILexLocation local = node.getLocation();
+        Element evaluation = doc.createElement("evaluation");
+        evaluation.setAttribute("n",String.valueOf(iteration));
+        evaluation.setTextContent(null);
+
+        if(!xml_nodes.containsKey(local)){
+            Element exists=doc.createElement("exists1");
+            fill_source_file_location(exists, node.getLocation());
+            Element expression = doc.createElement("expression");
+            exists.appendChild(evaluation);
+            exists.appendChild(expression);
+            xml_nodes.put(local, exists);
+            currentElement.appendChild(exists);
+            currentElement = expression;
+        }
+        else {
+            xml_nodes.get(local).appendChild(evaluation);
+            for(int i =0;i<xml_nodes.get(local).getChildNodes().getLength();i++){
+                if (xml_nodes.get(local).getChildNodes().item(i).getNodeName().equals("expression"))
+                    currentElement= (Element) xml_nodes.get(local).getChildNodes().item(i);
+            }
+        }
+
+        ValueList allValues = null;
+        boolean alreadyFound = false;
+
+        try
+        {
+            allValues = ctx.assistantFactory.createPBindAssistant().getBindValues(node.getBind(), ctx);
+        } catch (ValueException e)
+        {
+            VdmRuntimeError.abort(node.getLocation(), e);
+        }
+
+        for (Value val : allValues)
+        {
+            try
+            {
+                Context evalContext = new Context(ctx.assistantFactory, node.getLocation(), "exists1", ctx);
+                evalContext.putList(ctx.assistantFactory.createPPatternAssistant().getNamedValues(node.getBind().getPattern(), val, ctx));
+                Context aux=ctx;
+                ctx=evalContext;
+                node.getPredicate().apply(this);
+                ctx=aux;
+                if (node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctx))
+                {
+                    if (alreadyFound)
+                    {
+                        evaluation.setTextContent("false");
+                        break;
+                    }
+
+                    alreadyFound = true;
+                }
+            } catch (ValueException e)
+            {
+                VdmRuntimeError.abort(node.getLocation(), e);
+            } catch (PatternMatchException e)
+            {
+                // Ignore pattern mismatches
+            }
+        }
+        if(evaluation.getTextContent().isEmpty())evaluation.setTextContent(String.valueOf(alreadyFound));
+    }
+
+
+    @Override
+    public void caseAExistsExp(AExistsExp node) throws AnalysisException {
+        ILexLocation local= node.getLocation();
+        Element evaluation = doc.createElement("evaluation");
+        evaluation.setAttribute("n",String.valueOf(iteration));
+        evaluation.setTextContent(null);
+
+        if(!xml_nodes.containsKey(local)){
+            Element exists=doc.createElement("exists");
+            fill_source_file_location(exists, node.getLocation());
+            exists.appendChild(evaluation);
+            Element expression = doc.createElement("expression");
+            exists.appendChild(expression);
+            currentElement.appendChild(exists);
+            currentElement = expression;
+        }else{
+            xml_nodes.get(local).appendChild(evaluation);
+            for(int i =0;i<xml_nodes.get(local).getChildNodes().getLength();i++){
+                if (xml_nodes.get(local).getChildNodes().item(i).getNodeName().equals("expression"))
+                    currentElement= (Element) xml_nodes.get(local).getChildNodes().item(i);
+            }
+        }
+        try
+        {
+            QuantifierList quantifiers = new QuantifierList();
+
+            for (PMultipleBind mb : node.getBindList())
+            {
+                ValueList bvals = ctx.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctx);
+
+                for (PPattern p : mb.getPlist())
+                {
+                    Quantifier q = new Quantifier(p, bvals);
+                    quantifiers.add(q);
+                }
+            }
+
+            quantifiers.init(ctx, false);
+
+            while (quantifiers.hasNext())
+            {
+                Context evalContext = new Context(ctx.assistantFactory, node.getLocation(), "exists", ctx);
+                NameValuePairList nvpl = quantifiers.next();
+                boolean matches = true;
+
+                for (NameValuePair nvp : nvpl)
+                {
+                    Value v = evalContext.get(nvp.name);
+
+                    if (v == null)
+                    {
+                        evalContext.put(nvp.name, nvp.value);
+                    } else
+                    {
+                        if (!v.equals(nvp.value))
+                        {
+                            matches = false;
+                            break; // This quantifier set does not match
+                        }
+                    }
+                }
+
+                Context aux=ctx;
+                ctx=evalContext;
+                if (node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctx)){
+                    evaluation.setTextContent("true");
+                    node.getPredicate().apply(this);
+                    ctx=aux;
+                    break;
+                }
+                node.getPredicate().apply(this);
+                ctx=aux;
+
+            }
+        } catch (ValueException e)
+        {
+            System.out.println(VdmRuntimeError.abort(node.getLocation(), e));
+        }
+        if(evaluation.getTextContent().isEmpty())evaluation.setTextContent("false");
     }
 
     @Override
@@ -301,16 +463,27 @@ public class CoverageToXML extends AnalysisAdaptor {
 
     @Override
     public void caseAForAllExp(AForAllExp node) throws AnalysisException {
-        Element for_all=doc.createElement("for_all");
-        fill_source_file_location(for_all, node.getLocation());
+        ILexLocation local = node.getLocation();
         Element evaluation = doc.createElement("evaluation");
         evaluation.setAttribute("n",String.valueOf(iteration));
         evaluation.setTextContent("true");
-        for_all.appendChild(evaluation);
-        Element expression = doc.createElement("expression");
-        for_all.appendChild(expression);
-        currentElement.appendChild(for_all);
-        currentElement = expression;
+
+        if(!xml_nodes.containsKey(local)){
+            Element for_all=doc.createElement("for_all");
+            fill_source_file_location(for_all, node.getLocation());
+            for_all.appendChild(evaluation);
+            Element expression = doc.createElement("expression");
+            for_all.appendChild(expression);
+            currentElement.appendChild(for_all);
+            currentElement = expression;
+            xml_nodes.put(local, for_all);
+        }else{
+            xml_nodes.get(local).appendChild(evaluation);
+            for(int i =0;i<xml_nodes.get(local).getChildNodes().getLength();i++){
+                if (xml_nodes.get(local).getChildNodes().item(i).getNodeName().equals("expression"))
+                    currentElement= (Element) xml_nodes.get(local).getChildNodes().item(i);
+            }
+        }
         try
         {
             QuantifierList quantifiers = new QuantifierList();
@@ -367,6 +540,48 @@ public class CoverageToXML extends AnalysisAdaptor {
         {
             System.out.println(VdmRuntimeError.abort(node.getLocation(), e));
         }
+    }
+
+
+    @Override
+    public void caseAWhileStm(AWhileStm node) throws AnalysisException {
+        ILexLocation local=node.getLocation();
+        this.iteration = (int) local.getHits();
+
+        if(!xml_nodes.containsKey(local)){
+            Element if_statement =doc.createElement("while_statement");
+            fill_source_file_location(if_statement, local);
+            Element expression = doc.createElement("expression");
+            if_statement.appendChild(expression);
+            currentElement = expression;
+            rootElement.appendChild(if_statement);
+            xml_nodes.put(local,if_statement);
+        }
+        else {
+            for(int i =0;i<xml_nodes.get(local).getChildNodes().getLength();i++){
+                if (xml_nodes.get(local).getChildNodes().item(i).getNodeName().equals("expression"))
+                    currentElement= (Element) xml_nodes.get(local).getChildNodes().item(i);
+            }
+        }
+
+        try
+        {
+            int i=0;
+            while (node.getExp().apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx))
+            {
+                Element eval = doc.createElement("evaluation");
+                eval.setAttribute("i",String.valueOf(i++));
+                eval.setAttribute("n",Integer.toString(iteration));
+                Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctx);
+                eval.setTextContent(String.valueOf(node.getExp().apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
+                xml_nodes.get(local).appendChild(eval);
+                node.getExp().apply(this);
+            }
+        } catch (ValueException e)
+        {
+            VdmRuntimeError.abort(node.getLocation(), e);
+        }
+
     }
 }
 

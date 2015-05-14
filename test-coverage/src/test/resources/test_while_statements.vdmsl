@@ -1,0 +1,11 @@
+operations
+
+SquareRoot : () ==> real
+SquareRoot () ==
+            (dcl x:real := 1;
+                while x<=5 do
+                    ( x := x+1;
+                );
+                return x
+            );
+

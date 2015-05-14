@@ -973,6 +973,8 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	public Value caseAWhileStm(AWhileStm node, Context ctxt)
 			throws AnalysisException
 	{
+        ctx.setContext(ctxt);
+        node.apply(ctx);
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
 		try

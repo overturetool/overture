@@ -1,0 +1,11 @@
+values
+nums = {1,2,3,4,5,6}
+
+operations
+
+
+foo2 : () ==> int
+foo2 () ==
+	if exists1 x in set nums & x mod 2 = 0
+	then return 0
+	else return 1;
