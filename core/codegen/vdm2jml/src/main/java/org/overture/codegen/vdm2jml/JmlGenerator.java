@@ -25,6 +25,7 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.ir.IRConstants;
@@ -57,8 +58,6 @@ public class JmlGenerator implements IREventObserver
 	private static final String JML_RESULT = "\\result";
 	
 	public static final String REPORT_CALL = "report";
-	
-	public static final String THIS = "this";
 
 	private JavaCodeGen javaGen;
 
@@ -205,15 +204,16 @@ public class JmlGenerator implements IREventObserver
 
 	private void annotateRecsWithInvs(List<IRStatus<INode>> ast)
 	{
-		LinkedList<String> args = new LinkedList<String>();
-		args.add(THIS);
-		
 		List<ARecordDeclCG> recs = getRecords(ast);
 		
 		for(ARecordDeclCG r : recs)
 		{
+			List<String> args = getRecFieldNames(r);
+			
 			if(r.getInvariant() != null)
 			{
+				changeRecInvMethod(r);
+				
 				// Must be public otherwise we can't access it from the invariant
 				makeCondPublic(r.getInvariant());
 				// Must be a helper since we use this function from the invariant
@@ -222,11 +222,104 @@ public class JmlGenerator implements IREventObserver
 				makePure(r.getInvariant());
 				
 				// Add the instance invariant to the record
-				appendMetaData(r, consAnno(JML_INSTANCE_INV_ANNOTATION, JML_INV_PREFIX
+				// Make it public so we can access the record fields from the invariant clause
+				appendMetaData(r, consAnno("public " + JML_INSTANCE_INV_ANNOTATION, JML_INV_PREFIX
 						+ r.getName(), args));
 				
 				injectReportCalls(r.getInvariant());
 			}
+		}
+	}
+
+	private List<String> getRecFieldNames(ARecordDeclCG r)
+	{
+		List<String> args = new LinkedList<String>();
+		
+		for(AFieldDeclCG f : r.getFields())
+		{
+			args.add(f.getName());
+		}
+		return args;
+	}
+
+	/**
+	 * The record invariant method is generated such that it takes the record instance as an argument, e.g.
+	 * inv_Rec(recToCheck). When I try to invoke it from the instance invariant clause as //@ invariant inv_Rec(this);
+	 * it crashes on a stackoverflow where it keeps calling the invariant check. Adjusting the invariant method such
+	 * that it instead takes the fields as arguments does, however, work. This is exactly what this method does. After
+	 * calling this method a call to the invariant method from the invariant will take the following form:
+	 * //@ public instance invariant inv_Rec(field1,field2);
+	 * 
+	 * @param rec The record for which we will change the invariant method
+	 */
+	private void changeRecInvMethod(ARecordDeclCG rec)
+	{
+		if (!(rec.getInvariant() instanceof AMethodDeclCG))
+		{
+			Logger.getLog().printErrorln("Expected invariant to be a method declaration. Got: "
+					+ rec.getInvariant()
+					+ " in '"
+					+ this.getClass().getSimpleName() + "'");
+			return;
+		}
+
+		AMethodDeclCG invMethod = (AMethodDeclCG) rec.getInvariant();
+
+		if (invMethod.getFormalParams().size() != 1)
+		{
+			Logger.getLog().printErrorln("Expected invariant to take a single argument. Instead it takes "
+					+ invMethod.getFormalParams().size()
+					+ " in '"
+					+ this.getClass().getSimpleName() + "'");
+
+			if (invMethod.getFormalParams().isEmpty())
+			{
+				return;
+			}
+		}
+
+		AFormalParamLocalParamCG param = invMethod.getFormalParams().getFirst();
+
+		if (!(param.getPattern() instanceof AIdentifierPatternCG))
+		{
+			Logger.getLog().printErrorln("Expected pattern of formal parameter to be an identifier pattern at this point. Got "
+					+ param.getPattern()
+					+ " in '"
+					+ this.getClass().getSimpleName() + "'");
+			return;
+		}
+
+		// First update the signature of the invariant method to take the fields
+
+		invMethod.setMethodType(null);
+		invMethod.getFormalParams().clear();
+
+		AMethodTypeCG newMethodType = new AMethodTypeCG();
+		newMethodType.setResult(new ABoolBasicTypeCG());
+		invMethod.setMethodType(newMethodType);
+
+		for (AFieldDeclCG f : rec.getFields())
+		{
+			newMethodType.getParams().add(f.getType().clone());
+
+			AFormalParamLocalParamCG nextParam = new AFormalParamLocalParamCG();
+			nextParam.setPattern(javaGen.getTransformationAssistant().consIdPattern(f.getName()));
+			nextParam.setType(f.getType().clone());
+
+			invMethod.getFormalParams().add(nextParam);
+		}
+
+		final String paramName = ((AIdentifierPatternCG) param.getPattern()).getName();
+
+		// Now adjust the body of the invariant method to work with the new signature
+		try
+		{
+			rec.getInvariant().apply(new RecInvTransformation(javaGen, paramName));
+		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+		{
+			Logger.getLog().printErrorln("Problems transforming the invariant method of a record in '"
+					+ this.getClass().getSimpleName() + "'");
+			e.printStackTrace();
 		}
 	}
 
