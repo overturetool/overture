@@ -42,6 +42,7 @@ import org.overture.codegen.vdm2java.JavaSettings;
 
 public class JmlGenerator implements IREventObserver
 {
+	private static final String JML_INSTANCE_INV_ANNOTATION = "instance invariant";
 	private static final String JML_STATIC_INV_ANNOTATION = "static invariant";
 	private static final String JML_REQ_ANNOTATION = "requires";
 	private static final String JML_ENS_ANNOTATION = "ensures";
@@ -56,6 +57,8 @@ public class JmlGenerator implements IREventObserver
 	private static final String JML_RESULT = "\\result";
 	
 	public static final String REPORT_CALL = "report";
+	
+	public static final String THIS = "this";
 
 	private JavaCodeGen javaGen;
 
@@ -112,6 +115,8 @@ public class JmlGenerator implements IREventObserver
 		// In the final version of the IR, received by the Java code generator, all
 		// top level containers are classes
 
+		annotateRecsWithInvs(ast);
+		
 		// Functions are JML pure so we will annotate them as so.
 		// Note that @pure is a JML modifier so this annotation should go last
 		// to prevent the error: "no modifiers are allowed prior to a lightweight
@@ -196,6 +201,31 @@ public class JmlGenerator implements IREventObserver
 
 		// Return back the modified AST to the Java code generator
 		return newAst;
+	}
+
+	private void annotateRecsWithInvs(List<IRStatus<INode>> ast)
+	{
+		LinkedList<String> args = new LinkedList<String>();
+		args.add(THIS);
+		
+		List<ARecordDeclCG> recs = getRecords(ast);
+		
+		for(ARecordDeclCG r : recs)
+		{
+			if(r.getInvariant() != null)
+			{
+				// Must be public otherwise we can't access it from the invariant
+				makeCondPublic(r.getInvariant());
+				// Must be a helper since we use this function from the invariant
+				makeHelper(r.getInvariant());
+				
+				makePure(r.getInvariant());
+				
+				// Add the instance invariant to the record
+				appendMetaData(r, consAnno(JML_INSTANCE_INV_ANNOTATION, JML_INV_PREFIX
+						+ r.getName(), args));
+			}
+		}
 	}
 
 	private void injectReportCalls(SDeclCG cond)
@@ -350,11 +380,17 @@ public class JmlGenerator implements IREventObserver
 			{
 				AClassDeclCG recClass = new AClassDeclCG();
 
+				recClass.setMetaData(recDecl.getMetaData());
 				recClass.setAbstract(false);
 				recClass.setAccess(IRConstants.PUBLIC);
 				recClass.setSourceNode(recDecl.getSourceNode());
 				recClass.setStatic(false);
 				recClass.setName(recDecl.getName());
+				
+				if(recDecl.getInvariant() != null)
+				{
+					recClass.setInvariant(recDecl.getInvariant().clone());
+				}
 				
 				AInterfaceDeclCG recInterface = new AInterfaceDeclCG();
 				recInterface.setPackage("org.overture.codegen.runtime");
