@@ -224,6 +224,8 @@ public class JmlGenerator implements IREventObserver
 				// Add the instance invariant to the record
 				appendMetaData(r, consAnno(JML_INSTANCE_INV_ANNOTATION, JML_INV_PREFIX
 						+ r.getName(), args));
+				
+				injectReportCalls(r.getInvariant());
 			}
 		}
 	}
