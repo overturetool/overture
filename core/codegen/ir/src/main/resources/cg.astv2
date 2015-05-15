@@ -198,6 +198,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{record}
     	//TODO: Should have [access]:java_String
     	[name]:java_String
+    	[invariant]:CG.#decl
     	[fields]:field*
     	[methods]:CG.#decl.method*
     |	{thread}

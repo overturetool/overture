@@ -223,6 +223,12 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 		ARecordDeclCG record = new ARecordDeclCG();
 		record.setName(name.getName());
+		
+		if(node.getInvDef() != null)
+		{
+			SDeclCG invCg = node.getInvDef().apply(question.getDeclVisitor(), question);
+			record.setInvariant(invCg);
+		}
 
 		LinkedList<AFieldDeclCG> recordFields = record.getFields();
 		for (AFieldField aFieldField : fields)
