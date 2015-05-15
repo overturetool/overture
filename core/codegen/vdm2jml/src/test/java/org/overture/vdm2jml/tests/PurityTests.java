@@ -34,7 +34,7 @@ public class PurityTests extends AnnotationTestsBase
 	@Test
 	public void testGenModuleFuncsArePure()
 	{
-		assertGenFuncsPure(getGenFunctions(genModule.getMethods()));
+		assertPure(getGenFunctions(genModule.getMethods()));
 	}
 
 	@Test

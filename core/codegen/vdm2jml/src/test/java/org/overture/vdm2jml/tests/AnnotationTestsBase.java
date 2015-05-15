@@ -213,21 +213,29 @@ abstract public class AnnotationTestsBase
 				getLastAnnotation(preCondFunc));
 	}
 
-	public static void assertGenFuncsPure(List<AMethodDeclCG> genFuncs)
+	public static void assertPure(List<AMethodDeclCG> methods)
 	{
-		Assert.assertTrue("Expected functions to be defined", genFuncs != null && !genFuncs.isEmpty());
+		Assert.assertTrue("Expected functions to be defined", methods != null && !methods.isEmpty());
 
-		for (AMethodDeclCG func : genFuncs)
+		for (AMethodDeclCG func : methods)
 		{
-			// Since @pure is a JML modifier so this annotation should go last
-			String failureMsg = "Expected the last annotation to be @pure of function "
-					+ func.getName();
-
-			List<? extends ClonableString> metaData = func.getMetaData();
-
-			Assert.assertTrue(failureMsg, metaData != null
-					&& !metaData.isEmpty());
-			Assert.assertEquals(failureMsg, PURE_ANNOTATION, getLastAnnotation(func));
+			if (!func.getIsConstructor())
+			{
+				assertPureMethod(func);
+			}
 		}
+	}
+
+	public static void assertPureMethod(AMethodDeclCG func)
+	{
+		// Since @pure is a JML modifier so this annotation should go last
+		String failureMsg = "Expected the last annotation to be @pure of function "
+				+ func.getName();
+
+		List<? extends ClonableString> metaData = func.getMetaData();
+
+		Assert.assertTrue(failureMsg, metaData != null
+				&& !metaData.isEmpty());
+		Assert.assertEquals(failureMsg, PURE_ANNOTATION, getLastAnnotation(func));
 	}
 }
