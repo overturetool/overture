@@ -43,7 +43,7 @@ public class RecInvTests
 		Assert.assertTrue("Expected a record type definition in the generated module", recTypeDef != null);
 
 		Assert.assertEquals("Got unexpected record type definition invariant",
-				"//@ instance invariant inv_Rec(this);", AnnotationTestsBase.getLastAnnotation(recTypeDef));
+				"//@ public instance invariant inv_Rec(x);", AnnotationTestsBase.getLastAnnotation(recTypeDef));
 	}
 	
 	@Test
