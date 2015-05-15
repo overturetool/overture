@@ -173,7 +173,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 			}
 		}
 		
-		if(node.getInvariant() != null && question.getSettings().generateInvariantChecks())
+		if(node.getInvariant() != null && question.getSettings().generateInvariants())
 		{
 			SDeclCG invCg = node.getInvariant().apply(question.getDeclVisitor(), question);
 			classCg.setInvariant(invCg);

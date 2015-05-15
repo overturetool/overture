@@ -966,9 +966,9 @@ public class JavaFormat
 		}
 	}
 
-	public boolean genInvariant(AClassDeclCG clazz)
+	public boolean genClassInvariant(AClassDeclCG clazz)
 	{
-		if(!info.getSettings().generateInvariantChecks())
+		if(!info.getSettings().generateInvariants())
 		{
 			return false;
 		}

@@ -106,12 +106,12 @@ public class IRSettings
 		this.generateTraces = generateTraces;
 	}
 
-	public boolean generateInvariantChecks()
+	public boolean generateInvariants()
 	{
 		return generateInvariantChecks;
 	}
 
-	public void setGenerateInvariantChecks(boolean generateInvariantChecks)
+	public void setGenerateInvariants(boolean generateInvariantChecks)
 	{
 		this.generateInvariantChecks = generateInvariantChecks;
 	}

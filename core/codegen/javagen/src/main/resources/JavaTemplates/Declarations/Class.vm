@@ -51,7 +51,7 @@ $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSupe
 	$node.getTag().getMainMethod()
 	#end
 	##
-	#if ($JavaFormat.genInvariant($node))
+	#if ($JavaFormat.genClassInvariant($node))
 	$JavaFormat.format($node.getInvariant())
 	#end	
 	
