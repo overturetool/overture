@@ -41,7 +41,7 @@ public class JmlGenMain
 		irSettings.setGeneratePreCondChecks(false);
 		irSettings.setGeneratePostConds(true);
 		irSettings.setGeneratePostCondChecks(false);
-		irSettings.setGenerateInvariantChecks(true);
+		irSettings.setGenerateInvariants(true);
 
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
