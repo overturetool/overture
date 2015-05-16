@@ -128,10 +128,18 @@ public class JmlGenerator implements IREventObserver
 		// To circumvent a problem with OpenJML. See documentation of makeRecsOuterClasses
 		newAst.addAll(makeRecsOuterClasses(ast));
 		
+		// Also extract classes that are records
+		for(IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
+		{
+			// Make declarations nullable
+			makeNullable(status.getIrNode());
+		}
+		
+		// Only extract from 'ast' to not get the record classes
 		for (IRStatus<AClassDeclCG> status : IRStatus.extract(ast, AClassDeclCG.class))
 		{
 			AClassDeclCG clazz = status.getIrNode();
-			
+
 			if(info.getDeclAssistant().isLibraryName(clazz.getName()))
 			{
 				continue;
@@ -199,6 +207,21 @@ public class JmlGenerator implements IREventObserver
 
 		// Return back the modified AST to the Java code generator
 		return newAst;
+	}
+
+	private void makeNullable(AClassDeclCG clazz)
+	{
+		try
+		{
+			clazz.apply(new NullableAnnotator());
+		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+		{
+			Logger.getLog().printErrorln("Problem encountered when trying to make declarations nullable: "
+					+ e.getMessage()
+					+ " in '"
+					+ this.getClass().getSimpleName() + "'");
+			e.printStackTrace();
+		}
 	}
 
 	private void annotateRecsWithInvs(List<IRStatus<INode>> ast)
