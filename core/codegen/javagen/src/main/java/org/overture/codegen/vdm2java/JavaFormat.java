@@ -978,6 +978,11 @@ public class JavaFormat
 	
 	public static String formatMetaData(List<ClonableString> metaData)
 	{
+		if(metaData == null || metaData.isEmpty())
+		{
+			return "";
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		
 		for(ClonableString str : metaData)
