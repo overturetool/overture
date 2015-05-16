@@ -25,7 +25,6 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.ir.IRConstants;
@@ -254,67 +253,9 @@ public class JmlGenerator implements IREventObserver
 	 */
 	private void changeRecInvMethod(ARecordDeclCG rec)
 	{
-		if (!(rec.getInvariant() instanceof AMethodDeclCG))
-		{
-			Logger.getLog().printErrorln("Expected invariant to be a method declaration. Got: "
-					+ rec.getInvariant()
-					+ " in '"
-					+ this.getClass().getSimpleName() + "'");
-			return;
-		}
-
-		AMethodDeclCG invMethod = (AMethodDeclCG) rec.getInvariant();
-
-		if (invMethod.getFormalParams().size() != 1)
-		{
-			Logger.getLog().printErrorln("Expected invariant to take a single argument. Instead it takes "
-					+ invMethod.getFormalParams().size()
-					+ " in '"
-					+ this.getClass().getSimpleName() + "'");
-
-			if (invMethod.getFormalParams().isEmpty())
-			{
-				return;
-			}
-		}
-
-		AFormalParamLocalParamCG param = invMethod.getFormalParams().getFirst();
-
-		if (!(param.getPattern() instanceof AIdentifierPatternCG))
-		{
-			Logger.getLog().printErrorln("Expected pattern of formal parameter to be an identifier pattern at this point. Got "
-					+ param.getPattern()
-					+ " in '"
-					+ this.getClass().getSimpleName() + "'");
-			return;
-		}
-
-		// First update the signature of the invariant method to take the fields
-
-		invMethod.setMethodType(null);
-		invMethod.getFormalParams().clear();
-
-		AMethodTypeCG newMethodType = new AMethodTypeCG();
-		newMethodType.setResult(new ABoolBasicTypeCG());
-		invMethod.setMethodType(newMethodType);
-
-		for (AFieldDeclCG f : rec.getFields())
-		{
-			newMethodType.getParams().add(f.getType().clone());
-
-			AFormalParamLocalParamCG nextParam = new AFormalParamLocalParamCG();
-			nextParam.setPattern(javaGen.getTransformationAssistant().consIdPattern(f.getName()));
-			nextParam.setType(f.getType().clone());
-
-			invMethod.getFormalParams().add(nextParam);
-		}
-
-		final String paramName = ((AIdentifierPatternCG) param.getPattern()).getName();
-
-		// Now adjust the body of the invariant method to work with the new signature
 		try
 		{
-			rec.getInvariant().apply(new RecInvTransformation(javaGen, paramName));
+			rec.getInvariant().apply(new RecInvTransformation(javaGen, rec));
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
 			Logger.getLog().printErrorln("Problems transforming the invariant method of a record in '"
