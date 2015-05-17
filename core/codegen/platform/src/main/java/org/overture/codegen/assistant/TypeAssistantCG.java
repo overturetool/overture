@@ -63,6 +63,7 @@ import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ANatBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
+import org.overture.codegen.cgast.types.AOptionalTypeCG;
 import org.overture.codegen.cgast.types.ARatBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
@@ -558,6 +559,16 @@ public class TypeAssistantCG extends AssistantBase
 			{
 				type = ((AOptionalType) type).getType();
 			}
+		}
+		
+		return type;
+	}
+	
+	public STypeCG resolve(STypeCG type)
+	{
+		while(type instanceof AOptionalTypeCG)
+		{
+			type = ((AOptionalTypeCG) type).getType();
 		}
 		
 		return type;
