@@ -63,6 +63,7 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AOptionalTypeCG;
 import org.overture.codegen.cgast.types.AQuoteTypeCG;
 import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -74,7 +75,6 @@ import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
-import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRNamedTypeInvariantTag;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -233,17 +233,12 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	public STypeCG caseAOptionalType(AOptionalType node, IRInfo question)
 			throws AnalysisException
 	{
-		// TODO: Maybe keep optional types?
-		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-
-		STypeCG wrapperType = null;
-
-		if (type instanceof SBasicTypeCG)
-		{
-			wrapperType = question.getTypeAssistant().getWrapperType((SBasicTypeCG) type);
-		}
-
-		return wrapperType != null ? wrapperType : type;
+		STypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		
+		AOptionalTypeCG optionalType = new AOptionalTypeCG();
+		optionalType.setType(typeCg);
+		
+		return optionalType;
 	}
 
 	@Override
