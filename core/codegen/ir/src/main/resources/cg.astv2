@@ -524,6 +524,7 @@ CG {-> package='org.overture.codegen.cgast'
     =   #basic
     |	{Object}
     |	{void}
+    |	{optional} [type]:CG.#type
     |	{class} [types]:CG.#type* [name]:java_String
     	//When generating code using the abstract syntax of this tree structure "external" 
     	//is used for refering to types of the target environment (e.g. that of Java) 
