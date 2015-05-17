@@ -359,6 +359,8 @@ public class JavaValueSemantics
 
 	private boolean usesStructuralEquivalence(STypeCG type)
 	{
+		type = javaFormat.getIrInfo().getTypeAssistant().resolve(type);
+		
 		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG
 				|| type instanceof SSeqTypeCG || type instanceof SSetTypeCG
 				|| type instanceof SMapTypeCG;
