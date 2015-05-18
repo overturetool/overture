@@ -36,8 +36,8 @@ public class VariableSubVisitor extends
 	public PExp defaultSBinaryExp(SBinaryExp node, Substitution question)
 			throws AnalysisException
 	{
-		PExp subl = node.getLeft().apply(main, question);
-		PExp subr = node.getRight().apply(main, question);
+		PExp subl = node.getLeft().clone().apply(main, question);
+		PExp subr = node.getRight().clone().apply(main, question);
 		node.setLeft(subl.clone());
 		node.setRight(subr.clone());
 		return node;
@@ -47,7 +47,7 @@ public class VariableSubVisitor extends
 	public PExp defaultSUnaryExp(SUnaryExp node, Substitution question)
 			throws AnalysisException
 	{
-		PExp sub = node.getExp().apply(main, question);
+		PExp sub = node.getExp().clone().apply(main, question);
 		node.setExp(sub.clone());
 		return node;
 	}
@@ -59,7 +59,7 @@ public class VariableSubVisitor extends
 	public PExp caseAExistsExp(AExistsExp node, Substitution question)
 			throws AnalysisException
 	{
-		PExp sub = node.getPredicate().apply(main, question);
+		PExp sub = node.getPredicate().clone().apply(main, question);
 		node.setPredicate(sub.clone());
 		return node;
 
@@ -69,7 +69,7 @@ public class VariableSubVisitor extends
 	public PExp caseAFieldExp(AFieldExp node, Substitution question)
 			throws AnalysisException
 	{
-		PExp obj = node.getObject().apply(main, question);
+		PExp obj = node.getObject().clone().apply(main, question);
 		node.setObject(obj.clone());
 		return node;
 	}
@@ -80,7 +80,7 @@ public class VariableSubVisitor extends
 	public PExp caseAPostOpExp(APostOpExp node, Substitution question)
 			throws AnalysisException
 	{
-		PExp sub = node.getPostexpression().apply(main, question);
+		PExp sub = node.getPostexpression().clone().apply(main, question);
 		node.setPostexpression(sub.clone());
 		return node;
 	}
@@ -93,7 +93,7 @@ public class VariableSubVisitor extends
 	{
 		if (question.containsKey(node))
 		{
-			return question.get(node);
+			return question.get(node).clone();
 		}
 		return node;
 	}

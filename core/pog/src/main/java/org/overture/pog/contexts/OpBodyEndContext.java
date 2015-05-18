@@ -50,7 +50,7 @@ public class OpBodyEndContext extends StatefulContext
 		{
 			try
 			{
-				stitch = stitch.apply(af.getVarSubVisitor(), sub);
+				stitch = stitch.clone().apply(af.getVarSubVisitor(), sub);
 			} catch (AnalysisException e)
 			{
 				e.printStackTrace();

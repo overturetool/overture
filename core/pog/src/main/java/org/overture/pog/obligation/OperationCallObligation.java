@@ -38,7 +38,7 @@ public class OperationCallObligation extends ProofObligation
 
 		for (Substitution sub : subs)
 		{
-			pre_exp = pre_exp.apply(af.getVarSubVisitor(), sub);
+			pre_exp = pre_exp.clone().apply(af.getVarSubVisitor(), sub);
 
 		}
 
