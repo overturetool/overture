@@ -598,7 +598,7 @@ public class JmlGenerator implements IREventObserver
 					//
 					//@ public static invariant St == null || inv_St(St);
 					classInvInfo.put(module.getName(), consAnno("public " + JML_STATIC_INV_ANNOTATION,
-							String.format("%s == null", state.getName())  + " || " +
+							String.format("%s != null", state.getName())  + " ==> " +
 							JML_INV_PREFIX + state.getName(), fieldNames));
 					//
 					// Note that the invariant is public. Otherwise we would get the error
