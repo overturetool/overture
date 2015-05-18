@@ -97,7 +97,6 @@ import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ANatBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.cgast.types.AOptionalTypeCG;
 import org.overture.codegen.cgast.types.AQuoteTypeCG;
 import org.overture.codegen.cgast.types.ARatBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
@@ -184,9 +183,6 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AVoidTypeCG.class, templateStructure.TYPE_PATH
 				+ "Void");
-
-		nodeTemplateFileNames.put(AOptionalTypeCG.class, templateStructure.TYPE_PATH
-				+ "Optional");
 		
 		nodeTemplateFileNames.put(AStringTypeCG.class, templateStructure.TYPE_PATH
 				+ "String");

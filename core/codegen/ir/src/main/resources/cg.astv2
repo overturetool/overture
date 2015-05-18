@@ -521,11 +521,11 @@ CG {-> package='org.overture.codegen.cgast'
 	| {comp} [first]:CG.#exp.maplet [bindings]:CG.#multipleBind.set* [predicate]:CG.#exp
 	;
 
-#type {-> package='org.overture.codegen.cgast.types'}
+#type {-> package='org.overture.codegen.cgast.types'
+	| [optional]:java_Boolean}
     =   #basic
     |	{Object}
     |	{void}
-    |	{optional} [type]:CG.#type
     |	{class} [types]:CG.#type* [name]:java_String
     	//When generating code using the abstract syntax of this tree structure "external" 
     	//is used for refering to types of the target environment (e.g. that of Java) 

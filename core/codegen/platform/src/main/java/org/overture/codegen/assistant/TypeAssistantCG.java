@@ -24,6 +24,7 @@ package org.overture.codegen.assistant;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -63,7 +64,6 @@ import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ANatBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.cgast.types.AOptionalTypeCG;
 import org.overture.codegen.cgast.types.ARatBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
@@ -564,16 +564,6 @@ public class TypeAssistantCG extends AssistantBase
 		return type;
 	}
 	
-	public STypeCG resolve(STypeCG type)
-	{
-		while(type instanceof AOptionalTypeCG)
-		{
-			type = ((AOptionalTypeCG) type).getType();
-		}
-		
-		return type;
-	}
-	
 	public SSeqTypeCG getSeqType(AUnionTypeCG unionType)
 	{
 		AUnionTypeCG seqOf = new AUnionTypeCG();
@@ -767,8 +757,8 @@ public class TypeAssistantCG extends AssistantBase
 		}
 		else
 		{
-			return /*type instanceof AObjectTypeCG || */ type instanceof AUnknownTypeCG
-					|| type instanceof AOptionalTypeCG || isWrapperType(type);
+			return /* type instanceof AObjectTypeCG || */type != null
+					&& (type instanceof AUnknownTypeCG || BooleanUtils.isTrue(type.getOptional()) || isWrapperType(type));
 		}
 		
 	}

@@ -2666,7 +2666,7 @@ public class POP3Types implements EvaluatePP {
         public Number messageNumber;
 
         public LIST(final Number _messageNumber) {
-            messageNumber = (_messageNumber != null) ? _messageNumber : null;
+            messageNumber = _messageNumber;
         }
 
         public boolean equals(final Object obj) {
@@ -2832,7 +2832,7 @@ public class POP3Types implements EvaluatePP {
         public Number messageNumber;
 
         public UIDL(final Number _messageNumber) {
-            messageNumber = (_messageNumber != null) ? _messageNumber : null;
+            messageNumber = _messageNumber;
         }
 
         public boolean equals(final Object obj) {

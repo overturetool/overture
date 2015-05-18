@@ -63,7 +63,6 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.AOptionalTypeCG;
 import org.overture.codegen.cgast.types.AQuoteTypeCG;
 import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -235,10 +234,12 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	{
 		STypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
 		
-		AOptionalTypeCG optionalType = new AOptionalTypeCG();
-		optionalType.setType(typeCg);
+		if(typeCg != null)
+		{
+			typeCg.setOptional(true);
+		}
 		
-		return optionalType;
+		return typeCg;
 	}
 
 	@Override
