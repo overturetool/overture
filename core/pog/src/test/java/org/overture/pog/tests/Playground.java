@@ -13,7 +13,6 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
@@ -21,8 +20,6 @@ import org.overture.ast.node.INode;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.core.tests.ParseTcFacade;
-import org.overture.parser.lex.LexException;
-import org.overture.parser.syntax.ParserException;
 import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
