@@ -207,6 +207,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[type]:CG.#type
     |	{type}
     	[access]:java_String
+    	[inv]:CG.#decl
     	[decl]:CG.#decl
     |	{catchClause}
     	[type]:CG.#type
