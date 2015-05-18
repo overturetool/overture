@@ -213,7 +213,7 @@ public class JmlGenerator implements IREventObserver
 	{
 		try
 		{
-			clazz.apply(new NullableAnnotator());
+			clazz.apply(new NullableAnnotator(javaGen));
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
 			Logger.getLog().printErrorln("Problem encountered when trying to make declarations nullable: "
