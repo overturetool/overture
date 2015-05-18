@@ -19,8 +19,6 @@ import org.overture.codegen.vdm2java.JavaCodeGen;
  */
 public class NullableAnnotator extends DepthFirstAnalysisAdaptor
 {
-	private static final String JML_NULLABLE = "//@ nullable;";
-
 	private JavaCodeGen javaGen;
 	
 	public NullableAnnotator(JavaCodeGen javaGen)
@@ -53,7 +51,7 @@ public class NullableAnnotator extends DepthFirstAnalysisAdaptor
 				|| initExp instanceof ANullExpCG
 				|| initExp instanceof AUndefinedExpCG)
 		{
-			JmlGenerator.appendMetaData(decl, JmlGenerator.consMetaData(JML_NULLABLE));
+			JmlGenerator.appendMetaData(decl, JmlGenerator.consMetaData(JmlGenerator.JML_NULLABLE));
 		}
 	}
 }
