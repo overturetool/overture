@@ -740,4 +740,36 @@ public class TypeAssistantCG extends AssistantBase
 				|| type instanceof ANatNumericBasicTypeCG
 				|| type instanceof ANatBasicTypeWrappersTypeCG;
 	}
+	
+	public boolean isWrapperType(STypeCG type)
+	{
+		return type instanceof ANatBasicTypeWrappersTypeCG
+				|| type instanceof ANat1BasicTypeWrappersTypeCG
+				|| type instanceof ARatBasicTypeWrappersTypeCG
+				|| type instanceof ARealBasicTypeWrappersTypeCG
+				|| type instanceof ACharBasicTypeWrappersTypeCG
+				|| type instanceof ABoolBasicTypeWrappersTypeCG;
+	}
+	
+	public boolean allowsNull(STypeCG type)
+	{
+		if(type instanceof AUnionTypeCG)
+		{
+			for(STypeCG t : ((AUnionTypeCG) type).getTypes())
+			{
+				if(allowsNull(t))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		else
+		{
+			return /*type instanceof AObjectTypeCG || */ type instanceof AUnknownTypeCG
+					|| type instanceof AOptionalTypeCG || isWrapperType(type);
+		}
+		
+	}
 }
