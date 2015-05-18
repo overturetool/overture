@@ -40,6 +40,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
+import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
@@ -925,10 +926,21 @@ public class JavaFormat
 		}
 	}
 	
+	public boolean genDecl(ATypeDeclCG node)
+	{
+		return !(node.getDecl() instanceof ANamedTypeDeclCG);
+	}
+	
 	public boolean genTypeDecl(ATypeDeclCG node)
 	{
-		return getJavaSettings().genRecsAsInnerClasses()
-				&& !(node.getDecl() instanceof ANamedTypeDeclCG);
+		if(node.getDecl() instanceof ARecordDeclCG)
+		{
+			return true;
+		}
+		else
+		{
+			return info.getSettings().generateInvariants();
+		}
 	}
 	
 	public static boolean isSeqConversion(AFieldNumberExpCG node)
