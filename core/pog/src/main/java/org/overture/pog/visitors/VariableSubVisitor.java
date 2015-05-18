@@ -38,8 +38,8 @@ public class VariableSubVisitor extends
 	{
 		PExp subl = node.getLeft().apply(main, question);
 		PExp subr = node.getRight().apply(main, question);
-		node.setLeft(subl);
-		node.setRight(subr);
+		node.setLeft(subl.clone());
+		node.setRight(subr.clone());
 		return node;
 	}
 
@@ -48,7 +48,7 @@ public class VariableSubVisitor extends
 			throws AnalysisException
 	{
 		PExp sub = node.getExp().apply(main, question);
-		node.setExp(sub);
+		node.setExp(sub.clone());
 		return node;
 	}
 
@@ -60,7 +60,7 @@ public class VariableSubVisitor extends
 			throws AnalysisException
 	{
 		PExp sub = node.getPredicate().apply(main, question);
-		node.setPredicate(sub);
+		node.setPredicate(sub.clone());
 		return node;
 
 	}
@@ -70,7 +70,7 @@ public class VariableSubVisitor extends
 			throws AnalysisException
 	{
 		PExp obj = node.getObject().apply(main, question);
-		node.setObject(obj);
+		node.setObject(obj.clone());
 		return node;
 	}
 
@@ -81,7 +81,7 @@ public class VariableSubVisitor extends
 			throws AnalysisException
 	{
 		PExp sub = node.getPostexpression().apply(main, question);
-		node.setPostexpression(sub);
+		node.setPostexpression(sub.clone());
 		return node;
 	}
 
@@ -93,7 +93,7 @@ public class VariableSubVisitor extends
 	{
 		if (question.containsKey(node))
 		{
-			return question.get(node).clone();
+			return question.get(node);
 		}
 		return node;
 	}
