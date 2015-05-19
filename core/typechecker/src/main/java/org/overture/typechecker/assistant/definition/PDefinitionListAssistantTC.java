@@ -147,6 +147,11 @@ public class PDefinitionListAssistantTC implements IAstAssistant
 	{
 		for (PDefinition d : defs)
 		{
+			if (d.getName() != null && d.getName().getName().equals("RESULT"))
+			{
+				TypeCheckerErrors.report(3336, "Illegal use of RESULT reserved identifier", d.getLocation(), d);
+			}
+			
 			d.apply(rootVisitor, question);
 		}
 	}

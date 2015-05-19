@@ -85,7 +85,7 @@ public class BooleanValue extends Value
 	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
-		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, ABooleanBasicType.class))
+		if (to instanceof ABooleanBasicType)
 		{
 			return this;
 		} else
