@@ -1,5 +1,6 @@
-package test.java;
+package org.overture.interpreter.tests.coverage;
 
+import junit.framework.TestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.XpathEngine;
 import org.overture.ast.lex.Dialect;
@@ -22,24 +23,24 @@ public class TestCoverageIfStatement extends BaseTestCase {
     public void test() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_PP;
-        Value test = InterpreterUtil.interpret(Dialect.VDM_PP, "new Test().Run(2,3,4)", new File("src/test/resources/test_if_elseif_statements.vdmpp".replace('/', File.separatorChar)), true);
+        Value test = InterpreterUtil.interpret(Dialect.VDM_PP, "new Test().Run(2,3,4)", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_if_elseif_statements.vdmpp".replace('/', File.separatorChar)), true);
         System.out.println("The interpreter executed test with the result: "
                 + test);
         Interpreter interpreter = Interpreter.getInstance();
-        File coverageFolder = new File("test/target/vdmpp-coverage/if-statement".replace('/', File.separatorChar));
+        File coverageFolder = new File("src/test/target/vdmpp-coverage/if-statement".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
         DBGPReaderV2.writeCoverage(interpreter, coverageFolder);
         assertEquals(test.toString(),"4");
 
-        File fXmlFile = new File("test/target/vdmpp-coverage/if-statement/test_if_elseif_statements.vdmpp.xml");
+        File fXmlFile = new File("src/test/target/vdmpp-coverage/if-statement/test_if_elseif_statements.vdmpp.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
 
         //Query result file
         XpathEngine engine = XMLUnit.newXpathEngine();
-        assertEquals(engine.evaluate("count(//if_statement)", doc), "1");
-        assertEquals(engine.evaluate("count(//elseif)", doc),"1");
+        TestCase.assertEquals(engine.evaluate("count(//if_statement)", doc), "1");
+        TestCase.assertEquals(engine.evaluate("count(//elseif)", doc), "1");
 
 
     }

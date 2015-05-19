@@ -1,5 +1,6 @@
-package test.java;
+package org.overture.interpreter.tests.coverage;
 
+import junit.framework.TestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.XpathEngine;
 import org.custommonkey.xmlunit.exceptions.XpathException;
@@ -27,7 +28,7 @@ public class TestCoverageWhileStatements extends BaseTestCase {
     public void test() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "SquareRoot()", new File("src/test/resources/test_while_statements.vdmsl".replace('/', File.separatorChar)), true);
+        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "SquareRoot()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_while_statements.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
         File coverageFolder = new File("test/target/vdmsl-coverage/while_statements".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
@@ -68,7 +69,7 @@ public class TestCoverageWhileStatements extends BaseTestCase {
 
         for(String query : queries.keySet()){
             try {
-                assertEquals(engine.evaluate(query,doc),queries.get(query));
+                TestCase.assertEquals(engine.evaluate(query, doc), queries.get(query));
             } catch (XpathException e) {
                 e.printStackTrace();
             }

@@ -1,5 +1,6 @@
-package test.java;
+package org.overture.interpreter.tests.coverage;
 
+import junit.framework.TestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.XpathEngine;
 import org.custommonkey.xmlunit.exceptions.XpathException;
@@ -33,9 +34,9 @@ public class TestCoverageQuantifiers extends BaseTestCase {
     public void test_foo1_a() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo1()", new File("src/test/resources/test_quantifiers_1.vdmsl".replace('/', File.separatorChar)), true);
+        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo1()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_1.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
-        File coverageFolder = new File("test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
+        File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
         DBGPReaderV2.writeCoverage(interpreter, coverageFolder);
 
@@ -46,16 +47,16 @@ public class TestCoverageQuantifiers extends BaseTestCase {
         queries.put("count(//lesser/evaluation)","6");
         queries.put("//if_statement/evaluation","true");
         queries.put("//for_all/evaluation","true");
-        assertQueries("test/target/vdmsl-coverage/quantifiers/test_quantifiers_1.vdmsl.xml",queries);
+        assertQueries("src/test/target/vdmsl-coverage/quantifiers/test_quantifiers_1.vdmsl.xml",queries);
     }
 
     //Test ForAll quantifier for a false result.
     public void test_foo1_b() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo1()", new File("src/test/resources/test_quantifiers_2.vdmsl".replace('/', File.separatorChar)), true);
+        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo1()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_2.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
-        File coverageFolder = new File("test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
+        File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
         DBGPReaderV2.writeCoverage(interpreter, coverageFolder);
 
@@ -66,16 +67,16 @@ public class TestCoverageQuantifiers extends BaseTestCase {
         queries.put("count(//lesser/evaluation)","4");
         queries.put("//if_statement/evaluation","false");
         queries.put("//for_all/evaluation","false");
-        assertQueries("test/target/vdmsl-coverage/quantifiers/test_quantifiers_2.vdmsl.xml",queries);
+        assertQueries("src/test/target/vdmsl-coverage/quantifiers/test_quantifiers_2.vdmsl.xml",queries);
     }
 
     //Test exists1 for false when there is more than one positive outcome.
     public void test_foo2_a() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo2()", new File("src/test/resources/test_quantifiers_3.vdmsl".replace('/', File.separatorChar)), true);
+        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo2()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_3.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
-        File coverageFolder = new File("test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
+        File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
         DBGPReaderV2.writeCoverage(interpreter, coverageFolder);
 
@@ -86,7 +87,7 @@ public class TestCoverageQuantifiers extends BaseTestCase {
         queries.put("count(//exists1)","1");
         queries.put("//exists1/evaluation","false");
         queries.put("count(//exists1/expression/equals/evaluation)", "4");
-        assertQueries("test/target/vdmsl-coverage/quantifiers/test_quantifiers_3.vdmsl.xml",queries);
+        assertQueries("src/test/target/vdmsl-coverage/quantifiers/test_quantifiers_3.vdmsl.xml",queries);
     }
 
 
@@ -94,9 +95,9 @@ public class TestCoverageQuantifiers extends BaseTestCase {
     public void test_foo2_b() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo2()", new File("src/test/resources/test_quantifiers_4.vdmsl".replace('/', File.separatorChar)), true);
+        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo2()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_4.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
-        File coverageFolder = new File("test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
+        File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
         DBGPReaderV2.writeCoverage(interpreter, coverageFolder);
 
@@ -114,9 +115,9 @@ public class TestCoverageQuantifiers extends BaseTestCase {
     public void test_foo2_c() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo2()", new File("src/test/resources/test_quantifiers_5.vdmsl".replace('/', File.separatorChar)), true);
+        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo2()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_5.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
-        File coverageFolder = new File("test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
+        File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
         DBGPReaderV2.writeCoverage(interpreter, coverageFolder);
 
@@ -127,7 +128,7 @@ public class TestCoverageQuantifiers extends BaseTestCase {
         queries.put("count(//exists1)","1");
         queries.put("//exists1/evaluation","true");
         queries.put("count(//exists1/expression/equals/evaluation)","6");
-        assertQueries("test/target/vdmsl-coverage/quantifiers/test_quantifiers_5.vdmsl.xml",queries);
+        assertQueries("src/test/target/vdmsl-coverage/quantifiers/test_quantifiers_5.vdmsl.xml",queries);
     }
 
 
@@ -135,9 +136,9 @@ public class TestCoverageQuantifiers extends BaseTestCase {
     public void test_foo3_a() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo3()", new File("src/test/resources/test_quantifiers_6.vdmsl".replace('/', File.separatorChar)), true);
+        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo3()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_6.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
-        File coverageFolder = new File("test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
+        File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
         DBGPReaderV2.writeCoverage(interpreter, coverageFolder);
 
@@ -148,7 +149,7 @@ public class TestCoverageQuantifiers extends BaseTestCase {
         queries.put("count(//exists)","1");
         queries.put("//exists/evaluation","false");
         queries.put("count(//exists/expression/equals/evaluation)","6");
-        assertQueries("test/target/vdmsl-coverage/quantifiers/test_quantifiers_6.vdmsl.xml",queries);
+        assertQueries("src/test/target/vdmsl-coverage/quantifiers/test_quantifiers_6.vdmsl.xml",queries);
     }
 
 
@@ -156,9 +157,9 @@ public class TestCoverageQuantifiers extends BaseTestCase {
     public void test_foo3_b() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo3()", new File("src/test/resources/test_quantifiers_7.vdmsl".replace('/', File.separatorChar)), true);
+        Value test = InterpreterUtil.interpret(Dialect.VDM_SL, "foo3()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_7.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
-        File coverageFolder = new File("test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
+        File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
         DBGPReaderV2.writeCoverage(interpreter, coverageFolder);
 
@@ -169,7 +170,7 @@ public class TestCoverageQuantifiers extends BaseTestCase {
         queries.put("count(//exists)","1");
         queries.put("//exists/evaluation","true");
         queries.put("count(//exists/expression/equals/evaluation)","4");
-        assertQueries("test/target/vdmsl-coverage/quantifiers/test_quantifiers_7.vdmsl.xml",queries);
+        assertQueries("src/test/target/vdmsl-coverage/quantifiers/test_quantifiers_7.vdmsl.xml",queries);
     }
 
 
@@ -197,7 +198,7 @@ public class TestCoverageQuantifiers extends BaseTestCase {
 
         for(String query : queries.keySet()){
             try {
-                assertEquals(engine.evaluate(query,doc),queries.get(query));
+                TestCase.assertEquals(engine.evaluate(query, doc), queries.get(query));
             } catch (XpathException e) {
                 e.printStackTrace();
             }
