@@ -22,6 +22,7 @@
 package org.overture.typechecker.utilities.pattern;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -352,7 +353,7 @@ public class AllDefinitionLocator
 			{
 				for (AMapletPatternMaplet p : pattern.getMaplets())
 				{
-					defs.addAll(af.createAMapletPatternMapletAssistant().getDefinitions(p, map, question.scope));
+					defs.addAll(getDefinitions(p, map, question.scope));
 					// defs.addAll(p.apply(THIS, question));
 				}
 			}
@@ -416,5 +417,16 @@ public class AllDefinitionLocator
 	{
 		assert false : "PPatternAssistant.getDefinitions - should not hit this case";
 		return null;
+	}
+	
+	public Collection<? extends PDefinition> getDefinitions(
+			AMapletPatternMaplet p, SMapType map, NameScope scope) {
+
+		List<PDefinition> list = new Vector<PDefinition>();
+		list.addAll(af.createPPatternAssistant().getDefinitions(p.getFrom(),
+				map.getFrom(), scope));
+		list.addAll(af.createPPatternAssistant().getDefinitions(p.getTo(),
+				map.getTo(), scope));
+		return list;
 	}
 }

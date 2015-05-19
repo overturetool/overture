@@ -9,6 +9,7 @@ import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
@@ -28,6 +29,8 @@ import org.overture.interpreter.values.RealValue;
 import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueSet;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.syntax.ParserException;
 
 public class ASystemClassDefinitionAssistantInterpreter implements IAstAssistant
 {
@@ -116,7 +119,7 @@ public class ASystemClassDefinitionAssistantInterpreter implements IAstAssistant
 			// We can create vBUS now that all the CPUs have been created
 			// This must be first, to ensure it's bus number 0.
 
-			BUSValue.vBUS = af.createABusClassDefinitionAssitant().makeVirtualBUS(cpus);
+			BUSValue.vBUS = makeVirtualBUS(cpus);
 			BUSValue.vBUS.setup(scheduler, "vBUS");
 
 			for (PDefinition d : systemClass.getDefinitions())
@@ -162,6 +165,20 @@ public class ASystemClassDefinitionAssistantInterpreter implements IAstAssistant
 			throw new ContextException(4135, "Cannot instantiate a system class", systemClass.getLocation(), initialContext);
 		}
 
+	}
+	public BUSValue makeVirtualBUS(ValueSet cpus)
+	{
+		try
+		{
+			return new BUSValue((AClassType) AstFactoryTC.newABusClassDefinition(af).getType(), cpus);
+		} catch (ParserException e)
+		{
+
+		} catch (LexException e)
+		{
+
+		}
+		return null;
 	}
 
 }
