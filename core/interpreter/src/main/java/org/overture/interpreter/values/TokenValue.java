@@ -79,7 +79,7 @@ public class TokenValue extends Value
 	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
-		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, ATokenBasicType.class))
+		if (to instanceof ATokenBasicType)
 		{
 			return this;
 		} else

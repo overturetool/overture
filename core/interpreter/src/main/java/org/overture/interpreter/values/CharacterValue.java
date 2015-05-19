@@ -110,7 +110,7 @@ public class CharacterValue extends Value
 	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
-		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, ACharBasicType.class))
+		if (to instanceof ACharBasicType)
 		{
 			return this;
 		} else
