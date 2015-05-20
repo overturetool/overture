@@ -65,26 +65,23 @@ abstract public class OpenJmlValidationBase
 	{
 		String openJmlDir = System.getenv(OPENJML_ENV_VAR);
 
-		if (openJmlDir != null)
-		{
-			openJml = new File(openJmlDir, OPEN_JML);
-			jmlRuntime = new File(openJmlDir, JML_RUNTIME);
-		}
+		openJml = new File(openJmlDir, OPEN_JML);
+		jmlRuntime = new File(openJmlDir, JML_RUNTIME);
 	}
 	
 	public void assumeOpenJml()
 	{
-		assumeFile(openJml);
+		assumeFile(OPEN_JML, openJml);
 	}
 
 	public void assumeJmlRuntime()
 	{
-		assumeFile(jmlRuntime);
+		assumeFile(JML_RUNTIME, jmlRuntime);
 	}
 	
-	private void assumeFile(File file)
+	private void assumeFile(String fileName, File file)
 	{
-		Assume.assumeTrue("Could not find " + file.getName(), file != null
+		Assume.assumeTrue("Could not find " + fileName, file != null
 				&& file.exists());
 	}
 
