@@ -21,6 +21,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
@@ -42,32 +43,36 @@ import org.overture.codegen.vdm2java.JavaSettings;
 
 public class JmlGenerator implements IREventObserver
 {
-	private static final String JML_INSTANCE_INV_ANNOTATION = "instance invariant";
-	private static final String JML_STATIC_INV_ANNOTATION = "static invariant";
-	private static final String JML_REQ_ANNOTATION = "requires";
-	private static final String JML_ENS_ANNOTATION = "ensures";
-
-	private static final String JML_INV_PREFIX = "inv_";
-	private static final String JML_OLD_PREFIX = "\\old";
-
-	private static final String JML_SPEC_PUBLIC = "/*@ spec_public @*/";
-	private static final String JML_PURE = "/*@ pure @*/";
-	private static final String JML_HELPER = "/*@ helper @*/";
-
-	private static final String JML_RESULT = "\\result";
-	
+	public static final String JML_OR = " || ";
+	public static final String JML_AND = " && ";
+	public static final String JML_PUBLIC = "public";
+	public static final String JML_INSTANCE_INV_ANNOTATION = "instance invariant";
+	public static final String JML_STATIC_INV_ANNOTATION = "static invariant";
+	public static final String JML_REQ_ANNOTATION = "requires";
+	public static final String JML_ENS_ANNOTATION = "ensures";
+	public static final String JML_ASSERT_ANNOTATION = "assert";
+	public static final String JML_INV_PREFIX = "inv_";
+	public static final String JML_OLD_PREFIX = "\\old";
+	public static final String JML_SPEC_PUBLIC = "/*@ spec_public @*/";
+	public static final String JML_PURE = "/*@ pure @*/";
+	public static final String JML_HELPER = "/*@ helper @*/";
+	public static final String JML_RESULT = "\\result";
 	public static final String REPORT_CALL = "report";
-	
 	public static final String JML_NULLABLE = "//@ nullable;";
-
+	
 	private JavaCodeGen javaGen;
-
 	private JmlSettings jmlSettings;
+	private Map<String, List<ClonableString>> classInvInfo;
+	private List<NamedTypeInfo> typeInfoList;
 	
 	public JmlGenerator()
 	{
 		this.javaGen = new JavaCodeGen();
 		this.jmlSettings = new JmlSettings();
+		this.classInvInfo = new HashedMap<String, List<ClonableString>>();
+		
+		// Named invariant type info will be derived (later) from the VDM-SL AST
+		this.typeInfoList = null;
 	}
 	
 	public JavaCodeGen getJavaGen()
@@ -83,12 +88,27 @@ public class JmlGenerator implements IREventObserver
 	public GeneratedData generateJml(List<AModuleModules> ast)
 			throws AnalysisException, UnsupportedModelingException
 	{
+		computeNamedTypeInvInfo(ast);
+		
 		javaGen.register(this);
 
 		return javaGen.generateJavaFromVdmModules(ast);
 	}
 
-	private Map<String, List<ClonableString>> classInvInfo = new HashedMap<String, List<ClonableString>>();
+	private void computeNamedTypeInvInfo(List<AModuleModules> ast) throws AnalysisException
+	{
+		NamedTypeInvDepCalculator depCalc = new NamedTypeInvDepCalculator();
+		
+		for (AModuleModules m : ast)
+		{
+			if (!javaGen.getInfo().getDeclAssistant().isLibrary(m))
+			{
+				m.apply(depCalc);
+			}
+		}
+		
+		this.typeInfoList = depCalc.getTypeDataList();
+	}
 
 	@Override
 	public List<IRStatus<INode>> initialIRConstructed(
@@ -163,7 +183,7 @@ public class JmlGenerator implements IREventObserver
 			for (AFieldDeclCG f : clazz.getFields())
 			{
 				// Make fields JML @spec_public so they can be passed to post conditions
-				appendMetaData(f, consMetaData(JML_SPEC_PUBLIC));
+				makeSpecPublic(f);
 			}
 
 			List<ClonableString> inv = classInvInfo.get(status.getIrNodeName());
@@ -172,6 +192,10 @@ public class JmlGenerator implements IREventObserver
 			{
 				clazz.setMetaData(inv);
 			}
+
+			// Named type invariant functions will potentially also have to be
+			// accessed by other modules
+			makeNamedTypeInvsPublic(clazz);
 
 			// Note that the methods contained in clazz.getMethod() include
 			// pre post and invariant methods
@@ -206,9 +230,52 @@ public class JmlGenerator implements IREventObserver
 		}
 		
 		addModuleStateInvAssertions(newAst);
+		addNamedTypeInvariantAssertions(newAst);
 
 		// Return back the modified AST to the Java code generator
 		return newAst;
+	}
+
+	public static void makeNamedTypeInvsPublic(AClassDeclCG clazz)
+	{
+		for(ATypeDeclCG typeDecl : clazz.getTypeDecls())
+		{
+			if(typeDecl.getDecl() instanceof ANamedTypeDeclCG)
+			{
+				if(typeDecl.getInv() != null)
+				{
+					makeCondPublic(typeDecl.getInv());
+				}
+			}
+		}
+	}
+
+	public static void makeSpecPublic(AFieldDeclCG f)
+	{
+		appendMetaData(f, consMetaData(JML_SPEC_PUBLIC));
+	}
+
+	private void addNamedTypeInvariantAssertions(List<IRStatus<INode>> newAst)
+	{
+		NamedTypeInvariantTransformation assertTr = new NamedTypeInvariantTransformation(typeInfoList);
+		
+		for (IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
+		{
+			AClassDeclCG clazz = status.getIrNode();
+
+			if (!this.javaGen.getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
+			{
+				try
+				{
+					this.javaGen.getIRGenerator().applyPartialTransformation(status, assertTr);
+				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+				{
+					Logger.getLog().printErrorln("Unexpected problem occured when applying transformation in '"
+							+ this.getClass().getSimpleName() + "'");
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	private void makeNullable(AClassDeclCG clazz)
@@ -380,7 +447,7 @@ public class JmlGenerator implements IREventObserver
 		return records;
 	}
 
-	private void makePure(SDeclCG cond)
+	public static void makePure(SDeclCG cond)
 	{
 		if (cond != null)
 		{
@@ -388,7 +455,7 @@ public class JmlGenerator implements IREventObserver
 		}
 	}
 	
-	private void makeHelper(SDeclCG cond)
+	public static void makeHelper(SDeclCG cond)
 	{
 		if(cond != null)
 		{
@@ -396,7 +463,7 @@ public class JmlGenerator implements IREventObserver
 		}
 	}
 
-	private void makeCondPublic(SDeclCG cond)
+	public static void makeCondPublic(SDeclCG cond)
 	{
 		if (cond instanceof AMethodDeclCG)
 		{
@@ -643,7 +710,7 @@ public class JmlGenerator implements IREventObserver
 		}
 	}
 
-	private List<ClonableString> consAnno(String jmlAnno, String name,
+	public static List<ClonableString> consAnno(String jmlAnno, String name,
 			List<String> fieldNames)
 	{
 		StringBuilder sb = new StringBuilder();
@@ -661,8 +728,8 @@ public class JmlGenerator implements IREventObserver
 
 		return consMetaData(sb);
 	}
-
-	private List<ClonableString> consMetaData(StringBuilder sb)
+	
+	public static List<ClonableString> consMetaData(StringBuilder sb)
 	{
 		return consMetaData(sb.toString());
 	}
@@ -675,11 +742,6 @@ public class JmlGenerator implements IREventObserver
 
 		return inv;
 	}
-
-//	private void prependMetaData(PCG node, List<ClonableString> extraMetaData)
-//	{
-//		addMetaData(node, extraMetaData, true);
-//	}
 	
 	public static void appendMetaData(PCG node, List<ClonableString> extraMetaData)
 	{
