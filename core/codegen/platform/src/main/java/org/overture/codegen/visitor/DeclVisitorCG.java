@@ -72,6 +72,7 @@ import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.name.ATokenNameCG;
+import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.traces.ATraceDeclTermCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -79,7 +80,6 @@ import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
 
 public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 {
@@ -203,13 +203,16 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	public SDeclCG caseANamedInvariantType(ANamedInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
-		String name = node.getName().getName();
 		PType type = node.getType();
 		
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		
+		ATypeNameCG typeName = new ATypeNameCG();
+		typeName.setDefiningClass(node.getName().getModule());
+		typeName.setName(node.getName().getName());
+		
 		ANamedTypeDeclCG namedTypeDecl = new ANamedTypeDeclCG();
-		namedTypeDecl.setName(name);
+		namedTypeDecl.setName(typeName);
 		namedTypeDecl.setType(typeCg);
 		
 		return namedTypeDecl;

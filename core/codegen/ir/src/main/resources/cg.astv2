@@ -13,7 +13,6 @@ Tokens
  
   vdmType = 'java:org.overture.ast.types.PType';
   SourceNode = 'java:org.overture.codegen.ir.SourceNode';
-
   
   // Java
   java_Boolean = 'java:java.lang.Boolean';
@@ -225,7 +224,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[pattern]:CG.#pattern
     	[exp]:CG.#exp
     |	{namedType}
-    	[name]:java_String
+    	[name]:CG.#name.type
     	[type]:CG.#type
     |	{namedTrace}
     	[pathname]:CG.#name.token*
@@ -522,7 +521,8 @@ CG {-> package='org.overture.codegen.cgast'
 	;
 
 #type {-> package='org.overture.codegen.cgast.types'
-	| [optional]:java_Boolean}
+	| [optional]:java_Boolean
+	| [namedInvType]:CG.#decl.namedType}
     =   #basic
     |	{Object}
     |	{void}

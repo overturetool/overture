@@ -55,6 +55,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -247,10 +248,26 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 			IRInfo question) throws AnalysisException
 	{
 		PType type = node.getType();
-		String name = node.getName().getName();
-		
 		STypeCG underlyingType  = type.apply(question.getTypeVisitor(), question);
-		underlyingType.setTag(new IRNamedTypeInvariantTag(name));
+		
+		// TODO: Morten initially requested some way of knowing whether a type originates
+		// from a named invariant type. With the NamedInvTypeInfo being introduced, using
+		// IR tags for this is redundant. Check if the IR tagging can be removed.
+		underlyingType.setTag(new IRNamedTypeInvariantTag(node.getName().getName()));
+		
+		ATypeNameCG typeName = new ATypeNameCG();
+		typeName.setDefiningClass(node.getName().getModule());
+		typeName.setName(node.getName().getName());
+		
+		ANamedTypeDeclCG typeDecl = new ANamedTypeDeclCG();
+		typeDecl.setName(typeName);
+
+		if(underlyingType != null)
+		{
+			typeDecl.setType(underlyingType.clone());
+		}
+		
+		underlyingType.setNamedInvType(typeDecl);
 		
 		return underlyingType;
 	}
