@@ -4,14 +4,14 @@ import java.util.*;
 
 
 public class Entry {
-    private static final Other Other = new Other(10L);
+    private static Other Other = new Other(10L);
 
     public static Object Run() {
         return Other.x;
     }
 
     public String toString() {
-        return "Entry{" + "Other = " + Utils.toString(Other) + "}";
+        return "Entry{" + "Other := " + Utils.toString(Other) + "}";
     }
 
     public static class Other implements Record {
@@ -35,7 +35,7 @@ public class Entry {
             return Utils.hashCode(x);
         }
 
-        public Other clone() {
+        public Other copy() {
             return new Other(x);
         }
 

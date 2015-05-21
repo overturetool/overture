@@ -4,7 +4,7 @@ import java.util.*;
 
 
 public class Entry {
-    private static final St St = new St(0L);
+    private static St St = new St(0L);
 
     public static Object Run() {
         St.x = 25L;
@@ -13,7 +13,7 @@ public class Entry {
     }
 
     public String toString() {
-        return "Entry{" + "St = " + Utils.toString(St) + "}";
+        return "Entry{" + "St := " + Utils.toString(St) + "}";
     }
 
     public static class St implements Record {
@@ -37,7 +37,7 @@ public class Entry {
             return Utils.hashCode(x);
         }
 
-        public St clone() {
+        public St copy() {
             return new St(x);
         }
 

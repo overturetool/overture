@@ -36,6 +36,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
@@ -598,5 +599,68 @@ public class DeclAssistantCG extends AssistantBase
 		{
 			return idDef instanceof AAssignmentDefinition;
 		}
+	}
+	
+	public boolean inFunc(INode node)
+	{
+		if(node.getAncestor(SFunctionDefinition.class) != null)
+		{
+			return true;
+		}
+	
+		// If a node appears in a pre or post condition of an operation then the pre/post
+		// expression might be directly linked to the operation. Therefore the above ancestor
+		// check will not work.
+		
+		return appearsInPreOrPosOfEnclosingOp(node);
+	}
+	
+	public boolean appearsInPreOrPosOfEnclosingFunc(INode node)
+	{
+		SFunctionDefinition encFunc = node.getAncestor(SFunctionDefinition.class);
+		
+		if(encFunc == null)
+		{
+			return false;
+		}
+		
+		PExp preCond = encFunc.getPrecondition();
+		PExp postCond = encFunc.getPostcondition();
+		
+		return appearsInPreOrPostExp(node, preCond, postCond);
+	}
+
+	public boolean appearsInPreOrPosOfEnclosingOp(INode node)
+	{
+		SOperationDefinition encOp = node.getAncestor(SOperationDefinition.class);
+		
+		if(encOp == null)
+		{
+			return false;
+		}
+		
+		PExp preCond = encOp.getPrecondition();
+		PExp postCond = encOp.getPostcondition();
+		
+		return appearsInPreOrPostExp(node, preCond, postCond);
+	}
+
+	private boolean appearsInPreOrPostExp(INode node, PExp preCond, PExp postCond)
+	{
+		INode next = node;
+		Set<INode> visited = new HashSet<INode>();
+		
+		while (next.parent() != null
+				&& !(next.parent() instanceof SOperationDefinition)
+				&& !visited.contains(next))
+		{
+			visited.add(next);
+			next = next.parent();
+		}
+
+		// If we are in a pre or post condition then 'next' should point to the
+		// pre or post expression of the operation
+
+		return preCond == next || postCond == next;
 	}
 }

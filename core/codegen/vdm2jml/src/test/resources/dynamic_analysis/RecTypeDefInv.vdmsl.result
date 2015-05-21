@@ -1,0 +1,9 @@
+inv_Rec(_x = 1, _y = -2) is false
+
+java.lang.AssertionError
+	at org.overture.codegen.runtime.Utils.report(Utils.java:419)
+	at Entrytypes.Rec.inv_Rec(Rec.java:69)
+	at Entrytypes.Rec.<init>(Rec.java:12)
+	at Entry.recInvBreak(Entry.java:21)
+	at Entry.Run(Entry.java:9)
+	at Main.main(Main.java:7)

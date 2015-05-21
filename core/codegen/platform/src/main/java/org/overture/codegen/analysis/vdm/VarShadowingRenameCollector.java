@@ -20,6 +20,7 @@ import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
@@ -56,6 +57,7 @@ import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.PType;
 import org.overture.codegen.ir.TempVarNameGen;
 import org.overture.codegen.logging.Logger;
@@ -110,7 +112,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		visitModuleDefs(node.getDefs());
+		visitModuleDefs(node.getDefs(), node);
 	}
 	
 	@Override
@@ -122,7 +124,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		visitModuleDefs(node.getDefinitions());
+		visitModuleDefs(node.getDefinitions(), node);
 	}
 
 	@Override
@@ -134,7 +136,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		visitModuleDefs(node.getDefinitions());
+		visitModuleDefs(node.getDefinitions(), node);
 	}
 
 	// For operations and functions it works as a single pattern
@@ -154,11 +156,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		
 		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
 		
-		addLocalDefs(defInfo);
+		openScope(defInfo, node);
 
 		node.getBody().apply(this);
 
-		removeLocalDefs(defInfo);
+		endScope(defInfo);
 	}
 
 	@Override
@@ -172,11 +174,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		DefinitionInfo defInfo = new DefinitionInfo(getParamDefs(node), af);
 		
-		addLocalDefs(defInfo);
+		openScope(defInfo, node);
 
 		node.getBody().apply(this);
 
-		removeLocalDefs(defInfo);
+		endScope(defInfo);
 	}
 
 	@Override
@@ -698,8 +700,25 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		return newNameSuggestion;
 	}
 
-	private void visitModuleDefs(List<PDefinition> defs)
+	// Note that this methods is intended to work both for SL modules and PP/RT classes
+	private void visitModuleDefs(List<PDefinition> defs, INode module)
 			throws AnalysisException
+	{
+		DefinitionInfo defInfo = getStateDefs(defs, module);
+		
+		if(defInfo != null)
+		{
+			addLocalDefs(defInfo);
+			handleExecutables(defs);
+			removeLocalDefs(defInfo);
+		}
+		else
+		{
+			handleExecutables(defs);
+		}
+	}
+
+	private void handleExecutables(List<PDefinition> defs) throws AnalysisException
 	{
 		for (PDefinition def : defs)
 		{
@@ -715,6 +734,91 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 				def.apply(this);
 			}
 		}
+	}
+
+	private DefinitionInfo getStateDefs(List<PDefinition> defs, INode module)
+	{
+		if(module instanceof AModuleModules)
+		{
+			List<PDefinition> fieldDefs = new LinkedList<PDefinition>();
+
+			AStateDefinition stateDef = getStateDef(defs);
+			
+			if(stateDef != null)
+			{
+				fieldDefs.addAll(findFieldDefs(stateDef.getStateDefs(), stateDef.getFields()));
+			}
+			
+			for(PDefinition def : defs)
+			{
+				if(def instanceof AValueDefinition)
+				{
+					fieldDefs.add(def);
+				}
+			}
+
+			return new DefinitionInfo(fieldDefs, af);
+		}
+		else if(module instanceof SClassDefinition)
+		{
+			SClassDefinition classDef = (SClassDefinition) module;
+			List<PDefinition> allDefs = new LinkedList<PDefinition>();
+
+			LinkedList<PDefinition> enclosedDefs = classDef.getDefinitions();
+			LinkedList<PDefinition> inheritedDefs = classDef.getAllInheritedDefinitions();
+
+			allDefs.addAll(enclosedDefs);
+			allDefs.addAll(inheritedDefs);
+			
+			List<PDefinition> fields = new LinkedList<PDefinition>();
+			
+			for (PDefinition def : allDefs)
+			{
+				if (def instanceof AInstanceVariableDefinition
+						|| def instanceof AValueDefinition)
+				{
+					fields.add(def);
+				}
+			}
+			
+			return new DefinitionInfo(fields, af);
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Expected module or class definition. Got: " + module + " in '" + this.getClass().getSimpleName() +"'");
+			return null;
+		}
+	}
+	
+	private AStateDefinition getStateDef(List<PDefinition> defs)
+	{
+		for (PDefinition def : defs)
+		{
+			if (def instanceof AStateDefinition)
+			{
+				return (AStateDefinition) def;
+			}
+		}
+		
+		return null;
+	}
+
+	private List<PDefinition> findFieldDefs(List<PDefinition> stateDefs, List<AFieldField> fields)
+	{
+		List<PDefinition> fieldDefs = new LinkedList<PDefinition>();
+		
+		for(PDefinition d : stateDefs)
+		{
+			for(AFieldField f : fields)
+			{
+				if(f.getTagname().equals(d.getName()))
+				{
+					fieldDefs.add(d);
+					break;
+				}
+			}
+		}
+		return fieldDefs;
 	}
 
 	private void setNamesToAvoid(PDefinition def) throws AnalysisException

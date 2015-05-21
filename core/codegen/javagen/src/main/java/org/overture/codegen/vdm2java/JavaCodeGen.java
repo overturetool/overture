@@ -65,6 +65,8 @@ import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IREventCoordinator;
+import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
@@ -73,6 +75,7 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.ModuleToClassTransformation;
+import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -82,7 +85,7 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Settings;
 
-public class JavaCodeGen extends CodeGenBase
+public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 {
 	public static final String JAVA_TEMPLATES_ROOT_FOLDER = "JavaTemplates";
 
@@ -96,6 +99,8 @@ public class JavaCodeGen extends CodeGenBase
 
 	private JavaFormat javaFormat;
 	private TemplateStructure javaTemplateStructure;
+	
+	private IREventObserver irObserver;
 
 	public JavaCodeGen()
 	{
@@ -103,6 +108,22 @@ public class JavaCodeGen extends CodeGenBase
 		init();
 	}
 
+	public JavaCodeGen(ILogger log)
+	{
+		super(log);
+		init();
+	}
+
+	private void init()
+	{
+		this.irObserver = null;
+		initVelocity();
+
+		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
+		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
+		this.javaFormat = new JavaFormat(varPrefixes, javaTemplateStructure, generator.getIRInfo());
+	}
+	
 	public void setJavaTemplateStructure(TemplateStructure javaTemplateStructure)
 	{
 		this.javaTemplateStructure = javaTemplateStructure;
@@ -121,21 +142,6 @@ public class JavaCodeGen extends CodeGenBase
 	public JavaSettings getJavaSettings()
 	{
 		return this.javaFormat.getJavaSettings();
-	}
-
-	public JavaCodeGen(ILogger log)
-	{
-		super(log);
-		init();
-	}
-
-	private void init()
-	{
-		initVelocity();
-
-		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
-		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
-		this.javaFormat = new JavaFormat(varPrefixes, javaTemplateStructure, generator.getIRInfo());
 	}
 
 	public void clear()
@@ -231,6 +237,8 @@ public class JavaCodeGen extends CodeGenBase
 			throws AnalysisException, UnsupportedModelingException {
 		
 		List<INode> userModules = getUserModules(ast);
+		
+		handleOldNames(ast);
 
 		List<Renaming> allRenamings = normaliseIdentifiers(userModules);
 		computeDefTable(userModules);
@@ -263,19 +271,20 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 		
+		// Event notification
+		statuses = initialIrEvent(statuses);
+		
 		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
 		List<IRStatus<org.overture.codegen.cgast.INode>> modulesAsNodes = IRStatus.extract(moduleStatuses);
 			
-		ModuleToClassTransformation moduleTransformation = new ModuleToClassTransformation(transAssistant, getModuleDecls(moduleStatuses));
+		ModuleToClassTransformation moduleTransformation = new ModuleToClassTransformation(getInfo(),
+				transAssistant, getModuleDecls(moduleStatuses));
 		
 		for(IRStatus<org.overture.codegen.cgast.INode> moduleStatus : modulesAsNodes)
 		{
 			try
 			{
-				if (!getInfo().getDeclAssistant().isLibraryName(moduleStatus.getIrNodeName()))
-				{
-					generator.applyTotalTransformation(moduleStatus, moduleTransformation);
-				}
+				generator.applyTotalTransformation(moduleStatus, moduleTransformation);
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
@@ -301,7 +310,7 @@ public class JavaCodeGen extends CodeGenBase
 		List<AClassDeclCG> classes = getClassDecls(classStatuses);
 		javaFormat.setClasses(classes);
 
-		LinkedList<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
+		List<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
 		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
 
 		for (IRStatus<AClassDeclCG> status : classStatuses)
@@ -340,6 +349,9 @@ public class JavaCodeGen extends CodeGenBase
 				}
 			}
 		}
+		
+		// Event notification
+		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), AClassDeclCG.class);
 
 		List<String> skipping = new LinkedList<String>();
 
@@ -431,6 +443,16 @@ public class JavaCodeGen extends CodeGenBase
 		data.setWarnings(warnings);
 
 		return data;
+	}
+
+	private void handleOldNames(List<? extends INode> ast) throws AnalysisException
+	{
+		OldNameRenamer oldNameRenamer = new OldNameRenamer();
+		
+		for(INode module : ast)
+		{
+			module.apply(oldNameRenamer);
+		}
 	}
 
 	private List<INode> getUserModules(
@@ -766,5 +788,43 @@ public class JavaCodeGen extends CodeGenBase
 		// }
 
 		return true;
+	}
+
+	@Override
+	public void register(IREventObserver obs)
+	{
+		if(obs != null && irObserver == null)
+		{
+			irObserver = obs;
+		}
+	}
+
+	@Override
+	public void unregister(IREventObserver obs)
+	{
+		if(obs != null && irObserver == obs)
+		{
+			irObserver = null;
+		}
+	}
+
+	public List<IRStatus<org.overture.codegen.cgast.INode>> initialIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
+	{
+		if(irObserver != null)
+		{
+			return irObserver.initialIRConstructed(ast, getInfo());
+		}
+		
+		return ast;
+	}
+	
+	public List<IRStatus<org.overture.codegen.cgast.INode>> finalIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
+	{
+		if(irObserver != null)
+		{
+			return irObserver.finalIRConstructed(ast, getInfo());
+		}
+		
+		return ast;
 	}
 }

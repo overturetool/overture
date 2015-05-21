@@ -37,10 +37,10 @@ public class Entry {
         long toVar_1 = 5L;
 
         for (Long i = 0L; i <= toVar_1; i++) {
-            result = SeqUtil.conc(Utils.clone(result), SeqUtil.seq(casesInt(i)));
+            result = SeqUtil.conc(Utils.copy(result), SeqUtil.seq(casesInt(i)));
         }
 
-        return Utils.clone(result);
+        return Utils.copy(result);
     }
 
     public String toString() {

@@ -5,7 +5,7 @@ import java.util.*;
 
 public class A {
     private static final VDMSet a = SetUtil.set(1L, 2L);
-    private static final VDMMap x = MapUtil.rngResBy(m1(), Utils.clone(a));
+    private static final VDMMap x = MapUtil.rngResBy(m1(), Utils.copy(a));
 
     public A() {
     }

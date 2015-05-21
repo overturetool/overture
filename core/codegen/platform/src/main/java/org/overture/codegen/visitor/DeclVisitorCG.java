@@ -79,6 +79,7 @@ import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
+import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
 
 public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 {
@@ -223,6 +224,12 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 		ARecordDeclCG record = new ARecordDeclCG();
 		record.setName(name.getName());
+		
+		if(node.getInvDef() != null)
+		{
+			SDeclCG invCg = node.getInvDef().apply(question.getDeclVisitor(), question);
+			record.setInvariant(invCg);
+		}
 
 		LinkedList<AFieldDeclCG> recordFields = record.getFields();
 		for (AFieldField aFieldField : fields)
@@ -265,12 +272,17 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		PType type = node.getType();
 		
 		SDeclCG declCg = type.apply(question.getDeclVisitor(), question);
-		
-		ATypeDeclCG typDecl = new ATypeDeclCG();
-		typDecl.setAccess(access);
-		typDecl.setDecl(declCg);
 
-		return typDecl;
+		SDeclCG invCg = node.getInvdef() != null ?
+				node.getInvdef().apply(question.getDeclVisitor(), question)
+				: null;
+		
+		ATypeDeclCG typeDecl = new ATypeDeclCG();
+		typeDecl.setAccess(access);
+		typeDecl.setDecl(declCg);
+		typeDecl.setInv(invCg);
+		
+		return typeDecl;
 	}
 
 	@Override
@@ -278,12 +290,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			AExplicitFunctionDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		if (node.getIsTypeInvariant())
-		{
-			question.addUnsupportedNode(node, "Explicit functions that are type invariants are not supported");
-			return null;
-		}
-
 		String accessCg = node.getAccess().getAccess().toString();
 		String funcNameCg = node.getName().getName();
 

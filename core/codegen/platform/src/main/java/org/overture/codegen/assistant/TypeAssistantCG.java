@@ -24,6 +24,7 @@ package org.overture.codegen.assistant;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -728,5 +729,37 @@ public class TypeAssistantCG extends AssistantBase
 				|| type instanceof ANat1BasicTypeWrappersTypeCG
 				|| type instanceof ANatNumericBasicTypeCG
 				|| type instanceof ANatBasicTypeWrappersTypeCG;
+	}
+	
+	public boolean isWrapperType(STypeCG type)
+	{
+		return type instanceof ANatBasicTypeWrappersTypeCG
+				|| type instanceof ANat1BasicTypeWrappersTypeCG
+				|| type instanceof ARatBasicTypeWrappersTypeCG
+				|| type instanceof ARealBasicTypeWrappersTypeCG
+				|| type instanceof ACharBasicTypeWrappersTypeCG
+				|| type instanceof ABoolBasicTypeWrappersTypeCG;
+	}
+	
+	public boolean allowsNull(STypeCG type)
+	{
+		if(type instanceof AUnionTypeCG)
+		{
+			for(STypeCG t : ((AUnionTypeCG) type).getTypes())
+			{
+				if(allowsNull(t))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		else
+		{
+			return /* type instanceof AObjectTypeCG || */type != null
+					&& (type instanceof AUnknownTypeCG || BooleanUtils.isTrue(type.getOptional()) || isWrapperType(type));
+		}
+		
 	}
 }

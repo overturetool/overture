@@ -29,7 +29,7 @@ public class Entry {
                 success_1 = Utils.equals(intPattern_1, 1L);
 
                 if (success_1) {
-                    Tuple tuplePattern_2 = Utils.clone(((Tuple) tuplePattern_1.get(
+                    Tuple tuplePattern_2 = Utils.copy(((Tuple) tuplePattern_1.get(
                                 1)));
                     success_1 = tuplePattern_2.compatible(Number.class,
                             Number.class);
@@ -50,12 +50,12 @@ public class Entry {
             }
 
             if (Utils.equals(1L, 1L)) {
-                setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
+                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
                         SetUtil.set(a));
             }
         }
 
-        return Utils.clone(setCompResult_1);
+        return Utils.copy(setCompResult_1);
     }
 
     public String toString() {

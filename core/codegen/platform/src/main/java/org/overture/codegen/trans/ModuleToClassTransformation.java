@@ -1,5 +1,6 @@
 package org.overture.codegen.trans;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.INode;
@@ -25,15 +26,12 @@ import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeImportCG;
 import org.overture.codegen.cgast.declarations.AValueValueImportCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
-import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
@@ -42,11 +40,13 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 {
 	private AClassDeclCG clazz = null;
 	
+	private IRInfo info;
 	private TransAssistantCG transAssistant;
 	private List<AModuleDeclCG> allModules;
 
-	public ModuleToClassTransformation(TransAssistantCG transAssistant, List<AModuleDeclCG> allModules)
+	public ModuleToClassTransformation(IRInfo info, TransAssistantCG transAssistant, List<AModuleDeclCG> allModules)
 	{
+		this.info = info;
 		this.transAssistant = transAssistant;
 		this.allModules = allModules;
 	}
@@ -62,11 +62,10 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		makeStateAccessExplicit(node);
 		handleImports(node.getImport(), clazz);
 		
-		for (SDeclCG decl : node.getDecls())
+		// Wrap declarations in a new list to avoid a concurrent modifications
+		// exception when moving the module declarations to the class
+		for (SDeclCG decl : new LinkedList<>(node.getDecls()))
 		{
-			// Note that this declaration is disconnected from the IR
-			decl = decl.clone();
-
 			if (decl instanceof AMethodDeclCG)
 			{
 				AMethodDeclCG method = (AMethodDeclCG) decl;
@@ -118,6 +117,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		if (stateDecl != null)
 		{
 			ARecordDeclCG record = new ARecordDeclCG();
+			record.setSourceNode(stateDecl.getSourceNode());
 			record.setName(stateDecl.getName());
 
 			for (AFieldDeclCG field : stateDecl.getFields())
@@ -137,8 +137,15 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 
 			ARecordTypeCG stateType = new ARecordTypeCG();
 			stateType.setName(typeName);
+			
+			if(stateDecl.getInvDecl() != null)
+			{
+				clazz.setInvariant(stateDecl.getInvDecl().clone());
+			}
 
-			clazz.getFields().add(transAssistant.consConstField(IRConstants.PRIVATE, stateType, stateDecl.getName(), getInitExp(stateDecl)));
+			// The state field can't be final since you are allow to assign to it in
+			// VDM-SL, e.g. St := mk_St(...)
+			clazz.getFields().add(transAssistant.consField(IRConstants.PRIVATE, stateType, stateDecl.getName(), getInitExp(stateDecl)));
 		}
 	}
 
@@ -229,64 +236,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		module.apply(new DepthFirstAnalysisAdaptor()
-		{
-			@Override
-			public void caseAIdentifierVarExpCG(AIdentifierVarExpCG node)
-					throws AnalysisException
-			{
-				if (!node.getIsLocal()
-						&& !node.getName().equals(stateDecl.getName()))
-				{
-					// First condition: 'not local' means we are accessing state
-					// Second condition: if the variable represents a field of the state then it must be explicit
-					AExplicitVarExpCG eVar = new AExplicitVarExpCG();
-					eVar.setClassType(transAssistant.consClassType(stateDecl.getName()));
-					eVar.setIsLambda(false);
-					eVar.setIsLocal(node.getIsLocal());
-					eVar.setName(node.getName());
-					eVar.setSourceNode(node.getSourceNode());
-					eVar.setTag(node.getTag());
-					eVar.setType(node.getType().clone());
-
-					transAssistant.replaceNodeWith(node, eVar);
-				}
-			}
-		});
-
-		module.apply(new DepthFirstAnalysisAdaptor()
-		{
-			@Override
-			public void caseAIdentifierStateDesignatorCG(
-					AIdentifierStateDesignatorCG node) throws AnalysisException
-			{
-				if (!node.getIsLocal()
-						&& !node.getName().equals(stateDecl.getName()))
-				{
-					ARecordTypeCG stateType = getRecType(stateDecl);
-
-					AIdentifierStateDesignatorCG idState = new AIdentifierStateDesignatorCG();
-					idState.setClassName(null);
-					idState.setExplicit(false);
-					idState.setIsLocal(false);
-					idState.setName(stateDecl.getName());
-					idState.setType(stateType);
-
-					AFieldStateDesignatorCG field = new AFieldStateDesignatorCG();
-					field.setField(node.getName());
-					field.setObject(idState);
-					for (AFieldDeclCG f : stateDecl.getFields())
-					{
-						if (f.getName().equals(node.getName()))
-						{
-							field.setType(f.getType().clone());
-						}
-					}
-
-					transAssistant.replaceNodeWith(node, field);
-				}
-			}
-		});
+		module.apply(new SlStateAccessTrans(stateDecl, info, transAssistant));
 	}
 
 	public AStateDeclCG getStateDecl(AModuleDeclCG module)
@@ -312,8 +262,8 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		} else
 		{
 			ANewExpCG defaultRecInit = new ANewExpCG();
-			defaultRecInit.setName(getTypeName(stateDecl));
-			defaultRecInit.setType(getRecType(stateDecl));
+			defaultRecInit.setName(transAssistant.getTypeName(stateDecl));
+			defaultRecInit.setType(transAssistant.getRecType(stateDecl));
 
 			for (int i = 0; i < stateDecl.getFields().size(); i++)
 			{
@@ -321,40 +271,6 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			}
 
 			return defaultRecInit;
-		}
-	}
-
-	private ARecordTypeCG getRecType(final AStateDeclCG stateDecl)
-	{
-		ARecordTypeCG stateType = new ARecordTypeCG();
-		stateType.setName(getTypeName(stateDecl));
-
-		return stateType;
-	}
-
-	private ATypeNameCG getTypeName(final AStateDeclCG stateDecl)
-	{
-		ATypeNameCG stateName = new ATypeNameCG();
-		stateName.setDefiningClass(getEnclosingModuleName(stateDecl));
-		stateName.setName(stateDecl.getName());
-
-		return stateName;
-	}
-
-	private String getEnclosingModuleName(AStateDeclCG stateDecl)
-	{
-		AModuleDeclCG module = stateDecl.getAncestor(AModuleDeclCG.class);
-
-		if (module != null)
-		{
-			return module.getName();
-		} else
-		{
-			Logger.getLog().printErrorln("Could not find enclosing module name of state declaration "
-					+ stateDecl.getName()
-					+ " in '"
-					+ this.getClass().getSimpleName() + "'");
-			return null;
 		}
 	}
 	

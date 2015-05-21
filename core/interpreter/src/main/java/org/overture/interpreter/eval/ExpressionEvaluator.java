@@ -1,13 +1,16 @@
 package org.overture.interpreter.eval;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AApplyExp;
@@ -76,6 +79,7 @@ import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
@@ -508,7 +512,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			if (node.getExpdef() == null)
 			{
-				rv = ctxt.assistantFactory.createAImplicitFunctionDefinitionAssistant().getPolymorphicValue(ctxt.assistantFactory, node.getImpdef(), fixed);
+				rv = getPolymorphicValue(ctxt.assistantFactory, node.getImpdef(), fixed);
 			} else
 			{
 				rv = ctxt.assistantFactory.createAExplicitFunctionDefinitionAssistant().getPolymorphicValue(ctxt.assistantFactory, node.getExpdef(), fixed);
@@ -1845,7 +1849,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 
 			ObjectValue ov = v.objectValue(ctxt);
-			return new BooleanValue(ctxt.assistantFactory.createAIsOfBaseClassExpAssistant().search(node, ov));
+			return new BooleanValue(search(node, ov));
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -1874,5 +1878,73 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
+	}
+	
+	public FunctionValue getPolymorphicValue(IInterpreterAssistantFactory af,
+			AImplicitFunctionDefinition impdef, PTypeList actualTypes)
+	{
+
+		Map<List<PType>, FunctionValue> polyfuncs = VdmRuntime.getNodeState(impdef).polyfuncs;
+
+		if (polyfuncs == null)
+		{
+			polyfuncs = new HashMap<List<PType>, FunctionValue>();
+		} else
+		{
+			// We always return the same function value for a polymorph
+			// with a given set of types. This is so that the one function
+			// value can record measure counts for recursive polymorphic
+			// functions.
+
+			FunctionValue rv = polyfuncs.get(actualTypes);
+
+			if (rv != null)
+			{
+				return rv;
+			}
+		}
+
+		FunctionValue prefv = null;
+		FunctionValue postfv = null;
+
+		if (impdef.getPredef() != null)
+		{
+			prefv = af.createAExplicitFunctionDefinitionAssistant().getPolymorphicValue(af, impdef.getPredef(), actualTypes);
+		} else
+		{
+			prefv = null;
+		}
+
+		if (impdef.getPostdef() != null)
+		{
+			postfv = af.createAExplicitFunctionDefinitionAssistant().getPolymorphicValue(af, impdef.getPostdef(), actualTypes);
+		} else
+		{
+			postfv = null;
+		}
+
+		FunctionValue rv = new FunctionValue(af, impdef, actualTypes, prefv, postfv, null);
+
+		polyfuncs.put(actualTypes, rv);
+		return rv;
+	}
+	
+	public boolean search(AIsOfBaseClassExp node, ObjectValue from)
+	{
+		if (from.type.getName().getName().equals(node.getBaseClass().getName())
+				&& from.superobjects.isEmpty())
+		{
+			return true;
+		}
+
+		for (ObjectValue svalue : from.superobjects)
+		{
+			if (search(node, svalue))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

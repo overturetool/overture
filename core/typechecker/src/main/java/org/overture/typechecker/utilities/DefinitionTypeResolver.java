@@ -108,10 +108,7 @@ public class DefinitionTypeResolver extends
 			node.setType(af.createPTypeAssistant().typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node), null, question.rootVisitor, newQuestion));
 		} else
 		{
-			// node.setType(PTypeAssistantTC.typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node),
-			// null, question.rootVisitor, question));
 			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
-			// FIXME: my way to rewrite the above line.Test shows that it is ok <- George kanakis
 		}
 
 		if (question.question.env.isVDMPP())

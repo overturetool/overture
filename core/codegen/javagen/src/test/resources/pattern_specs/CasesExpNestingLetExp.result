@@ -12,10 +12,10 @@ public class Entry {
         long toVar_1 = 4L;
 
         for (Long i = 1L; i <= toVar_1; i++) {
-            result = SeqUtil.conc(Utils.clone(result), SeqUtil.seq(f(i)));
+            result = SeqUtil.conc(Utils.copy(result), SeqUtil.seq(f(i)));
         }
 
-        return Utils.clone(result);
+        return Utils.copy(result);
     }
 
     public static Number f(final Number n) {

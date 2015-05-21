@@ -22,7 +22,7 @@ public class A {
 
         public Node(final Number _e, final Node _r) {
             e = _e;
-            r = (_r != null) ? Utils.clone(_r) : null;
+            r = (_r != null) ? Utils.copy(_r) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -39,7 +39,7 @@ public class A {
             return Utils.hashCode(e, r);
         }
 
-        public Node clone() {
+        public Node copy() {
             return new Node(e, r);
         }
 

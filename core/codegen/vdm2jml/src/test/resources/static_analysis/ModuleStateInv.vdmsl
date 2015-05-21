@@ -1,0 +1,60 @@
+module M
+
+exports all
+definitions
+
+state St of
+x : int
+s : seq of nat
+m : map nat to nat
+init s == s = mk_St(1,[1], {1 |-> 1})
+inv s == s.x < 5
+end
+
+operations
+
+assignSt : () ==> ()
+assignSt () ==
+  St := mk_St(1,[1], {1 |-> 1});
+
+atomicAssignSt : () ==> ()
+atomicAssignSt () ==
+atomic
+(
+  St := mk_St(1,[1], {1 |-> 1});
+);
+
+assignX : () ==> ()
+assignX () ==
+  x := x + 1;
+  
+atomicAssignX : () ==> ()
+atomicAssignX () ==
+atomic
+(
+  x := x + 1;
+);
+
+assignS : () ==> ()
+assignS () ==
+  s(1) := 1;
+
+atomicAssignS : () ==> ()
+atomicAssignS () ==
+atomic
+(
+  s(1) := 1;
+);
+
+assignM : () ==> ()
+assignM () ==
+  m(1) := 1;
+  
+atomicAssignM : () ==> ()
+atomicAssignM () ==
+atomic
+(
+  m(1) := 1;
+);
+
+end M

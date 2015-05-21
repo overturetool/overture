@@ -18,11 +18,11 @@ public class Entry {
 
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Number x = ((Number) iterator_2.next());
-            setCompResult_2 = SetUtil.union(Utils.clone(setCompResult_2),
+            setCompResult_2 = SetUtil.union(Utils.copy(setCompResult_2),
                     SetUtil.set(x.longValue() + a.longValue()));
         }
 
-        VDMSet b = Utils.clone(setCompResult_2);
+        VDMSet b = Utils.copy(setCompResult_2);
         Number c = 2L;
 
         {
@@ -32,14 +32,14 @@ public class Entry {
 
             for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
                 Number x = ((Number) iterator_1.next());
-                setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
+                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
                         SetUtil.set(x.longValue() + d.longValue()));
             }
 
-            VDMSet e = Utils.clone(setCompResult_1);
+            VDMSet e = Utils.copy(setCompResult_1);
             Number f = 20L;
 
-            return SetUtil.union(Utils.clone(b), Utils.clone(e));
+            return SetUtil.union(Utils.copy(b), Utils.copy(e));
         }
     }
 

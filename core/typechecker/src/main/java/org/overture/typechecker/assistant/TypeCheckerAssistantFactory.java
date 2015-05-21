@@ -60,19 +60,15 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
-import org.overture.typechecker.assistant.definition.PTraceDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.expression.SBinaryExpAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
-import org.overture.typechecker.assistant.pattern.AMapletPatternMapletAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
@@ -86,12 +82,10 @@ import org.overture.typechecker.assistant.statement.ACallStmAssistantTC;
 import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
 import org.overture.typechecker.assistant.statement.ANonDeterministicSimpleBlockStmAssistantTC;
 import org.overture.typechecker.assistant.statement.PStateDesignatorAssistantTC;
-import org.overture.typechecker.assistant.statement.PStmAssistantTC;
 import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
-import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -209,11 +203,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AOperationTypeAssistantTC(this);
 	}
 
-	@Override
-	public APatternListTypePairAssistantTC createAPatternListTypePairAssistant()
-	{
-		return new APatternListTypePairAssistantTC(this);
-	}
+//	@Override
+//	public APatternListTypePairAssistantTC createAPatternListTypePairAssistant()
+//	{
+//		return new APatternListTypePairAssistantTC(this);
+//	}
 
 	@Override
 	public ARecordInvariantTypeAssistantTC createARecordInvariantTypeAssistant()
@@ -295,11 +289,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 //		return new ALocalDefinitionAssistantTC(this);
 //	}
 
-	@Override
-	public AStateDefinitionAssistantTC createAStateDefinitionAssistant()
-	{
-		return new AStateDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public AStateDefinitionAssistantTC createAStateDefinitionAssistant()
+//	{
+//		return new AStateDefinitionAssistantTC(this);
+//	}
 
 	// @Override
 	// public ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant()
@@ -349,11 +343,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new PDefinitionSet(this);
 	}
 
-	@Override
-	public PTraceDefinitionAssistantTC createPTraceDefinitionAssistant()
-	{
-		return new PTraceDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public PTraceDefinitionAssistantTC createPTraceDefinitionAssistant()
+//	{
+//		return new PTraceDefinitionAssistantTC(this);
+//	}
 
 	@Override
 	public SClassDefinitionAssistantTC createSClassDefinitionAssistant()
@@ -381,11 +375,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 //		return new PExpAssistantTC(this);
 //	}
 
-	@Override
-	public SBinaryExpAssistantTC createSBinaryExpAssistant()
-	{
-		return new SBinaryExpAssistantTC(this);
-	}
+//	@Override
+//	public SBinaryExpAssistantTC createSBinaryExpAssistant()
+//	{
+//		return new SBinaryExpAssistantTC(this);
+//	}
 
 	// module
 
@@ -453,11 +447,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new AExpressionPatternAssistantTC(this);
 	// }
 
-	@Override
-	public AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant()
-	{
-		return new AMapletPatternMapletAssistantTC(this);
-	}
+//	@Override
+//	public AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant()
+//	{
+//		return new AMapletPatternMapletAssistantTC(this);
+//	}
 
 	// @Override
 	// public AMapPatternAssistantTC createAMapPatternAssistant()
@@ -683,11 +677,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new PStateDesignatorAssistantTC(this);
 	}
 
-	@Override
-	public PStmAssistantTC createPStmAssistant()
-	{
-		return new PStmAssistantTC(this);
-	}
+//	@Override
+//	public PStmAssistantTC createPStmAssistant()
+//	{
+//		return new PStmAssistantTC(this);
+//	}
 
 	// @Override
 	// public SLetDefStmAssistantTC createSLetDefStmAssistant()

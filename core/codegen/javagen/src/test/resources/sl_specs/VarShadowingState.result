@@ -4,16 +4,16 @@ import java.util.*;
 
 
 public class Entry {
-    private static final St St = new St(5L);
+    private static St St = new St(5L);
 
     public static Object Run() {
-        Number x = 10L;
+        Number x_1 = 10L;
 
-        return x.longValue() + St.x.longValue();
+        return x_1.longValue() + St.x.longValue();
     }
 
     public String toString() {
-        return "Entry{" + "St = " + Utils.toString(St) + "}";
+        return "Entry{" + "St := " + Utils.toString(St) + "}";
     }
 
     public static class St implements Record {
@@ -37,7 +37,7 @@ public class Entry {
             return Utils.hashCode(x);
         }
 
-        public St clone() {
+        public St copy() {
             return new St(x);
         }
 

@@ -1,0 +1,43 @@
+module Entry
+
+exports all
+definitions
+
+state St of
+  x : nat
+init s == s = mk_St(0)
+end
+
+functions
+
+f :  nat -> nat
+f (a) ==
+  if a mod 2 = 0 then a + 2 else a + 1
+post RESULT mod 2 = 0;
+
+operations
+
+Run : () ==> ?
+Run () ==
+let - = opRet(1),
+    - = f(3)
+in
+(
+  opVoid();
+  opRet(4);
+);
+
+opVoid : () ==> ()
+opVoid () ==
+  x := x + 1
+post x = x~+1; 
+
+opRet : nat ==> nat
+opRet (a) ==
+(
+  x := x + 1;
+  return x;
+)
+post x = x~+1 and RESULT = a;
+
+end Entry

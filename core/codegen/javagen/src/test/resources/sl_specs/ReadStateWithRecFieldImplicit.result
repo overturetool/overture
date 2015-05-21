@@ -4,14 +4,14 @@ import java.util.*;
 
 
 public class Entry {
-    private static final St St = new St(new R(42L));
+    private static St St = new St(new R(42L));
 
     public static Object Run() {
         return St.x.r;
     }
 
     public String toString() {
-        return "Entry{" + "St = " + Utils.toString(St) + "}";
+        return "Entry{" + "St := " + Utils.toString(St) + "}";
     }
 
     public static class R implements Record {
@@ -35,7 +35,7 @@ public class Entry {
             return Utils.hashCode(r);
         }
 
-        public R clone() {
+        public R copy() {
             return new R(r);
         }
 
@@ -48,7 +48,7 @@ public class Entry {
         public R x;
 
         public St(final R _x) {
-            x = (_x != null) ? Utils.clone(_x) : null;
+            x = (_x != null) ? Utils.copy(_x) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -65,7 +65,7 @@ public class Entry {
             return Utils.hashCode(x);
         }
 
-        public St clone() {
+        public St copy() {
             return new St(x);
         }
 

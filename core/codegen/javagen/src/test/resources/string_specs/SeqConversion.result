@@ -38,7 +38,7 @@ public class Entry {
     public static String op4() {
         VDMSeq a = SeqUtil.toSeq(SeqUtil.toStr(SeqUtil.seq()) + "a");
 
-        return SeqUtil.toStr(Utils.clone(a));
+        return SeqUtil.toStr(Utils.copy(a));
     }
 
     public static String op5() {
@@ -66,7 +66,7 @@ public class Entry {
     }
 
     public static String Run() {
-        return SeqUtil.toStr(Utils.clone(x)) + f() + op1() + op2() + op3() +
+        return SeqUtil.toStr(Utils.copy(x)) + f() + op1() + op2() + op3() +
         op5() + SeqUtil.toStr(op6()) + op7();
     }
 

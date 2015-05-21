@@ -1,0 +1,11 @@
+module M
+
+exports all
+definitions
+state St of
+  x : nat
+  init s == s = mk_St(1)
+  inv s == s.x > 0
+end
+
+end M

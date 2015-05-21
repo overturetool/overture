@@ -337,7 +337,7 @@ public class SeqUtil
 		}
 		else if(str instanceof VDMSeq)
 		{
-			return ((VDMSeq) str).clone();
+			return ((VDMSeq) str).copy();
 		}
 		else
 		{

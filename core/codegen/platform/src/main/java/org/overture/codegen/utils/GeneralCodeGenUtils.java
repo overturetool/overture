@@ -30,21 +30,41 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.util.definitions.ClassList;
+import org.overture.ast.util.modules.ModuleList;
+import org.overture.codegen.analysis.vdm.Renaming;
+import org.overture.codegen.analysis.violations.InvalidNamesResult;
+import org.overture.codegen.analysis.violations.UnsupportedModelingException;
+import org.overture.codegen.analysis.violations.Violation;
+import org.overture.codegen.assistant.AssistantManager;
+import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.ir.ITempVarGen;
+import org.overture.codegen.ir.IrNodeInfo;
+import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
+import org.overture.config.Settings;
+import org.overture.interpreter.VDMPP;
+import org.overture.interpreter.VDMRT;
+import org.overture.interpreter.VDMSL;
+import org.overture.interpreter.util.ClassListInterpreter;
+import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.Console;
@@ -66,6 +86,79 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 public class GeneralCodeGenUtils
 {
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	
+	public static List<SClassDefinition> consClassList(List<File> files, Dialect dialect)
+			throws AnalysisException
+	{
+		Settings.dialect = dialect;
+		VDMPP vdmrt = (dialect == Dialect.VDM_RT ? new VDMRT() : new VDMPP());
+		vdmrt.setQuiet(true);
+
+		ExitStatus status = vdmrt.parse(files);
+
+		if (status != ExitStatus.EXIT_OK)
+		{
+			throw new AnalysisException("Could not parse files!");
+		}
+
+		status = vdmrt.typeCheck();
+
+		if (status != ExitStatus.EXIT_OK)
+		{
+			throw new AnalysisException("Could not type check files!");
+		}
+
+		ClassListInterpreter classes;
+		try
+		{
+			classes = vdmrt.getInterpreter().getClasses();
+		} catch (Exception e)
+		{
+			throw new AnalysisException("Could not get classes from class list interpreter!");
+		}
+
+		List<SClassDefinition> mergedParseList = new LinkedList<SClassDefinition>();
+
+		for (SClassDefinition vdmClass : classes)
+		{
+			if (vdmClass instanceof AClassClassDefinition) {
+				mergedParseList.add(vdmClass);
+			}
+		}
+
+		return mergedParseList;
+	}
+	
+	public static ModuleList consModuleList(List<File> files) throws AnalysisException
+	{
+		Settings.dialect = Dialect.VDM_SL;
+		VDMSL vdmSl = new VDMSL();
+		vdmSl.setQuiet(true);
+
+		ExitStatus status = vdmSl.parse(files);
+
+		if (status != ExitStatus.EXIT_OK)
+		{
+			throw new AnalysisException("Could not parse files!");
+		}
+
+		status = vdmSl.typeCheck();
+
+		if (status != ExitStatus.EXIT_OK)
+		{
+			throw new AnalysisException("Could not type check files!");
+		}
+
+		try
+		{
+			return vdmSl.getInterpreter().getModules();
+		} catch (Exception e)
+		{
+			throw new AnalysisException("Could not get classes from class list interpreter!");
+		}
+	}
+	
 	public static TypeCheckResult<List<SClassDefinition>> validateFile(File file)
 			throws AnalysisException
 	{
@@ -352,5 +445,139 @@ public class GeneralCodeGenUtils
 		}
 		
 		return classesToSkip;
-	}	
+	}
+	
+	public static String constructNameViolationsString(
+			InvalidNamesResult invalidNames)
+	{
+		StringBuffer buffer = new StringBuffer();
+
+		List<Violation> reservedWordViolations = asSortedList(invalidNames.getReservedWordViolations());
+		List<Violation> typenameViolations = asSortedList(invalidNames.getTypenameViolations());
+		List<Violation> tempVarViolations = asSortedList(invalidNames.getTempVarViolations());
+
+		String correctionMessage = String.format("Prefix '%s' has been added to the name"
+				+ LINE_SEPARATOR, invalidNames.getCorrectionPrefix());
+
+		for (Violation violation : reservedWordViolations)
+		{
+			buffer.append("Reserved name violation: " + violation + ". "
+					+ correctionMessage);
+		}
+
+		for (Violation violation : typenameViolations)
+		{
+			buffer.append("Type name violation: " + violation + ". "
+					+ correctionMessage);
+		}
+
+		for (Violation violation : tempVarViolations)
+		{
+			buffer.append("Temporary variable violation: " + violation + ". "
+					+ correctionMessage);
+		}
+
+		return buffer.toString();
+	}
+	
+	public static String constructVarRenamingString(List<Renaming> renamings)
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		for(Renaming r : renamings)
+		{
+			sb.append(r).append('\n');
+		}
+		
+		return sb.toString();
+	}
+	
+	public static String constructUnsupportedModelingString(
+			UnsupportedModelingException e)
+	{
+		StringBuffer buffer = new StringBuffer();
+
+		List<Violation> violations = asSortedList(e.getViolations());
+
+		for (Violation violation : violations)
+		{
+			buffer.append(violation + LINE_SEPARATOR);
+		}
+
+		return buffer.toString();
+	}
+	
+	public static List<Violation> asSortedList(Set<Violation> violations)
+	{
+		LinkedList<Violation> list = new LinkedList<Violation>(violations);
+		Collections.sort(list);
+
+		return list;
+	}
+	
+	public static void printMergeErrors(List<Exception> mergeErrors)
+	{
+		for (Exception error : mergeErrors)
+		{
+			Logger.getLog().println(error.toString());
+		}
+	}
+	
+	public static void printUnsupportedIrNodes(Set<VdmNodeInfo> unsupportedNodes)
+	{
+		AssistantManager assistantManager = new AssistantManager();
+		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+
+		List<VdmNodeInfo> nodesSorted = locationAssistant.getVdmNodeInfoLocationSorted(unsupportedNodes);
+
+		for (VdmNodeInfo vdmNodeInfo : nodesSorted)
+		{
+			Logger.getLog().print(vdmNodeInfo.getNode().toString() + 
+					" (" + vdmNodeInfo.getNode().getClass().getSimpleName() + ")");
+
+			ILexLocation location = locationAssistant.findLocation(vdmNodeInfo.getNode());
+
+			Logger.getLog().print(location != null ? " at [line, pos] = ["
+					+ location.getStartLine() + ", " + location.getStartPos()
+					+ "]" : "");
+
+			String reason = vdmNodeInfo.getReason();
+
+			if (reason != null)
+			{
+				Logger.getLog().print(". Reason: " + reason);
+			}
+
+			Logger.getLog().println("");
+		}
+	}
+	
+	public static void printUnsupportedNodes(Set<IrNodeInfo> unsupportedNodes)
+	{
+		AssistantManager assistantManager = new AssistantManager();
+		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+		
+		List<IrNodeInfo> nodesSorted = locationAssistant.getIrNodeInfoLocationSorted(unsupportedNodes);
+
+		for (IrNodeInfo nodeInfo : nodesSorted)
+		{
+			INode vdmNode = locationAssistant.getVdmNode(nodeInfo);
+			Logger.getLog().print(vdmNode != null ? vdmNode.toString() : nodeInfo.getNode().getClass().getSimpleName());
+
+			ILexLocation location = locationAssistant.findLocation(nodeInfo);
+
+			Logger.getLog().print(location != null ? " at [line, pos] = ["
+					+ location.getStartLine() + ", " + location.getStartPos()
+					+ "]" : "");
+
+			String reason = nodeInfo.getReason();
+
+			if (reason != null)
+			{
+				Logger.getLog().print(". Reason: " + reason);
+			}
+
+			Logger.getLog().println("");
+		}
+	}
 }

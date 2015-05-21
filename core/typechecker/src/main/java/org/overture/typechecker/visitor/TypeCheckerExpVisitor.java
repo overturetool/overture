@@ -224,7 +224,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType defaultSBooleanBinaryExp(SBooleanBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		node.setType(question.assistantFactory.createSBinaryExpAssistant().binaryCheck(node, AstFactory.newABooleanBasicType(node.getLocation()), THIS, question));
+		node.setType(binaryCheck(node, AstFactory.newABooleanBasicType(node.getLocation()), THIS, question));
 
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, node.getType(), node.getLocation());
 	}
@@ -3558,5 +3558,31 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		c.setType(c.getResult().apply(rootVisitor, question));
 		local.unusedCheck();
 		return c.getType();
+	}
+	
+	public ABooleanBasicType binaryCheck(SBooleanBinaryExp node,
+			ABooleanBasicType expected,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) throws AnalysisException
+	{
+
+		node.getLeft().apply(rootVisitor, question);
+		node.getRight().apply(rootVisitor, question);
+
+		if (!question.assistantFactory.createPTypeAssistant().isType(node.getLeft().getType(), expected.getClass()))
+		{
+			TypeCheckerErrors.report(3065, "Left hand of " + node.getOp()
+					+ " is not " + expected, node.getLocation(), node);
+		}
+
+		if (!question.assistantFactory.createPTypeAssistant().isType(node.getRight().getType(), expected.getClass()))
+		{
+			TypeCheckerErrors.report(3066, "Right hand of " + node.getOp()
+					+ " is not " + expected, node.getLocation(), node);
+		}
+
+		node.setType(expected);
+		return (ABooleanBasicType) node.getType();
+
 	}
 }

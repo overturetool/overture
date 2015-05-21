@@ -15,7 +15,7 @@ Tokens
   SourceNode = 'java:org.overture.codegen.ir.SourceNode';
 
   
-  //Java
+  // Java
   java_Boolean = 'java:java.lang.Boolean';
   java_Long = 'java:java.lang.Long';
   java_Integer = 'java:java.lang.Integer';
@@ -24,13 +24,16 @@ Tokens
   java_String = 'java:java.lang.String';
   java_Object = 'java:java.lang.Object';
   
+  // Wraps a string type so it can be used as a field type
+  eString ='java:org.overture.ast.util.ClonableString';
      
 Abstract Syntax Tree
 /* This section declares the AST by giving root nodes and their possible sub classe */
 
 CG {-> package='org.overture.codegen.cgast'
 	| [sourceNode]:SourceNode
-	| (tag):java_Object}
+	| (tag):java_Object // Tags carry information to support IR analysis
+	| (metaData):eString*} // Meta data is intended to hold printable information such as code annotations
 	= #pattern
 	| #bind
 	| #multipleBind
@@ -195,6 +198,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{record}
     	//TODO: Should have [access]:java_String
     	[name]:java_String
+    	[invariant]:CG.#decl
     	[fields]:field*
     	[methods]:CG.#decl.method*
     |	{thread}
@@ -203,6 +207,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[type]:CG.#type
     |	{type}
     	[access]:java_String
+    	[inv]:CG.#decl
     	[decl]:CG.#decl
     |	{catchClause}
     	[type]:CG.#type
@@ -291,6 +296,7 @@ CG {-> package='org.overture.codegen.cgast'
 			|	{mapSeqUpdate} [col]:CG.#exp [index]:CG.#exp [value]:CG.#exp
 			|	{invCheck} [subject]:CG.#exp
 			|	{atomic} [statements]:CG.#stm*
+			|	{meta}
            ;
 
 #call {-> package='org.overture.codegen.cgast.statements'
@@ -515,7 +521,8 @@ CG {-> package='org.overture.codegen.cgast'
 	| {comp} [first]:CG.#exp.maplet [bindings]:CG.#multipleBind.set* [predicate]:CG.#exp
 	;
 
-#type {-> package='org.overture.codegen.cgast.types'}
+#type {-> package='org.overture.codegen.cgast.types'
+	| [optional]:java_Boolean}
     =   #basic
     |	{Object}
     |	{void}

@@ -35,9 +35,12 @@ import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
@@ -232,7 +235,7 @@ public class JavaCodeGenMain
 			if (generated.hasMergeErrors())
 			{
 				Logger.getLog().println(String.format("VDM expression '%s' could not be merged. Following merge errors were found:", exp));
-				JavaCodeGenUtil.printMergeErrors(generated.getMergeErrors());
+				GeneralCodeGenUtils.printMergeErrors(generated.getMergeErrors());
 			} else if (!generated.canBeGenerated())
 			{
 				Logger.getLog().println("Could not generate VDM expression: "
@@ -240,12 +243,12 @@ public class JavaCodeGenMain
 
 				if (generated.hasUnsupportedIrNodes())
 				{
-					JavaCodeGenUtil.printUnsupportedIrNodes(generated.getUnsupportedInIr());
+					GeneralCodeGenUtils.printUnsupportedIrNodes(generated.getUnsupportedInIr());
 				}
 
 				if (generated.hasUnsupportedTargLangNodes())
 				{
-					JavaCodeGenUtil.printUnsupportedNodes(generated.getUnsupportedInTargLang());
+					GeneralCodeGenUtils.printUnsupportedNodes(generated.getUnsupportedInTargLang());
 				}
 
 			} else
@@ -270,7 +273,7 @@ public class JavaCodeGenMain
 			vdmCodGen.setSettings(irSettings);
 			vdmCodGen.setJavaSettings(javaSettings);
 			
-			ModuleList ast = JavaCodeGenUtil.consModulesList(files);
+			ModuleList ast = GeneralCodeGenUtils.consModuleList(files);
 			
 			GeneratedData data = vdmCodGen.generateJavaFromVdmModules(ast);
 			
@@ -285,7 +288,7 @@ public class JavaCodeGenMain
 		{
 			Logger.getLog().println("Could not generate model: "
 					+ e.getMessage());
-			Logger.getLog().println(JavaCodeGenUtil.constructUnsupportedModelingString(e));
+			Logger.getLog().println(GeneralCodeGenUtils.constructUnsupportedModelingString(e));
 		}
 	}
 
@@ -298,7 +301,7 @@ public class JavaCodeGenMain
 			vdmCodGen.setSettings(irSettings);
 			vdmCodGen.setJavaSettings(javaSettings);
 			
-			List<SClassDefinition> ast = JavaCodeGenUtil.consMergedParseList(files, dialect);
+			List<SClassDefinition> ast = GeneralCodeGenUtils.consClassList(files, dialect);
 			
 			GeneratedData data = vdmCodGen.generateJavaFromVdm(ast);
 			
@@ -313,25 +316,15 @@ public class JavaCodeGenMain
 		{
 			Logger.getLog().println("Could not generate model: "
 					+ e.getMessage());
-			Logger.getLog().println(JavaCodeGenUtil.constructUnsupportedModelingString(e));
+			Logger.getLog().println(GeneralCodeGenUtils.constructUnsupportedModelingString(e));
 		}
 	}
 
-	private static void processData(boolean printCode,
+	public static void processData(boolean printCode,
 			File outputDir, JavaCodeGen vdmCodGen, GeneratedData data) {
 		List<GeneratedModule> generatedClasses = data.getClasses();
 
 		Logger.getLog().println("");
-		
-		if (outputDir != null)
-		{
-			String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
-			if(JavaCodeGenUtil.isValidJavaPackage(javaPackage))
-			{
-				String packageFolderPath = JavaCodeGenUtil.getFolderFromJavaRootPackage(javaPackage);
-				outputDir = new File(outputDir, packageFolderPath);
-			}
-		}
 		
 		if(!generatedClasses.isEmpty())
 		{
@@ -341,7 +334,7 @@ public class JavaCodeGenMain
 				{
 					Logger.getLog().println(String.format("Class %s could not be merged. Following merge errors were found:", generatedClass.getName()));
 	
-					JavaCodeGenUtil.printMergeErrors(generatedClass.getMergeErrors());
+					GeneralCodeGenUtils.printMergeErrors(generatedClass.getMergeErrors());
 				} else if (!generatedClass.canBeGenerated())
 				{
 					Logger.getLog().println("Could not generate class: "
@@ -350,20 +343,28 @@ public class JavaCodeGenMain
 					if (generatedClass.hasUnsupportedIrNodes())
 					{
 						Logger.getLog().println("Following VDM constructs are not supported by the code generator:");
-						JavaCodeGenUtil.printUnsupportedIrNodes(generatedClass.getUnsupportedInIr());
+						GeneralCodeGenUtils.printUnsupportedIrNodes(generatedClass.getUnsupportedInIr());
 					}
 	
 					if (generatedClass.hasUnsupportedTargLangNodes())
 					{
 						Logger.getLog().println("Following constructs are not supported by the code generator:");
-						JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedInTargLang());
+						GeneralCodeGenUtils.printUnsupportedNodes(generatedClass.getUnsupportedInTargLang());
 					}
 	
 				} else
 				{
+					
 					if (outputDir != null)
 					{
-						vdmCodGen.generateJavaSourceFile(outputDir, generatedClass);
+						File moduleOutputDir = getModuleOutputDir(outputDir, vdmCodGen, generatedClass);
+						
+						if(moduleOutputDir == null)
+						{
+							continue;
+						}
+						
+						vdmCodGen.generateJavaSourceFile(moduleOutputDir, generatedClass);
 					}
 					
 					if (printCode)
@@ -382,7 +383,7 @@ public class JavaCodeGenMain
 					if (!warnings.isEmpty())
 					{
 						Logger.getLog().println("Following transformation warnings were found:");
-						JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getTransformationWarnings());
+						GeneralCodeGenUtils.printUnsupportedNodes(generatedClass.getTransformationWarnings());
 					}
 				}
 			}
@@ -400,11 +401,16 @@ public class JavaCodeGenMain
 		{
 			if(outputDir != null)
 			{
-				outputDir = new File(outputDir, JavaCodeGen.QUOTES);
-				
 				for (GeneratedModule q : quotes)
 				{
-					vdmCodGen.generateJavaSourceFile(outputDir, q);
+					File moduleOutputDir = getModuleOutputDir(outputDir, vdmCodGen, q);
+					
+					if(moduleOutputDir == null)
+					{
+						continue;
+					}
+					
+					vdmCodGen.generateJavaSourceFile(moduleOutputDir, q);
 				}
 			}
 			
@@ -420,7 +426,7 @@ public class JavaCodeGenMain
 
 		if (!invalidName.isEmpty())
 		{
-			Logger.getLog().println(JavaCodeGenUtil.constructNameViolationsString(invalidName));
+			Logger.getLog().println(GeneralCodeGenUtils.constructNameViolationsString(invalidName));
 		}
 
 		List<Renaming> allRenamings = data.getAllRenamings();
@@ -429,7 +435,7 @@ public class JavaCodeGenMain
 		{
 			Logger.getLog().println("\nDue to variable shadowing or normalisation of Java identifiers the following renamings of variables have been made: ");
 
-			Logger.getLog().println(JavaCodeGenUtil.constructVarRenamingString(allRenamings));
+			Logger.getLog().println(GeneralCodeGenUtils.constructVarRenamingString(allRenamings));
 		}
 		
 		if(data.getWarnings() != null && !data.getWarnings().isEmpty())
@@ -440,6 +446,38 @@ public class JavaCodeGenMain
 				Logger.getLog().println("[WARNING] " + w);
 			}
 		}
+	}
+
+	private static File getModuleOutputDir(File outputDir, JavaCodeGen vdmCodGen,
+			GeneratedModule generatedClass)
+	{
+		File moduleOutputDir = outputDir;
+		String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
+		
+		if(generatedClass.getIrNode() instanceof AClassDeclCG)
+		{
+			javaPackage = ((AClassDeclCG) generatedClass.getIrNode()).getPackage();
+		}
+		else if(generatedClass.getIrNode() instanceof AInterfaceDeclCG)
+		{
+			javaPackage = ((AInterfaceDeclCG) generatedClass.getIrNode()).getPackage();
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Expected IR node of "
+					+ generatedClass.getName()
+					+ " to be a class or interface  declaration at this point. Got: "
+					+ generatedClass.getIrNode());
+			return null;
+		}
+		
+		if (JavaCodeGenUtil.isValidJavaPackage(javaPackage))
+		{
+			String packageFolderPath = JavaCodeGenUtil.getFolderFromJavaRootPackage(javaPackage);
+			moduleOutputDir = new File(outputDir, packageFolderPath);
+		}
+		
+		return moduleOutputDir;
 	}
 	
 	public static List<File> filterFiles(List<File> files)
@@ -457,7 +495,7 @@ public class JavaCodeGenMain
 		return filtered;
 	}
 
-	private static boolean isValidSourceFile(File f) {
+	public static boolean isValidSourceFile(File f) {
 		return f.getName().endsWith(".vdmpp") || f.getName().endsWith(".vdmsl");
 	}
 

@@ -417,7 +417,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 		if(!allRenamings.isEmpty())
 		{
 			CodeGenConsole.GetInstance().println("Due to variable shadowing or normalisation of Java identifiers the following renamings of variables have been made:");
-			CodeGenConsole.GetInstance().println(JavaCodeGenUtil.constructVarRenamingString(allRenamings));;
+			CodeGenConsole.GetInstance().println(GeneralCodeGenUtils.constructVarRenamingString(allRenamings));;
 		}
 	}
 	
@@ -539,7 +539,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 		CodeGenConsole.GetInstance().println("Could not code generate VDM model: "
 				+ ex.getMessage());
 
-		String violationStr = JavaCodeGenUtil.constructUnsupportedModelingString(ex);
+		String violationStr = GeneralCodeGenUtils.constructUnsupportedModelingString(ex);
 		CodeGenConsole.GetInstance().println(violationStr);
 
 		Set<Violation> violations = ex.getViolations();
@@ -554,7 +554,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 
 		CodeGenConsole.GetInstance().println("Warning: " + message);
 
-		String violationStr = JavaCodeGenUtil.constructNameViolationsString(invalidNames);
+		String violationStr = GeneralCodeGenUtils.constructNameViolationsString(invalidNames);
 		CodeGenConsole.GetInstance().println(violationStr);
 
 		Set<Violation> typeNameViolations = invalidNames.getTypenameViolations();

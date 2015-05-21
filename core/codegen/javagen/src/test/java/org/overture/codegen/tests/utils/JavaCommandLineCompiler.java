@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.junit.Assert;
+import org.overture.codegen.vdm2java.JavaToolsUtils;
 
 public class JavaCommandLineCompiler
 {

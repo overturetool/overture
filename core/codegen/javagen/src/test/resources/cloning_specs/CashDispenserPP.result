@@ -228,7 +228,7 @@ public class Account {
             return Utils.hashCode(date, cardId, amount);
         }
 
-        public Transaction clone() {
+        public Transaction copy() {
             return new Transaction(date, cardId, amount);
         }
 

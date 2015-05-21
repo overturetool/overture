@@ -49,7 +49,7 @@ public class Entry {
             }
 
             if (andResult_1) {
-                setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
+                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
                         SetUtil.set(x));
             }
         }

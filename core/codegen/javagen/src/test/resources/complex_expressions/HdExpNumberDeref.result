@@ -12,7 +12,7 @@ public class A {
             return 0L;
         } else {
             return ((Number) rs.get(0)).doubleValue() +
-            Sum(SeqUtil.tail(Utils.clone(rs))).doubleValue();
+            Sum(SeqUtil.tail(Utils.copy(rs))).doubleValue();
         }
     }
 

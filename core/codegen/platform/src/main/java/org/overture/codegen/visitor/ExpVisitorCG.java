@@ -1441,7 +1441,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			}
 			
 			boolean inOwningModule = defModuleName.equals(nodeModuleName);
-			boolean isLocalDef = varDef.getAncestor(AStateDefinition.class) == null;
+			boolean isLocalDef = question.getDeclAssistant().inFunc(node) || 
+					varDef.getAncestor(AStateDefinition.class) == null;
 			
 			if(inOwningModule)
 			{
