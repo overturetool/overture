@@ -182,7 +182,7 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 
 		if (invExpStr != null)
 		{
-			return "//@ assert " + invExpStr + ";";
+			return "//@ " + JmlGenerator.JML_ASSERT_ANNOTATION + " " + invExpStr + ";";
 		} else
 		{
 			return null;
@@ -200,7 +200,7 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 				String stateName = encClass.getFields().getFirst().getName();
 
 				// E.g. inv_St(St)
-				return "inv_" + stateName + "(" + stateName + ")";
+				return JmlGenerator.JML_INV_PREFIX + stateName + "(" + stateName + ")";
 			} else
 			{
 				Logger.getLog().printErrorln("Expected only a single field to represent the state in '"
