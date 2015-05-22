@@ -1,7 +1,9 @@
 package org.overture.codegen.vdm2jml;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
@@ -11,8 +13,6 @@ import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 
-// TODO: This class must take optional types into account - possibly by updating the create method.
-// TODO: Guard against type recursion in the dependency tree
 public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 {
 	private List<NamedTypeInfo> typeInfoList;
@@ -42,51 +42,53 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 		return null;
 	}
 
-	public static List<NamedTypeInfo> onlyDisjointTypes(List<NamedTypeInfo> typeInfo)
+	public static List<NamedTypeInfo> onlyDisjointTypes(
+			List<NamedTypeInfo> typeInfo)
 	{
 		List<NamedTypeInfo> disjointTypes = new LinkedList<NamedTypeInfo>();
 
-		for(NamedTypeInfo t : typeInfo)
+		for (NamedTypeInfo t : typeInfo)
 		{
-			if(!contains(disjointTypes, t))
+			if (!contains(disjointTypes, t))
 			{
 				removeSmallerTypes(disjointTypes, t);
 				disjointTypes.add(t);
 			}
 		}
-		
+
 		return disjointTypes;
 	}
-	
+
 	public static void removeSmallerTypes(List<NamedTypeInfo> disjointTypes,
 			NamedTypeInfo subject)
 	{
 		List<NamedTypeInfo> toRemove = new LinkedList<NamedTypeInfo>();
-		
-		for(NamedTypeInfo nexType : disjointTypes)
+
+		for (NamedTypeInfo nexType : disjointTypes)
 		{
-			if(subject.contains(nexType))
+			if (subject.contains(nexType))
 			{
 				toRemove.add(nexType);
 			}
 		}
-		
+
 		disjointTypes.removeAll(toRemove);
 	}
 
-	public static boolean contains(List<NamedTypeInfo> typeInfoList, NamedTypeInfo subject)
+	public static boolean contains(List<NamedTypeInfo> typeInfoList,
+			NamedTypeInfo subject)
 	{
-		for(NamedTypeInfo nextType : typeInfoList)
+		for (NamedTypeInfo nextType : typeInfoList)
 		{
-			if(nextType.contains(subject))
+			if (nextType.contains(subject))
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public boolean containsExactly(ANamedInvariantType node)
 	{
 		String module = node.getName().getModule();
@@ -110,51 +112,65 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 		// Avoid unnecessary construction
 		if (!containsExactly(node))
 		{
-			typeInfoList.addAll(create(node, null));
+			typeInfoList.addAll(create(node, null, new HashSet<PType>()));
 		}
 	}
 
-	private static PType resolve(PType type)
+	private static List<NamedTypeInfo> create(PType type, NamedTypeInfo previous, Set<PType> visited)
 	{
+		if(visited.contains(type))
+		{
+			return new LinkedList<NamedTypeInfo>(); 
+		}
+		else
+		{
+			visited.add(type);
+		}
+		
+		boolean optional = false;
 		while (type instanceof AOptionalType || type instanceof ABracketType)
 		{
 			if (type instanceof AOptionalType)
 			{
 				type = ((AOptionalType) type).getType();
+				optional = true;
 			} else if (type instanceof ABracketType)
 			{
 				type = ((ABracketType) type).getType();
 			}
 		}
 
-		return type;
-	}
-
-	private static List<NamedTypeInfo> create(PType type, NamedTypeInfo previous)
-	{
-		type = resolve(type);
-
 		List<NamedTypeInfo> data = new LinkedList<NamedTypeInfo>();
 
 		if (type instanceof ANamedInvariantType)
 		{
 			ANamedInvariantType namedType = (ANamedInvariantType) type;
-			NamedTypeInfo typeData = new NamedTypeInfo(namedType.getName().getName(), namedType.getName().getModule(), namedType.getInvDef() != null);
+			
+			NamedTypeInfo typeData = new NamedTypeInfo(namedType.getName().getName(),
+					namedType.getName().getModule(), namedType.getInvDef() != null, optional);
 
-			typeData.getNamedTypes().addAll(create(namedType.getType(), typeData));
+			typeData.getNamedTypes().addAll(create(namedType.getType(), typeData, visited));
 
 			data.add(typeData);
 		} else if (type instanceof AUnionType)
 		{
+			// Say we are visiting a union type that is optional, e.g.
+			//T = [S | nat];
+			// Then we mark the previous type, e.g T as optional
+			if(previous != null)
+			{
+				previous.makeOptional();
+			}
+			
 			for (PType t : ((AUnionType) type).getTypes())
 			{
-				data.addAll(create(t, previous));
+				data.addAll(create(t, previous, visited));
 			}
 		} else
 		{
 			if (previous != null)
 			{
-				previous.getLeafTypes().add(type);
+				previous.getLeafTypes().add(new LeafTypeInfo(type, optional));
 			}
 		}
 
