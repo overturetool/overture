@@ -1,0 +1,9 @@
+module Entry
+
+exports all
+definitions
+
+types
+T = nat | T;
+
+end Entry

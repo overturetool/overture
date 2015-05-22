@@ -1,0 +1,10 @@
+module Entry
+
+exports all
+definitions
+
+types
+
+N = nat;
+
+end Entry
