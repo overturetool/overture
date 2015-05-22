@@ -3,9 +3,7 @@ package org.overture.codegen.vdm2jml;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.ast.types.PType;
-
-public class NamedTypeInfo
+public class NamedTypeInfo extends AbstractTypeInfo
 {
 	private static String ARG_PLACEHOLDER = "%1$s";
 
@@ -13,15 +11,16 @@ public class NamedTypeInfo
 	private String defModule;
 	private boolean hasInv;
 	private List<NamedTypeInfo> namedTypes;
-	private List<PType> leafTypes;
+	private List<LeafTypeInfo> leafTypes;
 
-	public NamedTypeInfo(String typeName, String defModule, boolean hasInv)
+	public NamedTypeInfo(String typeName, String defModule, boolean hasInv, boolean optional)
 	{
+		super(optional);
 		this.typeName = typeName;
 		this.defModule = defModule;
 		this.hasInv = hasInv;
 		this.namedTypes = new LinkedList<NamedTypeInfo>();
-		this.leafTypes = new LinkedList<PType>();
+		this.leafTypes = new LinkedList<LeafTypeInfo>();
 	}
 
 	public String getTypeName()
@@ -44,7 +43,7 @@ public class NamedTypeInfo
 		return hasInv;
 	}
 
-	public List<PType> getLeafTypes()
+	public List<LeafTypeInfo> getLeafTypes()
 	{
 		return leafTypes;
 	}
@@ -187,7 +186,7 @@ public class NamedTypeInfo
 		if (!leafTypes.isEmpty())
 		{
 			String sep = "";
-			for (PType leaf : leafTypes)
+			for (LeafTypeInfo leaf : leafTypes)
 			{
 				sb.append(sep);
 				sb.append(leaf.toString());
@@ -199,7 +198,50 @@ public class NamedTypeInfo
 		}
 
 		sb.append(".\n");
+		
+		sb.append("Allows null: ");
+		sb.append(allowsNull());
+		sb.append(".\n");
+		
+		sb.append("Has invariant: " + hasInv());
 
 		return sb.toString();
+	}
+
+	@Override
+	public boolean allowsNull()
+	{
+		// This type allows null either if it is
+		// 1) optional or 
+		// 2) any child type allows null
+		//
+		// Example. Given:
+		// N = nat; C = [char]; CN = C|N
+		// Then CN allows null. C allows null. N does not allow null.
+		
+		if(optional)
+		{
+			return true;
+		}
+		else
+		{
+			for(LeafTypeInfo leaf : leafTypes)
+			{
+				if(leaf.allowsNull())
+				{
+					return true;
+				}
+			}
+			
+			for(NamedTypeInfo n : namedTypes)
+			{
+				if(n.allowsNull())
+				{
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 }
