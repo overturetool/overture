@@ -285,4 +285,15 @@ public class TypeDependencyTests
 		assertNoOfLeafs(info, 1);
 		assertLeafType(info, ANatNumericBasicType.class, false);
 	}
+	
+	@Test
+	public void unionWithoutNull()
+	{
+		load("UnionWithoutNull.vdmsl");
+		//CN = C|N;
+		//N = nat;
+		//C = char;
+		
+		assertNullNotAllowed(getInfo("CN"));
+	}
 }
