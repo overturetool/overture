@@ -32,6 +32,7 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
@@ -161,8 +162,12 @@ public class JmlGenerator implements IREventObserver
 
 			for (AFieldDeclCG f : clazz.getFields())
 			{
-				// Make fields JML @spec_public so they can be passed to post conditions
-				annotator.makeSpecPublic(f);
+				// Make fields JML @spec_public so they can be passed to post conditions.
+				// However, we'll avoid doing it for public fields as this does not make sense
+				if(!f.getAccess().equals(IRConstants.PUBLIC))
+				{
+					annotator.makeSpecPublic(f);
+				}
 			}
 
 			List<ClonableString> inv = classInvInfo.get(status.getIrNodeName());
@@ -243,7 +248,7 @@ public class JmlGenerator implements IREventObserver
 
 	private void addNamedTypeInvariantAssertions(List<IRStatus<INode>> newAst)
 	{
-		NamedTypeInvariantTransformation assertTr = new NamedTypeInvariantTransformation(typeInfoList);
+		NamedTypeInvariantTransformation assertTr = new NamedTypeInvariantTransformation(this);
 		
 		for (IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
 		{
