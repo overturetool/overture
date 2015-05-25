@@ -38,6 +38,10 @@ public class NullableTest extends AnnotationTestsBase
 		{
 			for (AClassDeclCG c : classes)
 			{
+				if(c.getName().equals("Entry"))
+				{
+					genModule = c;
+				}
 				c.apply(collector);
 			}
 		}
@@ -93,6 +97,28 @@ public class NullableTest extends AnnotationTestsBase
 	public void varCheckOpDField2()
 	{
 		assertNullableVar("d2Opt");
+	}
+	
+	@Test
+	public void assertValuesNotSpecPublic()
+	{
+		int valueCount = 0;
+		for (AFieldDeclCG field : genModule.getFields())
+		{
+			if (field.getName().equals("v") || field.getName().equals("vOpt"))
+			{
+				for (ClonableString anno : field.getMetaData())
+				{
+					Assert.assertTrue("It does not make sense to make a generated "
+							+ "value @spec_public since it already generated with a public"
+							+ " java modifier", !anno.value.trim().equals(SPEC_PUBLIC_ANNOTATION));
+				}
+				valueCount++;
+			}
+		}
+
+		Assert.assertEquals("Expected two values to be generated but found "
+				+ valueCount, 2, valueCount);
 	}
 	
 	public void assertNullableField(String name)
