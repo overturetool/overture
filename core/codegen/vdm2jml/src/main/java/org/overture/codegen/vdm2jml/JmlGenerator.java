@@ -464,6 +464,9 @@ public class JmlGenerator implements IREventObserver
 				{
 					continue;
 				}
+
+				// Invariant methods are really functions so we'll annotate them as pure
+				annotator.makePure(method);
 				
 				AIdentifierVarExpCG paramExp = util.getInvParamVar(method);
 				
