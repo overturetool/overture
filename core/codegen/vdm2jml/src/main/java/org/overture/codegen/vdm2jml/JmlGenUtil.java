@@ -19,7 +19,7 @@ public class JmlGenUtil
 		this.javaGen = javaGen;
 	}
 
-	public AIdentifierVarExpCG getNamedTypeInvParamVar(AMethodDeclCG invMethod)
+	public AIdentifierVarExpCG getInvParamVar(AMethodDeclCG invMethod)
 	{
 		if (invMethod.getFormalParams().size() == 1)
 		{
@@ -51,7 +51,7 @@ public class JmlGenUtil
 		}
 	}
 
-	public AMethodDeclCG getMethod(ATypeDeclCG typeDecl)
+	public AMethodDeclCG getInvMethod(ATypeDeclCG typeDecl)
 	{
 		if (typeDecl.getInv() instanceof AMethodDeclCG)
 		{
