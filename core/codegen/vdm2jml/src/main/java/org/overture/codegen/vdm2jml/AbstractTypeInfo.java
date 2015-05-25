@@ -1,5 +1,7 @@
 package org.overture.codegen.vdm2jml;
 
+import java.util.List;
+
 public abstract class AbstractTypeInfo
 {
 	protected boolean optional;
@@ -15,4 +17,6 @@ public abstract class AbstractTypeInfo
 	}
 
 	abstract public boolean allowsNull();
+	
+	abstract public List<LeafTypeInfo> getLeafTypesRecursively();
 }

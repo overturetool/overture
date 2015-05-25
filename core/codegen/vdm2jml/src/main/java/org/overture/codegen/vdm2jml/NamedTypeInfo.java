@@ -244,4 +244,22 @@ public class NamedTypeInfo extends AbstractTypeInfo
 		
 		return false;
 	}
+
+	@Override
+	public List<LeafTypeInfo> getLeafTypesRecursively()
+	{
+		List<LeafTypeInfo> allLeaftypes = new LinkedList<LeafTypeInfo>();
+		
+		for(LeafTypeInfo leaf : leafTypes)
+		{
+			allLeaftypes.addAll(leaf.getLeafTypesRecursively());
+		}
+		
+		for(NamedTypeInfo named : namedTypes)
+		{
+			allLeaftypes.addAll(named.getLeafTypesRecursively());
+		}
+		
+		return allLeaftypes;
+	}
 }
