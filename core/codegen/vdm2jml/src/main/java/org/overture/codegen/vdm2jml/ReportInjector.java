@@ -10,17 +10,16 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaRecordCreator;
 
 class ReportInjector extends DepthFirstAnalysisAdaptor
 {
-	private JavaCodeGen javaGen;
+	private JmlGenerator jmlGen;
 	private AMethodDeclCG method;
 
-	public ReportInjector(JavaCodeGen javaGen, AMethodDeclCG method)
+	public ReportInjector(JmlGenerator jmlGen, AMethodDeclCG method)
 	{
-		this.javaGen = javaGen;
+		this.jmlGen = jmlGen;
 		this.method = method;
 	}
 
@@ -30,16 +29,16 @@ class ReportInjector extends DepthFirstAnalysisAdaptor
 	{
 		if(node.getExp() != null)
 		{
-			javaGen.getTransformationAssistant().replaceNodeWith(node.getExp(), consReportCall(node.getExp().clone()));
+			jmlGen.getJavaGen().getTransformationAssistant().replaceNodeWith(node.getExp(), consReportCall(node.getExp().clone()));
 		}
 	}
 
 	public AApplyExpCG consReportCall(SExpCG returnExp)
 	{
-		JavaRecordCreator recCreator = javaGen.getJavaFormat().getRecCreator();
+		JavaRecordCreator recCreator = jmlGen.getJavaGen().getJavaFormat().getRecCreator();
 		
 		AApplyExpCG reportCall = recCreator.consUtilCall(method.getMethodType().clone(), JmlGenerator.REPORT_CALL);
-		reportCall.getArgs().add(javaGen.getInfo().getExpAssistant().consStringLiteral(method.getName(), false));
+		reportCall.getArgs().add(jmlGen.getJavaGen().getInfo().getExpAssistant().consStringLiteral(method.getName(), false));
 		reportCall.getArgs().add(returnExp);
 		
 		for(AFormalParamLocalParamCG param : method.getFormalParams())
@@ -50,11 +49,11 @@ class ReportInjector extends DepthFirstAnalysisAdaptor
 			{
 				AIdentifierPatternCG id = (AIdentifierPatternCG) name;
 				
-				AIdentifierVarExpCG arg = javaGen.getTransformationAssistant().
+				AIdentifierVarExpCG arg = jmlGen.getJavaGen().getTransformationAssistant().
 						consIdentifierVar(id.getName(), param.getType().clone());
 				
 				// TODO: what if the settings are set to char of sequences?
-				reportCall.getArgs().add(javaGen.getInfo().getExpAssistant().consStringLiteral(id.getName(), false));
+				reportCall.getArgs().add(jmlGen.getJavaGen().getInfo().getExpAssistant().consStringLiteral(id.getName(), false));
 				reportCall.getArgs().add(arg);
 			}
 			else
