@@ -11,30 +11,17 @@ import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
-import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
-import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
-import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.ir.IRConstants;
@@ -74,6 +61,7 @@ public class JmlGenerator implements IREventObserver
 	private Map<String, List<ClonableString>> classInvInfo;
 	private List<NamedTypeInfo> typeInfoList;
 	private JmlGenUtil util;
+	private JmlAnnotationHelper annotator;
 	
 	public JmlGenerator()
 	{
@@ -84,11 +72,27 @@ public class JmlGenerator implements IREventObserver
 		// Named invariant type info will be derived (later) from the VDM-SL AST
 		this.typeInfoList = null;
 		this.util = new JmlGenUtil(javaGen);
+		this.annotator = new JmlAnnotationHelper(this);
+	}
+	
+	public JmlAnnotationHelper getAnnotator()
+	{
+		return annotator;
 	}
 	
 	public JavaCodeGen getJavaGen()
 	{
 		return javaGen;
+	}
+	
+	public JmlGenUtil getUtil()
+	{
+		return util;
+	}
+	
+	public List<NamedTypeInfo> getTypeInfoList()
+	{
+		return typeInfoList;
 	}
 
 	public JmlSettings getJmlSettings()
@@ -146,7 +150,7 @@ public class JmlGenerator implements IREventObserver
 		// In the final version of the IR, received by the Java code generator, all
 		// top level containers are classes
 
-		annotateRecsWithInvs(ast);
+		addRecsWithInvs(ast);
 		
 		// Functions are JML pure so we will annotate them as so.
 		// Note that @pure is a JML modifier so this annotation should go last
@@ -154,7 +158,7 @@ public class JmlGenerator implements IREventObserver
 		// specification case"
 		
 		// All the record methods are JML pure
-		makeRecMethodsPure(ast);
+		annotator.makeRecMethodsPure(ast);
 		
 		List<IRStatus<INode>> newAst = new LinkedList<IRStatus<INode>>(ast);
 
@@ -182,19 +186,19 @@ public class JmlGenerator implements IREventObserver
 			{
 				// Now that the static invariant is public the invariant function
 				// must also be made public
-				makeCondPublic(clazz.getInvariant());
+				annotator.makeCondPublic(clazz.getInvariant());
 
 				// Now make the invariant function a pure helper so we can invoke it from
 				// the invariant annotation and avoid runtime errors and JML warnings
-				makeHelper(clazz.getInvariant());
-				makePure(clazz.getInvariant());
+				annotator.makeHelper(clazz.getInvariant());
+				annotator.makePure(clazz.getInvariant());
 				injectReportCalls(clazz.getInvariant());
 			}
 
 			for (AFieldDeclCG f : clazz.getFields())
 			{
 				// Make fields JML @spec_public so they can be passed to post conditions
-				makeSpecPublic(f);
+				annotator.makeSpecPublic(f);
 			}
 
 			List<ClonableString> inv = classInvInfo.get(status.getIrNodeName());
@@ -206,7 +210,7 @@ public class JmlGenerator implements IREventObserver
 
 			// Named type invariant functions will potentially also have to be
 			// accessed by other modules
-			makeNamedTypeInvFuncsPublic(clazz);
+			annotator.makeNamedTypeInvFuncsPublic(clazz);
 			
 			// In order for a value to be compatible with a named invariant type
 			// two conditions must be met:
@@ -217,7 +221,7 @@ public class JmlGenerator implements IREventObserver
 			// 2) the value must meet the invariant predicate 
 			//
 			// Wrt. 1) a dynamic type check has to be added to the invariant method
-			adjustNamedTypeInvFuncs(clazz);
+			annotator.adjustNamedTypeInvFuncs(clazz);
 
 			// Note that the methods contained in clazz.getMethod() include
 			// pre post and invariant methods
@@ -227,15 +231,15 @@ public class JmlGenerator implements IREventObserver
 				{
 					// We need to make pre and post conditions functions public in order to
 					// be able to call them in the @requires and @ensures clauses, respectively.
-					makeCondPublic(m.getPreCond());
-					appendMetaData(m, consMethodCond(m.getPreCond(), m.getFormalParams(), JML_REQ_ANNOTATION));
+					annotator.makeCondPublic(m.getPreCond());
+					annotator.appendMetaData(m, consMethodCond(m.getPreCond(), m.getFormalParams(), JML_REQ_ANNOTATION));
 					injectReportCalls(m.getPreCond());
 				}
 
 				if (m.getPostCond() != null)
 				{
-					makeCondPublic(m.getPostCond());
-					appendMetaData(m, consMethodCond(m.getPostCond(), m.getFormalParams(), JML_ENS_ANNOTATION));
+					annotator.makeCondPublic(m.getPostCond());
+					annotator.appendMetaData(m, consMethodCond(m.getPostCond(), m.getFormalParams(), JML_ENS_ANNOTATION));
 					injectReportCalls(m.getPostCond());
 				}
 
@@ -245,7 +249,7 @@ public class JmlGenerator implements IREventObserver
 				{
 					if (m.getSourceNode().getVdmNode() instanceof SFunctionDefinition)
 					{
-						makePure(m);
+						annotator.makePure(m);
 					}
 				}
 			}
@@ -256,166 +260,6 @@ public class JmlGenerator implements IREventObserver
 
 		// Return back the modified AST to the Java code generator
 		return newAst;
-	}
-
-	public void makeNamedTypeInvFuncsPublic(AClassDeclCG clazz)
-	{
-		List<AMethodDeclCG> nameInvMethods = util.getNamedTypeInvMethods(clazz);
-
-		for (AMethodDeclCG method : nameInvMethods)
-		{
-			makeCondPublic(method);
-		}
-	}
-
-	public void adjustNamedTypeInvFuncs(AClassDeclCG clazz)
-	{
-		for (ATypeDeclCG typeDecl : clazz.getTypeDecls())
-		{
-			if (typeDecl.getDecl() instanceof ANamedTypeDeclCG)
-			{
-				ANamedTypeDeclCG namedTypeDecl = (ANamedTypeDeclCG) typeDecl.getDecl();
-
-				AMethodDeclCG method = util.getInvMethod(typeDecl);
-
-				if (method == null)
-				{
-					continue;
-				}
-				
-				AIdentifierVarExpCG paramExp = util.getInvParamVar(method);
-				
-				if(paramExp == null)
-				{
-					continue;
-				}
-
-				String defModule = namedTypeDecl.getName().getDefiningClass();
-				String typeName = namedTypeDecl.getName().getName();
-				NamedTypeInfo findTypeInfo = NamedTypeInvDepCalculator.findTypeInfo(typeInfoList, defModule, typeName);
-
-				List<LeafTypeInfo> leafTypes = findTypeInfo.getLeafTypesRecursively();
-
-				if (leafTypes.isEmpty())
-				{
-					Logger.getLog().printErrorln("Could not find any leaf types for named invariant type "
-							+ findTypeInfo.getDefModule()
-							+ "."
-							+ findTypeInfo.getTypeName()
-							+ " in '"
-							+ this.getClass().getSimpleName() + "'");
-					continue;
-				}
-
-				// The idea is to construct a dynamic type check to make sure that the parameter value
-				// matches one of the leaf types, e.g.
-				// Utils.is_char(n) || Utils.is_nat(n)
-				SExpCG typeCond = null;
-				
-				ExpAssistantCG expAssist = javaGen.getInfo().getExpAssistant();
-
-				if (leafTypes.size() == 1)
-				{
-					STypeCG typeCg = leafTypes.get(0).toIrType(javaGen.getInfo());
-
-					if (typeCg == null)
-					{
-						continue;
-					}
-
-					typeCond = expAssist.consIsExp(paramExp, typeCg);
-				} else
-				{
-					// There are two or more leaf types
-					STypeCG typeCg = leafTypes.get(0).toIrType(javaGen.getInfo());
-
-					if (typeCg == null)
-					{
-						continue;
-					}
-
-					AOrBoolBinaryExpCG topOr = new AOrBoolBinaryExpCG();
-					topOr.setType(new ABoolBasicTypeCG());
-					topOr.setLeft(expAssist.consIsExp(paramExp, typeCg));
-
-					AOrBoolBinaryExpCG next = topOr;
-
-					// Iterate all leaf types - except for the first and last ones
-					for (int i = 1; i < leafTypes.size() - 1; i++)
-					{
-						typeCg = leafTypes.get(i).toIrType(javaGen.getInfo());
-
-						if (typeCg == null)
-						{
-							continue;
-						}
-
-						AOrBoolBinaryExpCG tmp = new AOrBoolBinaryExpCG();
-						tmp.setType(new ABoolBasicTypeCG());
-						tmp.setLeft(expAssist.consIsExp(paramExp, typeCg));
-
-						next.setRight(tmp);
-						next = tmp;
-					}
-
-					typeCg = leafTypes.get(leafTypes.size() - 1).toIrType(javaGen.getInfo());
-
-					if (typeCg == null)
-					{
-						continue;
-					}
-
-					next.setRight(expAssist.consIsExp(paramExp, typeCg));
-
-					typeCond = topOr;
-				}
-
-				// We will negate the type check and return false if the type of the parameter
-				// is not any of the leaf types, e.g
-				// if (!(Utils.is_char(n) || Utils.is_nat(n))) { return false;}
-				typeCond = expAssist.negate(typeCond);
-
-				boolean nullAllowed = findTypeInfo.allowsNull();
-
-				if (!nullAllowed)
-				{
-					// If 'null' is not allowed as a value we have to update the dynamic
-					// type check to also take this into account too, e.g.
-					// if ((Utils.equals(n, null)) || !(Utils.is_char(n) || Utils.is_nat(n))) { return false;}
-					AEqualsBinaryExpCG notNull = new AEqualsBinaryExpCG();
-					notNull.setType(new ABoolBasicTypeCG());
-					notNull.setLeft(paramExp.clone());
-					notNull.setRight(javaGen.getTransformationAssistant().consNullExp());
-
-					AOrBoolBinaryExpCG nullCheckOr = new AOrBoolBinaryExpCG();
-					nullCheckOr.setType(new ABoolBasicTypeCG());
-					nullCheckOr.setLeft(notNull);
-					nullCheckOr.setRight(typeCond);
-
-					typeCond = nullCheckOr;
-				}
-
-				AReturnStmCG returnFalse = new AReturnStmCG();
-				returnFalse.setExp(javaGen.getInfo().getExpAssistant().consBoolLiteral(false));
-
-				AIfStmCG dynTypeCheck = new AIfStmCG();
-				dynTypeCheck.setIfExp(typeCond);
-				dynTypeCheck.setThenStm(returnFalse);
-
-				SStmCG body = method.getBody();
-
-				ABlockStmCG repBlock = new ABlockStmCG();
-				javaGen.getTransformationAssistant().replaceNodeWith(body, repBlock);
-
-				repBlock.getStatements().add(dynTypeCheck);
-				repBlock.getStatements().add(body);
-			}
-		}
-	}
-	
-	public static void makeSpecPublic(AFieldDeclCG f)
-	{
-		appendMetaData(f, consMetaData(JML_SPEC_PUBLIC));
 	}
 
 	private void addNamedTypeInvariantAssertions(List<IRStatus<INode>> newAst)
@@ -445,7 +289,7 @@ public class JmlGenerator implements IREventObserver
 	{
 		try
 		{
-			clazz.apply(new NullableAnnotator(javaGen));
+			clazz.apply(new NullableAnnotator(this));
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
 			Logger.getLog().printErrorln("Problem encountered when trying to make declarations nullable: "
@@ -456,7 +300,7 @@ public class JmlGenerator implements IREventObserver
 		}
 	}
 
-	private void annotateRecsWithInvs(List<IRStatus<INode>> ast)
+	private void addRecsWithInvs(List<IRStatus<INode>> ast)
 	{
 		List<ARecordDeclCG> recs = util.getRecords(ast);
 		
@@ -474,15 +318,15 @@ public class JmlGenerator implements IREventObserver
 				changeRecInvMethod(r);
 				
 				// Must be public otherwise we can't access it from the invariant
-				makeCondPublic(r.getInvariant());
+				annotator.makeCondPublic(r.getInvariant());
 				// Must be a helper since we use this function from the invariant
-				makeHelper(r.getInvariant());
+				annotator.makeHelper(r.getInvariant());
 				
-				makePure(r.getInvariant());
+				annotator.makePure(r.getInvariant());
 				
 				// Add the instance invariant to the record
 				// Make it public so we can access the record fields from the invariant clause
-				appendMetaData(r, consAnno("public " + JML_INSTANCE_INV_ANNOTATION, JML_INV_PREFIX
+				annotator.appendMetaData(r, annotator.consAnno("public " + JML_INSTANCE_INV_ANNOTATION, JML_INV_PREFIX
 						+ r.getName(), args));
 				
 				injectReportCalls(r.getInvariant());
@@ -549,7 +393,7 @@ public class JmlGenerator implements IREventObserver
 		// depend on the state of another module since the invariant is a function and
 		// functions cannot access state.
 		
-		ModuleStateInvTransformation assertTr = new ModuleStateInvTransformation(javaGen);
+		ModuleStateInvTransformation assertTr = new ModuleStateInvTransformation(this);
 		
 		for (IRStatus<AClassDeclCG> status : IRStatus.extract(ast, AClassDeclCG.class))
 		{
@@ -567,50 +411,6 @@ public class JmlGenerator implements IREventObserver
 					e.printStackTrace();
 				}
 			}
-		}
-	}
-
-	private void makeRecMethodsPure(List<IRStatus<INode>> ast)
-	{
-		List<ARecordDeclCG> records = util.getRecords(ast);
-
-		for (ARecordDeclCG rec : records)
-		{
-			for (AMethodDeclCG method : rec.getMethods())
-			{
-				if (!method.getIsConstructor())
-				{
-					makePure(method);
-				}
-			}
-		}
-	}
-	
-	public static void makePure(SDeclCG cond)
-	{
-		if (cond != null)
-		{
-			appendMetaData(cond, consMetaData(JML_PURE));
-		}
-	}
-	
-	public static void makeHelper(SDeclCG cond)
-	{
-		if(cond != null)
-		{
-			appendMetaData(cond, consMetaData(JML_HELPER));
-		}
-	}
-
-	public static void makeCondPublic(SDeclCG cond)
-	{
-		if (cond instanceof AMethodDeclCG)
-		{
-			((AMethodDeclCG) cond).setAccess(IRConstants.PUBLIC);
-		} else
-		{
-			Logger.getLog().printErrorln("Expected method declaration but got "
-					+ cond + " in makePCondPublic");
 		}
 	}
 
@@ -736,7 +536,7 @@ public class JmlGenerator implements IREventObserver
 				fieldNames.add(util.getMethodCondArgName(cond.getFormalParams().get(i).getPattern()));
 			}
 
-			return consAnno(jmlAnno, cond.getName(), fieldNames);
+			return annotator.consAnno(jmlAnno, cond.getName(), fieldNames);
 
 		} else if (decl != null)
 		{
@@ -763,7 +563,7 @@ public class JmlGenerator implements IREventObserver
 					// or inv_St(St) holds.
 					//
 					//@ public static invariant St == null || inv_St(St);
-					classInvInfo.put(module.getName(), consAnno("public " + JML_STATIC_INV_ANNOTATION,
+					classInvInfo.put(module.getName(), annotator.consAnno("public " + JML_STATIC_INV_ANNOTATION,
 							String.format("%s != null", state.getName())  + " ==> " +
 							JML_INV_PREFIX + state.getName(), fieldNames));
 					//
@@ -804,70 +604,9 @@ public class JmlGenerator implements IREventObserver
 				}
 			}
 
-			classInvInfo.put(clazz.getName(), consAnno(JML_STATIC_INV_ANNOTATION, JML_INV_PREFIX
+			classInvInfo.put(clazz.getName(), annotator.consAnno(JML_STATIC_INV_ANNOTATION, JML_INV_PREFIX
 					+ clazz.getName(), fieldNames));
 		}
-	}
-
-	public static List<ClonableString> consAnno(String jmlAnno, String name,
-			List<String> fieldNames)
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("//@ %s %s", jmlAnno, name));
-		sb.append("(");
-
-		String sep = "";
-		for (String fName : fieldNames)
-		{
-			sb.append(sep).append(fName);
-			sep = ",";
-		}
-
-		sb.append(");");
-
-		return consMetaData(sb);
-	}
-	
-	public static List<ClonableString> consMetaData(StringBuilder sb)
-	{
-		return consMetaData(sb.toString());
-	}
-
-	public static List<ClonableString> consMetaData(String str)
-	{
-		List<ClonableString> inv = new LinkedList<ClonableString>();
-
-		inv.add(new ClonableString(str));
-
-		return inv;
-	}
-	
-	public static void appendMetaData(PCG node, List<ClonableString> extraMetaData)
-	{
-		addMetaData(node, extraMetaData, false);
-	}
-	
-	public static void addMetaData(PCG node, List<ClonableString> extraMetaData, boolean prepend)
-	{
-		if (extraMetaData == null || extraMetaData.isEmpty())
-		{
-			return;
-		}
-
-		List<ClonableString> allMetaData = new LinkedList<ClonableString>();
-
-		if(prepend)
-		{
-			allMetaData.addAll(extraMetaData);
-			allMetaData.addAll(node.getMetaData());
-		}
-		else
-		{
-			allMetaData.addAll(node.getMetaData());
-			allMetaData.addAll(extraMetaData);
-		}
-
-		node.setMetaData(allMetaData);
 	}
 
 	public IRSettings getIrSettings()

@@ -9,7 +9,6 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
-import org.overture.codegen.vdm2java.JavaCodeGen;
 
 /**
  * This class is responsible for annotating declarations that can point to null.
@@ -19,11 +18,11 @@ import org.overture.codegen.vdm2java.JavaCodeGen;
  */
 public class NullableAnnotator extends DepthFirstAnalysisAdaptor
 {
-	private JavaCodeGen javaGen;
+	private JmlGenerator jmlGen;
 	
-	public NullableAnnotator(JavaCodeGen javaGen)
+	public NullableAnnotator(JmlGenerator jmlGen)
 	{
-		this.javaGen = javaGen;
+		this.jmlGen = jmlGen;
 	}
 	
 	@Override
@@ -47,11 +46,11 @@ public class NullableAnnotator extends DepthFirstAnalysisAdaptor
 		//
 		// Following two checks:
 		// Some expressions code generate to null so we need to take those into account
-		if (javaGen.getInfo().getTypeAssistant().allowsNull(type)
+		if (jmlGen.getJavaGen().getInfo().getTypeAssistant().allowsNull(type)
 				|| initExp instanceof ANullExpCG
 				|| initExp instanceof AUndefinedExpCG)
 		{
-			JmlGenerator.appendMetaData(decl, JmlGenerator.consMetaData(JmlGenerator.JML_NULLABLE));
+			jmlGen.getAnnotator().appendMetaData(decl, jmlGen.getAnnotator().consMetaData(JmlGenerator.JML_NULLABLE));
 		}
 	}
 }

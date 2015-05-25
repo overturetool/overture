@@ -14,14 +14,13 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.config.Settings;
 
 public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 {
-	private JavaCodeGen javaGen;
+	private JmlGenerator jmlGen;
 
-	public ModuleStateInvTransformation(JavaCodeGen javaGen)
+	public ModuleStateInvTransformation(JmlGenerator jmlGen)
 	{
 		if (Settings.dialect != Dialect.VDM_SL)
 		{
@@ -31,7 +30,7 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 					+ Settings.dialect);
 		}
 
-		this.javaGen = javaGen;
+		this.jmlGen = jmlGen;
 	}
 
 	@Override
@@ -126,11 +125,11 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 		if (stm.parent() != null)
 		{
 			AMetaStmCG assertion = new AMetaStmCG();
-			JmlGenerator.appendMetaData(assertion, JmlGenerator.consMetaData(str));
+			jmlGen.getAnnotator().appendMetaData(assertion, jmlGen.getAnnotator().consMetaData(str));
 
 			ABlockStmCG replacementBlock = new ABlockStmCG();
 
-			javaGen.getTransformationAssistant().replaceNodeWith(stm, replacementBlock);
+			jmlGen.getJavaGen().getTransformationAssistant().replaceNodeWith(stm, replacementBlock);
 
 			replacementBlock.getStatements().add(stm);
 			replacementBlock.getStatements().add(assertion);
@@ -167,7 +166,7 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 			// We'll proceed if 1) the class has an invariant and
 			// 2) the statement does not occur inside an atomic statement
 			return encClass.getInvariant() != null
-					&& !javaGen.getInfo().getStmAssistant().inAtomic(stm);
+					&& !jmlGen.getJavaGen().getInfo().getStmAssistant().inAtomic(stm);
 		} else
 		{
 			// Erroneous case: we can't really check anything..

@@ -20,6 +20,13 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 {
 	private List<NamedTypeInfo> typeInfoList;
 
+	private JmlGenerator jmlGen;
+	
+	public NamedTypeInvariantTransformation(JmlGenerator jmlGen)
+	{
+		this.jmlGen = jmlGen;
+	}
+	
 	public NamedTypeInvariantTransformation(List<NamedTypeInfo> typeInfoList)
 	{
 		if (typeInfoList == null)
@@ -120,7 +127,7 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		// Because we code generate VDM-SL all fields will be static
 		String inv = consJmlCheck(JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, invTypes, node.getName());
 
-		JmlGenerator.appendMetaData(node, JmlGenerator.consMetaData(inv));
+		jmlGen.getAnnotator().appendMetaData(node, jmlGen.getAnnotator().consMetaData(inv));
 	}
 
 	@Override
