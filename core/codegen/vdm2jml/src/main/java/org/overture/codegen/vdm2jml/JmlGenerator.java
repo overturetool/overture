@@ -32,6 +32,7 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRInfo;
@@ -44,6 +45,7 @@ import org.overture.codegen.vdm2java.JavaSettings;
 
 public class JmlGenerator implements IREventObserver
 {
+	public static final String GEN_INV_METHOD_PARAM_NAME = "elem";
 	public static final String JML_OR = " || ";
 	public static final String JML_AND = " && ";
 	public static final String JML_PUBLIC = "public";
@@ -458,11 +460,35 @@ public class JmlGenerator implements IREventObserver
 			{
 				ANamedTypeDeclCG namedTypeDecl = (ANamedTypeDeclCG) typeDecl.getDecl();
 
+				STypeCG paramType = namedTypeDecl.getType();
+
 				AMethodDeclCG method = util.getInvMethod(typeDecl);
 
 				if (method == null)
 				{
-					continue;
+					AReturnStmCG body = new AReturnStmCG();
+					body.setExp(javaGen.getInfo().getExpAssistant().consBoolLiteral(true));
+					
+					AMethodTypeCG invMethodType = new AMethodTypeCG();
+					invMethodType.setResult(new ABoolBasicTypeCG());
+					invMethodType.getParams().add(paramType.clone());
+					
+					AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
+					formalParam.setType(paramType.clone());
+					formalParam.setPattern(javaGen.getTransformationAssistant().consIdPattern(GEN_INV_METHOD_PARAM_NAME));
+					
+					method = new AMethodDeclCG();
+					method.setAbstract(false);
+					method.setAccess(IRConstants.PUBLIC);
+					method.setAsync(false);
+					method.setBody(body);
+					method.getFormalParams().add(formalParam);
+					method.setIsConstructor(false);
+					method.setMethodType(invMethodType);
+					method.setName("inv_" + namedTypeDecl.getName());
+					method.setStatic(true);
+					
+					typeDecl.setInv(method);
 				}
 
 				// Invariant methods are really functions so we'll annotate them as pure
