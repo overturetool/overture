@@ -11,10 +11,14 @@ import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
+import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SDeclCG;
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
+import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
@@ -25,7 +29,14 @@ import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
+import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.ir.IRConstants;
@@ -64,6 +75,7 @@ public class JmlGenerator implements IREventObserver
 	private JmlSettings jmlSettings;
 	private Map<String, List<ClonableString>> classInvInfo;
 	private List<NamedTypeInfo> typeInfoList;
+	private JmlGenUtil util;
 	
 	public JmlGenerator()
 	{
@@ -73,6 +85,7 @@ public class JmlGenerator implements IREventObserver
 		
 		// Named invariant type info will be derived (later) from the VDM-SL AST
 		this.typeInfoList = null;
+		this.util = new JmlGenUtil(javaGen);
 	}
 	
 	public JavaCodeGen getJavaGen()
@@ -195,7 +208,18 @@ public class JmlGenerator implements IREventObserver
 
 			// Named type invariant functions will potentially also have to be
 			// accessed by other modules
-			makeNamedTypeInvsPublic(clazz);
+			makeNamedTypeInvFuncsPublic(clazz);
+			
+			// In order for a value to be compatible with a named invariant type
+			// two conditions must be met:
+			//
+			// 1) The type of the value must match one of the leaf types of the
+			//    named invariant type, and secondly
+			// 
+			// 2) the value must meet the invariant predicate 
+			//
+			// Wrt. 1) a dynamic type check has to be added to the invariant method
+			adjustNamedTypeInvFuncs(clazz);
 
 			// Note that the methods contained in clazz.getMethod() include
 			// pre post and invariant methods
@@ -236,18 +260,179 @@ public class JmlGenerator implements IREventObserver
 		return newAst;
 	}
 
-	public static void makeNamedTypeInvsPublic(AClassDeclCG clazz)
+	public void makeNamedTypeInvFuncsPublic(AClassDeclCG clazz)
 	{
-		for(ATypeDeclCG typeDecl : clazz.getTypeDecls())
+		List<AMethodDeclCG> nameInvMethods = getNamedTypeInvMethods(clazz);
+
+		for (AMethodDeclCG method : nameInvMethods)
 		{
-			if(typeDecl.getDecl() instanceof ANamedTypeDeclCG)
+			makeCondPublic(method);
+		}
+	}
+
+	public void adjustNamedTypeInvFuncs(AClassDeclCG clazz)
+	{
+		for (ATypeDeclCG typeDecl : clazz.getTypeDecls())
+		{
+			if (typeDecl.getDecl() instanceof ANamedTypeDeclCG)
 			{
-				if(typeDecl.getInv() != null)
+				ANamedTypeDeclCG namedTypeDecl = (ANamedTypeDeclCG) typeDecl.getDecl();
+
+				AMethodDeclCG method = util.getInvMethod(typeDecl);
+
+				if (method == null)
 				{
-					makeCondPublic(typeDecl.getInv());
+					continue;
+				}
+				
+				AIdentifierVarExpCG paramExp = util.getInvParamVar(method);
+				
+				if(paramExp == null)
+				{
+					continue;
+				}
+
+				String defModule = namedTypeDecl.getName().getDefiningClass();
+				String typeName = namedTypeDecl.getName().getName();
+				NamedTypeInfo findTypeInfo = NamedTypeInvDepCalculator.findTypeInfo(typeInfoList, defModule, typeName);
+
+				List<LeafTypeInfo> leafTypes = findTypeInfo.getLeafTypesRecursively();
+
+				if (leafTypes.isEmpty())
+				{
+					Logger.getLog().printErrorln("Could not find any leaf types for named invariant type "
+							+ findTypeInfo.getDefModule()
+							+ "."
+							+ findTypeInfo.getTypeName()
+							+ " in '"
+							+ this.getClass().getSimpleName() + "'");
+					continue;
+				}
+
+				// The idea is to construct a dynamic type check to make sure that the parameter value
+				// matches one of the leaf types, e.g.
+				// Utils.is_char(n) || Utils.is_nat(n)
+				SExpCG typeCond = null;
+				
+				ExpAssistantCG expAssist = javaGen.getInfo().getExpAssistant();
+
+				if (leafTypes.size() == 1)
+				{
+					STypeCG typeCg = leafTypes.get(0).toIrType(javaGen.getInfo());
+
+					if (typeCg == null)
+					{
+						continue;
+					}
+
+					typeCond = expAssist.consIsExp(paramExp, typeCg);
+				} else
+				{
+					// There are two or more leaf types
+					STypeCG typeCg = leafTypes.get(0).toIrType(javaGen.getInfo());
+
+					if (typeCg == null)
+					{
+						continue;
+					}
+
+					AOrBoolBinaryExpCG topOr = new AOrBoolBinaryExpCG();
+					topOr.setType(new ABoolBasicTypeCG());
+					topOr.setLeft(expAssist.consIsExp(paramExp, typeCg));
+
+					AOrBoolBinaryExpCG next = topOr;
+
+					// Iterate all leaf types - except for the first and last ones
+					for (int i = 1; i < leafTypes.size() - 1; i++)
+					{
+						typeCg = leafTypes.get(i).toIrType(javaGen.getInfo());
+
+						if (typeCg == null)
+						{
+							continue;
+						}
+
+						AOrBoolBinaryExpCG tmp = new AOrBoolBinaryExpCG();
+						tmp.setType(new ABoolBasicTypeCG());
+						tmp.setLeft(expAssist.consIsExp(paramExp, typeCg));
+
+						next.setRight(tmp);
+						next = tmp;
+					}
+
+					typeCg = leafTypes.get(leafTypes.size() - 1).toIrType(javaGen.getInfo());
+
+					if (typeCg == null)
+					{
+						continue;
+					}
+
+					next.setRight(expAssist.consIsExp(paramExp, typeCg));
+
+					typeCond = topOr;
+				}
+
+				// We will negate the type check and return false if the type of the parameter
+				// is not any of the leaf types, e.g
+				// if (!(Utils.is_char(n) || Utils.is_nat(n))) { return false;}
+				typeCond = expAssist.negate(typeCond);
+
+				boolean nullAllowed = findTypeInfo.allowsNull();
+
+				if (!nullAllowed)
+				{
+					// If 'null' is not allowed as a value we have to update the dynamic
+					// type check to also take this into account too, e.g.
+					// if ((Utils.equals(n, null)) || !(Utils.is_char(n) || Utils.is_nat(n))) { return false;}
+					AEqualsBinaryExpCG notNull = new AEqualsBinaryExpCG();
+					notNull.setType(new ABoolBasicTypeCG());
+					notNull.setLeft(paramExp.clone());
+					notNull.setRight(javaGen.getTransformationAssistant().consNullExp());
+
+					AOrBoolBinaryExpCG nullCheckOr = new AOrBoolBinaryExpCG();
+					nullCheckOr.setType(new ABoolBasicTypeCG());
+					nullCheckOr.setLeft(notNull);
+					nullCheckOr.setRight(typeCond);
+
+					typeCond = nullCheckOr;
+				}
+
+				AReturnStmCG returnFalse = new AReturnStmCG();
+				returnFalse.setExp(javaGen.getInfo().getExpAssistant().consBoolLiteral(false));
+
+				AIfStmCG dynTypeCheck = new AIfStmCG();
+				dynTypeCheck.setIfExp(typeCond);
+				dynTypeCheck.setThenStm(returnFalse);
+
+				SStmCG body = method.getBody();
+
+				ABlockStmCG repBlock = new ABlockStmCG();
+				javaGen.getTransformationAssistant().replaceNodeWith(body, repBlock);
+
+				repBlock.getStatements().add(dynTypeCheck);
+				repBlock.getStatements().add(body);
+			}
+		}
+	}
+	
+	public List<AMethodDeclCG> getNamedTypeInvMethods(AClassDeclCG clazz)
+	{
+		List<AMethodDeclCG> invDecls = new LinkedList<AMethodDeclCG>();
+
+		for (ATypeDeclCG typeDecl : clazz.getTypeDecls())
+		{
+			if (typeDecl.getDecl() instanceof ANamedTypeDeclCG)
+			{
+				AMethodDeclCG m = util.getInvMethod(typeDecl);
+				
+				if(m != null)
+				{
+					invDecls.add(m);
 				}
 			}
 		}
+
+		return invDecls;
 	}
 
 	public static void makeSpecPublic(AFieldDeclCG f)
@@ -312,6 +497,7 @@ public class JmlGenerator implements IREventObserver
 				
 				makePure(r.getInvariant());
 				
+				// TODO: Should this invariant not guard against null?
 				// Add the instance invariant to the record
 				// Make it public so we can access the record fields from the invariant clause
 				appendMetaData(r, consAnno("public " + JML_INSTANCE_INV_ANNOTATION, JML_INV_PREFIX
