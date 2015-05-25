@@ -488,6 +488,11 @@ public class JmlGenerator implements IREventObserver
 			
 			if(r.getInvariant() != null)
 			{
+				// The record invariant is an instance invariant and the invariant method
+				// is updated such that it passes the record fields (rather than the record instance)
+				// to the invariant method. See the changeRecInvMethod for more information about
+				// this. Also note that there is no need for the record invariant method to guard against
+				// the record being null (because the invariant is specified as an instance invariant).
 				changeRecInvMethod(r);
 				
 				// Must be public otherwise we can't access it from the invariant
@@ -497,7 +502,6 @@ public class JmlGenerator implements IREventObserver
 				
 				makePure(r.getInvariant());
 				
-				// TODO: Should this invariant not guard against null?
 				// Add the instance invariant to the record
 				// Make it public so we can access the record fields from the invariant clause
 				appendMetaData(r, consAnno("public " + JML_INSTANCE_INV_ANNOTATION, JML_INV_PREFIX
