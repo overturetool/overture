@@ -157,7 +157,7 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			// Say we are visiting a union type that is optional, e.g.
 			//T = [S | nat];
 			// Then we mark the previous type, e.g T as optional
-			if(previous != null)
+			if(optional && previous != null)
 			{
 				previous.makeOptional();
 			}
