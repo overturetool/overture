@@ -16,7 +16,6 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
@@ -32,7 +31,6 @@ import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
@@ -262,7 +260,7 @@ public class JmlGenerator implements IREventObserver
 
 	public void makeNamedTypeInvFuncsPublic(AClassDeclCG clazz)
 	{
-		List<AMethodDeclCG> nameInvMethods = getNamedTypeInvMethods(clazz);
+		List<AMethodDeclCG> nameInvMethods = util.getNamedTypeInvMethods(clazz);
 
 		for (AMethodDeclCG method : nameInvMethods)
 		{
@@ -415,26 +413,6 @@ public class JmlGenerator implements IREventObserver
 		}
 	}
 	
-	public List<AMethodDeclCG> getNamedTypeInvMethods(AClassDeclCG clazz)
-	{
-		List<AMethodDeclCG> invDecls = new LinkedList<AMethodDeclCG>();
-
-		for (ATypeDeclCG typeDecl : clazz.getTypeDecls())
-		{
-			if (typeDecl.getDecl() instanceof ANamedTypeDeclCG)
-			{
-				AMethodDeclCG m = util.getInvMethod(typeDecl);
-				
-				if(m != null)
-				{
-					invDecls.add(m);
-				}
-			}
-		}
-
-		return invDecls;
-	}
-
 	public static void makeSpecPublic(AFieldDeclCG f)
 	{
 		appendMetaData(f, consMetaData(JML_SPEC_PUBLIC));
@@ -480,11 +458,11 @@ public class JmlGenerator implements IREventObserver
 
 	private void annotateRecsWithInvs(List<IRStatus<INode>> ast)
 	{
-		List<ARecordDeclCG> recs = getRecords(ast);
+		List<ARecordDeclCG> recs = util.getRecords(ast);
 		
 		for(ARecordDeclCG r : recs)
 		{
-			List<String> args = getRecFieldNames(r);
+			List<String> args = util.getRecFieldNames(r);
 			
 			if(r.getInvariant() != null)
 			{
@@ -510,17 +488,6 @@ public class JmlGenerator implements IREventObserver
 				injectReportCalls(r.getInvariant());
 			}
 		}
-	}
-
-	private List<String> getRecFieldNames(ARecordDeclCG r)
-	{
-		List<String> args = new LinkedList<String>();
-		
-		for(AFieldDeclCG f : r.getFields())
-		{
-			args.add(f.getName());
-		}
-		return args;
 	}
 
 	/**
@@ -605,7 +572,7 @@ public class JmlGenerator implements IREventObserver
 
 	private void makeRecMethodsPure(List<IRStatus<INode>> ast)
 	{
-		List<ARecordDeclCG> records = getRecords(ast);
+		List<ARecordDeclCG> records = util.getRecords(ast);
 
 		for (ARecordDeclCG rec : records)
 		{
@@ -619,24 +586,6 @@ public class JmlGenerator implements IREventObserver
 		}
 	}
 	
-	private List<ARecordDeclCG> getRecords(List<IRStatus<INode>> ast)
-	{
-		List<ARecordDeclCG> records = new LinkedList<ARecordDeclCG>();
-
-		for (IRStatus<AClassDeclCG> classStatus : IRStatus.extract(ast, AClassDeclCG.class))
-		{
-			for (ATypeDeclCG typeDecl : classStatus.getIrNode().getTypeDecls())
-			{
-				if (typeDecl.getDecl() instanceof ARecordDeclCG)
-				{
-					records.add((ARecordDeclCG) typeDecl.getDecl());
-				}
-			}
-		}
-
-		return records;
-	}
-
 	public static void makePure(SDeclCG cond)
 	{
 		if (cond != null)
@@ -777,14 +726,14 @@ public class JmlGenerator implements IREventObserver
 			int i;
 			for (i = 0; i < parentMethodParams.size(); i++)
 			{
-				fieldNames.add(getMethodCondArgName(parentMethodParams.get(i).getPattern()));
+				fieldNames.add(util.getMethodCondArgName(parentMethodParams.get(i).getPattern()));
 			}
 
 			// Now compute the remaining argument names which (possibly)
 			// include the RESULT and the old state passed
 			for (; i < cond.getFormalParams().size(); i++)
 			{
-				fieldNames.add(getMethodCondArgName(cond.getFormalParams().get(i).getPattern()));
+				fieldNames.add(util.getMethodCondArgName(cond.getFormalParams().get(i).getPattern()));
 			}
 
 			return consAnno(jmlAnno, cond.getName(), fieldNames);
@@ -796,46 +745,6 @@ public class JmlGenerator implements IREventObserver
 		}
 
 		return null;
-	}
-
-	private String getMethodCondArgName(SPatternCG pattern)
-	{
-		// By now all patterns should be identifier patterns
-		if (pattern instanceof AIdentifierPatternCG)
-		{
-			String paramName = ((AIdentifierPatternCG) pattern).getName();
-
-			if (this.javaGen.getInfo().getExpAssistant().isOld(paramName))
-			{
-				paramName = toJmlOldExp(paramName);
-			} else if (this.javaGen.getInfo().getExpAssistant().isResult(paramName))
-			{
-				// The type checker prohibits use of 'RESULT' as name of a user specified identifier
-				paramName = JML_RESULT;
-			}
-
-			return paramName;
-
-		} else
-		{
-			Logger.getLog().printErrorln("Expected formal parameter pattern to be an indentifier pattern. Got: "
-					+ pattern + " in '" + this.getClass().getSimpleName() + "'");
-
-			return "UNKNOWN";
-		}
-	}
-
-	private String toJmlOldExp(String paramName)
-	{
-		// Convert old name to current name (e.g. _St to St)
-		String currentArg = this.javaGen.getInfo().getExpAssistant().oldNameToCurrentName(paramName);
-
-		// Note that invoking the copy method on the state should be okay
-		// because the state should never be a null pointer
-		currentArg += ".copy()";
-
-		// Convert current name to JML old expression (e.g. \old(St)
-		return String.format("%s(%s)", JML_OLD_PREFIX, currentArg);
 	}
 
 	private void computeModuleInvInfo(AModuleDeclCG module)
