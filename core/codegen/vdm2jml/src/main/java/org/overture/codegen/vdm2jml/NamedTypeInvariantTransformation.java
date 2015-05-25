@@ -18,24 +18,11 @@ import org.overture.codegen.logging.Logger;
 // TODO: remember to take optional types into account
 public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 {
-	private List<NamedTypeInfo> typeInfoList;
-
 	private JmlGenerator jmlGen;
 	
 	public NamedTypeInvariantTransformation(JmlGenerator jmlGen)
 	{
 		this.jmlGen = jmlGen;
-	}
-	
-	public NamedTypeInvariantTransformation(List<NamedTypeInfo> typeInfoList)
-	{
-		if (typeInfoList == null)
-		{
-			throw new IllegalArgumentException("Type list cannot be null in '"
-					+ this.getClass().getSimpleName() + "'");
-		}
-
-		this.typeInfoList = typeInfoList;
 	}
 
 	public String consJmlCheck(String jmlVisibility, String annotationType,
@@ -73,7 +60,7 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 			String defModule = namedInv.getName().getDefiningClass();
 			String typeName = namedInv.getName().getName();
 
-			NamedTypeInfo info = NamedTypeInvDepCalculator.findTypeInfo(typeInfoList, defModule, typeName);
+			NamedTypeInfo info = NamedTypeInvDepCalculator.findTypeInfo(jmlGen.getTypeInfoList(), defModule, typeName);
 
 			if (info != null)
 			{
