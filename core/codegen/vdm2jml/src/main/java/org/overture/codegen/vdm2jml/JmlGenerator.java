@@ -473,9 +473,11 @@ public class JmlGenerator implements IREventObserver
 					invMethodType.setResult(new ABoolBasicTypeCG());
 					invMethodType.getParams().add(paramType.clone());
 					
+					String formalParamName = new NameGen(clazz).getName(GEN_INV_METHOD_PARAM_NAME);
+					
 					AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
 					formalParam.setType(paramType.clone());
-					formalParam.setPattern(javaGen.getTransformationAssistant().consIdPattern(GEN_INV_METHOD_PARAM_NAME));
+					formalParam.setPattern(javaGen.getTransformationAssistant().consIdPattern(formalParamName));
 					
 					method = new AMethodDeclCG();
 					method.setAbstract(false);
