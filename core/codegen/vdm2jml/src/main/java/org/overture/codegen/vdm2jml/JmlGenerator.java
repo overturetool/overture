@@ -22,8 +22,12 @@ import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRInfo;
@@ -37,6 +41,7 @@ import org.overture.codegen.vdm2java.JavaSettings;
 public class JmlGenerator implements IREventObserver
 {
 	public static final String GEN_INV_METHOD_PARAM_NAME = "elem";
+	public static final String INV_METHOD_REPLACEMENT_NAME_PREFIX = "check_"; 
 	public static final String JML_OR = " || ";
 	public static final String JML_AND = " && ";
 	public static final String JML_PUBLIC = "public";
@@ -453,16 +458,53 @@ public class JmlGenerator implements IREventObserver
 
 				AMethodDeclCG method = util.getInvMethod(typeDecl);
 
+				boolean invMethodIsGen = false;
+				
 				if (method == null)
 				{
 					method = util.genInvMethod(clazz, namedTypeDecl);
 					typeDecl.setInv(method);
+					invMethodIsGen = true;
 				}
-
+				
+				AFormalParamLocalParamCG invParam = util.getInvFormalParam(method);
+				AFormalParamLocalParamCG invParamCopy = invParam.clone();
+				
+				invParam.setType(new AUnknownTypeCG());
+				
+				String paramName = util.getName(invParam);
+				
+				if(paramName == null)
+				{
+					continue;
+				}
+				
+				invParam.setPattern(util.consInvParamReplacementId(clazz, paramName));
+				
 				// Invariant methods are really functions so we'll annotate them as pure
 				annotator.makePure(method);
 
 				AIfStmCG dynTypeCheck = util.consDynamicTypeCheck(method, namedTypeDecl);
+				
+				ABlockStmCG declStmBlock = new ABlockStmCG();
+				
+				if(!invMethodIsGen)
+				{
+					AIdentifierVarExpCG paramVar = util.getInvParamVar(method);
+					
+					if(paramVar == null)
+					{
+						continue;
+					}
+					
+					ACastUnaryExpCG cast = new ACastUnaryExpCG();
+					cast.setType(invParamCopy.getType().clone());
+					cast.setExp(paramVar.clone());
+					
+					AVarDeclCG decl = javaGen.getInfo().getDeclAssistant().consLocalVarDecl(invParamCopy.getType(), invParamCopy.getPattern(), cast);
+					declStmBlock.setScoped(false);
+					declStmBlock.getLocalDefs().add(decl);
+				}
 				
 				if(dynTypeCheck == null)
 				{
@@ -475,6 +517,7 @@ public class JmlGenerator implements IREventObserver
 				javaGen.getTransformationAssistant().replaceNodeWith(body, repBlock);
 
 				repBlock.getStatements().add(dynTypeCheck);
+				repBlock.getStatements().add(declStmBlock);
 				repBlock.getStatements().add(body);
 			}
 		}
