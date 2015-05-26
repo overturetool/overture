@@ -47,7 +47,14 @@ public class LeafTypeInfo extends AbstractTypeInfo
 	{
 		try
 		{
-			return type.apply(info.getTypeVisitor(), info);
+			STypeCG irType = type.apply(info.getTypeVisitor(), info);
+			
+			if(irType != null)
+			{
+				irType.setOptional(optional);
+			}
+			
+			return irType;
 		} catch (AnalysisException e)
 		{
 			Logger.getLog().printErrorln("Problems encountered while attempting "
