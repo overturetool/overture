@@ -483,7 +483,13 @@ public class JmlGenerator implements IREventObserver
 				
 				// Invariant methods are really functions so we'll annotate them as pure
 				annotator.makePure(method);
-
+				
+				// We'll also make it a helper so it can be called from invariants, which is needed for fields
+				// Otherwise we would get errors on the form:
+				// "Calling a pure non-helper method in an invariant may lead to unbounded recursive
+				// invariant checks and stack-overflow: inv_C(java.lang.Object)"
+				annotator.makeHelper(method);
+				
 				AIfStmCG dynTypeCheck = util.consDynamicTypeCheck(method, namedTypeDecl);
 				
 				ABlockStmCG declStmBlock = new ABlockStmCG();
