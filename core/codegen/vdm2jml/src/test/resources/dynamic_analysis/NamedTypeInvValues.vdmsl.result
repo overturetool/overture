@@ -1,0 +1,7 @@
+inv_CN(check_cn = 'b') is false
+
+java.lang.AssertionError
+	at org.overture.codegen.runtime.Utils.report(Utils.java:419)
+	at Entry.inv_CN(Entry.java:40)
+	at Entry.<clinit>(Entry.java:10)
+	at Main.main(Main.java:8)
