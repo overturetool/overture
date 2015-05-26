@@ -52,4 +52,11 @@ public class NameGenTests
 	{
 		Assert.assertEquals(MSG, "field_1",  nameGen.getName("field")); 
 	}
+	
+	@Test
+	public void addExtraName()
+	{
+		nameGen.addName("x");
+		Assert.assertEquals(MSG, "x_1", nameGen.getName("x"));
+	}
 }
