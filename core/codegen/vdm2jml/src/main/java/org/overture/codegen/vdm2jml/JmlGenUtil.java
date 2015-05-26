@@ -44,23 +44,46 @@ public class JmlGenUtil
 
 	public AIdentifierVarExpCG getInvParamVar(AMethodDeclCG invMethod)
 	{
+		AFormalParamLocalParamCG formalParam = getInvFormalParam(invMethod);
+
+		if (formalParam == null)
+		{
+			return null;
+		}
+
+		String paramName = getName(formalParam);
+		
+		if(paramName == null)
+		{
+			return null;
+		}
+		
+		STypeCG paramType = formalParam.getType().clone();
+
+		return jmlGen.getJavaGen().getTransformationAssistant().consIdentifierVar(paramName, paramType);
+	}
+
+	public String getName(AFormalParamLocalParamCG formalParam)
+	{
+		SPatternCG id = formalParam.getPattern();
+
+		if (!(id instanceof AIdentifierPatternCG))
+		{
+			Logger.getLog().printErrorln("Expected identifier pattern of formal parameter "
+					+ "to be an identifier pattern at this point. Got: "
+					+ id
+					+ " in '" + this.getClass().getSimpleName() + "'");
+			return null;
+		}
+
+		return ((AIdentifierPatternCG) id).getName();
+	}
+	
+	public AFormalParamLocalParamCG getInvFormalParam(AMethodDeclCG invMethod)
+	{
 		if (invMethod.getFormalParams().size() == 1)
 		{
-			AFormalParamLocalParamCG param = invMethod.getFormalParams().get(0);
-			SPatternCG id = param.getPattern();
-
-			if (!(id instanceof AIdentifierPatternCG))
-			{
-				Logger.getLog().printErrorln("Expected identifier pattern of formal parameter "
-						+ "to be an identifier pattern at this point. Got: "
-						+ id + " in '" + this.getClass().getSimpleName() + "'");
-				return null;
-			}
-
-			String paramName = ((AIdentifierPatternCG) id).getName();
-			STypeCG paramType = param.getType().clone();
-			
-			return jmlGen.getJavaGen().getTransformationAssistant().consIdentifierVar(paramName, paramType);
+			return invMethod.getFormalParams().get(0);
 		} else
 		{
 			Logger.getLog().printErrorln("Expected only a single formal parameter "
@@ -68,9 +91,15 @@ public class JmlGenUtil
 					+ invMethod.getName()
 					+ " but got "
 					+ invMethod.getFormalParams().size()
-					+ " in '"
-					+ this.getClass().getSimpleName() + "'");
-			return null;
+					+ " in '" + this.getClass().getSimpleName() + "'");
+
+			if (!invMethod.getFormalParams().isEmpty())
+			{
+				return invMethod.getFormalParams().get(0);
+			} else
+			{
+				return null;
+			}
 		}
 	}
 
@@ -433,5 +462,16 @@ public class JmlGenUtil
 		dynTypeCheck.setThenStm(returnFalse);
 
 		return dynTypeCheck;
+	}
+	
+	public AIdentifierPatternCG consInvParamReplacementId(AClassDeclCG encClass, String originalParamName)
+	{
+		NameGen nameGen = new NameGen(encClass);
+		nameGen.addName(originalParamName);
+		
+		String newParamName = nameGen.getName(JmlGenerator.INV_METHOD_REPLACEMENT_NAME_PREFIX
+				+ originalParamName);
+		
+		return jmlGen.getJavaGen().getTransformationAssistant().consIdPattern(newParamName);
 	}
 }
