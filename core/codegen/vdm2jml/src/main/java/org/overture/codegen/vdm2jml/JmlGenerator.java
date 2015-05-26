@@ -525,6 +525,8 @@ public class JmlGenerator implements IREventObserver
 				repBlock.getStatements().add(dynTypeCheck);
 				repBlock.getStatements().add(declStmBlock);
 				repBlock.getStatements().add(body);
+				
+				injectReportCalls(method);
 			}
 		}
 	}
