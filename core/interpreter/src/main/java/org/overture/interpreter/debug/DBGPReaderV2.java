@@ -2039,6 +2039,21 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		}
 	}
 
+	public static void writeMCDCCoverage(Interpreter interpreter, File coverage)
+			throws IOException
+	{
+
+		Properties.init(); // Read properties file, if any
+
+		for (File f : interpreter.getSourceFiles())
+		{
+			interpreter.getCoverage_to_xml().saveCoverageXml(coverage, f.getName());
+		}
+
+		Properties.parser_tabstop = 1;// required to match locations with the editor representation
+	}
+
+	
 	public static void writeCoverage(Interpreter interpreter, File coverage)
 			throws IOException
 	{
@@ -2052,12 +2067,15 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 
 			File data = new File(coverage.getPath() + File.separator
 					+ f.getName() + ".covtbl");
-			interpreter.getCoverage_to_xml().saveCoverageXml(coverage, f.getName());
+			PrintWriter pw = new PrintWriter(data);
+			source.writeCoverage(pw);
+			pw.close();
+
 		}
 
 		Properties.parser_tabstop = 1;// required to match locations with the editor representation
 	}
-
+	
 	public static String getStackTrace(Throwable t)
 	{
 		StringWriter sw = new StringWriter();
@@ -2067,5 +2085,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		sw.flush();
 		return sw.toString();
 	}
+
+	
 
 }

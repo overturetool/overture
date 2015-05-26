@@ -1,21 +1,27 @@
 package org.overture.interpreter.tests.coverage;
 
 import junit.framework.TestCase;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.custommonkey.xmlunit.XpathEngine;
+
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.debug.DBGPReaderV2;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.util.InterpreterUtil;
-import org.overture.interpreter.values.Value;
 import org.overture.test.framework.BaseTestCase;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
 import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 
 
 public class TestCoverageIfStatement extends BaseTestCase {
@@ -23,25 +29,52 @@ public class TestCoverageIfStatement extends BaseTestCase {
     public void test() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_PP;
-        Value test = InterpreterUtil.interpret(Dialect.VDM_PP, "new Test().Run(2,3,4)", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_if_elseif_statements.vdmpp".replace('/', File.separatorChar)), true);
-        System.out.println("The interpreter executed test with the result: "
-                + test);
+        InterpreterUtil.interpret(Dialect.VDM_PP, "new Test().Run(2,3,4)", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_if_elseif_statements.vdmpp".replace('/', File.separatorChar)), true);
+        
         Interpreter interpreter = Interpreter.getInstance();
         File coverageFolder = new File("src/test/target/vdmpp-coverage/if-statement".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
-        DBGPReaderV2.writeCoverage(interpreter, coverageFolder);
-        assertEquals(test.toString(),"4");
-
-        File fXmlFile = new File("src/test/target/vdmpp-coverage/if-statement/test_if_elseif_statements.vdmpp.xml");
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(fXmlFile);
+        DBGPReaderV2.writeMCDCCoverage(interpreter, coverageFolder);
 
         //Query result file
-        XpathEngine engine = XMLUnit.newXpathEngine();
-        TestCase.assertEquals(engine.evaluate("count(//if_statement)", doc), "1");
-        TestCase.assertEquals(engine.evaluate("count(//elseif)", doc), "1");
 
+        HashMap<String, String> queries = new HashMap<String, String>();
+        queries.put("count(//if_statement)","1");
+        queries.put("count(//elseif)","1");
+        queries.put("//elseif/evaluation","false");
+        queries.put("//if_statement/evaluation","false");
+        
+        assertQueries("src/test/target/vdmpp-coverage/if-statement/test_if_elseif_statements.vdmpp.xml",queries);
+    }
+    
+    public void assertQueries(String file_path, HashMap<String, String> queries){
+        File fXmlFile = new File(file_path);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = null;
+        try {
+            dBuilder = dbFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        Document doc = null;
+        try {
+            doc = dBuilder.parse(fXmlFile);
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        //Query result file
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPath engine = xPathfactory.newXPath();
+
+        for(String query : queries.keySet()){
+                try {
+					TestCase.assertEquals(engine.evaluate(query, doc), queries.get(query));
+				} catch (XPathExpressionException e) {
+					e.printStackTrace();
+				}
+        }
     }
 }
