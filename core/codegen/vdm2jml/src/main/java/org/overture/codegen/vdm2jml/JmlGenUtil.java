@@ -4,7 +4,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
@@ -15,25 +17,29 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
+import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
 
 public class JmlGenUtil
 {
-	private JavaCodeGen javaGen;
+	private JmlGenerator jmlGen;
 
-	public JmlGenUtil(JavaCodeGen javaGen)
+	public JmlGenUtil(JmlGenerator jmlGen)
 	{
-		this.javaGen = javaGen;
+		this.jmlGen = jmlGen;
 	}
 
 	public AIdentifierVarExpCG getInvParamVar(AMethodDeclCG invMethod)
@@ -54,7 +60,7 @@ public class JmlGenUtil
 			String paramName = ((AIdentifierPatternCG) id).getName();
 			STypeCG paramType = param.getType().clone();
 			
-			return javaGen.getTransformationAssistant().consIdentifierVar(paramName, paramType);
+			return jmlGen.getJavaGen().getTransformationAssistant().consIdentifierVar(paramName, paramType);
 		} else
 		{
 			Logger.getLog().printErrorln("Expected only a single formal parameter "
@@ -141,10 +147,10 @@ public class JmlGenUtil
 		{
 			String paramName = ((AIdentifierPatternCG) pattern).getName();
 
-			if (this.javaGen.getInfo().getExpAssistant().isOld(paramName))
+			if (jmlGen.getJavaGen().getInfo().getExpAssistant().isOld(paramName))
 			{
 				paramName = toJmlOldExp(paramName);
-			} else if (this.javaGen.getInfo().getExpAssistant().isResult(paramName))
+			} else if (jmlGen.getJavaGen().getInfo().getExpAssistant().isResult(paramName))
 			{
 				// The type checker prohibits use of 'RESULT' as name of a user specified identifier
 				paramName = JmlGenerator.JML_RESULT;
@@ -164,7 +170,7 @@ public class JmlGenUtil
 	public String toJmlOldExp(String paramName)
 	{
 		// Convert old name to current name (e.g. _St to St)
-		String currentArg = this.javaGen.getInfo().getExpAssistant().oldNameToCurrentName(paramName);
+		String currentArg = jmlGen.getJavaGen().getInfo().getExpAssistant().oldNameToCurrentName(paramName);
 
 		// Note that invoking the copy method on the state should be okay
 		// because the state should never be a null pointer
@@ -229,7 +235,7 @@ public class JmlGenUtil
 				AMethodTypeCG copyMethodType = new AMethodTypeCG();
 				copyMethodType.setResult(recInterfaceType);
 				
-				AMethodDeclCG copyMethod = javaGen.getJavaFormat().
+				AMethodDeclCG copyMethod = jmlGen.getJavaGen().getJavaFormat().
 						getRecCreator().consCopySignature(copyMethodType);
 				copyMethod.setAbstract(true);
 				
@@ -255,9 +261,9 @@ public class JmlGenUtil
 
 				// Put the record classes of module M in package <userpackage>.<modulename>types
 				// Examples: my.pack.Mtypes
-				if (JavaCodeGenUtil.isValidJavaPackage(javaGen.getJavaSettings().getJavaRootPackage()))
+				if (JavaCodeGenUtil.isValidJavaPackage(jmlGen.getJavaSettings().getJavaRootPackage()))
 				{
-					String recPackage = javaGen.getJavaSettings().getJavaRootPackage()
+					String recPackage = jmlGen.getJavaSettings().getJavaRootPackage()
 							+ "." + clazz.getName()
 							+ JavaFormat.TYPE_DECL_PACKAGE_SUFFIX;
 					recClass.setPackage(recPackage);
@@ -271,5 +277,161 @@ public class JmlGenUtil
 		}
 
 		return extraClasses;
+	}
+	
+	public AMethodDeclCG genInvMethod(AClassDeclCG clazz,
+			ANamedTypeDeclCG namedTypeDecl)
+	{
+		AReturnStmCG body = new AReturnStmCG();
+		body.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consBoolLiteral(true));
+		
+		STypeCG paramType = namedTypeDecl.getType();
+		
+		AMethodTypeCG invMethodType = new AMethodTypeCG();
+		invMethodType.setResult(new ABoolBasicTypeCG());
+		invMethodType.getParams().add(paramType.clone());
+		
+		String formalParamName = new NameGen(clazz).getName(JmlGenerator.GEN_INV_METHOD_PARAM_NAME);
+		
+		AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
+		formalParam.setType(paramType.clone());
+		formalParam.setPattern(jmlGen.getJavaGen().getTransformationAssistant().consIdPattern(formalParamName));
+		
+		AMethodDeclCG method = new AMethodDeclCG();
+		method.setAbstract(false);
+		method.setAccess(IRConstants.PUBLIC);
+		method.setAsync(false);
+		method.setBody(body);
+		method.getFormalParams().add(formalParam);
+		method.setIsConstructor(false);
+		method.setMethodType(invMethodType);
+		method.setName("inv_" + namedTypeDecl.getName());
+		method.setStatic(true);
+		
+		return method;
+	}
+	
+	public AIfStmCG consDynamicTypeCheck(AMethodDeclCG method, ANamedTypeDeclCG namedTypeDecl)
+	{
+		AIdentifierVarExpCG paramExp = getInvParamVar(method);
+		
+		if(paramExp == null)
+		{
+			return null;
+		}
+
+		String defModule = namedTypeDecl.getName().getDefiningClass();
+		String typeName = namedTypeDecl.getName().getName();
+		NamedTypeInfo findTypeInfo = NamedTypeInvDepCalculator.findTypeInfo(jmlGen.getTypeInfoList(), defModule, typeName);
+
+		List<LeafTypeInfo> leafTypes = findTypeInfo.getLeafTypesRecursively();
+
+		if (leafTypes.isEmpty())
+		{
+			Logger.getLog().printErrorln("Could not find any leaf types for named invariant type "
+					+ findTypeInfo.getDefModule()
+					+ "."
+					+ findTypeInfo.getTypeName()
+					+ " in '"
+					+ this.getClass().getSimpleName() + "'");
+			return null;
+		}
+
+		// The idea is to construct a dynamic type check to make sure that the parameter value
+		// matches one of the leaf types, e.g.
+		// Utils.is_char(n) || Utils.is_nat(n)
+		SExpCG typeCond = null;
+		
+		ExpAssistantCG expAssist = jmlGen.getJavaGen().getInfo().getExpAssistant();
+
+		if (leafTypes.size() == 1)
+		{
+			STypeCG typeCg = leafTypes.get(0).toIrType(jmlGen.getJavaGen().getInfo());
+
+			if (typeCg == null)
+			{
+				return null;
+			}
+
+			typeCond = expAssist.consIsExp(paramExp, typeCg);
+		} else
+		{
+			// There are two or more leaf types
+			STypeCG typeCg = leafTypes.get(0).toIrType(jmlGen.getJavaGen().getInfo());
+
+			if (typeCg == null)
+			{
+				return null;
+			}
+
+			AOrBoolBinaryExpCG topOr = new AOrBoolBinaryExpCG();
+			topOr.setType(new ABoolBasicTypeCG());
+			topOr.setLeft(expAssist.consIsExp(paramExp, typeCg));
+
+			AOrBoolBinaryExpCG next = topOr;
+
+			// Iterate all leaf types - except for the first and last ones
+			for (int i = 1; i < leafTypes.size() - 1; i++)
+			{
+				typeCg = leafTypes.get(i).toIrType(jmlGen.getJavaGen().getInfo());
+
+				if (typeCg == null)
+				{
+					return null;
+				}
+
+				AOrBoolBinaryExpCG tmp = new AOrBoolBinaryExpCG();
+				tmp.setType(new ABoolBasicTypeCG());
+				tmp.setLeft(expAssist.consIsExp(paramExp, typeCg));
+
+				next.setRight(tmp);
+				next = tmp;
+			}
+
+			typeCg = leafTypes.get(leafTypes.size() - 1).toIrType(jmlGen.getJavaGen().getInfo());
+
+			if (typeCg == null)
+			{
+				return null;
+			}
+
+			next.setRight(expAssist.consIsExp(paramExp, typeCg));
+
+			typeCond = topOr;
+		}
+
+		// We will negate the type check and return false if the type of the parameter
+		// is not any of the leaf types, e.g
+		// if (!(Utils.is_char(n) || Utils.is_nat(n))) { return false;}
+		typeCond = expAssist.negate(typeCond);
+
+		boolean nullAllowed = findTypeInfo.allowsNull();
+
+		if (!nullAllowed)
+		{
+			// If 'null' is not allowed as a value we have to update the dynamic
+			// type check to also take this into account too, e.g.
+			// if ((Utils.equals(n, null)) || !(Utils.is_char(n) || Utils.is_nat(n))) { return false;}
+			AEqualsBinaryExpCG notNull = new AEqualsBinaryExpCG();
+			notNull.setType(new ABoolBasicTypeCG());
+			notNull.setLeft(paramExp.clone());
+			notNull.setRight(jmlGen.getJavaGen().getTransformationAssistant().consNullExp());
+
+			AOrBoolBinaryExpCG nullCheckOr = new AOrBoolBinaryExpCG();
+			nullCheckOr.setType(new ABoolBasicTypeCG());
+			nullCheckOr.setLeft(notNull);
+			nullCheckOr.setRight(typeCond);
+
+			typeCond = nullCheckOr;
+		}
+
+		AReturnStmCG returnFalse = new AReturnStmCG();
+		returnFalse.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consBoolLiteral(false));
+
+		AIfStmCG dynTypeCheck = new AIfStmCG();
+		dynTypeCheck.setIfExp(typeCond);
+		dynTypeCheck.setThenStm(returnFalse);
+
+		return dynTypeCheck;
 	}
 }
