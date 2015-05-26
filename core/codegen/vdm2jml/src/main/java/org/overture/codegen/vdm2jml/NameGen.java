@@ -24,6 +24,11 @@ public class NameGen
 			this.toAvoid.add(field.getName());
 		}
 	}
+	
+	public void addName(String name)
+	{
+		toAvoid.add(name);
+	}
 
 	public String getName(String suggestion)
 	{
