@@ -87,10 +87,21 @@ public class CoverageToXML extends AnalysisAdaptor {
     public void caseAVariableExp(AVariableExp node) throws AnalysisException {
         ILexLocation local=node.getLocation();
         Element eval=doc.createElement("evaluation");
-        fill_source_file_location(eval, local);
         eval.setTextContent(ctx.lookup(node.getName()).toString());
         eval.setAttribute("n", Integer.toString(this.iteration));
-        currentElement.appendChild(eval);
+        
+        if(!xml_nodes.containsKey(local)){
+        	Element boolean_variable=doc.createElement("boolean_variable");
+        	fill_source_file_location(boolean_variable, local);
+        	Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.toString());
+        	boolean_variable.appendChild(source_code);
+        	boolean_variable.appendChild(eval);
+        	currentElement.appendChild(boolean_variable);
+        	xml_nodes.put(local, boolean_variable);
+        }else{
+        	xml_nodes.get(local).appendChild(eval);
+        }
     }
 
     @Override
@@ -100,6 +111,9 @@ public class CoverageToXML extends AnalysisAdaptor {
         if(!xml_nodes.containsKey(local)){
             Element not=doc.createElement("not");
             fill_source_file_location(not, local);
+            Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.toString());
+        	not.appendChild(source_code);
             currentElement.appendChild(not);
             currentElement = not;
             xml_nodes.put(local, not);
@@ -145,8 +159,11 @@ public class CoverageToXML extends AnalysisAdaptor {
         eval.setTextContent( String.valueOf(exp.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
 
         if(!xml_nodes.containsKey(local)){
+        	Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.getIfExp().toString());
             Element if_statement =doc.createElement("if_statement");
             fill_source_file_location(if_statement, local);
+            if_statement.appendChild(source_code);
             if_statement.appendChild(eval);
             Element expression = doc.createElement("expression");
             if_statement.appendChild(expression);
@@ -174,8 +191,11 @@ public class CoverageToXML extends AnalysisAdaptor {
         eval.setTextContent(String.valueOf(node.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
 
         if(!xml_nodes.containsKey(local)){
+        	Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.toString());
             Element op=doc.createElement("not_equal");
             fill_source_file_location(op, local);
+            op.appendChild(source_code);
             op.appendChild(eval);
             currentElement.appendChild(op);
             xml_nodes.put(local, op);
@@ -194,8 +214,11 @@ public class CoverageToXML extends AnalysisAdaptor {
         eval.setAttribute("n", String.valueOf(iteration));
         eval.setTextContent(String.valueOf(node.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
         if(!xml_nodes.containsKey(local)){
+        	Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.toString());
             Element op=doc.createElement("greater_or_equal");
             fill_source_file_location(op, local);
+            op.appendChild(source_code);
             op.appendChild(eval);
             currentElement.appendChild(op);
             xml_nodes.put(local, op);
@@ -213,8 +236,11 @@ public class CoverageToXML extends AnalysisAdaptor {
         eval.setAttribute("n", String.valueOf(iteration));
         eval.setTextContent(String.valueOf(node.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
         if(!xml_nodes.containsKey(local)){
+        	Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.toString());
             Element op=doc.createElement("greater");
             fill_source_file_location(op, local);
+            op.appendChild(source_code);
             op.appendChild(eval);
             currentElement.appendChild(op);
             xml_nodes.put(local, op);
@@ -232,8 +258,11 @@ public class CoverageToXML extends AnalysisAdaptor {
         eval.setAttribute("n", String.valueOf(iteration));
         eval.setTextContent(String.valueOf(node.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
         if(!xml_nodes.containsKey(local)){
+        	Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.toString());
             Element op=doc.createElement("lesser_or_equal");
             fill_source_file_location(op, local);
+            op.appendChild(source_code);
             op.appendChild(eval);
             currentElement.appendChild(op);
             xml_nodes.put(local, op);
@@ -251,8 +280,11 @@ public class CoverageToXML extends AnalysisAdaptor {
         eval.setAttribute("n", String.valueOf(iteration));
         eval.setTextContent(String.valueOf(node.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
         if(!xml_nodes.containsKey(local)){
+        	Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.toString());
             Element op=doc.createElement("lesser");
             fill_source_file_location(op, local);
+            op.appendChild(source_code);
             op.appendChild(eval);
             currentElement.appendChild(op);
             xml_nodes.put(local, op);
@@ -270,8 +302,11 @@ public class CoverageToXML extends AnalysisAdaptor {
         eval.setAttribute("n", String.valueOf(iteration));
         eval.setTextContent(String.valueOf(node.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
         if(!xml_nodes.containsKey(local)){
+        	Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.toString());
             Element op=doc.createElement("equals");
             fill_source_file_location(op, local);
+            op.appendChild(source_code);
             op.appendChild(eval);
             currentElement.appendChild(op);
             xml_nodes.put(local, op);
@@ -289,7 +324,10 @@ public class CoverageToXML extends AnalysisAdaptor {
         evaluation.setTextContent(null);
 
         if(!xml_nodes.containsKey(local)){
+        	Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.toString());
             Element exists=doc.createElement("exists1");
+            exists.appendChild(source_code);
             fill_source_file_location(exists, node.getLocation());
             Element expression = doc.createElement("expression");
             exists.appendChild(evaluation);
@@ -357,7 +395,10 @@ public class CoverageToXML extends AnalysisAdaptor {
         evaluation.setTextContent(null);
 
         if(!xml_nodes.containsKey(local)){
+        	Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.toString());
             Element exists=doc.createElement("exists");
+            exists.appendChild(source_code);
             fill_source_file_location(exists, node.getLocation());
             exists.appendChild(evaluation);
             Element expression = doc.createElement("expression");
@@ -440,7 +481,10 @@ public class CoverageToXML extends AnalysisAdaptor {
         eval.setTextContent(String.valueOf(exp.apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
 
         if(!xml_nodes.containsKey(local)){
+        	Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.getElseIf().toString());
             Element if_statement =doc.createElement("elseif");
+            if_statement.appendChild(source_code);
             fill_source_file_location(if_statement, local);
             if_statement.appendChild(eval);
             Element expression = doc.createElement("expression");
@@ -469,7 +513,10 @@ public class CoverageToXML extends AnalysisAdaptor {
         evaluation.setTextContent("true");
 
         if(!xml_nodes.containsKey(local)){
+        	Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.toString());
             Element for_all=doc.createElement("for_all");
+            for_all.appendChild(source_code);
             fill_source_file_location(for_all, node.getLocation());
             for_all.appendChild(evaluation);
             Element expression = doc.createElement("expression");
@@ -549,13 +596,16 @@ public class CoverageToXML extends AnalysisAdaptor {
         this.iteration = (int) local.getHits();
 
         if(!xml_nodes.containsKey(local)){
-            Element if_statement =doc.createElement("while_statement");
-            fill_source_file_location(if_statement, local);
+        	Element source_code=doc.createElement("source_code");
+        	source_code.setTextContent(node.getExp().toString());
+            Element while_statement =doc.createElement("while_statement");
+            while_statement.appendChild(source_code);
+            fill_source_file_location(while_statement, local);
             Element expression = doc.createElement("expression");
-            if_statement.appendChild(expression);
+            while_statement.appendChild(expression);
             currentElement = expression;
-            rootElement.appendChild(if_statement);
-            xml_nodes.put(local,if_statement);
+            rootElement.appendChild(while_statement);
+            xml_nodes.put(local,while_statement);
         }
         else {
             for(int i =0;i<xml_nodes.get(local).getChildNodes().getLength();i++){

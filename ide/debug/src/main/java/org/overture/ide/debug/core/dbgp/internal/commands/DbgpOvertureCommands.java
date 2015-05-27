@@ -61,6 +61,15 @@ public class DbgpOvertureCommands extends DbgpBaseCommands implements
 
 		send(request);
 	}
+	
+	public void writeMCDCCoverage(File file) throws DbgpException
+	{
+		DbgpRequest request = createRequest(OVERTURE_COMMAND);
+		request.addOption("-c", "write_mcdc_coverage"); //$NON-NLS-1$
+		request.setData(file.toURI().toString());
+
+		send(request);
+	}
 
 	public void writeLog(String file) throws DbgpException
 	{

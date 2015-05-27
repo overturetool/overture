@@ -78,6 +78,8 @@ import org.overture.ide.debug.core.model.IVdmVariable;
 import org.overture.ide.debug.logging.LogItem;
 import org.overture.ide.debug.logging.LogView;
 import org.overture.ide.debug.utils.CharOperation;
+import org.overture.interpreter.debug.DBGPReaderV2;
+import org.overture.interpreter.runtime.Interpreter;
 
 public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		IVdmThreadManagerListener, IStepFilters
@@ -801,6 +803,11 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	{
 		return getLaunch().getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, false);
 	}
+	
+	private boolean isMCDCCoverageEnabled() throws CoreException
+	{
+		return getLaunch().getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_MCDC_COVERAGE, false);
+	}
 
 	public static void writeFile(File outputFolder, String fileName,
 			String content) throws IOException
@@ -846,6 +853,27 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 				coverageDir.mkdirs();
 
 				dbgpSession.getOvertureCommands().writeCompleteCoverage(coverageDir);
+
+				for (IVdmSourceUnit source : this.vdmProject.getSpecFiles())
+				{
+					String name = source.getSystemFile().getName() + "cov";
+
+					IProject p = (IProject) vdmProject.getAdapter(IProject.class);
+					p.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+					String outputFolderSegement = coverageDir.toURI().toASCIIString().substring(p.getLocationURI().toASCIIString().length() + 1);
+					IResource folder = p.findMember(new Path(outputFolderSegement));
+
+					source.getFile().copy(new Path(folder.getFullPath() + "/"
+							+ name), true, new NullProgressMonitor());
+				}
+			}
+			if(isMCDCCoverageEnabled()){
+				DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+				File coverageDir = new File(new File(getOutputFolder(vdmProject), "coverage"), dateFormat.format(new Date()));
+
+				coverageDir.mkdirs();
+
+				dbgpSession.getOvertureCommands().writeMCDCCoverage(coverageDir);
 
 				for (IVdmSourceUnit source : this.vdmProject.getSpecFiles())
 				{

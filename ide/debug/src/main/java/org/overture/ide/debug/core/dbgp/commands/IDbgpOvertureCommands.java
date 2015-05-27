@@ -24,6 +24,7 @@ package org.overture.ide.debug.core.dbgp.commands;
 import java.io.File;
 
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
+import org.overture.interpreter.runtime.Interpreter;
 
 public interface IDbgpOvertureCommands
 {
@@ -31,6 +32,8 @@ public interface IDbgpOvertureCommands
 	public void getCoverage(File file) throws DbgpException;
 
 	public void writeCompleteCoverage(File file) throws DbgpException;
+	
+	public void writeMCDCCoverage(File file) throws DbgpException;
 
 	public void writeLog(String file) throws DbgpException;
 
@@ -65,5 +68,6 @@ public interface IDbgpOvertureCommands
 
 	public void runTrace(String name, int testNo, boolean debug)
 			throws DbgpException;
+
 
 }

@@ -159,6 +159,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	private Text fRemoteControlClassText;
 	private Button fRemoteControlnButton;
 	protected Button checkBoxGenerateLatexCoverage = null;
+	protected Button checkBoxGenerateMCDCCoverage = null;
 
 	private Button radioLaunchModeConsole = null;
 	private Button radioLaunchModeEntryPoint = null;
@@ -656,9 +657,14 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		group.setLayout(layout);
 
 		checkBoxGenerateLatexCoverage = new Button(group, SWT.CHECK);
-		checkBoxGenerateLatexCoverage.setText("Generate coverage");
+		checkBoxGenerateLatexCoverage.setText("Generate Latex coverage");
 		checkBoxGenerateLatexCoverage.setSelection(false);
 		checkBoxGenerateLatexCoverage.addSelectionListener(fListener);
+		
+		checkBoxGenerateMCDCCoverage = new Button(group, SWT.CHECK);
+		checkBoxGenerateMCDCCoverage.setText("Generate MC/DC coverage");
+		checkBoxGenerateMCDCCoverage.setSelection(false);
+		checkBoxGenerateMCDCCoverage.addSelectionListener(fListener);
 
 	}
 
@@ -846,6 +852,8 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		}
 
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, checkBoxGenerateLatexCoverage.getSelection());
+		
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_MCDC_COVERAGE, checkBoxGenerateMCDCCoverage.getSelection());
 
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CONSOLE_ENTRY, radioLaunchModeConsole.getSelection());
 

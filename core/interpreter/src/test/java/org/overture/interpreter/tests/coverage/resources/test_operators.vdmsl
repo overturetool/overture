@@ -1,0 +1,7 @@
+operations
+
+operators : bool * bool * bool ==> int
+operators (a,b,c) ==
+	if a and b or c
+	then return 0
+	else return 1;
