@@ -51,7 +51,7 @@ public class JmlGenUtil
 			return null;
 		}
 
-		String paramName = getName(formalParam);
+		String paramName = getName(formalParam.getPattern());
 		
 		if(paramName == null)
 		{
@@ -63,13 +63,11 @@ public class JmlGenUtil
 		return jmlGen.getJavaGen().getTransformationAssistant().consIdentifierVar(paramName, paramType);
 	}
 
-	public String getName(AFormalParamLocalParamCG formalParam)
+	public String getName(SPatternCG id)
 	{
-		SPatternCG id = formalParam.getPattern();
-
 		if (!(id instanceof AIdentifierPatternCG))
 		{
-			Logger.getLog().printErrorln("Expected identifier pattern of formal parameter "
+			Logger.getLog().printErrorln("Expected identifier pattern "
 					+ "to be an identifier pattern at this point. Got: "
 					+ id
 					+ " in '" + this.getClass().getSimpleName() + "'");

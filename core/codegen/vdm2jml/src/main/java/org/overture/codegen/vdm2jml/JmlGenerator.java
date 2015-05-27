@@ -472,7 +472,7 @@ public class JmlGenerator implements IREventObserver
 				
 				invParam.setType(new AUnknownTypeCG());
 				
-				String paramName = util.getName(invParam);
+				String paramName = util.getName(invParam.getPattern());
 				
 				if(paramName == null)
 				{
