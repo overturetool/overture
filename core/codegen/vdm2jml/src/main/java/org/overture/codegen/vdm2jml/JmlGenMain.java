@@ -12,6 +12,7 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGenMain;
 import org.overture.codegen.vdm2java.JavaSettings;
@@ -23,6 +24,7 @@ public class JmlGenMain
 	public static final String OUTPUT_ARG = "-output";
 	public static final String PRINT_ARG = "-print";
 	public static final String REPORT_VIOLATIONS_ARG = "-report";
+	public static final String FOLDER_ARG = "-folder";
 
 	public static void main(String[] args)
 	{
@@ -80,7 +82,26 @@ public class JmlGenMain
 			} else if (arg.equals(PRINT_ARG))
 			{
 				print = true;
-			} else if(arg.equals(REPORT_VIOLATIONS_ARG))
+			} 
+			else if (arg.equals(FOLDER_ARG))
+			{
+				if (i.hasNext())
+				{
+					File path = new File(i.next());
+
+					if (path.isDirectory())
+					{
+						files.addAll(JavaCodeGenMain.filterFiles(GeneralUtils.getFiles(path)));
+					} else
+					{
+						usage("Could not find path: " + path);
+					}
+				} else
+				{
+					usage(FOLDER_ARG + " requires a directory");
+				}
+			}
+			else if(arg.equals(REPORT_VIOLATIONS_ARG))
 			{
 				report = true;
 			}
