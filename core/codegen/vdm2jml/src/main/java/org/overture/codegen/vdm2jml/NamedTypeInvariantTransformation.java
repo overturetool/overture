@@ -6,12 +6,15 @@ import java.util.List;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
+import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.logging.Logger;
 
@@ -25,13 +28,41 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		this.jmlGen = jmlGen;
 	}
 
+	public String consJmlCheck(String annotationType,
+			List<NamedTypeInfo> typeInfoMatches, String varName)
+	{
+		return consJmlCheck(null, annotationType, typeInfoMatches, varName);
+	}
+	
+	@Override
+	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
+	{
+		// We want only to treat fields and methods specified by the user.
+		// This case helps us avoiding visiting invariant methods
+		
+		for(AFieldDeclCG f : node.getFields())
+		{
+			f.apply(this);
+		}
+		
+		for(AMethodDeclCG m : node.getMethods())
+		{
+			m.apply(this);
+		}
+	}
+	
 	public String consJmlCheck(String jmlVisibility, String annotationType,
 			List<NamedTypeInfo> typeInfoMatches, String varName)
 	{
 		StringBuilder inv = new StringBuilder();
 		inv.append("//@ ");
-		inv.append(jmlVisibility);
-		inv.append(' ');
+		
+		if(jmlVisibility != null)
+		{
+			inv.append(jmlVisibility);
+			inv.append(' ');
+		}
+		
 		inv.append(annotationType);
 		inv.append(' ');
 
@@ -120,8 +151,61 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAVarDeclCG(AVarDeclCG node) throws AnalysisException
 	{
-		// TODO Auto-generated method stub
-		super.caseAVarDeclCG(node);
+		// Examples:
+		// let x : Even = 1 in ...
+		// (dcl y : Even | nat := 2; ...)
+
+		List<NamedTypeInfo> invTypes = findNamedInvTypes(node.getType());
+
+		if (invTypes.isEmpty())
+		{
+			return;
+		}
+
+		String name = jmlGen.getUtil().getName(node.getPattern());
+
+		if (name == null)
+		{
+			return;
+		}
+
+		if (node.parent() instanceof ABlockStmCG)
+		{
+			ABlockStmCG parentBlock = (ABlockStmCG) node.parent();
+
+			if (!parentBlock.getLocalDefs().contains(node))
+			{
+				Logger.getLog().printErrorln("Expected local variable declaration to be "
+						+ "one of the local variable declarations of "
+						+ "the parent statement block in '"
+						+ this.getClass().getSimpleName() + "'");
+				return;
+			}
+
+			if (parentBlock.getLocalDefs().size() > 1)
+			{
+				ABlockStmCG declBlock = new ABlockStmCG();
+				while (parentBlock.getLocalDefs().getLast() != node)
+				{
+					declBlock.getLocalDefs().addFirst(parentBlock.getLocalDefs().getLast());
+				}
+				parentBlock.getStatements().addFirst(declBlock);
+			}
+
+			AMetaStmCG assertInv = new AMetaStmCG();
+
+			String inv = consJmlCheck(JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, name);
+			jmlGen.getAnnotator().appendMetaData(assertInv, jmlGen.getAnnotator().consMetaData(inv));
+			
+			parentBlock.getStatements().addFirst(assertInv);
+		} else
+		{
+			Logger.getLog().printErrorln("Expected parent of local variable "
+					+ "declaration to be a statement block. Got: "
+					+ node.parent() + " in '" + this.getClass().getSimpleName()
+					+ "'");
+		}
+
 	}
 
 	@Override
