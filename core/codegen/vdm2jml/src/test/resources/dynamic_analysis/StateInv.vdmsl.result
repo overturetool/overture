@@ -1,23 +1,5 @@
-inv_St(s = mk_Entry`St(-10)) is false
-
-java.lang.AssertionError
-	at org.overture.codegen.runtime.Utils.report(Utils.java:419)
-	at Entry.inv_St(Entry.java:38)
-	at Entry.op(Entry.java:25)
-	at Entry.Run(Entry.java:13)
-	at Main.main(Main.java:7)
-inv_St(s = mk_Entry`St(-10)) is false
-
-java.lang.AssertionError
-	at org.overture.codegen.runtime.Utils.report(Utils.java:419)
-	at Entry.inv_St(Entry.java:38)
-	at Entry.op(Entry.java:10)
-	at Entry.Run(Entry.java:13)
-	at Main.main(Main.java:7)
-inv_St(s = mk_Entry`St(-10)) is false
-
-java.lang.AssertionError
-	at org.overture.codegen.runtime.Utils.report(Utils.java:419)
-	at Entry.inv_St(Entry.java:38)
-	at Entry.Run(Entry.java:10)
-	at Main.main(Main.java:7)
+"Before breaking state invariant"
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInv/Entry.java:27: JML assertion is false
+        //@ assert inv_St(St);
+            ^
+"After breaking state invariant"

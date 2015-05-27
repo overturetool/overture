@@ -1,8 +1,8 @@
-post_opRet(a = 4, RESULT = 3, _St = mk_Entry`St(2), St = mk_Entry`St(3)) is false
-
-java.lang.AssertionError
-	at org.overture.codegen.runtime.Utils.report(Utils.java:419)
-	at Entry.post_opRet(Entry.java:58)
-	at Entry.opRet(Entry.java:23)
-	at Entry.Run(Entry.java:15)
-	at Main.main(Main.java:7)
+"Before breaking post condition"
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PostCond/Entry.java:33: JML postcondition is false
+    public static Number opRet(final Number a) {
+                         ^
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PostCond/Entry.java:32: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PostCond/Entry.java:33: 
+    //@ ensures post_opRet(a,\result,\old(St.copy()),St);
+        ^
+"After breaking post condition"

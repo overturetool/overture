@@ -1,6 +1,7 @@
 module Entry
 
 exports all
+imports from IO all
 definitions
 
 types
@@ -16,7 +17,9 @@ Run : () ==> ?
 Run () ==
 (
   recInvOk();
+  IO`println("Before breaking record invariant");
   recInvBreak();
+  IO`println("After breaking record invariant");
   return 0;
 );
 

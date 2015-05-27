@@ -1,9 +1,8 @@
-inv_Rec(_x = 1, _y = -2) is false
-
-java.lang.AssertionError
-	at org.overture.codegen.runtime.Utils.report(Utils.java:419)
-	at Entrytypes.Rec.inv_Rec(Rec.java:69)
-	at Entrytypes.Rec.<init>(Rec.java:12)
-	at Entry.recInvBreak(Entry.java:21)
-	at Entry.Run(Entry.java:9)
-	at Main.main(Main.java:7)
+"Before breaking record invariant"
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecTypeDefInv/Entrytypes/Rec.java:13: JML invariant is false on leaving method Entrytypes.Rec.Rec(java.lang.Number,java.lang.Number)
+    public Rec(final Number _x, final Number _y) {
+           ^
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecTypeDefInv/Entrytypes/Rec.java:12: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecTypeDefInv/Entrytypes/Rec.java:13: 
+    //@ public instance invariant inv_Rec(x,y);
+                        ^
+"After breaking record invariant"

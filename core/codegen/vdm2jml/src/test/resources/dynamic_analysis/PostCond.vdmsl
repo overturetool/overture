@@ -1,6 +1,7 @@
 module Entry
 
 exports all
+imports from IO all
 definitions
 
 state St of
@@ -24,7 +25,10 @@ let - = opRet(1),
 in
 (
   opVoid();
-  opRet(4);
+  IO`println("Before breaking post condition");
+  let - = opRet(4) in skip;
+  IO`println("After breaking post condition");
+  return 0;
 );
 
 opVoid : () ==> ()

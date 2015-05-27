@@ -1,7 +1,8 @@
-pre_id(a = -1) is false
-
-java.lang.AssertionError
-	at org.overture.codegen.runtime.Utils.report(Utils.java:419)
-	at Entry.pre_id(Entry.java:48)
-	at Entry.Run(Entry.java:29)
-	at Main.main(Main.java:7)
+"Before breaking pre condition"
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PreCond/Entry.java:16: JML precondition is false
+            Number ignorePattern_2 = id(-1L);
+                                       ^
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PreCond/Entry.java:40: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PreCond/Entry.java:16: 
+    public static Number id(final Number a) {
+                                         ^
+"After breaking pre condition"
