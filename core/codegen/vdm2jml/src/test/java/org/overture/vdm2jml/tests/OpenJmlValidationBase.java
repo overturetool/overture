@@ -16,6 +16,10 @@ import org.overture.vdm2jml.tests.util.ProcessResult;
 
 abstract public class OpenJmlValidationBase
 {
+	private static final String VDM_LIB_PATH = "src" + File.separatorChar
+			+ "test" + File.separatorChar + "resources" + File.separatorChar
+			+ "lib";
+
 	protected static final String VDMSL_FILE_EXT = ".vdmsl";
 
 	public static final String OPENJML_ENV_VAR = "OPENJML";
@@ -117,7 +121,9 @@ abstract public class OpenJmlValidationBase
 		}
 		javaCgArgs.add(JmlGenMain.OUTPUT_ARG);
 		javaCgArgs.add(genJavaFolder.getAbsolutePath());
-		javaCgArgs.add(JmlGenMain.REPORT_VIOLATIONS_ARG);
+		javaCgArgs.add(JmlGenMain.FOLDER_ARG);
+		javaCgArgs.add(new File(VDM_LIB_PATH).getAbsolutePath());
+		//javaCgArgs.add(JmlGenMain.REPORT_VIOLATIONS_ARG);
 		
 		JmlGenMain.main(javaCgArgs.toArray(new String[]{}));
 	}
