@@ -171,7 +171,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 		// -classpath
 		// codegen-runtime.jar
 		// -rac
-		// -racCompileToJavaAssert
+		// -racCompileToJavaAssert (currently disabled)
 		// -no-purityCheck
 		// <javafiles>
 
@@ -179,7 +179,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 				JavaToolsUtils.JAR_ARG, openJml.getAbsolutePath(),
 				IOpenJmlConsts.CP_ARG, cgRuntime.getAbsolutePath(),
 				IOpenJmlConsts.RAC_ARG,
-				IOpenJmlConsts.RAC_TO_ASSERT_ARG,
+				/*IOpenJmlConsts.RAC_TO_ASSERT_ARG,*/
 				IOpenJmlConsts.NO_PURITY_CHECKS_ARG };
 
 		String[] javaFiles = JavaCodeGenUtil.findJavaFilePathsRec(genJavaFolder);
@@ -193,7 +193,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 		// java
 		// -classpath
 		// ".:codegen-runtime.jar:jmlruntime.jar"
-		// -ea
+		// -ea (currently disabled)
 		// Main
 
 		// Note that use of File.pathSeparatorChar makes it a platform dependent construction
@@ -205,7 +205,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 		
 		String[] args = new String[] { JavaToolsUtils.JAVA,
 				JavaToolsUtils.CP_ARG, runtimes,
-				JavaToolsUtils.ENABLE_ASSERTIONS_ARG, MAIN_CLASS_NAME };
+				/*JavaToolsUtils.ENABLE_ASSERTIONS_ARG,*/ MAIN_CLASS_NAME };
 
 		return args;
 	}
