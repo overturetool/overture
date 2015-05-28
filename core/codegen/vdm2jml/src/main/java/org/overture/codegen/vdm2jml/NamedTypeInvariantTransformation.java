@@ -1,8 +1,11 @@
 package org.overture.codegen.vdm2jml;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.util.ClonableString;
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -11,6 +14,8 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
@@ -28,10 +33,10 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		this.jmlGen = jmlGen;
 	}
 
-	public String consJmlCheck(String annotationType,
+	public String consJmlCheck(String enclosingClass, String annotationType,
 			List<NamedTypeInfo> typeInfoMatches, String varName)
 	{
-		return consJmlCheck(null, annotationType, typeInfoMatches, varName);
+		return consJmlCheck(enclosingClass, null, annotationType, typeInfoMatches, varName);
 	}
 	
 	@Override
@@ -51,7 +56,7 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		}
 	}
 	
-	public String consJmlCheck(String jmlVisibility, String annotationType,
+	public String consJmlCheck(String enclosingClass, String jmlVisibility, String annotationType,
 			List<NamedTypeInfo> typeInfoMatches, String varName)
 	{
 		StringBuilder inv = new StringBuilder();
@@ -70,7 +75,7 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		for (NamedTypeInfo match : typeInfoMatches)
 		{
 			inv.append(or);
-			inv.append(match.consCheckExp());
+			inv.append(match.consCheckExp(enclosingClass, jmlGen.getJavaSettings().getJavaRootPackage()));
 			or = JmlGenerator.JML_OR;
 		}
 
@@ -142,8 +147,15 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
+		AClassDeclCG enclosingClass = jmlGen.getUtil().getEnclosingClass(node);
+		
+		if(enclosingClass == null)
+		{
+			return;
+		}
+		
 		// Because we code generate VDM-SL all fields will be static
-		String inv = consJmlCheck(JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, invTypes, node.getName());
+		String inv = consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, invTypes, node.getName());
 
 		jmlGen.getAnnotator().appendMetaData(node, jmlGen.getAnnotator().consMetaData(inv));
 	}
@@ -194,7 +206,15 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 
 			AMetaStmCG assertInv = new AMetaStmCG();
 
-			String inv = consJmlCheck(JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, name);
+			AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
+			
+			if(enclosingClass == null)
+			{
+				return;
+			}
+			
+			String inv = consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, name);
+			
 			jmlGen.getAnnotator().appendMetaData(assertInv, jmlGen.getAnnotator().consMetaData(inv));
 			
 			parentBlock.getStatements().addFirst(assertInv);
@@ -205,15 +225,85 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 					+ node.parent() + " in '" + this.getClass().getSimpleName()
 					+ "'");
 		}
-
 	}
 
 	@Override
 	public void caseAAssignToExpStmCG(AAssignToExpStmCG node)
 			throws AnalysisException
 	{
-		// TODO Auto-generated method stub
-		super.caseAAssignToExpStmCG(node);
+		List<NamedTypeInfo> invTypes = findNamedInvTypes(node.getTarget().getType());
+
+		if (invTypes.isEmpty())
+		{
+			return;
+		}
+		
+		// Must be field or variable expression
+		SExpCG next = node.getTarget();
+		
+		List<String> names = new LinkedList<String>();
+		
+		// Consider the field a.b.c
+		while(next instanceof AFieldExpCG)
+		{
+			AFieldExpCG fieldExpCG = (AFieldExpCG) next;
+			
+			// First 'c' will be visited, then 'b' and then 'a'.
+			names.add(fieldExpCG.getMemberName());
+			next = fieldExpCG.getObject();
+		}
+		
+		if (next instanceof SVarExpCG)
+		{
+			SVarExpCG var = (SVarExpCG) next;
+			names.add(var.getName());
+		} else
+		{
+			Logger.getLog().printErrorln("Expected target to a variable expression at this point. Got "
+					+ next + " in '" + this.getClass().getSimpleName() + "'");
+			return;
+		}
+		
+		// By reversing the list we get the original order, i.e.  'a' then 'b' then 'c'
+		Collections.reverse(names);
+
+		if (names.isEmpty())
+		{
+			Logger.getLog().printErrorln("Expected the naming list not to be empty in '"
+					+ this.getClass().getSimpleName() + "'");
+			return;
+		}
+		
+		StringBuilder varName = new StringBuilder();
+		
+		varName.append(names.get(0));
+		
+		// Iterate over all names - except for the first
+		for(int i = 1; i < names.size(); i++)
+		{
+			varName.append(".");
+			varName.append(names.get(i));
+		}
+		// So for our example varName wil be a.b.c
+		
+		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
+		
+		if(enclosingClass == null)
+		{
+			return;
+		}
+		
+		String assertStr = consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, varName.toString());
+		List<ClonableString> assertMetaData = jmlGen.getAnnotator().consMetaData(assertStr);
+		AMetaStmCG assertStm = new AMetaStmCG();
+		jmlGen.getAnnotator().appendMetaData(assertStm, assertMetaData);
+		
+		ABlockStmCG replStm = new ABlockStmCG();
+		
+		jmlGen.getJavaGen().getTransformationAssistant().replaceNodeWith(node, replStm);
+		
+		replStm.getStatements().add(node);
+		replStm.getStatements().add(assertStm);
 	}
 
 	@Override
