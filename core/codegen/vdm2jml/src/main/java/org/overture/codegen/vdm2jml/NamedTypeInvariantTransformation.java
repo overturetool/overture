@@ -154,8 +154,12 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		// Because we code generate VDM-SL all fields will be static
-		String inv = consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, invTypes, node.getName());
+		// In classes that originate from VDM-SL modules the state field
+		// and the values are static. However record fields are not.
+		String scope = node.getStatic() ? JmlGenerator.JML_STATIC_INV_ANNOTATION
+				: JmlGenerator.JML_INSTANCE_INV_ANNOTATION;
+		
+		String inv = consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_PUBLIC, scope, invTypes, node.getName());
 
 		jmlGen.getAnnotator().appendMetaData(node, jmlGen.getAnnotator().consMetaData(inv));
 	}
