@@ -38,6 +38,7 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
+import org.overture.codegen.vdm2jml.util.AnnotationSorter;
 
 public class JmlGenerator implements IREventObserver
 {
@@ -232,10 +233,36 @@ public class JmlGenerator implements IREventObserver
 		addModuleStateInvAssertions(newAst);
 		addNamedTypeInvariantAssertions(newAst);
 
+		// Make sure that the JML annotations are ordered correcly
+		sortAnnotations(newAst);
+		
 		// Return back the modified AST to the Java code generator
 		return newAst;
 	}
 	
+	private void sortAnnotations(List<IRStatus<INode>> newAst)
+	{
+		AnnotationSorter sorter = new AnnotationSorter();
+
+		for (IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
+		{
+			if (!javaGen.getInfo().getDeclAssistant().isLibraryName(status.getIrNode().getName()))
+			{
+				try
+				{
+					status.getIrNode().apply(sorter);
+				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+				{
+					Logger.getLog().printErrorln("Problems sorting JML annotations for node "
+							+ status.getIrNode()
+							+ " in '"
+							+ this.getClass().getSimpleName() + "'");
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 	private void computeNamedTypeInvInfo(List<AModuleModules> ast) throws AnalysisException
 	{
 		NamedTypeInvDepCalculator depCalc = new NamedTypeInvDepCalculator();
