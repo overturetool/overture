@@ -146,19 +146,27 @@ public class NamedTypeInfo extends AbstractTypeInfo
 		sb.append(ARG_PLACEHOLDER);
 		sb.append(')');
 		
-		if (!namedTypes.isEmpty())
+		boolean allowsNull = allowsNull();
+		if (!namedTypes.isEmpty() || allowsNull)
 		{
 			sb.append(JmlGenerator.JML_AND);
+			
 			sb.append('(');
 
 			String orSep = "";
+			if(allowsNull)
+			{
+				sb.append(ARG_PLACEHOLDER + " == null");
+				orSep = JmlGenerator.JML_OR;
+			}
+			
 			for (NamedTypeInfo n : namedTypes)
 			{
 				sb.append(orSep);
 				n.consCheckExp(sb, enclosingModule, javaRootPackage);
 				orSep = JmlGenerator.JML_OR;
 			}
-
+			
 			sb.append(')');
 		}
 	}

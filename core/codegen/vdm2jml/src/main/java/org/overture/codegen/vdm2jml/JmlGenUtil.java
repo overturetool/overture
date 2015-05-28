@@ -17,9 +17,11 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
+import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
@@ -434,23 +436,32 @@ public class JmlGenUtil
 
 		boolean nullAllowed = findTypeInfo.allowsNull();
 
-		if (!nullAllowed)
+		AEqualsBinaryExpCG notNull = new AEqualsBinaryExpCG();
+		notNull.setType(new ABoolBasicTypeCG());
+		notNull.setLeft(paramExp.clone());
+		notNull.setRight(jmlGen.getJavaGen().getTransformationAssistant().consNullExp());
+
+		SBinaryExpCG nullCheck = null;
+
+		if (nullAllowed)
 		{
-			// If 'null' is not allowed as a value we have to update the dynamic
+			// If 'null' is allowed as a value we have to update the dynamic
 			// type check to also take this into account too, e.g.
-			// if ((Utils.equals(n, null)) || !(Utils.is_char(n) || Utils.is_nat(n))) { return false;}
-			AEqualsBinaryExpCG notNull = new AEqualsBinaryExpCG();
-			notNull.setType(new ABoolBasicTypeCG());
-			notNull.setLeft(paramExp.clone());
-			notNull.setRight(jmlGen.getJavaGen().getTransformationAssistant().consNullExp());
-
-			AOrBoolBinaryExpCG nullCheckOr = new AOrBoolBinaryExpCG();
-			nullCheckOr.setType(new ABoolBasicTypeCG());
-			nullCheckOr.setLeft(notNull);
-			nullCheckOr.setRight(typeCond);
-
-			typeCond = nullCheckOr;
+			// if (!Utils.equals(n, null) && !(Utils.is_char(n) || Utils.is_nat(n))) { return false;}
+			nullCheck = new AAndBoolBinaryExpCG();
+			nullCheck.setLeft(jmlGen.getJavaGen().getInfo().getExpAssistant().negate(notNull));
+		} else
+		{
+			// If 'null' is NOT allowed as a value we have to update the dynamic we get
+			// if (Utils.equals(n, null) || !(Utils.is_char(n) || Utils.is_nat(n))) { return false;}
+			nullCheck = new AOrBoolBinaryExpCG();
+			nullCheck.setLeft(notNull);
 		}
+
+		nullCheck.setType(new ABoolBasicTypeCG());
+		nullCheck.setRight(typeCond);
+
+		typeCond = nullCheck;
 
 		AReturnStmCG returnFalse = new AReturnStmCG();
 		returnFalse.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consBoolLiteral(false));
