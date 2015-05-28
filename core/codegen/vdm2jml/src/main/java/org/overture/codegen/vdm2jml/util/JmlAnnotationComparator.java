@@ -18,7 +18,7 @@ public class JmlAnnotationComparator implements Comparator<ClonableString>
 
 	public int getOrder(String annotation)
 	{
-		if (annotation.equals(JmlGenerator.JML_NULLABLE))
+		if (annotation.equals(JmlGenerator.JML_NULLABLE_BY_DEFAULT))
 		{
 			return 10;
 		} else if (annotation.equals(JmlGenerator.JML_SPEC_PUBLIC))

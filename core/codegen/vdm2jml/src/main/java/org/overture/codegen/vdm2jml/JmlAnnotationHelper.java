@@ -50,21 +50,6 @@ public class JmlAnnotationHelper
 		}
 	}
 	
-	public void makeNullable(AClassDeclCG clazz)
-	{
-		try
-		{
-			clazz.apply(new NullableAnnotator(jmlGen));
-		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
-		{
-			Logger.getLog().printErrorln("Problem encountered when trying to make declarations nullable: "
-					+ e.getMessage()
-					+ " in '"
-					+ this.getClass().getSimpleName() + "'");
-			e.printStackTrace();
-		}
-	}
-	
 	public List<ClonableString> consAnno(String jmlAnno, String name,
 			List<String> fieldNames)
 	{

@@ -60,7 +60,6 @@ public class JmlGenerator implements IREventObserver
 	public static final String JML_HELPER = "/*@ helper @*/";
 	public static final String JML_RESULT = "\\result";
 	public static final String REPORT_CALL = "report";
-	public static final String JML_NULLABLE = "//@ nullable;";
 	public static final String JML_NULLABLE_BY_DEFAULT = "//@ nullable_by_default";
 	
 	private JavaCodeGen javaGen;
