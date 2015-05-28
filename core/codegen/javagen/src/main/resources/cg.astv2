@@ -120,6 +120,7 @@ CG {-> package='org.overture.codegen.cgast'
       	[static]:java_Boolean 
     	[name]:java_String
     	[fields]:field*
+    	[invariant]:CG.#decl
     	[methods]:CG.#decl.method*
     	[functions]:CG.#decl.func*
     	[traces]:CG.#decl.namedTrace*
@@ -229,6 +230,8 @@ CG {-> package='org.overture.codegen.cgast'
            		[name]:java_String
            		[args]:CG.#exp*
 			|	{mapSeqUpdate} [col]:CG.#exp [index]:CG.#exp [value]:CG.#exp
+			|	{invCheck} [subject]:CG.#exp
+			|	{atomic} [statements]:CG.#stm*
            ;
 
 #call {-> package='org.overture.codegen.cgast.statements'

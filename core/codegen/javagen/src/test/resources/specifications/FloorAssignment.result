@@ -4,7 +4,7 @@ import java.util.*;
 
 
 public class A {
-    public static final Number x = Math.round(Math.floor(-1.5)) - 3L;
+    public static final Number x = Math.round(Utils.floor(-1.5)) - 3L;
 
     public A() {
     }

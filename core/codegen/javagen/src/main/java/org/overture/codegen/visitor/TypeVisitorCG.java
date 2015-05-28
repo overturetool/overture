@@ -22,6 +22,7 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -84,7 +85,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	public STypeCG caseAUnionType(AUnionType node, IRInfo question)
 			throws AnalysisException
 	{
-		LinkedList<PType> types = node.getTypes();
+		List<PType> types = node.getTypes();
 
 		PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
 
@@ -107,24 +108,30 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 			return mapType.apply(question.getTypeVisitor(), question);
 		} else
 		{
-
-			AUnionTypeCG unionTypeCg = new AUnionTypeCG();
-
-			for (PType type : types)
+			if(types.size() <= 1)
 			{
-				STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-				
-				if(typeCg != null)
-				{
-					unionTypeCg.getTypes().add(typeCg);	
-				}
-				else
-				{
-					return null;
-				}
+				return types.get(0).apply(question.getTypeVisitor(), question);
 			}
+			else
+			{
+				AUnionTypeCG unionTypeCg = new AUnionTypeCG();
 
-			return unionTypeCg;
+				for (PType type : types)
+				{
+					STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+					
+					if(typeCg != null)
+					{
+						unionTypeCg.getTypes().add(typeCg);	
+					}
+					else
+					{
+						return null;
+					}
+				}
+
+				return unionTypeCg;
+			}
 		}
 	}
 	

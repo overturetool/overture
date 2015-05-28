@@ -344,4 +344,34 @@ public class Utils
 		
 		return doubleValue;
 	}
+	
+	public static double floor(Number n)
+	{
+		if(n == null)
+		{
+			throw new IllegalArgumentException("The 'floor' operator only works for numbers. Got null");
+		}
+		
+		return Math.floor(n.doubleValue());
+	}
+	
+	public static double abs(Number n)
+	{
+		if(n == null)
+		{
+			throw new IllegalArgumentException("The 'abs' operator only works for numbers. Got null");
+		}
+		
+		return Math.abs(n.doubleValue());
+	}
+	
+	public static double pow(Number a, Number b)
+	{
+		if(a == null || b == null)
+		{
+			throw new IllegalArgumentException("The power operator only works for numbers. Got arguments: '" + a + "' and '" + b + "'");
+		}
+		
+		return Math.pow(a.doubleValue(), b.doubleValue());	
+	}
 }

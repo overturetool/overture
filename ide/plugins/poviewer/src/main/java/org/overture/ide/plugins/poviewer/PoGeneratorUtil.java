@@ -60,6 +60,7 @@ public class PoGeneratorUtil
 	private File selectedFile = null;
 	private File libFolder = null;
 	private File selectedFolder;
+	private static String lastPoggedProject = null;
 
 	/**
 	 * Constructor for Action1.
@@ -111,7 +112,7 @@ public class PoGeneratorUtil
 			IVdmProject project = (IVdmProject) selectedProject.getAdapter(IVdmProject.class);
 
 			libFolder = new File(selectedProject.getLocation().toFile(), "lib");
-
+			lastPoggedProject=project.getName();
 			viewPos(project);
 
 		} catch (Exception e)
@@ -325,5 +326,15 @@ public class PoGeneratorUtil
 			}
 
 		});
+	}
+
+	public boolean isPoggedModel(IVdmModel model)
+	{
+		IVdmProject vdmproject = (IVdmProject) model.getSourceUnits().get(0).getProject();
+		if (vdmproject != null)
+		{
+			return vdmproject.getName().equals(lastPoggedProject);
+		}
+		return false;
 	}
 }

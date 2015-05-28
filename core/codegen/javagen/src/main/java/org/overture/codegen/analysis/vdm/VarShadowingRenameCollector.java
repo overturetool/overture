@@ -1,6 +1,5 @@
 package org.overture.codegen.analysis.vdm;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,7 +78,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	private Stack<ILexNameToken> localDefsInScope;
 	private int enclosingCounter;
 	
-	private List<Renaming> renamings;
+	private Set<Renaming> renamings;
 	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
 	
@@ -92,7 +91,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		this.localDefsInScope = new Stack<ILexNameToken>();
 		this.enclosingCounter = 0;
 
-		this.renamings = new LinkedList<Renaming>();
+		this.renamings = new HashSet<Renaming>();
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
 	}
@@ -721,12 +720,9 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	public List<Renaming> getRenamings()
+	public Set<Renaming> getRenamings()
 	{
-		LinkedList<Renaming> renameCopies = new LinkedList<Renaming>(renamings);
-		Collections.sort(renameCopies);
-
-		return renameCopies;
+		return renamings;
 	}
 
 	private List<PDefinition> getParamDefs(AExplicitFunctionDefinition node)

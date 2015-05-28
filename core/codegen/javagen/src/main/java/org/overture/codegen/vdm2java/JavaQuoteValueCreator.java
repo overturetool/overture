@@ -46,12 +46,12 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		this.transformationAssistant = transformationAssistant;
 	}
 	
-	public AClassDeclCG consQuoteValue(String name, String userCodePackage)
+	public AClassDeclCG consQuoteValue(String quoteClassName, String quoteName, String userCodePackage)
 	{
 		AClassDeclCG decl = new AClassDeclCG();
 		decl.setAbstract(false);
 		decl.setAccess(JavaFormat.JAVA_PUBLIC);
-		decl.setName(name);
+		decl.setName(quoteClassName);
 		decl.setStatic(false);
 		
 		// The package where the quotes are put is userCode.quotes
@@ -66,13 +66,13 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		}
 		
 		decl.getFields().add(consHashcodeField());
-		decl.getFields().add(consInstanceField(name));
+		decl.getFields().add(consInstanceField(quoteClassName));
 		
-		decl.getMethods().add(consQuoteCtor(name));
-		decl.getMethods().add(consGetInstanceMethod(name));
-		decl.getMethods().add(consHashcodeMethod(name));
-		decl.getMethods().add(consEqualsMethod(name));
-		decl.getMethods().add(consToStringMethod(name));
+		decl.getMethods().add(consQuoteCtor(quoteClassName));
+		decl.getMethods().add(consGetInstanceMethod(quoteClassName));
+		decl.getMethods().add(consHashcodeMethod());
+		decl.getMethods().add(consEqualsMethod(quoteClassName));
+		decl.getMethods().add(consToStringMethod(quoteName));
 		
 		return decl;
 	}
@@ -210,7 +210,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		return getInstanceMethod;
 	}
 	
-	private AMethodDeclCG consHashcodeMethod(String name)
+	private AMethodDeclCG consHashcodeMethod()
 	{
 		AIdentifierVarExpCG hashCodeVar = transformationAssistant.consIdentifierVar(HASHCODE_FIELD, consFieldType());
 		

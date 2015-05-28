@@ -1,1 +1,1 @@
-["binary-04.vdmparses and type checks"]
+["Error 3335: binary-04.vdm at 112:41 Subset will only be true if the LHS set is empty","Error 3335: binary-04.vdm at 138:26 Subset will only be true if the LHS set is empty","Error 3335: binary-04.vdm at 145:9 Subset will only be true if the LHS set is empty"]

@@ -1,6 +1,6 @@
 package org.overture.codegen.analysis.vdm;
 
-import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
@@ -11,9 +11,9 @@ import org.overture.ast.node.INode;
 
 class RenameAnalysis extends DepthFirstAnalysisAdaptor
 {
-	private List<Renaming> renamings;
+	private Set<Renaming> renamings;
 	
-	public RenameAnalysis(List<Renaming> renamings)
+	public RenameAnalysis(Set<Renaming> renamings)
 	{
 		this.renamings = renamings;
 	}

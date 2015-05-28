@@ -5,10 +5,11 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>root</artifactId>
-    <version>2.2.3-SNAPSHOT</version>
+    <version>2.2.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
-  </parent>
-    <packaging>pom</packaging>
+</parent>
+
+<packaging>pom</packaging>
   <artifactId>ide</artifactId>
   <name>Overture IDE Top-level</name>
   <description>Super POM for all IDE (Eclipse) artifacts.</description>

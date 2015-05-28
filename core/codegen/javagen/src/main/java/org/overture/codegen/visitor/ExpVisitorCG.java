@@ -502,7 +502,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseASetCompSetExp(ASetCompSetExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().existsOutsideMethodOrTrace(node))
+		if (question.getExpAssistant().outsideImperativeContext(node))
 		{
 			question.addUnsupportedNode(node, "Generation of a set comprehension is only supported within operations/functions");
 			return null;
@@ -743,7 +743,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseALetBeStExp(ALetBeStExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().existsOutsideMethodOrTrace(node))
+		if (question.getExpAssistant().outsideImperativeContext(node))
 		{
 			question.addUnsupportedNode(node, "Generation of a let be st expression is only supported within operations/functions");
 			return null;
@@ -962,7 +962,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseASeqCompSeqExp(ASeqCompSeqExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().existsOutsideMethodOrTrace(node))
+		if (question.getExpAssistant().outsideImperativeContext(node))
 		{
 			question.addUnsupportedNode(node, "Generation of a sequence comprehension is only supported within operations/functions");
 			return null;
@@ -1083,7 +1083,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseAMapCompMapExp(AMapCompMapExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().existsOutsideMethodOrTrace(node))
+		if (question.getExpAssistant().outsideImperativeContext(node))
 		{
 			question.addUnsupportedNode(node, "Generation of a map comprehension is only supported within operations/functions");
 			return null;

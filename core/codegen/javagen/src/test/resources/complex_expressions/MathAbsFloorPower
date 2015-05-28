@@ -1,0 +1,17 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a1 = 1.5,
+    a2 = floor a1,
+    a3 = -9,
+    a4 = abs a3,
+    a5 = 2.5,
+    a6 = a5 ** a1
+    
+in
+   return floor a2 + a4 + a6;
+
+end Entry

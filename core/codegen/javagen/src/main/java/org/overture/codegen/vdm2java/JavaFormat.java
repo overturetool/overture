@@ -940,4 +940,14 @@ public class JavaFormat
 			return CodeGenBase.QUOTES + ".";
 		}
 	}
+
+	public boolean genInvariant(AClassDeclCG clazz)
+	{
+		if(!info.getSettings().generateInvariantChecks())
+		{
+			return false;
+		}
+		
+		return clazz.getInvariant() != null;
+	}
 }

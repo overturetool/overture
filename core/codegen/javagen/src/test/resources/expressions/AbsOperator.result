@@ -1,1 +1,1 @@
-Math.abs( -2.1)
+Utils.abs(-2.1)

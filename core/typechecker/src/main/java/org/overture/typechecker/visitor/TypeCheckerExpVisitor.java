@@ -691,10 +691,26 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		TypeCheckInfo noConstraint = question.newConstraint(null);
-
-		node.getLeft().apply(THIS, noConstraint);
-		node.getRight().apply(THIS, noConstraint);
+		TypeCheckInfo leftcons = question.newConstraint(null);
+		TypeCheckInfo mapcons = question.newConstraint(null);
+		
+		if (question.constraint != null && question.assistantFactory.createPTypeAssistant().isSeq(question.constraint))
+		{
+			SSeqType st = question.assistantFactory.createPTypeAssistant().getSeq(question.constraint);
+			mapcons = question.newConstraint(AstFactory.newAMapMapType(node.getLocation(),
+				AstFactory.newANatOneNumericBasicType(node.getLocation()), st.getSeqof()));
+			leftcons = question.newConstraint(AstFactory.newASeqSeqType(node.getLocation()));
+		}
+		else if (question.constraint != null && question.assistantFactory.createPTypeAssistant().isMap(question.constraint))
+		{
+			SMapType mt = question.assistantFactory.createPTypeAssistant().getMap(question.constraint);
+			mapcons = question.newConstraint(mt);
+			leftcons = question.newConstraint(AstFactory.newAMapMapType(node.getLocation(),
+				mt.getFrom(), AstFactory.newAUnknownType(node.getLocation())));
+		}
+		
+		node.getLeft().apply(THIS, leftcons);
+		node.getRight().apply(THIS, mapcons);
 
 		PTypeSet result = new PTypeSet(question.assistantFactory);
 
@@ -733,7 +749,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			{
 				TypeCheckerErrors.concern(unique, 3142, "Right hand of '++' is not a map", node.getLocation(), node);
 				TypeCheckerErrors.detail(unique, "Type", node.getRight().getType());
-			} else
+				result.add(st);
+			}
+			else
 			{
 				SMapType mr = question.assistantFactory.createPTypeAssistant().getMap(node.getRight().getType());
 
@@ -742,9 +760,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 					TypeCheckerErrors.concern(unique, 3143, "Domain of right hand of '++' must be nat1", node.getLocation(), node);
 					TypeCheckerErrors.detail(unique, "Type", mr.getFrom());
 				}
+				
+				PTypeSet type = new PTypeSet(question.assistantFactory);
+				type.add(st.getSeqof());
+				type.add(mr.getTo());
+				result.add(AstFactory.newASeqSeqType(node.getLocation(), type.getType(node.getLocation())));
 			}
-
-			result.add(st);
 		}
 
 		if (result.isEmpty())
@@ -769,6 +790,15 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
+
+		if (question.assistantFactory.createPTypeAssistant().isSet(ltype) &&
+			question.assistantFactory.createPTypeAssistant().isSet(rtype) &&
+			!question.assistantFactory.getTypeComparator().compatible(ltype, rtype))
+		{
+			TypeCheckerErrors.report(3335, "Subset will only be true if the LHS set is empty", node.getLocation(), node);
+			TypeCheckerErrors.detail("Left", ltype);
+			TypeCheckerErrors.detail("Right", rtype);
+		}
 
 		if (!question.assistantFactory.createPTypeAssistant().isSet(ltype))
 		{
@@ -1083,6 +1113,15 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
+
+		if (question.assistantFactory.createPTypeAssistant().isSet(ltype) &&
+			question.assistantFactory.createPTypeAssistant().isSet(rtype) &&
+			!question.assistantFactory.getTypeComparator().compatible(ltype, rtype))
+		{
+			TypeCheckerErrors.report(3335, "Subset will only be true if the LHS set is empty", node.getLocation(), node);
+			TypeCheckerErrors.detail("Left", ltype);
+			TypeCheckerErrors.detail("Right", rtype);
+		}
 
 		if (!question.assistantFactory.createPTypeAssistant().isSet(ltype))
 		{

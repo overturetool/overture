@@ -31,5 +31,5 @@ import java.io.Serializable;
 
 public enum Pass implements Serializable
 {
-	TYPES, VALUES, DEFS
+	TYPES, VALUES, DEFS, FINAL
 }

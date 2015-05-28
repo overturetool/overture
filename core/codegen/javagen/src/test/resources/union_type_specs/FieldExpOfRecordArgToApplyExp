@@ -13,7 +13,7 @@ operations
 
 public static Run : () ==> ?
 Run () ==
-let r : Rec | Rec =  mk_Rec(8)
+let r : Rec | nat =  mk_Rec(8)
 in 
   return id(r.x);
  

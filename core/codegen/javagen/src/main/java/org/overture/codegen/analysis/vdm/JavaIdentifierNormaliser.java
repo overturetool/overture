@@ -1,7 +1,7 @@
 package org.overture.codegen.analysis.vdm;
 
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,14 +18,14 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 	private Set<String> allNames;
 	private Map<String, String> renamingsSoFar;
 	private ITempVarGen nameGen;
-	private List<Renaming> renamings;
+	private Set<Renaming> renamings;
 	
 	public JavaIdentifierNormaliser(Set<String> allNames, ITempVarGen nameGen)
 	{
 		this.allNames = allNames;
 		this.renamingsSoFar = new HashMap<String, String>();
 		this.nameGen = nameGen;
-		this.renamings = new LinkedList<Renaming>();
+		this.renamings = new HashSet<Renaming>();
 	}
 	
 	@Override
@@ -61,7 +61,7 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 		return false;
 	}
 	
-	public List<Renaming> getRenamings()
+	public Set<Renaming> getRenamings()
 	{
 		return renamings;
 	}

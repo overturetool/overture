@@ -113,7 +113,7 @@ public class JavaCodeGenMain
 
 					if (path.isDirectory())
 					{
-						files.addAll(GeneralUtils.getFiles(path));
+						files.addAll(filterPp(GeneralUtils.getFiles(path)));
 					} else
 					{
 						usage("Could not find path: " + path);
@@ -169,7 +169,10 @@ public class JavaCodeGenMain
 
 				if (file.isFile())
 				{
-					files.add(file);
+					if (file.getName().endsWith(".vdmpp"))
+					{
+						files.add(file);
+					}
 				} else
 				{
 					usage("Not a file: " + file);
@@ -187,7 +190,7 @@ public class JavaCodeGenMain
 				usage("Input files are missing");
 			}
 			
-			if(outputDir == null)
+			if(outputDir == null && !printClasses)
 			{
 				Logger.getLog().println("No output directory specified - printing code generated classes instead..\n");
 				printClasses = true;
@@ -380,6 +383,21 @@ public class JavaCodeGenMain
 					+ e.getMessage());
 			Logger.getLog().println(JavaCodeGenUtil.constructUnsupportedModelingString(e));
 		}
+	}
+	
+	public static List<File> filterPp(List<File> files)
+	{
+		List<File> filtered = new LinkedList<File>();
+		
+		for(File f : files)
+		{
+			if(f.getName().endsWith(".vdmpp"))
+			{
+				filtered.add(f);
+			}
+		}
+		
+		return filtered;
 	}
 
 	public static void usage(String msg)

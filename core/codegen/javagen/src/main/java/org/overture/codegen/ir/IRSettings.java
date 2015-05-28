@@ -30,6 +30,7 @@ public class IRSettings
 	private boolean generatePostConds;
 	private boolean generatePostCondChecks;
 	private boolean generateTraces;
+	private boolean generateInvariantChecks;
 
 	public IRSettings()
 	{
@@ -103,5 +104,15 @@ public class IRSettings
 	public void setGenerateTraces(boolean generateTraces)
 	{
 		this.generateTraces = generateTraces;
+	}
+
+	public boolean generateInvariantChecks()
+	{
+		return generateInvariantChecks;
+	}
+
+	public void setGenerateInvariantChecks(boolean generateInvariantChecks)
+	{
+		this.generateInvariantChecks = generateInvariantChecks;
 	}
 }

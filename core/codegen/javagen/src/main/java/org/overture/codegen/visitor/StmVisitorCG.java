@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -43,6 +44,7 @@ import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
+import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AErrorStm;
 import org.overture.ast.statements.AForAllStm;
@@ -71,11 +73,13 @@ import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.AAtomicStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
@@ -95,6 +99,7 @@ import org.overture.codegen.cgast.statements.AStartStmCG;
 import org.overture.codegen.cgast.statements.AStartlistStmCG;
 import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
@@ -112,6 +117,66 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			throws AnalysisException
 	{
 		return new AErrorStmCG();
+	}
+	
+	@Override
+	public SStmCG caseAClassInvariantStm(AClassInvariantStm node,
+			IRInfo question) throws AnalysisException
+	{
+		List<PExp> exps = new LinkedList<PExp>();
+		
+		for (PDefinition d : node.getInvDefs())
+		{
+			if(!(d instanceof AClassInvariantDefinition))
+			{
+				Logger.getLog().printErrorln("Expected class invariant definition in '" + this.getClass().getName() + "'. Got: " + d);
+				return null;
+			}
+			
+			AClassInvariantDefinition invDef = (AClassInvariantDefinition) d;
+			exps.add(invDef.getExpression());
+		}
+		
+		AReturnStmCG returnStmCg = new AReturnStmCG();
+		
+		if(exps.isEmpty())
+		{
+			// Should not really be necessary
+			returnStmCg.setExp(question.getExpAssistant().consBoolLiteral(true));
+		}
+		else if(exps.size() == 1)
+		{
+			SExpCG expCg = exps.get(0).apply(question.getExpVisitor(), question);
+			returnStmCg.setExp(expCg);
+		}
+		else
+		{
+			// We have more than one expressions from which we will build an 'and chain'
+			AAndBoolBinaryExpCG andExpTopCg = new AAndBoolBinaryExpCG();
+			andExpTopCg.setType(new ABoolBasicTypeCG());
+			andExpTopCg.setLeft(exps.get(0).apply(question.getExpVisitor(), question));
+			
+			AAndBoolBinaryExpCG previousAndExpCg = andExpTopCg;
+			
+			// The remaining ones except the last
+			for(int i = 1; i < exps.size() - 1; i++)
+			{
+				SExpCG nextExpCg = exps.get(i).apply(question.getExpVisitor(), question);
+				
+				AAndBoolBinaryExpCG nextAndExpCg = new AAndBoolBinaryExpCG();
+				nextAndExpCg.setType(new ABoolBasicTypeCG());
+				nextAndExpCg.setLeft(nextExpCg);
+				
+				previousAndExpCg.setRight(nextAndExpCg);
+				previousAndExpCg = nextAndExpCg;
+			}
+			
+			previousAndExpCg.setRight(exps.get(exps.size() - 1).apply(question.getExpVisitor(), question));
+			
+			returnStmCg.setExp(andExpTopCg);
+		}
+
+		return returnStmCg;
 	}
 	
 	@Override
@@ -144,18 +209,15 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	public SStmCG caseAAtomicStm(AAtomicStm node, IRInfo question)
 			throws AnalysisException
 	{
-		LinkedList<AAssignmentStm> assignments = node.getAssignments();
-
-		ABlockStmCG stmBlock = new ABlockStmCG();
-		LinkedList<SStmCG> stmsCg = stmBlock.getStatements();
-
-		for (AAssignmentStm assignment : assignments)
+		AAtomicStmCG atomicBlock = new AAtomicStmCG();
+		
+		for (AAssignmentStm assignment : node.getAssignments())
 		{
 			SStmCG stmCg = assignment.apply(question.getStmVisitor(), question);
 			
 			if(stmCg != null)
 			{
-				stmsCg.add(stmCg);
+				atomicBlock.getStatements().add(stmCg);
 			}
 			else
 			{
@@ -163,7 +225,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			}
 		}
 
-		return stmBlock;
+		return atomicBlock;
 	}
 
 	@Override
@@ -310,7 +372,11 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), block.getLocalDefs(), question);
 
 		SStmCG stm = node.getStatement().apply(question.getStmVisitor(), question);
-		block.getStatements().add(stm);
+		
+		if (stm != null)
+		{
+			block.getStatements().add(stm);
+		}
 
 		return block;
 	}

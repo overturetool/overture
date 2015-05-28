@@ -23,6 +23,7 @@ package org.overture.codegen.vdm2java;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -170,7 +171,7 @@ public class JavaCodeGen extends CodeGenBase
 			for (String quoteNameVdm : quoteValues)
 			{
 				AClassDeclCG quoteDecl = quoteValueCreator.consQuoteValue(quoteNameVdm
-						+ JAVA_QUOTE_NAME_SUFFIX, getJavaSettings().getJavaRootPackage());
+						+ JAVA_QUOTE_NAME_SUFFIX, quoteNameVdm, getJavaSettings().getJavaRootPackage());
 
 				StringWriter writer = new StringWriter();
 				quoteDecl.apply(javaFormat.getMergeVisitor(), writer);
@@ -353,6 +354,8 @@ public class JavaCodeGen extends CodeGenBase
 
 		for (AInterfaceDeclCG funcValueInterface : funcValueInterfaces)
 		{
+			funcValueInterface.setPackage(getJavaSettings().getJavaRootPackage());
+			
 			StringWriter writer = new StringWriter();
 
 			try
@@ -412,7 +415,7 @@ public class JavaCodeGen extends CodeGenBase
 		Set<String> allNames = collector.namesToAvoid();
 
 		JavaIdentifierNormaliser normaliser = new JavaIdentifierNormaliser(allNames, getInfo().getTempVarNameGen());
-
+		
 		for (SClassDefinition clazz : userClasses)
 		{
 			clazz.apply(normaliser);
@@ -420,14 +423,23 @@ public class JavaCodeGen extends CodeGenBase
 
 		VarRenamer renamer = new VarRenamer();
 
-		List<Renaming> renamings = normaliser.getRenamings();
-
+		
+		Set<Renaming> filteredRenamings = new HashSet<Renaming>();
+		
+		for(Renaming r : normaliser.getRenamings())
+		{
+			if(!getInfo().getDeclAssistant().isLibraryName(r.getLoc().getModule()))
+			{
+				filteredRenamings.add(r);
+			}
+		}
+		
 		for (SClassDefinition clazz : userClasses)
 		{
-			renamer.rename(clazz, renamings);
+			renamer.rename(clazz, filteredRenamings);
 		}
 
-		return renamings;
+		return new LinkedList<Renaming>(filteredRenamings);
 	}
 
 	private void computeDefTable(List<SClassDefinition> mergedParseLists)
@@ -470,7 +482,7 @@ public class JavaCodeGen extends CodeGenBase
 
 		for (SClassDefinition classDef : mergedParseLists)
 		{
-			List<Renaming> classRenamings = renamer.computeRenamings(classDef, renamingsCollector);
+			Set<Renaming> classRenamings = renamer.computeRenamings(classDef, renamingsCollector);
 
 			if (!classRenamings.isEmpty())
 			{
@@ -479,6 +491,8 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 
+		Collections.sort(allRenamings);
+		
 		return allRenamings;
 	}
 
@@ -575,7 +589,7 @@ public class JavaCodeGen extends CodeGenBase
 		{
 			String javaFileName = generatedModule.getName();
 
-			if (GeneralCodeGenUtils.isQuote(generatedModule.getIrNode()))
+			if (JavaCodeGenUtil.isQuote(generatedModule.getIrNode(), getJavaSettings()))
 			{
 				javaFileName += JAVA_QUOTE_NAME_SUFFIX;
 			}
