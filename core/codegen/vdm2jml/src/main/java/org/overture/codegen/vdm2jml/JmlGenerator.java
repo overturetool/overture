@@ -36,10 +36,12 @@ import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
 
 public class JmlGenerator implements IREventObserver
 {
+	public static final String DEFAULT_JAVA_ROOT_PACKAGE = "project";
 	public static final String GEN_INV_METHOD_PARAM_NAME = "elem";
 	public static final String INV_METHOD_REPLACEMENT_NAME_PREFIX = "check_"; 
 	public static final String JML_OR = " || ";
@@ -81,6 +83,11 @@ public class JmlGenerator implements IREventObserver
 	public GeneratedData generateJml(List<AModuleModules> ast)
 			throws AnalysisException, UnsupportedModelingException
 	{
+		if(!JavaCodeGenUtil.isValidJavaPackage(getJavaSettings().getJavaRootPackage()))
+		{
+			getJavaSettings().setJavaRootPackage(DEFAULT_JAVA_ROOT_PACKAGE);
+		}
+		
 		computeNamedTypeInvInfo(ast);
 		
 		javaGen.register(this);
@@ -531,6 +538,7 @@ public class JmlGenerator implements IREventObserver
 		}
 	}
 
+	// TODO: consider delete and removal from codegen runtime also
 	public void injectReportCalls(SDeclCG cond)
 	{
 		if(!getJmlSettings().injectReportCalls())

@@ -4,7 +4,7 @@ public class Main
 	{
 		try
 		{
-			Entry.Run();
+			project.Entry.Run();
 		} catch(AssertionError e)
 		{
 			// Terminate silently
