@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -42,14 +41,11 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -66,13 +62,11 @@ import org.overture.ide.core.IVdmElementDelta;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.plugins.poviewer.Activator;
 import org.overture.ide.plugins.poviewer.IPoviewerConstants;
 import org.overture.ide.plugins.poviewer.PoGeneratorUtil;
 import org.overture.ide.ui.utility.EditorUtility;
 import org.overture.pog.obligation.ProofObligation;
 import org.overture.pog.pub.IProofObligation;
-import org.overture.pog.pub.POStatus;
 
 public class PoOverviewTableView extends ViewPart implements ISelectionListener {
 
@@ -80,21 +74,6 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener 
 	protected Action doubleClickAction;
 	protected Display display = Display.getCurrent();
 	protected IVdmProject project;
-
-	private ViewerFilter provedFilter = new ViewerFilter() {
-
-		@Override
-		public boolean select(Viewer viewer, Object parentElement,
-				Object element) {
-			if (element instanceof ProofObligation
-					&& ((ProofObligation) element).status == POStatus.UNPROVED)
-				return true;
-			else
-				return false;
-		}
-
-	};
-	private Action actionSetProvedFilter;
 
 	protected class ViewContentProvider implements IStructuredContentProvider {
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
@@ -141,9 +120,6 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener 
 			case 2:
 				columnText = data.kind.toString();
 				break;
-			case 3:
-				columnText = "";// data.status.toString();
-				break;
 			default:
 				columnText = "not set";
 			}
@@ -151,29 +127,14 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener 
 
 		}
 
-		public Image getColumnImage(Object obj, int index) {
-			if (index == 3) {
-				return getImage(obj);
-			}
+		@Override
+		public Image getColumnImage(Object element, int columnIndex)
+		{
 			return null;
 		}
 
-		@Override
-		public Image getImage(Object obj) {
-			ProofObligation data = (ProofObligation) obj;
-
-			String imgPath = "icons/cview16/caution.png";
-
-			if (data.status == POStatus.PROVED)
-				imgPath = "icons/cview16/proved.png";
-
-			return Activator.getImageDescriptor(imgPath).createImage();
-		}
-
 	}
 
-	class IdSorter extends ViewerSorter {
-	}
 
 	private IElementChangedListener vdmlistner = new IElementChangedListener() {
 
@@ -268,9 +229,8 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener 
 		// test setup columns...
 		TableLayout layout = new TableLayout();
 		layout.addColumnData(new ColumnWeightData(20, true));
-		layout.addColumnData(new ColumnWeightData(100, true));
-		layout.addColumnData(new ColumnWeightData(60, false));
-		layout.addColumnData(new ColumnWeightData(20, false));
+		layout.addColumnData(new ColumnWeightData(30, true));
+		layout.addColumnData(new ColumnWeightData(50, false));
 		viewer.getTable().setLayout(layout);
 		viewer.getTable().setLinesVisible(true);
 		viewer.getTable().setHeaderVisible(true);
@@ -288,16 +248,11 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener 
 		TableColumn column2 = new TableColumn(viewer.getTable(), SWT.LEFT);
 		column2.setText("Type");
 		column2.setToolTipText("Show Type");
-
-		TableColumn column3 = new TableColumn(viewer.getTable(), SWT.CENTER);
-		column3.setText("Status");
-		column3.setToolTipText("Show status");
-
+		
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 
 		makeActions();
-		contributeToActionBars();
 		hookDoubleClickAction();
 
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -322,19 +277,6 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener 
 
 			}
 		});
-	}
-
-	protected void contributeToActionBars() {
-		IActionBars bars = getViewSite().getActionBars();
-
-		fillLocalToolBar(bars.getToolBarManager());
-	}
-
-	protected void fillLocalToolBar(IToolBarManager manager) {
-
-		manager.add(actionSetProvedFilter);
-
-		// drillDownAdapter.addNavigationActions(manager);
 	}
 
 	protected void makeActions() {
@@ -362,36 +304,6 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener 
 				}
 
 			}
-		};
-
-		actionSetProvedFilter = new Action("Filter proved", Action.AS_CHECK_BOX) {
-			@Override
-			public void run() {
-				ViewerFilter[] filters = viewer.getFilters();
-				boolean isSet = false;
-				for (ViewerFilter viewerFilter : filters) {
-					if (viewerFilter.equals(provedFilter))
-						isSet = true;
-				}
-				if (isSet) {
-					viewer.removeFilter(provedFilter);
-
-				} else {
-					viewer.addFilter(provedFilter);
-
-				}
-				if (viewer.getLabelProvider() instanceof ViewLabelProvider)
-					((ViewLabelProvider) viewer.getLabelProvider())
-							.resetCounter(); // this
-												// is
-												// needed
-												// to
-												// reset
-												// the
-				// numbering
-				viewer.refresh();
-			}
-
 		};
 
 	}
