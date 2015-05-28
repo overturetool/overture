@@ -1,8 +1,8 @@
 "Before breaking post condition"
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PostCond/Entry.java:33: JML postcondition is false
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PostCond/project/Entry.java:35: JML postcondition is false
     public static Number opRet(final Number a) {
                          ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PostCond/Entry.java:32: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PostCond/Entry.java:33: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PostCond/project/Entry.java:34: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PostCond/project/Entry.java:35: 
     //@ ensures post_opRet(a,\result,\old(St.copy()),St);
         ^
 "After breaking post condition"
