@@ -1,8 +1,8 @@
 "Before breaking pre condition"
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PreCond/project/Entry.java:18: JML precondition is false
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PreCond/project/Entry.java:19: JML precondition is false
             Number ignorePattern_2 = id(-1L);
                                        ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PreCond/project/Entry.java:42: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PreCond/project/Entry.java:18: 
-    public static Number id(final Number a) {
-                                         ^
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PreCond/project/Entry.java:41: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/PreCond/project/Entry.java:19: 
+    //@ requires pre_id(a);
+        ^
 "After breaking pre condition"

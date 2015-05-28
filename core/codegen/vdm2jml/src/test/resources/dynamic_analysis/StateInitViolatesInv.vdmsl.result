@@ -1,18 +1,18 @@
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:8: JML static initialization may not be correct: invariant is false
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:9: JML static initialization may not be correct: invariant is false
 public class Entry {
        ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:12: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:8: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:9: 
     //@ public static invariant St != null ==> inv_St(St);
                       ^
 /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/Main.java:7: JML invariant is false on entering method project.Entry.Run() from Main.main(java.lang.String[])
 			project.Entry.Run();
 			                 ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:12: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/Main.java:7: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/Main.java:7: 
     //@ public static invariant St != null ==> inv_St(St);
                       ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:13: JML invariant is false on leaving method project.Entry.Run()
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:14: JML invariant is false on leaving method project.Entry.Run()
     public static Object Run() {
                          ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:12: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:13: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/StateInitViolatesInv/project/Entry.java:14: 
     //@ public static invariant St != null ==> inv_St(St);
                       ^
