@@ -68,7 +68,7 @@ abstract public class AnnotationTestsBase
 	protected static void validGeneratedModule()
 	{
 		Assert.assertTrue("No module was generated", genModule != null);
-		Assert.assertEquals("Expected generated module to be in the default package", null, genModule.getPackage());
+		Assert.assertEquals("Expected generated module to be in different package", JmlGenerator.DEFAULT_JAVA_ROOT_PACKAGE, genModule.getPackage());
 	}
 	
 	public static void validateGenModuleAndStateType()
@@ -76,8 +76,8 @@ abstract public class AnnotationTestsBase
 		validGeneratedModule();
 		
 		Assert.assertTrue("State type was not generated", genStateType != null);
-		String stateClassPackage = genModule.getName()
-				+ JavaFormat.TYPE_DECL_PACKAGE_SUFFIX;
+		String stateClassPackage = JmlGenerator.DEFAULT_JAVA_ROOT_PACKAGE + "."
+				+ genModule.getName() + JavaFormat.TYPE_DECL_PACKAGE_SUFFIX;
 		Assert.assertEquals("Generated state type is located in a wrong package", stateClassPackage, genStateType.getPackage());
 	}
 	
