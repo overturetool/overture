@@ -120,23 +120,32 @@ public class NamedTypeInfo extends AbstractTypeInfo
 		return true;
 	}
 
-	public String consCheckExp()
+	public String consCheckExp(String enclosingModule, String javaRootPackages)
 	{
 		StringBuilder sb = new StringBuilder();
-		consCheckExp(sb);
+		consCheckExp(sb, enclosingModule, javaRootPackages);
 		return sb.toString();
 	}
 
-	private void consCheckExp(StringBuilder sb)
+	private void consCheckExp(StringBuilder sb, String enclosingModule, String javaRootPackage)
 	{
-		sb.append(defModule);
-		sb.append(".");
+		// If the type is not defined in the enclosing class we use the absolute name
+		// to refer to the invariant method
+		if(!defModule.equals(enclosingModule))
+		{
+			sb.append(javaRootPackage);
+			sb.append('.');
+			sb.append(defModule);
+			sb.append(".");
+		}
+
 		sb.append(JmlGenerator.JML_INV_PREFIX);
 		sb.append(typeName);
+
 		sb.append('(');
 		sb.append(ARG_PLACEHOLDER);
 		sb.append(')');
-
+		
 		if (!namedTypes.isEmpty())
 		{
 			sb.append(JmlGenerator.JML_AND);
@@ -146,7 +155,7 @@ public class NamedTypeInfo extends AbstractTypeInfo
 			for (NamedTypeInfo n : namedTypes)
 			{
 				sb.append(orSep);
-				n.consCheckExp(sb);
+				n.consCheckExp(sb, enclosingModule, javaRootPackage);
 				orSep = JmlGenerator.JML_OR;
 			}
 
