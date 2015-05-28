@@ -154,6 +154,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[name]:java_String
     	[initial]:CG.#exp
    	|	{class}
+   	    (globalMetaData):eString*
    		[package]:java_String
       	[access]:java_String
       	[abstract]:java_Boolean
