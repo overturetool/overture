@@ -472,4 +472,19 @@ public class JmlGenUtil
 		
 		return jmlGen.getJavaGen().getTransformationAssistant().consIdPattern(newParamName);
 	}
+	
+	public AClassDeclCG getEnclosingClass(INode node)
+	{
+		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
+
+		if (enclosingClass != null)
+		{
+			return enclosingClass;
+		} else
+		{
+			Logger.getLog().printErrorln("Could not find enclosing class of node "
+					+ node + " in '" + this.getClass().getSimpleName() + "'");
+			return null;
+		}
+	}
 }
