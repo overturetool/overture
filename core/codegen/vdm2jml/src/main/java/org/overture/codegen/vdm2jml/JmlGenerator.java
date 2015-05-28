@@ -61,6 +61,7 @@ public class JmlGenerator implements IREventObserver
 	public static final String JML_RESULT = "\\result";
 	public static final String REPORT_CALL = "report";
 	public static final String JML_NULLABLE = "//@ nullable;";
+	public static final String JML_NULLABLE_BY_DEFAULT = "//@ nullable_by_default";
 	
 	private JavaCodeGen javaGen;
 	private JmlSettings jmlSettings;
@@ -139,8 +140,9 @@ public class JmlGenerator implements IREventObserver
 		// Also extract classes that are records
 		for(IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
 		{
-			// Make declarations nullable
-			annotator.makeNullable(status.getIrNode());
+			// VDM uses the type system to control whether 'nil' is allowed as a value so we'll
+			// just annotate all classes as @nullable_by_default
+			status.getIrNode().setGlobalMetaData(annotator.consMetaData(JmlGenerator.JML_NULLABLE_BY_DEFAULT));
 		}
 		
 		// Only extract from 'ast' to not get the record classes
