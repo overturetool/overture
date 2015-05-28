@@ -30,8 +30,12 @@ public interface IDbgpOvertureCommands
 {
 
 	public void getCoverage(File file) throws DbgpException;
+	
+	public void getMCDCCoverage(File file) throws DbgpException;
 
 	public void writeCompleteCoverage(File file) throws DbgpException;
+	
+	public void writeMCDCCompleteCoverage(File file) throws DbgpException;
 	
 	public void writeMCDCCoverage(File file) throws DbgpException;
 

@@ -20,7 +20,6 @@
  * #~%
  */
 package org.overture.ide.platform;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

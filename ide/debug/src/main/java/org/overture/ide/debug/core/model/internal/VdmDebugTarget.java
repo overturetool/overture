@@ -851,7 +851,6 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 				File coverageDir = new File(new File(getOutputFolder(vdmProject), "coverage"), dateFormat.format(new Date()));
 
 				coverageDir.mkdirs();
-
 				dbgpSession.getOvertureCommands().writeCompleteCoverage(coverageDir);
 
 				for (IVdmSourceUnit source : this.vdmProject.getSpecFiles())
@@ -869,13 +868,12 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 			}
 			if(isMCDCCoverageEnabled()){
 				DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-				File coverageDir = new File(new File(getOutputFolder(vdmProject), "coverage"), dateFormat.format(new Date()));
+				File coverageDir = new File(new File(getOutputFolder(vdmProject), "MCDCcoverage"), dateFormat.format(new Date()));
 
 				coverageDir.mkdirs();
-
 				dbgpSession.getOvertureCommands().writeMCDCCoverage(coverageDir);
 
-				for (IVdmSourceUnit source : this.vdmProject.getSpecFiles())
+				/*for (IVdmSourceUnit source : this.vdmProject.getSpecFiles())
 				{
 					String name = source.getSystemFile().getName() + "cov";
 
@@ -886,7 +884,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 					source.getFile().copy(new Path(folder.getFullPath() + "/"
 							+ name), true, new NullProgressMonitor());
-				}
+				}*/
 			}
 			IProject project = (IProject) vdmProject.getAdapter(IProject.class);
 			if (project != null)
