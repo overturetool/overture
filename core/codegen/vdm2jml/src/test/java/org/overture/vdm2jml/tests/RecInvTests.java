@@ -56,10 +56,9 @@ public class RecInvTests
 	}
 	
 	@Test
-	public void incFuncIsHelper()
+	public void invFuncIsHelper()
 	{
-		Assert.assertEquals("Expected record type definition invariant function to be a helper",
-				AnnotationTestsBase.HELPER_ANNOTATION,
-				AnnotationTestsBase.getAnnotation(recTypeDef.getInvariant(), 0));
+		AnnotationTestsBase.assertHelper(recTypeDef.getInvariant(),
+				"Expected record type definition invariant function to be a helper");
 	}
 }

@@ -46,9 +46,7 @@ public class StateTests extends AnnotationTestsBase
 		{
 			if (!m.getIsConstructor())
 			{
-				String actual = getLastAnnotation(m);
-				Assert.assertEquals("Expected non-constructor methods of state class to be pure",
-						PURE_ANNOTATION, actual);
+				assertPureMethod(m);
 			}
 		}
 	}
@@ -56,9 +54,7 @@ public class StateTests extends AnnotationTestsBase
 	@Test
 	public void testInvFuncIsHelper()
 	{
-		Assert.assertEquals("Expected invariant function to be a helper",
-				HELPER_ANNOTATION,
-				getAnnotation(genModule.getInvariant(), 0));
+		assertHelper(genModule.getInvariant(), "Expected invariant function to be a helper");
 	}
 	
 	@Test

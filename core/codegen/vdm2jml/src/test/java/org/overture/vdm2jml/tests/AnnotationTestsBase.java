@@ -213,6 +213,19 @@ abstract public class AnnotationTestsBase
 				getLastAnnotation(preCondFunc));
 	}
 
+	public static void assertHelper(PCG node, String msg)
+	{
+		for(ClonableString m : node.getMetaData())
+		{
+			if(m.value.equals(HELPER_ANNOTATION))
+			{
+				return;
+			}
+		}
+		
+		Assert.assertTrue(msg, false);
+	}
+	
 	public static void assertPure(List<AMethodDeclCG> methods)
 	{
 		Assert.assertTrue("Expected functions to be defined", methods != null && !methods.isEmpty());
@@ -229,13 +242,22 @@ abstract public class AnnotationTestsBase
 	public static void assertPureMethod(AMethodDeclCG func)
 	{
 		// Since @pure is a JML modifier so this annotation should go last
-		String failureMsg = "Expected the last annotation to be @pure of function "
-				+ func.getName();
+		String failureMsg = "Expected function " + func.getName()
+				+ " to be @pure";
 
 		List<? extends ClonableString> metaData = func.getMetaData();
 
 		Assert.assertTrue(failureMsg, metaData != null
 				&& !metaData.isEmpty());
-		Assert.assertEquals(failureMsg, PURE_ANNOTATION, getLastAnnotation(func));
+		
+		for(ClonableString m : func.getMetaData())
+		{
+			if(m.value.equals(PURE_ANNOTATION))
+			{
+				return;
+			}
+		}
+		
+		Assert.assertTrue(failureMsg, false);
 	}
 }
