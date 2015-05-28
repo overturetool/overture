@@ -935,7 +935,7 @@ public class JavaFormat
 	{
 		if(node.getDecl() instanceof ARecordDeclCG)
 		{
-			return true;
+			return getJavaSettings().genRecsAsInnerClasses();
 		}
 		else
 		{
