@@ -35,8 +35,6 @@ public interface IDbgpOvertureCommands
 
 	public void writeCompleteCoverage(File file) throws DbgpException;
 	
-	public void writeMCDCCompleteCoverage(File file) throws DbgpException;
-	
 	public void writeMCDCCoverage(File file) throws DbgpException;
 
 	public void writeLog(String file) throws DbgpException;

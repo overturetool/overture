@@ -1656,11 +1656,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 				break;
 			case WRITE_COMPLETE_COVERAGE:
 				processWriteCoverage(c);
-				System.out.println("--->COVERAGE!\n\n\n\n\n");
 				break;
 			case WRITE_MCDC_COVERAGE:
 				processWriteMCDCCoverage(c);
-				System.out.println("--->MCDC!\n\n\n\n\n");
 				break;
 			case POG:
 				processPOG(c);
@@ -1798,11 +1796,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 	private void processWriteCoverage(DBGPCommand c) throws DBGPException,
 			IOException, URISyntaxException {
-		System.out.println("-->COVERAGE\n\n\n\n\n ");
 		// if (status == DBGPStatus.BREAK) {
 		// throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		// }
-
 		File file = new File(new URI(c.data));
 
 		if (file == null || file.getName().length() == 0) {
@@ -1825,7 +1821,6 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		// }
 
 		File file = new File(new URI(c.data));
-
 		if (file == null || file.getName().length() == 0) {
 			cdataResponse(file + ": folder not found");
 		} else {
@@ -1840,7 +1835,6 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 	public static void writeMCDCCoverage(Interpreter interpreter, File coverage)
 			throws IOException {
-
 		Properties.init(); // Read properties file, if any
 
 		for (File f : interpreter.getSourceFiles()) {
@@ -1854,14 +1848,14 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 	public static void writeCoverage(Interpreter interpreter, File coverage)
 			throws IOException {
-
+		System.out.println("--->\n\n\n\n\n");
 		Properties.init(); // Read properties file, if any
 
 		for (File f : interpreter.getSourceFiles()) {
 			SourceFile source = interpreter.getSourceFile(f);
 
 			File data = new File(coverage.getPath() + File.separator
-					+ f.getName() + ".covtblaa");
+					+ f.getName() + ".covtbl");
 			PrintWriter pw = new PrintWriter(data);
 			source.writeCoverage(pw);
 			pw.close();

@@ -4,7 +4,7 @@ public enum DBGPXCmdOvertureCommandType
 {
 	INIT("init"), CREATE("create"), CURRENT_LINE("currentline"), SOURCE(
 			"source"), COVERAGE("coverage"), WRITE_COMPLETE_COVERAGE(
-			"write_complete_coverage"),WRITE_MCDC_COVERAGE("wirte_mcdc_coverage"), LATEX("latex"), POG("pog"), STACK(
+			"write_complete_coverage"),WRITE_MCDC_COVERAGE("write_mcdc_coverage"), LATEX("latex"), POG("pog"), STACK(
 			"stack"), TRACE("trace"), LIST("list"), FILES("files"), CLASSES(
 			"classes"), MODULES("modules"), DEFAULT("default"), LOG("log"), ;
 
