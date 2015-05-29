@@ -975,14 +975,18 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	{
         ctx.setContext(ctxt);
         node.apply(ctx);
+        node.getExp().apply(ctx);
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
 		try
 		{
 			while (node.getExp().apply(VdmRuntime.getStatementEvaluator(), ctxt).boolValue(ctxt))
 			{
+				
 				Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
-
+				ctx.setContext(ctxt);
+				node.apply(ctx);
+		        node.getExp().apply(ctx);
 				if (!rv.isVoid())
 				{
 					return rv;

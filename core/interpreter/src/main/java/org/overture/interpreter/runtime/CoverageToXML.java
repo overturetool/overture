@@ -1,7 +1,6 @@
 package org.overture.interpreter.runtime;
 
 
-import com.sun.org.apache.xpath.internal.WhitespaceStrippingElementMatcher;
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.*;
@@ -9,11 +8,8 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AElseIfStm;
-import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.AWhileStm;
-import org.overture.interpreter.eval.ExpressionEvaluator;
-import org.overture.interpreter.eval.StatementEvaluator;
 import org.overture.interpreter.values.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -433,8 +429,6 @@ public class CoverageToXML extends AnalysisAdaptor {
             {
                 Context evalContext = new Context(ctx.assistantFactory, node.getLocation(), "exists", ctx);
                 NameValuePairList nvpl = quantifiers.next();
-                boolean matches = true;
-
                 for (NameValuePair nvp : nvpl)
                 {
                     Value v = evalContext.get(nvp.name);
@@ -446,7 +440,6 @@ public class CoverageToXML extends AnalysisAdaptor {
                     {
                         if (!v.equals(nvp.value))
                         {
-                            matches = false;
                             break; // This quantifier set does not match
                         }
                     }
@@ -552,7 +545,6 @@ public class CoverageToXML extends AnalysisAdaptor {
             {
                 Context evalContext = new Context(ctx.assistantFactory, node.getLocation(), "forall", ctx);
                 NameValuePairList nvpl = quantifiers.next();
-                boolean matches = true;
 
                 for (NameValuePair nvp : nvpl)
                 {
@@ -565,7 +557,6 @@ public class CoverageToXML extends AnalysisAdaptor {
                     {
                         if (!v.equals(nvp.value))
                         {
-                            matches = false;
                             break; // This quantifier set does not match
                         }
                     }
@@ -593,13 +584,18 @@ public class CoverageToXML extends AnalysisAdaptor {
     @Override
     public void caseAWhileStm(AWhileStm node) throws AnalysisException {
         ILexLocation local=node.getLocation();
-        this.iteration = (int) local.getHits();
+        
+        Element evaluation=doc.createElement("evaluation");
+        evaluation.setAttribute("n", Integer.toString(iteration));
+        evaluation.setTextContent(String.valueOf(node.getExp().apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
 
         if(!xml_nodes.containsKey(local)){
+        	this.iteration = (int) local.getHits();
         	Element source_code=doc.createElement("source_code");
         	source_code.setTextContent(node.getExp().toString());
             Element while_statement =doc.createElement("while_statement");
             while_statement.appendChild(source_code);
+            while_statement.appendChild(evaluation);
             fill_source_file_location(while_statement, local);
             Element expression = doc.createElement("expression");
             while_statement.appendChild(expression);
@@ -611,25 +607,8 @@ public class CoverageToXML extends AnalysisAdaptor {
             for(int i =0;i<xml_nodes.get(local).getChildNodes().getLength();i++){
                 if (xml_nodes.get(local).getChildNodes().item(i).getNodeName().equals("expression"))
                     currentElement= (Element) xml_nodes.get(local).getChildNodes().item(i);
+                    xml_nodes.get(local).appendChild(evaluation);
             }
-        }
-
-        try
-        {
-            int i=0;
-            while (node.getExp().apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx))
-            {
-                Element eval = doc.createElement("evaluation");
-                eval.setAttribute("i",String.valueOf(i++));
-                eval.setAttribute("n",Integer.toString(iteration));
-                Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctx);
-                eval.setTextContent(String.valueOf(node.getExp().apply(VdmRuntime.getStatementEvaluator(), ctx).boolValue(ctx)));
-                xml_nodes.get(local).appendChild(eval);
-                node.getExp().apply(this);
-            }
-        } catch (ValueException e)
-        {
-            VdmRuntimeError.abort(node.getLocation(), e);
         }
 
     }

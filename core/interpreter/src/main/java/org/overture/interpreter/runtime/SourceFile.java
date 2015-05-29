@@ -32,14 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.ast.analysis.intf.IAnswer;
-import org.overture.ast.definitions.ANamedTraceDefinition;
-import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.expressions.*;
-import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;

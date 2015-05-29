@@ -38,12 +38,12 @@ public class TestCoverageWhileStatements extends BaseTestCase {
         //assert result.
         HashMap<String, String> queries = new HashMap<String, String>();
         queries.put("count(//while_statement)","1");
-        queries.put("count(//while_statement/evaluation)","5");
-        queries.put("count(//while_statement/expression/lesser_or_equal/evaluation)","5");
+        queries.put("count(//while_statement/evaluation)","6");
+        queries.put("count(//while_statement/expression/lesser_or_equal/evaluation)","6");
         queries.put("count(//while_statement/evaluation[.='false'])","1");
-        queries.put("count(//while_statement/evaluation[.='true'])","4");
+        queries.put("count(//while_statement/evaluation[.='true'])","5");
         queries.put("count(//while_statement/expression/lesser_or_equal/evaluation[.='false'])","1");
-        queries.put("count(//while_statement/expression/lesser_or_equal/evaluation[.='true'])","4");
+        queries.put("count(//while_statement/expression/lesser_or_equal/evaluation[.='true'])","5");
         assertQueries("src/test/target/vdmsl-coverage/while_statements/test_while_statements.vdmsl.xml",queries);
     }
 
