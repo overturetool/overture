@@ -29,7 +29,7 @@ public class TestCoverageForLoopStatements extends BaseTestCase {
     public void test() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_PP;
-        InterpreterUtil.interpret(Dialect.VDM_PP, "new TestFor().Remove([1,2,3,4],4)", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_for_loop_statements.vdmpp".replace('/', File.separatorChar)), true);
+        InterpreterUtil.interpret(Dialect.VDM_PP, "new TestFor().Remove([1,2,3,4],4)", new File("src/test/resources/coverage/test_for_loop_statements.vdmpp".replace('/', File.separatorChar)), true);
         
         Interpreter interpreter = Interpreter.getInstance();
         File coverageFolder = new File("src/test/target/vdmpp-coverage/if-statement".replace('/', File.separatorChar));

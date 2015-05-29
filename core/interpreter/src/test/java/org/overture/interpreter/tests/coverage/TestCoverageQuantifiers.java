@@ -35,7 +35,7 @@ public class TestCoverageQuantifiers extends BaseTestCase {
     public void test_foo1_a() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        InterpreterUtil.interpret(Dialect.VDM_SL, "foo1()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_1.vdmsl".replace('/', File.separatorChar)), true);
+        InterpreterUtil.interpret(Dialect.VDM_SL, "foo1()", new File("src/test/resources/coverage/test_quantifiers_1.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
         File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
@@ -55,7 +55,7 @@ public class TestCoverageQuantifiers extends BaseTestCase {
     public void test_foo1_b() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        InterpreterUtil.interpret(Dialect.VDM_SL, "foo1()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_2.vdmsl".replace('/', File.separatorChar)), true);
+        InterpreterUtil.interpret(Dialect.VDM_SL, "foo1()", new File("src/test/resources/coverage/test_quantifiers_2.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
         File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
@@ -75,7 +75,7 @@ public class TestCoverageQuantifiers extends BaseTestCase {
     public void test_foo2_a() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        InterpreterUtil.interpret(Dialect.VDM_SL, "foo2()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_3.vdmsl".replace('/', File.separatorChar)), true);
+        InterpreterUtil.interpret(Dialect.VDM_SL, "foo2()", new File("src/test/resources/coverage/test_quantifiers_3.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
         File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
@@ -96,7 +96,7 @@ public class TestCoverageQuantifiers extends BaseTestCase {
     public void test_foo2_b() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        InterpreterUtil.interpret(Dialect.VDM_SL, "foo2()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_4.vdmsl".replace('/', File.separatorChar)), true);
+        InterpreterUtil.interpret(Dialect.VDM_SL, "foo2()", new File("src/test/resources/coverage/test_quantifiers_4.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
         File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
@@ -116,7 +116,7 @@ public class TestCoverageQuantifiers extends BaseTestCase {
     public void test_foo2_c() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        InterpreterUtil.interpret(Dialect.VDM_SL, "foo2()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_5.vdmsl".replace('/', File.separatorChar)), true);
+        InterpreterUtil.interpret(Dialect.VDM_SL, "foo2()", new File("src/test/resources/coverage/test_quantifiers_5.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
         File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
@@ -137,7 +137,7 @@ public class TestCoverageQuantifiers extends BaseTestCase {
     public void test_foo3_a() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        InterpreterUtil.interpret(Dialect.VDM_SL, "foo3()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_6.vdmsl".replace('/', File.separatorChar)), true);
+        InterpreterUtil.interpret(Dialect.VDM_SL, "foo3()", new File("src/test/resources/coverage/test_quantifiers_6.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
         File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
@@ -158,7 +158,7 @@ public class TestCoverageQuantifiers extends BaseTestCase {
     public void test_foo3_b() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;
-        InterpreterUtil.interpret(Dialect.VDM_SL, "foo3()", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_quantifiers_7.vdmsl".replace('/', File.separatorChar)), true);
+        InterpreterUtil.interpret(Dialect.VDM_SL, "foo3()", new File("src/test/resources/coverage/test_quantifiers_7.vdmsl".replace('/', File.separatorChar)), true);
         Interpreter interpreter = Interpreter.getInstance();
         File coverageFolder = new File("src/test/target/vdmsl-coverage/quantifiers".replace('/', File.separatorChar));
         coverageFolder.mkdirs();

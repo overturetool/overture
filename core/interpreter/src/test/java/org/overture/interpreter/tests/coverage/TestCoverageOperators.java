@@ -29,7 +29,7 @@ public class TestCoverageOperators extends BaseTestCase{
     public void test() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_PP;
-        InterpreterUtil.interpret(Dialect.VDM_SL, "operators(false,true,true)", new File("src/test/java/org/overture/interpreter/tests/coverage/resources/test_operators.vdmsl".replace('/', File.separatorChar)), true);
+        InterpreterUtil.interpret(Dialect.VDM_SL, "operators(false,true,true)", new File("src/test/resources/coverage/test_operators.vdmsl".replace('/', File.separatorChar)), true);
         
         Interpreter interpreter = Interpreter.getInstance();
         File coverageFolder = new File("src/test/target/vdmpp-coverage/operators".replace('/', File.separatorChar));
