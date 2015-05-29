@@ -23,7 +23,7 @@
     <module>javagen</module>
 	<module>codegen-runtime</module>
     <module>codegen-maven-plugin</module>
-	<!-- <module>isagen</module> -->
+     <module>isagen</module> 
   </modules>
   
 </project>
