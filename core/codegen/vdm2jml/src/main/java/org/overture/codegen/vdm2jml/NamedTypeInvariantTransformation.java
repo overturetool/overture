@@ -6,11 +6,13 @@ import java.util.List;
 
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
@@ -134,6 +136,31 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		return NamedTypeInvDepCalculator.onlyDisjointTypes(posTypes);
 	}
 
+	private void appendAssetion(SStmCG node,
+			List<NamedTypeInfo> invTypes, String enclosingClassName,
+			String varNameStr)
+	{
+		AMetaStmCG assertStm = consAssertStm(invTypes, enclosingClassName, varNameStr);
+		
+		ABlockStmCG replStm = new ABlockStmCG();
+		
+		jmlGen.getJavaGen().getTransformationAssistant().replaceNodeWith(node, replStm);
+		
+		replStm.getStatements().add(node);
+		replStm.getStatements().add(assertStm);
+	}
+
+	private AMetaStmCG consAssertStm(List<NamedTypeInfo> invTypes,
+			String enclosingClassName, String varNameStr)
+	{
+		AMetaStmCG assertStm = new AMetaStmCG();
+		String assertStr = consJmlCheck(enclosingClassName, JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, varNameStr);
+		List<ClonableString> assertMetaData = jmlGen.getAnnotator().consMetaData(assertStr);
+		jmlGen.getAnnotator().appendMetaData(assertStm, assertMetaData);
+		
+		return assertStm;
+	}
+	
 	@Override
 	public void caseAFieldDeclCG(AFieldDeclCG node) throws AnalysisException
 	{
@@ -302,24 +329,17 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		}
 		// So for our example varName wil be a.b.c
 		
-		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
+		AClassDeclCG enclosingClass = jmlGen.getUtil().getEnclosingClass(node);
 		
 		if(enclosingClass == null)
 		{
 			return;
 		}
 		
-		String assertStr = consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, varName.toString());
-		List<ClonableString> assertMetaData = jmlGen.getAnnotator().consMetaData(assertStr);
-		AMetaStmCG assertStm = new AMetaStmCG();
-		jmlGen.getAnnotator().appendMetaData(assertStm, assertMetaData);
+		String enclosingClassName = enclosingClass.getName();
+		String varNameStr = varName.toString();
 		
-		ABlockStmCG replStm = new ABlockStmCG();
-		
-		jmlGen.getJavaGen().getTransformationAssistant().replaceNodeWith(node, replStm);
-		
-		replStm.getStatements().add(node);
-		replStm.getStatements().add(assertStm);
+		appendAssetion(node, invTypes, enclosingClassName, varNameStr);
 	}
 
 	@Override
@@ -333,11 +353,43 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAMethodDeclCG(AMethodDeclCG node) throws AnalysisException
 	{
+		//TODO: Also take return statements into account
+		
 		// Upon entering the method, assert that the parameters are valid
 		// wrt. their named invariant types
+		ABlockStmCG replBody = new ABlockStmCG();
+		replBody.setScoped(false);
+		
+		for(AFormalParamLocalParamCG param : node.getFormalParams())
+		{
+			List<NamedTypeInfo> invTypes = findNamedInvTypes(param.getType());
 
-		// TODO Auto-generated method stub
-		super.caseAMethodDeclCG(node);
+			if (!invTypes.isEmpty())
+			{
+				AClassDeclCG encClass = jmlGen.getUtil().getEnclosingClass(node);
+				
+				if(encClass == null)
+				{
+					continue;
+				}
+				
+				String enclosingClassName = encClass.getName();
+				
+				String varNameStr = jmlGen.getUtil().getName(param.getPattern());
+				
+				if(varNameStr == null)
+				{
+					continue;
+				}
+				
+				replBody.getStatements().add(consAssertStm(invTypes, enclosingClassName, varNameStr));
+			}
+		}
+		
+		SStmCG body = node.getBody();
+		jmlGen.getJavaGen().getTransformationAssistant().replaceNodeWith(body, replBody);
+		replBody.getStatements().add(body);
+		body.apply(this);
 	}
 
 }
