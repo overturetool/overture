@@ -7,6 +7,7 @@ import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 
 public class AnnotationSorter extends DepthFirstAnalysisAdaptor
 {
@@ -21,11 +22,20 @@ public class AnnotationSorter extends DepthFirstAnalysisAdaptor
 	@Override
 	public void defaultInPCG(PCG node) throws AnalysisException
 	{
-		if(node.getMetaData().isEmpty())
+		if(!node.getMetaData().isEmpty())
 		{
-			return;
+			Collections.sort(node.getMetaData(), comparator);
 		}
-
-		Collections.sort(node.getMetaData(), comparator);
+		
+		if(node instanceof AClassDeclCG)
+		{
+			AClassDeclCG clazz = (AClassDeclCG) node;
+			
+			if(!clazz.getGlobalMetaData().isEmpty())
+			{
+				Collections.sort(clazz.getGlobalMetaData(), comparator);
+			}
+			
+		}
 	}
 }
