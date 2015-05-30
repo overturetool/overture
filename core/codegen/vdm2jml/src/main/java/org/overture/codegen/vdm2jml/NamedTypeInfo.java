@@ -147,7 +147,7 @@ public class NamedTypeInfo extends AbstractTypeInfo
 		sb.append(')');
 		
 		boolean allowsNull = allowsNull();
-		if (!namedTypes.isEmpty() || allowsNull)
+		if (!namedTypes.isEmpty())
 		{
 			sb.append(JmlGenerator.JML_AND);
 			
