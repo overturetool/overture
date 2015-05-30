@@ -20,6 +20,7 @@ import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
+import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.logging.Logger;
 
@@ -235,15 +236,26 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 	public void caseAAssignToExpStmCG(AAssignToExpStmCG node)
 			throws AnalysisException
 	{
+		// Must be field or variable expression
+		SExpCG next = node.getTarget();
+		
+		if(next instanceof AFieldExpCG)
+		{
+			if(((AFieldExpCG) next).getObject().getType() instanceof ARecordTypeCG)
+			{
+				// rec.field = ...
+				// No need to take record modifications into account. The invariant
+				// should handle this (if it is needed).
+				return;
+			}
+		}
+		
 		List<NamedTypeInfo> invTypes = findNamedInvTypes(node.getTarget().getType());
 
 		if (invTypes.isEmpty())
 		{
 			return;
 		}
-		
-		// Must be field or variable expression
-		SExpCG next = node.getTarget();
 		
 		List<String> names = new LinkedList<String>();
 		
