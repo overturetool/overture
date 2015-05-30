@@ -34,7 +34,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.QuestionAdaptor;
 import org.overture.codegen.ir.IrNodeInfo;
 
-public class MergeVisitor extends QuestionAdaptor<StringWriter>
+public class MergeVisitor extends QuestionAdaptor<StringWriter> implements MergeCoordinator
 {
 	private static final String NODE_KEY = "node";
 
@@ -48,6 +48,8 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 	private Stack<MergeContext> nodeContexts;
 
 	private List<Exception> mergeErrors;
+	
+	private MergerObserver mergeObserver;
 
 	/**
 	 * Default constructor. <b>NOT</b> for use by extensions.
@@ -62,6 +64,7 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		this.templateCallables = templateCallables;
 		this.mergeErrors = new LinkedList<Exception>();
 		this.unsupportedInTargLang = new HashSet<IrNodeInfo>();
+		this.mergeObserver = null;
 	}
 
 	/**
@@ -133,12 +136,39 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		{
 			try
 			{
+				if(mergeObserver != null)
+				{
+					mergeObserver.preMerging(node, question);
+				}
+				
 				template.merge(nodeContexts.pop().getVelocityContext(), question);
+				
+				if(mergeObserver != null)
+				{
+					mergeObserver.nodeMerged(node, question);
+				}
 			} catch (Exception e)
 			{
 				mergeErrors.add(e);
 			}
+		}
+	}
 
+	@Override
+	public void register(MergerObserver obs)
+	{
+		if(obs != null && mergeObserver == null)
+		{
+			mergeObserver = obs;
+		}
+	}
+
+	@Override
+	public void unregister(MergerObserver obs)
+	{
+		if(obs != null && mergeObserver == obs)
+		{
+			mergeObserver = null;
 		}
 	}
 }
