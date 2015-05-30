@@ -1,0 +1,11 @@
+"Breaking named type invariant (assigning record field)"
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvAsssignments/project/Entrytypes/St.java:10: JML invariant is false
+    //@ public instance invariant inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
+                        ^
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvAsssignments/project/Entrytypes/St.java:10: JML invariant is false
+    //@ public instance invariant inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
+                        ^
+"Breaking named type invariant (assigning local variable)"
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvAsssignments/project/Entry.java:34: JML assertion is false
+        //@ assert inv_Entry_PT(p1) && (p1 == null || inv_Entry_PossiblyOne(p1) || inv_Entry_True(p1));
+            ^
