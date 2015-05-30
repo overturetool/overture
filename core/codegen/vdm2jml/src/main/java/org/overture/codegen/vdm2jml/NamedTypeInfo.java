@@ -129,17 +129,19 @@ public class NamedTypeInfo extends AbstractTypeInfo
 
 	private void consCheckExp(StringBuilder sb, String enclosingModule, String javaRootPackage)
 	{
-		// If the type is not defined in the enclosing class we use the absolute name
-		// to refer to the invariant method
-		if(!defModule.equals(enclosingModule))
-		{
-			sb.append(javaRootPackage);
-			sb.append('.');
-			sb.append(defModule);
-			sb.append(".");
-		}
+//		// If the type is not defined in the enclosing class we use the absolute name
+//		// to refer to the invariant method
+//		if(!defModule.equals(enclosingModule))
+//		{
+//			sb.append(javaRootPackage);
+//			sb.append('.');
+//			sb.append(defModule);
+//			sb.append(".");
+//		}
 
-		sb.append(JmlGenerator.JML_INV_PREFIX);
+		sb.append(JmlGenerator.INV_PREFIX);
+		sb.append(defModule);
+		sb.append("_");
 		sb.append(typeName);
 
 		sb.append('(');

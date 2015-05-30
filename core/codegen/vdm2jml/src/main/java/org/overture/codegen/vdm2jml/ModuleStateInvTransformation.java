@@ -199,7 +199,7 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 				String stateName = encClass.getFields().getFirst().getName();
 
 				// E.g. inv_St(St)
-				return JmlGenerator.JML_INV_PREFIX + stateName + "(" + stateName + ")";
+				return JmlGenerator.INV_PREFIX + stateName + "(" + stateName + ")";
 			} else
 			{
 				Logger.getLog().printErrorln("Expected only a single field to represent the state in '"

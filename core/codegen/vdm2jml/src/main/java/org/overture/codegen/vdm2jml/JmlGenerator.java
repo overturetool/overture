@@ -44,7 +44,10 @@ public class JmlGenerator implements IREventObserver
 {
 	public static final String DEFAULT_JAVA_ROOT_PACKAGE = "project";
 	public static final String GEN_INV_METHOD_PARAM_NAME = "elem";
+	public static final String INV_PREFIX = "inv_";
+	public static final String REPORT_CALL = "report";
 	public static final String INV_METHOD_REPLACEMENT_NAME_PREFIX = "check_"; 
+
 	public static final String JML_OR = " || ";
 	public static final String JML_AND = " && ";
 	public static final String JML_PUBLIC = "public";
@@ -53,13 +56,11 @@ public class JmlGenerator implements IREventObserver
 	public static final String JML_REQ_ANNOTATION = "requires";
 	public static final String JML_ENS_ANNOTATION = "ensures";
 	public static final String JML_ASSERT_ANNOTATION = "assert";
-	public static final String JML_INV_PREFIX = "inv_";
 	public static final String JML_OLD_PREFIX = "\\old";
 	public static final String JML_SPEC_PUBLIC = "/*@ spec_public @*/";
 	public static final String JML_PURE = "/*@ pure @*/";
 	public static final String JML_HELPER = "/*@ helper @*/";
 	public static final String JML_RESULT = "\\result";
-	public static final String REPORT_CALL = "report";
 	public static final String JML_NULLABLE_BY_DEFAULT = "//@ nullable_by_default";
 	
 	private JavaCodeGen javaGen;
@@ -236,11 +237,14 @@ public class JmlGenerator implements IREventObserver
 
 		// Make sure that the JML annotations are ordered correcly
 		sortAnnotations(newAst);
+
+		// Make all nodes have a copy of each named type invariant method
+		util.distributeNamedTypeInvs(newAst);
 		
 		// Return back the modified AST to the Java code generator
 		return newAst;
 	}
-	
+
 	private void sortAnnotations(List<IRStatus<INode>> newAst)
 	{
 		AnnotationSorter sorter = new AnnotationSorter();
@@ -328,7 +332,7 @@ public class JmlGenerator implements IREventObserver
 				
 				// Add the instance invariant to the record
 				// Make it public so we can access the record fields from the invariant clause
-				annotator.appendMetaData(r, annotator.consAnno("public " + JML_INSTANCE_INV_ANNOTATION, JML_INV_PREFIX
+				annotator.appendMetaData(r, annotator.consAnno("public " + JML_INSTANCE_INV_ANNOTATION, INV_PREFIX
 						+ r.getName(), args));
 				
 				injectReportCalls(r.getInvariant());
@@ -439,7 +443,7 @@ public class JmlGenerator implements IREventObserver
 					//@ public static invariant St == null || inv_St(St);
 					classInvInfo.put(module.getName(), annotator.consAnno("public " + JML_STATIC_INV_ANNOTATION,
 							String.format("%s != null", state.getName())  + " ==> " +
-							JML_INV_PREFIX + state.getName(), fieldNames));
+							INV_PREFIX + state.getName(), fieldNames));
 					//
 					// Note that the invariant is public. Otherwise we would get the error
 					// 'An identifier with public visibility may not be used in a invariant clause with private '
@@ -478,7 +482,7 @@ public class JmlGenerator implements IREventObserver
 				}
 			}
 
-			classInvInfo.put(clazz.getName(), annotator.consAnno(JML_STATIC_INV_ANNOTATION, JML_INV_PREFIX
+			classInvInfo.put(clazz.getName(), annotator.consAnno(JML_STATIC_INV_ANNOTATION, INV_PREFIX
 					+ clazz.getName(), fieldNames));
 		}
 	}
@@ -501,6 +505,10 @@ public class JmlGenerator implements IREventObserver
 					typeDecl.setInv(method);
 					invMethodIsGen = true;
 				}
+				
+				String defModule = namedTypeDecl.getName().getDefiningClass();
+				String name = namedTypeDecl.getName().getName();
+				method.setName(JmlGenerator.INV_PREFIX + defModule + "_" + name);
 				
 				AFormalParamLocalParamCG invParam = util.getInvFormalParam(method);
 				AFormalParamLocalParamCG invParamCopy = invParam.clone();

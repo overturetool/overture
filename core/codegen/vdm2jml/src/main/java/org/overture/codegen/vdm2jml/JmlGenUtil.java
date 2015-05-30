@@ -498,4 +498,62 @@ public class JmlGenUtil
 			return null;
 		}
 	}
+	
+	/**
+	 * There are problems with OpenJML when you invoke named type invariant
+	 * methods across classes. Until these bugs are fixed the workaround is simply
+	 * to make sure that all generated classes have a local copy of a named invariant method.
+	 * 
+	 * TODO: Currently invariant method are named on the form <module>_<typename> although
+	 * this does not truly garuantee uniqueness. For example if module A defines type
+	 * B_C the invariant method name is A_B_C. However if module A_B defines type C
+	 * then the invariant method will also be named A_B_C. So something needs to be
+	 * done about this.
+	 * 
+	 * @param newAst
+	 */
+	public void distributeNamedTypeInvs(List<IRStatus<INode>> newAst)
+	{
+		// Collect all named type invariants
+		List<ATypeDeclCG> allNamedTypeInvTypeDecls = new LinkedList<ATypeDeclCG>();
+		for(IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
+		{
+			AClassDeclCG clazz = status.getIrNode();
+		
+			if(jmlGen.getJavaGen().getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
+			{
+				continue;
+			}
+			
+			for(ATypeDeclCG typeDecl : clazz.getTypeDecls())
+			{
+				if(typeDecl.getDecl() instanceof ANamedTypeDeclCG)
+				{
+					allNamedTypeInvTypeDecls.add(typeDecl);
+				}
+			}
+		}
+		
+		for(IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
+		{
+			AClassDeclCG clazz = status.getIrNode();
+			
+			if(jmlGen.getJavaGen().getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
+			{
+				continue;
+			}
+			
+			List<ATypeDeclCG> classTypeDecls = new LinkedList<ATypeDeclCG>(clazz.getTypeDecls());
+			
+			for(ATypeDeclCG namedTypeInv : allNamedTypeInvTypeDecls)
+			{
+				if(!classTypeDecls.contains(namedTypeInv))
+				{
+					classTypeDecls.add(namedTypeInv.clone());
+				}
+			}
+			
+			clazz.setTypeDecls(classTypeDecls);
+		}
+	}
 }
