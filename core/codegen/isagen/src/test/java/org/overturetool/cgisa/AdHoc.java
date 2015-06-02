@@ -49,7 +49,7 @@ public class AdHoc
 		
 		List<INode> ast = ParseTcFacade.typedAstNoRetry(files, "Quick", Dialect.VDM_PP);
 		
-		IsaCodeGen gen = new IsaCodeGen();
+		IsaGen gen = new IsaGen();
 		
 		List<SClassDefinition> classes = new LinkedList<>();
 		

@@ -31,7 +31,9 @@ import java.util.List;
 import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.PExp;
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRStatus;
@@ -48,14 +50,14 @@ import org.overturetool.cgisa.transformations.SortDependencies;
  * 
  * @author ldc
  */
-public class IsaCodeGen extends CodeGenBase
+public class IsaGen extends CodeGenBase
 {
-	public IsaCodeGen()
+	public IsaGen()
 	{
 		this(null);
 	}
 
-	public IsaCodeGen(ILogger log)
+	public IsaGen(ILogger log)
 	{
 		super(log);
 		initVelocity();
@@ -65,6 +67,19 @@ public class IsaCodeGen extends CodeGenBase
 	{
 		Velocity.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
 		Velocity.init();
+	}
+
+	GeneratedModule generateIsabelleSyntax(PExp exp) throws AnalysisException,
+			org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		IRStatus<SExpCG> status = this.generator.generateFrom(exp);
+
+		if (status.canBeGenerated())
+		{
+			return prettyPrint(status);
+		}
+
+		throw new org.overture.codegen.cgast.analysis.AnalysisException("exp.toString() cannot be code-generated");
 	}
 
 	/**
@@ -109,6 +124,13 @@ public class IsaCodeGen extends CodeGenBase
 			}
 		}
 
+		return prettyPrint(statuses);
+
+	}
+
+	private List<GeneratedModule> prettyPrint(List<IRStatus<INode>> statuses)
+			throws org.overture.codegen.cgast.analysis.AnalysisException
+	{
 		// Apply merge visitor to pretty print Isabelle syntax
 		TemplateStructure ts = new TemplateStructure("IsaTemplates");
 		IsaTranslations isa = new IsaTranslations(ts);
@@ -118,30 +140,46 @@ public class IsaCodeGen extends CodeGenBase
 
 		for (IRStatus<INode> status : statuses)
 		{
-			INode irClass = status.getIrNode();
-
-			StringWriter sw = new StringWriter();
-
-			irClass.apply(pp, sw);
-
-			if (pp.hasMergeErrors())
-			{
-				generated.add(new GeneratedModule(status.getIrNodeName(), irClass, pp.getMergeErrors()));
-			} else if (pp.hasUnsupportedTargLangNodes())
-			{
-				generated.add(new GeneratedModule(status.getIrNodeName(), new HashSet<VdmNodeInfo>(), pp.getUnsupportedInTargLang()));
-			} else
-			{
-				// Code can be generated. Ideally, should format it
-				GeneratedModule generatedModule = new GeneratedModule(status.getIrNodeName(), irClass, sw.toString());
-				generatedModule.setTransformationWarnings(status.getTransformationWarnings());
-				generated.add(generatedModule);
-			}
+			generated.add(prettyPrintNode(pp, status));
 
 		}
 
 		// Return syntax
 		return generated;
+	}
 
+	private GeneratedModule prettyPrint(IRStatus<? extends INode> status)
+			throws org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		// Apply merge visitor to pretty print Isabelle syntax
+		TemplateStructure ts = new TemplateStructure("IsaTemplates");
+		IsaTranslations isa = new IsaTranslations(ts);
+		MergeVisitor pp = isa.getMergeVisitor();
+		return prettyPrintNode(pp, status);
+	}
+
+	private GeneratedModule prettyPrintNode(MergeVisitor pp,
+			IRStatus<? extends INode> status)
+			throws org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		INode irClass = status.getIrNode();
+
+		StringWriter sw = new StringWriter();
+
+		irClass.apply(pp, sw);
+
+		if (pp.hasMergeErrors())
+		{
+			return new GeneratedModule(status.getIrNodeName(), irClass, pp.getMergeErrors());
+		} else if (pp.hasUnsupportedTargLangNodes())
+		{
+			return new GeneratedModule(status.getIrNodeName(), new HashSet<VdmNodeInfo>(), pp.getUnsupportedInTargLang());
+		} else
+		{
+			// Code can be generated. Ideally, should format it
+			GeneratedModule generatedModule = new GeneratedModule(status.getIrNodeName(), irClass, sw.toString());
+			generatedModule.setTransformationWarnings(status.getTransformationWarnings());
+			return generatedModule;
+		}
 	}
 }

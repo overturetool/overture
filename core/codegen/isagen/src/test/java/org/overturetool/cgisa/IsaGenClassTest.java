@@ -42,10 +42,10 @@ import org.overture.core.tests.PathsProvider;
 import com.google.gson.reflect.TypeToken;
 
 @RunWith(Parameterized.class)
-public class CgIsaParamTest extends ParamStandardTest<CgIsaTestResult>
+public class IsaGenClassTest extends ParamStandardTest<CgIsaTestResult>
 {
 
-	public CgIsaParamTest(String nameParameter, String inputParameter,
+	public IsaGenClassTest(String nameParameter, String inputParameter,
 			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
@@ -57,7 +57,7 @@ public class CgIsaParamTest extends ParamStandardTest<CgIsaTestResult>
 	@Override
 	public CgIsaTestResult processModel(List<INode> ast)
 	{
-		IsaCodeGen gen = new IsaCodeGen();
+		IsaGen gen = new IsaGen();
 
 		List<SClassDefinition> classes = new LinkedList<>();
 
