@@ -1,0 +1,45 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+A = [B | C]
+inv c == is_char(c) => c = 'a';
+B = real;
+C = char
+inv c == c = 'a' or c = 'b';
+
+operations
+
+Run : () ==> ?
+Run () ==
+let - = idC('b'),
+    - = idC('a'),
+    - = idA(nil),
+    - = idA(2.1),
+    - = constFunc()
+in 
+(
+  IO`println("Breaking named type invariant for return value");
+  let - = idA('b') in skip;
+  return 0;
+);
+
+functions
+
+idC : C -> C
+idC (c) ==
+  c;
+
+idA : A -> A
+idA (a) ==
+  a;
+
+constFunc : () -> A
+constFunc () ==
+  'a';
+
+end Entry
