@@ -499,6 +499,22 @@ public class JmlGenUtil
 		}
 	}
 	
+	public AMethodDeclCG getEnclosingMethod(INode node)
+	{
+		AMethodDeclCG enclosingMethod = node.getAncestor(AMethodDeclCG.class);
+
+		if (enclosingMethod != null)
+		{
+			return enclosingMethod;
+		} else
+		{
+			Logger.getLog().printErrorln("Could not find enclosing method of node "
+					+ node + " in " + this.getClass().getSimpleName());
+
+			return null;
+		}
+	}
+	
 	/**
 	 * There are problems with OpenJML when you invoke named type invariant
 	 * methods across classes. Until these bugs are fixed the workaround is simply
