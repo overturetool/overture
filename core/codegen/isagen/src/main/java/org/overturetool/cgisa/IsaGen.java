@@ -69,7 +69,7 @@ public class IsaGen extends CodeGenBase
 		Velocity.init();
 	}
 
-	GeneratedModule generateIsabelleSyntax(PExp exp) throws AnalysisException,
+	public GeneratedModule generateIsabelleSyntax(PExp exp) throws AnalysisException,
 			org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		IRStatus<SExpCG> status = this.generator.generateFrom(exp);
@@ -91,7 +91,7 @@ public class IsaGen extends CodeGenBase
 	 * @throws AnalysisException
 	 * @throws org.overture.codegen.cgast.analysis.AnalysisException
 	 */
-	List<GeneratedModule> generateIsabelleSyntax(List<SClassDefinition> ast)
+	public List<GeneratedModule> generateIsabelleSyntax(List<SClassDefinition> ast)
 			throws AnalysisException,
 			org.overture.codegen.cgast.analysis.AnalysisException
 	{

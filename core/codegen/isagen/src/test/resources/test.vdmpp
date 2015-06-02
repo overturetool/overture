@@ -1,8 +1,7 @@
 class A
+
 functions
-
-id : nat -> nat
-id (x) == x
-
+f: int -> int
+f(x) == x
 
 end A
