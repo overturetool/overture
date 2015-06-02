@@ -17,18 +17,25 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
+import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 // TODO: remember to take optional types into account
 public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 {
+	public static final String RET_VAR_NAME_PREFIX = "ret_";
+	
 	private JmlGenerator jmlGen;
 	
 	public NamedTypeInvariantTransformation(JmlGenerator jmlGen)
@@ -138,7 +145,7 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 
 	private void appendAssetion(SStmCG node,
 			List<NamedTypeInfo> invTypes, String enclosingClassName,
-			String varNameStr)
+			String varNameStr, boolean append)
 	{
 		AMetaStmCG assertStm = consAssertStm(invTypes, enclosingClassName, varNameStr);
 		
@@ -147,7 +154,15 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		jmlGen.getJavaGen().getTransformationAssistant().replaceNodeWith(node, replStm);
 		
 		replStm.getStatements().add(node);
-		replStm.getStatements().add(assertStm);
+		
+		if(append)
+		{
+			replStm.getStatements().add(assertStm);
+		}
+		else 
+		{
+			replStm.getStatements().addFirst(assertStm);
+		}
 	}
 
 	private AMetaStmCG consAssertStm(List<NamedTypeInfo> invTypes,
@@ -191,6 +206,42 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 
 		jmlGen.getAnnotator().appendMetaData(node, jmlGen.getAnnotator().consMetaData(inv));
 	}
+	
+	@Override
+	public void caseABlockStmCG(ABlockStmCG node) throws AnalysisException
+	{
+		if (node.getLocalDefs().size() > 1)
+		{
+			LinkedList<AVarDeclCG> origDecls = new LinkedList<AVarDeclCG>(node.getLocalDefs());
+			
+			for(int i = origDecls.size() - 1; i >= 0; i--)
+			{
+				AVarDeclCG nextDecl = origDecls.get(i);
+				
+				ABlockStmCG block = new ABlockStmCG();
+				block.getLocalDefs().add(nextDecl);
+				
+				node.getStatements().addFirst(block);
+			}
+			
+			for(SStmCG stm : node.getStatements())
+			{
+				stm.apply(this);
+			}
+			
+		} else
+		{
+			for(AVarDeclCG dec : node.getLocalDefs())
+			{
+				dec.apply(this);
+			}
+			
+			for (SStmCG stm : node.getStatements())
+			{
+				stm.apply(this);
+			}
+		}
+	}
 
 	@Override
 	public void caseAVarDeclCG(AVarDeclCG node) throws AnalysisException
@@ -228,12 +279,10 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 
 			if (parentBlock.getLocalDefs().size() > 1)
 			{
-				ABlockStmCG declBlock = new ABlockStmCG();
-				while (parentBlock.getLocalDefs().getLast() != node)
-				{
-					declBlock.getLocalDefs().addFirst(parentBlock.getLocalDefs().getLast());
-				}
-				parentBlock.getStatements().addFirst(declBlock);
+				// The block statement case method should have ensured that the size == 1
+				Logger.getLog().printErrorln("Expected only a single local declaration in "
+						+ "the parent block at this point in '" + this.getClass().getSimpleName() + "'");
+				return;
 			}
 
 			AMetaStmCG assertInv = new AMetaStmCG();
@@ -339,7 +388,7 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		String enclosingClassName = enclosingClass.getName();
 		String varNameStr = varName.toString();
 		
-		appendAssetion(node, invTypes, enclosingClassName, varNameStr);
+		appendAssetion(node, invTypes, enclosingClassName, varNameStr, true);
 	}
 
 	@Override
@@ -353,13 +402,16 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAMethodDeclCG(AMethodDeclCG node) throws AnalysisException
 	{
-		//TODO: Also take return statements into account
-		
 		// Upon entering the method, assert that the parameters are valid
 		// wrt. their named invariant types
-		ABlockStmCG replBody = new ABlockStmCG();
-		replBody.setScoped(false);
 		
+		// This transformation also makes sure that the return statement is
+		// properly handled for cases where the method returns a value of a
+		// named invariant type. In particular this transformation ensures
+		// that such values are extracted to local variable declarations
+		// and then the assertion check is performed on those.
+		
+		ABlockStmCG replBody = new ABlockStmCG();
 		for(AFormalParamLocalParamCG param : node.getFormalParams())
 		{
 			List<NamedTypeInfo> invTypes = findNamedInvTypes(param.getType());
@@ -391,5 +443,51 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		replBody.getStatements().add(body);
 		body.apply(this);
 	}
+	
+	@Override
+	public void caseAReturnStmCG(AReturnStmCG node) throws AnalysisException
+	{
+		SExpCG exp = node.getExp();
+		
+		if(exp instanceof SVarExpCG)
+		{
+			return;
+		}
+		
+		ITempVarGen nameGen = jmlGen.getJavaGen().getInfo().getTempVarNameGen();
+		String name = nameGen.nextVarName(RET_VAR_NAME_PREFIX);
+		TransAssistantCG trans = jmlGen.getJavaGen().getTransformationAssistant();
+		
+		AMethodDeclCG enclosingMethod = jmlGen.getUtil().getEnclosingMethod(node);
+		
+		if(enclosingMethod == null)
+		{
+			return;
+		}
+		
+		STypeCG returnType = enclosingMethod.getMethodType().getResult();
+		
+		List<NamedTypeInfo> invTypes = findNamedInvTypes(returnType);
 
+		if (invTypes.isEmpty())
+		{
+			return;
+		}
+		
+		AIdentifierPatternCG id = trans.consIdPattern(name);
+		
+		AVarDeclCG var = jmlGen.getJavaGen().getInfo().getDeclAssistant().consLocalVarDecl(returnType.clone(), id, exp.clone());
+
+		AIdentifierVarExpCG varExp = trans.consIdentifierVar(name, returnType.clone());
+		
+		trans.replaceNodeWith(exp, varExp);
+		
+		ABlockStmCG replBlock = new ABlockStmCG();
+		replBlock.getLocalDefs().add(var);
+		
+		trans.replaceNodeWith(node, replBlock);
+		
+		replBlock.getStatements().add(node);
+		var.apply(this);
+	}
 }
