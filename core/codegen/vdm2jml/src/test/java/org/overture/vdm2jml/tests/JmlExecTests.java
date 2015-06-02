@@ -26,7 +26,6 @@ import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaToolsUtils;
 import org.overture.codegen.vdm2jml.IOpenJmlConsts;
-import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.test.framework.Properties;
 import org.overture.vdm2jml.tests.util.ProcessResult;
 
@@ -64,7 +63,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 	public static Collection<Object[]> data()
 	{
 		File folder = new File(AnnotationTestsBase.TEST_RES_DYNAMIC_ANALYSIS_ROOT);
-		List<File> files = GeneralUtils.getFiles(folder);
+		List<File> files = GeneralUtils.getFilesRecursive(folder);
 
 		return collectVdmslFiles(files);
 	}
