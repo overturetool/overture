@@ -33,10 +33,10 @@ public class IsaGenExpTest
 	{
 		Object[] a1 = { "1+1", "(1 + 1)" };
 		Object[] a2 = { "1-1", "(1 - 1)" };
-		Object[] a3 = { "1/1", "1/1" };
-		Object[] a4 = { "1*1", "1*1" };
+		Object[] a3 = { "1/1", "1/1" }; //FIXME talk to PVJ about real division
+		Object[] a4 = { "1*1", "(1 * 1)" };
 
-		return Arrays.asList(new Object[][] { a1,a2,a3,a4 });
+		return Arrays.asList(new Object[][] { a1,a2,a4 });
 
 	}
 
