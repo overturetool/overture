@@ -135,7 +135,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 				}
 			}
 
-			File testFolder = new File(inputFile.getParentFile(), getTestName());
+			File testFolder = inputFile.getParentFile();
 
 			for (File file : filesToStore)
 			{
