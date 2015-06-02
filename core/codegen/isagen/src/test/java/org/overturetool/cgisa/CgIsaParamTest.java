@@ -51,7 +51,7 @@ public class CgIsaParamTest extends ParamStandardTest<CgIsaTestResult>
 		super(nameParameter, inputParameter, resultParameter);
 	}
 
-	private static final String UPDATE = "tests.update.cgisa";
+	private static final String UPDATE = "tests.update.isagen";
 	private static final String CGISA_ROOT = "src/test/resources/micro";
 
 	@Override
