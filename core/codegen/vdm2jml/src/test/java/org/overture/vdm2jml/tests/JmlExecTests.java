@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -21,9 +22,11 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.LexLocation;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
+import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaToolsUtils;
 import org.overture.codegen.vdm2jml.IOpenJmlConsts;
+import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.test.framework.Properties;
 import org.overture.vdm2jml.tests.util.ProcessResult;
 
@@ -39,6 +42,8 @@ public class JmlExecTests extends OpenJmlValidationBase
 	private static final String MAIN_CLASS_RES = "exec_entry_point";
 
 	public static final String RESULT_FILE_EXT = ".result";
+	
+	public static final String DEFAULT_JAVA_ROOT_PACKAGE = "project";
 
 	private boolean isTypeChecked;
 
@@ -101,6 +106,52 @@ public class JmlExecTests extends OpenJmlValidationBase
 	}
 
 	public void storeResult(String resultStr)
+	{
+		storeJmlOutput(resultStr);
+		storeGeneratedJml();
+	}
+
+	private void storeGeneratedJml()
+	{
+		String projDir = File.separatorChar + DEFAULT_JAVA_ROOT_PACKAGE
+				+ File.separatorChar;
+		String quotesDir = File.separatorChar + JavaCodeGen.QUOTES
+				+ File.separatorChar;
+
+		try
+		{
+			List<File> files = GeneralUtils.getFilesRecursive(genJavaFolder);
+
+			List<File> filesToStore = new LinkedList<File>();
+
+			for (File file : files)
+			{
+				String absPath = file.getAbsolutePath();
+
+				if (absPath.endsWith(IJavaCodeGenConstants.JAVA_FILE_EXTENSION)
+						&& absPath.contains(projDir)
+						&& !absPath.contains(quotesDir))
+				{
+					filesToStore.add(file);
+				}
+			}
+
+			File testFolder = new File(inputFile.getParentFile(), getTestName());
+
+			for (File file : filesToStore)
+			{
+				File javaFile = new File(testFolder, file.getName());
+				FileUtils.copyFile(file, javaFile);
+			}
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+			Assert.assertTrue("Problems storing generated JML: "
+					+ e.getMessage(), false);
+		}
+	}
+
+	private void storeJmlOutput(String resultStr)
 	{
 		File resultFile = getResultFile();
 
@@ -223,7 +274,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 				resultFile.createNewFile();
 			} catch (IOException e)
 			{
-				Assume.assumeTrue("Problems creating result file: "
+				Assert.assertTrue("Problems creating result file: "
 						+ e.getMessage(), false);
 				e.printStackTrace();
 				return null;

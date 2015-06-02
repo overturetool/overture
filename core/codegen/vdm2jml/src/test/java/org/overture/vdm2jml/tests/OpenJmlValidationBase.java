@@ -53,16 +53,19 @@ abstract public class OpenJmlValidationBase
 	{
 		this.inputFile = inputFile;
 		this.cgRuntime = new File(CODEGEN_RUNTIME);
+		this.genJavaFolder = new File(GEN_JAVA_FOLDER, getTestName());
 		
+		setOpenJmlTools();
+	}
+
+	public String getTestName()
+	{
 		int dotIdx = inputFile.getName().indexOf('.');
 
 		Assert.assertTrue("Got unexpected file name '" + inputFile.getName()
 				+ "'", dotIdx > 0);
 
-		String inputFileNameNoExt = inputFile.getName().substring(0, dotIdx);
-		genJavaFolder = new File(GEN_JAVA_FOLDER, inputFileNameNoExt);
-		
-		setOpenJmlTools();
+		return inputFile.getName().substring(0, dotIdx);
 	}
 
 	public void setOpenJmlTools()
