@@ -9,6 +9,7 @@ import java.util.*;
 public class Entry {
     public static Object Run() {
         Number n1 = 2L;
+
         Number n2 = 3L;
 
         {
@@ -36,7 +37,10 @@ public class Entry {
         //@ assert inv_Entry_Even(a);
 
         //@ assert inv_Entry_Even(c);
-        return b.longValue() * (a.longValue() + c.longValue());
+        Number ret_2 = b.longValue() * (a.longValue() + c.longValue());
+
+        //@ assert inv_Entry_Even(ret_2);
+        return ret_2;
     }
 
     public String toString() {

@@ -9,6 +9,7 @@ import java.util.*;
 public class Entry {
     public static void typeUseOk() {
         Number ignorePattern_1 = 1L;
+
         Object even = 2L;
 
         //@ assert inv_Entry_No(even) && (inv_Entry_Even(even) || inv_Entry_Large(even));

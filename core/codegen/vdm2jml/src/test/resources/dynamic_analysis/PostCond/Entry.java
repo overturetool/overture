@@ -12,6 +12,7 @@ public class Entry {
 
     public static Object Run() {
         Number ignorePattern_1 = opRet(1L);
+
         Number ignorePattern_2 = f(3L);
         opVoid();
         IO.println("Before breaking post condition");

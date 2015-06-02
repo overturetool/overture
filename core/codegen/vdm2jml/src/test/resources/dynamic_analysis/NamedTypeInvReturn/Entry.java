@@ -14,21 +14,13 @@ public class Entry {
         Character ignorePattern_2 = idC('a');
 
         //@ assert inv_Entry_C(ignorePattern_2);
-
-        //@ assert inv_Entry_C(ignorePattern_2);
         Object ignorePattern_3 = idA(null);
-
-        //@ assert inv_Entry_A(ignorePattern_3) && (ignorePattern_3 == null || inv_Entry_B(ignorePattern_3) || inv_Entry_C(ignorePattern_3));
 
         //@ assert inv_Entry_A(ignorePattern_3) && (ignorePattern_3 == null || inv_Entry_B(ignorePattern_3) || inv_Entry_C(ignorePattern_3));
         Object ignorePattern_4 = idA(2.1);
 
         //@ assert inv_Entry_A(ignorePattern_4) && (ignorePattern_4 == null || inv_Entry_B(ignorePattern_4) || inv_Entry_C(ignorePattern_4));
-
-        //@ assert inv_Entry_A(ignorePattern_4) && (ignorePattern_4 == null || inv_Entry_B(ignorePattern_4) || inv_Entry_C(ignorePattern_4));
         Object ignorePattern_5 = constFunc();
-        //@ assert inv_Entry_A(ignorePattern_5) && (ignorePattern_5 == null || inv_Entry_B(ignorePattern_5) || inv_Entry_C(ignorePattern_5));
-
         //@ assert inv_Entry_A(ignorePattern_5) && (ignorePattern_5 == null || inv_Entry_B(ignorePattern_5) || inv_Entry_C(ignorePattern_5));
         {
             IO.println("Breaking named type invariant for return value");
@@ -59,7 +51,10 @@ public class Entry {
 
     /*@ pure @*/
     public static Object constFunc() {
-        return 'a';
+        Object ret_2 = 'a';
+
+        //@ assert inv_Entry_A(ret_2) && (ret_2 == null || inv_Entry_B(ret_2) || inv_Entry_C(ret_2));
+        return ret_2;
     }
 
     public String toString() {
