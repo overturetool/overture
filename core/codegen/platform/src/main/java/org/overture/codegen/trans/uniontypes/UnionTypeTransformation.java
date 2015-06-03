@@ -46,12 +46,15 @@ import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
+import org.overture.codegen.cgast.expressions.AIntDivNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMissingMemberRuntimeErrorExpCG;
+import org.overture.codegen.cgast.expressions.AModNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.ARemNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
@@ -71,7 +74,9 @@ import org.overture.codegen.cgast.statements.SCallStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AErrorTypeCG;
+import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
@@ -152,7 +157,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	private SExpCG correctTypes(SExpCG exp, STypeCG castedType)
 			throws AnalysisException
 	{
-		if (exp.getType() instanceof AUnionTypeCG
+		if ((exp.getType() instanceof AUnknownTypeCG || exp.getType() instanceof AUnionTypeCG)
 				&& !(exp instanceof ACastUnaryExpCG))
 		{
 			ACastUnaryExpCG casted = new ACastUnaryExpCG();
@@ -174,7 +179,12 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		{
 			for (int k = 0; k < paramTypes.size(); k++)
 			{
-				correctTypes(args.get(k), paramTypes.get(k));
+				SExpCG arg = args.get(k);
+				
+				if(!(arg instanceof ANullExpCG))
+				{
+					correctTypes(arg, paramTypes.get(k));
+				}
 			}
 			return true;
 		}
@@ -213,10 +223,30 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	public void defaultInSNumericBinaryExpCG(SNumericBinaryExpCG node)
 			throws AnalysisException
 	{
-		STypeCG expectedType = node.getType();
+		STypeCG expectedType;
+		
+		if (info.getTypeAssistant().isNumericType(node.getType()))
+		{
+			expectedType = node.getType();
+		} else
+		{
+			expectedType = getExpectedOperandType(node);
+		}
 
 		correctTypes(node.getLeft(), expectedType);
 		correctTypes(node.getRight(), expectedType);
+	}
+	
+	public STypeCG getExpectedOperandType(SNumericBinaryExpCG node)
+	{
+		if(node instanceof AIntDivNumericBinaryExpCG || node instanceof AModNumericBinaryExpCG || node instanceof ARemNumericBinaryExpCG)
+		{
+			return new AIntNumericBasicTypeCG();
+		}
+		else
+		{
+			return new ARealNumericBasicTypeCG();
+		}
 	}
 	
 	@Override
@@ -328,7 +358,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		id.setName(applyResultName);
 
 		AVarDeclCG resultDecl = info.getDeclAssistant().
-				consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, new ANullExpCG());
+				consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, info.getExpAssistant().consNullExp());
 		
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
 		resultVar.setSourceNode(node.getSourceNode());
@@ -818,6 +848,11 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	{
 		STypeCG expectedType = node.getType();
 
+		if(expectedType instanceof AUnknownTypeCG || node.getExp() instanceof ANullExpCG)
+		{
+			return;
+		}
+		
 		if (!(expectedType instanceof AUnionTypeCG))
 		{
 			correctTypes(node.getExp(), expectedType);
@@ -831,12 +866,22 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		{
 			return; // When the return type of the method is 'void'
 		}
+		
+		if(node.getExp() instanceof ANullExpCG)
+		{
+			return;
+		}
 
 		node.getExp().apply(this);
 
 		AMethodDeclCG methodDecl = node.getAncestor(AMethodDeclCG.class);
 
 		STypeCG expectedType = methodDecl.getMethodType().getResult();
+		
+		if(expectedType instanceof AUnknownTypeCG)
+		{
+			return;
+		}
 
 		if (!(expectedType instanceof AUnionTypeCG))
 		{
