@@ -41,10 +41,22 @@ public class GeneralUtils
 				|| c == '\'' || c == '\"' || c == '\\';
 	}
 
+	/**
+	 * Not for use with extensions. Use {@link #readFromFile(String, Class)} instead.
+	 * @param relativepath
+	 * @return
+	 * @throws IOException
+	 */
 	public static StringBuffer readFromFile(String relativepath)
 			throws IOException
 	{
 		InputStream input = GeneralUtils.class.getResourceAsStream('/' + relativepath.replace("\\", "/"));
+
+		return readFromInputStream(input);
+	}
+	
+	public static StringBuffer readFromFile(String relativepath, Class<?> classRef) throws IOException{
+		InputStream input = classRef.getResourceAsStream('/' + relativepath.replace("\\", "/"));
 
 		return readFromInputStream(input);
 	}

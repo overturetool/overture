@@ -123,15 +123,42 @@ public class TemplateManager
 
 	protected TemplateStructure templateStructure;
 
+	private boolean isBase;
+	private Class<?> templateLoadRef = null;
+
+	/**
+	 * Not for use with extensions. Use {@link #TemplateManager(TemplateStructure, Class)} instead.
+	 * 
+	 * @param templateStructure
+	 */
 	public TemplateManager(TemplateStructure templateStructure)
 	{
 		this.templateStructure = templateStructure;
 		initNodeTemplateFileNames();
+		isBase = true;
 	}
 
 	/**
-	 * Initialize the mapping of IR nodes and templates with the most common
-	 * nodes used. Folder structure is specified with {@link TemplateStructure}
+	 * This is an extensibility version of the template manager constructor for the benefit of OSGi extensions. <br>
+	 * <br>
+	 * Because of the way classloaders work in OSGi, the template lookups fail if the templates are located in another
+	 * bundle. This provides a workaround by using templateLoadRef to provide a specific class. Just pass it any class
+	 * that is native to the extension bundle and it should work.
+	 * 
+	 * @param struct
+	 * @param templateLoadRef
+	 */
+	public TemplateManager(TemplateStructure struct, Class<?> templateLoadRef)
+	{
+		this.templateStructure = struct;
+		initNodeTemplateFileNames();
+		isBase = false;
+		this.templateLoadRef = templateLoadRef;
+	}
+
+	/**
+	 * Initialize the mapping of IR nodes and templates with the most common nodes used. Folder structure is specified
+	 * with {@link TemplateStructure}
 	 */
 	protected void initNodeTemplateFileNames()
 	{
@@ -152,16 +179,16 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AVarDeclCG.class, templateStructure.DECL_PATH
 				+ "LocalVar");
-		
-		nodeTemplateFileNames.put(AThreadDeclCG.class, templateStructure.DECL_PATH 
+
+		nodeTemplateFileNames.put(AThreadDeclCG.class, templateStructure.DECL_PATH
 				+ "Thread");
-		
+
 		nodeTemplateFileNames.put(ATypeDeclCG.class, templateStructure.DECL_PATH
 				+ "Type");
 
 		nodeTemplateFileNames.put(ACatchClauseDeclCG.class, templateStructure.DECL_PATH
 				+ "CatchClause");
-		
+
 		// Local declarations
 
 		nodeTemplateFileNames.put(AFormalParamLocalParamCG.class, templateStructure.LOCAL_DECLS_PATH
@@ -203,7 +230,7 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AUnknownTypeCG.class, templateStructure.TYPE_PATH
 				+ "Unknown");
-		
+
 		nodeTemplateFileNames.put(AQuoteTypeCG.class, templateStructure.TYPE_PATH
 				+ "Quote");
 
@@ -214,13 +241,13 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ANat1BasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Nat1");
-		
+
 		nodeTemplateFileNames.put(ANatBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
-				+ "Nat");		
+				+ "Nat");
 
 		nodeTemplateFileNames.put(ARatBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Rat");
-		
+
 		nodeTemplateFileNames.put(ARealBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Real");
 
@@ -253,7 +280,7 @@ public class TemplateManager
 				+ "Token");
 
 		// Basic numeric types
-		
+
 		nodeTemplateFileNames.put(AIntNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
 				+ "Integer");
 
@@ -265,7 +292,7 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ARatNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
 				+ "Rat");
-		
+
 		nodeTemplateFileNames.put(ARealNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
 				+ "Real");
 
@@ -302,7 +329,7 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ASuperCallStmCG.class, templateStructure.STM_PATH
 				+ "SuperCall");
-		
+
 		nodeTemplateFileNames.put(ANotImplementedStmCG.class, templateStructure.STM_PATH
 				+ "NotImplemented");
 
@@ -341,23 +368,23 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ATryStmCG.class, templateStructure.STM_PATH
 				+ "Try");
-		
-		nodeTemplateFileNames.put(AStartStmCG.class, templateStructure.STM_PATH 
+
+		nodeTemplateFileNames.put(AStartStmCG.class, templateStructure.STM_PATH
 				+ "Start");
-		
-		nodeTemplateFileNames.put(AStartlistStmCG.class, templateStructure.STM_PATH 
+
+		nodeTemplateFileNames.put(AStartlistStmCG.class, templateStructure.STM_PATH
 				+ "Startlist");
 
-		nodeTemplateFileNames.put(AMapSeqUpdateStmCG.class, templateStructure.STM_PATH 
+		nodeTemplateFileNames.put(AMapSeqUpdateStmCG.class, templateStructure.STM_PATH
 				+ "MapSeqUpdate");
-		
-		nodeTemplateFileNames.put(AInvCheckStmCG.class, templateStructure.STM_PATH 
+
+		nodeTemplateFileNames.put(AInvCheckStmCG.class, templateStructure.STM_PATH
 				+ "InvCheck");
 
 		// The template used for the block statement also works here
-		nodeTemplateFileNames.put(AAtomicStmCG.class, templateStructure.STM_PATH 
+		nodeTemplateFileNames.put(AAtomicStmCG.class, templateStructure.STM_PATH
 				+ "Atomic");
-		
+
 		// Expressions
 
 		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH
@@ -377,7 +404,7 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ASuperVarExpCG.class, templateStructure.EXP_PATH
 				+ "SuperVariable");
-		
+
 		nodeTemplateFileNames.put(AInstanceofExpCG.class, templateStructure.EXP_PATH
 				+ "InstanceOf");
 
@@ -413,7 +440,7 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AExternalExpCG.class, templateStructure.EXP_PATH
 				+ "External");
-		
+
 		nodeTemplateFileNames.put(ATypeArgExpCG.class, templateStructure.EXP_PATH
 				+ "TypeArg");
 
@@ -437,15 +464,15 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ASubSeqExpCG.class, templateStructure.EXP_PATH
 				+ "SubSeq");
-		
-		nodeTemplateFileNames.put(AHistoryExpCG.class, templateStructure.EXP_PATH 
+
+		nodeTemplateFileNames.put(AHistoryExpCG.class, templateStructure.EXP_PATH
 				+ "HistoryExp");
-		
-		nodeTemplateFileNames.put(AMapSeqGetExpCG.class, templateStructure.EXP_PATH 
+
+		nodeTemplateFileNames.put(AMapSeqGetExpCG.class, templateStructure.EXP_PATH
 				+ "MapSeqGet");
-		
+
 		// Is expressions
-		
+
 		nodeTemplateFileNames.put(ABoolIsExpCG.class, templateStructure.IS_EXP_PATH
 				+ "Bool");
 
@@ -454,28 +481,28 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ANat1IsExpCG.class, templateStructure.IS_EXP_PATH
 				+ "Nat1");
-		
+
 		nodeTemplateFileNames.put(AIntIsExpCG.class, templateStructure.IS_EXP_PATH
 				+ "Int");
-		
+
 		nodeTemplateFileNames.put(ARatIsExpCG.class, templateStructure.IS_EXP_PATH
 				+ "Rat");
-		
+
 		nodeTemplateFileNames.put(ARealIsExpCG.class, templateStructure.IS_EXP_PATH
 				+ "Real");
-		
+
 		nodeTemplateFileNames.put(ACharIsExpCG.class, templateStructure.IS_EXP_PATH
 				+ "Char");
-		
+
 		nodeTemplateFileNames.put(ATokenIsExpCG.class, templateStructure.IS_EXP_PATH
 				+ "Token");
-		
+
 		nodeTemplateFileNames.put(ATupleIsExpCG.class, templateStructure.IS_EXP_PATH
 				+ "Tuple");
-		
+
 		nodeTemplateFileNames.put(AGeneralIsExpCG.class, templateStructure.IS_EXP_PATH
 				+ "General");
-		
+
 		// Quantifier expressions
 
 		nodeTemplateFileNames.put(AForAllQuantifierExpCG.class, templateStructure.QUANTIFIER_EXP_PATH
@@ -500,7 +527,7 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(APreCondRuntimeErrorExpCG.class, templateStructure.RUNTIME_ERROR_EXP_PATH
 				+ "PreCond");
-		
+
 		// Unary expressions
 
 		nodeTemplateFileNames.put(APlusUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
@@ -519,7 +546,7 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ACardUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "Len_Card");
-		
+
 		nodeTemplateFileNames.put(AElemsUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "Elems");
 
@@ -567,10 +594,10 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AMapInverseUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "MapInverse");
-		
+
 		nodeTemplateFileNames.put(ASeqToStringUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "SeqToString");
-		
+
 		nodeTemplateFileNames.put(AStringToSeqUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "StringToSeq");
 
@@ -659,13 +686,13 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(APowerNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "Power");
-		
+
 		nodeTemplateFileNames.put(ARemNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "Rem");
-		
+
 		nodeTemplateFileNames.put(AModNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
-				+ "Mod");		
-		
+				+ "Mod");
+
 		// Connective binary expressions
 
 		nodeTemplateFileNames.put(AOrBoolBinaryExpCG.class, templateStructure.BOOL_BINARY_EXP_PATH
@@ -754,7 +781,14 @@ public class TemplateManager
 	{
 		try
 		{
-			StringBuffer buffer = GeneralUtils.readFromFile(getTemplateFileRelativePath(nodeClass));
+			StringBuffer buffer;
+			if (isBase)
+			{
+				buffer = GeneralUtils.readFromFile(getTemplateFileRelativePath(nodeClass));
+			} else
+			{
+				buffer = GeneralUtils.readFromFile(getTemplateFileRelativePath(nodeClass), templateLoadRef);
+			}
 
 			if (buffer == null)
 			{
