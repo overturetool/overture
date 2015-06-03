@@ -2,14 +2,13 @@
 <?eclipse version="3.2"?>
 <plugin>
 
-  <!-- key bindings -->
-  <!--extension point="org.eclipse.ui.bindings">
-    <key commandId="org.overture.ide.plugins.poviewer.commandGeneratedPO" contextId="org.eclipse.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="Alt+P"/>
-  </extension-->
-
   <extension point="org.eclipse.ui.commands">
-    <command defaultHandler="org.overture.ide.plugins.isatrans.commands.IsaTransCommand" id="org.overture.ide.plugins.isatrans.genthycom" name="Translate to Isabelle"/>
+    <command 
+     defaultHandler="org.overture.ide.plugins.isatrans.commands.IsaTransCommand" 
+     id="org.overture.ide.plugins.isatrans.genthycom" 
+     name="Translate to Isabelle"/>
   </extension>
+  
     <extension point="org.eclipse.ui.menus">
     <menuContribution locationURI="popup:org.overture.ide.ui.VdmExplorer">
       <menu icon="icons/cview16/isa.png" id="org.overture.ide.plugins.isatrans" label="Isabelle Translation">
@@ -30,4 +29,14 @@
       </menu>
     </menuContribution>
   </extension>
+  
+  <extension point="org.eclipse.ui.bindings">
+    <key
+      commandId="org.overture.ide.plugins.isatrans.genthycom"
+      contextId="org.eclipse.ui.contexts.window"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="Ctrl+Alt+I">
+    </key>
+  </extension>
+  
 </plugin>
