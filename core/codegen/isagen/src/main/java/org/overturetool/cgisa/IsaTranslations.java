@@ -50,7 +50,7 @@ public class IsaTranslations
 	public IsaTranslations(TemplateStructure templateStructure)
 	{
 		TemplateCallable[] templateCallables = new TemplateCallable[] { new TemplateCallable(TEMPLATE_CALLABLE_NAME, this) };
-		this.mergeVisitor = new MergeVisitor(new IsaTemplateManager(templateStructure), templateCallables);
+		this.mergeVisitor = new MergeVisitor(new IsaTemplateManager(templateStructure,this.getClass()), templateCallables);
 		this.isaUtils = new IsaChecks();
 	}
 

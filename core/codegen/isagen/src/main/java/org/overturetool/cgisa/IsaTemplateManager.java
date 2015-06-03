@@ -56,9 +56,9 @@ public class IsaTemplateManager extends TemplateManager
 	private static final String INT_LIT = "IntLiteral";
 	private static final String REAL_LIT = "RealLiteral";
 
-	public IsaTemplateManager(TemplateStructure templateStructure)
+	public IsaTemplateManager(TemplateStructure templateStructure, Class<?> classRef)
 	{
-		super(templateStructure);
+		super(templateStructure,classRef);
 		initIsaNodes();
 	}
 
