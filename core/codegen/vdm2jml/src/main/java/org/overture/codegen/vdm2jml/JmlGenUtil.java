@@ -439,7 +439,7 @@ public class JmlGenUtil
 		AEqualsBinaryExpCG notNull = new AEqualsBinaryExpCG();
 		notNull.setType(new ABoolBasicTypeCG());
 		notNull.setLeft(paramExp.clone());
-		notNull.setRight(jmlGen.getJavaGen().getTransformationAssistant().consNullExp());
+		notNull.setRight(jmlGen.getJavaGen().getInfo().getExpAssistant().consNullExp());
 
 		SBinaryExpCG nullCheck = null;
 

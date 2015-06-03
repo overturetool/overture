@@ -31,6 +31,7 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
@@ -62,15 +63,18 @@ import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
+import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AGeneralIsExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntIsExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
+import org.overture.codegen.cgast.expressions.AMapSeqGetExpCG;
 import org.overture.codegen.cgast.expressions.ANat1IsExpCG;
 import org.overture.codegen.cgast.expressions.ANatIsExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARatIsExpCG;
 import org.overture.codegen.cgast.expressions.ARealIsExpCG;
@@ -91,16 +95,19 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AQuoteTypeCG;
 import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
@@ -367,6 +374,7 @@ public class ExpAssistantCG extends AssistantBase
 		return exp.getAncestor(SOperationDefinition.class) == null
 				&& exp.getAncestor(SFunctionDefinition.class) == null
 				&& exp.getAncestor(ANamedTraceDefinition.class) == null
+				&& exp.getAncestor(ATypeDefinition.class) == null
 				&& exp.getAncestor(AClassInvariantDefinition.class) == null;
 	}
 
@@ -486,6 +494,25 @@ public class ExpAssistantCG extends AssistantBase
 			return consGeneralIsExp(exp, checkedType);
 		} else
 		{
+			if(checkedType instanceof ASeqSeqTypeCG)
+			{
+				ASeqSeqTypeCG seqType = (ASeqSeqTypeCG) checkedType;
+				
+				if(seqType.getSeqOf() instanceof AUnknownTypeCG)
+				{
+					return consGeneralIsExp(exp, checkedType);
+				}
+			}
+			else if(checkedType instanceof AMapMapTypeCG)
+			{
+				AMapMapTypeCG mapType = (AMapMapTypeCG) checkedType;
+				
+				if(mapType.getFrom() instanceof AUnknownTypeCG && mapType.getTo() instanceof AUnknownTypeCG)
+				{
+					return consGeneralIsExp(exp, checkedType);
+				}
+			}
+			
 			return null;
 		}
 	}
@@ -614,5 +641,29 @@ public class ExpAssistantCG extends AssistantBase
 	public boolean isResult(String name)
 	{
 		return name != null && name.equals("RESULT");
+	}
+	
+	public SExpCG findSubject(SExpCG next)
+	{
+		while (next instanceof AFieldExpCG || next instanceof AMapSeqGetExpCG)
+		{
+			if (next instanceof AFieldExpCG)
+			{
+				next = ((AFieldExpCG) next).getObject();
+			} else if (next instanceof AMapSeqGetExpCG)
+			{
+				next = ((AMapSeqGetExpCG) next).getCol();
+			}
+		}
+		
+		return next;
+	}
+	
+	public ANullExpCG consNullExp()
+	{
+		ANullExpCG nullExp = new ANullExpCG();
+		nullExp.setType(new AUnknownTypeCG());
+
+		return nullExp;
 	}
 }

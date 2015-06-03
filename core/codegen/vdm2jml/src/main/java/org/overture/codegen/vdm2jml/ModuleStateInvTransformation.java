@@ -7,7 +7,6 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
-import org.overture.codegen.cgast.expressions.AMapSeqGetExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -45,7 +44,7 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 		// So by now we know that 1) the statement does not occur inside an atomic statement
 		// and 2) the enclosing class has an invariant
 
-		SExpCG subject = findSubject(node.getTarget());
+		SExpCG subject = jmlGen.getJavaGen().getInfo().getExpAssistant().findSubject(node.getTarget());
 
 		// Note that this case method does not have to consider
 		// state updates on the form stateComp(52) := 4
@@ -85,7 +84,7 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		SExpCG subject = findSubject(node.getCol());
+		SExpCG subject = jmlGen.getJavaGen().getInfo().getExpAssistant().findSubject(node.getCol());
 
 		if (subject instanceof SVarExpCG)
 		{
@@ -102,22 +101,6 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 			// Append the assertion just in case...
 			appendAssertion(node, consAssertStr(node));
 		}
-	}
-
-	private SExpCG findSubject(SExpCG next)
-	{
-		while (next instanceof AFieldExpCG || next instanceof AMapSeqGetExpCG)
-		{
-			if (next instanceof AFieldExpCG)
-			{
-				next = ((AFieldExpCG) next).getObject();
-			} else if (next instanceof AMapSeqGetExpCG)
-			{
-				next = ((AMapSeqGetExpCG) next).getCol();
-			}
-		}
-		
-		return next;
 	}
 
 	public void appendAssertion(SStmCG stm, String str)
