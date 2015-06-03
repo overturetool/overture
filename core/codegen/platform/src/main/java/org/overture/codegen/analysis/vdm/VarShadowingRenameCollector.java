@@ -895,9 +895,12 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 						if(def == null)
 						{
 							def = node.getAncestor(ATypeDefinition.class);
+							
+							if(def == null)
+							{
+								def = node.getAncestor(AStateDefinition.class);
+							}
 						}
-						
-						def = node.getAncestor(AStateDefinition.class);
 					}
 				}
 			}
