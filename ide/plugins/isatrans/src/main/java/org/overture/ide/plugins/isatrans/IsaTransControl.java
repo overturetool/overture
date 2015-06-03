@@ -27,7 +27,8 @@ public class IsaTransControl
 	private IVdmProject proj;
 	private Shell shell;
 
-	public IsaTransControl(IWorkbenchWindow window, IVdmProject proj, Shell shell)
+	public IsaTransControl(IWorkbenchWindow window, IVdmProject proj,
+			Shell shell)
 	{
 		this.window = window;
 		this.proj = proj;
@@ -36,58 +37,66 @@ public class IsaTransControl
 
 	public void generateTheoryFiles()
 	{
-		
+
 		preFlightCheck();
 
 		// Translate specification to Isabelle
 		DateFormat df = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-		
+
 		File isaDir = new File(new File(proj.getModelBuildPath().getOutput().getLocation().toFile(), "Isabelle"), df.format(new Date()));
 		isaDir.mkdirs();
 
 		IsaGen ig = new IsaGen();
-		
-		
+
 		try
 		{
 			List<SClassDefinition> ast = proj.getModel().getClassList();
-			List<GeneratedModule> modelTheory = ig.generateIsabelleSyntax(ast);
-			
-			String thyName = "model.thy";//FIXME compute thy name from model
-			
-			File thyFile = new File(isaDir.getPath()+File.separatorChar+thyName);
-			FileUtils.writeStringToFile(thyFile, modelTheory.get(0).getContent());
-			
+			List<GeneratedModule> modellTheoryList = ig.generateIsabelleSyntax(ast);
+
+			GeneratedModule modelTheory = modellTheoryList.get(0);
+
+			if (modelTheory.getContent().isEmpty())
+			{
+				openErrorDialog("Internal error.");
+				return;
+			}
+
+			String thyName = "model.thy";// FIXME compute thy name from model
+
+			File thyFile = new File(isaDir.getPath() + File.separatorChar
+					+ thyName);
+			FileUtils.writeStringToFile(thyFile, modelTheory.getContent());
+
 			IProject p = (IProject) proj.getAdapter(IProject.class);
 			p.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 
-			
 		} catch (Exception e)
 		{
-			showErrorMessage("Internal error.");
+			openErrorDialog("Internal error.");
 			e.printStackTrace();
 		}
-
 
 	}
 
 	private void preFlightCheck()
 	{
-		if (!VdmTypeCheckerUi.typeCheck(shell, proj)){
-			showErrorMessage("Model has errors.");
+		if (!VdmTypeCheckerUi.typeCheck(shell, proj))
+		{
+			openErrorDialog("Model has errors.");
 			return;
-		};
-		
+		}
+		;
+
 		if (!proj.getDialect().equals(Dialect.VDM_PP))
 		{
-			showErrorMessage("Only single class VDM++ models are allowed.");
+			openErrorDialog("Only single class VDM++ models are allowed.");
 			return;
 		}
 		try
 		{
 			if (proj.getModel().getClassList().size() > 1)
 			{
-				showErrorMessage("Only single class VDM++ models are allowed.");
+				openErrorDialog("Only single class VDM++ models are allowed.");
 				return;
 			}
 		} catch (NotAllowedException e)
@@ -97,7 +106,7 @@ public class IsaTransControl
 
 	}
 
-	private void showErrorMessage(String message)
+	private void openErrorDialog(String message)
 	{
 		MessageDialog.openError(window.getShell(), "VDM 2 Isabelle", "Cannot generate theory files.\n\n"
 				+ message);
