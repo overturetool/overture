@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -32,7 +31,6 @@ import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
-// TODO: remember to take optional types into account
 public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 {
 	public static final String RET_VAR_NAME_PREFIX = "ret_";
@@ -420,26 +418,7 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 				// else it could not be updated.
 				Logger.getLog().printErrorln("Expected collection to be a variable expression at this point. Got: "
 						+ col + " in '" + this.getClass().getSimpleName() + "'");
-
-				TransAssistantCG trans = jmlGen.getJavaGen().getTransformationAssistant();
-				DeclAssistantCG declAs = jmlGen.getJavaGen().getInfo().getDeclAssistant();
-
-				STypeCG type = col.getType();
-
-				ITempVarGen nameGen = jmlGen.getJavaGen().getInfo().getTempVarNameGen();
-				name = nameGen.nextVarName(MAP_SEQ_NAME_PREFIX);
-				AIdentifierPatternCG id = trans.consIdPattern(name);
-
-				AVarDeclCG varDecl = declAs.consLocalVarDecl(type, id, col.clone());
-				AIdentifierVarExpCG varExp = trans.consIdentifierVar(name, type.clone());
-
-				trans.replaceNodeWith(col, varExp);
-
-				ABlockStmCG replBlock = new ABlockStmCG();
-
-				trans.replaceNodeWith(node, replBlock);
-				replBlock.getLocalDefs().add(varDecl);
-				replBlock.getStatements().add(node);
+				return;
 			}
 
 			injectAssertion(node, invTypes, enclosingClass.getName(), name, true);
