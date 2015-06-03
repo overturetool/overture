@@ -56,7 +56,6 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -415,7 +414,7 @@ public class DeclAssistantCG extends AssistantBase
 			localDecl.setExp(expAssistant.getDefaultBoolValue());
 		} else
 		{
-			localDecl.setExp(new ANullExpCG());
+			localDecl.setExp(assistantManager.getExpAssistant().consNullExp());
 		}
 	}
 

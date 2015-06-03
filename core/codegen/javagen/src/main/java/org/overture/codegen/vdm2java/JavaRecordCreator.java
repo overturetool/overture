@@ -37,7 +37,6 @@ import org.overture.codegen.cgast.expressions.AExternalExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
@@ -115,7 +114,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 				checkedAssignment.setType(new ABoolBasicTypeCG());
 				checkedAssignment.setCondition(javaFormat.getJavaFormatAssistant().consParamNotNullComp(varExp));
 				checkedAssignment.setTrueValue(varExp);
-				checkedAssignment.setFalseValue(new ANullExpCG());
+				checkedAssignment.setFalseValue(javaFormat.getIrInfo().getExpAssistant().consNullExp());
 				assignment.setExp(checkedAssignment);
 			} else
 			{

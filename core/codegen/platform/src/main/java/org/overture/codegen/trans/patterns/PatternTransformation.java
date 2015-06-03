@@ -48,7 +48,6 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.APatternMatchRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
@@ -616,10 +615,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			return consSimplePatternCheck(declarePatternVar, intPattern, intLit, patternData, actualValue);
 		} else if (pattern instanceof ANullPatternCG)
 		{
-			ANullExpCG nullExp = new ANullExpCG();
-			nullExp.setType(new AUnknownTypeCG());
-
-			return consSimplePatternCheck(declarePatternVar, pattern, nullExp, patternData, actualValue);
+			return consSimplePatternCheck(declarePatternVar, pattern, info.getExpAssistant().consNullExp(), patternData, actualValue);
 		} else if (pattern instanceof AQuotePatternCG)
 		{
 			AQuotePatternCG quotePattern = (AQuotePatternCG) pattern;

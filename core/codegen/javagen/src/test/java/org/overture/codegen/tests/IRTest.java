@@ -12,7 +12,6 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ACatchClauseDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ATypeArgExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
@@ -112,7 +111,7 @@ public class IRTest
 		id.setName("x");
 		
 		AVarDeclCG varDecl = javaCodeGen.getInfo().getDeclAssistant().
-				consLocalVarDecl(new ARealNumericBasicTypeCG(), id, new ANullExpCG());
+				consLocalVarDecl(new ARealNumericBasicTypeCG(), id, javaCodeGen.getInfo().getExpAssistant().consNullExp());
 		varDecl.setFinal(true);
 		
 		String expected = "final Number x = null;";

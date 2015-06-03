@@ -10,7 +10,6 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
@@ -57,7 +56,7 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 		for (SPatternCG id : patterns)
 		{
 			AVarDeclCG decl = transAssistant.getInfo().getDeclAssistant().
-					consLocalVarDecl(setType.getSetOf().clone(), id.clone(), new ANullExpCG());
+					consLocalVarDecl(setType.getSetOf().clone(), id.clone(), transAssistant.getInfo().getExpAssistant().consNullExp());
 			decl.setFinal(true);
 			decls.add(decl);
 		}

@@ -48,7 +48,6 @@ import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
@@ -64,7 +63,6 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
@@ -249,14 +247,6 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		return info.getDeclAssistant().consLocalVarDecl(getSetTypeCloned(set),
 				consIdPattern(setBindName), set.clone());
-	}
-
-	public ANullExpCG consNullExp()
-	{
-		ANullExpCG nullExp = new ANullExpCG();
-		nullExp.setType(new AUnknownTypeCG());
-
-		return nullExp;
 	}
 
 	public AVarDeclCG consDecl(String varName, STypeCG type, SExpCG exp)

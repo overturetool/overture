@@ -51,7 +51,6 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARecordModExpCG;
 import org.overture.codegen.cgast.expressions.ARecordModifierCG;
@@ -143,7 +142,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		String resultVarName = info.getTempVarNameGen().nextVarName(ternaryIfExpPrefix);
 		
-		AVarDeclCG resultDecl = transformationAssistant.consDecl(resultVarName, node.getType().clone(), new ANullExpCG());
+		AVarDeclCG resultDecl = transformationAssistant.consDecl(resultVarName, node.getType().clone(), info.getExpAssistant().consNullExp());
 		AIdentifierVarExpCG resultVar = transformationAssistant.consIdentifierVar(resultVarName, resultDecl.getType().clone());
 		
 		SExpCG condition = node.getCondition();
@@ -349,13 +348,13 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		if (transformationAssistant.hasEmptySet(binding))
 		{
 			transformationAssistant.cleanUpBinding(binding);
-			letBeStResult = new ANullExpCG();
+			letBeStResult = info.getExpAssistant().consNullExp();
 		} else
 		{
 			String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
 			SExpCG value = node.getValue();
 
-			AVarDeclCG resultDecl = transformationAssistant.consDecl(var, value.getType().clone(), transformationAssistant.consNullExp());
+			AVarDeclCG resultDecl = transformationAssistant.consDecl(var, value.getType().clone(), info.getExpAssistant().consNullExp());
 			outerBlock.getLocalDefs().add(resultDecl);
 			
 			AAssignToExpStmCG setLetBeStResult = new AAssignToExpStmCG();

@@ -11,7 +11,6 @@ import org.overture.codegen.cgast.expressions.AExternalExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ASuperVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
@@ -105,7 +104,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		field.setStatic(true);
 		field.setName(INSTANCE_FIELD);
 		field.setType(quoteClassType);
-		field.setInitial(new ANullExpCG());
+		field.setInitial(info.getExpAssistant().consNullExp());
 		
 		return field;
 	}
@@ -164,7 +163,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		AEqualsBinaryExpCG nullCompare = new AEqualsBinaryExpCG();
 		nullCompare.setType(new ABoolBasicTypeCG());
 		nullCompare.setLeft(instanceVar);
-		nullCompare.setRight(new ANullExpCG());
+		nullCompare.setRight(info.getExpAssistant().consNullExp());
 		
 		AIdentifierVarExpCG instanceId = transformationAssistant.consIdentifierVar(INSTANCE_FIELD,
 				quoteClassType.clone());
