@@ -12,7 +12,7 @@ public class Entry {
     public static Object Run() {
         Entry e = new Entry();
 
-        return ((Object) Utils.get(((VDMSeq) Utils.get(((VDMSeq) e.xs), 1L)), 1L));
+        return Utils.get(((VDMSeq) Utils.get(((VDMSeq) e.xs), 1L)), 1L);
     }
 
     public String toString() {

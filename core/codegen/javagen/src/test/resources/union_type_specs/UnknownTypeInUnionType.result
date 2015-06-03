@@ -33,7 +33,7 @@ public class Entry {
 
         Object v = apply_1;
 
-        return ((Object) v);
+        return v;
     }
 
     public String toString() {
