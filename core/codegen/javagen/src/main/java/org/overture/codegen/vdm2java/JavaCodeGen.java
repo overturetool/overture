@@ -270,9 +270,12 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 				statuses.add(status);
 			}
 		}
+
+		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
 		
 		// Event notification
 		statuses = initialIrEvent(statuses);
+		statuses = filter(statuses, generated);
 		
 		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
 		List<IRStatus<org.overture.codegen.cgast.INode>> modulesAsNodes = IRStatus.extract(moduleStatuses);
@@ -311,7 +314,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		javaFormat.setClasses(classes);
 
 		List<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
-		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
 
 		for (IRStatus<AClassDeclCG> status : classStatuses)
 		{
@@ -352,7 +354,8 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		
 		// Event notification
 		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), AClassDeclCG.class);
-
+		canBeGenerated = filter(canBeGenerated, generated);
+		
 		List<String> skipping = new LinkedList<String>();
 
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
@@ -443,6 +446,26 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		data.setWarnings(warnings);
 
 		return data;
+	}
+
+	private <T extends org.overture.codegen.cgast.INode> List<IRStatus<T>> filter(
+			List<IRStatus<T>> statuses, List<GeneratedModule> generated)
+	{
+		List<IRStatus<T>> filtered = new LinkedList<IRStatus<T>>();
+		
+		for(IRStatus<T> status : statuses)
+		{
+			if(status.canBeGenerated())
+			{
+				filtered.add(status);
+			}
+			else
+			{
+				generated.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>()));
+			}
+		}
+		
+		return filtered;
 	}
 
 	private void handleOldNames(List<? extends INode> ast) throws AnalysisException
