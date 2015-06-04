@@ -37,6 +37,7 @@ import org.overture.codegen.vdm2java.JavaFormat;
 
 public class JmlGenUtil
 {
+	private static final String TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG = "The Java code generator does not support checking of this type";
 	private JmlGenerator jmlGen;
 
 	public JmlGenUtil(JmlGenerator jmlGen)
@@ -340,11 +341,12 @@ public class JmlGenUtil
 		return method;
 	}
 	
-	public AIfStmCG consDynamicTypeCheck(AMethodDeclCG method, ANamedTypeDeclCG namedTypeDecl)
+	public AIfStmCG consDynamicTypeCheck(IRStatus<AClassDeclCG> status, AMethodDeclCG method,
+			ANamedTypeDeclCG namedTypeDecl)
 	{
 		AIdentifierVarExpCG paramExp = getInvParamVar(method);
-		
-		if(paramExp == null)
+
+		if (paramExp == null)
 		{
 			return null;
 		}
@@ -370,12 +372,14 @@ public class JmlGenUtil
 		// matches one of the leaf types, e.g.
 		// Utils.is_char(n) || Utils.is_nat(n)
 		SExpCG typeCond = null;
-		
+
 		ExpAssistantCG expAssist = jmlGen.getJavaGen().getInfo().getExpAssistant();
 
 		if (leafTypes.size() == 1)
 		{
-			STypeCG typeCg = leafTypes.get(0).toIrType(jmlGen.getJavaGen().getInfo());
+			LeafTypeInfo onlyLeafType = leafTypes.get(0);
+
+			STypeCG typeCg = onlyLeafType.toIrType(jmlGen.getJavaGen().getInfo());
 
 			if (typeCg == null)
 			{
@@ -383,48 +387,83 @@ public class JmlGenUtil
 			}
 
 			typeCond = expAssist.consIsExp(paramExp, typeCg);
+
+			if (typeCond == null)
+			{
+				status.getUnsupportedInIr().add(new VdmNodeInfo(onlyLeafType.getType(), TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
+				return null;
+			}
 		} else
 		{
 			// There are two or more leaf types
-			STypeCG typeCg = leafTypes.get(0).toIrType(jmlGen.getJavaGen().getInfo());
+
+			LeafTypeInfo currentLeafType = leafTypes.get(0);
+			STypeCG typeCg = currentLeafType.toIrType(jmlGen.getJavaGen().getInfo());
 
 			if (typeCg == null)
 			{
 				return null;
 			}
 
+			typeCond = expAssist.consIsExp(paramExp, typeCg);
+
+			if (typeCond == null)
+			{
+				status.getUnsupportedInIr().add(new VdmNodeInfo(currentLeafType.getType(), TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
+				return null;
+			}
+
 			AOrBoolBinaryExpCG topOr = new AOrBoolBinaryExpCG();
 			topOr.setType(new ABoolBasicTypeCG());
-			topOr.setLeft(expAssist.consIsExp(paramExp, typeCg));
+			topOr.setLeft(typeCond);
 
 			AOrBoolBinaryExpCG next = topOr;
 
 			// Iterate all leaf types - except for the first and last ones
 			for (int i = 1; i < leafTypes.size() - 1; i++)
 			{
-				typeCg = leafTypes.get(i).toIrType(jmlGen.getJavaGen().getInfo());
+				currentLeafType = leafTypes.get(i);
+				typeCg = currentLeafType.toIrType(jmlGen.getJavaGen().getInfo());
 
 				if (typeCg == null)
 				{
 					return null;
 				}
 
+				typeCond = expAssist.consIsExp(paramExp, typeCg);
+
+				if (typeCond == null)
+				{
+					status.getUnsupportedInIr().add(new VdmNodeInfo(currentLeafType.getType(), TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
+					return null;
+				}
+
 				AOrBoolBinaryExpCG tmp = new AOrBoolBinaryExpCG();
 				tmp.setType(new ABoolBasicTypeCG());
-				tmp.setLeft(expAssist.consIsExp(paramExp, typeCg));
+				tmp.setLeft(typeCond);
 
 				next.setRight(tmp);
 				next = tmp;
 			}
+			
+			currentLeafType = leafTypes.get(leafTypes.size() - 1);
 
-			typeCg = leafTypes.get(leafTypes.size() - 1).toIrType(jmlGen.getJavaGen().getInfo());
+			typeCg = currentLeafType.toIrType(jmlGen.getJavaGen().getInfo());
 
 			if (typeCg == null)
 			{
 				return null;
 			}
 
-			next.setRight(expAssist.consIsExp(paramExp, typeCg));
+			typeCond = expAssist.consIsExp(paramExp, typeCg);
+
+			if (typeCond == null)
+			{
+				status.getUnsupportedInIr().add(new VdmNodeInfo(currentLeafType.getType(), TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
+				return null;
+			}
+
+			next.setRight(typeCond);
 
 			typeCond = topOr;
 		}

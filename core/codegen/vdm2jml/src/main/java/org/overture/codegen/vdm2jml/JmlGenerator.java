@@ -198,7 +198,7 @@ public class JmlGenerator implements IREventObserver
 			// 2) the value must meet the invariant predicate 
 			//
 			// Wrt. 1) a dynamic type check has to be added to the invariant method
-			adjustNamedTypeInvFuncs(clazz);
+			adjustNamedTypeInvFuncs(status);
 
 			// Note that the methods contained in clazz.getMethod() include
 			// pre post and invariant methods
@@ -487,8 +487,10 @@ public class JmlGenerator implements IREventObserver
 		}
 	}
 	
-	public void adjustNamedTypeInvFuncs(AClassDeclCG clazz)
+	public void adjustNamedTypeInvFuncs(IRStatus<AClassDeclCG> status)
 	{
+		AClassDeclCG clazz = status.getIrNode();
+		
 		for (ATypeDeclCG typeDecl : clazz.getTypeDecls())
 		{
 			if (typeDecl.getDecl() instanceof ANamedTypeDeclCG)
@@ -533,7 +535,12 @@ public class JmlGenerator implements IREventObserver
 				// invariant checks and stack-overflow: inv_C(java.lang.Object)"
 				annotator.makeHelper(method);
 				
-				AIfStmCG dynTypeCheck = util.consDynamicTypeCheck(method, namedTypeDecl);
+				AIfStmCG dynTypeCheck = util.consDynamicTypeCheck(status, method, namedTypeDecl);
+				
+				if(dynTypeCheck == null)
+				{
+					continue;
+				}
 				
 				ABlockStmCG declStmBlock = new ABlockStmCG();
 				
@@ -553,11 +560,6 @@ public class JmlGenerator implements IREventObserver
 					AVarDeclCG decl = javaGen.getInfo().getDeclAssistant().consLocalVarDecl(invParamCopy.getType(), invParamCopy.getPattern(), cast);
 					declStmBlock.setScoped(false);
 					declStmBlock.getLocalDefs().add(decl);
-				}
-				
-				if(dynTypeCheck == null)
-				{
-					continue;
 				}
 				
 				SStmCG body = method.getBody();
