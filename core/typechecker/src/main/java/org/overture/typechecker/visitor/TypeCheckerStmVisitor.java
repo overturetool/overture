@@ -105,6 +105,7 @@ import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.PublicClassEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
 public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
@@ -141,21 +142,9 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		node.setClassDefinition(question.env.findClassDefinition());
 		node.setStateDefinition(question.env.findStateDefinition());
-
-		PDefinition encl = question.env.getEnclosingDefinition();
-
-		if (encl != null)
-		{
-			if (encl instanceof AExplicitOperationDefinition)
-			{
-				AExplicitOperationDefinition op = (AExplicitOperationDefinition) encl;
-				node.setInConstructor(op.getIsConstructor());
-			} else if (encl instanceof AImplicitOperationDefinition)
-			{
-				AImplicitOperationDefinition op = (AImplicitOperationDefinition) encl;
-				node.setInConstructor(op.getIsConstructor());
-			}
-		}
+		
+		AClassTypeAssistantTC assist = question.assistantFactory.createAClassTypeAssistant();
+		node.setInConstructor(assist.inConstructor(question.env));
 
 		if (node.getInConstructor())
 		{
@@ -344,6 +333,16 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		List<PType> atypes = question.assistantFactory.createACallObjectStatementAssistant().getArgTypes(node.getArgs(), THIS, question);
 		node.getField().setTypeQualifier(atypes);
 		PDefinition fdef = classenv.findName(node.getField(), question.scope);
+		
+		AClassTypeAssistantTC assist = question.assistantFactory.createAClassTypeAssistant();
+
+		if (assist.isConstructor(fdef) && !assist.inConstructor(question.env))
+		{
+			TypeCheckerErrors.report(3337, "Cannot call a constructor from here", node.getLocation(), node);
+    		node.setType(AstFactory.newAUnknownType(node.getLocation()));
+    		return node.getType();
+		}
+
 
 		// Special code for the deploy method of CPU
 
@@ -472,6 +471,15 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				node.setType(AstFactory.newAUnknownType(node.getLocation()));
 				return node.getType();
 			}
+		}
+		
+		AClassTypeAssistantTC assist = question.assistantFactory.createAClassTypeAssistant();
+
+		if (assist.isConstructor(opdef) && !assist.inConstructor(question.env))
+		{
+			TypeCheckerErrors.report(3337, "Cannot call a constructor from here", node.getLocation(), node);
+    		node.setType(AstFactory.newAUnknownType(node.getLocation()));
+    		return node.getType();
 		}
 
 		if (!question.assistantFactory.createPDefinitionAssistant().isStatic(opdef)

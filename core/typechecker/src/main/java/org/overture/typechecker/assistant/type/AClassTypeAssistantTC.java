@@ -22,6 +22,9 @@
 package org.overture.typechecker.assistant.type;
 
 import org.overture.ast.assistant.IAstAssistant;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -29,6 +32,7 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
+import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AClassTypeAssistantTC implements IAstAssistant
@@ -61,4 +65,42 @@ public class AClassTypeAssistantTC implements IAstAssistant
 		return af.createSClassDefinitionAssistant().hasSupertype(sclass.getClassdef(), other);
 	}
 
+	/**
+	 * Test whether a definition is a class constructor.
+	 */
+	public boolean isConstructor(PDefinition def)
+	{
+		if (def instanceof AExplicitOperationDefinition)
+		{
+			AExplicitOperationDefinition op = (AExplicitOperationDefinition)def;
+			return op.getIsConstructor();
+		}
+		else if (def instanceof AImplicitOperationDefinition)
+		{
+			AImplicitOperationDefinition op = (AImplicitOperationDefinition)def;
+			return op.getIsConstructor();
+		}
+		else if (def instanceof AInheritedDefinition)
+		{
+			AInheritedDefinition op = (AInheritedDefinition)def;
+			return isConstructor(op.getSuperdef());
+		}
+		
+		return false;
+	}
+
+	/**
+	 * Test whether the calling environment indicates that we are within a constructor.
+	 */
+	public boolean inConstructor(Environment env)
+	{
+		PDefinition encl = env.getEnclosingDefinition();
+	
+		if (encl != null)
+		{
+			return isConstructor(encl);
+		}
+		
+		return false;
+	}
 }

@@ -710,9 +710,10 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				node.setIsConstructor(true);
 				node.getClassDefinition().setHasContructors(true);
 
-				if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()))
+				if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()) ||
+					question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
 				{
-					TypeCheckerErrors.report(3286, "Constructor cannot be 'async'", node.getLocation(), node);
+					TypeCheckerErrors.report(3286, "Constructor cannot be 'async' or 'static'", node.getLocation(), node);
 				}
 
 				if (question.assistantFactory.createPTypeAssistant().isClass(((AOperationType) node.getType()).getResult()))
@@ -948,9 +949,10 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				node.setIsConstructor(true);
 				node.getClassDefinition().setHasContructors(true);
 
-				if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()))
+				if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()) ||
+					question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
 				{
-					TypeCheckerErrors.report(3286, "Constructor cannot be 'async'", node.getLocation(), node);
+					TypeCheckerErrors.report(3286, "Constructor cannot be 'async' or 'static'", node.getLocation(), node);
 				}
 
 				if (question.assistantFactory.createPTypeAssistant().isClass(((AOperationType) node.getType()).getResult()))
