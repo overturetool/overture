@@ -705,11 +705,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 			}
 
-			if (node.getName().getName().equals(node.getClassDefinition().getName().getName()))
+			if (node.getIsConstructor())
 			{
-				node.setIsConstructor(true);
-				node.getClassDefinition().setHasContructors(true);
-
 				if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()) ||
 					question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
 				{
@@ -943,12 +940,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (question.env.isVDMPP())
 		{
-			if (node.getName().getName().equals(node.getClassDefinition().getName().getName()))
+			if (node.getIsConstructor())
 			{
-
-				node.setIsConstructor(true);
-				node.getClassDefinition().setHasContructors(true);
-
 				if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()) ||
 					question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
 				{
