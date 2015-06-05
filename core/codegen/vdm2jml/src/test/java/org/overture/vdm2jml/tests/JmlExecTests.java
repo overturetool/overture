@@ -10,6 +10,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
@@ -79,7 +81,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 
 			compileJmlJava();
 
-			String actualRes = execJmlJava().toString().trim();
+			String actualRes = processResultStr(execJmlJava().toString());
 
 			if (Properties.recordTestResults)
 			{
@@ -152,6 +154,8 @@ public class JmlExecTests extends OpenJmlValidationBase
 
 	private void storeJmlOutput(String resultStr)
 	{
+		resultStr = processResultStr(resultStr);
+		
 		File resultFile = getResultFile();
 
 		PrintWriter printWriter = null;
@@ -175,6 +179,33 @@ public class JmlExecTests extends OpenJmlValidationBase
 				printWriter.close();
 			}
 		}
+	}
+	
+	private String processResultStr(String resultStr)
+	{
+		resultStr = resultStr.trim();
+		resultStr = resultStr.replaceAll("\r", "");
+
+		String[] lines = resultStr.split("\n");
+		StringBuilder sb = new StringBuilder();
+		Pattern pattern = Pattern.compile("(?m)^.*?[^a-zA-Z]([a-zA-Z]+\\.java:[0-9]+:.*?)(:|$)");
+		
+		for(String line : lines)
+		{
+			Matcher matcher = pattern.matcher(line);
+			
+			if(matcher.find())
+			{
+				sb.append(matcher.group(1));
+			}
+			else
+			{
+				sb.append(line);
+			}
+			sb.append('\n');
+		}
+		
+		return sb.toString().trim();
 	}
 
 	private void createExecEntryPoint()
