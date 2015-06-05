@@ -1,8 +1,8 @@
 "Before breaking record invariant"
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecTypeDefInv/project/Entrytypes/Rec.java:14: JML invariant is false on leaving method project.Entrytypes.Rec.Rec(java.lang.Number,java.lang.Number)
+Rec.java:14: JML invariant is false on leaving method project.Entrytypes.Rec.Rec(java.lang.Number,java.lang.Number)
     public Rec(final Number _x, final Number _y) {
            ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecTypeDefInv/project/Entrytypes/Rec.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecTypeDefInv/project/Entrytypes/Rec.java:14: 
+Rec.java:13: Associated declaration
     //@ public instance invariant inv_Rec(x,y);
                         ^
 "After breaking record invariant"

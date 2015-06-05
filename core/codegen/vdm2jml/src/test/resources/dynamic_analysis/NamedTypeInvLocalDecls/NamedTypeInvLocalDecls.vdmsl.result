@@ -1,5 +1,5 @@
 "Before breaking named type invariant"
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvLocalDecls/project/Entry.java:26: JML assertion is false
+Entry.java:26: JML assertion is false
             //@ assert inv_Entry_No(notLarge) && (inv_Entry_Even(notLarge) || inv_Entry_Large(notLarge));
                 ^
 "After breaking named type invariant"

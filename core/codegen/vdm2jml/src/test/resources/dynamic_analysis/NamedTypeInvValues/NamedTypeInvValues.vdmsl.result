@@ -1,18 +1,18 @@
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvValues/project/Entry.java:9: JML static initialization may not be correct: invariant is false
+Entry.java:9: JML static initialization may not be correct
 public class Entry {
        ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvValues/project/Entry.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvValues/project/Entry.java:9: 
+Entry.java:13: Associated declaration
     //@ public static invariant inv_Entry_CN(fBreak) && (inv_Entry_C(fBreak) || inv_Entry_N(fBreak));
                       ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvValues/Main.java:7: JML invariant is false on entering method project.Entry.Run() from Main.main(java.lang.String[])
+Main.java:7: JML invariant is false on entering method project.Entry.Run() from Main.main(java.lang.String[])
 			project.Entry.Run();
 			                 ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvValues/project/Entry.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvValues/Main.java:7: 
+Entry.java:13: Associated declaration
     //@ public static invariant inv_Entry_CN(fBreak) && (inv_Entry_C(fBreak) || inv_Entry_N(fBreak));
                       ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvValues/project/Entry.java:16: JML invariant is false on leaving method project.Entry.Run()
+Entry.java:16: JML invariant is false on leaving method project.Entry.Run()
     public static Object Run() {
                          ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvValues/project/Entry.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvValues/project/Entry.java:16: 
+Entry.java:13: Associated declaration
     //@ public static invariant inv_Entry_CN(fBreak) && (inv_Entry_C(fBreak) || inv_Entry_N(fBreak));
                       ^

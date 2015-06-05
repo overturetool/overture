@@ -11,7 +11,7 @@ public class Entry {
         Object e = null;
 
         //@ assert inv_Entry_N(e) && (e == null || inv_Entry_X(e) || inv_Entry_Y(e));
-        return ((Object) e);
+        return e;
     }
 
     public String toString() {

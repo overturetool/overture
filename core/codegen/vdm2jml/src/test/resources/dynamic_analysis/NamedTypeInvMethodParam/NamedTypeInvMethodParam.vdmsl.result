@@ -1,4 +1,4 @@
 "Breaking named type invariant for method parameter"
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvMethodParam/project/Entry.java:39: JML assertion is false
+Entry.java:39: JML assertion is false
         //@ assert inv_Entry_Even(c);
             ^
