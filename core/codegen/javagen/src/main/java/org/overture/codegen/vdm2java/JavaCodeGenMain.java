@@ -58,6 +58,7 @@ public class JavaCodeGenMain
 	public static final String PACKAGE_ARG = "-package";
 	public static final String OUTPUT_ARG = "-output";
 	public static final String VDM_ENTRY_EXP = "-entry";
+	public static final String NO_CODE_FORMAT = "-nocodeformat";
 	
 	public static void main(String[] args)
 	{
@@ -170,6 +171,10 @@ public class JavaCodeGenMain
 				{
 					javaSettings.setVdmEntryExp(i.next());
 				}
+			}
+			else if(arg.equals(NO_CODE_FORMAT))
+			{
+				javaSettings.setFormatCode(false);
 			}
 			else
 			{
