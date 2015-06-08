@@ -1,4 +1,4 @@
-The output of the VDM++ to Java code generator can be imported directly
+The output of the VDM to Java code generator can be imported directly
 into Eclipse as an Eclipse project. The generated code is output in the
 generated/java project folder.
 
