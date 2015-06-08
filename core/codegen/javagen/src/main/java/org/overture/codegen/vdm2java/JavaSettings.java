@@ -31,6 +31,7 @@ public class JavaSettings
 	private String vdmEntryExp;
 	private String javaRootPackage;
 	private boolean genRecsAsInnerClasses;
+	private boolean formatCode;
 	
 	public JavaSettings()
 	{
@@ -39,6 +40,7 @@ public class JavaSettings
 		this.vdmEntryExp = null;
 		this.javaRootPackage = null;
 		this.genRecsAsInnerClasses = true;
+		this.formatCode = true;
 	}
 	
 	public List<String> getModulesToSkip()
@@ -95,5 +97,15 @@ public class JavaSettings
 	public void setGenRecsAsInnerClasses(boolean genRecsAsInnerClasses)
 	{
 		this.genRecsAsInnerClasses = genRecsAsInnerClasses;
+	}
+
+	public boolean formatCode()
+	{
+		return formatCode;
+	}
+
+	public void setFormatCode(boolean formatCode)
+	{
+		this.formatCode = formatCode;
 	}
 }

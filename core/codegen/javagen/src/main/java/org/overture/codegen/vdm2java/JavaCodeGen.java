@@ -185,9 +185,13 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 				StringWriter writer = new StringWriter();
 				quoteDecl.apply(javaFormat.getMergeVisitor(), writer);
 				String code = writer.toString();
-				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
 
-				modules.add(new GeneratedModule(quoteNameVdm, quoteDecl, formattedJavaCode));
+				if(getJavaSettings().formatCode())
+				{
+					code = JavaCodeGenUtil.formatJavaCode(code);
+				}
+
+				modules.add(new GeneratedModule(quoteNameVdm, quoteDecl, code));
 			}
 
 			return modules;
@@ -389,8 +393,14 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 						generated.add(new GeneratedModule(className, new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang()));
 					} else
 					{
-						String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
-						GeneratedModule generatedModule = new GeneratedModule(className, classCg, formattedJavaCode);
+						String code = writer.toString();
+						
+						if(getJavaSettings().formatCode())
+						{
+							code = JavaCodeGenUtil.formatJavaCode(code); 
+						}
+						
+						GeneratedModule generatedModule = new GeneratedModule(className, classCg, code);
 						generatedModule.setTransformationWarnings(status.getTransformationWarnings());
 						generated.add(generatedModule);
 					}
