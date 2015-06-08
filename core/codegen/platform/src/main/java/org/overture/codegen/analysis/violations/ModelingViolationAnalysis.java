@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SNumericBinaryBase;
@@ -40,6 +41,13 @@ public class ModelingViolationAnalysis extends ViolationAnalysis
 		super(assistantManager);
 	}
 
+	@Override
+	public void caseARenamedDefinition(ARenamedDefinition node)
+			throws AnalysisException
+	{
+		addViolation(new Violation("Renaming of imported definitions is not currently supported", node.getLocation(), assistantManager.getLocationAssistant()));
+	}
+	
 	@Override
 	public void defaultInINode(INode node) throws AnalysisException
 	{
