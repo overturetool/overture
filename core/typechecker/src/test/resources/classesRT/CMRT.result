@@ -5,7 +5,6 @@
 <message column="12" line="75" message="Class name IO not in scope" messageType="error" number="3133" resource="CMRT"/>
 <message column="6" line="75" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CMRT"/>
 <message column="13" line="40" message="Class name IO not in scope" messageType="error" number="3133" resource="CMRT"/>
-<message column="8" line="92" message="Constructor operation must have return type Environment" messageType="error" number="3026" resource="CMRT"/>
 <message column="6" line="75" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CMRT"/>
 <message column="3" line="460" message="Member handleEvent(EventId, FlareType, Angle, Time, Time) is not in scope" messageType="error" number="3209" resource="CMRT"/>
 <message column="5" line="740" message="Operation 'canObserve' cannot be called from a function" messageType="error" number="3300" resource="CMRT"/>

@@ -705,14 +705,12 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 			}
 
-			if (node.getName().getName().equals(node.getClassDefinition().getName().getName()))
+			if (node.getIsConstructor())
 			{
-				node.setIsConstructor(true);
-				node.getClassDefinition().setHasContructors(true);
-
-				if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()))
+				if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()) ||
+					question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
 				{
-					TypeCheckerErrors.report(3286, "Constructor cannot be 'async'", node.getLocation(), node);
+					TypeCheckerErrors.report(3286, "Constructor cannot be 'async' or 'static'", node.getLocation(), node);
 				}
 
 				if (question.assistantFactory.createPTypeAssistant().isClass(((AOperationType) node.getType()).getResult()))
@@ -942,15 +940,12 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (question.env.isVDMPP())
 		{
-			if (node.getName().getName().equals(node.getClassDefinition().getName().getName()))
+			if (node.getIsConstructor())
 			{
-
-				node.setIsConstructor(true);
-				node.getClassDefinition().setHasContructors(true);
-
-				if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()))
+				if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()) ||
+					question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
 				{
-					TypeCheckerErrors.report(3286, "Constructor cannot be 'async'", node.getLocation(), node);
+					TypeCheckerErrors.report(3286, "Constructor cannot be 'async' or 'static'", node.getLocation(), node);
 				}
 
 				if (question.assistantFactory.createPTypeAssistant().isClass(((AOperationType) node.getType()).getResult()))

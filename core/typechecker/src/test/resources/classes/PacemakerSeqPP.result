@@ -5,7 +5,6 @@
 <message column="6" line="55" message="Unable to resolve type name 'IO'" messageType="error" number="3427" resource="PacemakerSeqPP"/>
 <message column="12" line="55" message="Class name IO not in scope" messageType="error" number="3133" resource="PacemakerSeqPP"/>
 <message column="6" line="55" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="PacemakerSeqPP"/>
-<message column="1" line="95" message="Constructor operation must have return type Environment" messageType="error" number="3026" resource="PacemakerSeqPP"/>
 <message column="6" line="55" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="PacemakerSeqPP"/>
 <message column="9" line="566" message="Operation '(World`timerRef.GetTime)' cannot be called from a function" messageType="error" number="3300" resource="PacemakerSeqPP"/>
 <message column="5" line="575" message="Member handleEvent(Pulse, Chamber, Time) is not in scope" messageType="error" number="3209" resource="PacemakerSeqPP"/>

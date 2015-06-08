@@ -152,6 +152,12 @@ public class DefinitionTypeResolver extends
 		if (question.question.env.isVDMPP())
 		{
 			node.getName().setTypeQualifier(((AOperationType) node.getType()).getParameters());
+
+			if (node.getName().getName().equals(node.getClassDefinition().getName().getName()))
+			{
+				node.setIsConstructor(true);
+				node.getClassDefinition().setHasContructors(true);
+			}
 		}
 
 		if (node.getPrecondition() != null)
@@ -230,12 +236,17 @@ public class DefinitionTypeResolver extends
 		if (node.getResult() != null)
 		{
 			af.createAPatternTypePairAssistant().typeResolve(node.getResult(), question.rootVisitor, question.question);
-
 		}
 
 		if (question.question.env.isVDMPP())
 		{
 			node.getName().setTypeQualifier(((AOperationType) node.getType()).getParameters());
+
+			if (node.getName().getName().equals(node.getClassDefinition().getName().getName()))
+			{
+				node.setIsConstructor(true);
+				node.getClassDefinition().setHasContructors(true);
+			}
 		}
 
 		if (node.getPrecondition() != null)
