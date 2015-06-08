@@ -21,6 +21,9 @@
  */
 package org.overture.codegen.ir;
 
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Settings;
+
 public class IRSettings
 {
 	private boolean charSeqAsString;
@@ -38,7 +41,7 @@ public class IRSettings
 
 	public boolean generateConc()
 	{
-		return generateConc;
+		return generateConc && (Settings.dialect == Dialect.VDM_PP || Settings.dialect == Dialect.VDM_RT);
 	}
 	
 	public void setGenerateConc(boolean generateConc)
