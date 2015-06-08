@@ -54,6 +54,7 @@ import org.osgi.service.prefs.Preferences;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.LocationAssistantCG;
@@ -104,7 +105,7 @@ public class PluginVdm2JavaUtil
 
 	public static boolean isSupportedVdmDialect(IVdmProject vdmProject)
 	{
-		return vdmProject.getDialect() == Dialect.VDM_PP;
+		return vdmProject.getDialect() == Dialect.VDM_PP || vdmProject.getDialect() == Dialect.VDM_SL;
 	}
 
 	public static IVdmProject getVdmProject(ExecutionEvent event)
@@ -129,26 +130,48 @@ public class PluginVdm2JavaUtil
 
 		return vdmProject;
 	}
-
-	public static List<SClassDefinition> mergeParseLists(
-			List<IVdmSourceUnit> sources)
+	
+	public static List<INode> getNodes(List<IVdmSourceUnit> sources)
 	{
-		List<SClassDefinition> mergedParseLists = new ArrayList<SClassDefinition>();
+		List<INode> nodes = new ArrayList<INode>();
 
 		for (IVdmSourceUnit source : sources)
 		{
-			List<INode> parseList = source.getParseList();
+			nodes.addAll(source.getParseList());
+		}
+		
+		return nodes;
+	}
 
-			for (INode node : parseList)
+	public static List<SClassDefinition> getClasses(
+			List<IVdmSourceUnit> sources)
+	{
+		List<SClassDefinition> classes = new LinkedList<SClassDefinition>();
+		
+		for(INode n : getNodes(sources))
+		{
+			if(n instanceof SClassDefinition)
 			{
-				if (node instanceof SClassDefinition)
-				{
-					mergedParseLists.add(SClassDefinition.class.cast(node));
-				}
-
+				classes.add((SClassDefinition) n);
 			}
 		}
-		return mergedParseLists;
+		
+		return classes;
+	}
+	
+	public static List<AModuleModules> getModules(List<IVdmSourceUnit> sources)
+	{
+		List<AModuleModules> modules = new LinkedList<AModuleModules>();
+
+		for(INode n : getNodes(sources))
+		{
+			if(n instanceof AModuleModules)
+			{
+				modules.add((AModuleModules) n);
+			}
+		}
+		
+		return modules;
 	}
 
 	public static File getEclipseProjectFolder(IVdmProject project)
