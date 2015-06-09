@@ -1,6 +1,2 @@
-class A
-
 values
 x : bool = true;
-
-end A

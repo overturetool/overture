@@ -1,6 +1,2 @@
-class A
-
 values
 x = true;
-
-end A
