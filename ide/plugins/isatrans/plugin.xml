@@ -19,7 +19,7 @@
                 <adapt type="org.overture.ide.core.resources.IVdmProject"/>
                 <adapt type="org.eclipse.core.resources.IFile">
                   <or>
-                    <test property="org.eclipse.core.resources.extension" value="vdmpp"/>
+                    <test property="org.eclipse.core.resources.extension" value="vdmsl"/>
                   </or>
                 </adapt>
               </or>

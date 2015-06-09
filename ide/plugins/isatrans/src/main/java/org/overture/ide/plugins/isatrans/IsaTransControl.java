@@ -13,8 +13,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
@@ -50,7 +50,7 @@ public class IsaTransControl
 
 		try
 		{
-			List<SClassDefinition> ast = proj.getModel().getClassList();
+			List<AModuleModules> ast = proj.getModel().getModuleList();
 			List<GeneratedModule> modellTheoryList = ig.generateIsabelleSyntax(ast);
 
 			GeneratedModule modelTheory = modellTheoryList.get(0);
@@ -87,16 +87,16 @@ public class IsaTransControl
 		}
 		;
 
-		if (!proj.getDialect().equals(Dialect.VDM_PP))
+		if (!proj.getDialect().equals(Dialect.VDM_SL))
 		{
-			openErrorDialog("Only single class VDM++ models are allowed.");
+			openErrorDialog("Only module VDM-SL models are allowed.");
 			return;
 		}
 		try
 		{
-			if (proj.getModel().getClassList().size() > 1)
+			if (proj.getModel().getModuleList().size() > 1)
 			{
-				openErrorDialog("Only single class VDM++ models are allowed.");
+				openErrorDialog("Only single module VDM-SL models are allowed.");
 				return;
 			}
 		} catch (NotAllowedException e)
