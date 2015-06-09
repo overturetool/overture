@@ -1,6 +1,7 @@
 package org.overturetool.cgisa.transformations;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.jgrapht.DirectedGraph;
@@ -8,58 +9,60 @@ import org.jgrapht.alg.StrongConnectivityInspector;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.overture.cgisa.extast.analysis.DepthFirstAnalysisIsaAdaptor;
-import org.overture.cgisa.extast.declarations.AIsaClassDeclCG;
 import org.overture.cgisa.extast.declarations.AMrFuncGroupDeclCG;
+import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
+import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.trans.ITotalTransformation;
 
 public class GroupMutRecs extends DepthFirstAnalysisIsaAdaptor implements
 		ITotalTransformation
 {
 
-	private AIsaClassDeclCG result = null;
+	private AModuleDeclCG result = null;
 	Dependencies depUtils;
 	DirectedGraph<AFuncDeclCG, DefaultEdge> deps;
+	List<AFuncDeclCG> funcs;
 
 	public GroupMutRecs()
 	{
 		super();
 		deps = new DefaultDirectedGraph<>(DefaultEdge.class);
 		depUtils = new Dependencies();
+		funcs = new LinkedList<AFuncDeclCG>();
 	}
 
 	@Override
-	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
+	public void caseAModuleDeclCG(AModuleDeclCG node) throws AnalysisException
 	{
-		// clone original class into extended class
-		result = new AIsaClassDeclCG();
-		result.setAbstract(node.getAbstract());
-		result.setAccess(node.getAccess());
-		result.setFields(node.getFields());
-		result.setFunctions(node.getFunctions());
-		result.setInnerClasses(node.getInnerClasses());
-		result.setInterfaces(node.getInterfaces());
-		result.setMethods(node.getMethods());
-		result.setMutexSyncs(node.getMutexSyncs());
+		result = new AModuleDeclCG();
+		result.setExports(node.getExports());
+		result.setImport(node.getImport());
+		result.setIsDLModule(node.getIsDLModule());
+		result.setIsFlat(node.getIsFlat());
+		result.setMetaData(node.getMetaData());
 		result.setName(node.getName());
-		result.setPackage(node.getPackage());
-		result.setPerSyncs(node.getPerSyncs());
 		result.setSourceNode(node.getSourceNode());
-		result.setStatic(node.getStatic());
-		result.setSuperName(node.getSuperName());
 		result.setTag(node.getTag());
-		result.setThread(node.getThread());
-		result.setTraces(node.getTraces());
-		result.setTypeDecls(node.getTypeDecls());
-
-		// now compute the mr func groups
-		calcDependencies(result.getFunctions());
+		result.setDecls(node.getDecls());
+		filterFunctions(node.getDecls());
+		calcDependencies();
 
 	}
 
-	private void calcDependencies(LinkedList<AFuncDeclCG> funcs)
+	private void filterFunctions(LinkedList<SDeclCG> decls)
+	{
+		for (SDeclCG d : decls)
+		{
+			if (d instanceof AFuncDeclCG)
+			{
+				funcs.add((AFuncDeclCG) d);
+			}
+		}
+	}
+
+	private void calcDependencies()
 	{
 		try
 		{
@@ -81,14 +84,14 @@ public class GroupMutRecs extends DepthFirstAnalysisIsaAdaptor implements
 			{
 				AMrFuncGroupDeclCG aux = new AMrFuncGroupDeclCG();
 				aux.setFuncs(new LinkedList<>(scs));
-				// this line also removes the function from the functions block 
-				result.getMutrecfuncs().add(aux);
+				// this line also removes the function from the functions block
+				result.getDecls().add(aux);
 			}
 		}
 	}
 
 	@Override
-	public AIsaClassDeclCG getResult()
+	public AModuleDeclCG getResult()
 	{
 		return result;
 	}
