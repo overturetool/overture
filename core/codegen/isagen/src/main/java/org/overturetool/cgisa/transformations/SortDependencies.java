@@ -2,15 +2,17 @@ package org.overturetool.cgisa.transformations;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
+import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 
 public class SortDependencies extends DepthFirstAnalysisAdaptor
 {
@@ -18,29 +20,39 @@ public class SortDependencies extends DepthFirstAnalysisAdaptor
 	Map<AFuncDeclCG, List<AFuncDeclCG>> depGraph;
 	private List<AFuncDeclCG> sorted;
 
-	
-
 	protected Dependencies depUtils;
 
-	public SortDependencies(List<AFuncDeclCG> funcs)
+	public SortDependencies(LinkedList<SDeclCG> linkedList)
 	{
-		this.funcs = funcs;
+		this.funcs = filterFuncs(linkedList);
 		this.depUtils = new Dependencies();
 		this.depGraph = new HashMap<>();
 		this.sorted = new Vector<AFuncDeclCG>();
 		init();
 	}
 
-	@Override
-	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
+	private List<AFuncDeclCG> filterFuncs(LinkedList<SDeclCG> linkedList)
 	{
-		List<AFuncDeclCG> clonedList = new Vector<AFuncDeclCG>();
+		List<AFuncDeclCG> r = new LinkedList<AFuncDeclCG>();
 
+		for (SDeclCG d : linkedList)
+		{
+			if (d instanceof AFuncDeclCG)
+			{
+				r.add((AFuncDeclCG) d);
+			}
+		}
+		return r;
+	}
+
+	@Override
+	public void caseAModuleDeclCG(AModuleDeclCG node) throws AnalysisException
+	{
+		node.getDecls().removeAll(funcs);
 		for (AFuncDeclCG f : sorted)
 		{
-			clonedList.add(f.clone());
+			node.getDecls().add(f.clone());
 		}
-		node.setFunctions(clonedList);
 	}
 
 	private void init()
