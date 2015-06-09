@@ -15,20 +15,20 @@ public class Entry {
 
     public static VDMMap Test() {
         VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_1 = SeqUtil.elems(Utils.clone(s));
+        VDMSet set_1 = SeqUtil.elems(Utils.copy(s));
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             Number x = ((Number) iterator_1.next());
 
             if (Utils.equals(1L, 1L)) {
-                mapCompResult_1 = MapUtil.munion(Utils.clone(mapCompResult_1),
+                mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
                         MapUtil.map(new Maplet(x, x.longValue() + 1L)));
             }
         }
 
-        VDMMap a = Utils.clone(mapCompResult_1);
+        VDMMap a = Utils.copy(mapCompResult_1);
 
-        return Utils.clone(a);
+        return Utils.copy(a);
     }
 
     public String toString() {

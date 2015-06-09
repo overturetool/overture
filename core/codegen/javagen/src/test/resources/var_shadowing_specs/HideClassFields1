@@ -1,0 +1,31 @@
+class S
+
+instance variables
+
+protected static x : nat := 3;
+
+
+end S
+
+class Entry is subclass of S
+
+values
+
+y = 4;
+
+instance variables
+
+static z : nat := 5;
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+let e = new Entry()
+in
+  return e.hider(6,7,8);
+
+private hider : nat * nat * nat ==> nat
+hider (x,y,z) == return self.x + self.y + self.z + x + y + z;
+
+end Entry

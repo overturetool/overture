@@ -1,0 +1,12 @@
+module Entry
+
+exports all
+definitions
+
+types
+
+Rec ::
+  x : nat
+inv r == r.x > 0;
+
+end Entry

@@ -30,7 +30,7 @@ public class Entry {
     }
 
     private static Boolean post_addImpl(final Number left, final Number right,
-        final Number res, final VDMMap self) {
+        final Number res, final VDMMap _self) {
         return Utils.equals(left.longValue() + right.longValue(), res);
     }
 

@@ -38,7 +38,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.Preferences;
-import org.overture.codegen.utils.GeneralCodeGenUtils;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.ide.plugins.codegen.Activator;
 import org.overture.ide.plugins.codegen.ICodeGenConstants;
 import org.overture.ide.plugins.codegen.util.PluginVdm2JavaUtil;
@@ -71,7 +71,7 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		generateAsStrCheckBox.setText("Generate character sequences as strings");
 		
 		generateConcMechanismsCheckBox = new Button(composite, SWT.CHECK);
-		generateConcMechanismsCheckBox.setText("Generate concurrency mechanisms");
+		generateConcMechanismsCheckBox.setText("Generate concurrency mechanisms (VDM++ only)");
 
 		Label packageLabel = new Label(composite, SWT.NULL);
 		packageLabel.setText("Output package of the generated Java code (e.g. my.pack)");
@@ -88,7 +88,7 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
 		Label label = new Label(parent, SWT.NULL);
-		label.setText("Classes that should not be code generated. Separate by ';' (e.g. World; Env)");
+		label.setText("Classes/modules that should not be code generated. Separate by ';' (e.g. World; Env)");
 		classesToSkipField = new Text(parent, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
 		classesToSkipField.setLayoutData(gridData);
 
@@ -135,7 +135,7 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		{
 			// The project name will be used as the package
 		}
-		else if(GeneralCodeGenUtils.isValidJavaPackage(javaPackage))
+		else if(JavaCodeGenUtil.isValidJavaPackage(javaPackage))
 		{
 			store.setDefault(ICodeGenConstants.JAVA_PACKAGE, javaPackage);
 		}

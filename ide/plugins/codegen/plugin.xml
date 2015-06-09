@@ -43,10 +43,16 @@
 					<iterate ifEmpty="false">
 						<adapt
 							type="org.overture.ide.core.resources.IVdmProject">
-							<test
-								property="org.overture.ide.core.resources.dialect"
-								value="VDM_PP">
-							</test>
+                      		<or>
+	                         	<test
+		                               property="org.overture.ide.core.resources.dialect"
+		                               value="VDM_SL">
+		                        </test>
+		                        <test
+		                               property="org.overture.ide.core.resources.dialect"
+		                               value="VDM_PP">
+		                        </test>
+                         	</or>
 						</adapt>
 					</iterate>
 				</visibleWhen>
@@ -77,10 +83,16 @@
 					<iterate ifEmpty="false">
 						<adapt
 							type="org.overture.ide.core.resources.IVdmProject">
-							<test
-								property="org.overture.ide.core.resources.dialect"
-								value="VDM_PP">
-							</test>
+                      		<or>
+	                         	<test
+		                               property="org.overture.ide.core.resources.dialect"
+		                               value="VDM_SL">
+		                        </test>
+		                        <test
+		                               property="org.overture.ide.core.resources.dialect"
+		                               value="VDM_PP">
+		                        </test>
+                         	</or>
 						</adapt>
 					</iterate>
 				</visibleWhen>
@@ -94,10 +106,16 @@
 					<iterate ifEmpty="false">
 						<adapt
 							type="org.overture.ide.core.resources.IVdmProject">
-							<test
-								property="org.overture.ide.core.resources.dialect"
-								value="VDM_PP">
-							</test>
+                      		<or>
+	                         	<test
+		                               property="org.overture.ide.core.resources.dialect"
+		                               value="VDM_SL">
+		                        </test>
+		                        <test
+		                               property="org.overture.ide.core.resources.dialect"
+		                               value="VDM_PP">
+		                        </test>
+                         	</or>
 						</adapt>
 					</iterate>
 				</visibleWhen>

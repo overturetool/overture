@@ -18,8 +18,8 @@ public class Entry {
             ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq());
         }
 
-        VDMSeq m = Utils.clone(ternaryIfExp_1);
-        VDMSeq s = Utils.clone(((VDMSeq) Utils.get(m, 1L)));
+        VDMSeq m = Utils.copy(ternaryIfExp_1);
+        VDMSeq s = Utils.copy(((VDMSeq) Utils.get(m, 1L)));
 
         Object obj_1 = Utils.get(s, s.size());
 
@@ -33,7 +33,7 @@ public class Entry {
 
         Object v = apply_1;
 
-        return ((Object) v);
+        return v;
     }
 
     public String toString() {

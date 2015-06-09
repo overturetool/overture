@@ -113,7 +113,7 @@ public class Entry {
             return Utils.hashCode(n, b, c, r);
         }
 
-        public Rec clone() {
+        public Rec copy() {
             return new Rec(n, b, c, r);
         }
 

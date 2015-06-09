@@ -31,7 +31,7 @@ public class Entry {
             return 0;
         }
 
-        public M clone() {
+        public M copy() {
             return new M();
         }
 

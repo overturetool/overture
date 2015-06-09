@@ -38,7 +38,7 @@ public class Entry {
                             for (Iterator iterator_6 = set_3.iterator();
                                     iterator_6.hasNext();) {
                                 Number f = ((Number) iterator_6.next());
-                                setCompResult_1 = SetUtil.union(Utils.clone(
+                                setCompResult_1 = SetUtil.union(Utils.copy(
                                             setCompResult_1),
                                         SetUtil.set(a.longValue() +
                                             b.longValue() + c.longValue() +
@@ -51,7 +51,7 @@ public class Entry {
             }
         }
 
-        return Utils.clone(setCompResult_1);
+        return Utils.copy(setCompResult_1);
     }
 
     public String toString() {

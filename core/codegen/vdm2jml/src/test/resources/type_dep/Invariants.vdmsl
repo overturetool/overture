@@ -1,0 +1,13 @@
+module Entry
+
+exports all
+definitions
+
+types
+CN = C|N
+inv cn == is_char(cn) => cn = 'a';
+N = nat
+inv n == n = 1;
+C = [char];
+
+end Entry

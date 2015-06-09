@@ -1,0 +1,25 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+S = seq of ?
+inv s == forall x in set elems s & is_nat(x) => x > 5;
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  dcl s : S := [10,11,12];
+  s(1) := 'a';
+  s(2) := nil;
+  IO`println("Breaking named type invariant for sequence");
+  s(3) := 4;
+  return 0;
+);
+
+end Entry

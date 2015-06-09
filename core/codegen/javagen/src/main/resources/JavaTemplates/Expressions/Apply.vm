@@ -16,7 +16,7 @@
 	#end
 ##
 	#if ($ValueSemantics.shouldClone($node))
-		Utils.clone(${seqRead})
+		Utils.copy(${seqRead})
 	#else
 		${seqRead}
 	#end
@@ -30,7 +30,7 @@
 		#set ( $mapRead = "(($JavaFormat.format($node.getType())) Utils.get(${root},${key}))" )
 	#end
 	#if ($ValueSemantics.shouldClone($node))
-		Utils.clone(${mapRead})
+		Utils.copy(${mapRead})
 	#else
 		${mapRead}
 	#end

@@ -30,6 +30,8 @@ Export-Package: org.apache.velocity.app,
  org.overture.codegen.trans,
  org.overture.codegen.utils
 Bundle-ClassPath: .,
+ jars/ir.jar,
+ jars/platform.jar,
  jars/javagen.jar,
  jars/commons-collections.jar,
  jars/commons-lang.jar,

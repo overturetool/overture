@@ -27,7 +27,7 @@ public class Entry {
         public R2 r2;
 
         public R1(final R2 _r2) {
-            r2 = (_r2 != null) ? Utils.clone(_r2) : null;
+            r2 = (_r2 != null) ? Utils.copy(_r2) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -44,7 +44,7 @@ public class Entry {
             return Utils.hashCode(r2);
         }
 
-        public R1 clone() {
+        public R1 copy() {
             return new R1(r2);
         }
 
@@ -57,7 +57,7 @@ public class Entry {
         public R3 r3;
 
         public R2(final R3 _r3) {
-            r3 = (_r3 != null) ? Utils.clone(_r3) : null;
+            r3 = (_r3 != null) ? Utils.copy(_r3) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -74,7 +74,7 @@ public class Entry {
             return Utils.hashCode(r3);
         }
 
-        public R2 clone() {
+        public R2 copy() {
             return new R2(r3);
         }
 
@@ -104,7 +104,7 @@ public class Entry {
             return Utils.hashCode(e);
         }
 
-        public R3 clone() {
+        public R3 copy() {
             return new R3(e);
         }
 

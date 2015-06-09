@@ -33,7 +33,7 @@ public class VDMMap extends LinkedHashMap implements ValueType
 	private static final long serialVersionUID = -3288711341768577550L;
 
 	@SuppressWarnings("unchecked")
-	public VDMMap clone()
+	public VDMMap copy()
 	{
 		VDMMap mapClone = new VDMMap();
 		
@@ -47,10 +47,10 @@ public class VDMMap extends LinkedHashMap implements ValueType
 			Object value = entry.getValue();
 			
 			if(key instanceof ValueType)
-				key = ((ValueType) key).clone();
+				key = ((ValueType) key).copy();
 			
 			if(value instanceof ValueType)
-				value = ((ValueType) value).clone();
+				value = ((ValueType) value).copy();
 			
 			mapClone.put(key, value);
 		}

@@ -1,0 +1,38 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+Rec ::
+  x : int
+  y : int
+inv mk_Rec(x,y) == x > 0 and y > 0;
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  recInvOk();
+  IO`println("Before breaking record invariant");
+  recInvBreak();
+  IO`println("After breaking record invariant");
+  return 0;
+);
+
+recInvOk : () ==> ()
+recInvOk () ==
+let - = mk_Rec(1,2)
+in
+  skip;
+
+recInvBreak : () ==> ()
+recInvBreak () ==
+let - = mk_Rec(1,-2)
+in
+  skip;
+
+end Entry

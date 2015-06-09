@@ -41,6 +41,16 @@
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.overturetool.core.codegen</groupId>
+									<artifactId>ir</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.overturetool.core.codegen</groupId>
+									<artifactId>platform</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.overturetool.core.codegen</groupId>
 									<artifactId>javagen</artifactId>
 									<version>${project.version}</version>
 								</artifactItem>

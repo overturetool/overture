@@ -1,0 +1,12 @@
+module Entry
+
+exports all
+definitions
+
+types
+R :: x : int
+inv r == r.x = 1;
+
+Rn = R | nat;
+
+end Entry

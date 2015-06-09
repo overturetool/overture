@@ -42,6 +42,7 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.util.ClassListInterpreter;
+import org.overture.interpreter.values.BUSValue;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.ClassInvariantListener;
 import org.overture.interpreter.values.MapValue;
@@ -135,7 +136,7 @@ public class SClassDefinitionAssistantInterpreter extends
 	{
 		if (node instanceof ABusClassDefinition)
 		{
-			return af.createABusClassDefinitionAssitant().newInstance((ABusClassDefinition) node, ctorDefinition, argvals, ctxt);
+			return newInstance((ABusClassDefinition) node, ctorDefinition, argvals, ctxt);
 		} else if (node instanceof AClassClassDefinition)
 		{
 			if (node.getIsAbstract())
@@ -653,6 +654,16 @@ public class SClassDefinitionAssistantInterpreter extends
 		}
 
 		return null;
+	}
+	
+	public ObjectValue newInstance(ABusClassDefinition node,
+			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
+	{
+		NameValuePairList nvpl = af.createPDefinitionListAssistant().getNamedValues(node.getDefinitions(), ctxt);
+		NameValuePairMap map = new NameValuePairMap();
+		map.putAll(nvpl);
+
+		return new BUSValue((AClassType) node.getClasstype(), map, argvals);
 	}
 
 }

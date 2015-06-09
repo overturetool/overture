@@ -20,10 +20,14 @@
   </properties>
 
   <modules>
+    <module>ir</module>
+    <module>platform</module>
     <module>javagen</module>
-	<module>codegen-runtime</module>
+    <module>vdm2jml</module>
+    <module>codegen-runtime</module>
     <module>codegen-maven-plugin</module>
-     <module>isagen</module> 
+    <module>cgisa</module>
+    <module>cppgen</module>
   </modules>
   
 </project>

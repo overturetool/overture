@@ -5,8 +5,8 @@ import java.util.*;
 
 public class A {
     private static final Tuple a = Tuple.mk_(Tuple.mk_(1L, true), 3L);
-    private static final Tuple b = Utils.clone(a);
-    private static final Tuple c = Utils.clone(((Tuple) a.get(0)));
+    private static final Tuple b = Utils.copy(a);
+    private static final Tuple c = Utils.copy(((Tuple) a.get(0)));
     private static final Number d = ((Number) ((Tuple) a.get(0)).get(0));
     private static final Boolean e = ((Boolean) ((Tuple) a.get(0)).get(1));
     private static final Number f = ((Number) a.get(1));
@@ -21,15 +21,15 @@ public class A {
     }
 
     public Number op2() {
-        Tuple a = Tuple.mk_(1L, 2L);
-        Tuple b = Utils.clone(a);
+        Tuple a_1 = Tuple.mk_(1L, 2L);
+        Tuple b_1 = Utils.copy(a_1);
 
-        return ((Number) b.get(0));
+        return ((Number) b_1.get(0));
     }
 
     public Number op3() {
         Tuple a = Tuple.mk_(Tuple.mk_(1L, 2L), 3L);
-        Tuple b = Utils.clone(((Tuple) a.get(0)));
+        Tuple b = Utils.copy(((Tuple) a.get(0)));
 
         return ((Number) ((Tuple) a.get(0)).get(0));
     }
@@ -37,13 +37,13 @@ public class A {
     public Tuple op4() {
         Tuple a = Tuple.mk_(Tuple.mk_(1L, 2L), 3L);
 
-        return Utils.clone(a);
+        return Utils.copy(a);
     }
 
     public Tuple op5() {
         Tuple a = Tuple.mk_(Tuple.mk_(1L, 2L), 3L);
 
-        return Utils.clone(((Tuple) a.get(0)));
+        return Utils.copy(((Tuple) a.get(0)));
     }
 
     public String toString() {

@@ -24,7 +24,7 @@ public class Entry {
 
         VDMSeq xs = SeqUtil.seq(true, false, true, true, true);
 
-        return bool_nat_map(Utils.clone(xs)).eval(f);
+        return bool_nat_map(Utils.copy(xs)).eval(f);
     }
 
     public static Func_1<Func_1<Boolean, Number>, VDMSeq> bool_nat_map(
@@ -38,11 +38,10 @@ public class Entry {
                     } else {
                         ternaryIfExp_2 = SeqUtil.conc(SeqUtil.seq(f.eval(((Boolean) s.get(
                                             0)))),
-                                bool_nat_map(SeqUtil.tail(Utils.clone(s)))
-                                    .eval(f));
+                                bool_nat_map(SeqUtil.tail(Utils.copy(s))).eval(f));
                     }
 
-                    return Utils.clone(ternaryIfExp_2);
+                    return Utils.copy(ternaryIfExp_2);
                 }
             };
     }

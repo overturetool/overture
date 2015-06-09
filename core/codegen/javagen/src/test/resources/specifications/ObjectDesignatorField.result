@@ -27,8 +27,8 @@ public class A {
         return a.x.x.x.f(1L);
     }
 
-    public static Number f(final Number x) {
-        return x;
+    public static Number f(final Number x_1) {
+        return x_1;
     }
 
     public String toString() {
