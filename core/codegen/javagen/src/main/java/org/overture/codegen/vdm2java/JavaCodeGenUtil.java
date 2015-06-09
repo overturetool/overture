@@ -36,6 +36,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -115,13 +116,6 @@ public class JavaCodeGenUtil
 			throw new AnalysisException("Unable to generate code from expression: "
 					+ exp + ". Exception message: " + e.getMessage());
 		}
-	}
-	
-	public static void generateJavaSourceFiles(File outputFolder,
-			List<GeneratedModule> classes)
-	{
-		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		vdmCodGen.generateJavaSourceFiles(outputFolder, classes);
 	}
 
 	public static String formatJavaCode(String code)
@@ -377,5 +371,37 @@ public class JavaCodeGenUtil
 		}
 
 		return javaFilePaths.toArray(new String[] {});
+	}
+	
+	public static File getModuleOutputDir(File outputDir, JavaCodeGen vdmCodGen,
+			GeneratedModule generatedClass)
+	{
+		File moduleOutputDir = outputDir;
+		String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
+		
+		if(generatedClass.getIrNode() instanceof AClassDeclCG)
+		{
+			javaPackage = ((AClassDeclCG) generatedClass.getIrNode()).getPackage();
+		}
+		else if(generatedClass.getIrNode() instanceof AInterfaceDeclCG)
+		{
+			javaPackage = ((AInterfaceDeclCG) generatedClass.getIrNode()).getPackage();
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Expected IR node of "
+					+ generatedClass.getName()
+					+ " to be a class or interface  declaration at this point. Got: "
+					+ generatedClass.getIrNode());
+			return null;
+		}
+		
+		if (JavaCodeGenUtil.isValidJavaPackage(javaPackage))
+		{
+			String packageFolderPath = JavaCodeGenUtil.getFolderFromJavaRootPackage(javaPackage);
+			moduleOutputDir = new File(outputDir, packageFolderPath);
+		}
+		
+		return moduleOutputDir;
 	}
 }

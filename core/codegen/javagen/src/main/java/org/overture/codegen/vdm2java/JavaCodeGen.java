@@ -718,10 +718,25 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			return null;
 		}
 	}
-
-	public void generateJavaSourceFile(File outputFolder,
-			GeneratedModule generatedModule)
+	
+	public void genJavaSourceFiles(File root,
+			List<GeneratedModule> generatedClasses)
 	{
+		for (GeneratedModule classCg : generatedClasses)
+		{
+			genJavaSourceFile(root, classCg);
+		}
+	}
+
+	public void genJavaSourceFile(File root, GeneratedModule generatedModule)
+	{
+		File moduleOutputDir = JavaCodeGenUtil.getModuleOutputDir(root, this, generatedModule);
+		
+		if(moduleOutputDir == null)
+		{
+			return;
+		}
+		
 		if (generatedModule != null && generatedModule.canBeGenerated()
 				&& !generatedModule.hasMergeErrors())
 		{
@@ -734,16 +749,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 			javaFileName += IJavaCodeGenConstants.JAVA_FILE_EXTENSION;
 
-			JavaCodeGenUtil.saveJavaClass(outputFolder, javaFileName, generatedModule.getContent());
-		}
-	}
-
-	public void generateJavaSourceFiles(File outputFolder,
-			List<GeneratedModule> generatedClasses)
-	{
-		for (GeneratedModule classCg : generatedClasses)
-		{
-			generateJavaSourceFile(outputFolder, classCg);
+			JavaCodeGenUtil.saveJavaClass(moduleOutputDir, javaFileName, generatedModule.getContent());
 		}
 	}
 
