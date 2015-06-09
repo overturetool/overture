@@ -30,11 +30,11 @@ import java.util.List;
 
 import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.VdmNodeInfo;
@@ -91,13 +91,13 @@ public class IsaGen extends CodeGenBase
 	 * @throws AnalysisException
 	 * @throws org.overture.codegen.cgast.analysis.AnalysisException
 	 */
-	public List<GeneratedModule> generateIsabelleSyntax(List<SClassDefinition> ast)
+	public List<GeneratedModule> generateIsabelleSyntax(List<AModuleModules> ast)
 			throws AnalysisException,
 			org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		// Transform AST into IR
 		List<IRStatus<INode>> statuses = new LinkedList<>();
-		for (SClassDefinition sclass : ast)
+		for (AModuleModules sclass : ast)
 		{
 			IRStatus<INode> result = this.generator.generateFrom(sclass);
 
@@ -114,13 +114,12 @@ public class IsaGen extends CodeGenBase
 			GroupMutRecs groupMR = new GroupMutRecs();
 			generator.applyTotalTransformation(status, groupMR);
 
-			if (status.getIrNode() instanceof AClassDeclCG)
+			if (status.getIrNode() instanceof AModuleDeclCG)
 			{
-				AClassDeclCG cClass = (AClassDeclCG) status.getIrNode();
+				AModuleDeclCG cClass = (AModuleDeclCG) status.getIrNode();
 				// then sort remaining dependencies
-				SortDependencies sortTrans = new SortDependencies(cClass.getFunctions());
+				SortDependencies sortTrans = new SortDependencies(cClass.getDecls());
 				generator.applyPartialTransformation(status, sortTrans);
-
 			}
 		}
 
