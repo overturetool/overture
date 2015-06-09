@@ -110,6 +110,7 @@ public class JmlGenMain
 		}
 
 		JmlGenerator jmlGen = new JmlGenerator();
+		jmlGen.getIrSettings().setCharSeqAsString(true);
 		jmlGen.getJmlSettings().setInjectReportCalls(report);
 
 		//GeneralUtils.deleteFolderContents(outputDir, true);
