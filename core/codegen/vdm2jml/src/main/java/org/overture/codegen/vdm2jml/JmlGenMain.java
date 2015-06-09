@@ -7,15 +7,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
-import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGenMain;
-import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
@@ -35,20 +34,7 @@ public class JmlGenMain
 		}
 
 		Settings.release = Release.VDM_10;
-		// Dialect dialect = Dialect.VDM_SL;
-
-		IRSettings irSettings = new IRSettings();
-		irSettings.setCharSeqAsString(true);
-		irSettings.setGeneratePreConds(true);
-		irSettings.setGeneratePreCondChecks(false);
-		irSettings.setGeneratePostConds(true);
-		irSettings.setGeneratePostCondChecks(false);
-		irSettings.setGenerateInvariants(true);
-
-		JavaSettings javaSettings = new JavaSettings();
-		javaSettings.setDisableCloning(false);
-		//javaSettings.setJavaRootPackage("my.pack");
-		javaSettings.setGenRecsAsInnerClasses(false);
+		Settings.dialect = Dialect.VDM_SL;
 
 		List<String> listArgs = Arrays.asList(args);
 
@@ -124,10 +110,6 @@ public class JmlGenMain
 		}
 
 		JmlGenerator jmlGen = new JmlGenerator();
-
-		jmlGen.setIrSettings(irSettings);
-		jmlGen.setJavaSettings(javaSettings);
-		
 		jmlGen.getJmlSettings().setInjectReportCalls(report);
 
 		//GeneralUtils.deleteFolderContents(outputDir, true);
