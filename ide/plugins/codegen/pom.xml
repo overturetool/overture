@@ -55,6 +55,11 @@
 									<version>${project.version}</version>
 								</artifactItem>
 								<artifactItem>
+									<groupId>org.overturetool.core.codegen</groupId>
+									<artifactId>vdm2jml</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+								<artifactItem>
 									<groupId>org.apache.velocity</groupId>
 									<artifactId>velocity</artifactId>
 									<version>1.7</version>
