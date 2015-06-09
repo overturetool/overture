@@ -173,7 +173,7 @@ the manifests, though.
     <repository>
       <id>eclipse-kepler</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/kepler</url>
+      <url>http://download.eclipse.org/releases/luna</url>
     </repository>
   </repositories>
 
