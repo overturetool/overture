@@ -64,6 +64,7 @@ import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
+import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
@@ -160,9 +161,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 		
 		final List<String> classesToSkip = PluginVdm2JavaUtil.getClassesToSkip();
 		final JavaSettings javaSettings = getJavaSettings(project, classesToSkip);
-
+		
 		final IRSettings irSettings = getIrSettings(project);
-
 		
 		Job codeGenerate = new Job("VDM to Java code generation")
 		{
@@ -196,7 +196,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 					
 					try
 					{
-						vdm2java.generateJavaSourceFiles(javaCodeOutputFolder, generatedData.getClasses());
+						vdm2java.genJavaSourceFiles(javaCodeOutputFolder, generatedData.getClasses());
 					} catch (Exception e)
 					{
 						CodeGenConsole.GetInstance().printErrorln("Problems saving the code generated Java source files to disk.");
@@ -259,8 +259,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 					outputUserspecifiedModules(javaCodeOutputFolder, generatedData.getClasses());
 
 					// Quotes generation
-					outputQuotes(vdmProject, new File(javaCodeOutputFolder, PluginVdm2JavaUtil.QUOTES_FOLDER),
-							vdm2java, generatedData.getQuoteValues());
+					outputQuotes(vdmProject, javaCodeOutputFolder, vdm2java, generatedData.getQuoteValues());
 
 					// Renaming of variables shadowing other variables
 					outputRenamings(generatedData.getAllRenamings());
@@ -320,7 +319,18 @@ public class Vdm2JavaCommand extends AbstractHandler
 		else
 		{
 			List<AModuleModules> ast = PluginVdm2JavaUtil.getModules(model.getSourceUnits());
-			return vdm2java.generateJavaFromVdmModules(ast);
+			
+			// TODO: Read preferences
+			final boolean generateJml = true;
+
+			if (generateJml)
+			{
+				JmlGenerator jmlGen = new JmlGenerator(vdm2java);
+				return jmlGen.generateJml(ast);
+			} else
+			{
+				return vdm2java.generateJavaFromVdmModules(ast);
+			}
 		}
 	}
 	
@@ -527,7 +537,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 		{
 			for(GeneratedModule q : quotes)
 			{
-				vdm2java.generateJavaSourceFile(outputFolder, q);
+				vdm2java.genJavaSourceFile(outputFolder, q);
 			}
 
 			CodeGenConsole.GetInstance().println("Quotes generated to folder: "
