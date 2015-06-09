@@ -28,8 +28,8 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
@@ -43,19 +43,19 @@ public class AdHoc
 	public void testQuick() throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		
-		File f = new File("src/test/resources/test.vdmpp");
+		File f = new File("src/test/resources/test.vdmsl");
 		List<File> files = new LinkedList<>();
 		files.add(f);
 		
-		List<INode> ast = ParseTcFacade.typedAstNoRetry(files, "Quick", Dialect.VDM_PP);
+		List<INode> ast = ParseTcFacade.typedAstNoRetry(files, "Quick", Dialect.VDM_SL);
 		
 		IsaGen gen = new IsaGen();
 		
-		List<SClassDefinition> classes = new LinkedList<>();
+		List<AModuleModules> classes = new LinkedList<>();
 		
 		for(INode n : ast)
 		{
-			classes.add((SClassDefinition) n);
+			classes.add((AModuleModules) n);
 		}
 		
 		List<GeneratedModule> result = gen.generateIsabelleSyntax(classes);

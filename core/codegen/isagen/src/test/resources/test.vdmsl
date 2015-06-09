@@ -1,7 +1,4 @@
-class A
 
 functions
 f: int -> int
 f(x) == x
-
-end A
