@@ -33,6 +33,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.core.tests.ParseTcFacade;
@@ -68,7 +69,7 @@ public class AdHoc
 			{
 				Logger.getLog().println(String.format("Class %s could not be merged. Following merge errors were found:", generatedClass.getName()));
 
-				JavaCodeGenUtil.printMergeErrors(generatedClass.getMergeErrors());
+				GeneralCodeGenUtils.printMergeErrors(generatedClass.getMergeErrors());
 			} else if (!generatedClass.canBeGenerated())
 			{
 				Logger.getLog().println("Could not generate class: "
@@ -77,13 +78,13 @@ public class AdHoc
 				if(generatedClass.hasUnsupportedIrNodes())
 				{
 					Logger.getLog().println("Following VDM constructs are not supported by the IR:");
-					JavaCodeGenUtil.printUnsupportedIrNodes(generatedClass.getUnsupportedInIr());
+					GeneralCodeGenUtils.printUnsupportedIrNodes(generatedClass.getUnsupportedInIr());
 				}
 				
 				if(generatedClass.hasUnsupportedTargLangNodes())
 				{
 					Logger.getLog().println("Following IR constructs are not supported by the backend/target languages:");
-					JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedInTargLang());
+					GeneralCodeGenUtils.printUnsupportedNodes(generatedClass.getUnsupportedInTargLang());
 				}
 				
 			} else
@@ -95,7 +96,7 @@ public class AdHoc
 				if(!warnings.isEmpty())
 				{
 					Logger.getLog().println("Following transformation warnings were found:");
-					JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getTransformationWarnings());
+					GeneralCodeGenUtils.printUnsupportedNodes(generatedClass.getTransformationWarnings());
 				}
 			}
 

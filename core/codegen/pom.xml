@@ -26,7 +26,7 @@
     <module>vdm2jml</module>
     <module>codegen-runtime</module>
     <module>codegen-maven-plugin</module>
-    <module>cgisa</module>
+    <module>isagen</module>
     <module>cppgen</module>
   </modules>
   

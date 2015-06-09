@@ -25,6 +25,11 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.overturetool.core.codegen</groupId>
+			<artifactId>ir</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.overturetool.core.testing</groupId>
 			<artifactId>framework</artifactId>
 			<version>${project.version}</version>
@@ -79,7 +84,7 @@
 					<useSrcOutput>false</useSrcOutput>
 
 					<extendedAstGroupId>org.overturetool.core.codegen</extendedAstGroupId>
-					<extendedAstArtifactId>javagen</extendedAstArtifactId>
+					<extendedAstArtifactId>ir</extendedAstArtifactId>
 				</configuration>
 			</plugin>
 
