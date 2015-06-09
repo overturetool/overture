@@ -21,19 +21,19 @@
  */
 package org.overturetool.cgisa;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.core.tests.ParamStandardTest;
@@ -42,10 +42,10 @@ import org.overture.core.tests.PathsProvider;
 import com.google.gson.reflect.TypeToken;
 
 @RunWith(Parameterized.class)
-public class IsaGenClassTest extends ParamStandardTest<CgIsaTestResult>
+public class IsaGenModuleTest extends ParamStandardTest<CgIsaTestResult>
 {
 
-	public IsaGenClassTest(String nameParameter, String inputParameter,
+	public IsaGenModuleTest(String nameParameter, String inputParameter,
 			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
@@ -59,14 +59,14 @@ public class IsaGenClassTest extends ParamStandardTest<CgIsaTestResult>
 	{
 		IsaGen gen = new IsaGen();
 
-		List<SClassDefinition> classes = new LinkedList<>();
+		List<AModuleModules> classes = new LinkedList<>();
 
 		for (INode n : ast)
 		{
-			classes.add((SClassDefinition) n);
+			classes.add((AModuleModules) n);
 		}
 
-		List<GeneratedModule> result;
+		List<GeneratedModule> result= null;
 		try
 		{
 			result = gen.generateIsabelleSyntax(classes);
