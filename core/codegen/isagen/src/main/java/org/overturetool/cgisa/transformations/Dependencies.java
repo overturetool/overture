@@ -12,9 +12,11 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overturetool.cgisa.IsaChecks;
+import org.overture.codegen.cgast.SDeclCG;
 
 public class Dependencies
 {
@@ -22,40 +24,45 @@ public class Dependencies
 	private IsaChecks isaUtils = new IsaChecks();
 
 	public DirectedGraph<AFuncDeclCG, DefaultEdge> calDepsAsGraph(
-			List<AFuncDeclCG> funcs) throws AnalysisException
+			List<AFuncDeclCG> decls) throws AnalysisException
 	{
 		DirectedGraph<AFuncDeclCG, DefaultEdge> r = new DefaultDirectedGraph<>(DefaultEdge.class);
-		for (AFuncDeclCG func : funcs)
+		for (SDeclCG decl : decls)
 		{
-			List<AFuncDeclCG> dependencies = findDependencies(func, funcs);
-			if (!dependencies.isEmpty())
+			if (decl instanceof AFuncDeclCG)
 			{
-				r.addVertex(func);
-				for (AFuncDeclCG dep : dependencies)
+				List<SDeclCG> dependencies = findDependencies(decl, decls);
+				if (!dependencies.isEmpty())
 				{
-					r.addVertex(dep);
-					r.addEdge(func, dep);
+					r.addVertex((AFuncDeclCG) decl);
+					for (SDeclCG dep : dependencies)
+					{
+						if (dep instanceof AFuncDeclCG)
+						{
+							r.addVertex((AFuncDeclCG) dep);
+							r.addEdge((AFuncDeclCG) decl, (AFuncDeclCG) dep);
+						}
+					}
 				}
 			}
 		}
 		return r;
 	}
 
-	public Map<AFuncDeclCG, List<AFuncDeclCG>> calcDepsAsMap(
-			List<AFuncDeclCG> funcs)
+	public Map<SDeclCG, List<SDeclCG>> calcDepsAsMap(List<SDeclCG> decls)
 	{
-		Map<AFuncDeclCG, List<AFuncDeclCG>> r = new HashedMap<>();
-		for (AFuncDeclCG func : funcs)
+		Map<SDeclCG, List<SDeclCG>> r = new HashedMap<>();
+		for (SDeclCG decl : decls)
 		{
 			try
 			{
-				List<AFuncDeclCG> dependencies = findDependencies(func, funcs);
+				List<SDeclCG> dependencies = findDependencies(decl, decls);
 				if (!dependencies.isEmpty())
 				{
-					r.put(func, dependencies);
+					r.put(decl, dependencies);
 				} else
 				{
-					r.put(func, new Vector<AFuncDeclCG>());
+					r.put(decl, new Vector<SDeclCG>());
 				}
 			} catch (AnalysisException e)
 			{
@@ -65,31 +72,45 @@ public class Dependencies
 		return r;
 	}
 
-	private List<AFuncDeclCG> findDependencies(AFuncDeclCG func,
-			List<AFuncDeclCG> funcs) throws AnalysisException
+	private List<SDeclCG> findDependencies(SDeclCG decl,
+			List<? extends SDeclCG> decls) throws AnalysisException
 	{
 		final Set<SVarExpCG> vars = new HashSet<SVarExpCG>();
 
-		func.getBody().apply(new DepthFirstAnalysisAdaptor()
+		decl.apply(new DepthFirstAnalysisAdaptor()
 		{
 			public void defaultInSVarExpCG(SVarExpCG node)
 					throws AnalysisException
 			{
-				if (isaUtils.isRoot(node))
+				if (isaUtils.isRoot(node) || isaUtils.isFieldRHS(node))
 				{
 					vars.add(node);
 				}
 			}
 		});
 
-		List<AFuncDeclCG> deps = new Vector<AFuncDeclCG>();
+		List<SDeclCG> deps = new Vector<SDeclCG>();
 		for (SVarExpCG v : vars)
 		{
-			for (AFuncDeclCG f : funcs)
+			for (SDeclCG d : decls)
 			{
-				if (v.getName().equals(f.getName()))
+				String n = "";
+				if (d instanceof AFuncDeclCG)
 				{
-					deps.add(f);
+					n = ((AFuncDeclCG) d).getName();
+				}
+
+				else
+				{
+					if (d instanceof AFieldDeclCG)
+					{
+						n = ((AFieldDeclCG) d).getName();
+					}
+				}
+
+				if (v.getName().equals(n))
+				{
+					deps.add(d);
 					break;
 				}
 			}
@@ -97,5 +118,4 @@ public class Dependencies
 
 		return deps;
 	}
-
 }
