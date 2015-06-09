@@ -1,4 +1,7 @@
-class A
+module A
+
+definitions
+
 functions
 
 f : nat -> nat

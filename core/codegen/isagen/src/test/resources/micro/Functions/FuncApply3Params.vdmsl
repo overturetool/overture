@@ -1,4 +1,6 @@
-class A
+module A
+
+definitions
 
 functions
 f : int * int * int -> int
