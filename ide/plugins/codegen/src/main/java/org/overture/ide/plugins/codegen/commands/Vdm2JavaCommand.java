@@ -64,6 +64,7 @@ import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
+import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
@@ -160,9 +161,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 		
 		final List<String> classesToSkip = PluginVdm2JavaUtil.getClassesToSkip();
 		final JavaSettings javaSettings = getJavaSettings(project, classesToSkip);
-
+		
 		final IRSettings irSettings = getIrSettings(project);
-
 		
 		Job codeGenerate = new Job("VDM to Java code generation")
 		{
@@ -196,7 +196,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 					
 					try
 					{
-						vdm2java.generateJavaSourceFiles(javaCodeOutputFolder, generatedData.getClasses());
+						vdm2java.genJavaSourceFiles(javaCodeOutputFolder, generatedData.getClasses());
 					} catch (Exception e)
 					{
 						CodeGenConsole.GetInstance().printErrorln("Problems saving the code generated Java source files to disk.");
@@ -259,8 +259,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 					outputUserspecifiedModules(javaCodeOutputFolder, generatedData.getClasses());
 
 					// Quotes generation
-					outputQuotes(vdmProject, new File(javaCodeOutputFolder, PluginVdm2JavaUtil.QUOTES_FOLDER),
-							vdm2java, generatedData.getQuoteValues());
+					outputQuotes(vdmProject, javaCodeOutputFolder, vdm2java, generatedData.getQuoteValues());
 
 					// Renaming of variables shadowing other variables
 					outputRenamings(generatedData.getAllRenamings());
@@ -320,13 +319,24 @@ public class Vdm2JavaCommand extends AbstractHandler
 		else
 		{
 			List<AModuleModules> ast = PluginVdm2JavaUtil.getModules(model.getSourceUnits());
-			return vdm2java.generateJavaFromVdmModules(ast);
+			
+			Preferences prefs = getPrefs();
+			final boolean generateJml = prefs.getBoolean(ICodeGenConstants.GENERATE_JML, ICodeGenConstants.GENERATE_JML_DEFAULT);;
+
+			if (generateJml)
+			{
+				JmlGenerator jmlGen = new JmlGenerator(vdm2java);
+				return jmlGen.generateJml(ast);
+			} else
+			{
+				return vdm2java.generateJavaFromVdmModules(ast);
+			}
 		}
 	}
 	
 	public IRSettings getIrSettings(final IProject project)
 	{
-		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+		Preferences preferences = getPrefs();
 		
 		boolean generateCharSeqsAsStrings = preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
 		boolean generateConcMechanisms = preferences.getBoolean(ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS, ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS_DEFAULT);
@@ -337,10 +347,16 @@ public class Vdm2JavaCommand extends AbstractHandler
 		
 		return irSettings;
 	}
+
+	private Preferences getPrefs()
+	{
+		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+		return preferences;
+	}
 	
 	public JavaSettings getJavaSettings(final IProject project, List<String> classesToSkip)
 	{
-		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+		Preferences preferences = getPrefs();
 		
 		boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
 		String javaPackage = preferences.get(ICodeGenConstants.JAVA_PACKAGE, ICodeGenConstants.JAVA_PACKAGE_DEFAULT);
@@ -353,7 +369,6 @@ public class Vdm2JavaCommand extends AbstractHandler
 		if (!JavaCodeGenUtil.isValidJavaPackage(javaSettings.getJavaRootPackage()))
 		{
 			javaSettings.setJavaRootPackage(project.getName());
-
 		}
 		
 		return javaSettings;
@@ -527,7 +542,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 		{
 			for(GeneratedModule q : quotes)
 			{
-				vdm2java.generateJavaSourceFile(outputFolder, q);
+				vdm2java.genJavaSourceFile(outputFolder, q);
 			}
 
 			CodeGenConsole.GetInstance().println("Quotes generated to folder: "
