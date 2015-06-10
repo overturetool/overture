@@ -1,1 +1,1 @@
-Utils.clone(((Tuple) Utils.get(SeqUtil.seq(Tuple.mk_(1L, 2L)),1L)))
+Utils.copy(((Tuple) Utils.get(SeqUtil.seq(Tuple.mk_(1L, 2L)),1L)))

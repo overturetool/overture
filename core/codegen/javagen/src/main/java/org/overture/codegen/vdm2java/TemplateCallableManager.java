@@ -42,4 +42,9 @@ public class TemplateCallableManager
 				new TemplateCallable(VALUE_SEMANTICS, valueSemantics),
 				new TemplateCallable(RECORD_CREATOR, recordCreator) };
 	}
+	
+	public final static TemplateCallable[] constructTemplateCallables()
+	{
+		return new TemplateCallable[]{};
+	}
 }

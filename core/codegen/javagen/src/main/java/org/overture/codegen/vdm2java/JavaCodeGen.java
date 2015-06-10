@@ -38,11 +38,12 @@ import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
+import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
-import org.overture.codegen.analysis.vdm.JavaIdentifierNormaliser;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
@@ -61,8 +62,11 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
+import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IREventCoordinator;
+import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
@@ -70,6 +74,8 @@ import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
+import org.overture.codegen.trans.ModuleToClassTransformation;
+import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -79,7 +85,7 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Settings;
 
-public class JavaCodeGen extends CodeGenBase
+public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 {
 	public static final String JAVA_TEMPLATES_ROOT_FOLDER = "JavaTemplates";
 
@@ -93,6 +99,8 @@ public class JavaCodeGen extends CodeGenBase
 
 	private JavaFormat javaFormat;
 	private TemplateStructure javaTemplateStructure;
+	
+	private IREventObserver irObserver;
 
 	public JavaCodeGen()
 	{
@@ -100,6 +108,22 @@ public class JavaCodeGen extends CodeGenBase
 		init();
 	}
 
+	public JavaCodeGen(ILogger log)
+	{
+		super(log);
+		init();
+	}
+
+	private void init()
+	{
+		this.irObserver = null;
+		initVelocity();
+
+		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
+		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
+		this.javaFormat = new JavaFormat(varPrefixes, javaTemplateStructure, generator.getIRInfo());
+	}
+	
 	public void setJavaTemplateStructure(TemplateStructure javaTemplateStructure)
 	{
 		this.javaTemplateStructure = javaTemplateStructure;
@@ -118,21 +142,6 @@ public class JavaCodeGen extends CodeGenBase
 	public JavaSettings getJavaSettings()
 	{
 		return this.javaFormat.getJavaSettings();
-	}
-
-	public JavaCodeGen(ILogger log)
-	{
-		super(log);
-		init();
-	}
-
-	private void init()
-	{
-		initVelocity();
-
-		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
-		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
-		this.javaFormat = new JavaFormat(varPrefixes, javaTemplateStructure, generator.getIRInfo());
 	}
 
 	public void clear()
@@ -176,9 +185,13 @@ public class JavaCodeGen extends CodeGenBase
 				StringWriter writer = new StringWriter();
 				quoteDecl.apply(javaFormat.getMergeVisitor(), writer);
 				String code = writer.toString();
-				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
 
-				modules.add(new GeneratedModule(quoteNameVdm, quoteDecl, formattedJavaCode));
+				if(getJavaSettings().formatCode())
+				{
+					code = JavaCodeGenUtil.formatJavaCode(code);
+				}
+
+				modules.add(new GeneratedModule(quoteNameVdm, quoteDecl, code));
 			}
 
 			return modules;
@@ -193,6 +206,12 @@ public class JavaCodeGen extends CodeGenBase
 		return null;
 	}
 
+	public GeneratedData generateJavaFromVdmModules(List<AModuleModules> ast)
+			throws AnalysisException, UnsupportedModelingException {
+
+		return generateVdmFromNodes(ast, null, new LinkedList<String>());
+	}
+	
 	public GeneratedData generateJavaFromVdm(List<SClassDefinition> ast)
 			throws AnalysisException, UnsupportedModelingException
 	{
@@ -214,35 +233,78 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 
-		List<SClassDefinition> userClasses = getUserClasses(ast);
+		return generateVdmFromNodes(ast, mainClass, warnings);
+	}
 
-		List<Renaming> allRenamings = normaliseIdentifiers(userClasses);
-		computeDefTable(userClasses);
+	private GeneratedData generateVdmFromNodes(List<? extends INode> ast,
+			SClassDefinition mainClass, List<String> warnings)
+			throws AnalysisException, UnsupportedModelingException {
+		
+		List<INode> userModules = getUserModules(ast);
+		
+		handleOldNames(ast);
+
+		List<Renaming> allRenamings = normaliseIdentifiers(userModules);
+		computeDefTable(userModules);
 
 		// To document any renaming of variables shadowing other variables
 		removeUnreachableStms(ast);
 
-		allRenamings.addAll(performRenaming(userClasses, getInfo().getIdStateDesignatorDefs()));
+		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs()));
 
-		for (SClassDefinition classDef : ast)
+		for (INode node : ast)
 		{
-			if (generator.getIRInfo().getAssistantManager().getDeclAssistant().classIsLibrary(classDef))
+			if (generator.getIRInfo().getAssistantManager().getDeclAssistant().isLibrary(node))
 			{
-				simplifyLibraryClass(classDef);
+				simplifyLibrary(node);
 			}
 		}
 
-		InvalidNamesResult invalidNamesResult = validateVdmModelNames(userClasses);
-		validateVdmModelingConstructs(userClasses);
+		InvalidNamesResult invalidNamesResult = validateVdmModelNames(userModules);
+		validateVdmModelingConstructs(userModules);
 
 		List<IRStatus<org.overture.codegen.cgast.INode>> statuses = new LinkedList<>();
 
-		for (SClassDefinition classDef : ast)
+		for (INode node : ast)
 		{
-			statuses.add(generator.generateFrom(classDef));
+			IRStatus<org.overture.codegen.cgast.INode> status = generator.generateFrom(node);
+			
+			if(status != null)
+			{
+				statuses.add(status);
+			}
 		}
 
-		List<IRStatus<AClassDeclCG>> classStatuses = IRStatus.extract(statuses, AClassDeclCG.class);
+		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
+		
+		// Event notification
+		statuses = initialIrEvent(statuses);
+		statuses = filter(statuses, generated);
+		
+		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
+		List<IRStatus<org.overture.codegen.cgast.INode>> modulesAsNodes = IRStatus.extract(moduleStatuses);
+			
+		ModuleToClassTransformation moduleTransformation = new ModuleToClassTransformation(getInfo(),
+				transAssistant, getModuleDecls(moduleStatuses));
+		
+		for(IRStatus<org.overture.codegen.cgast.INode> moduleStatus : modulesAsNodes)
+		{
+			try
+			{
+				generator.applyTotalTransformation(moduleStatus, moduleTransformation);
+
+			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			{
+				Logger.getLog().printErrorln("Error when generating code for module "
+						+ moduleStatus.getIrNodeName() + ": " + e.getMessage());
+				Logger.getLog().printErrorln("Skipping module..");
+				e.printStackTrace();
+			}
+			
+		}
+
+		List<IRStatus<AClassDeclCG>> classStatuses = IRStatus.extract(modulesAsNodes, AClassDeclCG.class);
+		classStatuses.addAll(IRStatus.extract(statuses, AClassDeclCG.class));
 		
 		if (getJavaSettings().getJavaRootPackage() != null)
 		{
@@ -252,11 +314,10 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 
-		List<AClassDeclCG> classes = getClassDecls(statuses);
+		List<AClassDeclCG> classes = getClassDecls(classStatuses);
 		javaFormat.setClasses(classes);
 
-		LinkedList<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
-		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
+		List<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
 
 		for (IRStatus<AClassDeclCG> status : classStatuses)
 		{
@@ -294,7 +355,11 @@ public class JavaCodeGen extends CodeGenBase
 				}
 			}
 		}
-
+		
+		// Event notification
+		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), AClassDeclCG.class);
+		canBeGenerated = filter(canBeGenerated, generated);
+		
 		List<String> skipping = new LinkedList<String>();
 
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
@@ -305,7 +370,7 @@ public class JavaCodeGen extends CodeGenBase
 			StringWriter writer = new StringWriter();
 			AClassDeclCG classCg = status.getIrNode();
 			String className = status.getIrNodeName();
-			SClassDefinition vdmClass = (SClassDefinition) status.getIrNode().getSourceNode().getVdmNode();
+			INode vdmClass = status.getIrNode().getSourceNode().getVdmNode();
 
 			if (vdmClass == mainClass)
 			{
@@ -328,16 +393,22 @@ public class JavaCodeGen extends CodeGenBase
 						generated.add(new GeneratedModule(className, new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang()));
 					} else
 					{
-						String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
-						GeneratedModule generatedModule = new GeneratedModule(className, classCg, formattedJavaCode);
+						String code = writer.toString();
+						
+						if(getJavaSettings().formatCode())
+						{
+							code = JavaCodeGenUtil.formatJavaCode(code); 
+						}
+						
+						GeneratedModule generatedModule = new GeneratedModule(className, classCg, code);
 						generatedModule.setTransformationWarnings(status.getTransformationWarnings());
 						generated.add(generatedModule);
 					}
 				} else
 				{
-					if (!skipping.contains(vdmClass.getName().getName()))
+					if (!skipping.contains(className))
 					{
-						skipping.add(vdmClass.getName().getName());
+						skipping.add(className);
 					}
 				}
 
@@ -387,42 +458,86 @@ public class JavaCodeGen extends CodeGenBase
 		return data;
 	}
 
-	private List<SClassDefinition> getUserClasses(
-			List<SClassDefinition> mergedParseLists)
+	private <T extends org.overture.codegen.cgast.INode> List<IRStatus<T>> filter(
+			List<IRStatus<T>> statuses, List<GeneratedModule> generated)
 	{
-		List<SClassDefinition> userClasses = new LinkedList<SClassDefinition>();
-
-		for (SClassDefinition clazz : mergedParseLists)
+		List<IRStatus<T>> filtered = new LinkedList<IRStatus<T>>();
+		
+		for(IRStatus<T> status : statuses)
 		{
-			if (!getInfo().getDeclAssistant().classIsLibrary(clazz))
+			if(status.canBeGenerated())
 			{
-				userClasses.add(clazz);
+				filtered.add(status);
+			}
+			else
+			{
+				generated.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>()));
 			}
 		}
-		return userClasses;
+		
+		return filtered;
+	}
+
+	private void handleOldNames(List<? extends INode> ast) throws AnalysisException
+	{
+		OldNameRenamer oldNameRenamer = new OldNameRenamer();
+		
+		for(INode module : ast)
+		{
+			module.apply(oldNameRenamer);
+		}
+	}
+
+	private List<INode> getUserModules(
+			List<? extends INode> mergedParseLists)
+	{
+		List<INode> userModules = new LinkedList<INode>();
+		
+		if(mergedParseLists.size() == 1 && mergedParseLists.get(0) instanceof CombinedDefaultModule)
+		{
+			CombinedDefaultModule combined = (CombinedDefaultModule) mergedParseLists.get(0);
+			
+			for(AModuleModules m : combined.getModules())
+			{
+				userModules.add(m);
+			}
+			
+			return userModules;
+		}
+		else
+		{
+			for (INode node : mergedParseLists)
+			{
+				if(!getInfo().getDeclAssistant().isLibrary(node))
+				{
+					userModules.add(node);
+				}
+			}
+			
+			return userModules;
+		}
 	}
 
 	private List<Renaming> normaliseIdentifiers(
-			List<SClassDefinition> userClasses) throws AnalysisException
+			List<INode> userModules) throws AnalysisException
 	{
 		NameCollector collector = new NameCollector();
 
-		for (SClassDefinition clazz : userClasses)
+		for (INode node : userModules)
 		{
-			clazz.apply(collector);
+			node.apply(collector);
 		}
 
 		Set<String> allNames = collector.namesToAvoid();
 
 		JavaIdentifierNormaliser normaliser = new JavaIdentifierNormaliser(allNames, getInfo().getTempVarNameGen());
 		
-		for (SClassDefinition clazz : userClasses)
+		for (INode node : userModules)
 		{
-			clazz.apply(normaliser);
+			node.apply(normaliser);
 		}
 
 		VarRenamer renamer = new VarRenamer();
-
 		
 		Set<Renaming> filteredRenamings = new HashSet<Renaming>();
 		
@@ -434,24 +549,24 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 		
-		for (SClassDefinition clazz : userClasses)
+		for (INode node : userModules)
 		{
-			renamer.rename(clazz, filteredRenamings);
+			renamer.rename(node, filteredRenamings);
 		}
 
 		return new LinkedList<Renaming>(filteredRenamings);
 	}
 
-	private void computeDefTable(List<SClassDefinition> mergedParseLists)
+	private void computeDefTable(List<INode> mergedParseLists)
 			throws AnalysisException
 	{
-		List<SClassDefinition> classesToConsider = new LinkedList<>();
+		List<INode> classesToConsider = new LinkedList<>();
 
-		for (SClassDefinition c : mergedParseLists)
+		for (INode node : mergedParseLists)
 		{
-			if (!getInfo().getDeclAssistant().classIsLibrary(c))
+			if (!getInfo().getDeclAssistant().isLibrary(node))
 			{
-				classesToConsider.add(c);
+				classesToConsider.add(node);
 			}
 		}
 		
@@ -459,19 +574,19 @@ public class JavaCodeGen extends CodeGenBase
 		getInfo().setIdStateDesignatorDefs(idDefs);
 	}
 
-	private void removeUnreachableStms(List<SClassDefinition> mergedParseLists)
+	private void removeUnreachableStms(List<? extends INode> mergedParseLists)
 			throws AnalysisException
 	{
 		UnreachableStmRemover remover = new UnreachableStmRemover();
 
-		for (SClassDefinition clazz : mergedParseLists)
+		for (INode node : mergedParseLists)
 		{
-			clazz.apply(remover);
+			node.apply(remover);
 		}
 	}
 
 	private List<Renaming> performRenaming(
-			List<SClassDefinition> mergedParseLists,
+			List<INode> mergedParseLists,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 			throws AnalysisException
 	{
@@ -480,14 +595,14 @@ public class JavaCodeGen extends CodeGenBase
 		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
 		VarRenamer renamer = new VarRenamer();
 
-		for (SClassDefinition classDef : mergedParseLists)
+		for (INode node : mergedParseLists)
 		{
-			Set<Renaming> classRenamings = renamer.computeRenamings(classDef, renamingsCollector);
+			Set<Renaming> currentRenamings = renamer.computeRenamings(node, renamingsCollector);
 
-			if (!classRenamings.isEmpty())
+			if (!currentRenamings.isEmpty())
 			{
-				renamer.rename(classDef, classRenamings);
-				allRenamings.addAll(classRenamings);
+				renamer.rename(node, currentRenamings);
+				allRenamings.addAll(currentRenamings);
 			}
 		}
 
@@ -496,9 +611,25 @@ public class JavaCodeGen extends CodeGenBase
 		return allRenamings;
 	}
 
-	private void simplifyLibraryClass(SClassDefinition classDef)
+	private void simplifyLibrary(INode node)
 	{
-		for (PDefinition def : classDef.getDefinitions())
+		List<PDefinition> defs = null;
+		
+		if(node instanceof SClassDefinition)
+		{
+			defs = ((SClassDefinition) node).getDefinitions();
+		}
+		else if(node instanceof AModuleModules)
+		{
+			defs = ((AModuleModules) node).getDefs();
+		}
+		else
+		{
+			// Nothing to do
+			return;
+		}
+		
+		for (PDefinition def : defs)
 		{
 			if (def instanceof SOperationDefinition)
 			{
@@ -520,21 +651,28 @@ public class JavaCodeGen extends CodeGenBase
 	}
 
 	private List<AClassDeclCG> getClassDecls(
-			List<IRStatus<org.overture.codegen.cgast.INode>> statuses)
+			List<IRStatus<AClassDeclCG>> statuses)
 	{
 		List<AClassDeclCG> classDecls = new LinkedList<AClassDeclCG>();
 
-		for (IRStatus<org.overture.codegen.cgast.INode> status : statuses)
+		for (IRStatus<AClassDeclCG> status : statuses)
 		{
-			org.overture.codegen.cgast.INode node = status.getIrNode();
-
-			if (node instanceof AClassDeclCG)
-			{
-				classDecls.add((AClassDeclCG) node);
-			}
+			classDecls.add(status.getIrNode());
 		}
 
 		return classDecls;
+	}
+	
+	private List<AModuleDeclCG> getModuleDecls(List<IRStatus<AModuleDeclCG>> statuses)
+	{
+		List<AModuleDeclCG> modules = new LinkedList<AModuleDeclCG>();
+		
+		for(IRStatus<AModuleDeclCG> status : statuses)
+		{
+			modules.add(status.getIrNode());
+		}
+		
+		return modules;
 	}
 
 	public Generated generateJavaFromVdmExp(PExp exp) throws AnalysisException
@@ -610,7 +748,7 @@ public class JavaCodeGen extends CodeGenBase
 	}
 
 	private InvalidNamesResult validateVdmModelNames(
-			List<SClassDefinition> mergedParseLists) throws AnalysisException
+			List<INode> mergedParseLists) throws AnalysisException
 	{
 		AssistantManager assistantManager = generator.getIRInfo().getAssistantManager();
 		VdmAstAnalysis analysis = new VdmAstAnalysis(assistantManager);
@@ -646,17 +784,30 @@ public class JavaCodeGen extends CodeGenBase
 		}
 	}
 
-	private boolean shouldBeGenerated(SClassDefinition classDef,
+	private boolean shouldBeGenerated(INode node,
 			DeclAssistantCG declAssistant)
 	{
-		if (declAssistant.classIsLibrary(classDef))
+		if (declAssistant.isLibrary(node))
 		{
 			return false;
 		}
 
-		String name = classDef.getName().getName();
+		String name = null;
+		
+		if(node instanceof SClassDefinition)
+		{
+			name = ((SClassDefinition) node).getName().getName();
+		}
+		else if(node instanceof AModuleModules)
+		{
+			name = ((AModuleModules) node).getName().getName();
+		}
+		else
+		{
+			return true;
+		}
 
-		if (getJavaSettings().getClassesToSkip().contains(name))
+		if (getJavaSettings().getModulesToSkip().contains(name))
 		{
 			return false;
 		}
@@ -670,5 +821,43 @@ public class JavaCodeGen extends CodeGenBase
 		// }
 
 		return true;
+	}
+
+	@Override
+	public void register(IREventObserver obs)
+	{
+		if(obs != null && irObserver == null)
+		{
+			irObserver = obs;
+		}
+	}
+
+	@Override
+	public void unregister(IREventObserver obs)
+	{
+		if(obs != null && irObserver == obs)
+		{
+			irObserver = null;
+		}
+	}
+
+	public List<IRStatus<org.overture.codegen.cgast.INode>> initialIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
+	{
+		if(irObserver != null)
+		{
+			return irObserver.initialIRConstructed(ast, getInfo());
+		}
+		
+		return ast;
+	}
+	
+	public List<IRStatus<org.overture.codegen.cgast.INode>> finalIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
+	{
+		if(irObserver != null)
+		{
+			return irObserver.finalIRConstructed(ast, getInfo());
+		}
+		
+		return ast;
 	}
 }

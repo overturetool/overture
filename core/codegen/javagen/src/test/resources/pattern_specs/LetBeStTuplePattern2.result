@@ -41,7 +41,7 @@ public class Entry {
             throw new RuntimeException("Let Be St found no applicable bindings");
         }
 
-        return ((Object) b);
+        return b;
     }
 
     public String toString() {

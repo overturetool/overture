@@ -25,8 +25,7 @@ public class Entry {
             Number a = null;
 
             if (success_1) {
-                Tuple tuplePattern_2 = Utils.clone(((Tuple) tuplePattern_1.get(
-                            1)));
+                Tuple tuplePattern_2 = Utils.copy(((Tuple) tuplePattern_1.get(1)));
                 success_1 = tuplePattern_2.compatible(Number.class, Number.class);
 
                 if (success_1) {
@@ -44,12 +43,12 @@ public class Entry {
             }
 
             if (Utils.equals(1L, 1L)) {
-                seqCompResult_1 = SeqUtil.conc(Utils.clone(seqCompResult_1),
+                seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
                         SeqUtil.seq(a));
             }
         }
 
-        return Utils.clone(seqCompResult_1);
+        return Utils.copy(seqCompResult_1);
     }
 
     public String toString() {

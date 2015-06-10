@@ -11,7 +11,7 @@ public class Entry {
         A a = new A(MapUtil.map(new Maplet(1L, true)));
         Utils.mapSeqUpdate(a.x, 10L, false);
 
-        return Utils.clone(a.x);
+        return Utils.copy(a.x);
     }
 
     public String toString() {
@@ -22,7 +22,7 @@ public class Entry {
         public VDMMap x;
 
         public A(final VDMMap _x) {
-            x = (_x != null) ? Utils.clone(_x) : null;
+            x = (_x != null) ? Utils.copy(_x) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -39,7 +39,7 @@ public class Entry {
             return Utils.hashCode(x);
         }
 
-        public A clone() {
+        public A copy() {
             return new A(x);
         }
 

@@ -1,0 +1,46 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+No = Even | Large;
+
+Even = nat
+inv ev == ev mod 2 = 0;
+
+Large = real
+inv la == la > 1000;
+
+operations
+
+typeUseOk : () ==> ()
+typeUseOk () ==
+let  - = 1,
+     even : No = 2,
+     - = 3
+in
+  skip;
+  
+typeUseNotOk : () ==> ()
+typeUseNotOk () ==
+(
+  IO`println("Before breaking named type invariant");
+  (
+    dcl notLarge : No := 999;
+    IO`println("After breaking named type invariant");
+    skip;
+  );
+);
+
+Run : () ==> ?
+Run () ==
+(
+  typeUseOk();
+  typeUseNotOk();
+  return 0;
+);
+
+end Entry

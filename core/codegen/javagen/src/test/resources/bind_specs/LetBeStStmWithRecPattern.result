@@ -68,7 +68,7 @@ public class Entry {
             return Utils.hashCode(x, y);
         }
 
-        public Vec clone() {
+        public Vec copy() {
             return new Vec(x, y);
         }
 

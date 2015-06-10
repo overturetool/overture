@@ -30,10 +30,10 @@ public class Entry {
                     throw new RuntimeException("Missing member: field number 2");
                 }
 
-                ss = SeqUtil.conc(Utils.clone(ss), SeqUtil.seq(apply_1));
+                ss = SeqUtil.conc(Utils.copy(ss), SeqUtil.seq(apply_1));
             }
 
-            return Utils.clone(ss);
+            return Utils.copy(ss);
         }
     }
 

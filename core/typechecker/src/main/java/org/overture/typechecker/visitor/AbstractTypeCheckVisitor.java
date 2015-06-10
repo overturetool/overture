@@ -24,6 +24,7 @@ package org.overture.typechecker.visitor;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -37,6 +38,7 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
@@ -247,7 +249,17 @@ public class AbstractTypeCheckVisitor extends
 		final PDefinition def = AstFactory.newAMultiBindListDefinition(nodeLocation, question.assistantFactory.createPMultipleBindAssistant().getMultipleBindList((PMultipleBind) bind));
 
 		def.apply(THIS, question.newConstraint(null));
-		Environment local = new FlatCheckedEnvironment(question.assistantFactory, def, question.env, question.scope);
+		
+		List<PDefinition> qualified = new Vector<PDefinition>();
+		
+		for (PDefinition d: question.assistantFactory.createPDefinitionAssistant().getDefinitions(def))
+		{
+			PDefinition copy = d.clone();
+			copy.setNameScope(NameScope.LOCAL);
+			qualified.add(copy);
+		}
+		
+		Environment local = new FlatCheckedEnvironment(question.assistantFactory, qualified, question.env, question.scope);
 
 		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, question.constraint, null);
 

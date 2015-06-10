@@ -1,0 +1,47 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+state St of
+  x : nat
+init s == s = mk_St(0)
+end
+
+functions
+
+f :  nat -> nat
+f (a) ==
+  if a mod 2 = 0 then a + 2 else a + 1
+post RESULT mod 2 = 0;
+
+operations
+
+Run : () ==> ?
+Run () ==
+let - = opRet(1),
+    - = f(3)
+in
+(
+  opVoid();
+  IO`println("Before breaking post condition");
+  let - = opRet(4) in skip;
+  IO`println("After breaking post condition");
+  return 0;
+);
+
+opVoid : () ==> ()
+opVoid () ==
+  x := x + 1
+post x = x~+1; 
+
+opRet : nat ==> nat
+opRet (a) ==
+(
+  x := x + 1;
+  return x;
+)
+post x = x~+1 and RESULT = a;
+
+end Entry

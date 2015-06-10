@@ -28,6 +28,7 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
@@ -67,7 +68,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 			data = JavaCodeGenUtil.generateJavaFromFiles(files, vdmCodGen, Settings.dialect);
 		} catch (UnsupportedModelingException e)
 		{
-			return JavaCodeGenUtil.constructUnsupportedModelingString(e);
+			return GeneralCodeGenUtils.constructUnsupportedModelingString(e);
 		}
 
 		List<GeneratedModule> classes = data.getClasses();
@@ -104,7 +105,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 		{
 			generatedCode.append(NAME_VIOLATION_INDICATOR + LINE_SEPARATOR);
 			generatedCode.append(LINE_SEPARATOR
-					+ JavaCodeGenUtil.constructNameViolationsString(invalidNames));
+					+ GeneralCodeGenUtils.constructNameViolationsString(invalidNames));
 			generatedCode.append(MODULE_DELIMITER);
 		}
 

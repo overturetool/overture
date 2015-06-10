@@ -44,7 +44,7 @@ public class Entry {
             return Utils.hashCode(e);
         }
 
-        public R clone() {
+        public R copy() {
             return new R(e);
         }
 

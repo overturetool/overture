@@ -52,12 +52,12 @@ public class Entry {
                     continue;
                 }
 
-                setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
+                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
                         SetUtil.set(a.longValue() + b.longValue()));
             }
         }
 
-        return Utils.clone(setCompResult_1);
+        return Utils.copy(setCompResult_1);
     }
 
     public String toString() {

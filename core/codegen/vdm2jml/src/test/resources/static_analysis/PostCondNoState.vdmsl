@@ -1,0 +1,24 @@
+module M
+
+exports all
+definitions
+
+functions
+
+f :  nat * nat -> nat
+f (a,b) == a+b
+post RESULT = a+b;
+
+operations
+
+opRes : nat ==> nat
+opRes (a) ==
+  return a
+post a = RESULT;
+
+opNoRes : () ==> ()
+opNoRes () ==
+  skip
+post true;
+
+end M

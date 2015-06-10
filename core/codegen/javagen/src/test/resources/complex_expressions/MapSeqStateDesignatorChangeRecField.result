@@ -49,7 +49,7 @@ public class Entry {
             return Utils.hashCode(field);
         }
 
-        public Rec clone() {
+        public Rec copy() {
             return new Rec(field);
         }
 

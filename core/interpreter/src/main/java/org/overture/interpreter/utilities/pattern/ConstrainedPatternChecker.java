@@ -77,7 +77,7 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
 	{
-		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
+		return isConstrained(pattern.getPlist());
 
 	}
 
@@ -85,7 +85,7 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseASeqPattern(ASeqPattern pattern)
 			throws AnalysisException
 	{
-		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
+		return isConstrained(pattern.getPlist());
 	}
 
 	@Override
@@ -97,14 +97,14 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 			return true; // Set types are various, so we must permute
 		}
 
-		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
+		return isConstrained(pattern.getPlist());
 	}
 
 	@Override
 	public Boolean caseATuplePattern(ATuplePattern pattern)
 			throws AnalysisException
 	{
-		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
+		return isConstrained(pattern.getPlist());
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 			list.add(npp.getPattern());
 		}
 		
-		return af.createPPatternListAssistant().isConstrained(list);
+		return isConstrained(list);
 	}
 
 	@Override
@@ -146,6 +146,19 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 	{
 		// TODO Auto-generated method stub
 		return true;
+	}
+	
+	public boolean isConstrained(LinkedList<PPattern> plist)
+	{
+		for (PPattern p : plist)
+		{
+			if (af.createPPatternAssistant().isConstrained(p))
+			{
+				return true; // NB. OR
+			}
+		}
+
+		return false;
 	}
 
 }

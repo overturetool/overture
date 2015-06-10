@@ -23,13 +23,13 @@ public class Entry {
                 Number y = ((Number) iterator_2.next());
 
                 if (Utils.equals(1L, 1L)) {
-                    setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
+                    setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
                             SetUtil.set(x.longValue() * y.longValue()));
                 }
             }
         }
 
-        return Utils.clone(setCompResult_1);
+        return Utils.copy(setCompResult_1);
     }
 
     public String toString() {

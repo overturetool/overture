@@ -1,4 +1,9 @@
-#set( $decl = $node.getDecl())
-#if (!$JavaFormat.isNull($decl))
-	$node.getAccess() $JavaFormat.format(${decl})
+#if ($JavaFormat.genDecl(${node}))
+	$node.getAccess() $JavaFormat.format(${node.getDecl()})
+#end
+##
+#set( $inv = $node.getInv())
+##
+#if (!$JavaFormat.isNull(${inv}))
+	$JavaFormat.format(${inv})
 #end

@@ -5,7 +5,7 @@ import java.util.*;
 
 public class A {
     private static final VDMMap a = MapUtil.map(new Maplet(1L, 2L));
-    private static final VDMMap x = MapUtil.override(Utils.clone(a), op());
+    private static final VDMMap x = MapUtil.override(Utils.copy(a), op());
 
     public A() {
     }

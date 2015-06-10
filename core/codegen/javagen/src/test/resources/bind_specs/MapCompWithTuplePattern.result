@@ -35,12 +35,12 @@ public class Entry {
             }
 
             if (Utils.equals(1L, 1L)) {
-                mapCompResult_1 = MapUtil.munion(Utils.clone(mapCompResult_1),
+                mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
                         MapUtil.map(new Maplet(a, a)));
             }
         }
 
-        return Utils.clone(mapCompResult_1);
+        return Utils.copy(mapCompResult_1);
     }
 
     public String toString() {

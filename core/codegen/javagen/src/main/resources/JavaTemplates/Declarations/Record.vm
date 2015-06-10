@@ -3,13 +3,8 @@ static class $node.getName() implements Record
 	#foreach( $field in $node.getFields() )
 	$JavaFormat.format($field)
 	#end
-	
-	$RecordCreator.formatRecordConstructor($node)
-	
-	$RecordCreator.generateEqualsMethod($node)
-	$RecordCreator.generateHashcodeMethod($node)
-	$RecordCreator.generateCloneMethod($node)
-	$RecordCreator.generateToStringMethod($node)
+
+
 	##
 	#foreach( $method in $node.getMethods() )
 	$JavaFormat.format($method)

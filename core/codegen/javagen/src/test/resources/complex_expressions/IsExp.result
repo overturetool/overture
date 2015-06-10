@@ -50,7 +50,7 @@ public class Entry {
             return Utils.hashCode(x, y);
         }
 
-        public Rec clone() {
+        public Rec copy() {
             return new Rec(x, y);
         }
 

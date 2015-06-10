@@ -51,7 +51,7 @@ public class Entry {
         {
             Number sum = 0L;
 
-            for (Iterator iterator_1 = SeqUtil.elems(Utils.clone(xs)).iterator();
+            for (Iterator iterator_1 = SeqUtil.elems(Utils.copy(xs)).iterator();
                     iterator_1.hasNext();) {
                 Object x = (Object) iterator_1.next();
                 Number apply_1 = null;

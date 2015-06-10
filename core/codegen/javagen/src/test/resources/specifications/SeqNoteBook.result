@@ -120,7 +120,7 @@ public class NoteBook {
 
             for (Long i = 1L; i <= toVar_1; i++) {
                 VDMSeq reversed = nb1.getReverseMessages();
-                IO.println(Utils.clone(((VDMSeq) Utils.get(reversed, i))));
+                IO.println(Utils.copy(((VDMSeq) Utils.get(reversed, i))));
             }
 
             IO.print(SeqUtil.seq('\n'));
@@ -145,7 +145,7 @@ public class NoteBook {
                                               .iterator();
                     iterator_2.hasNext();) {
                 VDMSeq msg = (VDMSeq) iterator_2.next();
-                IO.print(SeqUtil.conc(Utils.clone(msg), SeqUtil.seq('\n')));
+                IO.print(SeqUtil.conc(Utils.copy(msg), SeqUtil.seq('\n')));
             }
 
             IO.println(SeqUtil.seq('\n'));
@@ -158,7 +158,7 @@ public class NoteBook {
             for (Iterator iterator_3 = nb1.getMessagesOrdered().iterator();
                     iterator_3.hasNext();) {
                 VDMSeq msg = (VDMSeq) iterator_3.next();
-                IO.print(SeqUtil.conc(Utils.clone(msg), SeqUtil.seq('\n')));
+                IO.print(SeqUtil.conc(Utils.copy(msg), SeqUtil.seq('\n')));
             }
         }
     }
@@ -168,45 +168,45 @@ public class NoteBook {
 
         for (Long i = 1L; i <= toVar_2; i++) {
             VDMSeq msg = getMessage(i);
-            IO.println(Utils.clone(msg));
+            IO.println(Utils.copy(msg));
         }
     }
 
     public void addMessage(final VDMSeq msg) {
-        messages = SeqUtil.conc(SeqUtil.seq(Utils.clone(msg)),
-                Utils.clone(messages));
+        messages = SeqUtil.conc(SeqUtil.seq(Utils.copy(msg)),
+                Utils.copy(messages));
     }
 
     public void addMessages(final VDMSeq newMessages) {
-        messages = SeqUtil.conc(Utils.clone(newMessages), Utils.clone(messages));
+        messages = SeqUtil.conc(Utils.copy(newMessages), Utils.copy(messages));
     }
 
     private void addMessagesDist(final VDMSeq newMessages1,
         final VDMSeq newMessages2) {
-        messages = SeqUtil.conc(SeqUtil.distConc(SeqUtil.seq(Utils.clone(
-                            newMessages1), Utils.clone(newMessages2))),
-                Utils.clone(messages));
+        messages = SeqUtil.conc(SeqUtil.distConc(SeqUtil.seq(Utils.copy(
+                            newMessages1), Utils.copy(newMessages2))),
+                Utils.copy(messages));
     }
 
     public VDMSeq readLatest() {
-        return Utils.clone(((VDMSeq) messages.get(0)));
+        return Utils.copy(((VDMSeq) messages.get(0)));
     }
 
     public void removeLatest() {
-        messages = SeqUtil.tail(Utils.clone(messages));
+        messages = SeqUtil.tail(Utils.copy(messages));
     }
 
     public void overrideMessage(final Number index, final VDMSeq newMessage) {
-        messages = SeqUtil.mod(Utils.clone(messages),
-                new Maplet[] { new Maplet(index, Utils.clone(newMessage)) });
+        messages = SeqUtil.mod(Utils.copy(messages),
+                new Maplet[] { new Maplet(index, Utils.copy(newMessage)) });
     }
 
     public VDMSeq getMessagesOrdered() {
-        return Utils.clone(messages);
+        return Utils.copy(messages);
     }
 
     public void setMessages(final VDMSeq newMessages) {
-        messages = Utils.clone(newMessages);
+        messages = Utils.copy(newMessages);
     }
 
     public Number noOfMessgages() {
@@ -214,7 +214,7 @@ public class NoteBook {
     }
 
     public VDMSeq getMessage(final Number index) {
-        return Utils.clone(((VDMSeq) Utils.get(messages, index)));
+        return Utils.copy(((VDMSeq) Utils.get(messages, index)));
     }
 
     public Boolean isMessage(final Number index, final VDMSeq message) {
@@ -226,7 +226,7 @@ public class NoteBook {
     }
 
     public VDMSet getMessgaesSet() {
-        return SeqUtil.elems(Utils.clone(messages));
+        return SeqUtil.elems(Utils.copy(messages));
     }
 
     public VDMSet getMessageIndices() {
@@ -234,7 +234,7 @@ public class NoteBook {
     }
 
     public VDMSeq getReverseMessages() {
-        return SeqUtil.reverse(Utils.clone(messages));
+        return SeqUtil.reverse(Utils.copy(messages));
     }
 
     public Boolean eq(final NoteBook other) {

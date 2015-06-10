@@ -36,7 +36,7 @@ public class A {
             return Utils.hashCode(x);
         }
 
-        public R clone() {
+        public R copy() {
             return new R(x);
         }
 
