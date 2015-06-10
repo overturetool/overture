@@ -26,7 +26,7 @@
     <module>codegen-runtime</module>
     <module>codegen-maven-plugin</module>
     <!-- <module>cgisa</module> -->
-    <module>cppgen</module>
+    <!--<module>cppgen</module>-->
   </modules>
   
 </project>
