@@ -1,7 +1,6 @@
 package org.overture.tools.maven.astcreator;
 
 import java.io.File;
-import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -84,6 +83,21 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 	 * @parameter expression="${project.build.directory}/generated-sources/vdmCodeGen"
 	 */
 	protected File outputDirectory;
+	
+	/**
+	 * Dialect to use. Can be either 'sl' or 'pp'
+	 * 
+	 * @parameter
+	 * @required
+	 */
+	protected String dialect;
+	
+	/**
+	 * A flag to configure formatting of the generated code
+	 * 
+	 * @parameter
+	 */
+	protected boolean formatCode = true;
 
 //	/**
 //	 * Enables generation of vDM source code corresponding to the Java generated tree.

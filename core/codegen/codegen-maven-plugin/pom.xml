@@ -10,10 +10,9 @@
 
   <packaging>maven-plugin</packaging>
 
-  <artifactId>codegen-plugin</artifactId>  
-  <name>The Java Code Generator Maven Plugin</name>
-
-
+	<groupId>org.overturetool.core.codegen</groupId>
+	<artifactId>codegen-plugin</artifactId>
+	<name>The Java Code Generator Maven Plugin</name>
 
   <build>
     <plugins>
