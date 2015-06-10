@@ -320,8 +320,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 		{
 			List<AModuleModules> ast = PluginVdm2JavaUtil.getModules(model.getSourceUnits());
 			
-			// TODO: Read preferences
-			final boolean generateJml = true;
+			Preferences prefs = getPrefs();
+			final boolean generateJml = prefs.getBoolean(ICodeGenConstants.GENERATE_JML, ICodeGenConstants.GENERATE_JML_DEFAULT);;
 
 			if (generateJml)
 			{
@@ -336,7 +336,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 	
 	public IRSettings getIrSettings(final IProject project)
 	{
-		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+		Preferences preferences = getPrefs();
 		
 		boolean generateCharSeqsAsStrings = preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
 		boolean generateConcMechanisms = preferences.getBoolean(ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS, ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS_DEFAULT);
@@ -347,10 +347,16 @@ public class Vdm2JavaCommand extends AbstractHandler
 		
 		return irSettings;
 	}
+
+	private Preferences getPrefs()
+	{
+		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+		return preferences;
+	}
 	
 	public JavaSettings getJavaSettings(final IProject project, List<String> classesToSkip)
 	{
-		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+		Preferences preferences = getPrefs();
 		
 		boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
 		String javaPackage = preferences.get(ICodeGenConstants.JAVA_PACKAGE, ICodeGenConstants.JAVA_PACKAGE_DEFAULT);
@@ -363,7 +369,6 @@ public class Vdm2JavaCommand extends AbstractHandler
 		if (!JavaCodeGenUtil.isValidJavaPackage(javaSettings.getJavaRootPackage()))
 		{
 			javaSettings.setJavaRootPackage(project.getName());
-
 		}
 		
 		return javaSettings;
