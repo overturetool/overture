@@ -6,6 +6,7 @@ import java.util.*;
 
 
 //@ nullable_by_default
+@SuppressWarnings("all")
 public class Entry {
     public static void typeUseOk() {
         Number ignorePattern_1 = 1L;

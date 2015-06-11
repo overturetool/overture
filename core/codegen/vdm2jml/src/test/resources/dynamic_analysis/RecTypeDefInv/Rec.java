@@ -6,6 +6,7 @@ import java.util.*;
 
 
 //@ nullable_by_default
+@SuppressWarnings("all")
 public class Rec implements Record {
     public Number x;
     public Number y;

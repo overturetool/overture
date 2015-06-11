@@ -6,6 +6,7 @@ import java.util.*;
 
 
 //@ nullable_by_default
+@SuppressWarnings("all")
 public class Entry {
     public static Object Run() {
         Number n1 = 2L;
