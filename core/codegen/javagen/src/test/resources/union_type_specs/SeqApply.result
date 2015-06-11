@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     private Object xs = SeqUtil.seq(SeqUtil.seq(10L));
 

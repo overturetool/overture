@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 abstract public class Employee {
     public Employee() {
     }
@@ -20,6 +21,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class HourlyPaidEmployee extends Employee {
     public Number hours;
     private Number rate;
@@ -63,6 +65,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class FixedSalaryEmployee extends Employee {
     private Number fixedSalary;
 
@@ -93,6 +96,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Company {
     private VDMSeq employees;
 
@@ -148,6 +152,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class World {
     public World() {
     }

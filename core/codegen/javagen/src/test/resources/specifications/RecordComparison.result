@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public static final Boolean a = Utils.equals(new R(1L), new R(2L));
     public static final Boolean b = !(Utils.equals(new R(1L), new R(2L)));

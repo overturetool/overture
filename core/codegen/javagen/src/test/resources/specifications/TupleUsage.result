@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     private static final Tuple a = Tuple.mk_(Tuple.mk_(1L, true), 3L);
     private static final Tuple b = Utils.copy(a);
