@@ -370,8 +370,8 @@ public class ExpAssistantCG extends AssistantBase
 		// expressions exist within a statement. However, in case it does not, the transformation
 		// is not performed. In this way, the  'and' and 'or' expressions can
 		// still be used (say) in instance variable assignment.
-		
-		return exp.getAncestor(SOperationDefinition.class) == null
+		//FIXME: imperative contexts need to move out of the platform
+		return false && exp.getAncestor(SOperationDefinition.class) == null
 				&& exp.getAncestor(SFunctionDefinition.class) == null
 				&& exp.getAncestor(ANamedTraceDefinition.class) == null
 				&& exp.getAncestor(ATypeDefinition.class) == null
@@ -388,24 +388,24 @@ public class ExpAssistantCG extends AssistantBase
 			return null;
 		}
 
-		LinkedList<ASetMultipleBindCG> bindingsCg = new LinkedList<ASetMultipleBindCG>();
+		LinkedList<SMultipleBindCG> bindingsCg = new LinkedList<SMultipleBindCG>();
 		for (PMultipleBind multipleBind : bindings)
 		{
-			if (!(multipleBind instanceof ASetMultipleBind))
-			{
-				question.addUnsupportedNode(node, String.format("Generation of a %s is only supported for multiple set binds. Got: %s", nodeStr, multipleBind));
-				return null;
-			}
+//			if (!(multipleBind instanceof ASetMultipleBind))
+//			{
+//				question.addUnsupportedNode(node, String.format("Generation of a %s is only supported for multiple set binds. Got: %s", nodeStr, multipleBind));
+//				return null;
+//			}
 
 			SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
 
-			if (!(multipleBindCg instanceof ASetMultipleBindCG))
-			{
-				question.addUnsupportedNode(node, String.format("Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: %s", multipleBindCg));
-				return null;
-			}
+//			if (!(multipleBindCg instanceof ASetMultipleBindCG))
+//			{
+//				question.addUnsupportedNode(node, String.format("Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: %s", multipleBindCg));
+//				return null;
+//			}
 
-			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
+			bindingsCg.add(multipleBindCg);
 		}
 
 		PType type = node.getType();

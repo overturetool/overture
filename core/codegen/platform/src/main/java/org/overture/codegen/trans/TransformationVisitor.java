@@ -24,7 +24,9 @@ package org.overture.codegen.trans;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -541,9 +543,16 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, varPrefixes);
 
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), tempVarNameGen, strategy);
+		List<ASetMultipleBindCG> x = new LinkedList<ASetMultipleBindCG>();
+		
+		for (SMultipleBindCG b : node.getBindList()){
+			x.add((ASetMultipleBindCG) b.clone());
+		}
+		
+		
+		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(x, tempVarNameGen, strategy);
 
-		if (node.getBindList().isEmpty())
+		if (x.isEmpty())
 		{
 			ABoolLiteralExpCG forAllResult = info.getExpAssistant().consBoolLiteral(true);
 			transformationAssistant.replaceNodeWith(node, forAllResult);
@@ -572,9 +581,16 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, varPrefixes);
 
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), tempVarNameGen, strategy);
+		List<ASetMultipleBindCG> x = new LinkedList<ASetMultipleBindCG>();
+		
+		for (SMultipleBindCG b : node.getBindList()){
+			x.add((ASetMultipleBindCG) b.clone());
+		}
+		
+		
+		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(x, tempVarNameGen, strategy);
 
-		if (node.getBindList().isEmpty())
+		if (x.isEmpty())
 		{
 			ABoolLiteralExpCG existsResult = info.getExpAssistant().consBoolLiteral(false);
 			transformationAssistant.replaceNodeWith(node, existsResult);
@@ -602,10 +618,16 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 
 		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transformationAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes, counterData);
+		
+		List<ASetMultipleBindCG> x = new LinkedList<ASetMultipleBindCG>();
+		
+		for (SMultipleBindCG b : node.getBindList()){
+			x.add((ASetMultipleBindCG) b.clone());
+		}
+		
+		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(x, tempVarNameGen, strategy);
 
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), tempVarNameGen, strategy);
-
-		if (node.getBindList().isEmpty())
+		if (x.isEmpty())
 		{
 			ABoolLiteralExpCG exists1Result = info.getExpAssistant().consBoolLiteral(false);
 			transformationAssistant.replaceNodeWith(node, exists1Result);
