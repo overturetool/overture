@@ -31,7 +31,9 @@ $package
 	#set( $threadMethod = $JavaFormat.format($node.getThread()))
 #end
 ##
-
+#if (!$JavaFormat.isInnerClass($node))
+@SuppressWarnings("all")
+#end
 ##
 $JavaFormat.formatMetaData($node.getGlobalMetaData())##
 ##
