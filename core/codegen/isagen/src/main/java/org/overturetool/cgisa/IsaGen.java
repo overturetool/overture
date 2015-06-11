@@ -41,6 +41,7 @@ import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overturetool.cgisa.transformations.GroupMutRecs;
 import org.overturetool.cgisa.transformations.SortDependencies;
@@ -52,6 +53,28 @@ import org.overturetool.cgisa.transformations.SortDependencies;
  */
 public class IsaGen extends CodeGenBase
 {
+
+	public static GeneratedModule vdmModule2IsaTheory(AModuleModules module)
+			throws AnalysisException,
+			org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		IsaGen ig = new IsaGen();
+		List<AModuleModules> ast = new LinkedList<AModuleModules>();
+		ast.add(module);
+		List<GeneratedModule> r = ig.generateIsabelleSyntax(ast);
+
+		return r.get(0);
+	}
+
+	public static String vdmExp2IsaString(PExp exp) throws AnalysisException,
+			org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		IsaGen ig = new IsaGen();
+		GeneratedModule r = ig.generateIsabelleSyntax(exp);
+		//FIXME: check if generation work before blindly returning
+		return r.getContent();
+	}
+
 	public IsaGen()
 	{
 		this(null);
@@ -69,7 +92,8 @@ public class IsaGen extends CodeGenBase
 		Velocity.init();
 	}
 
-	public GeneratedModule generateIsabelleSyntax(PExp exp) throws AnalysisException,
+	public GeneratedModule generateIsabelleSyntax(PExp exp)
+			throws AnalysisException,
 			org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		IRStatus<SExpCG> status = this.generator.generateFrom(exp);
@@ -79,7 +103,7 @@ public class IsaGen extends CodeGenBase
 			return prettyPrint(status);
 		}
 
-		throw new org.overture.codegen.cgast.analysis.AnalysisException("exp.toString() cannot be code-generated");
+		throw new org.overture.codegen.cgast.analysis.AnalysisException(exp.toString() +" cannot be code-generated");
 	}
 
 	/**
