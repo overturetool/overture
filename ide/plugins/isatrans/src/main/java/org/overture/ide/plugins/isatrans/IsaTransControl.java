@@ -1,6 +1,7 @@
 package org.overture.ide.plugins.isatrans;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,6 +15,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.console.ConsolePlugin;
+import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.MessageConsole;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.utils.GeneratedModule;
@@ -39,20 +43,33 @@ public class IsaTransControl
 
 	public void generateTheoryFilesModelPos()
 	{
+		final MessageConsole console = new MessageConsole("Isabelle Translation", null);
+		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
+
+		PrintStream printStream = new PrintStream(console.newMessageStream());
+
+		printStream.println("Starting Isabelle to VDM translation of Model and Proof Obligations...");
+
 		preFlightCheck();
 		File isaDir = makeThyDirs();
 		try
 		{
 			AModuleModules ast = proj.getModel().getModuleList().get(0);
+			printStream.println();
+			printStream.println("Generating Proof Obligations.");
+			printStream.println("Translating Model.");
+			printStream.println("Translating POs.");
 			IsaPog ip = new IsaPog(ast);
 
 			if (ip.getModelThyString().equals("")
 					|| ip.getPosThyString().equals(""))
 			{
 				openErrorDialog("Internal error.");
+				// FIXME report errors
 				return;
 			}
 
+			printStream.println("Writing files.");
 			File modelFile = new File(isaDir.getPath() + File.separatorChar
 					+ ip.getModelThyName());
 			FileUtils.writeStringToFile(modelFile, ip.getModelThyString());
@@ -62,7 +79,11 @@ public class IsaTransControl
 			FileUtils.writeStringToFile(posFile, ip.getPosThyString());
 
 			refreshProject();
-			
+
+			printStream.println();
+			printStream.println("Model and Proof Obligations Translation complete.");
+			printStream.close();
+
 		} catch (Exception e)
 		{
 			openErrorDialog("Internal error.");
@@ -72,7 +93,12 @@ public class IsaTransControl
 
 	public void generateTheoryFilesModel()
 	{
+		final MessageConsole console = new MessageConsole("Isabelle Translation", null);
+		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
 
+		PrintStream printStream = new PrintStream(console.newMessageStream());
+
+		printStream.println("Starting Isabelle to VDM translation of Model...");
 		preFlightCheck();
 		File isaDir = makeThyDirs();
 
@@ -81,6 +107,8 @@ public class IsaTransControl
 		try
 		{
 			List<AModuleModules> ast = proj.getModel().getModuleList();
+			printStream.println();
+			printStream.println("Translating Model.");
 			List<GeneratedModule> modellTheoryList = ig.generateIsabelleSyntax(ast);
 
 			GeneratedModule modelTheory = modellTheoryList.get(0);
@@ -88,6 +116,9 @@ public class IsaTransControl
 			if (modelTheory.getContent().isEmpty())
 			{
 				openErrorDialog("Internal error.");
+				printStream.println(modelTheory.getMergeErrors());
+				printStream.println(modelTheory.getUnsupportedInIr());
+				printStream.println(modelTheory.getUnsupportedInTargLang());
 				return;
 			}
 
@@ -95,10 +126,14 @@ public class IsaTransControl
 
 			File thyFile = new File(isaDir.getPath() + File.separatorChar
 					+ thyName);
+			printStream.println("Writing files.");
 			FileUtils.writeStringToFile(thyFile, modelTheory.getContent());
 
 			refreshProject();
 
+			printStream.println();
+			printStream.println("Model Translation complete.");
+			printStream.close();
 		} catch (Exception e)
 		{
 			openErrorDialog("Internal error.");
