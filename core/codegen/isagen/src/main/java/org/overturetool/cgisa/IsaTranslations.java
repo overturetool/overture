@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -74,11 +75,31 @@ public class IsaTranslations
 	{
 		return transParams(params, LIST_SEP);
 	}
-	
-	public String transTypeParams(List<AFormalParamLocalParamCG> params) throws AnalysisException
+
+	public String transTypeParams(List<AFormalParamLocalParamCG> params)
+			throws AnalysisException
 	{
 		return transParams(params, TYPE_PARAM_SEP);
 	}
+
+	public String transBinds(List<? extends SMultipleBindCG> binds) throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+
+		Iterator<? extends SMultipleBindCG> it = binds.iterator();
+		{
+			StringWriter writer = new StringWriter();
+			it.next().apply(mergeVisitor, writer);
+			sb.append(writer.toString());
+			if (it.hasNext())
+			{
+				sb.append(", ");
+			}
+		}
+
+		return sb.toString();
+	}
+
 	public String transParams(List<? extends INode> params, String sep)
 			throws AnalysisException
 	{
@@ -137,8 +158,9 @@ public class IsaTranslations
 	{
 		return name.replaceAll("-", "_");
 	}
-	
-	public String varWrap(String v){
+
+	public String varWrap(String v)
+	{
 		StringBuilder sb = new StringBuilder();
 		sb.append('<');
 		sb.append(v);
@@ -159,7 +181,7 @@ public class IsaTranslations
 	}
 
 	// Checks
-	
+
 	public boolean isRoot(INode node)
 	{
 		return isaUtils.isRoot(node);
