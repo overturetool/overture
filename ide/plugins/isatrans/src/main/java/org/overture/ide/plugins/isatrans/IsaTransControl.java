@@ -1,6 +1,7 @@
 package org.overture.ide.plugins.isatrans;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -45,20 +46,23 @@ public class IsaTransControl
 	{
 		final MessageConsole console = new MessageConsole("Isabelle Translation", null);
 		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
+		console.activate();
+		console.clearConsole();
 
 		PrintStream printStream = new PrintStream(console.newMessageStream());
 
 		printStream.println("Starting Isabelle to VDM translation of Model and Proof Obligations...");
+		printStream.println();
 
-		preFlightCheck();
+		if (!preFlightCheck())
+		{
+			return;
+		}
 		File isaDir = makeThyDirs();
 		try
 		{
+			printStream.println("Translating Model and POs.");
 			AModuleModules ast = proj.getModel().getModuleList().get(0);
-			printStream.println();
-			printStream.println("Generating Proof Obligations.");
-			printStream.println("Translating Model.");
-			printStream.println("Translating POs.");
 			IsaPog ip = new IsaPog(ast);
 
 			if (ip.getModelThyString().equals("")
@@ -69,7 +73,10 @@ public class IsaTransControl
 				return;
 			}
 
-			printStream.println("Writing files.");
+			printStream.println("Copying model source.");
+			backUpModel(isaDir);
+
+			printStream.println("Writing theory files.");
 			File modelFile = new File(isaDir.getPath() + File.separatorChar
 					+ ip.getModelThyName());
 			FileUtils.writeStringToFile(modelFile, ip.getModelThyString());
@@ -95,20 +102,27 @@ public class IsaTransControl
 	{
 		final MessageConsole console = new MessageConsole("Isabelle Translation", null);
 		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
+		console.activate();
+		console.clearConsole();
 
 		PrintStream printStream = new PrintStream(console.newMessageStream());
 
 		printStream.println("Starting Isabelle to VDM translation of Model...");
-		preFlightCheck();
+		printStream.println();
+
+		if (!preFlightCheck())
+		{
+			return;
+		}
+
 		File isaDir = makeThyDirs();
 
 		IsaGen ig = new IsaGen();
 
 		try
 		{
-			List<AModuleModules> ast = proj.getModel().getModuleList();
-			printStream.println();
 			printStream.println("Translating Model.");
+			List<AModuleModules> ast = proj.getModel().getModuleList();
 			List<GeneratedModule> modellTheoryList = ig.generateIsabelleSyntax(ast);
 
 			GeneratedModule modelTheory = modellTheoryList.get(0);
@@ -122,11 +136,13 @@ public class IsaTransControl
 				return;
 			}
 
-			String thyName = modelTheory.getName() + ".thy";
+			printStream.println("Copying model source.");
+			backUpModel(isaDir);
 
+			printStream.println("Writing theory files.");
+			String thyName = modelTheory.getName() + ".thy";
 			File thyFile = new File(isaDir.getPath() + File.separatorChar
 					+ thyName);
-			printStream.println("Writing files.");
 			FileUtils.writeStringToFile(thyFile, modelTheory.getContent());
 
 			refreshProject();
@@ -142,6 +158,14 @@ public class IsaTransControl
 
 	}
 
+	private void backUpModel(File isaDir) throws CoreException, IOException
+	{
+		File sourceFile = proj.getSpecFiles().get(0).getSystemFile();
+		File backupFile = new File(isaDir, sourceFile.getName() + ".bk");
+
+		FileUtils.copyFile(sourceFile, backupFile);
+	}
+
 	private void refreshProject() throws CoreException
 	{
 		IProject p = (IProject) proj.getAdapter(IProject.class);
@@ -150,39 +174,52 @@ public class IsaTransControl
 
 	private File makeThyDirs()
 	{
-		// Translate specification to Isabelle
 		DateFormat df = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 
 		File isaDir = new File(new File(proj.getModelBuildPath().getOutput().getLocation().toFile(), "Isabelle"), df.format(new Date()));
 		isaDir.mkdirs();
+
 		return isaDir;
 	}
 
-	private void preFlightCheck()
+	private boolean preFlightCheck()
 	{
+		if (proj == null)
+		{
+			openErrorDialog("Please select a project before translating");
+			return false;
+		}
+
 		if (!VdmTypeCheckerUi.typeCheck(shell, proj))
 		{
 			openErrorDialog("Model has errors.");
-			return;
+			return false;
 		}
 		;
 
 		if (!proj.getDialect().equals(Dialect.VDM_SL))
 		{
 			openErrorDialog("Only module VDM-SL models are allowed.");
-			return;
+			return false;
 		}
 		try
 		{
+			if (proj.getSpecFiles().size() > 1)
+			{
+
+				openErrorDialog("Only single-file projects are allowed.");
+				return false;
+			}
 			if (proj.getModel().getModuleList().size() > 1)
 			{
 				openErrorDialog("Only single module VDM-SL models are allowed.");
-				return;
+				return false;
 			}
-		} catch (NotAllowedException e)
+		} catch (NotAllowedException | CoreException e)
 		{
 			e.printStackTrace();
 		}
+		return true;
 
 	}
 
