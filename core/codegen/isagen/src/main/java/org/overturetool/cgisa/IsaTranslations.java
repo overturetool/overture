@@ -73,34 +73,21 @@ public class IsaTranslations
 	public String transApplyParams(List<SExpCG> params)
 			throws AnalysisException
 	{
-		return transParams(params, LIST_SEP);
+		return transNodeList(params, LIST_SEP);
 	}
 
 	public String transTypeParams(List<AFormalParamLocalParamCG> params)
 			throws AnalysisException
 	{
-		return transParams(params, TYPE_PARAM_SEP);
+		return transNodeList(params, TYPE_PARAM_SEP);
 	}
 
 	public String transBinds(List<? extends SMultipleBindCG> binds) throws AnalysisException
 	{
-		StringBuilder sb = new StringBuilder();
-
-		Iterator<? extends SMultipleBindCG> it = binds.iterator();
-		{
-			StringWriter writer = new StringWriter();
-			it.next().apply(mergeVisitor, writer);
-			sb.append(writer.toString());
-			if (it.hasNext())
-			{
-				sb.append(", ");
-			}
-		}
-
-		return sb.toString();
+		return transNodeList(binds,LIST_SEP);
 	}
 
-	public String transParams(List<? extends INode> params, String sep)
+	public String transNodeList(List<? extends INode> params, String sep)
 			throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder();
@@ -136,18 +123,7 @@ public class IsaTranslations
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
-
-		Iterator<SExpCG> it = args.iterator();
-
-		while (it.hasNext())
-		{
-			sb.append(trans(it.next()));
-			if (it.hasNext())
-			{
-				sb.append(LIST_SEP);
-			}
-		}
-
+		sb.append(transNodeList(args,LIST_SEP));
 		sb.append("]");
 		return sb.toString();
 	}
