@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     private static final VDMMap xs = MapUtil.map(new Maplet(1L, 1L),
             new Maplet(2L, 2L));

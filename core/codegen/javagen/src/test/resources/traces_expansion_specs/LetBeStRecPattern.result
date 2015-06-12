@@ -4,6 +4,7 @@ import org.overture.codegen.runtime.traces.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry implements java.io.Serializable {
     private static final VDMSet xs = SetUtil.set(1L, 2L, 3L, 4L, new A(5L), 6L,
             7L, 8L);

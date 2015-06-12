@@ -60,7 +60,6 @@ import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
-import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -72,9 +71,6 @@ import org.overture.ide.plugins.codegen.commands.Vdm2JavaCommand;
 
 public class PluginVdm2JavaUtil
 {
-	public static final String QUOTES_FOLDER = "quotes";
-	public static final String UTILS_FOLDER = "utils";
-	
 	public static final String CODEGEN_RUNTIME_BIN_FILE = "codegen-runtime.jar";
 	public static final String CODEGEN_RUNTIME_SOURCES_FILE = "codegen-runtime-sources.jar";
 	public static final String CODEGEN_RUNTIME_LIB_FOLDER = "lib";
@@ -191,25 +187,7 @@ public class PluginVdm2JavaUtil
 		File outputDir = getEclipseProjectFolder(project);
 		outputDir = getFolder(outputDir, ECLIPSE_PROJECT_SRC_FOLDER);
 		
-		String javaPackage = settings.getJavaRootPackage();
-		if(JavaCodeGenUtil.isValidJavaPackage(javaPackage))
-		{
-			outputDir = getFolder(outputDir, JavaCodeGenUtil
-					.getFolderFromJavaRootPackage(javaPackage));
-		}
-		
 		return outputDir;
-	}
-
-	public static File getQuotesFolder(IVdmProject project, JavaSettings settings)
-			throws CoreException
-	{
-		return getFolder(getJavaCodeOutputFolder(project, settings), QUOTES_FOLDER);
-	}
-
-	public static File getUtilsFolder(IVdmProject project, JavaSettings settings) throws CoreException
-	{
-		return getFolder(getJavaCodeOutputFolder(project, settings), UTILS_FOLDER);
 	}
 
 	public static void addMarkers(String generalMessage,

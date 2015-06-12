@@ -35,8 +35,6 @@ import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
@@ -326,7 +324,7 @@ public class JavaCodeGenMain
 	}
 
 	public static void processData(boolean printCode,
-			File outputDir, JavaCodeGen vdmCodGen, GeneratedData data) {
+			final File outputDir, JavaCodeGen vdmCodGen, GeneratedData data) {
 		List<GeneratedModule> generatedClasses = data.getClasses();
 
 		Logger.getLog().println("");
@@ -362,14 +360,7 @@ public class JavaCodeGenMain
 					
 					if (outputDir != null)
 					{
-						File moduleOutputDir = getModuleOutputDir(outputDir, vdmCodGen, generatedClass);
-						
-						if(moduleOutputDir == null)
-						{
-							continue;
-						}
-						
-						vdmCodGen.generateJavaSourceFile(moduleOutputDir, generatedClass);
+						vdmCodGen.genJavaSourceFile(outputDir, generatedClass);
 					}
 					
 					if (printCode)
@@ -408,14 +399,7 @@ public class JavaCodeGenMain
 			{
 				for (GeneratedModule q : quotes)
 				{
-					File moduleOutputDir = getModuleOutputDir(outputDir, vdmCodGen, q);
-					
-					if(moduleOutputDir == null)
-					{
-						continue;
-					}
-					
-					vdmCodGen.generateJavaSourceFile(moduleOutputDir, q);
+					vdmCodGen.genJavaSourceFile(outputDir, q);
 				}
 			}
 			
@@ -451,38 +435,6 @@ public class JavaCodeGenMain
 				Logger.getLog().println("[WARNING] " + w);
 			}
 		}
-	}
-
-	private static File getModuleOutputDir(File outputDir, JavaCodeGen vdmCodGen,
-			GeneratedModule generatedClass)
-	{
-		File moduleOutputDir = outputDir;
-		String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
-		
-		if(generatedClass.getIrNode() instanceof AClassDeclCG)
-		{
-			javaPackage = ((AClassDeclCG) generatedClass.getIrNode()).getPackage();
-		}
-		else if(generatedClass.getIrNode() instanceof AInterfaceDeclCG)
-		{
-			javaPackage = ((AInterfaceDeclCG) generatedClass.getIrNode()).getPackage();
-		}
-		else
-		{
-			Logger.getLog().printErrorln("Expected IR node of "
-					+ generatedClass.getName()
-					+ " to be a class or interface  declaration at this point. Got: "
-					+ generatedClass.getIrNode());
-			return null;
-		}
-		
-		if (JavaCodeGenUtil.isValidJavaPackage(javaPackage))
-		{
-			String packageFolderPath = JavaCodeGenUtil.getFolderFromJavaRootPackage(javaPackage);
-			moduleOutputDir = new File(outputDir, packageFolderPath);
-		}
-		
-		return moduleOutputDir;
 	}
 	
 	public static List<File> filterFiles(List<File> files)

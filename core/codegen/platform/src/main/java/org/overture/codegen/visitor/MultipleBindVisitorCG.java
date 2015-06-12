@@ -22,6 +22,7 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
@@ -45,7 +46,7 @@ public class MultipleBindVisitorCG extends
 	public SMultipleBindCG caseASetMultipleBind(ASetMultipleBind node,
 			IRInfo question) throws AnalysisException
 	{
-		LinkedList<PPattern> patterns = node.getPlist();
+		List<PPattern> patterns = node.getPlist();
 		PExp set = node.getSet();
 
 		LinkedList<SPatternCG> patternsCg = new LinkedList<SPatternCG>();
@@ -78,10 +79,10 @@ public class MultipleBindVisitorCG extends
 	public SMultipleBindCG caseATypeMultipleBind(ATypeMultipleBind node,
 			IRInfo question) throws AnalysisException
 	{
-		LinkedList<PPattern> patterns = node.getPlist();
-		PType set = node.getType();
+		List<PPattern> patterns = node.getPlist();
+		PType boundType = node.getType();
 
-		LinkedList<SPatternCG> patternsCg = new LinkedList<SPatternCG>();
+		List<SPatternCG> patternsCg = new LinkedList<SPatternCG>();
 
 		for (PPattern pattern : patterns)
 		{
@@ -97,12 +98,12 @@ public class MultipleBindVisitorCG extends
 			}
 		}
 
-		STypeCG setCg = set.apply(question.getTypeVisitor(), question);
+		STypeCG boundTypeCg = boundType.apply(question.getTypeVisitor(), question);
 
 		ATypeMultipleBindCG multipleSetBind = new ATypeMultipleBindCG();
 
 		multipleSetBind.setPatterns(patternsCg);
-		multipleSetBind.setType(setCg);
+		multipleSetBind.setType(boundTypeCg);
 
 		return multipleSetBind;
 	}

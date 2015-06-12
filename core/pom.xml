@@ -23,7 +23,6 @@
     <module>combinatorialtesting</module>
     <module>prettyprinting</module>
     <module>commandline</module>
-    <module>vdmjc</module>
     <module>codegen</module>
     <module>isapog</module>
     <module>guibuilder</module>

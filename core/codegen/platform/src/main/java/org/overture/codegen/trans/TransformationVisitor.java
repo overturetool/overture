@@ -1,3 +1,4 @@
+
 /*
  * #%~
  * VDM Code Generator
@@ -24,7 +25,6 @@ package org.overture.codegen.trans;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.ast.patterns.PMultipleBind;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -59,6 +59,7 @@ import org.overture.codegen.cgast.expressions.ARecordModifierCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
@@ -543,16 +544,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, varPrefixes);
 
-		List<ASetMultipleBindCG> x = new LinkedList<ASetMultipleBindCG>();
+		List<ASetMultipleBindCG> multipleSetBinds = filterMultipleBinds(node);
 		
-		for (SMultipleBindCG b : node.getBindList()){
-			x.add((ASetMultipleBindCG) b.clone());
-		}
-		
-		
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(x, tempVarNameGen, strategy);
+		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
 
-		if (x.isEmpty())
+		if (multipleSetBinds.isEmpty())
 		{
 			ABoolLiteralExpCG forAllResult = info.getExpAssistant().consBoolLiteral(true);
 			transformationAssistant.replaceNodeWith(node, forAllResult);
@@ -581,16 +577,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, varPrefixes);
 
-		List<ASetMultipleBindCG> x = new LinkedList<ASetMultipleBindCG>();
+		List<ASetMultipleBindCG> multipleSetBinds = filterMultipleBinds(node);
 		
-		for (SMultipleBindCG b : node.getBindList()){
-			x.add((ASetMultipleBindCG) b.clone());
-		}
-		
-		
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(x, tempVarNameGen, strategy);
+		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
 
-		if (x.isEmpty())
+		if (multipleSetBinds.isEmpty())
 		{
 			ABoolLiteralExpCG existsResult = info.getExpAssistant().consBoolLiteral(false);
 			transformationAssistant.replaceNodeWith(node, existsResult);
@@ -619,15 +610,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transformationAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes, counterData);
 		
-		List<ASetMultipleBindCG> x = new LinkedList<ASetMultipleBindCG>();
+		List<ASetMultipleBindCG> multipleSetBinds = filterMultipleBinds(node);
 		
-		for (SMultipleBindCG b : node.getBindList()){
-			x.add((ASetMultipleBindCG) b.clone());
-		}
-		
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(x, tempVarNameGen, strategy);
+		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
 
-		if (x.isEmpty())
+		if (multipleSetBinds.isEmpty())
 		{
 			ABoolLiteralExpCG exists1Result = info.getExpAssistant().consBoolLiteral(false);
 			transformationAssistant.replaceNodeWith(node, exists1Result);
@@ -837,5 +824,25 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		replacementBlock.getStatements().add(enclosingStm);
 		
 		replacementBlock.apply(this);
+	}
+	
+	private List<ASetMultipleBindCG> filterMultipleBinds(SQuantifierExpCG node)
+	{
+		List<ASetMultipleBindCG> multipleSetBinds = new LinkedList<ASetMultipleBindCG>();
+		
+		for (SMultipleBindCG b : node.getBindList()){
+			
+			if(b instanceof ASetMultipleBindCG)
+			{
+				multipleSetBinds.add((ASetMultipleBindCG) b.clone());
+			}
+			else
+			{
+				info.addTransformationWarning(node, "Transformation only works for quantified "
+						+ "expressions with multiple set binds and not multiple "
+						+ "type binds in '" + this.getClass().getSimpleName() + "'");
+			}
+		}
+		return multipleSetBinds;
 	}
 }

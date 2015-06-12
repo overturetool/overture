@@ -4,6 +4,7 @@ import org.overture.codegen.runtime.traces.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry implements java.io.Serializable {
     private Number x = 0L;
 

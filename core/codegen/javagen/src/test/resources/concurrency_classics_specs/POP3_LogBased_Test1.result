@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry implements EvaluatePP {
     public volatile Sentinel sentinel;
 
@@ -53,6 +54,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Log implements EvaluatePP {
     private static volatile Log Instance = null;
     private volatile VDMSeq messages = SeqUtil.seq();
@@ -158,6 +160,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class MessageChannelBuffer implements EvaluatePP {
     private volatile MessageChannel data = null;
     public volatile Sentinel sentinel;
@@ -242,6 +245,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class MessageChannel implements EvaluatePP {
     private volatile Object data = null;
     private volatile Boolean debug = true;
@@ -422,6 +426,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3ClientHandler extends VDMThread implements EvaluatePP {
     private static final String unknownMessageMsg = "No such message";
     private static final String negativeStatusMsg = "Wrong state for this command";
@@ -1303,6 +1308,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3Message implements EvaluatePP {
     private volatile String header;
     private volatile String body;
@@ -1479,6 +1485,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3Server extends VDMThread implements EvaluatePP {
     private volatile MessageChannelBuffer connChannel;
     private volatile VDMMap maildrop;
@@ -2115,6 +2122,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3Test implements EvaluatePP {
     private static final VDMSeq users = SeqUtil.seq("paul", "peter", "nico",
             "john", "marcel");
@@ -2380,6 +2388,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3TestSender extends VDMThread implements EvaluatePP {
     private volatile String id;
     private volatile VDMSeq cmds;
@@ -2477,6 +2486,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3TestListener extends VDMThread implements EvaluatePP {
     private volatile String id;
     private volatile MessageChannel mc;
@@ -2586,6 +2596,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3Types implements EvaluatePP {
     public volatile Sentinel sentinel;
 

@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -22,6 +23,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class SimpleTest {
     private static final Card c1 = new Card(123456L, 1L, 1L);
     private static final VDMSet cards = SetUtil.set(c1);
@@ -76,6 +78,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Account {
     private static final Number dailyLimit = 2000L;
     private VDMMap cards;
@@ -250,6 +253,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Card {
     private Number code;
     private Number cardId;
@@ -293,6 +297,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Cardholder {
     private VDMSeq name;
     private VDMSeq address;
@@ -327,6 +332,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class CentralResource {
     private static final Number maxNumberOfTries = 3L;
     private VDMMap accounts = MapUtil.map();
@@ -444,6 +450,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Clock {
     private VDMSeq date = SeqUtil.seq();
 
@@ -469,6 +476,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Letter {
     public VDMSeq name;
     public VDMSeq address;
@@ -504,6 +512,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Letterbox {
     private VDMSeq statements = SeqUtil.seq();
 
@@ -530,6 +539,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Till {
     private Card curCard = null;
     private Boolean cardOk = false;
@@ -653,6 +663,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 abstract public class Event {
     public Event() {
     }
@@ -670,6 +681,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class GetBalance extends Event {
     private Number tillid;
 
@@ -703,6 +715,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class IllegalCard extends Event {
     private Number mycard;
 
@@ -732,6 +745,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class InsertCard extends Event {
     private Number tillid;
     private Card mycard;
@@ -764,6 +778,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class ReturnCard extends Event {
     private Number tillid;
 
@@ -801,6 +816,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class SendStatement extends Event {
     private Number tillid;
 
@@ -834,6 +850,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class System {
     private static final Card c1 = new Card(123456L, 1L, 1L);
     private static final Card c2 = new Card(123457L, 2L, 2L);
@@ -931,6 +948,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Validate extends Event {
     private Number tillid;
     private Number code;
@@ -961,6 +979,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Withdrawal extends Event {
     private Number tillid;
     private Number amount;

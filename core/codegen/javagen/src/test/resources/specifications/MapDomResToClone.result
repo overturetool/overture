@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     private static final VDMSet a = SetUtil.set(1L, 2L);
     private static final VDMMap x = MapUtil.domResTo(Utils.copy(a), m1());

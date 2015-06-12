@@ -165,15 +165,10 @@ the manifests, though.
   </build>
 
   <repositories>
-    <!-- <repository> -->
-    <!--   <id>eclipse-juno</id> -->
-    <!--   <layout>p2</layout> -->
-    <!--   <url>http://download.eclipse.org/releases/juno</url> -->
-    <!-- </repository> -->
     <repository>
-      <id>eclipse-kepler</id>
+      <id>eclipse-luna</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/kepler</url>
+      <url>http://download.eclipse.org/releases/luna</url>
     </repository>
   </repositories>
 

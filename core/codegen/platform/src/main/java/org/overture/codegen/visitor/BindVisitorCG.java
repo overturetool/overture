@@ -1,3 +1,4 @@
+
 /*
  * #%~
  * VDM Code Generator
@@ -61,12 +62,12 @@ public class BindVisitorCG extends AbstractVisitorCG<IRInfo, SBindCG>
 		PPattern pattern = node.getPattern();
 		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
 
-		PType type = node.getType();
-		STypeCG setCg = type.apply(question.getTypeVisitor(), question);
+		PType boundType = node.getType();
+		STypeCG boundTypeCg = boundType.apply(question.getTypeVisitor(), question);
 
 		ATypeBindCG setBind = new ATypeBindCG();
 		setBind.setPattern(patternCg);
-		setBind.setType(setCg);
+		setBind.setType(boundTypeCg);
 
 		return setBind;
 	}

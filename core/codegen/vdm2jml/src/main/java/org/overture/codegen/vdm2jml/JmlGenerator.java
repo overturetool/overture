@@ -1,10 +1,10 @@
 package org.overture.codegen.vdm2jml;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections4.map.HashedMap;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.modules.AModuleModules;
@@ -72,16 +72,36 @@ public class JmlGenerator implements IREventObserver
 	
 	public JmlGenerator()
 	{
-		this.javaGen = new JavaCodeGen();
+		this(new JavaCodeGen());
+	}
+	
+	public JmlGenerator(JavaCodeGen javaGen)
+	{
+		this.javaGen = javaGen;
 		this.jmlSettings = new JmlSettings();
-		this.classInvInfo = new HashedMap<String, List<ClonableString>>();
+		this.classInvInfo = new HashMap<String, List<ClonableString>>();
 		
 		// Named invariant type info will be derived (later) from the VDM-SL AST
 		this.typeInfoList = null;
 		this.util = new JmlGenUtil(this);
 		this.annotator = new JmlAnnotationHelper(this);
+		
+		initSettings();
 	}
 	
+	private void initSettings()
+	{
+		IRSettings irSettings = getIrSettings();
+		irSettings.setGeneratePreConds(true);
+		irSettings.setGeneratePreCondChecks(false);
+		irSettings.setGeneratePostConds(true);
+		irSettings.setGeneratePostCondChecks(false);
+		irSettings.setGenerateInvariants(true);
+		
+		JavaSettings javaSettings = getJavaSettings();
+		javaSettings.setGenRecsAsInnerClasses(false);
+	}
+
 	public GeneratedData generateJml(List<AModuleModules> ast)
 			throws AnalysisException, UnsupportedModelingException
 	{

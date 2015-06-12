@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Buffer implements EvaluatePP {
     public volatile Number data = null;
     public volatile Sentinel sentinel;
@@ -89,6 +90,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Reader extends VDMThread implements EvaluatePP {
     public volatile Buffer b;
     public volatile Boolean isfinished = false;
@@ -169,6 +171,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Writer extends VDMThread implements EvaluatePP {
     public volatile Buffer b;
     public volatile Boolean isfinished = false;
@@ -266,6 +269,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry implements EvaluatePP {
     public volatile Sentinel sentinel;
 

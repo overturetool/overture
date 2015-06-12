@@ -6,6 +6,7 @@ import java.util.*;
 
 
 //@ nullable_by_default
+@SuppressWarnings("all")
 public class Entry {
     //@ public static invariant inv_Entry_CN(fOk) && (inv_Entry_C(fOk) || inv_Entry_N(fOk));
     public static final Object fOk = 'a';

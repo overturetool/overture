@@ -267,12 +267,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 		for (INode node : ast)
 		{
-			IRStatus<org.overture.codegen.cgast.INode> status = generator.generateFrom(node);
-			
-			if(status != null)
-			{
-				statuses.add(status);
-			}
+			genIrStatus(statuses, node);
 		}
 
 		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
@@ -456,6 +451,41 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		data.setWarnings(warnings);
 
 		return data;
+	}
+
+	private void genIrStatus(
+			List<IRStatus<org.overture.codegen.cgast.INode>> statuses,
+			INode node) throws AnalysisException
+	{
+		VdmAstJavaValidator v = validateVdmNode(node);
+		
+		if(v.hasUnsupportedNodes())
+		{
+			// We can tell by analysing the VDM AST that the IR generator will produce an
+			// IR tree that the Java backend cannot code generate
+			String nodeName = getInfo().getDeclAssistant().getNodeName(node);
+			HashSet<VdmNodeInfo> nodesCopy = new HashSet<VdmNodeInfo>(v.getUnsupportedNodes());
+			statuses.add(new IRStatus<org.overture.codegen.cgast.INode>(nodeName, /* no IR node */null, nodesCopy));
+		}
+		else
+		{
+			// Try to produce the IR
+			IRStatus<org.overture.codegen.cgast.INode> status = generator.generateFrom(node);
+			
+			if(status != null)
+			{
+				statuses.add(status);
+			}
+		}
+	}
+
+	private VdmAstJavaValidator validateVdmNode(INode node) throws AnalysisException
+	{
+		VdmAstJavaValidator validator = new VdmAstJavaValidator(generator.getIRInfo());
+		validator.getUnsupportedNodes().clear();
+		node.apply(validator);
+		
+		return validator;
 	}
 
 	private <T extends org.overture.codegen.cgast.INode> List<IRStatus<T>> filter(
@@ -718,10 +748,25 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			return null;
 		}
 	}
-
-	public void generateJavaSourceFile(File outputFolder,
-			GeneratedModule generatedModule)
+	
+	public void genJavaSourceFiles(File root,
+			List<GeneratedModule> generatedClasses)
 	{
+		for (GeneratedModule classCg : generatedClasses)
+		{
+			genJavaSourceFile(root, classCg);
+		}
+	}
+
+	public void genJavaSourceFile(File root, GeneratedModule generatedModule)
+	{
+		File moduleOutputDir = JavaCodeGenUtil.getModuleOutputDir(root, this, generatedModule);
+		
+		if(moduleOutputDir == null)
+		{
+			return;
+		}
+		
 		if (generatedModule != null && generatedModule.canBeGenerated()
 				&& !generatedModule.hasMergeErrors())
 		{
@@ -734,16 +779,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 			javaFileName += IJavaCodeGenConstants.JAVA_FILE_EXTENSION;
 
-			JavaCodeGenUtil.saveJavaClass(outputFolder, javaFileName, generatedModule.getContent());
-		}
-	}
-
-	public void generateJavaSourceFiles(File outputFolder,
-			List<GeneratedModule> generatedClasses)
-	{
-		for (GeneratedModule classCg : generatedClasses)
-		{
-			generateJavaSourceFile(outputFolder, classCg);
+			JavaCodeGenUtil.saveJavaClass(moduleOutputDir, javaFileName, generatedModule.getContent());
 		}
 	}
 

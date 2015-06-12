@@ -668,7 +668,9 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		{
 			fRemoteControlClassText.setEnabled(false);
 			fRemoteControlnButton.setEnabled(false);
+			fOperationText.setText("");
 			fOperationText.setEnabled(false);
+			fModuleNameText.setText("");
 			fModuleNameText.setEnabled(false);
 			fOperationButton.setEnabled(false);
 

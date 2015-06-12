@@ -100,9 +100,11 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 				int prv = classCgStr.indexOf("private");
 				int pub = classCgStr.indexOf("public");
 				int abstr = classCgStr.indexOf("abstract");
+				int suppress = classCgStr.indexOf("@SuppressWarnings(\"all\")");
 
 				int min = prv >= 0 && prv < pub ? prv : pub;
 				min = abstr >= 0 && abstr < min ? abstr : min;
+				min = suppress >= 0 && suppress < min ? suppress : min;
 
 				if (min < 0)
 				{

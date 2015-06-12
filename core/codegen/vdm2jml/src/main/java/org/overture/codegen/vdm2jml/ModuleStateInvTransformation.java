@@ -21,11 +21,11 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 
 	public ModuleStateInvTransformation(JmlGenerator jmlGen)
 	{
+		// This transformation only works for VDM-SL. For example, it does not
+		// take 'self' into account
 		if (Settings.dialect != Dialect.VDM_SL)
 		{
-			// This transformation only works for VDM-SL. For example, it does not
-			// take 'self' into account
-			throw new IllegalStateException("This transformation is targeting VDM-SL. The dialect is set to: "
+			Logger.getLog().printErrorln("This transformation is targeting VDM-SL. The dialect is set to: "
 					+ Settings.dialect);
 		}
 

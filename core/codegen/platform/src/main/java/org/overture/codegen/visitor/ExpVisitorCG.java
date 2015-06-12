@@ -478,32 +478,18 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			throws AnalysisException
 	{
 		PBind bind = node.getBind();
-
-		if (!(bind instanceof ASetBind))
-		{
-			question.addUnsupportedNode(node, String.format("Generation of a exist1 expression is only supported for set binds. Got: %s", bind));
-			return null;
-		}
-
 		SBindCG bindCg = bind.apply(question.getBindVisitor(), question);
-
-		if (!(bindCg instanceof ASetBindCG))
-		{
-			question.addUnsupportedNode(node, String.format("Generation of 	a set bind was expected to yield a ASetBindCG. Got: %s", bindCg));
-			return null;
-		}
-
-		ASetBindCG setBind = (ASetBindCG) bindCg;
 
 		PType type = node.getType();
 		PExp predicate = node.getPredicate();
 
-		ASetMultipleBindCG multipleSetBind = question.getBindAssistant().convertToMultipleSetBind(setBind);
+		SMultipleBindCG multipleBind = question.getBindAssistant().convertToMultipleBind(bindCg);
+		
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		SExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
 
 		AExists1QuantifierExpCG exists1Exp = new AExists1QuantifierExpCG();
-		exists1Exp.getBindList().add(multipleSetBind);
+		exists1Exp.getBindList().add(multipleBind);
 		exists1Exp.setType(typeCg);
 		exists1Exp.setPredicate(predicateCg);
 

@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     private static final B.RecB x = new B.RecB(1L);
     private static final RecA y = new RecA(new B.RecB(2L));
@@ -52,6 +53,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class B {
     public B() {
     }

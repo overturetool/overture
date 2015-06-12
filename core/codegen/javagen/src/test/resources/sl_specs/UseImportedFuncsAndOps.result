@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public static Object Run() {
         return Func.op().longValue() + Func.id(8L).longValue();
@@ -19,6 +20,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Func {
     public static Number op() {
         return 1L;
