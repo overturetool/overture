@@ -19,6 +19,7 @@ Require-Bundle: org.overture.ide.ui,
  org.overture.ide.core
 Import-Package: org.apache.commons.io,
  org.apache.velocity.app,
+ org.eclipse.ui.console,
  org.overture.ast.definitions,
  org.overture.ast.lex,
  org.overture.ast.util.definitions,
@@ -40,5 +41,5 @@ Import-Package: org.apache.commons.io,
  org.overture.ide.core,
  org.overture.ide.core.ast,
  org.overture.ide.core.resources,
- org.overture.pog.pub,
- org.overture.pof
+ org.overture.pof,
+ org.overture.pog.pub
