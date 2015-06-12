@@ -1,4 +1,5 @@
 functions
 
-f : int -> int
-f(x) == x/x
+f : int * int -> real
+f(x,y) == x/y
+pre y <> 0
