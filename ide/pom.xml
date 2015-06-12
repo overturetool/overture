@@ -5,10 +5,11 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>root</artifactId>
-    <version>2.2.3-SNAPSHOT</version>
+    <version>2.2.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
-  </parent>
-    <packaging>pom</packaging>
+</parent>
+
+<packaging>pom</packaging>
   <artifactId>ide</artifactId>
   <name>Overture IDE Top-level</name>
   <description>Super POM for all IDE (Eclipse) artifacts.</description>
@@ -164,15 +165,10 @@ the manifests, though.
   </build>
 
   <repositories>
-    <!-- <repository> -->
-    <!--   <id>eclipse-juno</id> -->
-    <!--   <layout>p2</layout> -->
-    <!--   <url>http://download.eclipse.org/releases/juno</url> -->
-    <!-- </repository> -->
     <repository>
-      <id>eclipse-kepler</id>
+      <id>eclipse-luna</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/kepler</url>
+      <url>http://download.eclipse.org/releases/luna</url>
     </repository>
   </repositories>
 

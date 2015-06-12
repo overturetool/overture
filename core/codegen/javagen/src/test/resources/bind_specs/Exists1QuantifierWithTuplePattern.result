@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -21,12 +22,12 @@ public class Entry {
                 Tuple.mk_(1L, Tuple.mk_(2L, 21L)),
                 Tuple.mk_(1L, Tuple.mk_(3L, 4L)));
 
-        return SeqUtil.seq(fa(Utils.clone(ts0)), fa(Utils.clone(ts1)));
+        return SeqUtil.seq(fa(Utils.copy(ts0)), fa(Utils.copy(ts1)));
     }
 
     public static Boolean fa(final VDMSet ts) {
         Long exists1Counter_1 = 0L;
-        VDMSet set_1 = Utils.clone(ts);
+        VDMSet set_1 = Utils.copy(ts);
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);) {
@@ -40,8 +41,7 @@ public class Entry {
             if (success_1) {
                 a = ((Number) tuplePattern_1.get(0));
 
-                Tuple tuplePattern_2 = Utils.clone(((Tuple) tuplePattern_1.get(
-                            1)));
+                Tuple tuplePattern_2 = Utils.copy(((Tuple) tuplePattern_1.get(1)));
                 success_1 = tuplePattern_2.compatible(Number.class, Number.class);
 
                 if (success_1) {

@@ -7,7 +7,6 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.traces.JavaCallStmToStringBuilder;
 import org.overture.codegen.traces.TracesTransformation;
 import org.overture.codegen.trans.AssignStmTransformation;
 import org.overture.codegen.trans.CallObjStmTransformation;
@@ -79,6 +78,8 @@ public class JavaTransSeries
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER);
 		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
 
+		RecordMetodsTransformation recTransformation = new RecordMetodsTransformation(codeGen.getJavaFormat().getRecCreator());
+		
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
 				assignTransformation,
 				callObjTransformation,
@@ -87,7 +88,7 @@ public class JavaTransSeries
 				preCheckTransformation, postCheckTransformation,
 				isExpTransformation, unionTypeTransformation,
 				javaToStringTransformation, concurrencytransform,
-				mutexTransform, mainclassTransform, seqConversionTransformation, instanceVarPPEval };
+				mutexTransform, mainclassTransform, seqConversionTransformation, instanceVarPPEval, recTransformation};
 
 		return analyses;
 	}

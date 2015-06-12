@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class SharedCounter implements EvaluatePP {
     public volatile Number counter = 0L;
     public volatile Sentinel sentinel;
@@ -76,6 +77,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Incrementer extends VDMThread implements EvaluatePP {
     private volatile SharedCounter sharedCounter;
     private volatile Boolean isFinished = false;
@@ -171,6 +173,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry implements EvaluatePP {
     public volatile Sentinel sentinel;
 

@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     private static final B.RecB x = new B.RecB(1L);
     private static final RecA y = new RecA(new B.RecB(2L));
@@ -19,7 +20,7 @@ public class A {
         public B.RecB b;
 
         public RecA(final B.RecB _b) {
-            b = (_b != null) ? Utils.clone(_b) : null;
+            b = (_b != null) ? Utils.copy(_b) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -36,7 +37,7 @@ public class A {
             return Utils.hashCode(b);
         }
 
-        public RecA clone() {
+        public RecA copy() {
             return new RecA(b);
         }
 
@@ -52,6 +53,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class B {
     public B() {
     }
@@ -81,7 +83,7 @@ public class B {
             return Utils.hashCode(b);
         }
 
-        public RecB clone() {
+        public RecB copy() {
             return new RecB(b);
         }
 

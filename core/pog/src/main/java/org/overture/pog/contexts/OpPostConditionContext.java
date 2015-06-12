@@ -257,7 +257,7 @@ public class OpPostConditionContext extends StatefulContext implements
 
 			for (Substitution sub : subs)
 			{
-				implies_exp = implies_exp.apply(visitor, sub);
+				implies_exp = implies_exp.clone().apply(visitor, sub);
 			}
 
 			if (forall_exp.getBindList().size() > 0)
@@ -328,7 +328,7 @@ public class OpPostConditionContext extends StatefulContext implements
 		{
 			try
 			{
-				post_exp = post_exp.apply(af.getVarSubVisitor(), sub);
+				post_exp = post_exp.clone().apply(af.getVarSubVisitor(), sub);
 			} catch (AnalysisException e)
 			{
 

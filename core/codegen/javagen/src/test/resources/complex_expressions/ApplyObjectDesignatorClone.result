@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public static final VDMMap x = MapUtil.map(new Maplet(Tuple.mk_(1L, 2L),
                 new A()));
@@ -24,11 +25,11 @@ public class A {
         Tuple a = Tuple.mk_('x', 'y');
         Tuple b = Tuple.mk_(1L, 2L);
 
-        return ((A) Utils.get(m(Utils.clone(a), Utils.clone(a)), b)).no();
+        return ((A) Utils.get(m(Utils.copy(a), Utils.copy(a)), b)).no();
     }
 
     public VDMMap m(final Tuple p, final Tuple q) {
-        return Utils.clone(x);
+        return Utils.copy(x);
     }
 
     public String toString() {
@@ -42,6 +43,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }

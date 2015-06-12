@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry implements EvaluatePP {
     private static final Number AsyncCalls = 10L;
     private volatile Number x = 0L;

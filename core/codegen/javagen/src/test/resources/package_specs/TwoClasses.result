@@ -5,6 +5,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public Number x = 42L;
 
@@ -24,6 +25,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }

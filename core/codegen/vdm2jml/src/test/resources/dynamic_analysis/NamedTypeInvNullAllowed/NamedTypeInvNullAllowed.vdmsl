@@ -1,0 +1,22 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+N = [X | Y];
+
+X = nat;
+Y = char;
+
+operations
+
+Run : () ==> ?
+Run () ==
+let e : N = nil
+in
+  return e;
+
+end Entry

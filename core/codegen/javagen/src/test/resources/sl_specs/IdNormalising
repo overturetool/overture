@@ -1,0 +1,26 @@
+module Entry
+
+exports all
+definitions 
+	
+types
+	
+state St of
+ x' : nat
+ init s == s = mk_St(5)
+end
+	
+operations 
+	
+Run : () ==> ?
+Run () ==
+let y' = 9
+in
+  return id'(3) + y' + x';
+
+functions
+
+id' :  nat -> nat
+id' (x') == x';
+
+end Entry

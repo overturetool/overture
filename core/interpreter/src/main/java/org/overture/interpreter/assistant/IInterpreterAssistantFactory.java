@@ -9,20 +9,16 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.PStm;
-import org.overture.interpreter.assistant.definition.ABusClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AMutexSyncDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
@@ -32,7 +28,6 @@ import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInte
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.PPatternListAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
@@ -59,7 +54,7 @@ public interface IInterpreterAssistantFactory extends
 	// ABracketedExpressionTraceCoreDefinitionAssitantInterpreter
 	// createABracketedExpressionTraceCoreDefinitionAssitant();
 
-	ABusClassDefinitionAssistantInterpreter createABusClassDefinitionAssitant();
+	//ABusClassDefinitionAssistantInterpreter createABusClassDefinitionAssitant();
 
 //	AClassClassDefinitionAssistantInterpreter createAClassClassDefinitionAssistant();
 
@@ -76,7 +71,7 @@ public interface IInterpreterAssistantFactory extends
 
 	// AExplicitOperationDefinitionAssistantInterpreter createAExplicitOperationDefinitionAssistant();
 
-	AImplicitFunctionDefinitionAssistantInterpreter createAImplicitFunctionDefinitionAssistant();
+	//AImplicitFunctionDefinitionAssistantInterpreter createAImplicitFunctionDefinitionAssistant();
 
 	// AImplicitOperationDefinitionAssistantInterpreter createAImplicitOperationDefinitionAssistant();
 
@@ -120,7 +115,7 @@ public interface IInterpreterAssistantFactory extends
 
 	PDefinitionListAssistantInterpreter createPDefinitionListAssistant();
 
-	PTraceCoreDefinitionAssistantInterpreter createPTraceCoreDefinitionAssistant();
+	//PTraceCoreDefinitionAssistantInterpreter createPTraceCoreDefinitionAssistant();
 
 	SClassDefinitionAssistantInterpreter createSClassDefinitionAssistant();
 
@@ -154,7 +149,7 @@ public interface IInterpreterAssistantFactory extends
 
 	// AIsExpAssistantInterpreter createAIsExpAssistant();
 
-	AIsOfBaseClassExpAssistantInterpreter createAIsOfBaseClassExpAssistant();
+//	AIsOfBaseClassExpAssistantInterpreter createAIsOfBaseClassExpAssistant();
 
 	AIsOfClassExpAssistantInterpreter createAIsOfClassExpAssistant();
 
@@ -275,7 +270,7 @@ public interface IInterpreterAssistantFactory extends
 
 	PPatternAssistantInterpreter createPPatternAssistant();
 
-	PPatternListAssistantInterpreter createPPatternListAssistant();
+	//PPatternListAssistantInterpreter createPPatternListAssistant();
 
 	// statement
 

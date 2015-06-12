@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Counter implements java.io.Serializable {
     private Number n = 0L;
 
@@ -27,6 +28,7 @@ import org.overture.codegen.runtime.traces.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry implements java.io.Serializable {
     private Counter counter;
 

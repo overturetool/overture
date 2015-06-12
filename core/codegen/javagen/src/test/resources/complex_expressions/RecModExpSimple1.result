@@ -3,17 +3,18 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
 
     public static Object Run() {
         Rec r = new Rec(5L, true);
-        Rec recModifierExp_1 = Utils.clone(r);
+        Rec recModifierExp_1 = Utils.copy(r);
 
         recModifierExp_1.x = 6L;
         recModifierExp_1.b = false;
-        r = Utils.clone(recModifierExp_1);
+        r = Utils.copy(recModifierExp_1);
 
         return Tuple.mk_(r.x, r.b);
     }
@@ -45,7 +46,7 @@ public class Entry {
             return Utils.hashCode(x, b);
         }
 
-        public Rec clone() {
+        public Rec copy() {
             return new Rec(x, b);
         }
 

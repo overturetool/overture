@@ -108,10 +108,7 @@ public class DefinitionTypeResolver extends
 			node.setType(af.createPTypeAssistant().typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node), null, question.rootVisitor, newQuestion));
 		} else
 		{
-			// node.setType(PTypeAssistantTC.typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node),
-			// null, question.rootVisitor, question));
 			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
-			// FIXME: my way to rewrite the above line.Test shows that it is ok <- George kanakis
 		}
 
 		if (question.question.env.isVDMPP())
@@ -155,6 +152,12 @@ public class DefinitionTypeResolver extends
 		if (question.question.env.isVDMPP())
 		{
 			node.getName().setTypeQualifier(((AOperationType) node.getType()).getParameters());
+
+			if (node.getName().getName().equals(node.getClassDefinition().getName().getName()))
+			{
+				node.setIsConstructor(true);
+				node.getClassDefinition().setHasContructors(true);
+			}
 		}
 
 		if (node.getPrecondition() != null)
@@ -233,12 +236,17 @@ public class DefinitionTypeResolver extends
 		if (node.getResult() != null)
 		{
 			af.createAPatternTypePairAssistant().typeResolve(node.getResult(), question.rootVisitor, question.question);
-
 		}
 
 		if (question.question.env.isVDMPP())
 		{
 			node.getName().setTypeQualifier(((AOperationType) node.getType()).getParameters());
+
+			if (node.getName().getName().equals(node.getClassDefinition().getName().getName()))
+			{
+				node.setIsConstructor(true);
+				node.getClassDefinition().setHasContructors(true);
+			}
 		}
 
 		if (node.getPrecondition() != null)

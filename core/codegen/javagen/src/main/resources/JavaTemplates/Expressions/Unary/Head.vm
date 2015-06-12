@@ -7,7 +7,7 @@
 	#set( $getCall = ".get(0)")
 	#set ($call = "(($JavaFormat.format($node.getType())) ${exp}${getCall})")
 	#if ($ValueSemantics.shouldClone($node))
-		Utils.clone(${call})
+		Utils.copy(${call})
 	#else
 		${call}
 	#end	

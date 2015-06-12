@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     private static final VDMMap xs = MapUtil.map(new Maplet(1L, 1L),
             new Maplet(2L, 2L));
@@ -12,19 +13,19 @@ public class Entry {
 
     public static Object Run() {
         VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_1 = MapUtil.dom(Utils.clone(xs));
+        VDMSet set_1 = MapUtil.dom(Utils.copy(xs));
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             Object e = ((Object) iterator_1.next());
 
             if (Utils.equals(e, 2L)) {
-                mapCompResult_1 = MapUtil.munion(Utils.clone(mapCompResult_1),
+                mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
                         MapUtil.map(
                             new Maplet(e, ((Number) e).longValue() + 1L)));
             }
         }
 
-        return Utils.clone(mapCompResult_1);
+        return Utils.copy(mapCompResult_1);
     }
 
     public String toString() {

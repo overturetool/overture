@@ -3,13 +3,14 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
 
     public static Object Run() {
         A a = new A(1L, 2L);
-        A recordPattern_1 = Utils.clone(a);
+        A recordPattern_1 = Utils.copy(a);
         Boolean success_1 = true;
         Number x = null;
         Number y = null;
@@ -51,7 +52,7 @@ public class Entry {
             return Utils.hashCode(_X_, _X__1);
         }
 
-        public A clone() {
+        public A copy() {
             return new A(_X_, _X__1);
         }
 

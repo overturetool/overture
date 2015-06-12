@@ -24,33 +24,35 @@ package org.overture.codegen.vdm2java;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.utils.GeneralCodeGenUtils;
-
 public class JavaSettings
 {
 	private boolean disableCloning;
-	private List<String> classesToSkip;
+	private List<String> modulesToSkip;
 	private String vdmEntryExp;
 	private String javaRootPackage;
+	private boolean genRecsAsInnerClasses;
+	private boolean formatCode;
 	
 	public JavaSettings()
 	{
 		this.disableCloning = false;
-		this.classesToSkip = new LinkedList<String>();
+		this.modulesToSkip = new LinkedList<String>();
 		this.vdmEntryExp = null;
 		this.javaRootPackage = null;
+		this.genRecsAsInnerClasses = true;
+		this.formatCode = true;
 	}
 	
-	public List<String> getClassesToSkip()
+	public List<String> getModulesToSkip()
 	{
-		return classesToSkip;
+		return modulesToSkip;
 	}
 
-	public void setClassesToSkip(List<String> classesToSkip)
+	public void setModulesToSkip(List<String> modulesToSkip)
 	{
-		if (classesToSkip != null)
+		if (modulesToSkip != null)
 		{
-			this.classesToSkip = classesToSkip;
+			this.modulesToSkip = modulesToSkip;
 		}
 	}
 
@@ -81,9 +83,29 @@ public class JavaSettings
 
 	public void setJavaRootPackage(String javaRootPackage)
 	{
-		if (GeneralCodeGenUtils.isValidJavaPackage(javaRootPackage))
+		if (JavaCodeGenUtil.isValidJavaPackage(javaRootPackage))
 		{
 			this.javaRootPackage = javaRootPackage.trim();
 		}
+	}
+
+	public boolean genRecsAsInnerClasses()
+	{
+		return genRecsAsInnerClasses;
+	}
+
+	public void setGenRecsAsInnerClasses(boolean genRecsAsInnerClasses)
+	{
+		this.genRecsAsInnerClasses = genRecsAsInnerClasses;
+	}
+
+	public boolean formatCode()
+	{
+		return formatCode;
+	}
+
+	public void setFormatCode(boolean formatCode)
+	{
+		this.formatCode = formatCode;
 	}
 }

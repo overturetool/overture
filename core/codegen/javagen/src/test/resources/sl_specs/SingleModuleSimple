@@ -1,0 +1,11 @@
+module Entry
+
+exports all
+definitions 
+
+operations 
+
+Run : () ==> ?
+Run () == return 2;
+
+end Entry

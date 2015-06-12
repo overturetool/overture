@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -18,19 +19,19 @@ public class Entry {
                 long toVar_1 = 3L;
 
                 for (Long k = 1L; k <= toVar_1; k++) {
-                    result = SeqUtil.conc(Utils.clone(result),
+                    result = SeqUtil.conc(Utils.copy(result),
                             SeqUtil.seq(casesTup(Tuple.mk_(i, j, k))));
                 }
             }
         }
 
-        return Utils.clone(result);
+        return Utils.copy(result);
     }
 
     public static Number casesTup(final Tuple t) {
         Number casesExpResult_1 = null;
 
-        Tuple tuplePattern_1 = Utils.clone(t);
+        Tuple tuplePattern_1 = Utils.copy(t);
         Boolean success_1 = tuplePattern_1.compatible(Number.class,
                 Number.class, Number.class);
 
@@ -50,7 +51,7 @@ public class Entry {
         }
 
         if (!(success_1)) {
-            Tuple tuplePattern_2 = Utils.clone(t);
+            Tuple tuplePattern_2 = Utils.copy(t);
             Number a = null;
             success_1 = tuplePattern_2.compatible(Number.class, Number.class,
                     Number.class);
@@ -63,7 +64,7 @@ public class Entry {
             }
 
             if (!(success_1)) {
-                Tuple tuplePattern_3 = Utils.clone(t);
+                Tuple tuplePattern_3 = Utils.copy(t);
                 Number b = null;
                 Number c = null;
                 success_1 = tuplePattern_3.compatible(Number.class,
@@ -80,7 +81,7 @@ public class Entry {
                 }
 
                 if (!(success_1)) {
-                    Tuple tuplePattern_4 = Utils.clone(t);
+                    Tuple tuplePattern_4 = Utils.copy(t);
                     success_1 = tuplePattern_4.compatible(Number.class,
                             Number.class, Number.class);
 

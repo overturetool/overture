@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     private static final VDMSeq s = SeqUtil.seq(1L, 2L, 3L);
 
@@ -15,20 +16,20 @@ public class Entry {
 
     public static VDMSeq Test() {
         VDMSeq seqCompResult_1 = SeqUtil.seq();
-        VDMSet set_1 = SeqUtil.elems(Utils.clone(s));
+        VDMSet set_1 = SeqUtil.elems(Utils.copy(s));
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             Number x = ((Number) iterator_1.next());
 
             if (Utils.equals(1L, 1L)) {
-                seqCompResult_1 = SeqUtil.conc(Utils.clone(seqCompResult_1),
+                seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
                         SeqUtil.seq(x));
             }
         }
 
-        VDMSeq a = Utils.clone(seqCompResult_1);
+        VDMSeq a = Utils.copy(seqCompResult_1);
 
-        return Utils.clone(a);
+        return Utils.copy(a);
     }
 
     public String toString() {

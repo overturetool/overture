@@ -1,0 +1,52 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+state St of
+  x : PT
+  init s == s = mk_St(1)
+end
+
+types
+
+PT = PossiblyOne | True;
+PossiblyOne = [nat]
+inv p == p <> nil => p = 1;
+True = bool
+inv b == b;
+
+operations
+
+op1 : () ==> ()
+op1 () ==
+(
+  dcl p : PT := nil;
+  p := 1;
+  p := true;
+  St.x := nil;
+  St.x := 1;
+  St.x := true;
+  IO`println("Breaking named type invariant (assigning record field)");
+  St.x := false;
+);
+  
+op2 : () ==> ()
+op2 () ==
+(
+  dcl p1 : PT := nil;
+  St.x := true;
+  IO`println("Breaking named type invariant (assigning local variable)");
+  p1 := false;
+);
+
+Run : () ==> ?
+Run () ==
+(
+  op1();
+  op2();
+  return 0;
+);
+
+end Entry

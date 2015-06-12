@@ -29,14 +29,14 @@ public class VDMSeq extends ArrayList implements ValueType
 	private static final long serialVersionUID = 5083307947808060044L;
 
 	@SuppressWarnings("unchecked")
-	public VDMSeq clone()
+	public VDMSeq copy()
 	{
 		VDMSeq seqClone = new VDMSeq();
 
 		for (Object element: this)
 		{
 			if (element instanceof ValueType)
-				element = ((ValueType)element).clone();
+				element = ((ValueType)element).copy();
 			
 			seqClone.add(element);
 		}

@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -41,7 +42,7 @@ public class Entry {
             throw new RuntimeException("Let Be St found no applicable bindings");
         }
 
-        return ((Object) b);
+        return b;
     }
 
     public String toString() {
