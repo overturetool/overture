@@ -42,7 +42,6 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SUnaryExp;
-import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.types.AIntNumericBasicType;
@@ -370,7 +369,6 @@ public class ExpAssistantCG extends AssistantBase
 		// expressions exist within a statement. However, in case it does not, the transformation
 		// is not performed. In this way, the  'and' and 'or' expressions can
 		// still be used (say) in instance variable assignment.
-		
 		return exp.getAncestor(SOperationDefinition.class) == null
 				&& exp.getAncestor(SFunctionDefinition.class) == null
 				&& exp.getAncestor(ANamedTraceDefinition.class) == null
@@ -382,30 +380,15 @@ public class ExpAssistantCG extends AssistantBase
 			PExp predicate, SQuantifierExpCG quantifier, IRInfo question,
 			String nodeStr) throws AnalysisException
 	{
-		if (question.getExpAssistant().outsideImperativeContext(node))
-		{
-			question.addUnsupportedNode(node, String.format("Generation of a %s is only supported within operations/functions", nodeStr));
-			return null;
-		}
-
-		LinkedList<ASetMultipleBindCG> bindingsCg = new LinkedList<ASetMultipleBindCG>();
+		LinkedList<SMultipleBindCG> bindingsCg = new LinkedList<SMultipleBindCG>();
 		for (PMultipleBind multipleBind : bindings)
 		{
-			if (!(multipleBind instanceof ASetMultipleBind))
-			{
-				question.addUnsupportedNode(node, String.format("Generation of a %s is only supported for multiple set binds. Got: %s", nodeStr, multipleBind));
-				return null;
-			}
-
 			SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
-
-			if (!(multipleBindCg instanceof ASetMultipleBindCG))
+			
+			if(multipleBindCg != null)
 			{
-				question.addUnsupportedNode(node, String.format("Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: %s", multipleBindCg));
-				return null;
+				bindingsCg.add(multipleBindCg);
 			}
-
-			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
 		}
 
 		PType type = node.getType();
