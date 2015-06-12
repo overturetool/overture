@@ -34,18 +34,21 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
+import org.overture.codegen.cgast.patterns.ATypeMultipleBindCG;
 import org.overture.codegen.merging.TemplateManager;
 import org.overture.codegen.merging.TemplateStructure;
 
 public class IsaTemplateManager extends TemplateManager
 {
 
+	private static final String MISC_EXP_PATH = "Misc";
+	private static final String LITERAL_EXP_PATH = "Literal";
+	private static final String BINDS_PATH = "Binds";
+
 	private static final String FUNC_TEMPLATE = "Function";
 	private static final String FORMAL_PARAM = "FormalParam";
 	private static final String MUT_REC = "MutRec";
 	private static final String MODULE_DECL = "Module";
-	private static final String MISC_EXP_PATH = "Misc";
-	private static final String LITERAL_EXP_PATH = "Literal";
 	private static final String APPLY = "Apply";
 	private static final String VAR = "Variable";
 	private static final String TERNARY = "TernaryIf";
@@ -53,10 +56,12 @@ public class IsaTemplateManager extends TemplateManager
 	private static final String CHAR_LIT = "CharLiteral";
 	private static final String INT_LIT = "IntLiteral";
 	private static final String REAL_LIT = "RealLiteral";
+	private static final String TYPE_MULTIPLE_BIND = "TypeMultiple";
 
-	public IsaTemplateManager(TemplateStructure templateStructure, Class<?> classRef)
+	public IsaTemplateManager(TemplateStructure templateStructure,
+			Class<?> classRef)
 	{
-		super(templateStructure,classRef);
+		super(templateStructure, classRef);
 		initIsaNodes();
 	}
 
@@ -64,36 +69,39 @@ public class IsaTemplateManager extends TemplateManager
 	{
 		nodeTemplateFileNames.put(AFuncDeclCG.class, templateStructure.DECL_PATH
 				+ FUNC_TEMPLATE);
+		
 		nodeTemplateFileNames.put(AFormalParamLocalParamCG.class, templateStructure.LOCAL_DECLS_PATH
 				+ FORMAL_PARAM);
-		
+
 		nodeTemplateFileNames.put(AMrFuncGroupDeclCG.class, templateStructure.DECL_PATH
 				+ MUT_REC);
-		
+
 		nodeTemplateFileNames.put(AModuleDeclCG.class, templateStructure.DECL_PATH
 				+ MODULE_DECL);
 
 		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH
-				+ MISC_EXP_PATH+File.separatorChar+APPLY);
-	
+				+ MISC_EXP_PATH + File.separatorChar + APPLY);
+
 		nodeTemplateFileNames.put(AIdentifierVarExpCG.class, templateStructure.EXP_PATH
-				+ MISC_EXP_PATH+File.separatorChar+VAR);
-		
+				+ MISC_EXP_PATH + File.separatorChar + VAR);
+
 		nodeTemplateFileNames.put(ATernaryIfExpCG.class, templateStructure.EXP_PATH
-				+ MISC_EXP_PATH+File.separatorChar+TERNARY);
+				+ MISC_EXP_PATH + File.separatorChar + TERNARY);
 
 		nodeTemplateFileNames.put(ABoolLiteralExpCG.class, templateStructure.EXP_PATH
-				+ LITERAL_EXP_PATH+File.separatorChar+BOOL_LIT);
-		
-		nodeTemplateFileNames.put(ACharLiteralExpCG.class, templateStructure.EXP_PATH
-				+ LITERAL_EXP_PATH+File.separatorChar+CHAR_LIT);
-		
-		nodeTemplateFileNames.put(AIntLiteralExpCG.class, templateStructure.EXP_PATH
-				+ LITERAL_EXP_PATH+File.separatorChar+INT_LIT);
-		
-		nodeTemplateFileNames.put(ARealLiteralExpCG.class, templateStructure.EXP_PATH
-				+ LITERAL_EXP_PATH+File.separatorChar+REAL_LIT);
+				+ LITERAL_EXP_PATH + File.separatorChar + BOOL_LIT);
 
+		nodeTemplateFileNames.put(ACharLiteralExpCG.class, templateStructure.EXP_PATH
+				+ LITERAL_EXP_PATH + File.separatorChar + CHAR_LIT);
+
+		nodeTemplateFileNames.put(AIntLiteralExpCG.class, templateStructure.EXP_PATH
+				+ LITERAL_EXP_PATH + File.separatorChar + INT_LIT);
+
+		nodeTemplateFileNames.put(ARealLiteralExpCG.class, templateStructure.EXP_PATH
+				+ LITERAL_EXP_PATH + File.separatorChar + REAL_LIT);
+
+		nodeTemplateFileNames.put(ATypeMultipleBindCG.class, templateStructure.makePath(BINDS_PATH)
+				+ File.separatorChar + TYPE_MULTIPLE_BIND);
 	}
 
 }
