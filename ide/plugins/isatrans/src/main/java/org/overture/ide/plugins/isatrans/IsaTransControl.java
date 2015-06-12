@@ -9,10 +9,16 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourceAttributes;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -164,6 +170,17 @@ public class IsaTransControl
 		File backupFile = new File(isaDir, sourceFile.getName() + ".bk");
 
 		FileUtils.copyFile(sourceFile, backupFile);
+		
+		// Concert to IFile and mark as read-only
+		IWorkspace workspace= ResourcesPlugin.getWorkspace();    
+		IPath location= Path.fromOSString(backupFile.getAbsolutePath()); 
+		IFile ifile= workspace.getRoot().getFileForLocation(location);	
+		
+		refreshProject();
+		
+		ResourceAttributes attributes = new ResourceAttributes();
+		attributes.setReadOnly(true);
+		ifile.setResourceAttributes(attributes);
 	}
 
 	private void refreshProject() throws CoreException
