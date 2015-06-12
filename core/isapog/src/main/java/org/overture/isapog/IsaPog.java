@@ -65,6 +65,16 @@ public class IsaPog
 		return posThy;
 	}
 
+	public String getModelThyName()
+	{
+		return modelThyName;
+	}
+
+	public String getPosThyName()
+	{
+		return posThyName;
+	}
+
 	/**
 	 * Write Isabelle theory files to disk for the model and proof obligations
 	 * 
