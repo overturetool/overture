@@ -30,6 +30,7 @@ import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
@@ -57,6 +58,7 @@ public class IsaTemplateManager extends TemplateManager
 	private static final String INT_LIT = "IntLiteral";
 	private static final String REAL_LIT = "RealLiteral";
 	private static final String TYPE_MULTIPLE_BIND = "TypeMultiple";
+	private static final String EXPLICIT_VAR = "ExplicitVariable";
 
 	public IsaTemplateManager(TemplateStructure templateStructure,
 			Class<?> classRef)
@@ -102,6 +104,9 @@ public class IsaTemplateManager extends TemplateManager
 
 		nodeTemplateFileNames.put(ATypeMultipleBindCG.class, templateStructure.makePath(BINDS_PATH)
 				+ File.separatorChar + TYPE_MULTIPLE_BIND);
+		
+		nodeTemplateFileNames.put(AExplicitVarExpCG.class, templateStructure.EXP_PATH
+				+MISC_EXP_PATH+File.separatorChar+ EXPLICIT_VAR);
 	}
 
 }
