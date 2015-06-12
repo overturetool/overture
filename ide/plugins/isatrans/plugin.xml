@@ -36,7 +36,7 @@
       commandId="org.overture.ide.plugins.isatrans.genthycom"
       contextId="org.eclipse.ui.contexts.window"
       schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-      sequence="Ctrl+Alt+I">
+      sequence="Ctrl+Alt+J">
     </key>
   </extension>
   
@@ -75,7 +75,7 @@
       commandId="org.overture.ide.plugins.isatrans.genbothcom"
       contextId="org.eclipse.ui.contexts.window"
       schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-      sequence="Ctrl+Alt+U">
+      sequence="Ctrl+Alt+K">
     </key>
   </extension>
    
