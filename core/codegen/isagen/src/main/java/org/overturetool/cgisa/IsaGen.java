@@ -41,7 +41,6 @@ import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overturetool.cgisa.transformations.GroupMutRecs;
 import org.overturetool.cgisa.transformations.SortDependencies;
@@ -71,7 +70,25 @@ public class IsaGen extends CodeGenBase
 	{
 		IsaGen ig = new IsaGen();
 		GeneratedModule r = ig.generateIsabelleSyntax(exp);
-		//FIXME: check if generation work before blindly returning
+		if (r.hasMergeErrors())
+		{
+			throw new org.overture.codegen.cgast.analysis.AnalysisException(exp.toString()
+					+ " cannot be generated. Merge errors:"
+					+ r.getMergeErrors().toString());
+		}
+		if (r.hasUnsupportedIrNodes())
+		{
+			throw new org.overture.codegen.cgast.analysis.AnalysisException(exp.toString()
+					+ " cannot be generated. Unsupported in IR:"
+					+ r.getUnsupportedInIr().toString());
+		}
+		if (r.hasUnsupportedTargLangNodes())
+		{
+			throw new org.overture.codegen.cgast.analysis.AnalysisException(exp.toString()
+					+ " cannot be generated. Unsupported in TargLang:"
+					+ r.getUnsupportedInTargLang().toString());
+		}
+
 		return r.getContent();
 	}
 
@@ -103,7 +120,8 @@ public class IsaGen extends CodeGenBase
 			return prettyPrint(status);
 		}
 
-		throw new org.overture.codegen.cgast.analysis.AnalysisException(exp.toString() +" cannot be code-generated");
+		throw new org.overture.codegen.cgast.analysis.AnalysisException(exp.toString()
+				+ " cannot be code-generated");
 	}
 
 	/**
