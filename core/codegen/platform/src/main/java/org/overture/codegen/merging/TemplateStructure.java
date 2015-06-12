@@ -92,4 +92,12 @@ public class TemplateStructure
 		PATTERN_PATH = root + "Pattern" + File.separatorChar;
 	}
 
+	public String makePath(String path)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(root);
+		sb.append(File.separatorChar);
+		sb.append(path);
+		return sb.toString();
+	}
 }
