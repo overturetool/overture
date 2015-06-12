@@ -31,10 +31,12 @@ public class IsaPog
 	private static final String SINGLE_SPACE = " ";
 	private static final String LINEBREAK = "\n";
 	private static final String ISA_BEGIN = "begin\n";
-	private static final String ISA_END = "\nend";
+	private static final String ISA_END = "end";
 	private static final String ISA_LEMMA = "lemma";
 	private static final String BY_TAC = " by vdm_auto_tac";
 	private static final String THY_EXT = ".thy";
+	private static final String ISA_OPEN_COMMENT = "(*";
+	private static final String ISA_CLOSE_COMMENT = "*)";
 
 	private GeneratedModule modelThy;
 	private String modelThyName;
@@ -45,6 +47,7 @@ public class IsaPog
 			org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		IProofObligationList pos = ProofObligationGenerator.generateProofObligations(ast);
+		pos.renumber();
 
 		modelThy = IsaGen.vdmModule2IsaTheory(ast);
 		modelThyName = modelThy.getName() + THY_EXT;
@@ -92,6 +95,7 @@ public class IsaPog
 		sb.append(ISA_IMPORTS);
 		sb.append(SINGLE_SPACE);
 		sb.append(moduleName);
+		sb.append(LINEBREAK);
 		sb.append(ISA_BEGIN);
 		return sb.toString();
 	}
@@ -100,10 +104,19 @@ public class IsaPog
 			org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		StringBuilder sb = new StringBuilder();
+		sb.append(ISA_OPEN_COMMENT);
+		sb.append(" ");
+		sb.append(po.toString());
+		sb.append(" ");
+		sb.append(ISA_CLOSE_COMMENT);
+		sb.append(LINEBREAK);
 		sb.append(ISA_LEMMA);
 		sb.append(SINGLE_SPACE);
 		sb.append(po.getIsaName());
+		sb.append(": ");
+		sb.append("\"+|");
 		sb.append(IsaGen.vdmExp2IsaString(po.getValueTree().getPredicate()));
+		sb.append("|+\"");
 		sb.append(BY_TAC);
 		sb.append(LINEBREAK);
 		return sb.toString();
@@ -116,9 +129,6 @@ public class IsaPog
 		StringBuilder sb = new StringBuilder();
 		sb.append(makePosThyHeader(moduleName));
 		sb.append(LINEBREAK);
-		sb.append(LINEBREAK);
-		sb.append(LINEBREAK);
-
 		Iterator<IProofObligation> iter = pos.iterator();
 		IProofObligation po;
 
@@ -128,7 +138,6 @@ public class IsaPog
 			sb.append(makePoLemma(po));
 			sb.append(LINEBREAK);
 		}
-
 		sb.append(ISA_END);
 		return sb.toString();
 	}
