@@ -71,7 +71,7 @@ public class IsaTemplateManager extends TemplateManager
 	{
 		nodeTemplateFileNames.put(AFuncDeclCG.class, templateStructure.DECL_PATH
 				+ FUNC_TEMPLATE);
-		
+
 		nodeTemplateFileNames.put(AFormalParamLocalParamCG.class, templateStructure.LOCAL_DECLS_PATH
 				+ FORMAL_PARAM);
 
@@ -103,10 +103,9 @@ public class IsaTemplateManager extends TemplateManager
 				+ LITERAL_EXP_PATH + File.separatorChar + REAL_LIT);
 
 		nodeTemplateFileNames.put(ATypeMultipleBindCG.class, templateStructure.makePath(BINDS_PATH)
-				+ File.separatorChar + TYPE_MULTIPLE_BIND);
-		
-		nodeTemplateFileNames.put(AExplicitVarExpCG.class, templateStructure.EXP_PATH
-				+MISC_EXP_PATH+File.separatorChar+ EXPLICIT_VAR);
-	}
+				+ TYPE_MULTIPLE_BIND);
 
+		nodeTemplateFileNames.put(AExplicitVarExpCG.class, templateStructure.EXP_PATH
+				+ MISC_EXP_PATH + File.separatorChar + EXPLICIT_VAR);
+	}
 }
