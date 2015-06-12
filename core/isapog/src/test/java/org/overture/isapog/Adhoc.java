@@ -11,7 +11,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.core.tests.ParseTcFacade;
 
-public class AdhocTest
+public class Adhoc
 {
 	String modelPath = "src/test/resources/adhoc/isapog.vdmsl";
 	String thysPath = "src/test/resoures/adhoc/";
