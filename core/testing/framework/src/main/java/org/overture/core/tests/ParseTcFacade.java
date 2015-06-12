@@ -132,16 +132,34 @@ public abstract class ParseTcFacade
 	}
 
 	/**
-	 * Parse and type check a VDM expression encoded in a string. Failure
-	 * to type check results in an exception.
+	 * Parse and type check a VDM expression encoded in a string using VDM_SL. Failure results in an exception.
 	 * 
 	 * @param expression
 	 *            the String representing the expression
 	 * @return the {@link PExp} AST node of the expression
+	 * 
+	 * @see #parseModelString(String, Dialect)
 	 */
 	public static PExp parseTcExpressionString(String expression)
 			throws ParserException, LexException
 	{
+		return parseTcExpressionString(expression, Dialect.VDM_SL);
+	}
+
+	/**
+	 * Parse and type check a VDM expression encoded in a string using the specified dialect. Failure results in an exception.
+	 * 
+	 * @param expression
+	 *            the String representing the expression
+	 * @param dialect
+	 *            the {@link Dialect} to use when checking
+	 * @return the {@link PExp} AST node of the expression
+	 */
+	public static PExp parseTcExpressionString(String expression,
+			Dialect dialect) throws ParserException, LexException,
+			TypeCheckException
+	{
+		Settings.dialect = dialect;
 		TypeCheckResult<PExp> res = TypeCheckerUtil.typeCheckExpression(expression);
 		if (res.errors.isEmpty())
 		{
