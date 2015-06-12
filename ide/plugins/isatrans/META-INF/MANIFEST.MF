@@ -13,7 +13,8 @@ Bundle-Activator: org.overture.ide.plugins.isatrans.Activator
 Bundle-ClassPath: .,
  jars/isagen.jar,
  jars/jgrapht-core.jar,
- jars/commons-collections4.jar
+ jars/commons-collections4.jar,
+ jars/isapog.jar
 Require-Bundle: org.overture.ide.ui,
  org.overture.ide.core
 Import-Package: org.apache.commons.io,
@@ -38,4 +39,6 @@ Import-Package: org.apache.commons.io,
  org.overture.codegen.utils,
  org.overture.ide.core,
  org.overture.ide.core.ast,
- org.overture.ide.core.resources
+ org.overture.ide.core.resources,
+ org.overture.pog.pub,
+ org.overture.pof
