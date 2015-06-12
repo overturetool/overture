@@ -106,11 +106,13 @@ CG {-> package='org.overture.codegen.cgast'
 #bind {-> package='org.overture.codegen.cgast.patterns'
 	|	[pattern]:CG.#pattern}
     =   {set} [set]:CG.#exp //binds
+    |   {type} [type]:CG.#type
     ;
 		
 #multipleBind {-> package='org.overture.codegen.cgast.patterns'
 	|	[patterns]:CG.#pattern*}
     =   {set}  [set]:CG.#exp //binds
+    |   {type} [type]:CG.#type
     ;
    
 #name {-> package='org.overture.codegen.cgast.name'}
@@ -420,7 +422,7 @@ CG {-> package='org.overture.codegen.cgast'
 	;
 	
 #Quantifier {-> package='org.overture.codegen.cgast.expressions'
-	| [bindList]:CG.#multipleBind.set*
+	| [bindList]:CG.#multipleBind*
 	| [predicate]:CG.#exp}
 	= {forAll}
 	| {exists}
