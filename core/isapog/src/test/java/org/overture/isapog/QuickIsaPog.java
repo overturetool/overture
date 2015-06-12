@@ -11,44 +11,61 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.core.tests.ParseTcFacade;
 
-public class Adhoc
+public class QuickIsaPog
 {
 	String modelPath = "src/test/resources/adhoc/isapog.vdmsl";
-	String thysPath = "src/test/resoures/adhoc/";
-	
-	//@Test
-	public void fileWriteTest() throws IOException, AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException{
+	String thysPath = "src/test/resources/adhoc/";
+
+	@Test
+	public void fileWriteTest() throws IOException, AnalysisException,
+			org.overture.codegen.cgast.analysis.AnalysisException
+	{
 		List<INode> nodelist = ParseTcFacade.typedAst(modelPath, "AdHoc");
 		INode ast = nodelist.get(0);
-		
-		if(ast instanceof AModuleModules){
+
+		if (ast instanceof AModuleModules)
+		{
 			AModuleModules module = (AModuleModules) ast;
 			IsaPog isapo = new IsaPog(module);
+			if (isapo.hasErrors())
+			{
+				fail(isapo.getErrorMessage());
+			}
 			isapo.writeThyFiles(thysPath);
 		}
-		
-		else{
+
+		else
+		{
 			fail();
 		}
 	}
-	
+
 	@Test
-	public void quickPrintTest() throws IOException, AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException{
+	public void printTest() throws IOException, AnalysisException,
+			org.overture.codegen.cgast.analysis.AnalysisException
+	{
 		List<INode> nodelist = ParseTcFacade.typedAst(modelPath, "AdHoc");
 		INode ast = nodelist.get(0);
-		
-		if(ast instanceof AModuleModules){
+
+		if (ast instanceof AModuleModules)
+		{
 			AModuleModules module = (AModuleModules) ast;
 			IsaPog isapo = new IsaPog(module);
-			System.out.println("Model THY");
-			System.out.println("*****");
+
+			if (isapo.hasErrors())
+			{
+				fail(isapo.getErrorMessage());
+			}
+
+			System.out.println("(** Model THY **)");
 			System.out.println(isapo.getModelThyString());
-			System.out.println("POs THY");
-			System.out.println("*****");
+			System.out.println();
+			System.out.println("(** POs THY **)");
 			System.out.println(isapo.getPosThyString());
 		}
-		
-		else{
+
+		else
+		{
 			fail();
 		}
 	}
