@@ -13,7 +13,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.isatrans.IsaTransControl;
 
-public class IsaTransCommand extends AbstractHandler
+public class IsaTransBothCommand extends AbstractHandler
 {
 
 	@Override
@@ -41,10 +41,9 @@ public class IsaTransCommand extends AbstractHandler
 			}
 
 			IsaTransControl util = new IsaTransControl(HandlerUtil.getActiveWorkbenchWindow(event), proj, Display.getCurrent().getActiveShell());
-			util.generateTheoryFilesModel();
+			util.generateTheoryFilesModelPos();
 		}
 
 		return null;
 	}
-
 }
