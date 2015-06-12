@@ -75,6 +75,23 @@ public class IsaPog
 		return posThyName;
 	}
 
+	public boolean hasErrors()
+	{
+		return modelThy.hasMergeErrors() || modelThy.hasUnsupportedIrNodes()
+				|| modelThy.hasUnsupportedTargLangNodes();
+	}
+
+	public String getErrorMessage()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(modelThy.getMergeErrors().toString());
+		sb.append(LINEBREAK);
+		sb.append(modelThy.getUnsupportedInIr().toString());
+		sb.append(LINEBREAK);
+		sb.append(modelThy.getUnsupportedInTargLang().toString());
+		return sb.toString();
+	}
+
 	/**
 	 * Write Isabelle theory files to disk for the model and proof obligations
 	 * 
