@@ -114,7 +114,8 @@ public class POFunctionDefinitionContext extends POContext {
 
 			AImpliesBooleanBinaryExp implies = AstExpressionFactory
 					.newAImpliesBooleanBinaryExp(precondition.clone(), stitch);
-
+			implies.setType(new ABooleanBasicType());
+			
 			forAllExp.setPredicate(implies);
 		} else {
 			forAllExp.setPredicate(stitch);
