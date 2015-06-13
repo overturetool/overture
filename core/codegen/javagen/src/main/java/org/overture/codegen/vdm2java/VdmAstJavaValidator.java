@@ -9,6 +9,7 @@ import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.ALetBeStExp;
+import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -98,6 +99,27 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 			info.addUnsupportedNode(node, "Generation of the let be st statement is only supported for a multiple set bind. Got: "
 					+ multipleBind);
 			return;
+		}
+	}
+	
+	@Override
+	public void caseAMapCompMapExp(AMapCompMapExp node)
+			throws AnalysisException
+	{
+		if (info.getExpAssistant().outsideImperativeContext(node))
+		{
+			info.addUnsupportedNode(node, "Generation of a map comprehension is only supported within operations/functions");
+			return;
+		}
+		
+		for (PMultipleBind multipleBind : node.getBindings())
+		{
+			if (!(multipleBind instanceof ASetMultipleBind))
+			{
+				info.addUnsupportedNode(node, "Generation of a map comprehension is only supported for multiple set binds. Got: "
+						+ multipleBind);
+				return;
+			}
 		}
 	}
 	
