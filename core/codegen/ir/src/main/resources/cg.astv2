@@ -520,7 +520,7 @@ CG {-> package='org.overture.codegen.cgast'
 
 #Map {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:CG.#exp.maplet*
-	| {comp} [first]:CG.#exp.maplet [bindings]:CG.#multipleBind.set* [predicate]:CG.#exp
+	| {comp} [first]:CG.#exp.maplet [bindings]:CG.#multipleBind* [predicate]:CG.#exp
 	;
 
 #type {-> package='org.overture.codegen.cgast.types'
