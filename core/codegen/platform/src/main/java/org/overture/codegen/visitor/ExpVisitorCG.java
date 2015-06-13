@@ -500,34 +500,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseASetCompSetExp(ASetCompSetExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().outsideImperativeContext(node))
-		{
-			question.addUnsupportedNode(node, "Generation of a set comprehension is only supported within operations/functions");
-			return null;
-		}
-
 		LinkedList<PMultipleBind> bindings = node.getBindings();
 
-		LinkedList<ASetMultipleBindCG> bindingsCg = new LinkedList<ASetMultipleBindCG>();
+		List<SMultipleBindCG> bindingsCg = new LinkedList<SMultipleBindCG>();
 		for (PMultipleBind multipleBind : bindings)
 		{
-			if (!(multipleBind instanceof ASetMultipleBind))
-			{
-				question.addUnsupportedNode(node, "Generation of a set comprehension is only supported for multiple set binds. Got: "
-						+ multipleBind);
-				return null;
-			}
-
 			SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
-
-			if (!(multipleBindCg instanceof ASetMultipleBindCG))
-			{
-				question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: "
-						+ multipleBindCg);
-				return null;
-			}
-
-			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
+			bindingsCg.add(multipleBindCg);
 		}
 
 		PType type = node.getType();
