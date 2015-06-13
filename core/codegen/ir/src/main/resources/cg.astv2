@@ -316,7 +316,7 @@ CG {-> package='org.overture.codegen.cgast'
     ;
            
 #letBeSt {-> package='org.overture.codegen.cgast.utils'}
-	= {header} [binding]:CG.#multipleBind.set [suchThat]:CG.#exp //The Overture AST uses a multiplebind 
+	= {header} [binding]:CG.#multipleBind [suchThat]:CG.#exp //The Overture AST uses a multiplebind 
 	;
 	
 #exp {-> package='org.overture.codegen.cgast.expressions'

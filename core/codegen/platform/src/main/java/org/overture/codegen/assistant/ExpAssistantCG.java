@@ -86,7 +86,6 @@ import org.overture.codegen.cgast.expressions.SIsExpCG;
 import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
@@ -352,7 +351,7 @@ public class ExpAssistantCG extends AssistantBase
 		return false;
 	}
 
-	public AHeaderLetBeStCG consHeader(ASetMultipleBindCG binding,
+	public AHeaderLetBeStCG consHeader(SMultipleBindCG binding,
 			SExpCG suchThat)
 	{
 		AHeaderLetBeStCG header = new AHeaderLetBeStCG();
