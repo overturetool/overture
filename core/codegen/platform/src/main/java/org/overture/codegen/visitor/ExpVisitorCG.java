@@ -741,33 +741,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseALetBeStExp(ALetBeStExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().outsideImperativeContext(node))
-		{
-			question.addUnsupportedNode(node, "Generation of a let be st expression is only supported within operations/functions");
-			return null;
-		}
-
 		PMultipleBind multipleBind = node.getBind();
-
-		if (!(multipleBind instanceof ASetMultipleBind))
-		{
-			question.addUnsupportedNode(node, "Generation of the let be st expression is only supported for a multiple set bind. Got: "
-					+ multipleBind);
-			return null;
-		}
-
-		ASetMultipleBind multipleSetBind = (ASetMultipleBind) multipleBind;
-
-		SMultipleBindCG multipleBindCg = multipleSetBind.apply(question.getMultipleBindVisitor(), question);
-
-		if (!(multipleBindCg instanceof ASetMultipleBindCG))
-		{
-			question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: "
-					+ multipleBindCg);
-			return null;
-		}
-
-		ASetMultipleBindCG multipleSetBindCg = (ASetMultipleBindCG) multipleBindCg;
+		SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
 
 		PType type = node.getType();
 		PExp suchThat = node.getSuchThat();
@@ -780,7 +755,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		ALetBeStExpCG letBeStExp = new ALetBeStExpCG();
 
-		AHeaderLetBeStCG header = question.getExpAssistant().consHeader(multipleSetBindCg, suchThatCg);
+		AHeaderLetBeStCG header = question.getExpAssistant().consHeader(multipleBindCg, suchThatCg);
 
 		letBeStExp.setType(typeCg);
 		letBeStExp.setHeader(header);
