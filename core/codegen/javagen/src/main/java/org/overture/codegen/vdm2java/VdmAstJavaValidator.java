@@ -10,14 +10,13 @@ import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.AMapCompMapExp;
+import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.statements.ALetBeStStm;
-import org.overture.codegen.cgast.SMultipleBindCG;
-import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 
@@ -144,6 +143,17 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 						+ multipleBind);
 				return;
 			}
+		}
+	}
+	
+	@Override
+	public void caseASeqCompSeqExp(ASeqCompSeqExp node)
+			throws AnalysisException
+	{
+		if (info.getExpAssistant().outsideImperativeContext(node))
+		{
+			info.addUnsupportedNode(node, "Generation of a sequence comprehension is only supported within operations/functions");
+			return;
 		}
 	}
 	
