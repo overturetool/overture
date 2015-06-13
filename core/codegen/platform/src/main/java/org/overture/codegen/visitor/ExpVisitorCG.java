@@ -41,7 +41,6 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
-import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -157,7 +156,6 @@ import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
-import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -921,12 +919,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseASeqCompSeqExp(ASeqCompSeqExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().outsideImperativeContext(node))
-		{
-			question.addUnsupportedNode(node, "Generation of a sequence comprehension is only supported within operations/functions");
-			return null;
-		}
-
 		ASetBind setBind = node.getSetBind();
 		PType type = node.getType();
 		PExp first = node.getFirst();
