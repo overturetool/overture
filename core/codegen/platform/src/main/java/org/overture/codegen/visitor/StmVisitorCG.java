@@ -35,7 +35,6 @@ import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AAssignmentStm;
@@ -78,7 +77,6 @@ import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AAtomicStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -235,25 +233,8 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			throws AnalysisException
 	{
 		PMultipleBind multipleBind = node.getBind();
-
-		if (!(multipleBind instanceof ASetMultipleBind))
-		{
-			question.addUnsupportedNode(node, "Generation of the let be st statement is only supported for a multiple set bind. Got: "
-					+ multipleBind);
-			return null;
-		}
-
-		ASetMultipleBind multipleSetBind = (ASetMultipleBind) multipleBind;
-
-		SMultipleBindCG multipleBindCg = multipleSetBind.apply(question.getMultipleBindVisitor(), question);
-
-		if (!(multipleBindCg instanceof ASetMultipleBindCG))
-		{
-			return null;
-		}
-
-		ASetMultipleBindCG multipleSetBindCg = (ASetMultipleBindCG) multipleBindCg;
-
+		SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
+		
 		PExp suchThat = node.getSuchThat();
 		PStm stm = node.getStatement();
 
@@ -263,7 +244,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		ALetBeStStmCG letBeSt = new ALetBeStStmCG();
 
-		AHeaderLetBeStCG header = question.getExpAssistant().consHeader(multipleSetBindCg, suchThatCg);
+		AHeaderLetBeStCG header = question.getExpAssistant().consHeader(multipleBindCg, suchThatCg);
 
 		letBeSt.setHeader(header);
 		letBeSt.setStatement(stmCg);
