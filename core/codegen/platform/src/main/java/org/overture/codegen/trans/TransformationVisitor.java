@@ -300,14 +300,23 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseALetBeStStmCG(ALetBeStStmCG node) throws AnalysisException
 	{
 		AHeaderLetBeStCG header = node.getHeader();
+		
+		if (!(header.getBinding() instanceof ASetMultipleBindCG))
+		{
+			info.addTransformationWarning(node.getHeader().getBinding(), "This transformation only works for 'let be st' "
+					+ "statements with with multiple set binds and not multiple type binds in '"
+					+ this.getClass().getSimpleName() + "'");
+			return;
+		}
+		
 		SExpCG suchThat = header.getSuchThat();
-		SSetTypeCG setType = transformationAssistant.getSetTypeCloned(header.getBinding().getSet());
+		ASetMultipleBindCG binding = (ASetMultipleBindCG) node.getHeader().getBinding();
+		
+		SSetTypeCG setType = transformationAssistant.getSetTypeCloned(binding.getSet());
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 
 		LetBeStStrategy strategy = new LetBeStStrategy(transformationAssistant, suchThat, setType, langIterator, tempVarNameGen, varPrefixes);
-
-		ASetMultipleBindCG binding = header.getBinding();
 
 		if (transformationAssistant.hasEmptySet(binding))
 		{
@@ -335,7 +344,16 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "let be st expressions");
 
 		AHeaderLetBeStCG header = node.getHeader();
-		ASetMultipleBindCG binding = header.getBinding();
+		
+		if (!(header.getBinding() instanceof ASetMultipleBindCG))
+		{
+			info.addTransformationWarning(node.getHeader().getBinding(), "This transformation only works for 'let be st' "
+					+ "expressions with with multiple set binds and not multiple type binds in '"
+					+ this.getClass().getSimpleName() + "'");
+			return;
+		}
+		
+		ASetMultipleBindCG binding = (ASetMultipleBindCG) header.getBinding();
 		SExpCG suchThat = header.getSuchThat();
 		SSetTypeCG setType = transformationAssistant.getSetTypeCloned(binding.getSet());
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
