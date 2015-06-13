@@ -13,6 +13,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.statements.ALetBeStStm;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 
@@ -82,6 +83,19 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 		if (!(multipleBind instanceof ASetMultipleBind))
 		{
 			info.addUnsupportedNode(node, "Generation of the let be st expression is only supported for a multiple set bind. Got: "
+					+ multipleBind);
+			return;
+		}
+	}
+	
+	@Override
+	public void caseALetBeStStm(ALetBeStStm node) throws AnalysisException
+	{
+		PMultipleBind multipleBind = node.getBind();
+		
+		if (!(multipleBind instanceof ASetMultipleBind))
+		{
+			info.addUnsupportedNode(node, "Generation of the let be st statement is only supported for a multiple set bind. Got: "
 					+ multipleBind);
 			return;
 		}
