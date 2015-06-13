@@ -495,7 +495,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		ComplexCompStrategy strategy = new SetCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
-		LinkedList<ASetMultipleBindCG> bindings = node.getBindings();
+		List<ASetMultipleBindCG> bindings = filterBindList(node, node.getBindings());
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy);
 
 		if (block.getStatements().isEmpty())
