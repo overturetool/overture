@@ -21,8 +21,13 @@
  */
 package org.overture.codegen.assistant;
 
+import org.overture.codegen.cgast.SBindCG;
+import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
+import org.overture.codegen.cgast.patterns.ATypeBindCG;
+import org.overture.codegen.cgast.patterns.ATypeMultipleBindCG;
+import org.overture.codegen.logging.Logger;
 
 public class BindAssistantCG extends AssistantBase
 {
@@ -31,13 +36,44 @@ public class BindAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 
-	public ASetMultipleBindCG convertToMultipleSetBind(ASetBindCG setBind)
+	public SMultipleBindCG convertToMultipleBind(SBindCG bind)
 	{
-		ASetMultipleBindCG multipleSetBind = new ASetMultipleBindCG();
-
-		multipleSetBind.getPatterns().add(setBind.getPattern());
-		multipleSetBind.setSet(setBind.getSet());
-
-		return multipleSetBind;
+		SMultipleBindCG result = null;
+		
+		if(bind instanceof ASetBindCG)
+		{
+			ASetBindCG setBind = (ASetBindCG) bind;
+			
+			ASetMultipleBindCG multipleSetBind = new ASetMultipleBindCG();
+			
+			multipleSetBind.getPatterns().add(bind.getPattern());
+			multipleSetBind.setSet(setBind.getSet());
+			
+			result = multipleSetBind;
+		}
+		else if(bind instanceof ATypeBindCG)
+		{
+			ATypeBindCG typeBind = (ATypeBindCG) bind;
+			
+			ATypeMultipleBindCG multipleTypeBind = new ATypeMultipleBindCG();
+			
+			multipleTypeBind.getPatterns().add(bind.getPattern());
+			multipleTypeBind.setType(typeBind.getType());
+			
+			result = multipleTypeBind; 
+		}
+		
+		if(result != null)
+		{
+			result.setTag(bind.getTag());
+			result.setSourceNode(bind.getSourceNode());
+			result.setMetaData(bind.getMetaData());
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Expected set or type bind in '" + this.getClass().getSimpleName() + "'");
+		}
+		
+		return result; 
 	}
 }

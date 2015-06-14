@@ -1,0 +1,16 @@
+module Entry
+
+exports all
+definitions
+
+values
+
+v = [x| x in set {1,2,3}];
+
+operations 
+
+Run : () ==> ?
+Run () ==
+  return v(1);
+
+end Entry

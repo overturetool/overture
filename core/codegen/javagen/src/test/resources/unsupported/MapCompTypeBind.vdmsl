@@ -1,0 +1,12 @@
+module Entry
+
+exports all
+definitions
+
+operations 
+
+Run : () ==> ?
+Run () ==
+  return {x |-> x | x : int};
+
+end Entry

@@ -1,0 +1,12 @@
+module Entry
+
+exports all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+  return exists1 x : int & x = x; 
+
+end Entry
