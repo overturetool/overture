@@ -38,7 +38,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.AElseIfStm;
+import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.AWhileStm;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.ct.utils.TraceXmlWrapper;
@@ -50,8 +57,11 @@ import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.messages.rtlog.RTTextLogger;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
+import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.GenerateTestCases;
 import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.interpreter.runtime.SourceFile;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.traces.TraceReductionType;
@@ -516,6 +526,7 @@ public class TraceRunnerMain implements IProgressMonitor
 					if (coverage != null)
 					{
 						writeCoverage(i, coverage);
+						writeMCDCCoverage(i, coverage);
 					}
 
 					RTLogger.dump(true);
@@ -615,6 +626,77 @@ public class TraceRunnerMain implements IProgressMonitor
 			source.writeCoverage(pw);
 			pw.close();
 		}
+	}
+	
+	public static void writeMCDCCoverage(Interpreter interpreter, File coverage)
+			throws IOException {
+		Properties.init(); // Read properties file, if any
+
+		for (File f : interpreter.getSourceFiles()) {
+			interpreter.getCoverage_to_xml().saveCoverageXml(coverage,
+					f.getName());
+			final GenerateTestCases gtc = new GenerateTestCases();
+			if (interpreter instanceof ClassInterpreter) {
+				ClassInterpreter ci = (ClassInterpreter) interpreter;
+
+				for (SClassDefinition cdef : ci.getClasses()) {
+					try {
+						cdef.apply(new DepthFirstAnalysisAdaptor() {
+							@Override
+							public void caseAIfStm(AIfStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
+							public void caseAElseIfStm(AElseIfStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
+							@Override
+							public void caseAWhileStm(AWhileStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
+						});
+					} catch (AnalysisException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			} else {
+				ModuleInterpreter mi = (ModuleInterpreter) interpreter;
+				for (AModuleModules m : mi.getModules()) {
+					try {
+						m.apply(new DepthFirstAnalysisAdaptor() {
+							@Override
+							public void caseAIfStm(AIfStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
+							public void caseAElseIfStm(AElseIfStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
+							@Override
+							public void caseAWhileStm(AWhileStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+						});
+					} catch (AnalysisException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			gtc.saveCoverageXml(coverage, f.getName());
+		}
+		Properties.parser_tabstop = 1;// required to match locations with the
+										// editor representation
 	}
 
 	protected void connect() throws Exception

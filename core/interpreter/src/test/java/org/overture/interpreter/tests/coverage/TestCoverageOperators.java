@@ -28,7 +28,7 @@ public class TestCoverageOperators extends BaseTestCase{
 	@Override
     public void test() throws Exception {
         Settings.release = Release.VDM_10;
-        Settings.dialect = Dialect.VDM_PP;
+        Settings.dialect = Dialect.VDM_SL;
         InterpreterUtil.interpret(Dialect.VDM_SL, "operators(false,true,true)", new File("src/test/resources/coverage/test_operators.vdmsl".replace('/', File.separatorChar)), true);
         
         Interpreter interpreter = Interpreter.getInstance();

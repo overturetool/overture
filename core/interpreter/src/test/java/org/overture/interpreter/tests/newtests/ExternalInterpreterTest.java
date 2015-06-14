@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken;
 @Ignore
 public class ExternalInterpreterTest extends
 		ParamExternalsTest<StringInterpreterResult> {
-
+	
 	private static String TEST_UPDATE_PROPERTY = "tests.update.interpreter.external";
 
 	public ExternalInterpreterTest(String nameParameter, String testParameter,

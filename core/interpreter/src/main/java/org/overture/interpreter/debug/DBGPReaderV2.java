@@ -44,6 +44,7 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -58,7 +59,11 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.AElseIfStm;
+import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.util.definitions.ClassList;
+import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.VDMJ;
@@ -74,6 +79,7 @@ import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.GenerateTestCases;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -108,6 +114,7 @@ import org.overture.interpreter.values.Value;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
+import org.overture.typechecker.ModuleEnvironment;
 import org.overture.util.Base64;
 
 /**
@@ -1827,7 +1834,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			file.mkdirs();
 			writeMCDCCoverage(interpreter, file);
 			StringBuilder sb = new StringBuilder();
-			sb.append("MCDC Coverage written to: " + file.toURI().toASCIIString());
+			sb.append("MCDC Coverage written to: "
+					+ file.toURI().toASCIIString());
 			xcmdOvertureResponse(
 					DBGPXCmdOvertureCommandType.WRITE_MCDC_COVERAGE, null, sb);
 		}
@@ -1840,15 +1848,72 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		for (File f : interpreter.getSourceFiles()) {
 			interpreter.getCoverage_to_xml().saveCoverageXml(coverage,
 					f.getName());
-		}
+			final GenerateTestCases gtc = new GenerateTestCases();
+			if (interpreter instanceof ClassInterpreter) {
+				ClassInterpreter ci = (ClassInterpreter) interpreter;
 
+				for (SClassDefinition cdef : ci.getClasses()) {
+					try {
+						cdef.apply(new DepthFirstAnalysisAdaptor() {
+							@Override
+							public void caseAIfStm(AIfStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
+							public void caseAElseIfStm(AElseIfStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
+							@Override
+							public void caseAWhileStm(AWhileStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
+						});
+					} catch (AnalysisException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			} else {
+				ModuleInterpreter mi = (ModuleInterpreter) interpreter;
+				for (AModuleModules m : mi.getModules()) {
+					try {
+						m.apply(new DepthFirstAnalysisAdaptor() {
+							@Override
+							public void caseAIfStm(AIfStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
+							public void caseAElseIfStm(AElseIfStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
+							@Override
+							public void caseAWhileStm(AWhileStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+						});
+					} catch (AnalysisException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			gtc.saveCoverageXml(coverage, f.getName());
+		}
 		Properties.parser_tabstop = 1;// required to match locations with the
 										// editor representation
 	}
 
 	public static void writeCoverage(Interpreter interpreter, File coverage)
 			throws IOException {
-		System.out.println("--->\n\n\n\n\n");
 		Properties.init(); // Read properties file, if any
 
 		for (File f : interpreter.getSourceFiles()) {
@@ -1864,6 +1929,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 		Properties.parser_tabstop = 1;// required to match locations with the
 										// editor representation
+
 	}
 
 	public static String getStackTrace(Throwable t) {

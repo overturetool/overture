@@ -890,6 +890,8 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			fRemoteControlClassText.setText(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, ""));
 
 			checkBoxGenerateLatexCoverage.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, false));
+			
+			checkBoxGenerateMCDCCoverage.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_MCDC_COVERAGE, false));
 
 			radioLaunchModeConsole.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CONSOLE_ENTRY, false));
 

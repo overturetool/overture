@@ -76,6 +76,7 @@ public class TraceDebugLauncher
 					+ " CT"));
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, project.getName());
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, true);
+			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_MCDC_COVERAGE, true);
 
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT, traceInfo.getClassName());
 			// wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION, "NOT Specified");

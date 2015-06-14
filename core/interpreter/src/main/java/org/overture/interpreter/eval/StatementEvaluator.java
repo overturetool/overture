@@ -504,6 +504,8 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		try
 		{
+			ctx.setContext(ctxt);
+			node.apply(ctx);
 			ValueSet values = node.getSet().apply(VdmRuntime.getStatementEvaluator(), ctxt).setValue(ctxt);
 
 			for (Value val : values)

@@ -100,6 +100,10 @@ public class RtBuilderMainLaunchConfigurationTab extends
 		configuration.setAttribute(
 				IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE,
 				checkBoxGenerateLatexCoverage.getSelection());
+		
+		configuration.setAttribute(
+				IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_MCDC_COVERAGE,
+				checkBoxGenerateMCDCCoverage.getSelection());
 
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT,
 				defaultModule);
