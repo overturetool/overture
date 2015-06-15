@@ -106,6 +106,11 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 			SMapType mapType = typeAssistant.getMap(node);
 			
 			return mapType.apply(question.getTypeVisitor(), question);
+		} else if(question.getTypeAssistant().isProductOfSameSize(node, typeAssistant)) 
+		{
+			AProductType productType = typeAssistant.getProduct(node);
+			
+			return productType.apply(question.getTypeVisitor(), question);
 		} else
 		{
 			if(types.size() <= 1)
