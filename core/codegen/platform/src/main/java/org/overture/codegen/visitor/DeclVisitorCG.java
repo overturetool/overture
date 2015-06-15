@@ -399,6 +399,8 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		SDeclCG postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
 		method.setPostCond(postCondCg);
 
+		method.setImplicit(false);
+		
 		return method;
 	}
 	
@@ -442,6 +444,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 		func.setAbstract(false);
 		func.setAccess(accessCg);
+		func.setImplicit(true);
 		func.setBody(new ANotImplementedExpCG());
 		func.setFormalParams(question.getDeclAssistant().
 				consFormalParams(node.getParamPatterns(), question));
@@ -452,6 +455,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		//SPatternCG resPatternCg = node.getResult().getPattern().apply(question.getPatternVisitor(), question);
 		//STypeCG resTypeCg = node.getResult().getType().apply(question.getTypeVisitor(), question);
 
+		
 		return func;
 	}
 	

@@ -54,7 +54,6 @@ public class FuncTransformation extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAFuncDeclCG(AFuncDeclCG node) throws AnalysisException
 	{
-		
 		SDeclCG preCond = node.getPreCond();
 		SDeclCG postCond = node.getPostCond();
 		String access = node.getAccess();
@@ -84,6 +83,7 @@ public class FuncTransformation extends DepthFirstAnalysisAdaptor
 		method.setName(name);
 		method.setStatic(true);
 		method.setIsConstructor(false);
+		method.setImplicit(node.getImplicit());
 
 		if (!(body instanceof ANotImplementedExpCG))
 		{

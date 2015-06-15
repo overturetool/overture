@@ -355,6 +355,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 		methodType.getParams().add(new AObjectTypeCG());
 		
 		AMethodDeclCG execMethod = new AMethodDeclCG();
+		execMethod.setImplicit(false);
 		execMethod.setAbstract(false);
 		execMethod.setAccess(IRConstants.PUBLIC);
 		execMethod.setAsync(false);

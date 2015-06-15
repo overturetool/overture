@@ -328,6 +328,7 @@ public class JmlGenUtil
 		formalParam.setPattern(jmlGen.getJavaGen().getTransformationAssistant().consIdPattern(formalParamName));
 		
 		AMethodDeclCG method = new AMethodDeclCG();
+		method.setImplicit(false);
 		method.setAbstract(false);
 		method.setAccess(IRConstants.PUBLIC);
 		method.setAsync(false);

@@ -182,6 +182,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		AMethodDeclCG evaluatePPmethod = new AMethodDeclCG();
 		evaluatePPmethod.setAccess(IRConstants.PUBLIC);
 		evaluatePPmethod.setName("evaluatePP");
+		evaluatePPmethod.setImplicit(false);
 		evaluatePPmethod.setMethodType(methType);
 		
 		evaluatePPmethod.getFormalParams().add(fnrloc);

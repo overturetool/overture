@@ -31,6 +31,7 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -555,6 +556,7 @@ public class DeclAssistantCG extends AssistantBase
 
 		AMethodDeclCG method = new AMethodDeclCG();
 
+		method.setImplicit(false);
 		method.setAccess(access);
 		method.setStatic(isStatic);
 		method.setAsync(isAsync);
@@ -563,6 +565,7 @@ public class DeclAssistantCG extends AssistantBase
 		method.setBody(bodyCg);
 		method.setIsConstructor(isConstructor);
 		method.setAbstract(isAbstract);
+		method.setImplicit(node instanceof AImplicitOperationDefinition);
 		
 		AExplicitFunctionDefinition preCond = node.getPredef();
 		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;

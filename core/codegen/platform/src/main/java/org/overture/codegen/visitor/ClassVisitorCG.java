@@ -204,6 +204,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 			constructor.setAbstract(false);
 			constructor.setIsConstructor(true);
 			constructor.setName(name);
+			constructor.setImplicit(false);
 			constructor.setBody(new ABlockStmCG());
 
 			classCg.getMethods().add(constructor);
