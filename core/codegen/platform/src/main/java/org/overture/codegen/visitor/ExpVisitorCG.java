@@ -46,7 +46,6 @@ import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
@@ -158,11 +157,9 @@ import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.config.Settings;
 
@@ -1503,31 +1500,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		ADivideNumericBinaryExpCG divide = (ADivideNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
-
-		PExp leftExp = node.getLeft();
-		PExp rightExp = node.getRight();
-
-		SExpCG leftExpCG = divide.getLeft();
-
-		if (question.getExpAssistant().isIntegerType(leftExp)
-				&& question.getExpAssistant().isIntegerType(rightExp))
-		{
-			ARealLiteralExpCG one = new ARealLiteralExpCG();
-			ARealNumericBasicTypeCG realTypeCg = new ARealNumericBasicTypeCG();
-			realTypeCg.setSourceNode(new SourceNode(new ARealNumericBasicType()));
-			one.setType(realTypeCg);
-			one.setValue(1.0);
-
-			ATimesNumericBinaryExpCG neutralMul = new ATimesNumericBinaryExpCG();
-			neutralMul.setType(realTypeCg.clone());
-			neutralMul.setLeft(one);
-			neutralMul.setRight(leftExpCG);
-
-			divide.setLeft(question.getExpAssistant().isolateExpression(neutralMul));
-		}
-
-		return divide;
+		return question.getExpAssistant().handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
 	}
 
 	@Override
