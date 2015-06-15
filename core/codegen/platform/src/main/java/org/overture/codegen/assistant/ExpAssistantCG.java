@@ -201,6 +201,18 @@ public class ExpAssistantCG extends AssistantBase
 				|| type instanceof ANatNumericBasicType || type instanceof AIntNumericBasicType)
 				&& !(exp instanceof ARealLiteralExp);
 	}
+	
+	public boolean isIntegerType(SExpCG exp)
+	{
+		STypeCG type = exp.getType();
+
+		// Expressions like 1.0 are considered real literal expressions
+		// of type NatOneNumericBasicType
+
+		return (type instanceof ANat1NumericBasicTypeCG
+				|| type instanceof ANatNumericBasicTypeCG || type instanceof AIntNumericBasicTypeCG)
+				&& !(exp instanceof ARealLiteralExpCG);
+	}
 
 	public ABoolLiteralExpCG consBoolLiteral(boolean val)
 	{
