@@ -26,56 +26,56 @@ import java.util.Random;
 public class MATH
 {
 
-	public static final double pi = 3.141592653589793;
+	public static final Number pi = 3.141592653589793;
 	private static Random random = new Random();
 	private static long seed = 0;
 	
-	public static double sin(Number v)
+	public static Number sin(Number v)
 	{
 		return Math.sin(v.doubleValue());
 	}
 
-	public static double cos(Number v)
+	public static Number cos(Number v)
 	{
 		return Math.cos(v.doubleValue());
 	}
 
-	public static double tan(Number a)
+	public static Number tan(Number a)
 	{
 		return Math.tan(a.doubleValue());
 	}
 
-	public static double cot(Number a)
+	public static Number cot(Number a)
 	{
 		return 1/Math.tan(a.doubleValue());
 	}
 
-	public static double asin(Number a)
+	public static Number asin(Number a)
 	{
 		return Math.asin(a.doubleValue());
 	}
 
-	public static double acos(Number a)
+	public static Number acos(Number a)
 	{
 		return Math.acos(a.doubleValue());
 	}
 
-	public static double atan(Number v)
+	public static Number atan(Number v)
 	{
 		return Math.atan(v.doubleValue());
 	}
 
-	public static double acot(Number a)
+	public static Number acot(Number a)
 	{
 		return atan(1 / a.doubleValue());
 	}
 
-	public static double sqrt(Number a)
+	public static Number sqrt(Number a)
 	{
 		return Math.sqrt(a.doubleValue());
 	}
 
-	public static double pi_f()
+	public static Number pi_f()
 	{
 		return Math.PI;
 	}
@@ -85,7 +85,7 @@ public class MATH
 		MATH.srand2(a);
 	}
 
-	public static long rand(Number a)
+	public static Number rand(Number a)
 	{
 		long lv = a.longValue();
 
@@ -103,34 +103,34 @@ public class MATH
 		}
 	}
 
-	public static long srand2(Number a)
+	public static Number srand2(Number a)
 	{
 		seed = a.longValue();
 		random.setSeed(seed);
 		return seed;
 	}
 
-	public static double exp(Number a)
+	public static Number exp(Number a)
 	{
 
 		return Math.exp(a.doubleValue());
 	}
 
-	public static double ln(Number a)
+	public static Number ln(Number a)
 	{
 
 		return Math.log(a.doubleValue());
 	}
 
-	public static double log(Number a)
+	public static Number log(Number a)
 	{
 
 		return Math.log10(a.doubleValue());
 	}
 
-	public static long fac(Number a)
+	public static Number fac(Number a)
 	{
-		return (a.longValue() < 1) ? 1 : a.longValue() * fac(a.longValue()-1);
+		return (a.longValue() < 1) ? 1 : a.longValue() * fac(a.longValue()-1).longValue();
 	}
 
 }
