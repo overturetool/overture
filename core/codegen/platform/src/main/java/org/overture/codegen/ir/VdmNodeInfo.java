@@ -99,4 +99,10 @@ public class VdmNodeInfo
 
 		return true;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "Node: " + node + ". Reason: " + reason;
+	}
 }

@@ -25,6 +25,7 @@ package org.overture.codegen.trans;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -59,7 +60,6 @@ import org.overture.codegen.cgast.expressions.ARecordModifierCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SBoolBinaryExpCG;
-import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
@@ -301,14 +301,23 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseALetBeStStmCG(ALetBeStStmCG node) throws AnalysisException
 	{
 		AHeaderLetBeStCG header = node.getHeader();
+		
+		if (!(header.getBinding() instanceof ASetMultipleBindCG))
+		{
+			info.addTransformationWarning(node.getHeader().getBinding(), "This transformation only works for 'let be st' "
+					+ "statements with with multiple set binds and not multiple type binds in '"
+					+ this.getClass().getSimpleName() + "'");
+			return;
+		}
+		
 		SExpCG suchThat = header.getSuchThat();
-		SSetTypeCG setType = transformationAssistant.getSetTypeCloned(header.getBinding().getSet());
+		ASetMultipleBindCG binding = (ASetMultipleBindCG) node.getHeader().getBinding();
+		
+		SSetTypeCG setType = transformationAssistant.getSetTypeCloned(binding.getSet());
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 
 		LetBeStStrategy strategy = new LetBeStStrategy(transformationAssistant, suchThat, setType, langIterator, tempVarNameGen, varPrefixes);
-
-		ASetMultipleBindCG binding = header.getBinding();
 
 		if (transformationAssistant.hasEmptySet(binding))
 		{
@@ -336,7 +345,16 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "let be st expressions");
 
 		AHeaderLetBeStCG header = node.getHeader();
-		ASetMultipleBindCG binding = header.getBinding();
+		
+		if (!(header.getBinding() instanceof ASetMultipleBindCG))
+		{
+			info.addTransformationWarning(node.getHeader().getBinding(), "This transformation only works for 'let be st' "
+					+ "expressions with with multiple set binds and not multiple type binds in '"
+					+ this.getClass().getSimpleName() + "'");
+			return;
+		}
+		
+		ASetMultipleBindCG binding = (ASetMultipleBindCG) header.getBinding();
 		SExpCG suchThat = header.getSuchThat();
 		SSetTypeCG setType = transformationAssistant.getSetTypeCloned(binding.getSet());
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
@@ -444,7 +462,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		ComplexCompStrategy strategy = new MapCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
-		LinkedList<ASetMultipleBindCG> bindings = node.getBindings();
+		List<ASetMultipleBindCG> bindings = filterBindList(node, node.getBindings());
+		
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy);
 
 		if (block.getStatements().isEmpty())
@@ -477,7 +496,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		ComplexCompStrategy strategy = new SetCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
-		LinkedList<ASetMultipleBindCG> bindings = node.getBindings();
+		List<ASetMultipleBindCG> bindings = filterBindList(node, node.getBindings());
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy);
 
 		if (block.getStatements().isEmpty())
@@ -544,7 +563,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, varPrefixes);
 
-		List<ASetMultipleBindCG> multipleSetBinds = filterMultipleBinds(node);
+		List<ASetMultipleBindCG> multipleSetBinds = filterBindList(node, node.getBindList());
 		
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
 
@@ -577,7 +596,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, varPrefixes);
 
-		List<ASetMultipleBindCG> multipleSetBinds = filterMultipleBinds(node);
+		List<ASetMultipleBindCG> multipleSetBinds = filterBindList(node, node.getBindList());
 		
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
 
@@ -610,7 +629,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transformationAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes, counterData);
 		
-		List<ASetMultipleBindCG> multipleSetBinds = filterMultipleBinds(node);
+		List<ASetMultipleBindCG> multipleSetBinds = filterBindList(node, node.getBindList());
 		
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
 
@@ -826,11 +845,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		replacementBlock.apply(this);
 	}
 	
-	private List<ASetMultipleBindCG> filterMultipleBinds(SQuantifierExpCG node)
+	private List<ASetMultipleBindCG> filterBindList(INode node, LinkedList<SMultipleBindCG> bindList)
 	{
 		List<ASetMultipleBindCG> multipleSetBinds = new LinkedList<ASetMultipleBindCG>();
 		
-		for (SMultipleBindCG b : node.getBindList()){
+		for (SMultipleBindCG b : bindList){
 			
 			if(b instanceof ASetMultipleBindCG)
 			{
@@ -838,11 +857,12 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			}
 			else
 			{
-				info.addTransformationWarning(node, "Transformation only works for quantified "
+				info.addTransformationWarning(node, "Transformation only works for "
 						+ "expressions with multiple set binds and not multiple "
 						+ "type binds in '" + this.getClass().getSimpleName() + "'");
 			}
 		}
+		
 		return multipleSetBinds;
 	}
 }

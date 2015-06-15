@@ -316,7 +316,7 @@ CG {-> package='org.overture.codegen.cgast'
     ;
            
 #letBeSt {-> package='org.overture.codegen.cgast.utils'}
-	= {header} [binding]:CG.#multipleBind.set [suchThat]:CG.#exp //The Overture AST uses a multiplebind 
+	= {header} [binding]:CG.#multipleBind [suchThat]:CG.#exp //The Overture AST uses a multiplebind 
 	;
 	
 #exp {-> package='org.overture.codegen.cgast.expressions'
@@ -514,13 +514,13 @@ CG {-> package='org.overture.codegen.cgast'
 
 #Set {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:CG.#exp*
-	| {comp} [first]:CG.#exp [bindings]:CG.#multipleBind.set* [predicate]:CG.#exp//In the Overture AST bindings are of type multipleBind* as it also allows type binds.
+	| {comp} [first]:CG.#exp [bindings]:CG.#multipleBind* [predicate]:CG.#exp//In the Overture AST bindings are of type multipleBind* as it also allows type binds.
 	| {range} [first]:CG.#exp [last]:CG.#exp
 	;
 
 #Map {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:CG.#exp.maplet*
-	| {comp} [first]:CG.#exp.maplet [bindings]:CG.#multipleBind.set* [predicate]:CG.#exp
+	| {comp} [first]:CG.#exp.maplet [bindings]:CG.#multipleBind* [predicate]:CG.#exp
 	;
 
 #type {-> package='org.overture.codegen.cgast.types'

@@ -41,7 +41,6 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
-import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -157,7 +156,6 @@ import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
-import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -500,34 +498,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseASetCompSetExp(ASetCompSetExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().outsideImperativeContext(node))
-		{
-			question.addUnsupportedNode(node, "Generation of a set comprehension is only supported within operations/functions");
-			return null;
-		}
-
 		LinkedList<PMultipleBind> bindings = node.getBindings();
 
-		LinkedList<ASetMultipleBindCG> bindingsCg = new LinkedList<ASetMultipleBindCG>();
+		List<SMultipleBindCG> bindingsCg = new LinkedList<SMultipleBindCG>();
 		for (PMultipleBind multipleBind : bindings)
 		{
-			if (!(multipleBind instanceof ASetMultipleBind))
-			{
-				question.addUnsupportedNode(node, "Generation of a set comprehension is only supported for multiple set binds. Got: "
-						+ multipleBind);
-				return null;
-			}
-
 			SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
-
-			if (!(multipleBindCg instanceof ASetMultipleBindCG))
-			{
-				question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: "
-						+ multipleBindCg);
-				return null;
-			}
-
-			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
+			bindingsCg.add(multipleBindCg);
 		}
 
 		PType type = node.getType();
@@ -741,33 +718,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseALetBeStExp(ALetBeStExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().outsideImperativeContext(node))
-		{
-			question.addUnsupportedNode(node, "Generation of a let be st expression is only supported within operations/functions");
-			return null;
-		}
-
 		PMultipleBind multipleBind = node.getBind();
-
-		if (!(multipleBind instanceof ASetMultipleBind))
-		{
-			question.addUnsupportedNode(node, "Generation of the let be st expression is only supported for a multiple set bind. Got: "
-					+ multipleBind);
-			return null;
-		}
-
-		ASetMultipleBind multipleSetBind = (ASetMultipleBind) multipleBind;
-
-		SMultipleBindCG multipleBindCg = multipleSetBind.apply(question.getMultipleBindVisitor(), question);
-
-		if (!(multipleBindCg instanceof ASetMultipleBindCG))
-		{
-			question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: "
-					+ multipleBindCg);
-			return null;
-		}
-
-		ASetMultipleBindCG multipleSetBindCg = (ASetMultipleBindCG) multipleBindCg;
+		SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
 
 		PType type = node.getType();
 		PExp suchThat = node.getSuchThat();
@@ -780,7 +732,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		ALetBeStExpCG letBeStExp = new ALetBeStExpCG();
 
-		AHeaderLetBeStCG header = question.getExpAssistant().consHeader(multipleSetBindCg, suchThatCg);
+		AHeaderLetBeStCG header = question.getExpAssistant().consHeader(multipleBindCg, suchThatCg);
 
 		letBeStExp.setType(typeCg);
 		letBeStExp.setHeader(header);
@@ -967,12 +919,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseASeqCompSeqExp(ASeqCompSeqExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().outsideImperativeContext(node))
-		{
-			question.addUnsupportedNode(node, "Generation of a sequence comprehension is only supported within operations/functions");
-			return null;
-		}
-
 		ASetBind setBind = node.getSetBind();
 		PType type = node.getType();
 		PExp first = node.getFirst();
@@ -1087,36 +1033,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseAMapCompMapExp(AMapCompMapExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().outsideImperativeContext(node))
-		{
-			question.addUnsupportedNode(node, "Generation of a map comprehension is only supported within operations/functions");
-			return null;
-		}
-
 		LinkedList<PMultipleBind> bindings = node.getBindings();
 		PType type = node.getType();
 		AMapletExp first = node.getFirst();
 		PExp predicate = node.getPredicate();
 
-		LinkedList<ASetMultipleBindCG> bindingsCg = new LinkedList<ASetMultipleBindCG>();
+		List<SMultipleBindCG> bindingsCg = new LinkedList<SMultipleBindCG>();
 		for (PMultipleBind multipleBind : bindings)
 		{
-			if (!(multipleBind instanceof ASetMultipleBind))
-			{
-				question.addUnsupportedNode(node, "Generation of a map comprehension is only supported for multiple set binds. Got: "
-						+ multipleBind);
-				return null;
-			}
-
 			SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
 
-			if (!(multipleBindCg instanceof ASetMultipleBindCG))
+			if(multipleBindCg != null)
 			{
-				question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: "
-						+ multipleBindCg);
+				bindingsCg.add(multipleBindCg);
 			}
-
-			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
 		}
 
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
