@@ -70,7 +70,6 @@ import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
-import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
@@ -104,13 +103,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 	public JavaCodeGen()
 	{
-		super(null);
-		init();
-	}
-
-	public JavaCodeGen(ILogger log)
-	{
-		super(log);
+		super();
 		init();
 	}
 
