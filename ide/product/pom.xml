@@ -65,6 +65,9 @@
               <id>org.overture.ide.platform.product</id>
               <archiveFileName>Overture-${project.version}</archiveFileName>
               <rootFolder>Overture</rootFolder>
+<rootFolders>
+          <macosx>Overture.app</macosx>
+        </rootFolders>
             </product>
           </products>
         </configuration>

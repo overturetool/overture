@@ -256,6 +256,22 @@ the manifests, though.
               </environments>
             </configuration>
           </plugin>
+
+
+<plugin>
+  <groupId>org.eclipse.tycho</groupId>
+  <artifactId>tycho-p2-repository-plugin</artifactId>
+  <version>${tycho.version}</version>
+  <configuration>
+    <includeAllDependencies>true</includeAllDependencies>
+    <profileProperties>
+      <macosx-bundled>true</macosx-bundled>
+    </profileProperties>
+  </configuration>
+</plugin>
+
+
+
         </plugins>
       </build>
     </profile>
