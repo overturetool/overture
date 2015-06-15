@@ -13,10 +13,10 @@ public class Entry {
             f(Tuple.mk_(true, false)), f(Tuple.mk_(10L, 3L)));
     }
 
-    public static Number f(final Object c) {
+    public static Number f(final Tuple c) {
         Number casesExpResult_1 = null;
 
-        Tuple tuplePattern_1 = ((Tuple) c);
+        Tuple tuplePattern_1 = Utils.copy(c);
         Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);
 
         if (success_1) {
@@ -30,7 +30,7 @@ public class Entry {
         }
 
         if (!(success_1)) {
-            Tuple tuplePattern_2 = ((Tuple) c);
+            Tuple tuplePattern_2 = Utils.copy(c);
             Number a = null;
             success_1 = tuplePattern_2.compatible(Number.class, Number.class);
 
@@ -42,7 +42,7 @@ public class Entry {
             }
 
             if (!(success_1)) {
-                Tuple tuplePattern_3 = ((Tuple) c);
+                Tuple tuplePattern_3 = Utils.copy(c);
                 Boolean b = null;
                 success_1 = tuplePattern_3.compatible(Boolean.class,
                         Boolean.class);
