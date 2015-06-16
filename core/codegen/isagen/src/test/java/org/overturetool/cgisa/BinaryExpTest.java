@@ -49,7 +49,10 @@ public class BinaryExpTest extends AbsExpTest
 		Object[] a3 = { "1*1", "(1 * 1)" };
 		Object[] a4 = { "1/1", "(1 / 1)" }; 
 		
-		return Arrays.asList(new Object[][] { a1, a2, a3,a4 });
+		Object[] a5 = { "1>1", "(1 > 1)" };
+		Object[] a6 = { "1<>1", "(1 <> 1)" };
+		
+		return Arrays.asList(new Object[][] { a1, a2, a3,a4,a5,a6});
 
 	}
 
