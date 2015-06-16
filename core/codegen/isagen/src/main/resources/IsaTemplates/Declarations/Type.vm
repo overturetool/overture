@@ -1,4 +1,4 @@
-#if( $node.Inv )
+#if( $node.Inv && !$Isa.isRecordDecl($node))
 $Isa.trans($node.Inv)
 
 #end

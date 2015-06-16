@@ -14,7 +14,9 @@ abbreviation"${fld.Name}_fld \<equiv> MkField maxty_${node.Name}#[$velocityCount
 abbreviation"$fld.Name \<equiv> SelectRec ${fld.Name}_fld"
 #end
 
-definition "$node.Name \<equiv>\<parallel>@maxty_$node.Name\<parallel>"
+$Isa.hackInvDecl($node)
+
+definition "$node.Name \<equiv>\<parallel>@maxty_$node.Name $Isa.hackInv($node)\<parallel>"
 declare ${node.Name}_def [eval,evalp]
 
 definition "mk_$node.Name \<equiv>MkRec $node.Name"
