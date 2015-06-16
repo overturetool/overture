@@ -52,7 +52,7 @@ public class IsaGenModuleTest extends ParamStandardTest<CgIsaTestResult>
 	}
 
 	private static final String UPDATE = "tests.update.isagen";
-	private static final String CGISA_ROOT = "src/test/resources/micro";
+	private static final String CGISA_ROOT = "src/test/resources/modules";
 
 	@Override
 	public CgIsaTestResult processModel(List<INode> ast)
