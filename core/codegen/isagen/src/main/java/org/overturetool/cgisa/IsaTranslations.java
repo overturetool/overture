@@ -34,6 +34,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
+import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
@@ -47,6 +48,7 @@ public class IsaTranslations
 	private static final String TEMPLATE_CALLABLE_NAME = "Isa";
 	private static final String TYPE_PARAM_SEP = " and ";
 	private static final String LIST_SEP = ", ";
+	private static final Object TUPLE_TYPE_SEPARATOR = "*";
 	private MergeVisitor mergeVisitor;
 
 	protected IsaChecks isaUtils;
@@ -129,6 +131,21 @@ public class IsaTranslations
 		sb.append("[");
 		sb.append(transNodeList(args, LIST_SEP));
 		sb.append("]");
+		return sb.toString();
+	}
+	
+	public String rec2Tuple(ARecordDeclCG record) throws AnalysisException{
+		StringBuilder sb = new StringBuilder();
+		
+		Iterator<AFieldDeclCG> it = record.getFields().iterator();
+		
+		while (it.hasNext()){
+			sb.append(trans(it.next().getType()));
+			if (it.hasNext()){
+				sb.append(TUPLE_TYPE_SEPARATOR);
+			}
+		}
+		
 		return sb.toString();
 	}
 
