@@ -1,4 +1,5 @@
 #if( $node.Inv )
-INV
+$Isa.trans($node.Inv)
+
 #end
 $Isa.trans($node.Decl)
