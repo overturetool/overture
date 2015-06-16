@@ -1,0 +1,1 @@
+{"translation":"theory DEFAULT\n  imports utp_vdm\nbegin\n\nvdmifun f\n  inp x :: \"@int\" and y :: \"@int\"\n  out r :: \"@int\"\n  pre \"(^y^ \u003c\u003e 0)\"\n  post \"((^x^ / ^y^) \u003d ^r^)\"\n\n\nend","errors":false}

@@ -1,0 +1,5 @@
+functions
+
+f (x:int) r: int
+pre true
+post r = x

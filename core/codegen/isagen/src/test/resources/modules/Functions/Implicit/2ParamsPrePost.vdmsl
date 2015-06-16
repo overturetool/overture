@@ -1,0 +1,5 @@
+functions
+
+f (x:int, y:int) r: int
+pre y <> 0
+post x/y =r
