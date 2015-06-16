@@ -322,9 +322,9 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
 
 		JavaTransSeries javaTransSeries = new JavaTransSeries(this);
-		DepthFirstAnalysisAdaptor[] analyses = javaTransSeries.consAnalyses(classes, functionValueAssistant);
+		 List<DepthFirstAnalysisAdaptor> transformations = javaTransSeries.consAnalyses(classes, functionValueAssistant);
 
-		for (DepthFirstAnalysisAdaptor transformation : analyses)
+		for (DepthFirstAnalysisAdaptor trans : transformations)
 		{
 			for (IRStatus<AClassDeclCG> status : canBeGenerated)
 			{
@@ -332,7 +332,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 				{
 					if (!getInfo().getDeclAssistant().isLibraryName(status.getIrNodeName()))
 					{
-						generator.applyPartialTransformation(status, transformation);
+						generator.applyPartialTransformation(status, trans);
 					}
 
 				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
