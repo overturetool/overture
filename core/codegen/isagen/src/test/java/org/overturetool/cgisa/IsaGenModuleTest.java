@@ -66,10 +66,18 @@ public class IsaGenModuleTest extends ParamStandardTest<CgIsaTestResult>
 			classes.add((AModuleModules) n);
 		}
 
-		List<GeneratedModule> result= null;
+		List<GeneratedModule> result = null;
 		try
 		{
 			result = gen.generateIsabelleSyntax(classes);
+			if (!result.get(0).canBeGenerated())
+			{
+				StringBuilder sb = new StringBuilder();
+				sb.append(result.get(0).getMergeErrors());
+				sb.append(result.get(0).getUnsupportedInIr());
+				sb.append(result.get(0).getUnsupportedInTargLang());
+				fail(sb.toString());
+			}
 		} catch (AnalysisException
 				| org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
@@ -104,7 +112,8 @@ public class IsaGenModuleTest extends ParamStandardTest<CgIsaTestResult>
 	@Override
 	public void compareResults(CgIsaTestResult actual, CgIsaTestResult expected)
 	{
-		assertTrue("\n --- Expected: ---\n"+expected.translation + "\n --- Got: ---\n"+actual.translation, expected.compare(actual));
+		assertTrue("\n --- Expected: ---\n" + expected.translation
+				+ "\n --- Got: ---\n" + actual.translation, expected.compare(actual));
 	}
 
 }
