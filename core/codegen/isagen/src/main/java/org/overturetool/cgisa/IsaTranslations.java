@@ -25,6 +25,7 @@ import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
 
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
@@ -32,6 +33,8 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
+import org.overture.codegen.cgast.declarations.AFuncDeclCG;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
@@ -47,11 +50,11 @@ public class IsaTranslations
 	private MergeVisitor mergeVisitor;
 
 	protected IsaChecks isaUtils;
-	
+
 	public IsaTranslations(TemplateStructure templateStructure)
 	{
 		TemplateCallable[] templateCallables = new TemplateCallable[] { new TemplateCallable(TEMPLATE_CALLABLE_NAME, this) };
-		this.mergeVisitor = new MergeVisitor(new IsaTemplateManager(templateStructure,this.getClass()), templateCallables);
+		this.mergeVisitor = new MergeVisitor(new IsaTemplateManager(templateStructure, this.getClass()), templateCallables);
 		this.isaUtils = new IsaChecks();
 	}
 
@@ -82,9 +85,10 @@ public class IsaTranslations
 		return transNodeList(params, TYPE_PARAM_SEP);
 	}
 
-	public String transBinds(List<? extends SMultipleBindCG> binds) throws AnalysisException
+	public String transBinds(List<? extends SMultipleBindCG> binds)
+			throws AnalysisException
 	{
-		return transNodeList(binds,LIST_SEP);
+		return transNodeList(binds, LIST_SEP);
 	}
 
 	public String transNodeList(List<? extends INode> params, String sep)
@@ -123,9 +127,31 @@ public class IsaTranslations
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
-		sb.append(transNodeList(args,LIST_SEP));
+		sb.append(transNodeList(args, LIST_SEP));
 		sb.append("]");
 		return sb.toString();
+	}
+
+	// Extractions - like translations but with tree navigation
+	//FIXME Unhack result name extraction for implicit functions
+	public String extractResultName(AFuncDeclCG func) throws AnalysisException
+	{
+		SourceNode x = func.getSourceNode();
+		if (x.getVdmNode() instanceof AImplicitFunctionDefinition)
+		{
+			AImplicitFunctionDefinition iFunc = (AImplicitFunctionDefinition) x.getVdmNode();
+			return iFunc.getResult().getPattern().toString();
+		}
+		throw new AnalysisException("Expected AFuncDeclCG in implicit function source. Got: "
+				+ x.getVdmNode().getClass().toString());
+	}
+
+	public String extractPost(AFuncDeclCG postFunc) throws AnalysisException
+	{
+		StringWriter writer = new StringWriter();
+
+		postFunc.getBody().apply(mergeVisitor, writer);
+		return writer.toString();
 	}
 
 	// Renamings
