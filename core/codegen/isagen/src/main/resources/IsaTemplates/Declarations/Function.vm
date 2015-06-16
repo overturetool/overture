@@ -5,7 +5,11 @@
 #set( $rName = $Isa.extractResultName($node))
 ##
 vdmifun $Isa.norm($node.Name)
+#if ($node.FormalParams.isEmpty())
+  inp emptyParam :: "@bool"
+#else
   inp $Isa.transTypeParams($node.FormalParams)
+#end
   out $rName :: "$rType"
   post "$post"##
 #else
