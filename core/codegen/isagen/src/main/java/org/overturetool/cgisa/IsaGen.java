@@ -97,12 +97,6 @@ public class IsaGen extends CodeGenBase
 
 	public IsaGen()
 	{
-		this(null);
-	}
-
-	public IsaGen(ILogger log)
-	{
-		super(log);
 		initVelocity();
 	}
 
