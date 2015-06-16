@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
@@ -37,10 +38,12 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRStatus;
+import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
+import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overturetool.cgisa.transformations.GroupMutRecs;
 import org.overturetool.cgisa.transformations.SortDependencies;
@@ -146,6 +149,11 @@ public class IsaGen extends CodeGenBase
 			if (result.canBeGenerated())
 			{
 				statuses.add(result);
+			} else
+			{
+				Vector<GeneratedModule> r = new Vector<GeneratedModule>();
+				r.add(new GeneratedModule("ERROR", result.getUnsupportedInIr(), new HashSet<IrNodeInfo>()));
+				return r;
 			}
 		}
 
