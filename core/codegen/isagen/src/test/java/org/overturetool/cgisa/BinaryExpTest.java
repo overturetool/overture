@@ -47,9 +47,9 @@ public class BinaryExpTest extends AbsExpTest
 		Object[] a1 = { "1+1", "(1 + 1)" };
 		Object[] a2 = { "1-1", "(1 - 1)" };
 		Object[] a3 = { "1*1", "(1 * 1)" };
-		Object[] a4 = { "1/1", "1/1" }; // FIXME talk to PVJ about real division
-
-		return Arrays.asList(new Object[][] { a1, a2, a3 });
+		Object[] a4 = { "1/1", "(1 / 1)" }; 
+		
+		return Arrays.asList(new Object[][] { a1, a2, a3,a4 });
 
 	}
 
