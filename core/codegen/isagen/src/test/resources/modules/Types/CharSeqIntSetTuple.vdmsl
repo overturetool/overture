@@ -1,0 +1,2 @@
+types
+t = seq of char * set of int
