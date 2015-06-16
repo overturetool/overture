@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
+import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
@@ -135,25 +136,28 @@ public class IsaTranslations
 		sb.append("]");
 		return sb.toString();
 	}
-	
-	public String rec2Tuple(ARecordDeclCG record) throws AnalysisException{
+
+	public String rec2Tuple(ARecordDeclCG record) throws AnalysisException
+	{
 		StringBuilder sb = new StringBuilder();
-		
+
 		Iterator<AFieldDeclCG> it = record.getFields().iterator();
-		
-		while (it.hasNext()){
+
+		while (it.hasNext())
+		{
 			sb.append(trans(it.next().getType()));
-			if (it.hasNext()){
+			if (it.hasNext())
+			{
 				sb.append(TUPLE_TYPE_SEPARATOR);
 			}
 		}
-		
+
 		return sb.toString();
 	}
 
 	// Hacks - translations that manipulate the tree in grostesque way due to
 	// issues with the IR
-	//FIXME Unhack result name extraction for implicit functions
+	// FIXME Unhack result name extraction for implicit functions
 	public String hackResultName(AFuncDeclCG func) throws AnalysisException
 	{
 		SourceNode x = func.getSourceNode();
@@ -165,11 +169,14 @@ public class IsaTranslations
 		throw new AnalysisException("Expected AFuncDeclCG in implicit function source. Got: "
 				+ x.getVdmNode().getClass().toString());
 	}
-	//FIXME Unhack invariant extraction for namedt ypes
-	public String hackInv(ANamedTypeDeclCG type){
+
+	// FIXME Unhack invariant extraction for named types
+	public String hackInv(ANamedTypeDeclCG type)
+	{
 		ATypeDeclCG tDecl = type.getAncestor(ATypeDeclCG.class);
-		
-		if (tDecl.getInv() != null){
+
+		if (tDecl.getInv() != null)
+		{
 			AFuncDeclCG invFunc = (AFuncDeclCG) tDecl.getInv();
 			StringBuilder sb = new StringBuilder();
 			sb.append("inv ");
@@ -181,6 +188,36 @@ public class IsaTranslations
 			sb.append(invFunc.getFormalParams().get(0).getPattern().toString());
 			sb.append(")");
 			return sb.toString();
+		}
+		return "";
+	}
+
+	// FIXME Unhack invariant extraction for namedt ypes
+	public String hackInv(ARecordDeclCG type)
+	{
+
+		if (type.getInvariant() != null)
+		{
+			AFuncDeclCG invFunc = (AFuncDeclCG) type.getInvariant();
+			StringBuilder sb = new StringBuilder();
+			sb.append("inv ");
+			sb.append(invFunc.getFormalParams().get(0).getPattern().toString());
+			sb.append(" == ");
+			sb.append(invFunc.getName());
+			sb.append("(");
+			sb.append("&");
+			sb.append(invFunc.getFormalParams().get(0).getPattern().toString());
+			sb.append(")");
+			return sb.toString();
+		}
+		return "";
+	}
+
+	public String hackInvDecl(ARecordDeclCG type) throws AnalysisException
+	{
+		if (type.getInvariant() != null)
+		{
+			return trans(type.getInvariant());
 		}
 		return "";
 	}
@@ -228,5 +265,10 @@ public class IsaTranslations
 	public boolean isFunc(STypeCG node) throws AnalysisException
 	{
 		return node.apply(new IsMethodTypeVisitor());
+	}
+
+	public boolean isRecordDecl(ATypeDeclCG node)
+	{
+		return (node.getDecl() instanceof ARecordDeclCG);
 	}
 }
