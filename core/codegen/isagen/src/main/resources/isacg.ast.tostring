@@ -4,6 +4,4 @@ To String Extensions
 import org.overture.ast.util.Utils;
 import org.overture.ast.util.ToStringUtil;
 
-%CG->#decl->extClass = [baseClass]
-%CG->#decl->class = [name]
-
+%CG->#decl->mrFuncGroup = "MutRec(" + $Utils.listToString($[funcs]$)$ ")
