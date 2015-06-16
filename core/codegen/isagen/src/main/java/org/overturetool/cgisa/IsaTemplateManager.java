@@ -28,7 +28,6 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
@@ -38,6 +37,9 @@ import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.patterns.ATypeMultipleBindCG;
+import org.overture.codegen.cgast.types.AMapMapTypeCG;
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
+import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.merging.TemplateManager;
 import org.overture.codegen.merging.TemplateStructure;
 
@@ -62,7 +64,9 @@ public class IsaTemplateManager extends TemplateManager
 	private static final String TYPE_MULTIPLE_BIND = "TypeMultiple";
 	private static final String EXPLICIT_VAR = "ExplicitVariable";
 	private static final String NAMED_TYPE = "Name";
-	private static final String RECORD_TYPE = "Record";
+	private static final String SET_TYPE = "Set";
+	private static final String SEQ_TYPE = "Seq";
+	private static final String MAP_TYPE = "Map";
 
 	public IsaTemplateManager(TemplateStructure templateStructure,
 			Class<?> classRef)
@@ -114,8 +118,14 @@ public class IsaTemplateManager extends TemplateManager
 
 		nodeTemplateFileNames.put(ANamedTypeDeclCG.class, templateStructure.TYPE_PATH
 				+ File.separatorChar + NAMED_TYPE);
-		
-		nodeTemplateFileNames.put(ARecordDeclCG.class, templateStructure.TYPE_PATH
-				+File.separatorChar + RECORD_TYPE);
+
+		nodeTemplateFileNames.put(ASetSetTypeCG.class, templateStructure.TYPE_PATH
+				+ File.separatorChar + SET_TYPE);
+
+		nodeTemplateFileNames.put(ASeqSeqTypeCG.class, templateStructure.TYPE_PATH
+				+ File.separatorChar + SEQ_TYPE);
+
+		nodeTemplateFileNames.put(AMapMapTypeCG.class, templateStructure.TYPE_PATH
+				+ File.separatorChar +  MAP_TYPE);
 	}
 }
