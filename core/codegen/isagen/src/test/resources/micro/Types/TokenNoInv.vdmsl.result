@@ -1,0 +1,1 @@
+{"translation":"theory DEFAULT\n  imports utp_vdm\nbegin\n\n\ndefinition \"A \u003d \\\u003cparallel\u003e@token\\\u003cparallel\u003e\"\ndeclare A_def [eval,evalp]\n\n\nend","errors":false}
