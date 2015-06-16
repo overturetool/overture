@@ -49,10 +49,10 @@ import com.google.gson.reflect.TypeToken;
  *
  */
 @RunWith(Parameterized.class)
-public class IsaGenModuleTest extends ParamStandardTest<CgIsaTestResult>
+public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult>
 {
 
-	public IsaGenModuleTest(String nameParameter, String inputParameter,
+	public IsaGenParamTest(String nameParameter, String inputParameter,
 			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
