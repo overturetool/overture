@@ -41,6 +41,13 @@ import org.overture.core.tests.PathsProvider;
 
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * Main parameterized test class. Runs tests on modules with minimal
+ * definitions to exercise the translation with a single construct 
+ * at a time.
+ * @author ldc
+ *
+ */
 @RunWith(Parameterized.class)
 public class IsaGenModuleTest extends ParamStandardTest<CgIsaTestResult>
 {
