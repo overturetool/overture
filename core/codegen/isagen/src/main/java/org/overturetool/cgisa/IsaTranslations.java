@@ -163,14 +163,6 @@ public class IsaTranslations
 				+ x.getVdmNode().getClass().toString());
 	}
 
-	public String extractPost(AFuncDeclCG postFunc) throws AnalysisException
-	{
-		StringWriter writer = new StringWriter();
-
-		postFunc.getBody().apply(mergeVisitor, writer);
-		return writer.toString();
-	}
-
 	// Renamings
 
 	public String norm(String name)
