@@ -1,7 +1,4 @@
 #if( $node.Inv )
-
 INV
-
 #end
-
 $Isa.trans($node.Decl)
