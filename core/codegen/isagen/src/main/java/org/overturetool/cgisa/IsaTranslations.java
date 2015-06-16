@@ -34,7 +34,9 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
@@ -149,9 +151,10 @@ public class IsaTranslations
 		return sb.toString();
 	}
 
-	// Extractions - like translations but with tree navigation
+	// Hacks - translations that manipulate the tree in grostesque way due to
+	// issues with the IR
 	//FIXME Unhack result name extraction for implicit functions
-	public String extractResultName(AFuncDeclCG func) throws AnalysisException
+	public String hackResultName(AFuncDeclCG func) throws AnalysisException
 	{
 		SourceNode x = func.getSourceNode();
 		if (x.getVdmNode() instanceof AImplicitFunctionDefinition)
@@ -161,6 +164,25 @@ public class IsaTranslations
 		}
 		throw new AnalysisException("Expected AFuncDeclCG in implicit function source. Got: "
 				+ x.getVdmNode().getClass().toString());
+	}
+	//FIXME Unhack invariant extraction for namedt ypes
+	public String hackInv(ANamedTypeDeclCG type){
+		ATypeDeclCG tDecl = type.getAncestor(ATypeDeclCG.class);
+		
+		if (tDecl.getInv() != null){
+			AFuncDeclCG invFunc = (AFuncDeclCG) tDecl.getInv();
+			StringBuilder sb = new StringBuilder();
+			sb.append("inv ");
+			sb.append(invFunc.getFormalParams().get(0).getPattern().toString());
+			sb.append(" == ");
+			sb.append(invFunc.getName());
+			sb.append("(");
+			sb.append("&");
+			sb.append(invFunc.getFormalParams().get(0).getPattern().toString());
+			sb.append(")");
+			return sb.toString();
+		}
+		return "";
 	}
 
 	// Renamings

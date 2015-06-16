@@ -5,7 +5,7 @@ vdmifun $Isa.norm($node.Name)
 #else
   inp $Isa.transTypeParams($node.FormalParams)
 #end
-  out $Isa.extractResultName($node) :: "$Isa.trans($node.MethodType.Result)"
+  out $Isa.hackResultName($node) :: "$Isa.trans($node.MethodType.Result)"
 #else
 vdmefun $Isa.norm($node.Name)
   inp $Isa.transTypeParams($node.FormalParams)
