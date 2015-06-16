@@ -358,7 +358,7 @@ public class JavaCodeGenUtil
 	
 	public static String[] findJavaFilePathsRec(File srcCodeFolder)
 	{
-		List<File> files = GeneralUtils.getFilesRecursive(srcCodeFolder);
+		List<File> files = GeneralUtils.getFilesRecursively(srcCodeFolder);
 
 		List<String> javaFilePaths = new LinkedList<String>();
 

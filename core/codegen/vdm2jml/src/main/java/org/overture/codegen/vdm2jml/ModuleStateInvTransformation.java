@@ -112,7 +112,7 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 
 			ABlockStmCG replacementBlock = new ABlockStmCG();
 
-			jmlGen.getJavaGen().getTransformationAssistant().replaceNodeWith(stm, replacementBlock);
+			jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(stm, replacementBlock);
 
 			replacementBlock.getStatements().add(stm);
 			replacementBlock.getStatements().add(assertion);

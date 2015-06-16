@@ -151,7 +151,7 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		
 		ABlockStmCG replStm = new ABlockStmCG();
 		
-		jmlGen.getJavaGen().getTransformationAssistant().replaceNodeWith(node, replStm);
+		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replStm);
 		
 		replStm.getStatements().add(node);
 		
@@ -465,7 +465,7 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		}
 		
 		SStmCG body = node.getBody();
-		jmlGen.getJavaGen().getTransformationAssistant().replaceNodeWith(body, replBody);
+		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(body, replBody);
 		replBody.getStatements().add(body);
 		body.apply(this);
 	}
@@ -482,7 +482,7 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		
 		ITempVarGen nameGen = jmlGen.getJavaGen().getInfo().getTempVarNameGen();
 		String name = nameGen.nextVarName(RET_VAR_NAME_PREFIX);
-		TransAssistantCG trans = jmlGen.getJavaGen().getTransformationAssistant();
+		TransAssistantCG trans = jmlGen.getJavaGen().getTransAssistant();
 		
 		AMethodDeclCG enclosingMethod = jmlGen.getUtil().getEnclosingMethod(node);
 		

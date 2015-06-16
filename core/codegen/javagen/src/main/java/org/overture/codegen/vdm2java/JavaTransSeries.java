@@ -58,7 +58,7 @@ public class JavaTransSeries
 		TempVarPrefixes varPrefixes = codeGen.getTempVarPrefixes();
 		ITempVarGen nameGen = irInfo.getTempVarNameGen();
 		TraceNames traceNamePrefixes = codeGen.getTracePrefixes();
-		TransAssistantCG transAssistant = codeGen.getTransformationAssistant();
+		TransAssistantCG transAssistant = codeGen.getTransAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
 
 		// Construct the transformations

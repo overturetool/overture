@@ -585,7 +585,7 @@ public class JmlGenerator implements IREventObserver
 				SStmCG body = method.getBody();
 
 				ABlockStmCG repBlock = new ABlockStmCG();
-				javaGen.getTransformationAssistant().replaceNodeWith(body, repBlock);
+				javaGen.getTransAssistant().replaceNodeWith(body, repBlock);
 
 				repBlock.getStatements().add(dynTypeCheck);
 				repBlock.getStatements().add(declStmBlock);

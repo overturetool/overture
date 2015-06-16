@@ -63,7 +63,7 @@ public class JmlGenUtil
 		
 		STypeCG paramType = formalParam.getType().clone();
 
-		return jmlGen.getJavaGen().getTransformationAssistant().consIdentifierVar(paramName, paramType);
+		return jmlGen.getJavaGen().getTransAssistant().consIdentifierVar(paramName, paramType);
 	}
 
 	public String getName(SPatternCG id)
@@ -325,7 +325,7 @@ public class JmlGenUtil
 		
 		AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
 		formalParam.setType(paramType.clone());
-		formalParam.setPattern(jmlGen.getJavaGen().getTransformationAssistant().consIdPattern(formalParamName));
+		formalParam.setPattern(jmlGen.getJavaGen().getTransAssistant().consIdPattern(formalParamName));
 		
 		AMethodDeclCG method = new AMethodDeclCG();
 		method.setImplicit(false);
@@ -521,7 +521,7 @@ public class JmlGenUtil
 		String newParamName = nameGen.getName(JmlGenerator.INV_METHOD_REPLACEMENT_NAME_PREFIX
 				+ originalParamName);
 		
-		return jmlGen.getJavaGen().getTransformationAssistant().consIdPattern(newParamName);
+		return jmlGen.getJavaGen().getTransAssistant().consIdPattern(newParamName);
 	}
 	
 	public AClassDeclCG getEnclosingClass(INode node)
