@@ -1,4 +1,16 @@
-vdmefun $node.Name
+#if ($node.Implicit)
+##
+#set( $rType = $Isa.trans($node.MethodType.Result))
+#set( $post = $Isa.extractPost($node.PostCond))
+#set( $rName = $Isa.extractResultName($node))
+##
+vdmifun $Isa.norm($node.Name)
+  inp $Isa.transTypeParams($node.FormalParams)
+  out $rName :: "$rType"
+  post "$post"##
+#else
+vdmefun $Isa.norm($node.Name)
   inp $Isa.transTypeParams($node.FormalParams)
   out "$Isa.trans($node.MethodType.Result)"
-  is "$Isa.trans($node.Body)"
+  is "$Isa.trans($node.Body)" ##
+#end
