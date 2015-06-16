@@ -27,6 +27,7 @@ import org.overture.cgisa.extast.declarations.AMrFuncGroupDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
@@ -59,6 +60,7 @@ public class IsaTemplateManager extends TemplateManager
 	private static final String REAL_LIT = "RealLiteral";
 	private static final String TYPE_MULTIPLE_BIND = "TypeMultiple";
 	private static final String EXPLICIT_VAR = "ExplicitVariable";
+	private static final String NAMED_TYPE = "Name";
 
 	public IsaTemplateManager(TemplateStructure templateStructure,
 			Class<?> classRef)
@@ -107,5 +109,8 @@ public class IsaTemplateManager extends TemplateManager
 
 		nodeTemplateFileNames.put(AExplicitVarExpCG.class, templateStructure.EXP_PATH
 				+ MISC_EXP_PATH + File.separatorChar + EXPLICIT_VAR);
+
+		nodeTemplateFileNames.put(ANamedTypeDeclCG.class, templateStructure.TYPE_PATH
+				+ File.separatorChar + NAMED_TYPE);
 	}
 }
