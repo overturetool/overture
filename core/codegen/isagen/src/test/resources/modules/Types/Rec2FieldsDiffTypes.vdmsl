@@ -1,0 +1,4 @@
+types
+
+RecType :: x : char
+           y: real
