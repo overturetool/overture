@@ -118,7 +118,7 @@ public class IsaTemplateManager extends TemplateManager
 		nodeTemplateFileNames.put(AExplicitVarExpCG.class, templateStructure.EXP_PATH
 				+ MISC_EXP_PATH + File.separatorChar + EXPLICIT_VAR);
 
-		nodeTemplateFileNames.put(ANamedTypeDeclCG.class, templateStructure.TYPE_PATH
+		nodeTemplateFileNames.put(ANamedTypeDeclCG.class, templateStructure.DECL_PATH
 				+ File.separatorChar + NAMED_TYPE);
 
 		nodeTemplateFileNames.put(ASetSetTypeCG.class, templateStructure.TYPE_PATH
