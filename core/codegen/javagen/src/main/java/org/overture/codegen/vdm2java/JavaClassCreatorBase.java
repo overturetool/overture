@@ -22,6 +22,7 @@ abstract public class JavaClassCreatorBase
 	public AMethodDeclCG consDefaultCtorSignature(String className)
 	{
 		AMethodDeclCG constructor = new AMethodDeclCG();
+		constructor.setImplicit(false);
 		constructor.setAccess(JavaFormat.JAVA_PUBLIC);
 		constructor.setIsConstructor(true);
 		constructor.setName(className);
@@ -33,6 +34,7 @@ abstract public class JavaClassCreatorBase
 	{
 		AMethodDeclCG method = new AMethodDeclCG();
 		method.setIsConstructor(false);
+		method.setImplicit(false);
 		method.setAccess(JavaFormat.JAVA_PUBLIC);
 		method.setName("copy");
 		method.setMethodType(methodType);
@@ -44,6 +46,7 @@ abstract public class JavaClassCreatorBase
 	{
 		AMethodDeclCG equalsMethod = new AMethodDeclCG();
 		
+		equalsMethod.setImplicit(false);
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.getParams().add(new AObjectTypeCG());
 	
@@ -77,6 +80,7 @@ abstract public class JavaClassCreatorBase
 		String hashCode = "hashCode";
 	
 		AMethodDeclCG hashcodeMethod = new AMethodDeclCG();
+		hashcodeMethod.setImplicit(false);
 		hashcodeMethod.setIsConstructor(false);
 		hashcodeMethod.setAccess(JavaFormat.JAVA_PUBLIC);
 		hashcodeMethod.setName(hashCode);

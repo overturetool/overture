@@ -70,10 +70,10 @@ import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
-import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
+import org.overture.codegen.trans.DivideTransformation;
 import org.overture.codegen.trans.ModuleToClassTransformation;
 import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -104,13 +104,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 	public JavaCodeGen()
 	{
-		super(null);
-		init();
-	}
-
-	public JavaCodeGen(ILogger log)
-	{
-		super(log);
+		super();
 		init();
 	}
 
@@ -705,10 +699,12 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		return modules;
 	}
 
-	public Generated generateJavaFromVdmExp(PExp exp) throws AnalysisException
+	public Generated generateJavaFromVdmExp(PExp exp) throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		// There is no name validation here.
 		IRStatus<SExpCG> expStatus = generator.generateFrom(exp);
+		
+		generator.applyPartialTransformation(expStatus, new DivideTransformation(getInfo()));
 
 		StringWriter writer = new StringWriter();
 

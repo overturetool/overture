@@ -196,6 +196,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		
 		AMethodDeclCG getInstanceMethod = new AMethodDeclCG();
 		
+		getInstanceMethod.setImplicit(false);
 		getInstanceMethod.setAbstract(false);
 		getInstanceMethod.setAccess(JavaFormat.JAVA_PUBLIC);
 		getInstanceMethod.setIsConstructor(false);

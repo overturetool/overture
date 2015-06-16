@@ -38,7 +38,6 @@ import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
-import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.VdmAstAnalysis;
@@ -50,7 +49,6 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
-import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
@@ -72,16 +70,9 @@ public class CppCodeGen extends CodeGenBase
 	
 	public CppCodeGen(String gen_type,boolean gen_timing)
 	{
-		super(null);
+		super();
 		generator_type = gen_type;
 		generate_timing = gen_timing;
-		init();
-	}
-
-
-	public CppCodeGen(ILogger log)
-	{
-		super(log);
 		init();
 	}
 

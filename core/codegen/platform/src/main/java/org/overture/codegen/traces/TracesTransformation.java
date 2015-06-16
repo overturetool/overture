@@ -110,6 +110,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 		
 		traceMethod.getFormalParams().add(instanceParam);
 		
+		traceMethod.setImplicit(false);
 		traceMethod.setAbstract(false);
 		traceMethod.setAccess(IRConstants.PUBLIC);
 		traceMethod.setBody(consTraceMethodBody(node));

@@ -136,6 +136,7 @@ CG {-> package='org.overture.codegen.cgast'
 		[formalParams]:CG.#localParam.formalParam*
 		[isConstructor]:java_Boolean
 		[templateTypes]:CG.#type.template*
+		[implicit]:java_Boolean
 		[body]:CG.#stm
 	|	{func}
 		(preCond):CG.#decl
@@ -146,6 +147,7 @@ CG {-> package='org.overture.codegen.cgast'
 		[name]:java_String
 		[formalParams]:CG.#localParam.formalParam*
 		[templateTypes]:CG.#type.template*
+		[implicit]:java_Boolean
 		[body]:CG.#exp
 	|	{field} 
     	[access]:java_String

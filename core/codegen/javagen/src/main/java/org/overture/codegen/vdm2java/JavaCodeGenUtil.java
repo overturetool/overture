@@ -111,7 +111,7 @@ public class JavaCodeGenUtil
 		{
 			return vdmCodeGen.generateJavaFromVdmExp(typeCheckResult.result);
 
-		} catch (AnalysisException e)
+		} catch (AnalysisException | org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
 			throw new AnalysisException("Unable to generate code from expression: "
 					+ exp + ". Exception message: " + e.getMessage());

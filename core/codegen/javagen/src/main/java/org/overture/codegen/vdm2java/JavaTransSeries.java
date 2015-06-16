@@ -10,6 +10,7 @@ import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.traces.TracesTransformation;
 import org.overture.codegen.trans.AssignStmTransformation;
 import org.overture.codegen.trans.CallObjStmTransformation;
+import org.overture.codegen.trans.DivideTransformation;
 import org.overture.codegen.trans.IPostCheckCreator;
 import org.overture.codegen.trans.IsExpTransformation;
 import org.overture.codegen.trans.PostCheckTransformation;
@@ -53,6 +54,7 @@ public class JavaTransSeries
 
 		FuncTransformation funcTransformation = new FuncTransformation(transAssistant);
 		IRInfo irInfo = codeGen.getIRGenerator().getIRInfo();
+		DivideTransformation divideTrans = new DivideTransformation(irInfo);
 
 		CallObjStmTransformation callObjTransformation = new CallObjStmTransformation(irInfo, classes);
 		AssignStmTransformation assignTransformation = new AssignStmTransformation(irInfo, classes, transAssistant);
@@ -81,6 +83,7 @@ public class JavaTransSeries
 		RecordMetodsTransformation recTransformation = new RecordMetodsTransformation(codeGen.getJavaFormat().getRecCreator());
 		
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
+				divideTrans,
 				assignTransformation,
 				callObjTransformation,
 				funcTransformation, prePostTransformation, ifExpTransformation,
