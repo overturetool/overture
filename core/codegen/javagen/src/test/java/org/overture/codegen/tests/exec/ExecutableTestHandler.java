@@ -80,7 +80,7 @@ public abstract class ExecutableTestHandler extends TestHandler
 				+ "  {\n"
 				+ "  if(args.length < 1)\n"
 				+ "  {\n"
-				+ " \t System.err.println(\"Error: Missing serilization file path\"); System.exit( 1);"
+				+ " \t java.lang.System.err.println(\"Error: Missing serilization file path\"); java.lang.System.exit( 1);"
 				+ "  }\n" + "      serialize(new File(args[0]));\n" + "  }\n\n"
 				+ SERIALIZE_METHOD + methodsMerged + "}\n";
 	}
