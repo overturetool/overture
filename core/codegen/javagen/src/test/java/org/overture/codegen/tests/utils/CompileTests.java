@@ -125,7 +125,7 @@ public class CompileTests
 		
 		if(RUN_SL_TESTS)
 		{
-			runSlTests();//not moved to unit test
+			runSlTests();
 		}
 
 		if (RUN_COMPLEX_EXP_TESTS)
