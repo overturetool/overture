@@ -23,7 +23,6 @@ package org.overture.codegen.tests.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.List;
@@ -69,7 +68,7 @@ public class JavaCommandLineCompiler
 						: " -cp " + cpJar.getAbsolutePath(), arguments.trim());
 			} else
 			{
-				arg = "javac"
+				arg = "javac"// -nowarn -J-client -J-Xms100m -J-Xmx100m"
 						+ (cpJar == null ? "" : " -cp "
 								+ cpJar.getAbsolutePath()) + " "
 						+ arguments.replace('\"', ' ').trim();
@@ -80,34 +79,19 @@ public class JavaCommandLineCompiler
 				pb.directory(dir);
 				pb.redirectErrorStream(true);
 				p = pb.start();
-				p.waitFor();
+				//p.waitFor();
 			} else
 			{
 				p = Runtime.getRuntime().exec(arg, null, dir);
-				InputStream stderr = p.getErrorStream();
-				InputStreamReader isr = new InputStreamReader(stderr);
-
-				BufferedReader br = new BufferedReader(isr);
-
-				String debugLine = null;
-				while ((debugLine = br.readLine()) != null)
-				{
-					line += debugLine + "\n";
-				}
-
-				int exitVal = p.waitFor();
-
-				if (exitVal != 0)
-				{
-					System.out.println(line);
-				}
 			}
-			BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			
+			p.waitFor();
+			
+			BufferedReader input = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 			String secondLastLine = "";
 			while ((line = input.readLine()) != null)
 			{
 				out.append("\n" + line);
-
 				secondLastLine = line;
 			}
 

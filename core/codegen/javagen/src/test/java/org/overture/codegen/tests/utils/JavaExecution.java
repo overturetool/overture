@@ -26,55 +26,74 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
 
 import org.overture.codegen.vdm2java.JavaToolsUtils;
 
 public class JavaExecution
 {
-	public static String run(File cp, String mainClassName)
+
+	public final static String cpPathSeparator = System.getProperty("path.separator");
+
+	public static String run(String mainClassName,String[]args, File directory, File... cp)
 	{
 		String javaHome = System.getenv(JavaToolsUtils.JAVA_HOME);
 		File java = new File(new File(javaHome, JavaToolsUtils.BIN_FOLDER), JavaToolsUtils.JAVA);
-		return run(java, mainClassName, cp);
+		return run(java, directory, mainClassName,args, cp);
 	}
 
-	public static String run(File java, String mainClassName, File cp)
+	public static String run(File java, File directory, String mainClassName,
+			String[] args,File... cp)
 	{
 		String cpArgs = consCpArg(cp);
 
 		Process p = null;
 		ProcessBuilder pb = null;
+		
+		
 
 		try
 		{
-				String javaArg = JavaToolsUtils.isWindows() ? java.getAbsolutePath() : "java";
-				pb = new ProcessBuilder(javaArg, "-cp", cpArgs, mainClassName.trim());
-				pb.directory(cp);
-				pb.redirectErrorStream(true);
-				
-				try
+			String javaArg = JavaToolsUtils.isWindows() ? java.getAbsolutePath()
+					: "java";
+			
+			
+			List<String> commands = new Vector<String>();
+			commands.add(javaArg);
+			commands.add("-cp");
+			commands.add(cpArgs);
+			commands.add(mainClassName.trim());
+			commands.addAll(Arrays.asList(args));
+			
+			pb = new ProcessBuilder(commands);
+			
+			pb.directory(directory);
+			pb.redirectErrorStream(true);
+
+			try
+			{
+				p = pb.start();
+				return getProcessOutput(p);
+
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+				return null;
+			} finally
+			{
+				if (p != null)
 				{
-					p = pb.start();
-					return getProcessOutput(p);
-					
-				} catch (InterruptedException e)
-				{
-					e.printStackTrace();
-					return null;
+					p.destroy();
 				}
-				finally
-				{
-					if(p != null)
-					{
-						p.destroy();
-					}
-				}
+			}
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
 		}
-		
+
 	}
 
 	private static String getProcessOutput(Process p)
@@ -84,18 +103,24 @@ public class JavaExecution
 		final InputStream is = p.getInputStream();
 		is.mark(0);
 		// the background thread watches the output from the process
-		Thread t = new Thread(new Runnable() {
-		    public void run() {
-		        try {
-		            BufferedReader reader =
-		                new BufferedReader(new InputStreamReader(is));
-		            String line;
-		            while ((line = reader.readLine()) != null) {
-		            	sb.append(line + "\n");
-		            }
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        } finally {
+		Thread t = new Thread(new Runnable()
+		{
+			public void run()
+			{
+				try
+				{
+					BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+					String line;
+					while ((line = reader.readLine()) != null)
+					{
+						sb.append(line + "\n");
+						
+					}
+				} catch (IOException e)
+				{
+					e.printStackTrace();
+				} finally
+				{
 					try
 					{
 						is.close();
@@ -103,23 +128,57 @@ public class JavaExecution
 					{
 						e.printStackTrace();
 					}
-		        }
-		    }
+				}
+			}
 		});
-		
+
 		t.start();
 		p.waitFor();
 		t.join();
-		
+
 		return sb.toString();
+	}
+
+	private static String consCpArg(File... file)
+	{
+		String cp = "";
+		for (File file2 : file)
+		{
+			String cpPart = consCpArg(file2);
+
+			if (cp.length() == 0)
+			{
+				cp = cpPart;
+			} else
+			{
+				cp += cpPathSeparator + cpPart;
+			}
+		}
+		
+		return cp;
 	}
 
 	private static String consCpArg(File file)
 	{
-		if (file == null || file.isFile())
+		if (file == null )
 		{
 			return JavaToolsUtils.CURRENT_FOLDER;
 		}
+		
+		
+		
+		if(file.isFile())
+		{
+			if(file.getName().endsWith(".class"))
+			{
+				return JavaToolsUtils.CURRENT_FOLDER;
+			}else
+			{
+				return file.getAbsolutePath();
+			}
+				
+		}
+		StringBuilder sb = new StringBuilder();
 
 		File[] allFiles = file.listFiles();
 
@@ -128,13 +187,11 @@ public class JavaExecution
 			return JavaToolsUtils.CURRENT_FOLDER;
 		}
 
-		StringBuilder sb = new StringBuilder();
-
-		char fileSep = JavaToolsUtils.isWindows() ? ';' : ':';
+	
 
 		if (file.isDirectory())
 		{
-			sb.append(file.getAbsolutePath() + fileSep);
+			sb.append(file.getAbsolutePath() + cpPathSeparator);
 		}
 
 		for (int i = 0; i < allFiles.length; i++)
@@ -143,9 +200,12 @@ public class JavaExecution
 
 			if (currentFile.isDirectory())
 			{
-				sb.append(currentFile.getAbsolutePath() + fileSep);
+				sb.append(currentFile.getAbsolutePath() + cpPathSeparator);
 			}
 		}
+
+//		File cgRuntime = new File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+//		sb.append(cgRuntime.getAbsolutePath() + cpPathSeparator);
 
 		if (sb.length() == 0)
 		{

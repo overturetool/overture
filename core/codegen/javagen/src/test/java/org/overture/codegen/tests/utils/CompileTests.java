@@ -70,7 +70,7 @@ public class CompileTests
 
 	private static final List<String> FOLDER_NAMES_TO_AVOID = Arrays.asList(new String[] { "runtime" });
 
-	private static final String RESULT_FILE_EXTENSION = ".result";
+	public static final String RESULT_FILE_EXTENSION = ".result";
 
 	public static final boolean RUN_EXP_TESTS = true;
 	public static final boolean RUN_SL_TESTS = true;
@@ -125,7 +125,7 @@ public class CompileTests
 		
 		if(RUN_SL_TESTS)
 		{
-			runSlTests();
+			runSlTests();//not moved to unit test
 		}
 
 		if (RUN_COMPLEX_EXP_TESTS)
@@ -135,7 +135,7 @@ public class CompileTests
 		
 		if (RUN_NON_EXECUTING_VDM10_SPEC_TESTS)
 		{
-			runNonExecutingVdm10Tests();
+			runNonExecutingVdm10Tests();//not moved to unit test
 		}
 		
 		if (RUN_FUNCTION_VALUE_TESTS)
@@ -443,7 +443,7 @@ public class CompileTests
 		testInputFiles = TestUtils.getTestInputFiles(new File(SpecificationTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(SpecificationTest.ROOT), RESULT_FILE_EXTENSION);
 
-		runTests(testInputFiles, resultFiles, new NonExecutableSpecTestHandler(), false);
+		runTests(testInputFiles, resultFiles, new NonExecutableSpecTestHandler(Release.VDM_10,Dialect.VDM_PP), false);
 
 		System.out.println("\n********");
 		System.out.println("Finished with specification tests");
@@ -492,7 +492,7 @@ public class CompileTests
 		System.out.println("********\n");
 	}
 
-	private void addPath(File f)
+	public static void addPath(File f)
 	{
 		try
 		{

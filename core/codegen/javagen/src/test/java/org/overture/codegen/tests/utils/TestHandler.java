@@ -41,30 +41,36 @@ public abstract class TestHandler
 
 	protected File currentInputFile = null;
 	protected File currentResultFile = null;
-	
+
+	private Release release;
+
+	private Dialect dialect;
+
 	public void setCurrentInputFile(File currentInputFile)
 	{
 		this.currentInputFile = currentInputFile;
 	}
-	
+
 	public void setCurrentResultFile(File currentResultFile)
 	{
 		this.currentResultFile = currentResultFile;
 	}
-	
-	public TestHandler()
+
+	public TestHandler(Release release, Dialect dialect)
 	{
+		this.release = release;
+		this.dialect = dialect;
 		initVdmEnv();
 	}
 
 	public void initVdmEnv()
 	{
-		Settings.release = Release.VDM_10;
-		Settings.dialect = Dialect.VDM_PP;
+		Settings.release = release;
+		Settings.dialect = dialect;
 	}
 
-	public abstract void writeGeneratedCode(File parent, File resultFile, String rootPackage)
-			throws IOException;
+	public abstract void writeGeneratedCode(File parent, File resultFile,
+			String rootPackage) throws IOException;
 
 	public void writeToFile(String toWrite, File file) throws IOException
 	{

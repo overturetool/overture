@@ -25,8 +25,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
+
 public class NonExecutableSpecTestHandler extends TestHandler
 {
+	public NonExecutableSpecTestHandler(Release release, Dialect dialect)
+	{
+		super(release, dialect);
+	}
+
 	@Override
 	public void writeGeneratedCode(File parent, File resultFile, String rootPackage)
 			throws IOException
