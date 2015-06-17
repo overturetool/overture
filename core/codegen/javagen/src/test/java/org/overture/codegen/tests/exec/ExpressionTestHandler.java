@@ -19,19 +19,40 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.tests.utils;
+package org.overture.codegen.tests.exec;
+
+import java.io.File;
+import java.io.IOException;
 
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
+import org.overture.interpreter.util.InterpreterUtil;
+import org.overture.interpreter.values.Value;
 
-public abstract class EntryBasedTestHandler extends ExecutableTestHandler
+class ExpressionTestHandler extends ExecutableTestHandler
 {
-	public EntryBasedTestHandler(Release release, Dialect dialect)
+	public ExpressionTestHandler(Release release, Dialect dialect)
 	{
 		super(release, dialect);
 	}
 
-	abstract public String getVdmEntry();
-	
-	abstract public String getJavaEntry();
+	public void writeGeneratedCode(File parent, File resultFile, String rootPackage)
+			throws IOException
+	{
+		String generatedExpression = readFromFile(resultFile);
+		injectArgIntoMainClassFile(parent, generatedExpression);
+	}
+
+	@Override
+	public ExecutionResult interpretVdm(File intputFile) throws Exception
+	{
+		initVdmEnv();
+
+		String input = GeneralUtils.readFromFile(intputFile);
+
+		Value val = InterpreterUtil.interpret(input);
+		
+		return new ExecutionResult(val.toString(), val);
+	}
 }

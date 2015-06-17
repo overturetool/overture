@@ -1,4 +1,4 @@
-package org.overture.codegen.tests.utils;
+package org.overture.codegen.tests.exec;
 
 import java.io.File;
 import java.util.Collection;
@@ -8,14 +8,14 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
-import org.overture.codegen.tests.ExpressionTest;
+import org.overture.codegen.tests.ConfiguredStringGenerationTest;
 import org.overture.config.Release;
 
 @RunWith(value = Parameterized.class)
-public class ExpJavaGenTest extends CommonJavaGenCheckerTest
+public class ConfiguredStringJavaGenTest extends CommonJavaGenCheckerTest
 {
 
-	public ExpJavaGenTest(String name,File vdmSpec, File javaGeneratedFiles,
+	public ConfiguredStringJavaGenTest(String name,File vdmSpec, File javaGeneratedFiles,
 			TestHandler testHandler, boolean printInput, String rootPackage)
 	{
 		super(vdmSpec, javaGeneratedFiles, testHandler, printInput, rootPackage);
@@ -24,13 +24,13 @@ public class ExpJavaGenTest extends CommonJavaGenCheckerTest
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(ExpressionTest.ROOT),new ExpressionTestHandler(Release.VDM_10, Dialect.VDM_PP));
+		return collectTests(new File(ConfiguredStringGenerationTest.ROOT),new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
 	@Override
 	protected String getPropertyId()
 	{
-		return "exp";
+		return "configured";
 	}
 
 }

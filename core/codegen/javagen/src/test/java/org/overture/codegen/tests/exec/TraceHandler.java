@@ -1,4 +1,4 @@
-package org.overture.codegen.tests.utils;
+package org.overture.codegen.tests.exec;
 
 import java.io.File;
 import java.io.IOException;

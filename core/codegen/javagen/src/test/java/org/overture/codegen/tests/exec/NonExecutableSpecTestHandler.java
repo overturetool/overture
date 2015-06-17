@@ -19,40 +19,41 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.tests.utils;
+package org.overture.codegen.tests.exec;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
-import org.overture.interpreter.util.InterpreterUtil;
-import org.overture.interpreter.values.Value;
 
-class ExpressionTestHandler extends ExecutableTestHandler
+public class NonExecutableSpecTestHandler extends TestHandler
 {
-	public ExpressionTestHandler(Release release, Dialect dialect)
+	public NonExecutableSpecTestHandler(Release release, Dialect dialect)
 	{
 		super(release, dialect);
 	}
 
+	@Override
 	public void writeGeneratedCode(File parent, File resultFile, String rootPackage)
 			throws IOException
 	{
-		String generatedExpression = readFromFile(resultFile);
-		injectArgIntoMainClassFile(parent, generatedExpression);
-	}
+		List<StringBuffer> content = TestUtils.readJavaModulesFromResultFile(resultFile, rootPackage);
 
-	@Override
-	public ExecutionResult interpretVdm(File intputFile) throws Exception
-	{
-		initVdmEnv();
+		if (content.size() == 0)
+		{
+			System.out.println("Got no clases for: " + resultFile.getName());
+			return;
+		}
 
-		String input = GeneralUtils.readFromFile(intputFile);
+		parent.mkdirs();
 
-		Value val = InterpreterUtil.interpret(input);
-		
-		return new ExecutionResult(val.toString(), val);
+		for (StringBuffer classCgStr : content)
+		{
+			File tempFile = consTempFile(TestUtils.getJavaModuleName(classCgStr), parent, classCgStr);
+
+			writeToFile(classCgStr.toString(), tempFile);
+		}
 	}
 }

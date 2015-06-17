@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.tests.utils;
+package org.overture.codegen.tests.exec;
 
 import java.io.BufferedWriter;
 import java.io.File;

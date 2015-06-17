@@ -1,4 +1,4 @@
-package org.overture.codegen.tests.utils;
+package org.overture.codegen.tests.exec;
 
 import java.io.File;
 import java.util.Collection;
@@ -8,7 +8,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
-import org.overture.codegen.tests.ExpressionTest;
 import org.overture.codegen.tests.FunctionValueTest;
 import org.overture.config.Release;
 
