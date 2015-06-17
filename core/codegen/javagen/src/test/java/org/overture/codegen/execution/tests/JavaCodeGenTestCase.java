@@ -11,6 +11,7 @@ import java.io.Serializable;
 
 import org.junit.Assert;
 import org.overture.ast.lex.LexLocation;
+import org.overture.interpreter.values.Value;
 import org.overture.test.framework.Properties;
 import org.overture.test.framework.TestResourcesResultTestCase4;
 import org.overture.util.Base64;
@@ -60,6 +61,10 @@ public abstract class JavaCodeGenTestCase extends
 		if (result instanceof Serializable)
 			try
 			{
+				if(result instanceof Value)
+				{
+					result = ((Value) result).deref();
+				}
 				message.setAttribute("object", toString((Serializable) result));
 			} catch (DOMException e)
 			{
