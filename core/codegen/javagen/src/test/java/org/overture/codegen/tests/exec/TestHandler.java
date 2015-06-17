@@ -119,4 +119,10 @@ public abstract class TestHandler
 		}
 		return tempFile;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
 }

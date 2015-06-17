@@ -103,9 +103,13 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		configureResultGeneration();
 		try
 		{
-			Result<Object> result = runJavaGenTest();
-
-			compareResults(result, file.getName() + ".eval.result");
+			compileCode();
+			
+			if(testHandler instanceof ExecutableTestHandler)
+			{
+				Result<Object> result = produceResult();
+				compareResults(result, file.getName() + ".eval.result");
+			}
 		} finally
 		{
 			unconfigureResultGeneration();
@@ -169,19 +173,8 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 
 	}
 
-	private Result<Object> runJavaGenTest() throws IOException
+	private Result<Object> produceResult() throws IOException
 	{
-		generateJavaSources(file);
-
-		File cgRuntime = new File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
-
-		boolean compileOk = JavaCommandLineCompiler.compile(outputDir, cgRuntime);
-
-		if (!compileOk)
-		{
-			return null;
-		}
-
 		if (testHandler instanceof ExecutableTestHandler)
 		{
 			ExecutableTestHandler executableTestHandler = (ExecutableTestHandler) testHandler;
@@ -204,8 +197,24 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 			return new Result<Object>(javaResult, new Vector<IMessage>(), new Vector<IMessage>());
 
 		}
+		
+		Assert.fail("Trying to produce result using an unsupported test handler: " + testHandler);
 
 		return new Result<Object>(null, new Vector<IMessage>(), new Vector<IMessage>());
+	}
+
+	private void compileCode()
+	{
+		generateJavaSources(file);
+
+		File cgRuntime = new File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+
+		boolean compileOk = JavaCommandLineCompiler.compile(outputDir, cgRuntime);
+
+		if (!compileOk)
+		{
+			Assert.fail("Generated Java code did not compile!");
+		}
 	}
 
 	private void restoreGeneratedJavaCode() throws IOException
