@@ -10,10 +10,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.junit.Assert;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.runtime.traces.TestAccumulator;
 import org.overture.config.Release;
 import org.overture.ct.ctruntime.TraceRunnerMain;
 import org.overture.ct.ctruntime.utils.CtHelper;
@@ -98,8 +98,6 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	@Override
 	public ExecutionResult runJava(File folder)
 	{
-		throw new NotImplementedException("Not implemented yet!");
-		/*
 		ExecutionResult javaResult = super.runJava(folder);
 
 		Object executionResult = javaResult.getExecutionResult();
@@ -113,7 +111,7 @@ public class TraceHandler extends ExecutableSpecTestHandler
 		else
 		{
 			return new ExecutionResult(javaResult.getStrRepresentation(), javaResult.getExecutionResult().toString());
-		}*/
+		}
 	}
 
 	public File computeVdmTraceResult(File specFile) throws IOException,

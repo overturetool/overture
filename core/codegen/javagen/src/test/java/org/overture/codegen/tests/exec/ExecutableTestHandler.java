@@ -69,7 +69,7 @@ public abstract class ExecutableTestHandler extends TestHandler
 				+ "import java.io.FileOutputStream;\n"
 				+ "import java.io.ObjectOutputStream;\n"
 				+ "import org.overture.codegen.runtime.*;\n"
-				// + "import org.overture.codegen.runtime.traces.*;\n"
+				+ "import org.overture.codegen.runtime.traces.*;\n"
 				+ "import java.util.*;\n\n"
 				+ "public class Exp {\n"
 				+ "  public static Object exp()\n"
