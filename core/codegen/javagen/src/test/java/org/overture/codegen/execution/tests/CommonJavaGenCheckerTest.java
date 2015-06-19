@@ -35,6 +35,11 @@ import org.overture.test.framework.results.Result;
 
 public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 {
+	TestHandler testHandler;
+	File javaGeneratedFile;
+	boolean printInput;
+	String rootPackage;
+	
 	protected static Collection<Object[]> collectTests(File root,
 			TestHandler handler)
 	{
@@ -61,18 +66,10 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 
 			tests.add(new Object[] { name, vdmSource, generatedJavaDataFile,
 					handler, true, null });
-
-			// if(i>2)
-			// break;
 		}
 
 		return tests;
 	}
-
-	TestHandler testHandler;
-	File javaGeneratedFile;
-	boolean printInput;
-	String rootPackage;
 
 	public CommonJavaGenCheckerTest(File vdmSpec, File javaGeneratedFiles,
 			TestHandler testHandler, boolean printInput, String rootPackage)
@@ -262,51 +259,16 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 	protected boolean assertEqualResults(Object expected, Object actual,
 			PrintWriter out)
 	{
-		boolean equal = false;
-
 		ExecutionResult javaResult = (ExecutionResult) actual;
 
-		if (!(expected instanceof Value))
+		// Comparison of VDM and Java results
+		ComparisonCG comp = new ComparisonCG(file);
+		boolean equal = comp.compare(javaResult.getExecutionResult(), expected);
+
+		if (!equal)
 		{
-			String cgValueStr = javaResult.getExecutionResult().toString();
-			equal = expected.toString().contains(cgValueStr);
-
-			if (!equal)
-			{
-				out.println(String.format("Actual result: '%s' is not compatible with Expected: '%s'", ""
-						+ cgValueStr, "" + expected));
-			}
-		} else
-		{
-
-			Value vdmResult = (Value) expected;
-			// Comparison of VDM and Java results
-			ComparisonCG comp = new ComparisonCG(file);
-			equal = comp.compare(javaResult.getExecutionResult(), vdmResult);
-
-			if (!equal)
-			{
-				out.println(String.format("Actual result: %s does not match Expected: %s", ""
-						+ actual, "" + expected));
-			}
-		}
-
-		if (printInput)
-		{
-			// String vdmInput;
-			// try
-			// {
-			// vdmInput = GeneralUtils.readFromFile(file);
-			//
-			// System.out.println("VDM:  " + vdmInput);
-			//
-			// String generatedCode = GeneralUtils.readFromFile(javaGeneratedFiles).replace('#', ' ');
-			// System.out.println("Java: " + generatedCode);
-			// } catch (IOException e)
-			// {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
+			out.println(String.format("Actual result: %s does not match Expected: %s", ""
+					+ actual, "" + expected));
 		}
 
 		return equal;
