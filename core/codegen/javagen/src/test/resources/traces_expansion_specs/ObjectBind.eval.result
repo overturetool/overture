@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.codegen.tests.exec.TracesExpansionJavaGenTest">
+<result>
+<output object="rO0ABXNyABBqYXZhLnV0aWwuVmVjdG9y2Zd9W4A7rwEDAANJABFjYXBhY2l0eUluY3JlbWVudEkADGVsZW1lbnRDb3VudFsAC2VsZW1lbnREYXRhdAATW0xqYXZhL2xhbmcvT2JqZWN0O3hwAAAAAAAAAAN1cgATW0xqYXZhLmxhbmcuT2JqZWN0O5DOWJ8QcylsAgAAeHAAAAAKc3IAKW9yZy5vdmVydHVyZS5jdC5jdHJ1bnRpbWUudXRpbHMuVHJhY2VUZXN0feFkkkPBXUACAARMAAJub3QAE0xqYXZhL2xhbmcvSW50ZWdlcjtMAAZyZXN1bHR0ABJMamF2YS9sYW5nL1N0cmluZztMAAR0ZXN0cQB+AAdMAAd2ZXJkaWN0dAApTG9yZy9vdmVydHVyZS9pbnRlcnByZXRlci90cmFjZXMvVmVyZGljdDt4cHNyABFqYXZhLmxhbmcuSW50ZWdlchLioKT3gYc4AgABSQAFdmFsdWV4cgAQamF2YS5sYW5nLk51bWJlcoaslR0LlOCLAgAAeHAAAAABdAABMXQABmEub3AoKX5yACdvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudHJhY2VzLlZlcmRpY3QAAAAAAAAAABIAAHhyAA5qYXZhLmxhbmcuRW51bQAAAAAAAAAAEgAAeHB0AAZQQVNTRURzcQB+AAVzcQB+AAoAAAACdAAFMSA7IDJ0AA5hLm9wKCk7IGEub3AoKXEAfgARc3EAfgAFc3EAfgAKAAAAA3QACTEgOyAyIDsgM3QAFmEub3AoKTsgYS5vcCgpOyBhLm9wKClxAH4AEXBwcHBwcHB4" resource="ObjectBind" value="[TraceTest: Number: 1 Test: a.op() Result: 1 Verdict: PASSED, TraceTest: Number: 2 Test: a.op(); a.op() Result: 1 ; 2 Verdict: PASSED, TraceTest: Number: 3 Test: a.op(); a.op(); a.op() Result: 1 ; 2 ; 3 Verdict: PASSED]"/>
+</result>
+</testResult>
