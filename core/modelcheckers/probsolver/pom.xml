@@ -14,11 +14,17 @@
 
 
 	<repositories>
-		<repository>
+		<!--repository>
 			<id>prob-cobra</id>
 			<name>prob-cobra</name>
 			<url>http://cobra.cs.uni-duesseldorf.de/artifactory/repo</url>
-		</repository>
+			</repository-->
+
+		<repository>
+        <id>prob.overture.au.dk</id>
+        <name>prob.overture.au.dk-releases</name>
+        <url>http://overture.au.dk/artifactory/prob</url>
+    </repository>
 
 	</repositories>
 
