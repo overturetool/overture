@@ -57,14 +57,16 @@ public abstract class JavaCodeGenTestCase extends
 	public void encodeResult(Object result, Document doc, Element resultElement)
 	{
 		Element message = doc.createElement("output");
-
+		
 		if (result instanceof Serializable)
+		{
 			try
 			{
-				if(result instanceof Value)
+				if (result instanceof Value)
 				{
 					result = ((Value) result).deref();
 				}
+
 				message.setAttribute("object", toString((Serializable) result));
 			} catch (DOMException e)
 			{
@@ -75,10 +77,11 @@ public abstract class JavaCodeGenTestCase extends
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		message.setAttribute("resource", file.getName());
-		message.setAttribute("value", result + "");
+			message.setAttribute("resource", file.getName());
+			message.setAttribute("value", result + "");
 
-		resultElement.appendChild(message);
+			resultElement.appendChild(message);
+		}
 	}
 
 	public Object decodeResult(Node node)
