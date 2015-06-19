@@ -21,10 +21,14 @@
  */
 package org.overture.ct.ctruntime.utils;
 
+import java.io.Serializable;
+
 import org.overture.interpreter.traces.Verdict;
 
-public class TraceTest
+public class TraceTest implements Serializable
 {
+	private static final long serialVersionUID = 9070641703865638208L;
+	
 	private Integer no;
 	private String test;
 	private String result;
