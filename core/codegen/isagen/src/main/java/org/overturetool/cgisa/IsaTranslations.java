@@ -172,7 +172,7 @@ public class IsaTranslations
 	// FIXME Unhack invariant extraction for named types
 	public String hackInv(ANamedTypeDeclCG type)
 	{
-		ATypeDeclCG tDecl = type.getAncestor(ATypeDeclCG.class);
+		ATypeDeclCG tDecl = (ATypeDeclCG) type.parent();
 
 		if (tDecl.getInv() != null)
 		{
