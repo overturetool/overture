@@ -30,7 +30,7 @@ public class ComplexExpJavaGenTest extends CommonJavaGenCheckerTest
 	@Override
 	protected String getPropertyId()
 	{
-		return "complex-exp";
+		return "complexexp";
 	}
 
 }

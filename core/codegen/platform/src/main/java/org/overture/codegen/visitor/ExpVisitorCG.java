@@ -274,6 +274,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			throws AnalysisException
 	{
 		//TODO: Optional types and collection types are not yet supported.
+		// Also tuple types are poorly supported
 		//Also check the IsExpTransformation
 		
 		PType checkedType = node.getBasicType();
