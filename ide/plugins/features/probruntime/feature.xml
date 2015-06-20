@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.probruntime"
       label="Prob Runtime for the VDM interpreter"
-      version="2.2.5.qualifier"
+      version="2.2.6"
       os="linux,macosx,win32"
       arch="x86,x86_64">
 
