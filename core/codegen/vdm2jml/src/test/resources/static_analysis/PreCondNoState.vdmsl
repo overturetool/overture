@@ -1,0 +1,19 @@
+module M
+
+exports all
+definitions
+
+functions
+
+f :  nat * nat -> nat
+f (a,b) == a+b
+pre a > 0 and b > 0;
+
+operations
+
+op : nat ==> nat
+op (a) ==
+  return a
+pre a > 0;
+
+end M

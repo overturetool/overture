@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public A() {
     }
@@ -17,14 +18,14 @@ public class A {
 
         if (success_1) {
             a = ((Number) tuplePattern_1.get(0));
-            c = Utils.clone(((Tuple) tuplePattern_1.get(2)));
+            c = Utils.copy(((Tuple) tuplePattern_1.get(2)));
         }
 
         if (!(success_1)) {
             throw new RuntimeException("Tuple pattern match failed");
         }
 
-        return Utils.clone(c);
+        return Utils.copy(c);
     }
 
     public String toString() {
@@ -38,6 +39,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }

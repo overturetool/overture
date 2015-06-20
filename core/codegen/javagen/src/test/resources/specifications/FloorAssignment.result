@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public static final Number x = Math.round(Utils.floor(-1.5)) - 3L;
 

@@ -12,8 +12,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.vdm2java.JavaCodeGenMain;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -27,6 +27,8 @@ import org.overture.config.Settings;
  */
 public class GenerateJavaSources extends AstCreatorBaseMojo
 {
+	public static final String VDM_PP = "pp";
+	public static final String VDM_SL = "sl";
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
@@ -34,9 +36,6 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 		getLog().info("Preparing for VDM to Java generation...");
 		// Let's make sure that maven knows to look in the output directory
 		project.addCompileSourceRoot(outputDirectory.getPath());
-
-		Settings.release = Release.VDM_10;
-		Dialect dialect = Dialect.VDM_PP;
 
 		IRSettings irSettings = new IRSettings();
 		irSettings.setCharSeqAsString(true);
@@ -47,8 +46,9 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
+		javaSettings.setFormatCode(formatCode);
 
-		if (GeneralCodeGenUtils.isValidJavaPackage(packageName))
+		if (JavaCodeGenUtil.isValidJavaPackage(packageName))
 		{
 			javaSettings.setJavaRootPackage(packageName);
 		} else
@@ -67,7 +67,7 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 		
 		if (specificationRoot != null && specificationRoot.exists())
 		{
-			files = FileUtils.listFiles(specificationRoot, new RegexFileFilter(".+\\.vpp|.+\\.vdmpp"), DirectoryFileFilter.DIRECTORY);
+			files = FileUtils.listFiles(specificationRoot, new RegexFileFilter(".+\\.vpp|.+\\.vdmpp|.+\\.vsl|.+\\.vdmsl"), DirectoryFileFilter.DIRECTORY);
 		}
 
 		if (files == null || files.isEmpty())
@@ -78,22 +78,22 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 
 		outputDirectory.mkdirs();
 
-		getLog().info("Starting generation...");
+		getLog().info("Starting Java code generation...");
 		List<File> tmp = new Vector<File>();
 		tmp.addAll(files);
-		JavaCodeGenMain.handleOo(tmp, irSettings, javaSettings, dialect, false, outputDirectory);
+
+		if (dialect.equals(VDM_PP))
+		{
+			JavaCodeGenMain.handleOo(tmp, irSettings, javaSettings, Dialect.VDM_PP, false, outputDirectory);
+		} else if (dialect.equals(VDM_SL))
+		{
+			JavaCodeGenMain.handleSl(tmp, irSettings, javaSettings, false, outputDirectory);
+		} else
+		{
+			getLog().error(String.format("Expected dialect to be '%s' or '%s'", VDM_SL, VDM_PP));
+			throw new MojoExecutionException("VDM input dialect not specified");
+		}
+		
 		getLog().info("Generation completed.");
 	}
-
-	private Collection<? extends File> getSpecFiles(File root)
-	{
-		List<File> files = new Vector<File>();
-
-		for (File file : root.listFiles(new VdmppNameFilter()))
-		{// TODO
-			files.add(file);
-		}
-		return files;
-	}
-
 }

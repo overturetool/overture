@@ -1,0 +1,21 @@
+module Entry
+
+exports all
+definitions 
+	
+types
+	
+state St of
+ x : nat
+end
+	
+operations 
+	
+Run : () ==> ?
+Run () ==
+(
+  x := 150;
+  return x;
+);
+	
+end Entry

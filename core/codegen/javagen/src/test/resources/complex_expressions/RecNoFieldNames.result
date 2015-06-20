@@ -1,0 +1,65 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        A a = new A(1L, 2L);
+        A recordPattern_1 = Utils.copy(a);
+        Boolean success_1 = true;
+        Number x = null;
+        Number y = null;
+        x = recordPattern_1._X_;
+        y = recordPattern_1._X__1;
+
+        if (!(success_1)) {
+            throw new RuntimeException("Record pattern match failed");
+        }
+
+        return x.longValue() + y.longValue();
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public static class A implements Record {
+        public Number _X_;
+        public Number _X__1;
+
+        public A(final Number __X_, final Number __X__1) {
+            _X_ = __X_;
+            _X__1 = __X__1;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof A)) {
+                return false;
+            }
+
+            A other = ((A) obj);
+
+            return (Utils.equals(_X_, other._X_)) &&
+            (Utils.equals(_X__1, other._X__1));
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(_X_, _X__1);
+        }
+
+        public A copy() {
+            return new A(_X_, _X__1);
+        }
+
+        public String toString() {
+            return "mk_Entry`A" + Utils.formatFields(_X_, _X__1);
+        }
+    }
+}
+
+##########

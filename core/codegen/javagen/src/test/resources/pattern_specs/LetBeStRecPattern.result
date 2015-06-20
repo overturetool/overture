@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     private static final VDMSet xs = SetUtil.set(1L, 2L, 3L, 4L, new A(5L), 6L,
             7L, 8L);
@@ -13,7 +14,7 @@ public class Entry {
     public static Object Run() {
         Object recordPattern_1 = null;
         Boolean success_1 = false;
-        VDMSet set_1 = Utils.clone(xs);
+        VDMSet set_1 = Utils.copy(xs);
         Number a = null;
 
         for (Iterator iterator_1 = set_1.iterator();
@@ -66,7 +67,7 @@ public class Entry {
             return Utils.hashCode(a);
         }
 
-        public A clone() {
+        public A copy() {
             return new A(a);
         }
 

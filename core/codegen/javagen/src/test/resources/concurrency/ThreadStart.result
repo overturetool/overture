@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class ThreadClass extends VDMThread implements EvaluatePP {
     public volatile Number x = 0L;
     public volatile Sentinel sentinel;
@@ -50,6 +51,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry implements EvaluatePP {
     public volatile Sentinel sentinel;
 

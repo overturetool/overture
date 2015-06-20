@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -38,7 +39,7 @@ public class Entry {
                             for (Iterator iterator_6 = set_3.iterator();
                                     iterator_6.hasNext();) {
                                 Number f = ((Number) iterator_6.next());
-                                mapCompResult_1 = MapUtil.munion(Utils.clone(
+                                mapCompResult_1 = MapUtil.munion(Utils.copy(
                                             mapCompResult_1),
                                         MapUtil.map(
                                             new Maplet(a.longValue() +
@@ -55,7 +56,7 @@ public class Entry {
             }
         }
 
-        return Utils.clone(mapCompResult_1);
+        return Utils.copy(mapCompResult_1);
     }
 
     public String toString() {

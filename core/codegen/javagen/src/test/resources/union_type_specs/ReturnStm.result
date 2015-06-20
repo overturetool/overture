@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -15,7 +16,7 @@ public class Entry {
         Object letBeStExp_1 = null;
         Tuple e = null;
         Boolean success_1 = false;
-        VDMSet set_1 = Utils.clone(tups);
+        VDMSet set_1 = Utils.copy(tups);
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {

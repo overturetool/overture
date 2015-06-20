@@ -1,0 +1,20 @@
+class Entry
+
+instance variables
+
+x : nat := 5;
+  
+operations
+
+public static Run : () ==> ?
+Run () ==
+  return new Entry().op();
+  
+public op : () ==> nat
+op () ==
+  return getX(self);
+  
+public getX : Entry ==> nat
+getX (e) == return e.x;
+
+end Entry

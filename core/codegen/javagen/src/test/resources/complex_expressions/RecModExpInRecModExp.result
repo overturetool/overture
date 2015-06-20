@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -11,20 +12,20 @@ public class Entry {
         Rec1 r1 = new Rec1(5L, new Rec2(10L, null));
         Rec2 r2 = new Rec2(55L, null);
         Number x = 1L;
-        Rec1 recModifierExp_1 = Utils.clone(r1);
+        Rec1 recModifierExp_1 = Utils.copy(r1);
 
         recModifierExp_1.a = 100L;
 
-        Rec2 recModifierExp_2 = Utils.clone(r2);
+        Rec2 recModifierExp_2 = Utils.copy(r2);
 
         recModifierExp_2.c = 200L;
         recModifierExp_2.d = null;
-        recModifierExp_1.b = Utils.clone(recModifierExp_2);
+        recModifierExp_1.b = Utils.copy(recModifierExp_2);
 
-        Rec1 r3 = Utils.clone(recModifierExp_1);
+        Rec1 r3 = Utils.copy(recModifierExp_1);
         Number y = 2L;
 
-        return Tuple.mk_(r3.a, r3.b.c, Utils.clone(r3.b.d));
+        return Tuple.mk_(r3.a, r3.b.c, Utils.copy(r3.b.d));
     }
 
     public String toString() {
@@ -37,7 +38,7 @@ public class Entry {
 
         public Rec1(final Number _a, final Rec2 _b) {
             a = _a;
-            b = (_b != null) ? Utils.clone(_b) : null;
+            b = (_b != null) ? Utils.copy(_b) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -54,7 +55,7 @@ public class Entry {
             return Utils.hashCode(a, b);
         }
 
-        public Rec1 clone() {
+        public Rec1 copy() {
             return new Rec1(a, b);
         }
 
@@ -69,7 +70,7 @@ public class Entry {
 
         public Rec2(final Number _c, final Rec1 _d) {
             c = _c;
-            d = (_d != null) ? Utils.clone(_d) : null;
+            d = (_d != null) ? Utils.copy(_d) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -86,7 +87,7 @@ public class Entry {
             return Utils.hashCode(c, d);
         }
 
-        public Rec2 clone() {
+        public Rec2 copy() {
             return new Rec2(c, d);
         }
 

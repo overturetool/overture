@@ -42,7 +42,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.osgi.service.prefs.Preferences;
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
@@ -61,6 +64,7 @@ import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
+import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
@@ -120,9 +124,10 @@ public class Vdm2JavaCommand extends AbstractHandler
 
 		if (!PluginVdm2JavaUtil.isSupportedVdmDialect(vdmProject))
 		{
-			CodeGenConsole.GetInstance().println("Project : "
+			CodeGenConsole.GetInstance().println("The project  '"
 					+ project.getName()
-					+ " is not supported by the Java code generator. Currently, VDM++ is the only supported dialect.");
+					+ "' is not supported by the Java code generator. "
+					+ "The only dialects being supported are VDM-SL and VDM++.");
 			return null;
 		}
 
@@ -152,16 +157,14 @@ public class Vdm2JavaCommand extends AbstractHandler
 			return null;
 		}
 		
-		CodeGenConsole.GetInstance().println("Starting VDM++ to Java code generation...\n");
+		CodeGenConsole.GetInstance().println("Starting VDM to Java code generation...\n");
 		
 		final List<String> classesToSkip = PluginVdm2JavaUtil.getClassesToSkip();
 		final JavaSettings javaSettings = getJavaSettings(project, classesToSkip);
-
-		final IRSettings irSettings = getIrSettings(project);
-		final List<SClassDefinition> mergedParseLists = consMergedParseList(project, model);
-
 		
-		Job codeGenerate = new Job("VDM++ to Java code generation")
+		final IRSettings irSettings = getIrSettings(project);
+		
+		Job codeGenerate = new Job("VDM to Java code generation")
 		{
 			@Override
 			protected IStatus run(IProgressMonitor monitor)
@@ -184,7 +187,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 					GeneralUtils.deleteFolderContents(eclipseProjectFolder, true);
 
 					// Generate user specified classes
-					GeneratedData generatedData = vdm2java.generateJavaFromVdm(mergedParseLists);
+					GeneratedData generatedData = generateJava(vdmProject, model, vdm2java);
 					
 					outputUserSpecifiedSkippedClasses(classesToSkip);
 					outputSkippedClasses(generatedData.getSkippedClasses());
@@ -193,7 +196,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 					
 					try
 					{
-						vdm2java.generateJavaSourceFiles(javaCodeOutputFolder, generatedData.getClasses());
+						vdm2java.genJavaSourceFiles(javaCodeOutputFolder, generatedData.getClasses());
 					} catch (Exception e)
 					{
 						CodeGenConsole.GetInstance().printErrorln("Problems saving the code generated Java source files to disk.");
@@ -256,8 +259,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 					outputUserspecifiedModules(javaCodeOutputFolder, generatedData.getClasses());
 
 					// Quotes generation
-					outputQuotes(vdmProject, new File(javaCodeOutputFolder, PluginVdm2JavaUtil.QUOTES_FOLDER),
-							vdm2java, generatedData.getQuoteValues());
+					outputQuotes(vdmProject, javaCodeOutputFolder, vdm2java, generatedData.getQuoteValues());
 
 					// Renaming of variables shadowing other variables
 					outputRenamings(generatedData.getAllRenamings());
@@ -305,9 +307,36 @@ public class Vdm2JavaCommand extends AbstractHandler
 		return null;
 	}
 	
+	public GeneratedData generateJava(final IVdmProject project,
+			final IVdmModel model, final JavaCodeGen vdm2java)
+			throws AnalysisException, UnsupportedModelingException
+	{
+		if(project.getDialect() != Dialect.VDM_SL)
+		{
+			List<SClassDefinition> ast = PluginVdm2JavaUtil.getClasses(model.getSourceUnits());
+			return vdm2java.generateJavaFromVdm(ast);			
+		}
+		else
+		{
+			List<AModuleModules> ast = PluginVdm2JavaUtil.getModules(model.getSourceUnits());
+			
+			Preferences prefs = getPrefs();
+			final boolean generateJml = prefs.getBoolean(ICodeGenConstants.GENERATE_JML, ICodeGenConstants.GENERATE_JML_DEFAULT);;
+
+			if (generateJml)
+			{
+				JmlGenerator jmlGen = new JmlGenerator(vdm2java);
+				return jmlGen.generateJml(ast);
+			} else
+			{
+				return vdm2java.generateJavaFromVdmModules(ast);
+			}
+		}
+	}
+	
 	public IRSettings getIrSettings(final IProject project)
 	{
-		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+		Preferences preferences = getPrefs();
 		
 		boolean generateCharSeqsAsStrings = preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
 		boolean generateConcMechanisms = preferences.getBoolean(ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS, ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS_DEFAULT);
@@ -318,32 +347,31 @@ public class Vdm2JavaCommand extends AbstractHandler
 		
 		return irSettings;
 	}
+
+	private Preferences getPrefs()
+	{
+		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+		return preferences;
+	}
 	
 	public JavaSettings getJavaSettings(final IProject project, List<String> classesToSkip)
 	{
-		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+		Preferences preferences = getPrefs();
 		
 		boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
 		String javaPackage = preferences.get(ICodeGenConstants.JAVA_PACKAGE, ICodeGenConstants.JAVA_PACKAGE_DEFAULT);
 		
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(disableCloning);
-		javaSettings.setClassesToSkip(classesToSkip);
+		javaSettings.setModulesToSkip(classesToSkip);
 		javaSettings.setJavaRootPackage(javaPackage);
 		
-		if (!GeneralCodeGenUtils.isValidJavaPackage(javaSettings.getJavaRootPackage()))
+		if (!JavaCodeGenUtil.isValidJavaPackage(javaSettings.getJavaRootPackage()))
 		{
 			javaSettings.setJavaRootPackage(project.getName());
-
 		}
 		
 		return javaSettings;
-	}
-
-	public List<SClassDefinition> consMergedParseList(final IProject project,
-			final IVdmModel model)
-	{
-		return PluginVdm2JavaUtil.mergeParseLists(model.getSourceUnits());
 	}
 	
 	private void deleteMarkers(IProject project)
@@ -417,7 +445,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 		if(!allRenamings.isEmpty())
 		{
 			CodeGenConsole.GetInstance().println("Due to variable shadowing or normalisation of Java identifiers the following renamings of variables have been made:");
-			CodeGenConsole.GetInstance().println(JavaCodeGenUtil.constructVarRenamingString(allRenamings));;
+			CodeGenConsole.GetInstance().println(GeneralCodeGenUtils.constructVarRenamingString(allRenamings));;
 		}
 	}
 	
@@ -514,7 +542,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 		{
 			for(GeneratedModule q : quotes)
 			{
-				vdm2java.generateJavaSourceFile(outputFolder, q);
+				vdm2java.genJavaSourceFile(outputFolder, q);
 			}
 
 			CodeGenConsole.GetInstance().println("Quotes generated to folder: "
@@ -539,7 +567,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 		CodeGenConsole.GetInstance().println("Could not code generate VDM model: "
 				+ ex.getMessage());
 
-		String violationStr = JavaCodeGenUtil.constructUnsupportedModelingString(ex);
+		String violationStr = GeneralCodeGenUtils.constructUnsupportedModelingString(ex);
 		CodeGenConsole.GetInstance().println(violationStr);
 
 		Set<Violation> violations = ex.getViolations();
@@ -554,7 +582,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 
 		CodeGenConsole.GetInstance().println("Warning: " + message);
 
-		String violationStr = JavaCodeGenUtil.constructNameViolationsString(invalidNames);
+		String violationStr = GeneralCodeGenUtils.constructNameViolationsString(invalidNames);
 		CodeGenConsole.GetInstance().println(violationStr);
 
 		Set<Violation> typeNameViolations = invalidNames.getTypenameViolations();

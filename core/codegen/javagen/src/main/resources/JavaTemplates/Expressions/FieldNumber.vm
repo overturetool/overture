@@ -11,7 +11,7 @@
 #else
 	#set( $field = "((${type}) ${tuple}${method})")##
 	#if ($ValueSemantics.cloneMember($node))
-		Utils.clone(${field})##
+		Utils.copy(${field})##
 	#else
 		${field}##
 	#end

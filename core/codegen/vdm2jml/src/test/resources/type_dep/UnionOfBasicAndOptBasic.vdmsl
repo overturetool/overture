@@ -1,0 +1,9 @@
+module Entry
+
+exports all
+definitions
+
+types
+CN = nat|[char];
+
+end Entry

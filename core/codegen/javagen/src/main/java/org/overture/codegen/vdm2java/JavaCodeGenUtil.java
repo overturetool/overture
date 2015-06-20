@@ -27,38 +27,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.node.INode;
-import org.overture.codegen.analysis.vdm.Renaming;
-import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
-import org.overture.codegen.analysis.violations.Violation;
-import org.overture.codegen.assistant.AssistantManager;
-import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.ir.IrNodeInfo;
-import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Settings;
-import org.overture.interpreter.VDMPP;
-import org.overture.interpreter.VDMRT;
-import org.overture.interpreter.util.ClassListInterpreter;
-import org.overture.interpreter.util.ExitStatus;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 import de.hunsicker.io.FileFormat;
@@ -66,8 +52,6 @@ import de.hunsicker.jalopy.Jalopy;
 
 public class JavaCodeGenUtil
 {
-	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
 	public static GeneratedData generateJavaFromFiles(List<File> files,
 			IRSettings irSettings, JavaSettings javaSettings, Dialect dialect)
 			throws AnalysisException, UnsupportedModelingException
@@ -84,60 +68,20 @@ public class JavaCodeGenUtil
 			JavaCodeGen vdmCodGen, Dialect dialect)
 			throws AnalysisException, UnsupportedModelingException
 	{
-		List<SClassDefinition> mergedParseList = consMergedParseList(files, dialect);
-
-		return generateJavaFromVdm(mergedParseList, vdmCodGen);
+		if (dialect == Dialect.VDM_PP || dialect == Dialect.VDM_RT)
+		{
+			return vdmCodGen.generateJavaFromVdm(GeneralCodeGenUtils.consClassList(files, dialect));
+		}
+		else if(dialect == Dialect.VDM_SL)
+		{
+			return vdmCodGen.generateJavaFromVdmModules(GeneralCodeGenUtils.consModuleList(files));
+		}
+		else
+		{
+			return null;
+		}
 	}
-
-	public static List<SClassDefinition> consMergedParseList(List<File> files, Dialect dialect)
-			throws AnalysisException
-	{
-		Settings.dialect = dialect;
-		VDMPP vdmrt = (dialect == Dialect.VDM_RT ? new VDMRT() : new VDMPP());
-		vdmrt.setQuiet(true);
-
-		ExitStatus status = vdmrt.parse(files);
-
-		if (status != ExitStatus.EXIT_OK)
-		{
-			throw new AnalysisException("Could not parse files!");
-		}
-
-		status = vdmrt.typeCheck();
-
-		if (status != ExitStatus.EXIT_OK)
-		{
-			throw new AnalysisException("Could not type check files!");
-		}
-
-		ClassListInterpreter classes;
-		try
-		{
-			classes = vdmrt.getInterpreter().getClasses();
-		} catch (Exception e)
-		{
-			throw new AnalysisException("Could not get classes from class list interpreter!");
-		}
-
-		List<SClassDefinition> mergedParseList = new LinkedList<SClassDefinition>();
-
-		for (SClassDefinition vdmClass : classes)
-		{
-			if (vdmClass instanceof AClassClassDefinition) {
-				mergedParseList.add(vdmClass);
-			}
-		}
-
-		return mergedParseList;
-	}
-
-	private static GeneratedData generateJavaFromVdm(
-			List<SClassDefinition> mergedParseLists, JavaCodeGen vdmCodGen)
-			throws AnalysisException, UnsupportedModelingException
-	{
-		return vdmCodGen.generateJavaFromVdm(mergedParseLists);
-	}
-
+	
 	public static Generated generateJavaFromExp(String exp,
 			IRSettings irSettings, JavaSettings javaSettings, Dialect dialect)
 			throws AnalysisException
@@ -172,81 +116,6 @@ public class JavaCodeGenUtil
 			throw new AnalysisException("Unable to generate code from expression: "
 					+ exp + ". Exception message: " + e.getMessage());
 		}
-	}
-	
-	public static List<Violation> asSortedList(Set<Violation> violations)
-	{
-		LinkedList<Violation> list = new LinkedList<Violation>(violations);
-		Collections.sort(list);
-
-		return list;
-	}
-
-	public static String constructNameViolationsString(
-			InvalidNamesResult invalidNames)
-	{
-		StringBuffer buffer = new StringBuffer();
-
-		List<Violation> reservedWordViolations = asSortedList(invalidNames.getReservedWordViolations());
-		List<Violation> typenameViolations = asSortedList(invalidNames.getTypenameViolations());
-		List<Violation> tempVarViolations = asSortedList(invalidNames.getTempVarViolations());
-
-		String correctionMessage = String.format("Prefix '%s' has been added to the name"
-				+ LINE_SEPARATOR, invalidNames.getCorrectionPrefix());
-
-		for (Violation violation : reservedWordViolations)
-		{
-			buffer.append("Reserved name violation: " + violation + ". "
-					+ correctionMessage);
-		}
-
-		for (Violation violation : typenameViolations)
-		{
-			buffer.append("Type name violation: " + violation + ". "
-					+ correctionMessage);
-		}
-
-		for (Violation violation : tempVarViolations)
-		{
-			buffer.append("Temporary variable violation: " + violation + ". "
-					+ correctionMessage);
-		}
-
-		return buffer.toString();
-	}
-
-	public static String constructUnsupportedModelingString(
-			UnsupportedModelingException e)
-	{
-		StringBuffer buffer = new StringBuffer();
-
-		List<Violation> violations = asSortedList(e.getViolations());
-
-		for (Violation violation : violations)
-		{
-			buffer.append(violation + LINE_SEPARATOR);
-		}
-
-		return buffer.toString();
-	}
-	
-	public static String constructVarRenamingString(List<Renaming> renamings)
-	{
-		StringBuilder sb = new StringBuilder();
-		
-		for(Renaming r : renamings)
-		{
-			sb.append(r).append('\n');
-		}
-		
-		return sb.toString();
-	}
-
-	public static void generateJavaSourceFiles(File outputFolder,
-			List<GeneratedModule> classes)
-	{
-		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		vdmCodGen.generateJavaSourceFiles(outputFolder, classes);
 	}
 
 	public static String formatJavaCode(String code)
@@ -322,72 +191,6 @@ public class JavaCodeGenUtil
 		}
 	}
 
-	public static void printMergeErrors(List<Exception> mergeErrors)
-	{
-		for (Exception error : mergeErrors)
-		{
-			Logger.getLog().println(error.toString());
-		}
-	}
-
-	public static void printUnsupportedIrNodes(Set<VdmNodeInfo> unsupportedNodes)
-	{
-		AssistantManager assistantManager = new AssistantManager();
-		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
-
-		List<VdmNodeInfo> nodesSorted = locationAssistant.getVdmNodeInfoLocationSorted(unsupportedNodes);
-
-		for (VdmNodeInfo vdmNodeInfo : nodesSorted)
-		{
-			Logger.getLog().print(vdmNodeInfo.getNode().toString() + 
-					" (" + vdmNodeInfo.getNode().getClass().getSimpleName() + ")");
-
-			ILexLocation location = locationAssistant.findLocation(vdmNodeInfo.getNode());
-
-			Logger.getLog().print(location != null ? " at [line, pos] = ["
-					+ location.getStartLine() + ", " + location.getStartPos()
-					+ "]" : "");
-
-			String reason = vdmNodeInfo.getReason();
-
-			if (reason != null)
-			{
-				Logger.getLog().print(". Reason: " + reason);
-			}
-
-			Logger.getLog().println("");
-		}
-	}
-	
-	public static void printUnsupportedNodes(Set<IrNodeInfo> unsupportedNodes)
-	{
-		AssistantManager assistantManager = new AssistantManager();
-		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
-		
-		List<IrNodeInfo> nodesSorted = locationAssistant.getIrNodeInfoLocationSorted(unsupportedNodes);
-
-		for (IrNodeInfo nodeInfo : nodesSorted)
-		{
-			INode vdmNode = locationAssistant.getVdmNode(nodeInfo);
-			Logger.getLog().print(vdmNode != null ? vdmNode.toString() : nodeInfo.getNode().getClass().getSimpleName());
-
-			ILexLocation location = locationAssistant.findLocation(nodeInfo);
-
-			Logger.getLog().print(location != null ? " at [line, pos] = ["
-					+ location.getStartLine() + ", " + location.getStartPos()
-					+ "]" : "");
-
-			String reason = nodeInfo.getReason();
-
-			if (reason != null)
-			{
-				Logger.getLog().print(". Reason: " + reason);
-			}
-
-			Logger.getLog().println("");
-		}
-	}
-	
 	public static boolean isQuote(org.overture.codegen.cgast.INode decl, JavaSettings settings)
 	{
 		if(decl instanceof AClassDeclCG)
@@ -413,5 +216,192 @@ public class JavaCodeGenUtil
 		}
 		
 		return false;
+	}
+	
+	public static boolean isValidJavaPackage(String pack)
+	{
+		if(pack == null)
+		{
+			return false;
+		}
+		
+		pack = pack.trim();
+		
+		Pattern pattern = Pattern.compile("^[a-zA-Z_\\$][\\w\\$]*(?:\\.[a-zA-Z_\\$][\\w\\$]*)*$");
+		
+		if(!pattern.matcher(pack).matches())
+		{
+			return false;
+		}
+		
+		String [] split = pack.split("\\.");
+		
+		for(String s : split)
+		{
+			if(isJavaKeyword(s))
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public static String getFolderFromJavaRootPackage(String pack)
+	{
+		if(!isValidJavaPackage(pack))
+		{
+			return null;
+		}
+		else
+		{
+			return pack.replaceAll("\\.", "/");
+		}
+	}
+	
+	public static boolean isJavaKeyword(String s)
+	{
+		if(s == null)
+		{
+			return false;
+		}
+		else
+		{
+			s = s.trim();
+			
+			if(s.isEmpty())
+			{
+				return false;
+			}
+		}
+		
+		for(String kw : IJavaCodeGenConstants.RESERVED_WORDS)
+		{
+			if(s.equals(kw))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Checks whether the given String is a valid Java identifier.
+	 *
+	 * @param s the String to check
+	 * @return <code>true</code> if 's' is an identifier, <code>false</code> otherwise
+	 */
+	public static boolean isValidJavaIdentifier(String s)
+	{
+		if (s == null || s.length() == 0)
+		{
+			return false;
+		}
+		
+		if(isJavaKeyword(s))
+		{
+			return false;
+		}
+
+		char[] c = s.toCharArray();
+		if (!Character.isJavaIdentifierStart(c[0]))
+		{
+			return false;
+		}
+
+		for (int i = 1; i < c.length; i++)
+		{
+			if (!Character.isJavaIdentifierPart(c[i]))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Computes the indices of characters that need to be replaced with valid characters in order to make 's' a valid
+	 * Java identifier. Please note that this method assumes that 's' is NOT a keyword.
+	 * 
+	 * @param s the identifier to compute correction indices for.
+	 * @return the indices of the characters that need to be corrected in order to make the identifier a valid Java
+	 * identifier
+	 */
+	public static List<Integer> computeJavaIdentifierCorrections(String s)
+	{
+		List<Integer> correctionIndices = new LinkedList<Integer>();
+
+		if (s == null || s.length() == 0)
+		{
+			return correctionIndices;
+		}
+
+		char[] c = s.toCharArray();
+		
+		if (!Character.isJavaIdentifierStart(c[0]))
+		{
+			correctionIndices.add(0);
+		}
+
+		for (int i = 1; i < c.length; i++)
+		{
+			if (!Character.isJavaIdentifierPart(c[i]))
+			{
+				correctionIndices.add(i);
+			}
+		}
+
+		return correctionIndices;
+	}
+	
+	public static String[] findJavaFilePathsRec(File srcCodeFolder)
+	{
+		List<File> files = GeneralUtils.getFilesRecursive(srcCodeFolder);
+
+		List<String> javaFilePaths = new LinkedList<String>();
+
+		for (File f : files)
+		{
+			if (f.getName().endsWith(IJavaCodeGenConstants.JAVA_FILE_EXTENSION))
+			{
+				javaFilePaths.add(f.getAbsolutePath());
+			}
+		}
+
+		return javaFilePaths.toArray(new String[] {});
+	}
+	
+	public static File getModuleOutputDir(File outputDir, JavaCodeGen vdmCodGen,
+			GeneratedModule generatedClass)
+	{
+		File moduleOutputDir = outputDir;
+		String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
+		
+		if(generatedClass.getIrNode() instanceof AClassDeclCG)
+		{
+			javaPackage = ((AClassDeclCG) generatedClass.getIrNode()).getPackage();
+		}
+		else if(generatedClass.getIrNode() instanceof AInterfaceDeclCG)
+		{
+			javaPackage = ((AInterfaceDeclCG) generatedClass.getIrNode()).getPackage();
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Expected IR node of "
+					+ generatedClass.getName()
+					+ " to be a class or interface  declaration at this point. Got: "
+					+ generatedClass.getIrNode());
+			return null;
+		}
+		
+		if (JavaCodeGenUtil.isValidJavaPackage(javaPackage))
+		{
+			String packageFolderPath = JavaCodeGenUtil.getFolderFromJavaRootPackage(javaPackage);
+			moduleOutputDir = new File(outputDir, packageFolderPath);
+		}
+		
+		return moduleOutputDir;
 	}
 }

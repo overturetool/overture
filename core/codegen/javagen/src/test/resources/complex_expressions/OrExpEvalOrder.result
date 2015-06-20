@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public static Number a = 0L;
     public Number n;
@@ -36,6 +37,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -56,15 +58,15 @@ public class Entry {
             }
 
             if (orResult_1) {
-                setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
+                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
                         SetUtil.set(x.n));
             }
         }
 
-        VDMSet s = Utils.clone(setCompResult_1);
+        VDMSet s = Utils.copy(setCompResult_1);
         Number a = A.a;
 
-        return Tuple.mk_(Utils.clone(s), a);
+        return Tuple.mk_(Utils.copy(s), a);
     }
 
     public String toString() {

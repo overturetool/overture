@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry implements EvaluatePP {
     public volatile Sentinel sentinel;
 
@@ -53,6 +54,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Log implements EvaluatePP {
     private static volatile Log Instance = null;
     private volatile VDMSeq messages = SeqUtil.seq();
@@ -85,7 +87,7 @@ public class Log implements EvaluatePP {
         sentinel.entering(((Log_sentinel) sentinel).log);
 
         try {
-            messages = SeqUtil.conc(Utils.clone(messages), SeqUtil.seq(msg));
+            messages = SeqUtil.conc(Utils.copy(messages), SeqUtil.seq(msg));
 
             sentinel.stateChanged();
         } finally {
@@ -158,6 +160,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class MessageChannelBuffer implements EvaluatePP {
     private volatile MessageChannel data = null;
     public volatile Sentinel sentinel;
@@ -242,6 +245,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class MessageChannel implements EvaluatePP {
     private volatile Object data = null;
     private volatile Boolean debug = true;
@@ -422,6 +426,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3ClientHandler extends VDMThread implements EvaluatePP {
     private static final String unknownMessageMsg = "No such message";
     private static final String negativeStatusMsg = "Wrong state for this command";
@@ -685,8 +690,8 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                     VDMSet msgs = parent.GetMessageInfo(user, list.messageNumber);
 
                     return new POP3Types.OkResponse(MakeScanListHeader(
-                            Utils.clone(msgs)) + "\n" +
-                        MakeScanListing(Utils.clone(msgs)));
+                            Utils.copy(msgs)) + "\n" +
+                        MakeScanListing(Utils.copy(msgs)));
                 } else {
                     return new POP3Types.ErrResponse(unknownMessageMsg);
                 }
@@ -788,7 +793,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                     VDMSeq lines = MakeLineSeq(body);
 
                     return new POP3Types.OkResponse(header + "\n" +
-                        MakeMultilineResponse(SeqUtil.subSeq(Utils.clone(lines),
+                        MakeMultilineResponse(SeqUtil.subSeq(Utils.copy(lines),
                                 1L, top.numLines)));
                 } else {
                     return new POP3Types.ErrResponse(unknownMessageMsg);
@@ -810,7 +815,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                     VDMSeq uidlTxt = parent.GetAllUidls(user);
 
                     return new POP3Types.OkResponse(MakeMultilineResponse(
-                            Utils.clone(uidlTxt)));
+                            Utils.copy(uidlTxt)));
                 } else if (parent.IsMessageNumber(user, uidl.messageNumber)) {
                     return new POP3Types.OkResponse(parent.GetUidl(user,
                             uidl.messageNumber));
@@ -891,16 +896,16 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         }
 
         VDMSet setCompResult_1 = SetUtil.set();
-        VDMSet set_1 = Utils.clone(msgs);
+        VDMSet set_1 = Utils.copy(msgs);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             POP3Server.MessageInfo msg = ((POP3Server.MessageInfo) iterator_1.next());
-            setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
+            setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
                     SetUtil.set(msg.size));
         }
 
         return int2string(lp) + (ternaryIfExp_2) +
-        int2string(sum(Utils.clone(setCompResult_1))) + " octets)";
+        int2string(sum(Utils.copy(setCompResult_1))) + " octets)";
     }
 
     private static <tp> VDMSeq set2seq(final VDMSet s) {
@@ -910,7 +915,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
             VDMSeq letBeStExp_1 = null;
             tp v = null;
             Boolean success_1 = false;
-            VDMSet set_2 = Utils.clone(s);
+            VDMSet set_2 = Utils.copy(s);
 
             for (Iterator iterator_2 = set_2.iterator();
                     iterator_2.hasNext() && !(success_1);) {
@@ -924,21 +929,21 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
             }
 
             letBeStExp_1 = SeqUtil.conc(SeqUtil.seq(v),
-                    set2seq(SetUtil.diff(Utils.clone(s), SetUtil.set(v))));
+                    set2seq(SetUtil.diff(Utils.copy(s), SetUtil.set(v))));
 
-            return Utils.clone(letBeStExp_1);
+            return Utils.copy(letBeStExp_1);
         }
     }
 
     private static String MakeScanListing(final VDMSet msgs) {
-        VDMSeq msgSeq = set2seq(Utils.clone(msgs));
+        VDMSeq msgSeq = set2seq(Utils.copy(msgs));
 
         VDMSeq seqCompResult_1 = SeqUtil.seq();
         VDMSet set_3 = SeqUtil.inds(msgSeq);
 
         for (Iterator iterator_3 = set_3.iterator(); iterator_3.hasNext();) {
             Number i = ((Number) iterator_3.next());
-            seqCompResult_1 = SeqUtil.conc(Utils.clone(seqCompResult_1),
+            seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
                     SeqUtil.seq(int2string(
                             ((POP3Server.MessageInfo) Utils.get(msgSeq, i)).index) +
                         " " +
@@ -946,7 +951,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                             ((POP3Server.MessageInfo) Utils.get(msgSeq, i)).size)));
         }
 
-        return MakeMultilineResponse(Utils.clone(seqCompResult_1));
+        return MakeMultilineResponse(Utils.copy(seqCompResult_1));
     }
 
     private static String MakeMultilineResponse(final VDMSeq resps) {
@@ -957,7 +962,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 return ((String) resps.get(0));
             } else {
                 return ((String) resps.get(0)) + "\n" +
-                MakeMultilineResponse(SeqUtil.tail(Utils.clone(resps)));
+                MakeMultilineResponse(SeqUtil.tail(Utils.copy(resps)));
             }
         }
     }
@@ -1024,7 +1029,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
             Number letBeStExp_2 = null;
             Number e = null;
             Boolean success_2 = false;
-            VDMSet set_4 = Utils.clone(s);
+            VDMSet set_4 = Utils.copy(s);
 
             for (Iterator iterator_4 = set_4.iterator();
                     iterator_4.hasNext() && !(success_2);) {
@@ -1037,7 +1042,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                     "Let Be St found no applicable bindings");
             }
 
-            letBeStExp_2 = sum(SetUtil.diff(Utils.clone(s), SetUtil.set(e)))
+            letBeStExp_2 = sum(SetUtil.diff(Utils.copy(s), SetUtil.set(e)))
                                .longValue() + e.longValue();
 
             return letBeStExp_2;
@@ -1303,6 +1308,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3Message implements EvaluatePP {
     private volatile String header;
     private volatile String body;
@@ -1479,6 +1485,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3Server extends VDMThread implements EvaluatePP {
     private volatile MessageChannelBuffer connChannel;
     private volatile VDMMap maildrop;
@@ -1491,7 +1498,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         final VDMMap npasswords) {
         sentinel = new POP3Server_sentinel(this);
 
-        cg_init_POP3Server_1(Utils.clone(nmd), nch, Utils.clone(npasswords));
+        cg_init_POP3Server_1(Utils.copy(nmd), nch, Utils.copy(npasswords));
     }
 
     public POP3Server() {
@@ -1500,10 +1507,10 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
     public void cg_init_POP3Server_1(final VDMMap nmd,
         final MessageChannelBuffer nch, final VDMMap npasswords) {
-        maildrop = Utils.clone(nmd);
+        maildrop = Utils.copy(nmd);
         connChannel = nch;
         locks = MapUtil.map();
-        passwords = Utils.clone(npasswords);
+        passwords = Utils.copy(npasswords);
     }
 
     public Boolean AuthenticateUser(final String user, final String password) {
@@ -1512,7 +1519,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         try {
             Boolean andResult_2 = false;
 
-            if (MapUtil.dom(Utils.clone(passwords)).contains(user)) {
+            if (MapUtil.dom(Utils.copy(passwords)).contains(user)) {
                 if (Utils.equals(((String) Utils.get(passwords, user)), password)) {
                     andResult_2 = true;
                 }
@@ -1528,7 +1535,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3Server_sentinel) sentinel).IsLocked);
 
         try {
-            return MapUtil.rng(Utils.clone(locks)).contains(user);
+            return MapUtil.rng(Utils.copy(locks)).contains(user);
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).IsLocked);
         }
@@ -1538,13 +1545,13 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3Server_sentinel) sentinel).SetUserMessages);
 
         try {
-            MailBox recModifierExp_1 = Utils.clone(((MailBox) Utils.get(
+            MailBox recModifierExp_1 = Utils.copy(((MailBox) Utils.get(
                         maildrop, user)));
 
-            recModifierExp_1.msgs = Utils.clone(newMsgs);
+            recModifierExp_1.msgs = Utils.copy(newMsgs);
             sentinel.stateChanged();
 
-            Utils.mapSeqUpdate(maildrop, user, Utils.clone(recModifierExp_1));
+            Utils.mapSeqUpdate(maildrop, user, Utils.copy(recModifierExp_1));
             sentinel.stateChanged();
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).SetUserMessages);
@@ -1555,7 +1562,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3Server_sentinel) sentinel).GetUserMail);
 
         try {
-            return Utils.clone(((MailBox) Utils.get(maildrop, user)));
+            return Utils.copy(((MailBox) Utils.get(maildrop, user)));
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).GetUserMail);
         }
@@ -1565,7 +1572,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3Server_sentinel) sentinel).GetUserMessages);
 
         try {
-            return Utils.clone(GetUserMail(user).msgs);
+            return Utils.copy(GetUserMail(user).msgs);
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).GetUserMessages);
         }
@@ -1583,13 +1590,13 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                 Number i = ((Number) iterator_5.next());
 
                 if (!(((POP3Message) Utils.get(oldMsgs, i)).IsDeleted())) {
-                    seqCompResult_2 = SeqUtil.conc(Utils.clone(seqCompResult_2),
+                    seqCompResult_2 = SeqUtil.conc(Utils.copy(seqCompResult_2),
                             SeqUtil.seq(((POP3Message) Utils.get(oldMsgs, i))));
                 }
             }
 
-            VDMSeq newMsgs = Utils.clone(seqCompResult_2);
-            SetUserMessages(user, Utils.clone(newMsgs));
+            VDMSeq newMsgs = Utils.copy(seqCompResult_2);
+            SetUserMessages(user, Utils.copy(newMsgs));
 
             return true;
         } finally {
@@ -1601,7 +1608,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3Server_sentinel) sentinel).AcquireLock);
 
         try {
-            locks = MapUtil.override(Utils.clone(locks),
+            locks = MapUtil.override(Utils.copy(locks),
                     MapUtil.map(new Maplet(clId, user)));
             sentinel.stateChanged();
         } finally {
@@ -1613,7 +1620,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3Server_sentinel) sentinel).ReleaseLock);
 
         try {
-            locks = MapUtil.domResBy(SetUtil.set(clId), Utils.clone(locks));
+            locks = MapUtil.domResBy(SetUtil.set(clId), Utils.copy(locks));
             sentinel.stateChanged();
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).ReleaseLock);
@@ -1730,13 +1737,13 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
             for (Iterator iterator_6 = set_6.iterator(); iterator_6.hasNext();) {
                 Number i = ((Number) iterator_6.next());
-                seqCompResult_3 = SeqUtil.conc(Utils.clone(seqCompResult_3),
+                seqCompResult_3 = SeqUtil.conc(Utils.copy(seqCompResult_3),
                         SeqUtil.seq(
                             ((POP3Message) Utils.get(oldMsgs, i)).Undelete()));
             }
 
-            VDMSeq newMsgs = Utils.clone(seqCompResult_3);
-            SetUserMessages(user, Utils.clone(newMsgs));
+            VDMSeq newMsgs = Utils.copy(seqCompResult_3);
+            SetUserMessages(user, Utils.copy(newMsgs));
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).ResetDeletedMessages);
         }
@@ -1777,14 +1784,14 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                     Number i = ((Number) iterator_7.next());
 
                     if (!(((POP3Message) Utils.get(mb, i)).IsDeleted())) {
-                        seqCompResult_4 = SeqUtil.conc(Utils.clone(
+                        seqCompResult_4 = SeqUtil.conc(Utils.copy(
                                     seqCompResult_4),
                                 SeqUtil.seq(
                                     new MessageInfo(i, GetMessageSize(user, i))));
                     }
                 }
 
-                return SeqUtil.elems(Utils.clone(seqCompResult_4));
+                return SeqUtil.elems(Utils.copy(seqCompResult_4));
             } else {
                 return SetUtil.set(new MessageInfo(index,
                         GetMessageSize(user, index)));
@@ -1817,11 +1824,11 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
             for (Iterator iterator_8 = set_8.iterator(); iterator_8.hasNext();) {
                 Number index = ((Number) iterator_8.next());
-                seqCompResult_5 = SeqUtil.conc(Utils.clone(seqCompResult_5),
+                seqCompResult_5 = SeqUtil.conc(Utils.copy(seqCompResult_5),
                         SeqUtil.seq(GetUidl(user, index)));
             }
 
-            return Utils.clone(seqCompResult_5);
+            return Utils.copy(seqCompResult_5);
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).GetAllUidls);
         }
@@ -1847,12 +1854,12 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
             for (Iterator iterator_9 = set_9.iterator(); iterator_9.hasNext();) {
                 Number i = ((Number) iterator_9.next());
-                seqCompResult_6 = SeqUtil.conc(Utils.clone(seqCompResult_6),
+                seqCompResult_6 = SeqUtil.conc(Utils.copy(seqCompResult_6),
                         SeqUtil.seq(
                             ((POP3Message) Utils.get(mb.msgs, i)).GetSize()));
             }
 
-            return sumseq(Utils.clone(seqCompResult_6));
+            return sumseq(Utils.copy(seqCompResult_6));
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).GetMailBoxSize);
         }
@@ -1883,7 +1890,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             return 0L;
         } else {
             return ((Number) s.get(0)).longValue() +
-            sumseq(SeqUtil.tail(Utils.clone(s))).longValue();
+            sumseq(SeqUtil.tail(Utils.copy(s))).longValue();
         }
     }
 
@@ -2065,7 +2072,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             return Utils.hashCode(index, size);
         }
 
-        public MessageInfo clone() {
+        public MessageInfo copy() {
             return new MessageInfo(index, size);
         }
 
@@ -2080,7 +2087,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         public Boolean locked;
 
         public MailBox(final VDMSeq _msgs, final Boolean _locked) {
-            msgs = (_msgs != null) ? Utils.clone(_msgs) : null;
+            msgs = (_msgs != null) ? Utils.copy(_msgs) : null;
             locked = _locked;
         }
 
@@ -2099,7 +2106,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             return Utils.hashCode(msgs, locked);
         }
 
-        public MailBox clone() {
+        public MailBox copy() {
             return new MailBox(msgs, locked);
         }
 
@@ -2115,6 +2122,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3Test implements EvaluatePP {
     private static final VDMSeq users = SeqUtil.seq("paul", "peter", "nico",
             "john", "marcel");
@@ -2164,19 +2172,19 @@ public class POP3Test implements EvaluatePP {
         sentinel.entering(((POP3Test_sentinel) sentinel).Test1);
 
         try {
-            MessageChannelBuffer ch = new MessageChannelBuffer();
-            POP3Server server = new POP3Server(MakeMailDrop(), ch,
+            MessageChannelBuffer ch_1 = new MessageChannelBuffer();
+            POP3Server server_1 = new POP3Server(MakeMailDrop(), ch_1,
                     MakePasswordMap());
 
             {
                 MessageChannel mc = new MessageChannel();
-                server.start();
-                ch.Put(mc);
+                server_1.start();
+                ch_1.Put(mc);
 
                 {
                     VDMSeq run = TestRun1();
                     POP3TestSender send = new POP3TestSender("c",
-                            Utils.clone(run), mc);
+                            Utils.copy(run), mc);
                     POP3TestListener listen = new POP3TestListener("l", mc);
                     send.start();
                     listen.start();
@@ -2199,26 +2207,28 @@ public class POP3Test implements EvaluatePP {
                     MakePasswordMap());
 
             {
-                MessageChannel mc1 = new MessageChannel();
-                MessageChannel mc2 = new MessageChannel();
+                MessageChannel mc1_1 = new MessageChannel();
+                MessageChannel mc2_1 = new MessageChannel();
                 server.start();
-                ch.Put(mc1);
-                ch.Put(mc2);
+                ch.Put(mc1_1);
+                ch.Put(mc2_1);
 
                 {
                     VDMSeq run = TestRun1();
-                    POP3TestSender send1 = new POP3TestSender("c1",
-                            Utils.clone(run), mc1);
-                    POP3TestSender send2 = new POP3TestSender("c2",
-                            Utils.clone(run), mc2);
-                    POP3TestListener listen1 = new POP3TestListener("l1", mc1);
-                    POP3TestListener listen2 = new POP3TestListener("l2", mc2);
-                    send1.start();
-                    send2.start();
-                    listen1.start();
-                    listen2.start();
-                    listen1.IsFinished();
-                    listen2.IsFinished();
+                    POP3TestSender send1_1 = new POP3TestSender("c1",
+                            Utils.copy(run), mc1_1);
+                    POP3TestSender send2_1 = new POP3TestSender("c2",
+                            Utils.copy(run), mc2_1);
+                    POP3TestListener listen1_1 = new POP3TestListener("l1",
+                            mc1_1);
+                    POP3TestListener listen2_1 = new POP3TestListener("l2",
+                            mc2_1);
+                    send1_1.start();
+                    send2_1.start();
+                    listen1_1.start();
+                    listen2_1.start();
+                    listen1_1.IsFinished();
+                    listen2_1.IsFinished();
                 }
 
                 return Log.getInstance().output();
@@ -2256,13 +2266,13 @@ public class POP3Test implements EvaluatePP {
 
         for (Iterator iterator_10 = set_10.iterator(); iterator_10.hasNext();) {
             Number i = ((Number) iterator_10.next());
-            mapCompResult_1 = MapUtil.munion(Utils.clone(mapCompResult_1),
+            mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
                     MapUtil.map(
                         new Maplet(((String) Utils.get(users, i)),
                             ((String) Utils.get(passwords, i)))));
         }
 
-        return Utils.clone(mapCompResult_1);
+        return Utils.copy(mapCompResult_1);
     }
 
     public static VDMMap MakeMailDrop() {
@@ -2271,14 +2281,14 @@ public class POP3Test implements EvaluatePP {
 
         for (Iterator iterator_11 = set_11.iterator(); iterator_11.hasNext();) {
             Number i = ((Number) iterator_11.next());
-            mapCompResult_2 = MapUtil.munion(Utils.clone(mapCompResult_2),
+            mapCompResult_2 = MapUtil.munion(Utils.copy(mapCompResult_2),
                     MapUtil.map(
                         new Maplet(((String) Utils.get(users, i)),
                             new POP3Server.MailBox(MakeMessages(
                                     ((String) Utils.get(users, i))), false))));
         }
 
-        return Utils.clone(mapCompResult_2);
+        return Utils.copy(mapCompResult_2);
     }
 
     public static VDMSeq MakeMessages(final String user) {
@@ -2287,14 +2297,14 @@ public class POP3Test implements EvaluatePP {
 
         for (Iterator iterator_12 = set_12.iterator(); iterator_12.hasNext();) {
             Number i = ((Number) iterator_12.next());
-            seqCompResult_7 = SeqUtil.conc(Utils.clone(seqCompResult_7),
+            seqCompResult_7 = SeqUtil.conc(Utils.copy(seqCompResult_7),
                     SeqUtil.seq(
                         new POP3Message(((String) Utils.get(headers, i)),
                             ((String) Utils.get(bodies, i)) + " to " + user,
                             user + POP3ClientHandler.int2string(i))));
         }
 
-        return Utils.clone(seqCompResult_7);
+        return Utils.copy(seqCompResult_7);
     }
 
     private static VDMSeq TestRun1() {
@@ -2378,6 +2388,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3TestSender extends VDMThread implements EvaluatePP {
     private volatile String id;
     private volatile VDMSeq cmds;
@@ -2388,7 +2399,7 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
         final MessageChannel mcarg) {
         sentinel = new POP3TestSender_sentinel(this);
 
-        cg_init_POP3TestSender_1(idarg, Utils.clone(cmdsarg), mcarg);
+        cg_init_POP3TestSender_1(idarg, Utils.copy(cmdsarg), mcarg);
     }
 
     public POP3TestSender() {
@@ -2398,7 +2409,7 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
     public void cg_init_POP3TestSender_1(final String idarg,
         final VDMSeq cmdsarg, final MessageChannel mcarg) {
         id = idarg;
-        cmds = Utils.clone(cmdsarg);
+        cmds = Utils.copy(cmdsarg);
         mc = mcarg;
     }
 
@@ -2475,6 +2486,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3TestListener extends VDMThread implements EvaluatePP {
     private volatile String id;
     private volatile MessageChannel mc;
@@ -2584,6 +2596,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class POP3Types implements EvaluatePP {
     public volatile Sentinel sentinel;
 
@@ -2630,7 +2643,7 @@ public class POP3Types implements EvaluatePP {
             return 0;
         }
 
-        public QUIT clone() {
+        public QUIT copy() {
             return new QUIT();
         }
 
@@ -2651,7 +2664,7 @@ public class POP3Types implements EvaluatePP {
             return 0;
         }
 
-        public STAT clone() {
+        public STAT copy() {
             return new STAT();
         }
 
@@ -2664,7 +2677,7 @@ public class POP3Types implements EvaluatePP {
         public Number messageNumber;
 
         public LIST(final Number _messageNumber) {
-            messageNumber = (_messageNumber != null) ? _messageNumber : null;
+            messageNumber = _messageNumber;
         }
 
         public boolean equals(final Object obj) {
@@ -2681,7 +2694,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(messageNumber);
         }
 
-        public LIST clone() {
+        public LIST copy() {
             return new LIST(messageNumber);
         }
 
@@ -2711,7 +2724,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(messageNumber);
         }
 
-        public RETR clone() {
+        public RETR copy() {
             return new RETR(messageNumber);
         }
 
@@ -2741,7 +2754,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(messageNumber);
         }
 
-        public DELE clone() {
+        public DELE copy() {
             return new DELE(messageNumber);
         }
 
@@ -2762,7 +2775,7 @@ public class POP3Types implements EvaluatePP {
             return 0;
         }
 
-        public NOOP clone() {
+        public NOOP copy() {
             return new NOOP();
         }
 
@@ -2783,7 +2796,7 @@ public class POP3Types implements EvaluatePP {
             return 0;
         }
 
-        public RSET clone() {
+        public RSET copy() {
             return new RSET();
         }
 
@@ -2816,7 +2829,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(messageNumber, numLines);
         }
 
-        public TOP clone() {
+        public TOP copy() {
             return new TOP(messageNumber, numLines);
         }
 
@@ -2830,7 +2843,7 @@ public class POP3Types implements EvaluatePP {
         public Number messageNumber;
 
         public UIDL(final Number _messageNumber) {
-            messageNumber = (_messageNumber != null) ? _messageNumber : null;
+            messageNumber = _messageNumber;
         }
 
         public boolean equals(final Object obj) {
@@ -2847,7 +2860,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(messageNumber);
         }
 
-        public UIDL clone() {
+        public UIDL copy() {
             return new UIDL(messageNumber);
         }
 
@@ -2877,7 +2890,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(name);
         }
 
-        public USER clone() {
+        public USER copy() {
             return new USER(name);
         }
 
@@ -2907,7 +2920,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(string);
         }
 
-        public PASS clone() {
+        public PASS copy() {
             return new PASS(string);
         }
 
@@ -2940,7 +2953,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(name, digest);
         }
 
-        public APOP clone() {
+        public APOP copy() {
             return new APOP(name, digest);
         }
 
@@ -2970,7 +2983,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(data);
         }
 
-        public OkResponse clone() {
+        public OkResponse copy() {
             return new OkResponse(data);
         }
 
@@ -3000,7 +3013,7 @@ public class POP3Types implements EvaluatePP {
             return Utils.hashCode(data);
         }
 
-        public ErrResponse clone() {
+        public ErrResponse copy() {
             return new ErrResponse(data);
         }
 

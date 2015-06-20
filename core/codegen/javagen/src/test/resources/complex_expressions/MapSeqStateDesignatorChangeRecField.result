@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     private VDMMap m = MapUtil.map(new Maplet(true, new Rec(10L)));
 
@@ -49,7 +50,7 @@ public class Entry {
             return Utils.hashCode(field);
         }
 
-        public Rec clone() {
+        public Rec copy() {
             return new Rec(field);
         }
 

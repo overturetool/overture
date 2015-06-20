@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public VDMSeq xs = SeqUtil.seq('h');
 
@@ -20,6 +21,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class B {
     public B() {
     }
@@ -35,6 +37,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -55,10 +58,10 @@ public class Entry {
                     throw new RuntimeException("Missing member: xs");
                 }
 
-                str = SeqUtil.conc(Utils.clone(str), SeqUtil.seq(apply_1));
+                str = SeqUtil.conc(Utils.copy(str), SeqUtil.seq(apply_1));
             }
 
-            return Utils.clone(str);
+            return Utils.copy(str);
         }
     }
 

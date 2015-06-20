@@ -1,0 +1,40 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+state St of
+  x : int
+init s == s = mk_St(5)
+inv s == s.x > 0
+end
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  opAtomic();
+  IO`println("Before breaking state invariant");
+  op();
+  IO`println("After breaking state invariant");
+  return x;
+);
+  
+opAtomic : () ==> ()
+opAtomic () ==
+atomic
+(
+  x := -1;
+  x := 1;
+);
+
+op : () ==> ()
+op () ==
+(
+  x := -10;
+  x := 10;
+);
+
+end Entry

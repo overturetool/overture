@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public A() {
     }
@@ -23,7 +24,7 @@ public class A {
             a = ((Number) tuplePattern_1.get(0));
             b = ((Number) tuplePattern_1.get(1));
 
-            Tuple tuplePattern_2 = Utils.clone(((Tuple) tuplePattern_1.get(2)));
+            Tuple tuplePattern_2 = Utils.copy(((Tuple) tuplePattern_1.get(2)));
             success_1 = tuplePattern_2.compatible(Number.class, Number.class,
                     Tuple.class);
 
@@ -31,8 +32,7 @@ public class A {
                 c = ((Number) tuplePattern_2.get(0));
                 d = ((Number) tuplePattern_2.get(1));
 
-                Tuple tuplePattern_3 = Utils.clone(((Tuple) tuplePattern_2.get(
-                            2)));
+                Tuple tuplePattern_3 = Utils.copy(((Tuple) tuplePattern_2.get(2)));
                 success_1 = tuplePattern_3.compatible(Number.class, Number.class);
 
                 if (success_1) {
@@ -61,6 +61,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }

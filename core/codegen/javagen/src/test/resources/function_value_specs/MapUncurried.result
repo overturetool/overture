@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -15,7 +16,7 @@ public class Entry {
                 }
             };
 
-        return seq_map(Utils.clone(xs), func);
+        return seq_map(Utils.copy(xs), func);
     }
 
     private static <A, B> VDMSeq seq_map(final VDMSeq s, final Func_1<A, B> f) {
@@ -23,7 +24,7 @@ public class Entry {
             return SeqUtil.seq();
         } else {
             return SeqUtil.conc(SeqUtil.seq(f.eval(((A) s.get(0)))),
-                seq_map(SeqUtil.tail(Utils.clone(s)), f));
+                seq_map(SeqUtil.tail(Utils.copy(s)), f));
         }
     }
 

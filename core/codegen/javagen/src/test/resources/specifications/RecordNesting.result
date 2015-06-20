@@ -3,9 +3,10 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     private static final R3 x = new R3(1L, new R2(new R1(2L)));
-    private static final R3 y = Utils.clone(x);
+    private static final R3 y = Utils.copy(x);
 
     public A() {
     }
@@ -36,7 +37,7 @@ public class A {
             return Utils.hashCode(x);
         }
 
-        public R1 clone() {
+        public R1 copy() {
             return new R1(x);
         }
 
@@ -49,7 +50,7 @@ public class A {
         public R1 r;
 
         public R2(final R1 _r) {
-            r = (_r != null) ? Utils.clone(_r) : null;
+            r = (_r != null) ? Utils.copy(_r) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -66,7 +67,7 @@ public class A {
             return Utils.hashCode(r);
         }
 
-        public R2 clone() {
+        public R2 copy() {
             return new R2(r);
         }
 
@@ -81,7 +82,7 @@ public class A {
 
         public R3(final Number _x, final R2 _r) {
             x = _x;
-            r = (_r != null) ? Utils.clone(_r) : null;
+            r = (_r != null) ? Utils.copy(_r) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -98,7 +99,7 @@ public class A {
             return Utils.hashCode(x, r);
         }
 
-        public R3 clone() {
+        public R3 copy() {
             return new R3(x, r);
         }
 

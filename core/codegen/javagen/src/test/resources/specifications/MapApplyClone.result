@@ -3,8 +3,9 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
-    private static final Tuple a = Utils.clone(((Tuple) Utils.get(op(),
+    private static final Tuple a = Utils.copy(((Tuple) Utils.get(op(),
                 Tuple.mk_(1L, true))));
 
     public A() {

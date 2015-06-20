@@ -13,6 +13,8 @@
 <message column="1" line="534" message="Recursive function has no measure" messageType="warning" number="5012" resource="pacemakerSL"/>
 <message column="16" line="659" message="Definition 'inp' not used" messageType="warning" number="5000" resource="pacemakerSL"/>
 <message column="13" line="785" message="t at 782:13 hidden by t" messageType="warning" number="5008" resource="pacemakerSL"/>
+<message column="1" line="485" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL"/>
+<message column="1" line="487" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL"/>
 <message column="1" line="73" message="Definition 'Pacemaker' not used" messageType="warning" number="5000" resource="pacemakerSL"/>
 <message column="1" line="163" message="Definition 'ARP' not used" messageType="warning" number="5000" resource="pacemakerSL"/>
 <message column="1" line="174" message="Definition 'Time' not used" messageType="warning" number="5000" resource="pacemakerSL"/>

@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public A() {
     }
@@ -34,7 +35,7 @@ public class A {
             return Utils.hashCode(x, y);
         }
 
-        public Vector2D clone() {
+        public Vector2D copy() {
             return new Vector2D(x, y);
         }
 
@@ -64,7 +65,7 @@ public class A {
             return Utils.hashCode(r);
         }
 
-        public Real clone() {
+        public Real copy() {
             return new Real(r);
         }
 

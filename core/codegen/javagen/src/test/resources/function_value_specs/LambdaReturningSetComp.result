@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -16,11 +17,11 @@ public class Entry {
                     for (Iterator iterator_1 = set_1.iterator();
                             iterator_1.hasNext();) {
                         Number z = ((Number) iterator_1.next());
-                        setCompResult_1 = SetUtil.union(Utils.clone(
+                        setCompResult_1 = SetUtil.union(Utils.copy(
                                     setCompResult_1), SetUtil.set(z));
                     }
 
-                    return Utils.clone(setCompResult_1);
+                    return Utils.copy(setCompResult_1);
                 }
             };
 

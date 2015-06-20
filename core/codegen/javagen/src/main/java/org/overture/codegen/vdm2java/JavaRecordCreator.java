@@ -22,6 +22,7 @@
 package org.overture.codegen.vdm2java;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
@@ -36,7 +37,6 @@ import org.overture.codegen.cgast.expressions.AExternalExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
@@ -60,7 +60,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		this.javaFormat = javaFormat;
 	}
 	
-	public void formatRecordConstructor(ARecordDeclCG record)
+	public AMethodDeclCG genRecConstructor(ARecordDeclCG record)
 			throws AnalysisException
 	{
 		// Since Java does not have records but the OO AST does a record is generated as a Java class.
@@ -114,7 +114,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 				checkedAssignment.setType(new ABoolBasicTypeCG());
 				checkedAssignment.setCondition(javaFormat.getJavaFormatAssistant().consParamNotNullComp(varExp));
 				checkedAssignment.setTrueValue(varExp);
-				checkedAssignment.setFalseValue(new ANullExpCG());
+				checkedAssignment.setFalseValue(javaFormat.getIrInfo().getExpAssistant().consNullExp());
 				assignment.setExp(checkedAssignment);
 			} else
 			{
@@ -124,10 +124,10 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 			bodyStms.add(assignment);
 		}
 
-		record.getMethods().add(constructor);
+		return constructor;
 	}
 
-	public void generateCloneMethod(ARecordDeclCG record)
+	public AMethodDeclCG genCopyMethod(ARecordDeclCG record)
 			throws AnalysisException
 	{
 
@@ -142,14 +142,14 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(returnType);
 
-		AMethodDeclCG method = consCloneSignature(methodType);
+		AMethodDeclCG method = consCopySignature(methodType);
 
 		ANewExpCG newExp = new ANewExpCG();
 		newExp.setType(returnType.clone());
 		newExp.setName(typeName.clone());
-		LinkedList<SExpCG> args = newExp.getArgs();
+		List<SExpCG> args = newExp.getArgs();
 
-		LinkedList<AFieldDeclCG> fields = record.getFields();
+		List<AFieldDeclCG> fields = record.getFields();
 		for (AFieldDeclCG field : fields)
 		{
 			String name = field.getName();
@@ -166,10 +166,10 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		body.setExp(newExp);
 		method.setBody(body);
 
-		record.getMethods().add(method);
+		return method;
 	}
 
-	public void generateEqualsMethod(ARecordDeclCG record)
+	public AMethodDeclCG genEqualsMethod(ARecordDeclCG record)
 			throws AnalysisException
 	{
 		String paramName = "obj";
@@ -229,10 +229,10 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 
 		equalsMethod.setBody(equalsMethodBody);
 
-		record.getMethods().add(equalsMethod);
+		return equalsMethod;
 	}
 
-	public void generateHashcodeMethod(ARecordDeclCG record)
+	public AMethodDeclCG genHashcodeMethod(ARecordDeclCG record)
 			throws AnalysisException
 	{
 		AMethodDeclCG hashcodeMethod = consHashcodeMethodSignature();
@@ -252,10 +252,10 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 
 		hashcodeMethod.setBody(returnStm);
 
-		record.getMethods().add(hashcodeMethod);
+		return hashcodeMethod;
 	}
 
-	public void generateToStringMethod(ARecordDeclCG record)
+	public AMethodDeclCG genToStringMethod(ARecordDeclCG record)
 			throws AnalysisException
 	{
 		AMethodDeclCG toStringMethod = consToStringSignature();
@@ -298,6 +298,6 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 
 		toStringMethod.setBody(returnStm);
 
-		record.getMethods().add(toStringMethod);
+		return toStringMethod;
 	}
 }
