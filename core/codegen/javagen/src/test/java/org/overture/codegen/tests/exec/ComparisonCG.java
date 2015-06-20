@@ -65,17 +65,25 @@ public class ComparisonCG
 		}
 	}
 
-	public boolean compare(Object cgValue, Object vdmResult)
+	public boolean compare(Object cgResult, Object vdmResult)
 	{
+		// If the VDM result is a String then it must be an error message
+		if(vdmResult instanceof String)
+		{
+			String vdmError = vdmResult.toString();
+			String cgError = cgResult.toString();
+			
+			return vdmError.toLowerCase().contains("error") && vdmError.contains(cgError);
+		}
 		
 		if(!(vdmResult instanceof Value))
 		{
-			if(vdmResult instanceof List && cgValue instanceof List)
+			if(vdmResult instanceof List && cgResult instanceof List)
 			{
 				@SuppressWarnings("rawtypes")
 				List vdmList = (List) vdmResult;
 				@SuppressWarnings("rawtypes")
-				List cgList = (List) cgValue;
+				List cgList = (List) cgResult;
 				
 				if(vdmList.size() != cgList.size())
 				{
@@ -142,46 +150,46 @@ public class ComparisonCG
 
 		if (vdmValue instanceof BooleanValue)
 		{
-			return handleBoolean(cgValue, vdmValue);
+			return handleBoolean(cgResult, vdmValue);
 		} else if (vdmValue instanceof CharacterValue)
 		{
-			return handleCharacter(cgValue, vdmValue);
+			return handleCharacter(cgResult, vdmValue);
 		} else if (vdmValue instanceof MapValue)
 		{
-			return handleMap(cgValue, vdmValue);
+			return handleMap(cgResult, vdmValue);
 		} else if (vdmValue instanceof QuoteValue)
 		{
-			return handleQuote(cgValue, vdmValue);
+			return handleQuote(cgResult, vdmValue);
 		} else if (vdmValue instanceof NumericValue)
 		{
-			return handleNumber(cgValue, vdmValue);
+			return handleNumber(cgResult, vdmValue);
 		} else if (vdmValue instanceof SeqValue)
 		{
-			if (cgValue instanceof String)
+			if (cgResult instanceof String)
 			{
-				return handleString(cgValue, vdmValue);
+				return handleString(cgResult, vdmValue);
 			} else
 			{
-				return handleSeq(cgValue, vdmValue);
+				return handleSeq(cgResult, vdmValue);
 			}
 		} else if (vdmValue instanceof SetValue)
 		{
-			return handleSet(cgValue, vdmValue);
+			return handleSet(cgResult, vdmValue);
 		} else if (vdmValue instanceof TupleValue)
 		{
-			return handleTuple(cgValue, vdmValue);
+			return handleTuple(cgResult, vdmValue);
 		} else if (vdmValue instanceof TokenValue)
 		{
-			return handleToken(cgValue, vdmValue);
+			return handleToken(cgResult, vdmValue);
 		} else if (vdmValue instanceof NilValue)
 		{
-			return cgValue == null;
+			return cgResult == null;
 		} else if (vdmValue instanceof ObjectValue)
 		{
-			return handleObject(cgValue, vdmValue);
+			return handleObject(cgResult, vdmValue);
 		} else if (vdmValue instanceof RecordValue)
 		{
-			return handleRecord(cgValue, vdmValue);
+			return handleRecord(cgResult, vdmValue);
 		}
 
 		return false;
