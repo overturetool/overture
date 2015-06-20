@@ -23,7 +23,6 @@
 
 package org.overture.codegen.runtime.traces;
 
-import java.util.Arrays;
 
 public class Permutor
 {
