@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overturetool.cgisa.checkers;
+package org.overturetool.cgisa.utils;
 
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
