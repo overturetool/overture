@@ -62,7 +62,7 @@ public class AdHoc
 		
 		for (GeneratedModule generatedClass : result)
 		{
-			Logger.getLog().println("**********");
+			Logger.getLog().println("(**********)");
 
 			if (generatedClass.hasMergeErrors())
 			{

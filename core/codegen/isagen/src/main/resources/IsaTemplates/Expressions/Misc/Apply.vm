@@ -2,6 +2,8 @@
 #set( $args = $Isa.transApplyParams($node.Args))
 #if ($Isa.isFunc($node.Root.Type) ) 
 ${root}(${args})##
+#elseif ($Isa.isRec($node))
+${root}[${args}]##
 #else 
 $root<$args>##
 #end

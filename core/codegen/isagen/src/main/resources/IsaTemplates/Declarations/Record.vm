@@ -10,7 +10,7 @@ end
 
 abbreviation"maxty_$node.Name \<equiv> RecMaximalType \<parallel>$Isa.rec2Tuple($node)\<parallel> TYPE($tyTag)"
 #foreach( $fld in $node.Fields )
-abbreviation"${fld.Name}_fld \<equiv> MkField maxty_${node.Name}#[$velocityCount]\<parallel>$Isa.trans($fld.Type)\<parallel>"
+abbreviation"${fld.Name}_fld \<equiv> MkField maxty_${node.Name}#[$velocityCount]\<parallel>$Isa.hackTypeName($fld)\<parallel>"
 abbreviation"$fld.Name \<equiv> SelectRec ${fld.Name}_fld"
 #end
 
