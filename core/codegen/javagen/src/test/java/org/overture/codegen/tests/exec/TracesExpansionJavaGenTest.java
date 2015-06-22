@@ -16,9 +16,9 @@ public class TracesExpansionJavaGenTest extends CommonJavaGenCheckerTest
 {
 
 	public TracesExpansionJavaGenTest(String name,File vdmSpec, File javaGeneratedFiles,
-			TestHandler testHandler, boolean printInput, String rootPackage)
+			TestHandler testHandler, String rootPackage)
 	{
-		super(vdmSpec, javaGeneratedFiles, testHandler, printInput, rootPackage);
+		super(vdmSpec, javaGeneratedFiles, testHandler, rootPackage);
 	}
 
 	@Parameters(name = "{0}")

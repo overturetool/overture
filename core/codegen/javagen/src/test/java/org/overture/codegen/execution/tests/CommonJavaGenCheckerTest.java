@@ -35,10 +35,9 @@ import org.overture.test.framework.results.Result;
 
 public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 {
-	TestHandler testHandler;
-	File javaGeneratedFile;
-	boolean printInput;
-	String rootPackage;
+	private TestHandler testHandler;
+	private File javaGeneratedFile;
+	private String rootPackage;
 	
 	protected static Collection<Object[]> collectTests(File root,
 			TestHandler handler)
@@ -65,19 +64,18 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 			String name = vdmSource.getAbsolutePath().substring(root.getAbsolutePath().length() + 1);
 
 			tests.add(new Object[] { name, vdmSource, generatedJavaDataFile,
-					handler, true, null });
+					handler, null });
 		}
 
 		return tests;
 	}
 
 	public CommonJavaGenCheckerTest(File vdmSpec, File javaGeneratedFiles,
-			TestHandler testHandler, boolean printInput, String rootPackage)
+			TestHandler testHandler, String rootPackage)
 	{
 		super(vdmSpec, null, null);
 		this.testHandler = testHandler;
 		this.javaGeneratedFile = javaGeneratedFiles;
-		this.printInput = printInput;
 		this.rootPackage = rootPackage;
 	}
 

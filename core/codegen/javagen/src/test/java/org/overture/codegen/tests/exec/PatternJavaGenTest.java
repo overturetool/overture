@@ -16,10 +16,9 @@ public class PatternJavaGenTest extends CommonJavaGenCheckerTest
 {
 
 	public PatternJavaGenTest(String name, File vdmSpec,
-			File javaGeneratedFiles, TestHandler testHandler,
-			boolean printInput, String rootPackage)
+			File javaGeneratedFiles, TestHandler testHandler, String rootPackage)
 	{
-		super(vdmSpec, javaGeneratedFiles, testHandler, printInput, rootPackage);
+		super(vdmSpec, javaGeneratedFiles, testHandler, rootPackage);
 	}
 
 	@Parameters(name = "{0}")

@@ -17,9 +17,9 @@ public class PackageJavaGenTest extends CommonJavaGenCheckerTest
 	private static final String JAVA_ROOT_PACKAGE = "my.model";
 	
 	public PackageJavaGenTest(String name,File vdmSpec, File javaGeneratedFiles,
-			TestHandler testHandler, boolean printInput, String rootPackage)
+			TestHandler testHandler, String rootPackage)
 	{
-		super(vdmSpec, javaGeneratedFiles, testHandler, printInput, JAVA_ROOT_PACKAGE);
+		super(vdmSpec, javaGeneratedFiles, testHandler, JAVA_ROOT_PACKAGE);
 	}
 
 	@Parameters(name = "{0}")
