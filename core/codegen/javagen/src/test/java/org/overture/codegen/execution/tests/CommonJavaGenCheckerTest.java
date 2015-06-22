@@ -26,7 +26,6 @@ import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.ContextException;
-import org.overture.interpreter.values.Value;
 import org.overture.test.framework.ConditionalIgnoreMethodRule;
 import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
 import org.overture.test.framework.Properties;
@@ -38,13 +37,22 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 	private TestHandler testHandler;
 	private File javaGeneratedFile;
 	private String rootPackage;
+	private File outputDir;
+	
+	public CommonJavaGenCheckerTest(File vdmSpec, File javaGeneratedFiles,
+			TestHandler testHandler, String rootPackage)
+	{
+		super(vdmSpec, null, null);
+		this.testHandler = testHandler;
+		this.javaGeneratedFile = javaGeneratedFiles;
+		this.rootPackage = rootPackage;
+	}
 	
 	protected static Collection<Object[]> collectTests(File root,
 			TestHandler handler)
 	{
 		Collection<Object[]> tests = new Vector<Object[]>();
 
-		// File root = new File(ExpressionTest.ROOT);
 		List<File> vdmSources = TestUtils.getTestInputFiles(root);
 
 		final int testCount = vdmSources.size();
@@ -68,15 +76,6 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		}
 
 		return tests;
-	}
-
-	public CommonJavaGenCheckerTest(File vdmSpec, File javaGeneratedFiles,
-			TestHandler testHandler, String rootPackage)
-	{
-		super(vdmSpec, null, null);
-		this.testHandler = testHandler;
-		this.javaGeneratedFile = javaGeneratedFiles;
-		this.rootPackage = rootPackage;
 	}
 
 	@Before
@@ -111,8 +110,6 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		}
 	}
 
-	File outputDir;
-
 	protected void generateJavaSources(File vdmSource)
 	{
 		try
@@ -120,7 +117,7 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 			restoreGeneratedJavaCode();
 		} catch (IOException e1)
 		{
-			// TODO Auto-generated catch block
+			Assert.fail("Could not restore generated Java sources");
 			e1.printStackTrace();
 		}
 
@@ -173,7 +170,6 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		if (testHandler instanceof ExecutableTestHandler)
 		{
 			ExecutableTestHandler executableTestHandler = (ExecutableTestHandler) testHandler;
-			// Properties.recordTestResults=true;
 			if (Properties.recordTestResults)
 			{
 				Object vdmResult = evalVdm(file, executableTestHandler);
@@ -183,12 +179,12 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 			// Note that the classes returned in javaResult may be loaded by another class loader. This is the case for
 			// classes representing VDM classes, Quotes etc. that's not part of the cg-runtime
 			ExecutionResult javaResult = executableTestHandler.runJava(outputDir);
-			// System.out.println(" + java: "+(System.currentTimeMillis()-s));
 
 			if (javaResult == null)
 			{
-				Assert.fail("no java result");
+				Assert.fail("No Java result");
 			}
+			
 			return new Result<Object>(javaResult, new Vector<IMessage>(), new Vector<IMessage>());
 
 		}
@@ -224,7 +220,7 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 	 * 
 	 * @param currentInputFile
 	 * @param executableTestHandler
-	 * @return
+	 * @return the result of the VDM execution
 	 */
 	private Object evalVdm(File currentInputFile,
 			ExecutableTestHandler executableTestHandler)
@@ -244,12 +240,14 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 			vdmResult = res.getExecutionResult();
 		} catch (ContextException ce1)
 		{
+			// Context exceptions are used to report the result of erroneous VDM executions
 			vdmResult = ce1.getMessage();
 		} catch (Exception e1)
 		{
 			e1.printStackTrace();
-			Assert.fail();
+			Assert.fail("Got unexpected exception when computing the VDM value");
 		}
+		
 		return vdmResult;
 	}
 
@@ -271,5 +269,4 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 
 		return equal;
 	}
-
 }
