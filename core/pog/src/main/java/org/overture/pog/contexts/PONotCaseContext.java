@@ -33,6 +33,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.ContextHelper;
@@ -57,6 +58,7 @@ public class PONotCaseContext extends POContext
 	public PExp getContextNode(PExp stitch)
 	{
 		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(getCaseExp(), stitch);
+		impliesExp.setType(new ABooleanBasicType());
 		return impliesExp;
 	}
 

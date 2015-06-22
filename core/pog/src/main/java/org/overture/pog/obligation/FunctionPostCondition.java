@@ -36,6 +36,7 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -137,6 +138,7 @@ public class FunctionPostCondition extends ProofObligation
 		{
 			// pre(params) =>
 			AApplyExp applyExp = new AApplyExp();
+			applyExp.setType(new ABooleanBasicType());
 			applyExp.setArgs(cloneListPExp(params));
 			AVariableExp varExp = getVarExp(predef.getName().clone());
 			applyExp.setRoot(varExp);

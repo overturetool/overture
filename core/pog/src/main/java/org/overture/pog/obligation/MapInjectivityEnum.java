@@ -36,6 +36,7 @@ import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -85,7 +86,8 @@ public class MapInjectivityEnum extends ProofObligation
 		domM2.setExp(getVarExp(m2));
 
 		AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getEqualsExp(getVarExp(d1), getVarExp(d2)), getEqualsExp(getApplyExp(getVarExp(m1), getVarExp(d1)), getApplyExp(getVarExp(m2), getVarExp(d2))));
-
+		implies.setType(new ABooleanBasicType());
+		
 		List<PMultipleBind> domBinding = getMultipleSetBindList(domM1, d1);
 		domBinding.addAll(getMultipleSetBindList(domM2, d2));
 

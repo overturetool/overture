@@ -31,6 +31,7 @@ import java.util.Vector;
 import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -121,7 +122,7 @@ public class AExplicitFunctionDefinitionAssistantTC implements IAstAssistant
 	}
 
 	public List<List<PDefinition>> getParamDefinitions(
-			AExplicitFunctionDefinition node, AFunctionType type,
+			SFunctionDefinition node, AFunctionType type,
 			List<List<PPattern>> paramPatternList, ILexLocation location)
 	{
 		List<List<PDefinition>> defList = new ArrayList<List<PDefinition>>(); // new Vector<DefinitionList>();

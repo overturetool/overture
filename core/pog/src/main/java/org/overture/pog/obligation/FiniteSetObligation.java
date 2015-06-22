@@ -36,6 +36,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ASetType;
@@ -104,6 +105,7 @@ public class FiniteSetObligation extends ProofObligation
 		} else
 		{
 			AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(exp.getPredicate().clone(), getImpliesExists(exp.clone(), finmap, findex));
+			implies.setType(new ABooleanBasicType());
 			return implies;
 		}
 	}
@@ -117,6 +119,7 @@ public class FiniteSetObligation extends ProofObligation
 		AExistsExp exists = new AExistsExp();
 
 		AMapDomainUnaryExp domExp = new AMapDomainUnaryExp();
+		domExp.setType(new ABooleanBasicType());
 		domExp.setExp(getVarExp(finmap));
 		List<PMultipleBind> bindList = getMultipleSetBindList(domExp, findex);
 		exists.setBindList(bindList);

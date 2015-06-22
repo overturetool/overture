@@ -46,6 +46,7 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
@@ -174,6 +175,7 @@ public class ParameterPatternObligation extends ProofObligation
 		if (predef != null)
 		{
 			AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getApplyExp(getVarExp(predef.getName().clone()), arglist), forallPredicate);
+			implies.setType(new ABooleanBasicType());
 			forallExp.setPredicate(implies);
 		} else
 		{

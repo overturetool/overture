@@ -37,6 +37,7 @@ import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -68,7 +69,8 @@ public class FuncIterationObligation extends ProofObligation
 
 		// n > 1 => forall n :T & P(X)
 		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(gTExp, forAllExp);
-
+		impliesExp.setType(new ABooleanBasicType());
+		
 		stitch = impliesExp.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(impliesExp));
 	}
@@ -87,7 +89,8 @@ public class FuncIterationObligation extends ProofObligation
 
 		// pre_f(a) => pre_f(f(a))
 		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(pre_exp, preleft_exp);
-
+		impliesExp.setType(new ABooleanBasicType());
+		
 		return impliesExp;
 
 	}
