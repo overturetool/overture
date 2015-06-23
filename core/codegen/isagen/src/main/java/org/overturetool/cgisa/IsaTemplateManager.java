@@ -119,16 +119,16 @@ public class IsaTemplateManager extends TemplateManager
 				+ MISC_EXP_PATH + File.separatorChar + EXPLICIT_VAR);
 
 		nodeTemplateFileNames.put(ANamedTypeDeclCG.class, templateStructure.DECL_PATH
-				+ File.separatorChar + NAMED_TYPE);
+				+ NAMED_TYPE);
 
 		nodeTemplateFileNames.put(ASetSetTypeCG.class, templateStructure.TYPE_PATH
-				+ File.separatorChar + SET_TYPE);
+				+ SET_TYPE);
 
 		nodeTemplateFileNames.put(ASeqSeqTypeCG.class, templateStructure.TYPE_PATH
-				+ File.separatorChar + SEQ_TYPE);
+				+ SEQ_TYPE);
 
 		nodeTemplateFileNames.put(AMapMapTypeCG.class, templateStructure.TYPE_PATH
-				+ File.separatorChar +  MAP_TYPE);
+				+  MAP_TYPE);
 		
 		nodeTemplateFileNames.put(ANotImplementedExpCG.class, templateStructure.EXP_PATH
 				+ MISC_EXP_PATH + File.separatorChar + NOT_IMPL_EXP);
