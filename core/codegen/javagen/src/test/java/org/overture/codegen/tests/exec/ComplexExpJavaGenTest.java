@@ -14,11 +14,10 @@ import org.overture.config.Release;
 @RunWith(value = Parameterized.class)
 public class ComplexExpJavaGenTest extends CommonJavaGenCheckerTest
 {
-
-	public ComplexExpJavaGenTest(String name,File vdmSpec, File javaGeneratedFiles,
-			TestHandler testHandler, String rootPackage)
+	public ComplexExpJavaGenTest(String name, File vdmSpec,
+			TestHandler testHandler)
 	{
-		super(vdmSpec, javaGeneratedFiles, testHandler, rootPackage);
+		super(vdmSpec, testHandler);
 	}
 
 	@Parameters(name = "{0}")
@@ -32,5 +31,4 @@ public class ComplexExpJavaGenTest extends CommonJavaGenCheckerTest
 	{
 		return "complexexp";
 	}
-
 }

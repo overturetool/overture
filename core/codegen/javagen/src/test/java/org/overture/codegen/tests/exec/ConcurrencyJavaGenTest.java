@@ -15,10 +15,10 @@ import org.overture.config.Release;
 @RunWith(value = Parameterized.class)
 public class ConcurrencyJavaGenTest extends CommonJavaGenCheckerTest
 {
-	public ConcurrencyJavaGenTest(String name,File vdmSpec, File javaGeneratedFiles,
-			TestHandler testHandler, String rootPackage)
+	public ConcurrencyJavaGenTest(String name, File vdmSpec,
+			TestHandler testHandler)
 	{
-		super(vdmSpec, javaGeneratedFiles, testHandler, rootPackage);
+		super(vdmSpec, testHandler);
 	}
 
 	@Parameters(name = "{0}")

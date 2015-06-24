@@ -15,17 +15,16 @@ import org.overture.config.Release;
 @RunWith(value = Parameterized.class)
 public class TracesVerdictJavaGenTest extends CommonJavaGenCheckerTest
 {
-
-	public TracesVerdictJavaGenTest(String name,File vdmSpec, File javaGeneratedFiles,
-			TestHandler testHandler, String rootPackage)
+	public TracesVerdictJavaGenTest(String name, File vdmSpec,
+			TestHandler testHandler)
 	{
-		super(vdmSpec, javaGeneratedFiles, testHandler, rootPackage);
+		super(vdmSpec, testHandler);
 	}
 
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(TracesVerdictTest.ROOT),new TraceHandler(Release.VDM_10, Dialect.VDM_PP));
+		return collectTests(new File(TracesVerdictTest.ROOT), new TraceHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
 	@Override
@@ -35,14 +34,13 @@ public class TracesVerdictJavaGenTest extends CommonJavaGenCheckerTest
 		irSettings.setGenerateTraces(true);
 		irSettings.setGeneratePreCondChecks(true);
 		irSettings.setGeneratePreConds(true);
-		
+
 		return irSettings;
 	}
-	
+
 	@Override
 	protected String getPropertyId()
 	{
 		return "tracesverdict";
 	}
-
 }

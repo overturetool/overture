@@ -15,11 +15,10 @@ import org.overture.config.Release;
 @RunWith(value = Parameterized.class)
 public class ConfiguredStringJavaGenTest extends CommonJavaGenCheckerTest
 {
-
-	public ConfiguredStringJavaGenTest(String name,File vdmSpec, File javaGeneratedFiles,
-			TestHandler testHandler, String rootPackage)
+	public ConfiguredStringJavaGenTest(String name, File vdmSpec,
+			TestHandler testHandler)
 	{
-		super(vdmSpec, javaGeneratedFiles, testHandler, rootPackage);
+		super(vdmSpec, testHandler);
 	}
 
 	@Parameters(name = "{0}")
@@ -42,5 +41,4 @@ public class ConfiguredStringJavaGenTest extends CommonJavaGenCheckerTest
 	{
 		return "configured";
 	}
-
 }

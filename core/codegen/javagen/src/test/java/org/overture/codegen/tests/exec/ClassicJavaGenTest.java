@@ -15,11 +15,9 @@ import org.overture.config.Settings;
 @RunWith(value = Parameterized.class)
 public class ClassicJavaGenTest extends CommonJavaGenCheckerTest
 {
-
-	public ClassicJavaGenTest(String name,File vdmSpec, File javaGeneratedFiles,
-			TestHandler testHandler, String rootPackage)
+	public ClassicJavaGenTest(String name, File vdmSpec, TestHandler testHandler)
 	{
-		super(vdmSpec, javaGeneratedFiles, testHandler, rootPackage);
+		super(vdmSpec, testHandler);
 	}
 
 	@Parameters(name = "{0}")
@@ -40,5 +38,4 @@ public class ClassicJavaGenTest extends CommonJavaGenCheckerTest
 	{
 		return "classic";
 	}
-
 }
