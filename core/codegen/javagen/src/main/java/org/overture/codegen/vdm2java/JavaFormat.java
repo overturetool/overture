@@ -645,7 +645,7 @@ public class JavaFormat
 		if(interfaces.isEmpty())
 		{
 			// All classes must be declared Serializable when traces are being generated.
-			if(info.getSettings().generateTraces())
+			if(info.getSettings().generateTraces() || getJavaSettings().makeClassesSerializable())
 			{
 				return implementsClause + sep + java.io.Serializable.class.getName();
 			}
@@ -661,7 +661,7 @@ public class JavaFormat
 			sep = ", ";
 		}
 		
-		if(info.getSettings().generateTraces())
+		if(info.getSettings().generateTraces() || getJavaSettings().makeClassesSerializable())
 		{
 			implementsClause += sep + java.io.Serializable.class.getName();
 		}
