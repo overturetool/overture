@@ -30,7 +30,7 @@ import org.overture.config.Release;
 import org.overture.interpreter.util.InterpreterUtil;
 import org.overture.interpreter.values.Value;
 
-class ExpressionTestHandler extends ExecutableTestHandler
+public class ExpressionTestHandler extends ExecutableTestHandler
 {
 	public ExpressionTestHandler(Release release, Dialect dialect)
 	{
