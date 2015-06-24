@@ -29,8 +29,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -40,30 +38,8 @@ public class TestHandler
 	public static final String QUOTES_PACKAGE_NAME = "quotes";
 
 	protected File currentInputFile = null;
-	protected File currentResultFile = null;
-
-	private Release release;
-
-	private Dialect dialect;
-
-	public void setCurrentInputFile(File currentInputFile)
-	{
-		this.currentInputFile = currentInputFile;
-	}
-
-	public void setCurrentResultFile(File currentResultFile)
-	{
-		this.currentResultFile = currentResultFile;
-	}
 
 	public TestHandler(Release release, Dialect dialect)
-	{
-		this.release = release;
-		this.dialect = dialect;
-		initVdmEnv();
-	}
-
-	public void initVdmEnv()
 	{
 		Settings.release = release;
 		Settings.dialect = dialect;
@@ -88,33 +64,6 @@ public class TestHandler
 		}
 
 		return file;
-	}
-
-	public String readFromFile(File resultFile) throws IOException
-	{
-		return GeneralUtils.readFromFile(resultFile).replace('#', ' ');
-	}
-
-	protected File consTempFile(String className, File parent,
-			StringBuffer classCgStr) throws IOException
-	{
-		File outputDir = parent;
-
-		if (className.equals(IRConstants.QUOTES_INTERFACE_NAME))
-		{
-			outputDir = new File(parent, QUOTES_PACKAGE_NAME);
-			outputDir.mkdirs();
-		}
-
-		File tempFile = new File(outputDir, className
-				+ IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
-
-		if (!tempFile.exists())
-		{
-			tempFile.getParentFile().mkdirs();
-			tempFile.createNewFile();
-		}
-		return tempFile;
 	}
 	
 	@Override

@@ -22,7 +22,6 @@
 package org.overture.codegen.tests.exec;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.utils.GeneralUtils;
@@ -37,18 +36,9 @@ public class ExpressionTestHandler extends ExecutableTestHandler
 		super(release, dialect);
 	}
 
-	public void writeGeneratedCode(File parent, File resultFile, String rootPackage)
-			throws IOException
-	{
-		String generatedExpression = readFromFile(resultFile);
-		injectArgIntoMainClassFile(parent, generatedExpression);
-	}
-
 	@Override
 	public ExecutionResult interpretVdm(File intputFile) throws Exception
 	{
-		initVdmEnv();
-
 		String input = GeneralUtils.readFromFile(intputFile);
 
 		Value val = InterpreterUtil.interpret(input);

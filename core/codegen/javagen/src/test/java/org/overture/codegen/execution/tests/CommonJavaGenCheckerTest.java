@@ -76,8 +76,6 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
 
-		testHandler.initVdmEnv();
-
 		outputDir = new File(new File(new File("target"), getClass().getSimpleName()), file.getName());
 		outputDir.mkdirs();
 	}
