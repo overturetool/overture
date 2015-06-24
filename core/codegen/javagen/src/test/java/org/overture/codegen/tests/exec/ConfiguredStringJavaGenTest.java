@@ -8,6 +8,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
+import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.tests.ConfiguredStringGenerationTest;
 import org.overture.config.Release;
 
@@ -27,6 +28,15 @@ public class ConfiguredStringJavaGenTest extends CommonJavaGenCheckerTest
 		return collectTests(new File(ConfiguredStringGenerationTest.ROOT),new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
+	@Override
+	public IRSettings getIrSettings()
+	{
+		IRSettings settings = new IRSettings();
+		settings.setCharSeqAsString(true);
+
+		return settings;
+	}
+	
 	@Override
 	protected String getPropertyId()
 	{

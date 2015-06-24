@@ -8,6 +8,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
+import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.tests.TracesVerdictTest;
 import org.overture.config.Release;
 
@@ -27,6 +28,17 @@ public class TracesVerdictJavaGenTest extends CommonJavaGenCheckerTest
 		return collectTests(new File(TracesVerdictTest.ROOT),new TraceHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
+	@Override
+	public IRSettings getIrSettings()
+	{
+		IRSettings irSettings = super.getIrSettings();
+		irSettings.setGenerateTraces(true);
+		irSettings.setGeneratePreCondChecks(true);
+		irSettings.setGeneratePreConds(true);
+		
+		return irSettings;
+	}
+	
 	@Override
 	protected String getPropertyId()
 	{

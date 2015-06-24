@@ -10,6 +10,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
 import org.overture.codegen.tests.ClassicSpecTest;
 import org.overture.config.Release;
+import org.overture.config.Settings;
 
 @RunWith(value = Parameterized.class)
 public class ClassicJavaGenTest extends CommonJavaGenCheckerTest
@@ -25,6 +26,13 @@ public class ClassicJavaGenTest extends CommonJavaGenCheckerTest
 	public static Collection<Object[]> getData()
 	{
 		return collectTests(new File(ClassicSpecTest.ROOT),new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
+	}
+	
+	@Override
+	public void setUp() throws Exception
+	{
+		super.setUp();
+		Settings.release = Release.CLASSIC;
 	}
 
 	@Override

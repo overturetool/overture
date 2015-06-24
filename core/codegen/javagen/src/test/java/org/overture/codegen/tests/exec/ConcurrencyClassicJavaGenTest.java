@@ -8,8 +8,10 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
+import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.tests.ConcurrencyClassicSpecTests;
 import org.overture.config.Release;
+import org.overture.config.Settings;
 
 @RunWith(value = Parameterized.class)
 public class ConcurrencyClassicJavaGenTest extends CommonJavaGenCheckerTest
@@ -27,6 +29,23 @@ public class ConcurrencyClassicJavaGenTest extends CommonJavaGenCheckerTest
 		return collectTests(new File(ConcurrencyClassicSpecTests.ROOT),new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
 	}
 
+	@Override
+	public void setUp() throws Exception
+	{
+		super.setUp();
+		Settings.release = Release.CLASSIC;
+	}
+	
+	@Override
+	public IRSettings getIrSettings()
+	{
+		IRSettings irSettings = new IRSettings();
+		irSettings.setGenerateConc(true);
+		irSettings.setCharSeqAsString(true);
+		
+		return irSettings;
+	}
+	
 	@Override
 	protected String getPropertyId()
 	{

@@ -8,6 +8,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
+import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.tests.TracesExpansionTest;
 import org.overture.config.Release;
 
@@ -25,6 +26,15 @@ public class TracesExpansionJavaGenTest extends CommonJavaGenCheckerTest
 	public static Collection<Object[]> getData()
 	{
 		return collectTests(new File(TracesExpansionTest.ROOT),new TraceHandler(Release.VDM_10, Dialect.VDM_PP));
+	}
+	
+	@Override
+	public IRSettings getIrSettings()
+	{
+		IRSettings irSettings = super.getIrSettings();
+		irSettings.setGenerateTraces(true);
+		
+		return irSettings;
 	}
 
 	@Override
