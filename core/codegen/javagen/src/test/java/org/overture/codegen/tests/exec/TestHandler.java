@@ -35,7 +35,7 @@ import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
-public abstract class TestHandler
+public class TestHandler
 {
 	public static final String QUOTES_PACKAGE_NAME = "quotes";
 
@@ -68,9 +68,6 @@ public abstract class TestHandler
 		Settings.release = release;
 		Settings.dialect = dialect;
 	}
-
-	public abstract void writeGeneratedCode(File parent, File resultFile,
-			String rootPackage) throws IOException;
 
 	public void writeToFile(String toWrite, File file) throws IOException
 	{

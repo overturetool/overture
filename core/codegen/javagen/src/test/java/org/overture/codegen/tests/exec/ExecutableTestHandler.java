@@ -37,6 +37,7 @@ import org.overture.config.Release;
 
 public abstract class ExecutableTestHandler extends TestHandler
 {
+	private final static Random rand = new Random(100);
 	public static final String MAIN_CLASS = "Exp";
 
 	public static final String SERIALIZE_METHOD = "  public static void serialize(File file){\n"
@@ -85,7 +86,6 @@ public abstract class ExecutableTestHandler extends TestHandler
 				+ SERIALIZE_METHOD + methodsMerged + "}\n";
 	}
 
-	final static Random rand = new Random(100);
 
 	public ExecutableTestHandler(Release release, Dialect dialect)
 	{

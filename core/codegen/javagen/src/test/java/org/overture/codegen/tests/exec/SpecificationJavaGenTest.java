@@ -23,7 +23,7 @@ public class SpecificationJavaGenTest extends CommonJavaGenCheckerTest
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(SpecificationTest.ROOT), new NonExecutableSpecTestHandler(Release.VDM_10,Dialect.VDM_PP));
+		return collectTests(new File(SpecificationTest.ROOT), new TestHandler(Release.VDM_10,Dialect.VDM_PP));
 	}
 
 	@Override
