@@ -39,12 +39,22 @@ public class TestHandler
 
 	protected File currentInputFile = null;
 
+	private Release release;
+	private Dialect dialect;
+	
 	public TestHandler(Release release, Dialect dialect)
+	{
+		this.release = release;
+		this.dialect = dialect;
+		initVdmEnv();
+	}
+
+	public void initVdmEnv()
 	{
 		Settings.release = release;
 		Settings.dialect = dialect;
 	}
-
+	
 	public void writeToFile(String toWrite, File file) throws IOException
 	{
 		PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8"));

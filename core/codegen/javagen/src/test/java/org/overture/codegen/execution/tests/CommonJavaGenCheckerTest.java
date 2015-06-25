@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.lex.Dialect;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.tests.exec.ComparisonCG;
@@ -30,7 +29,6 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
-import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.test.framework.ConditionalIgnoreMethodRule;
@@ -73,9 +71,6 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 	@Before
 	public void setUp() throws Exception
 	{
-		Settings.dialect = Dialect.VDM_PP;
-		Settings.release = Release.VDM_10;
-
 		outputDir = new File(new File(new File("target"), getClass().getSimpleName()), file.getName());
 		outputDir.mkdirs();
 	}

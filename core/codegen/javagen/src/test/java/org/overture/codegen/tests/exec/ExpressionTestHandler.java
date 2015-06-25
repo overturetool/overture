@@ -39,6 +39,8 @@ public class ExpressionTestHandler extends ExecutableTestHandler
 	@Override
 	public ExecutionResult interpretVdm(File intputFile) throws Exception
 	{
+		initVdmEnv();
+		
 		String input = GeneralUtils.readFromFile(intputFile);
 
 		Value val = InterpreterUtil.interpret(input);
