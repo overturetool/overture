@@ -16,7 +16,7 @@ public class TestCoverageGenerateTestCases extends BaseTestCase{
 	public void test() throws Exception {
 		Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_PP;
-        InterpreterUtil.interpret(Dialect.VDM_PP, "new Test().Run(2,3,4)", new File("src/test/resources/coverage/test_operators2.vdmpp".replace('/', File.separatorChar)), true);
+        InterpreterUtil.interpret(Dialect.VDM_PP, "new Test().Run(3,2)", new File("src/test/resources/coverage/test_operators2.vdmpp".replace('/', File.separatorChar)), true);
         
         Interpreter interpreter = Interpreter.getInstance();
         File coverageFolder = new File("src/test/target/vdmpp-coverage/operators".replace('/', File.separatorChar));

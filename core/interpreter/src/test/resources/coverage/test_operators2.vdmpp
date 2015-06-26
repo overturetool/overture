@@ -2,12 +2,11 @@ class Test
 
 operations
 
-public Run : int * int * int ==> int
-Run(a,b,c) == if a>b and a>c and c>b
-              	then return a
-              elseif b>a and b>c
-              	then return b
-              else return c;
-
+public Run : int * int ==> int
+Run(a,b) == if a>b
+				then return if a>b
+								then 1
+              					else 0
+              	else return 1
 
 end Test

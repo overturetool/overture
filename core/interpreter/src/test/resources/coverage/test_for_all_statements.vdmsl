@@ -1,0 +1,9 @@
+values
+
+nums = {1,2,3,4,5,6}
+
+functions
+
+TestForAllStm : () +> bool
+TestForAllStm () ==
+    forall x in set nums & x <> 4 =>  true;

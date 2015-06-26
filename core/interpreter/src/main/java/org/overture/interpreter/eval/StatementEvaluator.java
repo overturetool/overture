@@ -88,8 +88,6 @@ import org.overture.parser.config.Properties;
 
 public class StatementEvaluator extends DelegateExpressionEvaluator
 {
-    public CoverageToXML ctx;
-
 	@Override
 	public Value caseAAlwaysStm(AAlwaysStm node, Context ctxt)
 			throws AnalysisException
@@ -503,9 +501,11 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		try
-		{
+		{System.out.println("->>>AQUI!");
+			
 			ctx.setContext(ctxt);
 			node.apply(ctx);
+			boolean first=true;
 			ValueSet values = node.getSet().apply(VdmRuntime.getStatementEvaluator(), ctxt).setValue(ctxt);
 
 			for (Value val : values)
@@ -514,7 +514,15 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				{
 					Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "for all", ctxt);
 					evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getPattern(), val, ctxt));
+					if(first){
+						ctx.setContext(evalContext);
+						node.getStatement().apply(ctx);
+						first=false;
+					}
 					Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(), evalContext);
+					ctx.setContext(evalContext);
+					node.apply(ctx);
+			        node.getStatement().apply(ctx);
 					if (!rv.isVoid())
 					{
 						return rv;

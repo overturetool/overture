@@ -49,7 +49,9 @@ import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AHistoryExp;
+import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -60,6 +62,7 @@ import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.AElseIfStm;
+import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.util.definitions.ClassList;
@@ -1849,18 +1852,15 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			interpreter.getCoverage_to_xml().saveCoverageXml(coverage,
 					f.getName());
 			final GenerateTestCases gtc = new GenerateTestCases();
+
 			if (interpreter instanceof ClassInterpreter) {
 				ClassInterpreter ci = (ClassInterpreter) interpreter;
 
 				for (SClassDefinition cdef : ci.getClasses()) {
 					try {
 						cdef.apply(new DepthFirstAnalysisAdaptor() {
-							@Override
-							public void caseAIfStm(AIfStm node)
-									throws AnalysisException {
-								node.apply(gtc);
-							}
 
+							@Override
 							public void caseAElseIfStm(AElseIfStm node)
 									throws AnalysisException {
 								node.apply(gtc);
@@ -1868,6 +1868,24 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 							@Override
 							public void caseAWhileStm(AWhileStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
+							@Override
+							public void caseAIfExp(AIfExp node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
+							@Override
+							public void caseAForAllStm(AForAllStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
+							@Override
+							public void caseAIfStm(AIfStm node)
 									throws AnalysisException {
 								node.apply(gtc);
 							}
@@ -1899,6 +1917,20 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 									throws AnalysisException {
 								node.apply(gtc);
 							}
+
+							@Override
+							public void caseAIfExp(AIfExp node)
+									throws AnalysisException {
+								node.apply(gtc);
+
+							}
+
+							@Override
+							public void caseAForAllStm(AForAllStm node)
+									throws AnalysisException {
+								node.apply(gtc);
+							}
+
 						});
 					} catch (AnalysisException e) {
 						// TODO Auto-generated catch block

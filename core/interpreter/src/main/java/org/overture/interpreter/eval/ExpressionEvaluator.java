@@ -80,6 +80,7 @@ import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.CoverageToXML;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.ValueException;
@@ -118,7 +119,7 @@ import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 public class ExpressionEvaluator extends BinaryExpressionEvaluator
 {
-
+	public CoverageToXML ctx;
 	@Override
 	public Value caseAApplyExp(AApplyExp node, Context ctxt)
 			throws AnalysisException
@@ -430,9 +431,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				boolean matches = true;
 
 				for (NameValuePair nvp : nvpl)
-				{
+				{	
 					Value v = evalContext.get(nvp.name);
-
+			        
 					if (v == null)
 					{
 						evalContext.put(nvp.name, nvp.value);
@@ -659,7 +660,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseAIfExp(AIfExp node, Context ctxt) throws AnalysisException
-	{
+	{ 
+		//ctx.setContext(ctxt);
+        //node.apply(ctx);
 		return evalIf(node, node.getLocation(), node.getTest(), node.getThen(), node.getElseList(), node.getElse(), ctxt);
 	}
 
@@ -1209,6 +1212,8 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
+			//ctx.setContext(ctxt);
+			//node.apply(ctx);
 			if (node.getState() != null)
 			{
 				RecordValue sigma = ctxt.lookup(node.getState().getName()).recordValue(ctxt);
@@ -1373,6 +1378,8 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	{
 		try
 		{
+			//ctx.setContext(ctxt);
+			//node.apply(ctx);
 			BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
 			// The precondition function arguments are the function args,

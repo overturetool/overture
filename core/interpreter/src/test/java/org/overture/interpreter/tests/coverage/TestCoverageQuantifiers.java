@@ -44,10 +44,10 @@ public class TestCoverageQuantifiers extends BaseTestCase {
         //assert result.
         HashMap<String, String> queries = new HashMap<String, String>();
         queries.put("count(//if_statement)","1");
-        queries.put("count(//for_all)","1");
+        queries.put("count(//for_all_expression)","1");
         queries.put("count(//lesser/evaluation)","6");
         queries.put("//if_statement/evaluation","true");
-        queries.put("//for_all/evaluation","true");
+        queries.put("//for_all_expression/evaluation","true");
         assertQueries("src/test/target/vdmsl-coverage/quantifiers/test_quantifiers_1.vdmsl.xml",queries);
     }
 
@@ -64,10 +64,10 @@ public class TestCoverageQuantifiers extends BaseTestCase {
         //assert result.
         HashMap<String, String> queries = new HashMap<String, String>();
         queries.put("count(//if_statement)","1");
-        queries.put("count(//for_all)","1");
+        queries.put("count(//for_all_expression)","1");
         queries.put("count(//lesser/evaluation)","4");
         queries.put("//if_statement/evaluation","false");
-        queries.put("//for_all/evaluation","false");
+        queries.put("//for_all_expression/evaluation","false");
         assertQueries("src/test/target/vdmsl-coverage/quantifiers/test_quantifiers_2.vdmsl.xml",queries);
     }
 

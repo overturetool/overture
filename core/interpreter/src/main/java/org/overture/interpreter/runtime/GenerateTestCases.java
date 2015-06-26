@@ -1,28 +1,36 @@
 package org.overture.interpreter.runtime;
 
-import org.overture.ast.analysis.AnalysisAdaptor;
-import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.expressions.*;
-import org.overture.ast.intf.lex.ILexLocation;
-import org.overture.ast.patterns.PMultipleBind;
-import org.overture.ast.patterns.PPattern;
-import org.overture.ast.statements.AElseIfStm;
-import org.overture.ast.statements.AIfStm;
-import org.overture.ast.statements.AWhileStm;
-import org.overture.interpreter.values.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import java.io.File;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import java.io.File;
-import java.util.HashMap;
+import org.overture.ast.analysis.AnalysisAdaptor;
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.expressions.AAndBooleanBinaryExp;
+import org.overture.ast.expressions.AExists1Exp;
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AIfExp;
+import org.overture.ast.expressions.ANotUnaryExp;
+import org.overture.ast.expressions.AOrBooleanBinaryExp;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.statements.AElseIfStm;
+import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.AWhileStm;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 //Analysis Adaptor
 public class GenerateTestCases extends AnalysisAdaptor {
@@ -304,6 +312,38 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		node.getLeft().apply(this);
 		node.getRight().apply(this);
 	}
+
+	@Override
+	public void caseAIfExp(AIfExp node) throws AnalysisException {
+		// TODO Auto-generated method stub
+		ILexLocation local = node.getLocation();
+		PExp exp = node.getTest();
+
+		Element if_statement = doc.createElement("if_expression");
+		fill_source_file_location(if_statement, local);
+		Element expression = doc.createElement("expression");
+		if_statement.appendChild(expression);
+		currentElement = expression;
+		Element condition = doc.createElement("condition");
+		fill_source_file_location(condition, exp.getLocation());
+		Element eval_true = doc.createElement("evaluation");
+		eval_true.setAttribute("n", "1");
+		eval_true.setTextContent("true");
+		condition.appendChild(eval_true);
+		
+		Element eval_false = doc.createElement("evaluation");
+		eval_false.setAttribute("n", "2");
+		eval_false.setTextContent("false");
+		condition.appendChild(eval_false);
+		
+		expression.appendChild(condition);
+		rootElement.appendChild(if_statement);
+		xml_nodes.put(local, if_statement);
+		xml_nodes.put(node.getTest().getLocation(), condition);
+		exp.apply(this);
+	}
+	
+	
 	
 	
 }
