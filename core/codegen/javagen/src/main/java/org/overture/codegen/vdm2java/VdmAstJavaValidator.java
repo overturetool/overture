@@ -5,9 +5,12 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
@@ -27,6 +30,33 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 	public VdmAstJavaValidator(IRInfo info)
 	{
 		this.info = info;
+	}
+	
+	@Override
+	public void inAClassClassDefinition(AClassClassDefinition node)
+			throws AnalysisException
+	{
+		if (node.getSupernames().size() > 1)
+		{
+			info.addUnsupportedNode(node, "Multiple inheritance not supported.");
+		}
+	}
+	
+	@Override
+	public void inAFuncInstatiationExp(AFuncInstatiationExp node)
+			throws AnalysisException
+	{
+		if (node.getImpdef() != null)
+		{
+			info.addUnsupportedNode(node, "Implicit functions cannot be instantiated since they are not supported.");
+		}
+	}
+	
+	@Override
+	public void inARenamedDefinition(ARenamedDefinition node)
+			throws AnalysisException
+	{
+		info.addUnsupportedNode(node, "Renaming of imported definitions is not currently supported");
 	}
 	
 	@Override
