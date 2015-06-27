@@ -1,0 +1,1 @@
+MapUtil.domResBy(SetUtil.set(1L, 2L), MapUtil.map(new Maplet(1L, 5L), new Maplet(2L, 10L), new Maplet(3L, 15L)))

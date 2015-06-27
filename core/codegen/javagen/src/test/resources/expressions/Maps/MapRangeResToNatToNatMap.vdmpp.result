@@ -1,0 +1,1 @@
+MapUtil.rngResTo(MapUtil.map(new Maplet(1L, 5L), new Maplet(2L, 10L), new Maplet(3L, 5L)), SetUtil.set(1L, 5L))

@@ -1,0 +1,1 @@
+((Number) Utils.get(SeqUtil.seq(1L, 2L, 3L),1L))

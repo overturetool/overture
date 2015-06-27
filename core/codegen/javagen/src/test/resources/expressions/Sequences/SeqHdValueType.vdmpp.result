@@ -1,0 +1,1 @@
+Utils.copy(((Tuple) SeqUtil.seq(Tuple.mk_(1L, 2L)).get(0)))

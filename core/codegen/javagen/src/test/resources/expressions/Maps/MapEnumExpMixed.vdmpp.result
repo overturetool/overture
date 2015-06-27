@@ -1,0 +1,1 @@
+MapUtil.map(new Maplet(Tuple.mk_(1L, 2L), null), new Maplet(false, true))

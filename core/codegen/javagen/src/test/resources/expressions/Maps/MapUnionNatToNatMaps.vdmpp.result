@@ -1,0 +1,1 @@
+MapUtil.munion(MapUtil.map(new Maplet(1L, 2L), new Maplet(3L, 4L)), MapUtil.map(new Maplet(5L, 6L), new Maplet(7L, 8L)))
