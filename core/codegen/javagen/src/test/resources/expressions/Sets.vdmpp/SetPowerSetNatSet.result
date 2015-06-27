@@ -1,1 +1,0 @@
-SetUtil.powerset(SetUtil.set(1L, 2L, 3L))
