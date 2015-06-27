@@ -8,7 +8,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
-import org.overture.codegen.tests.PackageTest;
+import org.overture.codegen.tests.output.PackageOutputTest;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Release;
 
@@ -26,7 +26,7 @@ public class PackageJavaGenTest extends CommonJavaGenCheckerTest
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(PackageTest.ROOT),new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
+		return collectTests(new File(PackageOutputTest.ROOT),new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
 	@Override
