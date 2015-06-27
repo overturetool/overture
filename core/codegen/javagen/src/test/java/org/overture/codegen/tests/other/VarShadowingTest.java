@@ -61,18 +61,9 @@ public class VarShadowingTest
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData()
 	{
-		List<File> testFiles = TestUtils.getTestInputFiles(new File(ROOT));
-		
-		List<Object[]> testFilesPacked = new LinkedList<Object[]>();
-		
-		for(File file : testFiles)
-		{
-			testFilesPacked.add(new Object[]{file});
-		}
-		
-		return testFilesPacked;
+		return TestUtils.collectFiles(ROOT);
 	}
-	
+
 	@Test
 	public void test() throws Exception
 	{

@@ -22,7 +22,9 @@
 package org.overture.codegen.tests.util;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -55,5 +57,19 @@ public class TestUtils
 		Collections.sort(files, new FileComparator());
 
 		return files;
+	}
+	
+	public static Collection<Object[]> collectFiles(String root)
+	{
+		List<File> testFiles = getTestInputFiles(new File(root));
+		
+		List<Object[]> testFilesPacked = new LinkedList<Object[]>();
+		
+		for(File file : testFiles)
+		{
+			testFilesPacked.add(new Object[]{file});
+		}
+		
+		return testFilesPacked;
 	}
 }
