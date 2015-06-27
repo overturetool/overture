@@ -10,7 +10,6 @@ import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.util.ClonableString;
 import org.overture.ast.util.modules.ModuleList;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -49,7 +48,7 @@ abstract public class AnnotationTestsBase
 	// The IR class that is used to represent the type of the module state
 	protected static AClassDeclCG genStateType;
 	
-	public static void init(String fileName) throws AnalysisException, UnsupportedModelingException
+	public static void init(String fileName) throws AnalysisException
 	{
 		List<AClassDeclCG> classes = getClasses(fileName);
 
@@ -163,7 +162,7 @@ abstract public class AnnotationTestsBase
 	}
 	
 	public static List<AClassDeclCG> getClasses(String fileName)
-			throws AnalysisException, UnsupportedModelingException
+			throws AnalysisException
 	{
 		List<File> files = new LinkedList<File>();
 		files.add(new File(TEST_RES_STATIC_ANALYSIS_ROOT + fileName));

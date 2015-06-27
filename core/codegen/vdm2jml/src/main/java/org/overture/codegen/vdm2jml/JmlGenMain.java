@@ -9,7 +9,6 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.util.modules.ModuleList;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
@@ -128,11 +127,6 @@ public class JmlGenMain
 		{
 			Logger.getLog().println("Could not code generate model: "
 					+ e.getMessage());
-		} catch (UnsupportedModelingException e)
-		{
-			Logger.getLog().println("Could not generate model: "
-					+ e.getMessage());
-			Logger.getLog().println(GeneralCodeGenUtils.constructUnsupportedModelingString(e));
 		}
 	}
 

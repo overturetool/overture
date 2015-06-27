@@ -48,7 +48,6 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
@@ -286,9 +285,6 @@ public class Vdm2JavaCommand extends AbstractHandler
 
 					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 
-				} catch (UnsupportedModelingException ex)
-				{
-					handleUnsupportedModeling(ex);
 				} catch (AnalysisExceptionCG ex)
 				{
 					CodeGenConsole.GetInstance().println("Could not code generate VDM model: "
@@ -309,7 +305,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 	
 	public GeneratedData generateJava(final IVdmProject project,
 			final IVdmModel model, final JavaCodeGen vdm2java)
-			throws AnalysisException, UnsupportedModelingException
+			throws AnalysisException
 	{
 		if(project.getDialect() != Dialect.VDM_SL)
 		{
@@ -560,18 +556,6 @@ public class Vdm2JavaCommand extends AbstractHandler
 		Activator.log(errorMessage, ex);
 		CodeGenConsole.GetInstance().printErrorln(errorMessage);
 		ex.printStackTrace();
-	}
-
-	private void handleUnsupportedModeling(UnsupportedModelingException ex)
-	{
-		CodeGenConsole.GetInstance().println("Could not code generate VDM model: "
-				+ ex.getMessage());
-
-		String violationStr = GeneralCodeGenUtils.constructUnsupportedModelingString(ex);
-		CodeGenConsole.GetInstance().println(violationStr);
-
-		Set<Violation> violations = ex.getViolations();
-		PluginVdm2JavaUtil.addMarkers("Modeling rule not supported", violations);
 	}
 
 	private void handleInvalidNames(InvalidNamesResult invalidNames)

@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.tests.exec.util.testhandlers.ExecutableSpecTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.ExecutableTestHandler;
@@ -129,7 +128,7 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 					ex.writeMainClass(outputDir, getJavaSettings().getJavaRootPackage());
 				}
 			}
-		} catch (AnalysisException | UnsupportedModelingException | IOException e)
+		} catch (AnalysisException | IOException e)
 		{
 			Assert.fail("Got unexpected exception when attempting to generate Java code: "
 					+ e.getMessage());

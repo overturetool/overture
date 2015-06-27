@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -114,11 +113,8 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 
 			return generatedCode.toString();
 
-		} catch (UnsupportedModelingException e)
-		{
-			return GeneralCodeGenUtils.constructUnsupportedModelingString(e);
-
-		} catch (AnalysisException e)
+		}
+		catch (AnalysisException e)
 		{
 			Assert.fail("Unexpected problem encountered when attempting to code generate VDM model: "
 					+ e.getMessage());
@@ -128,7 +124,7 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 	}
 
 	abstract public GeneratedData genCode(List<INode> ast)
-			throws AnalysisException, UnsupportedModelingException;
+			throws AnalysisException;
 
 	@Override
 	public Type getResultType()
