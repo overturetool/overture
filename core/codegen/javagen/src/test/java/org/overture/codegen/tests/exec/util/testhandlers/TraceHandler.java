@@ -1,4 +1,4 @@
-package org.overture.codegen.tests.exec;
+package org.overture.codegen.tests.exec.util.testhandlers;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.traces.TestAccumulator;
+import org.overture.codegen.tests.exec.util.ExecutionResult;
 import org.overture.config.Release;
 import org.overture.ct.ctruntime.TraceRunnerMain;
 import org.overture.ct.ctruntime.utils.CtHelper;

@@ -1,4 +1,4 @@
-package org.overture.codegen.tests;
+package org.overture.codegen.tests.other;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

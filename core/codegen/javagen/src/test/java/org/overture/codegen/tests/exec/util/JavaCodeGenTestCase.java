@@ -1,4 +1,4 @@
-package org.overture.codegen.execution.tests;
+package org.overture.codegen.tests.exec.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

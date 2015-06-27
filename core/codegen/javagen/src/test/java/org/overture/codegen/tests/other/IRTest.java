@@ -1,4 +1,4 @@
-package org.overture.codegen.tests;
+package org.overture.codegen.tests.other;
 
 import java.io.StringWriter;
 import java.util.LinkedList;

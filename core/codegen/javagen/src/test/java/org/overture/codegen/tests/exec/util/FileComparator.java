@@ -19,19 +19,17 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.tests.exec;
+package org.overture.codegen.tests.exec.util;
 
-import org.overture.ast.lex.Dialect;
-import org.overture.config.Release;
+import java.io.File;
+import java.util.Comparator;
 
-public abstract class EntryBasedTestHandler extends ExecutableTestHandler
+public class FileComparator implements Comparator<File>
 {
-	public EntryBasedTestHandler(Release release, Dialect dialect)
-	{
-		super(release, dialect);
-	}
+	@Override
+	public int compare(File leftFile, File rightFile)
 
-	abstract public String getVdmEntry();
-	
-	abstract public String getJavaEntry();
+	{
+		return leftFile.getName().compareTo(rightFile.getName());
+	}
 }

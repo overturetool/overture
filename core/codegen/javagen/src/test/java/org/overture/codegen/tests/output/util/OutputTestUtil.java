@@ -1,4 +1,4 @@
-package org.overture.codegen.tests.output;
+package org.overture.codegen.tests.output.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;

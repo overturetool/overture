@@ -19,32 +19,47 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.tests.exec;
+package org.overture.codegen.tests.exec.util.testhandlers;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.utils.GeneralUtils;
+import org.overture.codegen.tests.exec.util.ExecutionResult;
 import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.interpreter.util.InterpreterUtil;
 import org.overture.interpreter.values.Value;
 
-public class ExpressionTestHandler extends ExecutableTestHandler
+public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 {
-	public ExpressionTestHandler(Release release, Dialect dialect)
+	public ExecutableSpecTestHandler(Release release, Dialect dialect)
 	{
 		super(release, dialect);
+	}
+
+	public void writeMainClass(File parent, String rootPackage)
+			throws IOException
+	{
+		injectArgIntoMainClassFile(parent, rootPackage != null ? (rootPackage  + "." + getJavaEntry()) : getJavaEntry());
+	}
+	
+	@Override
+	public String getJavaEntry()
+	{
+		return "Entry.Run()";
+	}
+
+	@Override
+	public String getVdmEntry()
+	{
+		return "Entry`Run()";
 	}
 
 	@Override
 	public ExecutionResult interpretVdm(File intputFile) throws Exception
 	{
-		initVdmEnv();
-		
-		String input = GeneralUtils.readFromFile(intputFile);
-
-		Value val = InterpreterUtil.interpret(input);
-		
+		Value val = InterpreterUtil.interpret(Settings.dialect, getVdmEntry(), intputFile);
 		return new ExecutionResult(val.toString(), val);
 	}
 }

@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.tests.exec;
+package org.overture.codegen.tests.exec.util.testhandlers;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,6 +33,8 @@ import java.util.Random;
 
 import org.apache.commons.io.input.ClassLoaderObjectInputStream;
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.tests.exec.util.ExecutionResult;
+import org.overture.codegen.tests.exec.util.JavaExecution;
 import org.overture.config.Release;
 
 public abstract class ExecutableTestHandler extends TestHandler

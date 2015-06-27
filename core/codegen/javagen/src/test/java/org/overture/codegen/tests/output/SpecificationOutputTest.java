@@ -6,6 +6,8 @@ import java.util.Collection;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.overture.codegen.tests.output.util.OutputTestUtil;
+import org.overture.codegen.tests.output.util.PpSpecificationTest;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)

@@ -13,6 +13,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.tests.output.util.OutputTestUtil;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;

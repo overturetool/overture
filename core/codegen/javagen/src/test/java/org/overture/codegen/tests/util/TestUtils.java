@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.tests.exec;
+package org.overture.codegen.tests.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.codegen.tests.exec.util.FileComparator;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 

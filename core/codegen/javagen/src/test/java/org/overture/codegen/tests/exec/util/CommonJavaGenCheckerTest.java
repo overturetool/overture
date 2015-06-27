@@ -1,4 +1,4 @@
-package org.overture.codegen.execution.tests;
+package org.overture.codegen.tests.exec.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,14 +15,11 @@ import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.tests.exec.ComparisonCG;
-import org.overture.codegen.tests.exec.ExecutableSpecTestHandler;
-import org.overture.codegen.tests.exec.ExecutableTestHandler;
-import org.overture.codegen.tests.exec.ExecutionResult;
-import org.overture.codegen.tests.exec.ExpressionTestHandler;
-import org.overture.codegen.tests.exec.JavaCommandLineCompiler;
-import org.overture.codegen.tests.exec.TestHandler;
-import org.overture.codegen.tests.exec.TestUtils;
+import org.overture.codegen.tests.exec.util.testhandlers.ExecutableSpecTestHandler;
+import org.overture.codegen.tests.exec.util.testhandlers.ExecutableTestHandler;
+import org.overture.codegen.tests.exec.util.testhandlers.ExpressionTestHandler;
+import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
+import org.overture.codegen.tests.util.TestUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;

@@ -1,4 +1,4 @@
-package org.overture.codegen.tests;
+package org.overture.codegen.tests.other;
 
 import java.io.File;
 import java.util.Collection;
@@ -22,7 +22,7 @@ import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.VarRenamer;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.tests.exec.TestUtils;
+import org.overture.codegen.tests.util.TestUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
 import org.overture.config.Settings;

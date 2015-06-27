@@ -1,4 +1,4 @@
-package org.overture.codegen.tests.exec;
+package org.overture.codegen.tests.exec.util;
 
 public class ExecutionResult
 {

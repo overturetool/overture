@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.execution.tests;
+package org.overture.codegen.tests.exec.util;
 
 import org.overture.test.framework.ConditionalIgnoreMethodRule.IgnoreCondition;
 
