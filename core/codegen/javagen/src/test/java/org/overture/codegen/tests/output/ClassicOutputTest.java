@@ -3,24 +3,34 @@ package org.overture.codegen.tests.output;
 import java.io.File;
 import java.util.Collection;
 
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)
-public class BindOutputTest extends OutputTestPp
+public class ClassicOutputTest extends OutputTestPp
 {
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
-			+ "bind_specs";
-
-	public BindOutputTest(String nameParameter, String inputParameter,
+			+ "classic_specs";
+	
+	public ClassicOutputTest(String nameParameter, String inputParameter,
 			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
-
+	
+	@Before
+	public void init() throws Exception
+	{
+		super.init();
+		Settings.release = Release.CLASSIC;
+	}
+	
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData()
 	{
@@ -30,6 +40,6 @@ public class BindOutputTest extends OutputTestPp
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "bind";
+		return UPDATE_PROPERTY_PREFIX + "classic";
 	}
 }

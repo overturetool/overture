@@ -8,7 +8,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
-import org.overture.codegen.tests.ClassicSpecTest;
+import org.overture.codegen.tests.output.ClassicOutputTest;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
@@ -23,7 +23,7 @@ public class ClassicJavaGenTest extends CommonJavaGenCheckerTest
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(ClassicSpecTest.ROOT),new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
+		return collectTests(new File(ClassicOutputTest.ROOT),new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
 	}
 	
 	@Override
