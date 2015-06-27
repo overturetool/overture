@@ -62,9 +62,16 @@ public class TestUtils
 			if (f.isDirectory())
 			{
 				files.addAll(getTestInputFiles(f));
-			} else if (!f.getName().contains("."))
+			} else
 			{
-				files.add(f);
+				String name = f.getName();
+
+				if (name.endsWith(".vdmsl") || name.endsWith(".vdmpp")
+						|| name.endsWith(".vdmrt") || name.endsWith("vpp")
+						|| name.endsWith("vsl"))
+				{
+					files.add(f);
+				}
 			}
 		}
 
