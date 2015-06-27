@@ -9,7 +9,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.tests.RtTest;
+import org.overture.codegen.tests.output.RtOutputTest;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
@@ -24,7 +24,7 @@ public class RtJavaGenTest extends CommonJavaGenCheckerTest
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(RtTest.ROOT), new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_RT));
+		return collectTests(new File(RtOutputTest.ROOT), new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_RT));
 	}
 
 	@Override
