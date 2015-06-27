@@ -1,10 +1,7 @@
 package org.overture.codegen.tests.output;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -17,7 +14,6 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
-import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaCodeGen;
@@ -36,10 +32,6 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 			+ "##########" + LINE_SEPARATOR;
 	protected static final String NAME_VIOLATION_INDICATOR = "*Name Violations*";
 	protected static final String QUOTE_INDICATOR = "*Quotes*";
-
-	public static final String UPDATE_PROPERTY_PREFIX = "tests.javagen.override.";
-	public static final String UPDATE_ALL_OUTPUT_TESTS_PROPERTY = UPDATE_PROPERTY_PREFIX
-			+ "all";
 
 	protected static JavaCodeGen vdmCodGen = new JavaCodeGen();
 
@@ -150,23 +142,21 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 	@Override
 	public void compareResults(String actual, String expected)
 	{
-		Assert.assertEquals("Unexpected code produced by the Java code generator", expected.trim(), actual.trim());
+		OutputTestUtil.compare(expected, actual);
 	}
 
 	@Override
 	public String deSerializeResult(String resultPath)
 			throws FileNotFoundException, IOException
 	{
-		return GeneralUtils.readFromFile(new File(resultPath));
+		return OutputTestUtil.deSerialize(resultPath);
 	}
 
 	@Override
 	protected void testUpdate(String actual) throws ParserException,
 			LexException, IOException
 	{
-		PrintStream out = new PrintStream(new FileOutputStream(new File(resultPath)));
-		out.print(actual);
-		out.close();
+		OutputTestUtil.testUpdate(actual, resultPath);
 	}
 
 	@Override
@@ -177,7 +167,7 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 			return true;
 		}
 
-		if (System.getProperty(UPDATE_ALL_OUTPUT_TESTS_PROPERTY) != null)
+		if (System.getProperty(OutputTestUtil.UPDATE_ALL_OUTPUT_TESTS_PROPERTY) != null)
 		{
 			return true;
 		}

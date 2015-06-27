@@ -40,6 +40,6 @@ public class ClassicOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "classic";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "classic";
 	}
 }

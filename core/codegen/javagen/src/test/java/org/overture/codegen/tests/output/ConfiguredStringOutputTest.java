@@ -40,6 +40,6 @@ public class ConfiguredStringOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "configuredstring";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "configuredstring";
 	}
 }

@@ -44,6 +44,6 @@ public class PrePostOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "prepost";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "prepost";
 	}
 }

@@ -30,6 +30,6 @@ public class NameNormalisingOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "namenormalising";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "namenormalising";
 	}
 }

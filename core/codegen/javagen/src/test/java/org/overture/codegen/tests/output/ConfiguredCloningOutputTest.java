@@ -50,6 +50,6 @@ public class ConfiguredCloningOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "configuredcloning";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "configuredcloning";
 	}
 }

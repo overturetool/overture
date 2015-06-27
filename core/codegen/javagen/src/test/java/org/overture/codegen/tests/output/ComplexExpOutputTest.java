@@ -30,6 +30,6 @@ public class ComplexExpOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "complexexp";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "complexexp";
 	}
 }

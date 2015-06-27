@@ -30,6 +30,6 @@ public class FunctionValueOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "functionvalue";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "functionvalue";
 	}
 }

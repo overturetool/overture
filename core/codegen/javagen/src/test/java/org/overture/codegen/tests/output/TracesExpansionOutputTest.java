@@ -40,6 +40,6 @@ public class TracesExpansionOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "tracesexpansion";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "tracesexpansion";
 	}
 }

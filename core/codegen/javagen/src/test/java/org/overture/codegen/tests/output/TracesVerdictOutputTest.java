@@ -42,6 +42,6 @@ public class TracesVerdictOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "tracesverdict";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "tracesverdict";
 	}
 }

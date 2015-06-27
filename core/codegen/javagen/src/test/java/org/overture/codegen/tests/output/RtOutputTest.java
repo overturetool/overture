@@ -52,6 +52,6 @@ public class RtOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "rt";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "rt";
 	}
 }

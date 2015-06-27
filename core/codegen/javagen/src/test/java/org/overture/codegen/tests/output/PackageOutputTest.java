@@ -40,6 +40,6 @@ public class PackageOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "package";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "package";
 	}
 }

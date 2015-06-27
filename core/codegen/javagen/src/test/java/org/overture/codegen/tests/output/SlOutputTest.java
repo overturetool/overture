@@ -30,6 +30,6 @@ public class SlOutputTest extends SlSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "sl";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "sl";
 	}
 }

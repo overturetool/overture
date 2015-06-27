@@ -30,6 +30,6 @@ public class BindOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "bind";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "bind";
 	}
 }

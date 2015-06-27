@@ -30,6 +30,6 @@ public class UnionTypeOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "uniontype";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "uniontype";
 	}
 }

@@ -51,6 +51,6 @@ public class ConcurrencyClassicOutputTest extends PpSpecificationTest
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "concurrencyclassic";
+		return OutputTestUtil.UPDATE_PROPERTY_PREFIX + "concurrencyclassic";
 	}
 }
