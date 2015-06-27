@@ -286,6 +286,14 @@ public class IRInfo
 
 	public void addUnsupportedNode(INode node, String reason)
 	{
+		for(VdmNodeInfo info : unsupportedNodes)
+		{
+			if(VdmNodeInfo.matches(info, node, reason))
+			{
+				return;
+			}
+		}
+		
 		VdmNodeInfo info = new VdmNodeInfo(node, reason);
 		unsupportedNodes.add(info);
 	}
