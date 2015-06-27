@@ -8,7 +8,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
-import org.overture.codegen.tests.ComplexExpressionTest;
+import org.overture.codegen.tests.output.ComplexExpOutputTest;
 import org.overture.config.Release;
 
 @RunWith(value = Parameterized.class)
@@ -23,7 +23,7 @@ public class ComplexExpJavaGenTest extends CommonJavaGenCheckerTest
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(ComplexExpressionTest.ROOT),new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
+		return collectTests(new File(ComplexExpOutputTest.ROOT),new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
 	@Override
