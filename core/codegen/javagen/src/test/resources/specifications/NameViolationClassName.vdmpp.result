@@ -24,6 +24,6 @@ public class cg_Long {
 ##########
 *Name Violations*
 
-Type name violation: [Violation in module Long: 'Long'. Location: line 1 at position: 7 in NameViolationClassName]. Prefix 'cg_' has been added to the name
+Type name violation: [Violation in module Long: 'Long'. Location: line 1 at position: 7 in NameViolationClassName.vdmpp]. Prefix 'cg_' has been added to the name
 
 ##########
