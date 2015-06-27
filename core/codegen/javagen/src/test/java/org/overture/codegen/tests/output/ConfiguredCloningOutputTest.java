@@ -13,7 +13,7 @@ import org.overture.config.Settings;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)
-public class ConfiguredCloningOutputTest extends OutputTestPp
+public class ConfiguredCloningOutputTest extends PpSpecificationTest
 {
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar

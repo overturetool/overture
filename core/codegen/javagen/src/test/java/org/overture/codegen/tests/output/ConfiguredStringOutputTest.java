@@ -10,7 +10,7 @@ import org.overture.codegen.ir.IRSettings;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)
-public class ConfiguredStringOutputTest extends OutputTestPp
+public class ConfiguredStringOutputTest extends PpSpecificationTest
 {
 	public ConfiguredStringOutputTest(String nameParameter,
 			String inputParameter, String resultParameter)

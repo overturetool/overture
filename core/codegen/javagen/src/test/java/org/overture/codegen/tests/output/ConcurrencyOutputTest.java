@@ -10,7 +10,7 @@ import org.overture.codegen.ir.IRSettings;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)
-public class ConcurrencyOutputTest extends OutputTestPp
+public class ConcurrencyOutputTest extends PpSpecificationTest
 {
 	public ConcurrencyOutputTest(String nameParameter, String inputParameter,
 			String resultParameter)

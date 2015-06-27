@@ -13,7 +13,7 @@ import org.overture.config.Settings;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)
-public class ConcurrencyClassicOutputTest extends OutputTestPp
+public class ConcurrencyClassicOutputTest extends PpSpecificationTest
 {
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar

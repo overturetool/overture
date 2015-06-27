@@ -9,7 +9,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)
-public class ComplexExpOutputTest extends OutputTestPp
+public class ComplexExpOutputTest extends PpSpecificationTest
 {
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar

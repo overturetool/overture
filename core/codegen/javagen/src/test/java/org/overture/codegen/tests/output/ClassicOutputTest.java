@@ -12,7 +12,7 @@ import org.overture.config.Settings;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)
-public class ClassicOutputTest extends OutputTestPp
+public class ClassicOutputTest extends PpSpecificationTest
 {
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
