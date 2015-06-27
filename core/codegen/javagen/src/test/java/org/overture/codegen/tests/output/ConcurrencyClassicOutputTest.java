@@ -7,19 +7,20 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.overture.codegen.ir.IRSettings;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)
-public class ClassicOutputTest extends OutputTestPp
+public class ConcurrencyClassicOutputTest extends OutputTestPp
 {
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
-			+ "classic_specs";
+			+ "concurrency_classics_specs";
 	
-	public ClassicOutputTest(String nameParameter, String inputParameter,
-			String resultParameter)
+	public ConcurrencyClassicOutputTest(String nameParameter,
+			String inputParameter, String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
@@ -31,6 +32,16 @@ public class ClassicOutputTest extends OutputTestPp
 		Settings.release = Release.CLASSIC;
 	}
 	
+	@Override
+	public IRSettings getIrSettings()
+	{
+		IRSettings irSettings = new IRSettings();
+		irSettings.setGenerateConc(true);
+		irSettings.setCharSeqAsString(true);
+		
+		return irSettings;
+	}
+	
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData()
 	{
@@ -40,6 +51,6 @@ public class ClassicOutputTest extends OutputTestPp
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return UPDATE_PROPERTY_PREFIX + "classic";
+		return UPDATE_PROPERTY_PREFIX + "concurrencyclassic";
 	}
 }

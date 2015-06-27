@@ -9,7 +9,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.tests.ConcurrencyClassicSpecTests;
+import org.overture.codegen.tests.output.ConcurrencyClassicOutputTest;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
@@ -25,7 +25,7 @@ public class ConcurrencyClassicJavaGenTest extends CommonJavaGenCheckerTest
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(ConcurrencyClassicSpecTests.ROOT),new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
+		return collectTests(new File(ConcurrencyClassicOutputTest.ROOT),new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
 	}
 
 	@Override

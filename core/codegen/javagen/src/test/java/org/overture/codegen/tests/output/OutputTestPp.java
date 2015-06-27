@@ -24,7 +24,7 @@ abstract public class OutputTestPp extends OutputTestBase
 	}
 	
 	@Before
-	public void init() throws Exception
+	public void init()
 	{
 		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
