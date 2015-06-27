@@ -122,7 +122,11 @@ public abstract class OutputTestBase extends ParamStandardTest<String>
 
 			return generatedCode.toString();
 
-		} catch (UnsupportedModelingException | AnalysisException e)
+		} catch (UnsupportedModelingException e)
+		{
+			return GeneralCodeGenUtils.constructUnsupportedModelingString(e);
+
+		} catch (AnalysisException e)
 		{
 			Assert.fail("Unexpected problem encountered when attempting to code generate VDM model: "
 					+ e.getMessage());
