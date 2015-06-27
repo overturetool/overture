@@ -52,8 +52,6 @@ public class JavaCommandLineCompiler
 
 		String arguments = buildFileArgs(files);
 
-		// printCompileMessage(files, cpJar);
-
 		StringBuilder out = new StringBuilder();
 		Process p = null;
 		try
@@ -79,7 +77,6 @@ public class JavaCommandLineCompiler
 				pb.directory(dir);
 				pb.redirectErrorStream(true);
 				p = pb.start();
-				//p.waitFor();
 			} else
 			{
 				p = Runtime.getRuntime().exec(arg, null, dir);

@@ -57,7 +57,7 @@ public abstract class JavaCodeGenTestCase extends
 	public void encodeResult(Object result, Document doc, Element resultElement)
 	{
 		Element message = doc.createElement("output");
-		
+
 		if (result instanceof Serializable)
 		{
 			try
@@ -68,15 +68,12 @@ public abstract class JavaCodeGenTestCase extends
 				}
 
 				message.setAttribute("object", toString((Serializable) result));
-			} catch (DOMException e)
+			} catch (IOException | DOMException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Assert.fail("Could not encode result: " + e.getMessage());
 			}
+
 			message.setAttribute("resource", file.getName());
 			message.setAttribute("value", result + "");
 
@@ -98,30 +95,19 @@ public abstract class JavaCodeGenTestCase extends
 				{
 
 					Node attribute = cn.getAttributes().getNamedItem("object");
-					
-					if(attribute==null)
+
+					if (attribute == null)
 					{
 						return null;
 					}
-					
+
 					Object nodeType = fromString(attribute.getNodeValue());
 					return nodeType;
 				} catch (Exception e)
 				{
 					e.printStackTrace();
-					Assert.fail("Not able to decode object stored result");
+					Assert.fail("Not able to decode result");
 				}
-				// String nodeType = cn.getAttributes().getNamedItem("object").getNodeValue();
-				// if (nodeType != null && !nodeType.isEmpty())
-				// {
-				// try
-				// {
-				// result = nodeType;
-				// } catch (Exception e)
-				// {
-				// Assert.fail("Not able to decode object stored result");
-				// }
-				// }
 			}
 		}
 		return result;
@@ -133,9 +119,9 @@ public abstract class JavaCodeGenTestCase extends
 	{
 		if (expected == null)
 		{
-			assert false : "No result file";
+			Assert.fail("No result file");
 		}
-		// return expected.size() == actual.size();
+
 		if (!expected.equals(actual))
 		{
 			out.println("Expected result does not match actual:\n\tExpected:\n\t"
@@ -154,7 +140,6 @@ public abstract class JavaCodeGenTestCase extends
 		{
 			Properties.recordTestResults = true;
 		}
-
 	}
 
 	protected void unconfigureResultGeneration()

@@ -34,41 +34,38 @@ import org.overture.codegen.vdm2java.JavaToolsUtils;
 
 public class JavaExecution
 {
-
 	public final static String cpPathSeparator = System.getProperty("path.separator");
 
-	public static String run(String mainClassName,String[]args, File directory, File... cp)
+	public static String run(String mainClassName, String[] args,
+			File directory, File... cp)
 	{
 		String javaHome = System.getenv(JavaToolsUtils.JAVA_HOME);
 		File java = new File(new File(javaHome, JavaToolsUtils.BIN_FOLDER), JavaToolsUtils.JAVA);
-		return run(java, directory, mainClassName,args, cp);
+		return run(java, directory, mainClassName, args, cp);
 	}
 
 	public static String run(File java, File directory, String mainClassName,
-			String[] args,File... cp)
+			String[] args, File... cp)
 	{
 		String cpArgs = consCpArg(cp);
 
 		Process p = null;
 		ProcessBuilder pb = null;
-		
-		
 
 		try
 		{
 			String javaArg = JavaToolsUtils.isWindows() ? java.getAbsolutePath()
 					: "java";
-			
-			
+
 			List<String> commands = new Vector<String>();
 			commands.add(javaArg);
 			commands.add("-cp");
 			commands.add(cpArgs);
 			commands.add(mainClassName.trim());
 			commands.addAll(Arrays.asList(args));
-			
+
 			pb = new ProcessBuilder(commands);
-			
+
 			pb.directory(directory);
 			pb.redirectErrorStream(true);
 
@@ -102,6 +99,7 @@ public class JavaExecution
 		final StringBuffer sb = new StringBuffer();
 		final InputStream is = p.getInputStream();
 		is.mark(0);
+
 		// the background thread watches the output from the process
 		Thread t = new Thread(new Runnable()
 		{
@@ -114,7 +112,7 @@ public class JavaExecution
 					while ((line = reader.readLine()) != null)
 					{
 						sb.append(line + "\n");
-						
+
 					}
 				} catch (IOException e)
 				{
@@ -154,29 +152,27 @@ public class JavaExecution
 				cp += cpPathSeparator + cpPart;
 			}
 		}
-		
+
 		return cp;
 	}
 
 	private static String consCpArg(File file)
 	{
-		if (file == null )
+		if (file == null)
 		{
 			return JavaToolsUtils.CURRENT_FOLDER;
 		}
-		
-		
-		
-		if(file.isFile())
+
+		if (file.isFile())
 		{
-			if(file.getName().endsWith(".class"))
+			if (file.getName().endsWith(".class"))
 			{
 				return JavaToolsUtils.CURRENT_FOLDER;
-			}else
+			} else
 			{
 				return file.getAbsolutePath();
 			}
-				
+
 		}
 		StringBuilder sb = new StringBuilder();
 
@@ -186,8 +182,6 @@ public class JavaExecution
 		{
 			return JavaToolsUtils.CURRENT_FOLDER;
 		}
-
-	
 
 		if (file.isDirectory())
 		{
@@ -204,8 +198,9 @@ public class JavaExecution
 			}
 		}
 
-//		File cgRuntime = new File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
-//		sb.append(cgRuntime.getAbsolutePath() + cpPathSeparator);
+		// File cgRuntime = new
+		// File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+		// sb.append(cgRuntime.getAbsolutePath() + cpPathSeparator);
 
 		if (sb.length() == 0)
 		{

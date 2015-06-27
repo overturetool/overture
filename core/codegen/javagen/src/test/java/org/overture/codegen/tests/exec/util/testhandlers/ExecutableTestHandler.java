@@ -40,7 +40,7 @@ import org.overture.config.Release;
 public abstract class ExecutableTestHandler extends TestHandler
 {
 	private final static Random rand = new Random(100);
-	public static final String MAIN_CLASS = "Exp";
+	private static final String MAIN_CLASS = "Exp";
 
 	public static final String SERIALIZE_METHOD = "  public static void serialize(File file){\n"
 			+ "     try{\n"

@@ -25,7 +25,6 @@ import org.overture.test.framework.ConditionalIgnoreMethodRule.IgnoreCondition;
 
 public class JavaCodeGenJavacEnabledCondition implements IgnoreCondition
 {
-
 	@Override
 	public boolean isIgnored()
 	{
@@ -37,5 +36,4 @@ public class JavaCodeGenJavacEnabledCondition implements IgnoreCondition
 		}
 		return true;
 	}
-
 }

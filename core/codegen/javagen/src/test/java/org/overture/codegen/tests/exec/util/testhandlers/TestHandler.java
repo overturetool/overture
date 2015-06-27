@@ -35,8 +35,6 @@ import org.overture.config.Settings;
 
 public class TestHandler
 {
-	public static final String QUOTES_PACKAGE_NAME = "quotes";
-
 	protected File currentInputFile = null;
 
 	private Release release;
