@@ -28,7 +28,7 @@ import org.overture.parser.syntax.ParserException;
 
 import com.google.gson.reflect.TypeToken;
 
-public abstract class OutputTestBase extends ParamStandardTest<String>
+public abstract class SpecificationTestBase extends ParamStandardTest<String>
 {
 	protected static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	protected static final String QUOTE_SEPARATOR = ",";
@@ -43,7 +43,7 @@ public abstract class OutputTestBase extends ParamStandardTest<String>
 
 	protected static JavaCodeGen vdmCodGen = new JavaCodeGen();
 
-	public OutputTestBase(String nameParameter, String inputParameter,
+	public SpecificationTestBase(String nameParameter, String inputParameter,
 			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);

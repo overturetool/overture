@@ -14,7 +14,7 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
-abstract public class PpSpecificationTest extends OutputTestBase
+abstract public class PpSpecificationTest extends SpecificationTestBase
 {
 	public PpSpecificationTest(String nameParameter, String inputParameter,
 			String resultParameter)

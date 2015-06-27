@@ -14,7 +14,7 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
-abstract public class SlSpecificationTest extends OutputTestBase
+abstract public class SlSpecificationTest extends SpecificationTestBase
 {
 	public SlSpecificationTest(String nameParameter, String inputParameter,
 			String resultParameter)
