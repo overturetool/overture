@@ -6,6 +6,7 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
@@ -177,18 +178,21 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 
 		if (encClass != null)
 		{
-			if (encClass.getFields().size() == 1)
+			// In addition to the state field there may be other fields that originate from values.
+			// However, values are final so we simply need to find the only non-final field in order
+			// to construct the invariant expression
+			for(AFieldDeclCG field : encClass.getFields())
 			{
-				String stateName = encClass.getFields().getFirst().getName();
+				if(field.getFinal() == false)
+				{
+					String stateName = field.getName();
 
-				// E.g. inv_St(St)
-				return JmlGenerator.INV_PREFIX + stateName + "(" + stateName + ")";
-			} else
-			{
-				Logger.getLog().printErrorln("Expected only a single field to represent the state in '"
-						+ this.getClass().getSimpleName() + "'");
+					// E.g. inv_St(St)
+					return JmlGenerator.INV_PREFIX + stateName + "(" + stateName + ")";
+				}
 			}
 		}
+		
 		return null;
 	}
 }
