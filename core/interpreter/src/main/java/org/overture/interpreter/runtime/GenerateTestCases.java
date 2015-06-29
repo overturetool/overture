@@ -36,9 +36,9 @@ import org.w3c.dom.NodeList;
 public class GenerateTestCases extends AnalysisAdaptor {
 	private Document doc;
 	private Element rootElement;
+	private Element dec;
 	private Element currentElement;
-	private int iteration;
-	private HashMap<ILexLocation, Element> xml_nodes;
+	public HashMap<ILexLocation, Element> xml_nodes;
 
 	public GenerateTestCases() {
 		DocumentBuilder db = null;
@@ -52,7 +52,6 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		this.rootElement = doc.createElement("file");
 		this.currentElement = rootElement;
 		this.doc.appendChild(rootElement);
-		this.iteration = 0;
 		this.xml_nodes = new HashMap<>();
 	}
 
@@ -108,6 +107,7 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		Element if_statement = doc.createElement("if_statement");
 		fill_source_file_location(if_statement, local);
 		Element expression = doc.createElement("expression");
+		dec=if_statement;
 		if_statement.appendChild(expression);
 		currentElement = expression;
 		Element condition = doc.createElement("condition");
@@ -136,7 +136,8 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		Element condition=(Element)xml_nodes.get(node.getLocation()).cloneNode(true);
 		fill_source_file_location(condition, node.getPredicate().getLocation());
 		currentElement.replaceChild(condition, xml_nodes.get(node.getLocation()));
-		xml_nodes.replace(node.getLocation(),condition);
+		xml_nodes.remove(node.getLocation());
+		xml_nodes.put(node.getLocation(), condition);
 		node.getPredicate().apply(this);
 	}
 
@@ -145,7 +146,8 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		Element condition=(Element)xml_nodes.get(node.getLocation()).cloneNode(true);
 		fill_source_file_location(condition, node.getPredicate().getLocation());
 		currentElement.replaceChild(condition, xml_nodes.get(node.getLocation()));
-		xml_nodes.replace(node.getLocation(),condition);
+		xml_nodes.remove(node.getLocation());
+		xml_nodes.put(node.getLocation(), condition);
 		node.getPredicate().apply(this);
 	}
 
@@ -153,8 +155,9 @@ public class GenerateTestCases extends AnalysisAdaptor {
 	public void caseAElseIfStm(AElseIfStm node) throws AnalysisException {
 		ILexLocation local = node.getLocation();
 		PExp exp = node.getElseIf();
-
+		
 		Element elseif_statement = doc.createElement("elseif_statement");
+		dec = elseif_statement;
 		fill_source_file_location(elseif_statement, local);
 		Element expression = doc.createElement("expression");
 		elseif_statement.appendChild(expression);
@@ -183,7 +186,8 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		Element condition=(Element)xml_nodes.get(node.getLocation()).cloneNode(true);
 		fill_source_file_location(condition, node.getPredicate().getLocation());
 		currentElement.replaceChild(condition, xml_nodes.get(node.getLocation()));
-		xml_nodes.replace(node.getLocation(),condition);
+		xml_nodes.remove(node.getLocation());
+		xml_nodes.put(node.getLocation(), condition);
 		node.getPredicate().apply(this);
 	}
 
@@ -193,6 +197,7 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		PExp exp = node.getExp();
 
 		Element while_statement = doc.createElement("while_statement");
+		dec=while_statement;
 		fill_source_file_location(while_statement, local);
 		Element expression = doc.createElement("expression");
 		while_statement.appendChild(expression);
@@ -221,6 +226,9 @@ public class GenerateTestCases extends AnalysisAdaptor {
 	public void caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node)
 			throws AnalysisException {
 		
+		Element and = doc.createElement("and");
+		
+		
 		NodeList conditions=currentElement.getChildNodes();
 		for (int i = 0; i < conditions.getLength(); i++) {
 			NodeList evaluations = conditions.item(i).getChildNodes();
@@ -233,7 +241,11 @@ public class GenerateTestCases extends AnalysisAdaptor {
 				condition.appendChild(new_evaluation); 
 				}
 			currentElement.replaceChild(condition, conditions.item(i));
-			xml_nodes.replace(get_location(condition),condition);
+			ILexLocation local= get_location(condition);
+			xml_nodes.remove(local);
+			xml_nodes.put(local, condition);
+			Element parent = xml_nodes.get(get_location(dec));
+			parent.appendChild(condition);
 			}
 		
 		
@@ -258,11 +270,15 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		}
 		xml_nodes.put(right, condition_right);
 		currentElement.appendChild(condition_right);
+		dec.appendChild(condition_right);
 		xml_nodes.remove(left);
 		xml_nodes.put(left, condition_left);
+		//dec.appendChild(condition_left);
 		
 		node.getLeft().apply(this);
 		node.getRight().apply(this);
+		System.out.println("------->"+xml_nodes.toString());
+		System.out.println("....>"+rootElement);
 		
 	}
 
@@ -281,7 +297,11 @@ public class GenerateTestCases extends AnalysisAdaptor {
 				condition.appendChild(new_evaluation); 
 				}
 			currentElement.replaceChild(condition, conditions.item(i));
-			xml_nodes.replace(get_location(condition),condition);
+			ILexLocation local= get_location(condition);
+			xml_nodes.remove(local);
+			xml_nodes.put(local, condition);
+			Element parent = xml_nodes.get(get_location(dec));
+			parent.appendChild(condition);
 			}
 		
 		
@@ -306,9 +326,10 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		}
 		xml_nodes.put(right, condition_right);
 		currentElement.appendChild(condition_right);
+		dec.appendChild(condition_right);
 		xml_nodes.remove(left);
 		xml_nodes.put(left, condition_left);
-		
+		//dec.appendChild(condition_left);
 		node.getLeft().apply(this);
 		node.getRight().apply(this);
 	}

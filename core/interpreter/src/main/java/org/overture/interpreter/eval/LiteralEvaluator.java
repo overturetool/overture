@@ -11,6 +11,7 @@ import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.MCDCoverage;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.BooleanValue;
@@ -22,7 +23,7 @@ import org.overture.interpreter.values.Value;
 
 public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 {
-
+	
 	@Override
 	public Value caseAIntLiteralExp(AIntLiteralExp node, Context ctxt)
 			throws AnalysisException

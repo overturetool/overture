@@ -6,6 +6,7 @@ import org.overture.config.Settings;
 import org.overture.interpreter.debug.DBGPReaderV2;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.util.InterpreterUtil;
+import org.overture.interpreter.values.Value;
 import org.overture.test.framework.BaseTestCase;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -29,8 +30,8 @@ public class TestCoverageForLoopStatements extends BaseTestCase {
     public void test() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_PP;
-        InterpreterUtil.interpret(Dialect.VDM_PP, "new TestFor().Remove([1,2,3,4],4)", new File("src/test/resources/coverage/test_for_loop_statements.vdmpp".replace('/', File.separatorChar)), true);
-        
+        Value result = InterpreterUtil.interpret(Dialect.VDM_PP, "new TestFor().Remove([1,2,3,4],4)", new File("src/test/resources/coverage/test_for_loop_statements.vdmpp".replace('/', File.separatorChar)), true);
+        System.out.println("Result: "+result.toString());
         Interpreter interpreter = Interpreter.getInstance();
         File coverageFolder = new File("src/test/target/vdmpp-coverage/if-statement".replace('/', File.separatorChar));
         coverageFolder.mkdirs();

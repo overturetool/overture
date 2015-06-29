@@ -409,6 +409,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
+			//node.apply(ctx, ctxt);
 			QuantifierList quantifiers = new QuantifierList();
 
 			for (PMultipleBind mb : node.getBindList())
@@ -432,6 +433,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 				for (NameValuePair nvp : nvpl)
 				{	
+					
 					Value v = evalContext.get(nvp.name);
 			        
 					if (v == null)
@@ -446,7 +448,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 						}
 					}
 				}
-
+				//node.getPredicate().apply(ctx, evalContext);
 				if (matches
 						&& !node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
 				{
