@@ -46,6 +46,7 @@ import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 import org.overture.pog.utility.Substitution;
 import org.overture.pog.visitors.IVariableSubVisitor;
+import org.overture.typechecker.utilities.SelfDefinitionFinder;
 
 public class StateInvariantObligation extends ProofObligation
 {
@@ -127,7 +128,8 @@ public class StateInvariantObligation extends ProofObligation
 			;
 		} else
 		{
-			inv_exp = invDefs(atom.getAssignments().get(0).getClassDefinition());
+			
+			inv_exp = extractInv(atom);
 		}
 		PExp ant_exp = inv_exp.clone();
 		List<Substitution> subs = new LinkedList<Substitution>();
@@ -144,6 +146,17 @@ public class StateInvariantObligation extends ProofObligation
 
 		stitch = AstExpressionFactory.newAImpliesBooleanBinaryExp(ant_exp, inv_exp);
 		valuetree.setPredicate(stitch);
+	}
+
+	private PExp extractInv(AAtomicStm atom)
+	{
+		AAssignmentStm x = atom.getAssignments().get(0);
+		if (x.getClassDefinition() != null){
+			return invDefs(x.getClassDefinition());
+		}
+		else{
+			return invDefs(x.getStateDefinition());
+		}
 	}
 
 	public StateInvariantObligation(AImplicitOperationDefinition def,
@@ -169,5 +182,9 @@ public class StateInvariantObligation extends ProofObligation
 		}
 
 		return root;
+	}
+	
+	private PExp invDefs(AStateDefinition def){
+		return def.getInvExpression().clone();
 	}
 }
