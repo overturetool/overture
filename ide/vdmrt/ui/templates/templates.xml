@@ -39,10 +39,9 @@ end ${className}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="forall in set" enabled="true" name="forallinset" id="forallinsetVDMRT">forall ${element} in set ${set}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="Explicit function" enabled="true" name="functionExplicit" id="functionExplicitVDMRT">${private} ${functionName} :  ${parameterTypes} -&gt; ${resultType}
 ${functionName} (${parameterNames}) == ${expression};</template>
-	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="Implicit function" enabled="true" name="functionImplicit" id="functionImplicitVDMRT">${private} ${functionName} (${parameters}) -&gt;
-${resultName}: ${resultType}
-pre ${predicate}
-post ${predicate}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="Implicit function" enabled="true" name="functionImplicit" id="functionImplicitVDMRT">${private} ${functionName} (${parameters}) ${resultName}: ${resultType}
+pre ${predicate1}
+post ${predicate2}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="Function block" enabled="true" name="functions" id="functionsVDMRT">
 functions
 	${cursor}</template>
@@ -64,12 +63,11 @@ instance variables
 	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="Mutex operation" enabled="true" name="mutex" id="mutexVDMRT">mutex ${operationName}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="Explicit Operation" enabled="true" name="operationExplicit" id="operationExplicitVDMRT">${private} ${operationName} : ${parameterTypes} ==&gt; ${resultType}
 ${operationName} (${parameterNames}) == ${statements};</template>
-	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="Implicit operation" enabled="true" name="operationImplicit" id="operationImplicitVDMRT">${private} ${operationName} (${parameters}) ==&gt;
-${resultName}: ${resultType}
+	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="Implicit operation" enabled="true" name="operationImplicit" id="operationImplicitVDMRT">${private} ${operationName} (${parameters}) ${resultName}: ${resultType}
 	ext rd ${instanceVariable1} : ${instanceVariable1Type}
 	wr ${instanceVariable2} : ${instanceVariable2Type}
-	pre ${predicate}
-	post ${predicate};</template>
+	pre ${predicate1}
+	post ${predicate2};</template>
 	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="Operation block" enabled="true" name="operations" id="operationsVDMRT">
 operations
 	${cursor}</template>
