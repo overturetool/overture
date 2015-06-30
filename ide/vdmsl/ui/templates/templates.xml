@@ -65,4 +65,9 @@ operations
 	${cursor}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="while predicate do statement" enabled="true" name="while" id="whileVDMSL">while ${predicate} 
 do ${statement}</template>
+  <template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="State Definition Block" enabled="true" name="state" id="stateVDMSL">state ${name} of
+	  ${field1} : ${type1}
+	  inv mk_${name}(${field1}) == ${exp1}
+	  init s == s = mk_${name}(${exp2})
+	end</template>
 </templates>
