@@ -1,4 +1,4 @@
-package org.overturetool.cgisa;
+package org.overturetool.cgisa.utils;
 
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
