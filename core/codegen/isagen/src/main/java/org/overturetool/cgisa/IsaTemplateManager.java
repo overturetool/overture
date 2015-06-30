@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
+import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.patterns.ATypeMultipleBindCG;
 import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
@@ -69,6 +70,7 @@ public class IsaTemplateManager extends TemplateManager
 	private static final String SEQ_TYPE = "Seq";
 	private static final String MAP_TYPE = "Map";
 	private static final String NOT_IMPL_EXP = "NotImplemented";
+	private static final String SET_MULT_BIND = "SetMultiple";
 
 	public IsaTemplateManager(TemplateStructure templateStructure,
 			Class<?> classRef)
@@ -114,6 +116,9 @@ public class IsaTemplateManager extends TemplateManager
 
 		nodeTemplateFileNames.put(ATypeMultipleBindCG.class, templateStructure.makePath(BINDS_PATH)
 				+ TYPE_MULTIPLE_BIND);
+		
+		nodeTemplateFileNames.put(ASetMultipleBindCG.class, templateStructure.makePath(BINDS_PATH)
+				+ SET_MULT_BIND);
 
 		nodeTemplateFileNames.put(AExplicitVarExpCG.class, templateStructure.EXP_PATH
 				+ MISC_EXP_PATH + File.separatorChar + EXPLICIT_VAR);

@@ -19,14 +19,14 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overturetool.cgisa.checkers;
+package org.overturetool.cgisa.utils;
 
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.AnswerAdaptor;
-import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 
-public class IsSeqOfCharTypeVisitor extends AnswerAdaptor<Boolean>
+public class IsMethodTypeVisitor extends AnswerAdaptor<Boolean>
 {
 
 	@Override
@@ -40,11 +40,12 @@ public class IsSeqOfCharTypeVisitor extends AnswerAdaptor<Boolean>
 	{
 		return false;
 	}
-	
+
 	@Override
-	public Boolean caseASeqSeqTypeCG(ASeqSeqTypeCG node)
+	public Boolean caseAMethodTypeCG(AMethodTypeCG node)
 			throws AnalysisException
 	{
-		return node.getSeqOf().apply(new IsCharTypeVisitor());
+		return true;
 	}
+
 }
