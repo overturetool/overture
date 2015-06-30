@@ -11,7 +11,6 @@ import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.MCDCoverage;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.BooleanValue;

@@ -1,9 +1,35 @@
 package org.overture.interpreter.runtime;
 
-import org.overture.ast.analysis.AnalysisAdaptor;
+import java.io.File;
+import java.util.HashMap;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
-import org.overture.ast.expressions.*;
+import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AExists1Exp;
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
+import org.overture.ast.expressions.AGreaterNumericBinaryExp;
+import org.overture.ast.expressions.AIfExp;
+import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
+import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.ANotEqualBinaryExp;
+import org.overture.ast.expressions.ANotUnaryExp;
+import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.SBooleanBinaryExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
@@ -12,19 +38,14 @@ import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.interpreter.debug.BreakpointManager;
-import org.overture.interpreter.values.*;
+import org.overture.interpreter.values.NameValuePair;
+import org.overture.interpreter.values.NameValuePairList;
+import org.overture.interpreter.values.Quantifier;
+import org.overture.interpreter.values.QuantifierList;
+import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.ValueList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import java.io.File;
-import java.util.HashMap;
 
 
 public class CoverageToXML extends QuestionAdaptor<Context> {

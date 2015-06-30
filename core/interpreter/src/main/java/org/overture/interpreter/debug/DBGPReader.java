@@ -2723,7 +2723,7 @@ public class DBGPReader
 	{
 		for (File f : interpreter.getSourceFiles())
 		{
-			SourceFile source = interpreter.getSourceFile(f);
+			//SourceFile source = interpreter.getSourceFile(f);
 
 			File data = new File(coverage.getPath() + File.separator
 					+ f.getName() + ".cov");

@@ -14,7 +14,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.omg.CORBA.FREE_MEM;
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
@@ -175,7 +174,7 @@ public class EliminateMaskedTests extends AnalysisAdaptor {
 
 	private void remove_evaluation(Node parentNode, String eval_number) {
 
-		if (parentNode!=null) {
+		if (parentNode != null) {
 			NodeList conditions = parentNode.getChildNodes();
 			for (int i = 0; i < conditions.getLength(); i++) {
 				NodeList evaluations = conditions.item(i).getChildNodes();
