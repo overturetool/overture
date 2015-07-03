@@ -485,10 +485,12 @@ public class ExpAssistantCG extends AssistantBase
 		{
 			return consTupleIsExp(exp, checkedType);
 		} else if (checkedType instanceof ARecordTypeCG
-				|| checkedType instanceof AClassTypeCG)
+				|| checkedType instanceof AClassTypeCG
+				|| checkedType instanceof AStringTypeCG)
 		{
 			return consGeneralIsExp(exp, checkedType);
-		} else
+		}
+		else
 		{
 			if(checkedType instanceof ASeqSeqTypeCG)
 			{
