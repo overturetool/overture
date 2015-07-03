@@ -46,7 +46,7 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
+import org.w3c.dom.NodeList;
 
 public class CoverageToXML extends QuestionAdaptor<Context> {
 	private Document doc;
@@ -69,6 +69,19 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		this.doc.appendChild(rootElement);
 		this.iteration = 0;
 		this.xml_nodes = new HashMap<>();
+	}
+
+	public ILexLocation get_location(Element e) {
+		int sl = Integer.valueOf(e.getAttribute("start_line"));
+		int sc = Integer.valueOf(e.getAttribute("start_column"));
+		int el = Integer.valueOf(e.getAttribute("end_line"));
+		int ec = Integer.valueOf(e.getAttribute("end_column"));
+		for (ILexLocation l : xml_nodes.keySet()) {
+			if (l.getEndLine() == el && l.getEndPos() == ec
+					&& l.getStartLine() == sl && l.getStartPos() == sc)
+				return l;
+		}
+		return null;
 	}
 
 	public static void fill_source_file_location(Element and, ILexLocation local) {
@@ -111,9 +124,6 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		if (!xml_nodes.containsKey(local)) {
 			Element boolean_variable = doc.createElement("boolean_variable");
 			fill_source_file_location(boolean_variable, local);
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.toString());
-			boolean_variable.appendChild(source_code);
 			boolean_variable.appendChild(eval);
 			currentElement.appendChild(boolean_variable);
 			xml_nodes.put(local, boolean_variable);
@@ -130,9 +140,6 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		if (!xml_nodes.containsKey(local)) {
 			Element not = doc.createElement("not");
 			fill_source_file_location(not, local);
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.toString());
-			not.appendChild(source_code);
 			currentElement.appendChild(not);
 			currentElement = not;
 			xml_nodes.put(local, not);
@@ -180,11 +187,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 				VdmRuntime.getExpressionEvaluator(), ctx).boolValue(ctx)));
 
 		if (!xml_nodes.containsKey(local)) {
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.getIfExp().toString());
 			Element if_statement = doc.createElement("if_statement");
 			fill_source_file_location(if_statement, local);
-			if_statement.appendChild(source_code);
 			if_statement.appendChild(eval);
 			Element expression = doc.createElement("expression");
 			if_statement.appendChild(expression);
@@ -215,11 +219,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 				VdmRuntime.getExpressionEvaluator(), ctx).boolValue(ctx)));
 
 		if (!xml_nodes.containsKey(local)) {
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.toString());
 			Element op = doc.createElement("not_equal");
 			fill_source_file_location(op, local);
-			op.appendChild(source_code);
 			op.appendChild(eval);
 			currentElement.appendChild(op);
 			xml_nodes.put(local, op);
@@ -239,11 +240,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		eval.setTextContent(String.valueOf(node.apply(
 				VdmRuntime.getExpressionEvaluator(), ctx).boolValue(ctx)));
 		if (!xml_nodes.containsKey(local)) {
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.toString());
 			Element op = doc.createElement("greater_or_equal");
 			fill_source_file_location(op, local);
-			op.appendChild(source_code);
 			op.appendChild(eval);
 			currentElement.appendChild(op);
 			xml_nodes.put(local, op);
@@ -261,11 +259,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		eval.setTextContent(String.valueOf(node.apply(
 				VdmRuntime.getExpressionEvaluator(), ctx).boolValue(ctx)));
 		if (!xml_nodes.containsKey(local)) {
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.toString());
 			Element op = doc.createElement("greater");
 			fill_source_file_location(op, local);
-			op.appendChild(source_code);
 			op.appendChild(eval);
 			currentElement.appendChild(op);
 			xml_nodes.put(local, op);
@@ -283,11 +278,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		eval.setTextContent(String.valueOf(node.apply(
 				VdmRuntime.getExpressionEvaluator(), ctx).boolValue(ctx)));
 		if (!xml_nodes.containsKey(local)) {
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.toString());
 			Element op = doc.createElement("lesser_or_equal");
 			fill_source_file_location(op, local);
-			op.appendChild(source_code);
 			op.appendChild(eval);
 			currentElement.appendChild(op);
 			xml_nodes.put(local, op);
@@ -305,11 +297,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		eval.setTextContent(String.valueOf(node.apply(
 				VdmRuntime.getExpressionEvaluator(), ctx).boolValue(ctx)));
 		if (!xml_nodes.containsKey(local)) {
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.toString());
 			Element op = doc.createElement("lesser");
 			fill_source_file_location(op, local);
-			op.appendChild(source_code);
 			op.appendChild(eval);
 			currentElement.appendChild(op);
 			xml_nodes.put(local, op);
@@ -327,11 +316,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		eval.setTextContent(String.valueOf(node.apply(
 				VdmRuntime.getExpressionEvaluator(), ctx).boolValue(ctx)));
 		if (!xml_nodes.containsKey(local)) {
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.toString());
 			Element op = doc.createElement("equals");
 			fill_source_file_location(op, local);
-			op.appendChild(source_code);
 			op.appendChild(eval);
 			currentElement.appendChild(op);
 			xml_nodes.put(local, op);
@@ -349,10 +335,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		evaluation.setTextContent(null);
 
 		if (!xml_nodes.containsKey(local)) {
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.toString());
 			Element exists = doc.createElement("exists1");
-			exists.appendChild(source_code);
 			fill_source_file_location(exists, node.getLocation());
 			Element expression = doc.createElement("expression");
 			exists.appendChild(evaluation);
@@ -421,10 +404,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		evaluation.setTextContent(null);
 
 		if (!xml_nodes.containsKey(local)) {
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.toString());
 			Element exists = doc.createElement("exists");
-			exists.appendChild(source_code);
 			fill_source_file_location(exists, node.getLocation());
 			exists.appendChild(evaluation);
 			Element expression = doc.createElement("expression");
@@ -505,10 +485,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 				VdmRuntime.getExpressionEvaluator(), ctx).boolValue(ctx)));
 
 		if (!xml_nodes.containsKey(local)) {
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.getElseIf().toString());
+
 			Element if_statement = doc.createElement("elseif");
-			if_statement.appendChild(source_code);
 			fill_source_file_location(if_statement, local);
 			if_statement.appendChild(eval);
 			Element expression = doc.createElement("expression");
@@ -536,10 +514,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		ILexLocation local = node.getLocation();
 		if (!xml_nodes.containsKey(local)) {
 			this.iteration = (int) local.getHits();
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.getStatement().toString());
+
 			Element forall_statement = doc.createElement("forall_statement");
-			forall_statement.appendChild(source_code);
 			fill_source_file_location(forall_statement, local);
 			Element expression = doc.createElement("expression");
 			forall_statement.appendChild(expression);
@@ -577,10 +553,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		evaluation.setTextContent(null);
 
 		if (!xml_nodes.containsKey(local)) {
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.toString());
+
 			Element exists = doc.createElement("for_all_expression");
-			exists.appendChild(source_code);
 			fill_source_file_location(exists, node.getLocation());
 			Element expression = doc.createElement("expression");
 			exists.appendChild(evaluation);
@@ -598,20 +572,18 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 							.getChildNodes().item(i);
 			}
 		}
-		
-		boolean value=true;
+
+		boolean value = true;
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctx);
 
-		try
-		{
+		try {
 			QuantifierList quantifiers = new QuantifierList();
 
-			for (PMultipleBind mb : node.getBindList())
-			{
-				ValueList bvals = ctx.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctx);
+			for (PMultipleBind mb : node.getBindList()) {
+				ValueList bvals = ctx.assistantFactory
+						.createPMultipleBindAssistant().getBindValues(mb, ctx);
 
-				for (PPattern p : mb.getPlist())
-				{
+				for (PPattern p : mb.getPlist()) {
 					Quantifier q = new Quantifier(p, bvals);
 					quantifiers.add(q);
 				}
@@ -619,24 +591,20 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 
 			quantifiers.init(ctx, false);
 
-			while (quantifiers.hasNext())
-			{
-				Context evalContext = new Context(ctx.assistantFactory, node.getLocation(), "forall", ctx);
+			while (quantifiers.hasNext()) {
+				Context evalContext = new Context(ctx.assistantFactory,
+						node.getLocation(), "forall", ctx);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
-				for (NameValuePair nvp : nvpl)
-				{	
-					
+				for (NameValuePair nvp : nvpl) {
+
 					Value v = evalContext.get(nvp.name);
-			        
-					if (v == null)
-					{
+
+					if (v == null) {
 						evalContext.put(nvp.name, nvp.value);
-					} else
-					{
-						if (!v.equals(nvp.value))
-						{
+					} else {
+						if (!v.equals(nvp.value)) {
 							matches = false;
 							break; // This quantifier set does not match
 						}
@@ -644,17 +612,18 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 				}
 				node.getPredicate().apply(this, evalContext);
 				if (matches
-						&& !node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctx))
-				{
+						&& !node.getPredicate()
+								.apply(VdmRuntime.getExpressionEvaluator(),
+										evalContext).boolValue(ctx)) {
 					evaluation.setTextContent("false");
 					value = false;
 					break;
 				}
 			}
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 		}
-		if(value)evaluation.setTextContent("true");
+		if (value)
+			evaluation.setTextContent("true");
 	}
 
 	@Override
@@ -671,10 +640,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 
 		if (!xml_nodes.containsKey(local)) {
 			this.iteration = (int) local.getHits();
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.getExp().toString());
+
 			Element while_statement = doc.createElement("while_statement");
-			while_statement.appendChild(source_code);
 			while_statement.appendChild(evaluation);
 			fill_source_file_location(while_statement, local);
 			Element expression = doc.createElement("expression");
@@ -706,11 +673,9 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 				VdmRuntime.getExpressionEvaluator(), ctx).boolValue(ctx)));
 
 		if (!xml_nodes.containsKey(local)) {
-			Element source_code = doc.createElement("source_code");
-			source_code.setTextContent(node.getTest().toString());
+
 			Element if_statement = doc.createElement("if_expression");
 			fill_source_file_location(if_statement, local);
-			if_statement.appendChild(source_code);
 			if_statement.appendChild(eval);
 			Element expression = doc.createElement("expression");
 			if_statement.appendChild(expression);
@@ -731,54 +696,57 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		}
 	}
 
-	/*
-	 * @Override public void caseAPostOpExp(APostOpExp node) throws
-	 * AnalysisException { // TODO Auto-generated method stub ILexLocation local
-	 * = node.getLocation(); this.iteration = (int) local.getHits(); PExp exp =
-	 * node.getPostexpression(); Element eval = doc.createElement("evaluation");
-	 * eval.setAttribute("n", Integer.toString(iteration));
-	 * eval.setTextContent(String.valueOf(exp.apply(
-	 * VdmRuntime.getExpressionEvaluator(), ctx).boolValue(ctx)));
-	 * 
-	 * if (!xml_nodes.containsKey(local)) { Element source_code =
-	 * doc.createElement("source_code");
-	 * source_code.setTextContent(node.getPostexpression().toString()); Element
-	 * if_statement = doc.createElement("post");
-	 * if_statement.appendChild(source_code);
-	 * fill_source_file_location(if_statement, local);
-	 * if_statement.appendChild(eval); Element expression =
-	 * doc.createElement("expression"); if_statement.appendChild(expression);
-	 * currentElement = expression; exp.apply(this);
-	 * rootElement.appendChild(if_statement); xml_nodes.put(local,
-	 * if_statement); } else { xml_nodes.get(local).appendChild(eval); for (int
-	 * i = 0; i < xml_nodes.get(local).getChildNodes() .getLength(); i++) { if
-	 * (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
-	 * .equals("expression")) currentElement = (Element) xml_nodes.get(local)
-	 * .getChildNodes().item(i); } exp.apply(this); } }
-	 * 
-	 * @Override public void caseAPreOpExp(APreOpExp node) throws
-	 * AnalysisException { ILexLocation local = node.getLocation();
-	 * this.iteration = (int) local.getHits(); PExp exp = node.getExpression();
-	 * Element eval = doc.createElement("evaluation"); eval.setAttribute("n",
-	 * Integer.toString(iteration));
-	 * eval.setTextContent(String.valueOf(exp.apply(
-	 * VdmRuntime.getExpressionEvaluator(), ctx).boolValue(ctx)));
-	 * 
-	 * if (!xml_nodes.containsKey(local)) { Element source_code =
-	 * doc.createElement("source_code");
-	 * source_code.setTextContent(node.getExpression().toString()); Element
-	 * if_statement = doc.createElement("pre");
-	 * if_statement.appendChild(source_code);
-	 * fill_source_file_location(if_statement, local);
-	 * if_statement.appendChild(eval); Element expression =
-	 * doc.createElement("expression"); if_statement.appendChild(expression);
-	 * currentElement = expression; exp.apply(this);
-	 * rootElement.appendChild(if_statement); xml_nodes.put(local,
-	 * if_statement); } else { xml_nodes.get(local).appendChild(eval); for (int
-	 * i = 0; i < xml_nodes.get(local).getChildNodes() .getLength(); i++) { if
-	 * (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
-	 * .equals("expression")) currentElement = (Element) xml_nodes.get(local)
-	 * .getChildNodes().item(i); } exp.apply(this); } }
-	 */
+	/*public void mark_tested(GenerateTestCases gtc) {
+		NodeList decisions = rootElement.getChildNodes();
+		for (int i = 0; i < decisions.getLength(); i++) {
+			Element decision = (Element) decisions.item(i);
+			Element generated = gtc.xml_nodes.get(get_location(decision));
+
+			NodeList expressions = decision.getElementsByTagName("expression");
+			if (expressions != null) {
+				NodeList conditions = generated.getChildNodes();
+				if (conditions != null) {
+					get_location((Element) conditions.item(0));
+					
+				}
+
+			}
+			for (ILexLocation l : gtc.xml_nodes.keySet()) {
+
+			}
+		}
+
+	}*/
+
+	public boolean evaluationEquals(Element a, Element b) throws Exception {
+		String content_a = a.getTextContent();
+		String content_b = b.getTextContent();
+		
+		if (content_a == null || content_b == null)
+			throw new Exception("No text content on node " + a.toString());
+		
+		if (!content_a.equals("true") || !content_a.equals("false")
+				|| !content_a.equals("?"))
+			throw new Exception("Node " + a.toString()
+					+ " has invalid content!");
+		
+		if (!content_b.equals("true") || !content_b.equals("false")
+				|| !content_b.equals("?"))
+			throw new Exception("Node " + b.toString()
+					+ " has invalid content!");
+		
+		if (a.getTextContent().equals("?") || b.getTextContent().equals("?"))
+			return true;
+		else
+			return (a.getTextContent().equals(b.getTextContent()));
+	}
+
+	public String getEvalNumber(Element a) throws Exception {
+		if (a.hasAttribute("n"))
+			return a.getAttribute("n");
+		else {
+			throw new Exception("Evaluation has no number!");
+		}
+	}
 
 }

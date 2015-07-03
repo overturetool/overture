@@ -43,6 +43,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
@@ -1854,7 +1862,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		for (File f : interpreter.getSourceFiles()) {
 			interpreter.getCoverage_to_xml().saveCoverageXml(coverage,
 					f.getName());
-			DecisionStructuresVisitor dsv = new DecisionStructuresVisitor();
+			DecisionStructuresVisitor dsv = new DecisionStructuresVisitor(f.getName());
 
 			if (interpreter instanceof ClassInterpreter) {
 				ClassInterpreter ci = (ClassInterpreter) interpreter;
@@ -1876,7 +1884,28 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 					}
 				}
 			}
+			//interpreter.getCoverage_to_xml().mark_tested(dsv.getGTC());
 			dsv.getGTC().saveCoverageXml(coverage, f.getName());
+			TransformerFactory factory = TransformerFactory.newInstance();
+			System.out.println(f.getPath());
+	        Source xslt = new StreamSource(new File("src/main/resources/MCDCTransformation.xsl"));
+	        Transformer transformer = null;
+			try {
+				transformer = factory.newTransformer(xslt);
+			} catch (TransformerConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+	        Source text = new StreamSource(new File(coverage.getPath()
+					+ File.separator + f.getName() + "test_cases.xml"));
+	        try {
+				transformer.transform(text, new StreamResult(new File(coverage.getPath()
+						+ File.separator + f.getName() + f.getName()+".html")));
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		Properties.parser_tabstop = 1;// required to match locations with the
 										// editor representation

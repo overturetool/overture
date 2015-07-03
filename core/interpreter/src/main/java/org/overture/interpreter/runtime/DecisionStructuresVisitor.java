@@ -11,8 +11,8 @@ import org.overture.ast.statements.AWhileStm;
 public class DecisionStructuresVisitor extends DepthFirstAnalysisAdaptor{
 	 private GenerateTestCases gtc; 
 	 
-	 public DecisionStructuresVisitor(){
-		 this.gtc = new GenerateTestCases();
+	 public DecisionStructuresVisitor(String fname){
+		 this.gtc = new GenerateTestCases(fname);
 	 }
 	 
 	 public GenerateTestCases getGTC(){
