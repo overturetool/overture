@@ -113,7 +113,7 @@
 
     <xsl:template match="if_expression" mode="specific">
         <center>
-            <h3>ElseIf Statement</h3>
+            <h3>If Expression</h3>
             <h4>Line : <xsl:value-of select="@start_line"/></h4>
         </center>
         <center>
