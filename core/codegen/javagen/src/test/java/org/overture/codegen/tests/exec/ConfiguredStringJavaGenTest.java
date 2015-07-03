@@ -41,6 +41,6 @@ public class ConfiguredStringJavaGenTest extends CommonJavaGenCheckerTest
 	@Override
 	protected String getPropertyId()
 	{
-		return "configured";
+		return "configuredstring";
 	}
 }
