@@ -4,8 +4,11 @@ import java.util.*;
 
 
 @SuppressWarnings("all")
-final abstract public class Entry {
+final public class Entry {
     private static St St = new St(new R(1L));
+
+    private Entry() {
+    }
 
     public static Object Run() {
         St.x.r = 200L;

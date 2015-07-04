@@ -4,7 +4,10 @@ import java.util.*;
 
 
 @SuppressWarnings("all")
-final abstract public class Entry {
+final public class Entry {
+    private Entry() {
+    }
+
     public static Object Run() {
         return 2L;
     }
