@@ -1,1 +1,1 @@
-["Error 3301: opdef2.vdm at 16:5 Variable \u0027S1\u0027 in scope is not updatable"]
+["Error 3302: opdef2.vdm at 16:5 State variable \u0027S1\u0027 cannot be accessed from this context","Error 3301: opdef2.vdm at 16:5 Variable \u0027S1\u0027 in scope is not updatable"]

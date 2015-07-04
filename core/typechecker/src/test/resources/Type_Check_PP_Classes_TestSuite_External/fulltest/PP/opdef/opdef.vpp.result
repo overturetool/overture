@@ -21,7 +21,6 @@
 <message column="4" line="84" message="Value is not of the right type" messageType="error" number="3327" resource="opdef.vpp"/>
 <message column="3" line="82" message="Operation returns unexpected type" messageType="error" number="3027" resource="opdef.vpp"/>
 <message column="9" line="109" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="opdef.vpp"/>
-<message column="4" line="108" message="Variable 'r' in scope is not updatable" messageType="error" number="3301" resource="opdef.vpp"/>
 <message column="3" line="107" message="Operation returns unexpected type" messageType="error" number="3035" resource="opdef.vpp"/>
 <message column="15" line="110" message="Left hand of + is not numeric" messageType="error" number="3139" resource="opdef.vpp"/>
 <result/>

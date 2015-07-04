@@ -137,7 +137,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		if (!question.assistantFactory.getTypeComparator().compatible(node.getTargetType(), node.getExpType()))
 		{
 			TypeCheckerErrors.report(3239, "Incompatible types in assignment", node.getLocation(), node);
-			TypeCheckerErrors.detail2("Target", node.getTarget(), "Expression", node.getExp());
+			TypeCheckerErrors.detail2("Target", node.getTarget().getType(), "Expression", node.getExp().getType());
 		}
 
 		node.setClassDefinition(question.env.findClassDefinition());
