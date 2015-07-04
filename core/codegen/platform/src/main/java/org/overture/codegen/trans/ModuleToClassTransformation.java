@@ -55,6 +55,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 	public void caseAModuleDeclCG(AModuleDeclCG node) throws AnalysisException
 	{
 		clazz = new AClassDeclCG();
+		clazz.setAbstract(true);
 		clazz.setSourceNode(node.getSourceNode());
 		clazz.setAccess(IRConstants.PUBLIC);
 		clazz.setName(node.getName());
