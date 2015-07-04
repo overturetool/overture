@@ -4,7 +4,7 @@ import java.util.*;
 
 
 @SuppressWarnings("all")
-public class Entry {
+final abstract public class Entry {
     private static Other Other = new Other(10L);
 
     public static Object Run() {
@@ -53,7 +53,7 @@ import java.util.*;
 
 
 @SuppressWarnings("all")
-public class Other {
+final abstract public class Other {
     public static final Number x = 5L;
 
     public String toString() {

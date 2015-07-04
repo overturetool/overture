@@ -4,7 +4,7 @@ import java.util.*;
 
 
 @SuppressWarnings("all")
-public class Entry {
+final abstract public class Entry {
     public static Object Run() {
         return Func.op().longValue() + Func.id(8L).longValue();
     }
@@ -21,7 +21,7 @@ import java.util.*;
 
 
 @SuppressWarnings("all")
-public class Func {
+final abstract public class Func {
     public static Number op() {
         return 1L;
     }
