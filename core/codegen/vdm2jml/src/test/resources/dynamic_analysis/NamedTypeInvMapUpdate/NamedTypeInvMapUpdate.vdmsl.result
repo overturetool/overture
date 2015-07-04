@@ -1,4 +1,4 @@
 "Breaking named type invariant for sequence"
-Entry.java:21: JML assertion is false
+Entry.java:24: JML assertion is false
         //@ assert inv_Entry_M(m);
             ^
