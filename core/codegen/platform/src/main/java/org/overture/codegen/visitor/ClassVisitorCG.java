@@ -42,12 +42,8 @@ import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
-import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
@@ -191,23 +187,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 
 		if (!defaultConstructorExplicit)
 		{
-			AMethodDeclCG constructor = new AMethodDeclCG();
-
-			AClassTypeCG classType = new AClassTypeCG();
-			classType.setName(name);
-
-			AMethodTypeCG methodType = new AMethodTypeCG();
-			methodType.setResult(classType);
-
-			constructor.setMethodType(methodType);
-			constructor.setAccess(IRConstants.PUBLIC);
-			constructor.setAbstract(false);
-			constructor.setIsConstructor(true);
-			constructor.setName(name);
-			constructor.setImplicit(false);
-			constructor.setBody(new ABlockStmCG());
-
-			classCg.getMethods().add(constructor);
+			classCg.getMethods().add(question.getDeclAssistant().consDefaultContructor(name));
 		}
 
 		return classCg;
