@@ -59,6 +59,11 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		clazz.setAccess(IRConstants.PUBLIC);
 		clazz.setName(node.getName());
 
+		// Prevent instantiation of the class
+		AMethodDeclCG privConstructor = info.getDeclAssistant().consDefaultContructor(node.getName());
+		privConstructor.setAccess(IRConstants.PRIVATE);
+		clazz.getMethods().add(privConstructor);
+		
 		makeStateAccessExplicit(node);
 		handleImports(node.getImport(), clazz);
 		

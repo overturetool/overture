@@ -7,7 +7,7 @@ import java.util.*;
 
 //@ nullable_by_default
 @SuppressWarnings("all")
-public class St implements Record {
+final public class St implements Record {
     //@ public instance invariant inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
     public Object x;
 

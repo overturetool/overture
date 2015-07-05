@@ -58,8 +58,10 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
@@ -679,5 +681,26 @@ public class DeclAssistantCG extends AssistantBase
 		// pre or post expression of the operation
 
 		return preCond == next || postCond == next;
+	}
+	
+	public AMethodDeclCG consDefaultContructor(String name)
+	{
+		AMethodDeclCG constructor = new AMethodDeclCG();
+
+		AClassTypeCG classType = new AClassTypeCG();
+		classType.setName(name);
+
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		methodType.setResult(classType);
+
+		constructor.setMethodType(methodType);
+		constructor.setAccess(IRConstants.PUBLIC);
+		constructor.setAbstract(false);
+		constructor.setIsConstructor(true);
+		constructor.setName(name);
+		constructor.setImplicit(false);
+		constructor.setBody(new ABlockStmCG());
+		
+		return constructor;
 	}
 }

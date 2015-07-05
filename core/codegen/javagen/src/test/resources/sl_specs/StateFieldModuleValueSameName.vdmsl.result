@@ -4,8 +4,11 @@ import java.util.*;
 
 
 @SuppressWarnings("all")
-public class Entry {
+final public class Entry {
     private static Other Other = new Other(10L);
+
+    private Entry() {
+    }
 
     public static Object Run() {
         return Other.x;
@@ -53,8 +56,11 @@ import java.util.*;
 
 
 @SuppressWarnings("all")
-public class Other {
+final public class Other {
     public static final Number x = 5L;
+
+    private Other() {
+    }
 
     public String toString() {
         return "Other{" + "x = " + Utils.toString(x) + "}";

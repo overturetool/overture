@@ -4,9 +4,12 @@ import java.util.*;
 
 
 @SuppressWarnings("all")
-public class Entry {
+final public class Entry {
     public static final Number x = 78L;
     private static St St = new St(x);
+
+    private Entry() {
+    }
 
     public static Object Run() {
         return St.p;
