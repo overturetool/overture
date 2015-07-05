@@ -983,8 +983,10 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			{
 				
 				Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
+				ctx.iteration++;
 				node.apply(ctx, ctxt);
 		        node.getExp().apply(ctx, ctxt);
+		        
 				if (!rv.isVoid())
 				{
 					return rv;

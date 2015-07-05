@@ -13,6 +13,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
@@ -64,8 +68,6 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		and.setAttribute("end_line", Integer.toString(local.getEndLine()));
 		and.setAttribute("end_column", Integer.toString(local.getEndPos()));
 	}
-
-	
 
 	public void saveCoverageXml(File coverage, String filename) {
 		TransformerFactory transformerFactory = TransformerFactory
@@ -119,10 +121,10 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		eval_false.setAttribute("n", "2");
 		eval_false.setTextContent("false");
 		condition.appendChild(eval_false);
-		
+
 		Element outcome = (Element) eval_true.cloneNode(true);
 		Element outcome2 = (Element) eval_false.cloneNode(true);
-		
+
 		if_statement.appendChild(outcome);
 		if_statement.appendChild(outcome2);
 
@@ -182,10 +184,10 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		eval_false.setAttribute("n", "2");
 		eval_false.setTextContent("false");
 		condition.appendChild(eval_false);
-		
+
 		Element outcome = (Element) eval_true.cloneNode(true);
 		Element outcome2 = (Element) eval_false.cloneNode(true);
-		
+
 		elseif_statement.appendChild(outcome);
 		elseif_statement.appendChild(outcome2);
 
@@ -233,10 +235,10 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		eval_false.setAttribute("n", "2");
 		eval_false.setTextContent("false");
 		condition.appendChild(eval_false);
-		
+
 		Element outcome = (Element) eval_true.cloneNode(true);
 		Element outcome2 = (Element) eval_false.cloneNode(true);
-		
+
 		while_statement.appendChild(outcome);
 		while_statement.appendChild(outcome2);
 
@@ -253,18 +255,19 @@ public class GenerateTestCases extends AnalysisAdaptor {
 			throws AnalysisException {
 		Element previous_condition = (Element) xml_nodes
 				.get(node.getLocation()).cloneNode(true);
-		NodeList previous_evaluations = previous_condition.getElementsByTagName("evaluation");
+		NodeList previous_evaluations = previous_condition
+				.getElementsByTagName("evaluation");
 
 		Element new_condition_left = doc.createElement("condition");
 		Element source_code_left = doc.createElement("source_code");
 		source_code_left.setTextContent(node.getLeft().toString());
 		new_condition_left.appendChild(source_code_left);
-		
+
 		Element new_condition_right = doc.createElement("condition");
 		Element source_code_right = doc.createElement("source_code");
 		source_code_right.setTextContent(node.getRight().toString());
 		new_condition_right.appendChild(source_code_right);
-		
+
 		fill_source_file_location(new_condition_left, node.getLeft()
 				.getLocation());
 		fill_source_file_location(new_condition_right, node.getRight()
@@ -308,7 +311,7 @@ public class GenerateTestCases extends AnalysisAdaptor {
 				Element new_eval_right = doc.createElement("evaluation");
 				new_eval_right.setAttribute("tested", "false");
 				new_eval_right.setAttribute("n", test_number);
-				new_eval_right.setTextContent("true ");
+				new_eval_right.setTextContent("true");
 
 				Element new_eval_left1 = doc.createElement("evaluation");
 				new_eval_left1.setAttribute("tested", "false");
@@ -321,7 +324,7 @@ public class GenerateTestCases extends AnalysisAdaptor {
 				new_eval_right1.setAttribute("n",
 						String.valueOf(1 + previous_evaluations.getLength()));
 				new_eval_right1.setTextContent("?");
-				
+
 				currentElement.appendChild(new_eval_left1.cloneNode(true));
 
 				duplicate_evaluation(test_number);
@@ -329,13 +332,13 @@ public class GenerateTestCases extends AnalysisAdaptor {
 				if (node.getRight() instanceof SBooleanBinaryExp) {
 					new_condition_left.appendChild(new_eval_left);
 					new_condition_right.appendChild(new_eval_right);
-					new_condition_left.appendChild(new_eval_left1);
-					new_condition_right.appendChild(new_eval_right1);
+					new_condition_left.appendChild(new_eval_right1);
+					new_condition_right.appendChild(new_eval_left1);
 				} else {
 					new_condition_left.appendChild(new_eval_right);
 					new_condition_right.appendChild(new_eval_left);
-					new_condition_left.appendChild(new_eval_right1);
-					new_condition_right.appendChild(new_eval_left1);
+					new_condition_left.appendChild(new_eval_left1);
+					new_condition_right.appendChild(new_eval_right1);
 				}
 
 			}
@@ -356,7 +359,6 @@ public class GenerateTestCases extends AnalysisAdaptor {
 			NodeList evaluations = condition.getElementsByTagName("evaluation");
 			for (int j = 0; j < evaluations.getLength(); j++) {
 				Element evaluation = (Element) evaluations.item(j);
-				System.out.println(evaluation.getAttribute("n"));
 				if (evaluation.getAttribute("n").equals(evaluation_number)) {
 					Element new_evaluation = (Element) evaluation
 							.cloneNode(true);
@@ -373,18 +375,19 @@ public class GenerateTestCases extends AnalysisAdaptor {
 			throws AnalysisException {
 		Element previous_condition = (Element) xml_nodes
 				.get(node.getLocation()).cloneNode(true);
-		NodeList previous_evaluations = previous_condition.getElementsByTagName("evaluation");
+		NodeList previous_evaluations = previous_condition
+				.getElementsByTagName("evaluation");
 
 		Element new_condition_left = doc.createElement("condition");
 		Element source_code_left = doc.createElement("source_code");
 		source_code_left.setTextContent(node.getLeft().toString());
 		new_condition_left.appendChild(source_code_left);
-		
+
 		Element new_condition_right = doc.createElement("condition");
 		Element source_code_right = doc.createElement("source_code");
 		source_code_right.setTextContent(node.getRight().toString());
 		new_condition_right.appendChild(source_code_right);
-		
+
 		fill_source_file_location(new_condition_left, node.getLeft()
 				.getLocation());
 		fill_source_file_location(new_condition_right, node.getRight()
@@ -447,7 +450,7 @@ public class GenerateTestCases extends AnalysisAdaptor {
 				new_eval_right1.setTextContent("?");
 
 				duplicate_evaluation(test_number);
-				
+
 				currentElement.appendChild(new_eval_left1.cloneNode(true));
 
 				if (node.getRight() instanceof SBooleanBinaryExp) {
@@ -500,10 +503,10 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		eval_false.setAttribute("n", "2");
 		eval_false.setTextContent("false");
 		condition.appendChild(eval_false);
-		
+
 		Element outcome = (Element) eval_true.cloneNode(true);
 		Element outcome2 = (Element) eval_false.cloneNode(true);
-		
+
 		if_expression.appendChild(outcome);
 		if_expression.appendChild(outcome2);
 
@@ -514,4 +517,23 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		exp.apply(this);
 	}
 
+	public float getTestedRate() {
+		XPath xPath = XPathFactory.newInstance().newXPath();
+		NodeList tested =null, not_tested = null;
+		try {
+			not_tested = (NodeList) xPath
+					.evaluate(
+							"//evaluation[not(@n = ../preceding-sibling::evaluation/@n) and not(@n = ../following-sibling::evaluation/@n) and @tested='false']",
+							doc.getDocumentElement(), XPathConstants.NODESET);
+
+			tested = (NodeList) xPath
+					.evaluate(
+							"//evaluation[not(@n = ../preceding-sibling::evaluation/@n) and not(@n = ../following-sibling::evaluation/@n) and @tested='true']",
+							doc.getDocumentElement(), XPathConstants.NODESET);
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return (float) ((float) tested.getLength() * 100.0 / (float) ((float)not_tested.getLength() + (float)tested.getLength()));
+	}
 }

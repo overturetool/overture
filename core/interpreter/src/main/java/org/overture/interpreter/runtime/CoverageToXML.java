@@ -1,6 +1,7 @@
 package org.overture.interpreter.runtime;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -52,7 +53,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 	private Document doc;
 	private Element rootElement;
 	private Element currentElement;
-	private int iteration;
+	public int iteration;
 	private HashMap<ILexLocation, Element> xml_nodes;
 
 	public CoverageToXML() {
@@ -696,45 +697,88 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		}
 	}
 
-	/*public void mark_tested(GenerateTestCases gtc) {
+	public void mark_tested(GenerateTestCases gtc) {
 		NodeList decisions = rootElement.getChildNodes();
 		for (int i = 0; i < decisions.getLength(); i++) {
 			Element decision = (Element) decisions.item(i);
 			Element generated = gtc.xml_nodes.get(get_location(decision));
-
 			NodeList expressions = decision.getElementsByTagName("expression");
 			if (expressions != null) {
-				NodeList conditions = generated.getChildNodes();
+				NodeList conditions = generated.getElementsByTagName("condition");
+				HashMap<Integer, ArrayList<Integer>> test_numbers = new HashMap<Integer, ArrayList<Integer>>();
 				if (conditions != null) {
-					get_location((Element) conditions.item(0));
-					
+					for(int j=0; j<conditions.getLength();j++){
+						Element condition = (Element) conditions.item(j);
+						ILexLocation local = get_location(condition);
+						Element tested= xml_nodes.get(local);
+						NodeList evaluations = condition.getElementsByTagName("evaluation");
+						
+						for (int k=0; k<evaluations.getLength();k++){
+							Element evaluation = (Element) evaluations.item(k);
+							int test_number = Integer.valueOf(evaluation.getAttribute("n"));
+							if(!test_numbers.containsKey(test_number))test_numbers.put(test_number, new ArrayList<Integer>());
+							NodeList tested_evaluation = tested.getChildNodes();
+							for (int n=0;n<tested_evaluation.getLength();n++){
+								Element eval2= (Element) tested_evaluation.item(n);
+								int test_number2= Integer.valueOf(eval2.getAttribute("n"));
+								if(evaluation.getTextContent().equals("?")){
+									if(!test_numbers.get(test_number).contains(test_number2) && j==0){
+										test_numbers.get(test_number).add(test_number2);
+									}
+								}
+								else if(eval2.getTextContent().equals(evaluation.getTextContent())){
+									if(!test_numbers.get(test_number).contains(test_number2) && j==0){
+										test_numbers.get(test_number).add(test_number2);
+									}
+								}else if(!eval2.getTextContent().equals(evaluation.getTextContent())){
+									if(test_numbers.get(test_number).contains(test_number2)){
+										test_numbers.get(test_number).remove(test_numbers.get(test_number).indexOf(test_number2));
+									}
+								}
+							}
+							
+						}
+					}
+					for(int tn: test_numbers.keySet()){
+						if (!test_numbers.get(tn).isEmpty()){
+							setTested(generated, String.valueOf(tn));
+						}
+					}
+
 				}
 
 			}
-			for (ILexLocation l : gtc.xml_nodes.keySet()) {
-
-			}
+			
 		}
 
-	}*/
+	}
+
+	public void setTested(Element decision, String test_number) {
+		NodeList evaluations = decision.getElementsByTagName("evaluation");
+		for (int i = 0; i < evaluations.getLength(); i++) {
+			Element eval = (Element) evaluations.item(i);
+			if (eval.getAttribute("n").equals(test_number))
+				eval.setAttribute("tested", "true");
+		}
+	}
 
 	public boolean evaluationEquals(Element a, Element b) throws Exception {
 		String content_a = a.getTextContent();
 		String content_b = b.getTextContent();
-		
+
 		if (content_a == null || content_b == null)
 			throw new Exception("No text content on node " + a.toString());
-		
+
 		if (!content_a.equals("true") || !content_a.equals("false")
 				|| !content_a.equals("?"))
 			throw new Exception("Node " + a.toString()
 					+ " has invalid content!");
-		
+
 		if (!content_b.equals("true") || !content_b.equals("false")
 				|| !content_b.equals("?"))
 			throw new Exception("Node " + b.toString()
 					+ " has invalid content!");
-		
+
 		if (a.getTextContent().equals("?") || b.getTextContent().equals("?"))
 			return true;
 		else

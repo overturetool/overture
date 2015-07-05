@@ -51,17 +51,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AHistoryExp;
-import org.overture.ast.expressions.AIfExp;
-import org.overture.ast.expressions.ARecordModifier;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -71,11 +66,6 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.ast.node.INode;
-import org.overture.ast.statements.AElseIfStm;
-import org.overture.ast.statements.AForAllStm;
-import org.overture.ast.statements.AIfStm;
-import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -93,9 +83,8 @@ import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.DecisionStructuresVisitor;
-import org.overture.interpreter.runtime.EliminateMaskedTests;
-import org.overture.interpreter.runtime.GenerateTestCases;
 import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.MCDCReport;
 import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.RuntimeValidator;
@@ -1858,11 +1847,14 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 	public static void writeMCDCCoverage(Interpreter interpreter, File coverage)
 			throws IOException {
 		Properties.init(); // Read properties file, if any
-
+		File temp=null;//Temporary for testing
+		MCDCReport mcdc = new MCDCReport();
 		for (File f : interpreter.getSourceFiles()) {
+			temp=f;
 			interpreter.getCoverage_to_xml().saveCoverageXml(coverage,
 					f.getName());
-			DecisionStructuresVisitor dsv = new DecisionStructuresVisitor(f.getName());
+			DecisionStructuresVisitor dsv = new DecisionStructuresVisitor(
+					f.getName());
 
 			if (interpreter instanceof ClassInterpreter) {
 				ClassInterpreter ci = (ClassInterpreter) interpreter;
@@ -1884,12 +1876,12 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 					}
 				}
 			}
-			//interpreter.getCoverage_to_xml().mark_tested(dsv.getGTC());
+			interpreter.getCoverage_to_xml().mark_tested(dsv.getGTC());
 			dsv.getGTC().saveCoverageXml(coverage, f.getName());
 			TransformerFactory factory = TransformerFactory.newInstance();
-			System.out.println(f.getPath());
-	        Source xslt = new StreamSource(new File("src/main/resources/MCDCTransformation.xsl"));
-	        Transformer transformer = null;
+			Source xslt = new StreamSource(new File(
+					"src/main/resources/MCDCTransformation.xsl"));
+			Transformer transformer = null;
 			try {
 				transformer = factory.newTransformer(xslt);
 			} catch (TransformerConfigurationException e) {
@@ -1897,16 +1889,20 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 				e.printStackTrace();
 			}
 
-	        Source text = new StreamSource(new File(coverage.getPath()
+			Source text = new StreamSource(new File(coverage.getPath()
 					+ File.separator + f.getName() + "test_cases.xml"));
-	        try {
-				transformer.transform(text, new StreamResult(new File(coverage.getPath()
-						+ File.separator + f.getName() + f.getName()+".html")));
+			try {
+				transformer.transform(text,
+						new StreamResult(new File(coverage.getPath()
+								+ File.separator + f.getName()
+								+ ".html")));
 			} catch (TransformerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			mcdc.addFile(f.getName(),dsv.getGTC().getTestedRate());
 		}
+		mcdc.saveReportHTML(coverage, temp.getName());
 		Properties.parser_tabstop = 1;// required to match locations with the
 										// editor representation
 	}

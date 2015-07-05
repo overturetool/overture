@@ -11,6 +11,13 @@
         <html>
             <head>
                 <title>MCDC Report</title>
+                <meta content="width=device-width, initial-scale=1" name="viewport">
+				<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+					<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
+					</script>
+					<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+				</link>
+</meta>
             </head>
             <body>
                 <center>
@@ -180,5 +187,8 @@
                 </td>
             </xsl:for-each>
         </tr>
+    </xsl:template>
+    
+    <xsl:template match="file_name" mode="specific">
     </xsl:template>
 </xsl:stylesheet>
