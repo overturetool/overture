@@ -38,6 +38,11 @@ public class ValueListenerList extends Vector<ValueListener>
 		add(listener);
 	}
 
+	public ValueListenerList(ValueListenerList list)
+	{
+		addAll(list);
+	}
+
 	public void changedValue(ILexLocation location, Value value, Context ctxt)
 			throws AnalysisException
 	{

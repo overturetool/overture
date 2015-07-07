@@ -30,6 +30,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
@@ -160,10 +161,28 @@ public class ObjectValue extends Value
 	@Override
 	public Value getUpdatable(ValueListenerList listeners)
 	{
-		// Object values are not updatable unless their members are explicitly.
-		// So this always just returns "this" wrapped in an UpdatableValue, so
-		// that objects can be updated as a whole, rather than recursing into
-		// the member list.
+		for (Entry<ILexNameToken, Value> m: members.entrySet())
+		{
+			Value v = m.getValue();
+			
+			if (v.deref() instanceof ObjectValue)
+			{
+				// Don't recurse into inner objects, just mark field itself
+				m.setValue(UpdatableValue.factory(v, listeners));
+			}
+			else if (v.deref() instanceof FunctionValue)
+			{
+				// Ignore function members
+			}
+			else if (v.deref() instanceof OperationValue)
+			{
+				// Ignore operation members
+			}
+			else
+			{
+				m.setValue(v.getUpdatable(listeners));
+			}
+		}
 
 		return UpdatableValue.factory(this, listeners);
 	}
