@@ -56,8 +56,7 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
-import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 
 public class SatisfiabilityObligation extends ProofObligation
 {
@@ -80,7 +79,7 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		List<PExp> arglist = new Vector<PExp>();
 
-		AImplicitFunctionDefinitionAssistantTC asist = new AImplicitFunctionDefinitionAssistantTC(af);
+		SFunctionDefinitionAssistantTC assistant = af.createSFunctionDefinitionAssistant();
 		//FIXME make these local definitions with unknown types -- so it goes through cg
 		List<List<PPattern>> aux = new Vector<List<PPattern>>();
 		for (APatternListTypePair p : func.getParamPatterns()){
@@ -91,7 +90,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			aux.add(aux2);
 		}
 		
-		List<List<PDefinition>> list =asist.getParamDefinitions(func, func.getType(), aux, func.getLocation());
+		List<List<PDefinition>> list =assistant.getParamDefinitions(func, func.getType(), aux, func.getLocation());
 		
 		for (int i =0;i<func.getParamPatterns().size();i++){
 			for (int j = 0;j<func.getParamPatterns().get(i).getPatterns().size();j++){
