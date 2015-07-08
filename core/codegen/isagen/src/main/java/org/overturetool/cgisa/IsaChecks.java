@@ -40,7 +40,7 @@ public class IsaChecks
 		}
 		return false;
 	}
-	public boolean isRec(AApplyExpCG node)
+	public boolean isRootRec(AApplyExpCG node)
 	{
 		return (node.getRoot() instanceof AFieldExpCG);
 	}
