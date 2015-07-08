@@ -33,6 +33,8 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SFunctionDefinition;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.modules.AModuleModules;
@@ -118,6 +120,7 @@ import org.overture.typechecker.utilities.expression.ImportDefinitionFinder;
 import org.overture.typechecker.utilities.expression.PreNameFinder;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.AlwaysMatchingPatternChecker;
+import org.overture.typechecker.utilities.pattern.MatchingExpressionFinder;
 import org.overture.typechecker.utilities.pattern.MultipleBindLister;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
 import org.overture.typechecker.utilities.pattern.PatternUnresolver;
@@ -1001,6 +1004,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new PossibleTypeFinder(this);
 	}
 
+	@Override
+	public IAnswer<PExp> getMatchingExpressionFinder()
+	{
+		return new MatchingExpressionFinder(this);
+	}
 
 	@Override
 	public IAnswer<Boolean> getSimplePatternChecker()

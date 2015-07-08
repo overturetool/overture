@@ -32,13 +32,16 @@ import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.LexNameToken;
@@ -48,9 +51,12 @@ import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
+import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 
 public class SatisfiabilityObligation extends ProofObligation
 {
@@ -73,11 +79,26 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		List<PExp> arglist = new Vector<PExp>();
 
-		for (APatternListTypePair pltp : func.getParamPatterns())
-		{
-			for (PPattern pattern : pltp.getPatterns())
-			{
-				arglist.add(patternToExp(pattern));
+		SFunctionDefinitionAssistantTC assistant = af.createSFunctionDefinitionAssistant();
+		//FIXME make these local definitions with unknown types -- so it goes through cg
+		List<List<PPattern>> aux = new Vector<List<PPattern>>();
+		for (APatternListTypePair p : func.getParamPatterns()){
+			Vector<PPattern> aux2 = new Vector<PPattern>();
+			for (PPattern p2 : p.getPatterns()){
+				aux2.add(p2.clone());
+			}
+			aux.add(aux2);
+		}
+		
+		List<List<PDefinition>> list =assistant.getParamDefinitions(func, func.getType(), aux, func.getLocation());
+		
+		for (int i =0;i<func.getParamPatterns().size();i++){
+			for (int j = 0;j<func.getParamPatterns().get(i).getPatterns().size();j++){
+				PExp exp = patternToExp(func.getParamPatterns().get(i).getPatterns().get(j));
+				if (exp instanceof AVariableExp){
+					((AVariableExp) exp).setVardef(list.get(i).get(j).clone());
+				}
+				arglist.add(exp);
 			}
 		}
 
@@ -85,28 +106,58 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		if (func.getPredef() != null)
 		{
-			preApply = getApplyExp(getVarExp(func.getPredef().getName()), arglist);
+			AVariableExp var = new AVariableExp();
+			var.setName(func.getPredef().getName().clone());
+			var.setOriginal(func.getPredef().getName().getFullName());
+			var.setVardef(func.getPredef().clone());
+			
+			AApplyExp apply = new AApplyExp();
+			apply.setRoot(var);
+			List<PExp> args = new Vector<PExp>();
+
+			for (PExp arg : arglist)
+			{
+				args.add(arg.clone());
+			}
+
+			apply.setArgs(args);
+			
+			preApply = getApplyExp(var, arglist);
+			preApply.setRoot(var);
+			preApply.setType(new ABooleanBasicType());
+			preApply.getRoot().setType(func.getPredef().getType().clone());
 		}
 
 		AExistsExp existsExp = new AExistsExp();
+		existsExp.setType(new ABooleanBasicType());
 		List<PExp> postArglist = new Vector<PExp>(arglist);
 
 		if (func.getResult().getPattern() instanceof AIdentifierPattern)
 		{
 			AIdentifierPattern ip = (AIdentifierPattern) func.getResult().getPattern().clone();
-			postArglist.add(patternToExp(func.getResult().getPattern()));
+			PExp rExp = patternToExp(func.getResult().getPattern());
+			if (rExp instanceof AVariableExp){
+				ALocalDefinition l = AstFactory.newALocalDefinition(func.getLocation(), func.getName().clone(), NameScope.LOCAL, func.getResult().getType());
+				((AVariableExp) rExp).setVardef(l);
+			}
+			postArglist.add(rExp);
 			existsExp.setBindList(getMultipleTypeBindList(func.getResult().getType().clone(), ip.getName()));
 		} else
 		{
 			throw new RuntimeException("Expecting identifier pattern in function result");
 		}
 
-		AApplyExp postApply = getApplyExp(getVarExp(func.getPostdef().getName()), postArglist);
+		AVariableExp rootExp = getVarExp(func.getPostdef().getName());
+		rootExp.setVardef(func.getPostdef().clone());
+		AApplyExp postApply = getApplyExp(rootExp, postArglist);
+		postApply.setType(new ABooleanBasicType());
+		postApply.getRoot().setType(func.getPostdef().getType().clone());
 		existsExp.setPredicate(postApply);
 
 		if (preApply != null)
 		{
 			AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
+			implies.setType(new ABooleanBasicType());
 			implies.setLeft(preApply);
 			implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
 			implies.setRight(existsExp);
@@ -145,6 +196,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		super(node, POType.TYPE_INV_SAT, ctxt, node.getLocation(), af);
 
 		AExistsExp exists_exp = new AExistsExp();
+		exists_exp.setType(new ABooleanBasicType());
 
 		ATypeMultipleBind tmb = new ATypeMultipleBind();
 		List<PPattern> pats = new LinkedList<PPattern>();
@@ -214,6 +266,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		if (op.getPredef() != null)
 		{
 			preApply = getApplyExp(getVarExp(op.getPredef().getName().clone()), arglist);
+			preApply.setType(new ABooleanBasicType());
 		}
 
 		PExp mainExp;
@@ -251,6 +304,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			}
 
 			AApplyExp postApply = getApplyExp(getVarExp(op.getPostdef().getName()), postArglist);
+			postApply.setType(new ABooleanBasicType());
 			existsExp.setPredicate(postApply);
 			mainExp = existsExp;
 		}
@@ -275,6 +329,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		if (preApply != null)
 		{
 			AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
+			implies.setType(new ABooleanBasicType());
 			implies.setLeft(preApply);
 			implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
 			implies.setRight(mainExp);

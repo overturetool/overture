@@ -274,7 +274,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		PType expectedResult = question.assistantFactory.createAExplicitFunctionDefinitionAssistant().checkParams(node, node.getParamPatternList().listIterator(), (AFunctionType) node.getType());
 		node.setExpectedResult(expectedResult);
-		List<List<PDefinition>> paramDefinitionList = question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getParamDefinitions(node, (AFunctionType) node.getType(), node.getParamPatternList(), node.getLocation());
+		List<List<PDefinition>> paramDefinitionList = question.assistantFactory.createSFunctionDefinitionAssistant().getParamDefinitions(node, (AFunctionType) node.getType(), node.getParamPatternList(), node.getLocation());
 
 		Collections.reverse(paramDefinitionList);
 

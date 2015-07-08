@@ -32,7 +32,6 @@ import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.node.NodeList;
@@ -118,52 +117,6 @@ public class AExplicitFunctionDefinitionAssistantTC implements IAstAssistant
 		}
 
 		return ftype.getResult();
-	}
-
-	public List<List<PDefinition>> getParamDefinitions(
-			AExplicitFunctionDefinition node, AFunctionType type,
-			List<List<PPattern>> paramPatternList, ILexLocation location)
-	{
-		List<List<PDefinition>> defList = new ArrayList<List<PDefinition>>(); // new Vector<DefinitionList>();
-		AFunctionType ftype = type; // Start with the overall function
-		Iterator<List<PPattern>> piter = paramPatternList.iterator();
-
-		while (piter.hasNext())
-		{
-			List<PPattern> plist = piter.next();
-			List<PDefinition> defs = new Vector<PDefinition>();
-			List<PType> ptypes = ftype.getParameters();
-			Iterator<PType> titer = ptypes.iterator();
-
-			if (plist.size() != ptypes.size())
-			{
-				// This is a type/param mismatch, reported elsewhere. But we
-				// have to create definitions to avoid a cascade of errors.
-
-				PType unknown = AstFactory.newAUnknownType(location);
-
-				for (PPattern p : plist)
-				{
-					defs.addAll(af.createPPatternAssistant().getDefinitions(p, unknown, NameScope.LOCAL));
-
-				}
-			} else
-			{
-				for (PPattern p : plist)
-				{
-					defs.addAll(af.createPPatternAssistant().getDefinitions(p, titer.next(), NameScope.LOCAL));
-				}
-			}
-
-			defList.add(af.createPDefinitionAssistant().checkDuplicatePatterns(node, defs));
-
-			if (ftype.getResult() instanceof AFunctionType) // else???
-			{
-				ftype = (AFunctionType) ftype.getResult();
-			}
-		}
-
-		return defList;
 	}
 
 	public List<PDefinition> getTypeParamDefinitions(
