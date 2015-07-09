@@ -120,7 +120,6 @@ import org.overture.typechecker.utilities.expression.ImportDefinitionFinder;
 import org.overture.typechecker.utilities.expression.PreNameFinder;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.AlwaysMatchingPatternChecker;
-import org.overture.typechecker.utilities.pattern.MatchingExpressionFinder;
 import org.overture.typechecker.utilities.pattern.MultipleBindLister;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
 import org.overture.typechecker.utilities.pattern.PatternUnresolver;
@@ -1002,12 +1001,6 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<PType> getPossibleTypeFinder()
 	{
 		return new PossibleTypeFinder(this);
-	}
-
-	@Override
-	public IAnswer<PExp> getMatchingExpressionFinder()
-	{
-		return new MatchingExpressionFinder(this);
 	}
 
 	@Override
