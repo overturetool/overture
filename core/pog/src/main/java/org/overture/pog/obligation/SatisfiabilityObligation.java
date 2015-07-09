@@ -38,6 +38,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -159,7 +160,7 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		exists_exp.setBindList(binds);
 		exists_exp.setPredicate(node.getInvExpression().clone());
-		
+
 		stitch = exists_exp;
 		valuetree.setPredicate(ctxt.getPredWithContext(exists_exp));
 	}
@@ -217,7 +218,8 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		if (op.getPredef() != null)
 		{
-			preApply = getApplyExp(getVarExp(op.getPredef().getName().clone(),op.getPredef()), arglist);
+			preApply = getApplyExp(getVarExp(op.getPredef().getName().clone(), op.getPredef()), arglist);
+			preApply.getRoot().setType(op.getPredef().getType().clone());
 			preApply.setType(new ABooleanBasicType());
 		}
 
@@ -228,6 +230,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		{
 
 			AExistsExp existsExp = new AExistsExp();
+			existsExp.setType(new ABooleanBasicType());
 			List<PExp> postArglist = new Vector<PExp>(arglist);
 
 			if (op.getResult().getPattern() instanceof AIdentifierPattern)
@@ -256,6 +259,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			}
 
 			AApplyExp postApply = getApplyExp(getVarExp(op.getPostdef().getName()), postArglist);
+			postApply.getRoot().setType(op.getPostdef().getType().clone());
 			postApply.setType(new ABooleanBasicType());
 			existsExp.setPredicate(postApply);
 			mainExp = existsExp;
@@ -266,6 +270,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		{
 
 			AExistsExp exists_exp = new AExistsExp();
+			exists_exp.setType(new ABooleanBasicType());
 			List<PExp> postArglist = new Vector<PExp>(arglist);
 
 			List<PMultipleBind> exists_binds = new LinkedList<PMultipleBind>();
@@ -274,7 +279,10 @@ public class SatisfiabilityObligation extends ProofObligation
 				stateInPost(exists_binds, postArglist, stateDefinition);
 			}
 			exists_exp.setBindList(exists_binds);
-			exists_exp.setPredicate(getApplyExp(getVarExp(op.getPostdef().getName()), new Vector<PExp>(postArglist)));
+			AApplyExp postApply = getApplyExp(getVarExp(op.getPostdef().getName()), new Vector<PExp>(postArglist));
+			postApply.setType(new ABooleanBasicType());
+			postApply.getRoot().setType(op.getPostdef().getType().clone());
+			exists_exp.setPredicate(postApply);
 			mainExp = exists_exp;
 		}
 
@@ -290,13 +298,17 @@ public class SatisfiabilityObligation extends ProofObligation
 	protected void stateInPre(List<PExp> args, PDefinition stateDefinition)
 	{
 
+		AVariableExp varExp;
 		if (stateDefinition instanceof AStateDefinition)
 		{
-			args.add(getVarExp(OLD_STATE_ARG));
+			varExp = getVarExp(OLD_STATE_ARG);
+			varExp.setType(((AStateDefinition) stateDefinition).getRecordType().clone());
 		} else
 		{
-			args.add(getVarExp(OLD_SELF_ARG));
+			varExp = getVarExp(OLD_SELF_ARG);
+			varExp.setType(stateDefinition.getType().clone());
 		}
+		args.add(varExp);
 
 	}
 
@@ -304,16 +316,21 @@ public class SatisfiabilityObligation extends ProofObligation
 			List<PExp> postArglist, PDefinition stateDefinition)
 	{
 
+		AVariableExp varExp;
 		// replace with super call
 		if (stateDefinition instanceof AStateDefinition)
 		{
-			postArglist.add(getVarExp(NEW_STATE_ARG));
-			exists_binds.addAll(getMultipleTypeBindList(((AStateDefinition) stateDefinition).getRecordType().clone(), NEW_STATE_ARG));
+			varExp = getVarExp(NEW_STATE_ARG);
+			AStateDefinition aStateDefinition = (AStateDefinition) stateDefinition;
+			varExp.setType(aStateDefinition.getRecordType().clone());
+			exists_binds.addAll(getMultipleTypeBindList(aStateDefinition.getRecordType().clone(), NEW_STATE_ARG));
 		} else
 		{
-			postArglist.add(getVarExp(NEW_SELF_ARG));
+			varExp = getVarExp(NEW_SELF_ARG);
+			varExp.setType(stateDefinition.getType().clone());
 			exists_binds.addAll(getMultipleTypeBindList(stateDefinition.getType().clone(), NEW_SELF_ARG));
 		}
+		postArglist.add(varExp);
 	}
 
 }
