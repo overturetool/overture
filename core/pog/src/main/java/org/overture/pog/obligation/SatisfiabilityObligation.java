@@ -56,10 +56,10 @@ public class SatisfiabilityObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -8922392508326253099L;
 
-	private static final ILexNameToken OLD_STATE_ARG = new LexNameToken(null, "oldstate", null);
-	private static final ILexNameToken OLD_SELF_ARG = new LexNameToken(null, "oldself", null);
-	private static final ILexNameToken NEW_STATE_ARG = new LexNameToken(null, "newstate", null);
-	private static final ILexNameToken NEW_SELF_ARG = new LexNameToken(null, "newself", null);
+	private static final ILexNameToken OLD_STATE_ARG = new LexNameToken("", "oldstate", null);
+	private static final ILexNameToken OLD_SELF_ARG = new LexNameToken("", "oldself", null);
+	private static final ILexNameToken NEW_STATE_ARG = new LexNameToken("", "newstate", null);
+	private static final ILexNameToken NEW_SELF_ARG = new LexNameToken("", "newself", null);
 
 	public SatisfiabilityObligation(AImplicitFunctionDefinition func,
 			IPOContextStack ctxt, IPogAssistantFactory af)
