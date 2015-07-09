@@ -49,17 +49,18 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.ASeqSeqType;
-import org.overture.pog.utility.PogAssistantFactory;
+import org.overture.ast.types.PType;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.UniqueNameGenerator;
 
 public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 {
 	private final UniqueNameGenerator unique;
-	private final PogAssistantFactory af = new PogAssistantFactory();
-	//FIXME use proper assistant factory
+	private final IPogAssistantFactory af;
 	
-	public PatternToExpVisitor(UniqueNameGenerator unique)
+	public PatternToExpVisitor(UniqueNameGenerator unique, IPogAssistantFactory af)
 	{
+		this.af=af;
 		this.unique = unique;
 	}
 
@@ -118,7 +119,10 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		AVariableExp var = new AVariableExp();
 		var.setName(node.getName().clone());
 		var.setOriginal(var.getName().getFullName());
-		var.setType(af.createPPatternAssistant().getPossibleType(node).clone());
+		PType possibleType = af.createPPatternAssistant().getPossibleType(node);
+		if (possibleType != null){
+			var.setType(possibleType.clone());
+		}
 		return var;
 	}
 
