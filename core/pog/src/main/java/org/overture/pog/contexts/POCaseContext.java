@@ -38,6 +38,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.ContextHelper;
+import org.overture.pog.utility.UniqueNameGenerator;
 
 public class POCaseContext extends POContext
 {
@@ -46,6 +47,7 @@ public class POCaseContext extends POContext
 	public final PExp exp;
 	public final IPogAssistantFactory assistantFactory;
 
+	
 	public POCaseContext(PPattern pattern, PType type, PExp exp,
 			IPogAssistantFactory assistantFactory)
 	{
@@ -60,7 +62,7 @@ public class POCaseContext extends POContext
 	{
 		if (assistantFactory.createPPatternAssistant().isSimple(pattern))
 		{
-			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
+			PExp matching = patternToExp(pattern,assistantFactory,new UniqueNameGenerator(exp));
 			PExp premise = AstExpressionFactory.newAEqualsBinaryExp(matching.clone(), exp.clone());
 			AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(premise, stitch);
 
@@ -70,7 +72,7 @@ public class POCaseContext extends POContext
 			AExistsExp existsExp = new AExistsExp();
 			List<PMultipleBind> bindList = ContextHelper.bindListFromPattern(pattern.clone(), type.clone());
 			existsExp.setBindList(bindList);
-			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
+			PExp matching = patternToExp(pattern,assistantFactory,new UniqueNameGenerator(exp));
 
 			PExp premise = AstExpressionFactory.newAEqualsBinaryExp(matching.clone(), exp.clone());
 
@@ -97,34 +99,6 @@ public class POCaseContext extends POContext
 	@Override
 	public String getContext()
 	{
-		StringBuilder sb = new StringBuilder();
-
-		if (assistantFactory.createPPatternAssistant().isSimple(pattern))
-		{
-			sb.append(pattern);
-			sb.append(" = ");
-			sb.append(exp);
-			sb.append(" => ");
-		} else
-		{
-			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
-
-			sb.append("exists ");
-			sb.append(matching);
-			sb.append(":");
-			sb.append(type);
-			sb.append(" & ");
-			sb.append(matching);
-			sb.append(" = ");
-			sb.append(exp);
-
-			sb.append(" =>\nlet ");
-			sb.append(pattern);
-			sb.append(" = ");
-			sb.append(exp);
-			sb.append(" in");
-		}
-
-		return sb.toString();
+		return "";
 	}
 }
