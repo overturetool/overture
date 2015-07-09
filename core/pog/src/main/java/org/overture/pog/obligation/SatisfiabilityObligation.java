@@ -159,7 +159,7 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		exists_exp.setBindList(binds);
 		exists_exp.setPredicate(node.getInvExpression().clone());
-
+		
 		stitch = exists_exp;
 		valuetree.setPredicate(ctxt.getPredWithContext(exists_exp));
 	}
@@ -171,6 +171,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		super(node, POType.STATE_INV_SAT, ctxt, node.getLocation(), af);
 
 		AExistsExp exists_exp = new AExistsExp();
+		exists_exp.setType(new ABooleanBasicType());
 		List<PMultipleBind> binds = stateInvBinds(node);
 
 		exists_exp.setBindList(binds);
