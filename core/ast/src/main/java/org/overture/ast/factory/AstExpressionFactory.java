@@ -37,6 +37,7 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
+import org.overture.ast.types.ABooleanBasicType;
 
 public class AstExpressionFactory
 {
@@ -46,6 +47,7 @@ public class AstExpressionFactory
 		AEqualsBinaryExp result = new AEqualsBinaryExp();
 		ILexToken op = new LexToken(null, VDMToken.EQUALS);
 		initExpressionBinary(result, left, op, right);
+		result.setType(new ABooleanBasicType());
 		return result;
 	}
 
@@ -55,6 +57,7 @@ public class AstExpressionFactory
 		AAndBooleanBinaryExp result = new AAndBooleanBinaryExp();
 		ILexToken op = new LexToken(null, VDMToken.AND);
 		initExpressionBinary(result, left, op, right);
+		result.setType(new ABooleanBasicType());
 		return result;
 	}
 
@@ -73,6 +76,7 @@ public class AstExpressionFactory
 		ALessEqualNumericBinaryExp result = new ALessEqualNumericBinaryExp();
 		ILexToken op = new LexToken(null, VDMToken.LE);
 		initExpressionBinary(result, left, op, right);
+		result.setType(new ABooleanBasicType());
 		return result;
 	}
 
@@ -81,6 +85,7 @@ public class AstExpressionFactory
 		ANotEqualBinaryExp result = new ANotEqualBinaryExp();
 		ILexToken op = new LexToken(null, VDMToken.NE);
 		initExpressionBinary(result, left, op, right);
+		result.setType(new ABooleanBasicType());
 		return result;
 	}
 
@@ -90,6 +95,7 @@ public class AstExpressionFactory
 		ALessNumericBinaryExp result = new ALessNumericBinaryExp();
 		ILexToken op = new LexToken(null, VDMToken.LT);
 		initExpressionBinary(result, left, op, right);
+		result.setType(new ABooleanBasicType());
 		return result;
 	}
 
@@ -98,6 +104,7 @@ public class AstExpressionFactory
 		AInSetBinaryExp result = new AInSetBinaryExp();
 		ILexToken op = new LexToken(null, VDMToken.INSET);
 		initExpressionBinary(result, left, op, right);
+		result.setType(new ABooleanBasicType());
 		return result;
 	}
 
@@ -107,7 +114,7 @@ public class AstExpressionFactory
 		AOrBooleanBinaryExp result = new AOrBooleanBinaryExp();
 		ILexToken op = new LexToken(null, VDMToken.OR);
 		initExpressionBinary(result, left, op, right);
-
+		result.setType(new ABooleanBasicType());
 		return result;
 	}
 
@@ -117,7 +124,7 @@ public class AstExpressionFactory
 		AImpliesBooleanBinaryExp result = new AImpliesBooleanBinaryExp();
 		ILexToken op = new LexToken(null, VDMToken.IMPLIES);
 		initExpressionBinary(result, left, op, right);
-
+		result.setType(new ABooleanBasicType());
 		return result;
 	}
 
@@ -127,7 +134,7 @@ public class AstExpressionFactory
 		AGreaterNumericBinaryExp result = new AGreaterNumericBinaryExp();
 		ILexToken op = new LexToken(null, VDMToken.GT);
 		initExpressionBinary(result, left, op, right);
-
+		result.setType(new ABooleanBasicType());
 		return result;
 	}
 

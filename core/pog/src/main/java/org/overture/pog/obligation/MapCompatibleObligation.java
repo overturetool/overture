@@ -33,7 +33,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PMultipleBind;
-import org.overture.ast.types.ABooleanBasicType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -64,8 +63,7 @@ public class MapCompatibleObligation extends ProofObligation
 		bindings.addAll(getMultipleSetBindList(domRight, rdom));
 
 		AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getEqualsExp(getVarExp(ldom), getVarExp(rdom)), getEqualsExp(getApplyExp(left, getVarExp(ldom)), getApplyExp(right, getVarExp(rdom))));
-		implies.setType(new ABooleanBasicType());
-
+	
 		AForAllExp forallExp = new AForAllExp();
 
 		forallExp.setBindList(bindings);

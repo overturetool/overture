@@ -29,7 +29,7 @@ import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.statements.PStateDesignator;
-import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -47,7 +47,8 @@ public class MapApplyObligation extends ProofObligation
 		/* <arg> in set dom <root> */
 		AMapDomainUnaryExp dom_exp = new AMapDomainUnaryExp();
 		dom_exp.setExp(root.clone());
-		dom_exp.setType(new ABooleanBasicType());
+		// We don't care about type of the exp. This is just for the CGP to not crash.
+		dom_exp.setType(new AUnknownType());
 		
 		AInSetBinaryExp inSetExp = AstExpressionFactory.newAInSetBinaryExp(arg.clone(), dom_exp);
 
@@ -61,8 +62,9 @@ public class MapApplyObligation extends ProofObligation
 	{
 		super(root, POType.MAP_APPLY, ctxt, root.getLocation(), af);
 		AMapDomainUnaryExp dom_exp = new AMapDomainUnaryExp();
-		dom_exp.setType(new ABooleanBasicType());
 		dom_exp.setExp(root.clone().apply(new StateDesignatorToExpVisitor()));
+		// We don't care about type of the exp. This is just for the CGP to not crash.
+		dom_exp.setType(new AUnknownType());
 
 		AInSetBinaryExp inSetExp = AstExpressionFactory.newAInSetBinaryExp(arg.clone(), dom_exp);
 

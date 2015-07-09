@@ -43,7 +43,6 @@ import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPogAssistantFactory;
@@ -127,7 +126,6 @@ public class POOperationDefinitionContext extends POContext
 			if (addPrecond && precondition != null)
 			{
 				AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitch);
-				impliesExp.setType(new ABooleanBasicType());
 				forAllExp.setPredicate(impliesExp);
 			} else
 			{

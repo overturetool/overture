@@ -29,7 +29,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
-import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.PExp;
@@ -104,9 +103,7 @@ public class FiniteSetObligation extends ProofObligation
 			return getImpliesExists(exp, finmap, findex);
 		} else
 		{
-			AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(exp.getPredicate().clone(), getImpliesExists(exp.clone(), finmap, findex));
-			implies.setType(new ABooleanBasicType());
-			return implies;
+			return AstExpressionFactory.newAImpliesBooleanBinaryExp(exp.getPredicate().clone(), getImpliesExists(exp.clone(), finmap, findex));
 		}
 	}
 

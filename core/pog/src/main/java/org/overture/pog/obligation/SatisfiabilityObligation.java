@@ -41,11 +41,10 @@ import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.LexNameToken;
-import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.ATypeMultipleBind;
@@ -80,22 +79,27 @@ public class SatisfiabilityObligation extends ProofObligation
 		List<PExp> arglist = new Vector<PExp>();
 
 		SFunctionDefinitionAssistantTC assistant = af.createSFunctionDefinitionAssistant();
-		//FIXME make these local definitions with unknown types -- so it goes through cg
+		// FIXME make these local definitions with unknown types -- so it goes through cg
 		List<List<PPattern>> aux = new Vector<List<PPattern>>();
-		for (APatternListTypePair p : func.getParamPatterns()){
+		for (APatternListTypePair p : func.getParamPatterns())
+		{
 			Vector<PPattern> aux2 = new Vector<PPattern>();
-			for (PPattern p2 : p.getPatterns()){
+			for (PPattern p2 : p.getPatterns())
+			{
 				aux2.add(p2.clone());
 			}
 			aux.add(aux2);
 		}
-		
-		List<List<PDefinition>> list =assistant.getParamDefinitions(func, func.getType(), aux, func.getLocation());
-		
-		for (int i =0;i<func.getParamPatterns().size();i++){
-			for (int j = 0;j<func.getParamPatterns().get(i).getPatterns().size();j++){
+
+		List<List<PDefinition>> list = assistant.getParamDefinitions(func, func.getType(), aux, func.getLocation());
+
+		for (int i = 0; i < func.getParamPatterns().size(); i++)
+		{
+			for (int j = 0; j < func.getParamPatterns().get(i).getPatterns().size(); j++)
+			{
 				PExp exp = patternToExp(func.getParamPatterns().get(i).getPatterns().get(j));
-				if (exp instanceof AVariableExp){
+				if (exp instanceof AVariableExp)
+				{
 					((AVariableExp) exp).setVardef(list.get(i).get(j).clone());
 				}
 				arglist.add(exp);
@@ -110,7 +114,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			var.setName(func.getPredef().getName().clone());
 			var.setOriginal(func.getPredef().getName().getFullName());
 			var.setVardef(func.getPredef().clone());
-			
+
 			AApplyExp apply = new AApplyExp();
 			apply.setRoot(var);
 			List<PExp> args = new Vector<PExp>();
@@ -121,7 +125,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			}
 
 			apply.setArgs(args);
-			
+
 			preApply = getApplyExp(var, arglist);
 			preApply.setRoot(var);
 			preApply.setType(new ABooleanBasicType());
@@ -136,7 +140,8 @@ public class SatisfiabilityObligation extends ProofObligation
 		{
 			AIdentifierPattern ip = (AIdentifierPattern) func.getResult().getPattern().clone();
 			PExp rExp = patternToExp(func.getResult().getPattern());
-			if (rExp instanceof AVariableExp){
+			if (rExp instanceof AVariableExp)
+			{
 				ALocalDefinition l = AstFactory.newALocalDefinition(func.getLocation(), func.getName().clone(), NameScope.LOCAL, func.getResult().getType());
 				((AVariableExp) rExp).setVardef(l);
 			}
@@ -156,11 +161,7 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		if (preApply != null)
 		{
-			AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
-			implies.setType(new ABooleanBasicType());
-			implies.setLeft(preApply);
-			implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
-			implies.setRight(existsExp);
+			AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(preApply, existsExp);
 			stitch = implies;
 			valuetree.setPredicate(ctxt.getPredWithContext(implies));
 		} else
@@ -328,12 +329,7 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		if (preApply != null)
 		{
-			AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
-			implies.setType(new ABooleanBasicType());
-			implies.setLeft(preApply);
-			implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
-			implies.setRight(mainExp);
-			return implies;
+			return AstExpressionFactory.newAImpliesBooleanBinaryExp(preApply, mainExp);
 		} else
 		{
 			return mainExp;

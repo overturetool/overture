@@ -91,7 +91,6 @@ public class POFunctionResultContext extends POContext
 		} else
 		{
 			AImpliesBooleanBinaryExp imp = AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitched);
-			imp.setType(new ABooleanBasicType());
 			return imp;
 		}
 
