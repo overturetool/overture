@@ -46,14 +46,21 @@ import org.overture.ast.patterns.AStringPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ACharBasicType;
+import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.PType;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.UniqueNameGenerator;
 
 public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 {
 	private final UniqueNameGenerator unique;
-
-	public PatternToExpVisitor(UniqueNameGenerator unique)
+	private final IPogAssistantFactory af;
+	
+	public PatternToExpVisitor(UniqueNameGenerator unique, IPogAssistantFactory af)
 	{
+		this.af=af;
 		this.unique = unique;
 	}
 
@@ -76,6 +83,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	{
 		ABooleanConstExp b = new ABooleanConstExp();
 		b.setValue(node.getValue().clone());
+		b.setType(new ABooleanBasicType());
 		return b;
 	}
 
@@ -84,6 +92,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	{
 		ACharLiteralExp ch = new ACharLiteralExp();
 		ch.setValue(node.getValue().clone());
+		ch.setType(new ACharBasicType());
 		return ch;
 	}
 
@@ -92,6 +101,9 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	{
 		AStringLiteralExp string = new AStringLiteralExp();
 		string.setValue(node.getValue().clone());
+		ASeqSeqType seqT = new ASeqSeqType();
+		seqT.setSeqof(new ACharBasicType());
+		string.setType(seqT);
 		return string;
 	}
 
@@ -107,6 +119,10 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		AVariableExp var = new AVariableExp();
 		var.setName(node.getName().clone());
 		var.setOriginal(var.getName().getFullName());
+		PType possibleType = af.createPPatternAssistant().getPossibleType(node);
+		if (possibleType != null){
+			var.setType(possibleType.clone());
+		}
 		return var;
 	}
 

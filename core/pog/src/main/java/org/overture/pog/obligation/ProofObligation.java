@@ -83,6 +83,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	private final UniqueNameGenerator generator;
 	private ILexLocation location;
 	private String locale;
+	private final IPogAssistantFactory af;
 
 	public ProofObligation(INode rootnode, POType kind,
 			IPOContextStack context, ILexLocation location,
@@ -92,6 +93,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 		this.rootNode = rootnode;
 		this.location = location;
 		this.kind = kind;
+		this.af=af;
 		this.name = context.getName();
 		this.status = POStatus.UNPROVED;
 		this.valuetree = new AVdmPoTree();
@@ -411,7 +413,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	 */
 	protected PExp patternToExp(PPattern pattern) throws AnalysisException
 	{
-		PatternToExpVisitor visitor = new PatternToExpVisitor(getUniqueGenerator());
+		PatternToExpVisitor visitor = new PatternToExpVisitor(getUniqueGenerator(), af);
 		return pattern.apply(visitor);
 	}
 
