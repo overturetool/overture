@@ -37,11 +37,11 @@ import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
+import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overturetool.cgisa.utils.GetTypeNameVisitor;
 import org.overturetool.cgisa.utils.IsMethodTypeVisitor;
 import org.overturetool.cgisa.utils.IsSeqOfCharTypeVisitor;
 
@@ -146,7 +146,7 @@ public class IsaTranslations
 		while (it.hasNext())
 		{
 			AFieldDeclCG n = it.next();
-			sb.append(extractFieldName(n));
+
 			sb.append(trans(n.getType()));
 			if (it.hasNext())
 			{
@@ -157,11 +157,6 @@ public class IsaTranslations
 		return sb.toString();
 	}
 
-	private String extractFieldName(AFieldDeclCG n) throws AnalysisException
-	{
-		return n.getType().apply(new GetTypeNameVisitor());
-	}
-	
 
 	// Hacks - translations that manipulate the tree in grostesque way due to
 	// issues with the IR
@@ -263,6 +258,10 @@ public class IsaTranslations
 	public boolean isRoot(INode node)
 	{
 		return isaUtils.isRoot(node);
+	}
+	
+	public boolean isRootRec(AApplyExpCG node){
+		return isaUtils.isRootRec(node);
 	}
 
 	public boolean isString(STypeCG node) throws AnalysisException

@@ -24,6 +24,7 @@ package org.overturetool.cgisa;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.AFieldExpCG;
 
 public class IsaChecks
 {
@@ -39,9 +40,14 @@ public class IsaChecks
 		}
 		return false;
 	}
+	public boolean isRootRec(AApplyExpCG node)
+	{
+		return (node.getRoot() instanceof AFieldExpCG);
+	}
 
 	public boolean isFieldRHS(INode node)
 	{
 		return node.getAncestor(AFieldDeclCG.class) != null;
 	}
+
 }

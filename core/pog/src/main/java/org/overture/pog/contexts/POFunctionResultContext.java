@@ -31,6 +31,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
@@ -41,6 +42,7 @@ import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
 
 public class POFunctionResultContext extends POContext
@@ -88,7 +90,8 @@ public class POFunctionResultContext extends POContext
 			return stitched;
 		} else
 		{
-			return AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitched);
+			AImpliesBooleanBinaryExp imp = AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitched);
+			return imp;
 		}
 
 	}
@@ -98,6 +101,7 @@ public class POFunctionResultContext extends POContext
 		if (implicit)
 		{
 			AExistsExp exists_exp = new AExistsExp();
+			exists_exp.setType(new ABooleanBasicType());
 			List<PMultipleBind> binds = new LinkedList<PMultipleBind>();
 			ATypeMultipleBind tmBind = new ATypeMultipleBind();
 			List<PPattern> patternList = new LinkedList<PPattern>();

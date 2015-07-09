@@ -1,4 +1,4 @@
-
-functions
-f: int -> int
-f(x) == x
+types
+  Alarm :: aQuali     : int
+           alarmtext : seq of char;
+       

@@ -44,6 +44,7 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -125,6 +126,7 @@ public class POForAllContext extends POContext
 	protected AForAllExp getSuperContext(PExp stitch)
 	{
 		AForAllExp forAllExp = new AForAllExp();
+		forAllExp.setType(new ABooleanBasicType());
 		forAllExp.setBindList(cloneBinds(bindings));
 		forAllExp.setPredicate(stitch);
 		return forAllExp;

@@ -85,7 +85,7 @@ public class MapInjectivityEnum extends ProofObligation
 		domM2.setExp(getVarExp(m2));
 
 		AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getEqualsExp(getVarExp(d1), getVarExp(d2)), getEqualsExp(getApplyExp(getVarExp(m1), getVarExp(d1)), getApplyExp(getVarExp(m2), getVarExp(d2))));
-
+		
 		List<PMultipleBind> domBinding = getMultipleSetBindList(domM1, d1);
 		domBinding.addAll(getMultipleSetBindList(domM2, d2));
 

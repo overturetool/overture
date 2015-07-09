@@ -35,6 +35,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.ContextHelper;
@@ -63,7 +64,7 @@ public class POCaseContext extends POContext
 			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
 			PExp premise = AstExpressionFactory.newAEqualsBinaryExp(matching.clone(), exp.clone());
 			AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(premise, stitch);
-
+			impliesExp.setType(new ABooleanBasicType());
 			return impliesExp;
 		} else
 		{
@@ -86,7 +87,7 @@ public class POCaseContext extends POContext
 			letDefExp.setExpression(stitch);
 
 			AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(premise, letDefExp);
-
+			impliesExp.setType(new ABooleanBasicType());
 			existsExp.setPredicate(impliesExp);
 
 			return existsExp;

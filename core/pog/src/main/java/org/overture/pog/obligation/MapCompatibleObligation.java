@@ -63,7 +63,7 @@ public class MapCompatibleObligation extends ProofObligation
 		bindings.addAll(getMultipleSetBindList(domRight, rdom));
 
 		AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getEqualsExp(getVarExp(ldom), getVarExp(rdom)), getEqualsExp(getApplyExp(left, getVarExp(ldom)), getApplyExp(right, getVarExp(rdom))));
-
+	
 		AForAllExp forallExp = new AForAllExp();
 
 		forallExp.setBindList(bindings);
