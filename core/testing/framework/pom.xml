@@ -8,8 +8,8 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>org.overturetool.core.testing</groupId>
-  <artifactId>framework</artifactId>
+  <groupId>org.overturetool.core</groupId>
+  <artifactId>testing.framework</artifactId>
   <name>Overture Testing Framework</name>
 
   <dependencies>
