@@ -3,9 +3,10 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     private static final VDMMap a = MapUtil.map(new Maplet(0L, 0L));
-    private static final VDMMap x = MapUtil.merge(SetUtil.set(Utils.clone(a),
+    private static final VDMMap x = MapUtil.merge(SetUtil.set(Utils.copy(a),
                 m1()));
 
     public A() {

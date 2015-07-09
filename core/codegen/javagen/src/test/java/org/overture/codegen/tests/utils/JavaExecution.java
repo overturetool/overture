@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.overture.codegen.vdm2java.JavaToolsUtils;
+
 public class JavaExecution
 {
 	public static String run(File cp, String mainClassName)

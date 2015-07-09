@@ -1,0 +1,8 @@
+ class A
+
+operations
+
+public op : () ==> int
+op()== return 1;
+
+end A

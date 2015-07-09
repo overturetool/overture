@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public Number first;
     public Boolean second;
@@ -46,6 +47,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class B extends A {
     public B() {
         cg_init_B_1();
@@ -77,6 +79,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class C extends B {
     public C(final Boolean t) {
         cg_init_C_1(t);
@@ -106,6 +109,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }

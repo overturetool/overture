@@ -1,0 +1,16 @@
+class A
+
+instance variables
+x : nat :=1;
+inv  x > 0;
+
+operations
+op : () ==> ()
+op () == calledop()
+post x>0;
+
+calledop : () ==> ()
+calledop () == skip
+post x>0;
+
+end A

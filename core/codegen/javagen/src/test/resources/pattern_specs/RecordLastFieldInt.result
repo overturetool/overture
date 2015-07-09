@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public A() {
     }
@@ -51,7 +52,7 @@ public class A {
             return Utils.hashCode(n1, n2);
         }
 
-        public Rec clone() {
+        public Rec copy() {
             return new Rec(n1, n2);
         }
 
@@ -67,6 +68,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }

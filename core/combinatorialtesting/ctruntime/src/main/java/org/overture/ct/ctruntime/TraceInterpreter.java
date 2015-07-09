@@ -212,7 +212,7 @@ public class TraceInterpreter
 	 * @param definitions
 	 * @param traceName
 	 *            null or a name of a trace
-	 * @return
+	 * @return a list of named trace definitions
 	 */
 	private List<ANamedTraceDefinition> getAllTraceDefinitions(
 			List<PDefinition> definitions, String traceName)
@@ -469,7 +469,7 @@ public class TraceInterpreter
 	 * 
 	 * @param mtd
 	 * @param test
-	 * @return
+	 * @return list of results or list of errors
 	 */
 	protected List<Object> evaluateCallSequence(ANamedTraceDefinition mtd,
 			CallSequence test)

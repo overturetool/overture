@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -10,7 +11,7 @@ public class Entry {
     public static Object Run() {
         A a = new A(SeqUtil.seq(new B(new C(new Entry()))));
 
-        return op(Utils.clone(a));
+        return op(Utils.copy(a));
     }
 
     public static Number op(final A a) {
@@ -29,7 +30,7 @@ public class Entry {
         public VDMSeq bs;
 
         public A(final VDMSeq _bs) {
-            bs = (_bs != null) ? Utils.clone(_bs) : null;
+            bs = (_bs != null) ? Utils.copy(_bs) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -46,7 +47,7 @@ public class Entry {
             return Utils.hashCode(bs);
         }
 
-        public A clone() {
+        public A copy() {
             return new A(bs);
         }
 
@@ -59,7 +60,7 @@ public class Entry {
         public C c;
 
         public B(final C _c) {
-            c = (_c != null) ? Utils.clone(_c) : null;
+            c = (_c != null) ? Utils.copy(_c) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -76,7 +77,7 @@ public class Entry {
             return Utils.hashCode(c);
         }
 
-        public B clone() {
+        public B copy() {
             return new B(c);
         }
 
@@ -106,7 +107,7 @@ public class Entry {
             return Utils.hashCode(e);
         }
 
-        public C clone() {
+        public C copy() {
             return new C(e);
         }
 

@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -18,7 +19,7 @@ public class Entry {
             Number letBeStExp_1 = null;
             Number x = null;
             Boolean success_1 = false;
-            VDMSet set_1 = Utils.clone(xs);
+            VDMSet set_1 = Utils.copy(xs);
 
             for (Iterator iterator_1 = set_1.iterator();
                     iterator_1.hasNext() && !(success_1);) {
@@ -32,7 +33,7 @@ public class Entry {
             }
 
             letBeStExp_1 = x.longValue() +
-                sum(SetUtil.diff(Utils.clone(xs), SetUtil.set(x))).longValue();
+                sum(SetUtil.diff(Utils.copy(xs), SetUtil.set(x))).longValue();
 
             return letBeStExp_1;
         }

@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Rec x = new Rec(10L);
 
@@ -10,7 +11,7 @@ public class Entry {
     }
 
     public static VDMSeq S(final Rec p) {
-        return SeqUtil.seq(Utils.clone(p));
+        return SeqUtil.seq(Utils.copy(p));
     }
 
     public static Object Run() {
@@ -22,12 +23,12 @@ public class Entry {
             ternaryIfExp_1 = SetUtil.set(SeqUtil.seq());
         }
 
-        VDMSet ss = Utils.clone(ternaryIfExp_1);
+        VDMSet ss = Utils.copy(ternaryIfExp_1);
         VDMMap ternaryIfExp_2 = null;
 
         if (Utils.equals(1L, 1L)) {
             VDMMap mapCompResult_1 = MapUtil.map();
-            VDMSet set_1 = Utils.clone(ss);
+            VDMSet set_1 = Utils.copy(ss);
 
             for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
                 VDMSeq hr = ((VDMSeq) iterator_1.next());
@@ -41,28 +42,28 @@ public class Entry {
                     throw new RuntimeException("Missing member: x");
                 }
 
-                mapCompResult_1 = MapUtil.munion(Utils.clone(mapCompResult_1),
+                mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
                         MapUtil.map(
-                            new Maplet(Utils.clone(hr), S(Utils.clone(apply_1)))));
+                            new Maplet(Utils.copy(hr), S(Utils.copy(apply_1)))));
             }
 
-            ternaryIfExp_2 = Utils.clone(mapCompResult_1);
+            ternaryIfExp_2 = Utils.copy(mapCompResult_1);
         } else {
             VDMMap mapCompResult_2 = MapUtil.map();
-            VDMSet set_2 = Utils.clone(ss);
+            VDMSet set_2 = Utils.copy(ss);
 
             for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
                 VDMSeq hr = ((VDMSeq) iterator_2.next());
-                mapCompResult_2 = MapUtil.munion(Utils.clone(mapCompResult_2),
-                        MapUtil.map(new Maplet(Utils.clone(hr), SeqUtil.seq())));
+                mapCompResult_2 = MapUtil.munion(Utils.copy(mapCompResult_2),
+                        MapUtil.map(new Maplet(Utils.copy(hr), SeqUtil.seq())));
             }
 
-            ternaryIfExp_2 = Utils.clone(mapCompResult_2);
+            ternaryIfExp_2 = Utils.copy(mapCompResult_2);
         }
 
-        VDMMap s = Utils.clone(ternaryIfExp_2);
+        VDMMap s = Utils.copy(ternaryIfExp_2);
 
-        return MapUtil.dom(Utils.clone(s)).size();
+        return MapUtil.dom(Utils.copy(s)).size();
     }
 
     public String toString() {
@@ -90,7 +91,7 @@ public class Entry {
             return Utils.hashCode(x);
         }
 
-        public Rec clone() {
+        public Rec copy() {
             return new Rec(x);
         }
 

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture
 Bundle-ActivationPolicy: lazy
-Bundle-Version: 2.2.3.qualifier
+Bundle-Version: 2.2.7.qualifier
 Eclipse-BuddyPolicy: registered
 Eclipse-BundleShape: dir
 Bundle-Localization: plugin
@@ -13,11 +13,10 @@ Require-Bundle: org.overture.ide.core
 Export-Package: org.overture.ast.factory,org.overture.ide.builders.vdm
  j,org.overture.typechecker,org.overture.typechecker.assistant,org.ove
  rture.typechecker.assistant.definition,org.overture.typechecker.assis
- tant.expression,org.overture.typechecker.assistant.module,org.overtur
- e.typechecker.assistant.pattern,org.overture.typechecker.assistant.st
- atement,org.overture.typechecker.assistant.type,org.overture.typechec
- ker.util,org.overture.typechecker.utilities,org.overture.typechecker.
- utilities.type,org.overture.typechecker.visitor
+ tant.module,org.overture.typechecker.assistant.pattern,org.overture.t
+ ypechecker.assistant.statement,org.overture.typechecker.assistant.typ
+ e,org.overture.typechecker.util,org.overture.typechecker.utilities,or
+ g.overture.typechecker.utilities.type,org.overture.typechecker.visitor
 Bundle-Activator: org.overture.ide.builders.vdmj.Activator
 Bundle-ClassPath: .,
  jars/typechecker.jar

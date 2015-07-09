@@ -1,0 +1,24 @@
+module Entry
+
+exports all
+definitions
+
+values
+
+fOk : CN = 'a';
+fBreak : CN = 'b';
+
+types
+
+CN = C|N
+inv cn == is_char(cn) => cn = 'a';
+N = nat;
+C = char;
+
+operations
+
+Run : () ==> ?
+Run () ==
+  return 0;
+
+end Entry

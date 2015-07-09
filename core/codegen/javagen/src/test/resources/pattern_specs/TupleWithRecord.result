@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public A() {
     }
@@ -18,25 +19,25 @@ public class A {
         if (success_1) {
             a = ((Number) tuplePattern_1.get(0));
 
-            Rec recordPattern_1 = Utils.clone(((Rec) tuplePattern_1.get(1)));
+            Rec recordPattern_1 = Utils.copy(((Rec) tuplePattern_1.get(1)));
             success_1 = true;
 
-            Tuple tuplePattern_2 = Utils.clone(recordPattern_1.t);
+            Tuple tuplePattern_2 = Utils.copy(recordPattern_1.t);
             success_1 = tuplePattern_2.compatible(Number.class, Rec.class);
 
             if (success_1) {
                 b = ((Number) tuplePattern_2.get(0));
 
-                Rec recordPattern_2 = Utils.clone(((Rec) tuplePattern_2.get(1)));
+                Rec recordPattern_2 = Utils.copy(((Rec) tuplePattern_2.get(1)));
                 success_1 = true;
 
-                Tuple tuplePattern_3 = Utils.clone(recordPattern_2.t);
+                Tuple tuplePattern_3 = Utils.copy(recordPattern_2.t);
                 success_1 = tuplePattern_3.compatible(Number.class, Rec.class);
 
                 if (success_1) {
                     c = ((Number) tuplePattern_3.get(0));
 
-                    Rec nullPattern_1 = Utils.clone(((Rec) tuplePattern_3.get(1)));
+                    Rec nullPattern_1 = Utils.copy(((Rec) tuplePattern_3.get(1)));
                     success_1 = Utils.equals(nullPattern_1, null);
                 }
             }
@@ -57,7 +58,7 @@ public class A {
         public Tuple t;
 
         public Rec(final Tuple _t) {
-            t = (_t != null) ? Utils.clone(_t) : null;
+            t = (_t != null) ? Utils.copy(_t) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -74,7 +75,7 @@ public class A {
             return Utils.hashCode(t);
         }
 
-        public Rec clone() {
+        public Rec copy() {
             return new Rec(t);
         }
 
@@ -90,6 +91,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }

@@ -59,7 +59,7 @@ public class Tuple implements ValueType, Comparable
 
 			if (currentValue instanceof ValueType)
 			{
-				this.values[i] = ((ValueType) currentValue).clone();
+				this.values[i] = ((ValueType) currentValue).copy();
 			} else
 			{
 				this.values[i] = currentValue;
@@ -166,7 +166,7 @@ public class Tuple implements ValueType, Comparable
 		return hash;
 	}
 
-	public Tuple clone()
+	public Tuple copy()
 	{
 		return new Tuple(values);
 	}

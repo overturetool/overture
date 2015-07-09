@@ -9,17 +9,15 @@ import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.state.StateDefinitionRuntimeState;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.State;
-import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 
-public class AStateDefinitionAssistantInterpreter extends
-		AStateDefinitionAssistantTC implements IAstAssistant
+public class AStateDefinitionAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AStateDefinitionAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 

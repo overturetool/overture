@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -23,11 +24,11 @@ public class Entry {
                 continue;
             }
 
-            setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
+            setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
                     SetUtil.set(3L));
         }
 
-        return Utils.clone(setCompResult_1);
+        return Utils.copy(setCompResult_1);
     }
 
     public String toString() {

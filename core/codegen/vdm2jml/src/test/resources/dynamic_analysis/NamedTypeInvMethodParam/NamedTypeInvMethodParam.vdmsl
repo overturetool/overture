@@ -1,0 +1,30 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+Even = nat
+inv n == n mod 2 = 0;
+
+operations
+
+Run : () ==> ?
+Run () ==
+let n1 = 2,
+    n2 = 3
+in
+(
+  let - = op(n1, 5, n1) in skip;
+  IO`println("Breaking named type invariant for method parameter");
+  let - = op(n1, 6, n2) in skip;
+  return 0;
+);
+
+op : Even * nat * Even ==> Even
+op (a,b,c) ==
+  return b * (a + c);
+
+end Entry

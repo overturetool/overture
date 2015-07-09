@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public A() {
     }
@@ -22,6 +23,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class B {
     public B() {
     }
@@ -41,6 +43,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }
@@ -51,7 +54,7 @@ public class Entry {
         {
             Number counter = 0L;
 
-            for (Iterator iterator_1 = SeqUtil.elems(Utils.clone(xs)).iterator();
+            for (Iterator iterator_1 = SeqUtil.elems(Utils.copy(xs)).iterator();
                     iterator_1.hasNext();) {
                 Object x = (Object) iterator_1.next();
                 VDMSeq apply_1 = null;

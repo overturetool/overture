@@ -31,7 +31,12 @@ $package
 	#set( $threadMethod = $JavaFormat.format($node.getThread()))
 #end
 ##
-
+#if (!$JavaFormat.isInnerClass($node))
+@SuppressWarnings("all")
+#end
+##
+$JavaFormat.formatMetaData($node.getGlobalMetaData())##
+##
 $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node) $JavaFormat.formatInterfaces($node)
 {
 	#foreach( $class in $node.getInnerClasses() )
@@ -41,7 +46,8 @@ $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSupe
 	$JavaFormat.format($field)
 	#end
 	##
-	
+	$JavaFormat.formatMetaData($node.getMetaData())##
+	##
 	#foreach( $method in $node.getMethods() )
 	$JavaFormat.format($method)
 	#end
@@ -50,12 +56,12 @@ $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSupe
 	$node.getTag().getMainMethod()
 	#end
 	##
-	#if ($JavaFormat.genInvariant($node))
+	#if ($JavaFormat.genClassInvariant($node))
 	$JavaFormat.format($node.getInvariant())
 	#end	
 	
 	#foreach( $typeDecl in $node.getTypeDecls() )
-		#if (!$JavaFormat.isNamedTypeDecl($typeDecl))
+		#if ($JavaFormat.genTypeDecl($typeDecl))
 		$JavaFormat.format($typeDecl)
 		#end
 	#end

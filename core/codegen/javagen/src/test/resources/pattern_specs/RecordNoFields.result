@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class A {
     public A() {
     }
@@ -34,7 +35,7 @@ public class A {
             return 0;
         }
 
-        public Rec clone() {
+        public Rec copy() {
             return new Rec();
         }
 
@@ -50,6 +51,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Entry {
     public Entry() {
     }

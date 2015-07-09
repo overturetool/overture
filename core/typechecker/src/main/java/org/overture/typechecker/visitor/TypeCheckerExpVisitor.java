@@ -86,6 +86,7 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
@@ -183,6 +184,19 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (question.assistantFactory.createPTypeAssistant().isOperation(node.getType()))
 		{
+			if (node.getRoot() instanceof AVariableExp)
+			{
+				AVariableExp exp = (AVariableExp)node.getRoot();
+				PDefinition opdef = question.env.findName(exp.getName(), question.scope);
+				AClassTypeAssistantTC assist = question.assistantFactory.createAClassTypeAssistant();
+
+				if (opdef != null && assist.isConstructor(opdef) && !assist.inConstructor(question.env))
+				{
+					TypeCheckerErrors.report(3337, "Cannot call a constructor from here", node.getLocation(), node);
+					results.add(AstFactory.newAUnknownType(node.getLocation()));
+				}
+			}
+			
 			AOperationType ot = question.assistantFactory.createPTypeAssistant().getOperation(node.getType());
 			question.assistantFactory.createPTypeAssistant().typeResolve(ot, null, THIS, question);
 
@@ -224,7 +238,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType defaultSBooleanBinaryExp(SBooleanBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		node.setType(question.assistantFactory.createSBinaryExpAssistant().binaryCheck(node, AstFactory.newABooleanBasicType(node.getLocation()), THIS, question));
+		node.setType(binaryCheck(node, AstFactory.newABooleanBasicType(node.getLocation()), THIS, question));
 
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, node.getType(), node.getLocation());
 	}
@@ -3420,20 +3434,24 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 	public PType mapApply(AApplyExp node, boolean isSimple, SMapType map, TypeCheckInfo question)
 	{
-		if (node.getArgs().size() != 1)
-		{
-			TypeCheckerErrors.concern(isSimple, 3057, "Map application must have one argument", node.getLocation(), node);
-		} else if (map.getEmpty())
+		if (map.getEmpty())
 		{
 			TypeCheckerErrors.concern(isSimple, 3267, "Empty map cannot be applied", node.getLocation(), node);
 		}
 
-		PType argtype = node.getArgtypes().get(0);
-
-		if (!question.assistantFactory.getTypeComparator().compatible(map.getFrom(), argtype))
+		if (node.getArgs().size() != 1)
 		{
-			TypeCheckerErrors.concern(isSimple, 3058, "Map application argument is incompatible type", node.getLocation(), node);
-			TypeCheckerErrors.detail2(isSimple, "Map domain", map.getFrom(), "Argument", argtype);
+			TypeCheckerErrors.concern(isSimple, 3057, "Map application must have one argument", node.getLocation(), node);
+		}
+		else
+		{
+			PType argtype = node.getArgtypes().get(0);
+    
+    		if (!question.assistantFactory.getTypeComparator().compatible(map.getFrom(), argtype))
+    		{
+    			TypeCheckerErrors.concern(isSimple, 3058, "Map application argument is incompatible type", node.getLocation(), node);
+    			TypeCheckerErrors.detail2(isSimple, "Map domain", map.getFrom(), "Argument", argtype);
+    		}
 		}
 
 		return map.getTo();
@@ -3558,5 +3576,31 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		c.setType(c.getResult().apply(rootVisitor, question));
 		local.unusedCheck();
 		return c.getType();
+	}
+	
+	public ABooleanBasicType binaryCheck(SBooleanBinaryExp node,
+			ABooleanBasicType expected,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) throws AnalysisException
+	{
+
+		node.getLeft().apply(rootVisitor, question);
+		node.getRight().apply(rootVisitor, question);
+
+		if (!question.assistantFactory.createPTypeAssistant().isType(node.getLeft().getType(), expected.getClass()))
+		{
+			TypeCheckerErrors.report(3065, "Left hand of " + node.getOp()
+					+ " is not " + expected, node.getLocation(), node);
+		}
+
+		if (!question.assistantFactory.createPTypeAssistant().isType(node.getRight().getType(), expected.getClass()))
+		{
+			TypeCheckerErrors.report(3066, "Right hand of " + node.getOp()
+					+ " is not " + expected, node.getLocation(), node);
+		}
+
+		node.setType(expected);
+		return (ABooleanBasicType) node.getType();
+
 	}
 }

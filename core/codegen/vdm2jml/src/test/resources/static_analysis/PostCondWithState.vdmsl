@@ -1,0 +1,29 @@
+module M
+
+exports all
+definitions
+
+state St of
+x : nat
+init s == s = mk_St(5)
+end
+
+functions
+
+f :  nat * nat -> nat
+f (a,b) == a+b
+post RESULT = a+b;
+
+operations
+
+opRes : nat ==> nat
+opRes (a) ==
+  return a
+post a = RESULT and St.x = x~;
+
+opNoRes : () ==> ()
+opNoRes () ==
+  skip
+post St.x = x~;
+
+end M

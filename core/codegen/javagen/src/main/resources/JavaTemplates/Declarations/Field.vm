@@ -13,4 +13,6 @@
 	#set( $volatile = "volatile")
 #end
 ##
+$JavaFormat.formatMetaData($node.getMetaData())##
+##
 $node.getAccess() $static $volatile $final $JavaFormat.format($node.getType()) $node.getName() $JavaFormat.formatInitialExp($node.getInitial());

@@ -3,11 +3,12 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class PhoneBook {
     private VDMMap phoneNumbers = MapUtil.map();
 
     public PhoneBook(final VDMMap pPhoneNumbers) {
-        cg_init_PhoneBook_1(Utils.clone(pPhoneNumbers));
+        cg_init_PhoneBook_1(Utils.copy(pPhoneNumbers));
     }
 
     public PhoneBook() {
@@ -49,9 +50,9 @@ public class PhoneBook {
             VDMSeq number = (VDMSeq) iterator_1.next();
             IO.print(SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(
                                 SeqUtil.seq('N', 'u', 'm', 'b', 'e', 'r', ':',
-                                    ' '), Utils.clone(number)),
+                                    ' '), Utils.copy(number)),
                             SeqUtil.seq('.', ' ', 'N', 'a', 'm', 'e', ':', ' ')),
-                        pb1.getName(Utils.clone(number))), SeqUtil.seq('\n')));
+                        pb1.getName(Utils.copy(number))), SeqUtil.seq('\n')));
         }
 
         IO.print(SeqUtil.seq('\n'));
@@ -139,7 +140,7 @@ public class PhoneBook {
     }
 
     public void cg_init_PhoneBook_1(final VDMMap pPhoneNumbers) {
-        phoneNumbers = Utils.clone(pPhoneNumbers);
+        phoneNumbers = Utils.copy(pPhoneNumbers);
     }
 
     public void loadDemo() {
@@ -158,20 +159,20 @@ public class PhoneBook {
             VDMSeq name = (VDMSeq) iterator_2.next();
             IO.print(SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(
                                 SeqUtil.seq('N', 'a', 'm', 'e', ':', ' '),
-                                Utils.clone(name)),
+                                Utils.copy(name)),
                             SeqUtil.seq('.', ' ', 'N', 'u', 'm', 'b', 'e', 'r',
-                                ':', ' ')), getNumber(Utils.clone(name))),
+                                ':', ' ')), getNumber(Utils.copy(name))),
                     SeqUtil.seq('\n')));
         }
     }
 
     public void addEntry(final VDMSeq name, final VDMSeq number) {
-        phoneNumbers = MapUtil.munion(Utils.clone(phoneNumbers),
-                MapUtil.map(new Maplet(Utils.clone(name), Utils.clone(number))));
+        phoneNumbers = MapUtil.munion(Utils.copy(phoneNumbers),
+                MapUtil.map(new Maplet(Utils.copy(name), Utils.copy(number))));
     }
 
     public void addTwoEntries(final Tuple first, final Tuple second) {
-        phoneNumbers = MapUtil.merge(SetUtil.set(Utils.clone(phoneNumbers),
+        phoneNumbers = MapUtil.merge(SetUtil.set(Utils.copy(phoneNumbers),
                     MapUtil.map(
                         new Maplet(SeqUtil.toSeq(first.get(0)),
                             SeqUtil.toSeq(first.get(1)))),
@@ -181,49 +182,49 @@ public class PhoneBook {
     }
 
     public VDMSet getNames() {
-        return MapUtil.dom(Utils.clone(phoneNumbers));
+        return MapUtil.dom(Utils.copy(phoneNumbers));
     }
 
     public VDMSet getNumbers() {
-        return MapUtil.rng(Utils.clone(phoneNumbers));
+        return MapUtil.rng(Utils.copy(phoneNumbers));
     }
 
     public VDMSeq getNumber(final VDMSeq name) {
-        return Utils.clone(((VDMSeq) Utils.get(phoneNumbers, name)));
+        return Utils.copy(((VDMSeq) Utils.get(phoneNumbers, name)));
     }
 
     public VDMSeq getName(final VDMSeq number) {
-        return Utils.clone(((VDMSeq) Utils.get(MapUtil.inverse(Utils.clone(
+        return Utils.copy(((VDMSeq) Utils.get(MapUtil.inverse(Utils.copy(
                         phoneNumbers)), number)));
     }
 
     public PhoneBook invertPhoneBook() {
-        return new PhoneBook(MapUtil.inverse(Utils.clone(phoneNumbers)));
+        return new PhoneBook(MapUtil.inverse(Utils.copy(phoneNumbers)));
     }
 
     public void override(final VDMMap overrides) {
-        phoneNumbers = MapUtil.override(Utils.clone(phoneNumbers),
-                Utils.clone(overrides));
+        phoneNumbers = MapUtil.override(Utils.copy(phoneNumbers),
+                Utils.copy(overrides));
     }
 
     public void restrictToNames(final VDMSet names) {
-        phoneNumbers = MapUtil.domResTo(Utils.clone(names),
-                Utils.clone(phoneNumbers));
+        phoneNumbers = MapUtil.domResTo(Utils.copy(names),
+                Utils.copy(phoneNumbers));
     }
 
     public void restrictByNames(final VDMSet names) {
-        phoneNumbers = MapUtil.domResBy(Utils.clone(names),
-                Utils.clone(phoneNumbers));
+        phoneNumbers = MapUtil.domResBy(Utils.copy(names),
+                Utils.copy(phoneNumbers));
     }
 
     public void restrictToNumbers(final VDMSet numbers) {
-        phoneNumbers = MapUtil.rngResTo(Utils.clone(phoneNumbers),
-                Utils.clone(numbers));
+        phoneNumbers = MapUtil.rngResTo(Utils.copy(phoneNumbers),
+                Utils.copy(numbers));
     }
 
     public void restrictByNumbers(final VDMSet numbers) {
-        phoneNumbers = MapUtil.rngResBy(Utils.clone(phoneNumbers),
-                Utils.clone(numbers));
+        phoneNumbers = MapUtil.rngResBy(Utils.copy(phoneNumbers),
+                Utils.copy(numbers));
     }
 
     public Boolean eq(final PhoneBook other) {

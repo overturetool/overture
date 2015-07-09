@@ -2,9 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>core</artifactId>
+   <artifactId>core</artifactId>
     <groupId>org.overturetool</groupId>
-    <version>2.2.3-SNAPSHOT</version>
+    <version>2.2.7-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -19,10 +19,14 @@
   </properties>
 
   <modules>
+    <module>ir</module>
+    <module>platform</module>
     <module>javagen</module>
-	<module>codegen-runtime</module>
+    <module>vdm2jml</module>
+    <module>codegen-runtime</module>
     <module>codegen-maven-plugin</module>
-	<!-- <module>cgisa</module> -->
+    <!-- <module>cgisa</module> -->
+    <!--<module>cppgen</module>-->
   </modules>
   
 </project>

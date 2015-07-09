@@ -3,6 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 abstract public class Employee {
     public Employee() {
     }
@@ -20,6 +21,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class HourlyPaidEmployee extends Employee {
     public Number hours;
     private Number rate;
@@ -63,6 +65,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class FixedSalaryEmployee extends Employee {
     private Number fixedSalary;
 
@@ -93,6 +96,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class Company {
     private VDMSeq employees;
 
@@ -106,14 +110,14 @@ public class Company {
 
     public void op1() {
         Number x = employees.size();
-        VDMSeq y = Utils.clone(employees);
+        VDMSeq y = Utils.copy(employees);
         Employee q = ((Employee) employees.get(0));
 
         //Skip;
     }
 
     public Number calculateSalary() {
-        return start_calc(0L, Utils.clone(employees));
+        return start_calc(0L, Utils.copy(employees));
     }
 
     private Number start_calc(final Number sum, final VDMSeq emps) {
@@ -122,7 +126,7 @@ public class Company {
         } else {
             return start_calc(sum.doubleValue() +
                 ((Employee) emps.get(0)).getSalary().doubleValue(),
-                SeqUtil.tail(Utils.clone(emps)));
+                SeqUtil.tail(Utils.copy(emps)));
         }
     }
 
@@ -132,7 +136,7 @@ public class Company {
     }
 
     public Company addEmp(final Employee emp) {
-        employees = SeqUtil.conc(Utils.clone(employees), SeqUtil.seq(emp));
+        employees = SeqUtil.conc(Utils.copy(employees), SeqUtil.seq(emp));
 
         return this;
     }
@@ -148,6 +152,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
+@SuppressWarnings("all")
 public class World {
     public World() {
     }

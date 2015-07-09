@@ -54,12 +54,12 @@ import org.osgi.service.prefs.Preferences;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
-import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -71,9 +71,6 @@ import org.overture.ide.plugins.codegen.commands.Vdm2JavaCommand;
 
 public class PluginVdm2JavaUtil
 {
-	public static final String QUOTES_FOLDER = "quotes";
-	public static final String UTILS_FOLDER = "utils";
-	
 	public static final String CODEGEN_RUNTIME_BIN_FILE = "codegen-runtime.jar";
 	public static final String CODEGEN_RUNTIME_SOURCES_FILE = "codegen-runtime-sources.jar";
 	public static final String CODEGEN_RUNTIME_LIB_FOLDER = "lib";
@@ -104,7 +101,7 @@ public class PluginVdm2JavaUtil
 
 	public static boolean isSupportedVdmDialect(IVdmProject vdmProject)
 	{
-		return vdmProject.getDialect() == Dialect.VDM_PP;
+		return vdmProject.getDialect() == Dialect.VDM_PP || vdmProject.getDialect() == Dialect.VDM_SL;
 	}
 
 	public static IVdmProject getVdmProject(ExecutionEvent event)
@@ -129,26 +126,48 @@ public class PluginVdm2JavaUtil
 
 		return vdmProject;
 	}
-
-	public static List<SClassDefinition> mergeParseLists(
-			List<IVdmSourceUnit> sources)
+	
+	public static List<INode> getNodes(List<IVdmSourceUnit> sources)
 	{
-		List<SClassDefinition> mergedParseLists = new ArrayList<SClassDefinition>();
+		List<INode> nodes = new ArrayList<INode>();
 
 		for (IVdmSourceUnit source : sources)
 		{
-			List<INode> parseList = source.getParseList();
+			nodes.addAll(source.getParseList());
+		}
+		
+		return nodes;
+	}
 
-			for (INode node : parseList)
+	public static List<SClassDefinition> getClasses(
+			List<IVdmSourceUnit> sources)
+	{
+		List<SClassDefinition> classes = new LinkedList<SClassDefinition>();
+		
+		for(INode n : getNodes(sources))
+		{
+			if(n instanceof SClassDefinition)
 			{
-				if (node instanceof SClassDefinition)
-				{
-					mergedParseLists.add(SClassDefinition.class.cast(node));
-				}
-
+				classes.add((SClassDefinition) n);
 			}
 		}
-		return mergedParseLists;
+		
+		return classes;
+	}
+	
+	public static List<AModuleModules> getModules(List<IVdmSourceUnit> sources)
+	{
+		List<AModuleModules> modules = new LinkedList<AModuleModules>();
+
+		for(INode n : getNodes(sources))
+		{
+			if(n instanceof AModuleModules)
+			{
+				modules.add((AModuleModules) n);
+			}
+		}
+		
+		return modules;
 	}
 
 	public static File getEclipseProjectFolder(IVdmProject project)
@@ -168,31 +187,13 @@ public class PluginVdm2JavaUtil
 		File outputDir = getEclipseProjectFolder(project);
 		outputDir = getFolder(outputDir, ECLIPSE_PROJECT_SRC_FOLDER);
 		
-		String javaPackage = settings.getJavaRootPackage();
-		if(GeneralCodeGenUtils.isValidJavaPackage(javaPackage))
-		{
-			outputDir = getFolder(outputDir, GeneralCodeGenUtils
-					.getFolderFromJavaRootPackage(javaPackage));
-		}
-		
 		return outputDir;
-	}
-
-	public static File getQuotesFolder(IVdmProject project, JavaSettings settings)
-			throws CoreException
-	{
-		return getFolder(getJavaCodeOutputFolder(project, settings), QUOTES_FOLDER);
-	}
-
-	public static File getUtilsFolder(IVdmProject project, JavaSettings settings) throws CoreException
-	{
-		return getFolder(getJavaCodeOutputFolder(project, settings), UTILS_FOLDER);
 	}
 
 	public static void addMarkers(String generalMessage,
 			Set<Violation> violations)
 	{
-		List<Violation> list = JavaCodeGenUtil.asSortedList(violations);
+		List<Violation> list = GeneralCodeGenUtils.asSortedList(violations);
 
 		for (Violation violation : list)
 		{

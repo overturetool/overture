@@ -320,8 +320,8 @@ public class TraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 	public TraceNode caseARepeatTraceDefinition(ARepeatTraceDefinition term,
 			Context ctxt) throws AnalysisException
 	{
-		// return ARepeatTraceDefinitionAssistantInterpreter.expand(term, ctxt);
-		TraceNode body = af.createPTraceCoreDefinitionAssistant().expand(term.getCore(), ctxt);
+		TraceNode body = term.getCore().apply(af.getTraceExpander(),ctxt);
+		//expand(term.getCore(), ctxt);
 
 		if (term.getFrom() == 1 && term.getTo() == 1)
 		{
@@ -331,5 +331,16 @@ public class TraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 			return new RepeatTraceNode(body, term.getFrom(), term.getTo());
 		}
 	}
+	
+//		public TraceNode expand(PTraceCoreDefinition core, Context ctxt)
+//		{
+//			try
+//			{
+//				return core.apply(af.getTraceExpander(), ctxt);
+//			} catch (AnalysisException e)
+//			{
+//				return null;
+//			}
+//		}
 
 }

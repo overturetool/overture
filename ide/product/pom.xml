@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>ide</artifactId>
-    <version>2.2.3-SNAPSHOT</version>
+    <version>2.2.7-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -65,6 +65,9 @@
               <id>org.overture.ide.platform.product</id>
               <archiveFileName>Overture-${project.version}</archiveFileName>
               <rootFolder>Overture</rootFolder>
+<rootFolders>
+          <macosx>Overture.app</macosx>
+        </rootFolders>
             </product>
           </products>
         </configuration>

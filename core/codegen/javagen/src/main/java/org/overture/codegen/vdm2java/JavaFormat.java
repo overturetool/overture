@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.ClonableString;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
@@ -39,6 +40,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
+import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
@@ -102,7 +104,8 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class JavaFormat
 {
-	private static final String CLASS_EXTENSION = ".class";
+	public static final String TYPE_DECL_PACKAGE_SUFFIX = "types";
+	public static final String CLASS_EXTENSION = ".class";
 	public static final String UTILS_FILE = "Utils";
 	public static final String SEQ_UTIL_FILE = "SeqUtil";
 	public static final String SET_UTIL_FILE = "SetUtil";
@@ -121,16 +124,23 @@ public class JavaFormat
 	private MergeVisitor mergeVisitor;
 	private JavaValueSemantics valueSemantics;
 	private JavaFormatAssistant javaFormatAssistant;
-
+	private JavaRecordCreator recCreator;
+	
 	public JavaFormat(TempVarPrefixes varPrefixes, TemplateStructure templateStructure, IRInfo info)
 	{
 		this.valueSemantics = new JavaValueSemantics(this);
-		JavaClassCreatorBase recordCreator = new JavaRecordCreator(this);
-		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, varPrefixes, valueSemantics, recordCreator);
+		this.recCreator = new JavaRecordCreator(this);
+		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this,
+				IRAnalysis.class, varPrefixes, valueSemantics, recCreator);
 		this.mergeVisitor = new MergeVisitor(templateStructure, templateCallables);
 		this.functionValueAssistant = null;
 		this.info = info;
 		this.javaFormatAssistant = new JavaFormatAssistant(this.info);
+	}
+	
+	public JavaRecordCreator getRecCreator()
+	{
+		return recCreator;
 	}
 	
 	public JavaFormatAssistant getJavaFormatAssistant()
@@ -360,6 +370,23 @@ public class JavaFormat
 
 	public String formatTypeName(INode node, ATypeNameCG typeName)
 	{
+		// Type names are also used for quotes, which do not have a defining class.
+		if(typeName.getDefiningClass() != null && !getJavaSettings().genRecsAsInnerClasses())
+		{
+			String typeNameStr = "";
+			
+			if(JavaCodeGenUtil.isValidJavaPackage(getJavaSettings().getJavaRootPackage()))
+			{
+				typeNameStr += getJavaSettings().getJavaRootPackage() + ".";
+			}
+			
+			typeNameStr += typeName.getDefiningClass() + TYPE_DECL_PACKAGE_SUFFIX + ".";
+			
+			typeNameStr += typeName.getName();
+			
+			return typeNameStr;
+		}
+		
 		AClassDeclCG classDef = node.getAncestor(AClassDeclCG.class);
 
 		String definingClass = typeName.getDefiningClass() != null
@@ -368,9 +395,7 @@ public class JavaFormat
 				+ "."
 				: "";
 
-		String name = typeName.getName();
-
-		return definingClass + name;
+		return definingClass + typeName.getName();
 	}
 
 	public String format(SExpCG exp, boolean leftChild)
@@ -901,9 +926,21 @@ public class JavaFormat
 		}
 	}
 	
-	public static boolean isNamedTypeDecl(ATypeDeclCG node)
+	public boolean genDecl(ATypeDeclCG node)
 	{
-		return node.getDecl() instanceof ANamedTypeDeclCG;
+		return !(node.getDecl() instanceof ANamedTypeDeclCG);
+	}
+	
+	public boolean genTypeDecl(ATypeDeclCG node)
+	{
+		if(node.getDecl() instanceof ARecordDeclCG)
+		{
+			return getJavaSettings().genRecsAsInnerClasses();
+		}
+		else
+		{
+			return info.getSettings().generateInvariants();
+		}
 	}
 	
 	public static boolean isSeqConversion(AFieldNumberExpCG node)
@@ -941,13 +978,30 @@ public class JavaFormat
 		}
 	}
 
-	public boolean genInvariant(AClassDeclCG clazz)
+	public boolean genClassInvariant(AClassDeclCG clazz)
 	{
-		if(!info.getSettings().generateInvariantChecks())
+		if(!info.getSettings().generateInvariants())
 		{
 			return false;
 		}
 		
 		return clazz.getInvariant() != null;
+	}
+	
+	public static String formatMetaData(List<ClonableString> metaData)
+	{
+		if(metaData == null || metaData.isEmpty())
+		{
+			return "";
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for(ClonableString str : metaData)
+		{
+			sb.append(str.value).append('\n');
+		}
+		
+		return sb.append('\n').toString();
 	}
 }

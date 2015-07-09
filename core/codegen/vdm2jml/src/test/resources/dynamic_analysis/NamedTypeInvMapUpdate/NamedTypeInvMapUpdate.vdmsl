@@ -1,0 +1,25 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+M = map ? to ?
+inv m == forall x in set dom m & (is_nat(x) and is_nat(m(x))) => x + 1 = m(x)
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  dcl m : M := {'a' |-> 1, 1 |-> 2};
+  m('a') := 2;
+  m(1) := 2;
+  IO`println("Breaking named type invariant for sequence");
+  m(2) := 10;
+  return 0;
+);
+
+end Entry
