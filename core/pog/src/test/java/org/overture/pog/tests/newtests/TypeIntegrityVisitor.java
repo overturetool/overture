@@ -6,6 +6,7 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.types.AFunctionType;
 
 public class TypeIntegrityVisitor extends DepthFirstAnalysisAdaptor
 {
@@ -29,6 +30,12 @@ public class TypeIntegrityVisitor extends DepthFirstAnalysisAdaptor
 	public void reset()
 	{
 		untypeExps.clear();
+	}
+	
+	@Override
+	public void caseAFunctionType(AFunctionType node) throws AnalysisException
+	{
+		// do nothing
 	}
 
 }
