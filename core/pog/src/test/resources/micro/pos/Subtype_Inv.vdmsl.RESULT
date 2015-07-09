@@ -1,0 +1,1 @@
+[{"poKind":"type invariant satisfiable","poExp":"(exists e:Even \u0026 ((e mod 2) \u003d 0))"},{"poKind":"type compatibility","poExp":"(forall n:int \u0026 (inv_Even(n) and is_(n, int)))"}]

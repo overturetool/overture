@@ -1,0 +1,11 @@
+
+state S of
+y : int
+x : nat
+end
+
+operations
+op () n : nat
+pre y > 0
+post y = n
+

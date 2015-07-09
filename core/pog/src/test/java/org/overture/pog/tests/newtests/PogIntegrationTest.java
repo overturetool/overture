@@ -20,15 +20,15 @@ import org.overture.pog.tests.newtests.PogTestResult.ResultComparison;
 import com.google.gson.reflect.TypeToken;
 
 @RunWith(Parameterized.class)
-public class PogLegacyTest extends ParamStandardTest<PogTestResult>
+public class PogIntegrationTest extends ParamStandardTest<PogTestResult>
 {
 
-	private final static String LEGACY_ADAPTED_ROOT = "src/test/resources/old/adapted";
-	private final static String LEGACY_DIRECT_ROOT = "src/test/resources/old/direct";
+	private final static String INTEGRATION_ROOT = "src/test/resources/integration";
+	
 
 	private static final String UPDATE_PROPERTY = "tests.update.pog.legacy";
 
-	public PogLegacyTest(String nameParameter, String testParameter,
+	public PogIntegrationTest(String nameParameter, String testParameter,
 			String resultParameter)
 	{
 		super(nameParameter, testParameter, resultParameter);
@@ -37,7 +37,7 @@ public class PogLegacyTest extends ParamStandardTest<PogTestResult>
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData()
 	{
-		return PathsProvider.computePaths(LEGACY_ADAPTED_ROOT, LEGACY_DIRECT_ROOT);
+		return PathsProvider.computePaths(INTEGRATION_ROOT);
 	}
 
 	@Override

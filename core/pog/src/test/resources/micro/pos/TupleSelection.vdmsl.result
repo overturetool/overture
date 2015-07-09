@@ -1,0 +1,1 @@
+["tuple selection obligation:(forall x:A \u0026 (not is_(x, int)))"]

@@ -1,0 +1,10 @@
+-- This test exercises the generation of a TupleSelectionObligation
+-- off a Type Definition and a Explicit Function Definition
+
+
+types
+    A = (int*int) | int
+    
+functions
+    picker : A -> int
+    picker (x) == x.#1

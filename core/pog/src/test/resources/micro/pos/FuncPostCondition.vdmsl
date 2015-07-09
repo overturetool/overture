@@ -1,0 +1,13 @@
+-- This test exercises the generation of a FunctionPostConditionObligation
+-- off an Explicit Function Definition
+
+functions
+
+ExplFn: nat -> nat
+ExplFn(n) ==
+  n ** 6
+pre n > 5
+post RESULT = n * n * n * n * n * n
+
+
+-- Expected Ouput:   (forall n:nat & (pre_ExplFn(n) => post_ExplFn(n, (n ** 6))))

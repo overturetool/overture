@@ -1,0 +1,12 @@
+-- This test exercises the generation of a SatisfiabilityObligation
+-- off an Implicit Function Definition
+
+
+functions
+
+f(mk_(a,b): (nat * nat), c: nat) d: bool
+pre a < b
+post c > a + b
+-- PO genereated here: (forall mk_(a, b):(nat * nat), c:nat & 
+--                          (pre_f(mk_(a, b), c) => 
+--                           (exists d:bool & post_f(mk_(a, b), c, d))))
