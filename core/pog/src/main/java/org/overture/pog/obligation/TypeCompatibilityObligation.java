@@ -242,7 +242,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 
 			for (PPattern p : func.getParamPatternList().get(0))
 			{
-				args.add(assistantFactory.createPPatternAssistant().getMatchingExpression(p));
+				args.add(patternToExp(p));
 			}
 
 			body = AstFactory.newAApplyExp(root, args);
@@ -274,7 +274,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 			{
 				for (PPattern p : pltp.getPatterns())
 				{
-					args.add(assistantFactory.createPPatternAssistant().getMatchingExpression(p));
+					args.add(patternToExp(p));
 				}
 			}
 

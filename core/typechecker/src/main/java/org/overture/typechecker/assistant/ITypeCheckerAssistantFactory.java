@@ -378,8 +378,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	IAnswer<PType> getPossibleTypeFinder();
 
-	IAnswer<PExp> getMatchingExpressionFinder();
-
 	IAnswer<Boolean> getSimplePatternChecker();
 
 	IAnswer<Boolean> getAlwaysMatchingPatternChecker();
