@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
@@ -329,6 +330,18 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 		var.setName(name.clone());
 		var.setOriginal(name.getFullName());
 		return var;
+	}
+	
+
+	/**
+	 * Generate AVariableExp with corresponding definition
+	 */
+	protected AVariableExp getVarExp(ILexNameToken name, PDefinition vardef){
+		AVariableExp var = new AVariableExp();
+		var.setName(name.clone());
+		var.setOriginal(name.getFullName());
+		var.setVardef(vardef.clone());
+		return var;		
 	}
 
 	/**
