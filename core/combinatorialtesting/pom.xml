@@ -16,14 +16,14 @@
 
   <!--Skip random tests in Java 8 since the RNG changed-->
   <properties>
-      <exclude.tests>java8</exclude.tests>
+      <exclude.tests>nothing-to-exclude</exclude.tests>
   </properties>
 
   <profiles>
       <profile>
           <id>java8</id>
           <properties>
-              <exclude.tests>CtRandomReductionSlTestCase.java</exclude.tests>
+              <exclude.tests>**/CtRandomReductionSlTestCase.java</exclude.tests>
           </properties>
       </profile>
   </profiles>

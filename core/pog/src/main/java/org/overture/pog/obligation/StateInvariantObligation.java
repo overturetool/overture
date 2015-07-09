@@ -127,10 +127,8 @@ public class StateInvariantObligation extends ProofObligation
 			;
 		} else
 		{
-			PDefinition rootDef = atom.getAssignments().get(0).getClassDefinition() != null ? atom.getAssignments().get(0).getClassDefinition()
-					: atom.getAssignments().get(0).getStateDefinition();
-
-			inv_exp = invDefs(rootDef);
+			
+			inv_exp = extractInv(atom);
 		}
 		PExp ant_exp = inv_exp.clone();
 		List<Substitution> subs = new LinkedList<Substitution>();
@@ -149,6 +147,17 @@ public class StateInvariantObligation extends ProofObligation
 		valuetree.setPredicate(stitch);
 	}
 
+	private PExp extractInv(AAtomicStm atom)
+	{
+		AAssignmentStm x = atom.getAssignments().get(0);
+		if (x.getClassDefinition() != null){
+			return invDefs(x.getClassDefinition());
+		}
+		else{
+			return invDefs(x.getStateDefinition());
+		}
+	}
+
 	public StateInvariantObligation(AImplicitOperationDefinition def,
 			IPOContextStack ctxt, IPogAssistantFactory af)
 			throws AnalysisException
@@ -158,7 +167,7 @@ public class StateInvariantObligation extends ProofObligation
 
 		if (def.getClassDefinition() == null)
 		{
-			stitch = invDefs(def.getStateDefinition());
+			stitch = invDefs(def.getClassDefinition());
 		} else
 		{
 			stitch = invDefs(def.getStateDefinition());
@@ -168,6 +177,19 @@ public class StateInvariantObligation extends ProofObligation
 		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 
+	private PExp invDefs(SClassDefinition def)
+	{
+		PExp root = null;
+
+		for (PDefinition d : assistantFactory.createSClassDefinitionAssistant().getInvDefs(def.clone()))
+		{
+			AClassInvariantDefinition cid = (AClassInvariantDefinition) d;
+			root = makeAnd(root, cid.getExpression().clone());
+		}
+
+		return root;
+	}
+	
 	private PExp invDefs(PDefinition def)
 	{
 
@@ -188,4 +210,5 @@ public class StateInvariantObligation extends ProofObligation
 			return root;
 		}
 	}
+
 }

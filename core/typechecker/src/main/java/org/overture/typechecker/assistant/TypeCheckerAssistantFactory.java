@@ -203,11 +203,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AOperationTypeAssistantTC(this);
 	}
 
-	// @Override
-	// public APatternListTypePairAssistantTC createAPatternListTypePairAssistant()
-	// {
-	// return new APatternListTypePairAssistantTC(this);
-	// }
+//	@Override
+//	public APatternListTypePairAssistantTC createAPatternListTypePairAssistant()
+//	{
+//		return new APatternListTypePairAssistantTC(this);
+//	}
 
 	@Override
 	public ARecordInvariantTypeAssistantTC createARecordInvariantTypeAssistant()
@@ -277,23 +277,23 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new AImportedDefinitionAssistantTC(this);
 	// }
 
-	// @Override
-	// public AInstanceVariableDefinitionAssistantTC createAInstanceVariableDefinitionAssistant()
-	// {
-	// return new AInstanceVariableDefinitionAssistantTC(this);
-	// }
+//	@Override
+//	public AInstanceVariableDefinitionAssistantTC createAInstanceVariableDefinitionAssistant()
+//	{
+//		return new AInstanceVariableDefinitionAssistantTC(this);
+//	}
 
-	// @Override
-	// public ALocalDefinitionAssistantTC createALocalDefinitionAssistant()
-	// {
-	// return new ALocalDefinitionAssistantTC(this);
-	// }
+//	@Override
+//	public ALocalDefinitionAssistantTC createALocalDefinitionAssistant()
+//	{
+//		return new ALocalDefinitionAssistantTC(this);
+//	}
 
-	// @Override
-	// public AStateDefinitionAssistantTC createAStateDefinitionAssistant()
-	// {
-	// return new AStateDefinitionAssistantTC(this);
-	// }
+//	@Override
+//	public AStateDefinitionAssistantTC createAStateDefinitionAssistant()
+//	{
+//		return new AStateDefinitionAssistantTC(this);
+//	}
 
 	// @Override
 	// public ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant()
@@ -343,11 +343,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new PDefinitionSet(this);
 	}
 
-	// @Override
-	// public PTraceDefinitionAssistantTC createPTraceDefinitionAssistant()
-	// {
-	// return new PTraceDefinitionAssistantTC(this);
-	// }
+//	@Override
+//	public PTraceDefinitionAssistantTC createPTraceDefinitionAssistant()
+//	{
+//		return new PTraceDefinitionAssistantTC(this);
+//	}
 
 	@Override
 	public SClassDefinitionAssistantTC createSClassDefinitionAssistant()
@@ -357,43 +357,43 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 
 	// expression
 
-	// @Override
-	// public AApplyExpAssistantTC createAApplyExpAssistant()
-	// {
-	// return new AApplyExpAssistantTC(this);
-	// }
+//	@Override
+//	public AApplyExpAssistantTC createAApplyExpAssistant()
+//	{
+//		return new AApplyExpAssistantTC(this);
+//	}
 
-	// @Override
-	// public ACaseAlternativeAssistantTC createACaseAlternativeAssistant()
-	// {
-	// return new ACaseAlternativeAssistantTC(this);
-	// }
+//	@Override
+//	public ACaseAlternativeAssistantTC createACaseAlternativeAssistant()
+//	{
+//		return new ACaseAlternativeAssistantTC(this);
+//	}
 
-	// @Override
-	// public PExpAssistantTC createPExpAssistant()
-	// {
-	// return new PExpAssistantTC(this);
-	// }
+//	@Override
+//	public PExpAssistantTC createPExpAssistant()
+//	{
+//		return new PExpAssistantTC(this);
+//	}
 
-	// @Override
-	// public SBinaryExpAssistantTC createSBinaryExpAssistant()
-	// {
-	// return new SBinaryExpAssistantTC(this);
-	// }
+//	@Override
+//	public SBinaryExpAssistantTC createSBinaryExpAssistant()
+//	{
+//		return new SBinaryExpAssistantTC(this);
+//	}
 
 	// module
 
-	// @Override
-	// public AFromModuleImportsAssistantTC createAFromModuleImportsAssistant()
-	// {
-	// return new AFromModuleImportsAssistantTC(this);
-	// }
+//	@Override
+//	public AFromModuleImportsAssistantTC createAFromModuleImportsAssistant()
+//	{
+//		return new AFromModuleImportsAssistantTC(this);
+//	}
 
-	// @Override
-	// public AModuleExportsAssistantTC createAModuleExportsAssistant()
-	// {
-	// return new AModuleExportsAssistantTC(this);
-	// }
+//	@Override
+//	public AModuleExportsAssistantTC createAModuleExportsAssistant()
+//	{
+//		return new AModuleExportsAssistantTC(this);
+//	}
 
 	@Override
 	public AModuleImportsAssistantTC createAModuleImportsAssistant()
@@ -445,11 +445,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new AExpressionPatternAssistantTC(this);
 	// }
 
-	// @Override
-	// public AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant()
-	// {
-	// return new AMapletPatternMapletAssistantTC(this);
-	// }
+//	@Override
+//	public AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant()
+//	{
+//		return new AMapletPatternMapletAssistantTC(this);
+//	}
 
 	// @Override
 	// public AMapPatternAssistantTC createAMapPatternAssistant()
@@ -481,11 +481,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new ASeqPatternAssistantTC(this);
 	// }
 
-	// @Override
-	// public ASetBindAssistantTC createASetBindAssistant()
-	// {
-	// return new ASetBindAssistantTC(this);
-	// }
+//	@Override
+//	public ASetBindAssistantTC createASetBindAssistant()
+//	{
+//		return new ASetBindAssistantTC(this);
+//	}
 
 	// @Override
 	// public ASetPatternAssistantTC createASetPatternAssistant()
@@ -535,11 +535,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new PPatternAssistantTC(this);
 	}
 
-	// @Override
-	// public PPatternBindAssistantTC createPPatternBindAssistant()
-	// {
-	// return new PPatternBindAssistantTC(this);
-	// }
+//	@Override
+//	public PPatternBindAssistantTC createPPatternBindAssistant()
+//	{
+//		return new PPatternBindAssistantTC(this);
+//	}
 
 	@Override
 	public PPatternListAssistantTC createPPatternListAssistant()
@@ -675,11 +675,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new PStateDesignatorAssistantTC(this);
 	}
 
-	// @Override
-	// public PStmAssistantTC createPStmAssistant()
-	// {
-	// return new PStmAssistantTC(this);
-	// }
+//	@Override
+//	public PStmAssistantTC createPStmAssistant()
+//	{
+//		return new PStmAssistantTC(this);
+//	}
 
 	// @Override
 	// public SLetDefStmAssistantTC createSLetDefStmAssistant()
