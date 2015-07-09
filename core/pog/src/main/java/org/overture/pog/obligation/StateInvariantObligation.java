@@ -36,6 +36,7 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.lex.LexNameToken;
@@ -74,12 +75,14 @@ public class StateInvariantObligation extends ProofObligation
 		{
 			AStateDefinition def = ass.getStateDefinition();
 			ALetDefExp letExp = new ALetDefExp();
-
+			letExp.setType(def.getInvExpression().getType().clone());
 			List<PDefinition> invDefs = new Vector<PDefinition>();
 			AEqualsDefinition local = new AEqualsDefinition();
 			local.setPattern(def.getInvPattern().clone());
 			local.setName(def.getName().clone());
-			local.setTest(getVarExp(def.getName()));
+			AVariableExp varExp = getVarExp(def.getName());
+			varExp.setType(def.getRecordType().clone());
+			local.setTest(varExp);
 			invDefs.add(local);
 			letExp.setLocalDefs(invDefs);
 			letExp.setExpression(def.getInvExpression().clone());

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  *
  *	Copyright (C) 2008 Fujitsu Services Ltd.
@@ -244,12 +243,20 @@ public class SatisfiabilityObligation extends ProofObligation
 
 					if (stateDefinition instanceof AStateDefinition)
 					{
-						postArglist.add(getVarExp(OLD_STATE_ARG));
-						postArglist.add(getVarExp(NEW_STATE_ARG));
+						AVariableExp varExp = getVarExp(OLD_STATE_ARG);
+						varExp.setType(((AStateDefinition) stateDefinition).getRecordType().clone());
+						postArglist.add(varExp);
+						AVariableExp varExp2 = getVarExp(NEW_STATE_ARG);
+						varExp2.setType(((AStateDefinition) stateDefinition).getRecordType().clone());
+						postArglist.add(varExp2);
 					} else
 					{
-						postArglist.add(getVarExp(OLD_SELF_ARG));
-						postArglist.add(getVarExp(NEW_SELF_ARG));
+						AVariableExp varExp = getVarExp(OLD_SELF_ARG);
+						postArglist.add(varExp);
+						varExp.setType(((AStateDefinition) stateDefinition).getRecordType().clone());
+						AVariableExp varExp2 = getVarExp(NEW_SELF_ARG);
+						postArglist.add(varExp2);
+						varExp2.setType(((AStateDefinition) stateDefinition).getRecordType().clone());
 					}
 				}
 
