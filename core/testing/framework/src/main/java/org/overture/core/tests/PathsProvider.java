@@ -51,6 +51,29 @@ public class PathsProvider
 	private final static String EXTERNAL_VDM_EXTENSION_REGEX = "(.*)\\.(vdm|vpp)";
 
 	/**
+	 * Processes (recursively) a folder of source inputs. The source input files must have one of the
+	 * three VDM extensions (,vdmsl, .vdmpp, .vdmrt). <br>
+	 * <br>
+	 * ex: Test.vdmsl, Test.vdmsl.RESULT
+	 * 
+	 * @param root
+	 *            the path(s) to the root(s) folder of the test inputs
+	 * @return the a collection of test model file and result paths in the form of {filename ,filepath} arrays
+	 */
+	public static Collection<Object[]> computePathsNoResultFiles(String... root)
+	{
+		File dir;
+		Collection<Object[]> r = searchForFilesNoResult(new File(root[0]));
+
+		for (int i = 1; i < root.length; i++)
+		{
+			dir = new File(root[i]);
+			r.addAll(searchForFilesNoResult(dir));
+		}
+		return r;
+	}
+
+	/**
 	 * Processes (recursively) a folder of source inputs and result files. The source input files must have one of the
 	 * three VDM extensions (,vdmsl, .vdmpp, .vdmrt). The result files must be in the same folder as the respective
 	 * inputs and have the same name including the extension but also have .RESULT as a second extension. <br>
@@ -100,7 +123,8 @@ public class PathsProvider
 
 		for (File file : files)
 		{
-			if(!(file.getPath().contains("sltest")||file.getPath().contains("pptest")||file.getPath().contains("rttest")))
+			if (!(file.getPath().contains("sltest")
+					|| file.getPath().contains("pptest") || file.getPath().contains("rttest")))
 			{
 				continue;
 			}
@@ -109,15 +133,25 @@ public class PathsProvider
 					file.getName(),
 					file.getPath(),
 					(RESULTS_EXTERNAL
-							+ file.getPath().substring(dir.getPath().length(),file.getPath().length())
-							+ RESULT_EXTENSION).replace('\\', '/').replace('/', File.separatorChar) });
+							+ file.getPath().substring(dir.getPath().length(), file.getPath().length()) + RESULT_EXTENSION).replace('\\', '/').replace('/', File.separatorChar) });
 
 		}
 
 		return paths;
 	}
 
-	private static Collection<Object[]> searchForFiles(File dir)
+	private static Collection<Object[]> searchForFiles(File file)
+	{
+		return searchForFilesOption(file, true);
+	}
+
+	private static Collection<Object[]> searchForFilesNoResult(File file)
+	{
+		return searchForFilesOption(file, false);
+	}
+
+	private static Collection<Object[]> searchForFilesOption(File dir,
+			boolean resultFile)
 	{
 		Collection<File> files = FileUtils.listFiles(dir, new RegexFileFilter(VDM_EXTENSION_REGEX), DirectoryFileFilter.DIRECTORY);
 
@@ -125,12 +159,27 @@ public class PathsProvider
 
 		for (File file : files)
 		{
-			paths.add(new Object[] { file.getName(), file.getPath(),
-					file.getPath() + RESULT_EXTENSION });
-
+			if (resultFile)
+			{
+				paths.add(buildResultArray(file));
+			} else
+			{
+				paths.add(buildNoResultArray(file));
+			}
 		}
 
 		return paths;
+	}
+
+	private static Object[] buildResultArray(File file)
+	{
+		return new Object[] { file.getName(), file.getPath(),
+				file.getPath() + RESULT_EXTENSION };
+	}
+
+	private static Object[] buildNoResultArray(File file)
+	{
+		return new Object[] { file.getName(), file.getPath() };
 	}
 
 }
