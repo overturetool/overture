@@ -1,0 +1,19 @@
+#set( $type = $JavaFormat.formatTemplateParam($node.getType()) )
+#set( $index = $node.getField() - 1 )
+##
+#set( $tuple = $JavaFormat.format($node.getTuple()) )
+#set( $method = ".get($index)" )
+##
+#set( $field = "")
+#if ($JavaFormat.isSeqConversion($node))
+	#set( $field = "${tuple}${method}")##
+	${field}##
+#else
+	#set( $field = "((${type}) ${tuple}${method})")##
+	#if ($ValueSemantics.cloneMember($node))
+		Utils.copy(${field})##
+	#else
+		${field}##
+	#end
+#end
+##

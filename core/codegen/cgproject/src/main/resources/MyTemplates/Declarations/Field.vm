@@ -1,0 +1,18 @@
+#set( $final = "")
+#if ($node.getFinal())
+	#set( $final = "final")
+#end
+##
+#set( $static = "")
+#if ($node.getStatic())
+	#set( $static = "static")
+#end
+##
+#set( $volatile = "")
+#if ($node.getVolatile())
+	#set( $volatile = "volatile")
+#end
+##
+$JavaFormat.formatMetaData($node.getMetaData())##
+##
+$node.getAccess() $static $volatile $final $JavaFormat.format($node.getType()) $node.getName() $JavaFormat.formatInitialExp($node.getInitial());

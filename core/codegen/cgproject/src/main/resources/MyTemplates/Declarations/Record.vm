@@ -1,0 +1,12 @@
+static class $node.getName() implements Record
+{
+	#foreach( $field in $node.getFields() )
+	$JavaFormat.format($field)
+	#end
+
+
+	##
+	#foreach( $method in $node.getMethods() )
+	$JavaFormat.format($method)
+	#end
+}

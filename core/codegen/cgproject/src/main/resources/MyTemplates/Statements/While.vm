@@ -1,0 +1,7 @@
+#set( $exp = $JavaFormat.format($node.getExp()) )
+#set( $body = $JavaFormat.format($node.getBody()) )
+##
+while(${exp})
+{
+	${body}
+}

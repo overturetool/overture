@@ -1,0 +1,4 @@
+#set( $first = $JavaFormat.format($node.getFirst()) )
+#set( $last = $JavaFormat.format($node.getLast()) )
+##
+SetUtil.range(${first}, ${last})

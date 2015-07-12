@@ -1,0 +1,8 @@
+#set( $type = $JavaFormat.format($node.getType()))
+#set( $name = $node.getName())
+#set( $stm = $JavaFormat.format($node.getStm()))
+##
+catch(${type} ${name})
+{
+	${stm}
+}

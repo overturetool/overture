@@ -1,0 +1,15 @@
+#set( $final = "")
+#if ( $node.getFinal() )
+	#set( $final = "final")
+#end
+##
+#set( $end = ";")
+#if ( $JavaFormat.isLoopVar($node) )
+	#set( $end = "")
+#end
+##
+#set( $pattern = $JavaFormat.format($node.getPattern()) )
+##
+$JavaFormat.formatMetaData($node.getMetaData())##
+##
+${final} $JavaFormat.format($node.getType()) $pattern = $JavaFormat.format($node.getExp())${end}

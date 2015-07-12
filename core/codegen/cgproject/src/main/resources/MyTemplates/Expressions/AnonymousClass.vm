@@ -1,0 +1,6 @@
+new $JavaFormat.format($node.getType())()
+{
+	#foreach( $method in $node.getMethods() )
+	$JavaFormat.format($method)
+	#end
+}

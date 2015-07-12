@@ -1,0 +1,4 @@
+class $node.Name
+{
+  Hello $CGh.getFive() katkat
+}

@@ -1,0 +1,14 @@
+#set( $exp = $JavaFormat.format($node.getExp()))
+##
+#if ($JavaFormat.isStringType($node.getExp().getType()))
+	#set( $getCall = ".charAt(0)")
+	${exp}${getCall}
+#else
+	#set( $getCall = ".get(0)")
+	#set ($call = "(($JavaFormat.format($node.getType())) ${exp}${getCall})")
+	#if ($ValueSemantics.shouldClone($node))
+		Utils.copy(${call})
+	#else
+		${call}
+	#end	
+#end

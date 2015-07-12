@@ -1,0 +1,10 @@
+#set( $args = $JavaFormat.formatArgs($node.getArgs()) )
+#set( $field = $node.getFieldName() )
+#set( $designator = $JavaFormat.format($node.getDesignator()) )
+##
+#set( $return = "")
+#if (!$JavaFormat.isVoidType($node.getType()))
+	#set( $return = "return ")
+#end
+##
+${return}${designator}.${field}(${args});

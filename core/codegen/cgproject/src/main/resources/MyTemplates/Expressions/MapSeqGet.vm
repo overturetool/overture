@@ -1,0 +1,5 @@
+#set( $col = $JavaFormat.format($node.getCol()) )
+#set( $index = $JavaFormat.format($node.getIndex()) )
+#set( $type = $JavaFormat.format($node.getType()) )
+##
+((${type}) Utils.get(${col},${index}))
