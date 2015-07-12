@@ -21,6 +21,7 @@ import javax.xml.xpath.XPathFactory;
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
+import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
@@ -165,6 +166,45 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		PExp exp = node.getElseIf();
 
 		Element elseif_statement = doc.createElement("elseif_statement");
+		Element source_code = doc.createElement("source_code");
+		source_code.setTextContent(node.getElseIf().toString());
+		elseif_statement.appendChild(source_code);
+		fill_source_file_location(elseif_statement, local);
+		currentElement = elseif_statement;
+		Element condition = doc.createElement("condition");
+		condition.appendChild(source_code.cloneNode(true));
+		fill_source_file_location(condition, exp.getLocation());
+		Element eval_true = doc.createElement("evaluation");
+		eval_true.setAttribute("tested", "false");
+		eval_true.setAttribute("n", "1");
+		eval_true.setTextContent("true");
+		condition.appendChild(eval_true);
+
+		Element eval_false = doc.createElement("evaluation");
+		eval_false.setAttribute("tested", "false");
+		eval_false.setAttribute("n", "2");
+		eval_false.setTextContent("false");
+		condition.appendChild(eval_false);
+
+		Element outcome = (Element) eval_true.cloneNode(true);
+		Element outcome2 = (Element) eval_false.cloneNode(true);
+
+		elseif_statement.appendChild(outcome);
+		elseif_statement.appendChild(outcome2);
+
+		currentElement.appendChild(condition);
+		rootElement.appendChild(elseif_statement);
+		xml_nodes.put(local, elseif_statement);
+		xml_nodes.put(node.getElseIf().getLocation(), condition);
+		exp.apply(this);
+	}
+
+	@Override
+	public void caseAElseIfExp(AElseIfExp node) throws AnalysisException {
+		ILexLocation local = node.getLocation();
+		PExp exp = node.getElseIf();
+
+		Element elseif_statement = doc.createElement("elseifexpression");
 		Element source_code = doc.createElement("source_code");
 		source_code.setTextContent(node.getElseIf().toString());
 		elseif_statement.appendChild(source_code);
@@ -474,7 +514,6 @@ public class GenerateTestCases extends AnalysisAdaptor {
 
 		node.getLeft().apply(this);
 		node.getRight().apply(this);
-
 	}
 
 	@Override

@@ -253,6 +253,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseAElseIfExp(AElseIfExp node, Context ctxt)
 			throws AnalysisException
 	{
+		node.apply(ctx, ctxt);
 		return evalElseIf(node, node.getLocation(), node.getElseIf(), node.getThen(), ctxt);
 	}
 
@@ -663,8 +664,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	@Override
 	public Value caseAIfExp(AIfExp node, Context ctxt) throws AnalysisException
 	{ 
-		//ctx.setContext(ctxt);
-        //node.apply(ctx);
+        node.apply(ctx,ctxt);
 		return evalIf(node, node.getLocation(), node.getTest(), node.getThen(), node.getElseList(), node.getElse(), ctxt);
 	}
 

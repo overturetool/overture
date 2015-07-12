@@ -17,6 +17,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
+import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
@@ -474,6 +475,9 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			evaluation.setTextContent("false");
 	}
 
+	
+	
+	
 	@Override
 	public void caseAElseIfStm(AElseIfStm node, Context ctx)
 			throws AnalysisException {
@@ -488,6 +492,41 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		if (!xml_nodes.containsKey(local)) {
 
 			Element if_statement = doc.createElement("elseif");
+			fill_source_file_location(if_statement, local);
+			if_statement.appendChild(eval);
+			Element expression = doc.createElement("expression");
+			if_statement.appendChild(expression);
+			currentElement = expression;
+			exp.apply(this, ctx);
+			rootElement.appendChild(if_statement);
+			xml_nodes.put(local, if_statement);
+		} else {
+			xml_nodes.get(local).appendChild(eval);
+			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
+					.getLength(); i++) {
+				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
+						.equals("expression"))
+					currentElement = (Element) xml_nodes.get(local)
+							.getChildNodes().item(i);
+			}
+			exp.apply(this, ctx);
+		}
+	}
+
+	@Override
+	public void caseAElseIfExp(AElseIfExp node, Context ctx)
+			throws AnalysisException {
+		ILexLocation local = node.getLocation();
+		this.iteration = (int) local.getHits();
+		PExp exp = node.getElseIf();
+		Element eval = doc.createElement("evaluation");
+		eval.setAttribute("n", Integer.toString(iteration));
+		eval.setTextContent(String.valueOf(exp.apply(
+				VdmRuntime.getExpressionEvaluator(), ctx).boolValue(ctx)));
+
+		if (!xml_nodes.containsKey(local)) {
+
+			Element if_statement = doc.createElement("elseifexpression");
 			fill_source_file_location(if_statement, local);
 			if_statement.appendChild(eval);
 			Element expression = doc.createElement("expression");
