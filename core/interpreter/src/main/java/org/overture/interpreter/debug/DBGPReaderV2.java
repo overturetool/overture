@@ -1849,7 +1849,6 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		Properties.init(); // Read properties file, if any
 		File temp=null;//Temporary for testing
 		MCDCReport mcdc = new MCDCReport();
-		System.out.println("\n\n\nMCDC COVERAGE!\n\n\n");
 		for (File f : interpreter.getSourceFiles()) {
 			temp=f;
 			interpreter.getCoverage_to_xml().saveCoverageXml(coverage,
@@ -1918,7 +1917,6 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			File data = new File(coverage.getPath() + File.separator
 					+ f.getName() + ".covtbl");
 			PrintWriter pw = new PrintWriter(data);
-			System.out.println("\n\n\nCOVERAGE!\n\n\n");
 			source.writeCoverage(pw);
 			pw.close();
 

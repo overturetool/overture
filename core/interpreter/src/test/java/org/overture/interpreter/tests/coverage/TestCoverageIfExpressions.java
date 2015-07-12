@@ -47,8 +47,8 @@ public class TestCoverageIfExpressions extends BaseTestCase {
         queries.put("count(//elseifexpression/evaluation[.='false'])","2");
         queries.put("count(//elseifexpression/evaluation[.='true'])","1");
         
-        queries.put("count(//if_statement/evaluation[.='false']","3");
-        queries.put("count(//if_statement/evaluation[.='true']","4");
+        queries.put("count(//if_statement/evaluation[.='false'])","3");
+        queries.put("count(//if_statement/evaluation[.='true'])","4");
         
         queries.put("count(//if_expression/evaluation[.='false'])","3");
         queries.put("count(//if_expression/evaluation[.='true'])","1");
@@ -83,6 +83,7 @@ public class TestCoverageIfExpressions extends BaseTestCase {
 					TestCase.assertEquals(engine.evaluate(query, doc), queries.get(query));
 				} catch (XPathExpressionException e) {
 					e.printStackTrace();
+					System.out.println(query);
 				}
         }
     }
