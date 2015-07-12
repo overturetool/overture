@@ -448,6 +448,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 					if (coverage != null) {
 						writeCoverage(i, coverage);
+						writeMCDCCoverage(i, coverage);
 					}
 
 					RTLogger.dump(true);
