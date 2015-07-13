@@ -88,6 +88,186 @@
         </center>
     </xsl:template>
     
+    
+    <xsl:template match="pre_expression" mode="specific">
+        <center>
+            <h3>Pre Expression</h3>
+            <h4>Line : <xsl:value-of select="@start_line"/></h4>
+        </center>
+        <center>
+            <table width="70%" border="1">
+                <thead>
+                    <tr>
+                        <td>
+                            <b>Outcome : <xsl:value-of select="source_code"/></b>
+                        </td>
+                        <xsl:for-each select="condition">
+                            <xsl:sort select="@start_column"/>
+                            <td>
+                                <xsl:value-of select="source_code"/>
+                            </td>
+                        </xsl:for-each>
+                    </tr>
+                </thead>
+                <tbody>
+                    <xsl:for-each select="condition[1]/evaluation">
+                        <xsl:sort select="@n"/>
+                        <xsl:apply-templates select="@n"/>
+                    </xsl:for-each>
+                </tbody>
+            </table>
+        </center>
+    </xsl:template>
+    
+    <xsl:template match="pos_expression" mode="specific">
+        <center>
+            <h3>Pos Expression</h3>
+            <h4>Line : <xsl:value-of select="@start_line"/></h4>
+        </center>
+        <center>
+            <table width="70%" border="1">
+                <thead>
+                    <tr>
+                        <td>
+                            <b>Outcome : <xsl:value-of select="source_code"/></b>
+                        </td>
+                        <xsl:for-each select="condition">
+                            <xsl:sort select="@start_column"/>
+                            <td>
+                                <xsl:value-of select="source_code"/>
+                            </td>
+                        </xsl:for-each>
+                    </tr>
+                </thead>
+                <tbody>
+                    <xsl:for-each select="condition[1]/evaluation">
+                        <xsl:sort select="@n"/>
+                        <xsl:apply-templates select="@n"/>
+                    </xsl:for-each>
+                </tbody>
+            </table>
+        </center>
+    </xsl:template>
+    
+    <xsl:template match="forall_statement" mode="specific">
+        <center>
+            <h3>ForAll Statement</h3>
+            <h4>Line : <xsl:value-of select="@start_line"/></h4>
+        </center>
+        <center>
+            <table width="70%" border="1">
+                <thead>
+                    <tr>
+                        <td>
+                            <b>Outcome : <xsl:value-of select="source_code"/></b>
+                        </td>
+                        <xsl:for-each select="condition">
+                            <xsl:sort select="@start_column"/>
+                            <td>
+                                <xsl:value-of select="source_code"/>
+                            </td>
+                        </xsl:for-each>
+                    </tr>
+                </thead>
+                <tbody>
+                    <xsl:for-each select="condition[1]/evaluation">
+                        <xsl:sort select="@n"/>
+                        <xsl:apply-templates select="@n"/>
+                    </xsl:for-each>
+                </tbody>
+            </table>
+        </center>
+    </xsl:template>
+    
+    <xsl:template match="forall_expression" mode="specific">
+        <center>
+            <h3>ForAll Expression</h3>
+            <h4>Line : <xsl:value-of select="@start_line"/></h4>
+        </center>
+        <center>
+            <table width="70%" border="1">
+                <thead>
+                    <tr>
+                        <td>
+                            <b>Outcome : <xsl:value-of select="source_code"/></b>
+                        </td>
+                        <xsl:for-each select="condition">
+                            <xsl:sort select="@start_column"/>
+                            <td>
+                                <xsl:value-of select="source_code"/>
+                            </td>
+                        </xsl:for-each>
+                    </tr>
+                </thead>
+                <tbody>
+                    <xsl:for-each select="condition[1]/evaluation">
+                        <xsl:sort select="@n"/>
+                        <xsl:apply-templates select="@n"/>
+                    </xsl:for-each>
+                </tbody>
+            </table>
+        </center>
+    </xsl:template>
+    
+    <xsl:template match="exists_expression" mode="specific">
+        <center>
+            <h3>Exists Expression</h3>
+            <h4>Line : <xsl:value-of select="@start_line"/></h4>
+        </center>
+        <center>
+            <table width="70%" border="1">
+                <thead>
+                    <tr>
+                        <td>
+                            <b>Outcome : <xsl:value-of select="source_code"/></b>
+                        </td>
+                        <xsl:for-each select="condition">
+                            <xsl:sort select="@start_column"/>
+                            <td>
+                                <xsl:value-of select="source_code"/>
+                            </td>
+                        </xsl:for-each>
+                    </tr>
+                </thead>
+                <tbody>
+                    <xsl:for-each select="condition[1]/evaluation">
+                        <xsl:sort select="@n"/>
+                        <xsl:apply-templates select="@n"/>
+                    </xsl:for-each>
+                </tbody>
+            </table>
+        </center>
+    </xsl:template>
+    
+    <xsl:template match="exists1_expression" mode="specific">
+        <center>
+            <h3>Exists1 Expression</h3>
+            <h4>Line : <xsl:value-of select="@start_line"/></h4>
+        </center>
+        <center>
+            <table width="70%" border="1">
+                <thead>
+                    <tr>
+                        <td>
+                            <b>Outcome : <xsl:value-of select="source_code"/></b>
+                        </td>
+                        <xsl:for-each select="condition">
+                            <xsl:sort select="@start_column"/>
+                            <td>
+                                <xsl:value-of select="source_code"/>
+                            </td>
+                        </xsl:for-each>
+                    </tr>
+                </thead>
+                <tbody>
+                    <xsl:for-each select="condition[1]/evaluation">
+                        <xsl:sort select="@n"/>
+                        <xsl:apply-templates select="@n"/>
+                    </xsl:for-each>
+                </tbody>
+            </table>
+        </center>
+    </xsl:template>
 
     <xsl:template match="elseif_statement" mode="specific">
         <center>

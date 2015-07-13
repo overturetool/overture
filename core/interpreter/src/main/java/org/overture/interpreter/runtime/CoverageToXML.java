@@ -704,7 +704,6 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 
 	@Override
 	public void caseAIfExp(AIfExp node, Context ctx) throws AnalysisException {
-		Context aux= ctx;
 		ILexLocation local = node.getLocation();
 		this.iteration = (int) local.getHits();
 		PExp exp = node.getTest();
