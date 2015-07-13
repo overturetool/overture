@@ -1,0 +1,67 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        A_X_ a = new A_X_();
+        B_X_ b = new B_X_();
+
+        return a.op_X_().longValue() + b.op_X_().longValue();
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class A_X_ {
+    public A_X_() {
+    }
+
+    public Number op_X_() {
+        Number y_X_ = 6L;
+
+        return y_X_;
+    }
+
+    public String toString() {
+        return "A_X_{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class B_X_ {
+    public B_X_() {
+    }
+
+    public Number op_X_() {
+        Number y_X_ = 42L;
+
+        return y_X_;
+    }
+
+    public String toString() {
+        return "B_X_{}";
+    }
+}
+
+##########

@@ -84,15 +84,23 @@ public class VdmNodeInfo
 		}
 
 		VdmNodeInfo other = (VdmNodeInfo) obj;
+		
+		INode otherNode = other.node;
+		String otherReason = other.reason;
+		
+		return matches(this, otherNode, otherReason);
+	}
 
-		if (this.node == null && other.node != null || this.node != null
-				&& !this.node.equals(other.node))
+	public static boolean matches(VdmNodeInfo vdmNodeInfo, INode otherNode, String otherReason)
+	{
+		if (vdmNodeInfo.node == null && otherNode != null || vdmNodeInfo.node != null
+				&& !vdmNodeInfo.node.equals(otherNode))
 		{
 			return false;
 		}
-
-		if (this.reason == null && other.reason != null || this.reason != null
-				&& !this.reason.equals(other.reason))
+		
+		if (vdmNodeInfo.reason == null && otherReason != null || vdmNodeInfo.reason != null
+				&& !vdmNodeInfo.reason.equals(otherReason))
 		{
 			return false;
 		}

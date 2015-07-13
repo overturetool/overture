@@ -872,7 +872,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getResult() != null)
 		{
-			defs.addAll(question.assistantFactory.createPPatternAssistant().getDefinitions(node.getResult().getPattern(), ((AOperationType) node.getType()).getResult(), NameScope.LOCAL));
+			defs.addAll(question.assistantFactory.createPPatternAssistant().getDefinitions(node.getResult().getPattern(), ((AOperationType) node.getType()).getResult(), NameScope.STATE));
 		}
 
 		// Now we build local definitions for each of the externals, so

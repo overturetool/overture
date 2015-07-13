@@ -7,7 +7,10 @@ import java.util.*;
 
 //@ nullable_by_default
 @SuppressWarnings("all")
-public class Entry {
+final public class Entry {
+    private Entry() {
+    }
+
     public static Object Run() {
         Character ignorePattern_1 = idC('b');
 

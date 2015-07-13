@@ -29,7 +29,7 @@ class ReportInjector extends DepthFirstAnalysisAdaptor
 	{
 		if(node.getExp() != null)
 		{
-			jmlGen.getJavaGen().getTransformationAssistant().replaceNodeWith(node.getExp(), consReportCall(node.getExp().clone()));
+			jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node.getExp(), consReportCall(node.getExp().clone()));
 		}
 	}
 
@@ -49,7 +49,7 @@ class ReportInjector extends DepthFirstAnalysisAdaptor
 			{
 				AIdentifierPatternCG id = (AIdentifierPatternCG) name;
 				
-				AIdentifierVarExpCG arg = jmlGen.getJavaGen().getTransformationAssistant().
+				AIdentifierVarExpCG arg = jmlGen.getJavaGen().getTransAssistant().
 						consIdentifierVar(id.getName(), param.getType().clone());
 				
 				// TODO: what if the settings are set to char of sequences?

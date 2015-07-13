@@ -1,5 +1,5 @@
 "Before breaking state invariant"
-Entry.java:31: JML assertion is false
+Entry.java:34: JML assertion is false
         //@ assert inv_St(St);
             ^
 "After breaking state invariant"

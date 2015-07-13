@@ -73,7 +73,7 @@ public class CodeGenBase
 		this.transAssistant = transAssistant;
 	}
 	
-	public TransAssistantCG getTransformationAssistant()
+	public TransAssistantCG getTransAssistant()
 	{
 		return transAssistant;
 	}

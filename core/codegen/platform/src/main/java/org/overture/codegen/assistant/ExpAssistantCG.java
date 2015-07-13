@@ -31,6 +31,7 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -380,7 +381,8 @@ public class ExpAssistantCG extends AssistantBase
 		// expressions exist within a statement. However, in case it does not, the transformation
 		// is not performed. In this way, the  'and' and 'or' expressions can
 		// still be used (say) in instance variable assignment.
-		return exp.getAncestor(SOperationDefinition.class) == null
+		return !(exp.parent() instanceof AStateDefinition)
+				&& exp.getAncestor(SOperationDefinition.class) == null
 				&& exp.getAncestor(SFunctionDefinition.class) == null
 				&& exp.getAncestor(ANamedTraceDefinition.class) == null
 				&& exp.getAncestor(ATypeDefinition.class) == null
@@ -483,10 +485,12 @@ public class ExpAssistantCG extends AssistantBase
 		{
 			return consTupleIsExp(exp, checkedType);
 		} else if (checkedType instanceof ARecordTypeCG
-				|| checkedType instanceof AClassTypeCG)
+				|| checkedType instanceof AClassTypeCG
+				|| checkedType instanceof AStringTypeCG)
 		{
 			return consGeneralIsExp(exp, checkedType);
-		} else
+		}
+		else
 		{
 			if(checkedType instanceof ASeqSeqTypeCG)
 			{

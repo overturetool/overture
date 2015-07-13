@@ -261,9 +261,6 @@ CG {-> package='org.overture.codegen.cgast'
            | 	{skip}
            |	{return} [exp]:CG.#exp
            |	{abstractBody}
-           //Cpp
-           |    {localAssignment} [target]:CG.#exp [exp]:CG.#exp
-           //end Cpp
            |	{assignment} [target]:CG.#stateDesignator [exp]:CG.#exp
            |	{assignToExp} [target]:CG.#exp [exp]:CG.#exp
            |	{localPatternAssignment} [target]:CG.#pattern [exp]:CG.#exp (nextElementDecl):CG.#decl.var

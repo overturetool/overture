@@ -1,0 +1,24 @@
+class Entry
+
+values
+
+x = 5;
+
+instance variables
+
+static y : nat := 100;
+
+operations
+
+public static Run : () ==> ?
+Run () == return new Entry().op(0) + f(10); 
+
+op : nat ==> nat
+op (y) == return self.y;
+
+functions
+
+public f : nat -> nat
+f (x) == Entry`x;
+
+end Entry

@@ -80,7 +80,7 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 			newMethodType.getParams().add(f.getType().clone());
 
 			AFormalParamLocalParamCG nextParam = new AFormalParamLocalParamCG();
-			nextParam.setPattern(javaGen.getTransformationAssistant().consIdPattern(consUniqueName(f.getName())));
+			nextParam.setPattern(javaGen.getTransAssistant().consIdPattern(consUniqueName(f.getName())));
 			nextParam.setType(f.getType().clone());
 
 			invMethod.getFormalParams().add(nextParam);
@@ -109,7 +109,7 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 
 				if (obj.getName().equals(paramName))
 				{
-					TransAssistantCG assistant = javaGen.getTransformationAssistant();
+					TransAssistantCG assistant = javaGen.getTransAssistant();
 					AIdentifierVarExpCG field = assistant.consIdentifierVar(consUniqueName(node.getMemberName()), node.getType().clone());
 					assistant.replaceNodeWith(node, field);
 				}

@@ -47,15 +47,6 @@ public class VdmAstAnalysis
 		return findViolations(nodes, application);
 	}
 
-	public Set<Violation> usesUnsupportedModelingConstructs(
-			List<? extends INode> nodes) throws AnalysisException
-	{
-		ModelingViolationAnalysis modelingAnalysis = new ModelingViolationAnalysis(assistantManager);
-		ViolationAnalysisApplication application = new ViolationAnalysisApplication(modelingAnalysis);
-
-		return findViolations(nodes, application);
-	}
-
 	private Set<Violation> findViolations(List<? extends INode> nodes,
 			ViolationAnalysisApplication application) throws AnalysisException
 	{

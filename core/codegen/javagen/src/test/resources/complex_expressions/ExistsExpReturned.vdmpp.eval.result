@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.codegen.tests.exec.ComplexExpJavaGenTest">
+<result>
+<output object="rO0ABXNyACxvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLkJvb2xlYW5WYWx1ZQAAAAAAAAABAgABWgAFdmFsdWV4cgAlb3JnLm92ZXJ0dXJlLmludGVycHJldGVyLnZhbHVlcy5WYWx1ZQAAAAAAAAABAgAAeHAA" resource="ExistsExpReturned" value="false"/>
+</result>
+</testResult>

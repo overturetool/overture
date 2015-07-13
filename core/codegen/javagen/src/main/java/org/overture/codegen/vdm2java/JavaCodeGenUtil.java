@@ -34,7 +34,6 @@ import java.util.regex.Pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.ir.IRSettings;
@@ -54,7 +53,7 @@ public class JavaCodeGenUtil
 {
 	public static GeneratedData generateJavaFromFiles(List<File> files,
 			IRSettings irSettings, JavaSettings javaSettings, Dialect dialect)
-			throws AnalysisException, UnsupportedModelingException
+			throws AnalysisException
 	{
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
 
@@ -66,7 +65,7 @@ public class JavaCodeGenUtil
 	
 	public static GeneratedData generateJavaFromFiles(List<File> files,
 			JavaCodeGen vdmCodGen, Dialect dialect)
-			throws AnalysisException, UnsupportedModelingException
+			throws AnalysisException
 	{
 		if (dialect == Dialect.VDM_PP || dialect == Dialect.VDM_RT)
 		{
@@ -358,7 +357,7 @@ public class JavaCodeGenUtil
 	
 	public static String[] findJavaFilePathsRec(File srcCodeFolder)
 	{
-		List<File> files = GeneralUtils.getFilesRecursive(srcCodeFolder);
+		List<File> files = GeneralUtils.getFilesRecursively(srcCodeFolder);
 
 		List<String> javaFilePaths = new LinkedList<String>();
 

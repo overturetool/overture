@@ -194,7 +194,7 @@ public class GeneralUtils
 		return str.replaceAll("\\s+", " ").trim();
 	}
 	
-	public static List<File> getFilesRecursive(File folder)
+	public static List<File> getFilesRecursively(File folder)
 	{
 		File[] listOfFiles = folder.listFiles();
 		
@@ -211,7 +211,7 @@ public class GeneralUtils
 			}
 			if(file.isDirectory())
 			{
-				fileList.addAll(getFilesRecursive(file));
+				fileList.addAll(getFilesRecursively(file));
 			}
 		}
 		return fileList;

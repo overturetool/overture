@@ -5,14 +5,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 
 public class StateTests extends AnnotationTestsBase
 {
 	@BeforeClass
-	public static void init() throws AnalysisException, UnsupportedModelingException
+	public static void init() throws AnalysisException
 	{
 		AnnotationTestsBase.init("State.vdmsl");
 	}
