@@ -59,8 +59,10 @@ import org.overture.interpreter.messages.rtlog.RTTextLogger;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.DecisionStructuresVisitor;
 import org.overture.interpreter.runtime.GenerateTestCases;
 import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.MCDCReport;
 import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.interpreter.runtime.SourceFile;
 import org.overture.interpreter.runtime.ValueException;
@@ -631,37 +633,22 @@ public class TraceRunnerMain implements IProgressMonitor
 	public static void writeMCDCCoverage(Interpreter interpreter, File coverage)
 			throws IOException {
 		Properties.init(); // Read properties file, if any
-
+		File temp = null;// Temporary for testing
+		MCDCReport mcdc = new MCDCReport();
 		for (File f : interpreter.getSourceFiles()) {
+			temp = f;
 			interpreter.getCoverage_to_xml().saveCoverageXml(coverage,
 					f.getName());
-			final GenerateTestCases gtc = new GenerateTestCases();
+			DecisionStructuresVisitor dsv = new DecisionStructuresVisitor(
+					f.getName());
+
 			if (interpreter instanceof ClassInterpreter) {
 				ClassInterpreter ci = (ClassInterpreter) interpreter;
 
 				for (SClassDefinition cdef : ci.getClasses()) {
 					try {
-						cdef.apply(new DepthFirstAnalysisAdaptor() {
-							@Override
-							public void caseAIfStm(AIfStm node)
-									throws AnalysisException {
-								node.apply(gtc);
-							}
-
-							public void caseAElseIfStm(AElseIfStm node)
-									throws AnalysisException {
-								node.apply(gtc);
-							}
-
-							@Override
-							public void caseAWhileStm(AWhileStm node)
-									throws AnalysisException {
-								node.apply(gtc);
-							}
-
-						});
+						cdef.apply(dsv);
 					} catch (AnalysisException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -669,32 +656,18 @@ public class TraceRunnerMain implements IProgressMonitor
 				ModuleInterpreter mi = (ModuleInterpreter) interpreter;
 				for (AModuleModules m : mi.getModules()) {
 					try {
-						m.apply(new DepthFirstAnalysisAdaptor() {
-							@Override
-							public void caseAIfStm(AIfStm node)
-									throws AnalysisException {
-								node.apply(gtc);
-							}
-
-							public void caseAElseIfStm(AElseIfStm node)
-									throws AnalysisException {
-								node.apply(gtc);
-							}
-
-							@Override
-							public void caseAWhileStm(AWhileStm node)
-									throws AnalysisException {
-								node.apply(gtc);
-							}
-						});
+						m.apply(dsv);
 					} catch (AnalysisException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
 			}
-			gtc.saveCoverageXml(coverage, f.getName());
+			
+			interpreter.getCoverage_to_xml().mark_tested(dsv.getGTC());
+			dsv.getGTC().saveCoverageXml(coverage, f.getName());
+			mcdc.addFile(f.getName(), dsv.getGTC().getTestedRate());
 		}
+		mcdc.saveReportHTML(coverage, temp.getName());
 		Properties.parser_tabstop = 1;// required to match locations with the
 										// editor representation
 	}
