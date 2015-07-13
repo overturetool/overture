@@ -24,11 +24,15 @@ package org.overture.codegen.visitor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ASetBind;
+import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.SBindCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
+import org.overture.codegen.cgast.patterns.ATypeBindCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class BindVisitorCG extends AbstractVisitorCG<IRInfo, SBindCG>
@@ -46,6 +50,23 @@ public class BindVisitorCG extends AbstractVisitorCG<IRInfo, SBindCG>
 		ASetBindCG setBind = new ASetBindCG();
 		setBind.setPattern(patternCg);
 		setBind.setSet(setCg);
+
+		return setBind;
+	}
+	
+	@Override
+	public SBindCG caseATypeBind(ATypeBind node, IRInfo question)
+			throws AnalysisException
+	{
+		PPattern pattern = node.getPattern();
+		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
+
+		PType boundType = node.getType();
+		STypeCG boundTypeCg = boundType.apply(question.getTypeVisitor(), question);
+
+		ATypeBindCG setBind = new ATypeBindCG();
+		setBind.setPattern(patternCg);
+		setBind.setType(boundTypeCg);
 
 		return setBind;
 	}

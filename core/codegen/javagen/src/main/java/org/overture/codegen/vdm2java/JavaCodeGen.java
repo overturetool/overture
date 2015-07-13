@@ -53,7 +53,6 @@ import org.overture.codegen.analysis.violations.GeneratedVarComparison;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.ReservedWordsComparison;
 import org.overture.codegen.analysis.violations.TypenameComparison;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.VdmAstAnalysis;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
@@ -70,10 +69,10 @@ import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
-import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
+import org.overture.codegen.trans.DivideTransformation;
 import org.overture.codegen.trans.ModuleToClassTransformation;
 import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -104,13 +103,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 	public JavaCodeGen()
 	{
-		super(null);
-		init();
-	}
-
-	public JavaCodeGen(ILogger log)
-	{
-		super(log);
+		super();
 		init();
 	}
 
@@ -207,13 +200,13 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	}
 
 	public GeneratedData generateJavaFromVdmModules(List<AModuleModules> ast)
-			throws AnalysisException, UnsupportedModelingException {
+			throws AnalysisException {
 
 		return generateVdmFromNodes(ast, null, new LinkedList<String>());
 	}
 	
 	public GeneratedData generateJavaFromVdm(List<SClassDefinition> ast)
-			throws AnalysisException, UnsupportedModelingException
+			throws AnalysisException
 	{
 		SClassDefinition mainClass = null;
 
@@ -238,7 +231,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 	private GeneratedData generateVdmFromNodes(List<? extends INode> ast,
 			SClassDefinition mainClass, List<String> warnings)
-			throws AnalysisException, UnsupportedModelingException {
+			throws AnalysisException {
 		
 		List<INode> userModules = getUserModules(ast);
 		
@@ -261,18 +254,11 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		}
 
 		InvalidNamesResult invalidNamesResult = validateVdmModelNames(userModules);
-		validateVdmModelingConstructs(userModules);
-
 		List<IRStatus<org.overture.codegen.cgast.INode>> statuses = new LinkedList<>();
 
 		for (INode node : ast)
 		{
-			IRStatus<org.overture.codegen.cgast.INode> status = generator.generateFrom(node);
-			
-			if(status != null)
-			{
-				statuses.add(status);
-			}
+			genIrStatus(statuses, node);
 		}
 
 		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
@@ -333,9 +319,9 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
 
 		JavaTransSeries javaTransSeries = new JavaTransSeries(this);
-		DepthFirstAnalysisAdaptor[] analyses = javaTransSeries.consAnalyses(classes, functionValueAssistant);
+		 List<DepthFirstAnalysisAdaptor> transformations = javaTransSeries.consAnalyses(classes, functionValueAssistant);
 
-		for (DepthFirstAnalysisAdaptor transformation : analyses)
+		for (DepthFirstAnalysisAdaptor trans : transformations)
 		{
 			for (IRStatus<AClassDeclCG> status : canBeGenerated)
 			{
@@ -343,7 +329,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 				{
 					if (!getInfo().getDeclAssistant().isLibraryName(status.getIrNodeName()))
 					{
-						generator.applyPartialTransformation(status, transformation);
+						generator.applyPartialTransformation(status, trans);
 					}
 
 				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
@@ -456,6 +442,41 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		data.setWarnings(warnings);
 
 		return data;
+	}
+
+	private void genIrStatus(
+			List<IRStatus<org.overture.codegen.cgast.INode>> statuses,
+			INode node) throws AnalysisException
+	{
+		VdmAstJavaValidator v = validateVdmNode(node);
+		
+		if(v.hasUnsupportedNodes())
+		{
+			// We can tell by analysing the VDM AST that the IR generator will produce an
+			// IR tree that the Java backend cannot code generate
+			String nodeName = getInfo().getDeclAssistant().getNodeName(node);
+			HashSet<VdmNodeInfo> nodesCopy = new HashSet<VdmNodeInfo>(v.getUnsupportedNodes());
+			statuses.add(new IRStatus<org.overture.codegen.cgast.INode>(nodeName, /* no IR node */null, nodesCopy));
+		}
+		else
+		{
+			// Try to produce the IR
+			IRStatus<org.overture.codegen.cgast.INode> status = generator.generateFrom(node);
+			
+			if(status != null)
+			{
+				statuses.add(status);
+			}
+		}
+	}
+
+	private VdmAstJavaValidator validateVdmNode(INode node) throws AnalysisException
+	{
+		VdmAstJavaValidator validator = new VdmAstJavaValidator(generator.getIRInfo());
+		validator.getUnsupportedNodes().clear();
+		node.apply(validator);
+		
+		return validator;
 	}
 
 	private <T extends org.overture.codegen.cgast.INode> List<IRStatus<T>> filter(
@@ -675,10 +696,12 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		return modules;
 	}
 
-	public Generated generateJavaFromVdmExp(PExp exp) throws AnalysisException
+	public Generated generateJavaFromVdmExp(PExp exp) throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		// There is no name validation here.
 		IRStatus<SExpCG> expStatus = generator.generateFrom(exp);
+		
+		generator.applyPartialTransformation(expStatus, new DivideTransformation(getInfo()));
 
 		StringWriter writer = new StringWriter();
 
@@ -773,20 +796,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		} else
 		{
 			return new InvalidNamesResult();
-		}
-	}
-
-	private void validateVdmModelingConstructs(
-			List<? extends INode> mergedParseLists) throws AnalysisException,
-			UnsupportedModelingException
-	{
-		VdmAstAnalysis analysis = new VdmAstAnalysis(generator.getIRInfo().getAssistantManager());
-
-		Set<Violation> violations = analysis.usesUnsupportedModelingConstructs(mergedParseLists);
-
-		if (!violations.isEmpty())
-		{
-			throw new UnsupportedModelingException("The model uses modeling constructs that are not supported for Java code Generation", violations);
 		}
 	}
 

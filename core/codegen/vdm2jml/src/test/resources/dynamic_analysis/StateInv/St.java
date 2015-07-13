@@ -7,7 +7,7 @@ import java.util.*;
 
 //@ nullable_by_default
 @SuppressWarnings("all")
-public class St implements Record {
+final public class St implements Record {
     public Number x;
 
     public St(final Number _x) {

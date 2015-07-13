@@ -51,7 +51,6 @@ import org.overture.ast.util.definitions.ClassList;
 import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
@@ -490,21 +489,6 @@ public class GeneralCodeGenUtils
 		}
 		
 		return sb.toString();
-	}
-	
-	public static String constructUnsupportedModelingString(
-			UnsupportedModelingException e)
-	{
-		StringBuffer buffer = new StringBuffer();
-
-		List<Violation> violations = asSortedList(e.getViolations());
-
-		for (Violation violation : violations)
-		{
-			buffer.append(violation + LINE_SEPARATOR);
-		}
-
-		return buffer.toString();
 	}
 	
 	public static List<Violation> asSortedList(Set<Violation> violations)

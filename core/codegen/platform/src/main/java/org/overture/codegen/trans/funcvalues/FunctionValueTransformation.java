@@ -206,6 +206,7 @@ public class FunctionValueTransformation extends DepthFirstAnalysisAdaptor
 		methodTypeInterface.setName(info.getTempVarNameGen().nextVarName(interfaceNamePrefix));
 
 		AMethodDeclCG evalMethod = new AMethodDeclCG();
+		evalMethod.setImplicit(false);
 		evalMethod.setAbstract(true);
 		evalMethod.setAccess(IRConstants.PUBLIC);
 		evalMethod.setBody(null);

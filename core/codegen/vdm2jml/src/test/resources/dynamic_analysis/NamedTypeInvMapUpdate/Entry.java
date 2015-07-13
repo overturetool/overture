@@ -7,7 +7,10 @@ import java.util.*;
 
 //@ nullable_by_default
 @SuppressWarnings("all")
-public class Entry {
+final public class Entry {
+    private Entry() {
+    }
+
     public static Object Run() {
         VDMMap m = MapUtil.map(new Maplet('a', 1L), new Maplet(1L, 2L));
         //@ assert inv_Entry_M(m);

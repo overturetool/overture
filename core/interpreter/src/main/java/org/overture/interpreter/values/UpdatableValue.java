@@ -101,7 +101,12 @@ public class UpdatableValue extends ReferenceValue
 	@Override
 	public synchronized Value getUpdatable(ValueListenerList watch)
 	{
-		return new UpdatableValue(value, watch, restrictedTo);
+		if (watch != null)
+		{
+   			addListeners(watch);
+		}
+		
+		return this;
 	}
 
 	@Override
@@ -157,10 +162,33 @@ public class UpdatableValue extends ReferenceValue
 	{
 		if (listeners != null)
 		{
-			listeners.add(listener);
-		} else
+			if (!listeners.contains(listener))
+			{
+				listeners.add(listener);
+			}
+		}
+		else
 		{
 			listeners = new ValueListenerList(listener);
+		}
+	}
+
+	public void addListeners(ValueListenerList list)
+	{
+		if (listeners == list)	// Same list
+		{
+			return;
+		}
+		else if (listeners != null)
+		{
+			for (ValueListener vl: list)
+			{
+				listeners.add(vl);
+			}
+		}
+		else
+		{
+			listeners = new ValueListenerList(list);
 		}
 	}
 

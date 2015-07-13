@@ -1,0 +1,32 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    private static final Number x = 5L;
+    private static Number y = 100L;
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return new Entry().op(0L).longValue() + f(10L).longValue();
+    }
+
+    private Number op(final Number y_1) {
+        return this.y;
+    }
+
+    public static Number f(final Number x_1) {
+        return x_1;
+    }
+
+    public String toString() {
+        return "Entry{" + "x = " + Utils.toString(x) + ", y := " +
+        Utils.toString(y) + "}";
+    }
+}
+
+##########

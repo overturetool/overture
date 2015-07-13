@@ -1,0 +1,70 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+final public class Entry {
+    private static Other Other = new Other(10L);
+
+    private Entry() {
+    }
+
+    public static Object Run() {
+        return Other.x;
+    }
+
+    public String toString() {
+        return "Entry{" + "Other := " + Utils.toString(Other) + "}";
+    }
+
+    public static class Other implements Record {
+        public Number x;
+
+        public Other(final Number _x) {
+            x = _x;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof Other)) {
+                return false;
+            }
+
+            Other other = ((Other) obj);
+
+            return Utils.equals(x, other.x);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x);
+        }
+
+        public Other copy() {
+            return new Other(x);
+        }
+
+        public String toString() {
+            return "mk_Entry`Other" + Utils.formatFields(x);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+final public class Other {
+    public static final Number x = 5L;
+
+    private Other() {
+    }
+
+    public String toString() {
+        return "Other{" + "x = " + Utils.toString(x) + "}";
+    }
+}
+
+##########

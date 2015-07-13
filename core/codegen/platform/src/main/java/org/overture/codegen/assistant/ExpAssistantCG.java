@@ -31,6 +31,7 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -42,7 +43,6 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SUnaryExp;
-import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.types.AIntNumericBasicType;
@@ -87,7 +87,6 @@ import org.overture.codegen.cgast.expressions.SIsExpCG;
 import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
@@ -202,6 +201,18 @@ public class ExpAssistantCG extends AssistantBase
 		return (type instanceof ANatOneNumericBasicType
 				|| type instanceof ANatNumericBasicType || type instanceof AIntNumericBasicType)
 				&& !(exp instanceof ARealLiteralExp);
+	}
+	
+	public boolean isIntegerType(SExpCG exp)
+	{
+		STypeCG type = exp.getType();
+
+		// Expressions like 1.0 are considered real literal expressions
+		// of type NatOneNumericBasicType
+
+		return (type instanceof ANat1NumericBasicTypeCG
+				|| type instanceof ANatNumericBasicTypeCG || type instanceof AIntNumericBasicTypeCG)
+				&& !(exp instanceof ARealLiteralExpCG);
 	}
 
 	public ABoolLiteralExpCG consBoolLiteral(boolean val)
@@ -353,7 +364,7 @@ public class ExpAssistantCG extends AssistantBase
 		return false;
 	}
 
-	public AHeaderLetBeStCG consHeader(ASetMultipleBindCG binding,
+	public AHeaderLetBeStCG consHeader(SMultipleBindCG binding,
 			SExpCG suchThat)
 	{
 		AHeaderLetBeStCG header = new AHeaderLetBeStCG();
@@ -370,8 +381,8 @@ public class ExpAssistantCG extends AssistantBase
 		// expressions exist within a statement. However, in case it does not, the transformation
 		// is not performed. In this way, the  'and' and 'or' expressions can
 		// still be used (say) in instance variable assignment.
-		
-		return exp.getAncestor(SOperationDefinition.class) == null
+		return !(exp.parent() instanceof AStateDefinition)
+				&& exp.getAncestor(SOperationDefinition.class) == null
 				&& exp.getAncestor(SFunctionDefinition.class) == null
 				&& exp.getAncestor(ANamedTraceDefinition.class) == null
 				&& exp.getAncestor(ATypeDefinition.class) == null
@@ -382,30 +393,15 @@ public class ExpAssistantCG extends AssistantBase
 			PExp predicate, SQuantifierExpCG quantifier, IRInfo question,
 			String nodeStr) throws AnalysisException
 	{
-		if (question.getExpAssistant().outsideImperativeContext(node))
-		{
-			question.addUnsupportedNode(node, String.format("Generation of a %s is only supported within operations/functions", nodeStr));
-			return null;
-		}
-
-		LinkedList<ASetMultipleBindCG> bindingsCg = new LinkedList<ASetMultipleBindCG>();
+		LinkedList<SMultipleBindCG> bindingsCg = new LinkedList<SMultipleBindCG>();
 		for (PMultipleBind multipleBind : bindings)
 		{
-			if (!(multipleBind instanceof ASetMultipleBind))
-			{
-				question.addUnsupportedNode(node, String.format("Generation of a %s is only supported for multiple set binds. Got: %s", nodeStr, multipleBind));
-				return null;
-			}
-
 			SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
-
-			if (!(multipleBindCg instanceof ASetMultipleBindCG))
+			
+			if(multipleBindCg != null)
 			{
-				question.addUnsupportedNode(node, String.format("Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: %s", multipleBindCg));
-				return null;
+				bindingsCg.add(multipleBindCg);
 			}
-
-			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
 		}
 
 		PType type = node.getType();
@@ -489,10 +485,12 @@ public class ExpAssistantCG extends AssistantBase
 		{
 			return consTupleIsExp(exp, checkedType);
 		} else if (checkedType instanceof ARecordTypeCG
-				|| checkedType instanceof AClassTypeCG)
+				|| checkedType instanceof AClassTypeCG
+				|| checkedType instanceof AStringTypeCG)
 		{
 			return consGeneralIsExp(exp, checkedType);
-		} else
+		}
+		else
 		{
 			if(checkedType instanceof ASeqSeqTypeCG)
 			{

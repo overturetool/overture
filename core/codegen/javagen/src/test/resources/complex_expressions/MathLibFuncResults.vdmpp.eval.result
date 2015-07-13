@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.codegen.tests.exec.ComplexExpJavaGenTest">
+<result>
+<output object="rO0ABXNyAClvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLlJlYWxWYWx1ZQAAAAAAAAABAgAAeHIALG9yZy5vdmVydHVyZS5pbnRlcnByZXRlci52YWx1ZXMuTnVtZXJpY1ZhbHVlAAAAAAAAAAECAAFEAAV2YWx1ZXhyACVvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLlZhbHVlAAAAAAAAAAECAAB4cEBg0KWzZ6c4" resource="MathLibFuncResults" value="134.52022714848295"/>
+</result>
+</testResult>

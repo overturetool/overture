@@ -126,6 +126,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		AMethodDeclCG method_pp = new AMethodDeclCG();
 		//adding the first constructor to the innerclass
 		method_pp.setIsConstructor(true);
+		method_pp.setImplicit(false);
 		//method_pp.setStatic(true);
 		method_pp.setAccess("public");
 		method_pp.setName(innerClass.getName());

@@ -7,12 +7,15 @@ import java.util.*;
 
 //@ nullable_by_default
 @SuppressWarnings("all")
-public class Entry {
+final public class Entry {
     //@ public static invariant inv_Entry_CN(fOk) && (inv_Entry_C(fOk) || inv_Entry_N(fOk));
     public static final Object fOk = 'a';
 
     //@ public static invariant inv_Entry_CN(fBreak) && (inv_Entry_C(fBreak) || inv_Entry_N(fBreak));
     public static final Object fBreak = 'b';
+
+    private Entry() {
+    }
 
     public static Object Run() {
         return 0L;

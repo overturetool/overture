@@ -7,9 +7,12 @@ import java.util.*;
 
 //@ nullable_by_default
 @SuppressWarnings("all")
-public class Entry {
+final public class Entry {
     /*@ spec_public @*/
     private static project.Entrytypes.St St = new project.Entrytypes.St(1L);
+
+    private Entry() {
+    }
 
     public static void op1() {
         Object p = null;

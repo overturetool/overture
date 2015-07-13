@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.assistant.TypeAssistantCG;
@@ -100,6 +101,7 @@ import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralUtils;
+import org.overture.config.Settings;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class JavaFormat
@@ -645,7 +647,7 @@ public class JavaFormat
 		if(interfaces.isEmpty())
 		{
 			// All classes must be declared Serializable when traces are being generated.
-			if(info.getSettings().generateTraces())
+			if(info.getSettings().generateTraces() || getJavaSettings().makeClassesSerializable())
 			{
 				return implementsClause + sep + java.io.Serializable.class.getName();
 			}
@@ -661,7 +663,7 @@ public class JavaFormat
 			sep = ", ";
 		}
 		
-		if(info.getSettings().generateTraces())
+		if(info.getSettings().generateTraces() || getJavaSettings().makeClassesSerializable())
 		{
 			implementsClause += sep + java.io.Serializable.class.getName();
 		}
@@ -1003,5 +1005,10 @@ public class JavaFormat
 		}
 		
 		return sb.append('\n').toString();
+	}
+	
+	public static boolean isVdmSl()
+	{
+		return Settings.dialect == Dialect.VDM_SL;
 	}
 }

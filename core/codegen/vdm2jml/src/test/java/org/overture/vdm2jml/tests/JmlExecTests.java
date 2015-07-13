@@ -65,7 +65,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 	public static Collection<Object[]> data()
 	{
 		File folder = new File(AnnotationTestsBase.TEST_RES_DYNAMIC_ANALYSIS_ROOT);
-		List<File> files = GeneralUtils.getFilesRecursive(folder);
+		List<File> files = GeneralUtils.getFilesRecursively(folder);
 
 		return collectVdmslFiles(files);
 	}
@@ -121,7 +121,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 
 		try
 		{
-			List<File> files = GeneralUtils.getFilesRecursive(genJavaFolder);
+			List<File> files = GeneralUtils.getFilesRecursively(genJavaFolder);
 
 			List<File> filesToStore = new LinkedList<File>();
 

@@ -9,7 +9,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SStmCG;
@@ -103,7 +102,7 @@ public class JmlGenerator implements IREventObserver
 	}
 
 	public GeneratedData generateJml(List<AModuleModules> ast)
-			throws AnalysisException, UnsupportedModelingException
+			throws AnalysisException
 	{
 		if(!JavaCodeGenUtil.isValidJavaPackage(getJavaSettings().getJavaRootPackage()))
 		{
@@ -585,7 +584,7 @@ public class JmlGenerator implements IREventObserver
 				SStmCG body = method.getBody();
 
 				ABlockStmCG repBlock = new ABlockStmCG();
-				javaGen.getTransformationAssistant().replaceNodeWith(body, repBlock);
+				javaGen.getTransAssistant().replaceNodeWith(body, repBlock);
 
 				repBlock.getStatements().add(dynTypeCheck);
 				repBlock.getStatements().add(declStmBlock);

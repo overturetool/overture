@@ -36,7 +36,6 @@ import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
-import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
@@ -372,18 +371,6 @@ public class NameFinder extends
 	}
 
 	@Override
-	public PDefinition caseANamedTraceDefinition(ANamedTraceDefinition node,
-			Newquestion question) throws AnalysisException
-	{
-		if (af.createPDefinitionAssistant().findNameBaseCase(node, question.sought, question.scope) != null)
-		{
-			return node;
-		}
-
-		return null;
-	}
-
-	@Override
 	public PDefinition caseAPerSyncDefinition(APerSyncDefinition node,
 			Newquestion question) throws AnalysisException
 	{
@@ -474,12 +461,7 @@ public class NameFinder extends
 	public PDefinition caseAValueDefinition(AValueDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		if (question.scope.matches(NameScope.NAMES))
-		{
-			return af.createPDefinitionListAssistant().findName(node.getDefs(), question.sought, question.scope);
-		}
-
-		return null;
+		return af.createPDefinitionListAssistant().findName(node.getDefs(), question.sought, question.scope);
 	}
 
 	// @Override

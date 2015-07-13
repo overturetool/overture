@@ -3,8 +3,8 @@
 <message column="26" line="101" message="Definition 'bellon' not used" messageType="warning" number="5000" resource="metroSL"/>
 <message column="29" line="214" message="Definition 'int2' not used" messageType="warning" number="5000" resource="metroSL"/>
 <message column="24" line="214" message="Definition 'int1' not used" messageType="warning" number="5000" resource="metroSL"/>
-<message column="15" line="218" message="Definition 'int1' not used" messageType="warning" number="5000" resource="metroSL"/>
 <message column="20" line="218" message="Definition 'int2' not used" messageType="warning" number="5000" resource="metroSL"/>
+<message column="15" line="218" message="Definition 'int1' not used" messageType="warning" number="5000" resource="metroSL"/>
 <message column="11" line="59" message="State variable 'Metro1a`doorsopen' cannot be accessed from this context" messageType="error" number="3302" resource="metroSL"/>
 <message column="11" line="68" message="State variable 'Metro1a`trainmoving' cannot be accessed from this context" messageType="error" number="3302" resource="metroSL"/>
 <result/>

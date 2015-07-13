@@ -398,6 +398,43 @@ public class TypeAssistantCG extends AssistantBase
 		return true;
 	}
 	
+	public boolean isProductOfSameSize(AUnionType unionType,
+			PTypeAssistantTC typeAssistant)
+	{
+		final int NOT_SET = -1;
+		int commonSize = NOT_SET;
+		try
+		{
+			for (PType t : unionType.getTypes())
+			{
+				if (!typeAssistant.isType(t, AProductType.class))
+				{
+					return false;
+				} else
+				{
+					AProductType productType = typeAssistant.getProduct(t);
+					int currentSize = productType.getTypes().size();
+
+					if (commonSize == NOT_SET)
+					{
+						commonSize = currentSize;
+					} else
+					{
+						if (commonSize != currentSize)
+						{
+							return false;
+						}
+					}
+				}
+			}
+		} catch (Error t)// Hack for stackoverflowError
+		{
+			return false;
+		}
+
+		return true;
+	}
+	
 	public PType getType(IRInfo question, AUnionType unionType, PPattern pattern)
 	{
 		PTypeSet possibleTypes = new PTypeSet(question.getTcFactory());

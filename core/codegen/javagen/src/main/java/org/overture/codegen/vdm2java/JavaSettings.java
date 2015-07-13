@@ -32,6 +32,7 @@ public class JavaSettings
 	private String javaRootPackage;
 	private boolean genRecsAsInnerClasses;
 	private boolean formatCode;
+	private boolean makeClassesSerializable;
 	
 	public JavaSettings()
 	{
@@ -41,6 +42,7 @@ public class JavaSettings
 		this.javaRootPackage = null;
 		this.genRecsAsInnerClasses = true;
 		this.formatCode = true;
+		this.makeClassesSerializable = false;
 	}
 	
 	public List<String> getModulesToSkip()
@@ -107,5 +109,15 @@ public class JavaSettings
 	public void setFormatCode(boolean formatCode)
 	{
 		this.formatCode = formatCode;
+	}
+
+	public boolean makeClassesSerializable()
+	{
+		return makeClassesSerializable;
+	}
+
+	public void setMakeClassesSerializable(boolean makeClassesSerializable)
+	{
+		this.makeClassesSerializable = makeClassesSerializable;
 	}
 }

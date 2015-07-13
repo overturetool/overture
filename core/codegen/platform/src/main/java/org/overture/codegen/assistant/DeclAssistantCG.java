@@ -31,6 +31,7 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -57,8 +58,10 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
@@ -77,6 +80,21 @@ public class DeclAssistantCG extends AssistantBase
 	public DeclAssistantCG(AssistantManager assistantManager)
 	{
 		super(assistantManager);
+	}
+	
+	public String getNodeName(INode node)
+	{
+		if(node instanceof SClassDefinition)
+		{
+			return ((SClassDefinition) node).getName().getName();
+		}
+		else if(node instanceof AModuleModules)
+		{
+			return ((AModuleModules) node).getName().getName();
+		}
+		
+		// Fall back
+		return node.toString();
 	}
 
 	public boolean isLibrary(INode node) {
@@ -540,6 +558,7 @@ public class DeclAssistantCG extends AssistantBase
 
 		AMethodDeclCG method = new AMethodDeclCG();
 
+		method.setImplicit(false);
 		method.setAccess(access);
 		method.setStatic(isStatic);
 		method.setAsync(isAsync);
@@ -548,6 +567,7 @@ public class DeclAssistantCG extends AssistantBase
 		method.setBody(bodyCg);
 		method.setIsConstructor(isConstructor);
 		method.setAbstract(isAbstract);
+		method.setImplicit(node instanceof AImplicitOperationDefinition);
 		
 		AExplicitFunctionDefinition preCond = node.getPredef();
 		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
@@ -661,5 +681,26 @@ public class DeclAssistantCG extends AssistantBase
 		// pre or post expression of the operation
 
 		return preCond == next || postCond == next;
+	}
+	
+	public AMethodDeclCG consDefaultContructor(String name)
+	{
+		AMethodDeclCG constructor = new AMethodDeclCG();
+
+		AClassTypeCG classType = new AClassTypeCG();
+		classType.setName(name);
+
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		methodType.setResult(classType);
+
+		constructor.setMethodType(methodType);
+		constructor.setAccess(IRConstants.PUBLIC);
+		constructor.setAbstract(false);
+		constructor.setIsConstructor(true);
+		constructor.setName(name);
+		constructor.setImplicit(false);
+		constructor.setBody(new ABlockStmCG());
+		
+		return constructor;
 	}
 }

@@ -1,0 +1,59 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Number op(final Tuple t) {
+        Tuple tuplePattern_1 = Utils.copy(t);
+        Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);
+
+        if (success_1) {
+            Number intPattern_1 = ((Number) tuplePattern_1.get(0));
+            success_1 = Utils.equals(intPattern_1, 1L);
+
+            if (success_1) {
+                Number intPattern_2 = ((Number) tuplePattern_1.get(1));
+                success_1 = Utils.equals(intPattern_2, 2L);
+            }
+        }
+
+        if (!(success_1)) {
+            Tuple tuplePattern_2 = Utils.copy(t);
+            success_1 = tuplePattern_2.compatible(Boolean.class, Boolean.class);
+
+            if (success_1) {
+                Boolean boolPattern_1 = ((Boolean) tuplePattern_2.get(0));
+                success_1 = Utils.equals(boolPattern_1, true);
+
+                if (success_1) {
+                    Boolean boolPattern_2 = ((Boolean) tuplePattern_2.get(1));
+                    success_1 = Utils.equals(boolPattern_2, false);
+                }
+            }
+
+            if (success_1) {
+                return 2L;
+            } else {
+                return 3L;
+            }
+        } else {
+            return 1L;
+        }
+    }
+
+    public static Object Run() {
+        return SeqUtil.seq(op(Tuple.mk_(1L, 2L)), op(Tuple.mk_(true, false)),
+            op(Tuple.mk_(5L, 5L)));
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
