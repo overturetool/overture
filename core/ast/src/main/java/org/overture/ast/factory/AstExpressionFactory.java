@@ -21,6 +21,8 @@
  */
 package org.overture.ast.factory;
 
+import java.util.List;
+
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
@@ -28,19 +30,31 @@ import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.PType;
 
 public class AstExpressionFactory
 {
+
+	public static AMkTypeExp newAMkTypeExp(ILexNameToken typeName, PType type, List<PExp> arglist)
+	{
+		AMkTypeExp mktype = new AMkTypeExp();
+		mktype.setType(type);
+		mktype.setTypeName(typeName);
+		mktype.setArgs(arglist);
+		return mktype;
+	}
 
 	public static AEqualsBinaryExp newAEqualsBinaryExp(PExp left, PExp right)
 	{
