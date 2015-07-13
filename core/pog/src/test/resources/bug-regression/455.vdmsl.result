@@ -1,1 +1,1 @@
-["state invariant holds obligation:((x \u003c y) \u003d\u003e (nx \u003c ny))"]
+["state invariant holds obligation:(inv_S(mk_S(x, y)) \u003d\u003e inv_S(mk_S(nx, ny)))"]
