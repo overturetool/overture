@@ -38,6 +38,7 @@ import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexIntegerToken;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -94,7 +95,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 		this.rootNode = rootnode;
 		this.location = location;
 		this.kind = kind;
-		this.af=af;
+		this.af = af;
 		this.name = context.getName();
 		this.status = POStatus.UNPROVED;
 		this.valuetree = new AVdmPoTree();
@@ -314,11 +315,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	 */
 	protected AEqualsBinaryExp getEqualsExp(PExp left, PExp right)
 	{
-		AEqualsBinaryExp equals = new AEqualsBinaryExp();
-		equals.setLeft(left.clone());
-		equals.setOp(new LexKeywordToken(VDMToken.EQUALS, null));
-		equals.setRight(right.clone());
-		return equals;
+		return AstExpressionFactory.newAEqualsBinaryExp(left.clone(), right.clone());
 	}
 
 	/**
@@ -331,17 +328,34 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 		var.setOriginal(name.getFullName());
 		return var;
 	}
-	
+
+	/**
+	 * Generate a Var Exp with associated type.
+	 */
+	protected AVariableExp getVarExp(ILexNameToken name, PType type)
+	{
+		AVariableExp var = getVarExp(name);
+		var.setType(type.clone());
+		return var;
+	}
 
 	/**
 	 * Generate AVariableExp with corresponding definition
 	 */
-	protected AVariableExp getVarExp(ILexNameToken name, PDefinition vardef){
+	protected AVariableExp getVarExp(ILexNameToken name, PDefinition vardef)
+	{
 		AVariableExp var = new AVariableExp();
 		var.setName(name.clone());
 		var.setOriginal(name.getFullName());
 		var.setVardef(vardef.clone());
-		return var;		
+		return var;
+	}
+
+	protected AApplyExp getApplyExp(PExp root, PType type, PExp... arglist)
+	{
+		AApplyExp exp = getApplyExp(root, arglist);
+		exp.setType(type.clone());
+		return exp;
 	}
 
 	/**
