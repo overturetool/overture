@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -125,17 +124,6 @@ public class StateInvariantObligation extends ProofObligation
 	{
 		super(atom, POType.STATE_INV, ctxt, atom.getLocation(), af);
 		assistantFactory = af;
-
-		PExp inv_exp = null;
-		if (atom.getStatedef() != null)
-		{
-			inv_exp = atom.getStatedef().getInvExpression().clone();
-			;
-		} else
-		{
-
-			inv_exp = extractInv(atom);
-		}
 
 		PExp invApplyExp = makeInvApplyExp(atom);
 
