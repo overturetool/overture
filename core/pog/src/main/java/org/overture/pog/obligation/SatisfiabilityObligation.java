@@ -253,10 +253,10 @@ public class SatisfiabilityObligation extends ProofObligation
 					{
 						AVariableExp varExp = getVarExp(OLD_SELF_ARG);
 						postArglist.add(varExp);
-						varExp.setType(((AStateDefinition) stateDefinition).getRecordType().clone());
+						varExp.setType(stateDefinition.getType().clone());
 						AVariableExp varExp2 = getVarExp(NEW_SELF_ARG);
 						postArglist.add(varExp2);
-						varExp2.setType(((AStateDefinition) stateDefinition).getRecordType().clone());
+						varExp2.setType(stateDefinition.getType().clone());
 					}
 				}
 
