@@ -17,7 +17,9 @@ instructions.configure=\
   addRepository(type:0,name:Overture,enabled:false,location:http${#58}//dl.bintray.com/overturetool/overturetool/);\
   addRepository(type:1,name:Overture,enabled:false,location:http${#58}//dl.bintray.com/overturetool/overturetool/);\
   addRepository(type:0,name:Overture Development,enabled:true,location:http${#58}//dl.bintray.com/overturetool/overturetool-development/);\
-  addRepository(type:1,name:Overture Development,enabled:true,location:http${#58}//dl.bintray.com/overturetool/overturetool-development/);
+  addRepository(type:1,name:Overture Development,enabled:true,location:http${#58}//dl.bintray.com/overturetool/overturetool-development/);\
+  addRepository(type:0,name:JODTool,enabled:true,location:http${#58}//aofa.csce.kyushu-u.ac.jp/JODTool/);\
+  addRepository(type:1,name:JODTool,enabled:true,location:http${#58}//aofa.csce.kyushu-u.ac.jp/JODTool/);
 instructions.configure.import=\
   org.eclipse.equinox.p2.touchpoint.natives.chmod,\
   org.eclipse.equinox.p2.touchpoint.natives.copy,\
