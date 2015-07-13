@@ -1,0 +1,7 @@
+operations
+
+notoperator : int * int ==> int
+notoperator(a,b) == 
+	if not a <> b
+		then return 1
+		else return 2;

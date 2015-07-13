@@ -17,6 +17,7 @@ public class DecisionStructuresVisitor extends DepthFirstAnalysisAdaptor{
 	 
 	 public GenerateTestCases getGTC(){
 		 return this.gtc;
+		 
 	 }
 	 
 	 @Override

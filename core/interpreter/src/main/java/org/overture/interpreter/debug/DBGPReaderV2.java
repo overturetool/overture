@@ -43,14 +43,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
@@ -1848,10 +1840,11 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 	public static void writeMCDCCoverage(Interpreter interpreter, File coverage)
 			throws IOException {
 		Properties.init(); // Read properties file, if any
-		File temp=null;//Temporary for testing
+		File temp = null;// Temporary for testing
 		MCDCReport mcdc = new MCDCReport();
+
 		for (File f : interpreter.getSourceFiles()) {
-			temp=f;
+			temp = f;
 			interpreter.getCoverage_to_xml().saveCoverageXml(coverage,
 					f.getName());
 			DecisionStructuresVisitor dsv = new DecisionStructuresVisitor(
@@ -1877,31 +1870,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 					}
 				}
 			}
+			
 			interpreter.getCoverage_to_xml().mark_tested(dsv.getGTC());
 			dsv.getGTC().saveCoverageXml(coverage, f.getName());
-			TransformerFactory factory = TransformerFactory.newInstance();
-			Source xslt = new StreamSource(new File(
-					"src/main/resources/MCDCTransformation.xsl"));
-			Transformer transformer = null;
-			try {
-				transformer = factory.newTransformer(xslt);
-			} catch (TransformerConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			Source text = new StreamSource(new File(coverage.getPath()
-					+ File.separator + f.getName() + "test_cases.xml"));
-			try {
-				transformer.transform(text,
-						new StreamResult(new File(coverage.getPath()
-								+ File.separator + f.getName()
-								+ ".html")));
-			} catch (TransformerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			mcdc.addFile(f.getName(),dsv.getGTC().getTestedRate());
+			mcdc.addFile(f.getName(), dsv.getGTC().getTestedRate());
 		}
 		mcdc.saveReportHTML(coverage, temp.getName());
 		Properties.parser_tabstop = 1;// required to match locations with the

@@ -10,6 +10,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -102,8 +103,14 @@ public class MCDCReport {
 	}
 	
 	public void saveReportHTML(File coverage, String filename) {
-		TransformerFactory transformerFactory = TransformerFactory
-				.newInstance();
+		TransformerFactory transformerFactory = null;
+		try {
+			transformerFactory = TransformerFactory
+					.newInstance();
+		} catch (TransformerFactoryConfigurationError e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		Transformer transformer = null;
 		try {
 			transformer = transformerFactory.newTransformer();
@@ -122,38 +129,10 @@ public class MCDCReport {
 			e.printStackTrace();
 		}
 	}
-}
-/*
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Bootstrap Example</title>
-        <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-                <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-                    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    </head>
-    <body>
-        
-        <div class="container">
-            <h2>Source File A MC/DC Report</h2>
-            <h3>Date: 30-05-2015, 19:50</h3>
-            
-            <p>If Statement A</p> 
-            <div class="progress">
-                <div class="progress-bar progress-bar-success" role="progressbar" style="width:20%">
-                    20% Required test cases covered
-                </div>
-                <div class="progress-bar progress-bar-danger" role="progressbar" style="width:80%">
-                </div>
-            </div>
-       
-            
-            
-        </div>
-        
-    </body>
-</html>
-*/
+	
+		
+		
+	
+	
+}

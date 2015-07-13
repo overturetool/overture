@@ -1,18 +1,24 @@
 package org.overture.interpreter.runtime;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
@@ -85,15 +91,27 @@ public class GenerateTestCases extends AnalysisAdaptor {
 		DOMSource source = new DOMSource(doc);
 		StreamResult result = new StreamResult(new File(coverage.getPath()
 				+ File.separator + filename + "test_cases.xml"));
+		
 		try {
 			transformer.transform(source, result);
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
+		
+		generateHTMLTable(coverage,filename);
+		
+		
 	}
 
 	@Override
 	public void caseANotUnaryExp(ANotUnaryExp node) throws AnalysisException {
+		NodeList evaluations = xml_nodes.get(node.getLocation()).getChildNodes();
+		for (int i = 0; i < evaluations.getLength(); i++) {
+			if(evaluations.item(i).getTextContent().equals("true"))evaluations.item(i).setTextContent("false");
+			else if(evaluations.item(i).getTextContent().equals("false"))evaluations.item(i).setTextContent("true");
+			else if(!evaluations.item(i).equals("?"))evaluations.item(i).setTextContent(node.getExp().toString());
+		}
+		fill_source_file_location(xml_nodes.get(node.getLocation()), node.getExp().getLocation());
 		PExp expression = node.getExp();
 		expression.apply(this);
 	}
@@ -574,5 +592,46 @@ public class GenerateTestCases extends AnalysisAdaptor {
 			e.printStackTrace();
 		}
 		return (float) ((float) tested.getLength() * 100.0 / (float) ((float)not_tested.getLength() + (float)tested.getLength()));
+	}
+
+	public void generateHTMLTable(File coverage, String f) {
+		TransformerFactory factory = null;
+		try {
+			factory = TransformerFactory.newInstance();
+		} catch (TransformerFactoryConfigurationError e) {
+			e.printStackTrace();
+		}
+		Source xslt = null;
+
+		try {
+			ClassLoader c1 = this.getClass().getClassLoader();
+			  try {
+				Enumeration<URL> urls =c1.getResources("MCDCTransformation.xsl");
+				URL url = urls.nextElement();
+				xslt = new StreamSource(url.toExternalForm());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+				
+			
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+		Transformer transformer = null;
+		try {
+			transformer = factory.newTransformer(xslt);
+		} catch (TransformerConfigurationException e) {
+			e.printStackTrace();
+		}
+
+		Source text = new StreamSource(new File(coverage.getPath()
+				+ File.separator + f + "test_cases.xml"));
+		try {
+			transformer.transform(text,
+					new StreamResult(new File(coverage.getPath()
+							+ File.separator + f + ".html")));
+		} catch (TransformerException e) {
+			e.printStackTrace();
+		}
 	}
 }
