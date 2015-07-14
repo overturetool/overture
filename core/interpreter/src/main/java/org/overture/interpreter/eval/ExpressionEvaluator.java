@@ -117,59 +117,59 @@ import org.overture.interpreter.values.ValueSet;
 import org.overture.interpreter.values.VoidValue;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 
-public class ExpressionEvaluator extends BinaryExpressionEvaluator
-{
-	
+public class ExpressionEvaluator extends BinaryExpressionEvaluator {
+
 	@Override
 	public Value caseAApplyExp(AApplyExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		node.getLocation().setHits(node.getLocation().getHits() / 1); // This is counted below when root is evaluated
+		node.getLocation().setHits(node.getLocation().getHits() / 1); // This is
+																		// counted
+																		// below
+																		// when
+																		// root
+																		// is
+																		// evaluated
 
-		try
-		{
-			Value object = node.getRoot().apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
+		try {
+			Value object = node.getRoot()
+					.apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
 
-			if (object instanceof FunctionValue)
-			{
+			if (object instanceof FunctionValue) {
 				ValueList argvals = new ValueList();
 
-				for (PExp arg : node.getArgs())
-				{
-					argvals.add(arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt));
+				for (PExp arg : node.getArgs()) {
+					argvals.add(arg.apply(VdmRuntime.getExpressionEvaluator(),
+							ctxt));
 				}
 
 				FunctionValue fv = object.functionValue(ctxt);
 				return fv.eval(node.getLocation(), argvals, ctxt);
-			} else if (object instanceof OperationValue)
-			{
+			} else if (object instanceof OperationValue) {
 				ValueList argvals = new ValueList();
 
-				for (PExp arg : node.getArgs())
-				{
-					argvals.add(arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt));
+				for (PExp arg : node.getArgs()) {
+					argvals.add(arg.apply(VdmRuntime.getExpressionEvaluator(),
+							ctxt));
 				}
 
 				OperationValue ov = object.operationValue(ctxt);
 				return ov.eval(node.getLocation(), argvals, ctxt);
-			} else if (object instanceof SeqValue)
-			{
-				Value arg = node.getArgs().get(0).apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+			} else if (object instanceof SeqValue) {
+				Value arg = node.getArgs().get(0)
+						.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 				SeqValue sv = (SeqValue) object;
 				return sv.get(arg, ctxt);
-			} else if (object instanceof MapValue)
-			{
-				Value arg = node.getArgs().get(0).apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+			} else if (object instanceof MapValue) {
+				Value arg = node.getArgs().get(0)
+						.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 				MapValue mv = (MapValue) object;
 				return mv.lookup(arg, ctxt);
-			} else
-			{
+			} else {
 				return VdmRuntimeError.abort(node.getLocation(), 4003, "Value "
 						+ object + " cannot be applied", ctxt);
 			}
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
@@ -183,44 +183,44 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	 */
 	@Override
 	public Value caseACasesExp(ACasesExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		Value val = node.getExpression().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		Value val = node.getExpression().apply(
+				VdmRuntime.getExpressionEvaluator(), ctxt);
 
-		for (ACaseAlternative c : node.getCases())
-		{
+		for (ACaseAlternative c : node.getCases()) {
 			Value rv = eval(c, val, ctxt);
-			if (rv != null)
-			{
+			if (rv != null) {
 				return rv;
 			}
 		}
 
-		if (node.getOthers() != null)
-		{
-			return node.getOthers().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		if (node.getOthers() != null) {
+			return node.getOthers().apply(VdmRuntime.getExpressionEvaluator(),
+					ctxt);
 		}
 
-		return VdmRuntimeError.abort(node.getLocation(), 4004, "No cases apply for "
-				+ val, ctxt);
+		return VdmRuntimeError.abort(node.getLocation(), 4004,
+				"No cases apply for " + val, ctxt);
 	}
 
 	@Override
 	public Value caseADefExp(ADefExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "def expression", ctxt);
+		Context evalContext = new Context(ctxt.assistantFactory,
+				node.getLocation(), "def expression", ctxt);
 
-		for (PDefinition d : node.getLocalDefs())
-		{
-			evalContext.putList(ctxt.assistantFactory.createPDefinitionAssistant().getNamedValues(d, evalContext));
+		for (PDefinition d : node.getLocalDefs()) {
+			evalContext.putList(ctxt.assistantFactory
+					.createPDefinitionAssistant()
+					.getNamedValues(d, evalContext));
 		}
 
-		return node.getExpression().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
+		return node.getExpression().apply(VdmRuntime.getExpressionEvaluator(),
+				evalContext);
 	}
 
 	/**
@@ -233,16 +233,16 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	 * @throws AnalysisException
 	 */
 	public Value eval(ACaseAlternative node, Value val, Context ctxt)
-			throws AnalysisException
-	{
-		Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "case alternative", ctxt);
+			throws AnalysisException {
+		Context evalContext = new Context(ctxt.assistantFactory,
+				node.getLocation(), "case alternative", ctxt);
 
-		try
-		{
-			evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getPattern(), val, ctxt));
-			return node.getResult().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
-		} catch (PatternMatchException e)
-		{
+		try {
+			evalContext.putList(ctxt.assistantFactory.createPPatternAssistant()
+					.getNamedValues(node.getPattern(), val, ctxt));
+			return node.getResult().apply(VdmRuntime.getExpressionEvaluator(),
+					evalContext);
+		} catch (PatternMatchException e) {
 			// Silently fail (CasesExpression will try the others)
 		}
 
@@ -251,321 +251,286 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseAElseIfExp(AElseIfExp node, Context ctxt)
-			throws AnalysisException
-	{
-		return evalElseIf(node, node.getLocation(), node.getElseIf(), node.getThen(), ctxt);
+			throws AnalysisException {
+		return evalElseIf(node, node.getLocation(), node.getElseIf(),
+				node.getThen(), ctxt);
 	}
 
 	@Override
 	public Value caseAExists1Exp(AExists1Exp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		ValueList allValues = null;
 		boolean alreadyFound = false;
-
-		try
-		{	node.apply(ctx,ctxt);
-		ctx.loop=true;
-			allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getBind(), ctxt);
-		} catch (ValueException e)
-		{
+		try {
+			node.apply(ctx, ctxt);
+			ctx.loop = true;
+			allValues = ctxt.assistantFactory.createPBindAssistant()
+					.getBindValues(node.getBind(), ctxt);
+		} catch (ValueException e) {
 			VdmRuntimeError.abort(node.getLocation(), e);
 		}
 
-		for (Value val : allValues)
-		{
-			try
-			{
-				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "exists1", ctxt);
-				evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getBind().getPattern(), val, ctxt));
-				boolean result = node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt);
-				ctx.loop_iteration= (int) node.getPredicate().getLocation().getHits();
-				if (result)
-				{ 
-					if (alreadyFound)
-					{
+		for (Value val : allValues) {
+			try {
+				Context evalContext = new Context(ctxt.assistantFactory,
+						node.getLocation(), "exists1", ctxt);
+				evalContext.putList(ctxt.assistantFactory
+						.createPPatternAssistant().getNamedValues(
+								node.getBind().getPattern(), val, ctxt));
+				node.apply(ctx, ctxt);
+				boolean result = node
+						.getPredicate()
+						.apply(VdmRuntime.getExpressionEvaluator(), evalContext)
+						.boolValue(ctxt);
+				if (result) {
+					if (alreadyFound) {
 						Value v = new BooleanValue(false);
-						ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits()-1;
 						ctx.add_eval(node.getLocation(), v.toString());
-						ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
-						ctx.loop=false;
+						ctx.loop = false;
 						return v;
 					}
 
 					alreadyFound = true;
 				}
-			} catch (ValueException e)
-			{
+			} catch (ValueException e) {
 				VdmRuntimeError.abort(node.getLocation(), e);
-			} catch (PatternMatchException e)
-			{
+			} catch (PatternMatchException e) {
 				// Ignore pattern mismatches
 			}
 		}
 		Value v2 = new BooleanValue(alreadyFound);
-		ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits()-1;
 		ctx.add_eval(node.getLocation(), v2.toString());
-		ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
-		ctx.loop=false;
+		ctx.loop = false;
 		return v2;
 	}
 
 	@Override
 	public Value caseAExistsExp(AExistsExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-
-		try
-		{
+		try {
+			ctx.loop = true;
+			node.apply(ctx, ctxt);
 			QuantifierList quantifiers = new QuantifierList();
 
-			for (PMultipleBind mb : node.getBindList())
-			{
-				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
+			for (PMultipleBind mb : node.getBindList()) {
+				ValueList bvals = ctxt.assistantFactory
+						.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
-				for (PPattern p : mb.getPlist())
-				{
+				for (PPattern p : mb.getPlist()) {
 					Quantifier q = new Quantifier(p, bvals);
 					quantifiers.add(q);
 				}
 			}
 
 			quantifiers.init(ctxt, true);
-			node.apply(ctx,ctxt);
-			ctx.loop = true;
-			while (quantifiers.hasNext())
-			{
-				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "exists", ctxt);
+
+			while (quantifiers.hasNext()) {
+				Context evalContext = new Context(ctxt.assistantFactory,
+						node.getLocation(), "exists", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
-				for (NameValuePair nvp : nvpl)
-				{
+				for (NameValuePair nvp : nvpl) {
 					Value v = evalContext.get(nvp.name);
 
-					if (v == null)
-					{
+					if (v == null) {
 						evalContext.put(nvp.name, nvp.value);
-					} else
-					{
-						if (!v.equals(nvp.value))
-						{
+					} else {
+						if (!v.equals(nvp.value)) {
 							matches = false;
 							break; // This quantifier set does not match
 						}
 					}
 				}
-				boolean result = node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt);
-				ctx.loop_iteration++;
-				if (matches
-						&& result)
-				{
+				node.apply(ctx, ctxt);
+				boolean result = node
+						.getPredicate()
+						.apply(VdmRuntime.getExpressionEvaluator(), evalContext)
+						.boolValue(ctxt);
+				if (matches && result) {
 					Value v = new BooleanValue(true);
-					ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits()-1;
 					ctx.add_eval(node.getLocation(), v.toString());
-					ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
-					ctx.loop=false;
+					ctx.loop = false;
 					return v;
 				}
 			}
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			VdmRuntimeError.abort(node.getLocation(), e);
 		}
 		Value v2 = new BooleanValue(false);
-		ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits()-1;
 		ctx.add_eval(node.getLocation(), v2.toString());
-		ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
-		ctx.loop=false;
+		ctx.loop = false;
 		return v2;
 	}
 
 	@Override
 	public Value caseAFieldExp(AFieldExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		node.getField().getLocation().hit();
 
-		try
-		{
-			return ctxt.assistantFactory.createAFieldExpAssistant().evaluate(node, ctxt);
-		} catch (ValueException e)
-		{
+		try {
+			return ctxt.assistantFactory.createAFieldExpAssistant().evaluate(
+					node, ctxt);
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
 	@Override
 	public Value caseAFieldNumberExp(AFieldNumberExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		node.getField().getLocation().hit();
 
-		try
-		{
-			ValueList fields = node.getTuple().apply(VdmRuntime.getExpressionEvaluator(), ctxt).tupleValue(ctxt);
+		try {
+			ValueList fields = node.getTuple()
+					.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+					.tupleValue(ctxt);
 			Value r = fields.get((int) node.getField().getValue() - 1);
 
-			if (r == null)
-			{
-				VdmRuntimeError.abort(node.getLocation(), 4007, "No such field in tuple: #"
-						+ node.getField(), ctxt);
+			if (r == null) {
+				VdmRuntimeError.abort(node.getLocation(), 4007,
+						"No such field in tuple: #" + node.getField(), ctxt);
 			}
 
 			return r;
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
 	@Override
 	public Value caseAForAllExp(AForAllExp node, Context ctxt)
-			throws AnalysisException
-	{ 
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-
-		try
-		{
-			
+		ctx.loop = true;
+		try {
+			node.apply(ctx, ctxt);
 			QuantifierList quantifiers = new QuantifierList();
 
-			for (PMultipleBind mb : node.getBindList())
-			{
-				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
+			for (PMultipleBind mb : node.getBindList()) {
+				ValueList bvals = ctxt.assistantFactory
+						.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
-				for (PPattern p : mb.getPlist())
-				{
+				for (PPattern p : mb.getPlist()) {
 					Quantifier q = new Quantifier(p, bvals);
 					quantifiers.add(q);
 				}
 			}
 
 			quantifiers.init(ctxt, false);
-			ctx.loop= true;
-			node.apply(ctx, ctxt);
-			while (quantifiers.hasNext())
-			{
-				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "forall", ctxt);
+
+			while (quantifiers.hasNext()) {
+				Context evalContext = new Context(ctxt.assistantFactory,
+						node.getLocation(), "forall", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
-				for (NameValuePair nvp : nvpl)
-				{	
-					
+				for (NameValuePair nvp : nvpl) {
+
 					Value v = evalContext.get(nvp.name);
-			        
-					if (v == null)
-					{
+
+					if (v == null) {
 						evalContext.put(nvp.name, nvp.value);
-					} else
-					{
-						if (!v.equals(nvp.value))
-						{
+					} else {
+						if (!v.equals(nvp.value)) {
 							matches = false;
 							break; // This quantifier set does not match
 						}
 					}
 				}
-				boolean result = !node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt);
-				ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
-				if (matches
-						&& result)
-				{
+				node.apply(ctx, ctxt);
+				boolean result = !node
+						.getPredicate()
+						.apply(VdmRuntime.getExpressionEvaluator(), evalContext)
+						.boolValue(ctxt);
+				if (matches && result) {
 					Value v = new BooleanValue(false);
-					ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits()-1;
+					
 					ctx.add_eval(node.getLocation(), v.toString());
-					ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
-					ctx.loop=false;
+					ctx.loop = false;
 					return v;
 				}
-				
+
 			}
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 		Value v2 = new BooleanValue(true);
-		ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits()-1;
 		ctx.add_eval(node.getLocation(), v2.toString());
-		ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
-		ctx.loop=false;
+
+		ctx.loop = false;
 		return v2;
 	}
 
 	@Override
 	public Value caseAFuncInstatiationExp(AFuncInstatiationExp node,
-			Context ctxt) throws AnalysisException
-	{
+			Context ctxt) throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		try
-		{
-			FunctionValue fv = node.getFunction().apply(VdmRuntime.getExpressionEvaluator(), ctxt).functionValue(ctxt);
+		try {
+			FunctionValue fv = node.getFunction()
+					.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+					.functionValue(ctxt);
 
-			if (!fv.uninstantiated)
-			{
-				VdmRuntimeError.abort(node.getLocation(), 3034, "Function is already instantiated: "
-						+ fv.name, ctxt);
+			if (!fv.uninstantiated) {
+				VdmRuntimeError.abort(node.getLocation(), 3034,
+						"Function is already instantiated: " + fv.name, ctxt);
 			}
 
 			PTypeList fixed = new PTypeList();
 
-			for (PType ptype : node.getActualTypes())
-			{
-				if (ptype instanceof AParameterType)
-				{
+			for (PType ptype : node.getActualTypes()) {
+				if (ptype instanceof AParameterType) {
 					AParameterType pname = (AParameterType) ptype;
 					Value t = ctxt.lookup(pname.getName());
 
-					if (t == null)
-					{
-						VdmRuntimeError.abort(node.getLocation(), 4008, "No such type parameter @"
-								+ pname + " in scope", ctxt);
-					} else if (t instanceof ParameterValue)
-					{
+					if (t == null) {
+						VdmRuntimeError.abort(node.getLocation(), 4008,
+								"No such type parameter @" + pname
+										+ " in scope", ctxt);
+					} else if (t instanceof ParameterValue) {
 						ParameterValue tv = (ParameterValue) t;
 						fixed.add(tv.type);
-					} else
-					{
-						VdmRuntimeError.abort(node.getLocation(), 4009, "Type parameter/local variable name clash, @"
-								+ pname, ctxt);
+					} else {
+						VdmRuntimeError.abort(node.getLocation(), 4009,
+								"Type parameter/local variable name clash, @"
+										+ pname, ctxt);
 					}
-				} else
-				{
+				} else {
 					fixed.add(ptype);
 				}
 			}
 
 			FunctionValue rv = null;
 
-			if (node.getExpdef() == null)
-			{
-				rv = ctxt.assistantFactory.createAImplicitFunctionDefinitionAssistant().getPolymorphicValue(ctxt.assistantFactory, node.getImpdef(), fixed);
-			} else
-			{
-				rv = ctxt.assistantFactory.createAExplicitFunctionDefinitionAssistant().getPolymorphicValue(ctxt.assistantFactory, node.getExpdef(), fixed);
+			if (node.getExpdef() == null) {
+				rv = ctxt.assistantFactory
+						.createAImplicitFunctionDefinitionAssistant()
+						.getPolymorphicValue(ctxt.assistantFactory,
+								node.getImpdef(), fixed);
+			} else {
+				rv = ctxt.assistantFactory
+						.createAExplicitFunctionDefinitionAssistant()
+						.getPolymorphicValue(ctxt.assistantFactory,
+								node.getExpdef(), fixed);
 			}
 
 			rv.setSelf(fv.self);
 			rv.uninstantiated = false;
 			return rv;
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
 	@Override
 	public Value caseAHistoryExp(AHistoryExp node, Context ctxt)
-			throws AnalysisException
-	{
-		try
-		{
+			throws AnalysisException {
+		try {
 			// TODO Not very efficient to do this every time. But we can't
 			// save the list because the same HistoryExpression is called from
 			// different object instance contexts, and each instance has its
@@ -573,121 +538,112 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			ValueList operations = new ValueList();
 
-			if (ctxt instanceof ObjectContext)
-			{
+			if (ctxt instanceof ObjectContext) {
 				ObjectValue self = ((ObjectContext) ctxt).self;
 
-				for (ILexNameToken opname : node.getOpnames())
-				{
+				for (ILexNameToken opname : node.getOpnames()) {
 					operations.addAll(self.getOverloads(opname));
 				}
-			} else if (ctxt instanceof ClassContext)
-			{
+			} else if (ctxt instanceof ClassContext) {
 				ClassContext cctxt = (ClassContext) ctxt;
-				Context statics = cctxt.assistantFactory.createSClassDefinitionAssistant().getStatics(cctxt.classdef);
+				Context statics = cctxt.assistantFactory
+						.createSClassDefinitionAssistant().getStatics(
+								cctxt.classdef);
 
-				for (ILexNameToken opname : node.getOpnames())
-				{
-					for (ILexNameToken sname : statics.keySet())
-					{
-						if (opname.matches(sname))
-						{
+				for (ILexNameToken opname : node.getOpnames()) {
+					for (ILexNameToken sname : statics.keySet()) {
+						if (opname.matches(sname)) {
 							operations.add(ctxt.check(sname));
 						}
 					}
 				}
 			}
 
-			if (operations.isEmpty())
-			{
-				VdmRuntimeError.abort(node.getLocation(), 4011, "Illegal history operator: "
-						+ node.getHop().toString(), ctxt);
+			if (operations.isEmpty()) {
+				VdmRuntimeError
+						.abort(node.getLocation(), 4011,
+								"Illegal history operator: "
+										+ node.getHop().toString(), ctxt);
 			}
 
 			int result = 0;
 
-			for (Value v : operations)
-			{
+			for (Value v : operations) {
 				OperationValue ov = v.operationValue(ctxt);
 
-				switch (node.getHop().getType())
-				{
-					case ACT:
-						result += ov.getHashAct();
-						break;
+				switch (node.getHop().getType()) {
+				case ACT:
+					result += ov.getHashAct();
+					break;
 
-					case FIN:
-						result += ov.getHashFin();
-						break;
+				case FIN:
+					result += ov.getHashFin();
+					break;
 
-					case REQ:
-						result += ov.getHashReq();
-						break;
+				case REQ:
+					result += ov.getHashReq();
+					break;
 
-					case ACTIVE:
-						result += ov.getHashAct() - ov.getHashFin();
-						break;
+				case ACTIVE:
+					result += ov.getHashAct() - ov.getHashFin();
+					break;
 
-					case WAITING:
-						result += ov.getHashReq() - ov.getHashAct();
-						break;
+				case WAITING:
+					result += ov.getHashReq() - ov.getHashAct();
+					break;
 
-					default:
-						VdmRuntimeError.abort(node.getLocation(), 4011, "Illegal history operator: "
-								+ node.getHop(), ctxt);
+				default:
+					VdmRuntimeError.abort(node.getLocation(), 4011,
+							"Illegal history operator: " + node.getHop(), ctxt);
 
 				}
 			}
 
 			node.getLocation().hit();
 			return new NaturalValue(result);
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
-		} catch (Exception e)
-		{
-			return VdmRuntimeError.abort(node.getLocation(), 4065, e.getMessage(), ctxt);
+		} catch (Exception e) {
+			return VdmRuntimeError.abort(node.getLocation(), 4065,
+					e.getMessage(), ctxt);
 		}
 	}
 
 	@Override
-	public Value caseAIsExp(AIsExp node, Context ctxt) throws AnalysisException
-	{
+	public Value caseAIsExp(AIsExp node, Context ctxt) throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		Value v = node.getTest().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		Value v = node.getTest().apply(VdmRuntime.getExpressionEvaluator(),
+				ctxt);
 
-		try
-		{
-			if (node.getTypeName() != null)
-			{
-				if (node.getTypedef() != null)
-				{
-					if (ctxt.assistantFactory.createPDefinitionAssistant().isTypeDefinition(node.getTypedef()))
-					{
+		try {
+			if (node.getTypeName() != null) {
+				if (node.getTypedef() != null) {
+					if (ctxt.assistantFactory.createPDefinitionAssistant()
+							.isTypeDefinition(node.getTypedef())) {
 						// NB. we skip the DTC enabled check here
-						v.convertValueTo(ctxt.assistantFactory.createPDefinitionAssistant().getType(node.getTypedef()), ctxt);
+						v.convertValueTo(
+								ctxt.assistantFactory
+										.createPDefinitionAssistant().getType(
+												node.getTypedef()), ctxt);
 						return new BooleanValue(true);
 					}
-				} else if (v.isType(RecordValue.class))
-				{
+				} else if (v.isType(RecordValue.class)) {
 					RecordValue rv = v.recordValue(ctxt);
-					return new BooleanValue(rv.type.getName().equals(node.getTypeName()));
+					return new BooleanValue(rv.type.getName().equals(
+							node.getTypeName()));
 				}
-			} else
-			{
+			} else {
 				// NB. we skip the DTC enabled check here
 				v.convertValueTo(node.getBasicType(), ctxt);
 				return new BooleanValue(true);
 			}
-		} catch (ContextException ex)
-		{
+		} catch (ContextException ex) {
 			if (ex.number != 4060) // Type invariant violation
 			{
 				throw ex; // Otherwise return false
 			}
-		} catch (ValueException ex)
-		{
+		} catch (ValueException ex) {
 			// return false...
 		}
 
@@ -695,10 +651,10 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	}
 
 	@Override
-	public Value caseAIfExp(AIfExp node, Context ctxt) throws AnalysisException
-	{ 
-        //node.apply(ctx,ctxt);
-		return evalIf(node, node.getLocation(), node.getTest(), node.getThen(), node.getElseList(), node.getElse(), ctxt);
+	public Value caseAIfExp(AIfExp node, Context ctxt) throws AnalysisException {
+		// node.apply(ctx,ctxt);
+		return evalIf(node, node.getLocation(), node.getTest(), node.getThen(),
+				node.getElseList(), node.getElse(), ctxt);
 	}
 
 	/**
@@ -716,38 +672,33 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	 */
 	protected Value evalIf(INode node, ILexLocation ifLocation, PExp testExp,
 			INode thenNode, List<? extends INode> elseIfNodeList,
-			INode elseNode, Context ctxt) throws AnalysisException
-	{
+			INode elseNode, Context ctxt) throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(ifLocation, ctxt);
 
-		try
-		{
-			node.apply(ctx,ctxt);
-			boolean value = testExp.apply(VdmRuntime.getStatementEvaluator(), ctxt).boolValue(ctxt);
+		try {
+			node.apply(ctx, ctxt);
+			boolean value = testExp.apply(VdmRuntime.getStatementEvaluator(),
+					ctxt).boolValue(ctxt);
 			ctx.add_eval(ifLocation, String.valueOf(value));
-			if (value)
-			{
+			if (value) {
 				return thenNode.apply(VdmRuntime.getStatementEvaluator(), ctxt);
-			} else
-			{
-				for (INode elseif : elseIfNodeList)
-				{
-					Value r = elseif.apply(VdmRuntime.getStatementEvaluator(), ctxt);
-					if (r != null)
-					{
+			} else {
+				for (INode elseif : elseIfNodeList) {
+					Value r = elseif.apply(VdmRuntime.getStatementEvaluator(),
+							ctxt);
+					if (r != null) {
 						return r;
 					}
 				}
 
-				if (elseNode != null)
-				{
-					return elseNode.apply(VdmRuntime.getStatementEvaluator(), ctxt);
+				if (elseNode != null) {
+					return elseNode.apply(VdmRuntime.getStatementEvaluator(),
+							ctxt);
 				}
 
 				return new VoidValue();
 			}
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(ifLocation, e);
 		}
 	}
@@ -764,76 +715,71 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	 * @throws AnalysisException
 	 */
 	protected Value evalElseIf(INode node, ILexLocation location, PExp test,
-			INode then, Context ctxt) throws AnalysisException
-	{
+			INode then, Context ctxt) throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(location, ctxt);
 
-		try
-		{
-			node.apply(ctx,ctxt);
-			boolean v = test.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
+		try {
+			node.apply(ctx, ctxt);
+			boolean v = test.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+					.boolValue(ctxt);
 			Value value = v ? then.apply(THIS, ctxt) : null;
 			ctx.add_eval(location, String.valueOf(v));
 			return value;
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(location, e);
 		}
 	}
 
 	@Override
 	public Value caseAIotaExp(AIotaExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		ValueList allValues = null;
 		Value result = null;
 
-		try
-		{
-			allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getBind(), ctxt);
-		} catch (ValueException e)
-		{
+		try {
+			allValues = ctxt.assistantFactory.createPBindAssistant()
+					.getBindValues(node.getBind(), ctxt);
+		} catch (ValueException e) {
 			VdmRuntimeError.abort(node.getLocation(), e);
 		}
 
-		for (Value val : allValues)
-		{
-			try
-			{
-				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "iota", ctxt);
-				evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getBind().getPattern(), val, ctxt));
+		for (Value val : allValues) {
+			try {
+				Context evalContext = new Context(ctxt.assistantFactory,
+						node.getLocation(), "iota", ctxt);
+				evalContext.putList(ctxt.assistantFactory
+						.createPPatternAssistant().getNamedValues(
+								node.getBind().getPattern(), val, ctxt));
 
-				if (node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
-				{
-					if (result != null && !result.equals(val))
-					{
-						VdmRuntimeError.abort(node.getLocation(), 4013, "Iota selects more than one result", ctxt);
+				if (node.getPredicate()
+						.apply(VdmRuntime.getExpressionEvaluator(), evalContext)
+						.boolValue(ctxt)) {
+					if (result != null && !result.equals(val)) {
+						VdmRuntimeError.abort(node.getLocation(), 4013,
+								"Iota selects more than one result", ctxt);
 					}
 
 					result = val;
 				}
-			} catch (ValueException e)
-			{
+			} catch (ValueException e) {
 				VdmRuntimeError.abort(node.getLocation(), e);
-			} catch (PatternMatchException e)
-			{
+			} catch (PatternMatchException e) {
 				// Ignore pattern mismatches
 			}
 		}
 
-		if (result != null)
-		{
+		if (result != null) {
 			return result;
 		}
 
-		return VdmRuntimeError.abort(node.getLocation(), 4014, "Iota does not select a result", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(), 4014,
+				"Iota does not select a result", ctxt);
 	}
 
 	@Override
 	public Value caseALambdaExp(ALambdaExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
 		// Free variables are everything currently visible from this
@@ -844,32 +790,31 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		PatternListTC list = ctxt.assistantFactory.createPatternList();
 		list.addAll(node.getParamPatterns());
 
-		return new FunctionValue(node.getLocation(), "lambda", (AFunctionType) node.getType(), list, node.getExpression(), free);
+		return new FunctionValue(node.getLocation(), "lambda",
+				(AFunctionType) node.getType(), list, node.getExpression(),
+				free);
 	}
 
 	@Override
 	public Value caseALetBeStExp(ALetBeStExp node, Context ctxt)
-			throws AnalysisException
-	{
-		return evalLetBeSt(node, node.getLocation(), node.getDef(), node.getSuchThat(), node.getValue(), 4015, "expression", ctxt);
+			throws AnalysisException {
+		return evalLetBeSt(node, node.getLocation(), node.getDef(),
+				node.getSuchThat(), node.getValue(), 4015, "expression", ctxt);
 	}
 
 	public Value evalLetBeSt(INode node, ILexLocation nodeLocation,
 			AMultiBindListDefinition binding, PExp suchThat, INode body,
-			int errorCode, String type, Context ctxt) throws AnalysisException
-	{
+			int errorCode, String type, Context ctxt) throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(nodeLocation, ctxt);
 
-		try
-		{
+		try {
 			QuantifierList quantifiers = new QuantifierList();
 
-			for (PMultipleBind mb : binding.getBindings())
-			{
-				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
+			for (PMultipleBind mb : binding.getBindings()) {
+				ValueList bvals = ctxt.assistantFactory
+						.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
-				for (PPattern p : mb.getPlist())
-				{
+				for (PPattern p : mb.getPlist()) {
 					Quantifier q = new Quantifier(p, bvals);
 					quantifiers.add(q);
 				}
@@ -877,24 +822,19 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			quantifiers.init(ctxt, true);
 
-			while (quantifiers.hasNext())
-			{
-				Context evalContext = new Context(ctxt.assistantFactory, nodeLocation, "let be st "
-						+ type, ctxt);
+			while (quantifiers.hasNext()) {
+				Context evalContext = new Context(ctxt.assistantFactory,
+						nodeLocation, "let be st " + type, ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
-				for (NameValuePair nvp : nvpl)
-				{
+				for (NameValuePair nvp : nvpl) {
 					Value v = evalContext.get(nvp.name);
 
-					if (v == null)
-					{
+					if (v == null) {
 						evalContext.put(nvp.name, nvp.value);
-					} else
-					{
-						if (!v.equals(nvp.value))
-						{
+					} else {
+						if (!v.equals(nvp.value)) {
 							matches = false;
 							break; // This quantifier set does not match
 						}
@@ -902,48 +842,48 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 
 				if (matches
-						&& (suchThat == null || suchThat.apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
-				{
-					return body.apply(VdmRuntime.getExpressionEvaluator(), evalContext);
+						&& (suchThat == null || suchThat.apply(
+								VdmRuntime.getExpressionEvaluator(),
+								evalContext).boolValue(ctxt))) {
+					return body.apply(VdmRuntime.getExpressionEvaluator(),
+							evalContext);
 				}
 			}
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			VdmRuntimeError.abort(nodeLocation, e);
 		}
 
-		return VdmRuntimeError.abort(nodeLocation, errorCode, "Let be st found no applicable bindings", ctxt);
+		return VdmRuntimeError.abort(nodeLocation, errorCode,
+				"Let be st found no applicable bindings", ctxt);
 	}
 
 	@Override
 	public Value caseALetDefExp(ALetDefExp node, Context ctxt)
-			throws AnalysisException
-	{
-		return evalLet(node, node.getLocation(), node.getLocalDefs(), node.getExpression(), "expression", ctxt);
+			throws AnalysisException {
+		return evalLet(node, node.getLocation(), node.getLocalDefs(),
+				node.getExpression(), "expression", ctxt);
 	}
 
 	public Value evalLet(INode node, ILexLocation nodeLocation,
 			LinkedList<PDefinition> localDefs, INode body, String type,
-			Context ctxt) throws AnalysisException
-	{
+			Context ctxt) throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(nodeLocation, ctxt);
 
-		Context evalContext = new Context(ctxt.assistantFactory, nodeLocation, "let "
-				+ type, ctxt);
+		Context evalContext = new Context(ctxt.assistantFactory, nodeLocation,
+				"let " + type, ctxt);
 
-		LexNameToken sname = new LexNameToken(nodeLocation.getModule(), "self", nodeLocation);
+		LexNameToken sname = new LexNameToken(nodeLocation.getModule(), "self",
+				nodeLocation);
 		ObjectValue self = (ObjectValue) ctxt.check(sname);
 
-		for (PDefinition d : localDefs)
-		{
-			NameValuePairList values = ctxt.assistantFactory.createPDefinitionAssistant().getNamedValues(d, evalContext);
+		for (PDefinition d : localDefs) {
+			NameValuePairList values = ctxt.assistantFactory
+					.createPDefinitionAssistant()
+					.getNamedValues(d, evalContext);
 
-			if (self != null && d instanceof AExplicitFunctionDefinition)
-			{
-				for (NameValuePair nvp : values)
-				{
-					if (nvp.value instanceof FunctionValue)
-					{
+			if (self != null && d instanceof AExplicitFunctionDefinition) {
+				for (NameValuePair nvp : values) {
+					if (nvp.value instanceof FunctionValue) {
 						FunctionValue fv = (FunctionValue) nvp.value;
 						fv.setSelf(self);
 					}
@@ -962,21 +902,18 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseAMapCompMapExp(AMapCompMapExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		ValueMap map = new ValueMap();
 
-		try
-		{
+		try {
 			QuantifierList quantifiers = new QuantifierList();
 
-			for (PMultipleBind mb : node.getBindings())
-			{
-				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
+			for (PMultipleBind mb : node.getBindings()) {
+				ValueList bvals = ctxt.assistantFactory
+						.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
-				for (PPattern p : mb.getPlist())
-				{
+				for (PPattern p : mb.getPlist()) {
 					Quantifier q = new Quantifier(p, bvals);
 					quantifiers.add(q);
 				}
@@ -984,23 +921,19 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			quantifiers.init(ctxt, false);
 
-			while (quantifiers.hasNext())
-			{
-				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "map comprehension", ctxt);
+			while (quantifiers.hasNext()) {
+				Context evalContext = new Context(ctxt.assistantFactory,
+						node.getLocation(), "map comprehension", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
-				for (NameValuePair nvp : nvpl)
-				{
+				for (NameValuePair nvp : nvpl) {
 					Value v = evalContext.get(nvp.name);
 
-					if (v == null)
-					{
+					if (v == null) {
 						evalContext.put(nvp.name, nvp.value);
-					} else
-					{
-						if (!v.equals(nvp.value))
-						{
+					} else {
+						if (!v.equals(nvp.value)) {
 							matches = false;
 							break; // This quantifier set does not match
 						}
@@ -1008,23 +941,32 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 
 				if (matches
-						&& (node.getPredicate() == null || node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
-				{
-					Value dom = node.getFirst().getLeft().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
-					Value rng = node.getFirst().getRight().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
+						&& (node.getPredicate() == null || node
+								.getPredicate()
+								.apply(VdmRuntime.getExpressionEvaluator(),
+										evalContext).boolValue(ctxt))) {
+					Value dom = node
+							.getFirst()
+							.getLeft()
+							.apply(VdmRuntime.getExpressionEvaluator(),
+									evalContext);
+					Value rng = node
+							.getFirst()
+							.getRight()
+							.apply(VdmRuntime.getExpressionEvaluator(),
+									evalContext);
 					node.getFirst().getLocation().hit();
 
 					Value old = map.put(dom, rng);
 
-					if (old != null && !old.equals(rng))
-					{
-						VdmRuntimeError.abort(node.getLocation(), 4016, "Duplicate map keys have different values: "
-								+ dom, ctxt);
+					if (old != null && !old.equals(rng)) {
+						VdmRuntimeError.abort(node.getLocation(), 4016,
+								"Duplicate map keys have different values: "
+										+ dom, ctxt);
 					}
 				}
 			}
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 
@@ -1033,23 +975,22 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseAMapEnumMapExp(AMapEnumMapExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
 		ValueMap map = new ValueMap();
 
-		for (AMapletExp e : node.getMembers())
-		{
-			Value l = e.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
-			Value r = e.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		for (AMapletExp e : node.getMembers()) {
+			Value l = e.getLeft().apply(VdmRuntime.getExpressionEvaluator(),
+					ctxt);
+			Value r = e.getRight().apply(VdmRuntime.getExpressionEvaluator(),
+					ctxt);
 			e.getLocation().hit();
 			Value old = map.put(l, r);
 
-			if (old != null && !old.equals(r))
-			{
-				VdmRuntimeError.abort(node.getLocation(), 4017, "Duplicate map keys have different values: "
-						+ l, ctxt);
+			if (old != null && !old.equals(r)) {
+				VdmRuntimeError.abort(node.getLocation(), 4017,
+						"Duplicate map keys have different values: " + l, ctxt);
 			}
 		}
 
@@ -1062,32 +1003,27 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseAMapletExp(AMapletExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		// Not used
 		return null;
 	}
 
 	@Override
 	public Value caseAMkBasicExp(AMkBasicExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		Value v = node.getArg().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		Value v = node.getArg()
+				.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-		if (node.getType() instanceof ATokenBasicType)
-		{
+		if (node.getType() instanceof ATokenBasicType) {
 			return new TokenValue(v);
-		} else
-		{
-			try
-			{
+		} else {
+			try {
 				v = v.convertTo(node.getType(), ctxt);
-			} catch (ValueException e)
-			{
-				VdmRuntimeError.abort(node.getLocation(), 4022, "mk_ type argument is not "
-						+ node.getType(), ctxt);
+			} catch (ValueException e) {
+				VdmRuntimeError.abort(node.getLocation(), 4022,
+						"mk_ type argument is not " + node.getType(), ctxt);
 			}
 		}
 
@@ -1096,86 +1032,82 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseAMkTypeExp(AMkTypeExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
 		ValueList argvals = new ValueList();
 
-		for (PExp e : node.getArgs())
-		{
+		for (PExp e : node.getArgs()) {
 			argvals.add(e.apply(VdmRuntime.getExpressionEvaluator(), ctxt));
 		}
 
-		try
-		{
+		try {
 			return new RecordValue(node.getRecordType(), argvals, ctxt);
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
 	@Override
-	public Value caseAMuExp(AMuExp node, Context ctxt) throws AnalysisException
-	{
+	public Value caseAMuExp(AMuExp node, Context ctxt) throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		try
-		{
-			RecordValue r = node.getRecord().apply(VdmRuntime.getExpressionEvaluator(), ctxt).recordValue(ctxt);
+		try {
+			RecordValue r = node.getRecord()
+					.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+					.recordValue(ctxt);
 			FieldMap fields = new FieldMap(r.fieldmap);
 
-			for (ARecordModifier rm : node.getModifiers())
-			{
-				AFieldField f = ctxt.assistantFactory.createARecordInvariantTypeAssistant().findField(r.type, rm.getTag().getName());
+			for (ARecordModifier rm : node.getModifiers()) {
+				AFieldField f = ctxt.assistantFactory
+						.createARecordInvariantTypeAssistant().findField(
+								r.type, rm.getTag().getName());
 
-				if (f == null)
-				{
-					VdmRuntimeError.abort(node.getLocation(), 4023, "Mu type conflict? No field tag "
-							+ rm.getTag().getName(), ctxt);
-				} else
-				{
-					fields.add(rm.getTag().getName(), rm.getValue().apply(VdmRuntime.getExpressionEvaluator(), ctxt), !f.getEqualityAbstraction());
+				if (f == null) {
+					VdmRuntimeError.abort(node.getLocation(), 4023,
+							"Mu type conflict? No field tag "
+									+ rm.getTag().getName(), ctxt);
+				} else {
+					fields.add(
+							rm.getTag().getName(),
+							rm.getValue().apply(
+									VdmRuntime.getExpressionEvaluator(), ctxt),
+							!f.getEqualityAbstraction());
 				}
 			}
 
 			return new RecordValue(r.type, fields, ctxt);
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
 	@Override
 	public Value caseANarrowExp(ANarrowExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		Value v = node.getTest().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		Value v = node.getTest().apply(VdmRuntime.getExpressionEvaluator(),
+				ctxt);
 
-		try
-		{
+		try {
 
-			if (node.getTypeName() != null)
-			{
+			if (node.getTypeName() != null) {
 
-				if (ctxt.assistantFactory.createPDefinitionAssistant().isTypeDefinition(node.getTypedef()))
-				{
+				if (ctxt.assistantFactory.createPDefinitionAssistant()
+						.isTypeDefinition(node.getTypedef())) {
 					// NB. we skip the DTC enabled check here
-					v = v.convertValueTo(ctxt.assistantFactory.createPDefinitionAssistant().getType(node.getTypedef()), ctxt);
-				} else if (v.isType(RecordValue.class))
-				{
+					v = v.convertValueTo(
+							ctxt.assistantFactory.createPDefinitionAssistant()
+									.getType(node.getTypedef()), ctxt);
+				} else if (v.isType(RecordValue.class)) {
 					v = v.recordValue(ctxt);
 				}
-			} else
-			{
+			} else {
 				// NB. we skip the DTC enabled check here
 				v = v.convertValueTo(node.getBasicType(), ctxt);
 			}
-		} catch (ValueException ex)
-		{
+		} catch (ValueException ex) {
 			VdmRuntimeError.abort(node.getLocation(), ex);
 		}
 
@@ -1184,40 +1116,38 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseANewExp(ANewExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		node.getClassName().getLocation().hit();
 
-		try
-		{
+		try {
 			ValueList argvals = new ValueList();
 
-			for (PExp arg : node.getArgs())
-			{
+			for (PExp arg : node.getArgs()) {
 				argvals.add(arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt));
 			}
 
-			ObjectValue objval = ctxt.assistantFactory.createSClassDefinitionAssistant().newInstance(node.getClassdef(), node.getCtorDefinition(), argvals, ctxt);
+			ObjectValue objval = ctxt.assistantFactory
+					.createSClassDefinitionAssistant().newInstance(
+							node.getClassdef(), node.getCtorDefinition(),
+							argvals, ctxt);
 
-			if (objval.invlistener != null)
-			{
+			if (objval.invlistener != null) {
 				// Check the initial values of the object's fields
 				objval.invlistener.doInvariantChecks = true;
-				objval.invlistener.changedValue(node.getLocation(), objval, ctxt);
+				objval.invlistener.changedValue(node.getLocation(), objval,
+						ctxt);
 			}
 
 			return objval;
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
 	@Override
 	public Value caseANilExp(ANilExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
 		return new NilValue();
@@ -1225,25 +1155,23 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node, Context ctxt)
-			throws AnalysisException
-	{
-		return evalANotYetSpecified(node, node.getLocation(), 4024, "expression", ctxt);
+			throws AnalysisException {
+		return evalANotYetSpecified(node, node.getLocation(), 4024,
+				"expression", ctxt);
 	}
 
 	protected Value evalANotYetSpecified(INode node, ILexLocation location,
 			int abortNumber, String type, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(location, ctxt);
 
-		return VdmRuntimeError.abort(location, abortNumber, "'not yet specified' "
-				+ type + " reached", ctxt);
+		return VdmRuntimeError.abort(location, abortNumber,
+				"'not yet specified' " + type + " reached", ctxt);
 	}
 
 	@Override
 	public Value caseAPostOpExp(APostOpExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		// No break check here, as we want to start in the expression
 
 		// The postcondition function arguments are the function args, the
@@ -1251,27 +1179,25 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		// We find the Sigma record and expand its contents to give additional
 		// values in ctxt for each field. Ditto with Sigma~.
 
-		try
-		{
-			//ctx.setContext(ctxt);
-			//node.apply(ctx);
-			if (node.getState() != null)
-			{
-				RecordValue sigma = ctxt.lookup(node.getState().getName()).recordValue(ctxt);
+		try {
+			if (node.getState() != null) {
+				RecordValue sigma = ctxt.lookup(node.getState().getName())
+						.recordValue(ctxt);
 
-				for (AFieldField field : node.getState().getFields())
-				{
-					ctxt.put(field.getTagname(), sigma.fieldmap.get(field.getTag()));
+				for (AFieldField field : node.getState().getFields()) {
+					ctxt.put(field.getTagname(),
+							sigma.fieldmap.get(field.getTag()));
 				}
 
-				RecordValue oldsigma = ctxt.lookup(node.getState().getName().getOldName()).recordValue(ctxt);
+				RecordValue oldsigma = ctxt.lookup(
+						node.getState().getName().getOldName()).recordValue(
+						ctxt);
 
-				for (AFieldField field : node.getState().getFields())
-				{
-					ctxt.put(field.getTagname().getOldName(), oldsigma.fieldmap.get(field.getTag()));
+				for (AFieldField field : node.getState().getFields()) {
+					ctxt.put(field.getTagname().getOldName(),
+							oldsigma.fieldmap.get(field.getTag()));
 				}
-			} else if (ctxt instanceof ObjectContext)
-			{
+			} else if (ctxt instanceof ObjectContext) {
 				ObjectContext octxt = (ObjectContext) ctxt;
 				ILexNameToken selfname = node.getOpname().getSelfName();
 				ILexNameToken oldselfname = selfname.getOldName();
@@ -1282,62 +1208,75 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				// If the opname was defined in a superclass of "self", we have
 				// to discover the subobject to populate its state variables.
 
-				ObjectValue subself = ctxt.assistantFactory.createAPostOpExpAssistant().findObject(node, node.getOpname().getModule(), self);
+				ObjectValue subself = ctxt.assistantFactory
+						.createAPostOpExpAssistant().findObject(node,
+								node.getOpname().getModule(), self);
 
-				if (self.superobjects.size() == 0)
-				{
+				if (self.superobjects.size() == 0) {
 					subself = self;
 				}
 
-				if (subself == null)
-				{
-					VdmRuntimeError.abort(node.getLocation(), 4026, "Cannot create post_op environment", ctxt);
+				if (subself == null) {
+					VdmRuntimeError.abort(node.getLocation(), 4026,
+							"Cannot create post_op environment", ctxt);
 				}
 
 				// Create an object context using the "self" passed in, rather
 				// than the self that we're being called from, assuming they
 				// are different.
 
-				if (subself != octxt.self)
-				{
-					ObjectContext selfctxt = new ObjectContext(ctxt.assistantFactory, ctxt.location, "postcondition's object", ctxt, subself);
+				if (subself != octxt.self) {
+					ObjectContext selfctxt = new ObjectContext(
+							ctxt.assistantFactory, ctxt.location,
+							"postcondition's object", ctxt, subself);
 
 					selfctxt.putAll(ctxt); // To add "RESULT" and args.
 					ctxt = selfctxt;
 				}
 
-				ctxt.assistantFactory.createAPostOpExpAssistant().populate(node, ctxt, subself.type.getName().getName(), oldvalues); // To
-																																		// add
-																																		// old
-																																		// "~"
+				ctxt.assistantFactory.createAPostOpExpAssistant()
+						.populate(node, ctxt, subself.type.getName().getName(),
+								oldvalues); // To
+											// add
+											// old
+											// "~"
 				// values
-			} else if (ctxt instanceof ClassContext)
-			{
+			} else if (ctxt instanceof ClassContext) {
 				ILexNameToken selfname = node.getOpname().getSelfName();
 				ILexNameToken oldselfname = selfname.getOldName();
 				ValueMap oldvalues = ctxt.lookup(oldselfname).mapValue(ctxt);
-				ctxt.assistantFactory.createAPostOpExpAssistant().populate(node, ctxt, node.getOpname().getModule(), oldvalues);
+				ctxt.assistantFactory.createAPostOpExpAssistant().populate(
+						node, ctxt, node.getOpname().getModule(), oldvalues);
 			}
 
-			// If there are errs clauses, and there is a precondition defined, then
+			// If there are errs clauses, and there is a precondition defined,
+			// then
 			// we evaluate that as well as the postcondition.
 
 			boolean result = (node.getErrors().isEmpty()
-					|| node.getPreexpression() == null || node.getPreexpression().apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt))
-					&& node.getPostexpression().apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
+					|| node.getPreexpression() == null || node
+					.getPreexpression()
+					.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+					.boolValue(ctxt))
+					&& node.getPostexpression()
+							.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+							.boolValue(ctxt);
 
 			node.setErrorLocation(node.getLocation());// FIXME not good
 
-			if (node.getErrors() != null)
-			{
-				for (AErrorCase err : node.getErrors())
-				{
-					boolean left = err.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
-					boolean right = err.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
+			if (node.getErrors() != null) {
+				for (AErrorCase err : node.getErrors()) {
+					boolean left = err.getLeft()
+							.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+							.boolValue(ctxt);
+					boolean right = err.getRight()
+							.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+							.boolValue(ctxt);
 
-					if (left && !right)
-					{
-						node.setErrorLocation(err.getLeft().getLocation());// FIXME not good
+					if (left && !right) {
+						node.setErrorLocation(err.getLeft().getLocation());// FIXME
+																			// not
+																			// good
 					}
 
 					result = result || left && right;
@@ -1345,34 +1284,29 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 
 			return new BooleanValue(result);
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
 	@Override
 	public Value caseAPreExp(APreExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		Value fv = node.getFunction().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		Value fv = node.getFunction().apply(
+				VdmRuntime.getExpressionEvaluator(), ctxt);
 
-		if (fv instanceof FunctionValue)
-		{
+		if (fv instanceof FunctionValue) {
 			FunctionValue tfv = (FunctionValue) fv;
 
-			while (true)
-			{
-				if (tfv instanceof CompFunctionValue)
-				{
+			while (true) {
+				if (tfv instanceof CompFunctionValue) {
 					tfv = ((CompFunctionValue) tfv).ff1;
 					continue;
 				}
 
-				if (tfv instanceof IterFunctionValue)
-				{
+				if (tfv instanceof IterFunctionValue) {
 					tfv = ((IterFunctionValue) tfv).function;
 					continue;
 				}
@@ -1382,27 +1316,23 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			FunctionValue pref = tfv.precondition;
 
-			if (pref == null)
-			{
+			if (pref == null) {
 				return new BooleanValue(true);
 			}
 
-			if (pref.type.getParameters().size() <= node.getArgs().size())
-			{
-				try
-				{
+			if (pref.type.getParameters().size() <= node.getArgs().size()) {
+				try {
 					ValueList argvals = new ValueList();
 					Iterator<PExp> aiter = node.getArgs().iterator();
 
 					for (@SuppressWarnings("unused")
-					PType t : pref.type.getParameters())
-					{
-						argvals.add(aiter.next().apply(VdmRuntime.getExpressionEvaluator(), ctxt));
+					PType t : pref.type.getParameters()) {
+						argvals.add(aiter.next().apply(
+								VdmRuntime.getExpressionEvaluator(), ctxt));
 					}
 
 					return pref.eval(node.getLocation(), argvals, ctxt);
-				} catch (ValueException e)
-				{
+				} catch (ValueException e) {
 					VdmRuntimeError.abort(node.getLocation(), e);
 				}
 			}
@@ -1415,34 +1345,30 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseAPreOpExp(APreOpExp node, Context ctxt)
-			throws AnalysisException
-	{
-		try
-		{
+			throws AnalysisException {
+		try {
 			node.apply(ctx, ctxt);
-			BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+			BreakpointManager.getBreakpoint(node).check(node.getLocation(),
+					ctxt);
 
 			// The precondition function arguments are the function args,
 			// plus the state (if any). These all exist in ctxt. We find the
 			// Sigma record and expand its contents to give additional
 			// values in ctxt for each field.
 
-			if (node.getState() != null)
-			{
-				try
-				{
-					RecordValue sigma = ctxt.lookup(node.getState().getName()).recordValue(ctxt);
+			if (node.getState() != null) {
+				try {
+					RecordValue sigma = ctxt.lookup(node.getState().getName())
+							.recordValue(ctxt);
 
-					for (AFieldField field : node.getState().getFields())
-					{
-						ctxt.put(field.getTagname(), sigma.fieldmap.get(field.getTag()));
+					for (AFieldField field : node.getState().getFields()) {
+						ctxt.put(field.getTagname(),
+								sigma.fieldmap.get(field.getTag()));
 					}
-				} catch (ValueException e)
-				{
+				} catch (ValueException e) {
 					VdmRuntimeError.abort(node.getLocation(), e);
 				}
-			} else if (ctxt instanceof ObjectContext)
-			{
+			} else if (ctxt instanceof ObjectContext) {
 				ObjectContext octxt = (ObjectContext) ctxt;
 				ILexNameToken selfname = node.getOpname().getSelfName();
 				ObjectValue self = octxt.lookup(selfname).objectValue(ctxt);
@@ -1450,45 +1376,47 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				// Create an object context using the "self" passed in, rather
 				// than the self that we're being called from.
 
-				ObjectContext selfctxt = new ObjectContext(ctxt.assistantFactory, ctxt.location, "precondition's object", ctxt, self);
+				ObjectContext selfctxt = new ObjectContext(
+						ctxt.assistantFactory, ctxt.location,
+						"precondition's object", ctxt, self);
 
 				selfctxt.putAll(ctxt); // To add "RESULT" and args.
 				ctxt = selfctxt;
 			}
 
-			boolean result = node.getExpression().apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
+			boolean result = node.getExpression()
+					.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+					.boolValue(ctxt);
 
-			if (node.getErrors() != null)
-			{
-				for (AErrorCase err : node.getErrors())
-				{
+			if (node.getErrors() != null) {
+				for (AErrorCase err : node.getErrors()) {
 					result = result
-							|| err.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
+							|| err.getLeft()
+									.apply(VdmRuntime.getExpressionEvaluator(),
+											ctxt).boolValue(ctxt);
 				}
 			}
-			
+
 			Value v = new BooleanValue(result);
-			ctx.add_eval(node.getLocation(), v.toString());
+			//ctx.add_eval(node.getLocation(), v.toString());
 			return v;
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
 	@Override
 	public Value caseASameBaseClassExp(ASameBaseClassExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		try
-		{
-			Value l = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
-			Value r = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		try {
+			Value l = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),
+					ctxt);
+			Value r = node.getRight().apply(
+					VdmRuntime.getExpressionEvaluator(), ctxt);
 
-			if (!l.isType(ObjectValue.class) || !r.isType(ObjectValue.class))
-			{
+			if (!l.isType(ObjectValue.class) || !r.isType(ObjectValue.class)) {
 				return new BooleanValue(false);
 			}
 
@@ -1498,34 +1426,30 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			PTypeList lbases = lv.getBaseTypes();
 			PTypeList rbases = rv.getBaseTypes();
 
-			for (PType ltype : lbases)
-			{
-				if (rbases.contains(ltype))
-				{
+			for (PType ltype : lbases) {
+				if (rbases.contains(ltype)) {
 					return new BooleanValue(true);
 				}
 			}
 
 			return new BooleanValue(false);
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
 	@Override
 	public Value caseASameClassExp(ASameClassExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		try
-		{
-			Value l = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
-			Value r = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		try {
+			Value l = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),
+					ctxt);
+			Value r = node.getRight().apply(
+					VdmRuntime.getExpressionEvaluator(), ctxt);
 
-			if (!l.isType(ObjectValue.class) || !r.isType(ObjectValue.class))
-			{
+			if (!l.isType(ObjectValue.class) || !r.isType(ObjectValue.class)) {
 				return new BooleanValue(false);
 			}
 
@@ -1533,8 +1457,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			ObjectValue rv = r.objectValue(ctxt);
 
 			return new BooleanValue(lv.type.equals(rv.type));
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
@@ -1545,45 +1468,49 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseASeqCompSeqExp(ASeqCompSeqExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		ValueList allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getSetBind(), ctxt);
+		ValueList allValues = ctxt.assistantFactory.createPBindAssistant()
+				.getBindValues(node.getSetBind(), ctxt);
 
 		ValueSet seq = new ValueSet(); // Bind variable values
 		ValueMap map = new ValueMap(); // Map bind values to output values
 
-		for (Value val : allValues)
-		{
-			try
-			{
-				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "seq comprehension", ctxt);
-				NameValuePairList nvpl = ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getSetBind().getPattern(), val, ctxt);
+		for (Value val : allValues) {
+			try {
+				Context evalContext = new Context(ctxt.assistantFactory,
+						node.getLocation(), "seq comprehension", ctxt);
+				NameValuePairList nvpl = ctxt.assistantFactory
+						.createPPatternAssistant().getNamedValues(
+								node.getSetBind().getPattern(), val, ctxt);
 				Value sortOn = nvpl.get(0).value;
 
-				if (map.get(sortOn) == null)
-				{
-					if (nvpl.size() != 1 || !sortOn.isNumeric())
-					{
-						VdmRuntimeError.abort(node.getLocation(), 4029, "Sequence comprehension bindings must be one numeric value", ctxt);
+				if (map.get(sortOn) == null) {
+					if (nvpl.size() != 1 || !sortOn.isNumeric()) {
+						VdmRuntimeError
+								.abort(node.getLocation(),
+										4029,
+										"Sequence comprehension bindings must be one numeric value",
+										ctxt);
 					}
 
 					evalContext.putList(nvpl);
 
 					if (node.getPredicate() == null
-							|| node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
-					{
-						Value out = node.getFirst().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
+							|| node.getPredicate()
+									.apply(VdmRuntime.getExpressionEvaluator(),
+											evalContext).boolValue(ctxt)) {
+						Value out = node.getFirst().apply(
+								VdmRuntime.getExpressionEvaluator(),
+								evalContext);
 						seq.add(sortOn);
 						map.put(sortOn, out);
 					}
 				}
-			} catch (ValueException e)
-			{
+			} catch (ValueException e) {
 				VdmRuntimeError.abort(node.getLocation(), e);
-			} catch (PatternMatchException e)
-			{
+			} catch (PatternMatchException e) {
 				// Ignore mismatches
 			}
 		}
@@ -1591,8 +1518,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		Collections.sort(seq); // Using compareTo
 		ValueList sorted = new ValueList();
 
-		for (Value bv : seq)
-		{
+		for (Value bv : seq) {
 			sorted.add(map.get(bv));
 		}
 
@@ -1601,14 +1527,12 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseASeqEnumSeqExp(ASeqEnumSeqExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
 		ValueList values = new ValueList();
 
-		for (PExp e : node.getMembers())
-		{
+		for (PExp e : node.getMembers()) {
 			values.add(e.apply(VdmRuntime.getExpressionEvaluator(), ctxt));
 		}
 
@@ -1621,20 +1545,19 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	/*
 	 * (non-Javadoc) Set start
+	 * 
 	 * @see
-	 * org.overture.ast.analysis.QuestionAnswerAdaptor#caseAStateInitExp(org.overture.ast.expressions.AStateInitExp,
-	 * java.lang.Object)
+	 * org.overture.ast.analysis.QuestionAnswerAdaptor#caseAStateInitExp(org
+	 * .overture.ast.expressions.AStateInitExp, java.lang.Object)
 	 */
 	@Override
 	public Value caseASetEnumSetExp(ASetEnumSetExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
 		ValueSet values = new ValueSet();
 
-		for (PExp e : node.getMembers())
-		{
+		for (PExp e : node.getMembers()) {
 			values.add(e.apply(VdmRuntime.getExpressionEvaluator(), ctxt));
 		}
 
@@ -1643,21 +1566,18 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseASetCompSetExp(ASetCompSetExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		ValueSet set = new ValueSet();
 
-		try
-		{
+		try {
 			QuantifierList quantifiers = new QuantifierList();
 
-			for (PMultipleBind mb : node.getBindings())
-			{
-				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
+			for (PMultipleBind mb : node.getBindings()) {
+				ValueList bvals = ctxt.assistantFactory
+						.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
-				for (PPattern p : mb.getPlist())
-				{
+				for (PPattern p : mb.getPlist()) {
 					Quantifier q = new Quantifier(p, bvals);
 					quantifiers.add(q);
 				}
@@ -1665,23 +1585,19 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			quantifiers.init(ctxt, false);
 
-			while (quantifiers.hasNext())
-			{
-				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "set comprehension", ctxt);
+			while (quantifiers.hasNext()) {
+				Context evalContext = new Context(ctxt.assistantFactory,
+						node.getLocation(), "set comprehension", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
-				for (NameValuePair nvp : nvpl)
-				{
+				for (NameValuePair nvp : nvpl) {
 					Value v = evalContext.get(nvp.name);
 
-					if (v == null)
-					{
+					if (v == null) {
 						evalContext.put(nvp.name, nvp.value);
-					} else
-					{
-						if (!v.equals(nvp.value))
-						{
+					} else {
+						if (!v.equals(nvp.value)) {
 							matches = false;
 							break; // This quantifier set does not match
 						}
@@ -1689,13 +1605,15 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 
 				if (matches
-						&& (node.getPredicate() == null || node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
-				{
-					set.add(node.getFirst().apply(VdmRuntime.getExpressionEvaluator(), evalContext));
+						&& (node.getPredicate() == null || node
+								.getPredicate()
+								.apply(VdmRuntime.getExpressionEvaluator(),
+										evalContext).boolValue(ctxt))) {
+					set.add(node.getFirst().apply(
+							VdmRuntime.getExpressionEvaluator(), evalContext));
 				}
 			}
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 
@@ -1704,52 +1622,49 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseASetRangeSetExp(ASetRangeSetExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		try
-		{
-			long from = (long) Math.ceil(node.getFirst().apply(VdmRuntime.getExpressionEvaluator(), ctxt).realValue(ctxt));
-			long to = (long) Math.floor(node.getLast().apply(VdmRuntime.getExpressionEvaluator(), ctxt).realValue(ctxt));
+		try {
+			long from = (long) Math.ceil(node.getFirst()
+					.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+					.realValue(ctxt));
+			long to = (long) Math.floor(node.getLast()
+					.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+					.realValue(ctxt));
 			ValueSet set = new ValueSet();
 
-			for (long i = from; i <= to; i++)
-			{
+			for (long i = from; i <= to; i++) {
 				set.add(new IntegerValue(i));
 			}
 
 			return new SetValue(set);
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
 	@Override
 	public Value caseAStateInitExp(AStateInitExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		try
-		{
+		try {
 			FunctionValue invariant = VdmRuntime.getNodeState(node.getState()).invfunc;
 
 			// Note, the function just checks whether the argument passed would
 			// violate the state invariant (if any). It doesn't initialize the
 			// state itself. This is done in State.initialize().
 
-			if (invariant != null)
-			{
-				AIdentifierPattern argp = (AIdentifierPattern) node.getState().getInitPattern();
+			if (invariant != null) {
+				AIdentifierPattern argp = (AIdentifierPattern) node.getState()
+						.getInitPattern();
 				RecordValue rv = (RecordValue) ctxt.lookup(argp.getName());
 				return invariant.eval(node.getLocation(), rv, ctxt);
 			}
 
 			return new BooleanValue(true);
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
@@ -1757,90 +1672,83 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	@Override
 	public Value caseASubclassResponsibilityExp(
 			ASubclassResponsibilityExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return VdmRuntimeError.abort(node.getLocation(), 4032, "'is subclass responsibility' expression reached", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(), 4032,
+				"'is subclass responsibility' expression reached", ctxt);
 	}
 
 	@Override
 	public Value caseASubseqExp(ASubseqExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		try
-		{
-			ValueList list = node.getSeq().apply(VdmRuntime.getExpressionEvaluator(), ctxt).seqValue(ctxt);
-			double fr = node.getFrom().apply(VdmRuntime.getExpressionEvaluator(), ctxt).realValue(ctxt);
-			double tr = node.getTo().apply(VdmRuntime.getExpressionEvaluator(), ctxt).realValue(ctxt);
+		try {
+			ValueList list = node.getSeq()
+					.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+					.seqValue(ctxt);
+			double fr = node.getFrom()
+					.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+					.realValue(ctxt);
+			double tr = node.getTo()
+					.apply(VdmRuntime.getExpressionEvaluator(), ctxt)
+					.realValue(ctxt);
 			int fi = (int) Math.ceil(fr);
 			int ti = (int) Math.floor(tr);
 
-			if (fi < 1)
-			{
+			if (fi < 1) {
 				fi = 1;
 			}
 
-			if (ti > list.size())
-			{
+			if (ti > list.size()) {
 				ti = list.size();
 			}
 
 			ValueList result = new ValueList();
 
-			if (fi <= ti)
-			{
+			if (fi <= ti) {
 				result.addAll(list.subList(fi - 1, ti));
 			}
 
 			return new SeqValue(result);
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
 	@Override
 	public Value caseAThreadIdExp(AThreadIdExp node, Context ctxt)
-			throws AnalysisException
-	{
-		try
-		{
+			throws AnalysisException {
+		try {
 			node.getLocation().hit();
 			return new NaturalValue(ctxt.threadState.threadId);
-		} catch (Exception e)
-		{
-			return VdmRuntimeError.abort(node.getLocation(), 4065, e.getMessage(), ctxt);
+		} catch (Exception e) {
+			return VdmRuntimeError.abort(node.getLocation(), 4065,
+					e.getMessage(), ctxt);
 		}
 	}
 
 	@Override
 	public Value caseATimeExp(ATimeExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		node.getLocation().hit();
 
-		try
-		{
+		try {
 			return new NaturalValue(SystemClock.getWallTime());
-		} catch (Exception e)
-		{
-			return VdmRuntimeError.abort(node.getLocation(), 4145, "Time: "
-					+ e.getMessage(), ctxt);
+		} catch (Exception e) {
+			return VdmRuntimeError.abort(node.getLocation(), 4145,
+					"Time: " + e.getMessage(), ctxt);
 		}
 	}
 
 	@Override
 	public Value caseATupleExp(ATupleExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
 		ValueList argvals = new ValueList();
 
-		for (PExp arg : node.getArgs())
-		{
+		for (PExp arg : node.getArgs()) {
 			argvals.add(arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt));
 		}
 
@@ -1849,8 +1757,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseAUndefinedExp(AUndefinedExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
 		return new UndefinedValue();
@@ -1858,11 +1765,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseAVariableExp(AVariableExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		// Experimental hood added for DESTECS
-		if (Settings.dialect == Dialect.VDM_RT)
-		{
+		if (Settings.dialect == Dialect.VDM_RT) {
 			SharedStateListner.beforeVariableReadDuration(node);
 		}
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
@@ -1873,56 +1778,52 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	@Override
 	public Value caseASelfExp(ASelfExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		node.getLocation().hit();
 		return ctxt.lookup(node.getName());
 	}
 
 	@Override
 	public Value caseAIsOfBaseClassExp(AIsOfBaseClassExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		node.getBaseClass().getLocation().hit();
 
-		try
-		{
-			Value v = node.getExp().apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
+		try {
+			Value v = node.getExp()
+					.apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
 
-			if (!(v instanceof ObjectValue))
-			{
+			if (!(v instanceof ObjectValue)) {
 				return new BooleanValue(false);
 			}
 
 			ObjectValue ov = v.objectValue(ctxt);
-			return new BooleanValue(ctxt.assistantFactory.createAIsOfBaseClassExpAssistant().search(node, ov));
-		} catch (ValueException e)
-		{
+			return new BooleanValue(ctxt.assistantFactory
+					.createAIsOfBaseClassExpAssistant().search(node, ov));
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
 	@Override
 	public Value caseAIsOfClassExp(AIsOfClassExp node, Context ctxt)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		node.getClassName().getLocation().hit();
 
-		try
-		{
-			Value v = node.getExp().apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
+		try {
+			Value v = node.getExp()
+					.apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
 
-			if (!(v instanceof ObjectValue))
-			{
+			if (!(v instanceof ObjectValue)) {
 				return new BooleanValue(false);
 			}
 
 			ObjectValue ov = v.objectValue(ctxt);
-			return new BooleanValue(ctxt.assistantFactory.createAIsOfClassExpAssistant().isOfClass(ov, node.getClassName().getName()));
-		} catch (ValueException e)
-		{
+			return new BooleanValue(ctxt.assistantFactory
+					.createAIsOfClassExpAssistant().isOfClass(ov,
+							node.getClassName().getName()));
+		} catch (ValueException e) {
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}

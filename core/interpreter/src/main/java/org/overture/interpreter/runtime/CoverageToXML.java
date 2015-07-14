@@ -155,8 +155,6 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			PExp expression = node.getExp();
 			expression.apply(this, ctx);
 			currentElement = not;
-		} else {
-			currentElement = xml_nodes.get(local);
 		}
 		
 	}
@@ -190,10 +188,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = op;
 			right.apply(this, ctx);
 			currentElement = op;
-		} else {
-			currentElement = xml_nodes.get(local);
-			currentElement = xml_nodes.get(local);
-		}
+		} 
 	}
 
 	@Override
@@ -213,10 +208,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = op;
 			right.apply(this, ctx);
 			currentElement = op;
-		} else {
-			currentElement = xml_nodes.get(local);
-			currentElement = xml_nodes.get(local);
-		}
+		} 
 	}
 
 	
@@ -237,9 +229,6 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = op;
 			right.apply(this, ctx);
 			currentElement = op;
-		} else {
-			currentElement = xml_nodes.get(local);
-			currentElement = xml_nodes.get(local);
 		}
 	}
 
@@ -260,10 +249,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = op;
 			right.apply(this, ctx);
 			currentElement = op;
-		} else {
-			currentElement = xml_nodes.get(local);
-			currentElement = xml_nodes.get(local);
-		}
+		} 
 	}
 
 	@Override
@@ -282,16 +268,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			xml_nodes.put(local, if_statement);
 			exp.apply(this, ctx);
 			currentElement = expression;
-		} else {
-
-			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
-					.getLength(); i++) {
-				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
-						.equals("expression"))
-					currentElement = (Element) xml_nodes.get(local)
-							.getChildNodes().item(i);
-			}
-		}
+		} 
 	}
 
 	@Override
@@ -400,7 +377,9 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 	public void caseAExists1Exp(AExists1Exp node, Context ctx)
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
-		this.loop_iteration = (int) node.getPredicate().getLocation().getHits();
+		int node_hits = (int) node.getLocation().getHits();
+		int inner_exp_hits =(int) node.getPredicate().getLocation().getHits();
+		this.loop_iteration = inner_exp_hits + node_hits;
 
 		if (!xml_nodes.containsKey(local)) {
 			Element exists = doc.createElement("exists1");
@@ -412,23 +391,16 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = expression;
 			node.getPredicate().apply(this, ctx);
 			currentElement = expression;
-		} else {
-			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
-					.getLength(); i++) {
-				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
-						.equals("expression"))
-					currentElement = (Element) xml_nodes.get(local)
-							.getChildNodes().item(i);
-			}
-		}
-
+		} 
 	}
 
 	@Override
 	public void caseAExistsExp(AExistsExp node, Context ctx)
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
-		this.loop_iteration = (int) node.getPredicate().getLocation().getHits();
+		int node_hits = (int) node.getLocation().getHits();
+		int inner_exp_hits =(int) node.getPredicate().getLocation().getHits();
+		this.loop_iteration = inner_exp_hits + node_hits;
 
 		if (!xml_nodes.containsKey(local)) {
 			Element exists = doc.createElement("exists");
@@ -440,14 +412,6 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = expression;
 			node.getPredicate().apply(this, ctx);
 			currentElement = expression;
-		} else {
-			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
-					.getLength(); i++) {
-				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
-						.equals("expression"))
-					currentElement = (Element) xml_nodes.get(local)
-							.getChildNodes().item(i);
-			}
 		}
 	}
 
@@ -468,16 +432,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			exp.apply(this, ctx);
 			rootElement.appendChild(if_statement);
 			xml_nodes.put(local, if_statement);
-		} else {
-			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
-					.getLength(); i++) {
-				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
-						.equals("expression"))
-					currentElement = (Element) xml_nodes.get(local)
-							.getChildNodes().item(i);
-			}
-			exp.apply(this, ctx);
-		}
+		} 
+		
 	}
 
 	@Override
@@ -497,23 +453,14 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			exp.apply(this, ctx);
 			rootElement.appendChild(if_statement);
 			xml_nodes.put(local, if_statement);
-		} else {
-			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
-					.getLength(); i++) {
-				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
-						.equals("expression"))
-					currentElement = (Element) xml_nodes.get(local)
-							.getChildNodes().item(i);
-			}
-			exp.apply(this, ctx);
-		}
+		} 
 	}
 
 	@Override
 	public void caseAForAllStm(AForAllStm node, Context ctx)
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
-		this.iteration = (int) node.getLocation().getHits();
+		this.iteration = (int) node.getStatement().getLocation().getHits()+(int)node.getLocation().getHits();
 		if (!xml_nodes.containsKey(local)) {
 			this.iteration = (int) local.getHits();
 
@@ -524,25 +471,16 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = expression;
 			rootElement.appendChild(forall_statement);
 			xml_nodes.put(local, forall_statement);
-		} else {
-
-			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
-					.getLength(); i++) {
-				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
-						.equals("expression"))
-					currentElement = (Element) xml_nodes.get(local)
-							.getChildNodes().item(i);
-
-			}
-		}
-		node.getStatement().apply(this, ctx);
+		} 
 	}
 
 	@Override
 	public void caseAForAllExp(AForAllExp node, Context ctx)
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
-		this.loop_iteration = (int) node.getPredicate().getLocation().getHits();
+		int node_hits = (int) node.getLocation().getHits();
+		int inner_exp_hits =(int) node.getPredicate().getLocation().getHits();
+		this.loop_iteration = inner_exp_hits + node_hits;
 		if (!xml_nodes.containsKey(local)) {
 
 			Element exists = doc.createElement("for_all_expression");
@@ -554,15 +492,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = expression;
 			node.getPredicate().apply(this,ctx);
 			currentElement = expression;
-		} else {
-			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
-					.getLength(); i++) {
-				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
-						.equals("expression"))
-					currentElement = (Element) xml_nodes.get(local)
-							.getChildNodes().item(i);
-			}
-		}
+		} 
 	}
 
 	@Override
@@ -579,16 +509,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			rootElement.appendChild(while_statement);
 			xml_nodes.put(local, while_statement);
 			node.getExp().apply(this,ctx);
-		} else {
-			this.iteration=(int) node.getExp().getLocation().getHits();
-			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
-					.getLength(); i++) {
-				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
-						.equals("expression"))
-					currentElement = (Element) xml_nodes.get(local)
-							.getChildNodes().item(i);
-			}
-		}
+		} 
 
 	}
 	
@@ -609,16 +530,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			exp.apply(this, ctx);
 			rootElement.appendChild(if_statement);
 			xml_nodes.put(local, if_statement);
-		} else {
-			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
-					.getLength(); i++) {
-				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
-						.equals("expression"))
-					currentElement = (Element) xml_nodes.get(local)
-							.getChildNodes().item(i);
-			}
-			exp.apply(this, ctx);
-		}
+		} 
 	}
 
 	@Override
@@ -638,16 +550,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			exp.apply(this, ctx);
 			rootElement.appendChild(if_statement);
 			xml_nodes.put(local, if_statement);
-		} else {
-			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
-					.getLength(); i++) {
-				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
-						.equals("expression"))
-					currentElement = (Element) xml_nodes.get(local)
-							.getChildNodes().item(i);
-			}
-			exp.apply(this, ctx);
-		}
+		} 
 	}
 
 	@Override
@@ -666,15 +569,6 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			exp.apply(this, ctx);
 			rootElement.appendChild(if_statement);
 			xml_nodes.put(local, if_statement);
-		} else {
-			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
-					.getLength(); i++) {
-				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
-						.equals("expression"))
-					currentElement = (Element) xml_nodes.get(local)
-							.getChildNodes().item(i);
-			}
-			exp.apply(this, ctx);
 		}
 	}
 

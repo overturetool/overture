@@ -146,7 +146,6 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				return node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 			}
 			Value v = new BooleanValue(true);
-			ctx.add_eval(node.getLocation(), v.toString());
 			return v;
 		} catch (ValueException e)
 		{
@@ -317,7 +316,6 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
-
 		Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
 		if (lv.isUndefined())

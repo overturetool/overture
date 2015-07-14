@@ -32,13 +32,27 @@ public class TestCoverageOperators extends BaseTestCase{
         InterpreterUtil.interpret(Dialect.VDM_SL, "operators(false,true,true)", new File("src/test/resources/coverage/test_operators.vdmsl".replace('/', File.separatorChar)), true);
         
         Interpreter interpreter = Interpreter.getInstance();
-        File coverageFolder = new File("src/test/target/vdmpp-coverage/operators".replace('/', File.separatorChar));
+        File coverageFolder = new File("src/test/target/vdmsl-coverage/operators".replace('/', File.separatorChar));
         coverageFolder.mkdirs();
         DBGPReaderV2.writeMCDCCoverage(interpreter, coverageFolder);
         
         HashMap<String, String> queries = new HashMap<String, String>();
         queries.put("count(//if_statement)","1");
-        assertQueries("src/test/target/vdmpp-coverage/operators/test_operators.vdmsl.xml",queries);
+        assertQueries("src/test/target/vdmsl-coverage/operators/test_operators.vdmsl.xml",queries);
+    }
+	
+	public void test2() throws Exception {
+        Settings.release = Release.VDM_10;
+        Settings.dialect = Dialect.VDM_SL;
+        InterpreterUtil.interpret(Dialect.VDM_SL, "TestEqualsOP()", new File("src/test/resources/coverage/test_equalsoperator.vdmsl".replace('/', File.separatorChar)), true);
+        
+        Interpreter interpreter = Interpreter.getInstance();
+        File coverageFolder = new File("src/test/target/vdmsl-coverage/operators".replace('/', File.separatorChar));
+        coverageFolder.mkdirs();
+        DBGPReaderV2.writeMCDCCoverage(interpreter, coverageFolder);
+        
+        HashMap<String, String> queries = new HashMap<String, String>();
+        //assertQueries("src/test/target/vdmsl-coverage/operators/test_equalsoperator.vdmsl.xml",queries);
     }
     
     public void assertQueries(String file_path, HashMap<String, String> queries){
