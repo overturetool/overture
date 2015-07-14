@@ -265,7 +265,8 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		boolean alreadyFound = false;
 
 		try
-		{
+		{	node.apply(ctx,ctxt);
+		ctx.loop=true;
 			allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getBind(), ctxt);
 		} catch (ValueException e)
 		{
@@ -278,12 +279,18 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			{
 				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "exists1", ctxt);
 				evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getBind().getPattern(), val, ctxt));
-
-				if (node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
-				{
+				boolean result = node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt);
+				ctx.loop_iteration= (int) node.getPredicate().getLocation().getHits();
+				if (result)
+				{ 
 					if (alreadyFound)
 					{
-						return new BooleanValue(false);
+						Value v = new BooleanValue(false);
+						ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits()-1;
+						ctx.add_eval(node.getLocation(), v.toString());
+						ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
+						ctx.loop=false;
+						return v;
 					}
 
 					alreadyFound = true;
@@ -296,8 +303,12 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				// Ignore pattern mismatches
 			}
 		}
-
-		return new BooleanValue(alreadyFound);
+		Value v2 = new BooleanValue(alreadyFound);
+		ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits()-1;
+		ctx.add_eval(node.getLocation(), v2.toString());
+		ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
+		ctx.loop=false;
+		return v2;
 	}
 
 	@Override
@@ -322,7 +333,8 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 
 			quantifiers.init(ctxt, true);
-
+			node.apply(ctx,ctxt);
+			ctx.loop = true;
 			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "exists", ctxt);
@@ -345,19 +357,29 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 						}
 					}
 				}
-
+				boolean result = node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt);
+				ctx.loop_iteration++;
 				if (matches
-						&& node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
+						&& result)
 				{
-					return new BooleanValue(true);
+					Value v = new BooleanValue(true);
+					ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits()-1;
+					ctx.add_eval(node.getLocation(), v.toString());
+					ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
+					ctx.loop=false;
+					return v;
 				}
 			}
 		} catch (ValueException e)
 		{
 			VdmRuntimeError.abort(node.getLocation(), e);
 		}
-
-		return new BooleanValue(false);
+		Value v2 = new BooleanValue(false);
+		ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits()-1;
+		ctx.add_eval(node.getLocation(), v2.toString());
+		ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
+		ctx.loop=false;
+		return v2;
 	}
 
 	@Override
@@ -404,7 +426,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	@Override
 	public Value caseAForAllExp(AForAllExp node, Context ctxt)
 			throws AnalysisException
-	{
+	{ 
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
 		try
@@ -424,6 +446,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 
 			quantifiers.init(ctxt, false);
+			ctx.loop= true;
 			node.apply(ctx, ctxt);
 			while (quantifiers.hasNext())
 			{
@@ -448,20 +471,29 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 						}
 					}
 				}
+				boolean result = !node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt);
+				ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
 				if (matches
-						&& !node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
+						&& result)
 				{
 					Value v = new BooleanValue(false);
+					ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits()-1;
 					ctx.add_eval(node.getLocation(), v.toString());
+					ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
+					ctx.loop=false;
 					return v;
 				}
+				
 			}
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 		Value v2 = new BooleanValue(true);
+		ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits()-1;
 		ctx.add_eval(node.getLocation(), v2.toString());
+		ctx.loop_iteration = (int) node.getPredicate().getLocation().getHits();
+		ctx.loop=false;
 		return v2;
 	}
 
@@ -1387,8 +1419,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	{
 		try
 		{
-			//ctx.setContext(ctxt);
-			//node.apply(ctx);
+			node.apply(ctx, ctxt);
 			BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
 			// The precondition function arguments are the function args,
@@ -1435,8 +1466,10 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 							|| err.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
 				}
 			}
-
-			return new BooleanValue(result);
+			
+			Value v = new BooleanValue(result);
+			ctx.add_eval(node.getLocation(), v.toString());
+			return v;
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);

@@ -35,6 +35,8 @@ import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
+import org.overture.ast.expressions.APostOpExp;
+import org.overture.ast.expressions.APreOpExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
@@ -53,6 +55,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 	private Element rootElement;
 	private Element currentElement;
 	public int iteration;
+	public int loop_iteration;
+	public boolean loop;
 	private HashMap<ILexLocation, Element> xml_nodes;
 
 	public CoverageToXML() {
@@ -148,20 +152,22 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement.appendChild(not);
 			currentElement = not;
 			xml_nodes.put(local, not);
+			PExp expression = node.getExp();
+			expression.apply(this, ctx);
+			currentElement = not;
 		} else {
 			currentElement = xml_nodes.get(local);
 		}
-		PExp expression = node.getExp();
-		expression.apply(this, ctx);
+		
 	}
 
 
 	public void add_eval(ILexLocation local, String value) {
 		if (xml_nodes.containsKey(local) && (value.equals("true") || value.equals("false"))) {
-			
 			Element eval = doc.createElement("evaluation");
-			eval.setAttribute("n", Integer.toString(iteration));
 			eval.setTextContent(value);
+			if(loop)eval.setAttribute("n", Integer.toString(loop_iteration));
+			else eval.setAttribute("n", Integer.toString(iteration));
 			xml_nodes.get(local).appendChild(eval);
 		}
 	}
@@ -183,11 +189,10 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			left.apply(this, ctx);
 			currentElement = op;
 			right.apply(this, ctx);
+			currentElement = op;
 		} else {
 			currentElement = xml_nodes.get(local);
-			left.apply(this, ctx);
 			currentElement = xml_nodes.get(local);
-			right.apply(this, ctx);
 		}
 	}
 
@@ -207,11 +212,10 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			left.apply(this, ctx);
 			currentElement = op;
 			right.apply(this, ctx);
+			currentElement = op;
 		} else {
 			currentElement = xml_nodes.get(local);
-			left.apply(this, ctx);
 			currentElement = xml_nodes.get(local);
-			right.apply(this, ctx);
 		}
 	}
 
@@ -232,11 +236,10 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			left.apply(this, ctx);
 			currentElement = op;
 			right.apply(this, ctx);
+			currentElement = op;
 		} else {
 			currentElement = xml_nodes.get(local);
-			left.apply(this, ctx);
 			currentElement = xml_nodes.get(local);
-			right.apply(this, ctx);
 		}
 	}
 
@@ -256,18 +259,17 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			left.apply(this, ctx);
 			currentElement = op;
 			right.apply(this, ctx);
+			currentElement = op;
 		} else {
 			currentElement = xml_nodes.get(local);
-			left.apply(this, ctx);
 			currentElement = xml_nodes.get(local);
-			right.apply(this, ctx);
 		}
 	}
 
 	@Override
 	public void caseAIfStm(AIfStm node, Context ctx) throws AnalysisException {
 		ILexLocation local = node.getLocation();
-		this.iteration = (int) local.getHits();
+		this.iteration = (int) node.getIfExp().getLocation().getHits();
 		PExp exp = node.getIfExp();
 
 		if (!xml_nodes.containsKey(local)) {
@@ -279,6 +281,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			rootElement.appendChild(if_statement);
 			xml_nodes.put(local, if_statement);
 			exp.apply(this, ctx);
+			currentElement = expression;
 		} else {
 
 			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
@@ -288,7 +291,6 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 					currentElement = (Element) xml_nodes.get(local)
 							.getChildNodes().item(i);
 			}
-			exp.apply(this, ctx);
 		}
 	}
 
@@ -398,7 +400,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 	public void caseAExists1Exp(AExists1Exp node, Context ctx)
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
-		
+		this.loop_iteration = (int) node.getPredicate().getLocation().getHits();
 
 		if (!xml_nodes.containsKey(local)) {
 			Element exists = doc.createElement("exists1");
@@ -406,7 +408,9 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			Element expression = doc.createElement("expression");
 			exists.appendChild(expression);
 			xml_nodes.put(local, exists);
-			currentElement.appendChild(exists);
+			rootElement.appendChild(exists);
+			currentElement = expression;
+			node.getPredicate().apply(this, ctx);
 			currentElement = expression;
 		} else {
 			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
@@ -424,13 +428,17 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 	public void caseAExistsExp(AExistsExp node, Context ctx)
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
-		
+		this.loop_iteration = (int) node.getPredicate().getLocation().getHits();
+
 		if (!xml_nodes.containsKey(local)) {
 			Element exists = doc.createElement("exists");
 			fill_source_file_location(exists, node.getLocation());
 			Element expression = doc.createElement("expression");
 			exists.appendChild(expression);
-			currentElement.appendChild(exists);
+			xml_nodes.put(local, exists);
+			rootElement.appendChild(exists);
+			currentElement = expression;
+			node.getPredicate().apply(this, ctx);
 			currentElement = expression;
 		} else {
 			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
@@ -447,7 +455,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 	public void caseAElseIfStm(AElseIfStm node, Context ctx)
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
-		this.iteration = (int) local.getHits();
+		this.iteration = (int) node.getElseIf().getLocation().getHits();
 		PExp exp = node.getElseIf();
 
 		if (!xml_nodes.containsKey(local)) {
@@ -476,7 +484,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 	public void caseAElseIfExp(AElseIfExp node, Context ctx)
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
-		this.iteration = (int) local.getHits();
+		this.iteration = (int) node.getElseIf().getLocation().getHits();
 		PExp exp = node.getElseIf();
 
 		if (!xml_nodes.containsKey(local)) {
@@ -505,6 +513,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 	public void caseAForAllStm(AForAllStm node, Context ctx)
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
+		this.iteration = (int) node.getLocation().getHits();
 		if (!xml_nodes.containsKey(local)) {
 			this.iteration = (int) local.getHits();
 
@@ -533,7 +542,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 	public void caseAForAllExp(AForAllExp node, Context ctx)
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
-		this.iteration = (int) local.getHits();
+		this.loop_iteration = (int) node.getPredicate().getLocation().getHits();
 		if (!xml_nodes.containsKey(local)) {
 
 			Element exists = doc.createElement("for_all_expression");
@@ -541,9 +550,10 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			Element expression = doc.createElement("expression");
 			exists.appendChild(expression);
 			xml_nodes.put(local, exists);
-			currentElement.appendChild(exists);
+			rootElement.appendChild(exists);
 			currentElement = expression;
 			node.getPredicate().apply(this,ctx);
+			currentElement = expression;
 		} else {
 			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
 					.getLength(); i++) {
@@ -552,7 +562,6 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 					currentElement = (Element) xml_nodes.get(local)
 							.getChildNodes().item(i);
 			}
-			node.getPredicate().apply(this,ctx);
 		}
 	}
 
@@ -560,10 +569,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 	public void caseAWhileStm(AWhileStm node, Context ctx)
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
-		
+		this.iteration = (int) node.getExp().getLocation().getHits();
 		if (!xml_nodes.containsKey(local)) {
-			this.iteration = (int) node.getExp().getLocation().getHits();
-
 			Element while_statement = doc.createElement("while_statement");
 			fill_source_file_location(while_statement, local);
 			Element expression = doc.createElement("expression");
@@ -584,11 +591,69 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		}
 
 	}
+	
+	@Override
+	public void caseAPostOpExp(APostOpExp node, Context ctx)
+			throws AnalysisException {
+		ILexLocation local = node.getLocation();
+		this.iteration = (int) node.getPostexpression().getLocation().getHits();
+		PExp exp = node.getPostexpression();
+
+		if (!xml_nodes.containsKey(local)) {
+
+			Element if_statement = doc.createElement("post_expression");
+			fill_source_file_location(if_statement, local);
+			Element expression = doc.createElement("expression");
+			if_statement.appendChild(expression);
+			currentElement = expression;
+			exp.apply(this, ctx);
+			rootElement.appendChild(if_statement);
+			xml_nodes.put(local, if_statement);
+		} else {
+			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
+					.getLength(); i++) {
+				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
+						.equals("expression"))
+					currentElement = (Element) xml_nodes.get(local)
+							.getChildNodes().item(i);
+			}
+			exp.apply(this, ctx);
+		}
+	}
+
+	@Override
+	public void caseAPreOpExp(APreOpExp node, Context ctx)
+			throws AnalysisException {
+		ILexLocation local = node.getLocation();
+		this.iteration = (int) node.getExpression().getLocation().getHits();
+		PExp exp = node.getExpression();
+
+		if (!xml_nodes.containsKey(local)) {
+
+			Element if_statement = doc.createElement("pre_expression");
+			fill_source_file_location(if_statement, local);
+			Element expression = doc.createElement("expression");
+			if_statement.appendChild(expression);
+			currentElement = expression;
+			exp.apply(this, ctx);
+			rootElement.appendChild(if_statement);
+			xml_nodes.put(local, if_statement);
+		} else {
+			for (int i = 0; i < xml_nodes.get(local).getChildNodes()
+					.getLength(); i++) {
+				if (xml_nodes.get(local).getChildNodes().item(i).getNodeName()
+						.equals("expression"))
+					currentElement = (Element) xml_nodes.get(local)
+							.getChildNodes().item(i);
+			}
+			exp.apply(this, ctx);
+		}
+	}
 
 	@Override
 	public void caseAIfExp(AIfExp node, Context ctx) throws AnalysisException {
 		ILexLocation local = node.getLocation();
-		this.iteration = (int) local.getHits();
+		this.iteration = (int) node.getTest().getLocation().getHits();
 		PExp exp = node.getTest();
 
 		if (!xml_nodes.containsKey(local)) {
