@@ -119,7 +119,7 @@ import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 public class ExpressionEvaluator extends BinaryExpressionEvaluator
 {
-	public CoverageToXML ctx;
+	
 	@Override
 	public Value caseAApplyExp(AApplyExp node, Context ctxt)
 			throws AnalysisException
@@ -253,7 +253,6 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseAElseIfExp(AElseIfExp node, Context ctxt)
 			throws AnalysisException
 	{
-		node.apply(ctx, ctxt);
 		return evalElseIf(node, node.getLocation(), node.getElseIf(), node.getThen(), ctxt);
 	}
 
@@ -410,7 +409,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-			//node.apply(ctx, ctxt);
+			
 			QuantifierList quantifiers = new QuantifierList();
 
 			for (PMultipleBind mb : node.getBindList())
@@ -425,7 +424,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 
 			quantifiers.init(ctxt, false);
-
+			node.apply(ctx, ctxt);
 			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "forall", ctxt);
@@ -449,19 +448,21 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 						}
 					}
 				}
-				//node.getPredicate().apply(ctx, evalContext);
 				if (matches
 						&& !node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
 				{
-					return new BooleanValue(false);
+					Value v = new BooleanValue(false);
+					ctx.add_eval(node.getLocation(), v.toString());
+					return v;
 				}
 			}
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
-
-		return new BooleanValue(true);
+		Value v2 = new BooleanValue(true);
+		ctx.add_eval(node.getLocation(), v2.toString());
+		return v2;
 	}
 
 	@Override
@@ -664,7 +665,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	@Override
 	public Value caseAIfExp(AIfExp node, Context ctxt) throws AnalysisException
 	{ 
-        node.apply(ctx,ctxt);
+        //node.apply(ctx,ctxt);
 		return evalIf(node, node.getLocation(), node.getTest(), node.getThen(), node.getElseList(), node.getElse(), ctxt);
 	}
 
@@ -689,7 +690,10 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-			if (testExp.apply(VdmRuntime.getStatementEvaluator(), ctxt).boolValue(ctxt))
+			node.apply(ctx,ctxt);
+			boolean value = testExp.apply(VdmRuntime.getStatementEvaluator(), ctxt).boolValue(ctxt);
+			ctx.add_eval(ifLocation, String.valueOf(value));
+			if (value)
 			{
 				return thenNode.apply(VdmRuntime.getStatementEvaluator(), ctxt);
 			} else
@@ -734,8 +738,11 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-			return test.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt) ? then.apply(THIS, ctxt)
-					: null;
+			node.apply(ctx,ctxt);
+			boolean v = test.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
+			Value value = v ? then.apply(THIS, ctxt) : null;
+			ctx.add_eval(location, String.valueOf(v));
+			return value;
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(location, e);
@@ -1826,7 +1833,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			SharedStateListner.beforeVariableReadDuration(node);
 		}
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return ctxt.lookup(node.getName());
+		Value v = ctxt.lookup(node.getName());
+		ctx.add_eval(node.getLocation(), v.toString());
+		return v;
 	}
 
 	@Override

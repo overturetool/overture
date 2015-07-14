@@ -27,6 +27,7 @@ import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.CoverageToXML;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -43,7 +44,7 @@ import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
 
 public class UnaryExpressionEvaluator extends LiteralEvaluator
-{
+{	
 
 	@Override
 	public Value caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node, Context ctxt)
@@ -373,7 +374,9 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		try
 		{
 			Value v = node.getExp().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
-			return v.isUndefined() ? v : new BooleanValue(!v.boolValue(ctxt));
+			Value v1 = v.isUndefined() ? v : new BooleanValue(!v.boolValue(ctxt));
+			ctx.add_eval(node.getLocation(), v1.toString());
+			return v1;
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);

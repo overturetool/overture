@@ -1871,11 +1871,11 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 				}
 			}
 			
-			interpreter.getCoverage_to_xml().mark_tested(dsv.getGTC());
-			dsv.getGTC().saveCoverageXml(coverage, f.getName());
-			mcdc.addFile(f.getName(), dsv.getGTC().getTestedRate());
+			//interpreter.getCoverage_to_xml().mark_tested(dsv.getGTC());
+			//dsv.getGTC().saveCoverageXml(coverage, f.getName());
+			//mcdc.addFile(f.getName(), dsv.getGTC().getTestedRate());
 		}
-		mcdc.saveReportHTML(coverage, temp.getName());
+		//mcdc.saveReportHTML(coverage, temp.getName());
 		Properties.parser_tabstop = 1;// required to match locations with the
 										// editor representation
 	}

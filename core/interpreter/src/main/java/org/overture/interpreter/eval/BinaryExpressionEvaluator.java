@@ -35,6 +35,7 @@ import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.CoverageToXML;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -53,7 +54,7 @@ import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
 
 public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
-{
+{	
 
 	/*
 	 * Boolean
@@ -113,8 +114,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			{
 				return new UndefinedValue();
 			}
-
-			return new BooleanValue(lv.boolValue(ctxt) == rv.boolValue(ctxt));
+			Value v = new BooleanValue(lv.boolValue(ctxt) == rv.boolValue(ctxt));
+			ctx.add_eval(node.getLocation(), v.toString());
+			return v;
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -143,8 +145,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			{
 				return node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 			}
-
-			return new BooleanValue(true);
+			Value v = new BooleanValue(true);
+			ctx.add_eval(node.getLocation(), v.toString());
+			return v;
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -328,8 +331,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		{
 			return rv;
 		}
-
-		return new BooleanValue(lv.equals(rv));
+		Value v = new BooleanValue(lv.equals(rv));
+		ctx.add_eval(node.getLocation(), v.toString());
+		return v;
 	}
 
 	@Override
@@ -344,7 +348,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 		try
 		{
-			return new BooleanValue(set.setValue(ctxt).contains(elem));
+			Value v = new BooleanValue(set.setValue(ctxt).contains(elem));
+			ctx.add_eval(node.getLocation(), v.toString());
+			return v;
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -394,11 +400,13 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
-
+		
 		Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
-
-		return new BooleanValue(!lv.equals(rv));
+		
+		Value v = new BooleanValue(!lv.equals(rv));
+		ctx.add_eval(node.getLocation(), v.toString());
+		return v;
 	}
 
 	@Override
@@ -413,7 +421,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 		try
 		{
-			return new BooleanValue(!set.setValue(ctxt).contains(elem));
+			Value v = new BooleanValue(!set.setValue(ctxt).contains(elem));
+			ctx.add_eval(node.getLocation(), v.toString());
+			return v;
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -479,8 +489,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
 		try
-		{
-			return new BooleanValue(lv.realValue(ctxt) >= rv.realValue(ctxt));
+		{	Value v = new BooleanValue(lv.realValue(ctxt) >= rv.realValue(ctxt));
+			ctx.add_eval(node.getLocation(), v.toString());
+			return v;
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -499,7 +510,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 		try
 		{
-			return new BooleanValue(lv.realValue(ctxt) > rv.realValue(ctxt));
+			Value v = new BooleanValue(lv.realValue(ctxt) > rv.realValue(ctxt));
+			ctx.add_eval(node.getLocation(), v.toString());
+			return v;
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -518,8 +531,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
 		try
-		{
-			return new BooleanValue(lv.realValue(ctxt) <= rv.realValue(ctxt));
+		{	Value v = new BooleanValue(lv.realValue(ctxt) <= rv.realValue(ctxt));
+			ctx.add_eval(node.getLocation(), v.toString());
+			return v;
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -537,8 +551,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
 		try
-		{
-			return new BooleanValue(lv.realValue(ctxt) < rv.realValue(ctxt));
+		{	Value v = new BooleanValue(lv.realValue(ctxt) < rv.realValue(ctxt));
+			ctx.add_eval(node.getLocation(), v.toString());
+			return v;
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -736,8 +751,10 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			ValueSet set1 = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
 			ValueSet set2 = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
 
-			return new BooleanValue(set1.size() < set2.size()
+			Value v = new BooleanValue(set1.size() < set2.size()
 					&& set2.containsAll(set1));
+			ctx.add_eval(node.getLocation(), v.toString());
+			return v;
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -968,8 +985,10 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		{
 			ValueSet set1 = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
 			ValueSet set2 = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
-
-			return new BooleanValue(set2.containsAll(set1));
+			
+			Value v = new BooleanValue(set2.containsAll(set1));
+			ctx.add_eval(node.getLocation(), v.toString());
+			return v;
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);

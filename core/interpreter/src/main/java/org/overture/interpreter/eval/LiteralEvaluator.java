@@ -11,6 +11,7 @@ import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.CoverageToXML;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.BooleanValue;
@@ -22,7 +23,7 @@ import org.overture.interpreter.values.Value;
 
 public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 {
-	
+	public CoverageToXML ctx;
 	@Override
 	public Value caseAIntLiteralExp(AIntLiteralExp node, Context ctxt)
 			throws AnalysisException
@@ -51,7 +52,9 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return new BooleanValue(node.getValue().getValue());
+		Value v = new BooleanValue(node.getValue().getValue());
+		ctx.add_eval(node.getLocation(), v.toString());
+		return v;
 	}
 
 	@Override

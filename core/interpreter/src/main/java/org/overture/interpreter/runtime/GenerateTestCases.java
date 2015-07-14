@@ -105,7 +105,7 @@ public class GenerateTestCases extends AnalysisAdaptor {
 			e.printStackTrace();
 		}
 		
-		generateHTMLTable(coverage,filename);
+		//generateHTMLTable(coverage,filename);
 		
 		
 	}
