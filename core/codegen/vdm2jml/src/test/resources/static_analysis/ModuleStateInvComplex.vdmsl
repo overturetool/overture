@@ -20,20 +20,32 @@ end
 
 operations
 
-seqField : () ==> ()
+seqField : () ==> nat
 seqField () ==
+(
   s(1).x := 5;
+  return 0;
+);
 
-mapField : () ==> ()
+mapField : () ==> nat
 mapField () ==
+(
   m(1).x := 5;
+  return 0;
+);
 
-fieldSeqField : () ==> ()
+fieldSeqField : () ==> nat
 fieldSeqField () ==
+(
   r.s(1).x := 5;
+  return 0;
+);
 
-seqSeqField : () ==> ()
+seqSeqField : () ==> nat
 seqSeqField () ==
+(
   ss(1)(1).x := 5;
+  return 0;
+)
 
 end M
