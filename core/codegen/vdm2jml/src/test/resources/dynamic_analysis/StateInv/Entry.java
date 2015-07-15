@@ -33,8 +33,6 @@ final public class Entry {
         St.x = -10L;
         //@ assert inv_St(St);
         St.x = 10L;
-
-        //@ assert inv_St(St);
     }
 
     public String toString() {
