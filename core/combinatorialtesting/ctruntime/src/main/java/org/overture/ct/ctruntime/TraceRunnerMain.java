@@ -562,7 +562,12 @@ public class TraceRunnerMain implements IProgressMonitor {
 				}
 			}
 
-			interpreter.getCoverage_to_xml().mark_tested(dsv.getGTC());
+			try {
+				interpreter.getCoverage_to_xml().mark_tested2(dsv.getGTC());
+			} catch (XPathExpressionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			dsv.getGTC().saveCoverageXml(coverage, f.getName());
 			mcdc.addFile(f.getName(), dsv.getGTC().getTestedRate());
 		}

@@ -710,8 +710,17 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 						System.out.println("content->"+content+" test_number->"+test_number+" content2->"+eval.getTextContent()+" test_number->"+test_number2);
 						if(content.equals("?") && test_numbers.get(test_number).contains(test_number2)){
 							test_numbers.get(test_number).remove(test_number2);
-						}else if(n==0 && eval.getTextContent().equals(content) && !test_numbers.get(test_number).contains(test_number2))test_numbers.get(test_number).remove(test_number2);
-						else if(!eval.getTextContent().equals(content) && test_numbers.get(test_number).contains(test_number2))test_numbers.get(test_number).remove(test_number2);
+							System.out.println("REMOVI!");
+						}else if(n==0 && eval.getTextContent().equals(content) && !test_numbers.get(test_number).contains(test_number2)){
+							test_numbers.get(test_number).add(test_number2);
+							System.out.println("ADICIONEI!");
+							}
+						else if(!eval.getTextContent().equals(content) && test_numbers.get(test_number).contains(test_number2)){
+							test_numbers.get(test_number).remove(test_number2);
+							System.out.println("REMOVI!");
+						
+						}
+						
 				}
 			}
 		}
