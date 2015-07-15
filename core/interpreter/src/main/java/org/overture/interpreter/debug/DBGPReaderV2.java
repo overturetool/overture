@@ -43,6 +43,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import javax.xml.xpath.XPathExpressionException;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
@@ -1870,12 +1872,17 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 					}
 				}
 			}
-			
-			//interpreter.getCoverage_to_xml().mark_tested(dsv.getGTC());
-			//dsv.getGTC().saveCoverageXml(coverage, f.getName());
-			//mcdc.addFile(f.getName(), dsv.getGTC().getTestedRate());
+
+			try {
+				interpreter.getCoverage_to_xml().mark_tested2(dsv.getGTC());
+			} catch (XPathExpressionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			dsv.getGTC().saveCoverageXml(coverage, f.getName());
+			mcdc.addFile(f.getName(), dsv.getGTC().getTestedRate());
 		}
-		//mcdc.saveReportHTML(coverage, temp.getName());
+		mcdc.saveReportHTML(coverage, temp.getName());
 		Properties.parser_tabstop = 1;// required to match locations with the
 										// editor representation
 	}

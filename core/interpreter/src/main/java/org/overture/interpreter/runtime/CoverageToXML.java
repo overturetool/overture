@@ -1,6 +1,7 @@
 package org.overture.interpreter.runtime;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,6 +15,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import junit.framework.TestCase;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
@@ -49,6 +56,7 @@ import org.overture.ast.statements.AWhileStm;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class CoverageToXML extends QuestionAdaptor<Context> {
 	private Document doc;
@@ -156,16 +164,18 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			expression.apply(this, ctx);
 			currentElement = not;
 		}
-		
+
 	}
 
-
 	public void add_eval(ILexLocation local, String value) {
-		if (xml_nodes.containsKey(local) && (value.equals("true") || value.equals("false"))) {
+		if (xml_nodes.containsKey(local)
+				&& (value.equals("true") || value.equals("false"))) {
 			Element eval = doc.createElement("evaluation");
 			eval.setTextContent(value);
-			if(loop)eval.setAttribute("n", Integer.toString(loop_iteration));
-			else eval.setAttribute("n", Integer.toString(iteration));
+			if (loop)
+				eval.setAttribute("n", Integer.toString(loop_iteration));
+			else
+				eval.setAttribute("n", Integer.toString(iteration));
 			xml_nodes.get(local).appendChild(eval);
 		}
 	}
@@ -188,7 +198,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = op;
 			right.apply(this, ctx);
 			currentElement = op;
-		} 
+		}
 	}
 
 	@Override
@@ -208,13 +218,12 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = op;
 			right.apply(this, ctx);
 			currentElement = op;
-		} 
+		}
 	}
 
-	
 	@Override
-	public void caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node,
-			Context ctx) throws AnalysisException {
+	public void caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node, Context ctx)
+			throws AnalysisException {
 		ILexLocation local = node.getLocation();
 		PExp left = node.getLeft();
 		PExp right = node.getRight();
@@ -233,8 +242,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 	}
 
 	@Override
-	public void caseAOrBooleanBinaryExp(AOrBooleanBinaryExp node,
-			Context ctx) throws AnalysisException {
+	public void caseAOrBooleanBinaryExp(AOrBooleanBinaryExp node, Context ctx)
+			throws AnalysisException {
 		ILexLocation local = node.getLocation();
 		PExp left = node.getLeft();
 		PExp right = node.getRight();
@@ -249,7 +258,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = op;
 			right.apply(this, ctx);
 			currentElement = op;
-		} 
+		}
 	}
 
 	@Override
@@ -268,7 +277,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			xml_nodes.put(local, if_statement);
 			exp.apply(this, ctx);
 			currentElement = expression;
-		} 
+		}
 	}
 
 	@Override
@@ -378,7 +387,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
 		int node_hits = (int) node.getLocation().getHits();
-		int inner_exp_hits =(int) node.getPredicate().getLocation().getHits();
+		int inner_exp_hits = (int) node.getPredicate().getLocation().getHits();
 		this.loop_iteration = inner_exp_hits + node_hits;
 
 		if (!xml_nodes.containsKey(local)) {
@@ -391,7 +400,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = expression;
 			node.getPredicate().apply(this, ctx);
 			currentElement = expression;
-		} 
+		}
 	}
 
 	@Override
@@ -399,7 +408,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
 		int node_hits = (int) node.getLocation().getHits();
-		int inner_exp_hits =(int) node.getPredicate().getLocation().getHits();
+		int inner_exp_hits = (int) node.getPredicate().getLocation().getHits();
 		this.loop_iteration = inner_exp_hits + node_hits;
 
 		if (!xml_nodes.containsKey(local)) {
@@ -432,8 +441,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			exp.apply(this, ctx);
 			rootElement.appendChild(if_statement);
 			xml_nodes.put(local, if_statement);
-		} 
-		
+		}
+
 	}
 
 	@Override
@@ -453,14 +462,15 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			exp.apply(this, ctx);
 			rootElement.appendChild(if_statement);
 			xml_nodes.put(local, if_statement);
-		} 
+		}
 	}
 
 	@Override
 	public void caseAForAllStm(AForAllStm node, Context ctx)
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
-		this.iteration = (int) node.getStatement().getLocation().getHits()+(int)node.getLocation().getHits();
+		this.iteration = (int) node.getStatement().getLocation().getHits()
+				+ (int) node.getLocation().getHits();
 		if (!xml_nodes.containsKey(local)) {
 			this.iteration = (int) local.getHits();
 
@@ -471,7 +481,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = expression;
 			rootElement.appendChild(forall_statement);
 			xml_nodes.put(local, forall_statement);
-		} 
+		}
 	}
 
 	@Override
@@ -479,7 +489,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			throws AnalysisException {
 		ILexLocation local = node.getLocation();
 		int node_hits = (int) node.getLocation().getHits();
-		int inner_exp_hits =(int) node.getPredicate().getLocation().getHits();
+		int inner_exp_hits = (int) node.getPredicate().getLocation().getHits();
 		this.loop_iteration = inner_exp_hits + node_hits;
 		if (!xml_nodes.containsKey(local)) {
 
@@ -490,9 +500,9 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			xml_nodes.put(local, exists);
 			rootElement.appendChild(exists);
 			currentElement = expression;
-			node.getPredicate().apply(this,ctx);
+			node.getPredicate().apply(this, ctx);
 			currentElement = expression;
-		} 
+		}
 	}
 
 	@Override
@@ -508,11 +518,11 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			currentElement = expression;
 			rootElement.appendChild(while_statement);
 			xml_nodes.put(local, while_statement);
-			node.getExp().apply(this,ctx);
-		} 
+			node.getExp().apply(this, ctx);
+		}
 
 	}
-	
+
 	@Override
 	public void caseAPostOpExp(APostOpExp node, Context ctx)
 			throws AnalysisException {
@@ -530,7 +540,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			exp.apply(this, ctx);
 			rootElement.appendChild(if_statement);
 			xml_nodes.put(local, if_statement);
-		} 
+		}
 	}
 
 	@Override
@@ -550,7 +560,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 			exp.apply(this, ctx);
 			rootElement.appendChild(if_statement);
 			xml_nodes.put(local, if_statement);
-		} 
+		}
 	}
 
 	@Override
@@ -606,7 +616,8 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 										.getLength(); n++) {
 									Element eval2 = (Element) tested_evaluation
 											.item(n);
-									int test_number2 = Integer.valueOf(eval2
+									int test_number2 = -1;
+									test_number2 = Integer.valueOf(eval2
 											.getAttribute("n"));
 									if (evaluation.getTextContent().equals("?")) {
 										if (!test_numbers.get(test_number)
@@ -639,11 +650,7 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 
 							}
 						}
-						for (int tn : test_numbers.keySet()) {
-							if (!test_numbers.get(tn).isEmpty()) {
-								setTested(generated, String.valueOf(tn));
-							}
-						}
+						
 
 					}
 
@@ -656,6 +663,78 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 
 	}
 
+	public void mark_tested2(GenerateTestCases gtc)	throws XPathExpressionException {
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath engine = xPathfactory.newXPath();
+			HashMap<Element, ArrayList<String> > values_set= new HashMap<Element, ArrayList <String> >();
+			int index = 1;
+			int index2 = 1;
+			String n="  ";
+			Element decision = doc.createElement("new");
+			while(decision!=null){
+				decision = (Element) engine.compile("/file/*[name(.)!='file_name']["+index2+"]").evaluate(doc,XPathConstants.NODE);
+				if(decision==null)break;
+				values_set.put(decision, new ArrayList<String>());
+			while(!n.equals("")){
+				n = (String) engine.compile("file/*["+index+"]//evaluation/@n[name(.)!='file_name']["+index2+"]").evaluate(doc,XPathConstants.STRING);
+			    index++;
+			    if(n.equals(""))break;
+			    values_set.get(decision).add(n);
+			}
+			index2++;
+			}
+			for(Element e: values_set.keySet())compare(e,values_set.get(e),gtc);
+	}
+
+	private void compare(Element e,ArrayList<String> values_set, GenerateTestCases gtc) {
+		Element generated_decision = gtc.xml_nodes.get(get_location(e));
+		NodeList generated_conditions = generated_decision.getElementsByTagName("condition");
+		HashMap<Integer, ArrayList<Integer>> test_numbers = new HashMap<Integer, ArrayList<Integer>>();
+		System.out.println("generated_decision->"+generated_decision);
+		for(int i=0; i< generated_conditions.getLength(); i++){
+			Element generated_condition = (Element) generated_conditions.item(i);
+			NodeList generated_evaluations = generated_condition.getElementsByTagName("evaluation");
+			Element captured_condition = xml_nodes.get(get_location(generated_condition));
+			System.out.println("captured_condition->"+captured_condition);
+			for(int k =0;k<generated_evaluations.getLength(); k++){
+				Element evaluation = (Element) generated_evaluations.item(k);
+				Integer test_number = Integer.valueOf(evaluation.getAttribute("n"));
+				String content = evaluation.getTextContent();
+				if(!test_numbers.containsKey(test_number)){
+					test_numbers.put(test_number, new ArrayList<Integer>());
+				}
+				NodeList captured_evaluations = captured_condition.getElementsByTagName("evaluation");
+				for(int n = 0;n<captured_evaluations.getLength();n++){
+						Element eval = (Element) captured_evaluations.item(n);
+						Integer test_number2 = Integer.valueOf(eval.getAttribute("n"));
+						System.out.println("content->"+content+" test_number->"+test_number+" content2->"+eval.getTextContent()+" test_number->"+test_number2);
+						if(content.equals("?") && test_numbers.get(test_number).contains(test_number2)){
+							test_numbers.get(test_number).remove(test_number2);
+						}else if(n==0 && eval.getTextContent().equals(content) && !test_numbers.get(test_number).contains(test_number2))test_numbers.get(test_number).remove(test_number2);
+						else if(!eval.getTextContent().equals(content) && test_numbers.get(test_number).contains(test_number2))test_numbers.get(test_number).remove(test_number2);
+				}
+			}
+		}
+		for (int tn : test_numbers.keySet()) {
+			if (!test_numbers.get(tn).isEmpty()) {
+				System.out.println("COVERED A TEST!");
+				setTested(generated_decision, String.valueOf(tn));
+			}
+		}
+	}
+
+	public String prep(Element generated_decision) {
+		String ident = "@end_column='"
+				+ generated_decision.getAttribute("end_column")
+				+ "' and @end_line='"
+				+ generated_decision.getAttribute("end_line")
+				+ "' and @start_column='"
+				+ generated_decision.getAttribute("start_column")
+				+ "' and @start_line='"
+				+ generated_decision.getAttribute("start_line") + "'";
+		return ident;
+	}
+
 	public void setTested(Element decision, String test_number) {
 		NodeList evaluations = decision.getElementsByTagName("evaluation");
 		for (int i = 0; i < evaluations.getLength(); i++) {
@@ -665,35 +744,25 @@ public class CoverageToXML extends QuestionAdaptor<Context> {
 		}
 	}
 
-	public boolean evaluationEquals(Element a, Element b) throws Exception {
-		String content_a = a.getTextContent();
-		String content_b = b.getTextContent();
-
-		if (content_a == null || content_b == null)
-			throw new Exception("No text content on node " + a.toString());
-
-		if (!content_a.equals("true") || !content_a.equals("false")
-				|| !content_a.equals("?"))
-			throw new Exception("Node " + a.toString()
-					+ " has invalid content!");
-
-		if (!content_b.equals("true") || !content_b.equals("false")
-				|| !content_b.equals("?"))
-			throw new Exception("Node " + b.toString()
-					+ " has invalid content!");
-
-		if (a.getTextContent().equals("?") || b.getTextContent().equals("?"))
-			return true;
-		else
-			return (a.getTextContent().equals(b.getTextContent()));
-	}
-
 	public String getEvalNumber(Element a) throws Exception {
 		if (a.hasAttribute("n"))
 			return a.getAttribute("n");
 		else {
 			throw new Exception("Evaluation has no number!");
 		}
+	}
+
+	public Object xpathResult(String query, Document d) {
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath engine = xPathfactory.newXPath();
+
+		try {
+			return engine.evaluate(query, d);
+		} catch (XPathExpressionException e) {
+			e.printStackTrace();
+			return null;
+		}
+
 	}
 
 }

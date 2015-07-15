@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.xml.xpath.XPathExpressionException;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.SClassDefinition;
@@ -74,11 +76,10 @@ import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.util.Base64;
 
-public class TraceRunnerMain implements IProgressMonitor
-{
+public class TraceRunnerMain implements IProgressMonitor {
 	public static boolean USE_SYSTEM_EXIT = true;
 	private final static boolean DEBUG = false;
-	
+
 	protected final String host;
 	protected final int port;
 	protected final String ideKey;
@@ -105,8 +106,7 @@ public class TraceRunnerMain implements IProgressMonitor
 	public TraceRunnerMain(String host, int port, String ideKey,
 			Interpreter interpreter, String moduleName, String traceName,
 			File traceFolder, float subset,
-			TraceReductionType traceReductionType, long seed)
-	{
+			TraceReductionType traceReductionType, long seed) {
 		this.host = host;
 		this.port = port;
 		this.ideKey = ideKey;
@@ -124,8 +124,7 @@ public class TraceRunnerMain implements IProgressMonitor
 	 * @param args
 	 *            the args
 	 */
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		Settings.usingDBGP = false;
 
 		String host = null;
@@ -153,147 +152,102 @@ public class TraceRunnerMain implements IProgressMonitor
 
 		Properties.parser_tabstop = 1;
 
-		for (Iterator<String> i = largs.iterator(); i.hasNext();)
-		{
+		for (Iterator<String> i = largs.iterator(); i.hasNext();) {
 			String arg = i.next();
 
-			if (arg.equals("-vdmsl"))
-			{
+			if (arg.equals("-vdmsl")) {
 				controller = new VDMSL();
-			} else if (arg.equals("-vdmpp"))
-			{
+			} else if (arg.equals("-vdmpp")) {
 				controller = new VDMPP();
-			} else if (arg.equals("-vdmrt"))
-			{
+			} else if (arg.equals("-vdmrt")) {
 				controller = new VDMRT();
-			} else if (arg.equals("-h"))
-			{
-				if (i.hasNext())
-				{
+			} else if (arg.equals("-h")) {
+				if (i.hasNext()) {
 					host = i.next();
-				} else
-				{
+				} else {
 					usage("-h option requires a hostname");
 				}
-			} else if (arg.equals("-p"))
-			{
-				try
-				{
+			} else if (arg.equals("-p")) {
+				try {
 					port = Integer.parseInt(i.next());
-				} catch (Exception e)
-				{
+				} catch (Exception e) {
 					usage("-p option requires a port");
 				}
-			} else if (arg.equals("-k"))
-			{
-				if (i.hasNext())
-				{
+			} else if (arg.equals("-k")) {
+				if (i.hasNext()) {
 					ideKey = i.next();
-				} else
-				{
+				} else {
 					usage("-k option requires a key");
 				}
-			} else if (arg.equals("-e"))
-			{
-				if (i.hasNext())
-				{
+			} else if (arg.equals("-e")) {
+				if (i.hasNext()) {
 					moduleName = i.next();
-				} else
-				{
+				} else {
 					usage("-e option requires an expression");
 				}
-			} else if (arg.equals("-e64"))
-			{
-				if (i.hasNext())
-				{
+			} else if (arg.equals("-e64")) {
+				if (i.hasNext()) {
 					moduleName = i.next();
 					expBase64 = true;
-				} else
-				{
+				} else {
 					usage("-e64 option requires an expression");
 				}
-			} else if (arg.equals("-c"))
-			{
-				if (i.hasNext())
-				{
-					if (controller == null)
-					{
+			} else if (arg.equals("-c")) {
+				if (i.hasNext()) {
+					if (controller == null) {
 						usage("-c must come after <-vdmpp|-vdmsl|-vdmrt>");
 					}
 
 					controller.setCharset(validateCharset(i.next()));
-				} else
-				{
+				} else {
 					usage("-c option requires a charset name");
 				}
-			} else if (arg.equals("-r"))
-			{
-				if (i.hasNext())
-				{
+			} else if (arg.equals("-r")) {
+				if (i.hasNext()) {
 					Settings.release = Release.lookup(i.next());
 
-					if (Settings.release == null)
-					{
+					if (Settings.release == null) {
 						usage("-r option must be " + Release.list());
 					}
-				} else
-				{
+				} else {
 					usage("-r option requires a VDM release");
 				}
-			} else if (arg.equals("-log"))
-			{
-				if (i.hasNext())
-				{
-					try
-					{
+			} else if (arg.equals("-log")) {
+				if (i.hasNext()) {
+					try {
 						logfile = new URI(i.next()).getPath();
-					} catch (URISyntaxException e)
-					{
+					} catch (URISyntaxException e) {
 						usage(e.getMessage() + ": " + arg);
-					} catch (IllegalArgumentException e)
-					{
+					} catch (IllegalArgumentException e) {
 						usage(e.getMessage() + ": " + arg);
 					}
-				} else
-				{
+				} else {
 					usage("-log option requires a filename");
 				}
-			} else if (arg.equals("-w"))
-			{
+			} else if (arg.equals("-w")) {
 				warnings = false;
-			} else if (arg.equals("-q"))
-			{
+			} else if (arg.equals("-q")) {
 				quiet = true;
-			} else if (arg.equals("-coverage"))
-			{
-				if (i.hasNext())
-				{
-					try
-					{
+			} else if (arg.equals("-coverage")) {
+				if (i.hasNext()) {
+					try {
 						coverage = new File(new URI(i.next()));
 
-						if (!coverage.isDirectory())
-						{
+						if (!coverage.isDirectory()) {
 							usage("Coverage location is not a directory");
 						}
-					} catch (URISyntaxException e)
-					{
+					} catch (URISyntaxException e) {
 						usage(e.getMessage() + ": " + arg);
-					} catch (IllegalArgumentException e)
-					{
+					} catch (IllegalArgumentException e) {
 						usage(e.getMessage() + ": " + arg);
 					}
-				} else
-				{
+				} else {
 					usage("-coverage option requires a directory name");
 				}
-			} else if (arg.equals("-default64"))
-			{
-				if (i.hasNext())
-				{
+			} else if (arg.equals("-default64")) {
+				if (i.hasNext()) {
 					defaultName = i.next();
-				} else
-				{
+				} else {
 					usage("-default64 option requires a name");
 				}
 			}
@@ -308,99 +262,70 @@ public class TraceRunnerMain implements IProgressMonitor
 			// usage("-remote option requires a Java classname");
 			// }
 			// }
-			else if (arg.equals("-t"))
-			{
-				if (i.hasNext())
-				{
+			else if (arg.equals("-t")) {
+				if (i.hasNext()) {
 					traceName = i.next();
-				} else
-				{
+				} else {
 					usage("-t option requires a Trace Name");
 				}
-			} else if (arg.equals("-t64"))
-			{
-				if (i.hasNext())
-				{
+			} else if (arg.equals("-t64")) {
+				if (i.hasNext()) {
 					traceName = i.next();
 					traceNameBase64 = true;
-				} else
-				{
+				} else {
 					usage("-t option requires a Trace Name");
 				}
-			} else if (arg.equals("-tracefolder"))
-			{
-				if (i.hasNext())
-				{
-					try
-					{
+			} else if (arg.equals("-tracefolder")) {
+				if (i.hasNext()) {
+					try {
 						traceFolder = new File(new URI(i.next()));
 
-						if (!traceFolder.isDirectory())
-						{
+						if (!traceFolder.isDirectory()) {
 							usage("Tracefolder location is not a directory");
 						}
-					} catch (URISyntaxException e)
-					{
+					} catch (URISyntaxException e) {
 						usage(e.getMessage() + ": " + arg);
-					} catch (IllegalArgumentException e)
-					{
+					} catch (IllegalArgumentException e) {
 						usage(e.getMessage() + ": " + arg);
 					}
-				} else
-				{
+				} else {
 					usage("-tracefolder option requires a directory name");
 				}
-			} else if (arg.equals("-traceReduction"))
-			{
-				if (i.hasNext())
-				{
-					try
-					{
+			} else if (arg.equals("-traceReduction")) {
+				if (i.hasNext()) {
+					try {
 						traceReductionPattern = i.next();
-					} catch (IllegalArgumentException e)
-					{
+					} catch (IllegalArgumentException e) {
 						usage(e.getMessage() + ": " + arg);
 					}
-				} else
-				{
+				} else {
 					usage("-traceReduction option requires a pattern");
 				}
-			} else if (arg.equals("-consoleName"))
-			{
-				if (i.hasNext())
-				{
+			} else if (arg.equals("-consoleName")) {
+				if (i.hasNext()) {
 					LexTokenReader.consoleFileName = i.next();
-				} else
-				{
+				} else {
 					usage("-consoleName option requires a console name");
 				}
-			} else if (arg.startsWith("-"))
-			{
+			} else if (arg.startsWith("-")) {
 				usage("Unknown option " + arg);
-			} else
-			{
-				try
-				{
+			} else {
+				try {
 					File dir = new File(new URI(arg));
 
-					if (dir.isDirectory())
-					{
-						for (File file : dir.listFiles(Settings.dialect.getFilter()))
-						{
-							if (file.isFile())
-							{
+					if (dir.isDirectory()) {
+						for (File file : dir.listFiles(Settings.dialect
+								.getFilter())) {
+							if (file.isFile()) {
 								files.add(file);
 							}
 						}
-					} else
-					{
+					} else {
 						files.add(dir);
 					}
-				} catch (URISyntaxException e)
-				{
+				} catch (URISyntaxException e) {
 					usage(e.getMessage() + ": " + arg);
-				} catch (IllegalArgumentException e)
-				{
+				} catch (IllegalArgumentException e) {
 					usage(e.getMessage() + ": " + arg);
 				}
 			}
@@ -408,47 +333,36 @@ public class TraceRunnerMain implements IProgressMonitor
 
 		if (host == null || port == -1 || controller == null || ideKey == null
 				|| moduleName == null || Settings.dialect == null
-				|| traceFolder == null || files.isEmpty())
-		{
+				|| traceFolder == null || files.isEmpty()) {
 			usage("Missing mandatory arguments");
 		}
 
-		if (Settings.dialect != Dialect.VDM_RT && logfile != null)
-		{
+		if (Settings.dialect != Dialect.VDM_RT && logfile != null) {
 			usage("-log can only be used with -vdmrt");
 		}
 
-		if (expBase64)
-		{
-			try
-			{
+		if (expBase64) {
+			try {
 				byte[] bytes = Base64.decode(moduleName);
 				moduleName = new String(bytes, VDMJ.filecharset);
-			} catch (Exception e)
-			{
+			} catch (Exception e) {
 				usage("Malformed -e64 base64 expression");
 			}
 		}
-		if (traceNameBase64)
-		{
-			try
-			{
+		if (traceNameBase64) {
+			try {
 				byte[] bytes = Base64.decode(traceName);
 				traceName = new String(bytes, VDMJ.filecharset);
-			} catch (Exception e)
-			{
+			} catch (Exception e) {
 				usage("Malformed -t64 base64 trace name");
 			}
 		}
 
-		if (defaultName != null)
-		{
-			try
-			{
+		if (defaultName != null) {
+			try {
 				byte[] bytes = Base64.decode(defaultName);
 				defaultName = new String(bytes, VDMJ.filecharset);
-			} catch (Exception e)
-			{
+			} catch (Exception e) {
 				usage("Malformed -default64 base64 name");
 			}
 		}
@@ -457,7 +371,8 @@ public class TraceRunnerMain implements IProgressMonitor
 		// {
 		// try
 		// {
-		// Class<?> cls = ClassLoader.getSystemClassLoader().loadClass(remoteName);
+		// Class<?> cls =
+		// ClassLoader.getSystemClassLoader().loadClass(remoteName);
 		// remoteClass = (Class<RemoteControl>)cls;
 		// }
 		// catch (ClassNotFoundException e)
@@ -470,22 +385,19 @@ public class TraceRunnerMain implements IProgressMonitor
 		controller.setQuiet(quiet);
 		Console.disableStdout();
 
-		if (controller.parse(files) == ExitStatus.EXIT_OK)
-		{
-			if (controller.typeCheck() == ExitStatus.EXIT_OK)
-			{
-				try
-				{
-					if (logfile != null)
-					{
-						RTLogger.setLogfile(RTTextLogger.class, new File(logfile));
-						RTLogger.setLogfile(NextGenRTLogger.class, new File(logfile));
+		if (controller.parse(files) == ExitStatus.EXIT_OK) {
+			if (controller.typeCheck() == ExitStatus.EXIT_OK) {
+				try {
+					if (logfile != null) {
+						RTLogger.setLogfile(RTTextLogger.class, new File(
+								logfile));
+						RTLogger.setLogfile(NextGenRTLogger.class, new File(
+								logfile));
 					}
 
 					Interpreter i = controller.getInterpreter();
 
-					if (defaultName != null)
-					{
+					if (defaultName != null) {
 						i.setDefaultName(defaultName);
 					}
 
@@ -502,31 +414,30 @@ public class TraceRunnerMain implements IProgressMonitor
 					// {subset,reduction,seed}
 
 					if (traceReductionPattern != null
-							&& traceReductionPattern.startsWith("{"))
-					{
-						try
-						{
+							&& traceReductionPattern.startsWith("{")) {
+						try {
 							String settings = traceReductionPattern;
-							String[] tmp = settings.substring(1, settings.length() - 1).split(",");
-							if (tmp.length == 3)
-							{
+							String[] tmp = settings.substring(1,
+									settings.length() - 1).split(",");
+							if (tmp.length == 3) {
 								subset = Float.parseFloat(tmp[0]);
-								reductionType = TraceReductionType.valueOf(tmp[1]);
+								reductionType = TraceReductionType
+										.valueOf(tmp[1]);
 								seed = Long.parseLong(tmp[2]);
 							}
-						} catch (NumberFormatException e)
-						{
+						} catch (NumberFormatException e) {
 							usage(traceReductionPattern
 									+ " <name> [test number]");
 							return;
 						}
 					}
 
-					TraceRunnerMain runner = new TraceRunnerMain(host, port, ideKey, i, moduleName, traceName, traceFolder, subset, reductionType, seed);
+					TraceRunnerMain runner = new TraceRunnerMain(host, port,
+							ideKey, i, moduleName, traceName, traceFolder,
+							subset, reductionType, seed);
 					runner.startup();
 
-					if (coverage != null)
-					{
+					if (coverage != null) {
 						writeCoverage(i, coverage);
 						writeMCDCCoverage(i, coverage);
 					}
@@ -535,14 +446,12 @@ public class TraceRunnerMain implements IProgressMonitor
 
 					// runner.progressTerminating();
 					exit(0);
-				} catch (ContextException e)
-				{
+				} catch (ContextException e) {
 					System.err.println("Initialization: " + e);
 					e.ctxt.printStackTrace(Console.out, true);
 					RTLogger.dump(true);
 					exit(3);
-				} catch (ValueException e)
-				{
+				} catch (ValueException e) {
 					System.err.println("Initialization: " + e);
 					e.ctxt.printStackTrace(Console.out, true);
 					RTLogger.dump(true);
@@ -555,56 +464,48 @@ public class TraceRunnerMain implements IProgressMonitor
 					RTLogger.dump(true);
 					exit(3);
 				}
-			} else
-			{
+			} else {
 				final PrintWriter out = new PrintWriter(System.err);
 				TypeChecker.printErrors(out);
 				out.flush();
 				exit(2);
 			}
-		} else
-		{
+		} else {
 			exit(1);
 		}
 
 	}
 
-	private static void exit(int code)
-	{
-		if (USE_SYSTEM_EXIT)
-		{
+	private static void exit(int code) {
+		if (USE_SYSTEM_EXIT) {
 			System.exit(code);
 		}
 	}
 
-	private void startup() throws Exception
-	{
+	private void startup() throws Exception {
 		connect();
 	}
 
-	protected static void usage(String string)
-	{
+	protected static void usage(String string) {
 		System.err.println(string);
-		System.err.println("Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt>"
-				+ " -e <expression> | -e64 <base64 expression>"
-				+ " [-w] [-q] [-log <logfile URL>] [-c <charset>] [-r <release>]"
-				+ " [-coverage <dir URL>] [-default64 <base64 name>]"
-				+ " [-remote <class>] [-consoleName <console>] {<filename URLs>}");
+		System.err
+				.println("Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt>"
+						+ " -e <expression> | -e64 <base64 expression>"
+						+ " [-w] [-q] [-log <logfile URL>] [-c <charset>] [-r <release>]"
+						+ " [-coverage <dir URL>] [-default64 <base64 name>]"
+						+ " [-remote <class>] [-consoleName <console>] {<filename URLs>}");
 
 		System.exit(1);
 	}
 
-	protected static String validateCharset(String cs)
-	{
-		if (!Charset.isSupported(cs))
-		{
+	protected static String validateCharset(String cs) {
+		if (!Charset.isSupported(cs)) {
 			System.err.println("Charset " + cs + " is not supported\n");
 			System.err.println("Available charsets:");
 			System.err.println("Default = " + Charset.defaultCharset());
 			Map<String, Charset> available = Charset.availableCharsets();
 
-			for (String name : available.keySet())
-			{
+			for (String name : available.keySet()) {
 				System.err.println(name + " " + available.get(name).aliases());
 			}
 
@@ -616,10 +517,8 @@ public class TraceRunnerMain implements IProgressMonitor
 	}
 
 	protected static void writeCoverage(Interpreter interpreter, File coverage)
-			throws IOException
-	{
-		for (File f : interpreter.getSourceFiles())
-		{
+			throws IOException {
+		for (File f : interpreter.getSourceFiles()) {
 			SourceFile source = interpreter.getSourceFile(f);
 
 			File data = new File(coverage.getPath() + File.separator
@@ -629,7 +528,7 @@ public class TraceRunnerMain implements IProgressMonitor
 			pw.close();
 		}
 	}
-	
+
 	public static void writeMCDCCoverage(Interpreter interpreter, File coverage)
 			throws IOException {
 		Properties.init(); // Read properties file, if any
@@ -662,7 +561,7 @@ public class TraceRunnerMain implements IProgressMonitor
 					}
 				}
 			}
-			
+
 			interpreter.getCoverage_to_xml().mark_tested(dsv.getGTC());
 			dsv.getGTC().saveCoverageXml(coverage, f.getName());
 			mcdc.addFile(f.getName(), dsv.getGTC().getTestedRate());
@@ -672,29 +571,22 @@ public class TraceRunnerMain implements IProgressMonitor
 										// editor representation
 	}
 
-	protected void connect() throws Exception
-	{
-		if (!connected)
-		{
-			if (port > 0)
-			{
-				if (DEBUG)
-				{
+	protected void connect() throws Exception {
+		if (!connected) {
+			if (port > 0) {
+				if (DEBUG) {
 					System.out.println("Trying to connect to CT IDE");
 				}
-				
-				try
-				{
+
+				try {
 					InetAddress server = InetAddress.getByName(host);
 					socket = new Socket(server, port);
 					input = socket.getInputStream();
 					output = socket.getOutputStream();
-				} catch (Exception e)
-				{
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			} else
-			{
+			} else {
 				System.err.println("Something wrong no port");
 				socket = null;
 				input = System.in;
@@ -708,35 +600,26 @@ public class TraceRunnerMain implements IProgressMonitor
 		}
 	}
 
-	private void run() throws Exception
-	{
-		Thread t = new Thread(new Runnable()
-		{
+	private void run() throws Exception {
+		Thread t = new Thread(new Runnable() {
 
-			public void run()
-			{
+			public void run() {
 				String tmp = "";
-				while (input != null && !socket.isClosed())
-				{
+				while (input != null && !socket.isClosed()) {
 					int b;
-					try
-					{
+					try {
 						b = input.read();
-						if (b == -1)
-						{
+						if (b == -1) {
 
-						} else
-						{
+						} else {
 							tmp += new String(new byte[] { (byte) b });
 						}
 
-						if (tmp.equals("exit"))
-						{
+						if (tmp.equals("exit")) {
 							completed = true;
 							return;
 						}
-					} catch (IOException e)
-					{
+					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -746,53 +629,45 @@ public class TraceRunnerMain implements IProgressMonitor
 		});
 		t.setDaemon(true);
 		t.start();
-		t.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
-		{
+		t.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 
 			@Override
-			public void uncaughtException(Thread t, Throwable e)
-			{
+			public void uncaughtException(Thread t, Throwable e) {
 				e.printStackTrace();
 
 			}
 		});
 
-		TraceXmlWrapper storage = new TraceXmlWrapper(new File(traceFolder, moduleName
-				+ "-" + traceName + ".xml"));
+		TraceXmlWrapper storage = new TraceXmlWrapper(new File(traceFolder,
+				moduleName + "-" + traceName + ".xml"));
 
-		new TraceInterpreter(this, subset, reductionType, seed, new TypeCheckerAssistantFactory()).run(moduleName, traceName, interpreter, storage);
+		new TraceInterpreter(this, subset, reductionType, seed,
+				new TypeCheckerAssistantFactory()).run(moduleName, traceName,
+				interpreter, storage);
 
-		while (!completed)
-		{
-			try
-			{
+		while (!completed) {
+			try {
 				Thread.sleep(500);
-			} catch (InterruptedException e)
-			{
+			} catch (InterruptedException e) {
 			}
 		}
 
-		try
-		{
-			if (DEBUG)
-			{
+		try {
+			if (DEBUG) {
 				System.out.println("Closing socket");
 			}
 			socket.close();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 
 		}
 
 	}
 
-	private void init() throws IOException
-	{
-		if (DEBUG)
-		{
+	private void init() throws IOException {
+		if (DEBUG) {
 			System.out.println("Connected");
 		}
-		
+
 		StringBuilder sb = new StringBuilder();
 		// interpreter.init(null);
 		sb.append("<init ");
@@ -800,9 +675,8 @@ public class TraceRunnerMain implements IProgressMonitor
 		sb.append("/>\n");
 
 		write(sb);
-		
-		if (DEBUG)
-		{
+
+		if (DEBUG) {
 			System.out.println("Wrote init");
 		}
 	}
@@ -811,10 +685,11 @@ public class TraceRunnerMain implements IProgressMonitor
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.overture.traces.vdmj.IProgressMonitor#progress(java.lang.Integer)
+	 * 
+	 * @see
+	 * org.overture.traces.vdmj.IProgressMonitor#progress(java.lang.Integer)
 	 */
-	public void progress(Integer procentage) throws IOException
-	{
+	public void progress(Integer procentage) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		// interpreter.init(null);
 		sb.append("<response ");
@@ -828,10 +703,12 @@ public class TraceRunnerMain implements IProgressMonitor
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.overture.traces.vdmj.IProgressMonitor#progressStartTrace(java.lang.String)
+	 * 
+	 * @see
+	 * org.overture.traces.vdmj.IProgressMonitor#progressStartTrace(java.lang
+	 * .String)
 	 */
-	public void progressStartTrace(String traceName) throws IOException
-	{
+	public void progressStartTrace(String traceName) throws IOException {
 		this.currentTraceName = traceName;
 		StringBuilder sb = new StringBuilder();
 		// interpreter.init(null);
@@ -844,8 +721,7 @@ public class TraceRunnerMain implements IProgressMonitor
 		write(sb);
 	}
 
-	public void progressCompleted() throws IOException
-	{
+	public void progressCompleted() throws IOException {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<response ");
 		sb.append("status=\"completed\" ");
@@ -856,8 +732,7 @@ public class TraceRunnerMain implements IProgressMonitor
 
 	}
 
-	public void progressTerminating() throws IOException
-	{
+	public void progressTerminating() throws IOException {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<response ");
 		sb.append("status=\"terminating\" ");
@@ -867,8 +742,7 @@ public class TraceRunnerMain implements IProgressMonitor
 
 	}
 
-	public void progressError(String message) throws IOException
-	{
+	public void progressError(String message) throws IOException {
 
 		StringBuilder sb = new StringBuilder();
 		// interpreter.init(null);
@@ -882,17 +756,17 @@ public class TraceRunnerMain implements IProgressMonitor
 
 	}
 
-	protected void write(StringBuilder data) throws IOException
-	{
-		if (output == null)
-		{
+	protected void write(StringBuilder data) throws IOException {
+		if (output == null) {
 			// TODO: Handle the error in VDMJ, terminate?
 			System.err.println("Socket to IDE not valid.");
 			return;
 		}
-		byte[] header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes("UTF-8");
+		byte[] header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+				.getBytes("UTF-8");
 		byte[] body = data.toString().getBytes("UTF-8");
-		byte[] size = Integer.toString(header.length + body.length).getBytes("UTF-8");
+		byte[] size = Integer.toString(header.length + body.length).getBytes(
+				"UTF-8");
 
 		output.write(size);
 		output.write(separator);
