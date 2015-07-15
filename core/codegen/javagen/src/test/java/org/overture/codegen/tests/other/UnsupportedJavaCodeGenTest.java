@@ -24,7 +24,7 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 
 @RunWith(Parameterized.class)
-public class UnsupportedTest
+public class UnsupportedJavaCodeGenTest
 {
 	public static final String TEST_INPUT_FOLDER_PATH = "src"
 			+ File.separatorChar + "test" + File.separatorChar + "resources"
@@ -36,7 +36,7 @@ public class UnsupportedTest
 
 	private File testInputFile;
 
-	public UnsupportedTest(File testInputFile)
+	public UnsupportedJavaCodeGenTest(File testInputFile)
 	{
 		this.testInputFile = testInputFile;
 	}
