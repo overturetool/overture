@@ -1,0 +1,7 @@
+operations
+
+Run : bool * bool ==> bool
+Run (a,b) ==
+	if a => b
+	 then return a
+	 else return b;

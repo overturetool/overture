@@ -41,6 +41,17 @@ public class TestCoverageOperators extends BaseTestCase{
         assertQueries("src/test/target/vdmsl-coverage/operators/test_operators.vdmsl.xml",queries);
     }
 	
+    public void test3() throws Exception {
+        Settings.release = Release.VDM_10;
+        Settings.dialect = Dialect.VDM_SL;
+        InterpreterUtil.interpret(Dialect.VDM_SL, "Run(true, false)", new File("src/test/resources/coverage/test_implies.vdmsl".replace('/', File.separatorChar)), true);
+        
+        Interpreter interpreter = Interpreter.getInstance();
+        File coverageFolder = new File("src/test/target/vdmsl-coverage/implies".replace('/', File.separatorChar));
+        coverageFolder.mkdirs();
+        DBGPReaderV2.writeMCDCCoverage(interpreter, coverageFolder);
+    }
+	
 	public void test2() throws Exception {
         Settings.release = Release.VDM_10;
         Settings.dialect = Dialect.VDM_SL;

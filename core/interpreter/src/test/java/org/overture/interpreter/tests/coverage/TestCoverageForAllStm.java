@@ -44,7 +44,7 @@ public class TestCoverageForAllStm extends BaseTestCase {
         queries.put("count(//if_statement/evaluation[.='true'])","3");
         queries.put("count(//if_statement/expression/not_equal/evaluation[.='false'])","1");
         queries.put("count(//if_statement/expression/not_equal/evaluation[.='true'])","3");
-        assertQueries("src/test/target/vdmpp-coverage/if-statement/test_for_loop_statements.vdmpp.xml",queries);
+        assertQueries("src/test/target/vdmsl-coverage/forall-statements/test_for_all_statements.vdmsl.xml",queries);
     }
     
     public void assertQueries(String file_path, HashMap<String, String> queries){
