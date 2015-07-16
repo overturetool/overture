@@ -7,61 +7,13 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
- * Says "Hi" to the user.
+ * The VDM-to-Java code generator base mojo.
  * 
  * @phase generate-sources
  * @requiresDependencyResolution compile
  */
-public abstract class AstCreatorBaseMojo extends AbstractMojo
+public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 {
-
-//	protected final String PLUGIN_GROUPID = "org.overture.maven.tools";
-//	protected final String PLUGIN_ARTIFACTID = "ast-creator-plugin";
-//
-//	/**
-//	 * The prefix of the generated classes.
-//	 * 
-//	 * @parameter
-//	 * @optional
-//	 */
-//	protected boolean extendedTreeOnly = false;
-//
-//	/**
-//	 * The prefix of the generated classes.
-//	 * 
-//	 * @parameter
-//	 * @required
-//	 */
-//	protected String vdmResourceFolderName;
-//
-//	/**
-//	 * The prefix of the generated classes.
-//	 * 
-//	 * @parameter
-//	 */
-//	protected String extendedAst;
-//
-//	/**
-//	 * The extended tree dependency groupid.
-//	 * 
-//	 * @parameter
-//	 */
-//	protected String extendedAstGroupId;
-//
-//	/**
-//	 * The extended tree dependency artifactid.
-//	 * 
-//	 * @parameter
-//	 */
-//	protected String extendedAstArtifactId;
-//
-//	/**
-//	 * The prefix of the extended generated classes.
-//	 * 
-//	 * @parameter
-//	 */
-//	protected String extendedName;
-
 	 /**
 	 * The package of the generated classes.
 	 *
@@ -107,27 +59,6 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 	 */
 	protected boolean formatCode = true;
 
-//	/**
-//	 * Enables generation of vDM source code corresponding to the Java generated tree.
-//	 * 
-//	 * @parameter
-//	 */
-//	protected Boolean generateVdm = false;
-//
-//	/**
-//	 * The package of the generated classes.
-//	 * 
-//	 * @parameter
-//	 */
-//	protected List<String> deletePackageOnGenerate;
-
-	// /**
-	// * My top level of tree.
-	// *
-	// * @parameter
-	// */
-	// protected List<String> names;
-
 	/**
 	 * @parameter expression="${project}"
 	 * @required
@@ -163,25 +94,11 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 		return output;
 	}
 
-//	protected File getProjectVdmSrcDirectory()
-//	{
-//		File output = new File(project.getFile().getParentFile(), "src/main/vdm".replace('/', File.separatorChar));
-//		return output;
-//	}
-
 	protected File getResourcesDir()
 	{
 		File resources = new File(project.getFile().getParentFile(), "src/main/resources".replace('/', File.separatorChar));
 		return resources;
 	}
-
-	// protected List<File> getGrammas()
-	// {
-	// List<File> grammas = new Vector<File>();
-	// grammas.add(new File(getResourcesDir(), ast));
-	// System.out.println("AST file: " + grammas.get(0).getAbsolutePath());
-	// return grammas;
-	// }
 
 	public abstract void execute() throws MojoExecutionException,
 			MojoFailureException;

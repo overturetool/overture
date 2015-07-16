@@ -1,7 +1,7 @@
 package org.overture.tools.maven.astcreator;
 
 import java.io.File;
-import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -10,13 +10,20 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.utils.GeneratedData;
+import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenMain;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 /**
  * Generate Tree
@@ -25,7 +32,7 @@ import org.overture.config.Settings;
  * @phase generate-sources
  * @requiresDependencyResolution compile
  */
-public class GenerateJavaSources extends AstCreatorBaseMojo
+public class GenerateJavaSources extends Vdm2JavaBaseMojo
 {
 	public static final String VDM_PP = "pp";
 	public static final String VDM_SL = "sl";
@@ -36,7 +43,8 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
-		getLog().info("Preparing for VDM to Java generation...");
+		getLog().info("Starting the VDM-to-Java code generator...");
+		
 		// Let's make sure that maven knows to look in the output directory
 		project.addCompileSourceRoot(outputDirectory.getPath());
 
@@ -56,11 +64,13 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 			javaSettings.setJavaRootPackage(packageName);
 		} else
 		{
-			getLog().error(String.format("The Java package: '%s' is not valid.", packageName));
-			// throw new MojoFailureException
+			if(packageName != null)
+			{
+				getLog().warn(String.format("%s is not a valid Java package.", packageName));
+			}
 		}
 
-		Collection<File> files = null;
+		List<File> files = null;
 		File specificationRoot = getResourcesDir();
 		
 		if(specificationDir!=null && !specificationDir.isEmpty())
@@ -70,7 +80,7 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 		
 		if (specificationRoot != null && specificationRoot.exists())
 		{
-			files = FileUtils.listFiles(specificationRoot, new RegexFileFilter(".+\\.vpp|.+\\.vdmpp|.+\\.vsl|.+\\.vdmsl"), DirectoryFileFilter.DIRECTORY);
+			files = new LinkedList<File>(FileUtils.listFiles(specificationRoot, new RegexFileFilter(".+\\.vpp|.+\\.vdmpp|.+\\.vsl|.+\\.vdmsl"), DirectoryFileFilter.DIRECTORY));
 		}
 
 		if (files == null || files.isEmpty())
@@ -81,7 +91,6 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 
 		outputDirectory.mkdirs();
 
-		getLog().info("Starting Java code generation...");
 		List<File> tmp = new Vector<File>();
 		tmp.addAll(files);
 		
@@ -95,24 +104,77 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 		}
 		else
 		{
-			String errorMsg = String.format("Expected VDM version to be '%s' or '%s'", VDM_10, VDM_CLASSIC);
-			getLog().error(errorMsg);
-			throw new MojoFailureException(errorMsg); 
+			throw new MojoFailureException(String.format("Expected VDM version to be '%s' or '%s'", VDM_10, VDM_CLASSIC)); 
 		}
+		
+		JavaCodeGen javaCodeGen = new JavaCodeGen();
+		javaCodeGen.setSettings(irSettings);
+		javaCodeGen.setJavaSettings(javaSettings);
+		
+		GeneratedData genData = null;
 
 		if (dialect.equals(VDM_PP))
 		{
-			JavaCodeGenMain.handleOo(tmp, irSettings, javaSettings, Dialect.VDM_PP, false, outputDirectory);
+			Settings.dialect = Dialect.VDM_PP;
+			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
+			
+			validateTcResult(tcResult);
+			
+			try
+			{
+				genData = javaCodeGen.generateJavaFromVdm(tcResult.result);
+			} catch (AnalysisException e)
+			{
+				e.printStackTrace();
+				throw new MojoExecutionException("Got unexpected error when trying to code generate VDM++ model: "
+						+ e.getMessage());
+			}
 		} else if (dialect.equals(VDM_SL))
 		{
-			JavaCodeGenMain.handleSl(tmp, irSettings, javaSettings, false, outputDirectory);
+			Settings.dialect = Dialect.VDM_SL;
+			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
+			
+			validateTcResult(tcResult);
+			
+			try
+			{
+				genData = javaCodeGen.generateJavaFromVdmModules(tcResult.result);
+			} catch (AnalysisException e)
+			{
+				e.printStackTrace();
+				throw new MojoExecutionException("Got unexpected error when trying to code generate VDM-SL model: "
+						+ e.getMessage());
+			}
+			
 		} else
 		{
-			String errorMsg = String.format("Expected dialect to be '%s' or '%s'", VDM_SL, VDM_PP);
-			getLog().error(errorMsg);
-			throw new MojoExecutionException(errorMsg);
+			throw new MojoExecutionException(String.format("Expected dialect to be '%s' or '%s'", VDM_SL, VDM_PP));
 		}
 		
-		getLog().info("Generation completed.");
+		if(genData != null)
+		{
+			JavaCodeGenMain.processData(false, outputDirectory, javaCodeGen, genData);
+		}
+		
+		getLog().info("Code generation completed.");
+	}
+
+	private void validateTcResult(
+			TypeCheckResult<?> tcResult) throws MojoExecutionException
+	{
+		if(tcResult == null)
+		{
+			throw new MojoExecutionException("Got unexpected problems when trying to type check the model");
+		}
+		else if(tcResult.parserResult == null || !tcResult.parserResult.errors.isEmpty())
+		{
+			throw new MojoExecutionException("Could not parse the model.");
+		}
+		else if(!tcResult.errors.isEmpty())
+		{
+			throw new MojoExecutionException("Could not type check the model.");
+		}
+		
+		// No type errors
 	}
 }
