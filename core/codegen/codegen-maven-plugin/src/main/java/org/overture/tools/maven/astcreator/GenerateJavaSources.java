@@ -12,6 +12,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
@@ -171,17 +172,10 @@ public class GenerateJavaSources extends Vdm2JavaBaseMojo
 	private void validateTcResult(
 			TypeCheckResult<?> tcResult) throws MojoExecutionException
 	{
-		if(tcResult == null)
+		if(!tcResult.parserResult.errors.isEmpty() || !tcResult.errors.isEmpty())
 		{
-			throw new MojoExecutionException("Got unexpected problems when trying to type check the model");
-		}
-		else if(tcResult.parserResult == null || !tcResult.parserResult.errors.isEmpty())
-		{
-			throw new MojoExecutionException("Could not parse the model.");
-		}
-		else if(!tcResult.errors.isEmpty())
-		{
-			throw new MojoExecutionException("Could not type check the model.");
+			getLog().error("Could not parse or type check VDM model:\n" + GeneralCodeGenUtils.errorStr(tcResult));
+			throw new MojoExecutionException("No valid VDM model to code generate!");
 		}
 		
 		// No type errors
