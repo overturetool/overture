@@ -72,7 +72,7 @@ public class Entry implements EvaluatePP {
                 break;
             }
 
-            //Skip;
+            /* skip */
         }
 
         return t.x;
