@@ -5,9 +5,12 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
@@ -30,6 +33,33 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void inAClassClassDefinition(AClassClassDefinition node)
+			throws AnalysisException
+	{
+		if (node.getSupernames().size() > 1)
+		{
+			info.addUnsupportedNode(node, "Multiple inheritance not supported.");
+		}
+	}
+	
+	@Override
+	public void inAFuncInstatiationExp(AFuncInstatiationExp node)
+			throws AnalysisException
+	{
+		if (node.getImpdef() != null)
+		{
+			info.addUnsupportedNode(node, "Implicit functions cannot be instantiated since they are not supported.");
+		}
+	}
+	
+	@Override
+	public void inARenamedDefinition(ARenamedDefinition node)
+			throws AnalysisException
+	{
+		info.addUnsupportedNode(node, "Renaming of imported definitions is not currently supported");
+	}
+	
+	@Override
 	public void caseAForAllExp(AForAllExp node) throws AnalysisException
 	{
 		validateQuantifiedExp(node, node.getBindList(), "forall expression");
@@ -44,7 +74,7 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAExists1Exp(AExists1Exp node) throws AnalysisException
 	{
-		if (info.getExpAssistant().outsideImperativeContext(node))
+		if (inUnsupportedContext(node))
 		{
 			info.addUnsupportedNode(node, String.format("Generation of a %s is only supported within operations/functions", "exists1 expression"));
 		}
@@ -57,7 +87,7 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 
 	private void validateQuantifiedExp(PExp node, List<PMultipleBind> bindings, String nodeStr)
 	{
-		if (info.getExpAssistant().outsideImperativeContext(node))
+		if (inUnsupportedContext(node))
 		{
 			info.addUnsupportedNode(node, String.format("Generation of a %s is only supported within operations/functions", nodeStr));
 		}
@@ -75,7 +105,7 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseALetBeStExp(ALetBeStExp node) throws AnalysisException
 	{
-		if (info.getExpAssistant().outsideImperativeContext(node))
+		if (inUnsupportedContext(node))
 		{
 			info.addUnsupportedNode(node, "Generation of a let be st expression is only supported within operations/functions");
 			return;
@@ -108,7 +138,7 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 	public void caseAMapCompMapExp(AMapCompMapExp node)
 			throws AnalysisException
 	{
-		if (info.getExpAssistant().outsideImperativeContext(node))
+		if (inUnsupportedContext(node))
 		{
 			info.addUnsupportedNode(node, "Generation of a map comprehension is only supported within operations/functions");
 			return;
@@ -129,7 +159,7 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 	public void caseASetCompSetExp(ASetCompSetExp node)
 			throws AnalysisException
 	{
-		if (info.getExpAssistant().outsideImperativeContext(node))
+		if (inUnsupportedContext(node))
 		{
 			info.addUnsupportedNode(node, "Generation of a set comprehension is only supported within operations/functions");
 			return;
@@ -150,11 +180,17 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 	public void caseASeqCompSeqExp(ASeqCompSeqExp node)
 			throws AnalysisException
 	{
-		if (info.getExpAssistant().outsideImperativeContext(node))
+		if (inUnsupportedContext(node))
 		{
 			info.addUnsupportedNode(node, "Generation of a sequence comprehension is only supported within operations/functions");
 			return;
 		}
+	}
+
+	private boolean inUnsupportedContext(org.overture.ast.node.INode node)
+	{
+		return info.getExpAssistant().outsideImperativeContext(node)
+				&& !info.getExpAssistant().appearsInModuleStateInv(node);
 	}
 	
 	public boolean hasUnsupportedNodes()

@@ -7,8 +7,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
-import org.overture.codegen.tests.ConfiguredCloningTest;
+import org.overture.codegen.tests.exec.util.CommonJavaGenCheckerTest;
+import org.overture.codegen.tests.exec.util.testhandlers.ExecutableSpecTestHandler;
+import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
+import org.overture.codegen.tests.output.ConfiguredCloningOutputTest;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -25,7 +27,7 @@ public class ConfiguredCloningJavaGenTest extends CommonJavaGenCheckerTest
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(ConfiguredCloningTest.ROOT),new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
+		return collectTests(new File(ConfiguredCloningOutputTest.ROOT),new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
 	}
 
 	@Override

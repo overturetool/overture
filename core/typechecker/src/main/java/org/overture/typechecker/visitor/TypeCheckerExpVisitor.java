@@ -1296,9 +1296,15 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			}
 
 			memberName.setTypeQualifier(question.qualifiers);
-			PDefinition fdef = // cls.apply(question.assistantFactory.getNameFinder(), new
-								// NameFinder.Newquestion(memberName, question.scope));
-			question.assistantFactory.createAClassTypeAssistant().findName(cls, memberName, question.scope);
+    		PDefinition encl = question.env.getEnclosingDefinition();
+    		NameScope findScope = question.scope;
+	
+    		if (encl != null && question.assistantFactory.createPDefinitionAssistant().isFunction(encl))
+    		{
+    			findScope = NameScope.VARSANDNAMES;		// Allow fields as well in functions
+    		}
+
+    		PDefinition fdef = question.assistantFactory.createAClassTypeAssistant().findName(cls, memberName, findScope);
 
 			if (fdef == null)
 			{

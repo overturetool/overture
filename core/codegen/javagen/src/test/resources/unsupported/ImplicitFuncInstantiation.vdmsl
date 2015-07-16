@@ -1,0 +1,14 @@
+module Entry
+
+exports all
+definitions
+functions
+
+fun1 :  () -> nat
+fun1 () == fun2[nat, nat](1,2);
+
+fun2[@T, @U] (t : @T, u : @U) r: nat
+pre true
+post true;
+
+end Entry

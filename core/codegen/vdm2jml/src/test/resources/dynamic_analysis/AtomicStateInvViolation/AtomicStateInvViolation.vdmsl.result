@@ -1,0 +1,3 @@
+Entry.java:20: JML assertion is false
+        //@ assert inv_St(St);
+            ^

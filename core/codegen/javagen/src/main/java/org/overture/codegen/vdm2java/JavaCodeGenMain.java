@@ -34,7 +34,6 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
@@ -286,12 +285,6 @@ public class JavaCodeGenMain
 		{
 			Logger.getLog().println("Could not code generate model: "
 					+ e.getMessage());
-
-		} catch (UnsupportedModelingException e)
-		{
-			Logger.getLog().println("Could not generate model: "
-					+ e.getMessage());
-			Logger.getLog().println(GeneralCodeGenUtils.constructUnsupportedModelingString(e));
 		}
 	}
 
@@ -315,11 +308,6 @@ public class JavaCodeGenMain
 			Logger.getLog().println("Could not code generate model: "
 					+ e.getMessage());
 
-		} catch (UnsupportedModelingException e)
-		{
-			Logger.getLog().println("Could not generate model: "
-					+ e.getMessage());
-			Logger.getLog().println(GeneralCodeGenUtils.constructUnsupportedModelingString(e));
 		}
 	}
 

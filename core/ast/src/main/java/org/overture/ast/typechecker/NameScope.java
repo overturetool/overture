@@ -32,8 +32,11 @@ public enum NameScope implements Serializable
 	TYPENAME(16), // The names of types
 	CLASSNAME(32), // The names of classes
 	PROCESSNAME(64), // dirty hack to remove split packaging. FIXME must be changed to propper extensible enums
+	VARSTATE(128), // Class instance variables also carry this bit	
 
-	NAMES(3), NAMESANDSTATE(7), NAMESANDANYSTATE(15);
+
+	NAMES(3), NAMESANDSTATE(7), NAMESANDANYSTATE(15),
+	VARSANDSTATE(128 + 4), VARSANDNAMES(128 + 3);
 
 	private int mask;
 

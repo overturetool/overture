@@ -1,0 +1,58 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+final public class Entry {
+    private static St St = new St(5L);
+
+    private Entry() {
+    }
+
+    public static Object Run() {
+        Number y_X_ = 9L;
+
+        return id_X_(3L).longValue() + y_X_.longValue() + St.x_X_.longValue();
+    }
+
+    public static Number id_X_(final Number x_X_) {
+        return x_X_;
+    }
+
+    public String toString() {
+        return "Entry{" + "St := " + Utils.toString(St) + "}";
+    }
+
+    public static class St implements Record {
+        public Number x_X_;
+
+        public St(final Number _x_X_) {
+            x_X_ = _x_X_;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof St)) {
+                return false;
+            }
+
+            St other = ((St) obj);
+
+            return Utils.equals(x_X_, other.x_X_);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x_X_);
+        }
+
+        public St copy() {
+            return new St(x_X_);
+        }
+
+        public String toString() {
+            return "mk_Entry`St" + Utils.formatFields(x_X_);
+        }
+    }
+}
+
+##########

@@ -911,7 +911,7 @@ public class AstFactory
 		AInstanceVariableDefinition result = new AInstanceVariableDefinition();
 
 		// Definition initialization
-		initDefinition(result, Pass.VALUES, name.getLocation(), name, NameScope.STATE);
+		initDefinition(result, Pass.VALUES, name.getLocation(), name, NameScope.VARSANDSTATE);
 
 		result.setType(type);
 		result.setExpression(expression);

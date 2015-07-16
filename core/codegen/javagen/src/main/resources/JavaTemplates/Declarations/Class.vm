@@ -21,6 +21,10 @@ $package
 #if ($node.getAbstract())
 	#set( $abstract = "abstract")
 #end
+#set( $final = "")
+#if ($JavaFormat.isVdmSl())
+	#set( $final = "final")
+#end
 ##
 #set( $static = "")
 #if ($node.getStatic())
@@ -37,7 +41,7 @@ $package
 ##
 $JavaFormat.formatMetaData($node.getGlobalMetaData())##
 ##
-$abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node) $JavaFormat.formatInterfaces($node)
+$final $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node) $JavaFormat.formatInterfaces($node)
 {
 	#foreach( $class in $node.getInnerClasses() )
 	$JavaFormat.format($class)

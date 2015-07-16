@@ -1,0 +1,28 @@
+module Entry
+
+imports from IO all
+definitions
+
+state St of
+  x : nat
+  init s == s = mk_St(1)
+  inv s == s.x = 1
+end
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  IO`println("Before atomic");
+  atomic
+  (
+    x := 2;
+    x := 1;
+  );
+  IO`println("After atomic");
+  
+  return x;
+);
+
+end Entry

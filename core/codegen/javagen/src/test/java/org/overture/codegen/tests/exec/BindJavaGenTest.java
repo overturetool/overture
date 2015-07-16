@@ -7,8 +7,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
-import org.overture.codegen.tests.BindTest;
+import org.overture.codegen.tests.exec.util.CommonJavaGenCheckerTest;
+import org.overture.codegen.tests.exec.util.testhandlers.ExecutableSpecTestHandler;
+import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
+import org.overture.codegen.tests.output.BindOutputTest;
 import org.overture.config.Release;
 
 @RunWith(value = Parameterized.class)
@@ -22,7 +24,7 @@ public class BindJavaGenTest extends CommonJavaGenCheckerTest
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(BindTest.ROOT),new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
+		return collectTests(new File(BindOutputTest.ROOT),new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
 	@Override

@@ -1,0 +1,8 @@
+class A
+end A
+
+class B
+end B
+
+class C is subclass of A,B
+end C

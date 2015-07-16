@@ -1,0 +1,24 @@
+module Entry
+
+imports from A
+functions f renamed g
+exports all
+definitions
+
+functions
+p :  () -> nat
+p () == g();
+
+end Entry
+
+module A
+
+exports all
+definitions
+
+functions
+
+f :  () -> nat
+f () == 1;
+
+end A

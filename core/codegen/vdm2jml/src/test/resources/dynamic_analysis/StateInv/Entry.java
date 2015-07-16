@@ -7,11 +7,14 @@ import java.util.*;
 
 //@ nullable_by_default
 @SuppressWarnings("all")
-public class Entry {
+final public class Entry {
     /*@ spec_public @*/
     private static project.Entrytypes.St St = new project.Entrytypes.St(5L);
 
     //@ public static invariant St != null ==> inv_St(St);
+    private Entry() {
+    }
+
     public static Object Run() {
         opAtomic();
         IO.println("Before breaking state invariant");
@@ -30,8 +33,6 @@ public class Entry {
         St.x = -10L;
         //@ assert inv_St(St);
         St.x = 10L;
-
-        //@ assert inv_St(St);
     }
 
     public String toString() {

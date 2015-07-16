@@ -7,15 +7,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.vdm2jml.tests.util.TestDataCollector;
 
 public class ModuleStateInvTests extends AnnotationTestsBase
 {
 	@BeforeClass
-	public static void init() throws AnalysisException,
-			UnsupportedModelingException
+	public static void init() throws AnalysisException
 	{
 		AnnotationTestsBase.init("ModuleStateInv.vdmsl");
 	}
@@ -69,28 +67,28 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 	public void updateEntireState()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignSt", true, true);
+		checkAssertion("assignSt", true, false);
 	}
 
 	@Test
 	public void updateEntireStateAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignSt", true, false);
+		checkAssertion("atomicAssignSt", true, true);
 	}
 
 	@Test
 	public void updateField()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignX", true, true);
+		checkAssertion("assignX", true, false);
 	}
 
 	@Test
 	public void updateFieldAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignX", true, false);
+		checkAssertion("atomicAssignX", true, true);
 	}
 
 	@Test

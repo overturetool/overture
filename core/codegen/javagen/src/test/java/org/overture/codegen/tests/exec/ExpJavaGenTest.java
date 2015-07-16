@@ -7,8 +7,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.execution.tests.CommonJavaGenCheckerTest;
-import org.overture.codegen.tests.ExpressionTest;
+import org.overture.codegen.tests.exec.util.CommonJavaGenCheckerTest;
+import org.overture.codegen.tests.exec.util.testhandlers.ExpressionTestHandler;
+import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
+import org.overture.codegen.tests.output.ExpOutputTest;
 import org.overture.config.Release;
 
 @RunWith(value = Parameterized.class)
@@ -23,7 +25,7 @@ public class ExpJavaGenTest extends CommonJavaGenCheckerTest
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(ExpressionTest.ROOT),new ExpressionTestHandler(Release.VDM_10, Dialect.VDM_PP));
+		return collectTests(new File(ExpOutputTest.ROOT),new ExpressionTestHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
 	@Override
