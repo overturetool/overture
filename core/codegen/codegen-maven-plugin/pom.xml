@@ -17,8 +17,8 @@
   <build>
     <plugins>
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-resources-plugin</artifactId>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-resources-plugin</artifactId>
       </plugin>
     </plugins>
     <pluginManagement>
@@ -58,8 +58,13 @@
 
   <dependencies>
     <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.4</version>
+    </dependency>
+    <dependency>
       <groupId>org.overturetool.core.codegen</groupId>
-  <artifactId>javagen</artifactId>
+      <artifactId>javagen</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
