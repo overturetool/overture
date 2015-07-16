@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -48,7 +47,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.util.definitions.ClassList;
-import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.Violation;
@@ -58,12 +56,6 @@ import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.config.Settings;
-import org.overture.interpreter.VDMPP;
-import org.overture.interpreter.VDMRT;
-import org.overture.interpreter.VDMSL;
-import org.overture.interpreter.util.ClassListInterpreter;
-import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.Console;
@@ -140,106 +132,6 @@ public class GeneralCodeGenUtils
 		
 		return sb.toString();
 	}
-	
-	public static List<SClassDefinition> consClassList(List<File> files, Dialect dialect)
-			throws AnalysisException
-	{
-		Settings.dialect = dialect;
-		VDMPP vdmrt = (dialect == Dialect.VDM_RT ? new VDMRT() : new VDMPP());
-		vdmrt.setQuiet(true);
-
-		ExitStatus status = vdmrt.parse(files);
-
-		if (status != ExitStatus.EXIT_OK)
-		{
-			throw new AnalysisException("Could not parse files!");
-		}
-
-		status = vdmrt.typeCheck();
-
-		if (status != ExitStatus.EXIT_OK)
-		{
-			throw new AnalysisException("Could not type check files!");
-		}
-
-		ClassListInterpreter classes;
-		try
-		{
-			classes = vdmrt.getInterpreter().getClasses();
-		} catch (Exception e)
-		{
-			throw new AnalysisException("Could not get classes from class list interpreter!");
-		}
-
-		List<SClassDefinition> mergedParseList = new LinkedList<SClassDefinition>();
-
-		for (SClassDefinition vdmClass : classes)
-		{
-			if (vdmClass instanceof AClassClassDefinition) {
-				mergedParseList.add(vdmClass);
-			}
-		}
-
-		return mergedParseList;
-	}
-	
-	public static ModuleList consModuleList(List<File> files) throws AnalysisException
-	{
-		Settings.dialect = Dialect.VDM_SL;
-		VDMSL vdmSl = new VDMSL();
-		vdmSl.setQuiet(true);
-
-		ExitStatus status = vdmSl.parse(files);
-
-		if (status != ExitStatus.EXIT_OK)
-		{
-			throw new AnalysisException("Could not parse files!");
-		}
-
-		status = vdmSl.typeCheck();
-
-		if (status != ExitStatus.EXIT_OK)
-		{
-			throw new AnalysisException("Could not type check files!");
-		}
-
-		try
-		{
-			return vdmSl.getInterpreter().getModules();
-		} catch (Exception e)
-		{
-			throw new AnalysisException("Could not get classes from class list interpreter!");
-		}
-	}
-	
-	public static TypeCheckResult<List<SClassDefinition>> validateFile(File file)
-			throws AnalysisException
-	{
-		if (!file.exists() || !file.isFile())
-		{
-			throw new AnalysisException("Could not find file: "
-					+ file.getAbsolutePath());
-		}
-
-		ParserResult<List<SClassDefinition>> parseResult = ParserUtil.parseOo(file, "UTF-8");
-
-		if (parseResult.errors.size() > 0)
-		{
-			throw new AnalysisException("File did not parse: "
-					+ file.getAbsolutePath());
-		}
-
-		TypeCheckResult<List<SClassDefinition>> typeCheckResult = TypeCheckerUtil.typeCheckPp(file);
-
-		if (typeCheckResult.errors.size() > 0)
-		{
-			throw new AnalysisException("File did not pass the type check: "
-					+ file.getName());
-		}
-
-		return typeCheckResult;
-
-	}
 
 	public static TypeCheckResult<PExp> validateExp(String exp)
 			throws AnalysisException
@@ -277,6 +169,11 @@ public class GeneralCodeGenUtils
 		return typeCheckResult;
 	}
 	
+	public static boolean hasErrors(TypeCheckResult<?> tcResult)
+	{
+		return !tcResult.parserResult.errors.isEmpty() || !tcResult.errors.isEmpty();
+	}
+
 	public static SClassDefinition consMainClass(
 			List<SClassDefinition> mergedParseLists, String expression,
 			Dialect dialect, String mainClassName, ITempVarGen nameGen) throws VDMErrorsException, AnalysisException

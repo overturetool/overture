@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.util.modules.ModuleList;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
@@ -17,6 +17,8 @@ import org.overture.codegen.vdm2java.JavaCodeGenMain;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class JmlGenMain
 {
@@ -118,11 +120,20 @@ public class JmlGenMain
 		try
 		{
 			Logger.getLog().println("Starting the VDM to JML generator...");
-			ModuleList modules = GeneralCodeGenUtils.consModuleList(files);
-
-			GeneratedData data = jmlGen.generateJml(modules);
-
-			JavaCodeGenMain.processData(print, outputDir, jmlGen.getJavaGen(), data);
+			
+			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
+			
+			if(!GeneralCodeGenUtils.hasErrors(tcResult))
+			{
+				GeneratedData data = jmlGen.generateJml(tcResult.result);
+				JavaCodeGenMain.processData(print, outputDir, jmlGen.getJavaGen(), data);
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Could not parse/type check VDM model:\n"
+						+ GeneralCodeGenUtils.errorStr(tcResult));
+			}
+			
 
 		} catch (AnalysisException e)
 		{

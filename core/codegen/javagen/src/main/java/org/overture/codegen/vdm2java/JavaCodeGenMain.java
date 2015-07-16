@@ -31,7 +31,7 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.util.modules.ModuleList;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.ir.IRSettings;
@@ -44,6 +44,8 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class JavaCodeGenMain
 {
@@ -275,9 +277,17 @@ public class JavaCodeGenMain
 			vdmCodGen.setSettings(irSettings);
 			vdmCodGen.setJavaSettings(javaSettings);
 			
-			ModuleList ast = GeneralCodeGenUtils.consModuleList(files);
+			Settings.dialect = Dialect.VDM_SL;
+			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
 			
-			GeneratedData data = vdmCodGen.generateJavaFromVdmModules(ast);
+			if(GeneralCodeGenUtils.hasErrors(tcResult))
+			{
+				Logger.getLog().printError("Found errors in VDM model:");
+				Logger.getLog().printErrorln(GeneralCodeGenUtils.errorStr(tcResult));
+				return;
+			}
+			
+			GeneratedData data = vdmCodGen.generateJavaFromVdmModules(tcResult.result);
 			
 			processData(printCode, outputDir, vdmCodGen, data);
 
@@ -297,9 +307,16 @@ public class JavaCodeGenMain
 			vdmCodGen.setSettings(irSettings);
 			vdmCodGen.setJavaSettings(javaSettings);
 			
-			List<SClassDefinition> ast = GeneralCodeGenUtils.consClassList(files, dialect);
+			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
 			
-			GeneratedData data = vdmCodGen.generateJavaFromVdm(ast);
+			if(GeneralCodeGenUtils.hasErrors(tcResult))
+			{
+				Logger.getLog().printError("Found errors in VDM model:");
+				Logger.getLog().printErrorln(GeneralCodeGenUtils.errorStr(tcResult));
+				return;
+			}
+			
+			GeneratedData data = vdmCodGen.generateJavaFromVdm(tcResult.result);
 			
 			processData(printCode, outputDir, vdmCodGen, data);
 
