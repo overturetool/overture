@@ -91,6 +91,14 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 	 * @required
 	 */
 	protected String dialect;
+
+	/**
+	 * VDM version to use to use. Can be either 'vdm10' or 'classic'
+	 * 
+	 * @parameter
+	 * @required
+	 */
+	protected String release;
 	
 	/**
 	 * A flag to configure formatting of the generated code

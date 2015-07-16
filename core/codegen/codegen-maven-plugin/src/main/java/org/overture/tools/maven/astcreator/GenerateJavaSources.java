@@ -29,6 +29,9 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 {
 	public static final String VDM_PP = "pp";
 	public static final String VDM_SL = "sl";
+	
+	public static final String VDM_10 = "vdm10";
+	public static final String VDM_CLASSIC = "classic";
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
@@ -81,6 +84,21 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 		getLog().info("Starting Java code generation...");
 		List<File> tmp = new Vector<File>();
 		tmp.addAll(files);
+		
+		if(release.equals(VDM_10))
+		{
+			Settings.release = Release.VDM_10;
+		}
+		else if(release.equals(VDM_CLASSIC))
+		{
+			Settings.release = Release.CLASSIC;
+		}
+		else
+		{
+			String errorMsg = String.format("Expected VDM version to be '%s' or '%s'", VDM_10, VDM_CLASSIC);
+			getLog().error(errorMsg);
+			throw new MojoFailureException(errorMsg); 
+		}
 
 		if (dialect.equals(VDM_PP))
 		{
@@ -90,8 +108,9 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 			JavaCodeGenMain.handleSl(tmp, irSettings, javaSettings, false, outputDirectory);
 		} else
 		{
-			getLog().error(String.format("Expected dialect to be '%s' or '%s'", VDM_SL, VDM_PP));
-			throw new MojoExecutionException("VDM input dialect not specified");
+			String errorMsg = String.format("Expected dialect to be '%s' or '%s'", VDM_SL, VDM_PP);
+			getLog().error(errorMsg);
+			throw new MojoExecutionException(errorMsg);
 		}
 		
 		getLog().info("Generation completed.");
