@@ -180,7 +180,7 @@ public class JavaCodeGenMain
 
 				if (file.isFile())
 				{
-					if (isValidSourceFile(file))
+					if (JavaCodeGenUtil.isSupportedVdmSourceFile(file))
 					{
 						files.add(file);
 					}
@@ -431,7 +431,7 @@ public class JavaCodeGenMain
 		
 		for(File f : files)
 		{
-			if(isValidSourceFile(f))
+			if(JavaCodeGenUtil.isSupportedVdmSourceFile(f))
 			{
 				filtered.add(f);
 			}
@@ -439,11 +439,7 @@ public class JavaCodeGenMain
 		
 		return filtered;
 	}
-
-	public static boolean isValidSourceFile(File f) {
-		return f.getName().endsWith(".vdmpp") || f.getName().endsWith(".vdmsl");
-	}
-
+	
 	public static void usage(String msg)
 	{
 		Logger.getLog().printErrorln("VDM++ to Java Code Generator: " + msg

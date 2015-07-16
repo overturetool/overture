@@ -403,4 +403,19 @@ public class JavaCodeGenUtil
 		
 		return moduleOutputDir;
 	}
+	
+	public static boolean isSupportedVdmSourceFile(File f)
+	{
+		String[] extensions = new String[]{".vdmpp", ".vpp", ".vsl", ".vdmsl"};
+		
+		for(String ext : extensions)
+		{
+			if(f.getName().endsWith(ext))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

@@ -5,9 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.overture.ast.analysis.AnalysisException;
@@ -15,6 +12,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenMain;
@@ -70,7 +68,7 @@ public class GenerateJavaSources extends Vdm2JavaBaseMojo
 			}
 		}
 
-		List<File> files = null;
+		List<File> files = new LinkedList<File>();
 		File specificationRoot = getResourcesDir();
 		
 		if(specificationDir!=null && !specificationDir.isEmpty())
@@ -80,7 +78,7 @@ public class GenerateJavaSources extends Vdm2JavaBaseMojo
 		
 		if (specificationRoot != null && specificationRoot.exists())
 		{
-			files = new LinkedList<File>(FileUtils.listFiles(specificationRoot, new RegexFileFilter(".+\\.vpp|.+\\.vdmpp|.+\\.vsl|.+\\.vdmsl"), DirectoryFileFilter.DIRECTORY));
+			findVdmSources(files, specificationRoot);
 		}
 
 		if (files == null || files.isEmpty())
@@ -157,6 +155,17 @@ public class GenerateJavaSources extends Vdm2JavaBaseMojo
 		}
 		
 		getLog().info("Code generation completed.");
+	}
+
+	private void findVdmSources(List<File> files, File specificationRoot)
+	{
+		for(File f : GeneralUtils.getFilesRecursively(specificationRoot))
+		{
+			if(JavaCodeGenUtil.isSupportedVdmSourceFile(f))
+			{
+				files.add(f);
+			}
+		}
 	}
 
 	private void validateTcResult(
