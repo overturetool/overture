@@ -67,7 +67,9 @@ import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.Console;
+import org.overture.parser.messages.VDMError;
 import org.overture.parser.messages.VDMErrorsException;
+import org.overture.parser.messages.VDMWarning;
 import org.overture.parser.syntax.ClassReader;
 import org.overture.parser.syntax.ExpressionReader;
 import org.overture.parser.syntax.ParserException;
@@ -86,6 +88,58 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 public class GeneralCodeGenUtils
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	
+	public static String errorStr(TypeCheckResult<?> tcResult)
+	{
+		if(tcResult == null)
+		{
+			return "No type check result found!";
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		
+		if(!tcResult.parserResult.warnings.isEmpty())
+		{
+			sb.append("Parser warnings:").append('\n');
+			for(VDMWarning w : tcResult.parserResult.warnings)
+			{
+				sb.append(w).append('\n');
+			}
+			sb.append('\n');
+		}
+		
+		if(!tcResult.parserResult.errors.isEmpty())
+		{
+			sb.append("Parser errors:").append('\n');
+			for(VDMError e : tcResult.parserResult.errors)
+			{
+				sb.append(e).append('\n');
+			}
+			sb.append('\n');
+		}
+		
+		if(!tcResult.warnings.isEmpty())
+		{
+			sb.append("Type check warnings:").append('\n');
+			for(VDMWarning w : tcResult.warnings)
+			{
+				sb.append(w).append('\n');
+			}
+			sb.append('\n');
+		}
+		
+		if(!tcResult.errors.isEmpty())
+		{
+			sb.append("Type check errors:").append('\n');
+			for(VDMError w : tcResult.errors)
+			{
+				sb.append(w).append('\n');
+			}
+			sb.append('\n');
+		}
+		
+		return sb.toString();
+	}
 	
 	public static List<SClassDefinition> consClassList(List<File> files, Dialect dialect)
 			throws AnalysisException
