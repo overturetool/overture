@@ -23,6 +23,7 @@ package org.overturetool.cgisa;
 
 import java.io.File;
 
+import org.overture.ast.expressions.ALetDefExp;
 import org.overture.cgisa.extast.declarations.AMrFuncGroupDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
@@ -34,6 +35,7 @@ import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
@@ -137,6 +139,8 @@ public class IsaTemplateManager extends TemplateManager
 		
 		nodeTemplateFileNames.put(ANotImplementedExpCG.class, templateStructure.EXP_PATH
 				+ MISC_EXP_PATH + File.separatorChar + NOT_IMPL_EXP);
+		
+		nodeTemplateFileNames.put(ALetDefExpCG.class, templateStructure)
 
 	}
 }
