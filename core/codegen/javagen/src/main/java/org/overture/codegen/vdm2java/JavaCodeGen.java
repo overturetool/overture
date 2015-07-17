@@ -72,7 +72,10 @@ import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
+import org.overture.codegen.traces.TraceNames;
 import org.overture.codegen.trans.DivideTrans;
+import org.overture.codegen.trans.Exp2StmVarPrefixes;
+import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.ModuleToClassTransformation;
 import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -104,6 +107,10 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	
 	private IREventObserver irObserver;
 
+	protected IterationVarPrefixes iteVarPrefixes;
+	protected TraceNames tracePrefixes;
+	protected Exp2StmVarPrefixes exp2stmPrefixes;
+	
 	public JavaCodeGen()
 	{
 		super();
@@ -112,6 +119,10 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 	private void init()
 	{
+		this.iteVarPrefixes = new IterationVarPrefixes();
+		this.tracePrefixes = new TraceNames();
+		this.exp2stmPrefixes = new Exp2StmVarPrefixes();
+		
 		this.irObserver = null;
 		initVelocity();
 
@@ -862,5 +873,35 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		}
 		
 		return ast;
+	}
+	
+	public void setTempVarPrefixes(IterationVarPrefixes iteVarPrefixes)
+	{
+		this.iteVarPrefixes = iteVarPrefixes;
+	}
+	
+	public IterationVarPrefixes getIteVarPrefixes()
+	{
+		return iteVarPrefixes;
+	}
+
+	public TraceNames getTracePrefixes()
+	{
+		return tracePrefixes;
+	}
+
+	public void setTracePrefixes(TraceNames tracePrefixes)
+	{
+		this.tracePrefixes = tracePrefixes;
+	}
+	
+	public Exp2StmVarPrefixes getExp2stmPrefixes()
+	{
+		return exp2stmPrefixes;
+	}
+
+	public void setExp2stmPrefixes(Exp2StmVarPrefixes exp2stmPrefixes)
+	{
+		this.exp2stmPrefixes = exp2stmPrefixes;
 	}
 }

@@ -69,11 +69,10 @@ public class JavaTransSeries
 		// Data and functionality to support the transformations
 		IRInfo info = codeGen.getIRGenerator().getIRInfo();
 		IterationVarPrefixes iteVarPrefixes = codeGen.getIteVarPrefixes();
+		Exp2StmVarPrefixes exp2stmPrefixes = codeGen.getExp2stmPrefixes();
 		TraceNames tracePrefixes = codeGen.getTracePrefixes();
 		TransAssistantCG transAssist = codeGen.getTransAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
-
-		Exp2StmVarPrefixes exp2stmPrefixes = new Exp2StmVarPrefixes();
 
 		// Construct the transformations
 		FuncTrans funcTr = new FuncTrans(transAssist);
