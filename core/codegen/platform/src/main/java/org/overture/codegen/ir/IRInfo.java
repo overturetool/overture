@@ -103,6 +103,9 @@ public class IRInfo
 	// IR classes
 	private List<AClassDeclCG> classes;
 	
+	// IR modules
+	private List<AModuleDeclCG> modules;
+	
 	public IRInfo(String objectInitCallPrefix)
 	{
 		super();
@@ -122,6 +125,7 @@ public class IRInfo
 		
 		this.idStateDesignatorDefs = new HashMap<AIdentifierStateDesignator, PDefinition>();
 		this.classes = new LinkedList<AClassDeclCG>();
+		this.modules = new LinkedList<AModuleDeclCG>();
 	}
 
 	public AssistantManager getAssistantManager()
@@ -391,11 +395,70 @@ public class IRInfo
 		}
 	}
 	
+	public void removeClass(String name)
+	{
+		AClassDeclCG classToRemove = null;
+		
+		for (AClassDeclCG clazz : classes)
+		{
+			if(clazz.getName().equals(name))
+			{
+				classToRemove = clazz;
+				break;
+			}
+		}
+		
+		if(classToRemove != null)
+		{
+			classes.remove(classToRemove);
+		}
+	}
+	
 	public void clearClasses()
 	{
 		if(this.classes != null)
 		{
 			this.classes.clear();
+		}
+	}
+	
+	public List<AModuleDeclCG> getModules()
+	{
+		return modules;
+	}
+	
+	public void addModule(AModuleDeclCG irModule)
+	{
+		if(this.modules != null)
+		{
+			this.modules.add(irModule);
+		}
+	}
+	
+	public void removeModule(String name)
+	{
+		AModuleDeclCG moduleToRemove = null;
+		
+		for (AModuleDeclCG module : modules)
+		{
+			if(module.getName().equals(name))
+			{
+				moduleToRemove = module;
+				break;
+			}
+		}
+		
+		if(moduleToRemove != null)
+		{
+			modules.remove(moduleToRemove);
+		}
+	}
+	
+	public void clearModules()
+	{
+		if(this.modules != null)
+		{
+			this.modules.clear();
 		}
 	}
 }

@@ -278,9 +278,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			try
 			{
 				generator.applyTotalTransformation(status, moduleTransformation);
-				
-				IRStatus<AClassDeclCG> clazzStatus = IRStatus.extract(status, AClassDeclCG.class);
-				getInfo().addClass(clazzStatus.getIrNode());
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
@@ -432,6 +429,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 		javaFormat.clearFunctionValueAssistant();
 		getInfo().clearClasses();
+		getInfo().clearModules();
 
 		GeneratedData data = new GeneratedData();
 		data.setClasses(generated);

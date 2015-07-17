@@ -68,8 +68,6 @@ public class JavaTransSeries
 
 	public List<DepthFirstAnalysisAdaptor> consAnalyses(FunctionValueAssistant functionValueAssistant)
 	{
-		// TODO: Register modules in IRInfo also (now that we register IR classes there)
-		
 		// Data and functionality to support the transformations
 		IRInfo irInfo = codeGen.getIRGenerator().getIRInfo();
 		TempVarPrefixes varPrefixes = codeGen.getTempVarPrefixes();

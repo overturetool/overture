@@ -152,6 +152,9 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			// VDM-SL, e.g. St := mk_St(...)
 			clazz.getFields().add(transAssistant.consField(IRConstants.PRIVATE, stateType, stateDecl.getName(), getInitExp(stateDecl)));
 		}
+		
+		info.removeModule(node.getName());
+		info.addClass(clazz);
 	}
 
 	private void handleImports(final AModuleImportsCG moduleImports, final AClassDeclCG clazz) throws AnalysisException
