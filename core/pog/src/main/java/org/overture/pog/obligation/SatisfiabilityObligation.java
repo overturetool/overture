@@ -243,18 +243,18 @@ public class SatisfiabilityObligation extends ProofObligation
 
 					if (stateDefinition instanceof AStateDefinition)
 					{
-						AVariableExp varExp = getVarExp(OLD_STATE_ARG);
+						AVariableExp varExp = getVarExp(OLD_STATE_ARG,stateDefinition.clone());
 						varExp.setType(((AStateDefinition) stateDefinition).getRecordType().clone());
 						postArglist.add(varExp);
-						AVariableExp varExp2 = getVarExp(NEW_STATE_ARG);
+						AVariableExp varExp2 = getVarExp(NEW_STATE_ARG,stateDefinition.clone());
 						varExp2.setType(((AStateDefinition) stateDefinition).getRecordType().clone());
 						postArglist.add(varExp2);
 					} else
 					{
-						AVariableExp varExp = getVarExp(OLD_SELF_ARG);
+						AVariableExp varExp = getVarExp(OLD_SELF_ARG,stateDefinition.clone());
 						postArglist.add(varExp);
 						varExp.setType(stateDefinition.getType().clone());
-						AVariableExp varExp2 = getVarExp(NEW_SELF_ARG);
+						AVariableExp varExp2 = getVarExp(NEW_SELF_ARG,stateDefinition.clone());
 						postArglist.add(varExp2);
 						varExp2.setType(stateDefinition.getType().clone());
 					}
@@ -266,7 +266,7 @@ public class SatisfiabilityObligation extends ProofObligation
 				throw new RuntimeException("Expecting single identifier pattern in operation result");
 			}
 
-			AApplyExp postApply = getApplyExp(getVarExp(op.getPostdef().getName()), postArglist);
+			AApplyExp postApply = getApplyExp(getVarExp(op.getPostdef().getName(),op.getPostdef().clone()), postArglist);
 			postApply.getRoot().setType(op.getPostdef().getType().clone());
 			postApply.setType(new ABooleanBasicType());
 			existsExp.setPredicate(postApply);
@@ -287,7 +287,7 @@ public class SatisfiabilityObligation extends ProofObligation
 				stateInPost(exists_binds, postArglist, stateDefinition);
 			}
 			exists_exp.setBindList(exists_binds);
-			AApplyExp postApply = getApplyExp(getVarExp(op.getPostdef().getName()), new Vector<PExp>(postArglist));
+			AApplyExp postApply = getApplyExp(getVarExp(op.getPostdef().getName(),op.getPostdef().clone()), new Vector<PExp>(postArglist));
 			postApply.setType(new ABooleanBasicType());
 			postApply.getRoot().setType(op.getPostdef().getType().clone());
 			exists_exp.setPredicate(postApply);
@@ -309,11 +309,11 @@ public class SatisfiabilityObligation extends ProofObligation
 		AVariableExp varExp;
 		if (stateDefinition instanceof AStateDefinition)
 		{
-			varExp = getVarExp(OLD_STATE_ARG);
+			varExp = getVarExp(OLD_STATE_ARG,stateDefinition.clone());
 			varExp.setType(((AStateDefinition) stateDefinition).getRecordType().clone());
 		} else
 		{
-			varExp = getVarExp(OLD_SELF_ARG);
+			varExp = getVarExp(OLD_SELF_ARG,stateDefinition.clone());
 			varExp.setType(stateDefinition.getType().clone());
 		}
 		args.add(varExp);
@@ -328,13 +328,13 @@ public class SatisfiabilityObligation extends ProofObligation
 		// replace with super call
 		if (stateDefinition instanceof AStateDefinition)
 		{
-			varExp = getVarExp(NEW_STATE_ARG);
+			varExp = getVarExp(NEW_STATE_ARG,stateDefinition.clone());
 			AStateDefinition aStateDefinition = (AStateDefinition) stateDefinition;
 			varExp.setType(aStateDefinition.getRecordType().clone());
 			exists_binds.addAll(getMultipleTypeBindList(aStateDefinition.getRecordType().clone(), NEW_STATE_ARG));
 		} else
 		{
-			varExp = getVarExp(NEW_SELF_ARG);
+			varExp = getVarExp(NEW_SELF_ARG,stateDefinition.clone());
 			varExp.setType(stateDefinition.getType().clone());
 			exists_binds.addAll(getMultipleTypeBindList(stateDefinition.getType().clone(), NEW_SELF_ARG));
 		}

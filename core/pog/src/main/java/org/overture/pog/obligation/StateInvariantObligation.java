@@ -35,6 +35,7 @@ import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
@@ -80,9 +81,10 @@ public class StateInvariantObligation extends ProofObligation
 			letExp.setType(def.getInvExpression().getType().clone());
 			List<PDefinition> invDefs = new Vector<PDefinition>();
 			AEqualsDefinition local = new AEqualsDefinition();
+			local.setExpType(def.getRecordType().clone());
 			local.setPattern(def.getInvPattern().clone());
 			local.setName(def.getName().clone());
-			AVariableExp varExp = getVarExp(def.getName());
+			AVariableExp varExp = getVarExp(def.getName(), def.clone());
 			varExp.setType(def.getRecordType().clone());
 			local.setTest(varExp);
 			invDefs.add(local);
@@ -148,18 +150,19 @@ public class StateInvariantObligation extends ProofObligation
 	private PExp makeInvApplyExp(AAtomicStm atom)
 	{
 		AStateDefinition stateDef = atom.getAssignments().get(0).getStateDefinition();
-		if (stateDef == null){
+		if (stateDef == null)
+		{
 			return extractInv(atom);
 		}
 		String stateName = getStateName(stateDef);
 		List<PExp> arglist = new Vector<PExp>();
 		for (AFieldField f : stateDef.getFields())
 		{
-			arglist.add(getVarExp(f.getTagname().clone(), f.getType()));
+			arglist.add(getVarExp(f.getTagname().clone(), stateDef.clone(),f.getType()));
 		}
 		PExp mkExp = AstExpressionFactory.newAMkTypeExp(new LexNameToken("", stateName, null), stateDef.getRecordType().clone(), arglist);
-		PExp invApplyExp = getApplyExp(getVarExp(new LexNameToken("", "inv_"
-				+ stateName, null)), new ABooleanBasicType(), mkExp);
+		AApplyExp invApplyExp = getApplyExp(getVarExp(stateDef.getInitdef().getName().clone(), stateDef.getInvdef().clone(), stateDef.getInvdef().getType().clone()), new ABooleanBasicType(), mkExp);
+		invApplyExp.getRoot().setType(stateDef.getInvdef().getType().clone());
 		return invApplyExp;
 	}
 
