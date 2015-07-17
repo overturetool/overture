@@ -273,16 +273,19 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		ModuleToClassTransformation moduleTransformation = new ModuleToClassTransformation(getInfo(),
 				transAssistant, getModuleDecls(moduleStatuses));
 		
-		for(IRStatus<org.overture.codegen.cgast.INode> moduleStatus : modulesAsNodes)
+		for(IRStatus<org.overture.codegen.cgast.INode> status : modulesAsNodes)
 		{
 			try
 			{
-				generator.applyTotalTransformation(moduleStatus, moduleTransformation);
+				generator.applyTotalTransformation(status, moduleTransformation);
+				
+				IRStatus<AClassDeclCG> clazzStatus = IRStatus.extract(status, AClassDeclCG.class);
+				getInfo().addClass(clazzStatus.getIrNode());
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Error when generating code for module "
-						+ moduleStatus.getIrNodeName() + ": " + e.getMessage());
+						+ status.getIrNodeName() + ": " + e.getMessage());
 				Logger.getLog().printErrorln("Skipping module..");
 				e.printStackTrace();
 			}
@@ -301,8 +304,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		}
 
 		List<AClassDeclCG> classes = getClassDecls(classStatuses);
-		javaFormat.setClasses(classes);
-
 		List<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
 
 		for (IRStatus<AClassDeclCG> status : classStatuses)
@@ -431,7 +432,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		}
 
 		javaFormat.clearFunctionValueAssistant();
-		javaFormat.clearClasses();
+		getInfo().clearClasses();
 
 		GeneratedData data = new GeneratedData();
 		data.setClasses(generated);

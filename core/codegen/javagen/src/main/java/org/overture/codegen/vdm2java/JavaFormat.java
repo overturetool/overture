@@ -118,8 +118,6 @@ public class JavaFormat
 	
 	public static final String JAVA_INT = "int";
 
-	private List<AClassDeclCG> classes;
-
 	private IRInfo info;
 
 	private FunctionValueAssistant functionValueAssistant;
@@ -171,11 +169,6 @@ public class JavaFormat
 		this.functionValueAssistant = null;
 	}
 
-	public List<AClassDeclCG> getClasses()
-	{
-		return classes;
-	}
-
 	public void setJavaSettings(JavaSettings javaSettings)
 	{
 		valueSemantics.setJavaSettings(javaSettings);
@@ -189,23 +182,6 @@ public class JavaFormat
 	public void init()
 	{
 		mergeVisitor.init();
-	}
-
-	public void setClasses(List<AClassDeclCG> classes)
-	{
-		this.classes = classes != null ? classes
-				: new LinkedList<AClassDeclCG>();
-	}
-
-	public void clearClasses()
-	{
-		if (classes != null)
-		{
-			classes.clear();
-		} else
-		{
-			classes = new LinkedList<AClassDeclCG>();
-		}
 	}
 
 	public MergeVisitor getMergeVisitor()

@@ -100,6 +100,9 @@ public class IRInfo
 	// Definitions for identifier state designators
 	private Map<AIdentifierStateDesignator, PDefinition> idStateDesignatorDefs;
 	
+	// IR classes
+	private List<AClassDeclCG> classes;
+	
 	public IRInfo(String objectInitCallPrefix)
 	{
 		super();
@@ -118,6 +121,7 @@ public class IRInfo
 		this.objectInitCallNames = new HashMap<AExplicitOperationDefinition, String>();
 		
 		this.idStateDesignatorDefs = new HashMap<AIdentifierStateDesignator, PDefinition>();
+		this.classes = new LinkedList<AClassDeclCG>();
 	}
 
 	public AssistantManager getAssistantManager()
@@ -372,5 +376,26 @@ public class IRInfo
 	public void setIdStateDesignatorDefs(Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
 		this.idStateDesignatorDefs = idDefs;
+	}
+
+	public List<AClassDeclCG> getClasses()
+	{
+		return classes;
+	}
+
+	public void addClass(AClassDeclCG irClass)
+	{
+		if(this.classes != null)
+		{
+			this.classes.add(irClass);
+		}
+	}
+	
+	public void clearClasses()
+	{
+		if(this.classes != null)
+		{
+			this.classes.clear();
+		}
 	}
 }

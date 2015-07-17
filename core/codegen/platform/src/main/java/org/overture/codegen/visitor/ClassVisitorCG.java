@@ -189,6 +189,8 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 		{
 			classCg.getMethods().add(question.getDeclAssistant().consDefaultContructor(name));
 		}
+		
+		question.addClass(classCg);
 
 		return classCg;
 	}
