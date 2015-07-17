@@ -51,7 +51,7 @@ public class JavaTransSeries
 	public static final String CASES_EXP_RESULT_NAME_PREFIX = "casesExpResult_";
 	public static final String AND_EXP_NAME_PREFIX = "andResult_";
 	public static final String OR_EXP_NAME_PREFIX = "orResult_";
-	public static final String WHILE_COND_NAME_PREFIX = "whileCond";
+	public static final String WHILE_COND_NAME_PREFIX = "whileCond_";
 	public static final String IS_EXP_SUBJECT_NAME_PREFIX = "isExpSubject_";
 	public static final String REC_MODIFIER_NAME_PREFIX = "recModifierExp_";
 	public static final String FUNC_RESULT_NAME_PREFIX = "funcResult_";
