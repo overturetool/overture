@@ -14,6 +14,7 @@ import org.overture.codegen.trans.CallObjStmTrans;
 import org.overture.codegen.trans.DivideTrans;
 import org.overture.codegen.trans.IPostCheckCreator;
 import org.overture.codegen.trans.IsExpTrans;
+import org.overture.codegen.trans.LetBeStTrans;
 import org.overture.codegen.trans.PostCheckTrans;
 import org.overture.codegen.trans.PreCheckTrans;
 import org.overture.codegen.trans.PrePostTrans;
@@ -85,6 +86,7 @@ public class JavaTransSeries
 		IfExpTrans ifExpTr = new IfExpTrans(transAssist);
 		FuncValTrans funcValTr = new FuncValTrans(transAssist, funcValAssist, INTERFACE_NP, TEMPLATE_TYPE_NP, EVAL_METHOD_PREFIX, PARAM_NP);
 		ILanguageIterator langIte = new JavaLanguageIterator(transAssist, prefixes);
+		LetBeStTrans letBeStTr = new LetBeStTrans(transAssist, langIte);
 		WhileStmTrans whileTr = new WhileStmTrans(transAssist, WHILE_COND_NP);
 		Exp2StmTrans exp2stmTr = new Exp2StmTrans(prefixes, transAssist, consExists1CounterData(), langIte, TERNARY_IF_EXP_NP, CASES_EXP_RESULT_NP, AND_EXP_NP, OR_EXP_NP, REC_MODIFIER_NP);
 		PatternTrans patternTr = new PatternTrans(prefixes, transAssist, new PatternMatchConfig(), CASES_EXP_NP);
@@ -114,6 +116,7 @@ public class JavaTransSeries
 		series.add(prePostTr);
 		series.add(ifExpTr);
 		series.add(funcValTr);
+		series.add(letBeStTr);
 		series.add(whileTr);
 		series.add(exp2stmTr);
 		series.add(tracesTr);

@@ -65,7 +65,6 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.ACasesStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
@@ -87,10 +86,9 @@ import org.overture.codegen.trans.quantifier.OrdinaryQuantifierStrategy;
 public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG transAssistant;
+	private ILanguageIterator langIterator;
 
 	private Exists1CounterData counterData;
-	
-	private ILanguageIterator langIterator;
 
 	private String ternaryIfExpPrefix;
 	private String casesExpResultPrefix;
@@ -99,12 +97,12 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 	private String recModifierExpPrefix;
 
 	public Exp2StmTrans(TempVarPrefixes varPrefixes,
-			TransAssistantCG transformationAssistant,
+			TransAssistantCG transAssistant,
 			Exists1CounterData counterData, ILanguageIterator langIterator,
 			String ternaryIfExpPrefix, String casesExpPrefix,
 			String andExpPrefix, String orExpPrefix, String recModifierExpPrefix)
 	{
-		this.transAssistant = transformationAssistant;
+		this.transAssistant = transAssistant;
 		this.counterData = counterData;
 		this.langIterator = langIterator;
 
@@ -232,48 +230,6 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		{
 			visitBoolBinary(node);
 		}
-	}
-
-	@Override
-	public void caseALetBeStStmCG(ALetBeStStmCG node) throws AnalysisException
-	{
-		AHeaderLetBeStCG header = node.getHeader();
-		
-		if (!(header.getBinding() instanceof ASetMultipleBindCG))
-		{
-			transAssistant.getInfo().addTransformationWarning(node.getHeader().getBinding(), "This transformation only works for 'let be st' "
-					+ "statements with with multiple set binds and not multiple type binds in '"
-					+ this.getClass().getSimpleName() + "'");
-			return;
-		}
-		
-		SExpCG suchThat = header.getSuchThat();
-		ASetMultipleBindCG binding = (ASetMultipleBindCG) node.getHeader().getBinding();
-		
-		SSetTypeCG setType = transAssistant.getSetTypeCloned(binding.getSet());
-		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
-		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
-
-		LetBeStStrategy strategy = new LetBeStStrategy(transAssistant, suchThat, setType, langIterator, tempVarNameGen, varPrefixes);
-
-		if (transAssistant.hasEmptySet(binding))
-		{
-			transAssistant.cleanUpBinding(binding);
-			node.setStatement(new ABlockStmCG());
-		}
-
-		LinkedList<SPatternCG> patterns = binding.getPatterns();
-		ABlockStmCG outerBlock = transAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy);
-
-		// Only the statement of the let be st statement is added to the outer block statements.
-		// We obtain the equivalent functionality of the remaining part of the let be st statement
-		// from the transformation in the outer block
-		outerBlock.getStatements().add(node.getStatement());
-
-		// Replace the let be st statement with the transformation
-		transAssistant.replaceNodeWithRecursively(node, outerBlock, this);
-		
-		outerBlock.setScoped(transAssistant.getInfo().getStmAssistant().isScoped(outerBlock));
 	}
 
 	@Override
