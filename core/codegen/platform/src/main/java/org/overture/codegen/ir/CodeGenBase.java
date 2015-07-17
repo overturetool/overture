@@ -22,13 +22,10 @@ public class CodeGenBase
 	public static final String WHILE_COND_NAME_PREFIX = "whileCond";
 	public static final String IS_EXP_SUBJECT_NAME_PREFIX = "isExpSubject_";
 	public static final String REC_MODIFIER_NAME_PREFIX = "recModifierExp_";
-	public static final String MISSING_OP_MEMBER = "Missing operation member: ";
-	public static final String MISSING_MEMBER = "Missing member: ";
 	public static final String INVALID_NAME_PREFIX = "cg_";
 	public static final String OBJ_INIT_CALL_NAME_PREFIX = "cg_init_";
 	public static final String FUNC_RESULT_NAME_PREFIX = "funcResult_";
 	public static final String POST_CHECK_METHOD_NAME = "postCheck";
-	public static final String QUOTES = "quotes";
 
 	protected IRGenerator generator;
 	protected TransAssistantCG transAssistant;

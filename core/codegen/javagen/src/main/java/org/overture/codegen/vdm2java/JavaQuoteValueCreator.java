@@ -22,7 +22,6 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
@@ -55,12 +54,12 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		// The package where the quotes are put is userCode.quotes
 		if(JavaCodeGenUtil.isValidJavaPackage(userCodePackage))
 		{
-			String quotePackage = userCodePackage + "." + CodeGenBase.QUOTES;
+			String quotePackage = userCodePackage + "." + JavaCodeGen.JAVA_QUOTES_PACKAGE;
 			decl.setPackage(quotePackage);
 		}
 		else
 		{
-			decl.setPackage(CodeGenBase.QUOTES);
+			decl.setPackage(JavaCodeGen.JAVA_QUOTES_PACKAGE);
 		}
 		
 		decl.getFields().add(consHashcodeField());

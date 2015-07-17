@@ -174,10 +174,10 @@ public class JavaCodeGenUtil
 
 			if(javaPackage == null || javaPackage.equals(""))
 			{
-				return clazz.getPackage().equals(JavaCodeGen.QUOTES);
+				return clazz.getPackage().equals(JavaCodeGen.JAVA_QUOTES_PACKAGE);
 			}
 			
-			if(clazz.getPackage().equals(javaPackage + "." + JavaCodeGen.QUOTES))
+			if(clazz.getPackage().equals(javaPackage + "." + JavaCodeGen.JAVA_QUOTES_PACKAGE))
 			{
 				return true;
 			}

@@ -9,8 +9,6 @@ import static org.overture.codegen.ir.CodeGenBase.EVAL_METHOD_PREFIX;
 import static org.overture.codegen.ir.CodeGenBase.FUNC_RESULT_NAME_PREFIX;
 import static org.overture.codegen.ir.CodeGenBase.INTERFACE_NAME_PREFIX;
 import static org.overture.codegen.ir.CodeGenBase.IS_EXP_SUBJECT_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.MISSING_MEMBER;
-import static org.overture.codegen.ir.CodeGenBase.MISSING_OP_MEMBER;
 import static org.overture.codegen.ir.CodeGenBase.OBJ_EXP_NAME_PREFIX;
 import static org.overture.codegen.ir.CodeGenBase.OR_EXP_NAME_PREFIX;
 import static org.overture.codegen.ir.CodeGenBase.PARAM_NAME_PREFIX;
@@ -92,7 +90,7 @@ public class JavaTransSeries
 		IsExpTransformation isExpTransformation = new IsExpTransformation(transAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
 		SeqConversionTransformation seqConversionTransformation = new SeqConversionTransformation(transAssistant);
 		TracesTransformation tracesTransformation = new TracesTransformation(transAssistant, varPrefixes, traceNamePrefixes, langIterator, new JavaCallStmToStringBuilder());
-		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transAssistant, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER);
+		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transAssistant, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX);
 		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
 		RecordMetodsTransformation recTransformation = new RecordMetodsTransformation(codeGen.getJavaFormat().getRecCreator());
 

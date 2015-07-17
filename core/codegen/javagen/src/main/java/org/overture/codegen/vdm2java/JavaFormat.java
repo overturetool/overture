@@ -90,7 +90,6 @@ import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
-import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRAnalysis;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
@@ -948,11 +947,11 @@ public class JavaFormat
 		
 		if(settings != null && !settings.trim().isEmpty())
 		{
-			return settings + "." + CodeGenBase.QUOTES + ".";
+			return settings + "." + JavaCodeGen.JAVA_QUOTES_PACKAGE + ".";
 		}
 		else
 		{
-			return CodeGenBase.QUOTES + ".";
+			return JavaCodeGen.JAVA_QUOTES_PACKAGE + ".";
 		}
 	}
 

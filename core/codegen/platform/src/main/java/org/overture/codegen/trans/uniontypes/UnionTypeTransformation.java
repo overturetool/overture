@@ -88,26 +88,23 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 {
+	public static final String MISSING_OP_MEMBER = "Missing operation member: ";
+	public static final String MISSING_MEMBER = "Missing member: ";
+	
 	private TransAssistantCG transAssistant;
 
 	private String objExpPrefix;
 	private String applyExpResulPrefix;
 	private String callStmObjPrefix;
 
-	private String missingOpMemberPrefix;
-	private String missingMemberPrefix;
-	
 	public UnionTypeTransformation(TransAssistantCG baseAssistant,
 			String applyExpResultPrefix, String objExpPrefix,
-			String callStmObjPrefix, String missingOpMemberPrefix,
-			String missingMemberPrefix)
+			String callStmObjPrefix)
 	{
 		this.transAssistant = baseAssistant;
-		this.missingMemberPrefix = missingMemberPrefix;
 
 		this.applyExpResulPrefix = applyExpResultPrefix;
 		this.objExpPrefix = objExpPrefix;
-		this.missingOpMemberPrefix = missingOpMemberPrefix;
 		this.callStmObjPrefix = callStmObjPrefix;
 	}
 
@@ -459,7 +456,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		ARaiseErrorStmCG raise = consRaiseStm(missingMemberPrefix, memberName);
+		ARaiseErrorStmCG raise = consRaiseStm(MISSING_MEMBER, memberName);
 		ifChecks.setElseStm(raise);
 
 		if(parent instanceof AApplyExpCG && ((AApplyExpCG) parent).getRoot() == node)
@@ -817,7 +814,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		ARaiseErrorStmCG raiseStm = consRaiseStm(missingOpMemberPrefix,fieldName);
+		ARaiseErrorStmCG raiseStm = consRaiseStm(MISSING_OP_MEMBER,fieldName);
 		ifChecks.setElseStm(raiseStm);
 
 		replacementBlock.getStatements().add(ifChecks);

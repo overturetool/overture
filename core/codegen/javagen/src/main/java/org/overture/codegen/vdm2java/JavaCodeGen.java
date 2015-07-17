@@ -95,7 +95,8 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 	public static final String JAVA_QUOTE_NAME_SUFFIX = "Quote";
 	public static final String JAVA_MAIN_CLASS_NAME = "Main";
-
+	public static final String JAVA_QUOTES_PACKAGE = "quotes";
+	
 	private JavaFormat javaFormat;
 	private TemplateStructure javaTemplateStructure;
 	
