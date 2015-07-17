@@ -90,6 +90,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 
 	private Exists1CounterData counterData;
 	private Exp2StmVarPrefixes prefixes;
+	private TempVarPrefixes varPrefixes;
 
 	public Exp2StmTrans(TempVarPrefixes varPrefixes,
 			TransAssistantCG transAssistant, Exists1CounterData counterData,
@@ -99,6 +100,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		this.counterData = counterData;
 		this.langIterator = langIterator;
 		this.prefixes = prefixes;
+		this.varPrefixes = varPrefixes;
 	}
 
 	@Override
@@ -237,7 +239,6 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		SExpCG suchThat = header.getSuchThat();
 		SSetTypeCG setType = transAssistant.getSetTypeCloned(binding.getSet());
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
-		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
 		LetBeStStrategy strategy = new LetBeStStrategy(transAssistant, suchThat, setType, langIterator, tempVarNameGen, varPrefixes);
 
@@ -273,7 +274,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		transAssistant.replaceNodeWith(node, letBeStResult);
 
 		LinkedList<SPatternCG> patterns = binding.getPatterns();
-		ABlockStmCG block = transAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy);
+		ABlockStmCG block = transAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy, varPrefixes);
 		outerBlock.getStatements().addFirst(block);
 
 		// Replace the enclosing statement with the transformation
@@ -337,13 +338,12 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		STypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_MAP_COMP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
 		ComplexCompStrategy strategy = new MapCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
 		List<ASetMultipleBindCG> bindings = filterBindList(node, node.getBindings());
 
-		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy);
+		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy, varPrefixes);
 
 		if (block.getStatements().isEmpty())
 		{
@@ -371,12 +371,11 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		STypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_SET_COMP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
 		ComplexCompStrategy strategy = new SetCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
 		List<ASetMultipleBindCG> bindings = filterBindList(node, node.getBindings());
-		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy);
+		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy, varPrefixes);
 
 		if (block.getStatements().isEmpty())
 		{
@@ -404,7 +403,6 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		STypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_SEQ_COMP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
 		SeqCompStrategy strategy = new SeqCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
@@ -421,7 +419,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 			LinkedList<SPatternCG> patterns = new LinkedList<SPatternCG>();
 			patterns.add(node.getSetBind().getPattern().clone());
 
-			ABlockStmCG block = transAssistant.consIterationBlock(patterns, node.getSet(), transAssistant.getInfo().getTempVarNameGen(), strategy);
+			ABlockStmCG block = transAssistant.consIterationBlock(patterns, node.getSet(), transAssistant.getInfo().getTempVarNameGen(), strategy, varPrefixes);
 
 			replaceCompWithTransformation(enclosingStm, block, type, var, node);
 
@@ -438,13 +436,12 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		SExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_FORALL_EXP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, varPrefixes);
 
 		List<ASetMultipleBindCG> multipleSetBinds = filterBindList(node, node.getBindList());
 
-		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
+		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy, varPrefixes);
 
 		if (multipleSetBinds.isEmpty())
 		{
@@ -471,13 +468,12 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		SExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, varPrefixes);
 
 		List<ASetMultipleBindCG> multipleSetBinds = filterBindList(node, node.getBindList());
 
-		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
+		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy, varPrefixes);
 
 		if (multipleSetBinds.isEmpty())
 		{
@@ -504,13 +500,12 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		SExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
 		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes, counterData);
 
 		List<ASetMultipleBindCG> multipleSetBinds = filterBindList(node, node.getBindList());
 
-		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
+		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy, varPrefixes);
 
 		if (multipleSetBinds.isEmpty())
 		{

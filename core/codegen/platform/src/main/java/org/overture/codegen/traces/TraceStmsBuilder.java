@@ -241,7 +241,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 			return new TraceNodeData(null, transAssistant.wrap(new ASkipStmCG()));
 		}
 
-		ABlockStmCG outerBlock = transAssistant.consIterationBlock(node.getBind().getPatterns(), bind.getSet(), info.getTempVarNameGen(), strategy);
+		ABlockStmCG outerBlock = transAssistant.consIterationBlock(node.getBind().getPatterns(), bind.getSet(), info.getTempVarNameGen(), strategy, varPrefixes);
 
 		return new TraceNodeData(transAssistant.consIdentifierVar(name, classType.clone()), transAssistant.wrap(outerBlock));
 	}

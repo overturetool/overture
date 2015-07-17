@@ -116,7 +116,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		initVelocity();
 
 		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
-		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
+		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
 		this.javaFormat = new JavaFormat(varPrefixes, javaTemplateStructure, generator.getIRInfo());
 	}
 	

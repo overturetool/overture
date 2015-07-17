@@ -84,7 +84,7 @@ public class JavaTransSeries
 		IfExpTrans ifExpTr = new IfExpTrans(transAssist);
 		FuncValTrans funcValTr = new FuncValTrans(transAssist, funcValAssist, INTERFACE_NP, TEMPLATE_TYPE_NP, EVAL_METHOD_PREFIX, PARAM_NP);
 		ILanguageIterator langIte = new JavaLanguageIterator(transAssist, prefixes);
-		LetBeStTrans letBeStTr = new LetBeStTrans(transAssist, langIte);
+		LetBeStTrans letBeStTr = new LetBeStTrans(transAssist, langIte, prefixes);
 		WhileStmTrans whileTr = new WhileStmTrans(transAssist, WHILE_COND_NP);
 		Exp2StmTrans exp2stmTr = new Exp2StmTrans(prefixes, transAssist, consExists1CounterData(), langIte, exp2stmPrefixes);
 		PatternTrans patternTr = new PatternTrans(prefixes, transAssist, new PatternMatchConfig(), CASES_EXP_NP);

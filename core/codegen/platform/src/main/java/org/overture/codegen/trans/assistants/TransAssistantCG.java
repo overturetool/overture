@@ -76,22 +76,15 @@ import org.overture.codegen.trans.TempVarPrefixes;
 public class TransAssistantCG extends BaseTransformationAssistant
 {
 	protected IRInfo info;
-	protected TempVarPrefixes varPrefixes;
 
-	public TransAssistantCG(IRInfo info, TempVarPrefixes varPrefixes)
+	public TransAssistantCG(IRInfo info)
 	{
 		this.info = info;
-		this.varPrefixes = varPrefixes;
 	}
 
 	public IRInfo getInfo()
 	{
 		return info;
-	}
-
-	public TempVarPrefixes getVarPrefixes()
-	{
-		return varPrefixes;
 	}
 
 	public SSetTypeCG getSetTypeCloned(SExpCG set) throws AnalysisException
@@ -398,12 +391,12 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	}
 
 	public ABlockStmCG consIterationBlock(List<SPatternCG> ids, SExpCG set,
-			ITempVarGen tempGen, IIterationStrategy strategy)
+			ITempVarGen tempGen, IIterationStrategy strategy, TempVarPrefixes varPrefixes)
 			throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
 
-		consIterationBlock(outerBlock, ids, set, tempGen, strategy);
+		consIterationBlock(outerBlock, ids, set, tempGen, strategy, varPrefixes);
 
 		return outerBlock;
 	}
@@ -428,7 +421,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 
 	private ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
 			List<SPatternCG> patterns, SExpCG set, ITempVarGen tempGen,
-			IIterationStrategy strategy) throws AnalysisException
+			IIterationStrategy strategy, TempVarPrefixes varPrefixes) throws AnalysisException
 	{
 		// Variable names
 		String setName = tempGen.nextVarName(varPrefixes.set());
@@ -517,7 +510,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 
 	public ABlockStmCG consComplexCompIterationBlock(
 			List<ASetMultipleBindCG> multipleSetBinds, ITempVarGen tempGen,
-			IIterationStrategy strategy) throws AnalysisException
+			IIterationStrategy strategy, TempVarPrefixes varPrefixes) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
 
@@ -541,7 +534,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 			strategy.setLastBind(i == multipleSetBinds.size() - 1);
 
 			ASetMultipleBindCG mb = multipleSetBinds.get(i);
-			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy);
+			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy, varPrefixes);
 
 			strategy.setFirstBind(false);
 		}
