@@ -97,6 +97,8 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	public static final String JAVA_MAIN_CLASS_NAME = "Main";
 	public static final String JAVA_QUOTES_PACKAGE = "quotes";
 	
+	public static final String INVALID_NAME_PREFIX = "cg_";
+	
 	private JavaFormat javaFormat;
 	private TemplateStructure javaTemplateStructure;
 	
@@ -761,7 +763,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			JavaCodeGenUtil.saveJavaClass(moduleOutputDir, javaFileName, generatedModule.getContent());
 		}
 	}
-
+	
 	private InvalidNamesResult validateVdmModelNames(
 			List<INode> mergedParseLists) throws AnalysisException
 	{

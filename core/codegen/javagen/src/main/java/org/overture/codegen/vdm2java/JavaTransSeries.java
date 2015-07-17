@@ -1,23 +1,5 @@
 package org.overture.codegen.vdm2java;
 
-import static org.overture.codegen.ir.CodeGenBase.AND_EXP_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.APPLY_EXP_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.CALL_STM_OBJ_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.CASES_EXP_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.CASES_EXP_RESULT_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.EVAL_METHOD_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.FUNC_RESULT_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.INTERFACE_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.IS_EXP_SUBJECT_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.OBJ_EXP_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.OR_EXP_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.PARAM_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.POST_CHECK_METHOD_NAME;
-import static org.overture.codegen.ir.CodeGenBase.REC_MODIFIER_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.TEMPLATE_TYPE_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.TERNARY_IF_EXP_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.WHILE_COND_NAME_PREFIX;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,6 +39,24 @@ import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 
 public class JavaTransSeries
 {
+	public static final String INTERFACE_NAME_PREFIX = "Func_";
+	public static final String TEMPLATE_TYPE_PREFIX = "T_";
+	public static final String EVAL_METHOD_PREFIX = "eval";
+	public static final String PARAM_NAME_PREFIX = "param_";
+	public static final String APPLY_EXP_NAME_PREFIX = "apply_";
+	public static final String OBJ_EXP_NAME_PREFIX = "obj_";
+	public static final String TERNARY_IF_EXP_NAME_PREFIX = "ternaryIfExp_";
+	public static final String CALL_STM_OBJ_NAME_PREFIX = "callStmObj_";
+	public static final String CASES_EXP_NAME_PREFIX = "casesExp_";
+	public static final String CASES_EXP_RESULT_NAME_PREFIX = "casesExpResult_";
+	public static final String AND_EXP_NAME_PREFIX = "andResult_";
+	public static final String OR_EXP_NAME_PREFIX = "orResult_";
+	public static final String WHILE_COND_NAME_PREFIX = "whileCond";
+	public static final String IS_EXP_SUBJECT_NAME_PREFIX = "isExpSubject_";
+	public static final String REC_MODIFIER_NAME_PREFIX = "recModifierExp_";
+	public static final String FUNC_RESULT_NAME_PREFIX = "funcResult_";
+	public static final String POST_CHECK_METHOD_NAME = "postCheck";
+	
 	private JavaCodeGen codeGen;
 
 	public JavaTransSeries(JavaCodeGen codeGen)
