@@ -45,6 +45,7 @@ import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overturetool.cgisa.transformations.GroupMutRecs;
 import org.overturetool.cgisa.transformations.SortDependencies;
+import org.overturetool.cgisa.transformations.StateInit;
 
 /**
  * Main facade class for VDM 2 Isabelle CG
@@ -152,7 +153,11 @@ public class IsaGen extends CodeGenBase
 		// Apply transformations
 		for (IRStatus<INode> status : statuses)
 		{
-			// first, transform away any recursion cycles
+			// make init expression an op
+			StateInit stateInit = new StateInit(getInfo());
+			generator.applyPartialTransformation(status, stateInit);
+
+			// transform away any recursion cycles
 			GroupMutRecs groupMR = new GroupMutRecs();
 			generator.applyTotalTransformation(status, groupMR);
 
