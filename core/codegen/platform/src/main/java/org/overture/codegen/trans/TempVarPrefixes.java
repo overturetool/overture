@@ -23,33 +23,33 @@ package org.overture.codegen.trans;
 
 public class TempVarPrefixes
 {
-	public String getSetNamePrefix()
+	public String set()
 	{
 		return "set_";
 	}
 
-	public final String getIteratorNamePrefix()
+	public final String iterator()
 	{
 		return "iterator_";
 	}
 
-	public String getSuccessVarNamePrefix()
+	public String success()
 	{
 		return "success_";
 	}
 
-	public String getForIndexToVarNamePrefix()
+	public String forIndexToVar()
 	{
 		return "toVar_";
 	}
 
-	public String getForIndexByVarNamePrefix()
+	public String forIndexByVar()
 	{
 		return "byVar_";
 	}
 
 	public final String[] GENERATED_TEMP_NAMES = {
-			getForIndexByVarNamePrefix(), getForIndexToVarNamePrefix(),
-			getIteratorNamePrefix(), getSetNamePrefix(),
-			getSuccessVarNamePrefix() };
+			forIndexByVar(), forIndexToVar(),
+			iterator(), set(),
+			success() };
 }

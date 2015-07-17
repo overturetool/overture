@@ -65,7 +65,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	public AVarDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
+		iteratorName = tempGen.nextVarName(varPrefixes.iterator());
 		String setName = setVar.getName();
 		AClassTypeCG iteratorType = transAssistant.consClassType(ITERATOR_TYPE);
 		STypeCG setType = setVar.getType().clone();

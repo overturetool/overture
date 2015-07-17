@@ -873,7 +873,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	private void consSuccessVarCheck(SPatternCG pattern,
 			PatternBlockData patternData)
 	{
-		String successVarName = this.transAssistant.getInfo().getTempVarNameGen().nextVarName(varPrefixes.getSuccessVarNamePrefix());
+		String successVarName = this.transAssistant.getInfo().getTempVarNameGen().nextVarName(varPrefixes.success());
 		SExpCG init = null;
 
 		if (!patternData.IsRootPattern(pattern))

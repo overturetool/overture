@@ -60,7 +60,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	{
 		super(transformationAssistant, langIterator, tempGen, varPrefixes);
 
-		String successVarNamePrefix = transformationAssistant.getVarPrefixes().getSuccessVarNamePrefix();
+		String successVarNamePrefix = transformationAssistant.getVarPrefixes().success();
 		ITempVarGen tempVarNameGen = transformationAssistant.getInfo().getTempVarNameGen();
 
 		this.successVarName = tempVarNameGen.nextVarName(successVarNamePrefix);

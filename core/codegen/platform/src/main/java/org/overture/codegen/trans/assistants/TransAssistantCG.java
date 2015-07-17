@@ -431,7 +431,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 			IIterationStrategy strategy) throws AnalysisException
 	{
 		// Variable names
-		String setName = tempGen.nextVarName(varPrefixes.getSetNamePrefix());
+		String setName = tempGen.nextVarName(varPrefixes.set());
 		AIdentifierVarExpCG setVar = consSetVar(setName, set);
 
 		ABlockStmCG forBody = null;
