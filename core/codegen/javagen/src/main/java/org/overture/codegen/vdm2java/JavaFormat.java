@@ -124,13 +124,15 @@ public class JavaFormat
 	private JavaValueSemantics valueSemantics;
 	private JavaFormatAssistant javaFormatAssistant;
 	private JavaRecordCreator recCreator;
+	private TempVarPrefixes varPrefixes;
 	
-	public JavaFormat(TempVarPrefixes varPrefixes, TemplateStructure templateStructure, IRInfo info)
+	public JavaFormat(TempVarPrefixes varPrefixes,
+			TemplateStructure templateStructure, IRInfo info)
 	{
+		this.varPrefixes = varPrefixes;
 		this.valueSemantics = new JavaValueSemantics(this);
 		this.recCreator = new JavaRecordCreator(this);
-		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this,
-				IRAnalysis.class, varPrefixes, valueSemantics, recCreator);
+		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, valueSemantics, recCreator);
 		this.mergeVisitor = new MergeVisitor(templateStructure, templateCallables);
 		this.functionValueAssistant = null;
 		this.info = info;
@@ -985,5 +987,25 @@ public class JavaFormat
 	public static boolean isVdmSl()
 	{
 		return Settings.dialect == Dialect.VDM_SL;
+	}
+	
+	public String genIteratorName()
+	{
+		return info.getTempVarNameGen().nextVarName(varPrefixes.iterator()); 
+	}
+	
+	public String genThreadName()
+	{
+		return info.getTempVarNameGen().nextVarName("nextThread_");
+	}
+	
+	public String genForIndexToVarName()
+	{
+		return info.getTempVarNameGen().nextVarName(varPrefixes.forIndexToVar());
+	}
+	
+	public String genForIndexByVarName()
+	{
+		return info.getTempVarNameGen().nextVarName(varPrefixes.forIndexByVar());
 	}
 }
