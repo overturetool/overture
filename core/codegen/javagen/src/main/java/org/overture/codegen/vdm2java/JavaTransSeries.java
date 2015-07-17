@@ -12,6 +12,7 @@ import org.overture.codegen.traces.TracesTrans;
 import org.overture.codegen.trans.AssignStmTrans;
 import org.overture.codegen.trans.CallObjStmTrans;
 import org.overture.codegen.trans.DivideTrans;
+import org.overture.codegen.trans.Exp2StmVarPrefixes;
 import org.overture.codegen.trans.IPostCheckCreator;
 import org.overture.codegen.trans.IsExpTrans;
 import org.overture.codegen.trans.LetBeStTrans;
@@ -49,15 +50,10 @@ public class JavaTransSeries
 	public static final String PARAM_NP = "param_";
 	public static final String APPLY_EXP_NP = "apply_";
 	public static final String OBJ_EXP_NP = "obj_";
-	public static final String TERNARY_IF_EXP_NP = "ternaryIfExp_";
 	public static final String CALL_STM_OBJ_NP = "callStmObj_";
 	public static final String CASES_EXP_NP = "casesExp_";
-	public static final String CASES_EXP_RESULT_NP = "casesExpResult_";
-	public static final String AND_EXP_NP = "andResult_";
-	public static final String OR_EXP_NP = "orResult_";
 	public static final String WHILE_COND_NP = "whileCond_";
 	public static final String IS_EXP_SUBJECT_NP = "isExpSubject_";
-	public static final String REC_MODIFIER_NP = "recModifierExp_";
 	public static final String FUNC_RES_NP = "funcResult_";
 
 	private JavaCodeGen codeGen;
@@ -77,6 +73,8 @@ public class JavaTransSeries
 		TransAssistantCG transAssist = codeGen.getTransAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
 
+		Exp2StmVarPrefixes exp2stmPrefixes = new Exp2StmVarPrefixes();
+
 		// Construct the transformations
 		FuncTrans funcTr = new FuncTrans(transAssist);
 		DivideTrans divideTr = new DivideTrans(info);
@@ -88,7 +86,7 @@ public class JavaTransSeries
 		ILanguageIterator langIte = new JavaLanguageIterator(transAssist, prefixes);
 		LetBeStTrans letBeStTr = new LetBeStTrans(transAssist, langIte);
 		WhileStmTrans whileTr = new WhileStmTrans(transAssist, WHILE_COND_NP);
-		Exp2StmTrans exp2stmTr = new Exp2StmTrans(prefixes, transAssist, consExists1CounterData(), langIte, TERNARY_IF_EXP_NP, CASES_EXP_RESULT_NP, AND_EXP_NP, OR_EXP_NP, REC_MODIFIER_NP);
+		Exp2StmTrans exp2stmTr = new Exp2StmTrans(prefixes, transAssist, consExists1CounterData(), langIte, exp2stmPrefixes);
 		PatternTrans patternTr = new PatternTrans(prefixes, transAssist, new PatternMatchConfig(), CASES_EXP_NP);
 		PreCheckTrans preCheckTr = new PreCheckTrans(transAssist, new JavaValueSemanticsTag(false));
 		PostCheckTrans postCheckTr = new PostCheckTrans(postCheckCreator, transAssist, FUNC_RES_NP, new JavaValueSemanticsTag(false));
