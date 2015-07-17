@@ -6,6 +6,7 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AEqualsDefinition;
+import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.AFunctionType;
@@ -47,6 +48,15 @@ public class TypeIntegrityVisitor extends DepthFirstAnalysisAdaptor implements I
 		}
 	}
 
+	@Override
+	public void caseAMkTypeExp(AMkTypeExp node) throws AnalysisException
+	{
+		if (node.getRecordType()==null){
+			untypeNodes.add(node);
+		}
+		super.caseAMkTypeExp(node);
+	}
+	
 	@Override
 	public void caseAFunctionType(AFunctionType node) throws AnalysisException
 	{
