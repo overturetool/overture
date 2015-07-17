@@ -374,19 +374,42 @@ public class ExpAssistantCG extends AssistantBase
 
 		return header;
 	}
+	
+	public boolean appearsInModuleStateInv(org.overture.ast.node.INode node)
+	{
+		AStateDefinition stateDef = node.getAncestor(AStateDefinition.class);
+		if (stateDef != null)
+		{
+			LinkedList<org.overture.ast.node.INode> ancestors = new LinkedList<>();
+			org.overture.ast.node.INode next = node.parent();
 
-	public boolean outsideImperativeContext(PExp exp)
+			do
+			{
+				ancestors.add(next);
+				next = node.parent();
+			} while (!(next instanceof AStateDefinition)
+					&& !ancestors.contains(next));
+
+			if (ancestors.getLast() == stateDef.getInvExpression())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean outsideImperativeContext(org.overture.ast.node.INode node)
 	{
 		// The transformation of the 'and' and 'or' logical expressions also assumes that the
 		// expressions exist within a statement. However, in case it does not, the transformation
 		// is not performed. In this way, the  'and' and 'or' expressions can
 		// still be used (say) in instance variable assignment.
-		return !(exp.parent() instanceof AStateDefinition)
-				&& exp.getAncestor(SOperationDefinition.class) == null
-				&& exp.getAncestor(SFunctionDefinition.class) == null
-				&& exp.getAncestor(ANamedTraceDefinition.class) == null
-				&& exp.getAncestor(ATypeDefinition.class) == null
-				&& exp.getAncestor(AClassInvariantDefinition.class) == null;
+		
+		return node.getAncestor(SOperationDefinition.class) == null
+				&& node.getAncestor(SFunctionDefinition.class) == null
+				&& node.getAncestor(ANamedTraceDefinition.class) == null
+				&& node.getAncestor(ATypeDefinition.class) == null
+				&& node.getAncestor(AClassInvariantDefinition.class) == null;
 	}
 
 	public SExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings,

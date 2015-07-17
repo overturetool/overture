@@ -67,28 +67,28 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 	public void updateEntireState()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignSt", true, true);
+		checkAssertion("assignSt", true, false);
 	}
 
 	@Test
 	public void updateEntireStateAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignSt", true, false);
+		checkAssertion("atomicAssignSt", true, true);
 	}
 
 	@Test
 	public void updateField()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignX", true, true);
+		checkAssertion("assignX", true, false);
 	}
 
 	@Test
 	public void updateFieldAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignX", true, false);
+		checkAssertion("atomicAssignX", true, true);
 	}
 
 	@Test

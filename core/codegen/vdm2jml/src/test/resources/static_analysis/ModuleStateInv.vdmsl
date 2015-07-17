@@ -17,27 +17,36 @@ assignSt : () ==> ()
 assignSt () ==
   St := mk_St(1,[1], {1 |-> 1});
 
-atomicAssignSt : () ==> ()
+atomicAssignSt : () ==> nat
 atomicAssignSt () ==
-atomic
 (
-  St := mk_St(1,[1], {1 |-> 1});
+  atomic
+  (
+    St := mk_St(1,[1], {1 |-> 1});
+  );
+  return 0;
 );
 
 assignX : () ==> ()
 assignX () ==
   x := x + 1;
   
-atomicAssignX : () ==> ()
+atomicAssignX : () ==> nat
 atomicAssignX () ==
-atomic
 (
-  x := x + 1;
+  atomic
+  (
+    x := x + 1;
+  );
+  return 0;
 );
 
-assignS : () ==> ()
+assignS : () ==> nat
 assignS () ==
+(
   s(1) := 1;
+  return 0;
+);
 
 atomicAssignS : () ==> ()
 atomicAssignS () ==
@@ -46,9 +55,12 @@ atomic
   s(1) := 1;
 );
 
-assignM : () ==> ()
+assignM : () ==> nat
 assignM () ==
+(
   m(1) := 1;
+  return 0;
+);
   
 atomicAssignM : () ==> ()
 atomicAssignM () ==

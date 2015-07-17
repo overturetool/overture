@@ -121,7 +121,7 @@ public class CountSwitcher extends VDMThread implements EvaluatePP {
         sentinel.entering(((CountSwitcher_sentinel) sentinel).joined);
 
         try {
-            //Skip;
+            /* skip */
         } finally {
             sentinel.leaving(((CountSwitcher_sentinel) sentinel).joined);
         }

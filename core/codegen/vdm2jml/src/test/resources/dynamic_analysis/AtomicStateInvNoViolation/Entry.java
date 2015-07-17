@@ -9,30 +9,20 @@ import java.util.*;
 @SuppressWarnings("all")
 final public class Entry {
     /*@ spec_public @*/
-    private static project.Entrytypes.St St = new project.Entrytypes.St(5L);
+    private static project.Entrytypes.St St = new project.Entrytypes.St(1L);
 
     //@ public static invariant St != null ==> inv_St(St);
     private Entry() {
     }
 
     public static Object Run() {
-        opAtomic();
-        IO.println("Before breaking state invariant");
-        op();
-        IO.println("After breaking state invariant");
+        IO.println("Before atomic");
+        St.x = 2L;
+        St.x = 1L;
+        //@ assert inv_St(St);
+        IO.println("After atomic");
 
         return St.x;
-    }
-
-    public static void opAtomic() {
-        St.x = -1L;
-        St.x = 1L;
-    }
-
-    public static void op() {
-        St.x = -10L;
-        //@ assert inv_St(St);
-        St.x = 10L;
     }
 
     public String toString() {
@@ -42,6 +32,6 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_St(final project.Entrytypes.St s) {
-        return s.x.longValue() > 0L;
+        return Utils.equals(s.x, 1L);
     }
 }

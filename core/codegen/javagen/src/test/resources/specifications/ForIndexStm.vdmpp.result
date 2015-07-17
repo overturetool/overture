@@ -14,7 +14,7 @@ public class A {
 
         for (Long i = 1L; (byVar_1 < 0) ? (i >= toVar_1) : (i <= toVar_1);
                 i += byVar_1) {
-            //Skip;
+            /* skip */
         }
 
         long toVar_2 = -1L;
@@ -22,7 +22,7 @@ public class A {
 
         for (Long j = 10L; (byVar_2 < 0) ? (j >= toVar_2) : (j <= toVar_2);
                 j += byVar_2) {
-            //Skip;
+            /* skip */
         }
 
         long toVar_3 = 1L;
@@ -30,7 +30,7 @@ public class A {
 
         for (Long i = 1L; (byVar_3 < 0) ? (i >= toVar_3) : (i <= toVar_3);
                 i += byVar_3) {
-            //Skip;
+            /* skip */
         }
 
         long toVar_4 = 0L;
@@ -38,7 +38,7 @@ public class A {
 
         for (Long i = 1L; (byVar_4 < 0) ? (i >= toVar_4) : (i <= toVar_4);
                 i += byVar_4) {
-            //Skip;
+            /* skip */
         }
     }
 

@@ -10,7 +10,7 @@ public class Entry implements java.io.Serializable {
     }
 
     private void op() {
-        //Skip;
+        /* skip */
     }
 
     private static Number fun() {
