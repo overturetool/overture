@@ -80,7 +80,7 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 			newMethodType.getParams().add(f.getType().clone());
 
 			AFormalParamLocalParamCG nextParam = new AFormalParamLocalParamCG();
-			nextParam.setPattern(javaGen.getTransAssistant().consIdPattern(consUniqueName(f.getName())));
+			nextParam.setPattern(javaGen.getInfo().getPatternAssistant().consIdPattern(consUniqueName(f.getName())));
 			nextParam.setType(f.getType().clone());
 
 			invMethod.getFormalParams().add(nextParam);

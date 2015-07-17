@@ -1,10 +1,7 @@
 package org.overture.codegen.trans;
 
-import java.util.List;
-
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.ir.IRInfo;
@@ -15,9 +12,9 @@ public class CallObjStmTransformation extends DepthFirstAnalysisAdaptor
 {
 	private ObjectDesignatorToExpCG converter;
 	
-	public CallObjStmTransformation(IRInfo info, List<AClassDeclCG> classes)
+	public CallObjStmTransformation(IRInfo info)
 	{
-		this.converter = new ObjectDesignatorToExpCG(info, classes); 
+		this.converter = new ObjectDesignatorToExpCG(info); 
 	}
 	
 	@Override

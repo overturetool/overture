@@ -222,7 +222,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 
 		AClassTypeCG classType = transAssistant.consClassType(tracePrefixes.altTraceNodeNodeClassName());
 
-		AIdentifierPatternCG id = transAssistant.consIdPattern(name);
+		AIdentifierPatternCG id = info.getPatternAssistant().consIdPattern(name);
 
 		AVarDeclCG altTests = transAssistant.consDecl(name, classType, transAssistant.consDefaultConsCall(classType));
 
@@ -393,7 +393,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 		
 		AFormalParamLocalParamCG instanceParam = new AFormalParamLocalParamCG();
 		instanceParam.setType(new AObjectTypeCG());
-		instanceParam.setPattern(transAssistant.consIdPattern(tracePrefixes.callStmMethodParamName()));
+		instanceParam.setPattern(info.getPatternAssistant().consIdPattern(tracePrefixes.callStmMethodParamName()));
 
 		execMethod.getFormalParams().add(instanceParam);
 
@@ -501,7 +501,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 	{
 		AFieldExpCG field = new AFieldExpCG();
 		field.setMemberName(callObj.getFieldName());
-		field.setObject(callObj.getDesignator().apply(new ObjectDesignatorToExpCG(info, classes)));
+		field.setObject(callObj.getDesignator().apply(new ObjectDesignatorToExpCG(info)));
 		field.setType(info.getTypeAssistant().getFieldType(classes, traceEnclosingClass, callObj.getFieldName()));
 
 		AApplyExpCG apply = new AApplyExpCG();
@@ -571,7 +571,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 			AFieldExpCG field = new AFieldExpCG();
 			String fieldModule = classType instanceof AClassTypeCG ? ((AClassTypeCG) classType).getName()
 					: traceEnclosingClass;
-			field.setType(info.getTypeAssistant().getMethodType(info, classes, fieldModule, name, args));
+			field.setType(info.getTypeAssistant().getMethodType(info, fieldModule, name, args));
 			field.setMemberName(name);
 			field.setObject(cast);
 

@@ -71,8 +71,8 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 		STypeCG setType = setVar.getType().clone();
 		SExpCG getIteratorCall = transAssistant.consInstanceCall(setType, setName, iteratorType.clone(), GET_ITERATOR);
 
-		return transAssistant.getInfo().getDeclAssistant().
-				consLocalVarDecl(iteratorType, transAssistant.consIdPattern(iteratorName), getIteratorCall);
+		return transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(iteratorType,
+				transAssistant.getInfo().getPatternAssistant().consIdPattern(iteratorName),getIteratorCall);
 	}
 
 	@Override

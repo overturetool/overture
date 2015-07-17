@@ -4,7 +4,6 @@
 package org.overture.codegen.trans.conc;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -48,12 +47,10 @@ import org.overture.codegen.ir.IRInfo;
 public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
-	private List<AClassDeclCG> classes;
 
-	public MainClassConcTransformation(IRInfo info, List<AClassDeclCG> classes)
+	public MainClassConcTransformation(IRInfo info)
 	{
 		this.info = info;
-		this.classes = classes;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -197,7 +194,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			LinkedList<AMethodDeclCG>  allMethods;
 			
 			if (node.getSuperName() != null){
-				allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, classes);
+				allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, info.getClasses());
 			}
 			else
 			{
@@ -315,7 +312,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		{
 			AClassDeclCG superClass = null;
 
-			for(AClassDeclCG c : classes)
+			for(AClassDeclCG c : info.getClasses())
 			{
 				if(c.getName().equals(superName))
 				{

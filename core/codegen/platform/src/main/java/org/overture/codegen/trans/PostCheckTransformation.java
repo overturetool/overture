@@ -13,7 +13,6 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -21,18 +20,16 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 public class PostCheckTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IPostCheckCreator postCheckCreator;
-	private IRInfo info;
-	private TransAssistantCG transformationAssistant;
+	private TransAssistantCG transAssistant;
 	private String funcResultNamePrefix;
 	private Object conditionalCallTag;
 
 	public PostCheckTransformation(IPostCheckCreator postCheckCreator,
-			IRInfo info, TransAssistantCG transformationAssistant,
-			String funcResultNamePrefix, Object conditionalCallTag)
+			TransAssistantCG transAssistant, String funcResultNamePrefix,
+			Object conditionalCallTag)
 	{
 		this.postCheckCreator = postCheckCreator;
-		this.info = info;
-		this.transformationAssistant = transformationAssistant;
+		this.transAssistant = transAssistant;
 		this.funcResultNamePrefix = funcResultNamePrefix;
 		this.conditionalCallTag = conditionalCallTag;
 	}
@@ -40,7 +37,7 @@ public class PostCheckTransformation extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAMethodDeclCG(AMethodDeclCG node) throws AnalysisException
 	{
-		if (!info.getSettings().generatePostCondChecks())
+		if (!transAssistant.getInfo().getSettings().generatePostCondChecks())
 		{
 			return;
 		}
@@ -119,22 +116,22 @@ public class PostCheckTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		AApplyExpCG postCondCall = transformationAssistant.consConditionalCall(method, (AMethodDeclCG) method.getPostCond());
+		AApplyExpCG postCondCall = transAssistant.consConditionalCall(method, (AMethodDeclCG) method.getPostCond());
 		postCondCall.setTag(conditionalCallTag);
 
-		String funcResultVarName = info.getTempVarNameGen().nextVarName(funcResultNamePrefix);
-		AVarDeclCG resultDecl = transformationAssistant.consDecl(funcResultVarName, method.getMethodType().getResult().clone(), node.getExp().clone());
-		AIdentifierVarExpCG resultVar = transformationAssistant.consIdentifierVar(funcResultVarName, resultDecl.getType().clone());
+		String funcResultVarName = transAssistant.getInfo().getTempVarNameGen().nextVarName(funcResultNamePrefix);
+		AVarDeclCG resultDecl = transAssistant.consDecl(funcResultVarName, method.getMethodType().getResult().clone(), node.getExp().clone());
+		AIdentifierVarExpCG resultVar = transAssistant.consIdentifierVar(funcResultVarName, resultDecl.getType().clone());
 
 		postCondCall.getArgs().add(resultVar.clone());
-		AStringLiteralExpCG methodName = info.getExpAssistant().consStringLiteral(method.getName(), false);
+		AStringLiteralExpCG methodName = transAssistant.getInfo().getExpAssistant().consStringLiteral(method.getName(), false);
 		AApplyExpCG postCheckCall = postCheckCreator.consPostCheckCall(method, postCondCall, resultVar, methodName);
 
 		ABlockStmCG replacementBlock = new ABlockStmCG();
 		replacementBlock.getLocalDefs().add(resultDecl);
 
-		transformationAssistant.replaceNodeWith(node.getExp(), postCheckCall);
-		transformationAssistant.replaceNodeWith(node, replacementBlock);
+		transAssistant.replaceNodeWith(node.getExp(), postCheckCall);
+		transAssistant.replaceNodeWith(node, replacementBlock);
 
 		replacementBlock.getStatements().add(node);
 	}

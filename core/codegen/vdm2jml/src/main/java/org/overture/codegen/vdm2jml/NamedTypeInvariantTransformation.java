@@ -500,7 +500,7 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		AIdentifierPatternCG id = trans.consIdPattern(name);
+		AIdentifierPatternCG id = jmlGen.getJavaGen().getInfo().getPatternAssistant().consIdPattern(name);
 		
 		AVarDeclCG var = jmlGen.getJavaGen().getInfo().getDeclAssistant().consLocalVarDecl(returnType.clone(), id, exp.clone());
 

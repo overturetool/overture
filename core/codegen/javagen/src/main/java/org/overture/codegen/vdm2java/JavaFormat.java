@@ -90,7 +90,6 @@ import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
-import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRAnalysis;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
@@ -117,8 +116,6 @@ public class JavaFormat
 	public static final String JAVA_PRIVATE = "private";
 	
 	public static final String JAVA_INT = "int";
-
-	private List<AClassDeclCG> classes;
 
 	private IRInfo info;
 
@@ -171,11 +168,6 @@ public class JavaFormat
 		this.functionValueAssistant = null;
 	}
 
-	public List<AClassDeclCG> getClasses()
-	{
-		return classes;
-	}
-
 	public void setJavaSettings(JavaSettings javaSettings)
 	{
 		valueSemantics.setJavaSettings(javaSettings);
@@ -189,23 +181,6 @@ public class JavaFormat
 	public void init()
 	{
 		mergeVisitor.init();
-	}
-
-	public void setClasses(List<AClassDeclCG> classes)
-	{
-		this.classes = classes != null ? classes
-				: new LinkedList<AClassDeclCG>();
-	}
-
-	public void clearClasses()
-	{
-		if (classes != null)
-		{
-			classes.clear();
-		} else
-		{
-			classes = new LinkedList<AClassDeclCG>();
-		}
 	}
 
 	public MergeVisitor getMergeVisitor()
@@ -972,11 +947,11 @@ public class JavaFormat
 		
 		if(settings != null && !settings.trim().isEmpty())
 		{
-			return settings + "." + CodeGenBase.QUOTES + ".";
+			return settings + "." + JavaCodeGen.JAVA_QUOTES_PACKAGE + ".";
 		}
 		else
 		{
-			return CodeGenBase.QUOTES + ".";
+			return JavaCodeGen.JAVA_QUOTES_PACKAGE + ".";
 		}
 	}
 

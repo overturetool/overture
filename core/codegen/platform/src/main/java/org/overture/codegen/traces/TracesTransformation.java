@@ -1,7 +1,5 @@
 package org.overture.codegen.traces;
 
-import java.util.List;
-
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -18,7 +16,6 @@ import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -26,21 +23,17 @@ import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class TracesTransformation extends DepthFirstAnalysisAdaptor
 {
-	private IRInfo irInfo;
-	private List<AClassDeclCG> classes;
 	private TransAssistantCG transAssistant;
 	private TempVarPrefixes tempVarPrefixes;
 	private ILanguageIterator langIterator;
 	private ICallStmToStringMethodBuilder toStringBuilder;
 	private TraceNames tracePrefixes;
 
-	public TracesTransformation(IRInfo irInfo, List<AClassDeclCG> classes,
-			TransAssistantCG transAssistant, TempVarPrefixes tempVarPrefixes,
-			TraceNames tracePrefixes, ILanguageIterator langIterator,
+	public TracesTransformation(TransAssistantCG transAssistant,
+			TempVarPrefixes tempVarPrefixes, TraceNames tracePrefixes,
+			ILanguageIterator langIterator,
 			ICallStmToStringMethodBuilder toStringBuilder)
 	{
-		this.irInfo = irInfo;
-		this.classes = classes;
 		this.transAssistant = transAssistant;
 		this.tempVarPrefixes = tempVarPrefixes;
 		this.langIterator = langIterator;
@@ -53,7 +46,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 	public void caseANamedTraceDeclCG(ANamedTraceDeclCG node)
 			throws AnalysisException
 	{
-		if(!irInfo.getSettings().generateTraces())
+		if(!transAssistant.getInfo().getSettings().generateTraces())
 		{
 			return;
 		}
@@ -61,7 +54,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 		TraceSupportedAnalysis supportedAnalysis = new TraceSupportedAnalysis(node);
 		if (!traceIsSupported(supportedAnalysis))
 		{
-			irInfo.addTransformationWarning(node, supportedAnalysis.getReason());
+			transAssistant.getInfo().addTransformationWarning(node, supportedAnalysis.getReason());
 			return;
 		}
 
@@ -104,7 +97,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 		
 		AFormalParamLocalParamCG instanceParam = new AFormalParamLocalParamCG();
 		instanceParam.setType(testAccType.clone());
-		instanceParam.setPattern(transAssistant.consIdPattern(tracePrefixes.traceMethodParamName()));
+		instanceParam.setPattern(transAssistant.getInfo().getPatternAssistant().consIdPattern(tracePrefixes.traceMethodParamName()));
 
 		AMethodDeclCG traceMethod = new AMethodDeclCG();
 		
@@ -152,7 +145,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		String traceEnclosingClass = getTraceEnclosingClass(node);
-		TraceStmsBuilder stmBuilder = new TraceStmsBuilder(irInfo, classes, transAssistant, 
+		TraceStmsBuilder stmBuilder = new TraceStmsBuilder(transAssistant.getInfo(), transAssistant.getInfo().getClasses(), transAssistant, 
 				tempVarPrefixes, tracePrefixes, langIterator, toStringBuilder, traceEnclosingClass);
 
 		TraceNodeData nodeData = stmBuilder.buildFromDeclTerms(node.getTerms());

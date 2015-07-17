@@ -95,7 +95,10 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 	public static final String JAVA_QUOTE_NAME_SUFFIX = "Quote";
 	public static final String JAVA_MAIN_CLASS_NAME = "Main";
-
+	public static final String JAVA_QUOTES_PACKAGE = "quotes";
+	
+	public static final String INVALID_NAME_PREFIX = "cg_";
+	
 	private JavaFormat javaFormat;
 	private TemplateStructure javaTemplateStructure;
 	
@@ -273,16 +276,16 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		ModuleToClassTransformation moduleTransformation = new ModuleToClassTransformation(getInfo(),
 				transAssistant, getModuleDecls(moduleStatuses));
 		
-		for(IRStatus<org.overture.codegen.cgast.INode> moduleStatus : modulesAsNodes)
+		for(IRStatus<org.overture.codegen.cgast.INode> status : modulesAsNodes)
 		{
 			try
 			{
-				generator.applyTotalTransformation(moduleStatus, moduleTransformation);
+				generator.applyTotalTransformation(status, moduleTransformation);
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Error when generating code for module "
-						+ moduleStatus.getIrNodeName() + ": " + e.getMessage());
+						+ status.getIrNodeName() + ": " + e.getMessage());
 				Logger.getLog().printErrorln("Skipping module..");
 				e.printStackTrace();
 			}
@@ -300,9 +303,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			}
 		}
 
-		List<AClassDeclCG> classes = getClassDecls(classStatuses);
-		javaFormat.setClasses(classes);
-
 		List<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
 
 		for (IRStatus<AClassDeclCG> status : classStatuses)
@@ -319,7 +319,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
 
 		JavaTransSeries javaTransSeries = new JavaTransSeries(this);
-		 List<DepthFirstAnalysisAdaptor> transformations = javaTransSeries.consAnalyses(classes, functionValueAssistant);
+		 List<DepthFirstAnalysisAdaptor> transformations = javaTransSeries.consAnalyses(functionValueAssistant);
 
 		for (DepthFirstAnalysisAdaptor trans : transformations)
 		{
@@ -431,7 +431,8 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		}
 
 		javaFormat.clearFunctionValueAssistant();
-		javaFormat.clearClasses();
+		getInfo().clearClasses();
+		getInfo().clearModules();
 
 		GeneratedData data = new GeneratedData();
 		data.setClasses(generated);
@@ -670,19 +671,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 		}
 	}
-
-	private List<AClassDeclCG> getClassDecls(
-			List<IRStatus<AClassDeclCG>> statuses)
-	{
-		List<AClassDeclCG> classDecls = new LinkedList<AClassDeclCG>();
-
-		for (IRStatus<AClassDeclCG> status : statuses)
-		{
-			classDecls.add(status.getIrNode());
-		}
-
-		return classDecls;
-	}
 	
 	private List<AModuleDeclCG> getModuleDecls(List<IRStatus<AModuleDeclCG>> statuses)
 	{
@@ -775,7 +763,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			JavaCodeGenUtil.saveJavaClass(moduleOutputDir, javaFileName, generatedModule.getContent());
 		}
 	}
-
+	
 	private InvalidNamesResult validateVdmModelNames(
 			List<INode> mergedParseLists) throws AnalysisException
 	{
