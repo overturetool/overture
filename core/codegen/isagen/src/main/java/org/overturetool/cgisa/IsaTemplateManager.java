@@ -23,7 +23,6 @@ package org.overturetool.cgisa;
 
 import java.io.File;
 
-import org.overture.ast.expressions.ALetDefExp;
 import org.overture.cgisa.extast.declarations.AMrFuncGroupDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
@@ -73,6 +72,7 @@ public class IsaTemplateManager extends TemplateManager
 	private static final String MAP_TYPE = "Map";
 	private static final String NOT_IMPL_EXP = "NotImplemented";
 	private static final String SET_MULT_BIND = "SetMultiple";
+	private static final String LET_DEF_EXP = "LetDef";
 
 	public IsaTemplateManager(TemplateStructure templateStructure,
 			Class<?> classRef)
@@ -118,7 +118,7 @@ public class IsaTemplateManager extends TemplateManager
 
 		nodeTemplateFileNames.put(ATypeMultipleBindCG.class, templateStructure.makePath(BINDS_PATH)
 				+ TYPE_MULTIPLE_BIND);
-		
+
 		nodeTemplateFileNames.put(ASetMultipleBindCG.class, templateStructure.makePath(BINDS_PATH)
 				+ SET_MULT_BIND);
 
@@ -135,12 +135,13 @@ public class IsaTemplateManager extends TemplateManager
 				+ SEQ_TYPE);
 
 		nodeTemplateFileNames.put(AMapMapTypeCG.class, templateStructure.TYPE_PATH
-				+  MAP_TYPE);
-		
+				+ MAP_TYPE);
+
 		nodeTemplateFileNames.put(ANotImplementedExpCG.class, templateStructure.EXP_PATH
 				+ MISC_EXP_PATH + File.separatorChar + NOT_IMPL_EXP);
-		
-		nodeTemplateFileNames.put(ALetDefExpCG.class, templateStructure)
+
+		nodeTemplateFileNames.put(ALetDefExpCG.class, templateStructure.EXP_PATH
+				+ MISC_EXP_PATH + File.separatorChar + LET_DEF_EXP);
 
 	}
 }
