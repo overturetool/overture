@@ -1,0 +1,19 @@
+#if ($node.Implicit)
+vdmiop0 $Isa.norm($node.Name)
+#if (!$node.FormalParams.isEmpty())
+  inp $Isa.transTypeParams($node.FormalParams)
+#end
+#if ($Isa.hasReturn($node.MethodType))
+  out $Isa.hackResultName($node) :: "$Isa.trans($node.MethodType.Result)"
+#end
+post "$Isa.trans($node.Post)"
+#else
+vemeop $Isa.norm($node.Name)
+#if (!$node.FormalParams.isEmpty())
+  inp $Isa.transTypeParams($node.FormalParams)
+#end
+#if ($Isa.hasReturn($node.MethodType))
+  out "$Isa.trans($node.MethodType.Result)"
+#end
+is "body statement..."
+#end

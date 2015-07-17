@@ -28,6 +28,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
+import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
@@ -75,6 +76,7 @@ public class IsaTemplateManager extends TemplateManager
 	private static final String SET_MULT_BIND = "SetMultiple";
 	private static final String LET_DEF_EXP = "LetDef";
 	private static final String DIV_EXP = "Div";
+	private static final String STATE_DECL = "State";
 
 	public IsaTemplateManager(TemplateStructure templateStructure,
 			Class<?> classRef)
@@ -147,6 +149,9 @@ public class IsaTemplateManager extends TemplateManager
 
 		nodeTemplateFileNames.put(AIntDivNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ File.separatorChar + DIV_EXP);
+
+		nodeTemplateFileNames.put(AStateDeclCG.class, templateStructure.DECL_PATH
+				+ File.separator + STATE_DECL);
 
 	}
 }

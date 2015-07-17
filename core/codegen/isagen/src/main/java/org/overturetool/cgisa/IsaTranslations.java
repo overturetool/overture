@@ -38,6 +38,8 @@ import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
@@ -157,7 +159,6 @@ public class IsaTranslations
 		return sb.toString();
 	}
 
-
 	// Hacks - translations that manipulate the tree in grostesque way due to
 	// issues with the IR
 	// FIXME Unhack result name extraction for implicit functions
@@ -254,13 +255,18 @@ public class IsaTranslations
 	}
 
 	// Checks
+	public boolean hasReturn(AMethodTypeCG node)
+	{
+		return !(node.getResult() instanceof AVoidTypeCG);
+	}
 
 	public boolean isRoot(INode node)
 	{
 		return isaUtils.isRoot(node);
 	}
-	
-	public boolean isRootRec(AApplyExpCG node){
+
+	public boolean isRootRec(AApplyExpCG node)
+	{
 		return isaUtils.isRootRec(node);
 	}
 
