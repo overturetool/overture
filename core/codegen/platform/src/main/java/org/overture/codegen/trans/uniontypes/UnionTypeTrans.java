@@ -93,19 +93,12 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	
 	private TransAssistantCG transAssistant;
 
-	private String objExpPrefix;
-	private String applyExpResulPrefix;
-	private String callStmObjPrefix;
+	private UnionTypeVarPrefixes unionTypePrefixes;
 
-	public UnionTypeTrans(TransAssistantCG baseAssistant,
-			String applyExpResultPrefix, String objExpPrefix,
-			String callStmObjPrefix)
+	public UnionTypeTrans(TransAssistantCG transAssistant, UnionTypeVarPrefixes unionTypePrefixes)
 	{
-		this.transAssistant = baseAssistant;
-
-		this.applyExpResulPrefix = applyExpResultPrefix;
-		this.objExpPrefix = objExpPrefix;
-		this.callStmObjPrefix = callStmObjPrefix;
+		this.transAssistant = transAssistant;
+		this.unionTypePrefixes = unionTypePrefixes;
 	}
 
 	private interface TypeFinder<T extends STypeCG>
@@ -344,7 +337,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 		SStmCG enclosingStatement = transAssistant.getEnclosingStm(node, "field expression");
 
-		String applyResultName = transAssistant.getInfo().getTempVarNameGen().nextVarName(applyExpResulPrefix);
+		String applyResultName = transAssistant.getInfo().getTempVarNameGen().nextVarName(unionTypePrefixes.applyExp());
 
 		AIdentifierPatternCG id = new AIdentifierPatternCG();
 		id.setName(applyResultName);
@@ -364,7 +357,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		
 		if (!(subject instanceof SVarExpBase))
 		{
-			String objName = transAssistant.getInfo().getTempVarNameGen().nextVarName(objExpPrefix);
+			String objName = transAssistant.getInfo().getTempVarNameGen().nextVarName(unionTypePrefixes.objExp());
 
 			AIdentifierPatternCG objId = new AIdentifierPatternCG();
 			objId.setName(objName);
@@ -740,7 +733,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 		if (!(objExp instanceof SVarExpCG))
 		{
-			String callStmObjName = transAssistant.getInfo().getTempVarNameGen().nextVarName(callStmObjPrefix);
+			String callStmObjName = transAssistant.getInfo().getTempVarNameGen().nextVarName(unionTypePrefixes.callStmObj());
 			
 			AIdentifierPatternCG id = new AIdentifierPatternCG();
 			id.setName(callStmObjName);

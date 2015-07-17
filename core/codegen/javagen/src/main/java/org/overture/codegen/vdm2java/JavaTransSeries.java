@@ -39,15 +39,13 @@ import org.overture.codegen.trans.patterns.PatternVarPrefixes;
 import org.overture.codegen.trans.patterns.PatternTrans;
 import org.overture.codegen.trans.quantifier.Exists1CounterData;
 import org.overture.codegen.trans.uniontypes.UnionTypeTrans;
+import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
 
 public class JavaTransSeries
 {
 	public static final String POST_CHECK_METHOD_NAME = "postCheck";
 
 	// Name Prefixes (NP) of temporary variables created by the transformations
-	public static final String APPLY_EXP_NP = "apply_";
-	public static final String OBJ_EXP_NP = "obj_";
-	public static final String CALL_STM_OBJ_NP = "callStmObj_";
 	public static final String CASES_EXP_NP = "casesExp_";
 	public static final String WHILE_COND_NP = "whileCond_";
 	public static final String IS_EXP_SUBJECT_NP = "isExpSubject_";
@@ -70,6 +68,7 @@ public class JavaTransSeries
 		TraceNames tracePrefixes = codeGen.getTracePrefixes();
 		FuncValPrefixes funcValPrefixes = codeGen.getFuncValPrefixes();
 		PatternVarPrefixes patternPrefixes = codeGen.getPatternPrefixes();
+		UnionTypeVarPrefixes unionTypePrefixes = codeGen.getUnionTypePrefixes();
 		
 		TransAssistantCG transAssist = codeGen.getTransAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
@@ -92,7 +91,7 @@ public class JavaTransSeries
 		IsExpTrans isExpTr = new IsExpTrans(transAssist, IS_EXP_SUBJECT_NP);
 		SeqConvTrans seqConvTr = new SeqConvTrans(transAssist);
 		TracesTrans tracesTr = new TracesTrans(transAssist, iteVarPrefixes, tracePrefixes, langIte, new JavaCallStmToStringBuilder());
-		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, APPLY_EXP_NP, OBJ_EXP_NP, CALL_STM_OBJ_NP);
+		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, unionTypePrefixes);
 		JavaToStringTrans javaToStringTr = new JavaToStringTrans(info);
 		RecMethodsTrans recTr = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());
 
