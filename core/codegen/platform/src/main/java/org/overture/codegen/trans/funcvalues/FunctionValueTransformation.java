@@ -44,13 +44,10 @@ import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class FunctionValueTransformation extends DepthFirstAnalysisAdaptor
 {
-	private IRInfo info;
-
 	private TransAssistantCG transformationAssistant;
 
 	private FunctionValueAssistant functionValueAssistant;
@@ -60,13 +57,12 @@ public class FunctionValueTransformation extends DepthFirstAnalysisAdaptor
 	private String evalMethodName;
 	private String paramNamePrefix;
 
-	public FunctionValueTransformation(IRInfo info,
+	public FunctionValueTransformation(
 			TransAssistantCG transformationAssistant,
 			FunctionValueAssistant functionValueAssistant,
 			String interfaceNamePrefix, String templateTypePrefix,
 			String evalMethodName, String paramNamePrefix)
 	{
-		this.info = info;
 		this.transformationAssistant = transformationAssistant;
 		this.functionValueAssistant = functionValueAssistant;
 		this.interfaceNamePrefix = interfaceNamePrefix;
@@ -203,7 +199,7 @@ public class FunctionValueTransformation extends DepthFirstAnalysisAdaptor
 		AInterfaceDeclCG methodTypeInterface = new AInterfaceDeclCG();
 
 		methodTypeInterface.setPackage(null);
-		methodTypeInterface.setName(info.getTempVarNameGen().nextVarName(interfaceNamePrefix));
+		methodTypeInterface.setName(transformationAssistant.getInfo().getTempVarNameGen().nextVarName(interfaceNamePrefix));
 
 		AMethodDeclCG evalMethod = new AMethodDeclCG();
 		evalMethod.setImplicit(false);

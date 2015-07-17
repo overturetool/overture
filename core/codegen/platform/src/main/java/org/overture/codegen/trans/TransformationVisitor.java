@@ -74,7 +74,6 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.comp.ComplexCompStrategy;
@@ -90,12 +89,9 @@ import org.overture.codegen.trans.quantifier.OrdinaryQuantifierStrategy;
 
 public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 {
-	private IRInfo info;
-
-	//TODO: consider putting in ir info
 	private List<AClassDeclCG> classes;
 	
-	private TransAssistantCG transformationAssistant;
+	private TransAssistantCG transAssistant;
 
 	private Exists1CounterData counterData;
 	
@@ -108,13 +104,12 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	private String whileCondExpPrefix;
 	private String recModifierExpPrefix;
 
-	public TransformationVisitor(IRInfo info, List<AClassDeclCG> classes, TempVarPrefixes varPrefixes,
+	public TransformationVisitor(List<AClassDeclCG> classes, TempVarPrefixes varPrefixes,
 			TransAssistantCG transformationAssistant, Exists1CounterData counterData,
 			ILanguageIterator langIterator, String ternaryIfExpPrefix, String casesExpPrefix, String andExpPrefix, String orExpPrefix, String whileCondExpPrefix, String recModifierExpPrefix)
 	{
-		this.info = info;
 		this.classes = classes;
-		this.transformationAssistant = transformationAssistant;
+		this.transAssistant = transformationAssistant;
 		this.counterData = counterData;
 		this.langIterator = langIterator;
 		
@@ -130,7 +125,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseATernaryIfExpCG(ATernaryIfExpCG node)
 			throws AnalysisException
 	{
-		SStmCG enclosingStm = transformationAssistant.findEnclosingStm(node);
+		SStmCG enclosingStm = transAssistant.findEnclosingStm(node);
 		
 		if(enclosingStm == null)
 		{
@@ -142,10 +137,10 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		String resultVarName = info.getTempVarNameGen().nextVarName(ternaryIfExpPrefix);
+		String resultVarName = transAssistant.getInfo().getTempVarNameGen().nextVarName(ternaryIfExpPrefix);
 		
-		AVarDeclCG resultDecl = transformationAssistant.consDecl(resultVarName, node.getType().clone(), info.getExpAssistant().consNullExp());
-		AIdentifierVarExpCG resultVar = transformationAssistant.consIdentifierVar(resultVarName, resultDecl.getType().clone());
+		AVarDeclCG resultDecl = transAssistant.consDecl(resultVarName, node.getType().clone(), transAssistant.getInfo().getExpAssistant().consNullExp());
+		AIdentifierVarExpCG resultVar = transAssistant.consIdentifierVar(resultVarName, resultDecl.getType().clone());
 		
 		SExpCG condition = node.getCondition();
 		SExpCG trueValue = node.getTrueValue();
@@ -166,8 +161,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		ABlockStmCG replacementBlock = new ABlockStmCG();
 
-		transformationAssistant.replaceNodeWith(node, resultVar);
-		transformationAssistant.replaceNodeWith(enclosingStm, replacementBlock);
+		transAssistant.replaceNodeWith(node, resultVar);
+		transAssistant.replaceNodeWith(enclosingStm, replacementBlock);
 		
 		ABlockStmCG declBlock = new ABlockStmCG();
 		declBlock.getLocalDefs().add(resultDecl);
@@ -205,16 +200,16 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		SExpCG exp = node.getExp().clone();
 		SStmCG body = node.getBody().clone();
 		
-		String whileCondName = info.getTempVarNameGen().nextVarName(whileCondExpPrefix);
+		String whileCondName = transAssistant.getInfo().getTempVarNameGen().nextVarName(whileCondExpPrefix);
 		
-		SExpCG whileCondVar = transformationAssistant.consBoolCheck(whileCondName, false);
+		SExpCG whileCondVar = transAssistant.consBoolCheck(whileCondName, false);
 		
 		AIfStmCG whileCondCheck = new AIfStmCG();
-		whileCondCheck.setIfExp(transformationAssistant.consBoolCheck(whileCondName, true));
+		whileCondCheck.setIfExp(transAssistant.consBoolCheck(whileCondName, true));
 		whileCondCheck.setThenStm(new ABreakStmCG());
 		
 		ABlockStmCG newWhileBody = new ABlockStmCG();
-		newWhileBody.getStatements().add(transformationAssistant.consBoolVarAssignment(exp, whileCondName));
+		newWhileBody.getStatements().add(transAssistant.consBoolVarAssignment(exp, whileCondName));
 		newWhileBody.getStatements().add(whileCondCheck);
 		newWhileBody.getStatements().add(body);
 		
@@ -223,11 +218,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		newWhileStm.setBody(newWhileBody);
 		
 		ABlockStmCG declBlock = new ABlockStmCG();
-		AVarDeclCG whileCondVarDecl = transformationAssistant.consBoolVarDecl(whileCondName, true);
+		AVarDeclCG whileCondVarDecl = transAssistant.consBoolVarDecl(whileCondName, true);
 		declBlock.getLocalDefs().add(whileCondVarDecl);
 		declBlock.getStatements().add(newWhileStm);
 		
-		transformationAssistant.replaceNodeWith(node, declBlock);
+		transAssistant.replaceNodeWith(node, declBlock);
 
 		newWhileStm.getBody().apply(this);
 	}
@@ -252,11 +247,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		// }
 		//
 		
-		SStmCG enclosingStm = transformationAssistant.findEnclosingStm(node);
+		SStmCG enclosingStm = transAssistant.findEnclosingStm(node);
 		
 		if(transformBoolBinaryExp(node, enclosingStm))
 		{
-			String resultName = info.getTempVarNameGen().nextVarName(orExpPrefix);
+			String resultName = transAssistant.getInfo().getTempVarNameGen().nextVarName(orExpPrefix);
 			handleLogicExp(node, enclosingStm, consOrExpCheck(node, resultName), resultName);
 		}
 		else
@@ -283,11 +278,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		//    }
 		// }
 		
-		SStmCG enclosingStm = transformationAssistant.findEnclosingStm(node);
+		SStmCG enclosingStm = transAssistant.findEnclosingStm(node);
 
 		if(transformBoolBinaryExp(node, enclosingStm))
 		{
-			String resultName = info.getTempVarNameGen().nextVarName(andExpPrefix);
+			String resultName = transAssistant.getInfo().getTempVarNameGen().nextVarName(andExpPrefix);
 			handleLogicExp(node, enclosingStm, consAndExpCheck(node, resultName), resultName);
 		}
 		else
@@ -303,7 +298,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		if (!(header.getBinding() instanceof ASetMultipleBindCG))
 		{
-			info.addTransformationWarning(node.getHeader().getBinding(), "This transformation only works for 'let be st' "
+			transAssistant.getInfo().addTransformationWarning(node.getHeader().getBinding(), "This transformation only works for 'let be st' "
 					+ "statements with with multiple set binds and not multiple type binds in '"
 					+ this.getClass().getSimpleName() + "'");
 			return;
@@ -312,20 +307,20 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		SExpCG suchThat = header.getSuchThat();
 		ASetMultipleBindCG binding = (ASetMultipleBindCG) node.getHeader().getBinding();
 		
-		SSetTypeCG setType = transformationAssistant.getSetTypeCloned(binding.getSet());
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		SSetTypeCG setType = transAssistant.getSetTypeCloned(binding.getSet());
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
+		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
-		LetBeStStrategy strategy = new LetBeStStrategy(transformationAssistant, suchThat, setType, langIterator, tempVarNameGen, varPrefixes);
+		LetBeStStrategy strategy = new LetBeStStrategy(transAssistant, suchThat, setType, langIterator, tempVarNameGen, varPrefixes);
 
-		if (transformationAssistant.hasEmptySet(binding))
+		if (transAssistant.hasEmptySet(binding))
 		{
-			transformationAssistant.cleanUpBinding(binding);
+			transAssistant.cleanUpBinding(binding);
 			node.setStatement(new ABlockStmCG());
 		}
 
 		LinkedList<SPatternCG> patterns = binding.getPatterns();
-		ABlockStmCG outerBlock = transformationAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy);
+		ABlockStmCG outerBlock = transAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy);
 
 		// Only the statement of the let be st statement is added to the outer block statements.
 		// We obtain the equivalent functionality of the remaining part of the let be st statement
@@ -333,21 +328,21 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		outerBlock.getStatements().add(node.getStatement());
 
 		// Replace the let be st statement with the transformation
-		transformationAssistant.replaceNodeWithRecursively(node, outerBlock, this);
+		transAssistant.replaceNodeWithRecursively(node, outerBlock, this);
 		
-		outerBlock.setScoped(info.getStmAssistant().isScoped(outerBlock));
+		outerBlock.setScoped(transAssistant.getInfo().getStmAssistant().isScoped(outerBlock));
 	}
 
 	@Override
 	public void caseALetBeStExpCG(ALetBeStExpCG node) throws AnalysisException
 	{
-		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "let be st expressions");
+		SStmCG enclosingStm = transAssistant.getEnclosingStm(node, "let be st expressions");
 
 		AHeaderLetBeStCG header = node.getHeader();
 		
 		if (!(header.getBinding() instanceof ASetMultipleBindCG))
 		{
-			info.addTransformationWarning(node.getHeader().getBinding(), "This transformation only works for 'let be st' "
+			transAssistant.getInfo().addTransformationWarning(node.getHeader().getBinding(), "This transformation only works for 'let be st' "
 					+ "expressions with with multiple set binds and not multiple type binds in '"
 					+ this.getClass().getSimpleName() + "'");
 			return;
@@ -355,30 +350,30 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		ASetMultipleBindCG binding = (ASetMultipleBindCG) header.getBinding();
 		SExpCG suchThat = header.getSuchThat();
-		SSetTypeCG setType = transformationAssistant.getSetTypeCloned(binding.getSet());
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		SSetTypeCG setType = transAssistant.getSetTypeCloned(binding.getSet());
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
+		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
-		LetBeStStrategy strategy = new LetBeStStrategy(transformationAssistant, suchThat, setType, langIterator, tempVarNameGen, varPrefixes);
+		LetBeStStrategy strategy = new LetBeStStrategy(transAssistant, suchThat, setType, langIterator, tempVarNameGen, varPrefixes);
 
 		ABlockStmCG outerBlock = new ABlockStmCG();
 
 		SExpCG letBeStResult = null;
 
-		if (transformationAssistant.hasEmptySet(binding))
+		if (transAssistant.hasEmptySet(binding))
 		{
-			transformationAssistant.cleanUpBinding(binding);
-			letBeStResult = info.getExpAssistant().consNullExp();
+			transAssistant.cleanUpBinding(binding);
+			letBeStResult = transAssistant.getInfo().getExpAssistant().consNullExp();
 		} else
 		{
 			String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
 			SExpCG value = node.getValue();
 
-			AVarDeclCG resultDecl = transformationAssistant.consDecl(var, value.getType().clone(), info.getExpAssistant().consNullExp());
+			AVarDeclCG resultDecl = transAssistant.consDecl(var, value.getType().clone(), transAssistant.getInfo().getExpAssistant().consNullExp());
 			outerBlock.getLocalDefs().add(resultDecl);
 			
 			AAssignToExpStmCG setLetBeStResult = new AAssignToExpStmCG();
-			setLetBeStResult.setTarget(transformationAssistant.consIdentifierVar(var, value.getType().clone()));
+			setLetBeStResult.setTarget(transAssistant.consIdentifierVar(var, value.getType().clone()));
 			setLetBeStResult.setExp(value);
 			outerBlock.getStatements().add(setLetBeStResult);
 
@@ -390,33 +385,33 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		}
 
 		// Replace the let be st expression with the result expression
-		transformationAssistant.replaceNodeWith(node, letBeStResult);
+		transAssistant.replaceNodeWith(node, letBeStResult);
 
 		LinkedList<SPatternCG> patterns = binding.getPatterns();
-		ABlockStmCG block = transformationAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy);
+		ABlockStmCG block = transAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy);
 		outerBlock.getStatements().addFirst(block);
 
 		// Replace the enclosing statement with the transformation
-		transformationAssistant.replaceNodeWith(enclosingStm, outerBlock);
+		transAssistant.replaceNodeWith(enclosingStm, outerBlock);
 
 		// And make sure to have the enclosing statement in the transformed tree
 		outerBlock.getStatements().add(enclosingStm);
 		outerBlock.apply(this);
 		
-		outerBlock.setScoped(info.getStmAssistant().isScoped(outerBlock));
+		outerBlock.setScoped(transAssistant.getInfo().getStmAssistant().isScoped(outerBlock));
 	}
 	
 	@Override
 	public void caseARecordModExpCG(ARecordModExpCG node)
 			throws AnalysisException
 	{
-		String recModifierName = info.getTempVarNameGen().nextVarName(recModifierExpPrefix);
+		String recModifierName = transAssistant.getInfo().getTempVarNameGen().nextVarName(recModifierExpPrefix);
 		
-		AVarDeclCG recDecl = transformationAssistant.consDecl(recModifierName, node.getType().clone(), node.getRec().clone());
+		AVarDeclCG recDecl = transAssistant.consDecl(recModifierName, node.getType().clone(), node.getRec().clone());
 		ABlockStmCG declStm = new ABlockStmCG();
 		declStm.getLocalDefs().add(recDecl);
 		
-		AIdentifierVarExpCG recVar = transformationAssistant.consIdentifierVar(recModifierName, node.getType().clone());
+		AIdentifierVarExpCG recVar = transAssistant.consIdentifierVar(recModifierName, node.getType().clone());
 		
 		ABlockStmCG replacementBlock = new ABlockStmCG();
 		replacementBlock.getStatements().add(declStm);
@@ -426,7 +421,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			String name = modifier.getName();
 			SExpCG value = modifier.getValue().clone();
 			
-			STypeCG fieldType = info.getTypeAssistant().getFieldType(classes, node.getRecType(), name);
+			STypeCG fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(classes, node.getRecType(), name);
 			
 			AFieldExpCG field = new AFieldExpCG();
 			field.setType(fieldType);
@@ -440,7 +435,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			replacementBlock.getStatements().add(assignment);
 		}
 		
-		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "record modification expression");
+		SStmCG enclosingStm = transAssistant.getEnclosingStm(node, "record modification expression");
 		
 		transform(enclosingStm, replacementBlock, recVar.clone(), node);
 		
@@ -450,20 +445,20 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACompMapExpCG(ACompMapExpCG node) throws AnalysisException
 	{
-		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "map comprehension");
+		SStmCG enclosingStm = transAssistant.getEnclosingStm(node, "map comprehension");
 
 		AMapletExpCG first = node.getFirst();
 		SExpCG predicate = node.getPredicate();
 		STypeCG type = node.getType();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_MAP_COMP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
-		ComplexCompStrategy strategy = new MapCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
+		ComplexCompStrategy strategy = new MapCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
 		List<ASetMultipleBindCG> bindings = filterBindList(node, node.getBindings());
 		
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy);
+		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy);
 
 		if (block.getStatements().isEmpty())
 		{
@@ -472,7 +467,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			emptyMap.setType(type.clone());
 
 			// Replace the map comprehension with the empty map
-			transformationAssistant.replaceNodeWith(node, emptyMap);
+			transAssistant.replaceNodeWith(node, emptyMap);
 		} else
 		{
 			replaceCompWithTransformation(enclosingStm, block, type, var, node);
@@ -484,19 +479,19 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACompSetExpCG(ACompSetExpCG node) throws AnalysisException
 	{
-		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "set comprehension");
+		SStmCG enclosingStm = transAssistant.getEnclosingStm(node, "set comprehension");
 
 		SExpCG first = node.getFirst();
 		SExpCG predicate = node.getPredicate();
 		STypeCG type = node.getType();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_SET_COMP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
-		ComplexCompStrategy strategy = new SetCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
+		ComplexCompStrategy strategy = new SetCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
 		List<ASetMultipleBindCG> bindings = filterBindList(node, node.getBindings());
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy);
+		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy);
 
 		if (block.getStatements().isEmpty())
 		{
@@ -505,7 +500,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			emptySet.setType(type.clone());
 
 			// Replace the set comprehension with the empty set
-			transformationAssistant.replaceNodeWith(node, emptySet);
+			transAssistant.replaceNodeWith(node, emptySet);
 		} else
 		{
 			replaceCompWithTransformation(enclosingStm, block, type, var, node);
@@ -517,31 +512,31 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACompSeqExpCG(ACompSeqExpCG node) throws AnalysisException
 	{
-		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "sequence comprehension");
+		SStmCG enclosingStm = transAssistant.getEnclosingStm(node, "sequence comprehension");
 
 		SExpCG first = node.getFirst();
 		SExpCG predicate = node.getPredicate();
 		STypeCG type = node.getType();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_SEQ_COMP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
-		SeqCompStrategy strategy = new SeqCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
+		SeqCompStrategy strategy = new SeqCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
-		if (transformationAssistant.isEmptySet(node.getSet()))
+		if (transAssistant.isEmptySet(node.getSet()))
 		{
 			// In case the block has no statements the result of the sequence comprehension is the empty sequence
 			AEnumSeqExpCG emptySeq = new AEnumSeqExpCG();
 			emptySeq.setType(type.clone());
 
 			// Replace the sequence comprehension with the empty sequence
-			transformationAssistant.replaceNodeWith(node, emptySeq);
+			transAssistant.replaceNodeWith(node, emptySeq);
 		} else
 		{
 			LinkedList<SPatternCG> patterns = new LinkedList<SPatternCG>();
 			patterns.add(node.getSetBind().getPattern().clone());
 
-			ABlockStmCG block = transformationAssistant.consIterationBlock(patterns, node.getSet(), info.getTempVarNameGen(), strategy);
+			ABlockStmCG block = transAssistant.consIterationBlock(patterns, node.getSet(), transAssistant.getInfo().getTempVarNameGen(), strategy);
 
 			replaceCompWithTransformation(enclosingStm, block, type, var, node);
 
@@ -553,23 +548,23 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseAForAllQuantifierExpCG(AForAllQuantifierExpCG node)
 			throws AnalysisException
 	{
-		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "forall expression");
+		SStmCG enclosingStm = transAssistant.getEnclosingStm(node, "forall expression");
 
 		SExpCG predicate = node.getPredicate();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_FORALL_EXP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
-		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, varPrefixes);
+		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, varPrefixes);
 
 		List<ASetMultipleBindCG> multipleSetBinds = filterBindList(node, node.getBindList());
 		
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
+		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
 
 		if (multipleSetBinds.isEmpty())
 		{
-			ABoolLiteralExpCG forAllResult = info.getExpAssistant().consBoolLiteral(true);
-			transformationAssistant.replaceNodeWith(node, forAllResult);
+			ABoolLiteralExpCG forAllResult = transAssistant.getInfo().getExpAssistant().consBoolLiteral(true);
+			transAssistant.replaceNodeWith(node, forAllResult);
 		} else
 		{
 			AIdentifierVarExpCG forAllResult = new AIdentifierVarExpCG();
@@ -586,23 +581,23 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseAExistsQuantifierExpCG(AExistsQuantifierExpCG node)
 			throws AnalysisException
 	{
-		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "exists expression");
+		SStmCG enclosingStm = transAssistant.getEnclosingStm(node, "exists expression");
 
 		SExpCG predicate = node.getPredicate();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
-		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, varPrefixes);
+		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, varPrefixes);
 
 		List<ASetMultipleBindCG> multipleSetBinds = filterBindList(node, node.getBindList());
 		
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
+		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
 
 		if (multipleSetBinds.isEmpty())
 		{
-			ABoolLiteralExpCG existsResult = info.getExpAssistant().consBoolLiteral(false);
-			transformationAssistant.replaceNodeWith(node, existsResult);
+			ABoolLiteralExpCG existsResult = transAssistant.getInfo().getExpAssistant().consBoolLiteral(false);
+			transAssistant.replaceNodeWith(node, existsResult);
 		} else
 		{
 			AIdentifierVarExpCG existsResult = new AIdentifierVarExpCG();
@@ -619,23 +614,23 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseAExists1QuantifierExpCG(AExists1QuantifierExpCG node)
 			throws AnalysisException
 	{
-		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "exists1 expression");
+		SStmCG enclosingStm = transAssistant.getEnclosingStm(node, "exists1 expression");
 
 		SExpCG predicate = node.getPredicate();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		TempVarPrefixes varPrefixes = transAssistant.getVarPrefixes();
 
-		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transformationAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes, counterData);
+		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes, counterData);
 		
 		List<ASetMultipleBindCG> multipleSetBinds = filterBindList(node, node.getBindList());
 		
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
+		ABlockStmCG block = transAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy);
 
 		if (multipleSetBinds.isEmpty())
 		{
-			ABoolLiteralExpCG exists1Result = info.getExpAssistant().consBoolLiteral(false);
-			transformationAssistant.replaceNodeWith(node, exists1Result);
+			ABoolLiteralExpCG exists1Result = transAssistant.getInfo().getExpAssistant().consBoolLiteral(false);
+			transAssistant.replaceNodeWith(node, exists1Result);
 		} else
 		{
 			AIdentifierVarExpCG counter = new AIdentifierVarExpCG();
@@ -646,7 +641,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			AEqualsBinaryExpCG exists1Result = new AEqualsBinaryExpCG();
 			exists1Result.setType(new ABoolBasicTypeCG());
 			exists1Result.setLeft(counter);
-			exists1Result.setRight(info.getExpAssistant().consIntLiteral(1));
+			exists1Result.setRight(transAssistant.getInfo().getExpAssistant().consIntLiteral(1));
 
 			transform(enclosingStm, block, exists1Result, node);
 			block.apply(this);
@@ -655,10 +650,10 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 	public void caseALetDefExpCG(ALetDefExpCG node) throws AnalysisException
 	{
-		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "let def expression");
+		SStmCG enclosingStm = transAssistant.getEnclosingStm(node, "let def expression");
 
 		SExpCG exp = node.getExp();
-		transformationAssistant.replaceNodeWith(node, exp);
+		transAssistant.replaceNodeWith(node, exp);
 
 		ABlockStmCG topBlock = new ABlockStmCG();
 		ABlockStmCG current = topBlock;
@@ -671,13 +666,13 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			current = tmp;
 		}
 
-		transformationAssistant.replaceNodeWith(enclosingStm, topBlock);
+		transAssistant.replaceNodeWith(enclosingStm, topBlock);
 		topBlock.getStatements().add(enclosingStm);
 
 		exp.apply(this);
 		topBlock.apply(this);
 		
-		topBlock.setScoped(info.getStmAssistant().isScoped(topBlock));
+		topBlock.setScoped(transAssistant.getInfo().getStmAssistant().isScoped(topBlock));
 	}
 
 	private void replaceCompWithTransformation(SStmCG enclosingStm,
@@ -696,10 +691,10 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			SExpCG nodeResult, SExpCG node)
 	{
 		// Replace the node with the node result
-		transformationAssistant.replaceNodeWith(node, nodeResult);
+		transAssistant.replaceNodeWith(node, nodeResult);
 
 		// Replace the enclosing statement with the transformation
-		transformationAssistant.replaceNodeWith(enclosingStm, block);
+		transAssistant.replaceNodeWith(enclosingStm, block);
 
 		// And make sure to have the enclosing statement in the transformed tree
 		block.getStatements().add(enclosingStm);
@@ -718,13 +713,13 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACasesExpCG(ACasesExpCG node) throws AnalysisException
 	{
-		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "cases expression");
+		SStmCG enclosingStm = transAssistant.getEnclosingStm(node, "cases expression");
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
-		String casesExpResultName = info.getTempVarNameGen().nextVarName(casesExpResultPrefix);
+		String casesExpResultName = transAssistant.getInfo().getTempVarNameGen().nextVarName(casesExpResultPrefix);
 		idPattern.setName(casesExpResultName);
 
-		AVarDeclCG resultVarDecl = info.getDeclAssistant().consLocalVarDecl(node.getType().clone(),
+		AVarDeclCG resultVarDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(node.getType().clone(),
 				idPattern, new AUndefinedExpCG());
 
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
@@ -776,8 +771,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		rightCheck.setIfExp(right);
 		
 		AAssignToExpStmCG assignAndVar = new AAssignToExpStmCG();
-		assignAndVar.setTarget(transformationAssistant.consBoolCheck(andResultVarName, false));
-		assignAndVar.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
+		assignAndVar.setTarget(transAssistant.consBoolCheck(andResultVarName, false));
+		assignAndVar.setExp(transAssistant.getInfo().getAssistantManager().getExpAssistant().consBoolLiteral(true));
 		
 		rightCheck.setThenStm(assignAndVar);
 		
@@ -795,13 +790,13 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		leftCheck.setIfExp(left);
 		
 		AAssignToExpStmCG setOrResultVarTrue = new AAssignToExpStmCG();
-		setOrResultVarTrue.setTarget(transformationAssistant.consBoolCheck(orResultVarName, false));
-		setOrResultVarTrue.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
+		setOrResultVarTrue.setTarget(transAssistant.consBoolCheck(orResultVarName, false));
+		setOrResultVarTrue.setExp(transAssistant.getInfo().getAssistantManager().getExpAssistant().consBoolLiteral(true));
 		
 		leftCheck.setThenStm(setOrResultVarTrue);
 
 		AAssignToExpStmCG setOrResultVarToRightExp = new AAssignToExpStmCG();
-		setOrResultVarToRightExp.setTarget(transformationAssistant.consBoolCheck(orResultVarName, false));
+		setOrResultVarToRightExp.setTarget(transAssistant.consBoolCheck(orResultVarName, false));
 		setOrResultVarToRightExp.setExp(right);
 		
 		leftCheck.setElseStm(setOrResultVarToRightExp);
@@ -814,7 +809,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		// First condition: The enclosing statement can be 'null' if we only try to code generate an expression rather than
 		// a complete specification.
 		
-		return enclosingStm != null && !transformationAssistant.getInfo().getExpAssistant().isLoopCondition(node);
+		return enclosingStm != null && !transAssistant.getInfo().getExpAssistant().isLoopCondition(node);
 	}
 
 	private void visitBoolBinary(SBoolBinaryExpCG node) throws AnalysisException
@@ -827,15 +822,15 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	private void handleLogicExp(SBoolBinaryExpCG node, SStmCG enclosingStm, SStmCG checkBlock, String resultName)
 			throws AnalysisException
 	{
-		AVarDeclCG andResultDecl = transformationAssistant.consBoolVarDecl(resultName, false);
+		AVarDeclCG andResultDecl = transAssistant.consBoolVarDecl(resultName, false);
 		
 		ABlockStmCG declBlock = new ABlockStmCG();
 		declBlock.getLocalDefs().add(andResultDecl);
 		
 		ABlockStmCG replacementBlock = new ABlockStmCG();
 
-		transformationAssistant.replaceNodeWith(enclosingStm, replacementBlock);
-		transformationAssistant.replaceNodeWith(node, transformationAssistant.consBoolCheck(resultName, false));
+		transAssistant.replaceNodeWith(enclosingStm, replacementBlock);
+		transAssistant.replaceNodeWith(node, transAssistant.consBoolCheck(resultName, false));
 		
 		replacementBlock.getStatements().add(declBlock);
 		replacementBlock.getStatements().add(checkBlock);
@@ -856,7 +851,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			}
 			else
 			{
-				info.addTransformationWarning(node, "Transformation only works for "
+				transAssistant.getInfo().addTransformationWarning(node, "Transformation only works for "
 						+ "expressions with multiple set binds and not multiple "
 						+ "type binds in '" + this.getClass().getSimpleName() + "'");
 			}

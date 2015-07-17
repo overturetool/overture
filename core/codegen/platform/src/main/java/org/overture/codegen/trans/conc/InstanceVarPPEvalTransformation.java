@@ -17,7 +17,6 @@ import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRGeneratedTag;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
@@ -33,12 +32,10 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 	//TODO: put constants somewhere appropriate
 	private static final String SENTINEL_FIELD_NAME = "sentinel";
 	private TransAssistantCG transAssistant;
-	private IRInfo info;
 	private List<AClassDeclCG> classes;
 	
-	public InstanceVarPPEvalTransformation(IRInfo info, TransAssistantCG transAssistant, List<AClassDeclCG> classes)
+	public InstanceVarPPEvalTransformation(TransAssistantCG transAssistant, List<AClassDeclCG> classes)
 	{
-		this.info = info;
 		this.transAssistant = transAssistant;
 		this.classes = classes;
 	}
@@ -74,7 +71,7 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 	
 	private void handleStateUpdate(SStmCG node)
 	{
-		if(!info.getSettings().generateConc())
+		if(!transAssistant.getInfo().getSettings().generateConc())
 		{
 			return;
 		}
@@ -142,7 +139,7 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 		
 		if(enclosingClass != null)
 		{
-			fieldType = info.getTypeAssistant().getFieldType(enclosingClass, SENTINEL_FIELD_NAME, classes);
+			fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(enclosingClass, SENTINEL_FIELD_NAME, classes);
 		}
 		else
 		{

@@ -11,7 +11,6 @@ import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.conv.StateDesignatorToExpCG;
@@ -20,9 +19,9 @@ public class AssignStmTransformation extends DepthFirstAnalysisAdaptor
 {
 	private StateDesignatorToExpCG converter;
 	
-	public AssignStmTransformation(IRInfo info, List<AClassDeclCG> classes, TransAssistantCG transAssistant)
+	public AssignStmTransformation(List<AClassDeclCG> classes, TransAssistantCG transAssistant)
 	{
-		this.converter = new StateDesignatorToExpCG(info, classes, transAssistant);
+		this.converter = new StateDesignatorToExpCG(classes, transAssistant);
 	}
 	
 	@Override

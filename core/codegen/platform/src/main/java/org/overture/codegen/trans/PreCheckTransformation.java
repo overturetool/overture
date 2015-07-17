@@ -11,27 +11,24 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.types.AErrorTypeCG;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class PreCheckTransformation extends DepthFirstAnalysisAdaptor {
 
-	private IRInfo info;
-	private TransAssistantCG transformationAssistant;
+	private TransAssistantCG transAssistant;
 	private Object conditionalCallTag;
 	
-	public PreCheckTransformation(IRInfo info, TransAssistantCG transformationAssistant, Object conditionalCallTag)
+	public PreCheckTransformation(TransAssistantCG transAssistant, Object conditionalCallTag)
 	{
-		this.info = info;
-		this.transformationAssistant = transformationAssistant;
+		this.transAssistant = transAssistant;
 		this.conditionalCallTag = conditionalCallTag;
 	}
 	
 	@Override
 	public void caseAMethodDeclCG(AMethodDeclCG node) throws AnalysisException {
 		
-		if(!info.getSettings().generatePreCondChecks())
+		if(!transAssistant.getInfo().getSettings().generatePreCondChecks())
 		{
 			return;
 		}
@@ -51,7 +48,7 @@ public class PreCheckTransformation extends DepthFirstAnalysisAdaptor {
 
 		AMethodDeclCG preCondMethod = (AMethodDeclCG) preCond;
 		
-		AApplyExpCG preCondCall = transformationAssistant.consConditionalCall(node, preCondMethod);
+		AApplyExpCG preCondCall = transAssistant.consConditionalCall(node, preCondMethod);
 		
 		if(preCondCall == null)
 		{
@@ -70,13 +67,13 @@ public class PreCheckTransformation extends DepthFirstAnalysisAdaptor {
 		raiseError.setError(runtimeError);
 		
 		AIfStmCG ifCheck = new AIfStmCG();
-		ifCheck.setIfExp(info.getExpAssistant().negate(preCondCall));
+		ifCheck.setIfExp(transAssistant.getInfo().getExpAssistant().negate(preCondCall));
 		ifCheck.setThenStm(raiseError);
 		
 		ABlockStmCG newBody = new ABlockStmCG();
 		newBody.getStatements().add(ifCheck);
 		newBody.getStatements().add(body.clone());
 		
-		transformationAssistant.replaceNodeWith(body, newBody);
+		transAssistant.replaceNodeWith(body, newBody);
 	}
 }

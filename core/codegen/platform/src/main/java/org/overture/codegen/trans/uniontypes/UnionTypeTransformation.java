@@ -83,14 +83,12 @@ import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 {
-	private BaseTransformationAssistant baseAssistant;
-	private IRInfo info;
+	private TransAssistantCG transAssistant;
 	private List<AClassDeclCG> classes;
 
 	private String objExpPrefix;
@@ -100,13 +98,12 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	private String missingOpMemberPrefix;
 	private String missingMemberPrefix;
 	
-	public UnionTypeTransformation(BaseTransformationAssistant baseAssistant,
-			IRInfo info, List<AClassDeclCG> classes,
+	public UnionTypeTransformation(TransAssistantCG baseAssistant,
+			List<AClassDeclCG> classes,
 			String applyExpResultPrefix, String objExpPrefix,
 			String callStmObjPrefix, String missingOpMemberPrefix, String missingMemberPrefix)
 	{
-		this.baseAssistant = baseAssistant;
-		this.info = info;
+		this.transAssistant = baseAssistant;
 		this.classes = classes;
 		this.missingMemberPrefix = missingMemberPrefix;
 
@@ -164,7 +161,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			casted.setType(castedType.clone());
 			casted.setExp(exp.clone());
 
-			baseAssistant.replaceNodeWith(exp, casted);
+			transAssistant.replaceNodeWith(exp, casted);
 
 			return casted;
 		}
@@ -175,7 +172,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	private boolean correctArgTypes(List<SExpCG> args, List<STypeCG> paramTypes)
 			throws AnalysisException
 	{
-		if (info.getAssistantManager().getTypeAssistant().checkArgTypes(info, args, paramTypes))
+		if (transAssistant.getInfo().getAssistantManager().getTypeAssistant().checkArgTypes(transAssistant.getInfo(), args, paramTypes))
 		{
 			for (int k = 0; k < paramTypes.size(); k++)
 			{
@@ -225,7 +222,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	{
 		STypeCG expectedType;
 		
-		if (info.getTypeAssistant().isNumericType(node.getType()))
+		if (transAssistant.getInfo().getTypeAssistant().isNumericType(node.getType()))
 		{
 			expectedType = node.getType();
 		} else
@@ -257,7 +254,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		
 		if(type instanceof AUnionTypeCG)
 		{
-			STypeCG expectedType = info.getTypeAssistant().getSetType((AUnionTypeCG) type);
+			STypeCG expectedType = transAssistant.getInfo().getTypeAssistant().getSetType((AUnionTypeCG) type);
 			correctTypes(node.getExp(), expectedType);
 		}
 		
@@ -273,7 +270,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		
 		if(type instanceof AUnionTypeCG)
 		{
-			STypeCG expectedType = info.getTypeAssistant().getSeqType((AUnionTypeCG) type);
+			STypeCG expectedType = transAssistant.getInfo().getTypeAssistant().getSeqType((AUnionTypeCG) type);
 			correctTypes(node.getExp(), expectedType);
 		}
 		
@@ -289,7 +286,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		node.getRight().apply(this);
 		node.getType().apply(this);
 		
-		if(!info.getTypeAssistant().usesUnionType(node))
+		if(!transAssistant.getInfo().getTypeAssistant().usesUnionType(node))
 		{
 			return;
 		}
@@ -298,7 +295,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		if (leftType instanceof AUnionTypeCG)
 		{
-			STypeCG expectedType = info.getTypeAssistant().getSeqType((AUnionTypeCG) leftType);
+			STypeCG expectedType = transAssistant.getInfo().getTypeAssistant().getSeqType((AUnionTypeCG) leftType);
 			correctTypes(node.getLeft(), expectedType);
 		}
 
@@ -306,7 +303,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		if (rightType instanceof AUnionTypeCG)
 		{
-			STypeCG expectedType = info.getTypeAssistant().getSeqType((AUnionTypeCG) rightType);
+			STypeCG expectedType = transAssistant.getInfo().getTypeAssistant().getSeqType((AUnionTypeCG) rightType);
 			correctTypes(node.getRight(), expectedType);
 		}
 	}
@@ -339,7 +336,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		STypeCG resultType = getResultType(node, node.parent(), objectType, info.getTypeAssistant());
+		STypeCG resultType = getResultType(node, node.parent(), objectType, transAssistant.getInfo().getTypeAssistant());
 		
 		handleFieldExp(node, node.getMemberName(), object, objectType, resultType);
 	}
@@ -348,17 +345,17 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	{
 		INode parent = node.parent();
 
-		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
+		TypeAssistantCG typeAssistant = transAssistant.getInfo().getAssistantManager().getTypeAssistant();
 
-		SStmCG enclosingStatement = baseAssistant.getEnclosingStm(node, "field expression");
+		SStmCG enclosingStatement = transAssistant.getEnclosingStm(node, "field expression");
 
-		String applyResultName = info.getTempVarNameGen().nextVarName(applyExpResulPrefix);
+		String applyResultName = transAssistant.getInfo().getTempVarNameGen().nextVarName(applyExpResulPrefix);
 
 		AIdentifierPatternCG id = new AIdentifierPatternCG();
 		id.setName(applyResultName);
 
-		AVarDeclCG resultDecl = info.getDeclAssistant().
-				consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, info.getExpAssistant().consNullExp());
+		AVarDeclCG resultDecl = transAssistant.getInfo().getDeclAssistant().
+				consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, transAssistant.getInfo().getExpAssistant().consNullExp());
 		
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
 		resultVar.setSourceNode(node.getSourceNode());
@@ -372,12 +369,12 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		
 		if (!(subject instanceof SVarExpBase))
 		{
-			String objName = info.getTempVarNameGen().nextVarName(objExpPrefix);
+			String objName = transAssistant.getInfo().getTempVarNameGen().nextVarName(objExpPrefix);
 
 			AIdentifierPatternCG objId = new AIdentifierPatternCG();
 			objId.setName(objName);
 
-			AVarDeclCG objectDecl = info.getDeclAssistant().
+			AVarDeclCG objectDecl = transAssistant.getInfo().getDeclAssistant().
 					consLocalVarDecl(subject.getType().clone(), objId, subject.clone());
 			
 			replacementBlock.getLocalDefs().add(objectDecl);
@@ -469,17 +466,17 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		if(parent instanceof AApplyExpCG && ((AApplyExpCG) parent).getRoot() == node)
 		{
-			baseAssistant.replaceNodeWith(parent, resultVar);
+			transAssistant.replaceNodeWith(parent, resultVar);
 		}
 		else
 		{
-			baseAssistant.replaceNodeWith(node, resultVar);
+			transAssistant.replaceNodeWith(node, resultVar);
 		}
 		
 		replacementBlock.getLocalDefs().add(resultDecl);
 		replacementBlock.getStatements().add(ifChecks);
 
-		baseAssistant.replaceNodeWith(enclosingStatement, replacementBlock);
+		transAssistant.replaceNodeWith(enclosingStatement, replacementBlock);
 		replacementBlock.getStatements().add(enclosingStatement);
 		
 		ifChecks.apply(this);
@@ -512,7 +509,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			{
 				ARecordTypeCG recordType = (ARecordTypeCG) currentType;
 
-				return info.getDeclAssistant().getFieldDecl(classes, recordType, memberName) != null;
+				return transAssistant.getInfo().getDeclAssistant().getFieldDecl(classes, recordType, memberName) != null;
 			}
 		}
 		else if(fieldExp instanceof AFieldNumberExpCG && currentType instanceof ATupleTypeCG)
@@ -537,7 +534,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		
 		List<SExpCG> args = ((AApplyExpCG) parent).getArgs();
 		
-		return typeAssistant.getMethodType(info, classes, className, memberName, args) != null;
+		return typeAssistant.getMethodType(transAssistant.getInfo(), classes, className, memberName, args) != null;
 	}
 
 	@Override
@@ -556,11 +553,11 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 				@Override
 				public SMapTypeCG findType(PType type)
 						throws org.overture.ast.analysis.AnalysisException {
-					SMapType mapType = info.getTcFactory()
+					SMapType mapType = transAssistant.getInfo().getTcFactory()
 							.createPTypeAssistant().getMap(type);
 
 					return mapType != null ? (SMapTypeCG) mapType.apply(
-							info.getTypeVisitor(), info) : null;
+							transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo()) : null;
 				}
 			});
 
@@ -570,11 +567,11 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 					public SSeqTypeCG findType(PType type)
 							throws org.overture.ast.analysis.AnalysisException {
 
-						SSeqType seqType = info.getTcFactory()
+						SSeqType seqType = transAssistant.getInfo().getTcFactory()
 								.createPTypeAssistant().getSeq(type);
 
 						return seqType != null ? (SSeqTypeCG) seqType.apply(
-								info.getTypeVisitor(), info) : null;
+								transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo()) : null;
 					}
 				});
 			}
@@ -648,10 +645,10 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			String definingClassName = recordType.getName().getDefiningClass();
 			String recordName = recordType.getName().getName();
 
-			AClassDeclCG classDecl = info.getAssistantManager().getDeclAssistant().findClass(classes, definingClassName);
-			ARecordDeclCG record = info.getAssistantManager().getDeclAssistant().findRecord(classDecl, recordName);
+			AClassDeclCG classDecl = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findClass(classes, definingClassName);
+			ARecordDeclCG record = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findRecord(classDecl, recordName);
 
-			List<STypeCG> fieldTypes = info.getAssistantManager().getTypeAssistant().getFieldTypes(record);
+			List<STypeCG> fieldTypes = transAssistant.getInfo().getAssistantManager().getTypeAssistant().getFieldTypes(record);
 
 			if (correctArgTypes(args, fieldTypes))
 			{
@@ -690,7 +687,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	public void caseASuperCallStmCG(ASuperCallStmCG node)
 			throws AnalysisException
 	{
-		handleCallStm(node, info.getStmAssistant().getSuperClassName(node));
+		handleCallStm(node, transAssistant.getInfo().getStmAssistant().getSuperClassName(node));
 	}
 
 	private void handleCallStm(SCallStmCG node, String className) throws AnalysisException
@@ -703,8 +700,8 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		String fieldName = node.getName();
 		LinkedList<SExpCG> args = node.getArgs();
 
-		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
-		AMethodTypeCG methodType = typeAssistant.getMethodType(info, classes, className, fieldName, args);
+		TypeAssistantCG typeAssistant = transAssistant.getInfo().getAssistantManager().getTypeAssistant();
+		AMethodTypeCG methodType = typeAssistant.getMethodType(transAssistant.getInfo(), classes, className, fieldName, args);
 
 		if (methodType != null)
 		{
@@ -748,11 +745,11 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		if (!(objExp instanceof SVarExpCG))
 		{
-			String callStmObjName = info.getTempVarNameGen().nextVarName(callStmObjPrefix);
+			String callStmObjName = transAssistant.getInfo().getTempVarNameGen().nextVarName(callStmObjPrefix);
 			
 			AIdentifierPatternCG id = new AIdentifierPatternCG();
 			id.setName(callStmObjName);
-			AVarDeclCG objDecl = info.getDeclAssistant().
+			AVarDeclCG objDecl = transAssistant.getInfo().getDeclAssistant().
 					consLocalVarDecl(node.getSourceNode().getVdmNode(),
 							objType.clone(), id, objExp.clone());
 
@@ -768,7 +765,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			replacementBlock.getLocalDefs().add(objDecl);
 		}
 
-		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
+		TypeAssistantCG typeAssistant = transAssistant.getInfo().getAssistantManager().getTypeAssistant();
 
 		LinkedList<STypeCG> possibleTypes = ((AUnionTypeCG) objType).getTypes();
 		AIfStmCG ifChecks = new AIfStmCG();
@@ -780,7 +777,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 			AClassTypeCG currentType = (AClassTypeCG) possibleTypes.get(i);
 
-			AMethodTypeCG methodType = typeAssistant.getMethodType(info, classes, currentType.getName(), fieldName, args);
+			AMethodTypeCG methodType = typeAssistant.getMethodType(transAssistant.getInfo(), classes, currentType.getName(), fieldName, args);
 
 			if (methodType != null)
 			{
@@ -826,7 +823,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		ifChecks.setElseStm(raiseStm);
 
 		replacementBlock.getStatements().add(ifChecks);
-		baseAssistant.replaceNodeWith(node, replacementBlock);
+		transAssistant.replaceNodeWith(node, replacementBlock);
 		ifChecks.apply(this);
 	}
 
@@ -897,11 +894,11 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		{
 			SExpCG exp = node.getExp();
 			PType vdmType = (PType) exp.getType().getSourceNode().getVdmNode();
-			SSeqType seqType = info.getTcFactory().createPTypeAssistant().getSeq(vdmType);
+			SSeqType seqType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getSeq(vdmType);
 
 			try
 			{
-				STypeCG typeCg = seqType.apply(info.getTypeVisitor(), info);
+				STypeCG typeCg = seqType.apply(transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo());
 
 				if (typeCg instanceof SSeqTypeCG)
 				{
@@ -922,11 +919,11 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		{
 			SExpCG exp = node.getExp();
 			PType vdmType = (PType) exp.getType().getSourceNode().getVdmNode();
-			SMapType mapType = info.getTcFactory().createPTypeAssistant().getMap(vdmType);
+			SMapType mapType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getMap(vdmType);
 
 			try
 			{
-				STypeCG typeCg = mapType.apply(info.getTypeVisitor(), info);
+				STypeCG typeCg = mapType.apply(transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo());
 
 				if (typeCg instanceof SMapTypeCG)
 				{
@@ -989,7 +986,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			else if(currentType instanceof ARecordTypeCG)
 			{
 				ARecordTypeCG recordType = (ARecordTypeCG) currentType;
-				fieldType = info.getTypeAssistant().getFieldType(classes, recordType, memberName);
+				fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(classes, recordType, memberName);
 			}
 			else{
 				//Can be the unknown type

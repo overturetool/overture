@@ -12,7 +12,6 @@ import org.overture.codegen.cgast.expressions.AMapSeqGetExpCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 /**
@@ -24,13 +23,11 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
  */
 public class StateDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 {
-	private IRInfo info;
 	private List<AClassDeclCG> classes;
 	private TransAssistantCG transAssistant;
 	
-	public StateDesignatorToExpCG(IRInfo info, List<AClassDeclCG> classes, TransAssistantCG transAssistant)
+	public StateDesignatorToExpCG(List<AClassDeclCG> classes, TransAssistantCG transAssistant)
 	{
-		this.info = info;
 		this.classes = classes;
 		this.transAssistant = transAssistant;
 	}
@@ -39,7 +36,7 @@ public class StateDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 	public SExpCG caseAIdentifierStateDesignatorCG(
 			AIdentifierStateDesignatorCG node) throws AnalysisException
 	{
-		return info.getExpAssistant().idStateDesignatorToExp(info, transAssistant, classes, node);
+		return transAssistant.getInfo().getExpAssistant().idStateDesignatorToExp(transAssistant, classes, node);
 	}
 	
 	@Override

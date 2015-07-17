@@ -613,7 +613,7 @@ public class ExpAssistantCG extends AssistantBase
 		return basicIsExp;
 	}
 	
-	public SVarExpCG idStateDesignatorToExp(IRInfo info, TransAssistantCG transAssistant, List<AClassDeclCG> classes, AIdentifierStateDesignatorCG node)
+	public SVarExpCG idStateDesignatorToExp(TransAssistantCG transAssistant, List<AClassDeclCG> classes, AIdentifierStateDesignatorCG node)
 	{
 		if(node.getExplicit())
 		{

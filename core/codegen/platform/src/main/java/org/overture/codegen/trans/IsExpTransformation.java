@@ -15,20 +15,17 @@ import org.overture.codegen.cgast.expressions.SVarExpBase;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 
 public class IsExpTransformation extends DepthFirstAnalysisAdaptor
 {
-	private IRInfo info;
-	private TransAssistantCG transformationAssistant;
+	private TransAssistantCG transAssistant;
 	private String isExpSubjectNamePrefix;
 	
-	public IsExpTransformation(IRInfo info, TransAssistantCG transformationAssistant, String isExpSubjectNamePrefix)
+	public IsExpTransformation(TransAssistantCG transAssistant, String isExpSubjectNamePrefix)
 	{
-		this.info = info;
-		this.transformationAssistant = transformationAssistant;
+		this.transAssistant = transAssistant;
 		this.isExpSubjectNamePrefix = isExpSubjectNamePrefix;
 	}
 	@Override
@@ -45,17 +42,17 @@ public class IsExpTransformation extends DepthFirstAnalysisAdaptor
 		
 		AUnionTypeCG unionType = (AUnionTypeCG) checkedType;
 		List<STypeCG> types = unionType.getTypes();
-		types = info.getTypeAssistant().clearObjectTypes(types);
+		types = transAssistant.getInfo().getTypeAssistant().clearObjectTypes(types);
 
 		SExpCG exp = node.getExp();
 		STypeCG expType = node.getExp().getType();
 		
-		ExpAssistantCG expAssistant = info.getExpAssistant();
+		ExpAssistantCG expAssistant = transAssistant.getInfo().getExpAssistant();
 		
 		if(types.size() == 1)
 		{
 			SExpCG isExp = expAssistant.consIsExp(exp, types.get(0));
-			transformationAssistant.replaceNodeWith(node, isExp);
+			transAssistant.replaceNodeWith(node, isExp);
 			
 			isExp.apply(this);
 			
@@ -68,10 +65,10 @@ public class IsExpTransformation extends DepthFirstAnalysisAdaptor
 
 			if (!(exp instanceof SVarExpBase))
 			{
-				String varName = info.getTempVarNameGen().nextVarName(isExpSubjectNamePrefix);
-				AVarDeclCG expDecl = transformationAssistant.consDecl(varName, expType.clone(), exp.clone());
+				String varName = transAssistant.getInfo().getTempVarNameGen().nextVarName(isExpSubjectNamePrefix);
+				AVarDeclCG expDecl = transAssistant.consDecl(varName, expType.clone(), exp.clone());
 				replacementBlock.getLocalDefs().add(expDecl);
-				expVar = transformationAssistant.consIdentifierVar(varName, expType.clone());
+				expVar = transAssistant.consIdentifierVar(varName, expType.clone());
 			} else
 			{
 				expVar = exp;
@@ -106,9 +103,9 @@ public class IsExpTransformation extends DepthFirstAnalysisAdaptor
 
 			nextOrExp.setRight(nextIsExp);
 
-			SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "general is-expression");
-			transformationAssistant.replaceNodeWith(enclosingStm, replacementBlock);
-			transformationAssistant.replaceNodeWith(node, topOrExp);
+			SStmCG enclosingStm = transAssistant.getEnclosingStm(node, "general is-expression");
+			transAssistant.replaceNodeWith(enclosingStm, replacementBlock);
+			transAssistant.replaceNodeWith(node, topOrExp);
 
 			replacementBlock.getStatements().add(enclosingStm);
 
