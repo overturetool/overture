@@ -1,0 +1,1 @@
+($Isa.trans($node.Left) div $Isa.trans($node.Right))
