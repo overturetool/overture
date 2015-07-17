@@ -62,12 +62,10 @@ import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ABreakStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.ACasesStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
-import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
@@ -98,22 +96,22 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 	private String casesExpResultPrefix;
 	private String andExpPrefix;
 	private String orExpPrefix;
-	private String whileCondExpPrefix;
 	private String recModifierExpPrefix;
 
 	public Exp2StmTrans(TempVarPrefixes varPrefixes,
-			TransAssistantCG transformationAssistant, Exists1CounterData counterData,
-			ILanguageIterator langIterator, String ternaryIfExpPrefix, String casesExpPrefix, String andExpPrefix, String orExpPrefix, String whileCondExpPrefix, String recModifierExpPrefix)
+			TransAssistantCG transformationAssistant,
+			Exists1CounterData counterData, ILanguageIterator langIterator,
+			String ternaryIfExpPrefix, String casesExpPrefix,
+			String andExpPrefix, String orExpPrefix, String recModifierExpPrefix)
 	{
 		this.transAssistant = transformationAssistant;
 		this.counterData = counterData;
 		this.langIterator = langIterator;
-		
+
 		this.ternaryIfExpPrefix = ternaryIfExpPrefix;
 		this.casesExpResultPrefix = casesExpPrefix;
 		this.andExpPrefix = andExpPrefix;
 		this.orExpPrefix = orExpPrefix;
-		this.whileCondExpPrefix = whileCondExpPrefix;
 		this.recModifierExpPrefix = recModifierExpPrefix;
 	}
 	
@@ -170,57 +168,6 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		ifStm.getIfExp().apply(this);
 		trueBranch.getExp().apply(this);
 		falseBranch.getExp().apply(this);
-	}
-	
-	@Override
-	public void caseAWhileStmCG(AWhileStmCG node) throws AnalysisException
-	{
-		// while(boolExp) { body; }
-		//
-		// boolExp is replaced with a variable expression 'whileCond' that is
-		// computed as set for each iteration in the while loop:
-		//
-		// boolean whileCond = true;
-		//
-		// while(whileCond)
-		// {
-		//   whileCond = boolExp;
-		//   if (!whileCond) { break; }
-		//   body;
-		// }
-		//
-		// This is needed for cases where the while condition is a complex
-		// expression that needs to be transformed. For example, when the
-		// while condition is a quantified expression
-		
-		SExpCG exp = node.getExp().clone();
-		SStmCG body = node.getBody().clone();
-		
-		String whileCondName = transAssistant.getInfo().getTempVarNameGen().nextVarName(whileCondExpPrefix);
-		
-		SExpCG whileCondVar = transAssistant.consBoolCheck(whileCondName, false);
-		
-		AIfStmCG whileCondCheck = new AIfStmCG();
-		whileCondCheck.setIfExp(transAssistant.consBoolCheck(whileCondName, true));
-		whileCondCheck.setThenStm(new ABreakStmCG());
-		
-		ABlockStmCG newWhileBody = new ABlockStmCG();
-		newWhileBody.getStatements().add(transAssistant.consBoolVarAssignment(exp, whileCondName));
-		newWhileBody.getStatements().add(whileCondCheck);
-		newWhileBody.getStatements().add(body);
-		
-		AWhileStmCG newWhileStm = new AWhileStmCG();
-		newWhileStm.setExp(whileCondVar);
-		newWhileStm.setBody(newWhileBody);
-		
-		ABlockStmCG declBlock = new ABlockStmCG();
-		AVarDeclCG whileCondVarDecl = transAssistant.consBoolVarDecl(whileCondName, true);
-		declBlock.getLocalDefs().add(whileCondVarDecl);
-		declBlock.getStatements().add(newWhileStm);
-		
-		transAssistant.replaceNodeWith(node, declBlock);
-
-		newWhileStm.getBody().apply(this);
 	}
 	
 	@Override
