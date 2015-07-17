@@ -49,26 +49,16 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 public class FuncValTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG transformationAssistant;
-
 	private FunctionValueAssistant functionValueAssistant;
+	private FuncValPrefixes funcValPrefixes;
 
-	private String interfaceNamePrefix;
-	private String templateTypePrefix;
-	private String evalMethodName;
-	private String paramNamePrefix;
-
-	public FuncValTrans(
-			TransAssistantCG transformationAssistant,
+	public FuncValTrans(TransAssistantCG transformationAssistant,
 			FunctionValueAssistant functionValueAssistant,
-			String interfaceNamePrefix, String templateTypePrefix,
-			String evalMethodName, String paramNamePrefix)
+			FuncValPrefixes funcValPrefixes)
 	{
 		this.transformationAssistant = transformationAssistant;
 		this.functionValueAssistant = functionValueAssistant;
-		this.interfaceNamePrefix = interfaceNamePrefix;
-		this.templateTypePrefix = templateTypePrefix;
-		this.evalMethodName = evalMethodName;
-		this.paramNamePrefix = paramNamePrefix;
+		this.funcValPrefixes = funcValPrefixes;
 	}
 
 	public FunctionValueAssistant getFunctionValueAssistant()
@@ -180,7 +170,7 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 
 			AFormalParamLocalParamCG param = new AFormalParamLocalParamCG();
 
-			String nextParamName = paramNamePrefix + (i + 1);
+			String nextParamName = funcValPrefixes.param() + (i + 1);
 			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 			idPattern.setName(nextParamName);
 
@@ -199,7 +189,7 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 		AInterfaceDeclCG methodTypeInterface = new AInterfaceDeclCG();
 
 		methodTypeInterface.setPackage(null);
-		methodTypeInterface.setName(transformationAssistant.getInfo().getTempVarNameGen().nextVarName(interfaceNamePrefix));
+		methodTypeInterface.setName(transformationAssistant.getInfo().getTempVarNameGen().nextVarName(funcValPrefixes.funcInterface()));
 
 		AMethodDeclCG evalMethod = new AMethodDeclCG();
 		evalMethod.setImplicit(false);
@@ -208,7 +198,7 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 		evalMethod.setBody(null);
 		evalMethod.setIsConstructor(false);
 		evalMethod.setMethodType(methodType.clone());
-		evalMethod.setName(evalMethodName);
+		evalMethod.setName(funcValPrefixes.evalMethod());
 		evalMethod.setStatic(false);
 
 		AMethodTypeCG evalMethodType = new AMethodTypeCG();
@@ -216,7 +206,7 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 		for (int i = 0; i < params.size(); i++)
 		{
 			ATemplateTypeCG templateType = new ATemplateTypeCG();
-			templateType.setName(templateTypePrefix + (i + 1));
+			templateType.setName(funcValPrefixes.templateType() + (i + 1));
 
 			AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
 			formalParam.setType(templateType);
@@ -230,7 +220,7 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 		methodTypeInterface.getMethodSignatures().add(evalMethod);
 
 		ATemplateTypeCG templateTypeResult = new ATemplateTypeCG();
-		templateTypeResult.setName(templateTypePrefix
+		templateTypeResult.setName(funcValPrefixes.templateType()
 				+ (methodType.getParams().size() + 1));
 		methodTypeInterface.getTemplateTypes().add(templateTypeResult);
 		evalMethodType.setResult(templateTypeResult.clone());

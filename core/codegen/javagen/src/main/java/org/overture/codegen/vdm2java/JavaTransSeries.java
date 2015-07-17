@@ -28,6 +28,7 @@ import org.overture.codegen.trans.conc.EvalPermPredTrans;
 import org.overture.codegen.trans.conc.MainClassConcTrans;
 import org.overture.codegen.trans.conc.MutexDeclTrans;
 import org.overture.codegen.trans.conc.SentinelTrans;
+import org.overture.codegen.trans.funcvalues.FuncValPrefixes;
 import org.overture.codegen.trans.funcvalues.FuncValTrans;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
@@ -41,13 +42,9 @@ import org.overture.codegen.trans.uniontypes.UnionTypeTrans;
 
 public class JavaTransSeries
 {
-	public static final String EVAL_METHOD_PREFIX = "eval";
 	public static final String POST_CHECK_METHOD_NAME = "postCheck";
 
 	// Name Prefixes (NP) of temporary variables created by the transformations
-	public static final String INTERFACE_NP = "Func_";
-	public static final String TEMPLATE_TYPE_NP = "T_";
-	public static final String PARAM_NP = "param_";
 	public static final String APPLY_EXP_NP = "apply_";
 	public static final String OBJ_EXP_NP = "obj_";
 	public static final String CALL_STM_OBJ_NP = "callStmObj_";
@@ -71,6 +68,8 @@ public class JavaTransSeries
 		IterationVarPrefixes iteVarPrefixes = codeGen.getIteVarPrefixes();
 		Exp2StmVarPrefixes exp2stmPrefixes = codeGen.getExp2stmPrefixes();
 		TraceNames tracePrefixes = codeGen.getTracePrefixes();
+		FuncValPrefixes funcValPrefixes = codeGen.getFuncValPrefixes();
+		
 		TransAssistantCG transAssist = codeGen.getTransAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
 
@@ -81,7 +80,7 @@ public class JavaTransSeries
 		AssignStmTrans assignTr = new AssignStmTrans(transAssist);
 		PrePostTrans prePostTr = new PrePostTrans(info);
 		IfExpTrans ifExpTr = new IfExpTrans(transAssist);
-		FuncValTrans funcValTr = new FuncValTrans(transAssist, funcValAssist, INTERFACE_NP, TEMPLATE_TYPE_NP, EVAL_METHOD_PREFIX, PARAM_NP);
+		FuncValTrans funcValTr = new FuncValTrans(transAssist, funcValAssist, funcValPrefixes);
 		ILanguageIterator langIte = new JavaLanguageIterator(transAssist, iteVarPrefixes);
 		LetBeStTrans letBeStTr = new LetBeStTrans(transAssist, langIte, iteVarPrefixes);
 		WhileStmTrans whileTr = new WhileStmTrans(transAssist, WHILE_COND_NP);

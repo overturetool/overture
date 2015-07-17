@@ -79,6 +79,7 @@ import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.ModuleToClassTransformation;
 import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.funcvalues.FuncValPrefixes;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
@@ -110,6 +111,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	protected IterationVarPrefixes iteVarPrefixes;
 	protected TraceNames tracePrefixes;
 	protected Exp2StmVarPrefixes exp2stmPrefixes;
+	protected FuncValPrefixes funcValPrefixes;
 	
 	public JavaCodeGen()
 	{
@@ -122,6 +124,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		this.iteVarPrefixes = new IterationVarPrefixes();
 		this.tracePrefixes = new TraceNames();
 		this.exp2stmPrefixes = new Exp2StmVarPrefixes();
+		this.funcValPrefixes = new FuncValPrefixes();
 		
 		this.irObserver = null;
 		initVelocity();
@@ -130,7 +133,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
 		this.javaFormat = new JavaFormat(iteVarPrefixes, javaTemplateStructure, generator.getIRInfo());
 	}
-	
+
 	public void setJavaTemplateStructure(TemplateStructure javaTemplateStructure)
 	{
 		this.javaTemplateStructure = javaTemplateStructure;
@@ -903,5 +906,15 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	public void setExp2stmPrefixes(Exp2StmVarPrefixes exp2stmPrefixes)
 	{
 		this.exp2stmPrefixes = exp2stmPrefixes;
+	}
+
+	public FuncValPrefixes getFuncValPrefixes()
+	{
+		return funcValPrefixes;
+	}
+
+	public void setFuncValPrefixes(FuncValPrefixes funcValPrefixes)
+	{
+		this.funcValPrefixes = funcValPrefixes;
 	}
 }
