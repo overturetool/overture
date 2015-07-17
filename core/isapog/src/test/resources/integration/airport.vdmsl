@@ -9,7 +9,7 @@ Aircraft = token
 state A of
   permission : set of Aircraft
   landed     : set of Aircraft
-  inv mk_A(per,lan) == lan subset per
+  inv s == s.landed subset s.permission
   init s == s = mk_A({},{})
 end
 
