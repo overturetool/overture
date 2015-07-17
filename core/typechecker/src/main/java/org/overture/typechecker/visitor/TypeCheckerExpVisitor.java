@@ -2564,6 +2564,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				&& exp instanceof AEqualsBinaryExp)
 		{
 			AEqualsBinaryExp ee = (AEqualsBinaryExp) exp;
+			ee.setType(AstFactory.newABooleanBasicType(ee.getLocation()));
+			
 			question.qualifiers = null;
 			ee.getLeft().apply(THIS, noConstraint);
 
