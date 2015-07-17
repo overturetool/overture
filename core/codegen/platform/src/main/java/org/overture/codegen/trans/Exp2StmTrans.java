@@ -86,7 +86,7 @@ import org.overture.codegen.trans.quantifier.Exists1QuantifierStrategy;
 import org.overture.codegen.trans.quantifier.OrdinaryQuantifier;
 import org.overture.codegen.trans.quantifier.OrdinaryQuantifierStrategy;
 
-public class TransformationVisitor extends DepthFirstAnalysisAdaptor
+public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG transAssistant;
 
@@ -101,7 +101,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	private String whileCondExpPrefix;
 	private String recModifierExpPrefix;
 
-	public TransformationVisitor(TempVarPrefixes varPrefixes,
+	public Exp2StmTrans(TempVarPrefixes varPrefixes,
 			TransAssistantCG transformationAssistant, Exists1CounterData counterData,
 			ILanguageIterator langIterator, String ternaryIfExpPrefix, String casesExpPrefix, String andExpPrefix, String orExpPrefix, String whileCondExpPrefix, String recModifierExpPrefix)
 	{

@@ -19,7 +19,7 @@ import org.overture.codegen.trans.PreCheckTrans;
 import org.overture.codegen.trans.PrePostTrans;
 import org.overture.codegen.trans.SeqConvTrans;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.TransformationVisitor;
+import org.overture.codegen.trans.Exp2StmTrans;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.conc.EvalPermPredTrans;
 import org.overture.codegen.trans.conc.MainClassConcTrans;
@@ -84,7 +84,7 @@ public class JavaTransSeries
 		IfExpTrans ifExpTr = new IfExpTrans(transAssist);
 		FuncValTrans funcValTr = new FuncValTrans(transAssist, funcValAssist, INTERFACE_NP, TEMPLATE_TYPE_NP, EVAL_METHOD_PREFIX, PARAM_NP);
 		ILanguageIterator langIte = new JavaLanguageIterator(transAssist, prefixes);
-		TransformationVisitor transVisitor = new TransformationVisitor(prefixes, transAssist, consExists1CounterData(), langIte, TERNARY_IF_EXP_NP, CASES_EXP_RESULT_NP, AND_EXP_NP, OR_EXP_NP, WHILE_COND_NP, REC_MODIFIER_NP);
+		Exp2StmTrans exp2stmTr = new Exp2StmTrans(prefixes, transAssist, consExists1CounterData(), langIte, TERNARY_IF_EXP_NP, CASES_EXP_RESULT_NP, AND_EXP_NP, OR_EXP_NP, WHILE_COND_NP, REC_MODIFIER_NP);
 		PatternTrans patternTr = new PatternTrans(prefixes, transAssist, new PatternMatchConfig(), CASES_EXP_NP);
 		PreCheckTrans preCheckTr = new PreCheckTrans(transAssist, new JavaValueSemanticsTag(false));
 		PostCheckTrans postCheckTr = new PostCheckTrans(postCheckCreator, transAssist, FUNC_RES_NP, new JavaValueSemanticsTag(false));
@@ -112,7 +112,7 @@ public class JavaTransSeries
 		series.add(prePostTr);
 		series.add(ifExpTr);
 		series.add(funcValTr);
-		series.add(transVisitor);
+		series.add(exp2stmTr);
 		series.add(tracesTr);
 		series.add(patternTr);
 		series.add(preCheckTr);
