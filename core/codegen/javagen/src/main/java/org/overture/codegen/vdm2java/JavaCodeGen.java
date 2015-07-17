@@ -81,6 +81,7 @@ import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.funcvalues.FuncValPrefixes;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
+import org.overture.codegen.trans.patterns.PatternVarPrefixes;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
@@ -112,6 +113,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	protected TraceNames tracePrefixes;
 	protected Exp2StmVarPrefixes exp2stmPrefixes;
 	protected FuncValPrefixes funcValPrefixes;
+	protected PatternVarPrefixes patternPrefixes;
 	
 	public JavaCodeGen()
 	{
@@ -125,6 +127,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		this.tracePrefixes = new TraceNames();
 		this.exp2stmPrefixes = new Exp2StmVarPrefixes();
 		this.funcValPrefixes = new FuncValPrefixes();
+		this.patternPrefixes = new PatternVarPrefixes();
 		
 		this.irObserver = null;
 		initVelocity();
@@ -916,5 +919,15 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	public void setFuncValPrefixes(FuncValPrefixes funcValPrefixes)
 	{
 		this.funcValPrefixes = funcValPrefixes;
+	}
+	
+	public PatternVarPrefixes getPatternPrefixes()
+	{
+		return patternPrefixes;
+	}
+
+	public void setPatternPrefixes(PatternVarPrefixes patternPrefixes)
+	{
+		this.patternPrefixes = patternPrefixes;
 	}
 }

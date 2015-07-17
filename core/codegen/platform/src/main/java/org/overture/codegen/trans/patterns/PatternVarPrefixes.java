@@ -36,11 +36,11 @@ import org.overture.codegen.cgast.patterns.ARecordPatternCG;
 import org.overture.codegen.cgast.patterns.AStringPatternCG;
 import org.overture.codegen.cgast.patterns.ATuplePatternCG;
 
-public class PatternMatchConfig
+public class PatternVarPrefixes
 {
 	private Map<Class<? extends SPatternCG>, String> patternNamePrefixes;
 
-	public PatternMatchConfig()
+	public PatternVarPrefixes()
 	{
 		setupNameLookup();
 	}

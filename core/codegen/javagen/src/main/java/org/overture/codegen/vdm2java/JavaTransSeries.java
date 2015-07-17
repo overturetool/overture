@@ -35,7 +35,7 @@ import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.iterator.JavaLanguageIterator;
 import org.overture.codegen.trans.letexps.FuncTrans;
 import org.overture.codegen.trans.letexps.IfExpTrans;
-import org.overture.codegen.trans.patterns.PatternMatchConfig;
+import org.overture.codegen.trans.patterns.PatternVarPrefixes;
 import org.overture.codegen.trans.patterns.PatternTrans;
 import org.overture.codegen.trans.quantifier.Exists1CounterData;
 import org.overture.codegen.trans.uniontypes.UnionTypeTrans;
@@ -69,6 +69,7 @@ public class JavaTransSeries
 		Exp2StmVarPrefixes exp2stmPrefixes = codeGen.getExp2stmPrefixes();
 		TraceNames tracePrefixes = codeGen.getTracePrefixes();
 		FuncValPrefixes funcValPrefixes = codeGen.getFuncValPrefixes();
+		PatternVarPrefixes patternPrefixes = codeGen.getPatternPrefixes();
 		
 		TransAssistantCG transAssist = codeGen.getTransAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
@@ -85,7 +86,7 @@ public class JavaTransSeries
 		LetBeStTrans letBeStTr = new LetBeStTrans(transAssist, langIte, iteVarPrefixes);
 		WhileStmTrans whileTr = new WhileStmTrans(transAssist, WHILE_COND_NP);
 		Exp2StmTrans exp2stmTr = new Exp2StmTrans(iteVarPrefixes, transAssist, consExists1CounterData(), langIte, exp2stmPrefixes);
-		PatternTrans patternTr = new PatternTrans(iteVarPrefixes, transAssist, new PatternMatchConfig(), CASES_EXP_NP);
+		PatternTrans patternTr = new PatternTrans(iteVarPrefixes, transAssist, patternPrefixes, CASES_EXP_NP);
 		PreCheckTrans preCheckTr = new PreCheckTrans(transAssist, new JavaValueSemanticsTag(false));
 		PostCheckTrans postCheckTr = new PostCheckTrans(postCheckCreator, transAssist, FUNC_RES_NP, new JavaValueSemanticsTag(false));
 		IsExpTrans isExpTr = new IsExpTrans(transAssist, IS_EXP_SUBJECT_NP);

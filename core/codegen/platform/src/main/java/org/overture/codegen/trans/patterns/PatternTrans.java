@@ -90,14 +90,14 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG transAssistant;
 
-	private PatternMatchConfig config;
+	private PatternVarPrefixes config;
 
 	private IterationVarPrefixes iteVarPrefixes;
 
 	private String casesExpNamePrefix;
 	
 	public PatternTrans(IterationVarPrefixes iteVarPrefixes,
-			TransAssistantCG transAssistant, PatternMatchConfig config,
+			TransAssistantCG transAssistant, PatternVarPrefixes config,
 			String casesExpNamePrefix)
 	{
 		this.transAssistant = transAssistant;
