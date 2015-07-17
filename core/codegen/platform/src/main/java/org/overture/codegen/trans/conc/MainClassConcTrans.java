@@ -44,11 +44,11 @@ import org.overture.codegen.ir.IRInfo;
  * @author gkanos
  *
  */
-public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
+public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
 
-	public MainClassConcTransformation(IRInfo info)
+	public MainClassConcTrans(IRInfo info)
 	{
 		this.info = info;
 	}

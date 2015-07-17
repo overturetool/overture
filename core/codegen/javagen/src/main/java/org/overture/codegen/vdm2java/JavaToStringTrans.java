@@ -5,11 +5,11 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.ir.IRInfo;
 
-public class JavaClassToStringTrans extends DepthFirstAnalysisAdaptor
+public class JavaToStringTrans extends DepthFirstAnalysisAdaptor
 {
 	private JavaClassCreator creator;
 	
-	public JavaClassToStringTrans(IRInfo info)
+	public JavaToStringTrans(IRInfo info)
 	{
 		this.creator = new JavaClassCreator(info);
 	}

@@ -86,7 +86,7 @@ import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
-public class PatternTransformation extends DepthFirstAnalysisAdaptor
+public class PatternTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG transAssistant;
 
@@ -96,7 +96,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 	private String casesExpNamePrefix;
 	
-	public PatternTransformation(TempVarPrefixes varPrefixes,
+	public PatternTrans(TempVarPrefixes varPrefixes,
 			TransAssistantCG transAssistant, PatternMatchConfig config,
 			String casesExpNamePrefix)
 	{

@@ -11,11 +11,11 @@ import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 
-public class DivideTransformation extends DepthFirstAnalysisAdaptor
+public class DivideTrans extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
 	
-	public DivideTransformation(IRInfo info)
+	public DivideTrans(IRInfo info)
 	{
 		this.info = info;
 	}

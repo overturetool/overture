@@ -86,7 +86,7 @@ import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
-public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
+public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 {
 	public static final String MISSING_OP_MEMBER = "Missing operation member: ";
 	public static final String MISSING_MEMBER = "Missing member: ";
@@ -97,7 +97,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	private String applyExpResulPrefix;
 	private String callStmObjPrefix;
 
-	public UnionTypeTransformation(TransAssistantCG baseAssistant,
+	public UnionTypeTrans(TransAssistantCG baseAssistant,
 			String applyExpResultPrefix, String objExpPrefix,
 			String callStmObjPrefix)
 	{

@@ -16,12 +16,12 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.ir.IRInfo;
 
-public class MutexDeclTransformation extends DepthFirstAnalysisAdaptor
+public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
 	
 	
-	public MutexDeclTransformation(IRInfo info)
+	public MutexDeclTrans(IRInfo info)
 	{
 		this.info = info;
 	}

@@ -17,14 +17,14 @@ import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
-public class PostCheckTransformation extends DepthFirstAnalysisAdaptor
+public class PostCheckTrans extends DepthFirstAnalysisAdaptor
 {
 	private IPostCheckCreator postCheckCreator;
 	private TransAssistantCG transAssistant;
 	private String funcResultNamePrefix;
 	private Object conditionalCallTag;
 
-	public PostCheckTransformation(IPostCheckCreator postCheckCreator,
+	public PostCheckTrans(IPostCheckCreator postCheckCreator,
 			TransAssistantCG transAssistant, String funcResultNamePrefix,
 			Object conditionalCallTag)
 	{

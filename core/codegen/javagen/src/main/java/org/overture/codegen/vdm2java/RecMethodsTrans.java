@@ -6,11 +6,11 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 
-public class RecordMetodsTransformation extends DepthFirstAnalysisAdaptor
+public class RecMethodsTrans extends DepthFirstAnalysisAdaptor
 {
 	private JavaRecordCreator recCreator;
 	
-	public RecordMetodsTransformation(JavaRecordCreator recCreator)
+	public RecMethodsTrans(JavaRecordCreator recCreator)
 	{
 		this.recCreator = recCreator;
 	}

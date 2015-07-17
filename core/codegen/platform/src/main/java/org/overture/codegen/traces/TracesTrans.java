@@ -21,7 +21,7 @@ import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
-public class TracesTransformation extends DepthFirstAnalysisAdaptor
+public class TracesTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG transAssistant;
 	private TempVarPrefixes tempVarPrefixes;
@@ -29,7 +29,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 	private ICallStmToStringMethodBuilder toStringBuilder;
 	private TraceNames tracePrefixes;
 
-	public TracesTransformation(TransAssistantCG transAssistant,
+	public TracesTrans(TransAssistantCG transAssistant,
 			TempVarPrefixes tempVarPrefixes, TraceNames tracePrefixes,
 			ILanguageIterator langIterator,
 			ICallStmToStringMethodBuilder toStringBuilder)

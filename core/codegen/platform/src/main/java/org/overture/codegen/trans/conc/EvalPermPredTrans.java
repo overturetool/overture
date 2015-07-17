@@ -25,13 +25,13 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
  * 
  * @author pvj
  */
-public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
+public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 {
 	//TODO: put constants somewhere appropriate
 	private static final String SENTINEL_FIELD_NAME = "sentinel";
 	private TransAssistantCG transAssistant;
 	
-	public InstanceVarPPEvalTransformation(TransAssistantCG transAssistant)
+	public EvalPermPredTrans(TransAssistantCG transAssistant)
 	{
 		this.transAssistant = transAssistant;
 	}

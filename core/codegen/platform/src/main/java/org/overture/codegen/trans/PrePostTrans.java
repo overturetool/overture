@@ -11,11 +11,11 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 
-public class PrePostTransformation extends DepthFirstAnalysisAdaptor {
+public class PrePostTrans extends DepthFirstAnalysisAdaptor {
 	
 	private IRInfo info;
 	
-	public PrePostTransformation(IRInfo info)
+	public PrePostTrans(IRInfo info)
 	{
 		this.info = info;
 	}

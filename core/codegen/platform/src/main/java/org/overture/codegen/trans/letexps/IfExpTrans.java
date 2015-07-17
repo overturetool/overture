@@ -29,11 +29,11 @@ import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
 
-public class IfExpTransformation extends DepthFirstAnalysisAdaptor
+public class IfExpTrans extends DepthFirstAnalysisAdaptor
 {
 	private BaseTransformationAssistant baseAssistant;
 
-	public IfExpTransformation(BaseTransformationAssistant baseAssistant)
+	public IfExpTrans(BaseTransformationAssistant baseAssistant)
 	{
 		this.baseAssistant = baseAssistant;
 	}

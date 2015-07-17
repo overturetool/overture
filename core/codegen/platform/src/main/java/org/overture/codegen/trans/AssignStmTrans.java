@@ -12,11 +12,11 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.conv.StateDesignatorToExpCG;
 
-public class AssignStmTransformation extends DepthFirstAnalysisAdaptor
+public class AssignStmTrans extends DepthFirstAnalysisAdaptor
 {
 	private StateDesignatorToExpCG converter;
 	
-	public AssignStmTransformation(TransAssistantCG transAssistant)
+	public AssignStmTrans(TransAssistantCG transAssistant)
 	{
 		this.converter = new StateDesignatorToExpCG(transAssistant);
 	}

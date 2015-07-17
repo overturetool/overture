@@ -29,11 +29,11 @@ import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
-public class FuncTransformation extends DepthFirstAnalysisAdaptor
+public class FuncTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG transAssistant;
 	
-	public FuncTransformation(TransAssistantCG transformationAssistant)
+	public FuncTrans(TransAssistantCG transformationAssistant)
 	{
 		this.transAssistant = transformationAssistant;
 	}

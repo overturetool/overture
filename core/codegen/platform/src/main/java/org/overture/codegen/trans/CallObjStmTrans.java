@@ -8,11 +8,11 @@ import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.conv.ObjectDesignatorToExpCG;
 
-public class CallObjStmTransformation extends DepthFirstAnalysisAdaptor
+public class CallObjStmTrans extends DepthFirstAnalysisAdaptor
 {
 	private ObjectDesignatorToExpCG converter;
 	
-	public CallObjStmTransformation(IRInfo info)
+	public CallObjStmTrans(IRInfo info)
 	{
 		this.converter = new ObjectDesignatorToExpCG(info); 
 	}

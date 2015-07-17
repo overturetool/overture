@@ -18,12 +18,12 @@ import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 
-public class IsExpTransformation extends DepthFirstAnalysisAdaptor
+public class IsExpTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG transAssistant;
 	private String isExpSubjectNamePrefix;
 	
-	public IsExpTransformation(TransAssistantCG transAssistant, String isExpSubjectNamePrefix)
+	public IsExpTrans(TransAssistantCG transAssistant, String isExpSubjectNamePrefix)
 	{
 		this.transAssistant = transAssistant;
 		this.isExpSubjectNamePrefix = isExpSubjectNamePrefix;

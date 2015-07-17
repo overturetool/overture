@@ -14,12 +14,12 @@ import org.overture.codegen.cgast.types.AErrorTypeCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
-public class PreCheckTransformation extends DepthFirstAnalysisAdaptor {
+public class PreCheckTrans extends DepthFirstAnalysisAdaptor {
 
 	private TransAssistantCG transAssistant;
 	private Object conditionalCallTag;
 	
-	public PreCheckTransformation(TransAssistantCG transAssistant, Object conditionalCallTag)
+	public PreCheckTrans(TransAssistantCG transAssistant, Object conditionalCallTag)
 	{
 		this.transAssistant = transAssistant;
 		this.conditionalCallTag = conditionalCallTag;

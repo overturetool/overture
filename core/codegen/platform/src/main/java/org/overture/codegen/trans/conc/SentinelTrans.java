@@ -20,7 +20,7 @@ import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 
 
-public class SentinelTransformation extends DepthFirstAnalysisAdaptor
+public class SentinelTrans extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
 	
@@ -29,7 +29,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 	// transformation
 	private String INTTYPE = "int";
 
-	public SentinelTransformation(IRInfo info)
+	public SentinelTrans(IRInfo info)
 	{
 		this.info = info;
 	}

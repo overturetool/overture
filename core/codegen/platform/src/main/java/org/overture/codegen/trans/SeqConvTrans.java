@@ -19,11 +19,11 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
-public class SeqConversionTransformation extends DepthFirstAnalysisAdaptor
+public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG transformationAssistant;
 
-	public SeqConversionTransformation(
+	public SeqConvTrans(
 			TransAssistantCG transformationAssistant)
 	{
 		this.transformationAssistant = transformationAssistant;
