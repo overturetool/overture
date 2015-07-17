@@ -72,17 +72,11 @@ import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.traces.TraceNames;
 import org.overture.codegen.trans.DivideTrans;
-import org.overture.codegen.trans.Exp2StmVarPrefixes;
-import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.ModuleToClassTransformation;
 import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
-import org.overture.codegen.trans.funcvalues.FuncValPrefixes;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
-import org.overture.codegen.trans.patterns.PatternVarPrefixes;
-import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
@@ -109,14 +103,9 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	private TemplateStructure javaTemplateStructure;
 	
 	private IREventObserver irObserver;
-
-	protected IterationVarPrefixes iteVarPrefixes;
-	protected TraceNames tracePrefixes;
-	protected Exp2StmVarPrefixes exp2stmPrefixes;
-	protected FuncValPrefixes funcValPrefixes;
-	protected PatternVarPrefixes patternPrefixes;
-	protected UnionTypeVarPrefixes unionTypePrefixes;
 	
+	private JavaVarPrefixManager varPrefixManager;
+
 	public JavaCodeGen()
 	{
 		super();
@@ -125,19 +114,14 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 	private void init()
 	{
-		this.iteVarPrefixes = new IterationVarPrefixes();
-		this.tracePrefixes = new TraceNames();
-		this.exp2stmPrefixes = new Exp2StmVarPrefixes();
-		this.funcValPrefixes = new FuncValPrefixes();
-		this.patternPrefixes = new PatternVarPrefixes();
-		this.unionTypePrefixes = new UnionTypeVarPrefixes();
+		this.varPrefixManager = new JavaVarPrefixManager();
 		
 		this.irObserver = null;
 		initVelocity();
 
 		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
 		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
-		this.javaFormat = new JavaFormat(iteVarPrefixes, javaTemplateStructure, generator.getIRInfo());
+		this.javaFormat = new JavaFormat(varPrefixManager, javaTemplateStructure, generator.getIRInfo());
 	}
 
 	public void setJavaTemplateStructure(TemplateStructure javaTemplateStructure)
@@ -793,7 +777,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaCodeGenConstants.RESERVED_WORDS, generator.getIRInfo(), INVALID_NAME_PREFIX));
 		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(JAVA_RESERVED_TYPE_NAMES, generator.getIRInfo(), INVALID_NAME_PREFIX));
 
-		String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, iteVarPrefixes.GENERATED_TEMP_NAMES);
+		String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, varPrefixManager.getIteVarPrefixes().GENERATED_TEMP_NAMES);
 
 		Set<Violation> tempVarViolations = analysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(generatedTempVarNames, generator.getIRInfo(), INVALID_NAME_PREFIX));
 
@@ -883,64 +867,14 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		
 		return ast;
 	}
-	
-	public void setTempVarPrefixes(IterationVarPrefixes iteVarPrefixes)
+
+	public JavaVarPrefixManager getVarPrefixManager()
 	{
-		this.iteVarPrefixes = iteVarPrefixes;
-	}
-	
-	public IterationVarPrefixes getIteVarPrefixes()
-	{
-		return iteVarPrefixes;
+		return varPrefixManager;
 	}
 
-	public TraceNames getTracePrefixes()
+	public void setVarPrefixManager(JavaVarPrefixManager varPrefixManager)
 	{
-		return tracePrefixes;
-	}
-
-	public void setTracePrefixes(TraceNames tracePrefixes)
-	{
-		this.tracePrefixes = tracePrefixes;
-	}
-	
-	public Exp2StmVarPrefixes getExp2stmPrefixes()
-	{
-		return exp2stmPrefixes;
-	}
-
-	public void setExp2stmPrefixes(Exp2StmVarPrefixes exp2stmPrefixes)
-	{
-		this.exp2stmPrefixes = exp2stmPrefixes;
-	}
-
-	public FuncValPrefixes getFuncValPrefixes()
-	{
-		return funcValPrefixes;
-	}
-
-	public void setFuncValPrefixes(FuncValPrefixes funcValPrefixes)
-	{
-		this.funcValPrefixes = funcValPrefixes;
-	}
-	
-	public PatternVarPrefixes getPatternPrefixes()
-	{
-		return patternPrefixes;
-	}
-
-	public void setPatternPrefixes(PatternVarPrefixes patternPrefixes)
-	{
-		this.patternPrefixes = patternPrefixes;
-	}
-	
-	public UnionTypeVarPrefixes getUnionTypePrefixes()
-	{
-		return unionTypePrefixes;
-	}
-
-	public void setUnionTypePrefixes(UnionTypeVarPrefixes unionTypePrefixes)
-	{
-		this.unionTypePrefixes = unionTypePrefixes;
+		this.varPrefixManager = varPrefixManager;
 	}
 }
