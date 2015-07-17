@@ -89,7 +89,6 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG transAssistant;
-	private List<AClassDeclCG> classes;
 
 	private String objExpPrefix;
 	private String applyExpResulPrefix;
@@ -99,12 +98,11 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	private String missingMemberPrefix;
 	
 	public UnionTypeTransformation(TransAssistantCG baseAssistant,
-			List<AClassDeclCG> classes,
 			String applyExpResultPrefix, String objExpPrefix,
-			String callStmObjPrefix, String missingOpMemberPrefix, String missingMemberPrefix)
+			String callStmObjPrefix, String missingOpMemberPrefix,
+			String missingMemberPrefix)
 	{
 		this.transAssistant = baseAssistant;
-		this.classes = classes;
 		this.missingMemberPrefix = missingMemberPrefix;
 
 		this.applyExpResulPrefix = applyExpResultPrefix;
@@ -509,7 +507,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			{
 				ARecordTypeCG recordType = (ARecordTypeCG) currentType;
 
-				return transAssistant.getInfo().getDeclAssistant().getFieldDecl(classes, recordType, memberName) != null;
+				return transAssistant.getInfo().getDeclAssistant().getFieldDecl(transAssistant.getInfo().getClasses(), recordType, memberName) != null;
 			}
 		}
 		else if(fieldExp instanceof AFieldNumberExpCG && currentType instanceof ATupleTypeCG)
@@ -527,14 +525,14 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	private boolean memberExists(INode parent, TypeAssistantCG typeAssistant,
 			String className, String memberName) throws AnalysisException
 	{
-		if(typeAssistant.getFieldType(classes, className, memberName) != null)
+		if(typeAssistant.getFieldType(transAssistant.getInfo().getClasses(), className, memberName) != null)
 		{
 			return true;
 		}
 		
 		List<SExpCG> args = ((AApplyExpCG) parent).getArgs();
 		
-		return typeAssistant.getMethodType(transAssistant.getInfo(), classes, className, memberName, args) != null;
+		return typeAssistant.getMethodType(transAssistant.getInfo(), className, memberName, args) != null;
 	}
 
 	@Override
@@ -624,7 +622,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		if (type instanceof AClassTypeCG)
 		{
-			for (AClassDeclCG classCg : classes)
+			for (AClassDeclCG classCg : transAssistant.getInfo().getClasses())
 			{
 				for (AMethodDeclCG method : classCg.getMethods())
 				{
@@ -645,7 +643,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			String definingClassName = recordType.getName().getDefiningClass();
 			String recordName = recordType.getName().getName();
 
-			AClassDeclCG classDecl = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findClass(classes, definingClassName);
+			AClassDeclCG classDecl = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findClass(transAssistant.getInfo().getClasses(), definingClassName);
 			ARecordDeclCG record = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findRecord(classDecl, recordName);
 
 			List<STypeCG> fieldTypes = transAssistant.getInfo().getAssistantManager().getTypeAssistant().getFieldTypes(record);
@@ -701,7 +699,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		LinkedList<SExpCG> args = node.getArgs();
 
 		TypeAssistantCG typeAssistant = transAssistant.getInfo().getAssistantManager().getTypeAssistant();
-		AMethodTypeCG methodType = typeAssistant.getMethodType(transAssistant.getInfo(), classes, className, fieldName, args);
+		AMethodTypeCG methodType = typeAssistant.getMethodType(transAssistant.getInfo(), className, fieldName, args);
 
 		if (methodType != null)
 		{
@@ -777,7 +775,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 			AClassTypeCG currentType = (AClassTypeCG) possibleTypes.get(i);
 
-			AMethodTypeCG methodType = typeAssistant.getMethodType(transAssistant.getInfo(), classes, currentType.getName(), fieldName, args);
+			AMethodTypeCG methodType = typeAssistant.getMethodType(transAssistant.getInfo(), currentType.getName(), fieldName, args);
 
 			if (methodType != null)
 			{
@@ -981,12 +979,12 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			if(currentType instanceof AClassTypeCG)
 			{
 				AClassTypeCG classType = (AClassTypeCG) currentType;
-				fieldType = typeAssistant.getFieldType(classes, classType.getName(), memberName);
+				fieldType = typeAssistant.getFieldType(transAssistant.getInfo().getClasses(), classType.getName(), memberName);
 			}
 			else if(currentType instanceof ARecordTypeCG)
 			{
 				ARecordTypeCG recordType = (ARecordTypeCG) currentType;
-				fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(classes, recordType, memberName);
+				fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(transAssistant.getInfo().getClasses(), recordType, memberName);
 			}
 			else{
 				//Can be the unknown type

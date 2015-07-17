@@ -32,7 +32,6 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
@@ -89,8 +88,6 @@ import org.overture.codegen.trans.quantifier.OrdinaryQuantifierStrategy;
 
 public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 {
-	private List<AClassDeclCG> classes;
-	
 	private TransAssistantCG transAssistant;
 
 	private Exists1CounterData counterData;
@@ -104,11 +101,10 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	private String whileCondExpPrefix;
 	private String recModifierExpPrefix;
 
-	public TransformationVisitor(List<AClassDeclCG> classes, TempVarPrefixes varPrefixes,
+	public TransformationVisitor(TempVarPrefixes varPrefixes,
 			TransAssistantCG transformationAssistant, Exists1CounterData counterData,
 			ILanguageIterator langIterator, String ternaryIfExpPrefix, String casesExpPrefix, String andExpPrefix, String orExpPrefix, String whileCondExpPrefix, String recModifierExpPrefix)
 	{
-		this.classes = classes;
 		this.transAssistant = transformationAssistant;
 		this.counterData = counterData;
 		this.langIterator = langIterator;
@@ -421,7 +417,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			String name = modifier.getName();
 			SExpCG value = modifier.getValue().clone();
 			
-			STypeCG fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(classes, node.getRecType(), name);
+			STypeCG fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(transAssistant.getInfo().getClasses(), node.getRecType(), name);
 			
 			AFieldExpCG field = new AFieldExpCG();
 			field.setType(fieldType);

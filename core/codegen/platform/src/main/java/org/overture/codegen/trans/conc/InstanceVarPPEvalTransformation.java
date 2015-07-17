@@ -1,7 +1,5 @@
 package org.overture.codegen.trans.conc;
 
-import java.util.List;
-
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -32,12 +30,10 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 	//TODO: put constants somewhere appropriate
 	private static final String SENTINEL_FIELD_NAME = "sentinel";
 	private TransAssistantCG transAssistant;
-	private List<AClassDeclCG> classes;
 	
-	public InstanceVarPPEvalTransformation(TransAssistantCG transAssistant, List<AClassDeclCG> classes)
+	public InstanceVarPPEvalTransformation(TransAssistantCG transAssistant)
 	{
 		this.transAssistant = transAssistant;
-		this.classes = classes;
 	}
 
 	@Override
@@ -139,7 +135,7 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 		
 		if(enclosingClass != null)
 		{
-			fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(enclosingClass, SENTINEL_FIELD_NAME, classes);
+			fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(enclosingClass, SENTINEL_FIELD_NAME, transAssistant.getInfo().getClasses());
 		}
 		else
 		{

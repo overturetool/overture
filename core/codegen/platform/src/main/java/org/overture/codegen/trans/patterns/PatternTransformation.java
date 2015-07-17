@@ -32,7 +32,6 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -89,7 +88,6 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class PatternTransformation extends DepthFirstAnalysisAdaptor
 {
-	private List<AClassDeclCG> classes;
 	private TransAssistantCG transAssistant;
 
 	private PatternMatchConfig config;
@@ -98,11 +96,10 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 	private String casesExpNamePrefix;
 	
-	public PatternTransformation(List<AClassDeclCG> classes,
-			TempVarPrefixes varPrefixes, TransAssistantCG transAssistant,
-			PatternMatchConfig config, String casesExpNamePrefix)
+	public PatternTransformation(TempVarPrefixes varPrefixes,
+			TransAssistantCG transAssistant, PatternMatchConfig config,
+			String casesExpNamePrefix)
 	{
-		this.classes = classes;
 		this.transAssistant = transAssistant;
 		this.varPrefixes = varPrefixes;
 
@@ -774,7 +771,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		
 		ABlockStmCG recordPatternBlock = initPattern(declarePattern, recordPattern, recordType, actualValue, idPattern);
 
-		ARecordDeclCG record = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findRecord(classes, recordType);
+		ARecordDeclCG record = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findRecord(transAssistant.getInfo().getClasses(), recordType);
 
 		if (patternData.getSuccessVarDecl() == null)
 		{
@@ -1242,7 +1239,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	{
 		ARecordTypeCG recordType = (ARecordTypeCG) patternVar.getType();
 
-		AFieldDeclCG recordField = transAssistant.getInfo().getAssistantManager().getDeclAssistant().getFieldDecl(classes, recordType, i);
+		AFieldDeclCG recordField = transAssistant.getInfo().getAssistantManager().getDeclAssistant().getFieldDecl(transAssistant.getInfo().getClasses(), recordType, i);
 		String fieldName = recordField.getName();
 
 		AFieldExpCG fieldExp = consRecFieldExp(patternVar, currentType, fieldName);

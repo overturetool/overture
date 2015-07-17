@@ -1,7 +1,5 @@
 package org.overture.codegen.traces;
 
-import java.util.List;
-
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -25,19 +23,17 @@ import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class TracesTransformation extends DepthFirstAnalysisAdaptor
 {
-	private List<AClassDeclCG> classes;
 	private TransAssistantCG transAssistant;
 	private TempVarPrefixes tempVarPrefixes;
 	private ILanguageIterator langIterator;
 	private ICallStmToStringMethodBuilder toStringBuilder;
 	private TraceNames tracePrefixes;
 
-	public TracesTransformation(List<AClassDeclCG> classes,
-			TransAssistantCG transAssistant, TempVarPrefixes tempVarPrefixes,
-			TraceNames tracePrefixes, ILanguageIterator langIterator,
+	public TracesTransformation(TransAssistantCG transAssistant,
+			TempVarPrefixes tempVarPrefixes, TraceNames tracePrefixes,
+			ILanguageIterator langIterator,
 			ICallStmToStringMethodBuilder toStringBuilder)
 	{
-		this.classes = classes;
 		this.transAssistant = transAssistant;
 		this.tempVarPrefixes = tempVarPrefixes;
 		this.langIterator = langIterator;
@@ -149,7 +145,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		String traceEnclosingClass = getTraceEnclosingClass(node);
-		TraceStmsBuilder stmBuilder = new TraceStmsBuilder(transAssistant.getInfo(), classes, transAssistant, 
+		TraceStmsBuilder stmBuilder = new TraceStmsBuilder(transAssistant.getInfo(), transAssistant.getInfo().getClasses(), transAssistant, 
 				tempVarPrefixes, tracePrefixes, langIterator, toStringBuilder, traceEnclosingClass);
 
 		TraceNodeData nodeData = stmBuilder.buildFromDeclTerms(node.getTerms());

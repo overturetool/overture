@@ -54,7 +54,6 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.ABoolIsExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
@@ -613,7 +612,7 @@ public class ExpAssistantCG extends AssistantBase
 		return basicIsExp;
 	}
 	
-	public SVarExpCG idStateDesignatorToExp(TransAssistantCG transAssistant, List<AClassDeclCG> classes, AIdentifierStateDesignatorCG node)
+	public SVarExpCG idStateDesignatorToExp(TransAssistantCG transAssistant, AIdentifierStateDesignatorCG node)
 	{
 		if(node.getExplicit())
 		{

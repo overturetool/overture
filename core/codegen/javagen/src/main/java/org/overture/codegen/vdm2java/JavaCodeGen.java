@@ -303,7 +303,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			}
 		}
 
-		List<AClassDeclCG> classes = getClassDecls(classStatuses);
 		List<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
 
 		for (IRStatus<AClassDeclCG> status : classStatuses)
@@ -320,7 +319,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
 
 		JavaTransSeries javaTransSeries = new JavaTransSeries(this);
-		 List<DepthFirstAnalysisAdaptor> transformations = javaTransSeries.consAnalyses(classes, functionValueAssistant);
+		 List<DepthFirstAnalysisAdaptor> transformations = javaTransSeries.consAnalyses(functionValueAssistant);
 
 		for (DepthFirstAnalysisAdaptor trans : transformations)
 		{
@@ -670,19 +669,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			}
 
 		}
-	}
-
-	private List<AClassDeclCG> getClassDecls(
-			List<IRStatus<AClassDeclCG>> statuses)
-	{
-		List<AClassDeclCG> classDecls = new LinkedList<AClassDeclCG>();
-
-		for (IRStatus<AClassDeclCG> status : statuses)
-		{
-			classDecls.add(status.getIrNode());
-		}
-
-		return classDecls;
 	}
 	
 	private List<AModuleDeclCG> getModuleDecls(List<IRStatus<AModuleDeclCG>> statuses)

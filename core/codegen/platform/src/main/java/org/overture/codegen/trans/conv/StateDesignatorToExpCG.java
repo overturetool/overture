@@ -1,12 +1,9 @@
 package org.overture.codegen.trans.conv;
 
-import java.util.List;
-
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.AnswerAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AMapSeqGetExpCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
@@ -23,12 +20,10 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
  */
 public class StateDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 {
-	private List<AClassDeclCG> classes;
 	private TransAssistantCG transAssistant;
 	
-	public StateDesignatorToExpCG(List<AClassDeclCG> classes, TransAssistantCG transAssistant)
+	public StateDesignatorToExpCG(TransAssistantCG transAssistant)
 	{
-		this.classes = classes;
 		this.transAssistant = transAssistant;
 	}
 	
@@ -36,7 +31,7 @@ public class StateDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 	public SExpCG caseAIdentifierStateDesignatorCG(
 			AIdentifierStateDesignatorCG node) throws AnalysisException
 	{
-		return transAssistant.getInfo().getExpAssistant().idStateDesignatorToExp(transAssistant, classes, node);
+		return transAssistant.getInfo().getExpAssistant().idStateDesignatorToExp(transAssistant, node);
 	}
 	
 	@Override

@@ -501,7 +501,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 	{
 		AFieldExpCG field = new AFieldExpCG();
 		field.setMemberName(callObj.getFieldName());
-		field.setObject(callObj.getDesignator().apply(new ObjectDesignatorToExpCG(info, classes)));
+		field.setObject(callObj.getDesignator().apply(new ObjectDesignatorToExpCG(info)));
 		field.setType(info.getTypeAssistant().getFieldType(classes, traceEnclosingClass, callObj.getFieldName()));
 
 		AApplyExpCG apply = new AApplyExpCG();
@@ -571,7 +571,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 			AFieldExpCG field = new AFieldExpCG();
 			String fieldModule = classType instanceof AClassTypeCG ? ((AClassTypeCG) classType).getName()
 					: traceEnclosingClass;
-			field.setType(info.getTypeAssistant().getMethodType(info, classes, fieldModule, name, args));
+			field.setType(info.getTypeAssistant().getMethodType(info, fieldModule, name, args));
 			field.setMemberName(name);
 			field.setObject(cast);
 

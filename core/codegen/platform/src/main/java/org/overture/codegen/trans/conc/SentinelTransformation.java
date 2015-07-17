@@ -1,7 +1,6 @@
 package org.overture.codegen.trans.conc;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -24,17 +23,15 @@ import org.overture.codegen.ir.IRInfo;
 public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
-	private List<AClassDeclCG> classes;
 	
 	// TODO: If this is suppose to be a general transformation then the integer type
 	// can not be stored like this. Instead it could be passed as a parameter to the
 	// transformation
 	private String INTTYPE = "int";
 
-	public SentinelTransformation(IRInfo info, List<AClassDeclCG> classes)
+	public SentinelTransformation(IRInfo info)
 	{
 		this.info = info;
-		this.classes = classes;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -53,7 +50,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		LinkedList<AMethodDeclCG> allMethods;
 
 		if (node.getSuperName() != null){
-				allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, classes);
+				allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, info.getClasses());
 		}
 		else
 		{
