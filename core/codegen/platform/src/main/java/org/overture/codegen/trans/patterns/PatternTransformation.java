@@ -92,7 +92,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 {
 	private List<AClassDeclCG> classes;
 	private IRInfo info;
-	private TransAssistantCG transformationAssistant;
+	private TransAssistantCG transAssistant;
 
 	private PatternMatchConfig config;
 
@@ -102,12 +102,12 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	
 	public PatternTransformation(List<AClassDeclCG> classes,
 			TempVarPrefixes varPrefixes, IRInfo info,
-			TransAssistantCG transformationAssistant,
+			TransAssistantCG transAssistant,
 			PatternMatchConfig config, String casesExpNamePrefix)
 	{
 		this.classes = classes;
 		this.info = info;
-		this.transformationAssistant = transformationAssistant;
+		this.transAssistant = transAssistant;
 		this.varPrefixes = varPrefixes;
 
 		this.config = config;
@@ -130,7 +130,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		DeclarationTag tag = fetchTag(node);
 
 		ABlockStmCG replacementBlock = consPatternHandlingInIterationBlock(nextElementDecl, tag, node.getExp());
-		transformationAssistant.replaceNodeWith(node, replacementBlock);
+		transAssistant.replaceNodeWith(node, replacementBlock);
 	}
 
 	@Override
@@ -147,9 +147,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		if (!(node.getExp() instanceof SVarExpCG))
 		{
 			AVarDeclCG expVarDecl = info.getDeclAssistant().consLocalVarDecl(node.getExp().getType().clone(),
-				transformationAssistant.consIdPattern(expName), node.getExp().clone());
+				info.getPatternAssistant().consIdPattern(expName), node.getExp().clone());
 			replacementBlock.getLocalDefs().add(expVarDecl);
-			exp = transformationAssistant.consIdentifierVar(expName,
+			exp = transAssistant.consIdentifierVar(expName,
 					node.getExp().getType().clone());
 		}
 		
@@ -218,7 +218,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			nextCase.setElseStm(node.getOthers().clone());
 		}
 
-		transformationAssistant.replaceNodeWith(node, replacementBlock);
+		transAssistant.replaceNodeWith(node, replacementBlock);
 
 		ifStm.apply(this);
 	}
@@ -236,7 +236,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			newBody.getStatements().add(patternHandlingBlock);
 
 			SStmCG oldBody = node.getBody();
-			transformationAssistant.replaceNodeWith(oldBody, newBody);
+			transAssistant.replaceNodeWith(oldBody, newBody);
 			newBody.getStatements().add(oldBody);
 
 			newBody.apply(this);
@@ -253,7 +253,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 					if (prefix != null)
 					{
 						AIdentifierPatternCG idPattern = getIdPattern(prefix);
-						transformationAssistant.replaceNodeWith(param.getPattern(), idPattern);
+						transAssistant.replaceNodeWith(param.getPattern(), idPattern);
 					} else
 					{
 						Logger.getLog().printError("Could not find prefix for pattern: "
@@ -320,10 +320,10 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 					{
 						// The pattern handling block must be put before the
 						// enclosing statement of the next declaration
-						SStmCG stm = transformationAssistant.getEnclosingStm(currentDeclBlockPair.getNextDecl(), "block statement pattern handling");
+						SStmCG stm = transAssistant.getEnclosingStm(currentDeclBlockPair.getNextDecl(), "block statement pattern handling");
 						ABlockStmCG block = new ABlockStmCG();
 						
-						transformationAssistant.replaceNodeWith(stm, block);
+						transAssistant.replaceNodeWith(stm, block);
 						block.getStatements().add(currentDeclBlockPair.getBlock());
 						block.getStatements().add(stm);
 					}
@@ -372,7 +372,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		if (pattern  instanceof AIgnorePatternCG)
 		{
 			AIdentifierPatternCG idPattern = getIdPattern(config.getIgnorePatternPrefix());
-			transformationAssistant.replaceNodeWith(pattern, idPattern);
+			transAssistant.replaceNodeWith(pattern, idPattern);
 		}
 		
 		PatternBlockData patternData = new PatternBlockData(MismatchHandling.LOOP_CONTINUE);
@@ -389,7 +389,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		
 		declBlock.getStatements().add(node.getBody().clone());
 
-		transformationAssistant.replaceNodeWith(node.getBody(), declBlock);
+		transAssistant.replaceNodeWith(node.getBody(), declBlock);
 		
 		node.getExp().apply(this);
 		node.getBody().apply(this);
@@ -411,7 +411,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			{
 				AIdentifierPatternCG idPattern = (AIdentifierPatternCG) successVarDeclPattern;
 				data.setSuccessVarDecl(successVarDecl.clone());
-				AIdentifierVarExpCG successVar = transformationAssistant.consSuccessVar(idPattern.getName());
+				AIdentifierVarExpCG successVar = transAssistant.consSuccessVar(idPattern.getName());
 				data.setSuccessVar(successVar);
 			} else
 			{
@@ -568,7 +568,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		} else if (currentPattern instanceof AIgnorePatternCG)
 		{
 			AIdentifierPatternCG idPattern = getIdPattern(config.getIgnorePatternPrefix());
-			transformationAssistant.replaceNodeWith(currentPattern, idPattern);
+			transAssistant.replaceNodeWith(currentPattern, idPattern);
 
 			return true;
 		}
@@ -894,10 +894,10 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			init.setType(new AUnknownTypeCG());
 		}
 
-		AVarDeclCG successVarDecl = transformationAssistant.consDecl(successVarName, new ABoolBasicTypeCG(), init);
+		AVarDeclCG successVarDecl = transAssistant.consDecl(successVarName, new ABoolBasicTypeCG(), init);
 		patternData.setSuccessVarDecl(successVarDecl);
 
-		AIdentifierVarExpCG successVar = transformationAssistant.consSuccessVar(successVarName);
+		AIdentifierVarExpCG successVar = transAssistant.consSuccessVar(successVarName);
 		patternData.setSuccessVar(successVar);
 
 		patternData.getDeclBlock().getLocalDefs().add(successVarDecl);
@@ -932,7 +932,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			SStmCG noMatchStm)
 	{
 		AIfStmCG ifCheck = new AIfStmCG();
-		ifCheck.setIfExp(transformationAssistant.consBoolCheck(successVar.getName(), true));
+		ifCheck.setIfExp(transAssistant.consBoolCheck(successVar.getName(), true));
 		ifCheck.setThenStm(noMatchStm);
 
 		return ifCheck;
@@ -967,7 +967,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			patternBlock.getLocalDefs().add(patternDecl);
 		} else
 		{
-			transformationAssistant.replaceNodeWith(pattern, idPattern);
+			transAssistant.replaceNodeWith(pattern, idPattern);
 		}
 
 		return patternBlock;
@@ -1122,7 +1122,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		// Boolean success_2 = intPattern_2.longValue() == 1L;
 
 		AIdentifierPatternCG idPattern = getIdPattern(config.getName(pattern.getClass()));
-		transformationAssistant.replaceNodeWith(pattern, idPattern);
+		transAssistant.replaceNodeWith(pattern, idPattern);
 
 		ABlockStmCG block = new ABlockStmCG();
 

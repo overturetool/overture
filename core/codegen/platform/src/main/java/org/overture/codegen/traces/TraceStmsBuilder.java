@@ -222,7 +222,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 
 		AClassTypeCG classType = transAssistant.consClassType(tracePrefixes.altTraceNodeNodeClassName());
 
-		AIdentifierPatternCG id = transAssistant.consIdPattern(name);
+		AIdentifierPatternCG id = info.getPatternAssistant().consIdPattern(name);
 
 		AVarDeclCG altTests = transAssistant.consDecl(name, classType, transAssistant.consDefaultConsCall(classType));
 
@@ -393,7 +393,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 		
 		AFormalParamLocalParamCG instanceParam = new AFormalParamLocalParamCG();
 		instanceParam.setType(new AObjectTypeCG());
-		instanceParam.setPattern(transAssistant.consIdPattern(tracePrefixes.callStmMethodParamName()));
+		instanceParam.setPattern(info.getPatternAssistant().consIdPattern(tracePrefixes.callStmMethodParamName()));
 
 		execMethod.getFormalParams().add(instanceParam);
 

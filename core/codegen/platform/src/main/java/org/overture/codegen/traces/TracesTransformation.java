@@ -26,7 +26,7 @@ import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class TracesTransformation extends DepthFirstAnalysisAdaptor
 {
-	private IRInfo irInfo;
+	private IRInfo info;
 	private List<AClassDeclCG> classes;
 	private TransAssistantCG transAssistant;
 	private TempVarPrefixes tempVarPrefixes;
@@ -39,7 +39,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 			TraceNames tracePrefixes, ILanguageIterator langIterator,
 			ICallStmToStringMethodBuilder toStringBuilder)
 	{
-		this.irInfo = irInfo;
+		this.info = irInfo;
 		this.classes = classes;
 		this.transAssistant = transAssistant;
 		this.tempVarPrefixes = tempVarPrefixes;
@@ -53,7 +53,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 	public void caseANamedTraceDeclCG(ANamedTraceDeclCG node)
 			throws AnalysisException
 	{
-		if(!irInfo.getSettings().generateTraces())
+		if(!info.getSettings().generateTraces())
 		{
 			return;
 		}
@@ -61,7 +61,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 		TraceSupportedAnalysis supportedAnalysis = new TraceSupportedAnalysis(node);
 		if (!traceIsSupported(supportedAnalysis))
 		{
-			irInfo.addTransformationWarning(node, supportedAnalysis.getReason());
+			info.addTransformationWarning(node, supportedAnalysis.getReason());
 			return;
 		}
 
@@ -104,7 +104,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 		
 		AFormalParamLocalParamCG instanceParam = new AFormalParamLocalParamCG();
 		instanceParam.setType(testAccType.clone());
-		instanceParam.setPattern(transAssistant.consIdPattern(tracePrefixes.traceMethodParamName()));
+		instanceParam.setPattern(info.getPatternAssistant().consIdPattern(tracePrefixes.traceMethodParamName()));
 
 		AMethodDeclCG traceMethod = new AMethodDeclCG();
 		
@@ -152,7 +152,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		String traceEnclosingClass = getTraceEnclosingClass(node);
-		TraceStmsBuilder stmBuilder = new TraceStmsBuilder(irInfo, classes, transAssistant, 
+		TraceStmsBuilder stmBuilder = new TraceStmsBuilder(info, classes, transAssistant, 
 				tempVarPrefixes, tracePrefixes, langIterator, toStringBuilder, traceEnclosingClass);
 
 		TraceNodeData nodeData = stmBuilder.buildFromDeclTerms(node.getTerms());

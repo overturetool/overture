@@ -38,6 +38,7 @@ import org.overture.codegen.assistant.BindAssistantCG;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.LocationAssistantCG;
+import org.overture.codegen.assistant.PatternAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.SBindCG;
@@ -247,6 +248,11 @@ public class IRInfo
 	public BindAssistantCG getBindAssistant()
 	{
 		return assistantManager.getBindAssistant();
+	}
+	
+	public PatternAssistantCG getPatternAssistant()
+	{
+		return assistantManager.getPatternAssistant();
 	}
 
 	public void registerQuoteValue(String value)
