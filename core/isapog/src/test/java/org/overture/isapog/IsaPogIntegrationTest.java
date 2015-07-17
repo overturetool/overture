@@ -51,8 +51,8 @@ public class IsaPogIntegrationTest extends ParamStandardTest<IsaPogResult>
 			} catch (AnalysisException
 					| org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
-				e.printStackTrace();
-				return new IsaPogResult("", "", true);
+				fail(e.getMessage());
+				return null;
 			}
 		}
 
