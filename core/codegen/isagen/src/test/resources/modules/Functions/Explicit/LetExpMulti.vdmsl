@@ -1,5 +1,0 @@
-functions
-
-f : int->int
-f(x)== let y =1
-        in x+y

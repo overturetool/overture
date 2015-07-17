@@ -1,2 +1,0 @@
-values
-x = forall x : int, y : nat & true

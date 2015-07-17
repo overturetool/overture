@@ -1,1 +1,0 @@
-{"translation":"theory DEFAULT\n  imports utp_vdm\nbegin\n\nvdmefun f\n  inp x :: \"@int\"\n  out \"@int\"\n  is \"let y : @nat1 \u003d 1 in (^x^ + ^y^)\" \n\nend","errors":false}
