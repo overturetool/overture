@@ -21,79 +21,27 @@
  */
 package org.overture.codegen.trans.letexps;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
-import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.ATemplateTypeCG;
-import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class FuncTransformation extends DepthFirstAnalysisAdaptor
 {
-	private TransAssistantCG transformationAssistant;
+	private TransAssistantCG transAssistant;
 	
 	public FuncTransformation(TransAssistantCG transformationAssistant)
 	{
-		this.transformationAssistant = transformationAssistant;
+		this.transAssistant = transformationAssistant;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void caseAFuncDeclCG(AFuncDeclCG node) throws AnalysisException
 	{
-		SDeclCG preCond = node.getPreCond();
-		SDeclCG postCond = node.getPostCond();
-		String access = node.getAccess();
-		Boolean isAbstract = node.getAbstract();
-		LinkedList<ATemplateTypeCG> templateTypes = node.getTemplateTypes();
-		AMethodTypeCG methodType = node.getMethodType();
-		LinkedList<AFormalParamLocalParamCG> formalParams = node.getFormalParams();
-		String name = node.getName();
-		SExpCG body = node.getBody();
-		SourceNode sourceNode = node.getSourceNode();
-
-		AMethodDeclCG method = new AMethodDeclCG();
-		method.setSourceNode(sourceNode);
-
-		if (preCond != null) {
-			method.setPreCond(preCond.clone());
-		}
-		if (postCond != null) {
-			method.setPostCond(postCond.clone());
-		}
-
-		method.setAccess(access);
-		method.setAbstract(isAbstract);
-		method.setTemplateTypes((List<? extends ATemplateTypeCG>) templateTypes.clone());
-		method.setMethodType(methodType.clone());
-		method.setFormalParams((List<? extends AFormalParamLocalParamCG>) formalParams.clone());
-		method.setName(name);
-		method.setStatic(true);
-		method.setIsConstructor(false);
-		method.setImplicit(node.getImplicit());
-
-		if (!(body instanceof ANotImplementedExpCG))
-		{
-			AReturnStmCG returnStm = new AReturnStmCG();
-			returnStm.setExp(body.clone());
-			method.setBody(returnStm);
-		} else
-		{
-			method.setBody(new ANotImplementedStmCG());
-		}
+		AMethodDeclCG method = transAssistant.getInfo().getDeclAssistant().funcToMethod(node);
 
 		INode parent = node.parent();
 		
@@ -103,7 +51,7 @@ public class FuncTransformation extends DepthFirstAnalysisAdaptor
 			
 			if(enclosingClass.getInvariant() == node)
 			{
-				transformationAssistant.replaceNodeWith(node, method);
+				transAssistant.replaceNodeWith(node, method);
 			}
 			else
 			{
@@ -120,12 +68,11 @@ public class FuncTransformation extends DepthFirstAnalysisAdaptor
 					method.getPostCond().apply(this);
 				}
 			}
-			
 		}
 		else
 		{
 			// The node's parent is not a class so it must be a pre/post condition
-			transformationAssistant.replaceNodeWith(node, method);
+			transAssistant.replaceNodeWith(node, method);
 		}
 	}
 }
