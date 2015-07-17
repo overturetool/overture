@@ -29,22 +29,18 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
-import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public abstract class AbstractLanguageIterator implements ILanguageIterator
 {
 	protected TransAssistantCG transAssistant;
-	protected ITempVarGen tempGen;
 	protected TempVarPrefixes varPrefixes;
 
-	public AbstractLanguageIterator(
-			TransAssistantCG transformationAssistant,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
+	public AbstractLanguageIterator(TransAssistantCG transformationAssistant,
+			TempVarPrefixes varPrefixes)
 	{
 		this.transAssistant = transformationAssistant;
-		this.tempGen = tempGen;
 		this.varPrefixes = varPrefixes;
 	}
 

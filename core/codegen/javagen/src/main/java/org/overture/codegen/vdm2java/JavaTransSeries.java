@@ -7,7 +7,6 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.traces.TraceNames;
 import org.overture.codegen.traces.TracesTrans;
 import org.overture.codegen.trans.AssignStmTrans;
@@ -26,8 +25,8 @@ import org.overture.codegen.trans.conc.EvalPermPredTrans;
 import org.overture.codegen.trans.conc.MainClassConcTrans;
 import org.overture.codegen.trans.conc.MutexDeclTrans;
 import org.overture.codegen.trans.conc.SentinelTrans;
-import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.funcvalues.FuncValTrans;
+import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.iterator.JavaLanguageIterator;
 import org.overture.codegen.trans.letexps.FuncTrans;
@@ -67,12 +66,11 @@ public class JavaTransSeries
 	}
 
 	public List<DepthFirstAnalysisAdaptor> consAnalyses(
-			FunctionValueAssistant functionValueAssistant)
+			FunctionValueAssistant funcValAssist)
 	{
 		// Data and functionality to support the transformations
 		IRInfo info = codeGen.getIRGenerator().getIRInfo();
 		TempVarPrefixes prefixes = codeGen.getTempVarPrefixes();
-		ITempVarGen nameGen = info.getTempVarNameGen();
 		TraceNames tracePrefixes = codeGen.getTracePrefixes();
 		TransAssistantCG transAssist = codeGen.getTransAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
@@ -84,8 +82,8 @@ public class JavaTransSeries
 		AssignStmTrans assignTr = new AssignStmTrans(transAssist);
 		PrePostTrans prePostTr = new PrePostTrans(info);
 		IfExpTrans ifExpTr = new IfExpTrans(transAssist);
-		FuncValTrans funcValTr = new FuncValTrans(transAssist, functionValueAssistant, INTERFACE_NP, TEMPLATE_TYPE_NP, EVAL_METHOD_PREFIX, PARAM_NP);
-		ILanguageIterator langIte = new JavaLanguageIterator(transAssist, nameGen, prefixes);
+		FuncValTrans funcValTr = new FuncValTrans(transAssist, funcValAssist, INTERFACE_NP, TEMPLATE_TYPE_NP, EVAL_METHOD_PREFIX, PARAM_NP);
+		ILanguageIterator langIte = new JavaLanguageIterator(transAssist, prefixes);
 		TransformationVisitor transVisitor = new TransformationVisitor(prefixes, transAssist, consExists1CounterData(), langIte, TERNARY_IF_EXP_NP, CASES_EXP_RESULT_NP, AND_EXP_NP, OR_EXP_NP, WHILE_COND_NP, REC_MODIFIER_NP);
 		PatternTrans patternTr = new PatternTrans(prefixes, transAssist, new PatternMatchConfig(), CASES_EXP_NP);
 		PreCheckTrans preCheckTr = new PreCheckTrans(transAssist, new JavaValueSemanticsTag(false));
@@ -95,7 +93,7 @@ public class JavaTransSeries
 		TracesTrans tracesTr = new TracesTrans(transAssist, prefixes, tracePrefixes, langIte, new JavaCallStmToStringBuilder());
 		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, APPLY_EXP_NP, OBJ_EXP_NP, CALL_STM_OBJ_NP);
 		JavaToStringTrans javaToStringTr = new JavaToStringTrans(info);
-		RecMethodsTrans recTransformation = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());
+		RecMethodsTrans recTr = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());
 
 		// Start concurrency transformations
 		SentinelTrans sentinelTr = new SentinelTrans(info);
@@ -127,7 +125,7 @@ public class JavaTransSeries
 		series.add(mainClassTr);
 		series.add(seqConvTr);
 		series.add(evalPermPredTr);
-		series.add(recTransformation);
+		series.add(recTr);
 
 		return series;
 	}

@@ -33,7 +33,6 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
@@ -45,10 +44,9 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	private static final String ITERATOR_TYPE = "Iterator";
 
 	public JavaLanguageIterator(
-			TransAssistantCG transformationAssistant,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
+			TransAssistantCG transformationAssistant,TempVarPrefixes varPrefixes)
 	{
-		super(transformationAssistant, tempGen, varPrefixes);
+		super(transformationAssistant, varPrefixes);
 	}
 
 	protected String iteratorName;
@@ -65,7 +63,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	public AVarDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		iteratorName = tempGen.nextVarName(varPrefixes.iterator());
+		iteratorName = transAssistant.getInfo().getTempVarNameGen().nextVarName(varPrefixes.iterator());
 		String setName = setVar.getName();
 		AClassTypeCG iteratorType = transAssistant.consClassType(ITERATOR_TYPE);
 		STypeCG setType = setVar.getType().clone();
