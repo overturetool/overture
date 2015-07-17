@@ -20,7 +20,7 @@ import org.overture.codegen.trans.PostCheckTrans;
 import org.overture.codegen.trans.PreCheckTrans;
 import org.overture.codegen.trans.PrePostTrans;
 import org.overture.codegen.trans.SeqConvTrans;
-import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.Exp2StmTrans;
 import org.overture.codegen.trans.WhileStmTrans;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -68,7 +68,7 @@ public class JavaTransSeries
 	{
 		// Data and functionality to support the transformations
 		IRInfo info = codeGen.getIRGenerator().getIRInfo();
-		TempVarPrefixes prefixes = codeGen.getTempVarPrefixes();
+		IterationVarPrefixes iteVarPrefixes = codeGen.getIteVarPrefixes();
 		TraceNames tracePrefixes = codeGen.getTracePrefixes();
 		TransAssistantCG transAssist = codeGen.getTransAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
@@ -83,16 +83,16 @@ public class JavaTransSeries
 		PrePostTrans prePostTr = new PrePostTrans(info);
 		IfExpTrans ifExpTr = new IfExpTrans(transAssist);
 		FuncValTrans funcValTr = new FuncValTrans(transAssist, funcValAssist, INTERFACE_NP, TEMPLATE_TYPE_NP, EVAL_METHOD_PREFIX, PARAM_NP);
-		ILanguageIterator langIte = new JavaLanguageIterator(transAssist, prefixes);
-		LetBeStTrans letBeStTr = new LetBeStTrans(transAssist, langIte, prefixes);
+		ILanguageIterator langIte = new JavaLanguageIterator(transAssist, iteVarPrefixes);
+		LetBeStTrans letBeStTr = new LetBeStTrans(transAssist, langIte, iteVarPrefixes);
 		WhileStmTrans whileTr = new WhileStmTrans(transAssist, WHILE_COND_NP);
-		Exp2StmTrans exp2stmTr = new Exp2StmTrans(prefixes, transAssist, consExists1CounterData(), langIte, exp2stmPrefixes);
-		PatternTrans patternTr = new PatternTrans(prefixes, transAssist, new PatternMatchConfig(), CASES_EXP_NP);
+		Exp2StmTrans exp2stmTr = new Exp2StmTrans(iteVarPrefixes, transAssist, consExists1CounterData(), langIte, exp2stmPrefixes);
+		PatternTrans patternTr = new PatternTrans(iteVarPrefixes, transAssist, new PatternMatchConfig(), CASES_EXP_NP);
 		PreCheckTrans preCheckTr = new PreCheckTrans(transAssist, new JavaValueSemanticsTag(false));
 		PostCheckTrans postCheckTr = new PostCheckTrans(postCheckCreator, transAssist, FUNC_RES_NP, new JavaValueSemanticsTag(false));
 		IsExpTrans isExpTr = new IsExpTrans(transAssist, IS_EXP_SUBJECT_NP);
 		SeqConvTrans seqConvTr = new SeqConvTrans(transAssist);
-		TracesTrans tracesTr = new TracesTrans(transAssist, prefixes, tracePrefixes, langIte, new JavaCallStmToStringBuilder());
+		TracesTrans tracesTr = new TracesTrans(transAssist, iteVarPrefixes, tracePrefixes, langIte, new JavaCallStmToStringBuilder());
 		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, APPLY_EXP_NP, OBJ_EXP_NP, CALL_STM_OBJ_NP);
 		JavaToStringTrans javaToStringTr = new JavaToStringTrans(info);
 		RecMethodsTrans recTr = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());

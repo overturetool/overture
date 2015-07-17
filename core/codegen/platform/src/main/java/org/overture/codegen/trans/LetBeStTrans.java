@@ -20,14 +20,14 @@ public class LetBeStTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG transAssistant;
 	private ILanguageIterator langIterator;
-	private TempVarPrefixes varPrefixes;
+	private IterationVarPrefixes iteVarPrefixes;
 
 	public LetBeStTrans(TransAssistantCG transAssistant,
-			ILanguageIterator langIterator, TempVarPrefixes varPrefixes)
+			ILanguageIterator langIterator, IterationVarPrefixes iteVarPrefixes)
 	{
 		this.transAssistant = transAssistant;
 		this.langIterator = langIterator;
-		this.varPrefixes = varPrefixes;
+		this.iteVarPrefixes = iteVarPrefixes;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class LetBeStTrans extends DepthFirstAnalysisAdaptor
 		SSetTypeCG setType = transAssistant.getSetTypeCloned(binding.getSet());
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 
-		LetBeStStrategy strategy = new LetBeStStrategy(transAssistant, suchThat, setType, langIterator, tempVarNameGen, varPrefixes);
+		LetBeStStrategy strategy = new LetBeStStrategy(transAssistant, suchThat, setType, langIterator, tempVarNameGen, iteVarPrefixes);
 
 		if (transAssistant.hasEmptySet(binding))
 		{
@@ -58,7 +58,7 @@ public class LetBeStTrans extends DepthFirstAnalysisAdaptor
 		}
 
 		LinkedList<SPatternCG> patterns = binding.getPatterns();
-		ABlockStmCG outerBlock = transAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy, varPrefixes);
+		ABlockStmCG outerBlock = transAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy, iteVarPrefixes);
 
 		// Only the statement of the let be st statement is added to the outer block statements.
 		// We obtain the equivalent functionality of the remaining part of the let be st statement

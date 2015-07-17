@@ -83,7 +83,7 @@ import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.DeclarationTag;
-import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class PatternTrans extends DepthFirstAnalysisAdaptor
@@ -92,16 +92,16 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 	private PatternMatchConfig config;
 
-	private TempVarPrefixes varPrefixes;
+	private IterationVarPrefixes iteVarPrefixes;
 
 	private String casesExpNamePrefix;
 	
-	public PatternTrans(TempVarPrefixes varPrefixes,
+	public PatternTrans(IterationVarPrefixes iteVarPrefixes,
 			TransAssistantCG transAssistant, PatternMatchConfig config,
 			String casesExpNamePrefix)
 	{
 		this.transAssistant = transAssistant;
-		this.varPrefixes = varPrefixes;
+		this.iteVarPrefixes = iteVarPrefixes;
 
 		this.config = config;
 
@@ -873,7 +873,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	private void consSuccessVarCheck(SPatternCG pattern,
 			PatternBlockData patternData)
 	{
-		String successVarName = this.transAssistant.getInfo().getTempVarNameGen().nextVarName(varPrefixes.success());
+		String successVarName = this.transAssistant.getInfo().getTempVarNameGen().nextVarName(iteVarPrefixes.success());
 		SExpCG init = null;
 
 		if (!patternData.IsRootPattern(pattern))

@@ -97,7 +97,7 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Settings;
@@ -124,12 +124,12 @@ public class JavaFormat
 	private JavaValueSemantics valueSemantics;
 	private JavaFormatAssistant javaFormatAssistant;
 	private JavaRecordCreator recCreator;
-	private TempVarPrefixes varPrefixes;
+	private IterationVarPrefixes iteVarPrefixes;
 	
-	public JavaFormat(TempVarPrefixes varPrefixes,
+	public JavaFormat(IterationVarPrefixes iteVarPrefixes,
 			TemplateStructure templateStructure, IRInfo info)
 	{
-		this.varPrefixes = varPrefixes;
+		this.iteVarPrefixes = iteVarPrefixes;
 		this.valueSemantics = new JavaValueSemantics(this);
 		this.recCreator = new JavaRecordCreator(this);
 		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, valueSemantics, recCreator);
@@ -991,7 +991,7 @@ public class JavaFormat
 	
 	public String genIteratorName()
 	{
-		return info.getTempVarNameGen().nextVarName(varPrefixes.iterator()); 
+		return info.getTempVarNameGen().nextVarName(iteVarPrefixes.iterator()); 
 	}
 	
 	public String genThreadName()
@@ -1001,11 +1001,11 @@ public class JavaFormat
 	
 	public String genForIndexToVarName()
 	{
-		return info.getTempVarNameGen().nextVarName(varPrefixes.forIndexToVar());
+		return info.getTempVarNameGen().nextVarName(iteVarPrefixes.forIndexToVar());
 	}
 	
 	public String genForIndexByVarName()
 	{
-		return info.getTempVarNameGen().nextVarName(varPrefixes.forIndexByVar());
+		return info.getTempVarNameGen().nextVarName(iteVarPrefixes.forIndexByVar());
 	}
 }

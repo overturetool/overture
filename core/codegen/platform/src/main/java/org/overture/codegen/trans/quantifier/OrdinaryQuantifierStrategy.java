@@ -30,7 +30,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
@@ -42,9 +42,9 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 			TransAssistantCG transformationAssistant,
 			SExpCG predicate, String resultVarName,
 			OrdinaryQuantifier quantifier, ILanguageIterator langIterator,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
+			ITempVarGen tempGen, IterationVarPrefixes iteVarPrefixes)
 	{
-		super(transformationAssistant, predicate, resultVarName, langIterator, tempGen, varPrefixes);
+		super(transformationAssistant, predicate, resultVarName, langIterator, tempGen, iteVarPrefixes);
 		this.quantifier = quantifier;
 	}
 

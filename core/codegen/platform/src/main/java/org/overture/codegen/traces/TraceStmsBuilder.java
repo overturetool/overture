@@ -57,7 +57,7 @@ import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.conv.ObjectDesignatorToExpCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
@@ -67,7 +67,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 	private IRInfo info;
 	private List<AClassDeclCG> classes;
 	private TransAssistantCG transAssistant;
-	private TempVarPrefixes varPrefixes;
+	private IterationVarPrefixes iteVarPrefixes;
 	private ILanguageIterator langIterator;
 	private ICallStmToStringMethodBuilder toStringBuilder;
 
@@ -79,7 +79,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 	private Map<String, String> idConstNameMap;
 	
 	public TraceStmsBuilder(IRInfo info, List<AClassDeclCG> classes,
-			TransAssistantCG transAssistant, TempVarPrefixes varPrefixes,
+			TransAssistantCG transAssistant, IterationVarPrefixes iteVarPrefixes,
 			TraceNames tracePrefixes, ILanguageIterator langIterator,
 			ICallStmToStringMethodBuilder toStringBuilder,
 			String traceEnclosingClass)
@@ -87,7 +87,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 		this.info = info;
 		this.classes = classes;
 		this.transAssistant = transAssistant;
-		this.varPrefixes = varPrefixes;
+		this.iteVarPrefixes = iteVarPrefixes;
 		this.langIterator = langIterator;
 		this.toStringBuilder = toStringBuilder;
 
@@ -233,7 +233,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 
 		SSetTypeCG setType = transAssistant.getSetTypeCloned(bind.getSet());
 		TraceLetBeStStrategy strategy = new TraceLetBeStStrategy(transAssistant, exp, setType, langIterator, 
-				info.getTempVarNameGen(), varPrefixes, storeAssistant, idConstNameMap, tracePrefixes, id, altTests, bodyTraceData);
+				info.getTempVarNameGen(), iteVarPrefixes, storeAssistant, idConstNameMap, tracePrefixes, id, altTests, bodyTraceData);
 
 		if (transAssistant.hasEmptySet(bind))
 		{
@@ -241,7 +241,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 			return new TraceNodeData(null, transAssistant.wrap(new ASkipStmCG()));
 		}
 
-		ABlockStmCG outerBlock = transAssistant.consIterationBlock(node.getBind().getPatterns(), bind.getSet(), info.getTempVarNameGen(), strategy, varPrefixes);
+		ABlockStmCG outerBlock = transAssistant.consIterationBlock(node.getBind().getPatterns(), bind.getSet(), info.getTempVarNameGen(), strategy, iteVarPrefixes);
 
 		return new TraceNodeData(transAssistant.consIdentifierVar(name, classType.clone()), transAssistant.wrap(outerBlock));
 	}

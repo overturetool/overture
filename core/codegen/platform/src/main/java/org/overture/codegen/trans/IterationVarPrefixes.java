@@ -21,7 +21,7 @@
  */
 package org.overture.codegen.trans;
 
-public class TempVarPrefixes
+public class IterationVarPrefixes
 {
 	public String set()
 	{

@@ -17,25 +17,25 @@ import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class TracesTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG transAssistant;
-	private TempVarPrefixes tempVarPrefixes;
+	private IterationVarPrefixes iteVarPrefixes;
 	private ILanguageIterator langIterator;
 	private ICallStmToStringMethodBuilder toStringBuilder;
 	private TraceNames tracePrefixes;
 
 	public TracesTrans(TransAssistantCG transAssistant,
-			TempVarPrefixes tempVarPrefixes, TraceNames tracePrefixes,
+			IterationVarPrefixes iteVarPrefixes, TraceNames tracePrefixes,
 			ILanguageIterator langIterator,
 			ICallStmToStringMethodBuilder toStringBuilder)
 	{
 		this.transAssistant = transAssistant;
-		this.tempVarPrefixes = tempVarPrefixes;
+		this.iteVarPrefixes = iteVarPrefixes;
 		this.langIterator = langIterator;
 		this.toStringBuilder = toStringBuilder;
 
@@ -146,7 +146,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 	{
 		String traceEnclosingClass = getTraceEnclosingClass(node);
 		TraceStmsBuilder stmBuilder = new TraceStmsBuilder(transAssistant.getInfo(), transAssistant.getInfo().getClasses(), transAssistant, 
-				tempVarPrefixes, tracePrefixes, langIterator, toStringBuilder, traceEnclosingClass);
+				iteVarPrefixes, tracePrefixes, langIterator, toStringBuilder, traceEnclosingClass);
 
 		TraceNodeData nodeData = stmBuilder.buildFromDeclTerms(node.getTerms());
 

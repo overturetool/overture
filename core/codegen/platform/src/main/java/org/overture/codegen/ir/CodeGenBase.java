@@ -1,7 +1,7 @@
 package org.overture.codegen.ir;
 
 import org.overture.codegen.traces.TraceNames;
-import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 
@@ -11,14 +11,14 @@ public class CodeGenBase
 	
 	protected IRGenerator generator;
 	protected TransAssistantCG transAssistant;
-	protected TempVarPrefixes varPrefixes;
+	protected IterationVarPrefixes iteVarPrefixes;
 	protected TraceNames tracePrefixes;
 	
 	protected CodeGenBase()
 	{
 		super();
 		this.generator = new IRGenerator(OBJ_INIT_CALL_NAME_PREFIX);
-		this.varPrefixes = new TempVarPrefixes();
+		this.iteVarPrefixes = new IterationVarPrefixes();
 		this.tracePrefixes = new TraceNames();
 	}
 	
@@ -57,14 +57,14 @@ public class CodeGenBase
 		return transAssistant;
 	}
 	
-	public void setTempVarPrefixes(TempVarPrefixes varPrefixes)
+	public void setTempVarPrefixes(IterationVarPrefixes iteVarPrefixes)
 	{
-		this.varPrefixes = varPrefixes;
+		this.iteVarPrefixes = iteVarPrefixes;
 	}
 	
-	public TempVarPrefixes getTempVarPrefixes()
+	public IterationVarPrefixes getIteVarPrefixes()
 	{
-		return varPrefixes;
+		return iteVarPrefixes;
 	}
 
 	public TraceNames getTracePrefixes()

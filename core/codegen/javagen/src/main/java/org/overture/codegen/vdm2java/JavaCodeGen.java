@@ -117,7 +117,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
 		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
-		this.javaFormat = new JavaFormat(varPrefixes, javaTemplateStructure, generator.getIRInfo());
+		this.javaFormat = new JavaFormat(iteVarPrefixes, javaTemplateStructure, generator.getIRInfo());
 	}
 	
 	public void setJavaTemplateStructure(TemplateStructure javaTemplateStructure)
@@ -773,7 +773,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaCodeGenConstants.RESERVED_WORDS, generator.getIRInfo(), INVALID_NAME_PREFIX));
 		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(JAVA_RESERVED_TYPE_NAMES, generator.getIRInfo(), INVALID_NAME_PREFIX));
 
-		String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, varPrefixes.GENERATED_TEMP_NAMES);
+		String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, iteVarPrefixes.GENERATED_TEMP_NAMES);
 
 		Set<Violation> tempVarViolations = analysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(generatedTempVarNames, generator.getIRInfo(), INVALID_NAME_PREFIX));
 
