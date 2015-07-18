@@ -112,9 +112,9 @@ public class DeclAssistantCG extends AssistantBase
 
 		method.setAccess(access);
 		method.setAbstract(isAbstract);
-		method.setTemplateTypes((List<? extends ATemplateTypeCG>) templateTypes.clone());
+		method.setTemplateTypes(cloneNodes(templateTypes, ATemplateTypeCG.class));
 		method.setMethodType(methodType.clone());
-		method.setFormalParams((List<? extends AFormalParamLocalParamCG>) formalParams.clone());
+		method.setFormalParams(cloneNodes(formalParams, AFormalParamLocalParamCG.class));
 		method.setName(name);
 		method.setStatic(true);
 		method.setIsConstructor(false);
