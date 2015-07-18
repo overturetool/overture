@@ -24,7 +24,7 @@ final public class Entry {
         {
             Number ignorePattern_3 = opRet(4L);
 
-            //Skip;
+            /* skip */
         }
 
         IO.println("After breaking post condition");
