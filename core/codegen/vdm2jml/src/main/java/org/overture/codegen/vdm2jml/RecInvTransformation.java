@@ -110,7 +110,7 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 				if (obj.getName().equals(paramName))
 				{
 					TransAssistantCG assistant = javaGen.getTransAssistant();
-					AIdentifierVarExpCG field = assistant.consIdentifierVar(consUniqueName(node.getMemberName()), node.getType().clone());
+					AIdentifierVarExpCG field = javaGen.getInfo().getExpAssistant().consIdVar(consUniqueName(node.getMemberName()), node.getType().clone());
 					assistant.replaceNodeWith(node, field);
 				}
 			}

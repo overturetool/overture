@@ -121,7 +121,7 @@ public class PostCheckTrans extends DepthFirstAnalysisAdaptor
 
 		String funcResultVarName = transAssistant.getInfo().getTempVarNameGen().nextVarName(funcResultNamePrefix);
 		AVarDeclCG resultDecl = transAssistant.consDecl(funcResultVarName, method.getMethodType().getResult().clone(), node.getExp().clone());
-		AIdentifierVarExpCG resultVar = transAssistant.consIdentifierVar(funcResultVarName, resultDecl.getType().clone());
+		AIdentifierVarExpCG resultVar = transAssistant.getInfo().getExpAssistant().consIdVar(funcResultVarName, resultDecl.getType().clone());
 
 		postCondCall.getArgs().add(resultVar.clone());
 		AStringLiteralExpCG methodName = transAssistant.getInfo().getExpAssistant().consStringLiteral(method.getName(), false);

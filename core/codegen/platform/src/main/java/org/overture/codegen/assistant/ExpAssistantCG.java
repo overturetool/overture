@@ -109,13 +109,23 @@ import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class ExpAssistantCG extends AssistantBase
 {
 	public ExpAssistantCG(AssistantManager assistantManager)
 	{
 		super(assistantManager);
+	}
+	
+	public AIdentifierVarExpCG consIdVar(String name, STypeCG type)
+	{
+		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+		var.setIsLambda(false);
+		var.setIsLocal(true);
+		var.setType(type);
+		var.setName(name);
+
+		return var;
 	}
 
 	public SExpCG consLetDefExp(PExp node, List<PDefinition> defs, PExp exp,
@@ -612,7 +622,7 @@ public class ExpAssistantCG extends AssistantBase
 		return basicIsExp;
 	}
 	
-	public SVarExpCG idStateDesignatorToExp(TransAssistantCG transAssistant, AIdentifierStateDesignatorCG node)
+	public SVarExpCG idStateDesignatorToExp(AIdentifierStateDesignatorCG node)
 	{
 		if(node.getExplicit())
 		{
@@ -632,7 +642,7 @@ public class ExpAssistantCG extends AssistantBase
 		}
 		else
 		{
-			AIdentifierVarExpCG idVar = transAssistant.consIdentifierVar(node.getName(), node.getType().clone());
+			AIdentifierVarExpCG idVar = consIdVar(node.getName(), node.getType().clone());
 			idVar.setTag(node.getTag());
 			idVar.setSourceNode(node.getSourceNode());
 			idVar.setIsLocal(node.getIsLocal());

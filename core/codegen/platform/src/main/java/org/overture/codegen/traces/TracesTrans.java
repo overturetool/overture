@@ -132,9 +132,9 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 
 		executeTestsCall.getArgs().add(nodeVar.clone());
 		executeTestsCall.getArgs().add(typeArg);
-		executeTestsCall.getArgs().add(transAssistant.consIdentifierVar(tracePrefixes.traceMethodParamName(),
+		executeTestsCall.getArgs().add(transAssistant.getInfo().getExpAssistant().consIdVar(tracePrefixes.traceMethodParamName(),
 				transAssistant.consClassType(tracePrefixes.testAccumulatorClassName())));
-		executeTestsCall.getArgs().add(transAssistant.consIdentifierVar(tracePrefixes.storeVarName(),
+		executeTestsCall.getArgs().add(transAssistant.getInfo().getExpAssistant().consIdVar(tracePrefixes.storeVarName(),
 				transAssistant.consClassType(tracePrefixes.storeClassName())));
 		
 

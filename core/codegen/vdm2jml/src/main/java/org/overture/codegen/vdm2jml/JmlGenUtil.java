@@ -63,7 +63,7 @@ public class JmlGenUtil
 		
 		STypeCG paramType = formalParam.getType().clone();
 
-		return jmlGen.getJavaGen().getTransAssistant().consIdentifierVar(paramName, paramType);
+		return jmlGen.getJavaGen().getInfo().getExpAssistant().consIdVar(paramName, paramType);
 	}
 
 	public String getName(SPatternCG id)

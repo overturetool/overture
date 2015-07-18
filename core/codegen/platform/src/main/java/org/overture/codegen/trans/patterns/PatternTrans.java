@@ -142,7 +142,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			AVarDeclCG expVarDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(node.getExp().getType().clone(),
 					transAssistant.getInfo().getPatternAssistant().consIdPattern(expName), node.getExp().clone());
 			replacementBlock.getLocalDefs().add(expVarDecl);
-			exp = transAssistant.consIdentifierVar(expName,
+			exp = transAssistant.getInfo().getExpAssistant().consIdVar(expName,
 					node.getExp().getType().clone());
 		}
 		

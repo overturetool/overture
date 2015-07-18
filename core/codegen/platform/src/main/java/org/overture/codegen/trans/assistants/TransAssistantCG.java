@@ -574,17 +574,6 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		binding.getPatterns().clear();
 	}
 
-	public AIdentifierVarExpCG consIdentifierVar(String name, STypeCG type)
-	{
-		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
-		var.setIsLambda(false);
-		var.setIsLocal(true);
-		var.setType(type);
-		var.setName(name);
-
-		return var;
-	}
-	
 	public AFieldDeclCG consField(String access, STypeCG type, String name, SExpCG initExp)
 	{
 		AFieldDeclCG stateField = new AFieldDeclCG();

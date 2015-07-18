@@ -31,7 +31,7 @@ public class StateDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 	public SExpCG caseAIdentifierStateDesignatorCG(
 			AIdentifierStateDesignatorCG node) throws AnalysisException
 	{
-		return transAssistant.getInfo().getExpAssistant().idStateDesignatorToExp(transAssistant, node);
+		return transAssistant.getInfo().getExpAssistant().idStateDesignatorToExp(node);
 	}
 	
 	@Override

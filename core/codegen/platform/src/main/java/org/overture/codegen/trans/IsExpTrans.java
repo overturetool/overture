@@ -68,7 +68,7 @@ public class IsExpTrans extends DepthFirstAnalysisAdaptor
 				String varName = transAssistant.getInfo().getTempVarNameGen().nextVarName(isExpSubjectNamePrefix);
 				AVarDeclCG expDecl = transAssistant.consDecl(varName, expType.clone(), exp.clone());
 				replacementBlock.getLocalDefs().add(expDecl);
-				expVar = transAssistant.consIdentifierVar(varName, expType.clone());
+				expVar = transAssistant.getInfo().getExpAssistant().consIdVar(varName, expType.clone());
 			} else
 			{
 				expVar = exp;

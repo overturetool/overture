@@ -49,8 +49,7 @@ class ReportInjector extends DepthFirstAnalysisAdaptor
 			{
 				AIdentifierPatternCG id = (AIdentifierPatternCG) name;
 				
-				AIdentifierVarExpCG arg = jmlGen.getJavaGen().getTransAssistant().
-						consIdentifierVar(id.getName(), param.getType().clone());
+				AIdentifierVarExpCG arg = jmlGen.getJavaGen().getInfo().getExpAssistant().consIdVar(id.getName(), param.getType().clone());
 				
 				// TODO: what if the settings are set to char of sequences?
 				reportCall.getArgs().add(jmlGen.getJavaGen().getInfo().getExpAssistant().consStringLiteral(id.getName(), false));

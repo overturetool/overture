@@ -122,7 +122,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		String resultVarName = transAssistant.getInfo().getTempVarNameGen().nextVarName(prefixes.ternaryIfExp());
 
 		AVarDeclCG resultDecl = transAssistant.consDecl(resultVarName, node.getType().clone(), transAssistant.getInfo().getExpAssistant().consNullExp());
-		AIdentifierVarExpCG resultVar = transAssistant.consIdentifierVar(resultVarName, resultDecl.getType().clone());
+		AIdentifierVarExpCG resultVar = transAssistant.getInfo().getExpAssistant().consIdVar(resultVarName, resultDecl.getType().clone());
 
 		SExpCG condition = node.getCondition();
 		SExpCG trueValue = node.getTrueValue();
@@ -259,7 +259,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 			outerBlock.getLocalDefs().add(resultDecl);
 
 			AAssignToExpStmCG setLetBeStResult = new AAssignToExpStmCG();
-			setLetBeStResult.setTarget(transAssistant.consIdentifierVar(var, value.getType().clone()));
+			setLetBeStResult.setTarget(transAssistant.getInfo().getExpAssistant().consIdVar(var, value.getType().clone()));
 			setLetBeStResult.setExp(value);
 			outerBlock.getStatements().add(setLetBeStResult);
 
@@ -297,7 +297,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		ABlockStmCG declStm = new ABlockStmCG();
 		declStm.getLocalDefs().add(recDecl);
 
-		AIdentifierVarExpCG recVar = transAssistant.consIdentifierVar(recModifierName, node.getType().clone());
+		AIdentifierVarExpCG recVar = transAssistant.getInfo().getExpAssistant().consIdVar(recModifierName, node.getType().clone());
 
 		ABlockStmCG replacementBlock = new ABlockStmCG();
 		replacementBlock.getStatements().add(declStm);

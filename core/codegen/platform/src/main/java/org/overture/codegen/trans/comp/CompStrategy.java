@@ -71,7 +71,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	protected List<SStmCG> consConditionalAdd(AIdentifierVarExpCG compResult,
 			SBinaryExpCG collectionMerge)
 	{
-		AIdentifierVarExpCG result = transAssistant.consIdentifierVar(compResult.getName(),
+		AIdentifierVarExpCG result = transAssistant.getInfo().getExpAssistant().consIdVar(compResult.getName(),
 				compResult.getType().clone());
 
 		AAssignToExpStmCG updateCompResult = new AAssignToExpStmCG();
