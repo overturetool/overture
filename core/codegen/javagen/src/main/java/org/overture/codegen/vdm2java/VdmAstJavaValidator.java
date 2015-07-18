@@ -37,7 +37,7 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 	public void inAStateDefinition(AStateDefinition node)
 			throws AnalysisException
 	{
-		if(!node.getCanBeExecuted())
+		if(node.getCanBeExecuted() != null && !node.getCanBeExecuted())
 		{
 			info.addUnsupportedNode(node, String.format("The state definition '%s' is not executable.\n"
 					+ "Only an executable state definition can be code generated.", node.getName().getName()));
