@@ -16,11 +16,13 @@ final public class Entry {
     }
 
     public static Object Run() {
-        St.x = 2L;
+        Number atomicTmp_1 = 2L;
+        St.x = atomicTmp_1;
+
         //@ assert inv_St(St);
-        { /* Start of atomic statement */
-            St.x = 1L;
-        } /* End of atomic statement */
+        Number atomicTmp_2 = 1L;
+        St.x = atomicTmp_2;
+
         //@ assert inv_St(St);
         return 2L;
     }

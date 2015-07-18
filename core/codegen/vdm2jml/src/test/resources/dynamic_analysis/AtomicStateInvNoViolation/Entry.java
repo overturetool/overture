@@ -17,8 +17,12 @@ final public class Entry {
 
     public static Object Run() {
         IO.println("Before atomic");
-        St.x = 2L;
-        St.x = 1L;
+
+        Number atomicTmp_1 = 2L;
+
+        Number atomicTmp_2 = 1L;
+        St.x = atomicTmp_1;
+        St.x = atomicTmp_2;
         //@ assert inv_St(St);
         IO.println("After atomic");
 

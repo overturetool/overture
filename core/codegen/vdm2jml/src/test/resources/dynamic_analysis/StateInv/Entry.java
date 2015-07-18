@@ -25,8 +25,11 @@ final public class Entry {
     }
 
     public static void opAtomic() {
-        St.x = -1L;
-        St.x = 1L;
+        Number atomicTmp_1 = -1L;
+
+        Number atomicTmp_2 = 1L;
+        St.x = atomicTmp_1;
+        St.x = atomicTmp_2;
     }
 
     public static void op() {
