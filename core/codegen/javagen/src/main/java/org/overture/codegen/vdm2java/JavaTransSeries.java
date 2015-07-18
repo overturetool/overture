@@ -10,18 +10,19 @@ import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.traces.TraceNames;
 import org.overture.codegen.traces.TracesTrans;
 import org.overture.codegen.trans.AssignStmTrans;
+import org.overture.codegen.trans.AtomicStmTrans;
 import org.overture.codegen.trans.CallObjStmTrans;
 import org.overture.codegen.trans.DivideTrans;
+import org.overture.codegen.trans.Exp2StmTrans;
 import org.overture.codegen.trans.Exp2StmVarPrefixes;
 import org.overture.codegen.trans.IPostCheckCreator;
 import org.overture.codegen.trans.IsExpTrans;
+import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.LetBeStTrans;
 import org.overture.codegen.trans.PostCheckTrans;
 import org.overture.codegen.trans.PreCheckTrans;
 import org.overture.codegen.trans.PrePostTrans;
 import org.overture.codegen.trans.SeqConvTrans;
-import org.overture.codegen.trans.IterationVarPrefixes;
-import org.overture.codegen.trans.Exp2StmTrans;
 import org.overture.codegen.trans.WhileStmTrans;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.conc.EvalPermPredTrans;
@@ -35,8 +36,8 @@ import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.iterator.JavaLanguageIterator;
 import org.overture.codegen.trans.letexps.FuncTrans;
 import org.overture.codegen.trans.letexps.IfExpTrans;
-import org.overture.codegen.trans.patterns.PatternVarPrefixes;
 import org.overture.codegen.trans.patterns.PatternTrans;
+import org.overture.codegen.trans.patterns.PatternVarPrefixes;
 import org.overture.codegen.trans.quantifier.Exists1CounterData;
 import org.overture.codegen.trans.uniontypes.UnionTypeTrans;
 import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
@@ -67,6 +68,7 @@ public class JavaTransSeries
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(varMan.postCheckMethodName());
 
 		// Construct the transformations
+		AtomicStmTrans atomicTr = new AtomicStmTrans(transAssist, varMan.atomicTmpVar());
 		FuncTrans funcTr = new FuncTrans(transAssist);
 		DivideTrans divideTr = new DivideTrans(info);
 		CallObjStmTrans callObjTr = new CallObjStmTrans(info);
@@ -98,6 +100,7 @@ public class JavaTransSeries
 		// Set up order of transformations
 		List<DepthFirstAnalysisAdaptor> series = new LinkedList<DepthFirstAnalysisAdaptor>();
 
+		series.add(atomicTr);
 		series.add(divideTr);
 		series.add(assignTr);
 		series.add(callObjTr);

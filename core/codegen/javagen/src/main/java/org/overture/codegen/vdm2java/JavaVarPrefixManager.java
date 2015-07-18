@@ -110,4 +110,9 @@ public class JavaVarPrefixManager
 	{
 		return "funcResult_";
 	}
+	
+	public String atomicTmpVar()
+	{
+		return "atomicTmp_";
+	}
 }
