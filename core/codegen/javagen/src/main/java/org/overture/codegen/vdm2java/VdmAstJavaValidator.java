@@ -7,6 +7,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
@@ -30,6 +31,17 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 	public VdmAstJavaValidator(IRInfo info)
 	{
 		this.info = info;
+	}
+	
+	@Override
+	public void inAStateDefinition(AStateDefinition node)
+			throws AnalysisException
+	{
+		if(!node.getCanBeExecuted())
+		{
+			info.addUnsupportedNode(node, String.format("The state definition '%s' is not executable.\n"
+					+ "Only an executable state definition can be code generated.", node.getName().getName()));
+		}
 	}
 	
 	@Override

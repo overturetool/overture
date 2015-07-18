@@ -95,7 +95,8 @@ public class UnsupportedJavaCodeGenTest
 				}
 			}
 
-			Assert.assertEquals("Expected only a single module to be unsupported", noOfUnsupportedModules, 1);
+			Assert.assertTrue("Expected a single module to be unsupported. "
+					+ "Got: " + noOfUnsupportedModules, noOfUnsupportedModules == 1);
 
 		} catch (AnalysisException e)
 		{
