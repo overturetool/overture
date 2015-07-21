@@ -48,6 +48,7 @@ public class JmlGenerator implements IREventObserver
 	public static final String JML_STATIC_INV_ANNOTATION = "static invariant";
 	public static final String JML_OR = " || ";
 	public static final String JML_AND = " && ";
+	public static final String JML_IMPLIES = " ==> ";
 	public static final String JML_INSTANCE_INV_ANNOTATION = "instance invariant";
 	public static final String JML_REQ_ANNOTATION = "requires";
 	public static final String JML_ENS_ANNOTATION = "ensures";
@@ -130,9 +131,9 @@ public class JmlGenerator implements IREventObserver
 	{
 		// In the final version of the IR, received by the Java code generator, all
 		// top level containers are classes
-
+		setInvChecksOnOwner(ast);
 		annotateRecsWithInvs(ast);
-		
+
 		// All the record methods are JML pure (getters and setters are added just below)
 		annotator.makeRecMethodsPure(ast);
 		
@@ -160,12 +161,6 @@ public class JmlGenerator implements IREventObserver
 			if(info.getDeclAssistant().isLibraryName(clazz.getName()))
 			{
 				continue;
-			}
-			
-			if(invChecksFlagOwner == null)
-			{
-				invChecksFlagOwner = clazz;
-				annotator.addInvCheckGhostVarDecl(invChecksFlagOwner);
 			}
 			
 			for (AFieldDeclCG f : clazz.getFields())
@@ -320,8 +315,6 @@ public class JmlGenerator implements IREventObserver
 		
 		for(ARecordDeclCG r : recs)
 		{
-			List<String> args = util.getRecFieldNames(r);
-			
 			if(r.getInvariant() != null)
 			{
 				// The record invariant is an instance invariant and the invariant method
@@ -340,10 +333,21 @@ public class JmlGenerator implements IREventObserver
 				
 				// Add the instance invariant to the record
 				// Make it public so we can access the record fields from the invariant clause
-				annotator.appendMetaData(r, annotator.consAnno("public " + JML_INSTANCE_INV_ANNOTATION, INV_PREFIX
-						+ r.getName(), args));
+				annotator.addRecInv(r);
 				
 				injectReportCalls(r.getInvariant());
+			}
+		}
+	}
+
+	private void setInvChecksOnOwner(List<IRStatus<INode>> ast) {
+		
+		for (IRStatus<AClassDeclCG> status : IRStatus.extract(ast, AClassDeclCG.class))
+		{
+			if(invChecksFlagOwner == null)
+			{
+				invChecksFlagOwner = status.getIrNode();
+				annotator.addInvCheckGhostVarDecl(invChecksFlagOwner);
 			}
 		}
 	}

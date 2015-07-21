@@ -51,13 +51,21 @@ public class JmlAnnotationHelper
 		}
 	}
 	
-	public List<ClonableString> consAnno(String jmlAnno, String name,
+	public List<ClonableString> consAnno(String jmlAnno, String pred,
 			List<String> fieldNames)
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("//@ %s %s", jmlAnno, name));
-		sb.append("(");
+		sb.append(String.format("//@ %s %s", jmlAnno, pred));
 
+		appendFieldNames(fieldNames, sb);
+
+		return consMetaData(sb);
+	}
+
+	private void appendFieldNames(List<String> fieldNames, StringBuilder sb) {
+		
+		sb.append("(");
+		
 		String sep = "";
 		for (String fName : fieldNames)
 		{
@@ -66,8 +74,6 @@ public class JmlAnnotationHelper
 		}
 
 		sb.append(");");
-
-		return consMetaData(sb);
 	}
 	
 	public void addInvCheckGhostVarDecl(AClassDeclCG owner)
@@ -93,6 +99,22 @@ public class JmlAnnotationHelper
 		
 		return prefix.toString();
 	}
+
+	public void addRecInv(ARecordDeclCG r) {
+
+		List<String> args = jmlGen.getUtil().getRecFieldNames(r);
+
+		String jmlAnno = "public " + JmlGenerator.JML_INSTANCE_INV_ANNOTATION;
+		
+		StringBuilder pred = new StringBuilder();
+		pred.append(consInvChecksOnName(jmlGen.getInvChecksFlagOwner()));
+		pred.append(JmlGenerator.JML_IMPLIES);
+		pred.append(JmlGenerator.INV_PREFIX);
+		pred.append(r.getName());
+		
+		appendMetaData(r, consAnno(jmlAnno, pred.toString(), args));
+	}
+
 	
 	public void makePure(SDeclCG cond)
 	{
