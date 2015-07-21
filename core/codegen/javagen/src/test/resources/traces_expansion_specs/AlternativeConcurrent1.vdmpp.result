@@ -10,11 +10,11 @@ public class Entry implements java.io.Serializable {
     }
 
     private void op1() {
-        //Skip;
+        /* skip */
     }
 
     private void op2() {
-        //Skip;
+        /* skip */
     }
 
     private static Number fun1() {

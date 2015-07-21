@@ -9,11 +9,12 @@ import org.junit.Test;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
-import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.vdm2jml.LeafTypeInfo;
 import org.overture.codegen.vdm2jml.NamedTypeInfo;
 import org.overture.codegen.vdm2jml.NamedTypeInvDepCalculator;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class TypeDependencyTests
 {
@@ -32,8 +33,15 @@ public class TypeDependencyTests
 
 			files.add(new File(TEST_RES_TYPE_DEP_ROOT + filename));
 
-			ModuleList modules = GeneralCodeGenUtils.consModuleList(files);
+			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
+			
+			if(GeneralCodeGenUtils.hasErrors(tcResult))
+			{
+				Assert.fail("Could not parse/type check VDM model:\n" + GeneralCodeGenUtils.errorStr(tcResult));
+			}
 
+			List<AModuleModules> modules = tcResult.result;
+			
 			Assert.assertTrue("Expected a single module but got "
 					+ modules.size(), modules.size() == 1);
 

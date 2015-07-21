@@ -39,7 +39,7 @@ public class Buffer implements EvaluatePP {
         sentinel.entering(((Buffer_sentinel) sentinel).IsFinished);
 
         try {
-            //Skip;
+            /* skip */
         } finally {
             sentinel.leaving(((Buffer_sentinel) sentinel).IsFinished);
         }
@@ -114,7 +114,7 @@ public class Reader extends VDMThread implements EvaluatePP {
         sentinel.entering(((Reader_sentinel) sentinel).ended);
 
         try {
-            //Skip;
+            /* skip */
         } finally {
             sentinel.leaving(((Reader_sentinel) sentinel).ended);
         }
@@ -145,7 +145,7 @@ public class Reader extends VDMThread implements EvaluatePP {
         for (Long i = 1L; i <= toVar_1; i++) {
             Number x = b.Read();
 
-            //Skip;
+            /* skip */
         }
     }
 
@@ -209,7 +209,7 @@ public class Writer extends VDMThread implements EvaluatePP {
         sentinel.entering(((Writer_sentinel) sentinel).ended);
 
         try {
-            //Skip;
+            /* skip */
         } finally {
             sentinel.leaving(((Writer_sentinel) sentinel).ended);
         }

@@ -34,7 +34,7 @@ final public class Entry {
 
                 //@ assert inv_Entry_A(ignorePattern_6) && (ignorePattern_6 == null || inv_Entry_B(ignorePattern_6) || inv_Entry_C(ignorePattern_6));
 
-                //Skip;
+                /* skip */
             }
 
             return 0L;

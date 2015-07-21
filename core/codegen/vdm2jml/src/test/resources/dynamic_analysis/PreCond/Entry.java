@@ -22,7 +22,7 @@ final public class Entry {
         {
             Number ignorePattern_2 = id(-1L);
 
-            //Skip;
+            /* skip */
         }
 
         IO.println("After breaking pre condition");

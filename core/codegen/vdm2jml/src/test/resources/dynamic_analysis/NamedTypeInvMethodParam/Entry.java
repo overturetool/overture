@@ -21,7 +21,7 @@ final public class Entry {
 
             //@ assert inv_Entry_Even(ignorePattern_1);
 
-            //Skip;
+            /* skip */
         }
 
         IO.println("Breaking named type invariant for method parameter");
@@ -31,7 +31,7 @@ final public class Entry {
 
             //@ assert inv_Entry_Even(ignorePattern_2);
 
-            //Skip;
+            /* skip */
         }
 
         return 0L;

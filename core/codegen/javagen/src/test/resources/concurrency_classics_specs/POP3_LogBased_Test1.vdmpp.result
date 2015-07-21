@@ -1246,12 +1246,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
         cmd = msgChannel.ServerListen();
 
-        Boolean whileCond1 = true;
+        Boolean whileCond_1 = true;
 
-        while (whileCond1) {
-            whileCond1 = !(Utils.equals(cmd, new POP3Types.QUIT()));
+        while (whileCond_1) {
+            whileCond_1 = !(Utils.equals(cmd, new POP3Types.QUIT()));
 
-            if (!(whileCond1)) {
+            if (!(whileCond_1)) {
                 break;
             }
 
@@ -1879,7 +1879,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3Server_sentinel) sentinel).WaitForServerStart);
 
         try {
-            //Skip;
+            /* skip */
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).WaitForServerStart);
         }
@@ -1988,12 +1988,12 @@ public class POP3Server extends VDMThread implements EvaluatePP {
     }
 
     public void run() {
-        Boolean whileCond2 = true;
+        Boolean whileCond_2 = true;
 
-        while (whileCond2) {
-            whileCond2 = true;
+        while (whileCond_2) {
+            whileCond_2 = true;
 
-            if (!(whileCond2)) {
+            if (!(whileCond_2)) {
                 break;
             }
 
@@ -2417,7 +2417,7 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3TestSender_sentinel) sentinel).LogClient);
 
         try {
-            //Skip;
+            /* skip */
         } finally {
             sentinel.leaving(((POP3TestSender_sentinel) sentinel).LogClient);
         }
@@ -2514,7 +2514,7 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3TestListener_sentinel) sentinel).LogServer);
 
         try {
-            //Skip;
+            /* skip */
         } finally {
             sentinel.leaving(((POP3TestListener_sentinel) sentinel).LogServer);
         }
@@ -2524,7 +2524,7 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3TestListener_sentinel) sentinel).IsFinished);
 
         try {
-            //Skip;
+            /* skip */
         } finally {
             sentinel.leaving(((POP3TestListener_sentinel) sentinel).IsFinished);
         }
@@ -2554,13 +2554,13 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
 
     public void run() {
         Object response = mc.ClientListen();
-        Boolean whileCond3 = true;
+        Boolean whileCond_3 = true;
 
-        while (whileCond3) {
-            whileCond3 = !(Utils.equals(response,
+        while (whileCond_3) {
+            whileCond_3 = !(Utils.equals(response,
                     new POP3Types.OkResponse("Quitting POP3 Server")));
 
-            if (!(whileCond3)) {
+            if (!(whileCond_3)) {
                 break;
             }
 

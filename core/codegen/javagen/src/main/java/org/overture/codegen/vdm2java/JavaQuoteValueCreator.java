@@ -22,7 +22,6 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
@@ -36,12 +35,12 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 	private static final String EQUALS_METHOD_PARAM = "obj";
 	
 	private IRInfo info;
-	private TransAssistantCG transformationAssistant;
+	private TransAssistantCG transAssistant;
 	
 	public JavaQuoteValueCreator(IRInfo info, TransAssistantCG transformationAssistant)
 	{
 		this.info = info;
-		this.transformationAssistant = transformationAssistant;
+		this.transAssistant = transformationAssistant;
 	}
 	
 	public AClassDeclCG consQuoteValue(String quoteClassName, String quoteName, String userCodePackage)
@@ -55,12 +54,12 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		// The package where the quotes are put is userCode.quotes
 		if(JavaCodeGenUtil.isValidJavaPackage(userCodePackage))
 		{
-			String quotePackage = userCodePackage + "." + CodeGenBase.QUOTES;
+			String quotePackage = userCodePackage + "." + JavaCodeGen.JAVA_QUOTES_PACKAGE;
 			decl.setPackage(quotePackage);
 		}
 		else
 		{
-			decl.setPackage(CodeGenBase.QUOTES);
+			decl.setPackage(JavaCodeGen.JAVA_QUOTES_PACKAGE);
 		}
 		
 		decl.getFields().add(consHashcodeField());
@@ -114,14 +113,14 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		AExternalTypeCG fieldType = new AExternalTypeCG();
 		fieldType.setName(JavaFormat.JAVA_INT);
 		
-		AIdentifierVarExpCG hashcodeVar = transformationAssistant.consIdentifierVar(HASHCODE_FIELD, fieldType);
+		AIdentifierVarExpCG hashcodeVar = transAssistant.getInfo().getExpAssistant().consIdVar(HASHCODE_FIELD, fieldType);
 		
 		AEqualsBinaryExpCG hashcodeCompare = new AEqualsBinaryExpCG();
 		hashcodeCompare.setType(new ABoolBasicTypeCG());
 		hashcodeCompare.setLeft(hashcodeVar);
 		hashcodeCompare.setRight(consZero());
 		
-		AIdentifierVarExpCG hashCodeId = transformationAssistant.consIdentifierVar(HASHCODE_FIELD, consFieldType());
+		AIdentifierVarExpCG hashCodeId = transAssistant.getInfo().getExpAssistant().consIdVar(HASHCODE_FIELD, consFieldType());
 		
 		AMethodTypeCG hashCodeMethodType = new AMethodTypeCG();
 		hashCodeMethodType.setResult(consFieldType());
@@ -158,14 +157,14 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		AClassTypeCG quoteClassType = new AClassTypeCG();
 		quoteClassType.setName(name);
 
-		AIdentifierVarExpCG instanceVar = transformationAssistant.consIdentifierVar(INSTANCE_FIELD, quoteClassType);
+		AIdentifierVarExpCG instanceVar = transAssistant.getInfo().getExpAssistant().consIdVar(INSTANCE_FIELD, quoteClassType);
 		
 		AEqualsBinaryExpCG nullCompare = new AEqualsBinaryExpCG();
 		nullCompare.setType(new ABoolBasicTypeCG());
 		nullCompare.setLeft(instanceVar);
 		nullCompare.setRight(info.getExpAssistant().consNullExp());
 		
-		AIdentifierVarExpCG instanceId = transformationAssistant.consIdentifierVar(INSTANCE_FIELD,
+		AIdentifierVarExpCG instanceId = transAssistant.getInfo().getExpAssistant().consIdVar(INSTANCE_FIELD,
 				quoteClassType.clone());
 		
 		ATypeNameCG typeName = new ATypeNameCG();
@@ -211,7 +210,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 	
 	private AMethodDeclCG consHashcodeMethod()
 	{
-		AIdentifierVarExpCG hashCodeVar = transformationAssistant.consIdentifierVar(HASHCODE_FIELD, consFieldType());
+		AIdentifierVarExpCG hashCodeVar = transAssistant.getInfo().getExpAssistant().consIdVar(HASHCODE_FIELD, consFieldType());
 		
 		AReturnStmCG returnHashCode = new AReturnStmCG();
 		returnHashCode.setExp(hashCodeVar);
@@ -227,7 +226,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 	}
 	private AMethodDeclCG consEqualsMethod(String name)
 	{
-		AIdentifierVarExpCG paramVar = transformationAssistant.consIdentifierVar(EQUALS_METHOD_PARAM, new AObjectTypeCG());
+		AIdentifierVarExpCG paramVar = transAssistant.getInfo().getExpAssistant().consIdVar(EQUALS_METHOD_PARAM, new AObjectTypeCG());
 		
 		AClassTypeCG quoteClass = new AClassTypeCG();
 		quoteClass.setName(name);

@@ -13,7 +13,7 @@ public class A {
     }
 
     public void q2() {
-        //Skip;
+        /* skip */
     }
 
     public void q3() {

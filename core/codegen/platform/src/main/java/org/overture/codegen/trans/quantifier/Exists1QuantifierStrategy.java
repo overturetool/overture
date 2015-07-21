@@ -31,7 +31,7 @@ import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
@@ -43,9 +43,9 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 			TransAssistantCG transformationAssistant,
 			SExpCG predicate, String resultVarName,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
-			TempVarPrefixes varPrefixes, Exists1CounterData counterData)
+			IterationVarPrefixes iteVarPrefixes, Exists1CounterData counterData)
 	{
-		super(transformationAssistant, predicate, resultVarName, langIterator, tempGen, varPrefixes);
+		super(transformationAssistant, predicate, resultVarName, langIterator, tempGen, iteVarPrefixes);
 		
 		this.counterData = counterData;
 	}
