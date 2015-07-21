@@ -124,8 +124,11 @@ public class JmlGenerator implements IREventObserver
 
 		annotateRecsWithInvs(ast);
 		
-		// All the record methods are JML pure
+		// All the record methods are JML pure (getters and setters are added just below)
 		annotator.makeRecMethodsPure(ast);
+		
+		// Transform the IR such that access to record state is done via getters and setters.
+		makeRecStateAccessorBased(ast);
 		
 		List<IRStatus<INode>> newAst = new LinkedList<IRStatus<INode>>(ast);
 
@@ -217,6 +220,22 @@ public class JmlGenerator implements IREventObserver
 		
 		// Return back the modified AST to the Java code generator
 		return newAst;
+	}
+
+	private void makeRecStateAccessorBased(List<IRStatus<INode>> ast) {
+
+		RecAccessorTrans recAccTr = new RecAccessorTrans(javaGen.getTransAssistant());
+
+		for (IRStatus<INode> status : ast) {
+			try {
+				javaGen.getIRGenerator().applyPartialTransformation(status, recAccTr);
+			} catch (org.overture.codegen.cgast.analysis.AnalysisException e) {
+
+				Logger.getLog().printErrorln(
+						"Problems applying '" + RecAccessorTrans.class + "' to status " + status.getIrNodeName());
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void sortAnnotations(List<IRStatus<INode>> newAst)
