@@ -125,9 +125,12 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			record.setSourceNode(stateDecl.getSourceNode());
 			record.setName(stateDecl.getName());
 
-			// The state invariant constrains the type of the state
-			// see https://github.com/overturetool/overture/issues/459 
-			record.setInvariant(stateDecl.getInvDecl().clone());
+			if(stateDecl.getInvDecl() != null)
+			{
+				// The state invariant constrains the type of the state
+				// see https://github.com/overturetool/overture/issues/459 
+				record.setInvariant(stateDecl.getInvDecl().clone());
+			}
 
 			for (AFieldDeclCG field : stateDecl.getFields())
 			{
