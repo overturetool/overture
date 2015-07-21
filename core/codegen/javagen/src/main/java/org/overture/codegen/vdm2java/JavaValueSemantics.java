@@ -51,6 +51,7 @@ import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
 import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
+import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
@@ -189,6 +190,16 @@ public class JavaValueSemantics
 		{
 			AAssignToExpStmCG assignment = (AAssignToExpStmCG) parent;
 			if (assignment.getTarget() == exp)
+			{
+				return false;
+			}
+		}
+		
+		if(parent instanceof ACallObjectExpStmCG)
+		{
+			ACallObjectExpStmCG callObjStm = (ACallObjectExpStmCG) parent;
+			
+			if(callObjStm.getObj() == exp)
 			{
 				return false;
 			}
