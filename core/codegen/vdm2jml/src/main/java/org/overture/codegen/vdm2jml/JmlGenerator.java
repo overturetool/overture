@@ -37,12 +37,15 @@ import org.overture.codegen.vdm2jml.util.AnnotationSorter;
 
 public class JmlGenerator implements IREventObserver
 {
+	//TODO: Cleanup constants
 	public static final String DEFAULT_JAVA_ROOT_PACKAGE = "project";
 	public static final String GEN_INV_METHOD_PARAM_NAME = "elem";
 	public static final String INV_PREFIX = "inv_";
 	public static final String REPORT_CALL = "report";
 	public static final String INV_METHOD_REPLACEMENT_NAME_PREFIX = "check_"; 
-
+	
+	public static final String JML_PUBLIC = "public";
+	public static final String JML_STATIC_INV_ANNOTATION = "static invariant";
 	public static final String JML_OR = " || ";
 	public static final String JML_AND = " && ";
 	public static final String JML_INSTANCE_INV_ANNOTATION = "instance invariant";
@@ -56,11 +59,17 @@ public class JmlGenerator implements IREventObserver
 	public static final String JML_RESULT = "\\result";
 	public static final String JML_NULLABLE_BY_DEFAULT = "//@ nullable_by_default";
 	
+	public static final String INV_CHECKS_ON_GHOST_VAR_NAME = "invChecksOn";
+	public static final String JML_INV_CHECKS_ON_DECL = "/*@ public ghost static boolean %s = true; @*/";
+	
 	private JavaCodeGen javaGen;
 	private JmlSettings jmlSettings;
 	private List<NamedTypeInfo> typeInfoList;
 	private JmlGenUtil util;
 	private JmlAnnotationHelper annotator;
+	
+	// The class owning the invChecksOn flag
+	private AClassDeclCG invChecksFlagOwner = null;
 	
 	public JmlGenerator()
 	{
@@ -151,6 +160,12 @@ public class JmlGenerator implements IREventObserver
 			if(info.getDeclAssistant().isLibraryName(clazz.getName()))
 			{
 				continue;
+			}
+			
+			if(invChecksFlagOwner == null)
+			{
+				invChecksFlagOwner = clazz;
+				annotator.addInvCheckGhostVarDecl(invChecksFlagOwner);
 			}
 			
 			for (AFieldDeclCG f : clazz.getFields())
@@ -552,5 +567,10 @@ public class JmlGenerator implements IREventObserver
 	public JmlSettings getJmlSettings()
 	{
 		return jmlSettings;
+	}
+	
+	public AClassDeclCG getInvChecksFlagOwner()
+	{
+		return invChecksFlagOwner;
 	}
 }

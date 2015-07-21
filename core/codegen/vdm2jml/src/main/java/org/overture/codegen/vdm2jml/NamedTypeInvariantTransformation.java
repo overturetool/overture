@@ -33,9 +33,6 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 {
-	public static final String JML_PUBLIC = "public";
-	public static final String JML_STATIC_INV_ANNOTATION = "static invariant";
-	
 	public static final String RET_VAR_NAME_PREFIX = "ret_";
 	public static final String MAP_SEQ_NAME_PREFIX = "col_";
 	
@@ -202,10 +199,10 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		
 		// In classes that originate from VDM-SL modules the state field
 		// and the values are static. However record fields are not.
-		String scope = node.getStatic() ? JML_STATIC_INV_ANNOTATION
+		String scope = node.getStatic() ? JmlGenerator.JML_STATIC_INV_ANNOTATION
 				: JmlGenerator.JML_INSTANCE_INV_ANNOTATION;
 		
-		String inv = consJmlCheck(enclosingClass.getName(), JML_PUBLIC, scope, invTypes, node.getName());
+		String inv = consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_PUBLIC, scope, invTypes, node.getName());
 
 		jmlGen.getAnnotator().appendMetaData(node, jmlGen.getAnnotator().consMetaData(inv));
 	}

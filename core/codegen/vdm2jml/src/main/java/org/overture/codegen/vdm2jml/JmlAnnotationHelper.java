@@ -14,6 +14,7 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class JmlAnnotationHelper
 {
@@ -67,6 +68,30 @@ public class JmlAnnotationHelper
 		sb.append(");");
 
 		return consMetaData(sb);
+	}
+	
+	public void addInvCheckGhostVarDecl(AClassDeclCG owner)
+	{
+		String metaStr = String.format(JmlGenerator.JML_INV_CHECKS_ON_DECL, JmlGenerator.INV_CHECKS_ON_GHOST_VAR_NAME);
+		
+		appendMetaData(owner, consMetaData(metaStr));
+	}
+	
+	public String consInvChecksOnName(AClassDeclCG owner)
+	{
+		StringBuilder prefix = new StringBuilder();
+		
+		if(JavaCodeGenUtil.isValidJavaPackage(owner.getPackage()))
+		{
+			prefix.append(owner.getPackage());
+			prefix.append(".");
+		}
+		
+		prefix.append(owner.getName());
+		prefix.append(".");
+		prefix.append(JmlGenerator.INV_CHECKS_ON_GHOST_VAR_NAME);
+		
+		return prefix.toString();
 	}
 	
 	public void makePure(SDeclCG cond)
