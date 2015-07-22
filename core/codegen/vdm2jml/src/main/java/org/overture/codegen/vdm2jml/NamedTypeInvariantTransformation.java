@@ -21,6 +21,7 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
+import org.overture.codegen.cgast.statements.AAtomicStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
@@ -174,6 +175,29 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		jmlGen.getAnnotator().appendMetaData(assertStm, assertMetaData);
 		
 		return assertStm;
+	}
+
+	private AMetaStmCG consInvChecksStm(boolean val)
+	{
+		AMetaStmCG setStm = new AMetaStmCG();
+		String setStr = val ? JmlGenerator.JML_ENABLE_INV_CHECKS
+				: JmlGenerator.JML_DISABLE_INV_CHECKS;
+		List<ClonableString> setMetaData = jmlGen.getAnnotator().consMetaData(setStr);
+		jmlGen.getAnnotator().appendMetaData(setStm, setMetaData);
+
+		return setStm;
+	}
+
+	@Override
+	public void caseAAtomicStmCG(AAtomicStmCG node) throws AnalysisException
+	{
+		ABlockStmCG replBlock = new ABlockStmCG();
+		
+		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
+		
+		replBlock.getStatements().add(consInvChecksStm(false));
+		replBlock.getStatements().add(node);
+		replBlock.getStatements().add(consInvChecksStm(true));
 	}
 	
 	@Override
