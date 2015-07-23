@@ -283,13 +283,27 @@ abstract public class AnnotationTestsBase
 		String failureMsg = "Expected method " + method.getName()
 				+ " not to be pure";
 
-		List<? extends ClonableString> metaData = method.getMetaData();
-
 		for(ClonableString m : method.getMetaData())
 		{
 			if(m.value.equals(PURE_ANNOTATION))
 			{
 				Assert.fail(failureMsg);
+			}
+		}
+	}
+	
+	public static void assertRecMethodsPurity(List<AMethodDeclCG> stateMethods)
+	{
+		for (AMethodDeclCG m : stateMethods)
+		{
+			if (m.getName().equals("hashCode") || m.getName().equals("equals")
+					|| m.getName().equals("toString")
+					|| m.getName().equals("copy"))
+			{
+				assertPureMethod(m);
+			} else
+			{
+				assertNotPureMethod(m);
 			}
 		}
 	}

@@ -32,7 +32,7 @@ public class RecInvTests extends AnnotationTestsBase
 	@Test
 	public void recMethodsPure()
 	{
-		AnnotationTestsBase.assertPure(recTypeDef.getMethods());
+		AnnotationTestsBase.assertRecMethodsPurity(recTypeDef.getMethods());
 	}
 
 	@Test
@@ -41,7 +41,7 @@ public class RecInvTests extends AnnotationTestsBase
 		Assert.assertTrue("Expected a record type definition in the generated module", recTypeDef != null);
 
 		Assert.assertEquals("Got unexpected record type definition invariant",
-				"//@ public instance invariant inv_Rec(x);", AnnotationTestsBase.getLastAnnotation(recTypeDef));
+				"//@ public instance invariant project.Entry.invChecksOn ==> inv_Rec(x);", AnnotationTestsBase.getLastAnnotation(recTypeDef));
 	}
 	
 	@Test

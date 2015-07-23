@@ -1,5 +1,7 @@
 package org.overture.vdm2jml.tests;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -39,22 +41,12 @@ public class StateTests extends AnnotationTestsBase
 	@Test
 	public void testGenStateTypeMethodsArePure()
 	{
-		Assert.assertTrue("Expected seven methods in the state type ", genStateType.getMethods().size() == 7);
+		List<AMethodDeclCG> stateMethods = genStateType.getMethods();
+		Assert.assertTrue("Expected seven methods in the state type ", stateMethods.size() == 7);
 
-		for (AMethodDeclCG m : genStateType.getMethods())
-		{
-			if (m.getName().equals("hashCode") || m.getName().equals("equals")
-					|| m.getName().equals("toString")
-					|| m.getName().equals("copy"))
-			{
-				assertPureMethod(m);
-			} else
-			{
-				assertNotPureMethod(m);
-			}
-		}
+		assertRecMethodsPurity(stateMethods);
 	}
-	
+
 	@Test
 	public void testModuleHasNoInvFunction()
 	{
