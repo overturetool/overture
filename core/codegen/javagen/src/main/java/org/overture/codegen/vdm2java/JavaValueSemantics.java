@@ -21,6 +21,7 @@
  */
 package org.overture.codegen.vdm2java;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.assistant.AssistantManager;
@@ -29,6 +30,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -179,6 +181,11 @@ public class JavaValueSemantics
 			return false;
 		}
 
+		if(inRecClassNonConstructor(exp))
+		{
+			return false;
+		}
+		
 		INode parent = exp.parent();
 
 		if (cloneNotNeeded(parent))
@@ -234,6 +241,48 @@ public class JavaValueSemantics
 		}
 
 		return false;
+	}
+
+	private boolean inRecClassNonConstructor(SExpCG exp)
+	{
+		AClassDeclCG encClass = exp.getAncestor(AClassDeclCG.class);
+		
+		if(encClass != null)
+		{
+			LinkedList<AMethodDeclCG> methods = encClass.getMethods();
+			
+			boolean isRec = false;
+			for(AMethodDeclCG m : methods)
+			{
+				if(m.getIsConstructor() && m.getMethodType().getResult() instanceof ARecordTypeCG)
+				{
+					isRec = true;
+					break;
+				}
+			}
+			
+			if(!isRec)
+			{
+				return false;
+			}
+			else
+			{
+				AMethodDeclCG encMethod = exp.getAncestor(AMethodDeclCG.class);
+				
+				if(encMethod != null)
+				{
+					return !encMethod.getIsConstructor();
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	private boolean cloneNotNeededMapPutGet(SExpCG exp)
