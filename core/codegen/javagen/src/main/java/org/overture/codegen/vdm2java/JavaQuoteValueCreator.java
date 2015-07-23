@@ -146,7 +146,14 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		ABlockStmCG body = new ABlockStmCG();
 		body.getStatements().add(hashcodeCheck);
 		
+		AClassTypeCG quoteClassType = new AClassTypeCG();
+		quoteClassType.setName(name);
+		
+		AMethodTypeCG constructorType = new AMethodTypeCG();
+		constructorType.setResult(quoteClassType);
+
 		AMethodDeclCG ctor = consDefaultCtorSignature(name);
+		ctor.setMethodType(constructorType);
 		ctor.setBody(body);
 		
 		return ctor;
