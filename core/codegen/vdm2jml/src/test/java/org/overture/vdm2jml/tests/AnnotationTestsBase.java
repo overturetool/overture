@@ -257,18 +257,17 @@ abstract public class AnnotationTestsBase
 		}
 	}
 
-	public static void assertPureMethod(AMethodDeclCG func)
+	public static void assertPureMethod(AMethodDeclCG method)
 	{
-		// Since @pure is a JML modifier so this annotation should go last
-		String failureMsg = "Expected function " + func.getName()
-				+ " to be @pure";
+		String failureMsg = "Expected method " + method.getName()
+				+ " to be pure";
 
-		List<? extends ClonableString> metaData = func.getMetaData();
+		List<? extends ClonableString> metaData = method.getMetaData();
 
 		Assert.assertTrue(failureMsg, metaData != null
 				&& !metaData.isEmpty());
 		
-		for(ClonableString m : func.getMetaData())
+		for(ClonableString m : method.getMetaData())
 		{
 			if(m.value.equals(PURE_ANNOTATION))
 			{
@@ -277,5 +276,21 @@ abstract public class AnnotationTestsBase
 		}
 		
 		Assert.assertTrue(failureMsg, false);
+	}
+	
+	public static void assertNotPureMethod(AMethodDeclCG method)
+	{
+		String failureMsg = "Expected method " + method.getName()
+				+ " not to be pure";
+
+		List<? extends ClonableString> metaData = method.getMetaData();
+
+		for(ClonableString m : method.getMetaData())
+		{
+			if(m.value.equals(PURE_ANNOTATION))
+			{
+				Assert.fail(failureMsg);
+			}
+		}
 	}
 }
