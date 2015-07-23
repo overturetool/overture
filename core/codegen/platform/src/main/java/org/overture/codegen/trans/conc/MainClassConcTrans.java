@@ -181,6 +181,7 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 		evaluatePPmethod.setName("evaluatePP");
 		evaluatePPmethod.setImplicit(false);
 		evaluatePPmethod.setMethodType(methType);
+		evaluatePPmethod.setIsConstructor(false);
 		
 		evaluatePPmethod.getFormalParams().add(fnrloc);
 		
