@@ -14,21 +14,22 @@ import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 
+	private static final String VALID = "valid";
 	private static final String GET = "get_";
 	private static final String SET = "set_";
 
-	private TransAssistantCG transAssistant;
+	private JmlGenerator jmlGen;
 
-	public RecAccessorTrans(TransAssistantCG transAssistant) {
-		this.transAssistant = transAssistant;
+	public RecAccessorTrans(JmlGenerator jmlGen) {
+		this.jmlGen = jmlGen;
 	}
 
 	// private void privatizeFields(ARecordDeclCG node)
@@ -43,6 +44,7 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 	public void caseARecordDeclCG(ARecordDeclCG node) throws AnalysisException {
 		// TODO: Privatise record fields?
 		node.getMethods().addAll(consAccessors(node));
+		node.getMethods().add(consValidMethod());
 	}
 
 	@Override
@@ -60,7 +62,7 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 				setCall.setObj(target.getObject().clone());
 				setCall.setSourceNode(node.getSourceNode());
 
-				transAssistant.replaceNodeWith(node, setCall);
+				jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, setCall);
 
 				setCall.getObj().apply(this);
 				setCall.getArgs().getFirst().apply(this);
@@ -89,7 +91,7 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 			getCall.setType(node.getType().clone());
 			getCall.setSourceNode(node.getSourceNode());
 
-			transAssistant.replaceNodeWith(node, getCall);
+			jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, getCall);
 		}
 	}
 
@@ -121,7 +123,7 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 
 		AFormalParamLocalParamCG param = new AFormalParamLocalParamCG();
 		param.setType(f.getType().clone());
-		param.setPattern(transAssistant.getInfo().getPatternAssistant().consIdPattern(paramName));
+		param.setPattern(jmlGen.getJavaGen().getInfo().getPatternAssistant().consIdPattern(paramName));
 		setter.getFormalParams().add(param);
 
 		AMethodTypeCG methodType = new AMethodTypeCG();
@@ -130,8 +132,8 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 		setter.setMethodType(methodType);
 
 		AAssignToExpStmCG fieldUpdate = new AAssignToExpStmCG();
-		fieldUpdate.setTarget(transAssistant.getInfo().getExpAssistant().consIdVar(f.getName(), f.getType().clone()));
-		fieldUpdate.setExp(transAssistant.getInfo().getExpAssistant().consIdVar(paramName, f.getType().clone()));
+		fieldUpdate.setTarget(jmlGen.getJavaGen().getInfo().getExpAssistant().consIdVar(f.getName(), f.getType().clone()));
+		fieldUpdate.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consIdVar(paramName, f.getType().clone()));
 
 		setter.setBody(fieldUpdate);
 
@@ -154,11 +156,40 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 		getter.setMethodType(methodType);
 
 		AReturnStmCG returnField = new AReturnStmCG();
-		returnField.setExp(transAssistant.getInfo().getExpAssistant().consIdVar(f.getName(), f.getType().clone()));
+		returnField.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consIdVar(f.getName(), f.getType().clone()));
 		getter.setBody(returnField);
+		
+		jmlGen.getAnnotator().makePure(getter);
+		
 		return getter;
 	}
 
+	public AMethodDeclCG consValidMethod()
+	{
+		AMethodDeclCG validMethod = new AMethodDeclCG();
+
+		validMethod.setAbstract(false);
+		validMethod.setAccess(IRConstants.PUBLIC);
+		validMethod.setAsync(false);
+		validMethod.setImplicit(false);
+		validMethod.setIsConstructor(false);
+		validMethod.setName(VALID);
+		validMethod.setStatic(false);
+
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		methodType.setResult(new ABoolBasicTypeCG());
+		validMethod.setMethodType(methodType);
+		
+		jmlGen.getAnnotator().makePure(validMethod);
+		
+		AReturnStmCG body = new AReturnStmCG();
+		body.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consBoolLiteral(true));
+		
+		validMethod.setBody(body);
+		
+		return validMethod;
+	}
+	
 	public String consGetCallName(String fieldName) {
 		return GET + fieldName;
 	}

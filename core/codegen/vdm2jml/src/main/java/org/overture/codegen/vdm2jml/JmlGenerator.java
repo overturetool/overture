@@ -236,7 +236,7 @@ public class JmlGenerator implements IREventObserver
 
 	private void makeRecStateAccessorBased(List<IRStatus<INode>> ast) {
 
-		RecAccessorTrans recAccTr = new RecAccessorTrans(javaGen.getTransAssistant());
+		RecAccessorTrans recAccTr = new RecAccessorTrans(this);
 
 		for (IRStatus<INode> status : ast) {
 			try {
