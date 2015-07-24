@@ -42,7 +42,7 @@ public class StateTests extends AnnotationTestsBase
 	public void testGenStateTypeMethodsArePure()
 	{
 		List<AMethodDeclCG> stateMethods = genStateType.getMethods();
-		Assert.assertTrue("Expected seven methods in the state type ", stateMethods.size() == 7);
+		Assert.assertTrue("Expected seven methods in the state type ", stateMethods.size() == 8);
 
 		assertRecMethodsPurity(stateMethods);
 	}

@@ -298,7 +298,9 @@ abstract public class AnnotationTestsBase
 		{
 			if (m.getName().equals("hashCode") || m.getName().equals("equals")
 					|| m.getName().equals("toString")
-					|| m.getName().equals("copy"))
+					|| m.getName().equals("copy")
+					|| m.getName().startsWith("get_")
+					|| m.getName().equals("valid"))
 			{
 				assertPureMethod(m);
 			} else
