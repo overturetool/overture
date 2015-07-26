@@ -18,7 +18,7 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 		AnnotationTestsBase.init("ModuleStateInv.vdmsl");
 	}
 
-	public static void checkAssertion(String methodName, boolean expectAssignment,
+	public static void checkAssertion(String methodName, Update update,
 			boolean expectMetaData)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
@@ -29,18 +29,33 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 		TestDataCollector dataCollector = new TestDataCollector();
 		assignSt.apply(dataCollector);
 
-		if (expectAssignment)
+		if (update == Update.ASSIGN)
 		{
 			Assert.assertTrue("Expected to find a single assignment in the '"
 					+ methodName + "' method", dataCollector.getAssignments().size() == 1);
 			Assert.assertTrue("Expected to find no map seq updates in the '"
 					+ methodName + "' method", dataCollector.getMapSeqUpdates().isEmpty());
-		} else
+			Assert.assertTrue("Expected to find no set calls in the '"
+					+ methodName + "' method", dataCollector.getSetCalls().isEmpty());
+			
+		} else if(update == Update.MAP_SEQ_UPDATE)
 		{
 			Assert.assertTrue("Expected to find no assignments in the '"
 					+ methodName + "' method", dataCollector.getAssignments().isEmpty());
 			Assert.assertTrue("Expected to find a single map seq update in the '"
 					+ methodName + "' method", dataCollector.getMapSeqUpdates().size() == 1);
+			Assert.assertTrue("Expected to find no set calls in the '"
+					+ methodName + "' method", dataCollector.getSetCalls().isEmpty());
+		}
+		else
+		{
+			//Setter call
+			Assert.assertTrue("Expected to find no assignments in the '"
+					+ methodName + "' method", dataCollector.getAssignments().isEmpty());
+			Assert.assertTrue("Expected to find no map seq updates in the '"
+					+ methodName + "' method", dataCollector.getMapSeqUpdates().isEmpty());
+			Assert.assertTrue("Expected to find a single set call in the '"
+					+ methodName + "' method", dataCollector.getSetCalls().size() == 1);
 		}
 
 		if (expectMetaData)
@@ -55,7 +70,7 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 			String assertStr = metaData.get(0).value;
 
 			Assert.assertEquals("Got unexpected assertion in method '"
-					+ methodName + "'", "//@ assert inv_St(St);", assertStr);
+					+ methodName + "'", "//@ assert St.valid();", assertStr);
 		} else
 		{
 			Assert.assertTrue("Expected no assertions in the '" + methodName
@@ -67,55 +82,57 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 	public void updateEntireState()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignSt", true, false);
+		checkAssertion("assignSt", Update.ASSIGN, false);
 	}
 
 	@Test
 	public void updateEntireStateAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignSt", true, true);
+		// No need to assert since the violation will be picked up by the
+		// atomicTmp var assignment
+		checkAssertion("atomicAssignSt", Update.ASSIGN, false);
 	}
 
 	@Test
 	public void updateField()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignX", true, false);
+		checkAssertion("assignX", Update.SET_CALL, false);
 	}
 
 	@Test
 	public void updateFieldAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignX", true, true);
+		checkAssertion("atomicAssignX", Update.SET_CALL, true);
 	}
 
 	@Test
 	public void updateSeqElem()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignS", false, true);
+		checkAssertion("assignS", Update.MAP_SEQ_UPDATE, true);
 	}
 
 	@Test
 	public void updateSeqElemAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignS", false, false);
+		checkAssertion("atomicAssignS", Update.MAP_SEQ_UPDATE, true);
 	}
 
 	@Test
 	public void updateMapRng()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignM", false, true);
+		checkAssertion("assignM", Update.MAP_SEQ_UPDATE, true);
 	}
 
 	@Test
 	public void updateMapRngAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignM", false, false);
+		checkAssertion("atomicAssignM", Update.MAP_SEQ_UPDATE, true);
 	}
 }
