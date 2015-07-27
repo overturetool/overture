@@ -8,6 +8,7 @@ import java.util.*;
 //@ nullable_by_default
 @SuppressWarnings("all")
 final public class Entry {
+    /*@ public ghost static boolean invChecksOn = true; @*/
     private Entry() {
     }
 

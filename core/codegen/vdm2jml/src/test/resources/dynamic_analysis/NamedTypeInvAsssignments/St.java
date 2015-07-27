@@ -45,6 +45,23 @@ final public class St implements Record {
     }
 
     /*@ pure @*/
+    public Object get_x() {
+        return x;
+    }
+
+    public void set_x(final Object _x) {
+        //@ assert inv_Entry_PT(_x) && (_x == null || inv_Entry_PossiblyOne(_x) || inv_Entry_True(_x));
+        x = _x;
+
+        //@ assert inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
+    }
+
+    /*@ pure @*/
+    public Boolean valid() {
+        return true;
+    }
+
+    /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_PT(final Object check_elem) {
         if (!(Utils.equals(check_elem, null)) &&

@@ -11,6 +11,7 @@ final public class Entry {
     /*@ spec_public @*/
     private static project.Entrytypes.St St = new project.Entrytypes.St(1L);
 
+    /*@ public ghost static boolean invChecksOn = true; @*/
     private Entry() {
     }
 
@@ -21,17 +22,17 @@ final public class Entry {
         //@ assert inv_Entry_PT(p) && (p == null || inv_Entry_PossiblyOne(p) || inv_Entry_True(p));
         p = true;
         //@ assert inv_Entry_PT(p) && (p == null || inv_Entry_PossiblyOne(p) || inv_Entry_True(p));
-        St.x = null;
-        St.x = 1L;
-        St.x = true;
+        St.set_x(null);
+        St.set_x(1L);
+        St.set_x(true);
         IO.println("Breaking named type invariant (assigning record field)");
-        St.x = false;
+        St.set_x(false);
     }
 
     public static void op2() {
         Object p1 = null;
         //@ assert inv_Entry_PT(p1) && (p1 == null || inv_Entry_PossiblyOne(p1) || inv_Entry_True(p1));
-        St.x = true;
+        St.set_x(true);
         IO.println("Breaking named type invariant (assigning local variable)");
         p1 = false;
 

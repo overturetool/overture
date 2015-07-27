@@ -1,5 +1,5 @@
 "Before breaking named type invariant"
-Entry.java:30: JML assertion is false
+Entry.java:31: JML assertion is false
             //@ assert inv_Entry_No(notLarge) && (inv_Entry_Even(notLarge) || inv_Entry_Large(notLarge));
                 ^
 "After breaking named type invariant"
