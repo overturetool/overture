@@ -14,6 +14,7 @@ final public class Entry {
     //@ public static invariant inv_Entry_CN(fBreak) && (inv_Entry_C(fBreak) || inv_Entry_N(fBreak));
     public static final Object fBreak = 'b';
 
+    /*@ public ghost static boolean invChecksOn = true; @*/
     private Entry() {
     }
 
