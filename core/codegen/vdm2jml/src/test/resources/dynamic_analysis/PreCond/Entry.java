@@ -11,6 +11,7 @@ final public class Entry {
     /*@ spec_public @*/
     private static project.Entrytypes.St St = new project.Entrytypes.St(5L);
 
+    /*@ public ghost static boolean invChecksOn = true; @*/
     private Entry() {
     }
 
@@ -32,14 +33,14 @@ final public class Entry {
 
     //@ requires pre_opRet(a,St);
     public static Number opRet(final Number a) {
-        St.x = a.longValue() + 1L;
+        St.set_x(a.longValue() + 1L);
 
-        return St.x;
+        return St.get_x();
     }
 
     //@ requires pre_opVoid(a,St);
     public static void opVoid(final Number a) {
-        St.x = a.longValue() + 1L;
+        St.set_x(a.longValue() + 1L);
     }
 
     //@ requires pre_id(a);
@@ -51,13 +52,13 @@ final public class Entry {
     /*@ pure @*/
     public static Boolean pre_opRet(final Number a,
         final project.Entrytypes.St St) {
-        return St.x.longValue() > 0L;
+        return St.get_x().longValue() > 0L;
     }
 
     /*@ pure @*/
     public static Boolean pre_opVoid(final Number a,
         final project.Entrytypes.St St) {
-        return St.x.longValue() > 0L;
+        return St.get_x().longValue() > 0L;
     }
 
     /*@ pure @*/
