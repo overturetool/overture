@@ -11,7 +11,7 @@ final public class Rec implements Record {
     public Number x;
     public Number y;
 
-    //@ public instance invariant inv_Rec(x,y);
+    //@ public instance invariant project.Entry.invChecksOn ==> inv_Rec(x,y);
     public Rec(final Number _x, final Number _y) {
         x = _x;
         y = _y;
@@ -41,6 +41,29 @@ final public class Rec implements Record {
     /*@ pure @*/
     public String toString() {
         return "mk_Entry`Rec" + Utils.formatFields(x, y);
+    }
+
+    /*@ pure @*/
+    public Number get_x() {
+        return x;
+    }
+
+    public void set_x(final Number _x) {
+        x = _x;
+    }
+
+    /*@ pure @*/
+    public Number get_y() {
+        return y;
+    }
+
+    public void set_y(final Number _y) {
+        y = _y;
+    }
+
+    /*@ pure @*/
+    public Boolean valid() {
+        return true;
     }
 
     /*@ pure @*/
