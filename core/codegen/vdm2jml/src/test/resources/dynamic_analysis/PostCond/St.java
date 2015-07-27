@@ -39,4 +39,18 @@ final public class St implements Record {
     public String toString() {
         return "mk_Entry`St" + Utils.formatFields(x);
     }
+
+    /*@ pure @*/
+    public Number get_x() {
+        return x;
+    }
+
+    public void set_x(final Number _x) {
+        x = _x;
+    }
+
+    /*@ pure @*/
+    public Boolean valid() {
+        return true;
+    }
 }

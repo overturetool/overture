@@ -11,6 +11,7 @@ final public class Entry {
     /*@ spec_public @*/
     private static project.Entrytypes.St St = new project.Entrytypes.St(0L);
 
+    /*@ public ghost static boolean invChecksOn = true; @*/
     private Entry() {
     }
 
@@ -34,14 +35,14 @@ final public class Entry {
 
     //@ ensures post_opVoid(\old(St.copy()),St);
     public static void opVoid() {
-        St.x = St.x.longValue() + 1L;
+        St.set_x(St.get_x().longValue() + 1L);
     }
 
     //@ ensures post_opRet(a,\result,\old(St.copy()),St);
     public static Number opRet(final Number a) {
-        St.x = St.x.longValue() + 1L;
+        St.set_x(St.get_x().longValue() + 1L);
 
-        return St.x;
+        return St.get_x();
     }
 
     //@ ensures post_f(a,\result);
@@ -57,7 +58,7 @@ final public class Entry {
     /*@ pure @*/
     public static Boolean post_opVoid(final project.Entrytypes.St _St,
         final project.Entrytypes.St St) {
-        return Utils.equals(St.x, _St.x.longValue() + 1L);
+        return Utils.equals(St.get_x(), _St.get_x().longValue() + 1L);
     }
 
     /*@ pure @*/
@@ -65,7 +66,7 @@ final public class Entry {
         final project.Entrytypes.St _St, final project.Entrytypes.St St) {
         Boolean andResult_1 = false;
 
-        if (Utils.equals(St.x, _St.x.longValue() + 1L)) {
+        if (Utils.equals(St.get_x(), _St.get_x().longValue() + 1L)) {
             if (Utils.equals(RESULT, a)) {
                 andResult_1 = true;
             }
