@@ -11,7 +11,7 @@ final public class Entry {
     /*@ spec_public @*/
     private static project.Entrytypes.St St = new project.Entrytypes.St(1L);
 
-    //@ public static invariant St != null ==> inv_St(St);
+    /*@ public ghost static boolean invChecksOn = true; @*/
     private Entry() {
     }
 
@@ -21,21 +21,20 @@ final public class Entry {
         Number atomicTmp_1 = 2L;
 
         Number atomicTmp_2 = 1L;
-        St.x = atomicTmp_1;
-        St.x = atomicTmp_2;
-        //@ assert inv_St(St);
+        //@ set invChecksOn = false;
+        { /* Start of atomic statement */
+            St.set_x(atomicTmp_1);
+            St.set_x(atomicTmp_2);
+        } /* End of atomic statement */
+        //@ set invChecksOn = true;
+
+        //@ assert St.valid();
         IO.println("After atomic");
 
-        return St.x;
+        return St.get_x();
     }
 
     public String toString() {
         return "Entry{" + "St := " + Utils.toString(St) + "}";
-    }
-
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_St(final project.Entrytypes.St s) {
-        return Utils.equals(s.x, 1L);
     }
 }
