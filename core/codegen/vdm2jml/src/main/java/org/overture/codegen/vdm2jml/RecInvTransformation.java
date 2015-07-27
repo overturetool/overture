@@ -95,24 +95,18 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseAFieldExpCG(AFieldExpCG node)
-			throws org.overture.codegen.cgast.analysis.AnalysisException
+	public void caseAIdentifierVarExpCG(AIdentifierVarExpCG node)
+			throws AnalysisException
 	{
-		if (node.getObject() instanceof AFieldExpCG)
+		if (node.parent() instanceof AFieldExpCG)
 		{
-			node.getObject().apply(this);
-		} else
-		{
-			if (node.getObject() instanceof AIdentifierVarExpCG)
+			if (node.getName().equals(paramName))
 			{
-				AIdentifierVarExpCG obj = (AIdentifierVarExpCG) node.getObject();
-
-				if (obj.getName().equals(paramName))
-				{
-					TransAssistantCG assistant = javaGen.getTransAssistant();
-					AIdentifierVarExpCG field = javaGen.getInfo().getExpAssistant().consIdVar(consUniqueName(node.getMemberName()), node.getType().clone());
-					assistant.replaceNodeWith(node, field);
-				}
+				AFieldExpCG field = (AFieldExpCG) node.parent();
+				
+				TransAssistantCG assistant = javaGen.getTransAssistant();
+				AIdentifierVarExpCG replField = javaGen.getInfo().getExpAssistant().consIdVar(consUniqueName(field.getMemberName()), field.getType().clone());
+				assistant.replaceNodeWith(field, replField);
 			}
 		}
 	}
