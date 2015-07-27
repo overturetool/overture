@@ -11,7 +11,7 @@ final public class Entry {
     /*@ spec_public @*/
     private static project.Entrytypes.St St = new project.Entrytypes.St(5L);
 
-    //@ public static invariant St != null ==> inv_St(St);
+    /*@ public ghost static boolean invChecksOn = true; @*/
     private Entry() {
     }
 
@@ -21,30 +21,29 @@ final public class Entry {
         op();
         IO.println("After breaking state invariant");
 
-        return St.x;
+        return St.get_x();
     }
 
     public static void opAtomic() {
         Number atomicTmp_1 = -1L;
 
         Number atomicTmp_2 = 1L;
-        St.x = atomicTmp_1;
-        St.x = atomicTmp_2;
+        //@ set invChecksOn = false;
+        { /* Start of atomic statement */
+            St.set_x(atomicTmp_1);
+            St.set_x(atomicTmp_2);
+        } /* End of atomic statement */
+        //@ set invChecksOn = true;
+
+        //@ assert St.valid();
     }
 
     public static void op() {
-        St.x = -10L;
-        //@ assert inv_St(St);
-        St.x = 10L;
+        St.set_x(-10L);
+        St.set_x(10L);
     }
 
     public String toString() {
         return "Entry{" + "St := " + Utils.toString(St) + "}";
-    }
-
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_St(final project.Entrytypes.St s) {
-        return s.x.longValue() > 0L;
     }
 }
