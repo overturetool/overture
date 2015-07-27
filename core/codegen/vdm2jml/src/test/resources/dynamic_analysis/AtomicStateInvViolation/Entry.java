@@ -11,29 +11,39 @@ final public class Entry {
     /*@ spec_public @*/
     private static project.Entrytypes.St St = new project.Entrytypes.St(1L);
 
-    //@ public static invariant St != null ==> inv_St(St);
+    /*@ public ghost static boolean invChecksOn = true; @*/
     private Entry() {
     }
 
     public static Object Run() {
+        IO.println("Before first atomic (expecting violation after atomic)");
+
         Number atomicTmp_1 = 2L;
-        St.x = atomicTmp_1;
+        //@ set invChecksOn = false;
+        { /* Start of atomic statement */
+            St.set_x(atomicTmp_1);
+        } /* End of atomic statement */
+        //@ set invChecksOn = true;
 
-        //@ assert inv_St(St);
+        //@ assert St.valid();
+        IO.println(
+            "After first atomic (expected violation before this print statement)");
+        IO.println("Before second atomic");
+
         Number atomicTmp_2 = 1L;
-        St.x = atomicTmp_2;
+        //@ set invChecksOn = false;
+        { /* Start of atomic statement */
+            St.set_x(atomicTmp_2);
+        } /* End of atomic statement */
+        //@ set invChecksOn = true;
 
-        //@ assert inv_St(St);
+        //@ assert St.valid();
+        IO.println("After second atomic");
+
         return 2L;
     }
 
     public String toString() {
         return "Entry{" + "St := " + Utils.toString(St) + "}";
-    }
-
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_St(final project.Entrytypes.St s) {
-        return Utils.equals(s.x, 1L);
     }
 }

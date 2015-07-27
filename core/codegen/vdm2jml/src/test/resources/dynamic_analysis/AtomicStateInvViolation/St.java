@@ -10,6 +10,7 @@ import java.util.*;
 final public class St implements Record {
     public Number x;
 
+    //@ public instance invariant project.Entry.invChecksOn ==> inv_St(x);
     public St(final Number _x) {
         x = _x;
     }
@@ -38,5 +39,25 @@ final public class St implements Record {
     /*@ pure @*/
     public String toString() {
         return "mk_Entry`St" + Utils.formatFields(x);
+    }
+
+    /*@ pure @*/
+    public Number get_x() {
+        return x;
+    }
+
+    public void set_x(final Number _x) {
+        x = _x;
+    }
+
+    /*@ pure @*/
+    public Boolean valid() {
+        return true;
+    }
+
+    /*@ pure @*/
+    /*@ helper @*/
+    public static Boolean inv_St(final Number _x) {
+        return Utils.equals(_x, 1L);
     }
 }
