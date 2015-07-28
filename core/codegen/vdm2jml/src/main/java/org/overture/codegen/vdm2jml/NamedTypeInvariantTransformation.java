@@ -23,6 +23,7 @@ import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AAtomicStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
@@ -30,6 +31,7 @@ import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.trans.AtomicStmTrans;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
@@ -165,6 +167,16 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 			replStm.getStatements().addFirst(assertStm);
 		}
 	}
+	
+	private AMetaStmCG consAssert(String pred)
+	{
+		AMetaStmCG assertStm = new AMetaStmCG();
+		List<ClonableString> setMetaData = jmlGen.getAnnotator().consMetaData("//@ "
+				+ JmlGenerator.JML_ASSERT_ANNOTATION + " " + pred + ";");
+		jmlGen.getAnnotator().appendMetaData(assertStm, setMetaData);
+
+		return assertStm;
+	}
 
 	private AMetaStmCG consAssertStm(List<NamedTypeInfo> invTypes,
 			String enclosingClassName, String varNameStr)
@@ -187,17 +199,185 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 
 		return setStm;
 	}
+	
+	public String consVarName(AAssignToExpStmCG node)
+	{
+		// Must be field or variable expression
+		SExpCG next = node.getTarget();
 
+		if(next instanceof AFieldExpCG)
+		{
+			if(((AFieldExpCG) next).getObject().getType() instanceof ARecordTypeCG)
+			{
+				// rec.field = ...
+				// No need to take record modifications into account. The invariant
+				// should handle this (if it is needed).
+				return null;
+			}
+		}
+		
+		List<String> names = new LinkedList<String>();
+		
+		// Consider the field a.b.c
+		while(next instanceof AFieldExpCG)
+		{
+			AFieldExpCG fieldExpCG = (AFieldExpCG) next;
+			
+			// First 'c' will be visited, then 'b' and then 'a'.
+			names.add(fieldExpCG.getMemberName());
+			next = fieldExpCG.getObject();
+		}
+		
+		if (next instanceof SVarExpCG)
+		{
+			SVarExpCG var = (SVarExpCG) next;
+			names.add(var.getName());
+		} else
+		{
+			Logger.getLog().printErrorln("Expected target to a variable expression at this point. Got "
+					+ next + " in '" + this.getClass().getSimpleName() + "'");
+			return null;
+		}
+		
+		// By reversing the list we get the original order, i.e.  'a' then 'b' then 'c'
+		Collections.reverse(names);
+
+		if (names.isEmpty())
+		{
+			Logger.getLog().printErrorln("Expected the naming list not to be empty in '"
+					+ this.getClass().getSimpleName() + "'");
+			return null;
+		}
+		
+		StringBuilder varName = new StringBuilder();
+		
+		varName.append(names.get(0));
+		
+		// Iterate over all names - except for the first
+		for(int i = 1; i < names.size(); i++)
+		{
+			varName.append(".");
+			varName.append(names.get(i));
+		}
+		// So for our example varName will be a.b.c
+		
+		return varName.toString();
+	}
+
+	/**
+	 * @see AtomicStmTrans
+	 */
 	@Override
 	public void caseAAtomicStmCG(AAtomicStmCG node) throws AnalysisException
 	{
 		ABlockStmCG replBlock = new ABlockStmCG();
-		
+
 		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
-		
+
 		replBlock.getStatements().add(consInvChecksStm(false));
 		replBlock.getStatements().add(node);
 		replBlock.getStatements().add(consInvChecksStm(true));
+		
+		// In the original VDM AST assignments are on the form
+		// <stateDesignator> := <exp>; 
+		// Note that the left hand side is a look-up and it is side-effect free
+
+		// When the atomic statement ends we need to check if any type invariants
+		// (which also include state invariants) have been broken.
+		for (SStmCG stm : node.getStatements())
+		{
+			if (stm instanceof AAssignToExpStmCG)
+			{
+				// <target> := atomic_tmp;
+				
+				AAssignToExpStmCG assign = (AAssignToExpStmCG) stm;
+
+				SExpCG target = assign.getTarget();
+
+				/*
+				 * Note that assignment to targets that are of type AFieldNumberExpCG,
+				 * i.e. tuples (e.g. tup.#1 := 5) is not allowed in VDM.
+				 */
+				if (target instanceof SVarExpCG)
+				{
+					// No need to assert anything since the violation would already have been
+					// detected in the temporary variable section
+				}
+				else
+				{
+					Logger.getLog().printErrorln("By now all assignments should have simple variable expression as target. Got: " + target);
+				}
+				
+			} else if (stm instanceof ACallObjectExpStmCG)
+			{
+				// All record updates are made through setters
+				// <rec_obj>.set_field(<exp>);
+
+				// RecAccessorTrans removed all direct field assignments to records, i.e. <rec_obj>.field := <exp>
+				// which are now on the form on the form rec.set_field(4).
+				// This case simply means we will have to check a record invariant.
+				
+				ACallObjectExpStmCG call = (ACallObjectExpStmCG) stm;
+				SExpCG recObj = call.getObj();
+				
+				if(recObj instanceof SVarExpCG)
+				{
+					// rec.set_field(atomic_tmp)
+					SVarExpCG recObjVar = (SVarExpCG) recObj;
+					
+					List<NamedTypeInfo> invTypes = findNamedInvTypes(recObj.getType());
+
+					//TODO: Can this happen?
+					if (!invTypes.isEmpty())
+					{
+						AClassDeclCG encClass = jmlGen.getUtil().getEnclosingClass(node);
+						
+						if (encClass == null)
+						{
+							continue;
+						}
+						
+						AMetaStmCG assertStm = consAssertStm(invTypes, encClass.getName(), recObjVar.getName());
+						replBlock.getStatements().add(assertStm);
+					}
+
+					
+				}
+				else if (recObj instanceof AFieldExpCG)
+				{
+					// Should not happen...
+					Logger.getLog().printErrorln("Did not expect record object of call object expression to be a field expression at this point: " + recObj);
+				} else
+				{
+					// TODO: implement proper handling
+					// Must also take othe kinds of state designators into account: r1.get_r2().get_r3().set_field(atomic_tmp)
+					
+					Logger.getLog().printErrorln("Found unexpected record object of call expression "
+							+ " statement inside atomic statement block in '"
+							+ this.getClass().getSimpleName() + "'. Target found: " + recObj);
+				}
+				
+				
+			} 
+			else if (stm instanceof AMapSeqUpdateStmCG)
+			{
+				//TODO: Needs handling (consider the corresponding case method)
+				
+			} else
+			{
+				Logger.getLog().printErrorln("Expected statement in atomic block to be either '"
+						+ AAssignToExpStmCG.class + "' or '"
+						+ ACallObjectExpStmCG.class + ". Got: " + stm);
+			}
+		}
+	}
+	
+	@Override
+	public void caseACallObjectExpStmCG(ACallObjectExpStmCG node)
+			throws AnalysisException
+	{
+		// TODO: Handle setter calls to records
+		// Consider collecting them in the RecAccessorTrans
 	}
 	
 	@Override
@@ -336,20 +516,6 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 	public void caseAAssignToExpStmCG(AAssignToExpStmCG node)
 			throws AnalysisException
 	{
-		// Must be field or variable expression
-		SExpCG next = node.getTarget();
-		
-		if(next instanceof AFieldExpCG)
-		{
-			if(((AFieldExpCG) next).getObject().getType() instanceof ARecordTypeCG)
-			{
-				// rec.field = ...
-				// No need to take record modifications into account. The invariant
-				// should handle this (if it is needed).
-				return;
-			}
-		}
-		
 		List<NamedTypeInfo> invTypes = findNamedInvTypes(node.getTarget().getType());
 
 		if (invTypes.isEmpty())
@@ -357,50 +523,12 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		List<String> names = new LinkedList<String>();
+		String varName = consVarName(node);
 		
-		// Consider the field a.b.c
-		while(next instanceof AFieldExpCG)
+		if(varName == null)
 		{
-			AFieldExpCG fieldExpCG = (AFieldExpCG) next;
-			
-			// First 'c' will be visited, then 'b' and then 'a'.
-			names.add(fieldExpCG.getMemberName());
-			next = fieldExpCG.getObject();
-		}
-		
-		if (next instanceof SVarExpCG)
-		{
-			SVarExpCG var = (SVarExpCG) next;
-			names.add(var.getName());
-		} else
-		{
-			Logger.getLog().printErrorln("Expected target to a variable expression at this point. Got "
-					+ next + " in '" + this.getClass().getSimpleName() + "'");
 			return;
 		}
-		
-		// By reversing the list we get the original order, i.e.  'a' then 'b' then 'c'
-		Collections.reverse(names);
-
-		if (names.isEmpty())
-		{
-			Logger.getLog().printErrorln("Expected the naming list not to be empty in '"
-					+ this.getClass().getSimpleName() + "'");
-			return;
-		}
-		
-		StringBuilder varName = new StringBuilder();
-		
-		varName.append(names.get(0));
-		
-		// Iterate over all names - except for the first
-		for(int i = 1; i < names.size(); i++)
-		{
-			varName.append(".");
-			varName.append(names.get(i));
-		}
-		// So for our example varName wil be a.b.c
 		
 		AClassDeclCG enclosingClass = jmlGen.getUtil().getEnclosingClass(node);
 		
