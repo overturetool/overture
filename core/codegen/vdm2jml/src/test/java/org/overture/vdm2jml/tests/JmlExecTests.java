@@ -8,6 +8,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -80,7 +82,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 			configureResultGeneration();
 
 			compileJmlJava();
-
+			
 			String actualRes = processResultStr(execJmlJava().toString());
 
 			if (Properties.recordTestResults)
@@ -90,8 +92,8 @@ public class JmlExecTests extends OpenJmlValidationBase
 			{
 				try
 				{
-					String expectedRes = GeneralUtils.readFromFile(getResultFile()).trim();
-					Assert.assertEquals("Expected result and actual result are different", expectedRes, actualRes);
+					checkOpenJmlOutput(actualRes);
+					checkGenJavaJml();
 
 				} catch (IOException e)
 				{
@@ -106,38 +108,75 @@ public class JmlExecTests extends OpenJmlValidationBase
 		}
 	}
 
+	private void checkOpenJmlOutput(String actualRes) throws IOException
+	{
+		String expectedRes = GeneralUtils.readFromFile(getResultFile()).trim();
+		Assert.assertEquals("Expected result and actual result are different", expectedRes, actualRes);
+	}
+
+	private void checkGenJavaJml()
+	{
+		List<File> storedJavaJmlFiles = collectStoredJavaJmlFiles();
+		List<File> genJavaJmlFiles = collectGenJavaJmlFiles();
+		
+		Assert.assertTrue("The number of stored Java/JML files differs "
+				+ "from the number of generated Java/JML files", storedJavaJmlFiles.size() == genJavaJmlFiles.size());
+
+		Comparator<File> comp = new Comparator<File>() {
+			
+            @Override
+            public int compare(File f1, File f2) {
+            	
+            	// Reverse paths because root folders differ
+            	String f1PathRev = new StringBuilder(f1.getAbsolutePath()).toString();
+            	String f2PathRev = new StringBuilder(f2.getAbsolutePath()).toString();
+            	
+            	return f1PathRev.compareTo(f2PathRev);
+            }
+        };
+        
+        Collections.sort(storedJavaJmlFiles, comp);
+        Collections.sort(genJavaJmlFiles, comp);
+        
+        for(int i = 0; i < storedJavaJmlFiles.size(); i++)
+        {
+        	try
+			{
+				String storedContent = GeneralUtils.readFromFile(storedJavaJmlFiles.get(i)).trim();
+				String genContent = GeneralUtils.readFromFile(genJavaJmlFiles.get(i)).trim();
+
+				Assert.assertEquals("Stored Java/JML is different from generared Java/JML", storedContent, genContent);
+			} catch (IOException e)
+			{
+				Assert.fail("Problems comparing stored and generated Java/JML");
+				e.printStackTrace();
+			}
+        }
+	}
+
 	public void storeResult(String resultStr)
 	{
 		storeJmlOutput(resultStr);
 		storeGeneratedJml();
 	}
 
+	private File getTestDataFolder()
+	{
+		return inputFile.getParentFile();
+	}
+	
 	private void storeGeneratedJml()
 	{
-		String projDir = File.separatorChar + DEFAULT_JAVA_ROOT_PACKAGE
-				+ File.separatorChar;
-		String quotesDir = File.separatorChar + JavaCodeGen.JAVA_QUOTES_PACKAGE
-				+ File.separatorChar;
-
+		for(File file : collectStoredJavaJmlFiles())
+		{
+			Assert.assertTrue("Problems deleting stored Java/JML file", file.exists() && file.delete());
+		}
+		
 		try
 		{
-			List<File> files = GeneralUtils.getFilesRecursively(genJavaFolder);
+			List<File> filesToStore = collectGenJavaJmlFiles();
 
-			List<File> filesToStore = new LinkedList<File>();
-
-			for (File file : files)
-			{
-				String absPath = file.getAbsolutePath();
-
-				if (absPath.endsWith(IJavaCodeGenConstants.JAVA_FILE_EXTENSION)
-						&& absPath.contains(projDir)
-						&& !absPath.contains(quotesDir))
-				{
-					filesToStore.add(file);
-				}
-			}
-
-			File testFolder = inputFile.getParentFile();
+			File testFolder = getTestDataFolder();
 
 			for (File file : filesToStore)
 			{
@@ -150,6 +189,49 @@ public class JmlExecTests extends OpenJmlValidationBase
 			Assert.assertTrue("Problems storing generated JML: "
 					+ e.getMessage(), false);
 		}
+	}
+
+	private List<File> collectStoredJavaJmlFiles()
+	{
+		List<File> files = GeneralUtils.getFiles(getTestDataFolder());
+		
+		LinkedList<File> javaFiles = new LinkedList<File>();
+		
+		for(File f : files)
+		{
+			if(f.getName().endsWith(IJavaCodeGenConstants.JAVA_FILE_EXTENSION))
+			{
+				javaFiles.add(f);
+			}
+		}
+		
+		return javaFiles;
+	}
+	
+	private List<File> collectGenJavaJmlFiles()
+	{
+		List<File> files = GeneralUtils.getFilesRecursively(genJavaFolder);
+		
+		String projDir = File.separatorChar + DEFAULT_JAVA_ROOT_PACKAGE
+				+ File.separatorChar;
+		String quotesDir = File.separatorChar + JavaCodeGen.JAVA_QUOTES_PACKAGE
+				+ File.separatorChar;
+		
+		List<File> filesToStore = new LinkedList<File>();
+
+		for (File file : files)
+		{
+			String absPath = file.getAbsolutePath();
+
+			if (absPath.endsWith(IJavaCodeGenConstants.JAVA_FILE_EXTENSION)
+					&& absPath.contains(projDir)
+					&& !absPath.contains(quotesDir))
+			{
+				filesToStore.add(file);
+			}
+		}
+		
+		return filesToStore;
 	}
 
 	private void storeJmlOutput(String resultStr)
