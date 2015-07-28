@@ -34,236 +34,18 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.AtomicStmTrans;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
-public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
+public class NamedTypeInTrans extends DepthFirstAnalysisAdaptor
 {
 	public static final String RET_VAR_NAME_PREFIX = "ret_";
 	public static final String MAP_SEQ_NAME_PREFIX = "col_";
 	
 	private JmlGenerator jmlGen;
 	
-	public NamedTypeInvariantTransformation(JmlGenerator jmlGen)
+	public NamedTypeInTrans(JmlGenerator jmlGen)
 	{
 		this.jmlGen = jmlGen;
 	}
-
-	public String consJmlCheck(String enclosingClass, String annotationType,
-			List<NamedTypeInfo> typeInfoMatches, String varName)
-	{
-		return consJmlCheck(enclosingClass, null, annotationType, typeInfoMatches, varName);
-	}
 	
-	@Override
-	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
-	{
-		// We want only to treat fields and methods specified by the user.
-		// This case helps us avoiding visiting invariant methods
-		
-		for(AFieldDeclCG f : node.getFields())
-		{
-			f.apply(this);
-		}
-		
-		for(AMethodDeclCG m : node.getMethods())
-		{
-			m.apply(this);
-		}
-	}
-	
-	public String consJmlCheck(String enclosingClass, String jmlVisibility, String annotationType,
-			List<NamedTypeInfo> typeInfoMatches, String varName)
-	{
-		StringBuilder inv = new StringBuilder();
-		inv.append("//@ ");
-		
-		if(jmlVisibility != null)
-		{
-			inv.append(jmlVisibility);
-			inv.append(' ');
-		}
-		
-		inv.append(annotationType);
-		inv.append(' ');
-
-		String or = "";
-		for (NamedTypeInfo match : typeInfoMatches)
-		{
-			inv.append(or);
-			inv.append(match.consCheckExp(enclosingClass, jmlGen.getJavaSettings().getJavaRootPackage()));
-			or = JmlGenerator.JML_OR;
-		}
-
-		inv.append(';');
-
-		// Inject the name of the field into the expression
-		return String.format(inv.toString(), varName);
-	}
-
-	public List<NamedTypeInfo> findNamedInvTypes(STypeCG type)
-	{
-		List<NamedTypeInfo> posTypes = new LinkedList<NamedTypeInfo>();
-
-		if (type.getNamedInvType() != null)
-		{
-			ANamedTypeDeclCG namedInv = type.getNamedInvType();
-
-			String defModule = namedInv.getName().getDefiningClass();
-			String typeName = namedInv.getName().getName();
-
-			NamedTypeInfo info = NamedTypeInvDepCalculator.findTypeInfo(jmlGen.getTypeInfoList(), defModule, typeName);
-
-			if (info != null)
-			{
-				posTypes.add(info);
-			} else
-			{
-				Logger.getLog().printErrorln("Could not find info for named type '"
-						+ typeName
-						+ "' defined in module '"
-						+ defModule
-						+ "' in '" + this.getClass().getSimpleName() + "'");
-			}
-
-			// We do not need to collect sub named invariant types
-		} else if (type instanceof AUnionTypeCG)
-		{
-			for (STypeCG t : ((AUnionTypeCG) type).getTypes())
-			{
-				posTypes.addAll(findNamedInvTypes(t));
-			}
-		}
-
-		// We will only consider types that are disjoint. As an example consider
-		// the type definitions below:
-		//
-		// C = ...; N = ...; CN = C|N;
-		//
-		// Say we have the following value definition:
-		//
-		// val : CN|N
-		//
-		// Then we only want to have the type info for CN returned since N is already
-		// contained in CN.
-		return NamedTypeInvDepCalculator.onlyDisjointTypes(posTypes);
-	}
-
-	private void injectAssertion(SStmCG node,
-			List<NamedTypeInfo> invTypes, String enclosingClassName,
-			String varNameStr, boolean append)
-	{
-		AMetaStmCG assertStm = consAssertStm(invTypes, enclosingClassName, varNameStr);
-		
-		ABlockStmCG replStm = new ABlockStmCG();
-		
-		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replStm);
-		
-		replStm.getStatements().add(node);
-		
-		if(append)
-		{
-			replStm.getStatements().add(assertStm);
-		}
-		else 
-		{
-			replStm.getStatements().addFirst(assertStm);
-		}
-	}
-	
-	private AMetaStmCG consAssert(String pred)
-	{
-		AMetaStmCG assertStm = new AMetaStmCG();
-		List<ClonableString> setMetaData = jmlGen.getAnnotator().consMetaData("//@ "
-				+ JmlGenerator.JML_ASSERT_ANNOTATION + " " + pred + ";");
-		jmlGen.getAnnotator().appendMetaData(assertStm, setMetaData);
-
-		return assertStm;
-	}
-
-	private AMetaStmCG consAssertStm(List<NamedTypeInfo> invTypes,
-			String enclosingClassName, String varNameStr)
-	{
-		AMetaStmCG assertStm = new AMetaStmCG();
-		String assertStr = consJmlCheck(enclosingClassName, JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, varNameStr);
-		List<ClonableString> assertMetaData = jmlGen.getAnnotator().consMetaData(assertStr);
-		jmlGen.getAnnotator().appendMetaData(assertStm, assertMetaData);
-		
-		return assertStm;
-	}
-
-	private AMetaStmCG consInvChecksStm(boolean val)
-	{
-		AMetaStmCG setStm = new AMetaStmCG();
-		String setStr = val ? JmlGenerator.JML_ENABLE_INV_CHECKS
-				: JmlGenerator.JML_DISABLE_INV_CHECKS;
-		List<ClonableString> setMetaData = jmlGen.getAnnotator().consMetaData(setStr);
-		jmlGen.getAnnotator().appendMetaData(setStm, setMetaData);
-
-		return setStm;
-	}
-	
-	public String consVarName(AAssignToExpStmCG node)
-	{
-		// Must be field or variable expression
-		SExpCG next = node.getTarget();
-
-		if(next instanceof AFieldExpCG)
-		{
-			if(((AFieldExpCG) next).getObject().getType() instanceof ARecordTypeCG)
-			{
-				// rec.field = ...
-				// No need to take record modifications into account. The invariant
-				// should handle this (if it is needed).
-				return null;
-			}
-		}
-		
-		List<String> names = new LinkedList<String>();
-		
-		// Consider the field a.b.c
-		while(next instanceof AFieldExpCG)
-		{
-			AFieldExpCG fieldExpCG = (AFieldExpCG) next;
-			
-			// First 'c' will be visited, then 'b' and then 'a'.
-			names.add(fieldExpCG.getMemberName());
-			next = fieldExpCG.getObject();
-		}
-		
-		if (next instanceof SVarExpCG)
-		{
-			SVarExpCG var = (SVarExpCG) next;
-			names.add(var.getName());
-		} else
-		{
-			Logger.getLog().printErrorln("Expected target to a variable expression at this point. Got "
-					+ next + " in '" + this.getClass().getSimpleName() + "'");
-			return null;
-		}
-		
-		// By reversing the list we get the original order, i.e.  'a' then 'b' then 'c'
-		Collections.reverse(names);
-
-		if (names.isEmpty())
-		{
-			Logger.getLog().printErrorln("Expected the naming list not to be empty in '"
-					+ this.getClass().getSimpleName() + "'");
-			return null;
-		}
-		
-		StringBuilder varName = new StringBuilder();
-		
-		varName.append(names.get(0));
-		
-		// Iterate over all names - except for the first
-		for(int i = 1; i < names.size(); i++)
-		{
-			varName.append(".");
-			varName.append(names.get(i));
-		}
-		// So for our example varName will be a.b.c
-		
-		return varName.toString();
-	}
-
 	/**
 	 * @see AtomicStmTrans
 	 */
@@ -289,36 +71,33 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 			if (stm instanceof AAssignToExpStmCG)
 			{
 				// <target> := atomic_tmp;
-				
-				AAssignToExpStmCG assign = (AAssignToExpStmCG) stm;
-
-				SExpCG target = assign.getTarget();
 
 				/*
-				 * Note that assignment to targets that are of type AFieldNumberExpCG,
-				 * i.e. tuples (e.g. tup.#1 := 5) is not allowed in VDM.
+				 * Note that assignment to targets that are of type AFieldNumberExpCG, i.e. tuples (e.g. tup.#1 := 5) is
+				 * not allowed in VDM.
 				 */
-				if (target instanceof SVarExpCG)
+				/*
+				 * No need to assert anything since the violation would already have been detected in the temporary
+				 * variable section
+				 */
+
+				SExpCG target = ((AAssignToExpStmCG) stm).getTarget();
+				
+				if (!(target instanceof SVarExpCG))
 				{
-					// No need to assert anything since the violation would already have been
-					// detected in the temporary variable section
-				}
-				else
-				{
-					Logger.getLog().printErrorln("By now all assignments should have simple variable expression as target. Got: " + target);
+					Logger.getLog().printErrorln("By now all assignments should have simple variable expression as target. Got: "
+							+ target);
 				}
 				
 			} else if (stm instanceof ACallObjectExpStmCG)
 			{
-				// All record updates are made through setters
-				// <rec_obj>.set_field(<exp>);
+
 
 				// RecAccessorTrans removed all direct field assignments to records, i.e. <rec_obj>.field := <exp>
 				// which are now on the form on the form rec.set_field(4).
 				// This case simply means we will have to check a record invariant.
 				
-				ACallObjectExpStmCG call = (ACallObjectExpStmCG) stm;
-				SExpCG recObj = call.getObj();
+				SExpCG recObj = ((ACallObjectExpStmCG) stm).getObj();
 				
 				if(recObj instanceof SVarExpCG)
 				{
@@ -327,7 +106,7 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 					
 					List<NamedTypeInfo> invTypes = findNamedInvTypes(recObj.getType());
 
-					//TODO: Can this happen?
+					// This will happen for cases like T = R; R :: x : int;
 					if (!invTypes.isEmpty())
 					{
 						AClassDeclCG encClass = jmlGen.getUtil().getEnclosingClass(node);
@@ -341,7 +120,6 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 						replBlock.getStatements().add(assertStm);
 					}
 
-					
 				}
 				else if (recObj instanceof AFieldExpCG)
 				{
@@ -667,5 +445,213 @@ public class NamedTypeInvariantTransformation extends DepthFirstAnalysisAdaptor
 		
 		replBlock.getStatements().add(node);
 		var.apply(this);
+	}
+
+	public String consJmlCheck(String enclosingClass, String annotationType,
+			List<NamedTypeInfo> typeInfoMatches, String varName)
+	{
+		return consJmlCheck(enclosingClass, null, annotationType, typeInfoMatches, varName);
+	}
+	
+	@Override
+	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
+	{
+		// We want only to treat fields and methods specified by the user.
+		// This case helps us avoiding visiting invariant methods
+		
+		for(AFieldDeclCG f : node.getFields())
+		{
+			f.apply(this);
+		}
+		
+		for(AMethodDeclCG m : node.getMethods())
+		{
+			m.apply(this);
+		}
+	}
+	
+	public String consJmlCheck(String enclosingClass, String jmlVisibility, String annotationType,
+			List<NamedTypeInfo> typeInfoMatches, String varName)
+	{
+		StringBuilder inv = new StringBuilder();
+		inv.append("//@ ");
+		
+		if(jmlVisibility != null)
+		{
+			inv.append(jmlVisibility);
+			inv.append(' ');
+		}
+		
+		inv.append(annotationType);
+		inv.append(' ');
+
+		String or = "";
+		for (NamedTypeInfo match : typeInfoMatches)
+		{
+			inv.append(or);
+			inv.append(match.consCheckExp(enclosingClass, jmlGen.getJavaSettings().getJavaRootPackage()));
+			or = JmlGenerator.JML_OR;
+		}
+
+		inv.append(';');
+
+		// Inject the name of the field into the expression
+		return String.format(inv.toString(), varName);
+	}
+
+	public List<NamedTypeInfo> findNamedInvTypes(STypeCG type)
+	{
+		List<NamedTypeInfo> posTypes = new LinkedList<NamedTypeInfo>();
+
+		if (type.getNamedInvType() != null)
+		{
+			ANamedTypeDeclCG namedInv = type.getNamedInvType();
+
+			String defModule = namedInv.getName().getDefiningClass();
+			String typeName = namedInv.getName().getName();
+
+			NamedTypeInfo info = NamedTypeInvDepCalculator.findTypeInfo(jmlGen.getTypeInfoList(), defModule, typeName);
+
+			if (info != null)
+			{
+				posTypes.add(info);
+			} else
+			{
+				Logger.getLog().printErrorln("Could not find info for named type '"
+						+ typeName
+						+ "' defined in module '"
+						+ defModule
+						+ "' in '" + this.getClass().getSimpleName() + "'");
+			}
+
+			// We do not need to collect sub named invariant types
+		} else if (type instanceof AUnionTypeCG)
+		{
+			for (STypeCG t : ((AUnionTypeCG) type).getTypes())
+			{
+				posTypes.addAll(findNamedInvTypes(t));
+			}
+		}
+
+		// We will only consider types that are disjoint. As an example consider
+		// the type definitions below:
+		//
+		// C = ...; N = ...; CN = C|N;
+		//
+		// Say we have the following value definition:
+		//
+		// val : CN|N
+		//
+		// Then we only want to have the type info for CN returned since N is already
+		// contained in CN.
+		return NamedTypeInvDepCalculator.onlyDisjointTypes(posTypes);
+	}
+
+	private void injectAssertion(SStmCG node,
+			List<NamedTypeInfo> invTypes, String enclosingClassName,
+			String varNameStr, boolean append)
+	{
+		AMetaStmCG assertStm = consAssertStm(invTypes, enclosingClassName, varNameStr);
+		
+		ABlockStmCG replStm = new ABlockStmCG();
+		
+		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replStm);
+		
+		replStm.getStatements().add(node);
+		
+		if(append)
+		{
+			replStm.getStatements().add(assertStm);
+		}
+		else 
+		{
+			replStm.getStatements().addFirst(assertStm);
+		}
+	}
+	
+	private AMetaStmCG consAssertStm(List<NamedTypeInfo> invTypes,
+			String enclosingClassName, String varNameStr)
+	{
+		AMetaStmCG assertStm = new AMetaStmCG();
+		String assertStr = consJmlCheck(enclosingClassName, JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, varNameStr);
+		List<ClonableString> assertMetaData = jmlGen.getAnnotator().consMetaData(assertStr);
+		jmlGen.getAnnotator().appendMetaData(assertStm, assertMetaData);
+		
+		return assertStm;
+	}
+
+	private AMetaStmCG consInvChecksStm(boolean val)
+	{
+		AMetaStmCG setStm = new AMetaStmCG();
+		String setStr = val ? JmlGenerator.JML_ENABLE_INV_CHECKS
+				: JmlGenerator.JML_DISABLE_INV_CHECKS;
+		List<ClonableString> setMetaData = jmlGen.getAnnotator().consMetaData(setStr);
+		jmlGen.getAnnotator().appendMetaData(setStm, setMetaData);
+
+		return setStm;
+	}
+	
+	public String consVarName(AAssignToExpStmCG node)
+	{
+		// Must be field or variable expression
+		SExpCG next = node.getTarget();
+
+		if(next instanceof AFieldExpCG)
+		{
+			if(((AFieldExpCG) next).getObject().getType() instanceof ARecordTypeCG)
+			{
+				// rec.field = ...
+				// No need to take record modifications into account. The invariant
+				// should handle this (if it is needed).
+				return null;
+			}
+		}
+		
+		List<String> names = new LinkedList<String>();
+		
+		// Consider the field a.b.c
+		while(next instanceof AFieldExpCG)
+		{
+			AFieldExpCG fieldExpCG = (AFieldExpCG) next;
+			
+			// First 'c' will be visited, then 'b' and then 'a'.
+			names.add(fieldExpCG.getMemberName());
+			next = fieldExpCG.getObject();
+		}
+		
+		if (next instanceof SVarExpCG)
+		{
+			SVarExpCG var = (SVarExpCG) next;
+			names.add(var.getName());
+		} else
+		{
+			Logger.getLog().printErrorln("Expected target to a variable expression at this point. Got "
+					+ next + " in '" + this.getClass().getSimpleName() + "'");
+			return null;
+		}
+		
+		// By reversing the list we get the original order, i.e.  'a' then 'b' then 'c'
+		Collections.reverse(names);
+
+		if (names.isEmpty())
+		{
+			Logger.getLog().printErrorln("Expected the naming list not to be empty in '"
+					+ this.getClass().getSimpleName() + "'");
+			return null;
+		}
+		
+		StringBuilder varName = new StringBuilder();
+		
+		varName.append(names.get(0));
+		
+		// Iterate over all names - except for the first
+		for(int i = 1; i < names.size(); i++)
+		{
+			varName.append(".");
+			varName.append(names.get(i));
+		}
+		// So for our example varName will be a.b.c
+		
+		return varName.toString();
 	}
 }
