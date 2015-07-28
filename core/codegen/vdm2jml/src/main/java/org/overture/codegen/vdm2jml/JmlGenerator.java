@@ -139,6 +139,9 @@ public class JmlGenerator implements IREventObserver
 		// All the record methods are JML pure (getters and setters are added just below)
 		annotator.makeRecMethodsPure(ast);
 		
+		// We append the record modification checks before we apply the RecAccessorTrans
+		addRecModAssertions(ast);
+		
 		// Transform the IR such that access to record state is done via getters and setters.
 		makeRecStateAccessorBased(ast);
 		
@@ -578,5 +581,27 @@ public class JmlGenerator implements IREventObserver
 	public AClassDeclCG getInvChecksFlagOwner()
 	{
 		return invChecksFlagOwner;
+	}
+	private void addRecModAssertions(List<IRStatus<INode>> ast)
+	{
+		RecModCheckTrans assertTr = new RecModCheckTrans(this);
+		
+		for (IRStatus<AClassDeclCG> status : IRStatus.extract(ast, AClassDeclCG.class))
+		{
+			AClassDeclCG clazz = status.getIrNode();
+
+			if (!this.javaGen.getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
+			{
+				try
+				{
+					this.javaGen.getIRGenerator().applyPartialTransformation(status, assertTr);
+				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+				{
+					Logger.getLog().printErrorln("Unexpected problem occured when applying transformation in '"
+							+ this.getClass().getSimpleName() + "'");
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }
