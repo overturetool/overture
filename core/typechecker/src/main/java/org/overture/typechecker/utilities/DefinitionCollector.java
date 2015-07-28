@@ -294,7 +294,8 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 
 		List<PDefinition> defs = new Vector<PDefinition>();
 		defs.add(node);
-
+		defs.addAll(node.getComposeDefinitions());
+		
 		if (node.getInvdef() != null)
 		{
 			defs.add(node.getInvdef());
