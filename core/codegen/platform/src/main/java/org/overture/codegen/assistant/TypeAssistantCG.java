@@ -95,7 +95,7 @@ public class TypeAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 
-	public STypeCG getFieldExpType(IRInfo info, List<AClassDeclCG> classes, String fieldName, String fieldModule,
+	public STypeCG getFieldExpType(IRInfo info, String fieldName, String fieldModule,
 			SObjectDesignatorCG obj, INode parent)
 			throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException
 	{
@@ -107,7 +107,7 @@ public class TypeAssistantCG extends AssistantBase
 			if (fieldModule != null)
 			{
 				// It is a class
-				AClassDeclCG clazz = info.getDeclAssistant().findClass(classes, fieldModule);
+				AClassDeclCG clazz = info.getDeclAssistant().findClass(info.getClasses(), fieldModule);
 				AFieldDeclCG field = info.getDeclAssistant().getFieldDecl(clazz, fieldModule);
 				
 				if(field != null)
@@ -117,31 +117,30 @@ public class TypeAssistantCG extends AssistantBase
 				else
 				{
 					// It must be a method
-					return info.getTypeAssistant().getMethodType(info, classes, fieldModule, fieldName, args);
+					return info.getTypeAssistant().getMethodType(info, fieldModule, fieldName, args);
 				}
 			}
 		}
-		return getFieldType(info, classes, fieldName, fieldModule, obj);
+		return getFieldType(info, fieldName, fieldModule, obj);
 	}
 	
-	private STypeCG getFieldType(IRInfo info, List<AClassDeclCG> classes,
-			String fieldName, String fieldModule, SObjectDesignatorCG obj)
+	private STypeCG getFieldType(IRInfo info, String fieldName, String fieldModule, SObjectDesignatorCG obj)
 	{
 		if (fieldModule != null)
 		{
 			// It is a class
-			return info.getTypeAssistant().getFieldType(classes, fieldModule, fieldName);
+			return info.getTypeAssistant().getFieldType(info.getClasses(), fieldModule, fieldName);
 		} else
 		{
 			// It is a record
 			try
 			{
-				ObjectDesignatorToExpCG converter = new ObjectDesignatorToExpCG(info, classes);
+				ObjectDesignatorToExpCG converter = new ObjectDesignatorToExpCG(info);
 				SExpCG objExp = obj.apply(converter);
 
 				if (objExp.getType() instanceof ARecordTypeCG)
 				{
-					STypeCG fieldExpType = info.getTypeAssistant().getFieldType(classes, (ARecordTypeCG) objExp.getType(), fieldName);
+					STypeCG fieldExpType = info.getTypeAssistant().getFieldType(info.getClasses(), (ARecordTypeCG) objExp.getType(), fieldName);
 
 					if (fieldExpType == null)
 					{
@@ -160,13 +159,13 @@ public class TypeAssistantCG extends AssistantBase
 		return new AUnknownTypeCG();
 	}
 	
-	public AMethodTypeCG getMethodType(IRInfo info, List<AClassDeclCG> classes,
+	public AMethodTypeCG getMethodType(IRInfo info,
 			String fieldModule, String fieldName, List<SExpCG> args)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, fieldModule);
+		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(info.getClasses(), fieldModule);
 
-		List<AMethodDeclCG> methods = assistantManager.getDeclAssistant().getAllMethods(classDecl, classes);
+		List<AMethodDeclCG> methods = assistantManager.getDeclAssistant().getAllMethods(classDecl, info.getClasses());
 
 		for (AMethodDeclCG method : methods)
 		{

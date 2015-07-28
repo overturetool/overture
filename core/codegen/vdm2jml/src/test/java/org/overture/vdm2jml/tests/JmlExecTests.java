@@ -116,7 +116,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 	{
 		String projDir = File.separatorChar + DEFAULT_JAVA_ROOT_PACKAGE
 				+ File.separatorChar;
-		String quotesDir = File.separatorChar + JavaCodeGen.QUOTES
+		String quotesDir = File.separatorChar + JavaCodeGen.JAVA_QUOTES_PACKAGE
 				+ File.separatorChar;
 
 		try

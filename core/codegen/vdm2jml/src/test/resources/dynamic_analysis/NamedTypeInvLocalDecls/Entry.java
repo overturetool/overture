@@ -19,7 +19,7 @@ final public class Entry {
         //@ assert inv_Entry_No(even) && (inv_Entry_Even(even) || inv_Entry_Large(even));
         Number ignorePattern_2 = 3L;
 
-        //Skip;
+        /* skip */
     }
 
     public static void typeUseNotOk() {
@@ -30,7 +30,7 @@ final public class Entry {
             //@ assert inv_Entry_No(notLarge) && (inv_Entry_Even(notLarge) || inv_Entry_Large(notLarge));
             IO.println("After breaking named type invariant");
 
-            //Skip;
+            /* skip */
         }
     }
 

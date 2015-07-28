@@ -54,7 +54,6 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.ABoolIsExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
@@ -110,13 +109,23 @@ import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class ExpAssistantCG extends AssistantBase
 {
 	public ExpAssistantCG(AssistantManager assistantManager)
 	{
 		super(assistantManager);
+	}
+	
+	public AIdentifierVarExpCG consIdVar(String name, STypeCG type)
+	{
+		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+		var.setIsLambda(false);
+		var.setIsLocal(true);
+		var.setType(type);
+		var.setName(name);
+
+		return var;
 	}
 
 	public SExpCG consLetDefExp(PExp node, List<PDefinition> defs, PExp exp,
@@ -374,19 +383,42 @@ public class ExpAssistantCG extends AssistantBase
 
 		return header;
 	}
+	
+	public boolean appearsInModuleStateInv(org.overture.ast.node.INode node)
+	{
+		AStateDefinition stateDef = node.getAncestor(AStateDefinition.class);
+		if (stateDef != null)
+		{
+			LinkedList<org.overture.ast.node.INode> ancestors = new LinkedList<>();
+			org.overture.ast.node.INode next = node.parent();
 
-	public boolean outsideImperativeContext(PExp exp)
+			do
+			{
+				ancestors.add(next);
+				next = node.parent();
+			} while (!(next instanceof AStateDefinition)
+					&& !ancestors.contains(next));
+
+			if (ancestors.getLast() == stateDef.getInvExpression())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean outsideImperativeContext(org.overture.ast.node.INode node)
 	{
 		// The transformation of the 'and' and 'or' logical expressions also assumes that the
 		// expressions exist within a statement. However, in case it does not, the transformation
 		// is not performed. In this way, the  'and' and 'or' expressions can
 		// still be used (say) in instance variable assignment.
-		return !(exp.parent() instanceof AStateDefinition)
-				&& exp.getAncestor(SOperationDefinition.class) == null
-				&& exp.getAncestor(SFunctionDefinition.class) == null
-				&& exp.getAncestor(ANamedTraceDefinition.class) == null
-				&& exp.getAncestor(ATypeDefinition.class) == null
-				&& exp.getAncestor(AClassInvariantDefinition.class) == null;
+		
+		return node.getAncestor(SOperationDefinition.class) == null
+				&& node.getAncestor(SFunctionDefinition.class) == null
+				&& node.getAncestor(ANamedTraceDefinition.class) == null
+				&& node.getAncestor(ATypeDefinition.class) == null
+				&& node.getAncestor(AClassInvariantDefinition.class) == null;
 	}
 
 	public SExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings,
@@ -590,7 +622,7 @@ public class ExpAssistantCG extends AssistantBase
 		return basicIsExp;
 	}
 	
-	public SVarExpCG idStateDesignatorToExp(IRInfo info, TransAssistantCG transAssistant, List<AClassDeclCG> classes, AIdentifierStateDesignatorCG node)
+	public SVarExpCG idStateDesignatorToExp(AIdentifierStateDesignatorCG node)
 	{
 		if(node.getExplicit())
 		{
@@ -610,7 +642,7 @@ public class ExpAssistantCG extends AssistantBase
 		}
 		else
 		{
-			AIdentifierVarExpCG idVar = transAssistant.consIdentifierVar(node.getName(), node.getType().clone());
+			AIdentifierVarExpCG idVar = consIdVar(node.getName(), node.getType().clone());
 			idVar.setTag(node.getTag());
 			idVar.setSourceNode(node.getSourceNode());
 			idVar.setIsLocal(node.getIsLocal());

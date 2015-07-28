@@ -1,0 +1,15 @@
+module Entry
+
+definitions
+
+state St of
+ b : bool
+ init St == St = mk_St(forall x in set {1,2,3} & x > 1)
+end
+
+operations
+
+op : () ==> ?
+op () == return b;
+
+end Entry

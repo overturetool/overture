@@ -38,6 +38,7 @@ import org.overture.codegen.assistant.BindAssistantCG;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.LocationAssistantCG;
+import org.overture.codegen.assistant.PatternAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.SBindCG;
@@ -99,6 +100,12 @@ public class IRInfo
 	// Definitions for identifier state designators
 	private Map<AIdentifierStateDesignator, PDefinition> idStateDesignatorDefs;
 	
+	// IR classes
+	private List<AClassDeclCG> classes;
+	
+	// IR modules
+	private List<AModuleDeclCG> modules;
+	
 	public IRInfo(String objectInitCallPrefix)
 	{
 		super();
@@ -117,6 +124,8 @@ public class IRInfo
 		this.objectInitCallNames = new HashMap<AExplicitOperationDefinition, String>();
 		
 		this.idStateDesignatorDefs = new HashMap<AIdentifierStateDesignator, PDefinition>();
+		this.classes = new LinkedList<AClassDeclCG>();
+		this.modules = new LinkedList<AModuleDeclCG>();
 	}
 
 	public AssistantManager getAssistantManager()
@@ -248,6 +257,11 @@ public class IRInfo
 	{
 		return assistantManager.getBindAssistant();
 	}
+	
+	public PatternAssistantCG getPatternAssistant()
+	{
+		return assistantManager.getPatternAssistant();
+	}
 
 	public void registerQuoteValue(String value)
 	{
@@ -366,5 +380,85 @@ public class IRInfo
 	public void setIdStateDesignatorDefs(Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
 		this.idStateDesignatorDefs = idDefs;
+	}
+
+	public List<AClassDeclCG> getClasses()
+	{
+		return classes;
+	}
+
+	public void addClass(AClassDeclCG irClass)
+	{
+		if(this.classes != null)
+		{
+			this.classes.add(irClass);
+		}
+	}
+	
+	public void removeClass(String name)
+	{
+		AClassDeclCG classToRemove = null;
+		
+		for (AClassDeclCG clazz : classes)
+		{
+			if(clazz.getName().equals(name))
+			{
+				classToRemove = clazz;
+				break;
+			}
+		}
+		
+		if(classToRemove != null)
+		{
+			classes.remove(classToRemove);
+		}
+	}
+	
+	public void clearClasses()
+	{
+		if(this.classes != null)
+		{
+			this.classes.clear();
+		}
+	}
+	
+	public List<AModuleDeclCG> getModules()
+	{
+		return modules;
+	}
+	
+	public void addModule(AModuleDeclCG irModule)
+	{
+		if(this.modules != null)
+		{
+			this.modules.add(irModule);
+		}
+	}
+	
+	public void removeModule(String name)
+	{
+		AModuleDeclCG moduleToRemove = null;
+		
+		for (AModuleDeclCG module : modules)
+		{
+			if(module.getName().equals(name))
+			{
+				moduleToRemove = module;
+				break;
+			}
+		}
+		
+		if(moduleToRemove != null)
+		{
+			modules.remove(moduleToRemove);
+		}
+	}
+	
+	public void clearModules()
+	{
+		if(this.modules != null)
+		{
+			this.modules.clear();
+		}
 	}
 }

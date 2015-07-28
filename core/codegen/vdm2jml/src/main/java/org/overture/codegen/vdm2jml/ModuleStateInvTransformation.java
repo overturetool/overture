@@ -1,15 +1,18 @@
 package org.overture.codegen.vdm2jml;
 
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
+import org.overture.codegen.cgast.statements.AAtomicStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
@@ -31,6 +34,15 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 		}
 
 		this.jmlGen = jmlGen;
+	}
+	
+	@Override
+	public void caseAAtomicStmCG(AAtomicStmCG node) throws AnalysisException
+	{
+		if(!isLastStmInMethod(node))
+		{
+			appendAssertion(node, consAssertStr(node));
+		}
 	}
 
 	@Override
@@ -147,10 +159,13 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 
 		if (encClass != null)
 		{
-			// We'll proceed if 1) the class has an invariant and
-			// 2) the statement does not occur inside an atomic statement
+			// We'll proceed if
+			// 1) the class has an invariant and
+			// 2) the statement does not occur inside an atomic statement and
+			// 3) the statement is not the last statement of a method
 			return encClass.getInvariant() != null
-					&& !jmlGen.getJavaGen().getInfo().getStmAssistant().inAtomic(stm);
+					&& !jmlGen.getJavaGen().getInfo().getStmAssistant().inAtomic(stm)
+					&& !isLastStmInMethod(stm);
 		} else
 		{
 			// Erroneous case: we can't really check anything..
@@ -194,5 +209,72 @@ public class ModuleStateInvTransformation extends DepthFirstAnalysisAdaptor
 		}
 		
 		return null;
+	}
+	
+	private boolean isLastStmInMethod(org.overture.codegen.cgast.INode node)
+	{
+		org.overture.codegen.cgast.INode parent = node.parent();
+		org.overture.codegen.cgast.INode child = node;
+		
+		while(lastStmInBlock(parent, child) || isSingleStmBlock(parent))
+		{
+			child = parent;
+			parent = parent.parent();
+		}
+		
+		return parent instanceof AMethodDeclCG;
+	}
+	
+	private boolean lastStmInBlock(INode posBlock, INode posStm)
+	{
+		if(!(posBlock instanceof ABlockStmCG) || !(posStm instanceof SStmCG))
+		{
+			return false;
+		}
+		
+		ABlockStmCG block = (ABlockStmCG) posBlock;
+		
+		if(!block.getStatements().isEmpty())
+		{
+			return block.getStatements().getLast() == posStm;
+		}
+		
+		return false;
+	}
+
+	private boolean isSingleStmBlock(org.overture.codegen.cgast.INode posBlock)
+	{
+		if(!(posBlock instanceof ABlockStmCG))
+		{
+			return false;
+		}
+		
+		ABlockStmCG block = (ABlockStmCG) posBlock;
+		
+		int counter = 0;
+		
+		for(SStmCG s : block.getStatements())
+		{
+			if(!isEmptyBlock(s))
+			{
+				counter++;
+			}
+		}
+		
+		return counter == 1;
+	}
+	
+	private boolean isEmptyBlock(org.overture.codegen.cgast.INode node)
+	{
+		if(node instanceof ABlockStmCG)
+		{
+			ABlockStmCG block = (ABlockStmCG) node;
+			
+			return block.getStatements().isEmpty() && block.getLocalDefs().isEmpty();
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

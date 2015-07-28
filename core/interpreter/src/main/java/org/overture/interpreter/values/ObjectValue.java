@@ -164,7 +164,7 @@ public class ObjectValue extends Value
 		for (Entry<ILexNameToken, Value> m: members.entrySet())
 		{
 			Value v = m.getValue();
-			
+
 			if (v.deref() instanceof ObjectValue)
 			{
 				// Don't recurse into inner objects, just mark field itself

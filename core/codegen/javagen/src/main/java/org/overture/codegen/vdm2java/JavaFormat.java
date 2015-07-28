@@ -90,7 +90,6 @@ import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
-import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRAnalysis;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
@@ -98,7 +97,6 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Settings;
@@ -118,8 +116,6 @@ public class JavaFormat
 	
 	public static final String JAVA_INT = "int";
 
-	private List<AClassDeclCG> classes;
-
 	private IRInfo info;
 
 	private FunctionValueAssistant functionValueAssistant;
@@ -127,13 +123,15 @@ public class JavaFormat
 	private JavaValueSemantics valueSemantics;
 	private JavaFormatAssistant javaFormatAssistant;
 	private JavaRecordCreator recCreator;
+	private JavaVarPrefixManager varPrefixManager;
 	
-	public JavaFormat(TempVarPrefixes varPrefixes, TemplateStructure templateStructure, IRInfo info)
+	public JavaFormat(JavaVarPrefixManager varPrefixManager,
+			TemplateStructure templateStructure, IRInfo info)
 	{
+		this.varPrefixManager = varPrefixManager;
 		this.valueSemantics = new JavaValueSemantics(this);
 		this.recCreator = new JavaRecordCreator(this);
-		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this,
-				IRAnalysis.class, varPrefixes, valueSemantics, recCreator);
+		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, valueSemantics, recCreator);
 		this.mergeVisitor = new MergeVisitor(templateStructure, templateCallables);
 		this.functionValueAssistant = null;
 		this.info = info;
@@ -171,11 +169,6 @@ public class JavaFormat
 		this.functionValueAssistant = null;
 	}
 
-	public List<AClassDeclCG> getClasses()
-	{
-		return classes;
-	}
-
 	public void setJavaSettings(JavaSettings javaSettings)
 	{
 		valueSemantics.setJavaSettings(javaSettings);
@@ -189,23 +182,6 @@ public class JavaFormat
 	public void init()
 	{
 		mergeVisitor.init();
-	}
-
-	public void setClasses(List<AClassDeclCG> classes)
-	{
-		this.classes = classes != null ? classes
-				: new LinkedList<AClassDeclCG>();
-	}
-
-	public void clearClasses()
-	{
-		if (classes != null)
-		{
-			classes.clear();
-		} else
-		{
-			classes = new LinkedList<AClassDeclCG>();
-		}
 	}
 
 	public MergeVisitor getMergeVisitor()
@@ -972,11 +948,11 @@ public class JavaFormat
 		
 		if(settings != null && !settings.trim().isEmpty())
 		{
-			return settings + "." + CodeGenBase.QUOTES + ".";
+			return settings + "." + JavaCodeGen.JAVA_QUOTES_PACKAGE + ".";
 		}
 		else
 		{
-			return CodeGenBase.QUOTES + ".";
+			return JavaCodeGen.JAVA_QUOTES_PACKAGE + ".";
 		}
 	}
 
@@ -1010,5 +986,25 @@ public class JavaFormat
 	public static boolean isVdmSl()
 	{
 		return Settings.dialect == Dialect.VDM_SL;
+	}
+	
+	public String genIteratorName()
+	{
+		return info.getTempVarNameGen().nextVarName(varPrefixManager.getIteVarPrefixes().iterator());
+	}
+
+	public String genThreadName()
+	{
+		return info.getTempVarNameGen().nextVarName("nextThread_");
+	}
+
+	public String genForIndexToVarName()
+	{
+		return info.getTempVarNameGen().nextVarName(varPrefixManager.getIteVarPrefixes().forIndexToVar());
+	}
+
+	public String genForIndexByVarName()
+	{
+		return info.getTempVarNameGen().nextVarName(varPrefixManager.getIteVarPrefixes().forIndexByVar());
 	}
 }

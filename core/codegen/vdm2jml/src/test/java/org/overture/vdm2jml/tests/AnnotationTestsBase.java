@@ -5,11 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.util.ClonableString;
-import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -21,6 +23,10 @@ import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaFormat;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.codegen.vdm2jml.JmlGenerator;
+import org.overture.config.Release;
+import org.overture.config.Settings;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 abstract public class AnnotationTestsBase
 {
@@ -47,6 +53,13 @@ abstract public class AnnotationTestsBase
 	
 	// The IR class that is used to represent the type of the module state
 	protected static AClassDeclCG genStateType;
+	
+	@BeforeClass
+	public static void prepareVdmTypeChecker()
+	{
+		Settings.dialect = Dialect.VDM_SL;
+		Settings.release = Release.VDM_10;
+	}
 	
 	public static void init(String fileName) throws AnalysisException
 	{
@@ -167,12 +180,18 @@ abstract public class AnnotationTestsBase
 		List<File> files = new LinkedList<File>();
 		files.add(new File(TEST_RES_STATIC_ANALYSIS_ROOT + fileName));
 
-		ModuleList modules = GeneralCodeGenUtils.consModuleList(files);
+		
+		TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
+
+		if(GeneralCodeGenUtils.hasErrors(tcResult))
+		{
+			Assert.fail("Could not parse/type check VDM model:\n" + GeneralCodeGenUtils.errorStr(tcResult));
+		}
 
 		JmlGenerator jmlGen = new JmlGenerator();
 		initJmlGen(jmlGen);
 
-		GeneratedData data = jmlGen.generateJml(modules);
+		GeneratedData data = jmlGen.generateJml(tcResult.result);
 
 		return getClasses(data);
 	}

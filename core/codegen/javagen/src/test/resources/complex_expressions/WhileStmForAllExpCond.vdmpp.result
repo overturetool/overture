@@ -10,9 +10,9 @@ public class Entry {
 
     public static Object Run() {
         VDMSet s = SetUtil.set(2L, 4L, 6L);
-        Boolean whileCond1 = true;
+        Boolean whileCond_1 = true;
 
-        while (whileCond1) {
+        while (whileCond_1) {
             Boolean forAllExpResult_1 = true;
             VDMSet set_1 = Utils.copy(s);
 
@@ -23,9 +23,9 @@ public class Entry {
                         0L);
             }
 
-            whileCond1 = forAllExpResult_1;
+            whileCond_1 = forAllExpResult_1;
 
-            if (!(whileCond1)) {
+            if (!(whileCond_1)) {
                 break;
             }
 

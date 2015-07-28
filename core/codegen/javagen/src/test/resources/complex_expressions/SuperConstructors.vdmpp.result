@@ -63,8 +63,8 @@ public class B extends A {
     }
 
     public void cg_init_B_2(final Character x, final Character y) {
-        //Skip;
-        //Skip;
+        /* skip */
+        /* skip */
         cg_init_A_2(x, y);
     }
 

@@ -108,7 +108,7 @@ public class UpdatableValue extends ReferenceValue
 
 		// We have to calculate the getUpdates to propagate the combined
 		// listeners to the rest of the structure, but we do not want to
-		// create a new Updatable value to return, as this upsets statics.
+		// create a new UpdatableValue, having updated the listeners.
 		
 		UpdatableValue uv = (UpdatableValue)value.getUpdatable(listeners);
 		value = uv.value;

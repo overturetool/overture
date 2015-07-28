@@ -26,7 +26,7 @@ public class B {
     }
 
     public void cg_init_B_1() {
-        //Skip;
+        /* skip */
     }
 
     public String toString() {

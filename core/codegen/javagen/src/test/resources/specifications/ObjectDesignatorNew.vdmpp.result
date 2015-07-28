@@ -13,7 +13,7 @@ public class A {
     }
 
     public void cg_init_A_1(final Number x) {
-        //Skip;
+        /* skip */
     }
 
     public Number op() {
