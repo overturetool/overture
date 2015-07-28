@@ -88,7 +88,7 @@ public class RecModCheckTrans extends DepthFirstAnalysisAdaptor
 		{
 			SVarExpCG var = (SVarExpCG) subject;
 
-			if (var.getType() instanceof ARecordTypeCG)
+			if (isRec(var))
 			{
 				handleRecAssert(node, var);
 			}
@@ -107,7 +107,7 @@ public class RecModCheckTrans extends DepthFirstAnalysisAdaptor
 
 		if (subject instanceof SVarExpCG)
 		{
-			if (subject.getType() instanceof ARecordTypeCG)
+			if (isRec(subject))
 			{
 				handleRecAssert(node, (SVarExpCG) subject);
 			}
@@ -183,5 +183,10 @@ public class RecModCheckTrans extends DepthFirstAnalysisAdaptor
 	private String consValidRecCheck(SVarExpCG var)
 	{
 		return "//@ assert " + var.getName() + ".valid();";
+	}
+	
+	public boolean isRec(SExpCG exp)
+	{
+		return exp.getType().getNamedInvType() == null && exp.getType() instanceof ARecordTypeCG;
 	}
 }
