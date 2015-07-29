@@ -9,7 +9,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 
-public class RecInvTests
+public class RecInvTests extends AnnotationTestsBase
 {
 	private static final String REC_NAME = "Rec";
 

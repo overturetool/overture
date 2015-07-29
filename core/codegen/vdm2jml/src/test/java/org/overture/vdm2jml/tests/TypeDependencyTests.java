@@ -16,7 +16,7 @@ import org.overture.codegen.vdm2jml.NamedTypeInvDepCalculator;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
-public class TypeDependencyTests
+public class TypeDependencyTests extends AnnotationTestsBase
 {
 	public static final String TEST_RES_TYPE_DEP_ROOT = AnnotationTestsBase.TEST_RESOURCES_ROOT
 			+ "type_dep" + File.separatorChar;
