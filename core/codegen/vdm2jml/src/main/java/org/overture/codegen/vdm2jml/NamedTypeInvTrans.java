@@ -34,14 +34,14 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.AtomicStmTrans;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
-public class NamedTypeInTrans extends DepthFirstAnalysisAdaptor
+public class NamedTypeInvTrans extends DepthFirstAnalysisAdaptor
 {
 	public static final String RET_VAR_NAME_PREFIX = "ret_";
 	public static final String MAP_SEQ_NAME_PREFIX = "col_";
 	
 	private JmlGenerator jmlGen;
 	
-	public NamedTypeInTrans(JmlGenerator jmlGen)
+	public NamedTypeInvTrans(JmlGenerator jmlGen)
 	{
 		this.jmlGen = jmlGen;
 	}
