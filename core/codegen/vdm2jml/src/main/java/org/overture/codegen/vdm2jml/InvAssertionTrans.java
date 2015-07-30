@@ -9,7 +9,6 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
@@ -21,7 +20,6 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.statements.AAtomicStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
@@ -34,128 +32,74 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.AtomicStmTrans;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
-public class NamedTypeInvTrans extends DepthFirstAnalysisAdaptor
+/**
+ * In the original VDM AST assignments are on the form <stateDesignator> := <exp>; Note that the left hand side is a
+ * look-up and it is side-effect free When the atomic statement ends we need to check if any type invariants (which also
+ * include state invariants) have been broken.
+ * 
+ * @see AtomicStmTrans
+ */
+public class InvAssertionTrans extends AtomicAssertTrans
 {
 	public static final String RET_VAR_NAME_PREFIX = "ret_";
 	public static final String MAP_SEQ_NAME_PREFIX = "col_";
 	
-	private JmlGenerator jmlGen;
-	
-	public NamedTypeInvTrans(JmlGenerator jmlGen)
+	public InvAssertionTrans(JmlGenerator jmlGen)
 	{
-		this.jmlGen = jmlGen;
-	}
-	
-	/**
-	 * @see AtomicStmTrans
-	 */
-	@Override
-	public void caseAAtomicStmCG(AAtomicStmCG node) throws AnalysisException
-	{
-		ABlockStmCG replBlock = new ABlockStmCG();
-
-		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
-
-		replBlock.getStatements().add(consInvChecksStm(false));
-		replBlock.getStatements().add(node);
-		replBlock.getStatements().add(consInvChecksStm(true));
-		
-		// In the original VDM AST assignments are on the form
-		// <stateDesignator> := <exp>; 
-		// Note that the left hand side is a look-up and it is side-effect free
-
-		// When the atomic statement ends we need to check if any type invariants
-		// (which also include state invariants) have been broken.
-		for (SStmCG stm : node.getStatements())
-		{
-			if (stm instanceof AAssignToExpStmCG)
-			{
-				// <target> := atomic_tmp;
-
-				/*
-				 * Note that assignment to targets that are of type AFieldNumberExpCG, i.e. tuples (e.g. tup.#1 := 5) is
-				 * not allowed in VDM.
-				 */
-				/*
-				 * No need to assert anything since the violation would already have been detected in the temporary
-				 * variable section
-				 */
-
-				SExpCG target = ((AAssignToExpStmCG) stm).getTarget();
-				
-				if (!(target instanceof SVarExpCG))
-				{
-					Logger.getLog().printErrorln("By now all assignments should have simple variable expression as target. Got: "
-							+ target);
-				}
-				
-			} else if (stm instanceof ACallObjectExpStmCG)
-			{
-
-
-				// RecAccessorTrans removed all direct field assignments to records, i.e. <rec_obj>.field := <exp>
-				// which are now on the form on the form rec.set_field(4).
-				// This case simply means we will have to check a record invariant.
-				
-				SExpCG recObj = ((ACallObjectExpStmCG) stm).getObj();
-				
-				if(recObj instanceof SVarExpCG)
-				{
-					// rec.set_field(atomic_tmp)
-					SVarExpCG recObjVar = (SVarExpCG) recObj;
-					
-					List<NamedTypeInfo> invTypes = findNamedInvTypes(recObj.getType());
-
-					// This will happen for cases like T = R; R :: x : int;
-					if (!invTypes.isEmpty())
-					{
-						AClassDeclCG encClass = jmlGen.getUtil().getEnclosingClass(node);
-						
-						if (encClass == null)
-						{
-							continue;
-						}
-						
-						AMetaStmCG assertStm = consAssertStm(invTypes, encClass.getName(), recObjVar.getName());
-						replBlock.getStatements().add(assertStm);
-					}
-
-				}
-				else if (recObj instanceof AFieldExpCG)
-				{
-					// Should not happen...
-					Logger.getLog().printErrorln("Did not expect record object of call object expression to be a field expression at this point: " + recObj);
-				} else
-				{
-					// TODO: implement proper handling
-					// Must also take othe kinds of state designators into account: r1.get_r2().get_r3().set_field(atomic_tmp)
-					
-					Logger.getLog().printErrorln("Found unexpected record object of call expression "
-							+ " statement inside atomic statement block in '"
-							+ this.getClass().getSimpleName() + "'. Target found: " + recObj);
-				}
-				
-				
-			} 
-			else if (stm instanceof AMapSeqUpdateStmCG)
-			{
-				//TODO: Needs handling (consider the corresponding case method)
-				
-			} else
-			{
-				Logger.getLog().printErrorln("Expected statement in atomic block to be either '"
-						+ AAssignToExpStmCG.class + "' or '"
-						+ ACallObjectExpStmCG.class + ". Got: " + stm);
-			}
-		}
+		super(jmlGen);
 	}
 	
 	@Override
 	public void caseACallObjectExpStmCG(ACallObjectExpStmCG node)
 			throws AnalysisException
 	{
+		handleCallObj(node);
 		// TODO: Handle setter calls to records
 		// Consider collecting them in the RecAccessorTrans
+		
+		// RecAccessorTrans removed all direct field assignments to records, i.e. <rec_obj>.field := <exp>
+		// which are now on the form on the form rec.set_field(4).
+		// This case simply means we will have to check a record invariant.
+		
+		SExpCG recObj = node.getObj();
+		
+		if(recObj instanceof SVarExpCG)
+		{
+			// rec.set_field(atomic_tmp)
+			SVarExpCG recObjVar = (SVarExpCG) recObj;
+			
+			List<NamedTypeInfo> invTypes = findNamedInvTypes(recObj.getType());
+
+			// This will happen for cases like T = R; R :: x : int;
+			if (!invTypes.isEmpty())
+			{
+				AClassDeclCG encClass = jmlGen.getUtil().getEnclosingClass(node);
+				
+				if (encClass == null)
+				{
+					return;
+				}
+				
+				ABlockStmCG replBlock = new ABlockStmCG();
+				jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
+				replBlock.getStatements().add(node);
+				replBlock.getStatements().add(consAssertStm(invTypes, encClass.getName(), recObjVar.getName()));
+			}
+
+		}
+		else if (recObj instanceof AFieldExpCG)
+		{
+			// Should not happen...
+			Logger.getLog().printErrorln("Did not expect record object of call object expression to be a field expression at this point: " + recObj);
+		} else
+		{
+			// TODO: implement proper handling
+			// Must also take othe kinds of state designators into account: r1.get_r2().get_r3().set_field(atomic_tmp)
+			
+			Logger.getLog().printErrorln("Found unexpected record object of call expression "
+					+ " statement inside atomic statement block in '"
+					+ this.getClass().getSimpleName() + "'. Target found: " + recObj);
+		}
 	}
 	
 	@Override
@@ -294,6 +238,27 @@ public class NamedTypeInvTrans extends DepthFirstAnalysisAdaptor
 	public void caseAAssignToExpStmCG(AAssignToExpStmCG node)
 			throws AnalysisException
 	{
+		handleAssign(node);
+		// <target> := atomic_tmp;
+
+		/*
+		 * Note that assignment to targets that are of type AFieldNumberExpCG, i.e. tuples (e.g. tup.#1 := 5) is
+		 * not allowed in VDM.
+		 */
+		/*
+		 * No need to assert anything since the violation would already have been detected in the temporary
+		 * variable section
+		 */
+
+		SExpCG target = node.getTarget();
+		
+		if (!(target instanceof SVarExpCG))
+		{
+			Logger.getLog().printErrorln("By now all assignments should have simple variable expression as target. Got: "
+					+ target);
+			return;
+		}
+		
 		List<NamedTypeInfo> invTypes = findNamedInvTypes(node.getTarget().getType());
 
 		if (invTypes.isEmpty())
@@ -325,6 +290,9 @@ public class NamedTypeInvTrans extends DepthFirstAnalysisAdaptor
 	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
 			throws AnalysisException
 	{
+		handleMapSeq(node);
+		//TODO: Consider this for the atomic statement
+		
 		SExpCG col = node.getCol();
 
 		List<NamedTypeInfo> invTypes = findNamedInvTypes(col.getType());
@@ -580,17 +548,6 @@ public class NamedTypeInvTrans extends DepthFirstAnalysisAdaptor
 		return assertStm;
 	}
 
-	private AMetaStmCG consInvChecksStm(boolean val)
-	{
-		AMetaStmCG setStm = new AMetaStmCG();
-		String setStr = val ? JmlGenerator.JML_ENABLE_INV_CHECKS
-				: JmlGenerator.JML_DISABLE_INV_CHECKS;
-		List<ClonableString> setMetaData = jmlGen.getAnnotator().consMetaData(setStr);
-		jmlGen.getAnnotator().appendMetaData(setStm, setMetaData);
-
-		return setStm;
-	}
-	
 	public String consVarName(AAssignToExpStmCG node)
 	{
 		// Must be field or variable expression
@@ -654,4 +611,136 @@ public class NamedTypeInvTrans extends DepthFirstAnalysisAdaptor
 		
 		return varName.toString();
 	}
+	
+	//
+	// Start of RecModCheckTrans porting
+	//
+	
+	// Not there originally
+	private void handleCallObj(ACallObjectExpStmCG node)
+	{
+		//
+		// TODO: copy and paste...
+		//
+		
+		if (!jmlGen.getJavaGen().getInfo().getStmAssistant().inAtomic(node)
+				&& node.getObj() instanceof SVarExpCG
+				&& node.getObj().getType() instanceof ARecordTypeCG)
+		{
+			/**
+			 * E.g. rec.set_(3). Setter call to record outside atomic statement block
+			 */
+			return;
+		}
+		
+		SExpCG subject = jmlGen.getJavaGen().getInfo().getExpAssistant().findSubject(node.getObj());
+
+		if (subject instanceof SVarExpCG)
+		{
+			SVarExpCG var = (SVarExpCG) subject;
+
+			if (isRec(var))
+			{
+				handleRecAssert(node, var);
+			}
+		} else
+		{
+			Logger.getLog().printErrorln("Expected target to a variable expression at this point. Got "
+					+ subject + " in '" + this.getClass().getSimpleName() + "'");
+		}		
+	}
+	
+	//Reconsider..
+	public void handleAssign(AAssignToExpStmCG node)
+			throws AnalysisException
+	{
+		if (node.getTarget() instanceof SVarExpCG
+				&& node.getTarget().getType() instanceof ARecordTypeCG)
+		{
+			/**
+			 * E.g. St = new St(..). Violation will be detected when constructing the record value or in the temporary
+			 * variable section if the assignment occurs in the context of an atomic statement block
+			 */
+			return;
+		}
+
+		if (!jmlGen.getJavaGen().getInfo().getStmAssistant().inAtomic(node)
+				&& node.getTarget() instanceof AFieldExpCG
+				&& ((AFieldExpCG) node.getTarget()).getObject().getType() instanceof ARecordTypeCG)
+		{
+			/**
+			 * E.g. rec.set_(3). Setter call to record outside atomic statement block
+			 */
+			return;
+		}
+
+		SExpCG subject = jmlGen.getJavaGen().getInfo().getExpAssistant().findSubject(node.getTarget());
+
+		/**
+		 * Note that this case method does not have to consider state updates on the form stateComp(52) := 4 since they
+		 * get transformed into AMapSeqUpdateStmCGs which are treated using a separate case method in this visitor
+		 */
+		if (subject instanceof SVarExpCG)
+		{
+			SVarExpCG var = (SVarExpCG) subject;
+
+			if (isRec(var))
+			{
+				handleRecAssert(node, var);
+			}
+		} else
+		{
+			Logger.getLog().printErrorln("Expected target to a variable expression at this point. Got "
+					+ subject + " in '" + this.getClass().getSimpleName() + "'");
+		}
+	}
+	
+	//Reconsider
+	public void handleMapSeq(AMapSeqUpdateStmCG node)
+			throws AnalysisException
+	{
+		SExpCG subject = jmlGen.getJavaGen().getInfo().getExpAssistant().findSubject(node.getCol());
+
+		if (subject instanceof SVarExpCG)
+		{
+			if (isRec(subject))
+			{
+				handleRecAssert(node, (SVarExpCG) subject);
+			}
+		} else
+		{
+			Logger.getLog().printErrorln("Expected 'next' to be a variable expression at this point. Got: "
+					+ subject + " in '" + this.getClass().getSimpleName() + "'");
+		}
+	}
+	
+	private void handleRecAssert(SStmCG stm, SVarExpCG var)
+	{
+		if(recVarChecks != null)
+		{
+			String recCheck = consValidRecCheck(var);
+			
+			// No need to assert the same thing twice
+			if(!recVarChecks.contains(recCheck))
+			{
+				recVarChecks.add(recCheck);
+			}
+		}
+		else
+		{
+			appendAsserts(stm, consValidRecCheck(var));
+		}
+	}
+
+	private String consValidRecCheck(SVarExpCG var)
+	{
+		return "//@ assert " + var.getName() + ".valid();";
+	}
+	
+	public boolean isRec(SExpCG exp)
+	{
+		return exp.getType().getNamedInvType() == null && exp.getType() instanceof ARecordTypeCG;
+	}
 }
+
+

@@ -291,7 +291,7 @@ public class JmlGenerator implements IREventObserver
 
 	private void addAssertions(List<IRStatus<INode>> newAst)
 	{
-		NamedTypeInvTrans assertTr = new NamedTypeInvTrans(this);
+		InvAssertionTrans assertTr = new InvAssertionTrans(this);
 		
 		for (IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
 		{
