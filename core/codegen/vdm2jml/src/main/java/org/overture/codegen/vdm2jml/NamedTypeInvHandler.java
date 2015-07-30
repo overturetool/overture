@@ -1,10 +1,8 @@
 package org.overture.codegen.vdm2jml;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -13,7 +11,6 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
@@ -25,8 +22,6 @@ import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -37,10 +32,12 @@ public class NamedTypeInvHandler
 	public static final String MAP_SEQ_NAME_PREFIX = "col_";
 
 	private InvAssertionTrans invTrans;
-
+	private NamedTypeInvUtil util;
+	
 	public NamedTypeInvHandler(InvAssertionTrans invTrans)
 	{
 		this.invTrans = invTrans;
+		this.util = new NamedTypeInvUtil(this);
 	}
 
 	public void handleClass(AClassDeclCG node) throws AnalysisException
@@ -65,7 +62,7 @@ public class NamedTypeInvHandler
 		// val : char | Even = 5;
 		// stateField : char | Even;
 
-		List<NamedTypeInfo> invTypes = findNamedInvTypes(node.getType());
+		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getType());
 
 		if (invTypes.isEmpty())
 		{
@@ -84,7 +81,7 @@ public class NamedTypeInvHandler
 		String scope = node.getStatic() ? JmlGenerator.JML_STATIC_INV_ANNOTATION
 				: JmlGenerator.JML_INSTANCE_INV_ANNOTATION;
 
-		String inv = consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_PUBLIC, scope, invTypes, node.getName());
+		String inv = util.consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_PUBLIC, scope, invTypes, node.getName());
 
 		invTrans.getJmlGen().getAnnotator().appendMetaData(node, invTrans.getJmlGen().getAnnotator().consMetaData(inv));
 	}
@@ -146,7 +143,7 @@ public class NamedTypeInvHandler
 
 		STypeCG returnType = enclosingMethod.getMethodType().getResult();
 
-		List<NamedTypeInfo> invTypes = findNamedInvTypes(returnType);
+		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(returnType);
 
 		if (invTypes.isEmpty())
 		{
@@ -184,7 +181,7 @@ public class NamedTypeInvHandler
 		ABlockStmCG replBody = new ABlockStmCG();
 		for (AFormalParamLocalParamCG param : node.getFormalParams())
 		{
-			List<NamedTypeInfo> invTypes = findNamedInvTypes(param.getType());
+			List<NamedTypeInfo> invTypes = util.findNamedInvTypes(param.getType());
 
 			if (!invTypes.isEmpty())
 			{
@@ -204,7 +201,7 @@ public class NamedTypeInvHandler
 					continue;
 				}
 
-				replBody.getStatements().add(consAssertStm(invTypes, enclosingClassName, varNameStr));
+				replBody.getStatements().add(util.consAssertStm(invTypes, enclosingClassName, varNameStr));
 			}
 		}
 
@@ -220,7 +217,7 @@ public class NamedTypeInvHandler
 
 		SExpCG col = node.getCol();
 
-		List<NamedTypeInfo> invTypes = findNamedInvTypes(col.getType());
+		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(col.getType());
 
 		if (!invTypes.isEmpty())
 		{
@@ -245,7 +242,7 @@ public class NamedTypeInvHandler
 				return;
 			}
 
-			injectAssertion(node, invTypes, enclosingClass.getName(), name, true);
+			util.injectAssertion(node, invTypes, enclosingClass.getName(), name, true);
 		}
 	}
 
@@ -255,7 +252,7 @@ public class NamedTypeInvHandler
 		// let x : Even = 1 in ...
 		// (dcl y : Even | nat := 2; ...)
 
-		List<NamedTypeInfo> invTypes = findNamedInvTypes(node.getType());
+		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getType());
 
 		if (invTypes.isEmpty())
 		{
@@ -300,7 +297,7 @@ public class NamedTypeInvHandler
 				return;
 			}
 
-			String inv = consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, name);
+			String inv = util.consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, name);
 
 			invTrans.getJmlGen().getAnnotator().appendMetaData(assertInv, invTrans.getJmlGen().getAnnotator().consMetaData(inv));
 
@@ -330,7 +327,7 @@ public class NamedTypeInvHandler
 			// rec.set_field(atomic_tmp)
 			SVarExpCG recObjVar = (SVarExpCG) recObj;
 
-			List<NamedTypeInfo> invTypes = findNamedInvTypes(recObj.getType());
+			List<NamedTypeInfo> invTypes = util.findNamedInvTypes(recObj.getType());
 
 			// This will happen for cases like T = R; R :: x : int;
 			if (!invTypes.isEmpty())
@@ -345,7 +342,7 @@ public class NamedTypeInvHandler
 				ABlockStmCG replBlock = new ABlockStmCG();
 				invTrans.getJmlGen().getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
 				replBlock.getStatements().add(node);
-				replBlock.getStatements().add(consAssertStm(invTypes, encClass.getName(), recObjVar.getName()));
+				replBlock.getStatements().add(util.consAssertStm(invTypes, encClass.getName(), recObjVar.getName()));
 			}
 
 		} else if (recObj instanceof AFieldExpCG)
@@ -387,14 +384,14 @@ public class NamedTypeInvHandler
 			return;
 		}
 
-		List<NamedTypeInfo> invTypes = findNamedInvTypes(node.getTarget().getType());
+		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getTarget().getType());
 
 		if (invTypes.isEmpty())
 		{
 			return;
 		}
 
-		String varName = consVarName(node);
+		String varName = util.consVarName(node);
 
 		if (varName == null)
 		{
@@ -411,183 +408,11 @@ public class NamedTypeInvHandler
 		String enclosingClassName = enclosingClass.getName();
 		String varNameStr = varName.toString();
 
-		injectAssertion(node, invTypes, enclosingClassName, varNameStr, true);
+		util.injectAssertion(node, invTypes, enclosingClassName, varNameStr, true);
 	}
-
-	public String consJmlCheck(String enclosingClass, String jmlVisibility,
-			String annotationType, List<NamedTypeInfo> typeInfoMatches,
-			String varName)
+	
+	public JmlGenerator getJmlGen()
 	{
-		StringBuilder inv = new StringBuilder();
-		inv.append("//@ ");
-
-		if (jmlVisibility != null)
-		{
-			inv.append(jmlVisibility);
-			inv.append(' ');
-		}
-
-		inv.append(annotationType);
-		inv.append(' ');
-
-		String or = "";
-		for (NamedTypeInfo match : typeInfoMatches)
-		{
-			inv.append(or);
-			inv.append(match.consCheckExp(enclosingClass, invTrans.getJmlGen().getJavaSettings().getJavaRootPackage()));
-			or = JmlGenerator.JML_OR;
-		}
-
-		inv.append(';');
-
-		// Inject the name of the field into the expression
-		return String.format(inv.toString(), varName);
-	}
-
-	public void injectAssertion(SStmCG node, List<NamedTypeInfo> invTypes,
-			String enclosingClassName, String varNameStr, boolean append)
-	{
-		AMetaStmCG assertStm = consAssertStm(invTypes, enclosingClassName, varNameStr);
-
-		ABlockStmCG replStm = new ABlockStmCG();
-
-		invTrans.getJmlGen().getJavaGen().getTransAssistant().replaceNodeWith(node, replStm);
-
-		replStm.getStatements().add(node);
-
-		if (append)
-		{
-			replStm.getStatements().add(assertStm);
-		} else
-		{
-			replStm.getStatements().addFirst(assertStm);
-		}
-	}
-
-	public String consJmlCheck(String enclosingClass, String annotationType,
-			List<NamedTypeInfo> typeInfoMatches, String varName)
-	{
-		return consJmlCheck(enclosingClass, null, annotationType, typeInfoMatches, varName);
-	}
-
-	private AMetaStmCG consAssertStm(List<NamedTypeInfo> invTypes,
-			String enclosingClassName, String varNameStr)
-	{
-		AMetaStmCG assertStm = new AMetaStmCG();
-		String assertStr = consJmlCheck(enclosingClassName, JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, varNameStr);
-		List<ClonableString> assertMetaData = invTrans.getJmlGen().getAnnotator().consMetaData(assertStr);
-		invTrans.getJmlGen().getAnnotator().appendMetaData(assertStm, assertMetaData);
-
-		return assertStm;
-	}
-
-	public List<NamedTypeInfo> findNamedInvTypes(STypeCG type)
-	{
-		List<NamedTypeInfo> posTypes = new LinkedList<NamedTypeInfo>();
-
-		if (type.getNamedInvType() != null)
-		{
-			ANamedTypeDeclCG namedInv = type.getNamedInvType();
-
-			String defModule = namedInv.getName().getDefiningClass();
-			String typeName = namedInv.getName().getName();
-
-			NamedTypeInfo info = NamedTypeInvDepCalculator.findTypeInfo(invTrans.getJmlGen().getTypeInfoList(), defModule, typeName);
-
-			if (info != null)
-			{
-				posTypes.add(info);
-			} else
-			{
-				Logger.getLog().printErrorln("Could not find info for named type '"
-						+ typeName + "' defined in module '" + defModule
-						+ "' in '" + this.getClass().getSimpleName() + "'");
-			}
-
-			// We do not need to collect sub named invariant types
-		} else if (type instanceof AUnionTypeCG)
-		{
-			for (STypeCG t : ((AUnionTypeCG) type).getTypes())
-			{
-				posTypes.addAll(findNamedInvTypes(t));
-			}
-		}
-
-		// We will only consider types that are disjoint. As an example consider
-		// the type definitions below:
-		//
-		// C = ...; N = ...; CN = C|N;
-		//
-		// Say we have the following value definition:
-		//
-		// val : CN|N
-		//
-		// Then we only want to have the type info for CN returned since N is already
-		// contained in CN.
-		return NamedTypeInvDepCalculator.onlyDisjointTypes(posTypes);
-	}
-
-	public String consVarName(AAssignToExpStmCG node)
-	{
-		// Must be field or variable expression
-		SExpCG next = node.getTarget();
-
-		if (next instanceof AFieldExpCG)
-		{
-			if (((AFieldExpCG) next).getObject().getType() instanceof ARecordTypeCG)
-			{
-				// rec.field = ...
-				// No need to take record modifications into account. The invariant
-				// should handle this (if it is needed).
-				return null;
-			}
-		}
-
-		List<String> names = new LinkedList<String>();
-
-		// Consider the field a.b.c
-		while (next instanceof AFieldExpCG)
-		{
-			AFieldExpCG fieldExpCG = (AFieldExpCG) next;
-
-			// First 'c' will be visited, then 'b' and then 'a'.
-			names.add(fieldExpCG.getMemberName());
-			next = fieldExpCG.getObject();
-		}
-
-		if (next instanceof SVarExpCG)
-		{
-			SVarExpCG var = (SVarExpCG) next;
-			names.add(var.getName());
-		} else
-		{
-			Logger.getLog().printErrorln("Expected target to a variable expression at this point. Got "
-					+ next + " in '" + this.getClass().getSimpleName() + "'");
-			return null;
-		}
-
-		// By reversing the list we get the original order, i.e. 'a' then 'b' then 'c'
-		Collections.reverse(names);
-
-		if (names.isEmpty())
-		{
-			Logger.getLog().printErrorln("Expected the naming list not to be empty in '"
-					+ this.getClass().getSimpleName() + "'");
-			return null;
-		}
-
-		StringBuilder varName = new StringBuilder();
-
-		varName.append(names.get(0));
-
-		// Iterate over all names - except for the first
-		for (int i = 1; i < names.size(); i++)
-		{
-			varName.append(".");
-			varName.append(names.get(i));
-		}
-		// So for our example varName will be a.b.c
-
-		return varName.toString();
+		return invTrans.getJmlGen();
 	}
 }
