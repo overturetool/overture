@@ -23,14 +23,14 @@ public class InvAssertionTrans extends AtomicAssertTrans
 {
 	private RecModHandler recHandler;
 	private NamedTypeInvHandler namedTypeHandler;
-	
+
 	public InvAssertionTrans(JmlGenerator jmlGen)
 	{
 		super(jmlGen);
 		this.recHandler = new RecModHandler(this);
 		this.namedTypeHandler = new NamedTypeInvHandler(this);
 	}
-	
+
 	@Override
 	public void caseACallObjectExpStmCG(ACallObjectExpStmCG node)
 			throws AnalysisException
@@ -38,13 +38,13 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		recHandler.handleCallObj(node);
 		namedTypeHandler.handleCallObj(node);
 	}
-	
+
 	@Override
 	public void caseAFieldDeclCG(AFieldDeclCG node) throws AnalysisException
 	{
 		namedTypeHandler.handleField(node);
 	}
-	
+
 	@Override
 	public void caseABlockStmCG(ABlockStmCG node) throws AnalysisException
 	{
@@ -61,7 +61,14 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public void caseAAssignToExpStmCG(AAssignToExpStmCG node)
 			throws AnalysisException
 	{
-		recHandler.handleAssign(node);
+		/**
+		 * Regarding record modifications, which will now all be on the form E.g. St = new St(..), i.e. node.getTarget()
+		 * instanceof SVarExpCG && node.getTarget().getType() instanceof ARecordTypeCG Violation will be detected when
+		 * constructing the record value or in the temporary variable section if the assignment occurs in the context of
+		 * an atomic statement block. Therefore, there is no need to assert anything. Note that more complicated record
+		 * modifications (e.g. rec1.rec2.f := 5) appear as nodes of type caseACallObjectExpStmCG
+		 */
+
 		namedTypeHandler.handleAssign(node);
 	}
 
@@ -78,19 +85,16 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	{
 		namedTypeHandler.handleMethod(node);
 	}
-	
+
 	@Override
 	public void caseAReturnStmCG(AReturnStmCG node) throws AnalysisException
 	{
-		namedTypeHandler.handleReturn(node);		
+		namedTypeHandler.handleReturn(node);
 	}
 
-	
 	@Override
 	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
 	{
 		namedTypeHandler.handleClass(node);
 	}
 }
-
-
