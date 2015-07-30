@@ -222,6 +222,9 @@ public class JmlGenerator implements IREventObserver
 			}
 		}
 		
+		// Split targets
+		splitTargets(newAst);
+		
 		// Add assertions to check for violation of record and named type invariants
 		addAssertions(newAst);
 
@@ -529,6 +532,23 @@ public class JmlGenerator implements IREventObserver
 			Logger.getLog().printErrorln("Expected condition to be a method declaration at this point. Got: "
 					+ cond + " in '" + this.getClass().getSimpleName() + "'");
 		}
+	}
+	
+	public void splitTargets(List<IRStatus<INode>> newAst)
+	{
+		TargetNormaliserTrans targetSplitTr = new TargetNormaliserTrans(this);
+		for(IRStatus<INode> n : newAst)
+		{
+			try
+			{
+				javaGen.getIRGenerator().applyPartialTransformation(n, targetSplitTr);
+			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 	public IRSettings getIrSettings()
