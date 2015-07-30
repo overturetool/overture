@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2jml;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -11,12 +12,12 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.logging.Logger;
 
-public abstract class AtomicAsserTrans extends DepthFirstAnalysisAdaptor
+public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 {
 	protected JmlGenerator jmlGen;
 	protected List<String> recVarChecks = null;
-
-	public AtomicAsserTrans(JmlGenerator jmlGen)
+	
+	public AtomicAssertTrans(JmlGenerator jmlGen)
 	{
 		this.jmlGen = jmlGen;
 	}
@@ -24,6 +25,12 @@ public abstract class AtomicAsserTrans extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAAtomicStmCG(AAtomicStmCG node) throws AnalysisException
 	{
+		ABlockStmCG replBlock = new ABlockStmCG();
+		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
+		replBlock.getStatements().add(consInvChecksStm(false));
+		replBlock.getStatements().add(node);
+		replBlock.getStatements().add(consInvChecksStm(true));
+		
 		recVarChecks = new LinkedList<String>();
 		
 		for(SStmCG stm : node.getStatements())
@@ -31,12 +38,12 @@ public abstract class AtomicAsserTrans extends DepthFirstAnalysisAdaptor
 			stm.apply(this);
 		}
 		
-		appendAssertsToAtomic(node);
+		appendAssertsToAtomic(replBlock);
 		
 		recVarChecks = null;
 	}
 
-	protected void appendAssertsToAtomic(AAtomicStmCG node)
+	protected void appendAssertsToAtomic(ABlockStmCG node)
 	{
 		if (node.parent() != null)
 		{
@@ -78,5 +85,16 @@ public abstract class AtomicAsserTrans extends DepthFirstAnalysisAdaptor
 					+ " and therefore no assertion could be inserted (in"
 					+ this.getClass().getSimpleName() + ")");
 		}
+	}
+	
+	protected AMetaStmCG consInvChecksStm(boolean val)
+	{
+		AMetaStmCG setStm = new AMetaStmCG();
+		String setStr = val ? JmlGenerator.JML_ENABLE_INV_CHECKS
+				: JmlGenerator.JML_DISABLE_INV_CHECKS;
+		List<ClonableString> setMetaData = jmlGen.getAnnotator().consMetaData(setStr);
+		jmlGen.getAnnotator().appendMetaData(setStm, setMetaData);
+
+		return setStm;
 	}
 }
