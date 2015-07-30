@@ -54,6 +54,7 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolIsExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
@@ -675,7 +676,8 @@ public class ExpAssistantCG extends AssistantBase
 	
 	public SExpCG findSubject(SExpCG next)
 	{
-		while (next instanceof AFieldExpCG || next instanceof AMapSeqGetExpCG)
+		while (next instanceof AFieldExpCG || next instanceof AMapSeqGetExpCG
+				|| next instanceof AApplyExpCG)
 		{
 			if (next instanceof AFieldExpCG)
 			{
@@ -683,9 +685,12 @@ public class ExpAssistantCG extends AssistantBase
 			} else if (next instanceof AMapSeqGetExpCG)
 			{
 				next = ((AMapSeqGetExpCG) next).getCol();
+			} else if (next instanceof AApplyExpCG)
+			{
+				next = ((AApplyExpCG) next).getRoot();
 			}
 		}
-		
+
 		return next;
 	}
 	
