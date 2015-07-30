@@ -1,26 +1,26 @@
 package org.overture.codegen.vdm2jml;
 
 import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.logging.Logger;
 
 public class RecModHandler
 {
 	private InvAssertionTrans invTrans;
+	private RecModUtil util;
 
 	public RecModHandler(InvAssertionTrans invTrans)
 	{
 		this.invTrans = invTrans;
+		this.util = new RecModUtil(this);
 	}
 
 	public void handleCallObj(ACallObjectExpStmCG node)
 	{
-		if (simpleRecSetCallOutsideAtomic(node))
+		if (util.simpleRecSetCallOutsideAtomic(node))
 		{
 			/**
 			 * E.g. rec.set_(3). Setter call to record outside atomic statement block
@@ -34,9 +34,9 @@ public class RecModHandler
 		{
 			SVarExpCG var = (SVarExpCG) subject;
 
-			if (isRec(var))
+			if (util.isRec(var))
 			{
-				handleRecAssert(node, var);
+				util.handleRecAssert(node, var);
 			}
 		} else
 		{
@@ -52,9 +52,9 @@ public class RecModHandler
 
 		if (subject instanceof SVarExpCG)
 		{
-			if (isRec(subject))
+			if (util.isRec(subject))
 			{
-				handleRecAssert(node, (SVarExpCG) subject);
+				util.handleRecAssert(node, (SVarExpCG) subject);
 			}
 		} else
 		{
@@ -64,38 +64,8 @@ public class RecModHandler
 		}
 	}
 	
-	public boolean simpleRecSetCallOutsideAtomic(ACallObjectExpStmCG node)
+	public InvAssertionTrans getInvTrans()
 	{
-		return !invTrans.getJmlGen().getJavaGen().getInfo().getStmAssistant().inAtomic(node)
-				&& node.getObj() instanceof SVarExpCG
-				&& node.getObj().getType() instanceof ARecordTypeCG;
-	}
-
-	public void handleRecAssert(SStmCG stm, SVarExpCG var)
-	{
-		if (invTrans.getRecChecks() != null)
-		{
-			String recCheck = consValidRecCheck(var);
-
-			// No need to assert the same thing twice
-			if (!invTrans.getRecChecks().contains(recCheck))
-			{
-				invTrans.getRecChecks().add(recCheck);
-			}
-		} else
-		{
-			invTrans.appendAsserts(stm, consValidRecCheck(var));
-		}
-	}
-
-	public String consValidRecCheck(SVarExpCG var)
-	{
-		return "//@ assert " + var.getName() + ".valid();";
-	}
-
-	public boolean isRec(SExpCG exp)
-	{
-		return exp.getType().getNamedInvType() == null
-				&& exp.getType() instanceof ARecordTypeCG;
+		return invTrans;
 	}
 }
