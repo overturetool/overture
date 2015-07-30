@@ -21,7 +21,7 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 	{
 		this.jmlGen = jmlGen;
 	}
-
+	
 	@Override
 	public void caseAAtomicStmCG(AAtomicStmCG node) throws AnalysisException
 	{
@@ -96,5 +96,15 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 		jmlGen.getAnnotator().appendMetaData(setStm, setMetaData);
 
 		return setStm;
+	}
+	
+	public JmlGenerator getJmlGen()
+	{
+		return jmlGen;
+	}
+	
+	public List<String> getRecChecks()
+	{
+		return recVarChecks;
 	}
 }

@@ -44,16 +44,19 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public static final String RET_VAR_NAME_PREFIX = "ret_";
 	public static final String MAP_SEQ_NAME_PREFIX = "col_";
 	
+	private RecModHandler recHandler;
+	
 	public InvAssertionTrans(JmlGenerator jmlGen)
 	{
 		super(jmlGen);
+		this.recHandler = new RecModHandler(this);
 	}
 	
 	@Override
 	public void caseACallObjectExpStmCG(ACallObjectExpStmCG node)
 			throws AnalysisException
 	{
-		handleCallObj(node);
+		recHandler.handleCallObj(node);
 		// TODO: Handle setter calls to records
 		// Consider collecting them in the RecAccessorTrans
 		
@@ -238,7 +241,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public void caseAAssignToExpStmCG(AAssignToExpStmCG node)
 			throws AnalysisException
 	{
-		handleAssign(node);
+		recHandler.handleAssign(node);
 		// <target> := atomic_tmp;
 
 		/*
@@ -290,7 +293,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
 			throws AnalysisException
 	{
-		handleMapSeq(node);
+		recHandler.handleMapSeq(node);
 		//TODO: Consider this for the atomic statement
 		
 		SExpCG col = node.getCol();
@@ -610,136 +613,6 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		// So for our example varName will be a.b.c
 		
 		return varName.toString();
-	}
-	
-	//
-	// Start of RecModCheckTrans porting
-	//
-	
-	// Not there originally
-	private void handleCallObj(ACallObjectExpStmCG node)
-	{
-		//
-		// TODO: copy and paste...
-		//
-		
-		if (!jmlGen.getJavaGen().getInfo().getStmAssistant().inAtomic(node)
-				&& node.getObj() instanceof SVarExpCG
-				&& node.getObj().getType() instanceof ARecordTypeCG)
-		{
-			/**
-			 * E.g. rec.set_(3). Setter call to record outside atomic statement block
-			 */
-			return;
-		}
-		
-		SExpCG subject = jmlGen.getJavaGen().getInfo().getExpAssistant().findSubject(node.getObj());
-
-		if (subject instanceof SVarExpCG)
-		{
-			SVarExpCG var = (SVarExpCG) subject;
-
-			if (isRec(var))
-			{
-				handleRecAssert(node, var);
-			}
-		} else
-		{
-			Logger.getLog().printErrorln("Expected target to a variable expression at this point. Got "
-					+ subject + " in '" + this.getClass().getSimpleName() + "'");
-		}		
-	}
-	
-	//Reconsider..
-	public void handleAssign(AAssignToExpStmCG node)
-			throws AnalysisException
-	{
-		if (node.getTarget() instanceof SVarExpCG
-				&& node.getTarget().getType() instanceof ARecordTypeCG)
-		{
-			/**
-			 * E.g. St = new St(..). Violation will be detected when constructing the record value or in the temporary
-			 * variable section if the assignment occurs in the context of an atomic statement block
-			 */
-			return;
-		}
-
-		if (!jmlGen.getJavaGen().getInfo().getStmAssistant().inAtomic(node)
-				&& node.getTarget() instanceof AFieldExpCG
-				&& ((AFieldExpCG) node.getTarget()).getObject().getType() instanceof ARecordTypeCG)
-		{
-			/**
-			 * E.g. rec.set_(3). Setter call to record outside atomic statement block
-			 */
-			return;
-		}
-
-		SExpCG subject = jmlGen.getJavaGen().getInfo().getExpAssistant().findSubject(node.getTarget());
-
-		/**
-		 * Note that this case method does not have to consider state updates on the form stateComp(52) := 4 since they
-		 * get transformed into AMapSeqUpdateStmCGs which are treated using a separate case method in this visitor
-		 */
-		if (subject instanceof SVarExpCG)
-		{
-			SVarExpCG var = (SVarExpCG) subject;
-
-			if (isRec(var))
-			{
-				handleRecAssert(node, var);
-			}
-		} else
-		{
-			Logger.getLog().printErrorln("Expected target to a variable expression at this point. Got "
-					+ subject + " in '" + this.getClass().getSimpleName() + "'");
-		}
-	}
-	
-	//Reconsider
-	public void handleMapSeq(AMapSeqUpdateStmCG node)
-			throws AnalysisException
-	{
-		SExpCG subject = jmlGen.getJavaGen().getInfo().getExpAssistant().findSubject(node.getCol());
-
-		if (subject instanceof SVarExpCG)
-		{
-			if (isRec(subject))
-			{
-				handleRecAssert(node, (SVarExpCG) subject);
-			}
-		} else
-		{
-			Logger.getLog().printErrorln("Expected 'next' to be a variable expression at this point. Got: "
-					+ subject + " in '" + this.getClass().getSimpleName() + "'");
-		}
-	}
-	
-	private void handleRecAssert(SStmCG stm, SVarExpCG var)
-	{
-		if(recVarChecks != null)
-		{
-			String recCheck = consValidRecCheck(var);
-			
-			// No need to assert the same thing twice
-			if(!recVarChecks.contains(recCheck))
-			{
-				recVarChecks.add(recCheck);
-			}
-		}
-		else
-		{
-			appendAsserts(stm, consValidRecCheck(var));
-		}
-	}
-
-	private String consValidRecCheck(SVarExpCG var)
-	{
-		return "//@ assert " + var.getName() + ".valid();";
-	}
-	
-	public boolean isRec(SExpCG exp)
-	{
-		return exp.getType().getNamedInvType() == null && exp.getType() instanceof ARecordTypeCG;
 	}
 }
 
