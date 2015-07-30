@@ -139,9 +139,6 @@ public class JmlGenerator implements IREventObserver
 		// All the record methods are JML pure (getters and setters are added just below)
 		annotator.makeRecMethodsPure(ast);
 		
-		// We append the record modification checks before we apply the RecAccessorTrans
-		addRecModAssertions(ast);
-		
 		// Transform the IR such that access to record state is done via getters and setters.
 		makeRecStateAccessorBased(ast);
 		
@@ -225,7 +222,8 @@ public class JmlGenerator implements IREventObserver
 			}
 		}
 		
-		addNamedTypeInvariantAssertions(newAst);
+		// Add assertions to check for violation of record and named type invariants
+		addAssertions(newAst);
 
 		// Make sure that the JML annotations are ordered correctly
 		sortAnnotations(newAst);
@@ -291,7 +289,7 @@ public class JmlGenerator implements IREventObserver
 		this.typeInfoList = depCalc.getTypeDataList();
 	}
 
-	private void addNamedTypeInvariantAssertions(List<IRStatus<INode>> newAst)
+	private void addAssertions(List<IRStatus<INode>> newAst)
 	{
 		NamedTypeInvTrans assertTr = new NamedTypeInvTrans(this);
 		
@@ -581,27 +579,5 @@ public class JmlGenerator implements IREventObserver
 	public AClassDeclCG getInvChecksFlagOwner()
 	{
 		return invChecksFlagOwner;
-	}
-	private void addRecModAssertions(List<IRStatus<INode>> ast)
-	{
-		RecModCheckTrans assertTr = new RecModCheckTrans(this);
-		
-		for (IRStatus<AClassDeclCG> status : IRStatus.extract(ast, AClassDeclCG.class))
-		{
-			AClassDeclCG clazz = status.getIrNode();
-
-			if (!this.javaGen.getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
-			{
-				try
-				{
-					this.javaGen.getIRGenerator().applyPartialTransformation(status, assertTr);
-				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
-				{
-					Logger.getLog().printErrorln("Unexpected problem occured when applying transformation in '"
-							+ this.getClass().getSimpleName() + "'");
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 }
