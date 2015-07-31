@@ -211,7 +211,7 @@ public class NamedTypeInvHandler
 		body.apply(invTrans);
 	}
 
-	public void handleMapSeq(AMapSeqUpdateStmCG node)
+	public AMetaStmCG handleMapSeq(AMapSeqUpdateStmCG node)
 	{
 		// TODO: Consider this for the atomic statement
 
@@ -225,7 +225,7 @@ public class NamedTypeInvHandler
 
 			if (enclosingClass == null)
 			{
-				return;
+				return null;
 			}
 
 			String name;
@@ -239,11 +239,13 @@ public class NamedTypeInvHandler
 				Logger.getLog().printErrorln("Expected collection to be a variable expression at this point. Got: "
 						+ col + " in '" + this.getClass().getSimpleName()
 						+ "'");
-				return;
+				return null;
 			}
 
-			util.injectAssertion(node, invTypes, enclosingClass.getName(), name, true);
+			return util.consAssertStm(invTypes, enclosingClass.getName(), name);
 		}
+		
+		return null;
 	}
 
 	public void handleVarDecl(AVarDeclCG node)
@@ -311,7 +313,7 @@ public class NamedTypeInvHandler
 		}
 	}
 
-	public void handleCallObj(ACallObjectExpStmCG node)
+	public AMetaStmCG handleCallObj(ACallObjectExpStmCG node)
 	{
 		// TODO: Handle setter calls to records
 		// Consider collecting them in the RecAccessorTrans
@@ -336,13 +338,10 @@ public class NamedTypeInvHandler
 
 				if (encClass == null)
 				{
-					return;
+					return null;
 				}
 
-				ABlockStmCG replBlock = new ABlockStmCG();
-				invTrans.getJmlGen().getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
-				replBlock.getStatements().add(node);
-				replBlock.getStatements().add(util.consAssertStm(invTypes, encClass.getName(), recObjVar.getName()));
+				return util.consAssertStm(invTypes, encClass.getName(), recObjVar.getName());
 			}
 
 		} else if (recObj instanceof AFieldExpCG)
@@ -360,6 +359,8 @@ public class NamedTypeInvHandler
 					+ this.getClass().getSimpleName() + "'. Target found: "
 					+ recObj);
 		}
+		
+		return null;
 	}
 	
 	public void handleAssign(AAssignToExpStmCG node)

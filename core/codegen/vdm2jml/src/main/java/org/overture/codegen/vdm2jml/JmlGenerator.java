@@ -2,6 +2,7 @@ package org.overture.codegen.vdm2jml;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SFunctionDefinition;
@@ -223,10 +224,10 @@ public class JmlGenerator implements IREventObserver
 		}
 		
 		// Normalise targets of call object statements and mapseq updates
-		normaliseTargets(newAst);
+		Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars = normaliseTargets(newAst);
 		
 		// Add assertions to check for violation of record and named type invariants
-		addAssertions(newAst);
+		addAssertions(newAst, stateDesVars);
 
 		// Make sure that the JML annotations are ordered correctly
 		sortAnnotations(newAst);
@@ -292,9 +293,9 @@ public class JmlGenerator implements IREventObserver
 		this.typeInfoList = depCalc.getTypeDataList();
 	}
 
-	private void addAssertions(List<IRStatus<INode>> newAst)
+	private void addAssertions(List<IRStatus<INode>> newAst, Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars)
 	{
-		InvAssertionTrans assertTr = new InvAssertionTrans(this);
+		InvAssertionTrans assertTr = new InvAssertionTrans(this, stateDesVars);
 		
 		for (IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
 		{
@@ -534,21 +535,24 @@ public class JmlGenerator implements IREventObserver
 		}
 	}
 	
-	public void normaliseTargets(List<IRStatus<INode>> newAst)
+	public Map<SStmCG, List<AIdentifierVarExpCG>> normaliseTargets(List<IRStatus<INode>> newAst)
 	{
-		TargetNormaliserTrans targetSplitTr = new TargetNormaliserTrans(this);
-		for(IRStatus<INode> n : newAst)
+		TargetNormaliserTrans normaliser = new TargetNormaliserTrans(this);
+		for (IRStatus<INode> n : newAst)
 		{
 			try
 			{
-				javaGen.getIRGenerator().applyPartialTransformation(n, targetSplitTr);
+				javaGen.getIRGenerator().applyPartialTransformation(n, normaliser);
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
-				// TODO Auto-generated catch block
+				Logger.getLog().printErrorln("Problem normalising state designators in '"
+						+ this.getClass().getSimpleName() + "': "
+						+ e.getMessage());
 				e.printStackTrace();
 			}
 		}
-		
+
+		return normaliser.getStateDesVars();
 	}
 
 	public IRSettings getIrSettings()

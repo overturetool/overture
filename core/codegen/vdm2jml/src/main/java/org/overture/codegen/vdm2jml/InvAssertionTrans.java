@@ -1,14 +1,21 @@
 package org.overture.codegen.vdm2jml;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
+import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.trans.AtomicStmTrans;
 
@@ -23,20 +30,26 @@ public class InvAssertionTrans extends AtomicAssertTrans
 {
 	private RecModHandler recHandler;
 	private NamedTypeInvHandler namedTypeHandler;
-
-	public InvAssertionTrans(JmlGenerator jmlGen)
+	private Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars;
+	
+	public InvAssertionTrans(JmlGenerator jmlGen, Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars)
 	{
 		super(jmlGen);
 		this.recHandler = new RecModHandler(this);
 		this.namedTypeHandler = new NamedTypeInvHandler(this);
+		this.stateDesVars = stateDesVars;
 	}
 
 	@Override
 	public void caseACallObjectExpStmCG(ACallObjectExpStmCG node)
 			throws AnalysisException
 	{
-		recHandler.handleCallObj(node);
-		namedTypeHandler.handleCallObj(node);
+		List<AMetaStmCG> asserts = new LinkedList<AMetaStmCG>();
+		
+		add(asserts, recHandler.handleCallObj(node));
+		add(asserts, namedTypeHandler.handleCallObj(node));
+		
+		appendAsserts(node, asserts);		
 	}
 
 	@Override
@@ -76,8 +89,12 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
 			throws AnalysisException
 	{
-		recHandler.handleMapSeq(node);
-		namedTypeHandler.handleMapSeq(node);
+		List<AMetaStmCG> asserts = new LinkedList<AMetaStmCG>();
+		
+		add(asserts, recHandler.handleMapSeq(node));
+		add(asserts, namedTypeHandler.handleMapSeq(node));
+		
+		appendAsserts(node, asserts);
 	}
 
 	@Override
@@ -96,5 +113,30 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
 	{
 		namedTypeHandler.handleClass(node);
+	}
+	
+	private void add(List<AMetaStmCG> asserts, AMetaStmCG as)
+	{
+		if(as != null)
+		{
+			asserts.add(as);
+		}
+	}
+	
+	private void appendAsserts(SStmCG node, List<AMetaStmCG> asserts)
+	{
+		if(asserts.isEmpty())
+		{
+			return;
+		}
+		
+		ABlockStmCG replBlock = new ABlockStmCG();
+		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
+		replBlock.getStatements().add(node);
+		
+		for(AMetaStmCG a : asserts)
+		{
+			replBlock.getStatements().add(a);
+		}
 	}
 }

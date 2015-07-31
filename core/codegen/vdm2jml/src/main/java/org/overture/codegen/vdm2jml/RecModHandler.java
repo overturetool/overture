@@ -2,9 +2,11 @@ package org.overture.codegen.vdm2jml;
 
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
+import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.logging.Logger;
 
 public class RecModHandler
@@ -18,14 +20,14 @@ public class RecModHandler
 		this.util = new RecModUtil(this);
 	}
 
-	public void handleCallObj(ACallObjectExpStmCG node)
+	public AMetaStmCG handleCallObj(ACallObjectExpStmCG node)
 	{
 		if (util.simpleRecSetCallOutsideAtomic(node))
 		{
 			/**
 			 * E.g. rec.set_(3). Setter call to record outside atomic statement block
 			 */
-			return;
+			return null;
 		}
 
 		SExpCG subject = invTrans.getJmlGen().getJavaGen().getInfo().getExpAssistant().findSubject(node.getObj());
@@ -36,7 +38,7 @@ public class RecModHandler
 
 			if (util.isRec(var))
 			{
-				util.handleRecAssert(node, var);
+				return util.handleRecAssert(node, var);
 			}
 		} else
 		{
@@ -44,9 +46,10 @@ public class RecModHandler
 					+ subject + " in '" + this.getClass().getSimpleName()
 					+ "'");
 		}
+		return null;
 	}
 
-	public void handleMapSeq(AMapSeqUpdateStmCG node) throws AnalysisException
+	public AMetaStmCG handleMapSeq(AMapSeqUpdateStmCG node) throws AnalysisException
 	{
 		SExpCG subject = invTrans.getJmlGen().getJavaGen().getInfo().getExpAssistant().findSubject(node.getCol());
 
@@ -54,7 +57,7 @@ public class RecModHandler
 		{
 			if (util.isRec(subject))
 			{
-				util.handleRecAssert(node, (SVarExpCG) subject);
+				return util.handleRecAssert(node, (SVarExpCG) subject);
 			}
 		} else
 		{
@@ -62,6 +65,8 @@ public class RecModHandler
 					+ subject + " in '" + this.getClass().getSimpleName()
 					+ "'");
 		}
+		
+		return null;
 	}
 	
 	public InvAssertionTrans getInvTrans()

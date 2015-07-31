@@ -65,26 +65,12 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 	
-	protected void appendAsserts(SStmCG stm, String str)
+	protected AMetaStmCG consMetaStm(String str)
 	{
-		if (stm.parent() != null)
-		{
-			AMetaStmCG assertion = new AMetaStmCG();
-			jmlGen.getAnnotator().appendMetaData(assertion, jmlGen.getAnnotator().consMetaData(str));
-
-			ABlockStmCG replacementBlock = new ABlockStmCG();
-
-			jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(stm, replacementBlock);
-
-			replacementBlock.getStatements().add(stm);
-			replacementBlock.getStatements().add(assertion);
-
-		} else
-		{
-			Logger.getLog().printErrorln("Could not find parent node of " + stm
-					+ " and therefore no assertion could be inserted (in"
-					+ this.getClass().getSimpleName() + ")");
-		}
+		AMetaStmCG assertion = new AMetaStmCG();
+		jmlGen.getAnnotator().appendMetaData(assertion, jmlGen.getAnnotator().consMetaData(str));
+		
+		return assertion;
 	}
 	
 	protected AMetaStmCG consInvChecksStm(boolean val)

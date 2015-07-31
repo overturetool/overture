@@ -4,6 +4,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
+import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 
 public class RecModUtil
@@ -22,7 +23,7 @@ public class RecModUtil
 				&& node.getObj().getType() instanceof ARecordTypeCG;
 	}
 
-	public void handleRecAssert(SStmCG stm, SVarExpCG var)
+	public AMetaStmCG handleRecAssert(SStmCG stm, SVarExpCG var)
 	{
 		if (handler.getInvTrans().getRecChecks() != null)
 		{
@@ -35,8 +36,10 @@ public class RecModUtil
 			}
 		} else
 		{
-			handler.getInvTrans().appendAsserts(stm, consValidRecCheck(var));
+			return handler.getInvTrans().consMetaStm(consValidRecCheck(var));
 		}
+		
+		return null;
 	}
 
 	public String consValidRecCheck(SVarExpCG var)
