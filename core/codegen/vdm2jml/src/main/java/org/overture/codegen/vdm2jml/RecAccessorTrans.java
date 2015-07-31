@@ -11,8 +11,10 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.AMapSeqGetExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
+import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -131,7 +133,7 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 	private boolean cloneFieldRead(AFieldExpCG node)
 	{
 		JavaValueSemantics valSem = jmlGen.getJavaGen().getJavaFormat().getValueSemantics();
-		return !inTarget && !isObjOfFieldExp(node)
+		return !inTarget && !isObjOfFieldExp(node) && !isColOfMapSeq(node)
 				&& valSem.usesStructuralEquivalence(node.getType());
 	}
 
@@ -139,6 +141,12 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 	{
 		return node.parent() instanceof AFieldExpCG
 				&& ((AFieldExpCG) node.parent()).getObject() == node;
+	}
+	
+	private boolean isColOfMapSeq(AFieldExpCG node)
+	{
+		return (node.parent() instanceof AMapSeqGetExpCG && ((AMapSeqGetExpCG) node.parent()).getCol() == node) ||
+				(node.parent() instanceof AMapSeqUpdateStmCG && ((AMapSeqUpdateStmCG) node.parent()).getCol() == node);
 	}
 
 	private List<AMethodDeclCG> consAccessors(ARecordDeclCG node)
