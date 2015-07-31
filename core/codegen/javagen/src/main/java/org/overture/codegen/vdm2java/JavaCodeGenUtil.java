@@ -243,7 +243,7 @@ public class JavaCodeGenUtil
 			}
 		}
 		
-		for(String kw : IJavaCodeGenConstants.RESERVED_WORDS)
+		for(String kw : IJavaConstants.RESERVED_WORDS)
 		{
 			if(s.equals(kw))
 			{
@@ -332,7 +332,7 @@ public class JavaCodeGenUtil
 
 		for (File f : files)
 		{
-			if (f.getName().endsWith(IJavaCodeGenConstants.JAVA_FILE_EXTENSION))
+			if (f.getName().endsWith(IJavaConstants.JAVA_FILE_EXTENSION))
 			{
 				javaFilePaths.add(f.getAbsolutePath());
 			}

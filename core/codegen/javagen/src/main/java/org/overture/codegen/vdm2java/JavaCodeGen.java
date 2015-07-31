@@ -762,7 +762,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 				javaFileName += JAVA_QUOTE_NAME_SUFFIX;
 			}
 
-			javaFileName += IJavaCodeGenConstants.JAVA_FILE_EXTENSION;
+			javaFileName += IJavaConstants.JAVA_FILE_EXTENSION;
 
 			JavaCodeGenUtil.saveJavaClass(moduleOutputDir, javaFileName, generatedModule.getContent());
 		}
@@ -774,7 +774,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		AssistantManager assistantManager = generator.getIRInfo().getAssistantManager();
 		VdmAstAnalysis analysis = new VdmAstAnalysis(assistantManager);
 
-		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaCodeGenConstants.RESERVED_WORDS, generator.getIRInfo(), INVALID_NAME_PREFIX));
+		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaConstants.RESERVED_WORDS, generator.getIRInfo(), INVALID_NAME_PREFIX));
 		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(JAVA_RESERVED_TYPE_NAMES, generator.getIRInfo(), INVALID_NAME_PREFIX));
 
 		String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, varPrefixManager.getIteVarPrefixes().GENERATED_TEMP_NAMES);

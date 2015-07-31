@@ -47,7 +47,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 	{
 		AClassDeclCG decl = new AClassDeclCG();
 		decl.setAbstract(false);
-		decl.setAccess(JavaFormat.JAVA_PUBLIC);
+		decl.setAccess(IJavaConstants.PUBLIC);
 		decl.setName(quoteClassName);
 		decl.setStatic(false);
 		
@@ -77,10 +77,10 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 	private AFieldDeclCG consHashcodeField()
 	{
 		AExternalTypeCG fieldType = new AExternalTypeCG();
-		fieldType.setName(JavaFormat.JAVA_INT);
+		fieldType.setName(IJavaConstants.INT);
 		
 		AFieldDeclCG field = new AFieldDeclCG();
-		field.setAccess(JavaFormat.JAVA_PRIVATE);
+		field.setAccess(IJavaConstants.PRIVATE);
 		field.setVolatile(false);
 		field.setFinal(false);
 		field.setStatic(true);
@@ -97,7 +97,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		quoteClassType.setName(name);
 
 		AFieldDeclCG field = new AFieldDeclCG();
-		field.setAccess(JavaFormat.JAVA_PRIVATE);
+		field.setAccess(IJavaConstants.PRIVATE);
 		field.setVolatile(false);
 		field.setFinal(false);
 		field.setStatic(true);
@@ -111,7 +111,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 	private AMethodDeclCG consQuoteCtor(String name)
 	{
 		AExternalTypeCG fieldType = new AExternalTypeCG();
-		fieldType.setName(JavaFormat.JAVA_INT);
+		fieldType.setName(IJavaConstants.INT);
 		
 		AIdentifierVarExpCG hashcodeVar = transAssistant.getInfo().getExpAssistant().consIdVar(HASHCODE_FIELD, fieldType);
 		
@@ -204,7 +204,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		
 		getInstanceMethod.setImplicit(false);
 		getInstanceMethod.setAbstract(false);
-		getInstanceMethod.setAccess(JavaFormat.JAVA_PUBLIC);
+		getInstanceMethod.setAccess(IJavaConstants.PUBLIC);
 		getInstanceMethod.setIsConstructor(false);
 		getInstanceMethod.setName(GET_INSTANCE_METHOD);
 		getInstanceMethod.setStatic(true);
@@ -277,7 +277,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 	private STypeCG consFieldType()
 	{
 		AExternalTypeCG fieldType = new AExternalTypeCG();
-		fieldType.setName(JavaFormat.JAVA_INT);
+		fieldType.setName(IJavaConstants.INT);
 		
 		return fieldType;
 	}

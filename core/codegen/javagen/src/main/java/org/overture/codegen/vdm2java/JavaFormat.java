@@ -111,11 +111,6 @@ public class JavaFormat
 	public static final String SET_UTIL_FILE = "SetUtil";
 	public static final String MAP_UTIL_FILE = "MapUtil";
 
-	public static final String JAVA_PUBLIC = "public";
-	public static final String JAVA_PRIVATE = "private";
-	
-	public static final String JAVA_INT = "int";
-
 	private IRInfo info;
 
 	private FunctionValueAssistant functionValueAssistant;

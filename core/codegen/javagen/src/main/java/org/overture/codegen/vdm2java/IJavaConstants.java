@@ -21,7 +21,7 @@
  */
 package org.overture.codegen.vdm2java;
 
-public interface IJavaCodeGenConstants
+public interface IJavaConstants
 {
 	public static final String[] RESERVED_WORDS = {
 			// Java Keywords
@@ -37,4 +37,13 @@ public interface IJavaCodeGenConstants
 	public static final String PACKAGE_JAVA_KEYWORD = "package";
 
 	public static final String JAVA_FILE_EXTENSION = ".java";
+	
+	public static final String PUBLIC = "public";
+	public static final String PRIVATE = "private";
+	
+	public static final String INT = "int";
+	public static final String EQUALS = "equals";
+	public static final String BOOLEAN = "boolean";
+	public static final String HASH_CODE = "hashCode";
+	public static final String TO_STRING = "toString";
 }
