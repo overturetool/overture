@@ -132,7 +132,17 @@ public class JavaFormat
 		this.info = info;
 		this.javaFormatAssistant = new JavaFormatAssistant(this.info);
 	}
-	
+
+	public JavaValueSemantics getValueSemantics()
+	{
+		return valueSemantics;
+	}
+
+	public void setValueSemantics(JavaValueSemantics valueSemantics)
+	{
+		this.valueSemantics = valueSemantics;
+	}
+
 	public JavaRecordCreator getRecCreator()
 	{
 		return recCreator;

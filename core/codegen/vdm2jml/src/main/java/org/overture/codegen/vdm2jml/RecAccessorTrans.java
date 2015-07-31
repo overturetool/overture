@@ -19,8 +19,10 @@ import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.vdm2java.JavaValueSemantics;
 
-public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
+public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
+{
 
 	private static final String VALID = "valid";
 	private static final String GET = "get_";
@@ -28,7 +30,10 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 
 	private JmlGenerator jmlGen;
 
-	public RecAccessorTrans(JmlGenerator jmlGen) {
+	private boolean inTarget = false;
+
+	public RecAccessorTrans(JmlGenerator jmlGen)
+	{
 		this.jmlGen = jmlGen;
 	}
 
@@ -41,19 +46,24 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 	// }
 
 	@Override
-	public void caseARecordDeclCG(ARecordDeclCG node) throws AnalysisException {
+	public void caseARecordDeclCG(ARecordDeclCG node) throws AnalysisException
+	{
 		// TODO: Privatise record fields?
 		node.getMethods().addAll(consAccessors(node));
 		node.getMethods().add(consValidMethod());
 	}
 
 	@Override
-	public void caseAAssignToExpStmCG(AAssignToExpStmCG node) throws AnalysisException {
-		if (node.getTarget() instanceof AFieldExpCG) {
+	public void caseAAssignToExpStmCG(AAssignToExpStmCG node)
+			throws AnalysisException
+	{
+		if (node.getTarget() instanceof AFieldExpCG)
+		{
 
 			AFieldExpCG target = (AFieldExpCG) node.getTarget();
 
-			if (target.getObject().getType() instanceof ARecordTypeCG) {
+			if (target.getObject().getType() instanceof ARecordTypeCG)
+			{
 
 				ACallObjectExpStmCG setCall = new ACallObjectExpStmCG();
 				setCall.setFieldName(consSetCallName(target.getMemberName()));
@@ -64,42 +74,80 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 
 				jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, setCall);
 
+				inTarget = true;
 				setCall.getObj().apply(this);
+				inTarget = false;
+
 				setCall.getArgs().getFirst().apply(this);
 			}
-		} else {
+		} else
+		{
+			inTarget = true;
 			node.getTarget().apply(this);
+			inTarget = false;
 			node.getExp().apply(this);
 		}
 	}
 
 	@Override
-	public void caseAFieldExpCG(AFieldExpCG node) throws AnalysisException {
-
+	public void caseAFieldExpCG(AFieldExpCG node) throws AnalysisException
+	{
 		node.getObject().apply(this);
 
-		if (node.getObject().getType() instanceof ARecordTypeCG) {
+		if (node.getObject().getType() instanceof ARecordTypeCG)
+		{
 			AMethodTypeCG getterType = new AMethodTypeCG();
 			getterType.setResult(node.getType().clone());
 
 			AFieldExpCG getterField = node.clone();
 			getterField.setType(getterType);
-			getterField.setMemberName(consGetCallName(node.getMemberName()));
 
 			AApplyExpCG getCall = new AApplyExpCG();
 			getCall.setRoot(getterField);
 			getCall.setType(node.getType().clone());
 			getCall.setSourceNode(node.getSourceNode());
+			getterField.setMemberName(consGetCallName(node.getMemberName()));
+
+			/**
+			 * The getters added to the record classes do not copy object references representing values. Therefore we
+			 * need to take it into account when we do the field read call
+			 */
+			if (cloneFieldRead(node))
+			{
+				getCall = makeCopy(getCall);
+			}
 
 			jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, getCall);
 		}
 	}
 
-	private List<AMethodDeclCG> consAccessors(ARecordDeclCG node) {
+	private AApplyExpCG makeCopy(AApplyExpCG getCall)
+	{
+		AApplyExpCG copyCall = jmlGen.getJavaGen().getJavaFormat().getJavaFormatAssistant().consUtilCopyCall();
+		copyCall.getArgs().add(getCall);
+		return copyCall;
+	}
+
+	private boolean cloneFieldRead(AFieldExpCG node)
+	{
+		JavaValueSemantics valSem = jmlGen.getJavaGen().getJavaFormat().getValueSemantics();
+		return !inTarget && !isObjOfFieldExp(node)
+				&& valSem.usesStructuralEquivalence(node.getType());
+	}
+
+	private boolean isObjOfFieldExp(AFieldExpCG node)
+	{
+		return node.parent() instanceof AFieldExpCG
+				&& ((AFieldExpCG) node.parent()).getObject() == node;
+	}
+
+	private List<AMethodDeclCG> consAccessors(ARecordDeclCG node)
+	{
 
 		List<AMethodDeclCG> accessors = new LinkedList<AMethodDeclCG>();
 
-		for (AFieldDeclCG f : node.getFields()) {
+		for (AFieldDeclCG f : node.getFields())
+		{
 			accessors.add(consGetter(f));
 			accessors.add(consSetter(f));
 		}
@@ -107,7 +155,8 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 		return accessors;
 	}
 
-	private AMethodDeclCG consSetter(AFieldDeclCG f) {
+	private AMethodDeclCG consSetter(AFieldDeclCG f)
+	{
 		AMethodDeclCG setter = new AMethodDeclCG();
 
 		setter.setAbstract(false);
@@ -140,7 +189,8 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 		return setter;
 	}
 
-	private AMethodDeclCG consGetter(AFieldDeclCG f) {
+	private AMethodDeclCG consGetter(AFieldDeclCG f)
+	{
 		AMethodDeclCG getter = new AMethodDeclCG();
 		getter.setAbstract(false);
 		getter.setAccess(IRConstants.PUBLIC);
@@ -158,9 +208,9 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 		AReturnStmCG returnField = new AReturnStmCG();
 		returnField.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consIdVar(f.getName(), f.getType().clone()));
 		getter.setBody(returnField);
-		
+
 		jmlGen.getAnnotator().makePure(getter);
-		
+
 		return getter;
 	}
 
@@ -179,26 +229,29 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor {
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(new ABoolBasicTypeCG());
 		validMethod.setMethodType(methodType);
-		
+
 		jmlGen.getAnnotator().makePure(validMethod);
-		
+
 		AReturnStmCG body = new AReturnStmCG();
 		body.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consBoolLiteral(true));
-		
+
 		validMethod.setBody(body);
-		
+
 		return validMethod;
 	}
-	
-	public String consGetCallName(String fieldName) {
+
+	public String consGetCallName(String fieldName)
+	{
 		return GET + fieldName;
 	}
 
-	public String consSetCallName(String fieldName) {
+	public String consSetCallName(String fieldName)
+	{
 		return SET + fieldName;
 	}
 
-	private String consParamName(AFieldDeclCG f) {
+	private String consParamName(AFieldDeclCG f)
+	{
 		return "_" + f.getName();
 	}
 }

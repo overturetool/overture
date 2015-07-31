@@ -25,7 +25,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.LexLocation;
 import org.overture.codegen.utils.GeneralUtils;
-import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
+import org.overture.codegen.vdm2java.IJavaConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaToolsUtils;
@@ -199,7 +199,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 		
 		for(File f : files)
 		{
-			if(f.getName().endsWith(IJavaCodeGenConstants.JAVA_FILE_EXTENSION))
+			if(f.getName().endsWith(IJavaConstants.JAVA_FILE_EXTENSION))
 			{
 				javaFiles.add(f);
 			}
@@ -223,7 +223,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 		{
 			String absPath = file.getAbsolutePath();
 
-			if (absPath.endsWith(IJavaCodeGenConstants.JAVA_FILE_EXTENSION)
+			if (absPath.endsWith(IJavaConstants.JAVA_FILE_EXTENSION)
 					&& absPath.contains(projDir)
 					&& !absPath.contains(quotesDir))
 			{
@@ -294,7 +294,7 @@ public class JmlExecTests extends OpenJmlValidationBase
 	{
 		File mainClassRes = new File(AnnotationTestsBase.TEST_RESOURCES_ROOT, MAIN_CLASS_RES);
 		File mainClassJavaFile = new File(genJavaFolder, MAIN_CLASS_NAME
-				+ IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
+				+ IJavaConstants.JAVA_FILE_EXTENSION);
 
 		try
 		{

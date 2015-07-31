@@ -417,7 +417,7 @@ public class JavaValueSemantics
 				&& ((AExternalTypeCG) classType).getName().equals(JavaFormat.UTILS_FILE);
 	}
 
-	private boolean usesStructuralEquivalence(STypeCG type)
+	public boolean usesStructuralEquivalence(STypeCG type)
 	{
 		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG
 				|| type instanceof SSeqTypeCG || type instanceof SSetTypeCG
