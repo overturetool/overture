@@ -3,11 +3,11 @@ package org.overture.codegen.vdm2jml;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.ast.expressions.AFieldExp;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.PatternAssistantCG;
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
@@ -28,7 +28,6 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 	public static final String STATE_DES = "stateDes_";
 
 	// Consider atomic
-	// Consider cloning
 	// Consider the 'index' exp and side effects a.b('a').c (also for applies, although get calls do not really receive
 	// any arguments)
 
@@ -43,42 +42,44 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 	public void caseACallObjectExpStmCG(ACallObjectExpStmCG node)
 			throws AnalysisException
 	{
-		List<AVarDeclCG> temps = new LinkedList<AVarDeclCG>();
-		SExpCG target = splitTarget(node.getObj(), temps);
-
-		ABlockStmCG replBlock = new ABlockStmCG();
-		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
-
-		for (AVarDeclCG t : temps)
-		{
-			replBlock.getLocalDefs().add(t);
-		}
-
-		replBlock.getStatements().add(node);
-
-		if (target != node.getObj())
-		{
-			jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node.getObj(), target);
-		}
+		normaliseTarget(node, node.getObj());
 	}
 
 	@Override
 	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
 			throws AnalysisException
 	{
-		// TODO Auto-generated method stub
-		super.caseAMapSeqUpdateStmCG(node);
+		normaliseTarget(node, node.getCol());
 	}
 
-	@Override
-	public void caseAMapSeqGetExpCG(AMapSeqGetExpCG node)
-			throws AnalysisException
+	private void normaliseTarget(SStmCG node, SExpCG target)
 	{
-		// TODO Auto-generated method stub
-		super.caseAMapSeqGetExpCG(node);
+		List<AVarDeclCG> vars = new LinkedList<AVarDeclCG>();
+
+		SExpCG newTarget = splitTarget(target, vars);
+
+		if (vars.isEmpty())
+		{
+			return;
+		}
+
+		ABlockStmCG replBlock = new ABlockStmCG();
+		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
+
+		for (AVarDeclCG t : vars)
+		{
+			replBlock.getLocalDefs().add(t);
+		}
+
+		replBlock.getStatements().add(node);
+
+		if (newTarget != target)
+		{
+			jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(target, newTarget);
+		}
 	}
 
-	public SExpCG splitTarget(SExpCG target, List<AVarDeclCG> vars)
+	private SExpCG splitTarget(SExpCG target, List<AVarDeclCG> vars)
 	{
 		DeclAssistantCG dAssist = jmlGen.getJavaGen().getInfo().getDeclAssistant();
 		PatternAssistantCG pAssist = jmlGen.getJavaGen().getInfo().getPatternAssistant();
@@ -92,12 +93,12 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 		} else if (target instanceof AMapSeqGetExpCG)
 		{
 			// Utils.mapSeqGet(a.get_m(), 1).get_b()
-			
+
 			AMapSeqGetExpCG get = (AMapSeqGetExpCG) target;
 			SExpCG newCol = splitTarget(get.getCol().clone(), vars);
 			tr.replaceNodeWith(get.getCol(), newCol);
 			// Utils.mapSeqGet(tmp_2, 1).get_b()
-			
+
 			AIdentifierPatternCG id = pAssist.consIdPattern(nameGen.nextVarName(STATE_DES));
 			AVarDeclCG varDecl = dAssist.consLocalVarDecl(get.getType().clone(), id, get.clone());
 			vars.add(varDecl);
@@ -128,7 +129,7 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 			AFieldExpCG field = (AFieldExpCG) target;
 			SExpCG newObj = splitTarget(field.getObject().clone(), vars);
 			tr.replaceNodeWith(field.getObject(), newObj);
-			
+
 			return field;
 		} else
 		{

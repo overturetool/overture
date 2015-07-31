@@ -222,8 +222,8 @@ public class JmlGenerator implements IREventObserver
 			}
 		}
 		
-		// Split targets
-		splitTargets(newAst);
+		// Normalise targets of call object statements and mapseq updates
+		normaliseTargets(newAst);
 		
 		// Add assertions to check for violation of record and named type invariants
 		addAssertions(newAst);
@@ -534,7 +534,7 @@ public class JmlGenerator implements IREventObserver
 		}
 	}
 	
-	public void splitTargets(List<IRStatus<INode>> newAst)
+	public void normaliseTargets(List<IRStatus<INode>> newAst)
 	{
 		TargetNormaliserTrans targetSplitTr = new TargetNormaliserTrans(this);
 		for(IRStatus<INode> n : newAst)
