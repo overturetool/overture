@@ -26,7 +26,7 @@ import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
-public class NamedTypeInvHandler
+public class NamedTypeInvHandler implements IAssert
 {
 	public static final String RET_VAR_NAME_PREFIX = "ret_";
 	public static final String MAP_SEQ_NAME_PREFIX = "col_";
@@ -399,14 +399,14 @@ public class NamedTypeInvHandler
 			return;
 		}
 
-		AClassDeclCG enclosingClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
+		AClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
 
-		if (enclosingClass == null)
+		if (encClass == null)
 		{
 			return;
 		}
 
-		String enclosingClassName = enclosingClass.getName();
+		String enclosingClassName = encClass.getName();
 		String varNameStr = varName.toString();
 
 		util.injectAssertion(node, invTypes, enclosingClassName, varNameStr, true);
@@ -415,5 +415,25 @@ public class NamedTypeInvHandler
 	public JmlGenerator getJmlGen()
 	{
 		return invTrans.getJmlGen();
+	}
+
+	@Override
+	public AMetaStmCG consAssert(AIdentifierVarExpCG var)
+	{
+		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(var.getType());
+
+		if (invTypes.isEmpty())
+		{
+			return null;
+		}
+
+		AClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(var);
+
+		if (encClass == null)
+		{
+			return null;
+		}
+		
+		return util.consAssertStm(invTypes, encClass.getName(), var.getName());
 	}
 }

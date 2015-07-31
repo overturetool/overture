@@ -44,12 +44,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public void caseACallObjectExpStmCG(ACallObjectExpStmCG node)
 			throws AnalysisException
 	{
-		List<AMetaStmCG> asserts = new LinkedList<AMetaStmCG>();
-		
-		add(asserts, recHandler.handleCallObj(node));
-		add(asserts, namedTypeHandler.handleCallObj(node));
-		
-		appendAsserts(node, asserts);		
+		handleStateUpdate(node, stateDesVars.get(node), recHandler.handleCallObj(node), namedTypeHandler.handleCallObj(node));
 	}
 
 	@Override
@@ -89,12 +84,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
 			throws AnalysisException
 	{
-		List<AMetaStmCG> asserts = new LinkedList<AMetaStmCG>();
-		
-		add(asserts, recHandler.handleMapSeq(node));
-		add(asserts, namedTypeHandler.handleMapSeq(node));
-		
-		appendAsserts(node, asserts);
+		handleStateUpdate(node, stateDesVars.get(node), recHandler.handleMapSeq(node), namedTypeHandler.handleMapSeq(node));
 	}
 
 	@Override
@@ -115,6 +105,39 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		namedTypeHandler.handleClass(node);
 	}
 	
+	private void handleStateUpdate(SStmCG node,
+			List<AIdentifierVarExpCG> objVars, AMetaStmCG recAssert,
+			AMetaStmCG namedTypeInvAssert)
+	{
+		if (recAssert == null && namedTypeInvAssert == null && objVars == null)
+		{
+			return;
+		}
+		
+		List<AMetaStmCG> asserts = new LinkedList<AMetaStmCG>();
+		
+		add(asserts, recAssert);
+		add(asserts, namedTypeInvAssert);
+		
+		ABlockStmCG replBlock = new ABlockStmCG();
+		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
+		replBlock.getStatements().add(node);
+		
+		if(objVars != null)
+		{
+			for(AIdentifierVarExpCG var : objVars)
+			{
+				add(replBlock, recHandler.consAssert(var));
+				add(replBlock, namedTypeHandler.consAssert(var));
+			}
+		}
+		
+		for (AMetaStmCG a : asserts)
+		{
+			replBlock.getStatements().add(a);
+		}
+	}
+	
 	private void add(List<AMetaStmCG> asserts, AMetaStmCG as)
 	{
 		if(as != null)
@@ -123,20 +146,11 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		}
 	}
 	
-	private void appendAsserts(SStmCG node, List<AMetaStmCG> asserts)
+	private void add(ABlockStmCG block, AMetaStmCG as)
 	{
-		if(asserts.isEmpty())
+		if(as != null)
 		{
-			return;
-		}
-		
-		ABlockStmCG replBlock = new ABlockStmCG();
-		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
-		replBlock.getStatements().add(node);
-		
-		for(AMetaStmCG a : asserts)
-		{
-			replBlock.getStatements().add(a);
+			block.getStatements().add(as);
 		}
 	}
 }

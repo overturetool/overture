@@ -9,7 +9,7 @@ import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.logging.Logger;
 
-public class RecModHandler
+public class RecModHandler implements IAssert
 {
 	private InvAssertionTrans invTrans;
 	private RecModUtil util;
@@ -72,5 +72,18 @@ public class RecModHandler
 	public InvAssertionTrans getInvTrans()
 	{
 		return invTrans;
+	}
+
+	@Override
+	public AMetaStmCG consAssert(AIdentifierVarExpCG var)
+	{
+		if(util.isRec(var))
+		{
+			return invTrans.consMetaStm(util.consValidRecCheck(var));
+		}
+		else
+		{
+			return null;
+		}
 	}
 }
