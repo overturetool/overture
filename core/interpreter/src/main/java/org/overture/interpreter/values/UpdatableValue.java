@@ -189,7 +189,10 @@ public class UpdatableValue extends ReferenceValue
 		{
 			for (ValueListener vl: list)
 			{
-				listeners.add(vl);
+				if (!listeners.contains(vl))
+				{
+					listeners.add(vl);
+				}
 			}
 		}
 		else
