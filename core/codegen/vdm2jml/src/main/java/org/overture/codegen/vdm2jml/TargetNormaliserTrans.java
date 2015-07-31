@@ -1,7 +1,9 @@
 package org.overture.codegen.vdm2jml;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
@@ -13,6 +15,7 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AMapSeqGetExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
@@ -32,10 +35,13 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 	// any arguments)
 
 	private JmlGenerator jmlGen;
+	
+	private Map<SStmCG,List<AIdentifierVarExpCG>> stateDesVars;
 
 	public TargetNormaliserTrans(JmlGenerator jmlGen)
 	{
 		this.jmlGen = jmlGen;
+		this.stateDesVars = new HashMap<SStmCG,List<AIdentifierVarExpCG>>();
 	}
 
 	@Override
@@ -45,20 +51,23 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 		normaliseTarget(node, node.getObj());
 	}
 
-	@Override
-	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
-			throws AnalysisException
-	{
-		normaliseTarget(node, node.getCol());
-	}
+//	@Override
+//	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
+//			throws AnalysisException
+//	{
+//		normaliseTarget(node, node.getCol());
+//	}
 
 	private void normaliseTarget(SStmCG node, SExpCG target)
 	{
-		List<AVarDeclCG> vars = new LinkedList<AVarDeclCG>();
+		List<AVarDeclCG> varDecls = new LinkedList<AVarDeclCG>();
+		List<AIdentifierVarExpCG> vars = new LinkedList<AIdentifierVarExpCG>();
 
-		SExpCG newTarget = splitTarget(target, vars);
+		SExpCG newTarget = splitTarget(target, varDecls, vars);
 
-		if (vars.isEmpty())
+		stateDesVars.put(node, vars);
+		
+		if (varDecls.isEmpty())
 		{
 			return;
 		}
@@ -66,7 +75,7 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 		ABlockStmCG replBlock = new ABlockStmCG();
 		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
 
-		for (AVarDeclCG t : vars)
+		for (AVarDeclCG t : varDecls)
 		{
 			replBlock.getLocalDefs().add(t);
 		}
@@ -79,7 +88,7 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private SExpCG splitTarget(SExpCG target, List<AVarDeclCG> vars)
+	private SExpCG splitTarget(SExpCG target, List<AVarDeclCG> varDecls, List<AIdentifierVarExpCG> vars)
 	{
 		DeclAssistantCG dAssist = jmlGen.getJavaGen().getInfo().getDeclAssistant();
 		PatternAssistantCG pAssist = jmlGen.getJavaGen().getInfo().getPatternAssistant();
@@ -95,39 +104,43 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 			// Utils.mapSeqGet(a.get_m(), 1).get_b()
 
 			AMapSeqGetExpCG get = (AMapSeqGetExpCG) target;
-			SExpCG newCol = splitTarget(get.getCol().clone(), vars);
+			SExpCG newCol = splitTarget(get.getCol().clone(), varDecls, vars);
 			tr.replaceNodeWith(get.getCol(), newCol);
 			// Utils.mapSeqGet(tmp_2, 1).get_b()
 
 			AIdentifierPatternCG id = pAssist.consIdPattern(nameGen.nextVarName(STATE_DES));
 			AVarDeclCG varDecl = dAssist.consLocalVarDecl(get.getType().clone(), id, get.clone());
-			vars.add(varDecl);
+			varDecls.add(varDecl);
 			// B tmp_1 = Utils.mapSeqGet(tmp_2, 1).get_b()
 
 			// tmp_1
-			return eAssist.consIdVar(id.getName(), get.getType().clone());
+			AIdentifierVarExpCG var = eAssist.consIdVar(id.getName(), get.getType().clone());
+			vars.add(var);
+			return var;
 
 		} else if (target instanceof AApplyExpCG)
 		{
 			// a.get_b().get_c()
 
 			AApplyExpCG app = (AApplyExpCG) target;
-			SExpCG newRoot = splitTarget(app.getRoot().clone(), vars);
+			SExpCG newRoot = splitTarget(app.getRoot().clone(), varDecls, vars);
 			tr.replaceNodeWith(app.getRoot(), newRoot);
 			// tmp_2.get_c()
 
 			AIdentifierPatternCG id = pAssist.consIdPattern(nameGen.nextVarName(STATE_DES));
 			AVarDeclCG varDecl = dAssist.consLocalVarDecl(app.getType().clone(), id, app.clone());
-			vars.add(varDecl);
+			varDecls.add(varDecl);
 			// C tmp_1 = tmp_2.get_c()
 
 			// tmp_1
-			return eAssist.consIdVar(id.getName(), app.getType().clone());
+			AIdentifierVarExpCG var = eAssist.consIdVar(id.getName(), app.getType().clone());
+			vars.add(var);
+			return var;
 
 		} else if (target instanceof AFieldExpCG)
 		{
 			AFieldExpCG field = (AFieldExpCG) target;
-			SExpCG newObj = splitTarget(field.getObject().clone(), vars);
+			SExpCG newObj = splitTarget(field.getObject().clone(), varDecls, vars);
 			tr.replaceNodeWith(field.getObject(), newObj);
 
 			return field;
@@ -137,5 +150,10 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 					+ this.getClass().getSimpleName() + "'. Got " + target);
 			return null;
 		}
+	}
+
+	public Map<SStmCG, List<AIdentifierVarExpCG>> getStateDesVars()
+	{
+		return stateDesVars;
 	}
 }
