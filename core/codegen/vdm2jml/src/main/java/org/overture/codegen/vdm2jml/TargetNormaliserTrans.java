@@ -48,15 +48,21 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 	public void caseACallObjectExpStmCG(ACallObjectExpStmCG node)
 			throws AnalysisException
 	{
-		normaliseTarget(node, node.getObj());
+		if(!(node.getObj() instanceof SVarExpCG))
+		{
+			normaliseTarget(node, node.getObj());
+		}
 	}
 
-//	@Override
-//	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
-//			throws AnalysisException
-//	{
-//		normaliseTarget(node, node.getCol());
-//	}
+	@Override
+	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
+			throws AnalysisException
+	{
+		if(!(node.getCol() instanceof SVarExpCG))
+		{
+			normaliseTarget(node, node.getCol());
+		}
+	}
 
 	private void normaliseTarget(SStmCG node, SExpCG target)
 	{
@@ -98,7 +104,9 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 
 		if (target instanceof SVarExpCG)
 		{
-			return target;
+			AIdentifierVarExpCG var = ((AIdentifierVarExpCG) target).clone();
+			vars.add(var);
+			return var;
 		} else if (target instanceof AMapSeqGetExpCG)
 		{
 			// Utils.mapSeqGet(a.get_m(), 1).get_b()
