@@ -1,5 +1,6 @@
 package org.overture.codegen.vdm2jml;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -125,9 +126,14 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		
 		if(objVars != null)
 		{
-			for(AIdentifierVarExpCG var : objVars)
+			Collections.reverse(objVars);
+			// Everyone except the first
+			for(int i = 1; i < objVars.size(); i++)
 			{
+				AIdentifierVarExpCG var = objVars.get(i);
+				
 				add(replBlock, recHandler.consAssert(var));
+				// TODO: Will the named type invariants not get handled automatically since they are local variable decls.
 				add(replBlock, namedTypeHandler.consAssert(var));
 			}
 		}
