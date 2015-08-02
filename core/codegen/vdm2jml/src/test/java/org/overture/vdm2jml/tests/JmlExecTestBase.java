@@ -59,8 +59,6 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	{
 		try
 		{
-			codeGenerateInputFile();
-			
 			configureResultGeneration();
 	
 			compileJmlJava();
