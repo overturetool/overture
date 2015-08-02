@@ -31,6 +31,9 @@ import org.overture.vdm2jml.tests.util.ProcessResult;
 
 public abstract class JmlExecTestBase extends OpenJmlValidationBase
 {
+	public static final String TEST_RES_DYNAMIC_ANALYSIS_ROOT = AnnotationTestsBase.TEST_RESOURCES_ROOT
+			+ "dynamic_analysis" + File.separatorChar;
+	
 	public static final String TESTS_VDM2JML_PROPERTY_PREFIX = "tests.vdm2jml.override.";
 	public static final String MAIN_CLASS_NAME = "Main";
 	public static final String MAIN_CLASS_RES = "exec_entry_point";
@@ -41,6 +44,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	public JmlExecTestBase(File inputFile)
 	{
 		super(inputFile);
+		this.isTypeChecked = false;
 	}
 
 	@Before
