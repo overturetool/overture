@@ -39,9 +39,6 @@ abstract public class AnnotationTestsBase
 	public static final String TEST_RES_STATIC_ANALYSIS_ROOT = TEST_RESOURCES_ROOT
 			+ "static_analysis" + File.separatorChar;
 
-	public static final String TEST_RES_DYNAMIC_ANALYSIS_ROOT = TEST_RESOURCES_ROOT
-			+ "dynamic_analysis" + File.separatorChar;
-	
 	public static final String SPEC_PUBLIC_ANNOTATION = "/*@ spec_public @*/";
 	public static final String PURE_ANNOTATION = "/*@ pure @*/";
 	public static final String HELPER_ANNOTATION = "/*@ helper @*/";
