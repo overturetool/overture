@@ -36,7 +36,7 @@ public class RecModHandler implements IAssert
 		{
 			SVarExpCG var = (SVarExpCG) subject;
 
-			if (util.isRec(var))
+			if (util.assertRec(var))
 			{
 				return util.handleRecAssert(node, var);
 			}
@@ -55,7 +55,7 @@ public class RecModHandler implements IAssert
 
 		if (subject instanceof SVarExpCG)
 		{
-			if (util.isRec(subject))
+			if (util.assertRec(subject))
 			{
 				return util.handleRecAssert(node, (SVarExpCG) subject);
 			}
@@ -77,7 +77,7 @@ public class RecModHandler implements IAssert
 	@Override
 	public AMetaStmCG consAssert(AIdentifierVarExpCG var)
 	{
-		if(util.isRec(var))
+		if(util.assertRec(var))
 		{
 			return invTrans.consMetaStm(util.consValidRecCheck(var));
 		}
