@@ -25,12 +25,6 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAAtomicStmCG(AAtomicStmCG node) throws AnalysisException
 	{
-		ABlockStmCG replBlock = new ABlockStmCG();
-		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
-		replBlock.getStatements().add(consInvChecksStm(false));
-		replBlock.getStatements().add(node);
-		replBlock.getStatements().add(consInvChecksStm(true));
-		
 		recVarChecks = new LinkedList<String>();
 		
 		for(SStmCG stm : node.getStatements())
@@ -38,31 +32,17 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 			stm.apply(this);
 		}
 		
-		appendAssertsToAtomic(replBlock);
+		node.getStatements().addFirst(consInvChecksStm(false));
+		node.getStatements().add(consInvChecksStm(true));
+		
+		for(String str : recVarChecks)
+		{
+			AMetaStmCG assertion = new AMetaStmCG();
+			jmlGen.getAnnotator().appendMetaData(assertion, jmlGen.getAnnotator().consMetaData(str));
+			node.getStatements().add(assertion);
+		}
 		
 		recVarChecks = null;
-	}
-
-	protected void appendAssertsToAtomic(ABlockStmCG node)
-	{
-		if (node.parent() != null)
-		{
-			ABlockStmCG replBlock = new ABlockStmCG();
-			jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
-			replBlock.getStatements().add(node);
-			
-			for(String str : recVarChecks)
-			{
-				AMetaStmCG assertion = new AMetaStmCG();
-				jmlGen.getAnnotator().appendMetaData(assertion, jmlGen.getAnnotator().consMetaData(str));
-				replBlock.getStatements().add(assertion);
-			}
-		} else
-		{
-			Logger.getLog().printErrorln("Could not find parent node of " + node
-					+ " and therefore no assertion could be inserted (in"
-					+ this.getClass().getSimpleName() + ")");
-		}
 	}
 	
 	protected AMetaStmCG consMetaStm(String str)
