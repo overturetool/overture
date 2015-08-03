@@ -30,24 +30,21 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 {
 	public static final String STATE_DES = "stateDes_";
 
-	// TODO: Consider the 'index' exp and side effects a.b('a').c (also for applies, although get calls do not really
-	// receive any arguments)
-
 	private JmlGenerator jmlGen;
-	
-	private Map<SStmCG,List<AIdentifierVarExpCG>> stateDesVars;
+
+	private Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars;
 
 	public TargetNormaliserTrans(JmlGenerator jmlGen)
 	{
 		this.jmlGen = jmlGen;
-		this.stateDesVars = new HashMap<SStmCG,List<AIdentifierVarExpCG>>();
+		this.stateDesVars = new HashMap<SStmCG, List<AIdentifierVarExpCG>>();
 	}
 
 	@Override
 	public void caseACallObjectExpStmCG(ACallObjectExpStmCG node)
 			throws AnalysisException
 	{
-		if(!(node.getObj() instanceof SVarExpCG))
+		if (!(node.getObj() instanceof SVarExpCG))
 		{
 			normaliseTarget(node, node.getObj());
 		}
@@ -57,7 +54,7 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
 			throws AnalysisException
 	{
-		if(!(node.getCol() instanceof SVarExpCG))
+		if (!(node.getCol() instanceof SVarExpCG))
 		{
 			normaliseTarget(node, node.getCol());
 		}
@@ -71,7 +68,7 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 		SExpCG newTarget = splitTarget(target, varDecls, vars);
 
 		stateDesVars.put(node, vars);
-		
+
 		if (varDecls.isEmpty())
 		{
 			return;
@@ -80,20 +77,17 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 		ABlockStmCG replBlock = new ABlockStmCG();
 		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
 
-		for (AVarDeclCG t : varDecls)
+		for (AVarDeclCG var : varDecls)
 		{
-			replBlock.getLocalDefs().add(t);
+			replBlock.getLocalDefs().add(var);
 		}
 
 		replBlock.getStatements().add(node);
-
-		if (newTarget != target)
-		{
-			jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(target, newTarget);
-		}
+		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(target, newTarget);
 	}
 
-	private SExpCG splitTarget(SExpCG target, List<AVarDeclCG> varDecls, List<AIdentifierVarExpCG> vars)
+	private SExpCG splitTarget(SExpCG target, List<AVarDeclCG> varDecls,
+			List<AIdentifierVarExpCG> vars)
 	{
 		DeclAssistantCG dAssist = jmlGen.getJavaGen().getInfo().getDeclAssistant();
 		PatternAssistantCG pAssist = jmlGen.getJavaGen().getInfo().getPatternAssistant();
@@ -150,10 +144,11 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 			SExpCG newObj = splitTarget(field.getObject().clone(), varDecls, vars);
 			tr.replaceNodeWith(field.getObject(), newObj);
 
+			// No variable declaration needed
 			return field;
 		} else
 		{
-			Logger.getLog().printErrorln("Expected a variable expression at this point in '"
+			Logger.getLog().printErrorln("Got unexpected target in '"
 					+ this.getClass().getSimpleName() + "'. Got " + target);
 			return null;
 		}
