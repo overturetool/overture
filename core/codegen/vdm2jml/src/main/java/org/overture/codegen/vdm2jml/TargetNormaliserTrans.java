@@ -30,9 +30,8 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 {
 	public static final String STATE_DES = "stateDes_";
 
-	// Consider atomic
-	// Consider the 'index' exp and side effects a.b('a').c (also for applies, although get calls do not really receive
-	// any arguments)
+	// TODO: Consider the 'index' exp and side effects a.b('a').c (also for applies, although get calls do not really
+	// receive any arguments)
 
 	private JmlGenerator jmlGen;
 	
