@@ -77,34 +77,13 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 	{
 		for(AMetaStmCG as : recVarChecks)
 		{
-			if(eq(as,check))
+			if(jmlGen.getJavaGen().getInfo().getStmAssistant().equal(as,check))
 			{
 				return true;
 			}
 		}
 		
 		return false;
-	}
-	
-	private boolean eq(AMetaStmCG left, AMetaStmCG right)
-	{
-		if(left.getMetaData().size() != right.getMetaData().size())
-		{
-			return false;
-		}
-		
-		for(int i = 0; i < left.getMetaData().size(); i++)
-		{
-			String currentLeft = left.getMetaData().get(i).value;
-			String currentRight = right.getMetaData().get(i).value;
-			
-			if(!currentLeft.equals(currentRight))
-			{
-				return false;
-			}
-		}
-		
-		return true;
 	}
 	
 	public boolean inAtomic()
