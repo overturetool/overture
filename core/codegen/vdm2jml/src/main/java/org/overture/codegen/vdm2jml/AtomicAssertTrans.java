@@ -65,7 +65,7 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 		return jmlGen;
 	}
 	
-	public void addCheck(AMetaStmCG check)
+	public void addPostAtomicCheck(AMetaStmCG check)
 	{
 		if(!contains(check))
 		{

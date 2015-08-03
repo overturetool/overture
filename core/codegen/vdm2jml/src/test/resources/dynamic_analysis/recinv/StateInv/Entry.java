@@ -32,7 +32,6 @@ final public class Entry {
         { /* Start of atomic statement */
             //@ set invChecksOn = false;
             St.set_x(atomicTmp_1);
-
             St.set_x(atomicTmp_2);
 
             //@ set invChecksOn = true;

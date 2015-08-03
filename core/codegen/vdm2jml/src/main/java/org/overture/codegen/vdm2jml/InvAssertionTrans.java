@@ -18,22 +18,22 @@ import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.trans.AtomicStmTrans;
 
 /**
- * In the original VDM AST assignments are on the form <stateDesignator> := <exp>; Note that the left hand side is a
- * look-up and it is side-effect free When the atomic statement ends we need to check if any type invariants (which also
- * include state invariants) have been broken.
+ * This class is responsible for adding additional assertions to the IR to preserve the semantics of the contract-based
+ * notations of VDM-SL when they are translated to JML annotated Java.
  * 
- * @see AtomicStmTrans
+ * @see RecAccessorTrans
+ * @see TargetNormaliserTrans
  */
 public class InvAssertionTrans extends AtomicAssertTrans
 {
 	private RecModHandler recHandler;
 	private NamedTypeInvHandler namedTypeHandler;
 	private Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars;
-	
-	public InvAssertionTrans(JmlGenerator jmlGen, Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars)
+
+	public InvAssertionTrans(JmlGenerator jmlGen,
+			Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars)
 	{
 		super(jmlGen);
 		this.recHandler = new RecModHandler(this);
@@ -71,13 +71,12 @@ public class InvAssertionTrans extends AtomicAssertTrans
 			throws AnalysisException
 	{
 		/**
-		 * Regarding record modifications, which will now all be on the form E.g. St = new St(..), i.e. node.getTarget()
-		 * instanceof SVarExpCG && node.getTarget().getType() instanceof ARecordTypeCG Violation will be detected when
-		 * constructing the record value or in the temporary variable section if the assignment occurs in the context of
-		 * an atomic statement block. Therefore, there is no need to assert anything. Note that more complicated record
-		 * modifications (e.g. rec1.rec2.f := 5) appear as nodes of type caseACallObjectExpStmCG
+		 * Record modifications are now all on the form E.g. St = <recvalue>, i.e. node.getTarget() instanceof SVarExpCG
+		 * && node.getTarget().getType() instanceof ARecordTypeCG. Invariant violations will therefore be detected when
+		 * the record value is constructed or it appears in the temporary variable section if the assignment occurs in
+		 * the context of an atomic statement block. Therefore, no record invariant needs to be asserted. Note that more
+		 * complicated record modifications (e.g. rec1.rec2.f := 5) appear as nodes of type caseACallObjectExpStmCG
 		 */
-
 		namedTypeHandler.handleAssign(node);
 	}
 
@@ -105,7 +104,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	{
 		namedTypeHandler.handleClass(node);
 	}
-	
+
 	private void handleStateUpdate(SStmCG node,
 			List<AIdentifierVarExpCG> objVars, AMetaStmCG recAssert,
 			AMetaStmCG namedTypeInvAssert)
@@ -114,36 +113,35 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		{
 			return;
 		}
-		
-		ABlockStmCG replBlock = new ABlockStmCG();
-		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
-		replBlock.getStatements().add(node);
-		
-		if(!inAtomic())
+
+		if (!inAtomic())
 		{
-			// Not in atomic so append to replacement block
-			appendSubjectAsserts(recAssert, namedTypeInvAssert, replBlock);
-			appendStateDesAsserts(objVars, replBlock);
-		}
-		else
+			// NOT inside atomic statement block
+			ABlockStmCG replBlock = new ABlockStmCG();
+			jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
+			replBlock.getStatements().add(node);
+
+			addSubjectAsserts(recAssert, namedTypeInvAssert, replBlock);
+			addStateDesAsserts(objVars, replBlock);
+		} else
 		{
-			// In atomic so record them
-			appendSubjectAssertsAtomic(recAssert, namedTypeInvAssert);
-			appendStateDesAssertsAtomic(objVars);
+			// We'll store the checks and let the atomic statement case handle the assert insertion
+			addSubjectAssertAtomic(recAssert, namedTypeInvAssert);
+			addStateDesAssertsAtomic(objVars);
 		}
 	}
 
-	private void appendSubjectAssertsAtomic(AMetaStmCG recAssert,
+	private void addSubjectAssertAtomic(AMetaStmCG recAssert,
 			AMetaStmCG namedTypeInvAssert)
 	{
 		for (AMetaStmCG a : consSubjectAsserts(recAssert, namedTypeInvAssert))
 		{
-			addCheck(a);
+			addPostAtomicCheck(a);
 		}
 	}
 
-	private void appendSubjectAsserts(AMetaStmCG recAssert, AMetaStmCG namedTypeInvAssert,
-			ABlockStmCG replBlock)
+	private void addSubjectAsserts(AMetaStmCG recAssert,
+			AMetaStmCG namedTypeInvAssert, ABlockStmCG replBlock)
 	{
 		for (AMetaStmCG a : consSubjectAsserts(recAssert, namedTypeInvAssert))
 		{
@@ -155,62 +153,64 @@ public class InvAssertionTrans extends AtomicAssertTrans
 			AMetaStmCG namedTypeInvAssert)
 	{
 		List<AMetaStmCG> asserts = new LinkedList<AMetaStmCG>();
-		
+
 		add(asserts, recAssert);
 		add(asserts, namedTypeInvAssert);
-		
+
 		return asserts;
 	}
 
-	private void appendStateDesAssertsAtomic(List<AIdentifierVarExpCG> objVars)
+	private void addStateDesAssertsAtomic(List<AIdentifierVarExpCG> objVars)
 	{
-		for(AMetaStmCG a : consObjVarAsserts(objVars))
+		for (AMetaStmCG a : consObjVarAsserts(objVars))
 		{
-			addCheck(a);
+			addPostAtomicCheck(a);
 		}
 	}
-	
-	private void appendStateDesAsserts(List<AIdentifierVarExpCG> objVars,
+
+	private void addStateDesAsserts(List<AIdentifierVarExpCG> objVars,
 			ABlockStmCG replBlock)
 	{
-		for(AMetaStmCG a : consObjVarAsserts(objVars))
+		for (AMetaStmCG a : consObjVarAsserts(objVars))
 		{
 			add(replBlock, a);
 		}
 	}
-	
-	private List<AMetaStmCG> consObjVarAsserts(List<AIdentifierVarExpCG> objVars)
+
+	private List<AMetaStmCG> consObjVarAsserts(
+			List<AIdentifierVarExpCG> objVars)
 	{
 		List<AMetaStmCG> objVarAsserts = new LinkedList<AMetaStmCG>();
 
-		if(objVars != null)
+		if (objVars != null)
 		{
 			// Everyone except the last
-			for(int i = 0; i < objVars.size() - 1; i++)
+			for (int i = 0; i < objVars.size() - 1; i++)
 			{
 				AIdentifierVarExpCG var = objVars.get(i);
-				
+
 				add(objVarAsserts, recHandler.consAssert(var));
-				// TODO: Will the named type invariants not get handled automatically since they are local variable decls.
+				// TODO: Will the named type invariants not get handled automatically since they are local variable
+				// decls.
 				add(objVarAsserts, namedTypeHandler.consAssert(var));
 			}
 		}
-		
+
 		Collections.reverse(objVarAsserts);
 		return objVarAsserts;
 	}
-	
+
 	private void add(List<AMetaStmCG> asserts, AMetaStmCG as)
 	{
-		if(as != null)
+		if (as != null)
 		{
 			asserts.add(as);
 		}
 	}
-	
+
 	private void add(ABlockStmCG block, AMetaStmCG as)
 	{
-		if(as != null)
+		if (as != null)
 		{
 			block.getStatements().add(as);
 		}
