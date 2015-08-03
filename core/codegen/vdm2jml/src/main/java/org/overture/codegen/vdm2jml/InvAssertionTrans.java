@@ -115,15 +115,31 @@ public class InvAssertionTrans extends AtomicAssertTrans
 			return;
 		}
 		
+		ABlockStmCG replBlock = new ABlockStmCG();
+		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
+		replBlock.getStatements().add(node);
+		
+		appendStateDesAsserts(objVars, replBlock);
+		appendSubjectAsserts(recAssert, namedTypeInvAssert, replBlock);
+	}
+
+	private void appendSubjectAsserts(AMetaStmCG recAssert, AMetaStmCG namedTypeInvAssert,
+			ABlockStmCG replBlock)
+	{
 		List<AMetaStmCG> asserts = new LinkedList<AMetaStmCG>();
 		
 		add(asserts, recAssert);
 		add(asserts, namedTypeInvAssert);
 		
-		ABlockStmCG replBlock = new ABlockStmCG();
-		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
-		replBlock.getStatements().add(node);
-		
+		for (AMetaStmCG a : asserts)
+		{
+			replBlock.getStatements().add(a);
+		}
+	}
+
+	private void appendStateDesAsserts(List<AIdentifierVarExpCG> objVars,
+			ABlockStmCG replBlock)
+	{
 		if(objVars != null)
 		{
 			Collections.reverse(objVars);
@@ -136,11 +152,6 @@ public class InvAssertionTrans extends AtomicAssertTrans
 				// TODO: Will the named type invariants not get handled automatically since they are local variable decls.
 				add(replBlock, namedTypeHandler.consAssert(var));
 			}
-		}
-		
-		for (AMetaStmCG a : asserts)
-		{
-			replBlock.getStatements().add(a);
 		}
 	}
 	
