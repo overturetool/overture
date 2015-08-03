@@ -108,8 +108,8 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	        public int compare(File f1, File f2) {
 	        	
 	        	// Reverse paths because root folders differ
-	        	String f1PathRev = new StringBuilder(f1.getAbsolutePath()).toString();
-	        	String f2PathRev = new StringBuilder(f2.getAbsolutePath()).toString();
+	        	String f1PathRev = new StringBuilder(f1.getAbsolutePath()).reverse().toString();
+	        	String f2PathRev = new StringBuilder(f2.getAbsolutePath()).reverse().toString();
 	        	
 	        	return f1PathRev.compareTo(f2PathRev);
 	        }
