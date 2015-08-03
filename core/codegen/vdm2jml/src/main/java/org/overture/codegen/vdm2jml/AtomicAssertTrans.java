@@ -8,14 +8,12 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.statements.AAtomicStmCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
-import org.overture.codegen.logging.Logger;
 
 public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 {
 	protected JmlGenerator jmlGen;
-	private List<String> recVarChecks = null;
+	private List<AMetaStmCG> recVarChecks = null;
 	
 	public AtomicAssertTrans(JmlGenerator jmlGen)
 	{
@@ -25,7 +23,7 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAAtomicStmCG(AAtomicStmCG node) throws AnalysisException
 	{
-		recVarChecks = new LinkedList<String>();
+		recVarChecks = new LinkedList<AMetaStmCG>();
 		
 		for(SStmCG stm : node.getStatements())
 		{
@@ -35,11 +33,9 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 		node.getStatements().addFirst(consInvChecksStm(false));
 		node.getStatements().add(consInvChecksStm(true));
 		
-		for(String str : recVarChecks)
+		for(AMetaStmCG as : recVarChecks)
 		{
-			AMetaStmCG assertion = new AMetaStmCG();
-			jmlGen.getAnnotator().appendMetaData(assertion, jmlGen.getAnnotator().consMetaData(str));
-			node.getStatements().add(assertion);
+			node.getStatements().add(as);
 		}
 		
 		recVarChecks = null;
@@ -69,24 +65,46 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 		return jmlGen;
 	}
 	
-	public boolean hasCheck(String check)
-	{
-		return recVarChecks.contains(check);
-	}
-	
-	public void addCheck(String check)
-	{
-		recVarChecks.add(check);
-	}
-	
 	public void addCheck(AMetaStmCG check)
 	{
-		//TODO: Need more consistent handling of these checks
-		if (check.getMetaData().size() == 1)
+		if(!contains(check))
 		{
-			String checkStr = check.getMetaData().get(0).value;
-			recVarChecks.add(checkStr);
+			recVarChecks.add(check);
 		}
+	}
+	
+	private boolean contains(AMetaStmCG check)
+	{
+		for(AMetaStmCG as : recVarChecks)
+		{
+			if(eq(as,check))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean eq(AMetaStmCG left, AMetaStmCG right)
+	{
+		if(left.getMetaData().size() != right.getMetaData().size())
+		{
+			return false;
+		}
+		
+		for(int i = 0; i < left.getMetaData().size(); i++)
+		{
+			String currentLeft = left.getMetaData().get(i).value;
+			String currentRight = right.getMetaData().get(i).value;
+			
+			if(!currentLeft.equals(currentRight))
+			{
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	public boolean inAtomic()

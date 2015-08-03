@@ -122,13 +122,23 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		if(!inAtomic())
 		{
 			// Not in atomic so append to replacement block
-			appendStateDesAsserts(objVars, replBlock);
 			appendSubjectAsserts(recAssert, namedTypeInvAssert, replBlock);
+			appendStateDesAsserts(objVars, replBlock);
 		}
 		else
 		{
 			// In atomic so record them
+			appendSubjectAssertsAtomic(recAssert, namedTypeInvAssert);
 			appendStateDesAssertsAtomic(objVars);
+		}
+	}
+
+	private void appendSubjectAssertsAtomic(AMetaStmCG recAssert,
+			AMetaStmCG namedTypeInvAssert)
+	{
+		for (AMetaStmCG a : consSubjectAsserts(recAssert, namedTypeInvAssert))
+		{
+			addCheck(a);
 		}
 	}
 
@@ -175,9 +185,8 @@ public class InvAssertionTrans extends AtomicAssertTrans
 
 		if(objVars != null)
 		{
-			Collections.reverse(objVars);
-			// Everyone except the first
-			for(int i = 1; i < objVars.size(); i++)
+			// Everyone except the last
+			for(int i = 0; i < objVars.size() - 1; i++)
 			{
 				AIdentifierVarExpCG var = objVars.get(i);
 				
@@ -187,6 +196,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 			}
 		}
 		
+		Collections.reverse(objVarAsserts);
 		return objVarAsserts;
 	}
 	

@@ -27,21 +27,7 @@ public class RecModUtil
 
 	public AMetaStmCG handleRecAssert(SStmCG stm, SVarExpCG var)
 	{
-		if (handler.getInvTrans().inAtomic())
-		{
-			String recCheck = consValidRecCheck(var);
-
-			// No need to assert the same thing twice
-			if (!handler.getInvTrans().hasCheck(recCheck))
-			{
-				handler.getInvTrans().addCheck(recCheck);
-			}
-		} else
-		{
-			return handler.getInvTrans().consMetaStm(consValidRecCheck(var));
-		}
-		
-		return null;
+		return handler.getInvTrans().consMetaStm(consValidRecCheck(var));
 	}
 
 	public String consValidRecCheck(SVarExpCG var)
