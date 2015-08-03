@@ -119,27 +119,60 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
 		replBlock.getStatements().add(node);
 		
-		appendStateDesAsserts(objVars, replBlock);
-		appendSubjectAsserts(recAssert, namedTypeInvAssert, replBlock);
+		if(!inAtomic())
+		{
+			// Not in atomic so append to replacement block
+			appendStateDesAsserts(objVars, replBlock);
+			appendSubjectAsserts(recAssert, namedTypeInvAssert, replBlock);
+		}
+		else
+		{
+			// In atomic so record them
+			appendStateDesAssertsAtomic(objVars);
+		}
 	}
 
 	private void appendSubjectAsserts(AMetaStmCG recAssert, AMetaStmCG namedTypeInvAssert,
 			ABlockStmCG replBlock)
+	{
+		for (AMetaStmCG a : consSubjectAsserts(recAssert, namedTypeInvAssert))
+		{
+			replBlock.getStatements().add(a);
+		}
+	}
+
+	private List<AMetaStmCG> consSubjectAsserts(AMetaStmCG recAssert,
+			AMetaStmCG namedTypeInvAssert)
 	{
 		List<AMetaStmCG> asserts = new LinkedList<AMetaStmCG>();
 		
 		add(asserts, recAssert);
 		add(asserts, namedTypeInvAssert);
 		
-		for (AMetaStmCG a : asserts)
-		{
-			replBlock.getStatements().add(a);
-		}
+		return asserts;
 	}
 
+	private void appendStateDesAssertsAtomic(List<AIdentifierVarExpCG> objVars)
+	{
+		for(AMetaStmCG a : consObjVarAsserts(objVars))
+		{
+			addCheck(a);
+		}
+	}
+	
 	private void appendStateDesAsserts(List<AIdentifierVarExpCG> objVars,
 			ABlockStmCG replBlock)
 	{
+		for(AMetaStmCG a : consObjVarAsserts(objVars))
+		{
+			add(replBlock, a);
+		}
+	}
+	
+	private List<AMetaStmCG> consObjVarAsserts(List<AIdentifierVarExpCG> objVars)
+	{
+		List<AMetaStmCG> objVarAsserts = new LinkedList<AMetaStmCG>();
+
 		if(objVars != null)
 		{
 			Collections.reverse(objVars);
@@ -148,11 +181,13 @@ public class InvAssertionTrans extends AtomicAssertTrans
 			{
 				AIdentifierVarExpCG var = objVars.get(i);
 				
-				add(replBlock, recHandler.consAssert(var));
+				add(objVarAsserts, recHandler.consAssert(var));
 				// TODO: Will the named type invariants not get handled automatically since they are local variable decls.
-				add(replBlock, namedTypeHandler.consAssert(var));
+				add(objVarAsserts, namedTypeHandler.consAssert(var));
 			}
 		}
+		
+		return objVarAsserts;
 	}
 	
 	private void add(List<AMetaStmCG> asserts, AMetaStmCG as)

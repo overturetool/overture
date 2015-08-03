@@ -15,7 +15,7 @@ import org.overture.codegen.logging.Logger;
 public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 {
 	protected JmlGenerator jmlGen;
-	protected List<String> recVarChecks = null;
+	private List<String> recVarChecks = null;
 	
 	public AtomicAssertTrans(JmlGenerator jmlGen)
 	{
@@ -89,8 +89,28 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 		return jmlGen;
 	}
 	
-	public List<String> getRecChecks()
+	public boolean hasCheck(String check)
 	{
-		return recVarChecks;
+		return recVarChecks.contains(check);
+	}
+	
+	public void addCheck(String check)
+	{
+		recVarChecks.add(check);
+	}
+	
+	public void addCheck(AMetaStmCG check)
+	{
+		//TODO: Need more consistent handling of these checks
+		if (check.getMetaData().size() == 1)
+		{
+			String checkStr = check.getMetaData().get(0).value;
+			recVarChecks.add(checkStr);
+		}
+	}
+	
+	public boolean inAtomic()
+	{
+		return recVarChecks != null;
 	}
 }
