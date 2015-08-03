@@ -68,8 +68,6 @@ final public class Entry {
             //@ assert stateDes_4.valid();
 
             //@ assert stateDes_3.valid();
-
-            //@ assert r1.valid();
         } /* End of atomic statement */
         return 0L;
     }
