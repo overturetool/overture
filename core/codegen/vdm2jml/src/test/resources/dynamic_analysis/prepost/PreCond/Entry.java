@@ -17,18 +17,21 @@ final public class Entry {
 
     public static Object Run() {
         Number ignorePattern_1 = opRet(1L);
-        opVoid(2L);
-        IO.println("Before breaking pre condition");
 
         {
-            Number ignorePattern_2 = id(-1L);
+            opVoid(2L);
+            IO.println("Before breaking pre condition");
 
-            /* skip */
+            {
+                Number ignorePattern_2 = id(-1L);
+
+                /* skip */
+            }
+
+            IO.println("After breaking pre condition");
+
+            return 0L;
         }
-
-        IO.println("After breaking pre condition");
-
-        return 0L;
     }
 
     //@ requires pre_opRet(a,St);

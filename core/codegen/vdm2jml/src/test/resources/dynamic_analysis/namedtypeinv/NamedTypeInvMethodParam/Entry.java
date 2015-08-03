@@ -18,24 +18,26 @@ final public class Entry {
         Number n2 = 3L;
 
         {
-            Number ignorePattern_1 = op(n1, 5L, n1);
+            {
+                Number ignorePattern_1 = op(n1, 5L, n1);
 
-            //@ assert inv_Entry_Even(ignorePattern_1);
+                //@ assert inv_Entry_Even(ignorePattern_1);
 
-            /* skip */
+                /* skip */
+            }
+
+            IO.println("Breaking named type invariant for method parameter");
+
+            {
+                Number ignorePattern_2 = op(n1, 6L, n2);
+
+                //@ assert inv_Entry_Even(ignorePattern_2);
+
+                /* skip */
+            }
+
+            return 0L;
         }
-
-        IO.println("Breaking named type invariant for method parameter");
-
-        {
-            Number ignorePattern_2 = op(n1, 6L, n2);
-
-            //@ assert inv_Entry_Even(ignorePattern_2);
-
-            /* skip */
-        }
-
-        return 0L;
     }
 
     public static Number op(final Number a, final Number b, final Number c) {

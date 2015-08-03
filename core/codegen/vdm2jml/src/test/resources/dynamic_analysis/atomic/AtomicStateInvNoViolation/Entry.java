@@ -21,14 +21,16 @@ final public class Entry {
         Number atomicTmp_1 = 2L;
 
         Number atomicTmp_2 = 1L;
-        //@ set invChecksOn = false;
+
         { /* Start of atomic statement */
+            //@ set invChecksOn = false;
             St.set_x(atomicTmp_1);
             St.set_x(atomicTmp_2);
-        } /* End of atomic statement */
-        //@ set invChecksOn = true;
 
-        //@ assert St.valid();
+            //@ set invChecksOn = true;
+
+            //@ assert St.valid();
+        } /* End of atomic statement */
         IO.println("After atomic");
 
         return St.get_x();

@@ -19,18 +19,21 @@ final public class Entry {
         Number ignorePattern_1 = opRet(1L);
 
         Number ignorePattern_2 = f(3L);
-        opVoid();
-        IO.println("Before breaking post condition");
 
         {
-            Number ignorePattern_3 = opRet(4L);
+            opVoid();
+            IO.println("Before breaking post condition");
 
-            /* skip */
+            {
+                Number ignorePattern_3 = opRet(4L);
+
+                /* skip */
+            }
+
+            IO.println("After breaking post condition");
+
+            return 0L;
         }
-
-        IO.println("After breaking post condition");
-
-        return 0L;
     }
 
     //@ ensures post_opVoid(\old(St.copy()),St);

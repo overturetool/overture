@@ -5,7 +5,7 @@ St.java:49: JML invariant is false on leaving method project.Entrytypes.St.set_x
 St.java:13: Associated declaration
     //@ public instance invariant project.Entry.invChecksOn ==> inv_St(x);
                         ^
-Entry.java:43: JML invariant is false on entering method project.Entrytypes.St.set_x(java.lang.Number) from project.Entry.op()
+Entry.java:44: JML invariant is false on entering method project.Entrytypes.St.set_x(java.lang.Number) from project.Entry.op()
         St.set_x(10L);
                 ^
 St.java:13: Associated declaration

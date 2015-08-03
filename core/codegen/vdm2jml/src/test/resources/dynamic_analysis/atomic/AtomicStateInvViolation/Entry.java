@@ -19,25 +19,29 @@ final public class Entry {
         IO.println("Before first atomic (expecting violation after atomic)");
 
         Number atomicTmp_1 = 2L;
-        //@ set invChecksOn = false;
-        { /* Start of atomic statement */
-            St.set_x(atomicTmp_1);
-        } /* End of atomic statement */
-        //@ set invChecksOn = true;
 
-        //@ assert St.valid();
+        { /* Start of atomic statement */
+            //@ set invChecksOn = false;
+            St.set_x(atomicTmp_1);
+
+            //@ set invChecksOn = true;
+
+            //@ assert St.valid();
+        } /* End of atomic statement */
         IO.println(
             "After first atomic (expected violation before this print statement)");
         IO.println("Before second atomic");
 
         Number atomicTmp_2 = 1L;
-        //@ set invChecksOn = false;
-        { /* Start of atomic statement */
-            St.set_x(atomicTmp_2);
-        } /* End of atomic statement */
-        //@ set invChecksOn = true;
 
-        //@ assert St.valid();
+        { /* Start of atomic statement */
+            //@ set invChecksOn = false;
+            St.set_x(atomicTmp_2);
+
+            //@ set invChecksOn = true;
+
+            //@ assert St.valid();
+        } /* End of atomic statement */
         IO.println("After second atomic");
 
         return 2L;
