@@ -24,7 +24,6 @@ public class JmlGenMain
 {
 	public static final String OUTPUT_ARG = "-output";
 	public static final String PRINT_ARG = "-print";
-	public static final String REPORT_VIOLATIONS_ARG = "-report";
 	public static final String FOLDER_ARG = "-folder";
 
 	public static void main(String[] args)
@@ -45,7 +44,6 @@ public class JmlGenMain
 		File outputDir = null;
 
 		boolean print = false;
-		boolean report = false;
 
 		for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
 		{
@@ -89,10 +87,6 @@ public class JmlGenMain
 					usage(FOLDER_ARG + " requires a directory");
 				}
 			}
-			else if(arg.equals(REPORT_VIOLATIONS_ARG))
-			{
-				report = true;
-			}
 			else
 			{
 				// It's a file or a directory
@@ -113,7 +107,6 @@ public class JmlGenMain
 
 		JmlGenerator jmlGen = new JmlGenerator();
 		jmlGen.getIrSettings().setCharSeqAsString(true);
-		jmlGen.getJmlSettings().setInjectReportCalls(report);
 
 		//GeneralUtils.deleteFolderContents(outputDir, true);
 

@@ -41,11 +41,9 @@ import de.hunsicker.jalopy.storage.ConventionKeys;
 
 public class JmlGenerator implements IREventObserver
 {
-	//TODO: Cleanup constants
 	public static final String DEFAULT_JAVA_ROOT_PACKAGE = "project";
 	public static final String GEN_INV_METHOD_PARAM_NAME = "elem";
 	public static final String INV_PREFIX = "inv_";
-	public static final String REPORT_CALL = "report";
 	public static final String INV_METHOD_REPLACEMENT_NAME_PREFIX = "check_"; 
 	
 	public static final String JML_PUBLIC = "public";
@@ -70,7 +68,6 @@ public class JmlGenerator implements IREventObserver
 	public static final String JML_DISABLE_INV_CHECKS = "//@ set " + INV_CHECKS_ON_GHOST_VAR_NAME + " = false;";
 	
 	private JavaCodeGen javaGen;
-	private JmlSettings jmlSettings;
 	private List<NamedTypeInfo> typeInfoList;
 	private JmlGenUtil util;
 	private JmlAnnotationHelper annotator;
@@ -86,7 +83,6 @@ public class JmlGenerator implements IREventObserver
 	public JmlGenerator(JavaCodeGen javaGen)
 	{
 		this.javaGen = javaGen;
-		this.jmlSettings = new JmlSettings();
 		
 		// Named invariant type info will be derived (later) from the VDM-SL AST
 		this.typeInfoList = null;
@@ -208,14 +204,12 @@ public class JmlGenerator implements IREventObserver
 					// be able to call them in the @requires and @ensures clauses, respectively.
 					annotator.makeCondPublic(m.getPreCond());
 					annotator.appendMetaData(m, consMethodCond(m.getPreCond(), m.getFormalParams(), JML_REQ_ANNOTATION));
-					injectReportCalls(m.getPreCond());
 				}
 
 				if (m.getPostCond() != null)
 				{
 					annotator.makeCondPublic(m.getPostCond());
 					annotator.appendMetaData(m, consMethodCond(m.getPostCond(), m.getFormalParams(), JML_ENS_ANNOTATION));
-					injectReportCalls(m.getPostCond());
 				}
 
 				// Some methods such as those in record classes
@@ -348,8 +342,6 @@ public class JmlGenerator implements IREventObserver
 				// Add the instance invariant to the record
 				// Make it public so we can access the record fields from the invariant clause
 				annotator.addRecInv(r);
-				
-				injectReportCalls(r.getInvariant());
 			}
 		}
 	}
@@ -506,39 +498,7 @@ public class JmlGenerator implements IREventObserver
 				repBlock.getStatements().add(dynTypeCheck);
 				repBlock.getStatements().add(declStmBlock);
 				repBlock.getStatements().add(body);
-				
-				injectReportCalls(method);
 			}
-		}
-	}
-
-	// TODO: consider delete and removal from codegen runtime also
-	public void injectReportCalls(SDeclCG cond)
-	{
-		if(!getJmlSettings().injectReportCalls())
-		{
-			return;
-		}
-		
-		if (cond instanceof AMethodDeclCG)
-		{
-			final AMethodDeclCG method = (AMethodDeclCG) cond;
-
-			try
-			{
-				method.apply(new ReportInjector(this, method));
-			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
-			{
-				Logger.getLog().printErrorln("Problem encountered when injecting report calls in '"
-						+ this.getClass().getSimpleName()
-						+ " ' "
-						+ e.getMessage());
-				e.printStackTrace();
-			}
-		} else
-		{
-			Logger.getLog().printErrorln("Expected condition to be a method declaration at this point. Got: "
-					+ cond + " in '" + this.getClass().getSimpleName() + "'");
 		}
 	}
 	
@@ -602,11 +562,6 @@ public class JmlGenerator implements IREventObserver
 		return typeInfoList;
 	}
 
-	public JmlSettings getJmlSettings()
-	{
-		return jmlSettings;
-	}
-	
 	public AClassDeclCG getInvChecksFlagOwner()
 	{
 		return invChecksFlagOwner;
