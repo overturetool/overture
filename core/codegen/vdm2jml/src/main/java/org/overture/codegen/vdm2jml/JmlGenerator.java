@@ -36,6 +36,9 @@ import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.codegen.vdm2jml.util.AnnotationSorter;
 
+import de.hunsicker.jalopy.storage.Convention;
+import de.hunsicker.jalopy.storage.ConventionKeys;
+
 public class JmlGenerator implements IREventObserver
 {
 	//TODO: Cleanup constants
@@ -104,6 +107,10 @@ public class JmlGenerator implements IREventObserver
 		
 		JavaSettings javaSettings = getJavaSettings();
 		javaSettings.setGenRecsAsInnerClasses(false);
+		
+		// Bugs in Jalopy requires a small tweak to the code formatting conventions.
+		// Force Jalopy to not remove 'scope' braces
+		Convention.getInstance().putBoolean(ConventionKeys.BRACE_REMOVE_BLOCK, false);
 	}
 
 	public GeneratedData generateJml(List<AModuleModules> ast)
