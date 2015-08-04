@@ -44,10 +44,10 @@ final public class Entry {
         //@ assert inv_Entry_Even(a);
 
         //@ assert inv_Entry_Even(c);
-        Number ret_2 = b.longValue() * (a.longValue() + c.longValue());
+        Number ret_1 = b.longValue() * (a.longValue() + c.longValue());
 
-        //@ assert inv_Entry_Even(ret_2);
-        return ret_2;
+        //@ assert inv_Entry_Even(ret_1);
+        return ret_1;
     }
 
     public String toString() {

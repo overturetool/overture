@@ -56,10 +56,10 @@ final public class Entry {
 
     /*@ pure @*/
     public static Object constFunc() {
-        Object ret_2 = 'a';
+        Object ret_1 = 'a';
 
-        //@ assert inv_Entry_A(ret_2) && (ret_2 == null || inv_Entry_B(ret_2) || inv_Entry_C(ret_2));
-        return ret_2;
+        //@ assert inv_Entry_A(ret_1) && (ret_1 == null || inv_Entry_B(ret_1) || inv_Entry_C(ret_1));
+        return ret_1;
     }
 
     public String toString() {
