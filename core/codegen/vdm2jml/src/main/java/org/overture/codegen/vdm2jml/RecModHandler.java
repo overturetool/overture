@@ -1,11 +1,8 @@
 package org.overture.codegen.vdm2jml;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.logging.Logger;
 
@@ -24,64 +21,38 @@ public class RecModHandler implements IAssert
 	{
 		if (util.simpleRecSetCallOutsideAtomic(node))
 		{
-			/**
-			 * E.g. rec.set_(3). Setter call to record outside atomic statement block
-			 */
+			// E.g. rec.set_(3). Setter call to record outside atomic statement block
 			return null;
 		}
 
-		SExpCG subject = invTrans.getJmlGen().getJavaGen().getInfo().getExpAssistant().findSubject(node.getObj());
-
-		if (subject instanceof SVarExpCG)
+		if (node.getObj() instanceof SVarExpCG)
 		{
-			SVarExpCG var = (SVarExpCG) subject;
+			SVarExpCG var = (SVarExpCG) node.getObj();
 
 			if (util.assertRec(var))
 			{
-				return util.handleRecAssert(node, var);
+				return util.handleRecAssert(var);
 			}
 		} else
 		{
 			Logger.getLog().printErrorln("Expected target to a variable expression at this point. Got "
-					+ subject + " in '" + this.getClass().getSimpleName()
-					+ "'");
+					+ node.getObj() + " in '" + this.getClass().getSimpleName() + "'");
 		}
 		return null;
 	}
 
-	public AMetaStmCG handleMapSeq(AMapSeqUpdateStmCG node) throws AnalysisException
-	{
-		SExpCG subject = invTrans.getJmlGen().getJavaGen().getInfo().getExpAssistant().findSubject(node.getCol());
-
-		if (subject instanceof SVarExpCG)
-		{
-			if (util.assertRec(subject))
-			{
-				return util.handleRecAssert(node, (SVarExpCG) subject);
-			}
-		} else
-		{
-			Logger.getLog().printErrorln("Expected 'next' to be a variable expression at this point. Got: "
-					+ subject + " in '" + this.getClass().getSimpleName()
-					+ "'");
-		}
-		
-		return null;
-	}
-	
 	public InvAssertionTrans getInvTrans()
 	{
 		return invTrans;
 	}
-
+	
 	@Override
 	public AMetaStmCG consAssert(AIdentifierVarExpCG var)
 	{
-		if(util.assertRec(var))
+		if (util.assertRec(var))
 		{
 			return invTrans.consMetaStm(util.consValidRecCheck(var));
-		}
-		else
+		} else
 		{
 			return null;
 		}

@@ -1,7 +1,6 @@
 package org.overture.codegen.vdm2jml;
 
 import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
@@ -25,7 +24,7 @@ public class RecModUtil
 				&& node.getObj().getType() instanceof ARecordTypeCG;
 	}
 
-	public AMetaStmCG handleRecAssert(SStmCG stm, SVarExpCG var)
+	public AMetaStmCG handleRecAssert(SVarExpCG var)
 	{
 		return handler.getInvTrans().consMetaStm(consValidRecCheck(var));
 	}
@@ -42,9 +41,8 @@ public class RecModUtil
 			return false;
 		}
 		
-		ARecordTypeCG recType = (ARecordTypeCG) exp.getType();
 		IRInfo info = handler.getInvTrans().getJmlGen().getJavaGen().getInfo();
-		ARecordDeclCG rec = info.getDeclAssistant().findRecord(info.getClasses(), recType);
+		ARecordDeclCG rec = info.getDeclAssistant().findRecord(info.getClasses(), (ARecordTypeCG) exp.getType());
 		
 		return rec.getInvariant() != null;
 	}

@@ -84,7 +84,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
 			throws AnalysisException
 	{
-		handleStateUpdate(node, stateDesVars.get(node), recHandler.handleMapSeq(node), namedTypeHandler.handleMapSeq(node));
+		handleStateUpdate(node, stateDesVars.get(node), null, namedTypeHandler.handleMapSeq(node));
 	}
 
 	@Override
