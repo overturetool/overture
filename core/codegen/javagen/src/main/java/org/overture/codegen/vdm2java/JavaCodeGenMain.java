@@ -49,8 +49,10 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class JavaCodeGenMain
 {
-	public static final String OO_ARG = "-oo";
+	public static final String OO_ARG = "-pp";
 	public static final String SL_ARG = "-sl";
+	public static final String CLASSIC = "-classic";
+	public static final String VDM10 = "-vdm10";
 	public static final String EXP_ARG = "-exp";
 	public static final String FOLDER_ARG = "-folder";
 	public static final String PRINT_ARG = "-print";
@@ -88,6 +90,8 @@ public class JavaCodeGenMain
 		
 		List<File> files = new LinkedList<File>();
 
+		Settings.release = Release.VDM_10;
+		
 		for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
 		{
 			String arg = i.next();
@@ -95,10 +99,20 @@ public class JavaCodeGenMain
 			if (arg.equals(OO_ARG))
 			{
 				cgMode = JavaCodeGenMode.OO_SPEC;
+				Settings.dialect = Dialect.VDM_PP;
 			}
 			else if(arg.equals(SL_ARG))
 			{
 				cgMode = JavaCodeGenMode.SL_SPEC;
+				Settings.dialect = Dialect.VDM_SL;
+			}
+			else if(arg.equals(CLASSIC))
+			{
+				Settings.release = Release.CLASSIC;
+			}
+			else if(arg.equals(VDM10))
+			{
+				Settings.release = Release.VDM_10;
 			}
 			else if (arg.equals(EXP_ARG))
 			{
@@ -234,6 +248,9 @@ public class JavaCodeGenMain
 	{
 		try
 		{
+			Settings.release = Release.VDM_10;
+			Settings.dialect = Dialect.VDM_PP;
+			
 			Generated generated = JavaCodeGenUtil.generateJavaFromExp(exp, irSettings, javaSettings, dialect);
 
 			if (generated.hasMergeErrors())
