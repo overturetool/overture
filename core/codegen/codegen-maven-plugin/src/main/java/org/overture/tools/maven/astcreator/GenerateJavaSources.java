@@ -15,6 +15,7 @@ import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
+import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenMain;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
@@ -138,6 +139,7 @@ public class GenerateJavaSources extends Vdm2JavaBaseMojo
 			try
 			{
 				genData = javaCodeGen.generateJavaFromVdmModules(tcResult.result);
+				
 			} catch (AnalysisException e)
 			{
 				e.printStackTrace();
@@ -153,6 +155,11 @@ public class GenerateJavaSources extends Vdm2JavaBaseMojo
 		if(genData != null)
 		{
 			JavaCodeGenMain.processData(false, outputDirectory, javaCodeGen, genData);
+			
+			if(genData.hasErrors())
+			{
+				throw new MojoExecutionException("Could not code generate model.");
+			}
 		}
 		
 		getLog().info("Code generation completed.");
