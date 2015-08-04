@@ -12,7 +12,6 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
@@ -22,7 +21,7 @@ import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.ir.ITempVarGen;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
@@ -60,7 +59,6 @@ public class NamedTypeInvHandler implements IAssert
 	{
 		// Examples:
 		// val : char | Even = 5;
-		// stateField : char | Even;
 
 		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getType());
 
@@ -69,9 +67,9 @@ public class NamedTypeInvHandler implements IAssert
 			return;
 		}
 
-		AClassDeclCG enclosingClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
+		AClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
 
-		if (enclosingClass == null)
+		if (encClass == null)
 		{
 			return;
 		}
@@ -81,7 +79,7 @@ public class NamedTypeInvHandler implements IAssert
 		String scope = node.getStatic() ? JmlGenerator.JML_STATIC_INV_ANNOTATION
 				: JmlGenerator.JML_INSTANCE_INV_ANNOTATION;
 
-		String inv = util.consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_PUBLIC, scope, invTypes, node.getName());
+		String inv = util.consJmlCheck(encClass.getName(), JmlGenerator.JML_PUBLIC, scope, invTypes, node.getName());
 
 		invTrans.getJmlGen().getAnnotator().appendMetaData(node, invTrans.getJmlGen().getAnnotator().consMetaData(inv));
 	}
@@ -109,9 +107,9 @@ public class NamedTypeInvHandler implements IAssert
 
 		} else
 		{
-			for (AVarDeclCG dec : node.getLocalDefs())
+			if(!node.getLocalDefs().isEmpty())
 			{
-				dec.apply(invTrans);
+				node.getLocalDefs().getFirst().apply(invTrans);
 			}
 
 			for (SStmCG stm : node.getStatements())
@@ -124,24 +122,20 @@ public class NamedTypeInvHandler implements IAssert
 	public void handleReturn(AReturnStmCG node) throws AnalysisException
 	{
 		SExpCG exp = node.getExp();
-
+		
 		if (exp instanceof SVarExpCG)
 		{
 			return;
 		}
 
-		ITempVarGen nameGen = invTrans.getJmlGen().getJavaGen().getInfo().getTempVarNameGen();
-		String name = nameGen.nextVarName(RET_VAR_NAME_PREFIX);
-		TransAssistantCG trans = invTrans.getJmlGen().getJavaGen().getTransAssistant();
+		AMethodDeclCG encMethod = invTrans.getJmlGen().getUtil().getEnclosingMethod(node);
 
-		AMethodDeclCG enclosingMethod = invTrans.getJmlGen().getUtil().getEnclosingMethod(node);
-
-		if (enclosingMethod == null)
+		if (encMethod == null)
 		{
 			return;
 		}
 
-		STypeCG returnType = enclosingMethod.getMethodType().getResult();
+		STypeCG returnType = encMethod.getMethodType().getResult();
 
 		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(returnType);
 
@@ -150,34 +144,26 @@ public class NamedTypeInvHandler implements IAssert
 			return;
 		}
 
-		AIdentifierPatternCG id = invTrans.getJmlGen().getJavaGen().getInfo().getPatternAssistant().consIdPattern(name);
+		String name = getInfo().getTempVarNameGen().nextVarName(RET_VAR_NAME_PREFIX);
+		AIdentifierPatternCG id = getInfo().getPatternAssistant().consIdPattern(name);
 
-		AVarDeclCG var = invTrans.getJmlGen().getJavaGen().getInfo().getDeclAssistant().consLocalVarDecl(returnType.clone(), id, exp.clone());
+		AIdentifierVarExpCG varExp = getInfo().getExpAssistant().consIdVar(name, returnType.clone());
+		getTransAssist().replaceNodeWith(exp, varExp);
 
-		AIdentifierVarExpCG varExp = invTrans.getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(name, returnType.clone());
-
-		trans.replaceNodeWith(exp, varExp);
-
+		AVarDeclCG varDecl = getInfo().getDeclAssistant().consLocalVarDecl(returnType.clone(), id, exp.clone());
 		ABlockStmCG replBlock = new ABlockStmCG();
-		replBlock.getLocalDefs().add(var);
+		replBlock.getLocalDefs().add(varDecl);
 
-		trans.replaceNodeWith(node, replBlock);
+		getTransAssist().replaceNodeWith(node, replBlock);
 
 		replBlock.getStatements().add(node);
-		var.apply(invTrans);
+		varDecl.apply(invTrans);
 	}
 
 	public void handleMethod(AMethodDeclCG node) throws AnalysisException
 	{
-		// Upon entering the method, assert that the parameters are valid
-		// wrt. their named invariant types
-
-		// This transformation also makes sure that the return statement is
-		// properly handled for cases where the method returns a value of a
-		// named invariant type. In particular this transformation ensures
-		// that such values are extracted to local variable declarations
-		// and then the assertion check is performed on those.
-
+		// Upon entering the method, assert that the parameters are valid wrt. their named invariant types.
+		
 		ABlockStmCG replBody = new ABlockStmCG();
 		for (AFormalParamLocalParamCG param : node.getFormalParams())
 		{
@@ -206,7 +192,7 @@ public class NamedTypeInvHandler implements IAssert
 		}
 
 		SStmCG body = node.getBody();
-		invTrans.getJmlGen().getJavaGen().getTransAssistant().replaceNodeWith(body, replBody);
+		getTransAssist().replaceNodeWith(body, replBody);
 		replBody.getStatements().add(body);
 		body.apply(invTrans);
 	}
@@ -228,21 +214,15 @@ public class NamedTypeInvHandler implements IAssert
 				return null;
 			}
 
-			String name;
 			if (col instanceof SVarExpCG)
 			{
-				name = ((SVarExpCG) col).getName();
+				return util.consAssertStm(invTypes, enclosingClass.getName(), ((SVarExpCG) col).getName());
 			} else
 			{
-				// Should never into this case. The collection must be a variable expression
-				// else it could not be updated.
 				Logger.getLog().printErrorln("Expected collection to be a variable expression at this point. Got: "
 						+ col + " in '" + this.getClass().getSimpleName()
 						+ "'");
-				return null;
 			}
-
-			return util.consAssertStm(invTypes, enclosingClass.getName(), name);
 		}
 		
 		return null;
@@ -290,8 +270,6 @@ public class NamedTypeInvHandler implements IAssert
 				return;
 			}
 
-			AMetaStmCG assertInv = new AMetaStmCG();
-
 			AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
 
 			if (enclosingClass == null)
@@ -299,10 +277,16 @@ public class NamedTypeInvHandler implements IAssert
 				return;
 			}
 
+			AMetaStmCG assertInv = new AMetaStmCG();
 			String inv = util.consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, name);
 
 			invTrans.getJmlGen().getAnnotator().appendMetaData(assertInv, invTrans.getJmlGen().getAnnotator().consMetaData(inv));
 
+			/**
+			 * The variable declaration is a local declaration of the statement block. Therefore, making the assertion
+			 * the first statement in the statement block makes the assertion immediately appear right after the
+			 * variable declaration.
+			 */
 			parentBlock.getStatements().addFirst(assertInv);
 		} else
 		{
@@ -315,23 +299,18 @@ public class NamedTypeInvHandler implements IAssert
 
 	public AMetaStmCG handleCallObj(ACallObjectExpStmCG node)
 	{
-		// TODO: Handle setter calls to records
-		// Consider collecting them in the RecAccessorTrans
-
-		// RecAccessorTrans removed all direct field assignments to records, i.e. <rec_obj>.field := <exp>
-		// which are now on the form on the form rec.set_field(4).
-		// This case simply means we will have to check a record invariant.
+		/**
+		 * Handling of setter calls to masked records. This will happen for cases like T = R ... ; R :: x : int;
+		 */
 
 		SExpCG recObj = node.getObj();
 
 		if (recObj instanceof SVarExpCG)
 		{
-			// rec.set_field(atomic_tmp)
 			SVarExpCG recObjVar = (SVarExpCG) recObj;
 
 			List<NamedTypeInfo> invTypes = util.findNamedInvTypes(recObj.getType());
 
-			// This will happen for cases like T = R; R :: x : int;
 			if (!invTypes.isEmpty())
 			{
 				AClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
@@ -344,16 +323,9 @@ public class NamedTypeInvHandler implements IAssert
 				return util.consAssertStm(invTypes, encClass.getName(), recObjVar.getName());
 			}
 
-		} else if (recObj instanceof AFieldExpCG)
+		}
+		else
 		{
-			// Should not happen...
-			Logger.getLog().printErrorln("Did not expect record object of call object expression to be a field expression at this point: "
-					+ recObj);
-		} else
-		{
-			// TODO: implement proper handling
-			// Must also take othe kinds of state designators into account: r1.get_r2().get_r3().set_field(atomic_tmp)
-
 			Logger.getLog().printErrorln("Found unexpected record object of call expression "
 					+ " statement inside atomic statement block in '"
 					+ this.getClass().getSimpleName() + "'. Target found: "
@@ -368,12 +340,13 @@ public class NamedTypeInvHandler implements IAssert
 		// <target> := atomic_tmp;
 
 		/*
-		 * Note that assignment to targets that are of type AFieldNumberExpCG, i.e. tuples (e.g. tup.#1 := 5) is not
-		 * allowed in VDM.
-		 */
-		/*
+		 * TODO: Missing handling of atomic...
 		 * No need to assert anything since the violation would already have been detected in the temporary variable
 		 * section
+		 */
+		/*
+		 * Note that assignment to targets that are of type AFieldNumberExpCG, i.e. tuples (e.g. tup.#1 := 5) is not
+		 * allowed in VDM.
 		 */
 
 		SExpCG target = node.getTarget();
@@ -385,16 +358,11 @@ public class NamedTypeInvHandler implements IAssert
 			return;
 		}
 
+		String varNameStr = ((SVarExpCG) target).toString();
+
 		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getTarget().getType());
 
 		if (invTypes.isEmpty())
-		{
-			return;
-		}
-
-		String varName = util.consVarName(node);
-
-		if (varName == null)
 		{
 			return;
 		}
@@ -406,10 +374,17 @@ public class NamedTypeInvHandler implements IAssert
 			return;
 		}
 
-		String enclosingClassName = encClass.getName();
-		String varNameStr = varName.toString();
+		util.injectAssertion(node, invTypes, encClass.getName(), varNameStr, true);
+	}
+	
+	private TransAssistantCG getTransAssist()
+	{
+		return invTrans.getJmlGen().getJavaGen().getTransAssistant();
+	}
 
-		util.injectAssertion(node, invTypes, enclosingClassName, varNameStr, true);
+	private IRInfo getInfo()
+	{
+		return invTrans.getJmlGen().getJavaGen().getInfo();
 	}
 	
 	public JmlGenerator getJmlGen()
