@@ -63,7 +63,31 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	@Override
 	public void caseAVarDeclCG(AVarDeclCG node) throws AnalysisException
 	{
-		namedTypeHandler.handleVarDecl(node);
+		/**
+		 * Since the target of map/seq updates (e.g. Utils.mapsSeqUpdate(stateDes_3, 4, 'a')) and call object statements
+		 * (e.g. stateDes_3.set_x("a")) (i.e. assignments in the VDM-SL model) are split into variables named stateDes_
+		 * <n> we can also expect local variable declarations in atomic statement blocks
+		 */
+		AMetaStmCG as = namedTypeHandler.handleVarDecl(node);
+		
+		if(as == null)
+		{
+			return;
+		}
+		
+		ABlockStmCG encBlock = namedTypeHandler.getEncBlockStm(node);
+		
+		if(encBlock == null)
+		{
+			return;
+		}
+		
+		/**
+		 * The variable declaration is a local declaration of the statement block. Therefore, making the assertion the
+		 * first statement in the statement block makes the assertion appear immediately right after the variable
+		 * declaration.
+		 */
+		encBlock.getStatements().addFirst(as);
 	}
 
 	@Override

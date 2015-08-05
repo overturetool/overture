@@ -227,8 +227,44 @@ public class NamedTypeInvHandler implements IAssert
 		
 		return null;
 	}
+	
+	public ABlockStmCG getEncBlockStm(AVarDeclCG varDecl)
+	{
+		if (varDecl.parent() instanceof ABlockStmCG)
+		{
+			ABlockStmCG parentBlock = (ABlockStmCG) varDecl.parent();
 
-	public void handleVarDecl(AVarDeclCG node)
+			if (!parentBlock.getLocalDefs().contains(varDecl))
+			{
+				Logger.getLog().printErrorln("Expected local variable declaration to be "
+						+ "one of the local variable declarations of "
+						+ "the parent statement block in '"
+						+ this.getClass().getSimpleName() + "'");
+				return null;
+			}
+
+			if (parentBlock.getLocalDefs().size() > 1)
+			{
+				// The block statement case method should have ensured that the size == 1
+				Logger.getLog().printErrorln("Expected only a single local declaration in "
+						+ "the parent block at this point in '"
+						+ this.getClass().getSimpleName() + "'");
+				return null;
+			}
+			
+			return parentBlock;
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Expected parent of local variable "
+					+ "declaration to be a statement block. Got: "
+					+ varDecl.parent() + " in '" + this.getClass().getSimpleName()
+					+ "'");
+			return null;
+		}
+	}
+
+	public AMetaStmCG handleVarDecl(AVarDeclCG node)
 	{
 		// Examples:
 		// let x : Even = 1 in ...
@@ -238,63 +274,24 @@ public class NamedTypeInvHandler implements IAssert
 
 		if (invTypes.isEmpty())
 		{
-			return;
+			return null;
 		}
 
 		String name = invTrans.getJmlGen().getUtil().getName(node.getPattern());
 
 		if (name == null)
 		{
-			return;
+			return null;
 		}
 
-		if (node.parent() instanceof ABlockStmCG)
+		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
+
+		if (enclosingClass == null)
 		{
-			ABlockStmCG parentBlock = (ABlockStmCG) node.parent();
-
-			if (!parentBlock.getLocalDefs().contains(node))
-			{
-				Logger.getLog().printErrorln("Expected local variable declaration to be "
-						+ "one of the local variable declarations of "
-						+ "the parent statement block in '"
-						+ this.getClass().getSimpleName() + "'");
-				return;
-			}
-
-			if (parentBlock.getLocalDefs().size() > 1)
-			{
-				// The block statement case method should have ensured that the size == 1
-				Logger.getLog().printErrorln("Expected only a single local declaration in "
-						+ "the parent block at this point in '"
-						+ this.getClass().getSimpleName() + "'");
-				return;
-			}
-
-			AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
-
-			if (enclosingClass == null)
-			{
-				return;
-			}
-
-			AMetaStmCG assertInv = new AMetaStmCG();
-			String inv = util.consJmlCheck(enclosingClass.getName(), JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, name);
-
-			invTrans.getJmlGen().getAnnotator().appendMetaData(assertInv, invTrans.getJmlGen().getAnnotator().consMetaData(inv));
-
-			/**
-			 * The variable declaration is a local declaration of the statement block. Therefore, making the assertion
-			 * the first statement in the statement block makes the assertion immediately appear right after the
-			 * variable declaration.
-			 */
-			parentBlock.getStatements().addFirst(assertInv);
-		} else
-		{
-			Logger.getLog().printErrorln("Expected parent of local variable "
-					+ "declaration to be a statement block. Got: "
-					+ node.parent() + " in '" + this.getClass().getSimpleName()
-					+ "'");
+			return null;
 		}
+
+		return util.consAssertStm(invTypes, enclosingClass.getName(), name);
 	}
 
 	public AMetaStmCG handleCallObj(ACallObjectExpStmCG node)
