@@ -8,7 +8,6 @@ import java.util.*;
 //@ nullable_by_default
 @SuppressWarnings("all")
 final public class St implements Record {
-    //@ public instance invariant inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
     public Object x;
 
     public St(final Object _x) {
@@ -50,10 +49,10 @@ final public class St implements Record {
     }
 
     public void set_x(final Object _x) {
-        //@ assert inv_Entry_PT(_x) && (_x == null || inv_Entry_PossiblyOne(_x) || inv_Entry_True(_x));
+        //@ assert project.Entry.invChecksOn ==> (inv_Entry_PT(_x) && (_x == null || inv_Entry_PossiblyOne(_x) || inv_Entry_True(_x)));
         x = _x;
 
-        //@ assert inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
+        //@ assert project.Entry.invChecksOn ==> (inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x)));
     }
 
     /*@ pure @*/

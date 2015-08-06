@@ -1,28 +1,10 @@
 "Breaking named type invariant (assigning record field)"
-St.java:53: JML assertion is false
-        //@ assert inv_Entry_PT(_x) && (_x == null || inv_Entry_PossiblyOne(_x) || inv_Entry_True(_x));
+St.java:52: JML assertion is false
+        //@ assert project.Entry.invChecksOn ==> (inv_Entry_PT(_x) && (_x == null || inv_Entry_PossiblyOne(_x) || inv_Entry_True(_x)));
             ^
-St.java:56: JML assertion is false
-        //@ assert inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
+St.java:55: JML assertion is false
+        //@ assert project.Entry.invChecksOn ==> (inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x)));
             ^
-St.java:52: JML invariant is false on leaving method project.Entrytypes.St.set_x(java.lang.Object)
-    public void set_x(final Object _x) {
-                ^
-St.java:11: Associated declaration
-    //@ public instance invariant inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
-                        ^
-St.java:11: JML invariant is false
-    //@ public instance invariant inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
-                        ^
-St.java:11: JML invariant is false
-    //@ public instance invariant inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
-                        ^
-Entry.java:35: JML invariant is false on entering method project.Entrytypes.St.set_x(java.lang.Object) from project.Entry.op2()
-        St.set_x(true);
-                ^
-St.java:11: Associated declaration
-    //@ public instance invariant inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
-                        ^
 "Breaking named type invariant (assigning local variable)"
 Entry.java:39: JML assertion is false
         //@ assert inv_Entry_PT(p1) && (p1 == null || inv_Entry_PossiblyOne(p1) || inv_Entry_True(p1));
