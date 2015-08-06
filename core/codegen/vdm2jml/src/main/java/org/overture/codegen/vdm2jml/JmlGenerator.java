@@ -144,12 +144,12 @@ public class JmlGenerator implements IREventObserver
 		annotator.makeRecMethodsPure(ast);
 		
 		// Transform the IR such that access to record state is done via getters and setters.
-		makeRecStateAccessorBased(ast);
+		RecClassInfo recInfo = makeRecStateAccessorBased(ast);
 		
 		List<IRStatus<INode>> newAst = new LinkedList<IRStatus<INode>>(ast);
 
 		// To circumvent a problem with OpenJML. See documentation of makeRecsOuterClasses
-		newAst.addAll(util.makeRecsOuterClasses(ast));
+		newAst.addAll(util.makeRecsOuterClasses(ast, recInfo));
 		
 		// Also extract classes that are records
 		for(IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
@@ -228,7 +228,7 @@ public class JmlGenerator implements IREventObserver
 		Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars = normaliseTargets(newAst);
 		
 		// Add assertions to check for violation of record and named type invariants
-		addAssertions(newAst, stateDesVars);
+		addAssertions(newAst, stateDesVars, recInfo);
 
 		// Make sure that the JML annotations are ordered correctly
 		sortAnnotations(newAst);
@@ -240,7 +240,7 @@ public class JmlGenerator implements IREventObserver
 		return newAst;
 	}
 
-	private void makeRecStateAccessorBased(List<IRStatus<INode>> ast) {
+	private RecClassInfo makeRecStateAccessorBased(List<IRStatus<INode>> ast) {
 
 		RecAccessorTrans recAccTr = new RecAccessorTrans(this);
 
@@ -254,6 +254,8 @@ public class JmlGenerator implements IREventObserver
 				e.printStackTrace();
 			}
 		}
+		
+		return recAccTr.getRecInfo();
 	}
 
 	private void sortAnnotations(List<IRStatus<INode>> newAst)
@@ -294,9 +296,9 @@ public class JmlGenerator implements IREventObserver
 		this.typeInfoList = depCalc.getTypeDataList();
 	}
 
-	private void addAssertions(List<IRStatus<INode>> newAst, Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars)
+	private void addAssertions(List<IRStatus<INode>> newAst, Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars, RecClassInfo recInfo)
 	{
-		InvAssertionTrans assertTr = new InvAssertionTrans(this, stateDesVars);
+		InvAssertionTrans assertTr = new InvAssertionTrans(this, stateDesVars, recInfo);
 		
 		for (IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
 		{

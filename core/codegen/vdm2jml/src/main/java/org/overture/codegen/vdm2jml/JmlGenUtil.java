@@ -217,8 +217,10 @@ public class JmlGenUtil
 	 * 
 	 * @param ast
 	 *            The IR passed by the Java code generator after the transformation process
+	 * @param recInfo
+	 *            Since the new record classes are deep copies we need to update the record info too
 	 */
-	public List<IRStatus<INode>> makeRecsOuterClasses(List<IRStatus<INode>> ast)
+	public List<IRStatus<INode>> makeRecsOuterClasses(List<IRStatus<INode>> ast, RecClassInfo recInfo)
 	{
 		List<IRStatus<INode>> extraClasses = new LinkedList<IRStatus<INode>>();
 
@@ -277,7 +279,9 @@ public class JmlGenUtil
 				List<AMethodDeclCG> methods = new LinkedList<AMethodDeclCG>();
 				for (AMethodDeclCG m : recDecl.getMethods())
 				{
-					methods.add(m.clone());
+					AMethodDeclCG newMethod = m.clone(); 
+					methods.add(newMethod);
+					recInfo.updateAccessor(m, newMethod);
 				}
 				recClass.setMethods(methods);
 
