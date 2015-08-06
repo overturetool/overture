@@ -1,9 +1,7 @@
 package org.overture.codegen.vdm2jml;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
@@ -32,12 +30,12 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 
 	private JmlGenerator jmlGen;
 
-	private Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars;
+	private StateDesInfo stateDesInfo;
 
 	public TargetNormaliserTrans(JmlGenerator jmlGen)
 	{
 		this.jmlGen = jmlGen;
-		this.stateDesVars = new HashMap<SStmCG, List<AIdentifierVarExpCG>>();
+		this.stateDesInfo = new StateDesInfo();
 	}
 
 	@Override
@@ -67,7 +65,7 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 
 		SExpCG newTarget = splitTarget(target, varDecls, vars);
 
-		stateDesVars.put(node, vars);
+		stateDesInfo.addStateDesVars(node, vars);
 
 		if (varDecls.isEmpty())
 		{
@@ -154,8 +152,8 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	public Map<SStmCG, List<AIdentifierVarExpCG>> getStateDesVars()
+	public StateDesInfo getStateDesInfo()
 	{
-		return stateDesVars;
+		return stateDesInfo;
 	}
 }

@@ -2,7 +2,6 @@ package org.overture.codegen.vdm2jml;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SFunctionDefinition;
@@ -225,10 +224,10 @@ public class JmlGenerator implements IREventObserver
 		}
 		
 		// Normalise targets of call object statements and mapseq updates
-		Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars = normaliseTargets(newAst);
+		StateDesInfo stateDesInfo = normaliseTargets(newAst);
 		
 		// Add assertions to check for violation of record and named type invariants
-		addAssertions(newAst, stateDesVars, recInfo);
+		addAssertions(newAst, stateDesInfo, recInfo);
 
 		// Make sure that the JML annotations are ordered correctly
 		sortAnnotations(newAst);
@@ -296,9 +295,9 @@ public class JmlGenerator implements IREventObserver
 		this.typeInfoList = depCalc.getTypeDataList();
 	}
 
-	private void addAssertions(List<IRStatus<INode>> newAst, Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars, RecClassInfo recInfo)
+	private void addAssertions(List<IRStatus<INode>> newAst, StateDesInfo stateDesInfo, RecClassInfo recInfo)
 	{
-		InvAssertionTrans assertTr = new InvAssertionTrans(this, stateDesVars, recInfo);
+		InvAssertionTrans assertTr = new InvAssertionTrans(this, stateDesInfo, recInfo);
 		
 		for (IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
 		{
@@ -504,7 +503,7 @@ public class JmlGenerator implements IREventObserver
 		}
 	}
 	
-	public Map<SStmCG, List<AIdentifierVarExpCG>> normaliseTargets(List<IRStatus<INode>> newAst)
+	public StateDesInfo normaliseTargets(List<IRStatus<INode>> newAst)
 	{
 		TargetNormaliserTrans normaliser = new TargetNormaliserTrans(this);
 		for (IRStatus<INode> n : newAst)
@@ -521,7 +520,7 @@ public class JmlGenerator implements IREventObserver
 			}
 		}
 
-		return normaliser.getStateDesVars();
+		return normaliser.getStateDesInfo();
 	}
 
 	public IRSettings getIrSettings()

@@ -3,7 +3,6 @@ package org.overture.codegen.vdm2jml;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -30,16 +29,16 @@ public class InvAssertionTrans extends AtomicAssertTrans
 {
 	private RecModHandler recHandler;
 	private NamedTypeInvHandler namedTypeHandler;
-	private Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars;
+	private StateDesInfo stateDesInfo;
 	private RecClassInfo recInfo;
 	
-	public InvAssertionTrans(JmlGenerator jmlGen,
-			Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars, RecClassInfo recInfo)
+	public InvAssertionTrans(JmlGenerator jmlGen, StateDesInfo stateDesInfo,
+			RecClassInfo recInfo)
 	{
 		super(jmlGen);
 		this.recHandler = new RecModHandler(this);
 		this.namedTypeHandler = new NamedTypeInvHandler(this);
-		this.stateDesVars = stateDesVars;
+		this.stateDesInfo = stateDesInfo;
 		this.recInfo = recInfo;
 	}
 
@@ -47,7 +46,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public void caseACallObjectExpStmCG(ACallObjectExpStmCG node)
 			throws AnalysisException
 	{
-		handleStateUpdate(node, stateDesVars.get(node), recHandler.handleCallObj(node), namedTypeHandler.handleCallObj(node));
+		handleStateUpdate(node, stateDesInfo.getStateDesVars(node), recHandler.handleCallObj(node), namedTypeHandler.handleCallObj(node));
 	}
 
 	@Override
@@ -117,7 +116,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
 			throws AnalysisException
 	{
-		handleStateUpdate(node, stateDesVars.get(node), null, namedTypeHandler.handleMapSeq(node));
+		handleStateUpdate(node, stateDesInfo.getStateDesVars(node), null, namedTypeHandler.handleMapSeq(node));
 	}
 
 	@Override
