@@ -45,21 +45,27 @@ final public class Entry {
     /*@ pure @*/
     public static Character idC(final Character c) {
         //@ assert inv_Entry_C(c);
-        return c;
+        Character ret_1 = c;
+
+        //@ assert inv_Entry_C(ret_1);
+        return ret_1;
     }
 
     /*@ pure @*/
     public static Object idA(final Object a) {
         //@ assert inv_Entry_A(a) && (a == null || inv_Entry_B(a) || inv_Entry_C(a));
-        return a;
+        Object ret_2 = a;
+
+        //@ assert inv_Entry_A(ret_2) && (ret_2 == null || inv_Entry_B(ret_2) || inv_Entry_C(ret_2));
+        return ret_2;
     }
 
     /*@ pure @*/
     public static Object constFunc() {
-        Object ret_1 = 'a';
+        Object ret_3 = 'a';
 
-        //@ assert inv_Entry_A(ret_1) && (ret_1 == null || inv_Entry_B(ret_1) || inv_Entry_C(ret_1));
-        return ret_1;
+        //@ assert inv_Entry_A(ret_3) && (ret_3 == null || inv_Entry_B(ret_3) || inv_Entry_C(ret_3));
+        return ret_3;
     }
 
     public String toString() {

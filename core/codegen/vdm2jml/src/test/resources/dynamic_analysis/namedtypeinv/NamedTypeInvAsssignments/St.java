@@ -45,7 +45,10 @@ final public class St implements Record {
 
     /*@ pure @*/
     public Object get_x() {
-        return x;
+        Object ret_1 = x;
+
+        //@ assert project.Entry.invChecksOn ==> (inv_Entry_PT(ret_1) && (ret_1 == null || inv_Entry_PossiblyOne(ret_1) || inv_Entry_True(ret_1)));
+        return ret_1;
     }
 
     public void set_x(final Object _x) {
