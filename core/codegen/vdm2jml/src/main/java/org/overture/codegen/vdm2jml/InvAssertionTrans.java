@@ -31,14 +31,16 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	private RecModHandler recHandler;
 	private NamedTypeInvHandler namedTypeHandler;
 	private Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars;
-
+	private RecClassInfo recInfo;
+	
 	public InvAssertionTrans(JmlGenerator jmlGen,
-			Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars)
+			Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars, RecClassInfo recInfo)
 	{
 		super(jmlGen);
 		this.recHandler = new RecModHandler(this);
 		this.namedTypeHandler = new NamedTypeInvHandler(this);
 		this.stateDesVars = stateDesVars;
+		this.recInfo = recInfo;
 	}
 
 	@Override
@@ -87,7 +89,14 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		 * first statement in the statement block makes the assertion appear immediately right after the variable
 		 * declaration.
 		 */
-		encBlock.getStatements().addFirst(as);
+		if(inAtomic())
+		{
+			addPostAtomicCheck(as);
+		}
+		else
+		{
+			encBlock.getStatements().addFirst(as);
+		}
 	}
 
 	@Override
@@ -238,5 +247,10 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		{
 			block.getStatements().add(as);
 		}
+	}
+	
+	public RecClassInfo getRecInfo()
+	{
+		return recInfo;
 	}
 }
