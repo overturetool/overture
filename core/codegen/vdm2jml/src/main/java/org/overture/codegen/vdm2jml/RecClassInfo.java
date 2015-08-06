@@ -7,7 +7,6 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.logging.Logger;
 
 public class RecClassInfo
 {
@@ -70,9 +69,6 @@ public class RecClassInfo
 
 		if (anc == null)
 		{
-			Logger.getLog().printErrorln("Expected " + node
-					+ " to be enclosed by a method in '"
-					+ this.getClass().getSimpleName() + "'");
 			return false;
 		}
 

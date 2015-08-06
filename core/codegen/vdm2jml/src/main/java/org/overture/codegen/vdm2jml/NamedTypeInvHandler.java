@@ -426,7 +426,7 @@ public class NamedTypeInvHandler implements IAssert
 			return null;
 		}
 
-		AClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(var);
+		AClassDeclCG encClass = invTrans.getStateDesInfo().getEnclosingClass(var);
 
 		if (encClass == null)
 		{
