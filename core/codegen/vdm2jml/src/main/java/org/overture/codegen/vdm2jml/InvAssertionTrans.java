@@ -65,6 +65,18 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public void caseAVarDeclCG(AVarDeclCG node) throws AnalysisException
 	{
 		/**
+		 * Variable declarations occurring inside an atomic statement do not need handling. The reason for this is that
+		 * the call statement and the map/seq update cases currently take care of generating the assertions for
+		 * variable expressions used to represent state designators.
+		 * 
+		 * TODO: Make this case handle state designators
+		 */
+		if(inAtomic())
+		{
+			return;
+		}
+		
+		/**
 		 * Since the target of map/seq updates (e.g. Utils.mapsSeqUpdate(stateDes_3, 4, 'a')) and call object statements
 		 * (e.g. stateDes_3.set_x("a")) (i.e. assignments in the VDM-SL model) are split into variables named stateDes_
 		 * <n> we can also expect local variable declarations in atomic statement blocks
@@ -251,5 +263,10 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public RecClassInfo getRecInfo()
 	{
 		return recInfo;
+	}
+	
+	public StateDesInfo getStateDesInfo()
+	{
+		return stateDesInfo;
 	}
 }
