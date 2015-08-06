@@ -4,10 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.logging.Logger;
@@ -22,7 +21,7 @@ public class NamedTypeInvUtil
 	}
 	
 	public String consJmlCheck(String enclosingClass, String jmlVisibility,
-			String annotationType, List<NamedTypeInfo> typeInfoMatches,
+			String annotationType, boolean invChecksGuard, List<NamedTypeInfo> typeInfoMatches,
 			String varName)
 	{
 		StringBuilder inv = new StringBuilder();
@@ -36,6 +35,13 @@ public class NamedTypeInvUtil
 
 		inv.append(annotationType);
 		inv.append(' ');
+		
+		if(invChecksGuard)
+		{
+			inv.append(handler.getJmlGen().getAnnotator().consInvChecksOnName(handler.getJmlGen().getInvChecksFlagOwner()));
+			inv.append(JmlGenerator.JML_IMPLIES);
+			inv.append('(');
+		}
 
 		String or = "";
 		for (NamedTypeInfo match : typeInfoMatches)
@@ -45,43 +51,25 @@ public class NamedTypeInvUtil
 			or = JmlGenerator.JML_OR;
 		}
 
+		if(invChecksGuard)
+		{
+			inv.append(')');
+		}
+		
 		inv.append(';');
 
 		// Inject the name of the field into the expression
 		return String.format(inv.toString(), varName);
 	}
-
-	public void injectAssertion(SStmCG node, List<NamedTypeInfo> invTypes,
-			String enclosingClassName, String varNameStr, boolean append)
-	{
-		AMetaStmCG assertStm = consAssertStm(invTypes, enclosingClassName, varNameStr);
-
-		ABlockStmCG replStm = new ABlockStmCG();
-
-		handler.getJmlGen().getJavaGen().getTransAssistant().replaceNodeWith(node, replStm);
-
-		replStm.getStatements().add(node);
-
-		if (append)
-		{
-			replStm.getStatements().add(assertStm);
-		} else
-		{
-			replStm.getStatements().addFirst(assertStm);
-		}
-	}
-
-	public String consJmlCheck(String enclosingClass, String annotationType,
-			List<NamedTypeInfo> typeInfoMatches, String varName)
-	{
-		return consJmlCheck(enclosingClass, null, annotationType, typeInfoMatches, varName);
-	}
-
+	
 	public AMetaStmCG consAssertStm(List<NamedTypeInfo> invTypes,
-			String enclosingClassName, String varNameStr)
+			String enclosingClassName, String varNameStr, INode node, RecClassInfo recInfo)
 	{
+		boolean inAccessor = node != null && recInfo != null && recInfo.inAccessor(node);
+		
+		
 		AMetaStmCG assertStm = new AMetaStmCG();
-		String assertStr = consJmlCheck(enclosingClassName, JmlGenerator.JML_ASSERT_ANNOTATION, invTypes, varNameStr);
+		String assertStr = consJmlCheck(enclosingClassName, null, JmlGenerator.JML_ASSERT_ANNOTATION, inAccessor, invTypes, varNameStr);
 		List<ClonableString> assertMetaData = handler.getJmlGen().getAnnotator().consMetaData(assertStr);
 		handler.getJmlGen().getAnnotator().appendMetaData(assertStm, assertMetaData);
 

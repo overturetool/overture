@@ -57,9 +57,10 @@ public class NamedTypeInvHandler implements IAssert
 	
 	public void handleField(AFieldDeclCG node)
 	{
-		// Examples:
-		// val : char | Even = 5;
-
+		/**
+		 * Values and record fields will be handled by this handler (not the state component field since its type is a
+		 * record type) Example: val : char | Even = 5;
+		 */
 		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getType());
 
 		if (invTypes.isEmpty())
@@ -74,14 +75,17 @@ public class NamedTypeInvHandler implements IAssert
 			return;
 		}
 
-		// In classes that originate from VDM-SL modules the state field
-		// and the values are static. However record fields are not.
-		String scope = node.getStatic() ? JmlGenerator.JML_STATIC_INV_ANNOTATION
-				: JmlGenerator.JML_INSTANCE_INV_ANNOTATION;
-
-		String inv = util.consJmlCheck(encClass.getName(), JmlGenerator.JML_PUBLIC, scope, invTypes, node.getName());
-
-		invTrans.getJmlGen().getAnnotator().appendMetaData(node, invTrans.getJmlGen().getAnnotator().consMetaData(inv));
+		if (!invTrans.getRecInfo().isRecField(node))
+		{
+			/**
+			 * So at this point it must be a value defined in a module. No need to check if invariant checks are enabled.
+			 */
+			String inv = util.consJmlCheck(encClass.getName(), JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, false, invTypes, node.getName());
+			invTrans.getJmlGen().getAnnotator().appendMetaData(node, invTrans.getJmlGen().getAnnotator().consMetaData(inv));
+		}
+		/**
+		 * No need to assert type consistency of record fields since this is handled by the record setter
+		 */
 	}
 
 	public void handleBlock(ABlockStmCG node) throws AnalysisException
@@ -187,7 +191,12 @@ public class NamedTypeInvHandler implements IAssert
 					continue;
 				}
 
-				replBody.getStatements().add(util.consAssertStm(invTypes, enclosingClassName, varNameStr));
+				/**
+				 * Upon entering a record setter it is necessary to check if invariants checks are enabled before
+				 * checking the parameter
+				 */
+				AMetaStmCG as = util.consAssertStm(invTypes, enclosingClassName, varNameStr, node, invTrans.getRecInfo());
+				replBody.getStatements().add(as);
 			}
 		}
 
@@ -216,7 +225,10 @@ public class NamedTypeInvHandler implements IAssert
 
 			if (col instanceof SVarExpCG)
 			{
-				return util.consAssertStm(invTypes, enclosingClass.getName(), ((SVarExpCG) col).getName());
+				/**
+				 * Updates to fields in record setters need to check if invariants checks are enabled
+				 */
+				return util.consAssertStm(invTypes, enclosingClass.getName(), ((SVarExpCG) col).getName(), node,  invTrans.getRecInfo());
 			} else
 			{
 				Logger.getLog().printErrorln("Expected collection to be a variable expression at this point. Got: "
@@ -228,42 +240,6 @@ public class NamedTypeInvHandler implements IAssert
 		return null;
 	}
 	
-	public ABlockStmCG getEncBlockStm(AVarDeclCG varDecl)
-	{
-		if (varDecl.parent() instanceof ABlockStmCG)
-		{
-			ABlockStmCG parentBlock = (ABlockStmCG) varDecl.parent();
-
-			if (!parentBlock.getLocalDefs().contains(varDecl))
-			{
-				Logger.getLog().printErrorln("Expected local variable declaration to be "
-						+ "one of the local variable declarations of "
-						+ "the parent statement block in '"
-						+ this.getClass().getSimpleName() + "'");
-				return null;
-			}
-
-			if (parentBlock.getLocalDefs().size() > 1)
-			{
-				// The block statement case method should have ensured that the size == 1
-				Logger.getLog().printErrorln("Expected only a single local declaration in "
-						+ "the parent block at this point in '"
-						+ this.getClass().getSimpleName() + "'");
-				return null;
-			}
-			
-			return parentBlock;
-		}
-		else
-		{
-			Logger.getLog().printErrorln("Expected parent of local variable "
-					+ "declaration to be a statement block. Got: "
-					+ varDecl.parent() + " in '" + this.getClass().getSimpleName()
-					+ "'");
-			return null;
-		}
-	}
-
 	public AMetaStmCG handleVarDecl(AVarDeclCG node)
 	{
 		// Examples:
@@ -291,7 +267,11 @@ public class NamedTypeInvHandler implements IAssert
 			return null;
 		}
 
-		return util.consAssertStm(invTypes, enclosingClass.getName(), name);
+		/**
+		 * We do not really need to check if invariant checks are enabled because local variable declarations are not
+		 * expected to be found inside record accessors
+		 */
+		return util.consAssertStm(invTypes, enclosingClass.getName(), name, node, invTrans.getRecInfo());
 	}
 
 	public AMetaStmCG handleCallObj(ACallObjectExpStmCG node)
@@ -299,7 +279,6 @@ public class NamedTypeInvHandler implements IAssert
 		/**
 		 * Handling of setter calls to masked records. This will happen for cases like T = R ... ; R :: x : int;
 		 */
-
 		SExpCG recObj = node.getObj();
 
 		if (recObj instanceof SVarExpCG)
@@ -317,7 +296,11 @@ public class NamedTypeInvHandler implements IAssert
 					return null;
 				}
 
-				return util.consAssertStm(invTypes, encClass.getName(), recObjVar.getName());
+				/**
+				 * Since setter calls can occur inside a record in the context of an atomic statement blocks we need to
+				 * check if invariant checks are enabled
+				 */
+				return util.consAssertStm(invTypes, encClass.getName(), recObjVar.getName(), node, invTrans.getRecInfo());
 			}
 
 		}
@@ -371,7 +354,52 @@ public class NamedTypeInvHandler implements IAssert
 			return;
 		}
 
-		util.injectAssertion(node, invTypes, encClass.getName(), varNameStr, true);
+		/**
+		 * Since assignments can occur inside record setters in the context of an atomic statement block we need to
+		 * check if invariant checks are enabled
+		 */
+		AMetaStmCG assertStm = util.consAssertStm(invTypes, encClass.getName(), varNameStr, node, invTrans.getRecInfo());
+		ABlockStmCG replStm = new ABlockStmCG();
+		getJmlGen().getJavaGen().getTransAssistant().replaceNodeWith(node, replStm);
+		replStm.getStatements().add(node);
+		replStm.getStatements().add(assertStm);
+
+	}
+	
+	public ABlockStmCG getEncBlockStm(AVarDeclCG varDecl)
+	{
+		if (varDecl.parent() instanceof ABlockStmCG)
+		{
+			ABlockStmCG parentBlock = (ABlockStmCG) varDecl.parent();
+
+			if (!parentBlock.getLocalDefs().contains(varDecl))
+			{
+				Logger.getLog().printErrorln("Expected local variable declaration to be "
+						+ "one of the local variable declarations of "
+						+ "the parent statement block in '"
+						+ this.getClass().getSimpleName() + "'");
+				return null;
+			}
+
+			if (parentBlock.getLocalDefs().size() > 1)
+			{
+				// The block statement case method should have ensured that the size == 1
+				Logger.getLog().printErrorln("Expected only a single local declaration in "
+						+ "the parent block at this point in '"
+						+ this.getClass().getSimpleName() + "'");
+				return null;
+			}
+			
+			return parentBlock;
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Expected parent of local variable "
+					+ "declaration to be a statement block. Got: "
+					+ varDecl.parent() + " in '" + this.getClass().getSimpleName()
+					+ "'");
+			return null;
+		}
 	}
 	
 	private TransAssistantCG getTransAssist()
@@ -406,6 +434,10 @@ public class NamedTypeInvHandler implements IAssert
 			return null;
 		}
 		
-		return util.consAssertStm(invTypes, encClass.getName(), var.getName());
+		/**
+		 * Normalisation of state designators will never occur inside record classes so really there is no need to check
+		 * if invariant checks are enabled
+		 */
+		return util.consAssertStm(invTypes, encClass.getName(), var.getName(), var, invTrans.getRecInfo());
 	}
 }
