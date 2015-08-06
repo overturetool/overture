@@ -289,7 +289,9 @@ public class JmlGenUtil
 				List<AFieldDeclCG> fields = new LinkedList<AFieldDeclCG>();
 				for (AFieldDeclCG f : recDecl.getFields())
 				{
-					fields.add(f.clone());
+					AFieldDeclCG newField = f.clone();
+					fields.add(newField);
+					recInfo.register(newField);
 				}
 				recClass.setFields(fields);
 

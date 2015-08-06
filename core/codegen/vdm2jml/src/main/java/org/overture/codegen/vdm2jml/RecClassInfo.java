@@ -4,31 +4,33 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.SDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.logging.Logger;
 
 public class RecClassInfo
 {
-	private Set<AMethodDeclCG> accessors;
+	private Set<SDeclCG> members;
 
 	public RecClassInfo()
 	{
-		this.accessors = new HashSet<>();
+		this.members = new HashSet<SDeclCG>();
 	}
 
-	public void register(AMethodDeclCG acc)
+	public void register(SDeclCG acc)
 	{
 		if (!contains(acc))
 		{
-			accessors.add(acc);
+			members.add(acc);
 		}
 	}
 
-	private boolean contains(AMethodDeclCG acc)
+	private boolean contains(SDeclCG memberToCheck)
 	{
-		for (AMethodDeclCG a : accessors)
+		for (SDeclCG m : members)
 		{
-			if (a == acc)
+			if (m == memberToCheck)
 			{
 				return true;
 			}
@@ -39,22 +41,27 @@ public class RecClassInfo
 
 	public void updateAccessor(AMethodDeclCG oldAcc, AMethodDeclCG newAcc)
 	{
-		AMethodDeclCG toRemove = null;
+		SDeclCG toRemove = null;
 
-		for (AMethodDeclCG a : accessors)
+		for (SDeclCG m : members)
 		{
-			if (a == oldAcc)
+			if (m == oldAcc)
 			{
-				toRemove = a;
+				toRemove = m;
 				break;
 			}
 		}
 
 		if (toRemove != null)
 		{
-			accessors.remove(toRemove);
-			accessors.add(newAcc);
+			members.remove(toRemove);
+			members.add(newAcc);
 		}
+	}
+	
+	public boolean isRecField(AFieldDeclCG field)
+	{
+		return contains(field);
 	}
 
 	public boolean inAccessor(INode node)
