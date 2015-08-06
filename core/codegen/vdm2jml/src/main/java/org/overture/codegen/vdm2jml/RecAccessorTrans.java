@@ -25,18 +25,19 @@ import org.overture.codegen.vdm2java.JavaValueSemantics;
 
 public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 {
-
 	private static final String VALID = "valid";
 	private static final String GET = "get_";
 	private static final String SET = "set_";
 
 	private JmlGenerator jmlGen;
+	private RecClassInfo recInfo;
 
 	private boolean inTarget = false;
 
 	public RecAccessorTrans(JmlGenerator jmlGen)
 	{
 		this.jmlGen = jmlGen;
+		this.recInfo = new RecClassInfo();
 	}
 
 	// private void privatizeFields(ARecordDeclCG node)
@@ -51,7 +52,9 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 	public void caseARecordDeclCG(ARecordDeclCG node) throws AnalysisException
 	{
 		// TODO: Privatise record fields?
-		node.getMethods().addAll(consAccessors(node));
+		List<AMethodDeclCG> accessors = consAccessors(node);
+		registerAccessors(accessors);
+		node.getMethods().addAll(accessors);
 		node.getMethods().add(consValidMethod());
 	}
 
@@ -61,12 +64,10 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 	{
 		if (node.getTarget() instanceof AFieldExpCG)
 		{
-
 			AFieldExpCG target = (AFieldExpCG) node.getTarget();
 
 			if (target.getObject().getType() instanceof ARecordTypeCG)
 			{
-
 				ACallObjectExpStmCG setCall = new ACallObjectExpStmCG();
 				setCall.setFieldName(consSetCallName(target.getMemberName()));
 				setCall.getArgs().add(node.getExp().clone());
@@ -142,16 +143,17 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 		return node.parent() instanceof AFieldExpCG
 				&& ((AFieldExpCG) node.parent()).getObject() == node;
 	}
-	
+
 	private boolean isColOfMapSeq(AFieldExpCG node)
 	{
-		return (node.parent() instanceof AMapSeqGetExpCG && ((AMapSeqGetExpCG) node.parent()).getCol() == node) ||
-				(node.parent() instanceof AMapSeqUpdateStmCG && ((AMapSeqUpdateStmCG) node.parent()).getCol() == node);
+		return (node.parent() instanceof AMapSeqGetExpCG
+				&& ((AMapSeqGetExpCG) node.parent()).getCol() == node)
+				|| (node.parent() instanceof AMapSeqUpdateStmCG
+						&& ((AMapSeqUpdateStmCG) node.parent()).getCol() == node);
 	}
 
 	private List<AMethodDeclCG> consAccessors(ARecordDeclCG node)
 	{
-
 		List<AMethodDeclCG> accessors = new LinkedList<AMethodDeclCG>();
 
 		for (AFieldDeclCG f : node.getFields())
@@ -248,6 +250,14 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 		return validMethod;
 	}
 
+	private void registerAccessors(List<AMethodDeclCG> accessors)
+	{
+		for (AMethodDeclCG a : accessors)
+		{
+			recInfo.register(a);
+		}
+	}
+
 	public String consGetCallName(String fieldName)
 	{
 		return GET + fieldName;
@@ -261,5 +271,10 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 	private String consParamName(AFieldDeclCG f)
 	{
 		return "_" + f.getName();
+	}
+
+	public RecClassInfo getRecInfo()
+	{
+		return recInfo;
 	}
 }
