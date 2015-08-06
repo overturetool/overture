@@ -125,13 +125,12 @@ public class NamedTypeInvHandler implements IAssert
 	
 	public void handleReturn(AReturnStmCG node) throws AnalysisException
 	{
+		/**
+		 * The idea is to extract the return value to variable and return that variable. Then it becomes the
+		 * responsibility of the variable declaration case to assert if the named invariant type is violated.
+		 */
 		SExpCG exp = node.getExp();
 		
-		if (exp instanceof SVarExpCG)
-		{
-			return;
-		}
-
 		AMethodDeclCG encMethod = invTrans.getJmlGen().getUtil().getEnclosingMethod(node);
 
 		if (encMethod == null)
