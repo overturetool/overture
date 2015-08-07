@@ -65,6 +65,7 @@ final public class Entry {
 
             //@ assert stateDes_3.valid();
 
+            //@ assert stateDes_2.valid();
             //@ assert inv_Entry_T3(stateDes_2);
 
             //@ assert stateDes_1.valid();
@@ -73,6 +74,7 @@ final public class Entry {
 
             //@ assert stateDes_6.valid();
 
+            //@ assert stateDes_5.valid();
             //@ assert inv_Entry_T3(stateDes_5);
 
             //@ assert stateDes_4.valid();
@@ -100,6 +102,7 @@ final public class Entry {
 
             //@ assert stateDes_9.valid();
 
+            //@ assert stateDes_8.valid();
             //@ assert inv_Entry_T3(stateDes_8);
 
             //@ assert stateDes_7.valid();
