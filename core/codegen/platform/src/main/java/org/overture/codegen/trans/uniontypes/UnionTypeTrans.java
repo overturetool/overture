@@ -396,7 +396,6 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				continue;
 			}
 			
-			
 			if (!(currentType instanceof AClassTypeCG)
 					&& !(currentType instanceof ATupleTypeCG)
 					&& !(currentType instanceof ARecordTypeCG))
@@ -405,17 +404,14 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				continue;
 			}
 			
-			if(parent instanceof SExpCG)
+			boolean memberExists = false;
+
+			memberExists = memberExists(memberName, parent, typeAssistant, fieldExp, currentType);
+
+			if (!memberExists)
 			{
-				boolean memberExists = false;
-				
-				memberExists = memberExists(memberName, parent, typeAssistant, fieldExp, currentType);
-				
-				if(!memberExists)
-				{
-					//If the member does not exist then the case should not be treated
-					continue;
-				}
+				// If the member does not exist then the case should not be treated
+				continue;
 			}
 			
 			ACastUnaryExpCG castedFieldExp = new ACastUnaryExpCG();
