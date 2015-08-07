@@ -299,9 +299,7 @@ public class JmlGenUtil
 				// Examples: my.pack.Mtypes
 				if (JavaCodeGenUtil.isValidJavaPackage(jmlGen.getJavaSettings().getJavaRootPackage()))
 				{
-					String recPackage = jmlGen.getJavaSettings().getJavaRootPackage()
-							+ "." + clazz.getName()
-							+ JavaFormat.TYPE_DECL_PACKAGE_SUFFIX;
+					String recPackage = consRecPackage(clazz.getName());
 					recClass.setPackage(recPackage);
 				} else
 				{
@@ -313,6 +311,15 @@ public class JmlGenUtil
 		}
 
 		return extraClasses;
+	}
+
+	public String consRecPackage(String defClass)
+	{
+		String recPackage = jmlGen.getJavaSettings().getJavaRootPackage()
+				+ "." + defClass
+				+ JavaFormat.TYPE_DECL_PACKAGE_SUFFIX;
+		
+		return recPackage;
 	}
 	
 	public AMethodDeclCG genInvMethod(AClassDeclCG clazz,
