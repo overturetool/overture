@@ -114,14 +114,14 @@ public class NamedTypeInvUtil
 					inv.append(" instanceof ");
 					inv.append(fullyQualifiedRecType);
 					inv.append(JmlGenerator.JML_IMPLIES);
-					inv.append("((" + fullyQualifiedRecType + ")).");
+					inv.append("((" + fullyQualifiedRecType + ") " + var.getName() + ").");
 					inv.append(JmlGenerator.REC_VALID_METHOD_CALL);
 					// e.g. r1 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) r1).valid()
 				}
 
 				inv.append(';');
+				inv.append('\n');
 			}
-			inv.append('\n');
 		}
 	}
 	
