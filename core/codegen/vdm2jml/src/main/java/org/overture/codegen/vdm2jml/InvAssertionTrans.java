@@ -11,12 +11,14 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.logging.Logger;
 
 /**
  * This class is responsible for adding additional assertions to the IR to preserve the semantics of the contract-based
@@ -46,7 +48,17 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public void caseACallObjectExpStmCG(ACallObjectExpStmCG node)
 			throws AnalysisException
 	{
-		handleStateUpdate(node, stateDesInfo.getStateDesVars(node), recHandler.handleCallObj(node), namedTypeHandler.handleCallObj(node));
+		if (node.getObj() instanceof SVarExpCG)
+		{
+			SVarExpCG obj = (SVarExpCG) node.getObj();
+			handleStateUpdate(node, obj, stateDesInfo.getStateDesVars(node), recHandler.handleCallObj(node), namedTypeHandler.handleCallObj(node));
+		} else
+		{
+			Logger.getLog().printErrorln("Expected object of call object statement "
+					+ " to be a variable expression by now in '"
+					+ this.getClass().getSimpleName() + "'. Got: "
+					+ node.getObj());
+		}
 	}
 
 	@Override
@@ -128,7 +140,17 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
 			throws AnalysisException
 	{
-		handleStateUpdate(node, stateDesInfo.getStateDesVars(node), null, namedTypeHandler.handleMapSeq(node));
+		if (node.getCol() instanceof SVarExpCG)
+		{
+			SVarExpCG col = (SVarExpCG) node.getCol();
+			handleStateUpdate(node, col, stateDesInfo.getStateDesVars(node), null, namedTypeHandler.handleMapSeq(node));
+		} else
+		{
+			Logger.getLog().printErrorln("Expected collection of map/sequence"
+					+ " update to be a variable expression by now in '"
+					+ this.getClass().getSimpleName() + "'. Got: "
+					+ node.getCol());
+		}
 	}
 
 	@Override
@@ -149,7 +171,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		namedTypeHandler.handleClass(node);
 	}
 
-	private void handleStateUpdate(SStmCG node,
+	private void handleStateUpdate(SStmCG node, SVarExpCG target,
 			List<AIdentifierVarExpCG> objVars, AMetaStmCG recAssert,
 			AMetaStmCG namedTypeInvAssert)
 	{
@@ -166,12 +188,12 @@ public class InvAssertionTrans extends AtomicAssertTrans
 			replBlock.getStatements().add(node);
 
 			addSubjectAsserts(recAssert, namedTypeInvAssert, replBlock);
-			addStateDesAsserts(objVars, replBlock);
+			addStateDesAsserts(target, objVars, replBlock);
 		} else
 		{
 			// We'll store the checks and let the atomic statement case handle the assert insertion
 			addSubjectAssertAtomic(recAssert, namedTypeInvAssert);
-			addStateDesAssertsAtomic(objVars);
+			addStateDesAssertsAtomic(target, objVars);
 		}
 	}
 
@@ -204,44 +226,58 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		return asserts;
 	}
 
-	private void addStateDesAssertsAtomic(List<AIdentifierVarExpCG> objVars)
+	private void addStateDesAssertsAtomic(SVarExpCG target, List<AIdentifierVarExpCG> objVars)
 	{
-		for (AMetaStmCG a : consObjVarAsserts(objVars))
+		for (AMetaStmCG a : consObjVarAsserts(target, objVars))
 		{
 			addPostAtomicCheck(a);
 		}
 	}
 
-	private void addStateDesAsserts(List<AIdentifierVarExpCG> objVars,
+	private void addStateDesAsserts(SVarExpCG target, List<AIdentifierVarExpCG> objVars,
 			ABlockStmCG replBlock)
 	{
-		for (AMetaStmCG a : consObjVarAsserts(objVars))
+		for (AMetaStmCG a : consObjVarAsserts(target, objVars))
 		{
 			add(replBlock, a);
 		}
 	}
 
 	private List<AMetaStmCG> consObjVarAsserts(
-			List<AIdentifierVarExpCG> objVars)
+			SVarExpCG target, List<AIdentifierVarExpCG> objVars)
 	{
 		List<AMetaStmCG> objVarAsserts = new LinkedList<AMetaStmCG>();
 
 		if (objVars != null)
 		{
-			// Everyone except the last
+			// All of them except the last
 			for (int i = 0; i < objVars.size() - 1; i++)
 			{
-				AIdentifierVarExpCG var = objVars.get(i);
-
-				add(objVarAsserts, recHandler.consAssert(var));
-				// TODO: Will the named type invariants not get handled automatically since they are local variable
-				// decls.
-				add(objVarAsserts, namedTypeHandler.consAssert(var));
+				addAsserts(objVarAsserts, objVars.get(i));
+			}
+			
+			if(!objVarAsserts.isEmpty())
+			{
+				AIdentifierVarExpCG last = objVars.get(objVars.size() - 1);
+				
+				if(!target.getName().equals(last.getName()))
+				{
+					addAsserts(objVarAsserts, last);
+				}
 			}
 		}
 
 		Collections.reverse(objVarAsserts);
 		return objVarAsserts;
+	}
+
+	private void addAsserts(List<AMetaStmCG> objVarAsserts,
+			AIdentifierVarExpCG var)
+	{
+		add(objVarAsserts, recHandler.consAssert(var));
+		// TODO: Will the named type invariants not get handled automatically since they are local variable
+		// decls.
+		add(objVarAsserts, namedTypeHandler.consAssert(var));
 	}
 
 	private void add(List<AMetaStmCG> asserts, AMetaStmCG as)
