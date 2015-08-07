@@ -10,6 +10,7 @@ import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
@@ -29,6 +30,7 @@ import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.trans.AssignStmTrans;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
@@ -66,12 +68,16 @@ public class JmlGenerator implements IREventObserver
 	public static final String JML_ENABLE_INV_CHECKS = "//@ set " + INV_CHECKS_ON_GHOST_VAR_NAME + " = true;";
 	public static final String JML_DISABLE_INV_CHECKS = "//@ set " + INV_CHECKS_ON_GHOST_VAR_NAME + " = false;";
 	
-	public static final String REC_VALID_METHOD_CALL = "valid()"; 
+	public static final String REC_VALID_METHOD_NAMEVALID = "valid";
+	public static final String REC_VALID_METHOD_CALL = REC_VALID_METHOD_NAMEVALID + "()"; 
 	
 	private JavaCodeGen javaGen;
 	private List<NamedTypeInfo> typeInfoList;
 	private JmlGenUtil util;
 	private JmlAnnotationHelper annotator;
+	
+	private RecClassInfo recInfo;
+	private StateDesInfo stateDesInfo;
 	
 	// The class owning the invChecksOn flag
 	private AClassDeclCG invChecksFlagOwner = null;
@@ -91,6 +97,43 @@ public class JmlGenerator implements IREventObserver
 		this.annotator = new JmlAnnotationHelper(this);
 		
 		initSettings();
+
+		addJmlTransformations();
+	}
+
+	private void addJmlTransformations()
+	{
+		RecAccessorTrans recAccessorTrans = new RecAccessorTrans(this, true, true);
+		TargetNormaliserTrans targetNormaliserTrans = new TargetNormaliserTrans(this);
+
+		// Info structures are populated with data when the transformations are applied
+		this.recInfo = recAccessorTrans.getRecInfo();
+		this.stateDesInfo = targetNormaliserTrans.getStateDesInfo();
+
+		List<DepthFirstAnalysisAdaptor> series = this.javaGen.getTransSeries().getSeries();
+		
+		for (int i = 0; i < series.size(); i++)
+		{
+			// We'll add the transformations after the assignment transformation
+			if (series.get(i).getClass().equals(AssignStmTrans.class))
+			{
+				int recTransIdx = i + 1;
+				int targetTransIdx = recTransIdx + 1;
+
+				if (recTransIdx < series.size())
+				{
+					series.add(recTransIdx, recAccessorTrans);
+					series.add(targetTransIdx, targetNormaliserTrans);
+				} else
+				{
+					Logger.getLog().printErrorln("Could not add transformations "
+							+ " to Java transformation series in '"
+							+ this.getClass().getSimpleName());
+				}
+				
+				break;
+			}
+		}
 	}
 	
 	private void initSettings()
@@ -142,10 +185,13 @@ public class JmlGenerator implements IREventObserver
 		annotateRecsWithInvs(ast);
 
 		// All the record methods are JML pure (getters and setters are added just below)
-		annotator.makeRecMethodsPure(ast);
+		annotator.makeRecMethodsPure(ast, recInfo);
 		
-		// Transform the IR such that access to record state is done via getters and setters.
-		RecClassInfo recInfo = makeRecStateAccessorBased(ast);
+		/**
+		 * Some of the Java transformations, like the union type transformation, will add field expressions to the IR.
+		 * In this step we apply (again!) the 'RecAccessorTrans' to remove these field expressions.
+		 */
+		makeRecStateAccessorBased(ast);
 		
 		List<IRStatus<INode>> newAst = new LinkedList<IRStatus<INode>>(ast);
 
@@ -225,9 +271,6 @@ public class JmlGenerator implements IREventObserver
 			}
 		}
 		
-		// Normalise targets of call object statements and mapseq updates
-		StateDesInfo stateDesInfo = normaliseTargets(newAst);
-		
 		// Add assertions to check for violation of record and named type invariants
 		addAssertions(newAst, stateDesInfo, recInfo);
 
@@ -241,9 +284,9 @@ public class JmlGenerator implements IREventObserver
 		return newAst;
 	}
 
-	private RecClassInfo makeRecStateAccessorBased(List<IRStatus<INode>> ast) {
+	private void makeRecStateAccessorBased(List<IRStatus<INode>> ast) {
 
-		RecAccessorTrans recAccTr = new RecAccessorTrans(this);
+		RecAccessorTrans recAccTr = new RecAccessorTrans(this, false, false);
 
 		for (IRStatus<INode> status : ast) {
 			try {
@@ -255,8 +298,6 @@ public class JmlGenerator implements IREventObserver
 				e.printStackTrace();
 			}
 		}
-		
-		return recAccTr.getRecInfo();
 	}
 
 	private void sortAnnotations(List<IRStatus<INode>> newAst)

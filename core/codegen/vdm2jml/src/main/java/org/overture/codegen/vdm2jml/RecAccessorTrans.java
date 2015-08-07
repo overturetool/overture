@@ -32,11 +32,15 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 	private RecClassInfo recInfo;
 
 	private boolean inTarget = false;
+	private boolean addAccessors;
+	private boolean cloneMembers;
 
-	public RecAccessorTrans(JmlGenerator jmlGen)
+	public RecAccessorTrans(JmlGenerator jmlGen, boolean addAccessors, boolean cloneMembers)
 	{
 		this.jmlGen = jmlGen;
 		this.recInfo = new RecClassInfo();
+		this.addAccessors = addAccessors;
+		this.cloneMembers = cloneMembers;
 	}
 
 	// private void privatizeFields(ARecordDeclCG node)
@@ -51,10 +55,13 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 	public void caseARecordDeclCG(ARecordDeclCG node) throws AnalysisException
 	{
 		// TODO: Privatise record fields?
-		List<AMethodDeclCG> accessors = consAccessors(node);
-		registerAccessors(accessors);
-		node.getMethods().addAll(accessors);
-		node.getMethods().add(consValidMethod());
+		if(addAccessors)
+		{
+			List<AMethodDeclCG> accessors = consAccessors(node);
+			registerAccessors(accessors);
+			node.getMethods().addAll(accessors);
+			node.getMethods().add(consValidMethod());
+		}
 	}
 
 	@Override
@@ -96,7 +103,7 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 	{
 		node.getObject().apply(this);
 
-		if (node.getObject().getType() instanceof ARecordTypeCG)
+		if (node.getObject().getType() instanceof ARecordTypeCG && !(node.parent() instanceof AApplyExpCG))
 		{
 			AMethodTypeCG getterType = new AMethodTypeCG();
 			getterType.setResult(node.getType().clone());
@@ -132,7 +139,13 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 
 	private boolean cloneFieldRead(AFieldExpCG node)
 	{
+		if(!cloneMembers)
+		{
+			return false;
+		}
+		
 		JavaValueSemantics valSem = jmlGen.getJavaGen().getJavaFormat().getValueSemantics();
+		
 		return !inTarget && !isObjOfFieldExp(node) && !isColOfMapSeq(node)
 				&& valSem.usesStructuralEquivalence(node.getType());
 	}
