@@ -31,7 +31,7 @@ public class RecModUtil
 
 	public String consValidRecCheck(SVarExpCG var)
 	{
-		return "//@ assert " + var.getName() + ".valid();";
+		return "//@ assert " + var.getName() + "." + JmlGenerator.REC_VALID_METHOD_CALL + ";";
 	}
 
 	public boolean assertRec(SExpCG exp)

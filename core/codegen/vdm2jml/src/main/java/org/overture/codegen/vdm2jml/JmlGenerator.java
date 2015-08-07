@@ -66,6 +66,8 @@ public class JmlGenerator implements IREventObserver
 	public static final String JML_ENABLE_INV_CHECKS = "//@ set " + INV_CHECKS_ON_GHOST_VAR_NAME + " = true;";
 	public static final String JML_DISABLE_INV_CHECKS = "//@ set " + INV_CHECKS_ON_GHOST_VAR_NAME + " = false;";
 	
+	public static final String REC_VALID_METHOD_CALL = "valid()"; 
+	
 	private JavaCodeGen javaGen;
 	private List<NamedTypeInfo> typeInfoList;
 	private JmlGenUtil util;
