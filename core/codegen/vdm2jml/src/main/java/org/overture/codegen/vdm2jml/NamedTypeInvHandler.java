@@ -80,7 +80,10 @@ public class NamedTypeInvHandler implements IAssert
 			/**
 			 * So at this point it must be a value defined in a module. No need to check if invariant checks are enabled.
 			 */
-			String inv = util.consJmlCheck(encClass.getName(), JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, false, invTypes, node.getName());
+			
+			AIdentifierVarExpCG var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(node.getName(), node.getType().clone());
+			
+			String inv = util.consJmlCheck(encClass.getName(), JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, false, invTypes, var);
 			invTrans.getJmlGen().getAnnotator().appendMetaData(node, invTrans.getJmlGen().getAnnotator().consMetaData(inv));
 		}
 		/**
@@ -181,7 +184,7 @@ public class NamedTypeInvHandler implements IAssert
 					continue;
 				}
 
-				String enclosingClassName = encClass.getName();
+				String encClassName = encClass.getName();
 
 				String varNameStr = invTrans.getJmlGen().getUtil().getName(param.getPattern());
 
@@ -189,12 +192,14 @@ public class NamedTypeInvHandler implements IAssert
 				{
 					continue;
 				}
+				
+				SVarExpCG var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(varNameStr, param.getType().clone());
 
 				/**
 				 * Upon entering a record setter it is necessary to check if invariants checks are enabled before
 				 * checking the parameter
 				 */
-				AMetaStmCG as = util.consAssertStm(invTypes, enclosingClassName, varNameStr, node, invTrans.getRecInfo());
+				AMetaStmCG as = util.consAssertStm(invTypes, encClassName, var, node, invTrans.getRecInfo());
 				replBody.getStatements().add(as);
 			}
 		}
@@ -227,7 +232,7 @@ public class NamedTypeInvHandler implements IAssert
 				/**
 				 * Updates to fields in record setters need to check if invariants checks are enabled
 				 */
-				return util.consAssertStm(invTypes, enclosingClass.getName(), ((SVarExpCG) col).getName(), node,  invTrans.getRecInfo());
+				return util.consAssertStm(invTypes, enclosingClass.getName(), ((SVarExpCG) col), node,  invTrans.getRecInfo());
 			} else
 			{
 				Logger.getLog().printErrorln("Expected collection to be a variable expression at this point. Got: "
@@ -265,12 +270,14 @@ public class NamedTypeInvHandler implements IAssert
 		{
 			return null;
 		}
+		
+		AIdentifierVarExpCG var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(name, node.getType().clone());
 
 		/**
 		 * We do not really need to check if invariant checks are enabled because local variable declarations are not
 		 * expected to be found inside record accessors
 		 */
-		return util.consAssertStm(invTypes, enclosingClass.getName(), name, node, invTrans.getRecInfo());
+		return util.consAssertStm(invTypes, enclosingClass.getName(), var, node, invTrans.getRecInfo());
 	}
 
 	public AMetaStmCG handleCallObj(ACallObjectExpStmCG node)
@@ -299,7 +306,7 @@ public class NamedTypeInvHandler implements IAssert
 				 * Since setter calls can occur inside a record in the context of an atomic statement blocks we need to
 				 * check if invariant checks are enabled
 				 */
-				return util.consAssertStm(invTypes, encClass.getName(), recObjVar.getName(), node, invTrans.getRecInfo());
+				return util.consAssertStm(invTypes, encClass.getName(), recObjVar, node, invTrans.getRecInfo());
 			}
 
 		}
@@ -337,8 +344,6 @@ public class NamedTypeInvHandler implements IAssert
 			return;
 		}
 
-		String varNameStr = ((SVarExpCG) target).toString();
-
 		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getTarget().getType());
 
 		if (invTypes.isEmpty())
@@ -357,7 +362,7 @@ public class NamedTypeInvHandler implements IAssert
 		 * Since assignments can occur inside record setters in the context of an atomic statement block we need to
 		 * check if invariant checks are enabled
 		 */
-		AMetaStmCG assertStm = util.consAssertStm(invTypes, encClass.getName(), varNameStr, node, invTrans.getRecInfo());
+		AMetaStmCG assertStm = util.consAssertStm(invTypes, encClass.getName(), ((SVarExpCG) target), node, invTrans.getRecInfo());
 		ABlockStmCG replStm = new ABlockStmCG();
 		getJmlGen().getJavaGen().getTransAssistant().replaceNodeWith(node, replStm);
 		replStm.getStatements().add(node);
@@ -437,6 +442,6 @@ public class NamedTypeInvHandler implements IAssert
 		 * Normalisation of state designators will never occur inside record classes so really there is no need to check
 		 * if invariant checks are enabled
 		 */
-		return util.consAssertStm(invTypes, encClass.getName(), var.getName(), var, invTrans.getRecInfo());
+		return util.consAssertStm(invTypes, encClass.getName(), var, var, invTrans.getRecInfo());
 	}
 }
