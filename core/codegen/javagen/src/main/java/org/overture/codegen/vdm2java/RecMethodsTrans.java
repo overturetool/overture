@@ -24,11 +24,11 @@ public class RecMethodsTrans extends DepthFirstAnalysisAdaptor
 			{
 				ARecordDeclCG rec = (ARecordDeclCG) typeDecl.getDecl();
 				
-				rec.getMethods().add(recCreator.genRecConstructor(rec));
-				rec.getMethods().add(recCreator.genEqualsMethod(rec));
-				rec.getMethods().add(recCreator.genHashcodeMethod(rec));
-				rec.getMethods().add(recCreator.genCopyMethod(rec));
-				rec.getMethods().add(recCreator.genToStringMethod(rec));
+				rec.getMethods().addFirst(recCreator.genToStringMethod(rec));
+				rec.getMethods().addFirst(recCreator.genCopyMethod(rec));
+				rec.getMethods().addFirst(recCreator.genHashcodeMethod(rec));
+				rec.getMethods().addFirst(recCreator.genEqualsMethod(rec));
+				rec.getMethods().addFirst(recCreator.genRecConstructor(rec));
 			}
 		}
 	}
