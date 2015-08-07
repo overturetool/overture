@@ -35,7 +35,7 @@ public class JmlAnnotationHelper
 		}
 	}
 	
-	public void makeRecMethodsPure(List<IRStatus<INode>> ast)
+	public void makeRecMethodsPure(List<IRStatus<INode>> ast, RecClassInfo recInfo)
 	{
 		List<ARecordDeclCG> records = jmlGen.getUtil().getRecords(ast);
 
@@ -43,7 +43,7 @@ public class JmlAnnotationHelper
 		{
 			for (AMethodDeclCG method : rec.getMethods())
 			{
-				if (!method.getIsConstructor())
+				if (!method.getIsConstructor() && !recInfo.isSetter(method))
 				{
 					makePure(method);
 				}

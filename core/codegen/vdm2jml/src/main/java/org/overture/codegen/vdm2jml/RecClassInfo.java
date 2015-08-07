@@ -24,6 +24,11 @@ public class RecClassInfo
 			members.add(acc);
 		}
 	}
+	
+	public boolean isSetter(AMethodDeclCG method)
+	{
+		return contains(method) && method.getName().startsWith(RecAccessorTrans.SET_PREFIX);
+	}
 
 	private boolean contains(SDeclCG memberToCheck)
 	{

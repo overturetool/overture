@@ -25,9 +25,8 @@ import org.overture.codegen.vdm2java.JavaValueSemantics;
 
 public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 {
-	private static final String VALID = "valid";
-	private static final String GET = "get_";
-	private static final String SET = "set_";
+	public static final String GET_PREFIX = "get_";
+	public static final String SET_PREFIX = "set_";
 
 	private JmlGenerator jmlGen;
 	private RecClassInfo recInfo;
@@ -219,8 +218,6 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 		returnField.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consIdVar(f.getName(), f.getType().clone()));
 		getter.setBody(returnField);
 
-		jmlGen.getAnnotator().makePure(getter);
-
 		return getter;
 	}
 
@@ -233,14 +230,12 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 		validMethod.setAsync(false);
 		validMethod.setImplicit(false);
 		validMethod.setIsConstructor(false);
-		validMethod.setName(VALID);
+		validMethod.setName(JmlGenerator.REC_VALID_METHOD_NAMEVALID);
 		validMethod.setStatic(false);
 
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(new ABoolBasicTypeCG());
 		validMethod.setMethodType(methodType);
-
-		jmlGen.getAnnotator().makePure(validMethod);
 
 		AReturnStmCG body = new AReturnStmCG();
 		body.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consBoolLiteral(true));
@@ -260,12 +255,12 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 
 	public String consGetCallName(String fieldName)
 	{
-		return GET + fieldName;
+		return GET_PREFIX + fieldName;
 	}
 
 	public String consSetCallName(String fieldName)
 	{
-		return SET + fieldName;
+		return SET_PREFIX + fieldName;
 	}
 
 	private String consParamName(AFieldDeclCG f)
