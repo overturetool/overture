@@ -49,11 +49,11 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 public class FuncValTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG transformationAssistant;
-	private FunctionValueAssistant functionValueAssistant;
+	private FuncValAssistant functionValueAssistant;
 	private FuncValPrefixes funcValPrefixes;
 
 	public FuncValTrans(TransAssistantCG transformationAssistant,
-			FunctionValueAssistant functionValueAssistant,
+			FuncValAssistant functionValueAssistant,
 			FuncValPrefixes funcValPrefixes)
 	{
 		this.transformationAssistant = transformationAssistant;
@@ -61,7 +61,7 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 		this.funcValPrefixes = funcValPrefixes;
 	}
 
-	public FunctionValueAssistant getFunctionValueAssistant()
+	public FuncValAssistant getFunctionValueAssistant()
 	{
 		return functionValueAssistant;
 	}

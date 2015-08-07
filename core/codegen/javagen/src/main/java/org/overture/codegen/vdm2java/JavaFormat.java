@@ -97,7 +97,7 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
+import org.overture.codegen.trans.funcvalues.FuncValAssistant;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Settings;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -113,7 +113,7 @@ public class JavaFormat
 
 	private IRInfo info;
 
-	private FunctionValueAssistant functionValueAssistant;
+	private FuncValAssistant funcValAssist;
 	private MergeVisitor mergeVisitor;
 	private JavaValueSemantics valueSemantics;
 	private JavaFormatAssistant javaFormatAssistant;
@@ -128,7 +128,7 @@ public class JavaFormat
 		this.recCreator = new JavaRecordCreator(this);
 		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, valueSemantics, recCreator);
 		this.mergeVisitor = new MergeVisitor(templateStructure, templateCallables);
-		this.functionValueAssistant = null;
+		this.funcValAssist = null;
 		this.info = info;
 		this.javaFormatAssistant = new JavaFormatAssistant(this.info);
 	}
@@ -164,14 +164,14 @@ public class JavaFormat
 	}
 
 	public void setFunctionValueAssistant(
-			FunctionValueAssistant functionValueAssistant)
+			FuncValAssistant functionValueAssistant)
 	{
-		this.functionValueAssistant = functionValueAssistant;
+		this.funcValAssist = functionValueAssistant;
 	}
 
 	public void clearFunctionValueAssistant()
 	{
-		this.functionValueAssistant = null;
+		this.funcValAssist = null;
 	}
 
 	public void setJavaSettings(JavaSettings javaSettings)
@@ -198,12 +198,12 @@ public class JavaFormat
 	{
 		final String OBJ = "Object";
 
-		if (functionValueAssistant == null)
+		if (funcValAssist == null)
 		{
 			return OBJ;
 		}
 
-		AInterfaceDeclCG methodTypeInterface = functionValueAssistant.findInterface(methodType);
+		AInterfaceDeclCG methodTypeInterface = funcValAssist.findInterface(methodType);
 
 		if (methodTypeInterface == null)
 		{

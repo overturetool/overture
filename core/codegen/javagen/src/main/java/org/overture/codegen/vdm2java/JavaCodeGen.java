@@ -76,7 +76,6 @@ import org.overture.codegen.trans.DivideTrans;
 import org.overture.codegen.trans.ModuleToClassTransformation;
 import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
-import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
@@ -105,6 +104,8 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	private IREventObserver irObserver;
 	
 	private JavaVarPrefixManager varPrefixManager;
+	
+	private JavaTransSeries transSeries;
 
 	public JavaCodeGen()
 	{
@@ -122,6 +123,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
 		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
 		this.javaFormat = new JavaFormat(varPrefixManager, javaTemplateStructure, generator.getIRInfo());
+		this.transSeries = new JavaTransSeries(this);
 	}
 
 	public void setJavaTemplateStructure(TemplateStructure javaTemplateStructure)
@@ -143,11 +145,17 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	{
 		return this.javaFormat.getJavaSettings();
 	}
+	
+	public JavaTransSeries getTransSeries()
+	{
+		return this.transSeries;
+	}
 
 	public void clear()
 	{
 		javaFormat.init();
 		generator.clear();
+		transSeries.init();
 	}
 
 	private void initVelocity()
@@ -320,10 +328,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			}
 		}
 
-		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
-
-		JavaTransSeries javaTransSeries = new JavaTransSeries(this);
-		 List<DepthFirstAnalysisAdaptor> transformations = javaTransSeries.consAnalyses(functionValueAssistant);
+		 List<DepthFirstAnalysisAdaptor> transformations = transSeries.getSeries();
 
 		for (DepthFirstAnalysisAdaptor trans : transformations)
 		{
@@ -353,7 +358,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		List<String> skipping = new LinkedList<String>();
 
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
-		javaFormat.setFunctionValueAssistant(functionValueAssistant);
+		javaFormat.setFunctionValueAssistant(transSeries.getFuncValAssist());
 
 		for (IRStatus<AClassDeclCG> status : canBeGenerated)
 		{
@@ -411,7 +416,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			}
 		}
 
-		List<AInterfaceDeclCG> funcValueInterfaces = functionValueAssistant.getFunctionValueInterfaces();
+		List<AInterfaceDeclCG> funcValueInterfaces = transSeries.getFuncValAssist().getFuncValInterfaces();
 
 		for (AInterfaceDeclCG funcValueInterface : funcValueInterfaces)
 		{

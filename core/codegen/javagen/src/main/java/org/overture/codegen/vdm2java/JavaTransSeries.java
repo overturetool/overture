@@ -31,7 +31,7 @@ import org.overture.codegen.trans.conc.MutexDeclTrans;
 import org.overture.codegen.trans.conc.SentinelTrans;
 import org.overture.codegen.trans.funcvalues.FuncValPrefixes;
 import org.overture.codegen.trans.funcvalues.FuncValTrans;
-import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
+import org.overture.codegen.trans.funcvalues.FuncValAssistant;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.iterator.JavaLanguageIterator;
 import org.overture.codegen.trans.letexps.FuncTrans;
@@ -45,14 +45,28 @@ import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
 public class JavaTransSeries
 {
 	private JavaCodeGen codeGen;
-
+	private List<DepthFirstAnalysisAdaptor> series;
+	private FuncValAssistant funcValAssist;
+	
 	public JavaTransSeries(JavaCodeGen codeGen)
 	{
 		this.codeGen = codeGen;
+		this.series = new LinkedList<>();
+		this.funcValAssist = new FuncValAssistant();
+		setupAnalysis();
 	}
 
-	public List<DepthFirstAnalysisAdaptor> consAnalyses(
-			FunctionValueAssistant funcValAssist)
+	public FuncValAssistant getFuncValAssist()
+	{
+		return funcValAssist;
+	}
+	
+	public List<DepthFirstAnalysisAdaptor> getSeries()
+	{
+		return series;
+	}
+
+	private List<DepthFirstAnalysisAdaptor> setupAnalysis()
 	{
 		// Data and functionality to support the transformations
 		IRInfo info = codeGen.getIRGenerator().getIRInfo();
@@ -98,8 +112,6 @@ public class JavaTransSeries
 		// End concurrency transformations
 
 		// Set up order of transformations
-		List<DepthFirstAnalysisAdaptor> series = new LinkedList<DepthFirstAnalysisAdaptor>();
-
 		series.add(atomicTr);
 		series.add(divideTr);
 		series.add(assignTr);
@@ -137,5 +149,10 @@ public class JavaTransSeries
 		AIntLiteralExpCG initExp = irInfo.getExpAssistant().consIntLiteral(0);
 
 		return new Exists1CounterData(type, initExp);
+	}
+
+	public void init()
+	{
+		funcValAssist.getFuncValInterfaces().clear();
 	}
 }
