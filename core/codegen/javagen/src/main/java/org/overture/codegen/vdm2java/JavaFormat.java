@@ -133,16 +133,11 @@ public class JavaFormat
 		this.javaFormatAssistant = new JavaFormatAssistant(this.info);
 	}
 	
-	public void setCloneFreeNodes(List<INode> cloneFreeNodes)
-	{
-		this.valueSemantics.setCloneFreeNodes(cloneFreeNodes);
-	}
-	
 	public JavaValueSemantics getValueSemantics()
 	{
 		return valueSemantics;
 	}
-
+	
 	public void setValueSemantics(JavaValueSemantics valueSemantics)
 	{
 		this.valueSemantics = valueSemantics;
@@ -192,6 +187,12 @@ public class JavaFormat
 	public void init()
 	{
 		mergeVisitor.init();
+	}
+	
+	public void clear()
+	{
+		init();
+		valueSemantics.clear();
 	}
 
 	public MergeVisitor getMergeVisitor()

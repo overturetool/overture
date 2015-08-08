@@ -76,12 +76,22 @@ public class JavaValueSemantics
 		this.javaSettings = new JavaSettings();
 		this.cloneFreeNodes = new LinkedList<>();
 	}
-
-	public void setCloneFreeNodes(List<INode> cloneFreeNodes)
+	
+	public void clear()
 	{
-		this.cloneFreeNodes = cloneFreeNodes;
+		cloneFreeNodes.clear();
 	}
 	
+	public void addCloneFreeNode(INode node)
+	{
+		cloneFreeNodes.add(node);
+	}
+	
+	public List<INode> getCloneFreeNodes()
+	{
+		return cloneFreeNodes;
+	}
+
 	public void setJavaSettings(JavaSettings javaSettings)
 	{
 		this.javaSettings = javaSettings;

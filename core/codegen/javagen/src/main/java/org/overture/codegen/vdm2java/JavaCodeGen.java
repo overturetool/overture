@@ -351,9 +351,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			}
 		}
 		
-		// Nodes that should not be cloned
-		javaFormat.setCloneFreeNodes(transSeries.getCloneFreeNodes());
-		
 		// Event notification
 		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), AClassDeclCG.class);
 		canBeGenerated = filter(canBeGenerated, generated);

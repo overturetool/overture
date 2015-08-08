@@ -151,7 +151,7 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 	{
 		for(AVarDeclCG v : varDecls)
 		{
-			jmlGen.getJavaGen().getTransSeries().getCloneFreeNodes().add(v);
+			jmlGen.getJavaGen().getJavaFormat().getValueSemantics().addCloneFreeNode(v);
 		}
 	}
 	

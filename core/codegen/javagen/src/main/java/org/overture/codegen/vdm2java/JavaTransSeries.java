@@ -3,7 +3,6 @@ package org.overture.codegen.vdm2java;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
@@ -30,9 +29,9 @@ import org.overture.codegen.trans.conc.EvalPermPredTrans;
 import org.overture.codegen.trans.conc.MainClassConcTrans;
 import org.overture.codegen.trans.conc.MutexDeclTrans;
 import org.overture.codegen.trans.conc.SentinelTrans;
+import org.overture.codegen.trans.funcvalues.FuncValAssistant;
 import org.overture.codegen.trans.funcvalues.FuncValPrefixes;
 import org.overture.codegen.trans.funcvalues.FuncValTrans;
-import org.overture.codegen.trans.funcvalues.FuncValAssistant;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.iterator.JavaLanguageIterator;
 import org.overture.codegen.trans.letexps.FuncTrans;
@@ -48,14 +47,12 @@ public class JavaTransSeries
 	private JavaCodeGen codeGen;
 	private List<DepthFirstAnalysisAdaptor> series;
 	private FuncValAssistant funcValAssist;
-	private List<INode> cloneFreeNodes;
 	
 	public JavaTransSeries(JavaCodeGen codeGen)
 	{
 		this.codeGen = codeGen;
 		this.series = new LinkedList<>();
 		this.funcValAssist = new FuncValAssistant();
-		this.cloneFreeNodes = new LinkedList<>();
 		setupAnalysis();
 	}
 
@@ -103,7 +100,7 @@ public class JavaTransSeries
 		IsExpTrans isExpTr = new IsExpTrans(transAssist, varMan.isExpSubject());
 		SeqConvTrans seqConvTr = new SeqConvTrans(transAssist);
 		TracesTrans tracesTr = new TracesTrans(transAssist, iteVarPrefixes, tracePrefixes, langIte, new JavaCallStmToStringBuilder());
-		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, unionTypePrefixes, cloneFreeNodes);
+		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, unionTypePrefixes, codeGen.getJavaFormat().getValueSemantics().getCloneFreeNodes());
 		JavaToStringTrans javaToStringTr = new JavaToStringTrans(info);
 		RecMethodsTrans recTr = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());
 
@@ -157,11 +154,5 @@ public class JavaTransSeries
 	public void init()
 	{
 		funcValAssist.getFuncValInterfaces().clear();
-		cloneFreeNodes.clear();
-	}
-	
-	public List<INode> getCloneFreeNodes()
-	{
-		return cloneFreeNodes;
 	}
 }

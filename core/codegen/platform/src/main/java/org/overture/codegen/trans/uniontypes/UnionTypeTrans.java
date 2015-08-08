@@ -104,11 +104,6 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		this.cloneFreeNodes = cloneFreeNodes;
 	}
 
-	public List<INode> getCloneFreeNodes()
-	{
-		return cloneFreeNodes;
-	}
-	
 	private interface TypeFinder<T extends STypeCG>
 	{
 		public T findType(PType type)
