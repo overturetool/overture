@@ -59,39 +59,42 @@ final public class Entry {
                 throw new RuntimeException("Missing member: r4");
             }
 
-            apply_1.set_x(atomicTmp_1);
+            project.Entrytypes.R4 stateDes_3 = apply_1;
+            stateDes_3.set_x(atomicTmp_1);
 
-            project.Entrytypes.R2 stateDes_3 = r1.get_r2();
+            project.Entrytypes.R2 stateDes_4 = r1.get_r2();
 
-            Object stateDes_4 = stateDes_3.get_t3();
+            Object stateDes_5 = stateDes_4.get_t3();
 
             project.Entrytypes.R4 apply_2 = null;
 
-            if (stateDes_4 instanceof project.Entrytypes.R3) {
-                apply_2 = ((project.Entrytypes.R3) stateDes_4).get_r4();
+            if (stateDes_5 instanceof project.Entrytypes.R3) {
+                apply_2 = ((project.Entrytypes.R3) stateDes_5).get_r4();
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
 
-            apply_2.set_x(atomicTmp_2);
+            project.Entrytypes.R4 stateDes_6 = apply_2;
+            stateDes_6.set_x(atomicTmp_2);
 
-            project.Entrytypes.R2 stateDes_5 = r1.get_r2();
+            project.Entrytypes.R2 stateDes_7 = r1.get_r2();
 
-            Object stateDes_6 = stateDes_5.get_t3();
+            Object stateDes_8 = stateDes_7.get_t3();
 
             project.Entrytypes.R4 apply_3 = null;
 
-            if (stateDes_6 instanceof project.Entrytypes.R3) {
-                apply_3 = ((project.Entrytypes.R3) stateDes_6).get_r4();
+            if (stateDes_8 instanceof project.Entrytypes.R3) {
+                apply_3 = ((project.Entrytypes.R3) stateDes_8).get_r4();
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
 
-            apply_3.set_x(atomicTmp_3);
+            project.Entrytypes.R4 stateDes_9 = apply_3;
+            stateDes_9.set_x(atomicTmp_3);
 
             //@ set invChecksOn = true;
 
-            //@ assert apply_1.valid();
+            //@ assert stateDes_3.valid();
 
             //@ assert stateDes_2 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_2).valid();
             //@ assert stateDes_2 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_2).valid();
@@ -101,21 +104,21 @@ final public class Entry {
 
             //@ assert r1.valid();
 
-            //@ assert apply_2.valid();
+            //@ assert stateDes_6.valid();
 
-            //@ assert stateDes_4 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_4).valid();
-            //@ assert stateDes_4 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_4).valid();
-            //@ assert inv_Entry_T3(stateDes_4);
+            //@ assert stateDes_5 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_5).valid();
+            //@ assert stateDes_5 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_5).valid();
+            //@ assert inv_Entry_T3(stateDes_5);
 
-            //@ assert stateDes_3.valid();
+            //@ assert stateDes_4.valid();
 
-            //@ assert apply_3.valid();
+            //@ assert stateDes_9.valid();
 
-            //@ assert stateDes_6 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_6).valid();
-            //@ assert stateDes_6 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_6).valid();
-            //@ assert inv_Entry_T3(stateDes_6);
+            //@ assert stateDes_8 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_8).valid();
+            //@ assert stateDes_8 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_8).valid();
+            //@ assert inv_Entry_T3(stateDes_8);
 
-            //@ assert stateDes_5.valid();
+            //@ assert stateDes_7.valid();
         } /* End of atomic statement */
         return 0L;
     }
@@ -128,29 +131,30 @@ final public class Entry {
         { /* Start of atomic statement */
 
             //@ set invChecksOn = false;
-            project.Entrytypes.R2 stateDes_7 = r1.get_r2();
+            project.Entrytypes.R2 stateDes_10 = r1.get_r2();
 
-            Object stateDes_8 = stateDes_7.get_t3();
+            Object stateDes_11 = stateDes_10.get_t3();
 
             project.Entrytypes.R4 apply_4 = null;
 
-            if (stateDes_8 instanceof project.Entrytypes.R3) {
-                apply_4 = ((project.Entrytypes.R3) stateDes_8).get_r4();
+            if (stateDes_11 instanceof project.Entrytypes.R3) {
+                apply_4 = ((project.Entrytypes.R3) stateDes_11).get_r4();
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
 
-            apply_4.set_x(atomicTmp_4);
+            project.Entrytypes.R4 stateDes_12 = apply_4;
+            stateDes_12.set_x(atomicTmp_4);
 
             //@ set invChecksOn = true;
 
-            //@ assert apply_4.valid();
+            //@ assert stateDes_12.valid();
 
-            //@ assert stateDes_8 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_8).valid();
-            //@ assert stateDes_8 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_8).valid();
-            //@ assert inv_Entry_T3(stateDes_8);
+            //@ assert stateDes_11 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_11).valid();
+            //@ assert stateDes_11 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_11).valid();
+            //@ assert inv_Entry_T3(stateDes_11);
 
-            //@ assert stateDes_7.valid();
+            //@ assert stateDes_10.valid();
 
             //@ assert r1.valid();
         } /* End of atomic statement */
