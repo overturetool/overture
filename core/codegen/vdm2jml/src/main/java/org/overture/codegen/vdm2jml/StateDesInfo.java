@@ -6,20 +6,46 @@ import java.util.Map;
 
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 
 public class StateDesInfo
 {
 	private Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars;
+	private Map<SStmCG, List<AVarDeclCG>> stateDesDecls;
 	
 	public StateDesInfo()
 	{
-		this.stateDesVars = new HashMap<SStmCG, List<AIdentifierVarExpCG>>();
+		this.stateDesVars = new HashMap<>();
+		this.stateDesDecls = new HashMap<>();
 	}
 	
 	public void addStateDesVars(SStmCG stm, List<AIdentifierVarExpCG> stateDesVars)
 	{
 		this.stateDesVars.put(stm, stateDesVars);
+	}
+	
+	public void addStateDesDecl(SStmCG stm, List<AVarDeclCG> stateDesDecls)
+	{
+		this.stateDesDecls.put(stm, stateDesDecls);
+	}
+	
+	public boolean isStateDesDecl(AVarDeclCG decl)
+	{
+		for (SStmCG stm : stateDesDecls.keySet())
+		{
+			List<AVarDeclCG> decls = stateDesDecls.get(stm);
+
+			for (AVarDeclCG d : decls)
+			{
+				if (d == decl)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 	
 	public List<AIdentifierVarExpCG> getStateDesVars(SStmCG stm)

@@ -66,6 +66,7 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 		SExpCG newTarget = splitTarget(target, varDecls, vars);
 
 		stateDesInfo.addStateDesVars(node, vars);
+		stateDesInfo.addStateDesDecl(node, varDecls);
 
 		if (varDecls.isEmpty())
 		{

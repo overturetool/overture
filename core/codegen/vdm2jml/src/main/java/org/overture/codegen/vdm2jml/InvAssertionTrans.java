@@ -88,6 +88,11 @@ public class InvAssertionTrans extends AtomicAssertTrans
 			return;
 		}
 		
+		if(stateDesInfo.isStateDesDecl(node))
+		{
+			return;
+		}
+		
 		/**
 		 * Since the target of map/seq updates (e.g. Utils.mapsSeqUpdate(stateDes_3, 4, 'a')) and call object statements
 		 * (e.g. stateDes_3.set_x("a")) (i.e. assignments in the VDM-SL model) are split into variables named stateDes_
