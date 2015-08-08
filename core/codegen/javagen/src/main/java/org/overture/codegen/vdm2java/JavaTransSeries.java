@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2java;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
@@ -47,12 +48,14 @@ public class JavaTransSeries
 	private JavaCodeGen codeGen;
 	private List<DepthFirstAnalysisAdaptor> series;
 	private FuncValAssistant funcValAssist;
+	private List<INode> cloneFreeNodes;
 	
 	public JavaTransSeries(JavaCodeGen codeGen)
 	{
 		this.codeGen = codeGen;
 		this.series = new LinkedList<>();
 		this.funcValAssist = new FuncValAssistant();
+		this.cloneFreeNodes = new LinkedList<>();
 		setupAnalysis();
 	}
 
@@ -100,7 +103,7 @@ public class JavaTransSeries
 		IsExpTrans isExpTr = new IsExpTrans(transAssist, varMan.isExpSubject());
 		SeqConvTrans seqConvTr = new SeqConvTrans(transAssist);
 		TracesTrans tracesTr = new TracesTrans(transAssist, iteVarPrefixes, tracePrefixes, langIte, new JavaCallStmToStringBuilder());
-		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, unionTypePrefixes);
+		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, unionTypePrefixes, cloneFreeNodes);
 		JavaToStringTrans javaToStringTr = new JavaToStringTrans(info);
 		RecMethodsTrans recTr = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());
 
@@ -154,5 +157,11 @@ public class JavaTransSeries
 	public void init()
 	{
 		funcValAssist.getFuncValInterfaces().clear();
+		cloneFreeNodes.clear();
+	}
+	
+	public List<INode> getCloneFreeNodes()
+	{
+		return cloneFreeNodes;
 	}
 }

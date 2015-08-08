@@ -94,13 +94,21 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	private TransAssistantCG transAssistant;
 
 	private UnionTypeVarPrefixes unionTypePrefixes;
-
-	public UnionTypeTrans(TransAssistantCG transAssistant, UnionTypeVarPrefixes unionTypePrefixes)
+	
+	private List<INode> cloneFreeNodes;
+	
+	public UnionTypeTrans(TransAssistantCG transAssistant, UnionTypeVarPrefixes unionTypePrefixes, List<INode> cloneFreeNodes)
 	{
 		this.transAssistant = transAssistant;
 		this.unionTypePrefixes = unionTypePrefixes;
+		this.cloneFreeNodes = cloneFreeNodes;
 	}
 
+	public List<INode> getCloneFreeNodes()
+	{
+		return cloneFreeNodes;
+	}
+	
 	private interface TypeFinder<T extends STypeCG>
 	{
 		public T findType(PType type)
@@ -421,6 +429,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			setSubject(fieldExp, castedFieldExp);
 
 			AAssignToExpStmCG assignment = new AAssignToExpStmCG();
+			cloneFreeNodes.add(assignment);
 			assignment.setTarget(resultVar.clone());
 			assignment.setExp(getAssignmentExp(node, fieldExp));
 

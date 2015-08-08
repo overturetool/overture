@@ -132,7 +132,12 @@ public class JavaFormat
 		this.info = info;
 		this.javaFormatAssistant = new JavaFormatAssistant(this.info);
 	}
-
+	
+	public void setCloneFreeNodes(List<INode> cloneFreeNodes)
+	{
+		this.valueSemantics.setCloneFreeNodes(cloneFreeNodes);
+	}
+	
 	public JavaValueSemantics getValueSemantics()
 	{
 		return valueSemantics;

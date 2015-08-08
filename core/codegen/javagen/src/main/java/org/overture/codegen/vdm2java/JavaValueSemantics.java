@@ -68,13 +68,20 @@ public class JavaValueSemantics
 {
 	private JavaFormat javaFormat;
 	private JavaSettings javaSettings;
-
+	private List<INode> cloneFreeNodes;
+	
 	public JavaValueSemantics(JavaFormat javaFormat)
 	{
 		this.javaFormat = javaFormat;
 		this.javaSettings = new JavaSettings();
+		this.cloneFreeNodes = new LinkedList<>();
 	}
 
+	public void setCloneFreeNodes(List<INode> cloneFreeNodes)
+	{
+		this.cloneFreeNodes = cloneFreeNodes;
+	}
+	
 	public void setJavaSettings(JavaSettings javaSettings)
 	{
 		this.javaSettings = javaSettings;
@@ -88,6 +95,11 @@ public class JavaValueSemantics
 	public boolean cloneMember(AFieldNumberExpCG exp)
 	{
 		if (javaSettings.getDisableCloning())
+		{
+			return false;
+		}
+		
+		if(isCloneFree(exp))
 		{
 			return false;
 		}
@@ -134,6 +146,11 @@ public class JavaValueSemantics
 		{
 			return false;
 		}
+		
+		if(isCloneFree(exp))
+		{
+			return false;
+		}
 
 		INode parent = exp.parent();
 		if (cloneNotNeeded(parent))
@@ -177,6 +194,11 @@ public class JavaValueSemantics
 	public boolean shouldClone(SExpCG exp)
 	{
 		if (javaSettings.getDisableCloning())
+		{
+			return false;
+		}
+		
+		if(isCloneFree(exp))
 		{
 			return false;
 		}
@@ -432,6 +454,43 @@ public class JavaValueSemantics
 		{
 			AAssignToExpStmCG assignment = (AAssignToExpStmCG) parent;
 			if (assignment.getTarget() == exp)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isCloneFree(SExpCG exp)
+	{
+		if(exp == null)
+		{
+			return false;
+		}
+		
+		INode next = exp;
+		
+		while(next != null)
+		{
+			if(contains(next))
+			{
+				return true;
+			}
+			else
+			{
+				next = next.parent();
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean contains(INode node)
+	{
+		for(INode n : cloneFreeNodes)
+		{
+			if(n == node)
 			{
 				return true;
 			}
