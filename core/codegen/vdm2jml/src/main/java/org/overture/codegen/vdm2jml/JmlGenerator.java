@@ -76,7 +76,6 @@ public class JmlGenerator implements IREventObserver
 	private JmlGenUtil util;
 	private JmlAnnotationHelper annotator;
 	
-	private RecClassInfo recInfo;
 	private StateDesInfo stateDesInfo;
 	
 	// The class owning the invChecksOn flag
@@ -103,11 +102,9 @@ public class JmlGenerator implements IREventObserver
 
 	private void addJmlTransformations()
 	{
-		RecAccessorTrans recAccessorTrans = new RecAccessorTrans(this, true, true);
 		TargetNormaliserTrans targetNormaliserTrans = new TargetNormaliserTrans(this);
 
 		// Info structures are populated with data when the transformations are applied
-		this.recInfo = recAccessorTrans.getRecInfo();
 		this.stateDesInfo = targetNormaliserTrans.getStateDesInfo();
 
 		List<DepthFirstAnalysisAdaptor> series = this.javaGen.getTransSeries().getSeries();
@@ -117,12 +114,10 @@ public class JmlGenerator implements IREventObserver
 			// We'll add the transformations after the assignment transformation
 			if (series.get(i).getClass().equals(AssignStmTrans.class))
 			{
-				int recTransIdx = i + 1;
-				int targetTransIdx = recTransIdx + 1;
+				int targetTransIdx = i + 1;
 
-				if (recTransIdx < series.size())
+				if (targetTransIdx <= series.size())
 				{
-					series.add(recTransIdx, recAccessorTrans);
 					series.add(targetTransIdx, targetNormaliserTrans);
 				} else
 				{
@@ -184,14 +179,14 @@ public class JmlGenerator implements IREventObserver
 		setInvChecksOnOwner(ast);
 		annotateRecsWithInvs(ast);
 
-		// All the record methods are JML pure (getters and setters are added just below)
-		annotator.makeRecMethodsPure(ast, recInfo);
+		// All the record methods are JML pure
+		annotator.makeRecMethodsPure(ast);
 		
 		/**
-		 * Some of the Java transformations, like the union type transformation, will add field expressions to the IR.
-		 * In this step we apply (again!) the 'RecAccessorTrans' to remove these field expressions.
+		 * Make records accessor-based (i.e. using setters and getters), which will force the record into a visible
+		 * state when modified/read.
 		 */
-		makeRecStateAccessorBased(ast);
+		RecClassInfo recInfo = makeRecStateAccessorBased(ast);
 		
 		List<IRStatus<INode>> newAst = new LinkedList<IRStatus<INode>>(ast);
 
@@ -284,9 +279,9 @@ public class JmlGenerator implements IREventObserver
 		return newAst;
 	}
 
-	private void makeRecStateAccessorBased(List<IRStatus<INode>> ast) {
+	private RecClassInfo makeRecStateAccessorBased(List<IRStatus<INode>> ast) {
 
-		RecAccessorTrans recAccTr = new RecAccessorTrans(this, false, false);
+		RecAccessorTrans recAccTr = new RecAccessorTrans(this);
 
 		for (IRStatus<INode> status : ast) {
 			try {
@@ -298,6 +293,8 @@ public class JmlGenerator implements IREventObserver
 				e.printStackTrace();
 			}
 		}
+		
+		return recAccTr.getRecInfo();
 	}
 
 	private void sortAnnotations(List<IRStatus<INode>> newAst)
@@ -609,5 +606,10 @@ public class JmlGenerator implements IREventObserver
 	public AClassDeclCG getInvChecksFlagOwner()
 	{
 		return invChecksFlagOwner;
+	}
+	
+	public StateDesInfo getStateDesInfo()
+	{
+		return stateDesInfo;
 	}
 }

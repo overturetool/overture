@@ -25,11 +25,6 @@ public class RecClassInfo
 		}
 	}
 	
-	public boolean isSetter(AMethodDeclCG method)
-	{
-		return contains(method) && method.getName().startsWith(RecAccessorTrans.SET_PREFIX);
-	}
-
 	private boolean contains(SDeclCG memberToCheck)
 	{
 		for (SDeclCG m : members)
