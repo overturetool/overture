@@ -30,19 +30,40 @@ public class StateDesInfo
 		this.stateDesDecls.put(stm, stateDesDecls);
 	}
 	
+	public void replaceStateDesOwner(SStmCG oldKey, SStmCG newKey)
+	{
+		List<AIdentifierVarExpCG> vars = stateDesVars.remove(oldKey);
+		
+		if(vars != null)
+		{
+			stateDesVars.put(newKey, vars);
+		}
+		
+		List<AVarDeclCG> decls = stateDesDecls.remove(oldKey);
+		
+		if(decls != null)
+		{
+			stateDesDecls.put(newKey, decls);
+		}
+	}
+	
 	public boolean isStateDesDecl(AVarDeclCG decl)
 	{
 		for (SStmCG stm : stateDesDecls.keySet())
 		{
 			List<AVarDeclCG> decls = stateDesDecls.get(stm);
-
-			for (AVarDeclCG d : decls)
+			
+			if(decls != null)
 			{
-				if (d == decl)
+				for (AVarDeclCG d : decls)
 				{
-					return true;
+					if (d == decl)
+					{
+						return true;
+					}
 				}
 			}
+
 		}
 
 		return false;
