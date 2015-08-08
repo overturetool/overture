@@ -9,6 +9,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AMapSeqGetExpCG;
@@ -32,15 +33,11 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 	private RecClassInfo recInfo;
 
 	private boolean inTarget = false;
-	private boolean addAccessors;
-	private boolean cloneMembers;
 
-	public RecAccessorTrans(JmlGenerator jmlGen, boolean addAccessors, boolean cloneMembers)
+	public RecAccessorTrans(JmlGenerator jmlGen)
 	{
 		this.jmlGen = jmlGen;
 		this.recInfo = new RecClassInfo();
-		this.addAccessors = addAccessors;
-		this.cloneMembers = cloneMembers;
 	}
 
 	// private void privatizeFields(ARecordDeclCG node)
@@ -55,13 +52,10 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 	public void caseARecordDeclCG(ARecordDeclCG node) throws AnalysisException
 	{
 		// TODO: Privatise record fields?
-		if(addAccessors)
-		{
-			List<AMethodDeclCG> accessors = consAccessors(node);
-			registerAccessors(accessors);
-			node.getMethods().addAll(accessors);
-			node.getMethods().add(consValidMethod());
-		}
+		List<AMethodDeclCG> accessors = consAccessors(node);
+		registerAccessors(accessors);
+		node.getMethods().addAll(accessors);
+		node.getMethods().add(consValidMethod());
 	}
 
 	@Override
@@ -81,6 +75,12 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 				setCall.setObj(target.getObject().clone());
 				setCall.setSourceNode(node.getSourceNode());
 
+				/**
+				 * Replacing the assignment statement with a setter call makes the setter call the new state designator
+				 * owner
+				 */
+				jmlGen.getStateDesInfo().replaceStateDesOwner(node, setCall);
+				
 				jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, setCall);
 
 				inTarget = true;
@@ -139,7 +139,17 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 
 	private boolean cloneFieldRead(AFieldExpCG node)
 	{
-		if(!cloneMembers)
+		AVarDeclCG decl = node.getAncestor(AVarDeclCG.class);
+		
+		/*
+		 * Normalized state designators do not need cloning
+		 */
+		if (decl != null && jmlGen.getStateDesInfo().isStateDesDecl(decl))
+		{
+			return false;
+		}
+		
+		if(jmlGen.getJavaGen().getJavaFormat().getValueSemantics().isCloneFree(node))
 		{
 			return false;
 		}
@@ -231,6 +241,8 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 		returnField.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consIdVar(f.getName(), f.getType().clone()));
 		getter.setBody(returnField);
 
+		jmlGen.getAnnotator().makePure(getter);
+		
 		return getter;
 	}
 
@@ -254,6 +266,8 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 		body.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consBoolLiteral(true));
 
 		validMethod.setBody(body);
+		
+		jmlGen.getAnnotator().makePure(validMethod);
 
 		return validMethod;
 	}
