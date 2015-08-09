@@ -7,10 +7,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +18,6 @@ import org.junit.Test;
 import org.overture.ast.lex.LexLocation;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.IJavaConstants;
-import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaToolsUtils;
 import org.overture.codegen.vdm2jml.IOpenJmlConsts;
@@ -34,7 +29,6 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	public static final String TEST_RES_DYNAMIC_ANALYSIS_ROOT = AnnotationTestsBase.TEST_RESOURCES_ROOT
 			+ "dynamic_analysis" + File.separatorChar;
 	
-	public static final String TESTS_VDM2JML_PROPERTY_PREFIX = "tests.vdm2jml.override.";
 	public static final String MAIN_CLASS_NAME = "Main";
 	public static final String MAIN_CLASS_RES = "exec_entry_point";
 	public static final String RESULT_FILE_EXT = ".result";
@@ -73,8 +67,6 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 				try
 				{
 					checkOpenJmlOutput(actualRes);
-					checkGenJavaJml();
-	
 				} catch (IOException e)
 				{
 					e.printStackTrace();
@@ -94,124 +86,9 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 		Assert.assertEquals("Expected result and actual result are different", expectedRes, actualRes);
 	}
 
-	protected void checkGenJavaJml()
-	{
-		List<File> storedJavaJmlFiles = collectStoredJavaJmlFiles();
-		List<File> genJavaJmlFiles = collectGenJavaJmlFiles();
-		
-		Assert.assertTrue("The number of stored Java/JML files differs "
-				+ "from the number of generated Java/JML files", storedJavaJmlFiles.size() == genJavaJmlFiles.size());
-	
-		Comparator<File> comp = new Comparator<File>() {
-			
-	        @Override
-	        public int compare(File f1, File f2) {
-	        	
-	        	// Reverse paths because root folders differ
-	        	String f1PathRev = new StringBuilder(f1.getAbsolutePath()).reverse().toString();
-	        	String f2PathRev = new StringBuilder(f2.getAbsolutePath()).reverse().toString();
-	        	
-	        	return f1PathRev.compareTo(f2PathRev);
-	        }
-	    };
-	    
-	    Collections.sort(storedJavaJmlFiles, comp);
-	    Collections.sort(genJavaJmlFiles, comp);
-	    
-	    for(int i = 0; i < storedJavaJmlFiles.size(); i++)
-	    {
-	    	try
-			{
-				String storedContent = GeneralUtils.readFromFile(storedJavaJmlFiles.get(i)).trim();
-				String genContent = GeneralUtils.readFromFile(genJavaJmlFiles.get(i)).trim();
-	
-				Assert.assertEquals("Stored Java/JML is different from generared Java/JML", storedContent, genContent);
-			} catch (IOException e)
-			{
-				Assert.fail("Problems comparing stored and generated Java/JML");
-				e.printStackTrace();
-			}
-	    }
-	}
-
 	protected void storeResult(String resultStr)
 	{
 		storeJmlOutput(resultStr);
-		storeGeneratedJml();
-	}
-
-	protected File getTestDataFolder()
-	{
-		return inputFile.getParentFile();
-	}
-
-	protected void storeGeneratedJml()
-	{
-		for(File file : collectStoredJavaJmlFiles())
-		{
-			Assert.assertTrue("Problems deleting stored Java/JML file", file.exists() && file.delete());
-		}
-		
-		try
-		{
-			List<File> filesToStore = collectGenJavaJmlFiles();
-	
-			File testFolder = getTestDataFolder();
-	
-			for (File file : filesToStore)
-			{
-				File javaFile = new File(testFolder, file.getName());
-				FileUtils.copyFile(file, javaFile);
-			}
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-			Assert.assertTrue("Problems storing generated JML: "
-					+ e.getMessage(), false);
-		}
-	}
-
-	protected List<File> collectStoredJavaJmlFiles()
-	{
-		List<File> files = GeneralUtils.getFiles(getTestDataFolder());
-		
-		LinkedList<File> javaFiles = new LinkedList<File>();
-		
-		for(File f : files)
-		{
-			if(f.getName().endsWith(IJavaConstants.JAVA_FILE_EXTENSION))
-			{
-				javaFiles.add(f);
-			}
-		}
-		
-		return javaFiles;
-	}
-
-	protected List<File> collectGenJavaJmlFiles()
-	{
-		List<File> files = GeneralUtils.getFilesRecursively(genJavaFolder);
-		
-		String projDir = File.separatorChar + DEFAULT_JAVA_ROOT_PACKAGE
-				+ File.separatorChar;
-		String quotesDir = File.separatorChar + JavaCodeGen.JAVA_QUOTES_PACKAGE
-				+ File.separatorChar;
-		
-		List<File> filesToStore = new LinkedList<File>();
-	
-		for (File file : files)
-		{
-			String absPath = file.getAbsolutePath();
-	
-			if (absPath.endsWith(IJavaConstants.JAVA_FILE_EXTENSION)
-					&& absPath.contains(projDir)
-					&& !absPath.contains(quotesDir))
-			{
-				filesToStore.add(file);
-			}
-		}
-		
-		return filesToStore;
 	}
 
 	protected void storeJmlOutput(String resultStr)
@@ -383,7 +260,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 		{
 			clearCodeFolder();
 			createExecEntryPoint();
-			codeGenerateInputFile();
+			TestUtil.codeGenerateInputFile(inputFile, genJavaFolder, VDM_LIB_PATH);
 		}
 	}
 
@@ -398,24 +275,4 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 			return getExecArgs();
 		}
 	}
-
-	abstract protected String getPropertyId();
-
-	protected void configureResultGeneration()
-	{
-		LexLocation.absoluteToStringLocation = false;
-		if (System.getProperty(TESTS_VDM2JML_PROPERTY_PREFIX + "all") != null
-				|| getPropertyId() != null
-				&& System.getProperty(TESTS_VDM2JML_PROPERTY_PREFIX
-						+ getPropertyId()) != null)
-		{
-			Properties.recordTestResults = true;
-		}
-	}
-
-	protected void unconfigureResultGeneration()
-	{
-		Properties.recordTestResults = false;
-	}
-
 }
