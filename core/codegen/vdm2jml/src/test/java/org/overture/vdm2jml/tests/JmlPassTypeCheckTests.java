@@ -29,7 +29,7 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 		File folder = new File(AnnotationTestsBase.TEST_RES_STATIC_ANALYSIS_ROOT);
 		List<File> files = GeneralUtils.getFiles(folder);
 
-		return collectVdmslFiles(files);
+		return TestUtil.collectVdmslFiles(files);
 	}
 	
 	@Before
@@ -76,6 +76,13 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 	public void beforeRunningOpenJmlProcess()
 	{
 		clearCodeFolder();
-		codeGenerateInputFile();
+		TestUtil.codeGenerateInputFile(inputFile, genJavaFolder, VDM_LIB_PATH);
+	}
+
+	@Override
+	protected String getPropertyId()
+	{
+		// Never configure execution
+		return null;
 	}
 }
