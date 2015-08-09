@@ -23,6 +23,8 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 	public static final String CODEGEN_RUNTIME = TEST_EXEC_FOLDER_PATH
 			+ File.separatorChar + "lib" + File.separatorChar
 			+ "codegen-runtime.jar";
+	
+	public static final String EXEC_PROPERTY = "tests.vdm2jml.openjml";
 
 	public static final int EXIT_OK = 0;
 

@@ -15,7 +15,6 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
-import org.overture.ast.lex.LexLocation;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.IJavaConstants;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
@@ -33,6 +32,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	public static final String MAIN_CLASS_RES = "exec_entry_point";
 	public static final String RESULT_FILE_EXT = ".result";
 	public static final String DEFAULT_JAVA_ROOT_PACKAGE = "project";
+
 	protected boolean isTypeChecked;
 
 	public JmlExecTestBase(File inputFile)
@@ -44,6 +44,9 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	@Before
 	public void assumeTools()
 	{
+		Assume.assumeTrue(String.format("Execution test will only run if the "
+				+ "property '%s' is passed", EXEC_PROPERTY), System.getProperty(EXEC_PROPERTY) != null);
+		
 		assumeOpenJml();
 		assumeJmlRuntime();
 	}
