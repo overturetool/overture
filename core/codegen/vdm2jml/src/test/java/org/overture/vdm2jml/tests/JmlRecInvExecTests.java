@@ -23,7 +23,7 @@ public class JmlRecInvExecTests extends JmlExecTestBase
 	@Parameters(name = "{index}: {0}")
 	public static Collection<Object[]> data()
 	{
-		return collectVdmslFiles(GeneralUtils.getFilesRecursively(new File(TEST_DIR)));
+		return TestUtil.collectVdmslFiles(GeneralUtils.getFilesRecursively(new File(TEST_DIR)));
 	}
 	
 	protected String getPropertyId()
