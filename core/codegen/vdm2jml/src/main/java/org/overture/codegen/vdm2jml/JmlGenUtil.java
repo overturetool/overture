@@ -315,10 +315,15 @@ public class JmlGenUtil
 
 	public String consRecPackage(String defClass)
 	{
-		String recPackage = jmlGen.getJavaSettings().getJavaRootPackage()
-				+ "." + defClass
-				+ JavaFormat.TYPE_DECL_PACKAGE_SUFFIX;
-		
+		String recPackage = "";
+
+		if (JavaCodeGenUtil.isValidJavaPackage(jmlGen.getJavaSettings().getJavaRootPackage()))
+		{
+			recPackage += jmlGen.getJavaSettings().getJavaRootPackage() + ".";
+		}
+
+		recPackage += defClass + JavaFormat.TYPE_DECL_PACKAGE_SUFFIX;
+
 		return recPackage;
 	}
 	
