@@ -176,12 +176,13 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 
 							javaGen.getTransAssistant().replaceNodeWith(node, func);
 						}
-					} else
-					{
-						Logger.getLog().printErrorln("Could not find enclosing class of record "
-								+ rec.getName() + " in '"
-								+ this.getClass().getSimpleName() + "'");
-					}
+						else
+						{
+							Logger.getLog().printErrorln("Could not find enclosing class of record "
+									+ rec.getName() + " in '"
+									+ this.getClass().getSimpleName() + "'");
+						}
+					} 
 				} else
 				{
 					Logger.getLog().printErrorln("Expected vdm source node to be a variable expression at this point in '"

@@ -391,7 +391,7 @@ public class ExpAssistantCG extends AssistantBase
 		if (stateDef != null)
 		{
 			LinkedList<org.overture.ast.node.INode> ancestors = new LinkedList<>();
-			org.overture.ast.node.INode next = node.parent();
+			org.overture.ast.node.INode next = node;
 
 			do
 			{
