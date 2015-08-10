@@ -551,14 +551,14 @@ public class JavaFormat
 		SExpCG leftNode = node.getLeft();
 		SExpCG rightNode = node.getRight();
 
-		final String EMPTY = ".isEmpty()";
-
+		String empty = "Utils.empty(%s)";
+		
 		if (isEmptyCollection(leftNode.getType()))
 		{
-			return format(node.getRight()) + EMPTY;
+			return String.format(empty, format(node.getRight()));
 		} else if (isEmptyCollection(rightNode.getType()))
 		{
-			return format(node.getLeft()) + EMPTY;
+			return String.format(empty, format(node.getLeft()));
 		}
 
 		return UTILS_FILE + ".equals(" + format(node.getLeft()) + ", "
