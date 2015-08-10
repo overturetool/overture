@@ -193,7 +193,7 @@ public class Account {
     }
 
     private static Number Sum(final VDMSeq rs) {
-        if (rs.isEmpty()) {
+        if (Utils.empty(rs)) {
             return 0L;
         } else {
             return ((Number) rs.get(0)).doubleValue() +
@@ -350,7 +350,7 @@ public class CentralResource {
     }
 
     public Number GetBalance(final Number accountId) {
-        if (MapUtil.dom(Utils.copy(accounts)).contains(accountId)) {
+        if (SetUtil.inSet(accountId, MapUtil.dom(Utils.copy(accounts)))) {
             return ((Account) Utils.get(accounts, accountId)).GetBalance();
         } else {
             return null;
@@ -381,12 +381,12 @@ public class CentralResource {
     public Boolean IsLegalCard(final Number accountId, final Number cardId) {
         Boolean andResult_2 = false;
 
-        if (!(illegalCards.contains(cardId))) {
+        if (!(SetUtil.inSet(cardId, illegalCards))) {
             Boolean andResult_3 = false;
 
-            if (MapUtil.dom(Utils.copy(accounts)).contains(accountId)) {
-                if (((Account) Utils.get(accounts, accountId)).GetCardIds()
-                         .contains(cardId)) {
+            if (SetUtil.inSet(accountId, MapUtil.dom(Utils.copy(accounts)))) {
+                if (SetUtil.inSet(cardId,
+                            ((Account) Utils.get(accounts, accountId)).GetCardIds())) {
                     andResult_3 = true;
                 }
             }

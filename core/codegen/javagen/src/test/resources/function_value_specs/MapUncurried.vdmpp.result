@@ -20,7 +20,7 @@ public class Entry {
     }
 
     private static <A, B> VDMSeq seq_map(final VDMSeq s, final Func_1<A, B> f) {
-        if (s.isEmpty()) {
+        if (Utils.empty(s)) {
             return SeqUtil.seq();
         } else {
             return SeqUtil.conc(SeqUtil.seq(f.eval(((A) s.get(0)))),

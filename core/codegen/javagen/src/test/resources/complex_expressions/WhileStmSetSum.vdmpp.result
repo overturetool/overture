@@ -14,7 +14,7 @@ public class Entry {
         Boolean whileCond_1 = true;
 
         while (whileCond_1) {
-            whileCond_1 = !(xs.isEmpty());
+            whileCond_1 = !(Utils.empty(xs));
 
             if (!(whileCond_1)) {
                 break;
