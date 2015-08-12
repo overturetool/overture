@@ -729,6 +729,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			if (node.getInvdef() != null)
 			{
 				list.addAll(node.getInvdef().apply(mainVisitor, question));
+				list.add(new SatisfiabilityObligation(node, question, assistantFactory));
 			}
 
 			return list;
