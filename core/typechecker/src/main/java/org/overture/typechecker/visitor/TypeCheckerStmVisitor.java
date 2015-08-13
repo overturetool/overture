@@ -624,7 +624,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		
 		if (encl != null && encl.getAccess().getPure())
 		{
-			TypeCheckerErrors.report(3346, "Cannot use cycles in pure operations", node.getCycles().getLocation(), node);
+			TypeCheckerErrors.report(3346, "Cannot use cycles in pure operations", node.getLocation(), node);
 		}
 
 		Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
