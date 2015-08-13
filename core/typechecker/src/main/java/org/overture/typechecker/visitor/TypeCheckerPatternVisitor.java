@@ -23,9 +23,6 @@ package org.overture.typechecker.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ANamePatternPair;
@@ -134,14 +131,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 				}
 			}
 	
-			PDefinition func = question.env.getEnclosingDefinition();
-	
-			boolean inFunction =
-				(func instanceof AExplicitFunctionDefinition ||
-				 func instanceof AImplicitFunctionDefinition ||
-				 func instanceof APerSyncDefinition);
-			
-			if (inFunction)
+			if (question.env.isFunctional())
 			{
 				TypeCheckerErrors.report(3332, "Object pattern cannot be used from a function", pattern.getLocation(), pattern);
 			}

@@ -56,6 +56,7 @@ import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
+import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
@@ -488,6 +489,11 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		Value v = null;
+
+		if (Settings.release == Release.VDM_10 && ctxt.threadState.isPure())
+		{
+			VdmRuntimeError.abort(node.getLocation(), 4167, "Cannot call exit in a pure operation", ctxt);
+		}
 
 		if (node.getExpression() != null)
 		{
@@ -1021,9 +1027,21 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			try
 			{
 				arg.getLocation().hit();
-				argval = arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
-				value = argval.intValue(ctxt);
-
+				
+				try
+				{
+					// We disable the swapping and time (RT) as periodic evaluation should be "free".
+					ctxt.threadState.setAtomic(true);
+					ctxt.threadState.setPure(true);
+					argval = arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+					value = argval.intValue(ctxt);
+				}
+				finally
+				{
+					ctxt.threadState.setAtomic(false);
+					ctxt.threadState.setPure(false);
+				}
+				
 				if (value < 0)
 				{
 					VdmRuntimeError.abort(node.getLocation(), 4157, "Expecting +ive integer in periodic argument "
@@ -1087,12 +1105,25 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		for (PExp arg : node.getArgs())
 		{
 			Value argval = null;
+			long value = 0;
 
 			try
 			{
 				arg.getLocation().hit();
-				argval = arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
-				long value = argval.intValue(ctxt);
+
+				try
+				{
+					// We disable the swapping and time (RT) as periodic evaluation should be "free".
+					ctxt.threadState.setAtomic(true);
+					ctxt.threadState.setPure(true);
+					argval = arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+					value = argval.intValue(ctxt);
+				}
+				finally
+				{
+					ctxt.threadState.setAtomic(false);
+					ctxt.threadState.setPure(false);
+				}
 
 				if (value < 0)
 				{

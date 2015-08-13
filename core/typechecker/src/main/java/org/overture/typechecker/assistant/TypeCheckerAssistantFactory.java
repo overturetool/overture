@@ -102,6 +102,7 @@ import org.overture.typechecker.utilities.Dereferer;
 import org.overture.typechecker.utilities.ExitTypeCollector;
 import org.overture.typechecker.utilities.FunctionChecker;
 import org.overture.typechecker.utilities.ImplicitDefinitionFinder;
+import org.overture.typechecker.utilities.InstanceVariableChecker;
 import org.overture.typechecker.utilities.KindFinder;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.OperationChecker;
@@ -1106,5 +1107,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 			lnt = new LexNameTokenAssistant(this);
 		}
 		return lnt;
+	}
+
+	@Override
+	public IAnswer<Boolean> getInstanceVariableChecker()
+	{
+		return new InstanceVariableChecker(this);
 	}
 }

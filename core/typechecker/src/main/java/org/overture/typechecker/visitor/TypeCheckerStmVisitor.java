@@ -620,8 +620,16 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseACyclesStm(ACyclesStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		PDefinition encl = question.env.getEnclosingDefinition();
+		
+		if (encl != null && encl.getAccess().getPure())
+		{
+			TypeCheckerErrors.report(3346, "Cannot use cycles in pure operations", node.getCycles().getLocation(), node);
+		}
 
-		PType argType = node.getCycles().apply(THIS, question);
+		Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+		TypeCheckInfo functional = question.newInfo(newEnv);
+		PType argType = node.getCycles().apply(THIS, functional);
 
 		if (!question.assistantFactory.getTypeComparator().compatible(AstFactory.newANatNumericBasicType(node.getLocation()), argType))
 		{
@@ -646,8 +654,16 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseADurationStm(ADurationStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		PDefinition encl = question.env.getEnclosingDefinition();
+		
+		if (encl != null && encl.getAccess().getPure())
+		{
+			TypeCheckerErrors.report(3346, "Cannot use duration in pure operations", node.getLocation(), node);
+		}
 
-		PType argType = node.getDuration().apply(THIS, question);
+		Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+		TypeCheckInfo functional = question.newInfo(newEnv);
+		PType argType = node.getDuration().apply(THIS, functional);
 
 		if (!question.assistantFactory.getTypeComparator().compatible(AstFactory.newANatNumericBasicType(node.getLocation()), argType))
 		{
@@ -774,7 +790,13 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			ANonDeterministicSimpleBlockStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		// PType r = defaultSSimpleBlockStm(node,question);
+		PDefinition encl = question.env.getEnclosingDefinition();
+		
+		if (encl != null && encl.getAccess().getPure())
+		{
+			TypeCheckerErrors.report(3346, "Cannot use non-deterministic statement in pure operations",
+				node.getLocation(), node);
+		}
 
 		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
 		int rcount = 0;
@@ -1025,10 +1047,12 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3287, "Periodic thread must have 4 argument(s)", node.getLocation(), node);
 		} else
 		{
+			Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+			TypeCheckInfo functional = question.newInfo(newEnv);
 
 			for (PExp arg : args)
 			{
-				PType type = arg.apply(THIS, question);
+				PType type = arg.apply(THIS, functional);
 
 				if (!question.assistantFactory.createPTypeAssistant().isNumeric(type))
 				{
@@ -1066,6 +1090,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 						+ " should have no parameters or return type", node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", def.getType());
 			}
+			else if (def.getAccess().getPure())
+			{
+				TypeCheckerErrors.report(3347, "Cannot have a pure operation as the body of a thread", node.getLocation(), node);
+			}
 		} else if (opdef instanceof AImplicitOperationDefinition)
 		{
 			AImplicitOperationDefinition def = (AImplicitOperationDefinition) opdef;
@@ -1080,6 +1108,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				TypeCheckerErrors.report(3231, opname
 						+ " should have no parameters or return type", node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", def.getType());
+			}
+			else if (def.getAccess().getPure())
+			{
+				TypeCheckerErrors.report(3347, "Cannot have a pure operation as the body of a thread", node.getLocation(), node);
 			}
 		} else
 		{
@@ -1101,9 +1133,12 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3287, "Sporadic thread must have 3 arguments", node.getLocation(), node);
 		} else
 		{
+			Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+			TypeCheckInfo functional = question.newInfo(newEnv);
+
 			for (PExp arg : args)
 			{
-				PType type = arg.apply(THIS, question);
+				PType type = arg.apply(THIS, functional);
 
 				if (!question.assistantFactory.createPTypeAssistant().isNumeric(type))
 				{
@@ -1139,6 +1174,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 						+ " should have no parameters or return type", node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", def.getType());
 			}
+			else if (def.getAccess().getPure())
+			{
+				TypeCheckerErrors.report(3347, "Cannot have a pure operation as the body of a thread", node.getLocation(), node);
+			}
 		} else if (opdef instanceof AImplicitOperationDefinition)
 		{
 			AImplicitOperationDefinition def = (AImplicitOperationDefinition) opdef;
@@ -1154,6 +1193,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 						+ " should have no parameters or return type", node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", def.getType());
 			}
+			else if (def.getAccess().getPure())
+			{
+				TypeCheckerErrors.report(3347, "Cannot have a pure operation as the body of a thread", node.getLocation(), node);
+			}
 		} else
 		{
 			TypeCheckerErrors.report(3232, opname + " is not an operation name", node.getLocation(), node);
@@ -1167,6 +1210,12 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAStartStm(AStartStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		PDefinition encl = question.env.getEnclosingDefinition();
+		
+		if (encl != null && encl.getAccess().getPure())
+		{
+			TypeCheckerErrors.report(3346, "Cannot use start in pure operations", node.getLocation(), node);
+		}
 
 		PType type = node.getObj().apply(THIS, question);
 

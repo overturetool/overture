@@ -406,4 +406,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	LexNameTokenAssistant getLexNameTokenAssistant();
 
 	IQuestionAnswer<TypeCheckInfo, List<QualifiedDefinition>> getQualificationVisitor();
+	
+	IAnswer<Boolean> getInstanceVariableChecker();
 }

@@ -217,7 +217,7 @@ type {-> package='org.overture.ast.types'
     |   {function} [partial]:java_Boolean (parameters):type* (result):type 
     |   #invariant
     |   #Map 
-    |   {operation} (parameters):type* (result):type
+    |   {operation} (parameters):type* (result):type (pure):java_Boolean
     |   {optional} (type):type
     |   {parameter} [name]:LexNameToken
     |   {product} (types):type*
@@ -284,7 +284,7 @@ field {-> package='org.overture.ast.types'}
                 [tag]:java_String (type):type [equalityAbstraction]:java_Boolean
     ;
 accessSpecifier  {-> package='org.overture.ast.types'}
-  = {accessSpecifier} [access]:access [static]:static [async]:async 
+  = {accessSpecifier} [access]:access [static]:static [async]:async [pure]:java_Boolean
   ;
 access  {-> package='org.overture.ast.definitions'}
     =   {public}
