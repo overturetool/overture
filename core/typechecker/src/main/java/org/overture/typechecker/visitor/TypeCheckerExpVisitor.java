@@ -2674,6 +2674,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3346, "Cannot use threadid in pure operations", node.getLocation(), node);
 		}
 
+		if (Settings.release == Release.VDM_10 && question.env.isFunctional())
+		{
+			TypeCheckerErrors.report(3348, "Cannot use threadid in a functional context", node.getLocation(), node);
+		}
+
 		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, node.getType(), node.getLocation());
 	}
@@ -2686,6 +2691,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (encl != null && encl.getAccess().getPure())
 		{
 			TypeCheckerErrors.report(3346, "Cannot use time in pure operations", node.getLocation(), node);
+		}
+
+		if (Settings.release == Release.VDM_10 && question.env.isFunctional())
+		{
+			TypeCheckerErrors.report(3348, "Cannot use time in a functional context", node.getLocation(), node);
 		}
 		
 		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));

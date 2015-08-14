@@ -2,7 +2,7 @@ class Entry
 
 functions
 
-public f :  () -> nat	
+public static f :  () -> nat	
 f () == threadid;
 
 operations
