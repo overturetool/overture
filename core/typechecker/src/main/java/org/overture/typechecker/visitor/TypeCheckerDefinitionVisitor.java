@@ -832,7 +832,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		}
 
 		if (node.getAccess().getPure() &&
-			question.assistantFactory.createPTypeAssistant().isType(((AOperationType) node.getType()).getResult(), AVoidType.class))
+			question.assistantFactory.createPTypeAssistant().isType(((AOperationType) node.getType()).getResult(), AVoidType.class) &&
+			!question.assistantFactory.createPTypeAssistant().isUnknown(((AOperationType) node.getType()).getResult()))
 		{
 			TypeCheckerErrors.report(3344, "Pure operation '" + node.getName() + "' must return a value", node.getLocation(), node);
 		}
@@ -1063,12 +1064,14 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		}
 
 		if (node.getAccess().getPure() &&
-			question.assistantFactory.createPTypeAssistant().isType(((AOperationType) node.getType()).getResult(), AVoidType.class))
+			question.assistantFactory.createPTypeAssistant().isType(((AOperationType) node.getType()).getResult(), AVoidType.class) &&
+			!question.assistantFactory.createPTypeAssistant().isUnknown(((AOperationType) node.getType()).getResult()))
 		{
 			TypeCheckerErrors.report(3344, "Pure operation '" + node.getName() + "' must return a value", node.getLocation(), node);
 		}
 
-		if (node.getAccess().getPure() && question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()))
+		if (node.getAccess().getPure() &&
+			question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()))
 		{
 			TypeCheckerErrors.report(3345, "Pure operation '" + node.getName() + "' cannot also be async", node.getLocation(), node);
 		}
