@@ -37,7 +37,7 @@
 <message column="34" line="885" message="Definition 'se' not used" messageType="warning" number="5000" resource="simulatorSL"/>
 <message column="33" line="932" message="Definition 'se' not used" messageType="warning" number="5000" resource="simulatorSL"/>
 <message column="1" line="307" message="Definition 'LSLLIBRARY' not used" messageType="warning" number="5000" resource="simulatorSL"/>
-<message column="17" line="904" message="Impure operation 'get_enabled_simevent' cannot be called from a function" messageType="error" number="3300" resource="simulatorSL"/>
-<message column="22" line="923" message="Impure operation 'get_enabled_simevent_synch' cannot be called from a function" messageType="error" number="3300" resource="simulatorSL"/>
+<message column="17" line="904" message="Impure operation 'get_enabled_simevent' cannot be called from here" messageType="error" number="3300" resource="simulatorSL"/>
+<message column="22" line="923" message="Impure operation 'get_enabled_simevent_synch' cannot be called from here" messageType="error" number="3300" resource="simulatorSL"/>
 <result/>
 </testResult>

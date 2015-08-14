@@ -16,7 +16,7 @@
 <message column="38" line="935" message="Definition 'm' not used" messageType="warning" number="5000" resource="looseSL"/>
 <message column="2" line="189" message="Definition 'expr2' not used" messageType="warning" number="5000" resource="looseSL"/>
 <message column="3" line="446" message="Definition 'CreateContext' not used" messageType="warning" number="5000" resource="looseSL"/>
-<message column="50" line="277" message="Impure operation 'FnInfo' cannot be called from a function" messageType="error" number="3300" resource="looseSL"/>
+<message column="50" line="277" message="Impure operation 'FnInfo' cannot be called from here" messageType="error" number="3300" resource="looseSL"/>
 <message column="3" line="928" message="Operation returns void value" messageType="error" number="3313" resource="looseSL"/>
 <result/>
 </testResult>

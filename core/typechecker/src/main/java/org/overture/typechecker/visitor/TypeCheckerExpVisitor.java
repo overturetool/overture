@@ -200,7 +200,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			if (inFunction && Settings.release == Release.VDM_10 && !ot.getPure())
 			{
 				TypeCheckerErrors.report(3300, "Impure operation '" + node.getRoot()
-						+ "' cannot be called from a function", node.getLocation(), node);
+						+ "' cannot be called from here", node.getLocation(), node);
 				results.add(AstFactory.newAUnknownType(node.getLocation()));
 			}
 			else if (inOperation && Settings.release == Release.VDM_10 && func != null && func.getAccess().getPure() && !ot.getPure())
