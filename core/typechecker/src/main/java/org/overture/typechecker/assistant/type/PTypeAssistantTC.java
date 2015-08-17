@@ -46,6 +46,7 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -294,22 +295,22 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 		}
 	}
 
-	public boolean isClass(PType type)
+	public boolean isClass(PType type, Environment env)
 	{
 		try
 		{
-			return type.apply(af.getClassBasisChecker());
+			return type.apply(af.getClassBasisChecker(env));
 		} catch (AnalysisException e)
 		{
 			return false;
 		}
 	}
 
-	public AClassType getClassType(PType type)
+	public AClassType getClassType(PType type, Environment env)
 	{
 		try
 		{
-			return type.apply(af.getClassTypeFinder());
+			return type.apply(af.getClassTypeFinder(env));
 		} catch (AnalysisException e)
 		{
 			return null;

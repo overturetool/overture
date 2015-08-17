@@ -1288,9 +1288,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		}
 
 		if (question.env.isVDMPP()
-				&& question.assistantFactory.createPTypeAssistant().isClass(root))
+				&& question.assistantFactory.createPTypeAssistant().isClass(root, question.env))
 		{
-			AClassType cls = question.assistantFactory.createPTypeAssistant().getClassType(root);
+			AClassType cls = question.assistantFactory.createPTypeAssistant().getClassType(root, question.env);
 			ILexNameToken memberName = node.getMemberName();
 
 			if (memberName == null)
@@ -1734,7 +1734,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType rt = node.getExp().apply(THIS, question.newConstraint(null));
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(rt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(rt, question.env))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", node.getExp().getLocation(), node.getExp());
 		}
@@ -1762,7 +1762,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType rt = node.getExp().apply(THIS, question.newConstraint(null));
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(rt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(rt, question.env))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", node.getExp().getLocation(), node.getExp());
 		}
@@ -2325,7 +2325,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType lt = left.apply(THIS, question.newConstraint(null));
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(lt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(lt, question.env))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", left.getLocation(), left);
 		}
@@ -2333,7 +2333,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType rt = right.apply(THIS, question.newConstraint(null));
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(rt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(rt, question.env))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", right.getLocation(), right);
 		}
@@ -2352,7 +2352,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType lt = left.apply(THIS, question.newConstraint(null));
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(lt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(lt, question.env))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", left.getLocation(), left);
 		}
@@ -2360,7 +2360,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType rt = right.apply(THIS, question.newConstraint(null));
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(rt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(rt, question.env))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", right.getLocation(), right);
 		}

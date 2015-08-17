@@ -166,9 +166,9 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (question.assistantFactory.createPTypeAssistant().isClass(type))
+		if (question.assistantFactory.createPTypeAssistant().isClass(type, question.env))
 		{
-			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type);
+			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, question.env);
 			String cname = ctype.getName().getName();
 
 			node.setObjectfield(new LexNameToken(cname, field.getName(), node.getObject().getLocation()));
@@ -493,9 +493,9 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 		PTypeSet result = new PTypeSet(question.assistantFactory);
 		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type);
 
-		if (question.assistantFactory.createPTypeAssistant().isClass(type))
+		if (question.assistantFactory.createPTypeAssistant().isClass(type, question.env))
 		{
-			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type);
+			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, question.env);
 
 			if (node.getClassName() == null)
 			{

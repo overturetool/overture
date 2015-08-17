@@ -107,7 +107,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 	{
 		PTypeAssistantTC typeAssistant = question.assistantFactory.createPTypeAssistant();
 		
-		if (!typeAssistant.isClass(pattern.getType()))
+		if (!typeAssistant.isClass(pattern.getType(), question.env))
 		{
 			TypeCheckerErrors.report(3331, "obj_ expression is not an object type", pattern.getLocation(), pattern);
 			TypeCheckerErrors.detail("Type", pattern.getType());
@@ -115,7 +115,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 		else
 		{
 			// Check whether the field access is permitted from here.
-			AClassType cls = typeAssistant.getClassType(pattern.getType());
+			AClassType cls = typeAssistant.getClassType(pattern.getType(), question.env);
 	
 			for (ANamePatternPair npp: pattern.getFields())
 			{

@@ -40,6 +40,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.util.LexNameTokenMap;
 
@@ -50,12 +51,13 @@ import org.overture.typechecker.util.LexNameTokenMap;
  */
 public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 {
-
 	protected ITypeCheckerAssistantFactory af;
+	protected Environment env;
 
-	public ClassTypeFinder(ITypeCheckerAssistantFactory af)
+	public ClassTypeFinder(ITypeCheckerAssistantFactory af, Environment env)
 	{
 		this.af = af;
+		this.env = env;
 	}
 
 	@Override
@@ -86,7 +88,7 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 			type.setClassDone(true); // Mark early to avoid recursion.
 			// type.setClassType(PTypeAssistantTC.getClassType(AstFactory.newAUnknownType(type.getLocation())));
 			// Rewritten in non static way.
-			type.setClassType(af.createPTypeAssistant().getClassType(AstFactory.newAUnknownType(type.getLocation())));
+			type.setClassType(af.createPTypeAssistant().getClassType(AstFactory.newAUnknownType(type.getLocation()), env));
 			// Build a class type with the common fields of the contained
 			// class types, making the field types the union of the original
 			// fields' types...
@@ -97,7 +99,7 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 
 			for (PType t : type.getTypes())
 			{
-				if (af.createPTypeAssistant().isClass(t))
+				if (af.createPTypeAssistant().isClass(t, env))
 				{
 					AClassType ct = t.apply(THIS);// PTypeAssistantTC.getClassType(t);
 
@@ -108,6 +110,12 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 
 					for (PDefinition f : af.createPDefinitionAssistant().getDefinitions(ct.getClassdef()))
 					{
+						if (env != null && !af.createSClassDefinitionAssistant().isAccessible(env, f, false))
+						{
+							// Omit inaccessible definitions
+							continue;
+						}
+						
 						// TypeSet current = common.get(f.name);
 						ILexNameToken synthname = f.getName().getModifiedName(classname.getName());
 						PTypeSet current = null;

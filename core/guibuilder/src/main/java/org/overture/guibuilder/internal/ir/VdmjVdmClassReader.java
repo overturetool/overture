@@ -323,7 +323,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 	public static VdmType getType(PType type,
 			ITypeCheckerAssistantFactory assistantFactory) // added parameter for the assistantFactory
 	{
-		if (assistantFactory.createPTypeAssistant().isClass(type))
+		if (assistantFactory.createPTypeAssistant().isClass(type, null))
 		{
 			return new VdmType(type.getLocation().getModule(), true);
 		}

@@ -296,14 +296,14 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	{
 		PType dtype = node.getDesignator().apply(THIS, question);
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(dtype))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(dtype, question.env))
 		{
 			TypeCheckerErrors.report(3207, "Object designator is not an object type", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
-		AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(dtype);
+		AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(dtype, question.env);
 
 		SClassDefinition classdef = ctype.getClassdef();
 		SClassDefinition self = question.env.findClassDefinition();
@@ -1223,21 +1223,21 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			ASetType set = question.assistantFactory.createPTypeAssistant().getSet(type);
 
-			if (!question.assistantFactory.createPTypeAssistant().isClass(set.getSetof()))
+			if (!question.assistantFactory.createPTypeAssistant().isClass(set.getSetof(), null))
 			{
 				TypeCheckerErrors.report(3235, "Expression is not a set of object references", node.getObj().getLocation(), node.getObj());
 			} else
 			{
-				AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(set.getSetof());
+				AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(set.getSetof(), null);
 
 				if (question.assistantFactory.createSClassDefinitionAssistant().findThread(ctype.getClassdef()) == null)
 				{
 					TypeCheckerErrors.report(3236, "Class does not define a thread", node.getObj().getLocation(), node.getObj());
 				}
 			}
-		} else if (question.assistantFactory.createPTypeAssistant().isClass(type))
+		} else if (question.assistantFactory.createPTypeAssistant().isClass(type, null))
 		{
-			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type);
+			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, null);
 
 			if (question.assistantFactory.createSClassDefinitionAssistant().findThread(ctype.getClassdef()) == null)
 			{
@@ -1262,21 +1262,21 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			ASetType set = question.assistantFactory.createPTypeAssistant().getSet(type);
 
-			if (!question.assistantFactory.createPTypeAssistant().isClass(set.getSetof()))
+			if (!question.assistantFactory.createPTypeAssistant().isClass(set.getSetof(), null))
 			{
 				TypeCheckerErrors.report(3235, "Expression is not a set of object references", node.getObj().getLocation(), node.getObj());
 			} else
 			{
-				AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(set.getSetof());
+				AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(set.getSetof(), null);
 
 				if (question.assistantFactory.createSClassDefinitionAssistant().findThread(ctype.getClassdef()) == null)
 				{
 					TypeCheckerErrors.report(3236, "Class does not define a thread", node.getObj().getLocation(), node.getObj());
 				}
 			}
-		} else if (question.assistantFactory.createPTypeAssistant().isClass(type))
+		} else if (question.assistantFactory.createPTypeAssistant().isClass(type, null))
 		{
-			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type);
+			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, null);
 
 			if (question.assistantFactory.createSClassDefinitionAssistant().findThread(ctype.getClassdef()) == null)
 			{

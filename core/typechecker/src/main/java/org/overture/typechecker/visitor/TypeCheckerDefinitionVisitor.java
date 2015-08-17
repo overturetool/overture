@@ -722,9 +722,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 					TypeCheckerErrors.report(3286, "Constructor cannot be 'async', 'static' or 'pure'", node.getLocation(), node);
 				}
 
-				if (question.assistantFactory.createPTypeAssistant().isClass(((AOperationType) node.getType()).getResult()))
+				if (question.assistantFactory.createPTypeAssistant().isClass(((AOperationType) node.getType()).getResult(), question.env))
 				{
-					AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(((AOperationType) node.getType()).getResult());
+					AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(((AOperationType) node.getType()).getResult(), question.env);
 
 					if (ctype.getClassdef() != node.getClassDefinition())
 					{
@@ -973,9 +973,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 					TypeCheckerErrors.report(3286, "Constructor cannot be 'async', 'static' or 'pure'", node.getLocation(), node);
 				}
 
-				if (question.assistantFactory.createPTypeAssistant().isClass(((AOperationType) node.getType()).getResult()))
+				if (question.assistantFactory.createPTypeAssistant().isClass(((AOperationType) node.getType()).getResult(), question.env))
 				{
-					AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(((AOperationType) node.getType()).getResult());
+					AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(((AOperationType) node.getType()).getResult(), question.env);
 
 					if (ctype.getClassdef() != node.getClassDefinition())
 					{

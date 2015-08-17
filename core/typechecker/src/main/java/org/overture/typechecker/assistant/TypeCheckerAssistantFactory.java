@@ -885,15 +885,15 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public AnswerAdaptor<Boolean> getClassBasisChecker()
+	public AnswerAdaptor<Boolean> getClassBasisChecker(Environment env)
 	{
-		return new ClassBasisChecker(this);
+		return new ClassBasisChecker(this, env);
 	}
 
 	@Override
-	public IAnswer<AClassType> getClassTypeFinder()
+	public IAnswer<AClassType> getClassTypeFinder(Environment env)
 	{
-		return new ClassTypeFinder(this);
+		return new ClassTypeFinder(this, env);
 	}
 
 	@Override
