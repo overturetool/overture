@@ -148,15 +148,11 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 						}
 						else
 						{
-							if (af.createPAccessSpecifierAssistant().narrowerThan(curracc, f.getAccess()))
-							{
-								access.put(synthname, f.getAccess());
-							}
-
-							if (!curracc.getPure() && f.getAccess().getPure())
+							if (af.createPAccessSpecifierAssistant().narrowerThan(curracc, f.getAccess()) ||
+								(!curracc.getPure() && f.getAccess().getPure()))
 							{
 								AAccessSpecifierAccessSpecifier purified = AstFactory.newAAccessSpecifierAccessSpecifier(
-									f.getAccess().getAccess(),
+									f.getAccess().getAccess().clone(),
 									f.getAccess().getStatic() != null,
 									f.getAccess().getAsync() != null,
 									curracc.getPure() || f.getAccess().getPure());
