@@ -35,6 +35,7 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
@@ -144,11 +145,23 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 						if (curracc == null)
 						{
 							access.put(synthname, f.getAccess());
-						} else
+						}
+						else
 						{
 							if (af.createPAccessSpecifierAssistant().narrowerThan(curracc, f.getAccess()))
 							{
 								access.put(synthname, f.getAccess());
+							}
+
+							if (!curracc.getPure() && f.getAccess().getPure())
+							{
+								AAccessSpecifierAccessSpecifier purified = AstFactory.newAAccessSpecifierAccessSpecifier(
+									f.getAccess().getAccess(),
+									f.getAccess().getStatic() != null,
+									f.getAccess().getAsync() != null,
+									curracc.getPure() || f.getAccess().getPure());
+
+								access.put(synthname, purified);
 							}
 						}
 					}
@@ -163,7 +176,15 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 
 			for (ILexNameToken synthname : common.keySet())
 			{
-				PDefinition def = AstFactory.newALocalDefinition(synthname.getLocation(), synthname, NameScope.GLOBAL, common.get(synthname).getType(type.getLocation()));
+    			PType ptype = common.get(synthname).getType(type.getLocation());
+    			
+    			if (ptype instanceof AOperationType)
+    			{
+    				AOperationType optype = (AOperationType)ptype;
+    				optype.setPure(access.get(synthname).getPure());
+    			}
+
+    			PDefinition def = AstFactory.newALocalDefinition(synthname.getLocation(), synthname, NameScope.GLOBAL, ptype);
 
 				def.setAccess(access.get(synthname).clone());
 				newdefs.add(def);
