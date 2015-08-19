@@ -189,6 +189,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+		newEnv.setEnclosingDefinition(node);
 		TypeCheckInfo functional = question.newInfo(newEnv);
 		functional.qualifiers = null;
 		functional.scope = NameScope.NAMESANDSTATE;

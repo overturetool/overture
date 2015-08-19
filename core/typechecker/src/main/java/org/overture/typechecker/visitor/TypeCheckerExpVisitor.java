@@ -122,6 +122,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PDefinition func = question.env.getEnclosingDefinition();
 		boolean inFunction = question.env.isFunctional();
 		boolean inOperation = !inFunction;
+		boolean inReserved = (func == null || func.getName() == null) ? false : func.getName().isReserved();
 
 		if (inFunction)
 		{
@@ -212,6 +213,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			else
 			{
 				results.add(operationApply(node, isSimple, ot, question));
+			}
+			
+			if (inFunction && Settings.release == Release.VDM_10 && ot.getPure() && !inReserved)
+			{
+				TypeCheckerErrors.warning(5017, "Pure operation call may not be referentially transparent", node.getLocation(), node);
 			}
 		}
 
