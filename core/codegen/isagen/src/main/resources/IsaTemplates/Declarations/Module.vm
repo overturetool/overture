@@ -1,5 +1,5 @@
 theory $Isa.norm($node.Name)
-  imports utp_vdm
+  imports vdm_sl
 begin
 
 #foreach( $decl in $node.Decls )
