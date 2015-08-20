@@ -176,8 +176,9 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
     			
     			if (ptype instanceof AOperationType)
     			{
-    				AOperationType optype = (AOperationType)ptype;
+    				AOperationType optype = (AOperationType)ptype.clone();
     				optype.setPure(access.get(synthname).getPure());
+    				ptype = optype;
     			}
 
     			PDefinition def = AstFactory.newALocalDefinition(synthname.getLocation(), synthname, NameScope.GLOBAL, ptype);
