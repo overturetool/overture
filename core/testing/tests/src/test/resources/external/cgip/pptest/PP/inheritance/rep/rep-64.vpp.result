@@ -1,1 +1,1 @@
-["rep-64.vpp parses and type checks"]
+["Error 3348: rep-64.vpp at 32:5 Cannot use \u0027new\u0027 in a functional context"]

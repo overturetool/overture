@@ -19,6 +19,7 @@
 <message column="33" line="2389" message="Cannot access Compile(?) from a static context" messageType="error" number="3181" resource="CodegenPP"/>
 <message column="43" line="2390" message="Impure operation '(selif.getElif)' cannot be called from here" messageType="error" number="3300" resource="CodegenPP"/>
 <message column="60" line="2390" message="Impure operation '(selif.getEse)' cannot be called from here" messageType="error" number="3300" resource="CodegenPP"/>
+<message column="9" line="2392" message="Cannot use 'new' in a functional context" messageType="error" number="3348" resource="CodegenPP"/>
 <message column="9" line="2397" message="Cannot access Compile(SimpleExpression) from a static context" messageType="error" number="3181" resource="CodegenPP"/>
 <message column="49" line="2400" message="Impure operation '(head.getTest)' cannot be called from here" messageType="error" number="3300" resource="CodegenPP"/>
 <message column="41" line="2400" message="Name Compile(?) is ambiguous" messageType="error" number="3010" resource="CodegenPP"/>
@@ -26,5 +27,6 @@
 <message column="49" line="2401" message="Impure operation '(head.getThn)' cannot be called from here" messageType="error" number="3300" resource="CodegenPP"/>
 <message column="41" line="2401" message="Name Compile(?) is ambiguous" messageType="error" number="3010" resource="CodegenPP"/>
 <message column="41" line="2401" message="Cannot access Compile(?) from a static context" messageType="error" number="3181" resource="CodegenPP"/>
+<message column="12" line="2403" message="Cannot use 'new' in a functional context" messageType="error" number="3348" resource="CodegenPP"/>
 <result/>
 </testResult>
