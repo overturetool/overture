@@ -20,8 +20,8 @@ public class Entry {
     }
 
     public static Number f() {
-        Entry ignorePattern_3 = new Entry();
-        Entry ignorePattern_4 = new Entry();
+        Number ignorePattern_3 = 1L;
+        Number ignorePattern_4 = 2L;
 
         return 1L;
     }

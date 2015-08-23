@@ -4,8 +4,8 @@ functions
 
 public f :  () -> nat
 f () ==
-let - = new Entry(),
-		- = new Entry()
+let - = 1,
+    - = 2
 in
 	1;
 	
