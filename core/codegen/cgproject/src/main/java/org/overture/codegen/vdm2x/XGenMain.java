@@ -29,9 +29,7 @@ public class XGenMain {
 
 			XCodeGen xGen = new XCodeGen();
 			GeneratedData data = xGen.generateJavaFromVdm(ast);
-
-			
-			
+		
 			for (GeneratedModule module : data.getClasses()) {
 				
 				if (module.canBeGenerated()) {

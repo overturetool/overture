@@ -45,8 +45,10 @@ public class XCodeGen extends CodeGenBase {
 		GeneratedData data = new GeneratedData();
 		
 		// Add generated code to 'data'
-		TemplateManager templateManager = new TemplateManager(new TemplateStructure("MyTemplates"));
-		MergeVisitor mergeVisitor = new MergeVisitor(templateManager, new TemplateCallable[]{new TemplateCallable("CGh", new CGHelper())});
+		//templateManager = new TemplateManager(new TemplateStructure("MyTemplates"));
+		//MergeVisitor mergeVisitor = new MergeVisitor(templateManager, new TemplateCallable[]{new TemplateCallable("CGh", new CGHelper())});
+		
+		XFormat my_formatter = new XFormat(varPrefixes);
 		
 		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
 		
@@ -56,7 +58,7 @@ public class XCodeGen extends CodeGenBase {
 			AClassDeclCG classCg = status.getIrNode();
 
 			try {
-				classCg.apply(mergeVisitor, writer);
+				classCg.apply(my_formatter.GetMergeVisitor(), writer);
 				
 				GeneratedModule generatedModule = new GeneratedModule(status.getIrNodeName(), classCg, writer.toString());
 				generatedModule.setTransformationWarnings(status.getTransformationWarnings());
