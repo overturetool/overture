@@ -18,8 +18,8 @@
   <properties>
     <example-packager.version>2.1.2</example-packager.version>
     <repo.root>${project.basedir}/../..</repo.root>
-    <examples.root>${repo.root}/externals/documentation/target/documentation-master/examples</examples.root>
-    <documentation.root>${repo.root}/externals/documentation/target/documentation-master/documentation</documentation.root>
+    <examples.root>${repo.root}/externals/documentation/target/documentation-editing/examples</examples.root>
+    <documentation.root>${repo.root}/externals/documentation/target/documentation-editing/documentation</documentation.root>
     <libs.root>${repo.root}/documentation/examples/</libs.root>
   </properties>
   

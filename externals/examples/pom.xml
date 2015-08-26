@@ -14,7 +14,7 @@
 
   <properties>
     <repo.root>${project.basedir}/../..</repo.root>
-    <examples.root>${repo.root}/externals/documentation/target/documentation-master/examples</examples.root>
+    <examples.root>${repo.root}/externals/documentation/target/documentation-editing/examples</examples.root>
     <libs.root>${repo.root}/documentation/examples/</libs.root>
   </properties>
   

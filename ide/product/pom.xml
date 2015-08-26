@@ -17,7 +17,7 @@
 
   <properties>
     <repo.root>${project.basedir}/../..</repo.root>
-    <documentation.root>${repo.root}/externals/documentation/target/documentation-master/documentation</documentation.root>
+    <documentation.root>${repo.root}/externals/documentation/target/documentation-editing/documentation</documentation.root>
   </properties>
 
   <build>

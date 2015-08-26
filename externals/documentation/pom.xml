@@ -30,7 +30,7 @@
               <goal>wget</goal>
             </goals>
             <configuration>
-              <url>https://github.com/overturetool/documentation/archive/master.zip</url>
+              <url>https://github.com/overturetool/documentation/archive/editing.zip</url>
               <unpack>true</unpack>
               <outputDirectory>${project.build.directory}</outputDirectory>
               <skipCache>${force-download}</skipCache> <!-- true ==> force download -->
