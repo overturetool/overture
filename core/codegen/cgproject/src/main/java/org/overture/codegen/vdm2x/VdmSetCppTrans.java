@@ -9,6 +9,7 @@ import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ADistConcatUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADistIntersectUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADistUnionUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.ASetDifferenceBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetIntersectBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
@@ -22,6 +23,7 @@ public class VdmSetCppTrans extends DepthFirstAnalysisAdaptor {
 	
 	public VdmSetCppTrans(BaseTransformationAssistant baseAss) {
 		// TODO Auto-generated constructor stub
+		System.out.println("Set transform");
 		baseAssistant = baseAss;
 	}
 	
@@ -32,6 +34,17 @@ public class VdmSetCppTrans extends DepthFirstAnalysisAdaptor {
 		LinkedList<SExpCG> args = new LinkedList<SExpCG>();
 		args.add(node.getLeft());
 		args.add(node.getRight());
+		n.setArgs(args);
+		baseAssistant.replaceNodeWith(node, n);
+	}
+	
+	@Override
+	public void caseAEnumSetExpCG(AEnumSetExpCG node) throws AnalysisException {
+		// TODO Auto-generated method stub
+		//super.caseAEnumSetExpCG(node);
+		AApplyExpCG n = ConstructionUtils.consUtilCall("vdm_set", "create_set", node.getType().clone());
+		LinkedList<SExpCG> args = new LinkedList<SExpCG>();
+		args.addAll(node.getMembers());
 		n.setArgs(args);
 		baseAssistant.replaceNodeWith(node, n);
 	}
