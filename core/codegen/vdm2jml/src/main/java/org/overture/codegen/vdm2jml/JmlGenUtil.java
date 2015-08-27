@@ -63,7 +63,7 @@ public class JmlGenUtil
 		
 		STypeCG paramType = formalParam.getType().clone();
 
-		return jmlGen.getJavaGen().getTransAssistant().consIdentifierVar(paramName, paramType);
+		return jmlGen.getJavaGen().getInfo().getExpAssistant().consIdVar(paramName, paramType);
 	}
 
 	public String getName(SPatternCG id)
@@ -217,8 +217,10 @@ public class JmlGenUtil
 	 * 
 	 * @param ast
 	 *            The IR passed by the Java code generator after the transformation process
+	 * @param recInfo
+	 *            Since the new record classes are deep copies we need to update the record info too
 	 */
-	public List<IRStatus<INode>> makeRecsOuterClasses(List<IRStatus<INode>> ast)
+	public List<IRStatus<INode>> makeRecsOuterClasses(List<IRStatus<INode>> ast, RecClassInfo recInfo)
 	{
 		List<IRStatus<INode>> extraClasses = new LinkedList<IRStatus<INode>>();
 
@@ -277,7 +279,9 @@ public class JmlGenUtil
 				List<AMethodDeclCG> methods = new LinkedList<AMethodDeclCG>();
 				for (AMethodDeclCG m : recDecl.getMethods())
 				{
-					methods.add(m.clone());
+					AMethodDeclCG newMethod = m.clone(); 
+					methods.add(newMethod);
+					recInfo.updateAccessor(m, newMethod);
 				}
 				recClass.setMethods(methods);
 
@@ -285,7 +289,9 @@ public class JmlGenUtil
 				List<AFieldDeclCG> fields = new LinkedList<AFieldDeclCG>();
 				for (AFieldDeclCG f : recDecl.getFields())
 				{
-					fields.add(f.clone());
+					AFieldDeclCG newField = f.clone();
+					fields.add(newField);
+					recInfo.register(newField);
 				}
 				recClass.setFields(fields);
 
@@ -293,9 +299,7 @@ public class JmlGenUtil
 				// Examples: my.pack.Mtypes
 				if (JavaCodeGenUtil.isValidJavaPackage(jmlGen.getJavaSettings().getJavaRootPackage()))
 				{
-					String recPackage = jmlGen.getJavaSettings().getJavaRootPackage()
-							+ "." + clazz.getName()
-							+ JavaFormat.TYPE_DECL_PACKAGE_SUFFIX;
+					String recPackage = consRecPackage(clazz.getName());
 					recClass.setPackage(recPackage);
 				} else
 				{
@@ -307,6 +311,20 @@ public class JmlGenUtil
 		}
 
 		return extraClasses;
+	}
+
+	public String consRecPackage(String defClass)
+	{
+		String recPackage = "";
+
+		if (JavaCodeGenUtil.isValidJavaPackage(jmlGen.getJavaSettings().getJavaRootPackage()))
+		{
+			recPackage += jmlGen.getJavaSettings().getJavaRootPackage() + ".";
+		}
+
+		recPackage += defClass + JavaFormat.TYPE_DECL_PACKAGE_SUFFIX;
+
+		return recPackage;
 	}
 	
 	public AMethodDeclCG genInvMethod(AClassDeclCG clazz,
@@ -325,7 +343,7 @@ public class JmlGenUtil
 		
 		AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
 		formalParam.setType(paramType.clone());
-		formalParam.setPattern(jmlGen.getJavaGen().getTransAssistant().consIdPattern(formalParamName));
+		formalParam.setPattern(jmlGen.getJavaGen().getInfo().getPatternAssistant().consIdPattern(formalParamName));
 		
 		AMethodDeclCG method = new AMethodDeclCG();
 		method.setImplicit(false);
@@ -521,7 +539,7 @@ public class JmlGenUtil
 		String newParamName = nameGen.getName(JmlGenerator.INV_METHOD_REPLACEMENT_NAME_PREFIX
 				+ originalParamName);
 		
-		return jmlGen.getJavaGen().getTransAssistant().consIdPattern(newParamName);
+		return jmlGen.getJavaGen().getInfo().getPatternAssistant().consIdPattern(newParamName);
 	}
 	
 	public AClassDeclCG getEnclosingClass(INode node)

@@ -86,7 +86,7 @@ public class Plant {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
             expert = ((Expert) iterator_1.next());
-            success_1 = expert.GetQuali().contains(a.GetReqQuali());
+            success_1 = SetUtil.inSet(a.GetReqQuali(), expert.GetQuali());
         }
 
         if (!(success_1)) {
@@ -107,7 +107,7 @@ public class Plant {
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Token p = ((Token) iterator_2.next());
 
-            if (((VDMSet) Utils.get(schedule, p)).contains(ex)) {
+            if (SetUtil.inSet(ex, ((VDMSet) Utils.get(schedule, p)))) {
                 setCompResult_1 = SetUtil.union(setCompResult_1, SetUtil.set(p));
             }
         }
@@ -123,7 +123,7 @@ public class Plant {
     public void AddExpertToSchedule(final Token p, final Expert ex) {
         VDMSet ternaryIfExp_1 = null;
 
-        if (MapUtil.dom(schedule).contains(p)) {
+        if (SetUtil.inSet(p, MapUtil.dom(schedule))) {
             ternaryIfExp_1 = SetUtil.union(((VDMSet) Utils.get(schedule, p)),
                     SetUtil.set(ex));
         } else {
@@ -158,7 +158,7 @@ public class Plant {
         for (Iterator iterator_3 = set_3.iterator();
                 iterator_3.hasNext() && forAllExpResult_1;) {
             Token p = ((Token) iterator_3.next());
-            forAllExpResult_1 = !(((VDMSet) Utils.get(sch, p)).isEmpty());
+            forAllExpResult_1 = !(Utils.empty(((VDMSet) Utils.get(sch, p))));
         }
 
         if (forAllExpResult_1) {
@@ -180,8 +180,8 @@ public class Plant {
                     for (Iterator iterator_6 = set_6.iterator();
                             iterator_6.hasNext() && !(existsExpResult_1);) {
                         Expert expert = ((Expert) iterator_6.next());
-                        existsExpResult_1 = expert.GetQuali()
-                                                  .contains(a.GetReqQuali());
+                        existsExpResult_1 = SetUtil.inSet(a.GetReqQuali(),
+                                expert.GetQuali());
                     }
 
                     forAllExpResult_3 = existsExpResult_1;

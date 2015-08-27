@@ -231,8 +231,8 @@
              <tagNameFormat>Release/@{project.version}</tagNameFormat>
            </configuration>
         </plugin>
-		
-		
+
+
 		<!-- Disable the maven enforcer warning in Eclipse -->
 				 <plugin>
           <groupId>org.eclipse.m2e</groupId>
@@ -258,7 +258,7 @@
             </lifecycleMappingMetadata>
           </configuration>
         </plugin>
-		
+
 		<!-- Plugin for license headers-->
 		 <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -276,13 +276,13 @@
                 <root>src/main/java</root>
                 <root>src/test/java</root>
               </roots>
-			  
+
 			  <includes>
                 <include>**/*.java</include>
               </includes>
 			  <excludes>
                 <exclude>*.ftl</exclude>
-               
+
               </excludes>
         </configuration>
         </plugin>
@@ -316,21 +316,11 @@
       </roles>
     </developer>
     <developer>
-      <id>jwc</id>
-      <email>jwc@eng.au.dk</email>
-      <name>Joey Coleman</name>
-      <roles>
-        <role>coordinator</role>
-        <role>developer</role>
-      </roles>
-      <organization>Aarhus University</organization>
-      <organizationUrl>http://eng.au.dk/</organizationUrl>
-    </developer>
-    <developer>
       <id>lausdahl</id>
       <email>lausdahl@eng.au.dk</email>
       <name>Kenneth Lausdahl</name>
       <roles>
+        <role>coordinator</role>
         <role>architect</role>
         <role>developer</role>
       </roles>
@@ -360,6 +350,6 @@
     <name>Overture</name>
     <url>http://overturetool.org/</url>
   </organization>
-  
+
     <inceptionYear>2008</inceptionYear>
 </project>

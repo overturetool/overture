@@ -36,7 +36,7 @@ import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.AbstractIterationStrategy;
-import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
@@ -49,9 +49,9 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	public CompStrategy(TransAssistantCG transformationAssistant,
 			SExpCG predicate, String varName, STypeCG compType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
-			TempVarPrefixes varPrefixes)
+			IterationVarPrefixes iteVarPrefixes)
 	{
-		super(transformationAssistant, langIterator, tempGen, varPrefixes);
+		super(transformationAssistant, langIterator, tempGen, iteVarPrefixes);
 
 		this.predicate = predicate;
 
@@ -71,7 +71,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	protected List<SStmCG> consConditionalAdd(AIdentifierVarExpCG compResult,
 			SBinaryExpCG collectionMerge)
 	{
-		AIdentifierVarExpCG result = transAssistant.consIdentifierVar(compResult.getName(),
+		AIdentifierVarExpCG result = transAssistant.getInfo().getExpAssistant().consIdVar(compResult.getName(),
 				compResult.getType().clone());
 
 		AAssignToExpStmCG updateCompResult = new AAssignToExpStmCG();

@@ -909,7 +909,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
     }
 
     private static <tp> VDMSeq set2seq(final VDMSet s) {
-        if (s.isEmpty()) {
+        if (Utils.empty(s)) {
             return SeqUtil.seq();
         } else {
             VDMSeq letBeStExp_1 = null;
@@ -955,7 +955,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
     }
 
     private static String MakeMultilineResponse(final VDMSeq resps) {
-        if (resps.isEmpty()) {
+        if (Utils.empty(resps)) {
             return SeqUtil.toStr(SeqUtil.seq());
         } else {
             if (Utils.equals(resps.size(), 1L)) {
@@ -1023,7 +1023,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
     }
 
     private static Number sum(final VDMSet s) {
-        if (s.isEmpty()) {
+        if (Utils.empty(s)) {
             return 0L;
         } else {
             Number letBeStExp_2 = null;
@@ -1246,12 +1246,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
         cmd = msgChannel.ServerListen();
 
-        Boolean whileCond1 = true;
+        Boolean whileCond_1 = true;
 
-        while (whileCond1) {
-            whileCond1 = !(Utils.equals(cmd, new POP3Types.QUIT()));
+        while (whileCond_1) {
+            whileCond_1 = !(Utils.equals(cmd, new POP3Types.QUIT()));
 
-            if (!(whileCond1)) {
+            if (!(whileCond_1)) {
                 break;
             }
 
@@ -1519,7 +1519,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         try {
             Boolean andResult_2 = false;
 
-            if (MapUtil.dom(Utils.copy(passwords)).contains(user)) {
+            if (SetUtil.inSet(user, MapUtil.dom(Utils.copy(passwords)))) {
                 if (Utils.equals(((String) Utils.get(passwords, user)), password)) {
                     andResult_2 = true;
                 }
@@ -1535,7 +1535,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3Server_sentinel) sentinel).IsLocked);
 
         try {
-            return MapUtil.rng(Utils.copy(locks)).contains(user);
+            return SetUtil.inSet(user, MapUtil.rng(Utils.copy(locks)));
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).IsLocked);
         }
@@ -1643,7 +1643,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         try {
             VDMSeq mb = GetUserMessages(user);
 
-            return SeqUtil.inds(mb).contains(index);
+            return SetUtil.inSet(index, SeqUtil.inds(mb));
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).IsMessageNumber);
         }
@@ -1656,7 +1656,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             VDMSeq mb = GetUserMessages(user);
             Boolean andResult_4 = false;
 
-            if (SeqUtil.inds(mb).contains(index)) {
+            if (SetUtil.inSet(index, SeqUtil.inds(mb))) {
                 if (!(((POP3Message) Utils.get(mb, index)).IsDeleted())) {
                     andResult_4 = true;
                 }
@@ -1675,7 +1675,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             VDMSeq mb = GetUserMessages(user);
             Boolean andResult_5 = false;
 
-            if (SeqUtil.inds(mb).contains(index)) {
+            if (SetUtil.inSet(index, SeqUtil.inds(mb))) {
                 if (((POP3Message) Utils.get(mb, index)).IsDeleted()) {
                     andResult_5 = true;
                 }
@@ -1879,14 +1879,14 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3Server_sentinel) sentinel).WaitForServerStart);
 
         try {
-            //Skip;
+            /* skip */
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).WaitForServerStart);
         }
     }
 
     public static Number sumseq(final VDMSeq s) {
-        if (s.isEmpty()) {
+        if (Utils.empty(s)) {
             return 0L;
         } else {
             return ((Number) s.get(0)).longValue() +
@@ -1988,12 +1988,12 @@ public class POP3Server extends VDMThread implements EvaluatePP {
     }
 
     public void run() {
-        Boolean whileCond2 = true;
+        Boolean whileCond_2 = true;
 
-        while (whileCond2) {
-            whileCond2 = true;
+        while (whileCond_2) {
+            whileCond_2 = true;
 
-            if (!(whileCond2)) {
+            if (!(whileCond_2)) {
                 break;
             }
 
@@ -2417,7 +2417,7 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3TestSender_sentinel) sentinel).LogClient);
 
         try {
-            //Skip;
+            /* skip */
         } finally {
             sentinel.leaving(((POP3TestSender_sentinel) sentinel).LogClient);
         }
@@ -2514,7 +2514,7 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3TestListener_sentinel) sentinel).LogServer);
 
         try {
-            //Skip;
+            /* skip */
         } finally {
             sentinel.leaving(((POP3TestListener_sentinel) sentinel).LogServer);
         }
@@ -2524,7 +2524,7 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3TestListener_sentinel) sentinel).IsFinished);
 
         try {
-            //Skip;
+            /* skip */
         } finally {
             sentinel.leaving(((POP3TestListener_sentinel) sentinel).IsFinished);
         }
@@ -2554,13 +2554,13 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
 
     public void run() {
         Object response = mc.ClientListen();
-        Boolean whileCond3 = true;
+        Boolean whileCond_3 = true;
 
-        while (whileCond3) {
-            whileCond3 = !(Utils.equals(response,
+        while (whileCond_3) {
+            whileCond_3 = !(Utils.equals(response,
                     new POP3Types.OkResponse("Quitting POP3 Server")));
 
-            if (!(whileCond3)) {
+            if (!(whileCond_3)) {
                 break;
             }
 

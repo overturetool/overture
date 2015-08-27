@@ -10,7 +10,7 @@ public class Entry {
 
     public static Object Run() {
         Number a = 1L;
-        //Skip;
+        /* skip */
         {
             Tuple tuplePattern_1 = Tuple.mk_(2L, 3L);
             Boolean success_1 = tuplePattern_1.compatible(Number.class,

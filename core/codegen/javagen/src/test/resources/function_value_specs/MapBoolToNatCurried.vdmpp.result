@@ -34,7 +34,7 @@ public class Entry {
                 public VDMSeq eval(final Func_1<Boolean, Number> f) {
                     VDMSeq ternaryIfExp_2 = null;
 
-                    if (s.isEmpty()) {
+                    if (Utils.empty(s)) {
                         ternaryIfExp_2 = SeqUtil.seq();
                     } else {
                         ternaryIfExp_2 = SeqUtil.conc(SeqUtil.seq(f.eval(((Boolean) s.get(

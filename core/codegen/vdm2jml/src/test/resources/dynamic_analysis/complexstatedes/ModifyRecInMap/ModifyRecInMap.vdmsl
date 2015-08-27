@@ -1,0 +1,45 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+types
+
+A :: m : map nat to B
+inv a == forall i in set dom a.m & a.m(i).x = 2;
+B :: x : nat;
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before useOk");
+ let - = useOk() in skip;
+ IO`println("After useOk");
+ IO`println("Before useNotOk");
+ let - = useNotOk() in skip;
+ IO`println("After useNotOk");
+ return 0;
+);
+
+useOk : () ==> nat
+useOk () ==
+(
+ dcl a : A := mk_A({1 |-> mk_B(2)});
+ a.m(1).x := 2;
+ return 0;
+);
+
+useNotOk : () ==> nat
+useNotOk () ==
+(
+ dcl a : A := mk_A({1 |-> mk_B(2)});
+ a.m(1).x := 1;
+ return 0;
+);
+
+end Entry

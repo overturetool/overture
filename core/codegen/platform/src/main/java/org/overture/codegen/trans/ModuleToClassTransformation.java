@@ -125,6 +125,13 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			record.setSourceNode(stateDecl.getSourceNode());
 			record.setName(stateDecl.getName());
 
+			if(stateDecl.getInvDecl() != null)
+			{
+				// The state invariant constrains the type of the state
+				// see https://github.com/overturetool/overture/issues/459 
+				record.setInvariant(stateDecl.getInvDecl().clone());
+			}
+
 			for (AFieldDeclCG field : stateDecl.getFields())
 			{
 				record.getFields().add(field.clone());
@@ -142,16 +149,14 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 
 			ARecordTypeCG stateType = new ARecordTypeCG();
 			stateType.setName(typeName);
-			
-			if(stateDecl.getInvDecl() != null)
-			{
-				clazz.setInvariant(stateDecl.getInvDecl().clone());
-			}
 
 			// The state field can't be final since you are allow to assign to it in
 			// VDM-SL, e.g. St := mk_St(...)
 			clazz.getFields().add(transAssistant.consField(IRConstants.PRIVATE, stateType, stateDecl.getName(), getInitExp(stateDecl)));
 		}
+		
+		info.removeModule(node.getName());
+		info.addClass(clazz);
 	}
 
 	private void handleImports(final AModuleImportsCG moduleImports, final AClassDeclCG clazz) throws AnalysisException

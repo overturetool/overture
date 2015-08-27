@@ -1,5 +1,6 @@
 package org.overture.codegen.vdm2java;
 
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -10,10 +11,14 @@ import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRGeneratedTag;
+import org.overture.codegen.logging.Logger;
 
 abstract public class JavaClassCreatorBase
 {
+	private static final String COPY = "copy";
+	
 	public JavaClassCreatorBase()
 	{
 		super();
@@ -23,7 +28,7 @@ abstract public class JavaClassCreatorBase
 	{
 		AMethodDeclCG constructor = new AMethodDeclCG();
 		constructor.setImplicit(false);
-		constructor.setAccess(JavaFormat.JAVA_PUBLIC);
+		constructor.setAccess(IJavaConstants.PUBLIC);
 		constructor.setIsConstructor(true);
 		constructor.setName(className);
 		
@@ -35,8 +40,8 @@ abstract public class JavaClassCreatorBase
 		AMethodDeclCG method = new AMethodDeclCG();
 		method.setIsConstructor(false);
 		method.setImplicit(false);
-		method.setAccess(JavaFormat.JAVA_PUBLIC);
-		method.setName("copy");
+		method.setAccess(IJavaConstants.PUBLIC);
+		method.setName(COPY);
 		method.setMethodType(methodType);
 		
 		return method;
@@ -52,13 +57,13 @@ abstract public class JavaClassCreatorBase
 	
 		AExternalTypeCG returnType = new AExternalTypeCG();
 		returnType.setInfo(null);
-		returnType.setName("boolean");
+		returnType.setName(IJavaConstants.BOOLEAN);
 	
 		methodType.setResult(returnType);
 	
-		equalsMethod.setAccess(JavaFormat.JAVA_PUBLIC);
+		equalsMethod.setAccess(IJavaConstants.PUBLIC);
 		equalsMethod.setIsConstructor(false);
-		equalsMethod.setName("equals");
+		equalsMethod.setName(IJavaConstants.EQUALS);
 		equalsMethod.setMethodType(methodType);
 	
 		// Add the formal parameter "Object obj" to the method
@@ -77,15 +82,13 @@ abstract public class JavaClassCreatorBase
 
 	public AMethodDeclCG consHashcodeMethodSignature()
 	{
-		String hashCode = "hashCode";
-	
 		AMethodDeclCG hashcodeMethod = new AMethodDeclCG();
 		hashcodeMethod.setImplicit(false);
 		hashcodeMethod.setIsConstructor(false);
-		hashcodeMethod.setAccess(JavaFormat.JAVA_PUBLIC);
-		hashcodeMethod.setName(hashCode);
+		hashcodeMethod.setAccess(IJavaConstants.PUBLIC);
+		hashcodeMethod.setName(IJavaConstants.HASH_CODE);
 	
-		String intTypeName = JavaFormat.JAVA_INT;
+		String intTypeName = IJavaConstants.INT;
 		AExternalTypeCG intBasicType = new AExternalTypeCG();
 		intBasicType.setName(intTypeName);
 	
@@ -102,9 +105,9 @@ abstract public class JavaClassCreatorBase
 		toStringMethod.setTag(new IRGeneratedTag(getClass().getName()));
 	
 		toStringMethod.setIsConstructor(false);
-		toStringMethod.setAccess(JavaFormat.JAVA_PUBLIC);
+		toStringMethod.setAccess(IJavaConstants.PUBLIC);
 		toStringMethod.setStatic(false);
-		toStringMethod.setName("toString");
+		toStringMethod.setName(IJavaConstants.TO_STRING);
 	
 		AStringTypeCG returnType = new AStringTypeCG();
 	
@@ -135,8 +138,31 @@ abstract public class JavaClassCreatorBase
 		return call;
 	}
 	
+	public AApplyExpCG consUtilCopyCall()
+	{
+		ATemplateTypeCG copyType = new ATemplateTypeCG();
+		copyType.setName("T");
+		
+		AApplyExpCG copyCall = consUtilCall(copyType, COPY);
+		
+		SExpCG member = copyCall.getRoot();
+		
+		if (member instanceof AExplicitVarExpCG && ((AExplicitVarExpCG) member).getType() instanceof AMethodTypeCG)
+		{
+			AMethodTypeCG methodType = (AMethodTypeCG) member.getType();
+			methodType.getParams().add(member.getType().clone());
+		} else
+		{
+			Logger.getLog().printErrorln("Expected type of call expression to be a method type at this point in '"
+					+ this.getClass().getSimpleName() + "'. Got: "
+					+ copyCall.getType());
+		}
+		
+		return copyCall;
+	}
+	
 	public AApplyExpCG consUtilsToStringCall()
 	{
-		return consUtilCall(new AStringTypeCG(), "toString");
+		return consUtilCall(new AStringTypeCG(), IJavaConstants.TO_STRING);
 	}
 }

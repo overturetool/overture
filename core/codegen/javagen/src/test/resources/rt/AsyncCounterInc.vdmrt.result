@@ -32,7 +32,7 @@ public class Entry implements EvaluatePP {
         sentinel.entering(((Entry_sentinel) sentinel).join);
 
         try {
-            //Skip;
+            /* skip */
         } finally {
             sentinel.leaving(((Entry_sentinel) sentinel).join);
         }

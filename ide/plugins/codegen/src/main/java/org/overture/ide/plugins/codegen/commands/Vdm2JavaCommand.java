@@ -59,7 +59,7 @@ import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
+import org.overture.codegen.vdm2java.IJavaConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
@@ -507,7 +507,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 			} else
 			{
 				File javaFile = new File(outputFolder, generatedModule.getName()
-						+ IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
+						+ IJavaConstants.JAVA_FILE_EXTENSION);
 				CodeGenConsole.GetInstance().println("Generated class: "
 						+ generatedModule.getName());
 				CodeGenConsole.GetInstance().println("Java source file: "

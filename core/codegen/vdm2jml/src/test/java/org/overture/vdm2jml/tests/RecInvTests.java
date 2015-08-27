@@ -9,7 +9,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 
-public class RecInvTests
+public class RecInvTests extends AnnotationTestsBase
 {
 	private static final String REC_NAME = "Rec";
 
@@ -32,7 +32,7 @@ public class RecInvTests
 	@Test
 	public void recMethodsPure()
 	{
-		AnnotationTestsBase.assertPure(recTypeDef.getMethods());
+		AnnotationTestsBase.assertRecMethodsPurity(recTypeDef.getMethods());
 	}
 
 	@Test
@@ -41,7 +41,7 @@ public class RecInvTests
 		Assert.assertTrue("Expected a record type definition in the generated module", recTypeDef != null);
 
 		Assert.assertEquals("Got unexpected record type definition invariant",
-				"//@ public instance invariant inv_Rec(x);", AnnotationTestsBase.getLastAnnotation(recTypeDef));
+				"//@ public instance invariant project.Entry.invChecksOn ==> inv_Rec(x);", AnnotationTestsBase.getLastAnnotation(recTypeDef));
 	}
 	
 	@Test

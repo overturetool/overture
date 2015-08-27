@@ -63,16 +63,16 @@ public class Entry implements EvaluatePP {
         ThreadClass t = new ThreadClass();
         t.start();
 
-        Boolean whileCond1 = true;
+        Boolean whileCond_1 = true;
 
-        while (whileCond1) {
-            whileCond1 = !(Utils.equals(t.x, 2L));
+        while (whileCond_1) {
+            whileCond_1 = !(Utils.equals(t.x, 2L));
 
-            if (!(whileCond1)) {
+            if (!(whileCond_1)) {
                 break;
             }
 
-            //Skip;
+            /* skip */
         }
 
         return t.x;

@@ -113,7 +113,7 @@ public class Company {
         VDMSeq y = Utils.copy(employees);
         Employee q = ((Employee) employees.get(0));
 
-        //Skip;
+        /* skip */
     }
 
     public Number calculateSalary() {

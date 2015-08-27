@@ -1,0 +1,59 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+types
+
+R1 :: r2 : R2
+inv r1 == r1.r2.r3.x <> 1;
+R2 :: r3 :  R3
+inv r2 == r2.r3.x <> 2;
+R3 :: x : int
+inv r3 == r3.x <> 3;
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before useOk");
+ let - = useOk() in skip;
+ IO`println("After useOk");
+ IO`println("Before useNotOk");
+ let - = useNotOk() in skip;
+ IO`println("After useNotOk");
+ return 0;
+);
+
+useOk : () ==> nat
+useOk () ==
+(
+ dcl r1 : R1 := mk_R1(mk_R2(mk_R3(5)));
+ 
+ atomic
+ (
+  r1.r2.r3.x := 1;
+  r1.r2.r3.x := 5;
+ );
+ 
+ return 0;
+);
+
+useNotOk : () ==> nat
+useNotOk () ==
+(
+ dcl r1 : R1 := mk_R1(mk_R2(mk_R3(5)));
+ 
+ atomic
+ (
+  r1.r2.r3.x := 1;
+ );
+ 
+ return 0;
+);
+
+end Entry

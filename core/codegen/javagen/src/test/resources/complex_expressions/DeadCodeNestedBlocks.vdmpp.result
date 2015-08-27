@@ -9,12 +9,12 @@ public class Entry {
     }
 
     public static Object Run() {
-        //Skip;
+        /* skip */
         {
             Number a = 1L;
-            //Skip;
+            /* skip */
             {
-                //Skip;
+                /* skip */
                 return 2L;
             }
         }

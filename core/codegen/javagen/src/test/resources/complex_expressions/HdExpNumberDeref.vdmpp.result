@@ -9,7 +9,7 @@ public class A {
     }
 
     public static Number Sum(final VDMSeq rs) {
-        if (rs.isEmpty()) {
+        if (Utils.empty(rs)) {
             return 0L;
         } else {
             return ((Number) rs.get(0)).doubleValue() +

@@ -72,11 +72,10 @@ import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.trans.DivideTransformation;
+import org.overture.codegen.trans.DivideTrans;
 import org.overture.codegen.trans.ModuleToClassTransformation;
 import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
-import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
@@ -95,11 +94,18 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 	public static final String JAVA_QUOTE_NAME_SUFFIX = "Quote";
 	public static final String JAVA_MAIN_CLASS_NAME = "Main";
-
+	public static final String JAVA_QUOTES_PACKAGE = "quotes";
+	
+	public static final String INVALID_NAME_PREFIX = "cg_";
+	
 	private JavaFormat javaFormat;
 	private TemplateStructure javaTemplateStructure;
 	
 	private IREventObserver irObserver;
+	
+	private JavaVarPrefixManager varPrefixManager;
+	
+	private JavaTransSeries transSeries;
 
 	public JavaCodeGen()
 	{
@@ -109,14 +115,17 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 	private void init()
 	{
+		this.varPrefixManager = new JavaVarPrefixManager();
+		
 		this.irObserver = null;
 		initVelocity();
 
 		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
-		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
-		this.javaFormat = new JavaFormat(varPrefixes, javaTemplateStructure, generator.getIRInfo());
+		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
+		this.javaFormat = new JavaFormat(varPrefixManager, javaTemplateStructure, generator.getIRInfo());
+		this.transSeries = new JavaTransSeries(this);
 	}
-	
+
 	public void setJavaTemplateStructure(TemplateStructure javaTemplateStructure)
 	{
 		this.javaTemplateStructure = javaTemplateStructure;
@@ -136,11 +145,17 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	{
 		return this.javaFormat.getJavaSettings();
 	}
+	
+	public JavaTransSeries getTransSeries()
+	{
+		return this.transSeries;
+	}
 
 	public void clear()
 	{
 		javaFormat.init();
 		generator.clear();
+		transSeries.init();
 	}
 
 	private void initVelocity()
@@ -273,16 +288,16 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		ModuleToClassTransformation moduleTransformation = new ModuleToClassTransformation(getInfo(),
 				transAssistant, getModuleDecls(moduleStatuses));
 		
-		for(IRStatus<org.overture.codegen.cgast.INode> moduleStatus : modulesAsNodes)
+		for(IRStatus<org.overture.codegen.cgast.INode> status : modulesAsNodes)
 		{
 			try
 			{
-				generator.applyTotalTransformation(moduleStatus, moduleTransformation);
+				generator.applyTotalTransformation(status, moduleTransformation);
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Error when generating code for module "
-						+ moduleStatus.getIrNodeName() + ": " + e.getMessage());
+						+ status.getIrNodeName() + ": " + e.getMessage());
 				Logger.getLog().printErrorln("Skipping module..");
 				e.printStackTrace();
 			}
@@ -300,9 +315,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			}
 		}
 
-		List<AClassDeclCG> classes = getClassDecls(classStatuses);
-		javaFormat.setClasses(classes);
-
 		List<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
 
 		for (IRStatus<AClassDeclCG> status : classStatuses)
@@ -316,10 +328,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			}
 		}
 
-		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
-
-		JavaTransSeries javaTransSeries = new JavaTransSeries(this);
-		 List<DepthFirstAnalysisAdaptor> transformations = javaTransSeries.consAnalyses(classes, functionValueAssistant);
+		 List<DepthFirstAnalysisAdaptor> transformations = transSeries.getSeries();
 
 		for (DepthFirstAnalysisAdaptor trans : transformations)
 		{
@@ -349,7 +358,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		List<String> skipping = new LinkedList<String>();
 
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
-		javaFormat.setFunctionValueAssistant(functionValueAssistant);
+		javaFormat.setFunctionValueAssistant(transSeries.getFuncValAssist());
 
 		for (IRStatus<AClassDeclCG> status : canBeGenerated)
 		{
@@ -407,7 +416,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			}
 		}
 
-		List<AInterfaceDeclCG> funcValueInterfaces = functionValueAssistant.getFunctionValueInterfaces();
+		List<AInterfaceDeclCG> funcValueInterfaces = transSeries.getFuncValAssist().getFuncValInterfaces();
 
 		for (AInterfaceDeclCG funcValueInterface : funcValueInterfaces)
 		{
@@ -431,7 +440,8 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		}
 
 		javaFormat.clearFunctionValueAssistant();
-		javaFormat.clearClasses();
+		getInfo().clearClasses();
+		getInfo().clearModules();
 
 		GeneratedData data = new GeneratedData();
 		data.setClasses(generated);
@@ -670,19 +680,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 		}
 	}
-
-	private List<AClassDeclCG> getClassDecls(
-			List<IRStatus<AClassDeclCG>> statuses)
-	{
-		List<AClassDeclCG> classDecls = new LinkedList<AClassDeclCG>();
-
-		for (IRStatus<AClassDeclCG> status : statuses)
-		{
-			classDecls.add(status.getIrNode());
-		}
-
-		return classDecls;
-	}
 	
 	private List<AModuleDeclCG> getModuleDecls(List<IRStatus<AModuleDeclCG>> statuses)
 	{
@@ -701,7 +698,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		// There is no name validation here.
 		IRStatus<SExpCG> expStatus = generator.generateFrom(exp);
 		
-		generator.applyPartialTransformation(expStatus, new DivideTransformation(getInfo()));
+		generator.applyPartialTransformation(expStatus, new DivideTrans(getInfo()));
 
 		StringWriter writer = new StringWriter();
 
@@ -770,22 +767,22 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 				javaFileName += JAVA_QUOTE_NAME_SUFFIX;
 			}
 
-			javaFileName += IJavaCodeGenConstants.JAVA_FILE_EXTENSION;
+			javaFileName += IJavaConstants.JAVA_FILE_EXTENSION;
 
 			JavaCodeGenUtil.saveJavaClass(moduleOutputDir, javaFileName, generatedModule.getContent());
 		}
 	}
-
+	
 	private InvalidNamesResult validateVdmModelNames(
 			List<INode> mergedParseLists) throws AnalysisException
 	{
 		AssistantManager assistantManager = generator.getIRInfo().getAssistantManager();
 		VdmAstAnalysis analysis = new VdmAstAnalysis(assistantManager);
 
-		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaCodeGenConstants.RESERVED_WORDS, generator.getIRInfo(), INVALID_NAME_PREFIX));
+		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaConstants.RESERVED_WORDS, generator.getIRInfo(), INVALID_NAME_PREFIX));
 		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(JAVA_RESERVED_TYPE_NAMES, generator.getIRInfo(), INVALID_NAME_PREFIX));
 
-		String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, varPrefixes.GENERATED_TEMP_NAMES);
+		String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, varPrefixManager.getIteVarPrefixes().GENERATED_TEMP_NAMES);
 
 		Set<Violation> tempVarViolations = analysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(generatedTempVarNames, generator.getIRInfo(), INVALID_NAME_PREFIX));
 
@@ -874,5 +871,15 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		}
 		
 		return ast;
+	}
+
+	public JavaVarPrefixManager getVarPrefixManager()
+	{
+		return varPrefixManager;
+	}
+
+	public void setVarPrefixManager(JavaVarPrefixManager varPrefixManager)
+	{
+		this.varPrefixManager = varPrefixManager;
 	}
 }
