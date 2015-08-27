@@ -1430,21 +1430,18 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			ANamedInvariantType ntype = (ANamedInvariantType) type;
 
+			if (question.assistantFactory.createPTypeAssistant().narrowerThan(ntype.getType(), node.getAccess()))
+			{
+				TypeCheckerErrors.report(3321, "Type component visibility less than type's definition", node.getLocation(), node);
+			}
+
 			// Rebuild the compose definitions, after we check whether they already exist
 			node.getComposeDefinitions().clear();
 
 			for (PType compose : question.assistantFactory.getTypeComparator().checkComposeTypes(ntype.getType(), question.env, true))
 			{
 				ARecordInvariantType rtype = (ARecordInvariantType) compose;
-				PDefinition cdef = AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null);
-				cdef.setAccess(node.getAccess().clone());
-				node.getComposeDefinitions().add(cdef);
-				rtype.getDefinitions().get(0).setAccess(node.getAccess().clone());
-			}
-
-			if (question.assistantFactory.createPTypeAssistant().narrowerThan(ntype.getType(), node.getAccess()))
-			{
-				TypeCheckerErrors.report(3321, "Type component visibility less than type's definition", node.getLocation(), node);
+				node.getComposeDefinitions().add(AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null));
 			}
 		} else if (type instanceof ARecordInvariantType)
 		{

@@ -459,7 +459,7 @@ public class SClassDefinitionAssistantInterpreter extends
 				} else if (af.createPDefinitionAssistant().isStatic(d)
 						&& af.createPDefinitionAssistant().isInstanceVariable(d))
 				{
-					nvl = af.createPDefinitionAssistant().getNamedValues(d, initCtxt);
+					nvl = af.createPDefinitionAssistant().getNamedValues(d, initCtxt).getUpdatable(null);
 				}
 			}
 

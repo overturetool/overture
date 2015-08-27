@@ -40,7 +40,7 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.AbstractIterationStrategy;
 import org.overture.codegen.trans.DeclarationTag;
-import org.overture.codegen.trans.IterationVarPrefixes;
+import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
@@ -56,11 +56,11 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	public LetBeStStrategy(TransAssistantCG transformationAssistant,
 			SExpCG suchThat, SSetTypeCG setType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
-			IterationVarPrefixes iteVarPrefixes)
+			TempVarPrefixes varPrefixes)
 	{
-		super(transformationAssistant, langIterator, tempGen, iteVarPrefixes);
+		super(transformationAssistant, langIterator, tempGen, varPrefixes);
 
-		String successVarNamePrefix = iteVarPrefixes.success();
+		String successVarNamePrefix = transformationAssistant.getVarPrefixes().getSuccessVarNamePrefix();
 		ITempVarGen tempVarNameGen = transformationAssistant.getInfo().getTempVarNameGen();
 
 		this.successVarName = tempVarNameGen.nextVarName(successVarNamePrefix);

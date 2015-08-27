@@ -16,27 +16,27 @@ public class ModuleStateInvComplexTests extends AnnotationTestsBase
 	public void seqField()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		ModuleStateInvTests.checkAssertion("seqField", Update.SET_CALL, 1);
+		ModuleStateInvTests.checkAssertion("seqField", true, true);
 	}
 
 	@Test
 	public void mapField()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		ModuleStateInvTests.checkAssertion("mapField", Update.SET_CALL, 1);
+		ModuleStateInvTests.checkAssertion("mapField", true, true);
 	}
 
 	@Test
 	public void fieldSeqField()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		ModuleStateInvTests.checkAssertion("fieldSeqField", Update.SET_CALL, 2);
+		ModuleStateInvTests.checkAssertion("fieldSeqField", true, true);
 	}
 
 	@Test
 	public void seqSeqField()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		ModuleStateInvTests.checkAssertion("seqSeqField", Update.SET_CALL, 1);
+		ModuleStateInvTests.checkAssertion("seqSeqField", true, true);
 	}
 }

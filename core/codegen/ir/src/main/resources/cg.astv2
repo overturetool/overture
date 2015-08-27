@@ -185,7 +185,6 @@ CG {-> package='org.overture.codegen.cgast'
     	[isDLModule]:java_Boolean
     |   {state}
     	[access]:java_String
-    	[executable]:java_Boolean
     	[name]:java_String
     	[fields]:CG.#decl.field*
     	[invPattern]:CG.#pattern

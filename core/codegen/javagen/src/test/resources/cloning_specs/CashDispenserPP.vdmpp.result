@@ -188,7 +188,7 @@ public class Account {
     }
 
     private static Number Sum(final VDMSeq rs) {
-        if (Utils.empty(rs)) {
+        if (rs.isEmpty()) {
             return 0L;
         } else {
             return ((Number) rs.get(0)).doubleValue() +
@@ -345,7 +345,7 @@ public class CentralResource {
     }
 
     public Number GetBalance(final Number accountId) {
-        if (SetUtil.inSet(accountId, MapUtil.dom(accounts))) {
+        if (MapUtil.dom(accounts).contains(accountId)) {
             return ((Account) Utils.get(accounts, accountId)).GetBalance();
         } else {
             return null;
@@ -376,12 +376,12 @@ public class CentralResource {
     public Boolean IsLegalCard(final Number accountId, final Number cardId) {
         Boolean andResult_2 = false;
 
-        if (!(SetUtil.inSet(cardId, illegalCards))) {
+        if (!(illegalCards.contains(cardId))) {
             Boolean andResult_3 = false;
 
-            if (SetUtil.inSet(accountId, MapUtil.dom(accounts))) {
-                if (SetUtil.inSet(cardId,
-                            ((Account) Utils.get(accounts, accountId)).GetCardIds())) {
+            if (MapUtil.dom(accounts).contains(accountId)) {
+                if (((Account) Utils.get(accounts, accountId)).GetCardIds()
+                         .contains(cardId)) {
                     andResult_3 = true;
                 }
             }
@@ -408,21 +408,21 @@ public class CentralResource {
     }
 
     public void AddAccount(final Number accId, final Account acc) {
-        VDMMap atomicTmp_1 = MapUtil.override(accounts,
-                MapUtil.map(new Maplet(accId, acc)));
-        VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_4 = acc.GetCardIds();
+        { /* Start of atomic statement */
+            accounts = MapUtil.override(accounts,
+                    MapUtil.map(new Maplet(accId, acc)));
 
-        for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
-            Number cId = ((Number) iterator_4.next());
-            mapCompResult_1 = MapUtil.munion(mapCompResult_1,
-                    MapUtil.map(new Maplet(cId, 0L)));
-        }
+            VDMMap mapCompResult_1 = MapUtil.map();
+            VDMSet set_4 = acc.GetCardIds();
 
-        VDMMap atomicTmp_2 = MapUtil.override(numberOfTries, mapCompResult_1);
-        accounts = atomicTmp_1;
-        numberOfTries = atomicTmp_2;
-    }
+            for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
+                Number cId = ((Number) iterator_4.next());
+                mapCompResult_1 = MapUtil.munion(mapCompResult_1,
+                        MapUtil.map(new Maplet(cId, 0L)));
+            }
+
+            numberOfTries = MapUtil.override(numberOfTries, mapCompResult_1);
+        } /* End of atomic statement */}
 
     public void AddIllegalCard(final Number cId) {
         illegalCards = SetUtil.union(illegalCards, SetUtil.set(cId));

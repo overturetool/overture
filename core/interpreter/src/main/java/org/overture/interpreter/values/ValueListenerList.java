@@ -46,9 +46,7 @@ public class ValueListenerList extends Vector<ValueListener>
 	public void changedValue(ILexLocation location, Value value, Context ctxt)
 			throws AnalysisException
 	{
-		ValueListenerList copy = new ValueListenerList(this);
-		
-		for (ValueListener vl : copy)
+		for (ValueListener vl : this)
 		{
 			vl.changedValue(location, value, ctxt);
 		}

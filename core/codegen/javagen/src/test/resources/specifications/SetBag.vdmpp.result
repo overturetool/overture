@@ -191,11 +191,11 @@ public class Bag {
     }
 
     public Boolean hasNumber(final Number n) {
-        return SetUtil.inSet(n, numbers);
+        return numbers.contains(n);
     }
 
     public Boolean hasNotNumber(final Number n) {
-        return !(SetUtil.inSet(n, numbers));
+        return !(numbers.contains(n));
     }
 
     public void addNumbers(final Bag bag) {
@@ -211,7 +211,7 @@ public class Bag {
     }
 
     public Boolean contains(final Bag bag) {
-        return SetUtil.subset(bag.getNumbers(), numbers);
+        return numbers.containsAll(bag.getNumbers());
     }
 
     public Boolean properContains(final Bag bag) {

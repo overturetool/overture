@@ -14,7 +14,7 @@ public class Entry implements java.io.Serializable {
             throw new RuntimeException("Precondition failure: pre_op");
         }
 
-        /* skip */
+        //Skip;
     }
 
     private Boolean pre_op() {

@@ -45,27 +45,23 @@ public class LeafTypeInfo extends AbstractTypeInfo
 	
 	public STypeCG toIrType(IRInfo info)
 	{
-		STypeCG irType = toIrType(type, info);
-		
-		if(irType != null)
-		{
-			irType.setOptional(optional);
-		}
-		
-		return irType;
-	}
-	
-	public static STypeCG toIrType(PType type, IRInfo info)
-	{
 		try
 		{
-			return type.apply(info.getTypeVisitor(), info);
+			STypeCG irType = type.apply(info.getTypeVisitor(), info);
+			
+			if(irType != null)
+			{
+				irType.setOptional(optional);
+			}
+			
+			return irType;
 		} catch (AnalysisException e)
 		{
 			Logger.getLog().printErrorln("Problems encountered while attempting "
 					+ "to construct the IR type from a VDM type: "
-					+ e.getMessage() + " in '"
-					+ LeafTypeInfo.class.getSimpleName() + "'");
+					+ e.getMessage()
+					+ " in '"
+					+ this.getClass().getSimpleName() + "'");
 			e.printStackTrace();
 		}
 

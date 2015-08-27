@@ -31,26 +31,6 @@ public class Utils
 		return value == VOID_VALUE;
 	}
 	
-	public static boolean empty(Object col)
-	{
-		if(col instanceof VDMSet)
-		{
-			return ((VDMSet) col).isEmpty();
-		}
-		else if(col instanceof VDMSeq)
-		{
-			return ((VDMSeq) col).isEmpty();
-		}
-		else if(col instanceof VDMMap)
-		{
-			return ((VDMMap) col).isEmpty();
-		}
-		else
-		{
-			throw new IllegalArgumentException("Expected collection to be either a VDM set, map or sequence. Got: " + col);
-		}
-	}
-	
 	public static int hashCode(Object... fields)
 	{
 		if(fields == null)

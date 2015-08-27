@@ -128,7 +128,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		}
 		stateDeclCg.setInvExp(invExpCg);
 		stateDeclCg.setInvPattern(invPatternCg);
-		stateDeclCg.setExecutable(node.getCanBeExecuted());
 
 		for (AFieldField field : node.getFields())
 		{

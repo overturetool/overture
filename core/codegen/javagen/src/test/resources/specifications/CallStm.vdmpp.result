@@ -13,7 +13,7 @@ public class C {
     }
 
     public void op2(final Number arg) {
-        /* skip */
+        //Skip;
     }
 
     public String toString() {

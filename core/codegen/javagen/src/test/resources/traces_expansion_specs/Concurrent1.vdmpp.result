@@ -10,15 +10,15 @@ public class Entry implements java.io.Serializable {
     }
 
     private void op1() {
-        /* skip */
+        //Skip;
     }
 
     private void op2() {
-        /* skip */
+        //Skip;
     }
 
     private void op3() {
-        /* skip */
+        //Skip;
     }
 
     public void Entry_T1_Run(final TestAccumulator testAccumulator) {

@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 
 public class PurityTests extends AnnotationTestsBase
@@ -52,11 +51,6 @@ public class PurityTests extends AnnotationTestsBase
 	@Test
 	public void testNoStateInvInGenModule()
 	{
-		for(ClonableString m : genModule.getMetaData())
-		{
-			// A bit naive way to check that no instance or static invariant is declared
-			Assert.assertTrue("Expected no state annotations", !m.value.contains("invariant"));
-		}
-		
+		Assert.assertTrue("Expected no state annotations", genModule.getMetaData().isEmpty());
 	}
 }

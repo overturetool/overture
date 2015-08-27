@@ -25,7 +25,7 @@ public class Entry {
                 public VDMSeq eval(final Func_1<Number, Number> f) {
                     VDMSeq ternaryIfExp_1 = null;
 
-                    if (Utils.empty(s)) {
+                    if (s.isEmpty()) {
                         ternaryIfExp_1 = SeqUtil.seq();
                     } else {
                         ternaryIfExp_1 = SeqUtil.conc(SeqUtil.seq(f.eval(((Number) s.get(

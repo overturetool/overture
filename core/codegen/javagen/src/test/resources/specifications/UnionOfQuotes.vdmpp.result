@@ -10,13 +10,13 @@ public class A {
 
     public void op(final Object v) {
         if (Utils.equals(v, quotes.RedQuote.getInstance())) {
-            /* skip */
+            //Skip;
         }
     }
 
     public void op2(final Object v) {
         if (Utils.equals(v, quotes.AQuote.getInstance())) {
-            /* skip */
+            //Skip;
         }
     }
 

@@ -183,12 +183,12 @@ public class SlStateAccessTrans extends DepthFirstAnalysisAdaptor
 		
 		if(info.getExpAssistant().isOld(name))
 		{
-			field.setObject(transAssistant.getInfo().getExpAssistant().consIdVar("_" + stateName, recType));
+			field.setObject(transAssistant.consIdentifierVar("_" + stateName, recType));
 			field.setMemberName(info.getExpAssistant().oldNameToCurrentName(name));	
 		}
 		else
 		{
-			field.setObject(transAssistant.getInfo().getExpAssistant().consIdVar(stateName, recType));
+			field.setObject(transAssistant.consIdentifierVar(stateName, recType));
 			field.setMemberName(name);
 		}
 	}

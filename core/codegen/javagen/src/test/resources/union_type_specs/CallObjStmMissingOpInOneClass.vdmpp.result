@@ -9,7 +9,7 @@ public class A {
     }
 
     public void op() {
-        /* skip */
+        //Skip;
     }
 
     public String toString() {

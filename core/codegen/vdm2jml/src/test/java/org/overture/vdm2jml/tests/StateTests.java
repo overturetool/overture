@@ -1,7 +1,5 @@
 package org.overture.vdm2jml.tests;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -41,26 +39,31 @@ public class StateTests extends AnnotationTestsBase
 	@Test
 	public void testGenStateTypeMethodsArePure()
 	{
-		List<AMethodDeclCG> stateMethods = genStateType.getMethods();
-		Assert.assertTrue("Expected seven methods in the state type ", stateMethods.size() == 8);
+		Assert.assertTrue("Expected five methods in the state type ", genStateType.getMethods().size() == 5);
 
-		assertRecMethodsPurity(stateMethods);
+		for (AMethodDeclCG m : genStateType.getMethods())
+		{
+			if (!m.getIsConstructor())
+			{
+				assertPureMethod(m);
+			}
+		}
 	}
-
+	
 	@Test
-	public void testModuleHasNoInvFunction()
+	public void testInvFuncIsHelper()
 	{
-		// The state invariant constrains the type of the state
-		// see https://github.com/overturetool/overture/issues/459
-		Assert.assertTrue("The state invariant constrains the type of the state", genModule.getInvariant() == null);
+		assertHelper(genModule.getInvariant(), "Expected invariant function to be a helper");
 	}
 	
 	@Test
 	public void testInv()
 	{
-		Assert.assertTrue("Expected only a single ghost variable declaration to exist", genModule.getMetaData().size() == 1);
+		Assert.assertTrue("Expected state invariant to exist", !genModule.getMetaData().isEmpty());
 		
-		String expected = "/*@ public ghost static boolean invChecksOn = true; @*/";
+		String fieldName = genModule.getFields().getFirst().getName();
+		
+		String expected = String.format("//@ public static invariant St != null ==> inv_%1$s(%1$s);", fieldName);
 		
 		Assert.assertEquals("Got unexpected invariant", expected, genModule.getMetaData().get(0).value);
 	}

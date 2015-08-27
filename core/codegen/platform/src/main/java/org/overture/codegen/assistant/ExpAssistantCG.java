@@ -54,7 +54,7 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.ABoolIsExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
@@ -110,23 +110,13 @@ import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class ExpAssistantCG extends AssistantBase
 {
 	public ExpAssistantCG(AssistantManager assistantManager)
 	{
 		super(assistantManager);
-	}
-	
-	public AIdentifierVarExpCG consIdVar(String name, STypeCG type)
-	{
-		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
-		var.setIsLambda(false);
-		var.setIsLocal(true);
-		var.setType(type);
-		var.setName(name);
-
-		return var;
 	}
 
 	public SExpCG consLetDefExp(PExp node, List<PDefinition> defs, PExp exp,
@@ -391,7 +381,7 @@ public class ExpAssistantCG extends AssistantBase
 		if (stateDef != null)
 		{
 			LinkedList<org.overture.ast.node.INode> ancestors = new LinkedList<>();
-			org.overture.ast.node.INode next = node;
+			org.overture.ast.node.INode next = node.parent();
 
 			do
 			{
@@ -623,7 +613,7 @@ public class ExpAssistantCG extends AssistantBase
 		return basicIsExp;
 	}
 	
-	public SVarExpCG idStateDesignatorToExp(AIdentifierStateDesignatorCG node)
+	public SVarExpCG idStateDesignatorToExp(IRInfo info, TransAssistantCG transAssistant, List<AClassDeclCG> classes, AIdentifierStateDesignatorCG node)
 	{
 		if(node.getExplicit())
 		{
@@ -643,7 +633,7 @@ public class ExpAssistantCG extends AssistantBase
 		}
 		else
 		{
-			AIdentifierVarExpCG idVar = consIdVar(node.getName(), node.getType().clone());
+			AIdentifierVarExpCG idVar = transAssistant.consIdentifierVar(node.getName(), node.getType().clone());
 			idVar.setTag(node.getTag());
 			idVar.setSourceNode(node.getSourceNode());
 			idVar.setIsLocal(node.getIsLocal());
@@ -676,8 +666,7 @@ public class ExpAssistantCG extends AssistantBase
 	
 	public SExpCG findSubject(SExpCG next)
 	{
-		while (next instanceof AFieldExpCG || next instanceof AMapSeqGetExpCG
-				|| next instanceof AApplyExpCG)
+		while (next instanceof AFieldExpCG || next instanceof AMapSeqGetExpCG)
 		{
 			if (next instanceof AFieldExpCG)
 			{
@@ -685,12 +674,9 @@ public class ExpAssistantCG extends AssistantBase
 			} else if (next instanceof AMapSeqGetExpCG)
 			{
 				next = ((AMapSeqGetExpCG) next).getCol();
-			} else if (next instanceof AApplyExpCG)
-			{
-				next = ((AApplyExpCG) next).getRoot();
 			}
 		}
-
+		
 		return next;
 	}
 	

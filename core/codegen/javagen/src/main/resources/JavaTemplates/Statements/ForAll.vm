@@ -1,4 +1,4 @@
-#set( $iterator = $JavaFormat.genIteratorName() )
+#set( $iterator = $JavaFormat.nextVarName($TempVar.getIteratorNamePrefix()) )
 #set( $exp = $JavaFormat.format($node.getExp()) )
 #set( $var = $JavaFormat.format($node.getPattern()) )
 #set( $elementType = $JavaFormat.formatElementType($node.getExp().getType()) )

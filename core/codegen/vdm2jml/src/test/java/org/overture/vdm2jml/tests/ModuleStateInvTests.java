@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.vdm2jml.tests.util.TestDataCollector;
 
 public class ModuleStateInvTests extends AnnotationTestsBase
@@ -19,70 +18,44 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 		AnnotationTestsBase.init("ModuleStateInv.vdmsl");
 	}
 
-	public static void checkAssertion(String methodName, Update update,
-			int noOfAsserts)
-					throws org.overture.codegen.cgast.analysis.AnalysisException
+	public static void checkAssertion(String methodName, boolean expectAssignment,
+			boolean expectMetaData)
+			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		AMethodDeclCG assignSt = getMethod(genModule.getMethods(), methodName);
 
-		Assert.assertTrue("Could not find method '" + methodName
-				+ "'", assignSt != null);
+		Assert.assertTrue("Could not find method '" + methodName + "'", assignSt != null);
 
 		TestDataCollector dataCollector = new TestDataCollector();
 		assignSt.apply(dataCollector);
 
-		if (update == Update.ASSIGN)
+		if (expectAssignment)
 		{
 			Assert.assertTrue("Expected to find a single assignment in the '"
-					+ methodName
-					+ "' method", dataCollector.getAssignments().size() == 1);
+					+ methodName + "' method", dataCollector.getAssignments().size() == 1);
 			Assert.assertTrue("Expected to find no map seq updates in the '"
-					+ methodName
-					+ "' method", dataCollector.getMapSeqUpdates().isEmpty());
-			Assert.assertTrue("Expected to find no set calls in the '"
-					+ methodName
-					+ "' method", dataCollector.getSetCalls().isEmpty());
-
-		} else if (update == Update.MAP_SEQ_UPDATE)
-		{
-			Assert.assertTrue("Expected to find no assignments in the '"
-					+ methodName
-					+ "' method", dataCollector.getAssignments().isEmpty());
-			Assert.assertTrue("Expected to find a single map seq update in the '"
-					+ methodName
-					+ "' method", dataCollector.getMapSeqUpdates().size() == 1);
-			Assert.assertTrue("Expected to find no set calls in the '"
-					+ methodName
-					+ "' method", dataCollector.getSetCalls().isEmpty());
+					+ methodName + "' method", dataCollector.getMapSeqUpdates().isEmpty());
 		} else
 		{
-			// Setter call
 			Assert.assertTrue("Expected to find no assignments in the '"
-					+ methodName
-					+ "' method", dataCollector.getAssignments().isEmpty());
-			Assert.assertTrue("Expected to find no map seq updates in the '"
-					+ methodName
-					+ "' method", dataCollector.getMapSeqUpdates().isEmpty());
-			Assert.assertTrue("Expected to find a single set call in the '"
-					+ methodName
-					+ "' method", dataCollector.getSetCalls().size() == 1);
+					+ methodName + "' method", dataCollector.getAssignments().isEmpty());
+			Assert.assertTrue("Expected to find a single map seq update in the '"
+					+ methodName + "' method", dataCollector.getMapSeqUpdates().size() == 1);
 		}
 
-		if (noOfAsserts > 0)
+		if (expectMetaData)
 		{
-			Assert.assertTrue("Expected to find " + noOfAsserts
-					+ " assertion(s) in the '" + methodName
-					+ "' method", dataCollector.getAssertions().size() == noOfAsserts);
+			Assert.assertTrue("Expected to find a single assertion in the '"
+					+ methodName + "' method", dataCollector.getAssertions().size() == 1);
 
-			for (AMetaStmCG a : dataCollector.getAssertions())
-			{
-				List<? extends ClonableString> metaData = a.getMetaData();
-				Assert.assertTrue("Expected only a single assertion", metaData.size() == 1);
-				String assertStr = metaData.get(0).value;
+			List<? extends ClonableString> metaData = dataCollector.getAssertions().get(0).getMetaData();
 
-				Assert.assertTrue("Got unexpected assertion in method '"
-						+ methodName + "'", assertStr.contains(".valid()"));
-			}
+			Assert.assertTrue("Expected a single assertion annotation", metaData.size() == 1);
+
+			String assertStr = metaData.get(0).value;
+
+			Assert.assertEquals("Got unexpected assertion in method '"
+					+ methodName + "'", "//@ assert inv_St(St);", assertStr);
 		} else
 		{
 			Assert.assertTrue("Expected no assertions in the '" + methodName
@@ -94,57 +67,55 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 	public void updateEntireState()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignSt", Update.ASSIGN, 0);
+		checkAssertion("assignSt", true, false);
 	}
 
 	@Test
 	public void updateEntireStateAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		// No need to assert since the violation will be picked up by the
-		// atomicTmp var assignment
-		checkAssertion("atomicAssignSt", Update.ASSIGN, 0);
+		checkAssertion("atomicAssignSt", true, true);
 	}
 
 	@Test
 	public void updateField()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignX", Update.SET_CALL, 0);
+		checkAssertion("assignX", true, false);
 	}
 
 	@Test
 	public void updateFieldAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignX", Update.SET_CALL, 1);
+		checkAssertion("atomicAssignX", true, true);
 	}
 
 	@Test
 	public void updateSeqElem()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignS", Update.MAP_SEQ_UPDATE, 1);
+		checkAssertion("assignS", false, true);
 	}
 
 	@Test
 	public void updateSeqElemAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignS", Update.MAP_SEQ_UPDATE, 1);
+		checkAssertion("atomicAssignS", false, false);
 	}
 
 	@Test
 	public void updateMapRng()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignM", Update.MAP_SEQ_UPDATE, 1);
+		checkAssertion("assignM", false, true);
 	}
 
 	@Test
 	public void updateMapRngAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignM", Update.MAP_SEQ_UPDATE, 1);
+		checkAssertion("atomicAssignM", false, false);
 	}
 }

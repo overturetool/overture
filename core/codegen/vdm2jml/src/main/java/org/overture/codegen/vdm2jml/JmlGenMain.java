@@ -8,22 +8,20 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGenMain;
-import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.typechecker.util.TypeCheckerUtil;
-import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class JmlGenMain
 {
 	public static final String OUTPUT_ARG = "-output";
 	public static final String PRINT_ARG = "-print";
+	public static final String REPORT_VIOLATIONS_ARG = "-report";
 	public static final String FOLDER_ARG = "-folder";
 
 	public static void main(String[] args)
@@ -44,6 +42,7 @@ public class JmlGenMain
 		File outputDir = null;
 
 		boolean print = false;
+		boolean report = false;
 
 		for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
 		{
@@ -87,6 +86,10 @@ public class JmlGenMain
 					usage(FOLDER_ARG + " requires a directory");
 				}
 			}
+			else if(arg.equals(REPORT_VIOLATIONS_ARG))
+			{
+				report = true;
+			}
 			else
 			{
 				// It's a file or a directory
@@ -94,7 +97,7 @@ public class JmlGenMain
 
 				if (file.isFile())
 				{
-					if (JavaCodeGenUtil.isSupportedVdmSourceFile(file))
+					if (JavaCodeGenMain.isValidSourceFile(file))
 					{
 						files.add(file);
 					}
@@ -107,26 +110,18 @@ public class JmlGenMain
 
 		JmlGenerator jmlGen = new JmlGenerator();
 		jmlGen.getIrSettings().setCharSeqAsString(true);
+		jmlGen.getJmlSettings().setInjectReportCalls(report);
 
 		//GeneralUtils.deleteFolderContents(outputDir, true);
 
 		try
 		{
 			Logger.getLog().println("Starting the VDM to JML generator...");
-			
-			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
-			
-			if(!GeneralCodeGenUtils.hasErrors(tcResult))
-			{
-				GeneratedData data = jmlGen.generateJml(tcResult.result);
-				JavaCodeGenMain.processData(print, outputDir, jmlGen.getJavaGen(), data);
-			}
-			else
-			{
-				Logger.getLog().printErrorln("Could not parse/type check VDM model:\n"
-						+ GeneralCodeGenUtils.errorStr(tcResult));
-			}
-			
+			ModuleList modules = GeneralCodeGenUtils.consModuleList(files);
+
+			GeneratedData data = jmlGen.generateJml(modules);
+
+			JavaCodeGenMain.processData(print, outputDir, jmlGen.getJavaGen(), data);
 
 		} catch (AnalysisException e)
 		{

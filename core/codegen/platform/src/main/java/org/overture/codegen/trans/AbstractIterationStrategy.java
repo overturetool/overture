@@ -43,7 +43,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	protected TransAssistantCG transAssistant;
 	protected ILanguageIterator langIterator;
 	protected ITempVarGen tempGen;
-	protected IterationVarPrefixes iteVarPrefixes;
+	protected TempVarPrefixes varPrefixes;
 
 	protected AVarDeclCG successVarDecl = null;
 
@@ -52,12 +52,12 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	public AbstractIterationStrategy(
 			TransAssistantCG transformationAssistant,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
-			IterationVarPrefixes iteVarPrefixes)
+			TempVarPrefixes varPrefixes)
 	{
 		this.transAssistant = transformationAssistant;
 		this.langIterator = langIterator;
 		this.tempGen = tempGen;
-		this.iteVarPrefixes = iteVarPrefixes;
+		this.varPrefixes = varPrefixes;
 	}
 
 	@Override

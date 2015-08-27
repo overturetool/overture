@@ -14,7 +14,7 @@ public class A {
         for (Iterator iterator_1 = x.iterator(); iterator_1.hasNext();) {
             Rec e = (Rec) iterator_1.next();
 
-            /* skip */
+            //Skip;
         }
     }
 
@@ -23,7 +23,7 @@ public class A {
                 iterator_2.hasNext();) {
             Number n = (Number) iterator_2.next();
 
-            /* skip */
+            //Skip;
         }
     }
 
@@ -32,7 +32,7 @@ public class A {
                 iterator_3.hasNext();) {
             Object e = (Object) iterator_3.next();
 
-            /* skip */
+            //Skip;
         }
     }
 
@@ -40,7 +40,7 @@ public class A {
         for (Iterator iterator_4 = f().iterator(); iterator_4.hasNext();) {
             Number n = (Number) iterator_4.next();
 
-            /* skip */
+            //Skip;
         }
     }
 

@@ -29,7 +29,7 @@ public class A {
 
         VDMSeq fs_ = SeqUtil.reverse(Utils.copy(fs));
 
-        /* skip */
+        //Skip;
     }
 
     public String toString() {

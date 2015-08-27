@@ -33,7 +33,8 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.trans.IterationVarPrefixes;
+import org.overture.codegen.ir.ITempVarGen;
+import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class JavaLanguageIterator extends AbstractLanguageIterator
@@ -44,9 +45,10 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	private static final String ITERATOR_TYPE = "Iterator";
 
 	public JavaLanguageIterator(
-			TransAssistantCG transformationAssistant,IterationVarPrefixes iteVarPrefixes)
+			TransAssistantCG transformationAssistant,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
 	{
-		super(transformationAssistant, iteVarPrefixes);
+		super(transformationAssistant, tempGen, varPrefixes);
 	}
 
 	protected String iteratorName;
@@ -63,14 +65,14 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	public AVarDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		iteratorName = transAssistant.getInfo().getTempVarNameGen().nextVarName(iteVarPrefixes.iterator());
+		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
 		String setName = setVar.getName();
 		AClassTypeCG iteratorType = transAssistant.consClassType(ITERATOR_TYPE);
 		STypeCG setType = setVar.getType().clone();
 		SExpCG getIteratorCall = transAssistant.consInstanceCall(setType, setName, iteratorType.clone(), GET_ITERATOR);
 
-		return transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(iteratorType,
-				transAssistant.getInfo().getPatternAssistant().consIdPattern(iteratorName),getIteratorCall);
+		return transAssistant.getInfo().getDeclAssistant().
+				consLocalVarDecl(iteratorType, transAssistant.consIdPattern(iteratorName), getIteratorCall);
 	}
 
 	@Override

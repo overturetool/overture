@@ -101,7 +101,7 @@ public class EnsureLocalObjDesignatorAnalysis extends AnswerAdaptor<AIdentifierO
 	{
 		String name = tracePrefixes.callStmMethodParamName();
 		AClassTypeCG classType = transAssistant.consClassType(traceEnclosingClass);
-		AIdentifierVarExpCG idVar = transAssistant.getInfo().getExpAssistant().consIdVar(name, classType);
+		AIdentifierVarExpCG idVar = transAssistant.consIdentifierVar(name, classType);
 		
 		AIdentifierObjectDesignatorCG objId = new AIdentifierObjectDesignatorCG();
 		objId.setExp(idVar);

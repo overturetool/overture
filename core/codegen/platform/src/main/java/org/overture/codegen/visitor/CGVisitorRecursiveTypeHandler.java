@@ -25,8 +25,8 @@ public class CGVisitorRecursiveTypeHandler extends CGVisitor<STypeCG> {
 			throws AnalysisException {
 
 		if (node instanceof PType) {
-			
-			if (contains((PType) node, question)) {
+
+			if (typeStack.contains(node)) {
 				return new AObjectTypeCG();
 			}
 
@@ -40,19 +40,5 @@ public class CGVisitorRecursiveTypeHandler extends CGVisitor<STypeCG> {
 		}
 
 		return super.defaultINode(node, question);
-	}
-	
-	private boolean contains(PType type, IRInfo question)
-	{
-		for (PType e : typeStack)
-		{
-			if (question.getTcFactory().createPTypeAssistant().equals(type, e)
-					&& question.getTcFactory().createPTypeAssistant().equals(e, type))
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 }

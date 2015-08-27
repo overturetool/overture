@@ -41,6 +41,7 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
+import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Settings;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
@@ -50,6 +51,36 @@ import de.hunsicker.jalopy.Jalopy;
 
 public class JavaCodeGenUtil
 {
+	public static GeneratedData generateJavaFromFiles(List<File> files,
+			IRSettings irSettings, JavaSettings javaSettings, Dialect dialect)
+			throws AnalysisException
+	{
+		JavaCodeGen vdmCodGen = new JavaCodeGen();
+
+		vdmCodGen.setSettings(irSettings);
+		vdmCodGen.setJavaSettings(javaSettings);
+
+		return generateJavaFromFiles(files, vdmCodGen, dialect);
+	}
+	
+	public static GeneratedData generateJavaFromFiles(List<File> files,
+			JavaCodeGen vdmCodGen, Dialect dialect)
+			throws AnalysisException
+	{
+		if (dialect == Dialect.VDM_PP || dialect == Dialect.VDM_RT)
+		{
+			return vdmCodGen.generateJavaFromVdm(GeneralCodeGenUtils.consClassList(files, dialect));
+		}
+		else if(dialect == Dialect.VDM_SL)
+		{
+			return vdmCodGen.generateJavaFromVdmModules(GeneralCodeGenUtils.consModuleList(files));
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
 	public static Generated generateJavaFromExp(String exp,
 			IRSettings irSettings, JavaSettings javaSettings, Dialect dialect)
 			throws AnalysisException
@@ -174,10 +205,10 @@ public class JavaCodeGenUtil
 
 			if(javaPackage == null || javaPackage.equals(""))
 			{
-				return clazz.getPackage().equals(JavaCodeGen.JAVA_QUOTES_PACKAGE);
+				return clazz.getPackage().equals(JavaCodeGen.QUOTES);
 			}
 			
-			if(clazz.getPackage().equals(javaPackage + "." + JavaCodeGen.JAVA_QUOTES_PACKAGE))
+			if(clazz.getPackage().equals(javaPackage + "." + JavaCodeGen.QUOTES))
 			{
 				return true;
 			}
@@ -243,7 +274,7 @@ public class JavaCodeGenUtil
 			}
 		}
 		
-		for(String kw : IJavaConstants.RESERVED_WORDS)
+		for(String kw : IJavaCodeGenConstants.RESERVED_WORDS)
 		{
 			if(s.equals(kw))
 			{
@@ -332,7 +363,7 @@ public class JavaCodeGenUtil
 
 		for (File f : files)
 		{
-			if (f.getName().endsWith(IJavaConstants.JAVA_FILE_EXTENSION))
+			if (f.getName().endsWith(IJavaCodeGenConstants.JAVA_FILE_EXTENSION))
 			{
 				javaFilePaths.add(f.getAbsolutePath());
 			}
@@ -371,20 +402,5 @@ public class JavaCodeGenUtil
 		}
 		
 		return moduleOutputDir;
-	}
-	
-	public static boolean isSupportedVdmSourceFile(File f)
-	{
-		String[] extensions = new String[]{".vdmpp", ".vpp", ".vsl", ".vdmsl"};
-		
-		for(String ext : extensions)
-		{
-			if(f.getName().endsWith(ext))
-			{
-				return true;
-			}
-		}
-		
-		return false;
 	}
 }

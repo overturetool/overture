@@ -90,6 +90,7 @@ import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRAnalysis;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
@@ -97,7 +98,8 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.trans.funcvalues.FuncValAssistant;
+import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Settings;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -111,38 +113,33 @@ public class JavaFormat
 	public static final String SET_UTIL_FILE = "SetUtil";
 	public static final String MAP_UTIL_FILE = "MapUtil";
 
+	public static final String JAVA_PUBLIC = "public";
+	public static final String JAVA_PRIVATE = "private";
+	
+	public static final String JAVA_INT = "int";
+
+	private List<AClassDeclCG> classes;
+
 	private IRInfo info;
 
-	private FuncValAssistant funcValAssist;
+	private FunctionValueAssistant functionValueAssistant;
 	private MergeVisitor mergeVisitor;
 	private JavaValueSemantics valueSemantics;
 	private JavaFormatAssistant javaFormatAssistant;
 	private JavaRecordCreator recCreator;
-	private JavaVarPrefixManager varPrefixManager;
 	
-	public JavaFormat(JavaVarPrefixManager varPrefixManager,
-			TemplateStructure templateStructure, IRInfo info)
+	public JavaFormat(TempVarPrefixes varPrefixes, TemplateStructure templateStructure, IRInfo info)
 	{
-		this.varPrefixManager = varPrefixManager;
 		this.valueSemantics = new JavaValueSemantics(this);
 		this.recCreator = new JavaRecordCreator(this);
-		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, valueSemantics, recCreator);
+		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this,
+				IRAnalysis.class, varPrefixes, valueSemantics, recCreator);
 		this.mergeVisitor = new MergeVisitor(templateStructure, templateCallables);
-		this.funcValAssist = null;
+		this.functionValueAssistant = null;
 		this.info = info;
 		this.javaFormatAssistant = new JavaFormatAssistant(this.info);
 	}
 	
-	public JavaValueSemantics getValueSemantics()
-	{
-		return valueSemantics;
-	}
-	
-	public void setValueSemantics(JavaValueSemantics valueSemantics)
-	{
-		this.valueSemantics = valueSemantics;
-	}
-
 	public JavaRecordCreator getRecCreator()
 	{
 		return recCreator;
@@ -164,14 +161,19 @@ public class JavaFormat
 	}
 
 	public void setFunctionValueAssistant(
-			FuncValAssistant functionValueAssistant)
+			FunctionValueAssistant functionValueAssistant)
 	{
-		this.funcValAssist = functionValueAssistant;
+		this.functionValueAssistant = functionValueAssistant;
 	}
 
 	public void clearFunctionValueAssistant()
 	{
-		this.funcValAssist = null;
+		this.functionValueAssistant = null;
+	}
+
+	public List<AClassDeclCG> getClasses()
+	{
+		return classes;
 	}
 
 	public void setJavaSettings(JavaSettings javaSettings)
@@ -188,11 +190,22 @@ public class JavaFormat
 	{
 		mergeVisitor.init();
 	}
-	
-	public void clear()
+
+	public void setClasses(List<AClassDeclCG> classes)
 	{
-		init();
-		valueSemantics.clear();
+		this.classes = classes != null ? classes
+				: new LinkedList<AClassDeclCG>();
+	}
+
+	public void clearClasses()
+	{
+		if (classes != null)
+		{
+			classes.clear();
+		} else
+		{
+			classes = new LinkedList<AClassDeclCG>();
+		}
 	}
 
 	public MergeVisitor getMergeVisitor()
@@ -204,12 +217,12 @@ public class JavaFormat
 	{
 		final String OBJ = "Object";
 
-		if (funcValAssist == null)
+		if (functionValueAssistant == null)
 		{
 			return OBJ;
 		}
 
-		AInterfaceDeclCG methodTypeInterface = funcValAssist.findInterface(methodType);
+		AInterfaceDeclCG methodTypeInterface = functionValueAssistant.findInterface(methodType);
 
 		if (methodTypeInterface == null)
 		{
@@ -551,14 +564,14 @@ public class JavaFormat
 		SExpCG leftNode = node.getLeft();
 		SExpCG rightNode = node.getRight();
 
-		String empty = "Utils.empty(%s)";
-		
+		final String EMPTY = ".isEmpty()";
+
 		if (isEmptyCollection(leftNode.getType()))
 		{
-			return String.format(empty, format(node.getRight()));
+			return format(node.getRight()) + EMPTY;
 		} else if (isEmptyCollection(rightNode.getType()))
 		{
-			return String.format(empty, format(node.getLeft()));
+			return format(node.getLeft()) + EMPTY;
 		}
 
 		return UTILS_FILE + ".equals(" + format(node.getLeft()) + ", "
@@ -959,11 +972,11 @@ public class JavaFormat
 		
 		if(settings != null && !settings.trim().isEmpty())
 		{
-			return settings + "." + JavaCodeGen.JAVA_QUOTES_PACKAGE + ".";
+			return settings + "." + CodeGenBase.QUOTES + ".";
 		}
 		else
 		{
-			return JavaCodeGen.JAVA_QUOTES_PACKAGE + ".";
+			return CodeGenBase.QUOTES + ".";
 		}
 	}
 
@@ -997,25 +1010,5 @@ public class JavaFormat
 	public static boolean isVdmSl()
 	{
 		return Settings.dialect == Dialect.VDM_SL;
-	}
-	
-	public String genIteratorName()
-	{
-		return info.getTempVarNameGen().nextVarName(varPrefixManager.getIteVarPrefixes().iterator());
-	}
-
-	public String genThreadName()
-	{
-		return info.getTempVarNameGen().nextVarName("nextThread_");
-	}
-
-	public String genForIndexToVarName()
-	{
-		return info.getTempVarNameGen().nextVarName(varPrefixManager.getIteVarPrefixes().forIndexToVar());
-	}
-
-	public String genForIndexByVarName()
-	{
-		return info.getTempVarNameGen().nextVarName(varPrefixManager.getIteVarPrefixes().forIndexByVar());
 	}
 }

@@ -31,7 +31,7 @@ import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
 import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.trans.IterationVarPrefixes;
+import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
@@ -42,9 +42,9 @@ public class SetCompStrategy extends ComplexCompStrategy
 	public SetCompStrategy(TransAssistantCG transformationAssitant,
 			SExpCG first, SExpCG predicate, String var, STypeCG compType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
-			IterationVarPrefixes iteVarPrefixes)
+			TempVarPrefixes varPrefixes)
 	{
-		super(transformationAssitant, predicate, var, compType, langIterator, tempGen, iteVarPrefixes);
+		super(transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
 
 		this.first = first;
 	}

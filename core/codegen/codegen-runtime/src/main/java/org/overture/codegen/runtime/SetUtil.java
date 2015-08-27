@@ -42,17 +42,6 @@ public class SetUtil
 		return set;
 	}
 	
-	public static boolean inSet(Object elem, VDMSet set)
-	{
-		return set.contains(elem);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static boolean subset(VDMSet left, VDMSet right)
-	{
-		return right.containsAll(left);
-	}
-	
 	@SuppressWarnings("unchecked")
 	public static VDMSet union(VDMSet left, VDMSet right)
 	{

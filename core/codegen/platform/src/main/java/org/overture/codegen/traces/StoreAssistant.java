@@ -54,17 +54,17 @@ public class StoreAssistant
 	{
 		AClassTypeCG storageType = transAssistant.consClassType(tracePrefixes.storeClassName());
 		String storeVarName = tracePrefixes.storeVarName();
-		AIdentifierVarExpCG idVarExp = transAssistant.getInfo().getExpAssistant().consIdVar(idConstName, new ANatNumericBasicTypeCG());
+		AIdentifierVarExpCG idVarExp = transAssistant.consIdentifierVar(idConstName, new ANatNumericBasicTypeCG());
 		
 		return transAssistant.consInstanceCallStm(storageType, storeVarName, tracePrefixes.storeRegisterMethodName(),
-				idVarExp, transAssistant.getInfo().getExpAssistant().consIdVar(varName, varType));
+				idVarExp, transAssistant.consIdentifierVar(varName, varType));
 	}
 	
 	public ACastUnaryExpCG consStoreLookup(AIdentifierVarExpCG node)
 	{
 		AClassTypeCG storeType = transAssistant.consClassType(tracePrefixes.storeClassName());
 		
-		AIdentifierVarExpCG idArg = transAssistant.getInfo().getExpAssistant().consIdVar(idConstNameMap.get(node.getName()), 
+		AIdentifierVarExpCG idArg = transAssistant.consIdentifierVar(idConstNameMap.get(node.getName()), 
 				new ANatNumericBasicTypeCG());
 		
 		SExpCG call = transAssistant.consInstanceCall(storeType, tracePrefixes.storeVarName(), 

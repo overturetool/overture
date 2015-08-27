@@ -38,7 +38,7 @@ public class SharedCounter implements EvaluatePP {
         sentinel.entering(((SharedCounter_sentinel) sentinel).op1);
 
         try {
-            /* skip */
+            //Skip;
         } finally {
             sentinel.leaving(((SharedCounter_sentinel) sentinel).op1);
         }
@@ -141,7 +141,7 @@ public class CountSwitcher extends VDMThread implements EvaluatePP {
         sentinel.entering(((CountSwitcher_sentinel) sentinel).joined);
 
         try {
-            /* skip */
+            //Skip;
         } finally {
             sentinel.leaving(((CountSwitcher_sentinel) sentinel).joined);
         }

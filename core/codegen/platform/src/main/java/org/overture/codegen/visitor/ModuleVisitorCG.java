@@ -91,7 +91,6 @@ public class ModuleVisitorCG extends AbstractVisitorCG<IRInfo, AModuleDeclCG>
 			}
 		}
 
-		question.addModule(moduleCg);
 		return moduleCg;
 	}
 }

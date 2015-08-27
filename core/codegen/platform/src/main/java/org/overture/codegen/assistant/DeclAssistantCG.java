@@ -53,16 +53,12 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
@@ -73,7 +69,6 @@ import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
@@ -85,51 +80,6 @@ public class DeclAssistantCG extends AssistantBase
 	public DeclAssistantCG(AssistantManager assistantManager)
 	{
 		super(assistantManager);
-	}
-	
-	public AMethodDeclCG funcToMethod(AFuncDeclCG node)
-	{
-		SDeclCG preCond = node.getPreCond();
-		SDeclCG postCond = node.getPostCond();
-		String access = node.getAccess();
-		Boolean isAbstract = node.getAbstract();
-		LinkedList<ATemplateTypeCG> templateTypes = node.getTemplateTypes();
-		AMethodTypeCG methodType = node.getMethodType();
-		LinkedList<AFormalParamLocalParamCG> formalParams = node.getFormalParams();
-		String name = node.getName();
-		SExpCG body = node.getBody();
-		SourceNode sourceNode = node.getSourceNode();
-
-		AMethodDeclCG method = new AMethodDeclCG();
-		method.setSourceNode(sourceNode);
-
-		if (preCond != null) {
-			method.setPreCond(preCond.clone());
-		}
-		if (postCond != null) {
-			method.setPostCond(postCond.clone());
-		}
-
-		method.setAccess(access);
-		method.setAbstract(isAbstract);
-		method.setTemplateTypes(cloneNodes(templateTypes, ATemplateTypeCG.class));
-		method.setMethodType(methodType.clone());
-		method.setFormalParams(cloneNodes(formalParams, AFormalParamLocalParamCG.class));
-		method.setName(name);
-		method.setStatic(true);
-		method.setIsConstructor(false);
-		method.setImplicit(node.getImplicit());
-
-		if (!(body instanceof ANotImplementedExpCG))
-		{
-			AReturnStmCG returnStm = new AReturnStmCG();
-			returnStm.setExp(body.clone());
-			method.setBody(returnStm);
-		} else
-		{
-			method.setBody(new ANotImplementedStmCG());
-		}
-		return method;
 	}
 	
 	public String getNodeName(INode node)

@@ -1,0 +1,11 @@
+"Breaking named type invariant (assigning record field)"
+St.java:11: JML invariant is false
+    //@ public instance invariant inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
+                        ^
+St.java:11: JML invariant is false
+    //@ public instance invariant inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
+                        ^
+"Breaking named type invariant (assigning local variable)"
+Entry.java:38: JML assertion is false
+        //@ assert inv_Entry_PT(p1) && (p1 == null || inv_Entry_PossiblyOne(p1) || inv_Entry_True(p1));
+            ^

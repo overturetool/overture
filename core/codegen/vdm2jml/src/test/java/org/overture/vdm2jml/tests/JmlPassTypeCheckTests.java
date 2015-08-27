@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,14 +29,12 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 		File folder = new File(AnnotationTestsBase.TEST_RES_STATIC_ANALYSIS_ROOT);
 		List<File> files = GeneralUtils.getFiles(folder);
 
-		return TestUtil.collectVdmslFiles(files);
+		return collectVdmslFiles(files);
 	}
 	
 	@Before
 	public void assumeTools()
 	{
-		Assume.assumeTrue(String.format("JML type checker test will only run if the "
-				+ "property '%s' is passed", EXEC_PROPERTY), System.getProperty(EXEC_PROPERTY) != null);
 		assumeOpenJml();
 	}
 
@@ -79,13 +76,6 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 	public void beforeRunningOpenJmlProcess()
 	{
 		clearCodeFolder();
-		TestUtil.codeGenerateInputFile(inputFile, genJavaFolder, VDM_LIB_PATH);
-	}
-
-	@Override
-	protected String getPropertyId()
-	{
-		// Never configure execution
-		return null;
+		codeGenerateInputFile();
 	}
 }

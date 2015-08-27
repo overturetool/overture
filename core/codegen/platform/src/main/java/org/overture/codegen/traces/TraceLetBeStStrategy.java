@@ -19,7 +19,7 @@ import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.DeclarationTag;
-import org.overture.codegen.trans.IterationVarPrefixes;
+import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.let.LetBeStStrategy;
@@ -36,10 +36,10 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 	public TraceLetBeStStrategy(TransAssistantCG transAssistant,
 			SExpCG suchThat, SSetTypeCG setType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
-			IterationVarPrefixes iteVarPrefixes, StoreAssistant storeAssistant,Map<String, String> idConstNameMap, TraceNames tracePrefixes,
+			TempVarPrefixes varPrefixes, StoreAssistant storeAssistant,Map<String, String> idConstNameMap, TraceNames tracePrefixes,
 			AIdentifierPatternCG id, AVarDeclCG altTests, TraceNodeData nodeData)
 	{
-		super(transAssistant, suchThat, setType, langIterator, tempGen, iteVarPrefixes);
+		super(transAssistant, suchThat, setType, langIterator, tempGen, varPrefixes);
 
 		this.storeAssistant = storeAssistant;
 		this.idConstNameMap = idConstNameMap;

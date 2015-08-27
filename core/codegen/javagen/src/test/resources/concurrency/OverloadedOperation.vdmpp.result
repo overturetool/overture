@@ -110,7 +110,7 @@ public class Incrementer1 extends VDMThread implements EvaluatePP {
         sentinel.entering(((Incrementer1_sentinel) sentinel).joined);
 
         try {
-            /* skip */
+            //Skip;
         } finally {
             sentinel.leaving(((Incrementer1_sentinel) sentinel).joined);
         }
@@ -206,7 +206,7 @@ public class Incrementer2 extends VDMThread implements EvaluatePP {
         sentinel.entering(((Incrementer2_sentinel) sentinel).joined);
 
         try {
-            /* skip */
+            //Skip;
         } finally {
             sentinel.leaving(((Incrementer2_sentinel) sentinel).joined);
         }

@@ -67,9 +67,6 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		// To make sure that the record can be instantiated we must explicitly add a constructor.
 		
 		AMethodDeclCG constructor = consDefaultCtorSignature(record.getName());
-		
-		AMethodTypeCG methodType = new AMethodTypeCG();
-		methodType.setResult(consRecordType(record));
 
 		ABlockStmCG body = new ABlockStmCG();
 		constructor.setBody(body);
@@ -81,19 +78,17 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		for (AFieldDeclCG field : fields)
 		{
 			String name = field.getName();
-			STypeCG type = field.getType();
+			STypeCG type = field.getType().clone();
 
 			String paramName = "_" + name;
 
 			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 			idPattern.setName(paramName);
 
-			methodType.getParams().add(type.clone());
-			
 			// Construct formal parameter of the constructor
 			AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
 			formalParam.setPattern(idPattern);
-			formalParam.setType(type.clone());
+			formalParam.setType(type);
 			formalParams.add(formalParam);
 
 			// Construct the initialization of the record field using the
@@ -101,12 +96,12 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 			AAssignToExpStmCG assignment = new AAssignToExpStmCG();
 			AIdentifierVarExpCG id = new AIdentifierVarExpCG();
 			id.setName(name);
-			id.setType(type.clone());
+			id.setType(field.getType().clone());
 			id.setIsLambda(false);
 			id.setIsLocal(true);
 
 			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
-			varExp.setType(type.clone());
+			varExp.setType(field.getType().clone());
 			varExp.setName(paramName);
 			varExp.setIsLocal(true);
 
@@ -129,8 +124,6 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 			bodyStms.add(assignment);
 		}
 
-		constructor.setMethodType(methodType);
-		
 		return constructor;
 	}
 
@@ -306,18 +299,5 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		toStringMethod.setBody(returnStm);
 
 		return toStringMethod;
-	}
-	
-	public ARecordTypeCG consRecordType(ARecordDeclCG record)
-	{
-		AClassDeclCG defClass = record.getAncestor(AClassDeclCG.class);
-		ATypeNameCG typeName = new ATypeNameCG();
-		typeName.setDefiningClass(defClass.getName());
-		typeName.setName(record.getName());
-
-		ARecordTypeCG returnType = new ARecordTypeCG();
-
-		returnType.setName(typeName);
-		return returnType;
 	}
 }

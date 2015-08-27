@@ -16,7 +16,7 @@ public class A extends VDMThread implements EvaluatePP {
         sentinel.entering(((A_sentinel) sentinel).opA);
 
         try {
-            /* skip */
+            //Skip;
         } finally {
             sentinel.leaving(((A_sentinel) sentinel).opA);
         }

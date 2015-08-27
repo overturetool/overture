@@ -5,13 +5,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
-import org.overture.ast.lex.Dialect;
-import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.util.ClonableString;
+import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -23,10 +21,6 @@ import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaFormat;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.codegen.vdm2jml.JmlGenerator;
-import org.overture.config.Release;
-import org.overture.config.Settings;
-import org.overture.typechecker.util.TypeCheckerUtil;
-import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 abstract public class AnnotationTestsBase
 {
@@ -39,6 +33,9 @@ abstract public class AnnotationTestsBase
 	public static final String TEST_RES_STATIC_ANALYSIS_ROOT = TEST_RESOURCES_ROOT
 			+ "static_analysis" + File.separatorChar;
 
+	public static final String TEST_RES_DYNAMIC_ANALYSIS_ROOT = TEST_RESOURCES_ROOT
+			+ "dynamic_analysis" + File.separatorChar;
+	
 	public static final String SPEC_PUBLIC_ANNOTATION = "/*@ spec_public @*/";
 	public static final String PURE_ANNOTATION = "/*@ pure @*/";
 	public static final String HELPER_ANNOTATION = "/*@ helper @*/";
@@ -50,13 +47,6 @@ abstract public class AnnotationTestsBase
 	
 	// The IR class that is used to represent the type of the module state
 	protected static AClassDeclCG genStateType;
-	
-	@BeforeClass
-	public static void prepareVdmTypeChecker()
-	{
-		Settings.dialect = Dialect.VDM_SL;
-		Settings.release = Release.VDM_10;
-	}
 	
 	public static void init(String fileName) throws AnalysisException
 	{
@@ -177,18 +167,12 @@ abstract public class AnnotationTestsBase
 		List<File> files = new LinkedList<File>();
 		files.add(new File(TEST_RES_STATIC_ANALYSIS_ROOT + fileName));
 
-		
-		TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
-
-		if(GeneralCodeGenUtils.hasErrors(tcResult))
-		{
-			Assert.fail("Could not parse/type check VDM model:\n" + GeneralCodeGenUtils.errorStr(tcResult));
-		}
+		ModuleList modules = GeneralCodeGenUtils.consModuleList(files);
 
 		JmlGenerator jmlGen = new JmlGenerator();
 		initJmlGen(jmlGen);
 
-		GeneratedData data = jmlGen.generateJml(tcResult.result);
+		GeneratedData data = jmlGen.generateJml(modules);
 
 		return getClasses(data);
 	}
@@ -254,17 +238,18 @@ abstract public class AnnotationTestsBase
 		}
 	}
 
-	public static void assertPureMethod(AMethodDeclCG method)
+	public static void assertPureMethod(AMethodDeclCG func)
 	{
-		String failureMsg = "Expected method " + method.getName()
-				+ " to be pure";
+		// Since @pure is a JML modifier so this annotation should go last
+		String failureMsg = "Expected function " + func.getName()
+				+ " to be @pure";
 
-		List<? extends ClonableString> metaData = method.getMetaData();
+		List<? extends ClonableString> metaData = func.getMetaData();
 
 		Assert.assertTrue(failureMsg, metaData != null
 				&& !metaData.isEmpty());
 		
-		for(ClonableString m : method.getMetaData())
+		for(ClonableString m : func.getMetaData())
 		{
 			if(m.value.equals(PURE_ANNOTATION))
 			{
@@ -273,37 +258,5 @@ abstract public class AnnotationTestsBase
 		}
 		
 		Assert.assertTrue(failureMsg, false);
-	}
-	
-	public static void assertNotPureMethod(AMethodDeclCG method)
-	{
-		String failureMsg = "Expected method " + method.getName()
-				+ " not to be pure";
-
-		for(ClonableString m : method.getMetaData())
-		{
-			if(m.value.equals(PURE_ANNOTATION))
-			{
-				Assert.fail(failureMsg);
-			}
-		}
-	}
-	
-	public static void assertRecMethodsPurity(List<AMethodDeclCG> stateMethods)
-	{
-		for (AMethodDeclCG m : stateMethods)
-		{
-			if (m.getName().equals("hashCode") || m.getName().equals("equals")
-					|| m.getName().equals("toString")
-					|| m.getName().equals("copy")
-					|| m.getName().startsWith("get_")
-					|| m.getName().equals("valid"))
-			{
-				assertPureMethod(m);
-			} else
-			{
-				assertNotPureMethod(m);
-			}
-		}
 	}
 }

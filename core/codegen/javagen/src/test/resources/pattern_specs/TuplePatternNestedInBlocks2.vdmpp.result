@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        /* skip */
+        //Skip;
         {
             Tuple tuplePattern_1 = Tuple.mk_(1L, 2L);
             Boolean success_1 = tuplePattern_1.compatible(Number.class,
@@ -28,7 +28,7 @@ public class Entry {
 
             Number r = a.longValue() + b.longValue();
 
-            /* skip */
+            //Skip;
         }
 
         return 2L;

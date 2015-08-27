@@ -25,19 +25,19 @@ public class Entry {
     }
 
     public void cg_init_Entry_1(final Character c) {
-        /* skip */
+        //Skip;
     }
 
     public void cg_init_Entry_2(final Number n) {
-        /* skip */
+        //Skip;
     }
 
     public void cg_init_Entry_3(final Boolean b, final Number r) {
-        /* skip */
+        //Skip;
     }
 
     public void cg_init_Entry_4(final Number n, final Character c) {
-        /* skip */
+        //Skip;
     }
 
     public static Object Run() {

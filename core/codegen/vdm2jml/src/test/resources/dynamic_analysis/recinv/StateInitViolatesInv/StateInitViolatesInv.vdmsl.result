@@ -1,3 +1,0 @@
-St.java:13: JML invariant is false
-    //@ public instance invariant project.Entry.invChecksOn ==> inv_St(x);
-                        ^

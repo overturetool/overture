@@ -26,9 +26,9 @@ public class Entry {
             {
                 VDMSet a = null;
 
-                /* skip */
-                /* skip */
-                /* skip */
+                //Skip;
+                //Skip;
+                //Skip;
                 return 2L;
             }
         }

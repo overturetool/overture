@@ -49,7 +49,6 @@ import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AForIndexStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 import org.overture.codegen.ir.IRInfo;
 
@@ -145,26 +144,5 @@ public class StmAssistantCG extends AssistantBase
 				!(block.parent() instanceof AForAllStmCG) &&
 				!(block.parent() instanceof AForIndexStmCG) &&
 				!(block.parent() instanceof AForLoopStmCG);
-	}
-	
-	public boolean equal(AMetaStmCG left, AMetaStmCG right)
-	{
-		if(left.getMetaData().size() != right.getMetaData().size())
-		{
-			return false;
-		}
-		
-		for(int i = 0; i < left.getMetaData().size(); i++)
-		{
-			String currentLeft = left.getMetaData().get(i).value;
-			String currentRight = right.getMetaData().get(i).value;
-			
-			if(!currentLeft.equals(currentRight))
-			{
-				return false;
-			}
-		}
-		
-		return true;
 	}
 }

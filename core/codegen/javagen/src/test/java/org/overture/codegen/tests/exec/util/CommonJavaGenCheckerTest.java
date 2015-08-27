@@ -13,16 +13,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.lex.Dialect;
-import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.tests.exec.util.testhandlers.ExecutableSpecTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.ExecutableTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.ExpressionTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
 import org.overture.codegen.tests.util.TestUtils;
-import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
@@ -31,15 +27,11 @@ import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.ContextException;
-import org.overture.parser.lex.LexException;
-import org.overture.parser.syntax.ParserException;
 import org.overture.test.framework.ConditionalIgnoreMethodRule;
 import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
 import org.overture.test.framework.Properties;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Result;
-import org.overture.typechecker.util.TypeCheckerUtil;
-import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 {
@@ -101,7 +93,7 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 			unconfigureResultGeneration();
 		}
 	}
-	
+
 	protected void generateJavaSources(File vdmSource)
 	{
 		JavaCodeGen javaCg = new JavaCodeGen();
@@ -120,12 +112,7 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 				((ExpressionTestHandler) testHandler).injectArgIntoMainClassFile(outputDir, s.getContent());
 			} else
 			{
-				GeneratedData data = genData(javaCg, files);
-				
-				if(data == null)
-				{
-					Assert.fail("Problems encountered when trying to code generate VDM model!");
-				}
+				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(files, javaCg, Settings.dialect);
 
 				javaCg.genJavaSourceFiles(outputDir, data.getClasses());
 
@@ -149,39 +136,6 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		}
 	}
 
-	public static GeneratedData genData(JavaCodeGen javaCg, List<File> files)
-			throws AnalysisException, ParserException, LexException
-	{
-		GeneratedData data = null;
-		if(Settings.dialect == Dialect.VDM_SL)
-		{
-			TypeCheckResult<List<AModuleModules>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckSl(files));
-			data = javaCg.generateJavaFromVdmModules(tcResult.result);
-			
-		}
-		else if(Settings.dialect == Dialect.VDM_PP)
-		{
-			TypeCheckResult<List<SClassDefinition>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckPp(files));
-			data = javaCg.generateJavaFromVdm(tcResult.result);
-		}
-		else if(Settings.dialect == Dialect.VDM_RT)
-		{
-			TypeCheckResult<List<SClassDefinition>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckRt(files));
-			data = javaCg.generateJavaFromVdm(tcResult.result);
-		}
-		return data;
-	}
-	
-	public static <T extends TypeCheckResult<?>> T checkTcResult(T tcResult)
-	{
-		if(GeneralCodeGenUtils.hasErrors(tcResult))
-		{
-			Assert.fail("Problems parsing/type checking VDM model:\n" + GeneralCodeGenUtils.errorStr(tcResult));
-		}
-		
-		return tcResult;
-	}
-
 	public IRSettings getIrSettings()
 	{
 		IRSettings irSettings = new IRSettings();
@@ -195,7 +149,6 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
 		javaSettings.setMakeClassesSerializable(true);
-		javaSettings.setFormatCode(false);
 
 		return javaSettings;
 	}

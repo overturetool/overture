@@ -5,11 +5,9 @@ definitions
 
 types
 
-R :: x : int
-inv r == r.x > 0;
+R :: x : int;
 
 R1 :: s : seq of R
-inv r1 == r1.s <> [];
 
 state St of
 s : seq of R

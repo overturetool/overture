@@ -1,1 +1,1 @@
-!(SetUtil.inSet(4L,SetUtil.set(1L, 2L, 3L)))
+!(SetUtil.set(1L, 2L, 3L).contains(4L))

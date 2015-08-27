@@ -14,7 +14,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.tests.util.TestUtils;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
@@ -22,8 +22,6 @@ import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.typechecker.util.TypeCheckerUtil;
-import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 @RunWith(Parameterized.class)
 public class UnsupportedJavaCodeGenTest
@@ -95,8 +93,7 @@ public class UnsupportedJavaCodeGenTest
 				}
 			}
 
-			Assert.assertTrue("Expected a single module to be unsupported. "
-					+ "Got: " + noOfUnsupportedModules, noOfUnsupportedModules == 1);
+			Assert.assertEquals("Expected only a single module to be unsupported", noOfUnsupportedModules, 1);
 
 		} catch (AnalysisException e)
 		{
@@ -108,29 +105,12 @@ public class UnsupportedJavaCodeGenTest
 	{
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
-			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
-			validateTcResult(tcResult);
-			
-			return javaGen.generateJavaFromVdmModules(tcResult.result);
-		} else if(Settings.dialect == Dialect.VDM_PP)
+			ModuleList ast = GeneralCodeGenUtils.consModuleList(files);
+			return javaGen.generateJavaFromVdmModules(ast);
+		} else
 		{
-			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
-			validateTcResult(tcResult);
-
-			return javaGen.generateJavaFromVdm(tcResult.result);
-		}
-		else
-		{
-			Assert.fail("Only VDM-SL and VDM++ are supported for this test");
-			return null;
-		}
-	}
-
-	private void validateTcResult(TypeCheckResult<?> tcResult)
-	{
-		if(GeneralCodeGenUtils.hasErrors(tcResult))
-		{
-			Assert.fail("Could not parse/type check VDM model:\n" + GeneralCodeGenUtils.errorStr(tcResult));
+			List<SClassDefinition> ast = GeneralCodeGenUtils.consClassList(files, Settings.dialect);
+			return javaGen.generateJavaFromVdm(ast);
 		}
 	}
 }

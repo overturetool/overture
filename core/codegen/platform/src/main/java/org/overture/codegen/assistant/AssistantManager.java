@@ -29,7 +29,6 @@ public class AssistantManager
 	private TypeAssistantCG typeAssistant;
 	private LocationAssistantCG locationAssistant;
 	private BindAssistantCG bindAssistant;
-	private PatternAssistantCG patternAssistant;
 
 	public AssistantManager()
 	{
@@ -39,7 +38,6 @@ public class AssistantManager
 		this.typeAssistant = new TypeAssistantCG(this);
 		this.locationAssistant = new LocationAssistantCG(this);
 		this.bindAssistant = new BindAssistantCG(this);
-		this.patternAssistant = new PatternAssistantCG(this);
 	}
 
 	public ExpAssistantCG getExpAssistant()
@@ -70,10 +68,5 @@ public class AssistantManager
 	public BindAssistantCG getBindAssistant()
 	{
 		return bindAssistant;
-	}
-
-	public PatternAssistantCG getPatternAssistant()
-	{
-		return patternAssistant;
 	}
 }

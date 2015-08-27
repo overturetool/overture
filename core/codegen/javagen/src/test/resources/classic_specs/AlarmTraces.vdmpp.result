@@ -86,7 +86,7 @@ public class Plant {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
             expert = ((Expert) iterator_1.next());
-            success_1 = SetUtil.inSet(a.GetReqQuali(), expert.GetQuali());
+            success_1 = expert.GetQuali().contains(a.GetReqQuali());
         }
 
         if (!(success_1)) {
@@ -107,7 +107,7 @@ public class Plant {
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Token p = ((Token) iterator_2.next());
 
-            if (SetUtil.inSet(ex, ((VDMSet) Utils.get(schedule, p)))) {
+            if (((VDMSet) Utils.get(schedule, p)).contains(ex)) {
                 setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
                         SetUtil.set(p));
             }
@@ -124,7 +124,7 @@ public class Plant {
     public void AddExpertToSchedule(final Token p, final Expert ex) {
         VDMSet ternaryIfExp_1 = null;
 
-        if (SetUtil.inSet(p, MapUtil.dom(Utils.copy(schedule)))) {
+        if (MapUtil.dom(Utils.copy(schedule)).contains(p)) {
             ternaryIfExp_1 = SetUtil.union(Utils.copy(
                         ((VDMSet) Utils.get(schedule, p))), SetUtil.set(ex));
         } else {
@@ -161,7 +161,7 @@ public class Plant {
         for (Iterator iterator_3 = set_3.iterator();
                 iterator_3.hasNext() && forAllExpResult_1;) {
             Token p = ((Token) iterator_3.next());
-            forAllExpResult_1 = !(Utils.empty(((VDMSet) Utils.get(sch, p))));
+            forAllExpResult_1 = !(((VDMSet) Utils.get(sch, p)).isEmpty());
         }
 
         if (forAllExpResult_1) {
@@ -183,8 +183,8 @@ public class Plant {
                     for (Iterator iterator_6 = set_6.iterator();
                             iterator_6.hasNext() && !(existsExpResult_1);) {
                         Expert expert = ((Expert) iterator_6.next());
-                        existsExpResult_1 = SetUtil.inSet(a.GetReqQuali(),
-                                expert.GetQuali());
+                        existsExpResult_1 = expert.GetQuali()
+                                                  .contains(a.GetReqQuali());
                     }
 
                     forAllExpResult_3 = existsExpResult_1;

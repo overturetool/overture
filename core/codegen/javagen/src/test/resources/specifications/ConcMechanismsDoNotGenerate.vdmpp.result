@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public void op() {
-        /* skip */
+        //Skip;
     }
 
     public String toString() {
