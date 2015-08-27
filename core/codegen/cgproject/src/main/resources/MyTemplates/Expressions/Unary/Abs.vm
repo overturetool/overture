@@ -1,1 +1,1 @@
-Utils.abs($JavaFormat.format($node.getExp()))
+Utils.abs($XFormat.format($node.getExp()))

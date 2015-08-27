@@ -4,4 +4,7 @@ class $node.Name
 	$XFormat.format($field)
 	#end
 	##
-	}
+	#foreach( $method in $node.getMethods() )
+	$XFormat.format($method)
+	#end	
+}

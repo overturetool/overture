@@ -1,1 +1,1 @@
-Utils.divide($JavaFormat.format($node.getLeft()), $JavaFormat.format($node.getRight()))
+Utils.divide($XFormat.format($node.getLeft()), $XFormat.format($node.getRight()))

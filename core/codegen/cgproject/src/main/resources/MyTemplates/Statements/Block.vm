@@ -1,19 +1,19 @@
-#if ($JavaFormat.isScoped($node))
+#if ($XFormat.isScoped($node))
 {
 #end
 ##
 ## Local definitions:
 ##
 	#foreach( $dec in $node.getLocalDefs() )
-	$JavaFormat.format($dec)
+	$XFormat.format($dec)
 	#end
 ##
 ## Statements:
 ##
 	#foreach( $stm in $node.getStatements() )
-	$JavaFormat.format($stm)
+	$XFormat.format($stm)
 	#end
 ##
-#if ($JavaFormat.isScoped($node))
+#if ($XFormat.isScoped($node))
 }
 #end

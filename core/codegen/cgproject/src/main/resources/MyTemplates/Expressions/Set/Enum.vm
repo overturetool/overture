@@ -1,1 +1,1 @@
-SetUtil.set($JavaFormat.formatArgs($node.getMembers()))
+SetUtil.set($XFormat.formatArgs($node.getMembers()))

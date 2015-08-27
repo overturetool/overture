@@ -1,1 +1,1 @@
-$JavaFormat.format($node.getType()) $JavaFormat.format($node.getPattern())
+$XFormat.format($node.getType()) $XFormat.format($node.getPattern())

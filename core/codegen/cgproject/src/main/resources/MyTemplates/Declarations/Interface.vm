@@ -1,12 +1,12 @@
 #set( $package = "")
 #set( $packageName = $node.getPackage())
-#if (!$JavaFormat.isNull($packageName))
+#if (!$XFormat.isNull($packageName))
 	#set( $package = "package ${packageName};")
 #end
 ##
 #set( $templateTypes = "")
 #if ($node.getTemplateTypes().size() > 0)
-	#set( $templateTypes = $JavaFormat.formatTemplateTypes($node.getTemplateTypes()))
+	#set( $templateTypes = $XFormat.formatTemplateTypes($node.getTemplateTypes()))
 #end
 ##
 $package
@@ -14,10 +14,10 @@ $package
 public interface $node.getName() $templateTypes
 {
 #foreach( $field in $node.getFields() )
-$JavaFormat.format($field)
+$XFormat.format($field)
 #end
 ##
 #foreach( $methodSig in $node.getMethodSignatures() )
-$JavaFormat.format($methodSig)
+$XFormat.format($methodSig)
 #end
 }

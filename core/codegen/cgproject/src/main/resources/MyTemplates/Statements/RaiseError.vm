@@ -1,1 +1,1 @@
-throw $JavaFormat.format($node.getError());
+throw $XFormat.format($node.getError());

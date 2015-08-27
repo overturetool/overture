@@ -1,18 +1,18 @@
 #set( $stm = "")
-#if (!$JavaFormat.isNull($node.getStm()))
-	#set( $stm = $JavaFormat.format($node.getStm()))
+#if (!$XFormat.isNull($node.getStm()))
+	#set( $stm = $XFormat.format($node.getStm()))
 #end
 ##
-#set( $finally = $JavaFormat.format($node.getFinally()))
+#set( $finally = $XFormat.format($node.getFinally()))
 ##
 try
 {
 	${stm}
 }
 #foreach( $clause in $node.getCatchClauses() )
-$JavaFormat.format($clause)
+$XFormat.format($clause)
 #end
-#if (!$JavaFormat.isNull(${finally}))
+#if (!$XFormat.isNull(${finally}))
 finally
 {
 	${finally}
