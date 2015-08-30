@@ -324,7 +324,7 @@ public class Uml2Vdm
 
 	private void createInstanceVar(AClassClassDefinition c, Property att)
 	{
-		console.out.println("\tConverting instanve variable: " + att.getName());
+		console.out.println("\tConverting instance variable: " + att.getName());
 		PType type = tc.convert(att);
 		PExp defaultExp = null;// NEW_A_INT_ZERRO_LITERAL_EXP.clone();
 		if (att.getDefault() != null && !att.getDefault().isEmpty())
