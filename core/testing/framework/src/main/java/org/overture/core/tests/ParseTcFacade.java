@@ -178,7 +178,7 @@ public abstract class ParseTcFacade {
 	public static List<INode> typedAstNoRetry(List<File> sources,
 			String testName, Dialect dialect) throws ParserException,
 			LexException {
-		return typedAst(sources, testName, dialect, true);
+		return typedAst(sources, testName, dialect, false);
 	}
 
 	/**
@@ -342,7 +342,7 @@ public abstract class ParseTcFacade {
 
 	protected static void checkTcResult(
 			@SuppressWarnings("rawtypes") TypeCheckResult TC) {
-		assertTrue("Parse Error:\n" + TC.parserResult.getErrorString(),
+		assertTrue(Settings.release.toString() + " Parse Error:\n" + TC.parserResult.getErrorString(),
 				TC.parserResult.errors.isEmpty());
 		assertTrue("Type Check Error:\n" + TC.getErrorString(),
 				TC.errors.isEmpty());
