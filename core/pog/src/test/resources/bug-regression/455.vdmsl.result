@@ -1,1 +1,1 @@
-["state invariant holds obligation:(inv_S(mk_S(x, y)) \u003d\u003e inv_S(mk_S(nx, ny)))"]
+["state invariant satisfiable obligation:(exists x:nat, y:nat \u0026 (x \u003c y))","state invariant holds obligation:(inv_S(mk_S(x, y)) \u003d\u003e inv_S(mk_S(nx, ny)))"]
