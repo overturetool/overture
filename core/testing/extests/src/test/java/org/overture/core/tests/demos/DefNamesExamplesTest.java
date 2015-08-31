@@ -13,29 +13,29 @@ import com.google.gson.reflect.TypeToken;
 
 /**
  * Demonstration of new Overture tests on examples. Takes an AST and dumps the
- * entire content to a string. <br>
+ * definition names to a list of strings. <br>
  * <br>
- * This test operates on result type {@link ExampleIdTestResult}.
+ * This test operates on result type {@link DefNamesTestResult}.
  * 
  * @author ldc
  */
 // @Ignore
 @RunWith(JUnitParamsRunner.class)
-public class IdExamplesTest extends ParamExamplesTest<ExampleIdTestResult> {
+public class DefNamesExamplesTest extends ParamExamplesTest<DefNamesTestResult> {
 
 
 
-	private static final String UPDATE_PROPERTY = "tests.update.example.ExamplesID";
+	private static final String UPDATE_PROPERTY = "tests.update.example.DefNames";
 
 	@Override
-	public ExampleIdTestResult processModel(List<INode> model) {
-		return new ExampleIdTestResult(model, testName);
+	public DefNamesTestResult processModel(List<INode> model) {
+		return new DefNamesTestResult(model, testName);
 	}
 
 	@Override
-	public void compareResults(ExampleIdTestResult actual,
-			ExampleIdTestResult expected) {
-		ExampleIdTestResult.compare(actual, expected, testName);
+	public void compareResults(DefNamesTestResult actual,
+			DefNamesTestResult expected) {
+		DefNamesTestResult.compare(actual, expected, testName);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class IdExamplesTest extends ParamExamplesTest<ExampleIdTestResult> {
 	 */
 	@Override
 	public Type getResultType() {
-		Type resultType = new TypeToken<ExampleIdTestResult>() {
+		Type resultType = new TypeToken<DefNamesTestResult>() {
 		}.getType();
 		return resultType;
 
