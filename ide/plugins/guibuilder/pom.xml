@@ -37,7 +37,7 @@
                   <artifactItem>
                       <groupId>org.overturetool.core</groupId>
                       <artifactId>guibuilder</artifactId>
-                     <version>${project.version}</version>
+                      <version>${project.version}</version>
                   </artifactItem>
                   <artifactItem>
                       <groupId>net.sf.jopt-simple</groupId>
