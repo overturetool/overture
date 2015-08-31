@@ -1,1 +1,1 @@
-["non-zero obligation:(forall a:nat, b:nat, c:nat \u0026 (0 \u003c\u003e 0))","type compatibility obligation:(forall a:nat, b:nat, c:nat \u0026 is_((1 / 0), nat))"]
+["non-zero obligation in \u0027DEFAULT\u0027 (356.vdmsl) at line 4:21: (forall a:nat, b:nat, c:nat \u0026 (0 \u003c\u003e 0))","type compatibility obligation in \u0027DEFAULT\u0027 (356.vdmsl) at line 3:1: (forall a:nat, b:nat, c:nat \u0026 is_((1 / 0), nat))"]

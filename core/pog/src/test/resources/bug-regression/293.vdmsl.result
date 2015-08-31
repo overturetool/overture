@@ -1,1 +1,1 @@
-["non-zero obligation:((n \u003c\u003e 0) \u003d\u003e (n \u003c\u003e 0))","operation postcondition satisfiable obligation:(forall n:nat \u0026 (pre_ImplTest(n) \u003d\u003e (exists r:real \u0026 post_ImplTest(n, r))))"]
+["non-zero obligation in \u0027DEFAULT\u0027 (293.vdmsl) at line 5:13: ((n \u003c\u003e 0) \u003d\u003e (n \u003c\u003e 0))","operation postcondition satisfiable obligation in \u0027DEFAULT\u0027 (293.vdmsl) at line 3:1: (forall n:nat \u0026 (pre_ImplTest(n) \u003d\u003e (exists r:real \u0026 post_ImplTest(n, r))))"]
