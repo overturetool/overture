@@ -1,0 +1,24 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    private static final VDMMap m = MapUtil.map(new Maplet(2L, 5L));
+    private static final VDMSeq s = SeqUtil.seq(1L, 2L);
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return SeqUtil.mod(Utils.copy(s), Utils.copy(m));
+    }
+
+    public String toString() {
+        return "Entry{" + "m = " + Utils.toString(m) + ", s = " +
+        Utils.toString(s) + "}";
+    }
+}
+
+##########
