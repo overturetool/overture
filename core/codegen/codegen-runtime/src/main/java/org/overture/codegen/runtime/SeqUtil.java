@@ -44,8 +44,15 @@ public class SeqUtil
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static VDMSeq mod(VDMSeq seq, Maplet... maplets)
+	public static VDMSeq mod(VDMSeq seq, VDMMap map)
 	{
+		if(map == null)
+		{
+			throw new IllegalArgumentException("Cannot modify sequence from null");
+		}
+		
+		Maplet[] maplets = MapUtil.toMaplets(map);
+		
 		if(maplets == null)
 			throw new IllegalArgumentException("Cannot modify sequence from null");
 		
@@ -67,8 +74,15 @@ public class SeqUtil
 		return seq;
 	}
 	
-	public static String mod(String string, Maplet... maplets)
+	public static String mod(String string, VDMMap map)
 	{
+		if(map == null)
+		{
+			throw new IllegalArgumentException("Cannot modify sequence from null");
+		}
+		
+		Maplet[] maplets = MapUtil.toMaplets(map);
+		
 		if(maplets == null)
 			throw new IllegalArgumentException("Cannot modify sequence from null");
 

@@ -658,13 +658,6 @@ public class JavaFormat
 		return implementsClause;
 	}
 
-	public String formatMaplets(AEnumMapExpCG mapEnum) throws AnalysisException
-	{
-		LinkedList<AMapletExpCG> members = mapEnum.getMembers();
-
-		return "new Maplet[]{" + formatArgs(members) + "}";
-	}
-
 	public String formatArgs(List<? extends SExpCG> exps)
 			throws AnalysisException
 	{
