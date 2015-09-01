@@ -199,7 +199,7 @@ public class NoteBook {
 
     public void overrideMessage(final Number index, final VDMSeq newMessage) {
         messages = SeqUtil.mod(Utils.copy(messages),
-                new Maplet[] { new Maplet(index, Utils.copy(newMessage)) });
+                MapUtil.map(new Maplet(index, Utils.copy(newMessage))));
     }
 
     public VDMSeq getMessagesOrdered() {

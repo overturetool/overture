@@ -1697,7 +1697,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             POP3Message newMsg = oldMsg.Delete();
             SetUserMessages(user,
                 SeqUtil.mod(GetUserMessages(user),
-                    new Maplet[] { new Maplet(index, newMsg) }));
+                    MapUtil.map(new Maplet(index, newMsg))));
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).DeleteMessage);
         }

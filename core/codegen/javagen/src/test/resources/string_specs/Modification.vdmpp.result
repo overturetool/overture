@@ -11,9 +11,9 @@ public class Entry {
     }
 
     public static Object Run() {
-        return SeqUtil.mod("a", new Maplet[] { new Maplet(1L, 'b') }) +
-        SeqUtil.mod(a, new Maplet[] { new Maplet(1L, 'm'), new Maplet(3L, 'l') }) +
-        SeqUtil.mod(f(), new Maplet[] { new Maplet(1L, 'b') });
+        return SeqUtil.mod("a", MapUtil.map(new Maplet(1L, 'b'))) +
+        SeqUtil.mod(a, MapUtil.map(new Maplet(1L, 'm'), new Maplet(3L, 'l'))) +
+        SeqUtil.mod(f(), MapUtil.map(new Maplet(1L, 'b')));
     }
 
     public static String f() {
