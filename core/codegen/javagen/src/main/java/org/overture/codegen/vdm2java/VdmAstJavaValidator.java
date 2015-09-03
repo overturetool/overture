@@ -18,9 +18,8 @@ import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ASetBind;
-import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
-import org.overture.ast.statements.ALetBeStStm;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 
@@ -97,20 +96,16 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private void validateQuantifiedExp(PExp node, List<PMultipleBind> bindings, String nodeStr)
+	private void validateQuantifiedExp(PExp node, List<PMultipleBind> bindings, String nodeStr) throws AnalysisException
 	{
 		if (inUnsupportedContext(node))
 		{
 			info.addUnsupportedNode(node, String.format("Generation of a %s is only supported within operations/functions", nodeStr));
 		}
 		
-		for(PMultipleBind multipleBind : bindings)
+		for(PMultipleBind mb : bindings)
 		{
-			if (!(multipleBind instanceof ASetMultipleBind))
-			{
-				info.addUnsupportedNode(node, String.format("Generation of a %s is only supported for multiple set binds. Got: %s", nodeStr, multipleBind));
-				return;
-			}
+			mb.apply(this);
 		}
 	}
 	
@@ -120,30 +115,9 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 		if (inUnsupportedContext(node))
 		{
 			info.addUnsupportedNode(node, "Generation of a let be st expression is only supported within operations/functions");
-			return;
 		}
 		
-		PMultipleBind multipleBind = node.getBind();
-		
-		if (!(multipleBind instanceof ASetMultipleBind))
-		{
-			info.addUnsupportedNode(node, "Generation of the let be st expression is only supported for a multiple set bind. Got: "
-					+ multipleBind);
-			return;
-		}
-	}
-	
-	@Override
-	public void caseALetBeStStm(ALetBeStStm node) throws AnalysisException
-	{
-		PMultipleBind multipleBind = node.getBind();
-		
-		if (!(multipleBind instanceof ASetMultipleBind))
-		{
-			info.addUnsupportedNode(node, "Generation of the let be st statement is only supported for a multiple set bind. Got: "
-					+ multipleBind);
-			return;
-		}
+		node.getBind().apply(this);
 	}
 	
 	@Override
@@ -153,17 +127,11 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 		if (inUnsupportedContext(node))
 		{
 			info.addUnsupportedNode(node, "Generation of a map comprehension is only supported within operations/functions");
-			return;
 		}
 		
-		for (PMultipleBind multipleBind : node.getBindings())
+		for (PMultipleBind mb : node.getBindings())
 		{
-			if (!(multipleBind instanceof ASetMultipleBind))
-			{
-				info.addUnsupportedNode(node, "Generation of a map comprehension is only supported for multiple set binds. Got: "
-						+ multipleBind);
-				return;
-			}
+			mb.apply(this);
 		}
 	}
 	
@@ -174,17 +142,11 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 		if (inUnsupportedContext(node))
 		{
 			info.addUnsupportedNode(node, "Generation of a set comprehension is only supported within operations/functions");
-			return;
 		}
 		
-		for (PMultipleBind multipleBind : node.getBindings())
+		for (PMultipleBind mb : node.getBindings())
 		{
-			if (!(multipleBind instanceof ASetMultipleBind))
-			{
-				info.addUnsupportedNode(node, "Generation of a set comprehension is only supported for multiple set binds. Got: "
-						+ multipleBind);
-				return;
-			}
+			mb.apply(this);
 		}
 	}
 	
@@ -197,6 +159,17 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 			info.addUnsupportedNode(node, "Generation of a sequence comprehension is only supported within operations/functions");
 			return;
 		}
+	}
+	
+	/**
+	 * Single type binds are supported for lambda expression, e.g. (lambda x : int & x) so we cannot report all of the
+	 * unsupported.
+	 */
+	
+	@Override
+	public void caseATypeMultipleBind(ATypeMultipleBind node) throws AnalysisException
+	{
+		info.addUnsupportedNode(node, "Type binds are not supported");
 	}
 
 	private boolean inUnsupportedContext(org.overture.ast.node.INode node)
