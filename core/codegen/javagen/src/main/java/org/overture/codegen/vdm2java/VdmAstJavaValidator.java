@@ -13,6 +13,7 @@ import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.ALetBeStExp;
+import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
@@ -106,6 +107,15 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 		for(PMultipleBind mb : bindings)
 		{
 			mb.apply(this);
+		}
+	}
+	
+	@Override
+	public void caseALetDefExp(ALetDefExp node) throws AnalysisException
+	{
+		if (info.getExpAssistant().isAssigned(node))
+		{
+			info.addUnsupportedNode(node, "Generation of a let expression is not supported in assignments");
 		}
 	}
 	
