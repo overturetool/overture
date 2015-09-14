@@ -509,7 +509,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				node.getName().setTypeQualifier(optype.getParameters());
 			}
 
-			question.assistantFactory.createACallStmAssistant().checkArgTypes(node, optype, optype.getParameters(), atypes);
+			checkArgTypes(node, optype, optype.getParameters(), atypes, question);
 			node.setType(optype.getResult());
 			return question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, optype.getResult(), node.getLocation());
 		} else if (question.assistantFactory.createPTypeAssistant().isFunction(type))
@@ -529,7 +529,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				node.getName().setTypeQualifier(ftype.getParameters());
 			}
 
-			question.assistantFactory.createACallStmAssistant().checkArgTypes(node, ftype, ftype.getParameters(), atypes);
+			checkArgTypes(node, ftype, ftype.getParameters(), atypes, question);
 			node.setType(ftype.getResult());
 			return question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, ftype.getResult(), node.getLocation());
 		} else
@@ -1434,6 +1434,28 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			return null;
 		}
 
+	}
+	
+	public void checkArgTypes(ACallStm node, PType type, List<PType> ptypes,
+			List<PType> atypes, TypeCheckInfo question) {
+		if (ptypes.size() != atypes.size()) {
+			TypeCheckerErrors.report(3216, "Expecting " + ptypes.size()
+					+ " arguments", node.getLocation(), node);
+		} else {
+			int i = 0;
+
+			for (PType atype : atypes) {
+				PType ptype = ptypes.get(i++);
+
+				if (!question.assistantFactory.getTypeComparator().compatible(ptype, atype)) {
+					TypeCheckerErrors.report(3217,
+							"Unexpected type for argument " + i,
+							node.getLocation(), type);
+					TypeCheckerErrors.detail2("Expected", ptype, "Actual",
+							atype);
+				}
+			}
+		}
 	}
 
 }

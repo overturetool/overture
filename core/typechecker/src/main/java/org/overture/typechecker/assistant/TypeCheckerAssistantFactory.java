@@ -75,7 +75,6 @@ import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ACallStmAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
@@ -567,11 +566,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 //		return new ACallObjectStatementAssistantTC(this);
 //	}
 
-	@Override
-	public ACallStmAssistantTC createACallStmAssistant()
-	{
-		return new ACallStmAssistantTC(this);
-	}
+//	@Override
+//	public ACallStmAssistantTC createACallStmAssistant()
+//	{
+//		return new ACallStmAssistantTC(this);
+//	}
 
 	// @Override
 	// public ACaseAlternativeStmAssistantTC createACaseAlternativeStmAssistant()
