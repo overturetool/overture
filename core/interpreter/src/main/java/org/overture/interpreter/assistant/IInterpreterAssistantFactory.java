@@ -11,7 +11,6 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AMutexSyncDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
@@ -83,7 +82,7 @@ public interface IInterpreterAssistantFactory extends
 
 	// ALocalDefinitionAssistantInterpreter createALocalDefinitionAssistant();
 
-	AMutexSyncDefinitionAssistantInterpreter createAMutexSyncDefinitionAssistant();
+//	AMutexSyncDefinitionAssistantInterpreter createAMutexSyncDefinitionAssistant();
 
 	ANamedTraceDefinitionAssistantInterpreter createANamedTraceDefinitionAssistant();
 

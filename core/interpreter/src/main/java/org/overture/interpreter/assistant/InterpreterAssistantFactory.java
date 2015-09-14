@@ -12,7 +12,6 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AMutexSyncDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
@@ -172,10 +171,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	// return new ALocalDefinitionAssistantInterpreter(this);
 	// }
 
-	public AMutexSyncDefinitionAssistantInterpreter createAMutexSyncDefinitionAssistant()
-	{
-		return new AMutexSyncDefinitionAssistantInterpreter(this);
-	}
+//	public AMutexSyncDefinitionAssistantInterpreter createAMutexSyncDefinitionAssistant()
+//	{
+//		return new AMutexSyncDefinitionAssistantInterpreter(this);
+//	}
 
 	public ANamedTraceDefinitionAssistantInterpreter createANamedTraceDefinitionAssistant()
 	{
