@@ -60,7 +60,6 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -297,11 +296,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new ASystemClassDefinitionAssistantTC(this);
 	// }
 
-	@Override
-	public AThreadDefinitionAssistantTC createAThreadDefinitionAssistant()
-	{
-		return new AThreadDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public AThreadDefinitionAssistantTC createAThreadDefinitionAssistant()
+//	{
+//		return new AThreadDefinitionAssistantTC(this);
+//	}
 
 	@Override
 	public ATypeDefinitionAssistantTC createATypeDefinitionAssistant()

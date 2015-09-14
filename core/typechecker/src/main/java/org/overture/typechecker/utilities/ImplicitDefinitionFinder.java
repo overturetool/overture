@@ -52,6 +52,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
@@ -300,7 +301,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		// ORIGINAL CODE FROM ASSISTANT
 		// node.setOperationDef(AThreadDefinitionAssistantTC.getThreadDefinition(node));
 		// Mine non static call of the code.
-		node.setOperationDef(af.createAThreadDefinitionAssistant().getThreadDefinition(node));
+		node.setOperationDef(getThreadDefinition(node));
 	}
 
 	@Override
@@ -372,6 +373,18 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		AFunctionType ftype = AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
 
 		return AstFactory.newAExplicitFunctionDefinition(d.getName().getInvName(loc), NameScope.GLOBAL, null, ftype, parameters, d.getInvExpression(), null, null, true, null);
+	}
+	
+	public AExplicitOperationDefinition getThreadDefinition(AThreadDefinition d)
+	{
+
+		AOperationType type = AstFactory.newAOperationType(d.getLocation()); // () ==> ()
+
+		AExplicitOperationDefinition def = AstFactory.newAExplicitOperationDefinition(d.getOperationName(), type, new Vector<PPattern>(), null, null, d.getStatement().clone());
+
+		def.setAccess(d.getAccess().clone());
+		def.setClassDefinition(d.getClassDefinition());
+		return def;
 	}
 
 }
