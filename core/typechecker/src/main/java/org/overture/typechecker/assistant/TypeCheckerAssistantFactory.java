@@ -81,7 +81,6 @@ import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.utilities.CallableOperationChecker;
 import org.overture.typechecker.utilities.ComposeTypeCollector;
@@ -209,11 +208,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ARecordInvariantTypeAssistantTC(this);
 	}
 
-	@Override
-	public AUnionTypeAssistantTC createAUnionTypeAssistant()
-	{
-		return new AUnionTypeAssistantTC(this);
-	}
+//	@Override
+//	public AUnionTypeAssistantTC createAUnionTypeAssistant()
+//	{
+//		return new AUnionTypeAssistantTC(this);
+//	}
 
 	@Override
 	public PTypeAssistantTC createPTypeAssistant()
