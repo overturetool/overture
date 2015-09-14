@@ -67,6 +67,7 @@ import org.overture.ast.statements.AExternalClause;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
+import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
@@ -84,6 +85,7 @@ import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
+import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.ast.typechecker.NameScope;
@@ -151,7 +153,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			// Mark assignment target as initialized (so no warnings)
 			PDefinition state;
-			state = question.assistantFactory.createPStateDesignatorAssistant().targetDefinition(node.getTarget(), question);
+			state = targetDefinition(node.getTarget(), question);
 
 			if (state instanceof AInstanceVariableDefinition)
 			{
@@ -1418,6 +1420,20 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			rtypes.add(add);
 			return false;
 		}
+	}
+	
+	public PDefinition targetDefinition(PStateDesignator pStateDesignator,
+			TypeCheckInfo question)
+	{
+		if (pStateDesignator instanceof AIdentifierStateDesignator)
+		{
+			AIdentifierStateDesignator stateDesignator = (AIdentifierStateDesignator) pStateDesignator;
+			return question.env.findName(stateDesignator.getName(), NameScope.STATE);
+		} else
+		{
+			return null;
+		}
+
 	}
 
 }
