@@ -32,7 +32,6 @@ import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistant
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.PTypeListAssistant;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -346,7 +345,7 @@ public interface IInterpreterAssistantFactory extends
 
 	PTypeAssistantInterpreter createPTypeAssistant();
 
-	PTypeListAssistant createPTypeListAssistant();
+//	PTypeListAssistant createPTypeListAssistant();
 
 	// SBasicTypeAssistantInterpreter createSBasicTypeAssistant();
 
