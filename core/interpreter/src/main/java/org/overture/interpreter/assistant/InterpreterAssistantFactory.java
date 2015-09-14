@@ -20,7 +20,6 @@ import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpr
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
@@ -331,10 +330,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new AIsOfBaseClassExpAssistantInterpreter(this);
 //	}
 
-	public AIsOfClassExpAssistantInterpreter createAIsOfClassExpAssistant()
-	{
-		return new AIsOfClassExpAssistantInterpreter(this);
-	}
+//	public AIsOfClassExpAssistantInterpreter createAIsOfClassExpAssistant()
+//	{
+//		return new AIsOfClassExpAssistantInterpreter(this);
+//	}
 
 	// public ALambdaExpAssistantInterpreter createALambdaExpAssistant()
 	// {
@@ -652,10 +651,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	// return new ACallStmAssistantInterpreter(this);
 	// }
 
-//	public ACaseAlternativeStmAssistantInterpreter createACaseAlternativeStmAssistant()
-//	{
-//		return new ACaseAlternativeStmAssistantInterpreter(this);
-//	}
+	//	public ACaseAlternativeStmAssistantInterpreter createACaseAlternativeStmAssistant()
+	//	{
+	//		return new ACaseAlternativeStmAssistantInterpreter(this);
+	//	}
 
 	// public ACasesStmAssistantInterpreter createACasesStmAssistant()
 	// {
