@@ -94,6 +94,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
@@ -788,14 +789,14 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				AUnionType ust = (AUnionType) stype;
 				for (PType t : ust.getTypes())
 				{
-					if (question.assistantFactory.createANonDeterministicSimpleBlockStmAssistant().addOne(rtypes, t))
+					if (addOne(rtypes, t))
 					{
 						rcount++;
 					}
 				}
 			} else
 			{
-				if (question.assistantFactory.createANonDeterministicSimpleBlockStmAssistant().addOne(rtypes, stype))
+				if (addOne(rtypes, stype))
 				{
 					rcount++;
 				}
@@ -1399,6 +1400,23 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 					TypeCheckerErrors.detail2("Expected", ptype, "Actual", atype);
 				}
 			}
+		}
+	}
+	
+	public boolean addOne(PTypeSet rtypes, PType add)
+	{
+		if (add instanceof AVoidReturnType)
+		{
+			rtypes.add(AstFactory.newAVoidType(add.getLocation()));
+			return true;
+		} else if (!(add instanceof AVoidType))
+		{
+			rtypes.add(add);
+			return true;
+		} else
+		{
+			rtypes.add(add);
+			return false;
 		}
 	}
 

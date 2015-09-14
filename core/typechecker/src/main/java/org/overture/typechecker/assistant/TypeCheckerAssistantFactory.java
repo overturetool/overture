@@ -78,7 +78,6 @@ import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
 import org.overture.typechecker.assistant.statement.ACallStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ANonDeterministicSimpleBlockStmAssistantTC;
 import org.overture.typechecker.assistant.statement.PStateDesignatorAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
@@ -638,11 +637,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new ALetBeStStmAssistantTC(this);
 	// }
 
-	@Override
-	public ANonDeterministicSimpleBlockStmAssistantTC createANonDeterministicSimpleBlockStmAssistant()
-	{
-		return new ANonDeterministicSimpleBlockStmAssistantTC(this);
-	}
+//	@Override
+//	public ANonDeterministicSimpleBlockStmAssistantTC createANonDeterministicSimpleBlockStmAssistant()
+//	{
+//		return new ANonDeterministicSimpleBlockStmAssistantTC(this);
+//	}
 
 	// @Override
 	// public AReturnStmAssistantTC createAReturnStmAssistant()
