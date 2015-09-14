@@ -60,7 +60,6 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
@@ -126,7 +125,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 //	AThreadDefinitionAssistantTC createAThreadDefinitionAssistant();
 
-	ATypeDefinitionAssistantTC createATypeDefinitionAssistant();
+//	ATypeDefinitionAssistantTC createATypeDefinitionAssistant();
 
 	// AValueDefinitionAssistantTC createAValueDefinitionAssistant();
 

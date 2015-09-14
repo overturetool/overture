@@ -311,7 +311,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		if (node.getInvPattern() != null)
 		{
 			// node.setInvdef(getInvDefinition(d)); //Original code from Assistant.
-			node.setInvdef(af.createATypeDefinitionAssistant().getInvDefinition(node));
+			node.setInvdef(getInvDefinition(node));
 			node.getInvType().setInvDef(node.getInvdef());
 		} else
 		{
@@ -373,6 +373,39 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		AFunctionType ftype = AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
 
 		return AstFactory.newAExplicitFunctionDefinition(d.getName().getInvName(loc), NameScope.GLOBAL, null, ftype, parameters, d.getInvExpression(), null, null, true, null);
+	}
+	
+	public AExplicitFunctionDefinition getInvDefinition(ATypeDefinition d)
+	{
+
+		ILexLocation loc = d.getInvPattern().getLocation();
+		List<PPattern> params = new Vector<PPattern>();
+		params.add(d.getInvPattern().clone());
+
+		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		parameters.add(params);
+
+		PTypeList ptypes = new PTypeList();
+
+		if (d.getInvType() instanceof ARecordInvariantType)
+		{
+			// Records are inv_R: R +> bool
+			ptypes.add(AstFactory.newAUnresolvedType(d.getName().clone()));
+		} else
+		{
+			// Named types are inv_T: x +> bool, for T = x
+			ANamedInvariantType nt = (ANamedInvariantType) d.getInvType();
+			ptypes.add(nt.getType().clone());
+		}
+
+		AFunctionType ftype = AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
+
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getInvName(loc), NameScope.GLOBAL, null, ftype, parameters, d.getInvExpression(), null, null, true, null);
+
+		def.setAccess(d.getAccess().clone()); // Same as type's
+		def.setClassDefinition(d.getClassDefinition());
+
+		return def;
 	}
 	
 	public AExplicitOperationDefinition getThreadDefinition(AThreadDefinition d)
