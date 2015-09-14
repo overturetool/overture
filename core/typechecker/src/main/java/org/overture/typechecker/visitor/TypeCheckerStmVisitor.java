@@ -330,7 +330,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.getField().getLocation().executable(true);
-		List<PType> atypes = question.assistantFactory.createACallObjectStatementAssistant().getArgTypes(node.getArgs(), THIS, question);
+		List<PType> atypes = getArgTypes(node.getArgs(), THIS, question);
 		node.getField().setTypeQualifier(atypes);
 		PDefinition fdef = classenv.findName(node.getField(), question.scope);
 		
@@ -406,7 +406,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			AOperationType optype = question.assistantFactory.createPTypeAssistant().getOperation(type);
 			optype.apply(THIS, question);
 			node.getField().setTypeQualifier(optype.getParameters());
-			question.assistantFactory.createACallObjectStatementAssistant().checkArgTypes(type, optype.getParameters(), atypes); // Not
+			checkArgTypes(type, optype.getParameters(), atypes, question); // Not
 																																	// necessary?
 			node.setType(optype.getResult());
 			return question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, node.getType(), node.getLocation());
@@ -419,7 +419,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			AFunctionType ftype = question.assistantFactory.createPTypeAssistant().getFunction(type);
 			ftype.apply(THIS, question);
 			node.getField().setTypeQualifier(ftype.getParameters());
-			question.assistantFactory.createACallObjectStatementAssistant().checkArgTypes(type, ftype.getParameters(), atypes); // Not
+			checkArgTypes(type, ftype.getParameters(), atypes, question); // Not
 																																// necessary?
 			node.setType(ftype.getResult());
 			return question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, node.getType(), node.getLocation());
@@ -435,7 +435,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseACallStm(ACallStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		List<PType> atypes = question.assistantFactory.createACallObjectStatementAssistant().getArgTypes(node.getArgs(), THIS, question);
+		List<PType> atypes = getArgTypes(node.getArgs(), THIS, question);
 
 		if (question.env.isVDMPP())
 		{
@@ -1362,6 +1362,44 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			return new PTypeSet(question.assistantFactory);
 		}
 
+	}
+	
+	public List<PType> getArgTypes(List<PExp> args,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) throws AnalysisException
+	{
+		List<PType> types = new LinkedList<PType>();
+
+		for (PExp e : args)
+		{
+			types.add(e.apply(rootVisitor, question));
+		}
+
+		return types;
+	}
+
+	public void checkArgTypes(PType type, List<PType> ptypes, List<PType> atypes, TypeCheckInfo question)
+	{
+		if (ptypes.size() != atypes.size())
+		{
+			TypeCheckerErrors.report(3211, "Expecting " + ptypes.size()
+					+ " arguments", type.getLocation(), type);
+		} else
+		{
+			int i = 0;
+
+			for (PType atype : atypes)
+			{
+				PType ptype = ptypes.get(i++);
+
+				if (!question.assistantFactory.getTypeComparator().compatible(ptype, atype))
+				{
+					TypeCheckerErrors.report(3212, "Unexpected type for argument "
+							+ i, atype.getLocation(), atype);
+					TypeCheckerErrors.detail2("Expected", ptype, "Actual", atype);
+				}
+			}
+		}
 	}
 
 }
