@@ -891,7 +891,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				for (ILexNameToken exname : clause.getIdentifiers())
 				{
 					PDefinition sdef = question.env.findName(exname, NameScope.STATE);
-					question.assistantFactory.createAExternalClauseAssistant().typeResolve(clause, THIS, question);
+					typeResolve(clause, THIS, question);
 
 					if (sdef == null)
 					{
@@ -1635,6 +1635,14 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		}
 
 		return list;
+	}
+	
+	public void typeResolve(AExternalClause clause,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question)
+	{
+		clause.setType(question.assistantFactory.createPTypeAssistant().typeResolve(clause.getType(), null, rootVisitor, question));
+
 	}
 
 }
