@@ -81,7 +81,6 @@ import org.overture.typechecker.assistant.statement.ACallStmAssistantTC;
 import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
 import org.overture.typechecker.assistant.statement.ANonDeterministicSimpleBlockStmAssistantTC;
 import org.overture.typechecker.assistant.statement.PStateDesignatorAssistantTC;
-import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
@@ -246,7 +245,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	// SSimpleBlockStmAssistantTC createSSimpleBlockStmAssistant();
 
 	// Type
-	AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant();
+//	AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant();
 
 	// ABracketTypeAssistantTC createABracketTypeAssistant();
 

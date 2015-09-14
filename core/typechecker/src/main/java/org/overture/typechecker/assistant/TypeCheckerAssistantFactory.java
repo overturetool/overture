@@ -81,7 +81,6 @@ import org.overture.typechecker.assistant.statement.ACallStmAssistantTC;
 import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
 import org.overture.typechecker.assistant.statement.ANonDeterministicSimpleBlockStmAssistantTC;
 import org.overture.typechecker.assistant.statement.PStateDesignatorAssistantTC;
-import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
@@ -172,11 +171,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	transient TypeComparator typeComp;
 	transient LexNameTokenAssistant lnt;
 
-	@Override
-	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant()
-	{
-		return new AApplyObjectDesignatorAssistantTC(this);
-	}
+//	@Override
+//	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant()
+//	{
+//		return new AApplyObjectDesignatorAssistantTC(this);
+//	}
 
 	// @Override
 	// public ABracketTypeAssistantTC createABracketTypeAssistant()
