@@ -27,7 +27,6 @@ import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInte
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
@@ -305,7 +304,7 @@ public interface IInterpreterAssistantFactory extends
 	//
 	// AReturnStmAssistantInterpreter createAReturnStmAssistant();
 
-	AStartStmAssistantInterpreter createAStartStmAssistant();
+//	AStartStmAssistantInterpreter createAStartStmAssistant();
 
 	// ATixeStmAssistantInterpreter createATixeStmAssistant();
 
