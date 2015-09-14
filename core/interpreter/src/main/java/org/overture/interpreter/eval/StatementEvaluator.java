@@ -358,7 +358,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		for (ACaseAlternativeStm c : node.getCases())
 		{
-			Value rv = ctxt.assistantFactory.createACaseAlternativeStmAssistant().eval(c, val, ctxt);
+			Value rv = eval(c, val, ctxt);
 			if (rv != null)
 			{
 				return rv;
@@ -1429,6 +1429,25 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		return evalContext == null ? null
 				: node.getStatement().apply(VdmRuntime.getStatementEvaluator(), evalContext);
+	}
+	
+	private Value eval(ACaseAlternativeStm node, Value val, Context ctxt)
+			throws AnalysisException
+	{
+		Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "case alternative", ctxt);
+
+		node.getPattern().getLocation().hit();
+		node.getLocation().hit();
+		try
+		{
+			evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getPattern(), val, ctxt));
+			return node.getResult().apply(VdmRuntime.getStatementEvaluator(), evalContext);
+		} catch (PatternMatchException e)
+		{
+			// CasesStatement tries the others
+		}
+
+		return null;
 	}
 
 }

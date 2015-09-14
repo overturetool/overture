@@ -29,7 +29,6 @@ import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInte
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
@@ -653,10 +652,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	// return new ACallStmAssistantInterpreter(this);
 	// }
 
-	public ACaseAlternativeStmAssistantInterpreter createACaseAlternativeStmAssistant()
-	{
-		return new ACaseAlternativeStmAssistantInterpreter(this);
-	}
+//	public ACaseAlternativeStmAssistantInterpreter createACaseAlternativeStmAssistant()
+//	{
+//		return new ACaseAlternativeStmAssistantInterpreter(this);
+//	}
 
 	// public ACasesStmAssistantInterpreter createACasesStmAssistant()
 	// {
