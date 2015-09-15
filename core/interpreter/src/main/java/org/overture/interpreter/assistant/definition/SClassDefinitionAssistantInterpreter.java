@@ -164,7 +164,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		return null;
 	}
 
-	protected ObjectValue makeNewInstance(SClassDefinition node,
+	public ObjectValue makeNewInstance(SClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt,
 
 			Map<ILexNameToken, ObjectValue> done, boolean nested)

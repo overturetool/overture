@@ -13,7 +13,6 @@ import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistan
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
@@ -94,7 +93,7 @@ public interface IInterpreterAssistantFactory extends
 
 	AStateDefinitionAssistantInterpreter createAStateDefinitionAssistant();
 
-	ASystemClassDefinitionAssistantInterpreter createASystemClassDefinitionAssistant();
+//	ASystemClassDefinitionAssistantInterpreter createASystemClassDefinitionAssistant();
 
 	// AThreadDefinitionAssistantInterpreter createAThreadDefinitionAssistant();
 

@@ -14,7 +14,6 @@ import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistan
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
@@ -201,10 +200,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new AStateDefinitionAssistantInterpreter(this);
 	}
 
-	public ASystemClassDefinitionAssistantInterpreter createASystemClassDefinitionAssistant()
-	{
-		return new ASystemClassDefinitionAssistantInterpreter(this);
-	}
+//	public ASystemClassDefinitionAssistantInterpreter createASystemClassDefinitionAssistant()
+//	{
+//		return new ASystemClassDefinitionAssistantInterpreter(this);
+//	}
 
 	// public AThreadDefinitionAssistantInterpreter createAThreadDefinitionAssistant()
 	// {
