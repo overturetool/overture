@@ -46,6 +46,7 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PPattern;
@@ -59,7 +60,6 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 
 /**
  * This class implements a way to find ImplicitDefinitions from nodes from the AST.
@@ -133,7 +133,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 							{
 								TypeCheckerErrors.report(3305, "CPU frequency to slow: "
 										+ speed + " Hz", d.getLocation(), d);
-							} else if (speed > ACpuClassDefinitionAssistantTC.CPU_MAX_FREQUENCY)
+							} else if (speed > AstFactoryTC.CPU_MAX_FREQUENCY)
 							{
 								TypeCheckerErrors.report(3306, "CPU frequency to fast: "
 										+ speed + " Hz", d.getLocation(), d);

@@ -55,7 +55,6 @@ import org.overture.typechecker.LexNameTokenAssistant;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
@@ -99,7 +98,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant();
 
-	ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistant();
+//	ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistant();
 
 	AExplicitFunctionDefinitionAssistantTC createAExplicitFunctionDefinitionAssistant();
 
