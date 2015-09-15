@@ -23,6 +23,7 @@ package org.overture.typechecker.visitor;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
 
@@ -232,7 +233,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 					for (PType t : ust.getTypes())
 					{
-						question.assistantFactory.createABlockSimpleBlockStmAssistant().addOne(rtypes, t);
+						addOneType(rtypes, t);
 
 						if (t instanceof AVoidType || t instanceof AUnknownType)
 						{
@@ -241,7 +242,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 					}
 				} else
 				{
-					question.assistantFactory.createABlockSimpleBlockStmAssistant().addOne(rtypes, stype);
+					addOneType(rtypes, stype);
 
 					if (stype instanceof AVoidType
 							|| stype instanceof AUnknownType)
@@ -1419,6 +1420,17 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			rtypes.add(add);
 			return false;
+		}
+	}
+	
+	public void addOneType(Set<PType> rtypes, PType add)
+	{
+		if (add instanceof AVoidReturnType)
+		{
+			rtypes.add(AstFactory.newAVoidType(add.getLocation()));
+		} else if (!(add instanceof AVoidType))
+		{
+			rtypes.add(add);
 		}
 	}
 	

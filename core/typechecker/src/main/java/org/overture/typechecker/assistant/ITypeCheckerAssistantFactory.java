@@ -74,7 +74,6 @@ import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
-import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
@@ -207,7 +206,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	// statement
 	// AAlwaysStmAssistantTC createAAlwaysStmAssistant();
 	// AAssignmentStmAssistantTC createAAssignmentStmAssistant();
-	ABlockSimpleBlockStmAssistantTC createABlockSimpleBlockStmAssistant();
+//	ABlockSimpleBlockStmAssistantTC createABlockSimpleBlockStmAssistant();
 
 //	ACallObjectStatementAssistantTC createACallObjectStatementAssistant();
 
