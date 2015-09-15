@@ -96,7 +96,7 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 	{
 		if (type instanceof AUnionType)
 		{
-			return af.createAUnionTypeAssistant().isUnknown((AUnionType) type);
+			return isUnknown((AUnionType) type);
 		} else if (type instanceof AUnknownType)
 		{
 			return true;
@@ -558,5 +558,18 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 		}
 
 		return actual;
+	}
+	
+	public boolean isUnknown(AUnionType type)
+	{
+		for (PType t : type.getTypes())
+		{
+			if (af.createPTypeAssistant().isUnknown(t))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

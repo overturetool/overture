@@ -6,7 +6,10 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.pattern.PTypeList;
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AInMapMapType;
@@ -31,9 +34,13 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.InvariantValue;
 import org.overture.interpreter.values.MapValue;
+import org.overture.interpreter.values.NameValuePair;
+import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NilValue;
 import org.overture.interpreter.values.NumericValue;
 import org.overture.interpreter.values.ParameterValue;
+import org.overture.interpreter.values.Quantifier;
+import org.overture.interpreter.values.QuantifierList;
 import org.overture.interpreter.values.QuoteValue;
 import org.overture.interpreter.values.RecordValue;
 import org.overture.interpreter.values.SetValue;
@@ -164,7 +171,7 @@ public class AllValuesCollector extends
 
 		ValueList results = new ValueList();
 
-		for (Value v : af.createPTypeListAssistant().getAllValues(types, ctxt))
+		for (Value v : getAllValues(types, ctxt))
 		{
 			try
 			{
@@ -221,7 +228,7 @@ public class AllValuesCollector extends
 	public ValueList caseAProductType(AProductType type, Context ctxt)
 			throws AnalysisException
 	{
-		return af.createPTypeListAssistant().getAllValues(type.getTypes(), ctxt);
+		return getAllValues(type.getTypes(), ctxt);
 
 	}
 
@@ -234,7 +241,7 @@ public class AllValuesCollector extends
 		tuple.add(type.getTo());
 
 		ValueList results = new ValueList();
-		ValueList tuples = af.createPTypeListAssistant().getAllValues(tuple, ctxt);
+		ValueList tuples = getAllValues(tuple, ctxt);
 		ValueSet set = new ValueSet();
 		set.addAll(tuples);
 		List<ValueSet> psets = set.powerSet();
@@ -328,6 +335,39 @@ public class AllValuesCollector extends
 			throws AnalysisException
 	{
 		return null;
+	}
+	
+	public ValueList getAllValues(List<PType> linkedList, Context ctxt)
+			throws AnalysisException
+	{
+		QuantifierList quantifiers = new QuantifierList();
+		int n = 0;
+
+		for (PType t : linkedList)
+		{
+			LexNameToken name = new LexNameToken("#", String.valueOf(n), t.getLocation());
+			PPattern p = AstFactory.newAIdentifierPattern(name);
+			Quantifier q = new Quantifier(p, af.createPTypeAssistant().getAllValues(t, ctxt));
+			quantifiers.add(q);
+		}
+
+		quantifiers.init(ctxt, true);
+		ValueList results = new ValueList();
+
+		while (quantifiers.hasNext())
+		{
+			NameValuePairList nvpl = quantifiers.next();
+			ValueList list = new ValueList();
+
+			for (NameValuePair nvp : nvpl)
+			{
+				list.add(nvp.value);
+			}
+
+			results.add(new TupleValue(list));
+		}
+
+		return results;
 	}
 
 }

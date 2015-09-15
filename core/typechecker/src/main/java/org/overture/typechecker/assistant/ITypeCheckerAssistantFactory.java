@@ -54,14 +54,10 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.LexNameTokenAssistant;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
@@ -76,18 +72,10 @@ import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
-import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ACallObjectStatementAssistantTC;
-import org.overture.typechecker.assistant.statement.ACallStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
-import org.overture.typechecker.assistant.statement.ANonDeterministicSimpleBlockStmAssistantTC;
-import org.overture.typechecker.assistant.statement.PStateDesignatorAssistantTC;
-import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.utilities.DefinitionFinder;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
@@ -107,9 +95,9 @@ import org.overture.typechecker.utilities.type.QualifiedDefinition;
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
 
-	ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant();
+//	ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant();
 
-	ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistant();
+//	ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistant();
 
 	AExplicitFunctionDefinitionAssistantTC createAExplicitFunctionDefinitionAssistant();
 
@@ -129,9 +117,9 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	// ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant();
 
-	AThreadDefinitionAssistantTC createAThreadDefinitionAssistant();
+//	AThreadDefinitionAssistantTC createAThreadDefinitionAssistant();
 
-	ATypeDefinitionAssistantTC createATypeDefinitionAssistant();
+//	ATypeDefinitionAssistantTC createATypeDefinitionAssistant();
 
 	// AValueDefinitionAssistantTC createAValueDefinitionAssistant();
 
@@ -216,30 +204,30 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	// statement
 	// AAlwaysStmAssistantTC createAAlwaysStmAssistant();
 	// AAssignmentStmAssistantTC createAAssignmentStmAssistant();
-	ABlockSimpleBlockStmAssistantTC createABlockSimpleBlockStmAssistant();
+//	ABlockSimpleBlockStmAssistantTC createABlockSimpleBlockStmAssistant();
 
-	ACallObjectStatementAssistantTC createACallObjectStatementAssistant();
+//	ACallObjectStatementAssistantTC createACallObjectStatementAssistant();
 
-	ACallStmAssistantTC createACallStmAssistant();
+//	ACallStmAssistantTC createACallStmAssistant();
 
 	// ACaseAlternativeStmAssistantTC createACaseAlternativeStmAssistant();
 	// ACasesStmAssistantTC createACasesStmAssistant();
 	// AElseIfStmAssistantTC createAElseIfStmAssistant();
 	// AExitStmAssistantTC createAExitStmAssistant();
-	AExternalClauseAssistantTC createAExternalClauseAssistant();
+//	AExternalClauseAssistantTC createAExternalClauseAssistant();
 
 	// AForAllStmAssistantTC createAForAllStmAssistant();
 	// AForIndexStmAssistantTC createAForIndexStmAssistant();
 	// AForPatternBindStmAssitantTC createAForPatternBindStmAssitant();
 	// AIfStmAssistantTC createAIfStmAssistant();
 	// ALetBeStStmAssistantTC createALetBeStStmAssistant();
-	ANonDeterministicSimpleBlockStmAssistantTC createANonDeterministicSimpleBlockStmAssistant();
+//	ANonDeterministicSimpleBlockStmAssistantTC createANonDeterministicSimpleBlockStmAssistant();
 
 	// AReturnStmAssistantTC createAReturnStmAssistant();
 	// ATixeStmAssistantTC createATixeStmAssistant();
 	// ATrapStmAssistantTC createATrapStmAssistant();
 	// AWhileStmAssistantTC createAWhileStmAssistant();
-	PStateDesignatorAssistantTC createPStateDesignatorAssistant();
+//	PStateDesignatorAssistantTC createPStateDesignatorAssistant();
 
 	//PStmAssistantTC createPStmAssistant();
 
@@ -247,7 +235,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	// SSimpleBlockStmAssistantTC createSSimpleBlockStmAssistant();
 
 	// Type
-	AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant();
+//	AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant();
 
 	// ABracketTypeAssistantTC createABracketTypeAssistant();
 
@@ -261,7 +249,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	ARecordInvariantTypeAssistantTC createARecordInvariantTypeAssistant();
 
-	AUnionTypeAssistantTC createAUnionTypeAssistant();
+//	AUnionTypeAssistantTC createAUnionTypeAssistant();
 
 	PTypeAssistantTC createPTypeAssistant();
 

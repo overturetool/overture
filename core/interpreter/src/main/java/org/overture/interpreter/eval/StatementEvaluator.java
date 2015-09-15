@@ -60,10 +60,13 @@ import org.overture.config.Settings;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ExitException;
+import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
+import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -358,7 +361,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		for (ACaseAlternativeStm c : node.getCases())
 		{
-			Value rv = ctxt.assistantFactory.createACaseAlternativeStmAssistant().eval(c, val, ctxt);
+			Value rv = eval(c, val, ctxt);
 			if (rv != null)
 			{
 				return rv;
@@ -779,14 +782,14 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					ObjectValue target = v.objectValue(ctxt);
 					OperationValue op = target.getThreadOperation(ctxt);
 
-					ctxt.assistantFactory.createAStartStmAssistant().start(node, target, op, ctxt);
+					start(node, target, op, ctxt);
 				}
 			} else
 			{
 				ObjectValue target = value.objectValue(ctxt);
 				OperationValue op = target.getThreadOperation(ctxt);
 
-				ctxt.assistantFactory.createAStartStmAssistant().start(node, target, op, ctxt);
+				start(node, target, op, ctxt);
 			}
 
 			return new VoidValue();
@@ -1429,6 +1432,85 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		return evalContext == null ? null
 				: node.getStatement().apply(VdmRuntime.getStatementEvaluator(), evalContext);
+	}
+	
+	private Value eval(ACaseAlternativeStm node, Value val, Context ctxt)
+			throws AnalysisException
+	{
+		Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "case alternative", ctxt);
+
+		node.getPattern().getLocation().hit();
+		node.getLocation().hit();
+		try
+		{
+			evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getPattern(), val, ctxt));
+			return node.getResult().apply(VdmRuntime.getStatementEvaluator(), evalContext);
+		} catch (PatternMatchException e)
+		{
+			// CasesStatement tries the others
+		}
+
+		return null;
+	}
+	
+	public void start(AStartStm node, ObjectValue target, OperationValue op,
+			Context ctxt) throws AnalysisException
+	{
+		if (op.body instanceof APeriodicStm)
+		{
+			RootContext global = ClassInterpreter.getInstance().initialContext;
+			Context pctxt = new ObjectContext(ctxt.assistantFactory, op.name.getLocation(), "async", global, target);
+			APeriodicStm ps = (APeriodicStm) op.body;
+
+			// We disable the swapping and time (RT) as periodic evaluation should be "free".
+			try
+			{
+				pctxt.threadState.setAtomic(true);
+				ps.apply(VdmRuntime.getStatementEvaluator(), pctxt); // Ignore return value
+			} finally
+			{
+				pctxt.threadState.setAtomic(false);
+			}
+
+			OperationValue pop = pctxt.lookup(ps.getOpname()).operationValue(pctxt);
+
+			long period = ps.getPeriod();
+			long jitter = ps.getJitter();
+			long delay = ps.getDelay();
+			long offset = ps.getOffset();
+
+			// Note that periodic threads never set the stepping flag
+
+			new PeriodicThread(target, pop, period, jitter, delay, offset, 0, false).start();
+		} else if (op.body instanceof ASporadicStm)
+		{
+			RootContext global = ClassInterpreter.getInstance().initialContext;
+			Context pctxt = new ObjectContext(ctxt.assistantFactory, op.name.getLocation(), "sporadic", global, target);
+			ASporadicStm ss = (ASporadicStm) op.body;
+
+			// We disable the swapping and time (RT) as sporadic evaluation should be "free".
+			try
+			{
+				pctxt.threadState.setAtomic(true);
+				ss.apply(VdmRuntime.getStatementEvaluator(), pctxt); // Ignore return value
+			} finally
+			{
+				pctxt.threadState.setAtomic(false);
+			}
+
+			OperationValue pop = pctxt.lookup(ss.getOpname()).operationValue(pctxt);
+
+			long delay = ss.getMinDelay();
+			long jitter = ss.getMaxDelay(); // Jitter used for maximum delay
+			long offset = ss.getOffset();
+			long period = 0;
+
+			// Note that periodic threads never set the stepping flag
+			new PeriodicThread(target, pop, period, jitter, delay, offset, 0, true).start();
+		} else
+		{
+			new ObjectThread(node.getLocation(), target, ctxt).start();
+		}
 	}
 
 }
