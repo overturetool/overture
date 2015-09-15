@@ -55,7 +55,7 @@ public class AstFactoryTC extends AstFactory
 			throws ParserException, LexException
 	{
 		ABusClassDefinition result = new ABusClassDefinition();
-		initClassDefinition(result, new LexNameToken("CLASS", "BUS", new LexLocation()), new LexNameList(), assistantFactory.createABusClassDefinitionAssistant().operationDefs());
+		initClassDefinition(result, new LexNameToken("CLASS", "BUS", new LexLocation()), new LexNameList(), new AstFactoryTC().operationDefsBus());
 
 		result.setInstance(result);
 
@@ -73,13 +73,26 @@ public class AstFactoryTC extends AstFactory
 			+ "public setPriority: ? * nat ==> () "
 			+ "	setPriority(opname, priority) == is not yet specified;";
 
-	//FIXME: used in 1 place only. move
 	public List<PDefinition> operationDefs() throws ParserException,
 			LexException
 	{
 		LexTokenReader ltr = new LexTokenReader(defs, Dialect.VDM_PP);
 		DefinitionReader dr = new DefinitionReader(ltr);
 		dr.setCurrentModule("CPU");
+		return dr.readDefinitions();
+	}
+	
+	
+	private String defsBus = "operations "
+			+ "public BUS:(<FCFS>|<CSMACD>) * real * set of CPU ==> BUS "
+			+ "	BUS(policy, speed, cpus) == is not yet specified;";
+
+	public List<PDefinition> operationDefsBus() throws ParserException,
+			LexException
+	{
+		LexTokenReader ltr = new LexTokenReader(defsBus, Dialect.VDM_PP);
+		DefinitionReader dr = new DefinitionReader(ltr);
+		dr.setCurrentModule("BUS");
 		return dr.readDefinitions();
 	}
 

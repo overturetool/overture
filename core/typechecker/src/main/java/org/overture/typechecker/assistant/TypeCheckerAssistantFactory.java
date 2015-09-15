@@ -54,7 +54,6 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.LexNameTokenAssistant;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
@@ -224,11 +223,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new AAssignmentDefinitionAssistantTC(this);
 	// }
 
-	@Override
-	public ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant()
-	{
-		return new ABusClassDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant()
+//	{
+//		return new ABusClassDefinitionAssistantTC(this);
+//	}
 
 //	@Override
 //	public ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistant()
