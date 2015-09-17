@@ -1,1 +1,1 @@
-["recursive function obligation:(forall s:seq of (nat), b:nat \u0026 ((not ([] \u003d s)) \u003d\u003e (exists [e] ^ rest:seq of (nat) \u0026 ((([e] ^ rest) \u003d s) \u003d\u003e let [e] ^ rest \u003d s in (LenPar1(s, b) \u003e LenPar1(rest, (e + b)))))))"]
+["recursive function obligation in \u0027DEFAULT\u0027 (291.vdmsl) at line 6:19: (forall s:seq of (nat), b:nat \u0026 ((not ([] \u003d s)) \u003d\u003e (exists [e] ^ rest:seq of (nat) \u0026 ((([e] ^ rest) \u003d s) \u003d\u003e let [e] ^ rest \u003d s in (LenPar1(s, b) \u003e LenPar1(rest, (e + b)))))))"]

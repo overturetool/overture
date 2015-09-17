@@ -1,0 +1,49 @@
+types
+  Period = token;
+
+  ExpertId = token;
+
+  Qualification = <Elec> | <Mech> | <Bio> | <Chem>;
+
+  Expert :: expertid : ExpertId
+            eQuali    : set of Qualification
+  inv ex == ex.eQuali <> {};
+
+  Alarm :: aQuali     : Qualification
+           alarmtext : seq of char;
+       
+  Schedule = map Period to set of Expert
+inv sch ==
+   forall exs in set rng sch &
+          exs <> {} and
+          forall ex1, ex2 in set exs &
+                 ex1 <> ex2 => ex1.expertid <> ex2.expertid;
+
+     
+  Plant :: schedule : Schedule
+           alarms   : set of Alarm
+  inv p ==
+        forall a in set p.alarms &
+     forall peri in set dom p.schedule & true;
+
+functions
+
+  NumberOfExperts: Period * Plant -> nat
+  NumberOfExperts(peri,plant) ==
+    card plant.schedule(peri)
+  pre peri in set dom plant.schedule;
+
+  ExpertIsOnDuty: Expert * Plant -> set of Period
+  ExpertIsOnDuty(ex,p) ==
+    {peri| peri in set dom p.schedule & ex in set p.schedule(peri)};
+
+  ExpertToPage(a:Alarm,peri:Period,plant:Plant) r: Expert
+  pre peri in set dom plant.schedule and
+      a in set plant.alarms
+  post r in set plant.schedule(peri) and
+       a.aQuali in set r.eQuali;
+
+  QualificationOK: set of Expert * Qualification -> bool
+  QualificationOK(exs,reqquali) ==
+    exists ex in set exs & reqquali in set ex.eQuali;
+

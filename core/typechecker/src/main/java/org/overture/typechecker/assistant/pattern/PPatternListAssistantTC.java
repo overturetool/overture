@@ -102,19 +102,6 @@ public class PPatternListAssistantTC implements IAstAssistant
 		}
 	}
 
-	public List<PExp> getMatchingExpressionList(List<PPattern> pl)
-	{
-
-		List<PExp> list = new ArrayList<PExp>();
-
-		for (PPattern p : pl)
-		{
-			list.add(af.createPPatternAssistant().getMatchingExpression(p));
-		}
-
-		return list;
-	}
-
 	public boolean isSimple(LinkedList<PPattern> p)
 	{
 		for (PPattern pattern : p)

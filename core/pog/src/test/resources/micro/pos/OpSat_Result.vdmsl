@@ -1,0 +1,3 @@
+operations
+op () r :int
+post r = 0

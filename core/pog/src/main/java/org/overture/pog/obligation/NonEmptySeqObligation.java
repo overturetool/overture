@@ -30,6 +30,8 @@ import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.types.AUnknownType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -50,6 +52,7 @@ public class NonEmptySeqObligation extends ProofObligation
 
 		ASeqEnumSeqExp seqExp = new ASeqEnumSeqExp();
 		seqExp.setMembers(new LinkedList<PExp>()); // empty list
+		seqExp.setType(AstFactory.newASeqSeqType(null, new AUnknownType()));
 
 		ANotEqualBinaryExp notEqualsExp = AstExpressionFactory.newANotEqualBinaryExp(exp.clone(), seqExp);
 

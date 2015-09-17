@@ -63,6 +63,7 @@ import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
@@ -135,6 +136,8 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	SClassDefinitionAssistantTC createSClassDefinitionAssistant();
 
+	SFunctionDefinitionAssistantTC createSFunctionDefinitionAssistant();
+	
 	// expression
 	//AApplyExpAssistantTC createAApplyExpAssistant();
 
@@ -362,8 +365,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<Boolean> getVoidBasisChecker();
 
 	IAnswer<PType> getPossibleTypeFinder();
-
-	IAnswer<PExp> getMatchingExpressionFinder();
 
 	IAnswer<Boolean> getSimplePatternChecker();
 

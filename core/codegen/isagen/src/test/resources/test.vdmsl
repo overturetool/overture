@@ -1,0 +1,4 @@
+types
+  Alarm :: aQuali     : int
+           alarmtext : seq of char;
+       

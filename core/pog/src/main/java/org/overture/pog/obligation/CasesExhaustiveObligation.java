@@ -89,7 +89,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 			return equalsExp;
 		} else
 		{
-			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(alt.getPattern().clone());
+			PExp matching =  patternToExp(alt.getPattern().clone());
 
 			AExistsExp existsExp = new AExistsExp();
 

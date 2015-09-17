@@ -13,6 +13,22 @@ Require-Bundle: org.eclipse.ui.console,
  org.overture.ide.debug
 Bundle-Activator: org.overture.ide.plugins.codegen.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.apache.velocity.app,
+ org.overture.codegen.cgast,
+ org.overture.codegen.cgast.analysis,
+ org.overture.codegen.cgast.analysis.intf,
+ org.overture.codegen.cgast.declarations,
+ org.overture.codegen.cgast.expressions,
+ org.overture.codegen.cgast.name,
+ org.overture.codegen.cgast.patterns,
+ org.overture.codegen.cgast.statements,
+ org.overture.codegen.cgast.traces,
+ org.overture.codegen.cgast.types,
+ org.overture.codegen.cgast.utils,
+ org.overture.codegen.ir,
+ org.overture.codegen.merging,
+ org.overture.codegen.trans,
+ org.overture.codegen.utils
 Bundle-ClassPath: .,
  jars/ir.jar,
  jars/platform.jar,
@@ -23,5 +39,3 @@ Bundle-ClassPath: .,
  jars/jalopy.jar,
  jars/log4j.jar,
  jars/velocity.jar
- 
-

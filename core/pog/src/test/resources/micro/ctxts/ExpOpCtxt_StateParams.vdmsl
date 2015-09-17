@@ -1,0 +1,9 @@
+state S of
+y : int
+end
+
+operations
+op : int ==> real
+op (x) == return y/x
+
+

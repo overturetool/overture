@@ -1,0 +1,1 @@
+["non-empty sequence obligation in \u0027DEFAULT\u0027 (NonEmptySeq.vdmsl) at line 11:11: (forall list:seq of (nat) \u0026 ((not (list \u003d [])) \u003d\u003e (list \u003c\u003e [])))","non-empty sequence obligation in \u0027DEFAULT\u0027 (NonEmptySeq.vdmsl) at line 11:28: (forall list:seq of (nat) \u0026 ((not (list \u003d [])) \u003d\u003e (list \u003c\u003e [])))"]

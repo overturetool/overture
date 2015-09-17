@@ -1,0 +1,4 @@
+types
+
+t = int
+inv t == t > 0

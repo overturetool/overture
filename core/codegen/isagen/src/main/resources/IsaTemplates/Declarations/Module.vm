@@ -1,0 +1,9 @@
+theory $Isa.norm($node.Name)
+  imports utp_vdm
+begin
+
+#foreach( $decl in $node.Decls )
+$Isa.trans($decl)
+
+#end
+end

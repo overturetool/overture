@@ -68,7 +68,7 @@ public class FuncIterationObligation extends ProofObligation
 
 		// n > 1 => forall n :T & P(X)
 		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(gTExp, forAllExp);
-
+		
 		stitch = impliesExp.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(impliesExp));
 	}
@@ -87,7 +87,7 @@ public class FuncIterationObligation extends ProofObligation
 
 		// pre_f(a) => pre_f(f(a))
 		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(pre_exp, preleft_exp);
-
+		
 		return impliesExp;
 
 	}

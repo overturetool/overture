@@ -1,0 +1,1 @@
+["operation postcondition satisfiable obligation in \u0027DEFAULT\u0027 (ImpOpCtxt_StateResultNoFrame.vdmsl) at line 7:1: (forall ns:set of (nat), oldstate:S \u0026 (exists n:nat \u0026 post_op(ns, oldstate, n, oldstate, newstate)))"]

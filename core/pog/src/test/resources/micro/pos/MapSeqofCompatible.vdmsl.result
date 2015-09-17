@@ -1,0 +1,1 @@
+["enumeration map injectivity obligation in \u0027DEFAULT\u0027 (MapSeqofCompatible.vdmsl) at line 7:23: (forall m1, m2 in set {{2 |-\u003e true}, {3 |-\u003e false}} \u0026 (forall d3 in set (dom m1), d4 in set (dom m2) \u0026 ((d3 \u003d d4) \u003d\u003e (m1(d3) \u003d m2(d4)))))"]

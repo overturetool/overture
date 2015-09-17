@@ -1,0 +1,1 @@
+[{"poKind":"state invariant initialized","poExp":"(0 \u003d 0)"},{"poKind":"state invariant satisfiable","poExp":"(exists n:nat, m:nat \u0026 (n \u003d m))"},{"poKind":"state invariant holds","poExp":"(forall a:nat \u0026 ((n \u003d m) \u003d\u003e (1 \u003d m)))"},{"poKind":"state invariant holds","poExp":"(forall a:nat \u0026 ((1 \u003d m) \u003d\u003e (1 \u003d 2)))"}]

@@ -1,0 +1,1 @@
+["operation postcondition satisfiable obligation in \u0027C\u0027 (Satisfiability_ImpOp_Class.vdmpp) at line 12:1: (forall a:nat, b:nat, oldself:C \u0026 (pre_Op1(a, b, oldself) \u003d\u003e (exists newself:C \u0026 post_Op1(a, b, oldself, newself))))"]

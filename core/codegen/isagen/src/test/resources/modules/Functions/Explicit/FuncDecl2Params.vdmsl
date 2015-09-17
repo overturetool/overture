@@ -1,0 +1,10 @@
+module A
+
+definitions
+
+functions
+
+f : nat * nat -> nat
+f(x,y) == x;
+
+end A

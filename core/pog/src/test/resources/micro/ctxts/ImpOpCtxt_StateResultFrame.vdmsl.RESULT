@@ -1,0 +1,1 @@
+[{"poKind":"operation satisfiability","poExp":"(forall ns:set of (nat) \u0026 (exists y1:int, n:nat \u0026 (true and (y \u003d y1))))"}]

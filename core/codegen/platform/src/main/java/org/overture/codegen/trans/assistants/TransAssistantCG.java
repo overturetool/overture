@@ -508,6 +508,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return forBody;
 	}
 
+	//FIXME make this method work on generic PMUltipleBinds
 	public ABlockStmCG consComplexCompIterationBlock(
 			List<ASetMultipleBindCG> multipleSetBinds, ITempVarGen tempGen,
 			IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes) throws AnalysisException

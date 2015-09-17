@@ -33,7 +33,6 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.modules.AModuleModules;
@@ -63,6 +62,7 @@ import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
@@ -106,7 +106,6 @@ import org.overture.typechecker.utilities.expression.ImportDefinitionFinder;
 import org.overture.typechecker.utilities.expression.PreNameFinder;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.AlwaysMatchingPatternChecker;
-import org.overture.typechecker.utilities.pattern.MatchingExpressionFinder;
 import org.overture.typechecker.utilities.pattern.MultipleBindLister;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
 import org.overture.typechecker.utilities.pattern.PatternUnresolver;
@@ -160,6 +159,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// instance variables of things to return
 	transient TypeComparator typeComp;
 	transient LexNameTokenAssistant lnt;
+	transient SFunctionDefinitionAssistantTC sfd;
 
 //	@Override
 //	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant()
@@ -395,19 +395,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AModuleModulesAssistantTC(this);
 	}
 
+	// @Override
+	// public PExportAssistantTC createPExportAssistant()
+	// {
+	// return new PExportAssistantTC(this);
+	// }
 
-
-//	@Override
-//	public PExportAssistantTC createPExportAssistant()
-//	{
-//		return new PExportAssistantTC(this);
-//	}
-
-//	@Override
-//	public PImportAssistantTC createPImportAssistant()
-//	{
-//		return new PImportAssistantTC(this);
-//	}
+	// @Override
+	// public PImportAssistantTC createPImportAssistant()
+	// {
+	// return new PImportAssistantTC(this);
+	// }
 
 	// pattern
 
@@ -991,11 +989,6 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new PossibleTypeFinder(this);
 	}
 
-	@Override
-	public IAnswer<PExp> getMatchingExpressionFinder()
-	{
-		return new MatchingExpressionFinder(this);
-	}
 
 	@Override
 	public IAnswer<Boolean> getSimplePatternChecker()
@@ -1094,5 +1087,15 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 			lnt = new LexNameTokenAssistant(this);
 		}
 		return lnt;
+	}
+
+	@Override
+	public SFunctionDefinitionAssistantTC createSFunctionDefinitionAssistant()
+	{
+		if (sfd == null)
+		{
+			sfd = new SFunctionDefinitionAssistantTC(this);
+		}
+		return sfd;
 	}
 }

@@ -1,1 +1,1 @@
-["type compatibility obligation:((turns - 1) \u003e\u003d 0)","while loop termination obligation:...","type compatibility obligation:((forks - 1) \u003e\u003d 0)"]
+["type compatibility obligation in \u0027Philosopher\u0027 (philosopher.vdmpp) at line 16:28: ((turns - 1) \u003e\u003d 0)","while loop termination obligation in \u0027Table\u0027 (table.vdmpp) at line 12:5: ...","type compatibility obligation in \u0027Table\u0027 (table.vdmpp) at line 19:33: ((forks - 1) \u003e\u003d 0)"]

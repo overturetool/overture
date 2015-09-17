@@ -1,0 +1,1 @@
+@map $Isa.trans($node.From) to $Isa.trans($node.To)

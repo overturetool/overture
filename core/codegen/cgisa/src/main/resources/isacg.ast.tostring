@@ -1,9 +1,0 @@
-To String Extensions
-
-// import packages used by external $$ java code
-import org.overture.ast.util.Utils;
-import org.overture.ast.util.ToStringUtil;
-
-%CG->#decl->extClass = [baseClass]
-%CG->#decl->mrFuncGroup = "mrgroup (" + $Utils.listToString($[funcs]$)$ + ")"
-

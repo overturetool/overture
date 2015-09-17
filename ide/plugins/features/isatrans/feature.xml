@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.overture.ide.plugins.features.isatrans"
+      label="Isabelle Translation Plugin"
+      version="2.2.5.qualifier">
+
+   <description>
+      %description
+   </description>
+
+   <copyright url="%copyURL">
+      %copyNotice
+   </copyright>
+
+   <license url="%licenseURL">
+      %agreement
+   </license>
+
+   <requires>
+      <import feature="org.overture.ide.features.core" version="0.0.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.overture.ide.plugins.isatrans"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

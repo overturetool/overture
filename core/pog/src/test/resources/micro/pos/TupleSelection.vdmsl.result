@@ -1,0 +1,1 @@
+["tuple selection obligation in \u0027DEFAULT\u0027 (TupleSelection.vdmsl) at line 10:19: (forall x:A \u0026 (not is_(x, int)))"]

@@ -24,6 +24,7 @@
     <module>prettyprinting</module>
     <module>commandline</module>
     <module>codegen</module>
+    <module>isapog</module>
     <module>guibuilder</module>
     <!-- <module>constraintsolverconn</module> -->
     <module>modelcheckers</module>

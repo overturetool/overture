@@ -1,7 +1,0 @@
-class A
-functions
-
-f : nat -> nat
-f(x) == x;
-
-end A

@@ -36,6 +36,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.ContextHelper;
+import org.overture.pog.utility.UniqueNameGenerator;
 
 public class PONotCaseContext extends POContext
 {
@@ -65,7 +66,7 @@ public class PONotCaseContext extends POContext
 		if (assistantFactory.createPPatternAssistant().isSimple(pattern))
 		{
 			ANotUnaryExp notExp = new ANotUnaryExp();
-			AEqualsBinaryExp equalsExp = AstExpressionFactory.newAEqualsBinaryExp(assistantFactory.createPPatternAssistant().getMatchingExpression(pattern.clone()), exp.clone());
+			AEqualsBinaryExp equalsExp = AstExpressionFactory.newAEqualsBinaryExp(patternToExp(pattern.clone(), assistantFactory, new UniqueNameGenerator(exp)), exp.clone());
 			notExp.setExp(equalsExp);
 			return notExp;
 
@@ -77,7 +78,7 @@ public class PONotCaseContext extends POContext
 			List<PMultipleBind> bindList = ContextHelper.bindListFromPattern(pattern.clone(), type.clone());
 
 			existsExp.setBindList(bindList);
-			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
+			PExp matching = patternToExp(pattern,assistantFactory,new UniqueNameGenerator(exp));
 			AEqualsBinaryExp equalsExp = AstExpressionFactory.newAEqualsBinaryExp(matching, exp.clone());
 
 			existsExp.setPredicate(equalsExp);
@@ -90,30 +91,6 @@ public class PONotCaseContext extends POContext
 	@Override
 	public String getContext()
 	{
-		StringBuilder sb = new StringBuilder();
-
-		if (assistantFactory.createPPatternAssistant().isSimple(pattern))
-		{
-			sb.append("not ");
-			sb.append(pattern);
-			sb.append(" = ");
-			sb.append(exp);
-		} else
-		{
-			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
-
-			sb.append("not exists ");
-			sb.append(matching);
-			sb.append(":");
-			sb.append(type);
-			sb.append(" & ");
-			sb.append(matching);
-			sb.append(" = ");
-			sb.append(exp);
-		}
-
-		sb.append(" =>");
-
-		return sb.toString();
+		return "";
 	}
 }

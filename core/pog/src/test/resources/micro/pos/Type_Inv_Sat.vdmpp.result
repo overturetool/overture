@@ -1,1 +1,1 @@
-["type invariant satisfiable obligation:(exists x:A \u0026 (x \u003e 10))"]
+["type invariant satisfiable obligation in \u0027A\u0027 (Type_Inv_Sat.vdmpp) at line 4:1: (exists x:A \u0026 (x \u003e 10))"]

@@ -1,0 +1,1 @@
+["type compatibility obligation in \u0027Philosopher\u0027 (DiningPP.vdmpp) at line 20:28: ((turns - 1) \u003e\u003d 0)","while loop termination obligation in \u0027Table\u0027 (DiningPP.vdmpp) at line 49:5: ...","type compatibility obligation in \u0027Table\u0027 (DiningPP.vdmpp) at line 56:33: ((forks - 1) \u003e\u003d 0)"]

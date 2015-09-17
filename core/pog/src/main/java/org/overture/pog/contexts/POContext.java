@@ -26,9 +26,14 @@ package org.overture.pog.contexts;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContext;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.utility.UniqueNameGenerator;
+import org.overture.pog.visitors.PatternToExpVisitor;
 
 abstract public class POContext implements IPOContext
 {
@@ -75,6 +80,22 @@ abstract public class POContext implements IPOContext
 	public PType checkType(PExp exp)
 	{
 		return knownTypes.get(exp);
+	}
+
+	/**
+	 * Create an expression equivalent to a pattern.
+	 */
+	protected PExp patternToExp(PPattern pattern, IPogAssistantFactory af,
+			UniqueNameGenerator unq)
+	{
+		PatternToExpVisitor visitor = new PatternToExpVisitor(unq, af);
+		try
+		{
+			return pattern.apply(visitor);
+		} catch (AnalysisException e)
+		{
+			return null;
+		}
 	}
 
 }

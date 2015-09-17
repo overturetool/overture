@@ -1,0 +1,1 @@
+{"translation":"theory DEFAULT\n  imports utp_vdm\nbegin\n\nvdmefun inv_t\n  inp t :: \"@set of @int\"\n  out \"@bool\"\n  is \"(^t^ \u003c\u003e {})\" \n\ndefinition \"t \u003d \\\u003cparallel\u003e@set of @int inv t \u003d\u003d inv_t(\u0026t)\\\u003cparallel\u003e\"\ndeclare t_def [eval,evalp]\n\nend","errors":false}

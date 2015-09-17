@@ -1,0 +1,1 @@
+["type compatibility obligation in \u0027Buffer\u0027 (ReaderWriterPP.vdmpp) at line 25:23: is_(data, nat)","operation call obligation in \u0027IO\u0027 (ReaderWriterPP.vdmpp) at line 101:3: (forall text:seq of (char) \u0026 ((\"\" \u003d \"\") \u003c\u003d\u003e (\"\" \u003d nil)))"]

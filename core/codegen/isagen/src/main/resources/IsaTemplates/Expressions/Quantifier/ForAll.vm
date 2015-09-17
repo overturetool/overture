@@ -1,0 +1,1 @@
+(forall $Isa.transBinds($node.BindList) & $Isa.trans($node.Predicate))
