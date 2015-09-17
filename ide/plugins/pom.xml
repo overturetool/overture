@@ -30,7 +30,7 @@
 	<module>codegen</module>
 	<module>prob-runtime</module>
 	<module>guibuilder</module>
-	<module>isatrans</module>
+	<!--<module>isatrans</module>-->
     <!-- features last -->
     <module>features</module>
   </modules>
