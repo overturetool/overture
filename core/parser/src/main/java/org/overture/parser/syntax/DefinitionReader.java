@@ -237,12 +237,32 @@ public class DefinitionReader extends SyntaxReader
 		return list;
 	}
 
-	private AAccessSpecifierAccessSpecifier readAccessSpecifier(boolean async)
+	private AAccessSpecifierAccessSpecifier readAccessSpecifier(boolean asyncOK, boolean pureOK)
 			throws LexException, ParserException
 	{
 		if (dialect == Dialect.VDM_SL)
 		{
-			return AstFactory.getDefaultAccessSpecifier();
+			if (lastToken().is(VDMToken.PURE))
+			{
+				if (Settings.release == Release.CLASSIC)
+				{
+					throwMessage(2325, "Pure operations are not available in classic");
+				}
+				
+				if (pureOK)
+				{
+					nextToken();
+					return AstFactory.getDefaultAccessSpecifier();
+				}
+				else
+				{
+					throwMessage(2324, "Pure only permitted for operations");
+				}
+			}
+			else
+			{
+				return AstFactory.getDefaultAccessSpecifier();
+			}
 		}
 
 		// Defaults
@@ -250,6 +270,7 @@ public class DefinitionReader extends SyntaxReader
 		// boolean isAsync = false;
 		boolean isStatic = false;
 		boolean isAsync = false;
+		boolean isPure = false;
 		// VDMToken access = VDMToken.PRIVATE;
 		PAccess access = new APrivateAccess();
 
@@ -260,7 +281,7 @@ public class DefinitionReader extends SyntaxReader
 			switch (lastToken().type)
 			{
 				case ASYNC:
-					if (async)
+					if (asyncOK)
 					{
 						isAsync = true;
 						nextToken();
@@ -290,13 +311,30 @@ public class DefinitionReader extends SyntaxReader
 					nextToken();
 					break;
 
+				case PURE:
+					if (Settings.release == Release.CLASSIC)
+					{
+						throwMessage(2325, "Pure operations are not available in classic");
+					}
+
+					if (pureOK)
+					{
+						isPure = true;
+						nextToken();
+					}
+					else
+					{
+						throwMessage(2324, "Pure only permitted for operations");
+					}
+					break;
+
 				default:
 					more = false;
 					break;
 			}
 		}
 
-		return AstFactory.newAAccessSpecifierAccessSpecifier(access, isStatic, isAsync);
+		return AstFactory.newAAccessSpecifierAccessSpecifier(access, isStatic, isAsync, isPure);
 	}
 
 	public ATypeDefinition readTypeDefinition() throws ParserException,
@@ -355,7 +393,7 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
-				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
+				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				access.setStatic(new TStatic());
 				ATypeDefinition def = readTypeDefinition();
 
@@ -385,7 +423,7 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
-				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
+				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				access.setStatic(new TStatic());
 				PDefinition def = readValueDefinition(NameScope.GLOBAL);
 
@@ -425,7 +463,7 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
-				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
+				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				PDefinition def = readFunctionDefinition(NameScope.GLOBAL);
 
 				if (Settings.release == Release.VDM_10)
@@ -463,9 +501,10 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
-				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(dialect == Dialect.VDM_RT);
+				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(dialect == Dialect.VDM_RT, true);
 				PDefinition def = readOperationDefinition();
 				def.setAccess(access);
+				((AOperationType)def.getType()).setPure(access.getPure());
 				list.add(def);
 
 				if (!newSection())
@@ -1210,7 +1249,7 @@ public class DefinitionReader extends SyntaxReader
 			return AstFactory.newAClassInvariantDefinition(className.getInvName(token.location), exp);
 		} else
 		{
-			AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
+			AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 			AAssignmentDefinition def = getStatementReader().readAssignmentDefinition();
 			AInstanceVariableDefinition ivd = AstFactory.newAInstanceVariableDefinition(def.getName(), def.getType(), def.getExpression());
 			def.getType().parent(ivd);// the type of ivd is graph but we trough away the assignment

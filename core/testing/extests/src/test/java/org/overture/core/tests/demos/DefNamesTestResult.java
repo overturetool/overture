@@ -13,7 +13,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 
 /**
- * The {@link ExampleIdTestResult} class holds test result info for an identify
+ * The {@link DefNamesTestResult} class holds test result info for an identify
  * test on an Overture example. It is similar to a counterpart class in the
  * main test demos but since those are not deployed, they cannot be
  * reused, nor are they meant to.
@@ -21,7 +21,7 @@ import org.overture.ast.node.INode;
  * @author ldc
  *
  */
-public class ExampleIdTestResult {
+public class DefNamesTestResult {
 
 	String exampleName;
 	List<String> defNames;
@@ -34,7 +34,7 @@ public class ExampleIdTestResult {
 		return exampleName;
 	}
 
-	public ExampleIdTestResult(List<INode> ast, String name) {
+	public DefNamesTestResult(List<INode> ast, String name) {
 		this.exampleName = name;
 		defNames = new Vector<String>();
 		for (INode n : ast) {
@@ -57,8 +57,8 @@ public class ExampleIdTestResult {
 		}
 	}
 
-	public static void compare(ExampleIdTestResult actual,
-			ExampleIdTestResult expected, String testName) {
+	public static void compare(DefNamesTestResult actual,
+			DefNamesTestResult expected, String testName) {
 		Collection<String> stored_notfound = CollectionUtils.removeAll(
 				expected.getDefNames(), actual.getDefNames());
 		Collection<String> found_notstored = CollectionUtils.removeAll(

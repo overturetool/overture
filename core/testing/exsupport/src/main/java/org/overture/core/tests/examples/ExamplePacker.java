@@ -235,7 +235,7 @@ class ExamplePacker
 		{
 			if (data[0].equals(LANGUAGE_VERSION))
 			{
-				languageVersion = Release.lookup(data[1]);
+				languageVersion = Release.lookup(data[1].toLowerCase());
 			} else if (data[0].equals(LIB))
 			{
 				processLibs(data[1]);

@@ -7,6 +7,6 @@
 <message column="8" line="350" message="k at 345:25 hidden by k" messageType="warning" number="5008" resource="DigraphSL"/>
 <message column="10" line="351" message="i at 345:7 hidden by i" messageType="warning" number="5008" resource="DigraphSL"/>
 <message column="11" line="352" message="j at 345:16 hidden by j" messageType="warning" number="5008" resource="DigraphSL"/>
-<message column="21" line="48" message="Operation 'relations`Warshall' cannot be called from a function" messageType="error" number="3300" resource="DigraphSL"/>
+<message column="21" line="48" message="Impure operation 'relations`Warshall' cannot be called from here" messageType="error" number="3300" resource="DigraphSL"/>
 <result/>
 </testResult>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
-<message column="10" line="93" message="Operation '(a.GetReqQuali)' cannot be called from a function" messageType="error" number="3300" resource="AlarmtracesPP"/>
-<message column="33" line="93" message="Operation '(expert.GetQuali)' cannot be called from a function" messageType="error" number="3300" resource="AlarmtracesPP"/>
-<message column="8" line="112" message="Operation '(a.GetReqQuali)' cannot be called from a function" messageType="error" number="3300" resource="AlarmtracesPP"/>
-<message column="31" line="112" message="Operation '(expert.GetQuali)' cannot be called from a function" messageType="error" number="3300" resource="AlarmtracesPP"/>
+<message column="10" line="93" message="Impure operation '(a.GetReqQuali)' cannot be called from here" messageType="error" number="3300" resource="AlarmtracesPP"/>
+<message column="33" line="93" message="Impure operation '(expert.GetQuali)' cannot be called from here" messageType="error" number="3300" resource="AlarmtracesPP"/>
+<message column="8" line="112" message="Impure operation '(a.GetReqQuali)' cannot be called from here" messageType="error" number="3300" resource="AlarmtracesPP"/>
+<message column="31" line="112" message="Impure operation '(expert.GetQuali)' cannot be called from here" messageType="error" number="3300" resource="AlarmtracesPP"/>
 <result/>
 </testResult>

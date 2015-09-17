@@ -4,11 +4,11 @@
 <message column="14" line="54" message="Definition 'label' not used" messageType="warning" number="5000" resource="simulatorSL"/>
 <message column="28" line="68" message="substates at 65:38 hidden by substates" messageType="warning" number="5008" resource="simulatorSL"/>
 <message column="9" line="67" message="Recursive function has no measure" messageType="warning" number="5012" resource="simulatorSL"/>
-<message column="27" line="65" message="Definition 'isinitial' not used" messageType="warning" number="5000" resource="simulatorSL"/>
 <message column="14" line="65" message="Definition 'label' not used" messageType="warning" number="5000" resource="simulatorSL"/>
+<message column="27" line="65" message="Definition 'isinitial' not used" messageType="warning" number="5000" resource="simulatorSL"/>
 <message column="29" line="102" message="Definition 'transition' not used" messageType="warning" number="5000" resource="simulatorSL"/>
-<message column="23" line="102" message="Definition 'label' not used" messageType="warning" number="5000" resource="simulatorSL"/>
 <message column="55" line="102" message="Definition 'dstates' not used" messageType="warning" number="5000" resource="simulatorSL"/>
+<message column="23" line="102" message="Definition 'label' not used" messageType="warning" number="5000" resource="simulatorSL"/>
 <message column="13" line="167" message="Definition 'label' not used" messageType="warning" number="5000" resource="simulatorSL"/>
 <message column="19" line="167" message="Definition 'tromclass' not used" messageType="warning" number="5000" resource="simulatorSL"/>
 <message column="52" line="169" message="Definition 'assignmentvector' not used" messageType="warning" number="5000" resource="simulatorSL"/>
@@ -37,7 +37,7 @@
 <message column="34" line="885" message="Definition 'se' not used" messageType="warning" number="5000" resource="simulatorSL"/>
 <message column="33" line="932" message="Definition 'se' not used" messageType="warning" number="5000" resource="simulatorSL"/>
 <message column="1" line="307" message="Definition 'LSLLIBRARY' not used" messageType="warning" number="5000" resource="simulatorSL"/>
-<message column="17" line="904" message="Operation 'get_enabled_simevent' cannot be called from a function" messageType="error" number="3300" resource="simulatorSL"/>
-<message column="22" line="923" message="Operation 'get_enabled_simevent_synch' cannot be called from a function" messageType="error" number="3300" resource="simulatorSL"/>
+<message column="17" line="904" message="Impure operation 'get_enabled_simevent' cannot be called from here" messageType="error" number="3300" resource="simulatorSL"/>
+<message column="22" line="923" message="Impure operation 'get_enabled_simevent_synch' cannot be called from here" messageType="error" number="3300" resource="simulatorSL"/>
 <result/>
 </testResult>

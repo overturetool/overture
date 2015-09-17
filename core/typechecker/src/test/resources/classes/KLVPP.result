@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
-<message column="23" line="484" message="Operation '(cabdisplay.getDisplay)' cannot be called from a function" messageType="error" number="3300" resource="KLVPP"/>
-<message column="5" line="485" message="Operation '(emergencybreak.getEmergencyBreak)' cannot be called from a function" messageType="error" number="3300" resource="KLVPP"/>
+<message column="23" line="484" message="Impure operation '(cabdisplay.getDisplay)' cannot be called from here" messageType="error" number="3300" resource="KLVPP"/>
+<message column="5" line="485" message="Impure operation '(emergencybreak.getEmergencyBreak)' cannot be called from here" messageType="error" number="3300" resource="KLVPP"/>
 <result/>
 </testResult>

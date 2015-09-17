@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
@@ -165,9 +166,9 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (question.assistantFactory.createPTypeAssistant().isClass(type))
+		if (question.assistantFactory.createPTypeAssistant().isClass(type, question.env))
 		{
-			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type);
+			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, question.env);
 			String cname = ctype.getName().getName();
 
 			node.setObjectfield(new LexNameToken(cname, field.getName(), node.getObject().getLocation()));
@@ -211,6 +212,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			AIdentifierStateDesignator node, TypeCheckInfo question)
 	{
 		Environment env = question.env;
+		PDefinition encl = env.getEnclosingDefinition();
 
 		if (env.isVDMPP())
 		{
@@ -254,7 +256,13 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 						+ "' in scope is not updatable", name.getLocation(), name);
 				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
-			} else if (def.getClassDefinition() != null)
+			} else if (encl != null &&
+				encl.getAccess().getPure() &&
+				question.assistantFactory.createPDefinitionAssistant().isInstanceVariable(def))
+			{
+					TypeCheckerErrors.report(3338, "Cannot update state in a pure operation", name.getLocation(), name);
+			}
+			else if (def.getClassDefinition() != null)
 			{
 				if (!question.assistantFactory.createSClassDefinitionAssistant().isAccessible(env, def, true))
 				{
@@ -312,7 +320,12 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 						+ "' in scope is not updatable", name.getLocation(), name);
 				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
-			} else if (def instanceof AExternalDefinition)
+			}
+			else if (encl != null && encl.getAccess().getPure() && !(def instanceof AAssignmentDefinition))
+			{
+				TypeCheckerErrors.report(3338, "Cannot update state in a pure operation", name.getLocation(), name);
+			}
+			else if (def instanceof AExternalDefinition)
 			{
 				AExternalDefinition d = (AExternalDefinition) def;
 
@@ -480,9 +493,9 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 		PTypeSet result = new PTypeSet(question.assistantFactory);
 		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type);
 
-		if (question.assistantFactory.createPTypeAssistant().isClass(type))
+		if (question.assistantFactory.createPTypeAssistant().isClass(type, question.env))
 		{
-			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type);
+			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, question.env);
 
 			if (node.getClassName() == null)
 			{

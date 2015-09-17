@@ -326,9 +326,9 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	IAnswer<ARecordInvariantType> getRecordTypeFinder();
 
-	AnswerAdaptor<Boolean> getClassBasisChecker();
+	AnswerAdaptor<Boolean> getClassBasisChecker(Environment env);
 
-	IAnswer<AClassType> getClassTypeFinder();
+	IAnswer<AClassType> getClassTypeFinder(Environment env);
 
 	IAnswer<AProductType> getProductTypeFinder();
 
@@ -395,4 +395,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	LexNameTokenAssistant getLexNameTokenAssistant();
 
 	IQuestionAnswer<TypeCheckInfo, List<QualifiedDefinition>> getQualificationVisitor();
+	
+	IAnswer<Boolean> getInstanceVariableChecker();
 }

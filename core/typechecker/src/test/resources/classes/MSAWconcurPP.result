@@ -2,9 +2,11 @@
 <testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
 <message column="21" line="180" message="radars at 61:1 hidden by radars" messageType="warning" number="5008" resource="MSAWconcurPP"/>
 <message column="21" line="185" message="radars at 61:1 hidden by radars" messageType="warning" number="5008" resource="MSAWconcurPP"/>
-<message column="5" line="20" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWconcurPP"/>
-<message column="5" line="220" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWconcurPP"/>
-<message column="52" line="220" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWconcurPP"/>
+<message column="25" line="12" message="Impure operation '(airspace(foid1).getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWconcurPP"/>
+<message column="52" line="12" message="Impure operation '(airspace(foid2).getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWconcurPP"/>
+<message column="5" line="20" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWconcurPP"/>
+<message column="5" line="220" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWconcurPP"/>
+<message column="52" line="220" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWconcurPP"/>
 <message column="20" line="215" message="Name 'World`timerRef' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
 <message column="11" line="217" message="Name 'World`env' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
 <message column="11" line="217" message="Member handleFOWarningEvent(FOId, Coordinates, Altitude, &lt;EstimationWarning&gt;, MinimumSafetyAltitude, ?) is not in scope" messageType="error" number="3209" resource="MSAWconcurPP"/>
@@ -14,9 +16,9 @@
 <message column="17" line="240" message="Name 'World`timerRef' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
 <message column="5" line="242" message="Name 'World`env' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
 <message column="5" line="242" message="Member handleRadarWarningEvent(Coordinates, nat1, &lt;Saturated&gt;, nat, ?) is not in scope" messageType="error" number="3209" resource="MSAWconcurPP"/>
-<message column="5" line="251" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWconcurPP"/>
-<message column="5" line="265" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWconcurPP"/>
-<message column="51" line="265" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWconcurPP"/>
+<message column="5" line="251" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWconcurPP"/>
+<message column="5" line="265" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWconcurPP"/>
+<message column="51" line="265" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWconcurPP"/>
 <message column="3" line="330" message="Name 'World`timerRef' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
 <message column="3" line="330" message="Member WaitRelative(nat1) is not in scope" messageType="error" number="3209" resource="MSAWconcurPP"/>
 <message column="3" line="331" message="Name 'World`timerRef' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
@@ -33,6 +35,7 @@
 <message column="5" line="434" message="Name 'World`timerRef' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
 <message column="5" line="434" message="Member Awake() is not in scope" messageType="error" number="3209" resource="MSAWconcurPP"/>
 <message column="2" line="424" message="Thread statement/operation must not return a value" messageType="error" number="3049" resource="MSAWconcurPP"/>
+<message column="39" line="912" message="Impure operation '(detected(foid).getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWconcurPP"/>
 <message column="4" line="1003" message="Name 'World`timerRef' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
 <message column="4" line="1003" message="Member WaitRelative(nat) is not in scope" messageType="error" number="3209" resource="MSAWconcurPP"/>
 <message column="4" line="1004" message="Name 'World`timerRef' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>

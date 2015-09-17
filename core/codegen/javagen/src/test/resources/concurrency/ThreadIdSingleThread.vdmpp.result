@@ -12,11 +12,7 @@ public class Entry implements EvaluatePP {
     }
 
     public static Object Run() {
-        return Utils.is_nat(f());
-    }
-
-    public static Number f() {
-        return Thread.currentThread().getId();
+        return Utils.is_nat(Thread.currentThread().getId());
     }
 
     public String toString() {
@@ -30,8 +26,6 @@ public class Entry implements EvaluatePP {
             return true;
         } else if (Utils.equals(fnr, 2L)) {
             return true;
-        } else if (Utils.equals(fnr, 3L)) {
-            return true;
         } else {
             return true;
         }
@@ -40,9 +34,8 @@ public class Entry implements EvaluatePP {
     public static class Entry_sentinel extends Sentinel {
         public static final int Run = 0;
         public static final int Entry = 1;
-        public static final int f = 2;
-        public static final int toString = 3;
-        public final int function_sum = 4;
+        public static final int toString = 2;
+        public final int function_sum = 3;
 
         public Entry_sentinel() {
         }

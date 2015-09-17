@@ -2,13 +2,10 @@ class Entry
 
 functions
 
-public f :  () -> nat	
-f () == threadid;
-
 operations
 
 public static Run : () ==> ?
 Run () ==
-	return is_nat(f());
+	return is_nat(threadid);
 
 end Entry

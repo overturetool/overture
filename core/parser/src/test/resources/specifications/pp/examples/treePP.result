@@ -4,14 +4,14 @@
 <message column="29" line="28" message="Empty set used in bind" messageType="warning" number="3264" resource="treePP.result"/>
 <message column="29" line="29" message="Empty set used in bind" messageType="warning" number="3264" resource="treePP.result"/>
 <message column="18" line="10" message="Definition 't' not used" messageType="warning" number="5000" resource="treePP.result"/>
-<message column="18" line="30" message="Operation '(lt.gettree)' cannot be called from a function" messageType="error" number="3300" resource="treePP.result"/>
-<message column="29" line="28" message="Operation '(lt.nodes)' cannot be called from a function" messageType="error" number="3300" resource="treePP.result"/>
-<message column="13" line="139" message="Operation 'isEmpty' cannot be called from a function" messageType="error" number="3300" resource="treePP.result"/>
+<message column="18" line="30" message="Impure operation '(lt.gettree)' cannot be called from here" messageType="error" number="3300" resource="treePP.result"/>
+<message column="29" line="28" message="Impure operation '(lt.nodes)' cannot be called from here" messageType="error" number="3300" resource="treePP.result"/>
+<message column="13" line="139" message="Impure operation 'isEmpty' cannot be called from here" messageType="error" number="3300" resource="treePP.result"/>
 <message column="5" line="172" message="Operation returns void value" messageType="error" number="3313" resource="treePP.result"/>
 <message column="5" line="114" message="Operation returns void value" messageType="error" number="3313" resource="treePP.result"/>
-<message column="42" line="30" message="Operation '(rt.gettree)' cannot be called from a function" messageType="error" number="3300" resource="treePP.result"/>
+<message column="42" line="30" message="Impure operation '(rt.gettree)' cannot be called from here" messageType="error" number="3300" resource="treePP.result"/>
 <message column="12" line="181" message="Operation returns void value" messageType="error" number="3313" resource="treePP.result"/>
-<message column="29" line="29" message="Operation '(rt.nodes)' cannot be called from a function" messageType="error" number="3300" resource="treePP.result"/>
-<message column="13" line="144" message="Operation 'isEmpty' cannot be called from a function" messageType="error" number="3300" resource="treePP.result"/>
-<message column="13" line="81" message="Operation 'isEmpty' cannot be called from a function" messageType="error" number="3300" resource="treePP.result"/>
+<message column="29" line="29" message="Impure operation '(rt.nodes)' cannot be called from here" messageType="error" number="3300" resource="treePP.result"/>
+<message column="13" line="144" message="Impure operation 'isEmpty' cannot be called from here" messageType="error" number="3300" resource="treePP.result"/>
+<message column="13" line="81" message="Impure operation 'isEmpty' cannot be called from here" messageType="error" number="3300" resource="treePP.result"/>
 </testResult>

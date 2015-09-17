@@ -90,6 +90,7 @@ import org.overture.typechecker.utilities.Dereferer;
 import org.overture.typechecker.utilities.ExitTypeCollector;
 import org.overture.typechecker.utilities.FunctionChecker;
 import org.overture.typechecker.utilities.ImplicitDefinitionFinder;
+import org.overture.typechecker.utilities.InstanceVariableChecker;
 import org.overture.typechecker.utilities.KindFinder;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.OperationChecker;
@@ -870,15 +871,15 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public AnswerAdaptor<Boolean> getClassBasisChecker()
+	public AnswerAdaptor<Boolean> getClassBasisChecker(Environment env)
 	{
-		return new ClassBasisChecker(this);
+		return new ClassBasisChecker(this, env);
 	}
 
 	@Override
-	public IAnswer<AClassType> getClassTypeFinder()
+	public IAnswer<AClassType> getClassTypeFinder(Environment env)
 	{
-		return new ClassTypeFinder(this);
+		return new ClassTypeFinder(this, env);
 	}
 
 	@Override
@@ -1097,5 +1098,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 			sfd = new SFunctionDefinitionAssistantTC(this);
 		}
 		return sfd;
+	}
+
+	@Override
+	public IAnswer<Boolean> getInstanceVariableChecker()
+	{
+		return new InstanceVariableChecker(this);
 	}
 }

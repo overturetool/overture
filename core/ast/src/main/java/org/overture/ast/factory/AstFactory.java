@@ -337,7 +337,7 @@ public class AstFactory
 
 	public static AAccessSpecifierAccessSpecifier getDefaultAccessSpecifier()
 	{
-		return AstFactory.newAAccessSpecifierAccessSpecifier(new APrivateAccess(), false, false);
+		return AstFactory.newAAccessSpecifierAccessSpecifier(new APrivateAccess(), false, false, false);
 	}
 
 	/*
@@ -798,6 +798,7 @@ public class AstFactory
 
 		result.setParameters(parameters);
 		result.setResult(resultType);
+		result.setPure(false);	// Set explicitly where needed
 
 		return result;
 	}
@@ -1068,10 +1069,17 @@ public class AstFactory
 	public static AAccessSpecifierAccessSpecifier newAAccessSpecifierAccessSpecifier(
 			PAccess access, boolean isStatic, boolean isAsync)
 	{
+		return newAAccessSpecifierAccessSpecifier(access, isStatic, isAsync, false);
+	}
+	
+	public static AAccessSpecifierAccessSpecifier newAAccessSpecifierAccessSpecifier(
+			PAccess access, boolean isStatic, boolean isAsync, boolean isPure)
+	{
 		AAccessSpecifierAccessSpecifier result = new AAccessSpecifierAccessSpecifier();
 		result.setAccess(access);
 		result.setStatic(isStatic ? new TStatic() : null);
 		result.setAsync(isAsync ? new TAsync() : null);
+		result.setPure(isPure);
 		return result;
 	}
 
@@ -3050,6 +3058,7 @@ public class AstFactory
 		initType(result, location);
 		result.setParameters(new Vector<PType>());
 		result.setResult(AstFactory.newAVoidType(location));
+		result.setPure(false);
 
 		return result;
 	}

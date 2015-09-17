@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesRtTypeCheckTest">
 <message column="10" line="57" message="Definition 'i' not used" messageType="warning" number="5000" resource="basicext-06.vpp"/>
-<message column="16" line="45" message="Asynchronous operation DOITC(map (nat) to (nat), nat) cannot return a value" messageType="error" number="3293" resource="basicext-06.vpp"/>
+<message column="16" line="45" message="Asynchronous operation 'DOITC(map (nat) to (nat), nat)' cannot return a value" messageType="error" number="3293" resource="basicext-06.vpp"/>
 <result/>
 </testResult>

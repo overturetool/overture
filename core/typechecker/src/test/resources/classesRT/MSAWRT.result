@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ClassesRtTypeCheckTest">
-<message column="5" line="20" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT"/>
-<message column="11" line="185" message="Operation '(a.getDetected)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT"/>
-<message column="33" line="185" message="Operation '(b.getDetected)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT"/>
-<message column="11" line="190" message="Operation '(r.getDetected)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT"/>
-<message column="21" line="197" message="Operation '(obs.getCoordinates)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT"/>
-<message column="21" line="198" message="Operation '(obs.getSecureRange)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT"/>
-<message column="24" line="202" message="Operation '(obs.getMSA)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT"/>
-<message column="5" line="229" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT"/>
-<message column="52" line="229" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT"/>
-<message column="5" line="260" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT"/>
-<message column="5" line="274" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT"/>
-<message column="51" line="274" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="25" line="12" message="Impure operation '(airspace(foid1).getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="52" line="12" message="Impure operation '(airspace(foid2).getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="5" line="20" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="11" line="185" message="Impure operation '(a.getDetected)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="33" line="185" message="Impure operation '(b.getDetected)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="11" line="190" message="Impure operation '(r.getDetected)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="21" line="197" message="Impure operation '(obs.getCoordinates)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="21" line="198" message="Impure operation '(obs.getSecureRange)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="24" line="202" message="Impure operation '(obs.getMSA)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="5" line="229" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="52" line="229" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="5" line="260" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="5" line="274" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="51" line="274" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
+<message column="39" line="904" message="Impure operation '(detected(foid).getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWRT"/>
 <result/>
 </testResult>

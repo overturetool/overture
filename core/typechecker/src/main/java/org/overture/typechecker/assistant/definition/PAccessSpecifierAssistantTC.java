@@ -114,7 +114,7 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant imple
 		if (paccess instanceof AAccessSpecifierAccessSpecifier)
 		{
 			return AstFactory.newAAccessSpecifierAccessSpecifier(paccess.getAccess().clone(), asStatic
-					&& paccess.getStatic() != null, paccess.getAsync() != null);
+					&& paccess.getStatic() != null, paccess.getAsync() != null, false);
 		}
 		assert false : "PAccessSpecifier must be instance of AAccessSpecifierAccessSpecifier";
 		return null;
