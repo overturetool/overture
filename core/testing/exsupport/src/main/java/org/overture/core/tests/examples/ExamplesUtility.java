@@ -168,6 +168,7 @@ abstract public class ExamplesUtility {
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
 		File dir = new File(externalsRoot + examplesRoot);
+		dir.mkdirs();
 
 		List<File> source = new LinkedList<File>();
 		// grab examples groups

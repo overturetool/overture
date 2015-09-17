@@ -24,12 +24,11 @@ package org.overture.core.tests.examples;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.LinkedList;
 import java.util.List;
 
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.overture.ast.node.INode;
@@ -38,6 +37,9 @@ import org.overture.core.tests.ParamStandardTest;
 import org.overture.core.tests.PathsProvider;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
+
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 
 /**
  * Test on the Overture examples. The behavior of class is very similar to that
@@ -101,6 +103,9 @@ public abstract class ParamExamplesTest<R> extends AbsResultTest<R> {
 			throws FileNotFoundException, IOException, ParserException,
 			LexException {
 
+		List<String> toSkip = getExamplesToSkip();
+		Assume.assumeFalse(toSkip.contains(exSource.getName()));
+		
 		ExampleAstData exData = ExamplesUtility.parseTcExample(exSource);
 
 		this.testName = exData.getExampleName();
@@ -155,4 +160,14 @@ public abstract class ParamExamplesTest<R> extends AbsResultTest<R> {
 	 */
 	protected abstract String getRelativeExamplesPath();
 
+	/**
+	 * Get the examples to skip. This method returns an empty list by default and should be overridden in order to skip
+	 * specific examples when running the test.
+	 * 
+	 * @return a {@link List} of {@link String} with the names of the examples to be skipped
+	 */
+	protected List<String> getExamplesToSkip()
+	{
+		return new LinkedList<String>();
+	}
 }

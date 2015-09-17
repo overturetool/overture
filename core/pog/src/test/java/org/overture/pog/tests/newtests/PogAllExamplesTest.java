@@ -3,6 +3,7 @@ package org.overture.pog.tests.newtests;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Type;
+import java.util.LinkedList;
 import java.util.List;
 
 import junitparams.JUnitParamsRunner;
@@ -72,6 +73,15 @@ public class PogAllExamplesTest extends ParamExamplesTest<PogTestResult>
 	@Override
 	protected String getRelativeExamplesPath() {
 		return EXAMPLES_ROOT;
+	}
+	
+	@Override
+	protected List<String> getExamplesToSkip()
+	{
+		LinkedList<String> toSkip = new LinkedList<String>();
+		toSkip.add("AutomatedStockBrokerPP");
+		
+		return toSkip;
 	}
 
 }
