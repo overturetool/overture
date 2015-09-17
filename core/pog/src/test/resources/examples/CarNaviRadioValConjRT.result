@@ -1,1 +1,1 @@
-["type compatibility obligation in \u0027Radio\u0027 (Radio.vdmrt) at line 23:29: ((volume - 1) \u003e\u003d 0)","operation call obligation in \u0027IO\u0027 (IO.vdmrt) at line 80:3: (forall text:seq of (char) \u0026 ((\"\" \u003d \"\") \u003c\u003d\u003e (\"\" \u003d nil)))"]
+true

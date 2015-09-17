@@ -1,1 +1,1 @@
-["non-empty sequence obligation in \u0027Stack\u0027 (stack.vdmpp) at line 16:20: ((stack \u003c\u003e []) \u003d\u003e (stack \u003c\u003e []))","non-empty sequence obligation in \u0027Stack\u0027 (stack.vdmpp) at line 17:22: ((stack \u003c\u003e []) \u003d\u003e (stack \u003c\u003e []))","operation establishes postcondition obligation in \u0027Stack\u0027 (stack.vdmpp) at line 14:5: ((stack \u003c\u003e []) \u003d\u003e (stack \u003d ([RESULT] ^ (tl stack))))","non-empty sequence obligation in \u0027Stack\u0027 (stack.vdmpp) at line 29:18: (stack \u003c\u003e [])"]
+true

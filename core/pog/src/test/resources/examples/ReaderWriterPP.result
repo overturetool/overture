@@ -1,1 +1,1 @@
-["operation call obligation in \u0027IO\u0027 (io.vdmpp) at line 53:3: (forall text:seq of (char) \u0026 ((\"\" \u003d \"\") \u003c\u003d\u003e (\"\" \u003d nil)))","type compatibility obligation in \u0027Buffer\u0027 (Buffer.vdmpp) at line 21:23: is_(data, nat)"]
+true
