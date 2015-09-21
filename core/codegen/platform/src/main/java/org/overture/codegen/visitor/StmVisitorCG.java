@@ -45,6 +45,8 @@ import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.statements.AClassInvariantStm;
+import org.overture.ast.statements.ACyclesStm;
+import org.overture.ast.statements.ADurationStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AErrorStm;
 import org.overture.ast.statements.AForAllStm;
@@ -83,6 +85,8 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.ACasesStmCG;
+import org.overture.codegen.cgast.statements.ACyclesStmCG;
+import org.overture.codegen.cgast.statements.ADurationStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AErrorStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
@@ -226,6 +230,38 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		}
 
 		return atomicBlock;
+	}
+	
+	@Override
+	public SStmCG caseACyclesStm(ACyclesStm node, IRInfo question) throws AnalysisException
+	{
+		PExp cycles = node.getCycles();
+		PStm stm = node.getStatement();
+		
+		SExpCG cyclesCg = cycles.apply(question.getExpVisitor(), question);
+		SStmCG stmCg = stm.apply(question.getStmVisitor(), question);
+		
+		ACyclesStmCG cycStm = new ACyclesStmCG();
+		cycStm.setCycles(cyclesCg);
+		cycStm.setStm(stmCg);
+		
+		return cycStm;
+	}
+	
+	@Override
+	public SStmCG caseADurationStm(ADurationStm node, IRInfo question) throws AnalysisException
+	{
+		PExp duration = node.getDuration();
+		PStm stm = node.getStatement();
+		
+		SExpCG durationCg = duration.apply(question.getExpVisitor(), question);
+		SStmCG stmCg = stm.apply(question.getStmVisitor(), question);
+		
+		ADurationStmCG durStm = new ADurationStmCG();
+		durStm.setDuration(durationCg);
+		durStm.setStm(stmCg);;
+		
+		return durStm;
 	}
 
 	@Override
