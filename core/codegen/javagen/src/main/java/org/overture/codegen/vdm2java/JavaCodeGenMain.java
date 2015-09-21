@@ -50,6 +50,7 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 public class JavaCodeGenMain
 {
 	public static final String OO_ARG = "-pp";
+	public static final String RT_ARG = "-rt";
 	public static final String SL_ARG = "-sl";
 	public static final String CLASSIC = "-classic";
 	public static final String VDM10 = "-vdm10";
@@ -64,7 +65,6 @@ public class JavaCodeGenMain
 	public static void main(String[] args)
 	{
 		Settings.release = Release.VDM_10;
-		Dialect dialect = Dialect.VDM_PP;
 
 		JavaCodeGenMode cgMode = null;
 		boolean printClasses = false;
@@ -100,6 +100,11 @@ public class JavaCodeGenMain
 			{
 				cgMode = JavaCodeGenMode.OO_SPEC;
 				Settings.dialect = Dialect.VDM_PP;
+			}
+			else if(arg.equals(RT_ARG))
+			{
+				cgMode = JavaCodeGenMode.OO_SPEC;
+				Settings.dialect = Dialect.VDM_RT;
 			}
 			else if(arg.equals(SL_ARG))
 			{
@@ -212,7 +217,7 @@ public class JavaCodeGenMain
 		
 		if(cgMode == JavaCodeGenMode.EXP)
 		{
-			handleExp(exp, irSettings, javaSettings, dialect);
+			handleExp(exp, irSettings, javaSettings, Settings.dialect);
 		}
 		else
 		{
@@ -228,7 +233,7 @@ public class JavaCodeGenMain
 			}
 			
 			if (cgMode == JavaCodeGenMode.OO_SPEC) {
-				handleOo(files, irSettings, javaSettings, dialect,
+				handleOo(files, irSettings, javaSettings, Settings.dialect,
 						printClasses, outputDir);
 			} else if(cgMode == JavaCodeGenMode.SL_SPEC) {
 				handleSl(files, irSettings, javaSettings, printClasses,
@@ -324,7 +329,15 @@ public class JavaCodeGenMain
 			vdmCodGen.setSettings(irSettings);
 			vdmCodGen.setJavaSettings(javaSettings);
 			
-			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
+			TypeCheckResult<List<SClassDefinition>> tcResult = null;
+			
+			if (dialect == Dialect.VDM_PP)
+			{
+				tcResult = TypeCheckerUtil.typeCheckPp(files);
+			} else
+			{
+				tcResult = TypeCheckerUtil.typeCheckRt(files);
+			}
 			
 			if(GeneralCodeGenUtils.hasErrors(tcResult))
 			{

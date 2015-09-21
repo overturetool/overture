@@ -375,7 +375,7 @@ public class JavaCodeGenUtil
 	
 	public static boolean isSupportedVdmSourceFile(File f)
 	{
-		String[] extensions = new String[]{".vdmpp", ".vpp", ".vsl", ".vdmsl"};
+		String[] extensions = new String[]{".vdmpp", ".vpp", ".vsl", ".vdmsl", ".vdmrt", ".vrt"};
 		
 		for(String ext : extensions)
 		{

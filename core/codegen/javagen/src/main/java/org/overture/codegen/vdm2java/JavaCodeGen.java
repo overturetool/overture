@@ -32,6 +32,8 @@ import java.util.Set;
 
 import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.ACpuClassDefinition;
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
@@ -273,7 +275,10 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 		for (INode node : ast)
 		{
-			genIrStatus(statuses, node);
+			if(!(node instanceof ASystemClassDefinition) && !(node instanceof ACpuClassDefinition))
+			{
+				genIrStatus(statuses, node);
+			}
 		}
 
 		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
