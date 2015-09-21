@@ -52,7 +52,9 @@ import org.overture.codegen.cgast.statements.ABreakStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.AContinueStmCG;
+import org.overture.codegen.cgast.statements.ACyclesStmCG;
 import org.overture.codegen.cgast.statements.ADecrementStmCG;
+import org.overture.codegen.cgast.statements.ADurationStmCG;
 import org.overture.codegen.cgast.statements.AErrorStmCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
@@ -385,10 +387,15 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMetaStmCG.class, templateStructure.STM_PATH
 				+ "Meta");
 
-		// The template used for the block statement also works here
 		nodeTemplateFileNames.put(AAtomicStmCG.class, templateStructure.STM_PATH
 				+ "Atomic");
 
+		nodeTemplateFileNames.put(ACyclesStmCG.class, templateStructure.STM_PATH
+				+ "Cycles");
+
+		nodeTemplateFileNames.put(ADurationStmCG.class, templateStructure.STM_PATH
+				+ "Duration");
+		
 		// Expressions
 
 		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH
