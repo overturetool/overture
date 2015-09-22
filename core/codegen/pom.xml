@@ -29,6 +29,7 @@
     <module>codegen-maven-plugin</module>
     <!--<module>isagen</module>-->
     <!--<module>cppgen</module>-->
+    <module>llvmgen</module>
   </modules>
   
 </project>
