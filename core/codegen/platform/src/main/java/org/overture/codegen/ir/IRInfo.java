@@ -344,6 +344,7 @@ public class IRInfo
 		unsupportedNodes.clear();
 		transformationWarnings.clear();
 		tempVarNameGen.clear();
+		idStateDesignatorDefs.clear();
 	}
 
 	public IRSettings getSettings()

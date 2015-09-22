@@ -45,7 +45,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.util.modules.CombinedDefaultModule;
-import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
@@ -255,7 +254,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		handleOldNames(ast);
 
 		List<Renaming> allRenamings = normaliseIdentifiers(userModules);
-		computeDefTable(userModules);
+		generator.computeDefTable(userModules);
 
 		// To document any renaming of variables shadowing other variables
 		removeUnreachableStms(ast);
@@ -591,23 +590,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		}
 
 		return new LinkedList<Renaming>(filteredRenamings);
-	}
-
-	private void computeDefTable(List<INode> mergedParseLists)
-			throws AnalysisException
-	{
-		List<INode> classesToConsider = new LinkedList<>();
-
-		for (INode node : mergedParseLists)
-		{
-			if (!getInfo().getDeclAssistant().isLibrary(node))
-			{
-				classesToConsider.add(node);
-			}
-		}
-		
-		Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(classesToConsider, getInfo().getTcFactory());
-		getInfo().setIdStateDesignatorDefs(idDefs);
 	}
 
 	private void removeUnreachableStms(List<? extends INode> mergedParseLists)

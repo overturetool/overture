@@ -5,15 +5,13 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class CodeGenBase
 {
-	public static final String OBJ_INIT_CALL_NAME_PREFIX = "cg_init_";
-	
 	protected IRGenerator generator;
 	protected TransAssistantCG transAssistant;
 	
 	protected CodeGenBase()
 	{
 		super();
-		this.generator = new IRGenerator(OBJ_INIT_CALL_NAME_PREFIX);
+		this.generator = new IRGenerator();
 	}
 	
 	public void setIRGenerator(IRGenerator generator)

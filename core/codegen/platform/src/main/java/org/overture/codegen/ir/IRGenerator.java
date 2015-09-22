@@ -22,13 +22,18 @@
 package org.overture.codegen.ir;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.AIdentifierStateDesignator;
+import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
@@ -37,11 +42,35 @@ import org.overture.codegen.trans.ITotalTransformation;
 
 public class IRGenerator
 {
+	private static final String OBJ_INIT_CALL_NAME_PREFIX = "cg_init_";
+	
 	protected IRInfo codeGenInfo;
 
+	public IRGenerator()
+	{
+		this(OBJ_INIT_CALL_NAME_PREFIX);
+	}
+	
 	public IRGenerator(String objectInitCallPrefix)
 	{
 		this.codeGenInfo = new IRInfo(objectInitCallPrefix);
+	}
+	
+	public void computeDefTable(List<? extends org.overture.ast.node.INode> mergedParseLists)
+			throws AnalysisException
+	{
+		List<org.overture.ast.node.INode> classesToConsider = new LinkedList<>();
+
+		for (org.overture.ast.node.INode node : mergedParseLists)
+		{
+			if (!codeGenInfo.getDeclAssistant().isLibrary(node))
+			{
+				classesToConsider.add(node);
+			}
+		}
+		
+		Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(classesToConsider, codeGenInfo.getTcFactory());
+		codeGenInfo.setIdStateDesignatorDefs(idDefs);
 	}
 
 	public void clear()
