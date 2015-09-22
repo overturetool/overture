@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -38,14 +38,14 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
+	public void caseADefaultClassDeclCG(ADefaultClassDeclCG node) throws AnalysisException
 	{
 		if(!info.getSettings().generateConc())
 		{
 			return;
 		}
 
-		AClassDeclCG innerClass = new AClassDeclCG();
+		ADefaultClassDeclCG innerClass = new ADefaultClassDeclCG();
 		innerClass.setStatic(true);
 
 		String classname = node.getName();

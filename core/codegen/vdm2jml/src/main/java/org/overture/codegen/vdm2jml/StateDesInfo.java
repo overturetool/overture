@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 
@@ -74,7 +74,7 @@ public class StateDesInfo
 		return stateDesVars.get(stm);
 	}
 	
-	public AClassDeclCG getEnclosingClass(AIdentifierVarExpCG stateDesVar)
+	public ADefaultClassDeclCG getEnclosingClass(AIdentifierVarExpCG stateDesVar)
 	{
 		for(SStmCG k : stateDesVars.keySet())
 		{
@@ -82,7 +82,7 @@ public class StateDesInfo
 			{
 				if(v == stateDesVar)
 				{
-					return k.getAncestor(AClassDeclCG.class);
+					return k.getAncestor(ADefaultClassDeclCG.class);
 				}
 			}
 		}

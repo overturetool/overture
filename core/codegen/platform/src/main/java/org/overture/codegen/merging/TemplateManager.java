@@ -32,7 +32,7 @@ import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.ACatchClauseDeclCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
@@ -168,7 +168,7 @@ public class TemplateManager
 		nodeTemplateFileNames = new HashMap<Class<? extends INode>, String>();
 
 		// Declarations
-		nodeTemplateFileNames.put(AClassDeclCG.class, templateStructure.DECL_PATH
+		nodeTemplateFileNames.put(ADefaultClassDeclCG.class, templateStructure.DECL_PATH
 				+ "Class");
 
 		nodeTemplateFileNames.put(ARecordDeclCG.class, templateStructure.DECL_PATH

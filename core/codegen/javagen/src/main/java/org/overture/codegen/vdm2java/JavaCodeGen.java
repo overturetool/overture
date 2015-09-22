@@ -60,7 +60,7 @@ import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
@@ -188,7 +188,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			List<GeneratedModule> modules = new LinkedList<GeneratedModule>();
 			for (String quoteNameVdm : quoteValues)
 			{
-				AClassDeclCG quoteDecl = quoteValueCreator.consQuoteValue(quoteNameVdm
+				ADefaultClassDeclCG quoteDecl = quoteValueCreator.consQuoteValue(quoteNameVdm
 						+ JAVA_QUOTE_NAME_SUFFIX, quoteNameVdm, getJavaSettings().getJavaRootPackage());
 
 				StringWriter writer = new StringWriter();
@@ -308,20 +308,20 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			
 		}
 
-		List<IRStatus<AClassDeclCG>> classStatuses = IRStatus.extract(modulesAsNodes, AClassDeclCG.class);
-		classStatuses.addAll(IRStatus.extract(statuses, AClassDeclCG.class));
+		List<IRStatus<ADefaultClassDeclCG>> classStatuses = IRStatus.extract(modulesAsNodes, ADefaultClassDeclCG.class);
+		classStatuses.addAll(IRStatus.extract(statuses, ADefaultClassDeclCG.class));
 		
 		if (getJavaSettings().getJavaRootPackage() != null)
 		{
-			for (IRStatus<AClassDeclCG> irStatus : classStatuses)
+			for (IRStatus<ADefaultClassDeclCG> irStatus : classStatuses)
 			{
 				irStatus.getIrNode().setPackage(getJavaSettings().getJavaRootPackage());
 			}
 		}
 
-		List<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
+		List<IRStatus<ADefaultClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<ADefaultClassDeclCG>>();
 
-		for (IRStatus<AClassDeclCG> status : classStatuses)
+		for (IRStatus<ADefaultClassDeclCG> status : classStatuses)
 		{
 			if (status.canBeGenerated())
 			{
@@ -336,7 +336,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 		for (DepthFirstAnalysisAdaptor trans : transformations)
 		{
-			for (IRStatus<AClassDeclCG> status : canBeGenerated)
+			for (IRStatus<ADefaultClassDeclCG> status : canBeGenerated)
 			{
 				try
 				{
@@ -356,7 +356,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		}
 		
 		// Event notification
-		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), AClassDeclCG.class);
+		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), ADefaultClassDeclCG.class);
 		canBeGenerated = filter(canBeGenerated, generated);
 		
 		List<String> skipping = new LinkedList<String>();
@@ -364,10 +364,10 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
 		javaFormat.setFunctionValueAssistant(transSeries.getFuncValAssist());
 
-		for (IRStatus<AClassDeclCG> status : canBeGenerated)
+		for (IRStatus<ADefaultClassDeclCG> status : canBeGenerated)
 		{
 			StringWriter writer = new StringWriter();
-			AClassDeclCG classCg = status.getIrNode();
+			ADefaultClassDeclCG classCg = status.getIrNode();
 			String className = status.getIrNodeName();
 			INode vdmClass = status.getIrNode().getSourceNode().getVdmNode();
 

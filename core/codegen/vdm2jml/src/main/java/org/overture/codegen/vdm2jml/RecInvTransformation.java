@@ -7,7 +7,7 @@ import org.overture.ast.node.INode;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -150,7 +150,7 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 					if (varExp.getVardef() instanceof SFunctionDefinition
 							|| varExp.getVardef() instanceof SOperationDefinition)
 					{
-						AClassDeclCG encClass = rec.getAncestor(AClassDeclCG.class);
+						ADefaultClassDeclCG encClass = rec.getAncestor(ADefaultClassDeclCG.class);
 
 						if (encClass != null)
 						{

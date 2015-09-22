@@ -36,7 +36,7 @@ import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.trans.ITotalTransformation;
 
@@ -85,7 +85,7 @@ public class IRGenerator
 
 		if(node instanceof SClassDefinition)
 		{
-			AClassDeclCG classCg = node.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
+			ADefaultClassDeclCG classCg = node.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
 			Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 			String name = ((SClassDefinition) node).getName().getName();
 			

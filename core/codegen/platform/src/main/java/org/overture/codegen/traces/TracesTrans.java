@@ -3,7 +3,7 @@ package org.overture.codegen.traces;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
@@ -58,7 +58,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG enclosingClass = node.getAncestor(ADefaultClassDeclCG.class);
 
 		if (enclosingClass != null)
 		{
@@ -163,7 +163,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 	{
 		if (trace != null)
 		{
-			AClassDeclCG enclosingClass = trace.getAncestor(AClassDeclCG.class);
+			ADefaultClassDeclCG enclosingClass = trace.getAncestor(ADefaultClassDeclCG.class);
 			if (enclosingClass != null)
 			{
 				return enclosingClass.getName();
@@ -190,7 +190,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 
 	private String getClassName(ANamedTraceDeclCG node)
 	{
-		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG enclosingClass = node.getAncestor(ADefaultClassDeclCG.class);
 
 		String traceClassName = "";
 		if (enclosingClass != null)

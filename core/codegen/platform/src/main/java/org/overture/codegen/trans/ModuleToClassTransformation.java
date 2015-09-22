@@ -10,7 +10,7 @@ import org.overture.codegen.cgast.SImportCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AAllImportCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFromModuleImportsCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
@@ -38,7 +38,7 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		implements ITotalTransformation
 {
-	private AClassDeclCG clazz = null;
+	private ADefaultClassDeclCG clazz = null;
 	
 	private IRInfo info;
 	private TransAssistantCG transAssistant;
@@ -54,7 +54,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAModuleDeclCG(AModuleDeclCG node) throws AnalysisException
 	{
-		clazz = new AClassDeclCG();
+		clazz = new ADefaultClassDeclCG();
 		clazz.setSourceNode(node.getSourceNode());
 		clazz.setAccess(IRConstants.PUBLIC);
 		clazz.setName(node.getName());
@@ -159,7 +159,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		info.addClass(clazz);
 	}
 
-	private void handleImports(final AModuleImportsCG moduleImports, final AClassDeclCG clazz) throws AnalysisException
+	private void handleImports(final AModuleImportsCG moduleImports, final ADefaultClassDeclCG clazz) throws AnalysisException
 	{
 		//name = moduleImports.getName();
 		

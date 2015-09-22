@@ -7,7 +7,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -39,7 +39,7 @@ public class NamedTypeInvHandler implements IAssert
 		this.util = new NamedTypeInvUtil(this);
 	}
 
-	public void handleClass(AClassDeclCG node) throws AnalysisException
+	public void handleClass(ADefaultClassDeclCG node) throws AnalysisException
 	{
 		// We want only to treat fields and methods specified by the user.
 		// This case helps us avoiding visiting invariant methods
@@ -68,7 +68,7 @@ public class NamedTypeInvHandler implements IAssert
 			return;
 		}
 
-		AClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
+		ADefaultClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
 
 		if (encClass == null)
 		{
@@ -177,7 +177,7 @@ public class NamedTypeInvHandler implements IAssert
 
 			if (!invTypes.isEmpty())
 			{
-				AClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
+				ADefaultClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
 
 				if (encClass == null)
 				{
@@ -220,7 +220,7 @@ public class NamedTypeInvHandler implements IAssert
 
 		if (!invTypes.isEmpty())
 		{
-			AClassDeclCG enclosingClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
+			ADefaultClassDeclCG enclosingClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
 
 			if (enclosingClass == null)
 			{
@@ -264,7 +264,7 @@ public class NamedTypeInvHandler implements IAssert
 			return null;
 		}
 
-		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG enclosingClass = node.getAncestor(ADefaultClassDeclCG.class);
 
 		if (enclosingClass == null)
 		{
@@ -295,7 +295,7 @@ public class NamedTypeInvHandler implements IAssert
 
 			if (!invTypes.isEmpty())
 			{
-				AClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
+				ADefaultClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
 
 				if (encClass == null)
 				{
@@ -351,7 +351,7 @@ public class NamedTypeInvHandler implements IAssert
 			return;
 		}
 
-		AClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
+		ADefaultClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
 
 		if (encClass == null)
 		{
@@ -431,7 +431,7 @@ public class NamedTypeInvHandler implements IAssert
 			return null;
 		}
 
-		AClassDeclCG encClass = invTrans.getStateDesInfo().getEnclosingClass(var);
+		ADefaultClassDeclCG encClass = invTrans.getStateDesInfo().getEnclosingClass(var);
 
 		if (encClass == null)
 		{

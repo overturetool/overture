@@ -7,7 +7,7 @@ import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
@@ -25,7 +25,7 @@ public class JmlAnnotationHelper
 		this.jmlGen = jmlGen;
 	}
 	
-	public void makeNamedTypeInvFuncsPublic(AClassDeclCG clazz)
+	public void makeNamedTypeInvFuncsPublic(ADefaultClassDeclCG clazz)
 	{
 		List<AMethodDeclCG> nameInvMethods = jmlGen.getUtil().getNamedTypeInvMethods(clazz);
 
@@ -76,14 +76,14 @@ public class JmlAnnotationHelper
 		sb.append(");");
 	}
 	
-	public void addInvCheckGhostVarDecl(AClassDeclCG owner)
+	public void addInvCheckGhostVarDecl(ADefaultClassDeclCG owner)
 	{
 		String metaStr = String.format(JmlGenerator.JML_INV_CHECKS_ON_DECL, JmlGenerator.INV_CHECKS_ON_GHOST_VAR_NAME);
 		
 		appendMetaData(owner, consMetaData(metaStr));
 	}
 	
-	public String consInvChecksOnName(AClassDeclCG owner)
+	public String consInvChecksOnName(ADefaultClassDeclCG owner)
 	{
 		StringBuilder prefix = new StringBuilder();
 		

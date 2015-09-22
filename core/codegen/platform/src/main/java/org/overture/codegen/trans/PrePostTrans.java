@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.ir.IRInfo;
@@ -29,7 +29,7 @@ public class PrePostTrans extends DepthFirstAnalysisAdaptor {
 			return;
 		}
 		
-		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG enclosingClass = node.getAncestor(ADefaultClassDeclCG.class);
 		
 		if(enclosingClass == null)
 		{

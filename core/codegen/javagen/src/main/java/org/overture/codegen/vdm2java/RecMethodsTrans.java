@@ -2,7 +2,7 @@ package org.overture.codegen.vdm2java;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 
@@ -16,7 +16,7 @@ public class RecMethodsTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
+	public void caseADefaultClassDeclCG(ADefaultClassDeclCG node) throws AnalysisException
 	{
 		for(ATypeDeclCG typeDecl : node.getTypeDecls())
 		{

@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
@@ -171,7 +171,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	}
 
 	@Override
-	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
+	public void caseADefaultClassDeclCG(ADefaultClassDeclCG node) throws AnalysisException
 	{
 		namedTypeHandler.handleClass(node);
 	}

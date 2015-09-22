@@ -3,7 +3,7 @@ package org.overture.codegen.vdm2jml;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 
 /**
@@ -15,7 +15,7 @@ public class NameGen
 {
 	private Set<String> toAvoid;
 
-	public NameGen(AClassDeclCG classDecl)
+	public NameGen(ADefaultClassDeclCG classDecl)
 	{
 		this.toAvoid = new HashSet<String>();
 

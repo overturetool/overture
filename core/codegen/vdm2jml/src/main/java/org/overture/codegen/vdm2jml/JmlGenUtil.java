@@ -9,7 +9,7 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
@@ -121,7 +121,7 @@ public class JmlGenUtil
 		return null;
 	}
 	
-	public List<AMethodDeclCG> getNamedTypeInvMethods(AClassDeclCG clazz)
+	public List<AMethodDeclCG> getNamedTypeInvMethods(ADefaultClassDeclCG clazz)
 	{
 		List<AMethodDeclCG> invDecls = new LinkedList<AMethodDeclCG>();
 
@@ -156,7 +156,7 @@ public class JmlGenUtil
 	{
 		List<ARecordDeclCG> records = new LinkedList<ARecordDeclCG>();
 
-		for (IRStatus<AClassDeclCG> classStatus : IRStatus.extract(ast, AClassDeclCG.class))
+		for (IRStatus<ADefaultClassDeclCG> classStatus : IRStatus.extract(ast, ADefaultClassDeclCG.class))
 		{
 			for (ATypeDeclCG typeDecl : classStatus.getIrNode().getTypeDecls())
 			{
@@ -224,9 +224,9 @@ public class JmlGenUtil
 	{
 		List<IRStatus<INode>> extraClasses = new LinkedList<IRStatus<INode>>();
 
-		for (IRStatus<AClassDeclCG> status : IRStatus.extract(ast, AClassDeclCG.class))
+		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(ast, ADefaultClassDeclCG.class))
 		{
-			AClassDeclCG clazz = status.getIrNode();
+			ADefaultClassDeclCG clazz = status.getIrNode();
 
 			List<ARecordDeclCG> recDecls = new LinkedList<ARecordDeclCG>();
 
@@ -243,7 +243,7 @@ public class JmlGenUtil
 			// For each of the records we will make a top-level class
 			for (ARecordDeclCG recDecl : recDecls)
 			{
-				AClassDeclCG recClass = new AClassDeclCG();
+				ADefaultClassDeclCG recClass = new ADefaultClassDeclCG();
 
 				recClass.setMetaData(recDecl.getMetaData());
 				recClass.setAbstract(false);
@@ -327,7 +327,7 @@ public class JmlGenUtil
 		return recPackage;
 	}
 	
-	public AMethodDeclCG genInvMethod(AClassDeclCG clazz,
+	public AMethodDeclCG genInvMethod(ADefaultClassDeclCG clazz,
 			ANamedTypeDeclCG namedTypeDecl)
 	{
 		AReturnStmCG body = new AReturnStmCG();
@@ -360,7 +360,7 @@ public class JmlGenUtil
 		return method;
 	}
 	
-	public AIfStmCG consDynamicTypeCheck(IRStatus<AClassDeclCG> status, AMethodDeclCG method,
+	public AIfStmCG consDynamicTypeCheck(IRStatus<ADefaultClassDeclCG> status, AMethodDeclCG method,
 			ANamedTypeDeclCG namedTypeDecl)
 	{
 		AIdentifierVarExpCG paramExp = getInvParamVar(method);
@@ -531,7 +531,7 @@ public class JmlGenUtil
 		return dynTypeCheck;
 	}
 	
-	public AIdentifierPatternCG consInvParamReplacementId(AClassDeclCG encClass, String originalParamName)
+	public AIdentifierPatternCG consInvParamReplacementId(ADefaultClassDeclCG encClass, String originalParamName)
 	{
 		NameGen nameGen = new NameGen(encClass);
 		nameGen.addName(originalParamName);
@@ -542,9 +542,9 @@ public class JmlGenUtil
 		return jmlGen.getJavaGen().getInfo().getPatternAssistant().consIdPattern(newParamName);
 	}
 	
-	public AClassDeclCG getEnclosingClass(INode node)
+	public ADefaultClassDeclCG getEnclosingClass(INode node)
 	{
-		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG enclosingClass = node.getAncestor(ADefaultClassDeclCG.class);
 
 		if (enclosingClass != null)
 		{
@@ -590,9 +590,9 @@ public class JmlGenUtil
 	{
 		// Collect all named type invariants
 		List<ATypeDeclCG> allNamedTypeInvTypeDecls = new LinkedList<ATypeDeclCG>();
-		for(IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
+		for(IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(newAst, ADefaultClassDeclCG.class))
 		{
-			AClassDeclCG clazz = status.getIrNode();
+			ADefaultClassDeclCG clazz = status.getIrNode();
 		
 			if(jmlGen.getJavaGen().getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
 			{
@@ -608,9 +608,9 @@ public class JmlGenUtil
 			}
 		}
 		
-		for(IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
+		for(IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(newAst, ADefaultClassDeclCG.class))
 		{
-			AClassDeclCG clazz = status.getIrNode();
+			ADefaultClassDeclCG clazz = status.getIrNode();
 			
 			if(jmlGen.getJavaGen().getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
 			{

@@ -58,7 +58,7 @@ import org.overture.codegen.cgast.STermCG;
 import org.overture.codegen.cgast.STraceCoreDeclCG;
 import org.overture.codegen.cgast.STraceDeclCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.visitor.CGVisitor;
@@ -101,7 +101,7 @@ public class IRInfo
 	private Map<AIdentifierStateDesignator, PDefinition> idStateDesignatorDefs;
 	
 	// IR classes
-	private List<AClassDeclCG> classes;
+	private List<ADefaultClassDeclCG> classes;
 	
 	// IR modules
 	private List<AModuleDeclCG> modules;
@@ -124,7 +124,7 @@ public class IRInfo
 		this.objectInitCallNames = new HashMap<AExplicitOperationDefinition, String>();
 		
 		this.idStateDesignatorDefs = new HashMap<AIdentifierStateDesignator, PDefinition>();
-		this.classes = new LinkedList<AClassDeclCG>();
+		this.classes = new LinkedList<ADefaultClassDeclCG>();
 		this.modules = new LinkedList<AModuleDeclCG>();
 	}
 
@@ -133,7 +133,7 @@ public class IRInfo
 		return assistantManager;
 	}
 
-	public CGVisitor<AClassDeclCG> getClassVisitor()
+	public CGVisitor<ADefaultClassDeclCG> getClassVisitor()
 	{
 		return visitorManager.getClassVisitor();
 	}
@@ -383,12 +383,12 @@ public class IRInfo
 		this.idStateDesignatorDefs = idDefs;
 	}
 
-	public List<AClassDeclCG> getClasses()
+	public List<ADefaultClassDeclCG> getClasses()
 	{
 		return classes;
 	}
 
-	public void addClass(AClassDeclCG irClass)
+	public void addClass(ADefaultClassDeclCG irClass)
 	{
 		if(this.classes != null)
 		{
@@ -398,9 +398,9 @@ public class IRInfo
 	
 	public void removeClass(String name)
 	{
-		AClassDeclCG classToRemove = null;
+		ADefaultClassDeclCG classToRemove = null;
 		
-		for (AClassDeclCG clazz : classes)
+		for (ADefaultClassDeclCG clazz : classes)
 		{
 			if(clazz.getName().equals(name))
 			{

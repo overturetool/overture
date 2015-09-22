@@ -34,7 +34,7 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
@@ -612,7 +612,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 		if (type instanceof AClassTypeCG)
 		{
-			for (AClassDeclCG classCg : transAssistant.getInfo().getClasses())
+			for (ADefaultClassDeclCG classCg : transAssistant.getInfo().getClasses())
 			{
 				for (AMethodDeclCG method : classCg.getMethods())
 				{
@@ -633,7 +633,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			String definingClassName = recordType.getName().getDefiningClass();
 			String recordName = recordType.getName().getName();
 
-			AClassDeclCG classDecl = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findClass(transAssistant.getInfo().getClasses(), definingClassName);
+			ADefaultClassDeclCG classDecl = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findClass(transAssistant.getInfo().getClasses(), definingClassName);
 			ARecordDeclCG record = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findRecord(classDecl, recordName);
 
 			List<STypeCG> fieldTypes = transAssistant.getInfo().getAssistantManager().getTypeAssistant().getFieldTypes(record);
@@ -666,7 +666,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		STypeCG classType = node.getClassType();
 		
 		String className = classType instanceof AClassTypeCG ? ((AClassTypeCG) classType).getName()
-				: node.getAncestor(AClassDeclCG.class).getName();
+				: node.getAncestor(ADefaultClassDeclCG.class).getName();
 		
 		handleCallStm(node, className);
 	}

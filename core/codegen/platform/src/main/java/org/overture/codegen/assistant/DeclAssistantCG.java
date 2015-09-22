@@ -50,7 +50,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
@@ -170,8 +170,8 @@ public class DeclAssistantCG extends AssistantBase
 		return false;
 	}
 
-	public <T extends SDeclCG> List<T> getAllDecls(AClassDeclCG classDecl,
-			List<AClassDeclCG> classes, DeclStrategy<T> strategy)
+	public <T extends SDeclCG> List<T> getAllDecls(ADefaultClassDeclCG classDecl,
+			List<ADefaultClassDeclCG> classes, DeclStrategy<T> strategy)
 	{
 		List<T> allDecls = new LinkedList<T>();
 
@@ -181,7 +181,7 @@ public class DeclAssistantCG extends AssistantBase
 
 		while (superName != null)
 		{
-			AClassDeclCG superClassDecl = findClass(classes, superName);
+			ADefaultClassDeclCG superClassDecl = findClass(classes, superName);
 			
 			if(superClassDecl == null)
 			{
@@ -204,8 +204,8 @@ public class DeclAssistantCG extends AssistantBase
 		return allDecls;
 	}
 
-	public List<AMethodDeclCG> getAllMethods(AClassDeclCG classDecl,
-			List<AClassDeclCG> classes)
+	public List<AMethodDeclCG> getAllMethods(ADefaultClassDeclCG classDecl,
+			List<ADefaultClassDeclCG> classes)
 	{
 		DeclStrategy<AMethodDeclCG> methodDeclStrategy = new DeclStrategy<AMethodDeclCG>()
 		{
@@ -216,7 +216,7 @@ public class DeclAssistantCG extends AssistantBase
 			}
 
 			@Override
-			public List<AMethodDeclCG> getDecls(AClassDeclCG classDecl)
+			public List<AMethodDeclCG> getDecls(ADefaultClassDeclCG classDecl)
 			{
 				return classDecl.getMethods();
 			}
@@ -225,8 +225,8 @@ public class DeclAssistantCG extends AssistantBase
 		return getAllDecls(classDecl, classes, methodDeclStrategy);
 	}
 
-	public List<AFieldDeclCG> getAllFields(AClassDeclCG classDecl,
-			List<AClassDeclCG> classes)
+	public List<AFieldDeclCG> getAllFields(ADefaultClassDeclCG classDecl,
+			List<ADefaultClassDeclCG> classes)
 	{
 		DeclStrategy<AFieldDeclCG> fieldDeclStrategy = new DeclStrategy<AFieldDeclCG>()
 		{
@@ -237,7 +237,7 @@ public class DeclAssistantCG extends AssistantBase
 			}
 
 			@Override
-			public List<AFieldDeclCG> getDecls(AClassDeclCG classDecl)
+			public List<AFieldDeclCG> getDecls(ADefaultClassDeclCG classDecl)
 			{
 				return classDecl.getFields();
 			}
@@ -268,9 +268,9 @@ public class DeclAssistantCG extends AssistantBase
 		}
 	}
 
-	public AClassDeclCG findClass(List<AClassDeclCG> classes, String moduleName)
+	public ADefaultClassDeclCG findClass(List<ADefaultClassDeclCG> classes, String moduleName)
 	{
-		for (AClassDeclCG classDecl : classes)
+		for (ADefaultClassDeclCG classDecl : classes)
 		{
 			if (classDecl.getName().equals(moduleName))
 			{
@@ -282,7 +282,7 @@ public class DeclAssistantCG extends AssistantBase
 	}
 
 	// This method assumes that the record is defined in definingClass and not a super class
-	public ARecordDeclCG findRecord(AClassDeclCG definingClass,
+	public ARecordDeclCG findRecord(ADefaultClassDeclCG definingClass,
 			String recordName)
 	{
 		for (ATypeDeclCG typeDecl : definingClass.getTypeDecls())
@@ -306,7 +306,7 @@ public class DeclAssistantCG extends AssistantBase
 	}
 	
 	// This method assumes that the record is defined in definingClass and not a super class
-	public List<ARecordDeclCG> getRecords(AClassDeclCG definingClass)
+	public List<ARecordDeclCG> getRecords(ADefaultClassDeclCG definingClass)
 	{
 		List<ARecordDeclCG> records = new LinkedList<ARecordDeclCG>();
 		
@@ -327,10 +327,10 @@ public class DeclAssistantCG extends AssistantBase
 		return records;
 	}
 
-	public ARecordDeclCG findRecord(List<AClassDeclCG> classes,
+	public ARecordDeclCG findRecord(List<ADefaultClassDeclCG> classes,
 			ARecordTypeCG recordType)
 	{
-		AClassDeclCG definingClass = findClass(classes, recordType.getName().getDefiningClass());
+		ADefaultClassDeclCG definingClass = findClass(classes, recordType.getName().getDefiningClass());
 		ARecordDeclCG record = findRecord(definingClass, recordType.getName().getName());
 
 		return record;
@@ -486,7 +486,7 @@ public class DeclAssistantCG extends AssistantBase
 		}
 	}
 
-	public AFieldDeclCG getFieldDecl(List<AClassDeclCG> classes,
+	public AFieldDeclCG getFieldDecl(List<ADefaultClassDeclCG> classes,
 			ARecordTypeCG recordType, int number)
 	{
 		ARecordDeclCG record = findRecord(classes, recordType);
@@ -494,7 +494,7 @@ public class DeclAssistantCG extends AssistantBase
 		return record.getFields().get(number);
 	}
 	
-	public AFieldDeclCG getFieldDecl(AClassDeclCG clazz, String fieldName)
+	public AFieldDeclCG getFieldDecl(ADefaultClassDeclCG clazz, String fieldName)
 	{
 		for(AFieldDeclCG field : clazz.getFields())
 		{
@@ -507,7 +507,7 @@ public class DeclAssistantCG extends AssistantBase
 		return null;
 	}
 
-	public AFieldDeclCG getFieldDecl(List<AClassDeclCG> classes,
+	public AFieldDeclCG getFieldDecl(List<ADefaultClassDeclCG> classes,
 			ARecordTypeCG recordType, String memberName)
 	{
 		ATypeNameCG name = recordType.getName();
@@ -534,8 +534,8 @@ public class DeclAssistantCG extends AssistantBase
 					+ recordType);
 		}
 
-		AClassDeclCG definingClass = null;
-		for (AClassDeclCG currentClass : classes)
+		ADefaultClassDeclCG definingClass = null;
+		for (ADefaultClassDeclCG currentClass : classes)
 		{
 			if (currentClass.getName().equals(definingClassName))
 			{

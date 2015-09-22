@@ -2,7 +2,7 @@ package org.overture.codegen.vdm2java;
 
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -43,9 +43,9 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		this.transAssistant = transformationAssistant;
 	}
 	
-	public AClassDeclCG consQuoteValue(String quoteClassName, String quoteName, String userCodePackage)
+	public ADefaultClassDeclCG consQuoteValue(String quoteClassName, String quoteName, String userCodePackage)
 	{
-		AClassDeclCG decl = new AClassDeclCG();
+		ADefaultClassDeclCG decl = new ADefaultClassDeclCG();
 		decl.setAbstract(false);
 		decl.setAccess(IJavaConstants.PUBLIC);
 		decl.setName(quoteClassName);

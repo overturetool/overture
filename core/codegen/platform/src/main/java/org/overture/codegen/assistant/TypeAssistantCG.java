@@ -44,7 +44,7 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
@@ -107,7 +107,7 @@ public class TypeAssistantCG extends AssistantBase
 			if (fieldModule != null)
 			{
 				// It is a class
-				AClassDeclCG clazz = info.getDeclAssistant().findClass(info.getClasses(), fieldModule);
+				ADefaultClassDeclCG clazz = info.getDeclAssistant().findClass(info.getClasses(), fieldModule);
 				AFieldDeclCG field = info.getDeclAssistant().getFieldDecl(clazz, fieldModule);
 				
 				if(field != null)
@@ -163,7 +163,7 @@ public class TypeAssistantCG extends AssistantBase
 			String fieldModule, String fieldName, List<SExpCG> args)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(info.getClasses(), fieldModule);
+		ADefaultClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(info.getClasses(), fieldModule);
 
 		List<AMethodDeclCG> methods = assistantManager.getDeclAssistant().getAllMethods(classDecl, info.getClasses());
 
@@ -193,8 +193,8 @@ public class TypeAssistantCG extends AssistantBase
 		return null;
 	}
 
-	public STypeCG getFieldType(AClassDeclCG classDecl, String fieldName,
-			List<AClassDeclCG> classes)
+	public STypeCG getFieldType(ADefaultClassDeclCG classDecl, String fieldName,
+			List<ADefaultClassDeclCG> classes)
 	{
 		for (AFieldDeclCG field : assistantManager.getDeclAssistant().getAllFields(classDecl, classes))
 		{
@@ -207,7 +207,7 @@ public class TypeAssistantCG extends AssistantBase
 		return null;
 	}
 	
-	public STypeCG getFieldType(List<AClassDeclCG> classes,
+	public STypeCG getFieldType(List<ADefaultClassDeclCG> classes,
 			ARecordTypeCG recordType, String memberName)
 	{
 		AFieldDeclCG field = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);
@@ -231,10 +231,10 @@ public class TypeAssistantCG extends AssistantBase
 		return fieldTypes;
 	}
 
-	public STypeCG getFieldType(List<AClassDeclCG> classes, String moduleName,
+	public STypeCG getFieldType(List<ADefaultClassDeclCG> classes, String moduleName,
 			String fieldName)
 	{
-		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, moduleName);
+		ADefaultClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, moduleName);
 		return getFieldType(classDecl, fieldName, classes);
 	}
 

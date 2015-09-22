@@ -30,7 +30,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
@@ -48,14 +48,14 @@ import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 
-public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
+public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, ADefaultClassDeclCG>
 {
 	public ClassVisitorCG()
 	{
 	}
-
+	
 	@Override
-	public AClassDeclCG caseAClassClassDefinition(AClassClassDefinition node,
+	public ADefaultClassDeclCG caseAClassClassDefinition(AClassClassDefinition node,
 			IRInfo question) throws AnalysisException
 	{
 		String name = node.getName().getName();
@@ -64,7 +64,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 		boolean isStatic = false;
 		LinkedList<ILexNameToken> superNames = node.getSupernames();
 
-		AClassDeclCG classCg = new AClassDeclCG();
+		ADefaultClassDeclCG classCg = new ADefaultClassDeclCG();
 		classCg.setPackage(null);
 		classCg.setName(name);
 		classCg.setAccess(access);

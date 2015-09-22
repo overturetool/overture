@@ -3,7 +3,7 @@ package org.overture.codegen.vdm2java;
 import java.util.LinkedList;
 
 import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -23,7 +23,7 @@ public class JavaClassCreator extends JavaClassCreatorBase
 		this.info = info;
 	}
 	
-	public AMethodDeclCG generateToString(AClassDeclCG classDecl)
+	public AMethodDeclCG generateToString(ADefaultClassDeclCG classDecl)
 	{
 		//Example: A{#32, x := 4, c = "STD"} (ID is omitted)
 		

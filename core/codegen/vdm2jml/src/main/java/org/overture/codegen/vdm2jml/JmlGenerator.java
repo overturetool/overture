@@ -11,7 +11,7 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -79,7 +79,7 @@ public class JmlGenerator implements IREventObserver
 	private StateDesInfo stateDesInfo;
 	
 	// The class owning the invChecksOn flag
-	private AClassDeclCG invChecksFlagOwner = null;
+	private ADefaultClassDeclCG invChecksFlagOwner = null;
 	
 	public JmlGenerator()
 	{
@@ -194,7 +194,7 @@ public class JmlGenerator implements IREventObserver
 		newAst.addAll(util.makeRecsOuterClasses(ast, recInfo));
 		
 		// Also extract classes that are records
-		for(IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
+		for(IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(newAst, ADefaultClassDeclCG.class))
 		{
 			// VDM uses the type system to control whether 'nil' is allowed as a value so we'll
 			// just annotate all classes as @nullable_by_default
@@ -202,9 +202,9 @@ public class JmlGenerator implements IREventObserver
 		}
 		
 		// Only extract from 'ast' to not get the record classes
-		for (IRStatus<AClassDeclCG> status : IRStatus.extract(ast, AClassDeclCG.class))
+		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(ast, ADefaultClassDeclCG.class))
 		{
-			AClassDeclCG clazz = status.getIrNode();
+			ADefaultClassDeclCG clazz = status.getIrNode();
 
 			if(info.getDeclAssistant().isLibraryName(clazz.getName()))
 			{
@@ -301,7 +301,7 @@ public class JmlGenerator implements IREventObserver
 	{
 		AnnotationSorter sorter = new AnnotationSorter();
 
-		for (IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
+		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(newAst, ADefaultClassDeclCG.class))
 		{
 			if (!javaGen.getInfo().getDeclAssistant().isLibraryName(status.getIrNode().getName()))
 			{
@@ -339,9 +339,9 @@ public class JmlGenerator implements IREventObserver
 	{
 		InvAssertionTrans assertTr = new InvAssertionTrans(this, stateDesInfo, recInfo);
 		
-		for (IRStatus<AClassDeclCG> status : IRStatus.extract(newAst, AClassDeclCG.class))
+		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(newAst, ADefaultClassDeclCG.class))
 		{
-			AClassDeclCG clazz = status.getIrNode();
+			ADefaultClassDeclCG clazz = status.getIrNode();
 
 			if (!this.javaGen.getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
 			{
@@ -389,7 +389,7 @@ public class JmlGenerator implements IREventObserver
 
 	private void setInvChecksOnOwner(List<IRStatus<INode>> ast) {
 		
-		for (IRStatus<AClassDeclCG> status : IRStatus.extract(ast, AClassDeclCG.class))
+		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(ast, ADefaultClassDeclCG.class))
 		{
 			if(invChecksFlagOwner == null)
 			{
@@ -456,9 +456,9 @@ public class JmlGenerator implements IREventObserver
 		return null;
 	}
 	
-	public void adjustNamedTypeInvFuncs(IRStatus<AClassDeclCG> status)
+	public void adjustNamedTypeInvFuncs(IRStatus<ADefaultClassDeclCG> status)
 	{
-		AClassDeclCG clazz = status.getIrNode();
+		ADefaultClassDeclCG clazz = status.getIrNode();
 		
 		for (ATypeDeclCG typeDecl : clazz.getTypeDecls())
 		{
@@ -603,7 +603,7 @@ public class JmlGenerator implements IREventObserver
 		return typeInfoList;
 	}
 
-	public AClassDeclCG getInvChecksFlagOwner()
+	public ADefaultClassDeclCG getInvChecksFlagOwner()
 	{
 		return invChecksFlagOwner;
 	}

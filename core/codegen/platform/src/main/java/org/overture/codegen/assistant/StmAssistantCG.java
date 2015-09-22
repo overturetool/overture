@@ -38,7 +38,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.statements.AAtomicStmCG;
@@ -113,7 +113,7 @@ public class StmAssistantCG extends AssistantBase
 	
 	public String getSuperClassName(ASuperCallStmCG stm)
 	{
-		AClassDeclCG enclosingClass = stm.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG enclosingClass = stm.getAncestor(ADefaultClassDeclCG.class);
 		
 		return enclosingClass.getName();
 	}

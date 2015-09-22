@@ -28,7 +28,7 @@ import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
@@ -186,7 +186,7 @@ public class JavaValueSemantics
 
 			String memberName = exp.getMemberName();
 
-			List<AClassDeclCG> classes = javaFormat.getIrInfo().getClasses();
+			List<ADefaultClassDeclCG> classes = javaFormat.getIrInfo().getClasses();
 			AssistantManager assistantManager = javaFormat.getIrInfo().getAssistantManager();
 
 			AFieldDeclCG memberField = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);
@@ -277,7 +277,7 @@ public class JavaValueSemantics
 
 	private boolean inRecClassNonConstructor(SExpCG exp)
 	{
-		AClassDeclCG encClass = exp.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG encClass = exp.getAncestor(ADefaultClassDeclCG.class);
 		
 		if(encClass != null)
 		{

@@ -36,7 +36,7 @@ import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -376,7 +376,7 @@ public class JavaFormat
 			return typeNameStr;
 		}
 		
-		AClassDeclCG classDef = node.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG classDef = node.getAncestor(ADefaultClassDeclCG.class);
 
 		String definingClass = typeName.getDefiningClass() != null
 				&& classDef != null
@@ -613,13 +613,13 @@ public class JavaFormat
 		return writer.toString();
 	}
 
-	public String formatSuperType(AClassDeclCG classDecl)
+	public String formatSuperType(ADefaultClassDeclCG classDecl)
 	{
 		return classDecl.getSuperName() == null ? "" : "extends "
 				+ classDecl.getSuperName();
 	}
 	
-	public String formatInterfaces(AClassDeclCG classDecl)
+	public String formatInterfaces(ADefaultClassDeclCG classDecl)
 	{
 		LinkedList<AInterfaceDeclCG> interfaces = classDecl.getInterfaces();
 		
@@ -885,12 +885,12 @@ public class JavaFormat
 				: c + "";
 	}
 	
-	public boolean isInnerClass(AClassDeclCG node)
+	public boolean isInnerClass(ADefaultClassDeclCG node)
 	{
-		return node.parent() != null && node.parent().getAncestor(AClassDeclCG.class) != null;
+		return node.parent() != null && node.parent().getAncestor(ADefaultClassDeclCG.class) != null;
 	}
 	
-	public static boolean isQuote(AClassDeclCG classCg)
+	public static boolean isQuote(ADefaultClassDeclCG classCg)
 	{
 		return classCg != null && "quotes".equals(classCg.getPackage());
 	}
@@ -936,12 +936,12 @@ public class JavaFormat
 		return block != null && block.getScoped() != null && block.getScoped();
 	}
 
-	public boolean importTraceSupport(AClassDeclCG node)
+	public boolean importTraceSupport(ADefaultClassDeclCG node)
 	{
 		return info.getSettings().generateTraces() && !node.getTraces().isEmpty();
 	}
 	
-	public static boolean isMainClass(AClassDeclCG clazz)
+	public static boolean isMainClass(ADefaultClassDeclCG clazz)
 	{
 		return clazz != null && clazz.getTag() instanceof JavaMainTag;
 	}
@@ -960,7 +960,7 @@ public class JavaFormat
 		}
 	}
 
-	public boolean genClassInvariant(AClassDeclCG clazz)
+	public boolean genClassInvariant(ADefaultClassDeclCG clazz)
 	{
 		if(!info.getSettings().generateInvariants())
 		{
