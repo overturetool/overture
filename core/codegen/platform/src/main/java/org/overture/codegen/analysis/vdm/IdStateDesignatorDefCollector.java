@@ -14,9 +14,11 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
@@ -65,6 +67,17 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 	@Override
 	public void caseAClassClassDefinition(AClassClassDefinition node)
 			throws AnalysisException
+	{
+		handleClass(node);
+	}
+	
+	@Override
+	public void caseASystemClassDefinition(ASystemClassDefinition node) throws AnalysisException
+	{
+		handleClass(node);
+	}
+
+	private void handleClass(SClassDefinition node) throws AnalysisException
 	{
 		if(!proceed(node))
 		{
