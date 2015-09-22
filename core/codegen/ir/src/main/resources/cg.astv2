@@ -238,7 +238,10 @@ CG {-> package='org.overture.codegen.cgast'
   | [typeDecls]:CG.#decl.type*
   | [perSyncs]:CG.#decl.persync*
   | [mutexSyncs]:CG.#decl.mutexSync*}
-   = {default}
+   = {bus}
+   | {cpu}
+   | {system}
+   | {default}
   ;
 	
 #stateDesignator {-> package='org.overture.codegen.cgast.statements'
