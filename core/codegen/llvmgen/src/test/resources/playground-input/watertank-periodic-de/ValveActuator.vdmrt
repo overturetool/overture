@@ -1,0 +1,32 @@
+-- DESTECS (Design Support and Tooling for Embedded Control Software)
+-- Grant Agreement Number: INFSO-ICT-248134
+-- Seventh Framework Programme
+-- WaterTank project: introductory project to the DESTECS tool.
+-- More details can be found at DESTECS User Manual, chapter 6.
+
+-- File ValveActuator.vdmrt: model of a valve actuator that is used
+-- to pour water from the tank.
+
+class ValveActuator
+
+instance variables
+	valveState : real := 0.0;
+	public isValveBroken: real := 0.0;
+	
+values
+	public on	: real = 1.0;
+	public off	: real = 0.0;
+
+operations
+
+public setValveState : real ==> ()
+setValveState (state) == 
+(
+		if isValveBroken = 1 then
+		(
+			return;
+		);
+		valveState := state;
+)
+
+end ValveActuator

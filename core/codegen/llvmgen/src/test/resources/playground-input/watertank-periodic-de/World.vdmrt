@@ -1,0 +1,27 @@
+-- DESTECS (Design Support and Tooling for Embedded Control Software)
+-- Grant Agreement Number: INFSO-ICT-248134
+-- Seventh Framework Programme
+-- WaterTank project: introductory project to the DESTECS tool.
+-- More details can be found at DESTECS User Manual, chapter 6.
+
+-- File World.vdmrt: World class used to launch the simulation.
+
+class World
+operations
+
+public run : () ==> ()
+run() ==
+(
+	start(System`controller);
+	block();
+);
+
+operations
+
+block : () ==>()
+block()==skip;
+
+sync
+per block => false;
+
+end World

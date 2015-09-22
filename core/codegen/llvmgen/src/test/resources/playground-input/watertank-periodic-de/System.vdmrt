@@ -1,0 +1,33 @@
+-- DESTECS (Design Support and Tooling for Embedded Control Software)
+-- Grant Agreement Number: INFSO-ICT-248134
+-- Seventh Framework Programme
+-- WaterTank project: introductory project to the DESTECS tool.
+-- More details can be found at DESTECS User Manual, chapter 6.
+
+-- File System.vdmrt: System class resposible for deploying the controller
+-- and its associated classes.
+
+system System
+
+instance variables
+
+	public static controller : [Controller] := nil;
+	levelSensor   : LevelSensor;
+	valveActuator : ValveActuator;
+
+    -- Architecture definition
+	cpu1 : CPU := new CPU(<FP>, 5E3);
+
+operations
+
+public System : () ==> System
+System () == 
+(
+	levelSensor   := new LevelSensor();
+	valveActuator := new ValveActuator();
+	controller    := new Controller(levelSensor,valveActuator);
+
+	cpu1.deploy(controller,"Controller");
+);
+
+end System
