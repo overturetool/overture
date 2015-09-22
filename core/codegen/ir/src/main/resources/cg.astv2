@@ -157,25 +157,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[type]:CG.#type
     	[name]:java_String
     	[initial]:CG.#exp
-   	|	{class}
-   	    (globalMetaData):eString*
-   		[package]:java_String
-      	[access]:java_String
-      	[abstract]:java_Boolean
-      	[static]:java_Boolean 
-    	[name]:java_String
-    	[fields]:field*
-    	[invariant]:CG.#decl
-    	[methods]:CG.#decl.method*
-    	[functions]:CG.#decl.func*
-    	[traces]:CG.#decl.namedTrace*
-    	[superName]:java_String
-    	[thread]:CG.#decl.thread
-    	[innerClasses]:CG.#decl.class*
-    	[interfaces]:CG.#decl.interface*
-    	[typeDecls]:CG.#decl.type*
-    	[perSyncs]:CG.#decl.persync*
-    	[mutexSyncs]:CG.#decl.mutexSync*
+   	|	#Class
     |	{module}
     	[name]:java_String
     	[import]:CG.#imports.module
@@ -236,6 +218,28 @@ CG {-> package='org.overture.codegen.cgast'
     	[pathname]:CG.#name.token*
     	[terms]:CG.#term.traceDecl*
 	;
+	
+#Class {-> package='org.overture.codegen.cgast.declarations'
+  | (globalMetaData):eString*
+  | [package]:java_String
+  | [access]:java_String
+  | [abstract]:java_Boolean
+  | [static]:java_Boolean 
+  | [name]:java_String
+  | [fields]:field*
+  | [invariant]:CG.#decl
+  | [methods]:CG.#decl.method*
+  | [functions]:CG.#decl.func*
+  | [traces]:CG.#decl.namedTrace*
+  | [superName]:java_String
+  | [thread]:CG.#decl.thread
+  | [innerClasses]:CG.#decl.class*
+  | [interfaces]:CG.#decl.interface*
+  | [typeDecls]:CG.#decl.type*
+  | [perSyncs]:CG.#decl.persync*
+  | [mutexSyncs]:CG.#decl.mutexSync*}
+   = {default}
+  ;
 	
 #stateDesignator {-> package='org.overture.codegen.cgast.statements'
 	| [type]:CG.#type }
