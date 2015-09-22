@@ -38,7 +38,7 @@ public class AbstractVisitorCG<Q extends IRInfo, A extends org.overture.codegen.
 			return null;
 		}
 
-		question.addUnsupportedNode(node);
+		question.addUnsupportedNode(node, "Node is currently not supported by the IR generator");
 
 		return null;
 	}
