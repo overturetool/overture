@@ -38,6 +38,7 @@ import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACardUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
@@ -612,7 +613,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 		if (type instanceof AClassTypeCG)
 		{
-			for (ADefaultClassDeclCG classCg : transAssistant.getInfo().getClasses())
+			for (SClassDeclCG classCg : transAssistant.getInfo().getClasses())
 			{
 				for (AMethodDeclCG method : classCg.getMethods())
 				{
@@ -633,7 +634,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			String definingClassName = recordType.getName().getDefiningClass();
 			String recordName = recordType.getName().getName();
 
-			ADefaultClassDeclCG classDecl = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findClass(transAssistant.getInfo().getClasses(), definingClassName);
+			SClassDeclCG classDecl = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findClass(transAssistant.getInfo().getClasses(), definingClassName);
 			ARecordDeclCG record = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findRecord(classDecl, recordName);
 
 			List<STypeCG> fieldTypes = transAssistant.getInfo().getAssistantManager().getTypeAssistant().getFieldTypes(record);

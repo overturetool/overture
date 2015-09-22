@@ -58,8 +58,8 @@ import org.overture.codegen.cgast.STermCG;
 import org.overture.codegen.cgast.STraceCoreDeclCG;
 import org.overture.codegen.cgast.STraceDeclCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.visitor.CGVisitor;
 import org.overture.codegen.visitor.VisitorManager;
@@ -101,7 +101,7 @@ public class IRInfo
 	private Map<AIdentifierStateDesignator, PDefinition> idStateDesignatorDefs;
 	
 	// IR classes
-	private List<ADefaultClassDeclCG> classes;
+	private List<SClassDeclCG> classes;
 	
 	// IR modules
 	private List<AModuleDeclCG> modules;
@@ -124,7 +124,7 @@ public class IRInfo
 		this.objectInitCallNames = new HashMap<AExplicitOperationDefinition, String>();
 		
 		this.idStateDesignatorDefs = new HashMap<AIdentifierStateDesignator, PDefinition>();
-		this.classes = new LinkedList<ADefaultClassDeclCG>();
+		this.classes = new LinkedList<SClassDeclCG>();
 		this.modules = new LinkedList<AModuleDeclCG>();
 	}
 
@@ -133,7 +133,7 @@ public class IRInfo
 		return assistantManager;
 	}
 
-	public CGVisitor<ADefaultClassDeclCG> getClassVisitor()
+	public CGVisitor<SClassDeclCG> getClassVisitor()
 	{
 		return visitorManager.getClassVisitor();
 	}
@@ -383,12 +383,12 @@ public class IRInfo
 		this.idStateDesignatorDefs = idDefs;
 	}
 
-	public List<ADefaultClassDeclCG> getClasses()
+	public List<SClassDeclCG> getClasses()
 	{
 		return classes;
 	}
 
-	public void addClass(ADefaultClassDeclCG irClass)
+	public void addClass(SClassDeclCG irClass)
 	{
 		if(this.classes != null)
 		{
@@ -398,9 +398,9 @@ public class IRInfo
 	
 	public void removeClass(String name)
 	{
-		ADefaultClassDeclCG classToRemove = null;
+		SClassDeclCG classToRemove = null;
 		
-		for (ADefaultClassDeclCG clazz : classes)
+		for (SClassDeclCG clazz : classes)
 		{
 			if(clazz.getName().equals(name))
 			{

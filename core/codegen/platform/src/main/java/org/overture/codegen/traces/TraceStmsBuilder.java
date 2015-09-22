@@ -16,10 +16,10 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.AnswerAdaptor;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
@@ -65,7 +65,7 @@ import org.overture.codegen.trans.iterator.ILanguageIterator;
 public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 {
 	private IRInfo info;
-	private List<ADefaultClassDeclCG> classes;
+	private List<SClassDeclCG> classes;
 	private TransAssistantCG transAssistant;
 	private IterationVarPrefixes iteVarPrefixes;
 	private ILanguageIterator langIterator;
@@ -78,7 +78,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 	
 	private Map<String, String> idConstNameMap;
 	
-	public TraceStmsBuilder(IRInfo info, List<ADefaultClassDeclCG> classes,
+	public TraceStmsBuilder(IRInfo info, List<SClassDeclCG> classes,
 			TransAssistantCG transAssistant, IterationVarPrefixes iteVarPrefixes,
 			TraceNames tracePrefixes, ILanguageIterator langIterator,
 			ICallStmToStringMethodBuilder toStringBuilder,

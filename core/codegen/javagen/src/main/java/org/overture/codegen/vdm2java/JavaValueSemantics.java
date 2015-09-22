@@ -31,6 +31,7 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -186,7 +187,7 @@ public class JavaValueSemantics
 
 			String memberName = exp.getMemberName();
 
-			List<ADefaultClassDeclCG> classes = javaFormat.getIrInfo().getClasses();
+			List<SClassDeclCG> classes = javaFormat.getIrInfo().getClasses();
 			AssistantManager assistantManager = javaFormat.getIrInfo().getAssistantManager();
 
 			AFieldDeclCG memberField = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);

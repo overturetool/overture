@@ -13,6 +13,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
@@ -46,6 +47,7 @@ import org.overture.codegen.ir.IRInfo;
  */
 public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 {
+	private static final String VDM_THREAD = "VDMThread";
 	private IRInfo info;
 
 	public MainClassConcTrans(IRInfo info)
@@ -299,21 +301,21 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 	
 	private void makeThread(ADefaultClassDeclCG node)
 	{
-		ADefaultClassDeclCG threadClass = getThreadClass(node.getSuperName(), node);
-		threadClass.setSuperName("VDMThread");
+		SClassDeclCG threadClass = getThreadClass(node.getSuperName(), node);
+		threadClass.setSuperName(VDM_THREAD);
 	}
 
-	private ADefaultClassDeclCG getThreadClass(String superName, ADefaultClassDeclCG classCg)
+	private SClassDeclCG getThreadClass(String superName, SClassDeclCG classCg)
 	{
-		if(superName == null || superName.equals("VDMThread"))
+		if(superName == null || superName.equals(VDM_THREAD))
 		{
 			return classCg;
 		}
 		else
 		{
-			ADefaultClassDeclCG superClass = null;
+			SClassDeclCG superClass = null;
 
-			for(ADefaultClassDeclCG c : info.getClasses())
+			for(SClassDeclCG c : info.getClasses())
 			{
 				if(c.getName().equals(superName))
 				{

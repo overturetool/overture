@@ -24,11 +24,11 @@ package org.overture.codegen.assistant;
 import java.util.List;
 
 import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 
 public interface DeclStrategy<T extends SDeclCG>
 {
 	public String getAccess(T decl);
 
-	public List<T> getDecls(ADefaultClassDeclCG classDecl);
+	public List<T> getDecls(SClassDeclCG classDecl);
 }
