@@ -10,15 +10,15 @@
 
 class Controller
 
-values
-    -- the value of minLevel and maxLevel can be found in Shared Design 
-    -- Parameters in Debug Configurations
-	public minLevel : real = 0.0; -- {m}
-	public maxLevel : real = 0.0; -- {m}
+
+
 	
 instance variables
 	levelSensor   : LevelSensor;
 	valveActuator : ValveActuator;
+
+	 minLevel : real := 0.0; -- {m}
+	 maxLevel : real := 0.0; -- {m}
 	
 operations
 
@@ -41,12 +41,12 @@ controlLoop()==
 			-- determine the valve setting or abort
 			if level >= maxLevel then
 			(
-				valveActuator.setValveState(ValveActuator`on);
+				valveActuator.setValveState(1);
 			);
 
 			if level <= minLevel then
 			(
-				valveActuator.setValveState(ValveActuator`off);
+				valveActuator.setValveState(0);
 			);
 		)
 	);	

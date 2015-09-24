@@ -11,21 +11,15 @@ class LevelSensor
 
 instance variables
 	level : real := 0.0;
-	public isLevelSensorBroken: real := 0.0;
+
 	
 operations
 
 	public getLevel : () ==> real
 	getLevel () ==
 	(
-		if isLevelSensorBroken = 1 then
-		(
-			return 0;
-		)
-		else
-		(
 			return level;
-		);
+
 	);
 
 end LevelSensor

@@ -39,6 +39,14 @@
 		  <artifactId>platform</artifactId>
 		  <version>${project.version}</version>
 	  </dependency>
+	  
+	  
+  	<dependency>
+  		<groupId>org.robovm</groupId>
+  		<artifactId>robovm-llvm</artifactId>
+  		<version>1.6.0</version>
+  	</dependency>
+
   </dependencies>
 
   <build>
