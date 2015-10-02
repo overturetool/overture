@@ -49,14 +49,14 @@ import org.overture.parser.syntax.ParserException;
  */
 abstract public class ExamplesUtility {
 
-	private static final String SL_EXAMPLES_ROOT = "examples/VDMSL";
-	private static final String PP_EXAMPLES_ROOT = "examples/VDM++";
-	private static final String RT_EXAMPLES_ROOT = "examples/VDMRT";
-	private static final String LIBS_ROOT = "examples/libs/";
+	private static final String SL_EXAMPLES_ROOT = "VDMSL";
+	private static final String PP_EXAMPLES_ROOT = "VDM++";
+	private static final String RT_EXAMPLES_ROOT = "VDMRT";
+	private static final String LIBS_ROOT = "libs/";
 
-	private static final String SL_LIBS_ROOT = "examples/libs/SL/";
-	private static final String PP_LIBS_ROOT = "examples/libs/PP/";
-	private static final String RT_LIBS_ROOT = "examples/libs/RT/";
+	private static final String SL_LIBS_ROOT = "SL/";
+	private static final String PP_LIBS_ROOT = "PP/";
+	private static final String RT_LIBS_ROOT = "RT/";
 
 	/**
 	 * Get the ASTs for the Overture examples. This method only provides the

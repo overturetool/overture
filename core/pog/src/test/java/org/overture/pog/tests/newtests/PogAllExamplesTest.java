@@ -67,7 +67,7 @@ public class PogAllExamplesTest extends ParamExamplesTest<Boolean>
 		return resultType;
 	}
 
-	private static String EXAMPLES_ROOT = "../../externals/examples/target/classes/";
+	private static String EXAMPLES_ROOT = "../../externals/docrepo/examples/";
 	
 	@Override
 	protected String getRelativeExamplesPath()
