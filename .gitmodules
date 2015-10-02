@@ -2,3 +2,4 @@
 	path = externals/docrepo
     url = https://github.com/overturetool/documentation
     ignore = dirty
+	branch = master
