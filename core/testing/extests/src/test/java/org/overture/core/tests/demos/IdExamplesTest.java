@@ -58,7 +58,7 @@ public class IdExamplesTest extends ParamExamplesTest<ExampleIdTestResult> {
 
 	}
 
-	private static String EXAMPLES_ROOT = "../../../externals/examples/target/classes/";
+	private static String EXAMPLES_ROOT = "../../../externals/docrepo/examples/";
 
 	/**
 	 * Path to the examples. Needs to be customized on a per-module basis.
