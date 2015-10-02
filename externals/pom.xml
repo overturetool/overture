@@ -12,11 +12,6 @@
     <packaging>pom</packaging>
     <name>Overture External Resources</name>
 
-    <!--<modules>-->
-        <!--<module>documentation</module>-->
-        <!--<module>examples</module>-->
-    <!--</modules>-->
-
 <build>
     <plugins>
         <plugin>
