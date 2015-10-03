@@ -35,6 +35,7 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
@@ -235,6 +236,20 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		else
 		{
 			return new ARealNumericBasicTypeCG();
+		}
+	}
+	
+	@Override
+	public void caseAFieldDeclCG(AFieldDeclCG node) throws AnalysisException
+	{
+		if (node.getInitial() != null)
+		{
+			if (node.getInitial().getType() instanceof AUnionTypeCG)
+			{
+				correctTypes(node.getInitial(), node.getType());
+			}
+			
+			node.getInitial().apply(this);
 		}
 	}
 	
