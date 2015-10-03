@@ -1,0 +1,7 @@
+"Before passing LEGAL value"
+"After passing LEGAL value"
+"Before passing ILLEGAL value"
+Entry.java:33: JML assertion is false
+        //@ assert ignorePattern_1 != null;
+            ^
+"After passing ILLEGAL value"

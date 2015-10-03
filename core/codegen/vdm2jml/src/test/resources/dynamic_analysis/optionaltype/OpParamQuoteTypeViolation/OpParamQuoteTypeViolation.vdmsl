@@ -1,0 +1,29 @@
+module Entry
+
+imports from IO all
+exports all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+let aOpt : [<A>] = nil,
+    a : <A> = <A>
+in 
+(
+  IO`println("Before passing LEGAL value");
+  op(a);
+  IO`println("After passing LEGAL value");
+  
+  IO`println("Before passing ILLEGAL value");
+  op(aOpt);
+  IO`println("After passing ILLEGAL value");	
+  
+  return true;		
+);
+
+op : <A> ==> ()
+op (-) == skip;
+
+end Entry
