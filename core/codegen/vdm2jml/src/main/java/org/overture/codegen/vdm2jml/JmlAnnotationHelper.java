@@ -25,6 +25,11 @@ public class JmlAnnotationHelper
 		this.jmlGen = jmlGen;
 	}
 	
+	public void makeNullableByDefault(ADefaultClassDeclCG clazz)
+	{
+		clazz.setGlobalMetaData(consMetaData(JmlGenerator.JML_NULLABLE_BY_DEFAULT));
+	}
+	
 	public void makeNamedTypeInvFuncsPublic(ADefaultClassDeclCG clazz)
 	{
 		List<AMethodDeclCG> nameInvMethods = jmlGen.getUtil().getNamedTypeInvMethods(clazz);

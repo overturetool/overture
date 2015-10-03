@@ -32,6 +32,7 @@ import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.AssignStmTrans;
 import org.overture.codegen.utils.GeneratedData;
+import org.overture.codegen.vdm2java.IJavaQuoteEventObserver;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
@@ -40,7 +41,7 @@ import org.overture.codegen.vdm2jml.util.AnnotationSorter;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
-public class JmlGenerator implements IREventObserver
+public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 {
 	public static final String DEFAULT_JAVA_ROOT_PACKAGE = "project";
 	public static final String GEN_INV_METHOD_PARAM_NAME = "elem";
@@ -158,7 +159,8 @@ public class JmlGenerator implements IREventObserver
 		
 		computeNamedTypeInvInfo(ast);
 		
-		javaGen.register(this);
+		javaGen.registerIrObs(this);
+		javaGen.registerJavaQuoteObs(this);
 
 		return javaGen.generateJavaFromVdmModules(ast);
 	}
@@ -198,7 +200,7 @@ public class JmlGenerator implements IREventObserver
 		{
 			// VDM uses the type system to control whether 'nil' is allowed as a value so we'll
 			// just annotate all classes as @nullable_by_default
-			status.getIrNode().setGlobalMetaData(annotator.consMetaData(JmlGenerator.JML_NULLABLE_BY_DEFAULT));
+			annotator.makeNullableByDefault(status.getIrNode());
 		}
 		
 		// Only extract from 'ast' to not get the record classes
@@ -611,5 +613,17 @@ public class JmlGenerator implements IREventObserver
 	public StateDesInfo getStateDesInfo()
 	{
 		return stateDesInfo;
+	}
+
+	@Override
+	public void quoteClassesProduced(List<ADefaultClassDeclCG> quoteClasses)
+	{
+		for(ADefaultClassDeclCG qc : quoteClasses)
+		{
+			// Code generated quotes are represented as singletons and by default the instance
+			// field is null. So we'll mark quote classes as nullable_by_default.
+			//Example from class represented <A>: private static AQuote instance = null;
+			annotator.makeNullableByDefault(qc);
+		}
 	}
 }
