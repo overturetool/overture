@@ -1,19 +1,24 @@
 package org.overture.codegen.vdm2jml;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 
 public class RecClassInfo
 {
+	private List<ADefaultClassDeclCG> recClasses;
 	private Set<SDeclCG> members;
 
 	public RecClassInfo()
 	{
+		this.recClasses = new LinkedList<>();
 		this.members = new HashSet<SDeclCG>();
 	}
 
@@ -62,7 +67,7 @@ public class RecClassInfo
 	{
 		return contains(field);
 	}
-
+	
 	public boolean inAccessor(INode node)
 	{
 		AMethodDeclCG anc = node.getAncestor(AMethodDeclCG.class);
@@ -73,5 +78,30 @@ public class RecClassInfo
 		}
 
 		return contains(anc);
+	}
+	
+	public boolean inRec(INode node)
+	{
+		ADefaultClassDeclCG clazz = node.getAncestor(ADefaultClassDeclCG.class);
+		
+		if(clazz == null)
+		{
+			return false;
+		}
+		
+		for(ADefaultClassDeclCG r : recClasses)
+		{
+			if(clazz == r)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public void registerRecClass(ADefaultClassDeclCG recClass)
+	{
+		recClasses.add(recClass);
 	}
 }

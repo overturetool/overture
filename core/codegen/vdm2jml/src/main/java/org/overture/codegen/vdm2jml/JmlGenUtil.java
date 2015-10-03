@@ -244,6 +244,8 @@ public class JmlGenUtil
 			for (ARecordDeclCG recDecl : recDecls)
 			{
 				ADefaultClassDeclCG recClass = new ADefaultClassDeclCG();
+				
+				recInfo.registerRecClass(recClass);
 
 				recClass.setMetaData(recDecl.getMetaData());
 				recClass.setAbstract(false);
