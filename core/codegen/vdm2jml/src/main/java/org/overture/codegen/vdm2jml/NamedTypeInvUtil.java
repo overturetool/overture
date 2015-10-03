@@ -177,6 +177,16 @@ public class NamedTypeInvUtil
 
 		return assertStm;
 	}
+	
+	public AMetaStmCG assertNotNull(String varName)
+	{
+		AMetaStmCG assertStm = new AMetaStmCG();
+		List<ClonableString> assertMetaData = handler.getJmlGen().getAnnotator().consMetaData("//@ assert " + varName + " != null;");
+		handler.getJmlGen().getAnnotator().appendMetaData(assertStm, assertMetaData);
+
+		return assertStm;
+	}
+	
 
 	public List<NamedTypeInfo> findNamedInvTypes(STypeCG type)
 	{

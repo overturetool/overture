@@ -7,12 +7,15 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.analysis.intf.IAnswer;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.ANewExpCG;
+import org.overture.codegen.cgast.expressions.SLiteralExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
@@ -21,8 +24,10 @@ import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.runtime.Utils;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class NamedTypeInvHandler implements IAssert
@@ -57,6 +62,8 @@ public class NamedTypeInvHandler implements IAssert
 	
 	public void handleField(AFieldDeclCG node)
 	{
+		//TODO: No guarding against null!
+		
 		/**
 		 * Values and record fields will be handled by this handler (not the state component field since its type is a
 		 * record type) Example: val : char | Even = 5;
@@ -145,7 +152,7 @@ public class NamedTypeInvHandler implements IAssert
 
 		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(returnType);
 
-		if (invTypes.isEmpty())
+		if (invTypes.isEmpty() && !varMayBeNull(returnType))
 		{
 			return;
 		}
@@ -193,7 +200,7 @@ public class NamedTypeInvHandler implements IAssert
 					continue;
 				}
 				
-				SVarExpCG var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(varNameStr, param.getType().clone());
+				SVarExpCG var = getInfo().getExpAssistant().consIdVar(varNameStr, param.getType().clone());
 
 				/**
 				 * Upon entering a record setter it is necessary to check if invariants checks are enabled before
@@ -201,6 +208,15 @@ public class NamedTypeInvHandler implements IAssert
 				 */
 				AMetaStmCG as = util.consAssertStm(invTypes, encClassName, var, node, invTrans.getRecInfo());
 				replBody.getStatements().add(as);
+			}
+			else
+			{
+				if(varMayBeNull(param.getType()))
+				{
+					String varNameStr = invTrans.getJmlGen().getUtil().getName(param.getPattern());
+					AMetaStmCG as = util.assertNotNull(varNameStr);
+					replBody.getStatements().add(as);
+				}
 			}
 		}
 
@@ -216,8 +232,17 @@ public class NamedTypeInvHandler implements IAssert
 
 		SExpCG col = node.getCol();
 
-		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(col.getType());
-
+		if(!(col instanceof SVarExpCG))
+		{
+			Logger.getLog().printErrorln("Expected collection to be a variable expression at this point. Got: "
+					+ col + " in '" + this.getClass().getSimpleName()
+					+ "'");
+		}
+		
+		SVarExpCG var = ((SVarExpCG) col);
+		
+		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(var.getType());
+	
 		if (!invTypes.isEmpty())
 		{
 			ADefaultClassDeclCG enclosingClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
@@ -232,12 +257,24 @@ public class NamedTypeInvHandler implements IAssert
 				/**
 				 * Updates to fields in record setters need to check if invariants checks are enabled
 				 */
-				return util.consAssertStm(invTypes, enclosingClass.getName(), ((SVarExpCG) col), node,  invTrans.getRecInfo());
-			} else
+				return util.consAssertStm(invTypes, enclosingClass.getName(), var, node,  invTrans.getRecInfo());
+			} 
+		}
+		else
+		{
+			if(varMayBeNull(var.getType()))
 			{
-				Logger.getLog().printErrorln("Expected collection to be a variable expression at this point. Got: "
-						+ col + " in '" + this.getClass().getSimpleName()
-						+ "'");
+				// The best we can do is to assert that the map/seq subject to modification is
+				// not null although we eventually get the null pointer exception, e.g.
+				//
+				// //@ azzert m != null
+				// Utils.mapSeqUpdate(m,1L,1L);
+				AMetaStmCG assertNotNull = util.assertNotNull(var.getName());
+				
+				ABlockStmCG replStm = new ABlockStmCG();
+				getTransAssist().replaceNodeWith(node, replStm);
+				replStm.getStatements().add(assertNotNull);
+				replStm.getStatements().add(node);
 			}
 		}
 		
@@ -252,32 +289,48 @@ public class NamedTypeInvHandler implements IAssert
 
 		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getType());
 
-		if (invTypes.isEmpty())
+		if (!invTypes.isEmpty())
 		{
-			return null;
+			String name = invTrans.getJmlGen().getUtil().getName(node.getPattern());
+
+			if (name == null)
+			{
+				return null;
+			}
+
+			ADefaultClassDeclCG enclosingClass = node.getAncestor(ADefaultClassDeclCG.class);
+
+			if (enclosingClass == null)
+			{
+				return null;
+			}
+
+			AIdentifierVarExpCG var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(name, node.getType().clone());
+
+			/**
+			 * We do not really need to check if invariant checks are enabled because local variable declarations are
+			 * not expected to be found inside record accessors
+			 */
+			return util.consAssertStm(invTypes, enclosingClass.getName(), var, node, invTrans.getRecInfo());
 		}
-
-		String name = invTrans.getJmlGen().getUtil().getName(node.getPattern());
-
-		if (name == null)
+		else
 		{
-			return null;
+			if(varMayBeNull(node.getType()) && rightHandSideMayBeNull(node.getExp()))
+			{
+				String name = invTrans.getJmlGen().getUtil().getName(node.getPattern());
+
+				if (name == null)
+				{
+					return null;
+				}
+				
+				return util.assertNotNull(name);
+			}
+			else
+			{
+				return null;
+			}
 		}
-
-		ADefaultClassDeclCG enclosingClass = node.getAncestor(ADefaultClassDeclCG.class);
-
-		if (enclosingClass == null)
-		{
-			return null;
-		}
-		
-		AIdentifierVarExpCG var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(name, node.getType().clone());
-
-		/**
-		 * We do not really need to check if invariant checks are enabled because local variable declarations are not
-		 * expected to be found inside record accessors
-		 */
-		return util.consAssertStm(invTypes, enclosingClass.getName(), var, node, invTrans.getRecInfo());
 	}
 
 	public AMetaStmCG handleCallObj(ACallObjectExpStmCG node)
@@ -307,6 +360,25 @@ public class NamedTypeInvHandler implements IAssert
 				 * check if invariant checks are enabled
 				 */
 				return util.consAssertStm(invTypes, encClass.getName(), recObjVar, node, invTrans.getRecInfo());
+			}
+			else
+			{
+				if(varMayBeNull(recObj.getType()))
+				{
+					// The best we can do is to assert that the record subject to modification is
+					// not null although we eventually get the null pointer exception, e.g.
+					//
+					// //@ azzert rec != null
+					// rec.set_x(5);
+					AMetaStmCG assertNotNull = util.assertNotNull(recObjVar.getName());
+					
+					ABlockStmCG replStm = new ABlockStmCG();
+					getTransAssist().replaceNodeWith(node, replStm);
+					replStm.getStatements().add(assertNotNull);
+					replStm.getStatements().add(node);
+					
+					return null;
+				}
 			}
 
 		}
@@ -344,32 +416,36 @@ public class NamedTypeInvHandler implements IAssert
 			return;
 		}
 
+		SVarExpCG var = (SVarExpCG) target;
+		
 		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getTarget().getType());
 
-		if (invTypes.isEmpty())
+		if (!invTypes.isEmpty())
 		{
-			return;
+			ADefaultClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
+			
+			if (encClass == null)
+			{
+				return;
+			}
+			
+			/**
+			 * Since assignments can occur inside record setters in the context of an atomic statement block we need to
+			 * check if invariant checks are enabled
+			 */
+			AMetaStmCG assertStm = util.consAssertStm(invTypes, encClass.getName(), var, node, invTrans.getRecInfo());
+			addAssert(node, assertStm);
 		}
-
-		ADefaultClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
-
-		if (encClass == null)
+		else
 		{
-			return;
+			if(varMayBeNull(node.getTarget().getType()) && rightHandSideMayBeNull(node.getExp()))
+			{
+				AMetaStmCG assertStm = util.assertNotNull(var.getName());
+				addAssert(node, assertStm);
+			}
 		}
-
-		/**
-		 * Since assignments can occur inside record setters in the context of an atomic statement block we need to
-		 * check if invariant checks are enabled
-		 */
-		AMetaStmCG assertStm = util.consAssertStm(invTypes, encClass.getName(), ((SVarExpCG) target), node, invTrans.getRecInfo());
-		ABlockStmCG replStm = new ABlockStmCG();
-		getJmlGen().getJavaGen().getTransAssistant().replaceNodeWith(node, replStm);
-		replStm.getStatements().add(node);
-		replStm.getStatements().add(assertStm);
-
 	}
-	
+
 	public ABlockStmCG getEncBlockStm(AVarDeclCG varDecl)
 	{
 		if (varDecl.parent() instanceof ABlockStmCG)
@@ -443,5 +519,60 @@ public class NamedTypeInvHandler implements IAssert
 		 * if invariant checks are enabled
 		 */
 		return util.consAssertStm(invTypes, encClass.getName(), var, var, invTrans.getRecInfo());
+	}
+	
+	public boolean rightHandSideMayBeNull(SExpCG exp)
+	{
+		IsValChecker checker = new IsValChecker();
+		
+		try
+		{
+			return !exp.apply(checker);
+		} catch (AnalysisException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	private boolean varMayBeNull(STypeCG type)
+	{
+		if(inModuleToStringMethod(type))
+		{
+			return false;
+		}
+		
+		// Some of the record methods inherited from object use native java type that can never be null
+		if(invTrans.getRecInfo().inRec(type) && !invTrans.getRecInfo().inAccessor(type))
+		{
+			return false;
+		}
+		
+		return !getInfo().getTypeAssistant().allowsNull(type);
+	}
+	
+	private boolean inModuleToStringMethod(STypeCG type)
+	{
+		AMethodDeclCG m = type.getAncestor(AMethodDeclCG.class);
+		
+		if(m == null)
+		{
+			return false;
+		}
+		
+		if(m.getTag() instanceof IRGeneratedTag && m.getName().equals("toString"))
+		{
+			return true;
+		}
+		
+		return false;
+	}
+
+	private void addAssert(AAssignToExpStmCG node, AMetaStmCG assertStm)
+	{
+		ABlockStmCG replStm = new ABlockStmCG();
+		getJmlGen().getJavaGen().getTransAssistant().replaceNodeWith(node, replStm);
+		replStm.getStatements().add(node);
+		replStm.getStatements().add(assertStm);
 	}
 }
