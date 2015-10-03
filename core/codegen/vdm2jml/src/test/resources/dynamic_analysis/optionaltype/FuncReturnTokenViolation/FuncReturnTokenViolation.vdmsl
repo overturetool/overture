@@ -1,0 +1,38 @@
+module Entry
+
+imports from IO all
+exports all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  IO`println("Before evaluating ok()");
+  let - = ok() in skip;
+  IO`println("After evaluating ok()");	
+  
+  IO`println("Before evaluating error()");
+  let - = err() in skip;
+  IO`println("After evaluating error()");
+  
+  return true;		
+);
+
+functions
+
+ok : () -> token
+ok () ==
+let aOpt : [token] = mk_token("")
+in
+  aOpt;
+
+
+err : () -> token
+err () ==
+let aOpt : [token] = nil
+in 
+  aOpt;
+
+end Entry

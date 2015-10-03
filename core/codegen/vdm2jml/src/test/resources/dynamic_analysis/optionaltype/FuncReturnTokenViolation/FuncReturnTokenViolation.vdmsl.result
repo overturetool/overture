@@ -1,0 +1,10 @@
+"Before evaluating ok()"
+"After evaluating ok()"
+"Before evaluating error()"
+Entry.java:58: JML assertion is false
+        //@ assert ret_2 != null;
+            ^
+Entry.java:32: JML assertion is false
+            //@ assert ignorePattern_2 != null;
+                ^
+"After evaluating error()"
