@@ -2,6 +2,6 @@ package org.overture.codegen.ir;
 
 public interface IREventCoordinator
 {
-	public void register(IREventObserver obs);
-	public void unregister(IREventObserver obs);
+	public void registerIrObs(IREventObserver obs);
+	public void unregisterIrObs(IREventObserver obs);
 }

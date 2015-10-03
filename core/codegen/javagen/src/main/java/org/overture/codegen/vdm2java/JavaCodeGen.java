@@ -84,7 +84,7 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Settings;
 
-public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
+public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJavaQouteEventCoordinator
 {
 	public static final String JAVA_TEMPLATES_ROOT_FOLDER = "JavaTemplates";
 
@@ -103,6 +103,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	private TemplateStructure javaTemplateStructure;
 	
 	private IREventObserver irObserver;
+	private IJavaQuoteEventObserver quoteObserver;
 	
 	private JavaVarPrefixManager varPrefixManager;
 	
@@ -119,6 +120,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		this.varPrefixManager = new JavaVarPrefixManager();
 		
 		this.irObserver = null;
+		this.quoteObserver = null;
 		initVelocity();
 
 		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
@@ -185,14 +187,29 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(generator.getIRInfo(), transAssistant);
 
-			List<GeneratedModule> modules = new LinkedList<GeneratedModule>();
+			List<ADefaultClassDeclCG> quoteClasses = new LinkedList<>();
 			for (String quoteNameVdm : quoteValues)
 			{
 				ADefaultClassDeclCG quoteDecl = quoteValueCreator.consQuoteValue(quoteNameVdm
 						+ JAVA_QUOTE_NAME_SUFFIX, quoteNameVdm, getJavaSettings().getJavaRootPackage());
-
+				
+				quoteClasses.add(quoteDecl);
+			}
+			
+			// Event notification
+			if(quoteObserver != null)
+			{
+				quoteObserver.quoteClassesProduced(quoteClasses);
+			}
+			
+			List<GeneratedModule> modules = new LinkedList<GeneratedModule>();
+			for (int i = 0; i < quoteClasses.size(); i++)
+			{
+				String quoteNameVdm = quoteValues.get(i);
+				ADefaultClassDeclCG qc = quoteClasses.get(i);
+				
 				StringWriter writer = new StringWriter();
-				quoteDecl.apply(javaFormat.getMergeVisitor(), writer);
+				qc.apply(javaFormat.getMergeVisitor(), writer);
 				String code = writer.toString();
 
 				if(getJavaSettings().formatCode())
@@ -200,7 +217,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 					code = JavaCodeGenUtil.formatJavaCode(code);
 				}
 
-				modules.add(new GeneratedModule(quoteNameVdm, quoteDecl, code));
+				modules.add(new GeneratedModule(quoteNameVdm, qc, code));
 			}
 
 			return modules;
@@ -823,7 +840,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	}
 
 	@Override
-	public void register(IREventObserver obs)
+	public void registerIrObs(IREventObserver obs)
 	{
 		if(obs != null && irObserver == null)
 		{
@@ -832,11 +849,29 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	}
 
 	@Override
-	public void unregister(IREventObserver obs)
+	public void unregisterIrObs(IREventObserver obs)
 	{
 		if(obs != null && irObserver == obs)
 		{
 			irObserver = null;
+		}
+	}
+	
+	@Override
+	public void registerJavaQuoteObs(IJavaQuoteEventObserver obs)
+	{
+		if(obs != null && quoteObserver == null)
+		{
+			quoteObserver = obs;
+		}
+	}
+
+	@Override
+	public void unregisterJavaQuoteObs(IJavaQuoteEventObserver obs)
+	{
+		if(obs != null && quoteObserver == obs)
+		{
+			quoteObserver = null;
 		}
 	}
 
