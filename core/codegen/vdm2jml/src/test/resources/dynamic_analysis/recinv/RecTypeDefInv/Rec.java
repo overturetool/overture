@@ -45,20 +45,32 @@ final public class Rec implements Record {
 
     /*@ pure @*/
     public Number get_x() {
-        return x;
+        Number ret_1 = x;
+
+        //@ assert ret_1 != null;
+        return ret_1;
     }
 
     public void set_x(final Number _x) {
+        //@ assert _x != null;
         x = _x;
+
+        //@ assert x != null;
     }
 
     /*@ pure @*/
     public Number get_y() {
-        return y;
+        Number ret_2 = y;
+
+        //@ assert ret_2 != null;
+        return ret_2;
     }
 
     public void set_y(final Number _y) {
+        //@ assert _y != null;
         y = _y;
+
+        //@ assert y != null;
     }
 
     /*@ pure @*/

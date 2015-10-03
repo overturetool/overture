@@ -22,17 +22,28 @@ final public class Entry {
         //@ assert inv_Entry_PT(p) && (p == null || inv_Entry_PossiblyOne(p) || inv_Entry_True(p));
         p = true;
         //@ assert inv_Entry_PT(p) && (p == null || inv_Entry_PossiblyOne(p) || inv_Entry_True(p));
+
+        //@ assert St != null;
         St.set_x(null);
+
+        //@ assert St != null;
         St.set_x(1L);
+
+        //@ assert St != null;
         St.set_x(true);
+
         IO.println("Breaking named type invariant (assigning record field)");
+        //@ assert St != null;
         St.set_x(false);
     }
 
     public static void op2() {
         Object p1 = null;
         //@ assert inv_Entry_PT(p1) && (p1 == null || inv_Entry_PossiblyOne(p1) || inv_Entry_True(p1));
+
+        //@ assert St != null;
         St.set_x(true);
+
         IO.println("Breaking named type invariant (assigning local variable)");
         p1 = false;
 

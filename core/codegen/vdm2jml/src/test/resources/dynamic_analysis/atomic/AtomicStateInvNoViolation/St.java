@@ -43,11 +43,17 @@ final public class St implements Record {
 
     /*@ pure @*/
     public Number get_x() {
-        return x;
+        Number ret_1 = x;
+
+        //@ assert ret_1 != null;
+        return ret_1;
     }
 
     public void set_x(final Number _x) {
+        //@ assert _x != null;
         x = _x;
+
+        //@ assert x != null;
     }
 
     /*@ pure @*/

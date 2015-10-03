@@ -42,11 +42,17 @@ final public class X implements Record {
 
     /*@ pure @*/
     public Boolean get_b() {
-        return b;
+        Boolean ret_7 = b;
+
+        //@ assert ret_7 != null;
+        return ret_7;
     }
 
     public void set_b(final Boolean _b) {
+        //@ assert _b != null;
         b = _b;
+
+        //@ assert b != null;
     }
 
     /*@ pure @*/

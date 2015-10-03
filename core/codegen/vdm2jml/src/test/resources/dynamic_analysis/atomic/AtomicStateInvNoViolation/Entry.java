@@ -24,7 +24,11 @@ final public class Entry {
 
         { /* Start of atomic statement */
             //@ set invChecksOn = false;
+
+            //@ assert St != null;
             St.set_x(atomicTmp_1);
+
+            //@ assert St != null;
             St.set_x(atomicTmp_2);
 
             //@ set invChecksOn = true;

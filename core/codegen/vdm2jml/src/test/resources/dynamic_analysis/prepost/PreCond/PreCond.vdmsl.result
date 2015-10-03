@@ -2,7 +2,7 @@
 Entry.java:26: JML precondition is false
                 Number ignorePattern_2 = id(-1L);
                                            ^
-Entry.java:49: Associated declaration
+Entry.java:60: Associated declaration
     //@ requires pre_id(a);
         ^
 "After breaking pre condition"

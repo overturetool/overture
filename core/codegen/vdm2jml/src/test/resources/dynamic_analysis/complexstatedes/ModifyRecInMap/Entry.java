@@ -18,6 +18,8 @@ final public class Entry {
         {
             Number ignorePattern_1 = useOk();
 
+            //@ assert ignorePattern_1 != null;
+
             /* skip */
         }
 
@@ -26,6 +28,8 @@ final public class Entry {
 
         {
             Number ignorePattern_2 = useNotOk();
+
+            //@ assert ignorePattern_2 != null;
 
             /* skip */
         }
@@ -43,10 +47,13 @@ final public class Entry {
         project.Entrytypes.B stateDes_2 = ((project.Entrytypes.B) Utils.get(stateDes_1,
                 1L));
 
+        //@ assert stateDes_2 != null;
         stateDes_2.set_x(2L);
 
         //@ assert a.valid();
-        return 0L;
+        Number ret_1 = 0L;
+
+        return ret_1;
     }
 
     public static Number useNotOk() {
@@ -57,10 +64,13 @@ final public class Entry {
         project.Entrytypes.B stateDes_4 = ((project.Entrytypes.B) Utils.get(stateDes_3,
                 1L));
 
+        //@ assert stateDes_4 != null;
         stateDes_4.set_x(1L);
 
         //@ assert a.valid();
-        return 0L;
+        Number ret_2 = 0L;
+
+        return ret_2;
     }
 
     public String toString() {

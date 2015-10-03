@@ -43,11 +43,17 @@ final public class A implements Record {
 
     /*@ pure @*/
     public VDMMap get_m() {
-        return m;
+        VDMMap ret_3 = m;
+
+        //@ assert ret_3 != null;
+        return ret_3;
     }
 
     public void set_m(final VDMMap _m) {
+        //@ assert _m != null;
         m = _m;
+
+        //@ assert m != null;
     }
 
     /*@ pure @*/

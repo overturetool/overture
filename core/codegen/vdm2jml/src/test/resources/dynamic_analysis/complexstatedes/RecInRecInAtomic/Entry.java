@@ -18,6 +18,8 @@ final public class Entry {
         {
             Number ignorePattern_1 = useOk();
 
+            //@ assert ignorePattern_1 != null;
+
             /* skip */
         }
 
@@ -26,6 +28,8 @@ final public class Entry {
 
         {
             Number ignorePattern_2 = useNotOk();
+
+            //@ assert ignorePattern_2 != null;
 
             /* skip */
         }
@@ -49,12 +53,14 @@ final public class Entry {
 
             project.Entrytypes.R3 stateDes_2 = stateDes_1.get_r3();
 
+            //@ assert stateDes_2 != null;
             stateDes_2.set_x(atomicTmp_1);
 
             project.Entrytypes.R2 stateDes_3 = r1.get_r2();
 
             project.Entrytypes.R3 stateDes_4 = stateDes_3.get_r3();
 
+            //@ assert stateDes_4 != null;
             stateDes_4.set_x(atomicTmp_2);
 
             //@ set invChecksOn = true;
@@ -69,7 +75,9 @@ final public class Entry {
 
             //@ assert stateDes_3.valid();
         } /* End of atomic statement */
-        return 0L;
+        Number ret_1 = 0L;
+
+        return ret_1;
     }
 
     public static Number useNotOk() {
@@ -84,6 +92,7 @@ final public class Entry {
 
             project.Entrytypes.R3 stateDes_6 = stateDes_5.get_r3();
 
+            //@ assert stateDes_6 != null;
             stateDes_6.set_x(atomicTmp_3);
 
             //@ set invChecksOn = true;
@@ -94,7 +103,9 @@ final public class Entry {
 
             //@ assert r1.valid();
         } /* End of atomic statement */
-        return 0L;
+        Number ret_2 = 0L;
+
+        return ret_2;
     }
 
     public String toString() {

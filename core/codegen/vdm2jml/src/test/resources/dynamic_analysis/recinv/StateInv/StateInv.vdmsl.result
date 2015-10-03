@@ -1,11 +1,11 @@
 "Before breaking state invariant"
-St.java:49: JML invariant is false on leaving method project.Entrytypes.St.set_x(java.lang.Number)
+St.java:52: JML invariant is false on leaving method project.Entrytypes.St.set_x(java.lang.Number)
     public void set_x(final Number _x) {
                 ^
 St.java:13: Associated declaration
     //@ public instance invariant project.Entry.invChecksOn ==> inv_St(x);
                         ^
-Entry.java:44: JML invariant is false on entering method project.Entrytypes.St.set_x(java.lang.Number) from project.Entry.op()
+Entry.java:51: JML invariant is false on entering method project.Entrytypes.St.set_x(java.lang.Number) from project.Entry.op()
         St.set_x(10L);
                 ^
 St.java:13: Associated declaration

@@ -31,7 +31,11 @@ final public class Entry {
 
         { /* Start of atomic statement */
             //@ set invChecksOn = false;
+
+            //@ assert St != null;
             St.set_x(atomicTmp_1);
+
+            //@ assert St != null;
             St.set_x(atomicTmp_2);
 
             //@ set invChecksOn = true;
@@ -40,7 +44,10 @@ final public class Entry {
         } /* End of atomic statement */}
 
     public static void op() {
+        //@ assert St != null;
         St.set_x(-10L);
+
+        //@ assert St != null;
         St.set_x(10L);
     }
 

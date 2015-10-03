@@ -43,6 +43,8 @@ final public class Entry {
     public static Number op(final Number a, final Number b, final Number c) {
         //@ assert inv_Entry_Even(a);
 
+        //@ assert b != null;
+
         //@ assert inv_Entry_Even(c);
         Number ret_1 = b.longValue() * (a.longValue() + c.longValue());
 

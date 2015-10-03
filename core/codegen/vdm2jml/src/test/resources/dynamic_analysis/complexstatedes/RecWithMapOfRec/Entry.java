@@ -18,6 +18,8 @@ final public class Entry {
         {
             Number ignorePattern_1 = useOk();
 
+            //@ assert ignorePattern_1 != null;
+
             /* skip */
         }
 
@@ -26,6 +28,8 @@ final public class Entry {
 
         {
             Number ignorePattern_2 = useNotOk();
+
+            //@ assert ignorePattern_2 != null;
 
             /* skip */
         }
@@ -37,18 +41,24 @@ final public class Entry {
 
     public static Number useOk() {
         project.Entrytypes.A a = new project.Entrytypes.A(MapUtil.map());
+        //@ assert a != null;
         a.set_m(MapUtil.munion(Utils.copy(a.get_m()),
                 MapUtil.map(new Maplet(1L, new project.Entrytypes.B(2L)))));
 
-        return 0L;
+        Number ret_1 = 0L;
+
+        return ret_1;
     }
 
     public static Number useNotOk() {
         project.Entrytypes.A a = new project.Entrytypes.A(MapUtil.map());
+        //@ assert a != null;
         a.set_m(MapUtil.munion(Utils.copy(a.get_m()),
                 MapUtil.map(new Maplet(1L, new project.Entrytypes.B(1L)))));
 
-        return 0L;
+        Number ret_2 = 0L;
+
+        return ret_2;
     }
 
     public String toString() {

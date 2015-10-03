@@ -1,10 +1,10 @@
 "Before useOk"
 "After useOk"
 "Before useNotOk"
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:54: JML invariant is false on leaving method project.Entrytypes.R3.valid()
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:60: JML invariant is false on leaving method project.Entrytypes.R3.valid()
     public Boolean valid() {
                    ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:54: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:60: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
 /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:19: JML invariant is false on leaving method project.Entrytypes.R3.equals(java.lang.Object)
@@ -13,10 +13,10 @@
 /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:19: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-Entry.java:146: JML invariant is false on entering method project.Entrytypes.R3.get_r4() from project.Entry.inv_Entry_T3(java.lang.Object)
+Entry.java:158: JML invariant is false on entering method project.Entrytypes.R3.get_r4() from project.Entry.inv_Entry_T3(java.lang.Object)
         return !(Utils.equals(t3.get_r4().get_x(), 10L));
                                        ^
-Entry.java:146: 
+Entry.java:158: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
 /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:45: JML invariant is false on leaving method project.Entrytypes.R3.get_r4()

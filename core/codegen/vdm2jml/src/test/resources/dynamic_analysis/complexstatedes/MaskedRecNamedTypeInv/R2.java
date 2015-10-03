@@ -48,11 +48,11 @@ final public class R2 implements Record {
 
     /*@ pure @*/
     public project.Entrytypes.R3 get_t3() {
-        project.Entrytypes.R3 ret_1 = t3;
+        project.Entrytypes.R3 ret_4 = t3;
 
-        //@ assert project.Entry.invChecksOn ==> ret_1.valid();
-        //@ assert project.Entry.invChecksOn ==> (inv_Entry_T3(ret_1));
-        return ret_1;
+        //@ assert project.Entry.invChecksOn ==> ret_4.valid();
+        //@ assert project.Entry.invChecksOn ==> (inv_Entry_T3(ret_4));
+        return ret_4;
     }
 
     public void set_t3(final project.Entrytypes.R3 _t3) {

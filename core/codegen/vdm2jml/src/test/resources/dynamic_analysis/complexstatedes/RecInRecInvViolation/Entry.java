@@ -21,6 +21,7 @@ final public class Entry {
 
         project.Entrytypes.T4 stateDes_3 = stateDes_2.get_t4();
 
+        //@ assert stateDes_3 != null;
         stateDes_3.set_x(6L);
 
         //@ assert stateDes_2.valid();
@@ -34,6 +35,7 @@ final public class Entry {
 
         project.Entrytypes.T4 stateDes_6 = stateDes_5.get_t4();
 
+        //@ assert stateDes_6 != null;
         stateDes_6.set_x(7L);
 
         //@ assert stateDes_5.valid();
@@ -41,7 +43,9 @@ final public class Entry {
         //@ assert stateDes_4.valid();
 
         //@ assert t1.valid();
-        return 0L;
+        Number ret_1 = 0L;
+
+        return ret_1;
     }
 
     public static Number useNotOk() {
@@ -53,6 +57,7 @@ final public class Entry {
 
         project.Entrytypes.T4 stateDes_9 = stateDes_8.get_t4();
 
+        //@ assert stateDes_9 != null;
         stateDes_9.set_x(60L);
 
         //@ assert stateDes_8.valid();
@@ -66,6 +71,7 @@ final public class Entry {
 
         project.Entrytypes.T4 stateDes_12 = stateDes_11.get_t4();
 
+        //@ assert stateDes_12 != null;
         stateDes_12.set_x(5L);
 
         //@ assert stateDes_11.valid();
@@ -73,7 +79,9 @@ final public class Entry {
         //@ assert stateDes_10.valid();
 
         //@ assert t1.valid();
-        return 0L;
+        Number ret_2 = 0L;
+
+        return ret_2;
     }
 
     public static Object Run() {
@@ -81,6 +89,8 @@ final public class Entry {
 
         {
             Number ignorePattern_1 = useOk();
+
+            //@ assert ignorePattern_1 != null;
 
             /* skip */
         }
@@ -90,6 +100,8 @@ final public class Entry {
 
         {
             Number ignorePattern_2 = useNotOk();
+
+            //@ assert ignorePattern_2 != null;
 
             /* skip */
         }

@@ -43,11 +43,17 @@ final public class T1 implements Record {
 
     /*@ pure @*/
     public project.Entrytypes.T2 get_t2() {
-        return t2;
+        project.Entrytypes.T2 ret_3 = t2;
+
+        //@ assert ret_3 != null;
+        return ret_3;
     }
 
     public void set_t2(final project.Entrytypes.T2 _t2) {
+        //@ assert _t2 != null;
         t2 = _t2;
+
+        //@ assert t2 != null;
     }
 
     /*@ pure @*/

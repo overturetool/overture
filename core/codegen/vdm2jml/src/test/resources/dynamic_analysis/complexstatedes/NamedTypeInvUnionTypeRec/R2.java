@@ -50,12 +50,12 @@ final public class R2 implements Record {
 
     /*@ pure @*/
     public Object get_t3() {
-        Object ret_1 = t3;
+        Object ret_4 = t3;
 
-        //@ assert project.Entry.invChecksOn ==> ret_1 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) ret_1).valid();
-        //@ assert project.Entry.invChecksOn ==> ret_1 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) ret_1).valid();
-        //@ assert project.Entry.invChecksOn ==> (inv_Entry_T3(ret_1));
-        return ret_1;
+        //@ assert project.Entry.invChecksOn ==> ret_4 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) ret_4).valid();
+        //@ assert project.Entry.invChecksOn ==> ret_4 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) ret_4).valid();
+        //@ assert project.Entry.invChecksOn ==> (inv_Entry_T3(ret_4));
+        return ret_4;
     }
 
     public void set_t3(final Object _t3) {
