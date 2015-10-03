@@ -1,0 +1,7 @@
+"Before VALID initialisation"
+"After VALID initialisation"
+"Before INVALID initialisation"
+Entry.java:32: JML assertion is false
+            //@ assert bError != null;
+                ^
+"After INVALID initialisation"
