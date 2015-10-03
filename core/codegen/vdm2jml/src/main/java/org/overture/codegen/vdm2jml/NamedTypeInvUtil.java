@@ -178,7 +178,7 @@ public class NamedTypeInvUtil
 		return assertStm;
 	}
 	
-	public AMetaStmCG assertNotNull(String varName)
+	public AMetaStmCG consVarNotNullAssert(String varName)
 	{
 		AMetaStmCG assertStm = new AMetaStmCG();
 		List<ClonableString> assertMetaData = handler.getJmlGen().getAnnotator().consMetaData("//@ assert " + varName + " != null;");
@@ -186,6 +186,11 @@ public class NamedTypeInvUtil
 
 		return assertStm;
 	}
+	
+//	public List<ClonableString> consValNotNullInvariant(String fieldName)
+//	{
+//		return handler.getJmlGen().getAnnotator().consMetaData("//@ static invariant " + fieldName + " != null;");
+//	}
 	
 
 	public List<NamedTypeInfo> findNamedInvTypes(STypeCG type)

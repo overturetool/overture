@@ -7,15 +7,12 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.intf.IAnswer;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.ANewExpCG;
-import org.overture.codegen.cgast.expressions.SLiteralExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
@@ -27,7 +24,6 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.runtime.Utils;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class NamedTypeInvHandler implements IAssert
@@ -62,19 +58,10 @@ public class NamedTypeInvHandler implements IAssert
 	
 	public void handleField(AFieldDeclCG node)
 	{
-		//TODO: No guarding against null!
-		
 		/**
 		 * Values and record fields will be handled by this handler (not the state component field since its type is a
 		 * record type) Example: val : char | Even = 5;
 		 */
-		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getType());
-
-		if (invTypes.isEmpty())
-		{
-			return;
-		}
-
 		ADefaultClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
 
 		if (encClass == null)
@@ -88,14 +75,34 @@ public class NamedTypeInvHandler implements IAssert
 			 * So at this point it must be a value defined in a module. No need to check if invariant checks are enabled.
 			 */
 			
-			AIdentifierVarExpCG var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(node.getName(), node.getType().clone());
+			List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getType());
+
+			if (!invTypes.isEmpty())
+			{
+				AIdentifierVarExpCG var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(node.getName(), node.getType().clone());
+				
+				String inv = util.consJmlCheck(encClass.getName(), JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, false, invTypes, var);
+				getAnnotator().appendMetaData(node, getAnnotator().consMetaData(inv));
+			}
+			else
+			{
+				// Since value definitions can only be initialised with literals there is no
+				// need to guard against null (see JmlGenerator.initialIRConstructed)
+//				if(varMayBeNull(node.getType()) && rightHandSideMayBeNull(node.getInitial()))
+//				{
+//					getAnnotator().appendMetaData(node, util.consValNotNullInvariant(node.getName()));
+//				}
+			}
 			
-			String inv = util.consJmlCheck(encClass.getName(), JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, false, invTypes, var);
-			invTrans.getJmlGen().getAnnotator().appendMetaData(node, invTrans.getJmlGen().getAnnotator().consMetaData(inv));
 		}
 		/**
 		 * No need to assert type consistency of record fields since this is handled by the record setter
 		 */
+	}
+
+	private JmlAnnotationHelper getAnnotator()
+	{
+		return invTrans.getJmlGen().getAnnotator();
 	}
 
 	public void handleBlock(ABlockStmCG node) throws AnalysisException
@@ -214,7 +221,7 @@ public class NamedTypeInvHandler implements IAssert
 				if(varMayBeNull(param.getType()))
 				{
 					String varNameStr = invTrans.getJmlGen().getUtil().getName(param.getPattern());
-					AMetaStmCG as = util.assertNotNull(varNameStr);
+					AMetaStmCG as = util.consVarNotNullAssert(varNameStr);
 					replBody.getStatements().add(as);
 				}
 			}
@@ -269,7 +276,7 @@ public class NamedTypeInvHandler implements IAssert
 				//
 				// //@ azzert m != null
 				// Utils.mapSeqUpdate(m,1L,1L);
-				AMetaStmCG assertNotNull = util.assertNotNull(var.getName());
+				AMetaStmCG assertNotNull = util.consVarNotNullAssert(var.getName());
 				
 				ABlockStmCG replStm = new ABlockStmCG();
 				getTransAssist().replaceNodeWith(node, replStm);
@@ -324,7 +331,7 @@ public class NamedTypeInvHandler implements IAssert
 					return null;
 				}
 				
-				return util.assertNotNull(name);
+				return util.consVarNotNullAssert(name);
 			}
 			else
 			{
@@ -370,7 +377,7 @@ public class NamedTypeInvHandler implements IAssert
 					//
 					// //@ azzert rec != null
 					// rec.set_x(5);
-					AMetaStmCG assertNotNull = util.assertNotNull(recObjVar.getName());
+					AMetaStmCG assertNotNull = util.consVarNotNullAssert(recObjVar.getName());
 					
 					ABlockStmCG replStm = new ABlockStmCG();
 					getTransAssist().replaceNodeWith(node, replStm);
@@ -440,7 +447,7 @@ public class NamedTypeInvHandler implements IAssert
 		{
 			if(varMayBeNull(node.getTarget().getType()) && rightHandSideMayBeNull(node.getExp()))
 			{
-				AMetaStmCG assertStm = util.assertNotNull(var.getName());
+				AMetaStmCG assertStm = util.consVarNotNullAssert(var.getName());
 				addAssert(node, assertStm);
 			}
 		}
