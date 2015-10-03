@@ -1,7 +1,9 @@
 package org.overture.codegen.vdm2jml;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SFunctionDefinition;
@@ -15,6 +17,7 @@ import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
@@ -29,6 +32,7 @@ import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IRStatus;
+import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.AssignStmTrans;
 import org.overture.codegen.utils.GeneratedData;
@@ -169,6 +173,41 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	public List<IRStatus<INode>> initialIRConstructed(
 			List<IRStatus<INode>> ast, IRInfo info)
 	{
+		List<IRStatus<AModuleDeclCG>> modules = IRStatus.extract(ast, AModuleDeclCG.class);
+		
+		for(IRStatus<AModuleDeclCG> m : modules)
+		{
+			for(SDeclCG d : m.getIrNode().getDecls())
+			{
+				if(d instanceof AFieldDeclCG)
+				{
+					AFieldDeclCG f = (AFieldDeclCG) d;
+					
+					if(f.getInitial() != null && f.getFinal())
+					{
+						IsValChecker isVal = new IsValChecker();
+						try
+						{
+							if(!f.getInitial().apply(isVal))
+							{
+								Set<IrNodeInfo> wrap = new HashSet<>();
+								IrNodeInfo warning = new IrNodeInfo(f, "The JML generator only allows literal-based expressions "
+										+ "to be used to initialise value definitions");
+								// By requiring that there is no need to assert that it is not null
+								wrap.add(warning);
+								m.addTransformationWarnings(wrap);
+							}
+							
+						} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+						{
+							e.printStackTrace();
+						}
+						
+					}
+				}
+			}
+		}
+		
 		return ast;
 	}
 
