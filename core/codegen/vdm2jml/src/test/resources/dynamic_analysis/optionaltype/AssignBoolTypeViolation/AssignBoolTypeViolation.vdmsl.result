@@ -1,0 +1,7 @@
+"Before doing valid assignments"
+"After doing valid assignments"
+"Before doing illegal assignments"
+Entry.java:28: JML assertion is false
+        //@ assert b != null;
+            ^
+"After doing illegal assignments"
