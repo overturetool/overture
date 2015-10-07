@@ -30,6 +30,7 @@ import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
@@ -400,7 +401,7 @@ public class JmlGenUtil
 		{
 			LeafTypeInfo onlyLeafType = leafTypes.get(0);
 
-			STypeCG typeCg = onlyLeafType.toIrType(jmlGen.getJavaGen().getInfo());
+			STypeCG typeCg = onlyLeafType.getType();
 
 			if (typeCg == null)
 			{
@@ -411,7 +412,8 @@ public class JmlGenUtil
 
 			if (typeCond == null)
 			{
-				status.getUnsupportedInIr().add(new VdmNodeInfo(onlyLeafType.getType(), TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
+				SourceNode sourceNode = onlyLeafType.getType().getSourceNode();
+				status.getUnsupportedInIr().add(new VdmNodeInfo(sourceNode != null ? sourceNode.getVdmNode() : null, TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
 				return null;
 			}
 		} else
@@ -419,7 +421,7 @@ public class JmlGenUtil
 			// There are two or more leaf types
 
 			LeafTypeInfo currentLeafType = leafTypes.get(0);
-			STypeCG typeCg = currentLeafType.toIrType(jmlGen.getJavaGen().getInfo());
+			STypeCG typeCg = currentLeafType.getType();
 
 			if (typeCg == null)
 			{
@@ -430,7 +432,8 @@ public class JmlGenUtil
 
 			if (typeCond == null)
 			{
-				status.getUnsupportedInIr().add(new VdmNodeInfo(currentLeafType.getType(), TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
+				SourceNode sourceNode = currentLeafType.getType().getSourceNode();
+				status.getUnsupportedInIr().add(new VdmNodeInfo(sourceNode != null ? sourceNode.getVdmNode() : null, TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
 				return null;
 			}
 
@@ -444,7 +447,7 @@ public class JmlGenUtil
 			for (int i = 1; i < leafTypes.size() - 1; i++)
 			{
 				currentLeafType = leafTypes.get(i);
-				typeCg = currentLeafType.toIrType(jmlGen.getJavaGen().getInfo());
+				typeCg = currentLeafType.getType();
 
 				if (typeCg == null)
 				{
@@ -455,7 +458,8 @@ public class JmlGenUtil
 
 				if (typeCond == null)
 				{
-					status.getUnsupportedInIr().add(new VdmNodeInfo(currentLeafType.getType(), TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
+					SourceNode sourceNode = currentLeafType.getType().getSourceNode();
+					status.getUnsupportedInIr().add(new VdmNodeInfo(sourceNode != null ? sourceNode.getVdmNode() : null, TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
 					return null;
 				}
 
@@ -469,7 +473,7 @@ public class JmlGenUtil
 			
 			currentLeafType = leafTypes.get(leafTypes.size() - 1);
 
-			typeCg = currentLeafType.toIrType(jmlGen.getJavaGen().getInfo());
+			typeCg = currentLeafType.getType();
 
 			if (typeCg == null)
 			{
@@ -480,7 +484,8 @@ public class JmlGenUtil
 
 			if (typeCond == null)
 			{
-				status.getUnsupportedInIr().add(new VdmNodeInfo(currentLeafType.getType(), TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
+				SourceNode sourceNode = currentLeafType.getType().getSourceNode();
+				status.getUnsupportedInIr().add(new VdmNodeInfo(sourceNode != null ? sourceNode.getVdmNode() : null, TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
 				return null;
 			}
 

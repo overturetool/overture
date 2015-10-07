@@ -3,10 +3,7 @@ package org.overture.codegen.vdm2jml;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.PType;
 import org.overture.ast.util.ClonableString;
-import org.overture.ast.util.PTypeSet;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
@@ -128,36 +125,18 @@ public class NamedTypeInvUtil
 	private List<ARecordTypeCG> getRecTypes(
 			List<NamedTypeInfo> typeInfoMatches)
 	{
-		PTypeSet typeSet = new PTypeSet(handler.getJmlGen().getJavaGen().getInfo().getTcFactory());
-
+		List<ARecordTypeCG> recTypes = new LinkedList<>();
+		
 		for (NamedTypeInfo match : typeInfoMatches)
 		{
 			List<LeafTypeInfo> leaves = match.getLeafTypesRecursively();
 
 			for (LeafTypeInfo leaf : leaves)
 			{
-				if (leaf.getType() instanceof ARecordInvariantType)
+				if (leaf.getType() instanceof ARecordTypeCG)
 				{
-					typeSet.add(leaf.getType());
+					recTypes.add((ARecordTypeCG) leaf.getType());
 				}
-			}
-		}
-
-		List<ARecordTypeCG> recTypes = new LinkedList<>();
-
-		for (PType type : typeSet)
-		{
-			STypeCG irType = LeafTypeInfo.toIrType(type, handler.getJmlGen().getJavaGen().getInfo());
-
-			if (irType instanceof ARecordTypeCG)
-			{
-				recTypes.add((ARecordTypeCG) irType);
-			} else
-			{
-				Logger.getLog().printErrorln("Expected " + type
-						+ " to convert to a "
-						+ ARecordTypeCG.class.getSimpleName() + " in '"
-						+ this.getClass().getSimpleName() + "'");
 			}
 		}
 

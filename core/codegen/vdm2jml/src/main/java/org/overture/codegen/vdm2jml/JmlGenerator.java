@@ -363,7 +363,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 
 	private void computeNamedTypeInvInfo(List<AModuleModules> ast) throws AnalysisException
 	{
-		NamedTypeInvDepCalculator depCalc = new NamedTypeInvDepCalculator();
+		NamedTypeInvDepCalculator depCalc = new NamedTypeInvDepCalculator(this.getJavaGen().getInfo());
 		
 		for (AModuleModules m : ast)
 		{

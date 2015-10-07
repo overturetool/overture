@@ -12,14 +12,19 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
+import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.logging.Logger;
 
 public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 {
 	private List<NamedTypeInfo> typeInfoList;
-
-	public NamedTypeInvDepCalculator()
+	private IRInfo info;
+	
+	public NamedTypeInvDepCalculator(IRInfo info)
 	{
 		super();
+		this.info = info;
 		this.typeInfoList = new LinkedList<NamedTypeInfo>();
 	}
 
@@ -112,11 +117,11 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 		// Avoid unnecessary construction
 		if (!containsExactly(node))
 		{
-			typeInfoList.addAll(create(node, null, new HashSet<PType>()));
+			typeInfoList.addAll(create(info, node, null, new HashSet<PType>()));
 		}
 	}
 
-	private static List<NamedTypeInfo> create(PType type, NamedTypeInfo previous, Set<PType> visited)
+	private static List<NamedTypeInfo> create(IRInfo info, PType type, NamedTypeInfo previous, Set<PType> visited)
 	{
 		if(visited.contains(type))
 		{
@@ -149,7 +154,7 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			NamedTypeInfo typeData = new NamedTypeInfo(namedType.getName().getName(),
 					namedType.getName().getModule(), namedType.getInvDef() != null, optional);
 
-			typeData.getNamedTypes().addAll(create(namedType.getType(), typeData, visited));
+			typeData.getNamedTypes().addAll(create(info, namedType.getType(), typeData, visited));
 
 			data.add(typeData);
 		} else if (type instanceof AUnionType)
@@ -164,16 +169,40 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			
 			for (PType t : ((AUnionType) type).getTypes())
 			{
-				data.addAll(create(t, previous, visited));
+				data.addAll(create(info, t, previous, visited));
 			}
 		} else
 		{
 			if (previous != null)
 			{
-				previous.getLeafTypes().add(new LeafTypeInfo(type, optional));
+				previous.getLeafTypes().add(new LeafTypeInfo(toIrType(type, info), optional));
 			}
 		}
 
 		return data;
+	}
+	
+	public static STypeCG toIrType(PType type, IRInfo info)
+	{
+		try
+		{
+			STypeCG irType = type.apply(info.getTypeVisitor(), info);
+			
+			if(irType != null)
+			{
+				irType.setOptional(false);
+			}
+			
+			return irType;
+			
+		} catch (AnalysisException e)
+		{
+			Logger.getLog().printErrorln("Problems encountered while attempting "
+					+ "to construct the IR type from a VDM type: "
+					+ e.getMessage() + " in '"
+					+ LeafTypeInfo.class.getSimpleName() + "'");
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
