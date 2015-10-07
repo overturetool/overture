@@ -5,7 +5,7 @@
 <message column="12" line="55" message="Class name IO not in scope" messageType="error" number="3133" resource="PacemakerSeqPP.result"/>
 <message column="6" line="967" message="Member addLeadSensor(Lead) is not in scope" messageType="error" number="3209" resource="PacemakerSeqPP.result"/>
 <message column="31" line="95" message="Constructor operation must have return type Environment" messageType="error" number="3026" resource="PacemakerSeqPP.result"/>
-<message column="9" line="566" message="Operation '(World`timerRef.GetTime)' cannot be called from a function" messageType="error" number="3300" resource="PacemakerSeqPP.result"/>
+<message column="9" line="566" message="Impure operation '(World`timerRef.GetTime)' cannot be called from here" messageType="error" number="3300" resource="PacemakerSeqPP.result"/>
 <message column="12" line="985" message="Member Run() is not in scope" messageType="error" number="3209" resource="PacemakerSeqPP.result"/>
 <message column="23" line="985" message="Member showResult() is not in scope" messageType="error" number="3209" resource="PacemakerSeqPP.result"/>
 <message column="5" line="575" message="Member handleEvent(Pulse, Chamber, Time) is not in scope" messageType="error" number="3209" resource="PacemakerSeqPP.result"/>

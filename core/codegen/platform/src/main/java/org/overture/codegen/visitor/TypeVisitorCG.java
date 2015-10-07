@@ -50,6 +50,7 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
@@ -77,10 +78,20 @@ import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRNamedTypeInvariantTag;
+import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 {
+	@Override
+	public STypeCG caseAUnresolvedType(AUnresolvedType node, IRInfo question)
+			throws AnalysisException
+	{
+		Logger.getLog().printErrorln("Found unresolved type in the VDM AST");
+		//To guard against unresolved type in the type checker
+		return new AUnknownTypeCG();
+	}
+	
 	@Override
 	public STypeCG caseAUnionType(AUnionType node, IRInfo question)
 			throws AnalysisException
@@ -106,6 +117,11 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 			SMapType mapType = typeAssistant.getMap(node);
 			
 			return mapType.apply(question.getTypeVisitor(), question);
+		} else if(question.getTypeAssistant().isProductOfSameSize(node, typeAssistant)) 
+		{
+			AProductType productType = typeAssistant.getProduct(node);
+			
+			return productType.apply(question.getTypeVisitor(), question);
 		} else
 		{
 			if(types.size() <= 1)

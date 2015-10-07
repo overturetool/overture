@@ -1,0 +1,93 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class A {
+    public A() {
+    }
+
+    public void op() {
+        VDMSeq x = SeqUtil.seq(new Rec(1L), new Rec(2L), new Rec(3L));
+
+        for (Iterator iterator_1 = x.iterator(); iterator_1.hasNext();) {
+            Rec e = (Rec) iterator_1.next();
+        }
+    }
+
+    public void op1() {
+        for (Iterator iterator_2 = SeqUtil.seq(1L, 2L, 3L).iterator();
+                iterator_2.hasNext();) {
+            Number n = (Number) iterator_2.next();
+
+            /* skip */
+        }
+    }
+
+    public void op2() {
+        for (Iterator iterator_3 = SeqUtil.seq().iterator();
+                iterator_3.hasNext();) {
+            Object e = (Object) iterator_3.next();
+
+            /* skip */
+        }
+    }
+
+    public void op3() {
+        for (Iterator iterator_4 = f().iterator(); iterator_4.hasNext();) {
+            Number n = (Number) iterator_4.next();
+
+            /* skip */
+        }
+    }
+
+    public void op4() {
+        for (Iterator iterator_5 = SeqUtil.reverse(SeqUtil.seq(1L, 2L, 3L))
+                                          .iterator(); iterator_5.hasNext();) {
+            Number n = (Number) iterator_5.next();
+
+            /* skip */
+        }
+    }
+
+    public static VDMSeq f() {
+        return SeqUtil.seq(1L, 2L, 3L);
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+
+    private static class Rec implements Record {
+        public Number x;
+
+        public Rec(final Number _x) {
+            x = _x;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof Rec)) {
+                return false;
+            }
+
+            Rec other = ((Rec) obj);
+
+            return Utils.equals(x, other.x);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x);
+        }
+
+        public Rec copy() {
+            return new Rec(x);
+        }
+
+        public String toString() {
+            return "mk_A`Rec" + Utils.formatFields(x);
+        }
+    }
+}
+
+##########

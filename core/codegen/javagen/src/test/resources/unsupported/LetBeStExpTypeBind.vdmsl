@@ -1,0 +1,14 @@
+module Entry
+
+exports all
+definitions
+operations 
+
+Run : () ==> ?
+Run () ==
+return
+  let x : int
+  in 
+	  x;
+
+end Entry

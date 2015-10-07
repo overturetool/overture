@@ -21,6 +21,11 @@
  */
 package org.overture.codegen.assistant;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.overture.codegen.cgast.INode;
+
 public abstract class AssistantBase
 {
 	protected AssistantManager assistantManager;
@@ -29,5 +34,22 @@ public abstract class AssistantBase
 	{
 		super();
 		this.assistantManager = assistantManager;
+	}
+	
+	public <T extends INode> List<T> cloneNodes(List<T> list, Class<T> nodeType)
+	{
+		List<T> cloneList = new LinkedList<T>();
+		
+		for(T e : list)
+		{
+			Object clone = e.clone();
+			
+			if(nodeType.isInstance(clone))
+			{
+				cloneList.add(nodeType.cast(clone));
+			}
+		}
+		
+		return cloneList;
 	}
 }

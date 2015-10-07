@@ -55,6 +55,7 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
+import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
@@ -416,8 +417,12 @@ public class OperationValue extends Value
 
 			} else
 			{
+	    		if (Settings.release == Release.VDM_10 && !type.getPure() && ctxt.threadState.isPure())
+	    		{
+	    			abort(4166, "Cannot call impure operation: " + name, ctxt);
+	    		}
 
-				rv = body.apply(VdmRuntime.getStatementEvaluator(), argContext);
+	    		rv = body.apply(VdmRuntime.getStatementEvaluator(), argContext);
 			}
 
 			if (isConstructor)

@@ -1,0 +1,47 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class A {
+    public A() {
+    }
+
+    public Number op() {
+        Number a = 0L;
+        Number b = 0L;
+        Number atomicTmp_1 = 2L;
+        Number atomicTmp_2 = 4L;
+        a = atomicTmp_1;
+        b = atomicTmp_2;
+
+        return a.longValue() + b.longValue();
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return new A().op();
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

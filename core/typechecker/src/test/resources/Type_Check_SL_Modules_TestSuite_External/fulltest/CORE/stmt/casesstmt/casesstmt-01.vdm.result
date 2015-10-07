@@ -2,8 +2,8 @@
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="13" line="11" message="Definition 'b' not used" messageType="warning" number="5000" resource="casesstmt-01.vdm"/>
 <message column="11" line="11" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt-01.vdm"/>
-<message column="7" line="12" message="Definition 'l1' not used" messageType="warning" number="5000" resource="casesstmt-01.vdm"/>
 <message column="12" line="12" message="Definition 'l2' not used" messageType="warning" number="5000" resource="casesstmt-01.vdm"/>
+<message column="7" line="12" message="Definition 'l1' not used" messageType="warning" number="5000" resource="casesstmt-01.vdm"/>
 <message column="7" line="13" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt-01.vdm"/>
 <message column="44" line="11" message="Right hand of and is not bool" messageType="error" number="3066" resource="casesstmt-01.vdm"/>
 <message column="1" line="8" message="Operation returns void value" messageType="error" number="3313" resource="casesstmt-01.vdm"/>

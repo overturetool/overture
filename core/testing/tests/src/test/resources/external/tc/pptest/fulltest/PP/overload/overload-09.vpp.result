@@ -1,1 +1,1 @@
-["Error 3091: overload-09.vpp at 26:11 Unknown member fn(nat) of class A"]
+["Error 3348: overload-09.vpp at 26:3 Cannot use \u0027new\u0027 in a functional context","Error 3091: overload-09.vpp at 26:11 Unknown member fn(nat) of class A","Error 3348: overload-09.vpp at 30:3 Cannot use \u0027new\u0027 in a functional context"]

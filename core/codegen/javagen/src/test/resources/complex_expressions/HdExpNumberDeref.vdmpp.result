@@ -1,0 +1,51 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class A {
+    public A() {
+    }
+
+    public static Number Sum(final VDMSeq rs) {
+        if (Utils.empty(rs)) {
+            return 0L;
+        } else {
+            return ((Number) rs.get(0)).doubleValue() +
+            Sum(SeqUtil.tail(Utils.copy(rs))).doubleValue();
+        }
+    }
+
+    public static Number add(final VDMSeq natSeq, final VDMSeq realSeq) {
+        return ((Number) natSeq.get(0)).longValue() +
+        ((Number) realSeq.get(0)).doubleValue();
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return A.Sum(SeqUtil.seq(1L, 2L, 3L)).doubleValue() +
+        A.add(SeqUtil.seq(5L), SeqUtil.seq(1.1)).doubleValue();
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

@@ -6,6 +6,7 @@
 <message column="9" line="30" message="Definition 'id' not used" messageType="warning" number="5000" resource="indexforloopstmt.vdm"/>
 <message column="5" line="20" message="To type is not numeric" messageType="error" number="3221" resource="indexforloopstmt.vdm"/>
 <message column="5" line="25" message="By type is not numeric" messageType="error" number="3222" resource="indexforloopstmt.vdm"/>
+<message column="7" line="31" message="State variable 'a' cannot be accessed from this context" messageType="error" number="3302" resource="indexforloopstmt.vdm"/>
 <message column="7" line="31" message="Variable 'a' in scope is not updatable" messageType="error" number="3301" resource="indexforloopstmt.vdm"/>
 <result/>
 </testResult>

@@ -1,0 +1,43 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        VDMSet s = SetUtil.set(2L, 4L, 6L);
+        Boolean whileCond_1 = true;
+
+        while (whileCond_1) {
+            Boolean forAllExpResult_1 = true;
+            VDMSet set_1 = Utils.copy(s);
+
+            for (Iterator iterator_1 = set_1.iterator();
+                    iterator_1.hasNext() && forAllExpResult_1;) {
+                Number x = ((Number) iterator_1.next());
+                forAllExpResult_1 = Utils.equals(Utils.mod(x.longValue(), 2L),
+                        0L);
+            }
+
+            whileCond_1 = forAllExpResult_1;
+
+            if (!(whileCond_1)) {
+                break;
+            }
+
+            s = SetUtil.union(Utils.copy(s), SetUtil.set(3L));
+        }
+
+        return Utils.copy(s);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

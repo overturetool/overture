@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.AIntLiteralExp;
@@ -23,7 +24,9 @@ import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexKeywordToken;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ABooleanPattern;
@@ -46,14 +49,21 @@ import org.overture.ast.patterns.AStringPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.PType;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.UniqueNameGenerator;
 
 public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 {
 	private final UniqueNameGenerator unique;
+	private final IPogAssistantFactory af;
 
-	public PatternToExpVisitor(UniqueNameGenerator unique)
+	public PatternToExpVisitor(UniqueNameGenerator unique,
+			IPogAssistantFactory af)
 	{
+		this.af = af;
 		this.unique = unique;
 	}
 
@@ -76,6 +86,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	{
 		ABooleanConstExp b = new ABooleanConstExp();
 		b.setValue(node.getValue().clone());
+		addPossibleType(b, node);
 		return b;
 	}
 
@@ -84,6 +95,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	{
 		ACharLiteralExp ch = new ACharLiteralExp();
 		ch.setValue(node.getValue().clone());
+		addPossibleType(ch, node);
 		return ch;
 	}
 
@@ -92,6 +104,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	{
 		AStringLiteralExp string = new AStringLiteralExp();
 		string.setValue(node.getValue().clone());
+		addPossibleType(string, node);
 		return string;
 	}
 
@@ -107,6 +120,9 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		AVariableExp var = new AVariableExp();
 		var.setName(node.getName().clone());
 		var.setOriginal(var.getName().getFullName());
+		var.setVardef(pattern2DummyDef(node));
+
+		addPossibleType(var, node);
 		return var;
 	}
 
@@ -116,6 +132,8 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		AVariableExp var = new AVariableExp();
 		var.setName(unique.getUnique("any"));
 		var.setOriginal(var.getName().getFullName());
+		var.setVardef(pattern2DummyDef(node));
+		addPossibleType(var, node);
 		return var;
 	}
 
@@ -124,18 +142,20 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	{
 		AIntLiteralExp exp = new AIntLiteralExp();
 		exp.setValue(node.getValue().clone());
+		addPossibleType(exp, node);
 		return exp;
 	}
 
 	public PExp caseANilPattern(ANilPattern node) throws AnalysisException
 	{
-		return new ANilExp();
+		return addPossibleType(new ANilExp(), node);
 	}
 
 	public PExp caseAQuotePattern(AQuotePattern node) throws AnalysisException
 	{
 		AQuoteLiteralExp quote = new AQuoteLiteralExp();
 		quote.setValue(node.getValue().clone());
+		addPossibleType(quote, node);
 		return quote;
 	}
 
@@ -143,6 +163,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	{
 		ARealLiteralExp exp = new ARealLiteralExp();
 		exp.setValue(node.getValue().clone());
+		addPossibleType(exp, node);
 		return exp;
 	}
 
@@ -165,7 +186,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		{
 			args.add(p.apply(this).clone());
 		}
-
+		addPossibleType(mkExp, node);
 		mkExp.setArgs(args);
 		return mkExp;
 	}
@@ -177,9 +198,11 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 
 		for (PPattern p : node.getPlist())
 		{
-			values.add(p.apply(this).clone());
+			PExp e = p.apply(this);
+			values.add(e.clone());
 		}
 
+		addPossibleType(tuple, node);
 		tuple.setArgs(values);
 		return tuple;
 	}
@@ -195,7 +218,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		}
 
 		seq.setMembers(values);
-		return seq;
+		return addPossibleType(seq, node);
 	}
 
 	public PExp caseAConcatenationPattern(AConcatenationPattern node)
@@ -205,7 +228,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		conc.setLeft(node.getLeft().apply(this).clone());
 		conc.setOp(new LexKeywordToken(VDMToken.CONCATENATE, null));
 		conc.setRight(node.getRight().apply(this).clone());
-		return conc;
+		return addPossibleType(conc, node);
 	}
 
 	public PExp caseASetPattern(ASetPattern node) throws AnalysisException
@@ -219,7 +242,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		}
 
 		set.setMembers(values);
-		return set;
+		return addPossibleType(set, node);
 	}
 
 	public PExp caseAUnionPattern(AUnionPattern node) throws AnalysisException
@@ -228,7 +251,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		union.setLeft(node.getLeft().apply(this).clone());
 		union.setOp(new LexKeywordToken(VDMToken.UNION, null));
 		union.setRight(node.getRight().apply(this).clone());
-		return union;
+		return addPossibleType(union, node);
 	}
 
 	public PExp caseAMapPattern(AMapPattern node) throws AnalysisException
@@ -242,15 +265,20 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		}
 
 		map.setMembers(values);
-		return map;
+		return addPossibleType(map, node);
 	}
 
 	public PExp caseAMapletPatternMaplet(AMapletPatternMaplet node)
 			throws AnalysisException
 	{
 		AMapletExp maplet = new AMapletExp();
-		maplet.setLeft(node.getFrom().apply(this).clone());
-		maplet.setRight(node.getTo().apply(this).clone());
+		PExp from = node.getFrom().apply(this).clone();
+		maplet.setLeft(from);
+
+		PExp to = node.getTo().apply(this).clone();
+		maplet.setRight(to);
+		maplet.setType(AstFactory.newAMapMapType(null, from.getType().clone(), to.getType().clone()));
+
 		return maplet;
 	}
 
@@ -261,20 +289,45 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		union.setLeft(node.getLeft().apply(this).clone());
 		union.setOp(new LexKeywordToken(VDMToken.MUNION, null));
 		union.setRight(node.getRight().apply(this).clone());
-		return union;
+		return addPossibleType(union, node);
 	}
 
 	@Override
 	public PExp createNewReturnValue(INode node)
 	{
-		assert false : "Should not happen";
-		return null;
+
+		throw new RuntimeException("Cannot convert pattern to Expression: "
+				+ node);
+
 	}
 
 	@Override
 	public PExp createNewReturnValue(Object node)
 	{
-		assert false : "Should not happen";
-		return null;
+		throw new RuntimeException("Cannot convert pattern to Expression: "
+				+ node);
+	}
+
+	/*
+	 * VarExps in the CGP need a corresponding vardef or it crashes. So we add dummy definitions to avoid the crash. The
+	 * definition is never needed for anything.
+	 */
+	private ALocalDefinition pattern2DummyDef(PPattern pat)
+	{
+		ALocalDefinition r = AstFactory.newALocalDefinition(null, new LexNameToken("", "", pat.getLocation().clone()), NameScope.LOCAL, new AUnknownType());
+		return r;
+	}
+
+	private PExp addPossibleType(PExp exp, PPattern node)
+	{
+		PType possibleType = af.createPPatternAssistant().getPossibleType(node);
+		if (possibleType != null)
+		{
+			exp.setType(possibleType.clone());
+		} else
+		{
+			exp.setType(new AUnknownType());
+		}
+		return exp;
 	}
 }

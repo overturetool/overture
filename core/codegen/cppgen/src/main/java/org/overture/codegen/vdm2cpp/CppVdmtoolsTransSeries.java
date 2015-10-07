@@ -47,7 +47,7 @@ public class CppVdmtoolsTransSeries
 		//IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
 
 		IRInfo irInfo = codeGen.getIRGenerator().getIRInfo();
-		TransAssistantCG transAssistant = codeGen.getTransformationAssistant();
+		TransAssistantCG transAssistant = codeGen.getTransAssistant();
 		TempVarPrefixes varPrefixes = codeGen.getTempVarPrefixes();
 		
 		FuncTransformation funcTransformation = new FuncTransformation(transAssistant);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="type_checker">
-<message column="5" line="70" message="Operation '(Purses(fromId).GetBalance)' cannot be called from a function" messageType="error" number="3300" resource="ElectronicPursePP.result"/>
-<message column="61" line="75" message="Operation '(q.GetCardNo)' cannot be called from a function" messageType="error" number="3300" resource="ElectronicPursePP.result"/>
-<message column="44" line="75" message="Operation '(p.GetCardNo)' cannot be called from a function" messageType="error" number="3300" resource="ElectronicPursePP.result"/>
+<message column="5" line="70" message="Impure operation '(Purses(fromId).GetBalance)' cannot be called from here" messageType="error" number="3300" resource="ElectronicPursePP.result"/>
+<message column="61" line="75" message="Impure operation '(q.GetCardNo)' cannot be called from here" messageType="error" number="3300" resource="ElectronicPursePP.result"/>
+<message column="44" line="75" message="Impure operation '(p.GetCardNo)' cannot be called from here" messageType="error" number="3300" resource="ElectronicPursePP.result"/>
 </testResult>

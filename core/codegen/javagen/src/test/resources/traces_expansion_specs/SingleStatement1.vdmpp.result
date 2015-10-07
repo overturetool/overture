@@ -1,0 +1,44 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry implements java.io.Serializable {
+    public Entry() {
+    }
+
+    private void op() {
+        /* skip */
+    }
+
+    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        CallStatement callStm_1 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    ((Entry) instance).op();
+
+                    return Utils.VOID_VALUE;
+                }
+
+                public String toString() {
+                    return "op()";
+                }
+            };
+
+        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+        sequence_1.add(apply_1);
+
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

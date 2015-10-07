@@ -1,0 +1,31 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Number ignorePattern_1 = MATH.rand(5L).longValue() +
+            MATH.srand2(5L).longValue();
+        MATH.srand(5L);
+
+        return MATH.sin(0.5).doubleValue() + MATH.cos(0.5).doubleValue() +
+        MATH.tan(0.5).doubleValue() + MATH.cot(0.5).doubleValue() +
+        MATH.asin(0.5).doubleValue() + MATH.acos(0.5).doubleValue() +
+        MATH.atan(0.5).doubleValue() + MATH.acot(0.5).doubleValue() +
+        MATH.sqrt(0.5).doubleValue() + MATH.pi_f().doubleValue() +
+        MATH.exp(0.5).doubleValue() + MATH.ln(0.5).doubleValue() +
+        MATH.log(0.5).doubleValue() + MATH.fac(5L).longValue() +
+        MATH.pi.doubleValue();
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

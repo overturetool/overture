@@ -1,0 +1,10 @@
+-- This test exercises the generation of a MapSeqOfCompatibleObligation
+-- off a Value Definition
+
+
+values
+
+m : map nat to bool = {2|-> true, 3 |-> false}
+-- PO (forall m1, m2 in set {{2 |-> true}, {3 |-> false}} & 
+--       (forall d3 in set (dom m1), d4 in set (dom m2) & 
+--            ((d3 = d4) => (m1(d3) = m2(d4)))))

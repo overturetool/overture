@@ -1,0 +1,37 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class A {
+    public A() {
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class B {
+    public B() {
+        cg_init_B_1();
+    }
+
+    public void cg_init_B_1() {
+        /* skip */
+    }
+
+    public String toString() {
+        return "B{}";
+    }
+}
+
+##########

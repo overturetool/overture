@@ -492,14 +492,22 @@ public class FunctionValue extends Value
 			{
 				try
 				{
+					evalContext.threadState.setAtomic(true);
+					evalContext.threadState.setPure(true);
 					rv = body.apply(VdmRuntime.getExpressionEvaluator(), evalContext).convertTo(type.getResult(), evalContext);
-				} catch (AnalysisException e)
+				}
+				catch (AnalysisException e)
 				{
 					if (e instanceof ValueException)
 					{
 						throw (ValueException) e;
 					}
 					e.printStackTrace();
+				}
+				finally
+				{
+					evalContext.threadState.setAtomic(false);
+					evalContext.threadState.setPure(false);
 				}
 			}
 

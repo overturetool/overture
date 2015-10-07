@@ -1,0 +1,13 @@
+-- This test exercises the generation of 2 NonEmptySeqObligation
+-- off an Explicit Function Definition
+
+
+functions
+
+SeqSum: seq of nat -> nat
+SeqSum(list) ==
+  if list = []
+  then 0
+  else hd list + SeqSum(tl list)
+-- PO: (forall list:seq of (nat) & (not ((list = []) => (list <> []))))
+-- PO: (forall list:seq of (nat) & (not ((list = []) => (list <> []))))

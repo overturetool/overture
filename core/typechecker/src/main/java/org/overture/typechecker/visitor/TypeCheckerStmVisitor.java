@@ -23,6 +23,7 @@ package org.overture.typechecker.visitor;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
 
@@ -67,6 +68,7 @@ import org.overture.ast.statements.AExternalClause;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
+import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
@@ -84,6 +86,7 @@ import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
+import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.ast.typechecker.NameScope;
@@ -94,6 +97,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
@@ -137,7 +141,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		if (!question.assistantFactory.getTypeComparator().compatible(node.getTargetType(), node.getExpType()))
 		{
 			TypeCheckerErrors.report(3239, "Incompatible types in assignment", node.getLocation(), node);
-			TypeCheckerErrors.detail2("Target", node.getTarget(), "Expression", node.getExp());
+			TypeCheckerErrors.detail2("Target", node.getTarget().getType(), "Expression", node.getExp().getType());
 		}
 
 		node.setClassDefinition(question.env.findClassDefinition());
@@ -150,7 +154,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			// Mark assignment target as initialized (so no warnings)
 			PDefinition state;
-			state = question.assistantFactory.createPStateDesignatorAssistant().targetDefinition(node.getTarget(), question);
+			state = targetDefinition(node.getTarget(), question);
 
 			if (state instanceof AInstanceVariableDefinition)
 			{
@@ -229,7 +233,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 					for (PType t : ust.getTypes())
 					{
-						question.assistantFactory.createABlockSimpleBlockStmAssistant().addOne(rtypes, t);
+						addOneType(rtypes, t);
 
 						if (t instanceof AVoidType || t instanceof AUnknownType)
 						{
@@ -238,7 +242,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 					}
 				} else
 				{
-					question.assistantFactory.createABlockSimpleBlockStmAssistant().addOne(rtypes, stype);
+					addOneType(rtypes, stype);
 
 					if (stype instanceof AVoidType
 							|| stype instanceof AUnknownType)
@@ -296,14 +300,14 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	{
 		PType dtype = node.getDesignator().apply(THIS, question);
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(dtype))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(dtype, question.env))
 		{
 			TypeCheckerErrors.report(3207, "Object designator is not an object type", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
-		AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(dtype);
+		AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(dtype, question.env);
 
 		SClassDefinition classdef = ctype.getClassdef();
 		SClassDefinition self = question.env.findClassDefinition();
@@ -330,7 +334,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.getField().getLocation().executable(true);
-		List<PType> atypes = question.assistantFactory.createACallObjectStatementAssistant().getArgTypes(node.getArgs(), THIS, question);
+		List<PType> atypes = getArgTypes(node.getArgs(), THIS, question);
 		node.getField().setTypeQualifier(atypes);
 		PDefinition fdef = classenv.findName(node.getField(), question.scope);
 		
@@ -406,7 +410,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			AOperationType optype = question.assistantFactory.createPTypeAssistant().getOperation(type);
 			optype.apply(THIS, question);
 			node.getField().setTypeQualifier(optype.getParameters());
-			question.assistantFactory.createACallObjectStatementAssistant().checkArgTypes(type, optype.getParameters(), atypes); // Not
+			checkArgTypes(type, optype.getParameters(), atypes, question); // Not
 																																	// necessary?
 			node.setType(optype.getResult());
 			return question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, node.getType(), node.getLocation());
@@ -419,7 +423,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			AFunctionType ftype = question.assistantFactory.createPTypeAssistant().getFunction(type);
 			ftype.apply(THIS, question);
 			node.getField().setTypeQualifier(ftype.getParameters());
-			question.assistantFactory.createACallObjectStatementAssistant().checkArgTypes(type, ftype.getParameters(), atypes); // Not
+			checkArgTypes(type, ftype.getParameters(), atypes, question); // Not
 																																// necessary?
 			node.setType(ftype.getResult());
 			return question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, node.getType(), node.getLocation());
@@ -435,7 +439,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseACallStm(ACallStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		List<PType> atypes = question.assistantFactory.createACallObjectStatementAssistant().getArgTypes(node.getArgs(), THIS, question);
+		List<PType> atypes = getArgTypes(node.getArgs(), THIS, question);
 
 		if (question.env.isVDMPP())
 		{
@@ -506,7 +510,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				node.getName().setTypeQualifier(optype.getParameters());
 			}
 
-			question.assistantFactory.createACallStmAssistant().checkArgTypes(node, optype, optype.getParameters(), atypes);
+			checkArgTypes(node, optype, optype.getParameters(), atypes, question);
 			node.setType(optype.getResult());
 			return question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, optype.getResult(), node.getLocation());
 		} else if (question.assistantFactory.createPTypeAssistant().isFunction(type))
@@ -526,7 +530,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				node.getName().setTypeQualifier(ftype.getParameters());
 			}
 
-			question.assistantFactory.createACallStmAssistant().checkArgTypes(node, ftype, ftype.getParameters(), atypes);
+			checkArgTypes(node, ftype, ftype.getParameters(), atypes, question);
 			node.setType(ftype.getResult());
 			return question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, ftype.getResult(), node.getLocation());
 		} else
@@ -620,8 +624,16 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseACyclesStm(ACyclesStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		PDefinition encl = question.env.getEnclosingDefinition();
+		
+		if (encl != null && encl.getAccess().getPure())
+		{
+			TypeCheckerErrors.report(3346, "Cannot use cycles in pure operations", node.getLocation(), node);
+		}
 
-		PType argType = node.getCycles().apply(THIS, question);
+		Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+		TypeCheckInfo functional = question.newInfo(newEnv);
+		PType argType = node.getCycles().apply(THIS, functional);
 
 		if (!question.assistantFactory.getTypeComparator().compatible(AstFactory.newANatNumericBasicType(node.getLocation()), argType))
 		{
@@ -646,8 +658,16 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseADurationStm(ADurationStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		PDefinition encl = question.env.getEnclosingDefinition();
+		
+		if (encl != null && encl.getAccess().getPure())
+		{
+			TypeCheckerErrors.report(3346, "Cannot use duration in pure operations", node.getLocation(), node);
+		}
 
-		PType argType = node.getDuration().apply(THIS, question);
+		Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+		TypeCheckInfo functional = question.newInfo(newEnv);
+		PType argType = node.getDuration().apply(THIS, functional);
 
 		if (!question.assistantFactory.getTypeComparator().compatible(AstFactory.newANatNumericBasicType(node.getLocation()), argType))
 		{
@@ -774,7 +794,13 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			ANonDeterministicSimpleBlockStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		// PType r = defaultSSimpleBlockStm(node,question);
+		PDefinition encl = question.env.getEnclosingDefinition();
+		
+		if (encl != null && encl.getAccess().getPure())
+		{
+			TypeCheckerErrors.report(3346, "Cannot use non-deterministic statement in pure operations",
+				node.getLocation(), node);
+		}
 
 		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
 		int rcount = 0;
@@ -788,14 +814,14 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				AUnionType ust = (AUnionType) stype;
 				for (PType t : ust.getTypes())
 				{
-					if (question.assistantFactory.createANonDeterministicSimpleBlockStmAssistant().addOne(rtypes, t))
+					if (addOne(rtypes, t))
 					{
 						rcount++;
 					}
 				}
 			} else
 			{
-				if (question.assistantFactory.createANonDeterministicSimpleBlockStmAssistant().addOne(rtypes, stype))
+				if (addOne(rtypes, stype))
 				{
 					rcount++;
 				}
@@ -1025,10 +1051,12 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3287, "Periodic thread must have 4 argument(s)", node.getLocation(), node);
 		} else
 		{
+			Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+			TypeCheckInfo functional = question.newInfo(newEnv);
 
 			for (PExp arg : args)
 			{
-				PType type = arg.apply(THIS, question);
+				PType type = arg.apply(THIS, functional);
 
 				if (!question.assistantFactory.createPTypeAssistant().isNumeric(type))
 				{
@@ -1066,6 +1094,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 						+ " should have no parameters or return type", node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", def.getType());
 			}
+			else if (def.getAccess().getPure())
+			{
+				TypeCheckerErrors.report(3347, "Cannot have a pure operation as the body of a thread", node.getLocation(), node);
+			}
 		} else if (opdef instanceof AImplicitOperationDefinition)
 		{
 			AImplicitOperationDefinition def = (AImplicitOperationDefinition) opdef;
@@ -1080,6 +1112,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				TypeCheckerErrors.report(3231, opname
 						+ " should have no parameters or return type", node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", def.getType());
+			}
+			else if (def.getAccess().getPure())
+			{
+				TypeCheckerErrors.report(3347, "Cannot have a pure operation as the body of a thread", node.getLocation(), node);
 			}
 		} else
 		{
@@ -1101,9 +1137,12 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3287, "Sporadic thread must have 3 arguments", node.getLocation(), node);
 		} else
 		{
+			Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+			TypeCheckInfo functional = question.newInfo(newEnv);
+
 			for (PExp arg : args)
 			{
-				PType type = arg.apply(THIS, question);
+				PType type = arg.apply(THIS, functional);
 
 				if (!question.assistantFactory.createPTypeAssistant().isNumeric(type))
 				{
@@ -1139,6 +1178,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 						+ " should have no parameters or return type", node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", def.getType());
 			}
+			else if (def.getAccess().getPure())
+			{
+				TypeCheckerErrors.report(3347, "Cannot have a pure operation as the body of a thread", node.getLocation(), node);
+			}
 		} else if (opdef instanceof AImplicitOperationDefinition)
 		{
 			AImplicitOperationDefinition def = (AImplicitOperationDefinition) opdef;
@@ -1154,6 +1197,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 						+ " should have no parameters or return type", node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", def.getType());
 			}
+			else if (def.getAccess().getPure())
+			{
+				TypeCheckerErrors.report(3347, "Cannot have a pure operation as the body of a thread", node.getLocation(), node);
+			}
 		} else
 		{
 			TypeCheckerErrors.report(3232, opname + " is not an operation name", node.getLocation(), node);
@@ -1167,6 +1214,12 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAStartStm(AStartStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		PDefinition encl = question.env.getEnclosingDefinition();
+		
+		if (encl != null && encl.getAccess().getPure())
+		{
+			TypeCheckerErrors.report(3346, "Cannot use start in pure operations", node.getLocation(), node);
+		}
 
 		PType type = node.getObj().apply(THIS, question);
 
@@ -1174,21 +1227,21 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			ASetType set = question.assistantFactory.createPTypeAssistant().getSet(type);
 
-			if (!question.assistantFactory.createPTypeAssistant().isClass(set.getSetof()))
+			if (!question.assistantFactory.createPTypeAssistant().isClass(set.getSetof(), null))
 			{
 				TypeCheckerErrors.report(3235, "Expression is not a set of object references", node.getObj().getLocation(), node.getObj());
 			} else
 			{
-				AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(set.getSetof());
+				AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(set.getSetof(), null);
 
 				if (question.assistantFactory.createSClassDefinitionAssistant().findThread(ctype.getClassdef()) == null)
 				{
 					TypeCheckerErrors.report(3236, "Class does not define a thread", node.getObj().getLocation(), node.getObj());
 				}
 			}
-		} else if (question.assistantFactory.createPTypeAssistant().isClass(type))
+		} else if (question.assistantFactory.createPTypeAssistant().isClass(type, null))
 		{
-			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type);
+			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, null);
 
 			if (question.assistantFactory.createSClassDefinitionAssistant().findThread(ctype.getClassdef()) == null)
 			{
@@ -1213,21 +1266,21 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			ASetType set = question.assistantFactory.createPTypeAssistant().getSet(type);
 
-			if (!question.assistantFactory.createPTypeAssistant().isClass(set.getSetof()))
+			if (!question.assistantFactory.createPTypeAssistant().isClass(set.getSetof(), null))
 			{
 				TypeCheckerErrors.report(3235, "Expression is not a set of object references", node.getObj().getLocation(), node.getObj());
 			} else
 			{
-				AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(set.getSetof());
+				AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(set.getSetof(), null);
 
 				if (question.assistantFactory.createSClassDefinitionAssistant().findThread(ctype.getClassdef()) == null)
 				{
 					TypeCheckerErrors.report(3236, "Class does not define a thread", node.getObj().getLocation(), node.getObj());
 				}
 			}
-		} else if (question.assistantFactory.createPTypeAssistant().isClass(type))
+		} else if (question.assistantFactory.createPTypeAssistant().isClass(type, null))
 		{
-			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type);
+			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, null);
 
 			if (question.assistantFactory.createSClassDefinitionAssistant().findThread(ctype.getClassdef()) == null)
 			{
@@ -1362,6 +1415,108 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			return new PTypeSet(question.assistantFactory);
 		}
 
+	}
+	
+	public List<PType> getArgTypes(List<PExp> args,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) throws AnalysisException
+	{
+		List<PType> types = new LinkedList<PType>();
+
+		for (PExp e : args)
+		{
+			types.add(e.apply(rootVisitor, question));
+		}
+
+		return types;
+	}
+
+	public void checkArgTypes(PType type, List<PType> ptypes, List<PType> atypes, TypeCheckInfo question)
+	{
+		if (ptypes.size() != atypes.size())
+		{
+			TypeCheckerErrors.report(3211, "Expecting " + ptypes.size()
+					+ " arguments", type.getLocation(), type);
+		} else
+		{
+			int i = 0;
+
+			for (PType atype : atypes)
+			{
+				PType ptype = ptypes.get(i++);
+
+				if (!question.assistantFactory.getTypeComparator().compatible(ptype, atype))
+				{
+					TypeCheckerErrors.report(3212, "Unexpected type for argument "
+							+ i, atype.getLocation(), atype);
+					TypeCheckerErrors.detail2("Expected", ptype, "Actual", atype);
+				}
+			}
+		}
+	}
+	
+	public boolean addOne(PTypeSet rtypes, PType add)
+	{
+		if (add instanceof AVoidReturnType)
+		{
+			rtypes.add(AstFactory.newAVoidType(add.getLocation()));
+			return true;
+		} else if (!(add instanceof AVoidType))
+		{
+			rtypes.add(add);
+			return true;
+		} else
+		{
+			rtypes.add(add);
+			return false;
+		}
+	}
+	
+	public void addOneType(Set<PType> rtypes, PType add)
+	{
+		if (add instanceof AVoidReturnType)
+		{
+			rtypes.add(AstFactory.newAVoidType(add.getLocation()));
+		} else if (!(add instanceof AVoidType))
+		{
+			rtypes.add(add);
+		}
+	}
+	
+	public PDefinition targetDefinition(PStateDesignator pStateDesignator,
+			TypeCheckInfo question)
+	{
+		if (pStateDesignator instanceof AIdentifierStateDesignator)
+		{
+			AIdentifierStateDesignator stateDesignator = (AIdentifierStateDesignator) pStateDesignator;
+			return question.env.findName(stateDesignator.getName(), NameScope.STATE);
+		} else
+		{
+			return null;
+		}
+
+	}
+	
+	public void checkArgTypes(ACallStm node, PType type, List<PType> ptypes,
+			List<PType> atypes, TypeCheckInfo question) {
+		if (ptypes.size() != atypes.size()) {
+			TypeCheckerErrors.report(3216, "Expecting " + ptypes.size()
+					+ " arguments", node.getLocation(), node);
+		} else {
+			int i = 0;
+
+			for (PType atype : atypes) {
+				PType ptype = ptypes.get(i++);
+
+				if (!question.assistantFactory.getTypeComparator().compatible(ptype, atype)) {
+					TypeCheckerErrors.report(3217,
+							"Unexpected type for argument " + i,
+							node.getLocation(), type);
+					TypeCheckerErrors.detail2("Expected", ptype, "Actual",
+							atype);
+				}
+			}
+		}
 	}
 
 }

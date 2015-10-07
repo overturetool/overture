@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.features.rcp"
       label="Overture RCP"
-      version="2.2.6">
+      version="2.2.8">
 
    <description>
       %description
@@ -59,6 +59,10 @@
    <includes
          id="org.overture.ide.plugins.features.guibuilder"
          version="0.0.0"/>
+
+  <!-- <includes
+         id="org.overture.ide.plugins.features.isatrans"
+         version="0.0.0"/>-->
 
    <includes
          id="org.overture.ide.plugins.features.probruntime"

@@ -1,0 +1,16 @@
+module Entry
+
+exports all
+definitions
+
+values
+
+v = let x in set {1,2} in x;
+
+operations 
+
+Run : () ==> ?
+Run () ==
+return v;
+
+end Entry

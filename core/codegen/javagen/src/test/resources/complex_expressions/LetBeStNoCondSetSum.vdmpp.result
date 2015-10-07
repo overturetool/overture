@@ -1,0 +1,44 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return sum(SetUtil.set(1L, 2L, 3L, 4L, 5L));
+    }
+
+    public static Number sum(final VDMSet xs) {
+        if (Utils.empty(xs)) {
+            return 0L;
+        } else {
+            Number x = null;
+            Boolean success_1 = false;
+            VDMSet set_1 = Utils.copy(xs);
+
+            for (Iterator iterator_1 = set_1.iterator();
+                    iterator_1.hasNext() && !(success_1);) {
+                x = ((Number) iterator_1.next());
+                success_1 = true;
+            }
+
+            if (!(success_1)) {
+                throw new RuntimeException(
+                    "Let Be St found no applicable bindings");
+            }
+
+            return x.longValue() +
+            sum(SetUtil.diff(Utils.copy(xs), SetUtil.set(x))).longValue();
+        }
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

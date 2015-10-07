@@ -1,0 +1,17 @@
+-- This test exercises the generation of a SubtypeObligation with an
+-- invariant clause
+-- off a Type Definition and a Explicit Function Definition
+
+
+types
+
+Even = int
+inv e == e mod 2 = 0
+
+functions
+
+fEven: int -> Even
+fEven(n) ==
+  n
+-- no PO is generated
+-- should be: forall n:nat & inv_Even(n)

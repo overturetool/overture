@@ -27,8 +27,10 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.APreExp;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -54,6 +56,7 @@ public class FunctionApplyObligation extends ProofObligation
 		{
 			// pre_(root, args)
 			APreExp preExp = new APreExp();
+			preExp.setType(new ABooleanBasicType());
 			preExp.setFunction(root.clone());
 			preExp.setArgs(cloneListPExp(args));
 			stitch = preExp.clone();
@@ -61,7 +64,10 @@ public class FunctionApplyObligation extends ProofObligation
 		} else
 		{
 			// pre_f(args)
-			PExp pred = getApplyExp(getVarExp(prename), cloneListPExp(args));
+			AVariableExp varExp = getVarExp(prename);
+			varExp.setType(root.getType().clone());
+			PExp pred = getApplyExp(varExp, cloneListPExp(args));
+			pred.setType(new ABooleanBasicType());
 			stitch = pred.clone();
 			valuetree.setPredicate(ctxt.getPredWithContext(pred));
 		}

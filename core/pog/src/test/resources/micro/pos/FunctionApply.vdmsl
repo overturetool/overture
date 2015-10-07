@@ -1,0 +1,14 @@
+-- This test exercises the generation of a FunctionApplyObligation
+-- off an Explicit Function Definition
+
+
+functions
+
+Fun: int -> int
+Fun(n) ==
+  if n = 0
+  then 1
+  else n * Fun(n - 1)
+pre n >= 0
+-- PO: (forall n:int & (n >= 0) =>
+--        (not (n = 0) =>  pre_Fun((n - 1))))

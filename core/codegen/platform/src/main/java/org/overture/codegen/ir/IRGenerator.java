@@ -33,18 +33,15 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
-import org.overture.codegen.logging.ILogger;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.ITotalTransformation;
 
 public class IRGenerator
 {
 	protected IRInfo codeGenInfo;
 
-	public IRGenerator(ILogger log, String objectInitCallPrefix)
+	public IRGenerator(String objectInitCallPrefix)
 	{
 		this.codeGenInfo = new IRInfo(objectInitCallPrefix);
-		Logger.setLog(log);
 	}
 
 	public void clear()

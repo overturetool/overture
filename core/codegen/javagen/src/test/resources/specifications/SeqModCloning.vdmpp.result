@@ -1,0 +1,21 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class A {
+    private static final VDMSeq a = SeqUtil.seq(1L, 2L);
+    private static final VDMSeq b = SeqUtil.mod(Utils.copy(a),
+            MapUtil.map(new Maplet(1L, 5L)));
+
+    public A() {
+    }
+
+    public String toString() {
+        return "A{" + "a = " + Utils.toString(a) + ", b = " +
+        Utils.toString(b) + "}";
+    }
+}
+
+##########

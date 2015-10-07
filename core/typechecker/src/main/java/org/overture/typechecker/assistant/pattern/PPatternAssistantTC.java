@@ -136,16 +136,6 @@ public class PPatternAssistantTC extends PPatternAssistant implements IAstAssist
 		return af.getTypeComparator().compatible(af.createPPatternAssistant().getPossibleType(pattern), expType);
 	}
 
-	public PExp getMatchingExpression(PPattern pattern)
-	{
-		try
-		{
-			return pattern.apply(af.getMatchingExpressionFinder());
-		} catch (AnalysisException e)
-		{
-			return null;
-		}
-	}
 
 	public boolean isSimple(PPattern pattern)
 	{

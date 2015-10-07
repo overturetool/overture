@@ -1,1 +1,0 @@
-{"translation":"theory A\n  imports utp_cml\nbegin\n\ncmlefun f\n  inp \n  out \"@int\"\n  is \"0\"\n\ndefinition \"x \u003d +|f() : @int|+\"\ndeclare x_def [eval,evalp]\n\nend","errors":false}

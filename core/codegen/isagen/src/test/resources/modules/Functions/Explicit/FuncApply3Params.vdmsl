@@ -1,0 +1,12 @@
+module A
+
+definitions
+
+functions
+f : int * int * int -> int
+f (x,y,z) == 0;
+
+values
+x = f(1,2,3);
+
+end A

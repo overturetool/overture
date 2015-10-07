@@ -1,0 +1,271 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Alarm {
+    private VDMSeq descr;
+    private Object reqQuali;
+
+    public Alarm(final Object quali, final VDMSeq str) {
+        cg_init_Alarm_1(((Object) quali), Utils.copy(str));
+    }
+
+    public Alarm() {
+    }
+
+    public void cg_init_Alarm_1(final Object quali, final VDMSeq str) {
+        descr = Utils.copy(str);
+        reqQuali = quali;
+    }
+
+    public Object GetReqQuali() {
+        return reqQuali;
+    }
+
+    public String toString() {
+        return "Alarm{" + "descr := " + Utils.toString(descr) +
+        ", reqQuali := " + Utils.toString(reqQuali) + "}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Expert {
+    private VDMSet quali;
+
+    public Expert(final VDMSet qs) {
+        cg_init_Expert_1(Utils.copy(qs));
+    }
+
+    public Expert() {
+    }
+
+    public void cg_init_Expert_1(final VDMSet qs) {
+        quali = Utils.copy(qs);
+    }
+
+    public VDMSet GetQuali() {
+        return Utils.copy(quali);
+    }
+
+    public String toString() {
+        return "Expert{" + "quali := " + Utils.toString(quali) + "}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Plant {
+    private VDMSet alarms;
+    private VDMMap schedule;
+
+    public Plant(final VDMSet als, final VDMMap sch) {
+        cg_init_Plant_1(Utils.copy(als), Utils.copy(sch));
+    }
+
+    public Plant() {
+    }
+
+    public Expert ExpertToPage(final Alarm a, final Token p) {
+        Expert expert = null;
+        Boolean success_1 = false;
+        VDMSet set_1 = Utils.copy(((VDMSet) Utils.get(schedule, p)));
+
+        for (Iterator iterator_1 = set_1.iterator();
+                iterator_1.hasNext() && !(success_1);) {
+            expert = ((Expert) iterator_1.next());
+            success_1 = SetUtil.inSet(a.GetReqQuali(), expert.GetQuali());
+        }
+
+        if (!(success_1)) {
+            throw new RuntimeException("Let Be St found no applicable bindings");
+        }
+
+        return expert;
+    }
+
+    public Number NumberOfExperts(final Token p) {
+        return ((VDMSet) Utils.get(schedule, p)).size();
+    }
+
+    public VDMSet ExpertIsOnDuty(final Expert ex) {
+        VDMSet setCompResult_1 = SetUtil.set();
+        VDMSet set_2 = MapUtil.dom(Utils.copy(schedule));
+
+        for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
+            Token p = ((Token) iterator_2.next());
+
+            if (SetUtil.inSet(ex, ((VDMSet) Utils.get(schedule, p)))) {
+                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
+                        SetUtil.set(p));
+            }
+        }
+
+        return Utils.copy(setCompResult_1);
+    }
+
+    public void cg_init_Plant_1(final VDMSet als, final VDMMap sch) {
+        alarms = Utils.copy(als);
+        schedule = Utils.copy(sch);
+    }
+
+    public void AddExpertToSchedule(final Token p, final Expert ex) {
+        VDMSet ternaryIfExp_1 = null;
+
+        if (SetUtil.inSet(p, MapUtil.dom(Utils.copy(schedule)))) {
+            ternaryIfExp_1 = SetUtil.union(Utils.copy(
+                        ((VDMSet) Utils.get(schedule, p))), SetUtil.set(ex));
+        } else {
+            ternaryIfExp_1 = SetUtil.set(ex);
+        }
+
+        Utils.mapSeqUpdate(schedule, p, Utils.copy(ternaryIfExp_1));
+    }
+
+    public void RemoveExpertFromSchedule(final Token p, final Expert ex) {
+        VDMSet exs = Utils.copy(((VDMSet) Utils.get(schedule, p)));
+
+        VDMMap ternaryIfExp_2 = null;
+
+        if (Utils.equals(exs.size(), 1L)) {
+            ternaryIfExp_2 = MapUtil.domResBy(SetUtil.set(p),
+                    Utils.copy(schedule));
+        } else {
+            ternaryIfExp_2 = MapUtil.override(Utils.copy(schedule),
+                    MapUtil.map(
+                        new Maplet(p,
+                            SetUtil.diff(Utils.copy(exs), SetUtil.set(ex)))));
+        }
+
+        schedule = Utils.copy(ternaryIfExp_2);
+    }
+
+    private static Boolean PlantInv(final VDMSet as, final VDMMap sch) {
+        Boolean andResult_3 = false;
+
+        Boolean forAllExpResult_1 = true;
+        VDMSet set_3 = MapUtil.dom(Utils.copy(sch));
+
+        for (Iterator iterator_3 = set_3.iterator();
+                iterator_3.hasNext() && forAllExpResult_1;) {
+            Token p = ((Token) iterator_3.next());
+            forAllExpResult_1 = !(Utils.empty(((VDMSet) Utils.get(sch, p))));
+        }
+
+        if (forAllExpResult_1) {
+            Boolean forAllExpResult_2 = true;
+            VDMSet set_4 = Utils.copy(as);
+
+            for (Iterator iterator_4 = set_4.iterator();
+                    iterator_4.hasNext() && forAllExpResult_2;) {
+                Alarm a = ((Alarm) iterator_4.next());
+                Boolean forAllExpResult_3 = true;
+                VDMSet set_5 = MapUtil.dom(Utils.copy(sch));
+
+                for (Iterator iterator_5 = set_5.iterator();
+                        iterator_5.hasNext() && forAllExpResult_3;) {
+                    Token p = ((Token) iterator_5.next());
+                    Boolean existsExpResult_1 = false;
+                    VDMSet set_6 = Utils.copy(((VDMSet) Utils.get(sch, p)));
+
+                    for (Iterator iterator_6 = set_6.iterator();
+                            iterator_6.hasNext() && !(existsExpResult_1);) {
+                        Expert expert = ((Expert) iterator_6.next());
+                        existsExpResult_1 = SetUtil.inSet(a.GetReqQuali(),
+                                expert.GetQuali());
+                    }
+
+                    forAllExpResult_3 = existsExpResult_1;
+                }
+
+                forAllExpResult_2 = forAllExpResult_3;
+            }
+
+            if (forAllExpResult_2) {
+                andResult_3 = true;
+            }
+        }
+
+        return andResult_3;
+    }
+
+    public String toString() {
+        return "Plant{" + "alarms := " + Utils.toString(alarms) +
+        ", schedule := " + Utils.toString(schedule) + "}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    private static final Token p1 = new Token(SeqUtil.seq('M', 'o', 'n', 'd',
+                'a', 'y', ' ', 'd', 'a', 'y'));
+    private static final Token p2 = new Token(SeqUtil.seq('M', 'o', 'n', 'd',
+                'a', 'y', ' ', 'n', 'i', 'g', 'h', 't'));
+    private static final Token p3 = new Token(SeqUtil.seq('T', 'u', 'e', 's',
+                'd', 'a', 'y', ' ', 'd', 'a', 'y'));
+    private static final Token p4 = new Token(SeqUtil.seq('T', 'u', 'e', 's',
+                'd', 'a', 'y', ' ', 'n', 'i', 'g', 'h', 't'));
+    private static final VDMSet ps = SetUtil.set(p1, p2, p3, p4);
+    private Alarm a1 = new Alarm(quotes.MechQuote.getInstance(),
+            SeqUtil.seq('M', 'e', 'c', 'h', 'a', 'n', 'i', 'c', 'a', 'l', ' ',
+                'f', 'a', 'u', 'l', 't'));
+    private Alarm a2 = new Alarm(quotes.ChemQuote.getInstance(),
+            SeqUtil.seq('T', 'a', 'n', 'k', ' ', 'o', 'v', 'e', 'r', 'f', 'l',
+                'o', 'w'));
+    private Expert ex1 = new Expert(SetUtil.set(
+                quotes.MechQuote.getInstance(), quotes.BioQuote.getInstance()));
+    private Expert ex2 = new Expert(SetUtil.set(quotes.ElecQuote.getInstance()));
+    private Expert ex3 = new Expert(SetUtil.set(
+                quotes.ChemQuote.getInstance(), quotes.BioQuote.getInstance(),
+                quotes.MechQuote.getInstance()));
+    private Expert ex4 = new Expert(SetUtil.set(
+                quotes.ElecQuote.getInstance(), quotes.ChemQuote.getInstance()));
+    private Plant plant = new Plant(SetUtil.set(a1),
+            MapUtil.map(new Maplet(p1, SetUtil.set(ex1, ex4)),
+                new Maplet(p2, SetUtil.set(ex2, ex3))));
+    private VDMSet exs = SetUtil.set(ex1, ex2, ex3, ex4);
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Entry entry = new Entry();
+        VDMSet periods = entry.plant.ExpertIsOnDuty(entry.ex1);
+        Expert expert = entry.plant.ExpertToPage(entry.a1, p1);
+
+        return Tuple.mk_(Utils.copy(periods), expert);
+    }
+
+    public String toString() {
+        return "Entry{" + "a1 := " + Utils.toString(a1) + ", a2 := " +
+        Utils.toString(a2) + ", ex1 := " + Utils.toString(ex1) + ", ex2 := " +
+        Utils.toString(ex2) + ", ex3 := " + Utils.toString(ex3) + ", ex4 := " +
+        Utils.toString(ex4) + ", plant := " + Utils.toString(plant) +
+        ", exs := " + Utils.toString(exs) + ", p1 = " + Utils.toString(p1) +
+        ", p2 = " + Utils.toString(p2) + ", p3 = " + Utils.toString(p3) +
+        ", p4 = " + Utils.toString(p4) + ", ps = " + Utils.toString(ps) + "}";
+    }
+}
+
+##########
+*Quotes*
+Bio,Chem,Elec,Mech
+##########

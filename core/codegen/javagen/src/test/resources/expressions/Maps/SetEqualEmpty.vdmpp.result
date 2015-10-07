@@ -1,0 +1,1 @@
+Utils.empty(MapUtil.map(new Maplet(1L, 2L), new Maplet(3L, 4L), new Maplet(5L, 6L)))

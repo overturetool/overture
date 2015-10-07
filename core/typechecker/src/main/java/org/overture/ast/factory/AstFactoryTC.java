@@ -21,13 +21,19 @@
  */
 package org.overture.ast.factory;
 
+import java.util.List;
+
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.parser.lex.LexException;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.syntax.DefinitionReader;
 import org.overture.parser.syntax.ParserException;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -39,7 +45,7 @@ public class AstFactoryTC extends AstFactory
 			throws ParserException, LexException
 	{
 		ACpuClassDefinition result = new ACpuClassDefinition();
-		initClassDefinition(result, new LexNameToken("CLASS", "CPU", new LexLocation()), new LexNameList(), assistantFactory.createACpuClassDefinitionAssistant().operationDefs());
+		initClassDefinition(result, new LexNameToken("CLASS", "CPU", new LexLocation()), new LexNameList(), new AstFactoryTC().operationDefs());
 
 		return result;
 	}
@@ -49,11 +55,45 @@ public class AstFactoryTC extends AstFactory
 			throws ParserException, LexException
 	{
 		ABusClassDefinition result = new ABusClassDefinition();
-		initClassDefinition(result, new LexNameToken("CLASS", "BUS", new LexLocation()), new LexNameList(), assistantFactory.createABusClassDefinitionAssistant().operationDefs());
+		initClassDefinition(result, new LexNameToken("CLASS", "BUS", new LexLocation()), new LexNameList(), new AstFactoryTC().operationDefsBus());
 
 		result.setInstance(result);
 
 		return result;
+	}
+	
+	public static final long CPU_MAX_FREQUENCY = 1000000000; // 1GHz
+	private String defs = "operations "
+			+ "public CPU:(<FP>|<FCFS>) * real ==> CPU "
+			+ "	CPU(policy, speed) == is not yet specified; "
+			+ "public deploy: ? ==> () "
+			+ "	deploy(obj) == is not yet specified; "
+			+ "public deploy: ? * seq of char ==> () "
+			+ "	deploy(obj, name) == is not yet specified; "
+			+ "public setPriority: ? * nat ==> () "
+			+ "	setPriority(opname, priority) == is not yet specified;";
+
+	public List<PDefinition> operationDefs() throws ParserException,
+			LexException
+	{
+		LexTokenReader ltr = new LexTokenReader(defs, Dialect.VDM_PP);
+		DefinitionReader dr = new DefinitionReader(ltr);
+		dr.setCurrentModule("CPU");
+		return dr.readDefinitions();
+	}
+	
+	
+	private String defsBus = "operations "
+			+ "public BUS:(<FCFS>|<CSMACD>) * real * set of CPU ==> BUS "
+			+ "	BUS(policy, speed, cpus) == is not yet specified;";
+
+	public List<PDefinition> operationDefsBus() throws ParserException,
+			LexException
+	{
+		LexTokenReader ltr = new LexTokenReader(defsBus, Dialect.VDM_PP);
+		DefinitionReader dr = new DefinitionReader(ltr);
+		dr.setCurrentModule("BUS");
+		return dr.readDefinitions();
 	}
 
 }

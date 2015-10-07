@@ -332,7 +332,7 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type umlType = utc.getUmlType(defType);
 
-		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType)
+		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType, null)
 				&& !(defType instanceof AUnknownType)
 				&& !extendedAssociationMapping
 				|| Vdm2UmlAssociationUtil.validType(defType)
@@ -639,7 +639,7 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type type = utc.getUmlType(defType);
 
-		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType)
+		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType, null)
 				&& !(defType instanceof AUnknownType)
 				&& !extendedAssociationMapping
 				|| Vdm2UmlAssociationUtil.validType(defType)

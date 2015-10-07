@@ -1,0 +1,88 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return SeqUtil.seq(f(Tuple.mk_(1L, 1L)), f(Tuple.mk_(10L, 2L)),
+            f(Tuple.mk_(true, false)), f(Tuple.mk_(10L, 3L)));
+    }
+
+    public static Number f(final Tuple c) {
+        Number casesExpResult_1 = null;
+
+        Tuple tuplePattern_1 = Utils.copy(c);
+        Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);
+
+        if (success_1) {
+            Number intPattern_1 = ((Number) tuplePattern_1.get(0));
+            success_1 = Utils.equals(intPattern_1, 1L);
+
+            if (success_1) {
+                Number intPattern_2 = ((Number) tuplePattern_1.get(1));
+                success_1 = Utils.equals(intPattern_2, 1L);
+            }
+        }
+
+        if (!(success_1)) {
+            Tuple tuplePattern_2 = Utils.copy(c);
+            Number a = null;
+            success_1 = tuplePattern_2.compatible(Number.class, Number.class);
+
+            if (success_1) {
+                a = ((Number) tuplePattern_2.get(0));
+
+                Number intPattern_3 = ((Number) tuplePattern_2.get(1));
+                success_1 = Utils.equals(intPattern_3, 2L);
+            }
+
+            if (!(success_1)) {
+                Tuple tuplePattern_3 = Utils.copy(c);
+                Boolean b = null;
+                success_1 = tuplePattern_3.compatible(Boolean.class,
+                        Boolean.class);
+
+                if (success_1) {
+                    Boolean boolPattern_1 = ((Boolean) tuplePattern_3.get(0));
+                    success_1 = Utils.equals(boolPattern_1, true);
+
+                    if (success_1) {
+                        b = ((Boolean) tuplePattern_3.get(1));
+                    }
+                }
+
+                if (success_1) {
+                    Number ternaryIfExp_1 = null;
+
+                    if (((Boolean) b)) {
+                        ternaryIfExp_1 = 11L;
+                    } else {
+                        ternaryIfExp_1 = 33L;
+                    }
+
+                    casesExpResult_1 = ternaryIfExp_1;
+                } else {
+                    casesExpResult_1 = 3L;
+                }
+            } else {
+                casesExpResult_1 = ((Number) a).longValue() +
+                    ((Number) a).longValue();
+            }
+        } else {
+            casesExpResult_1 = 1L;
+        }
+
+        return casesExpResult_1;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

@@ -1,0 +1,4 @@
+#foreach( $pat in $node.Patterns )
+$Isa.trans($pat)#if( $foreach.hasNext ), #end
+#end
+ : $Isa.trans($node.Type)

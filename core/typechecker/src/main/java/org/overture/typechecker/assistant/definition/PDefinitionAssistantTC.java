@@ -158,12 +158,8 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		if (af.getLexNameTokenAssistant().isEqual(d.getName(), sought))
 		{
-			if (d.getNameScope() == NameScope.STATE
-					&& !scope.matches(NameScope.STATE)
-					|| d.getNameScope() == NameScope.OLDSTATE
-					&& !scope.matches(NameScope.OLDSTATE))
+			if (!d.getNameScope().matches(scope))
 			{
-
 				TypeChecker.report(3302, "State variable '"
 						+ sought.getFullName()
 						+ "' cannot be accessed from this context", sought.getLocation());
@@ -430,5 +426,16 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 		}
 
 		return false;
+	}
+
+	public boolean isInstanceVariable(PDefinition def)
+	{
+		try
+		{
+			return def.apply(af.getInstanceVariableChecker());
+		} catch (AnalysisException e)
+		{
+			return false;
+		}
 	}
 }

@@ -1,0 +1,8 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () == return is_(3, seq of char);
+
+end Entry

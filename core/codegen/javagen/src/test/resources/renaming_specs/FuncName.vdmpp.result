@@ -1,0 +1,47 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        A_X_ a = new A_X_();
+
+        return a.f_X_();
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class A_X_ {
+    public A_X_() {
+    }
+
+    public static Number f_X_() {
+        return 2L * 97L;
+    }
+
+    public String toString() {
+        return "A_X_{}";
+    }
+}
+
+##########
+public interface Func_1<T_1> {
+    public abstract T_1 eval();
+}
+
+##########

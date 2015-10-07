@@ -27,6 +27,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AIsExp;
 import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
@@ -46,7 +47,9 @@ public class TupleSelectObligation extends ProofObligation
 		super(exp, POType.TUPLE_SELECT, ctxt, exp.getLocation(), af);
 
 		ANotUnaryExp notExp = new ANotUnaryExp();
+		notExp.setType(new ABooleanBasicType());
 		AIsExp isExp = new AIsExp();
+		isExp.setType(new ABooleanBasicType());
 
 		isExp.setTest(exp.clone());
 		isExp.setBasicType(type.clone()); // Do we need the type definition instead? If so, the visitor must provide it.

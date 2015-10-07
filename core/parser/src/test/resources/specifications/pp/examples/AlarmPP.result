@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="type_checker">
-<message column="8" line="117" message="Operation '(a.GetReqQuali)' cannot be called from a function" messageType="error" number="3300" resource="AlarmPP.result"/>
-<message column="31" line="117" message="Operation '(expert.GetQuali)' cannot be called from a function" messageType="error" number="3300" resource="AlarmPP.result"/>
-<message column="5" line="141" message="Operation 'PlantInv' cannot be called from a function" messageType="error" number="3300" resource="AlarmPP.result"/>
+<message column="8" line="117" message="Impure operation '(a.GetReqQuali)' cannot be called from here" messageType="error" number="3300" resource="AlarmPP.result"/>
+<message column="31" line="117" message="Impure operation '(expert.GetQuali)' cannot be called from here" messageType="error" number="3300" resource="AlarmPP.result"/>
+<message column="5" line="141" message="Impure operation 'PlantInv' cannot be called from here" messageType="error" number="3300" resource="AlarmPP.result"/>
 </testResult>

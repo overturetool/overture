@@ -106,11 +106,13 @@ CG {-> package='org.overture.codegen.cgast'
 #bind {-> package='org.overture.codegen.cgast.patterns'
 	|	[pattern]:CG.#pattern}
     =   {set} [set]:CG.#exp //binds
+    |   {type} [type]:CG.#type
     ;
 		
 #multipleBind {-> package='org.overture.codegen.cgast.patterns'
 	|	[patterns]:CG.#pattern*}
     =   {set}  [set]:CG.#exp //binds
+    |   {type} [type]:CG.#type
     ;
    
 #name {-> package='org.overture.codegen.cgast.name'}
@@ -134,6 +136,7 @@ CG {-> package='org.overture.codegen.cgast'
 		[formalParams]:CG.#localParam.formalParam*
 		[isConstructor]:java_Boolean
 		[templateTypes]:CG.#type.template*
+		[implicit]:java_Boolean
 		[body]:CG.#stm
 	|	{func}
 		(preCond):CG.#decl
@@ -144,6 +147,7 @@ CG {-> package='org.overture.codegen.cgast'
 		[name]:java_String
 		[formalParams]:CG.#localParam.formalParam*
 		[templateTypes]:CG.#type.template*
+		[implicit]:java_Boolean
 		[body]:CG.#exp
 	|	{field} 
     	[access]:java_String
@@ -181,6 +185,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[isDLModule]:java_Boolean
     |   {state}
     	[access]:java_String
+    	[executable]:java_Boolean
     	[name]:java_String
     	[fields]:CG.#decl.field*
     	[invPattern]:CG.#pattern
@@ -257,9 +262,6 @@ CG {-> package='org.overture.codegen.cgast'
            | 	{skip}
            |	{return} [exp]:CG.#exp
            |	{abstractBody}
-           //Cpp
-           |    {localAssignment} [target]:CG.#exp [exp]:CG.#exp
-           //end Cpp
            |	{assignment} [target]:CG.#stateDesignator [exp]:CG.#exp
            |	{assignToExp} [target]:CG.#exp [exp]:CG.#exp
            |	{localPatternAssignment} [target]:CG.#pattern [exp]:CG.#exp (nextElementDecl):CG.#decl.var
@@ -314,7 +316,7 @@ CG {-> package='org.overture.codegen.cgast'
     ;
            
 #letBeSt {-> package='org.overture.codegen.cgast.utils'}
-	= {header} [binding]:CG.#multipleBind.set [suchThat]:CG.#exp //The Overture AST uses a multiplebind 
+	= {header} [binding]:CG.#multipleBind [suchThat]:CG.#exp //The Overture AST uses a multiplebind 
 	;
 	
 #exp {-> package='org.overture.codegen.cgast.expressions'
@@ -420,7 +422,7 @@ CG {-> package='org.overture.codegen.cgast'
 	;
 	
 #Quantifier {-> package='org.overture.codegen.cgast.expressions'
-	| [bindList]:CG.#multipleBind.set*
+	| [bindList]:CG.#multipleBind*
 	| [predicate]:CG.#exp}
 	= {forAll}
 	| {exists}
@@ -512,13 +514,13 @@ CG {-> package='org.overture.codegen.cgast'
 
 #Set {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:CG.#exp*
-	| {comp} [first]:CG.#exp [bindings]:CG.#multipleBind.set* [predicate]:CG.#exp//In the Overture AST bindings are of type multipleBind* as it also allows type binds.
+	| {comp} [first]:CG.#exp [bindings]:CG.#multipleBind* [predicate]:CG.#exp//In the Overture AST bindings are of type multipleBind* as it also allows type binds.
 	| {range} [first]:CG.#exp [last]:CG.#exp
 	;
 
 #Map {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:CG.#exp.maplet*
-	| {comp} [first]:CG.#exp.maplet [bindings]:CG.#multipleBind.set* [predicate]:CG.#exp
+	| {comp} [first]:CG.#exp.maplet [bindings]:CG.#multipleBind* [predicate]:CG.#exp
 	;
 
 #type {-> package='org.overture.codegen.cgast.types'

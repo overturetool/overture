@@ -1,0 +1,1 @@
+{"translation":"theory DEFAULT\n  imports utp_vdm\nbegin\n\ndefinition \"t \u003d \\\u003cparallel\u003e@int * @char\\\u003cparallel\u003e\"\ndeclare t_def [eval,evalp]\n\nend","errors":false}

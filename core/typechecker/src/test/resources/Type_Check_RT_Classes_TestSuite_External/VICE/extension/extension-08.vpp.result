@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesRtTypeCheckTest">
 <message column="10" line="44" message="Definition 'i' not used" messageType="warning" number="5000" resource="extension-08.vpp"/>
-<message column="16" line="63" message="Definition 'b' not used" messageType="warning" number="5000" resource="extension-08.vpp"/>
 <message column="10" line="63" message="Definition 'argc' not used" messageType="warning" number="5000" resource="extension-08.vpp"/>
+<message column="16" line="63" message="Definition 'b' not used" messageType="warning" number="5000" resource="extension-08.vpp"/>
 <result/>
 </testResult>

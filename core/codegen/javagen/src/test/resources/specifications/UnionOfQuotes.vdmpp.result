@@ -1,0 +1,35 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class A {
+    public A() {
+    }
+
+    public void op(final Object v) {
+        if (Utils.equals(v, quotes.RedQuote.getInstance())) {
+            /* skip */
+        }
+    }
+
+    public void op2(final Object v) {
+        if (Utils.equals(v, quotes.AQuote.getInstance())) {
+            /* skip */
+        }
+    }
+
+    public Object op3() {
+        return quotes.RedQuote.getInstance();
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+}
+
+##########
+*Quotes*
+Blue,Green,Red,A,B
+##########

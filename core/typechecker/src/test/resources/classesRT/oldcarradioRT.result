@@ -4,7 +4,7 @@
 <message column="15" line="461" message="Unable to resolve type name 'IO'" messageType="error" number="3427" resource="oldcarradioRT"/>
 <message column="21" line="461" message="Class name IO not in scope" messageType="error" number="3133" resource="oldcarradioRT"/>
 <message column="15" line="461" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="oldcarradioRT"/>
-<message column="9" line="250" message="Operation '(pat.getName)' cannot be called from a function" messageType="error" number="3300" resource="oldcarradioRT"/>
+<message column="9" line="250" message="Impure operation '(pat.getName)' cannot be called from here" messageType="error" number="3300" resource="oldcarradioRT"/>
 <message column="9" line="283" message="Operation printNetworkEvent(seq of (char), seq of (char), nat) is not in scope" messageType="error" number="3213" resource="oldcarradioRT"/>
 <message column="9" line="294" message="Operation printInterruptEvent(seq of (char), seq of (char), nat) is not in scope" messageType="error" number="3213" resource="oldcarradioRT"/>
 <message column="15" line="461" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="oldcarradioRT"/>

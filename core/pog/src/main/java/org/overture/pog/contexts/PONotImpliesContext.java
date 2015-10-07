@@ -27,6 +27,7 @@ import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
+import org.overture.ast.types.ABooleanBasicType;
 
 public class PONotImpliesContext extends POContext
 {
@@ -42,6 +43,7 @@ public class PONotImpliesContext extends POContext
 	{
 		ANotUnaryExp notExp = new ANotUnaryExp();
 		notExp.setExp(exp.clone());
+		notExp.setType(new ABooleanBasicType());
 		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(notExp, stitch);
 		return impliesExp;
 	}

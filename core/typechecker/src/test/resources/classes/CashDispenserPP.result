@@ -22,12 +22,15 @@
 <message column="3" line="810" message="Instance variable 'code' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP"/>
 <message column="3" line="838" message="Instance variable 'tillid' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP"/>
 <message column="3" line="839" message="Instance variable 'amount' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP"/>
-<message column="11" line="899" message="Operation 'CardInside' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP"/>
-<message column="7" line="930" message="Operation 'CardInside' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP"/>
-<message column="7" line="943" message="Operation 'CardInside' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP"/>
-<message column="7" line="961" message="Operation 'CardValidated' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP"/>
-<message column="7" line="972" message="Operation 'CardValidated' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP"/>
-<message column="7" line="977" message="Operation 'CardValidated' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP"/>
-<message column="7" line="987" message="Operation 'CardInside' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP"/>
+<message column="13" line="242" message="Impure operation '(acc.GetCardIds)' cannot be called from here" messageType="error" number="3300" resource="CashDispenserPP"/>
+<message column="11" line="253" message="Impure operation '(acc1.GetCardIds)' cannot be called from here" messageType="error" number="3300" resource="CashDispenserPP"/>
+<message column="35" line="253" message="Impure operation '(acc2.GetCardIds)' cannot be called from here" messageType="error" number="3300" resource="CashDispenserPP"/>
+<message column="11" line="899" message="Impure operation 'CardInside' cannot be called from here" messageType="error" number="3300" resource="CashDispenserPP"/>
+<message column="7" line="930" message="Impure operation 'CardInside' cannot be called from here" messageType="error" number="3300" resource="CashDispenserPP"/>
+<message column="7" line="943" message="Impure operation 'CardInside' cannot be called from here" messageType="error" number="3300" resource="CashDispenserPP"/>
+<message column="7" line="961" message="Impure operation 'CardValidated' cannot be called from here" messageType="error" number="3300" resource="CashDispenserPP"/>
+<message column="7" line="972" message="Impure operation 'CardValidated' cannot be called from here" messageType="error" number="3300" resource="CashDispenserPP"/>
+<message column="7" line="977" message="Impure operation 'CardValidated' cannot be called from here" messageType="error" number="3300" resource="CashDispenserPP"/>
+<message column="7" line="987" message="Impure operation 'CardInside' cannot be called from here" messageType="error" number="3300" resource="CashDispenserPP"/>
 <result/>
 </testResult>

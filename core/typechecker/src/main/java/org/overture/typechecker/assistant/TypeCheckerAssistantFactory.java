@@ -33,7 +33,6 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.modules.AModuleModules;
@@ -54,19 +53,16 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.LexNameTokenAssistant;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
@@ -76,18 +72,10 @@ import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
-import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ACallObjectStatementAssistantTC;
-import org.overture.typechecker.assistant.statement.ACallStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
-import org.overture.typechecker.assistant.statement.ANonDeterministicSimpleBlockStmAssistantTC;
-import org.overture.typechecker.assistant.statement.PStateDesignatorAssistantTC;
-import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.utilities.CallableOperationChecker;
 import org.overture.typechecker.utilities.ComposeTypeCollector;
@@ -102,6 +90,7 @@ import org.overture.typechecker.utilities.Dereferer;
 import org.overture.typechecker.utilities.ExitTypeCollector;
 import org.overture.typechecker.utilities.FunctionChecker;
 import org.overture.typechecker.utilities.ImplicitDefinitionFinder;
+import org.overture.typechecker.utilities.InstanceVariableChecker;
 import org.overture.typechecker.utilities.KindFinder;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.OperationChecker;
@@ -118,7 +107,6 @@ import org.overture.typechecker.utilities.expression.ImportDefinitionFinder;
 import org.overture.typechecker.utilities.expression.PreNameFinder;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.AlwaysMatchingPatternChecker;
-import org.overture.typechecker.utilities.pattern.MatchingExpressionFinder;
 import org.overture.typechecker.utilities.pattern.MultipleBindLister;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
 import org.overture.typechecker.utilities.pattern.PatternUnresolver;
@@ -172,12 +160,13 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// instance variables of things to return
 	transient TypeComparator typeComp;
 	transient LexNameTokenAssistant lnt;
+	transient SFunctionDefinitionAssistantTC sfd;
 
-	@Override
-	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant()
-	{
-		return new AApplyObjectDesignatorAssistantTC(this);
-	}
+//	@Override
+//	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant()
+//	{
+//		return new AApplyObjectDesignatorAssistantTC(this);
+//	}
 
 	// @Override
 	// public ABracketTypeAssistantTC createABracketTypeAssistant()
@@ -215,11 +204,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ARecordInvariantTypeAssistantTC(this);
 	}
 
-	@Override
-	public AUnionTypeAssistantTC createAUnionTypeAssistant()
-	{
-		return new AUnionTypeAssistantTC(this);
-	}
+//	@Override
+//	public AUnionTypeAssistantTC createAUnionTypeAssistant()
+//	{
+//		return new AUnionTypeAssistantTC(this);
+//	}
 
 	@Override
 	public PTypeAssistantTC createPTypeAssistant()
@@ -235,17 +224,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new AAssignmentDefinitionAssistantTC(this);
 	// }
 
-	@Override
-	public ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant()
-	{
-		return new ABusClassDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant()
+//	{
+//		return new ABusClassDefinitionAssistantTC(this);
+//	}
 
-	@Override
-	public ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistant()
-	{
-		return new ACpuClassDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistant()
+//	{
+//		return new ACpuClassDefinitionAssistantTC(this);
+//	}
 
 	@Override
 	public AExplicitFunctionDefinitionAssistantTC createAExplicitFunctionDefinitionAssistant()
@@ -301,17 +290,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new ASystemClassDefinitionAssistantTC(this);
 	// }
 
-	@Override
-	public AThreadDefinitionAssistantTC createAThreadDefinitionAssistant()
-	{
-		return new AThreadDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public AThreadDefinitionAssistantTC createAThreadDefinitionAssistant()
+//	{
+//		return new AThreadDefinitionAssistantTC(this);
+//	}
 
-	@Override
-	public ATypeDefinitionAssistantTC createATypeDefinitionAssistant()
-	{
-		return new ATypeDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public ATypeDefinitionAssistantTC createATypeDefinitionAssistant()
+//	{
+//		return new ATypeDefinitionAssistantTC(this);
+//	}
 
 	// @Override
 	// public AValueDefinitionAssistantTC createAValueDefinitionAssistant()
@@ -407,19 +396,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AModuleModulesAssistantTC(this);
 	}
 
+	// @Override
+	// public PExportAssistantTC createPExportAssistant()
+	// {
+	// return new PExportAssistantTC(this);
+	// }
 
-
-//	@Override
-//	public PExportAssistantTC createPExportAssistant()
-//	{
-//		return new PExportAssistantTC(this);
-//	}
-
-//	@Override
-//	public PImportAssistantTC createPImportAssistant()
-//	{
-//		return new PImportAssistantTC(this);
-//	}
+	// @Override
+	// public PImportAssistantTC createPImportAssistant()
+	// {
+	// return new PImportAssistantTC(this);
+	// }
 
 	// pattern
 
@@ -563,23 +550,23 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new AAssignmentStmAssistantTC(this);
 	// }
 
-	@Override
-	public ABlockSimpleBlockStmAssistantTC createABlockSimpleBlockStmAssistant()
-	{
-		return new ABlockSimpleBlockStmAssistantTC(this);
-	}
+//	@Override
+//	public ABlockSimpleBlockStmAssistantTC createABlockSimpleBlockStmAssistant()
+//	{
+//		return new ABlockSimpleBlockStmAssistantTC(this);
+//	}
 
-	@Override
-	public ACallObjectStatementAssistantTC createACallObjectStatementAssistant()
-	{
-		return new ACallObjectStatementAssistantTC(this);
-	}
+//	@Override
+//	public ACallObjectStatementAssistantTC createACallObjectStatementAssistant()
+//	{
+//		return new ACallObjectStatementAssistantTC(this);
+//	}
 
-	@Override
-	public ACallStmAssistantTC createACallStmAssistant()
-	{
-		return new ACallStmAssistantTC(this);
-	}
+//	@Override
+//	public ACallStmAssistantTC createACallStmAssistant()
+//	{
+//		return new ACallStmAssistantTC(this);
+//	}
 
 	// @Override
 	// public ACaseAlternativeStmAssistantTC createACaseAlternativeStmAssistant()
@@ -605,11 +592,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new AExitStmAssistantTC(this);
 	// }
 
-	@Override
-	public AExternalClauseAssistantTC createAExternalClauseAssistant()
-	{
-		return new AExternalClauseAssistantTC(this);
-	}
+//	@Override
+//	public AExternalClauseAssistantTC createAExternalClauseAssistant()
+//	{
+//		return new AExternalClauseAssistantTC(this);
+//	}
 
 	// @Override
 	// public AForAllStmAssistantTC createAForAllStmAssistant()
@@ -641,11 +628,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new ALetBeStStmAssistantTC(this);
 	// }
 
-	@Override
-	public ANonDeterministicSimpleBlockStmAssistantTC createANonDeterministicSimpleBlockStmAssistant()
-	{
-		return new ANonDeterministicSimpleBlockStmAssistantTC(this);
-	}
+//	@Override
+//	public ANonDeterministicSimpleBlockStmAssistantTC createANonDeterministicSimpleBlockStmAssistant()
+//	{
+//		return new ANonDeterministicSimpleBlockStmAssistantTC(this);
+//	}
 
 	// @Override
 	// public AReturnStmAssistantTC createAReturnStmAssistant()
@@ -671,11 +658,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new AWhileStmAssistantTC(this);
 	// }
 
-	@Override
-	public PStateDesignatorAssistantTC createPStateDesignatorAssistant()
-	{
-		return new PStateDesignatorAssistantTC(this);
-	}
+//	@Override
+//	public PStateDesignatorAssistantTC createPStateDesignatorAssistant()
+//	{
+//		return new PStateDesignatorAssistantTC(this);
+//	}
 
 //	@Override
 //	public PStmAssistantTC createPStmAssistant()
@@ -884,15 +871,15 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public AnswerAdaptor<Boolean> getClassBasisChecker()
+	public AnswerAdaptor<Boolean> getClassBasisChecker(Environment env)
 	{
-		return new ClassBasisChecker(this);
+		return new ClassBasisChecker(this, env);
 	}
 
 	@Override
-	public IAnswer<AClassType> getClassTypeFinder()
+	public IAnswer<AClassType> getClassTypeFinder(Environment env)
 	{
-		return new ClassTypeFinder(this);
+		return new ClassTypeFinder(this, env);
 	}
 
 	@Override
@@ -1003,11 +990,6 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new PossibleTypeFinder(this);
 	}
 
-	@Override
-	public IAnswer<PExp> getMatchingExpressionFinder()
-	{
-		return new MatchingExpressionFinder(this);
-	}
 
 	@Override
 	public IAnswer<Boolean> getSimplePatternChecker()
@@ -1106,5 +1088,21 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 			lnt = new LexNameTokenAssistant(this);
 		}
 		return lnt;
+	}
+
+	@Override
+	public SFunctionDefinitionAssistantTC createSFunctionDefinitionAssistant()
+	{
+		if (sfd == null)
+		{
+			sfd = new SFunctionDefinitionAssistantTC(this);
+		}
+		return sfd;
+	}
+
+	@Override
+	public IAnswer<Boolean> getInstanceVariableChecker()
+	{
+		return new InstanceVariableChecker(this);
 	}
 }

@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
@@ -165,9 +166,9 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (question.assistantFactory.createPTypeAssistant().isClass(type))
+		if (question.assistantFactory.createPTypeAssistant().isClass(type, question.env))
 		{
-			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type);
+			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, question.env);
 			String cname = ctype.getName().getName();
 
 			node.setObjectfield(new LexNameToken(cname, field.getName(), node.getObject().getLocation()));
@@ -211,6 +212,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			AIdentifierStateDesignator node, TypeCheckInfo question)
 	{
 		Environment env = question.env;
+		PDefinition encl = env.getEnclosingDefinition();
 
 		if (env.isVDMPP())
 		{
@@ -254,7 +256,13 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 						+ "' in scope is not updatable", name.getLocation(), name);
 				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
-			} else if (def.getClassDefinition() != null)
+			} else if (encl != null &&
+				encl.getAccess().getPure() &&
+				question.assistantFactory.createPDefinitionAssistant().isInstanceVariable(def))
+			{
+					TypeCheckerErrors.report(3338, "Cannot update state in a pure operation", name.getLocation(), name);
+			}
+			else if (def.getClassDefinition() != null)
 			{
 				if (!question.assistantFactory.createSClassDefinitionAssistant().isAccessible(env, def, true))
 				{
@@ -312,7 +320,12 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 						+ "' in scope is not updatable", name.getLocation(), name);
 				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
-			} else if (def instanceof AExternalDefinition)
+			}
+			else if (encl != null && encl.getAccess().getPure() && !(def instanceof AAssignmentDefinition))
+			{
+				TypeCheckerErrors.report(3338, "Cannot update state in a pure operation", name.getLocation(), name);
+			}
+			else if (def instanceof AExternalDefinition)
 			{
 				AExternalDefinition d = (AExternalDefinition) def;
 
@@ -423,27 +436,27 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 		if (question.assistantFactory.createPTypeAssistant().isMap(type))
 		{
 			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(type);
-			result.add(question.assistantFactory.createAApplyObjectDesignatorAssistant().mapApply(node, map, question.env, NameScope.NAMESANDSTATE, unique, THIS));
+			result.add(mapApply(node, map, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
 
 		if (question.assistantFactory.createPTypeAssistant().isSeq(type))
 		{
 			SSeqType seq = question.assistantFactory.createPTypeAssistant().getSeq(type);
-			result.add(question.assistantFactory.createAApplyObjectDesignatorAssistant().seqApply(node, seq, question.env, NameScope.NAMESANDSTATE, unique, THIS));
+			result.add(seqApply(node, seq, question.env, NameScope.NAMESANDSTATE, unique, THIS, question));
 		}
 
 		if (question.assistantFactory.createPTypeAssistant().isFunction(type))
 		{
 			AFunctionType ft = question.assistantFactory.createPTypeAssistant().getFunction(type);
 			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, THIS, new TypeCheckInfo(question.assistantFactory, question.env));
-			result.add(question.assistantFactory.createAApplyObjectDesignatorAssistant().functionApply(node, ft, question.env, NameScope.NAMESANDSTATE, unique, THIS));
+			result.add(functionApply(node, ft, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
 
 		if (question.assistantFactory.createPTypeAssistant().isOperation(type))
 		{
 			AOperationType ot = question.assistantFactory.createPTypeAssistant().getOperation(type);
 			question.assistantFactory.createPTypeAssistant().typeResolve(ot, null, THIS, new TypeCheckInfo(question.assistantFactory, question.env));
-			result.add(question.assistantFactory.createAApplyObjectDesignatorAssistant().operationApply(node, ot, question.env, NameScope.NAMESANDSTATE, unique, THIS));
+			result.add(operationApply(node, ot, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
 
 		if (result.isEmpty())
@@ -480,9 +493,9 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 		PTypeSet result = new PTypeSet(question.assistantFactory);
 		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type);
 
-		if (question.assistantFactory.createPTypeAssistant().isClass(type))
+		if (question.assistantFactory.createPTypeAssistant().isClass(type, question.env))
 		{
-			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type);
+			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, question.env);
 
 			if (node.getClassName() == null)
 			{
@@ -541,6 +554,130 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 
 		return result.getType(node.getLocation());
 
+	}
+	
+	public PType mapApply(AApplyObjectDesignator node, SMapType map,
+			Environment env, NameScope scope, boolean unique,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
+			throws AnalysisException
+	{
+
+		if (node.getArgs().size() != 1)
+		{
+			TypeCheckerErrors.concern(unique, 3250, "Map application must have one argument", node.getLocation(), node);
+			return AstFactory.newAUnknownType(node.getLocation());
+		}
+
+		PType argtype = node.getArgs().get(0).apply(rootVisitor, new TypeCheckInfo(env.af, env, scope));
+
+		if (!env.af.getTypeComparator().compatible(map.getFrom(), argtype))
+		{
+			TypeCheckerErrors.concern(unique, 3251, "Map application argument is incompatible type", node.getLocation(), node);
+			TypeCheckerErrors.detail2(unique, "Map domain", map.getFrom(), "Argument", argtype);
+		}
+
+		return map.getTo();
+	}
+
+	public PType seqApply(AApplyObjectDesignator node, SSeqType seq,
+			Environment env, NameScope scope, boolean unique,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question)
+			throws AnalysisException
+	{
+
+		if (node.getArgs().size() != 1)
+		{
+			TypeCheckerErrors.concern(unique, 3252, "Sequence application must have one argument", node.getLocation(), node);
+			return AstFactory.newAUnknownType(node.getLocation());
+		}
+
+		PType argtype = node.getArgs().get(0).apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, env, scope));
+
+		if (!env.af.createPTypeAssistant().isNumeric(argtype))
+		{
+			TypeCheckerErrors.concern(unique, 3253, "Sequence argument is not numeric", node.getLocation(), node);
+			TypeCheckerErrors.detail(unique, "Type", argtype);
+		}
+
+		return seq.getSeqof();
+	}
+
+	public PType functionApply(AApplyObjectDesignator node,
+			AFunctionType ftype, Environment env, NameScope scope,
+			boolean unique, IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
+			throws AnalysisException
+	{
+
+		LinkedList<PType> ptypes = ftype.getParameters();
+
+		if (node.getArgs().size() > ptypes.size())
+		{
+			TypeCheckerErrors.concern(unique, 3254, "Too many arguments", node.getLocation(), node);
+			TypeCheckerErrors.detail2(unique, "Args", node.getArgs(), "Params", ptypes);
+			return ftype.getResult();
+		} else if (node.getArgs().size() < ptypes.size())
+		{
+			TypeCheckerErrors.concern(unique, 3255, "Too few arguments", node.getLocation(), node);
+			TypeCheckerErrors.detail2(unique, "Args", node.getArgs(), "Params", ptypes);
+			return ftype.getResult();
+		}
+
+		int i = 0;
+
+		for (PExp a : node.getArgs())
+		{
+			PType at = a.apply(rootVisitor, new TypeCheckInfo(env.af, env, scope));
+			PType pt = ptypes.get(i++);
+
+			if (!env.af.getTypeComparator().compatible(pt, at))
+			{
+
+				// TypeCheckerErrors.concern(unique, 3256, "Inappropriate type for argument " + i
+				// +". (Expected: "+pt+" Actual: "+at+")" ,node.getLocation(),node);
+				TypeCheckerErrors.concern(unique, 3256, "Inappropriate type for argument "
+						+ i, node.getLocation(), node);
+				TypeCheckerErrors.detail2(unique, "Expect", pt, "Actual", at);
+			}
+		}
+
+		return ftype.getResult();
+	}
+
+	public PType operationApply(AApplyObjectDesignator node,
+			AOperationType optype, Environment env, NameScope scope,
+			boolean unique, IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
+			throws AnalysisException
+	{
+		LinkedList<PType> ptypes = optype.getParameters();
+
+		if (node.getArgs().size() > ptypes.size())
+		{
+			TypeCheckerErrors.concern(unique, 3257, "Too many arguments", node.getLocation(), node);
+			TypeCheckerErrors.detail2(unique, "Args", node.getArgs(), "Params", ptypes);
+			return optype.getResult();
+		} else if (node.getArgs().size() < ptypes.size())
+		{
+			TypeCheckerErrors.concern(unique, 3258, "Too few arguments", node.getLocation(), node);
+			TypeCheckerErrors.detail2(unique, "Args", node.getArgs(), "Params", ptypes);
+			return optype.getResult();
+		}
+
+		int i = 0;
+
+		for (PExp a : node.getArgs())
+		{
+			PType at = a.apply(rootVisitor, new TypeCheckInfo(env.af, env, scope));
+			PType pt = ptypes.get(i++);
+
+			if (!env.af.getTypeComparator().compatible(pt, at))
+			{ // + ". (Expected: "+pt+" Actual: "+at+")"
+				TypeCheckerErrors.concern(unique, 3259, "Inappropriate type for argument "
+						+ i, node.getLocation(), node);
+				TypeCheckerErrors.detail2(unique, "Expect", pt, "Actual", at);
+			}
+		}
+
+		return optype.getResult();
 	}
 
 }

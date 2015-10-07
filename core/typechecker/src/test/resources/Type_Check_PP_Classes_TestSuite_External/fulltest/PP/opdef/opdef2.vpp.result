@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
 <message column="11" line="7" message="S1 at 3:7 hidden by S1" messageType="warning" number="5008" resource="opdef2.vpp"/>
+<message column="5" line="8" message="State variable 'OpDefTest`S1' cannot be accessed from this context" messageType="error" number="3302" resource="opdef2.vpp"/>
 <message column="5" line="8" message="Variable 'S1' in scope is not updatable" messageType="error" number="3301" resource="opdef2.vpp"/>
 <result/>
 </testResult>

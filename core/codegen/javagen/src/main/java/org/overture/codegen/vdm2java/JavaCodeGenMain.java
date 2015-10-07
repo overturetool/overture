@@ -31,10 +31,9 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.util.modules.ModuleList;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
@@ -45,11 +44,15 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class JavaCodeGenMain
 {
-	public static final String OO_ARG = "-oo";
+	public static final String OO_ARG = "-pp";
 	public static final String SL_ARG = "-sl";
+	public static final String CLASSIC = "-classic";
+	public static final String VDM10 = "-vdm10";
 	public static final String EXP_ARG = "-exp";
 	public static final String FOLDER_ARG = "-folder";
 	public static final String PRINT_ARG = "-print";
@@ -87,6 +90,8 @@ public class JavaCodeGenMain
 		
 		List<File> files = new LinkedList<File>();
 
+		Settings.release = Release.VDM_10;
+		
 		for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
 		{
 			String arg = i.next();
@@ -94,10 +99,20 @@ public class JavaCodeGenMain
 			if (arg.equals(OO_ARG))
 			{
 				cgMode = JavaCodeGenMode.OO_SPEC;
+				Settings.dialect = Dialect.VDM_PP;
 			}
 			else if(arg.equals(SL_ARG))
 			{
 				cgMode = JavaCodeGenMode.SL_SPEC;
+				Settings.dialect = Dialect.VDM_SL;
+			}
+			else if(arg.equals(CLASSIC))
+			{
+				Settings.release = Release.CLASSIC;
+			}
+			else if(arg.equals(VDM10))
+			{
+				Settings.release = Release.VDM_10;
 			}
 			else if (arg.equals(EXP_ARG))
 			{
@@ -181,7 +196,7 @@ public class JavaCodeGenMain
 
 				if (file.isFile())
 				{
-					if (isValidSourceFile(file))
+					if (JavaCodeGenUtil.isSupportedVdmSourceFile(file))
 					{
 						files.add(file);
 					}
@@ -233,6 +248,9 @@ public class JavaCodeGenMain
 	{
 		try
 		{
+			Settings.release = Release.VDM_10;
+			Settings.dialect = Dialect.VDM_PP;
+			
 			Generated generated = JavaCodeGenUtil.generateJavaFromExp(exp, irSettings, javaSettings, dialect);
 
 			if (generated.hasMergeErrors())
@@ -276,9 +294,17 @@ public class JavaCodeGenMain
 			vdmCodGen.setSettings(irSettings);
 			vdmCodGen.setJavaSettings(javaSettings);
 			
-			ModuleList ast = GeneralCodeGenUtils.consModuleList(files);
+			Settings.dialect = Dialect.VDM_SL;
+			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
 			
-			GeneratedData data = vdmCodGen.generateJavaFromVdmModules(ast);
+			if(GeneralCodeGenUtils.hasErrors(tcResult))
+			{
+				Logger.getLog().printError("Found errors in VDM model:");
+				Logger.getLog().printErrorln(GeneralCodeGenUtils.errorStr(tcResult));
+				return;
+			}
+			
+			GeneratedData data = vdmCodGen.generateJavaFromVdmModules(tcResult.result);
 			
 			processData(printCode, outputDir, vdmCodGen, data);
 
@@ -286,12 +312,6 @@ public class JavaCodeGenMain
 		{
 			Logger.getLog().println("Could not code generate model: "
 					+ e.getMessage());
-
-		} catch (UnsupportedModelingException e)
-		{
-			Logger.getLog().println("Could not generate model: "
-					+ e.getMessage());
-			Logger.getLog().println(GeneralCodeGenUtils.constructUnsupportedModelingString(e));
 		}
 	}
 
@@ -304,9 +324,16 @@ public class JavaCodeGenMain
 			vdmCodGen.setSettings(irSettings);
 			vdmCodGen.setJavaSettings(javaSettings);
 			
-			List<SClassDefinition> ast = GeneralCodeGenUtils.consClassList(files, dialect);
+			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
 			
-			GeneratedData data = vdmCodGen.generateJavaFromVdm(ast);
+			if(GeneralCodeGenUtils.hasErrors(tcResult))
+			{
+				Logger.getLog().printError("Found errors in VDM model:");
+				Logger.getLog().printErrorln(GeneralCodeGenUtils.errorStr(tcResult));
+				return;
+			}
+			
+			GeneratedData data = vdmCodGen.generateJavaFromVdm(tcResult.result);
 			
 			processData(printCode, outputDir, vdmCodGen, data);
 
@@ -315,11 +342,6 @@ public class JavaCodeGenMain
 			Logger.getLog().println("Could not code generate model: "
 					+ e.getMessage());
 
-		} catch (UnsupportedModelingException e)
-		{
-			Logger.getLog().println("Could not generate model: "
-					+ e.getMessage());
-			Logger.getLog().println(GeneralCodeGenUtils.constructUnsupportedModelingString(e));
 		}
 	}
 
@@ -443,7 +465,7 @@ public class JavaCodeGenMain
 		
 		for(File f : files)
 		{
-			if(isValidSourceFile(f))
+			if(JavaCodeGenUtil.isSupportedVdmSourceFile(f))
 			{
 				filtered.add(f);
 			}
@@ -451,11 +473,7 @@ public class JavaCodeGenMain
 		
 		return filtered;
 	}
-
-	public static boolean isValidSourceFile(File f) {
-		return f.getName().endsWith(".vdmpp") || f.getName().endsWith(".vdmsl");
-	}
-
+	
 	public static void usage(String msg)
 	{
 		Logger.getLog().printErrorln("VDM++ to Java Code Generator: " + msg

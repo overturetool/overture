@@ -1,0 +1,1 @@
+{"translation":"theory DEFAULT\n  imports utp_vdm\nbegin\n\ndefinition \"a \u003d +|10 : @nat1|+\"\ndeclare a_def [eval,evalp]\n\ndefinition \"b \u003d +|20 : @nat1|+\"\ndeclare b_def [eval,evalp]\n\ndefinition \"c \u003d +|30 : @nat1|+\"\ndeclare c_def [eval,evalp]\n\nend","errors":false}

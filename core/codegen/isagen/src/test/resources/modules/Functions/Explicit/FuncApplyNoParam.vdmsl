@@ -1,0 +1,13 @@
+module A
+
+definitions
+
+functions
+f : () -> int
+f () == 0;
+
+values
+x = f();
+
+
+end A

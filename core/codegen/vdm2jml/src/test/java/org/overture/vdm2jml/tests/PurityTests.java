@@ -7,14 +7,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
+import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 
 public class PurityTests extends AnnotationTestsBase
 {
 	@BeforeClass
-	public static void init() throws AnalysisException,
-			UnsupportedModelingException
+	public static void init() throws AnalysisException
 	{
 		AnnotationTestsBase.init("FuncsOpsOnly.vdmsl");
 	}
@@ -53,6 +52,11 @@ public class PurityTests extends AnnotationTestsBase
 	@Test
 	public void testNoStateInvInGenModule()
 	{
-		Assert.assertTrue("Expected no state annotations", genModule.getMetaData().isEmpty());
+		for(ClonableString m : genModule.getMetaData())
+		{
+			// A bit naive way to check that no instance or static invariant is declared
+			Assert.assertTrue("Expected no state annotations", !m.value.contains("invariant"));
+		}
+		
 	}
 }

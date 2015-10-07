@@ -1,0 +1,28 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    private static final String a = "hej";
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return SeqUtil.mod("a", MapUtil.map(new Maplet(1L, 'b'))) +
+        SeqUtil.mod(a, MapUtil.map(new Maplet(1L, 'm'), new Maplet(3L, 'l'))) +
+        SeqUtil.mod(f(), MapUtil.map(new Maplet(1L, 'b')));
+    }
+
+    public static String f() {
+        return "cat";
+    }
+
+    public String toString() {
+        return "Entry{" + "a = " + Utils.toString(a) + "}";
+    }
+}
+
+##########

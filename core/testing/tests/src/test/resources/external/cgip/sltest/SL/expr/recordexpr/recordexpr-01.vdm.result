@@ -1,1 +1,1 @@
-["Error 3327: recordexpr-01.vdm at 22:18 Value is not of the right type","Error 3300: recordexpr-01.vdm at 33:8 Operation \u0027RecordTest\u0027 cannot be called from a function"]
+["Error 3327: recordexpr-01.vdm at 22:18 Value is not of the right type","Error 3300: recordexpr-01.vdm at 33:8 Impure operation \u0027RecordTest\u0027 cannot be called from here"]

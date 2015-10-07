@@ -1,0 +1,39 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Number a = 1L;
+        /* skip */
+        {
+            Tuple tuplePattern_1 = Tuple.mk_(2L, 3L);
+            Boolean success_1 = tuplePattern_1.compatible(Number.class,
+                    Number.class);
+            Number b = null;
+            Number c = null;
+
+            if (success_1) {
+                b = ((Number) tuplePattern_1.get(0));
+                c = ((Number) tuplePattern_1.get(1));
+            }
+
+            if (!(success_1)) {
+                throw new RuntimeException("Tuple pattern match failed");
+            }
+
+            return a.longValue() + b.longValue() + c.longValue();
+        }
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

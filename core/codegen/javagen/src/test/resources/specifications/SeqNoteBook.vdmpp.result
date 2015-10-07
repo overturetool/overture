@@ -1,0 +1,257 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class NoteBook {
+    private VDMSeq messages = SeqUtil.seq();
+
+    public NoteBook() {
+    }
+
+    public void Test() {
+        NoteBook nb1 = new NoteBook();
+        NoteBook nb2 = new NoteBook();
+
+        {
+            IO.println(SeqUtil.seq('N', 'o', 't', 'e', 'b', 'o', 'o', 'k', 's',
+                    ' ', 'n', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'n', 'b', '2',
+                    ' ', 'h', 'a', 's', ' ', 'b', 'e', 'e', 'n', ' ', 'c', 'r',
+                    'e', 'a', 't', 'e', 'd', '\n'));
+            IO.println(SeqUtil.seq('A', 'd', 'd', 'i', 'n', 'g', ' ', 'm', 'e',
+                    's', 's', 'a', 'g', 'e', 's', ' ', 'f', 'o', 'r', ' ', 'n',
+                    'b', '1', ' ', 'w', 'h', 'i', 'l', 'e', ' ', 'l', 'e', 'a',
+                    'v', 'i', 'n', 'g', ' ', 'n', 'b', '2', ' ', 'e', 'm', 'p',
+                    't', 'y', '\n'));
+            nb1.addMessage(SeqUtil.seq('H', 'e', 'l', 'l', 'o', '!'));
+            nb1.addMessage(SeqUtil.seq('B', 'y', 'e', '!'));
+            nb1.addMessages(SeqUtil.seq(SeqUtil.seq('o', 'n', 'e'),
+                    SeqUtil.seq('t', 'w', 'o'),
+                    SeqUtil.seq('t', 'h', 'r', 'e', 'e'),
+                    SeqUtil.seq('f', 'o', 'u', 'r')));
+            nb1.addMessagesDist(SeqUtil.seq(SeqUtil.seq('r', 'e', 'd'),
+                    SeqUtil.seq('g', 'r', 'e', 'e', 'n')),
+                SeqUtil.seq(SeqUtil.seq('b', 'l', 'u', 'e'),
+                    SeqUtil.seq('y', 'e', 'l', 'l', 'o', 'w')));
+            IO.printf(SeqUtil.seq('n', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'n',
+                    'b', '2', ' ', 'a', 'r', 'e', ' ', 'e', 'q', 'u', 'a', 'l',
+                    ':', ' ', '%', 's', '\n'), SeqUtil.seq(nb1.eq(nb2)));
+            IO.printf(SeqUtil.seq('n', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'n',
+                    'b', '2', ' ', 'a', 'r', 'e', ' ', 'N', 'O', 'T', ' ', 'e',
+                    'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
+                SeqUtil.seq(nb1.neq(nb2)));
+            IO.print(SeqUtil.seq('\n'));
+            IO.println(SeqUtil.seq('C', 'o', 'p', 'y', 'i', 'n', 'g', ' ', 't',
+                    'h', 'e', ' ', 'n', 'b', '1', ' ', 'm', 'e', 's', 's', 'a',
+                    'g', 'e', 's', ' ', 't', 'o', ' ', 'n', 'b', '2', '.', '.',
+                    '\n'));
+            nb2.setMessages(nb1.getMessagesOrdered());
+            IO.printf(SeqUtil.seq('n', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'n',
+                    'b', '2', ' ', 'a', 'r', 'e', ' ', 'e', 'q', 'u', 'a', 'l',
+                    ':', ' ', '%', 's', '\n'), SeqUtil.seq(nb1.eq(nb2)));
+            IO.printf(SeqUtil.seq('n', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'n',
+                    'b', '2', ' ', 'a', 'r', 'e', ' ', 'N', 'O', 'T', ' ', 'e',
+                    'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
+                SeqUtil.seq(nb1.neq(nb2)));
+            IO.print(SeqUtil.seq('\n'));
+            IO.printf(SeqUtil.seq('T', 'h', 'e', ' ', 'c', 'u', 'r', 'r', 'e',
+                    'n', 't', ' ', 'n', 'u', 'm', 'b', 'e', 'r', ' ', 'o', 'f',
+                    ' ', 'm', 'e', 's', 's', 'a', 'g', 'e', 's', ' ', 'i', 'n',
+                    ' ', 'n', 'b', '1', ' ', 'i', 's', ':', ' ', '%', 's',
+                    '\n', '\n'), SeqUtil.seq(nb1.noOfMessgages()));
+            IO.println(SeqUtil.seq('A', 'l', 'l', ' ', 'm', 'e', 's', 's', 'a',
+                    'g', 'e', 's', ' ', 's', 'o', ' ', 'f', 'a', 'r', ':', ' '));
+            nb1.printMessages();
+            IO.print(SeqUtil.seq('\n'));
+            IO.println(SeqUtil.conc(SeqUtil.seq('L', 'a', 't', 'e', 's', 't',
+                        ' ', 'm', 'e', 's', 's', 'a', 'g', 'e', ' ', 'i', 's',
+                        ':', ' '), nb1.readLatest()));
+            IO.println(SeqUtil.seq('R', 'e', 'm', 'o', 'v', 'i', 'n', 'g', ' ',
+                    'l', 'a', 't', 'e', 's', 't', '.', '.'));
+            nb1.removeLatest();
+            IO.println(SeqUtil.conc(SeqUtil.conc(SeqUtil.seq('L', 'a', 't',
+                            'e', 's', 't', ' ', 'm', 'e', 's', 's', 'a', 'g',
+                            'e', ' ', 'i', 's', ':', ' '), nb1.readLatest()),
+                    SeqUtil.seq('\n')));
+            IO.printf(SeqUtil.seq('O', 'v', 'e', 'r', 'r', 'i', 'd', 'i', 'n',
+                    'g', ' ', 'm', 'e', 's', 's', 'a', 'g', 'e', ' ', '%', 's',
+                    ' ', 'w', 'i', 't', 'h', ' ', '\'', 'H', 'i', '\'', '\n'),
+                SeqUtil.seq(9L));
+            nb1.overrideMessage(9L, SeqUtil.seq('H', 'i', '!'));
+            IO.println(SeqUtil.seq('A', 'l', 'l', ' ', 'm', 'e', 's', 's', 'a',
+                    'g', 'e', 's', ' ', 's', 'o', ' ', 'f', 'a', 'r', ':', ' '));
+            nb1.printMessages();
+            IO.print(SeqUtil.seq('\n'));
+            IO.printf(SeqUtil.conc(SeqUtil.conc(SeqUtil.seq('M', 'e', 's', 's',
+                            'a', 'g', 'e', ' ', '%', 's', ':', ' '),
+                        nb1.getMessage(5L)), SeqUtil.seq('\n')), SeqUtil.seq(5L));
+            IO.print(SeqUtil.seq('\n'));
+            IO.printf(SeqUtil.seq('M', 'e', 's', 's', 'a', 'g', 'e', ' ', '8',
+                    ' ', 'i', 's', ' ', 'e', 'q', 'u', 'a', 'l', ' ', 't', 'o',
+                    ' ', '\'', 'B', 'y', 'e', '!', '\'', ':', ' ', '%', 's',
+                    '\n'),
+                SeqUtil.seq(nb1.isMessage(8L, SeqUtil.seq('B', 'y', 'e', '!'))));
+            IO.printf(SeqUtil.seq('M', 'e', 's', 's', 'a', 'g', 'e', ' ', '1',
+                    ' ', 'i', 's', ' ', 'e', 'q', 'u', 'a', 'l', ' ', 't', 'o',
+                    ' ', '\'', 'B', 'y', 'e', '!', '\'', ':', ' ', '%', 's',
+                    '\n'),
+                SeqUtil.seq(nb1.isMessage(1L, SeqUtil.seq('B', 'y', 'e', '!'))));
+            IO.printf(SeqUtil.seq('M', 'e', 's', 's', 'a', 'g', 'e', ' ', '8',
+                    ' ', 'i', 's', ' ', 'N', 'O', 'T', ' ', 'e', 'q', 'u', 'a',
+                    'l', ' ', 't', 'o', ' ', '\'', 'B', 'y', 'e', '!', '\'',
+                    ':', ' ', '%', 's', '\n'),
+                SeqUtil.seq(nb1.isNotMessage(8L, SeqUtil.seq('B', 'y', 'e', '!'))));
+            IO.printf(SeqUtil.seq('M', 'e', 's', 's', 'a', 'g', 'e', ' ', '1',
+                    ' ', 'i', 's', ' ', 'N', 'O', 'T', ' ', 'e', 'q', 'u', 'a',
+                    'l', ' ', 't', 'o', ' ', '\'', 'B', 'y', 'e', '!', '\'',
+                    ':', ' ', '%', 's', '\n'),
+                SeqUtil.seq(nb1.isNotMessage(1L, SeqUtil.seq('B', 'y', 'e', '!'))));
+            IO.print(SeqUtil.seq('\n'));
+            IO.print(SeqUtil.seq('A', 'd', 'd', 'i', 'n', 'g', ' ', 'd', 'u',
+                    'p', 'l', 'i', 'c', 'a', 't', 'e', ' ', 'm', 'e', 's', 's',
+                    'a', 'g', 'e', ' ', '\'', 'y', 'e', 'l', 'l', 'o', 'w',
+                    '\'', '\n', '\n'));
+            nb1.addMessage(SeqUtil.seq('y', 'e', 'l', 'l', 'o', 'w'));
+            IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                    'm', 'e', 's', 's', 'a', 'g', 'e', 's', ' ', 'r', 'e', 'v',
+                    'e', 'r', 's', 'e', 'd'));
+
+            long toVar_1 = nb1.noOfMessgages().longValue();
+
+            for (Long i = 1L; i <= toVar_1; i++) {
+                VDMSeq reversed = nb1.getReverseMessages();
+                IO.println(Utils.copy(((VDMSeq) Utils.get(reversed, i))));
+            }
+
+            IO.print(SeqUtil.seq('\n'));
+            IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                    'm', 'e', 's', 's', 'a', 'g', 'e', ' ', 'i', 'n', 'd', 'i',
+                    'c', 'e', 's', ' ', 'o', 'f', ' ', 'n', 'b', '1'));
+
+            for (Iterator iterator_1 = nb1.getMessageIndices().iterator();
+                    iterator_1.hasNext();) {
+                Number idx = (Number) iterator_1.next();
+                IO.printf(SeqUtil.seq('%', 's', ' '), SeqUtil.seq(idx));
+            }
+
+            IO.println(SeqUtil.seq('\n'));
+            IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                    'm', 'e', 's', 's', 'a', 'g', 'e', 's', ' ', 'o', 'f', ' ',
+                    'n', 'b', '1', ' ', 'u', 's', 'i', 'n', 'g', ' ', '\'',
+                    'e', 'l', 'e', 'm', 's', '\'', ' ', 'o', 'p', 'e', 'r',
+                    'a', 't', 'o', 'r'));
+
+            for (Iterator iterator_2 = SeqUtil.elems(nb1.getMessagesOrdered())
+                                              .iterator();
+                    iterator_2.hasNext();) {
+                VDMSeq msg = (VDMSeq) iterator_2.next();
+                IO.print(SeqUtil.conc(Utils.copy(msg), SeqUtil.seq('\n')));
+            }
+
+            IO.println(SeqUtil.seq('\n'));
+            IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                    'm', 'e', 's', 's', 'a', 'g', 'e', 's', ' ', 'o', 'f', ' ',
+                    'n', 'b', '1', ' ', 'u', 's', 'i', 'n', 'g', ' ', 't', 'h',
+                    'e', ' ', 's', 'e', 'q', 'u', 'e', 'n', 'c', 'e', ' ', 'l',
+                    'o', 'o', 'p'));
+
+            for (Iterator iterator_3 = nb1.getMessagesOrdered().iterator();
+                    iterator_3.hasNext();) {
+                VDMSeq msg = (VDMSeq) iterator_3.next();
+                IO.print(SeqUtil.conc(Utils.copy(msg), SeqUtil.seq('\n')));
+            }
+        }
+    }
+
+    public void printMessages() {
+        long toVar_2 = messages.size();
+
+        for (Long i = 1L; i <= toVar_2; i++) {
+            VDMSeq msg = getMessage(i);
+            IO.println(Utils.copy(msg));
+        }
+    }
+
+    public void addMessage(final VDMSeq msg) {
+        messages = SeqUtil.conc(SeqUtil.seq(Utils.copy(msg)),
+                Utils.copy(messages));
+    }
+
+    public void addMessages(final VDMSeq newMessages) {
+        messages = SeqUtil.conc(Utils.copy(newMessages), Utils.copy(messages));
+    }
+
+    private void addMessagesDist(final VDMSeq newMessages1,
+        final VDMSeq newMessages2) {
+        messages = SeqUtil.conc(SeqUtil.distConc(SeqUtil.seq(Utils.copy(
+                            newMessages1), Utils.copy(newMessages2))),
+                Utils.copy(messages));
+    }
+
+    public VDMSeq readLatest() {
+        return Utils.copy(((VDMSeq) messages.get(0)));
+    }
+
+    public void removeLatest() {
+        messages = SeqUtil.tail(Utils.copy(messages));
+    }
+
+    public void overrideMessage(final Number index, final VDMSeq newMessage) {
+        messages = SeqUtil.mod(Utils.copy(messages),
+                MapUtil.map(new Maplet(index, Utils.copy(newMessage))));
+    }
+
+    public VDMSeq getMessagesOrdered() {
+        return Utils.copy(messages);
+    }
+
+    public void setMessages(final VDMSeq newMessages) {
+        messages = Utils.copy(newMessages);
+    }
+
+    public Number noOfMessgages() {
+        return getMessagesOrdered().size();
+    }
+
+    public VDMSeq getMessage(final Number index) {
+        return Utils.copy(((VDMSeq) Utils.get(messages, index)));
+    }
+
+    public Boolean isMessage(final Number index, final VDMSeq message) {
+        return Utils.equals(message, getMessage(index));
+    }
+
+    public Boolean isNotMessage(final Number index, final VDMSeq message) {
+        return !(Utils.equals(message, getMessage(index)));
+    }
+
+    public VDMSet getMessgaesSet() {
+        return SeqUtil.elems(Utils.copy(messages));
+    }
+
+    public VDMSet getMessageIndices() {
+        return SeqUtil.inds(messages);
+    }
+
+    public VDMSeq getReverseMessages() {
+        return SeqUtil.reverse(Utils.copy(messages));
+    }
+
+    public Boolean eq(final NoteBook other) {
+        return Utils.equals(messages, other.messages);
+    }
+
+    public Boolean neq(final NoteBook other) {
+        return !(Utils.equals(messages, other.messages));
+    }
+
+    public String toString() {
+        return "NoteBook{" + "messages := " + Utils.toString(messages) + "}";
+    }
+}
+
+##########
+*Quotes*
+append,start
+##########

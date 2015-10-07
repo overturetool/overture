@@ -1,7 +1,0 @@
-"Breaking named type invariant for return value"
-Entry.java:49: JML assertion is false
-        //@ assert inv_Entry_A(a) && (a == null || inv_Entry_B(a) || inv_Entry_C(a));
-            ^
-Entry.java:32: JML assertion is false
-                //@ assert inv_Entry_A(ignorePattern_6) && (ignorePattern_6 == null || inv_Entry_B(ignorePattern_6) || inv_Entry_C(ignorePattern_6));
-                    ^

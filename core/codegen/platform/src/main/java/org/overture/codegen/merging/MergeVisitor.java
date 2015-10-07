@@ -29,12 +29,14 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.apache.velocity.Template;
+import org.apache.velocity.runtime.parser.ParseException;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.QuestionAdaptor;
 import org.overture.codegen.ir.IrNodeInfo;
 
-public class MergeVisitor extends QuestionAdaptor<StringWriter> implements MergeCoordinator
+public class MergeVisitor extends QuestionAdaptor<StringWriter> implements
+		MergeCoordinator
 {
 	private static final String NODE_KEY = "node";
 
@@ -48,11 +50,12 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements Merge
 	private Stack<MergeContext> nodeContexts;
 
 	private List<Exception> mergeErrors;
-	
+
 	private MergerObserver mergeObserver;
 
 	/**
 	 * Default constructor. <b>NOT</b> for use by extensions.
+	 * 
 	 * @param templateStructure
 	 * @param templateCallables
 	 */
@@ -69,17 +72,20 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements Merge
 
 	/**
 	 * Extensible constructor.
+	 * 
 	 * @param templateManager
 	 * @param templateCallables
 	 */
-	public MergeVisitor(TemplateManager templateManager, TemplateCallable[] templateCallables){
+	public MergeVisitor(TemplateManager templateManager,
+			TemplateCallable[] templateCallables)
+	{
 		this.templates = templateManager;
 		this.nodeContexts = new Stack<MergeContext>();
 		this.templateCallables = templateCallables;
 		this.mergeErrors = new LinkedList<Exception>();
 		this.unsupportedInTargLang = new HashSet<IrNodeInfo>();
 	}
-	
+
 	public List<Exception> getMergeErrors()
 	{
 		return mergeErrors;
@@ -94,10 +100,11 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements Merge
 	{
 		return unsupportedInTargLang;
 	}
-	
+
 	public boolean hasUnsupportedTargLangNodes()
 	{
-		return unsupportedInTargLang != null && !unsupportedInTargLang.isEmpty();
+		return unsupportedInTargLang != null
+				&& !unsupportedInTargLang.isEmpty();
 	}
 
 	public void init()
@@ -106,7 +113,7 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements Merge
 		mergeErrors = new LinkedList<Exception>();
 		unsupportedInTargLang = new HashSet<IrNodeInfo>();
 	}
-	
+
 	private void initCodeGenContext(INode node,
 			TemplateCallable[] templateCallables)
 	{
@@ -127,37 +134,44 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements Merge
 	{
 		initCodeGenContext(node, templateCallables);
 
-		Template template = templates.getTemplate(node.getClass());
+		try
+		{
+			Template template = templates.getTemplate(node.getClass());
 
-		if (template == null)
-		{
-			unsupportedInTargLang.add(new IrNodeInfo(node, "Template could not be found."));
-		} else
-		{
-			try
+			if (template == null)
 			{
-				if(mergeObserver != null)
-				{
-					mergeObserver.preMerging(node, question);
-				}
-				
-				template.merge(nodeContexts.pop().getVelocityContext(), question);
-				
-				if(mergeObserver != null)
-				{
-					mergeObserver.nodeMerged(node, question);
-				}
-			} catch (Exception e)
+				unsupportedInTargLang.add(new IrNodeInfo(node, "Template could not be found."));
+			} else
 			{
-				mergeErrors.add(e);
+				try
+				{
+					if (mergeObserver != null)
+					{
+						mergeObserver.preMerging(node, question);
+					}
+
+					template.merge(nodeContexts.pop().getVelocityContext(), question);
+
+					if (mergeObserver != null)
+					{
+						mergeObserver.nodeMerged(node, question);
+					}
+				} catch (Exception e)
+				{
+					mergeErrors.add(e);
+				}
 			}
+		} catch (ParseException e)
+		{
+			unsupportedInTargLang.add(new IrNodeInfo(node, "Parse error in template.\n"
+					+ e.getMessage()));
 		}
 	}
 
 	@Override
 	public void register(MergerObserver obs)
 	{
-		if(obs != null && mergeObserver == null)
+		if (obs != null && mergeObserver == null)
 		{
 			mergeObserver = obs;
 		}
@@ -166,7 +180,7 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements Merge
 	@Override
 	public void unregister(MergerObserver obs)
 	{
-		if(obs != null && mergeObserver == obs)
+		if (obs != null && mergeObserver == obs)
 		{
 			mergeObserver = null;
 		}

@@ -1,0 +1,10 @@
+state S of
+    x : nat
+    y : nat
+    inv mk_S(x,y) == x < y
+    init s == s = mk_S(0,1)
+end
+
+operations
+update : int * int ==> ()
+update(nx, ny) == atomic (x := nx ; y := ny)

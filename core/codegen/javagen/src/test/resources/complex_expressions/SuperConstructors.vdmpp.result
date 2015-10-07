@@ -1,0 +1,131 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class A {
+    public Number first;
+    public Boolean second;
+    public Character third;
+    public Character fourth;
+    public Character fifth;
+
+    public A(final Number a, final Boolean b, final Character c) {
+        cg_init_A_1(a, b, c);
+    }
+
+    public A(final Character d, final Character e) {
+        cg_init_A_2(d, e);
+    }
+
+    public A() {
+    }
+
+    public void cg_init_A_1(final Number a, final Boolean b, final Character c) {
+        first = a;
+        second = b;
+        third = c;
+    }
+
+    public void cg_init_A_2(final Character d, final Character e) {
+        fourth = d;
+        fifth = e;
+    }
+
+    public String toString() {
+        return "A{" + "first := " + Utils.toString(first) + ", second := " +
+        Utils.toString(second) + ", third := " + Utils.toString(third) +
+        ", fourth := " + Utils.toString(fourth) + ", fifth := " +
+        Utils.toString(fifth) + "}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class B extends A {
+    public B() {
+        cg_init_B_1();
+    }
+
+    public B(final Character x, final Character y) {
+        cg_init_B_2(x, y);
+    }
+
+    public void cg_init_B_1() {
+        Number a = 60L;
+        cg_init_A_1(a, true, 'a');
+    }
+
+    public void cg_init_B_2(final Character x, final Character y) {
+        /* skip */
+        /* skip */
+        cg_init_A_2(x, y);
+    }
+
+    public String toString() {
+        return "B{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class C extends B {
+    public C(final Boolean t) {
+        cg_init_C_1(t);
+    }
+
+    public C() {
+        cg_init_C_2();
+    }
+
+    public void cg_init_C_1(final Boolean t) {
+        Number z = 1L;
+        cg_init_A_1(z, t, 'b');
+    }
+
+    public void cg_init_C_2() {
+        cg_init_A_1(2L, false, 'b');
+    }
+
+    public String toString() {
+        return "C{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        B b1 = new B();
+        B b2 = new B('h', 'j');
+        C c1 = new C(true);
+        C c2 = new C();
+
+        return SeqUtil.seq(b1.first, b2.fourth, c1.second, c2.first);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

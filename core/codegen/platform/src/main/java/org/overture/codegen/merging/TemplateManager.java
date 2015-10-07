@@ -781,7 +781,7 @@ public class TemplateManager
 				+ "Interface");
 	}
 
-	public Template getTemplate(Class<? extends INode> nodeClass)
+	public Template getTemplate(Class<? extends INode> nodeClass) throws ParseException
 	{
 		try
 		{
@@ -807,14 +807,13 @@ public class TemplateManager
 		}
 	}
 
-	private Template constructTemplate(StringBuffer buffer)
+	private Template constructTemplate(StringBuffer buffer) throws ParseException
 	{
 		Template template = new Template();
 		RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
 		StringReader reader = new StringReader(buffer.toString());
 
-		try
-		{
+		
 			SimpleNode simpleNode = runtimeServices.parse(reader, "Template name");
 			template.setRuntimeServices(runtimeServices);
 			template.setData(simpleNode);
@@ -822,10 +821,7 @@ public class TemplateManager
 
 			return template;
 
-		} catch (ParseException e)
-		{
-			return null;
-		}
+		
 	}
 
 	private String getTemplateFileRelativePath(Class<? extends INode> nodeClass)

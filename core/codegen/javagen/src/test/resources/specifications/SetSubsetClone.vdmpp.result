@@ -1,0 +1,24 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class A {
+    private static final VDMSet a = SetUtil.set(1L, 2L, 3L);
+    private static final Boolean x = SetUtil.subset(a, op());
+
+    public A() {
+    }
+
+    public static VDMSet op() {
+        return SetUtil.set(1L, 2L, 3L);
+    }
+
+    public String toString() {
+        return "A{" + "a = " + Utils.toString(a) + ", x = " +
+        Utils.toString(x) + "}";
+    }
+}
+
+##########

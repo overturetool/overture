@@ -1,0 +1,64 @@
+-- Permissions for landings and takeoffs on an airport. 
+-- Original VDM model from Quentin Charatan and Aaron Kans. From VDM to Java.
+-- Adapted to CML by Jim Woodcock. CML Examples Compendium.
+-- CML model adapted to VDM-SL by Luis Diogo Couto
+
+types
+Aircraft = token
+
+state A of
+  permission : set of Aircraft
+  landed     : set of Aircraft
+  inv mk_A(per,lan) == lan subset per
+  init s == s = mk_A({},{})
+end
+
+functions  
+permitted: Aircraft * set of Aircraft -> bool
+permitted(a,perm) ==
+  a in set perm;
+  
+down: Aircraft * set of Aircraft -> bool
+down(a,land) ==
+  a in set land;
+  
+PreRecordLanding: Aircraft * set of Aircraft * set of Aircraft -> bool
+PreRecordLanding(a,p,l) ==
+  permitted(a,p) and not down(a,l);
+
+operations
+Init : () ==> ()
+Init() ==
+  (permission := {} ; landed := {});
+
+GivePermission : Aircraft ==> ()
+GivePermission(a) ==
+  permission := permission union {a}
+pre not permitted(a,permission);
+
+RecordLanding : Aircraft ==> ()
+RecordLanding(a) ==
+  landed := landed union {a}
+pre PreRecordLanding(a,permission,landed);
+
+RecordTakeOff : Aircraft ==> ()
+RecordTakeOff(a) ==
+  atomic (
+  landed := landed \ {a};
+  permission := permission \ {a} )
+pre down(a,landed);
+
+NumberWaiting : () ==> nat
+NumberWaiting() ==
+  return card (permission \ landed);
+
+traces
+t1:
+  let p1,p2 in set {mk_token("1"),mk_token("2"),mk_token("3")}
+  in
+  (
+     (GivePermission(p1) ; RecordLanding(p1) ; RecordTakeOff(p1)) 
+      |
+     (GivePermission(p2) ; RecordLanding(p2) ;  RecordTakeOff(p2)) 
+  ) {3}
+    

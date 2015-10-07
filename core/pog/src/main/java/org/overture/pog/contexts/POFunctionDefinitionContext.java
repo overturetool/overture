@@ -40,6 +40,7 @@ import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPogAssistantFactory;
@@ -104,7 +105,7 @@ public class POFunctionDefinitionContext extends POContext {
 	public PExp getContextNode(PExp stitch) {
 		AForAllExp forAllExp = new AForAllExp();
 		forAllExp.setBindList(makeBinds());
-
+		forAllExp.setType(new ABooleanBasicType());
 		if (deftype.getParameters().isEmpty()) {
 			return stitch;
 		}
@@ -113,7 +114,8 @@ public class POFunctionDefinitionContext extends POContext {
 
 			AImpliesBooleanBinaryExp implies = AstExpressionFactory
 					.newAImpliesBooleanBinaryExp(precondition.clone(), stitch);
-
+			implies.setType(new ABooleanBasicType());
+			
 			forAllExp.setPredicate(implies);
 		} else {
 			forAllExp.setPredicate(stitch);

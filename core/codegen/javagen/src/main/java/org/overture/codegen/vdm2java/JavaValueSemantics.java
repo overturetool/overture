@@ -21,6 +21,7 @@
  */
 package org.overture.codegen.vdm2java;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.assistant.AssistantManager;
@@ -29,6 +30,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -51,6 +53,7 @@ import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
 import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
+import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
@@ -65,11 +68,28 @@ public class JavaValueSemantics
 {
 	private JavaFormat javaFormat;
 	private JavaSettings javaSettings;
-
+	private List<INode> cloneFreeNodes;
+	
 	public JavaValueSemantics(JavaFormat javaFormat)
 	{
 		this.javaFormat = javaFormat;
 		this.javaSettings = new JavaSettings();
+		this.cloneFreeNodes = new LinkedList<>();
+	}
+	
+	public void clear()
+	{
+		cloneFreeNodes.clear();
+	}
+	
+	public void addCloneFreeNode(INode node)
+	{
+		cloneFreeNodes.add(node);
+	}
+	
+	public List<INode> getCloneFreeNodes()
+	{
+		return cloneFreeNodes;
 	}
 
 	public void setJavaSettings(JavaSettings javaSettings)
@@ -85,6 +105,11 @@ public class JavaValueSemantics
 	public boolean cloneMember(AFieldNumberExpCG exp)
 	{
 		if (javaSettings.getDisableCloning())
+		{
+			return false;
+		}
+		
+		if(isCloneFree(exp))
 		{
 			return false;
 		}
@@ -131,6 +156,11 @@ public class JavaValueSemantics
 		{
 			return false;
 		}
+		
+		if(isCloneFree(exp))
+		{
+			return false;
+		}
 
 		INode parent = exp.parent();
 		if (cloneNotNeeded(parent))
@@ -156,7 +186,7 @@ public class JavaValueSemantics
 
 			String memberName = exp.getMemberName();
 
-			List<AClassDeclCG> classes = javaFormat.getClasses();
+			List<AClassDeclCG> classes = javaFormat.getIrInfo().getClasses();
 			AssistantManager assistantManager = javaFormat.getIrInfo().getAssistantManager();
 
 			AFieldDeclCG memberField = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);
@@ -177,7 +207,17 @@ public class JavaValueSemantics
 		{
 			return false;
 		}
+		
+		if(isCloneFree(exp))
+		{
+			return false;
+		}
 
+		if(inRecClassNonConstructor(exp))
+		{
+			return false;
+		}
+		
 		INode parent = exp.parent();
 
 		if (cloneNotNeeded(parent))
@@ -189,6 +229,16 @@ public class JavaValueSemantics
 		{
 			AAssignToExpStmCG assignment = (AAssignToExpStmCG) parent;
 			if (assignment.getTarget() == exp)
+			{
+				return false;
+			}
+		}
+		
+		if(parent instanceof ACallObjectExpStmCG)
+		{
+			ACallObjectExpStmCG callObjStm = (ACallObjectExpStmCG) parent;
+			
+			if(callObjStm.getObj() == exp)
 			{
 				return false;
 			}
@@ -223,6 +273,48 @@ public class JavaValueSemantics
 		}
 
 		return false;
+	}
+
+	private boolean inRecClassNonConstructor(SExpCG exp)
+	{
+		AClassDeclCG encClass = exp.getAncestor(AClassDeclCG.class);
+		
+		if(encClass != null)
+		{
+			LinkedList<AMethodDeclCG> methods = encClass.getMethods();
+			
+			boolean isRec = false;
+			for(AMethodDeclCG m : methods)
+			{
+				if(m.getIsConstructor() && m.getMethodType().getResult() instanceof ARecordTypeCG)
+				{
+					isRec = true;
+					break;
+				}
+			}
+			
+			if(!isRec)
+			{
+				return false;
+			}
+			else
+			{
+				AMethodDeclCG encMethod = exp.getAncestor(AMethodDeclCG.class);
+				
+				if(encMethod != null)
+				{
+					return !encMethod.getIsConstructor();
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	private boolean cloneNotNeededMapPutGet(SExpCG exp)
@@ -357,7 +449,7 @@ public class JavaValueSemantics
 				&& ((AExternalTypeCG) classType).getName().equals(JavaFormat.UTILS_FILE);
 	}
 
-	private boolean usesStructuralEquivalence(STypeCG type)
+	public boolean usesStructuralEquivalence(STypeCG type)
 	{
 		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG
 				|| type instanceof SSeqTypeCG || type instanceof SSetTypeCG
@@ -372,6 +464,43 @@ public class JavaValueSemantics
 		{
 			AAssignToExpStmCG assignment = (AAssignToExpStmCG) parent;
 			if (assignment.getTarget() == exp)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isCloneFree(SExpCG exp)
+	{
+		if(exp == null)
+		{
+			return false;
+		}
+		
+		INode next = exp;
+		
+		while(next != null)
+		{
+			if(contains(next))
+			{
+				return true;
+			}
+			else
+			{
+				next = next.parent();
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean contains(INode node)
+	{
+		for(INode n : cloneFreeNodes)
+		{
+			if(n == node)
 			{
 				return true;
 			}

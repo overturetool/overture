@@ -1,9 +1,14 @@
 package org.overture.pog.visitors;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AFieldExp;
+import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
@@ -54,7 +59,6 @@ public class VariableSubVisitor extends
 
 	// cases here for what we need
 
-
 	@Override
 	public PExp caseAExistsExp(AExistsExp node, Substitution question)
 			throws AnalysisException
@@ -74,8 +78,6 @@ public class VariableSubVisitor extends
 		return node;
 	}
 
-
-
 	@Override
 	public PExp caseAPostOpExp(APostOpExp node, Substitution question)
 			throws AnalysisException
@@ -85,8 +87,6 @@ public class VariableSubVisitor extends
 		return node;
 	}
 
-
-
 	@Override
 	public PExp caseAVariableExp(AVariableExp node, Substitution question)
 			throws AnalysisException
@@ -95,6 +95,22 @@ public class VariableSubVisitor extends
 		{
 			return question.get(node).clone();
 		}
+		return node;
+	}
+
+	@Override
+	public PExp caseAApplyExp(AApplyExp node, Substitution question)
+			throws AnalysisException
+	{
+		node.setArgs(distribute(node.getArgs(), question));
+		return node;
+	}
+
+	@Override
+	public PExp caseAMkTypeExp(AMkTypeExp node, Substitution question)
+			throws AnalysisException
+	{
+		node.setArgs(distribute(node.getArgs(), question));
 		return node;
 	}
 
@@ -119,6 +135,17 @@ public class VariableSubVisitor extends
 	{
 		throw new AnalysisException("Substitution visitor applied to non-expression object "
 				+ arg0.toString());
+	}
+
+	private List<PExp> distribute(List<PExp> args, Substitution question)
+			throws AnalysisException
+	{
+		List<PExp> subs = new Vector<PExp>();
+		for (PExp a : args)
+		{
+			subs.add(a.clone().apply(main, question));
+		}
+		return subs;
 	}
 
 }

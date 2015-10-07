@@ -1,0 +1,1 @@
+{"translation":"theory DEFAULT\n  imports utp_vdm\nbegin\n\ndefinition \"x \u003d +|true : @bool|+\"\ndeclare x_def [eval,evalp]\n\nend","errors":false}

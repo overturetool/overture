@@ -52,12 +52,12 @@ public class ClonableFile extends File implements ExternalNode
 
 	public ClonableFile(File file)
 	{
-		super(file.getAbsolutePath());
+		super(file.getPath());
 	}
 
 	public Object clone()
 	{
-		return new ClonableFile(this.getAbsolutePath());
+		return new ClonableFile(this.getPath());
 	}
 
 }

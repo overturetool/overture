@@ -71,27 +71,20 @@ import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.IIterationStrategy;
-import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.IterationVarPrefixes;
 
 public class TransAssistantCG extends BaseTransformationAssistant
 {
 	protected IRInfo info;
-	protected TempVarPrefixes varPrefixes;
 
-	public TransAssistantCG(IRInfo info, TempVarPrefixes varPrefixes)
+	public TransAssistantCG(IRInfo info)
 	{
 		this.info = info;
-		this.varPrefixes = varPrefixes;
 	}
 
 	public IRInfo getInfo()
 	{
 		return info;
-	}
-
-	public TempVarPrefixes getVarPrefixes()
-	{
-		return varPrefixes;
 	}
 
 	public SSetTypeCG getSetTypeCloned(SExpCG set) throws AnalysisException
@@ -181,7 +174,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	public AVarDeclCG consBoolVarDecl(String boolVarName, boolean initValue)
 	{
 		return info.getDeclAssistant().consLocalVarDecl(new ABoolBasicTypeCG(),
-				consIdPattern(boolVarName), info.getExpAssistant().consBoolLiteral(initValue));
+				info.getPatternAssistant().consIdPattern(boolVarName), info.getExpAssistant().consBoolLiteral(initValue));
 	}
 
 	public SExpCG consAndExp(SExpCG left, SExpCG right)
@@ -246,12 +239,12 @@ public class TransAssistantCG extends BaseTransformationAssistant
 			throws AnalysisException
 	{
 		return info.getDeclAssistant().consLocalVarDecl(getSetTypeCloned(set),
-				consIdPattern(setBindName), set.clone());
+				info.getPatternAssistant().consIdPattern(setBindName), set.clone());
 	}
 
 	public AVarDeclCG consDecl(String varName, STypeCG type, SExpCG exp)
 	{
-		return info.getDeclAssistant().consLocalVarDecl(type, consIdPattern(varName), exp);
+		return info.getDeclAssistant().consLocalVarDecl(type, info.getPatternAssistant().consIdPattern(varName), exp);
 	}
 
 	public AClassTypeCG consClassType(String classTypeName)
@@ -398,12 +391,12 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	}
 
 	public ABlockStmCG consIterationBlock(List<SPatternCG> ids, SExpCG set,
-			ITempVarGen tempGen, IIterationStrategy strategy)
+			ITempVarGen tempGen, IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes)
 			throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
 
-		consIterationBlock(outerBlock, ids, set, tempGen, strategy);
+		consIterationBlock(outerBlock, ids, set, tempGen, strategy, iteVarPrefixes);
 
 		return outerBlock;
 	}
@@ -428,10 +421,10 @@ public class TransAssistantCG extends BaseTransformationAssistant
 
 	private ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
 			List<SPatternCG> patterns, SExpCG set, ITempVarGen tempGen,
-			IIterationStrategy strategy) throws AnalysisException
+			IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes) throws AnalysisException
 	{
 		// Variable names
-		String setName = tempGen.nextVarName(varPrefixes.getSetNamePrefix());
+		String setName = tempGen.nextVarName(iteVarPrefixes.set());
 		AIdentifierVarExpCG setVar = consSetVar(setName, set);
 
 		ABlockStmCG forBody = null;
@@ -515,9 +508,10 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return forBody;
 	}
 
+	//FIXME make this method work on generic PMUltipleBinds
 	public ABlockStmCG consComplexCompIterationBlock(
 			List<ASetMultipleBindCG> multipleSetBinds, ITempVarGen tempGen,
-			IIterationStrategy strategy) throws AnalysisException
+			IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
 
@@ -541,7 +535,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 			strategy.setLastBind(i == multipleSetBinds.size() - 1);
 
 			ASetMultipleBindCG mb = multipleSetBinds.get(i);
-			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy);
+			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy, iteVarPrefixes);
 
 			strategy.setFirstBind(false);
 		}
@@ -581,17 +575,6 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		binding.getPatterns().clear();
 	}
 
-	public AIdentifierVarExpCG consIdentifierVar(String name, STypeCG type)
-	{
-		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
-		var.setIsLambda(false);
-		var.setIsLocal(true);
-		var.setType(type);
-		var.setName(name);
-
-		return var;
-	}
-	
 	public AFieldDeclCG consField(String access, STypeCG type, String name, SExpCG initExp)
 	{
 		AFieldDeclCG stateField = new AFieldDeclCG();
@@ -644,14 +627,6 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		}
 
 		return condCall;
-	}
-
-	public AIdentifierPatternCG consIdPattern(String name)
-	{
-		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
-		idPattern.setName(name);
-
-		return idPattern;
 	}
 
 	public AVarDeclCG consClassVarDeclDefaultCtor(String className,

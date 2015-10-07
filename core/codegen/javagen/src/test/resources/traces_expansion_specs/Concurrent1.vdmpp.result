@@ -1,0 +1,85 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry implements java.io.Serializable {
+    public Entry() {
+    }
+
+    private void op1() {
+        /* skip */
+    }
+
+    private void op2() {
+        /* skip */
+    }
+
+    private void op3() {
+        /* skip */
+    }
+
+    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
+        CallStatement callStm_1 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    ((Entry) instance).op1();
+
+                    return Utils.VOID_VALUE;
+                }
+
+                public String toString() {
+                    return "op1()";
+                }
+            };
+
+        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+        CallStatement callStm_2 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    ((Entry) instance).op2();
+
+                    return Utils.VOID_VALUE;
+                }
+
+                public String toString() {
+                    return "op2()";
+                }
+            };
+
+        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+
+        CallStatement callStm_3 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    ((Entry) instance).op3();
+
+                    return Utils.VOID_VALUE;
+                }
+
+                public String toString() {
+                    return "op3()";
+                }
+            };
+
+        StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
+
+        concurrent_1.add(apply_1);
+        concurrent_1.add(apply_2);
+        concurrent_1.add(apply_3);
+
+        sequence_1.add(concurrent_1);
+
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

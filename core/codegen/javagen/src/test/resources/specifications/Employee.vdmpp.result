@@ -1,0 +1,176 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+abstract public class Employee {
+    public Employee() {
+    }
+
+    public abstract Number getSalary();
+
+    public String toString() {
+        return "Employee{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class HourlyPaidEmployee extends Employee {
+    public Number hours;
+    private Number rate;
+
+    public HourlyPaidEmployee(final Number pHours, final Number pRate) {
+        cg_init_HourlyPaidEmployee_1(pHours, pRate);
+    }
+
+    public HourlyPaidEmployee() {
+    }
+
+    public void cg_init_HourlyPaidEmployee_1(final Number pHours,
+        final Number pRate) {
+        hours = pHours;
+        rate = pRate;
+    }
+
+    public Number getSalary() {
+        return hours.doubleValue() * rate.doubleValue();
+    }
+
+    public void SetRate(final Number pRate) {
+        if (pRate.doubleValue() > 150L) {
+            rate = 150L;
+        } else if (pRate.doubleValue() < 0L) {
+            rate = 0L;
+        } else {
+            rate = pRate;
+        }
+    }
+
+    public String toString() {
+        return "HourlyPaidEmployee{" + "hours := " + Utils.toString(hours) +
+        ", rate := " + Utils.toString(rate) + "}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class FixedSalaryEmployee extends Employee {
+    private Number fixedSalary;
+
+    public FixedSalaryEmployee(final Number pFixedSalary) {
+        cg_init_FixedSalaryEmployee_1(pFixedSalary);
+    }
+
+    public FixedSalaryEmployee() {
+    }
+
+    public void cg_init_FixedSalaryEmployee_1(final Number pFixedSalary) {
+        fixedSalary = pFixedSalary;
+    }
+
+    public Number getSalary() {
+        return fixedSalary;
+    }
+
+    public String toString() {
+        return "FixedSalaryEmployee{" + "fixedSalary := " +
+        Utils.toString(fixedSalary) + "}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Company {
+    private VDMSeq employees;
+
+    public Company() {
+        cg_init_Company_1();
+    }
+
+    public void cg_init_Company_1() {
+        employees = SeqUtil.seq();
+    }
+
+    public void op1() {
+        Number x = employees.size();
+        VDMSeq y = Utils.copy(employees);
+        Employee q = ((Employee) employees.get(0));
+
+        /* skip */
+    }
+
+    public Number calculateSalary() {
+        return start_calc(0L, Utils.copy(employees));
+    }
+
+    private Number start_calc(final Number sum, final VDMSeq emps) {
+        if (Utils.equals(emps.size(), 0L)) {
+            return sum;
+        } else {
+            return start_calc(sum.doubleValue() +
+                ((Employee) emps.get(0)).getSalary().doubleValue(),
+                SeqUtil.tail(Utils.copy(emps)));
+        }
+    }
+
+    private Number not_used(final Number r, final Number n1, final Number n,
+        final Character c, final Boolean b) {
+        return 2.1;
+    }
+
+    public Company addEmp(final Employee emp) {
+        employees = SeqUtil.conc(Utils.copy(employees), SeqUtil.seq(emp));
+
+        return this;
+    }
+
+    public String toString() {
+        return "Company{" + "employees := " + Utils.toString(employees) + "}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class World {
+    public World() {
+    }
+
+    public Number run() {
+        HourlyPaidEmployee emp1 = new HourlyPaidEmployee(120.0, 100L);
+        FixedSalaryEmployee emp2 = new FixedSalaryEmployee(10000L);
+        FixedSalaryEmployee emp3 = new FixedSalaryEmployee(5000L);
+        HourlyPaidEmployee emp4 = new HourlyPaidEmployee(100.0, 100L);
+        Company company = new Company().addEmp(emp1).addEmp(emp2).addEmp(emp3)
+                                       .addEmp(emp4);
+
+        return company.calculateSalary();
+    }
+
+    public String toString() {
+        return "World{}";
+    }
+}
+
+##########

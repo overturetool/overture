@@ -1,0 +1,73 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry implements java.io.Serializable {
+    public Entry() {
+    }
+
+    public void op(final Number x) {
+        if (!(pre_op(x))) {
+            throw new RuntimeException("Precondition failure: pre_op");
+        }
+
+        /* skip */
+    }
+
+    private Boolean pre_op(final Number x) {
+        Boolean andResult_1 = false;
+
+        if (!(Utils.equals(x, 2L))) {
+            if (!(Utils.equals(x, 4L))) {
+                andResult_1 = true;
+            }
+        }
+
+        return andResult_1;
+    }
+
+    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+        VDMSet set_1 = SetUtil.set(1L, 2L, 3L, 4L, 5L);
+
+        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
+            final Number x = ((Number) iterator_1.next());
+            final Number ID_1 = gen.inc();
+
+            store.register(ID_1, x);
+
+            CallStatement callStm_1 = new CallStatement() {
+                    public Object execute(final Object instance) {
+                        ((Entry) instance).op(((Number) store.getValue(ID_1)));
+
+                        return Utils.VOID_VALUE;
+                    }
+
+                    public String toString() {
+                        return "op(" +
+                        Utils.toString(((Number) store.getValue(ID_1))) + ")";
+                    }
+                };
+
+            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+            alternatives_2.add(apply_1);
+        }
+
+        sequence_1.add(alternatives_2);
+
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

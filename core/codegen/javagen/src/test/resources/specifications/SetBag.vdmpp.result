@@ -1,0 +1,264 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Bag {
+    private VDMSet numbers;
+
+    public Bag(final VDMSet pNumbers) {
+        cg_init_Bag_1(Utils.copy(pNumbers));
+    }
+
+    public Bag() {
+    }
+
+    public static void Test() {
+        Bag bag1 = new Bag(SetUtil.set(1L, 2L, 3L));
+        Bag bag2 = new Bag(SetUtil.set(3L, 4L, 5L));
+        IO.println(SeqUtil.seq('C', 'r', 'e', 'a', 't', 'i', 'n', 'g', ' ',
+                't', 'w', 'o', ' ', 'b', 'a', 'g', 's', ',', ' ', 'b', 'a',
+                'g', '1', ' ', 'a', 'n', 'd', ' ', 'b', 'a', 'g', '2', ' ',
+                'w', 'i', 'h', ' ', 'n', 'u', 'm', 'b', 'e', 'r', 's', ' ',
+                '{', '1', ' ', '2', ' ', '3', '}', ' ', 'a', 'n', 'd', ' ',
+                '{', '3', ' ', '4', ' ', '5', '}', ',', ' ', 'r', 'e', 's',
+                'p', 'e', 'c', 't', 'i', 'v', 'e', 'l', 'y', '.', '\n'));
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
+        bag1.printBag();
+        IO.println(SeqUtil.seq('\n'));
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '2'));
+        bag2.printBag();
+        IO.println(SeqUtil.seq('\n'));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'h', 'a', 's', ' ', 'n',
+                'u', 'm', 'b', 'e', 'r', ' ', '2', ':', ' ', '%', 's', '\n'),
+            SeqUtil.seq(bag1.hasNumber(2L)));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'h', 'a', 's', ' ', 'n',
+                'u', 'm', 'b', 'e', 'r', ' ', '4', ':', ' ', '%', 's', '\n'),
+            SeqUtil.seq(bag1.hasNumber(4L)));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'h', 'a', 's', ' ', 'N',
+                'O', 'T', ' ', 'n', 'u', 'm', 'b', 'e', 'r', ' ', '2', ':',
+                ' ', '%', 's', '\n'), SeqUtil.seq(bag1.hasNotNumber(2L)));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'h', 'a', 's', ' ', 'N',
+                'O', 'T', ' ', 'n', 'u', 'm', 'b', 'e', 'r', ' ', '4', ':',
+                ' ', '%', 's', '\n'), SeqUtil.seq(bag1.hasNotNumber(4L)));
+        IO.print(SeqUtil.seq('\n'));
+        IO.print(SeqUtil.seq('A', 'd', 'd', 'i', 'n', 'g', ' ', 'c', 'o', 'n',
+                't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b', 'a', 'g', '2',
+                ' ', 't', 'o', ' ', 'b', 'a', 'g', '1', '.', '.', '\n'));
+        bag1.addNumbers(bag2);
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
+        bag1.printBag();
+        IO.println(SeqUtil.seq('\n'));
+        IO.print(SeqUtil.seq('A', 'd', 'd', 'i', 'n', 'g', ' ', '\'', '6',
+                '\'', ' ', 't', 'o', ' ', 'b', 'a', 'g', '1'));
+        bag1.addNumbers(new Bag(SetUtil.set(6L)));
+        IO.print(SeqUtil.seq('\n'));
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
+        bag1.printBag();
+        IO.println(SeqUtil.seq('\n'));
+        IO.print(SeqUtil.seq('S', 'e', 't', 't', 'i', 'n', 'g', ' ', 'b', 'a',
+                'g', '1', ' ', 't', 'o', ' ', 'h', 'a', 'v', 'e', ' ', 't',
+                'h', 'e', ' ', 'n', 'u', 'm', 'b', 'e', 'r', 's', ' ', 's',
+                'h', 'a', 'r', 'e', 'd', ' ', 'w', 'i', 't', 'h', ' ', 'b',
+                'a', 'g', ' ', '2', '\n'));
+        bag1.setSharedNumbers(bag2);
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
+        bag1.printBag();
+        IO.println(SeqUtil.seq('\n'));
+        IO.print(SeqUtil.seq('R', 'e', 'm', 'o', 'v', 'i', 'n', 'g', ' ', 'n',
+                'u', 'm', 'b', 'e', 'r', ' ', '\'', '4', '\'', ' ', 'f', 'r',
+                'o', 'm', ' ', 'b', 'a', 'g', '1'));
+        bag1.removeNumbers(new Bag(SetUtil.set(4L)));
+        IO.print(SeqUtil.seq('\n'));
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
+        bag1.printBag();
+        IO.println(SeqUtil.seq('\n'));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '2', ' ', 'c', 'o', 'n', 't', 'a',
+                'i', 'n', 's', ' ', 'b', 'a', 'g', '1', ':', ' ', '%', 's', '\n'),
+            SeqUtil.seq(bag2.contains(bag1)));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'c', 'o', 'n', 't', 'a',
+                'i', 'n', 's', ' ', 'b', 'a', 'g', '2', ':', ' ', '%', 's', '\n'),
+            SeqUtil.seq(bag1.contains(bag2)));
+        IO.print(SeqUtil.seq('\n'));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '2', ' ', '\"', 'p', 'r', 'o',
+                'p', 'e', 'r', '\"', ' ', 'c', 'o', 'n', 't', 'a', 'i', 'n',
+                's', ' ', 'a', ' ', 'b', 'a', 'g', ' ', 'w', 'i', 't', 'h',
+                ' ', 'e', 'l', 'e', 'm', 'e', 'n', 't', 's', ' ', '{', '3',
+                ' ', '4', ' ', '5', '}', ':', ' ', '%', 's', '\n'),
+            SeqUtil.seq(bag2.properContains(new Bag(SetUtil.set(3L, 4L, 5L)))));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '2', ' ', '\"', 'p', 'r', 'o',
+                'p', 'e', 'r', '\"', ' ', 'c', 'o', 'n', 't', 'a', 'i', 'n',
+                's', ' ', 'b', 'a', 'g', '1', ':', ' ', '%', 's', '\n'),
+            SeqUtil.seq(bag2.properContains(bag1)));
+        IO.print(SeqUtil.seq('\n'));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'e', 'q', 'u', 'a', 'l',
+                's', ' ', 'b', 'a', 'g', '2', ':', ' ', '%', 's', '\n'),
+            SeqUtil.seq(bag1.eq(bag2)));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'e', 'q', 'u', 'a', 'l',
+                's', ' ', 'a', ' ', 'b', 'a', 'g', ' ', 'c', 'o', 'n', 't',
+                'a', 'i', 'n', 'i', 'n', 'g', ' ', 'e', 'l', 'e', 'm', 'e',
+                'n', 't', 's', ' ', '{', '3', ' ', '5', '}', ':', ' ', '%',
+                's', '\n'), SeqUtil.seq(bag1.eq(new Bag(SetUtil.set(3L, 5L)))));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'N', 'O', 'T', ' ', 'e',
+                'q', 'u', 'a', 'l', 's', ' ', 'b', 'a', 'g', '2', ':', ' ',
+                '%', 's', '\n'), SeqUtil.seq(bag1.neq(bag2)));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'N', 'O', 'T', ' ', 'e',
+                'q', 'u', 'a', 'l', 's', ' ', 'a', ' ', 'b', 'a', 'g', ' ',
+                'c', 'o', 'n', 't', 'a', 'i', 'n', 'i', 'n', 'g', ' ', 'e',
+                'l', 'e', 'm', 'e', 'n', 't', 's', ' ', '{', '3', ' ', '5',
+                '}', ':', ' ', '%', 's', '\n'),
+            SeqUtil.seq(bag1.neq(new Bag(SetUtil.set(3L, 5L)))));
+        IO.print(SeqUtil.seq('\n'));
+        IO.printf(SeqUtil.seq('S', 'i', 'z', 'e', ' ', 'o', 'f', ' ', 'b', 'a',
+                'g', '1', ':', ' ', '%', 's', '\n'), SeqUtil.seq(bag1.size()));
+        IO.print(SeqUtil.seq('\n'));
+        IO.println(SeqUtil.seq('A', 'd', 'd', 'i', 'n', 'g', ' ', 'n', 'u',
+                'm', 'b', 'e', 'r', 's', ' ', '\'', '4', '\'', ' ', 'a', 'n',
+                'd', ' ', '\'', '6', '\'', ' ', 't', 'o', ' ', 'b', 'a', 'g',
+                '1', ' ', 'u', 's', 'i', 'n', 'g', ' ', 'd', 'i', 's', 't',
+                'r', 'i', 'b', 'u', 't', 'e', 'd', ' ', 'u', 'n', 'i', 'o',
+                'n', '.', '.'));
+        bag1.addNumbersDist(new Bag(SetUtil.set(4L)), new Bag(SetUtil.set(6L)));
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
+        bag1.printBag();
+        IO.println(SeqUtil.seq('\n'));
+        IO.println(SeqUtil.seq('S', 'e', 't', 't', 'i', 'n', 'g', ' ', 'b',
+                'a', 'g', '1', ' ', 't', 'o', ' ', 'h', 'a', 'v', 'e', ' ',
+                'n', 'u', 'm', 'b', 'e', 'r', 's', ' ', 's', 'h', 'a', 'r',
+                'e', 'd', ' ', 'w', 'i', 't', 'h', ' ', '{', '4', ' ', '5',
+                '}', ' ', 'a', 'n', 'd', ' ', 't', 'h', 'e', 'n', ' ', '{',
+                '5', '}', ' ', 'u', 's', 'i', 'n', 'g', ' ', 'd', 'i', 's',
+                'r', 'i', 'b', 'u', 't', 'e', 'd', ' ', 'i', 'n', 't', 'e',
+                'r', 's', 'e', 'c', 't', 'i', 'o', 'n', '.', '.', '.'));
+        bag1.setSharedNumbersDist(new Bag(SetUtil.set(4L, 5L)),
+            new Bag(SetUtil.set(5L)));
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
+        bag1.printBag();
+        IO.println(SeqUtil.seq('\n'));
+        IO.print(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'p',
+                'o', 'w', 'e', 'r', ' ', 'b', 'a', 'g', 's', ' ', 'o', 'f',
+                ' ', 'b', 'a', 'g', '2', '.', '.', '\n'));
+
+        for (Iterator iterator_1 = bag2.powerBag().iterator();
+                iterator_1.hasNext();) {
+            Bag b = (Bag) iterator_1.next();
+            b.printBag();
+            IO.print(SeqUtil.seq('\n'));
+        }
+    }
+
+    public void cg_init_Bag_1(final VDMSet pNumbers) {
+        numbers = Utils.copy(pNumbers);
+
+        return;
+    }
+
+    public void printBag() {
+        IO.print(SeqUtil.seq('{'));
+
+        if (Utils.equals(numbers.size(), 0L)) {
+            IO.print(SeqUtil.seq(' '));
+        } else {
+            for (Iterator iterator_2 = numbers.iterator();
+                    iterator_2.hasNext();) {
+                Number e = (Number) iterator_2.next();
+                IO.printf(SeqUtil.seq(' ', '%', 's', ' '), SeqUtil.seq(e));
+            }
+        }
+
+        IO.print(SeqUtil.seq('}'));
+    }
+
+    public VDMSet getNumbers() {
+        return Utils.copy(numbers);
+    }
+
+    public Boolean hasNumber(final Number n) {
+        return SetUtil.inSet(n, numbers);
+    }
+
+    public Boolean hasNotNumber(final Number n) {
+        return !(SetUtil.inSet(n, numbers));
+    }
+
+    public void addNumbers(final Bag bag) {
+        numbers = SetUtil.union(Utils.copy(numbers), bag.getNumbers());
+    }
+
+    public void setSharedNumbers(final Bag bag) {
+        numbers = SetUtil.intersect(Utils.copy(numbers), bag.getNumbers());
+    }
+
+    public void removeNumbers(final Bag bag) {
+        numbers = SetUtil.diff(Utils.copy(numbers), bag.getNumbers());
+    }
+
+    public Boolean contains(final Bag bag) {
+        return SetUtil.subset(bag.getNumbers(), numbers);
+    }
+
+    public Boolean properContains(final Bag bag) {
+        return SetUtil.psubset(bag.getNumbers(), numbers);
+    }
+
+    public Boolean eq(final Bag bag) {
+        return Utils.equals(numbers, bag.getNumbers());
+    }
+
+    public Boolean neq(final Bag bag) {
+        return !(Utils.equals(numbers, bag.getNumbers()));
+    }
+
+    public Number size() {
+        return numbers.size();
+    }
+
+    public void addNumbersDist(final Bag bag1, final Bag bag2) {
+        numbers = SetUtil.dunion(SetUtil.set(Utils.copy(numbers),
+                    bag1.getNumbers(), bag2.getNumbers()));
+    }
+
+    public void setSharedNumbersDist(final Bag bag1, final Bag bag2) {
+        numbers = SetUtil.dinter(SetUtil.set(Utils.copy(numbers),
+                    bag1.getNumbers(), bag2.getNumbers()));
+    }
+
+    public VDMSet powerBag() {
+        VDMSet powerSets = SetUtil.powerset(Utils.copy(numbers));
+        VDMSet bags = SetUtil.set();
+
+        for (Iterator iterator_3 = powerSets.iterator(); iterator_3.hasNext();) {
+            VDMSet s = (VDMSet) iterator_3.next();
+            bags = SetUtil.union(Utils.copy(bags),
+                    SetUtil.set(new Bag(Utils.copy(s))));
+        }
+
+        return Utils.copy(bags);
+    }
+
+    public String toString() {
+        return "Bag{" + "numbers := " + Utils.toString(numbers) + "}";
+    }
+}
+
+##########
+*Quotes*
+append,start
+##########

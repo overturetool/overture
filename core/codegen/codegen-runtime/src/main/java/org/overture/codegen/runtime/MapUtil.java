@@ -32,6 +32,26 @@ public class MapUtil
 		return new VDMMap();
 	}
 	
+	public static Maplet[] toMaplets(VDMMap map)
+	{
+		if(map == null)
+		{
+			throw new IllegalArgumentException("Cannot get maplets from null");
+		}
+		
+		Maplet[] maplets = new Maplet[map.size()];
+
+		int nextIndex = 0;
+		for(Object key : map.keySet())
+		{
+			Object val = map.get(key);
+			
+			maplets[nextIndex++] = new Maplet(key, val);
+		}
+		
+		return maplets;
+	}
+	
 	public static Object get(VDMMap map, Object key)
 	{
 		Object value = map.get(key);

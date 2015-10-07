@@ -1,0 +1,24 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class C {
+    public C() {
+    }
+
+    public void op1(final Number arg) {
+        op2(arg);
+    }
+
+    public void op2(final Number arg) {
+        /* skip */
+    }
+
+    public String toString() {
+        return "C{}";
+    }
+}
+
+##########

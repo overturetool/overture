@@ -1,7 +1,0 @@
-class A
-functions
-
-f : () -> nat
-f() == 0;
-
-end A

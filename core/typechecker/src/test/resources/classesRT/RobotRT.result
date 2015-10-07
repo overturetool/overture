@@ -9,15 +9,16 @@
 <message column="9" line="1082" message="Instance variable 'dest' is not initialized" messageType="warning" number="5001" resource="RobotRT"/>
 <message column="2" line="1086" message="Instance variable 'counter' is not initialized" messageType="warning" number="5001" resource="RobotRT"/>
 <message column="9" line="1205" message="Instance variable 'completeGrid' is not initialized" messageType="warning" number="5001" resource="RobotRT"/>
-<message column="6" line="131" message="Operation 'IsValidGridPoint' cannot be called from a function" messageType="error" number="3300" resource="RobotRT"/>
-<message column="39" line="131" message="Operation 'IsValidGridPoint' cannot be called from a function" messageType="error" number="3300" resource="RobotRT"/>
-<message column="7" line="141" message="Operation 'IsValidGridPoint' cannot be called from a function" messageType="error" number="3300" resource="RobotRT"/>
-<message column="36" line="146" message="Operation 'IsValidGridPoint' cannot be called from a function" messageType="error" number="3300" resource="RobotRT"/>
-<message column="6" line="636" message="Operation '((World`env.completeGrid).IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT"/>
-<message column="15" line="833" message="Operation 'GetPos' cannot be called from a function" messageType="error" number="3300" resource="RobotRT"/>
-<message column="34" line="840" message="Operation '(workingGrid.IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT"/>
-<message column="7" line="903" message="Operation 'GetBatUsage' cannot be called from a function" messageType="error" number="3300" resource="RobotRT"/>
-<message column="6" line="935" message="Operation '(workingGrid.IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT"/>
-<message column="40" line="991" message="Operation '(workingGrid.IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT"/>
+<message column="34" line="120" message="Impure operation 'IsValidGridPoint' cannot be called from here" messageType="error" number="3300" resource="RobotRT"/>
+<message column="6" line="131" message="Impure operation 'IsValidGridPoint' cannot be called from here" messageType="error" number="3300" resource="RobotRT"/>
+<message column="39" line="131" message="Impure operation 'IsValidGridPoint' cannot be called from here" messageType="error" number="3300" resource="RobotRT"/>
+<message column="7" line="141" message="Impure operation 'IsValidGridPoint' cannot be called from here" messageType="error" number="3300" resource="RobotRT"/>
+<message column="36" line="146" message="Impure operation 'IsValidGridPoint' cannot be called from here" messageType="error" number="3300" resource="RobotRT"/>
+<message column="6" line="636" message="Impure operation '((World`env.completeGrid).IsValidGridPoint)' cannot be called from here" messageType="error" number="3300" resource="RobotRT"/>
+<message column="15" line="833" message="Impure operation 'GetPos' cannot be called from here" messageType="error" number="3300" resource="RobotRT"/>
+<message column="34" line="840" message="Impure operation '(workingGrid.IsValidGridPoint)' cannot be called from here" messageType="error" number="3300" resource="RobotRT"/>
+<message column="7" line="903" message="Impure operation 'GetBatUsage' cannot be called from here" messageType="error" number="3300" resource="RobotRT"/>
+<message column="6" line="935" message="Impure operation '(workingGrid.IsValidGridPoint)' cannot be called from here" messageType="error" number="3300" resource="RobotRT"/>
+<message column="40" line="991" message="Impure operation '(workingGrid.IsValidGridPoint)' cannot be called from here" messageType="error" number="3300" resource="RobotRT"/>
 <result/>
 </testResult>

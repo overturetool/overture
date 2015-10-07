@@ -1,4 +1,4 @@
 #set( $left = $JavaFormat.format($node.getLeft()) )
 #set( $right = $JavaFormat.format($node.getRight()) )
 ##
-${right}.containsAll(${left})
+SetUtil.subset(${left},${right})

@@ -1,0 +1,1 @@
+["state invariant satisfiable obligation in \u0027DEFAULT\u0027 (455.vdmsl) at line 1:7: (exists x:nat, y:nat \u0026 (x \u003c y))","state invariant holds obligation in \u0027DEFAULT\u0027 (455.vdmsl) at line 10:19: (inv_S(mk_S(x, y)) \u003d\u003e inv_S(mk_S(nx, ny)))"]

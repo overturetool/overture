@@ -2,6 +2,7 @@
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="11" line="15" message="S1 at 6:7 hidden by S1" messageType="warning" number="5008" resource="opdef2.vdm"/>
 <message column="7" line="8" message="Definition 'x' not used" messageType="warning" number="5000" resource="opdef2.vdm"/>
+<message column="5" line="16" message="State variable 'S1' cannot be accessed from this context" messageType="error" number="3302" resource="opdef2.vdm"/>
 <message column="5" line="16" message="Variable 'S1' in scope is not updatable" messageType="error" number="3301" resource="opdef2.vdm"/>
 <result/>
 </testResult>

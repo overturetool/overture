@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.ACpuClassDefinition;
+import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
@@ -22,10 +23,8 @@ import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.VoidValue;
-import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 
-public class ACpuClassDefinitionAssistantInterpreter extends
-		ACpuClassDefinitionAssistantTC implements IAstAssistant
+public class ACpuClassDefinitionAssistantInterpreter implements IAstAssistant
 {
 
 	protected static IInterpreterAssistantFactory af;
@@ -34,7 +33,6 @@ public class ACpuClassDefinitionAssistantInterpreter extends
 	public ACpuClassDefinitionAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 
@@ -50,7 +48,7 @@ public class ACpuClassDefinitionAssistantInterpreter extends
 		{
 			throw new ContextException(4149, "CPU frequency to slow: "
 					+ sarg.value + " Hz", ctxt.location, ctxt);
-		} else if (sarg.value > CPU_MAX_FREQUENCY)
+		} else if (sarg.value > AstFactoryTC.CPU_MAX_FREQUENCY)
 		{
 			throw new ContextException(4150, "CPU frequency to fast: "
 					+ sarg.value + " Hz", ctxt.location, ctxt);

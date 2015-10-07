@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="3" line="26" message="Cannot use 'new' in a functional context" messageType="error" number="3348" resource="overload-09.vpp"/>
 <message column="11" line="26" message="Unknown member fn(nat) of class A" messageType="error" number="3091" resource="overload-09.vpp"/>
+<message column="3" line="30" message="Cannot use 'new' in a functional context" messageType="error" number="3348" resource="overload-09.vpp"/>
 <result/>
 </testResult>

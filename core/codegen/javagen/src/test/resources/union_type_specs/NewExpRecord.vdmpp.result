@@ -1,0 +1,88 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry(final Character c) {
+        cg_init_Entry_1(c);
+    }
+
+    public Entry(final Number n) {
+        cg_init_Entry_2(n);
+    }
+
+    public Entry(final Boolean b, final Number r) {
+        cg_init_Entry_3(b, r);
+    }
+
+    public Entry(final Number n, final Character c) {
+        cg_init_Entry_4(n, c);
+    }
+
+    public Entry() {
+    }
+
+    public void cg_init_Entry_1(final Character c) {
+        /* skip */
+    }
+
+    public void cg_init_Entry_2(final Number n) {
+        /* skip */
+    }
+
+    public void cg_init_Entry_3(final Boolean b, final Number r) {
+        /* skip */
+    }
+
+    public void cg_init_Entry_4(final Number n, final Character c) {
+        /* skip */
+    }
+
+    public static Object Run() {
+        Object x = 1L;
+        Object y = 'a';
+        Rec r = new Rec(((Number) x), ((Character) y));
+
+        return Tuple.mk_(r.x, r.y);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public static class Rec implements Record {
+        public Number x;
+        public Character y;
+
+        public Rec(final Number _x, final Character _y) {
+            x = _x;
+            y = _y;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof Rec)) {
+                return false;
+            }
+
+            Rec other = ((Rec) obj);
+
+            return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x, y);
+        }
+
+        public Rec copy() {
+            return new Rec(x, y);
+        }
+
+        public String toString() {
+            return "mk_Entry`Rec" + Utils.formatFields(x, y);
+        }
+    }
+}
+
+##########

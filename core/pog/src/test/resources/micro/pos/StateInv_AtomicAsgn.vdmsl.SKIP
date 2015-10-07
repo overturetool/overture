@@ -1,0 +1,11 @@
+state S of 
+x :int 
+y :int
+inv s == s.x = s.y
+end
+
+operations
+op : () ==> ()
+op()== atomic(x:=1; y:=1)
+
+

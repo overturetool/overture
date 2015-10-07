@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -48,10 +47,8 @@ import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.util.definitions.ClassList;
-import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
-import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
@@ -59,16 +56,12 @@ import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.config.Settings;
-import org.overture.interpreter.VDMPP;
-import org.overture.interpreter.VDMRT;
-import org.overture.interpreter.VDMSL;
-import org.overture.interpreter.util.ClassListInterpreter;
-import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.Console;
+import org.overture.parser.messages.VDMError;
 import org.overture.parser.messages.VDMErrorsException;
+import org.overture.parser.messages.VDMWarning;
 import org.overture.parser.syntax.ClassReader;
 import org.overture.parser.syntax.ExpressionReader;
 import org.overture.parser.syntax.ParserException;
@@ -88,104 +81,56 @@ public class GeneralCodeGenUtils
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
-	public static List<SClassDefinition> consClassList(List<File> files, Dialect dialect)
-			throws AnalysisException
+	public static String errorStr(TypeCheckResult<?> tcResult)
 	{
-		Settings.dialect = dialect;
-		VDMPP vdmrt = (dialect == Dialect.VDM_RT ? new VDMRT() : new VDMPP());
-		vdmrt.setQuiet(true);
-
-		ExitStatus status = vdmrt.parse(files);
-
-		if (status != ExitStatus.EXIT_OK)
+		if(tcResult == null)
 		{
-			throw new AnalysisException("Could not parse files!");
+			return "No type check result found!";
 		}
-
-		status = vdmrt.typeCheck();
-
-		if (status != ExitStatus.EXIT_OK)
+		
+		StringBuilder sb = new StringBuilder();
+		
+		if(!tcResult.parserResult.warnings.isEmpty())
 		{
-			throw new AnalysisException("Could not type check files!");
-		}
-
-		ClassListInterpreter classes;
-		try
-		{
-			classes = vdmrt.getInterpreter().getClasses();
-		} catch (Exception e)
-		{
-			throw new AnalysisException("Could not get classes from class list interpreter!");
-		}
-
-		List<SClassDefinition> mergedParseList = new LinkedList<SClassDefinition>();
-
-		for (SClassDefinition vdmClass : classes)
-		{
-			if (vdmClass instanceof AClassClassDefinition) {
-				mergedParseList.add(vdmClass);
+			sb.append("Parser warnings:").append('\n');
+			for(VDMWarning w : tcResult.parserResult.warnings)
+			{
+				sb.append(w).append('\n');
 			}
+			sb.append('\n');
 		}
-
-		return mergedParseList;
-	}
-	
-	public static ModuleList consModuleList(List<File> files) throws AnalysisException
-	{
-		Settings.dialect = Dialect.VDM_SL;
-		VDMSL vdmSl = new VDMSL();
-		vdmSl.setQuiet(true);
-
-		ExitStatus status = vdmSl.parse(files);
-
-		if (status != ExitStatus.EXIT_OK)
+		
+		if(!tcResult.parserResult.errors.isEmpty())
 		{
-			throw new AnalysisException("Could not parse files!");
+			sb.append("Parser errors:").append('\n');
+			for(VDMError e : tcResult.parserResult.errors)
+			{
+				sb.append(e).append('\n');
+			}
+			sb.append('\n');
 		}
-
-		status = vdmSl.typeCheck();
-
-		if (status != ExitStatus.EXIT_OK)
+		
+		if(!tcResult.warnings.isEmpty())
 		{
-			throw new AnalysisException("Could not type check files!");
+			sb.append("Type check warnings:").append('\n');
+			for(VDMWarning w : tcResult.warnings)
+			{
+				sb.append(w).append('\n');
+			}
+			sb.append('\n');
 		}
-
-		try
+		
+		if(!tcResult.errors.isEmpty())
 		{
-			return vdmSl.getInterpreter().getModules();
-		} catch (Exception e)
-		{
-			throw new AnalysisException("Could not get classes from class list interpreter!");
+			sb.append("Type check errors:").append('\n');
+			for(VDMError w : tcResult.errors)
+			{
+				sb.append(w).append('\n');
+			}
+			sb.append('\n');
 		}
-	}
-	
-	public static TypeCheckResult<List<SClassDefinition>> validateFile(File file)
-			throws AnalysisException
-	{
-		if (!file.exists() || !file.isFile())
-		{
-			throw new AnalysisException("Could not find file: "
-					+ file.getAbsolutePath());
-		}
-
-		ParserResult<List<SClassDefinition>> parseResult = ParserUtil.parseOo(file, "UTF-8");
-
-		if (parseResult.errors.size() > 0)
-		{
-			throw new AnalysisException("File did not parse: "
-					+ file.getAbsolutePath());
-		}
-
-		TypeCheckResult<List<SClassDefinition>> typeCheckResult = TypeCheckerUtil.typeCheckPp(file);
-
-		if (typeCheckResult.errors.size() > 0)
-		{
-			throw new AnalysisException("File did not pass the type check: "
-					+ file.getName());
-		}
-
-		return typeCheckResult;
-
+		
+		return sb.toString();
 	}
 
 	public static TypeCheckResult<PExp> validateExp(String exp)
@@ -224,6 +169,11 @@ public class GeneralCodeGenUtils
 		return typeCheckResult;
 	}
 	
+	public static boolean hasErrors(TypeCheckResult<?> tcResult)
+	{
+		return !tcResult.parserResult.errors.isEmpty() || !tcResult.errors.isEmpty();
+	}
+
 	public static SClassDefinition consMainClass(
 			List<SClassDefinition> mergedParseLists, String expression,
 			Dialect dialect, String mainClassName, ITempVarGen nameGen) throws VDMErrorsException, AnalysisException
@@ -490,21 +440,6 @@ public class GeneralCodeGenUtils
 		}
 		
 		return sb.toString();
-	}
-	
-	public static String constructUnsupportedModelingString(
-			UnsupportedModelingException e)
-	{
-		StringBuffer buffer = new StringBuffer();
-
-		List<Violation> violations = asSortedList(e.getViolations());
-
-		for (Violation violation : violations)
-		{
-			buffer.append(violation + LINE_SEPARATOR);
-		}
-
-		return buffer.toString();
 	}
 	
 	public static List<Violation> asSortedList(Set<Violation> violations)

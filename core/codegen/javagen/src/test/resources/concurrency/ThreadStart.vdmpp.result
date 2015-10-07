@@ -1,0 +1,112 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class ThreadClass extends VDMThread implements EvaluatePP {
+    public volatile Number x = 0L;
+    public volatile Sentinel sentinel;
+
+    public ThreadClass() {
+        sentinel = new ThreadClass_sentinel(this);
+    }
+
+    public String toString() {
+        return "ThreadClass{" + "x := " + Utils.toString(x) + "}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public void run() {
+        x = 2L;
+        sentinel.stateChanged();
+    }
+
+    public static class ThreadClass_sentinel extends Sentinel {
+        public static final int ThreadClass = 0;
+        public static final int toString = 1;
+        public final int function_sum = 2;
+
+        public ThreadClass_sentinel() {
+        }
+
+        public ThreadClass_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry implements EvaluatePP {
+    public volatile Sentinel sentinel;
+
+    public Entry() {
+        sentinel = new Entry_sentinel(this);
+    }
+
+    public static Object Run() {
+        ThreadClass t = new ThreadClass();
+        t.start();
+
+        Boolean whileCond_1 = true;
+
+        while (whileCond_1) {
+            whileCond_1 = !(Utils.equals(t.x, 2L));
+
+            if (!(whileCond_1)) {
+                break;
+            }
+
+            /* skip */
+        }
+
+        return t.x;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public static class Entry_sentinel extends Sentinel {
+        public static final int Run = 0;
+        public static final int Entry = 1;
+        public static final int toString = 2;
+        public final int function_sum = 3;
+
+        public Entry_sentinel() {
+        }
+
+        public Entry_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########

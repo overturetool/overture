@@ -51,12 +51,10 @@ import org.overture.codegen.logging.Logger;
 public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 {
 	private IRInfo info;
-	private List<AClassDeclCG> classes;
 
-	public ObjectDesignatorToExpCG(IRInfo info, List<AClassDeclCG> classes)
+	public ObjectDesignatorToExpCG(IRInfo info)
 	{
 		this.info = info;
-		this.classes = classes;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -109,7 +107,7 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 		STypeCG fieldExpType = null;
 		try
 		{
-			fieldExpType = info.getTypeAssistant().getFieldExpType(info, classes, fieldName, fieldModule, obj, parent);
+			fieldExpType = info.getTypeAssistant().getFieldExpType(info, fieldName, fieldModule, obj, parent);
 		} catch (org.overture.ast.analysis.AnalysisException e)
 		{
 			Logger.getLog().printErrorln("Could not find field expression type of " + node + " in 'ObjectDesignatorToExpCG'");

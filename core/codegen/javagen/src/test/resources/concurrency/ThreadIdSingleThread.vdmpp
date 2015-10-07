@@ -1,0 +1,11 @@
+class Entry
+
+functions
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return is_nat(threadid);
+
+end Entry

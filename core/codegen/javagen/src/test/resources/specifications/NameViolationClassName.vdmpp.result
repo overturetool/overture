@@ -1,0 +1,29 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class cg_Long {
+    public cg_Long() {
+    }
+
+    public void op(final Number Character) {
+        if (!(Utils.equals(1L, 2L))) {
+            op(3L);
+        } else {
+            op(3L);
+        }
+    }
+
+    public String toString() {
+        return "cg_Long{}";
+    }
+}
+
+##########
+*Name Violations*
+
+Type name violation: [Violation in module Long: 'Long'. Location: line 1 at position: 7 in NameViolationClassName.vdmpp]. Prefix 'cg_' has been added to the name
+
+##########

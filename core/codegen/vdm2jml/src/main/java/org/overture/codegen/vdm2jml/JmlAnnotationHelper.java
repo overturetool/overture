@@ -14,6 +14,7 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class JmlAnnotationHelper
 {
@@ -50,13 +51,21 @@ public class JmlAnnotationHelper
 		}
 	}
 	
-	public List<ClonableString> consAnno(String jmlAnno, String name,
+	public List<ClonableString> consAnno(String jmlAnno, String pred,
 			List<String> fieldNames)
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("//@ %s %s", jmlAnno, name));
-		sb.append("(");
+		sb.append(String.format("//@ %s %s", jmlAnno, pred));
 
+		appendFieldNames(fieldNames, sb);
+
+		return consMetaData(sb);
+	}
+
+	private void appendFieldNames(List<String> fieldNames, StringBuilder sb) {
+		
+		sb.append("(");
+		
 		String sep = "";
 		for (String fName : fieldNames)
 		{
@@ -65,9 +74,47 @@ public class JmlAnnotationHelper
 		}
 
 		sb.append(");");
-
-		return consMetaData(sb);
 	}
+	
+	public void addInvCheckGhostVarDecl(AClassDeclCG owner)
+	{
+		String metaStr = String.format(JmlGenerator.JML_INV_CHECKS_ON_DECL, JmlGenerator.INV_CHECKS_ON_GHOST_VAR_NAME);
+		
+		appendMetaData(owner, consMetaData(metaStr));
+	}
+	
+	public String consInvChecksOnName(AClassDeclCG owner)
+	{
+		StringBuilder prefix = new StringBuilder();
+		
+		if(JavaCodeGenUtil.isValidJavaPackage(owner.getPackage()))
+		{
+			prefix.append(owner.getPackage());
+			prefix.append(".");
+		}
+		
+		prefix.append(owner.getName());
+		prefix.append(".");
+		prefix.append(JmlGenerator.INV_CHECKS_ON_GHOST_VAR_NAME);
+		
+		return prefix.toString();
+	}
+
+	public void addRecInv(ARecordDeclCG r) {
+
+		List<String> args = jmlGen.getUtil().getRecFieldNames(r);
+
+		String jmlAnno = "public " + JmlGenerator.JML_INSTANCE_INV_ANNOTATION;
+		
+		StringBuilder pred = new StringBuilder();
+		pred.append(consInvChecksOnName(jmlGen.getInvChecksFlagOwner()));
+		pred.append(JmlGenerator.JML_IMPLIES);
+		pred.append(JmlGenerator.INV_PREFIX);
+		pred.append(r.getName());
+		
+		appendMetaData(r, consAnno(jmlAnno, pred.toString(), args));
+	}
+
 	
 	public void makePure(SDeclCG cond)
 	{

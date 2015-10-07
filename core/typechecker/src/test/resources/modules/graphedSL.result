@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
 <message column="36" line="101" message="State init expression cannot be executed" messageType="warning" number="5010" resource="graphedSL"/>
-<message column="13" line="682" message="Operation 'move_compound_object' cannot be called from a function" messageType="error" number="3300" resource="graphedSL"/>
-<message column="13" line="685" message="Operation 'move_simple_object' cannot be called from a function" messageType="error" number="3300" resource="graphedSL"/>
-<message column="13" line="760" message="Operation 'copy_compound_object' cannot be called from a function" messageType="error" number="3300" resource="graphedSL"/>
-<message column="13" line="763" message="Operation 'copy_simple_object' cannot be called from a function" messageType="error" number="3300" resource="graphedSL"/>
+<message column="13" line="682" message="Impure operation 'move_compound_object' cannot be called from here" messageType="error" number="3300" resource="graphedSL"/>
+<message column="13" line="685" message="Impure operation 'move_simple_object' cannot be called from here" messageType="error" number="3300" resource="graphedSL"/>
+<message column="13" line="760" message="Impure operation 'copy_compound_object' cannot be called from here" messageType="error" number="3300" resource="graphedSL"/>
+<message column="13" line="763" message="Impure operation 'copy_simple_object' cannot be called from here" messageType="error" number="3300" resource="graphedSL"/>
 <result/>
 </testResult>

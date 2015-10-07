@@ -48,7 +48,10 @@ public class GeneratedData
 		this.skippedClasses = skippedClasses;
 	}
 
-	
+	public boolean hasErrors()
+	{
+		return hasErrors(classes) || hasErrors(quoteValues);
+	}
 
 	public List<GeneratedModule> getClasses()
 	{
@@ -108,5 +111,18 @@ public class GeneratedData
 	public void setWarnings(List<String> warnings)
 	{
 		this.warnings = warnings;
+	}
+	
+	private boolean hasErrors(List<GeneratedModule> modules)
+	{
+		for(GeneratedModule clazz : modules)
+		{
+			if(clazz.hasErrors())
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

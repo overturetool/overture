@@ -1,0 +1,3029 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry implements EvaluatePP {
+    public volatile Sentinel sentinel;
+
+    public Entry() {
+        sentinel = new Entry_sentinel(this);
+    }
+
+    public static Object Run() {
+        String test1Output = new POP3Test().Test1();
+
+        return "Test 1:\n" + test1Output;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public static class Entry_sentinel extends Sentinel {
+        public static final int Run = 0;
+        public static final int Entry = 1;
+        public static final int toString = 2;
+        public final int function_sum = 3;
+
+        public Entry_sentinel() {
+        }
+
+        public Entry_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Log implements EvaluatePP {
+    private static volatile Log Instance = null;
+    private volatile VDMSeq messages = SeqUtil.seq();
+    public volatile Sentinel sentinel;
+
+    public Log() {
+        sentinel = new Log_sentinel(this);
+    }
+
+    public void clear() {
+        sentinel.entering(((Log_sentinel) sentinel).clear);
+
+        try {
+            messages = SeqUtil.seq();
+            sentinel.stateChanged();
+        } finally {
+            sentinel.leaving(((Log_sentinel) sentinel).clear);
+        }
+    }
+
+    public static Log getInstance() {
+        if (Utils.equals(Instance, null)) {
+            Instance = new Log();
+        }
+
+        return Instance;
+    }
+
+    public void log(final String msg) {
+        sentinel.entering(((Log_sentinel) sentinel).log);
+
+        try {
+            messages = SeqUtil.conc(Utils.copy(messages), SeqUtil.seq(msg));
+
+            sentinel.stateChanged();
+        } finally {
+            sentinel.leaving(((Log_sentinel) sentinel).log);
+        }
+    }
+
+    public String output() {
+        sentinel.entering(((Log_sentinel) sentinel).output);
+
+        try {
+            String output = "";
+
+            for (Iterator iterator_13 = messages.iterator();
+                    iterator_13.hasNext();) {
+                String m = (String) iterator_13.next();
+                output = output + m + "\n";
+            }
+
+            return output;
+        } finally {
+            sentinel.leaving(((Log_sentinel) sentinel).output);
+        }
+    }
+
+    public String toString() {
+        return "Log{" + "messages := " + Utils.toString(messages) +
+        ", Instance := " + Utils.toString(Instance) + "}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else if (Utils.equals(fnr, 3L)) {
+            return true;
+        } else if (Utils.equals(fnr, 4L)) {
+            return true;
+        } else if (Utils.equals(fnr, 5L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public static class Log_sentinel extends Sentinel {
+        public static final int clear = 0;
+        public static final int getInstance = 1;
+        public static final int log = 2;
+        public static final int output = 3;
+        public static final int Log = 4;
+        public static final int toString = 5;
+        public final int function_sum = 6;
+
+        public Log_sentinel() {
+        }
+
+        public Log_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class MessageChannelBuffer implements EvaluatePP {
+    private volatile MessageChannel data = null;
+    public volatile Sentinel sentinel;
+
+    public MessageChannelBuffer() {
+        sentinel = new MessageChannelBuffer_sentinel(this);
+    }
+
+    public void Put(final MessageChannel msg) {
+        sentinel.entering(((MessageChannelBuffer_sentinel) sentinel).Put);
+
+        try {
+            data = msg;
+            sentinel.stateChanged();
+        } finally {
+            sentinel.leaving(((MessageChannelBuffer_sentinel) sentinel).Put);
+        }
+    }
+
+    public MessageChannel Get() {
+        sentinel.entering(((MessageChannelBuffer_sentinel) sentinel).Get);
+
+        try {
+            MessageChannel d = data;
+            data = null;
+            sentinel.stateChanged();
+
+            return d;
+        } finally {
+            sentinel.leaving(((MessageChannelBuffer_sentinel) sentinel).Get);
+        }
+    }
+
+    public String toString() {
+        return "MessageChannelBuffer{" + "data := " + Utils.toString(data) +
+        "}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return (Utils.equals(data, null)) &&
+            (Utils.equals(sentinel.active[((MessageChannelBuffer_sentinel) sentinel).Put] +
+                sentinel.active[((MessageChannelBuffer_sentinel) sentinel).Get],
+                0L)) &&
+            (Utils.equals(sentinel.active[((MessageChannelBuffer_sentinel) sentinel).Put],
+                0L));
+        } else if (Utils.equals(fnr, 1L)) {
+            return !(Utils.equals(data, null)) &&
+            (Utils.equals(sentinel.active[((MessageChannelBuffer_sentinel) sentinel).Put] +
+                sentinel.active[((MessageChannelBuffer_sentinel) sentinel).Get],
+                0L)) &&
+            (Utils.equals(sentinel.active[((MessageChannelBuffer_sentinel) sentinel).Get],
+                0L));
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else if (Utils.equals(fnr, 3L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public static class MessageChannelBuffer_sentinel extends Sentinel {
+        public static final int Put = 0;
+        public static final int Get = 1;
+        public static final int MessageChannelBuffer = 2;
+        public static final int toString = 3;
+        public final int function_sum = 4;
+
+        public MessageChannelBuffer_sentinel() {
+        }
+
+        public MessageChannelBuffer_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class MessageChannel implements EvaluatePP {
+    private volatile Object data = null;
+    private volatile Boolean debug = true;
+    public volatile Sentinel sentinel;
+
+    public MessageChannel() {
+        sentinel = new MessageChannel_sentinel(this);
+    }
+
+    private void Send(final Object msg) {
+        sentinel.entering(((MessageChannel_sentinel) sentinel).Send);
+
+        try {
+            data = msg;
+            sentinel.stateChanged();
+        } finally {
+            sentinel.leaving(((MessageChannel_sentinel) sentinel).Send);
+        }
+    }
+
+    private Object Listen() {
+        sentinel.entering(((MessageChannel_sentinel) sentinel).Listen);
+
+        try {
+            Object d = data;
+            data = null;
+            sentinel.stateChanged();
+
+            return d;
+        } finally {
+            sentinel.leaving(((MessageChannel_sentinel) sentinel).Listen);
+        }
+    }
+
+    public void ServerSend(final Object p) {
+        sentinel.entering(((MessageChannel_sentinel) sentinel).ServerSend);
+
+        try {
+            if (debug) {
+                Log.getInstance().log("***> ServerSend");
+            }
+
+            Send(((Object) p));
+
+            if (debug) {
+                Log.getInstance().log("***> fin ServerSend");
+            }
+        } finally {
+            sentinel.leaving(((MessageChannel_sentinel) sentinel).ServerSend);
+        }
+    }
+
+    public Object ClientListen() {
+        sentinel.entering(((MessageChannel_sentinel) sentinel).ClientListen);
+
+        try {
+            if (debug) {
+                Log.getInstance().log("***> ClientListen");
+            }
+
+            {
+                Object r = Listen();
+
+                if (debug) {
+                    Log.getInstance().log("***> fin ClientListen");
+                }
+
+                return r;
+            }
+        } finally {
+            sentinel.leaving(((MessageChannel_sentinel) sentinel).ClientListen);
+        }
+    }
+
+    public void ClientSend(final Object p) {
+        sentinel.entering(((MessageChannel_sentinel) sentinel).ClientSend);
+
+        try {
+            if (debug) {
+                Log.getInstance().log("***> ClientSend");
+            }
+
+            Send(((Object) p));
+
+            if (debug) {
+                Log.getInstance().log("***> fin ClientSend");
+            }
+        } finally {
+            sentinel.leaving(((MessageChannel_sentinel) sentinel).ClientSend);
+        }
+    }
+
+    public Object ServerListen() {
+        sentinel.entering(((MessageChannel_sentinel) sentinel).ServerListen);
+
+        try {
+            if (debug) {
+                Log.getInstance().log("***> ServerListen");
+            }
+
+            {
+                Object c = Listen();
+
+                if (debug) {
+                    Log.getInstance().log("***> fin ServerListen");
+                }
+
+                return c;
+            }
+        } finally {
+            sentinel.leaving(((MessageChannel_sentinel) sentinel).ServerListen);
+        }
+    }
+
+    public String toString() {
+        return "MessageChannel{" + "data := " + Utils.toString(data) +
+        ", debug := " + Utils.toString(debug) + "}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return (Utils.equals(sentinel.fin[((MessageChannel_sentinel) sentinel).ClientSend],
+                sentinel.fin[((MessageChannel_sentinel) sentinel).ServerListen])) &&
+            (Utils.equals(sentinel.fin[((MessageChannel_sentinel) sentinel).ServerListen] -
+                1L,
+                sentinel.fin[((MessageChannel_sentinel) sentinel).ServerSend]));
+        } else if (Utils.equals(fnr, 3L)) {
+            return Utils.equals(sentinel.fin[((MessageChannel_sentinel) sentinel).ServerSend] -
+                1L,
+                sentinel.fin[((MessageChannel_sentinel) sentinel).ClientListen]);
+        } else if (Utils.equals(fnr, 4L)) {
+            return (Utils.equals(sentinel.fin[((MessageChannel_sentinel) sentinel).ServerSend],
+                sentinel.fin[((MessageChannel_sentinel) sentinel).ClientListen])) &&
+            (Utils.equals(sentinel.fin[((MessageChannel_sentinel) sentinel).ClientSend],
+                sentinel.fin[((MessageChannel_sentinel) sentinel).ServerListen])) &&
+            (Utils.equals(sentinel.fin[((MessageChannel_sentinel) sentinel).ServerSend],
+                sentinel.fin[((MessageChannel_sentinel) sentinel).ClientSend]));
+        } else if (Utils.equals(fnr, 5L)) {
+            return Utils.equals(sentinel.fin[((MessageChannel_sentinel) sentinel).ClientSend] -
+                1L,
+                sentinel.fin[((MessageChannel_sentinel) sentinel).ServerListen]);
+        } else if (Utils.equals(fnr, 6L)) {
+            return true;
+        } else if (Utils.equals(fnr, 7L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public static class MessageChannel_sentinel extends Sentinel {
+        public static final int Send = 0;
+        public static final int Listen = 1;
+        public static final int ServerSend = 2;
+        public static final int ClientListen = 3;
+        public static final int ClientSend = 4;
+        public static final int ServerListen = 5;
+        public static final int MessageChannel = 6;
+        public static final int toString = 7;
+        public final int function_sum = 8;
+
+        public MessageChannel_sentinel() {
+        }
+
+        public MessageChannel_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class POP3ClientHandler extends VDMThread implements EvaluatePP {
+    private static final String unknownMessageMsg = "No such message";
+    private static final String negativeStatusMsg = "Wrong state for this command";
+    private static final String alreadyDeletedMsg = "Message already deleted";
+    private static final String deleteFailMsg = "Some deleted messages not removed";
+    private static final String maildropLockedMsg = "Maildrop already locked";
+    private static final String maildropReadyMsg = "Maildrop locked and ready";
+    private static final String passwordFailedMsg = "User/password authentication failed";
+    private static final String quitMsg = "Quitting POP3 Server";
+    private static final String submitPasswordMsg = "Enter password";
+    private volatile Object ss;
+    private volatile POP3Server parent;
+    private volatile String user;
+    private volatile MessageChannel msgChannel;
+    private volatile Number id;
+    private volatile Boolean lastWasUser = false;
+    public volatile Sentinel sentinel;
+
+    public POP3ClientHandler(final POP3Server nparent, final MessageChannel nch) {
+        sentinel = new POP3ClientHandler_sentinel(this);
+
+        cg_init_POP3ClientHandler_1(nparent, nch);
+    }
+
+    public POP3ClientHandler() {
+        sentinel = new POP3ClientHandler_sentinel(this);
+    }
+
+    public void cg_init_POP3ClientHandler_1(final POP3Server nparent,
+        final MessageChannel nch) {
+        ss = quotes.AuthorizationQuote.getInstance();
+        parent = nparent;
+        msgChannel = nch;
+    }
+
+    private Object ReceiveCommand(final Object c) {
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveCommand);
+
+        try {
+            Object casesExpResult_1 = null;
+
+            Boolean success_3 = true;
+
+            if (c instanceof POP3Types.QUIT) {
+                POP3Types.QUIT recordPattern_1 = ((POP3Types.QUIT) c);
+            } else {
+                success_3 = false;
+            }
+
+            if (!(success_3)) {
+                if (c instanceof POP3Types.STAT) {
+                    POP3Types.STAT recordPattern_2 = ((POP3Types.STAT) c);
+                    success_3 = true;
+                } else {
+                    success_3 = false;
+                }
+
+                if (!(success_3)) {
+                    if (c instanceof POP3Types.LIST) {
+                        POP3Types.LIST recordPattern_3 = ((POP3Types.LIST) c);
+                        success_3 = true;
+                    } else {
+                        success_3 = false;
+                    }
+
+                    if (!(success_3)) {
+                        if (c instanceof POP3Types.RETR) {
+                            POP3Types.RETR recordPattern_4 = ((POP3Types.RETR) c);
+                            success_3 = true;
+                        } else {
+                            success_3 = false;
+                        }
+
+                        if (!(success_3)) {
+                            if (c instanceof POP3Types.DELE) {
+                                POP3Types.DELE recordPattern_5 = ((POP3Types.DELE) c);
+                                success_3 = true;
+                            } else {
+                                success_3 = false;
+                            }
+
+                            if (!(success_3)) {
+                                if (c instanceof POP3Types.NOOP) {
+                                    POP3Types.NOOP recordPattern_6 = ((POP3Types.NOOP) c);
+                                    success_3 = true;
+                                } else {
+                                    success_3 = false;
+                                }
+
+                                if (!(success_3)) {
+                                    if (c instanceof POP3Types.RSET) {
+                                        POP3Types.RSET recordPattern_7 = ((POP3Types.RSET) c);
+                                        success_3 = true;
+                                    } else {
+                                        success_3 = false;
+                                    }
+
+                                    if (!(success_3)) {
+                                        if (c instanceof POP3Types.TOP) {
+                                            POP3Types.TOP recordPattern_8 = ((POP3Types.TOP) c);
+                                            success_3 = true;
+                                        } else {
+                                            success_3 = false;
+                                        }
+
+                                        if (!(success_3)) {
+                                            if (c instanceof POP3Types.UIDL) {
+                                                POP3Types.UIDL recordPattern_9 = ((POP3Types.UIDL) c);
+                                                success_3 = true;
+                                            } else {
+                                                success_3 = false;
+                                            }
+
+                                            if (!(success_3)) {
+                                                if (c instanceof POP3Types.USER) {
+                                                    POP3Types.USER recordPattern_10 =
+                                                        ((POP3Types.USER) c);
+                                                    success_3 = true;
+                                                } else {
+                                                    success_3 = false;
+                                                }
+
+                                                if (!(success_3)) {
+                                                    if (c instanceof POP3Types.PASS) {
+                                                        POP3Types.PASS recordPattern_11 =
+                                                            ((POP3Types.PASS) c);
+                                                        success_3 = true;
+                                                    } else {
+                                                        success_3 = false;
+                                                    }
+
+                                                    if (success_3) {
+                                                        casesExpResult_1 = ReceivePASS(((POP3Types.PASS) c));
+                                                    }
+                                                } else {
+                                                    casesExpResult_1 = ReceiveUSER(((POP3Types.USER) c));
+                                                }
+                                            } else {
+                                                casesExpResult_1 = ReceiveUIDL(((POP3Types.UIDL) c));
+                                            }
+                                        } else {
+                                            casesExpResult_1 = ReceiveTOP(((POP3Types.TOP) c));
+                                        }
+                                    } else {
+                                        casesExpResult_1 = ReceiveRSET(((POP3Types.RSET) c));
+                                    }
+                                } else {
+                                    casesExpResult_1 = ReceiveNOOP(((POP3Types.NOOP) c));
+                                }
+                            } else {
+                                casesExpResult_1 = ReceiveDELE(((POP3Types.DELE) c));
+                            }
+                        } else {
+                            casesExpResult_1 = ReceiveRETR(((POP3Types.RETR) c));
+                        }
+                    } else {
+                        casesExpResult_1 = ReceiveLIST(((POP3Types.LIST) c));
+                    }
+                } else {
+                    casesExpResult_1 = ReceiveSTAT(((POP3Types.STAT) c));
+                }
+            } else {
+                casesExpResult_1 = ReceiveQUIT(((POP3Types.QUIT) c));
+            }
+
+            Object response = casesExpResult_1;
+
+            if (Utils.is_(c, POP3Types.USER.class)) {
+                lastWasUser = true;
+                sentinel.stateChanged();
+            } else {
+                lastWasUser = false;
+                sentinel.stateChanged();
+            }
+
+            return response;
+        } finally {
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveCommand);
+        }
+    }
+
+    private Object ReceiveQUIT(final POP3Types.QUIT ignorePattern_1) {
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveQUIT);
+
+        try {
+            Object response = null;
+            Object quotePattern_1 = ss;
+            Boolean success_4 = Utils.equals(quotePattern_1,
+                    quotes.AuthorizationQuote.getInstance());
+
+            if (!(success_4)) {
+                Object quotePattern_2 = ss;
+                success_4 = Utils.equals(quotePattern_2,
+                        quotes.TransactionQuote.getInstance());
+
+                if (success_4) {
+                    {
+                        Boolean b = parent.RemoveDeletedMessages(user);
+
+                        {
+                            ss = quotes.UpdateQuote.getInstance();
+                            sentinel.stateChanged();
+
+                            parent.ReleaseLock(id);
+
+                            Object ternaryIfExp_1 = null;
+
+                            if (b) {
+                                ternaryIfExp_1 = new POP3Types.OkResponse(quitMsg);
+                            } else {
+                                ternaryIfExp_1 = new POP3Types.ErrResponse(deleteFailMsg);
+                            }
+
+                            response = ternaryIfExp_1;
+                        }
+                    }
+                } else {
+                    throw new RuntimeException("ERROR statement reached");
+                }
+            } else {
+                response = new POP3Types.OkResponse(quitMsg);
+            }
+
+            return response;
+        } finally {
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveQUIT);
+        }
+    }
+
+    private Object ReceiveSTAT(final POP3Types.STAT ignorePattern_2) {
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveSTAT);
+
+        try {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
+                return new POP3Types.OkResponse(" " +
+                    int2string(parent.GetNumberOfMessages(user)) + " " +
+                    int2string(parent.GetMailBoxSize(user)));
+            } else {
+                return new POP3Types.ErrResponse(negativeStatusMsg);
+            }
+        } finally {
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveSTAT);
+        }
+    }
+
+    private Object ReceiveLIST(final POP3Types.LIST list) {
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveLIST);
+
+        try {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
+                Boolean orResult_1 = false;
+
+                if (Utils.equals(list.messageNumber, null)) {
+                    orResult_1 = true;
+                } else {
+                    orResult_1 = parent.IsValidMessageNumber(user,
+                            list.messageNumber);
+                }
+
+                if (orResult_1) {
+                    VDMSet msgs = parent.GetMessageInfo(user, list.messageNumber);
+
+                    return new POP3Types.OkResponse(MakeScanListHeader(
+                            Utils.copy(msgs)) + "\n" +
+                        MakeScanListing(Utils.copy(msgs)));
+                } else {
+                    return new POP3Types.ErrResponse(unknownMessageMsg);
+                }
+            } else {
+                return new POP3Types.ErrResponse(negativeStatusMsg);
+            }
+        } finally {
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveLIST);
+        }
+    }
+
+    private Object ReceiveRETR(final POP3Types.RETR retr) {
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveRETR);
+
+        try {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
+                if (parent.IsValidMessageNumber(user, retr.messageNumber)) {
+                    String msgText = parent.GetMessageText(user,
+                            retr.messageNumber);
+                    String sizeText = int2string(parent.GetMessageSize(user,
+                                retr.messageNumber));
+
+                    return new POP3Types.OkResponse(sizeText + "\n" + msgText);
+                } else {
+                    return new POP3Types.ErrResponse(unknownMessageMsg);
+                }
+            } else {
+                return new POP3Types.ErrResponse(negativeStatusMsg);
+            }
+        } finally {
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveRETR);
+        }
+    }
+
+    private Object ReceiveDELE(final POP3Types.DELE retr) {
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveDELE);
+
+        try {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
+                if (parent.IsValidMessageNumber(user, retr.messageNumber)) {
+                    parent.DeleteMessage(user, retr.messageNumber);
+
+                    return new POP3Types.OkResponse("message " +
+                        int2string(retr.messageNumber) + " deleted");
+                } else {
+                    if (parent.MessageIsDeleted(user, retr.messageNumber)) {
+                        return new POP3Types.ErrResponse(alreadyDeletedMsg);
+                    } else {
+                        return new POP3Types.ErrResponse(unknownMessageMsg);
+                    }
+                }
+            } else {
+                return new POP3Types.ErrResponse(negativeStatusMsg);
+            }
+        } finally {
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveDELE);
+        }
+    }
+
+    private Object ReceiveNOOP(final POP3Types.NOOP ignorePattern_3) {
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveNOOP);
+
+        try {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
+                return new POP3Types.OkResponse("");
+            } else {
+                return new POP3Types.ErrResponse(negativeStatusMsg);
+            }
+        } finally {
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveNOOP);
+        }
+    }
+
+    private Object ReceiveRSET(final POP3Types.RSET ignorePattern_4) {
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveRSET);
+
+        try {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
+                parent.ResetDeletedMessages(user);
+
+                return new POP3Types.OkResponse("maildrop has " +
+                    int2string(parent.GetNumberOfMessages(user)) + " messages");
+            } else {
+                return new POP3Types.ErrResponse(negativeStatusMsg);
+            }
+        } finally {
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveRSET);
+        }
+    }
+
+    private Object ReceiveTOP(final POP3Types.TOP top) {
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveTOP);
+
+        try {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
+                if (parent.IsValidMessageNumber(user, top.messageNumber)) {
+                    String header = parent.GetMsgHeader(user, top.messageNumber);
+                    String body = parent.GetMsgBody(user, top.messageNumber);
+                    VDMSeq lines = MakeLineSeq(body);
+
+                    return new POP3Types.OkResponse(header + "\n" +
+                        MakeMultilineResponse(SeqUtil.subSeq(Utils.copy(lines),
+                                1L, top.numLines)));
+                } else {
+                    return new POP3Types.ErrResponse(unknownMessageMsg);
+                }
+            } else {
+                return new POP3Types.ErrResponse(negativeStatusMsg);
+            }
+        } finally {
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveTOP);
+        }
+    }
+
+    private Object ReceiveUIDL(final POP3Types.UIDL uidl) {
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveUIDL);
+
+        try {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
+                if (Utils.equals(uidl.messageNumber, null)) {
+                    VDMSeq uidlTxt = parent.GetAllUidls(user);
+
+                    return new POP3Types.OkResponse(MakeMultilineResponse(
+                            Utils.copy(uidlTxt)));
+                } else if (parent.IsMessageNumber(user, uidl.messageNumber)) {
+                    return new POP3Types.OkResponse(parent.GetUidl(user,
+                            uidl.messageNumber));
+                } else {
+                    return new POP3Types.ErrResponse(unknownMessageMsg);
+                }
+            } else {
+                return new POP3Types.ErrResponse(negativeStatusMsg);
+            }
+        } finally {
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveUIDL);
+        }
+    }
+
+    private Object ReceiveUSER(final POP3Types.USER usercmd) {
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveUSER);
+
+        try {
+            if (Utils.equals(ss, quotes.AuthorizationQuote.getInstance())) {
+                user = usercmd.name;
+                sentinel.stateChanged();
+
+                return new POP3Types.OkResponse(submitPasswordMsg);
+            } else {
+                return new POP3Types.ErrResponse(negativeStatusMsg);
+            }
+        } finally {
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveUSER);
+        }
+    }
+
+    private Object ReceivePASS(final POP3Types.PASS pass) {
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceivePASS);
+
+        try {
+            Boolean andResult_1 = false;
+
+            if (Utils.equals(ss, quotes.AuthorizationQuote.getInstance())) {
+                if (lastWasUser) {
+                    andResult_1 = true;
+                }
+            }
+
+            if (andResult_1) {
+                lastWasUser = false;
+                sentinel.stateChanged();
+
+                if (parent.AuthenticateUser(user, pass.string)) {
+                    if (parent.IsLocked(user)) {
+                        return new POP3Types.ErrResponse(maildropLockedMsg);
+                    } else {
+                        parent.AcquireLock(id, user);
+                        ss = quotes.TransactionQuote.getInstance();
+                        sentinel.stateChanged();
+
+                        return new POP3Types.OkResponse(maildropReadyMsg);
+                    }
+                } else {
+                    return new POP3Types.ErrResponse(passwordFailedMsg);
+                }
+            } else {
+                return new POP3Types.ErrResponse(negativeStatusMsg);
+            }
+        } finally {
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceivePASS);
+        }
+    }
+
+    private static String MakeScanListHeader(final VDMSet msgs) {
+        Number lp = msgs.size();
+
+        String ternaryIfExp_2 = null;
+
+        if (Utils.equals(lp, 1L)) {
+            ternaryIfExp_2 = " message(";
+        } else {
+            ternaryIfExp_2 = " messages(";
+        }
+
+        VDMSet setCompResult_1 = SetUtil.set();
+        VDMSet set_1 = Utils.copy(msgs);
+
+        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
+            POP3Server.MessageInfo msg = ((POP3Server.MessageInfo) iterator_1.next());
+            setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
+                    SetUtil.set(msg.size));
+        }
+
+        return int2string(lp) + (ternaryIfExp_2) +
+        int2string(sum(Utils.copy(setCompResult_1))) + " octets)";
+    }
+
+    private static <tp> VDMSeq set2seq(final VDMSet s) {
+        if (Utils.empty(s)) {
+            return SeqUtil.seq();
+        } else {
+            VDMSeq letBeStExp_1 = null;
+            tp v = null;
+            Boolean success_1 = false;
+            VDMSet set_2 = Utils.copy(s);
+
+            for (Iterator iterator_2 = set_2.iterator();
+                    iterator_2.hasNext() && !(success_1);) {
+                v = ((tp) iterator_2.next());
+                success_1 = true;
+            }
+
+            if (!(success_1)) {
+                throw new RuntimeException(
+                    "Let Be St found no applicable bindings");
+            }
+
+            letBeStExp_1 = SeqUtil.conc(SeqUtil.seq(v),
+                    set2seq(SetUtil.diff(Utils.copy(s), SetUtil.set(v))));
+
+            return Utils.copy(letBeStExp_1);
+        }
+    }
+
+    private static String MakeScanListing(final VDMSet msgs) {
+        VDMSeq msgSeq = set2seq(Utils.copy(msgs));
+
+        VDMSeq seqCompResult_1 = SeqUtil.seq();
+        VDMSet set_3 = SeqUtil.inds(msgSeq);
+
+        for (Iterator iterator_3 = set_3.iterator(); iterator_3.hasNext();) {
+            Number i = ((Number) iterator_3.next());
+            seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
+                    SeqUtil.seq(int2string(
+                            ((POP3Server.MessageInfo) Utils.get(msgSeq, i)).index) +
+                        " " +
+                        int2string(
+                            ((POP3Server.MessageInfo) Utils.get(msgSeq, i)).size)));
+        }
+
+        return MakeMultilineResponse(Utils.copy(seqCompResult_1));
+    }
+
+    private static String MakeMultilineResponse(final VDMSeq resps) {
+        if (Utils.empty(resps)) {
+            return SeqUtil.toStr(SeqUtil.seq());
+        } else {
+            if (Utils.equals(resps.size(), 1L)) {
+                return ((String) resps.get(0));
+            } else {
+                return ((String) resps.get(0)) + "\n" +
+                MakeMultilineResponse(SeqUtil.tail(Utils.copy(resps)));
+            }
+        }
+    }
+
+    private static VDMSeq MakeLineSeq(final String text) {
+        if (Utils.equals(text, SeqUtil.toStr(SeqUtil.seq()))) {
+            return SeqUtil.seq();
+        } else {
+            Tuple tuplePattern_1 = GetLine(text);
+            Boolean success_5 = tuplePattern_1.compatible(String.class,
+                    String.class);
+            String line = null;
+            String rest = null;
+
+            if (success_5) {
+                line = SeqUtil.toStr(tuplePattern_1.get(0));
+                rest = SeqUtil.toStr(tuplePattern_1.get(1));
+            }
+
+            if (!(success_5)) {
+                throw new RuntimeException("Tuple pattern match failed");
+            }
+
+            return SeqUtil.conc(SeqUtil.seq(line), MakeLineSeq(rest));
+        }
+    }
+
+    private static Tuple GetLine(final String text) {
+        if (Utils.equals(text, SeqUtil.toStr(SeqUtil.seq()))) {
+            return Tuple.mk_(SeqUtil.seq(), SeqUtil.seq());
+        } else {
+            if (Utils.equals(text.charAt(0), '\n')) {
+                return Tuple.mk_(SeqUtil.seq(), SeqUtil.tail(text));
+            } else {
+                Tuple tuplePattern_2 = GetLine(SeqUtil.tail(text));
+                Boolean success_6 = tuplePattern_2.compatible(String.class,
+                        String.class);
+                String line = null;
+                String rest = null;
+
+                if (success_6) {
+                    line = SeqUtil.toStr(tuplePattern_2.get(0));
+                    rest = SeqUtil.toStr(tuplePattern_2.get(1));
+                }
+
+                if (!(success_6)) {
+                    throw new RuntimeException("Tuple pattern match failed");
+                }
+
+                return Tuple.mk_(new String(new char[] { text.charAt(0) }) +
+                    line, rest);
+            }
+        }
+    }
+
+    private static Number Len(final VDMSeq l) {
+        return l.size();
+    }
+
+    private static Number sum(final VDMSet s) {
+        if (Utils.empty(s)) {
+            return 0L;
+        } else {
+            Number letBeStExp_2 = null;
+            Number e = null;
+            Boolean success_2 = false;
+            VDMSet set_4 = Utils.copy(s);
+
+            for (Iterator iterator_4 = set_4.iterator();
+                    iterator_4.hasNext() && !(success_2);) {
+                e = ((Number) iterator_4.next());
+                success_2 = true;
+            }
+
+            if (!(success_2)) {
+                throw new RuntimeException(
+                    "Let Be St found no applicable bindings");
+            }
+
+            letBeStExp_2 = sum(SetUtil.diff(Utils.copy(s), SetUtil.set(e)))
+                               .longValue() + e.longValue();
+
+            return letBeStExp_2;
+        }
+    }
+
+    private static Number Card(final VDMSet s) {
+        return s.size();
+    }
+
+    public static String int2string(final Number i) {
+        if (Utils.equals(i, 0L)) {
+            return "0";
+        } else {
+            if (i.longValue() < 0L) {
+                return "-" + int2string(-i.longValue());
+            } else {
+                return int2stringR(i);
+            }
+        }
+    }
+
+    private static Number Abs(final Number i) {
+        return Utils.abs(i.longValue());
+    }
+
+    private static String int2stringR(final Number n) {
+        if (Utils.equals(n, 0L)) {
+            return "";
+        } else {
+            Number first = Utils.div(n.longValue(), 10L);
+            Number last = Utils.mod(n.longValue(), 10L);
+
+            String casesExpResult_2 = null;
+
+            Number intPattern_1 = last;
+            Boolean success_7 = Utils.equals(intPattern_1, 0L);
+
+            if (!(success_7)) {
+                Number intPattern_2 = last;
+                success_7 = Utils.equals(intPattern_2, 1L);
+
+                if (!(success_7)) {
+                    Number intPattern_3 = last;
+                    success_7 = Utils.equals(intPattern_3, 2L);
+
+                    if (!(success_7)) {
+                        Number intPattern_4 = last;
+                        success_7 = Utils.equals(intPattern_4, 3L);
+
+                        if (!(success_7)) {
+                            Number intPattern_5 = last;
+                            success_7 = Utils.equals(intPattern_5, 4L);
+
+                            if (!(success_7)) {
+                                Number intPattern_6 = last;
+                                success_7 = Utils.equals(intPattern_6, 5L);
+
+                                if (!(success_7)) {
+                                    Number intPattern_7 = last;
+                                    success_7 = Utils.equals(intPattern_7, 6L);
+
+                                    if (!(success_7)) {
+                                        Number intPattern_8 = last;
+                                        success_7 = Utils.equals(intPattern_8,
+                                                7L);
+
+                                        if (!(success_7)) {
+                                            Number intPattern_9 = last;
+                                            success_7 = Utils.equals(intPattern_9,
+                                                    8L);
+
+                                            if (!(success_7)) {
+                                                Number intPattern_10 = last;
+                                                success_7 = Utils.equals(intPattern_10,
+                                                        9L);
+
+                                                if (success_7) {
+                                                    casesExpResult_2 = "9";
+                                                }
+                                            } else {
+                                                casesExpResult_2 = "8";
+                                            }
+                                        } else {
+                                            casesExpResult_2 = "7";
+                                        }
+                                    } else {
+                                        casesExpResult_2 = "6";
+                                    }
+                                } else {
+                                    casesExpResult_2 = "5";
+                                }
+                            } else {
+                                casesExpResult_2 = "4";
+                            }
+                        } else {
+                            casesExpResult_2 = "3";
+                        }
+                    } else {
+                        casesExpResult_2 = "2";
+                    }
+                } else {
+                    casesExpResult_2 = "1";
+                }
+            } else {
+                casesExpResult_2 = "0";
+            }
+
+            return int2stringR(first) + casesExpResult_2;
+        }
+    }
+
+    private static Number Id(final Number n) {
+        return n;
+    }
+
+    public String toString() {
+        return "POP3ClientHandler{" + "unknownMessageMsg = " +
+        Utils.toString(unknownMessageMsg) + ", negativeStatusMsg = " +
+        Utils.toString(negativeStatusMsg) + ", alreadyDeletedMsg = " +
+        Utils.toString(alreadyDeletedMsg) + ", deleteFailMsg = " +
+        Utils.toString(deleteFailMsg) + ", maildropLockedMsg = " +
+        Utils.toString(maildropLockedMsg) + ", maildropReadyMsg = " +
+        Utils.toString(maildropReadyMsg) + ", passwordFailedMsg = " +
+        Utils.toString(passwordFailedMsg) + ", quitMsg = " +
+        Utils.toString(quitMsg) + ", submitPasswordMsg = " +
+        Utils.toString(submitPasswordMsg) + ", ss := " + Utils.toString(ss) +
+        ", parent := " + Utils.toString(parent) + ", user := " +
+        Utils.toString(user) + ", msgChannel := " + Utils.toString(msgChannel) +
+        ", id := " + Utils.toString(id) + ", lastWasUser := " +
+        Utils.toString(lastWasUser) + "}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else if (Utils.equals(fnr, 3L)) {
+            return true;
+        } else if (Utils.equals(fnr, 4L)) {
+            return true;
+        } else if (Utils.equals(fnr, 5L)) {
+            return true;
+        } else if (Utils.equals(fnr, 6L)) {
+            return true;
+        } else if (Utils.equals(fnr, 7L)) {
+            return true;
+        } else if (Utils.equals(fnr, 8L)) {
+            return true;
+        } else if (Utils.equals(fnr, 9L)) {
+            return true;
+        } else if (Utils.equals(fnr, 10L)) {
+            return true;
+        } else if (Utils.equals(fnr, 11L)) {
+            return true;
+        } else if (Utils.equals(fnr, 12L)) {
+            return true;
+        } else if (Utils.equals(fnr, 13L)) {
+            return true;
+        } else if (Utils.equals(fnr, 14L)) {
+            return true;
+        } else if (Utils.equals(fnr, 15L)) {
+            return true;
+        } else if (Utils.equals(fnr, 16L)) {
+            return true;
+        } else if (Utils.equals(fnr, 17L)) {
+            return true;
+        } else if (Utils.equals(fnr, 18L)) {
+            return true;
+        } else if (Utils.equals(fnr, 19L)) {
+            return true;
+        } else if (Utils.equals(fnr, 20L)) {
+            return true;
+        } else if (Utils.equals(fnr, 21L)) {
+            return true;
+        } else if (Utils.equals(fnr, 22L)) {
+            return true;
+        } else if (Utils.equals(fnr, 23L)) {
+            return true;
+        } else if (Utils.equals(fnr, 24L)) {
+            return true;
+        } else if (Utils.equals(fnr, 25L)) {
+            return true;
+        } else if (Utils.equals(fnr, 26L)) {
+            return true;
+        } else if (Utils.equals(fnr, 27L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public void run() {
+        Object cmd = null;
+        id = Thread.currentThread().getId();
+
+        sentinel.stateChanged();
+
+        cmd = msgChannel.ServerListen();
+
+        Boolean whileCond_1 = true;
+
+        while (whileCond_1) {
+            whileCond_1 = !(Utils.equals(cmd, new POP3Types.QUIT()));
+
+            if (!(whileCond_1)) {
+                break;
+            }
+
+            msgChannel.ServerSend(ReceiveCommand(((Object) cmd)));
+            cmd = msgChannel.ServerListen();
+        }
+
+        msgChannel.ServerSend(ReceiveCommand(((Object) cmd)));
+    }
+
+    public static class POP3ClientHandler_sentinel extends Sentinel {
+        public static final int cg_init_POP3ClientHandler_1 = 0;
+        public static final int POP3ClientHandler = 1;
+        public static final int ReceiveCommand = 2;
+        public static final int ReceiveQUIT = 3;
+        public static final int ReceiveSTAT = 4;
+        public static final int ReceiveLIST = 5;
+        public static final int ReceiveRETR = 6;
+        public static final int ReceiveDELE = 7;
+        public static final int ReceiveNOOP = 8;
+        public static final int ReceiveRSET = 9;
+        public static final int ReceiveTOP = 10;
+        public static final int ReceiveUIDL = 11;
+        public static final int ReceiveUSER = 12;
+        public static final int ReceivePASS = 13;
+        public static final int MakeScanListHeader = 14;
+        public static final int set2seq = 15;
+        public static final int MakeScanListing = 16;
+        public static final int MakeMultilineResponse = 17;
+        public static final int MakeLineSeq = 18;
+        public static final int GetLine = 19;
+        public static final int Len = 20;
+        public static final int sum = 21;
+        public static final int Card = 22;
+        public static final int int2string = 23;
+        public static final int Abs = 24;
+        public static final int int2stringR = 25;
+        public static final int Id = 26;
+        public static final int toString = 27;
+        public final int function_sum = 28;
+
+        public POP3ClientHandler_sentinel() {
+        }
+
+        public POP3ClientHandler_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class POP3Message implements EvaluatePP {
+    private volatile String header;
+    private volatile String body;
+    private volatile Boolean deleted;
+    private volatile String uniqueId;
+    public volatile Sentinel sentinel;
+
+    public POP3Message(final String nheader, final String nbody,
+        final String nuniqueId) {
+        sentinel = new POP3Message_sentinel(this);
+
+        cg_init_POP3Message_1(nheader, nbody, nuniqueId);
+    }
+
+    public POP3Message() {
+        sentinel = new POP3Message_sentinel(this);
+    }
+
+    public void cg_init_POP3Message_1(final String nheader, final String nbody,
+        final String nuniqueId) {
+        header = nheader;
+        body = nbody;
+        deleted = false;
+        uniqueId = nuniqueId;
+    }
+
+    public String GetBody() {
+        sentinel.entering(((POP3Message_sentinel) sentinel).GetBody);
+
+        try {
+            return body;
+        } finally {
+            sentinel.leaving(((POP3Message_sentinel) sentinel).GetBody);
+        }
+    }
+
+    public String GetHeader() {
+        sentinel.entering(((POP3Message_sentinel) sentinel).GetHeader);
+
+        try {
+            return header;
+        } finally {
+            sentinel.leaving(((POP3Message_sentinel) sentinel).GetHeader);
+        }
+    }
+
+    public String GetText() {
+        sentinel.entering(((POP3Message_sentinel) sentinel).GetText);
+
+        try {
+            return header + "\n" + body;
+        } finally {
+            sentinel.leaving(((POP3Message_sentinel) sentinel).GetText);
+        }
+    }
+
+    public POP3Message Delete() {
+        sentinel.entering(((POP3Message_sentinel) sentinel).Delete);
+
+        try {
+            deleted = true;
+            sentinel.stateChanged();
+
+            return this;
+        } finally {
+            sentinel.leaving(((POP3Message_sentinel) sentinel).Delete);
+        }
+    }
+
+    public Boolean IsDeleted() {
+        sentinel.entering(((POP3Message_sentinel) sentinel).IsDeleted);
+
+        try {
+            return deleted;
+        } finally {
+            sentinel.leaving(((POP3Message_sentinel) sentinel).IsDeleted);
+        }
+    }
+
+    public POP3Message Undelete() {
+        sentinel.entering(((POP3Message_sentinel) sentinel).Undelete);
+
+        try {
+            deleted = false;
+            sentinel.stateChanged();
+
+            return this;
+        } finally {
+            sentinel.leaving(((POP3Message_sentinel) sentinel).Undelete);
+        }
+    }
+
+    public Number GetSize() {
+        sentinel.entering(((POP3Message_sentinel) sentinel).GetSize);
+
+        try {
+            return body.length() + header.length();
+        } finally {
+            sentinel.leaving(((POP3Message_sentinel) sentinel).GetSize);
+        }
+    }
+
+    public String GetUniqueId() {
+        sentinel.entering(((POP3Message_sentinel) sentinel).GetUniqueId);
+
+        try {
+            return uniqueId;
+        } finally {
+            sentinel.leaving(((POP3Message_sentinel) sentinel).GetUniqueId);
+        }
+    }
+
+    public String toString() {
+        return "POP3Message{" + "header := " + Utils.toString(header) +
+        ", body := " + Utils.toString(body) + ", deleted := " +
+        Utils.toString(deleted) + ", uniqueId := " + Utils.toString(uniqueId) +
+        "}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else if (Utils.equals(fnr, 3L)) {
+            return true;
+        } else if (Utils.equals(fnr, 4L)) {
+            return true;
+        } else if (Utils.equals(fnr, 5L)) {
+            return true;
+        } else if (Utils.equals(fnr, 6L)) {
+            return true;
+        } else if (Utils.equals(fnr, 7L)) {
+            return true;
+        } else if (Utils.equals(fnr, 8L)) {
+            return true;
+        } else if (Utils.equals(fnr, 9L)) {
+            return true;
+        } else if (Utils.equals(fnr, 10L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public static class POP3Message_sentinel extends Sentinel {
+        public static final int cg_init_POP3Message_1 = 0;
+        public static final int POP3Message = 1;
+        public static final int GetBody = 2;
+        public static final int GetHeader = 3;
+        public static final int GetText = 4;
+        public static final int Delete = 5;
+        public static final int IsDeleted = 6;
+        public static final int Undelete = 7;
+        public static final int GetSize = 8;
+        public static final int GetUniqueId = 9;
+        public static final int toString = 10;
+        public final int function_sum = 11;
+
+        public POP3Message_sentinel() {
+        }
+
+        public POP3Message_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class POP3Server extends VDMThread implements EvaluatePP {
+    private volatile MessageChannelBuffer connChannel;
+    private volatile VDMMap maildrop;
+    private volatile VDMMap passwords;
+    private volatile VDMMap locks;
+    private volatile Boolean serverStarted = false;
+    public volatile Sentinel sentinel;
+
+    public POP3Server(final VDMMap nmd, final MessageChannelBuffer nch,
+        final VDMMap npasswords) {
+        sentinel = new POP3Server_sentinel(this);
+
+        cg_init_POP3Server_1(Utils.copy(nmd), nch, Utils.copy(npasswords));
+    }
+
+    public POP3Server() {
+        sentinel = new POP3Server_sentinel(this);
+    }
+
+    public void cg_init_POP3Server_1(final VDMMap nmd,
+        final MessageChannelBuffer nch, final VDMMap npasswords) {
+        maildrop = Utils.copy(nmd);
+        connChannel = nch;
+        locks = MapUtil.map();
+        passwords = Utils.copy(npasswords);
+    }
+
+    public Boolean AuthenticateUser(final String user, final String password) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).AuthenticateUser);
+
+        try {
+            Boolean andResult_2 = false;
+
+            if (SetUtil.inSet(user, MapUtil.dom(Utils.copy(passwords)))) {
+                if (Utils.equals(((String) Utils.get(passwords, user)), password)) {
+                    andResult_2 = true;
+                }
+            }
+
+            return andResult_2;
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).AuthenticateUser);
+        }
+    }
+
+    public Boolean IsLocked(final String user) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).IsLocked);
+
+        try {
+            return SetUtil.inSet(user, MapUtil.rng(Utils.copy(locks)));
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).IsLocked);
+        }
+    }
+
+    private void SetUserMessages(final String user, final VDMSeq newMsgs) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).SetUserMessages);
+
+        try {
+            MailBox recModifierExp_1 = Utils.copy(((MailBox) Utils.get(
+                        maildrop, user)));
+
+            recModifierExp_1.msgs = Utils.copy(newMsgs);
+            sentinel.stateChanged();
+
+            Utils.mapSeqUpdate(maildrop, user, Utils.copy(recModifierExp_1));
+            sentinel.stateChanged();
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).SetUserMessages);
+        }
+    }
+
+    private MailBox GetUserMail(final String user) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetUserMail);
+
+        try {
+            return Utils.copy(((MailBox) Utils.get(maildrop, user)));
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetUserMail);
+        }
+    }
+
+    private VDMSeq GetUserMessages(final String user) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetUserMessages);
+
+        try {
+            return Utils.copy(GetUserMail(user).msgs);
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetUserMessages);
+        }
+    }
+
+    public Boolean RemoveDeletedMessages(final String user) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).RemoveDeletedMessages);
+
+        try {
+            VDMSeq oldMsgs = GetUserMessages(user);
+            VDMSeq seqCompResult_2 = SeqUtil.seq();
+            VDMSet set_5 = SeqUtil.inds(oldMsgs);
+
+            for (Iterator iterator_5 = set_5.iterator(); iterator_5.hasNext();) {
+                Number i = ((Number) iterator_5.next());
+
+                if (!(((POP3Message) Utils.get(oldMsgs, i)).IsDeleted())) {
+                    seqCompResult_2 = SeqUtil.conc(Utils.copy(seqCompResult_2),
+                            SeqUtil.seq(((POP3Message) Utils.get(oldMsgs, i))));
+                }
+            }
+
+            VDMSeq newMsgs = Utils.copy(seqCompResult_2);
+            SetUserMessages(user, Utils.copy(newMsgs));
+
+            return true;
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).RemoveDeletedMessages);
+        }
+    }
+
+    public void AcquireLock(final Number clId, final String user) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).AcquireLock);
+
+        try {
+            locks = MapUtil.override(Utils.copy(locks),
+                    MapUtil.map(new Maplet(clId, user)));
+            sentinel.stateChanged();
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).AcquireLock);
+        }
+    }
+
+    public void ReleaseLock(final Number clId) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).ReleaseLock);
+
+        try {
+            locks = MapUtil.domResBy(SetUtil.set(clId), Utils.copy(locks));
+            sentinel.stateChanged();
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).ReleaseLock);
+        }
+    }
+
+    private void CreateClientHandler(final MessageChannel mc) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).CreateClientHandler);
+
+        try {
+            new POP3ClientHandler(this, mc).start();
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).CreateClientHandler);
+        }
+    }
+
+    public Boolean IsMessageNumber(final String user, final Number index) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).IsMessageNumber);
+
+        try {
+            VDMSeq mb = GetUserMessages(user);
+
+            return SetUtil.inSet(index, SeqUtil.inds(mb));
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).IsMessageNumber);
+        }
+    }
+
+    public Boolean IsValidMessageNumber(final String user, final Number index) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).IsValidMessageNumber);
+
+        try {
+            VDMSeq mb = GetUserMessages(user);
+            Boolean andResult_4 = false;
+
+            if (SetUtil.inSet(index, SeqUtil.inds(mb))) {
+                if (!(((POP3Message) Utils.get(mb, index)).IsDeleted())) {
+                    andResult_4 = true;
+                }
+            }
+
+            return andResult_4;
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).IsValidMessageNumber);
+        }
+    }
+
+    public Boolean MessageIsDeleted(final String user, final Number index) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).MessageIsDeleted);
+
+        try {
+            VDMSeq mb = GetUserMessages(user);
+            Boolean andResult_5 = false;
+
+            if (SetUtil.inSet(index, SeqUtil.inds(mb))) {
+                if (((POP3Message) Utils.get(mb, index)).IsDeleted()) {
+                    andResult_5 = true;
+                }
+            }
+
+            return andResult_5;
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).MessageIsDeleted);
+        }
+    }
+
+    public void DeleteMessage(final String user, final Number index) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).DeleteMessage);
+
+        try {
+            POP3Message oldMsg = ((POP3Message) Utils.get(GetUserMessages(user),
+                    index));
+
+            POP3Message newMsg = oldMsg.Delete();
+            SetUserMessages(user,
+                SeqUtil.mod(GetUserMessages(user),
+                    MapUtil.map(new Maplet(index, newMsg))));
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).DeleteMessage);
+        }
+    }
+
+    public String GetMsgHeader(final String user, final Number index) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetMsgHeader);
+
+        try {
+            VDMSeq mb = GetUserMessages(user);
+
+            return ((POP3Message) Utils.get(mb, index)).GetHeader();
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetMsgHeader);
+        }
+    }
+
+    public String GetMsgBody(final String user, final Number index) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetMsgBody);
+
+        try {
+            VDMSeq mb = GetUserMessages(user);
+
+            return ((POP3Message) Utils.get(mb, index)).GetBody();
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetMsgBody);
+        }
+    }
+
+    public void ResetDeletedMessages(final String user) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).ResetDeletedMessages);
+
+        try {
+            VDMSeq oldMsgs = GetUserMessages(user);
+            VDMSeq seqCompResult_3 = SeqUtil.seq();
+            VDMSet set_6 = SeqUtil.inds(oldMsgs);
+
+            for (Iterator iterator_6 = set_6.iterator(); iterator_6.hasNext();) {
+                Number i = ((Number) iterator_6.next());
+                seqCompResult_3 = SeqUtil.conc(Utils.copy(seqCompResult_3),
+                        SeqUtil.seq(
+                            ((POP3Message) Utils.get(oldMsgs, i)).Undelete()));
+            }
+
+            VDMSeq newMsgs = Utils.copy(seqCompResult_3);
+            SetUserMessages(user, Utils.copy(newMsgs));
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).ResetDeletedMessages);
+        }
+    }
+
+    public String GetMessageText(final String user, final Number index) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetMessageText);
+
+        try {
+            return ((POP3Message) Utils.get(GetUserMessages(user), index)).GetText();
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetMessageText);
+        }
+    }
+
+    public Number GetMessageSize(final String user, final Number index) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetMessageSize);
+
+        try {
+            return ((POP3Message) Utils.get(GetUserMessages(user), index)).GetSize();
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetMessageSize);
+        }
+    }
+
+    public VDMSet GetMessageInfo(final String user, final Number index) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetMessageInfo);
+
+        try {
+            VDMSeq mb = GetUserMessages(user);
+
+            if (Utils.equals(index, null)) {
+                VDMSeq seqCompResult_4 = SeqUtil.seq();
+                VDMSet set_7 = SeqUtil.inds(mb);
+
+                for (Iterator iterator_7 = set_7.iterator();
+                        iterator_7.hasNext();) {
+                    Number i = ((Number) iterator_7.next());
+
+                    if (!(((POP3Message) Utils.get(mb, i)).IsDeleted())) {
+                        seqCompResult_4 = SeqUtil.conc(Utils.copy(
+                                    seqCompResult_4),
+                                SeqUtil.seq(
+                                    new MessageInfo(i, GetMessageSize(user, i))));
+                    }
+                }
+
+                return SeqUtil.elems(Utils.copy(seqCompResult_4));
+            } else {
+                return SetUtil.set(new MessageInfo(index,
+                        GetMessageSize(user, index)));
+            }
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetMessageInfo);
+        }
+    }
+
+    public String GetUidl(final String user, final Number index) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetUidl);
+
+        try {
+            VDMSeq mb = GetUserMessages(user);
+
+            return POP3ClientHandler.int2string(index) + " " +
+            ((POP3Message) Utils.get(mb, index)).GetUniqueId();
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetUidl);
+        }
+    }
+
+    public VDMSeq GetAllUidls(final String user) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetAllUidls);
+
+        try {
+            VDMSeq mb = GetUserMessages(user);
+            VDMSeq seqCompResult_5 = SeqUtil.seq();
+            VDMSet set_8 = SeqUtil.inds(mb);
+
+            for (Iterator iterator_8 = set_8.iterator(); iterator_8.hasNext();) {
+                Number index = ((Number) iterator_8.next());
+                seqCompResult_5 = SeqUtil.conc(Utils.copy(seqCompResult_5),
+                        SeqUtil.seq(GetUidl(user, index)));
+            }
+
+            return Utils.copy(seqCompResult_5);
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetAllUidls);
+        }
+    }
+
+    public Number GetNumberOfMessages(final String user) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetNumberOfMessages);
+
+        try {
+            return GetUserMessages(user).size();
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetNumberOfMessages);
+        }
+    }
+
+    public Number GetMailBoxSize(final String user) {
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetMailBoxSize);
+
+        try {
+            MailBox mb = GetUserMail(user);
+            VDMSeq seqCompResult_6 = SeqUtil.seq();
+            VDMSet set_9 = SeqUtil.inds(mb.msgs);
+
+            for (Iterator iterator_9 = set_9.iterator(); iterator_9.hasNext();) {
+                Number i = ((Number) iterator_9.next());
+                seqCompResult_6 = SeqUtil.conc(Utils.copy(seqCompResult_6),
+                        SeqUtil.seq(
+                            ((POP3Message) Utils.get(mb.msgs, i)).GetSize()));
+            }
+
+            return sumseq(Utils.copy(seqCompResult_6));
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetMailBoxSize);
+        }
+    }
+
+    public MessageChannelBuffer GetChannel() {
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetChannel);
+
+        try {
+            return connChannel;
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetChannel);
+        }
+    }
+
+    public void WaitForServerStart() {
+        sentinel.entering(((POP3Server_sentinel) sentinel).WaitForServerStart);
+
+        try {
+            /* skip */
+        } finally {
+            sentinel.leaving(((POP3Server_sentinel) sentinel).WaitForServerStart);
+        }
+    }
+
+    public static Number sumseq(final VDMSeq s) {
+        if (Utils.empty(s)) {
+            return 0L;
+        } else {
+            return ((Number) s.get(0)).longValue() +
+            sumseq(SeqUtil.tail(Utils.copy(s))).longValue();
+        }
+    }
+
+    private static Number Len(final VDMSeq l) {
+        return l.size();
+    }
+
+    public String toString() {
+        return "POP3Server{" + "connChannel := " + Utils.toString(connChannel) +
+        ", maildrop := " + Utils.toString(maildrop) + ", passwords := " +
+        Utils.toString(passwords) + ", locks := " + Utils.toString(locks) +
+        ", serverStarted := " + Utils.toString(serverStarted) + "}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else if (Utils.equals(fnr, 3L)) {
+            return Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock] +
+                sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
+                sentinel.active[((POP3Server_sentinel) sentinel).IsLocked], 0L);
+        } else if (Utils.equals(fnr, 4L)) {
+            return (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).SetUserMessages],
+                0L)) &&
+            (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).SetUserMessages] +
+                sentinel.active[((POP3Server_sentinel) sentinel).GetUserMail],
+                0L));
+        } else if (Utils.equals(fnr, 5L)) {
+            return Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).SetUserMessages] +
+                sentinel.active[((POP3Server_sentinel) sentinel).GetUserMail],
+                0L);
+        } else if (Utils.equals(fnr, 6L)) {
+            return true;
+        } else if (Utils.equals(fnr, 7L)) {
+            return true;
+        } else if (Utils.equals(fnr, 8L)) {
+            return (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock],
+                0L)) &&
+            (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock] +
+                sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
+                sentinel.active[((POP3Server_sentinel) sentinel).IsLocked], 0L));
+        } else if (Utils.equals(fnr, 9L)) {
+            return (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock],
+                0L)) &&
+            (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock] +
+                sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
+                sentinel.active[((POP3Server_sentinel) sentinel).IsLocked], 0L));
+        } else if (Utils.equals(fnr, 10L)) {
+            return true;
+        } else if (Utils.equals(fnr, 11L)) {
+            return true;
+        } else if (Utils.equals(fnr, 12L)) {
+            return true;
+        } else if (Utils.equals(fnr, 13L)) {
+            return true;
+        } else if (Utils.equals(fnr, 14L)) {
+            return true;
+        } else if (Utils.equals(fnr, 15L)) {
+            return true;
+        } else if (Utils.equals(fnr, 16L)) {
+            return true;
+        } else if (Utils.equals(fnr, 17L)) {
+            return true;
+        } else if (Utils.equals(fnr, 18L)) {
+            return true;
+        } else if (Utils.equals(fnr, 19L)) {
+            return true;
+        } else if (Utils.equals(fnr, 20L)) {
+            return true;
+        } else if (Utils.equals(fnr, 21L)) {
+            return true;
+        } else if (Utils.equals(fnr, 22L)) {
+            return true;
+        } else if (Utils.equals(fnr, 23L)) {
+            return true;
+        } else if (Utils.equals(fnr, 24L)) {
+            return true;
+        } else if (Utils.equals(fnr, 25L)) {
+            return true;
+        } else if (Utils.equals(fnr, 26L)) {
+            return serverStarted;
+        } else if (Utils.equals(fnr, 27L)) {
+            return true;
+        } else if (Utils.equals(fnr, 28L)) {
+            return true;
+        } else if (Utils.equals(fnr, 29L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public void run() {
+        Boolean whileCond_2 = true;
+
+        while (whileCond_2) {
+            whileCond_2 = true;
+
+            if (!(whileCond_2)) {
+                break;
+            }
+
+            {
+                MessageChannel msgChannel = connChannel.Get();
+                CreateClientHandler(msgChannel);
+            }
+
+            serverStarted = true;
+            sentinel.stateChanged();
+        }
+    }
+
+    public static class POP3Server_sentinel extends Sentinel {
+        public static final int cg_init_POP3Server_1 = 0;
+        public static final int POP3Server = 1;
+        public static final int AuthenticateUser = 2;
+        public static final int IsLocked = 3;
+        public static final int SetUserMessages = 4;
+        public static final int GetUserMail = 5;
+        public static final int GetUserMessages = 6;
+        public static final int RemoveDeletedMessages = 7;
+        public static final int AcquireLock = 8;
+        public static final int ReleaseLock = 9;
+        public static final int CreateClientHandler = 10;
+        public static final int IsMessageNumber = 11;
+        public static final int IsValidMessageNumber = 12;
+        public static final int MessageIsDeleted = 13;
+        public static final int DeleteMessage = 14;
+        public static final int GetMsgHeader = 15;
+        public static final int GetMsgBody = 16;
+        public static final int ResetDeletedMessages = 17;
+        public static final int GetMessageText = 18;
+        public static final int GetMessageSize = 19;
+        public static final int GetMessageInfo = 20;
+        public static final int GetUidl = 21;
+        public static final int GetAllUidls = 22;
+        public static final int GetNumberOfMessages = 23;
+        public static final int GetMailBoxSize = 24;
+        public static final int GetChannel = 25;
+        public static final int WaitForServerStart = 26;
+        public static final int sumseq = 27;
+        public static final int Len = 28;
+        public static final int toString = 29;
+        public final int function_sum = 30;
+
+        public POP3Server_sentinel() {
+        }
+
+        public POP3Server_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+
+    public static class MessageInfo implements Record {
+        public Number index;
+        public Number size;
+
+        public MessageInfo(final Number _index, final Number _size) {
+            index = _index;
+            size = _size;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof MessageInfo)) {
+                return false;
+            }
+
+            MessageInfo other = ((MessageInfo) obj);
+
+            return (Utils.equals(index, other.index)) &&
+            (Utils.equals(size, other.size));
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(index, size);
+        }
+
+        public MessageInfo copy() {
+            return new MessageInfo(index, size);
+        }
+
+        public String toString() {
+            return "mk_POP3Server`MessageInfo" +
+            Utils.formatFields(index, size);
+        }
+    }
+
+    public static class MailBox implements Record {
+        public VDMSeq msgs;
+        public Boolean locked;
+
+        public MailBox(final VDMSeq _msgs, final Boolean _locked) {
+            msgs = (_msgs != null) ? Utils.copy(_msgs) : null;
+            locked = _locked;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof MailBox)) {
+                return false;
+            }
+
+            MailBox other = ((MailBox) obj);
+
+            return (Utils.equals(msgs, other.msgs)) &&
+            (Utils.equals(locked, other.locked));
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(msgs, locked);
+        }
+
+        public MailBox copy() {
+            return new MailBox(msgs, locked);
+        }
+
+        public String toString() {
+            return "mk_POP3Server`MailBox" + Utils.formatFields(msgs, locked);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class POP3Test implements EvaluatePP {
+    private static final VDMSeq users = SeqUtil.seq("paul", "peter", "nico",
+            "john", "marcel");
+    private static final VDMSeq passwords = SeqUtil.seq("laup", "retep",
+            "ocin", "nhoj", "lecram");
+    private static final VDMSeq headers = SeqUtil.seq("From paul@mail.domain\n" +
+            "Subject Subject 1 \n" + "Date Fri, 19 Oct 2001 10:52:58 -0500",
+            "From peter@mail.domain\n" + "Subject Subject 2 \n" +
+            "Date Sat, 20 Oct 2001 10:52:58 -0500",
+            "From nico@mail.domain\n" + "Subject Subject 3 \n" +
+            "Date Sun, 21 Oct 2001 10:52:58 -0500",
+            "From john@mail.domain\n" + "Subject Subject 4 \n" +
+            "Date Mon, 22 Oct 2001 10:52:58 -0500",
+            "From marcel@mail.domain\n" + "Subject Subject 5 \n" +
+            "Date Tues, 23 Oct 2001 10:52:58 -0500");
+    private static final VDMSeq bodies = SeqUtil.seq("Greetings from Paul",
+            "Greetings from Peter", "Greetings from Nico",
+            "Greetings from John", "Greetings from Marcel");
+    private volatile POP3Server server;
+    private volatile MessageChannelBuffer ch;
+    private volatile MessageChannel mc1;
+    private volatile MessageChannel mc2;
+    private volatile MessageChannel mc3;
+    private volatile POP3TestSender send1;
+    private volatile POP3TestSender send2;
+    private volatile POP3TestListener listen1;
+    private volatile POP3TestListener listen2;
+    public volatile Sentinel sentinel;
+
+    public POP3Test() {
+        sentinel = new POP3Test_sentinel(this);
+
+        cg_init_POP3Test_1();
+    }
+
+    public void StartServer(final POP3Server myserver) {
+        sentinel.entering(((POP3Test_sentinel) sentinel).StartServer);
+
+        try {
+            myserver.start();
+        } finally {
+            sentinel.leaving(((POP3Test_sentinel) sentinel).StartServer);
+        }
+    }
+
+    public String Test1() {
+        sentinel.entering(((POP3Test_sentinel) sentinel).Test1);
+
+        try {
+            MessageChannelBuffer ch_1 = new MessageChannelBuffer();
+            POP3Server server_1 = new POP3Server(MakeMailDrop(), ch_1,
+                    MakePasswordMap());
+
+            {
+                MessageChannel mc = new MessageChannel();
+                server_1.start();
+                ch_1.Put(mc);
+
+                {
+                    VDMSeq run = TestRun1();
+                    POP3TestSender send = new POP3TestSender("c",
+                            Utils.copy(run), mc);
+                    POP3TestListener listen = new POP3TestListener("l", mc);
+                    send.start();
+                    listen.start();
+                    listen.IsFinished();
+                }
+
+                return Log.getInstance().output();
+            }
+        } finally {
+            sentinel.leaving(((POP3Test_sentinel) sentinel).Test1);
+        }
+    }
+
+    public String Test2() {
+        sentinel.entering(((POP3Test_sentinel) sentinel).Test2);
+
+        try {
+            MessageChannelBuffer ch = new MessageChannelBuffer();
+            POP3Server server = new POP3Server(MakeMailDrop(), ch,
+                    MakePasswordMap());
+
+            {
+                MessageChannel mc1_1 = new MessageChannel();
+                MessageChannel mc2_1 = new MessageChannel();
+                server.start();
+                ch.Put(mc1_1);
+                ch.Put(mc2_1);
+
+                {
+                    VDMSeq run = TestRun1();
+                    POP3TestSender send1_1 = new POP3TestSender("c1",
+                            Utils.copy(run), mc1_1);
+                    POP3TestSender send2_1 = new POP3TestSender("c2",
+                            Utils.copy(run), mc2_1);
+                    POP3TestListener listen1_1 = new POP3TestListener("l1",
+                            mc1_1);
+                    POP3TestListener listen2_1 = new POP3TestListener("l2",
+                            mc2_1);
+                    send1_1.start();
+                    send2_1.start();
+                    listen1_1.start();
+                    listen2_1.start();
+                    listen1_1.IsFinished();
+                    listen2_1.IsFinished();
+                }
+
+                return Log.getInstance().output();
+            }
+        } finally {
+            sentinel.leaving(((POP3Test_sentinel) sentinel).Test2);
+        }
+    }
+
+    private void Start(final Object obj) {
+        sentinel.entering(((POP3Test_sentinel) sentinel).Start);
+
+        try {
+            ((Thread) obj).start();
+        } finally {
+            sentinel.leaving(((POP3Test_sentinel) sentinel).Start);
+        }
+    }
+
+    public void cg_init_POP3Test_1() {
+        ch = new MessageChannelBuffer();
+        server = new POP3Server(MakeMailDrop(), ch, MakePasswordMap());
+        mc1 = new MessageChannel();
+        mc2 = new MessageChannel();
+        mc3 = new MessageChannel();
+        send1 = new POP3TestSender("c1", TestRun1(), mc1);
+        send2 = new POP3TestSender("c2", TestRun1(), mc2);
+        listen1 = new POP3TestListener("l1", mc1);
+        listen2 = new POP3TestListener("l2", mc2);
+    }
+
+    public static VDMMap MakePasswordMap() {
+        VDMMap mapCompResult_1 = MapUtil.map();
+        VDMSet set_10 = SeqUtil.inds(users);
+
+        for (Iterator iterator_10 = set_10.iterator(); iterator_10.hasNext();) {
+            Number i = ((Number) iterator_10.next());
+            mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
+                    MapUtil.map(
+                        new Maplet(((String) Utils.get(users, i)),
+                            ((String) Utils.get(passwords, i)))));
+        }
+
+        return Utils.copy(mapCompResult_1);
+    }
+
+    public static VDMMap MakeMailDrop() {
+        VDMMap mapCompResult_2 = MapUtil.map();
+        VDMSet set_11 = SeqUtil.inds(users);
+
+        for (Iterator iterator_11 = set_11.iterator(); iterator_11.hasNext();) {
+            Number i = ((Number) iterator_11.next());
+            mapCompResult_2 = MapUtil.munion(Utils.copy(mapCompResult_2),
+                    MapUtil.map(
+                        new Maplet(((String) Utils.get(users, i)),
+                            new POP3Server.MailBox(MakeMessages(
+                                    ((String) Utils.get(users, i))), false))));
+        }
+
+        return Utils.copy(mapCompResult_2);
+    }
+
+    public static VDMSeq MakeMessages(final String user) {
+        VDMSeq seqCompResult_7 = SeqUtil.seq();
+        VDMSet set_12 = SeqUtil.inds(headers);
+
+        for (Iterator iterator_12 = set_12.iterator(); iterator_12.hasNext();) {
+            Number i = ((Number) iterator_12.next());
+            seqCompResult_7 = SeqUtil.conc(Utils.copy(seqCompResult_7),
+                    SeqUtil.seq(
+                        new POP3Message(((String) Utils.get(headers, i)),
+                            ((String) Utils.get(bodies, i)) + " to " + user,
+                            user + POP3ClientHandler.int2string(i))));
+        }
+
+        return Utils.copy(seqCompResult_7);
+    }
+
+    private static VDMSeq TestRun1() {
+        return SeqUtil.seq(new POP3Types.USER(((String) Utils.get(users, 1L))),
+            new POP3Types.PASS(((String) Utils.get(passwords, 1L))),
+            new POP3Types.STAT(), new POP3Types.LIST(null),
+            new POP3Types.RETR(1L), new POP3Types.DELE(1L),
+            new POP3Types.RETR(1L), new POP3Types.RSET(), new POP3Types.NOOP(),
+            new POP3Types.LIST(3L), new POP3Types.LIST(8L),
+            new POP3Types.TOP(2L, 5L), new POP3Types.UIDL(null),
+            new POP3Types.UIDL(3L), new POP3Types.DELE(1L),
+            new POP3Types.DELE(1L), new POP3Types.UIDL(1L), new POP3Types.QUIT());
+    }
+
+    public String toString() {
+        return "POP3Test{" + "users = " + Utils.toString(users) +
+        ", passwords = " + Utils.toString(passwords) + ", headers = " +
+        Utils.toString(headers) + ", bodies = " + Utils.toString(bodies) +
+        ", server := " + Utils.toString(server) + ", ch := " +
+        Utils.toString(ch) + ", mc1 := " + Utils.toString(mc1) + ", mc2 := " +
+        Utils.toString(mc2) + ", mc3 := " + Utils.toString(mc3) +
+        ", send1 := " + Utils.toString(send1) + ", send2 := " +
+        Utils.toString(send2) + ", listen1 := " + Utils.toString(listen1) +
+        ", listen2 := " + Utils.toString(listen2) + "}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else if (Utils.equals(fnr, 3L)) {
+            return true;
+        } else if (Utils.equals(fnr, 4L)) {
+            return true;
+        } else if (Utils.equals(fnr, 5L)) {
+            return true;
+        } else if (Utils.equals(fnr, 6L)) {
+            return true;
+        } else if (Utils.equals(fnr, 7L)) {
+            return true;
+        } else if (Utils.equals(fnr, 8L)) {
+            return true;
+        } else if (Utils.equals(fnr, 9L)) {
+            return true;
+        } else if (Utils.equals(fnr, 10L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public static class POP3Test_sentinel extends Sentinel {
+        public static final int StartServer = 0;
+        public static final int Test1 = 1;
+        public static final int Test2 = 2;
+        public static final int Start = 3;
+        public static final int cg_init_POP3Test_1 = 4;
+        public static final int POP3Test = 5;
+        public static final int MakePasswordMap = 6;
+        public static final int MakeMailDrop = 7;
+        public static final int MakeMessages = 8;
+        public static final int TestRun1 = 9;
+        public static final int toString = 10;
+        public final int function_sum = 11;
+
+        public POP3Test_sentinel() {
+        }
+
+        public POP3Test_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class POP3TestSender extends VDMThread implements EvaluatePP {
+    private volatile String id;
+    private volatile VDMSeq cmds;
+    private volatile MessageChannel mc;
+    public volatile Sentinel sentinel;
+
+    public POP3TestSender(final String idarg, final VDMSeq cmdsarg,
+        final MessageChannel mcarg) {
+        sentinel = new POP3TestSender_sentinel(this);
+
+        cg_init_POP3TestSender_1(idarg, Utils.copy(cmdsarg), mcarg);
+    }
+
+    public POP3TestSender() {
+        sentinel = new POP3TestSender_sentinel(this);
+    }
+
+    public void cg_init_POP3TestSender_1(final String idarg,
+        final VDMSeq cmdsarg, final MessageChannel mcarg) {
+        id = idarg;
+        cmds = Utils.copy(cmdsarg);
+        mc = mcarg;
+    }
+
+    private void LogClient(final Object cmd) {
+        sentinel.entering(((POP3TestSender_sentinel) sentinel).LogClient);
+
+        try {
+            /* skip */
+        } finally {
+            sentinel.leaving(((POP3TestSender_sentinel) sentinel).LogClient);
+        }
+    }
+
+    private void SendCmd(final MessageChannel mcarg, final Object cmd) {
+        sentinel.entering(((POP3TestSender_sentinel) sentinel).SendCmd);
+
+        try {
+            mcarg.ClientSend(cmd);
+            LogClient(((Object) cmd));
+        } finally {
+            sentinel.leaving(((POP3TestSender_sentinel) sentinel).SendCmd);
+        }
+    }
+
+    public String toString() {
+        return "POP3TestSender{" + "id := " + Utils.toString(id) +
+        ", cmds := " + Utils.toString(cmds) + ", mc := " + Utils.toString(mc) +
+        "}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else if (Utils.equals(fnr, 3L)) {
+            return true;
+        } else if (Utils.equals(fnr, 4L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public void run() {
+        for (Iterator iterator_14 = cmds.iterator(); iterator_14.hasNext();) {
+            Object cmd = (Object) iterator_14.next();
+            SendCmd(mc, ((Object) cmd));
+        }
+    }
+
+    public static class POP3TestSender_sentinel extends Sentinel {
+        public static final int cg_init_POP3TestSender_1 = 0;
+        public static final int POP3TestSender = 1;
+        public static final int LogClient = 2;
+        public static final int SendCmd = 3;
+        public static final int toString = 4;
+        public final int function_sum = 5;
+
+        public POP3TestSender_sentinel() {
+        }
+
+        public POP3TestSender_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class POP3TestListener extends VDMThread implements EvaluatePP {
+    private volatile String id;
+    private volatile MessageChannel mc;
+    private volatile Boolean finished;
+    public volatile Sentinel sentinel;
+
+    public POP3TestListener(final String idarg, final MessageChannel mcarg) {
+        sentinel = new POP3TestListener_sentinel(this);
+
+        cg_init_POP3TestListener_1(idarg, mcarg);
+    }
+
+    public POP3TestListener() {
+        sentinel = new POP3TestListener_sentinel(this);
+    }
+
+    public void cg_init_POP3TestListener_1(final String idarg,
+        final MessageChannel mcarg) {
+        id = idarg;
+        mc = mcarg;
+        finished = false;
+    }
+
+    private void LogServer(final Object resp) {
+        sentinel.entering(((POP3TestListener_sentinel) sentinel).LogServer);
+
+        try {
+            /* skip */
+        } finally {
+            sentinel.leaving(((POP3TestListener_sentinel) sentinel).LogServer);
+        }
+    }
+
+    public void IsFinished() {
+        sentinel.entering(((POP3TestListener_sentinel) sentinel).IsFinished);
+
+        try {
+            /* skip */
+        } finally {
+            sentinel.leaving(((POP3TestListener_sentinel) sentinel).IsFinished);
+        }
+    }
+
+    public String toString() {
+        return "POP3TestListener{" + "id := " + Utils.toString(id) +
+        ", mc := " + Utils.toString(mc) + ", finished := " +
+        Utils.toString(finished) + "}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else if (Utils.equals(fnr, 3L)) {
+            return finished;
+        } else if (Utils.equals(fnr, 4L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public void run() {
+        Object response = mc.ClientListen();
+        Boolean whileCond_3 = true;
+
+        while (whileCond_3) {
+            whileCond_3 = !(Utils.equals(response,
+                    new POP3Types.OkResponse("Quitting POP3 Server")));
+
+            if (!(whileCond_3)) {
+                break;
+            }
+
+            LogServer(((Object) response));
+            response = mc.ClientListen();
+        }
+
+        LogServer(((Object) response));
+        finished = true;
+        sentinel.stateChanged();
+    }
+
+    public static class POP3TestListener_sentinel extends Sentinel {
+        public static final int cg_init_POP3TestListener_1 = 0;
+        public static final int POP3TestListener = 1;
+        public static final int LogServer = 2;
+        public static final int IsFinished = 3;
+        public static final int toString = 4;
+        public final int function_sum = 5;
+
+        public POP3TestListener_sentinel() {
+        }
+
+        public POP3TestListener_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class POP3Types implements EvaluatePP {
+    public volatile Sentinel sentinel;
+
+    public POP3Types() {
+        sentinel = new POP3Types_sentinel(this);
+    }
+
+    public String toString() {
+        return "POP3Types{}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public static class POP3Types_sentinel extends Sentinel {
+        public static final int POP3Types = 0;
+        public static final int toString = 1;
+        public final int function_sum = 2;
+
+        public POP3Types_sentinel() {
+        }
+
+        public POP3Types_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+
+    public static class QUIT implements Record {
+        public QUIT() {
+        }
+
+        public boolean equals(final Object obj) {
+            return obj instanceof QUIT;
+        }
+
+        public int hashCode() {
+            return 0;
+        }
+
+        public QUIT copy() {
+            return new QUIT();
+        }
+
+        public String toString() {
+            return "mk_POP3Types`QUIT()";
+        }
+    }
+
+    public static class STAT implements Record {
+        public STAT() {
+        }
+
+        public boolean equals(final Object obj) {
+            return obj instanceof STAT;
+        }
+
+        public int hashCode() {
+            return 0;
+        }
+
+        public STAT copy() {
+            return new STAT();
+        }
+
+        public String toString() {
+            return "mk_POP3Types`STAT()";
+        }
+    }
+
+    public static class LIST implements Record {
+        public Number messageNumber;
+
+        public LIST(final Number _messageNumber) {
+            messageNumber = _messageNumber;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof LIST)) {
+                return false;
+            }
+
+            LIST other = ((LIST) obj);
+
+            return Utils.equals(messageNumber, other.messageNumber);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(messageNumber);
+        }
+
+        public LIST copy() {
+            return new LIST(messageNumber);
+        }
+
+        public String toString() {
+            return "mk_POP3Types`LIST" + Utils.formatFields(messageNumber);
+        }
+    }
+
+    public static class RETR implements Record {
+        public Number messageNumber;
+
+        public RETR(final Number _messageNumber) {
+            messageNumber = _messageNumber;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof RETR)) {
+                return false;
+            }
+
+            RETR other = ((RETR) obj);
+
+            return Utils.equals(messageNumber, other.messageNumber);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(messageNumber);
+        }
+
+        public RETR copy() {
+            return new RETR(messageNumber);
+        }
+
+        public String toString() {
+            return "mk_POP3Types`RETR" + Utils.formatFields(messageNumber);
+        }
+    }
+
+    public static class DELE implements Record {
+        public Number messageNumber;
+
+        public DELE(final Number _messageNumber) {
+            messageNumber = _messageNumber;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof DELE)) {
+                return false;
+            }
+
+            DELE other = ((DELE) obj);
+
+            return Utils.equals(messageNumber, other.messageNumber);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(messageNumber);
+        }
+
+        public DELE copy() {
+            return new DELE(messageNumber);
+        }
+
+        public String toString() {
+            return "mk_POP3Types`DELE" + Utils.formatFields(messageNumber);
+        }
+    }
+
+    public static class NOOP implements Record {
+        public NOOP() {
+        }
+
+        public boolean equals(final Object obj) {
+            return obj instanceof NOOP;
+        }
+
+        public int hashCode() {
+            return 0;
+        }
+
+        public NOOP copy() {
+            return new NOOP();
+        }
+
+        public String toString() {
+            return "mk_POP3Types`NOOP()";
+        }
+    }
+
+    public static class RSET implements Record {
+        public RSET() {
+        }
+
+        public boolean equals(final Object obj) {
+            return obj instanceof RSET;
+        }
+
+        public int hashCode() {
+            return 0;
+        }
+
+        public RSET copy() {
+            return new RSET();
+        }
+
+        public String toString() {
+            return "mk_POP3Types`RSET()";
+        }
+    }
+
+    public static class TOP implements Record {
+        public Number messageNumber;
+        public Number numLines;
+
+        public TOP(final Number _messageNumber, final Number _numLines) {
+            messageNumber = _messageNumber;
+            numLines = _numLines;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof TOP)) {
+                return false;
+            }
+
+            TOP other = ((TOP) obj);
+
+            return (Utils.equals(messageNumber, other.messageNumber)) &&
+            (Utils.equals(numLines, other.numLines));
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(messageNumber, numLines);
+        }
+
+        public TOP copy() {
+            return new TOP(messageNumber, numLines);
+        }
+
+        public String toString() {
+            return "mk_POP3Types`TOP" +
+            Utils.formatFields(messageNumber, numLines);
+        }
+    }
+
+    public static class UIDL implements Record {
+        public Number messageNumber;
+
+        public UIDL(final Number _messageNumber) {
+            messageNumber = _messageNumber;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof UIDL)) {
+                return false;
+            }
+
+            UIDL other = ((UIDL) obj);
+
+            return Utils.equals(messageNumber, other.messageNumber);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(messageNumber);
+        }
+
+        public UIDL copy() {
+            return new UIDL(messageNumber);
+        }
+
+        public String toString() {
+            return "mk_POP3Types`UIDL" + Utils.formatFields(messageNumber);
+        }
+    }
+
+    public static class USER implements Record {
+        public String name;
+
+        public USER(final String _name) {
+            name = (_name != null) ? _name : null;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof USER)) {
+                return false;
+            }
+
+            USER other = ((USER) obj);
+
+            return Utils.equals(name, other.name);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(name);
+        }
+
+        public USER copy() {
+            return new USER(name);
+        }
+
+        public String toString() {
+            return "mk_POP3Types`USER" + Utils.formatFields(name);
+        }
+    }
+
+    public static class PASS implements Record {
+        public String string;
+
+        public PASS(final String _string) {
+            string = (_string != null) ? _string : null;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof PASS)) {
+                return false;
+            }
+
+            PASS other = ((PASS) obj);
+
+            return Utils.equals(string, other.string);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(string);
+        }
+
+        public PASS copy() {
+            return new PASS(string);
+        }
+
+        public String toString() {
+            return "mk_POP3Types`PASS" + Utils.formatFields(string);
+        }
+    }
+
+    public static class APOP implements Record {
+        public String name;
+        public String digest;
+
+        public APOP(final String _name, final String _digest) {
+            name = (_name != null) ? _name : null;
+            digest = (_digest != null) ? _digest : null;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof APOP)) {
+                return false;
+            }
+
+            APOP other = ((APOP) obj);
+
+            return (Utils.equals(name, other.name)) &&
+            (Utils.equals(digest, other.digest));
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(name, digest);
+        }
+
+        public APOP copy() {
+            return new APOP(name, digest);
+        }
+
+        public String toString() {
+            return "mk_POP3Types`APOP" + Utils.formatFields(name, digest);
+        }
+    }
+
+    public static class OkResponse implements Record {
+        public String data;
+
+        public OkResponse(final String _data) {
+            data = (_data != null) ? _data : null;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof OkResponse)) {
+                return false;
+            }
+
+            OkResponse other = ((OkResponse) obj);
+
+            return Utils.equals(data, other.data);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(data);
+        }
+
+        public OkResponse copy() {
+            return new OkResponse(data);
+        }
+
+        public String toString() {
+            return "mk_POP3Types`OkResponse" + Utils.formatFields(data);
+        }
+    }
+
+    public static class ErrResponse implements Record {
+        public String data;
+
+        public ErrResponse(final String _data) {
+            data = (_data != null) ? _data : null;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof ErrResponse)) {
+                return false;
+            }
+
+            ErrResponse other = ((ErrResponse) obj);
+
+            return Utils.equals(data, other.data);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(data);
+        }
+
+        public ErrResponse copy() {
+            return new ErrResponse(data);
+        }
+
+        public String toString() {
+            return "mk_POP3Types`ErrResponse" + Utils.formatFields(data);
+        }
+    }
+}
+
+##########
+*Quotes*
+Authorization,Transaction,Update
+##########

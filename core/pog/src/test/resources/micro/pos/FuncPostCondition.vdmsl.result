@@ -1,0 +1,1 @@
+["function establishes postcondition obligation in \u0027DEFAULT\u0027 (FuncPostCondition.vdmsl) at line 6:1: (forall n:nat \u0026 (pre_ExplFn(n) \u003d\u003e post_ExplFn(n, (n ** 6))))"]

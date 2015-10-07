@@ -1,0 +1,68 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry implements java.io.Serializable {
+    public Entry() {
+    }
+
+    private void op() {
+        /* skip */
+    }
+
+    private static Number fun() {
+        return 1L;
+    }
+
+    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
+        CallStatement callStm_1 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    ((Entry) instance).op();
+
+                    return Utils.VOID_VALUE;
+                }
+
+                public String toString() {
+                    return "op()";
+                }
+            };
+
+        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+        RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_1, 1L, 2L);
+
+        CallStatement callStm_2 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    return fun();
+                }
+
+                public String toString() {
+                    return "fun()";
+                }
+            };
+
+        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+
+        RepeatTraceNode repeat_2 = new RepeatTraceNode(apply_2, 1L, 2L);
+
+        concurrent_1.add(repeat_1);
+        concurrent_1.add(repeat_2);
+
+        sequence_1.add(concurrent_1);
+
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

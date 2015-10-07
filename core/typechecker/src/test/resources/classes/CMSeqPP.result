@@ -6,7 +6,7 @@
 <message column="6" line="54" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CMSeqPP"/>
 <message column="6" line="54" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CMSeqPP"/>
 <message column="3" line="311" message="Member handleEvent(EventId, FlareType, Angle, Time, Time) is not in scope" messageType="error" number="3209" resource="CMSeqPP"/>
-<message column="5" line="576" message="Operation 'canObserve' cannot be called from a function" messageType="error" number="3300" resource="CMSeqPP"/>
+<message column="5" line="576" message="Impure operation 'canObserve' cannot be called from here" messageType="error" number="3300" resource="CMSeqPP"/>
 <message column="11" line="633" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="CMSeqPP"/>
 <message column="4" line="634" message="Member addSensor(Sensor) is not in scope" messageType="error" number="3209" resource="CMSeqPP"/>
 <message column="4" line="635" message="Member addSensor(Sensor) is not in scope" messageType="error" number="3209" resource="CMSeqPP"/>

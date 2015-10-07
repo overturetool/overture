@@ -1,0 +1,324 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Buffer implements EvaluatePP {
+    public volatile Number data = null;
+    public volatile Sentinel sentinel;
+
+    public Buffer() {
+        sentinel = new Buffer_sentinel(this);
+    }
+
+    public void Write(final Number newData) {
+        sentinel.entering(((Buffer_sentinel) sentinel).Write);
+
+        try {
+            data = newData;
+            sentinel.stateChanged();
+        } finally {
+            sentinel.leaving(((Buffer_sentinel) sentinel).Write);
+        }
+    }
+
+    public Number Read() {
+        sentinel.entering(((Buffer_sentinel) sentinel).Read);
+
+        try {
+            Number oldData = data;
+
+            return oldData;
+        } finally {
+            sentinel.leaving(((Buffer_sentinel) sentinel).Read);
+        }
+    }
+
+    public void IsFinished() {
+        sentinel.entering(((Buffer_sentinel) sentinel).IsFinished);
+
+        try {
+            /* skip */
+        } finally {
+            sentinel.leaving(((Buffer_sentinel) sentinel).IsFinished);
+        }
+    }
+
+    public String toString() {
+        return "Buffer{" + "data := " + Utils.toString(data) + "}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return Utils.equals(sentinel.fin[((Buffer_sentinel) sentinel).Read],
+                sentinel.fin[((Buffer_sentinel) sentinel).Write]);
+        } else if (Utils.equals(fnr, 1L)) {
+            return Utils.equals(sentinel.fin[((Buffer_sentinel) sentinel).Read] +
+                1L, sentinel.fin[((Buffer_sentinel) sentinel).Write]);
+        } else if (Utils.equals(fnr, 2L)) {
+            return sentinel.fin[((Buffer_sentinel) sentinel).Read] >= 3L;
+        } else if (Utils.equals(fnr, 3L)) {
+            return true;
+        } else if (Utils.equals(fnr, 4L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public static class Buffer_sentinel extends Sentinel {
+        public static final int Write = 0;
+        public static final int Read = 1;
+        public static final int IsFinished = 2;
+        public static final int Buffer = 3;
+        public static final int toString = 4;
+        public final int function_sum = 5;
+
+        public Buffer_sentinel() {
+        }
+
+        public Buffer_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Reader extends VDMThread implements EvaluatePP {
+    public volatile Buffer b;
+    public volatile Boolean isfinished = false;
+    public volatile Sentinel sentinel;
+
+    public Reader(final Buffer buf) {
+        sentinel = new Reader_sentinel(this);
+
+        cg_init_Reader_1(buf);
+    }
+
+    public Reader() {
+        sentinel = new Reader_sentinel(this);
+    }
+
+    public void cg_init_Reader_1(final Buffer buf) {
+        b = buf;
+    }
+
+    public void ended() {
+        sentinel.entering(((Reader_sentinel) sentinel).ended);
+
+        try {
+            /* skip */
+        } finally {
+            sentinel.leaving(((Reader_sentinel) sentinel).ended);
+        }
+    }
+
+    public String toString() {
+        return "Reader{" + "b := " + Utils.toString(b) + ", isfinished := " +
+        Utils.toString(isfinished) + "}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else if (Utils.equals(fnr, 3L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public void run() {
+        long toVar_1 = 3L;
+
+        for (Long i = 1L; i <= toVar_1; i++) {
+            Number x = b.Read();
+
+            /* skip */
+        }
+    }
+
+    public static class Reader_sentinel extends Sentinel {
+        public static final int cg_init_Reader_1 = 0;
+        public static final int Reader = 1;
+        public static final int ended = 2;
+        public static final int toString = 3;
+        public final int function_sum = 4;
+
+        public Reader_sentinel() {
+        }
+
+        public Reader_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Writer extends VDMThread implements EvaluatePP {
+    public volatile Buffer b;
+    public volatile Boolean isfinished = false;
+    private volatile Number index = 0L;
+    public volatile Sentinel sentinel;
+
+    public Writer(final Buffer buf) {
+        sentinel = new Writer_sentinel(this);
+
+        cg_init_Writer_1(buf);
+    }
+
+    public Writer() {
+        sentinel = new Writer_sentinel(this);
+    }
+
+    public void cg_init_Writer_1(final Buffer buf) {
+        b = buf;
+    }
+
+    public Number Write() {
+        sentinel.entering(((Writer_sentinel) sentinel).Write);
+
+        try {
+            index = index.longValue() + 1L;
+            sentinel.stateChanged();
+
+            return index;
+        } finally {
+            sentinel.leaving(((Writer_sentinel) sentinel).Write);
+        }
+    }
+
+    public void ended() {
+        sentinel.entering(((Writer_sentinel) sentinel).ended);
+
+        try {
+            /* skip */
+        } finally {
+            sentinel.leaving(((Writer_sentinel) sentinel).ended);
+        }
+    }
+
+    public String toString() {
+        return "Writer{" + "b := " + Utils.toString(b) + ", isfinished := " +
+        Utils.toString(isfinished) + ", index := " + Utils.toString(index) +
+        "}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else if (Utils.equals(fnr, 3L)) {
+            return true;
+        } else if (Utils.equals(fnr, 4L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public void run() {
+        long toVar_2 = 3L;
+
+        for (Long i = 1L; i <= toVar_2; i++) {
+            Number x = Write();
+            b.Write(x);
+        }
+    }
+
+    public static class Writer_sentinel extends Sentinel {
+        public static final int cg_init_Writer_1 = 0;
+        public static final int Writer = 1;
+        public static final int Write = 2;
+        public static final int ended = 3;
+        public static final int toString = 4;
+        public final int function_sum = 5;
+
+        public Writer_sentinel() {
+        }
+
+        public Writer_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry implements EvaluatePP {
+    public volatile Sentinel sentinel;
+
+    public Entry() {
+        sentinel = new Entry_sentinel(this);
+    }
+
+    public static Number Run() {
+        {
+            Buffer B = new Buffer();
+            Writer wrt = new Writer(B);
+            Reader read = new Reader(B);
+            wrt.start();
+            read.start();
+            B.IsFinished();
+
+            return B.data;
+        }
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public static class Entry_sentinel extends Sentinel {
+        public static final int Run = 0;
+        public static final int Entry = 1;
+        public static final int toString = 2;
+        public final int function_sum = 3;
+
+        public Entry_sentinel() {
+        }
+
+        public Entry_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########

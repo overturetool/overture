@@ -1,0 +1,1 @@
+["legal function application obligation in \u0027DEFAULT\u0027 (FunctionApply.vdmsl) at line 11:12: (forall n:int \u0026 ((n \u003e\u003d 0) \u003d\u003e ((not (n \u003d 0)) \u003d\u003e pre_Fun((n - 1)))))"]

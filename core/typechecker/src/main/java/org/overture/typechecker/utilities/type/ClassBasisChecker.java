@@ -28,6 +28,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -37,12 +38,13 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  */
 public class ClassBasisChecker extends TypeUnwrapper<Boolean>
 {
-
 	protected ITypeCheckerAssistantFactory af;
+	protected Environment env;
 
-	public ClassBasisChecker(ITypeCheckerAssistantFactory af)
+	public ClassBasisChecker(ITypeCheckerAssistantFactory af, Environment env)
 	{
 		this.af = af;
+		this.env = env;
 	}
 
 	@Override
@@ -71,13 +73,12 @@ public class ClassBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return af.createPTypeAssistant().getClassType(type) != null;
+		return af.createPTypeAssistant().getClassType(type, env) != null;
 	}
 
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
-
 		return true;
 	}
 

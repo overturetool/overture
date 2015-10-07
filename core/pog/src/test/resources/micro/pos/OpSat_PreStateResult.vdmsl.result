@@ -1,0 +1,1 @@
+["operation postcondition satisfiable obligation in \u0027DEFAULT\u0027 (OpSat_PreStateResult.vdmsl) at line 8:1: (pre_op(oldstate) \u003d\u003e (exists n:nat \u0026 post_op(oldstate, n, oldstate, newstate)))"]

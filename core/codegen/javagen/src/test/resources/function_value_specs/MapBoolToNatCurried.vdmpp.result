@@ -1,0 +1,60 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Func_1<Boolean, Number> f = new Func_1<Boolean, Number>() {
+                public Number eval(final Boolean b) {
+                    Number ternaryIfExp_1 = null;
+
+                    if (b) {
+                        ternaryIfExp_1 = 1L;
+                    } else {
+                        ternaryIfExp_1 = 0L;
+                    }
+
+                    return ternaryIfExp_1;
+                }
+            };
+
+        VDMSeq xs = SeqUtil.seq(true, false, true, true, true);
+
+        return bool_nat_map(Utils.copy(xs)).eval(f);
+    }
+
+    public static Func_1<Func_1<Boolean, Number>, VDMSeq> bool_nat_map(
+        final VDMSeq s) {
+        return new Func_1<Func_1<Boolean, Number>, VDMSeq>() {
+                public VDMSeq eval(final Func_1<Boolean, Number> f) {
+                    VDMSeq ternaryIfExp_2 = null;
+
+                    if (Utils.empty(s)) {
+                        ternaryIfExp_2 = SeqUtil.seq();
+                    } else {
+                        ternaryIfExp_2 = SeqUtil.conc(SeqUtil.seq(f.eval(((Boolean) s.get(
+                                            0)))),
+                                bool_nat_map(SeqUtil.tail(Utils.copy(s))).eval(f));
+                    }
+
+                    return Utils.copy(ternaryIfExp_2);
+                }
+            };
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+public interface Func_1<T_1, T_2> {
+    public abstract T_2 eval(final T_1 param_1);
+}
+
+##########

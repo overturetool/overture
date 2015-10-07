@@ -246,7 +246,8 @@ import org.overture.ast.util.ToStringUtil;
 //Access
 %accessSpecifier->accessSpecifier = ""+$($[access]$==null?"":$[access]$+" ") +
                                     ($[static]$==null?"":$[static]$+" ") +
-                                    ($[async]$==null?"":$[async]$+" ")$ 
+                                    ($[async]$==null?"":$[async]$+" ") +
+                                    ($[pure]$?"pure ":"")$ 
                                     
 %access->public ="public"
 %access->protected ="protected"

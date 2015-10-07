@@ -1,0 +1,43 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class A {
+    private static final VDMSeq as = SeqUtil.seq();
+    private static final VDMSeq bs = SeqUtil.seq(1L, 2L);
+    private static final VDMSeq cs = SeqUtil.seq(1.2, 3.3);
+    private static final VDMSeq ds = SeqUtil.seq(true, false);
+    private static final VDMSeq es = SeqUtil.seq('a', 'b');
+    private static final VDMSeq fs = SeqUtil.seq(SeqUtil.seq('a'),
+            SeqUtil.seq('b'));
+
+    public A() {
+    }
+
+    public void op() {
+        VDMSeq as_ = SeqUtil.reverse(Utils.copy(as));
+
+        VDMSeq bs_ = SeqUtil.reverse(Utils.copy(bs));
+
+        VDMSeq cs_ = SeqUtil.reverse(Utils.copy(cs));
+
+        VDMSeq ds_ = SeqUtil.reverse(Utils.copy(ds));
+
+        VDMSeq es_ = SeqUtil.reverse(Utils.copy(es));
+
+        VDMSeq fs_ = SeqUtil.reverse(Utils.copy(fs));
+
+        /* skip */
+    }
+
+    public String toString() {
+        return "A{" + "as = " + Utils.toString(as) + ", bs = " +
+        Utils.toString(bs) + ", cs = " + Utils.toString(cs) + ", ds = " +
+        Utils.toString(ds) + ", es = " + Utils.toString(es) + ", fs = " +
+        Utils.toString(fs) + "}";
+    }
+}
+
+##########

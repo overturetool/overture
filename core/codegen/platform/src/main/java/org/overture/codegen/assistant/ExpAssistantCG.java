@@ -31,9 +31,9 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.ACaseAlternative;
@@ -42,7 +42,6 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SUnaryExp;
-import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.types.AIntNumericBasicType;
@@ -54,7 +53,7 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolIsExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
@@ -69,7 +68,6 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntIsExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapSeqGetExpCG;
 import org.overture.codegen.cgast.expressions.ANat1IsExpCG;
 import org.overture.codegen.cgast.expressions.ANatIsExpCG;
@@ -87,7 +85,6 @@ import org.overture.codegen.cgast.expressions.SIsExpCG;
 import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
@@ -111,7 +108,6 @@ import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class ExpAssistantCG extends AssistantBase
 {
@@ -119,28 +115,16 @@ public class ExpAssistantCG extends AssistantBase
 	{
 		super(assistantManager);
 	}
-
-	public SExpCG consLetDefExp(PExp node, List<PDefinition> defs, PExp exp,
-			PType type, IRInfo question, String message)
-			throws AnalysisException
+	
+	public AIdentifierVarExpCG consIdVar(String name, STypeCG type)
 	{
-		if (question.getExpAssistant().isAssigned(node))
-		{
-			question.addUnsupportedNode(node, message);
-			return null;
-		}
+		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+		var.setIsLambda(false);
+		var.setIsLocal(true);
+		var.setType(type);
+		var.setName(name);
 
-		ALetDefExpCG letDefExp = new ALetDefExpCG();
-
-		question.getDeclAssistant().setLocalDefs(defs, letDefExp.getLocalDefs(), question);
-
-		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
-		letDefExp.setExp(expCg);
-
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		letDefExp.setType(typeCg);
-
-		return letDefExp;
+		return var;
 	}
 
 	public SExpCG isolateExpression(SExpCG exp)
@@ -202,6 +186,18 @@ public class ExpAssistantCG extends AssistantBase
 		return (type instanceof ANatOneNumericBasicType
 				|| type instanceof ANatNumericBasicType || type instanceof AIntNumericBasicType)
 				&& !(exp instanceof ARealLiteralExp);
+	}
+	
+	public boolean isIntegerType(SExpCG exp)
+	{
+		STypeCG type = exp.getType();
+
+		// Expressions like 1.0 are considered real literal expressions
+		// of type NatOneNumericBasicType
+
+		return (type instanceof ANat1NumericBasicTypeCG
+				|| type instanceof ANatNumericBasicTypeCG || type instanceof AIntNumericBasicTypeCG)
+				&& !(exp instanceof ARealLiteralExpCG);
 	}
 
 	public ABoolLiteralExpCG consBoolLiteral(boolean val)
@@ -353,7 +349,7 @@ public class ExpAssistantCG extends AssistantBase
 		return false;
 	}
 
-	public AHeaderLetBeStCG consHeader(ASetMultipleBindCG binding,
+	public AHeaderLetBeStCG consHeader(SMultipleBindCG binding,
 			SExpCG suchThat)
 	{
 		AHeaderLetBeStCG header = new AHeaderLetBeStCG();
@@ -363,49 +359,57 @@ public class ExpAssistantCG extends AssistantBase
 
 		return header;
 	}
+	
+	public boolean appearsInModuleStateInv(org.overture.ast.node.INode node)
+	{
+		AStateDefinition stateDef = node.getAncestor(AStateDefinition.class);
+		if (stateDef != null)
+		{
+			LinkedList<org.overture.ast.node.INode> ancestors = new LinkedList<>();
+			org.overture.ast.node.INode next = node;
 
-	public boolean outsideImperativeContext(PExp exp)
+			do
+			{
+				ancestors.add(next);
+				next = node.parent();
+			} while (!(next instanceof AStateDefinition)
+					&& !ancestors.contains(next));
+
+			if (ancestors.getLast() == stateDef.getInvExpression())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean outsideImperativeContext(org.overture.ast.node.INode node)
 	{
 		// The transformation of the 'and' and 'or' logical expressions also assumes that the
 		// expressions exist within a statement. However, in case it does not, the transformation
 		// is not performed. In this way, the  'and' and 'or' expressions can
 		// still be used (say) in instance variable assignment.
 		
-		return exp.getAncestor(SOperationDefinition.class) == null
-				&& exp.getAncestor(SFunctionDefinition.class) == null
-				&& exp.getAncestor(ANamedTraceDefinition.class) == null
-				&& exp.getAncestor(ATypeDefinition.class) == null
-				&& exp.getAncestor(AClassInvariantDefinition.class) == null;
+		return node.getAncestor(SOperationDefinition.class) == null
+				&& node.getAncestor(SFunctionDefinition.class) == null
+				&& node.getAncestor(ANamedTraceDefinition.class) == null
+				&& node.getAncestor(ATypeDefinition.class) == null
+				&& node.getAncestor(AClassInvariantDefinition.class) == null;
 	}
 
 	public SExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings,
 			PExp predicate, SQuantifierExpCG quantifier, IRInfo question,
 			String nodeStr) throws AnalysisException
 	{
-		if (question.getExpAssistant().outsideImperativeContext(node))
-		{
-			question.addUnsupportedNode(node, String.format("Generation of a %s is only supported within operations/functions", nodeStr));
-			return null;
-		}
-
-		LinkedList<ASetMultipleBindCG> bindingsCg = new LinkedList<ASetMultipleBindCG>();
+		LinkedList<SMultipleBindCG> bindingsCg = new LinkedList<SMultipleBindCG>();
 		for (PMultipleBind multipleBind : bindings)
 		{
-			if (!(multipleBind instanceof ASetMultipleBind))
-			{
-				question.addUnsupportedNode(node, String.format("Generation of a %s is only supported for multiple set binds. Got: %s", nodeStr, multipleBind));
-				return null;
-			}
-
 			SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
-
-			if (!(multipleBindCg instanceof ASetMultipleBindCG))
+			
+			if(multipleBindCg != null)
 			{
-				question.addUnsupportedNode(node, String.format("Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: %s", multipleBindCg));
-				return null;
+				bindingsCg.add(multipleBindCg);
 			}
-
-			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
 		}
 
 		PType type = node.getType();
@@ -489,10 +493,12 @@ public class ExpAssistantCG extends AssistantBase
 		{
 			return consTupleIsExp(exp, checkedType);
 		} else if (checkedType instanceof ARecordTypeCG
-				|| checkedType instanceof AClassTypeCG)
+				|| checkedType instanceof AClassTypeCG
+				|| checkedType instanceof AStringTypeCG)
 		{
 			return consGeneralIsExp(exp, checkedType);
-		} else
+		}
+		else
 		{
 			if(checkedType instanceof ASeqSeqTypeCG)
 			{
@@ -592,7 +598,7 @@ public class ExpAssistantCG extends AssistantBase
 		return basicIsExp;
 	}
 	
-	public SVarExpCG idStateDesignatorToExp(IRInfo info, TransAssistantCG transAssistant, List<AClassDeclCG> classes, AIdentifierStateDesignatorCG node)
+	public SVarExpCG idStateDesignatorToExp(AIdentifierStateDesignatorCG node)
 	{
 		if(node.getExplicit())
 		{
@@ -612,7 +618,7 @@ public class ExpAssistantCG extends AssistantBase
 		}
 		else
 		{
-			AIdentifierVarExpCG idVar = transAssistant.consIdentifierVar(node.getName(), node.getType().clone());
+			AIdentifierVarExpCG idVar = consIdVar(node.getName(), node.getType().clone());
 			idVar.setTag(node.getTag());
 			idVar.setSourceNode(node.getSourceNode());
 			idVar.setIsLocal(node.getIsLocal());
@@ -645,7 +651,8 @@ public class ExpAssistantCG extends AssistantBase
 	
 	public SExpCG findSubject(SExpCG next)
 	{
-		while (next instanceof AFieldExpCG || next instanceof AMapSeqGetExpCG)
+		while (next instanceof AFieldExpCG || next instanceof AMapSeqGetExpCG
+				|| next instanceof AApplyExpCG)
 		{
 			if (next instanceof AFieldExpCG)
 			{
@@ -653,9 +660,12 @@ public class ExpAssistantCG extends AssistantBase
 			} else if (next instanceof AMapSeqGetExpCG)
 			{
 				next = ((AMapSeqGetExpCG) next).getCol();
+			} else if (next instanceof AApplyExpCG)
+			{
+				next = ((AApplyExpCG) next).getRoot();
 			}
 		}
-		
+
 		return next;
 	}
 	

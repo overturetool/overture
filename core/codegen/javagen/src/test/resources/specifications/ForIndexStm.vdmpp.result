@@ -1,0 +1,50 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class A {
+    public A() {
+    }
+
+    public void op() {
+        long toVar_1 = 10L;
+        long byVar_1 = 5L;
+
+        for (Long i = 1L; (byVar_1 < 0) ? (i >= toVar_1) : (i <= toVar_1);
+                i += byVar_1) {
+            /* skip */
+        }
+
+        long toVar_2 = -1L;
+        long byVar_2 = -2L;
+
+        for (Long j = 10L; (byVar_2 < 0) ? (j >= toVar_2) : (j <= toVar_2);
+                j += byVar_2) {
+            /* skip */
+        }
+
+        long toVar_3 = 1L;
+        long byVar_3 = 1L;
+
+        for (Long i = 1L; (byVar_3 < 0) ? (i >= toVar_3) : (i <= toVar_3);
+                i += byVar_3) {
+            /* skip */
+        }
+
+        long toVar_4 = 0L;
+        long byVar_4 = 1L;
+
+        for (Long i = 1L; (byVar_4 < 0) ? (i >= toVar_4) : (i <= toVar_4);
+                i += byVar_4) {
+            /* skip */
+        }
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+}
+
+##########

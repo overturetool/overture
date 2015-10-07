@@ -1,0 +1,10 @@
+module A
+
+definitions
+
+functions
+
+f : () -> nat
+f() == 0;
+
+end A

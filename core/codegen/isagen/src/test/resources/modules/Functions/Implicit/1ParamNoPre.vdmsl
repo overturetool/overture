@@ -1,0 +1,4 @@
+functions
+
+f (x:int) r: int
+post r = x

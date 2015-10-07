@@ -11,15 +11,12 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AMutexSyncDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
@@ -28,11 +25,8 @@ import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInte
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.PTypeListAssistant;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -87,7 +81,7 @@ public interface IInterpreterAssistantFactory extends
 
 	// ALocalDefinitionAssistantInterpreter createALocalDefinitionAssistant();
 
-	AMutexSyncDefinitionAssistantInterpreter createAMutexSyncDefinitionAssistant();
+//	AMutexSyncDefinitionAssistantInterpreter createAMutexSyncDefinitionAssistant();
 
 	ANamedTraceDefinitionAssistantInterpreter createANamedTraceDefinitionAssistant();
 
@@ -99,7 +93,7 @@ public interface IInterpreterAssistantFactory extends
 
 	AStateDefinitionAssistantInterpreter createAStateDefinitionAssistant();
 
-	ASystemClassDefinitionAssistantInterpreter createASystemClassDefinitionAssistant();
+//	ASystemClassDefinitionAssistantInterpreter createASystemClassDefinitionAssistant();
 
 	// AThreadDefinitionAssistantInterpreter createAThreadDefinitionAssistant();
 
@@ -151,7 +145,7 @@ public interface IInterpreterAssistantFactory extends
 
 //	AIsOfBaseClassExpAssistantInterpreter createAIsOfBaseClassExpAssistant();
 
-	AIsOfClassExpAssistantInterpreter createAIsOfClassExpAssistant();
+//	AIsOfClassExpAssistantInterpreter createAIsOfClassExpAssistant();
 
 	// ALambdaExpAssistantInterpreter createALambdaExpAssistant();
 
@@ -284,7 +278,7 @@ public interface IInterpreterAssistantFactory extends
 	//
 	// ACallStmAssistantInterpreter createACallStmAssistant();
 
-	ACaseAlternativeStmAssistantInterpreter createACaseAlternativeStmAssistant();
+//	ACaseAlternativeStmAssistantInterpreter createACaseAlternativeStmAssistant();
 
 	// ACasesStmAssistantInterpreter createACasesStmAssistant();
 	//
@@ -308,7 +302,7 @@ public interface IInterpreterAssistantFactory extends
 	//
 	// AReturnStmAssistantInterpreter createAReturnStmAssistant();
 
-	AStartStmAssistantInterpreter createAStartStmAssistant();
+//	AStartStmAssistantInterpreter createAStartStmAssistant();
 
 	// ATixeStmAssistantInterpreter createATixeStmAssistant();
 
@@ -346,7 +340,7 @@ public interface IInterpreterAssistantFactory extends
 
 	PTypeAssistantInterpreter createPTypeAssistant();
 
-	PTypeListAssistant createPTypeListAssistant();
+//	PTypeListAssistant createPTypeListAssistant();
 
 	// SBasicTypeAssistantInterpreter createSBasicTypeAssistant();
 

@@ -1,0 +1,42 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    private static final VDMSet s = SetUtil.set();
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        if (true) {
+            return true;
+        }
+
+        {
+            Boolean success_1 = false;
+
+            if (!(success_1)) {
+                throw new RuntimeException(
+                    "Let Be St found no applicable bindings");
+            }
+
+            {
+                VDMSet a = null;
+
+                /* skip */
+                /* skip */
+                /* skip */
+                return 2L;
+            }
+        }
+    }
+
+    public String toString() {
+        return "Entry{" + "s = " + Utils.toString(s) + "}";
+    }
+}
+
+##########

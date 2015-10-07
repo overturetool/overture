@@ -1,1 +1,1 @@
-["map compatible obligation:(forall ldom1 in set (dom m), rdom2 in set (dom {7 |-\u003e 5}) \u0026 ((ldom1 \u003d rdom2) \u003d\u003e (m(ldom1) \u003d {7 |-\u003e 5}(rdom2))))"]
+["map compatible obligation in \u0027DEFAULT\u0027 (292.vdmsl) at line 6:9: (forall ldom1 in set (dom m), rdom2 in set (dom {7 |-\u003e 5}) \u0026 ((ldom1 \u003d rdom2) \u003d\u003e (m(ldom1) \u003d {7 |-\u003e 5}(rdom2))))"]

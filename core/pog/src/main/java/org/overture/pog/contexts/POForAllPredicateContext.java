@@ -32,6 +32,7 @@ import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -81,6 +82,7 @@ public class POForAllPredicateContext extends POForAllContext
 		if (predicate != null)
 		{
 			AImpliesBooleanBinaryExp implies_exp = AstExpressionFactory.newAImpliesBooleanBinaryExp(predicate.clone(), stitch);
+			implies_exp.setType(new ABooleanBasicType());
 			super_exp.setPredicate(implies_exp);
 		} else
 		{

@@ -36,7 +36,6 @@ import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
-import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
@@ -46,8 +45,11 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -212,18 +214,19 @@ public class NameFinder extends
 			return node;
 		}
 
-		PDefinition predef = node.getPredef();
-		if (predef != null && predef.apply(this, question) != null)// PDefinitionAssistantTC.findName(predef, sought,
-																	// scope) != null)
+		if (Settings.dialect == Dialect.VDM_SL || Settings.release == Release.CLASSIC)
 		{
-			return predef;
-		}
-
-		PDefinition postdef = node.getPostdef();
-		if (postdef != null && postdef.apply(this, question) != null)// PDefinitionAssistantTC.findName(postdef, sought,
-																		// scope) != null)
-		{
-			return postdef;
+    		PDefinition predef = node.getPredef();
+    		if (predef != null && predef.apply(this, question) != null)
+    		{
+    			return predef;
+    		}
+    
+    		PDefinition postdef = node.getPostdef();
+    		if (postdef != null && postdef.apply(this, question) != null)
+    		{
+    			return postdef;
+    		}
 		}
 
 		return null;
@@ -278,18 +281,19 @@ public class NameFinder extends
 			return node;
 		}
 
-		PDefinition predef = node.getPredef();
-		if (predef != null && predef.apply(this, question) != null)// PDefinitionAssistantTC.findName(predef, sought,
-																	// scope) != null)
+		if (Settings.dialect == Dialect.VDM_SL || Settings.release == Release.CLASSIC)
 		{
-			return predef;
-		}
-
-		PDefinition postdef = node.getPostdef();
-		if (postdef != null && postdef.apply(this, question) != null)// PDefinitionAssistantTC.findName(postdef, sought,
-																		// scope) != null)
-		{
-			return postdef;
+    		PDefinition predef = node.getPredef();
+    		if (predef != null && predef.apply(this, question) != null)
+    		{
+    			return predef;
+    		}
+    
+    		PDefinition postdef = node.getPostdef();
+    		if (postdef != null && postdef.apply(this, question) != null)
+    		{
+    			return postdef;
+    		}
 		}
 
 		return null;
@@ -368,18 +372,6 @@ public class NameFinder extends
 	public PDefinition caseAMutexSyncDefinition(AMutexSyncDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		return null;
-	}
-
-	@Override
-	public PDefinition caseANamedTraceDefinition(ANamedTraceDefinition node,
-			Newquestion question) throws AnalysisException
-	{
-		if (af.createPDefinitionAssistant().findNameBaseCase(node, question.sought, question.scope) != null)
-		{
-			return node;
-		}
-
 		return null;
 	}
 
@@ -474,12 +466,7 @@ public class NameFinder extends
 	public PDefinition caseAValueDefinition(AValueDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		if (question.scope.matches(NameScope.NAMES))
-		{
-			return af.createPDefinitionListAssistant().findName(node.getDefs(), question.sought, question.scope);
-		}
-
-		return null;
+		return af.createPDefinitionListAssistant().findName(node.getDefs(), question.sought, question.scope);
 	}
 
 	// @Override
