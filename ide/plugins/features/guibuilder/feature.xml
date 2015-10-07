@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.guibuilder"
       label="GUI Builder"
-      version="2.2.9.qualifier">
+      version="2.3.0">
 
    <description>
       %description
