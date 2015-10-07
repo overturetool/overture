@@ -27,6 +27,8 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class JavaQuoteValueCreator extends JavaClassCreatorBase
 {
+	public static final String JAVA_QUOTE_NAME_SUFFIX = "Quote";
+	
 	private static final String GET_INSTANCE_METHOD = "getInstance";
 	private static final String HASH_CODE_METHOD = "hashCode";
 
@@ -45,6 +47,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 	
 	public ADefaultClassDeclCG consQuoteValue(String quoteClassName, String quoteName, String userCodePackage)
 	{
+		quoteClassName = quoteClassName + JavaQuoteValueCreator.JAVA_QUOTE_NAME_SUFFIX;
 		ADefaultClassDeclCG decl = new ADefaultClassDeclCG();
 		decl.setAbstract(false);
 		decl.setAccess(IJavaConstants.PUBLIC);
@@ -52,15 +55,9 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		decl.setStatic(false);
 		
 		// The package where the quotes are put is userCode.quotes
-		if(JavaCodeGenUtil.isValidJavaPackage(userCodePackage))
-		{
-			String quotePackage = userCodePackage + "." + JavaCodeGen.JAVA_QUOTES_PACKAGE;
-			decl.setPackage(quotePackage);
-		}
-		else
-		{
-			decl.setPackage(JavaCodeGen.JAVA_QUOTES_PACKAGE);
-		}
+		String quotePackage = consQuotePackage(userCodePackage);
+		
+		decl.setPackage(quotePackage);
 		
 		decl.getFields().add(consHashcodeField());
 		decl.getFields().add(consInstanceField(quoteClassName));
@@ -72,6 +69,23 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		decl.getMethods().add(consToStringMethod(quoteName));
 		
 		return decl;
+	}
+
+	public static String consQuotePackage(String userCodePackage)
+	{
+		if(JavaCodeGenUtil.isValidJavaPackage(userCodePackage))
+		{
+			return userCodePackage + "." + JavaCodeGen.JAVA_QUOTES_PACKAGE;
+		}
+		else
+		{
+			return JavaCodeGen.JAVA_QUOTES_PACKAGE;
+		}
+	}
+	
+	public static String fullyQualifiedQuoteName(String userCodePackage, String vdmValueName)
+	{
+		return consQuotePackage(userCodePackage) + "." + vdmValueName;
 	}
 	
 	private AFieldDeclCG consHashcodeField()

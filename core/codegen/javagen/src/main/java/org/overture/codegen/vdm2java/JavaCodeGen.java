@@ -93,7 +93,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 			"Utils", "Record", "Long", "Double", "Character", "String", "List",
 			"Set" };
 
-	public static final String JAVA_QUOTE_NAME_SUFFIX = "Quote";
 	public static final String JAVA_MAIN_CLASS_NAME = "Main";
 	public static final String JAVA_QUOTES_PACKAGE = "quotes";
 	
@@ -185,13 +184,13 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 
 			javaFormat.init();
 
-			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(generator.getIRInfo(), transAssistant);
+			JavaQuoteValueCreator creator = new JavaQuoteValueCreator(generator.getIRInfo(), transAssistant);
 
 			List<ADefaultClassDeclCG> quoteClasses = new LinkedList<>();
 			for (String quoteNameVdm : quoteValues)
 			{
-				ADefaultClassDeclCG quoteDecl = quoteValueCreator.consQuoteValue(quoteNameVdm
-						+ JAVA_QUOTE_NAME_SUFFIX, quoteNameVdm, getJavaSettings().getJavaRootPackage());
+				String pack = getJavaSettings().getJavaRootPackage();
+				ADefaultClassDeclCG quoteDecl = creator.consQuoteValue(quoteNameVdm, quoteNameVdm, pack);
 				
 				quoteClasses.add(quoteDecl);
 			}
@@ -768,7 +767,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 
 			if (JavaCodeGenUtil.isQuote(generatedModule.getIrNode(), getJavaSettings()))
 			{
-				javaFileName += JAVA_QUOTE_NAME_SUFFIX;
+				javaFileName += JavaQuoteValueCreator.JAVA_QUOTE_NAME_SUFFIX;
 			}
 
 			javaFileName += IJavaConstants.JAVA_FILE_EXTENSION;
