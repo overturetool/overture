@@ -1,4 +1,4 @@
-# Overture 2.2.8 Release Notes — 7 October 2015
+# Overture 2.3.0 Release Notes — 7 October 2015
 
 ## What's New?
 
@@ -83,7 +83,7 @@ If you encounter a problem with a VDM specification, please try to make a small 
 
 ## Bugfixes
 
-Please note that the interactive list is at <https://github.com/overturetool/overture/issues?q=milestone%3Av2.2.8>
+Please note that the interactive list is at <https://github.com/overturetool/overture/issues?q=milestone%3Av2.3.0>
 
 * [#459 Type invariant violation incorrectly reported for the state type](https://github.com/overturetool/overture/issues/459)
 * [#455 POG crash for atomic statements in VDM-SL](https://github.com/overturetool/overture/issues/455)
