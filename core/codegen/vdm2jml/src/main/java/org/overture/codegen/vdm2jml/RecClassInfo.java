@@ -80,6 +80,23 @@ public class RecClassInfo
 		return contains(anc);
 	}
 	
+	public boolean inRecConstructor(INode node)
+	{
+		if(!inRec(node))
+		{
+			return false;
+		}
+		
+		AMethodDeclCG m = node.getAncestor(AMethodDeclCG.class);
+		
+		if(m != null)
+		{
+			return m.getIsConstructor();
+		}
+		
+		return false;
+	}
+	
 	public boolean inRec(INode node)
 	{
 		ADefaultClassDeclCG clazz = node.getAncestor(ADefaultClassDeclCG.class);
