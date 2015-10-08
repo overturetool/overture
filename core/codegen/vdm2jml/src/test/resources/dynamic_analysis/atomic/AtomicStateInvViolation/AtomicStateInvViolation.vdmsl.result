@@ -1,5 +1,5 @@
 "Before first atomic (expecting violation after atomic)"
-St.java:60: JML invariant is false on leaving method project.Entrytypes.St.valid()
+St.java:63: JML invariant is false on leaving method project.Entrytypes.St.valid()
     public Boolean valid() {
                    ^
 St.java:13: Associated declaration
