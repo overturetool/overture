@@ -81,7 +81,7 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 				String assertStr = metaData.get(0).value;
 
 				Assert.assertTrue("Got unexpected assertion in method '"
-						+ methodName + "'", assertStr.contains(".valid()") || assertStr.contains("!= null"));
+						+ methodName + "': " + assertStr, assertStr.contains(".valid()") || assertStr.contains("!= null") || assertStr.contains(".is_"));
 			}
 		} else
 		{
