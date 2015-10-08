@@ -5,8 +5,6 @@ import java.util.List;
 
 public class NamedTypeInfo extends AbstractTypeInfo
 {
-	private static String ARG_PLACEHOLDER = "%1$s";
-
 	private String typeName;
 	private String defModule;
 	private boolean hasInv;
@@ -48,7 +46,7 @@ public class NamedTypeInfo extends AbstractTypeInfo
 		return leafTypes;
 	}
 
-	public boolean contains(NamedTypeInfo other)
+	public boolean contains(AbstractTypeInfo other)
 	{
 		if (equals(other))
 		{
