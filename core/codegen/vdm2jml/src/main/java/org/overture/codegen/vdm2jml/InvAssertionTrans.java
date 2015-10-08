@@ -34,6 +34,8 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	private StateDesInfo stateDesInfo;
 	private RecClassInfo recInfo;
 	
+	private boolean buildRecChecks = false;
+	
 	public InvAssertionTrans(JmlGenerator jmlGen, StateDesInfo stateDesInfo,
 			RecClassInfo recInfo)
 	{
@@ -279,10 +281,12 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	private void addAsserts(List<AMetaStmCG> objVarAsserts,
 			AIdentifierVarExpCG var)
 	{
-		add(objVarAsserts, recHandler.consAssert(var));
 		// TODO: Will the named type invariants not get handled automatically since they are local variable
 		// decls.
+		buildRecChecks = true;
 		add(objVarAsserts, namedTypeHandler.consAssert(var));
+		add(objVarAsserts, recHandler.consAssert(var));
+		buildRecChecks = false;
 	}
 
 	private void add(List<AMetaStmCG> asserts, AMetaStmCG as)
@@ -309,5 +313,10 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	public StateDesInfo getStateDesInfo()
 	{
 		return stateDesInfo;
+	}
+
+	public boolean buildRecValidChecks()
+	{
+		return buildRecChecks;
 	}
 }
