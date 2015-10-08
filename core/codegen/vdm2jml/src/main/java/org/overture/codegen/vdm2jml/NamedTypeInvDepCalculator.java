@@ -47,12 +47,12 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 		return null;
 	}
 
-	public static List<NamedTypeInfo> onlyDisjointTypes(
-			List<NamedTypeInfo> typeInfo)
+	public static List<AbstractTypeInfo> onlyDisjointTypes(
+			List<AbstractTypeInfo> typeInfo)
 	{
-		List<NamedTypeInfo> disjointTypes = new LinkedList<NamedTypeInfo>();
+		List<AbstractTypeInfo> disjointTypes = new LinkedList<AbstractTypeInfo>();
 
-		for (NamedTypeInfo t : typeInfo)
+		for (AbstractTypeInfo t : typeInfo)
 		{
 			if (!contains(disjointTypes, t))
 			{
@@ -64,12 +64,12 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 		return disjointTypes;
 	}
 
-	public static void removeSmallerTypes(List<NamedTypeInfo> disjointTypes,
-			NamedTypeInfo subject)
+	public static void removeSmallerTypes(List<AbstractTypeInfo> disjointTypes,
+			AbstractTypeInfo subject)
 	{
-		List<NamedTypeInfo> toRemove = new LinkedList<NamedTypeInfo>();
+		List<AbstractTypeInfo> toRemove = new LinkedList<>();
 
-		for (NamedTypeInfo nexType : disjointTypes)
+		for (AbstractTypeInfo nexType : disjointTypes)
 		{
 			if (subject.contains(nexType))
 			{
@@ -80,10 +80,10 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 		disjointTypes.removeAll(toRemove);
 	}
 
-	public static boolean contains(List<NamedTypeInfo> typeInfoList,
-			NamedTypeInfo subject)
+	public static boolean contains(List<AbstractTypeInfo> typeInfoList,
+			AbstractTypeInfo subject)
 	{
-		for (NamedTypeInfo nextType : typeInfoList)
+		for (AbstractTypeInfo nextType : typeInfoList)
 		{
 			if (nextType.contains(subject))
 			{

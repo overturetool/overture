@@ -9,8 +9,13 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
+import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
+import org.overture.codegen.cgast.types.ASetSetTypeCG;
+import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.logging.Logger;
 
 public class NamedTypeInvUtil
@@ -23,12 +28,15 @@ public class NamedTypeInvUtil
 	}
 	
 	public String consJmlCheck(String enclosingClass, String jmlVisibility,
-			String annotationType, boolean invChecksGuard, List<NamedTypeInfo> typeInfoMatches,
+			String annotationType, boolean invChecksGuard, List<AbstractTypeInfo> typeInfoMatches,
 			SVarExpCG var)
 	{
 		StringBuilder inv = new StringBuilder();
 		
-		appendRecValidChecks(invChecksGuard, typeInfoMatches, var, inv);
+		if(handler.getInvAssertTrans().buildRecValidChecks())
+		{
+			appendRecValidChecks(invChecksGuard, typeInfoMatches, var, inv);
+		}
 		
 		inv.append("//@ ");
 
@@ -48,10 +56,22 @@ public class NamedTypeInvUtil
 		}
 
 		String or = "";
-		for (NamedTypeInfo match : typeInfoMatches)
+		for (AbstractTypeInfo match : typeInfoMatches)
 		{
+			String javaPackage = handler.getJmlGen().getJavaSettings().getJavaRootPackage();
+			String consCheckExp = match.consCheckExp(enclosingClass, javaPackage);
 			inv.append(or);
-			inv.append(match.consCheckExp(enclosingClass, handler.getJmlGen().getJavaSettings().getJavaRootPackage()));
+			if(consCheckExp != null)
+			{
+				inv.append(consCheckExp);
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Expression could not be checked in '"
+						+ this.getClass().getSimpleName() + "'");
+				//TODO: Consider better handling
+				inv.append("true");
+			}
 			or = JmlGenerator.JML_OR;
 		}
 
@@ -76,7 +96,7 @@ public class NamedTypeInvUtil
 	}
 
 	private void appendRecValidChecks(boolean invChecksGuard,
-			List<NamedTypeInfo> typeInfoMatches, SVarExpCG var,
+			List<AbstractTypeInfo> typeInfoMatches, SVarExpCG var,
 			StringBuilder inv)
 	{
 		List<ARecordTypeCG> recordTypes = getRecTypes(typeInfoMatches);
@@ -85,10 +105,7 @@ public class NamedTypeInvUtil
 		{
 			for (ARecordTypeCG rt : recordTypes)
 			{
-				String defClass = rt.getName().getDefiningClass();
-				String recPackage = handler.getJmlGen().getUtil().consRecPackage(defClass);
-				String fullyQualifiedRecType = recPackage + "."
-						+ rt.getName().getName();
+				String fullyQualifiedRecType = fullyQualifiedRecType(rt);
 
 				inv.append("//@ ");
 				inv.append(JmlGenerator.JML_ASSERT_ANNOTATION);
@@ -121,13 +138,22 @@ public class NamedTypeInvUtil
 			}
 		}
 	}
+
+	public String fullyQualifiedRecType(ARecordTypeCG rt)
+	{
+		String defClass = rt.getName().getDefiningClass();
+		String recPackage = JmlGenUtil.consRecPackage(defClass, handler.getJmlGen().getJavaGen().getJavaSettings().getJavaRootPackage());
+		String fullyQualifiedRecType = recPackage + "."
+				+ rt.getName().getName();
+		return fullyQualifiedRecType;
+	}
 	
 	private List<ARecordTypeCG> getRecTypes(
-			List<NamedTypeInfo> typeInfoMatches)
+			List<AbstractTypeInfo> typeInfoMatches)
 	{
 		List<ARecordTypeCG> recTypes = new LinkedList<>();
 		
-		for (NamedTypeInfo match : typeInfoMatches)
+		for (AbstractTypeInfo match : typeInfoMatches)
 		{
 			List<LeafTypeInfo> leaves = match.getLeafTypesRecursively();
 
@@ -143,7 +169,7 @@ public class NamedTypeInvUtil
 		return recTypes;
 	}
 
-	public AMetaStmCG consAssertStm(List<NamedTypeInfo> invTypes,
+	public AMetaStmCG consAssertStm(List<AbstractTypeInfo> invTypes,
 			String encClassName, SVarExpCG var, INode node, RecClassInfo recInfo)
 	{
 		boolean inAccessor = node != null && recInfo != null && recInfo.inAccessor(node);
@@ -172,9 +198,9 @@ public class NamedTypeInvUtil
 //	}
 	
 
-	public List<NamedTypeInfo> findNamedInvTypes(STypeCG type)
+	public List<AbstractTypeInfo> findTypeInfo(STypeCG type)
 	{
-		List<NamedTypeInfo> posTypes = new LinkedList<NamedTypeInfo>();
+		List<AbstractTypeInfo> posTypes = new LinkedList<>();
 
 		if (type.getNamedInvType() != null)
 		{
@@ -200,8 +226,22 @@ public class NamedTypeInvUtil
 		{
 			for (STypeCG t : ((AUnionTypeCG) type).getTypes())
 			{
-				posTypes.addAll(findNamedInvTypes(t));
+				posTypes.addAll(findTypeInfo(t));
 			}
+		}
+		else if(type instanceof AUnknownTypeCG)
+		{
+			return posTypes;
+		}
+		else if(type instanceof ASetSetTypeCG || type instanceof AMapMapTypeCG || type instanceof ASeqSeqTypeCG || type instanceof ATupleTypeCG)
+		{
+			// Can't do anything for these right now...
+			// TODO: implement handling
+			return posTypes;
+		}
+		else
+		{
+			posTypes.add(new LeafTypeInfo(type, handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant().allowsNull(type)));
 		}
 
 		// We will only consider types that are disjoint. As an example consider
