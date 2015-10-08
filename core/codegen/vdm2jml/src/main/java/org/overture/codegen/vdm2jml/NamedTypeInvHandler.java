@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2jml;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -33,6 +34,11 @@ public class NamedTypeInvHandler implements IAssert
 
 	private InvAssertionTrans invTrans;
 	private NamedTypeInvUtil util;
+	
+	public InvAssertionTrans getInvAssertTrans()
+	{
+		return invTrans;
+	}
 	
 	public NamedTypeInvHandler(InvAssertionTrans invTrans)
 	{
@@ -69,13 +75,13 @@ public class NamedTypeInvHandler implements IAssert
 			return;
 		}
 
-		if (!invTrans.getRecInfo().isRecField(node))
+		if (!invTrans.getRecInfo().isRecField(node) && node.getFinal())
 		{
 			/**
 			 * So at this point it must be a value defined in a module. No need to check if invariant checks are enabled.
 			 */
 			
-			List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getType());
+			List<AbstractTypeInfo> invTypes = util.findTypeInfo(node.getType());
 
 			if (!invTypes.isEmpty())
 			{
@@ -157,9 +163,9 @@ public class NamedTypeInvHandler implements IAssert
 
 		STypeCG returnType = encMethod.getMethodType().getResult();
 
-		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(returnType);
+		List<AbstractTypeInfo> invTypes = util.findTypeInfo(returnType);
 
-		if (invTypes.isEmpty() && !varMayBeNull(returnType))
+		if (invTypes.isEmpty())
 		{
 			return;
 		}
@@ -182,12 +188,17 @@ public class NamedTypeInvHandler implements IAssert
 
 	public void handleMethod(AMethodDeclCG node) throws AnalysisException
 	{
+		if(!treatMethod(node))
+		{
+			return;
+		}
+		
 		// Upon entering the method, assert that the parameters are valid wrt. their named invariant types.
 		
 		ABlockStmCG replBody = new ABlockStmCG();
 		for (AFormalParamLocalParamCG param : node.getFormalParams())
 		{
-			List<NamedTypeInfo> invTypes = util.findNamedInvTypes(param.getType());
+			List<AbstractTypeInfo> invTypes = util.findTypeInfo(param.getType());
 
 			if (!invTypes.isEmpty())
 			{
@@ -216,15 +227,6 @@ public class NamedTypeInvHandler implements IAssert
 				AMetaStmCG as = util.consAssertStm(invTypes, encClassName, var, node, invTrans.getRecInfo());
 				replBody.getStatements().add(as);
 			}
-			else
-			{
-				if(varMayBeNull(param.getType()))
-				{
-					String varNameStr = invTrans.getJmlGen().getUtil().getName(param.getPattern());
-					AMetaStmCG as = util.consVarNotNullAssert(varNameStr);
-					replBody.getStatements().add(as);
-				}
-			}
 		}
 
 		SStmCG body = node.getBody();
@@ -248,7 +250,22 @@ public class NamedTypeInvHandler implements IAssert
 		
 		SVarExpCG var = ((SVarExpCG) col);
 		
-		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(var.getType());
+		if (varMayBeNull(var.getType()))
+		{
+			// The best we can do is to assert that the map/seq subject to modification is
+			// not null although we eventually get the null pointer exception, e.g.
+			//
+			// //@ azzert m != null
+			// Utils.mapSeqUpdate(m,1L,1L);
+			AMetaStmCG assertNotNull = util.consVarNotNullAssert(var.getName());
+
+			ABlockStmCG replStm = new ABlockStmCG();
+			getTransAssist().replaceNodeWith(node, replStm);
+			replStm.getStatements().add(assertNotNull);
+			replStm.getStatements().add(node);
+		}
+		
+		List<AbstractTypeInfo> invTypes = util.findTypeInfo(var.getType());
 	
 		if (!invTypes.isEmpty())
 		{
@@ -267,23 +284,6 @@ public class NamedTypeInvHandler implements IAssert
 				return util.consAssertStm(invTypes, enclosingClass.getName(), var, node,  invTrans.getRecInfo());
 			} 
 		}
-		else
-		{
-			if(varMayBeNull(var.getType()))
-			{
-				// The best we can do is to assert that the map/seq subject to modification is
-				// not null although we eventually get the null pointer exception, e.g.
-				//
-				// //@ azzert m != null
-				// Utils.mapSeqUpdate(m,1L,1L);
-				AMetaStmCG assertNotNull = util.consVarNotNullAssert(var.getName());
-				
-				ABlockStmCG replStm = new ABlockStmCG();
-				getTransAssist().replaceNodeWith(node, replStm);
-				replStm.getStatements().add(assertNotNull);
-				replStm.getStatements().add(node);
-			}
-		}
 		
 		return null;
 	}
@@ -294,7 +294,7 @@ public class NamedTypeInvHandler implements IAssert
 		// let x : Even = 1 in ...
 		// (dcl y : Even | nat := 2; ...)
 
-		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getType());
+		List<AbstractTypeInfo> invTypes = util.findTypeInfo(node.getType());
 
 		if (!invTypes.isEmpty())
 		{
@@ -320,24 +320,8 @@ public class NamedTypeInvHandler implements IAssert
 			 */
 			return util.consAssertStm(invTypes, enclosingClass.getName(), var, node, invTrans.getRecInfo());
 		}
-		else
-		{
-			if(varMayBeNull(node.getType()) && rightHandSideMayBeNull(node.getExp()))
-			{
-				String name = invTrans.getJmlGen().getUtil().getName(node.getPattern());
-
-				if (name == null)
-				{
-					return null;
-				}
-				
-				return util.consVarNotNullAssert(name);
-			}
-			else
-			{
-				return null;
-			}
-		}
+		
+		return null;
 	}
 
 	public AMetaStmCG handleCallObj(ACallObjectExpStmCG node)
@@ -351,7 +335,24 @@ public class NamedTypeInvHandler implements IAssert
 		{
 			SVarExpCG recObjVar = (SVarExpCG) recObj;
 
-			List<NamedTypeInfo> invTypes = util.findNamedInvTypes(recObj.getType());
+			if(varMayBeNull(recObj.getType()))
+			{
+				// The best we can do is to assert that the record subject to modification is
+				// not null although we eventually get the null pointer exception, e.g.
+				//
+				// //@ azzert rec != null
+				// rec.set_x(5);
+				AMetaStmCG assertNotNull = util.consVarNotNullAssert(recObjVar.getName());
+				
+				ABlockStmCG replStm = new ABlockStmCG();
+				getTransAssist().replaceNodeWith(node, replStm);
+				replStm.getStatements().add(assertNotNull);
+				replStm.getStatements().add(node);
+				
+				return null;
+			}
+			
+			List<AbstractTypeInfo> invTypes = util.findTypeInfo(recObj.getType());
 
 			if (!invTypes.isEmpty())
 			{
@@ -368,26 +369,6 @@ public class NamedTypeInvHandler implements IAssert
 				 */
 				return util.consAssertStm(invTypes, encClass.getName(), recObjVar, node, invTrans.getRecInfo());
 			}
-			else
-			{
-				if(varMayBeNull(recObj.getType()))
-				{
-					// The best we can do is to assert that the record subject to modification is
-					// not null although we eventually get the null pointer exception, e.g.
-					//
-					// //@ azzert rec != null
-					// rec.set_x(5);
-					AMetaStmCG assertNotNull = util.consVarNotNullAssert(recObjVar.getName());
-					
-					ABlockStmCG replStm = new ABlockStmCG();
-					getTransAssist().replaceNodeWith(node, replStm);
-					replStm.getStatements().add(assertNotNull);
-					replStm.getStatements().add(node);
-					
-					return null;
-				}
-			}
-
 		}
 		else
 		{
@@ -425,7 +406,7 @@ public class NamedTypeInvHandler implements IAssert
 
 		SVarExpCG var = (SVarExpCG) target;
 		
-		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(node.getTarget().getType());
+		List<AbstractTypeInfo> invTypes = util.findTypeInfo(node.getTarget().getType());
 
 		if (!invTypes.isEmpty())
 		{
@@ -442,14 +423,6 @@ public class NamedTypeInvHandler implements IAssert
 			 */
 			AMetaStmCG assertStm = util.consAssertStm(invTypes, encClass.getName(), var, node, invTrans.getRecInfo());
 			addAssert(node, assertStm);
-		}
-		else
-		{
-			if(varMayBeNull(node.getTarget().getType()) && rightHandSideMayBeNull(node.getExp()))
-			{
-				AMetaStmCG assertStm = util.consVarNotNullAssert(var.getName());
-				addAssert(node, assertStm);
-			}
 		}
 	}
 
@@ -507,7 +480,7 @@ public class NamedTypeInvHandler implements IAssert
 	@Override
 	public AMetaStmCG consAssert(AIdentifierVarExpCG var)
 	{
-		List<NamedTypeInfo> invTypes = util.findNamedInvTypes(var.getType());
+		List<AbstractTypeInfo> invTypes = util.findTypeInfo(var.getType());
 
 		if (invTypes.isEmpty())
 		{
@@ -544,21 +517,30 @@ public class NamedTypeInvHandler implements IAssert
 	
 	private boolean varMayBeNull(STypeCG type)
 	{
-		if(inModuleToStringMethod(type))
+		return treatMethod(type) && !getInfo().getTypeAssistant().allowsNull(type);
+	}
+
+	private boolean treatMethod(INode node)
+	{
+		if(inModuleToStringMethod(node))
 		{
 			return false;
 		}
 		
 		// Some of the record methods inherited from object use native java type that can never be null
-		if(invTrans.getRecInfo().inRec(type) && !invTrans.getRecInfo().inAccessor(type))
+		
+		if(invTrans.getRecInfo().inRec(node))
 		{
-			return false;
+			if(!(invTrans.getRecInfo().inAccessor(node) || invTrans.getRecInfo().inRecConstructor(node)))
+			{
+				return false;
+			}
 		}
 		
-		return !getInfo().getTypeAssistant().allowsNull(type);
+		return true;
 	}
 	
-	private boolean inModuleToStringMethod(STypeCG type)
+	private boolean inModuleToStringMethod(INode type)
 	{
 		AMethodDeclCG m = type.getAncestor(AMethodDeclCG.class);
 		
