@@ -13,8 +13,14 @@ final public class Rec implements Record {
 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_Rec(x,y);
     public Rec(final Number _x, final Number _y) {
+        //@ assert Utils.is_int(_x);
+
+        //@ assert Utils.is_int(_y);
         x = _x;
+        //@ assert Utils.is_int(x);
         y = _y;
+
+        //@ assert Utils.is_int(y);
     }
 
     /*@ pure @*/
@@ -47,30 +53,30 @@ final public class Rec implements Record {
     public Number get_x() {
         Number ret_1 = x;
 
-        //@ assert ret_1 != null;
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(ret_1));
         return ret_1;
     }
 
     public void set_x(final Number _x) {
-        //@ assert _x != null;
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(_x));
         x = _x;
 
-        //@ assert x != null;
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(x));
     }
 
     /*@ pure @*/
     public Number get_y() {
         Number ret_2 = y;
 
-        //@ assert ret_2 != null;
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(ret_2));
         return ret_2;
     }
 
     public void set_y(final Number _y) {
-        //@ assert _y != null;
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(_y));
         y = _y;
 
-        //@ assert y != null;
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(y));
     }
 
     /*@ pure @*/

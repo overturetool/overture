@@ -18,7 +18,7 @@ final public class Entry {
         {
             Number ignorePattern_1 = useOk();
 
-            //@ assert ignorePattern_1 != null;
+            //@ assert Utils.is_nat(ignorePattern_1);
 
             /* skip */
         }
@@ -29,7 +29,7 @@ final public class Entry {
         {
             Number ignorePattern_2 = useNotOk();
 
-            //@ assert ignorePattern_2 != null;
+            //@ assert Utils.is_nat(ignorePattern_2);
 
             /* skip */
         }
@@ -42,12 +42,16 @@ final public class Entry {
     public static Number useOk() {
         project.Entrytypes.R1 r1 = new project.Entrytypes.R1(new project.Entrytypes.R2(
                     new project.Entrytypes.R3(new project.Entrytypes.R4(5L))));
+
+        //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
         Number atomicTmp_1 = 10L;
 
+        //@ assert Utils.is_int(atomicTmp_1);
         Number atomicTmp_2 = 3L;
 
+        //@ assert Utils.is_int(atomicTmp_2);
         Number atomicTmp_3 = 5L;
-
+        //@ assert Utils.is_int(atomicTmp_3);
         { /* Start of atomic statement */
 
             //@ set invChecksOn = false;
@@ -60,7 +64,7 @@ final public class Entry {
             if (stateDes_2 instanceof project.Entrytypes.R3) {
                 apply_1 = ((project.Entrytypes.R3) stateDes_2).get_r4();
 
-                //@ assert apply_1 != null;
+                //@ assert Utils.is_(apply_1,project.Entrytypes.R4.class);
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
@@ -78,7 +82,7 @@ final public class Entry {
             if (stateDes_5 instanceof project.Entrytypes.R3) {
                 apply_2 = ((project.Entrytypes.R3) stateDes_5).get_r4();
 
-                //@ assert apply_2 != null;
+                //@ assert Utils.is_(apply_2,project.Entrytypes.R4.class);
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
@@ -96,7 +100,7 @@ final public class Entry {
             if (stateDes_8 instanceof project.Entrytypes.R3) {
                 apply_3 = ((project.Entrytypes.R3) stateDes_8).get_r4();
 
-                //@ assert apply_3 != null;
+                //@ assert Utils.is_(apply_3,project.Entrytypes.R4.class);
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
@@ -115,7 +119,13 @@ final public class Entry {
 
             //@ assert stateDes_1.valid();
 
+            //@ assert stateDes_1.valid();
+            //@ assert Utils.is_(stateDes_1,project.Entrytypes.R2.class);
+
             //@ assert r1.valid();
+
+            //@ assert r1.valid();
+            //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
 
             //@ assert stateDes_6.valid();
 
@@ -125,6 +135,9 @@ final public class Entry {
 
             //@ assert stateDes_4.valid();
 
+            //@ assert stateDes_4.valid();
+            //@ assert Utils.is_(stateDes_4,project.Entrytypes.R2.class);
+
             //@ assert stateDes_9.valid();
 
             //@ assert stateDes_8 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_8).valid();
@@ -132,17 +145,23 @@ final public class Entry {
             //@ assert inv_Entry_T3(stateDes_8);
 
             //@ assert stateDes_7.valid();
+
+            //@ assert stateDes_7.valid();
+            //@ assert Utils.is_(stateDes_7,project.Entrytypes.R2.class);
         } /* End of atomic statement */
         Number ret_1 = 0L;
 
+        //@ assert Utils.is_nat(ret_1);
         return ret_1;
     }
 
     public static Number useNotOk() {
         project.Entrytypes.R1 r1 = new project.Entrytypes.R1(new project.Entrytypes.R2(
                     new project.Entrytypes.R3(new project.Entrytypes.R4(5L))));
-        Number atomicTmp_4 = 3L;
 
+        //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
+        Number atomicTmp_4 = 3L;
+        //@ assert Utils.is_int(atomicTmp_4);
         { /* Start of atomic statement */
 
             //@ set invChecksOn = false;
@@ -155,7 +174,7 @@ final public class Entry {
             if (stateDes_11 instanceof project.Entrytypes.R3) {
                 apply_4 = ((project.Entrytypes.R3) stateDes_11).get_r4();
 
-                //@ assert apply_4 != null;
+                //@ assert Utils.is_(apply_4,project.Entrytypes.R4.class);
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
@@ -174,10 +193,17 @@ final public class Entry {
 
             //@ assert stateDes_10.valid();
 
+            //@ assert stateDes_10.valid();
+            //@ assert Utils.is_(stateDes_10,project.Entrytypes.R2.class);
+
             //@ assert r1.valid();
+
+            //@ assert r1.valid();
+            //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
         } /* End of atomic statement */
         Number ret_2 = 0L;
 
+        //@ assert Utils.is_nat(ret_2);
         return ret_2;
     }
 

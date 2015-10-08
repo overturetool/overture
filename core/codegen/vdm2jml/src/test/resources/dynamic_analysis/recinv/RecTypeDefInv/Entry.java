@@ -25,12 +25,16 @@ final public class Entry {
         project.Entrytypes.Rec ignorePattern_1 = new project.Entrytypes.Rec(1L,
                 2L);
 
+        //@ assert Utils.is_(ignorePattern_1,project.Entrytypes.Rec.class);
+
         /* skip */
     }
 
     public static void recInvBreak() {
         project.Entrytypes.Rec ignorePattern_2 = new project.Entrytypes.Rec(1L,
                 -2L);
+
+        //@ assert Utils.is_(ignorePattern_2,project.Entrytypes.Rec.class);
 
         /* skip */
     }

@@ -20,8 +20,9 @@ final public class Entry {
 
         Number atomicTmp_1 = 2L;
 
+        //@ assert Utils.is_nat(atomicTmp_1);
         Number atomicTmp_2 = 1L;
-
+        //@ assert Utils.is_nat(atomicTmp_2);
         { /* Start of atomic statement */
             //@ set invChecksOn = false;
 

@@ -11,7 +11,10 @@ final public class X implements Record {
     public Boolean b;
 
     public X(final Boolean _b) {
+        //@ assert Utils.is_bool(_b);
         b = _b;
+
+        //@ assert Utils.is_bool(b);
     }
 
     /*@ pure @*/
@@ -44,15 +47,15 @@ final public class X implements Record {
     public Boolean get_b() {
         Boolean ret_7 = b;
 
-        //@ assert ret_7 != null;
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_bool(ret_7));
         return ret_7;
     }
 
     public void set_b(final Boolean _b) {
-        //@ assert _b != null;
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_bool(_b));
         b = _b;
 
-        //@ assert b != null;
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_bool(b));
     }
 
     /*@ pure @*/

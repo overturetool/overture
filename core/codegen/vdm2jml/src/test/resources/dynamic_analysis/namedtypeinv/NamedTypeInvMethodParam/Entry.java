@@ -15,8 +15,9 @@ final public class Entry {
     public static Object Run() {
         Number n1 = 2L;
 
+        //@ assert Utils.is_nat1(n1);
         Number n2 = 3L;
-
+        //@ assert Utils.is_nat1(n2);
         {
             {
                 Number ignorePattern_1 = op(n1, 5L, n1);
@@ -43,7 +44,7 @@ final public class Entry {
     public static Number op(final Number a, final Number b, final Number c) {
         //@ assert inv_Entry_Even(a);
 
-        //@ assert b != null;
+        //@ assert Utils.is_nat(b);
 
         //@ assert inv_Entry_Even(c);
         Number ret_1 = b.longValue() * (a.longValue() + c.longValue());

@@ -11,7 +11,10 @@ final public class St implements Record {
     public Number x;
 
     public St(final Number _x) {
+        //@ assert Utils.is_nat(_x);
         x = _x;
+
+        //@ assert Utils.is_nat(x);
     }
 
     /*@ pure @*/
@@ -44,15 +47,15 @@ final public class St implements Record {
     public Number get_x() {
         Number ret_6 = x;
 
-        //@ assert ret_6 != null;
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(ret_6));
         return ret_6;
     }
 
     public void set_x(final Number _x) {
-        //@ assert _x != null;
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(_x));
         x = _x;
 
-        //@ assert x != null;
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(x));
     }
 
     /*@ pure @*/

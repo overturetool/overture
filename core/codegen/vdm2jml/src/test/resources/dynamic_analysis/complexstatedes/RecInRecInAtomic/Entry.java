@@ -18,7 +18,7 @@ final public class Entry {
         {
             Number ignorePattern_1 = useOk();
 
-            //@ assert ignorePattern_1 != null;
+            //@ assert Utils.is_nat(ignorePattern_1);
 
             /* skip */
         }
@@ -29,7 +29,7 @@ final public class Entry {
         {
             Number ignorePattern_2 = useNotOk();
 
-            //@ assert ignorePattern_2 != null;
+            //@ assert Utils.is_nat(ignorePattern_2);
 
             /* skip */
         }
@@ -42,10 +42,13 @@ final public class Entry {
     public static Number useOk() {
         project.Entrytypes.R1 r1 = new project.Entrytypes.R1(new project.Entrytypes.R2(
                     new project.Entrytypes.R3(5L)));
+
+        //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
         Number atomicTmp_1 = 1L;
 
+        //@ assert Utils.is_int(atomicTmp_1);
         Number atomicTmp_2 = 5L;
-
+        //@ assert Utils.is_int(atomicTmp_2);
         { /* Start of atomic statement */
 
             //@ set invChecksOn = false;
@@ -69,22 +72,34 @@ final public class Entry {
 
             //@ assert stateDes_1.valid();
 
+            //@ assert stateDes_1.valid();
+            //@ assert Utils.is_(stateDes_1,project.Entrytypes.R2.class);
+
             //@ assert r1.valid();
+
+            //@ assert r1.valid();
+            //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
 
             //@ assert stateDes_4.valid();
 
             //@ assert stateDes_3.valid();
+
+            //@ assert stateDes_3.valid();
+            //@ assert Utils.is_(stateDes_3,project.Entrytypes.R2.class);
         } /* End of atomic statement */
         Number ret_1 = 0L;
 
+        //@ assert Utils.is_nat(ret_1);
         return ret_1;
     }
 
     public static Number useNotOk() {
         project.Entrytypes.R1 r1 = new project.Entrytypes.R1(new project.Entrytypes.R2(
                     new project.Entrytypes.R3(5L)));
-        Number atomicTmp_3 = 1L;
 
+        //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
+        Number atomicTmp_3 = 1L;
+        //@ assert Utils.is_int(atomicTmp_3);
         { /* Start of atomic statement */
 
             //@ set invChecksOn = false;
@@ -101,10 +116,17 @@ final public class Entry {
 
             //@ assert stateDes_5.valid();
 
+            //@ assert stateDes_5.valid();
+            //@ assert Utils.is_(stateDes_5,project.Entrytypes.R2.class);
+
             //@ assert r1.valid();
+
+            //@ assert r1.valid();
+            //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
         } /* End of atomic statement */
         Number ret_2 = 0L;
 
+        //@ assert Utils.is_nat(ret_2);
         return ret_2;
     }
 

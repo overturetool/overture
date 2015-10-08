@@ -15,6 +15,8 @@ final public class Entry {
     public static Number useOk() {
         project.Entrytypes.T1 t1 = new project.Entrytypes.T1(new project.Entrytypes.T2(
                     new project.Entrytypes.T3(new project.Entrytypes.T4(5L))));
+
+        //@ assert Utils.is_(t1,project.Entrytypes.T1.class);
         project.Entrytypes.T2 stateDes_1 = t1.get_t2();
 
         project.Entrytypes.T3 stateDes_2 = stateDes_1.get_t3();
@@ -26,9 +28,18 @@ final public class Entry {
 
         //@ assert stateDes_2.valid();
 
+        //@ assert stateDes_2.valid();
+        //@ assert Utils.is_(stateDes_2,project.Entrytypes.T3.class);
+
         //@ assert stateDes_1.valid();
 
+        //@ assert stateDes_1.valid();
+        //@ assert Utils.is_(stateDes_1,project.Entrytypes.T2.class);
+
         //@ assert t1.valid();
+
+        //@ assert t1.valid();
+        //@ assert Utils.is_(t1,project.Entrytypes.T1.class);
         project.Entrytypes.T2 stateDes_4 = t1.get_t2();
 
         project.Entrytypes.T3 stateDes_5 = stateDes_4.get_t3();
@@ -40,17 +51,29 @@ final public class Entry {
 
         //@ assert stateDes_5.valid();
 
+        //@ assert stateDes_5.valid();
+        //@ assert Utils.is_(stateDes_5,project.Entrytypes.T3.class);
+
         //@ assert stateDes_4.valid();
 
+        //@ assert stateDes_4.valid();
+        //@ assert Utils.is_(stateDes_4,project.Entrytypes.T2.class);
+
         //@ assert t1.valid();
+
+        //@ assert t1.valid();
+        //@ assert Utils.is_(t1,project.Entrytypes.T1.class);
         Number ret_1 = 0L;
 
+        //@ assert Utils.is_nat(ret_1);
         return ret_1;
     }
 
     public static Number useNotOk() {
         project.Entrytypes.T1 t1 = new project.Entrytypes.T1(new project.Entrytypes.T2(
                     new project.Entrytypes.T3(new project.Entrytypes.T4(5L))));
+
+        //@ assert Utils.is_(t1,project.Entrytypes.T1.class);
         project.Entrytypes.T2 stateDes_7 = t1.get_t2();
 
         project.Entrytypes.T3 stateDes_8 = stateDes_7.get_t3();
@@ -62,9 +85,18 @@ final public class Entry {
 
         //@ assert stateDes_8.valid();
 
+        //@ assert stateDes_8.valid();
+        //@ assert Utils.is_(stateDes_8,project.Entrytypes.T3.class);
+
         //@ assert stateDes_7.valid();
 
+        //@ assert stateDes_7.valid();
+        //@ assert Utils.is_(stateDes_7,project.Entrytypes.T2.class);
+
         //@ assert t1.valid();
+
+        //@ assert t1.valid();
+        //@ assert Utils.is_(t1,project.Entrytypes.T1.class);
         project.Entrytypes.T2 stateDes_10 = t1.get_t2();
 
         project.Entrytypes.T3 stateDes_11 = stateDes_10.get_t3();
@@ -76,11 +108,21 @@ final public class Entry {
 
         //@ assert stateDes_11.valid();
 
+        //@ assert stateDes_11.valid();
+        //@ assert Utils.is_(stateDes_11,project.Entrytypes.T3.class);
+
         //@ assert stateDes_10.valid();
 
+        //@ assert stateDes_10.valid();
+        //@ assert Utils.is_(stateDes_10,project.Entrytypes.T2.class);
+
         //@ assert t1.valid();
+
+        //@ assert t1.valid();
+        //@ assert Utils.is_(t1,project.Entrytypes.T1.class);
         Number ret_2 = 0L;
 
+        //@ assert Utils.is_nat(ret_2);
         return ret_2;
     }
 
@@ -90,7 +132,7 @@ final public class Entry {
         {
             Number ignorePattern_1 = useOk();
 
-            //@ assert ignorePattern_1 != null;
+            //@ assert Utils.is_nat(ignorePattern_1);
 
             /* skip */
         }
@@ -101,7 +143,7 @@ final public class Entry {
         {
             Number ignorePattern_2 = useNotOk();
 
-            //@ assert ignorePattern_2 != null;
+            //@ assert Utils.is_nat(ignorePattern_2);
 
             /* skip */
         }

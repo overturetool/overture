@@ -27,8 +27,9 @@ final public class Entry {
     public static void opAtomic() {
         Number atomicTmp_1 = -1L;
 
+        //@ assert Utils.is_int(atomicTmp_1);
         Number atomicTmp_2 = 1L;
-
+        //@ assert Utils.is_int(atomicTmp_2);
         { /* Start of atomic statement */
             //@ set invChecksOn = false;
 

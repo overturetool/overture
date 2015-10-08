@@ -15,8 +15,9 @@ final public class Entry {
     public static Object Run() {
         project.quotes.AQuote aOpt = null;
 
+        //@ assert (aOpt == null || Utils.is_(aOpt,project.quotes.AQuote.class));
         project.quotes.AQuote a = project.quotes.AQuote.getInstance();
-
+        //@ assert Utils.is_(a,project.quotes.AQuote.class);
         {
             IO.println("Before passing LEGAL value");
             op(a);
@@ -30,7 +31,7 @@ final public class Entry {
     }
 
     public static void op(final project.quotes.AQuote ignorePattern_1) {
-        //@ assert ignorePattern_1 != null;
+        //@ assert Utils.is_(ignorePattern_1,project.quotes.AQuote.class);
 
         /* skip */
     }

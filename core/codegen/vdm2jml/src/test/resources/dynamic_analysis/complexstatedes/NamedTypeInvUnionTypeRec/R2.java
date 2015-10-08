@@ -12,13 +12,9 @@ final public class R2 implements Record {
 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R2(t3);
     public R2(final Object _t3) {
-        //@ assert _t3 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) _t3).valid();
-        //@ assert _t3 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) _t3).valid();
         //@ assert inv_Entry_T3(_t3);
         t3 = (_t3 != null) ? _t3 : null;
 
-        //@ assert t3 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) t3).valid();
-        //@ assert t3 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) t3).valid();
         //@ assert inv_Entry_T3(t3);
     }
 
@@ -52,20 +48,14 @@ final public class R2 implements Record {
     public Object get_t3() {
         Object ret_4 = t3;
 
-        //@ assert project.Entry.invChecksOn ==> ret_4 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) ret_4).valid();
-        //@ assert project.Entry.invChecksOn ==> ret_4 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) ret_4).valid();
         //@ assert project.Entry.invChecksOn ==> (inv_Entry_T3(ret_4));
         return ret_4;
     }
 
     public void set_t3(final Object _t3) {
-        //@ assert project.Entry.invChecksOn ==> _t3 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) _t3).valid();
-        //@ assert project.Entry.invChecksOn ==> _t3 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) _t3).valid();
         //@ assert project.Entry.invChecksOn ==> (inv_Entry_T3(_t3));
         t3 = _t3;
 
-        //@ assert project.Entry.invChecksOn ==> t3 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) t3).valid();
-        //@ assert project.Entry.invChecksOn ==> t3 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) t3).valid();
         //@ assert project.Entry.invChecksOn ==> (inv_Entry_T3(t3));
     }
 

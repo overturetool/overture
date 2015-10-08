@@ -18,7 +18,7 @@ final public class Entry {
         {
             Number ignorePattern_1 = useOk();
 
-            //@ assert ignorePattern_1 != null;
+            //@ assert Utils.is_nat(ignorePattern_1);
 
             /* skip */
         }
@@ -29,7 +29,7 @@ final public class Entry {
         {
             Number ignorePattern_2 = useNotOk();
 
-            //@ assert ignorePattern_2 != null;
+            //@ assert Utils.is_nat(ignorePattern_2);
 
             /* skip */
         }
@@ -42,6 +42,8 @@ final public class Entry {
     public static Number useOk() {
         project.Entrytypes.A a = new project.Entrytypes.A(MapUtil.map(
                     new Maplet(1L, new project.Entrytypes.B(2L))));
+
+        //@ assert Utils.is_(a,project.Entrytypes.A.class);
         VDMMap stateDes_1 = a.get_m();
 
         project.Entrytypes.B stateDes_2 = ((project.Entrytypes.B) Utils.get(stateDes_1,
@@ -51,14 +53,20 @@ final public class Entry {
         stateDes_2.set_x(2L);
 
         //@ assert a.valid();
+
+        //@ assert a.valid();
+        //@ assert Utils.is_(a,project.Entrytypes.A.class);
         Number ret_1 = 0L;
 
+        //@ assert Utils.is_nat(ret_1);
         return ret_1;
     }
 
     public static Number useNotOk() {
         project.Entrytypes.A a = new project.Entrytypes.A(MapUtil.map(
                     new Maplet(1L, new project.Entrytypes.B(2L))));
+
+        //@ assert Utils.is_(a,project.Entrytypes.A.class);
         VDMMap stateDes_3 = a.get_m();
 
         project.Entrytypes.B stateDes_4 = ((project.Entrytypes.B) Utils.get(stateDes_3,
@@ -68,8 +76,12 @@ final public class Entry {
         stateDes_4.set_x(1L);
 
         //@ assert a.valid();
+
+        //@ assert a.valid();
+        //@ assert Utils.is_(a,project.Entrytypes.A.class);
         Number ret_2 = 0L;
 
+        //@ assert Utils.is_nat(ret_2);
         return ret_2;
     }
 

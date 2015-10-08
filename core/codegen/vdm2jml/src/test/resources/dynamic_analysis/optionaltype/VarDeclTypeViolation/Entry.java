@@ -18,7 +18,7 @@ final public class Entry {
         {
             Number bOkay = natOne();
 
-            //@ assert bOkay != null;
+            //@ assert Utils.is_nat(bOkay);
 
             /* skip */
         }
@@ -29,7 +29,7 @@ final public class Entry {
         {
             Number bError = natNil();
 
-            //@ assert bError != null;
+            //@ assert Utils.is_nat(bError);
 
             /* skip */
         }
@@ -41,12 +41,18 @@ final public class Entry {
 
     /*@ pure @*/
     public static Number natNil() {
-        return null;
+        Number ret_1 = null;
+
+        //@ assert (ret_1 == null || Utils.is_nat(ret_1));
+        return ret_1;
     }
 
     /*@ pure @*/
     public static Number natOne() {
-        return 1L;
+        Number ret_2 = 1L;
+
+        //@ assert (ret_2 == null || Utils.is_nat(ret_2));
+        return ret_2;
     }
 
     public String toString() {
