@@ -85,7 +85,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 	
 	public static String fullyQualifiedQuoteName(String userCodePackage, String vdmValueName)
 	{
-		return consQuotePackage(userCodePackage) + "." + vdmValueName;
+		return consQuotePackage(userCodePackage) + "." + vdmValueName + JAVA_QUOTE_NAME_SUFFIX;
 	}
 	
 	private AFieldDeclCG consHashcodeField()
