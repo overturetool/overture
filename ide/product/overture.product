@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Overture Tools" uid="org.overture.ide.platform.product" id="org.overture.ide.platform.product" application="org.eclipse.ui.ide.workbench" version="2.2.7.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Overture Tools" uid="org.overture.ide.platform.product" id="org.overture.ide.platform.product" application="org.eclipse.ui.ide.workbench" version="2.3.1.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/icons/ctool128/overture_misc.png"/>

@@ -3,7 +3,7 @@ Eclipse-BundleShape: dir
 Bundle-ManifestVersion: 2
 Bundle-Name: org.overture.ide.plugins.probruntime
 Bundle-SymbolicName: org.overture.ide.plugins.probruntime.macosx.x86_64;singleton:=true
-Bundle-Version: 2.2.7.qualifier
+Bundle-Version: 2.3.1.qualifier
 Fragment-Host: org.overture.ide.plugins.probruntime.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 

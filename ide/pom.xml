@@ -5,10 +5,9 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>root</artifactId>
-    <version>2.2.7-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
 </parent>
-
     <packaging>pom</packaging>
   <artifactId>ide</artifactId>
   <name>Overture IDE Top-level</name>

@@ -13,6 +13,7 @@ import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASeqToStringUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringToSeqUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
@@ -76,6 +77,16 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 		}
 
 		handleExp(exp, nodeType);
+	}
+	
+	@Override
+	public void caseAAssignToExpStmCG(AAssignToExpStmCG node) throws AnalysisException
+	{
+		if(node.getExp() != null)
+		{
+			node.getExp().apply(this);
+			handleExp(node.getExp(), node.getTarget().getType());
+		}
 	}
 
 	private void handleExp(SExpCG exp, STypeCG nodeType)

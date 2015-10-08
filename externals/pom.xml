@@ -1,19 +1,48 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.overturetool</groupId>
-    <artifactId>root</artifactId>
-    <version>2.2.7-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
+    <parent>
+        <groupId>org.overturetool</groupId>
+        <artifactId>root</artifactId>
+        <version>2.3.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-  <artifactId>externals</artifactId>
-  <packaging>pom</packaging>
-  <name>Overture External Resources</name>
+    <artifactId>externals</artifactId>
+    <packaging>pom</packaging>
+    <name>Overture External Resources</name>
 
-  <modules>
-    <module>documentation</module>
-    <module>examples</module>
-  </modules>
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>update-docs</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                    <configuration>
+                        <target>
+                            <exec executable="git" failonerror="true">
+                                <arg value="submodule" />
+                                <arg value="update" />
+                                <arg value="--init" />
+                                <arg value="--force" />
+                                <redirector outputproperty="redirector.out" errorproperty="redirector.err">
+                                    <inputfilterchain>
+                                        <replacestring from="before" to="after" />
+                                    </inputfilterchain>
+                                    <outputmapper type="merge" to="target/redirector.out" />
+                                    <errormapper type="merge" to="target/redirector.err" />
+                                </redirector>
+                            </exec>
+                        </target>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build> 
 </project>
