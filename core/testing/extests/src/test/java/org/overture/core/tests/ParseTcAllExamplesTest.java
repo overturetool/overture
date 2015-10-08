@@ -29,7 +29,7 @@ public class ParseTcAllExamplesTest
 {
 	ExampleSourceData testData;
 
-	private static String EXAMPLES_ROOT = "../../../externals/examples/target/classes/";
+	private static String EXAMPLES_ROOT = "../../../externals/docrepo/examples/";
 	
 	public ParseTcAllExamplesTest(String _, ExampleSourceData testData)
 	{

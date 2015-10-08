@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>ide</artifactId>
-    <version>2.2.7-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -18,9 +18,8 @@
   <properties>
     <example-packager.version>2.1.2</example-packager.version>
     <repo.root>${project.basedir}/../..</repo.root>
-    <examples.root>${repo.root}/externals/documentation/target/documentation-editing/examples</examples.root>
-    <documentation.root>${repo.root}/externals/documentation/target/documentation-editing/documentation</documentation.root>
-    <libs.root>${repo.root}/documentation/examples/</libs.root>
+    <examples.root>${repo.root}/externals/docrepo/examples</examples.root>
+    <documentation.root>${repo.root}/externals/docrepo/documentation</documentation.root>
   </properties>
   
   <build>
