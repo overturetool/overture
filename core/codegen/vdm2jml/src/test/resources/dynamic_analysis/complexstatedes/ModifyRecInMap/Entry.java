@@ -54,7 +54,6 @@ final public class Entry {
 
         //@ assert a.valid();
 
-        //@ assert a.valid();
         //@ assert Utils.is_(a,project.Entrytypes.A.class);
         Number ret_1 = 0L;
 
@@ -77,7 +76,6 @@ final public class Entry {
 
         //@ assert a.valid();
 
-        //@ assert a.valid();
         //@ assert Utils.is_(a,project.Entrytypes.A.class);
         Number ret_2 = 0L;
 

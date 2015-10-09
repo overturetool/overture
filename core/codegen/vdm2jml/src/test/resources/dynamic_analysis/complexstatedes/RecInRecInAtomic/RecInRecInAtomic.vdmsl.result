@@ -7,10 +7,4 @@
 /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInAtomic/project/Entrytypes/R1.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInAtomic/project/Entrytypes/R1.java:63: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R1(r2);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInAtomic/project/Entrytypes/R1.java:63: JML invariant is false on leaving method project.Entrytypes.R1.valid()
-    public Boolean valid() {
-                   ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInAtomic/project/Entrytypes/R1.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInAtomic/project/Entrytypes/R1.java:63: 
-    //@ public instance invariant project.Entry.invChecksOn ==> inv_R1(r2);
-                        ^
 "After useNotOk"
