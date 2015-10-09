@@ -107,33 +107,40 @@ final public class Entry {
 
             //@ assert stateDes_3.valid();
 
-            //@ assert stateDes_2 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_2).valid();
-            //@ assert stateDes_2 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_2).valid();
             //@ assert inv_Entry_T3(stateDes_2);
 
-            //@ assert stateDes_1.valid();
+            //@ assert stateDes_2 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_2).valid();
+            //@ assert stateDes_2 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_2).valid();
+
             //@ assert Utils.is_(stateDes_1,project.Entrytypes.R2.class);
 
-            //@ assert r1.valid();
+            //@ assert stateDes_1.valid();
+
             //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
+
+            //@ assert r1.valid();
 
             //@ assert stateDes_6.valid();
 
-            //@ assert stateDes_5 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_5).valid();
-            //@ assert stateDes_5 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_5).valid();
             //@ assert inv_Entry_T3(stateDes_5);
 
-            //@ assert stateDes_4.valid();
+            //@ assert stateDes_5 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_5).valid();
+            //@ assert stateDes_5 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_5).valid();
+
             //@ assert Utils.is_(stateDes_4,project.Entrytypes.R2.class);
+
+            //@ assert stateDes_4.valid();
 
             //@ assert stateDes_9.valid();
 
-            //@ assert stateDes_8 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_8).valid();
-            //@ assert stateDes_8 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_8).valid();
             //@ assert inv_Entry_T3(stateDes_8);
 
-            //@ assert stateDes_7.valid();
+            //@ assert stateDes_8 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_8).valid();
+            //@ assert stateDes_8 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_8).valid();
+
             //@ assert Utils.is_(stateDes_7,project.Entrytypes.R2.class);
+
+            //@ assert stateDes_7.valid();
         } /* End of atomic statement */
         Number ret_1 = 0L;
 
@@ -171,15 +178,18 @@ final public class Entry {
 
             //@ assert stateDes_12.valid();
 
-            //@ assert stateDes_11 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_11).valid();
-            //@ assert stateDes_11 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_11).valid();
             //@ assert inv_Entry_T3(stateDes_11);
 
-            //@ assert stateDes_10.valid();
+            //@ assert stateDes_11 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_11).valid();
+            //@ assert stateDes_11 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_11).valid();
+
             //@ assert Utils.is_(stateDes_10,project.Entrytypes.R2.class);
 
-            //@ assert r1.valid();
+            //@ assert stateDes_10.valid();
+
             //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
+
+            //@ assert r1.valid();
         } /* End of atomic statement */
         Number ret_2 = 0L;
 

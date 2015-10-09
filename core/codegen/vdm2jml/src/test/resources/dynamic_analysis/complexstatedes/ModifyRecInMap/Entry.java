@@ -52,8 +52,9 @@ final public class Entry {
         //@ assert stateDes_2 != null;
         stateDes_2.set_x(2L);
 
-        //@ assert a.valid();
         //@ assert Utils.is_(a,project.Entrytypes.A.class);
+
+        //@ assert a.valid();
         Number ret_1 = 0L;
 
         //@ assert Utils.is_nat(ret_1);
@@ -73,8 +74,9 @@ final public class Entry {
         //@ assert stateDes_4 != null;
         stateDes_4.set_x(1L);
 
-        //@ assert a.valid();
         //@ assert Utils.is_(a,project.Entrytypes.A.class);
+
+        //@ assert a.valid();
         Number ret_2 = 0L;
 
         //@ assert Utils.is_nat(ret_2);
