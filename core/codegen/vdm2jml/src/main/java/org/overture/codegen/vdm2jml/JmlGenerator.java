@@ -40,7 +40,16 @@ import org.overture.codegen.vdm2java.IJavaQuoteEventObserver;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
+import org.overture.codegen.vdm2jml.data.RecClassInfo;
+import org.overture.codegen.vdm2jml.data.StateDesInfo;
+import org.overture.codegen.vdm2jml.predgen.TypePredDecorator;
+import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInfo;
+import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
+import org.overture.codegen.vdm2jml.trans.RecAccessorTrans;
+import org.overture.codegen.vdm2jml.trans.RecInvTransformation;
+import org.overture.codegen.vdm2jml.trans.TargetNormaliserTrans;
 import org.overture.codegen.vdm2jml.util.AnnotationSorter;
+import org.overture.codegen.vdm2jml.util.IsValChecker;
 
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -378,7 +387,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 
 	private void addAssertions(List<IRStatus<INode>> newAst, StateDesInfo stateDesInfo, RecClassInfo recInfo)
 	{
-		InvAssertionTrans assertTr = new InvAssertionTrans(this, stateDesInfo, recInfo);
+		TypePredDecorator assertTr = new TypePredDecorator(this, stateDesInfo, recInfo);
 		
 		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(newAst, ADefaultClassDeclCG.class))
 		{

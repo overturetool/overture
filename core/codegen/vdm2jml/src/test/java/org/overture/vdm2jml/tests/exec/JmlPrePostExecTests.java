@@ -1,4 +1,4 @@
-package org.overture.vdm2jml.tests;
+package org.overture.vdm2jml.tests.exec;
 
 import java.io.File;
 import java.util.Collection;
@@ -7,15 +7,16 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.codegen.utils.GeneralUtils;
+import org.overture.vdm2jml.tests.util.TestUtil;
 
 @RunWith(Parameterized.class)
-public class JmlRecInvExecTests extends JmlExecTestBase
+public class JmlPrePostExecTests extends JmlExecTestBase
 {
-	public static final String TEST_DIR = JmlExecTestBase.TEST_RES_DYNAMIC_ANALYSIS_ROOT + "recinv";
+	public static final String TEST_DIR = JmlExecTestBase.TEST_RES_DYNAMIC_ANALYSIS_ROOT + "prepost";
 
-	public static final String PROPERTY_ID = "recinv";
+	public static final String PROPERTY_ID = "prepost";
 	
-	public JmlRecInvExecTests(File inputFile)
+	public JmlPrePostExecTests(File inputFile)
 	{
 		super(inputFile);
 	}

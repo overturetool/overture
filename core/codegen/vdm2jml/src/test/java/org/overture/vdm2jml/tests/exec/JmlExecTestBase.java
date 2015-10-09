@@ -1,4 +1,4 @@
-package org.overture.vdm2jml.tests;
+package org.overture.vdm2jml.tests.exec;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,9 +19,12 @@ import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.IJavaConstants;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaToolsUtils;
-import org.overture.codegen.vdm2jml.IOpenJmlConsts;
 import org.overture.test.framework.Properties;
+import org.overture.vdm2jml.tests.AnnotationTestsBase;
+import org.overture.vdm2jml.tests.OpenJmlValidationBase;
+import org.overture.vdm2jml.tests.util.IOpenJmlConsts;
 import org.overture.vdm2jml.tests.util.ProcessResult;
+import org.overture.vdm2jml.tests.util.TestUtil;
 
 public abstract class JmlExecTestBase extends OpenJmlValidationBase
 {

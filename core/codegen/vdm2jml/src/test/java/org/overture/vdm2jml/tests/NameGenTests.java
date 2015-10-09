@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.vdm2jml.NameGen;
+import org.overture.codegen.vdm2jml.util.NameGen;
 
 public class NameGenTests
 {

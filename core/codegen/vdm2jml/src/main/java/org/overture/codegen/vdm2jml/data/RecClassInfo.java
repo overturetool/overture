@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2jml;
+package org.overture.codegen.vdm2jml.data;
 
 import java.util.HashSet;
 import java.util.LinkedList;

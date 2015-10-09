@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2jml;
+package org.overture.codegen.vdm2jml.predgen.info;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,6 +19,7 @@ import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.Utils;
 import org.overture.codegen.vdm2java.JavaQuoteValueCreator;
+import org.overture.codegen.vdm2jml.JmlGenUtil;
 
 public class LeafTypeInfo extends AbstractTypeInfo
 {

@@ -1,4 +1,4 @@
-package org.overture.vdm2jml.tests;
+package org.overture.vdm2jml.tests.util;
 
 public enum Update
 {

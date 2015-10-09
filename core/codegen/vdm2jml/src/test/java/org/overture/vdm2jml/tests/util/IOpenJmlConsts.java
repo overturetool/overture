@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2jml;
+package org.overture.vdm2jml.tests.util;
 
 public interface IOpenJmlConsts
 {

@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2jml;
+package org.overture.codegen.vdm2jml.trans;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +22,8 @@ import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.vdm2jml.JmlGenerator;
+import org.overture.codegen.vdm2jml.data.StateDesInfo;
 
 public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 {

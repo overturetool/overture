@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2jml;
+package org.overture.codegen.vdm2jml.predgen;
 
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
@@ -7,6 +7,7 @@ import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.vdm2jml.JmlGenerator;
 
 public class RecModUtil
 {

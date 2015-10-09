@@ -1,7 +1,9 @@
-package org.overture.codegen.vdm2jml;
+package org.overture.codegen.vdm2jml.predgen.info;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import org.overture.codegen.vdm2jml.JmlGenerator;
 
 public class NamedTypeInfo extends AbstractTypeInfo
 {

@@ -3,6 +3,7 @@ package org.overture.vdm2jml.tests;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.vdm2jml.tests.util.Update;
 
 public class ModuleStateInvComplexTests extends AnnotationTestsBase
 {

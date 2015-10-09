@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2jml;
+package org.overture.codegen.vdm2jml.predgen;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,24 +26,28 @@ import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.vdm2jml.JmlAnnotationHelper;
+import org.overture.codegen.vdm2jml.JmlGenerator;
+import org.overture.codegen.vdm2jml.predgen.info.AbstractTypeInfo;
+import org.overture.codegen.vdm2jml.util.IsValChecker;
 
-public class NamedTypeInvHandler
+public class TypePredHandler
 {
 	public static final String RET_VAR_NAME_PREFIX = "ret_";
 	public static final String MAP_SEQ_NAME_PREFIX = "col_";
 
-	private InvAssertionTrans invTrans;
-	private NamedTypeInvUtil util;
+	private TypePredDecorator decorator;
+	private TypePredUtil util;
 	
-	public InvAssertionTrans getInvAssertTrans()
+	public TypePredDecorator getDecorator()
 	{
-		return invTrans;
+		return decorator;
 	}
 	
-	public NamedTypeInvHandler(InvAssertionTrans invTrans)
+	public TypePredHandler(TypePredDecorator decorator)
 	{
-		this.invTrans = invTrans;
-		this.util = new NamedTypeInvUtil(this);
+		this.decorator = decorator;
+		this.util = new TypePredUtil(this);
 	}
 
 	public void handleClass(ADefaultClassDeclCG node) throws AnalysisException
@@ -53,12 +57,12 @@ public class NamedTypeInvHandler
 
 		for (AFieldDeclCG f : node.getFields())
 		{
-			f.apply(invTrans);
+			f.apply(decorator);
 		}
 
 		for (AMethodDeclCG m : node.getMethods())
 		{
-			m.apply(invTrans);
+			m.apply(decorator);
 		}
 	}
 	
@@ -68,14 +72,14 @@ public class NamedTypeInvHandler
 		 * Values and record fields will be handled by this handler (not the state component field since its type is a
 		 * record type) Example: val : char | Even = 5;
 		 */
-		ADefaultClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
+		ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
 		if (encClass == null)
 		{
 			return;
 		}
 
-		if (!invTrans.getRecInfo().isRecField(node) && node.getFinal())
+		if (!decorator.getRecInfo().isRecField(node) && node.getFinal())
 		{
 			/**
 			 * So at this point it must be a value defined in a module. No need to check if invariant checks are enabled.
@@ -111,7 +115,7 @@ public class NamedTypeInvHandler
 
 	private JmlAnnotationHelper getAnnotator()
 	{
-		return invTrans.getJmlGen().getAnnotator();
+		return decorator.getJmlGen().getAnnotator();
 	}
 
 	public void handleBlock(ABlockStmCG node) throws AnalysisException
@@ -132,19 +136,19 @@ public class NamedTypeInvHandler
 
 			for (SStmCG stm : node.getStatements())
 			{
-				stm.apply(invTrans);
+				stm.apply(decorator);
 			}
 
 		} else
 		{
 			if(!node.getLocalDefs().isEmpty())
 			{
-				node.getLocalDefs().getFirst().apply(invTrans);
+				node.getLocalDefs().getFirst().apply(decorator);
 			}
 
 			for (SStmCG stm : node.getStatements())
 			{
-				stm.apply(invTrans);
+				stm.apply(decorator);
 			}
 		}
 	}
@@ -157,7 +161,7 @@ public class NamedTypeInvHandler
 		 */
 		SExpCG exp = node.getExp();
 		
-		AMethodDeclCG encMethod = invTrans.getJmlGen().getUtil().getEnclosingMethod(node);
+		AMethodDeclCG encMethod = decorator.getJmlGen().getUtil().getEnclosingMethod(node);
 
 		if (encMethod == null)
 		{
@@ -186,7 +190,7 @@ public class NamedTypeInvHandler
 		getTransAssist().replaceNodeWith(node, replBlock);
 
 		replBlock.getStatements().add(node);
-		varDecl.apply(invTrans);
+		varDecl.apply(decorator);
 	}
 
 	public void handleMethod(AMethodDeclCG node) throws AnalysisException
@@ -205,7 +209,7 @@ public class NamedTypeInvHandler
 
 			if (!invTypes.isEmpty())
 			{
-				ADefaultClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
+				ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
 				if (encClass == null)
 				{
@@ -214,7 +218,7 @@ public class NamedTypeInvHandler
 
 				String encClassName = encClass.getName();
 
-				String varNameStr = invTrans.getJmlGen().getUtil().getName(param.getPattern());
+				String varNameStr = decorator.getJmlGen().getUtil().getName(param.getPattern());
 
 				if (varNameStr == null)
 				{
@@ -227,7 +231,7 @@ public class NamedTypeInvHandler
 				 * Upon entering a record setter it is necessary to check if invariants checks are enabled before
 				 * checking the parameter
 				 */
-				List<AMetaStmCG> as = util.consAssertStm(invTypes, encClassName, var, node, invTrans.getRecInfo());
+				List<AMetaStmCG> as = util.consAssertStm(invTypes, encClassName, var, node, decorator.getRecInfo());
 				for(AMetaStmCG a : as)
 				{
 					replBody.getStatements().add(a);
@@ -238,7 +242,7 @@ public class NamedTypeInvHandler
 		SStmCG body = node.getBody();
 		getTransAssist().replaceNodeWith(body, replBody);
 		replBody.getStatements().add(body);
-		body.apply(invTrans);
+		body.apply(decorator);
 	}
 
 	public List<AMetaStmCG> handleMapSeq(AMapSeqUpdateStmCG node)
@@ -275,7 +279,7 @@ public class NamedTypeInvHandler
 	
 		if (!invTypes.isEmpty())
 		{
-			ADefaultClassDeclCG enclosingClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
+			ADefaultClassDeclCG enclosingClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
 			if (enclosingClass == null)
 			{
@@ -287,7 +291,7 @@ public class NamedTypeInvHandler
 				/**
 				 * Updates to fields in record setters need to check if invariants checks are enabled
 				 */
-				return util.consAssertStm(invTypes, enclosingClass.getName(), var, node,  invTrans.getRecInfo());
+				return util.consAssertStm(invTypes, enclosingClass.getName(), var, node,  decorator.getRecInfo());
 			} 
 		}
 		
@@ -304,7 +308,7 @@ public class NamedTypeInvHandler
 
 		if (!invTypes.isEmpty())
 		{
-			String name = invTrans.getJmlGen().getUtil().getName(node.getPattern());
+			String name = decorator.getJmlGen().getUtil().getName(node.getPattern());
 
 			if (name == null)
 			{
@@ -324,7 +328,7 @@ public class NamedTypeInvHandler
 			 * We do not really need to check if invariant checks are enabled because local variable declarations are
 			 * not expected to be found inside record accessors
 			 */
-			return util.consAssertStm(invTypes, enclosingClass.getName(), var, node, invTrans.getRecInfo());
+			return util.consAssertStm(invTypes, enclosingClass.getName(), var, node, decorator.getRecInfo());
 		}
 		
 		return null;
@@ -362,7 +366,7 @@ public class NamedTypeInvHandler
 
 			if (!invTypes.isEmpty())
 			{
-				ADefaultClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
+				ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
 				if (encClass == null)
 				{
@@ -373,7 +377,7 @@ public class NamedTypeInvHandler
 				 * Since setter calls can occur inside a record in the context of an atomic statement blocks we need to
 				 * check if invariant checks are enabled
 				 */
-				return util.consAssertStm(invTypes, encClass.getName(), recObjVar, node, invTrans.getRecInfo());
+				return util.consAssertStm(invTypes, encClass.getName(), recObjVar, node, decorator.getRecInfo());
 			}
 		}
 		else
@@ -411,7 +415,7 @@ public class NamedTypeInvHandler
 
 		if (!invTypes.isEmpty())
 		{
-			ADefaultClassDeclCG encClass = invTrans.getJmlGen().getUtil().getEnclosingClass(node);
+			ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 			
 			if (encClass == null)
 			{
@@ -422,7 +426,7 @@ public class NamedTypeInvHandler
 			 * Since assignments can occur inside record setters in the context of an atomic statement block we need to
 			 * check if invariant checks are enabled
 			 */
-			List<AMetaStmCG> asserts = util.consAssertStm(invTypes, encClass.getName(), var, node, invTrans.getRecInfo());
+			List<AMetaStmCG> asserts = util.consAssertStm(invTypes, encClass.getName(), var, node, decorator.getRecInfo());
 			
 			for(AMetaStmCG a : asserts)
 			{
@@ -469,17 +473,17 @@ public class NamedTypeInvHandler
 	
 	private TransAssistantCG getTransAssist()
 	{
-		return invTrans.getJmlGen().getJavaGen().getTransAssistant();
+		return decorator.getJmlGen().getJavaGen().getTransAssistant();
 	}
 
 	private IRInfo getInfo()
 	{
-		return invTrans.getJmlGen().getJavaGen().getInfo();
+		return decorator.getJmlGen().getJavaGen().getInfo();
 	}
 	
 	public JmlGenerator getJmlGen()
 	{
-		return invTrans.getJmlGen();
+		return decorator.getJmlGen();
 	}
 
 	public List<AMetaStmCG> consAsserts(AIdentifierVarExpCG var)
@@ -491,7 +495,7 @@ public class NamedTypeInvHandler
 			return null;
 		}
 
-		ADefaultClassDeclCG encClass = invTrans.getStateDesInfo().getEnclosingClass(var);
+		ADefaultClassDeclCG encClass = decorator.getStateDesInfo().getEnclosingClass(var);
 
 		if (encClass == null)
 		{
@@ -502,7 +506,7 @@ public class NamedTypeInvHandler
 		 * Normalisation of state designators will never occur inside record classes so really there is no need to check
 		 * if invariant checks are enabled
 		 */
-		return util.consAssertStm(invTypes, encClass.getName(), var, var, invTrans.getRecInfo());
+		return util.consAssertStm(invTypes, encClass.getName(), var, var, decorator.getRecInfo());
 	}
 	
 	public boolean rightHandSideMayBeNull(SExpCG exp)
@@ -533,9 +537,9 @@ public class NamedTypeInvHandler
 		
 		// Some of the record methods inherited from object use native java type that can never be null
 		
-		if(invTrans.getRecInfo().inRec(node))
+		if(decorator.getRecInfo().inRec(node))
 		{
-			if(!(invTrans.getRecInfo().inAccessor(node) || invTrans.getRecInfo().inRecConstructor(node)))
+			if(!(decorator.getRecInfo().inAccessor(node) || decorator.getRecInfo().inRecConstructor(node)))
 			{
 				return false;
 			}

@@ -9,10 +9,11 @@ import org.junit.Assume;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.vdm2jml.tests.util.ProcessResult;
+import org.overture.vdm2jml.tests.util.TestUtil;
 
 abstract public class OpenJmlValidationBase extends JmlGenTestBase
 {
-	protected static final String VDMSL_FILE_EXT = ".vdmsl";
+	public static final String VDMSL_FILE_EXT = ".vdmsl";
 
 	public static final String OPENJML_ENV_VAR = "OPENJML";
 

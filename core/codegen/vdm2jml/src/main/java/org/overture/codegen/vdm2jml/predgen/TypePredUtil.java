@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2jml;
+package org.overture.codegen.vdm2jml.predgen;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,12 +17,19 @@ import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.vdm2jml.JmlGenUtil;
+import org.overture.codegen.vdm2jml.JmlGenerator;
+import org.overture.codegen.vdm2jml.data.RecClassInfo;
+import org.overture.codegen.vdm2jml.predgen.info.AbstractTypeInfo;
+import org.overture.codegen.vdm2jml.predgen.info.LeafTypeInfo;
+import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInfo;
+import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
 
-public class NamedTypeInvUtil
+public class TypePredUtil
 {
-	private NamedTypeInvHandler handler;
+	private TypePredHandler handler;
 	
-	public NamedTypeInvUtil(NamedTypeInvHandler handler)
+	public TypePredUtil(TypePredHandler handler)
 	{
 		this.handler = handler;
 	}
@@ -33,7 +40,7 @@ public class NamedTypeInvUtil
 	{
 		List<String> predStrs = new LinkedList<>();
 		
-		if(handler.getInvAssertTrans().buildRecValidChecks())
+		if(handler.getDecorator().buildRecValidChecks())
 		{
 			appendRecValidChecks(invChecksGuard, typeInfoMatches, var, predStrs);
 		}
@@ -201,12 +208,6 @@ public class NamedTypeInvUtil
 		return assertStm;
 	}
 	
-//	public List<ClonableString> consValNotNullInvariant(String fieldName)
-//	{
-//		return handler.getJmlGen().getAnnotator().consMetaData("//@ static invariant " + fieldName + " != null;");
-//	}
-	
-
 	public List<AbstractTypeInfo> findTypeInfo(STypeCG type)
 	{
 		List<AbstractTypeInfo> posTypes = new LinkedList<>();

@@ -11,9 +11,9 @@ import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.vdm2jml.JmlGenerator;
-import org.overture.codegen.vdm2jml.LeafTypeInfo;
-import org.overture.codegen.vdm2jml.NamedTypeInfo;
-import org.overture.codegen.vdm2jml.NamedTypeInvDepCalculator;
+import org.overture.codegen.vdm2jml.predgen.info.LeafTypeInfo;
+import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInfo;
+import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 

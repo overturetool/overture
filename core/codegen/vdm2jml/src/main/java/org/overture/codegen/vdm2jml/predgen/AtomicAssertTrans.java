@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2jml;
+package org.overture.codegen.vdm2jml.predgen;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.statements.AAtomicStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
+import org.overture.codegen.vdm2jml.JmlGenerator;
 
 public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 {
@@ -41,7 +42,7 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 		recVarChecks = null;
 	}
 	
-	protected AMetaStmCG consMetaStm(String str)
+	public AMetaStmCG consMetaStm(String str)
 	{
 		AMetaStmCG assertion = new AMetaStmCG();
 		jmlGen.getAnnotator().appendMetaData(assertion, jmlGen.getAnnotator().consMetaData(str));

@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2jml;
+package org.overture.codegen.vdm2jml.predgen;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -19,29 +19,34 @@ import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.vdm2jml.JmlGenerator;
+import org.overture.codegen.vdm2jml.data.RecClassInfo;
+import org.overture.codegen.vdm2jml.data.StateDesInfo;
+import org.overture.codegen.vdm2jml.trans.RecAccessorTrans;
+import org.overture.codegen.vdm2jml.trans.TargetNormaliserTrans;
 
 /**
- * This class is responsible for adding additional assertions to the IR to preserve the semantics of the contract-based
- * notations of VDM-SL when they are translated to JML annotated Java.
+ * This class is responsible for adding additional checks, like assertions, to the IR to preserve the semantics of the
+ * contract-based notations of VDM-SL when they are translated to JML annotated Java.
  * 
  * @see RecAccessorTrans
  * @see TargetNormaliserTrans
  */
-public class InvAssertionTrans extends AtomicAssertTrans
+public class TypePredDecorator extends AtomicAssertTrans
 {
 	private RecModHandler recHandler;
-	private NamedTypeInvHandler namedTypeHandler;
+	private TypePredHandler namedTypeHandler;
 	private StateDesInfo stateDesInfo;
 	private RecClassInfo recInfo;
 	
 	private boolean buildRecChecks = false;
 	
-	public InvAssertionTrans(JmlGenerator jmlGen, StateDesInfo stateDesInfo,
+	public TypePredDecorator(JmlGenerator jmlGen, StateDesInfo stateDesInfo,
 			RecClassInfo recInfo)
 	{
 		super(jmlGen);
 		this.recHandler = new RecModHandler(this);
-		this.namedTypeHandler = new NamedTypeInvHandler(this);
+		this.namedTypeHandler = new TypePredHandler(this);
 		this.stateDesInfo = stateDesInfo;
 		this.recInfo = recInfo;
 	}

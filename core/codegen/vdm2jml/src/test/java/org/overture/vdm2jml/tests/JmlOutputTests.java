@@ -15,6 +15,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.test.framework.Properties;
+import org.overture.vdm2jml.tests.exec.JmlExecTestBase;
+import org.overture.vdm2jml.tests.util.TestUtil;
 
 @RunWith(Parameterized.class)
 public class JmlOutputTests extends JmlGenTestBase

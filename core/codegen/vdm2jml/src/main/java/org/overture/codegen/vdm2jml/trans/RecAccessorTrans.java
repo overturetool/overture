@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2jml;
+package org.overture.codegen.vdm2jml.trans;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +23,8 @@ import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.vdm2java.JavaValueSemantics;
+import org.overture.codegen.vdm2jml.JmlGenerator;
+import org.overture.codegen.vdm2jml.data.RecClassInfo;
 
 public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 {

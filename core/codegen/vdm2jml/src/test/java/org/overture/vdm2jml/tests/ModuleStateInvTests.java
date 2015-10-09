@@ -10,6 +10,7 @@ import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.vdm2jml.tests.util.TestDataCollector;
+import org.overture.vdm2jml.tests.util.Update;
 
 public class ModuleStateInvTests extends AnnotationTestsBase
 {

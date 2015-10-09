@@ -35,6 +35,11 @@ import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
+import org.overture.codegen.vdm2jml.data.RecClassInfo;
+import org.overture.codegen.vdm2jml.predgen.info.LeafTypeInfo;
+import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInfo;
+import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
+import org.overture.codegen.vdm2jml.util.NameGen;
 
 public class JmlGenUtil
 {

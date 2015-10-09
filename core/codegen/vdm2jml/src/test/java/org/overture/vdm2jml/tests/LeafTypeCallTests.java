@@ -17,7 +17,7 @@ import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.runtime.Utils;
-import org.overture.codegen.vdm2jml.LeafTypeInfo;
+import org.overture.codegen.vdm2jml.predgen.info.LeafTypeInfo;
 
 public class LeafTypeCallTests
 {
