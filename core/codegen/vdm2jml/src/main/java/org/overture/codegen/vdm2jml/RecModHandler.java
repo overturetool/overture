@@ -6,7 +6,7 @@ import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.logging.Logger;
 
-public class RecModHandler implements IAssert
+public class RecModHandler
 {
 	private InvAssertionTrans invTrans;
 	private RecModUtil util;
@@ -46,7 +46,6 @@ public class RecModHandler implements IAssert
 		return invTrans;
 	}
 	
-	@Override
 	public AMetaStmCG consAssert(AIdentifierVarExpCG var)
 	{
 		if (util.assertRec(var))

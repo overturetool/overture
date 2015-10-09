@@ -27,15 +27,19 @@ public class NamedTypeInvUtil
 		this.handler = handler;
 	}
 	
-	public String consJmlCheck(String enclosingClass, String jmlVisibility,
+	public List<String> consJmlCheck(String enclosingClass, String jmlVisibility,
 			String annotationType, boolean invChecksGuard, List<AbstractTypeInfo> typeInfoMatches,
 			SVarExpCG var)
 	{
+		List<String> predStrs = new LinkedList<>();
+		
 		StringBuilder inv = new StringBuilder();
 		
 		if(handler.getInvAssertTrans().buildRecValidChecks())
 		{
 			appendRecValidChecks(invChecksGuard, typeInfoMatches, var, inv);
+			predStrs.add(inv.toString());
+			inv = new StringBuilder();
 		}
 		
 		inv.append("//@ ");
@@ -83,7 +87,9 @@ public class NamedTypeInvUtil
 		inv.append(';');
 		
 		// Inject the name of the field into the expression
-		return String.format(inv.toString(), var.getName());
+		predStrs.add(String.format(inv.toString(), var.getName()));
+		
+		return predStrs;
 	}
 
 	private String consInvChecksGuard()
@@ -169,18 +175,23 @@ public class NamedTypeInvUtil
 		return recTypes;
 	}
 
-	public AMetaStmCG consAssertStm(List<AbstractTypeInfo> invTypes,
+	public List<AMetaStmCG> consAssertStm(List<AbstractTypeInfo> invTypes,
 			String encClassName, SVarExpCG var, INode node, RecClassInfo recInfo)
 	{
 		boolean inAccessor = node != null && recInfo != null && recInfo.inAccessor(node);
-		
-		
-		AMetaStmCG assertStm = new AMetaStmCG();
-		String assertStr = consJmlCheck(encClassName, null, JmlGenerator.JML_ASSERT_ANNOTATION, inAccessor, invTypes, var);
-		List<ClonableString> assertMetaData = handler.getJmlGen().getAnnotator().consMetaData(assertStr);
-		handler.getJmlGen().getAnnotator().appendMetaData(assertStm, assertMetaData);
 
-		return assertStm;
+		List<AMetaStmCG> asserts = new LinkedList<>();
+		List<String> assertStrs = consJmlCheck(encClassName, null, JmlGenerator.JML_ASSERT_ANNOTATION, inAccessor, invTypes, var);
+		
+		for(String a : assertStrs)
+		{
+			AMetaStmCG assertStm = new AMetaStmCG();
+			List<ClonableString> assertMetaData = handler.getJmlGen().getAnnotator().consMetaData(a);
+			handler.getJmlGen().getAnnotator().appendMetaData(assertStm, assertMetaData);
+			asserts.add(assertStm);
+		}
+
+		return asserts;
 	}
 	
 	public AMetaStmCG consVarNotNullAssert(String varName)

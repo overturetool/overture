@@ -100,9 +100,9 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		 * (e.g. stateDes_3.set_x("a")) (i.e. assignments in the VDM-SL model) are split into variables named stateDes_
 		 * <n> we can also expect local variable declarations in atomic statement blocks
 		 */
-		AMetaStmCG as = namedTypeHandler.handleVarDecl(node);
+		List<AMetaStmCG> as = namedTypeHandler.handleVarDecl(node);
 		
-		if(as == null)
+		if(as == null || as.isEmpty())
 		{
 			return;
 		}
@@ -121,11 +121,17 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		 */
 		if(inAtomic())
 		{
-			addPostAtomicCheck(as);
+			for(AMetaStmCG a : as)
+			{
+				addPostAtomicCheck(a);
+			}
 		}
 		else
 		{
-			encBlock.getStatements().addFirst(as);
+			for(int i = as.size() - 1; i >= 0; i--)
+			{
+				encBlock.getStatements().addFirst(as.get(i));
+			}
 		}
 	}
 
@@ -184,7 +190,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 
 	private void handleStateUpdate(SStmCG node, SVarExpCG target,
 			List<AIdentifierVarExpCG> objVars, AMetaStmCG recAssert,
-			AMetaStmCG namedTypeInvAssert)
+			List<AMetaStmCG> namedTypeInvAssert)
 	{
 		if (recAssert == null && namedTypeInvAssert == null && objVars == null)
 		{
@@ -209,7 +215,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	}
 
 	private void addSubjectAssertAtomic(AMetaStmCG recAssert,
-			AMetaStmCG namedTypeInvAssert)
+			List<AMetaStmCG> namedTypeInvAssert)
 	{
 		for (AMetaStmCG a : consSubjectAsserts(recAssert, namedTypeInvAssert))
 		{
@@ -218,7 +224,7 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	}
 
 	private void addSubjectAsserts(AMetaStmCG recAssert,
-			AMetaStmCG namedTypeInvAssert, ABlockStmCG replBlock)
+			List<AMetaStmCG> namedTypeInvAssert, ABlockStmCG replBlock)
 	{
 		for (AMetaStmCG a : consSubjectAsserts(recAssert, namedTypeInvAssert))
 		{
@@ -227,14 +233,21 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	}
 
 	private List<AMetaStmCG> consSubjectAsserts(AMetaStmCG recAssert,
-			AMetaStmCG namedTypeInvAssert)
+			List<AMetaStmCG> namedTypeInvAsserts)
 	{
-		List<AMetaStmCG> asserts = new LinkedList<AMetaStmCG>();
+		List<AMetaStmCG> allAsserts = new LinkedList<AMetaStmCG>();
 
-		add(asserts, recAssert);
-		add(asserts, namedTypeInvAssert);
+		add(allAsserts, recAssert);
+		
+		if(namedTypeInvAsserts != null)
+		{
+			for(AMetaStmCG a : namedTypeInvAsserts)
+			{
+				add(allAsserts, a);
+			}
+		}
 
-		return asserts;
+		return allAsserts;
 	}
 
 	private void addStateDesAssertsAtomic(SVarExpCG target, List<AIdentifierVarExpCG> objVars)
@@ -285,16 +298,17 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	private void addAsserts(List<AMetaStmCG> objVarAsserts,
 			AIdentifierVarExpCG var)
 	{
-		// TODO: Will the named type invariants not get handled automatically since they are local variable
-		// decls.
-		AMetaStmCG r = recHandler.consAssert(var);
-		buildRecChecks = r == null;
-		AMetaStmCG n = namedTypeHandler.consAssert(var);
+		buildRecChecks = true;
+		List<AMetaStmCG> asserts = namedTypeHandler.consAsserts(var);
 		buildRecChecks = false;
 		
-		
-		add(objVarAsserts, n);
-		add(objVarAsserts, r);
+		if(asserts != null)
+		{
+			for(AMetaStmCG a : asserts)
+			{
+				add(objVarAsserts, a);
+			}
+		}
 	}
 
 	private void add(List<AMetaStmCG> asserts, AMetaStmCG as)

@@ -27,7 +27,7 @@ import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
-public class NamedTypeInvHandler implements IAssert
+public class NamedTypeInvHandler
 {
 	public static final String RET_VAR_NAME_PREFIX = "ret_";
 	public static final String MAP_SEQ_NAME_PREFIX = "col_";
@@ -87,8 +87,11 @@ public class NamedTypeInvHandler implements IAssert
 			{
 				AIdentifierVarExpCG var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(node.getName(), node.getType().clone());
 				
-				String inv = util.consJmlCheck(encClass.getName(), JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, false, invTypes, var);
-				getAnnotator().appendMetaData(node, getAnnotator().consMetaData(inv));
+				List<String> invStrings = util.consJmlCheck(encClass.getName(), JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, false, invTypes, var);
+				for(String invStr : invStrings)
+				{
+					getAnnotator().appendMetaData(node, getAnnotator().consMetaData(invStr));
+				}
 			}
 			else
 			{
@@ -224,8 +227,11 @@ public class NamedTypeInvHandler implements IAssert
 				 * Upon entering a record setter it is necessary to check if invariants checks are enabled before
 				 * checking the parameter
 				 */
-				AMetaStmCG as = util.consAssertStm(invTypes, encClassName, var, node, invTrans.getRecInfo());
-				replBody.getStatements().add(as);
+				List<AMetaStmCG> as = util.consAssertStm(invTypes, encClassName, var, node, invTrans.getRecInfo());
+				for(AMetaStmCG a : as)
+				{
+					replBody.getStatements().add(a);
+				}
 			}
 		}
 
@@ -235,7 +241,7 @@ public class NamedTypeInvHandler implements IAssert
 		body.apply(invTrans);
 	}
 
-	public AMetaStmCG handleMapSeq(AMapSeqUpdateStmCG node)
+	public List<AMetaStmCG> handleMapSeq(AMapSeqUpdateStmCG node)
 	{
 		// TODO: Consider this for the atomic statement
 
@@ -288,7 +294,7 @@ public class NamedTypeInvHandler implements IAssert
 		return null;
 	}
 	
-	public AMetaStmCG handleVarDecl(AVarDeclCG node)
+	public List<AMetaStmCG> handleVarDecl(AVarDeclCG node)
 	{
 		// Examples:
 		// let x : Even = 1 in ...
@@ -324,7 +330,7 @@ public class NamedTypeInvHandler implements IAssert
 		return null;
 	}
 
-	public AMetaStmCG handleCallObj(ACallObjectExpStmCG node)
+	public List<AMetaStmCG> handleCallObj(ACallObjectExpStmCG node)
 	{
 		/**
 		 * Handling of setter calls to masked records. This will happen for cases like T = R ... ; R :: x : int;
@@ -416,8 +422,12 @@ public class NamedTypeInvHandler implements IAssert
 			 * Since assignments can occur inside record setters in the context of an atomic statement block we need to
 			 * check if invariant checks are enabled
 			 */
-			AMetaStmCG assertStm = util.consAssertStm(invTypes, encClass.getName(), var, node, invTrans.getRecInfo());
-			addAssert(node, assertStm);
+			List<AMetaStmCG> asserts = util.consAssertStm(invTypes, encClass.getName(), var, node, invTrans.getRecInfo());
+			
+			for(AMetaStmCG a : asserts)
+			{
+				addAssert(node, a);
+			}
 		}
 	}
 
@@ -472,8 +482,7 @@ public class NamedTypeInvHandler implements IAssert
 		return invTrans.getJmlGen();
 	}
 
-	@Override
-	public AMetaStmCG consAssert(AIdentifierVarExpCG var)
+	public List<AMetaStmCG> consAsserts(AIdentifierVarExpCG var)
 	{
 		List<AbstractTypeInfo> invTypes = util.findTypeInfo(var.getType());
 
