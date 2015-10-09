@@ -63,8 +63,6 @@ final public class Entry {
 
             if (stateDes_2 instanceof project.Entrytypes.R3) {
                 apply_1 = ((project.Entrytypes.R3) stateDes_2).get_r4();
-
-                //@ assert Utils.is_(apply_1,project.Entrytypes.R4.class);
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
@@ -81,8 +79,6 @@ final public class Entry {
 
             if (stateDes_5 instanceof project.Entrytypes.R3) {
                 apply_2 = ((project.Entrytypes.R3) stateDes_5).get_r4();
-
-                //@ assert Utils.is_(apply_2,project.Entrytypes.R4.class);
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
@@ -99,8 +95,6 @@ final public class Entry {
 
             if (stateDes_8 instanceof project.Entrytypes.R3) {
                 apply_3 = ((project.Entrytypes.R3) stateDes_8).get_r4();
-
-                //@ assert Utils.is_(apply_3,project.Entrytypes.R4.class);
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
@@ -169,8 +163,6 @@ final public class Entry {
 
             if (stateDes_11 instanceof project.Entrytypes.R3) {
                 apply_4 = ((project.Entrytypes.R3) stateDes_11).get_r4();
-
-                //@ assert Utils.is_(apply_4,project.Entrytypes.R4.class);
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
