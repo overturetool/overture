@@ -33,15 +33,12 @@ public class NamedTypeInvUtil
 	{
 		List<String> predStrs = new LinkedList<>();
 		
-		StringBuilder inv = new StringBuilder();
-		
 		if(handler.getInvAssertTrans().buildRecValidChecks())
 		{
-			appendRecValidChecks(invChecksGuard, typeInfoMatches, var, inv);
-			predStrs.add(inv.toString());
-			inv = new StringBuilder();
+			appendRecValidChecks(invChecksGuard, typeInfoMatches, var, predStrs);
 		}
 		
+		StringBuilder inv = new StringBuilder();
 		inv.append("//@ ");
 
 		if (jmlVisibility != null)
@@ -103,7 +100,7 @@ public class NamedTypeInvUtil
 
 	private void appendRecValidChecks(boolean invChecksGuard,
 			List<AbstractTypeInfo> typeInfoMatches, SVarExpCG var,
-			StringBuilder inv)
+			List<String> predStrs)
 	{
 		List<ARecordTypeCG> recordTypes = getRecTypes(typeInfoMatches);
 
@@ -111,6 +108,7 @@ public class NamedTypeInvUtil
 		{
 			for (ARecordTypeCG rt : recordTypes)
 			{
+				StringBuilder inv = new StringBuilder();
 				String fullyQualifiedRecType = fullyQualifiedRecType(rt);
 
 				inv.append("//@ ");
@@ -140,7 +138,7 @@ public class NamedTypeInvUtil
 				}
 
 				inv.append(';');
-				inv.append('\n');
+				predStrs.add(inv.toString());
 			}
 		}
 	}
