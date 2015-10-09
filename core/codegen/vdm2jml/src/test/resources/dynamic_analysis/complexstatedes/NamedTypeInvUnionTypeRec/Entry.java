@@ -109,8 +109,9 @@ final public class Entry {
 
             //@ assert inv_Entry_T3(stateDes_2);
 
-            //@ assert stateDes_2 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_2).valid();
             //@ assert stateDes_2 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_2).valid();
+
+            //@ assert stateDes_2 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_2).valid();
 
             //@ assert Utils.is_(stateDes_1,project.Entrytypes.R2.class);
 
@@ -124,8 +125,9 @@ final public class Entry {
 
             //@ assert inv_Entry_T3(stateDes_5);
 
-            //@ assert stateDes_5 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_5).valid();
             //@ assert stateDes_5 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_5).valid();
+
+            //@ assert stateDes_5 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_5).valid();
 
             //@ assert Utils.is_(stateDes_4,project.Entrytypes.R2.class);
 
@@ -135,8 +137,9 @@ final public class Entry {
 
             //@ assert inv_Entry_T3(stateDes_8);
 
-            //@ assert stateDes_8 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_8).valid();
             //@ assert stateDes_8 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_8).valid();
+
+            //@ assert stateDes_8 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_8).valid();
 
             //@ assert Utils.is_(stateDes_7,project.Entrytypes.R2.class);
 
@@ -180,8 +183,9 @@ final public class Entry {
 
             //@ assert inv_Entry_T3(stateDes_11);
 
-            //@ assert stateDes_11 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_11).valid();
             //@ assert stateDes_11 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_11).valid();
+
+            //@ assert stateDes_11 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) stateDes_11).valid();
 
             //@ assert Utils.is_(stateDes_10,project.Entrytypes.R2.class);
 
