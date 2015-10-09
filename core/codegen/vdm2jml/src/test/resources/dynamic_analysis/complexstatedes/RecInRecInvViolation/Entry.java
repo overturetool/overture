@@ -27,15 +27,12 @@ final public class Entry {
         stateDes_3.set_x(6L);
 
         //@ assert stateDes_2.valid();
-
         //@ assert Utils.is_(stateDes_2,project.Entrytypes.T3.class);
 
         //@ assert stateDes_1.valid();
-
         //@ assert Utils.is_(stateDes_1,project.Entrytypes.T2.class);
 
         //@ assert t1.valid();
-
         //@ assert Utils.is_(t1,project.Entrytypes.T1.class);
         project.Entrytypes.T2 stateDes_4 = t1.get_t2();
 
@@ -47,15 +44,12 @@ final public class Entry {
         stateDes_6.set_x(7L);
 
         //@ assert stateDes_5.valid();
-
         //@ assert Utils.is_(stateDes_5,project.Entrytypes.T3.class);
 
         //@ assert stateDes_4.valid();
-
         //@ assert Utils.is_(stateDes_4,project.Entrytypes.T2.class);
 
         //@ assert t1.valid();
-
         //@ assert Utils.is_(t1,project.Entrytypes.T1.class);
         Number ret_1 = 0L;
 
@@ -78,15 +72,12 @@ final public class Entry {
         stateDes_9.set_x(60L);
 
         //@ assert stateDes_8.valid();
-
         //@ assert Utils.is_(stateDes_8,project.Entrytypes.T3.class);
 
         //@ assert stateDes_7.valid();
-
         //@ assert Utils.is_(stateDes_7,project.Entrytypes.T2.class);
 
         //@ assert t1.valid();
-
         //@ assert Utils.is_(t1,project.Entrytypes.T1.class);
         project.Entrytypes.T2 stateDes_10 = t1.get_t2();
 
@@ -98,15 +89,12 @@ final public class Entry {
         stateDes_12.set_x(5L);
 
         //@ assert stateDes_11.valid();
-
         //@ assert Utils.is_(stateDes_11,project.Entrytypes.T3.class);
 
         //@ assert stateDes_10.valid();
-
         //@ assert Utils.is_(stateDes_10,project.Entrytypes.T2.class);
 
         //@ assert t1.valid();
-
         //@ assert Utils.is_(t1,project.Entrytypes.T1.class);
         Number ret_2 = 0L;
 

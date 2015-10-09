@@ -53,7 +53,6 @@ final public class Entry {
         stateDes_2.set_x(2L);
 
         //@ assert a.valid();
-
         //@ assert Utils.is_(a,project.Entrytypes.A.class);
         Number ret_1 = 0L;
 
@@ -75,7 +74,6 @@ final public class Entry {
         stateDes_4.set_x(1L);
 
         //@ assert a.valid();
-
         //@ assert Utils.is_(a,project.Entrytypes.A.class);
         Number ret_2 = 0L;
 

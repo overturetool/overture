@@ -90,11 +90,9 @@ final public class Entry {
             //@ assert inv_Entry_T3(stateDes_2);
 
             //@ assert stateDes_1.valid();
-
             //@ assert Utils.is_(stateDes_1,project.Entrytypes.R2.class);
 
             //@ assert r1.valid();
-
             //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
 
             //@ assert stateDes_6.valid();
@@ -103,7 +101,6 @@ final public class Entry {
             //@ assert inv_Entry_T3(stateDes_5);
 
             //@ assert stateDes_4.valid();
-
             //@ assert Utils.is_(stateDes_4,project.Entrytypes.R2.class);
 
             //@ assert stateDes_9.valid();
@@ -112,7 +109,6 @@ final public class Entry {
             //@ assert inv_Entry_T3(stateDes_8);
 
             //@ assert stateDes_7.valid();
-
             //@ assert Utils.is_(stateDes_7,project.Entrytypes.R2.class);
         } /* End of atomic statement */
         Number ret_1 = 0L;
@@ -148,11 +144,9 @@ final public class Entry {
             //@ assert inv_Entry_T3(stateDes_11);
 
             //@ assert stateDes_10.valid();
-
             //@ assert Utils.is_(stateDes_10,project.Entrytypes.R2.class);
 
             //@ assert r1.valid();
-
             //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
         } /* End of atomic statement */
         Number ret_2 = 0L;

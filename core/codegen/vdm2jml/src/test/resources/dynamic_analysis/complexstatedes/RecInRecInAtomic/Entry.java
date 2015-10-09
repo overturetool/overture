@@ -71,17 +71,14 @@ final public class Entry {
             //@ assert stateDes_2.valid();
 
             //@ assert stateDes_1.valid();
-
             //@ assert Utils.is_(stateDes_1,project.Entrytypes.R2.class);
 
             //@ assert r1.valid();
-
             //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
 
             //@ assert stateDes_4.valid();
 
             //@ assert stateDes_3.valid();
-
             //@ assert Utils.is_(stateDes_3,project.Entrytypes.R2.class);
         } /* End of atomic statement */
         Number ret_1 = 0L;
@@ -112,11 +109,9 @@ final public class Entry {
             //@ assert stateDes_6.valid();
 
             //@ assert stateDes_5.valid();
-
             //@ assert Utils.is_(stateDes_5,project.Entrytypes.R2.class);
 
             //@ assert r1.valid();
-
             //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
         } /* End of atomic statement */
         Number ret_2 = 0L;
