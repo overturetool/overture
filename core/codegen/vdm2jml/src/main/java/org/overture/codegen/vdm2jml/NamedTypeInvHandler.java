@@ -386,15 +386,10 @@ public class NamedTypeInvHandler implements IAssert
 		// <target> := atomic_tmp;
 
 		/*
-		 * TODO: Missing handling of atomic...
-		 * No need to assert anything since the violation would already have been detected in the temporary variable
-		 * section
-		 */
-		/*
 		 * Note that assignment to targets that are of type AFieldNumberExpCG, i.e. tuples (e.g. tup.#1 := 5) is not
 		 * allowed in VDM.
 		 */
-
+		
 		SExpCG target = node.getTarget();
 
 		if (!(target instanceof SVarExpCG))

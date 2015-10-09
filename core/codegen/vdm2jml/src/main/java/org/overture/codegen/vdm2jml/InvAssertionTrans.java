@@ -140,7 +140,11 @@ public class InvAssertionTrans extends AtomicAssertTrans
 		 * the context of an atomic statement block. Therefore, no record invariant needs to be asserted. Note that more
 		 * complicated record modifications (e.g. rec1.rec2.f := 5) appear as nodes of type caseACallObjectExpStmCG
 		 */
-		namedTypeHandler.handleAssign(node);
+		
+		if(!inAtomic())
+		{
+			namedTypeHandler.handleAssign(node);
+		}
 	}
 
 	@Override
@@ -283,10 +287,14 @@ public class InvAssertionTrans extends AtomicAssertTrans
 	{
 		// TODO: Will the named type invariants not get handled automatically since they are local variable
 		// decls.
-		buildRecChecks = true;
-		add(objVarAsserts, namedTypeHandler.consAssert(var));
-		add(objVarAsserts, recHandler.consAssert(var));
+		AMetaStmCG r = recHandler.consAssert(var);
+		buildRecChecks = r == null;
+		AMetaStmCG n = namedTypeHandler.consAssert(var);
 		buildRecChecks = false;
+		
+		
+		add(objVarAsserts, n);
+		add(objVarAsserts, r);
 	}
 
 	private void add(List<AMetaStmCG> asserts, AMetaStmCG as)
