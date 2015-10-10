@@ -1,0 +1,30 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+  
+Run : () ==> ?
+Run () ==
+(
+  dcl b : bool;
+  IO`println("Before valid use.");
+  b := true;
+  IO`println("After valid use.");
+  IO`println("Before invalid use.");
+  b := boolNil();
+  IO`println("After invalid use.");
+  return 0;
+);
+
+functions
+
+boolTrue :  () -> bool
+boolTrue () == true;
+
+boolNil : () -> [bool]
+boolNil () == nil;
+
+end Entry
