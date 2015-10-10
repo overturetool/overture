@@ -28,7 +28,7 @@ public class Entry {
             Number apply_1 = null;
 
             if (obj_1 instanceof Rec) {
-                apply_1 = ((Rec) obj_1).x;
+                apply_1 = ((Number) ((Rec) obj_1).x);
             } else {
                 throw new RuntimeException("Missing member: x");
             }
