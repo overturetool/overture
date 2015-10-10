@@ -183,12 +183,6 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 									+ this.getClass().getSimpleName() + "'");
 						}
 					} 
-				} else
-				{
-					Logger.getLog().printErrorln("Expected vdm source node to be a variable expression at this point in '"
-							+ this.getClass().getSimpleName() + "'. Got: "
-							+ vdmNode);
-
 				}
 			}
 		}
