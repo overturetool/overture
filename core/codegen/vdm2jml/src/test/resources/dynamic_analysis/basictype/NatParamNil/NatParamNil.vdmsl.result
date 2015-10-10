@@ -1,0 +1,10 @@
+"Before valid use."
+"After valid use."
+"Before invalid use."
+Entry.java:34: JML assertion is false
+        //@ assert Utils.is_nat(x);
+            ^
+Entry.java:37: JML assertion is false
+        //@ assert Utils.is_nat(ret_1);
+            ^
+"After invalid use."

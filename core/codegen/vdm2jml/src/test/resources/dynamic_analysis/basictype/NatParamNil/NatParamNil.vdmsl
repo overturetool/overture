@@ -1,0 +1,28 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+  
+Run : () ==> ?
+Run () ==
+(
+  dcl n : [nat] := 0;
+  IO`println("Before valid use.");
+  n := 1;
+  n := nil;
+  IO`println("After valid use.");
+  IO`println("Before invalid use.");
+  n := idNat(n);
+  IO`println("After invalid use.");
+  return 0;
+);
+
+functions
+
+idNat :  nat -> nat
+idNat (x) == x;
+
+end Entry
