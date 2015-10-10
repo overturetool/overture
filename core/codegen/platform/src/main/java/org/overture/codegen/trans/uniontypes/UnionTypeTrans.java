@@ -847,16 +847,38 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	public void inAVarDeclCG(AVarDeclCG node)
 			throws AnalysisException
 	{
-		STypeCG expectedType = node.getType();
-
-		if(expectedType instanceof AUnknownTypeCG || node.getExp() instanceof ANullExpCG)
+		if(node.getExp() != null)
+		{
+			node.getExp().apply(this);
+		}
+		
+		if(node.getType() instanceof AUnknownTypeCG || node.getExp() instanceof ANullExpCG)
 		{
 			return;
 		}
 		
-		if (!(expectedType instanceof AUnionTypeCG))
+		if (!(node.getType() instanceof AUnionTypeCG))
 		{
-			correctTypes(node.getExp(), expectedType);
+			correctTypes(node.getExp(), node.getType());
+		}
+	}
+	
+	@Override
+	public void caseAAssignToExpStmCG(AAssignToExpStmCG node) throws AnalysisException
+	{
+		if(node.getExp() != null)
+		{
+			node.getExp().apply(this);
+		}
+		
+		if(node.getTarget().getType() instanceof AUnknownTypeCG || node.getExp() instanceof ANullExpCG)
+		{
+			return;
+		}
+		
+		if (!(node.getTarget().getType() instanceof AUnionTypeCG))
+		{
+			correctTypes(node.getExp(), node.getTarget().getType());
 		}
 	}
 
