@@ -4,8 +4,11 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.AnswerAdaptor;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMkBasicExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
+import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ATokenIsExpCG;
 import org.overture.codegen.cgast.expressions.SLiteralExpCG;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 
@@ -20,6 +23,19 @@ public class IsValChecker extends AnswerAdaptor<Boolean>
 	
 	@Override
 	public Boolean defaultSLiteralExpCG(SLiteralExpCG node) throws AnalysisException
+	{
+		return true;
+	}
+	
+	@Override
+	public Boolean caseAMkBasicExpCG(AMkBasicExpCG node) throws AnalysisException
+	{
+		// Token value
+		return true;
+	}
+	
+	@Override
+	public Boolean caseANullExpCG(ANullExpCG node) throws AnalysisException
 	{
 		return true;
 	}
