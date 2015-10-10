@@ -1,0 +1,27 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+  
+Run : () ==> ?
+Run () ==
+(dcl r : [real] := 1.23;
+  IO`println("Before valid use.");
+  doSkip(r);
+  r := nil;
+  IO`println("After valid use.");
+  IO`println("Before invalid use.");
+  doSkip(r);
+  IO`println("After invalid use.");
+  return 0;
+);
+
+operations
+
+doSkip :  real ==> ()
+doSkip (-) == skip;
+
+end Entry
