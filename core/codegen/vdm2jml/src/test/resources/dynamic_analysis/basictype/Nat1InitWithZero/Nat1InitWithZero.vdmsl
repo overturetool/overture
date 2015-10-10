@@ -1,0 +1,22 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+  
+Run : () ==> ?
+Run () ==
+(
+  dcl n : nat1 := 1;
+  IO`println("Before valid use.");
+  n := 1;
+  IO`println("After valid use.");
+  IO`println("Before invalid use.");
+  (dcl n1 : nat1 := 0; skip);
+  IO`println("After invalid use.");
+  return 0;
+);
+
+end Entry
