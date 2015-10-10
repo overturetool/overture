@@ -1,0 +1,7 @@
+"Before valid use."
+"After valid use."
+"Before invalid use."
+Entry.java:38: JML assertion is false
+            //@ assert Utils.is_token(ignorePattern_2);
+                ^
+"After invalid use."
