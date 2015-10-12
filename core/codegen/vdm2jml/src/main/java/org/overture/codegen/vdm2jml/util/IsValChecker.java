@@ -8,7 +8,6 @@ import org.overture.codegen.cgast.expressions.AMkBasicExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ATokenIsExpCG;
 import org.overture.codegen.cgast.expressions.SLiteralExpCG;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 

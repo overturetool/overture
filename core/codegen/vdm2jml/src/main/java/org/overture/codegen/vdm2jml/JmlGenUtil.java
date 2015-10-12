@@ -4,9 +4,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
@@ -17,33 +15,23 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
-import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
-import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
-import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
 import org.overture.codegen.vdm2jml.data.RecClassInfo;
-import org.overture.codegen.vdm2jml.predgen.info.LeafTypeInfo;
-import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInfo;
-import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
 import org.overture.codegen.vdm2jml.util.NameGen;
 
 public class JmlGenUtil
 {
-	private static final String TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG = "The Java code generator does not support checking of this type";
 	private JmlGenerator jmlGen;
 
 	public JmlGenUtil(JmlGenerator jmlGen)
@@ -366,181 +354,6 @@ public class JmlGenUtil
 		method.setStatic(true);
 		
 		return method;
-	}
-	
-	public AIfStmCG consDynamicTypeCheck(IRStatus<ADefaultClassDeclCG> status, AMethodDeclCG method,
-			ANamedTypeDeclCG namedTypeDecl)
-	{
-		AIdentifierVarExpCG paramExp = getInvParamVar(method);
-
-		if (paramExp == null)
-		{
-			return null;
-		}
-
-		String defModule = namedTypeDecl.getName().getDefiningClass();
-		String typeName = namedTypeDecl.getName().getName();
-		NamedTypeInfo findTypeInfo = NamedTypeInvDepCalculator.findTypeInfo(jmlGen.getTypeInfoList(), defModule, typeName);
-
-		List<LeafTypeInfo> leafTypes = findTypeInfo.getLeafTypesRecursively();
-
-		if (leafTypes.isEmpty())
-		{
-			Logger.getLog().printErrorln("Could not find any leaf types for named invariant type "
-					+ findTypeInfo.getDefModule()
-					+ "."
-					+ findTypeInfo.getTypeName()
-					+ " in '"
-					+ this.getClass().getSimpleName() + "'");
-			return null;
-		}
-
-		// The idea is to construct a dynamic type check to make sure that the parameter value
-		// matches one of the leaf types, e.g.
-		// Utils.is_char(n) || Utils.is_nat(n)
-		SExpCG typeCond = null;
-
-		ExpAssistantCG expAssist = jmlGen.getJavaGen().getInfo().getExpAssistant();
-
-		if (leafTypes.size() == 1)
-		{
-			LeafTypeInfo onlyLeafType = leafTypes.get(0);
-
-			STypeCG typeCg = onlyLeafType.getType();
-
-			if (typeCg == null)
-			{
-				return null;
-			}
-
-			typeCond = expAssist.consIsExp(paramExp, typeCg);
-
-			if (typeCond == null)
-			{
-				SourceNode sourceNode = onlyLeafType.getType().getSourceNode();
-				status.getUnsupportedInIr().add(new VdmNodeInfo(sourceNode != null ? sourceNode.getVdmNode() : null, TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
-				return null;
-			}
-		} else
-		{
-			// There are two or more leaf types
-
-			LeafTypeInfo currentLeafType = leafTypes.get(0);
-			STypeCG typeCg = currentLeafType.getType();
-
-			if (typeCg == null)
-			{
-				return null;
-			}
-
-			typeCond = expAssist.consIsExp(paramExp, typeCg);
-
-			if (typeCond == null)
-			{
-				SourceNode sourceNode = currentLeafType.getType().getSourceNode();
-				status.getUnsupportedInIr().add(new VdmNodeInfo(sourceNode != null ? sourceNode.getVdmNode() : null, TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
-				return null;
-			}
-
-			AOrBoolBinaryExpCG topOr = new AOrBoolBinaryExpCG();
-			topOr.setType(new ABoolBasicTypeCG());
-			topOr.setLeft(typeCond);
-
-			AOrBoolBinaryExpCG next = topOr;
-
-			// Iterate all leaf types - except for the first and last ones
-			for (int i = 1; i < leafTypes.size() - 1; i++)
-			{
-				currentLeafType = leafTypes.get(i);
-				typeCg = currentLeafType.getType();
-
-				if (typeCg == null)
-				{
-					return null;
-				}
-
-				typeCond = expAssist.consIsExp(paramExp, typeCg);
-
-				if (typeCond == null)
-				{
-					SourceNode sourceNode = currentLeafType.getType().getSourceNode();
-					status.getUnsupportedInIr().add(new VdmNodeInfo(sourceNode != null ? sourceNode.getVdmNode() : null, TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
-					return null;
-				}
-
-				AOrBoolBinaryExpCG tmp = new AOrBoolBinaryExpCG();
-				tmp.setType(new ABoolBasicTypeCG());
-				tmp.setLeft(typeCond);
-
-				next.setRight(tmp);
-				next = tmp;
-			}
-			
-			currentLeafType = leafTypes.get(leafTypes.size() - 1);
-
-			typeCg = currentLeafType.getType();
-
-			if (typeCg == null)
-			{
-				return null;
-			}
-
-			typeCond = expAssist.consIsExp(paramExp, typeCg);
-
-			if (typeCond == null)
-			{
-				SourceNode sourceNode = currentLeafType.getType().getSourceNode();
-				status.getUnsupportedInIr().add(new VdmNodeInfo(sourceNode != null ? sourceNode.getVdmNode() : null, TYPE_NOT_SUPPORTED_FOR_IS_CHECK_MSG));
-				return null;
-			}
-
-			next.setRight(typeCond);
-
-			typeCond = topOr;
-		}
-
-		// We will negate the type check and return false if the type of the parameter
-		// is not any of the leaf types, e.g
-		// if (!(Utils.is_char(n) || Utils.is_nat(n))) { return false;}
-		typeCond = expAssist.negate(typeCond);
-
-		boolean nullAllowed = findTypeInfo.allowsNull();
-
-		AEqualsBinaryExpCG notNull = new AEqualsBinaryExpCG();
-		notNull.setType(new ABoolBasicTypeCG());
-		notNull.setLeft(paramExp.clone());
-		notNull.setRight(jmlGen.getJavaGen().getInfo().getExpAssistant().consNullExp());
-
-		SBinaryExpCG nullCheck = null;
-
-		if (nullAllowed)
-		{
-			// If 'null' is allowed as a value we have to update the dynamic
-			// type check to also take this into account too, e.g.
-			// if (!Utils.equals(n, null) && !(Utils.is_char(n) || Utils.is_nat(n))) { return false;}
-			nullCheck = new AAndBoolBinaryExpCG();
-			nullCheck.setLeft(jmlGen.getJavaGen().getInfo().getExpAssistant().negate(notNull));
-		} else
-		{
-			// If 'null' is NOT allowed as a value we have to update the dynamic we get
-			// if (Utils.equals(n, null) || !(Utils.is_char(n) || Utils.is_nat(n))) { return false;}
-			nullCheck = new AOrBoolBinaryExpCG();
-			nullCheck.setLeft(notNull);
-		}
-
-		nullCheck.setType(new ABoolBasicTypeCG());
-		nullCheck.setRight(typeCond);
-
-		typeCond = nullCheck;
-
-		AReturnStmCG returnFalse = new AReturnStmCG();
-		returnFalse.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consBoolLiteral(false));
-
-		AIfStmCG dynTypeCheck = new AIfStmCG();
-		dynTypeCheck.setIfExp(typeCond);
-		dynTypeCheck.setThenStm(returnFalse);
-
-		return dynTypeCheck;
 	}
 	
 	public AIdentifierPatternCG consInvParamReplacementId(ADefaultClassDeclCG encClass, String originalParamName)

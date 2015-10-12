@@ -25,7 +25,6 @@ import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IREventObserver;
@@ -278,12 +277,10 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 			// In order for a value to be compatible with a named invariant type
 			// two conditions must be met:
 			//
-			// 1) The type of the value must match one of the leaf types of the
-			//    named invariant type, and secondly
+			// 1) The type of the value must match the domain type of the named
+			// type invariant. T = <domainType>
 			// 
 			// 2) the value must meet the invariant predicate 
-			//
-			// Wrt. 1) a dynamic type check has to be added to the invariant method
 			adjustNamedTypeInvFuncs(status);
 
 			// Note that the methods contained in clazz.getMethod() include
@@ -554,13 +551,6 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 				// invariant checks and stack-overflow: inv_C(java.lang.Object)"
 				annotator.makeHelper(method);
 				
-				AIfStmCG dynTypeCheck = util.consDynamicTypeCheck(status, method, namedTypeDecl);
-				
-				if(dynTypeCheck == null)
-				{
-					continue;
-				}
-				
 				ABlockStmCG declStmBlock = new ABlockStmCG();
 				
 				if(!invMethodIsGen)
@@ -586,7 +576,6 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 				ABlockStmCG repBlock = new ABlockStmCG();
 				javaGen.getTransAssistant().replaceNodeWith(body, repBlock);
 
-				repBlock.getStatements().add(dynTypeCheck);
 				repBlock.getStatements().add(declStmBlock);
 				repBlock.getStatements().add(body);
 			}
