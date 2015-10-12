@@ -38,11 +38,6 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_S(final Object check_s) {
-        if ((Utils.equals(check_s, null)) ||
-                !(Utils.is_(check_s, VDMSeq.class))) {
-            return false;
-        }
-
         VDMSeq s = ((VDMSeq) check_s);
 
         Boolean forAllExpResult_1 = true;

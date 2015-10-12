@@ -75,11 +75,6 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_A(final Object check_c) {
-        if (!(Utils.equals(check_c, null)) &&
-                !(Utils.is_real(check_c) || Utils.is_char(check_c))) {
-            return false;
-        }
-
         Object c = ((Object) check_c);
 
         Boolean orResult_1 = false;
@@ -96,20 +91,12 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_B(final Object check_elem) {
-        if ((Utils.equals(check_elem, null)) || !(Utils.is_real(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_C(final Object check_c) {
-        if ((Utils.equals(check_c, null)) || !(Utils.is_char(check_c))) {
-            return false;
-        }
-
         Character c = ((Character) check_c);
 
         Boolean orResult_2 = false;

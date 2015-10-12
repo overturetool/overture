@@ -38,11 +38,6 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_M(final Object check_m) {
-        if ((Utils.equals(check_m, null)) ||
-                !(Utils.is_(check_m, VDMMap.class))) {
-            return false;
-        }
-
         VDMMap m = ((VDMMap) check_m);
 
         Boolean forAllExpResult_1 = true;

@@ -73,12 +73,6 @@ final public class R4 implements Record {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_T3(final Object check_t3) {
-        if ((Utils.equals(check_t3, null)) ||
-                !(Utils.is_(check_t3, project.Entrytypes.R3.class) ||
-                Utils.is_(check_t3, project.Entrytypes.X.class))) {
-            return false;
-        }
-
         Object t3 = ((Object) check_t3);
 
         Boolean andResult_1 = false;

@@ -64,21 +64,12 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_PT(final Object check_elem) {
-        if (!(Utils.equals(check_elem, null)) &&
-                !(Utils.is_nat(check_elem) || Utils.is_bool(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_PossiblyOne(final Object check_p) {
-        if (!(Utils.equals(check_p, null)) && !(Utils.is_nat(check_p))) {
-            return false;
-        }
-
         Number p = ((Number) check_p);
 
         Boolean orResult_1 = false;
@@ -95,10 +86,6 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_True(final Object check_b) {
-        if ((Utils.equals(check_b, null)) || !(Utils.is_bool(check_b))) {
-            return false;
-        }
-
         Boolean b = ((Boolean) check_b);
 
         return b;

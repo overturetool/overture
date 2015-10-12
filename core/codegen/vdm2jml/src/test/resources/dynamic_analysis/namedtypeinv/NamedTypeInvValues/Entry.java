@@ -30,11 +30,6 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_CN(final Object check_cn) {
-        if ((Utils.equals(check_cn, null)) ||
-                !(Utils.is_char(check_cn) || Utils.is_nat(check_cn))) {
-            return false;
-        }
-
         Object cn = ((Object) check_cn);
 
         Boolean orResult_1 = false;
@@ -51,20 +46,12 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_N(final Object check_elem) {
-        if ((Utils.equals(check_elem, null)) || !(Utils.is_nat(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_C(final Object check_elem) {
-        if ((Utils.equals(check_elem, null)) || !(Utils.is_char(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 }

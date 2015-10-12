@@ -60,10 +60,6 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_Even(final Object check_n) {
-        if ((Utils.equals(check_n, null)) || !(Utils.is_nat(check_n))) {
-            return false;
-        }
-
         Number n = ((Number) check_n);
 
         return Utils.equals(Utils.mod(n.longValue(), 2L), 0L);

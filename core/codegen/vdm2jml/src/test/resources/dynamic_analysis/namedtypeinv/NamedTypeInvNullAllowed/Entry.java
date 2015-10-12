@@ -26,31 +26,18 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_N(final Object check_elem) {
-        if (!(Utils.equals(check_elem, null)) &&
-                !(Utils.is_nat(check_elem) || Utils.is_char(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_X(final Object check_elem) {
-        if ((Utils.equals(check_elem, null)) || !(Utils.is_nat(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_Y(final Object check_elem) {
-        if ((Utils.equals(check_elem, null)) || !(Utils.is_char(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 }
