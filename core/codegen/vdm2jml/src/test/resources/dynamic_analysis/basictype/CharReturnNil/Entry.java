@@ -43,7 +43,7 @@ final public class Entry {
     public static Character charA() {
         Character ret_1 = 'a';
 
-        //@ assert (ret_1 == null || Utils.is_char(ret_1));
+        //@ assert ((ret_1 == null) || Utils.is_char(ret_1));
         return ret_1;
     }
 
@@ -51,7 +51,7 @@ final public class Entry {
     public static Character charNil() {
         Character ret_2 = null;
 
-        //@ assert (ret_2 == null || Utils.is_char(ret_2));
+        //@ assert ((ret_2 == null) || Utils.is_char(ret_2));
         return ret_2;
     }
 

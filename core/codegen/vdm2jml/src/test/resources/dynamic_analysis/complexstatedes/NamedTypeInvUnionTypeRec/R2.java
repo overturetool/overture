@@ -12,10 +12,10 @@ final public class R2 implements Record {
 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R2(t3);
     public R2(final Object _t3) {
-        //@ assert inv_Entry_T3(_t3);
+        //@ assert ((Utils.is_(_t3,project.Entrytypes.R3.class) || Utils.is_(_t3,project.Entrytypes.X.class)) && inv_Entry_T3(_t3));
         t3 = (_t3 != null) ? _t3 : null;
 
-        //@ assert inv_Entry_T3(t3);
+        //@ assert ((Utils.is_(t3,project.Entrytypes.R3.class) || Utils.is_(t3,project.Entrytypes.X.class)) && inv_Entry_T3(t3));
     }
 
     /*@ pure @*/
@@ -48,15 +48,15 @@ final public class R2 implements Record {
     public Object get_t3() {
         Object ret_4 = t3;
 
-        //@ assert project.Entry.invChecksOn ==> (inv_Entry_T3(ret_4));
+        //@ assert project.Entry.invChecksOn ==> (((Utils.is_(ret_4,project.Entrytypes.R3.class) || Utils.is_(ret_4,project.Entrytypes.X.class)) && inv_Entry_T3(ret_4)));
         return ret_4;
     }
 
     public void set_t3(final Object _t3) {
-        //@ assert project.Entry.invChecksOn ==> (inv_Entry_T3(_t3));
+        //@ assert project.Entry.invChecksOn ==> (((Utils.is_(_t3,project.Entrytypes.R3.class) || Utils.is_(_t3,project.Entrytypes.X.class)) && inv_Entry_T3(_t3)));
         t3 = _t3;
 
-        //@ assert project.Entry.invChecksOn ==> (inv_Entry_T3(t3));
+        //@ assert project.Entry.invChecksOn ==> (((Utils.is_(t3,project.Entrytypes.R3.class) || Utils.is_(t3,project.Entrytypes.X.class)) && inv_Entry_T3(t3)));
     }
 
     /*@ pure @*/

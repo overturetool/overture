@@ -8,10 +8,10 @@ import java.util.*;
 //@ nullable_by_default
 @SuppressWarnings("all")
 final public class Entry {
-    //@ public static invariant (n == null || Utils.is_token(n));
+    //@ public static invariant ((n == null) || Utils.is_token(n));
     public static final Token n = null;
 
-    //@ public static invariant (t == null || Utils.is_token(t));
+    //@ public static invariant ((t == null) || Utils.is_token(t));
     public static final Token t = new Token("");
 
     /*@ public ghost static boolean invChecksOn = true; @*/

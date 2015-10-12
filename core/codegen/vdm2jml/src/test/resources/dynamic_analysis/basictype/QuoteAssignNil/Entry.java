@@ -18,7 +18,7 @@ final public class Entry {
         {
             project.quotes.AQuote aOpt = null;
 
-            //@ assert (aOpt == null || Utils.is_(aOpt,project.quotes.AQuote.class));
+            //@ assert ((aOpt == null) || Utils.is_(aOpt,project.quotes.AQuote.class));
 
             /* skip */
         }
@@ -43,7 +43,7 @@ final public class Entry {
     public static project.quotes.AQuote Nil() {
         project.quotes.AQuote ret_1 = null;
 
-        //@ assert (ret_1 == null || Utils.is_(ret_1,project.quotes.AQuote.class));
+        //@ assert ((ret_1 == null) || Utils.is_(ret_1,project.quotes.AQuote.class));
         return ret_1;
     }
 

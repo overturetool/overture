@@ -17,14 +17,14 @@ final public class Entry {
 
         //@ assert Utils.is_bool(b);
         Boolean bOpt = null;
-        //@ assert (bOpt == null || Utils.is_bool(bOpt));
+        //@ assert ((bOpt == null) || Utils.is_bool(bOpt));
         IO.println("Before doing valid assignments");
         bOpt = true;
-        //@ assert (bOpt == null || Utils.is_bool(bOpt));
+        //@ assert ((bOpt == null) || Utils.is_bool(bOpt));
         b = bOpt;
         //@ assert Utils.is_bool(b);
         bOpt = null;
-        //@ assert (bOpt == null || Utils.is_bool(bOpt));
+        //@ assert ((bOpt == null) || Utils.is_bool(bOpt));
         IO.println("After doing valid assignments");
         IO.println("Before doing illegal assignments");
         b = bOpt;

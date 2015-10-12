@@ -31,7 +31,7 @@ final public class Entry {
     public static Number ratOpt() {
         Number ret_1 = null;
 
-        //@ assert (ret_1 == null || Utils.is_rat(ret_1));
+        //@ assert ((ret_1 == null) || Utils.is_rat(ret_1));
         return ret_1;
     }
 

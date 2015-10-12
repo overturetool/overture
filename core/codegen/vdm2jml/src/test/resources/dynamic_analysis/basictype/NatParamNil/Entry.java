@@ -14,16 +14,16 @@ final public class Entry {
 
     public static Object Run() {
         Number n = 0L;
-        //@ assert (n == null || Utils.is_nat(n));
+        //@ assert ((n == null) || Utils.is_nat(n));
         IO.println("Before valid use.");
         n = 1L;
-        //@ assert (n == null || Utils.is_nat(n));
+        //@ assert ((n == null) || Utils.is_nat(n));
         n = null;
-        //@ assert (n == null || Utils.is_nat(n));
+        //@ assert ((n == null) || Utils.is_nat(n));
         IO.println("After valid use.");
         IO.println("Before invalid use.");
         n = idNat(n);
-        //@ assert (n == null || Utils.is_nat(n));
+        //@ assert ((n == null) || Utils.is_nat(n));
         IO.println("After invalid use.");
 
         return 0L;

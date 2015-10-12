@@ -18,7 +18,7 @@ final public class Entry {
         //@ assert Utils.is_nat1(ignorePattern_1);
         Object even = 2L;
 
-        //@ assert inv_Entry_No(even) && (inv_Entry_Even(even) || inv_Entry_Large(even));
+        //@ assert (((Utils.is_nat(even) && inv_Entry_Even(even)) || (Utils.is_real(even) && inv_Entry_Large(even))) && inv_Entry_No(even));
         Number ignorePattern_2 = 3L;
 
         //@ assert Utils.is_nat1(ignorePattern_2);
@@ -31,7 +31,7 @@ final public class Entry {
 
         {
             Object notLarge = 999L;
-            //@ assert inv_Entry_No(notLarge) && (inv_Entry_Even(notLarge) || inv_Entry_Large(notLarge));
+            //@ assert (((Utils.is_nat(notLarge) && inv_Entry_Even(notLarge)) || (Utils.is_real(notLarge) && inv_Entry_Large(notLarge))) && inv_Entry_No(notLarge));
             IO.println("After breaking named type invariant");
 
             /* skip */

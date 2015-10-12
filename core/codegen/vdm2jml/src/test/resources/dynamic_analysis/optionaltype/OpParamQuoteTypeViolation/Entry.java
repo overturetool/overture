@@ -15,7 +15,7 @@ final public class Entry {
     public static Object Run() {
         project.quotes.AQuote aOpt = null;
 
-        //@ assert (aOpt == null || Utils.is_(aOpt,project.quotes.AQuote.class));
+        //@ assert ((aOpt == null) || Utils.is_(aOpt,project.quotes.AQuote.class));
         project.quotes.AQuote a = project.quotes.AQuote.getInstance();
         //@ assert Utils.is_(a,project.quotes.AQuote.class);
         {

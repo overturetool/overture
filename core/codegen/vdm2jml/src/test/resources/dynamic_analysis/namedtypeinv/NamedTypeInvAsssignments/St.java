@@ -11,10 +11,10 @@ final public class St implements Record {
     public Object x;
 
     public St(final Object _x) {
-        //@ assert inv_Entry_PT(_x) && (_x == null || inv_Entry_PossiblyOne(_x) || inv_Entry_True(_x));
+        //@ assert ((_x == null) || ((_x == null) || ((_x == null) || ((_x == null) || Utils.is_nat(_x)) && inv_Entry_PossiblyOne(_x)) || (Utils.is_bool(_x) && inv_Entry_True(_x))) && inv_Entry_PT(_x));
         x = (_x != null) ? _x : null;
 
-        //@ assert inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
+        //@ assert ((x == null) || ((x == null) || ((x == null) || ((x == null) || Utils.is_nat(x)) && inv_Entry_PossiblyOne(x)) || (Utils.is_bool(x) && inv_Entry_True(x))) && inv_Entry_PT(x));
     }
 
     /*@ pure @*/
@@ -47,15 +47,15 @@ final public class St implements Record {
     public Object get_x() {
         Object ret_1 = x;
 
-        //@ assert project.Entry.invChecksOn ==> (inv_Entry_PT(ret_1) && (ret_1 == null || inv_Entry_PossiblyOne(ret_1) || inv_Entry_True(ret_1)));
+        //@ assert project.Entry.invChecksOn ==> (((ret_1 == null) || ((ret_1 == null) || ((ret_1 == null) || ((ret_1 == null) || Utils.is_nat(ret_1)) && inv_Entry_PossiblyOne(ret_1)) || (Utils.is_bool(ret_1) && inv_Entry_True(ret_1))) && inv_Entry_PT(ret_1)));
         return ret_1;
     }
 
     public void set_x(final Object _x) {
-        //@ assert project.Entry.invChecksOn ==> (inv_Entry_PT(_x) && (_x == null || inv_Entry_PossiblyOne(_x) || inv_Entry_True(_x)));
+        //@ assert project.Entry.invChecksOn ==> (((_x == null) || ((_x == null) || ((_x == null) || ((_x == null) || Utils.is_nat(_x)) && inv_Entry_PossiblyOne(_x)) || (Utils.is_bool(_x) && inv_Entry_True(_x))) && inv_Entry_PT(_x)));
         x = _x;
 
-        //@ assert project.Entry.invChecksOn ==> (inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x)));
+        //@ assert project.Entry.invChecksOn ==> (((x == null) || ((x == null) || ((x == null) || ((x == null) || Utils.is_nat(x)) && inv_Entry_PossiblyOne(x)) || (Utils.is_bool(x) && inv_Entry_True(x))) && inv_Entry_PT(x)));
     }
 
     /*@ pure @*/

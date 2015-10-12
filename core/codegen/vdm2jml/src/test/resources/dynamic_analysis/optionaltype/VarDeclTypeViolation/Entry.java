@@ -43,7 +43,7 @@ final public class Entry {
     public static Number natNil() {
         Number ret_1 = null;
 
-        //@ assert (ret_1 == null || Utils.is_nat(ret_1));
+        //@ assert ((ret_1 == null) || Utils.is_nat(ret_1));
         return ret_1;
     }
 
@@ -51,7 +51,7 @@ final public class Entry {
     public static Number natOne() {
         Number ret_2 = 1L;
 
-        //@ assert (ret_2 == null || Utils.is_nat(ret_2));
+        //@ assert ((ret_2 == null) || Utils.is_nat(ret_2));
         return ret_2;
     }
 

@@ -43,7 +43,7 @@ final public class Entry {
     public static Token ok() {
         Token aOpt = new Token("");
 
-        //@ assert (aOpt == null || Utils.is_token(aOpt));
+        //@ assert ((aOpt == null) || Utils.is_token(aOpt));
         Token ret_1 = aOpt;
 
         //@ assert Utils.is_token(ret_1);
@@ -54,7 +54,7 @@ final public class Entry {
     public static Token err() {
         Token aOpt = null;
 
-        //@ assert (aOpt == null || Utils.is_token(aOpt));
+        //@ assert ((aOpt == null) || Utils.is_token(aOpt));
         Token ret_2 = aOpt;
 
         //@ assert Utils.is_token(ret_2);

@@ -14,11 +14,11 @@ final public class Entry {
 
     public static Object Run() {
         Number r = 1.23;
-        //@ assert (r == null || Utils.is_real(r));
+        //@ assert ((r == null) || Utils.is_real(r));
         IO.println("Before valid use.");
         doSkip(r);
         r = null;
-        //@ assert (r == null || Utils.is_real(r));
+        //@ assert ((r == null) || Utils.is_real(r));
         IO.println("After valid use.");
         IO.println("Before invalid use.");
         doSkip(r);

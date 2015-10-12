@@ -39,7 +39,7 @@ final public class Entry {
     public static Boolean boolNil() {
         Boolean ret_2 = null;
 
-        //@ assert (ret_2 == null || Utils.is_bool(ret_2));
+        //@ assert ((ret_2 == null) || Utils.is_bool(ret_2));
         return ret_2;
     }
 

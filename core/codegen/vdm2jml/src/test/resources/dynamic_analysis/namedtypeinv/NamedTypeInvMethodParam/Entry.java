@@ -22,7 +22,7 @@ final public class Entry {
             {
                 Number ignorePattern_1 = op(n1, 5L, n1);
 
-                //@ assert inv_Entry_Even(ignorePattern_1);
+                //@ assert (Utils.is_nat(ignorePattern_1) && inv_Entry_Even(ignorePattern_1));
 
                 /* skip */
             }
@@ -32,7 +32,7 @@ final public class Entry {
             {
                 Number ignorePattern_2 = op(n1, 6L, n2);
 
-                //@ assert inv_Entry_Even(ignorePattern_2);
+                //@ assert (Utils.is_nat(ignorePattern_2) && inv_Entry_Even(ignorePattern_2));
 
                 /* skip */
             }
@@ -42,14 +42,14 @@ final public class Entry {
     }
 
     public static Number op(final Number a, final Number b, final Number c) {
-        //@ assert inv_Entry_Even(a);
+        //@ assert (Utils.is_nat(a) && inv_Entry_Even(a));
 
         //@ assert Utils.is_nat(b);
 
-        //@ assert inv_Entry_Even(c);
+        //@ assert (Utils.is_nat(c) && inv_Entry_Even(c));
         Number ret_1 = b.longValue() * (a.longValue() + c.longValue());
 
-        //@ assert inv_Entry_Even(ret_1);
+        //@ assert (Utils.is_nat(ret_1) && inv_Entry_Even(ret_1));
         return ret_1;
     }
 

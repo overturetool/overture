@@ -107,7 +107,7 @@ final public class Entry {
 
             //@ assert stateDes_3.valid();
 
-            //@ assert inv_Entry_T3(stateDes_2);
+            //@ assert ((Utils.is_(stateDes_2,project.Entrytypes.R3.class) || Utils.is_(stateDes_2,project.Entrytypes.X.class)) && inv_Entry_T3(stateDes_2));
 
             //@ assert stateDes_2 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_2).valid();
 
@@ -123,7 +123,7 @@ final public class Entry {
 
             //@ assert stateDes_6.valid();
 
-            //@ assert inv_Entry_T3(stateDes_5);
+            //@ assert ((Utils.is_(stateDes_5,project.Entrytypes.R3.class) || Utils.is_(stateDes_5,project.Entrytypes.X.class)) && inv_Entry_T3(stateDes_5));
 
             //@ assert stateDes_5 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_5).valid();
 
@@ -135,7 +135,7 @@ final public class Entry {
 
             //@ assert stateDes_9.valid();
 
-            //@ assert inv_Entry_T3(stateDes_8);
+            //@ assert ((Utils.is_(stateDes_8,project.Entrytypes.R3.class) || Utils.is_(stateDes_8,project.Entrytypes.X.class)) && inv_Entry_T3(stateDes_8));
 
             //@ assert stateDes_8 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_8).valid();
 
@@ -181,7 +181,7 @@ final public class Entry {
 
             //@ assert stateDes_12.valid();
 
-            //@ assert inv_Entry_T3(stateDes_11);
+            //@ assert ((Utils.is_(stateDes_11,project.Entrytypes.R3.class) || Utils.is_(stateDes_11,project.Entrytypes.X.class)) && inv_Entry_T3(stateDes_11));
 
             //@ assert stateDes_11 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) stateDes_11).valid();
 
