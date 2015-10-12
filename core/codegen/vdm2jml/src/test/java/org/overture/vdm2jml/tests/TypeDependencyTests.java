@@ -250,6 +250,19 @@ public class TypeDependencyTests extends AnnotationTestsBase
 		assertNullNotAllowed(getInfo("N"));
 		assertNullNotAllowed(getInfo("C"));
 	}
+	
+	@Test
+	public void optionalNamed()
+	{
+		load("OptionalNamedType.vdmsl");
+		//CN = [C]|N;
+		//N = nat;
+		//C = char;
+		
+		assertNullAllowed(getInfo("CN"));
+		assertNullNotAllowed(getInfo("C"));
+		assertNullNotAllowed(getInfo("N"));
+	}
 
 	@Test
 	public void record()
