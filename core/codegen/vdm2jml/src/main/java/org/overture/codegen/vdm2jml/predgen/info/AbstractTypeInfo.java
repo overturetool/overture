@@ -13,11 +13,6 @@ public abstract class AbstractTypeInfo
 		this.optional = optional;
 	}
 
-	public void makeOptional()
-	{
-		this.optional = true;
-	}
-
 	abstract public boolean allowsNull();
 	
 	abstract public List<LeafTypeInfo> getLeafTypesRecursively();
@@ -25,4 +20,9 @@ public abstract class AbstractTypeInfo
 	abstract public boolean contains(AbstractTypeInfo subject);
 
 	abstract public String consCheckExp(String enclosingClass, String javaRootPackage);
+	
+	public String consIsNullCheck()
+	{
+		return "(" + ARG_PLACEHOLDER + " == null)";
+	}
 }

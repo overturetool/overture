@@ -59,44 +59,24 @@ public class UnionInfo extends AbstractTypeInfo
 		return false;
 	}
 	
-	//TODO: eventually this must go out
-	private List<AbstractTypeInfo> removeDirectLeaves()
-	{
-		List<AbstractTypeInfo> filtered = new LinkedList<>();
-		
-		for(AbstractTypeInfo t : types)
-		{
-			if(!(t instanceof LeafTypeInfo))
-			{
-				filtered.add(t);
-			}
-		}
-		
-		return filtered;
-	}
-
 	@Override
 	public String consCheckExp(String enclosingModule, String javaRootPackage)
 	{
-		//TODO: remove eventually
-		List<AbstractTypeInfo> types = removeDirectLeaves();
-		
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append('(');
 
 		String orSep = "";
-		boolean allowsNull = allowsNull();
-		if(allowsNull)
+		if(allowsNull())
 		{
-			sb.append(ARG_PLACEHOLDER + " == null");
+			sb.append(consIsNullCheck());
 			orSep = JmlGenerator.JML_OR;
 		}
 		
-		for (AbstractTypeInfo n : types)
+		for (AbstractTypeInfo currentType : types)
 		{
 			sb.append(orSep);
-			sb.append(n.consCheckExp(enclosingModule, javaRootPackage));
+			sb.append(currentType.consCheckExp(enclosingModule, javaRootPackage));
 			orSep = JmlGenerator.JML_OR;
 		}
 		
@@ -111,6 +91,11 @@ public class UnionInfo extends AbstractTypeInfo
 		StringBuilder sb = new StringBuilder();
 		sb.append('(');
 		
+		if(optional)
+		{
+			sb.append("[");
+		}
+		
 		String sep = "";
 		for(AbstractTypeInfo t : types)
 		{
@@ -119,7 +104,13 @@ public class UnionInfo extends AbstractTypeInfo
 			sep = "|";
 		}
 		
+		if(optional)
+		{
+			sb.append("]");
+		}
+		
 		sb.append(')');
+		
 		return sb.toString();
 	}
 }

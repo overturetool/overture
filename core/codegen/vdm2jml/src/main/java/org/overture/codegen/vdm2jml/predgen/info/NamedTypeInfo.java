@@ -1,6 +1,6 @@
 package org.overture.codegen.vdm2jml.predgen.info;
 
-import java.util.LinkedList;
+
 import java.util.List;
 
 import org.overture.codegen.vdm2jml.JmlGenerator;
@@ -115,12 +115,6 @@ public class NamedTypeInfo extends AbstractTypeInfo
 	public String consCheckExp(String enclosingModule, String javaRootPackages)
 	{
 		StringBuilder sb = new StringBuilder();
-		consCheckExp(sb, enclosingModule, javaRootPackages);
-		return sb.toString();
-	}
-	
-	private void consCheckExp(StringBuilder sb, String enclosingModule, String javaRootPackage)
-	{
 //		// If the type is not defined in the enclosing class we use the absolute name
 //		// to refer to the invariant method
 //		if(!defModule.equals(enclosingModule))
@@ -130,6 +124,18 @@ public class NamedTypeInfo extends AbstractTypeInfo
 //			sb.append(defModule);
 //			sb.append(".");
 //		}
+		
+		if (allowsNull())
+		{
+			sb.append(consIsNullCheck());
+			sb.append(JmlGenerator.JML_OR);
+		}
+		
+		if (domainType != null)
+		{
+			sb.append(domainType.consCheckExp(enclosingModule, javaRootPackages));
+			sb.append(JmlGenerator.JML_AND);
+		}
 
 		sb.append(JmlGenerator.INV_PREFIX);
 		sb.append(defModule);
@@ -140,42 +146,9 @@ public class NamedTypeInfo extends AbstractTypeInfo
 		sb.append(ARG_PLACEHOLDER);
 		sb.append(')');
 		
-		if (domainType != null)
-		{
-			//TODO: remvoe eventually
-			if(!onlyBasics())
-			{
-				sb.append(JmlGenerator.JML_AND);
-				sb.append(domainType.consCheckExp(enclosingModule, javaRootPackage));
-				
-			}
-		}
+		return "(" + sb.toString() + ")";
 	}
-
-	//TODO: REMOVE THIS
-	private boolean onlyBasics()
-	{
-		if(domainType instanceof LeafTypeInfo)
-		{
-			return true;
-		}
-		
-		if(domainType instanceof UnionInfo)
-		{
-			for(AbstractTypeInfo t : ((UnionInfo) domainType).getTypes())
-			{
-				if(!(t instanceof LeafTypeInfo))
-				{
-					return false;
-				}
-			}
-			
-			return true;
-		}
-		
-		return false;
-	}
-
+	
 	@Override
 	public boolean allowsNull()
 	{
@@ -209,6 +182,26 @@ public class NamedTypeInfo extends AbstractTypeInfo
 	@Override
 	public String toString()
 	{
-		return "(" + this.typeName + " = " + domainType + ")";
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append('(');
+		
+		if(optional)
+		{
+			sb.append("[");
+		}
+		
+		sb.append(this.typeName);
+		sb.append(" = ");
+		sb.append(domainType);
+		
+		if(optional)
+		{
+			sb.append("]");
+		}
+		
+		sb.append(')');
+		
+		return sb.toString();
 	}
 }

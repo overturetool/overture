@@ -20,6 +20,7 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.Utils;
 import org.overture.codegen.vdm2java.JavaQuoteValueCreator;
 import org.overture.codegen.vdm2jml.JmlGenUtil;
+import org.overture.codegen.vdm2jml.JmlGenerator;
 
 public class LeafTypeInfo extends AbstractTypeInfo
 {
@@ -129,7 +130,7 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		if(methodName == null)
 		{
 			Logger.getLog().printErrorln("Got unhandled case");
-			return null;
+			return "true";
 		}
 
 		String call;
@@ -155,9 +156,9 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		}
 		
 		// If the type is optional 'null' is also a legal value
-		if(optional)
+		if(allowsNull())
 		{
-			return "(" + ARG_PLACEHOLDER + " == null || " + call + ")";
+			return "(" + consIsNullCheck() + JmlGenerator.JML_OR + call + ")";
 		}
 		
 		return call;
