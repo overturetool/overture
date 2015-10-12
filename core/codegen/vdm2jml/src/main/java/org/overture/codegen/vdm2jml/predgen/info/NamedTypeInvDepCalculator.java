@@ -117,15 +117,26 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 		// Avoid unnecessary construction
 		if (!containsExactly(node))
 		{
-			typeInfoList.addAll(create(info, node, null, new HashSet<PType>()));
+			AbstractTypeInfo typeInfo = create(info, node, new HashSet<PType>());
+			
+			if(typeInfo instanceof NamedTypeInfo)
+			{
+				typeInfoList.add((NamedTypeInfo) typeInfo);
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Expected a '" + NamedTypeInfo.class.getSimpleName()
+						+ "' to be returned. Got: " + typeInfo);
+			}
 		}
 	}
-
-	private static List<NamedTypeInfo> create(IRInfo info, PType type, NamedTypeInfo previous, Set<PType> visited)
+	
+	private static AbstractTypeInfo create(IRInfo info, PType type, Set<PType> visited)
 	{
 		if(visited.contains(type))
 		{
-			return new LinkedList<NamedTypeInfo>(); 
+			// Type recursion
+			return null; 
 		}
 		else
 		{
@@ -145,41 +156,36 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			}
 		}
 
-		List<NamedTypeInfo> data = new LinkedList<NamedTypeInfo>();
-
 		if (type instanceof ANamedInvariantType)
 		{
 			ANamedInvariantType namedType = (ANamedInvariantType) type;
 			
-			NamedTypeInfo typeData = new NamedTypeInfo(namedType.getName().getName(),
-					namedType.getName().getModule(), namedType.getInvDef() != null, optional);
+			AbstractTypeInfo domainInfo = create(info, namedType.getType(), visited);
+			NamedTypeInfo namedInfo = new NamedTypeInfo(namedType.getName().getName(),
+					namedType.getName().getModule(), namedType.getInvDef() != null, optional, domainInfo);
 
-			typeData.getNamedTypes().addAll(create(info, namedType.getType(), typeData, visited));
-
-			data.add(typeData);
+			return namedInfo;
+			
 		} else if (type instanceof AUnionType)
 		{
-			// Say we are visiting a union type that is optional, e.g.
-			//T = [S | nat];
-			// Then we mark the previous type, e.g T as optional
-			if(optional && previous != null)
-			{
-				previous.makeOptional();
-			}
+			UnionInfo unionInfo = new UnionInfo(optional);
 			
 			for (PType t : ((AUnionType) type).getTypes())
 			{
-				data.addAll(create(info, t, previous, visited));
+				AbstractTypeInfo tInfo = create(info, t, visited);
+				
+				if(tInfo != null)
+				{
+					unionInfo.getTypes().add(tInfo);
+				}
 			}
+			
+			return unionInfo;
+			
 		} else
 		{
-			if (previous != null)
-			{
-				previous.getLeafTypes().add(new LeafTypeInfo(toIrType(type, info), optional));
-			}
+			return new LeafTypeInfo(toIrType(type, info), optional);
 		}
-
-		return data;
 	}
 	
 	public static STypeCG toIrType(PType type, IRInfo info)
