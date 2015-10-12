@@ -1,10 +1,10 @@
 "Breaking named type invariant for return value"
 Entry.java:56: JML assertion is false
-        //@ assert inv_Entry_A(a) && (a == null || inv_Entry_B(a) || inv_Entry_C(a));
+        //@ assert ((a == null) || ((a == null) || (Utils.is_real(a) && inv_Entry_B(a)) || (Utils.is_char(a) && inv_Entry_C(a))) && inv_Entry_A(a));
             ^
 Entry.java:59: JML assertion is false
-        //@ assert inv_Entry_A(ret_2) && (ret_2 == null || inv_Entry_B(ret_2) || inv_Entry_C(ret_2));
+        //@ assert ((ret_2 == null) || ((ret_2 == null) || (Utils.is_real(ret_2) && inv_Entry_B(ret_2)) || (Utils.is_char(ret_2) && inv_Entry_C(ret_2))) && inv_Entry_A(ret_2));
             ^
 Entry.java:36: JML assertion is false
-                //@ assert inv_Entry_A(ignorePattern_6) && (ignorePattern_6 == null || inv_Entry_B(ignorePattern_6) || inv_Entry_C(ignorePattern_6));
+                //@ assert ((ignorePattern_6 == null) || ((ignorePattern_6 == null) || (Utils.is_real(ignorePattern_6) && inv_Entry_B(ignorePattern_6)) || (Utils.is_char(ignorePattern_6) && inv_Entry_C(ignorePattern_6))) && inv_Entry_A(ignorePattern_6));
                     ^
