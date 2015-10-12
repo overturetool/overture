@@ -10,17 +10,15 @@ public class NamedTypeInfo extends AbstractTypeInfo
 	private String typeName;
 	private String defModule;
 	private boolean hasInv;
-	private List<NamedTypeInfo> namedTypes;
-	private List<LeafTypeInfo> leafTypes;
-
-	public NamedTypeInfo(String typeName, String defModule, boolean hasInv, boolean optional)
+	private AbstractTypeInfo domainType; // T = <domainType>
+	
+	public NamedTypeInfo(String typeName, String defModule, boolean hasInv, boolean optional, AbstractTypeInfo domainType)
 	{
 		super(optional);
 		this.typeName = typeName;
 		this.defModule = defModule;
 		this.hasInv = hasInv;
-		this.namedTypes = new LinkedList<NamedTypeInfo>();
-		this.leafTypes = new LinkedList<LeafTypeInfo>();
+		this.domainType = domainType;
 	}
 
 	public String getTypeName()
@@ -33,38 +31,31 @@ public class NamedTypeInfo extends AbstractTypeInfo
 		return defModule;
 	}
 
-	public List<NamedTypeInfo> getNamedTypes()
-	{
-		return namedTypes;
-	}
-
 	public boolean hasInv()
 	{
 		return hasInv;
 	}
-
-	public List<LeafTypeInfo> getLeafTypes()
-	{
-		return leafTypes;
-	}
-
+	
 	public boolean contains(AbstractTypeInfo other)
 	{
-		if (equals(other))
-		{
-			return true;
-		} else
-		{
-			for (NamedTypeInfo n : namedTypes)
-			{
-				if (n.contains(other))
-				{
-					return true;
-				}
-			}
-		}
-
+		//TODO: Returning false leads to redundant dynamic type check which is not optimal
 		return false;
+		
+//		if (equals(other))
+//		{
+//			return true;
+//		} else
+//		{
+//			for (NamedTypeInfo n : namedTypes)
+//			{
+//				if (n.contains(other))
+//				{
+//					return true;
+//				}
+//			}
+//		}
+//
+//		return false;
 	}
 
 	@Override
@@ -120,13 +111,14 @@ public class NamedTypeInfo extends AbstractTypeInfo
 		return true;
 	}
 
+	@Override
 	public String consCheckExp(String enclosingModule, String javaRootPackages)
 	{
 		StringBuilder sb = new StringBuilder();
 		consCheckExp(sb, enclosingModule, javaRootPackages);
 		return sb.toString();
 	}
-
+	
 	private void consCheckExp(StringBuilder sb, String enclosingModule, String javaRootPackage)
 	{
 //		// If the type is not defined in the enclosing class we use the absolute name
@@ -148,117 +140,61 @@ public class NamedTypeInfo extends AbstractTypeInfo
 		sb.append(ARG_PLACEHOLDER);
 		sb.append(')');
 		
-		boolean allowsNull = allowsNull();
-		if (!namedTypes.isEmpty())
+		if (domainType != null)
 		{
-			sb.append(JmlGenerator.JML_AND);
-			
-			sb.append('(');
-
-			String orSep = "";
-			if(allowsNull)
+			//TODO: remvoe eventually
+			if(!onlyBasics())
 			{
-				sb.append(ARG_PLACEHOLDER + " == null");
-				orSep = JmlGenerator.JML_OR;
+				sb.append(JmlGenerator.JML_AND);
+				sb.append(domainType.consCheckExp(enclosingModule, javaRootPackage));
+				
 			}
-			
-			for (NamedTypeInfo n : namedTypes)
-			{
-				sb.append(orSep);
-				n.consCheckExp(sb, enclosingModule, javaRootPackage);
-				orSep = JmlGenerator.JML_OR;
-			}
-			
-			sb.append(')');
 		}
 	}
 
-	@Override
-	public String toString()
+	//TODO: REMOVE THIS
+	private boolean onlyBasics()
 	{
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("Module: ");
-		sb.append(defModule);
-		sb.append('\n');
-		sb.append("Type name: ");
-		sb.append(typeName);
-		sb.append('\n');
-
-		sb.append("Name types: ");
-		if (!namedTypes.isEmpty())
+		if(domainType instanceof LeafTypeInfo)
 		{
-			String sep = "";
-			for (NamedTypeInfo t : namedTypes)
-			{
-				sb.append(sep);
-				sb.append(t.getDefModule() + "." + t.getTypeName());
-				sep = ", ";
-			}
-		} else
-		{
-			sb.append("None");
+			return true;
 		}
-		sb.append(".\n");
-
-		sb.append("Leaf types: ");
-		if (!leafTypes.isEmpty())
+		
+		if(domainType instanceof UnionInfo)
 		{
-			String sep = "";
-			for (LeafTypeInfo leaf : leafTypes)
+			for(AbstractTypeInfo t : ((UnionInfo) domainType).getTypes())
 			{
-				sb.append(sep);
-				sb.append(leaf.toString());
-				sep = ", ";
+				if(!(t instanceof LeafTypeInfo))
+				{
+					return false;
+				}
 			}
-		} else
-		{
-			sb.append("None");
+			
+			return true;
 		}
-
-		sb.append(".\n");
 		
-		sb.append("Allows null: ");
-		sb.append(allowsNull());
-		sb.append(".\n");
-		
-		sb.append("Has invariant: " + hasInv());
-
-		return sb.toString();
+		return false;
 	}
 
 	@Override
 	public boolean allowsNull()
 	{
 		// This type allows null either if it is
-		// 1) optional or 
+		// 1) optional or
 		// 2) any child type allows null
 		//
 		// Example. Given:
 		// N = nat; C = [char]; CN = C|N
 		// Then CN allows null. C allows null. N does not allow null.
-		
-		if(optional)
+
+		if (optional)
 		{
 			return true;
 		}
-		else
+
+		if(domainType != null)
 		{
-			for(LeafTypeInfo leaf : leafTypes)
-			{
-				if(leaf.allowsNull())
-				{
-					return true;
-				}
-			}
-			
-			for(NamedTypeInfo n : namedTypes)
-			{
-				if(n.allowsNull())
-				{
-					return true;
-				}
-			}
+			return domainType.allowsNull();
 		}
 		
 		return false;
@@ -267,18 +203,12 @@ public class NamedTypeInfo extends AbstractTypeInfo
 	@Override
 	public List<LeafTypeInfo> getLeafTypesRecursively()
 	{
-		List<LeafTypeInfo> allLeaftypes = new LinkedList<LeafTypeInfo>();
-		
-		for(LeafTypeInfo leaf : leafTypes)
-		{
-			allLeaftypes.addAll(leaf.getLeafTypesRecursively());
-		}
-		
-		for(NamedTypeInfo named : namedTypes)
-		{
-			allLeaftypes.addAll(named.getLeafTypesRecursively());
-		}
-		
-		return allLeaftypes;
+		return domainType.getLeafTypesRecursively();
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "(" + this.typeName + " = " + domainType + ")";
 	}
 }
