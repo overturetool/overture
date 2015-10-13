@@ -66,7 +66,7 @@ public class TypePredUtil
 
 		String or = "";
 		String javaPackage = handler.getJmlGen().getJavaSettings().getJavaRootPackage();
-		String consCheckExp = typeInfo.consCheckExp(enclosingClass, javaPackage);
+		String consCheckExp = typeInfo.consCheckExp(enclosingClass, javaPackage, var.getName());
 		inv.append(or);
 		if (consCheckExp != null)
 		{
@@ -87,8 +87,7 @@ public class TypePredUtil
 		
 		inv.append(';');
 		
-		// Inject the name of the field into the expression
-		predStrs.add(String.format(inv.toString(), var.getName()));
+		predStrs.add(inv.toString());
 		
 		return predStrs;
 	}

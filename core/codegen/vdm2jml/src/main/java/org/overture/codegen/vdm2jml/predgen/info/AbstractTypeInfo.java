@@ -4,8 +4,6 @@ import java.util.List;
 
 public abstract class AbstractTypeInfo
 {
-	public static String ARG_PLACEHOLDER = "%1$s";
-	
 	protected boolean optional;
 
 	public AbstractTypeInfo(boolean optional)
@@ -17,10 +15,10 @@ public abstract class AbstractTypeInfo
 	
 	abstract public List<LeafTypeInfo> getLeafTypesRecursively();
 
-	abstract public String consCheckExp(String enclosingClass, String javaRootPackage);
+	abstract public String consCheckExp(String enclosingClass, String javaRootPackage, String var);
 	
-	public String consIsNullCheck()
+	public String consIsNullCheck(String var)
 	{
-		return "(" + ARG_PLACEHOLDER + " == null)";
+		return "(" + var + " == null)";
 	}
 }

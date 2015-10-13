@@ -95,14 +95,14 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		return types;
 	}
 	
-	public String concCheckCall(String s)
+	public String concCheckCall(String s, String var)
 	{
-		return concCheckCall(s, null);
+		return concCheckCall(s, null, var);
 	}
 	
-	public String concCheckCall(String s, String arg)
+	public String concCheckCall(String s, String arg, String var)
 	{
-		String call =  Utils.class.getSimpleName() + "." + s + "(" + ARG_PLACEHOLDER;
+		String call =  Utils.class.getSimpleName() + "." + s + "(" + var;
 		
 		if(arg != null)
 		{
@@ -115,7 +115,7 @@ public class LeafTypeInfo extends AbstractTypeInfo
 	}
 
 	@Override
-	public String consCheckExp(String enclosingClass, String javaRootPackage)
+	public String consCheckExp(String enclosingClass, String javaRootPackage, String var)
 	{
 		String methodName = utilsCallMap.get(type.getClass());
 		
@@ -130,7 +130,7 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		{
 			String qouteValue = ((AQuoteTypeCG) type).getValue();
 			String quoteType = JavaQuoteValueCreator.fullyQualifiedQuoteName(javaRootPackage, qouteValue);
-			call = concCheckCall(methodName, quoteType + CLASS_QUALIFIER);
+			call = concCheckCall(methodName, quoteType + CLASS_QUALIFIER, var);
 		}
 		else if(type instanceof ARecordTypeCG)
 		{
@@ -140,17 +140,17 @@ public class LeafTypeInfo extends AbstractTypeInfo
 			String fullyQualifiedRecType = recPackage + "."
 					+ rt.getName().getName();
 			
-			call = concCheckCall(methodName, fullyQualifiedRecType + CLASS_QUALIFIER);
+			call = concCheckCall(methodName, fullyQualifiedRecType + CLASS_QUALIFIER, var);
 		}
 		else
 		{
-			call = concCheckCall(methodName);
+			call = concCheckCall(methodName, var);
 		}
 		
 		// If the type is optional 'null' is also a legal value
 		if(allowsNull())
 		{
-			return "(" + consIsNullCheck() + JmlGenerator.JML_OR + call + ")";
+			return "(" + consIsNullCheck(var) + JmlGenerator.JML_OR + call + ")";
 		}
 		
 		return call;

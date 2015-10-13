@@ -53,7 +53,7 @@ public class UnionInfo extends AbstractTypeInfo
 	}
 	
 	@Override
-	public String consCheckExp(String enclosingModule, String javaRootPackage)
+	public String consCheckExp(String enclosingModule, String javaRootPackage, String var)
 	{
 		StringBuilder sb = new StringBuilder();
 		
@@ -62,14 +62,14 @@ public class UnionInfo extends AbstractTypeInfo
 		String orSep = "";
 		if(allowsNull())
 		{
-			sb.append(consIsNullCheck());
+			sb.append(consIsNullCheck(var));
 			orSep = JmlGenerator.JML_OR;
 		}
 		
 		for (AbstractTypeInfo currentType : types)
 		{
 			sb.append(orSep);
-			sb.append(currentType.consCheckExp(enclosingModule, javaRootPackage));
+			sb.append(currentType.consCheckExp(enclosingModule, javaRootPackage, var));
 			orSep = JmlGenerator.JML_OR;
 		}
 		

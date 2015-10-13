@@ -90,7 +90,7 @@ public class NamedTypeInfo extends AbstractTypeInfo
 	}
 
 	@Override
-	public String consCheckExp(String enclosingModule, String javaRootPackages)
+	public String consCheckExp(String enclosingModule, String javaRootPackages, String var)
 	{
 		StringBuilder sb = new StringBuilder();
 //		// If the type is not defined in the enclosing class we use the absolute name
@@ -105,13 +105,13 @@ public class NamedTypeInfo extends AbstractTypeInfo
 		
 		if (allowsNull())
 		{
-			sb.append(consIsNullCheck());
+			sb.append(consIsNullCheck(var));
 			sb.append(JmlGenerator.JML_OR);
 		}
 		
 		if (domainType != null)
 		{
-			sb.append(domainType.consCheckExp(enclosingModule, javaRootPackages));
+			sb.append(domainType.consCheckExp(enclosingModule, javaRootPackages, var));
 			sb.append(JmlGenerator.JML_AND);
 		}
 
@@ -121,7 +121,7 @@ public class NamedTypeInfo extends AbstractTypeInfo
 		sb.append(typeName);
 
 		sb.append('(');
-		sb.append(ARG_PLACEHOLDER);
+		sb.append(var);
 		sb.append(')');
 		
 		return "(" + sb.toString() + ")";
