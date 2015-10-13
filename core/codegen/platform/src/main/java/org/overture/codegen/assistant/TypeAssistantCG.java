@@ -781,7 +781,14 @@ public class TypeAssistantCG extends AssistantBase
 	{
 		if(type instanceof AUnionTypeCG)
 		{
-			for(STypeCG t : ((AUnionTypeCG) type).getTypes())
+			AUnionTypeCG unionType = (AUnionTypeCG) type;
+			
+			if(BooleanUtils.isTrue(unionType.getOptional()))
+			{
+				return true;
+			}
+			
+			for(STypeCG t : unionType.getTypes())
 			{
 				if(allowsNull(t))
 				{
