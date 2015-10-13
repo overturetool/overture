@@ -2,6 +2,6 @@
 "After legal use"
 "Before illegal use"
 Entry.java:32: JML assertion is false
-            //@ assert (Utils.is_nat(ignorePattern_2) && inv_Entry_Even(ignorePattern_2)) || Utils.is_char(ignorePattern_2);
+            //@ assert ((Utils.is_nat(ignorePattern_2) && inv_Entry_Even(ignorePattern_2)) || Utils.is_char(ignorePattern_2));
                 ^
 "After illegal use"
