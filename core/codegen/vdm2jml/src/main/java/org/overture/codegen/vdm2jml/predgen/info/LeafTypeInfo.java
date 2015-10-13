@@ -94,14 +94,6 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		
 		return types;
 	}
-
-	@Override
-	public boolean contains(AbstractTypeInfo subject)
-	{
-		//TODO: Returning false leads to redundant dynamic type check which is not optimal
-		return false;
-	}
-	
 	
 	public String concCheckCall(String s)
 	{

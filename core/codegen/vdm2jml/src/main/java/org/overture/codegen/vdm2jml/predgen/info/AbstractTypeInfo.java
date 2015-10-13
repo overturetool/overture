@@ -17,8 +17,6 @@ public abstract class AbstractTypeInfo
 	
 	abstract public List<LeafTypeInfo> getLeafTypesRecursively();
 
-	abstract public boolean contains(AbstractTypeInfo subject);
-
 	abstract public String consCheckExp(String enclosingClass, String javaRootPackage);
 	
 	public String consIsNullCheck()

@@ -51,13 +51,6 @@ public class UnionInfo extends AbstractTypeInfo
 		
 		return leaves;
 	}
-
-	@Override
-	public boolean contains(AbstractTypeInfo subject)
-	{
-		//TODO: Returning false leads to redundant dynamic type check which is not optimal
-		return false;
-	}
 	
 	@Override
 	public String consCheckExp(String enclosingModule, String javaRootPackage)

@@ -35,28 +35,6 @@ public class NamedTypeInfo extends AbstractTypeInfo
 	{
 		return hasInv;
 	}
-	
-	public boolean contains(AbstractTypeInfo other)
-	{
-		//TODO: Returning false leads to redundant dynamic type check which is not optimal
-		return false;
-		
-//		if (equals(other))
-//		{
-//			return true;
-//		} else
-//		{
-//			for (NamedTypeInfo n : namedTypes)
-//			{
-//				if (n.contains(other))
-//				{
-//					return true;
-//				}
-//			}
-//		}
-//
-//		return false;
-	}
 
 	@Override
 	public int hashCode()

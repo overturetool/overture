@@ -47,53 +47,6 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 		return null;
 	}
 
-	public static List<AbstractTypeInfo> onlyDisjointTypes(
-			List<AbstractTypeInfo> typeInfo)
-	{
-		List<AbstractTypeInfo> disjointTypes = new LinkedList<AbstractTypeInfo>();
-
-		for (AbstractTypeInfo t : typeInfo)
-		{
-			if (!contains(disjointTypes, t))
-			{
-				removeSmallerTypes(disjointTypes, t);
-				disjointTypes.add(t);
-			}
-		}
-
-		return disjointTypes;
-	}
-
-	public static void removeSmallerTypes(List<AbstractTypeInfo> disjointTypes,
-			AbstractTypeInfo subject)
-	{
-		List<AbstractTypeInfo> toRemove = new LinkedList<>();
-
-		for (AbstractTypeInfo nexType : disjointTypes)
-		{
-			if (subject.contains(nexType))
-			{
-				toRemove.add(nexType);
-			}
-		}
-
-		disjointTypes.removeAll(toRemove);
-	}
-
-	public static boolean contains(List<AbstractTypeInfo> typeInfoList,
-			AbstractTypeInfo subject)
-	{
-		for (AbstractTypeInfo nextType : typeInfoList)
-		{
-			if (nextType.contains(subject))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	public boolean containsExactly(ANamedInvariantType node)
 	{
 		String module = node.getName().getModule();
