@@ -24,6 +24,7 @@ import org.overture.codegen.vdm2jml.predgen.info.AbstractTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.LeafTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
+import org.overture.codegen.vdm2jml.predgen.info.UnionInfo;
 
 public class TypePredUtil
 {
@@ -35,14 +36,14 @@ public class TypePredUtil
 	}
 	
 	public List<String> consJmlCheck(String enclosingClass, String jmlVisibility,
-			String annotationType, boolean invChecksGuard, List<AbstractTypeInfo> typeInfoMatches,
+			String annotationType, boolean invChecksGuard, AbstractTypeInfo typeInfo,
 			SVarExpCG var)
 	{
 		List<String> predStrs = new LinkedList<>();
 		
 		if(handler.getDecorator().buildRecValidChecks())
 		{
-			appendRecValidChecks(invChecksGuard, typeInfoMatches, var, predStrs);
+			appendRecValidChecks(invChecksGuard, typeInfo, var, predStrs);
 		}
 		
 		StringBuilder inv = new StringBuilder();
@@ -64,24 +65,20 @@ public class TypePredUtil
 		}
 
 		String or = "";
-		for (AbstractTypeInfo match : typeInfoMatches)
+		String javaPackage = handler.getJmlGen().getJavaSettings().getJavaRootPackage();
+		String consCheckExp = typeInfo.consCheckExp(enclosingClass, javaPackage);
+		inv.append(or);
+		if (consCheckExp != null)
 		{
-			String javaPackage = handler.getJmlGen().getJavaSettings().getJavaRootPackage();
-			String consCheckExp = match.consCheckExp(enclosingClass, javaPackage);
-			inv.append(or);
-			if(consCheckExp != null)
-			{
-				inv.append(consCheckExp);
-			}
-			else
-			{
-				Logger.getLog().printErrorln("Expression could not be checked in '"
-						+ this.getClass().getSimpleName() + "'");
-				//TODO: Consider better handling
-				inv.append("true");
-			}
-			or = JmlGenerator.JML_OR;
+			inv.append(consCheckExp);
+		} else
+		{
+			Logger.getLog().printErrorln("Expression could not be checked in '" + this.getClass().getSimpleName()
+					+ "'");
+			// TODO: Consider better handling
+			inv.append("true");
 		}
+		or = JmlGenerator.JML_OR;
 
 		if(invChecksGuard)
 		{
@@ -106,10 +103,10 @@ public class TypePredUtil
 	}
 
 	private void appendRecValidChecks(boolean invChecksGuard,
-			List<AbstractTypeInfo> typeInfoMatches, SVarExpCG var,
+			AbstractTypeInfo typeInfo, SVarExpCG var,
 			List<String> predStrs)
 	{
-		List<ARecordTypeCG> recordTypes = getRecTypes(typeInfoMatches);
+		List<ARecordTypeCG> recordTypes = getRecTypes(typeInfo);
 
 		if (!recordTypes.isEmpty())
 		{
@@ -159,28 +156,24 @@ public class TypePredUtil
 		return fullyQualifiedRecType;
 	}
 	
-	private List<ARecordTypeCG> getRecTypes(
-			List<AbstractTypeInfo> typeInfoMatches)
+	private List<ARecordTypeCG> getRecTypes(AbstractTypeInfo typeInfo)
 	{
 		List<ARecordTypeCG> recTypes = new LinkedList<>();
-		
-		for (AbstractTypeInfo match : typeInfoMatches)
-		{
-			List<LeafTypeInfo> leaves = match.getLeafTypesRecursively();
 
-			for (LeafTypeInfo leaf : leaves)
+		List<LeafTypeInfo> leaves = typeInfo.getLeafTypesRecursively();
+
+		for (LeafTypeInfo leaf : leaves)
+		{
+			if (leaf.getType() instanceof ARecordTypeCG)
 			{
-				if (leaf.getType() instanceof ARecordTypeCG)
-				{
-					recTypes.add((ARecordTypeCG) leaf.getType());
-				}
+				recTypes.add((ARecordTypeCG) leaf.getType());
 			}
 		}
 
 		return recTypes;
 	}
 
-	public List<AMetaStmCG> consAssertStm(List<AbstractTypeInfo> invTypes,
+	public List<AMetaStmCG> consAssertStm(AbstractTypeInfo invTypes,
 			String encClassName, SVarExpCG var, INode node, RecClassInfo recInfo)
 	{
 		boolean inAccessor = node != null && recInfo != null && recInfo.inAccessor(node);
@@ -208,10 +201,8 @@ public class TypePredUtil
 		return assertStm;
 	}
 	
-	public List<AbstractTypeInfo> findTypeInfo(STypeCG type)
+	public AbstractTypeInfo findTypeInfo(STypeCG type)
 	{
-		List<AbstractTypeInfo> posTypes = new LinkedList<>();
-
 		if (type.getNamedInvType() != null)
 		{
 			ANamedTypeDeclCG namedInv = type.getNamedInvType();
@@ -221,50 +212,40 @@ public class TypePredUtil
 
 			NamedTypeInfo info = NamedTypeInvDepCalculator.findTypeInfo(handler.getJmlGen().getTypeInfoList(), defModule, typeName);
 
-			if (info != null)
-			{
-				posTypes.add(info);
-			} else
+			if (info == null)
 			{
 				Logger.getLog().printErrorln("Could not find info for named type '"
 						+ typeName + "' defined in module '" + defModule
 						+ "' in '" + this.getClass().getSimpleName() + "'");
 			}
+			
+			return info;
 
 			// We do not need to collect sub named invariant types
 		} else if (type instanceof AUnionTypeCG)
 		{
+			UnionInfo unionInfo = new UnionInfo(handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant().allowsNull(type));
+
 			for (STypeCG t : ((AUnionTypeCG) type).getTypes())
 			{
-				posTypes.addAll(findTypeInfo(t));
+				unionInfo.getTypes().add(findTypeInfo(t));
 			}
+			
+			return unionInfo;
 		}
 		else if(type instanceof AUnknownTypeCG)
 		{
-			return posTypes;
+			return null;
 		}
 		else if(type instanceof ASetSetTypeCG || type instanceof AMapMapTypeCG || type instanceof ASeqSeqTypeCG || type instanceof ATupleTypeCG)
 		{
 			// Can't do anything for these right now...
 			// TODO: implement handling
-			return posTypes;
+			return null;
 		}
 		else
 		{
-			posTypes.add(new LeafTypeInfo(type, handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant().allowsNull(type)));
+			return new LeafTypeInfo(type, handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant().allowsNull(type));
 		}
-
-		// We will only consider types that are disjoint. As an example consider
-		// the type definitions below:
-		//
-		// C = ...; N = ...; CN = C|N;
-		//
-		// Say we have the following value definition:
-		//
-		// val : CN|N
-		//
-		// Then we only want to have the type info for CN returned since N is already
-		// contained in CN.
-		return NamedTypeInvDepCalculator.onlyDisjointTypes(posTypes);
 	}
 }

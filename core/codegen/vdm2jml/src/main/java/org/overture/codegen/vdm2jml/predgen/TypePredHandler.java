@@ -85,13 +85,13 @@ public class TypePredHandler
 			 * So at this point it must be a value defined in a module. No need to check if invariant checks are enabled.
 			 */
 			
-			List<AbstractTypeInfo> invTypes = util.findTypeInfo(node.getType());
+			AbstractTypeInfo typeInfo = util.findTypeInfo(node.getType());
 
-			if (!invTypes.isEmpty())
+			if (typeInfo != null)
 			{
 				AIdentifierVarExpCG var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(node.getName(), node.getType().clone());
 				
-				List<String> invStrings = util.consJmlCheck(encClass.getName(), JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, false, invTypes, var);
+				List<String> invStrings = util.consJmlCheck(encClass.getName(), JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, false, typeInfo, var);
 				for(String invStr : invStrings)
 				{
 					getAnnotator().appendMetaData(node, getAnnotator().consMetaData(invStr));
@@ -170,9 +170,9 @@ public class TypePredHandler
 
 		STypeCG returnType = encMethod.getMethodType().getResult();
 
-		List<AbstractTypeInfo> invTypes = util.findTypeInfo(returnType);
+		AbstractTypeInfo typeInfo = util.findTypeInfo(returnType);
 
-		if (invTypes.isEmpty())
+		if (typeInfo == null)
 		{
 			return;
 		}
@@ -205,9 +205,9 @@ public class TypePredHandler
 		ABlockStmCG replBody = new ABlockStmCG();
 		for (AFormalParamLocalParamCG param : node.getFormalParams())
 		{
-			List<AbstractTypeInfo> invTypes = util.findTypeInfo(param.getType());
+			AbstractTypeInfo typeInfo = util.findTypeInfo(param.getType());
 
-			if (!invTypes.isEmpty())
+			if (typeInfo != null)
 			{
 				ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
@@ -231,7 +231,7 @@ public class TypePredHandler
 				 * Upon entering a record setter it is necessary to check if invariants checks are enabled before
 				 * checking the parameter
 				 */
-				List<AMetaStmCG> as = util.consAssertStm(invTypes, encClassName, var, node, decorator.getRecInfo());
+				List<AMetaStmCG> as = util.consAssertStm(typeInfo, encClassName, var, node, decorator.getRecInfo());
 				for(AMetaStmCG a : as)
 				{
 					replBody.getStatements().add(a);
@@ -275,9 +275,9 @@ public class TypePredHandler
 			replStm.getStatements().add(node);
 		}
 		
-		List<AbstractTypeInfo> invTypes = util.findTypeInfo(var.getType());
+		AbstractTypeInfo typeInfo = util.findTypeInfo(var.getType());
 	
-		if (!invTypes.isEmpty())
+		if (typeInfo != null)
 		{
 			ADefaultClassDeclCG enclosingClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
@@ -291,7 +291,7 @@ public class TypePredHandler
 				/**
 				 * Updates to fields in record setters need to check if invariants checks are enabled
 				 */
-				return util.consAssertStm(invTypes, enclosingClass.getName(), var, node,  decorator.getRecInfo());
+				return util.consAssertStm(typeInfo, enclosingClass.getName(), var, node,  decorator.getRecInfo());
 			} 
 		}
 		
@@ -304,9 +304,9 @@ public class TypePredHandler
 		// let x : Even = 1 in ...
 		// (dcl y : Even | nat := 2; ...)
 
-		List<AbstractTypeInfo> invTypes = util.findTypeInfo(node.getType());
+		AbstractTypeInfo typeInfo = util.findTypeInfo(node.getType());
 
-		if (!invTypes.isEmpty())
+		if (typeInfo != null)
 		{
 			String name = decorator.getJmlGen().getUtil().getName(node.getPattern());
 
@@ -328,7 +328,7 @@ public class TypePredHandler
 			 * We do not really need to check if invariant checks are enabled because local variable declarations are
 			 * not expected to be found inside record accessors
 			 */
-			return util.consAssertStm(invTypes, enclosingClass.getName(), var, node, decorator.getRecInfo());
+			return util.consAssertStm(typeInfo, enclosingClass.getName(), var, node, decorator.getRecInfo());
 		}
 		
 		return null;
@@ -362,9 +362,9 @@ public class TypePredHandler
 				return null;
 			}
 			
-			List<AbstractTypeInfo> invTypes = util.findTypeInfo(recObj.getType());
+			AbstractTypeInfo typeInfo = util.findTypeInfo(recObj.getType());
 
-			if (!invTypes.isEmpty())
+			if (typeInfo != null)
 			{
 				ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
@@ -377,7 +377,7 @@ public class TypePredHandler
 				 * Since setter calls can occur inside a record in the context of an atomic statement blocks we need to
 				 * check if invariant checks are enabled
 				 */
-				return util.consAssertStm(invTypes, encClass.getName(), recObjVar, node, decorator.getRecInfo());
+				return util.consAssertStm(typeInfo, encClass.getName(), recObjVar, node, decorator.getRecInfo());
 			}
 		}
 		else
@@ -411,9 +411,9 @@ public class TypePredHandler
 
 		SVarExpCG var = (SVarExpCG) target;
 		
-		List<AbstractTypeInfo> invTypes = util.findTypeInfo(node.getTarget().getType());
+		AbstractTypeInfo typeInfo = util.findTypeInfo(node.getTarget().getType());
 
-		if (!invTypes.isEmpty())
+		if (typeInfo != null)
 		{
 			ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 			
@@ -426,7 +426,7 @@ public class TypePredHandler
 			 * Since assignments can occur inside record setters in the context of an atomic statement block we need to
 			 * check if invariant checks are enabled
 			 */
-			List<AMetaStmCG> asserts = util.consAssertStm(invTypes, encClass.getName(), var, node, decorator.getRecInfo());
+			List<AMetaStmCG> asserts = util.consAssertStm(typeInfo, encClass.getName(), var, node, decorator.getRecInfo());
 			
 			for(AMetaStmCG a : asserts)
 			{
@@ -488,9 +488,9 @@ public class TypePredHandler
 
 	public List<AMetaStmCG> consAsserts(AIdentifierVarExpCG var)
 	{
-		List<AbstractTypeInfo> invTypes = util.findTypeInfo(var.getType());
+		AbstractTypeInfo typeInfo = util.findTypeInfo(var.getType());
 
-		if (invTypes.isEmpty())
+		if (typeInfo == null)
 		{
 			return null;
 		}
@@ -506,7 +506,7 @@ public class TypePredHandler
 		 * Normalisation of state designators will never occur inside record classes so really there is no need to check
 		 * if invariant checks are enabled
 		 */
-		return util.consAssertStm(invTypes, encClass.getName(), var, var, decorator.getRecInfo());
+		return util.consAssertStm(typeInfo, encClass.getName(), var, var, decorator.getRecInfo());
 	}
 	
 	public boolean rightHandSideMayBeNull(SExpCG exp)
