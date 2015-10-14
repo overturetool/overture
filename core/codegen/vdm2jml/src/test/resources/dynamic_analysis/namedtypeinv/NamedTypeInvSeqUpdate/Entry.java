@@ -14,20 +14,20 @@ final public class Entry {
 
     public static Object Run() {
         VDMSeq s = SeqUtil.seq(10L, 11L, 12L);
-        //@ assert (true && inv_Entry_S(s));
+        //@ assert ((V2J.isSeq(s) && (\forall int i; 0 <= i && i < V2J.size(s); true)) && inv_Entry_S(s));
 
         //@ assert s != null;
         Utils.mapSeqUpdate(s, 1L, 'a');
-        //@ assert (true && inv_Entry_S(s));
+        //@ assert ((V2J.isSeq(s) && (\forall int i; 0 <= i && i < V2J.size(s); true)) && inv_Entry_S(s));
 
         //@ assert s != null;
         Utils.mapSeqUpdate(s, 2L, null);
-        //@ assert (true && inv_Entry_S(s));
+        //@ assert ((V2J.isSeq(s) && (\forall int i; 0 <= i && i < V2J.size(s); true)) && inv_Entry_S(s));
         IO.println("Breaking named type invariant for sequence");
         //@ assert s != null;
         Utils.mapSeqUpdate(s, 3L, 4L);
 
-        //@ assert (true && inv_Entry_S(s));
+        //@ assert ((V2J.isSeq(s) && (\forall int i; 0 <= i && i < V2J.size(s); true)) && inv_Entry_S(s));
         return 0L;
     }
 
