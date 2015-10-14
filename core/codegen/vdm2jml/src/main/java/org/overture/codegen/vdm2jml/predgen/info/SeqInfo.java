@@ -5,11 +5,12 @@ import java.util.List;
 
 import org.overture.codegen.runtime.V2J;
 import org.overture.codegen.vdm2jml.JmlGenerator;
+import org.overture.codegen.vdm2jml.util.NameGen;
 
 public class SeqInfo extends AbstractTypeInfo
 {
 	public static final String GET_METHOD = "get";
-	public static final String ITE_VAR_NAME = "i";
+	public static final String ITE_VAR_NAME_PREFIX = "i";
 	public static final String SIZE__METHOD = "size";
 	public static final String IS_SEQ_METHOD = "isSeq";
 	
@@ -34,18 +35,19 @@ public class SeqInfo extends AbstractTypeInfo
 	}
 
 	@Override
-	public String consCheckExp(String enclosingClass, String javaRootPackage, String arg)
+	public String consCheckExp(String enclosingClass, String javaRootPackage, String arg, NameGen nameGen)
 	{
 		String isSeqCheck = consSubjectCheck(V2J.class.getSimpleName(), IS_SEQ_METHOD, arg);
 		String sizeCall = consSubjectCheck(V2J.class.getSimpleName(), SIZE__METHOD, arg);
-		String elemtnArg = consSubjectCheckExtraArg(V2J.class.getSimpleName(), GET_METHOD, arg, ITE_VAR_NAME);
-		String elemtCheck = elementType.consCheckExp(enclosingClass, javaRootPackage, elemtnArg);
+		String iteVar = nameGen.getName(ITE_VAR_NAME_PREFIX);
+		String elemtnArg = consSubjectCheckExtraArg(V2J.class.getSimpleName(), GET_METHOD, arg, iteVar);
+		String elemtCheck = elementType.consCheckExp(enclosingClass, javaRootPackage, elemtnArg, nameGen);
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(isSeqCheck);
 		sb.append(JmlGenerator.JML_AND);
 		sb.append('(');
-		sb.append("\\forall int i; 0 <= i && i < ");
+		sb.append(String.format("\\forall int %1$s; 0 <= %1$s && %1$s < ", iteVar));
 		sb.append(sizeCall);
 		sb.append("; ");
 		sb.append(elemtCheck);

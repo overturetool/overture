@@ -14,10 +14,15 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 public class NameGen
 {
 	private Set<String> toAvoid;
-
-	public NameGen(ADefaultClassDeclCG classDecl)
+	
+	public NameGen()
 	{
 		this.toAvoid = new HashSet<String>();
+	}
+	
+	public NameGen(ADefaultClassDeclCG classDecl)
+	{
+		this();
 
 		for (AFieldDeclCG field : classDecl.getFields())
 		{

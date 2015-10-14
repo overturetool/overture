@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.vdm2jml.JmlGenerator;
+import org.overture.codegen.vdm2jml.util.NameGen;
 
 public class UnionInfo extends AbstractTypeInfo
 {
@@ -53,7 +54,7 @@ public class UnionInfo extends AbstractTypeInfo
 	}
 	
 	@Override
-	public String consCheckExp(String enclosingModule, String javaRootPackage, String arg)
+	public String consCheckExp(String enclosingModule, String javaRootPackage, String arg, NameGen nameGen)
 	{
 		StringBuilder sb = new StringBuilder();
 		
@@ -69,7 +70,7 @@ public class UnionInfo extends AbstractTypeInfo
 		for (AbstractTypeInfo currentType : types)
 		{
 			sb.append(orSep);
-			sb.append(currentType.consCheckExp(enclosingModule, javaRootPackage, arg));
+			sb.append(currentType.consCheckExp(enclosingModule, javaRootPackage, arg, nameGen));
 			orSep = JmlGenerator.JML_OR;
 		}
 		

@@ -27,6 +27,7 @@ import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
 import org.overture.codegen.vdm2jml.predgen.info.SeqInfo;
 import org.overture.codegen.vdm2jml.predgen.info.TupleInfo;
 import org.overture.codegen.vdm2jml.predgen.info.UnionInfo;
+import org.overture.codegen.vdm2jml.util.NameGen;
 
 public class TypePredUtil
 {
@@ -68,7 +69,11 @@ public class TypePredUtil
 
 		String or = "";
 		String javaPackage = handler.getJmlGen().getJavaSettings().getJavaRootPackage();
-		String consCheckExp = typeInfo.consCheckExp(enclosingClass, javaPackage, var.getName());
+		
+		//TODO: Add names of parameters of the enclosing method to 'names-to-avoid' in name generator
+		NameGen nameGen = new NameGen();
+		String consCheckExp = typeInfo.consCheckExp(enclosingClass, javaPackage, var.getName(), nameGen);
+		
 		inv.append(or);
 		if (consCheckExp != null)
 		{

@@ -2,6 +2,8 @@ package org.overture.codegen.vdm2jml.predgen.info;
 
 import java.util.List;
 
+import org.overture.codegen.vdm2jml.util.NameGen;
+
 public abstract class AbstractTypeInfo
 {
 	protected boolean optional;
@@ -15,7 +17,7 @@ public abstract class AbstractTypeInfo
 	
 	abstract public List<LeafTypeInfo> getLeafTypesRecursively();
 
-	abstract public String consCheckExp(String enclosingClass, String javaRootPackage, String arg);
+	abstract public String consCheckExp(String enclosingClass, String javaRootPackage, String arg, NameGen nameGen);
 	
 	public String consIsNullCheck(String arg)
 	{

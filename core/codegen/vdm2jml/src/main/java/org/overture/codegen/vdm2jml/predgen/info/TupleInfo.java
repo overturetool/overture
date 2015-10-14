@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.overture.codegen.runtime.V2J;
 import org.overture.codegen.vdm2jml.JmlGenerator;
+import org.overture.codegen.vdm2jml.util.NameGen;
 
 public class TupleInfo extends AbstractTypeInfo
 {
@@ -57,7 +58,7 @@ public class TupleInfo extends AbstractTypeInfo
 	}
 
 	@Override
-	public String consCheckExp(String enclosingClass, String javaRootPackage, String arg)
+	public String consCheckExp(String enclosingClass, String javaRootPackage, String arg, NameGen nameGen)
 	{
 		StringBuilder sb = new StringBuilder();
 		
@@ -70,7 +71,7 @@ public class TupleInfo extends AbstractTypeInfo
 			String fieldArg = consSubjectCheckExtraArg(V2J.class.getSimpleName(), GET_FIELD_METHOD_NAME, arg, i + "");
 			
 			//e.g. Utils.is_nat1(V2J.field(t,2))
-			String fieldCheck = types.get(i).consCheckExp(enclosingClass, javaRootPackage, fieldArg);
+			String fieldCheck = types.get(i).consCheckExp(enclosingClass, javaRootPackage, fieldArg, nameGen);
 			
 			sb.append(JmlGenerator.JML_AND);
 			sb.append(fieldCheck);

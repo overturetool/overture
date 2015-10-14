@@ -21,6 +21,7 @@ import org.overture.codegen.runtime.Utils;
 import org.overture.codegen.vdm2java.JavaQuoteValueCreator;
 import org.overture.codegen.vdm2jml.JmlGenUtil;
 import org.overture.codegen.vdm2jml.JmlGenerator;
+import org.overture.codegen.vdm2jml.util.NameGen;
 
 public class LeafTypeInfo extends AbstractTypeInfo
 {
@@ -96,7 +97,7 @@ public class LeafTypeInfo extends AbstractTypeInfo
 	}
 	
 	@Override
-	public String consCheckExp(String enclosingClass, String javaRootPackage, String arg)
+	public String consCheckExp(String enclosingClass, String javaRootPackage, String arg, NameGen nameGen)
 	{
 		String methodName = utilsCallMap.get(type.getClass());
 		

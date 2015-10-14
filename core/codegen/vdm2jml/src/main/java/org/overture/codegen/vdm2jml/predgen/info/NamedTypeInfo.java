@@ -4,6 +4,7 @@ package org.overture.codegen.vdm2jml.predgen.info;
 import java.util.List;
 
 import org.overture.codegen.vdm2jml.JmlGenerator;
+import org.overture.codegen.vdm2jml.util.NameGen;
 
 public class NamedTypeInfo extends AbstractTypeInfo
 {
@@ -90,7 +91,7 @@ public class NamedTypeInfo extends AbstractTypeInfo
 	}
 
 	@Override
-	public String consCheckExp(String enclosingModule, String javaRootPackages, String arg)
+	public String consCheckExp(String enclosingModule, String javaRootPackages, String arg, NameGen nameGen)
 	{
 		StringBuilder sb = new StringBuilder();
 //		// If the type is not defined in the enclosing class we use the absolute name
@@ -111,7 +112,7 @@ public class NamedTypeInfo extends AbstractTypeInfo
 		
 		if (domainType != null)
 		{
-			sb.append(domainType.consCheckExp(enclosingModule, javaRootPackages, arg));
+			sb.append(domainType.consCheckExp(enclosingModule, javaRootPackages, arg, nameGen));
 			sb.append(JmlGenerator.JML_AND);
 		}
 
