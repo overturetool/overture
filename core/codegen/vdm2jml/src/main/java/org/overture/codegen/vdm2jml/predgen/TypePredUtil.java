@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.util.ClonableString;
+import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
@@ -228,56 +229,71 @@ public class TypePredUtil
 			return info;
 
 			// We do not need to collect sub named invariant types
-		} else if (type instanceof AUnionTypeCG)
+		} else
 		{
-			UnionInfo unionInfo = new UnionInfo(handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant().allowsNull(type));
-
-			for (STypeCG t : ((AUnionTypeCG) type).getTypes())
+			TypeAssistantCG assist = handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant();
+			
+			if (type instanceof AUnionTypeCG)
 			{
-				unionInfo.getTypes().add(findTypeInfo(t));
+				List<AbstractTypeInfo> types = new LinkedList<>();
+				
+				for (STypeCG t : ((AUnionTypeCG) type).getTypes())
+				{
+					AbstractTypeInfo tInfo = findTypeInfo(t);
+					
+					if(tInfo != null)
+					{
+						types.add(tInfo);
+					}
+				}
+				
+				return new UnionInfo(assist.allowsNull(type), types);
 			}
-			
-			return unionInfo;
-		}
-		else if(type instanceof ATupleTypeCG)
-		{
-			TupleInfo tupleInfo = new TupleInfo(handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant().allowsNull(type));
-			
-			for(STypeCG t : ((ATupleTypeCG) type).getTypes())
+			else if(type instanceof ATupleTypeCG)
 			{
-				tupleInfo.getTypes().add(findTypeInfo(t));
+				List<AbstractTypeInfo> types = new LinkedList<>();
+				
+				for(STypeCG t : ((ATupleTypeCG) type).getTypes())
+				{
+					AbstractTypeInfo tInfo = findTypeInfo(t);
+					
+					if(tInfo != null)
+					{
+						types.add(tInfo);
+					}
+				}
+				
+				return new TupleInfo(assist.allowsNull(type), types);
 			}
-			
-			return tupleInfo;
-		}
-		else if(type instanceof AUnknownTypeCG)
-		{
-			return null;
-		}
-		else if(type instanceof ASeqSeqTypeCG)
-		{
-			STypeCG t = ((ASeqSeqTypeCG) type).getSeqOf();
-			
-			AbstractTypeInfo elementInfo = findTypeInfo(t);
-			
-			if(elementInfo != null)
-			{
-				return new SeqInfo(handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant().allowsNull(type), elementInfo);
-			}
-			else
+			else if(type instanceof AUnknownTypeCG)
 			{
 				return null;
 			}
-		}
-		else if(type instanceof ASetSetTypeCG || type instanceof AMapMapTypeCG || type instanceof ATupleTypeCG)
-		{
-			// Can't do anything for these right now...
-			// TODO: implement handling
-			return null;
-		}
-		else
-		{
-			return new LeafTypeInfo(type, handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant().allowsNull(type));
+			else if(type instanceof ASeqSeqTypeCG)
+			{
+				STypeCG t = ((ASeqSeqTypeCG) type).getSeqOf();
+				
+				AbstractTypeInfo elementInfo = findTypeInfo(t);
+				
+				if(elementInfo != null)
+				{
+					return new SeqInfo(assist.allowsNull(type), elementInfo);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			else if(type instanceof ASetSetTypeCG || type instanceof AMapMapTypeCG)
+			{
+				// Can't do anything for these right now...
+				// TODO: implement handling
+				return null;
+			}
+			else
+			{
+				return new LeafTypeInfo(type, assist.allowsNull(type));
+			}
 		}
 	}
 }

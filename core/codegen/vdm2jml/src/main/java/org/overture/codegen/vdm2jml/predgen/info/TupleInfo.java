@@ -14,17 +14,12 @@ public class TupleInfo extends AbstractTypeInfo
 	
 	private List<AbstractTypeInfo> types;
 	
-	public TupleInfo(boolean optional)
+	public TupleInfo(boolean optional, List<AbstractTypeInfo> types)
 	{
 		super(optional);
-		this.types = new LinkedList<>();
+		this.types = types;
 	}
 	
-	public List<AbstractTypeInfo> getTypes()
-	{
-		return types;
-	}
-
 	@Override
 	public boolean allowsNull()
 	{

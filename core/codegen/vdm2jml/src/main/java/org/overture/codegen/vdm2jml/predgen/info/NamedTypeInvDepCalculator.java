@@ -123,7 +123,7 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			
 		} else if (type instanceof AUnionType)
 		{
-			UnionInfo unionInfo = new UnionInfo(optional);
+			List<AbstractTypeInfo> types = new LinkedList<>();
 			
 			for (PType t : ((AUnionType) type).getTypes())
 			{
@@ -131,15 +131,15 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 				
 				if(tInfo != null)
 				{
-					unionInfo.getTypes().add(tInfo);
+					types.add(tInfo);
 				}
 			}
 			
-			return unionInfo;
+			return new UnionInfo(optional, types);
 			
 		} else if(type instanceof AProductType)
 		{
-			TupleInfo tupleInfo = new TupleInfo(optional);
+			List<AbstractTypeInfo> types = new LinkedList<>();
 			
 			for(PType t : ((AProductType) type).getTypes())
 			{
@@ -147,11 +147,11 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 				
 				if(tInfo != null)
 				{
-					tupleInfo.getTypes().add(tInfo);
+					types.add(tInfo);
 				}
 			}
 			
-			return tupleInfo;
+			return new TupleInfo(optional, types);
 		}
 		else if(type instanceof SSeqType)
 		{

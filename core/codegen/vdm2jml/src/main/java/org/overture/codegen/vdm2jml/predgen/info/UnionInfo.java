@@ -10,15 +10,10 @@ public class UnionInfo extends AbstractTypeInfo
 {
 	private List<AbstractTypeInfo> types;
 	
-	public UnionInfo(boolean optional)
+	public UnionInfo(boolean optional, List<AbstractTypeInfo> types)
 	{
 		super(optional);
-		this.types = new LinkedList<>();
-	}
-	
-	public List<AbstractTypeInfo> getTypes()
-	{
-		return types;
+		this.types = types;
 	}
 
 	@Override
