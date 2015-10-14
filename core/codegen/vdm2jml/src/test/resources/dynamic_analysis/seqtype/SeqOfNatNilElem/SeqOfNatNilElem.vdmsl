@@ -1,0 +1,26 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ let - : seq of nat = [1,2,3] in skip;
+ IO`println("After legal use");
+ IO`println("Before illegal uses");
+ let - : seq of nat = seqOfNatsAndNil() in skip;
+ IO`println("After illegal uses");
+ return 0;
+);
+
+functions
+
+seqOfNatsAndNil :  () -> seq of [nat]
+seqOfNatsAndNil () == [1,nil,3];
+  
+end Entry
