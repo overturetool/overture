@@ -76,8 +76,18 @@ public class TupleInfo extends AbstractTypeInfo
 			sb.append(fieldCheck);
 		}
 		
-		//e.g. (V2J.isTup(t) && Utils.is_nat1(V2J.field(t,1)) && Utils.is_bool(V2J.field(t,2)))
-		return "(" + sb.toString() + ")";
+		String tupleCheck = "(" + sb.toString() + ")";
+		
+		if(allowsNull())
+		{
+			return "(" + consIsNullCheck(arg) + JmlGenerator.JML_OR + tupleCheck + ")";
+		}
+		else
+		{
+			//e.g. (V2J.isTup(t) && Utils.is_nat1(V2J.field(t,1)) && Utils.is_bool(V2J.field(t,2)))
+			return tupleCheck;
+		}
+		
 	}
 
 }
