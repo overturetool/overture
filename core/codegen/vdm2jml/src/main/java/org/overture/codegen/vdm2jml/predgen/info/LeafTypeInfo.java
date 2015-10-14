@@ -95,27 +95,8 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		return types;
 	}
 	
-	public String concCheckCall(String methodName, String arg)
-	{
-		return concCheckCall(methodName, null, arg);
-	}
-	
-	public String concCheckCall(String s, String arg, String var)
-	{
-		String call =  Utils.class.getSimpleName() + "." + s + "(" + var;
-		
-		if(arg != null)
-		{
-			call += "," + arg;
-		}
-		
-		call += ")";
-		
-		return call;
-	}
-
 	@Override
-	public String consCheckExp(String enclosingClass, String javaRootPackage, String var)
+	public String consCheckExp(String enclosingClass, String javaRootPackage, String arg)
 	{
 		String methodName = utilsCallMap.get(type.getClass());
 		
@@ -130,7 +111,7 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		{
 			String qouteValue = ((AQuoteTypeCG) type).getValue();
 			String quoteType = JavaQuoteValueCreator.fullyQualifiedQuoteName(javaRootPackage, qouteValue);
-			call = concCheckCall(methodName, quoteType + CLASS_QUALIFIER, var);
+			call = consSubjectCheckForType(methodName, arg, quoteType);
 		}
 		else if(type instanceof ARecordTypeCG)
 		{
@@ -140,20 +121,30 @@ public class LeafTypeInfo extends AbstractTypeInfo
 			String fullyQualifiedRecType = recPackage + "."
 					+ rt.getName().getName();
 			
-			call = concCheckCall(methodName, fullyQualifiedRecType + CLASS_QUALIFIER, var);
+			call = consSubjectCheckForType(methodName, arg, fullyQualifiedRecType);
 		}
 		else
 		{
-			call = concCheckCall(methodName, var);
+			call = consSubjectCheck(methodName, arg);
 		}
 		
 		// If the type is optional 'null' is also a legal value
 		if(allowsNull())
 		{
-			return "(" + consIsNullCheck(var) + JmlGenerator.JML_OR + call + ")";
+			return "(" + consIsNullCheck(arg) + JmlGenerator.JML_OR + call + ")";
 		}
 		
 		return call;
+	}
+
+	private String consSubjectCheck(String methodName, String arg)
+	{
+		return consSubjectCheck(Utils.class.getSimpleName(), methodName, arg);
+	}
+
+	private String consSubjectCheckForType(String methodName, String arg, String type)
+	{
+		return consSubjectCheckExtraArg(Utils.class.getSimpleName(), methodName, arg, type + CLASS_QUALIFIER);
 	}
 	
 	public static Map<Class<? extends STypeCG>, String> getUtilsCallMap()

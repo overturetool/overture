@@ -21,4 +21,23 @@ public abstract class AbstractTypeInfo
 	{
 		return "(" + arg + " == null)";
 	}
+	
+	public static String consSubjectCheck(String className, String methodName, String subject)
+	{
+		return consSubjectCheckExtraArg(className, methodName, subject, null);
+	}
+	
+	public static String consSubjectCheckExtraArg(String className, String methodName, String subject, String arg)
+	{
+		String call =  className + "." + methodName + "(" + subject;
+		
+		if(arg != null)
+		{
+			call += "," + arg;
+		}
+		
+		call += ")";
+		
+		return call;
+	}
 }
