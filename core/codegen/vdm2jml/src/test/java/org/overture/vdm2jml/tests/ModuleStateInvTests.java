@@ -125,14 +125,14 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 	public void updateSeqElem()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignS", Update.MAP_SEQ_UPDATE, 4);
+		checkAssertion("assignS", Update.MAP_SEQ_UPDATE, 5);
 	}
 
 	@Test
 	public void updateSeqElemAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignS", Update.MAP_SEQ_UPDATE, 4);
+		checkAssertion("atomicAssignS", Update.MAP_SEQ_UPDATE, 5);
 	}
 
 	@Test
