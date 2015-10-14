@@ -24,6 +24,7 @@ import org.overture.codegen.vdm2jml.predgen.info.AbstractTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.LeafTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
+import org.overture.codegen.vdm2jml.predgen.info.SeqInfo;
 import org.overture.codegen.vdm2jml.predgen.info.TupleInfo;
 import org.overture.codegen.vdm2jml.predgen.info.UnionInfo;
 
@@ -248,7 +249,22 @@ public class TypePredUtil
 		{
 			return null;
 		}
-		else if(type instanceof ASetSetTypeCG || type instanceof AMapMapTypeCG || type instanceof ASeqSeqTypeCG || type instanceof ATupleTypeCG)
+		else if(type instanceof ASeqSeqTypeCG)
+		{
+			STypeCG t = ((ASeqSeqTypeCG) type).getSeqOf();
+			
+			AbstractTypeInfo elementInfo = findTypeInfo(t);
+			
+			if(elementInfo != null)
+			{
+				return new SeqInfo(handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant().allowsNull(type), elementInfo);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		else if(type instanceof ASetSetTypeCG || type instanceof AMapMapTypeCG || type instanceof ATupleTypeCG)
 		{
 			// Can't do anything for these right now...
 			// TODO: implement handling

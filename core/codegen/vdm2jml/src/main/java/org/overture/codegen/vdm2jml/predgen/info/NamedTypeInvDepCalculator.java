@@ -13,6 +13,7 @@ import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SSeqType;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
@@ -151,6 +152,12 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			}
 			
 			return tupleInfo;
+		}
+		else if(type instanceof SSeqType)
+		{
+			SSeqType seqType = (SSeqType) type;
+
+			return new SeqInfo(optional, create(info, seqType.getSeqof(), visited));
 		}
 		else
 		{
