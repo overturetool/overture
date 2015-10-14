@@ -15,10 +15,10 @@ public abstract class AbstractTypeInfo
 	
 	abstract public List<LeafTypeInfo> getLeafTypesRecursively();
 
-	abstract public String consCheckExp(String enclosingClass, String javaRootPackage, String var);
+	abstract public String consCheckExp(String enclosingClass, String javaRootPackage, String arg);
 	
-	public String consIsNullCheck(String var)
+	public String consIsNullCheck(String arg)
 	{
-		return "(" + var + " == null)";
+		return "(" + arg + " == null)";
 	}
 }

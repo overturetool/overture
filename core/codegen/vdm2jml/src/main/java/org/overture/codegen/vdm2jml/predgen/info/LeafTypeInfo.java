@@ -95,9 +95,9 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		return types;
 	}
 	
-	public String concCheckCall(String s, String var)
+	public String concCheckCall(String methodName, String arg)
 	{
-		return concCheckCall(s, null, var);
+		return concCheckCall(methodName, null, arg);
 	}
 	
 	public String concCheckCall(String s, String arg, String var)
