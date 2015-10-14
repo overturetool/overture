@@ -10,13 +10,13 @@ import org.overture.codegen.utils.GeneralUtils;
 import org.overture.vdm2jml.tests.util.TestUtil;
 
 @RunWith(Parameterized.class)
-public class OptionalTypeExecTests extends JmlExecTestBase
+public class JmlOptionalTypeExecTests extends JmlExecTestBase
 {
 	public static final String TEST_DIR = JmlExecTestBase.TEST_RES_DYNAMIC_ANALYSIS_ROOT + "optionaltype";
 
 	public static final String PROPERTY_ID = "optionaltype";
 	
-	public OptionalTypeExecTests(File inputFile)
+	public JmlOptionalTypeExecTests(File inputFile)
 	{
 		super(inputFile);
 	}
