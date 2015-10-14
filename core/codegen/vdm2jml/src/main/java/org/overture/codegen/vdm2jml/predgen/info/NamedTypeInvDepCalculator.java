@@ -10,6 +10,7 @@ import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.STypeCG;
@@ -135,7 +136,23 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			
 			return unionInfo;
 			
-		} else
+		} else if(type instanceof AProductType)
+		{
+			TupleInfo tupleInfo = new TupleInfo(optional);
+			
+			for(PType t : ((AProductType) type).getTypes())
+			{
+				AbstractTypeInfo tInfo = create(info, t, visited);
+				
+				if(tInfo != null)
+				{
+					tupleInfo.getTypes().add(tInfo);
+				}
+			}
+			
+			return tupleInfo;
+		}
+		else
 		{
 			return new LeafTypeInfo(toIrType(type, info), optional);
 		}

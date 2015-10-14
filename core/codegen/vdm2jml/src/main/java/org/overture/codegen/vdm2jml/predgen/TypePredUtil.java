@@ -24,6 +24,7 @@ import org.overture.codegen.vdm2jml.predgen.info.AbstractTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.LeafTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
+import org.overture.codegen.vdm2jml.predgen.info.TupleInfo;
 import org.overture.codegen.vdm2jml.predgen.info.UnionInfo;
 
 public class TypePredUtil
@@ -231,6 +232,17 @@ public class TypePredUtil
 			}
 			
 			return unionInfo;
+		}
+		else if(type instanceof ATupleTypeCG)
+		{
+			TupleInfo tupleInfo = new TupleInfo(handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant().allowsNull(type));
+			
+			for(STypeCG t : ((ATupleTypeCG) type).getTypes())
+			{
+				tupleInfo.getTypes().add(findTypeInfo(t));
+			}
+			
+			return tupleInfo;
 		}
 		else if(type instanceof AUnknownTypeCG)
 		{
