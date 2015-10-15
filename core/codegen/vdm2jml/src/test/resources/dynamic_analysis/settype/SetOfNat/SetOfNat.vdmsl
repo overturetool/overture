@@ -1,0 +1,26 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ let - : set of nat = {2,4,6} in skip;
+ IO`println("After legal use");
+ IO`println("Before illegal use");
+ let - : set of nat = setOfNat() in skip;
+ IO`println("After illegal use");
+ return 0;
+);
+
+functions
+
+setOfNat :  () -> [set of nat]
+setOfNat () == nil;
+
+end Entry
