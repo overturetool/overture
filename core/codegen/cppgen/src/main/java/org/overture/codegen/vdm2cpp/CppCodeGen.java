@@ -94,7 +94,7 @@ public class CppCodeGen extends CodeGenBase
 	{
 		for (SClassDefinition classDef : mergedParseLists)
 		{
-			if (generator.getIRInfo().getAssistantManager().getDeclAssistant().isLibrary(classDef))
+			if (generator.getIRInfo().getAssistantManager().getDeclAssistant().classIsLibrary(classDef))
 			{
 				simplifyLibraryClass(classDef);
 			}
@@ -439,7 +439,7 @@ public class CppCodeGen extends CodeGenBase
 	private boolean shouldBeGenerated(SClassDefinition classDef,
 			DeclAssistantCG declAssistant)
 	{
-		if (declAssistant.isLibrary(classDef))
+		if (declAssistant.classIsLibrary(classDef))
 		{
 			return false;
 		}

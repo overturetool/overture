@@ -45,7 +45,7 @@ public class CppStdLibTransSeries
 		//IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
 
 		IRInfo irInfo = codeGen.getIRGenerator().getIRInfo();
-		TransAssistantCG transAssistant = codeGen.getTransAssistant();
+		TransAssistantCG transAssistant = codeGen.getTransformationAssistant();
 		TempVarPrefixes varPrefixes = codeGen.getTempVarPrefixes();
 		
 		FuncTransformation funcTransformation = new FuncTransformation(transAssistant);

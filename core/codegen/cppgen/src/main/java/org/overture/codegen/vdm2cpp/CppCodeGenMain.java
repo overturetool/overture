@@ -64,7 +64,7 @@ public class CppCodeGenMain
 			{
 				
 				
-				List<File> files = GeneralUtils.getFilesRecursively(inputRoot);
+				List<File> files = GeneralUtils.getFilesRecursive(inputRoot);
 				for( File f : files)
 				{
 					
