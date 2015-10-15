@@ -1,0 +1,7 @@
+"Before legal use"
+"After legal use"
+"Before illegal use"
+Entry.java:40: JML assertion is false
+            //@ assert ((V2J.isSeq(ignorePattern_3) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_3); (Utils.is_nat(V2J.get(ignorePattern_3,i)) && inv_Entry_Even(V2J.get(ignorePattern_3,i))))) && inv_Entry_SeqEven(ignorePattern_3));
+                ^
+"After illegal use"
