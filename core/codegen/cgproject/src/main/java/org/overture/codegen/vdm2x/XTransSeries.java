@@ -86,9 +86,9 @@ public class XTransSeries {
 		
 		
 		// Construct the transformations
-//		FuncTransformation funcTransformation = new FuncTransformation(transAssistant);
+		FuncTransformation funcTransformation = new FuncTransformation(transAssistant);
 //		DivideTransformation divideTrans = new DivideTransformation(irInfo);
-//		CallObjStmTransformation callObjTransformation = new CallObjStmTransformation(irInfo, classes);
+		CallObjStmTransformation callObjTransformation = new CallObjStmTransformation(irInfo, classes);
 		AssignStmTransformation assignTransformation = new AssignStmTransformation(irInfo, classes, transAssistant);
 //		PrePostTransformation prePostTransformation = new PrePostTransformation(irInfo);
 //		IfExpTransformation ifExpTransformation = new IfExpTransformation(transAssistant);
@@ -123,7 +123,7 @@ public class XTransSeries {
 //		transformations.add(divideTrans);
 
 //		transformations.add(callObjTransformation);
-//		transformations.add(funcTransformation);
+		transformations.add(funcTransformation);
 //		transformations.add(prePostTransformation);
 //		transformations.add(ifExpTransformation);
 //		transformations.add(funcValueTransformation);

@@ -4,15 +4,15 @@
 ##
 ## Local definitions:
 ##
-	#foreach( $dec in $node.getLocalDefs() )
-	$XFormat.format($dec)
-	#end
+#foreach( $dec in $node.getLocalDefs() )
+$XFormat.format($dec)
+#end
 ##
 ## Statements:
 ##
-	#foreach( $stm in $node.getStatements() )
-	$XFormat.format($stm)
-	#end
+#foreach( $stm in $node.getStatements() )
+$XFormat.format($stm)
+#end
 ##
 #if ($XFormat.isScoped($node))
 }

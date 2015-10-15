@@ -27,7 +27,10 @@ skip;
 );
    
 public GetReqQuali: (nat) ==> nat
-GetReqQuali(g) ==
-  return 0;
-  
+GetReqQuali(g) == return 2;
+
+functions
+public GetReqQuali2: (nat) -> nat
+GetReqQuali2(g) == 2;
+
 end Alarm

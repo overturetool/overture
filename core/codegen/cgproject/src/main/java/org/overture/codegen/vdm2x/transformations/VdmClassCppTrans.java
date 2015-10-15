@@ -17,11 +17,4 @@ public class VdmClassCppTrans extends DepthFirstAnalysisAdaptor {
 	}
 	
 	
-	@Override
-	public void caseAPlainCallStmCG(APlainCallStmCG node)
-			throws AnalysisException {
-		// TODO Auto-generated method stub
-		node.getClassType();
-		super.caseAPlainCallStmCG(node);
-	}
 }

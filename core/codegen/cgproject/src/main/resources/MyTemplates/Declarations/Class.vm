@@ -9,28 +9,28 @@ $XFormat.format($method)
 #end
 	
 #foreach( $field in $XFormat.getFieldsByAccess($node.getFields(),"public") )
-	$XFormat.format($field)
+$XFormat.format($field)
 #end
 	
 
 protected:
 
-	#foreach( $method in $XFormat.getMethodsByAccess($node.getMethods(),"protected") )
-	$XFormat.format($method)
-	#end
+#foreach( $method in $XFormat.getMethodsByAccess($node.getMethods(),"protected") )
+$XFormat.format($method)
+#end
 	
-	#foreach( $field in $XFormat.getFieldsByAccess($node.getFields(),"protected") )
-	$XFormat.format($field)
-	#end
+#foreach( $field in $XFormat.getFieldsByAccess($node.getFields(),"protected") )
+$XFormat.format($field)
+#end
 
 private:
 
-	#foreach( $field in $XFormat.getFieldsByAccess($node.getFields(),"private") )
-	$XFormat.format($field)
-	#end
+#foreach( $field in $XFormat.getFieldsByAccess($node.getFields(),"private") )
+$XFormat.format($field)
+#end
 	
-	#foreach( $method in $XFormat.getMethodsByAccess($node.getMethods(),"private") )
-	$XFormat.format($method)
-	#end
+#foreach( $method in $XFormat.getMethodsByAccess($node.getMethods(),"private") )
+$XFormat.format($method)
+#end
 	
 }
