@@ -1,4 +1,4 @@
-#set ( $field = "$JavaFormat.format($node.getObject()).$node.getMemberName()" )
+#set ( $field = "$XFormat.format($node.getObject()).$node.getMemberName()" )
 ##
 #if ($ValueSemantics.cloneMember($node))
 	Utils.copy(${field})##

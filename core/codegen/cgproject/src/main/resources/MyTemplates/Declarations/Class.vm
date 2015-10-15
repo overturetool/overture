@@ -1,4 +1,10 @@
 class $node.Name
 {
-  Hello $CGh.getFive() katkat
+	#foreach( $field in $node.getFields() )
+	$XFormat.format($field)
+	#end
+	##
+	#foreach( $method in $node.getMethods() )
+	$XFormat.format($method)
+	#end	
 }

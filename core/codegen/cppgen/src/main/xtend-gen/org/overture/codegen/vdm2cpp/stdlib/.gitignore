@@ -3,3 +3,6 @@
 /.CppExpressionVisitor.java._trace
 /.CppStatementVisitor.java._trace
 /.CppTypeVisitor.java._trace
+/CppDeclarationsVisitor.java
+/CppExpressionVisitor.java
+/CppTypeVisitor.java

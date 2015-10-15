@@ -1,1 +1,1 @@
-Tuple.mk_($JavaFormat.formatArgs($node.getArgs()))
+Tuple.mk_($XFormat.formatArgs($node.getArgs()))

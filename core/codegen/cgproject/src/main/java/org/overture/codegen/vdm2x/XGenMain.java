@@ -16,7 +16,6 @@ public class XGenMain {
 	public static void main(String[] args) {
 
 		// Se i JavaCodeGenMain
-		System.out.println("Test?");
 
 		File file = new File(args[0]);
 
@@ -28,9 +27,10 @@ public class XGenMain {
 					files, Dialect.VDM_PP);
 
 			XCodeGen xGen = new XCodeGen();
-			GeneratedData data = xGen.generateJavaFromVdm(ast);
 
-			
+			GeneratedData data = xGen.generateXFromVdm(ast);
+		
+
 			for (GeneratedModule module : data.getClasses()) {
 				
 				if (module.canBeGenerated()) {

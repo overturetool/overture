@@ -1,8 +1,8 @@
-#set( $iterator = $JavaFormat.nextVarName($TempVar.getIteratorNamePrefix()) )
-#set( $exp = $JavaFormat.format($node.getExp()) )
-#set( $var = $JavaFormat.format($node.getPattern()) )
-#set( $elementType = $JavaFormat.formatElementType($node.getExp().getType()) )
-#set( $body = $JavaFormat.format($node.getBody()) )
+#set( $iterator = $XFormat.nextVarName($TempVar.getIteratorNamePrefix()) )
+#set( $exp = $XFormat.format($node.getExp()) )
+#set( $var = $XFormat.format($node.getPattern()) )
+#set( $elementType = $XFormat.formatElementType($node.getExp().getType()) )
+#set( $body = $XFormat.format($node.getBody()) )
 ##
 for (Iterator ${iterator} = ${exp}.iterator(); ${iterator}.hasNext();)
 {

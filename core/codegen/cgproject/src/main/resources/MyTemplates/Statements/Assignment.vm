@@ -1,8 +1,8 @@
 ## If the target is a map sequence state designator, e.g. counters.put("c1", 4),
 ## then only the target should be generated.
 ##
-#if ($JavaFormat.isMapSeq($node.getTarget()))
-	$JavaFormat.format($node.getTarget());##
+#if ($XFormat.isMapSeq($node.getTarget()))
+	$XFormat.format($node.getTarget());##
 #else
-	$JavaFormat.format($node.getTarget()) = $JavaFormat.format($node.getExp());##
+	$XFormat.format($node.getTarget()) = $XFormat.format($node.getExp());##
 #end

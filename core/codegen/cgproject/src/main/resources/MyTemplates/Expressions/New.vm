@@ -1,1 +1,1 @@
-new $JavaFormat.formatName($node)($JavaFormat.formatArgs($node.getArgs()))
+new $XFormat.formatName($node)($XFormat.formatArgs($node.getArgs()))

@@ -1,1 +1,1 @@
-Utils.mod($JavaFormat.format($node.getLeft()), $JavaFormat.format($node.getRight()))
+Utils.mod($XFormat.format($node.getLeft()), $XFormat.format($node.getRight()))

@@ -2,17 +2,17 @@
 ##
 #set( $class = "" )
 ##
-#if (!$JavaFormat.isNull($node.getClassType()))
+#if (!$XFormat.isNull($node.getClassType()))
 	#set( $separator = ".")
-	#set( $classType = "$JavaFormat.format($node.getClassType())")
+	#set( $classType = "$XFormat.format($node.getClassType())")
 	#set( $class = "$classType$separator")
 #end
 ##
 #set( $return = "")
-#if (!$JavaFormat.isVoidType($node.getType()))
+#if (!$XFormat.isVoidType($node.getType()))
 	#set( $return = "return ")
 #end
 ##
 #set( $name = "$node.getName()")
 ##
-$return$class$name($JavaFormat.formatArgs($node.getArgs()));
+$return$class$name($XFormat.formatArgs($node.getArgs()));

@@ -1,6 +1,6 @@
-#set( $type = $JavaFormat.format($node.getType()))
+#set( $type = $XFormat.format($node.getType()))
 #set( $name = $node.getName())
-#set( $stm = $JavaFormat.format($node.getStm()))
+#set( $stm = $XFormat.format($node.getStm()))
 ##
 catch(${type} ${name})
 {

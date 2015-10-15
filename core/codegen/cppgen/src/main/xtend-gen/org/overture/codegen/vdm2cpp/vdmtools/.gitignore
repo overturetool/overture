@@ -5,3 +5,10 @@
 /.CppExpressionVisitor.java._trace
 /.CppStatementVisitor.java._trace
 /.CppTypeVisitor.java._trace
+/ConstructorVdmLibInit.java
+/CGGenHelper.java
+/CppDeclarationsVisitor.java
+/CppExpressionVisitor.java
+/CppStatementVisitor.java
+/CppTypeVisitor.java
+/MathRenamer.java

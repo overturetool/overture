@@ -1,5 +1,5 @@
-#set( $exp = $JavaFormat.format($node.getExp()) )
-#set( $body = $JavaFormat.format($node.getBody()) )
+#set( $exp = $XFormat.format($node.getExp()) )
+#set( $body = $XFormat.format($node.getBody()) )
 ##
 while(${exp})
 {

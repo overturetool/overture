@@ -1,11 +1,11 @@
-#set( $type = $JavaFormat.formatTemplateParam($node.getType()) )
+#set( $type = $XFormat.formatTemplateParam($node.getType()) )
 #set( $index = $node.getField() - 1 )
 ##
-#set( $tuple = $JavaFormat.format($node.getTuple()) )
+#set( $tuple = $XFormat.format($node.getTuple()) )
 #set( $method = ".get($index)" )
 ##
 #set( $field = "")
-#if ($JavaFormat.isSeqConversion($node))
+#if ($XFormat.isSeqConversion($node))
 	#set( $field = "${tuple}${method}")##
 	${field}##
 #else

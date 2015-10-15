@@ -1,5 +1,5 @@
-#set( $exp = $JavaFormat.format($node.getExp()) )
-#if ($JavaFormat.isStringType($node.getType()))
+#set( $exp = $XFormat.format($node.getExp()) )
+#if ($XFormat.isStringType($node.getType()))
 	SeqUtil.distConcStrings($exp)
 #else
 	SeqUtil.distConc($exp)

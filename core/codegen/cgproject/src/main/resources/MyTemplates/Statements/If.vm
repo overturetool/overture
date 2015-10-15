@@ -1,16 +1,16 @@
-if ( $JavaFormat.format($node.getIfExp()) )
+if ( $XFormat.format($node.getIfExp()) )
 {
-	$JavaFormat.format($node.getThenStm())
+	$XFormat.format($node.getThenStm())
 }
 #foreach( $stm in $node.getElseIf() )
-else if ( $JavaFormat.format($stm.getElseIf()) )
+else if ( $XFormat.format($stm.getElseIf()) )
 {
-	$JavaFormat.format($stm.getThenStm())
+	$XFormat.format($stm.getThenStm())
 }
 #end
-#if ( !$JavaFormat.isNull($node.getElseStm()) )
+#if ( !$XFormat.isNull($node.getElseStm()) )
 else
 {
-	$JavaFormat.format($node.getElseStm())
+	$XFormat.format($node.getElseStm())
 }
 #end

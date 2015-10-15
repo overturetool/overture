@@ -1,4 +1,4 @@
-#set( $left = $JavaFormat.format($node.getLeft()) )
-#set( $right = $JavaFormat.format($node.getRight()) )
+#set( $left = $XFormat.format($node.getLeft()) )
+#set( $right = $XFormat.format($node.getRight()) )
 ##
 MapUtil.override(${left}, ${right})
