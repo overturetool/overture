@@ -4,13 +4,13 @@ class $node.Name
 	
 public:
 
-	#foreach( $method in $XFormat.getMethodsByAccess($node.getMethods(),"public") )
-	$XFormat.format($method)
-	#end
+#foreach( $method in $XFormat.getMethodsByAccess($node.getMethods(),"public") )
+$XFormat.format($method)
+#end
 	
-	#foreach( $field in $XFormat.getFieldsByAccess($node.getFields(),"public") )
+#foreach( $field in $XFormat.getFieldsByAccess($node.getFields(),"public") )
 	$XFormat.format($field)
-	#end
+#end
 	
 
 protected:

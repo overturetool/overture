@@ -22,11 +22,12 @@ Alarm() ==
 (
 descr := "1,2,3";
 deq := {1,2,3};
+descr := "1,2,3";
 skip;
 );
    
 public GetReqQuali: (nat) ==> nat
 GetReqQuali(g) ==
-  return g;
+  return 0;
   
 end Alarm

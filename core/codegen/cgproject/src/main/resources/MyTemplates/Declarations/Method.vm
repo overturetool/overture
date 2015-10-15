@@ -1,4 +1,4 @@
-#if(!$node.getIsConstructor()) $node.getMethodType().getResult()#end $node.getName()( $XFormat.format($node.getFormalParams()) )
+#if(!$node.getIsConstructor())$node.getMethodType().getResult()#end $node.getName()( $XFormat.format($node.getFormalParams()))
 {
 $XFormat.format($node.getBody())
 }
