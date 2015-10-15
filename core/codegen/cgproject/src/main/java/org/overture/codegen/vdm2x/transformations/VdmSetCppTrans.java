@@ -55,7 +55,7 @@ public class VdmSetCppTrans extends DepthFirstAnalysisAdaptor {
 		//super.caseAEnumSetExpCG(node);
 		AApplyExpCG n = ConstructionUtils.consUtilCall("vdm_set", "create_set", node.getType().clone());
 		LinkedList<SExpCG> args = new LinkedList<SExpCG>();
-		args.addAll(node.getMembers());
+		args.add(node.clone());
 		n.setArgs(args);
 		baseAssistant.replaceNodeWith(node, n);
 	}

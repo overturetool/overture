@@ -55,8 +55,9 @@ public class VdmSeqCppTrans extends DepthFirstAnalysisAdaptor {
 			//TODO optional to string transformation
 			AApplyExpCG n = ConstructionUtils.consUtilCall("vdm_seq", "create_seq", node.getType());
 			LinkedList<SExpCG> args = new LinkedList<SExpCG>();
-			args.addAll((node.getMembers()));
+			args.add(node.clone());
 			n.setArgs(args);
+			
 			baseAssistant.replaceNodeWith(node, n);
 		}
 		

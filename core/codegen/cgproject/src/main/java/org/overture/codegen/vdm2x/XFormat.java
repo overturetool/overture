@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
@@ -17,6 +18,7 @@ import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateManager;
 import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.utils.GeneralUtils;
 
 public class XFormat {
 
@@ -123,6 +125,18 @@ public class XFormat {
 		}
 
 		return matches;
+	}
+	
+	public boolean isNull(INode node)
+	{
+		return node == null;
+	}
+	
+	public String escapeChar(char c)
+	{
+		return GeneralUtils.isEscapeSequence(c) ? StringEscapeUtils.escapeJavaScript(c
+				+ "")
+				: c + "";
 	}
 
 	public List<AFieldDeclCG> getFieldsByAccess(List<AFieldDeclCG> fields,

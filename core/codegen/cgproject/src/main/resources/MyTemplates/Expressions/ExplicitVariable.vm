@@ -1,1 +1,1 @@
-$XFormat.format($node.getClassType()).$node.getName()
+$XFormat.format($node.getClassType())::$node.getName()

@@ -21,6 +21,7 @@ public Alarm: () ==> Alarm
 Alarm() ==
 (
 descr := "1,2,3";
+deq := {1,2,3};
 skip;
 );
    
