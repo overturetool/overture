@@ -31,7 +31,6 @@ public class XGenMain {
 			GeneratedData data = xGen.generateJavaFromVdm(ast);
 
 			
-			
 			for (GeneratedModule module : data.getClasses()) {
 				
 				if (module.canBeGenerated()) {
