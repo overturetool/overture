@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2jml.predgen;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
@@ -258,9 +259,10 @@ public class TypePredUtil
 			}
 			else if(type instanceof ASeqSeqTypeCG)
 			{
-				STypeCG t = ((ASeqSeqTypeCG) type).getSeqOf();
+				ASeqSeqTypeCG seqType = ((ASeqSeqTypeCG) type);
+				STypeCG t = seqType.getSeqOf();
 				
-				return new SeqInfo(assist.allowsNull(type), findTypeInfo(t));
+				return new SeqInfo(assist.allowsNull(type), findTypeInfo(t), BooleanUtils.isTrue(seqType.getSeq1()));
 			}
 			else if(type instanceof AUnknownTypeCG || type instanceof ASetSetTypeCG || type instanceof AMapMapTypeCG)
 			{

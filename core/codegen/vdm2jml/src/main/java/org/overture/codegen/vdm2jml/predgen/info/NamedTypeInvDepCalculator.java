@@ -12,11 +12,13 @@ import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
+import org.overture.ast.types.SSeqTypeBase;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
@@ -156,11 +158,12 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			
 			return new TupleInfo(optional, types);
 		}
-		else if(type instanceof SSeqType)
+		else if(type instanceof SSeqTypeBase)
 		{
 			SSeqType seqType = (SSeqType) type;
-
-			return new SeqInfo(optional, create(info, seqType.getSeqof(), visited));
+			boolean isSeq1 = seqType instanceof ASeq1SeqType;
+			
+			return new SeqInfo(optional, create(info, seqType.getSeqof(), visited), isSeq1);
 		}
 		else if(type instanceof AUnknownType || type instanceof ASetType || type instanceof AMapMapType)
 		{
