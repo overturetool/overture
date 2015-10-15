@@ -10,7 +10,7 @@ import org.overture.codegen.cgast.types.AMethodTypeCG;
 
 public class ConstructionUtils {
 	
-	static AApplyExpCG consUtilCall(String utils_name,String memberName, STypeCG returnType )
+	public static AApplyExpCG consUtilCall(String utils_name,String memberName, STypeCG returnType )
 	{
 		AExplicitVarExpCG member = new AExplicitVarExpCG();
 

@@ -1,0 +1,28 @@
+class Alarm
+types
+
+types
+  
+public String = seq of char;
+
+instance variables 
+
+descr    : String;
+
+deq  : set of nat;
+
+
+operations
+
+public Alarm: () ==> Alarm
+Alarm() ==
+(
+descr := "1,2,3";
+skip;
+);
+   
+public GetReqQuali: () ==> nat
+GetReqQuali() ==
+  return 0;
+  
+end Alarm

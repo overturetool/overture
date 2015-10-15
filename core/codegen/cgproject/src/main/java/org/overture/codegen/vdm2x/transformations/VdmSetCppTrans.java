@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2x;
+package org.overture.codegen.vdm2x.transformations;
 
 import java.util.LinkedList;
 
@@ -15,7 +15,10 @@ import org.overture.codegen.cgast.expressions.ASetIntersectBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
+import org.overture.codegen.cgast.types.ASetSetTypeCG;
+import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
+import org.overture.codegen.vdm2x.ConstructionUtils;
 
 public class VdmSetCppTrans extends DepthFirstAnalysisAdaptor {
 	
@@ -25,6 +28,14 @@ public class VdmSetCppTrans extends DepthFirstAnalysisAdaptor {
 		// TODO Auto-generated constructor stub
 		System.out.println("Set transform");
 		baseAssistant = baseAss;
+	}
+	
+	@Override
+	public void caseASetSetTypeCG(ASetSetTypeCG node) throws AnalysisException {
+		// TODO Auto-generated method stub
+		ATemplateTypeCG n = new ATemplateTypeCG();
+		n.setName("vdm_set::Set");
+		baseAssistant.replaceNodeWith(node, n);
 	}
 	
 	@Override

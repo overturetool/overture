@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2x;
+package org.overture.codegen.vdm2x.transformations;
 
 import java.util.LinkedList;
 
@@ -23,6 +23,7 @@ import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.vdm2x.ConstructionUtils;
 
 public class VdmMapCppTrans extends DepthFirstAnalysisAdaptor {
 	

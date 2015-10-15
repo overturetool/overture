@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2x;
+package org.overture.codegen.vdm2x.transformations;
 
 
 import java.util.LinkedList;
@@ -7,10 +7,16 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.AAssignExpExpCG;
+import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASeqModificationBinaryExpCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
+import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.vdm2x.ConstructionUtils;
 
 public class VdmSeqCppTrans extends DepthFirstAnalysisAdaptor {
 	
@@ -20,6 +26,14 @@ public class VdmSeqCppTrans extends DepthFirstAnalysisAdaptor {
 		public VdmSeqCppTrans(BaseTransformationAssistant baseAssistant)
 		{
 			this.baseAssistant = baseAssistant;
+		}
+		
+		@Override
+		public void caseASeqSeqTypeCG(ASeqSeqTypeCG node) throws AnalysisException {
+		// TODO template type should have template arguments
+		ATemplateTypeCG d = new ATemplateTypeCG();
+		d.setName("vdm_seq::Seq");
+		baseAssistant.replaceNodeWith(node, d);
 		}
 
 		@Override
@@ -32,6 +46,16 @@ public class VdmSeqCppTrans extends DepthFirstAnalysisAdaptor {
 			LinkedList<SExpCG> args = new LinkedList<SExpCG>();
 			args.add(node.getLeft());
 			args.add(node.getRight());
+			n.setArgs(args);
+			baseAssistant.replaceNodeWith(node, n);
+		}
+		
+		@Override
+		public void caseAEnumSeqExpCG(AEnumSeqExpCG node) throws AnalysisException {
+			//TODO optional to string transformation
+			AApplyExpCG n = ConstructionUtils.consUtilCall("vdm_seq", "create_seq", node.getType());
+			LinkedList<SExpCG> args = new LinkedList<SExpCG>();
+			args.addAll((node.getMembers()));
 			n.setArgs(args);
 			baseAssistant.replaceNodeWith(node, n);
 		}

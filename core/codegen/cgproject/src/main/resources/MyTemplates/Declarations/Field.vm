@@ -1,1 +1,1 @@
-Hello from a field
+$XFormat.format($node.getType()) $node.getName(); // $node

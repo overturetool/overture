@@ -54,6 +54,8 @@ import org.overture.codegen.trans.letexps.IfExpTransformation;
 import org.overture.codegen.trans.patterns.PatternMatchConfig;
 import org.overture.codegen.trans.patterns.PatternTransformation;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
+import org.overture.codegen.vdm2x.transformations.VdmSeqCppTrans;
+import org.overture.codegen.vdm2x.transformations.VdmSetCppTrans;
 
 public class XTransSeries {
 
@@ -78,12 +80,13 @@ public class XTransSeries {
 //		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
 		
 		VdmSetCppTrans setTrans = new VdmSetCppTrans(transAssistant); 
+		VdmSeqCppTrans seqTrans = new VdmSeqCppTrans(transAssistant); 
 		
 		// Construct the transformations
 //		FuncTransformation funcTransformation = new FuncTransformation(transAssistant);
 //		DivideTransformation divideTrans = new DivideTransformation(irInfo);
 //		CallObjStmTransformation callObjTransformation = new CallObjStmTransformation(irInfo, classes);
-//		AssignStmTransformation assignTransformation = new AssignStmTransformation(irInfo, classes, transAssistant);
+		AssignStmTransformation assignTransformation = new AssignStmTransformation(irInfo, classes, transAssistant);
 //		PrePostTransformation prePostTransformation = new PrePostTransformation(irInfo);
 //		IfExpTransformation ifExpTransformation = new IfExpTransformation(transAssistant);
 //		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
@@ -110,9 +113,11 @@ public class XTransSeries {
 		List<DepthFirstAnalysisAdaptor> transformations = new LinkedList<DepthFirstAnalysisAdaptor>();
 
 		transformations.add(setTrans);
+		transformations.add(seqTrans);
+		transformations.add(assignTransformation);
 		
 //		transformations.add(divideTrans);
-//		transformations.add(assignTransformation);
+
 //		transformations.add(callObjTransformation);
 //		transformations.add(funcTransformation);
 //		transformations.add(prePostTransformation);
