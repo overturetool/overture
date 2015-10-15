@@ -56,9 +56,10 @@ public class TupleInfo extends AbstractTypeInfo
 	public String consCheckExp(String enclosingClass, String javaRootPackage, String arg, NameGen nameGen)
 	{
 		StringBuilder sb = new StringBuilder();
+		int tupleSize = types.size();
 		
 		//e.g. V2J.isTup(t)
-		sb.append(consSubjectCheck(V2J.class.getSimpleName(), IS_TUP_METHOD_NAME, arg));
+		sb.append(consSubjectCheckExtraArg(V2J.class.getSimpleName(), IS_TUP_METHOD_NAME, arg, tupleSize + ""));
 		
 		for(int i = 0; i < types.size(); i++)
 		{
