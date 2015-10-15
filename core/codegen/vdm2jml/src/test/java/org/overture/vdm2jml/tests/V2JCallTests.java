@@ -6,11 +6,19 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 import org.overture.codegen.runtime.V2J;
+import org.overture.codegen.vdm2jml.predgen.info.AbstractCollectionInfo;
 import org.overture.codegen.vdm2jml.predgen.info.SeqInfo;
+import org.overture.codegen.vdm2jml.predgen.info.SetInfo;
 import org.overture.codegen.vdm2jml.predgen.info.TupleInfo;
 
 public class V2JCallTests
 {
+	@Test
+	public void checkIsSet()
+	{
+		assertMethod(SetInfo.IS_SET_METHOD, Object.class);
+	}
+	
 	@Test
 	public void checkIsTup()
 	{
@@ -26,13 +34,13 @@ public class V2JCallTests
 	@Test
 	public void checkGetSeqElement()
 	{
-		assertMethod(SeqInfo.GET_METHOD, Object.class, int.class);
+		assertMethod(AbstractCollectionInfo.GET_METHOD, Object.class, int.class);
 	}
 	
 	@Test
 	public void checkSeqSize()
 	{
-		assertMethod(SeqInfo.SIZE__METHOD, Object.class);
+		assertMethod(AbstractCollectionInfo.SIZE__METHOD, Object.class);
 	}
 	
 	@Test
