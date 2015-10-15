@@ -581,6 +581,7 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
     
 #seq {-> package='org.overture.codegen.cgast.types'
 	| [empty]:java_Boolean
+	| [seq1]:java_Boolean
 	| [seqOf]:CG.#type}
     =   {seq}
     ;

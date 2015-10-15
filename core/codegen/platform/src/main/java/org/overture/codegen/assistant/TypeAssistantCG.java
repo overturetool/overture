@@ -36,6 +36,7 @@ import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
@@ -303,6 +304,8 @@ public class TypeAssistantCG extends AssistantBase
 	{
 		STypeCG seqOfCg = node.getSeqof().apply(question.getTypeVisitor(), question);
 		boolean emptyCg = node.getEmpty();
+		
+		boolean isSeq1 = node instanceof ASeq1SeqType;
 
 		// This is a special case since sequence of characters are strings
 		if (seqOfCg instanceof ACharBasicTypeCG
@@ -317,6 +320,7 @@ public class TypeAssistantCG extends AssistantBase
 		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
 		seqType.setSeqOf(seqOfCg);
 		seqType.setEmpty(emptyCg);
+		seqType.setSeq1(isSeq1);
 
 		return seqType;
 	}
