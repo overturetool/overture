@@ -11,6 +11,9 @@ descr    : String;
 
 deq  : set of nat;
 
+a : real;
+b : bool;
+
 
 operations
 
@@ -21,8 +24,8 @@ descr := "1,2,3";
 skip;
 );
    
-public GetReqQuali: () ==> nat
-GetReqQuali() ==
-  return 0;
+public GetReqQuali: (nat) ==> nat
+GetReqQuali(g) ==
+  return g;
   
 end Alarm

@@ -12,6 +12,7 @@ import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRStatus;
+import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
@@ -109,7 +110,14 @@ public class XCodeGen extends CodeGenBase {
 				GeneratedModule generatedModule = new GeneratedModule(status.getIrNodeName(), classCg, writer.toString());
 				generatedModule.setTransformationWarnings(status.getTransformationWarnings());
 				generated.add(generatedModule);
-				
+				for(IrNodeInfo m: my_formatter.GetMergeVisitor().getUnsupportedInTargLang())
+				{
+					System.out.println(m.toString());
+				}
+				for(Exception m: my_formatter.GetMergeVisitor().getMergeErrors())
+				{
+					System.out.println(m.toString());
+				}
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

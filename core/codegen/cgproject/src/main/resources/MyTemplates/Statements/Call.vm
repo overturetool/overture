@@ -15,4 +15,4 @@
 ##
 #set( $name = "$node.getName()")
 ##
-$return$class$name($XFormat.formatArgs($node.getArgs()));
+$return $class$name($XFormat.formatArgs($node.getArgs()));

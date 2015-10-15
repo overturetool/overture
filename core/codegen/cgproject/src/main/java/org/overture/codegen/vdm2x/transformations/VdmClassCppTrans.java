@@ -1,6 +1,9 @@
 package org.overture.codegen.vdm2x.transformations;
 
+import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.statements.ACallObjectStmCG;
+import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
@@ -13,4 +16,12 @@ public class VdmClassCppTrans extends DepthFirstAnalysisAdaptor {
 		baseAssistant = baseAss;
 	}
 	
+	
+	@Override
+	public void caseAPlainCallStmCG(APlainCallStmCG node)
+			throws AnalysisException {
+		// TODO Auto-generated method stub
+		node.getClassType();
+		super.caseAPlainCallStmCG(node);
+	}
 }

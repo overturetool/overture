@@ -35,6 +35,9 @@ public class XGenMain {
 				
 				if (module.canBeGenerated()) {
 					System.out.println(module.getContent());
+					System.out.println(module.getUnsupportedInIr());
+					System.out.println(module.getMergeErrors());
+					System.out.println(module.getUnsupportedInTargLang());
 				}
 			}
 

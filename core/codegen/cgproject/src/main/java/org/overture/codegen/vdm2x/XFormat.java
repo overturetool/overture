@@ -9,6 +9,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
@@ -70,6 +71,28 @@ public class XFormat {
 		return format(body);
 	}
 
+	public String format(List<AFormalParamLocalParamCG> params)
+			throws AnalysisException
+	{
+		StringWriter writer = new StringWriter();
+
+		if (params.size() <= 0)
+		{
+			return "";
+		}
+
+		AFormalParamLocalParamCG firstParam = params.get(0);
+		writer.append(format(firstParam));
+
+		for (int i = 1; i < params.size(); i++)
+		{
+			AFormalParamLocalParamCG param = params.get(i);
+			writer.append(", ");
+			writer.append(format(param));
+		}
+		return writer.toString();
+	}
+	
 	public String formatArgs(List<? extends SExpCG> exps)
 			throws AnalysisException {
 		StringWriter writer = new StringWriter();
