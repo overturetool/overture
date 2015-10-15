@@ -14,7 +14,7 @@ public class V2JCallTests
 	@Test
 	public void checkIsTup()
 	{
-		assertMethod(TupleInfo.IS_TUP_METHOD_NAME, Object.class);
+		assertMethod(TupleInfo.IS_TUP_METHOD_NAME, Object.class, int.class);
 	}
 	
 	@Test
