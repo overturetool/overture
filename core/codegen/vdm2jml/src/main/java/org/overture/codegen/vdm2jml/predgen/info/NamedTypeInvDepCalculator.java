@@ -17,7 +17,6 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.SSeqTypeBase;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.ir.IRInfo;
@@ -160,10 +159,16 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 		}
 		else if(type instanceof SSeqTypeBase)
 		{
-			SSeqType seqType = (SSeqType) type;
+			SSeqTypeBase seqType = (SSeqTypeBase) type;
 			boolean isSeq1 = seqType instanceof ASeq1SeqType;
 			
 			return new SeqInfo(optional, create(info, seqType.getSeqof(), visited), isSeq1);
+		}
+		else if(type instanceof ASetType)
+		{
+			ASetType setType = (ASetType) type;
+			
+			return new SetInfo(optional, create(info, setType.getSetof(), visited));
 		}
 		else if(type instanceof AUnknownType || type instanceof ASetType || type instanceof AMapMapType)
 		{

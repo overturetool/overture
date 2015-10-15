@@ -27,6 +27,7 @@ import org.overture.codegen.vdm2jml.predgen.info.LeafTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
 import org.overture.codegen.vdm2jml.predgen.info.SeqInfo;
+import org.overture.codegen.vdm2jml.predgen.info.SetInfo;
 import org.overture.codegen.vdm2jml.predgen.info.TupleInfo;
 import org.overture.codegen.vdm2jml.predgen.info.UnionInfo;
 import org.overture.codegen.vdm2jml.predgen.info.UnknownLeaf;
@@ -260,9 +261,16 @@ public class TypePredUtil
 			else if(type instanceof ASeqSeqTypeCG)
 			{
 				ASeqSeqTypeCG seqType = ((ASeqSeqTypeCG) type);
-				STypeCG t = seqType.getSeqOf();
+				STypeCG elementType = seqType.getSeqOf();
 				
-				return new SeqInfo(assist.allowsNull(type), findTypeInfo(t), BooleanUtils.isTrue(seqType.getSeq1()));
+				return new SeqInfo(assist.allowsNull(type), findTypeInfo(elementType), BooleanUtils.isTrue(seqType.getSeq1()));
+			}
+			else if(type instanceof ASetSetTypeCG)
+			{
+				ASetSetTypeCG setType = (ASetSetTypeCG) type;
+				STypeCG elementType = setType.getSetOf();
+				
+				return new SetInfo(assist.allowsNull(type), findTypeInfo(elementType));
 			}
 			else if(type instanceof AUnknownTypeCG || type instanceof ASetSetTypeCG || type instanceof AMapMapTypeCG)
 			{
