@@ -18,7 +18,7 @@ final public class Entry {
         {
             Tuple ignorePattern_1 = Tuple.mk_(1L, true);
 
-            //@ assert (V2J.isTup(ignorePattern_1) && Utils.is_nat(V2J.field(ignorePattern_1,0)) && Utils.is_bool(V2J.field(ignorePattern_1,1)));
+            //@ assert (V2J.isTup(ignorePattern_1,2) && Utils.is_nat(V2J.field(ignorePattern_1,0)) && Utils.is_bool(V2J.field(ignorePattern_1,1)));
 
             /* skip */
         }
@@ -29,7 +29,7 @@ final public class Entry {
         {
             Tuple ignorePattern_2 = TupNil();
 
-            //@ assert (V2J.isTup(ignorePattern_2) && Utils.is_nat(V2J.field(ignorePattern_2,0)) && Utils.is_bool(V2J.field(ignorePattern_2,1)));
+            //@ assert (V2J.isTup(ignorePattern_2,2) && Utils.is_nat(V2J.field(ignorePattern_2,0)) && Utils.is_bool(V2J.field(ignorePattern_2,1)));
 
             /* skip */
         }
@@ -43,7 +43,7 @@ final public class Entry {
     public static Tuple TupNil() {
         Tuple ret_1 = null;
 
-        //@ assert ((ret_1 == null) || (V2J.isTup(ret_1) && Utils.is_nat1(V2J.field(ret_1,0)) && Utils.is_bool(V2J.field(ret_1,1))));
+        //@ assert ((ret_1 == null) || (V2J.isTup(ret_1,2) && Utils.is_nat1(V2J.field(ret_1,0)) && Utils.is_bool(V2J.field(ret_1,1))));
         return Utils.copy(ret_1);
     }
 
@@ -51,7 +51,7 @@ final public class Entry {
     public static Tuple TupVal() {
         Tuple ret_2 = Tuple.mk_(1L, false);
 
-        //@ assert ((ret_2 == null) || (V2J.isTup(ret_2) && Utils.is_nat1(V2J.field(ret_2,0)) && Utils.is_bool(V2J.field(ret_2,1))));
+        //@ assert ((ret_2 == null) || (V2J.isTup(ret_2,2) && Utils.is_nat1(V2J.field(ret_2,0)) && Utils.is_bool(V2J.field(ret_2,1))));
         return Utils.copy(ret_2);
     }
 
