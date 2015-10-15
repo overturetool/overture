@@ -41,6 +41,12 @@ public class V2JCallTests
 		assertMethod(SeqInfo.IS_SEQ_METHOD, Object.class);
 	}
 	
+	@Test
+	public void checkIsSeq1()
+	{
+		assertMethod(SeqInfo.IS_SEQ1_METHOD, Object.class);
+	}
+	
 	public void assertMethod(String methodName, Class<?>... paramTypes)
 	{
 		Method method = null;
