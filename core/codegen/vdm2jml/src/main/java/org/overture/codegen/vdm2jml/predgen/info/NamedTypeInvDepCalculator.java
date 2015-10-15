@@ -8,10 +8,13 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.types.ABracketType;
+import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
 import org.overture.codegen.cgast.STypeCG;
@@ -158,6 +161,10 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			SSeqType seqType = (SSeqType) type;
 
 			return new SeqInfo(optional, create(info, seqType.getSeqof(), visited));
+		}
+		else if(type instanceof AUnknownType || type instanceof ASetType || type instanceof AMapMapType)
+		{
+			return new UnknownLeaf();
 		}
 		else
 		{

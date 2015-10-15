@@ -28,6 +28,7 @@ import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
 import org.overture.codegen.vdm2jml.predgen.info.SeqInfo;
 import org.overture.codegen.vdm2jml.predgen.info.TupleInfo;
 import org.overture.codegen.vdm2jml.predgen.info.UnionInfo;
+import org.overture.codegen.vdm2jml.predgen.info.UnknownLeaf;
 import org.overture.codegen.vdm2jml.util.NameGen;
 
 public class TypePredUtil
@@ -239,12 +240,7 @@ public class TypePredUtil
 				
 				for (STypeCG t : ((AUnionTypeCG) type).getTypes())
 				{
-					AbstractTypeInfo tInfo = findTypeInfo(t);
-					
-					if(tInfo != null)
-					{
-						types.add(tInfo);
-					}
+					types.add(findTypeInfo(t));
 				}
 				
 				return new UnionInfo(assist.allowsNull(type), types);
@@ -255,40 +251,22 @@ public class TypePredUtil
 				
 				for(STypeCG t : ((ATupleTypeCG) type).getTypes())
 				{
-					AbstractTypeInfo tInfo = findTypeInfo(t);
-					
-					if(tInfo != null)
-					{
-						types.add(tInfo);
-					}
+					types.add(findTypeInfo(t));
 				}
 				
 				return new TupleInfo(assist.allowsNull(type), types);
-			}
-			else if(type instanceof AUnknownTypeCG)
-			{
-				return null;
 			}
 			else if(type instanceof ASeqSeqTypeCG)
 			{
 				STypeCG t = ((ASeqSeqTypeCG) type).getSeqOf();
 				
-				AbstractTypeInfo elementInfo = findTypeInfo(t);
-				
-				if(elementInfo != null)
-				{
-					return new SeqInfo(assist.allowsNull(type), elementInfo);
-				}
-				else
-				{
-					return null;
-				}
+				return new SeqInfo(assist.allowsNull(type), findTypeInfo(t));
 			}
-			else if(type instanceof ASetSetTypeCG || type instanceof AMapMapTypeCG)
+			else if(type instanceof AUnknownTypeCG || type instanceof ASetSetTypeCG || type instanceof AMapMapTypeCG)
 			{
 				// Can't do anything for these right now...
 				// TODO: implement handling
-				return null;
+				return new UnknownLeaf();
 			}
 			else
 			{

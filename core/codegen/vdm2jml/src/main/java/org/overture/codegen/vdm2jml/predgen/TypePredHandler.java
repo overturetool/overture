@@ -29,6 +29,7 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.vdm2jml.JmlAnnotationHelper;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.codegen.vdm2jml.predgen.info.AbstractTypeInfo;
+import org.overture.codegen.vdm2jml.predgen.info.UnknownLeaf;
 import org.overture.codegen.vdm2jml.util.IsValChecker;
 
 public class TypePredHandler
@@ -87,7 +88,7 @@ public class TypePredHandler
 			
 			AbstractTypeInfo typeInfo = util.findTypeInfo(node.getType());
 
-			if (typeInfo != null)
+			if (proceed(typeInfo))
 			{
 				AIdentifierVarExpCG var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(node.getName(), node.getType().clone());
 				
@@ -172,7 +173,7 @@ public class TypePredHandler
 
 		AbstractTypeInfo typeInfo = util.findTypeInfo(returnType);
 
-		if (typeInfo == null)
+		if (!proceed(typeInfo))
 		{
 			return;
 		}
@@ -207,7 +208,7 @@ public class TypePredHandler
 		{
 			AbstractTypeInfo typeInfo = util.findTypeInfo(param.getType());
 
-			if (typeInfo != null)
+			if (proceed(typeInfo))
 			{
 				ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
@@ -277,7 +278,7 @@ public class TypePredHandler
 		
 		AbstractTypeInfo typeInfo = util.findTypeInfo(var.getType());
 	
-		if (typeInfo != null)
+		if (proceed(typeInfo))
 		{
 			ADefaultClassDeclCG enclosingClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
@@ -306,7 +307,7 @@ public class TypePredHandler
 
 		AbstractTypeInfo typeInfo = util.findTypeInfo(node.getType());
 
-		if (typeInfo != null)
+		if (proceed(typeInfo))
 		{
 			String name = decorator.getJmlGen().getUtil().getName(node.getPattern());
 
@@ -364,7 +365,7 @@ public class TypePredHandler
 			
 			AbstractTypeInfo typeInfo = util.findTypeInfo(recObj.getType());
 
-			if (typeInfo != null)
+			if (proceed(typeInfo))
 			{
 				ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
@@ -413,7 +414,7 @@ public class TypePredHandler
 		
 		AbstractTypeInfo typeInfo = util.findTypeInfo(node.getTarget().getType());
 
-		if (typeInfo != null)
+		if (proceed(typeInfo))
 		{
 			ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 			
@@ -490,7 +491,7 @@ public class TypePredHandler
 	{
 		AbstractTypeInfo typeInfo = util.findTypeInfo(var.getType());
 
-		if (typeInfo == null)
+		if (!proceed(typeInfo))
 		{
 			return null;
 		}
@@ -571,5 +572,10 @@ public class TypePredHandler
 		getJmlGen().getJavaGen().getTransAssistant().replaceNodeWith(node, replStm);
 		replStm.getStatements().add(node);
 		replStm.getStatements().add(assertStm);
+	}
+	
+	private boolean proceed(AbstractTypeInfo typeInfo)
+	{
+		return !(typeInfo instanceof UnknownLeaf);
 	}
 }
