@@ -37,13 +37,27 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		if(!JavaCodeGenUtil.isValidJavaIdentifier(node.getName()))
+		if (!contains(node.getLocation()))
 		{
-			String newName = getReplacementName(node.getName());
+			boolean rename = false;
+			String newName = node.getName();
 			
-			if (!contains(node.getLocation()))
+			if (!JavaCodeGenUtil.isValidJavaIdentifier(node.getName()))
 			{
-				this.renamings.add(new Renaming(node.getLocation(), node.getName(), newName));
+				newName = getReplacementName(node.getName());
+				rename = true;
+			}
+			
+			String newModule = node.getModule();
+			if (!JavaCodeGenUtil.isValidJavaIdentifier(node.getModule()))
+			{
+				newModule = getReplacementName(node.getModule());
+				rename = true;
+			}
+			
+			if(rename)
+			{
+				this.renamings.add(new Renaming(node.getLocation(), node.getName(), newName, node.getModule(), newModule));
 			}
 		}
 	}
