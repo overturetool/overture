@@ -1,1 +1,5 @@
-$JavaFormat.format($node.getClassType()).$node.getName()
+#if ($ValueSemantics.shouldClone($node))
+Utils.copy($JavaFormat.format($node.getClassType()).$node.getName())##
+#else
+$JavaFormat.format($node.getClassType()).$node.getName()##
+#end
