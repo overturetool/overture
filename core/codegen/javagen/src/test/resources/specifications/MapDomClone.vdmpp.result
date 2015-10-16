@@ -8,7 +8,7 @@ public class A {
     private static final VDMMap a = MapUtil.map(new Maplet(1L, 2L));
     private static final VDMSet x = MapUtil.dom(MapUtil.map(new Maplet(1L, 2L)));
     private static final VDMSet y = MapUtil.dom(op());
-    private static final VDMSet z = MapUtil.dom(Utils.copy(a));
+    private static final VDMSet z = MapUtil.dom(Utils.copy(A.a));
 
     public A() {
     }

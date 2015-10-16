@@ -14,7 +14,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        return b;
+        return Entry.b;
     }
 
     public String toString() {

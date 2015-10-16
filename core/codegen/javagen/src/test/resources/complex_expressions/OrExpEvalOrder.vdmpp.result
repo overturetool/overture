@@ -20,7 +20,7 @@ public class A {
     }
 
     public Boolean test() {
-        a = a.longValue() + 1L;
+        a = A.a.longValue() + 1L;
 
         return n.longValue() > 6L;
     }

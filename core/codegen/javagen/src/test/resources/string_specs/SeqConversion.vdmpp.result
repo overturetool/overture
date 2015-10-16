@@ -67,8 +67,8 @@ public class Entry {
     }
 
     public static String Run() {
-        return SeqUtil.toStr(Utils.copy(x)) + f() + op1() + op2() + op3() +
-        op5() + SeqUtil.toStr(op6()) + op7() +
+        return SeqUtil.toStr(Utils.copy(Entry.x)) + f() + op1() + op2() +
+        op3() + op5() + SeqUtil.toStr(op6()) + op7() +
         op8(quotes.AQuote.getInstance());
     }
 

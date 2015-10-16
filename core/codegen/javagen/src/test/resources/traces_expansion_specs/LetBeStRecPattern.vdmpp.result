@@ -21,7 +21,7 @@ public class Entry implements java.io.Serializable {
         final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
         AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
-        VDMSet set_1 = Utils.copy(xs);
+        VDMSet set_1 = Utils.copy(Entry.xs);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             final Object recordPattern_1 = ((Object) iterator_1.next());

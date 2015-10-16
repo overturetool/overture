@@ -220,7 +220,8 @@ public class Entry {
                 'd', 'a', 'y', ' ', 'd', 'a', 'y'));
     private static final Token p4 = new Token(SeqUtil.seq('T', 'u', 'e', 's',
                 'd', 'a', 'y', ' ', 'n', 'i', 'g', 'h', 't'));
-    private static final VDMSet ps = SetUtil.set(p1, p2, p3, p4);
+    private static final VDMSet ps = SetUtil.set(Entry.p1, Entry.p2, Entry.p3,
+            Entry.p4);
     private Alarm a1 = new Alarm(quotes.MechQuote.getInstance(),
             SeqUtil.seq('M', 'e', 'c', 'h', 'a', 'n', 'i', 'c', 'a', 'l', ' ',
                 'f', 'a', 'u', 'l', 't'));
@@ -236,8 +237,8 @@ public class Entry {
     private Expert ex4 = new Expert(SetUtil.set(
                 quotes.ElecQuote.getInstance(), quotes.ChemQuote.getInstance()));
     private Plant plant = new Plant(SetUtil.set(a1),
-            MapUtil.map(new Maplet(p1, SetUtil.set(ex1, ex4)),
-                new Maplet(p2, SetUtil.set(ex2, ex3))));
+            MapUtil.map(new Maplet(Entry.p1, SetUtil.set(ex1, ex4)),
+                new Maplet(Entry.p2, SetUtil.set(ex2, ex3))));
     private VDMSet exs = SetUtil.set(ex1, ex2, ex3, ex4);
 
     public Entry() {
@@ -246,7 +247,7 @@ public class Entry {
     public static Object Run() {
         Entry entry = new Entry();
         VDMSet periods = entry.plant.ExpertIsOnDuty(entry.ex1);
-        Expert expert = entry.plant.ExpertToPage(entry.a1, p1);
+        Expert expert = entry.plant.ExpertToPage(entry.a1, Entry.p1);
 
         return Tuple.mk_(periods, expert);
     }

@@ -12,7 +12,7 @@ public class Entry {
 
     public static Object Run() {
         VDMSeq seqCompResult_1 = SeqUtil.seq();
-        VDMSet set_1 = SeqUtil.elems(Utils.copy(xs));
+        VDMSet set_1 = SeqUtil.elems(Utils.copy(Entry.xs));
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             Object e = ((Object) iterator_1.next());

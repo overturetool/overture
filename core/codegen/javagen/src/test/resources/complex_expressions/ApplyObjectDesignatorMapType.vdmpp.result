@@ -16,16 +16,16 @@ public class X {
     }
 
     public Number m1() {
-        return ((X) Utils.get(xs, 1L)).f();
+        return ((X) Utils.get(X.xs, 1L)).f();
     }
 
     public Number m2() {
-        return ((X) Utils.get(((VDMMap) Utils.get(ys, 1L)), 1L)).f();
+        return ((X) Utils.get(((VDMMap) Utils.get(X.ys, 1L)), 1L)).f();
     }
 
     public Number m3() {
         return ((X) Utils.get(((VDMMap) Utils.get(
-                ((VDMMap) Utils.get(zs, 1L)), 1L)), 1L)).f();
+                ((VDMMap) Utils.get(X.zs, 1L)), 1L)), 1L)).f();
     }
 
     public Number m4() {
@@ -46,15 +46,15 @@ public class X {
     }
 
     public VDMMap map_xs(final Number pa, final Number pb) {
-        return Utils.copy(xs);
+        return Utils.copy(X.xs);
     }
 
     public VDMMap map_ys(final Number pa, final Number pb) {
-        return Utils.copy(ys);
+        return Utils.copy(X.ys);
     }
 
     public VDMMap map_zs(final Number pa, final Number pb) {
-        return Utils.copy(zs);
+        return Utils.copy(X.zs);
     }
 
     public static Number f() {

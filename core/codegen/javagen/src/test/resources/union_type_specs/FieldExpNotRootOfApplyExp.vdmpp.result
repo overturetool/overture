@@ -44,7 +44,8 @@ public class Entry {
 
                 mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
                         MapUtil.map(
-                            new Maplet(Utils.copy(hr), S(Utils.copy(apply_1)))));
+                            new Maplet(Utils.copy(hr),
+                                Entry.S(Utils.copy(apply_1)))));
             }
 
             ternaryIfExp_2 = Utils.copy(mapCompResult_1);

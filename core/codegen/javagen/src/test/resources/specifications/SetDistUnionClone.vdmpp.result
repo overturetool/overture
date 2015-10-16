@@ -6,8 +6,8 @@ import java.util.*;
 @SuppressWarnings("all")
 public class A {
     private static final VDMSet a = SetUtil.set(1L, 2L, 3L);
-    private static final VDMSet b = SetUtil.dunion(SetUtil.set(Utils.copy(a),
-                Utils.copy(a), Utils.copy(a)));
+    private static final VDMSet b = SetUtil.dunion(SetUtil.set(Utils.copy(A.a),
+                Utils.copy(A.a), Utils.copy(A.a)));
     private static final VDMSet c = SetUtil.dunion(op());
 
     public A() {

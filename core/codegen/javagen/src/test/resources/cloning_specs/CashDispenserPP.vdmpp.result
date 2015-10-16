@@ -26,10 +26,10 @@ import java.util.*;
 @SuppressWarnings("all")
 public class SimpleTest {
     private static final Card c1 = new Card(123456L, 1L, 1L);
-    private static final VDMSet cards = SetUtil.set(c1);
+    private static final VDMSet cards = SetUtil.set(SimpleTest.c1);
     private static final CentralResource resource = new CentralResource();
     private static final VDMMap tills = MapUtil.map(new Maplet(1L,
-                new Till(resource)));
+                new Till(SimpleTest.resource)));
     private Clock clock = new Clock();
     private Letterbox letterbox = new Letterbox();
 
@@ -49,9 +49,9 @@ public class SimpleTest {
                 Account pglacc1 = new Account().Create(MapUtil.map(
                             new Maplet(1L, peter)), 5000L);
                 Number pglid1 = 1L;
-                resource.AddAccount(pglid1, pglacc1);
-                resource.AddLetterbox(clock, new Letterbox());
-                ((Till) Utils.get(tills, 1L)).InsertCard(c1);
+                SimpleTest.resource.AddAccount(pglid1, pglacc1);
+                SimpleTest.resource.AddLetterbox(clock, new Letterbox());
+                ((Till) Utils.get(SimpleTest.tills, 1L)).InsertCard(SimpleTest.c1);
 
                 if (Utils.equals(((Till) Utils.get(tills, 1L)).Validate(123456L),
                             quotes.PinOkQuote.getInstance())) {
@@ -111,7 +111,7 @@ public class Account {
         if ((balance.longValue() - amount.longValue()) >= 0L) {
             if (DateTotal(date,
                         SeqUtil.conc(transactions, SeqUtil.seq(transaction)))
-                        .longValue() <= dailyLimit.longValue()) {
+                        .longValue() <= Account.dailyLimit.longValue()) {
                 andResult_1 = true;
             }
         }
@@ -165,7 +165,7 @@ public class Account {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {
             VDMSeq date = ((VDMSeq) iterator_1.next());
-            forAllExpResult_1 = DateTotal(date, ts).longValue() <= dailyLimit.longValue();
+            forAllExpResult_1 = DateTotal(date, ts).longValue() <= Account.dailyLimit.longValue();
         }
 
         return forAllExpResult_1;
@@ -395,7 +395,7 @@ public class CentralResource {
     }
 
     public Boolean NumberOfTriesExceeded(final Number cardId) {
-        return ((Number) Utils.get(numberOfTries, cardId)).longValue() >= maxNumberOfTries.longValue();
+        return ((Number) Utils.get(numberOfTries, cardId)).longValue() >= CentralResource.maxNumberOfTries.longValue();
     }
 
     public void ResetNumberOfTries(final Number cardId) {
@@ -853,11 +853,13 @@ public class System {
     private static final Card c5 = new Card(123460L, 5L, 5L);
     private static final Card c6 = new Card(123461L, 6L, 5L);
     private static final Card c7 = new Card(123462L, 7L, 5L);
-    private static final VDMSet cards = SetUtil.set(c1, c2, c3, c4, c5, c6, c7);
+    private static final VDMSet cards = SetUtil.set(System.c1, System.c2,
+            System.c3, System.c4, System.c5, System.c6, System.c7);
     private static final CentralResource resource = new CentralResource();
     private static final VDMMap tills = MapUtil.map(new Maplet(1L,
-                new Till(resource)), new Maplet(2L, new Till(resource)),
-            new Maplet(3L, new Till(resource)));
+                new Till(System.resource)),
+            new Maplet(2L, new Till(System.resource)),
+            new Maplet(3L, new Till(System.resource)));
     private Clock clock = new Clock();
     private Letterbox letterbox = new Letterbox();
 
@@ -870,7 +872,7 @@ public class System {
     }
 
     public CentralResource GetResource() {
-        return resource;
+        return System.resource;
     }
 
     public void cg_init_System_1() {
@@ -914,12 +916,12 @@ public class System {
                 Number ksid1 = 3L;
                 Number pmid1 = 4L;
                 Number ifid1 = 5L;
-                resource.AddAccount(pglid1, pglacc1);
-                resource.AddAccount(said1, saacc1);
-                resource.AddAccount(ksid1, ksacc1);
-                resource.AddAccount(pmid1, pmacc1);
-                resource.AddAccount(ifid1, ifacc1);
-                resource.AddLetterbox(clock, new Letterbox());
+                System.resource.AddAccount(pglid1, pglacc1);
+                System.resource.AddAccount(said1, saacc1);
+                System.resource.AddAccount(ksid1, ksacc1);
+                System.resource.AddAccount(pmid1, pmacc1);
+                System.resource.AddAccount(ifid1, ifacc1);
+                System.resource.AddLetterbox(clock, new Letterbox());
             }
         }
     }

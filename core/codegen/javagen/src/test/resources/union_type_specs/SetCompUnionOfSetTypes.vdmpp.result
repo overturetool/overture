@@ -12,7 +12,7 @@ public class Entry {
 
     public static Object Run() {
         VDMSet setCompResult_1 = SetUtil.set();
-        VDMSet set_1 = Utils.copy(xs);
+        VDMSet set_1 = Utils.copy(Entry.xs);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             Object e = ((Object) iterator_1.next());

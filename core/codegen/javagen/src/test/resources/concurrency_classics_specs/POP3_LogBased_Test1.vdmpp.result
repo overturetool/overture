@@ -76,11 +76,11 @@ public class Log implements EvaluatePP {
     }
 
     public static Log getInstance() {
-        if (Utils.equals(Instance, null)) {
+        if (Utils.equals(Log.Instance, null)) {
             Instance = new Log();
         }
 
-        return Instance;
+        return Log.Instance;
     }
 
     public void log(final String msg) {
@@ -635,9 +635,9 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                             Object ternaryIfExp_1 = null;
 
                             if (b) {
-                                ternaryIfExp_1 = new POP3Types.OkResponse(quitMsg);
+                                ternaryIfExp_1 = new POP3Types.OkResponse(POP3ClientHandler.quitMsg);
                             } else {
-                                ternaryIfExp_1 = new POP3Types.ErrResponse(deleteFailMsg);
+                                ternaryIfExp_1 = new POP3Types.ErrResponse(POP3ClientHandler.deleteFailMsg);
                             }
 
                             response = ternaryIfExp_1;
@@ -647,7 +647,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                     throw new RuntimeException("ERROR statement reached");
                 }
             } else {
-                response = new POP3Types.OkResponse(quitMsg);
+                response = new POP3Types.OkResponse(POP3ClientHandler.quitMsg);
             }
 
             return response;
@@ -665,7 +665,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                     int2string(parent.GetNumberOfMessages(user)) + " " +
                     int2string(parent.GetMailBoxSize(user)));
             } else {
-                return new POP3Types.ErrResponse(negativeStatusMsg);
+                return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
             sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveSTAT);
@@ -693,10 +693,10 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                             Utils.copy(msgs)) + "\n" +
                         MakeScanListing(Utils.copy(msgs)));
                 } else {
-                    return new POP3Types.ErrResponse(unknownMessageMsg);
+                    return new POP3Types.ErrResponse(POP3ClientHandler.unknownMessageMsg);
                 }
             } else {
-                return new POP3Types.ErrResponse(negativeStatusMsg);
+                return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
             sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveLIST);
@@ -716,10 +716,10 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
                     return new POP3Types.OkResponse(sizeText + "\n" + msgText);
                 } else {
-                    return new POP3Types.ErrResponse(unknownMessageMsg);
+                    return new POP3Types.ErrResponse(POP3ClientHandler.unknownMessageMsg);
                 }
             } else {
-                return new POP3Types.ErrResponse(negativeStatusMsg);
+                return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
             sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveRETR);
@@ -738,13 +738,13 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                         int2string(retr.messageNumber) + " deleted");
                 } else {
                     if (parent.MessageIsDeleted(user, retr.messageNumber)) {
-                        return new POP3Types.ErrResponse(alreadyDeletedMsg);
+                        return new POP3Types.ErrResponse(POP3ClientHandler.alreadyDeletedMsg);
                     } else {
-                        return new POP3Types.ErrResponse(unknownMessageMsg);
+                        return new POP3Types.ErrResponse(POP3ClientHandler.unknownMessageMsg);
                     }
                 }
             } else {
-                return new POP3Types.ErrResponse(negativeStatusMsg);
+                return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
             sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveDELE);
@@ -758,7 +758,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
             if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
                 return new POP3Types.OkResponse("");
             } else {
-                return new POP3Types.ErrResponse(negativeStatusMsg);
+                return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
             sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveNOOP);
@@ -775,7 +775,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 return new POP3Types.OkResponse("maildrop has " +
                     int2string(parent.GetNumberOfMessages(user)) + " messages");
             } else {
-                return new POP3Types.ErrResponse(negativeStatusMsg);
+                return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
             sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveRSET);
@@ -796,10 +796,10 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                         MakeMultilineResponse(SeqUtil.subSeq(Utils.copy(lines),
                                 1L, top.numLines)));
                 } else {
-                    return new POP3Types.ErrResponse(unknownMessageMsg);
+                    return new POP3Types.ErrResponse(POP3ClientHandler.unknownMessageMsg);
                 }
             } else {
-                return new POP3Types.ErrResponse(negativeStatusMsg);
+                return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
             sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveTOP);
@@ -820,10 +820,10 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                     return new POP3Types.OkResponse(parent.GetUidl(user,
                             uidl.messageNumber));
                 } else {
-                    return new POP3Types.ErrResponse(unknownMessageMsg);
+                    return new POP3Types.ErrResponse(POP3ClientHandler.unknownMessageMsg);
                 }
             } else {
-                return new POP3Types.ErrResponse(negativeStatusMsg);
+                return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
             sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveUIDL);
@@ -838,9 +838,9 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 user = usercmd.name;
                 sentinel.stateChanged();
 
-                return new POP3Types.OkResponse(submitPasswordMsg);
+                return new POP3Types.OkResponse(POP3ClientHandler.submitPasswordMsg);
             } else {
-                return new POP3Types.ErrResponse(negativeStatusMsg);
+                return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
             sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveUSER);
@@ -865,19 +865,19 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
                 if (parent.AuthenticateUser(user, pass.string)) {
                     if (parent.IsLocked(user)) {
-                        return new POP3Types.ErrResponse(maildropLockedMsg);
+                        return new POP3Types.ErrResponse(POP3ClientHandler.maildropLockedMsg);
                     } else {
                         parent.AcquireLock(id, user);
                         ss = quotes.TransactionQuote.getInstance();
                         sentinel.stateChanged();
 
-                        return new POP3Types.OkResponse(maildropReadyMsg);
+                        return new POP3Types.OkResponse(POP3ClientHandler.maildropReadyMsg);
                     }
                 } else {
-                    return new POP3Types.ErrResponse(passwordFailedMsg);
+                    return new POP3Types.ErrResponse(POP3ClientHandler.passwordFailedMsg);
                 }
             } else {
-                return new POP3Types.ErrResponse(negativeStatusMsg);
+                return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
             sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceivePASS);
@@ -2262,7 +2262,7 @@ public class POP3Test implements EvaluatePP {
 
     public static VDMMap MakePasswordMap() {
         VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_10 = SeqUtil.inds(users);
+        VDMSet set_10 = SeqUtil.inds(POP3Test.users);
 
         for (Iterator iterator_10 = set_10.iterator(); iterator_10.hasNext();) {
             Number i = ((Number) iterator_10.next());
@@ -2277,7 +2277,7 @@ public class POP3Test implements EvaluatePP {
 
     public static VDMMap MakeMailDrop() {
         VDMMap mapCompResult_2 = MapUtil.map();
-        VDMSet set_11 = SeqUtil.inds(users);
+        VDMSet set_11 = SeqUtil.inds(POP3Test.users);
 
         for (Iterator iterator_11 = set_11.iterator(); iterator_11.hasNext();) {
             Number i = ((Number) iterator_11.next());
@@ -2293,7 +2293,7 @@ public class POP3Test implements EvaluatePP {
 
     public static VDMSeq MakeMessages(final String user) {
         VDMSeq seqCompResult_7 = SeqUtil.seq();
-        VDMSet set_12 = SeqUtil.inds(headers);
+        VDMSet set_12 = SeqUtil.inds(POP3Test.headers);
 
         for (Iterator iterator_12 = set_12.iterator(); iterator_12.hasNext();) {
             Number i = ((Number) iterator_12.next());
