@@ -1,0 +1,31 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+SetEven = set of Even;
+Even = nat
+inv e == e mod 2 = 0;
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ let - : SetEven = {2, 4, 6} in skip;
+ IO`println("After legal use");
+ IO`println("Before illegal use");
+ let xs : SetEven = {2},
+     ys : set of nat = {1},
+     - : SetEven = xs union ys
+ in
+   skip;
+ IO`println("After illegal use");
+ return 0;
+);
+
+end Entry

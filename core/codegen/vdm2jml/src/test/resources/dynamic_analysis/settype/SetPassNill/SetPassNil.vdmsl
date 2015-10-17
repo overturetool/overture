@@ -1,0 +1,31 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ (dcl r : set of bool := idSet({true, false}); skip);
+ IO`println("After legal use");
+ IO`println("Before illegal use");
+ (
+   dcl xs : [set of bool] := nil;
+   dcl r : set of bool := idSet(xs);
+   skip;
+ );
+ IO`println("After illegal use");
+ return 0;
+);
+
+functions
+
+idSet :  set of bool -> set of bool
+idSet (xs) ==
+ xs;
+
+end Entry
