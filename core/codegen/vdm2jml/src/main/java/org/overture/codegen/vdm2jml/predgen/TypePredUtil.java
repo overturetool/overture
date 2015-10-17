@@ -11,6 +11,8 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
@@ -285,8 +287,9 @@ public class TypePredUtil
 				return new MapInfo(assist.allowsNull(mapType), domInfo, rngInfo, injective);
 				
 			}
-			else if(type instanceof AUnknownTypeCG)
+			else if(type instanceof AUnknownTypeCG || type instanceof AClassTypeCG || type instanceof AExternalTypeCG)
 			{
+				// Iterators are class types for instance
 				return new UnknownLeaf();
 			}
 			else
