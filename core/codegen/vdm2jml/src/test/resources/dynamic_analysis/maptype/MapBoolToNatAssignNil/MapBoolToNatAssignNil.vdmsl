@@ -1,0 +1,26 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ let - : map bool to nat = {false |-> 0, true |-> 1} in skip;
+ IO`println("After legal use");
+ IO`println("Before illegal use");
+ let - : map bool to nat = mapNil() in skip;
+ IO`println("After illegal use");
+ return 0;
+);
+
+functions
+
+mapNil :  () -> [map bool to nat]
+mapNil () == nil;
+
+end Entry
