@@ -15,6 +15,12 @@ import org.overture.codegen.vdm2jml.predgen.info.TupleInfo;
 public class V2JCallTests
 {
 	@Test
+	public void checkIsInjMap()
+	{
+		assertMethod(MapInfo.IS_INJECTIVE_MAP_METHOD, Object.class);
+	}
+	
+	@Test
 	public void checkIsMap()
 	{
 		assertMethod(MapInfo.IS_MAP_METHOD, Object.class);
