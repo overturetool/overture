@@ -7,8 +7,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.ast.types.ABracketType;
-import org.overture.ast.types.AMapMapType;
+import org.overture.ast.types.ABracketType;	
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
@@ -17,6 +16,7 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapTypeBase;
 import org.overture.ast.types.SSeqTypeBase;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.ir.IRInfo;
@@ -170,7 +170,16 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			
 			return new SetInfo(optional, create(info, setType.getSetof(), visited));
 		}
-		else if(type instanceof AUnknownType || type instanceof ASetType || type instanceof AMapMapType)
+		else if(type instanceof SMapTypeBase)
+		{
+			SMapTypeBase mapType = (SMapTypeBase) type;
+			
+			AbstractTypeInfo fromInfo = create(info, mapType.getFrom(), visited);
+			AbstractTypeInfo toInfo = create(info, mapType.getTo(), visited);
+			
+			return new MapInfo(optional, fromInfo, toInfo);
+		}
+		else if(type instanceof AUnknownType)
 		{
 			return new UnknownLeaf();
 		}

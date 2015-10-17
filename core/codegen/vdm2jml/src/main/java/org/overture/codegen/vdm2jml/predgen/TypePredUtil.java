@@ -24,6 +24,7 @@ import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.codegen.vdm2jml.data.RecClassInfo;
 import org.overture.codegen.vdm2jml.predgen.info.AbstractTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.LeafTypeInfo;
+import org.overture.codegen.vdm2jml.predgen.info.MapInfo;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
 import org.overture.codegen.vdm2jml.predgen.info.SeqInfo;
@@ -263,19 +264,27 @@ public class TypePredUtil
 				ASeqSeqTypeCG seqType = ((ASeqSeqTypeCG) type);
 				STypeCG elementType = seqType.getSeqOf();
 				
-				return new SeqInfo(assist.allowsNull(type), findTypeInfo(elementType), BooleanUtils.isTrue(seqType.getSeq1()));
+				return new SeqInfo(assist.allowsNull(seqType), findTypeInfo(elementType), BooleanUtils.isTrue(seqType.getSeq1()));
 			}
 			else if(type instanceof ASetSetTypeCG)
 			{
 				ASetSetTypeCG setType = (ASetSetTypeCG) type;
 				STypeCG elementType = setType.getSetOf();
 				
-				return new SetInfo(assist.allowsNull(type), findTypeInfo(elementType));
+				return new SetInfo(assist.allowsNull(setType), findTypeInfo(elementType));
 			}
-			else if(type instanceof AUnknownTypeCG || type instanceof ASetSetTypeCG || type instanceof AMapMapTypeCG)
+			else if(type instanceof AMapMapTypeCG)
 			{
-				// Can't do anything for these right now...
-				// TODO: implement handling
+				AMapMapTypeCG mapType = (AMapMapTypeCG) type;
+				
+				AbstractTypeInfo domInfo = findTypeInfo(mapType.getFrom());
+				AbstractTypeInfo rngInfo = findTypeInfo(mapType.getTo());
+				
+				return new MapInfo(assist.allowsNull(mapType), domInfo, rngInfo);
+				
+			}
+			else if(type instanceof AUnknownTypeCG)
+			{
 				return new UnknownLeaf();
 			}
 			else
