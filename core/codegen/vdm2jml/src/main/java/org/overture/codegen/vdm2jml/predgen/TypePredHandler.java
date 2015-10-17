@@ -19,6 +19,7 @@ import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
+import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
@@ -257,6 +258,7 @@ public class TypePredHandler
 			Logger.getLog().printErrorln("Expected collection to be a variable expression at this point. Got: "
 					+ col + " in '" + this.getClass().getSimpleName()
 					+ "'");
+			return null;
 		}
 		
 		SVarExpCG var = ((SVarExpCG) col);
@@ -438,7 +440,9 @@ public class TypePredHandler
 
 	public ABlockStmCG getEncBlockStm(AVarDeclCG varDecl)
 	{
-		if (varDecl.parent() instanceof ABlockStmCG)
+		INode parent = varDecl.parent();
+		
+		if (parent instanceof ABlockStmCG)
 		{
 			ABlockStmCG parentBlock = (ABlockStmCG) varDecl.parent();
 
@@ -461,6 +465,11 @@ public class TypePredHandler
 			}
 			
 			return parentBlock;
+		}
+		else if(parent instanceof AForLoopStmCG)
+		{
+			// Do nothing
+			return null;
 		}
 		else
 		{
