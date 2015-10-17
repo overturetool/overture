@@ -1,0 +1,10 @@
+"Before legal use"
+"After legal use"
+"Before illegal use"
+Entry.java:59: JML assertion is false
+        //@ assert (V2J.isInjMap(ret_2) && (\forall int i; 0 <= i && i < V2J.size(ret_2); Utils.is_nat(V2J.getDom(ret_2,i)) && Utils.is_(V2J.getRng(ret_2,i),project.Entrytypes.V2.class)));
+            ^
+Entry.java:32: JML assertion is false
+            //@ assert (V2J.isInjMap(ignorePattern_2) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_2); Utils.is_nat(V2J.getDom(ignorePattern_2,i)) && Utils.is_(V2J.getRng(ignorePattern_2,i),project.Entrytypes.V2.class)));
+                ^
+"After illegal use"
