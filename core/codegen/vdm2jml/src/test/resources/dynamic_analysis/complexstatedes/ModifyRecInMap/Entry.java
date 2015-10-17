@@ -52,6 +52,8 @@ final public class Entry {
         //@ assert stateDes_2 != null;
         stateDes_2.set_x(2L);
 
+        //@ assert (V2J.isMap(stateDes_1) && (\forall int i; 0 <= i && i < V2J.size(stateDes_1); Utils.is_nat(V2J.getDom(stateDes_1,i)) && Utils.is_(V2J.getRng(stateDes_1,i),project.Entrytypes.B.class)));
+
         //@ assert Utils.is_(a,project.Entrytypes.A.class);
 
         //@ assert a.valid();
@@ -73,6 +75,8 @@ final public class Entry {
 
         //@ assert stateDes_4 != null;
         stateDes_4.set_x(1L);
+
+        //@ assert (V2J.isMap(stateDes_3) && (\forall int i; 0 <= i && i < V2J.size(stateDes_3); Utils.is_nat(V2J.getDom(stateDes_3,i)) && Utils.is_(V2J.getRng(stateDes_3,i),project.Entrytypes.B.class)));
 
         //@ assert Utils.is_(a,project.Entrytypes.A.class);
 

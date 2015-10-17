@@ -45,10 +45,10 @@ final public class B implements Record {
 
     /*@ pure @*/
     public Number get_x() {
-        Number ret_3 = x;
+        Number ret_4 = x;
 
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(ret_3));
-        return ret_3;
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(ret_4));
+        return ret_4;
     }
 
     public void set_x(final Number _x) {

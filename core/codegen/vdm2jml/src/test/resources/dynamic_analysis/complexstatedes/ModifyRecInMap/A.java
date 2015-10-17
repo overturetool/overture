@@ -12,7 +12,10 @@ final public class A implements Record {
 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_A(m);
     public A(final VDMMap _m) {
+        //@ assert (V2J.isMap(_m) && (\forall int i; 0 <= i && i < V2J.size(_m); Utils.is_nat(V2J.getDom(_m,i)) && Utils.is_(V2J.getRng(_m,i),project.Entrytypes.B.class)));
         m = (_m != null) ? Utils.copy(_m) : null;
+
+        //@ assert (V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); Utils.is_nat(V2J.getDom(m,i)) && Utils.is_(V2J.getRng(m,i),project.Entrytypes.B.class)));
     }
 
     /*@ pure @*/
@@ -43,11 +46,17 @@ final public class A implements Record {
 
     /*@ pure @*/
     public VDMMap get_m() {
-        return m;
+        VDMMap ret_3 = m;
+
+        //@ assert project.Entry.invChecksOn ==> ((V2J.isMap(ret_3) && (\forall int i; 0 <= i && i < V2J.size(ret_3); Utils.is_nat(V2J.getDom(ret_3,i)) && Utils.is_(V2J.getRng(ret_3,i),project.Entrytypes.B.class))));
+        return ret_3;
     }
 
     public void set_m(final VDMMap _m) {
+        //@ assert project.Entry.invChecksOn ==> ((V2J.isMap(_m) && (\forall int i; 0 <= i && i < V2J.size(_m); Utils.is_nat(V2J.getDom(_m,i)) && Utils.is_(V2J.getRng(_m,i),project.Entrytypes.B.class))));
         m = _m;
+
+        //@ assert project.Entry.invChecksOn ==> ((V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); Utils.is_nat(V2J.getDom(m,i)) && Utils.is_(V2J.getRng(m,i),project.Entrytypes.B.class))));
     }
 
     /*@ pure @*/

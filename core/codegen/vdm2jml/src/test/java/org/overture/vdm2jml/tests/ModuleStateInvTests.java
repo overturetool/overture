@@ -139,13 +139,13 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 	public void updateMapRng()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignM", Update.MAP_SEQ_UPDATE, 4);
+		checkAssertion("assignM", Update.MAP_SEQ_UPDATE, 5);
 	}
 
 	@Test
 	public void updateMapRngAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignM", Update.MAP_SEQ_UPDATE, 4);
+		checkAssertion("atomicAssignM", Update.MAP_SEQ_UPDATE, 5);
 	}
 }

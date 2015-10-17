@@ -24,7 +24,7 @@ public class ModuleStateInvComplexTests extends AnnotationTestsBase
 	public void mapField()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		ModuleStateInvTests.checkAssertion("mapField", Update.SET_CALL, 4);
+		ModuleStateInvTests.checkAssertion("mapField", Update.SET_CALL, 5);
 	}
 
 	@Test

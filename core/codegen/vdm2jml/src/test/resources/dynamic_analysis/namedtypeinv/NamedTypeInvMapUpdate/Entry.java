@@ -14,20 +14,20 @@ final public class Entry {
 
     public static Object Run() {
         VDMMap m = MapUtil.map(new Maplet('a', 1L), new Maplet(1L, 2L));
-        //@ assert (true && inv_Entry_M(m));
+        //@ assert ((V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); true && true)) && inv_Entry_M(m));
 
         //@ assert m != null;
         Utils.mapSeqUpdate(m, 'a', 2L);
-        //@ assert (true && inv_Entry_M(m));
+        //@ assert ((V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); true && true)) && inv_Entry_M(m));
 
         //@ assert m != null;
         Utils.mapSeqUpdate(m, 1L, 2L);
-        //@ assert (true && inv_Entry_M(m));
+        //@ assert ((V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); true && true)) && inv_Entry_M(m));
         IO.println("Breaking named type invariant for sequence");
         //@ assert m != null;
         Utils.mapSeqUpdate(m, 2L, 10L);
 
-        //@ assert (true && inv_Entry_M(m));
+        //@ assert ((V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); true && true)) && inv_Entry_M(m));
         return 0L;
     }
 

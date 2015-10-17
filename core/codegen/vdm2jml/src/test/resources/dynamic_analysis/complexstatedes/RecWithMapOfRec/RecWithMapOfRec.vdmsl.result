@@ -1,7 +1,7 @@
 "Before useOk"
 "After useOk"
 "Before useNotOk"
-A.java:49: JML invariant is false on leaving method project.Entrytypes.A.set_m(org.overture.codegen.runtime.VDMMap)
+A.java:55: JML invariant is false on leaving method project.Entrytypes.A.set_m(org.overture.codegen.runtime.VDMMap)
     public void set_m(final VDMMap _m) {
                 ^
 A.java:13: Associated declaration

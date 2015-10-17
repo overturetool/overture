@@ -1,7 +1,7 @@
 "Before useOk"
 "After useOk"
 "Before useNotOk"
-A.java:54: JML invariant is false on leaving method project.Entrytypes.A.valid()
+A.java:63: JML invariant is false on leaving method project.Entrytypes.A.valid()
     public Boolean valid() {
                    ^
 A.java:13: Associated declaration
