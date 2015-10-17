@@ -588,6 +588,7 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
     
 #map {-> package='org.overture.codegen.cgast.types'
 	| [empty]:java_Boolean
+	| [injective]:java_Boolean
 	| [from]:CG.#type
 	| [to]:CG.#type }
     =   {map}

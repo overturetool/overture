@@ -31,6 +31,7 @@ import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
@@ -62,7 +63,6 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AQuoteTypeCG;
@@ -193,21 +193,15 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	public STypeCG caseAMapMapType(AMapMapType node, IRInfo question)
 			throws AnalysisException
 	{
-		PType from = node.getFrom();
-		PType to = node.getTo();
-		boolean empty = node.getEmpty();
-
-		STypeCG fromCg = from.apply(question.getTypeVisitor(), question);
-		STypeCG toCg = to.apply(question.getTypeVisitor(), question);
-
-		AMapMapTypeCG mapType = new AMapMapTypeCG();
-		mapType.setFrom(fromCg);
-		mapType.setTo(toCg);
-		mapType.setEmpty(empty);
-
-		return mapType;
+		return question.getExpAssistant().handleMapType(node, question, false);
 	}
 
+	@Override
+	public STypeCG caseAInMapMapType(AInMapMapType node, IRInfo question) throws AnalysisException
+	{
+		return question.getExpAssistant().handleMapType(node, question, true);
+	}
+	
 	@Override
 	public STypeCG caseAProductType(AProductType node, IRInfo question)
 			throws AnalysisException

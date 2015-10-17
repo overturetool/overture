@@ -49,6 +49,7 @@ import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapTypeBase;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
@@ -675,5 +676,24 @@ public class ExpAssistantCG extends AssistantBase
 		nullExp.setType(new AUnknownTypeCG());
 
 		return nullExp;
+	}
+	
+	public STypeCG handleMapType(SMapTypeBase node, IRInfo question, boolean isInjective) throws AnalysisException
+	{
+		PType from = node.getFrom();
+		PType to = node.getTo();
+		boolean empty = node.getEmpty();
+
+		STypeCG fromCg = from.apply(question.getTypeVisitor(), question);
+		STypeCG toCg = to.apply(question.getTypeVisitor(), question);
+
+		AMapMapTypeCG mapType = new AMapMapTypeCG();
+		mapType.setFrom(fromCg);
+		mapType.setTo(toCg);
+		mapType.setEmpty(empty);
+		
+		mapType.setInjective(isInjective);
+
+		return mapType;
 	}
 }
