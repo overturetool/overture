@@ -7,7 +7,8 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.ast.types.ABracketType;	
+import org.overture.ast.types.ABracketType;
+import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
@@ -177,7 +178,9 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			AbstractTypeInfo fromInfo = create(info, mapType.getFrom(), visited);
 			AbstractTypeInfo toInfo = create(info, mapType.getTo(), visited);
 			
-			return new MapInfo(optional, fromInfo, toInfo);
+			boolean injective = type instanceof AInMapMapType;
+			
+			return new MapInfo(optional, fromInfo, toInfo, injective);
 		}
 		else if(type instanceof AUnknownType)
 		{

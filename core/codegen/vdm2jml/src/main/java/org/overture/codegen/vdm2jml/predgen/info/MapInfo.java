@@ -7,17 +7,20 @@ import org.overture.codegen.vdm2jml.util.NameGen;
 public class MapInfo extends AbstractCollectionInfo
 {
 	public static final String IS_MAP_METHOD = "isMap";
+	public static final String IS_INJECTIVE_MAP_METHOD = "isInjMap";
 	public static final String GET_DOM_METHOD = "getDom";
 	public static final String GET_RNG_METHOD = "getRng";
 	
 	private AbstractTypeInfo domType;
 	private AbstractTypeInfo rngType;
+	private boolean injective;
 	
-	public MapInfo(boolean optional, AbstractTypeInfo domType, AbstractTypeInfo rngType)
+	public MapInfo(boolean optional, AbstractTypeInfo domType, AbstractTypeInfo rngType, boolean injective)
 	{
 		super(optional);
 		this.domType = domType;
 		this.rngType = rngType;
+		this.injective = injective;
 	}
 
 	@Override
@@ -42,6 +45,6 @@ public class MapInfo extends AbstractCollectionInfo
 	public String consCollectionCheck(String arg)
 	{
 		//e.g. (V2J.isMap(m) && (\forall int i; 0 <= i && i < VDM2JML.size(m); Utils.is_nat(VDM2JML.getDom(i,m)) && Utils.is_nat(VDM2JML.getRng(i,m))));
-		return consSubjectCheck(V2J.class.getSimpleName(), IS_MAP_METHOD, arg);
+		return consSubjectCheck(V2J.class.getSimpleName(), injective ? IS_INJECTIVE_MAP_METHOD :IS_MAP_METHOD, arg);
 	}
 }

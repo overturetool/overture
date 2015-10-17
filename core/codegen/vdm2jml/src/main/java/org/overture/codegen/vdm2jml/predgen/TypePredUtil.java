@@ -280,7 +280,9 @@ public class TypePredUtil
 				AbstractTypeInfo domInfo = findTypeInfo(mapType.getFrom());
 				AbstractTypeInfo rngInfo = findTypeInfo(mapType.getTo());
 				
-				return new MapInfo(assist.allowsNull(mapType), domInfo, rngInfo);
+				boolean injective = BooleanUtils.isTrue(mapType.getInjective());
+				
+				return new MapInfo(assist.allowsNull(mapType), domInfo, rngInfo, injective);
 				
 			}
 			else if(type instanceof AUnknownTypeCG)
