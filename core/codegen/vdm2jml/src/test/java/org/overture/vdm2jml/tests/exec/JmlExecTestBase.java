@@ -57,6 +57,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	@Test
 	public void execJml()
 	{
+		checkIfSkipped();
 		try
 		{
 			configureResultGeneration();
@@ -84,6 +85,11 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 		{
 			unconfigureResultGeneration();
 		}
+	}
+
+	private void checkIfSkipped()
+	{
+		Assume.assumeFalse("OpenJML cannot compile this test - there is a bug", inputFile.getName().equals("Exists1.vdmsl"));
 	}
 
 	protected void checkOpenJmlOutput(String actualRes) throws IOException
