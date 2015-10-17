@@ -7,12 +7,31 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.overture.codegen.runtime.V2J;
 import org.overture.codegen.vdm2jml.predgen.info.AbstractSetSeqInfo;
+import org.overture.codegen.vdm2jml.predgen.info.MapInfo;
 import org.overture.codegen.vdm2jml.predgen.info.SeqInfo;
 import org.overture.codegen.vdm2jml.predgen.info.SetInfo;
 import org.overture.codegen.vdm2jml.predgen.info.TupleInfo;
 
 public class V2JCallTests
 {
+	@Test
+	public void checkIsMap()
+	{
+		assertMethod(MapInfo.IS_MAP_METHOD, Object.class);
+	}
+	
+	@Test
+	public void checkGetDom()
+	{
+		assertMethod(MapInfo.GET_DOM_METHOD, Object.class, int.class);
+	}
+	
+	@Test
+	public void checkGetRng()
+	{
+		assertMethod(MapInfo.GET_RNG_METHOD, Object.class, int.class);
+	}
+	
 	@Test
 	public void checkIsSet()
 	{
