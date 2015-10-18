@@ -58,6 +58,7 @@ import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ARemNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpBase;
@@ -847,39 +848,52 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	public void inAVarDeclCG(AVarDeclCG node)
 			throws AnalysisException
 	{
-		if(node.getExp() != null)
+		SExpCG exp = node.getExp();
+		
+		if(exp != null)
 		{
-			node.getExp().apply(this);
+			exp.apply(this);
 		}
 		
-		if(node.getType() instanceof AUnknownTypeCG || node.getExp() instanceof ANullExpCG)
+		STypeCG type = node.getType();
+		
+		if(castNotNeeded(exp, type))
 		{
 			return;
 		}
 		
-		if (!(node.getType() instanceof AUnionTypeCG))
+		if (!(type instanceof AUnionTypeCG))
 		{
-			correctTypes(node.getExp(), node.getType());
+			correctTypes(exp, type);
 		}
 	}
 	
 	@Override
 	public void caseAAssignToExpStmCG(AAssignToExpStmCG node) throws AnalysisException
 	{
-		if(node.getExp() != null)
+		SExpCG exp = node.getExp();
+		
+		if(exp != null)
 		{
-			node.getExp().apply(this);
+			exp.apply(this);
 		}
 		
-		if(node.getTarget().getType() instanceof AUnknownTypeCG || node.getExp() instanceof ANullExpCG)
+		STypeCG type = node.getTarget().getType();
+		
+		if(castNotNeeded(exp, type))
 		{
 			return;
 		}
 		
-		if (!(node.getTarget().getType() instanceof AUnionTypeCG))
+		if (!(type instanceof AUnionTypeCG))
 		{
-			correctTypes(node.getExp(), node.getTarget().getType());
+			correctTypes(exp, type);
 		}
+	}
+
+	private boolean castNotNeeded(SExpCG exp, STypeCG type)
+	{
+		return type instanceof AUnknownTypeCG || exp instanceof ANullExpCG || exp instanceof AUndefinedExpCG;
 	}
 
 	@Override
