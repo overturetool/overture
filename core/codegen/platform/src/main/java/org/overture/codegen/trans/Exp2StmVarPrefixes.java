@@ -26,4 +26,39 @@ public class Exp2StmVarPrefixes
 	{
 		return "recModifierExp_";
 	}
+	
+	public String seqComp()
+	{
+		return "seqCompResult_"; 
+	}
+	
+	public String setComp()
+	{
+		return "setCompResult_";
+	}
+	
+	public String mapComp()
+	{
+		return "mapCompResult_"; 
+	}
+	
+	public String letBeSt()
+	{
+		return "letBeStExp_";
+	}
+	
+	public String forAll()
+	{
+		return "forAllExpResult_";
+	}
+	
+	public String exists()
+	{
+		return "existsExpResult_";
+	}
+	
+	public String exists1()
+	{
+		return "exists1Counter_";
+	}
 }

@@ -69,7 +69,6 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
-import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.comp.ComplexCompStrategy;
@@ -252,7 +251,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 			letBeStResult = transAssistant.getInfo().getExpAssistant().consNullExp();
 		} else
 		{
-			String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
+			String var = tempVarNameGen.nextVarName(prefixes.letBeSt());
 			SExpCG value = node.getValue();
 
 			AVarDeclCG resultDecl = transAssistant.consDecl(var, value.getType().clone(), transAssistant.getInfo().getExpAssistant().consNullExp());
@@ -337,7 +336,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		SExpCG predicate = node.getPredicate();
 		STypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_MAP_COMP_NAME_PREFIX);
+		String var = tempVarNameGen.nextVarName(prefixes.mapComp());
 
 		ComplexCompStrategy strategy = new MapCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, iteVarPrefixes);
 
@@ -370,7 +369,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		SExpCG predicate = node.getPredicate();
 		STypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_SET_COMP_NAME_PREFIX);
+		String var = tempVarNameGen.nextVarName(prefixes.setComp());
 
 		ComplexCompStrategy strategy = new SetCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, iteVarPrefixes);
 
@@ -402,7 +401,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		SExpCG predicate = node.getPredicate();
 		STypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_SEQ_COMP_NAME_PREFIX);
+		String var = tempVarNameGen.nextVarName(prefixes.seqComp());
 
 		SeqCompStrategy strategy = new SeqCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, iteVarPrefixes);
 
@@ -435,7 +434,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 
 		SExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_FORALL_EXP_NAME_PREFIX);
+		String var = tempVarNameGen.nextVarName(prefixes.forAll());
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, iteVarPrefixes);
 
@@ -467,7 +466,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 
 		SExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX);
+		String var = tempVarNameGen.nextVarName(prefixes.exists());
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, iteVarPrefixes);
 
@@ -499,7 +498,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 
 		SExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX);
+		String var = tempVarNameGen.nextVarName(prefixes.exists1());
 
 		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transAssistant, predicate, var, langIterator, tempVarNameGen, iteVarPrefixes, counterData);
 

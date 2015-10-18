@@ -64,7 +64,6 @@ import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
-import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IREventCoordinator;
 import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRStatus;
@@ -78,7 +77,6 @@ import org.overture.codegen.trans.ModuleToClassTransformation;
 import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
-import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
@@ -785,7 +783,8 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaConstants.RESERVED_WORDS, generator.getIRInfo(), INVALID_NAME_PREFIX));
 		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(JAVA_RESERVED_TYPE_NAMES, generator.getIRInfo(), INVALID_NAME_PREFIX));
 
-		String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, varPrefixManager.getIteVarPrefixes().GENERATED_TEMP_NAMES);
+		//TODO: needs to take all of them into account
+		String[] generatedTempVarNames = varPrefixManager.getIteVarPrefixes().GENERATED_TEMP_NAMES;
 
 		Set<Violation> tempVarViolations = analysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(generatedTempVarNames, generator.getIRInfo(), INVALID_NAME_PREFIX));
 
