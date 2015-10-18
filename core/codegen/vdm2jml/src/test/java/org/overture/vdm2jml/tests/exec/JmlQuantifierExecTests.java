@@ -10,13 +10,13 @@ import org.overture.codegen.utils.GeneralUtils;
 import org.overture.vdm2jml.tests.util.TestUtil;
 
 @RunWith(Parameterized.class)
-public class JmlQuantifiersExecTests extends JmlExecTestBase
+public class JmlQuantifierExecTests extends JmlExecTestBase
 {
-	public static final String TEST_DIR = JmlExecTestBase.TEST_RES_DYNAMIC_ANALYSIS_ROOT + "quantifiers";
+	public static final String TEST_DIR = JmlExecTestBase.TEST_RES_DYNAMIC_ANALYSIS_ROOT + "quantifier";
 
-	public static final String PROPERTY_ID = "quantifiers";
+	public static final String PROPERTY_ID = "quantifier";
 	
-	public JmlQuantifiersExecTests(File inputFile)
+	public JmlQuantifierExecTests(File inputFile)
 	{
 		super(inputFile);
 	}
