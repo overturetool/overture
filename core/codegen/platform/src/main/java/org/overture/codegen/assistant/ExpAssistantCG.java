@@ -58,6 +58,7 @@ import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolIsExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharIsExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
@@ -81,6 +82,7 @@ import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATokenIsExpCG;
 import org.overture.codegen.cgast.expressions.ATupleIsExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SIsExpCG;
 import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
@@ -670,6 +672,14 @@ public class ExpAssistantCG extends AssistantBase
 		return next;
 	}
 	
+	public AUndefinedExpCG consUndefinedExp()
+	{
+		AUndefinedExpCG undefExp = new AUndefinedExpCG();
+		undefExp.setType(new AUnknownTypeCG());
+		
+		return undefExp;
+	}
+	
 	public ANullExpCG consNullExp()
 	{
 		ANullExpCG nullExp = new ANullExpCG();
@@ -695,5 +705,21 @@ public class ExpAssistantCG extends AssistantBase
 		mapType.setInjective(isInjective);
 
 		return mapType;
+	}
+	
+	public boolean isUndefined(SExpCG exp)
+	{
+		if(exp instanceof ACastUnaryExpCG)
+		{
+			return isUndefined(((ACastUnaryExpCG) exp).getExp());
+		}
+		else if(exp instanceof AUndefinedExpCG)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
