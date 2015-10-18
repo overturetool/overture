@@ -20,9 +20,4 @@ Run () ==
   return 0;
 );
 
-functions
-
-xs :  () -> set of nat
-xs () == {};
-
 end Entry	
