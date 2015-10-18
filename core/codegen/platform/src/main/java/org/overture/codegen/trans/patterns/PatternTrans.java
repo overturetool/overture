@@ -119,6 +119,14 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
+		
+		if (pattern  instanceof AIgnorePatternCG)
+		{
+			AIdentifierPatternCG idPattern = getIdPattern(config.getIgnorePatternPrefix());
+			transAssistant.replaceNodeWith(node.getTarget(), idPattern);
+			transAssistant.replaceNodeWith(pattern, idPattern.clone());
+			return;
+		}
 
 		DeclarationTag tag = fetchTag(node);
 
