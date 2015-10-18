@@ -1,0 +1,10 @@
+"Before legal use"
+"After legal use"
+"Before violations"
+Entry.java:91: JML assertion is false
+            //@ assert (V2J.isSet(ignorePattern_3) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_3); Utils.is_nat1(V2J.get(ignorePattern_3,i))));
+                ^
+Entry.java:114: JML assertion is false
+            //@ assert (V2J.isSet(ignorePattern_4) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_4); Utils.is_nat1(V2J.get(ignorePattern_4,i))));
+                ^
+"After violations"
