@@ -79,7 +79,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 		{
 			AVarDeclCG decl = transAssistant.getInfo().getDeclAssistant().
 					consLocalVarDecl(transAssistant.getSetTypeCloned(setType).getSetOf(),
-					id.clone(), transAssistant.getInfo().getExpAssistant().consNullExp());
+					id.clone(), transAssistant.getInfo().getExpAssistant().consUndefinedExp());
 			decls.add(decl);
 			outerBlockDecls.add(decl);
 		}

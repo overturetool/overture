@@ -307,6 +307,11 @@ public class TypePredHandler
 		// let x : Even = 1 in ...
 		// (dcl y : Even | nat := 2; ...)
 
+		if(getInfo().getExpAssistant().isUndefined(node.getExp()))
+		{
+			return null;
+		}
+		
 		AbstractTypeInfo typeInfo = util.findTypeInfo(node.getType());
 
 		if (proceed(typeInfo))
