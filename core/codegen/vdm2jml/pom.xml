@@ -75,6 +75,15 @@
 									<outputDirectory>${basedir}/target/jml/lib</outputDirectory>
 									<destFileName>codegen-runtime.jar</destFileName>
 								</artifactItem>
+								<artifactItem>
+									<groupId>org.overturetool.core.codegen</groupId>
+									<artifactId>vdm2jml-runtime</artifactId>
+									<version>${project.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${basedir}/target/jml/lib</outputDirectory>
+									<destFileName>vdm2jml-runtime.jar</destFileName>
+								</artifactItem>
 							</artifactItems>
 						</configuration>
 					</execution>

@@ -21,9 +21,14 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 	
 	public static final String JML_RUNTIME = "jmlruntime.jar";
 
-	public static final String CODEGEN_RUNTIME = TEST_EXEC_FOLDER_PATH
-			+ File.separatorChar + "lib" + File.separatorChar
+	public static final String TEST_EXEC_LIB_FOLDER_PATH = TEST_EXEC_FOLDER_PATH
+			+ File.separatorChar + "lib";
+	
+	public static final String CODEGEN_RUNTIME = TEST_EXEC_LIB_FOLDER_PATH + File.separatorChar
 			+ "codegen-runtime.jar";
+	
+	public static final String VDM_TO_JML_RUNTIME = TEST_EXEC_LIB_FOLDER_PATH + File.separatorChar
+			+ "vdm2jml-runtime.jar";
 	
 	public static final String EXEC_PROPERTY = "tests.vdm2jml.openjml";
 
@@ -32,10 +37,12 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 	protected File openJml;
 	protected File jmlRuntime;
 	protected File cgRuntime;
+	protected File vdm2jmlRuntime;
 	public OpenJmlValidationBase(File inputFile)
 	{
 		super(inputFile);
 		this.cgRuntime = new File(CODEGEN_RUNTIME);
+		this.vdm2jmlRuntime = new File(VDM_TO_JML_RUNTIME);
 		
 		setOpenJmlTools();
 	}
