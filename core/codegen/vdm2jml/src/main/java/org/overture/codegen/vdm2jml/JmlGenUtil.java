@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -25,6 +26,7 @@ import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
 import org.overture.codegen.vdm2jml.data.RecClassInfo;
@@ -301,6 +303,11 @@ public class JmlGenUtil
 				{
 					recClass.setPackage(clazz.getName() + JavaFormat.TYPE_DECL_PACKAGE_SUFFIX);
 				}
+				
+				List<ClonableString> imports = new LinkedList<>();
+				imports.add(new ClonableString(JavaCodeGen.JAVA_UTIL));
+				imports.add(new ClonableString(JavaCodeGen.RUNTIME_IMPORT));
+				recClass.setDependencies(imports);
 
 				extraClasses.add(new IRStatus<INode>(recClass.getName(), recClass, new HashSet<VdmNodeInfo>()));
 			}
