@@ -1,6 +1,6 @@
 package org.overture.codegen.vdm2jml.predgen.info;
 
-import org.overture.codegen.runtime.V2J;
+import org.overture.codegen.vdm2jml.runtime.V2J;
 
 public class SeqInfo extends AbstractSetSeqInfo
 {

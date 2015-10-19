@@ -5,12 +5,12 @@ import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.overture.codegen.runtime.V2J;
 import org.overture.codegen.vdm2jml.predgen.info.AbstractSetSeqInfo;
 import org.overture.codegen.vdm2jml.predgen.info.MapInfo;
 import org.overture.codegen.vdm2jml.predgen.info.SeqInfo;
 import org.overture.codegen.vdm2jml.predgen.info.SetInfo;
 import org.overture.codegen.vdm2jml.predgen.info.TupleInfo;
+import org.overture.codegen.vdm2jml.runtime.V2J;
 
 public class V2JCallTests
 {
