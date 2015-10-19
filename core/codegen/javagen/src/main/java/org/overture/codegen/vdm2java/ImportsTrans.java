@@ -25,17 +25,17 @@ public class ImportsTrans extends DepthFirstAnalysisAdaptor
 		
 		if(!info.getDeclAssistant().isInnerClass(node))
 		{
-			dep.add(new ClonableString("java.util.*"));
-			dep.add(new ClonableString("org.overture.codegen.runtime.*"));
+			dep.add(new ClonableString(JavaCodeGen.JAVA_UTIL));
+			dep.add(new ClonableString(JavaCodeGen.RUNTIME_IMPORT));
 		}
 		else if(!info.getDeclAssistant().isInnerClass(node) && isQuote(node))
 		{
-			dep.add(new ClonableString("org.overture.codegen.runtime.*"));
+			dep.add(new ClonableString(JavaCodeGen.RUNTIME_IMPORT));
 		}
 		
 		if(importTraceSupport(node))
 		{
-			dep.add(new ClonableString("org.overture.codegen.runtime.traces.*"));
+			dep.add(new ClonableString(JavaCodeGen.TRACE_IMPORT));
 		}
 		
 		node.setDependencies(dep);
@@ -43,7 +43,7 @@ public class ImportsTrans extends DepthFirstAnalysisAdaptor
 	
 	public static boolean isQuote(ADefaultClassDeclCG classCg)
 	{
-		return classCg != null && "quotes".equals(classCg.getPackage());
+		return classCg != null && JavaCodeGen.JAVA_QUOTES_PACKAGE.equals(classCg.getPackage());
 	}
 	
 	public boolean importTraceSupport(ADefaultClassDeclCG node)

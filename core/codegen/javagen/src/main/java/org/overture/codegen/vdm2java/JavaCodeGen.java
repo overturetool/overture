@@ -84,6 +84,10 @@ import org.overture.config.Settings;
 
 public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJavaQouteEventCoordinator
 {
+	public static final String TRACE_IMPORT = "org.overture.codegen.runtime.traces.*";
+	public static final String RUNTIME_IMPORT = "org.overture.codegen.runtime.*";
+	public static final String JAVA_UTIL = "java.util.*";
+	
 	public static final String JAVA_TEMPLATES_ROOT_FOLDER = "JavaTemplates";
 
 	public static final String[] JAVA_RESERVED_TYPE_NAMES = {
