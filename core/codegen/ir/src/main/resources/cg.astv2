@@ -222,6 +222,7 @@ CG {-> package='org.overture.codegen.cgast'
 #Class {-> package='org.overture.codegen.cgast.declarations'
   | (globalMetaData):eString*
   | [package]:java_String
+  | (dependencies):eString*
   | [access]:java_String
   | [abstract]:java_Boolean
   | [static]:java_Boolean 
