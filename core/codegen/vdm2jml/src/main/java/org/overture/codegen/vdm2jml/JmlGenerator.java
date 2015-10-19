@@ -55,6 +55,7 @@ import de.hunsicker.jalopy.storage.ConventionKeys;
 
 public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 {
+	private static final String VDM_JML_RUNTIME_IMPORT = "org.overture.codegen.vdm2jml.runtime.*";
 	public static final String DEFAULT_JAVA_ROOT_PACKAGE = "project";
 	public static final String GEN_INV_METHOD_PARAM_NAME = "elem";
 	public static final String INV_PREFIX = "inv_";
@@ -245,9 +246,14 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		// Also extract classes that are records
 		for(IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(newAst, ADefaultClassDeclCG.class))
 		{
+			ADefaultClassDeclCG clazz = status.getIrNode();
+			
 			// VDM uses the type system to control whether 'nil' is allowed as a value so we'll
 			// just annotate all classes as @nullable_by_default
-			annotator.makeNullableByDefault(status.getIrNode());
+			annotator.makeNullableByDefault(clazz);
+
+			// Make sure that the classes can access the VDM to JML runtime
+			addVdmToJmlRuntimeImport(clazz);
 		}
 		
 		// Only extract from 'ast' to not get the record classes
@@ -324,6 +330,15 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		
 		// Return back the modified AST to the Java code generator
 		return newAst;
+	}
+
+	private void addVdmToJmlRuntimeImport(ADefaultClassDeclCG clazz)
+	{
+		String vdmJmlRuntimeImport = VDM_JML_RUNTIME_IMPORT;
+		List<ClonableString> allImports = new LinkedList<>();
+		allImports.addAll(clazz.getDependencies());
+		allImports.add(new ClonableString(vdmJmlRuntimeImport));
+		clazz.setDependencies(allImports);
 	}
 
 	private RecClassInfo makeRecStateAccessorBased(List<IRStatus<INode>> ast) {
@@ -661,6 +676,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 			// field is null. So we'll mark quote classes as nullable_by_default.
 			//Example from class represented <A>: private static AQuote instance = null;
 			annotator.makeNullableByDefault(qc);
+			addVdmToJmlRuntimeImport(qc);
 		}
 	}
 }
