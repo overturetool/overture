@@ -3,21 +3,21 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-   <artifactId>core</artifactId>
+    <artifactId>core</artifactId>
     <groupId>org.overturetool</groupId>
     <version>2.3.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
- <packaging>pom</packaging>
+  <packaging>pom</packaging>
 
   <groupId>org.overturetool.core</groupId>
   <artifactId>codegen</artifactId>
   <name>Code Generation</name>
 
   <properties> <!-- switch to 1.6.7 for isagen -->
-      <!--<astcreator.version>1.6.7-SNAPSHOT</astcreator.version>-->
-      <astcreator.version>1.6.6</astcreator.version>
+    <!--<astcreator.version>1.6.7-SNAPSHOT</astcreator.version>-->
+    <astcreator.version>1.6.6</astcreator.version>
   </properties>
 
   <modules>
@@ -25,6 +25,7 @@
     <module>platform</module>
     <module>javagen</module>
     <module>vdm2jml</module>
+    <module>vdm2jml-runtime</module>
     <module>codegen-runtime</module>
     <module>codegen-maven-plugin</module>
     <!--<module>isagen</module>-->
