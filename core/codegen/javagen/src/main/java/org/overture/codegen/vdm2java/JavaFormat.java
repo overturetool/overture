@@ -885,14 +885,9 @@ public class JavaFormat
 	
 	public boolean isInnerClass(ADefaultClassDeclCG node)
 	{
-		return node.parent() != null && node.parent().getAncestor(ADefaultClassDeclCG.class) != null;
+		return info.getDeclAssistant().isInnerClass(node);
 	}
 	
-	public static boolean isQuote(ADefaultClassDeclCG classCg)
-	{
-		return classCg != null && "quotes".equals(classCg.getPackage());
-	}
-
 	public String formatStartStmExp(AStartStmCG node) throws AnalysisException
 	{
 		String str = format(node.getExp());
@@ -934,11 +929,6 @@ public class JavaFormat
 		return block != null && block.getScoped() != null && block.getScoped();
 	}
 
-	public boolean importTraceSupport(ADefaultClassDeclCG node)
-	{
-		return info.getSettings().generateTraces() && !node.getTraces().isEmpty();
-	}
-	
 	public static boolean isMainClass(ADefaultClassDeclCG clazz)
 	{
 		return clazz != null && clazz.getTag() instanceof JavaMainTag;
@@ -1008,5 +998,10 @@ public class JavaFormat
 	public String genForIndexByVarName()
 	{
 		return info.getTempVarNameGen().nextVarName(varPrefixManager.getIteVarPrefixes().forIndexByVar());
+	}
+	
+	public static String getString(ClonableString c)
+	{
+		return c.value;
 	}
 }

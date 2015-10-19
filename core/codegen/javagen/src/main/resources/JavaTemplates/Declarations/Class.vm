@@ -5,17 +5,9 @@
 ##
 $package
 ##
-#if (!$JavaFormat.isInnerClass($node))
-#**#import org.overture.codegen.runtime.*;
-#**#import java.util.*;
-#elseif ( !$JavaFormat.isInnerClass($node) && !$JavaFormat.isQuote($node))
-#**#import org.overture.codegen.runtime.*;
-#end
-##
-#if ($JavaFormat.importTraceSupport($node))
-#**#import org.overture.codegen.runtime.traces.*;##
-#end
-##
+#foreach( $dep in $node.getDependencies() )
+import ${JavaFormat.getString($dep)};
+#end##
 ##
 #set( $abstract = "")
 #if ($node.getAbstract())

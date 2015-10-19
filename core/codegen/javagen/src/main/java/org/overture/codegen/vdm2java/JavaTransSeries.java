@@ -103,6 +103,7 @@ public class JavaTransSeries
 		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, unionTypePrefixes, codeGen.getJavaFormat().getValueSemantics().getCloneFreeNodes());
 		JavaToStringTrans javaToStringTr = new JavaToStringTrans(info);
 		RecMethodsTrans recTr = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());
+		ImportsTrans impTr = new ImportsTrans(info);
 
 		// Start concurrency transformations
 		SentinelTrans sentinelTr = new SentinelTrans(info);
@@ -136,6 +137,7 @@ public class JavaTransSeries
 		series.add(seqConvTr);
 		series.add(evalPermPredTr);
 		series.add(recTr);
+		series.add(impTr);
 
 		return series;
 	}
