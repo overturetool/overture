@@ -1,4 +1,4 @@
 "Breaking named type invariant for method parameter"
-Entry.java:49: JML assertion is false
+Entry.java:50: JML assertion is false
         //@ assert (Utils.is_nat(c) && inv_Entry_Even(c));
             ^

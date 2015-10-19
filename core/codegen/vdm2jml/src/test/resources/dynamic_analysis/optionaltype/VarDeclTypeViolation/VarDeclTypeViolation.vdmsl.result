@@ -1,7 +1,7 @@
 "Before VALID initialisation"
 "After VALID initialisation"
 "Before INVALID initialisation"
-Entry.java:32: JML assertion is false
+Entry.java:33: JML assertion is false
             //@ assert Utils.is_nat(bError);
                 ^
 "After INVALID initialisation"

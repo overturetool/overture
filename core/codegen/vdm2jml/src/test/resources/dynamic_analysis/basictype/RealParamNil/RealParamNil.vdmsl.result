@@ -1,7 +1,7 @@
 "Before valid use."
 "After valid use."
 "Before invalid use."
-Entry.java:31: JML assertion is false
+Entry.java:32: JML assertion is false
         //@ assert Utils.is_real(ignorePattern_1);
             ^
 "After invalid use."

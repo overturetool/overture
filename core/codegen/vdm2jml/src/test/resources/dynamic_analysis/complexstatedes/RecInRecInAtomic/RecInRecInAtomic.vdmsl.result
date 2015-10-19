@@ -1,10 +1,10 @@
 "Before useOk"
 "After useOk"
 "Before useNotOk"
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInAtomic/project/Entrytypes/R1.java:63: JML invariant is false on leaving method project.Entrytypes.R1.valid()
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInAtomic/project/Entrytypes/R1.java:64: JML invariant is false on leaving method project.Entrytypes.R1.valid()
     public Boolean valid() {
                    ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInAtomic/project/Entrytypes/R1.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInAtomic/project/Entrytypes/R1.java:63: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInAtomic/project/Entrytypes/R1.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInAtomic/project/Entrytypes/R1.java:64: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R1(r2);
                         ^
 "After useNotOk"

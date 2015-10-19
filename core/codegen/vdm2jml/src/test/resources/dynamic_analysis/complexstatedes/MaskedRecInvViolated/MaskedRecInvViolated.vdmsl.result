@@ -1,169 +1,169 @@
 "Before useOk"
 "After useOk"
 "Before useNotOk"
-Entry.java:177: JML invariant is false on entering method project.Entrytypes.R3.get_r4() from project.Entry.inv_Entry_T3(java.lang.Object)
+Entry.java:178: JML invariant is false on entering method project.Entrytypes.R3.get_r4() from project.Entry.inv_Entry_T3(java.lang.Object)
         return !(Utils.equals(t3.get_r4().get_x(), 10L));
                                        ^
-Entry.java:177: 
+Entry.java:178: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:48: JML invariant is false on leaving method project.Entrytypes.R3.get_r4()
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:49: JML invariant is false on leaving method project.Entrytypes.R3.get_r4()
     public project.Entrytypes.R4 get_r4() {
                                  ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:48: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:49: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:63: JML invariant is false on leaving method project.Entrytypes.R3.valid()
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:64: JML invariant is false on leaving method project.Entrytypes.R3.valid()
     public Boolean valid() {
                    ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:63: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:64: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: JML invariant is false
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: JML invariant is false
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML caller invariant is false on leaving calling method (Parameter: _t3, Caller: project.Entrytypes.R2.inv_R2(project.Entrytypes.R3), Callee: org.overture.codegen.runtime.Utils.equals(java.lang.Object,java.lang.Object))
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: JML invariant is false on leaving method project.Entrytypes.R2.inv_R2(project.Entrytypes.R3) (parameter _t3)
     public static Boolean inv_R2(final project.Entrytypes.R3 _t3) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/MaskedRecInvViolated/project/Entrytypes/R2.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
 "After useNotOk"

@@ -1,18 +1,18 @@
-Entry.java:10: JML static initialization may not be correct
+Entry.java:11: JML static initialization may not be correct
 final public class Entry {
              ^
-Entry.java:14: Associated declaration
+Entry.java:15: Associated declaration
     //@ public static invariant (((Utils.is_char(fBreak) && inv_Entry_C(fBreak)) || (Utils.is_nat(fBreak) && inv_Entry_N(fBreak))) && inv_Entry_CN(fBreak));
                       ^
 Main.java:7: JML invariant is false on entering method project.Entry.Run() from Main.main(java.lang.String[])
 			project.Entry.Run();
 			                 ^
-Entry.java:14: Associated declaration
+Entry.java:15: Associated declaration
     //@ public static invariant (((Utils.is_char(fBreak) && inv_Entry_C(fBreak)) || (Utils.is_nat(fBreak) && inv_Entry_N(fBreak))) && inv_Entry_CN(fBreak));
                       ^
-Entry.java:21: JML invariant is false on leaving method project.Entry.Run()
+Entry.java:22: JML invariant is false on leaving method project.Entry.Run()
     public static Object Run() {
                          ^
-Entry.java:14: Associated declaration
+Entry.java:15: Associated declaration
     //@ public static invariant (((Utils.is_char(fBreak) && inv_Entry_C(fBreak)) || (Utils.is_nat(fBreak) && inv_Entry_N(fBreak))) && inv_Entry_CN(fBreak));
                       ^

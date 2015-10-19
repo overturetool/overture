@@ -1,8 +1,8 @@
 "Before breaking record invariant"
-Rec.java:15: JML invariant is false on leaving method project.Entrytypes.Rec.Rec(java.lang.Number,java.lang.Number)
+Rec.java:16: JML invariant is false on leaving method project.Entrytypes.Rec.Rec(java.lang.Number,java.lang.Number)
     public Rec(final Number _x, final Number _y) {
            ^
-Rec.java:14: Associated declaration
+Rec.java:15: Associated declaration
     //@ public instance invariant project.Entry.invChecksOn ==> inv_Rec(x,y);
                         ^
 "After breaking record invariant"

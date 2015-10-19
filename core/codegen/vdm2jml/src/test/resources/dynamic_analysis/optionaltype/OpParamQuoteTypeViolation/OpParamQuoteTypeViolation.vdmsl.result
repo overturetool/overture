@@ -1,7 +1,7 @@
 "Before passing LEGAL value"
 "After passing LEGAL value"
 "Before passing ILLEGAL value"
-Entry.java:34: JML assertion is false
+Entry.java:35: JML assertion is false
         //@ assert Utils.is_(ignorePattern_1,project.quotes.AQuote.class);
             ^
 "After passing ILLEGAL value"

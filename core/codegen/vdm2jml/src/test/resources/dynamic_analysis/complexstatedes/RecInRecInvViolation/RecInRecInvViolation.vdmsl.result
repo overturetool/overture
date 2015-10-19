@@ -1,106 +1,106 @@
 "Before useOk"
 "After useOk"
 "Before useNotOk"
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:63: JML invariant is false on leaving method project.Entrytypes.T2.valid()
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:64: JML invariant is false on leaving method project.Entrytypes.T2.valid()
     public Boolean valid() {
                    ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:63: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:64: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: JML caller invariant is false on leaving calling method (Parameter: _t2, Caller: project.Entrytypes.T1.inv_T1(project.Entrytypes.T2), Callee: java.lang.Number.longValue())
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: JML caller invariant is false on leaving calling method (Parameter: _t2, Caller: project.Entrytypes.T1.inv_T1(project.Entrytypes.T2), Callee: java.lang.Number.longValue())
     public static Boolean inv_T1(final project.Entrytypes.T2 _t2) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: JML invariant is false on leaving method project.Entrytypes.T1.inv_T1(project.Entrytypes.T2) (parameter _t2)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: JML invariant is false on leaving method project.Entrytypes.T1.inv_T1(project.Entrytypes.T2) (parameter _t2)
     public static Boolean inv_T1(final project.Entrytypes.T2 _t2) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: JML caller invariant is false on leaving calling method (Parameter: _t2, Caller: project.Entrytypes.T1.inv_T1(project.Entrytypes.T2), Callee: java.lang.Number.longValue())
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: JML caller invariant is false on leaving calling method (Parameter: _t2, Caller: project.Entrytypes.T1.inv_T1(project.Entrytypes.T2), Callee: java.lang.Number.longValue())
     public static Boolean inv_T1(final project.Entrytypes.T2 _t2) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: JML invariant is false on leaving method project.Entrytypes.T1.inv_T1(project.Entrytypes.T2) (parameter _t2)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: JML invariant is false on leaving method project.Entrytypes.T1.inv_T1(project.Entrytypes.T2) (parameter _t2)
     public static Boolean inv_T1(final project.Entrytypes.T2 _t2) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: JML invariant is false
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: JML invariant is false
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: JML caller invariant is false on leaving calling method (Parameter: _t2, Caller: project.Entrytypes.T1.inv_T1(project.Entrytypes.T2), Callee: java.lang.Number.longValue())
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: JML caller invariant is false on leaving calling method (Parameter: _t2, Caller: project.Entrytypes.T1.inv_T1(project.Entrytypes.T2), Callee: java.lang.Number.longValue())
     public static Boolean inv_T1(final project.Entrytypes.T2 _t2) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: JML invariant is false on leaving method project.Entrytypes.T1.inv_T1(project.Entrytypes.T2) (parameter _t2)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: JML invariant is false on leaving method project.Entrytypes.T1.inv_T1(project.Entrytypes.T2) (parameter _t2)
     public static Boolean inv_T1(final project.Entrytypes.T2 _t2) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: JML caller invariant is false on leaving calling method (Parameter: _t2, Caller: project.Entrytypes.T1.inv_T1(project.Entrytypes.T2), Callee: java.lang.Number.longValue())
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: JML caller invariant is false on leaving calling method (Parameter: _t2, Caller: project.Entrytypes.T1.inv_T1(project.Entrytypes.T2), Callee: java.lang.Number.longValue())
     public static Boolean inv_T1(final project.Entrytypes.T2 _t2) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: JML invariant is false on leaving method project.Entrytypes.T1.inv_T1(project.Entrytypes.T2) (parameter _t2)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: JML invariant is false on leaving method project.Entrytypes.T1.inv_T1(project.Entrytypes.T2) (parameter _t2)
     public static Boolean inv_T1(final project.Entrytypes.T2 _t2) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: JML caller invariant is false on leaving calling method (Parameter: _t2, Caller: project.Entrytypes.T1.inv_T1(project.Entrytypes.T2), Callee: java.lang.Number.longValue())
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: JML caller invariant is false on leaving calling method (Parameter: _t2, Caller: project.Entrytypes.T1.inv_T1(project.Entrytypes.T2), Callee: java.lang.Number.longValue())
     public static Boolean inv_T1(final project.Entrytypes.T2 _t2) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: JML invariant is false on leaving method project.Entrytypes.T1.inv_T1(project.Entrytypes.T2) (parameter _t2)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: JML invariant is false on leaving method project.Entrytypes.T1.inv_T1(project.Entrytypes.T2) (parameter _t2)
     public static Boolean inv_T1(final project.Entrytypes.T2 _t2) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:48: JML invariant is false on leaving method project.Entrytypes.T1.get_t2() (for result type)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:49: JML invariant is false on leaving method project.Entrytypes.T1.get_t2() (for result type)
     public project.Entrytypes.T2 get_t2() {
                                  ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:48: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:49: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: JML invariant is false
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: JML invariant is false
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: JML caller invariant is false on leaving calling method (Parameter: _t2, Caller: project.Entrytypes.T1.inv_T1(project.Entrytypes.T2), Callee: java.lang.Number.longValue())
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: JML caller invariant is false on leaving calling method (Parameter: _t2, Caller: project.Entrytypes.T1.inv_T1(project.Entrytypes.T2), Callee: java.lang.Number.longValue())
     public static Boolean inv_T1(final project.Entrytypes.T2 _t2) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: JML invariant is false on leaving method project.Entrytypes.T1.inv_T1(project.Entrytypes.T2) (parameter _t2)
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: JML invariant is false on leaving method project.Entrytypes.T1.inv_T1(project.Entrytypes.T2) (parameter _t2)
     public static Boolean inv_T1(final project.Entrytypes.T2 _t2) {
                                                              ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:69: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T1.java:70: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-Entry.java:93: JML invariant is false on entering method project.Entrytypes.T2.get_t3() from project.Entry.useNotOk()
+Entry.java:94: JML invariant is false on entering method project.Entrytypes.T2.get_t3() from project.Entry.useNotOk()
         project.Entrytypes.T3 stateDes_11 = stateDes_10.get_t3();
                                                               ^
-Entry.java:93: 
+Entry.java:94: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:48: JML invariant is false on leaving method project.Entrytypes.T2.get_t3()
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:49: JML invariant is false on leaving method project.Entrytypes.T2.get_t3()
     public project.Entrytypes.T3 get_t3() {
                                  ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:48: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/RecInRecInvViolation/project/Entrytypes/T2.java:49: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_T2(t3);
                         ^
 "After useNotOk"

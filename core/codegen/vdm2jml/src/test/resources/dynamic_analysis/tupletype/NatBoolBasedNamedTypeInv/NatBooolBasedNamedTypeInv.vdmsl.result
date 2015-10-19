@@ -1,10 +1,10 @@
 "Before legal use"
 "After legal use"
 "Before illegal uses"
-Entry.java:32: JML assertion is false
+Entry.java:33: JML assertion is false
             //@ assert ((V2J.isTup(ignorePattern_2,2) && Utils.is_nat(V2J.field(ignorePattern_2,0)) && Utils.is_bool(V2J.field(ignorePattern_2,1))) && inv_Entry_TrueEven(ignorePattern_2));
                 ^
-Entry.java:40: JML assertion is false
+Entry.java:41: JML assertion is false
             //@ assert ((V2J.isTup(ignorePattern_3,2) && Utils.is_nat(V2J.field(ignorePattern_3,0)) && Utils.is_bool(V2J.field(ignorePattern_3,1))) && inv_Entry_TrueEven(ignorePattern_3));
                 ^
 "After illegal uses"

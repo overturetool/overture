@@ -1,13 +1,13 @@
 "Before legal use"
 "After legal use"
 "Before illegal use"
-Entry.java:47: JML assertion is false
+Entry.java:48: JML assertion is false
         //@ assert (V2J.isSet(xs) && (\forall int i; 0 <= i && i < V2J.size(xs); Utils.is_bool(V2J.get(xs,i))));
             ^
-Entry.java:50: JML assertion is false
+Entry.java:51: JML assertion is false
         //@ assert (V2J.isSet(ret_1) && (\forall int i; 0 <= i && i < V2J.size(ret_1); Utils.is_bool(V2J.get(ret_1,i))));
             ^
-Entry.java:35: JML assertion is false
+Entry.java:36: JML assertion is false
             //@ assert (V2J.isSet(r) && (\forall int i; 0 <= i && i < V2J.size(r); Utils.is_bool(V2J.get(r,i))));
                 ^
 "After illegal use"

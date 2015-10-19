@@ -1,10 +1,10 @@
 "Before evaluating ok()"
 "After evaluating ok()"
 "Before evaluating error()"
-Entry.java:60: JML assertion is false
+Entry.java:61: JML assertion is false
         //@ assert Utils.is_token(ret_2);
             ^
-Entry.java:32: JML assertion is false
+Entry.java:33: JML assertion is false
             //@ assert Utils.is_token(ignorePattern_2);
                 ^
 "After evaluating error()"

@@ -1,7 +1,7 @@
 "Before legal use"
 "After legal use"
 "Before illegal use"
-Entry.java:44: JML assertion is false
+Entry.java:45: JML assertion is false
             //@ assert (Utils.is_bool(a) || Utils.is_char(a) || Utils.is_nat1(a));
                 ^
 "After illegal use"

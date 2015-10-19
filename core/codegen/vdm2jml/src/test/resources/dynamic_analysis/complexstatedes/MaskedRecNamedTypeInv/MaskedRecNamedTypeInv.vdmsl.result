@@ -1,7 +1,7 @@
 "Before useOk"
 "After useOk"
 "Before useNotOk"
-Entry.java:128: JML assertion is false
+Entry.java:129: JML assertion is false
             //@ assert (Utils.is_(stateDes_8,project.Entrytypes.R3.class) && inv_Entry_T3(stateDes_8));
                 ^
 "After useNotOk"

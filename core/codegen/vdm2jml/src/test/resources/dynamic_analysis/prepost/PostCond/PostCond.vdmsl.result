@@ -1,8 +1,8 @@
 "Before breaking post condition"
-Entry.java:49: JML postcondition is false
+Entry.java:50: JML postcondition is false
     public static Number opRet(final Number a) {
                          ^
-Entry.java:48: Associated declaration
+Entry.java:49: Associated declaration
     //@ ensures post_opRet(a,\result,\old(St.copy()),St);
         ^
 "After breaking post condition"

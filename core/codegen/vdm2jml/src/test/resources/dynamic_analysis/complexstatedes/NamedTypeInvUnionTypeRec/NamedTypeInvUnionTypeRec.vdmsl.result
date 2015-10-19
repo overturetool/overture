@@ -1,22 +1,22 @@
 "Before useOk"
 "After useOk"
 "Before useNotOk"
-Entry.java:223: JML invariant is false on entering method project.Entrytypes.R3.get_r4() from project.Entry.inv_Entry_T3(java.lang.Object)
+Entry.java:224: JML invariant is false on entering method project.Entrytypes.R3.get_r4() from project.Entry.inv_Entry_T3(java.lang.Object)
                 apply_9 = ((project.Entrytypes.R3) t3).get_r4();
                                                              ^
-Entry.java:223: 
+Entry.java:224: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvUnionTypeRec/project/Entrytypes/R3.java:48: JML invariant is false on leaving method project.Entrytypes.R3.get_r4()
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvUnionTypeRec/project/Entrytypes/R3.java:49: JML invariant is false on leaving method project.Entrytypes.R3.get_r4()
     public project.Entrytypes.R4 get_r4() {
                                  ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvUnionTypeRec/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvUnionTypeRec/project/Entrytypes/R3.java:48: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvUnionTypeRec/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvUnionTypeRec/project/Entrytypes/R3.java:49: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvUnionTypeRec/project/Entrytypes/R3.java:63: JML invariant is false on leaving method project.Entrytypes.R3.valid()
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvUnionTypeRec/project/Entrytypes/R3.java:64: JML invariant is false on leaving method project.Entrytypes.R3.valid()
     public Boolean valid() {
                    ^
-/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvUnionTypeRec/project/Entrytypes/R3.java:13: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvUnionTypeRec/project/Entrytypes/R3.java:63: 
+/home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvUnionTypeRec/project/Entrytypes/R3.java:14: Associated declaration: /home/peter/dev/ovtrepo/core/codegen/vdm2jml/target/jml/code/NamedTypeInvUnionTypeRec/project/Entrytypes/R3.java:64: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
 "After useNotOk"
