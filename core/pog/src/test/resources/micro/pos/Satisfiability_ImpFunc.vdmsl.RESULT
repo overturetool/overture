@@ -1,1 +1,0 @@
-[{"poKind":"function postcondition satisfiable","poExp":"(forall mk_(a, b):(nat * nat), c:nat \u0026 (pre_f(mk_(a, b), c) \u003d\u003e (exists d:bool \u0026 post_f(mk_(a, b), c, d))))"}]
