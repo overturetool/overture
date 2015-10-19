@@ -1,5 +1,9 @@
 package org.overture.codegen.vdm2java;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
@@ -67,6 +71,10 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		decl.getMethods().add(consHashcodeMethod());
 		decl.getMethods().add(consEqualsMethod(quoteClassName));
 		decl.getMethods().add(consToStringMethod(quoteName));
+		
+		List<ClonableString> imports = new LinkedList<>();
+		imports.add(new ClonableString(JavaCodeGen.RUNTIME_IMPORT));
+		decl.setDependencies(imports);
 		
 		return decl;
 	}
