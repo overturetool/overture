@@ -1,7 +1,13 @@
-package org.overture.codegen.runtime;
+package org.overture.codegen.vdm2jml.runtime;
 
 import java.util.Collection;
 import java.util.HashSet;
+
+import org.overture.codegen.runtime.SeqUtil;
+import org.overture.codegen.runtime.Tuple;
+import org.overture.codegen.runtime.VDMMap;
+import org.overture.codegen.runtime.VDMSeq;
+import org.overture.codegen.runtime.VDMSet;
 
 public class V2J
 {
