@@ -41,6 +41,11 @@
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.overturetool.core.codegen</groupId>
+									<artifactId>vdm2jml-runtime</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.overturetool.core.codegen</groupId>
 									<artifactId>ir</artifactId>
 									<version>${project.version}</version>
 								</artifactItem>
@@ -113,6 +118,25 @@
 									<overWrite>true</overWrite>
 									<outputDirectory>${basedir}/target/runtime</outputDirectory>
 									<destFileName>codegen-runtime-sources.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.overturetool.core.codegen</groupId>
+									<artifactId>vdm2jml-runtime</artifactId>
+									<version>${project.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${basedir}/target/runtime</outputDirectory>
+									<destFileName>vdm2jml-runtime.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.overturetool.core.codegen</groupId>
+									<artifactId>vdm2jml-runtime</artifactId>
+									<version>${project.version}</version>
+									<classifier>sources</classifier>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${basedir}/target/runtime</outputDirectory>
+									<destFileName>vdm2jml-runtime-sources.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
