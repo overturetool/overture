@@ -236,14 +236,53 @@ public class Vdm2JavaCommand extends AbstractHandler
 						CodeGenConsole.GetInstance().printErrorln("Reason: " + e.getMessage());
 					}
 					
+					if(generateJml(vdmProject))
+					{
+						try
+						{
+							PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.VDM2JML_RUNTIME_BIN_FILE, libFolder);
+							outputVdm2JmlBinaries(libFolder);
+						}
+						catch(Exception e)
+						{
+							CodeGenConsole.GetInstance().printErrorln("Problems copying the VDM-to-JML runtime library to " + libFolder.getAbsolutePath());
+							CodeGenConsole.GetInstance().printErrorln("Reason: " + e.getMessage());
+						}
+						
+						try
+						{
+							PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.VDM2JML_RUNTIME_SOURCES_FILE, libFolder);
+							outputVdm2JmlSources(libFolder);
+						}
+						catch(Exception e)
+						{
+							CodeGenConsole.GetInstance().printErrorln("Problems copying the VDM-to-JML runtime library sources to " + libFolder.getAbsolutePath());
+							CodeGenConsole.GetInstance().printErrorln("Reason: " + e.getMessage());
+						}
+					}
+					
 					try
 					{
 						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.ECLIPSE_RES_FILES_FOLDER +  "/"
 								+ PluginVdm2JavaUtil.ECLIPSE_PROJECT_TEMPLATE_FILE, PluginVdm2JavaUtil.ECLIPSE_PROJECT_FILE, eclipseProjectFolder);
+						
+						GeneralCodeGenUtils.replaceInFile(new File(eclipseProjectFolder, PluginVdm2JavaUtil.ECLIPSE_PROJECT_FILE), "%s", project.getName());
+						
+						
 						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.ECLIPSE_RES_FILES_FOLDER +  "/"
 								+ PluginVdm2JavaUtil.ECLIPSE_CLASSPATH_TEMPLATE_FILE, PluginVdm2JavaUtil.ECLIPSE_CLASSPATH_FILE, eclipseProjectFolder);
 						
-						GeneralCodeGenUtils.replaceInFile(new File(eclipseProjectFolder, PluginVdm2JavaUtil.ECLIPSE_PROJECT_FILE), "%s", project.getName());
+						// Always imports codegen-runtime.jar
+						String classPathEntries =  PluginVdm2JavaUtil.RUNTIME_CLASSPATH_ENTRY;
+						
+						if(generateJml(vdmProject))
+						{
+							// Import the VDM-to-JML runtime
+							classPathEntries += PluginVdm2JavaUtil.VDM2JML_CLASSPATH_ENTRY;
+						}
+						
+						GeneralCodeGenUtils.replaceInFile(new File(eclipseProjectFolder, PluginVdm2JavaUtil.ECLIPSE_CLASSPATH_FILE), "%s", classPathEntries);
+						
 						
 						CodeGenConsole.GetInstance().println("Generated Eclipse project with Java generated code.\n");
 
@@ -316,10 +355,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 		{
 			List<AModuleModules> ast = PluginVdm2JavaUtil.getModules(model.getSourceUnits());
 			
-			Preferences prefs = getPrefs();
-			final boolean generateJml = prefs.getBoolean(ICodeGenConstants.GENERATE_JML, ICodeGenConstants.GENERATE_JML_DEFAULT);;
-
-			if (generateJml)
+			if (generateJml(project))
 			{
 				JmlGenerator jmlGen = new JmlGenerator(vdm2java);
 				return jmlGen.generateJml(ast);
@@ -328,6 +364,11 @@ public class Vdm2JavaCommand extends AbstractHandler
 				return vdm2java.generateJavaFromVdmModules(ast);
 			}
 		}
+	}
+
+	private boolean generateJml(IVdmProject project)
+	{
+		return project.getDialect() == Dialect.VDM_SL && getPrefs().getBoolean(ICodeGenConstants.GENERATE_JML, ICodeGenConstants.GENERATE_JML_DEFAULT);
 	}
 	
 	public IRSettings getIrSettings(final IProject project)
@@ -456,6 +497,18 @@ public class Vdm2JavaCommand extends AbstractHandler
 		File runtime = new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_SOURCES_FILE);
 		CodeGenConsole.GetInstance().println("Copied the Java code generator runtime library sources to " + runtime.getAbsolutePath() + "\n");
 	}
+	
+	private void outputVdm2JmlBinaries(File outputFolder)
+	{
+		File vdm2jmlRuntime = new File(outputFolder, PluginVdm2JavaUtil.VDM2JML_RUNTIME_BIN_FILE);
+		CodeGenConsole.GetInstance().println("Copied the VDM-to-JML runtime library to " + vdm2jmlRuntime.getAbsolutePath());
+	}
+	
+	private void outputVdm2JmlSources(File outputFolder)
+	{
+		File vdm2jmlSources = new File(outputFolder, PluginVdm2JavaUtil.VDM2JML_RUNTIME_BIN_FILE);
+		CodeGenConsole.GetInstance().println("Copied the VDM-to-JML runtime library sources to " + vdm2jmlSources.getAbsolutePath() + "\n");
+	}	
 
 	private void outputUserspecifiedModules(File outputFolder,
 			List<GeneratedModule> userspecifiedClasses)

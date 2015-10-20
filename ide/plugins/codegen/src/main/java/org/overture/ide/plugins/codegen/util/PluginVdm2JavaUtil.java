@@ -71,9 +71,13 @@ import org.overture.ide.plugins.codegen.commands.Vdm2JavaCommand;
 
 public class PluginVdm2JavaUtil
 {
+	public static final String CODEGEN_RUNTIME_LIB_FOLDER = "lib";
+	
 	public static final String CODEGEN_RUNTIME_BIN_FILE = "codegen-runtime.jar";
 	public static final String CODEGEN_RUNTIME_SOURCES_FILE = "codegen-runtime-sources.jar";
-	public static final String CODEGEN_RUNTIME_LIB_FOLDER = "lib";
+
+	public static final String VDM2JML_RUNTIME_BIN_FILE = "vdm2jml-runtime.jar";
+	public static final String VDM2JML_RUNTIME_SOURCES_FILE = "vdm2jml-runtime-sources.jar";
 	
 	public static final String ECLIPSE_CLASSPATH_TEMPLATE_FILE = "cg.classpath";
 	public static final String ECLIPSE_PROJECT_TEMPLATE_FILE = "cg.project";
@@ -83,6 +87,10 @@ public class PluginVdm2JavaUtil
 	public static final String ECLIPSE_PROJECT_FILE = ".project";
 	public static final String ECLIPSE_RES_FILES_FOLDER = "eclipsefiles";
 	public static final String ECLIPSE_PROJECT_SRC_FOLDER = "src"; 
+	
+	public static final String RUNTIME_CLASSPATH_ENTRY = "<classpathentry kind=\"lib\" path=\"lib/codegen-runtime.jar\"/>\n";
+	public static final String VDM2JML_CLASSPATH_ENTRY = "<classpathentry kind=\"lib\" path=\"lib/vdm2jml-runtime.jar\"/>\n";
+
 
 	public static final String WARNING = "[WARNING]";
 	
