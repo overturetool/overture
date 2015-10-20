@@ -1,1 +1,0 @@
-[{"poKind":"state invariant initialized","poExp":"(x \u003d y)"},{"poKind":"state invariant satisfiable","poExp":"(exists x:int, y:int \u0026 (x \u003d y))"},{"poKind":"state invariant holds","poExp":"((x \u003d y) \u003d\u003e (1 \u003d 1))"}]
