@@ -6,8 +6,8 @@
 <message column="1" line="483" message="Recursive function has no measure" messageType="warning" number="5012" resource="ADTSL"/>
 <message column="1" line="694" message="Recursive function has no measure" messageType="warning" number="5012" resource="ADTSL"/>
 <message column="1" line="713" message="Recursive function has no measure" messageType="warning" number="5012" resource="ADTSL"/>
-<message column="46" line="1161" message="data at 1159:35 hidden by data" messageType="warning" number="5008" resource="ADTSL"/>
 <message column="52" line="1161" message="position at 1159:41 hidden by position" messageType="warning" number="5008" resource="ADTSL"/>
+<message column="46" line="1161" message="data at 1159:35 hidden by data" messageType="warning" number="5008" resource="ADTSL"/>
 <message column="1" line="1201" message="Recursive function has no measure" messageType="warning" number="5012" resource="ADTSL"/>
 <message column="1" line="1480" message="Recursive function has no measure" messageType="warning" number="5012" resource="ADTSL"/>
 <message column="1" line="1512" message="Recursive function has no measure" messageType="warning" number="5012" resource="ADTSL"/>

@@ -1295,6 +1295,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			typeCheck(term.getList(), THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE));
 		}
 
+		// Mark node as used, as traces are not used anyway
+		question.assistantFactory.createPDefinitionAssistant().markUsed(node);
+		
 		return null;
 	}
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="16" line="61" message="Definition 'b' not used" messageType="warning" number="5000" resource="access-types.vpp"/>
 <message column="14" line="61" message="Definition 'a' not used" messageType="warning" number="5000" resource="access-types.vpp"/>
+<message column="16" line="61" message="Definition 'b' not used" messageType="warning" number="5000" resource="access-types.vpp"/>
 <message column="20" line="97" message="Definition 'r' not used" messageType="warning" number="5000" resource="access-types.vpp"/>
 <message column="15" line="101" message="Definition 'r' not used" messageType="warning" number="5000" resource="access-types.vpp"/>
 <message column="11" line="201" message="Unknown member f() of class A" messageType="warning" number="3091" resource="access-types.vpp"/>
