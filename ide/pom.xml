@@ -34,7 +34,6 @@
     <module>platform</module>
     <module>features</module>
     <module>product</module>
-    <module>tests</module>
   </modules>
 
   <reporting>
@@ -383,6 +382,18 @@ the manifests, though.
           </plugin>
         </plugins>
       </build>
+  </profile>
+
+    <profile>
+      <!-- This profile enables UI tests. Must not be enabled if running on terminal server with no UI -->
+      <id>ui-tests</id>
+      <activation>
+	<activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>ui.tests</module>
+      </modules>
     </profile>
+
   </profiles>
 </project>

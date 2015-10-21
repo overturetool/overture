@@ -4,9 +4,9 @@ Bundle-ActivationPolicy: lazy
 Bundle-Version: 2.3.1.qualifier
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
-Bundle-Name: org.overture.ide.tests.ui
+Bundle-Name: org.overture.ide.ui.tests
 Bundle-ManifestVersion: 2
-Bundle-SymbolicName: org.overture.ide.tests.ui;singleton:=true
+Bundle-SymbolicName: org.overture.ide.ui.tests;singleton:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Fragment-Host: org.overture.ide.ui
 Import-Package: org.junit
