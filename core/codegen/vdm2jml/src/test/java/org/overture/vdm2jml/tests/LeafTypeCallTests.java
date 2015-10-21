@@ -15,6 +15,7 @@ import org.overture.codegen.cgast.types.AQuoteTypeCG;
 import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.runtime.Utils;
 import org.overture.codegen.vdm2jml.predgen.info.LeafTypeInfo;
@@ -79,6 +80,12 @@ public class LeafTypeCallTests
 	public void recTest()
 	{
 		assertMethod(ARecordTypeCG.class, Object.class, Class.class);
+	}
+	
+	@Test
+	public void stringTest()
+	{
+		assertMethod(AStringTypeCG.class, Object.class, Class.class);
 	}
 
 	private void assertMethod(Class<? extends STypeCG> type, Class<?>... paramTypes)
