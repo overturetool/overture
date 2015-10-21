@@ -56,7 +56,6 @@ import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARecordModExpCG;
 import org.overture.codegen.cgast.expressions.ARecordModifierCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
-import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SBoolBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
@@ -69,6 +68,7 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.comp.ComplexCompStrategy;
@@ -594,10 +594,12 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		SStmCG enclosingStm = transAssistant.getEnclosingStm(node, "cases expression");
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
-		String casesExpResultName = transAssistant.getInfo().getTempVarNameGen().nextVarName(prefixes.casesExp());
+		IRInfo info = transAssistant.getInfo();
+		String casesExpResultName = info.getTempVarNameGen().nextVarName(prefixes.casesExp());
 		idPattern.setName(casesExpResultName);
 
-		AVarDeclCG resultVarDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(node.getType().clone(), idPattern, new AUndefinedExpCG());
+		AVarDeclCG resultVarDecl = info.getDeclAssistant().consLocalVarDecl(node.getType().clone(),
+				idPattern, info.getExpAssistant().consUndefinedExp());
 
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
 		resultVar.setIsLocal(true);
