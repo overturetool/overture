@@ -248,7 +248,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		if (transAssistant.hasEmptySet(binding))
 		{
 			transAssistant.cleanUpBinding(binding);
-			letBeStResult = transAssistant.getInfo().getExpAssistant().consNullExp();
+			letBeStResult = transAssistant.getInfo().getExpAssistant().consUndefinedExp();
 		} else
 		{
 			String var = tempVarNameGen.nextVarName(prefixes.letBeSt());
