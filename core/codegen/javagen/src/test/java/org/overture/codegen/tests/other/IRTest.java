@@ -111,7 +111,7 @@ public class IRTest
 		id.setName("x");
 		
 		AVarDeclCG varDecl = javaCodeGen.getInfo().getDeclAssistant().
-				consLocalVarDecl(new ARealNumericBasicTypeCG(), id, javaCodeGen.getInfo().getExpAssistant().consNullExp());
+				consLocalVarDecl(new ARealNumericBasicTypeCG(), id, javaCodeGen.getInfo().getExpAssistant().consUndefinedExp());
 		varDecl.setFinal(true);
 		
 		String expected = "final Number x = null;";

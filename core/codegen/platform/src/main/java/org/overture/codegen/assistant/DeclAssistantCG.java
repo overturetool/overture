@@ -636,7 +636,7 @@ public class DeclAssistantCG extends AssistantBase
 			localDecl.setExp(expAssistant.getDefaultBoolValue());
 		} else
 		{
-			localDecl.setExp(assistantManager.getExpAssistant().consNullExp());
+			localDecl.setExp(assistantManager.getExpAssistant().consUndefinedExp());
 		}
 	}
 

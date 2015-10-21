@@ -56,7 +56,7 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 		for (SPatternCG id : patterns)
 		{
 			AVarDeclCG decl = transAssistant.getInfo().getDeclAssistant().
-					consLocalVarDecl(setType.getSetOf().clone(), id.clone(), transAssistant.getInfo().getExpAssistant().consNullExp());
+					consLocalVarDecl(setType.getSetOf().clone(), id.clone(), transAssistant.getInfo().getExpAssistant().consUndefinedExp());
 			decl.setFinal(true);
 			decls.add(decl);
 		}

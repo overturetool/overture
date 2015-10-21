@@ -363,7 +363,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		id.setName(applyResultName);
 
 		AVarDeclCG resultDecl = transAssistant.getInfo().getDeclAssistant().
-				consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, transAssistant.getInfo().getExpAssistant().consNullExp());
+				consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, transAssistant.getInfo().getExpAssistant().consUndefinedExp());
 		
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
 		resultVar.setSourceNode(node.getSourceNode());
