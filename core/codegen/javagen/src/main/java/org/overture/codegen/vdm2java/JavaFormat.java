@@ -1004,4 +1004,9 @@ public class JavaFormat
 	{
 		return c.value;
 	}
+	
+	public boolean isUndefined(ACastUnaryExpCG cast)
+	{
+		return info.getExpAssistant().isUndefined(cast);
+	}
 }
