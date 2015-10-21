@@ -24,21 +24,15 @@ package org.overture.ide.ui.templates;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.overture.ast.lex.VDMToken;
-import org.overture.ide.ui.VdmUIPlugin;
+import org.overture.ide.ui.completion.CompletionUtil;
 import org.overture.ide.ui.editor.core.VdmDocument;
-import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
 
 public abstract class VdmContentAssistProcessor extends
 		VdmTemplateAssistProcessor
 {
-
-	VdmElementImageProvider imgProvider = new VdmElementImageProvider();
-	VdmCompleteProcesser processer = new VdmCompleteProcesser();
+	private VdmCompleteProcessor processer = new VdmCompleteProcessor();
 
 	public boolean enableTemplate()
 	{
@@ -72,7 +66,7 @@ public abstract class VdmContentAssistProcessor extends
 
 		if (viewer.getDocument() instanceof VdmDocument)
 		{
-			processer.computeCompletionProposals(computeVdmCompletionContext(viewer.getDocument(), offset), (VdmDocument) viewer.getDocument(), modList, offset);
+			processer.computeCompletionProposals(CompletionUtil.computeVdmCompletionContext(viewer.getDocument(), offset), (VdmDocument) viewer.getDocument(), modList, offset);
 		}
 
 		if (modList.size() > 0)
@@ -81,65 +75,5 @@ public abstract class VdmContentAssistProcessor extends
 		}
 
 		return completionProposals;
-	}
-
-	VDMToken getToken(char c)
-	{
-		String name = "" + c;
-		for (VDMToken token : VDMToken.values())
-		{
-			if (token.toString() != null && token.toString().equals(name))
-			{
-				return token;
-			}
-		}
-		return null;
-	}
-
-	private VdmCompletionContext computeVdmCompletionContext(IDocument doc,
-			int documentOffset)
-	{
-		// Use string buffer to collect characters
-		StringBuffer scanned = new StringBuffer();
-		while (true)
-		{
-			try
-			{
-				if(documentOffset-1==-1)
-				{
-					//EOF
-					break;
-				}
-				// Read character backwards
-				char c = doc.getChar(--documentOffset);
-
-				VDMToken token = null;
-				if ((token = getToken(c)) != null)// '`' == null
-				{
-					if (!(token == VDMToken.LT || token == VDMToken.POINT/* . */|| token == VDMToken.BRA /* ( */))
-					{
-						break;
-					}
-				}
-				
-				scanned.append(c);
-				
-				if(c=='n' && scanned.length()>3&& scanned.substring(scanned.length()-4, scanned.length()).matches("\\swen"))
-				{
-					
-					break;
-				}
-				
-
-			} catch (BadLocationException e)
-			{
-				e.printStackTrace();
-				VdmUIPlugin.log("completion failed", e);
-				// Document start reached, no tag found
-				break;
-			}
-		}
-		return new VdmCompletionContext(scanned.reverse());
-
 	}
 }
