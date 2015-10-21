@@ -1,0 +1,25 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  let - = f() in skip;
+  IO`println("Done! Expected no violations");
+  return 0;
+);
+
+functions
+
+f :  () -> [nat]
+f () == 
+let nil in set {nil}
+in
+ nil;
+
+end Entry	
