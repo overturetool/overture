@@ -120,7 +120,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 
 		String resultVarName = transAssistant.getInfo().getTempVarNameGen().nextVarName(prefixes.ternaryIfExp());
 
-		AVarDeclCG resultDecl = transAssistant.consDecl(resultVarName, node.getType().clone(), transAssistant.getInfo().getExpAssistant().consNullExp());
+		AVarDeclCG resultDecl = transAssistant.consDecl(resultVarName, node.getType().clone(), transAssistant.getInfo().getExpAssistant().consUndefinedExp());
 		AIdentifierVarExpCG resultVar = transAssistant.getInfo().getExpAssistant().consIdVar(resultVarName, resultDecl.getType().clone());
 
 		SExpCG condition = node.getCondition();
