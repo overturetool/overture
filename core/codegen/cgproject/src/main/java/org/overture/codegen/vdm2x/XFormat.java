@@ -5,13 +5,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
@@ -41,6 +44,22 @@ public class XFormat {
 
 	public MergeVisitor GetMergeVisitor() {
 		return mergeVisitor;
+	}
+	
+	public String formatTemplateTypes(List<? extends STypeCG> types) throws AnalysisException
+	{
+		StringWriter sw = new StringWriter();
+		
+		STypeCG firstParam = types.get(0);
+		sw.append(format(firstParam));
+
+		for (int i = 1; i < types.size(); i++)
+		{
+			STypeCG type = types.get(i);
+			sw.append(", ");
+			sw.append(format(type));
+		}
+		return sw.toString();
 	}
 
 	public String formatOperationBody(SStmCG body) throws AnalysisException {
@@ -127,9 +146,31 @@ public class XFormat {
 		return matches;
 	}
 	
+	
 	public boolean isNull(INode node)
 	{
 		return node == null;
+	}
+	
+	public boolean isVoidType(STypeCG node)
+	{
+		return node instanceof AVoidTypeCG;
+	}
+	public static String formatMetaData(List<ClonableString> metaData)
+	{
+		if(metaData == null || metaData.isEmpty())
+		{
+			return "";
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for(ClonableString str : metaData)
+		{
+			sb.append(str.value).append('\n');
+		}
+		
+		return sb.append('\n').toString();
 	}
 	
 	public String escapeChar(char c)

@@ -1,0 +1,78 @@
+class FileUtils
+types
+-- TODO Define types here
+values
+-- TODO Define values here
+instance variables
+-- TODO Define instance variables here
+operations
+
+public static writeExtractResult: seq of (Line`LineM * nat1) * seq of char * real * nat * nat * nat ==> ()
+writeExtractResult(lines,name,tol,max_iter,keep, scanid) == 
+(
+ IO`print("{ \"name\" : \""); IO`print(name); IO`print("\",\n");
+ IO`print(" \"scanid\" : "); IO`print(scanid); IO`print(",\n");
+ IO`print(" \"tol\" : "); IO`print(tol); IO`print(",\n");
+ IO`print(" \"max_iter\" : "); IO`print(max_iter); IO`print(",\n");
+ IO`print(" \"keep\" : "); IO`print(keep); IO`print(",\n");
+ IO`print("\"results\" : [\n");
+ for i = 1 to len lines do
+ (
+ 	writeLineToJSON(lines(i));
+ 	if i < len lines then IO`print(",\n");
+ 	
+ );
+ IO`print("]}\n");
+
+);
+
+public static writeRANSACRsult: seq of RANSAC`fit * seq of char * real * nat * nat * nat==>()
+writeRANSACRsult(results,name,tol,max_iter,keep, scanid) ==
+(
+ IO`print("{ \"name\" : \""); IO`print(name); IO`print("\",\n");
+ IO`print(" \"scanid\" : "); IO`print(scanid); IO`print(",\n");
+ IO`print(" \"tol\" : "); IO`print(tol); IO`print(",\n");
+ IO`print(" \"max_iter\" : "); IO`print(max_iter); IO`print(",\n");
+ IO`print(" \"keep\" : "); IO`print(keep); IO`print(",\n");
+ 
+ IO`print("\"results\" : [\n");
+ for i = 1 to len results do
+ (
+ 	writeLineToJSON(results(i));
+ 	if i < len results then IO`print(",\n");
+ 	
+ );
+ IO`print("]}\n");
+);
+
+public static writeLineToJSON: (Line`LineM * nat1) ==> ()
+writeLineToJSON(lines) == 
+(
+	let  mk_(line,ninliers) = lines in 
+	(
+	IO`print("{ \"inliers\" : "); IO`print(ninliers); IO`print(",\n");
+	IO`print(" \"xp\" : "); IO`print(line.p.x); IO`print(",\n");
+	IO`print(" \"yp\" : "); IO`print(line.p.y); IO`print(",\n");
+	IO`print(" \"xd\" : "); IO`print(line.dir.x); IO`print(",\n");
+	IO`print(" \"yd\" : "); IO`print(line.dir.y); IO`print("\n}\n");
+	);
+);
+
+public static writeLineToJSON: RANSAC`fit ==> ()
+writeLineToJSON(fit) == 
+(
+	let mk_(line,inliers) = fit in 
+	(
+	IO`print("{ \"inliers\" : "); IO`print(len inliers); IO`print(",\n");
+	IO`print(" \"xp\" : "); IO`print(line.p.x); IO`print(",\n");
+	IO`print(" \"yp\" : "); IO`print(line.p.y); IO`print(",\n");
+	IO`print(" \"xd\" : "); IO`print(line.dir.x); IO`print(",\n");
+	IO`print(" \"yd\" : "); IO`print(line.dir.y); IO`print("\n}\n");
+	)
+);
+-- TODO Define operations here
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end FileUtils

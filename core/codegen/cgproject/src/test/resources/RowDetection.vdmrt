@@ -1,0 +1,37 @@
+class RowDetection
+types
+-- TODO Define types here
+values
+-- TODO Define values here
+instance variables
+ algo : RANSAC;
+-- TODO Define instance variables here
+operations
+
+	public RowDetection: RANSAC ==> RowDetection
+	RowDetection(al)== (algo := al);
+	
+	public getRows: seq of Point`PointM * nat1 ==> seq of (Line`LineM * nat1)
+	getRows(points,n_lines) ==
+	(
+	dcl p : seq of Point`PointM := points;
+	dcl lines: seq of (Line`LineM * nat1) := [];
+	for i = 1 to n_lines do
+	(
+		if len p > 5 then
+		let mk_(line,inliers) = hd algo.extractLines(p) ,
+			outliers =  inds p \ elems inliers in
+		(
+			p := [p(out_idx) | out_idx in set outliers ];
+			lines := lines ^ [mk_(line,len inliers)];
+			
+		);
+	);
+	return lines;
+	);
+-- TODO Define operations here
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end RowDetection

@@ -1,0 +1,30 @@
+class Line
+types
+
+public LineM :: 
+	p : Point`PointM  -- point on line
+	dir : Point`PointM -- direction of line
+	inv mk_LineM(-,dd) == let res = Point`length(dd) in res > 1-math_tol and res < 1+math_tol; -- direction has to be a unit vector
+values
+	math_tol : real = 1E-9;
+
+functions
+
+public distanceToLine: Point`PointM * Line`LineM -> real
+distanceToLine(point,line) == let a = line.p, n= line.dir, p = point 
+in  
+	Point`length(Point`minus( Point`minus(a, p), 
+		Point`mult( 
+				n , 
+					Point`dot( Point`minus(a, p), n)
+			 )));
+--
+-- Given two points a line is returned which passes through the two points
+--
+public createLineFromPoints: Point`PointM * Point`PointM -> LineM
+createLineFromPoints(p1,p2) == let dir =  Point`normalize(Point`minus(p2,p1)) in mk_LineM(p1,dir)
+pre Point`equal(p1,p2) = false
+post let d1 = Line`distanceToLine(p1,RESULT), d2 = Line`distanceToLine(p2,RESULT) in
+	d1 < math_tol and d1 > -math_tol and d2 < math_tol and d2 > -math_tol ;
+
+end Line

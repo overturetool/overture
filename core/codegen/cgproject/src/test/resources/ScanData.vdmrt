@@ -1,0 +1,52 @@
+class ScanData
+
+values
+	angle_min: real =  -2.35619449615;
+	angle_max: real = 2.35619449615;
+	angle_increment: real = 0.0174532923847;
+	time_increment:real = 0.000246002484346;
+	scan_time:real = 0.0666666701436;
+	range_min:real = 0.00999999977648;
+	range_max:real = 8.0;
+	
+
+ instance variables
+ 
+ data : seq of seq of real := [[]];
+operations
+
+public loadScanFromFile: seq of char ==> ()
+loadScanFromFile(fname) ==
+(
+	let mk_(success,cnt) = CSV`flinecount(fname)
+	in if success then
+		for i = 1 to cnt do
+		(
+			def mk_(-,ran) = CSV`freadval[seq of real](fname,i) in		  			
+		  			data := data ^ [ran]
+	  			);
+	  			
+	 data := tl data;
+);
+
+public getScan: nat ==> seq of real
+getScan(index) == return data(1);
+ 
+public getScanAsXY: nat ==> seq of Point`PointM
+getScanAsXY(index) ==
+(
+	dcl points : seq of Point`PointM := [];
+	for i = 1 to len data(index) do
+	(
+			let r = data(index)(i), theta = angle_min+i*angle_increment in 
+				points := points ^ [mk_Point`PointM(r * MATH`cos(theta), r * MATH`sin(theta))]
+	);
+	
+	return points;
+);
+
+
+
+
+
+end ScanData

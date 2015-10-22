@@ -33,4 +33,4 @@ $XFormat.format($field)
 $XFormat.format($method)
 #end
 	
-}
+};

@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2x.transformations;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
+import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.ANatBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
@@ -17,6 +18,16 @@ public class VdmBasicTypesCppTrans extends DepthFirstAnalysisAdaptor {
 	
 	public VdmBasicTypesCppTrans(BaseTransformationAssistant baseAss) {
 		baseAssistant = baseAss;
+	}
+	
+	@Override
+	public void caseACharBasicTypeCG(ACharBasicTypeCG node)
+			throws AnalysisException {
+		AExternalTypeCG n = new AExternalTypeCG();
+		n.setName("char");
+		
+		
+		baseAssistant.replaceNodeWith(node, n);
 	}
 	
 	@Override

@@ -1,0 +1,49 @@
+class SplitAndMerge
+types
+-- TODO Define types here
+values
+-- TODO Define values here
+instance variables
+min_dist: real := 0.05;
+-- TODO Define instance variables here
+operations
+
+private split: seq of Point`PointM * Line`LineM ==> nat
+split(points,line) == 
+(
+	dcl cur_dist: real := 0.0;
+	dcl cur_inds: nat :=0;
+	for all i in set inds points do 
+	(
+		let p_dist = Line`distanceToLine(points(i),line) in if p_dist > cur_dist and p_dist > min_dist then (cur_dist:=p_dist; cur_inds:=i);
+	);
+	
+	return cur_inds;
+);
+
+public extractLines: seq of Point`PointM * real ==> seq of Line`LineM
+extractLines(points,tol) == (min_dist:=tol; return split_and_merge(points));
+
+public split_and_merge: seq of Point`PointM ==> seq of Line`LineM
+split_and_merge(points) ==
+(
+	let line = Line`createLineFromPoints( points(1), points(len points) ),
+			split_inds = split(points,line)
+	in
+	(
+		if split_inds > 0 and split_inds+1 < len points and split_inds > 1 then 
+		(
+			return split_and_merge(points(1,...,split_inds)) ^ split_and_merge(points(split_inds+1,...,len points));
+		)
+		else
+		(
+			return [line];
+		);
+	);
+); 
+-- TODO Define operations here
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end SplitAndMerge

@@ -1,0 +1,86 @@
+class RANSAC
+types
+
+public 	fit = Line`LineM * seq of nat1;
+
+instance variables
+	best_fit : real := 1E9;
+	
+	cur_iter : nat  := 0;
+	cur_n_inliers : nat := 0;
+	fits : seq of fit := [];
+	min_dist : real := 0.001;
+	keep : nat1 := 10;
+	max_iter : nat1 := 1;
+	
+operations
+	public RANSAC: real * nat1 * nat1 ==> RANSAC
+	RANSAC(tol,max_it,keep_n) == 
+	(
+		reset();
+		max_iter := max_it;
+		min_dist := tol;
+		keep:=keep_n;
+	); 
+	public extractLines : seq of Point`PointM ==> seq of fit
+	extractLines(points) ==
+	(
+		reset();
+		
+		while cur_iter < max_iter do
+		(
+			let cur_l = getRandomLine(points), 
+			inliers = getInliers(points, cur_l)
+			in
+				if(len inliers > cur_n_inliers) then addNewBestFit(cur_l, inliers);
+			cur_iter:= cur_iter + 1;
+		);
+		
+		return fits;
+	)
+	pre len(points) > 2 and min_dist > 0;
+	
+	private myrand: nat ==> nat1
+	myrand(l) == let r = MATH`rand(l) in 
+		if(r > 0) then return r elseif r = 0  then return 1 else return r*-1
+		post RESULT > 0 and RESULT <= l;
+	
+	private getRandomLine: seq of Point`PointM ==> (Line`LineM )
+  getRandomLine(points) ==
+  (
+		dcl ids1 : nat1 := myrand(len points ); 
+		dcl ids2 : nat1 := myrand(len points );
+	
+		while( ids2 = ids1 or Point`equal(points( ids1 ), points( ids2 ) ) ) 
+		do 
+			ids2 := myrand(len points );
+		 
+		return Line`createLineFromPoints(points(ids1),points(ids2));
+	) pre len points >= 2 and exists p1 in set elems points 
+			& exists p2 in set elems points 
+			& Point`equal(p1,p2) = false;
+	
+	private getInliers: seq of Point`PointM * (Line`LineM) ==> (seq of nat1)
+	getInliers(points,line) ==
+	(
+		return [i | i in set inds points & Line`distanceToLine(points(i),line) < min_dist];
+	) post len RESULT <= len points;
+	
+	private addNewBestFit: Line`LineM * seq of nat1 ==> ()
+	addNewBestFit(line,inliers) ==
+	(
+		cur_n_inliers := len inliers;
+		fits:=[mk_(line,inliers)] ^ fits;
+		fits := fits(1,...,keep);
+		
+	)post len fits <= keep;
+	
+	private reset: () ==> ()
+	reset() == (
+		
+		cur_iter := 0;
+		best_fit := 1E9;
+		cur_n_inliers := 0;
+	);
+
+end RANSAC

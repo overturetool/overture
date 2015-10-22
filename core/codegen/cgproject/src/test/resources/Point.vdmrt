@@ -1,0 +1,35 @@
+class Point
+types 
+
+
+public PointM :: x : real
+			 y:real;
+
+instance variables
+
+operations
+
+-- TODO Define operations here
+functions
+
+public equal: PointM * PointM -> bool
+equal(p1,p2) == p1.x = p2.x and p1.y = p2.y;
+
+public minus: PointM * PointM -> PointM
+minus(p1,p2) == mk_PointM(p1.x-p2.x, p1.y - p2.y);
+
+public mult: PointM * real -> PointM
+mult(p,sc) == mk_PointM(p.x*sc, p.y * sc);
+
+public dot: PointM * PointM -> real
+dot(p1,p2) == p1.x * p2.x + p1.y * p2.y;
+
+public length: PointM -> real
+length(p) == MATH`sqrt((p.x**2)+(p.y**2))
+post RESULT >= 0;
+
+public normalize: PointM -> PointM
+normalize(p) == let le = length(p) in mk_PointM(p.x/le, p.y / le)
+pre length(p) <> 0;
+
+end Point

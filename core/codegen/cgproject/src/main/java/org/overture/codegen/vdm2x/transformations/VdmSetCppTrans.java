@@ -15,6 +15,7 @@ import org.overture.codegen.cgast.expressions.ASetIntersectBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
@@ -33,9 +34,10 @@ public class VdmSetCppTrans extends DepthFirstAnalysisAdaptor {
 	@Override
 	public void caseASetSetTypeCG(ASetSetTypeCG node) throws AnalysisException {
 		// TODO Auto-generated method stub
-		ATemplateTypeCG n = new ATemplateTypeCG();
-		n.setName("vdm_set::Set");
-		baseAssistant.replaceNodeWith(node, n);
+		AClassTypeCG c = new AClassTypeCG();
+		c.getTypes().add(node.getSetOf().clone());
+		c.setName("vdm_set::Set");
+		baseAssistant.replaceNodeWith(node, c);
 	}
 	
 	@Override
@@ -49,17 +51,17 @@ public class VdmSetCppTrans extends DepthFirstAnalysisAdaptor {
 		baseAssistant.replaceNodeWith(node, n);
 	}
 	
-	@Override
-	public void caseAEnumSetExpCG(AEnumSetExpCG node) throws AnalysisException {
-		// TODO Auto-generated method stub
-		//super.caseAEnumSetExpCG(node);
-		AApplyExpCG n = ConstructionUtils.consUtilCall("vdm_set", "create_set", node.getType().clone());
-		LinkedList<SExpCG> args = new LinkedList<SExpCG>();
-		args.add(node.clone());
-		n.setArgs(args);
-		baseAssistant.replaceNodeWith(node, n);
-	}
-	
+//	@Override
+//	public void caseAEnumSetExpCG(AEnumSetExpCG node) throws AnalysisException {
+//		// TODO Auto-generated method stub
+//		//super.caseAEnumSetExpCG(node);
+//		AApplyExpCG n = ConstructionUtils.consUtilCall("vdm_set", "create_set", node.getType().clone());
+//		LinkedList<SExpCG> args = new LinkedList<SExpCG>();
+//		args.add(node.clone());
+//		n.setArgs(args);
+//		//baseAssistant.replaceNodeWith(node, n);
+//	}
+//	
 	@Override
 	public void caseASetUnionBinaryExpCG(ASetUnionBinaryExpCG node)
 			throws AnalysisException {

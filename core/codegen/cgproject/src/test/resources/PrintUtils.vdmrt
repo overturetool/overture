@@ -1,0 +1,55 @@
+class PrintUtils
+
+operations
+
+public static print: seq of char * Line`LineM  ==> ()
+print(prefix,line) ==
+(
+	let p = line.p, d= line.dir in
+	(
+	IO`print('_');IO`print(prefix);IO`print("p=[");
+	IO`print(p.x);
+	IO`print(",");
+	IO`print(p.y);
+	IO`print("];"); IO`print('_'); IO`print(prefix); IO`print("d=[");
+	IO`print(d.x);
+	IO`print(",");
+	IO`print(d.y);
+	IO`print("];");
+	);
+);
+
+public static print_results: seq of RANSAC`fit ==> ()
+print_results(fits) == 
+(
+dcl i : nat := 1;
+	for fit in fits do
+	(
+		let mk_(line,inliers) = fit,str = VDMUtil`val2seq_of_char[nat](i) in 
+		(
+			--FileUtils`writeLineToJSON(line);
+			--print(str,line);
+			IO`print("#");IO`print(inliers);
+			IO`print("\n");
+			i:=i+1;
+		);
+	);
+);
+
+public static print_results: seq of Line`LineM ==> ()
+print_results(lines) == 
+(
+dcl i : nat := 1;
+	for line in lines do
+	(
+		let str = VDMUtil`val2seq_of_char[nat](i) in 
+		(
+		
+			--Line`print(str,line);
+			IO`print("\n");
+			i:=i+1;
+		);
+	);
+);
+
+end PrintUtils

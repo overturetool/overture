@@ -1,8 +1,11 @@
 package org.overture.codegen.vdm2x;
 
+import java.awt.List;
+
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 
@@ -32,5 +35,5 @@ public class ConstructionUtils {
 		
 		return call;
 	}
-
+	
 }

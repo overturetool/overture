@@ -11,6 +11,7 @@ import org.overture.codegen.cgast.expressions.AAssignExpExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASeqModificationBinaryExpCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
@@ -31,9 +32,10 @@ public class VdmSeqCppTrans extends DepthFirstAnalysisAdaptor {
 		@Override
 		public void caseASeqSeqTypeCG(ASeqSeqTypeCG node) throws AnalysisException {
 		// TODO template type should have template arguments
-		ATemplateTypeCG d = new ATemplateTypeCG();
-		d.setName("vdm_seq::Seq");
-		baseAssistant.replaceNodeWith(node, d);
+		AClassTypeCG c = new AClassTypeCG();
+		c.getTypes().add(node.getSeqOf().clone());
+		c.setName("vdm_seq::Seq");
+		baseAssistant.replaceNodeWith(node, c);
 		}
 
 		@Override
@@ -50,16 +52,16 @@ public class VdmSeqCppTrans extends DepthFirstAnalysisAdaptor {
 			baseAssistant.replaceNodeWith(node, n);
 		}
 		
-		@Override
-		public void caseAEnumSeqExpCG(AEnumSeqExpCG node) throws AnalysisException {
-			//TODO optional to string transformation
-			AApplyExpCG n = ConstructionUtils.consUtilCall("vdm_seq", "create_seq", node.getType());
-			LinkedList<SExpCG> args = new LinkedList<SExpCG>();
-			args.add(node.clone());
-			n.setArgs(args);
-			
-			baseAssistant.replaceNodeWith(node, n);
-		}
+//		@Override
+//		public void caseAEnumSeqExpCG(AEnumSeqExpCG node) throws AnalysisException {
+//			//TODO optional to string transformation
+//			AApplyExpCG n = ConstructionUtils.consUtilCall("vdm_seq", "create_seq", node.getType());
+//			LinkedList<SExpCG> args = new LinkedList<SExpCG>();
+//			args.add(node.clone());
+//			n.setArgs(args);
+//			
+//			baseAssistant.replaceNodeWith(node, n);
+//		}
 		
 		@Override
 		public void caseASeqModificationBinaryExpCG(ASeqModificationBinaryExpCG node)

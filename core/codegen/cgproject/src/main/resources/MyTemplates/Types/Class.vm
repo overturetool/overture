@@ -3,4 +3,4 @@
 	#set( $types = $XFormat.formatTemplateTypes($node.getTypes()))
 #end
 ##
-$node.getName()${types}
+$node.getName()<${types}>

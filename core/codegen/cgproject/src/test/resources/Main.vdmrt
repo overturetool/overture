@@ -1,0 +1,46 @@
+class Main
+instance variables
+
+detector : RowDetection;
+d : ScanData := new ScanData();
+operations
+
+
+public RunSingle: nat * seq of Point`PointM * real * nat * nat * seq of char ==> ()
+RunSingle(scanid,scan,tol,max_iter,keep,name) == 
+(
+	--IO`println("RANSAC ,0.01,100,5");
+		--FileUtils`writeRANSACRsult(ransac.extractLines(scan,tol,max_iter,keep),name,tol,max_iter,keep,scanid);
+		detector := new RowDetection(new RANSAC(tol,max_iter,keep));
+		FileUtils`writeExtractResult(detector.getRows(scan,4),name,tol,max_iter,keep,scanid);
+);
+
+public Run: () ==> ()
+Run() ==
+(
+	
+	
+	
+	d.loadScanFromFile("data.csv");
+	IO`print("[");
+	for i = 1 to 137 by 1 do
+	(
+		
+		let scanDataXY = d.getScanAsXY(i) in
+		(
+			
+			RunSingle(i,scanDataXY,0.01,100,1,"test1");IO`print(",\n");
+			--RunSingle(i,scanDataXY,0.01,300,1,"test2");IO`print(",\n");
+			--RunSingle(i,scanDataXY,0.01,500,5,"test3");IO`print(",\n");
+			--RunSingle(i,scanDataXY,0.01,700,5,"test4");IO`print(",\n");
+			--RunSingle(i,scanDataXY,0.01,1000,5,"test5");
+			
+	
+		);
+		
+	);
+	IO`print("]\n");
+
+);
+
+end Main

@@ -8,6 +8,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 
@@ -20,7 +21,8 @@ public class XGenMain {
 		File file = new File(args[0]);
 
 		List<File> files = new LinkedList<>();
-		files.add(file);
+		
+		files.addAll(GeneralUtils.getFiles(file));
 
 		try {
 			List<SClassDefinition> ast = GeneralCodeGenUtils.consClassList(
