@@ -36,7 +36,12 @@ public class NamedTypeInfo extends AbstractTypeInfo
 	{
 		return hasInv;
 	}
-
+	
+	public AbstractTypeInfo getDomainType()
+	{
+		return domainType;
+	}
+	
 	@Override
 	public int hashCode()
 	{

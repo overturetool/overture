@@ -74,14 +74,12 @@ public class TypePredUtil
 			inv.append('(');
 		}
 
-		String or = "";
 		String javaPackage = handler.getJmlGen().getJavaSettings().getJavaRootPackage();
 		
 		//TODO: Add names of parameters of the enclosing method to 'names-to-avoid' in name generator
 		NameGen nameGen = new NameGen();
 		String consCheckExp = typeInfo.consCheckExp(enclosingClass, javaPackage, var.getName(), nameGen);
 		
-		inv.append(or);
 		if (consCheckExp != null)
 		{
 			inv.append(consCheckExp);
@@ -92,8 +90,6 @@ public class TypePredUtil
 			// TODO: Consider better handling
 			inv.append("true");
 		}
-		or = JmlGenerator.JML_OR;
-
 		if(invChecksGuard)
 		{
 			inv.append(')');
@@ -216,6 +212,8 @@ public class TypePredUtil
 	
 	public AbstractTypeInfo findTypeInfo(STypeCG type)
 	{
+		TypeAssistantCG assist = handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant();
+		
 		if (type.getNamedInvType() != null)
 		{
 			ANamedTypeDeclCG namedInv = type.getNamedInvType();
@@ -224,6 +222,11 @@ public class TypePredUtil
 			String typeName = namedInv.getName().getName();
 
 			NamedTypeInfo info = NamedTypeInvDepCalculator.findTypeInfo(handler.getJmlGen().getTypeInfoList(), defModule, typeName);
+			
+			if(assist.allowsNull(type))
+			{
+				info = new NamedTypeInfo(info.getTypeName(), info.getDefModule(), info.hasInv(), true, info.getDomainType());
+			}
 
 			if (info == null)
 			{
@@ -237,8 +240,6 @@ public class TypePredUtil
 			// We do not need to collect sub named invariant types
 		} else
 		{
-			TypeAssistantCG assist = handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant();
-			
 			if (type instanceof AUnionTypeCG)
 			{
 				List<AbstractTypeInfo> types = new LinkedList<>();
