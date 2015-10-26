@@ -32,7 +32,7 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	/**
 	 * Name of the directory into which the astCreatorPlugin should dump the ast files.
 	 * 
-	 * @parameter property="${project.build.directory}/generated-sources/vdmCodeGen"
+	 * @parameter expression="${project.build.directory}/generated-sources/vdmCodeGen"
 	 */
 	protected File outputDirectory;
 	
@@ -60,7 +60,7 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	protected boolean formatCode = true;
 
 	/**
-	 * @parameter property="project"
+	 * @parameter expression="${project}"
 	 * @required
 	 * @readonly
 	 */
