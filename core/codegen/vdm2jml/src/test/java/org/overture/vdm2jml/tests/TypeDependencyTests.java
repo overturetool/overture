@@ -93,7 +93,7 @@ public class TypeDependencyTests extends AnnotationTestsBase
 		{
 			if (leafType == leaf.getType().getClass())
 			{
-				Assert.assertEquals("Found leaf type but 'allowsNull' does not equal", nullAllowed, leaf.allowsNull());
+				Assert.assertEquals("Found leaf type but 'allowsNull' does not equal", nullAllowed, leaf.isOptional());
 				return;
 			}
 		}
@@ -103,16 +103,10 @@ public class TypeDependencyTests extends AnnotationTestsBase
 				+ "' for named invariant type '" + infoStr(info) + "'", true);
 	}
 
-	private void assertNullAllowed(NamedTypeInfo info)
+	private void assertNotOptional(NamedTypeInfo info)
 	{
 		Assert.assertTrue("Expected named type invariant '" + infoStr(info)
-				+ "' to allow null", info.allowsNull());
-	}
-
-	private void assertNullNotAllowed(NamedTypeInfo info)
-	{
-		Assert.assertTrue("Expected named type invariant '" + infoStr(info)
-				+ "' NOT to allow null", !info.allowsNull());
+				+ "' NOT to be optional", !info.isOptional());
 	}
 
 	private void assertTotalNoOfNamedInvTypes(int no)
@@ -152,7 +146,7 @@ public class TypeDependencyTests extends AnnotationTestsBase
 		assertTotalNoOfNamedInvTypes(1);
 		assertNoOfLeafs(info, 1);
 		assertLeafType(info, ANatNumericBasicTypeCG.class, false);
-		assertNullNotAllowed(info);
+		assertNotOptional(info);
 		assertNoInv(info);
 	}
 
@@ -168,7 +162,7 @@ public class TypeDependencyTests extends AnnotationTestsBase
 		assertTotalNoOfNamedInvTypes(1);
 		assertNoOfLeafs(info, 1);
 		assertLeafType(info, ANatNumericBasicTypeCG.class, true);
-		assertNullAllowed(info);
+		assertNotOptional(info);
 		assertNoInv(info);
 	}
 
@@ -185,7 +179,7 @@ public class TypeDependencyTests extends AnnotationTestsBase
 		assertNoOfLeafs(info, 2);
 		assertLeafType(info, ANatNumericBasicTypeCG.class, false);
 		assertLeafType(info, ACharBasicTypeCG.class, true);
-		assertNullAllowed(info);
+		assertNotOptional(info);
 		assertNoInv(info);
 	}
 
@@ -203,7 +197,7 @@ public class TypeDependencyTests extends AnnotationTestsBase
 
 		assertTotalNoOfNamedInvTypes(3);
 		assertNoOfLeafs(info, 2);
-		assertNullAllowed(info);
+		assertNotOptional(info);
 		assertNoInv(info);
 
 		typeName = "N";
@@ -211,7 +205,7 @@ public class TypeDependencyTests extends AnnotationTestsBase
 
 		assertNoOfLeafs(info, 1);
 		assertLeafType(info, ANatNumericBasicTypeCG.class, false);
-		assertNullNotAllowed(info);
+		assertNotOptional(info);
 		assertNoInv(info);
 
 		typeName = "C";
@@ -219,7 +213,7 @@ public class TypeDependencyTests extends AnnotationTestsBase
 
 		assertNoOfLeafs(info, 1);
 		assertLeafType(info, ACharBasicTypeCG.class, true);
-		assertNullAllowed(info);
+		assertNotOptional(info);
 		assertNoInv(info);
 	}
 
@@ -246,9 +240,9 @@ public class TypeDependencyTests extends AnnotationTestsBase
 		// N = nat;
 		// C = char;
 
-		assertNullAllowed(getInfo("CN"));
-		assertNullNotAllowed(getInfo("N"));
-		assertNullNotAllowed(getInfo("C"));
+		assertNotOptional(getInfo("CN"));
+		assertNotOptional(getInfo("N"));
+		assertNotOptional(getInfo("C"));
 	}
 	
 	@Test
@@ -259,9 +253,9 @@ public class TypeDependencyTests extends AnnotationTestsBase
 		//N = nat;
 		//C = char;
 		
-		assertNullAllowed(getInfo("CN"));
-		assertNullNotAllowed(getInfo("C"));
-		assertNullNotAllowed(getInfo("N"));
+		assertNotOptional(getInfo("CN"));
+		assertNotOptional(getInfo("C"));
+		assertNotOptional(getInfo("N"));
 	}
 
 	@Test
@@ -305,6 +299,6 @@ public class TypeDependencyTests extends AnnotationTestsBase
 		//N = nat;
 		//C = char;
 		
-		assertNullNotAllowed(getInfo("CN"));
+		assertNotOptional(getInfo("CN"));
 	}
 }
