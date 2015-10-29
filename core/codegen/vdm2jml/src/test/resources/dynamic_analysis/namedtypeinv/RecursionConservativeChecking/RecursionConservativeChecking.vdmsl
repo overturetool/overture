@@ -1,0 +1,40 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+types
+
+T = nat | seq of T;
+
+T1 = nat | nat * T1;
+
+operations
+
+tNat : () ==> T
+tNat () == return 1;
+
+tSeq : () ==> T
+tSeq () == return [[[1]]];
+
+t1Nat : () ==> T1
+t1Nat () == return 1;
+
+t1Tup : () ==> T1
+t1Tup () == return mk_(1,2);
+
+Run : () ==> ?
+Run () ==
+(
+  IO`println("Before legal use");
+  let - = tNat() in skip;
+  let - = t1Nat() in skip;
+  IO`println("Before legal use");
+  IO`println("Before illegal use");
+  let - = tSeq() in skip;
+  let - = t1Tup() in skip; 
+  IO`println("After illegal use");
+  return 0;
+); 
+
+end Entry
