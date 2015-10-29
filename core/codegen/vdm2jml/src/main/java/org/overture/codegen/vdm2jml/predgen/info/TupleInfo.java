@@ -21,25 +21,6 @@ public class TupleInfo extends AbstractTypeInfo
 	}
 	
 	@Override
-	public boolean allowsNull()
-	{
-		if(optional)
-		{
-			return true;
-		}
-		
-		for(AbstractTypeInfo t : types)
-		{
-			if(t.allowsNull())
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
-	@Override
 	public List<LeafTypeInfo> getLeafTypesRecursively()
 	{
 		List<LeafTypeInfo> leaves = new LinkedList<>();
@@ -75,7 +56,7 @@ public class TupleInfo extends AbstractTypeInfo
 		
 		String tupleCheck = "(" + sb.toString() + ")";
 		
-		if(allowsNull())
+		if(isOptional())
 		{
 			return "(" + consIsNullCheck(arg) + JmlGenerator.JML_OR + tupleCheck + ")";
 		}

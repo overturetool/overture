@@ -6,14 +6,17 @@ import org.overture.codegen.vdm2jml.util.NameGen;
 
 public abstract class AbstractTypeInfo
 {
-	protected boolean optional;
+	private boolean optional;
 
 	public AbstractTypeInfo(boolean optional)
 	{
 		this.optional = optional;
 	}
 
-	abstract public boolean allowsNull();
+	public final boolean isOptional()
+	{
+		return optional;
+	}
 	
 	abstract public List<LeafTypeInfo> getLeafTypesRecursively();
 

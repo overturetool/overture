@@ -69,15 +69,9 @@ public class LeafTypeInfo extends AbstractTypeInfo
 	}
 
 	@Override
-	public boolean allowsNull()
-	{
-		return optional;
-	}
-	
-	@Override
 	public String toString()
 	{
-		if(optional)
+		if(isOptional())
 		{
 			return "[" + type.toString() + "]";
 		}
@@ -135,7 +129,7 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		}
 		
 		// If the type is optional 'null' is also a legal value
-		if(allowsNull())
+		if(isOptional())
 		{
 			return "(" + consIsNullCheck(arg) + JmlGenerator.JML_OR + call + ")";
 		}

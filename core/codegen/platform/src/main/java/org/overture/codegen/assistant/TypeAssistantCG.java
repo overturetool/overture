@@ -781,6 +781,11 @@ public class TypeAssistantCG extends AssistantBase
 				|| type instanceof ABoolBasicTypeWrappersTypeCG;
 	}
 	
+	public boolean isOptional(STypeCG type)
+	{
+		return BooleanUtils.isTrue(type.getOptional());
+	}
+	
 	public boolean allowsNull(STypeCG type)
 	{
 		if(type instanceof AUnionTypeCG)

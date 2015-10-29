@@ -223,7 +223,7 @@ public class TypePredUtil
 
 			NamedTypeInfo info = NamedTypeInvDepCalculator.findTypeInfo(handler.getJmlGen().getTypeInfoList(), defModule, typeName);
 			
-			if(assist.allowsNull(type))
+			if(assist.isOptional(type))
 			{
 				info = new NamedTypeInfo(info.getTypeName(), info.getDefModule(), info.hasInv(), true, info.getDomainType());
 			}
@@ -249,7 +249,7 @@ public class TypePredUtil
 					types.add(findTypeInfo(t));
 				}
 				
-				return new UnionInfo(assist.allowsNull(type), types);
+				return new UnionInfo(assist.isOptional(type), types);
 			}
 			else if(type instanceof ATupleTypeCG)
 			{
@@ -260,21 +260,21 @@ public class TypePredUtil
 					types.add(findTypeInfo(t));
 				}
 				
-				return new TupleInfo(assist.allowsNull(type), types);
+				return new TupleInfo(assist.isOptional(type), types);
 			}
 			else if(type instanceof ASeqSeqTypeCG)
 			{
 				ASeqSeqTypeCG seqType = ((ASeqSeqTypeCG) type);
 				STypeCG elementType = seqType.getSeqOf();
 				
-				return new SeqInfo(assist.allowsNull(seqType), findTypeInfo(elementType), BooleanUtils.isTrue(seqType.getSeq1()));
+				return new SeqInfo(assist.isOptional(seqType), findTypeInfo(elementType), BooleanUtils.isTrue(seqType.getSeq1()));
 			}
 			else if(type instanceof ASetSetTypeCG)
 			{
 				ASetSetTypeCG setType = (ASetSetTypeCG) type;
 				STypeCG elementType = setType.getSetOf();
 				
-				return new SetInfo(assist.allowsNull(setType), findTypeInfo(elementType));
+				return new SetInfo(assist.isOptional(setType), findTypeInfo(elementType));
 			}
 			else if(type instanceof AMapMapTypeCG)
 			{
@@ -285,7 +285,7 @@ public class TypePredUtil
 				
 				boolean injective = BooleanUtils.isTrue(mapType.getInjective());
 				
-				return new MapInfo(assist.allowsNull(mapType), domInfo, rngInfo, injective);
+				return new MapInfo(assist.isOptional(mapType), domInfo, rngInfo, injective);
 				
 			}
 			else if(type instanceof AUnknownTypeCG || type instanceof AClassTypeCG || type instanceof AExternalTypeCG)
@@ -295,7 +295,7 @@ public class TypePredUtil
 			}
 			else
 			{
-				return new LeafTypeInfo(type, assist.allowsNull(type));
+				return new LeafTypeInfo(type, assist.isOptional(type));
 			}
 		}
 	}

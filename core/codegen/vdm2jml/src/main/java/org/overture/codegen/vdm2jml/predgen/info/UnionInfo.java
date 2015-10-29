@@ -17,25 +17,6 @@ public class UnionInfo extends AbstractTypeInfo
 	}
 
 	@Override
-	public boolean allowsNull()
-	{
-		if(optional)
-		{
-			return true;
-		}
-		
-		for(AbstractTypeInfo t : types)
-		{
-			if(t.allowsNull())
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
-	@Override
 	public List<LeafTypeInfo> getLeafTypesRecursively()
 	{
 		List<LeafTypeInfo> leaves = new LinkedList<>();
@@ -56,7 +37,7 @@ public class UnionInfo extends AbstractTypeInfo
 		sb.append('(');
 
 		String orSep = "";
-		if(allowsNull())
+		if(isOptional())
 		{
 			sb.append(consIsNullCheck(arg));
 			orSep = JmlGenerator.JML_OR;
@@ -80,7 +61,7 @@ public class UnionInfo extends AbstractTypeInfo
 		StringBuilder sb = new StringBuilder();
 		sb.append('(');
 		
-		if(optional)
+		if(isOptional())
 		{
 			sb.append("[");
 		}
@@ -93,7 +74,7 @@ public class UnionInfo extends AbstractTypeInfo
 			sep = "|";
 		}
 		
-		if(optional)
+		if(isOptional())
 		{
 			sb.append("]");
 		}

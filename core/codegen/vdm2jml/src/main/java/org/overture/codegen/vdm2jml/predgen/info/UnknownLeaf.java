@@ -13,12 +13,6 @@ public class UnknownLeaf extends AbstractTypeInfo
 	}
 
 	@Override
-	public boolean allowsNull()
-	{
-		return false;
-	}
-
-	@Override
 	public List<LeafTypeInfo> getLeafTypesRecursively()
 	{
 		return new LinkedList<>();

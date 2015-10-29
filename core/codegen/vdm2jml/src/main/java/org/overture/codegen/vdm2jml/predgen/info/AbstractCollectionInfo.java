@@ -16,12 +16,6 @@ public abstract class AbstractCollectionInfo extends AbstractTypeInfo
 	{
 		super(optional);
 	}
-	
-	@Override
-	public boolean allowsNull()
-	{
-		return optional;
-	}
 
 	@Override
 	public List<LeafTypeInfo> getLeafTypesRecursively()
@@ -53,7 +47,7 @@ public abstract class AbstractCollectionInfo extends AbstractTypeInfo
 		
 		String seqCheckExp = "(" + sb.toString() + ")";
 		
-		if(allowsNull())
+		if(isOptional())
 		{
 			return "(" + consIsNullCheck(arg) + JmlGenerator.JML_OR + seqCheckExp + ")";
 		}
