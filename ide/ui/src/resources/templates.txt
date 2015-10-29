@@ -22,6 +22,14 @@
 --	VDM Shared constructs
 --
 --==================================================================
+#name literateVdm
+#description Literate VDM
+#begin
+\begin{vdm_al}
+${cursor}
+\end{vdm_al}
+#end
+--------------------------------------------------------------------
 #name			while
 #description	while predicate do statement
 #dialect		all

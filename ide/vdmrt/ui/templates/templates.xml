@@ -4,6 +4,13 @@
 	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="The number of times that operation name operation has been activated" enabled="true" name="act" id="actVDMRT">#act(${operationName})</template>
 	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="The number of operation name operations that are currently active." enabled="true" name="active" id="activeVDMRT">#active(${operationName})</template>
 	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="BUS (Priority &lt;CSMACD&gt;, capacity,set of connected CPUs)" enabled="true" name="bus" id="busVDMRT">${busName} : BUS := new BUS (${priority}, ${speed}, {${CPU1}, ${CPU2}});</template>
+  <template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType"
+    deleted="false" description="Literate VDM" enabled="true" name="vdm_al"
+    id="literateVdmVDMRT">
+\begin{vdm_al}
+${cursor}
+\end{vdm_al}
+  </template>
 	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType" deleted="false" description="Case Expression" enabled="true" name="caseExpression" id="caseExpressionVDMRT">cases ${expression}:
 	${patternList1} -&gt; ${expression1},
 	${patternList2} -&gt; ${expression2},
