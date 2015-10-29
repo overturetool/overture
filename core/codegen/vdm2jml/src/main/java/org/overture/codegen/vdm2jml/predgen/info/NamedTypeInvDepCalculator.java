@@ -96,7 +96,7 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 		if(visited.contains(type))
 		{
 			// Type recursion
-			return null; 
+			return new RecursiveLeaf(); 
 		}
 		else
 		{
