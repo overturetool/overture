@@ -1,11 +1,11 @@
 "Breaking named type invariant (assigning record field)"
 St.java:56: JML assertion is false
-        //@ assert project.Entry.invChecksOn ==> (((_x == null) || ((_x == null) || ((_x == null) || ((_x == null) || Utils.is_nat(_x)) && inv_Entry_PossiblyOne(_x)) || (Utils.is_bool(_x) && inv_Entry_True(_x))) && inv_Entry_PT(_x)));
+        //@ assert project.Entry.invChecksOn ==> ((((((_x == null) || Utils.is_nat(_x)) && inv_Entry_PossiblyOne(_x)) || (Utils.is_bool(_x) && inv_Entry_True(_x))) && inv_Entry_PT(_x)));
             ^
 St.java:59: JML assertion is false
-        //@ assert project.Entry.invChecksOn ==> (((x == null) || ((x == null) || ((x == null) || ((x == null) || Utils.is_nat(x)) && inv_Entry_PossiblyOne(x)) || (Utils.is_bool(x) && inv_Entry_True(x))) && inv_Entry_PT(x)));
+        //@ assert project.Entry.invChecksOn ==> ((((((x == null) || Utils.is_nat(x)) && inv_Entry_PossiblyOne(x)) || (Utils.is_bool(x) && inv_Entry_True(x))) && inv_Entry_PT(x)));
             ^
 "Breaking named type invariant (assigning local variable)"
 Entry.java:51: JML assertion is false
-        //@ assert ((p1 == null) || ((p1 == null) || ((p1 == null) || ((p1 == null) || Utils.is_nat(p1)) && inv_Entry_PossiblyOne(p1)) || (Utils.is_bool(p1) && inv_Entry_True(p1))) && inv_Entry_PT(p1));
+        //@ assert (((((p1 == null) || Utils.is_nat(p1)) && inv_Entry_PossiblyOne(p1)) || (Utils.is_bool(p1) && inv_Entry_True(p1))) && inv_Entry_PT(p1));
             ^

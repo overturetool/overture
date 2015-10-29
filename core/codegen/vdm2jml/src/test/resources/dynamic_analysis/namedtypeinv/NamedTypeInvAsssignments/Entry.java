@@ -18,11 +18,11 @@ final public class Entry {
 
     public static void op1() {
         Object p = null;
-        //@ assert ((p == null) || ((p == null) || ((p == null) || ((p == null) || Utils.is_nat(p)) && inv_Entry_PossiblyOne(p)) || (Utils.is_bool(p) && inv_Entry_True(p))) && inv_Entry_PT(p));
+        //@ assert (((((p == null) || Utils.is_nat(p)) && inv_Entry_PossiblyOne(p)) || (Utils.is_bool(p) && inv_Entry_True(p))) && inv_Entry_PT(p));
         p = 1L;
-        //@ assert ((p == null) || ((p == null) || ((p == null) || ((p == null) || Utils.is_nat(p)) && inv_Entry_PossiblyOne(p)) || (Utils.is_bool(p) && inv_Entry_True(p))) && inv_Entry_PT(p));
+        //@ assert (((((p == null) || Utils.is_nat(p)) && inv_Entry_PossiblyOne(p)) || (Utils.is_bool(p) && inv_Entry_True(p))) && inv_Entry_PT(p));
         p = true;
-        //@ assert ((p == null) || ((p == null) || ((p == null) || ((p == null) || Utils.is_nat(p)) && inv_Entry_PossiblyOne(p)) || (Utils.is_bool(p) && inv_Entry_True(p))) && inv_Entry_PT(p));
+        //@ assert (((((p == null) || Utils.is_nat(p)) && inv_Entry_PossiblyOne(p)) || (Utils.is_bool(p) && inv_Entry_True(p))) && inv_Entry_PT(p));
 
         //@ assert St != null;
         St.set_x(null);
@@ -40,7 +40,7 @@ final public class Entry {
 
     public static void op2() {
         Object p1 = null;
-        //@ assert ((p1 == null) || ((p1 == null) || ((p1 == null) || ((p1 == null) || Utils.is_nat(p1)) && inv_Entry_PossiblyOne(p1)) || (Utils.is_bool(p1) && inv_Entry_True(p1))) && inv_Entry_PT(p1));
+        //@ assert (((((p1 == null) || Utils.is_nat(p1)) && inv_Entry_PossiblyOne(p1)) || (Utils.is_bool(p1) && inv_Entry_True(p1))) && inv_Entry_PT(p1));
 
         //@ assert St != null;
         St.set_x(true);
@@ -48,7 +48,7 @@ final public class Entry {
         IO.println("Breaking named type invariant (assigning local variable)");
         p1 = false;
 
-        //@ assert ((p1 == null) || ((p1 == null) || ((p1 == null) || ((p1 == null) || Utils.is_nat(p1)) && inv_Entry_PossiblyOne(p1)) || (Utils.is_bool(p1) && inv_Entry_True(p1))) && inv_Entry_PT(p1));
+        //@ assert (((((p1 == null) || Utils.is_nat(p1)) && inv_Entry_PossiblyOne(p1)) || (Utils.is_bool(p1) && inv_Entry_True(p1))) && inv_Entry_PT(p1));
     }
 
     public static Object Run() {
