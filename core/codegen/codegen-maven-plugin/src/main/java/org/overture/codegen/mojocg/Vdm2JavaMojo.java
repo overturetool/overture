@@ -28,13 +28,13 @@ import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 /**
- * Generate Tree
+ * VDM-to-Java code generator mojo
  * 
  * @goal generate
  * @phase generate-sources
  * @requiresDependencyResolution compile
  */
-public class GenerateJavaSources extends Vdm2JavaBaseMojo
+public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 {
 	public static final String VDM_PP = "pp";
 	public static final String VDM_SL = "sl";
@@ -190,14 +190,14 @@ public class GenerateJavaSources extends Vdm2JavaBaseMojo
 		{
 			Map<String, String> delegateMap = buidDelegateMap();
 			
-			getLog().info("Found following bridge/delegate class pairs:");
+			getLog().info("Found following bridge/delegate pairs:");
 			
 			for(String entry : delegateMap.keySet())
 			{
-				getLog().info("Bridge class: " + entry + ". Delegate class: " + delegateMap.get(entry));
+				getLog().info("  Bridge class: " + entry + ". Delegate class: " + delegateMap.get(entry));
 			}
 			
-			getLog().info("Replacing bridge call with delegate calls...");
+			getLog().info("Replacing bridge calls with delegate calls...");
 			javaCodeGen.getTransSeries().getSeries().add(new DelegateTrans(delegateMap, javaCodeGen.getTransAssistant(), getLog()));
 		}
 	}
@@ -218,8 +218,10 @@ public class GenerateJavaSources extends Vdm2JavaBaseMojo
 	{
 		if(!tcResult.parserResult.errors.isEmpty() || !tcResult.errors.isEmpty())
 		{
-			getLog().error("Could not parse or type check VDM model:\n" + GeneralCodeGenUtils.errorStr(tcResult));
-			throw new MojoExecutionException("No valid VDM model to code generate!");
+			String PARSE_TYPE_CHECK_ERR_MSG = "Could not parse or type check VDM model";
+			getLog().error(PARSE_TYPE_CHECK_ERR_MSG + ":\n" + GeneralCodeGenUtils.errorStr(tcResult));
+			
+			throw new MojoExecutionException(PARSE_TYPE_CHECK_ERR_MSG);
 		}
 		
 		// No type errors
