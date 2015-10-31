@@ -1,4 +1,4 @@
-package org.overture.tools.maven.astcreator;
+package org.overture.codegen.mojocg;
 
 import java.io.File;
 import java.util.Properties;
