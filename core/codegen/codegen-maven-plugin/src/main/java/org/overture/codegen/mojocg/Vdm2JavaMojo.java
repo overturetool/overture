@@ -73,16 +73,10 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 		}
 
 		List<File> files = new LinkedList<File>();
-		File specificationRoot = getResourcesDir();
 		
-		if(specificationDir!=null && !specificationDir.isEmpty())
+		if (specificationDir != null && specificationDir.isDirectory())
 		{
-			specificationRoot = new File(specificationRoot,specificationDir);
-		}
-		
-		if (specificationRoot != null && specificationRoot.exists())
-		{
-			findVdmSources(files, specificationRoot);
+			findVdmSources(files, specificationDir);
 		}
 
 		if (files == null || files.isEmpty())

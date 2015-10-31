@@ -27,8 +27,9 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	 * The name of the folder under resources where the specification is stored.
 	 * 
 	 * @parameter
+	 * @required
 	 */
-	protected String specificationDir;
+	protected File specificationDir;
 
 	/**
 	 * Name of the directory into which the astCreatorPlugin should dump the ast files.
@@ -100,12 +101,6 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	{
 		File output = new File(project.getFile().getParentFile(), "src/main/java".replace('/', File.separatorChar));
 		return output;
-	}
-
-	protected File getResourcesDir()
-	{
-		File resources = new File(project.getFile().getParentFile(), "src/main/resources".replace('/', File.separatorChar));
-		return resources;
 	}
 
 	public abstract void execute() throws MojoExecutionException,
