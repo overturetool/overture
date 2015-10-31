@@ -1,6 +1,7 @@
 package org.overture.tools.maven.astcreator;
 
 import java.io.File;
+import java.util.Properties;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -72,6 +73,13 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	 * @parameter
 	 */
 	private File projectOutputDirectory;
+	
+	/**
+	 * 
+	 * 
+	 * @parameter
+	 */
+	protected Properties delegates;
 
 	protected File getProjectOutputDirectory()
 	{

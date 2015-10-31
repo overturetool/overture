@@ -1,8 +1,10 @@
 package org.overture.tools.maven.astcreator;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -12,6 +14,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.mojocg.util.DelegateTrans;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
@@ -109,6 +112,8 @@ public class GenerateJavaSources extends Vdm2JavaBaseMojo
 		JavaCodeGen javaCodeGen = new JavaCodeGen();
 		javaCodeGen.setSettings(irSettings);
 		javaCodeGen.setJavaSettings(javaSettings);
+
+		addDelegateTrans(javaCodeGen);
 		
 		GeneratedData genData = null;
 
@@ -162,6 +167,39 @@ public class GenerateJavaSources extends Vdm2JavaBaseMojo
 		}
 		
 		getLog().info("Code generation completed.");
+	}
+
+	private Map<String,String> buidDelegateMap()
+	{
+		if(delegates == null)
+		{
+			return new HashMap<>();
+		}
+		
+		Map<String, String> map = new HashMap<String, String>();
+		for (String key : delegates.stringPropertyNames()) {
+		    map.put(key, delegates.getProperty(key));
+		}
+		
+		return map;
+	}
+	
+	private void addDelegateTrans(JavaCodeGen javaCodeGen)
+	{
+		if(delegates != null && !delegates.isEmpty())
+		{
+			Map<String, String> delegateMap = buidDelegateMap();
+			
+			getLog().info("Found following bridge/delegate class pairs:");
+			
+			for(String entry : delegateMap.keySet())
+			{
+				getLog().info("Bridge class: " + entry + ". Delegate class: " + delegateMap.get(entry));
+			}
+			
+			getLog().info("Replacing bridge call with delegate calls...");
+			javaCodeGen.getTransSeries().getSeries().add(new DelegateTrans(delegateMap, javaCodeGen.getTransAssistant(), getLog()));
+		}
 	}
 
 	private void findVdmSources(List<File> files, File specificationRoot)
