@@ -14,8 +14,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.codegen.utils.GeneralUtils;
+import org.overture.codegen.vdm2jml.JmlGenMain;
 import org.overture.test.framework.Properties;
 import org.overture.vdm2jml.tests.exec.JmlExecTestBase;
+import org.overture.vdm2jml.tests.exec.JmlInvariantForExecTests;
 import org.overture.vdm2jml.tests.util.TestUtil;
 
 @RunWith(Parameterized.class)
@@ -31,8 +33,8 @@ public class JmlOutputTests extends JmlGenTestBase
 	@Test
 	public void run()
 	{
-		TestUtil.codeGenerateInputFile(inputFile, genJavaFolder, VDM_LIB_PATH);
-
+		JmlGenMain.main(getJmlGenMainProcessArgs(genJavaFolder));
+		
 		try
 		{
 			configureResultGeneration();
@@ -120,6 +122,21 @@ public class JmlOutputTests extends JmlGenTestBase
 				e.printStackTrace();
 			}
 	    }
+	}
+	
+	@Override
+	public String[] getJmlGenMainProcessArgs(File outputFolder)
+	{
+		if (inputFile.getAbsolutePath().contains(JmlInvariantForExecTests.TEST_DIR))
+		{
+			String[] stdArgs = super.getJmlGenMainProcessArgs(outputFolder);
+			String[] invariantForArg = new String[] { JmlGenMain.INVARIANT_FOR };
+
+			return GeneralUtils.concat(stdArgs, invariantForArg);
+		} else
+		{
+			return super.getJmlGenMainProcessArgs(outputFolder);
+		}
 	}
 
 	@Override
