@@ -32,7 +32,26 @@ public class RecModUtil
 
 	public String consValidRecCheck(SVarExpCG var)
 	{
-		return "//@ assert " + var.getName() + "." + JmlGenerator.REC_VALID_METHOD_CALL + ";";
+		StringBuilder as = new StringBuilder();
+		as.append("//@ assert ");
+		
+		if(handler.getInvTrans().getJmlGen().getJmlSettings().genInvariantFor())
+		{
+			as.append(JmlGenerator.JML_INVARIANT_FOR);
+			as.append('(');
+			as.append(var.getName());
+			as.append(')');
+		}
+		else
+		{
+			as.append(var.getName());
+			as.append('.');
+			as.append(JmlGenerator.REC_VALID_METHOD_CALL);
+		}
+		
+		as.append(';');
+		
+		return as.toString();
 	}
 
 	public boolean assertRec(SExpCG exp)

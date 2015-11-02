@@ -172,6 +172,7 @@ public class TypePredUtil
 					else
 					{
 						inv.append(consRecVarCast(var, fullyQualifiedRecType));
+						inv.append('.');
 						inv.append(JmlGenerator.REC_VALID_METHOD_CALL);
 						// e.g. r1 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) r1).valid()
 					}
@@ -185,7 +186,7 @@ public class TypePredUtil
 
 	private String consRecVarCast(SVarExpCG var, String fullyQualifiedRecType)
 	{
-		return "((" + fullyQualifiedRecType + ") " + var.getName() + ").";
+		return "((" + fullyQualifiedRecType + ") " + var.getName() + ")";
 	}
 
 	public String fullyQualifiedRecType(ARecordTypeCG rt)
