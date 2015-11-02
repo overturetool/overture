@@ -24,7 +24,6 @@ import org.overture.vdm2jml.tests.AnnotationTestsBase;
 import org.overture.vdm2jml.tests.OpenJmlValidationBase;
 import org.overture.vdm2jml.tests.util.IOpenJmlConsts;
 import org.overture.vdm2jml.tests.util.ProcessResult;
-import org.overture.vdm2jml.tests.util.TestUtil;
 
 public abstract class JmlExecTestBase extends OpenJmlValidationBase
 {
@@ -273,7 +272,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 		{
 			clearCodeFolder();
 			createExecEntryPoint();
-			TestUtil.codeGenerateInputFile(inputFile, genJavaFolder, VDM_LIB_PATH);
+			generateJavaJml();
 		}
 	}
 

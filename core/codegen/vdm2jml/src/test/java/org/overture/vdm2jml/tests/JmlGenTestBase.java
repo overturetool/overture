@@ -1,18 +1,23 @@
 package org.overture.vdm2jml.tests;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.Assert;
 import org.overture.ast.lex.LexLocation;
+import org.overture.codegen.vdm2jml.JmlGenMain;
 import org.overture.test.framework.Properties;
 
 abstract public class JmlGenTestBase
 {
-	public static final String TESTS_VDM2JML_PROPERTY_PREFIX = "tests.vdm2jml.override.";
+	public static final boolean VERBOSE = false;
 	
 	public static final String VDM_LIB_PATH = "src" + File.separatorChar
 			+ "test" + File.separatorChar + "resources" + File.separatorChar
 			+ "lib";
+	
+	public static final String TESTS_VDM2JML_PROPERTY_PREFIX = "tests.vdm2jml.override.";
 	
 	public static final String TEST_EXEC_FOLDER_PATH = "target"
 			+ File.separatorChar + "jml";
@@ -63,5 +68,23 @@ abstract public class JmlGenTestBase
 		{
 			Properties.recordTestResults = true;
 		}
+	}
+	
+	public String[] getJmlGenMainProcessArgs(File outputFolder)
+	{
+		List<String> javaCgArgs = new LinkedList<String>();
+		
+		javaCgArgs.add(inputFile.getAbsolutePath());
+		if(VERBOSE)
+		{
+			javaCgArgs.add(JmlGenMain.PRINT_ARG);
+		}
+		javaCgArgs.add(JmlGenMain.OUTPUT_ARG);
+		javaCgArgs.add(outputFolder.getAbsolutePath());
+		javaCgArgs.add(JmlGenMain.FOLDER_ARG);
+		javaCgArgs.add(new File(VDM_LIB_PATH).getAbsolutePath());
+		//javaCgArgs.add(JmlGenMain.REPORT_VIOLATIONS_ARG);
+		
+		return javaCgArgs.toArray(new String[]{});
 	}
 }

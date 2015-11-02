@@ -81,7 +81,7 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 	public void beforeRunningOpenJmlProcess()
 	{
 		clearCodeFolder();
-		TestUtil.codeGenerateInputFile(inputFile, genJavaFolder, VDM_LIB_PATH);
+		generateJavaJml();
 	}
 
 	@Override

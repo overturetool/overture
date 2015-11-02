@@ -8,8 +8,8 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralUtils;
+import org.overture.codegen.vdm2jml.JmlGenMain;
 import org.overture.vdm2jml.tests.util.ProcessResult;
-import org.overture.vdm2jml.tests.util.TestUtil;
 
 abstract public class OpenJmlValidationBase extends JmlGenTestBase
 {
@@ -115,7 +115,7 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 
 			exitCode = p.waitFor();
 
-			if (TestUtil.VERBOSE)
+			if (VERBOSE)
 			{
 				Logger.getLog().println(openJmlOutput.toString());
 				Logger.getLog().println("Exit value: " + p.exitValue());
@@ -138,7 +138,12 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 		GeneralUtils.deleteFolderContents(genJavaFolder, true);
 
 	}
-
+	
+	protected void generateJavaJml()
+	{
+		JmlGenMain.main(getJmlGenMainProcessArgs(genJavaFolder));
+	}
+	
 	abstract public void beforeRunningOpenJmlProcess();
 
 	abstract public String[] getProcessArgs();

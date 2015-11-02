@@ -8,32 +8,11 @@ import java.util.List;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.IJavaConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
-import org.overture.codegen.vdm2jml.JmlGenMain;
 import org.overture.vdm2jml.tests.OpenJmlValidationBase;
 import org.overture.vdm2jml.tests.exec.JmlExecTestBase;
 
 public class TestUtil
 {
-	public static final boolean VERBOSE = false;
-	
-	public static void codeGenerateInputFile(File inputFile, File outputFolder, String libPath)
-	{
-		List<String> javaCgArgs = new LinkedList<String>();
-		
-		javaCgArgs.add(inputFile.getAbsolutePath());
-		if(VERBOSE)
-		{
-			javaCgArgs.add(JmlGenMain.PRINT_ARG);
-		}
-		javaCgArgs.add(JmlGenMain.OUTPUT_ARG);
-		javaCgArgs.add(outputFolder.getAbsolutePath());
-		javaCgArgs.add(JmlGenMain.FOLDER_ARG);
-		javaCgArgs.add(new File(libPath).getAbsolutePath());
-		//javaCgArgs.add(JmlGenMain.REPORT_VIOLATIONS_ARG);
-		
-		JmlGenMain.main(javaCgArgs.toArray(new String[]{}));
-	}
-	
 	public static List<File> collectStoredJavaJmlFiles(File folder)
 	{
 		List<File> files = GeneralUtils.getFiles(folder);
