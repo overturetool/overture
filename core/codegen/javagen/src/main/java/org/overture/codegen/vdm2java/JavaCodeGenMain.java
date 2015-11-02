@@ -489,17 +489,26 @@ public class JavaCodeGenMain
 	
 	public static void usage(String msg)
 	{
-		Logger.getLog().printErrorln("VDM++ to Java Code Generator: " + msg
-				+ "\n");
+		Logger.getLog().printErrorln("VDM++ to Java Code Generator: " + msg + "\n");
 		Logger.getLog().printErrorln("Usage: CodeGen <-oo | -sl | -exp> [<options>] [<files>]");
-		Logger.getLog().printErrorln(OO_ARG + ": code generate a VDMPP specification consisting of multiple .vdmpp files");
+		Logger.getLog().printErrorln(OO_ARG
+				+ ": code generate a VDMPP specification consisting of multiple .vdmpp files");
+		Logger.getLog().printErrorln(SL_ARG
+				+ ": code generate a VDMSL specification consisting of multiple .vdmsl files");
+		Logger.getLog().printErrorln(RT_ARG
+				+ ": code generate a limited part of a VDMRT specification consisting of multiple .vdmrt files");
+		Logger.getLog().printErrorln(CLASSIC + ": code generate using the VDM classic language release");
+		Logger.getLog().printErrorln(VDM10 + ": code generate using the VDM-10 language release");
 		Logger.getLog().printErrorln(EXP_ARG + " <expression>: code generate a VDMPP expression");
-		Logger.getLog().printErrorln(FOLDER_ARG + " <folder path>: a folder containing input .vdmpp files");
-		Logger.getLog().printErrorln(PRINT_ARG  + ": print the generated code to the console");
-		Logger.getLog().printErrorln(PACKAGE_ARG + " <java package>:  the output java package of the generated code (e.g. my.code)");
+		Logger.getLog().printErrorln(FOLDER_ARG + " <folder path>: a folder containing input vdm source files");
+		Logger.getLog().printErrorln(PRINT_ARG + ": print the generated code to the console");
+		Logger.getLog().printErrorln(PACKAGE_ARG
+				+ " <java package>:  the output java package of the generated code (e.g. my.code)");
 		Logger.getLog().printErrorln(OUTPUT_ARG + " <folder path>: the output folder of the generated code");
-		Logger.getLog().printErrorln(VDM_ENTRY_EXP + " <vdm entry point expression>: generate a Java main method based on the specified entry point");
-		
+		Logger.getLog().printErrorln(VDM_ENTRY_EXP
+				+ " <vdm entry point expression>: generate a Java main method based on the specified entry point");
+		Logger.getLog().printErrorln(NO_CODE_FORMAT + ": to NOT format the generated Java code");
+
 		// Terminate
 		System.exit(1);
 	}
