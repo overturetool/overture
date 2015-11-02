@@ -25,6 +25,7 @@ public class JmlGenMain
 	public static final String OUTPUT_ARG = "-output";
 	public static final String PRINT_ARG = "-print";
 	public static final String FOLDER_ARG = "-folder";
+	public static final String INVARIANT_FOR = "-invariant_for";
 
 	public static void main(String[] args)
 	{
@@ -40,10 +41,13 @@ public class JmlGenMain
 		List<String> listArgs = Arrays.asList(args);
 
 		List<File> files = new LinkedList<File>();
-
+		
 		File outputDir = null;
 
 		boolean print = false;
+		
+		JmlGenerator jmlGen = new JmlGenerator();
+		jmlGen.getIrSettings().setCharSeqAsString(true);
 
 		for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
 		{
@@ -87,6 +91,10 @@ public class JmlGenMain
 					usage(FOLDER_ARG + " requires a directory");
 				}
 			}
+			else if(arg.equals(INVARIANT_FOR))
+			{
+				jmlGen.getJmlSettings().setGenInvariantFor(true);
+			}
 			else
 			{
 				// It's a file or a directory
@@ -104,9 +112,6 @@ public class JmlGenMain
 				}
 			}
 		}
-
-		JmlGenerator jmlGen = new JmlGenerator();
-		jmlGen.getIrSettings().setCharSeqAsString(true);
 
 		//GeneralUtils.deleteFolderContents(outputDir, true);
 
@@ -137,12 +142,12 @@ public class JmlGenMain
 
 	private static void usage(String msg)
 	{
-		Logger.getLog().printErrorln("VDMSL to JML/Java generator: " + msg
-				+ "\n");
+		Logger.getLog().printErrorln("VDMSL to JML/Java generator: " + msg + "\n");
 		Logger.getLog().printErrorln("Usage: vdm2jml [<options>] [<VDM SL files>]");
-		Logger.getLog().printErrorln(PRINT_ARG
-				+ ": print the generated code to the console");
-		Logger.getLog().printErrorln(OUTPUT_ARG
-				+ " <folder path>: the output folder of the generated code");
+		Logger.getLog().printErrorln(PRINT_ARG + ": print the generated code to the console");
+		Logger.getLog().printErrorln(OUTPUT_ARG + " <folder path>: the output folder of the generated code");
+		Logger.getLog().printErrorln(FOLDER_ARG + " <folder path>: a folder containing input .vdmsl files");
+		Logger.getLog().printErrorln(INVARIANT_FOR
+				+ ": to check record invariants explicitly using JML's invariant_for");
 	}
 }
