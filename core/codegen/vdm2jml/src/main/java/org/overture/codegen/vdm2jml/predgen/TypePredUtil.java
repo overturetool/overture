@@ -135,25 +135,57 @@ public class TypePredUtil
 
 				if (var.getType() instanceof ARecordTypeCG)
 				{
-					inv.append(var.getName());
-					inv.append('.');
-					inv.append(JmlGenerator.REC_VALID_METHOD_CALL);
-					// e.g. r1.valid()
+					if(handler.getJmlGen().getJmlSettings().genInvariantFor())
+					{
+						inv.append(JmlGenerator.JML_INVARIANT_FOR);
+						inv.append('(');
+						inv.append(var.getName());
+						inv.append(')');
+						// e.g. invariant_for(r1)
+					}
+					else
+					{
+						inv.append(var.getName());
+						inv.append('.');
+						inv.append(JmlGenerator.REC_VALID_METHOD_CALL);
+						// e.g. r1.valid()
+					}
 				} else
 				{
 					inv.append(var.getName());
 					inv.append(" instanceof ");
 					inv.append(fullyQualifiedRecType);
 					inv.append(JmlGenerator.JML_IMPLIES);
-					inv.append("((" + fullyQualifiedRecType + ") " + var.getName() + ").");
-					inv.append(JmlGenerator.REC_VALID_METHOD_CALL);
-					// e.g. r1 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) r1).valid()
+					
+					// So far we have:
+					// e.g. r1 instanceof project.Entrytypes.R3
+					
+					if(handler.getJmlGen().getJmlSettings().genInvariantFor())
+					{
+						inv.append(JmlGenerator.JML_INVARIANT_FOR);
+						inv.append('(');
+						inv.append(consRecVarCast(var, fullyQualifiedRecType));;
+						inv.append(')');
+						
+						// e.g. r1 instanceof project.Entrytypes.R3 ==> \invariant_for((project.Entrytypes.R3) r1);
+					}
+					else
+					{
+						inv.append(consRecVarCast(var, fullyQualifiedRecType));
+						inv.append(JmlGenerator.REC_VALID_METHOD_CALL);
+						// e.g. r1 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) r1).valid()
+					}
 				}
 
 				inv.append(';');
 				predStrs.add(inv.toString());
 			}
 		}
+	}
+
+	private String consRecVarCast(SVarExpCG var, String fullyQualifiedRecType)
+	{
+		return "((" + fullyQualifiedRecType + ") " + var.getName() + ").";
 	}
 
 	public String fullyQualifiedRecType(ARecordTypeCG rt)

@@ -81,11 +81,15 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	public static final String JML_INV_CHECKS_ON_DECL = "/*@ public ghost static boolean %s = true; @*/";
 	public static final String JML_ENABLE_INV_CHECKS = "//@ set " + INV_CHECKS_ON_GHOST_VAR_NAME + " = true;";
 	public static final String JML_DISABLE_INV_CHECKS = "//@ set " + INV_CHECKS_ON_GHOST_VAR_NAME + " = false;";
-	
+
+	public static final String JML_INVARIANT_FOR = "\\invariant_for";
 	public static final String REC_VALID_METHOD_NAMEVALID = "valid";
-	public static final String REC_VALID_METHOD_CALL = REC_VALID_METHOD_NAMEVALID + "()"; 
+	public static final String REC_VALID_METHOD_CALL = REC_VALID_METHOD_NAMEVALID + "()";
 	
 	private JavaCodeGen javaGen;
+	
+	private JmlSettings jmlSettings;
+	
 	private List<NamedTypeInfo> typeInfoList;
 	private JmlGenUtil util;
 	private JmlAnnotationHelper annotator;
@@ -160,6 +164,8 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		// Bugs in Jalopy requires a small tweak to the code formatting conventions.
 		// Force Jalopy to not remove 'scope' braces
 		Convention.getInstance().putBoolean(ConventionKeys.BRACE_REMOVE_BLOCK, false);
+		
+		this.jmlSettings = new JmlSettings();
 	}
 
 	public GeneratedData generateJml(List<AModuleModules> ast)
@@ -616,6 +622,24 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 
 		return normaliser.getStateDesInfo();
 	}
+	
+	@Override
+	public void quoteClassesProduced(List<ADefaultClassDeclCG> quoteClasses)
+	{
+		for(ADefaultClassDeclCG qc : quoteClasses)
+		{
+			// Code generated quotes are represented as singletons and by default the instance
+			// field is null. So we'll mark quote classes as nullable_by_default.
+			//Example from class represented <A>: private static AQuote instance = null;
+			annotator.makeNullableByDefault(qc);
+			addVdmToJmlRuntimeImport(qc);
+		}
+	}
+	
+	public JmlSettings getJmlSettings()
+	{
+		return jmlSettings;
+	}
 
 	public IRSettings getIrSettings()
 	{
@@ -665,18 +689,5 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	public StateDesInfo getStateDesInfo()
 	{
 		return stateDesInfo;
-	}
-
-	@Override
-	public void quoteClassesProduced(List<ADefaultClassDeclCG> quoteClasses)
-	{
-		for(ADefaultClassDeclCG qc : quoteClasses)
-		{
-			// Code generated quotes are represented as singletons and by default the instance
-			// field is null. So we'll mark quote classes as nullable_by_default.
-			//Example from class represented <A>: private static AQuote instance = null;
-			annotator.makeNullableByDefault(qc);
-			addVdmToJmlRuntimeImport(qc);
-		}
 	}
 }

@@ -57,7 +57,11 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 		List<AMethodDeclCG> accessors = consAccessors(node);
 		registerAccessors(accessors);
 		node.getMethods().addAll(accessors);
-		node.getMethods().add(consValidMethod());
+
+		if(!this.jmlGen.getJmlSettings().genInvariantFor())
+		{
+			node.getMethods().add(consValidMethod());
+		}
 	}
 
 	@Override
