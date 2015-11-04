@@ -1,0 +1,30 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        op();
+
+        return 0L;
+    }
+
+    private static void op() {
+        voidOp();
+    }
+
+    private static void voidOp() {
+        return;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
