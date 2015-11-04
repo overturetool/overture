@@ -24,6 +24,7 @@ package org.overture.codegen.analysis.violations;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.statements.ACallStm;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -36,6 +37,12 @@ public class TypenameComparison extends NamingComparison
 		super(names, irInfo, correctionPrefix);
 	}
 
+	@Override
+	public boolean isModuleViolation(ILexNameToken nameToken)
+	{
+		return nameToken.parent() instanceof ACallStm && this.getNames().contains(nameToken.getModule());
+	}
+	
 	@Override
 	public boolean mustHandleNameToken(ILexNameToken nameToken)
 	{
@@ -53,6 +60,10 @@ public class TypenameComparison extends NamingComparison
 			}
 
 			return def != null;
+		}
+		else if(isModuleViolation(nameToken))
+		{
+			return true;
 		}
 
 		return false;

@@ -44,16 +44,31 @@ public abstract class NamingComparison
 	}
 
 	public abstract boolean mustHandleNameToken(ILexNameToken nameToken);
+	
+	public boolean isModuleViolation(ILexNameToken nameToken)
+	{
+		return false;
+	}
 
 	public void correctNameToken(ILexNameToken nameToken)
 	{
-		String module = nameToken.getModule();
-		String correctedName = correctionPrefix + nameToken.getName();
+		String newModule = nameToken.getModule();
+		if(names.contains(nameToken.getModule()))
+		{
+			newModule = correctionPrefix + newModule;
+		}
+		
+		String newName = nameToken.getName();
+		if(names.contains(nameToken.getName()))
+		{
+			newName = correctionPrefix + newName;
+		}
+		
 		ILexLocation location = nameToken.getLocation();
 		boolean old = nameToken.getOld();
 		boolean explicit = nameToken.getExplicit();
 
-		LexNameToken replaceMent = new LexNameToken(module, correctedName, location, old, explicit);
+		LexNameToken replaceMent = new LexNameToken(newModule, newName, location, old, explicit);
 		nameToken.parent().replaceChild(nameToken, replaceMent);
 	}
 

@@ -52,15 +52,17 @@ public class NameViolationAnalysis extends ViolationAnalysis
 
 				SClassDefinition enclosingClass = node.getAncestor(SClassDefinition.class);
 
-				if (enclosingClass == null
-						|| enclosingClass != null
+				if (enclosingClass != null
 						&& !assistantManager.getDeclAssistant().isLibrary(enclosingClass))
 				{
-					String name = nameToken.getName();
-					ILexLocation location = nameToken.getLocation();
+					if (!comparison.isModuleViolation(nameToken))
+					{
+						String name = nameToken.getName();
+						ILexLocation location = nameToken.getLocation();
 
-					Violation violation = new Violation(name, location, assistantManager.getLocationAssistant());
-					addViolation(violation);
+						Violation violation = new Violation(name, location, assistantManager.getLocationAssistant());
+						addViolation(violation);
+					}
 				}
 			}
 		}

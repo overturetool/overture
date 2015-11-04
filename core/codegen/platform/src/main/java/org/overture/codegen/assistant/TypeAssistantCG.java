@@ -292,8 +292,7 @@ public class TypeAssistantCG extends AssistantBase
 		{
 			return null;
 		}
-
-		enclosingClass.getName().getModule();
+		
 		PDefinition typeDef = defAssistant.findType(def, nameToken, enclosingClass.getName().getModule());
 
 		return typeDef;
