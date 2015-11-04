@@ -149,7 +149,7 @@ public class IRTest
 			if (mergeVisitor.getMergeErrors().isEmpty())
 			{
 				String actual = GeneralUtils.cleanupWhiteSpaces(writer.toString());
-				Assert.assertTrue("Expected: " + expected + ". Got: " + actual, expected.equals(actual));
+				Assert.assertEquals("Got unexpected code generator output", expected, actual);
 			} else
 			{
 				Assert.fail("Could print node: " + node);
