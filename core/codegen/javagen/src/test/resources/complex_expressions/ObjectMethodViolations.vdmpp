@@ -1,0 +1,56 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+ -- Call object statement
+ let e = new Entry() in e.wait();
+
+ -- Var expression 
+ let - = notify() in skip;
+ 
+ -- Field expression
+ let e = new Entry(),
+     - = e.notify()
+  in
+    skip;
+ 
+ --Call statement
+ wait();
+ return 0;
+);
+
+private clone : () ==> ()
+clone () == skip;
+
+private equals : () ==> ()
+equals () == skip;
+
+private finalize : () ==> ()
+finalize () == skip;
+
+private getClass : () ==> ()
+getClass () == skip;
+
+private hashCode : () ==> ()
+hashCode () == skip;
+
+functions
+
+private notify :  () -> nat
+notify () == 1;
+
+operations
+
+private notifyAll : () ==> ()
+notifyAll () == skip;
+
+private toString : () ==> ()
+toString () == skip;
+
+public static wait : () ==> ()
+wait () == skip;
+
+end Entry
