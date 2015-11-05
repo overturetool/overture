@@ -324,8 +324,8 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 			args = ((ACallObjectStmCG) callStm).getArgs();
 		} else
 		{
-			Logger.getLog().printErrorln("Expected a call statement or call object statement. Got: "
-					+ callStm);
+			Logger.getLog().printErrorln("Expected a call statement or call object statement in '"
+					+ this.getClass().getSimpleName() + "'. Got: " + callStm);
 			return decls;
 		}
 
