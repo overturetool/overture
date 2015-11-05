@@ -30,7 +30,6 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	// The socket is used to communicate with the trace interpreter
 	protected ServerSocket socket;
 	protected static final int SOCKET_TIMEOUT = 0;
-	protected static final int PORT = 8889;
 
 	public TraceHandler(Release release, Dialect dialect)
 	{
@@ -53,6 +52,36 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	{
 		return "computeTests()";
 	}
+	
+	public int getFreePort()
+	{
+		ServerSocket s = null;
+		try
+		{
+			s = new ServerSocket(0);
+			
+			// returns the port the system selected
+			return s.getLocalPort();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			if(s != null)
+			{
+				try
+				{
+					s.close();
+				} catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return 8999;
+	}
 
 	public List<String> getMainClassMethods()
 	{
@@ -73,7 +102,7 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	@Override
 	public ExecutionResult interpretVdm(File intputFile) throws Exception
 	{
-		File vdmTraceResultFile = computeVdmTraceResult(currentInputFile);
+		File vdmTraceResultFile = computeVdmTraceResult(intputFile);
 
 		List<TraceResult> testResult = new TraceResultReader().read(vdmTraceResultFile);
 
@@ -120,7 +149,8 @@ public class TraceHandler extends ExecutableSpecTestHandler
 			ParserConfigurationException
 	{
 		// The client thread will close the socket
-		socket = new ServerSocket(PORT);
+		int port = getFreePort();
+		socket = new ServerSocket(port);
 		socket.setSoTimeout(SOCKET_TIMEOUT);
 		final Data data = new Data();
 
@@ -147,7 +177,7 @@ public class TraceHandler extends ExecutableSpecTestHandler
 				"-h",
 				"localhost",
 				"-p",
-				PORT + "",
+				port + "",
 				"-k",
 				"whatever",
 				"-e",
