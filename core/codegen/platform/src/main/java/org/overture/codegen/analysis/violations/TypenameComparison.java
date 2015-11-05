@@ -24,6 +24,7 @@ package org.overture.codegen.analysis.violations;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.statements.ACallStm;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.ir.IRInfo;
@@ -66,6 +67,12 @@ public class TypenameComparison extends NamingComparison
 			return true;
 		}
 
+		return false;
+	}
+
+	@Override
+	public boolean mustHandleLexIdentifierToken(LexIdentifierToken lexId)
+	{
 		return false;
 	}
 }
