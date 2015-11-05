@@ -32,7 +32,7 @@ end ${className}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="forall bind list &amp; predicate" enabled="true" name="forall" id="forallVDMPP">forall ${bindList} &amp; ${predicate}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="for identifier = expression1 to expression2 do\n statement" enabled="true" name="forallLoop" id="forallLoopVDMPP">for ${identifier} = ${initialValue} to ${upperValue} do
 	${statement}</template>
-<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="for all in set do" enabled="true" name="forallinset" id="forallinsetVDMPP">for all ${pattern} in set ${set} do
+<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="for all in set do" enabled="true" name="forallinset" id="forallinsetVDMPP">for all ${pattern} in set ${s} do
     ${statement}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Explicit function" enabled="true" name="functionExplicit" id="functionExplicitVDMPP">${private} ${functionName} :  ${parameterTypes} -&gt; ${resultType}
 ${functionName} (${parameterNames}) == ${expression};</template>

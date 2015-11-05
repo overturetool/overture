@@ -75,7 +75,7 @@ forall ${bindList} & ${predicate}
 #description	for all in set do
 #dialect		all
 #begin
-for all ${pattern} in set ${set} do
+for all ${pattern} in set ${s} do
 	${statement}
 #end
 --------------------------------------------------------------------
