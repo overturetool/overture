@@ -43,8 +43,9 @@ public class Entry {
     public static Object Run() {
         Object x = 1L;
         Object y = 'a';
+        Entry ignorePattern_1 = new Entry(((Number) x), ((Character) y));
 
-        return new Entry(((Number) x), ((Character) y));
+        return 0L;
     }
 
     public String toString() {

@@ -252,7 +252,7 @@ public class Entry {
         VDMSet periods = entry.plant.ExpertIsOnDuty(entry.ex1);
         Expert expert = entry.plant.ExpertToPage(entry.a1, Entry.p1);
 
-        return Tuple.mk_(Utils.copy(periods), expert);
+        return Tuple.mk_(periods.size(), expert.GetQuali().size());
     }
 
     public String toString() {
