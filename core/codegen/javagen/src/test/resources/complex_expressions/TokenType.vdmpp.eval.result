@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.codegen.tests.exec.ComplexExpJavaGenTest">
 <result>
-<output object="rO0ABXNyACpvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLlRva2VuVmFsdWUAAAAAAAAAAQIAAUwABXZhbHVldAAnTG9yZy9vdmVydHVyZS9pbnRlcnByZXRlci92YWx1ZXMvVmFsdWU7eHIAJW9yZy5vdmVydHVyZS5pbnRlcnByZXRlci52YWx1ZXMuVmFsdWUAAAAAAAAAAQIAAHhwc3IAKG9yZy5vdmVydHVyZS5pbnRlcnByZXRlci52YWx1ZXMuTmlsVmFsdWUAAAAAAAAAAQIAAHhxAH4AAg==" resource="TokenType" value="mk_token(nil)"/>
+<output object="rO0ABXNyACpvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLlRva2VuVmFsdWUAAAAAAAAAAQIAAUwABXZhbHVldAAnTG9yZy9vdmVydHVyZS9pbnRlcnByZXRlci92YWx1ZXMvVmFsdWU7eHIAJW9yZy5vdmVydHVyZS5pbnRlcnByZXRlci52YWx1ZXMuVmFsdWUAAAAAAAAAAQIAAHhwc3IAKG9yZy5vdmVydHVyZS5pbnRlcnByZXRlci52YWx1ZXMuTmlsVmFsdWUAAAAAAAAAAQIAAHhxAH4AAg==" resource="TokenType.vdmpp" value="mk_token(nil)"/>
 </result>
 </testResult>
