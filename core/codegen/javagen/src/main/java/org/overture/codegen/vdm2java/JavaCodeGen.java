@@ -95,6 +95,24 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 			"Utils", "Record", "Long", "Double", "Character", "String", "List",
 			"Set" };
 
+	
+	/**
+	 * Signatures of the java.lang.Object methods:<br>
+	 * clone()<br>
+	 * equals(Object obj)<br>
+	 * finalize()<br>
+	 * getClass()<br>
+	 * hashCode()<br>
+	 * notify()<br>
+	 * notifyAll()<br>
+	 * toString()<br>
+	 * wait()<br>
+	 * wait(long timeout, int nanos)<br>
+	 * wait(long timeout)
+	 */
+	public static final String[] JAVA_LANG_OBJECT_METHODS = { "clone", "equals", "finalize", "getClass", "hashCode",
+			"notify", "notifyAll", "toString", "wait" };
+	
 	public static final String JAVA_MAIN_CLASS_NAME = "Main";
 	public static final String JAVA_QUOTES_PACKAGE = "quotes";
 	
@@ -786,16 +804,17 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 
 		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaConstants.RESERVED_WORDS, generator.getIRInfo(), INVALID_NAME_PREFIX));
 		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(JAVA_RESERVED_TYPE_NAMES, generator.getIRInfo(), INVALID_NAME_PREFIX));
-
+		Set<Violation> objectMethodViolations = analysis.usesIllegalNames(mergedParseLists, new ObjectMethodComparison(JAVA_LANG_OBJECT_METHODS, generator.getIRInfo(), INVALID_NAME_PREFIX));
+			
 		//TODO: needs to take all of them into account
 		String[] generatedTempVarNames = varPrefixManager.getIteVarPrefixes().GENERATED_TEMP_NAMES;
 
 		Set<Violation> tempVarViolations = analysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(generatedTempVarNames, generator.getIRInfo(), INVALID_NAME_PREFIX));
 
 		if (!reservedWordViolations.isEmpty() || !typenameViolations.isEmpty()
-				|| !tempVarViolations.isEmpty())
+				|| !tempVarViolations.isEmpty() || !objectMethodViolations.isEmpty())
 		{
-			return new InvalidNamesResult(reservedWordViolations, typenameViolations, tempVarViolations, INVALID_NAME_PREFIX);
+			return new InvalidNamesResult(reservedWordViolations, typenameViolations, tempVarViolations, objectMethodViolations, INVALID_NAME_PREFIX);
 		} else
 		{
 			return new InvalidNamesResult();
