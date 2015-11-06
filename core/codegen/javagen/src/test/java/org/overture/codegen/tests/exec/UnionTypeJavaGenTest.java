@@ -14,9 +14,9 @@ import org.overture.codegen.tests.output.UnionTypeOutputTest;
 import org.overture.config.Release;
 
 @RunWith(value = Parameterized.class)
-public class UnionJavaGenTest extends CommonJavaGenCheckerTest
+public class UnionTypeJavaGenTest extends CommonJavaGenCheckerTest
 {
-	public UnionJavaGenTest(String name, File vdmSpec, TestHandler testHandler)
+	public UnionTypeJavaGenTest(String name, File vdmSpec, TestHandler testHandler)
 	{
 		super(vdmSpec, testHandler);
 	}
