@@ -867,14 +867,6 @@ public class System {
         cg_init_System_1();
     }
 
-    public Till GetTill(final Number tid) {
-        return ((Till) Utils.get(tills, tid));
-    }
-
-    public CentralResource GetResource() {
-        return System.resource;
-    }
-
     public void cg_init_System_1() {
         clock.SetDate(SeqUtil.seq('1', '5', '0', '9', '9', '9'));
 
@@ -924,6 +916,14 @@ public class System {
                 System.resource.AddLetterbox(clock, new Letterbox());
             }
         }
+    }
+
+    public Till GetTill(final Number tid) {
+        return ((Till) Utils.get(tills, tid));
+    }
+
+    public CentralResource GetResource() {
+        return System.resource;
     }
 
     public String toString() {

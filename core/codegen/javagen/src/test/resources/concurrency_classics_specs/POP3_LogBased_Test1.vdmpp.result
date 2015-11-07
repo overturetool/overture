@@ -446,8 +446,6 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public POP3ClientHandler(final POP3Server nparent, final MessageChannel nch) {
-        sentinel = new POP3ClientHandler_sentinel(this);
-
         cg_init_POP3ClientHandler_1(nparent, nch);
     }
 
@@ -457,6 +455,8 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
     public void cg_init_POP3ClientHandler_1(final POP3Server nparent,
         final MessageChannel nch) {
+        sentinel = new POP3ClientHandler_sentinel(this);
+
         ss = quotes.AuthorizationQuote.getInstance();
         parent = nparent;
         msgChannel = nch;
@@ -1231,8 +1231,6 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
             return true;
         } else if (Utils.equals(fnr, 26L)) {
             return true;
-        } else if (Utils.equals(fnr, 27L)) {
-            return true;
         } else {
             return true;
         }
@@ -1263,35 +1261,34 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
     }
 
     public static class POP3ClientHandler_sentinel extends Sentinel {
-        public static final int cg_init_POP3ClientHandler_1 = 0;
-        public static final int POP3ClientHandler = 1;
-        public static final int ReceiveCommand = 2;
-        public static final int ReceiveQUIT = 3;
-        public static final int ReceiveSTAT = 4;
-        public static final int ReceiveLIST = 5;
-        public static final int ReceiveRETR = 6;
-        public static final int ReceiveDELE = 7;
-        public static final int ReceiveNOOP = 8;
-        public static final int ReceiveRSET = 9;
-        public static final int ReceiveTOP = 10;
-        public static final int ReceiveUIDL = 11;
-        public static final int ReceiveUSER = 12;
-        public static final int ReceivePASS = 13;
-        public static final int MakeScanListHeader = 14;
-        public static final int set2seq = 15;
-        public static final int MakeScanListing = 16;
-        public static final int MakeMultilineResponse = 17;
-        public static final int MakeLineSeq = 18;
-        public static final int GetLine = 19;
-        public static final int Len = 20;
-        public static final int sum = 21;
-        public static final int Card = 22;
-        public static final int int2string = 23;
-        public static final int Abs = 24;
-        public static final int int2stringR = 25;
-        public static final int Id = 26;
-        public static final int toString = 27;
-        public final int function_sum = 28;
+        public static final int POP3ClientHandler = 0;
+        public static final int ReceiveCommand = 1;
+        public static final int ReceiveQUIT = 2;
+        public static final int ReceiveSTAT = 3;
+        public static final int ReceiveLIST = 4;
+        public static final int ReceiveRETR = 5;
+        public static final int ReceiveDELE = 6;
+        public static final int ReceiveNOOP = 7;
+        public static final int ReceiveRSET = 8;
+        public static final int ReceiveTOP = 9;
+        public static final int ReceiveUIDL = 10;
+        public static final int ReceiveUSER = 11;
+        public static final int ReceivePASS = 12;
+        public static final int MakeScanListHeader = 13;
+        public static final int set2seq = 14;
+        public static final int MakeScanListing = 15;
+        public static final int MakeMultilineResponse = 16;
+        public static final int MakeLineSeq = 17;
+        public static final int GetLine = 18;
+        public static final int Len = 19;
+        public static final int sum = 20;
+        public static final int Card = 21;
+        public static final int int2string = 22;
+        public static final int Abs = 23;
+        public static final int int2stringR = 24;
+        public static final int Id = 25;
+        public static final int toString = 26;
+        public final int function_sum = 27;
 
         public POP3ClientHandler_sentinel() {
         }
@@ -1318,8 +1315,6 @@ public class POP3Message implements EvaluatePP {
 
     public POP3Message(final String nheader, final String nbody,
         final String nuniqueId) {
-        sentinel = new POP3Message_sentinel(this);
-
         cg_init_POP3Message_1(nheader, nbody, nuniqueId);
     }
 
@@ -1329,6 +1324,8 @@ public class POP3Message implements EvaluatePP {
 
     public void cg_init_POP3Message_1(final String nheader, final String nbody,
         final String nuniqueId) {
+        sentinel = new POP3Message_sentinel(this);
+
         header = nheader;
         body = nbody;
         deleted = false;
@@ -1449,26 +1446,23 @@ public class POP3Message implements EvaluatePP {
             return true;
         } else if (Utils.equals(fnr, 9L)) {
             return true;
-        } else if (Utils.equals(fnr, 10L)) {
-            return true;
         } else {
             return true;
         }
     }
 
     public static class POP3Message_sentinel extends Sentinel {
-        public static final int cg_init_POP3Message_1 = 0;
-        public static final int POP3Message = 1;
-        public static final int GetBody = 2;
-        public static final int GetHeader = 3;
-        public static final int GetText = 4;
-        public static final int Delete = 5;
-        public static final int IsDeleted = 6;
-        public static final int Undelete = 7;
-        public static final int GetSize = 8;
-        public static final int GetUniqueId = 9;
-        public static final int toString = 10;
-        public final int function_sum = 11;
+        public static final int POP3Message = 0;
+        public static final int GetBody = 1;
+        public static final int GetHeader = 2;
+        public static final int GetText = 3;
+        public static final int Delete = 4;
+        public static final int IsDeleted = 5;
+        public static final int Undelete = 6;
+        public static final int GetSize = 7;
+        public static final int GetUniqueId = 8;
+        public static final int toString = 9;
+        public final int function_sum = 10;
 
         public POP3Message_sentinel() {
         }
@@ -1496,8 +1490,6 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
     public POP3Server(final VDMMap nmd, final MessageChannelBuffer nch,
         final VDMMap npasswords) {
-        sentinel = new POP3Server_sentinel(this);
-
         cg_init_POP3Server_1(Utils.copy(nmd), nch, Utils.copy(npasswords));
     }
 
@@ -1507,6 +1499,8 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
     public void cg_init_POP3Server_1(final VDMMap nmd,
         final MessageChannelBuffer nch, final VDMMap npasswords) {
+        sentinel = new POP3Server_sentinel(this);
+
         maildrop = Utils.copy(nmd);
         connChannel = nch;
         locks = MapUtil.map();
@@ -1911,37 +1905,37 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         } else if (Utils.equals(fnr, 1L)) {
             return true;
         } else if (Utils.equals(fnr, 2L)) {
-            return true;
-        } else if (Utils.equals(fnr, 3L)) {
             return Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock] +
                 sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
                 sentinel.active[((POP3Server_sentinel) sentinel).IsLocked], 0L);
-        } else if (Utils.equals(fnr, 4L)) {
+        } else if (Utils.equals(fnr, 3L)) {
             return (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).SetUserMessages],
                 0L)) &&
             (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).SetUserMessages] +
                 sentinel.active[((POP3Server_sentinel) sentinel).GetUserMail],
                 0L));
-        } else if (Utils.equals(fnr, 5L)) {
+        } else if (Utils.equals(fnr, 4L)) {
             return Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).SetUserMessages] +
                 sentinel.active[((POP3Server_sentinel) sentinel).GetUserMail],
                 0L);
+        } else if (Utils.equals(fnr, 5L)) {
+            return true;
         } else if (Utils.equals(fnr, 6L)) {
             return true;
         } else if (Utils.equals(fnr, 7L)) {
-            return true;
-        } else if (Utils.equals(fnr, 8L)) {
             return (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock],
                 0L)) &&
             (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock] +
                 sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
                 sentinel.active[((POP3Server_sentinel) sentinel).IsLocked], 0L));
-        } else if (Utils.equals(fnr, 9L)) {
+        } else if (Utils.equals(fnr, 8L)) {
             return (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock],
                 0L)) &&
             (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock] +
                 sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
                 sentinel.active[((POP3Server_sentinel) sentinel).IsLocked], 0L));
+        } else if (Utils.equals(fnr, 9L)) {
+            return true;
         } else if (Utils.equals(fnr, 10L)) {
             return true;
         } else if (Utils.equals(fnr, 11L)) {
@@ -1973,14 +1967,12 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         } else if (Utils.equals(fnr, 24L)) {
             return true;
         } else if (Utils.equals(fnr, 25L)) {
-            return true;
-        } else if (Utils.equals(fnr, 26L)) {
             return serverStarted;
+        } else if (Utils.equals(fnr, 26L)) {
+            return true;
         } else if (Utils.equals(fnr, 27L)) {
             return true;
         } else if (Utils.equals(fnr, 28L)) {
-            return true;
-        } else if (Utils.equals(fnr, 29L)) {
             return true;
         } else {
             return true;
@@ -2008,37 +2000,36 @@ public class POP3Server extends VDMThread implements EvaluatePP {
     }
 
     public static class POP3Server_sentinel extends Sentinel {
-        public static final int cg_init_POP3Server_1 = 0;
-        public static final int POP3Server = 1;
-        public static final int AuthenticateUser = 2;
-        public static final int IsLocked = 3;
-        public static final int SetUserMessages = 4;
-        public static final int GetUserMail = 5;
-        public static final int GetUserMessages = 6;
-        public static final int RemoveDeletedMessages = 7;
-        public static final int AcquireLock = 8;
-        public static final int ReleaseLock = 9;
-        public static final int CreateClientHandler = 10;
-        public static final int IsMessageNumber = 11;
-        public static final int IsValidMessageNumber = 12;
-        public static final int MessageIsDeleted = 13;
-        public static final int DeleteMessage = 14;
-        public static final int GetMsgHeader = 15;
-        public static final int GetMsgBody = 16;
-        public static final int ResetDeletedMessages = 17;
-        public static final int GetMessageText = 18;
-        public static final int GetMessageSize = 19;
-        public static final int GetMessageInfo = 20;
-        public static final int GetUidl = 21;
-        public static final int GetAllUidls = 22;
-        public static final int GetNumberOfMessages = 23;
-        public static final int GetMailBoxSize = 24;
-        public static final int GetChannel = 25;
-        public static final int WaitForServerStart = 26;
-        public static final int sumseq = 27;
-        public static final int Len = 28;
-        public static final int toString = 29;
-        public final int function_sum = 30;
+        public static final int POP3Server = 0;
+        public static final int AuthenticateUser = 1;
+        public static final int IsLocked = 2;
+        public static final int SetUserMessages = 3;
+        public static final int GetUserMail = 4;
+        public static final int GetUserMessages = 5;
+        public static final int RemoveDeletedMessages = 6;
+        public static final int AcquireLock = 7;
+        public static final int ReleaseLock = 8;
+        public static final int CreateClientHandler = 9;
+        public static final int IsMessageNumber = 10;
+        public static final int IsValidMessageNumber = 11;
+        public static final int MessageIsDeleted = 12;
+        public static final int DeleteMessage = 13;
+        public static final int GetMsgHeader = 14;
+        public static final int GetMsgBody = 15;
+        public static final int ResetDeletedMessages = 16;
+        public static final int GetMessageText = 17;
+        public static final int GetMessageSize = 18;
+        public static final int GetMessageInfo = 19;
+        public static final int GetUidl = 20;
+        public static final int GetAllUidls = 21;
+        public static final int GetNumberOfMessages = 22;
+        public static final int GetMailBoxSize = 23;
+        public static final int GetChannel = 24;
+        public static final int WaitForServerStart = 25;
+        public static final int sumseq = 26;
+        public static final int Len = 27;
+        public static final int toString = 28;
+        public final int function_sum = 29;
 
         public POP3Server_sentinel() {
         }
@@ -2153,9 +2144,21 @@ public class POP3Test implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public POP3Test() {
+        cg_init_POP3Test_1();
+    }
+
+    public void cg_init_POP3Test_1() {
         sentinel = new POP3Test_sentinel(this);
 
-        cg_init_POP3Test_1();
+        ch = new MessageChannelBuffer();
+        server = new POP3Server(MakeMailDrop(), ch, MakePasswordMap());
+        mc1 = new MessageChannel();
+        mc2 = new MessageChannel();
+        mc3 = new MessageChannel();
+        send1 = new POP3TestSender("c1", TestRun1(), mc1);
+        send2 = new POP3TestSender("c2", TestRun1(), mc2);
+        listen1 = new POP3TestListener("l1", mc1);
+        listen2 = new POP3TestListener("l2", mc2);
     }
 
     public void StartServer(final POP3Server myserver) {
@@ -2246,18 +2249,6 @@ public class POP3Test implements EvaluatePP {
         } finally {
             sentinel.leaving(((POP3Test_sentinel) sentinel).Start);
         }
-    }
-
-    public void cg_init_POP3Test_1() {
-        ch = new MessageChannelBuffer();
-        server = new POP3Server(MakeMailDrop(), ch, MakePasswordMap());
-        mc1 = new MessageChannel();
-        mc2 = new MessageChannel();
-        mc3 = new MessageChannel();
-        send1 = new POP3TestSender("c1", TestRun1(), mc1);
-        send2 = new POP3TestSender("c2", TestRun1(), mc2);
-        listen1 = new POP3TestListener("l1", mc1);
-        listen2 = new POP3TestListener("l2", mc2);
     }
 
     public static VDMMap MakePasswordMap() {
@@ -2352,8 +2343,6 @@ public class POP3Test implements EvaluatePP {
             return true;
         } else if (Utils.equals(fnr, 9L)) {
             return true;
-        } else if (Utils.equals(fnr, 10L)) {
-            return true;
         } else {
             return true;
         }
@@ -2364,14 +2353,13 @@ public class POP3Test implements EvaluatePP {
         public static final int Test1 = 1;
         public static final int Test2 = 2;
         public static final int Start = 3;
-        public static final int cg_init_POP3Test_1 = 4;
-        public static final int POP3Test = 5;
-        public static final int MakePasswordMap = 6;
-        public static final int MakeMailDrop = 7;
-        public static final int MakeMessages = 8;
-        public static final int TestRun1 = 9;
-        public static final int toString = 10;
-        public final int function_sum = 11;
+        public static final int POP3Test = 4;
+        public static final int MakePasswordMap = 5;
+        public static final int MakeMailDrop = 6;
+        public static final int MakeMessages = 7;
+        public static final int TestRun1 = 8;
+        public static final int toString = 9;
+        public final int function_sum = 10;
 
         public POP3Test_sentinel() {
         }
@@ -2397,8 +2385,6 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
 
     public POP3TestSender(final String idarg, final VDMSeq cmdsarg,
         final MessageChannel mcarg) {
-        sentinel = new POP3TestSender_sentinel(this);
-
         cg_init_POP3TestSender_1(idarg, Utils.copy(cmdsarg), mcarg);
     }
 
@@ -2408,6 +2394,8 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
 
     public void cg_init_POP3TestSender_1(final String idarg,
         final VDMSeq cmdsarg, final MessageChannel mcarg) {
+        sentinel = new POP3TestSender_sentinel(this);
+
         id = idarg;
         cmds = Utils.copy(cmdsarg);
         mc = mcarg;
@@ -2449,8 +2437,6 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
             return true;
         } else if (Utils.equals(fnr, 3L)) {
             return true;
-        } else if (Utils.equals(fnr, 4L)) {
-            return true;
         } else {
             return true;
         }
@@ -2464,12 +2450,11 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
     }
 
     public static class POP3TestSender_sentinel extends Sentinel {
-        public static final int cg_init_POP3TestSender_1 = 0;
-        public static final int POP3TestSender = 1;
-        public static final int LogClient = 2;
-        public static final int SendCmd = 3;
-        public static final int toString = 4;
-        public final int function_sum = 5;
+        public static final int POP3TestSender = 0;
+        public static final int LogClient = 1;
+        public static final int SendCmd = 2;
+        public static final int toString = 3;
+        public final int function_sum = 4;
 
         public POP3TestSender_sentinel() {
         }
@@ -2494,8 +2479,6 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public POP3TestListener(final String idarg, final MessageChannel mcarg) {
-        sentinel = new POP3TestListener_sentinel(this);
-
         cg_init_POP3TestListener_1(idarg, mcarg);
     }
 
@@ -2505,6 +2488,8 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
 
     public void cg_init_POP3TestListener_1(final String idarg,
         final MessageChannel mcarg) {
+        sentinel = new POP3TestListener_sentinel(this);
+
         id = idarg;
         mc = mcarg;
         finished = false;
@@ -2542,10 +2527,8 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
         } else if (Utils.equals(fnr, 1L)) {
             return true;
         } else if (Utils.equals(fnr, 2L)) {
-            return true;
-        } else if (Utils.equals(fnr, 3L)) {
             return finished;
-        } else if (Utils.equals(fnr, 4L)) {
+        } else if (Utils.equals(fnr, 3L)) {
             return true;
         } else {
             return true;
@@ -2574,12 +2557,11 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
     }
 
     public static class POP3TestListener_sentinel extends Sentinel {
-        public static final int cg_init_POP3TestListener_1 = 0;
-        public static final int POP3TestListener = 1;
-        public static final int LogServer = 2;
-        public static final int IsFinished = 3;
-        public static final int toString = 4;
-        public final int function_sum = 5;
+        public static final int POP3TestListener = 0;
+        public static final int LogServer = 1;
+        public static final int IsFinished = 2;
+        public static final int toString = 3;
+        public final int function_sum = 4;
 
         public POP3TestListener_sentinel() {
         }

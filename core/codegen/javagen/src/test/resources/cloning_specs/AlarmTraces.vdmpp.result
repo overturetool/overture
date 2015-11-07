@@ -9,7 +9,7 @@ public class Alarm {
     private Object reqQuali;
 
     public Alarm(final Object quali, final VDMSeq str) {
-        cg_init_Alarm_1(((Object) quali), str);
+        cg_init_Alarm_1(quali, str);
     }
 
     public Alarm() {
@@ -78,6 +78,11 @@ public class Plant {
     public Plant() {
     }
 
+    public void cg_init_Plant_1(final VDMSet als, final VDMMap sch) {
+        alarms = als;
+        schedule = sch;
+    }
+
     public Expert ExpertToPage(final Alarm a, final Token p) {
         Expert expert = null;
         Boolean success_1 = false;
@@ -113,11 +118,6 @@ public class Plant {
         }
 
         return setCompResult_1;
-    }
-
-    public void cg_init_Plant_1(final VDMSet als, final VDMMap sch) {
-        alarms = als;
-        schedule = sch;
     }
 
     public void AddExpertToSchedule(final Token p, final Expert ex) {
