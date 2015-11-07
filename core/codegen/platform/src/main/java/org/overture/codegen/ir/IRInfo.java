@@ -28,9 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.assistant.AssistantManager;
@@ -91,12 +89,6 @@ public class IRInfo
 	// For configuring code generation
 	private IRSettings settings;
 
-	// To look up object initializer call names
-	private Map<AExplicitOperationDefinition, String> objectInitCallNames;
-
-	// Object initialization call prefix
-	private String objectInitCallPrefix;
-	
 	// Definitions for identifier state designators
 	private Map<AIdentifierStateDesignator, PDefinition> idStateDesignatorDefs;
 	
@@ -106,7 +98,7 @@ public class IRInfo
 	// IR modules
 	private List<AModuleDeclCG> modules;
 	
-	public IRInfo(String objectInitCallPrefix)
+	public IRInfo()
 	{
 		super();
 
@@ -120,9 +112,6 @@ public class IRInfo
 
 		this.settings = new IRSettings();
 
-		this.objectInitCallPrefix = objectInitCallPrefix;
-		this.objectInitCallNames = new HashMap<AExplicitOperationDefinition, String>();
-		
 		this.idStateDesignatorDefs = new HashMap<AIdentifierStateDesignator, PDefinition>();
 		this.classes = new LinkedList<SClassDeclCG>();
 		this.modules = new LinkedList<AModuleDeclCG>();
@@ -355,22 +344,6 @@ public class IRInfo
 	public void setSettings(IRSettings settings)
 	{
 		this.settings = settings;
-	}
-
-	public String getObjectInitializerCall(AExplicitOperationDefinition vdmOp)
-	{
-		if (objectInitCallNames.containsKey(vdmOp))
-		{
-			return objectInitCallNames.get(vdmOp);
-		} else
-		{
-			String enclosingClassName = vdmOp.getAncestor(SClassDefinition.class).getName().getName();
-			String initName = tempVarNameGen.nextVarName(objectInitCallPrefix
-					+ enclosingClassName + "_");
-			objectInitCallNames.put(vdmOp, initName);
-
-			return initName;
-		}
 	}
 
 	public Map<AIdentifierStateDesignator, PDefinition> getIdStateDesignatorDefs()

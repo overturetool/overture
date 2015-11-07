@@ -45,6 +45,8 @@ import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
 
 public class JavaTransSeries
 {
+	private static final String OBJ_INIT_CALL_NAME_PREFIX = "cg_init_";
+	
 	private JavaCodeGen codeGen;
 	private List<DepthFirstAnalysisAdaptor> series;
 	private FuncValAssistant funcValAssist;
@@ -104,7 +106,7 @@ public class JavaTransSeries
 		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, unionTypePrefixes, codeGen.getJavaFormat().getValueSemantics().getCloneFreeNodes());
 		JavaToStringTrans javaToStringTr = new JavaToStringTrans(info);
 		RecMethodsTrans recTr = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());
-		ConstructorTrans ctorTr = new ConstructorTrans(transAssist);
+		ConstructorTrans ctorTr = new ConstructorTrans(transAssist, OBJ_INIT_CALL_NAME_PREFIX);
 		ImportsTrans impTr = new ImportsTrans(info);
 
 		// Start concurrency transformations

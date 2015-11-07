@@ -42,18 +42,11 @@ import org.overture.codegen.trans.ITotalTransformation;
 
 public class IRGenerator
 {
-	private static final String OBJ_INIT_CALL_NAME_PREFIX = "cg_init_";
-	
 	protected IRInfo codeGenInfo;
 
 	public IRGenerator()
 	{
-		this(OBJ_INIT_CALL_NAME_PREFIX);
-	}
-	
-	public IRGenerator(String objectInitCallPrefix)
-	{
-		this.codeGenInfo = new IRInfo(objectInitCallPrefix);
+		this.codeGenInfo = new IRInfo();
 	}
 	
 	public void computeDefTable(List<? extends org.overture.ast.node.INode> mergedParseLists)

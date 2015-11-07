@@ -1,8 +1,12 @@
 package org.overture.codegen.trans;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ACallStm;
 import org.overture.codegen.cgast.SExpCG;
@@ -23,10 +27,18 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantCG assist;
+	
+	// To look up object initializer call names
+	private Map<AExplicitOperationDefinition, String> objectInitCallNames;
 
-	public ConstructorTrans(TransAssistantCG assist)
+	// Object initialization call prefix
+	private String objectInitCallPrefix;
+
+	public ConstructorTrans(TransAssistantCG assist, String objectInitCallPrefix)
 	{
 		this.assist = assist;
+		this.objectInitCallPrefix = objectInitCallPrefix;
+		this.objectInitCallNames = new HashMap<AExplicitOperationDefinition, String>();
 	}
 
 	@Override
@@ -126,6 +138,22 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 
 		assist.replaceNodeWith(node, callStm);
 	}
+	
+	public String getObjectInitializerCall(AExplicitOperationDefinition vdmOp)
+	{
+		if (objectInitCallNames.containsKey(vdmOp))
+		{
+			return objectInitCallNames.get(vdmOp);
+		} else
+		{
+			String enclosingClassName = vdmOp.getAncestor(SClassDefinition.class).getName().getName();
+			String initName = assist.getInfo().getTempVarNameGen().nextVarName(objectInitCallPrefix
+					+ enclosingClassName + "_");
+			objectInitCallNames.put(vdmOp, initName);
+
+			return initName;
+		}
+	}
 
 	private String getInitName(APlainCallStmCG node)
 	{
@@ -150,7 +178,7 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 
 					if (op.getIsConstructor())
 					{
-						return assist.getInfo().getObjectInitializerCall(op);
+						return getObjectInitializerCall(op);
 					}
 				}
 			}
@@ -169,7 +197,7 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 			{
 				AExplicitOperationDefinition op = (AExplicitOperationDefinition) vdmNode;
 
-				return assist.getInfo().getObjectInitializerCall(op);
+				return getObjectInitializerCall(op);
 			}
 		}
 
