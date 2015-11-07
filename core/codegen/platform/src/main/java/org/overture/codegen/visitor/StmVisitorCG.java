@@ -104,7 +104,6 @@ import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
@@ -466,24 +465,6 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			rootdef = ((AInheritedDefinition) rootdef).getSuperdef();
 		}
 
-		if (rootdef instanceof AExplicitOperationDefinition)
-		{
-			AExplicitOperationDefinition op = (AExplicitOperationDefinition) rootdef;
-
-			if (op.getIsConstructor())
-			{
-				String initName = question.getObjectInitializerCall(op);
-
-				APlainCallStmCG callStm = new APlainCallStmCG();
-				callStm.setType(new AVoidTypeCG());
-				callStm.setClassType(null);
-				callStm.setName(initName);
-				callStm.setArgs(argsCg);
-				
-				return callStm;
-			}
-		}
-
 		PType type = node.getType();
 		ILexNameToken nameToken = node.getName();
 		String name = nameToken.getName();
@@ -492,8 +473,10 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		
+		boolean isConstructorCall = rootdef instanceof AExplicitOperationDefinition
+				&& ((AExplicitOperationDefinition) rootdef).getIsConstructor();
 		
-		if(!isStaticOrSl)
+		if(!isConstructorCall && !isStaticOrSl)
 		{
 			ILexNameToken rootDefClassName = node.getRootdef().getClassDefinition().getName();
 			ILexNameToken enclosingClassName = node.getAncestor(SClassDefinition.class).getName();

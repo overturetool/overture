@@ -31,7 +31,6 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -64,13 +63,10 @@ import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.declarations.SClassDeclCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
-import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -83,9 +79,7 @@ import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
-import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
@@ -138,51 +132,7 @@ public class DeclAssistantCG extends AssistantBase
 				classCg.getFields().add((AFieldDeclCG) decl);
 			} else if (decl instanceof AMethodDeclCG)
 			{
-
-				AMethodDeclCG method = (AMethodDeclCG) decl;
-
-				if (method.getIsConstructor())
-				{
-					String initName = question.getObjectInitializerCall((AExplicitOperationDefinition) def);
-
-					AMethodDeclCG objInitializer = method.clone();
-					objInitializer.setTag(new IRGeneratedTag(getClass().getName()));
-					objInitializer.setName(initName);
-					objInitializer.getMethodType().setResult(new AVoidTypeCG());
-					objInitializer.setIsConstructor(false);
-					objInitializer.setPreCond(null);
-					objInitializer.setPostCond(null);
-					
-					classCg.getMethods().add(objInitializer);
-
-					APlainCallStmCG initCall = new APlainCallStmCG();
-					initCall.setType(objInitializer.getMethodType().getResult().clone());
-					initCall.setClassType(null);
-					initCall.setName(initName);
-
-					for (AFormalParamLocalParamCG param : method.getFormalParams())
-					{
-						SPatternCG pattern = param.getPattern();
-
-						if (pattern instanceof AIdentifierPatternCG)
-						{
-							AIdentifierPatternCG idPattern = (AIdentifierPatternCG) pattern;
-
-							AIdentifierVarExpCG var = new AIdentifierVarExpCG();
-							var.setIsLocal(true);
-							var.setType(param.getType().clone());
-							var.setName(idPattern.getName());
-							var.setIsLambda(false);
-							var.setSourceNode(pattern.getSourceNode());
-
-							initCall.getArgs().add(var);
-						}
-					}
-
-					method.setBody(initCall);
-				}
-
-				classCg.getMethods().add(method);
+				classCg.getMethods().add((AMethodDeclCG) decl);
 			} else if (decl instanceof ATypeDeclCG)
 			{
 				classCg.getTypeDecls().add((ATypeDeclCG) decl);
