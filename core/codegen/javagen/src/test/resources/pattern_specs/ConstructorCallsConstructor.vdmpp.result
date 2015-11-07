@@ -1,0 +1,58 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    private Number x;
+    private Number y;
+
+    private Entry(final Number x_, final Number y_) {
+        cg_init_Entry_1(x_, y_);
+    }
+
+    private Entry(final Tuple tuplePattern_1) {
+        cg_init_Entry_2(Utils.copy(tuplePattern_1));
+    }
+
+    public Entry() {
+    }
+
+    private void cg_init_Entry_2(final Tuple tuplePattern_1) {
+        Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);
+        Number x_ = null;
+        Number y_ = null;
+
+        if (success_1) {
+            x_ = ((Number) tuplePattern_1.get(0));
+            y_ = ((Number) tuplePattern_1.get(1));
+        }
+
+        if (!(success_1)) {
+            throw new RuntimeException("Tuple pattern match failed");
+        }
+
+        cg_init_Entry_1(x_, y_);
+    }
+
+    private void cg_init_Entry_1(final Number x_, final Number y_) {
+        x = x_;
+        y = y_;
+    }
+
+    public static Object Run() {
+        Entry e1 = new Entry(1L, 2L);
+        Entry e2 = new Entry(Tuple.mk_(3L, 4L));
+
+        return e1.x.longValue() + e1.y.longValue() + e2.x.longValue() +
+        e2.y.longValue();
+    }
+
+    public String toString() {
+        return "Entry{" + "x := " + Utils.toString(x) + ", y := " +
+        Utils.toString(y) + "}";
+    }
+}
+
+##########
