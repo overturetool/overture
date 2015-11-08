@@ -50,8 +50,6 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 
 			if (initName == null)
 			{
-				Logger.getLog().printErrorln("Could not find name of initializer method in '"
-						+ this.getClass().getSimpleName() + "'");
 				return;
 			}
 
