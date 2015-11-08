@@ -16,7 +16,7 @@ public class Entry {
         Character t = f();
 
         if (Utils.equals(t, null)) {
-            return t;
+            return Number.class.cast(t);
         } else {
             return 22L;
         }
