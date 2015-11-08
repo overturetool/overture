@@ -41,7 +41,7 @@ final public class Entry {
         //@ assert (V2J.isSet(set_1) && (\forall int i; 0 <= i && i < V2J.size(set_1); Utils.is_(V2J.get(set_1,i),project.Entrytypes.R.class)));
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
-            recordPattern_1 = ((project.Entrytypes.R) iterator_1.next());
+            recordPattern_1 = project.Entrytypes.R.class.cast(iterator_1.next());
             //@ assert Utils.is_(recordPattern_1,project.Entrytypes.R.class);
             success_1 = true;
 

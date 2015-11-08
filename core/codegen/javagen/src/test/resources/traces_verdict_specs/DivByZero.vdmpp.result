@@ -21,19 +21,20 @@ public class Entry implements java.io.Serializable {
         VDMSet set_1 = SetUtil.set(-2L, -1L, 0L, 1L, 2L);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            final Number x = ((Number) iterator_1.next());
+            final Number x = Number.class.cast(iterator_1.next());
             final Number ID_1 = gen.inc();
 
             store.register(ID_1, x);
 
             CallStatement callStm_1 = new CallStatement() {
                     public Object execute(final Object instance) {
-                        return f(((Number) store.getValue(ID_1)));
+                        return f(Number.class.cast(store.getValue(ID_1)));
                     }
 
                     public String toString() {
                         return "f(" +
-                        Utils.toString(((Number) store.getValue(ID_1))) + ")";
+                        Utils.toString(Number.class.cast(store.getValue(ID_1))) +
+                        ")";
                     }
                 };
 

@@ -19,11 +19,11 @@ public class Entry {
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
-            recordPattern_1 = ((Object) iterator_1.next());
+            recordPattern_1 = Object.class.cast(iterator_1.next());
 
             if (recordPattern_1 instanceof A) {
                 success_1 = true;
-                a = ((A) recordPattern_1).a;
+                a = A.class.cast(recordPattern_1).a;
             } else {
                 success_1 = false;
             }
@@ -58,7 +58,7 @@ public class Entry {
                 return false;
             }
 
-            A other = ((A) obj);
+            A other = A.class.cast(obj);
 
             return Utils.equals(a, other.a);
         }

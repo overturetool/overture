@@ -46,7 +46,7 @@ public class Entry implements java.io.Serializable {
 
         CallStatement callStm_1 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    Number result_1 = ((Entry) instance).op();
+                    Number result_1 = Entry.class.cast(instance).op();
 
                     return result_1;
                 }
@@ -70,15 +70,17 @@ public class Entry implements java.io.Serializable {
 
         CallStatement callStm_2 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    Number result_2 = ((Entry) instance).id(((Number) store.getValue(
-                                ID_4)));
+                    Number result_2 = Entry.class.cast(instance)
+                                                 .id(Number.class.cast(
+                                store.getValue(ID_4)));
 
                     return result_2;
                 }
 
                 public String toString() {
                     return "id(" +
-                    Utils.toString(((Number) store.getValue(ID_4))) + ")";
+                    Utils.toString(Number.class.cast(store.getValue(ID_4))) +
+                    ")";
                 }
             };
 

@@ -22,11 +22,11 @@ public class Entry {
                 Object apply_1 = null;
 
                 if (obj_1 instanceof Tuple) {
-                    apply_1 = ((Object) ((Tuple) obj_1).get(1));
+                    apply_1 = ((Object) Tuple.class.cast(obj_1).get(1));
                 } else if (obj_1 instanceof Tuple) {
-                    apply_1 = ((Object) ((Tuple) obj_1).get(1));
+                    apply_1 = ((Object) Tuple.class.cast(obj_1).get(1));
                 } else if (obj_1 instanceof Tuple) {
-                    apply_1 = ((Object) ((Tuple) obj_1).get(1));
+                    apply_1 = ((Object) Tuple.class.cast(obj_1).get(1));
                 } else {
                     throw new RuntimeException("Missing member: field number 2");
                 }

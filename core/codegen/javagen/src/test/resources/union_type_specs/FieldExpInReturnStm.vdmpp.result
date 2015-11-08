@@ -52,9 +52,9 @@ public class Entry {
         Number apply_1 = null;
 
         if (obj_1 instanceof A) {
-            apply_1 = ((A) obj_1).x;
+            apply_1 = A.class.cast(obj_1).x;
         } else if (obj_1 instanceof B) {
-            apply_1 = ((B) obj_1).x;
+            apply_1 = B.class.cast(obj_1).x;
         } else {
             throw new RuntimeException("Missing member: x");
         }

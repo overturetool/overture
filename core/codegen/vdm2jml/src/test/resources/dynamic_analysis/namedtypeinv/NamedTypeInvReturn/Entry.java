@@ -76,7 +76,7 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_A(final Object check_c) {
-        Object c = ((Object) check_c);
+        Object c = Object.class.cast(check_c);
 
         Boolean orResult_1 = false;
 
@@ -98,7 +98,7 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_C(final Object check_c) {
-        Character c = ((Character) check_c);
+        Character c = Character.class.cast(check_c);
 
         Boolean orResult_2 = false;
 

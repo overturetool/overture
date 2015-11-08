@@ -31,7 +31,7 @@ public class A {
                 return false;
             }
 
-            Node other = ((Node) obj);
+            Node other = Node.class.cast(obj);
 
             return (Utils.equals(e, other.e)) && (Utils.equals(r, other.r));
         }

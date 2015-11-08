@@ -13,7 +13,7 @@ public class Entry {
         Number apply_1 = null;
 
         if (r instanceof Rec) {
-            apply_1 = ((Rec) r).x;
+            apply_1 = Rec.class.cast(r).x;
         } else {
             throw new RuntimeException("Missing member: x");
         }
@@ -41,7 +41,7 @@ public class Entry {
                 return false;
             }
 
-            Rec other = ((Rec) obj);
+            Rec other = Rec.class.cast(obj);
 
             return Utils.equals(x, other.x);
         }

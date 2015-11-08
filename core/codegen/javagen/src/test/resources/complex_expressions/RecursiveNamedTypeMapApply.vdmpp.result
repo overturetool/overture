@@ -13,7 +13,7 @@ public class Entry {
     }
 
     public Object app(final Token id, final Token index) {
-        return Utils.get(((VDMMap) Utils.get(m, id)), index);
+        return Utils.get(VDMMap.class.cast(Utils.get(m, id)), index);
     }
 
     public static Object Run() {

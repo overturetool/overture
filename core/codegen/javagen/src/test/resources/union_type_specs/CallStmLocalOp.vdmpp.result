@@ -16,7 +16,7 @@ public class A {
         Object a = 1L;
         Boolean b = true;
 
-        return op(((Number) a), b);
+        return op(Number.class.cast(a), b);
     }
 
     public String toString() {

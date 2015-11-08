@@ -13,14 +13,14 @@ public class Entry {
         VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Number x = ((Number) iterator_1.next());
+            Number x = Number.class.cast(iterator_1.next());
 
             for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext();) {
-                Number y = ((Number) iterator_2.next());
+                Number y = Number.class.cast(iterator_2.next());
 
                 for (Iterator iterator_3 = set_1.iterator();
                         iterator_3.hasNext();) {
-                    Number z = ((Number) iterator_3.next());
+                    Number z = Number.class.cast(iterator_3.next());
 
                     if (Utils.equals(1L, 1L)) {
                         mapCompResult_1 = MapUtil.munion(Utils.copy(

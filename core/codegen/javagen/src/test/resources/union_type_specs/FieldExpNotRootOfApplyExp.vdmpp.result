@@ -31,13 +31,13 @@ public class Entry {
             VDMSet set_1 = Utils.copy(ss);
 
             for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-                VDMSeq hr = ((VDMSeq) iterator_1.next());
+                VDMSeq hr = VDMSeq.class.cast(iterator_1.next());
                 Object obj_1 = Utils.get(hr, hr.size());
 
                 Rec apply_1 = null;
 
                 if (obj_1 instanceof Entry) {
-                    apply_1 = ((Rec) ((Entry) obj_1).x);
+                    apply_1 = Rec.class.cast(Entry.class.cast(obj_1).x);
                 } else {
                     throw new RuntimeException("Missing member: x");
                 }
@@ -54,7 +54,7 @@ public class Entry {
             VDMSet set_2 = Utils.copy(ss);
 
             for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
-                VDMSeq hr = ((VDMSeq) iterator_2.next());
+                VDMSeq hr = VDMSeq.class.cast(iterator_2.next());
                 mapCompResult_2 = MapUtil.munion(Utils.copy(mapCompResult_2),
                         MapUtil.map(new Maplet(Utils.copy(hr), SeqUtil.seq())));
             }
@@ -83,7 +83,7 @@ public class Entry {
                 return false;
             }
 
-            Rec other = ((Rec) obj);
+            Rec other = Rec.class.cast(obj);
 
             return Utils.equals(x, other.x);
         }

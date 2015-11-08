@@ -13,23 +13,23 @@ public class SharedCounter implements EvaluatePP {
     }
 
     public void inc() {
-        sentinel.entering(((SharedCounter_sentinel) sentinel).inc);
+        sentinel.entering(SharedCounter_sentinel.class.cast(sentinel).inc);
 
         try {
             counter = counter.longValue() + 1L;
             sentinel.stateChanged();
         } finally {
-            sentinel.leaving(((SharedCounter_sentinel) sentinel).inc);
+            sentinel.leaving(SharedCounter_sentinel.class.cast(sentinel).inc);
         }
     }
 
     public Number getValue() {
-        sentinel.entering(((SharedCounter_sentinel) sentinel).getValue);
+        sentinel.entering(SharedCounter_sentinel.class.cast(sentinel).getValue);
 
         try {
             return counter;
         } finally {
-            sentinel.leaving(((SharedCounter_sentinel) sentinel).getValue);
+            sentinel.leaving(SharedCounter_sentinel.class.cast(sentinel).getValue);
         }
     }
 
@@ -98,17 +98,17 @@ public class Incrementer extends VDMThread implements EvaluatePP {
     }
 
     public void joined() {
-        sentinel.entering(((Incrementer_sentinel) sentinel).joined);
+        sentinel.entering(Incrementer_sentinel.class.cast(sentinel).joined);
 
         try {
             /* skip */
         } finally {
-            sentinel.leaving(((Incrementer_sentinel) sentinel).joined);
+            sentinel.leaving(Incrementer_sentinel.class.cast(sentinel).joined);
         }
     }
 
     public void incCounter() {
-        sentinel.entering(((Incrementer_sentinel) sentinel).incCounter);
+        sentinel.entering(Incrementer_sentinel.class.cast(sentinel).incCounter);
 
         try {
             long toVar_1 = 100L;
@@ -120,7 +120,7 @@ public class Incrementer extends VDMThread implements EvaluatePP {
             isFinished = true;
             sentinel.stateChanged();
         } finally {
-            sentinel.leaving(((Incrementer_sentinel) sentinel).incCounter);
+            sentinel.leaving(Incrementer_sentinel.class.cast(sentinel).incCounter);
         }
     }
 

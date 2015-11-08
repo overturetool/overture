@@ -22,13 +22,13 @@ public class Entry {
         VDMSet set_1 = Utils.copy(hr);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            VDMSeq ss = ((VDMSeq) iterator_1.next());
+            VDMSeq ss = VDMSeq.class.cast(iterator_1.next());
             Object obj_1 = Utils.get(ss, 1L);
 
             Number apply_1 = null;
 
             if (obj_1 instanceof Rec) {
-                apply_1 = ((Number) ((Rec) obj_1).x);
+                apply_1 = Number.class.cast(Rec.class.cast(obj_1).x);
             } else {
                 throw new RuntimeException("Missing member: x");
             }
@@ -56,7 +56,7 @@ public class Entry {
                 return false;
             }
 
-            Rec other = ((Rec) obj);
+            Rec other = Rec.class.cast(obj);
 
             return Utils.equals(x, other.x);
         }

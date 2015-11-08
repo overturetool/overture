@@ -16,12 +16,13 @@ public class Entry {
         VDMSet set_1 = MapUtil.dom(Utils.copy(Entry.xs));
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Object e = ((Object) iterator_1.next());
+            Object e = Object.class.cast(iterator_1.next());
 
             if (Utils.equals(e, 2L)) {
                 mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
                         MapUtil.map(
-                            new Maplet(e, ((Number) e).longValue() + 1L)));
+                            new Maplet(e, Number.class.cast(e).longValue() +
+                                1L)));
             }
         }
 

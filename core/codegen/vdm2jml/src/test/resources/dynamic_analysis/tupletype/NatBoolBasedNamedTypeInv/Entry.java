@@ -55,7 +55,7 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_TrueEven(final Object check_te) {
-        Tuple te = ((Tuple) check_te);
+        Tuple te = Tuple.class.cast(check_te);
 
         Boolean andResult_1 = false;
 

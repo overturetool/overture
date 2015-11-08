@@ -15,14 +15,14 @@ public class Entry {
         Object apply_1 = null;
 
         if (x instanceof Tuple) {
-            apply_1 = ((Object) ((Tuple) x).get(0));
+            apply_1 = ((Object) Tuple.class.cast(x).get(0));
         } else if (x instanceof Tuple) {
-            apply_1 = ((Object) ((Tuple) x).get(0));
+            apply_1 = ((Object) Tuple.class.cast(x).get(0));
         } else {
             throw new RuntimeException("Missing member: field number 1");
         }
 
-        return id(((Boolean) apply_1));
+        return id(Boolean.class.cast(apply_1));
     }
 
     private static Boolean id(final Boolean x) {

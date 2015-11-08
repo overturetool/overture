@@ -21,7 +21,7 @@ public class Entry implements java.io.Serializable {
         VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            final Number a = ((Number) iterator_1.next());
+            final Number a = Number.class.cast(iterator_1.next());
 
             if (!(a.longValue() > 1L)) {
                 continue;
@@ -33,12 +33,13 @@ public class Entry implements java.io.Serializable {
 
             CallStatement callStm_1 = new CallStatement() {
                     public Object execute(final Object instance) {
-                        return fun(((Number) store.getValue(ID_1)));
+                        return fun(Number.class.cast(store.getValue(ID_1)));
                     }
 
                     public String toString() {
                         return "fun(" +
-                        Utils.toString(((Number) store.getValue(ID_1))) + ")";
+                        Utils.toString(Number.class.cast(store.getValue(ID_1))) +
+                        ")";
                     }
                 };
 

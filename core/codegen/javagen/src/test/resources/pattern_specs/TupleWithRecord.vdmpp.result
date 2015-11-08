@@ -66,7 +66,7 @@ public class A {
                 return false;
             }
 
-            Rec other = ((Rec) obj);
+            Rec other = Rec.class.cast(obj);
 
             return Utils.equals(t, other.t);
         }

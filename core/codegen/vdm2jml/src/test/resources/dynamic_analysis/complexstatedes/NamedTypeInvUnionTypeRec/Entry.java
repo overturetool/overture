@@ -63,7 +63,7 @@ final public class Entry {
             project.Entrytypes.R4 apply_1 = null;
 
             if (stateDes_2 instanceof project.Entrytypes.R3) {
-                apply_1 = ((project.Entrytypes.R3) stateDes_2).get_r4();
+                apply_1 = project.Entrytypes.R3.class.cast(stateDes_2).get_r4();
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
@@ -79,7 +79,7 @@ final public class Entry {
             project.Entrytypes.R4 apply_2 = null;
 
             if (stateDes_5 instanceof project.Entrytypes.R3) {
-                apply_2 = ((project.Entrytypes.R3) stateDes_5).get_r4();
+                apply_2 = project.Entrytypes.R3.class.cast(stateDes_5).get_r4();
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
@@ -95,7 +95,7 @@ final public class Entry {
             project.Entrytypes.R4 apply_3 = null;
 
             if (stateDes_8 instanceof project.Entrytypes.R3) {
-                apply_3 = ((project.Entrytypes.R3) stateDes_8).get_r4();
+                apply_3 = project.Entrytypes.R3.class.cast(stateDes_8).get_r4();
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
@@ -169,7 +169,7 @@ final public class Entry {
             project.Entrytypes.R4 apply_4 = null;
 
             if (stateDes_11 instanceof project.Entrytypes.R3) {
-                apply_4 = ((project.Entrytypes.R3) stateDes_11).get_r4();
+                apply_4 = project.Entrytypes.R3.class.cast(stateDes_11).get_r4();
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
@@ -209,7 +209,7 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_T3(final Object check_t3) {
-        Object t3 = ((Object) check_t3);
+        Object t3 = Object.class.cast(check_t3);
 
         Boolean andResult_1 = false;
 
@@ -221,7 +221,7 @@ final public class Entry {
             project.Entrytypes.R4 apply_9 = null;
 
             if (t3 instanceof project.Entrytypes.R3) {
-                apply_9 = ((project.Entrytypes.R3) t3).get_r4();
+                apply_9 = project.Entrytypes.R3.class.cast(t3).get_r4();
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
@@ -238,7 +238,7 @@ final public class Entry {
                 Boolean apply_10 = null;
 
                 if (t3 instanceof project.Entrytypes.X) {
-                    apply_10 = ((project.Entrytypes.X) t3).get_b();
+                    apply_10 = project.Entrytypes.X.class.cast(t3).get_b();
                 } else {
                     throw new RuntimeException("Missing member: b");
                 }

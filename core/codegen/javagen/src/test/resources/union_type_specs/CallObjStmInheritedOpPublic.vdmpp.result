@@ -50,9 +50,9 @@ public class Entry {
         Number b = 2L;
 
         if (obj instanceof A) {
-            return ((A) obj).op(((Character) a), b);
+            return A.class.cast(obj).op(Character.class.cast(a), b);
         } else if (obj instanceof B) {
-            return ((B) obj).op(((Character) a), b);
+            return B.class.cast(obj).op(Character.class.cast(a), b);
         } else {
             throw new RuntimeException("Missing operation member: op");
         }

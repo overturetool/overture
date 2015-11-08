@@ -39,14 +39,14 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_M(final Object check_m) {
-        VDMMap m = ((VDMMap) check_m);
+        VDMMap m = VDMMap.class.cast(check_m);
 
         Boolean forAllExpResult_1 = true;
         VDMSet set_1 = MapUtil.dom(Utils.copy(m));
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {
-            Object x = ((Object) iterator_1.next());
+            Object x = Object.class.cast(iterator_1.next());
             Boolean orResult_1 = false;
 
             Boolean andResult_1 = false;
@@ -60,8 +60,8 @@ final public class Entry {
             if (!(andResult_1)) {
                 orResult_1 = true;
             } else {
-                orResult_1 = Utils.equals(((Number) x).doubleValue() + 1L,
-                        Utils.get(m, x));
+                orResult_1 = Utils.equals(Number.class.cast(x).doubleValue() +
+                        1L, Utils.get(m, x));
             }
 
             forAllExpResult_1 = orResult_1;

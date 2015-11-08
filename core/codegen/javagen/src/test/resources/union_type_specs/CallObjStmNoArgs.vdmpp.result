@@ -75,11 +75,11 @@ public class Entry {
         Object callStmObj_1 = e.w;
 
         if (callStmObj_1 instanceof A) {
-            return ((A) callStmObj_1).op();
+            return A.class.cast(callStmObj_1).op();
         } else if (callStmObj_1 instanceof B) {
-            return ((B) callStmObj_1).op();
+            return B.class.cast(callStmObj_1).op();
         } else if (callStmObj_1 instanceof C) {
-            return ((C) callStmObj_1).op();
+            return C.class.cast(callStmObj_1).op();
         } else {
             throw new RuntimeException("Missing operation member: op");
         }

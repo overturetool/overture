@@ -24,12 +24,12 @@ public class Entry implements java.io.Serializable {
         VDMSet set_1 = Utils.copy(Entry.xs);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            final Object recordPattern_1 = ((Object) iterator_1.next());
+            final Object recordPattern_1 = Object.class.cast(iterator_1.next());
             Boolean success_2 = true;
             Number a = null;
 
             if (recordPattern_1 instanceof A) {
-                a = ((A) recordPattern_1).a;
+                a = A.class.cast(recordPattern_1).a;
             } else {
                 success_2 = false;
             }
@@ -48,15 +48,17 @@ public class Entry implements java.io.Serializable {
 
             CallStatement callStm_1 = new CallStatement() {
                     public Object execute(final Object instance) {
-                        Number result_1 = ((Entry) instance).id(((Number) store.getValue(
-                                    ID_1)));
+                        Number result_1 = Entry.class.cast(instance)
+                                                     .id(Number.class.cast(
+                                    store.getValue(ID_1)));
 
                         return result_1;
                     }
 
                     public String toString() {
                         return "id(" +
-                        Utils.toString(((Number) store.getValue(ID_1))) + ")";
+                        Utils.toString(Number.class.cast(store.getValue(ID_1))) +
+                        ")";
                     }
                 };
 
@@ -86,7 +88,7 @@ public class Entry implements java.io.Serializable {
                 return false;
             }
 
-            A other = ((A) obj);
+            A other = A.class.cast(obj);
 
             return Utils.equals(a, other.a);
         }

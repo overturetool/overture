@@ -31,7 +31,7 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_CN(final Object check_cn) {
-        Object cn = ((Object) check_cn);
+        Object cn = Object.class.cast(check_cn);
 
         Boolean orResult_1 = false;
 

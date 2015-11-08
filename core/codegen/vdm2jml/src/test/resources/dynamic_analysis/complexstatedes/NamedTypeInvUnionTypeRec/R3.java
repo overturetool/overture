@@ -25,7 +25,7 @@ final public class R3 implements Record {
             return false;
         }
 
-        project.Entrytypes.R3 other = ((project.Entrytypes.R3) obj);
+        project.Entrytypes.R3 other = project.Entrytypes.R3.class.cast(obj);
 
         return Utils.equals(r4, other.r4);
     }
@@ -74,7 +74,7 @@ final public class R3 implements Record {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_T3(final Object check_t3) {
-        Object t3 = ((Object) check_t3);
+        Object t3 = Object.class.cast(check_t3);
 
         Boolean andResult_1 = false;
 
@@ -86,7 +86,7 @@ final public class R3 implements Record {
             project.Entrytypes.R4 apply_9 = null;
 
             if (t3 instanceof project.Entrytypes.R3) {
-                apply_9 = ((project.Entrytypes.R3) t3).get_r4();
+                apply_9 = project.Entrytypes.R3.class.cast(t3).get_r4();
             } else {
                 throw new RuntimeException("Missing member: r4");
             }
@@ -103,7 +103,7 @@ final public class R3 implements Record {
                 Boolean apply_10 = null;
 
                 if (t3 instanceof project.Entrytypes.X) {
-                    apply_10 = ((project.Entrytypes.X) t3).get_b();
+                    apply_10 = project.Entrytypes.X.class.cast(t3).get_b();
                 } else {
                     throw new RuntimeException("Missing member: b");
                 }

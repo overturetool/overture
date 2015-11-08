@@ -18,7 +18,7 @@ public class Entry {
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(existsExpResult_1);) {
-            Number x = ((Number) iterator_1.next());
+            Number x = Number.class.cast(iterator_1.next());
             existsExpResult_1 = Utils.equals(Utils.mod(x.longValue(), 2L), 0L);
         }
 

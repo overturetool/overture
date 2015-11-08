@@ -29,7 +29,7 @@ final public class R implements Record {
             return false;
         }
 
-        project.Entrytypes.R other = ((project.Entrytypes.R) obj);
+        project.Entrytypes.R other = project.Entrytypes.R.class.cast(obj);
 
         return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
     }

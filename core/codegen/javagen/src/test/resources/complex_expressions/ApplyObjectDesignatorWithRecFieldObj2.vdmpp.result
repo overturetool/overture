@@ -38,7 +38,7 @@ public class Entry {
                 return false;
             }
 
-            A other = ((A) obj);
+            A other = A.class.cast(obj);
 
             return Utils.equals(bs, other.bs);
         }
@@ -68,7 +68,7 @@ public class Entry {
                 return false;
             }
 
-            B other = ((B) obj);
+            B other = B.class.cast(obj);
 
             return Utils.equals(c, other.c);
         }
@@ -98,7 +98,7 @@ public class Entry {
                 return false;
             }
 
-            C other = ((C) obj);
+            C other = C.class.cast(obj);
 
             return Utils.equals(e, other.e);
         }

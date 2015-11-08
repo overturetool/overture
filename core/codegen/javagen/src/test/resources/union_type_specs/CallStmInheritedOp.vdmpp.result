@@ -32,7 +32,7 @@ public class B extends A {
         Object a = 1L;
         Object b = true;
 
-        return super.op(((Number) a), ((Boolean) b));
+        return super.op(Number.class.cast(a), Boolean.class.cast(b));
     }
 
     public String toString() {

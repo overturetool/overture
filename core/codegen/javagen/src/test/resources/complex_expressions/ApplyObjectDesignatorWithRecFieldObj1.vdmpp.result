@@ -38,7 +38,7 @@ public class Entry {
                 return false;
             }
 
-            A other = ((A) obj);
+            A other = A.class.cast(obj);
 
             return Utils.equals(es, other.es);
         }

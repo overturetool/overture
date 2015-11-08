@@ -17,7 +17,7 @@ final public class Entry {
         IO.println("Before legal use");
 
         {
-            Tuple ignorePattern_1 = ((Tuple) Tup4());
+            Tuple ignorePattern_1 = Tuple.class.cast(Tup4());
 
             //@ assert (V2J.isTup(ignorePattern_1,4) && Utils.is_nat(V2J.field(ignorePattern_1,0)) && Utils.is_nat(V2J.field(ignorePattern_1,1)) && Utils.is_char(V2J.field(ignorePattern_1,2)) && Utils.is_bool(V2J.field(ignorePattern_1,3)));
 
@@ -28,7 +28,7 @@ final public class Entry {
         IO.println("Before illegal use");
 
         {
-            Tuple ignorePattern_2 = ((Tuple) Tup3());
+            Tuple ignorePattern_2 = Tuple.class.cast(Tup3());
 
             //@ assert (V2J.isTup(ignorePattern_2,4) && Utils.is_nat(V2J.field(ignorePattern_2,0)) && Utils.is_nat(V2J.field(ignorePattern_2,1)) && Utils.is_char(V2J.field(ignorePattern_2,2)) && Utils.is_bool(V2J.field(ignorePattern_2,3)));
 

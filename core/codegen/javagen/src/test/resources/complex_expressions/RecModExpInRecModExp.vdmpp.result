@@ -46,7 +46,7 @@ public class Entry {
                 return false;
             }
 
-            Rec1 other = ((Rec1) obj);
+            Rec1 other = Rec1.class.cast(obj);
 
             return (Utils.equals(a, other.a)) && (Utils.equals(b, other.b));
         }
@@ -78,7 +78,7 @@ public class Entry {
                 return false;
             }
 
-            Rec2 other = ((Rec2) obj);
+            Rec2 other = Rec2.class.cast(obj);
 
             return (Utils.equals(c, other.c)) && (Utils.equals(d, other.d));
         }

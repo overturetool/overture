@@ -48,7 +48,7 @@ final public class Entry {
         //@ assert (V2J.isSet(set_1) && (\forall int i; 0 <= i && i < V2J.size(set_1); Utils.is_nat1(V2J.get(set_1,i))));
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
-            ignorePattern_3 = ((Number) iterator_1.next());
+            ignorePattern_3 = Number.class.cast(iterator_1.next());
             success_1 = true;
 
             //@ assert Utils.is_bool(success_1);
@@ -80,7 +80,7 @@ final public class Entry {
         //@ assert (V2J.isSet(set_2) && (\forall int i; 0 <= i && i < V2J.size(set_2); Utils.is_nat1(V2J.get(set_2,i))));
         for (Iterator iterator_2 = set_2.iterator();
                 iterator_2.hasNext() && !(success_2);) {
-            x = ((Number) iterator_2.next());
+            x = Number.class.cast(iterator_2.next());
             success_2 = x.longValue() > 1L;
 
             //@ assert Utils.is_bool(success_2);

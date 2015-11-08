@@ -39,7 +39,7 @@ final public class Entry {
                 return false;
             }
 
-            St other = ((St) obj);
+            St other = St.class.cast(obj);
 
             return Utils.equals(x, other.x);
         }

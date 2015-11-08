@@ -34,7 +34,7 @@ public class Entry implements java.io.Serializable {
         AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
         CallStatement callStm_1 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    ((Entry) instance).op1();
+                    Entry.class.cast(instance).op1();
 
                     return Utils.VOID_VALUE;
                 }
@@ -48,7 +48,7 @@ public class Entry implements java.io.Serializable {
 
         CallStatement callStm_2 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    ((Entry) instance).op2();
+                    Entry.class.cast(instance).op2();
 
                     return Utils.VOID_VALUE;
                 }

@@ -16,30 +16,30 @@ public class Entry implements EvaluatePP {
     public void inc() {
         new VDMThread() {
                 public void run() {
-                    sentinel.entering(((Entry_sentinel) sentinel).inc);
+                    sentinel.entering(Entry_sentinel.class.cast(sentinel).inc);
 
                     try {
                         x = x.longValue() + 1L;
                         sentinel.stateChanged();
                     } finally {
-                        sentinel.leaving(((Entry_sentinel) sentinel).inc);
+                        sentinel.leaving(Entry_sentinel.class.cast(sentinel).inc);
                     }
                 }
             }.start();
     }
 
     public void join() {
-        sentinel.entering(((Entry_sentinel) sentinel).join);
+        sentinel.entering(Entry_sentinel.class.cast(sentinel).join);
 
         try {
             /* skip */
         } finally {
-            sentinel.leaving(((Entry_sentinel) sentinel).join);
+            sentinel.leaving(Entry_sentinel.class.cast(sentinel).join);
         }
     }
 
     public Number fire() {
-        sentinel.entering(((Entry_sentinel) sentinel).fire);
+        sentinel.entering(Entry_sentinel.class.cast(sentinel).fire);
 
         try {
             long toVar_1 = Entry.AsyncCalls.longValue();
@@ -52,7 +52,7 @@ public class Entry implements EvaluatePP {
 
             return x;
         } finally {
-            sentinel.leaving(((Entry_sentinel) sentinel).fire);
+            sentinel.leaving(Entry_sentinel.class.cast(sentinel).fire);
         }
     }
 

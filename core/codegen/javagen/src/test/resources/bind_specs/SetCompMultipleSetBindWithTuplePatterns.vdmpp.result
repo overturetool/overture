@@ -18,7 +18,7 @@ public class Entry {
                 Tuple.mk_(2L, 60L));
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Tuple tuplePattern_1 = ((Tuple) iterator_1.next());
+            Tuple tuplePattern_1 = Tuple.class.cast(iterator_1.next());
             Boolean success_1 = tuplePattern_1.compatible(Number.class,
                     Number.class);
             Number a = null;
@@ -37,7 +37,7 @@ public class Entry {
             }
 
             for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext();) {
-                Tuple tuplePattern_2 = ((Tuple) iterator_2.next());
+                Tuple tuplePattern_2 = Tuple.class.cast(iterator_2.next());
                 Boolean success_2 = tuplePattern_2.compatible(Number.class,
                         Number.class);
                 Number b = null;

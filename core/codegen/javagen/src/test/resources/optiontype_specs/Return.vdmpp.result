@@ -9,14 +9,21 @@ public class Entry {
     }
 
     public static Object Run() {
-        Number i = 123.456;
-        i = Number.class.cast(ratOrBool());
-
-        return i;
+        return new Entry().op();
     }
 
-    private static Object ratOrBool() {
-        return 5L;
+    public Number op() {
+        Character t = f();
+
+        if (Utils.equals(t, null)) {
+            return t;
+        } else {
+            return 22L;
+        }
+    }
+
+    public static Character f() {
+        return null;
     }
 
     public String toString() {

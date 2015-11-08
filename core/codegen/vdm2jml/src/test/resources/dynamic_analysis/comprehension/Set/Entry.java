@@ -23,7 +23,7 @@ final public class Entry {
 
         //@ assert (V2J.isSet(set_1) && (\forall int i; 0 <= i && i < V2J.size(set_1); Utils.is_nat1(V2J.get(set_1,i))));
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Number x = ((Number) iterator_1.next());
+            Number x = Number.class.cast(iterator_1.next());
 
             //@ assert Utils.is_nat1(x);
             if (x.longValue() > 0L) {
@@ -49,7 +49,7 @@ final public class Entry {
 
         //@ assert (V2J.isSet(set_2) && (\forall int i; 0 <= i && i < V2J.size(set_2); Utils.is_nat1(V2J.get(set_2,i))));
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
-            Number x = ((Number) iterator_2.next());
+            Number x = Number.class.cast(iterator_2.next());
             //@ assert Utils.is_nat1(x);
             setCompResult_2 = SetUtil.union(Utils.copy(setCompResult_2),
                     SetUtil.set(x));
@@ -75,7 +75,7 @@ final public class Entry {
 
         //@ assert (V2J.isSet(set_3) && (\forall int i; 0 <= i && i < V2J.size(set_3); Utils.is_nat(V2J.get(set_3,i))));
         for (Iterator iterator_3 = set_3.iterator(); iterator_3.hasNext();) {
-            Number x = ((Number) iterator_3.next());
+            Number x = Number.class.cast(iterator_3.next());
 
             //@ assert Utils.is_nat(x);
             if (x.longValue() > -1L) {
@@ -101,7 +101,7 @@ final public class Entry {
 
         //@ assert (V2J.isSet(set_4) && (\forall int i; 0 <= i && i < V2J.size(set_4); Utils.is_nat(V2J.get(set_4,i))));
         for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
-            Number x = ((Number) iterator_4.next());
+            Number x = Number.class.cast(iterator_4.next());
             //@ assert Utils.is_nat(x);
             setCompResult_4 = SetUtil.union(Utils.copy(setCompResult_4),
                     SetUtil.set(x));

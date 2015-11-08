@@ -20,7 +20,7 @@ public class Entry {
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
-            a = ((Number) iterator_1.next());
+            a = Number.class.cast(iterator_1.next());
             success_1 = true;
         }
 

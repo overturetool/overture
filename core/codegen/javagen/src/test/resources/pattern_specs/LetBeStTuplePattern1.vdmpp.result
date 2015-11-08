@@ -18,15 +18,15 @@ public class Entry {
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
-            tuplePattern_1 = ((Object) iterator_1.next());
+            tuplePattern_1 = Object.class.cast(iterator_1.next());
 
             if (tuplePattern_1 instanceof Tuple) {
-                success_1 = ((Tuple) tuplePattern_1).compatible(Number.class,
-                        Number.class);
+                success_1 = Tuple.class.cast(tuplePattern_1)
+                                       .compatible(Number.class, Number.class);
 
                 if (success_1) {
-                    a = ((Number) ((Tuple) tuplePattern_1).get(0));
-                    b = ((Number) ((Tuple) tuplePattern_1).get(1));
+                    a = ((Number) Tuple.class.cast(tuplePattern_1).get(0));
+                    b = ((Number) Tuple.class.cast(tuplePattern_1).get(1));
                 }
             }
 

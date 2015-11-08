@@ -31,7 +31,7 @@ public class Entry {
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);) {
-            Tuple tuplePattern_1 = ((Tuple) iterator_1.next());
+            Tuple tuplePattern_1 = Tuple.class.cast(iterator_1.next());
             Boolean success_1 = tuplePattern_1.compatible(Number.class,
                     Tuple.class);
             Number a = null;

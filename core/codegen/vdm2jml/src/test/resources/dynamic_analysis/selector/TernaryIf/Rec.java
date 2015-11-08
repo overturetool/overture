@@ -25,7 +25,7 @@ final public class Rec implements Record {
             return false;
         }
 
-        project.Entrytypes.Rec other = ((project.Entrytypes.Rec) obj);
+        project.Entrytypes.Rec other = project.Entrytypes.Rec.class.cast(obj);
 
         return Utils.equals(x, other.x);
     }

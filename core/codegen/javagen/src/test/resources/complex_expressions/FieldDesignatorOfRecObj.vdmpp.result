@@ -36,7 +36,7 @@ public class Entry {
                 return false;
             }
 
-            R other = ((R) obj);
+            R other = R.class.cast(obj);
 
             return Utils.equals(e, other.e);
         }

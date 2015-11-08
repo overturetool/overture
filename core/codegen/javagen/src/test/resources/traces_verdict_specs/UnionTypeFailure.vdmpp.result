@@ -10,7 +10,7 @@ public class Entry implements java.io.Serializable {
     }
 
     public static Number f(final Object e) {
-        return 1L + ((Number) e).longValue();
+        return 1L + Number.class.cast(e).longValue();
     }
 
     public void Entry_T1_Run(final TestAccumulator testAccumulator) {
@@ -42,12 +42,13 @@ public class Entry implements java.io.Serializable {
         AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
         CallStatement callStm_1 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    return f(((Number) store.getValue(ID_1)));
+                    return f(Number.class.cast(store.getValue(ID_1)));
                 }
 
                 public String toString() {
                     return "f(" +
-                    Utils.toString(((Number) store.getValue(ID_1))) + ")";
+                    Utils.toString(Number.class.cast(store.getValue(ID_1))) +
+                    ")";
                 }
             };
 
@@ -55,12 +56,13 @@ public class Entry implements java.io.Serializable {
 
         CallStatement callStm_2 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    return f(((Character) store.getValue(ID_2)));
+                    return f(Character.class.cast(store.getValue(ID_2)));
                 }
 
                 public String toString() {
                     return "f(" +
-                    Utils.toString(((Character) store.getValue(ID_2))) + ")";
+                    Utils.toString(Character.class.cast(store.getValue(ID_2))) +
+                    ")";
                 }
             };
 
@@ -68,12 +70,13 @@ public class Entry implements java.io.Serializable {
 
         CallStatement callStm_3 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    return f(((Number) store.getValue(ID_3)));
+                    return f(Number.class.cast(store.getValue(ID_3)));
                 }
 
                 public String toString() {
                     return "f(" +
-                    Utils.toString(((Number) store.getValue(ID_3))) + ")";
+                    Utils.toString(Number.class.cast(store.getValue(ID_3))) +
+                    ")";
                 }
             };
 

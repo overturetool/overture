@@ -30,7 +30,7 @@ public class Entry implements java.io.Serializable {
 
         CallStatement callStm_1 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    return ((Entry) store.getValue(ID_1)).op();
+                    return Entry.class.cast(store.getValue(ID_1)).op();
                 }
 
                 public String toString() {

@@ -61,7 +61,7 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_Even(final Object check_e) {
-        Number e = ((Number) check_e);
+        Number e = Number.class.cast(check_e);
 
         return Utils.equals(Utils.mod(e.longValue(), 2L), 0L);
     }
