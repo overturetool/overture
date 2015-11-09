@@ -25,7 +25,7 @@ final public class E implements Record {
             return false;
         }
 
-        project.Entrytypes.E other = ((project.Entrytypes.E) obj);
+        project.Entrytypes.E other = project.Entrytypes.E.class.cast(obj);
 
         return Utils.equals(x, other.x);
     }
