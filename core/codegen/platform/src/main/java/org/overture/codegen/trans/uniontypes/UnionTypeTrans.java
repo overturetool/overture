@@ -871,6 +871,13 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAAssignToExpStmCG(AAssignToExpStmCG node) throws AnalysisException
 	{
+		SExpCG target = node.getTarget();
+		
+		if(target != null)
+		{
+			target.apply(this);
+		}
+		
 		SExpCG exp = node.getExp();
 		
 		if(exp != null)
@@ -878,7 +885,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			exp.apply(this);
 		}
 		
-		STypeCG type = node.getTarget().getType();
+		STypeCG type = target.getType();
 		
 		if(castNotNeeded(exp, type))
 		{
