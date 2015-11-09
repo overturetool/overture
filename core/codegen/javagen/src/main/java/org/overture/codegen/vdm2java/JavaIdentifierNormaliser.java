@@ -31,25 +31,19 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 	@Override
 	public void inILexNameToken(ILexNameToken node) throws AnalysisException
 	{
-		// "?" is used for implicitly named things
-		if(node.getName().equals("?"))
-		{
-			return;
-		}
-		
 		if (!contains(node.getLocation()))
 		{
 			boolean rename = false;
 			String newName = node.getName();
 			
-			if (!JavaCodeGenUtil.isValidJavaIdentifier(node.getName()))
+			if (!isImplicitlyNamed(node) && !JavaCodeGenUtil.isValidJavaIdentifier(node.getName()))
 			{
 				newName = getReplacementName(node.getName());
 				rename = true;
 			}
 			
 			String newModule = node.getModule();
-			if (!JavaCodeGenUtil.isValidJavaIdentifier(node.getModule()))
+			if (!node.getModule().equals("?") && !JavaCodeGenUtil.isValidJavaIdentifier(node.getModule()))
 			{
 				newModule = getReplacementName(node.getModule());
 				rename = true;
@@ -60,6 +54,12 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 				this.renamings.add(new Renaming(node.getLocation(), node.getName(), newName, node.getModule(), newModule));
 			}
 		}
+	}
+
+	private boolean isImplicitlyNamed(ILexNameToken node)
+	{
+		// "?" is used for implicitly named things
+		return node.getName().equals("?");
 	}
 	
 	private boolean contains(ILexLocation loc)
