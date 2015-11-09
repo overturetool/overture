@@ -79,8 +79,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	
 	public static final String INV_CHECKS_ON_GHOST_VAR_NAME = "invChecksOn";
 	public static final String JML_INV_CHECKS_ON_DECL = "/*@ public ghost static boolean %s = true; @*/";
-	public static final String JML_ENABLE_INV_CHECKS = "//@ set " + INV_CHECKS_ON_GHOST_VAR_NAME + " = true;";
-	public static final String JML_DISABLE_INV_CHECKS = "//@ set " + INV_CHECKS_ON_GHOST_VAR_NAME + " = false;";
+	public static final String JML_SET_INV_CHECKS = "//@ set %s = %s;";
 
 	public static final String JML_INVARIANT_FOR = "\\invariant_for";
 	public static final String REC_VALID_METHOD_NAMEVALID = "valid";

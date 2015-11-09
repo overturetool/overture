@@ -7,6 +7,7 @@ import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.statements.AAtomicStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.vdm2jml.JmlGenerator;
@@ -31,8 +32,10 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 			stm.apply(this);
 		}
 		
-		node.getStatements().addFirst(consInvChecksStm(false));
-		node.getStatements().add(consInvChecksStm(true));
+		ADefaultClassDeclCG encClass = node.getAncestor(ADefaultClassDeclCG.class);
+		
+		node.getStatements().addFirst(consInvChecksStm(false, encClass));
+		node.getStatements().add(consInvChecksStm(true, encClass));
 		
 		for(AMetaStmCG as : recVarChecks)
 		{
@@ -50,12 +53,12 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 		return assertion;
 	}
 	
-	protected AMetaStmCG consInvChecksStm(boolean val)
+	protected AMetaStmCG consInvChecksStm(boolean val, ADefaultClassDeclCG encClass)
 	{
 		AMetaStmCG setStm = new AMetaStmCG();
-		String setStr = val ? JmlGenerator.JML_ENABLE_INV_CHECKS
-				: JmlGenerator.JML_DISABLE_INV_CHECKS;
-		List<ClonableString> setMetaData = jmlGen.getAnnotator().consMetaData(setStr);
+
+		String setStmStr = String.format(JmlGenerator.JML_SET_INV_CHECKS, this.jmlGen.getAnnotator().consInvChecksOnNameEncClass(encClass), val);
+		List<ClonableString> setMetaData = jmlGen.getAnnotator().consMetaData(setStmStr);
 		jmlGen.getAnnotator().appendMetaData(setStm, setMetaData);
 
 		return setStm;

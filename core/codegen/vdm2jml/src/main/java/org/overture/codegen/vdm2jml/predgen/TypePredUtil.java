@@ -8,6 +8,7 @@ import org.overture.ast.util.ClonableString;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
@@ -45,7 +46,7 @@ public class TypePredUtil
 		this.handler = handler;
 	}
 	
-	public List<String> consJmlCheck(String enclosingClass, String jmlVisibility,
+	public List<String> consJmlCheck(ADefaultClassDeclCG encClass, String jmlVisibility,
 			String annotationType, boolean invChecksGuard, AbstractTypeInfo typeInfo,
 			SVarExpCG var)
 	{
@@ -53,7 +54,7 @@ public class TypePredUtil
 		
 		if(handler.getDecorator().buildRecValidChecks())
 		{
-			appendRecValidChecks(invChecksGuard, typeInfo, var, predStrs);
+			appendRecValidChecks(invChecksGuard, typeInfo, var, predStrs, encClass);
 		}
 		
 		StringBuilder inv = new StringBuilder();
@@ -70,7 +71,7 @@ public class TypePredUtil
 		
 		if(invChecksGuard)
 		{
-			inv.append(consInvChecksGuard());
+			inv.append(consInvChecksGuard(encClass));
 			inv.append('(');
 		}
 
@@ -78,7 +79,7 @@ public class TypePredUtil
 		
 		//TODO: Add names of parameters of the enclosing method to 'names-to-avoid' in name generator
 		NameGen nameGen = new NameGen();
-		String consCheckExp = typeInfo.consCheckExp(enclosingClass, javaPackage, var.getName(), nameGen);
+		String consCheckExp = typeInfo.consCheckExp(encClass.getName(), javaPackage, var.getName(), nameGen);
 		
 		if (consCheckExp != null)
 		{
@@ -102,10 +103,10 @@ public class TypePredUtil
 		return predStrs;
 	}
 
-	private String consInvChecksGuard()
+	private String consInvChecksGuard(ADefaultClassDeclCG encClass)
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(handler.getJmlGen().getAnnotator().consInvChecksOnName(handler.getJmlGen().getInvChecksFlagOwner()));
+		sb.append(handler.getJmlGen().getAnnotator().consInvChecksOnNameEncClass(encClass));
 		sb.append(JmlGenerator.JML_IMPLIES);
 		
 		return sb.toString();
@@ -113,7 +114,7 @@ public class TypePredUtil
 
 	private void appendRecValidChecks(boolean invChecksGuard,
 			AbstractTypeInfo typeInfo, SVarExpCG var,
-			List<String> predStrs)
+			List<String> predStrs, ADefaultClassDeclCG encClass)
 	{
 		List<ARecordTypeCG> recordTypes = getRecTypes(typeInfo);
 
@@ -130,7 +131,7 @@ public class TypePredUtil
 
 				if (invChecksGuard)
 				{
-					inv.append(consInvChecksGuard());
+					inv.append(consInvChecksGuard(encClass));
 				}
 
 				if (var.getType() instanceof ARecordTypeCG)
@@ -216,12 +217,12 @@ public class TypePredUtil
 	}
 
 	public List<AMetaStmCG> consAssertStm(AbstractTypeInfo invTypes,
-			String encClassName, SVarExpCG var, INode node, RecClassInfo recInfo)
+			ADefaultClassDeclCG encClass, SVarExpCG var, INode node, RecClassInfo recInfo)
 	{
 		boolean inAccessor = node != null && recInfo != null && recInfo.inAccessor(node);
 
 		List<AMetaStmCG> asserts = new LinkedList<>();
-		List<String> assertStrs = consJmlCheck(encClassName, null, JmlGenerator.JML_ASSERT_ANNOTATION, inAccessor, invTypes, var);
+		List<String> assertStrs = consJmlCheck(encClass, null, JmlGenerator.JML_ASSERT_ANNOTATION, inAccessor, invTypes, var);
 		
 		for(String a : assertStrs)
 		{

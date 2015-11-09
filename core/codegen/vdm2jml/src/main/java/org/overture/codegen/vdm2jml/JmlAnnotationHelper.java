@@ -88,7 +88,7 @@ public class JmlAnnotationHelper
 		appendMetaData(owner, consMetaData(metaStr));
 	}
 	
-	public String consInvChecksOnName(ADefaultClassDeclCG owner)
+	private String consInvChecksOnName(ADefaultClassDeclCG owner)
 	{
 		StringBuilder prefix = new StringBuilder();
 		
@@ -112,12 +112,29 @@ public class JmlAnnotationHelper
 		String jmlAnno = "public " + JmlGenerator.JML_INSTANCE_INV_ANNOTATION;
 		
 		StringBuilder pred = new StringBuilder();
-		pred.append(consInvChecksOnName(jmlGen.getInvChecksFlagOwner()));
+		pred.append(consInvChecksOnNameEncClass());
 		pred.append(JmlGenerator.JML_IMPLIES);
 		pred.append(JmlGenerator.INV_PREFIX);
 		pred.append(r.getName());
 		
 		appendMetaData(r, consAnno(jmlAnno, pred.toString(), args));
+	}
+
+	public String consInvChecksOnNameEncClass()
+	{
+		return consInvChecksOnNameEncClass(null);
+	}
+	
+	public String consInvChecksOnNameEncClass(ADefaultClassDeclCG enclosingClass)
+	{
+		if(enclosingClass != null && enclosingClass == jmlGen.getInvChecksFlagOwner())
+		{
+			return JmlGenerator.INV_CHECKS_ON_GHOST_VAR_NAME;
+		}
+		else
+		{
+			return consInvChecksOnName(jmlGen.getInvChecksFlagOwner());
+		}
 	}
 
 	
