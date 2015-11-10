@@ -4,5 +4,5 @@
   ${exp}##
 #else
   #set( $type = $JavaFormat.format($node.getType()))
-  ${type}.class.cast(${exp})##
+  (($type) $exp)##
 #end
