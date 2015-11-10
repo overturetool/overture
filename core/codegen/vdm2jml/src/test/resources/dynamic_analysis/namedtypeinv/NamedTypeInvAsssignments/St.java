@@ -24,7 +24,7 @@ final public class St implements Record {
             return false;
         }
 
-        project.Entrytypes.St other = project.Entrytypes.St.class.cast(obj);
+        project.Entrytypes.St other = ((project.Entrytypes.St) obj);
 
         return Utils.equals(x, other.x);
     }
@@ -73,7 +73,7 @@ final public class St implements Record {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_PossiblyOne(final Object check_p) {
-        Number p = Number.class.cast(check_p);
+        Number p = ((Number) check_p);
 
         Boolean orResult_1 = false;
 
@@ -89,7 +89,7 @@ final public class St implements Record {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_True(final Object check_b) {
-        Boolean b = Boolean.class.cast(check_b);
+        Boolean b = ((Boolean) check_b);
 
         return b;
     }

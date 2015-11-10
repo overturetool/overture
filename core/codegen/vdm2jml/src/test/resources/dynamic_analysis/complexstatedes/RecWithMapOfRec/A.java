@@ -25,7 +25,7 @@ final public class A implements Record {
             return false;
         }
 
-        project.Entrytypes.A other = project.Entrytypes.A.class.cast(obj);
+        project.Entrytypes.A other = ((project.Entrytypes.A) obj);
 
         return Utils.equals(m, other.m);
     }
@@ -73,7 +73,7 @@ final public class A implements Record {
 
         for (Iterator iterator_2 = set_2.iterator();
                 iterator_2.hasNext() && forAllExpResult_2;) {
-            Number i = Number.class.cast(iterator_2.next());
+            Number i = ((Number) iterator_2.next());
             forAllExpResult_2 = Utils.equals(((project.Entrytypes.B) Utils.get(
                         _m, i)).x, 2L);
         }

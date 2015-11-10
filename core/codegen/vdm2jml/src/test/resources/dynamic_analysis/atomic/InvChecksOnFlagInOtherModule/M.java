@@ -25,7 +25,7 @@ final public class M implements Record {
             return false;
         }
 
-        project.Modtypes.M other = project.Modtypes.M.class.cast(obj);
+        project.Modtypes.M other = ((project.Modtypes.M) obj);
 
         return Utils.equals(x, other.x);
     }

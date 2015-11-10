@@ -71,7 +71,7 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_PossiblyOne(final Object check_p) {
-        Number p = Number.class.cast(check_p);
+        Number p = ((Number) check_p);
 
         Boolean orResult_1 = false;
 
@@ -87,7 +87,7 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_True(final Object check_b) {
-        Boolean b = Boolean.class.cast(check_b);
+        Boolean b = ((Boolean) check_b);
 
         return b;
     }

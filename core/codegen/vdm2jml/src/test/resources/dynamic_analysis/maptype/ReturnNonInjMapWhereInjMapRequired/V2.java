@@ -29,7 +29,7 @@ final public class V2 implements Record {
             return false;
         }
 
-        project.Entrytypes.V2 other = project.Entrytypes.V2.class.cast(obj);
+        project.Entrytypes.V2 other = ((project.Entrytypes.V2) obj);
 
         return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
     }

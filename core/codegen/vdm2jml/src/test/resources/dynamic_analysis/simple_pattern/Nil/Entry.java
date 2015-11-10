@@ -40,7 +40,7 @@ final public class Entry {
         //@ assert (V2J.isSet(set_1) && (\forall int i; 0 <= i && i < V2J.size(set_1); true));
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
-            nullPattern_1 = Object.class.cast(iterator_1.next());
+            nullPattern_1 = ((Object) iterator_1.next());
             success_1 = Utils.equals(nullPattern_1, null);
 
             //@ assert Utils.is_bool(success_1);
@@ -59,7 +59,7 @@ final public class Entry {
 
         letBeStExp_1 = null;
 
-        Number ret_1 = Number.class.cast(letBeStExp_1);
+        Number ret_1 = ((Number) letBeStExp_1);
 
         //@ assert ((ret_1 == null) || Utils.is_nat(ret_1));
         return ret_1;

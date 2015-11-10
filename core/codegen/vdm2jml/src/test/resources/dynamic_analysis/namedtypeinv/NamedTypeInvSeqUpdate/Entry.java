@@ -39,20 +39,20 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_S(final Object check_s) {
-        VDMSeq s = VDMSeq.class.cast(check_s);
+        VDMSeq s = ((VDMSeq) check_s);
 
         Boolean forAllExpResult_1 = true;
         VDMSet set_1 = SeqUtil.elems(Utils.copy(s));
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {
-            Object x = Object.class.cast(iterator_1.next());
+            Object x = ((Object) iterator_1.next());
             Boolean orResult_1 = false;
 
             if (!(Utils.is_nat(x))) {
                 orResult_1 = true;
             } else {
-                orResult_1 = Number.class.cast(x).doubleValue() > 5L;
+                orResult_1 = ((Number) x).doubleValue() > 5L;
             }
 
             forAllExpResult_1 = orResult_1;

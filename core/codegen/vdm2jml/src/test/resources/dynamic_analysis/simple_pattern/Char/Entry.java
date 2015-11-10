@@ -40,7 +40,7 @@ final public class Entry {
         //@ assert (V2J.isSet(set_1) && (\forall int i; 0 <= i && i < V2J.size(set_1); Utils.is_char(V2J.get(set_1,i))));
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
-            charPattern_1 = Character.class.cast(iterator_1.next());
+            charPattern_1 = ((Character) iterator_1.next());
             //@ assert Utils.is_char(charPattern_1);
             success_1 = Utils.equals(charPattern_1, 'a');
 

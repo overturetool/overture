@@ -25,7 +25,7 @@ final public class R4 implements Record {
             return false;
         }
 
-        project.Entrytypes.R4 other = project.Entrytypes.R4.class.cast(obj);
+        project.Entrytypes.R4 other = ((project.Entrytypes.R4) obj);
 
         return Utils.equals(x, other.x);
     }
@@ -74,7 +74,7 @@ final public class R4 implements Record {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_T3(final Object check_t3) {
-        project.Entrytypes.R3 t3 = project.Entrytypes.R3.class.cast(check_t3);
+        project.Entrytypes.R3 t3 = ((project.Entrytypes.R3) check_t3);
 
         return !(Utils.equals(t3.get_r4().get_x(), 10L));
     }

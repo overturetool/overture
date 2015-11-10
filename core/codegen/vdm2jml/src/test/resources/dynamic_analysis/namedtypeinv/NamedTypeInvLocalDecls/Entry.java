@@ -59,7 +59,7 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_Even(final Object check_ev) {
-        Number ev = Number.class.cast(check_ev);
+        Number ev = ((Number) check_ev);
 
         return Utils.equals(Utils.mod(ev.longValue(), 2L), 0L);
     }
@@ -67,7 +67,7 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_Large(final Object check_la) {
-        Number la = Number.class.cast(check_la);
+        Number la = ((Number) check_la);
 
         return la.doubleValue() > 1000L;
     }

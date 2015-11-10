@@ -33,7 +33,7 @@ final public class Entry {
         //@ assert (V2J.isSet(set_1) && (\forall int i; 0 <= i && i < V2J.size(set_1); Utils.is_nat1(V2J.get(set_1,i))));
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {
-            Number x = Number.class.cast(iterator_1.next());
+            Number x = ((Number) iterator_1.next());
             //@ assert Utils.is_nat1(x);
             forAllExpResult_1 = x.longValue() > 0L;
 

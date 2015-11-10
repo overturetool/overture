@@ -63,14 +63,14 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_Seq1Even(final Object check_xs) {
-        VDMSeq xs = VDMSeq.class.cast(check_xs);
+        VDMSeq xs = ((VDMSeq) check_xs);
 
         Boolean forAllExpResult_1 = true;
         VDMSet set_1 = SeqUtil.elems(Utils.copy(xs));
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {
-            Number x = Number.class.cast(iterator_1.next());
+            Number x = ((Number) iterator_1.next());
             forAllExpResult_1 = Utils.equals(Utils.mod(x.longValue(), 2L), 0L);
         }
 

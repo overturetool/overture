@@ -25,7 +25,7 @@ final public class T2 implements Record {
             return false;
         }
 
-        project.Entrytypes.T2 other = project.Entrytypes.T2.class.cast(obj);
+        project.Entrytypes.T2 other = ((project.Entrytypes.T2) obj);
 
         return Utils.equals(t3, other.t3);
     }

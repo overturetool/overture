@@ -28,7 +28,7 @@ final public class Entry {
             project.Entrytypes.R2 apply_1 = null;
 
             if (r1 instanceof project.Entrytypes.R1) {
-                apply_1 = project.Entrytypes.R1.class.cast(r1).get_r2();
+                apply_1 = ((project.Entrytypes.R1) r1).get_r2();
             } else {
                 throw new RuntimeException("Missing member: r2");
             }
@@ -40,7 +40,7 @@ final public class Entry {
             project.Entrytypes.R2 apply_2 = null;
 
             if (r1 instanceof project.Entrytypes.R1) {
-                apply_2 = project.Entrytypes.R1.class.cast(r1).get_r2();
+                apply_2 = ((project.Entrytypes.R1) r1).get_r2();
             } else {
                 throw new RuntimeException("Missing member: r2");
             }
