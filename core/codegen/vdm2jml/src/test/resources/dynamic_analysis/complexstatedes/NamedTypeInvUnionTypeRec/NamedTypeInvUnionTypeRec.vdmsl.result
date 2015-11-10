@@ -2,8 +2,8 @@
 "After useOk"
 "Before useNotOk"
 Entry.java:224: JML invariant is false on entering method project.Entrytypes.R3.get_r4() from project.Entry.inv_Entry_T3(java.lang.Object)
-                apply_9 = project.Entrytypes.R3.class.cast(t3).get_r4();
-                                                                     ^
+                apply_9 = ((project.Entrytypes.R3) t3).get_r4();
+                                                             ^
 Entry.java:224: 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
                         ^
