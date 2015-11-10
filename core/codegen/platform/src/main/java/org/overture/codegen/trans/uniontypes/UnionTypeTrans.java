@@ -871,31 +871,72 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAAssignToExpStmCG(AAssignToExpStmCG node) throws AnalysisException
 	{
-		SExpCG target = node.getTarget();
-		
-		if(target != null)
+		if(node.getExp() != null)
 		{
-			target.apply(this);
+			node.getExp().apply(this);
 		}
 		
-		SExpCG exp = node.getExp();
-		
-		if(exp != null)
+		if(!castNotNeeded(node.getExp(), node.getTarget().getType()))
 		{
-			exp.apply(this);
+			if (!(node.getTarget().getType() instanceof AUnionTypeCG))
+			{
+				correctTypes(node.getExp(), node.getTarget().getType());
+			}
 		}
 		
-		STypeCG type = target.getType();
-		
-		if(castNotNeeded(exp, type))
+		if(node.getTarget() instanceof AFieldExpCG)
 		{
-			return;
+			AFieldExpCG field = (AFieldExpCG) node.getTarget();
+			
+			if(field.getObject().getType() instanceof AUnionTypeCG)
+			{
+				LinkedList<STypeCG> types = ((AUnionTypeCG) field.getObject().getType()).getTypes();
+
+				AIfStmCG ifChecks = new AIfStmCG();
+				
+				for(int i = 0; i < types.size(); i++)
+				{
+					STypeCG currentType = types.get(i);
+					
+					AInstanceofExpCG cond = consInstanceCheck(field.getObject(), currentType);
+					AAssignToExpStmCG castFieldObj = castFieldObj(node, field, currentType);
+					
+					if(i == 0)
+					{
+						ifChecks.setIfExp(cond);
+						ifChecks.setThenStm(castFieldObj);
+					}
+					else
+					{
+						AElseIfStmCG elseIf = new AElseIfStmCG();
+						elseIf.setElseIf(cond);
+						elseIf.setThenStm(castFieldObj);
+
+						ifChecks.getElseIf().add(elseIf);
+					}
+				}
+				
+				ifChecks.setElseStm(consRaiseStm(MISSING_MEMBER, field.getMemberName()));
+				
+				transAssistant.replaceNodeWith(node, ifChecks);
+				ifChecks.apply(this);
+			}
 		}
+	}
+
+	private AAssignToExpStmCG castFieldObj(AAssignToExpStmCG assign, AFieldExpCG target, STypeCG possibleType)
+	{
+		ACastUnaryExpCG cast = new ACastUnaryExpCG();
+		cast.setType(possibleType.clone());
+		cast.setExp(target.getObject().clone());
 		
-		if (!(type instanceof AUnionTypeCG))
-		{
-			correctTypes(exp, type);
-		}
+		AAssignToExpStmCG assignCopy = assign.clone();
+		AFieldExpCG fieldCopy = target.clone();
+		
+		transAssistant.replaceNodeWith(fieldCopy.getObject(), cast);
+		transAssistant.replaceNodeWith(assignCopy.getTarget(), fieldCopy);
+		
+		return assignCopy;
 	}
 
 	private boolean castNotNeeded(SExpCG exp, STypeCG type)
