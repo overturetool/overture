@@ -20,7 +20,6 @@ import org.overture.codegen.trans.IPostCheckCreator;
 import org.overture.codegen.trans.IsExpTrans;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.LetBeStTrans;
-import org.overture.codegen.trans.OptionTrans;
 import org.overture.codegen.trans.PostCheckTrans;
 import org.overture.codegen.trans.PreCheckTrans;
 import org.overture.codegen.trans.PrePostTrans;
@@ -109,7 +108,6 @@ public class JavaTransSeries
 		RecMethodsTrans recTr = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());
 		ConstructorTrans ctorTr = new ConstructorTrans(transAssist, OBJ_INIT_CALL_NAME_PREFIX);
 		ImportsTrans impTr = new ImportsTrans(info);
-		OptionTrans optionTr = new OptionTrans(transAssist);
 
 		// Start concurrency transformations
 		SentinelTrans sentinelTr = new SentinelTrans(info);
@@ -145,7 +143,6 @@ public class JavaTransSeries
 		series.add(recTr);
 		series.add(ctorTr);
 		series.add(impTr);
-		series.add(optionTr);
 
 		return series;
 	}
