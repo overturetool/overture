@@ -17,7 +17,7 @@ Run () ==
  (
    r.x := 4;
  );
- return 0;
+ return r.x;
 )
 
 end Entry
