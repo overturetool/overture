@@ -75,11 +75,11 @@ public class Entry {
             Object x = (Object) iterator_1.next();
 
             if (x instanceof A) {
-                A.class.cast(x).op();
+                ((A) x).op();
             } else if (x instanceof B) {
-                B.class.cast(x).op();
+                ((B) x).op();
             } else if (x instanceof C) {
-                C.class.cast(x).op();
+                ((C) x).op();
             } else {
                 throw new RuntimeException("Missing operation member: op");
             }

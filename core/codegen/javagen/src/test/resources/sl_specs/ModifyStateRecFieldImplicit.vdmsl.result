@@ -32,7 +32,7 @@ final public class Entry {
                 return false;
             }
 
-            R other = R.class.cast(obj);
+            R other = ((R) obj);
 
             return Utils.equals(r, other.r);
         }
@@ -62,7 +62,7 @@ final public class Entry {
                 return false;
             }
 
-            St other = St.class.cast(obj);
+            St other = ((St) obj);
 
             return Utils.equals(x, other.x);
         }

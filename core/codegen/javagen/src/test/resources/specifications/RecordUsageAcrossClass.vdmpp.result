@@ -28,7 +28,7 @@ public class A {
                 return false;
             }
 
-            RecA other = RecA.class.cast(obj);
+            RecA other = ((RecA) obj);
 
             return Utils.equals(b, other.b);
         }
@@ -74,7 +74,7 @@ public class B {
                 return false;
             }
 
-            RecB other = RecB.class.cast(obj);
+            RecB other = ((RecB) obj);
 
             return Utils.equals(b, other.b);
         }

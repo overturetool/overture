@@ -17,28 +17,28 @@ public class Entry {
         VDMSet set_1 = SetUtil.set(1L, 2L);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Number a = Number.class.cast(iterator_1.next());
+            Number a = ((Number) iterator_1.next());
 
             for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext();) {
-                Number b = Number.class.cast(iterator_2.next());
+                Number b = ((Number) iterator_2.next());
                 VDMSet set_2 = SetUtil.set(2L, 3L);
 
                 for (Iterator iterator_3 = set_2.iterator();
                         iterator_3.hasNext();) {
-                    Number c = Number.class.cast(iterator_3.next());
+                    Number c = ((Number) iterator_3.next());
 
                     for (Iterator iterator_4 = set_2.iterator();
                             iterator_4.hasNext();) {
-                        Number d = Number.class.cast(iterator_4.next());
+                        Number d = ((Number) iterator_4.next());
                         VDMSet set_3 = SetUtil.set(3L, 4L);
 
                         for (Iterator iterator_5 = set_3.iterator();
                                 iterator_5.hasNext();) {
-                            Number e = Number.class.cast(iterator_5.next());
+                            Number e = ((Number) iterator_5.next());
 
                             for (Iterator iterator_6 = set_3.iterator();
                                     iterator_6.hasNext();) {
-                                Number f = Number.class.cast(iterator_6.next());
+                                Number f = ((Number) iterator_6.next());
                                 setCompResult_1 = SetUtil.union(Utils.copy(
                                             setCompResult_1),
                                         SetUtil.set(a.longValue() +

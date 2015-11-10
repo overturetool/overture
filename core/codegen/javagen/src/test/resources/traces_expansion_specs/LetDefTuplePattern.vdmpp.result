@@ -43,13 +43,12 @@ public class Entry implements java.io.Serializable {
         SequenceTraceNode sequence_2 = new SequenceTraceNode();
         CallStatement callStm_1 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    return f(Number.class.cast(store.getValue(ID_1)));
+                    return f(((Number) store.getValue(ID_1)));
                 }
 
                 public String toString() {
                     return "f(" +
-                    Utils.toString(Number.class.cast(store.getValue(ID_1))) +
-                    ")";
+                    Utils.toString(((Number) store.getValue(ID_1))) + ")";
                 }
             };
 
@@ -57,13 +56,12 @@ public class Entry implements java.io.Serializable {
 
         CallStatement callStm_2 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    return f(Number.class.cast(store.getValue(ID_2)));
+                    return f(((Number) store.getValue(ID_2)));
                 }
 
                 public String toString() {
                     return "f(" +
-                    Utils.toString(Number.class.cast(store.getValue(ID_2))) +
-                    ")";
+                    Utils.toString(((Number) store.getValue(ID_2))) + ")";
                 }
             };
 

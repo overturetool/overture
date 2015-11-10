@@ -42,7 +42,7 @@ public class A {
                 return false;
             }
 
-            Rec other = Rec.class.cast(obj);
+            Rec other = ((Rec) obj);
 
             return (Utils.equals(n1, other.n1)) &&
             (Utils.equals(n2, other.n2));

@@ -17,7 +17,7 @@ public class Entry {
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
-            recordPattern_1 = Vec.class.cast(iterator_1.next());
+            recordPattern_1 = ((Vec) iterator_1.next());
             success_1 = true;
             a = recordPattern_1.x;
 
@@ -60,7 +60,7 @@ public class Entry {
                 return false;
             }
 
-            Vec other = Vec.class.cast(obj);
+            Vec other = ((Vec) obj);
 
             return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
         }

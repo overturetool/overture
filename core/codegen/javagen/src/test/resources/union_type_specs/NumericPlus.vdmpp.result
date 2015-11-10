@@ -13,9 +13,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        return Number.class.cast(Entry.a).doubleValue() +
-        Number.class.cast(Entry.b).doubleValue() +
-        Number.class.cast(Entry.c).doubleValue();
+        return ((Number) Entry.a).doubleValue() +
+        ((Number) Entry.b).doubleValue() + ((Number) Entry.c).doubleValue();
     }
 
     public String toString() {

@@ -22,7 +22,7 @@ public class Entry {
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
-            tuplePattern_1 = Tuple.class.cast(iterator_1.next());
+            tuplePattern_1 = ((Tuple) iterator_1.next());
             success_1 = tuplePattern_1.compatible(Number.class, Number.class);
 
             if (success_1) {

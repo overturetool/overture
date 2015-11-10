@@ -22,13 +22,13 @@ public class Entry {
         VDMSet set_1 = Utils.copy(hr);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            VDMSeq ss = VDMSeq.class.cast(iterator_1.next());
+            VDMSeq ss = ((VDMSeq) iterator_1.next());
             Object obj_1 = Utils.get(ss, 1L);
 
             Boolean apply_1 = null;
 
             if (obj_1 instanceof Tuple) {
-                apply_1 = ((Boolean) Tuple.class.cast(obj_1).get(1));
+                apply_1 = ((Boolean) ((Tuple) obj_1).get(1));
             } else {
                 throw new RuntimeException("Missing member: field number 2");
             }

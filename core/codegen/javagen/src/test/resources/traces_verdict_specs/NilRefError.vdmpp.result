@@ -39,7 +39,7 @@ public class Entry implements java.io.Serializable {
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
         CallStatement callStm_1 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    Number result_1 = Entry.class.cast(instance).op();
+                    Number result_1 = ((Entry) instance).op();
 
                     return result_1;
                 }

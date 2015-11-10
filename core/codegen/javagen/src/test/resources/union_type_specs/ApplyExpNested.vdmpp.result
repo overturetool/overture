@@ -55,9 +55,9 @@ public class Entry {
         Number apply_1 = null;
 
         if (x instanceof A) {
-            apply_1 = A.class.cast(x).op(1L);
+            apply_1 = ((A) x).op(1L);
         } else if (x instanceof B) {
-            apply_1 = B.class.cast(x).op(1L);
+            apply_1 = ((B) x).op(1L);
         } else {
             throw new RuntimeException("Missing member: op");
         }
@@ -65,9 +65,9 @@ public class Entry {
         Number apply_2 = null;
 
         if (x instanceof A) {
-            apply_2 = A.class.cast(x).op(apply_1);
+            apply_2 = ((A) x).op(apply_1);
         } else if (x instanceof B) {
-            apply_2 = B.class.cast(x).op(apply_1);
+            apply_2 = ((B) x).op(apply_1);
         } else {
             throw new RuntimeException("Missing member: op");
         }

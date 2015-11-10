@@ -34,14 +34,14 @@ public class Entry implements java.io.Serializable {
         VDMSet set_1 = SetUtil.set(new Entry(3L), new Entry(4L));
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            final Entry e1 = Entry.class.cast(iterator_1.next());
+            final Entry e1 = ((Entry) iterator_1.next());
             final Number ID_1 = gen.inc();
 
             store.register(ID_1, e1);
 
             CallStatement callStm_1 = new CallStatement() {
                     public Object execute(final Object instance) {
-                        return Entry.class.cast(store.getValue(ID_1)).op();
+                        return ((Entry) store.getValue(ID_1)).op();
                     }
 
                     public String toString() {
@@ -58,14 +58,14 @@ public class Entry implements java.io.Serializable {
         VDMSet set_2 = SetUtil.set(new Entry(5L), new Entry(6L));
 
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
-            final Entry e2 = Entry.class.cast(iterator_2.next());
+            final Entry e2 = ((Entry) iterator_2.next());
             final Number ID_2 = gen.inc();
 
             store.register(ID_2, e2);
 
             CallStatement callStm_2 = new CallStatement() {
                     public Object execute(final Object instance) {
-                        return Entry.class.cast(store.getValue(ID_2)).op();
+                        return ((Entry) store.getValue(ID_2)).op();
                     }
 
                     public String toString() {

@@ -60,9 +60,9 @@ public class Entry {
                 VDMSeq apply_1 = null;
 
                 if (x instanceof A) {
-                    apply_1 = A.class.cast(x).s();
+                    apply_1 = ((A) x).s();
                 } else if (x instanceof B) {
-                    apply_1 = B.class.cast(x).s();
+                    apply_1 = ((B) x).s();
                 } else {
                     throw new RuntimeException("Missing member: s");
                 }

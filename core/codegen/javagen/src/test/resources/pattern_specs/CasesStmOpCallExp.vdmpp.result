@@ -13,7 +13,7 @@ public class Entry {
         Boolean success_1 = true;
 
         if (casesExp_1 instanceof A) {
-            A recordPattern_1 = A.class.cast(casesExp_1);
+            A recordPattern_1 = ((A) casesExp_1);
             Number intPattern_1 = recordPattern_1.a;
             success_1 = Utils.equals(intPattern_1, 9L);
         } else {
@@ -22,7 +22,7 @@ public class Entry {
 
         if (!(success_1)) {
             if (casesExp_1 instanceof B) {
-                B recordPattern_2 = B.class.cast(casesExp_1);
+                B recordPattern_2 = ((B) casesExp_1);
                 success_1 = true;
 
                 Number intPattern_2 = recordPattern_2.b;
@@ -33,7 +33,7 @@ public class Entry {
 
             if (!(success_1)) {
                 if (casesExp_1 instanceof B) {
-                    B recordPattern_3 = B.class.cast(casesExp_1);
+                    B recordPattern_3 = ((B) casesExp_1);
                     success_1 = true;
 
                     Number intPattern_3 = recordPattern_3.b;
@@ -75,7 +75,7 @@ public class Entry {
                 return false;
             }
 
-            A other = A.class.cast(obj);
+            A other = ((A) obj);
 
             return Utils.equals(a, other.a);
         }
@@ -105,7 +105,7 @@ public class Entry {
                 return false;
             }
 
-            B other = B.class.cast(obj);
+            B other = ((B) obj);
 
             return Utils.equals(b, other.b);
         }

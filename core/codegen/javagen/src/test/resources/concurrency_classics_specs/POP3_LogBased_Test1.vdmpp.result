@@ -65,13 +65,13 @@ public class Log implements EvaluatePP {
     }
 
     public void clear() {
-        sentinel.entering(Log_sentinel.class.cast(sentinel).clear);
+        sentinel.entering(((Log_sentinel) sentinel).clear);
 
         try {
             messages = SeqUtil.seq();
             sentinel.stateChanged();
         } finally {
-            sentinel.leaving(Log_sentinel.class.cast(sentinel).clear);
+            sentinel.leaving(((Log_sentinel) sentinel).clear);
         }
     }
 
@@ -84,19 +84,19 @@ public class Log implements EvaluatePP {
     }
 
     public void log(final String msg) {
-        sentinel.entering(Log_sentinel.class.cast(sentinel).log);
+        sentinel.entering(((Log_sentinel) sentinel).log);
 
         try {
             messages = SeqUtil.conc(Utils.copy(messages), SeqUtil.seq(msg));
 
             sentinel.stateChanged();
         } finally {
-            sentinel.leaving(Log_sentinel.class.cast(sentinel).log);
+            sentinel.leaving(((Log_sentinel) sentinel).log);
         }
     }
 
     public String output() {
-        sentinel.entering(Log_sentinel.class.cast(sentinel).output);
+        sentinel.entering(((Log_sentinel) sentinel).output);
 
         try {
             String output = "";
@@ -109,7 +109,7 @@ public class Log implements EvaluatePP {
 
             return output;
         } finally {
-            sentinel.leaving(Log_sentinel.class.cast(sentinel).output);
+            sentinel.leaving(((Log_sentinel) sentinel).output);
         }
     }
 
@@ -170,18 +170,18 @@ public class MessageChannelBuffer implements EvaluatePP {
     }
 
     public void Put(final MessageChannel msg) {
-        sentinel.entering(MessageChannelBuffer_sentinel.class.cast(sentinel).Put);
+        sentinel.entering(((MessageChannelBuffer_sentinel) sentinel).Put);
 
         try {
             data = msg;
             sentinel.stateChanged();
         } finally {
-            sentinel.leaving(MessageChannelBuffer_sentinel.class.cast(sentinel).Put);
+            sentinel.leaving(((MessageChannelBuffer_sentinel) sentinel).Put);
         }
     }
 
     public MessageChannel Get() {
-        sentinel.entering(MessageChannelBuffer_sentinel.class.cast(sentinel).Get);
+        sentinel.entering(((MessageChannelBuffer_sentinel) sentinel).Get);
 
         try {
             MessageChannel d = data;
@@ -190,7 +190,7 @@ public class MessageChannelBuffer implements EvaluatePP {
 
             return d;
         } finally {
-            sentinel.leaving(MessageChannelBuffer_sentinel.class.cast(sentinel).Get);
+            sentinel.leaving(((MessageChannelBuffer_sentinel) sentinel).Get);
         }
     }
 
@@ -256,18 +256,18 @@ public class MessageChannel implements EvaluatePP {
     }
 
     private void Send(final Object msg) {
-        sentinel.entering(MessageChannel_sentinel.class.cast(sentinel).Send);
+        sentinel.entering(((MessageChannel_sentinel) sentinel).Send);
 
         try {
             data = msg;
             sentinel.stateChanged();
         } finally {
-            sentinel.leaving(MessageChannel_sentinel.class.cast(sentinel).Send);
+            sentinel.leaving(((MessageChannel_sentinel) sentinel).Send);
         }
     }
 
     private Object Listen() {
-        sentinel.entering(MessageChannel_sentinel.class.cast(sentinel).Listen);
+        sentinel.entering(((MessageChannel_sentinel) sentinel).Listen);
 
         try {
             Object d = data;
@@ -276,30 +276,30 @@ public class MessageChannel implements EvaluatePP {
 
             return d;
         } finally {
-            sentinel.leaving(MessageChannel_sentinel.class.cast(sentinel).Listen);
+            sentinel.leaving(((MessageChannel_sentinel) sentinel).Listen);
         }
     }
 
     public void ServerSend(final Object p) {
-        sentinel.entering(MessageChannel_sentinel.class.cast(sentinel).ServerSend);
+        sentinel.entering(((MessageChannel_sentinel) sentinel).ServerSend);
 
         try {
             if (debug) {
                 Log.getInstance().log("***> ServerSend");
             }
 
-            Send(Object.class.cast(p));
+            Send(((Object) p));
 
             if (debug) {
                 Log.getInstance().log("***> fin ServerSend");
             }
         } finally {
-            sentinel.leaving(MessageChannel_sentinel.class.cast(sentinel).ServerSend);
+            sentinel.leaving(((MessageChannel_sentinel) sentinel).ServerSend);
         }
     }
 
     public Object ClientListen() {
-        sentinel.entering(MessageChannel_sentinel.class.cast(sentinel).ClientListen);
+        sentinel.entering(((MessageChannel_sentinel) sentinel).ClientListen);
 
         try {
             if (debug) {
@@ -316,30 +316,30 @@ public class MessageChannel implements EvaluatePP {
                 return r;
             }
         } finally {
-            sentinel.leaving(MessageChannel_sentinel.class.cast(sentinel).ClientListen);
+            sentinel.leaving(((MessageChannel_sentinel) sentinel).ClientListen);
         }
     }
 
     public void ClientSend(final Object p) {
-        sentinel.entering(MessageChannel_sentinel.class.cast(sentinel).ClientSend);
+        sentinel.entering(((MessageChannel_sentinel) sentinel).ClientSend);
 
         try {
             if (debug) {
                 Log.getInstance().log("***> ClientSend");
             }
 
-            Send(Object.class.cast(p));
+            Send(((Object) p));
 
             if (debug) {
                 Log.getInstance().log("***> fin ClientSend");
             }
         } finally {
-            sentinel.leaving(MessageChannel_sentinel.class.cast(sentinel).ClientSend);
+            sentinel.leaving(((MessageChannel_sentinel) sentinel).ClientSend);
         }
     }
 
     public Object ServerListen() {
-        sentinel.entering(MessageChannel_sentinel.class.cast(sentinel).ServerListen);
+        sentinel.entering(((MessageChannel_sentinel) sentinel).ServerListen);
 
         try {
             if (debug) {
@@ -356,7 +356,7 @@ public class MessageChannel implements EvaluatePP {
                 return c;
             }
         } finally {
-            sentinel.leaving(MessageChannel_sentinel.class.cast(sentinel).ServerListen);
+            sentinel.leaving(((MessageChannel_sentinel) sentinel).ServerListen);
         }
     }
 
@@ -463,7 +463,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
     }
 
     private Object ReceiveCommand(final Object c) {
-        sentinel.entering(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveCommand);
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveCommand);
 
         try {
             Object casesExpResult_1 = null;
@@ -471,14 +471,14 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
             Boolean success_3 = true;
 
             if (c instanceof POP3Types.QUIT) {
-                POP3Types.QUIT recordPattern_1 = POP3Types.QUIT.class.cast(c);
+                POP3Types.QUIT recordPattern_1 = ((POP3Types.QUIT) c);
             } else {
                 success_3 = false;
             }
 
             if (!(success_3)) {
                 if (c instanceof POP3Types.STAT) {
-                    POP3Types.STAT recordPattern_2 = POP3Types.STAT.class.cast(c);
+                    POP3Types.STAT recordPattern_2 = ((POP3Types.STAT) c);
                     success_3 = true;
                 } else {
                     success_3 = false;
@@ -486,7 +486,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
                 if (!(success_3)) {
                     if (c instanceof POP3Types.LIST) {
-                        POP3Types.LIST recordPattern_3 = POP3Types.LIST.class.cast(c);
+                        POP3Types.LIST recordPattern_3 = ((POP3Types.LIST) c);
                         success_3 = true;
                     } else {
                         success_3 = false;
@@ -494,7 +494,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
                     if (!(success_3)) {
                         if (c instanceof POP3Types.RETR) {
-                            POP3Types.RETR recordPattern_4 = POP3Types.RETR.class.cast(c);
+                            POP3Types.RETR recordPattern_4 = ((POP3Types.RETR) c);
                             success_3 = true;
                         } else {
                             success_3 = false;
@@ -502,7 +502,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
                         if (!(success_3)) {
                             if (c instanceof POP3Types.DELE) {
-                                POP3Types.DELE recordPattern_5 = POP3Types.DELE.class.cast(c);
+                                POP3Types.DELE recordPattern_5 = ((POP3Types.DELE) c);
                                 success_3 = true;
                             } else {
                                 success_3 = false;
@@ -510,7 +510,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
                             if (!(success_3)) {
                                 if (c instanceof POP3Types.NOOP) {
-                                    POP3Types.NOOP recordPattern_6 = POP3Types.NOOP.class.cast(c);
+                                    POP3Types.NOOP recordPattern_6 = ((POP3Types.NOOP) c);
                                     success_3 = true;
                                 } else {
                                     success_3 = false;
@@ -518,7 +518,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
                                 if (!(success_3)) {
                                     if (c instanceof POP3Types.RSET) {
-                                        POP3Types.RSET recordPattern_7 = POP3Types.RSET.class.cast(c);
+                                        POP3Types.RSET recordPattern_7 = ((POP3Types.RSET) c);
                                         success_3 = true;
                                     } else {
                                         success_3 = false;
@@ -526,7 +526,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
                                     if (!(success_3)) {
                                         if (c instanceof POP3Types.TOP) {
-                                            POP3Types.TOP recordPattern_8 = POP3Types.TOP.class.cast(c);
+                                            POP3Types.TOP recordPattern_8 = ((POP3Types.TOP) c);
                                             success_3 = true;
                                         } else {
                                             success_3 = false;
@@ -534,7 +534,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
                                         if (!(success_3)) {
                                             if (c instanceof POP3Types.UIDL) {
-                                                POP3Types.UIDL recordPattern_9 = POP3Types.UIDL.class.cast(c);
+                                                POP3Types.UIDL recordPattern_9 = ((POP3Types.UIDL) c);
                                                 success_3 = true;
                                             } else {
                                                 success_3 = false;
@@ -543,7 +543,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                                             if (!(success_3)) {
                                                 if (c instanceof POP3Types.USER) {
                                                     POP3Types.USER recordPattern_10 =
-                                                        POP3Types.USER.class.cast(c);
+                                                        ((POP3Types.USER) c);
                                                     success_3 = true;
                                                 } else {
                                                     success_3 = false;
@@ -552,53 +552,44 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                                                 if (!(success_3)) {
                                                     if (c instanceof POP3Types.PASS) {
                                                         POP3Types.PASS recordPattern_11 =
-                                                            POP3Types.PASS.class.cast(c);
+                                                            ((POP3Types.PASS) c);
                                                         success_3 = true;
                                                     } else {
                                                         success_3 = false;
                                                     }
 
                                                     if (success_3) {
-                                                        casesExpResult_1 = ReceivePASS(POP3Types.PASS.class.cast(
-                                                                    c));
+                                                        casesExpResult_1 = ReceivePASS(((POP3Types.PASS) c));
                                                     }
                                                 } else {
-                                                    casesExpResult_1 = ReceiveUSER(POP3Types.USER.class.cast(
-                                                                c));
+                                                    casesExpResult_1 = ReceiveUSER(((POP3Types.USER) c));
                                                 }
                                             } else {
-                                                casesExpResult_1 = ReceiveUIDL(POP3Types.UIDL.class.cast(
-                                                            c));
+                                                casesExpResult_1 = ReceiveUIDL(((POP3Types.UIDL) c));
                                             }
                                         } else {
-                                            casesExpResult_1 = ReceiveTOP(POP3Types.TOP.class.cast(
-                                                        c));
+                                            casesExpResult_1 = ReceiveTOP(((POP3Types.TOP) c));
                                         }
                                     } else {
-                                        casesExpResult_1 = ReceiveRSET(POP3Types.RSET.class.cast(
-                                                    c));
+                                        casesExpResult_1 = ReceiveRSET(((POP3Types.RSET) c));
                                     }
                                 } else {
-                                    casesExpResult_1 = ReceiveNOOP(POP3Types.NOOP.class.cast(
-                                                c));
+                                    casesExpResult_1 = ReceiveNOOP(((POP3Types.NOOP) c));
                                 }
                             } else {
-                                casesExpResult_1 = ReceiveDELE(POP3Types.DELE.class.cast(
-                                            c));
+                                casesExpResult_1 = ReceiveDELE(((POP3Types.DELE) c));
                             }
                         } else {
-                            casesExpResult_1 = ReceiveRETR(POP3Types.RETR.class.cast(
-                                        c));
+                            casesExpResult_1 = ReceiveRETR(((POP3Types.RETR) c));
                         }
                     } else {
-                        casesExpResult_1 = ReceiveLIST(POP3Types.LIST.class.cast(
-                                    c));
+                        casesExpResult_1 = ReceiveLIST(((POP3Types.LIST) c));
                     }
                 } else {
-                    casesExpResult_1 = ReceiveSTAT(POP3Types.STAT.class.cast(c));
+                    casesExpResult_1 = ReceiveSTAT(((POP3Types.STAT) c));
                 }
             } else {
-                casesExpResult_1 = ReceiveQUIT(POP3Types.QUIT.class.cast(c));
+                casesExpResult_1 = ReceiveQUIT(((POP3Types.QUIT) c));
             }
 
             Object response = casesExpResult_1;
@@ -613,12 +604,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
             return response;
         } finally {
-            sentinel.leaving(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveCommand);
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveCommand);
         }
     }
 
     private Object ReceiveQUIT(final POP3Types.QUIT ignorePattern_1) {
-        sentinel.entering(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveQUIT);
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveQUIT);
 
         try {
             Object response = null;
@@ -661,12 +652,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
             return response;
         } finally {
-            sentinel.leaving(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveQUIT);
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveQUIT);
         }
     }
 
     private Object ReceiveSTAT(final POP3Types.STAT ignorePattern_2) {
-        sentinel.entering(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveSTAT);
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveSTAT);
 
         try {
             if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
@@ -677,12 +668,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
-            sentinel.leaving(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveSTAT);
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveSTAT);
         }
     }
 
     private Object ReceiveLIST(final POP3Types.LIST list) {
-        sentinel.entering(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveLIST);
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveLIST);
 
         try {
             if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
@@ -708,12 +699,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
-            sentinel.leaving(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveLIST);
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveLIST);
         }
     }
 
     private Object ReceiveRETR(final POP3Types.RETR retr) {
-        sentinel.entering(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveRETR);
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveRETR);
 
         try {
             if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
@@ -731,12 +722,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
-            sentinel.leaving(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveRETR);
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveRETR);
         }
     }
 
     private Object ReceiveDELE(final POP3Types.DELE retr) {
-        sentinel.entering(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveDELE);
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveDELE);
 
         try {
             if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
@@ -756,12 +747,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
-            sentinel.leaving(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveDELE);
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveDELE);
         }
     }
 
     private Object ReceiveNOOP(final POP3Types.NOOP ignorePattern_3) {
-        sentinel.entering(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveNOOP);
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveNOOP);
 
         try {
             if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
@@ -770,12 +761,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
-            sentinel.leaving(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveNOOP);
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveNOOP);
         }
     }
 
     private Object ReceiveRSET(final POP3Types.RSET ignorePattern_4) {
-        sentinel.entering(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveRSET);
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveRSET);
 
         try {
             if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
@@ -787,12 +778,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
-            sentinel.leaving(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveRSET);
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveRSET);
         }
     }
 
     private Object ReceiveTOP(final POP3Types.TOP top) {
-        sentinel.entering(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveTOP);
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveTOP);
 
         try {
             if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
@@ -811,12 +802,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
-            sentinel.leaving(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveTOP);
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveTOP);
         }
     }
 
     private Object ReceiveUIDL(final POP3Types.UIDL uidl) {
-        sentinel.entering(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveUIDL);
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveUIDL);
 
         try {
             if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
@@ -835,12 +826,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
-            sentinel.leaving(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveUIDL);
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveUIDL);
         }
     }
 
     private Object ReceiveUSER(final POP3Types.USER usercmd) {
-        sentinel.entering(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveUSER);
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveUSER);
 
         try {
             if (Utils.equals(ss, quotes.AuthorizationQuote.getInstance())) {
@@ -852,12 +843,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
-            sentinel.leaving(POP3ClientHandler_sentinel.class.cast(sentinel).ReceiveUSER);
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceiveUSER);
         }
     }
 
     private Object ReceivePASS(final POP3Types.PASS pass) {
-        sentinel.entering(POP3ClientHandler_sentinel.class.cast(sentinel).ReceivePASS);
+        sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceivePASS);
 
         try {
             Boolean andResult_1 = false;
@@ -889,7 +880,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 return new POP3Types.ErrResponse(POP3ClientHandler.negativeStatusMsg);
             }
         } finally {
-            sentinel.leaving(POP3ClientHandler_sentinel.class.cast(sentinel).ReceivePASS);
+            sentinel.leaving(((POP3ClientHandler_sentinel) sentinel).ReceivePASS);
         }
     }
 
@@ -908,7 +899,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         VDMSet set_1 = Utils.copy(msgs);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            POP3Server.MessageInfo msg = POP3Server.MessageInfo.class.cast(iterator_1.next());
+            POP3Server.MessageInfo msg = ((POP3Server.MessageInfo) iterator_1.next());
             setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
                     SetUtil.set(msg.size));
         }
@@ -928,7 +919,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
             for (Iterator iterator_2 = set_2.iterator();
                     iterator_2.hasNext() && !(success_1);) {
-                v = tp.class.cast(iterator_2.next());
+                v = ((tp) iterator_2.next());
                 success_1 = true;
             }
 
@@ -951,7 +942,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         VDMSet set_3 = SeqUtil.inds(msgSeq);
 
         for (Iterator iterator_3 = set_3.iterator(); iterator_3.hasNext();) {
-            Number i = Number.class.cast(iterator_3.next());
+            Number i = ((Number) iterator_3.next());
             seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
                     SeqUtil.seq(int2string(
                             ((POP3Server.MessageInfo) Utils.get(msgSeq, i)).index) +
@@ -1042,7 +1033,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
             for (Iterator iterator_4 = set_4.iterator();
                     iterator_4.hasNext() && !(success_2);) {
-                e = Number.class.cast(iterator_4.next());
+                e = ((Number) iterator_4.next());
                 success_2 = true;
             }
 
@@ -1262,11 +1253,11 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 break;
             }
 
-            msgChannel.ServerSend(ReceiveCommand(Object.class.cast(cmd)));
+            msgChannel.ServerSend(ReceiveCommand(((Object) cmd)));
             cmd = msgChannel.ServerListen();
         }
 
-        msgChannel.ServerSend(ReceiveCommand(Object.class.cast(cmd)));
+        msgChannel.ServerSend(ReceiveCommand(((Object) cmd)));
     }
 
     public static class POP3ClientHandler_sentinel extends Sentinel {
@@ -1342,37 +1333,37 @@ public class POP3Message implements EvaluatePP {
     }
 
     public String GetBody() {
-        sentinel.entering(POP3Message_sentinel.class.cast(sentinel).GetBody);
+        sentinel.entering(((POP3Message_sentinel) sentinel).GetBody);
 
         try {
             return body;
         } finally {
-            sentinel.leaving(POP3Message_sentinel.class.cast(sentinel).GetBody);
+            sentinel.leaving(((POP3Message_sentinel) sentinel).GetBody);
         }
     }
 
     public String GetHeader() {
-        sentinel.entering(POP3Message_sentinel.class.cast(sentinel).GetHeader);
+        sentinel.entering(((POP3Message_sentinel) sentinel).GetHeader);
 
         try {
             return header;
         } finally {
-            sentinel.leaving(POP3Message_sentinel.class.cast(sentinel).GetHeader);
+            sentinel.leaving(((POP3Message_sentinel) sentinel).GetHeader);
         }
     }
 
     public String GetText() {
-        sentinel.entering(POP3Message_sentinel.class.cast(sentinel).GetText);
+        sentinel.entering(((POP3Message_sentinel) sentinel).GetText);
 
         try {
             return header + "\n" + body;
         } finally {
-            sentinel.leaving(POP3Message_sentinel.class.cast(sentinel).GetText);
+            sentinel.leaving(((POP3Message_sentinel) sentinel).GetText);
         }
     }
 
     public POP3Message Delete() {
-        sentinel.entering(POP3Message_sentinel.class.cast(sentinel).Delete);
+        sentinel.entering(((POP3Message_sentinel) sentinel).Delete);
 
         try {
             deleted = true;
@@ -1380,22 +1371,22 @@ public class POP3Message implements EvaluatePP {
 
             return this;
         } finally {
-            sentinel.leaving(POP3Message_sentinel.class.cast(sentinel).Delete);
+            sentinel.leaving(((POP3Message_sentinel) sentinel).Delete);
         }
     }
 
     public Boolean IsDeleted() {
-        sentinel.entering(POP3Message_sentinel.class.cast(sentinel).IsDeleted);
+        sentinel.entering(((POP3Message_sentinel) sentinel).IsDeleted);
 
         try {
             return deleted;
         } finally {
-            sentinel.leaving(POP3Message_sentinel.class.cast(sentinel).IsDeleted);
+            sentinel.leaving(((POP3Message_sentinel) sentinel).IsDeleted);
         }
     }
 
     public POP3Message Undelete() {
-        sentinel.entering(POP3Message_sentinel.class.cast(sentinel).Undelete);
+        sentinel.entering(((POP3Message_sentinel) sentinel).Undelete);
 
         try {
             deleted = false;
@@ -1403,27 +1394,27 @@ public class POP3Message implements EvaluatePP {
 
             return this;
         } finally {
-            sentinel.leaving(POP3Message_sentinel.class.cast(sentinel).Undelete);
+            sentinel.leaving(((POP3Message_sentinel) sentinel).Undelete);
         }
     }
 
     public Number GetSize() {
-        sentinel.entering(POP3Message_sentinel.class.cast(sentinel).GetSize);
+        sentinel.entering(((POP3Message_sentinel) sentinel).GetSize);
 
         try {
             return body.length() + header.length();
         } finally {
-            sentinel.leaving(POP3Message_sentinel.class.cast(sentinel).GetSize);
+            sentinel.leaving(((POP3Message_sentinel) sentinel).GetSize);
         }
     }
 
     public String GetUniqueId() {
-        sentinel.entering(POP3Message_sentinel.class.cast(sentinel).GetUniqueId);
+        sentinel.entering(((POP3Message_sentinel) sentinel).GetUniqueId);
 
         try {
             return uniqueId;
         } finally {
-            sentinel.leaving(POP3Message_sentinel.class.cast(sentinel).GetUniqueId);
+            sentinel.leaving(((POP3Message_sentinel) sentinel).GetUniqueId);
         }
     }
 
@@ -1517,7 +1508,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
     }
 
     public Boolean AuthenticateUser(final String user, final String password) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).AuthenticateUser);
+        sentinel.entering(((POP3Server_sentinel) sentinel).AuthenticateUser);
 
         try {
             Boolean andResult_2 = false;
@@ -1530,22 +1521,22 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
             return andResult_2;
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).AuthenticateUser);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).AuthenticateUser);
         }
     }
 
     public Boolean IsLocked(final String user) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).IsLocked);
+        sentinel.entering(((POP3Server_sentinel) sentinel).IsLocked);
 
         try {
             return SetUtil.inSet(user, MapUtil.rng(Utils.copy(locks)));
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).IsLocked);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).IsLocked);
         }
     }
 
     private void SetUserMessages(final String user, final VDMSeq newMsgs) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).SetUserMessages);
+        sentinel.entering(((POP3Server_sentinel) sentinel).SetUserMessages);
 
         try {
             MailBox recModifierExp_1 = Utils.copy(((MailBox) Utils.get(
@@ -1557,32 +1548,32 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             Utils.mapSeqUpdate(maildrop, user, Utils.copy(recModifierExp_1));
             sentinel.stateChanged();
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).SetUserMessages);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).SetUserMessages);
         }
     }
 
     private MailBox GetUserMail(final String user) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).GetUserMail);
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetUserMail);
 
         try {
             return Utils.copy(((MailBox) Utils.get(maildrop, user)));
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).GetUserMail);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetUserMail);
         }
     }
 
     private VDMSeq GetUserMessages(final String user) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).GetUserMessages);
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetUserMessages);
 
         try {
             return Utils.copy(GetUserMail(user).msgs);
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).GetUserMessages);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetUserMessages);
         }
     }
 
     public Boolean RemoveDeletedMessages(final String user) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).RemoveDeletedMessages);
+        sentinel.entering(((POP3Server_sentinel) sentinel).RemoveDeletedMessages);
 
         try {
             VDMSeq oldMsgs = GetUserMessages(user);
@@ -1590,7 +1581,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             VDMSet set_5 = SeqUtil.inds(oldMsgs);
 
             for (Iterator iterator_5 = set_5.iterator(); iterator_5.hasNext();) {
-                Number i = Number.class.cast(iterator_5.next());
+                Number i = ((Number) iterator_5.next());
 
                 if (!(((POP3Message) Utils.get(oldMsgs, i)).IsDeleted())) {
                     seqCompResult_2 = SeqUtil.conc(Utils.copy(seqCompResult_2),
@@ -1603,57 +1594,57 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
             return true;
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).RemoveDeletedMessages);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).RemoveDeletedMessages);
         }
     }
 
     public void AcquireLock(final Number clId, final String user) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).AcquireLock);
+        sentinel.entering(((POP3Server_sentinel) sentinel).AcquireLock);
 
         try {
             locks = MapUtil.override(Utils.copy(locks),
                     MapUtil.map(new Maplet(clId, user)));
             sentinel.stateChanged();
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).AcquireLock);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).AcquireLock);
         }
     }
 
     public void ReleaseLock(final Number clId) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).ReleaseLock);
+        sentinel.entering(((POP3Server_sentinel) sentinel).ReleaseLock);
 
         try {
             locks = MapUtil.domResBy(SetUtil.set(clId), Utils.copy(locks));
             sentinel.stateChanged();
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).ReleaseLock);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).ReleaseLock);
         }
     }
 
     private void CreateClientHandler(final MessageChannel mc) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).CreateClientHandler);
+        sentinel.entering(((POP3Server_sentinel) sentinel).CreateClientHandler);
 
         try {
             new POP3ClientHandler(this, mc).start();
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).CreateClientHandler);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).CreateClientHandler);
         }
     }
 
     public Boolean IsMessageNumber(final String user, final Number index) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).IsMessageNumber);
+        sentinel.entering(((POP3Server_sentinel) sentinel).IsMessageNumber);
 
         try {
             VDMSeq mb = GetUserMessages(user);
 
             return SetUtil.inSet(index, SeqUtil.inds(mb));
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).IsMessageNumber);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).IsMessageNumber);
         }
     }
 
     public Boolean IsValidMessageNumber(final String user, final Number index) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).IsValidMessageNumber);
+        sentinel.entering(((POP3Server_sentinel) sentinel).IsValidMessageNumber);
 
         try {
             VDMSeq mb = GetUserMessages(user);
@@ -1667,12 +1658,12 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
             return andResult_4;
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).IsValidMessageNumber);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).IsValidMessageNumber);
         }
     }
 
     public Boolean MessageIsDeleted(final String user, final Number index) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).MessageIsDeleted);
+        sentinel.entering(((POP3Server_sentinel) sentinel).MessageIsDeleted);
 
         try {
             VDMSeq mb = GetUserMessages(user);
@@ -1686,12 +1677,12 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
             return andResult_5;
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).MessageIsDeleted);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).MessageIsDeleted);
         }
     }
 
     public void DeleteMessage(final String user, final Number index) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).DeleteMessage);
+        sentinel.entering(((POP3Server_sentinel) sentinel).DeleteMessage);
 
         try {
             POP3Message oldMsg = ((POP3Message) Utils.get(GetUserMessages(user),
@@ -1702,36 +1693,36 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                 SeqUtil.mod(GetUserMessages(user),
                     MapUtil.map(new Maplet(index, newMsg))));
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).DeleteMessage);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).DeleteMessage);
         }
     }
 
     public String GetMsgHeader(final String user, final Number index) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).GetMsgHeader);
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetMsgHeader);
 
         try {
             VDMSeq mb = GetUserMessages(user);
 
             return ((POP3Message) Utils.get(mb, index)).GetHeader();
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).GetMsgHeader);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetMsgHeader);
         }
     }
 
     public String GetMsgBody(final String user, final Number index) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).GetMsgBody);
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetMsgBody);
 
         try {
             VDMSeq mb = GetUserMessages(user);
 
             return ((POP3Message) Utils.get(mb, index)).GetBody();
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).GetMsgBody);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetMsgBody);
         }
     }
 
     public void ResetDeletedMessages(final String user) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).ResetDeletedMessages);
+        sentinel.entering(((POP3Server_sentinel) sentinel).ResetDeletedMessages);
 
         try {
             VDMSeq oldMsgs = GetUserMessages(user);
@@ -1739,7 +1730,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             VDMSet set_6 = SeqUtil.inds(oldMsgs);
 
             for (Iterator iterator_6 = set_6.iterator(); iterator_6.hasNext();) {
-                Number i = Number.class.cast(iterator_6.next());
+                Number i = ((Number) iterator_6.next());
                 seqCompResult_3 = SeqUtil.conc(Utils.copy(seqCompResult_3),
                         SeqUtil.seq(
                             ((POP3Message) Utils.get(oldMsgs, i)).Undelete()));
@@ -1748,32 +1739,32 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             VDMSeq newMsgs = Utils.copy(seqCompResult_3);
             SetUserMessages(user, Utils.copy(newMsgs));
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).ResetDeletedMessages);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).ResetDeletedMessages);
         }
     }
 
     public String GetMessageText(final String user, final Number index) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).GetMessageText);
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetMessageText);
 
         try {
             return ((POP3Message) Utils.get(GetUserMessages(user), index)).GetText();
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).GetMessageText);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetMessageText);
         }
     }
 
     public Number GetMessageSize(final String user, final Number index) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).GetMessageSize);
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetMessageSize);
 
         try {
             return ((POP3Message) Utils.get(GetUserMessages(user), index)).GetSize();
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).GetMessageSize);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetMessageSize);
         }
     }
 
     public VDMSet GetMessageInfo(final String user, final Number index) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).GetMessageInfo);
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetMessageInfo);
 
         try {
             VDMSeq mb = GetUserMessages(user);
@@ -1784,7 +1775,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
                 for (Iterator iterator_7 = set_7.iterator();
                         iterator_7.hasNext();) {
-                    Number i = Number.class.cast(iterator_7.next());
+                    Number i = ((Number) iterator_7.next());
 
                     if (!(((POP3Message) Utils.get(mb, i)).IsDeleted())) {
                         seqCompResult_4 = SeqUtil.conc(Utils.copy(
@@ -1800,12 +1791,12 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                         GetMessageSize(user, index)));
             }
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).GetMessageInfo);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetMessageInfo);
         }
     }
 
     public String GetUidl(final String user, final Number index) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).GetUidl);
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetUidl);
 
         try {
             VDMSeq mb = GetUserMessages(user);
@@ -1813,12 +1804,12 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             return POP3ClientHandler.int2string(index) + " " +
             ((POP3Message) Utils.get(mb, index)).GetUniqueId();
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).GetUidl);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetUidl);
         }
     }
 
     public VDMSeq GetAllUidls(final String user) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).GetAllUidls);
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetAllUidls);
 
         try {
             VDMSeq mb = GetUserMessages(user);
@@ -1826,29 +1817,29 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             VDMSet set_8 = SeqUtil.inds(mb);
 
             for (Iterator iterator_8 = set_8.iterator(); iterator_8.hasNext();) {
-                Number index = Number.class.cast(iterator_8.next());
+                Number index = ((Number) iterator_8.next());
                 seqCompResult_5 = SeqUtil.conc(Utils.copy(seqCompResult_5),
                         SeqUtil.seq(GetUidl(user, index)));
             }
 
             return Utils.copy(seqCompResult_5);
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).GetAllUidls);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetAllUidls);
         }
     }
 
     public Number GetNumberOfMessages(final String user) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).GetNumberOfMessages);
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetNumberOfMessages);
 
         try {
             return GetUserMessages(user).size();
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).GetNumberOfMessages);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetNumberOfMessages);
         }
     }
 
     public Number GetMailBoxSize(final String user) {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).GetMailBoxSize);
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetMailBoxSize);
 
         try {
             MailBox mb = GetUserMail(user);
@@ -1856,7 +1847,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             VDMSet set_9 = SeqUtil.inds(mb.msgs);
 
             for (Iterator iterator_9 = set_9.iterator(); iterator_9.hasNext();) {
-                Number i = Number.class.cast(iterator_9.next());
+                Number i = ((Number) iterator_9.next());
                 seqCompResult_6 = SeqUtil.conc(Utils.copy(seqCompResult_6),
                         SeqUtil.seq(
                             ((POP3Message) Utils.get(mb.msgs, i)).GetSize()));
@@ -1864,27 +1855,27 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
             return sumseq(Utils.copy(seqCompResult_6));
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).GetMailBoxSize);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetMailBoxSize);
         }
     }
 
     public MessageChannelBuffer GetChannel() {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).GetChannel);
+        sentinel.entering(((POP3Server_sentinel) sentinel).GetChannel);
 
         try {
             return connChannel;
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).GetChannel);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).GetChannel);
         }
     }
 
     public void WaitForServerStart() {
-        sentinel.entering(POP3Server_sentinel.class.cast(sentinel).WaitForServerStart);
+        sentinel.entering(((POP3Server_sentinel) sentinel).WaitForServerStart);
 
         try {
             /* skip */
         } finally {
-            sentinel.leaving(POP3Server_sentinel.class.cast(sentinel).WaitForServerStart);
+            sentinel.leaving(((POP3Server_sentinel) sentinel).WaitForServerStart);
         }
     }
 
@@ -2062,7 +2053,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                 return false;
             }
 
-            MessageInfo other = MessageInfo.class.cast(obj);
+            MessageInfo other = ((MessageInfo) obj);
 
             return (Utils.equals(index, other.index)) &&
             (Utils.equals(size, other.size));
@@ -2096,7 +2087,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                 return false;
             }
 
-            MailBox other = MailBox.class.cast(obj);
+            MailBox other = ((MailBox) obj);
 
             return (Utils.equals(msgs, other.msgs)) &&
             (Utils.equals(locked, other.locked));
@@ -2171,17 +2162,17 @@ public class POP3Test implements EvaluatePP {
     }
 
     public void StartServer(final POP3Server myserver) {
-        sentinel.entering(POP3Test_sentinel.class.cast(sentinel).StartServer);
+        sentinel.entering(((POP3Test_sentinel) sentinel).StartServer);
 
         try {
             myserver.start();
         } finally {
-            sentinel.leaving(POP3Test_sentinel.class.cast(sentinel).StartServer);
+            sentinel.leaving(((POP3Test_sentinel) sentinel).StartServer);
         }
     }
 
     public String Test1() {
-        sentinel.entering(POP3Test_sentinel.class.cast(sentinel).Test1);
+        sentinel.entering(((POP3Test_sentinel) sentinel).Test1);
 
         try {
             MessageChannelBuffer ch_1 = new MessageChannelBuffer();
@@ -2206,12 +2197,12 @@ public class POP3Test implements EvaluatePP {
                 return Log.getInstance().output();
             }
         } finally {
-            sentinel.leaving(POP3Test_sentinel.class.cast(sentinel).Test1);
+            sentinel.leaving(((POP3Test_sentinel) sentinel).Test1);
         }
     }
 
     public String Test2() {
-        sentinel.entering(POP3Test_sentinel.class.cast(sentinel).Test2);
+        sentinel.entering(((POP3Test_sentinel) sentinel).Test2);
 
         try {
             MessageChannelBuffer ch = new MessageChannelBuffer();
@@ -2246,17 +2237,17 @@ public class POP3Test implements EvaluatePP {
                 return Log.getInstance().output();
             }
         } finally {
-            sentinel.leaving(POP3Test_sentinel.class.cast(sentinel).Test2);
+            sentinel.leaving(((POP3Test_sentinel) sentinel).Test2);
         }
     }
 
     private void Start(final Object obj) {
-        sentinel.entering(POP3Test_sentinel.class.cast(sentinel).Start);
+        sentinel.entering(((POP3Test_sentinel) sentinel).Start);
 
         try {
             ((Thread) obj).start();
         } finally {
-            sentinel.leaving(POP3Test_sentinel.class.cast(sentinel).Start);
+            sentinel.leaving(((POP3Test_sentinel) sentinel).Start);
         }
     }
 
@@ -2265,7 +2256,7 @@ public class POP3Test implements EvaluatePP {
         VDMSet set_10 = SeqUtil.inds(POP3Test.users);
 
         for (Iterator iterator_10 = set_10.iterator(); iterator_10.hasNext();) {
-            Number i = Number.class.cast(iterator_10.next());
+            Number i = ((Number) iterator_10.next());
             mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
                     MapUtil.map(
                         new Maplet(((String) Utils.get(users, i)),
@@ -2280,7 +2271,7 @@ public class POP3Test implements EvaluatePP {
         VDMSet set_11 = SeqUtil.inds(POP3Test.users);
 
         for (Iterator iterator_11 = set_11.iterator(); iterator_11.hasNext();) {
-            Number i = Number.class.cast(iterator_11.next());
+            Number i = ((Number) iterator_11.next());
             mapCompResult_2 = MapUtil.munion(Utils.copy(mapCompResult_2),
                     MapUtil.map(
                         new Maplet(((String) Utils.get(users, i)),
@@ -2296,7 +2287,7 @@ public class POP3Test implements EvaluatePP {
         VDMSet set_12 = SeqUtil.inds(POP3Test.headers);
 
         for (Iterator iterator_12 = set_12.iterator(); iterator_12.hasNext();) {
-            Number i = Number.class.cast(iterator_12.next());
+            Number i = ((Number) iterator_12.next());
             seqCompResult_7 = SeqUtil.conc(Utils.copy(seqCompResult_7),
                     SeqUtil.seq(
                         new POP3Message(((String) Utils.get(headers, i)),
@@ -2411,23 +2402,23 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
     }
 
     private void LogClient(final Object cmd) {
-        sentinel.entering(POP3TestSender_sentinel.class.cast(sentinel).LogClient);
+        sentinel.entering(((POP3TestSender_sentinel) sentinel).LogClient);
 
         try {
             /* skip */
         } finally {
-            sentinel.leaving(POP3TestSender_sentinel.class.cast(sentinel).LogClient);
+            sentinel.leaving(((POP3TestSender_sentinel) sentinel).LogClient);
         }
     }
 
     private void SendCmd(final MessageChannel mcarg, final Object cmd) {
-        sentinel.entering(POP3TestSender_sentinel.class.cast(sentinel).SendCmd);
+        sentinel.entering(((POP3TestSender_sentinel) sentinel).SendCmd);
 
         try {
             mcarg.ClientSend(cmd);
-            LogClient(Object.class.cast(cmd));
+            LogClient(((Object) cmd));
         } finally {
-            sentinel.leaving(POP3TestSender_sentinel.class.cast(sentinel).SendCmd);
+            sentinel.leaving(((POP3TestSender_sentinel) sentinel).SendCmd);
         }
     }
 
@@ -2454,7 +2445,7 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
     public void run() {
         for (Iterator iterator_14 = cmds.iterator(); iterator_14.hasNext();) {
             Object cmd = (Object) iterator_14.next();
-            SendCmd(mc, Object.class.cast(cmd));
+            SendCmd(mc, ((Object) cmd));
         }
     }
 
@@ -2505,22 +2496,22 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
     }
 
     private void LogServer(final Object resp) {
-        sentinel.entering(POP3TestListener_sentinel.class.cast(sentinel).LogServer);
+        sentinel.entering(((POP3TestListener_sentinel) sentinel).LogServer);
 
         try {
             /* skip */
         } finally {
-            sentinel.leaving(POP3TestListener_sentinel.class.cast(sentinel).LogServer);
+            sentinel.leaving(((POP3TestListener_sentinel) sentinel).LogServer);
         }
     }
 
     public void IsFinished() {
-        sentinel.entering(POP3TestListener_sentinel.class.cast(sentinel).IsFinished);
+        sentinel.entering(((POP3TestListener_sentinel) sentinel).IsFinished);
 
         try {
             /* skip */
         } finally {
-            sentinel.leaving(POP3TestListener_sentinel.class.cast(sentinel).IsFinished);
+            sentinel.leaving(((POP3TestListener_sentinel) sentinel).IsFinished);
         }
     }
 
@@ -2556,11 +2547,11 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
                 break;
             }
 
-            LogServer(Object.class.cast(response));
+            LogServer(((Object) response));
             response = mc.ClientListen();
         }
 
-        LogServer(Object.class.cast(response));
+        LogServer(((Object) response));
         finished = true;
         sentinel.stateChanged();
     }
@@ -2676,7 +2667,7 @@ public class POP3Types implements EvaluatePP {
                 return false;
             }
 
-            LIST other = LIST.class.cast(obj);
+            LIST other = ((LIST) obj);
 
             return Utils.equals(messageNumber, other.messageNumber);
         }
@@ -2706,7 +2697,7 @@ public class POP3Types implements EvaluatePP {
                 return false;
             }
 
-            RETR other = RETR.class.cast(obj);
+            RETR other = ((RETR) obj);
 
             return Utils.equals(messageNumber, other.messageNumber);
         }
@@ -2736,7 +2727,7 @@ public class POP3Types implements EvaluatePP {
                 return false;
             }
 
-            DELE other = DELE.class.cast(obj);
+            DELE other = ((DELE) obj);
 
             return Utils.equals(messageNumber, other.messageNumber);
         }
@@ -2810,7 +2801,7 @@ public class POP3Types implements EvaluatePP {
                 return false;
             }
 
-            TOP other = TOP.class.cast(obj);
+            TOP other = ((TOP) obj);
 
             return (Utils.equals(messageNumber, other.messageNumber)) &&
             (Utils.equals(numLines, other.numLines));
@@ -2842,7 +2833,7 @@ public class POP3Types implements EvaluatePP {
                 return false;
             }
 
-            UIDL other = UIDL.class.cast(obj);
+            UIDL other = ((UIDL) obj);
 
             return Utils.equals(messageNumber, other.messageNumber);
         }
@@ -2872,7 +2863,7 @@ public class POP3Types implements EvaluatePP {
                 return false;
             }
 
-            USER other = USER.class.cast(obj);
+            USER other = ((USER) obj);
 
             return Utils.equals(name, other.name);
         }
@@ -2902,7 +2893,7 @@ public class POP3Types implements EvaluatePP {
                 return false;
             }
 
-            PASS other = PASS.class.cast(obj);
+            PASS other = ((PASS) obj);
 
             return Utils.equals(string, other.string);
         }
@@ -2934,7 +2925,7 @@ public class POP3Types implements EvaluatePP {
                 return false;
             }
 
-            APOP other = APOP.class.cast(obj);
+            APOP other = ((APOP) obj);
 
             return (Utils.equals(name, other.name)) &&
             (Utils.equals(digest, other.digest));
@@ -2965,7 +2956,7 @@ public class POP3Types implements EvaluatePP {
                 return false;
             }
 
-            OkResponse other = OkResponse.class.cast(obj);
+            OkResponse other = ((OkResponse) obj);
 
             return Utils.equals(data, other.data);
         }
@@ -2995,7 +2986,7 @@ public class POP3Types implements EvaluatePP {
                 return false;
             }
 
-            ErrResponse other = ErrResponse.class.cast(obj);
+            ErrResponse other = ((ErrResponse) obj);
 
             return Utils.equals(data, other.data);
         }

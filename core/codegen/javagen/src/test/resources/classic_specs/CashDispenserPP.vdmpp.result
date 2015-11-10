@@ -158,7 +158,7 @@ public class Account {
         VDMSet set_2 = SeqUtil.inds(ts);
 
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
-            Number i = Number.class.cast(iterator_2.next());
+            Number i = ((Number) iterator_2.next());
             setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
                     SetUtil.set(Utils.copy(
                             ((Transaction) Utils.get(ts, i)).date)));
@@ -168,7 +168,7 @@ public class Account {
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {
-            VDMSeq date = VDMSeq.class.cast(iterator_1.next());
+            VDMSeq date = ((VDMSeq) iterator_1.next());
             forAllExpResult_1 = DateTotal(Utils.copy(date), Utils.copy(ts))
                                     .longValue() <= Account.dailyLimit.longValue();
         }
@@ -181,7 +181,7 @@ public class Account {
         VDMSet set_3 = SeqUtil.inds(ts);
 
         for (Iterator iterator_3 = set_3.iterator(); iterator_3.hasNext();) {
-            Number i = Number.class.cast(iterator_3.next());
+            Number i = ((Number) iterator_3.next());
 
             if (Utils.equals(((Transaction) Utils.get(ts, i)).date, date)) {
                 seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
@@ -225,7 +225,7 @@ public class Account {
                 return false;
             }
 
-            Transaction other = Transaction.class.cast(obj);
+            Transaction other = ((Transaction) obj);
 
             return (Utils.equals(date, other.date)) &&
             (Utils.equals(cardId, other.cardId)) &&
@@ -419,7 +419,7 @@ public class CentralResource {
         VDMSet set_4 = acc.GetCardIds();
 
         for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
-            Number cId = Number.class.cast(iterator_4.next());
+            Number cId = ((Number) iterator_4.next());
             mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
                     MapUtil.map(new Maplet(cId, 0L)));
         }

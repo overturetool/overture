@@ -13,12 +13,12 @@ public class A extends VDMThread implements EvaluatePP {
     }
 
     public void opA() {
-        sentinel.entering(A_sentinel.class.cast(sentinel).opA);
+        sentinel.entering(((A_sentinel) sentinel).opA);
 
         try {
             /* skip */
         } finally {
-            sentinel.leaving(A_sentinel.class.cast(sentinel).opA);
+            sentinel.leaving(((A_sentinel) sentinel).opA);
         }
     }
 
@@ -69,13 +69,13 @@ public class B extends A implements EvaluatePP {
     }
 
     public void opB() {
-        sentinel.entering(B_sentinel.class.cast(sentinel).opB);
+        sentinel.entering(((B_sentinel) sentinel).opB);
 
         try {
             predA = 1L;
             sentinel.stateChanged();
         } finally {
-            sentinel.leaving(B_sentinel.class.cast(sentinel).opB);
+            sentinel.leaving(((B_sentinel) sentinel).opB);
         }
     }
 

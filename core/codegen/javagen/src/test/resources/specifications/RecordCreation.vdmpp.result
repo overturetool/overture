@@ -32,7 +32,7 @@ public class Records {
                 return false;
             }
 
-            Vector2D other = Vector2D.class.cast(obj);
+            Vector2D other = ((Vector2D) obj);
 
             return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
         }

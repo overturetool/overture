@@ -35,7 +35,7 @@ public class A {
                 return false;
             }
 
-            RecA other = RecA.class.cast(obj);
+            RecA other = ((RecA) obj);
 
             return (Utils.equals(i, other.i)) && (Utils.equals(c, other.c)) &&
             (Utils.equals(r, other.r)) && (Utils.equals(q, other.q)) &&

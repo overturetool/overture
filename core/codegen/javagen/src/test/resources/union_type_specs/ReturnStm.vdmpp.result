@@ -20,7 +20,7 @@ public class Entry {
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
-            e = Tuple.class.cast(iterator_1.next());
+            e = ((Tuple) iterator_1.next());
             success_1 = true;
         }
 
@@ -38,7 +38,7 @@ public class Entry {
 
         letBeStExp_1 = ternaryIfExp_1;
 
-        return Number.class.cast(letBeStExp_1);
+        return ((Number) letBeStExp_1);
     }
 
     public String toString() {

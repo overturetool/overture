@@ -67,7 +67,7 @@ public class Entry implements java.io.Serializable {
         SequenceTraceNode sequence_2 = new SequenceTraceNode();
         CallStatement callStm_1 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    return Entry.class.cast(store.getValue(ID_2)).inc();
+                    return ((Entry) store.getValue(ID_2)).inc();
                 }
 
                 public String toString() {
@@ -79,7 +79,7 @@ public class Entry implements java.io.Serializable {
 
         CallStatement callStm_2 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    return Entry.class.cast(store.getValue(ID_2)).inc();
+                    return ((Entry) store.getValue(ID_2)).inc();
                 }
 
                 public String toString() {
@@ -91,7 +91,7 @@ public class Entry implements java.io.Serializable {
 
         CallStatement callStm_3 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    return Entry.class.cast(store.getValue(ID_3)).inc();
+                    return ((Entry) store.getValue(ID_3)).inc();
                 }
 
                 public String toString() {
@@ -103,7 +103,7 @@ public class Entry implements java.io.Serializable {
 
         CallStatement callStm_4 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    return Entry.class.cast(store.getValue(ID_3)).inc();
+                    return ((Entry) store.getValue(ID_3)).inc();
                 }
 
                 public String toString() {

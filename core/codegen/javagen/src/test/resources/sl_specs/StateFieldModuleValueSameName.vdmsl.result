@@ -30,7 +30,7 @@ final public class Entry {
                 return false;
             }
 
-            Other other = Other.class.cast(obj);
+            Other other = ((Other) obj);
 
             return Utils.equals(x, other.x);
         }

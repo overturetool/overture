@@ -79,7 +79,7 @@ public class Entry {
                 return false;
             }
 
-            Rec other = Rec.class.cast(obj);
+            Rec other = ((Rec) obj);
 
             return (Utils.equals(f1, other.f1)) &&
             (Utils.equals(f2, other.f2));

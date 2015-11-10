@@ -15,7 +15,7 @@ public class Entry {
         VDMSet set_1 = SeqUtil.elems(Utils.copy(Entry.xs));
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Object e = Object.class.cast(iterator_1.next());
+            Object e = ((Object) iterator_1.next());
 
             if (Utils.equals(e, 2L)) {
                 seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),

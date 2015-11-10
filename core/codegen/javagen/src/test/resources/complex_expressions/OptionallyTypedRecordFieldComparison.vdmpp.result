@@ -40,7 +40,7 @@ public class Entry {
                 return false;
             }
 
-            NatList other = NatList.class.cast(obj);
+            NatList other = ((NatList) obj);
 
             return (Utils.equals(e, other.e)) && (Utils.equals(t, other.t));
         }

@@ -59,7 +59,7 @@ public class Entry {
                 if (success_1) {
                     Number ternaryIfExp_1 = null;
 
-                    if (Boolean.class.cast(b)) {
+                    if (((Boolean) b)) {
                         ternaryIfExp_1 = 11L;
                     } else {
                         ternaryIfExp_1 = 33L;
@@ -70,8 +70,8 @@ public class Entry {
                     casesExpResult_1 = 3L;
                 }
             } else {
-                casesExpResult_1 = Number.class.cast(a).longValue() +
-                    Number.class.cast(a).longValue();
+                casesExpResult_1 = ((Number) a).longValue() +
+                    ((Number) a).longValue();
             }
         } else {
             casesExpResult_1 = 1L;

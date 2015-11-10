@@ -19,7 +19,7 @@ public class Entry {
                 Tuple.mk_(40L, 1L, 2L), Tuple.mk_(50L, 2L, 2L));
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Tuple tuplePattern_1 = Tuple.class.cast(iterator_1.next());
+            Tuple tuplePattern_1 = ((Tuple) iterator_1.next());
             Boolean success_1 = tuplePattern_1.compatible(Number.class,
                     Number.class, Number.class);
             Number a = null;

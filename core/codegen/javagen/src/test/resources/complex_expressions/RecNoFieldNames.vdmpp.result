@@ -42,7 +42,7 @@ public class Entry {
                 return false;
             }
 
-            A other = A.class.cast(obj);
+            A other = ((A) obj);
 
             return (Utils.equals(_X_, other._X_)) &&
             (Utils.equals(_X__1, other._X__1));

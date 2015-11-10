@@ -10,7 +10,7 @@ public class Entry {
 
     public static Object Run() {
         Number i = 123.456;
-        i = Number.class.cast(ratOrBool());
+        i = ((Number) ratOrBool());
 
         return i;
     }

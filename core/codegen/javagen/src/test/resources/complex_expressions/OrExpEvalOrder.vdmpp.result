@@ -48,7 +48,7 @@ public class Entry {
                 new A(5L), new A(6L), new A(7L));
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            A x = A.class.cast(iterator_1.next());
+            A x = ((A) iterator_1.next());
             Boolean orResult_1 = false;
 
             if (Utils.equals(Utils.mod(x.n.longValue(), 2L), 0L)) {

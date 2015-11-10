@@ -11,7 +11,7 @@ public class Entry {
     public static Object Run() {
         Object a = SeqUtil.seq(1L, 2L);
 
-        return VDMSeq.class.cast(a).size();
+        return ((VDMSeq) a).size();
     }
 
     public String toString() {

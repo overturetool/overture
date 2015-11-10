@@ -16,7 +16,7 @@ public class Entry {
 
                     for (Iterator iterator_1 = set_1.iterator();
                             iterator_1.hasNext();) {
-                        Number z = Number.class.cast(iterator_1.next());
+                        Number z = ((Number) iterator_1.next());
                         setCompResult_1 = SetUtil.union(Utils.copy(
                                     setCompResult_1), SetUtil.set(z));
                     }

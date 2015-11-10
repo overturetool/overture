@@ -13,35 +13,35 @@ public class Buffer implements EvaluatePP {
     }
 
     public void Write(final Number newData) {
-        sentinel.entering(Buffer_sentinel.class.cast(sentinel).Write);
+        sentinel.entering(((Buffer_sentinel) sentinel).Write);
 
         try {
             data = newData;
             sentinel.stateChanged();
         } finally {
-            sentinel.leaving(Buffer_sentinel.class.cast(sentinel).Write);
+            sentinel.leaving(((Buffer_sentinel) sentinel).Write);
         }
     }
 
     public Number Read() {
-        sentinel.entering(Buffer_sentinel.class.cast(sentinel).Read);
+        sentinel.entering(((Buffer_sentinel) sentinel).Read);
 
         try {
             Number oldData = data;
 
             return oldData;
         } finally {
-            sentinel.leaving(Buffer_sentinel.class.cast(sentinel).Read);
+            sentinel.leaving(((Buffer_sentinel) sentinel).Read);
         }
     }
 
     public void IsFinished() {
-        sentinel.entering(Buffer_sentinel.class.cast(sentinel).IsFinished);
+        sentinel.entering(((Buffer_sentinel) sentinel).IsFinished);
 
         try {
             /* skip */
         } finally {
-            sentinel.leaving(Buffer_sentinel.class.cast(sentinel).IsFinished);
+            sentinel.leaving(((Buffer_sentinel) sentinel).IsFinished);
         }
     }
 
@@ -111,12 +111,12 @@ public class Reader extends VDMThread implements EvaluatePP {
     }
 
     public void ended() {
-        sentinel.entering(Reader_sentinel.class.cast(sentinel).ended);
+        sentinel.entering(((Reader_sentinel) sentinel).ended);
 
         try {
             /* skip */
         } finally {
-            sentinel.leaving(Reader_sentinel.class.cast(sentinel).ended);
+            sentinel.leaving(((Reader_sentinel) sentinel).ended);
         }
     }
 
@@ -190,7 +190,7 @@ public class Writer extends VDMThread implements EvaluatePP {
     }
 
     public Number Write() {
-        sentinel.entering(Writer_sentinel.class.cast(sentinel).Write);
+        sentinel.entering(((Writer_sentinel) sentinel).Write);
 
         try {
             index = index.longValue() + 1L;
@@ -198,17 +198,17 @@ public class Writer extends VDMThread implements EvaluatePP {
 
             return index;
         } finally {
-            sentinel.leaving(Writer_sentinel.class.cast(sentinel).Write);
+            sentinel.leaving(((Writer_sentinel) sentinel).Write);
         }
     }
 
     public void ended() {
-        sentinel.entering(Writer_sentinel.class.cast(sentinel).ended);
+        sentinel.entering(((Writer_sentinel) sentinel).ended);
 
         try {
             /* skip */
         } finally {
-            sentinel.leaving(Writer_sentinel.class.cast(sentinel).ended);
+            sentinel.leaving(((Writer_sentinel) sentinel).ended);
         }
     }
 

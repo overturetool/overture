@@ -55,7 +55,7 @@ public class Entry {
                 Number apply_1 = null;
 
                 if (x instanceof A) {
-                    apply_1 = A.class.cast(x).fun();
+                    apply_1 = ((A) x).fun();
                 } else {
                     throw new RuntimeException("Missing member: fun");
                 }

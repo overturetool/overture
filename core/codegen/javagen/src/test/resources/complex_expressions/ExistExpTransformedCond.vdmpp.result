@@ -14,13 +14,13 @@ public class Entry {
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(existsExpResult_1);) {
-            Number x = Number.class.cast(iterator_1.next());
+            Number x = ((Number) iterator_1.next());
             Boolean forAllExpResult_1 = true;
             VDMSet set_2 = SetUtil.set(2L);
 
             for (Iterator iterator_2 = set_2.iterator();
                     iterator_2.hasNext() && forAllExpResult_1;) {
-                Number y = Number.class.cast(iterator_2.next());
+                Number y = ((Number) iterator_2.next());
                 forAllExpResult_1 = Utils.equals(1L, 1L);
             }
 

@@ -17,12 +17,12 @@ public class Entry {
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
-            r = Object.class.cast(iterator_1.next());
+            r = ((Object) iterator_1.next());
 
             Number apply_1 = null;
 
             if (r instanceof A) {
-                apply_1 = A.class.cast(r).a;
+                apply_1 = ((A) r).a;
             } else {
                 throw new RuntimeException("Missing member: a");
             }
@@ -37,7 +37,7 @@ public class Entry {
         Number apply_2 = null;
 
         if (r instanceof A) {
-            apply_2 = A.class.cast(r).a;
+            apply_2 = ((A) r).a;
         } else {
             throw new RuntimeException("Missing member: a");
         }
@@ -61,7 +61,7 @@ public class Entry {
                 return false;
             }
 
-            A other = A.class.cast(obj);
+            A other = ((A) obj);
 
             return Utils.equals(a, other.a);
         }

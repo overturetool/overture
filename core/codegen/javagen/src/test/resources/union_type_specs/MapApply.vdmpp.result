@@ -7,8 +7,8 @@ import java.util.*;
 public class Entry {
     private static final VDMMap x = MapUtil.map(new Maplet(1L,
                 MapUtil.map(new Maplet(2L, 3L))));
-    private static final Number b = ((Number) Utils.get(VDMMap.class.cast(
-                Utils.get(x, 1L)), 2L));
+    private static final Number b = ((Number) Utils.get(((VDMMap) Utils.get(x,
+                1L)), 2L));
 
     public Entry() {
     }

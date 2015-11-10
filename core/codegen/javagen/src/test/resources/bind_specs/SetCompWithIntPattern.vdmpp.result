@@ -17,7 +17,7 @@ public class Entry {
         VDMSet set_1 = SetUtil.set(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Number intPattern_1 = Number.class.cast(iterator_1.next());
+            Number intPattern_1 = ((Number) iterator_1.next());
             Boolean success_1 = Utils.equals(intPattern_1, 3L);
 
             if (!(success_1)) {

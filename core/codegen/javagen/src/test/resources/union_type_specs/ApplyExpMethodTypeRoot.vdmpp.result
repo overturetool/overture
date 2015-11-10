@@ -17,7 +17,7 @@ public class Entry {
         Object x = 1L;
         Object y = 'a';
 
-        return e.op(Number.class.cast(x), Character.class.cast(y));
+        return e.op(((Number) x), ((Character) y));
     }
 
     public String toString() {

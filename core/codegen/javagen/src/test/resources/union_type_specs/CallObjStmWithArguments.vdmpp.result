@@ -101,17 +101,14 @@ public class Entry {
                 Object callStmObj_1 = Utils.get(objs, i);
 
                 if (callStmObj_1 instanceof A) {
-                    A.class.cast(callStmObj_1)
-                           .op(Number.class.cast(a), Boolean.class.cast(b),
-                        Number.class.cast(ternaryIfExp_1));
+                    ((A) callStmObj_1).op(((Number) a), ((Boolean) b),
+                        ((Number) ternaryIfExp_1));
                 } else if (callStmObj_1 instanceof B) {
-                    B.class.cast(callStmObj_1)
-                           .op(Number.class.cast(a), Boolean.class.cast(b),
-                        Boolean.class.cast(ternaryIfExp_1));
+                    ((B) callStmObj_1).op(((Number) a), ((Boolean) b),
+                        ((Boolean) ternaryIfExp_1));
                 } else if (callStmObj_1 instanceof C) {
-                    C.class.cast(callStmObj_1)
-                           .op(Number.class.cast(a), Boolean.class.cast(b),
-                        Character.class.cast(ternaryIfExp_1));
+                    ((C) callStmObj_1).op(((Number) a), ((Boolean) b),
+                        ((Character) ternaryIfExp_1));
                 } else {
                     throw new RuntimeException("Missing operation member: op");
                 }

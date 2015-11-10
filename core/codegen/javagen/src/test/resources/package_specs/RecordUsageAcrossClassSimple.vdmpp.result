@@ -26,7 +26,7 @@ public class A {
                 return false;
             }
 
-            Rec other = Rec.class.cast(obj);
+            Rec other = ((Rec) obj);
 
             return Utils.equals(n, other.n);
         }

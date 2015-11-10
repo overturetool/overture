@@ -104,7 +104,7 @@ public class Entry {
                 return false;
             }
 
-            Rec other = Rec.class.cast(obj);
+            Rec other = ((Rec) obj);
 
             return (Utils.equals(n, other.n)) && (Utils.equals(b, other.b)) &&
             (Utils.equals(c, other.c)) && (Utils.equals(r, other.r));

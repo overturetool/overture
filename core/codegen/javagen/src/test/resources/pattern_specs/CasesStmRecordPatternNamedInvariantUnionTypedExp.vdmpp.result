@@ -12,7 +12,7 @@ public class Entry {
         Boolean success_1 = true;
 
         if (r instanceof R1) {
-            R1 recordPattern_1 = R1.class.cast(r);
+            R1 recordPattern_1 = ((R1) r);
             Number intPattern_1 = recordPattern_1.a;
             success_1 = Utils.equals(intPattern_1, 1L);
 
@@ -26,7 +26,7 @@ public class Entry {
 
         if (!(success_1)) {
             if (r instanceof R2) {
-                R2 recordPattern_2 = R2.class.cast(r);
+                R2 recordPattern_2 = ((R2) r);
                 success_1 = true;
 
                 Boolean boolPattern_1 = recordPattern_2.c;
@@ -73,7 +73,7 @@ public class Entry {
                 return false;
             }
 
-            R1 other = R1.class.cast(obj);
+            R1 other = ((R1) obj);
 
             return (Utils.equals(a, other.a)) && (Utils.equals(b, other.b));
         }
@@ -105,7 +105,7 @@ public class Entry {
                 return false;
             }
 
-            R2 other = R2.class.cast(obj);
+            R2 other = ((R2) obj);
 
             return (Utils.equals(c, other.c)) && (Utils.equals(d, other.d));
         }

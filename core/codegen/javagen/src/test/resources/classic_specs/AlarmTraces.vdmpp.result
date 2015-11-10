@@ -90,7 +90,7 @@ public class Plant {
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
-            expert = Expert.class.cast(iterator_1.next());
+            expert = ((Expert) iterator_1.next());
             success_1 = SetUtil.inSet(a.GetReqQuali(), expert.GetQuali());
         }
 
@@ -110,7 +110,7 @@ public class Plant {
         VDMSet set_2 = MapUtil.dom(Utils.copy(schedule));
 
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
-            Token p = Token.class.cast(iterator_2.next());
+            Token p = ((Token) iterator_2.next());
 
             if (SetUtil.inSet(ex, ((VDMSet) Utils.get(schedule, p)))) {
                 setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
@@ -160,7 +160,7 @@ public class Plant {
 
         for (Iterator iterator_3 = set_3.iterator();
                 iterator_3.hasNext() && forAllExpResult_1;) {
-            Token p = Token.class.cast(iterator_3.next());
+            Token p = ((Token) iterator_3.next());
             forAllExpResult_1 = !(Utils.empty(((VDMSet) Utils.get(sch, p))));
         }
 
@@ -170,19 +170,19 @@ public class Plant {
 
             for (Iterator iterator_4 = set_4.iterator();
                     iterator_4.hasNext() && forAllExpResult_2;) {
-                Alarm a = Alarm.class.cast(iterator_4.next());
+                Alarm a = ((Alarm) iterator_4.next());
                 Boolean forAllExpResult_3 = true;
                 VDMSet set_5 = MapUtil.dom(Utils.copy(sch));
 
                 for (Iterator iterator_5 = set_5.iterator();
                         iterator_5.hasNext() && forAllExpResult_3;) {
-                    Token p = Token.class.cast(iterator_5.next());
+                    Token p = ((Token) iterator_5.next());
                     Boolean existsExpResult_1 = false;
                     VDMSet set_6 = Utils.copy(((VDMSet) Utils.get(sch, p)));
 
                     for (Iterator iterator_6 = set_6.iterator();
                             iterator_6.hasNext() && !(existsExpResult_1);) {
-                        Expert expert = Expert.class.cast(iterator_6.next());
+                        Expert expert = ((Expert) iterator_6.next());
                         existsExpResult_1 = SetUtil.inSet(a.GetReqQuali(),
                                 expert.GetQuali());
                     }

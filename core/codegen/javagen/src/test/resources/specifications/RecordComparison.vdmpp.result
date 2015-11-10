@@ -28,7 +28,7 @@ public class A {
                 return false;
             }
 
-            R other = R.class.cast(obj);
+            R other = ((R) obj);
 
             return Utils.equals(x, other.x);
         }
