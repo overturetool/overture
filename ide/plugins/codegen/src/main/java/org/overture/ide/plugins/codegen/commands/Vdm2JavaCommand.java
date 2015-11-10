@@ -64,6 +64,7 @@ import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.codegen.vdm2jml.JmlGenerator;
+import org.overture.codegen.vdm2jml.JmlSettings;
 import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
@@ -357,7 +358,11 @@ public class Vdm2JavaCommand extends AbstractHandler
 			
 			if (generateJml(project))
 			{
+				JmlSettings jmlSettings = getJmlSettings();
+				
 				JmlGenerator jmlGen = new JmlGenerator(vdm2java);
+				jmlGen.setJmlSettings(jmlSettings);
+				
 				return jmlGen.generateJml(ast);
 			} else
 			{
@@ -366,9 +371,22 @@ public class Vdm2JavaCommand extends AbstractHandler
 		}
 	}
 
+
 	private boolean generateJml(IVdmProject project)
 	{
 		return project.getDialect() == Dialect.VDM_SL && getPrefs().getBoolean(ICodeGenConstants.GENERATE_JML, ICodeGenConstants.GENERATE_JML_DEFAULT);
+	}
+	
+	private JmlSettings getJmlSettings()
+	{
+		Preferences preferences = getPrefs();
+		
+		boolean useInvFor = preferences.getBoolean(ICodeGenConstants.JML_USE_INVARIANT_FOR, ICodeGenConstants.JML_USE_INVARIANT_FOR_DEFAULT);;
+		
+		JmlSettings jmlSettings = new JmlSettings();
+		jmlSettings.setGenInvariantFor(useInvFor);
+		
+		return jmlSettings;
 	}
 	
 	public IRSettings getIrSettings(final IProject project)

@@ -639,6 +639,11 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	{
 		return jmlSettings;
 	}
+	
+	public void setJmlSettings(JmlSettings jmlSettings)
+	{
+		this.jmlSettings = jmlSettings;
+	}
 
 	public IRSettings getIrSettings()
 	{

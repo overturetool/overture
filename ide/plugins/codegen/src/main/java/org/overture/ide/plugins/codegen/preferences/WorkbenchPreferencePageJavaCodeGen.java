@@ -41,7 +41,6 @@ import org.osgi.service.prefs.Preferences;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.ide.plugins.codegen.Activator;
 import org.overture.ide.plugins.codegen.ICodeGenConstants;
-import org.overture.ide.plugins.codegen.util.PluginVdm2JavaUtil;
 
 public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implements
 		IWorkbenchPreferencePage
@@ -52,6 +51,7 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 	private Text classesToSkipField;
 	private Text packageField;
 	private Button genJmlCheckBox;
+	private Button jmlUseInvForCheckBox;
 	
 	@Override
 	protected IPreferenceStore doGetPreferenceStore()
@@ -76,6 +76,9 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		
 		genJmlCheckBox = new Button(composite, SWT.CHECK);
 		genJmlCheckBox.setText("Generate JML (Java Modeling Language) annotations (VDM-SL only)");
+		
+		jmlUseInvForCheckBox = new Button(composite, SWT.CHECK);
+		jmlUseInvForCheckBox.setText("Use JML \\invariant_for to explicitly check record invariants");
 
 		Label packageLabel = new Label(composite, SWT.NULL);
 		packageLabel.setText("Output package of the generated Java code (e.g. my.pack)");
@@ -106,8 +109,6 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 	{
 		apply();
 		super.performApply();
-		
-		PluginVdm2JavaUtil.getClassesToSkip();
 	}
 	
 	@Override
@@ -132,6 +133,9 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		
 		boolean genJml = genJmlCheckBox.getSelection();
 		store.setDefault(ICodeGenConstants.GENERATE_JML, genJml);
+		
+		boolean jmlUseInvFor = jmlUseInvForCheckBox.getSelection();
+		store.setDefault(ICodeGenConstants.JML_USE_INVARIANT_FOR, jmlUseInvFor);
 		
 		String userSpecifiedClassesToSkip = classesToSkipField.getText();
 		store.setDefault(ICodeGenConstants.CLASSES_TO_SKIP, userSpecifiedClassesToSkip);
@@ -160,7 +164,7 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 			javaPackage = null;
 		}
 
-		Activator.savePluginSettings(disableCloning, genAsStrings, genConcMechanisms, genJml, userSpecifiedClassesToSkip, javaPackage);
+		Activator.savePluginSettings(disableCloning, genAsStrings, genConcMechanisms, genJml, jmlUseInvFor, userSpecifiedClassesToSkip, javaPackage);
 		
 		refreshControls();
 	}
@@ -188,6 +192,11 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		if(genJmlCheckBox != null)
 		{
 			genJmlCheckBox.setSelection(ICodeGenConstants.GENERATE_JML_DEFAULT);
+		}
+		
+		if(jmlUseInvForCheckBox != null)
+		{
+			jmlUseInvForCheckBox.setSelection(ICodeGenConstants.JML_USE_INVARIANT_FOR_DEFAULT);
 		}
 		
 		if(classesToSkipField != null)
@@ -229,6 +238,11 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		if(genJmlCheckBox != null)
 		{
 			genJmlCheckBox.setSelection(preferences.getBoolean(ICodeGenConstants.GENERATE_JML, ICodeGenConstants.GENERATE_JML_DEFAULT));
+		}
+		
+		if(jmlUseInvForCheckBox != null)
+		{
+			jmlUseInvForCheckBox.setSelection(preferences.getBoolean(ICodeGenConstants.JML_USE_INVARIANT_FOR, ICodeGenConstants.JML_USE_INVARIANT_FOR_DEFAULT));
 		}
 		
 		if (classesToSkipField != null)
