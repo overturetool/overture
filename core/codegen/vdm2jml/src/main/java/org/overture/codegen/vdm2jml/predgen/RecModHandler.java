@@ -23,7 +23,8 @@ public class RecModHandler
 	{
 		if (util.simpleRecSetCallOutsideAtomic(node))
 		{
-			// E.g. rec.set_(3). Setter call to record outside atomic statement block
+			// E.g. rec.set_x(3). Setter call to record outside atomic statement block
+			// or ((R) rec).set_x(3);
 			return null;
 		}
 

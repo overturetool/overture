@@ -21,9 +21,29 @@ public class RecModUtil
 
 	public boolean simpleRecSetCallOutsideAtomic(ACallObjectExpStmCG node)
 	{
-		return !handler.getInvTrans().getJmlGen().getJavaGen().getInfo().getStmAssistant().inAtomic(node)
-				&& node.getObj() instanceof SVarExpCG
-				&& node.getObj().getType() instanceof ARecordTypeCG;
+		if(handler.getInvTrans().getJmlGen().getJavaGen().getInfo().getStmAssistant().inAtomic(node))
+		{
+			return false;
+		}
+		
+		SExpCG obj = node.getObj();
+		
+		if(!(obj.getType() instanceof ARecordTypeCG))
+		{
+			return false;
+		}
+		
+		if(obj instanceof SVarExpCG)
+		{
+			return true;
+		}
+
+		if(obj instanceof ACastUnaryExpCG && ((ACastUnaryExpCG) obj).getExp() instanceof SVarExpCG)
+		{
+			return true;
+		}
+		
+		return false;
 	}
 
 	public AMetaStmCG handleRecAssert(SExpCG var, String varName, ARecordTypeCG recType)
