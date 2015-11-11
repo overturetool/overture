@@ -154,7 +154,7 @@ public class TypePredUtil
 				} else
 				{
 					inv.append(var.getName());
-					inv.append(" instanceof ");
+					inv.append(JmlGenerator.JAVA_INSTANCEOF);
 					inv.append(fullyQualifiedRecType);
 					inv.append(JmlGenerator.JML_IMPLIES);
 					

@@ -2,6 +2,7 @@ package org.overture.codegen.vdm2jml.predgen;
 
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
@@ -25,26 +26,42 @@ public class RecModUtil
 				&& node.getObj().getType() instanceof ARecordTypeCG;
 	}
 
-	public AMetaStmCG handleRecAssert(SVarExpCG var)
+	public AMetaStmCG handleRecAssert(SExpCG var, String varName, ARecordTypeCG recType)
 	{
-		return handler.getInvTrans().consMetaStm(consValidRecCheck(var));
+		return handler.getInvTrans().consMetaStm(consValidRecCheck(var, varName, recType));
 	}
 
-	public String consValidRecCheck(SVarExpCG var)
+	public String consValidRecCheck(SExpCG subject, String varName, ARecordTypeCG recType)
 	{
 		StringBuilder as = new StringBuilder();
 		as.append("//@ assert ");
+		
+		String subjectStr;
+		if(subject instanceof ACastUnaryExpCG)
+		{
+			String fullRecType = handler.getInvTrans().getTypePredUtil().fullyQualifiedRecType(recType);
+			as.append(varName);
+			as.append(JmlGenerator.JAVA_INSTANCEOF);
+			as.append(fullRecType);
+			as.append(JmlGenerator.JML_IMPLIES);
+			
+			subjectStr = "((" + fullRecType + ") " + varName + ")";
+		}
+		else
+		{
+			subjectStr = varName; 
+		}
 		
 		if(handler.getInvTrans().getJmlGen().getJmlSettings().genInvariantFor())
 		{
 			as.append(JmlGenerator.JML_INVARIANT_FOR);
 			as.append('(');
-			as.append(var.getName());
+			as.append(subjectStr);
 			as.append(')');
 		}
 		else
 		{
-			as.append(var.getName());
+			as.append(subjectStr);
 			as.append('.');
 			as.append(JmlGenerator.REC_VALID_METHOD_CALL);
 		}

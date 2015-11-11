@@ -13,6 +13,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
@@ -346,6 +347,11 @@ public class TypePredHandler
 		 * Handling of setter calls to masked records. This will happen for cases like T = R ... ; R :: x : int;
 		 */
 		SExpCG recObj = node.getObj();
+		
+		if(recObj instanceof ACastUnaryExpCG)
+		{
+			recObj = ((ACastUnaryExpCG) recObj).getExp();
+		}
 
 		if (recObj instanceof SVarExpCG)
 		{
@@ -584,6 +590,11 @@ public class TypePredHandler
 		getJmlGen().getJavaGen().getTransAssistant().replaceNodeWith(node, replStm);
 		replStm.getStatements().add(node);
 		replStm.getStatements().add(assertStm);
+	}
+	
+	public TypePredUtil getTypePredUtil()
+	{
+		return util;
 	}
 	
 	private boolean proceed(AbstractTypeInfo typeInfo)

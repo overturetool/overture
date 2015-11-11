@@ -85,6 +85,8 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	public static final String REC_VALID_METHOD_NAMEVALID = "valid";
 	public static final String REC_VALID_METHOD_CALL = REC_VALID_METHOD_NAMEVALID + "()";
 	
+	public static final String JAVA_INSTANCEOF = " instanceof ";
+	
 	private JavaCodeGen javaGen;
 	
 	private JmlSettings jmlSettings;
