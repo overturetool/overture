@@ -149,5 +149,6 @@ public class JmlGenMain
 		Logger.getLog().printErrorln(FOLDER_ARG + " <folder path>: a folder containing input .vdmsl files");
 		Logger.getLog().printErrorln(INVARIANT_FOR
 				+ ": to check record invariants explicitly using JML's invariant_for");
+		System.exit(1);
 	}
 }
