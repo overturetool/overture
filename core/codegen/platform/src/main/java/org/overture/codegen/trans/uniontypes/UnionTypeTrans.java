@@ -924,7 +924,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private AAssignToExpStmCG castFieldObj(AAssignToExpStmCG assign, AFieldExpCG target, STypeCG possibleType)
+	public AAssignToExpStmCG castFieldObj(AAssignToExpStmCG assign, AFieldExpCG target, STypeCG possibleType)
 	{
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(possibleType.clone());

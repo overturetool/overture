@@ -34,6 +34,9 @@ import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.AssignStmTrans;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.uniontypes.UnionTypeTrans;
+import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.IJavaQuoteEventObserver;
 import org.overture.codegen.vdm2java.JavaCodeGen;
@@ -44,6 +47,7 @@ import org.overture.codegen.vdm2jml.data.StateDesInfo;
 import org.overture.codegen.vdm2jml.predgen.TypePredDecorator;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
+import org.overture.codegen.vdm2jml.trans.JmlUnionTypeTrans;
 import org.overture.codegen.vdm2jml.trans.RecAccessorTrans;
 import org.overture.codegen.vdm2jml.trans.RecInvTransformation;
 import org.overture.codegen.vdm2jml.trans.TargetNormaliserTrans;
@@ -127,7 +131,24 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		this.stateDesInfo = targetNormaliserTrans.getStateDesInfo();
 
 		List<DepthFirstAnalysisAdaptor> series = this.javaGen.getTransSeries().getSeries();
+
+		// Replace the union type transformation
+		for(int i = 0; i < series.size(); i++)
+		{
+			if(series.get(i) instanceof UnionTypeTrans)
+			{
+				TransAssistantCG assist = javaGen.getTransAssistant();
+				UnionTypeVarPrefixes varPrefixes = javaGen.getVarPrefixManager().getUnionTypePrefixes();
+				List<INode> cloneFreeNodes = javaGen.getJavaFormat().getValueSemantics().getCloneFreeNodes();
+				
+				JmlUnionTypeTrans newUnionTypeTr = new JmlUnionTypeTrans(assist, varPrefixes, cloneFreeNodes, stateDesInfo);
+				
+				series.set(i, newUnionTypeTr);
+				break;
+			}
+		}
 		
+		// Now add the assignment transformation
 		for (int i = 0; i < series.size(); i++)
 		{
 			// We'll add the transformations after the assignment transformation

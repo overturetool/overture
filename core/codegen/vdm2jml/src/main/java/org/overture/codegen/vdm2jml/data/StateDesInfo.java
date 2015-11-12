@@ -32,15 +32,21 @@ public class StateDesInfo
 	
 	public void replaceStateDesOwner(SStmCG oldKey, SStmCG newKey)
 	{
-		List<AIdentifierVarExpCG> vars = stateDesVars.remove(oldKey);
-		
+		register(newKey, stateDesVars.remove(oldKey), stateDesDecls.remove(oldKey));
+	}
+	
+	public void duplicateStateDesOwner(SStmCG oldKey, SStmCG newKey)
+	{
+		register(newKey, stateDesVars.get(oldKey), stateDesDecls.get(oldKey));
+	}
+
+	private void register(SStmCG newKey, List<AIdentifierVarExpCG> vars, List<AVarDeclCG> decls)
+	{
 		if(vars != null)
 		{
 			stateDesVars.put(newKey, vars);
 		}
-		
-		List<AVarDeclCG> decls = stateDesDecls.remove(oldKey);
-		
+
 		if(decls != null)
 		{
 			stateDesDecls.put(newKey, decls);
