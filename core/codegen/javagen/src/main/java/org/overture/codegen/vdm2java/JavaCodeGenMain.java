@@ -34,6 +34,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
@@ -61,6 +62,7 @@ public class JavaCodeGenMain
 	public static final String OUTPUT_ARG = "-output";
 	public static final String VDM_ENTRY_EXP = "-entry";
 	public static final String NO_CODE_FORMAT = "-nocodeformat";
+	public static final String JUNIT4 = "-junit4";
 	
 	public static void main(String[] args)
 	{
@@ -193,6 +195,10 @@ public class JavaCodeGenMain
 			else if(arg.equals(NO_CODE_FORMAT))
 			{
 				javaSettings.setFormatCode(false);
+			}
+			else if(arg.equals(JUNIT4))
+			{
+				javaSettings.setGenJUnit4tests(true);
 			}
 			else
 			{
@@ -508,6 +514,7 @@ public class JavaCodeGenMain
 		Logger.getLog().printErrorln(VDM_ENTRY_EXP
 				+ " <vdm entry point expression>: generate a Java main method based on the specified entry point");
 		Logger.getLog().printErrorln(NO_CODE_FORMAT + ": to NOT format the generated Java code");
+		Logger.getLog().printErrorln(JUNIT4 + ": to generate VDMUnit " + IRConstants.TEST_CASE + " sub-classes to JUnit4 tests");
 
 		// Terminate
 		System.exit(1);
