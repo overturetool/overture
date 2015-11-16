@@ -60,6 +60,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
 		javaSettings.setFormatCode(formatCode);
+		javaSettings.setGenJUnit4tests(genJUnit4Tests);
 
 		if (JavaCodeGenUtil.isValidJavaPackage(packageName))
 		{

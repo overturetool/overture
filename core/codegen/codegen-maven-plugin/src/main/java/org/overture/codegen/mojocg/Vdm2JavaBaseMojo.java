@@ -81,6 +81,13 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	 * @parameter
 	 */
 	protected Properties delegates;
+	
+	
+	/**
+	 * 
+	 * @parameter
+	 */
+	protected boolean genJUnit4Tests = false;
 
 	protected File getProjectOutputDirectory()
 	{
