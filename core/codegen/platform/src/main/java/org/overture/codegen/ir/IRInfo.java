@@ -36,6 +36,7 @@ import org.overture.codegen.assistant.BindAssistantCG;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.LocationAssistantCG;
+import org.overture.codegen.assistant.NodeAssistantCG;
 import org.overture.codegen.assistant.PatternAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
@@ -217,6 +218,11 @@ public class IRInfo
 		return visitorManager.getTraceCoreDeclVisitor();
 	}
 
+	public NodeAssistantCG getNodeAssistant()
+	{
+		return assistantManager.getNodeAssistant();
+	}
+	
 	public ExpAssistantCG getExpAssistant()
 	{
 		return assistantManager.getExpAssistant();
