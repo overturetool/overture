@@ -153,7 +153,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 		
 		if(genData != null)
 		{
-			JavaCodeGenMain.processData(false, outputDirectory, javaCodeGen, genData);
+			JavaCodeGenMain.processData(false, outputDirectory, javaCodeGen, genData, separateTestCode);
 			
 			if(genData.hasErrors())
 			{
