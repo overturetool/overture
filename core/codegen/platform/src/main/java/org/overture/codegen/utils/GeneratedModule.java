@@ -32,25 +32,29 @@ public class GeneratedModule extends Generated
 {
 	private String name;
 	private INode irNode;
+	private boolean isTestCase;
 
-	public GeneratedModule(String name, INode irDecl, String content)
+	public GeneratedModule(String name, INode irDecl, String content, boolean isTestCase)
 	{
 		super(content);
 		this.name = name;
 		this.irNode = irDecl;
+		this.isTestCase = isTestCase;
 	}
 
-	public GeneratedModule(String name, Set<VdmNodeInfo> unsupportedIrNodes, Set<IrNodeInfo> unsupportedInTargLang)
+	public GeneratedModule(String name, Set<VdmNodeInfo> unsupportedIrNodes, Set<IrNodeInfo> unsupportedInTargLang, boolean isTestCase)
 	{
 		super(unsupportedIrNodes, unsupportedInTargLang);
 		this.name = name;
+		this.isTestCase = isTestCase;
 	}
 
-	public GeneratedModule(String name, INode irDecl, List<Exception> mergeErrors)
+	public GeneratedModule(String name, INode irDecl, List<Exception> mergeErrors, boolean isTestCase)
 	{
 		super(mergeErrors);
 		this.name = name;
 		this.irNode = irDecl;
+		this.isTestCase = isTestCase;
 	}
 
 	public String getName()
@@ -61,5 +65,10 @@ public class GeneratedModule extends Generated
 	public INode getIrNode()
 	{
 		return irNode;
+	}
+	
+	public boolean isTestCase()
+	{
+		return isTestCase;
 	}
 }

@@ -238,7 +238,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 					code = JavaCodeGenUtil.formatJavaCode(code);
 				}
 
-				modules.add(new GeneratedModule(quoteNameVdm, qc, code));
+				modules.add(new GeneratedModule(quoteNameVdm, qc, code, false));
 			}
 
 			return modules;
@@ -299,14 +299,21 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 
 		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs()));
 
+		List<String> userTestCases = new LinkedList<>();
+		
 		for (INode node : ast)
 		{
-			if (generator.getIRInfo().getAssistantManager().getDeclAssistant().isLibrary(node))
+			if (getInfo().getAssistantManager().getDeclAssistant().isLibrary(node))
 			{
 				simplifyLibrary(node);
 			}
 			else
 			{
+				if(getInfo().getDeclAssistant().isTestCase(node))
+				{
+					userTestCases.add(getInfo().getDeclAssistant().getNodeName(node));
+				}
+				
 				preProcessUserClass(node);
 			}
 		}
@@ -326,7 +333,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 		
 		// Event notification
 		statuses = initialIrEvent(statuses);
-		statuses = filter(statuses, generated);
+		statuses = filter(statuses, generated, userTestCases);
 		
 		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
 		List<IRStatus<org.overture.codegen.cgast.INode>> modulesAsNodes = IRStatus.extract(moduleStatuses);
@@ -370,7 +377,8 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 				canBeGenerated.add(status);
 			} else
 			{
-				generated.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>()));
+				boolean isTestCase = userTestCases.contains(status.getIrNodeName());
+				generated.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>(), isTestCase));
 			}
 		}
 
@@ -399,7 +407,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 		
 		// Event notification
 		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), ADefaultClassDeclCG.class);
-		canBeGenerated = filter(canBeGenerated, generated);
+		canBeGenerated = filter(canBeGenerated, generated, userTestCases);
 		
 		List<String> skipping = new LinkedList<String>();
 
@@ -426,12 +434,14 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 				{
 					classCg.apply(mergeVisitor, writer);
 
+					boolean isTestCase = userTestCases.contains(className);
+					
 					if (mergeVisitor.hasMergeErrors())
 					{
-						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors()));
+						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors(), isTestCase));
 					} else if (mergeVisitor.hasUnsupportedTargLangNodes())
 					{
-						generated.add(new GeneratedModule(className, new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang()));
+						generated.add(new GeneratedModule(className, new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang(), isTestCase));
 					} else
 					{
 						String code = writer.toString();
@@ -441,7 +451,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 							code = JavaCodeGenUtil.formatJavaCode(code); 
 						}
 						
-						GeneratedModule generatedModule = new GeneratedModule(className, classCg, code);
+						GeneratedModule generatedModule = new GeneratedModule(className, classCg, code, isTestCase);
 						generatedModule.setTransformationWarnings(status.getTransformationWarnings());
 						generated.add(generatedModule);
 					}
@@ -474,7 +484,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 			{
 				funcValueInterface.apply(mergeVisitor, writer);
 				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
-				generated.add(new GeneratedModule(funcValueInterface.getName(), funcValueInterface, formattedJavaCode));
+				generated.add(new GeneratedModule(funcValueInterface.getName(), funcValueInterface, formattedJavaCode, false));
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
@@ -570,7 +580,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 	}
 
 	private <T extends org.overture.codegen.cgast.INode> List<IRStatus<T>> filter(
-			List<IRStatus<T>> statuses, List<GeneratedModule> generated)
+			List<IRStatus<T>> statuses, List<GeneratedModule> generated, List<String> userTestCases)
 	{
 		List<IRStatus<T>> filtered = new LinkedList<IRStatus<T>>();
 		
@@ -582,7 +592,8 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 			}
 			else
 			{
-				generated.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>()));
+				boolean isUserTestCase = userTestCases.contains(status.getIrNodeName());
+				generated.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>(), isUserTestCase));
 			}
 		}
 		
