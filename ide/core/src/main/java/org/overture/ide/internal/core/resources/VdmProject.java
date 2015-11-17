@@ -699,7 +699,7 @@ public class VdmProject implements IVdmProject
 		for (IContainer src : modelpath.getModelSrcPaths())
 		{
 			// Check model path
-			if (src.getFullPath().isPrefixOf(file.getFullPath()))//TODO check this, does it break something? not using the actual location. This was changed to do linked files.
+			if (src.getFullPath().isPrefixOf(file.getFullPath())&& !modelpath.getOutput().getFullPath().isPrefixOf(file.getFullPath()))//TODO check this, does it break something? not using the actual location. This was changed to do linked files.
 			{
 				//Check content type
 				for (IContentType contentType : getContentTypeIds())
