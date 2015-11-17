@@ -470,6 +470,10 @@ public class JavaCodeGenMain
 					{
 						vdmCodGen.genJavaSourceFile(new File(outputDir, GEN_MODEL_CODE_FOLDER), q);
 					}
+					else
+					{
+						vdmCodGen.genJavaSourceFile(outputDir, q);
+					}
 				}
 			}
 			
