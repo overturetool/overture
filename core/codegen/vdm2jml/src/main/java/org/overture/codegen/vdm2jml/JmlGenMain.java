@@ -124,7 +124,7 @@ public class JmlGenMain
 			if(!GeneralCodeGenUtils.hasErrors(tcResult))
 			{
 				GeneratedData data = jmlGen.generateJml(tcResult.result);
-				JavaCodeGenMain.processData(print, outputDir, jmlGen.getJavaGen(), data);
+				JavaCodeGenMain.processData(print, outputDir, jmlGen.getJavaGen(), data, false);
 			}
 			else
 			{
