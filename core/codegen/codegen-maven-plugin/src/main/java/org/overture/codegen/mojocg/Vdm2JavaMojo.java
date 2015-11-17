@@ -192,7 +192,6 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 				getLog().info("  Bridge class: " + entry + ". Delegate class: " + delegateMap.get(entry));
 			}
 			
-			getLog().info("Replacing bridge calls with delegate calls...");
 			javaCodeGen.getTransSeries().getSeries().add(new DelegateTrans(delegateMap, javaCodeGen.getTransAssistant(), getLog()));
 		}
 	}
