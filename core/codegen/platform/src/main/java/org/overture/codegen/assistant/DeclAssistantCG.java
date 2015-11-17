@@ -104,8 +104,15 @@ public class DeclAssistantCG extends AssistantBase
 		return node.parent() != null && node.parent().getAncestor(ADefaultClassDeclCG.class) != null;
 	}
 	
-	public boolean isTestCase(SClassDefinition clazz)
+	public boolean isTestCase(INode node)
 	{
+		if(!(node instanceof SClassDefinition))
+		{
+			return false;
+		}
+		
+		SClassDefinition clazz = (SClassDefinition) node;
+		
 		for(SClassDefinition d : clazz.getSuperDefs())
 		{
 			if(d.getName().getName().equals(IRConstants.TEST_CASE))
