@@ -341,7 +341,11 @@ public class TypeAssistantCG extends AssistantBase
 		} else if(basicType instanceof ANatNumericBasicTypeCG)
 		{
 			return new ANatBasicTypeWrappersTypeCG();
-		} else if (basicType instanceof ARealNumericBasicTypeCG)
+		} else if(basicType instanceof ARatNumericBasicTypeCG)
+		{
+			return new ARatBasicTypeWrappersTypeCG();
+		}
+		else if (basicType instanceof ARealNumericBasicTypeCG)
 		{
 			return new ARealBasicTypeWrappersTypeCG();
 		} else if (basicType instanceof ACharBasicTypeCG)
