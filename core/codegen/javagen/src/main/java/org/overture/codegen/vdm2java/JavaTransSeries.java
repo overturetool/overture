@@ -108,6 +108,7 @@ public class JavaTransSeries
 		RecMethodsTrans recTr = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());
 		ConstructorTrans ctorTr = new ConstructorTrans(transAssist, OBJ_INIT_CALL_NAME_PREFIX);
 		ImportsTrans impTr = new ImportsTrans(info);
+		JUnit4Trans junitTr = new JUnit4Trans(transAssist, codeGen);
 
 		// Start concurrency transformations
 		SentinelTrans sentinelTr = new SentinelTrans(info);
@@ -143,6 +144,7 @@ public class JavaTransSeries
 		series.add(recTr);
 		series.add(ctorTr);
 		series.add(impTr);
+		series.add(junitTr);
 
 		return series;
 	}

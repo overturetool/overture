@@ -8,6 +8,8 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.logging.Logger;
+import org.overture.codegen.runtime.traces.Pair;
 
 public class StateDesInfo
 {
@@ -32,18 +34,24 @@ public class StateDesInfo
 	
 	public void replaceStateDesOwner(SStmCG oldKey, SStmCG newKey)
 	{
-		List<AIdentifierVarExpCG> vars = stateDesVars.remove(oldKey);
-		
+		register(newKey, stateDesVars.remove(oldKey), stateDesDecls.remove(oldKey));
+	}
+	
+	public Pair<List<AIdentifierVarExpCG>, List<AVarDeclCG>> remove(SStmCG key)
+	{
+		return new Pair<List<AIdentifierVarExpCG>, List<AVarDeclCG>>(stateDesVars.remove(key), stateDesDecls.remove(key)); 
+	}
+	
+	public void register(SStmCG key, List<AIdentifierVarExpCG> vars, List<AVarDeclCG> decls)
+	{
 		if(vars != null)
 		{
-			stateDesVars.put(newKey, vars);
+			stateDesVars.put(key, vars);
 		}
-		
-		List<AVarDeclCG> decls = stateDesDecls.remove(oldKey);
-		
+
 		if(decls != null)
 		{
-			stateDesDecls.put(newKey, decls);
+			stateDesDecls.put(key, decls);
 		}
 	}
 	
@@ -82,7 +90,15 @@ public class StateDesInfo
 			{
 				if(v == stateDesVar)
 				{
-					return k.getAncestor(ADefaultClassDeclCG.class);
+					ADefaultClassDeclCG encClass = k.getAncestor(ADefaultClassDeclCG.class);
+					
+					if (encClass == null)
+					{
+						Logger.getLog().printErrorln("Could not find enclosing class of " + stateDesVar + " in '"
+								+ this.getClass().getSimpleName() + "'");
+					}
+					
+					return encClass;
 				}
 			}
 		}

@@ -45,6 +45,7 @@ import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
+import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -92,9 +93,40 @@ public class DeclAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 	
+	public void addDependencies(SClassDeclCG clazz, List<ClonableString> extraDeps, boolean prepend)
+	{
+		NodeAssistantCG nodeAssistant = assistantManager.getNodeAssistant();
+		clazz.setDependencies(nodeAssistant.buildData(clazz.getDependencies(), extraDeps, prepend));
+	}
+	
 	public boolean isInnerClass(ADefaultClassDeclCG node)
 	{
 		return node.parent() != null && node.parent().getAncestor(ADefaultClassDeclCG.class) != null;
+	}
+	
+	public boolean isTestCase(INode node)
+	{
+		if(!(node instanceof SClassDefinition))
+		{
+			return false;
+		}
+		
+		SClassDefinition clazz = (SClassDefinition) node;
+		
+		for(SClassDefinition d : clazz.getSuperDefs())
+		{
+			if(d.getName().getName().equals(IRConstants.TEST_CASE))
+			{
+				return true;
+			}
+			
+			if(isTestCase(d))
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public <T extends SClassDeclCG> T buildClass(SClassDefinition node, IRInfo question, T classCg) throws AnalysisException

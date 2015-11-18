@@ -60,6 +60,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
 		javaSettings.setFormatCode(formatCode);
+		javaSettings.setGenJUnit4tests(genJUnit4Tests);
 
 		if (JavaCodeGenUtil.isValidJavaPackage(packageName))
 		{
@@ -152,7 +153,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 		
 		if(genData != null)
 		{
-			JavaCodeGenMain.processData(false, outputDirectory, javaCodeGen, genData);
+			JavaCodeGenMain.processData(false, outputDirectory, javaCodeGen, genData, separateTestCode);
 			
 			if(genData.hasErrors())
 			{
@@ -191,7 +192,6 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 				getLog().info("  Bridge class: " + entry + ". Delegate class: " + delegateMap.get(entry));
 			}
 			
-			getLog().info("Replacing bridge calls with delegate calls...");
 			javaCodeGen.getTransSeries().getSeries().add(new DelegateTrans(delegateMap, javaCodeGen.getTransAssistant(), getLog()));
 		}
 	}

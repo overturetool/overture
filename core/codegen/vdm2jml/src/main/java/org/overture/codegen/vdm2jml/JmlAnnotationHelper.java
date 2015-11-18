@@ -168,25 +168,7 @@ public class JmlAnnotationHelper
 	
 	public void addMetaData(PCG node, List<ClonableString> extraMetaData, boolean prepend)
 	{
-		if (extraMetaData == null || extraMetaData.isEmpty())
-		{
-			return;
-		}
-
-		List<ClonableString> allMetaData = new LinkedList<ClonableString>();
-
-		if(prepend)
-		{
-			allMetaData.addAll(extraMetaData);
-			allMetaData.addAll(node.getMetaData());
-		}
-		else
-		{
-			allMetaData.addAll(node.getMetaData());
-			allMetaData.addAll(extraMetaData);
-		}
-
-		node.setMetaData(allMetaData);
+		this.jmlGen.getJavaGen().getInfo().getNodeAssistant().addMetaData(node, extraMetaData, prepend);
 	}
 	
 	public void appendMetaData(PCG node, List<ClonableString> extraMetaData)

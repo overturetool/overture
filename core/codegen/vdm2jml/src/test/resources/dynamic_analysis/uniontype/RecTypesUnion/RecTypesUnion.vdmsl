@@ -1,0 +1,32 @@
+module Entry
+
+imports from IO all
+exports all
+
+definitions
+
+types
+R1 :: x : int
+inv r1 == r1.x > 0;
+
+R2 :: x : int
+inv r2 == r2.x > 0;
+
+operations
+
+Run : () ==> ?
+Run () == 
+(dcl r : R1 | R2 := mk_R1(1);
+ 
+ IO`println("Before valid use");
+ r.x := 5;
+ IO`println("After valid use");
+ 
+ IO`println("Before illegal use");
+ r.x := -5;
+ IO`println("After illegal use");
+ 
+ return 0;
+)
+
+end Entry

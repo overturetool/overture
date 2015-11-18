@@ -36,6 +36,9 @@ public class IRConstants
 	public static final String IO_CLASS_NAME = "IO";
 	public static final String MATH_CLASS_NAME = "MATH";
 	public static final String UTIL_CLASS_NAME = "VDMUtil";
+	
+	public static final String TEST_CASE = "TestCase";
+	public static final String TEST_CASE_RUN_FULL_SUITE = "runFullSuite";
 
 	public static final String[] UTIL_NAMES = { IO_CLASS_NAME, MATH_CLASS_NAME,
 			UTIL_CLASS_NAME };

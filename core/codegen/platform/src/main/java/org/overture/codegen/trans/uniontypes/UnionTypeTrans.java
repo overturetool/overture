@@ -871,19 +871,12 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAAssignToExpStmCG(AAssignToExpStmCG node) throws AnalysisException
 	{
-		if(node.getExp() != null)
-		{
-			node.getExp().apply(this);
-		}
-		
-		if(!castNotNeeded(node.getExp(), node.getTarget().getType()))
-		{
-			if (!(node.getTarget().getType() instanceof AUnionTypeCG))
-			{
-				correctTypes(node.getExp(), node.getTarget().getType());
-			}
-		}
-		
+		handAssignRighHandSide(node);
+		handleAssignTarget(node);
+	}
+
+	public void handleAssignTarget(AAssignToExpStmCG node) throws AnalysisException
+	{
 		if(node.getTarget() instanceof AFieldExpCG)
 		{
 			AFieldExpCG field = (AFieldExpCG) node.getTarget();
@@ -924,7 +917,23 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private AAssignToExpStmCG castFieldObj(AAssignToExpStmCG assign, AFieldExpCG target, STypeCG possibleType)
+	public void handAssignRighHandSide(AAssignToExpStmCG node) throws AnalysisException
+	{
+		if(node.getExp() != null)
+		{
+			node.getExp().apply(this);
+		}
+		
+		if(!castNotNeeded(node.getExp(), node.getTarget().getType()))
+		{
+			if (!(node.getTarget().getType() instanceof AUnionTypeCG))
+			{
+				correctTypes(node.getExp(), node.getTarget().getType());
+			}
+		}
+	}
+
+	public AAssignToExpStmCG castFieldObj(AAssignToExpStmCG assign, AFieldExpCG target, STypeCG possibleType)
 	{
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(possibleType.clone());

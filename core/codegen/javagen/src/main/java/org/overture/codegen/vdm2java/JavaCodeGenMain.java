@@ -34,6 +34,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
@@ -49,6 +50,7 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class JavaCodeGenMain
 {
+	// Command-line args
 	public static final String OO_ARG = "-pp";
 	public static final String RT_ARG = "-rt";
 	public static final String SL_ARG = "-sl";
@@ -61,6 +63,12 @@ public class JavaCodeGenMain
 	public static final String OUTPUT_ARG = "-output";
 	public static final String VDM_ENTRY_EXP = "-entry";
 	public static final String NO_CODE_FORMAT = "-nocodeformat";
+	public static final String JUNIT4 = "-junit4";
+	public static final String SEP_TEST_CODE = "-separate";
+	
+	// Folder names
+	private static final String GEN_MODEL_CODE_FOLDER = "main";
+	private static final String GEN_TESTS_FOLDER = "test";
 	
 	public static void main(String[] args)
 	{
@@ -91,6 +99,8 @@ public class JavaCodeGenMain
 		List<File> files = new LinkedList<File>();
 
 		Settings.release = Release.VDM_10;
+		
+		boolean separateTestCode = false;
 		
 		for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
 		{
@@ -194,6 +204,14 @@ public class JavaCodeGenMain
 			{
 				javaSettings.setFormatCode(false);
 			}
+			else if(arg.equals(JUNIT4))
+			{
+				javaSettings.setGenJUnit4tests(true);
+			}
+			else if(arg.equals(SEP_TEST_CODE))
+			{
+				separateTestCode = true;
+			}
 			else
 			{
 				// It's a file or a directory
@@ -234,10 +252,10 @@ public class JavaCodeGenMain
 			
 			if (cgMode == JavaCodeGenMode.OO_SPEC) {
 				handleOo(files, irSettings, javaSettings, Settings.dialect,
-						printClasses, outputDir);
+						printClasses, outputDir, separateTestCode);
 			} else if(cgMode == JavaCodeGenMode.SL_SPEC) {
 				handleSl(files, irSettings, javaSettings, printClasses,
-						outputDir);
+						outputDir, separateTestCode);
 			}
 			else
 			{
@@ -291,7 +309,7 @@ public class JavaCodeGenMain
 	}
 	
 	public static void handleSl(List<File> files, IRSettings irSettings,
-			JavaSettings javaSettings, boolean printCode, File outputDir)
+			JavaSettings javaSettings, boolean printCode, File outputDir, boolean separateTestCode)
 	{
 		try
 		{
@@ -311,7 +329,7 @@ public class JavaCodeGenMain
 			
 			GeneratedData data = vdmCodGen.generateJavaFromVdmModules(tcResult.result);
 			
-			processData(printCode, outputDir, vdmCodGen, data);
+			processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
 
 		} catch (AnalysisException e)
 		{
@@ -321,7 +339,7 @@ public class JavaCodeGenMain
 	}
 
 	public static void handleOo(List<File> files, IRSettings irSettings,
-			JavaSettings javaSettings, Dialect dialect, boolean printCode, File outputDir)
+			JavaSettings javaSettings, Dialect dialect, boolean printCode, File outputDir, boolean separateTestCode)
 	{
 		try
 		{
@@ -348,7 +366,7 @@ public class JavaCodeGenMain
 			
 			GeneratedData data = vdmCodGen.generateJavaFromVdm(tcResult.result);
 			
-			processData(printCode, outputDir, vdmCodGen, data);
+			processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
 
 		} catch (AnalysisException e)
 		{
@@ -357,9 +375,9 @@ public class JavaCodeGenMain
 
 		}
 	}
-
+	
 	public static void processData(boolean printCode,
-			final File outputDir, JavaCodeGen vdmCodGen, GeneratedData data) {
+			final File outputDir, JavaCodeGen vdmCodGen, GeneratedData data, boolean separateTestCode) {
 		List<GeneratedModule> generatedClasses = data.getClasses();
 
 		Logger.getLog().println("");
@@ -395,7 +413,21 @@ public class JavaCodeGenMain
 					
 					if (outputDir != null)
 					{
-						vdmCodGen.genJavaSourceFile(outputDir, generatedClass);
+						if(separateTestCode)
+						{
+							if(generatedClass.isTestCase())
+							{
+								vdmCodGen.genJavaSourceFile(new File(outputDir, GEN_TESTS_FOLDER), generatedClass);
+							}
+							else
+							{
+								vdmCodGen.genJavaSourceFile(new File(outputDir, GEN_MODEL_CODE_FOLDER), generatedClass);
+							}
+						}
+						else
+						{
+							vdmCodGen.genJavaSourceFile(outputDir, generatedClass);
+						}
 					}
 					
 					if (printCode)
@@ -434,7 +466,14 @@ public class JavaCodeGenMain
 			{
 				for (GeneratedModule q : quotes)
 				{
-					vdmCodGen.genJavaSourceFile(outputDir, q);
+					if(separateTestCode)
+					{
+						vdmCodGen.genJavaSourceFile(new File(outputDir, GEN_MODEL_CODE_FOLDER), q);
+					}
+					else
+					{
+						vdmCodGen.genJavaSourceFile(outputDir, q);
+					}
 				}
 			}
 			
@@ -508,6 +547,9 @@ public class JavaCodeGenMain
 		Logger.getLog().printErrorln(VDM_ENTRY_EXP
 				+ " <vdm entry point expression>: generate a Java main method based on the specified entry point");
 		Logger.getLog().printErrorln(NO_CODE_FORMAT + ": to NOT format the generated Java code");
+		Logger.getLog().printErrorln(JUNIT4 + ": to generate VDMUnit " + IRConstants.TEST_CASE + " sub-classes to JUnit4 tests");
+		Logger.getLog().printErrorln(SEP_TEST_CODE + ": to place the code generated model and the test code into separate folders named '"
+				+ GEN_MODEL_CODE_FOLDER + "' and '" + GEN_TESTS_FOLDER + "', respectively");
 
 		// Terminate
 		System.exit(1);

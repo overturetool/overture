@@ -10,6 +10,7 @@ import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
@@ -58,14 +59,35 @@ public class TypePredDecorator extends AtomicAssertTrans
 		if (node.getObj() instanceof SVarExpCG)
 		{
 			SVarExpCG obj = (SVarExpCG) node.getObj();
-			handleStateUpdate(node, obj, stateDesInfo.getStateDesVars(node), recHandler.handleCallObj(node), namedTypeHandler.handleCallObj(node));
-		} else
+			handleStateUpdate(node, obj);
+		}
+		else if(node.getObj() instanceof ACastUnaryExpCG)
+		{
+			ACastUnaryExpCG cast = (ACastUnaryExpCG) node.getObj();
+			
+			if(cast.getExp() instanceof SVarExpCG)
+			{
+				SVarExpCG obj = (SVarExpCG) cast.getExp();
+				handleStateUpdate(node, obj);
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Expected subject of cast expression to be a variable expression at this point in '"
+						+ this.getClass().getSimpleName() + "'. Got: " + cast.getExp());
+			}
+		}
+		else
 		{
 			Logger.getLog().printErrorln("Expected object of call object statement "
-					+ " to be a variable expression by now in '"
+					+ " to be a variable or cast expression by now in '"
 					+ this.getClass().getSimpleName() + "'. Got: "
 					+ node.getObj());
 		}
+	}
+
+	private void handleStateUpdate(ACallObjectExpStmCG node, SVarExpCG obj)
+	{
+		handleStateUpdate(node, obj, stateDesInfo.getStateDesVars(node), recHandler.handleCallObj(node), namedTypeHandler.handleCallObj(node));
 	}
 
 	@Override
@@ -345,5 +367,10 @@ public class TypePredDecorator extends AtomicAssertTrans
 	public boolean buildRecValidChecks()
 	{
 		return buildRecChecks;
+	}
+
+	public TypePredUtil getTypePredUtil()
+	{
+		return this.namedTypeHandler.getTypePredUtil();
 	}
 }
