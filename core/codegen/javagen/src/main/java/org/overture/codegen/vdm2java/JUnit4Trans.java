@@ -16,6 +16,7 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 {
+	private static final String TEST_NAME_PREFIX = "test";
 	public static final String TEST_ANNOTATION = "@Test";
 	public static final String JUNI4_IMPORT = "org.junit.*";
 
@@ -71,7 +72,7 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 
 		for (AMethodDeclCG m : node.getMethods())
 		{
-			if (m.getAccess().equals(IRConstants.PUBLIC) && BooleanUtils.isFalse(m.getStatic())
+			if (m.getName().startsWith(TEST_NAME_PREFIX) && m.getAccess().equals(IRConstants.PUBLIC) && BooleanUtils.isFalse(m.getStatic())
 					&& BooleanUtils.isFalse(m.getIsConstructor()) && m.getFormalParams().isEmpty()
 					&& !(m.getTag() instanceof IRGeneratedTag))
 			{
