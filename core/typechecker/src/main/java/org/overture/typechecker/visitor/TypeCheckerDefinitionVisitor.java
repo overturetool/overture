@@ -119,12 +119,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	{
 		question.qualifiers = null;
 
-		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
+		node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(node), null, THIS, question));
 
 		ExcludedDefinitions.setExcluded(node);
 		node.setExpType(node.getExpression().apply(THIS, question));
 		ExcludedDefinitions.clearExcluded();
-		node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(node), null, THIS, question));
+
+		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 
 		if (node.getExpType() instanceof AVoidType)
 		{
