@@ -31,7 +31,7 @@ final public class Entry {
     public static Number f() {
         Number realPattern_1 = 1.5;
 
-        //@ assert Utils.is_real(realPattern_1);
+        //@ assert Utils.is_rat(realPattern_1);
         Boolean success_1 = Utils.equals(realPattern_1, 1.5);
 
         //@ assert Utils.is_bool(success_1);

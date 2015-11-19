@@ -2326,7 +2326,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			}
 		} else
 		{
-			node.setType(AstFactory.newARealNumericBasicType(node.getLocation()));
+			node.setType(AstFactory.newARationalNumericBasicType(node.getLocation()));
 		}
 
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, node.getType(), node.getLocation());
