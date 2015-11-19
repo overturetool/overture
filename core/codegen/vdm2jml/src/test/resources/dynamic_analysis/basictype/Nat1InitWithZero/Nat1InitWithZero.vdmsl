@@ -14,7 +14,7 @@ Run () ==
   n := 1;
   IO`println("After valid use.");
   IO`println("Before invalid use.");
-  (dcl n1 : nat1 := 0; skip);
+  (dcl n1 : nat1 := -1 + 1; skip);
   IO`println("After invalid use.");
   return 0;
 );

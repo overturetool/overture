@@ -23,7 +23,7 @@ final public class Entry {
         IO.println("Before invalid use.");
 
         {
-            Number n1 = 0L;
+            Number n1 = -1L + 1L;
 
             //@ assert Utils.is_nat1(n1);
 
