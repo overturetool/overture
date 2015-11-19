@@ -32,10 +32,8 @@
 <message column="18" line="174" message="Name 'Decode(nat1)' is not in scope" messageType="error" number="3182" resource="EnigmaPP"/>
 <message column="7" line="174" message="Operation AssertTrue(bool) is not in scope" messageType="error" number="3213" resource="EnigmaPP"/>
 <message column="24" line="426" message="Symbol 'name' is not an updatable variable" messageType="error" number="3247" resource="EnigmaPP"/>
-<message column="30" line="433" message="Class name Reflector not in scope" messageType="error" number="3133" resource="EnigmaPP"/>
 <message column="17" line="433" message="Unable to resolve type name 'Reflector'" messageType="error" number="3428" resource="EnigmaPP"/>
 <message column="20" line="545" message="Symbol 'name' is not an updatable variable" messageType="error" number="3247" resource="EnigmaPP"/>
-<message column="25" line="552" message="Class name Rotor not in scope" messageType="error" number="3133" resource="EnigmaPP"/>
 <message column="16" line="552" message="Unable to resolve type name 'Rotor'" messageType="error" number="3428" resource="EnigmaPP"/>
 <result/>
 </testResult>

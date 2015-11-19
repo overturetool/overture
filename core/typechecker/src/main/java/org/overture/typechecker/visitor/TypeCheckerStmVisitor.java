@@ -281,7 +281,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 			question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
-			d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+			d.setType(question.assistantFactory.createPTypeAssistant().typeResolve(d.getType(), null, THIS, question));
+			d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, d.getType(), question.returnType));
 		}
 
 		// For type checking purposes, the definitions are treated as
