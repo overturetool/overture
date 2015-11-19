@@ -45,6 +45,12 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
+		if (outputDirectory != null && outputDirectory.exists())
+		{
+			getLog().info(String.format("Skipping Java code generation. Output folder '%s' already exists.", outputDirectory.getAbsolutePath()));
+			return;
+		}
+
 		getLog().info("Starting the VDM-to-Java code generator...");
 		
 		// Let's make sure that maven knows to look in the output directory
