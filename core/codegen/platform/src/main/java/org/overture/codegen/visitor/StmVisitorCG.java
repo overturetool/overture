@@ -49,6 +49,7 @@ import org.overture.ast.statements.ACyclesStm;
 import org.overture.ast.statements.ADurationStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AErrorStm;
+import org.overture.ast.statements.AExitStm;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
@@ -89,6 +90,7 @@ import org.overture.codegen.cgast.statements.ACyclesStmCG;
 import org.overture.codegen.cgast.statements.ADurationStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AErrorStmCG;
+import org.overture.codegen.cgast.statements.AExitStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AForIndexStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
@@ -113,6 +115,18 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 {
 	public StmVisitorCG()
 	{
+	}
+	
+	@Override
+	public SStmCG caseAExitStm(AExitStm node, IRInfo question) throws AnalysisException
+	{
+		SExpCG expCg = node.getExpression() != null ? node.getExpression().apply(question.getExpVisitor(), question)
+				: null;
+
+		AExitStmCG exitCg = new AExitStmCG();
+		exitCg.setExp(expCg);
+
+		return exitCg;
 	}
 
 	@Override

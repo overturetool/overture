@@ -292,6 +292,7 @@ CG {-> package='org.overture.codegen.cgast'
            |	{cases} [exp]:CG.#exp [cases]:CG.#stm.#altStm.case* [others]:CG.#stm
            |	#altStm
            |	{error}
+           |  {exit} [exp]:CG.#exp
            |	{continue}
            |	{break}
            |	{start} [exp]:CG.#exp [type]:CG.#type
