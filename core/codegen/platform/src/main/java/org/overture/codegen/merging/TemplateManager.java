@@ -56,6 +56,7 @@ import org.overture.codegen.cgast.statements.ACyclesStmCG;
 import org.overture.codegen.cgast.statements.ADecrementStmCG;
 import org.overture.codegen.cgast.statements.ADurationStmCG;
 import org.overture.codegen.cgast.statements.AErrorStmCG;
+import org.overture.codegen.cgast.statements.AExitStmCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
@@ -362,6 +363,9 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AErrorStmCG.class, templateStructure.STM_PATH
 				+ "Error");
+		
+		nodeTemplateFileNames.put(AExitStmCG.class, templateStructure.STM_PATH
+				+ "Exit");
 
 		nodeTemplateFileNames.put(AContinueStmCG.class, templateStructure.STM_PATH
 				+ "Continue");

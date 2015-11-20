@@ -1,0 +1,6 @@
+#set( $exp = "" )
+##
+#if (!$JavaFormat.isNull($node.getExp()))
+	#set( $exp = $JavaFormat.format($node.getExp()) )
+#end
+throw new ExitException(${exp});
