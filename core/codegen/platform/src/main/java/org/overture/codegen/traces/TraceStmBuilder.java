@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STraceDeclCG;
@@ -19,7 +18,6 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
@@ -34,8 +32,6 @@ import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.ACallObjectStmCG;
-import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
@@ -59,12 +55,10 @@ import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
-import org.overture.codegen.trans.conv.ObjectDesignatorToExpCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 {
-	private List<SClassDeclCG> classes;
 	private TransAssistantCG transAssistant;
 	private IterationVarPrefixes iteVarPrefixes;
 	private ILanguageIterator langIterator;
@@ -77,13 +71,10 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 	
 	private Map<String, String> idConstNameMap;
 	
-	public TraceStmBuilder(List<SClassDeclCG> classes,
-			TransAssistantCG transAssistant, IterationVarPrefixes iteVarPrefixes,
-			TraceNames tracePrefixes, ILanguageIterator langIterator,
-			ICallStmToStringMethodBuilder toStringBuilder,
+	public TraceStmBuilder(TransAssistantCG transAssistant, IterationVarPrefixes iteVarPrefixes,
+			TraceNames tracePrefixes, ILanguageIterator langIterator, ICallStmToStringMethodBuilder toStringBuilder,
 			String traceEnclosingClass)
 	{
-		this.classes = classes;
 		this.transAssistant = transAssistant;
 		this.iteVarPrefixes = iteVarPrefixes;
 		this.langIterator = langIterator;
@@ -91,7 +82,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		this.tracePrefixes = tracePrefixes;
 		this.traceEnclosingClass = traceEnclosingClass;
-		
+
 		this.idConstNameMap = new HashMap<String, String>();
 
 		this.storeAssistant = new StoreAssistant(tracePrefixes, idConstNameMap, transAssistant);
@@ -322,9 +313,9 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		if (callStm instanceof SCallStmCG)
 		{
 			args = ((SCallStmCG) callStm).getArgs();
-		} else if (callStm instanceof ACallObjectStmCG)
+		} else if (callStm instanceof ACallObjectExpStmCG)
 		{
-			args = ((ACallObjectStmCG) callStm).getArgs();
+			args = ((ACallObjectExpStmCG) callStm).getArgs();
 		} else
 		{
 			Logger.getLog().printErrorln("Expected a call statement or call object statement in '"
@@ -434,30 +425,33 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 	private SStmCG makeInstanceCall(SStmCG stm)
 	{
-		if (stm instanceof ACallObjectStmCG)
+		if(stm instanceof ACallObjectExpStmCG)
 		{
 			// Assume the class enclosing the trace to be S
 			// self.op(42) becomes ((S)instance).op(42L)
 			// a.op(42) remains a.op(42L) if a is local
 			// a.op(42) becomes ((S)instance).a.op(42L) if a is an instance variable
-
-			ACallObjectStmCG callObj = (ACallObjectStmCG) stm;
-			ensureLocalObjDesignator(callObj.getDesignator());
-
-			if (callObj.getType() instanceof AVoidTypeCG)
+			
+			ACallObjectExpStmCG call = (ACallObjectExpStmCG) stm;
+			
+			try
 			{
-				return handleVoidValueReturn(stm);
-			} else
+				call.getObj().apply(new CallObjTraceLocalizer(transAssistant, tracePrefixes, traceEnclosingClass));
+			} catch (AnalysisException e)
 			{
-				try
-				{
-					return handleCallStmResult(callObj);
-
-				} catch (AnalysisException e)
-				{
-				}
+				Logger.getLog().printErrorln("Got unexpected problem when trying to apply "
+						+ CallObjTraceLocalizer.class.getSimpleName() + " in '" + this.getClass().getSimpleName());
+				e.printStackTrace();
 			}
-		} else if (stm instanceof APlainCallStmCG)
+			
+			if(call.getType() instanceof AVoidTypeCG)
+			{
+				return handleVoidValueReturn(call);
+			}
+			
+			return stm;
+		}
+	    else if (stm instanceof APlainCallStmCG)
 		{
 			// Assume the class enclosing the trace to be S
 			// Example: op(42) becomes ((S)instance).op(42L)
@@ -466,6 +460,9 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 				return handlePlainCallStm((APlainCallStmCG) stm);
 			} catch (AnalysisException e)
 			{
+				Logger.getLog().printErrorln("Got unexpected problem when handling plain call statement in '"
+						+ this.getClass().getSimpleName() + "'");
+				e.printStackTrace();
 			}
 		}
 		// Super call statements are not supported and this case should not be reached!
@@ -497,39 +494,6 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		block.getStatements().add(returnVoidVal);
 
 		return block;
-	}
-
-	private SStmCG handleCallStmResult(ACallObjectStmCG callObj)
-			throws AnalysisException
-	{
-		AFieldExpCG field = new AFieldExpCG();
-		field.setMemberName(callObj.getFieldName());
-		field.setObject(callObj.getDesignator().apply(new ObjectDesignatorToExpCG(getInfo())));
-		field.setType(getInfo().getTypeAssistant().getFieldType(classes, traceEnclosingClass, callObj.getFieldName()));
-
-		AApplyExpCG apply = new AApplyExpCG();
-		apply.setRoot(field);
-		apply.setType(callObj.getType().clone());
-
-		for (SExpCG arg : callObj.getArgs())
-		{
-			apply.getArgs().add(arg.clone());
-		}
-
-		apply.setSourceNode(callObj.getSourceNode());
-		apply.setTag(callObj.getSourceNode());
-
-		String resultName = getInfo().getTempVarNameGen().nextVarName(tracePrefixes.callStmResultNamePrefix());
-
-		AVarDeclCG resultDecl = transAssistant.consDecl(resultName, callObj.getType().clone(), apply);
-		AReturnStmCG returnStm = new AReturnStmCG();
-		returnStm.setExp(transAssistant.getInfo().getExpAssistant().consIdVar(resultName, callObj.getType().clone()));
-
-		ABlockStmCG stms = new ABlockStmCG();
-		stms.getLocalDefs().add(resultDecl);
-		stms.getStatements().add(returnStm);
-
-		return stms;
 	}
 
 	private SStmCG handlePlainCallStm(APlainCallStmCG callStmCG)
@@ -600,24 +564,6 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 			return stms;
 
-		}
-	}
-
-	private void ensureLocalObjDesignator(SObjectDesignatorCG obj)
-	{
-		try
-		{
-			AIdentifierObjectDesignatorCG objId = obj.apply(new EnsureLocalObjDesignatorAnalysis(transAssistant, tracePrefixes, traceEnclosingClass));
-
-			if (objId != null)
-			{
-				objId.apply(new VarExpCasting(transAssistant, traceEnclosingClass));
-			}
-
-		} catch (AnalysisException e)
-		{
-			Logger.getLog().printErrorln("Problems encountered when attempting to ensuring a local object designator in TraceStmsBuilder");
-			e.printStackTrace();
 		}
 	}
 
