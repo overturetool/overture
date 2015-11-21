@@ -1,0 +1,126 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry implements java.io.Serializable {
+    private Other o;
+
+    public Entry() {
+        cg_init_Entry_1();
+    }
+
+    public void cg_init_Entry_1() {
+        o = new Other();
+    }
+
+    public Number op() {
+        return 1L;
+    }
+
+    public void opVoid() {
+        /* skip */
+    }
+
+    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        final Number ID_1 = gen.inc();
+
+        {
+            final Entry e = new Entry();
+            store.register(ID_1, e);
+        }
+
+        SequenceTraceNode sequence_2 = new SequenceTraceNode();
+        CallStatement callStm_1 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    ((Entry) instance).opVoid();
+
+                    return Utils.VOID_VALUE;
+                }
+
+                public String toString() {
+                    return "self.opVoid()";
+                }
+            };
+
+        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+        CallStatement callStm_2 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    return ((Entry) instance).op();
+                }
+
+                public String toString() {
+                    return "self.op()";
+                }
+            };
+
+        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+
+        CallStatement callStm_3 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    return ((Entry) store.getValue(ID_1)).op();
+                }
+
+                public String toString() {
+                    return "e.op()";
+                }
+            };
+
+        StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
+
+        CallStatement callStm_4 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    ((Entry) store.getValue(ID_1)).o.opVoid();
+
+                    return Utils.VOID_VALUE;
+                }
+
+                public String toString() {
+                    return "e.o.opVoid()";
+                }
+            };
+
+        StatementTraceNode apply_4 = new StatementTraceNode(callStm_4);
+
+        sequence_2.add(apply_1);
+        sequence_2.add(apply_2);
+        sequence_2.add(apply_3);
+        sequence_2.add(apply_4);
+
+        sequence_1.add(sequence_2);
+
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{" + "o := " + Utils.toString(o) + "}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Other implements java.io.Serializable {
+    public Other() {
+    }
+
+    public void opVoid() {
+        /* skip */
+    }
+
+    public String toString() {
+        return "Other{}";
+    }
+}
+
+##########
