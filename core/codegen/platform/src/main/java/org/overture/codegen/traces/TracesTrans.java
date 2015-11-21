@@ -145,7 +145,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		String traceEnclosingClass = getTraceEnclosingClass(node);
-		TraceStmsBuilder stmBuilder = new TraceStmsBuilder(transAssistant.getInfo(), transAssistant.getInfo().getClasses(), transAssistant, 
+		TraceStmBuilder stmBuilder = new TraceStmBuilder(transAssistant.getInfo().getClasses(), transAssistant,
 				iteVarPrefixes, tracePrefixes, langIterator, toStringBuilder, traceEnclosingClass);
 
 		TraceNodeData nodeData = stmBuilder.buildFromDeclTerms(node.getTerms());
