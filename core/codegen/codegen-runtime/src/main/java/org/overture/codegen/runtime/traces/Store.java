@@ -3,26 +3,23 @@ package org.overture.codegen.runtime.traces;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.overture.codegen.runtime.copying.DeepCopy;
-
 public class Store
 {
-	private Map<Number, Pair<Object, Object>> values;
+	private Map<Number, ObjectCopy> values;
 	
 	public Store()
 	{
-		this.values = new HashMap<Number, Pair<Object, Object>>();
+		this.values = new HashMap<Number, ObjectCopy>();
 	}
 	
 	public void register(Number id, Object val)
 	{
-		Object deepCopy = DeepCopy.copy(val);
-		values.put(id, new Pair<Object, Object>(val, deepCopy));
+		values.put(id, new ObjectCopy(val));
 	}
 	
 	public Object getValue(Number id)
 	{
-		return values.get(id).getSecond();
+		return values.get(id).getValue();
 	}
 	
 	public void reset()
@@ -30,8 +27,7 @@ public class Store
 		// TODO: Optimise this
 		for(Number k : values.keySet())
 		{
-			Pair<Object, Object> v = values.get(k);
-			v.setSecond(DeepCopy.copy(v.getFirst()));
+			values.get(k).reset();
 		}
 	}
 }
