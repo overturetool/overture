@@ -30,6 +30,8 @@ import org.overture.codegen.runtime.Utils;
 
 public abstract class TraceNode
 {
+	private static final int ENCLOSING_MODULE_ID = -1;
+
 	@Override
 	abstract public String toString();
 
@@ -42,6 +44,8 @@ public abstract class TraceNode
 	{
 		try
 		{
+			store.register(ENCLOSING_MODULE_ID, instanceType.newInstance());
+			
 			int testNo = 1;
 
 			TestSequence tests = trace.getTests();
@@ -64,7 +68,7 @@ public abstract class TraceNode
 					acc.registerTest(new TraceTest(testNo, test.toString(), "", Verdict.SKIPPED));
 				} else
 				{
-					Object instance = instanceType.newInstance();
+					Object instance = store.getValue(ENCLOSING_MODULE_ID);
 					int callStmIdx = 0;
 					for (; callStmIdx < test.size(); callStmIdx++)
 					{
