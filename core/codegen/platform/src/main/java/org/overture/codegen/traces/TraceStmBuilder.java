@@ -358,7 +358,17 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		execMethod.setName(tracePrefixes.callStmMethodNamePrefix());
 		execMethod.setStatic(false);
 
-		SStmCG body = makeInstanceCall(stm);
+		ABlockStmCG body = new ABlockStmCG();
+		
+		SStmCG preCallStms = makePreCallStms(stm);
+		
+		if(preCallStms != null)
+		{
+			body.getStatements().add(preCallStms);
+		}
+		
+		body.getStatements().add(makeInstanceCall(stm));
+		
 		try
 		{
 			final Set<String> localVarNames = this.idConstNameMap.keySet();
@@ -395,6 +405,11 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 	}
 
 	
+	public SStmCG makePreCallStms(SStmCG stm)
+	{
+		return null;
+	}
+
 	public TraceNodeData buildFromDeclTerms(List<ATraceDeclTermCG> terms)
 			throws AnalysisException
 	{
