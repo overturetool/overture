@@ -33,6 +33,12 @@
       <artifactId>testframework</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.overturetool.core.testing</groupId>
+      <artifactId>framework</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

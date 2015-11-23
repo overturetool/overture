@@ -1,0 +1,17 @@
+class H
+
+--operations
+--public op : () ==> int
+--op () == return 2;
+
+functions
+private Func :  int -> int
+Func (f) == 2;
+
+public op : () -> int
+op () == 2;
+
+public op2 : () -> int
+op2 () == 2+3;
+
+end H
