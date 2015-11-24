@@ -1,0 +1,38 @@
+class Entry
+
+instance variables
+
+private static e : nat := 0;
+
+operations
+
+public static inc : () ==> nat
+inc () ==
+(
+  e := e + 1;
+  return e;
+);
+
+traces
+
+T1:
+ ((Entry`inc();Other`inc())|(Entry`inc();Other`inc()));
+ 
+end Entry
+
+class Other
+
+instance variables
+
+private static c : nat := 0;
+
+operations
+
+public static inc : () ==> nat
+inc () ==
+(
+  c := c + 1;
+  return c;
+);
+
+end Other
