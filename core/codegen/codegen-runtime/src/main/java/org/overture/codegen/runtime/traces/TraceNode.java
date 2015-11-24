@@ -37,9 +37,8 @@ public abstract class TraceNode
 
 	abstract public TestSequence getTests();
 
-	// Added
-	@SuppressWarnings("rawtypes")
-	public static void executeTests(TraceNode trace, Class instanceType,
+	// PP
+	public static void executeTests(TraceNode trace, Class<?> instanceType,
 			TestAccumulator acc, Store store)
 	{
 		try
@@ -134,8 +133,6 @@ public abstract class TraceNode
 				testNo++;
 				store.reset();
 			}
-
-			// showResults(results);
 
 		} catch (InstantiationException e)
 		{
