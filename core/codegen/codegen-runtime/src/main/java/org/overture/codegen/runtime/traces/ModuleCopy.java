@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.overture.codegen.runtime.copying.DeepCopy;
 
-public abstract class ModuleCopy
+public class ModuleCopy
 {
 	protected Object val;
 	protected Map<Field, Object> staticFields;

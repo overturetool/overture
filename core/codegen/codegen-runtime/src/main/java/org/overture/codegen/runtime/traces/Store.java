@@ -5,16 +5,21 @@ import java.util.Map;
 
 public class Store
 {
-	private Map<Number, ObjectCopy> values;
+	private Map<Number, ModuleCopy> values;
 	
 	public Store()
 	{
-		this.values = new HashMap<Number, ObjectCopy>();
+		this.values = new HashMap<>();
 	}
 	
 	public void register(Number id, Object val)
 	{
 		values.put(id, new ObjectCopy(val));
+	}
+	
+	public void staticReg(Number id, Class<?> clazz)
+	{
+		values.put(id, new ModuleCopy(clazz));
 	}
 	
 	public Object getValue(Number id)
