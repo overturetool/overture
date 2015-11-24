@@ -1,9 +1,7 @@
 package org.overture.codegen.traces;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.overture.codegen.cgast.INode;
@@ -69,11 +67,9 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 	private StoreAssistant storeAssistant; 
 	
-	private Map<String, String> idConstNameMap;
-	
 	public TraceStmBuilder(TransAssistantCG transAssistant, IterationVarPrefixes iteVarPrefixes,
 			TraceNames tracePrefixes, ILanguageIterator langIterator, ICallStmToStringMethodBuilder toStringBuilder,
-			String traceEnclosingClass)
+			String traceEnclosingClass, StoreAssistant storeAssist)
 	{
 		this.transAssistant = transAssistant;
 		this.iteVarPrefixes = iteVarPrefixes;
@@ -83,9 +79,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		this.tracePrefixes = tracePrefixes;
 		this.traceEnclosingClass = traceEnclosingClass;
 
-		this.idConstNameMap = new HashMap<String, String>();
-
-		this.storeAssistant = new StoreAssistant(tracePrefixes, idConstNameMap, transAssistant);
+		this.storeAssistant = storeAssist;
 	}
 
 	public IRInfo getInfo()
@@ -137,7 +131,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		AAnonymousClassExpCG callStmCreation = new AAnonymousClassExpCG();
 		callStmCreation.setType(callStmType);
 		callStmCreation.getMethods().add(consExecuteMethod(node.getCallStm().clone()));
-		callStmCreation.getMethods().add(toStringBuilder.consToString(getInfo(), node.getCallStm(), idConstNameMap, storeAssistant, transAssistant));
+		callStmCreation.getMethods().add(toStringBuilder.consToString(getInfo(), node.getCallStm(), storeAssistant.getIdConstNameMap(), storeAssistant, transAssistant));
 		AVarDeclCG callStmDecl = transAssistant.consDecl(callStmName, callStmType.clone(), callStmCreation);
 
 		AClassTypeCG stmTraceNodeType = transAssistant.consClassType(tracePrefixes.stmTraceNodeClassName());
@@ -208,7 +202,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			if(p instanceof AIdentifierPatternCG)
 			{
 				String idConstName = getInfo().getTempVarNameGen().nextVarName(tracePrefixes.idConstNamePrefix());
-				idConstNameMap.put(((AIdentifierPatternCG) p).getName(), idConstName);
+				storeAssistant.getIdConstNameMap().put(((AIdentifierPatternCG) p).getName(), idConstName);
 			}
 		}
 		
@@ -227,7 +221,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		SSetTypeCG setType = transAssistant.getSetTypeCloned(bind.getSet());
 		TraceLetBeStStrategy strategy = new TraceLetBeStStrategy(transAssistant, exp, setType, langIterator, 
-				getInfo().getTempVarNameGen(), iteVarPrefixes, storeAssistant, idConstNameMap, tracePrefixes, id, altTests, bodyTraceData);
+				getInfo().getTempVarNameGen(), iteVarPrefixes, storeAssistant, storeAssistant.getIdConstNameMap(), tracePrefixes, id, altTests, bodyTraceData);
 
 		if (transAssistant.hasEmptySet(bind))
 		{
@@ -263,9 +257,9 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			for(AIdentifierPatternCG occ : idOccurences)
 			{
 				String idConstName = getInfo().getTempVarNameGen().nextVarName(tracePrefixes.idConstNamePrefix());
-				idConstNameMap.put(occ.getName(), idConstName);
+				storeAssistant.getIdConstNameMap().put(occ.getName(), idConstName);
 				outer.getLocalDefs().add(storeAssistant.consIdConstDecl(idConstName));
-				storeAssistant.appendStoreRegStms(declBlock, occ.getName(), idConstName);
+				storeAssistant.appendStoreRegStms(declBlock, occ.getName(), idConstName, false);
 			}
 		}
 		TraceNodeData bodyNodeData = node.getBody().apply(this);
@@ -371,7 +365,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		
 		try
 		{
-			final Set<String> localVarNames = this.idConstNameMap.keySet();
+			final Set<String> localVarNames = storeAssistant.getIdConstNameMap().keySet();
 			
 			body.apply(new DepthFirstAnalysisAdaptor()
 			{

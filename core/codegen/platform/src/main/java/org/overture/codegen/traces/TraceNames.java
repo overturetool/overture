@@ -138,7 +138,12 @@ public class TraceNames
 		return "store";
 	}
 	
-	public String storeRegisterMethodName()
+	public String storeStaticRegistrationMethodName()
+	{
+		return "staticReg";
+	}
+	
+	public String storeRegistrationMethodName()
 	{
 		return "register";
 	}
