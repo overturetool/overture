@@ -31,7 +31,7 @@ public class Entry implements java.io.Serializable {
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
         AlternativeTraceNode alternatives_1 = new AlternativeTraceNode();
         ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
-        CallStatement callStm_1 = new CallStatement() {
+        CallStatementPp callStm_1 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     ((Entry) instance).op1();
 
@@ -45,7 +45,7 @@ public class Entry implements java.io.Serializable {
 
         StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
 
-        CallStatement callStm_2 = new CallStatement() {
+        CallStatementPp callStm_2 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     ((Entry) instance).op2();
 
@@ -63,7 +63,7 @@ public class Entry implements java.io.Serializable {
         concurrent_1.add(apply_2);
 
         ConcurrentTraceNode concurrent_2 = new ConcurrentTraceNode();
-        CallStatement callStm_3 = new CallStatement() {
+        CallStatementPp callStm_3 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     return fun1();
                 }
@@ -75,7 +75,7 @@ public class Entry implements java.io.Serializable {
 
         StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
 
-        CallStatement callStm_4 = new CallStatement() {
+        CallStatementPp callStm_4 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     return fun2();
                 }

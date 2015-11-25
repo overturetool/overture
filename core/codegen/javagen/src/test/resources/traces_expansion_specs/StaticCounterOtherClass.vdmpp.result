@@ -30,7 +30,7 @@ public class Entry implements java.io.Serializable {
         SequenceTraceNode sequence_2 = new SequenceTraceNode();
         AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
         SequenceTraceNode sequence_3 = new SequenceTraceNode();
-        CallStatement callStm_1 = new CallStatement() {
+        CallStatementPp callStm_1 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     return Entry.inc();
                 }
@@ -42,7 +42,7 @@ public class Entry implements java.io.Serializable {
 
         StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
 
-        CallStatement callStm_2 = new CallStatement() {
+        CallStatementPp callStm_2 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     return Other.inc();
                 }
@@ -58,7 +58,7 @@ public class Entry implements java.io.Serializable {
         sequence_3.add(apply_2);
 
         SequenceTraceNode sequence_4 = new SequenceTraceNode();
-        CallStatement callStm_3 = new CallStatement() {
+        CallStatementPp callStm_3 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     return Entry.inc();
                 }
@@ -70,7 +70,7 @@ public class Entry implements java.io.Serializable {
 
         StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
 
-        CallStatement callStm_4 = new CallStatement() {
+        CallStatementPp callStm_4 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     return Other.inc();
                 }

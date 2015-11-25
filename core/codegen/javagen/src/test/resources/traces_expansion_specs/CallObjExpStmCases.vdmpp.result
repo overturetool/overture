@@ -42,7 +42,7 @@ public class Entry implements java.io.Serializable {
         }
 
         SequenceTraceNode sequence_2 = new SequenceTraceNode();
-        CallStatement callStm_1 = new CallStatement() {
+        CallStatementPp callStm_1 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     ((Entry) instance).opVoid();
 
@@ -56,7 +56,7 @@ public class Entry implements java.io.Serializable {
 
         StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
 
-        CallStatement callStm_2 = new CallStatement() {
+        CallStatementPp callStm_2 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     return ((Entry) instance).op();
                 }
@@ -68,7 +68,7 @@ public class Entry implements java.io.Serializable {
 
         StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
 
-        CallStatement callStm_3 = new CallStatement() {
+        CallStatementPp callStm_3 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     return ((Entry) store.getValue(ID_2)).op();
                 }
@@ -80,7 +80,7 @@ public class Entry implements java.io.Serializable {
 
         StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
 
-        CallStatement callStm_4 = new CallStatement() {
+        CallStatementPp callStm_4 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     ((Entry) store.getValue(ID_2)).o.opVoid();
 

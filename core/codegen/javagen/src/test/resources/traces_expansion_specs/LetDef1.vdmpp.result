@@ -26,7 +26,7 @@ public class Entry implements java.io.Serializable {
 
             store.register(ID_1, a);
 
-            CallStatement callStm_1 = new CallStatement() {
+            CallStatementPp callStm_1 = new CallStatementPp() {
                     public Object execute(final Object instance) {
                         return fun(((Number) store.getValue(ID_1)));
                     }

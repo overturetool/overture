@@ -22,7 +22,7 @@ public class Entry implements java.io.Serializable {
         final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
         SequenceTraceNode sequence_2 = new SequenceTraceNode();
-        CallStatement callStm_1 = new CallStatement() {
+        CallStatementPp callStm_1 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     Number result_1 = ((Entry) instance).op();
 
@@ -38,7 +38,7 @@ public class Entry implements java.io.Serializable {
 
         SequenceTraceNode sequence_3 = new SequenceTraceNode();
         AlternativeTraceNode alternatives_4 = new AlternativeTraceNode();
-        CallStatement callStm_2 = new CallStatement() {
+        CallStatementPp callStm_2 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     Number result_2 = ((Entry) instance).op();
 
@@ -52,7 +52,7 @@ public class Entry implements java.io.Serializable {
 
         StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
 
-        CallStatement callStm_3 = new CallStatement() {
+        CallStatementPp callStm_3 = new CallStatementPp() {
                 public Object execute(final Object instance) {
                     Number result_3 = ((Entry) instance).op();
 
