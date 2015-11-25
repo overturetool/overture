@@ -110,7 +110,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 		traceMethod.setAccess(IRConstants.PUBLIC);
 		traceMethod.setBody(consTraceMethodBody(node));
 		traceMethod.setIsConstructor(false);
-		traceMethod.setStatic(false);
+		traceMethod.setStatic(Settings.dialect == Dialect.VDM_SL);
 		traceMethod.setMethodType(methodType);
 		traceMethod.setName(getTraceName(node) + "_"
 				+ tracePrefixes.runTraceMethodName());
@@ -133,7 +133,12 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 		typeArg.setType(transAssistant.consClassType(traceEnclosingClassName));
 
 		executeTestsCall.getArgs().add(nodeVar.clone());
-		executeTestsCall.getArgs().add(typeArg);
+		
+		if(Settings.dialect != Dialect.VDM_SL)
+		{
+			executeTestsCall.getArgs().add(typeArg);
+		}
+		
 		executeTestsCall.getArgs().add(transAssistant.getInfo().getExpAssistant().consIdVar(tracePrefixes.traceMethodParamName(),
 				transAssistant.consClassType(tracePrefixes.testAccumulatorClassName())));
 		executeTestsCall.getArgs().add(transAssistant.getInfo().getExpAssistant().consIdVar(tracePrefixes.storeVarName(),

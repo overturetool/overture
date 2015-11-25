@@ -42,7 +42,12 @@ public class TraceNames
 	
 	public String callStmClassTypeName()
 	{
-		return "CallStatement";
+		return "CallStatementPp";
+	}
+	
+	public String callStmSlClassTypeName()
+	{
+		return "CallStatementSl";
 	}
 	
 	public String callStmNamePrefix()

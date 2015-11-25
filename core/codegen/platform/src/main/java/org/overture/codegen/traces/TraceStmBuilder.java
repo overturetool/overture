@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.overture.ast.lex.Dialect;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -54,6 +55,7 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
+import org.overture.config.Settings;
 
 public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 {
@@ -126,7 +128,18 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 	{
 		List<AVarDeclCG> argDecls = replaceArgsWithVars(node.getCallStm());
 
-		AClassTypeCG callStmType = transAssistant.consClassType(tracePrefixes.callStmClassTypeName());
+		String classTypeName;
+		
+		if(Settings.dialect != Dialect.VDM_SL)
+		{
+			classTypeName = tracePrefixes.callStmClassTypeName();
+		}
+		else 
+		{
+			classTypeName = tracePrefixes.callStmSlClassTypeName();
+		}
+		
+		AClassTypeCG callStmType = transAssistant.consClassType(classTypeName);
 		String callStmName = getInfo().getTempVarNameGen().nextVarName(tracePrefixes.callStmNamePrefix());
 		AAnonymousClassExpCG callStmCreation = new AAnonymousClassExpCG();
 		callStmCreation.setType(callStmType);
@@ -340,7 +353,11 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 	{
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(new AObjectTypeCG());
-		methodType.getParams().add(new AObjectTypeCG());
+		
+		if(Settings.dialect != Dialect.VDM_SL)
+		{
+			methodType.getParams().add(new AObjectTypeCG());
+		}
 		
 		AMethodDeclCG execMethod = new AMethodDeclCG();
 		execMethod.setImplicit(false);
@@ -389,11 +406,14 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		}
 		execMethod.setBody(body);
 		
-		AFormalParamLocalParamCG instanceParam = new AFormalParamLocalParamCG();
-		instanceParam.setType(new AObjectTypeCG());
-		instanceParam.setPattern(getInfo().getPatternAssistant().consIdPattern(tracePrefixes.callStmMethodParamName()));
-
-		execMethod.getFormalParams().add(instanceParam);
+		if(Settings.dialect != Dialect.VDM_SL)
+		{
+			AFormalParamLocalParamCG instanceParam = new AFormalParamLocalParamCG();
+			instanceParam.setType(new AObjectTypeCG());
+			instanceParam.setPattern(getInfo().getPatternAssistant().consIdPattern(tracePrefixes.callStmMethodParamName()));
+			
+			execMethod.getFormalParams().add(instanceParam);
+		}
 
 		return execMethod;
 	}
