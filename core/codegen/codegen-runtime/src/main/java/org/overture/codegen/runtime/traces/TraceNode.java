@@ -37,13 +37,23 @@ public abstract class TraceNode
 
 	abstract public TestSequence getTests();
 
+	// SL
+	public static void executeTests(TraceNode trace, TestAccumulator acc, Store store)
+	{
+		executeTests(trace, null, acc, store);
+
+	}
+	
 	// PP
 	public static void executeTests(TraceNode trace, Class<?> instanceType,
 			TestAccumulator acc, Store store)
 	{
 		try
 		{
-			store.register(ENCLOSING_MODULE_ID, instanceType.newInstance());
+			if(instanceType != null)
+			{
+				store.register(ENCLOSING_MODULE_ID, instanceType.newInstance());
+			}
 			
 			int testNo = 1;
 
@@ -67,7 +77,6 @@ public abstract class TraceNode
 					acc.registerTest(new TraceTest(testNo, test.toString(), "", Verdict.SKIPPED));
 				} else
 				{
-					Object instance = store.getValue(ENCLOSING_MODULE_ID);
 					int callStmIdx = 0;
 					for (; callStmIdx < test.size(); callStmIdx++)
 					{
@@ -75,8 +84,23 @@ public abstract class TraceNode
 						try
 						{
 							callStms.add(callStm.toString());
-							Object result = callStm.execute(instance);
-							callStmResults.add(result);
+							
+							if(callStm instanceof CallStatementPp)
+							{
+								CallStatementPp callPp = (CallStatementPp) callStm;
+								Object result = callPp.execute(store.getValue(ENCLOSING_MODULE_ID));
+								callStmResults.add(result);
+							}
+							else if(callStm instanceof CallStatementSl)
+							{
+								CallStatementSl callSl = (CallStatementSl) callStm;
+								Object result = callSl.execute();
+								callStmResults.add(result);
+							}
+							else
+							{
+								throw new UnsupportedOperationException("Got unexpected call statement: " + callStm);
+							}
 
 						} catch (RuntimeException e)
 						{
