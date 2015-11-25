@@ -16,6 +16,7 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.traces.TestAccumulator;
 import org.overture.codegen.tests.exec.util.ExecutionResult;
 import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.ct.ctruntime.TraceRunnerMain;
 import org.overture.ct.ctruntime.utils.CtHelper;
 import org.overture.ct.ctruntime.utils.Data;
@@ -85,11 +86,23 @@ public class TraceHandler extends ExecutableSpecTestHandler
 
 	public List<String> getMainClassMethods()
 	{
+		String runTraceCall;
+		
+		if(Settings.dialect == Dialect.VDM_SL)
+		{
+			runTraceCall = "Entry.Entry_T1_Run(acc);";
+		}
+		else
+		{
+			runTraceCall = " new Entry().Entry_T1_Run(acc);";
+		}
+		
+		
 		String computeTestsMethod = 
 				" public static TestAccumulator computeTests()\n"
 				+ " {\n"
 				+ "    InMemoryTestAccumulator acc = new InMemoryTestAccumulator();\n"
-				+ "    new Entry().Entry_T1_Run(acc);\n"
+				+ runTraceCall + "\n"
 				+ "    return acc;\n"
 				+ " }\n";
 
@@ -173,6 +186,8 @@ public class TraceHandler extends ExecutableSpecTestHandler
 		TraceRunnerMain.USE_SYSTEM_EXIT = false;
 		TraceReductionInfo info = new TraceReductionInfo();
 
+		String dialect = Settings.dialect == Dialect.VDM_SL ? "-vdmsl" : "-vdmpp";
+		
 		String[] buildArgs = new String[] {
 				"-h",
 				"localhost",
@@ -182,7 +197,7 @@ public class TraceHandler extends ExecutableSpecTestHandler
 				"whatever",
 				"-e",
 				"Entry",
-				"-vdmpp",
+				dialect,
 				"-r",
 				"vdm10",
 				"-t",
