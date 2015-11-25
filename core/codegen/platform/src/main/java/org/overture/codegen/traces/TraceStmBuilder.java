@@ -508,16 +508,23 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 	private SStmCG handlePlainCallStm(APlainCallStmCG callStmCG)
 			throws AnalysisException
 	{
+		STypeCG type = callStmCG.getType();
+		
 		if (callStmCG.getIsStatic())
 		{
-			return callStmCG;
+			if (type instanceof AVoidTypeCG)
+			{
+				return handleVoidValueReturn(callStmCG);
+			} else
+			{
+				return callStmCG;
+			}
 		}
 
 		List<SExpCG> args = callStmCG.getArgs();
 		STypeCG classType = callStmCG.getClassType();
-		STypeCG type = callStmCG.getType();
 		String name = callStmCG.getName();
-
+		
 		SourceNode sourceNode = callStmCG.getSourceNode();
 
 		AClassTypeCG consClassType = transAssistant.consClassType(traceEnclosingClass);
