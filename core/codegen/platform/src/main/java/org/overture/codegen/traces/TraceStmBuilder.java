@@ -14,7 +14,6 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.AnswerAdaptor;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
@@ -354,11 +353,6 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(new AObjectTypeCG());
 		
-		if(Settings.dialect != Dialect.VDM_SL)
-		{
-			methodType.getParams().add(new AObjectTypeCG());
-		}
-		
 		AMethodDeclCG execMethod = new AMethodDeclCG();
 		execMethod.setImplicit(false);
 		execMethod.setAbstract(false);
@@ -406,15 +400,6 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		}
 		execMethod.setBody(body);
 		
-		if(Settings.dialect != Dialect.VDM_SL)
-		{
-			AFormalParamLocalParamCG instanceParam = new AFormalParamLocalParamCG();
-			instanceParam.setType(new AObjectTypeCG());
-			instanceParam.setPattern(getInfo().getPatternAssistant().consIdPattern(tracePrefixes.callStmMethodParamName()));
-			
-			execMethod.getFormalParams().add(instanceParam);
-		}
-
 		return execMethod;
 	}
 
