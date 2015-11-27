@@ -13,13 +13,25 @@ import org.overture.codegen.runtime.copying.DeepCopy;
 
 public class ModuleCopy
 {
+	private static final String MODIFIERS_FIELD = "modifiers";
+	private static final String JAVA_LANG = "java.lang";
+	
 	protected Object val;
 	protected Map<Field, Object> staticFields;
 	
 	public ModuleCopy(Class<?> clazz)
 	{
 		super();
-		copyStaticFields(clazz);
+		
+		if(!isJavaLangClass(clazz))
+		{
+			copyStaticFields(clazz);
+		}
+	}
+
+	private boolean isJavaLangClass(Class<?> clazz)
+	{
+		return clazz.getName().startsWith(JAVA_LANG);
 	}
 	
 	public void reset()
@@ -39,13 +51,13 @@ public class ModuleCopy
 
 	public void resetStaticFields()
 	{
+		if(staticFields == null)
+		{
+			return;
+		}
+		
 		for (Field f : staticFields.keySet())
 		{
-			if (isFinal(f))
-			{
-				continue;
-			}
-	
 			f.setAccessible(true);
 	
 			Object v = deepCopy(staticFields.get(f));
@@ -62,36 +74,52 @@ public class ModuleCopy
 
 	public void copyStaticFields(Class<?> clazz)
 	{
-		staticFields = new HashMap<>();
-	
+		this.staticFields = new HashMap<>();
+
 		for (Field f : getAllFields(clazz))
 		{
-			if (isFinal(f))
-			{
-				continue;
-			}
-	
-			f.setAccessible(true);
-	
 			try
 			{
-				if(isStatic(f))
+				/**
+				 * The field may be 'private'. Make it accessible so we can set it later
+				 */
+				f.setAccessible(true);
+				if (isFinal(f))
+				{
+					/**
+					 * Remove the 'final' modifier so we can set it later
+					 */
+					unfinal(f);
+					
+					/**
+					 * The Java code generator also makes 'final' fields 'static'
+					 */
+					staticFields.put(f, deepCopy(f.get(null)));
+				} else if (isStatic(f))
 				{
 					staticFields.put(f, deepCopy(f.get(null)));
 				}
-			} catch (IllegalArgumentException | IllegalAccessException e)
+			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
 			{
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public boolean isFinal(Field f)
+	private static void unfinal(Field f) throws NoSuchFieldException, IllegalAccessException
+	{
+		f.setAccessible(true);
+		Field modifiersField = Field.class.getDeclaredField(MODIFIERS_FIELD);
+		modifiersField.setAccessible(true);
+		modifiersField.setInt(f, f.getModifiers() & ~Modifier.FINAL);
+	}
+	
+	public static boolean isFinal(Field f)
 	{
 		return Modifier.isFinal(f.getModifiers());
 	}
 	
-	public boolean isStatic(Field f)
+	public static boolean isStatic(Field f)
 	{
 		return Modifier.isStatic(f.getModifiers());
 	}
