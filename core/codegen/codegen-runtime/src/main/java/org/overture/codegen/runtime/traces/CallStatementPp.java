@@ -1,6 +1,6 @@
 package org.overture.codegen.runtime.traces;
 
-abstract public class CallStatementPp implements CallStatementSl
+abstract public class CallStatementPp implements CallStatement
 {
 	protected Object instance;
 	

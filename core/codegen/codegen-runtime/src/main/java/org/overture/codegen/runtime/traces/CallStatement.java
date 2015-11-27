@@ -1,6 +1,6 @@
 package org.overture.codegen.runtime.traces;
 
-public interface CallStatementSl
+public interface CallStatement
 {
 	public Object execute();
 }

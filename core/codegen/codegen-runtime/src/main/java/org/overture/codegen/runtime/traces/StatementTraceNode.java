@@ -25,9 +25,9 @@ package org.overture.codegen.runtime.traces;
 
 public class StatementTraceNode extends TraceNode
 {
-	private CallStatementSl statement;
+	private CallStatement statement;
 
-	public StatementTraceNode(CallStatementSl statement)
+	public StatementTraceNode(CallStatement statement)
 	{
 		this.statement = statement;
 	}

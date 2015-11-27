@@ -62,7 +62,7 @@ public class RepeatTraceNode extends TraceNode implements IIterableTraceNode
 		{
 			CallSequence seq = new CallSequence();
 			/* Trace variables visible at this point */
-			CallStatementSl skip = new CallStatementSl()
+			CallStatement skip = new CallStatement()
 			{
 				public Object execute()
 				{

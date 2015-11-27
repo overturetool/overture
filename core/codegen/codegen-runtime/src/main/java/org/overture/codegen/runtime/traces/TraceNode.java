@@ -80,7 +80,7 @@ public abstract class TraceNode
 					int callStmIdx = 0;
 					for (; callStmIdx < test.size(); callStmIdx++)
 					{
-						CallStatementSl callStm = test.get(callStmIdx);
+						CallStatement callStm = test.get(callStmIdx);
 						try
 						{
 							callStms.add(callStm.toString());
@@ -97,7 +97,7 @@ public abstract class TraceNode
 						{
 							for (int p = callStmIdx + 1; p < test.size(); p++)
 							{
-								CallStatementSl notCalled = test.get(callStmIdx);
+								CallStatement notCalled = test.get(callStmIdx);
 								callStms.add(notCalled.toString());
 							}
 
