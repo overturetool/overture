@@ -135,7 +135,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		}
 		else 
 		{
-			classTypeName = tracePrefixes.callStmSlClassTypeName();
+			classTypeName = tracePrefixes.callStmBaseClassTypeName();
 		}
 		
 		AClassTypeCG callStmType = transAssistant.consClassType(classTypeName);
