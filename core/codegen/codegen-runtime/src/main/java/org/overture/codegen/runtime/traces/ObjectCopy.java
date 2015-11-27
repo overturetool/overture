@@ -1,7 +1,5 @@
 package org.overture.codegen.runtime.traces;
 
-import org.overture.codegen.runtime.copying.DeepCopy;
-
 public class ObjectCopy extends ModuleCopy
 {
 	private Object instance;
@@ -11,7 +9,7 @@ public class ObjectCopy extends ModuleCopy
 		super(orig.getClass());
 		
 		// Copy instance
-		this.instance = DeepCopy.copy(orig);
+		this.instance = deepCopy(orig);
 		reset();
 	}
 
@@ -19,6 +17,6 @@ public class ObjectCopy extends ModuleCopy
 	public void reset()
 	{
 		super.reset();
-		val = DeepCopy.copy(instance);
+		val = deepCopy(instance);
 	}
 }

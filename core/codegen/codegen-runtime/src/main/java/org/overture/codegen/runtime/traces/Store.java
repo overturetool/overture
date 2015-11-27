@@ -29,7 +29,6 @@ public class Store
 	
 	public void reset()
 	{
-		// TODO: Optimise this
 		for(Number k : values.keySet())
 		{
 			values.get(k).reset();

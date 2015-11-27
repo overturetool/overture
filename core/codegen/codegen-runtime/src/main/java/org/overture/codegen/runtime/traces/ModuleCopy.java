@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.overture.codegen.runtime.ValueType;
 import org.overture.codegen.runtime.copying.DeepCopy;
 
 public class ModuleCopy
@@ -47,7 +48,7 @@ public class ModuleCopy
 	
 			f.setAccessible(true);
 	
-			Object v = DeepCopy.copy(staticFields.get(f));
+			Object v = deepCopy(staticFields.get(f));
 	
 			try
 			{
@@ -76,7 +77,7 @@ public class ModuleCopy
 			{
 				if(isStatic(f))
 				{
-					staticFields.put(f, DeepCopy.copy(f.get(null)));
+					staticFields.put(f, deepCopy(f.get(null)));
 				}
 			} catch (IllegalArgumentException | IllegalAccessException e)
 			{
@@ -105,5 +106,26 @@ public class ModuleCopy
 		}
 	
 		return fields;
+	}
+	
+	public static Object deepCopy(Object orig)
+	{
+		if(orig == null)
+		{
+			return null;
+		}
+		else if(orig instanceof ValueType)
+		{
+			ValueType vt = (ValueType) orig;
+			
+			return vt.copy();
+		}else if(orig instanceof Number || orig instanceof Character || orig instanceof Boolean)
+		{
+			return orig;
+		}
+		else
+		{
+			return DeepCopy.copy(orig);
+		}
 	}
 }
