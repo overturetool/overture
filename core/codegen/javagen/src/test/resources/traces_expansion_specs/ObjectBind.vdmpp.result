@@ -29,7 +29,7 @@ public class Entry implements java.io.Serializable {
         }
 
         CallStatementPp callStm_1 = new CallStatementPp() {
-                public Object execute(final Object instance) {
+                public Object execute() {
                     return ((Entry) store.getValue(ID_1)).op();
                 }
 

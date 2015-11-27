@@ -43,7 +43,7 @@ public class Entry implements java.io.Serializable {
             store.register(ID_1, x);
 
             CallStatementPp callStm_1 = new CallStatementPp() {
-                    public Object execute(final Object instance) {
+                    public Object execute() {
                         ((Entry) instance).op(((Number) store.getValue(ID_1)));
 
                         return Utils.VOID_VALUE;

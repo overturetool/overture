@@ -40,7 +40,7 @@ public class Entry implements java.io.Serializable {
             store.register(ID_1, e1);
 
             CallStatementPp callStm_1 = new CallStatementPp() {
-                    public Object execute(final Object instance) {
+                    public Object execute() {
                         return ((Entry) store.getValue(ID_1)).op();
                     }
 
@@ -64,7 +64,7 @@ public class Entry implements java.io.Serializable {
             store.register(ID_2, e2);
 
             CallStatementPp callStm_2 = new CallStatementPp() {
-                    public Object execute(final Object instance) {
+                    public Object execute() {
                         return ((Entry) store.getValue(ID_2)).op();
                     }
 
