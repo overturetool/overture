@@ -74,6 +74,25 @@ public class IO {
 			file = new File(BaseDIr, path);
 		}
 		
+		/**
+		 * The VDM IO library requires the parent structure of a file to exist before the file is accessed. However,
+		 * when a model is code generated to some location the parent folder structure for a file will not exists. To
+		 * overcome this (and for convenience) the Java code generator runtime library tries to create the folder
+		 * structure
+		 */
+		
+		file.getParentFile().mkdirs();
+		
+		if(!file.exists())
+		{
+			try
+			{
+				file.createNewFile();
+			} catch (IOException e)
+			{
+			}
+		}
+		
 		return file;
 	}
     
@@ -101,7 +120,7 @@ public class IO {
 			try
 			{
 				File file = getFile(filename);
-				FileOutputStream fos = new FileOutputStream(file, fdir.getClass().getName().
+				FileOutputStream fos = new FileOutputStream(file, fdir != null && fdir.getClass().getName().
 						endsWith("quotes.appendQuote"));
 
 				fos.write(text.getBytes(Charset.defaultCharset().name()));
