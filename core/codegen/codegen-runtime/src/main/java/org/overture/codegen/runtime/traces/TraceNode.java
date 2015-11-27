@@ -80,33 +80,24 @@ public abstract class TraceNode
 					int callStmIdx = 0;
 					for (; callStmIdx < test.size(); callStmIdx++)
 					{
-						CallStatement callStm = test.get(callStmIdx);
+						CallStatementSl callStm = test.get(callStmIdx);
 						try
 						{
 							callStms.add(callStm.toString());
 							
 							if(callStm instanceof CallStatementPp)
 							{
-								CallStatementPp callPp = (CallStatementPp) callStm;
-								Object result = callPp.execute(store.getValue(ENCLOSING_MODULE_ID));
-								callStmResults.add(result);
+								((CallStatementPp) callStm).setInstance(store.getValue(ENCLOSING_MODULE_ID));
 							}
-							else if(callStm instanceof CallStatementSl)
-							{
-								CallStatementSl callSl = (CallStatementSl) callStm;
-								Object result = callSl.execute();
-								callStmResults.add(result);
-							}
-							else
-							{
-								throw new UnsupportedOperationException("Got unexpected call statement: " + callStm);
-							}
+							
+							Object result = callStm.execute();
+							callStmResults.add(result);
 
 						} catch (RuntimeException e)
 						{
 							for (int p = callStmIdx + 1; p < test.size(); p++)
 							{
-								CallStatement notCalled = test.get(callStmIdx);
+								CallStatementSl notCalled = test.get(callStmIdx);
 								callStms.add(notCalled.toString());
 							}
 

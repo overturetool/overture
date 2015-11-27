@@ -26,7 +26,7 @@ package org.overture.codegen.runtime.traces;
 import java.util.Vector;
 
 @SuppressWarnings("serial")
-public class CallSequence extends Vector<CallStatement>
+public class CallSequence extends Vector<CallStatementSl>
 {
 	private int filtered = 0;
 
@@ -36,7 +36,7 @@ public class CallSequence extends Vector<CallStatement>
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
 
-		for (CallStatement stmt : this)
+		for (CallStatementSl stmt : this)
 		{
 			sb.append(sep);
 			sb.append(stmt.toString());
