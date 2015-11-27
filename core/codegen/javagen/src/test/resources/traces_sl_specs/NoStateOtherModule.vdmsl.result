@@ -30,7 +30,7 @@ final public class Entry implements java.io.Serializable {
 
             store.register(ID_3, a);
 
-            CallStatementSl callStm_1 = new CallStatementSl() {
+            CallStatement callStm_1 = new CallStatement() {
                     public Object execute() {
                         Other.op(((Number) store.getValue(ID_3)));
 
