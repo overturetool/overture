@@ -64,7 +64,7 @@ public class RepeatTraceNode extends TraceNode implements IIterableTraceNode
 			/* Trace variables visible at this point */
 			CallStatement skip = new CallStatement()
 			{
-				public Object execute(final Object instance)
+				public Object execute()
 				{
 					return Utils.VOID_VALUE;
 				}

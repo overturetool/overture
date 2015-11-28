@@ -1,9 +1,6 @@
 package org.overture.codegen.runtime.traces;
 
-abstract public class CallStatement
+public interface CallStatement
 {
-	abstract public Object execute(final Object instance);
-	
-	@Override
-	abstract public String toString();
+	public Object execute();
 }

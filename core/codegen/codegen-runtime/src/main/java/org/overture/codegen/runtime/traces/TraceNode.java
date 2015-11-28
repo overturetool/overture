@@ -30,18 +30,31 @@ import org.overture.codegen.runtime.Utils;
 
 public abstract class TraceNode
 {
+	private static final int ENCLOSING_MODULE_ID = -1;
+
 	@Override
 	abstract public String toString();
 
 	abstract public TestSequence getTests();
 
-	// Added
-	@SuppressWarnings("rawtypes")
-	public static void executeTests(TraceNode trace, Class instanceType,
+	// SL
+	public static void executeTests(TraceNode trace, TestAccumulator acc, Store store)
+	{
+		executeTests(trace, null, acc, store);
+
+	}
+	
+	// PP
+	public static void executeTests(TraceNode trace, Class<?> instanceType,
 			TestAccumulator acc, Store store)
 	{
 		try
 		{
+			if(instanceType != null)
+			{
+				store.register(ENCLOSING_MODULE_ID, instanceType.newInstance());
+			}
+			
 			int testNo = 1;
 
 			TestSequence tests = trace.getTests();
@@ -64,7 +77,6 @@ public abstract class TraceNode
 					acc.registerTest(new TraceTest(testNo, test.toString(), "", Verdict.SKIPPED));
 				} else
 				{
-					Object instance = instanceType.newInstance();
 					int callStmIdx = 0;
 					for (; callStmIdx < test.size(); callStmIdx++)
 					{
@@ -72,7 +84,13 @@ public abstract class TraceNode
 						try
 						{
 							callStms.add(callStm.toString());
-							Object result = callStm.execute(instance);
+							
+							if(callStm instanceof CallStatementPp)
+							{
+								((CallStatementPp) callStm).setInstance(store.getValue(ENCLOSING_MODULE_ID));
+							}
+							
+							Object result = callStm.execute();
 							callStmResults.add(result);
 
 						} catch (RuntimeException e)
@@ -130,8 +148,6 @@ public abstract class TraceNode
 				testNo++;
 				store.reset();
 			}
-
-			// showResults(results);
 
 		} catch (InstantiationException e)
 		{

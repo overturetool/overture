@@ -42,6 +42,11 @@ public class TraceNames
 	
 	public String callStmClassTypeName()
 	{
+		return "CallStatementPp";
+	}
+	
+	public String callStmBaseClassTypeName()
+	{
 		return "CallStatement";
 	}
 	
@@ -138,7 +143,12 @@ public class TraceNames
 		return "store";
 	}
 	
-	public String storeRegisterMethodName()
+	public String storeStaticRegistrationMethodName()
+	{
+		return "staticReg";
+	}
+	
+	public String storeRegistrationMethodName()
 	{
 		return "register";
 	}

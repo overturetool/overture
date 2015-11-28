@@ -1,0 +1,21 @@
+class Entry
+
+instance variables
+
+static x : int := 0;
+
+operations
+
+public op : () ==> nat
+op () ==
+(
+  x := x + 1;
+  return x;
+);
+  
+traces
+
+T1:
+ (op();(op()|op()));
+
+end Entry

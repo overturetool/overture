@@ -31,8 +31,8 @@ public class Entry implements java.io.Serializable {
             store.register(ID_1, x);
 
             ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
-            CallStatement callStm_1 = new CallStatement() {
-                    public Object execute(final Object instance) {
+            CallStatementPp callStm_1 = new CallStatementPp() {
+                    public Object execute() {
                         return fun1(((Number) store.getValue(ID_1)));
                     }
 
@@ -44,8 +44,8 @@ public class Entry implements java.io.Serializable {
 
             StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
 
-            CallStatement callStm_2 = new CallStatement() {
-                    public Object execute(final Object instance) {
+            CallStatementPp callStm_2 = new CallStatementPp() {
+                    public Object execute() {
                         return fun2(((Number) store.getValue(ID_1)));
                     }
 
