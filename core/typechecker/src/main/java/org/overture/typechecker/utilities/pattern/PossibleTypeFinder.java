@@ -83,7 +83,15 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAConcatenationPattern(AConcatenationPattern pattern)
 			throws AnalysisException
 	{
-		return AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
+		PTypeSet set = new PTypeSet(af);
+
+		set.add(af.createPPatternAssistant().getPossibleType(pattern.getLeft()));
+		set.add(af.createPPatternAssistant().getPossibleType(pattern.getRight()));
+
+		PType s = set.getType(pattern.getLocation());
+
+		return af.createPTypeAssistant().isUnknown(s) ?
+			AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation())) : s;
 	}
 
 	@Override
@@ -144,13 +152,13 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 	@Override
 	public PType caseASetPattern(ASetPattern pattern) throws AnalysisException
 	{
-		return AstFactory.newASetType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
+		return AstFactory.newASetType(pattern.getLocation(), af.createPPatternListAssistant().getPossibleType(pattern.getPlist(), pattern.getLocation()));
 	}
 
 	@Override
 	public PType caseASeqPattern(ASeqPattern pattern) throws AnalysisException
 	{
-		return AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
+		return AstFactory.newASeqSeqType(pattern.getLocation(), af.createPPatternListAssistant().getPossibleType(pattern.getPlist(), pattern.getLocation()));
 	}
 
 	@Override
