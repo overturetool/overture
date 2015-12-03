@@ -4,7 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.statements.ACallStm;
+import org.overture.codegen.assistant.DeclAssistantCG;
+import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -14,8 +18,10 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.AnswerAdaptor;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
@@ -41,6 +47,7 @@ import org.overture.codegen.cgast.traces.ALetBeStBindingTraceDeclCG;
 import org.overture.codegen.cgast.traces.ALetDefBindingTraceDeclCG;
 import org.overture.codegen.cgast.traces.ARepeatTraceDeclCG;
 import org.overture.codegen.cgast.traces.ATraceDeclTermCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -142,6 +149,14 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		String callStmName = getInfo().getTempVarNameGen().nextVarName(tracePrefixes.callStmNamePrefix());
 		AAnonymousClassExpCG callStmCreation = new AAnonymousClassExpCG();
 		callStmCreation.setType(callStmType);
+		
+		AMethodDeclCG preCondMethod = condMeetsPreCondMethod(node.getCallStm().clone());
+		
+		if(preCondMethod != null)
+		{
+			callStmCreation.getMethods().add(preCondMethod);
+		}
+
 		callStmCreation.getMethods().add(consExecuteMethod(node.getCallStm().clone()));
 		callStmCreation.getMethods().add(toStringBuilder.consToString(getInfo(), node.getCallStm(), storeAssistant.getIdConstNameMap(), storeAssistant, transAssistant));
 		AVarDeclCG callStmDecl = transAssistant.consDecl(callStmName, callStmType.clone(), callStmCreation);
@@ -360,20 +375,21 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		execMethod.setAsync(false);
 		execMethod.setIsConstructor(false);
 		execMethod.setMethodType(methodType);
-		execMethod.setName(tracePrefixes.callStmMethodNamePrefix());
+		execMethod.setName(tracePrefixes.callStmExecMethodNamePrefix());
 		execMethod.setStatic(false);
 
 		ABlockStmCG body = new ABlockStmCG();
-		
-		SStmCG preCallStms = makePreCallStms(stm);
-		
-		if(preCallStms != null)
-		{
-			body.getStatements().add(preCallStms);
-		}
-		
 		body.getStatements().add(makeInstanceCall(stm));
 		
+		useStoreLookups(body);
+		
+		execMethod.setBody(body);
+		
+		return execMethod;
+	}
+
+	private void useStoreLookups(SStmCG body)
+	{
 		try
 		{
 			final Set<String> localVarNames = storeAssistant.getIdConstNameMap().keySet();
@@ -396,17 +412,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		} catch (AnalysisException e)
 		{
 			Logger.getLog().printErrorln("Problem replacing variable expressions with storage lookups in TraceStmBuilder");
-			return null;
 		}
-		execMethod.setBody(body);
-		
-		return execMethod;
-	}
-
-	
-	public SStmCG makePreCallStms(SStmCG stm)
-	{
-		return null;
 	}
 
 	public TraceNodeData buildFromDeclTerms(List<ATraceDeclTermCG> terms)
@@ -437,6 +443,109 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		return new TraceNodeData(transAssistant.getInfo().getExpAssistant().consIdVar(name, classType.clone()), stms);
 	}
 
+	private AMethodDeclCG condMeetsPreCondMethod(SStmCG stm)
+	{
+		// This only works for VDM-SL
+		if (Settings.dialect != Dialect.VDM_SL || !transAssistant.getInfo().getSettings().generatePreConds())
+		{
+			return null;
+		}
+
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		methodType.setResult(new ABoolBasicTypeCG());
+
+		AMethodDeclCG meetsPredMethod = new AMethodDeclCG();
+		meetsPredMethod.setImplicit(false);
+		meetsPredMethod.setAbstract(false);
+		meetsPredMethod.setAccess(IRConstants.PUBLIC);
+		meetsPredMethod.setAsync(false);
+		meetsPredMethod.setIsConstructor(false);
+		meetsPredMethod.setMethodType(methodType);
+		meetsPredMethod.setName(tracePrefixes.callStmMeetsPreCondNamePrefix());
+		meetsPredMethod.setStatic(false);
+
+		boolean isOp = false;
+		String pre = "pre_";
+		List<SExpCG> args = null;
+
+		/**
+		 * We don't need to consider the 'ACallObjectExpStmCG' since it only appears in the IR if we code generate a PP
+		 * or RT model
+		 */
+		if (stm instanceof APlainCallStmCG)
+		{
+			APlainCallStmCG plainCall = (APlainCallStmCG) stm;
+			SourceNode source = plainCall.getSourceNode();
+			if (source != null)
+			{
+				org.overture.ast.node.INode vdmNode = source.getVdmNode();
+
+				if (vdmNode instanceof ACallStm)
+				{
+					ACallStm callStm = (ACallStm) vdmNode;
+					if (callStm.getRootdef() instanceof SOperationDefinition)
+					{
+						SOperationDefinition op = (SOperationDefinition) callStm.getRootdef();
+
+						if (op.getPredef() == null)
+						{
+							// The pre condition is "true"
+							return null;
+						}
+
+						isOp = true;
+					}
+				} else
+				{
+					Logger.getLog().printErrorln("Expected VDM source node to be a call statement at this point in '"
+							+ this.getClass().getSimpleName() + "' but got: " + vdmNode);
+				}
+			} else
+			{
+				Logger.getLog().printErrorln("Could not find VDM source node for the plain statement call '" + plainCall
+						+ "' in '" + this.getClass().getSimpleName() + "'.");
+			}
+
+			plainCall.setName(pre + plainCall.getName());
+			plainCall.setType(new ABoolBasicTypeCG());
+			args = plainCall.getArgs();
+
+			meetsPredMethod.setBody(plainCall);
+		} else
+		{
+			Logger.getLog().printErrorln("Got unexpected statement type in '" + this.getClass().getSimpleName() + "': "
+					+ stm);
+
+			return null;
+		}
+
+		if (args != null && isOp)
+		{
+			DeclAssistantCG dAssist = this.transAssistant.getInfo().getDeclAssistant();
+			SClassDeclCG clazz = dAssist.findClass(transAssistant.getInfo().getClasses(), traceEnclosingClass);
+
+			for (AFieldDeclCG f : clazz.getFields())
+			{
+				if (!f.getFinal())
+				{
+					// It's the state component
+					ExpAssistantCG eAssist = this.transAssistant.getInfo().getExpAssistant();
+					AIdentifierVarExpCG stateArg = eAssist.consIdVar(f.getName(), f.getType().clone());
+					args.add(stateArg);
+					break;
+				}
+			}
+		} else
+		{
+			Logger.getLog().printErrorln("Could not find args for " + stm + " in '" + this.getClass().getSimpleName()
+					+ "'");
+		}
+
+		useStoreLookups(meetsPredMethod.getBody());
+
+		return meetsPredMethod;
+	}
+	
 	private SStmCG makeInstanceCall(SStmCG stm)
 	{
 		if(stm instanceof ACallObjectExpStmCG)

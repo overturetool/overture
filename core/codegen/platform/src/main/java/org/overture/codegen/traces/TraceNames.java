@@ -55,7 +55,12 @@ public class TraceNames
 		return "callStm_";
 	}
 	
-	public String callStmMethodNamePrefix()
+	public String callStmMeetsPreCondNamePrefix()
+	{
+		return "meetsPreCond";
+	}
+	
+	public String callStmExecMethodNamePrefix()
 	{
 		return "execute";
 	}
