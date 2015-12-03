@@ -31,6 +31,8 @@ public class TracesSlOutputTest extends SlSpecificationTest
 		irSettings.setGenerateTraces(true);
 		irSettings.setGeneratePreCondChecks(true);
 		irSettings.setGeneratePreConds(true);
+		irSettings.setMakePreCondsPublic(true);
+		irSettings.setMakePostCondsPublic(true);
 		
 		return irSettings;
 	}
