@@ -1,6 +1,16 @@
 package org.overture.codegen.runtime.traces;
 
-public interface CallStatement
+abstract public class CallStatement
 {
-	public Object execute();
+	abstract public Object execute();
+	
+	public Boolean isTypeCorrect()
+	{
+		return true;
+	}
+	
+	public Boolean meetsPreCond()
+	{
+		return true;
+	}
 }
