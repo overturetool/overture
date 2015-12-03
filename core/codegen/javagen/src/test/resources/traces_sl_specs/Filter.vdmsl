@@ -1,8 +1,9 @@
-class Entry
+module Entry
 
+definitions
 operations
 
-public op : () ==> ()
+op : () ==> ()
 op () == skip
 pre false;
 

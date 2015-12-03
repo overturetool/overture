@@ -1,8 +1,9 @@
-class Entry
+module Entry
 
+definitions
 operations
 
-public op : (nat) ==> ()
+op : (nat) ==> ()
 op (x) == skip
 pre x <> 2 and x <> 4;
 
