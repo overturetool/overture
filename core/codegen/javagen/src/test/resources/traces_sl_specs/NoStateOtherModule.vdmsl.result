@@ -31,6 +31,10 @@ final public class Entry implements java.io.Serializable {
             store.register(ID_3, a);
 
             CallStatement callStm_1 = new CallStatement() {
+                    public Boolean meetsPreCond() {
+                        return Other.pre_op(((Number) store.getValue(ID_3)));
+                    }
+
                     public Object execute() {
                         Other.op(((Number) store.getValue(ID_3)));
 
@@ -77,7 +81,7 @@ final public class Other implements java.io.Serializable {
         /* skip */
     }
 
-    private static Boolean pre_op(final Number x) {
+    public static Boolean pre_op(final Number x) {
         return Utils.divide((1.0 * 1L), x.longValue()) > 0L;
     }
 
