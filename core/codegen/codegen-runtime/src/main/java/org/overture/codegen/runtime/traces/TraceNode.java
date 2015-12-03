@@ -31,6 +31,7 @@ import org.overture.codegen.runtime.Utils;
 public abstract class TraceNode
 {
 	private static final int ENCLOSING_MODULE_ID = -1;
+	private static final Object NOT_AVAILABLE = new Object();
 
 	@Override
 	abstract public String toString();
@@ -67,6 +68,7 @@ public abstract class TraceNode
 				List<Object> callStmResults = new LinkedList<Object>();
 
 				boolean failureOccured = false;
+				boolean inCon = false;
 
 				/*
 				 * TODO: Type check missing here If the type check fails we would also have to do filtering
@@ -90,6 +92,21 @@ public abstract class TraceNode
 								((CallStatementPp) callStm).setInstance(store.getValue(ENCLOSING_MODULE_ID));
 							}
 							
+							if(!callStm.isTypeCorrect())
+							{
+								// TODO: To be done. Consider where the right place is to check for this.
+								break;
+							}
+							
+							if(!callStm.meetsPreCond())
+							{
+								// Inconclusive
+								inCon = true;
+								callStmResults.add(NOT_AVAILABLE);
+								callStmResults.add(Verdict.INCONCLUSIVE);
+								break;
+							}
+							
 							Object result = callStm.execute();
 							callStmResults.add(result);
 
@@ -100,9 +117,6 @@ public abstract class TraceNode
 								CallStatement notCalled = test.get(callStmIdx);
 								callStms.add(notCalled.toString());
 							}
-
-							boolean preCondViolation = e.getMessage() != null
-									&& e.getMessage().contains("Precondition failure");
 
 							for (; callStmIdx < test.size(); callStmIdx++)
 							{
@@ -117,24 +131,27 @@ public abstract class TraceNode
 								}
 							}
 
-							Verdict verdict = preCondViolation ? Verdict.INCONCLUSIVE
-									: Verdict.FAILED;
+							failureOccured = true;
+							
+							Verdict verdict = Verdict.FAILED;
 
 							// Filter
 							callStmResults.add(verdict);
 							tests.filter(callStmResults, test, testNo);
-
-							failureOccured = true;
 
 							acc.registerTest(new TraceTest(testNo, getResultStr(callStms, "; "), getResultStr(callStmResults.subList(0, callStmResults.size() - 1), " ; "), verdict));
 						}
 
 					}
 
-					if (!failureOccured)
+					if(inCon)
 					{
-						// Filter
-						// TODO: but filtering a passed test should be useless)
+						tests.filter(callStmResults, test, testNo);
+						acc.registerTest(new TraceTest(testNo, test.toString(), "", Verdict.INCONCLUSIVE));
+					}
+					else if (!failureOccured)
+					{
+						// TODO: but filtering a passed test should be useless) so cut it
 						callStmResults.add(Verdict.PASSED);
 						tests.filter(callStmResults, test, testNo);
 
