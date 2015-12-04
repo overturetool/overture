@@ -42,20 +42,18 @@ public abstract class TraceNode
 	public static void executeTests(TraceNode trace, TestAccumulator acc, Store store)
 	{
 		executeTests(trace, null, acc, store);
-
 	}
-	
+
 	// PP
-	public static void executeTests(TraceNode trace, Class<?> instanceType,
-			TestAccumulator acc, Store store)
+	public static void executeTests(TraceNode trace, Class<?> instanceType, TestAccumulator acc, Store store)
 	{
 		try
 		{
-			if(instanceType != null)
+			if (instanceType != null)
 			{
 				store.register(ENCLOSING_MODULE_ID, instanceType.newInstance());
 			}
-			
+
 			int testNo = 1;
 
 			TestSequence tests = trace.getTests();
@@ -67,13 +65,9 @@ public abstract class TraceNode
 				List<String> callStms = new LinkedList<String>();
 				List<Object> callStmResults = new LinkedList<Object>();
 
-				boolean failureOccured = false;
-				boolean inCon = false;
-
 				/*
 				 * TODO: Type check missing here If the type check fails we would also have to do filtering
 				 */
-
 				if (test.getFilter() > 0)
 				{
 					acc.registerTest(new TraceTest(testNo, test.toString(), "", Verdict.SKIPPED));
@@ -86,29 +80,37 @@ public abstract class TraceNode
 						try
 						{
 							callStms.add(callStm.toString());
-							
-							if(callStm instanceof CallStatementPp)
+
+							if (callStm instanceof CallStatementPp)
 							{
 								((CallStatementPp) callStm).setInstance(store.getValue(ENCLOSING_MODULE_ID));
 							}
-							
-							if(!callStm.isTypeCorrect())
+
+							if (!callStm.isTypeCorrect())
 							{
 								// TODO: To be done. Consider where the right place is to check for this.
 								break;
 							}
-							
-							if(!callStm.meetsPreCond())
+
+							if (!callStm.meetsPreCond())
 							{
 								// Inconclusive
-								inCon = true;
 								callStmResults.add(NOT_AVAILABLE);
 								callStmResults.add(Verdict.INCONCLUSIVE);
+								tests.filter(callStmResults, test, testNo);
+								acc.registerTest(new TraceTest(testNo, test.toString(), "", Verdict.INCONCLUSIVE));
 								break;
 							}
-							
+
 							Object result = callStm.execute();
 							callStmResults.add(result);
+
+							if (callStmIdx == test.size() - 1)
+							{
+								callStmResults.add(Verdict.PASSED);
+								acc.registerTest(new TraceTest(testNo, getResultStr(callStms, "; "), getResultStr(callStmResults.subList(0, callStmResults.size()
+										- 1), " ; "), Verdict.PASSED));
+							}
 
 						} catch (RuntimeException e)
 						{
@@ -122,40 +124,23 @@ public abstract class TraceNode
 							{
 								if (e.getMessage() != null)
 								{
-									callStmResults.add(e.getClass().getSimpleName()
-											+ ": " + e.getMessage());
+									callStmResults.add(e.getClass().getSimpleName() + ": " + e.getMessage());
 								} else
 								{
-									callStmResults.add(e.getClass().getSimpleName());// Happens for null pointer
-																						// exceptions
+									// Happens for null pointer exceptions
+									callStmResults.add(e.getClass().getSimpleName());
 								}
 							}
 
-							failureOccured = true;
-							
 							Verdict verdict = Verdict.FAILED;
 
-							// Filter
 							callStmResults.add(verdict);
-							tests.filter(callStmResults, test, testNo);
 
-							acc.registerTest(new TraceTest(testNo, getResultStr(callStms, "; "), getResultStr(callStmResults.subList(0, callStmResults.size() - 1), " ; "), verdict));
+							tests.filter(callStmResults, test, testNo);
+							acc.registerTest(new TraceTest(testNo, getResultStr(callStms, "; "), getResultStr(callStmResults.subList(0, callStmResults.size()
+									- 1), " ; "), verdict));
 						}
 
-					}
-
-					if(inCon)
-					{
-						tests.filter(callStmResults, test, testNo);
-						acc.registerTest(new TraceTest(testNo, test.toString(), "", Verdict.INCONCLUSIVE));
-					}
-					else if (!failureOccured)
-					{
-						// TODO: but filtering a passed test should be useless) so cut it
-						callStmResults.add(Verdict.PASSED);
-						tests.filter(callStmResults, test, testNo);
-
-						acc.registerTest(new TraceTest(testNo, getResultStr(callStms, "; "), getResultStr(callStmResults.subList(0, callStmResults.size() - 1), " ; "), Verdict.PASSED));
 					}
 				}
 
@@ -175,8 +160,7 @@ public abstract class TraceNode
 		}
 	}
 
-	private static String getResultStr(List<? extends Object> results,
-			String sep)
+	private static String getResultStr(List<? extends Object> results, String sep)
 	{
 		StringBuilder sb = new StringBuilder();
 
