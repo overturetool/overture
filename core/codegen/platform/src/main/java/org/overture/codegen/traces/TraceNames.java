@@ -206,4 +206,14 @@ public class TraceNames
 	{
 		return "testAccumulator";
 	}
+	
+	public String traceUtilClassName()
+	{
+		return "TraceUtil";
+	}
+	
+	public String readStateMethodName()
+	{
+		return "readState";
+	}
 }
