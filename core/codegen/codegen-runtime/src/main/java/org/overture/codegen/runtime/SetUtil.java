@@ -187,10 +187,19 @@ public class SetUtil
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static VDMSet range(double first, double last)
+	public static VDMSet range(Object first, Object last)
 	{
-		long from = (long) Math.ceil(first);
-		long to = (long) Math.floor(last);
+		if (!(first instanceof Number) || !(last instanceof Number))
+		{
+			throw new IllegalArgumentException("The range operator is only applicable to numbers. Got " + first
+					+ " and " + last);
+		}
+		
+		Number firstNumber = (Number) first;
+		Number lastNumber = (Number) last;
+		
+		long from = (long) Math.ceil(firstNumber.doubleValue());
+		long to = (long) Math.floor(lastNumber.doubleValue());
 		
 		VDMSet result = new VDMSet();
 		
