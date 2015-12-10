@@ -1,0 +1,14 @@
+class Entry
+
+values
+
+FIRST = 1;
+LAST = 10;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+ return card {FIRST,...,LAST};
+
+end Entry
