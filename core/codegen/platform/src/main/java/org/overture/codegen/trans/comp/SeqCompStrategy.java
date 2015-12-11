@@ -29,7 +29,7 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
+import org.overture.codegen.cgast.statements.ASeqCompAddStmCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -64,17 +64,12 @@ public class SeqCompStrategy extends CompStrategy
 		seqCompResult.setName(idPattern.getName());
 		seqCompResult.setIsLambda(false);
 		seqCompResult.setIsLocal(true);
+		
+		ASeqCompAddStmCG add = new ASeqCompAddStmCG();
+		add.setSeq(seqCompResult);
+		add.setElement(first.clone());
 
-		AEnumSeqExpCG seqToConcat = new AEnumSeqExpCG();
-		seqToConcat.setType(compType.clone());
-		seqToConcat.getMembers().add(first.clone());
-
-		ASeqConcatBinaryExpCG seqConcat = new ASeqConcatBinaryExpCG();
-		seqConcat.setType(compType.clone());
-		seqConcat.setLeft(seqCompResult.clone());
-		seqConcat.setRight(seqToConcat);
-
-		return consConditionalAdd(seqCompResult, seqConcat);
+		return consConditionalAdd(seqCompResult, add);
 	}
 
 	@Override
