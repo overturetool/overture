@@ -13,6 +13,8 @@ import org.overture.vdm2jml.tests.util.ProcessResult;
 
 abstract public class OpenJmlValidationBase extends JmlGenTestBase
 {
+	private static final String SKIPPING_A_SPECIFICATION_CLAUSE_FILTER_MSG = "Skipping a specification clause ";
+
 	public static final String VDMSL_FILE_EXT = ".vdmsl";
 
 	public static final String OPENJML_ENV_VAR = "OPENJML";
@@ -99,7 +101,10 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 
 			while ((s = br.readLine()) != null)
 			{
-				openJmlOutput.append(s).append('\n');
+				if(!mustFilter(s))
+				{
+					openJmlOutput.append(s).append('\n');
+				}
 			}
 
 			br.close();
@@ -130,6 +135,11 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 		}
 		
 		return new ProcessResult(exitCode, openJmlOutput);
+	}
+
+	private boolean mustFilter(String s)
+	{
+		return s.startsWith(SKIPPING_A_SPECIFICATION_CLAUSE_FILTER_MSG);
 	}
 	
 	public void clearCodeFolder()
