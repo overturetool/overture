@@ -310,7 +310,10 @@ CG {-> package='org.overture.codegen.cgast'
 			| {cycles} [cycles]:CG.#exp [stm]:CG.#stm
 			| {duration} [duration]:CG.#exp [stm]:CG.#stm
 			|	{meta}
-           ;
+      | {seqCompAdd} [seq]:CG.#exp [element]:CG.#exp
+      | {setCompAdd} [set]:CG.#exp [element]:CG.#exp
+      | {mapCompAdd} [map]:CG.#exp [element]:CG.#exp
+      ;
 
 #call {-> package='org.overture.codegen.cgast.statements'
 	| 	[type]:CG.#type
