@@ -33,8 +33,7 @@ public class Entry {
                 throw new RuntimeException("Missing member: x");
             }
 
-            mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
-                    MapUtil.map(new Maplet(1L, apply_1)));
+            MapUtil.mapAdd(mapCompResult_1, new Maplet(1L, apply_1));
         }
 
         return Utils.copy(mapCompResult_1);

@@ -113,8 +113,7 @@ public class Plant {
             Token p = ((Token) iterator_2.next());
 
             if (SetUtil.inSet(ex, ((VDMSet) Utils.get(schedule, p)))) {
-                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
-                        SetUtil.set(p));
+                setCompResult_1.add(p);
             }
         }
 

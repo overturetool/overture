@@ -19,9 +19,8 @@ public class Entry {
             Object e = ((Object) iterator_1.next());
 
             if (Utils.equals(e, 2L)) {
-                mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
-                        MapUtil.map(
-                            new Maplet(e, ((Number) e).longValue() + 1L)));
+                MapUtil.mapAdd(mapCompResult_1,
+                    new Maplet(e, ((Number) e).longValue() + 1L));
             }
         }
 
