@@ -151,6 +151,25 @@ public class MapUtil
 		
 		return result;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static void mapAdd(Object map, Object maplet)
+	{
+		if(!(map instanceof VDMMap))
+		{
+			throw new IllegalArgumentException("Expected " + map + " to be a " + VDMMap.class.getSimpleName());
+		}
+		
+		if(!(maplet instanceof Maplet))
+		{
+			throw new IllegalArgumentException("Expected " + maplet + " to be a " + Maplet.class.getSimpleName());
+		}
+		
+		VDMMap vdmMap = (VDMMap) map;
+		Maplet vdmMaplet = (Maplet) maplet;
+		
+		vdmMap.put(vdmMaplet.getLeft(), vdmMaplet.getRight());
+	}
 
 	@SuppressWarnings("unchecked")
 	public static VDMMap override(VDMMap left, VDMMap right)
