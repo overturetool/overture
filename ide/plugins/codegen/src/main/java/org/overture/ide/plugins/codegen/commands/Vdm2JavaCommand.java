@@ -122,15 +122,6 @@ public class Vdm2JavaCommand extends AbstractHandler
 
 		final IVdmModel model = vdmProject.getModel();
 
-		if (!PluginVdm2JavaUtil.isSupportedVdmDialect(vdmProject))
-		{
-			CodeGenConsole.GetInstance().println("The project  '"
-					+ project.getName()
-					+ "' is not supported by the Java code generator. "
-					+ "The only dialects being supported are VDM-SL and VDM++.");
-			return null;
-		}
-
 		if (model == null)
 		{
 			CodeGenConsole.GetInstance().println("Could not get model for project: "
@@ -197,6 +188,19 @@ public class Vdm2JavaCommand extends AbstractHandler
 					try
 					{
 						vdm2java.genJavaSourceFiles(javaCodeOutputFolder, generatedData.getClasses());
+
+						CodeGenConsole.GetInstance().println("Project dialect: " + PluginVdm2JavaUtil.dialect2Str(vdmProject.getDialect()));
+						
+						if(vdmProject.getDialect() == Dialect.VDM_RT)
+						{
+							CodeGenConsole.GetInstance().println("The current version of the Java code generator does not support the distributed aspects of the VDM-RT.");
+							CodeGenConsole.GetInstance().println("Ignoring deployment as well as cycles and duration statements...\n");
+						}
+						else
+						{
+							CodeGenConsole.GetInstance().println("");
+						}
+						
 					} catch (Exception e)
 					{
 						CodeGenConsole.GetInstance().printErrorln("Problems saving the code generated Java source files to disk.");
