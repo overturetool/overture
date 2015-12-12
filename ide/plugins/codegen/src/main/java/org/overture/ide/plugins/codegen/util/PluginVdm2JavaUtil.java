@@ -107,11 +107,6 @@ public class PluginVdm2JavaUtil
 		return iFile;
 	}
 
-	public static boolean isSupportedVdmDialect(IVdmProject vdmProject)
-	{
-		return vdmProject.getDialect() == Dialect.VDM_PP || vdmProject.getDialect() == Dialect.VDM_SL;
-	}
-
 	public static IVdmProject getVdmProject(ExecutionEvent event)
 	{
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
@@ -245,7 +240,7 @@ public class PluginVdm2JavaUtil
 		ILexLocation location = locationAssistant.findLocation(node);
 		if (location != null)
 		{
-			messageSb.append(" " + location.toShortString());
+			messageSb.append(" " + location.toShortString() + " in " + location.getFile().getAbsolutePath());
 		}
 
 		String reason = nodeInfo.getReason();
@@ -409,5 +404,25 @@ public class PluginVdm2JavaUtil
 		}
 		
 		return matches;
+	}
+	
+	public static String dialect2Str(Dialect dialect)
+	{
+		if(dialect == Dialect.VDM_SL)
+		{
+			return "VDM-SL";
+		}
+		else if(dialect == Dialect.VDM_PP)
+		{
+			return "VDM++";
+		}
+		else if(dialect == Dialect.VDM_RT)
+		{
+			return "VDM-RT";
+		}
+		else
+		{
+			return null;
+		}
 	}
 }
