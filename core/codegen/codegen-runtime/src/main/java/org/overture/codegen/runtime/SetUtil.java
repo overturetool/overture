@@ -27,187 +27,224 @@ public class SetUtil
 	{
 		return new VDMSet();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static VDMSet set(Object... elements)
 	{
-		if(elements == null)
+		if (elements == null)
 			throw new IllegalArgumentException("Cannot instantiate set from null");
-		
+
 		VDMSet set = set();
-		
-		for(Object element : elements)
+
+		for (Object element : elements)
 			set.add(element);
-		
+
 		return set;
 	}
-	
-	public static boolean inSet(Object elem, VDMSet set)
+
+	public static boolean inSet(Object elem, Object set)
 	{
-		return set.contains(elem);
+		validateSet(set, "'in set'");
+
+		VDMSet vdmSet = (VDMSet) set;
+
+		return vdmSet.contains(elem);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public static boolean subset(VDMSet left, VDMSet right)
+	public static boolean subset(Object left, Object right)
 	{
-		return right.containsAll(left);
+		validateSets(left, right, "subset");
+
+		VDMSet leftSet = (VDMSet) left;
+		VDMSet rightSet = (VDMSet) right;
+
+		return rightSet.containsAll(leftSet);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public static VDMSet union(VDMSet left, VDMSet right)
+	public static VDMSet union(Object left, Object right)
 	{
-		if(left == null || right == null)
-			throw new IllegalArgumentException("Cannot union null");
+		validateSets(left, right, "set union");
+
+		VDMSet leftSet = (VDMSet) left;
+		VDMSet rightSet = (VDMSet) right;
 
 		VDMSet result = new VDMSet();
-		
-		result.addAll(left);
-		result.addAll(right);
-		
+
+		result.addAll(leftSet);
+		result.addAll(rightSet);
+
 		return result;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public static VDMSet dunion(VDMSet sets)
+	public static VDMSet dunion(Object setOfSets)
 	{
-		if(sets == null)
-			throw new IllegalArgumentException("Distributed union of null is undefined");
-	
+		final String DUNION = "distributed union";
+
+		validateSet(setOfSets, DUNION);
+
+		VDMSet vdmSetOfSets = (VDMSet) setOfSets;
+
 		VDMSet result = set();
-		
-		for(Object set : sets)
+
+		for (Object set : vdmSetOfSets)
 		{
-			if(!(set instanceof VDMSet))
-				throw new IllegalArgumentException("Distributed union only supports sets");
-			
+			validateSet(set, DUNION);
+
 			VDMSet vdmSet = (VDMSet) set;
 			result.addAll(vdmSet);
 		}
-		
+
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
-	public static VDMSet dinter(VDMSet sets)
+	public static VDMSet dinter(Object setOfSets)
 	{
-		if(sets == null)
-			throw new IllegalArgumentException("Distributed intersection of null is undefined");
-	
-		VDMSet result = dunion(sets);
-		
-		for(Object set : sets)
+		final String DINTER = "distributed intersection";
+
+		validateSet(setOfSets, DINTER);
+
+		VDMSet vdmSetOfSets = (VDMSet) setOfSets;
+
+		VDMSet result = dunion(vdmSetOfSets);
+
+		for (Object set : vdmSetOfSets)
 		{
-			if(!(set instanceof VDMSet))
-				throw new IllegalArgumentException("Distributed intersection only supports sets");
-			
+			validateSet(set, DINTER);
+
 			VDMSet vdmSet = (VDMSet) set;
 			result.retainAll(vdmSet);
 		}
-		
+
 		return result;
 	}
 
-	
 	@SuppressWarnings("unchecked")
-	public static VDMSet diff(VDMSet left, VDMSet right)
+	public static VDMSet diff(Object left, Object right)
 	{
-		if(left == null || right == null)
-			throw new IllegalArgumentException("Cannot get set difference of null");
+		validateSets(left, right, "set difference");
+
+		VDMSet setLeft = (VDMSet) left;
+		VDMSet setRight = (VDMSet) right;
 
 		VDMSet result = new VDMSet();
-		
-		result.addAll(left);
-		result.removeAll(right);
-		
+
+		result.addAll(setLeft);
+		result.removeAll(setRight);
+
 		return result;
 	}
-	
-	@SuppressWarnings("unchecked")
-	public static boolean psubset(VDMSet left, VDMSet right)
-	{
-		if(left == null || right == null)
-			throw new IllegalArgumentException("proper subset is undefined for null");
 
-		return left.size() < right.size() && right.containsAll(left);
-	}
-	
 	@SuppressWarnings("unchecked")
-	public static VDMSet intersect(VDMSet left, VDMSet right)
+	public static boolean psubset(Object left, Object right)
 	{
-		if(left == null || right == null)
-			throw new IllegalArgumentException("Cannot intersect null");
+		validateSets(left, right, "proper subset");
+
+		VDMSet setLeft = (VDMSet) left;
+		VDMSet setRight = (VDMSet) right;
+
+		return setLeft.size() < setRight.size() && setRight.containsAll(setLeft);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static VDMSet intersect(Object left, Object right)
+	{
+		validateSets(left, right, "set intersection");
+
+		VDMSet setLeft = (VDMSet) left;
+		VDMSet setRight = (VDMSet) right;
 
 		VDMSet result = new VDMSet();
-		
-		result.addAll(left);
-		result.retainAll(right);
-		
+
+		result.addAll(setLeft);
+		result.retainAll(setRight);
+
 		return result;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public static VDMSet powerset(VDMSet originalSet) {
-		
-		if(originalSet == null)
-			throw new IllegalArgumentException("Powerset is undefined for null");
-		
+	public static VDMSet powerset(Object originalSet)
+	{
+
+		validateSet(originalSet, "power set");
+
+		VDMSet vdmOriginalSet = (VDMSet) originalSet;
+
 		VDMSet sets = SetUtil.set();
-		
-	    if (originalSet.isEmpty()) {
-	    	sets.add(SetUtil.set());
-	    	return sets;
-	    }
-	    
-	    VDMSeq seq = SeqUtil.seq();
-	    seq.addAll(originalSet);
-	    
-	    Object firstElement = seq.get(0);
-	    VDMSet rest = SetUtil.set();
-	    rest.addAll(seq.subList(1, seq.size()));
-	    
-	    VDMSet powerSets = powerset(rest);
-	    Object[] powerSetsArray = powerSets.toArray();
-	    
-	    for(int i = 0; i < powerSets.size(); i++)
-	    {
-	    	Object obj = powerSetsArray[i];
-	    	if(!(obj instanceof VDMSet))
-	    		throw new IllegalArgumentException("Powerset operation is only applicable to sets. Got: " + obj);
-	    	
-	    	VDMSet set = (VDMSet) obj;
-	    	
-	    	VDMSet newSet = SetUtil.set();
-	    	newSet.add(firstElement);
-	    	newSet.addAll(set);
-	    	sets.add(newSet);
-	    	sets.add(set);
-	    }
-	    
-	    return sets;
+
+		if (vdmOriginalSet.isEmpty())
+		{
+			sets.add(SetUtil.set());
+			return sets;
+		}
+
+		VDMSeq seq = SeqUtil.seq();
+		seq.addAll(vdmOriginalSet);
+
+		Object firstElement = seq.get(0);
+		VDMSet rest = SetUtil.set();
+		rest.addAll(seq.subList(1, seq.size()));
+
+		VDMSet powerSets = powerset(rest);
+		Object[] powerSetsArray = powerSets.toArray();
+
+		for (int i = 0; i < powerSets.size(); i++)
+		{
+			Object obj = powerSetsArray[i];
+			if (!(obj instanceof VDMSet))
+				throw new IllegalArgumentException("Powerset operation is only applicable to sets. Got: " + obj);
+
+			VDMSet set = (VDMSet) obj;
+
+			VDMSet newSet = SetUtil.set();
+			newSet.add(firstElement);
+			newSet.addAll(set);
+			sets.add(newSet);
+			sets.add(set);
+		}
+
+		return sets;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static VDMSet range(Object first, Object last)
 	{
-		if (!(first instanceof Number) || !(last instanceof Number))
-		{
-			throw new IllegalArgumentException("The range operator is only applicable to numbers. Got " + first
-					+ " and " + last);
-		}
-		
+		Utils.validateNumbers(first, last, "set range");
+
 		Number firstNumber = (Number) first;
 		Number lastNumber = (Number) last;
-		
+
 		long from = (long) Math.ceil(firstNumber.doubleValue());
 		long to = (long) Math.floor(lastNumber.doubleValue());
-		
+
 		VDMSet result = new VDMSet();
-		
+
 		for (long i = from; i <= to; i++)
 		{
 			result.add(i);
 		}
-		
+
 		return result;
+	}
+
+	private static void validateSet(Object arg, String operator)
+	{
+		if (!(arg instanceof VDMSet))
+		{
+			throw new IllegalArgumentException(operator + " is only supported for " + VDMSet.class.getName() + ". Got "
+					+ arg);
+		}
+	}
+
+	private static void validateSets(Object left, Object right, String operator)
+	{
+		if (!(left instanceof VDMSet) || !(right instanceof VDMSet))
+		{
+			throw new IllegalArgumentException(operator + " is only supported for " + VDMSet.class.getName() + ". Got "
+					+ left + " and " + right);
+		}
 	}
 }

@@ -441,7 +441,7 @@ public class Utils
 		return doubleValue;
 	}
 
-	private static void validateNumbers(Object left, Object right, String operator)
+	static void validateNumbers(Object left, Object right, String operator)
 	{
 		if (!(left instanceof Number) || !(right instanceof Number))
 		{
