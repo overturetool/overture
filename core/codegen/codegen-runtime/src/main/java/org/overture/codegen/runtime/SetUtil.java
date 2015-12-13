@@ -230,7 +230,7 @@ public class SetUtil
 		return result;
 	}
 
-	private static void validateSet(Object arg, String operator)
+	static void validateSet(Object arg, String operator)
 	{
 		if (!(arg instanceof VDMSet))
 		{
