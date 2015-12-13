@@ -21,119 +21,101 @@
  */
 package org.overture.codegen.runtime;
 
-
 public class Utils
 {
 	public static final Object VOID_VALUE = new Object();
-	
+
 	public static boolean isVoidValue(Object value)
 	{
 		return value == VOID_VALUE;
 	}
-	
+
 	public static boolean empty(Object col)
 	{
-		if(col instanceof VDMSet)
+		if (col instanceof VDMSet)
 		{
 			return ((VDMSet) col).isEmpty();
-		}
-		else if(col instanceof VDMSeq)
+		} else if (col instanceof VDMSeq)
 		{
 			return ((VDMSeq) col).isEmpty();
-		}
-		else if(col instanceof VDMMap)
+		} else if (col instanceof VDMMap)
 		{
 			return ((VDMMap) col).isEmpty();
-		}
-		else
+		} else
 		{
-			throw new IllegalArgumentException("Expected collection to be either a VDM set, map or sequence. Got: " + col);
+			throw new IllegalArgumentException("Expected collection to be either a VDM set, map or sequence. Got: "
+					+ col);
 		}
 	}
-	
+
 	public static int hashCode(Object... fields)
 	{
-		if(fields == null)
+		if (fields == null)
 			throw new IllegalArgumentException("Fields cannot be null");
 
 		int hashcode = 0;
-		
-		for(int i = 0; i < fields.length; i++)
+
+		for (int i = 0; i < fields.length; i++)
 		{
 			Object currentField = fields[i];
 			hashcode += currentField != null ? currentField.hashCode() : 0;
 		}
-		
+
 		return hashcode;
 	}
-	
+
 	public static Object get(Object col, Object index)
 	{
-		if(col instanceof VDMSeq)
+		if (col instanceof VDMSeq)
 		{
 			VDMSeq seq = (VDMSeq) col;
 			return seq.get(Utils.index(index));
-		}
-		else if(col instanceof VDMMap)
+		} else if (col instanceof VDMMap)
 		{
 			return MapUtil.get((VDMMap) col, index);
-		}
-		else
+		} else
 		{
 			throw new IllegalArgumentException("Only a map or a sequence can be read");
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static void mapSeqUpdate(Object col, Object index, Object value)
 	{
-		if(col instanceof VDMSeq)
+		if (col instanceof VDMSeq)
 		{
 			VDMSeq seq = (VDMSeq) col;
 			seq.set(index(index), value);
-		}
-		else if(col instanceof VDMMap)
+		} else if (col instanceof VDMMap)
 		{
 			VDMMap map = (VDMMap) col;
 			map.put(index, value);
-		}
-		else
+		} else
 		{
 			throw new IllegalArgumentException("Only a map or a sequence can be updated");
 		}
 	}
-	
+
 	public static int index(Object value)
 	{
-		if(!(value instanceof Number))
+		if (!(value instanceof Number))
 		{
 			throw new IllegalArgumentException("The value to be converted must be a java.lang.Number");
 		}
-		
+
 		Number numberValue = (Number) value;
-		
-		if(numberValue.longValue() < 1)
+
+		if (numberValue.longValue() < 1)
 			throw new IllegalArgumentException("VDM subscripts must be >= 1");
-		
+
 		return toInt(numberValue) - 1;
 	}
-	
-	public static int toInt(Number value) {
-		
-		long valueLong = value.longValue();
-		
-	    if (valueLong < Integer.MIN_VALUE || valueLong > Integer.MAX_VALUE) {
-	        throw new IllegalArgumentException
-	            (valueLong + " Casting the long to an int will change its value");
-	    }
-	    return (int) valueLong;
-	}
-	
+
 	public static String formatFields(Object... fields)
 	{
-		if(fields == null)
+		if (fields == null)
 			throw new IllegalArgumentException("Fields cannot be null in formatFields");
-		
+
 		StringBuilder str = new StringBuilder();
 
 		if (fields.length > 0)
@@ -147,102 +129,97 @@ public class Utils
 		}
 		return "(" + str.toString() + ")";
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T> T copy(T t)
 	{
-		if(t instanceof ValueType)
+		if (t instanceof ValueType)
 		{
-			return (T) ((ValueType)t).copy();
+			return (T) ((ValueType) t).copy();
 		}
-		
+
 		return null;
 	}
-	
+
 	public static String toString(Object obj)
 	{
-		if(obj == null)
+		if (obj == null)
 		{
 			return "nil";
-		}
-		else if(obj == VOID_VALUE)
+		} else if (obj == VOID_VALUE)
 		{
 			return "()";
-		}
-		else if(obj instanceof Number)
+		} else if (obj instanceof Number)
 		{
 			Number n = (Number) obj;
-			
-			if(n.doubleValue() % 1 == 0)
+
+			if (n.doubleValue() % 1 == 0)
 			{
 				return Long.toString(n.longValue());
-			}
-			else 
+			} else
 			{
 				return Double.toString(n.doubleValue());
 			}
-		}
-		else if(obj instanceof Character)
+		} else if (obj instanceof Character)
 		{
 			return "'" + obj + "'";
-		}
-		else if(obj instanceof String)
+		} else if (obj instanceof String)
 		{
 			return "\"" + obj.toString() + "\"";
 		}
-		
+
 		return obj.toString();
 	}
-	
+
 	public static boolean equals(Object left, Object right)
 	{
-		if(left instanceof Long && right instanceof Long)
+		if (left instanceof Long && right instanceof Long)
 		{
 			Long leftLong = (Long) left;
 			Long rightLong = (Long) right;
-			
+
 			return leftLong.compareTo(rightLong) == 0;
 		}
-		
-		if(left instanceof Integer && right instanceof Integer)
+
+		if (left instanceof Integer && right instanceof Integer)
 		{
 			Integer leftInt = (Integer) left;
 			Integer rightInt = (Integer) right;
-			
+
 			return leftInt.compareTo(rightInt) == 0;
 		}
-		
-		if(left instanceof Number && right instanceof Number)
+
+		if (left instanceof Number && right instanceof Number)
 		{
 			Double leftNumber = ((Number) left).doubleValue();
 			Double rightNumber = ((Number) right).doubleValue();
-			
+
 			return leftNumber.compareTo(rightNumber) == 0;
 		}
-		
-		return left != null ? left.equals(right) : right == null; 
+
+		return left != null ? left.equals(right) : right == null;
 	}
-	
+
 	public static <T> T postCheck(T returnValue, boolean postResult, String name)
 	{
-		if(postResult)
+		if (postResult)
 		{
 			return returnValue;
 		}
-		
+
 		throw new RuntimeException("Postcondition failure: post_" + name);
 	}
-	
+
 	public static boolean is_bool(Object value)
 	{
 		return value instanceof Boolean;
 	}
-	
+
 	public static boolean is_nat(Object value)
 	{
 		return isIntWithinRange(value, 0);
-	}	
-	
+	}
+
 	public static boolean is_nat1(Object value)
 	{
 		return isIntWithinRange(value, 1);
@@ -251,7 +228,7 @@ public class Utils
 	public static boolean is_int(Object value)
 	{
 		Double doubleValue = getDoubleValue(value);
-		
+
 		return is_int(doubleValue);
 	}
 
@@ -259,17 +236,17 @@ public class Utils
 	{
 		return value instanceof Number;
 	}
-	
+
 	public static boolean is_real(Object value)
 	{
 		return value instanceof Number;
 	}
-	
+
 	public static boolean is_char(Object value)
 	{
 		return value instanceof Character;
 	}
-	
+
 	public static boolean is_token(Object value)
 	{
 		return value instanceof Token;
@@ -280,57 +257,150 @@ public class Utils
 	{
 		return exp instanceof Tuple && ((Tuple) exp).compatible(types);
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public static boolean is_(Object exp, Class type)
 	{
 		return exp != null && exp.getClass() == type;
 	}
-	
-	public static double divide(double left, double right)
+
+	public static double divide(Object left, Object right)
 	{
-		if(right == 0L)
+		validateNumbers(left, right, "divide");
+
+		double leftDouble = ((Number) left).doubleValue();
+		double rightDouble = ((Number) right).doubleValue();
+
+		if (rightDouble == 0L)
 		{
 			throw new ArithmeticException("Division by zero is undefined");
 		}
-		
-		return left/right;
+
+		return leftDouble / rightDouble;
 	}
 
-	public static long div(double left, double right)
+	public static long div(Object left, Object right)
 	{
-		validateInput(left, right);
-		
-		return computeDiv(left, right);
+		validateIntOperands(left, right);
+
+		Number leftInt = (Number) left;
+		Number rightInt = (Number) right;
+
+		return computeDiv(leftInt.doubleValue(), rightInt.doubleValue());
+	}
+
+	public static long mod(Object left, Object right)
+	{
+		validateIntOperands(left, right);
+
+		double leftInt = ((Number) left).doubleValue();
+		double rightInt = ((Number) right).doubleValue();
+
+		return (long) (leftInt - rightInt * (long) Math.floor(leftInt / rightInt));
+	}
+
+	public static long rem(Object left, Object right)
+	{
+		validateIntOperands(left, right);
+
+		double leftInt = ((Number) left).doubleValue();
+		double rightInt = ((Number) right).doubleValue();
+
+		return (long) (leftInt - rightInt * computeDiv(leftInt, rightInt));
+	}
+
+	public static double floor(Object arg)
+	{
+		validateNumber(arg, "floor");
+
+		Number number = (Number) arg;
+
+		return Math.floor(number.doubleValue());
+	}
+
+	public static double abs(Object arg)
+	{
+		validateNumber(arg, "abs");
+
+		Number number = (Number) arg;
+
+		return Math.abs(number.doubleValue());
+	}
+
+	public static double pow(Object a, Object b)
+	{
+		validateNumbers(a, b, "pow");
+
+		Number aNumber = (Number) a;
+		Number bNumber = (Number) b;
+
+		return Math.pow(aNumber.doubleValue(), bNumber.doubleValue());
+	}
+
+	/* @ pure @ */
+	public static boolean report(String name, boolean res, Object... params)
+	{
+		if (res)
+		{
+			return true;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(name);
+		sb.append('(');
+
+		if (params.length > 1)
+		{
+			String del = ", ";
+			String eq = " = ";
+
+			sb.append(params[0]);
+			sb.append(eq);
+			sb.append(Utils.toString(params[1]));
+
+			for (int i = 2; i < params.length; i = i + 2)
+			{
+				sb.append(del);
+				sb.append(params[i]);
+				sb.append(eq);
+				sb.append(Utils.toString(params[i + 1]));
+			}
+		}
+
+		sb.append(')');
+		sb.append(" is " + res);
+		sb.append('\n');
+
+		System.out.println(sb.toString());
+		AssertionError error = new AssertionError();
+		error.printStackTrace(System.out);
+		throw error;
+	}
+
+	static int toInt(Number value)
+	{
+		long valueLong = value.longValue();
+
+		if (valueLong < Integer.MIN_VALUE || valueLong > Integer.MAX_VALUE)
+		{
+			throw new IllegalArgumentException(valueLong + " Casting the long to an int will change its value");
+		}
+		return (int) valueLong;
 	}
 	
-	public static long mod(double left, double right)
+	private static void validateIntOperands(Object left, Object right)
 	{
-		validateInput(left, right);
-		
-		return (long) (left - right * (long) Math.floor(left / right));
-	}
-	
-	public static long rem(double left, double right)
-	{
-		validateInput(left, right);
-
-		return (long) (left - right * computeDiv(left, right));
-	}
-
-	private static void validateInput(double left, double right)
-	{
-		if(!(is_int(left) && is_int(right)))
+		if (!(is_int(left) && is_int(right)))
 		{
 			throw new ArithmeticException("Operands must be integers. Got left " + left + " and right" + right);
 		}
-		
-		if(right == 0L)
+
+		if (((Number) right).longValue() == 0L)
 		{
 			throw new ArithmeticException("Division by zero is undefined");
 		}
 	}
-	
+
 	private static long computeDiv(double lv, double rv)
 	{
 		if (lv / rv < 0)
@@ -341,103 +411,50 @@ public class Utils
 			return (long) Math.floor(Math.abs(-lv / rv));
 		}
 	}
-	
+
 	private static boolean is_int(Double doubleValue)
 	{
 		return doubleValue != null && (doubleValue == Math.floor(doubleValue)) && !Double.isInfinite(doubleValue);
 	}
-	
+
 	private static boolean isIntWithinRange(Object value, int lowerLimit)
 	{
 		Double doubleValue = getDoubleValue(value);
-		
-		if(!is_int(doubleValue))
+
+		if (!is_int(doubleValue))
 		{
 			return false;
 		}
-		
+
 		return doubleValue >= lowerLimit;
 	}
-	
+
 	private static Double getDoubleValue(Object value)
 	{
-		if(!(value instanceof Number))
+		if (!(value instanceof Number))
 		{
 			return null;
 		}
-		
+
 		Double doubleValue = ((Number) value).doubleValue();
-		
+
 		return doubleValue;
 	}
-	
-	public static double floor(Number n)
-	{
-		if(n == null)
-		{
-			throw new IllegalArgumentException("The 'floor' operator only works for numbers. Got null");
-		}
-		
-		return Math.floor(n.doubleValue());
-	}
-	
-	public static double abs(Number n)
-	{
-		if(n == null)
-		{
-			throw new IllegalArgumentException("The 'abs' operator only works for numbers. Got null");
-		}
-		
-		return Math.abs(n.doubleValue());
-	}
-	
-	public static double pow(Number a, Number b)
-	{
-		if(a == null || b == null)
-		{
-			throw new IllegalArgumentException("The power operator only works for numbers. Got arguments: '" + a + "' and '" + b + "'");
-		}
-		
-		return Math.pow(a.doubleValue(), b.doubleValue());	
-	}
-	
-    /*@ pure @*/
-    public static boolean report(String name, boolean res, Object... params)
-    {
-    	if(res)
-    	{
-    		return true;
-    	}
-    	
-    	StringBuilder sb = new StringBuilder();
-    	sb.append(name);
-    	sb.append('(');
-    	
-    	if(params.length > 1)
-    	{
-    		String del = ", ";
-    		String eq = " = ";
-    		
-    		sb.append(params[0]);
-			sb.append(eq);
-    		sb.append(Utils.toString(params[1]));
-    		
-    		for(int i = 2; i < params.length; i = i + 2)
-    		{
-				sb.append(del);
-    			sb.append(params[i]);
-    			sb.append(eq);
-    			sb.append(Utils.toString(params[i+1]));
-    		}
-    	}
-    	
-    	sb.append(')');
-    	sb.append(" is " + res);
-    	sb.append('\n');
 
-		System.out.println(sb.toString());
-		AssertionError error = new AssertionError();
-		error.printStackTrace(System.out);
-		throw error;
-    }
+	private static void validateNumbers(Object left, Object right, String operator)
+	{
+		if (!(left instanceof Number) || !(right instanceof Number))
+		{
+			throw new IllegalArgumentException(operator + " is only supported for numbers. Got " + left + " and "
+					+ right);
+		}
+	}
+
+	private static void validateNumber(Object arg, String operator)
+	{
+		if (!(arg instanceof Number))
+		{
+			throw new IllegalArgumentException(operator + " is only supported for numbers. Got " + arg);
+		}
+	}
 }
