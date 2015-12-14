@@ -30,6 +30,7 @@
     <module>codegen-maven-plugin</module>
     <!--<module>isagen</module>-->
     <!--<module>cppgen</module>-->
+    <module>rt2rmi</module>
   </modules>
   
 </project>
