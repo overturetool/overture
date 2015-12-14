@@ -1677,7 +1677,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (long i = from; i <= to; i++)
 			{
-				set.add(new IntegerValue(i));
+				set.addNoCheck(new IntegerValue(i));
 			}
 
 			return new SetValue(set);
