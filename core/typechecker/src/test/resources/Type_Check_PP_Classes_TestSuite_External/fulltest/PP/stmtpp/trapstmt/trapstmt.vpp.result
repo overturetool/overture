@@ -6,8 +6,8 @@
 <message column="12" line="26" message="a at 3:3 hidden by a" messageType="warning" number="5008" resource="trapstmt.vpp"/>
 <message column="15" line="44" message="Definition 'arg2' not used" messageType="warning" number="5000" resource="trapstmt.vpp"/>
 <message column="10" line="55" message="b at 54:11 hidden by b" messageType="warning" number="5008" resource="trapstmt.vpp"/>
-<message column="9" line="54" message="Definition 'n' not used" messageType="warning" number="5000" resource="trapstmt.vpp"/>
 <message column="13" line="54" message="Definition 'l' not used" messageType="warning" number="5000" resource="trapstmt.vpp"/>
+<message column="9" line="54" message="Definition 'n' not used" messageType="warning" number="5000" resource="trapstmt.vpp"/>
 <message column="3" line="3" message="Instance variable 'a' is not initialized" messageType="warning" number="5001" resource="trapstmt.vpp"/>
 <message column="3" line="4" message="Instance variable 'stid' is not initialized" messageType="warning" number="5001" resource="trapstmt.vpp"/>
 <message column="3" line="26" message="Body of trap statement does not throw exceptions" messageType="error" number="3241" resource="trapstmt.vpp"/>
