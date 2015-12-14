@@ -5,11 +5,11 @@ import java.util.*;
 
 
 @SuppressWarnings("all")
-public class Entry implements java.io.Serializable {
-    public Entry() {
+final public class Entry implements java.io.Serializable {
+    private Entry() {
     }
 
-    public void op() {
+    public static void op() {
         if (!(pre_op())) {
             throw new RuntimeException("Precondition failure: pre_op");
         }
@@ -17,17 +17,27 @@ public class Entry implements java.io.Serializable {
         /* skip */
     }
 
-    private Boolean pre_op() {
+    public static Boolean pre_op() {
         return false;
     }
 
-    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
+    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
         final Store store = new Store();
         final IdGenerator gen = new IdGenerator();
+
+        {
+            final Number ID_1 = gen.inc();
+            store.staticReg(ID_1, Entry.class);
+        }
+
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
         CallStatement callStm_1 = new CallStatement() {
-                public Object execute(final Object instance) {
-                    ((Entry) instance).op();
+                public Boolean meetsPreCond() {
+                    return pre_op();
+                }
+
+                public Object execute() {
+                    op();
 
                     return Utils.VOID_VALUE;
                 }
@@ -43,7 +53,7 @@ public class Entry implements java.io.Serializable {
 
         sequence_1.add(repeat_1);
 
-        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+        TraceNode.executeTests(sequence_1, testAccumulator, store);
     }
 
     public String toString() {

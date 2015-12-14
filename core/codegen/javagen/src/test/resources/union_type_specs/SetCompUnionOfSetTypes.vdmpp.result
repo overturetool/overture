@@ -18,8 +18,7 @@ public class Entry {
             Object e = ((Object) iterator_1.next());
 
             if (((Boolean) e)) {
-                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
-                        SetUtil.set(e));
+                setCompResult_1.add(e);
             }
         }
 

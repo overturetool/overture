@@ -1,0 +1,34 @@
+class Entry
+
+values
+
+c : Counter = new Counter();
+
+operations
+
+public inc : () ==> nat
+inc () == c.inc();
+
+traces
+
+T1:
+ inc(){1,2};
+
+end Entry
+
+class Counter
+
+instance variables
+
+x : nat := 0;
+
+operations
+
+public inc : () ==> nat
+inc () ==
+(
+  x := x + 1;
+  return x;
+);
+
+end Counter

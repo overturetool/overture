@@ -11,7 +11,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
@@ -43,8 +42,6 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 	@Before
 	public void init()
 	{
-		Logger.getLog().setSilent(true);
-
 		vdmCodGen.clear();
 		vdmCodGen.setSettings(getIrSettings());
 		vdmCodGen.setJavaSettings(getJavaSettings());

@@ -23,8 +23,8 @@ public class Entry implements java.io.Serializable {
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
         SequenceTraceNode sequence_2 = new SequenceTraceNode();
         AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
-        CallStatement callStm_1 = new CallStatement() {
-                public Object execute(final Object instance) {
+        CallStatementPp callStm_1 = new CallStatementPp() {
+                public Object execute() {
                     ((Entry) instance).op();
 
                     return Utils.VOID_VALUE;
@@ -39,8 +39,8 @@ public class Entry implements java.io.Serializable {
 
         RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_1, 1L, 2L);
 
-        CallStatement callStm_2 = new CallStatement() {
-                public Object execute(final Object instance) {
+        CallStatementPp callStm_2 = new CallStatementPp() {
+                public Object execute() {
                     return fun();
                 }
 

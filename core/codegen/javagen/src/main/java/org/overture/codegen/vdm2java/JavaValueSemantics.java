@@ -56,7 +56,10 @@ import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
+import org.overture.codegen.cgast.statements.AMapCompAddStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
+import org.overture.codegen.cgast.statements.ASeqCompAddStmCG;
+import org.overture.codegen.cgast.statements.ASetCompAddStmCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -219,6 +222,11 @@ public class JavaValueSemantics
 			return false;
 		}
 		
+		if(compAdd(exp))
+		{
+			return false;
+		}
+		
 		INode parent = exp.parent();
 
 		if (cloneNotNeeded(parent))
@@ -271,6 +279,31 @@ public class JavaValueSemantics
 			}
 
 			return true;
+		}
+
+		return false;
+	}
+
+	private boolean compAdd(SExpCG exp)
+	{
+		INode parent = exp.parent();
+
+		if (parent instanceof ASeqCompAddStmCG)
+		{
+			ASeqCompAddStmCG add = (ASeqCompAddStmCG) parent;
+			return add.getSeq() == exp;
+		}
+
+		if (parent instanceof ASetCompAddStmCG)
+		{
+			ASetCompAddStmCG add = (ASetCompAddStmCG) parent;
+			return add.getSet() == exp;
+		}
+
+		if (parent instanceof AMapCompAddStmCG)
+		{
+			AMapCompAddStmCG add = (AMapCompAddStmCG) parent;
+			return add.getMap() == exp;
 		}
 
 		return false;

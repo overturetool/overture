@@ -24,8 +24,8 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (pick()) {
-                mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
-                        MapUtil.map(new Maplet(x, x.longValue() * 2L)));
+                MapUtil.mapAdd(mapCompResult_1,
+                    new Maplet(x, x.longValue() * 2L));
             }
         }
 

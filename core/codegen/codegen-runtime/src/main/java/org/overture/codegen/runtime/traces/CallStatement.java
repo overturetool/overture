@@ -2,8 +2,15 @@ package org.overture.codegen.runtime.traces;
 
 abstract public class CallStatement
 {
-	abstract public Object execute(final Object instance);
+	abstract public Object execute();
 	
-	@Override
-	abstract public String toString();
+	public Boolean isTypeCorrect()
+	{
+		return true;
+	}
+	
+	public Boolean meetsPreCond()
+	{
+		return true;
+	}
 }

@@ -27,10 +27,7 @@ final public class Entry {
 
             //@ assert Utils.is_nat1(x);
             if (x.longValue() > 0L) {
-                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
-                        SetUtil.set(x));
-
-                //@ assert (V2J.isSet(setCompResult_1) && (\forall int i; 0 <= i && i < V2J.size(setCompResult_1); Utils.is_nat1(V2J.get(setCompResult_1,i))));
+                setCompResult_1.add(x);
             }
         }
 
@@ -51,10 +48,7 @@ final public class Entry {
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Number x = ((Number) iterator_2.next());
             //@ assert Utils.is_nat1(x);
-            setCompResult_2 = SetUtil.union(Utils.copy(setCompResult_2),
-                    SetUtil.set(x));
-
-            //@ assert (V2J.isSet(setCompResult_2) && (\forall int i; 0 <= i && i < V2J.size(setCompResult_2); Utils.is_nat1(V2J.get(setCompResult_2,i))));
+            setCompResult_2.add(x);
         }
 
         {
@@ -79,10 +73,7 @@ final public class Entry {
 
             //@ assert Utils.is_nat(x);
             if (x.longValue() > -1L) {
-                setCompResult_3 = SetUtil.union(Utils.copy(setCompResult_3),
-                        SetUtil.set(x));
-
-                //@ assert (V2J.isSet(setCompResult_3) && (\forall int i; 0 <= i && i < V2J.size(setCompResult_3); Utils.is_nat(V2J.get(setCompResult_3,i))));
+                setCompResult_3.add(x);
             }
         }
 
@@ -103,10 +94,7 @@ final public class Entry {
         for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
             Number x = ((Number) iterator_4.next());
             //@ assert Utils.is_nat(x);
-            setCompResult_4 = SetUtil.union(Utils.copy(setCompResult_4),
-                    SetUtil.set(x));
-
-            //@ assert (V2J.isSet(setCompResult_4) && (\forall int i; 0 <= i && i < V2J.size(setCompResult_4); Utils.is_nat(V2J.get(setCompResult_4,i))));
+            setCompResult_4.add(x);
         }
 
         {

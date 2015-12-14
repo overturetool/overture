@@ -130,7 +130,7 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 		{
 			String idConstName = idConstNameMap.get(idToReg.getName());
 			block.getStatements().add(transAssistant.wrap(storeAssistant.consIdConstDecl(idConstName)));
-			storeAssistant.appendStoreRegStms(block, idToReg.getName(), idConstName);
+			storeAssistant.appendStoreRegStms(block, idToReg.getName(), idConstName, false);
 		}
 		
 		block.getStatements().add(nodeData.getStms());

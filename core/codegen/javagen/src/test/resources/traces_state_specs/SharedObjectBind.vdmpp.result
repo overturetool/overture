@@ -50,24 +50,30 @@ public class Entry implements java.io.Serializable {
     public void Entry_T1_Run(final TestAccumulator testAccumulator) {
         final Store store = new Store();
         final IdGenerator gen = new IdGenerator();
+
+        {
+            final Number ID_1 = gen.inc();
+            store.staticReg(ID_1, Counter.class);
+        }
+
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        final Number ID_1 = gen.inc();
         final Number ID_2 = gen.inc();
         final Number ID_3 = gen.inc();
+        final Number ID_4 = gen.inc();
 
         {
             final Counter c = new Counter();
             final Entry a1 = new Entry(c);
             final Entry a2 = new Entry(c);
-            store.register(ID_1, c);
-            store.register(ID_2, a1);
-            store.register(ID_3, a2);
+            store.register(ID_2, c);
+            store.register(ID_3, a1);
+            store.register(ID_4, a2);
         }
 
         SequenceTraceNode sequence_2 = new SequenceTraceNode();
-        CallStatement callStm_1 = new CallStatement() {
-                public Object execute(final Object instance) {
-                    return ((Entry) store.getValue(ID_2)).inc();
+        CallStatementPp callStm_1 = new CallStatementPp() {
+                public Object execute() {
+                    return ((Entry) store.getValue(ID_3)).inc();
                 }
 
                 public String toString() {
@@ -77,9 +83,9 @@ public class Entry implements java.io.Serializable {
 
         StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
 
-        CallStatement callStm_2 = new CallStatement() {
-                public Object execute(final Object instance) {
-                    return ((Entry) store.getValue(ID_2)).inc();
+        CallStatementPp callStm_2 = new CallStatementPp() {
+                public Object execute() {
+                    return ((Entry) store.getValue(ID_3)).inc();
                 }
 
                 public String toString() {
@@ -89,9 +95,9 @@ public class Entry implements java.io.Serializable {
 
         StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
 
-        CallStatement callStm_3 = new CallStatement() {
-                public Object execute(final Object instance) {
-                    return ((Entry) store.getValue(ID_3)).inc();
+        CallStatementPp callStm_3 = new CallStatementPp() {
+                public Object execute() {
+                    return ((Entry) store.getValue(ID_4)).inc();
                 }
 
                 public String toString() {
@@ -101,9 +107,9 @@ public class Entry implements java.io.Serializable {
 
         StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
 
-        CallStatement callStm_4 = new CallStatement() {
-                public Object execute(final Object instance) {
-                    return ((Entry) store.getValue(ID_3)).inc();
+        CallStatementPp callStm_4 = new CallStatementPp() {
+                public Object execute() {
+                    return ((Entry) store.getValue(ID_4)).inc();
                 }
 
                 public String toString() {

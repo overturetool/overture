@@ -22,8 +22,7 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (Utils.equals(1L, 1L)) {
-                seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
-                        SeqUtil.seq(x));
+                seqCompResult_1.add(x);
             }
         }
 

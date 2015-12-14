@@ -39,12 +39,10 @@ public class Entry {
                             for (Iterator iterator_6 = set_3.iterator();
                                     iterator_6.hasNext();) {
                                 Number f = ((Number) iterator_6.next());
-                                setCompResult_1 = SetUtil.union(Utils.copy(
-                                            setCompResult_1),
-                                        SetUtil.set(a.longValue() +
-                                            b.longValue() + c.longValue() +
-                                            d.longValue() + e.longValue() +
-                                            f.longValue()));
+                                setCompResult_1.add(a.longValue() +
+                                    b.longValue() + c.longValue() +
+                                    d.longValue() + e.longValue() +
+                                    f.longValue());
                             }
                         }
                     }

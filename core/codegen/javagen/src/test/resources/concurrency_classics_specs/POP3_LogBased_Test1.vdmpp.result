@@ -900,8 +900,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             POP3Server.MessageInfo msg = ((POP3Server.MessageInfo) iterator_1.next());
-            setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
-                    SetUtil.set(msg.size));
+            setCompResult_1.add(msg.size);
         }
 
         return int2string(lp) + (ternaryIfExp_2) +
@@ -943,12 +942,10 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
         for (Iterator iterator_3 = set_3.iterator(); iterator_3.hasNext();) {
             Number i = ((Number) iterator_3.next());
-            seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
-                    SeqUtil.seq(int2string(
-                            ((POP3Server.MessageInfo) Utils.get(msgSeq, i)).index) +
-                        " " +
-                        int2string(
-                            ((POP3Server.MessageInfo) Utils.get(msgSeq, i)).size)));
+            seqCompResult_1.add(int2string(
+                    ((POP3Server.MessageInfo) Utils.get(msgSeq, i)).index) +
+                " " +
+                int2string(((POP3Server.MessageInfo) Utils.get(msgSeq, i)).size));
         }
 
         return MakeMultilineResponse(Utils.copy(seqCompResult_1));
@@ -1584,8 +1581,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                 Number i = ((Number) iterator_5.next());
 
                 if (!(((POP3Message) Utils.get(oldMsgs, i)).IsDeleted())) {
-                    seqCompResult_2 = SeqUtil.conc(Utils.copy(seqCompResult_2),
-                            SeqUtil.seq(((POP3Message) Utils.get(oldMsgs, i))));
+                    seqCompResult_2.add(((POP3Message) Utils.get(oldMsgs, i)));
                 }
             }
 
@@ -1731,9 +1727,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
             for (Iterator iterator_6 = set_6.iterator(); iterator_6.hasNext();) {
                 Number i = ((Number) iterator_6.next());
-                seqCompResult_3 = SeqUtil.conc(Utils.copy(seqCompResult_3),
-                        SeqUtil.seq(
-                            ((POP3Message) Utils.get(oldMsgs, i)).Undelete()));
+                seqCompResult_3.add(((POP3Message) Utils.get(oldMsgs, i)).Undelete());
             }
 
             VDMSeq newMsgs = Utils.copy(seqCompResult_3);
@@ -1778,10 +1772,8 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                     Number i = ((Number) iterator_7.next());
 
                     if (!(((POP3Message) Utils.get(mb, i)).IsDeleted())) {
-                        seqCompResult_4 = SeqUtil.conc(Utils.copy(
-                                    seqCompResult_4),
-                                SeqUtil.seq(
-                                    new MessageInfo(i, GetMessageSize(user, i))));
+                        seqCompResult_4.add(new MessageInfo(i,
+                                GetMessageSize(user, i)));
                     }
                 }
 
@@ -1818,8 +1810,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
             for (Iterator iterator_8 = set_8.iterator(); iterator_8.hasNext();) {
                 Number index = ((Number) iterator_8.next());
-                seqCompResult_5 = SeqUtil.conc(Utils.copy(seqCompResult_5),
-                        SeqUtil.seq(GetUidl(user, index)));
+                seqCompResult_5.add(GetUidl(user, index));
             }
 
             return Utils.copy(seqCompResult_5);
@@ -1848,9 +1839,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
             for (Iterator iterator_9 = set_9.iterator(); iterator_9.hasNext();) {
                 Number i = ((Number) iterator_9.next());
-                seqCompResult_6 = SeqUtil.conc(Utils.copy(seqCompResult_6),
-                        SeqUtil.seq(
-                            ((POP3Message) Utils.get(mb.msgs, i)).GetSize()));
+                seqCompResult_6.add(((POP3Message) Utils.get(mb.msgs, i)).GetSize());
             }
 
             return sumseq(Utils.copy(seqCompResult_6));
@@ -2257,10 +2246,9 @@ public class POP3Test implements EvaluatePP {
 
         for (Iterator iterator_10 = set_10.iterator(); iterator_10.hasNext();) {
             Number i = ((Number) iterator_10.next());
-            mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
-                    MapUtil.map(
-                        new Maplet(((String) Utils.get(users, i)),
-                            ((String) Utils.get(passwords, i)))));
+            MapUtil.mapAdd(mapCompResult_1,
+                new Maplet(((String) Utils.get(users, i)),
+                    ((String) Utils.get(passwords, i))));
         }
 
         return Utils.copy(mapCompResult_1);
@@ -2272,11 +2260,10 @@ public class POP3Test implements EvaluatePP {
 
         for (Iterator iterator_11 = set_11.iterator(); iterator_11.hasNext();) {
             Number i = ((Number) iterator_11.next());
-            mapCompResult_2 = MapUtil.munion(Utils.copy(mapCompResult_2),
-                    MapUtil.map(
-                        new Maplet(((String) Utils.get(users, i)),
-                            new POP3Server.MailBox(MakeMessages(
-                                    ((String) Utils.get(users, i))), false))));
+            MapUtil.mapAdd(mapCompResult_2,
+                new Maplet(((String) Utils.get(users, i)),
+                    new POP3Server.MailBox(MakeMessages(
+                            ((String) Utils.get(users, i))), false)));
         }
 
         return Utils.copy(mapCompResult_2);
@@ -2288,11 +2275,10 @@ public class POP3Test implements EvaluatePP {
 
         for (Iterator iterator_12 = set_12.iterator(); iterator_12.hasNext();) {
             Number i = ((Number) iterator_12.next());
-            seqCompResult_7 = SeqUtil.conc(Utils.copy(seqCompResult_7),
-                    SeqUtil.seq(
-                        new POP3Message(((String) Utils.get(headers, i)),
-                            ((String) Utils.get(bodies, i)) + " to " + user,
-                            user + POP3ClientHandler.int2string(i))));
+            seqCompResult_7.add(new POP3Message(
+                    ((String) Utils.get(headers, i)),
+                    ((String) Utils.get(bodies, i)) + " to " + user,
+                    user + POP3ClientHandler.int2string(i)));
         }
 
         return Utils.copy(seqCompResult_7);

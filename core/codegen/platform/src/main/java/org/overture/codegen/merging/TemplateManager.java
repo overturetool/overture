@@ -68,6 +68,7 @@ import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
 import org.overture.codegen.cgast.statements.AInvCheckStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
+import org.overture.codegen.cgast.statements.AMapCompAddStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
@@ -77,6 +78,8 @@ import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
+import org.overture.codegen.cgast.statements.ASeqCompAddStmCG;
+import org.overture.codegen.cgast.statements.ASetCompAddStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.statements.AStartStmCG;
 import org.overture.codegen.cgast.statements.AStartlistStmCG;
@@ -390,7 +393,16 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AMetaStmCG.class, templateStructure.STM_PATH
 				+ "Meta");
+		
+		nodeTemplateFileNames.put(ASeqCompAddStmCG.class, templateStructure.STM_PATH
+				+ "SeqCompAdd");
+		
+		nodeTemplateFileNames.put(ASetCompAddStmCG.class, templateStructure.STM_PATH
+				+ "SetCompAdd");
 
+		nodeTemplateFileNames.put(AMapCompAddStmCG.class, templateStructure.STM_PATH
+				+ "MapCompAdd");
+		
 		nodeTemplateFileNames.put(AAtomicStmCG.class, templateStructure.STM_PATH
 				+ "Atomic");
 

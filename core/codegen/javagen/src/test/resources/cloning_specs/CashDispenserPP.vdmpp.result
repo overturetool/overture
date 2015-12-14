@@ -156,8 +156,7 @@ public class Account {
 
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Number i = ((Number) iterator_2.next());
-            setCompResult_1 = SetUtil.union(setCompResult_1,
-                    SetUtil.set(((Transaction) Utils.get(ts, i)).date));
+            setCompResult_1.add(((Transaction) Utils.get(ts, i)).date);
         }
 
         VDMSet set_1 = setCompResult_1;
@@ -179,8 +178,7 @@ public class Account {
             Number i = ((Number) iterator_3.next());
 
             if (Utils.equals(((Transaction) Utils.get(ts, i)).date, date)) {
-                seqCompResult_1 = SeqUtil.conc(seqCompResult_1,
-                        SeqUtil.seq(((Transaction) Utils.get(ts, i)).amount));
+                seqCompResult_1.add(((Transaction) Utils.get(ts, i)).amount);
             }
         }
 
@@ -415,8 +413,7 @@ public class CentralResource {
 
         for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
             Number cId = ((Number) iterator_4.next());
-            mapCompResult_1 = MapUtil.munion(mapCompResult_1,
-                    MapUtil.map(new Maplet(cId, 0L)));
+            MapUtil.mapAdd(mapCompResult_1, new Maplet(cId, 0L));
         }
 
         VDMMap atomicTmp_2 = MapUtil.override(numberOfTries, mapCompResult_1);

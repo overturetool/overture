@@ -27,10 +27,7 @@ final public class Entry {
 
             //@ assert Utils.is_nat1(x);
             if (x.longValue() > 0L) {
-                mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
-                        MapUtil.map(new Maplet(x, x)));
-
-                //@ assert (V2J.isMap(mapCompResult_1) && (\forall int i; 0 <= i && i < V2J.size(mapCompResult_1); Utils.is_nat1(V2J.getDom(mapCompResult_1,i)) && Utils.is_nat1(V2J.getRng(mapCompResult_1,i))));
+                MapUtil.mapAdd(mapCompResult_1, new Maplet(x, x));
             }
         }
 
@@ -51,10 +48,7 @@ final public class Entry {
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Number x = ((Number) iterator_2.next());
             //@ assert Utils.is_nat1(x);
-            mapCompResult_2 = MapUtil.munion(Utils.copy(mapCompResult_2),
-                    MapUtil.map(new Maplet(x, x)));
-
-            //@ assert (V2J.isMap(mapCompResult_2) && (\forall int i; 0 <= i && i < V2J.size(mapCompResult_2); Utils.is_nat1(V2J.getDom(mapCompResult_2,i)) && Utils.is_nat1(V2J.getRng(mapCompResult_2,i))));
+            MapUtil.mapAdd(mapCompResult_2, new Maplet(x, x));
         }
 
         {
@@ -79,10 +73,7 @@ final public class Entry {
 
             //@ assert Utils.is_nat1(x);
             if (x.longValue() > 1L) {
-                mapCompResult_3 = MapUtil.munion(Utils.copy(mapCompResult_3),
-                        MapUtil.map(new Maplet(x, 2L)));
-
-                //@ assert (V2J.isMap(mapCompResult_3) && (\forall int i; 0 <= i && i < V2J.size(mapCompResult_3); Utils.is_nat1(V2J.getDom(mapCompResult_3,i)) && Utils.is_nat1(V2J.getRng(mapCompResult_3,i))));
+                MapUtil.mapAdd(mapCompResult_3, new Maplet(x, 2L));
             }
         }
 
@@ -103,10 +94,7 @@ final public class Entry {
         for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
             Number x = ((Number) iterator_4.next());
             //@ assert Utils.is_nat1(x);
-            mapCompResult_4 = MapUtil.munion(Utils.copy(mapCompResult_4),
-                    MapUtil.map(new Maplet(x, 2L)));
-
-            //@ assert (V2J.isMap(mapCompResult_4) && (\forall int i; 0 <= i && i < V2J.size(mapCompResult_4); Utils.is_nat1(V2J.getDom(mapCompResult_4,i)) && Utils.is_nat1(V2J.getRng(mapCompResult_4,i))));
+            MapUtil.mapAdd(mapCompResult_4, new Maplet(x, 2L));
         }
 
         {

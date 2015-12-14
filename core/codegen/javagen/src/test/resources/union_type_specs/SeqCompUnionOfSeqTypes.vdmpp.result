@@ -18,8 +18,7 @@ public class Entry {
             Object e = ((Object) iterator_1.next());
 
             if (Utils.equals(e, 2L)) {
-                seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
-                        SeqUtil.seq(e));
+                seqCompResult_1.add(e);
             }
         }
 

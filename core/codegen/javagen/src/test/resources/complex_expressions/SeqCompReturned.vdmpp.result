@@ -20,8 +20,7 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (x.longValue() < 3L) {
-                seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
-                        SeqUtil.seq(x.longValue() * 2L));
+                seqCompResult_1.add(x.longValue() * 2L);
             }
         }
 

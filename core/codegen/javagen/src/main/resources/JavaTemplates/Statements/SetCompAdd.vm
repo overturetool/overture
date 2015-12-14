@@ -1,0 +1,4 @@
+#set( $set = $JavaFormat.format($node.getSet()) )
+#set( $element = $JavaFormat.format($node.getElement()) )
+##
+${set}.add(${element});

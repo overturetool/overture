@@ -42,10 +42,8 @@ public class Entry {
                     throw new RuntimeException("Missing member: x");
                 }
 
-                mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
-                        MapUtil.map(
-                            new Maplet(Utils.copy(hr),
-                                Entry.S(Utils.copy(apply_1)))));
+                MapUtil.mapAdd(mapCompResult_1,
+                    new Maplet(Utils.copy(hr), Entry.S(Utils.copy(apply_1))));
             }
 
             ternaryIfExp_2 = Utils.copy(mapCompResult_1);
@@ -55,8 +53,8 @@ public class Entry {
 
             for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
                 VDMSeq hr = ((VDMSeq) iterator_2.next());
-                mapCompResult_2 = MapUtil.munion(Utils.copy(mapCompResult_2),
-                        MapUtil.map(new Maplet(Utils.copy(hr), SeqUtil.seq())));
+                MapUtil.mapAdd(mapCompResult_2,
+                    new Maplet(Utils.copy(hr), SeqUtil.seq()));
             }
 
             ternaryIfExp_2 = Utils.copy(mapCompResult_2);
