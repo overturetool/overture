@@ -112,7 +112,7 @@ public abstract class TraceNode
 										- 1), " ; "), Verdict.PASSED));
 							}
 
-						} catch (RuntimeException e)
+						} catch (RuntimeException | AssertionError e)
 						{
 							for (int p = callStmIdx + 1; p < test.size(); p++)
 							{
