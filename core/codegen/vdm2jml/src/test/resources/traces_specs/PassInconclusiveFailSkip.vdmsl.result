@@ -1,0 +1,176 @@
+package project;
+
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+import org.overture.codegen.vdm2jml.runtime.*;
+
+import java.util.*;
+
+
+//@ nullable_by_default
+@SuppressWarnings("all")
+final public class Entry implements java.io.Serializable {
+    /*@ public ghost static boolean invChecksOn = true; @*/
+    private Entry() {
+    }
+
+    public static void op() {
+        /* skip */
+    }
+
+    //@ requires pre_pass();
+    public static void pass() {
+        /* skip */
+    }
+
+    //@ requires pre_inconclusive();
+    public static void inconclusive() {
+        /* skip */
+    }
+
+    public static void failPre() {
+        inconclusive();
+    }
+
+    //@ requires pre_crashPre();
+    public static void crashPre() {
+        /* skip */
+    }
+
+    /*@ pure @*/
+    public static Boolean pre_pass() {
+        Boolean ret_1 = true;
+
+        //@ assert Utils.is_bool(ret_1);
+        return ret_1;
+    }
+
+    /*@ pure @*/
+    public static Boolean pre_inconclusive() {
+        Boolean ret_2 = false;
+
+        //@ assert Utils.is_bool(ret_2);
+        return ret_2;
+    }
+
+    /*@ pure @*/
+    public static Boolean pre_crashPre() {
+        Boolean ret_3 = Utils.equals(Utils.divide((1.0 * 1L), 0L), 0L);
+
+        //@ assert Utils.is_bool(ret_3);
+        return ret_3;
+    }
+
+    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+
+        {
+            final Number ID_1 = gen.inc();
+            store.staticReg(ID_1, Entry.class);
+        }
+
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        SequenceTraceNode sequence_2 = new SequenceTraceNode();
+        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+        CallStatement callStm_1 = new CallStatement() {
+                public Boolean meetsPreCond() {
+                    return pre_pass();
+                }
+
+                public Object execute() {
+                    pass();
+
+                    return Utils.VOID_VALUE;
+                }
+
+                public String toString() {
+                    return "pass()";
+                }
+            };
+
+        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+        CallStatement callStm_2 = new CallStatement() {
+                public Boolean meetsPreCond() {
+                    return pre_inconclusive();
+                }
+
+                public Object execute() {
+                    inconclusive();
+
+                    return Utils.VOID_VALUE;
+                }
+
+                public String toString() {
+                    return "inconclusive()";
+                }
+            };
+
+        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+
+        CallStatement callStm_3 = new CallStatement() {
+                public Object execute() {
+                    failPre();
+
+                    return Utils.VOID_VALUE;
+                }
+
+                public String toString() {
+                    return "failPre()";
+                }
+            };
+
+        StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
+
+        CallStatement callStm_4 = new CallStatement() {
+                public Boolean meetsPreCond() {
+                    return pre_crashPre();
+                }
+
+                public Object execute() {
+                    crashPre();
+
+                    return Utils.VOID_VALUE;
+                }
+
+                public String toString() {
+                    return "crashPre()";
+                }
+            };
+
+        StatementTraceNode apply_4 = new StatementTraceNode(callStm_4);
+
+        CallStatement callStm_5 = new CallStatement() {
+                public Object execute() {
+                    failPre();
+
+                    return Utils.VOID_VALUE;
+                }
+
+                public String toString() {
+                    return "failPre()";
+                }
+            };
+
+        StatementTraceNode apply_5 = new StatementTraceNode(callStm_5);
+
+        alternatives_2.add(apply_1);
+        alternatives_2.add(apply_2);
+        alternatives_2.add(apply_3);
+        alternatives_2.add(apply_4);
+        alternatives_2.add(apply_5);
+
+        sequence_2.add(alternatives_2);
+
+        sequence_1.add(sequence_2);
+
+        TraceNode.executeTests(sequence_1, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
