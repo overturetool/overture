@@ -28,24 +28,19 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.Vector;
 
-import org.junit.Assert;
 import org.overture.codegen.vdm2java.JavaToolsUtils;
 
 public class JavaCommandLineCompiler
 {
-	public static boolean compile(File dir, File cpJar)
+	public static boolean compile(File dir, File[] cpJars)
 	{
 		String javaHome = System.getenv(JavaToolsUtils.JAVA_HOME);
 		File javac = new File(new File(javaHome, JavaToolsUtils.BIN_FOLDER), JavaToolsUtils.JAVAC);
-		return compile(javac, dir, cpJar);
+		return compile(javac, dir, cpJars);
 	}
 
-	public static boolean compile(File javac, File dir, File cpJar)
+	public static boolean compile(File javac, File dir, File[] cpJars)
 	{
-		if (cpJar != null)
-		{
-			Assert.assertNotNull("Classpath jar not found: " + cpJar, cpJar);
-		}
 		boolean compileOk = true;
 
 		List<File> files = getJavaSourceFiles(dir);
@@ -60,15 +55,19 @@ public class JavaCommandLineCompiler
 			ProcessBuilder pb = null;
 			String arg = "";
 
+			String cpArg = "";
+			if(cpJars != null && cpJars.length > 0)
+			{
+				cpArg = consCpArg(cpJars);
+			}
+			
 			if (JavaToolsUtils.isWindows())
 			{
-				pb = new ProcessBuilder(javac.getAbsolutePath(), cpJar == null ? ""
-						: " -cp " + cpJar.getAbsolutePath(), arguments.trim());
+				pb = new ProcessBuilder(javac.getAbsolutePath(), cpArg, arguments.trim());
 			} else
 			{
 				arg = "javac"// -nowarn -J-client -J-Xms100m -J-Xmx100m"
-						+ (cpJar == null ? "" : " -cp "
-								+ cpJar.getAbsolutePath()) + " "
+						+ cpArg + " "
 						+ arguments.replace('\"', ' ').trim();
 			}
 
@@ -114,6 +113,23 @@ public class JavaCommandLineCompiler
 
 		return compileOk;
 
+	}
+
+	private static String consCpArg(File[] cpJars)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(" -cp ");
+		
+		String sep = "";
+		
+		for(File jar : cpJars)
+		{
+			sb.append(sep);
+			sb.append(jar.getAbsolutePath());
+			sep = File.pathSeparator;
+		}
+		
+		return sb.toString();
 	}
 
 	public static void printCompileMessage(List<File> files, File cpJar)
