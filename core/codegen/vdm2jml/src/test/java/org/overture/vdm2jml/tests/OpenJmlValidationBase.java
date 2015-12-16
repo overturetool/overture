@@ -2,6 +2,7 @@ package org.overture.vdm2jml.tests;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.junit.Assert;
@@ -67,7 +68,7 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 		assumeFile(JML_RUNTIME, jmlRuntime);
 	}
 	
-	private void assumeFile(String fileName, File file)
+	public static void assumeFile(String fileName, File file)
 	{
 		Assume.assumeTrue("Could not find " + fileName, file != null
 				&& file.exists());
@@ -83,61 +84,63 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 	{
 		beforeRunningOpenJmlProcess();
 
-		String s;
-		Process p;
-		
-		int exitCode = 1;
-		StringBuilder openJmlOutput = new StringBuilder();
-		
 		try
 		{
-			String[] openJmlArgs = getProcessArgs();
-
-			ProcessBuilder pb = new ProcessBuilder(openJmlArgs);
-
-			p = pb.start();
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-			while ((s = br.readLine()) != null)
-			{
-				if(!mustFilter(s))
-				{
-					openJmlOutput.append(s).append('\n');
-				}
-			}
-
-			br.close();
-
-			br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-
-			while ((s = br.readLine()) != null)
-			{
-				openJmlOutput.append(s).append('\n');
-			}
-
-			br.close();
-
-			exitCode = p.waitFor();
-
-			if (VERBOSE)
-			{
-				Logger.getLog().println(openJmlOutput.toString());
-				Logger.getLog().println("Exit value: " + p.exitValue());
-			}
-
-			p.destroy();
-
-		} catch (Exception e)
+			return runProcess(getProcessArgs());
+		} catch (IOException | InterruptedException e)
 		{
 			e.printStackTrace();
 			Assume.assumeTrue("Problems launching OpenJML", false);
+			return null;
 		}
-		
-		return new ProcessResult(exitCode, openJmlOutput);
 	}
 
-	private boolean mustFilter(String s)
+	public static ProcessResult runProcess(String[] openJmlArgs) throws IOException, InterruptedException
+	{
+		String s;
+		Process p;
+		int exitCode = 1;
+		StringBuilder processOutput = new StringBuilder();
+		
+		ProcessBuilder pb = new ProcessBuilder(openJmlArgs);
+
+		p = pb.start();
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+		while ((s = br.readLine()) != null)
+		{
+			if (!mustFilter(s))
+			{
+				processOutput.append(s).append('\n');
+			}
+		}
+
+		br.close();
+
+		br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+
+		while ((s = br.readLine()) != null)
+		{
+			processOutput.append(s).append('\n');
+		}
+
+		br.close();
+
+		exitCode = p.waitFor();
+
+		if (VERBOSE)
+		{
+			Logger.getLog().println(processOutput.toString());
+			Logger.getLog().println("Exit value: " + p.exitValue());
+		}
+
+		p.destroy();
+		
+		return new ProcessResult(exitCode, processOutput);
+	}
+
+	private static boolean mustFilter(String s)
 	{
 		return s.startsWith(SKIPPING_A_SPECIFICATION_CLAUSE_FILTER_MSG);
 	}

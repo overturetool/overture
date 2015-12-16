@@ -192,7 +192,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 		return processResult.getOutput();
 	}
 
-	protected String[] getTypeCheckArgs(File genJavaFolder)
+	protected static String[] getTypeCheckArgs(File genJavaFolder, File cgRuntime, File vdm2jmlRuntime, File openJml)
 	{
 		// Compiles files with runtime assertions in preparation to execution
 		// of the JML annotated Java code
@@ -218,7 +218,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 		return GeneralUtils.concat(openJmlConfig, javaFiles);
 	}
 
-	protected String[] getExecArgs()
+	protected static String[] getExecArgs(File genJavaFolder, File cgRuntime, File vdm2jmlRuntime, File openJml, File jmlRuntime)
 	{
 		// Executes the OpenJML runtime assertion checker
 		// java
@@ -281,10 +281,10 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	{
 		if (!isTypeChecked)
 		{
-			return getTypeCheckArgs(genJavaFolder);
+			return getTypeCheckArgs(genJavaFolder, cgRuntime, vdm2jmlRuntime, openJml);
 		} else
 		{
-			return getExecArgs();
+			return getExecArgs(genJavaFolder, cgRuntime, vdm2jmlRuntime, openJml, jmlRuntime);
 		}
 	}
 }
