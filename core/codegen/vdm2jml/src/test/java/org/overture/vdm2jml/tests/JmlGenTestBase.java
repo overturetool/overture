@@ -83,6 +83,7 @@ abstract public class JmlGenTestBase
 		javaCgArgs.add(outputFolder.getAbsolutePath());
 		javaCgArgs.add(JmlGenMain.FOLDER_ARG);
 		javaCgArgs.add(new File(VDM_LIB_PATH).getAbsolutePath());
+		javaCgArgs.add(JmlGenMain.NO_TRACE);
 		//javaCgArgs.add(JmlGenMain.REPORT_VIOLATIONS_ARG);
 		
 		return javaCgArgs.toArray(new String[]{});
