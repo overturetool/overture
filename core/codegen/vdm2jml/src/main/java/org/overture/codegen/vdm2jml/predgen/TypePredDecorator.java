@@ -20,6 +20,7 @@ import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.traces.TraceMethodTag;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.codegen.vdm2jml.data.RecClassInfo;
 import org.overture.codegen.vdm2jml.data.StateDesInfo;
@@ -200,6 +201,11 @@ public class TypePredDecorator extends AtomicAssertTrans
 	@Override
 	public void caseAMethodDeclCG(AMethodDeclCG node) throws AnalysisException
 	{
+		if(node.getTag() instanceof TraceMethodTag)
+		{
+			return;
+		}
+		
 		namedTypeHandler.handleMethod(node);
 	}
 
