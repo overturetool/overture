@@ -6,7 +6,6 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
@@ -31,22 +30,21 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 	protected static final String NAME_VIOLATION_INDICATOR = "*Name Violations*";
 	protected static final String QUOTE_INDICATOR = "*Quotes*";
 
-	protected static JavaCodeGen vdmCodGen = new JavaCodeGen();
-
 	public SpecificationTestBase(String nameParameter, String inputParameter,
 			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
 	
-	@Before
-	public void init()
+	public JavaCodeGen getJavaGen()
 	{
-		vdmCodGen.clear();
-		vdmCodGen.setSettings(getIrSettings());
-		vdmCodGen.setJavaSettings(getJavaSettings());
+		JavaCodeGen javaGen = new JavaCodeGen();
+		javaGen.setSettings(getIrSettings());
+		javaGen.setJavaSettings(getJavaSettings());
+		
+		return javaGen;
 	}
-
+	
 	public IRSettings getIrSettings()
 	{
 		IRSettings irSettings = new IRSettings();
@@ -155,7 +153,7 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 	@Override
 	protected boolean updateCheck()
 	{
-		if (super.updateCheck())
+		if (frameworkUpdateCheck())
 		{
 			return true;
 		}
@@ -166,6 +164,11 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 		}
 
 		return false;
+	}
+
+	public boolean frameworkUpdateCheck()
+	{
+		return super.updateCheck();
 	}
 
 	protected abstract String getUpdatePropertyString();
