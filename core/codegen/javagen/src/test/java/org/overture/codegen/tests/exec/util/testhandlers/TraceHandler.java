@@ -54,6 +54,13 @@ public class TraceHandler extends ExecutableSpecTestHandler
 		return "computeTests()";
 	}
 	
+	@Override
+	public String getFullyQualifiedEntry(String rootPackage)
+	{
+		// The entry point is local so we can ignore the package and the enclosing class
+		return getJavaEntry();
+	}
+	
 	public int getFreePort()
 	{
 		ServerSocket s = null;
@@ -84,17 +91,18 @@ public class TraceHandler extends ExecutableSpecTestHandler
 		return 8999;
 	}
 
-	public List<String> getMainClassMethods()
+	@Override
+	public List<String> getMainClassMethods(String rootPackage)
 	{
 		String runTraceCall;
 		
 		if(Settings.dialect == Dialect.VDM_SL)
 		{
-			runTraceCall = "Entry.Entry_T1_Run(acc);";
+			runTraceCall = toFullName(rootPackage, "Entry.Entry_T1_Run(acc);");
 		}
 		else
 		{
-			runTraceCall = " new Entry().Entry_T1_Run(acc);";
+			runTraceCall = " new " + toFullName(rootPackage, "Entry") + "().Entry_T1_Run(acc);";
 		}
 		
 		
@@ -138,13 +146,19 @@ public class TraceHandler extends ExecutableSpecTestHandler
 		return new ExecutionResult(sb.toString(), t1.tests);
 	}
 
+	
 	@Override
 	public ExecutionResult runJava(File folder)
 	{
 		ExecutionResult javaResult = super.runJava(folder);
 
-		Object executionResult = javaResult.getExecutionResult();
+		return processTraceResult(javaResult);
+	}
 
+	public ExecutionResult processTraceResult(ExecutionResult javaResult)
+	{
+		Object executionResult = javaResult.getExecutionResult();
+		
 		if(executionResult instanceof TestAccumulator)
 		{
 			TestAccumulator acc = (TestAccumulator) executionResult;
