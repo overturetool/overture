@@ -26,6 +26,7 @@ public class JmlGenMain
 	public static final String PRINT_ARG = "-print";
 	public static final String FOLDER_ARG = "-folder";
 	public static final String INVARIANT_FOR = "-invariant_for";
+	public static final String NO_TRACE = "-notrace";
 
 	public static void main(String[] args)
 	{
@@ -94,6 +95,11 @@ public class JmlGenMain
 			else if(arg.equals(INVARIANT_FOR))
 			{
 				jmlGen.getJmlSettings().setGenInvariantFor(true);
+			}
+			else if(arg.equals(NO_TRACE))
+			{
+				jmlGen.getIrSettings().setGenerateTraces(false);
+				jmlGen.getJavaSettings().setMakeClassesSerializable(false);
 			}
 			else
 			{
