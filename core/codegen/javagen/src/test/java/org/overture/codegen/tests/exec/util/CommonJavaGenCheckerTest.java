@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,7 +35,6 @@ import org.overture.interpreter.runtime.ContextException;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 import org.overture.test.framework.ConditionalIgnoreMethodRule;
-import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
 import org.overture.test.framework.Properties;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Result;
@@ -43,8 +43,9 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 {
-	private TestHandler testHandler;
-	private File outputDir;
+	public static final String EXEC_TEST_PROPERTY = "javagen.javac";
+	protected TestHandler testHandler;
+	protected File outputDir;
 
 	public CommonJavaGenCheckerTest(File vdmSpec, TestHandler testHandler)
 	{
@@ -82,14 +83,25 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 	@Rule
 	public ConditionalIgnoreMethodRule rule = new ConditionalIgnoreMethodRule();
 
+	public boolean runTest()
+	{
+		return System.getProperty(getExecProperty()) != null;
+	}
+
+	public String getExecProperty()
+	{
+		return EXEC_TEST_PROPERTY;
+	}
+	
 	@Test
-	@ConditionalIgnore(condition = JavaCodeGenJavacEnabledCondition.class)
 	public void test() throws Exception
 	{
+		Assume.assumeTrue("Pass property -D" + getExecProperty() + " to run test", runTest());
+		
 		configureResultGeneration();
 		try
 		{
-			compileCode();
+			genSourcesAndCompile();
 
 			if (testHandler instanceof ExecutableTestHandler)
 			{
@@ -102,24 +114,21 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		}
 	}
 	
-	protected void generateJavaSources(File vdmSource)
+	public void genJavaSources(File vdmSource)
 	{
-		JavaCodeGen javaCg = new JavaCodeGen();
-		javaCg.setJavaSettings(getJavaSettings());
-		javaCg.setSettings(getIrSettings());
-
-		List<File> files = new LinkedList<File>();
-		files.add(vdmSource);
-
+		JavaCodeGen javaCg = getJavaGen();
+		
 		try
 		{
 			if (testHandler instanceof ExpressionTestHandler)
 			{
-				String s1 = GeneralUtils.readFromFile(files.get(0));
-				Generated s = JavaCodeGenUtil.generateJavaFromExp(s1, javaCg, Settings.dialect);
-				((ExpressionTestHandler) testHandler).injectArgIntoMainClassFile(outputDir, s.getContent());
+				Generated s = JavaCodeGenUtil.generateJavaFromExp(GeneralUtils.readFromFile(vdmSource), javaCg, Settings.dialect);
+				((ExpressionTestHandler) testHandler).injectArgIntoMainClassFile(outputDir, s.getContent(), javaCg.getJavaSettings().getJavaRootPackage());
 			} else
 			{
+				List<File> files = new LinkedList<File>();
+				files.add(vdmSource);
+				
 				GeneratedData data = genData(javaCg, files);
 				
 				if(data == null)
@@ -147,6 +156,15 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 					+ e.getMessage());
 			e.printStackTrace();
 		}
+	}
+
+	public  JavaCodeGen getJavaGen()
+	{
+		JavaCodeGen javaCg = new JavaCodeGen();
+		javaCg.setJavaSettings(getJavaSettings());
+		javaCg.setSettings(getIrSettings());
+		
+		return javaCg;
 	}
 
 	public static GeneratedData genData(JavaCodeGen javaCg, List<File> files)
@@ -213,6 +231,7 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 
 			// Note that the classes returned in javaResult may be loaded by another class loader. This is the case for
 			// classes representing VDM classes, Quotes etc. that's not part of the cg-runtime
+			
 			ExecutionResult javaResult = executableTestHandler.runJava(outputDir);
 
 			if (javaResult == null)
@@ -230,13 +249,21 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		return new Result<Object>(null, new Vector<IMessage>(), new Vector<IMessage>());
 	}
 
-	private void compileCode()
+	public void genSourcesAndCompile()
 	{
-		generateJavaSources(file);
+		genJavaSources(file);
+		compile(consCpFiles());
+	}
 
+	public  File[] consCpFiles()
+	{
 		File cgRuntime = new File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+		return new File[]{cgRuntime};
+	}
 
-		boolean compileOk = JavaCommandLineCompiler.compile(outputDir, cgRuntime);
+	public void compile(File[] cpJars)
+	{
+		boolean compileOk = JavaCommandLineCompiler.compile(outputDir, cpJars);
 
 		if (!compileOk)
 		{
