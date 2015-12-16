@@ -102,6 +102,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 		instanceParam.setPattern(transAssistant.getInfo().getPatternAssistant().consIdPattern(tracePrefixes.traceMethodParamName()));
 
 		AMethodDeclCG traceMethod = new AMethodDeclCG();
+		traceMethod.setTag(new TraceMethodTag());
 		
 		traceMethod.getFormalParams().add(instanceParam);
 		
