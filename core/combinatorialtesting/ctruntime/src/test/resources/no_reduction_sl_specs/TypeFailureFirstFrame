@@ -1,0 +1,12 @@
+operations 
+
+op : nat ==> ()
+op (-) == skip
+pre true;
+
+traces
+
+T1:
+let a in set {-1,true}
+in 
+ op(a);
