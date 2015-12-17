@@ -1,0 +1,11 @@
+<traces>
+	<class name="DEFAULT">
+		<trace name="T1" testcount="2" filename="TypeFailureFirstFrame" line="9" column="1" subset="1.0" reduction="NONE" seed="999">
+			<test no="1">op(-1)</test>
+			<result no="1" verdict="INCONCLUSIVE">Error 4065: Value -1 is not a nat in &apos;DEFAULT&apos; at line 12:2</result>
+			<test no="2">op(true)</test>
+			<result no="2" verdict="INCONCLUSIVE">Error 4087: Cannot convert true at line 12:2</result>
+			<status verdict="INCONCLUSIVE" testcount="2" skippedcount="0" faildcount="0" inconclusivecount="2"></status>
+		</trace>
+	</class>
+</traces>
