@@ -86,13 +86,8 @@ public abstract class TraceNode
 								((CallStatementPp) callStm).setInstance(store.getValue(ENCLOSING_MODULE_ID));
 							}
 
-							if (!callStm.isTypeCorrect())
-							{
-								// TODO: To be done. Consider where the right place is to check for this.
-								break;
-							}
-
-							if (!callStm.meetsPreCond())
+							// TODO: To be done. Consider where the right place is to check for this.
+							if (!callStm.isTypeCorrect() || !callStm.meetsPreCond())
 							{
 								// Inconclusive
 								callStmResults.add(NOT_AVAILABLE);
