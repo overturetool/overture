@@ -35,11 +35,16 @@ public class JmlTraceTrans extends TracesTrans
 		SExpCG exp = transAssistant.getInfo().getExpAssistant().consBoolLiteral(false);
 
 		String storeId = storeAssistant.getIdConstNameMap().get(arg.getName());
-		String name = storeId == null ? arg.getName() : storeId;
+		String name = storeId == null ? arg.getName() : consLookup(storeId);
 		
 		tcExpInfo.add(new TcExpInfo(name, formalParamType, exp, traceEnclosingClass));
 
 		return exp;
+	}
+
+	private String consLookup(String storeId)
+	{
+		return tracePrefixes.storeVarName() + "." + tracePrefixes.storeGetValueMethodName() + "(" + storeId + ")";
 	}
 
 	public List<TcExpInfo> getTcExpInfo()

@@ -10,16 +10,16 @@ public class TcExpInfo
 	private String traceEnclosingClass;
 	private String name;
 
-	public TcExpInfo(String name, STypeCG formalParamType, SExpCG typeCheck, String traceEnclosingClass)
+	public TcExpInfo(String expRef, STypeCG formalParamType, SExpCG typeCheck, String traceEnclosingClass)
 	{
 		super();
-		this.name = name;
+		this.name = expRef;
 		this.formalParamType = formalParamType;
 		this.typeCheck = typeCheck;
 		this.traceEnclosingClass = traceEnclosingClass;
 	}
 
-	public String getName()
+	public String getExpRef()
 	{
 		return name;
 	}
