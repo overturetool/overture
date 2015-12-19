@@ -395,7 +395,8 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 			
 			SClassDeclCG clazz = getJavaGen().getInfo().getDeclAssistant().findClass(getJavaGen().getInfo().getClasses(), enclosingClass);
 			NameGen nameGen = new NameGen(clazz);
-			String checkStr = typeInfo.consCheckExp(enclosingClass, javaRootPackage, currentInfo.getArg().getName(), nameGen);
+			String name = currentInfo.getName();
+			String checkStr = typeInfo.consCheckExp(enclosingClass, javaRootPackage, name, nameGen);
 			
 			AExternalExpCG check = new AExternalExpCG();
 			check.setTargetLangExp(checkStr);

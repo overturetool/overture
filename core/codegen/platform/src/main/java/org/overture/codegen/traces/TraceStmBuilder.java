@@ -527,7 +527,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			
 			if(a instanceof SVarExpCG)
 			{
-				SExpCG tcExp = traceTrans.consTypeCheckExp((SVarExpCG) a, argTypes.get(i), traceEnclosingClass);
+				SExpCG tcExp = traceTrans.consTypeCheckExp((SVarExpCG) a, argTypes.get(i), traceEnclosingClass, storeAssistant);
 				
 				if(tcExp != null)
 				{

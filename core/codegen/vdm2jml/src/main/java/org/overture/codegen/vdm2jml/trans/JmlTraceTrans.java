@@ -7,6 +7,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.traces.ICallStmToStringMethodBuilder;
+import org.overture.codegen.traces.StoreAssistant;
 import org.overture.codegen.traces.TraceNames;
 import org.overture.codegen.traces.TracesTrans;
 import org.overture.codegen.trans.IterationVarPrefixes;
@@ -25,7 +26,7 @@ public class JmlTraceTrans extends TracesTrans
 	}
 
 	@Override
-	public SExpCG consTypeCheckExp(SVarExpCG arg, STypeCG formalParamType, String traceEnclosingClass)
+	public SExpCG consTypeCheckExp(SVarExpCG arg, STypeCG formalParamType, String traceEnclosingClass, StoreAssistant storeAssistant)
 	{
 		/**
 		 * Just assume for now that 'exp' is 'false' and that 'arg' does not type check. Later, 'exp' will be replaced
@@ -33,7 +34,10 @@ public class JmlTraceTrans extends TracesTrans
 		 */
 		SExpCG exp = transAssistant.getInfo().getExpAssistant().consBoolLiteral(false);
 
-		tcExpInfo.add(new TcExpInfo(arg, formalParamType, exp, traceEnclosingClass));
+		String storeId = storeAssistant.getIdConstNameMap().get(arg.getName());
+		String name = storeId == null ? arg.getName() : storeId;
+		
+		tcExpInfo.add(new TcExpInfo(name, formalParamType, exp, traceEnclosingClass));
 
 		return exp;
 	}

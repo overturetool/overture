@@ -244,7 +244,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 		return null;
 	}
 
-	public SExpCG consTypeCheckExp(SVarExpCG a, STypeCG formalParamType, String traceEnclosingClass)
+	public SExpCG consTypeCheckExp(SVarExpCG a, STypeCG formalParamType, String traceEnclosingClass, StoreAssistant storeAssistant)
 	{
 		return null;
 	}
