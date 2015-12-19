@@ -37,7 +37,7 @@ final public class Entry implements java.io.Serializable {
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
         CallStatement callStm_1 = new CallStatement() {
                 public Boolean meetsPreCond() {
-                    return pre_op(Utils.copy(St));
+                    return pre_op(St);
                 }
 
                 public Object execute() {
