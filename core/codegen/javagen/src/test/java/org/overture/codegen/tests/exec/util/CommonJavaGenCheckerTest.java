@@ -98,6 +98,8 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 	{
 		Assume.assumeTrue("Pass property -D" + getExecProperty() + " to run test", runTest());
 		
+		assumeTest();
+		
 		configureResultGeneration();
 		try
 		{
@@ -114,6 +116,11 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		}
 	}
 	
+	public void assumeTest()
+	{
+		/* Allow all tests to run by default */
+	}
+
 	public void genJavaSources(File vdmSource)
 	{
 		JavaCodeGen javaCg = getJavaGen();
