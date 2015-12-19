@@ -37,7 +37,7 @@ final public class Entry implements java.io.Serializable {
 
             CallStatement callStm_1 = new CallStatement() {
                     public Boolean isTypeCorrect() {
-                        if (!(Utils.is_nat(a))) {
+                        if (!(Utils.is_nat(store.getValue(ID_3)))) {
                             return false;
                         }
 

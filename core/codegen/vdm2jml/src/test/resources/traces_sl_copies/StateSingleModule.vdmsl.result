@@ -41,17 +41,20 @@ final public class Entry implements java.io.Serializable {
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
         final Number ID_2 = gen.inc();
         final Number ID_3 = gen.inc();
-        final Number a = 1L;
-        final Number b = a.longValue() + 1L;
-        store.register(ID_2, a);
-        store.register(ID_3, b);
+
+        {
+            final Number a = 1L;
+            final Number b = a.longValue() + 1L;
+            store.register(ID_2, a);
+            store.register(ID_3, b);
+        }
 
         SequenceTraceNode sequence_2 = new SequenceTraceNode();
         AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
         SequenceTraceNode sequence_3 = new SequenceTraceNode();
         CallStatement callStm_1 = new CallStatement() {
                 public Boolean isTypeCorrect() {
-                    if (!(Utils.is_nat(a))) {
+                    if (!(Utils.is_nat(store.getValue(ID_2)))) {
                         return false;
                     }
 
@@ -72,7 +75,7 @@ final public class Entry implements java.io.Serializable {
 
         CallStatement callStm_2 = new CallStatement() {
                 public Boolean isTypeCorrect() {
-                    if (!(Utils.is_nat(b))) {
+                    if (!(Utils.is_nat(store.getValue(ID_3)))) {
                         return false;
                     }
 
@@ -97,7 +100,7 @@ final public class Entry implements java.io.Serializable {
         SequenceTraceNode sequence_4 = new SequenceTraceNode();
         CallStatement callStm_3 = new CallStatement() {
                 public Boolean isTypeCorrect() {
-                    if (!(Utils.is_nat(b))) {
+                    if (!(Utils.is_nat(store.getValue(ID_3)))) {
                         return false;
                     }
 
@@ -118,7 +121,7 @@ final public class Entry implements java.io.Serializable {
 
         CallStatement callStm_4 = new CallStatement() {
                 public Boolean isTypeCorrect() {
-                    if (!(Utils.is_nat(a))) {
+                    if (!(Utils.is_nat(store.getValue(ID_2)))) {
                         return false;
                     }
 
