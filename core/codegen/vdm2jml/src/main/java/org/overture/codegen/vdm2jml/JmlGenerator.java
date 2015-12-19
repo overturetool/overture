@@ -22,9 +22,12 @@ import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AExternalExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IREventObserver;
@@ -33,6 +36,7 @@ import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.traces.TracesTrans;
 import org.overture.codegen.trans.AssignStmTrans;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.uniontypes.UnionTypeTrans;
@@ -45,14 +49,18 @@ import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.codegen.vdm2jml.data.RecClassInfo;
 import org.overture.codegen.vdm2jml.data.StateDesInfo;
 import org.overture.codegen.vdm2jml.predgen.TypePredDecorator;
+import org.overture.codegen.vdm2jml.predgen.info.AbstractTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInfo;
 import org.overture.codegen.vdm2jml.predgen.info.NamedTypeInvDepCalculator;
+import org.overture.codegen.vdm2jml.trans.JmlTraceTrans;
 import org.overture.codegen.vdm2jml.trans.JmlUnionTypeTrans;
 import org.overture.codegen.vdm2jml.trans.RecAccessorTrans;
 import org.overture.codegen.vdm2jml.trans.RecInvTransformation;
 import org.overture.codegen.vdm2jml.trans.TargetNormaliserTrans;
+import org.overture.codegen.vdm2jml.trans.TcExpInfo;
 import org.overture.codegen.vdm2jml.util.AnnotationSorter;
 import org.overture.codegen.vdm2jml.util.IsValChecker;
+import org.overture.codegen.vdm2jml.util.NameGen;
 
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -104,6 +112,8 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	// The class owning the invChecksOn flag
 	private ADefaultClassDeclCG invChecksFlagOwner = null;
 	
+	private List<TcExpInfo> tcExpInfo;
+	
 	public JmlGenerator()
 	{
 		this(new JavaCodeGen());
@@ -135,7 +145,9 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		// Replace the union type transformation
 		for(int i = 0; i < series.size(); i++)
 		{
-			if(series.get(i) instanceof UnionTypeTrans)
+			DepthFirstAnalysisAdaptor currentTr = series.get(i);
+			
+			if(currentTr instanceof UnionTypeTrans)
 			{
 				TransAssistantCG assist = javaGen.getTransAssistant();
 				UnionTypeVarPrefixes varPrefixes = javaGen.getVarPrefixManager().getUnionTypePrefixes();
@@ -144,7 +156,13 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 				JmlUnionTypeTrans newUnionTypeTr = new JmlUnionTypeTrans(assist, varPrefixes, cloneFreeNodes, stateDesInfo);
 				
 				series.set(i, newUnionTypeTr);
-				break;
+			}
+			else if(currentTr instanceof TracesTrans)
+			{
+				TracesTrans orig = (TracesTrans) currentTr;
+				JmlTraceTrans newTraceTrans = new JmlTraceTrans(orig.getTransAssist(), orig.getIteVarPrefixes(), orig.getTracePrefixes(), orig.getLangIterator(), orig.getToStringBuilder());
+				series.set(i, newTraceTrans);
+				this.tcExpInfo = newTraceTrans.getTcExpInfo();
 			}
 		}
 		
@@ -348,8 +366,10 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 			}
 		}
 		
+		TypePredDecorator assertTr = new TypePredDecorator(this, stateDesInfo, recInfo);
+		
 		// Add assertions to check for violation of record and named type invariants
-		addAssertions(newAst, stateDesInfo, recInfo);
+		addAssertions(newAst, assertTr);
 
 		// Make sure that the JML annotations are ordered correctly
 		sortAnnotations(newAst);
@@ -357,8 +377,32 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		// Make all nodes have a copy of each named type invariant method
 		util.distributeNamedTypeInvs(newAst);
 		
+		// Type check trace tests
+		tcTraceTest(assertTr);
+		
 		// Return back the modified AST to the Java code generator
 		return newAst;
+	}
+
+	private void tcTraceTest(TypePredDecorator assertTr)
+	{
+		for(TcExpInfo currentInfo : tcExpInfo)
+		{
+			AbstractTypeInfo typeInfo = assertTr.getTypePredUtil().findTypeInfo(currentInfo.getFormalParamType());
+
+			String enclosingClass = currentInfo.getTraceEnclosingClass();
+			String javaRootPackage = getJavaSettings().getJavaRootPackage();
+			
+			SClassDeclCG clazz = getJavaGen().getInfo().getDeclAssistant().findClass(getJavaGen().getInfo().getClasses(), enclosingClass);
+			NameGen nameGen = new NameGen(clazz);
+			String checkStr = typeInfo.consCheckExp(enclosingClass, javaRootPackage, currentInfo.getArg().getName(), nameGen);
+			
+			AExternalExpCG check = new AExternalExpCG();
+			check.setTargetLangExp(checkStr);
+			check.setType(new ABoolBasicTypeCG());
+			
+			this.javaGen.getTransAssistant().replaceNodeWith(currentInfo.getTypeCheck(), check);
+		}
 	}
 
 	private void addVdmToJmlRuntimeImport(ADefaultClassDeclCG clazz)
@@ -426,10 +470,8 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		this.typeInfoList = depCalc.getTypeDataList();
 	}
 
-	private void addAssertions(List<IRStatus<INode>> newAst, StateDesInfo stateDesInfo, RecClassInfo recInfo)
+	private void addAssertions(List<IRStatus<INode>> newAst, TypePredDecorator assertTr)
 	{
-		TypePredDecorator assertTr = new TypePredDecorator(this, stateDesInfo, recInfo);
-		
 		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(newAst, ADefaultClassDeclCG.class))
 		{
 			ADefaultClassDeclCG clazz = status.getIrNode();
