@@ -13,6 +13,12 @@
   <artifactId>vdm2jml</artifactId>
   <name>The VDM to JML Generator</name>
 
+  <properties>
+    <tracesinput>../javagen/src/test/resources/traces_sl_specs</tracesinput>
+    <tracesoutput>src/test/resources/traces_sl_copies</tracesoutput>
+  </properties>
+
+
   <dependencies>
     <dependency>
       <groupId>org.overturetool.core.codegen</groupId>
@@ -124,7 +130,36 @@
             </lifecycleMappingMetadata>
           </configuration>
         </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.7</version>
+          <executions>
+          <!-- The JML generator uses the SL trace tests from the Java code generator -->
+            <execution>
+              <id>copy-resources</id>
+              <phase>initialize</phase>
+              <goals>
+                <goal>copy-resources</goal>
+              </goals>
+              <configuration>
+                <outputDirectory>${tracesoutput}</outputDirectory>
+                <resources>
+                  <resource>
+                    <directory>${tracesinput}</directory>
+                    <includes>
+                      <!-- The VDM-SL models containing traces used for testing -->
+                      <include>**/*.vdmsl</include>
+                      <!-- The result of executing the trace using the VDM interpreter can also be reused -->
+                      <include>**/*.eval.result</include>
+                    </includes>
+                  </resource>
+                </resources>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
+
     </pluginManagement>
 
   </build>
