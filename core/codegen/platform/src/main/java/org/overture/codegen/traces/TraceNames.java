@@ -55,6 +55,11 @@ public class TraceNames
 		return "callStm_";
 	}
 	
+	public String callStmIsTypeCorrectNamePrefix()
+	{
+		return "isTypeCorrect";
+	}
+	
 	public String callStmMeetsPreCondNamePrefix()
 	{
 		return "meetsPreCond";
