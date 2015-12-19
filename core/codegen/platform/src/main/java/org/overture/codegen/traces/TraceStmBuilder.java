@@ -269,6 +269,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		IdentifierPatternCollector idCollector = new IdentifierPatternCollector();
 		
 		ABlockStmCG declBlock = new ABlockStmCG();
+		declBlock.setScoped(true);
 
 		for (AVarDeclCG dec : node.getLocalDefs())
 		{
