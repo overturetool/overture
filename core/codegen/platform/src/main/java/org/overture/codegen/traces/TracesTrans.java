@@ -1,7 +1,9 @@
 package org.overture.codegen.traces;
 
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
@@ -11,6 +13,7 @@ import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
 import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ATypeArgExpCG;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
@@ -26,11 +29,11 @@ import org.overture.config.Settings;
 
 public class TracesTrans extends DepthFirstAnalysisAdaptor
 {
-	private TransAssistantCG transAssistant;
-	private IterationVarPrefixes iteVarPrefixes;
-	private ILanguageIterator langIterator;
-	private ICallStmToStringMethodBuilder toStringBuilder;
-	private TraceNames tracePrefixes;
+	protected TransAssistantCG transAssistant;
+	protected IterationVarPrefixes iteVarPrefixes;
+	protected ILanguageIterator langIterator;
+	protected ICallStmToStringMethodBuilder toStringBuilder;
+	protected TraceNames tracePrefixes;
 
 	public TracesTrans(TransAssistantCG transAssistant,
 			IterationVarPrefixes iteVarPrefixes, TraceNames tracePrefixes,
@@ -156,8 +159,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 		
 		String traceEnclosingClass = getClassName(node);
 		
-		TraceStmBuilder stmBuilder = new TraceStmBuilder(transAssistant,
-				iteVarPrefixes, tracePrefixes, langIterator, toStringBuilder, traceEnclosingClass, storeAssist);
+		TraceStmBuilder stmBuilder = new TraceStmBuilder(this, traceEnclosingClass, storeAssist);
 
 		SStmCG regModules = registerOtherModules(traceEnclosingClass, storeAssist);
 		TraceNodeData nodeData = stmBuilder.buildFromDeclTerms(node.getTerms());
@@ -225,7 +227,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 		return methodName;
 	}
 	
-	private String getClassName(ANamedTraceDeclCG trace)
+	public String getClassName(ANamedTraceDeclCG trace)
 	{
 		if (trace != null)
 		{
@@ -240,5 +242,35 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 				+ trace + " in 'TraceStmsBuilder'");
 
 		return null;
+	}
+
+	public SExpCG consTypeCheckExp(SVarExpCG a, STypeCG formalParamType, String traceEnclosingClass)
+	{
+		return null;
+	}
+	
+	public TransAssistantCG getTransAssist()
+	{
+		return transAssistant;
+	}
+	
+	public IterationVarPrefixes getIteVarPrefixes()
+	{
+		return iteVarPrefixes;
+	}
+	
+	public TraceNames getTracePrefixes()
+	{
+		return tracePrefixes;
+	}
+	
+	public ILanguageIterator getLangIterator()
+	{
+		return langIterator;
+	}
+	
+	public ICallStmToStringMethodBuilder getToStringBuilder()
+	{
+		return toStringBuilder;
 	}
 }
