@@ -58,7 +58,6 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRConstants;
@@ -641,8 +640,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 					{
 						ExpAssistantCG eAssist = traceTrans.getTransAssist().getInfo().getExpAssistant();
 						AIdentifierVarExpCG stateArg = eAssist.consIdVar(f.getName(), f.getType().clone());
-						
-						stateArg.setType(new AUnknownTypeCG());
+						traceTrans.getCloneFreeNodes().add(stateArg);
 						args.add(stateArg);
 					}
 					else

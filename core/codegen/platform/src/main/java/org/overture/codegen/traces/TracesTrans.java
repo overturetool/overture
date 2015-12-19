@@ -1,6 +1,9 @@
 package org.overture.codegen.traces;
 
+import java.util.List;
+
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -34,11 +37,12 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 	protected ILanguageIterator langIterator;
 	protected ICallStmToStringMethodBuilder toStringBuilder;
 	protected TraceNames tracePrefixes;
+	private List<INode> cloneFreeNodes;
 
 	public TracesTrans(TransAssistantCG transAssistant,
 			IterationVarPrefixes iteVarPrefixes, TraceNames tracePrefixes,
 			ILanguageIterator langIterator,
-			ICallStmToStringMethodBuilder toStringBuilder)
+			ICallStmToStringMethodBuilder toStringBuilder, List<INode> cloneFreeNodes)
 	{
 		this.transAssistant = transAssistant;
 		this.iteVarPrefixes = iteVarPrefixes;
@@ -46,6 +50,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 		this.toStringBuilder = toStringBuilder;
 
 		this.tracePrefixes = tracePrefixes;
+		this.cloneFreeNodes = cloneFreeNodes;
 	}
 
 	@Override
@@ -272,5 +277,10 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 	public ICallStmToStringMethodBuilder getToStringBuilder()
 	{
 		return toStringBuilder;
+	}
+	
+	public List<INode> getCloneFreeNodes()
+	{
+		return cloneFreeNodes;
 	}
 }

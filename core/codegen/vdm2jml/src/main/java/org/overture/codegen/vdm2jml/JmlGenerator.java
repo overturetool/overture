@@ -142,6 +142,8 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 
 		List<DepthFirstAnalysisAdaptor> series = this.javaGen.getTransSeries().getSeries();
 
+		List<INode> cloneFreeNodes = javaGen.getJavaFormat().getValueSemantics().getCloneFreeNodes();
+		
 		// Replace the union type transformation
 		for(int i = 0; i < series.size(); i++)
 		{
@@ -151,7 +153,6 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 			{
 				TransAssistantCG assist = javaGen.getTransAssistant();
 				UnionTypeVarPrefixes varPrefixes = javaGen.getVarPrefixManager().getUnionTypePrefixes();
-				List<INode> cloneFreeNodes = javaGen.getJavaFormat().getValueSemantics().getCloneFreeNodes();
 				
 				JmlUnionTypeTrans newUnionTypeTr = new JmlUnionTypeTrans(assist, varPrefixes, cloneFreeNodes, stateDesInfo);
 				
@@ -160,7 +161,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 			else if(currentTr instanceof TracesTrans)
 			{
 				TracesTrans orig = (TracesTrans) currentTr;
-				JmlTraceTrans newTraceTrans = new JmlTraceTrans(orig.getTransAssist(), orig.getIteVarPrefixes(), orig.getTracePrefixes(), orig.getLangIterator(), orig.getToStringBuilder());
+				JmlTraceTrans newTraceTrans = new JmlTraceTrans(orig.getTransAssist(), orig.getIteVarPrefixes(), orig.getTracePrefixes(), orig.getLangIterator(), orig.getToStringBuilder(), cloneFreeNodes);
 				series.set(i, newTraceTrans);
 				this.tcExpInfo = newTraceTrans.getTcExpInfo();
 			}
