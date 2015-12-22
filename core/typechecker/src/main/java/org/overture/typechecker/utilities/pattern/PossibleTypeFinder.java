@@ -35,6 +35,7 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.AIntegerPattern;
 import org.overture.ast.patterns.AMapPattern;
+import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.ast.patterns.ANilPattern;
 import org.overture.ast.patterns.AObjectPattern;
 import org.overture.ast.patterns.AQuotePattern;
@@ -200,6 +201,12 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 
 	@Override
 	public PType caseAMapPattern(AMapPattern pattern) throws AnalysisException
+	{
+		return AstFactory.newAMapMapType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()), AstFactory.newAUnknownType(pattern.getLocation()));
+	}
+
+	@Override
+	public PType caseAMapUnionPattern(AMapUnionPattern pattern) throws AnalysisException
 	{
 		return AstFactory.newAMapMapType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()), AstFactory.newAUnknownType(pattern.getLocation()));
 	}
