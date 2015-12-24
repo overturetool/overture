@@ -131,17 +131,7 @@ public class CTMainThread extends MainThread
 							result.add(Verdict.FAILED);
 						}
 						break;
-
-					case 4075:
-					case 4076:
-					case 4077: // invalid type conversions
-					case 4060: // type invariant failures
-					case 4058:
-					case 4059:
-					case 4064:
-					case 4065:
-					case 4134: // type conversion failures
-
+					default:
 						if (e.ctxt == ctxt)
 						{
 							result.add(Verdict.INCONCLUSIVE);
@@ -150,9 +140,6 @@ public class CTMainThread extends MainThread
 							result.add(Verdict.FAILED);
 						}
 						break;
-
-					default:
-						result.add(Verdict.FAILED);
 				}
 			}
 		} catch (Throwable e)
