@@ -32,12 +32,21 @@ import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.ACatchClauseDeclCG;
+import org.overture.codegen.cgast.declarations.AClientInstanceDeclCG;
+import org.overture.codegen.cgast.declarations.ACpuDeploymentDeclCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.ARMIServerDeclCG;
+import org.overture.codegen.cgast.declarations.ARMIregistryDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
+import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
+import org.overture.codegen.cgast.declarations.ARemoteInstanceDeclCG;
+import org.overture.codegen.cgast.declarations.ASynchTokenDeclCG;
+import org.overture.codegen.cgast.declarations.ASynchTokenInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
@@ -195,7 +204,34 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ACatchClauseDeclCG.class, templateStructure.DECL_PATH
 				+ "CatchClause");
+		
+		// RT specific
+		nodeTemplateFileNames.put(ARemoteContractDeclCG.class, templateStructure.DECL_PATH
+				+ "RemoteContract");
+		
+		nodeTemplateFileNames.put(ARemoteContractImplDeclCG.class, templateStructure.DECL_PATH
+				+ "RemoteContractImpl");
+		
+		nodeTemplateFileNames.put(ACpuDeploymentDeclCG.class, templateStructure.DECL_PATH
+				+ "CPUdeployment");
 
+		nodeTemplateFileNames.put(ARemoteInstanceDeclCG.class, templateStructure.DECL_PATH
+				+ "RemoteInstance");
+		
+		nodeTemplateFileNames.put(AClientInstanceDeclCG.class, templateStructure.DECL_PATH
+				+ "ClientInstance");
+		
+		nodeTemplateFileNames.put(ARMIregistryDeclCG.class, templateStructure.DECL_PATH
+				+ "RMIregistry");
+		
+		nodeTemplateFileNames.put(ARMIServerDeclCG.class, templateStructure.DECL_PATH + "RMI_Server");
+		
+		nodeTemplateFileNames.put(ASynchTokenDeclCG.class, templateStructure.DECL_PATH
+				+ "SynchToken");
+		
+		nodeTemplateFileNames.put(ASynchTokenInterfaceDeclCG.class, templateStructure.DECL_PATH
+				+ "SynchTokenInterface");
+		
 		// Local declarations
 
 		nodeTemplateFileNames.put(AFormalParamLocalParamCG.class, templateStructure.LOCAL_DECLS_PATH
