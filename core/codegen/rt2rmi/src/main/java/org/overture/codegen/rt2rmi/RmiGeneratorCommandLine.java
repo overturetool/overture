@@ -1,6 +1,7 @@
 package org.overture.codegen.rt2rmi;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,12 +13,22 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.util.Utils;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
+import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.rt2rmi.systemanalysis.DistributionMapping;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
+import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaCodeGenMain;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
+import org.overture.codegen.vdm2java.JavaFormat;
+import org.overture.codegen.vdm2java.JavaVarPrefixManager;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.util.TypeCheckerUtil;
@@ -29,7 +40,7 @@ public class RmiGeneratorCommandLine
 	private static final String PRINT_ARG = "-print";
 	public static final String OUTPUT_ARG = "-output";
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		if (args == null || args.length < 1)
 		{
@@ -135,6 +146,45 @@ public class RmiGeneratorCommandLine
 				
 				RmiGenerator rmiGen = new RmiGenerator(systemClassName);
 				GeneratedData data = rmiGen.generate(tcResult.result);
+				
+				IRInfo info = new IRInfo();
+				JavaFormat javaFormat = rmiGen.getJavaGen().getJavaFormat();
+				
+				List<ADefaultClassDeclCG> irClasses = Util.getClasses(data.getClasses());
+				
+				//**********************************************************************//
+				// Generate the remote contracts
+				RemoteContractGenerator contractGenerator = new RemoteContractGenerator(
+						irClasses);
+				Set<ARemoteContractDeclCG> remoteContracts = contractGenerator
+						.run();
+
+				MergeVisitor printer = javaFormat.getMergeVisitor();
+
+
+				System.out.println("**********************Remote contracts**********************");
+				for (ARemoteContractDeclCG conract : remoteContracts) {
+					StringWriter writer = new StringWriter();
+					conract.apply(printer, writer);
+
+					System.out.println(JavaCodeGenUtil.formatJavaCode(writer
+							.toString()));
+				}
+				
+				//**********************************************************************//
+				// Generate the remote contract implementations
+				RemoteImplGenerator implsGen = new RemoteImplGenerator(irClasses);
+				List<ARemoteContractImplDeclCG> remoteImpls = implsGen.run();
+
+				System.out.println("**********************Remote contracts implementation**********************");
+				for (ARemoteContractImplDeclCG impl : remoteImpls) {
+					StringWriter writer = new StringWriter();
+					impl.apply(printer, writer);
+
+					System.out.println(JavaCodeGenUtil.formatJavaCode(writer
+							.toString()));
+				}
+				
 				JavaCodeGenMain.processData(print, outputDir, rmiGen.getJavaGen(), data, false);
 			} else
 			{

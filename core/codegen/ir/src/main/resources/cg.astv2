@@ -125,6 +125,7 @@ CG {-> package='org.overture.codegen.cgast'
     
 #decl {-> package='org.overture.codegen.cgast.declarations'}
 	=	{method} //rename to operation
+		[isRemote]:java_Boolean
 		(preCond):CG.#decl
 		(postCond):CG.#decl
 		[access]:java_String //Consider introducing access node covering both "access" and "async"
