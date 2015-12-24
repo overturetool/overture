@@ -19,17 +19,18 @@ public class RmiGenerator implements IREventObserver
 {
 	private JavaCodeGen javaGen;
 
-	public RmiGenerator()
+	public RmiGenerator(String systemClassName)
 	{
 		this.javaGen = new JavaCodeGen();
 		this.javaGen.registerIrObs(this);
-		addTransformations();
+		addTransformations(systemClassName);
 	}
 
-	private void addTransformations()
+	private void addTransformations(String systemClassName)
 	{
 		// Add additional transformations
-		this.javaGen.getTransSeries().getSeries().add(new RemoteTypeTrans());
+		IRInfo info = new IRInfo();
+		this.javaGen.getTransSeries().getSeries().add(new RemoteTypeTrans(systemClassName,info));
 	}
 
 	public GeneratedData generate(List<SClassDefinition> rtClasses) throws AnalysisException

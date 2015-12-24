@@ -5,11 +5,15 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.rt2rmi.systemanalysis.DistributionMapping;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
@@ -106,9 +110,30 @@ public class RmiGeneratorCommandLine
 		{
 			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckRt(files);
 			
+			/**********Analyse System class**********/
+			// Now the architecture of the VDM-RT model is analysed
+			// in order to extract the Connection map, Distribution map,
+			// number of deployed objects and number of CPUs
+			
+			DistributionMapping mapping = new DistributionMapping(tcResult.result);
+			mapping.run();
+			
+			int deployedObjCounter = mapping.getDeployedObjCounter();
+			
+			System.out.println("Number of deployed objects in the system class is: " 
+								+ deployedObjCounter);
+			
+			Set<AClassClassDefinition> deployedClasses = mapping
+					.getDeployedClasses();
+
+			Set<AVariableExp> deployedObjects = mapping.getDeployedObjects();
+			
+			/******************************************/
 			if (!GeneralCodeGenUtils.hasErrors(tcResult))
 			{
-				RmiGenerator rmiGen = new RmiGenerator();
+				String systemClassName = mapping.getSystemName();
+				
+				RmiGenerator rmiGen = new RmiGenerator(systemClassName);
 				GeneratedData data = rmiGen.generate(tcResult.result);
 				JavaCodeGenMain.processData(print, outputDir, rmiGen.getJavaGen(), data, false);
 			} else
