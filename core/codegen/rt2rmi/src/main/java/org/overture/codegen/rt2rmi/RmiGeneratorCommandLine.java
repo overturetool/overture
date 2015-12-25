@@ -1,11 +1,13 @@
 package org.overture.codegen.rt2rmi;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -40,7 +42,7 @@ public class RmiGeneratorCommandLine
 	private static final String PRINT_ARG = "-print";
 	public static final String OUTPUT_ARG = "-output";
 
-	public static void main(String[] args) throws org.overture.codegen.cgast.analysis.AnalysisException
+	public static void main(String[] args) throws org.overture.codegen.cgast.analysis.AnalysisException, IOException
 	{
 		if (args == null || args.length < 1)
 		{
@@ -177,6 +179,7 @@ public class RmiGeneratorCommandLine
 				List<ARemoteContractImplDeclCG> remoteImpls = implsGen.run();
 
 				System.out.println("**********************Remote contracts implementation**********************");
+				
 				for (ARemoteContractImplDeclCG impl : remoteImpls) {
 					StringWriter writer = new StringWriter();
 					impl.apply(printer, writer);
@@ -184,6 +187,22 @@ public class RmiGeneratorCommandLine
 					System.out.println(JavaCodeGenUtil.formatJavaCode(writer
 							.toString()));
 				}
+				
+				
+				System.out.println("**********************CPU deployment**********************");
+
+				Map<String, Set<AVariableExp>> CpuToDeployedObject = mapping.getCpuToDeployedObject();
+
+				Map<String, Set<String>> cpuToConnectedCPUs = mapping.cpuToConnectedCPUs();
+				//CPUdeploymentGenerator cpuDep = new CPUdeploymentGenerator(CpuToDeployedObject);
+
+				Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses = mapping.cpuToDeployedClasses();
+
+				// Distributed the generate remote contracts and their implementation
+				rmiGen.processData(remoteContracts, cpuToDeployedClasses, cpuToConnectedCPUs, remoteImpls);
+				
+				
+				
 				
 				JavaCodeGenMain.processData(print, outputDir, rmiGen.getJavaGen(), data, false);
 			} else
