@@ -2,6 +2,7 @@ package org.overture.codegen.rt2rmi.trans;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.IRInfo;
@@ -36,6 +37,12 @@ public class RemoteTypeTrans extends DepthFirstAnalysisAdaptor
 		
 		// Do not transform if it is a library name
 		if(info.getDeclAssistant().isLibraryName(node.getName()))
+		{
+			return;
+		}
+		
+		// Do not transform variable references
+		if(node.parent() instanceof AExplicitVarExpCG)
 		{
 			return;
 		}
