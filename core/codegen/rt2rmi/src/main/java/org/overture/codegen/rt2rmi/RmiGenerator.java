@@ -12,7 +12,10 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.declarations.ACpuDeploymentDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.ARMIServerDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
@@ -220,6 +223,56 @@ public class RmiGenerator implements IREventObserver {
 				}
 			}
 		}
+	}
+	
+	public void processData2(Map<String, Set<AVariableExp>> cpuToDeployedObject, Map<String, 
+			Set<String>> cpuToConnectedCPUs,
+			int DeployedObjCounter) throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException, IOException{
+		
+		JavaFormat javaFormat = getJavaFormat();
+		MergeVisitor printer = javaFormat.getMergeVisitor();
+		
+		//**********************************************************************//
+		CPUdeploymentGenerator cpuDepGenerator = new CPUdeploymentGenerator(
+				cpuToDeployedObject, cpuToConnectedCPUs , DeployedObjCounter);
+		Set<ACpuDeploymentDeclCG> cpuDeps = cpuDepGenerator
+				.run();
 
+
+		Map<String, ADefaultClassDeclCG> cpuToSystemDecl = cpuDepGenerator.getcpuToSystemDecl();
+		// Distribute the CPU deployment for each CPU
+		// Here just a fix output path is chosen in order to test the generate Java code
+		for (ACpuDeploymentDeclCG impl : cpuDeps) {
+			StringWriter writer = new StringWriter();
+			impl.apply(printer, writer);
+
+			System.out.println(JavaCodeGenUtil.formatJavaCode(writer
+					.toString()));
+
+			// The CPU entry method
+			File file = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + impl.getCpuName()  + ".java");
+			BufferedWriter output = new BufferedWriter(new FileWriter(file));
+			output.write(JavaCodeGenUtil.formatJavaCode(writer
+					.toString()));
+			output.close();
+				
+			// Create the unique system class for each CPU
+			ADefaultClassDeclCG systemClass = cpuToSystemDecl.get(impl.getCpuName());
+			
+			StringWriter writer2 = new StringWriter();
+			systemClass.apply(printer, writer2);
+
+			System.out.println(JavaCodeGenUtil.formatJavaCode(writer2
+					.toString()));
+
+			// The unique system class for each CPU
+			File file2 = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + systemClass.getName()  + ".java");
+			BufferedWriter output2 = new BufferedWriter(new FileWriter(file2));
+			output2.write(JavaCodeGenUtil.formatJavaCode(writer2
+					.toString()));
+			output2.close();
+			
+		}
+		
 	}
 }

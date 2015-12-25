@@ -191,7 +191,7 @@ public class RmiGeneratorCommandLine
 				
 				System.out.println("**********************CPU deployment**********************");
 
-				Map<String, Set<AVariableExp>> CpuToDeployedObject = mapping.getCpuToDeployedObject();
+				Map<String, Set<AVariableExp>> cpuToDeployedObject = mapping.getCpuToDeployedObject();
 
 				Map<String, Set<String>> cpuToConnectedCPUs = mapping.cpuToConnectedCPUs();
 				//CPUdeploymentGenerator cpuDep = new CPUdeploymentGenerator(CpuToDeployedObject);
@@ -201,7 +201,8 @@ public class RmiGeneratorCommandLine
 				// Distributed the generate remote contracts and their implementation
 				rmiGen.processData(remoteContracts, cpuToDeployedClasses, cpuToConnectedCPUs, remoteImpls);
 				
-				
+				// Generate entry method for each CPU and the local system class
+				rmiGen.processData2(cpuToDeployedObject, cpuToConnectedCPUs, deployedObjCounter);
 				
 				
 				JavaCodeGenMain.processData(print, outputDir, rmiGen.getJavaGen(), data, false);
