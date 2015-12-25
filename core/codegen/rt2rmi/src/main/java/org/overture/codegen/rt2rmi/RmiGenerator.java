@@ -58,7 +58,7 @@ public class RmiGenerator implements IREventObserver {
 	}
 
 	public JavaFormat getJavaFormat() {
-		return this.getJavaFormat();
+		return this.javaGen.getJavaFormat();
 	}
 
 	public IRSettings getIrSettings() {

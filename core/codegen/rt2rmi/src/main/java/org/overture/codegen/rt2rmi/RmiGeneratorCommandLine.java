@@ -205,7 +205,7 @@ public class RmiGeneratorCommandLine
 				rmiGen.processData2(cpuToDeployedObject, cpuToConnectedCPUs, deployedObjCounter);
 				
 				
-				JavaCodeGenMain.processData(print, outputDir, rmiGen.getJavaGen(), data, false);
+//				JavaCodeGenMain.processData(print, outputDir, rmiGen.getJavaGen(), data, false);
 			} else
 			{
 				Logger.getLog().printErrorln("Could not parse/type check VDM model:\n"
