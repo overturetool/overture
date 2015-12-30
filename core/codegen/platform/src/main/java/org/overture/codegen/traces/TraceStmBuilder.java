@@ -624,60 +624,61 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			return null;
 		}
 
-		if (args != null && isOp)
+		if (args != null)
 		{
-			DeclAssistantCG dAssist = this.traceTrans.getTransAssist().getInfo().getDeclAssistant();
-			String invokedModule = getInvokedModule(stm);
-			SClassDeclCG clazz = dAssist.findClass(traceTrans.getTransAssist().getInfo().getClasses(), invokedModule);
-
-			for (AFieldDeclCG f : clazz.getFields())
+			if (isOp)
 			{
-				if (!f.getFinal())
+				DeclAssistantCG dAssist = this.traceTrans.getTransAssist().getInfo().getDeclAssistant();
+				String invokedModule = getInvokedModule(stm);
+				SClassDeclCG clazz = dAssist.findClass(traceTrans.getTransAssist().getInfo().getClasses(), invokedModule);
+
+				for (AFieldDeclCG f : clazz.getFields())
 				{
-					// It's the state component
-
-					if(traceEnclosingClass.equals(invokedModule))
+					if (!f.getFinal())
 					{
-						ExpAssistantCG eAssist = traceTrans.getTransAssist().getInfo().getExpAssistant();
-						AIdentifierVarExpCG stateArg = eAssist.consIdVar(f.getName(), f.getType().clone());
-						traceTrans.getCloneFreeNodes().add(stateArg);
-						args.add(stateArg);
-					}
-					else
-					{
-						AExternalTypeCG traceNodeClassType = new AExternalTypeCG();
-						traceNodeClassType.setName(traceTrans.getTracePrefixes().traceUtilClassName());
-						
-						AExplicitVarExpCG readStateMethod = new AExplicitVarExpCG();
-						readStateMethod.setClassType(traceNodeClassType);
-						readStateMethod.setIsLambda(false);
-						readStateMethod.setIsLocal(false);
-						readStateMethod.setName(traceTrans.getTracePrefixes().readStateMethodName());
+						// It's the state component
+						if (traceEnclosingClass.equals(invokedModule))
+						{
+							ExpAssistantCG eAssist = traceTrans.getTransAssist().getInfo().getExpAssistant();
+							AIdentifierVarExpCG stateArg = eAssist.consIdVar(f.getName(), f.getType().clone());
+							traceTrans.getCloneFreeNodes().add(stateArg);
+							args.add(stateArg);
+						} else
+						{
+							AExternalTypeCG traceNodeClassType = new AExternalTypeCG();
+							traceNodeClassType.setName(traceTrans.getTracePrefixes().traceUtilClassName());
 
-						AMethodTypeCG readStateMethodType = new AMethodTypeCG();
-						readStateMethodType.setResult(f.getType().clone());
-						readStateMethodType.getParams().add(traceTrans.getTransAssist().consClassType(invokedModule));
-						readStateMethodType.getParams().add(f.getType().clone());
-						
-						readStateMethod.setType(readStateMethodType);
-						
-						AApplyExpCG readStateCall = new AApplyExpCG();
-						readStateCall.setRoot(readStateMethod);
-						readStateCall.setType(f.getType().clone());
-						
-						ATypeArgExpCG moduleArg = new ATypeArgExpCG();
-						moduleArg.setType(traceTrans.getTransAssist().consClassType(invokedModule));
-						
-						ATypeArgExpCG stateArg = new ATypeArgExpCG();
-						stateArg.setType(f.getType().clone());
-						
-						readStateCall.getArgs().add(moduleArg);
-						readStateCall.getArgs().add(stateArg);
-						
-						args.add(readStateCall);
+							AExplicitVarExpCG readStateMethod = new AExplicitVarExpCG();
+							readStateMethod.setClassType(traceNodeClassType);
+							readStateMethod.setIsLambda(false);
+							readStateMethod.setIsLocal(false);
+							readStateMethod.setName(traceTrans.getTracePrefixes().readStateMethodName());
+
+							AMethodTypeCG readStateMethodType = new AMethodTypeCG();
+							readStateMethodType.setResult(f.getType().clone());
+							readStateMethodType.getParams().add(traceTrans.getTransAssist().consClassType(invokedModule));
+							readStateMethodType.getParams().add(f.getType().clone());
+
+							readStateMethod.setType(readStateMethodType);
+
+							AApplyExpCG readStateCall = new AApplyExpCG();
+							readStateCall.setRoot(readStateMethod);
+							readStateCall.setType(f.getType().clone());
+
+							ATypeArgExpCG moduleArg = new ATypeArgExpCG();
+							moduleArg.setType(traceTrans.getTransAssist().consClassType(invokedModule));
+
+							ATypeArgExpCG stateArg = new ATypeArgExpCG();
+							stateArg.setType(f.getType().clone());
+
+							readStateCall.getArgs().add(moduleArg);
+							readStateCall.getArgs().add(stateArg);
+
+							args.add(readStateCall);
+						}
+
+						break;
 					}
-					
-					break;
 				}
 			}
 		} else
