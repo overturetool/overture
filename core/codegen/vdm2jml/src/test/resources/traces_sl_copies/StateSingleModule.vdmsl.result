@@ -54,7 +54,9 @@ final public class Entry implements java.io.Serializable {
         SequenceTraceNode sequence_3 = new SequenceTraceNode();
         CallStatement callStm_1 = new CallStatement() {
                 public Boolean isTypeCorrect() {
-                    if (!(Utils.is_nat(store.getValue(ID_2)))) {
+                    try {
+                        //@ assert Utils.is_nat(store.getValue(ID_2));
+                    } catch (AssertionError e) {
                         return false;
                     }
 
@@ -75,7 +77,9 @@ final public class Entry implements java.io.Serializable {
 
         CallStatement callStm_2 = new CallStatement() {
                 public Boolean isTypeCorrect() {
-                    if (!(Utils.is_nat(store.getValue(ID_3)))) {
+                    try {
+                        //@ assert Utils.is_nat(store.getValue(ID_3));
+                    } catch (AssertionError e) {
                         return false;
                     }
 
@@ -100,7 +104,9 @@ final public class Entry implements java.io.Serializable {
         SequenceTraceNode sequence_4 = new SequenceTraceNode();
         CallStatement callStm_3 = new CallStatement() {
                 public Boolean isTypeCorrect() {
-                    if (!(Utils.is_nat(store.getValue(ID_3)))) {
+                    try {
+                        //@ assert Utils.is_nat(store.getValue(ID_3));
+                    } catch (AssertionError e) {
                         return false;
                     }
 
@@ -121,7 +127,9 @@ final public class Entry implements java.io.Serializable {
 
         CallStatement callStm_4 = new CallStatement() {
                 public Boolean isTypeCorrect() {
-                    if (!(Utils.is_nat(store.getValue(ID_2)))) {
+                    try {
+                        //@ assert Utils.is_nat(store.getValue(ID_2));
+                    } catch (AssertionError e) {
                         return false;
                     }
 
