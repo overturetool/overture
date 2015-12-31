@@ -4,13 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.statements.ACallStm;
-import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.INode;
@@ -41,7 +37,6 @@ import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
@@ -68,11 +63,9 @@ import org.overture.config.Settings;
 
 public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 {
-	private String traceEnclosingClass;
-
-	private StoreAssistant storeAssistant; 
-	
-	private TracesTrans traceTrans;
+	protected String traceEnclosingClass;
+	protected StoreAssistant storeAssistant; 
+	protected TracesTrans traceTrans;
 	
 	public TraceStmBuilder(TracesTrans traceTrans, String traceEnclosingClass, StoreAssistant storeAssist)
 	{
@@ -325,7 +318,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		}
 	}
 
-	private List<AVarDeclCG> replaceArgsWithVars(SStmCG callStm)
+	protected List<AVarDeclCG> replaceArgsWithVars(SStmCG callStm)
 	{
 		List<SExpCG> args = null;
 		List<AVarDeclCG> decls = new LinkedList<AVarDeclCG>();
@@ -361,7 +354,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		return decls;
 	}
 	
-	private AMethodDeclCG consExecuteMethod(SStmCG stm)
+	protected AMethodDeclCG consExecuteMethod(SStmCG stm)
 	{
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(new AObjectTypeCG());
@@ -386,7 +379,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		return execMethod;
 	}
 
-	private void useStoreLookups(SStmCG body)
+	protected void useStoreLookups(SStmCG body)
 	{
 		try
 		{
@@ -443,121 +436,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 	
 	public AMethodDeclCG consTypeCheckMethod(SStmCG stm)
 	{
-		/**
-		 * We don't need to consider the 'ACallObjectExpStmCG' since it only appears in the IR if we code generate a PP
-		 * or RT model
-		 */
-		if(!(stm instanceof APlainCallStmCG))
-		{
-			return null;
-		}
-		
-		ABlockStmCG body = new ABlockStmCG();
-		// Construct a body on the form
-		// if(!tc(arg1)) { return false; }
-		// ...
-		// if(!tc(argN)) { return false; }
-		// return true;
-		
-		APlainCallStmCG call = (APlainCallStmCG) stm;
-		
-		if(call.getArgs().isEmpty())
-		{
-			// Nothing to type check
-			return null;
-		}
-		
-		List<STypeCG> argTypes = null;
-		SourceNode source = call.getSourceNode();
-		if (source != null)
-		{
-			org.overture.ast.node.INode vdmNode = source.getVdmNode();
-
-			if (vdmNode instanceof ACallStm)
-			{
-				ACallStm callStm = (ACallStm) vdmNode;
-				PDefinition def = callStm.getRootdef();
-				
-				PType type = def.getType();
-				
-				List<PType> vdmArgTypes = null;
-				if(type instanceof AOperationType)
-				{
-					vdmArgTypes = ((AOperationType) type).getParameters();;
-				}
-				else if(type instanceof AFunctionType)
-				{
-					vdmArgTypes = ((AFunctionType) type).getParameters();
-				}
-				
-				if(vdmArgTypes != null)
-				{
-					argTypes = new LinkedList<>();
-					for(PType t : vdmArgTypes)
-					{
-						try
-						{
-							argTypes.add(t.apply(traceTrans.getTransAssist().getInfo().getTypeVisitor(), traceTrans.getTransAssist().getInfo()));
-						} catch (org.overture.ast.analysis.AnalysisException e)
-						{
-							argTypes = null;
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		}
-		
-		if(argTypes == null)
-		{
-			Logger.getLog().printErrorln("Could not find argument types for call statement " + call + " in '" + this.getClass().getSimpleName() + "'");
-			return null;
-		}
-		
-		if(argTypes.size() != call.getArgs().size())
-		{
-			Logger.getLog().printErrorln("Argument types and arguments do not match in '" + this.getClass().getSimpleName() + "'");
-			return null;
-		}
-		
-		for(int i = 0; i < call.getArgs().size(); i++)
-		{
-			SExpCG a = call.getArgs().get(i);
-			
-			if(a instanceof SVarExpCG)
-			{
-				SExpCG tcExp = traceTrans.consTypeCheckExp((SVarExpCG) a, argTypes.get(i), traceEnclosingClass, storeAssistant);
-				
-				if(tcExp != null)
-				{
-					AIfStmCG check = new AIfStmCG();
-					check.setIfExp(traceTrans.getTransAssist().getInfo().getExpAssistant().negate(tcExp));
-					
-					AReturnStmCG retFalse = new AReturnStmCG();
-					retFalse.setExp(traceTrans.getTransAssist().getInfo().getExpAssistant().consBoolLiteral(false));
-					check.setThenStm(retFalse);
-					
-					body.getStatements().add(check);
-				}
-				else
-				{
-					return null;
-				}
-			}
-			else
-			{
-				Logger.getLog().printError("Expected argument to be a variable expression by now. Got: " + a);
-			}
-		}
-		
-		AReturnStmCG retTrue = new AReturnStmCG();
-		retTrue.setExp(traceTrans.getTransAssist().getInfo().getExpAssistant().consBoolLiteral(true));
-		body.getStatements().add(retTrue);
-		
-		AMethodDeclCG typeCheckMethod = initPredDecl(traceTrans.getTracePrefixes().callStmIsTypeCorrectNamePrefix());
-		typeCheckMethod.setBody(body);
-		
-		return typeCheckMethod;
+		return null;
 	}
 	
 	public AMethodDeclCG condMeetsPreCondMethod(SStmCG stm)
@@ -692,7 +571,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		return meetsPredMethod;
 	}
 
-	private AMethodDeclCG initPredDecl(String name)
+	protected AMethodDeclCG initPredDecl(String name)
 	{
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(new ABoolBasicTypeCG());
@@ -710,13 +589,13 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		return meetsPredMethod;
 	}
 
-	private boolean canBeGenerated()
+	protected boolean canBeGenerated()
 	{
 		// This only works for VDM-SL
 		return Settings.dialect == Dialect.VDM_SL && traceTrans.getTransAssist().getInfo().getSettings().generatePreConds();
 	}
 	
-	private String getInvokedModule(SStmCG stm)
+	protected String getInvokedModule(SStmCG stm)
 	{
 		if(stm instanceof APlainCallStmCG)
 		{
@@ -733,7 +612,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		return traceEnclosingClass;
 	}
 
-	private SStmCG makeInstanceCall(SStmCG stm)
+	protected SStmCG makeInstanceCall(SStmCG stm)
 	{
 		if(stm instanceof ACallObjectExpStmCG)
 		{
@@ -783,7 +662,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		return stm;
 	}
 
-	private SStmCG handleVoidValueReturn(SStmCG stm)
+	protected SStmCG handleVoidValueReturn(SStmCG stm)
 	{
 		AExternalTypeCG traceNodeClassType = new AExternalTypeCG();
 		traceNodeClassType.setName(traceTrans.getTracePrefixes().voidValueEnclosingClassName());
@@ -806,7 +685,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		return block;
 	}
 
-	private SStmCG handlePlainCallStm(APlainCallStmCG callStmCG)
+	protected SStmCG handlePlainCallStm(APlainCallStmCG callStmCG)
 			throws AnalysisException
 	{
 		STypeCG type = callStmCG.getType();
@@ -884,7 +763,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		}
 	}
 
-	private ABlockStmCG consDecl(String classTypeName, String varName,
+	protected ABlockStmCG consDecl(String classTypeName, String varName,
 			SExpCG... args)
 	{
 		ATypeNameCG typeName = traceTrans.getTransAssist().consTypeNameForClass(classTypeName);
