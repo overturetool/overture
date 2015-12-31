@@ -21,13 +21,13 @@ import org.overture.config.Settings;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)
-public class JmlSlTraceOutputTest extends SlSpecificationTest
+public class JmlSlTraceReuseOutputTest extends SlSpecificationTest
 {
 	public static final String JML_SL_TRACE_UPDATE_PROPERTY = "tests.vdm2jml.override.";
 	public static final String ROOT = "src" + File.separatorChar + "test" + File.separatorChar + "resources"
 			+ File.separatorChar + "traces_sl_copies";
 
-	public JmlSlTraceOutputTest(String nameParameter, String inputParameter, String resultParameter)
+	public JmlSlTraceReuseOutputTest(String nameParameter, String inputParameter, String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}

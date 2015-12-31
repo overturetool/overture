@@ -25,17 +25,17 @@ import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.config.Release;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
-import org.overture.vdm2jml.tests.JmlSlTraceOutputTest;
+import org.overture.vdm2jml.tests.JmlSlTraceReuseOutputTest;
 import org.overture.vdm2jml.tests.OpenJmlValidationBase;
 import org.overture.vdm2jml.tests.util.IOpenJmlConsts;
 
 @RunWith(value = Parameterized.class)
-public class JmlSlTraceJavaGenTest extends CommonJavaGenCheckerTest
+public class JmlSlTraceReuseJavaGenTest extends CommonJavaGenCheckerTest
 {
 	/* OpenJML crashes on these tests although the tests are correct.. */
 	private static final List<String> SKIPPED = Arrays.asList("StateOtherModule.vdmsl");
 	
-	public JmlSlTraceJavaGenTest(String name, File vdmSpec,
+	public JmlSlTraceReuseJavaGenTest(String name, File vdmSpec,
 			TestHandler testHandler)
 	{
 		super(vdmSpec, testHandler);
@@ -44,7 +44,7 @@ public class JmlSlTraceJavaGenTest extends CommonJavaGenCheckerTest
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(JmlSlTraceOutputTest.ROOT),new JmlTraceTestHandler(Release.VDM_10, Dialect.VDM_SL));
+		return collectTests(new File(JmlSlTraceReuseOutputTest.ROOT),new JmlTraceTestHandler(Release.VDM_10, Dialect.VDM_SL));
 	}
 	
 	@Override
