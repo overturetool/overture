@@ -12,19 +12,19 @@ import org.overture.core.tests.PathsProvider;
 public class JmlReuseSlTraceOutputTest extends JmlSlOutputTestBase
 {
 	public static final String ROOT = "src" + File.separatorChar + "test" + File.separatorChar + "resources"
-			+ File.separatorChar + "dynamic_analysis" + File.separatorChar + "traces_sl_copies";
+			+ File.separatorChar + "traces_sl_copies";
 
 	public JmlReuseSlTraceOutputTest(String nameParameter, String inputParameter, String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
-	
+
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData()
 	{
 		return PathsProvider.computePaths(ROOT);
 	}
-	
+
 	@Override
 	protected String getUpdatePropertyString()
 	{
