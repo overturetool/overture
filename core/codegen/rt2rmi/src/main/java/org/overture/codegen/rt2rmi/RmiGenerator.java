@@ -27,30 +27,101 @@ import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.rt2rmi.systemanalysis.DistributionMapping;
 import org.overture.codegen.rt2rmi.trans.RemoteTypeTrans;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
+import org.overture.codegen.vdm2java.JavaCodeGenMain;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
 import org.overture.codegen.vdm2java.JavaSettings;
 
 public class RmiGenerator implements IREventObserver {
 	private JavaCodeGen javaGen;
+	private String systemClassName; 
 
-	public RmiGenerator(String systemClassName) {
+	public RmiGenerator() {
 		this.javaGen = new JavaCodeGen();
 		this.javaGen.registerIrObs(this);
-		addTransformations(systemClassName);
+		addTransformations();
 	}
 
-	private void addTransformations(String systemClassName) {
+	private void addTransformations() {
 		// Add additional transformations
 		IRInfo info = new IRInfo();
 		this.javaGen.getTransSeries().getSeries().add(new RemoteTypeTrans(systemClassName, info));
 	}
 
-	public GeneratedData generate(List<SClassDefinition> rtClasses) throws AnalysisException {
-		return javaGen.generateJavaFromVdm(rtClasses);
+	public void generate(List<SClassDefinition> rtClasses) throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException, IOException {
+		
+		/**********Analyse System class**********/
+		// Now the architecture of the VDM-RT model is analysed
+		// in order to extract the Connection map, Distribution map,
+		// number of deployed objects and number of CPUs
+		
+		DistributionMapping mapping = new DistributionMapping(rtClasses);
+		mapping.run();
+		
+		int deployedObjCounter = mapping.getDeployedObjCounter();
+		
+		try
+		{
+		
+		/******************************************/
+//		if (!GeneralCodeGenUtils.hasErrors(rtClasses))
+//		{
+			systemClassName = mapping.getSystemName();
+			
+			GeneratedData data = javaGen.generateJavaFromVdm(rtClasses);
+			
+			List<ADefaultClassDeclCG> irClasses = Util.getClasses(data.getClasses());
+			
+			//**********************************************************************//
+			// Generate the remote contracts
+			RemoteContractGenerator contractGenerator = new RemoteContractGenerator(
+					irClasses);
+			Set<ARemoteContractDeclCG> remoteContracts = contractGenerator
+					.run();
+
+			printRemoteContracts(remoteContracts);
+
+			//**********************************************************************//
+			// Generate the remote contract implementations
+			RemoteImplGenerator implsGen = new RemoteImplGenerator(irClasses);
+			List<ARemoteContractImplDeclCG> remoteImpls = implsGen.run();
+			
+			printRemoteContractsImpl(remoteImpls);
+			
+			System.out.println("**********************CPU deployment**********************");
+
+			Map<String, Set<AVariableExp>> cpuToDeployedObject = mapping.getCpuToDeployedObject();
+
+			Map<String, Set<String>> cpuToConnectedCPUs = mapping.cpuToConnectedCPUs();
+			//CPUdeploymentGenerator cpuDep = new CPUdeploymentGenerator(CpuToDeployedObject);
+
+			Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses = mapping.cpuToDeployedClasses();
+
+			// Distributed the generate remote contracts and their implementation
+			processData(remoteContracts, cpuToDeployedClasses, cpuToConnectedCPUs, remoteImpls);
+			
+			// Generate entry method for each CPU and the local system class
+			processData2(cpuToDeployedObject, cpuToConnectedCPUs, deployedObjCounter);
+			
+			
+			//JavaCodeGenMain.processData(print, outputDir, rmiGen.getJavaGen(), data, false);
+//		} else
+//		{
+//			Logger.getLog().printErrorln("Could not parse/type check VDM model:\n"
+//					+ GeneralCodeGenUtils.errorStr(tcResult));
+//		}
+	} catch (AnalysisException e)
+	{
+		Logger.getLog().println("Could not code generate model: " + e.getMessage());
+	}
+//		
+//		
+//		return javaGen.generateJavaFromVdm(rtClasses);
 	}
 
 	public JavaCodeGen getJavaGen() {
@@ -274,5 +345,32 @@ public class RmiGenerator implements IREventObserver {
 			
 		}
 		
+	}
+	
+	public void printRemoteContracts(Set<ARemoteContractDeclCG> remoteContracts) throws org.overture.codegen.cgast.analysis.AnalysisException{
+		System.out.println("**********************Remote contracts**********************");
+		JavaFormat javaFormat = getJavaGen().getJavaFormat();
+		MergeVisitor printer = javaFormat.getMergeVisitor();
+		
+		for (ARemoteContractDeclCG contract : remoteContracts) {
+			StringWriter writer = new StringWriter();
+			contract.apply(printer, writer);
+
+			System.out.println(JavaCodeGenUtil.formatJavaCode(writer
+					.toString()));
+		}
+	}
+	
+	public void printRemoteContractsImpl(List<ARemoteContractImplDeclCG> remoteImpls) throws org.overture.codegen.cgast.analysis.AnalysisException{
+		System.out.println("**********************Remote contracts implementation**********************");
+		JavaFormat javaFormat = getJavaGen().getJavaFormat();
+		MergeVisitor printer = javaFormat.getMergeVisitor();
+		for (ARemoteContractImplDeclCG impl : remoteImpls) {
+			StringWriter writer = new StringWriter();
+			impl.apply(printer, writer);
+
+			System.out.println(JavaCodeGenUtil.formatJavaCode(writer
+					.toString()));
+		}
 	}
 }

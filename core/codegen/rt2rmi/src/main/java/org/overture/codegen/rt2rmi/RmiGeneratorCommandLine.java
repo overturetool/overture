@@ -33,6 +33,8 @@ import org.overture.codegen.vdm2java.JavaFormat;
 import org.overture.codegen.vdm2java.JavaVarPrefixManager;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.syntax.ParserException;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
@@ -42,7 +44,7 @@ public class RmiGeneratorCommandLine
 	private static final String PRINT_ARG = "-print";
 	public static final String OUTPUT_ARG = "-output";
 
-	public static void main(String[] args) throws org.overture.codegen.cgast.analysis.AnalysisException, IOException
+	public static void main(String[] args) throws org.overture.codegen.cgast.analysis.AnalysisException, IOException, ParserException, LexException
 	{
 		if (args == null || args.length < 1)
 		{
@@ -119,102 +121,18 @@ public class RmiGeneratorCommandLine
 			}
 		}
 		
-		try
-		{
+//		try
+//		{
 			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckRt(files);
-			
-			/**********Analyse System class**********/
-			// Now the architecture of the VDM-RT model is analysed
-			// in order to extract the Connection map, Distribution map,
-			// number of deployed objects and number of CPUs
-			
-			DistributionMapping mapping = new DistributionMapping(tcResult.result);
-			mapping.run();
-			
-			int deployedObjCounter = mapping.getDeployedObjCounter();
-			
-			System.out.println("Number of deployed objects in the system class is: " 
-								+ deployedObjCounter);
-			
-			Set<AClassClassDefinition> deployedClasses = mapping
-					.getDeployedClasses();
-
-			Set<AVariableExp> deployedObjects = mapping.getDeployedObjects();
-			
-			/******************************************/
-			if (!GeneralCodeGenUtils.hasErrors(tcResult))
-			{
-				String systemClassName = mapping.getSystemName();
-				
-				RmiGenerator rmiGen = new RmiGenerator(systemClassName);
-				GeneratedData data = rmiGen.generate(tcResult.result);
-				
-				IRInfo info = new IRInfo();
-				JavaFormat javaFormat = rmiGen.getJavaGen().getJavaFormat();
-				
-				List<ADefaultClassDeclCG> irClasses = Util.getClasses(data.getClasses());
-				
-				//**********************************************************************//
-				// Generate the remote contracts
-				RemoteContractGenerator contractGenerator = new RemoteContractGenerator(
-						irClasses);
-				Set<ARemoteContractDeclCG> remoteContracts = contractGenerator
-						.run();
-
-				MergeVisitor printer = javaFormat.getMergeVisitor();
-
-
-				System.out.println("**********************Remote contracts**********************");
-				for (ARemoteContractDeclCG conract : remoteContracts) {
-					StringWriter writer = new StringWriter();
-					conract.apply(printer, writer);
-
-					System.out.println(JavaCodeGenUtil.formatJavaCode(writer
-							.toString()));
-				}
-				
-				//**********************************************************************//
-				// Generate the remote contract implementations
-				RemoteImplGenerator implsGen = new RemoteImplGenerator(irClasses);
-				List<ARemoteContractImplDeclCG> remoteImpls = implsGen.run();
-
-				System.out.println("**********************Remote contracts implementation**********************");
-				
-				for (ARemoteContractImplDeclCG impl : remoteImpls) {
-					StringWriter writer = new StringWriter();
-					impl.apply(printer, writer);
-
-					System.out.println(JavaCodeGenUtil.formatJavaCode(writer
-							.toString()));
-				}
-				
-				
-				System.out.println("**********************CPU deployment**********************");
-
-				Map<String, Set<AVariableExp>> cpuToDeployedObject = mapping.getCpuToDeployedObject();
-
-				Map<String, Set<String>> cpuToConnectedCPUs = mapping.cpuToConnectedCPUs();
-				//CPUdeploymentGenerator cpuDep = new CPUdeploymentGenerator(CpuToDeployedObject);
-
-				Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses = mapping.cpuToDeployedClasses();
-
-				// Distributed the generate remote contracts and their implementation
-				rmiGen.processData(remoteContracts, cpuToDeployedClasses, cpuToConnectedCPUs, remoteImpls);
-				
-				// Generate entry method for each CPU and the local system class
-				rmiGen.processData2(cpuToDeployedObject, cpuToConnectedCPUs, deployedObjCounter);
-				
-				
-//				JavaCodeGenMain.processData(print, outputDir, rmiGen.getJavaGen(), data, false);
-			} else
-			{
-				Logger.getLog().printErrorln("Could not parse/type check VDM model:\n"
-						+ GeneralCodeGenUtils.errorStr(tcResult));
+			RmiGenerator rmiGen = new RmiGenerator();
+			try {
+				rmiGen.generate(tcResult.result);
+			} catch (AnalysisException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (AnalysisException e)
-		{
-			Logger.getLog().println("Could not code generate model: " + e.getMessage());
-		}
+//		}
+
 	}
 	
 	public static List<File> filterFiles(List<File> files)
