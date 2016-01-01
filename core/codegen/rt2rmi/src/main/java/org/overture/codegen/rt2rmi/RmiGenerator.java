@@ -39,7 +39,7 @@ import org.overture.codegen.vdm2java.JavaSettings;
 
 public class RmiGenerator implements IREventObserver {
 	private JavaCodeGen javaGen;
-	private String systemClassName; 
+	private String systemClassName;
 
 	public RmiGenerator() {
 		this.javaGen = new JavaCodeGen();
@@ -53,75 +53,56 @@ public class RmiGenerator implements IREventObserver {
 		this.javaGen.getTransSeries().getSeries().add(new RemoteTypeTrans(systemClassName, info));
 	}
 
-	public void generate(List<SClassDefinition> rtClasses) throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException, IOException {
-		
-		/**********Analyse System class**********/
+	public void generate(List<SClassDefinition> rtClasses)
+			throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException, IOException {
+
+		/********** Analyse System class **********/
 		// Now the architecture of the VDM-RT model is analysed
 		// in order to extract the Connection map, Distribution map,
 		// number of deployed objects and number of CPUs
-		
+
 		DistributionMapping mapping = new DistributionMapping(rtClasses);
 		mapping.run();
-		
-		int deployedObjCounter = mapping.getDeployedObjCounter();
-		
-		try
-		{
-		
-		/******************************************/
-//		if (!GeneralCodeGenUtils.hasErrors(rtClasses))
-//		{
+
+		try {
 			systemClassName = mapping.getSystemName();
-			
+
 			GeneratedData data = javaGen.generateJavaFromVdm(rtClasses);
-			
+
 			List<ADefaultClassDeclCG> irClasses = Util.getClasses(data.getClasses());
-			
-			//**********************************************************************//
-			// Generate the remote contracts
-			RemoteContractGenerator contractGenerator = new RemoteContractGenerator(
-					irClasses);
-			Set<ARemoteContractDeclCG> remoteContracts = contractGenerator
-					.run();
 
-			printRemoteContracts(remoteContracts);
+			RemoteContractGenerator contractGenerator = new RemoteContractGenerator(irClasses);
+			Set<ARemoteContractDeclCG> remoteContracts = contractGenerator.run();
 
-			//**********************************************************************//
-			// Generate the remote contract implementations
+			// printRemoteContracts(remoteContracts);
+
 			RemoteImplGenerator implsGen = new RemoteImplGenerator(irClasses);
 			List<ARemoteContractImplDeclCG> remoteImpls = implsGen.run();
-			
-			printRemoteContractsImpl(remoteImpls);
-			
-			System.out.println("**********************CPU deployment**********************");
 
+			// printRemoteContractsImpl(remoteImpls);
+
+			//System.out.println("**********************CPU deployment**********************");
+
+			int deployedObjCounter = mapping.getDeployedObjCounter();
 			Map<String, Set<AVariableExp>> cpuToDeployedObject = mapping.getCpuToDeployedObject();
-
 			Map<String, Set<String>> cpuToConnectedCPUs = mapping.cpuToConnectedCPUs();
-			//CPUdeploymentGenerator cpuDep = new CPUdeploymentGenerator(CpuToDeployedObject);
-
 			Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses = mapping.cpuToDeployedClasses();
-
+			
+			String output_dir = "/Users/Miran/Documents/files/";
+			
+			// Generate the RMI server
+			generateRMIserver(output_dir, 1099, remoteContracts);
+			
 			// Distributed the generate remote contracts and their implementation
-			processData(remoteContracts, cpuToDeployedClasses, cpuToConnectedCPUs, remoteImpls);
-			
+			processData(output_dir, remoteContracts, cpuToDeployedClasses, cpuToConnectedCPUs, remoteImpls);
+
 			// Generate entry method for each CPU and the local system class
-			processData2(cpuToDeployedObject, cpuToConnectedCPUs, deployedObjCounter);
-			
-			
-			//JavaCodeGenMain.processData(print, outputDir, rmiGen.getJavaGen(), data, false);
-//		} else
-//		{
-//			Logger.getLog().printErrorln("Could not parse/type check VDM model:\n"
-//					+ GeneralCodeGenUtils.errorStr(tcResult));
-//		}
-	} catch (AnalysisException e)
-	{
-		Logger.getLog().println("Could not code generate model: " + e.getMessage());
-	}
-//		
-//		
-//		return javaGen.generateJavaFromVdm(rtClasses);
+			processData2(output_dir, cpuToDeployedObject, cpuToConnectedCPUs, deployedObjCounter);
+
+		} catch (AnalysisException e) {
+			Logger.getLog().println("Could not code generate model: " + e.getMessage());
+		}
+
 	}
 
 	public JavaCodeGen getJavaGen() {
@@ -171,32 +152,27 @@ public class RmiGenerator implements IREventObserver {
 	 * currently fix to a local path.
 	 */
 
-	public void processData(Set<ARemoteContractDeclCG> remoteContracts,
-			Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses, Map<String, Set<String>> cpuToConnectedCPUs,
-			List<ARemoteContractImplDeclCG> remoteImpls)
-					throws org.overture.codegen.cgast.analysis.AnalysisException, IOException {
+	public void generateRMIserver(String output_dir, int portNumber, Set<ARemoteContractDeclCG> remoteContracts) throws org.overture.codegen.cgast.analysis.AnalysisException, IOException{
+		// Create the RMI server
 
 		JavaFormat javaFormat = getJavaFormat();
 		MergeVisitor printer = javaFormat.getMergeVisitor();
-
-		// Create the RMI server
-
+		
 		ARMIServerDeclCG rmiServer = new ARMIServerDeclCG();
 
-		int PortNumber = 1099;
 		String RMI_ServerName = "RMI_Server";
 
-		rmiServer.setPortNumber(PortNumber);
+		rmiServer.setPortNumber(portNumber);
 		rmiServer.setName(RMI_ServerName);
 
 		StringWriter writer_s = new StringWriter();
 		rmiServer.apply(printer, writer_s);
 
-		File theDir_s = new File("/Users/Miran/Documents/files/" + RMI_ServerName);
+		File theDir_s = new File(output_dir + RMI_ServerName);
 
 		theDir_s.mkdir();
 
-		File file_s = new File("/Users/Miran/Documents/files/" + RMI_ServerName + "/" + RMI_ServerName + ".java");
+		File file_s = new File(output_dir + RMI_ServerName + "/" + RMI_ServerName + ".java");
 		BufferedWriter output_s = new BufferedWriter(new FileWriter(file_s));
 		output_s.write(JavaCodeGenUtil.formatJavaCode(writer_s.toString()));
 		output_s.close();
@@ -207,7 +183,7 @@ public class RmiGenerator implements IREventObserver {
 			contract.apply(printer, writer_i);
 
 			File file_i = new File(
-					"/Users/Miran/Documents/files/" + RMI_ServerName + "/" + contract.getName() + ".java");
+					output_dir + RMI_ServerName + "/" + contract.getName() + ".java");
 			BufferedWriter output_i = new BufferedWriter(new FileWriter(file_i));
 			output_i.write(JavaCodeGenUtil.formatJavaCode(writer_i.toString()));
 			output_i.close();
@@ -220,20 +196,27 @@ public class RmiGenerator implements IREventObserver {
 		synchToken_interface_RMI.apply(printer, writer_synch_i_RMI);
 
 		File file_synch_i_RMI = new File(
-				"/Users/Miran/Documents/files/" + RMI_ServerName + "/" + "SynchToken_interface.java");
+				output_dir + RMI_ServerName + "/" + "SynchToken_interface.java");
 		BufferedWriter output_synch_i_RMI = new BufferedWriter(new FileWriter(file_synch_i_RMI));
 		output_synch_i_RMI.write(JavaCodeGenUtil.formatJavaCode(writer_synch_i_RMI.toString()));
 		output_synch_i_RMI.close();
+	}
+			
+	// Create a directory for every CPU, and place relevant remote contracts
+	// and remote contract implementations inside
+	
+	public void processData(String output_dir, Set<ARemoteContractDeclCG> remoteContracts,
+			Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses, Map<String, Set<String>> cpuToConnectedCPUs,
+			List<ARemoteContractImplDeclCG> remoteImpls)
+					throws org.overture.codegen.cgast.analysis.AnalysisException, IOException {
 
-		// System.out.println("**********************Remote
-		// contracts**********************");
+		JavaFormat javaFormat = getJavaFormat();
+		MergeVisitor printer = javaFormat.getMergeVisitor();
 
-		// Create a directory for every CPU, and place relevant remote contracts
-		// and
-		// remote contract implementations inside
+
 
 		for (String cpu : cpuToDeployedClasses.keySet()) {
-			File theDir = new File("/Users/Miran/Documents/files/" + cpu);
+			File theDir = new File(output_dir + cpu);
 
 			theDir.mkdir();
 		}
@@ -248,7 +231,7 @@ public class RmiGenerator implements IREventObserver {
 				StringWriter writer_synch = new StringWriter();
 				synchToken.apply(printer, writer_synch);
 
-				File file_synch = new File("/Users/Miran/Documents/files/" + cpu + "/" + "SynchToken.java");
+				File file_synch = new File(output_dir + cpu + "/" + "SynchToken.java");
 				BufferedWriter output_synch = new BufferedWriter(new FileWriter(file_synch));
 				output_synch.write(JavaCodeGenUtil.formatJavaCode(writer_synch.toString()));
 				output_synch.close();
@@ -258,36 +241,26 @@ public class RmiGenerator implements IREventObserver {
 				StringWriter writer_synch_i = new StringWriter();
 				synchToken_interface.apply(printer, writer_synch_i);
 
-				File file_synch_i = new File("/Users/Miran/Documents/files/" + cpu + "/" + "SynchToken_interface.java");
+				File file_synch_i = new File(output_dir + cpu + "/" + "SynchToken_interface.java");
 				BufferedWriter output_synch_i = new BufferedWriter(new FileWriter(file_synch_i));
 				output_synch_i.write(JavaCodeGenUtil.formatJavaCode(writer_synch_i.toString()));
 				output_synch_i.close();
 
-				for (ARemoteContractDeclCG contract : remoteContracts) { // print
-																			// remote
-																			// contract
-																			// to
-																			// files
+				for (ARemoteContractDeclCG contract : remoteContracts) { 
 					StringWriter writer = new StringWriter();
 					contract.apply(printer, writer);
 
-					File file = new File("/Users/Miran/Documents/files/" + cpu + "/" + contract.getName() + ".java");
+					File file = new File(output_dir + cpu + "/" + contract.getName() + ".java");
 					BufferedWriter output = new BufferedWriter(new FileWriter(file));
 					output.write(JavaCodeGenUtil.formatJavaCode(writer.toString()));
 					output.close();
 				}
 
-				for (ARemoteContractImplDeclCG impl : remoteImpls) { // print
-																		// remote
-																		// contract
-																		// implementation
-																		// to
-																		// files
-
+				for (ARemoteContractImplDeclCG impl : remoteImpls) { 
 					StringWriter writer = new StringWriter();
 					impl.apply(printer, writer);
 
-					File file = new File("/Users/Miran/Documents/files/" + cpu + "/" + impl.getName() + ".java");
+					File file = new File(output_dir + cpu + "/" + impl.getName() + ".java");
 					BufferedWriter output = new BufferedWriter(new FileWriter(file));
 					output.write(JavaCodeGenUtil.formatJavaCode(writer.toString()));
 					output.close();
@@ -295,73 +268,69 @@ public class RmiGenerator implements IREventObserver {
 			}
 		}
 	}
-	
-	public void processData2(Map<String, Set<AVariableExp>> cpuToDeployedObject, Map<String, 
-			Set<String>> cpuToConnectedCPUs,
-			int DeployedObjCounter) throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException, IOException{
-		
+
+	public void processData2(String output_dir, Map<String, Set<AVariableExp>> cpuToDeployedObject,
+			Map<String, Set<String>> cpuToConnectedCPUs, int DeployedObjCounter)
+					throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException, IOException {
+
 		JavaFormat javaFormat = getJavaFormat();
 		MergeVisitor printer = javaFormat.getMergeVisitor();
-		
-		//**********************************************************************//
-		CPUdeploymentGenerator cpuDepGenerator = new CPUdeploymentGenerator(
-				cpuToDeployedObject, cpuToConnectedCPUs , DeployedObjCounter);
-		Set<ACpuDeploymentDeclCG> cpuDeps = cpuDepGenerator
-				.run();
 
+		CPUdeploymentGenerator cpuDepGenerator = new CPUdeploymentGenerator(cpuToDeployedObject, cpuToConnectedCPUs,
+				DeployedObjCounter);
+		Set<ACpuDeploymentDeclCG> cpuDeps = cpuDepGenerator.run();
 
 		Map<String, ADefaultClassDeclCG> cpuToSystemDecl = cpuDepGenerator.getcpuToSystemDecl();
+		
 		// Distribute the CPU deployment for each CPU
-		// Here just a fix output path is chosen in order to test the generate Java code
 		for (ACpuDeploymentDeclCG impl : cpuDeps) {
 			StringWriter writer = new StringWriter();
 			impl.apply(printer, writer);
 
-			System.out.println(JavaCodeGenUtil.formatJavaCode(writer
-					.toString()));
+			System.out.println(JavaCodeGenUtil.formatJavaCode(writer.toString()));
 
 			// The CPU entry method
-			File file = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + impl.getCpuName()  + ".java");
+			File file = new File(
+					output_dir + impl.getCpuName() + "/" + impl.getCpuName() + ".java");
 			BufferedWriter output = new BufferedWriter(new FileWriter(file));
-			output.write(JavaCodeGenUtil.formatJavaCode(writer
-					.toString()));
+			output.write(JavaCodeGenUtil.formatJavaCode(writer.toString()));
 			output.close();
-				
+
 			// Create the unique system class for each CPU
 			ADefaultClassDeclCG systemClass = cpuToSystemDecl.get(impl.getCpuName());
-			
+
 			StringWriter writer2 = new StringWriter();
 			systemClass.apply(printer, writer2);
 
-			System.out.println(JavaCodeGenUtil.formatJavaCode(writer2
-					.toString()));
+			System.out.println(JavaCodeGenUtil.formatJavaCode(writer2.toString()));
 
 			// The unique system class for each CPU
-			File file2 = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + systemClass.getName()  + ".java");
+			File file2 = new File(
+					output_dir + impl.getCpuName() + "/" + systemClass.getName() + ".java");
 			BufferedWriter output2 = new BufferedWriter(new FileWriter(file2));
-			output2.write(JavaCodeGenUtil.formatJavaCode(writer2
-					.toString()));
+			output2.write(JavaCodeGenUtil.formatJavaCode(writer2.toString()));
 			output2.close();
-			
+
 		}
-		
+
 	}
-	
-	public void printRemoteContracts(Set<ARemoteContractDeclCG> remoteContracts) throws org.overture.codegen.cgast.analysis.AnalysisException{
+
+	public void printRemoteContracts(Set<ARemoteContractDeclCG> remoteContracts)
+			throws org.overture.codegen.cgast.analysis.AnalysisException {
 		System.out.println("**********************Remote contracts**********************");
 		JavaFormat javaFormat = getJavaGen().getJavaFormat();
 		MergeVisitor printer = javaFormat.getMergeVisitor();
-		
+
 		for (ARemoteContractDeclCG contract : remoteContracts) {
 			StringWriter writer = new StringWriter();
 			contract.apply(printer, writer);
 
-			System.out.println(JavaCodeGenUtil.formatJavaCode(writer
-					.toString()));
+			System.out.println(JavaCodeGenUtil.formatJavaCode(writer.toString()));
 		}
 	}
-	
-	public void printRemoteContractsImpl(List<ARemoteContractImplDeclCG> remoteImpls) throws org.overture.codegen.cgast.analysis.AnalysisException{
+
+	public void printRemoteContractsImpl(List<ARemoteContractImplDeclCG> remoteImpls)
+			throws org.overture.codegen.cgast.analysis.AnalysisException {
 		System.out.println("**********************Remote contracts implementation**********************");
 		JavaFormat javaFormat = getJavaGen().getJavaFormat();
 		MergeVisitor printer = javaFormat.getMergeVisitor();
@@ -369,8 +338,7 @@ public class RmiGenerator implements IREventObserver {
 			StringWriter writer = new StringWriter();
 			impl.apply(printer, writer);
 
-			System.out.println(JavaCodeGenUtil.formatJavaCode(writer
-					.toString()));
+			System.out.println(JavaCodeGenUtil.formatJavaCode(writer.toString()));
 		}
 	}
 }
