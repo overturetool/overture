@@ -92,10 +92,10 @@ public class RmiGenerator implements IREventObserver {
 			generateRMIserver(output_dir, 1099, remoteContracts);
 			
 			// Distributed the generate remote contracts and their implementation
-			processData(output_dir, remoteContracts, cpuToDeployedClasses, cpuToConnectedCPUs, remoteImpls);
+			generateRemConAndRemConImp(output_dir, remoteContracts, cpuToDeployedClasses, cpuToConnectedCPUs, remoteImpls);
 
 			// Generate entry method for each CPU and the local system class
-			processData2(output_dir, cpuToDeployedObject, cpuToConnectedCPUs, deployedObjCounter);
+			generateEntryAndSystemClass(output_dir, cpuToDeployedObject, cpuToConnectedCPUs, deployedObjCounter);
 
 		} catch (AnalysisException e) {
 			Logger.getLog().println("Could not code generate model: " + e.getMessage());
@@ -203,7 +203,7 @@ public class RmiGenerator implements IREventObserver {
 	// Create a directory for every CPU, and place relevant remote contracts
 	// and remote contract implementations inside
 	
-	public void processData(String output_dir, Set<ARemoteContractDeclCG> remoteContracts,
+	public void generateRemConAndRemConImp(String output_dir, Set<ARemoteContractDeclCG> remoteContracts,
 			Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses, Map<String, Set<String>> cpuToConnectedCPUs,
 			List<ARemoteContractImplDeclCG> remoteImpls)
 					throws org.overture.codegen.cgast.analysis.AnalysisException, IOException {
@@ -211,11 +211,8 @@ public class RmiGenerator implements IREventObserver {
 		JavaFormat javaFormat = getJavaFormat();
 		MergeVisitor printer = javaFormat.getMergeVisitor();
 
-
-
 		for (String cpu : cpuToDeployedClasses.keySet()) {
 			File theDir = new File(output_dir + cpu);
-
 			theDir.mkdir();
 		}
 
@@ -267,7 +264,7 @@ public class RmiGenerator implements IREventObserver {
 		}
 	}
 
-	public void processData2(String output_dir, Map<String, Set<AVariableExp>> cpuToDeployedObject,
+	public void generateEntryAndSystemClass(String output_dir, Map<String, Set<AVariableExp>> cpuToDeployedObject,
 			Map<String, Set<String>> cpuToConnectedCPUs, int DeployedObjCounter)
 					throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException, IOException {
 
@@ -277,7 +274,6 @@ public class RmiGenerator implements IREventObserver {
 		CPUdeploymentGenerator cpuDepGenerator = new CPUdeploymentGenerator(cpuToDeployedObject, cpuToConnectedCPUs,
 				DeployedObjCounter);
 		Set<ACpuDeploymentDeclCG> cpuDeps = cpuDepGenerator.run();
-
 		Map<String, ADefaultClassDeclCG> cpuToSystemDecl = cpuDepGenerator.getcpuToSystemDecl();
 		
 		// Distribute the CPU deployment for each CPU
@@ -285,7 +281,7 @@ public class RmiGenerator implements IREventObserver {
 			StringWriter writer = new StringWriter();
 			impl.apply(printer, writer);
 
-			System.out.println(JavaCodeGenUtil.formatJavaCode(writer.toString()));
+			//System.out.println(JavaCodeGenUtil.formatJavaCode(writer.toString()));
 
 			// The CPU entry method
 			File file = new File(
@@ -296,13 +292,9 @@ public class RmiGenerator implements IREventObserver {
 
 			// Create the unique system class for each CPU
 			ADefaultClassDeclCG systemClass = cpuToSystemDecl.get(impl.getCpuName());
-
 			StringWriter writer2 = new StringWriter();
 			systemClass.apply(printer, writer2);
-
-			System.out.println(JavaCodeGenUtil.formatJavaCode(writer2.toString()));
-
-			// The unique system class for each CPU
+			//System.out.println(JavaCodeGenUtil.formatJavaCode(writer2.toString()));
 			File file2 = new File(
 					output_dir + impl.getCpuName() + "/" + systemClass.getName() + ".java");
 			BufferedWriter output2 = new BufferedWriter(new FileWriter(file2));
