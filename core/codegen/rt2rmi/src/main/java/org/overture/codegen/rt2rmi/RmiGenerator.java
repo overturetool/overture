@@ -53,7 +53,7 @@ public class RmiGenerator implements IREventObserver {
 		this.javaGen.getTransSeries().getSeries().add(new RemoteTypeTrans(systemClassName, info));
 	}
 
-	public void generate(List<SClassDefinition> rtClasses)
+	public void generate(List<SClassDefinition> rtClasses, String output_dir)
 			throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException, IOException {
 
 		/********** Analyse System class **********/
@@ -87,8 +87,6 @@ public class RmiGenerator implements IREventObserver {
 			Map<String, Set<AVariableExp>> cpuToDeployedObject = mapping.getCpuToDeployedObject();
 			Map<String, Set<String>> cpuToConnectedCPUs = mapping.cpuToConnectedCPUs();
 			Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses = mapping.cpuToDeployedClasses();
-			
-			String output_dir = "/Users/Miran/Documents/files/";
 			
 			// Generate the RMI server
 			generateRMIserver(output_dir, 1099, remoteContracts);

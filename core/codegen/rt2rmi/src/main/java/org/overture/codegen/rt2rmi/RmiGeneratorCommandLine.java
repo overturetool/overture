@@ -70,7 +70,7 @@ public class RmiGeneratorCommandLine
 				{
 					outputDir = new File(i.next());
 					outputDir.mkdirs();
-
+					
 					if (!outputDir.isDirectory())
 					{
 						usage(outputDir + " is not a directory");
@@ -126,7 +126,7 @@ public class RmiGeneratorCommandLine
 			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckRt(files);
 			RmiGenerator rmiGen = new RmiGenerator();
 			try {
-				rmiGen.generate(tcResult.result);
+				rmiGen.generate(tcResult.result, outputDir.toString()+"/");
 			} catch (AnalysisException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
