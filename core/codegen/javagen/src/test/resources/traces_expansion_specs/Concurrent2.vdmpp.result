@@ -37,8 +37,8 @@ public class Entry implements java.io.Serializable {
                     }
 
                     public String toString() {
-                        return "fun1(" +
-                        Utils.toString(((Number) store.getValue(ID_1))) + ")";
+                        return "fun1(" + Utils.toString(store.getValue(ID_1)) +
+                        ")";
                     }
                 };
 
@@ -50,8 +50,8 @@ public class Entry implements java.io.Serializable {
                     }
 
                     public String toString() {
-                        return "fun2(" +
-                        Utils.toString(((Number) store.getValue(ID_1))) + ")";
+                        return "fun2(" + Utils.toString(store.getValue(ID_1)) +
+                        ")";
                     }
                 };
 

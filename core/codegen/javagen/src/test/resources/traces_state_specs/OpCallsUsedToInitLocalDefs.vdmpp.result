@@ -70,8 +70,7 @@ public class Entry implements java.io.Serializable {
                 }
 
                 public String toString() {
-                    return "id(" +
-                    Utils.toString(((Number) store.getValue(ID_3))) + ")";
+                    return "id(" + Utils.toString(store.getValue(ID_3)) + ")";
                 }
             };
 
