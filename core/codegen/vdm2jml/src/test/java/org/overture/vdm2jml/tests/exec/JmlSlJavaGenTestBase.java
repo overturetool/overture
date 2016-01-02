@@ -19,6 +19,7 @@ import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import org.overture.vdm2jml.tests.OpenJmlValidationBase;
 import org.overture.vdm2jml.tests.util.IOpenJmlConsts;
+import org.overture.vdm2jml.tests.util.ProcessResult;
 
 public abstract class JmlSlJavaGenTestBase extends CommonJavaGenCheckerTest
 {
@@ -45,7 +46,9 @@ public abstract class JmlSlJavaGenTestBase extends CommonJavaGenCheckerTest
 
 		try
 		{
-			JmlExecTestBase.runProcess(args);
+			ProcessResult res = JmlExecTestBase.runProcess(args);
+			Assert.assertTrue("Got errors when running process:\n" + res.getOutput(), res.getExitCode() == 0);
+			
 		} catch (IOException | InterruptedException e)
 		{
 			e.printStackTrace();
