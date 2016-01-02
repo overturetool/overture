@@ -54,9 +54,11 @@ import org.overture.codegen.trans.letexps.IfExpTransformation;
 import org.overture.codegen.trans.patterns.PatternMatchConfig;
 import org.overture.codegen.trans.patterns.PatternTransformation;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
+import org.overture.codegen.vdm2x.transformations.MethodParamTransformation;
 import org.overture.codegen.vdm2x.transformations.VdmBasicTypesCppTrans;
 import org.overture.codegen.vdm2x.transformations.VdmSeqCppTrans;
 import org.overture.codegen.vdm2x.transformations.VdmSetCppTrans;
+import org.overture.codegen.vdm2x.transformations.MethodParamTransformation;
 
 public class XTransSeries {
 
@@ -112,6 +114,12 @@ public class XTransSeries {
 //		InstanceVarPPEvalTransformation instanceVarPPEval = new InstanceVarPPEvalTransformation(irInfo, transAssistant, classes);
 		// End concurrency transformations
 
+		
+		/* C transformations */
+		
+		MethodParamTransformation methodTransformation = new MethodParamTransformation(transAssistant);
+		
+		
 		// Set up order of transformations
 		List<DepthFirstAnalysisAdaptor> transformations = new LinkedList<DepthFirstAnalysisAdaptor>();
 
@@ -142,6 +150,10 @@ public class XTransSeries {
 //		transformations.add(instanceVarPPEval);
 //		transformations.add(recTransformation);
 
+		
+		/* C transformations */
+		transformations.add(methodTransformation);
+		
 		return transformations;
 	}
 	
