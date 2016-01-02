@@ -151,4 +151,8 @@ public class XFormat {
 
 		return matches;
 	}
+	
+	public String getTVPtype(){
+		return "TVP";
+	}
 }

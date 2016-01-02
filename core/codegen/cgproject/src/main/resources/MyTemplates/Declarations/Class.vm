@@ -1,36 +1,5 @@
-class $node.Name
-{
-	
-	
-public:
+// Add the memory management methods here
 
-#foreach( $method in $XFormat.getMethodsByAccess($node.getMethods(),"public") )
+#foreach( $method in $node.getMethods() )
 $XFormat.format($method)
 #end
-	
-#foreach( $field in $XFormat.getFieldsByAccess($node.getFields(),"public") )
-$XFormat.format($field)
-#end
-	
-
-protected:
-
-#foreach( $method in $XFormat.getMethodsByAccess($node.getMethods(),"protected") )
-$XFormat.format($method)
-#end
-	
-#foreach( $field in $XFormat.getFieldsByAccess($node.getFields(),"protected") )
-$XFormat.format($field)
-#end
-
-private:
-
-#foreach( $field in $XFormat.getFieldsByAccess($node.getFields(),"private") )
-$XFormat.format($field)
-#end
-	
-#foreach( $method in $XFormat.getMethodsByAccess($node.getMethods(),"private") )
-$XFormat.format($method)
-#end
-	
-}
