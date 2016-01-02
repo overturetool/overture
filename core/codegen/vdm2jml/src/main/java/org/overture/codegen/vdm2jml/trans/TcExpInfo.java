@@ -1,16 +1,16 @@
 package org.overture.codegen.vdm2jml.trans;
 
-import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.statements.AMetaStmCG;
 
 public class TcExpInfo
 {
 	private STypeCG formalParamType;
-	private SExpCG typeCheck;
+	private AMetaStmCG typeCheck;
 	private String traceEnclosingClass;
 	private String name;
 
-	public TcExpInfo(String expRef, STypeCG formalParamType, SExpCG typeCheck, String traceEnclosingClass)
+	public TcExpInfo(String expRef, STypeCG formalParamType, AMetaStmCG typeCheck, String traceEnclosingClass)
 	{
 		super();
 		this.name = expRef;
@@ -29,7 +29,7 @@ public class TcExpInfo
 		return formalParamType;
 	}
 
-	public SExpCG getTypeCheck()
+	public AMetaStmCG getTypeCheck()
 	{
 		return typeCheck;
 	}

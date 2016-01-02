@@ -43,7 +43,7 @@ final public class Entry implements java.io.Serializable {
 
                     public String toString() {
                         return "Other`op(" +
-                        Utils.toString(((Number) store.getValue(ID_3))) + ")";
+                        Utils.toString(store.getValue(ID_3)) + ")";
                     }
                 };
 

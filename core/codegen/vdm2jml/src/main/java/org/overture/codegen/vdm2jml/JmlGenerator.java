@@ -24,10 +24,8 @@ import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AExternalExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IREventObserver;
@@ -398,12 +396,8 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 			NameGen nameGen = new NameGen(clazz);
 			String expRef = currentInfo.getExpRef();
 			String checkStr = typeInfo.consCheckExp(enclosingClass, javaRootPackage, expRef, nameGen);
-			
-			AExternalExpCG check = new AExternalExpCG();
-			check.setTargetLangExp(checkStr);
-			check.setType(new ABoolBasicTypeCG());
-			
-			this.javaGen.getTransAssistant().replaceNodeWith(currentInfo.getTypeCheck(), check);
+
+			currentInfo.getTypeCheck().setMetaData(annotator.consMetaData("//@ " + JML_ASSERT_ANNOTATION + " " +  checkStr + ";"));
 		}
 	}
 

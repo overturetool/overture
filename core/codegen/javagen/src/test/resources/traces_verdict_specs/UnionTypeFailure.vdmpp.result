@@ -46,8 +46,7 @@ public class Entry implements java.io.Serializable {
                 }
 
                 public String toString() {
-                    return "f(" +
-                    Utils.toString(((Number) store.getValue(ID_1))) + ")";
+                    return "f(" + Utils.toString(store.getValue(ID_1)) + ")";
                 }
             };
 
@@ -59,8 +58,7 @@ public class Entry implements java.io.Serializable {
                 }
 
                 public String toString() {
-                    return "f(" +
-                    Utils.toString(((Character) store.getValue(ID_2))) + ")";
+                    return "f(" + Utils.toString(store.getValue(ID_2)) + ")";
                 }
             };
 
@@ -72,8 +70,7 @@ public class Entry implements java.io.Serializable {
                 }
 
                 public String toString() {
-                    return "f(" +
-                    Utils.toString(((Number) store.getValue(ID_3))) + ")";
+                    return "f(" + Utils.toString(store.getValue(ID_3)) + ")";
                 }
             };
 

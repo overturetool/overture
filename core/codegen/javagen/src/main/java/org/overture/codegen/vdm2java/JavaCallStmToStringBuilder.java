@@ -1,6 +1,7 @@
 package org.overture.codegen.vdm2java;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.overture.codegen.cgast.SExpCG;
@@ -75,7 +76,7 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 		return toStringMethod;
 	}
 	
-	private SExpCG appendArgs(IRInfo info, LinkedList<SExpCG> args, String prefix, Map<String, String> idConstNameMap, StoreAssistant storeAssistant, TransAssistantCG transAssistant)
+	private SExpCG appendArgs(IRInfo info, List<SExpCG> args, String prefix, Map<String, String> idConstNameMap, StoreAssistant storeAssistant, TransAssistantCG transAssistant)
 	{
 		if (args == null || args.isEmpty())
 		{
@@ -98,7 +99,7 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 			if(arg instanceof AIdentifierVarExpCG && idConstNameMap.containsKey(((AIdentifierVarExpCG) arg).getName()))
 			{
 				AIdentifierVarExpCG idVarExp = ((AIdentifierVarExpCG) arg);
-				utilsToStrCall.getArgs().add(storeAssistant.consStoreLookup(idVarExp));
+				utilsToStrCall.getArgs().add(storeAssistant.consStoreLookup(idVarExp, true));
 			}
 			else
 			{

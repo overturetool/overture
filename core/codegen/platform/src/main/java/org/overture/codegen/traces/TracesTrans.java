@@ -4,9 +4,7 @@ import java.util.List;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
@@ -16,7 +14,6 @@ import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
 import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ATypeArgExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
@@ -164,7 +161,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 		
 		String traceEnclosingClass = getClassName(node);
 		
-		TraceStmBuilder stmBuilder = new TraceStmBuilder(this, traceEnclosingClass, storeAssist);
+		TraceStmBuilder stmBuilder = consStmBuilder(storeAssist, traceEnclosingClass);
 
 		SStmCG regModules = registerOtherModules(traceEnclosingClass, storeAssist);
 		TraceNodeData nodeData = stmBuilder.buildFromDeclTerms(node.getTerms());
@@ -182,6 +179,11 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 		stms.getStatements().add(buildTestExecutionStms(nodeData.getNodeVar(), getClassName(node)));
 
 		return stms;
+	}
+
+	public TraceStmBuilder consStmBuilder(StoreAssistant storeAssist, String traceEnclosingClass)
+	{
+		return new TraceStmBuilder(this, traceEnclosingClass, storeAssist);
 	}
 	
 	private SStmCG registerOtherModules(String encClass, StoreAssistant storeAssist)
@@ -249,11 +251,6 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 		return null;
 	}
 
-	public SExpCG consTypeCheckExp(SVarExpCG a, STypeCG formalParamType, String traceEnclosingClass, StoreAssistant storeAssistant)
-	{
-		return null;
-	}
-	
 	public TransAssistantCG getTransAssist()
 	{
 		return transAssistant;

@@ -9,12 +9,12 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)
-public class JmlSlTraceOutputTest extends JmlSlOutputTestBase
+public class JmlReuseSlTraceOutputTest extends JmlSlOutputTestBase
 {
 	public static final String ROOT = "src" + File.separatorChar + "test" + File.separatorChar + "resources"
-			+ File.separatorChar + "traces_sl_specs";
+			+ File.separatorChar + "traces_sl_copies";
 
-	public JmlSlTraceOutputTest(String nameParameter, String inputParameter, String resultParameter)
+	public JmlReuseSlTraceOutputTest(String nameParameter, String inputParameter, String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
@@ -28,6 +28,6 @@ public class JmlSlTraceOutputTest extends JmlSlOutputTestBase
 	@Override
 	protected String getUpdatePropertyString()
 	{
-		return JML_SL_TRACE_UPDATE_PROPERTY + "traces";
+		return JML_SL_TRACE_UPDATE_PROPERTY + "reuse";
 	}
 }
