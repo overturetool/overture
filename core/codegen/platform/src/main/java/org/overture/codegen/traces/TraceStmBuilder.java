@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.statements.ACallStm;
@@ -475,6 +476,16 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 						}
 
 						isOp = true;
+					}
+					else if(callStm.getRootdef() instanceof SFunctionDefinition)
+					{
+						SFunctionDefinition func = (SFunctionDefinition) callStm.getRootdef();
+						
+						if(func.getPredef() == null)
+						{
+							// The pre condition is true
+							return null;
+						}
 					}
 				} else
 				{
