@@ -3,3 +3,13 @@
 #foreach( $method in $node.getMethods() )
 $XFormat.format($method)
 #end
+
+
+
+struct VTable VTableArrayFor$node.Name [] =
+{
+#foreach( $method in $node.getMethods() )
+#if(!$method.getIsConstructor()){ 0, 0, (VirtualFunctionPointer) $method.getName() },
+#end
+#end
+};
