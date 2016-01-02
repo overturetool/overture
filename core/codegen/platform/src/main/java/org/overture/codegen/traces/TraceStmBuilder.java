@@ -4,13 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.statements.ACallStm;
-import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.INode;
@@ -208,62 +204,6 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		return new TraceNodeData(getInfo().getExpAssistant().consIdVar(name, classType.clone()), stms);
 	}
 	
-	private List<STypeCG> getFormalTypes(APlainCallStmCG call)
-	{
-		SourceNode source = call.getSourceNode();
-		List<PType> vdmTypes = null;
-		if (source != null)
-		{
-			org.overture.ast.node.INode vdmNode = source.getVdmNode();
-
-			if (vdmNode instanceof ACallStm)
-			{
-				ACallStm callStm = (ACallStm) vdmNode;
-				if (callStm.getRootdef() instanceof SOperationDefinition)
-				{
-					SOperationDefinition op = (SOperationDefinition) callStm.getRootdef();
-					
-					if(op.getType() instanceof AOperationType)
-					{
-						vdmTypes = ((AOperationType) op.getType()).getParameters();
-					}
-					
-				} else if (callStm.getRootdef() instanceof SFunctionDefinition)
-				{
-					SFunctionDefinition func = (SFunctionDefinition) callStm.getRootdef();
-					
-					if(func.getType() instanceof AFunctionType)
-					{
-						vdmTypes = ((AFunctionType) func.getType()).getParameters();
-					}
-				}
-			}
-		}
-
-		if (vdmTypes != null)
-		{
-			List<STypeCG> transTypes = new LinkedList<>();
-
-			try
-			{
-				for (PType t : vdmTypes)
-				{
-					transTypes.add(t.apply(getInfo().getTypeVisitor(), getInfo()));
-				}
-
-				return transTypes;
-
-			} catch (org.overture.ast.analysis.AnalysisException e)
-			{
-				e.printStackTrace();
-			}
-		}
-
-		Logger.getLog().printErrorln("Could not find formal parameter types of " + call + " in '"
-				+ this.getClass().getSimpleName() + "'");
-		return null;
-	}
-
 	@Override
 	public TraceNodeData caseALetBeStBindingTraceDeclCG(
 			ALetBeStBindingTraceDeclCG node) throws AnalysisException
@@ -512,10 +452,6 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		String pre = "pre_";
 		List<SExpCG> args = null;
 
-		/**
-		 * We don't need to consider the 'ACallObjectExpStmCG' since it only appears in the IR if we code generate a PP
-		 * or RT model
-		 */
 		if (stm instanceof APlainCallStmCG)
 		{
 			APlainCallStmCG plainCall = (APlainCallStmCG) stm;
@@ -554,7 +490,6 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			plainCall.setName(pre + plainCall.getName());
 			plainCall.setType(new ABoolBasicTypeCG());
 
-			castArgs(plainCall);
 			meetsPredMethod.setBody(plainCall);
 		} else
 		{
@@ -631,33 +566,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		return meetsPredMethod;
 	}
-
-	private void castArgs(APlainCallStmCG call)
-	{
-		List<STypeCG> formalTypes = getFormalTypes(call);
-		
-		if(call.getArgs() == null || formalTypes == null || call.getArgs().size() != formalTypes.size())
-		{
-			Logger.getLog().printErrorln("Arguments and formal parameter types do not match in '" + this.getClass().getSimpleName() + "'");
-			return;
-		}
-		
-		for(int i = 0; i < formalTypes.size(); i++)
-		{
-			SExpCG arg = call.getArgs().get(i);
-			STypeCG formalType = formalTypes.get(i);
-			
-			if(!getInfo().getTypeAssistant().compatible(getInfo(), arg.getType(), formalType))
-			{
-				ACastUnaryExpCG cast = new ACastUnaryExpCG();
-				
-				traceTrans.getTransAssist().replaceNodeWith(arg, cast);
-				cast.setExp(arg);
-				cast.setType(formalType.clone());
-			}
-		}
-	}
-
+	
 	protected AMethodDeclCG initPredDecl(String name)
 	{
 		AMethodTypeCG methodType = new AMethodTypeCG();
@@ -738,10 +647,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			// Example: op(42) becomes ((S)instance).op(42L)
 			try
 			{
-				APlainCallStmCG call = (APlainCallStmCG) stm;
-				castArgs(call);
-				
-				return handlePlainCallStm(call);
+				return handlePlainCallStm((APlainCallStmCG) stm);
 			} catch (AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Got unexpected problem when handling plain call statement in '"
