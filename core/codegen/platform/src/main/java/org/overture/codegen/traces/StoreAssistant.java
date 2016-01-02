@@ -12,6 +12,8 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AObjectTypeCG;
+import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
@@ -74,7 +76,12 @@ public class StoreAssistant
 		return transAssistant.consInstanceCallStm(storageType, storeVarName, method, idVarExp, subject);
 	}
 	
-	public ACastUnaryExpCG consStoreLookup(AIdentifierVarExpCG node)
+	public SExpCG consStoreLookup(AIdentifierVarExpCG node)
+	{
+		return consStoreLookup(node, false);
+	}
+	
+	public SExpCG consStoreLookup(AIdentifierVarExpCG node, boolean noCast)
 	{
 		AClassTypeCG storeType = transAssistant.consClassType(tracePrefixes.storeClassName());
 		
@@ -84,10 +91,17 @@ public class StoreAssistant
 		SExpCG call = transAssistant.consInstanceCall(storeType, tracePrefixes.storeVarName(), 
 				node.getType(), tracePrefixes.storeGetValueMethodName(), idArg);
 		
-		ACastUnaryExpCG cast = new ACastUnaryExpCG();
-		cast.setType(node.getType().clone());
-		cast.setExp(call);
-		
-		return cast;
+		if (noCast || node.getType() instanceof AUnionTypeCG || node.getType() instanceof AUnknownTypeCG
+				|| node.getType() instanceof AObjectTypeCG)
+		{
+			return call;
+		} else
+		{
+			ACastUnaryExpCG cast = new ACastUnaryExpCG();
+			cast.setType(node.getType().clone());
+			cast.setExp(call);
+
+			return cast;
+		}
 	}
 }

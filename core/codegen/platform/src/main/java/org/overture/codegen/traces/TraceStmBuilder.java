@@ -4,9 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.statements.ACallStm;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.INode;
@@ -108,7 +112,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			
 			stms.getStatements().addAll(addStms);
 
-			return new TraceNodeData(traceTrans.getTransAssist().getInfo().getExpAssistant().consIdVar(name, classType.clone()), stms);
+			return new TraceNodeData(getInfo().getExpAssistant().consIdVar(name, classType.clone()), stms);
 		}
 	}
 
@@ -154,7 +158,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		AClassTypeCG stmTraceNodeType = traceTrans.getTransAssist().consClassType(traceTrans.getTracePrefixes().stmTraceNodeClassName());
 		ANewExpCG newStmTraceNodeExp = traceTrans.getTransAssist().consDefaultConsCall(stmTraceNodeType);
-		newStmTraceNodeExp.getArgs().add(traceTrans.getTransAssist().getInfo().getExpAssistant().consIdVar(callStmName, callStmType.clone()));
+		newStmTraceNodeExp.getArgs().add(getInfo().getExpAssistant().consIdVar(callStmName, callStmType.clone()));
 
 		String stmNodeName = getInfo().getTempVarNameGen().nextVarName(traceTrans.getTracePrefixes().stmTraceNodeNamePrefix());
 		AVarDeclCG stmNodeDecl = traceTrans.getTransAssist().consDecl(stmNodeName, stmTraceNodeType.clone(), newStmTraceNodeExp);
@@ -164,7 +168,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		decls.getLocalDefs().add(callStmDecl);
 		decls.getLocalDefs().add(stmNodeDecl);
 
-		return new TraceNodeData(traceTrans.getTransAssist().getInfo().getExpAssistant().consIdVar(stmNodeName, stmTraceNodeType.clone()), decls);
+		return new TraceNodeData(getInfo().getExpAssistant().consIdVar(stmNodeName, stmTraceNodeType.clone()), decls);
 	}
 
 	@Override
@@ -201,7 +205,63 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		stms.getStatements().addAll(addStms);
 
-		return new TraceNodeData(traceTrans.getTransAssist().getInfo().getExpAssistant().consIdVar(name, classType.clone()), stms);
+		return new TraceNodeData(getInfo().getExpAssistant().consIdVar(name, classType.clone()), stms);
+	}
+	
+	private List<STypeCG> getFormalTypes(APlainCallStmCG call)
+	{
+		SourceNode source = call.getSourceNode();
+		List<PType> vdmTypes = null;
+		if (source != null)
+		{
+			org.overture.ast.node.INode vdmNode = source.getVdmNode();
+
+			if (vdmNode instanceof ACallStm)
+			{
+				ACallStm callStm = (ACallStm) vdmNode;
+				if (callStm.getRootdef() instanceof SOperationDefinition)
+				{
+					SOperationDefinition op = (SOperationDefinition) callStm.getRootdef();
+					
+					if(op.getType() instanceof AOperationType)
+					{
+						vdmTypes = ((AOperationType) op.getType()).getParameters();
+					}
+					
+				} else if (callStm.getRootdef() instanceof SFunctionDefinition)
+				{
+					SFunctionDefinition func = (SFunctionDefinition) callStm.getRootdef();
+					
+					if(func.getType() instanceof AFunctionType)
+					{
+						vdmTypes = ((AFunctionType) func.getType()).getParameters();
+					}
+				}
+			}
+		}
+
+		if (vdmTypes != null)
+		{
+			List<STypeCG> transTypes = new LinkedList<>();
+
+			try
+			{
+				for (PType t : vdmTypes)
+				{
+					transTypes.add(t.apply(getInfo().getTypeVisitor(), getInfo()));
+				}
+
+				return transTypes;
+
+			} catch (org.overture.ast.analysis.AnalysisException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		Logger.getLog().printErrorln("Could not find formal parameter types of " + call + " in '"
+				+ this.getClass().getSimpleName() + "'");
+		return null;
 	}
 
 	@Override
@@ -249,7 +309,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		ABlockStmCG outerBlock = traceTrans.getTransAssist().consIterationBlock(node.getBind().getPatterns(), bind.getSet(), getInfo().getTempVarNameGen(), strategy, traceTrans.getIteVarPrefixes());
 
-		return new TraceNodeData(traceTrans.getTransAssist().getInfo().getExpAssistant().consIdVar(name, classType.clone()), traceTrans.getTransAssist().wrap(outerBlock));
+		return new TraceNodeData(getInfo().getExpAssistant().consIdVar(name, classType.clone()), traceTrans.getTransAssist().wrap(outerBlock));
 	}
 	
 	@Override
@@ -314,7 +374,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			block.getStatements().add(traceData.getStms());
 			block.getStatements().add(consDecl(traceTrans.getTracePrefixes().repeatTraceNodeNodeClassName(), name, varArg, fromArg, toArg));
 
-			return new TraceNodeData(traceTrans.getTransAssist().getInfo().getExpAssistant().consIdVar(name, repeat), block);
+			return new TraceNodeData(getInfo().getExpAssistant().consIdVar(name, repeat), block);
 		}
 	}
 
@@ -346,7 +406,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 				argDecl.setFinal(true);
 				decls.add(argDecl);
 
-				traceTrans.getTransAssist().replaceNodeWith(arg, traceTrans.getTransAssist().getInfo().getExpAssistant().consIdVar(argName, type.clone()));
+				traceTrans.getTransAssist().replaceNodeWith(arg, getInfo().getExpAssistant().consIdVar(argName, type.clone()));
 			}
 
 		}
@@ -431,7 +491,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		stms.getStatements().addAll(addStms);
 
-		return new TraceNodeData(traceTrans.getTransAssist().getInfo().getExpAssistant().consIdVar(name, classType.clone()), stms);
+		return new TraceNodeData(getInfo().getExpAssistant().consIdVar(name, classType.clone()), stms);
 	}
 	
 	public AMethodDeclCG consTypeCheckMethod(SStmCG stm)
@@ -459,6 +519,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		if (stm instanceof APlainCallStmCG)
 		{
 			APlainCallStmCG plainCall = (APlainCallStmCG) stm;
+			args = plainCall.getArgs();
 			SourceNode source = plainCall.getSourceNode();
 			if (source != null)
 			{
@@ -492,8 +553,8 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 			plainCall.setName(pre + plainCall.getName());
 			plainCall.setType(new ABoolBasicTypeCG());
-			args = plainCall.getArgs();
 
+			castArgs(plainCall);
 			meetsPredMethod.setBody(plainCall);
 		} else
 		{
@@ -507,9 +568,9 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		{
 			if (isOp)
 			{
-				DeclAssistantCG dAssist = this.traceTrans.getTransAssist().getInfo().getDeclAssistant();
+				DeclAssistantCG dAssist = this.getInfo().getDeclAssistant();
 				String invokedModule = getInvokedModule(stm);
-				SClassDeclCG clazz = dAssist.findClass(traceTrans.getTransAssist().getInfo().getClasses(), invokedModule);
+				SClassDeclCG clazz = dAssist.findClass(getInfo().getClasses(), invokedModule);
 
 				for (AFieldDeclCG f : clazz.getFields())
 				{
@@ -518,7 +579,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 						// It's the state component
 						if (traceEnclosingClass.equals(invokedModule))
 						{
-							ExpAssistantCG eAssist = traceTrans.getTransAssist().getInfo().getExpAssistant();
+							ExpAssistantCG eAssist = getInfo().getExpAssistant();
 							AIdentifierVarExpCG stateArg = eAssist.consIdVar(f.getName(), f.getType().clone());
 							traceTrans.getCloneFreeNodes().add(stateArg);
 							args.add(stateArg);
@@ -571,6 +632,32 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		return meetsPredMethod;
 	}
 
+	private void castArgs(APlainCallStmCG call)
+	{
+		List<STypeCG> formalTypes = getFormalTypes(call);
+		
+		if(call.getArgs() == null || formalTypes == null || call.getArgs().size() != formalTypes.size())
+		{
+			Logger.getLog().printErrorln("Arguments and formal parameter types do not match in '" + this.getClass().getSimpleName() + "'");
+			return;
+		}
+		
+		for(int i = 0; i < formalTypes.size(); i++)
+		{
+			SExpCG arg = call.getArgs().get(i);
+			STypeCG formalType = formalTypes.get(i);
+			
+			if(!getInfo().getTypeAssistant().compatible(getInfo(), arg.getType(), formalType))
+			{
+				ACastUnaryExpCG cast = new ACastUnaryExpCG();
+				
+				traceTrans.getTransAssist().replaceNodeWith(arg, cast);
+				cast.setExp(arg);
+				cast.setType(formalType.clone());
+			}
+		}
+	}
+
 	protected AMethodDeclCG initPredDecl(String name)
 	{
 		AMethodTypeCG methodType = new AMethodTypeCG();
@@ -592,7 +679,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 	protected boolean canBeGenerated()
 	{
 		// This only works for VDM-SL
-		return Settings.dialect == Dialect.VDM_SL && traceTrans.getTransAssist().getInfo().getSettings().generatePreConds();
+		return Settings.dialect == Dialect.VDM_SL && getInfo().getSettings().generatePreConds();
 	}
 	
 	protected String getInvokedModule(SStmCG stm)
@@ -629,9 +716,14 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			} catch (AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Got unexpected problem when trying to apply "
-						+ CallObjTraceLocalizer.class.getSimpleName() + " in '" + this.getClass().getSimpleName());
+						+ CallObjTraceLocalizer.class.getSimpleName() + " in '" + this.getClass().getSimpleName() + "'");
 				e.printStackTrace();
 			}
+			
+			/**
+			 * We don't narrow the types of the arguments, which we should and which we do for the 'APlainCallStmCG'
+			 * case using <code>castArgs(call);</code>. Code generation of traces does not really work for PP..
+			 */
 			
 			if(call.getType() instanceof AVoidTypeCG)
 			{
@@ -646,7 +738,10 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			// Example: op(42) becomes ((S)instance).op(42L)
 			try
 			{
-				return handlePlainCallStm((APlainCallStmCG) stm);
+				APlainCallStmCG call = (APlainCallStmCG) stm;
+				castArgs(call);
+				
+				return handlePlainCallStm(call);
 			} catch (AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Got unexpected problem when handling plain call statement in '"
@@ -711,7 +806,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(consClassType);
-		cast.setExp(traceTrans.getTransAssist().getInfo().getExpAssistant().consIdVar(traceTrans.getTracePrefixes().callStmMethodParamName(), consClassType.clone()));
+		cast.setExp(getInfo().getExpAssistant().consIdVar(traceTrans.getTracePrefixes().callStmMethodParamName(), consClassType.clone()));
 
 		if (type instanceof AVoidTypeCG)
 		{
@@ -752,7 +847,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			AVarDeclCG resultDecl = traceTrans.getTransAssist().consDecl(resultName, type.clone(), apply);
 
 			AReturnStmCG returnStm = new AReturnStmCG();
-			returnStm.setExp(traceTrans.getTransAssist().getInfo().getExpAssistant().consIdVar(resultName, type.clone()));
+			returnStm.setExp(getInfo().getExpAssistant().consIdVar(resultName, type.clone()));
 
 			ABlockStmCG stms = new ABlockStmCG();
 			stms.getLocalDefs().add(resultDecl);
