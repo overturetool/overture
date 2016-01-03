@@ -62,6 +62,11 @@ public abstract class TraceNode
 
 			for (CallSequence test : tests)
 			{
+				/**
+				 * We should reset the state before running the test in case the trace variable statements have modified
+				 * it, e.g. let a = opWithSideEffects() in ....
+				 */
+				store.reset();
 				List<String> callStms = new LinkedList<String>();
 				List<Object> callStmResults = new LinkedList<Object>();
 
@@ -143,7 +148,6 @@ public abstract class TraceNode
 				callStmResults.clear();
 
 				testNo++;
-				store.reset();
 			}
 
 		} catch (InstantiationException e)
