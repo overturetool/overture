@@ -16,7 +16,6 @@ public class ModuleCopy
 	private static final String MODIFIERS_FIELD = "modifiers";
 	private static final String JAVA_LANG = "java.lang";
 	
-	protected Object val;
 	protected Map<Field, Object> staticFields;
 	
 	public ModuleCopy(Class<?> clazz)
@@ -44,11 +43,6 @@ public class ModuleCopy
 		return getAllFields(new LinkedList<Field>(), type);
 	}
 
-	public Object getValue()
-	{
-		return val;
-	}
-
 	public void resetStaticFields()
 	{
 		if(staticFields == null)
@@ -64,7 +58,7 @@ public class ModuleCopy
 	
 			try
 			{
-				f.set(val, v);
+				f.set(null, v);
 			} catch (IllegalArgumentException | IllegalAccessException e)
 			{
 				e.printStackTrace();
@@ -155,5 +149,11 @@ public class ModuleCopy
 		{
 			return DeepCopy.copy(orig);
 		}
+	}
+
+	public Object getValue()
+	{
+		// A module cannot be instantiated so it has no value
+		return null;
 	}
 }
