@@ -43,7 +43,7 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 {
-	public static final String EXEC_TEST_PROPERTY = "javagen.javac";
+	public static final String EXEC_TEST_PROPERTY = "tests.javagen.javac";
 	protected TestHandler testHandler;
 	protected File outputDir;
 
