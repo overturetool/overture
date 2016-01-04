@@ -14,7 +14,10 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.IRGeneratedTag;
 
 /*
  * This set up the remote contracts for the generated Java code
@@ -38,7 +41,7 @@ public class RemoteContractGenerator {
 
 		Set<ARemoteContractDeclCG> remoteContracts = new HashSet<ARemoteContractDeclCG>();
 
-		for(ADefaultClassDeclCG classCg : irClasses){
+		for (ADefaultClassDeclCG classCg : irClasses) {
 
 			String currentName = classCg.getName().toString();
 
@@ -46,16 +49,34 @@ public class RemoteContractGenerator {
 
 			remoteContract.setName(currentName + "_i"); // transform name
 
-			for(AMethodDeclCG method : classCg.getMethods()){
+			if(classCg.getThread() != null){
+				AMethodDeclCG methodSignature = new AMethodDeclCG();
+				methodSignature.setName("start");
+				methodSignature.setIsRemote(true);
+				methodSignature.setAbstract(false);
+				methodSignature.setBody(null);
+				methodSignature.setStatic(false);
+				methodSignature.setAccess("public");
+				methodSignature.setFormalParams(null);
+				methodSignature.setIsConstructor(false);
+				AMethodTypeCG methodType = new AMethodTypeCG();
+				methodType.setParams(null);
+				methodType.setResult(new AVoidTypeCG());
+				methodSignature.setMethodType(methodType);
+				remoteContract.getMethodSignatures().add(methodSignature);
+				
+			}
+			
+			for (AMethodDeclCG method : classCg.getMethods()) {
 
 				AMethodDeclCG methodSignature = method.clone();
 
 				// Skip the auto generated toString() method
-				if(methodSignature.getName().equals("toString")){
-				}
-				else if(methodSignature.getAccess().equals("public")){ // if public add to remote contract
+				if (methodSignature.getName().equals("toString")) {
+				} else if (methodSignature.getAccess().equals("public") && !isIRGenerated(methodSignature)) { 
 
-					if(methodSignature.getIsConstructor()) continue;
+					if (methodSignature.getIsConstructor() != null && methodSignature.getIsConstructor())
+						continue;
 					methodSignature.setIsRemote(true);
 					methodSignature.setAbstract(false);
 					methodSignature.setBody(null);
@@ -66,5 +87,9 @@ public class RemoteContractGenerator {
 			remoteContracts.add(remoteContract);
 		}
 		return remoteContracts;
+	}
+
+	private boolean isIRGenerated(AMethodDeclCG method) {
+		return method.getTag() instanceof IRGeneratedTag;
 	}
 }

@@ -227,11 +227,19 @@ CG {-> package='org.overture.codegen.cgast'
 		[fields]:field*
 		[superName]:java_String
 		[isUniCast]:java_Boolean
+    	[innerClasses]:CG.#decl.class*
+    	[interfaces]:CG.#decl.interface*
+    	[typeDecls]:CG.#decl.type*
+    	[perSyncs]:CG.#decl.persync*
+    	[mutexSyncs]:CG.#decl.mutexSync*
+    	[thread]:CG.#decl.thread		
 	|	{remoteInstance}
 		[name]:java_String
 		[nameString]:java_String
 		[className]:java_String
 		[varExp]:java_String
+		[InterfaceclassName]:java_String
+		[ObjectName]:java_String
 	|	{clientInstance}
 		[name]:java_String
 		[nameString]:java_String

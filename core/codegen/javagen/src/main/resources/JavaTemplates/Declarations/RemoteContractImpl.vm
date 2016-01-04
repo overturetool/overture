@@ -3,18 +3,31 @@ import java.rmi.server.UnicastRemoteObject;
 import org.overture.codegen.runtime.*;
 import java.util.*;
 
-#set($UniCast = $node.getSuperName())
-#if ($node.getIsUniCast())
-	#set($UniCast = "UnicastRemoteObject")
+#set( $threadMethod = "")
+#if (!$JavaFormat.isNull($node.getThread()))
+	#set( $threadMethod = $JavaFormat.format($node.getThread()))
 #end
- 
-public class ${node.getName()} extends $UniCast implements ${node.getName()}_i
+
+##set($UniCast = $node.getSuperName())
+##if ($node.getIsUniCast())
+##set($UniCast = "UnicastRemoteObject")
+##end
+
+## $JavaFormat.formatInterfaces($node)
+public class ${node.getName()} $JavaFormat.formatSuperType($node) implements EvaluatePP, ${node.getName()}_i
 {
-    #foreach( $field in $node.getFields() )
+
+	#foreach( $class in $node.getInnerClasses() )
+	$JavaFormat.format($class)
+	#end##
+
+    	#foreach( $field in $node.getFields() )
 	$JavaFormat.format($field)
 	#end
                                 
 	#foreach( $method in $node.getMethods() )
 	$JavaFormat.format($method)
 	#end
+
+	${threadMethod}##
 }

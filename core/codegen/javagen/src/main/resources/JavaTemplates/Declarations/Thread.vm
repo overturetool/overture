@@ -1,3 +1,5 @@
 public void run(){
+try{
 	$JavaFormat.format($node.getStm())
+}catch(Exception e){}
 }

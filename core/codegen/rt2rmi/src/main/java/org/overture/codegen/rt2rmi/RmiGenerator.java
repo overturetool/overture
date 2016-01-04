@@ -42,6 +42,8 @@ public class RmiGenerator implements IREventObserver {
 	public RmiGenerator() {
 		this.javaGen = new JavaCodeGen();
 		this.javaGen.registerIrObs(this);
+		IRSettings ir = this.javaGen.getSettings();
+		ir.setGenerateConc(true);
 		addTransformations();
 	}
 

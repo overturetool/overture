@@ -129,7 +129,8 @@ public class CPUdeploymentGenerator {
 				AInstanceVariableDefinition varExp = (AInstanceVariableDefinition) inst_var.getVardef();
 				inst.setVarExp(varExp.getExpression().toString());
 				inst.setNameString("\""+inst_var.getName().getName().toString()+"\"");
-
+				inst.setInterfaceclassName(inst_var.getType().toString()+"_i");
+				inst.setObjectName(inst_var.getOriginal().toString());
 				cpuDeployment.getRemoteInst().add(inst);
 
 				cpuDeployment.setCpuNameString("\"" + cpuDep + "\"");
