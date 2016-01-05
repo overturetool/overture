@@ -20,6 +20,7 @@ import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.utils.GeneralUtils;
 
+
 public class XFormat {
 
 	private MergeVisitor mergeVisitor;
@@ -39,6 +40,34 @@ public class XFormat {
 		return writer.toString();
 	}
 
+	private String format(INode node, boolean ignoreContext)
+			throws AnalysisException
+	{
+		StringWriter writer = new StringWriter();
+		node.apply(mergeVisitor, writer);
+
+		return "hi";//writer.toString() + "";//getNumberDereference(node, ignoreContext);
+	}
+	
+	public String format(SExpCG exp, boolean leftChild)
+			throws AnalysisException
+	{
+		String formattedExp = format(exp);
+
+		XPrecedence precedence = new XPrecedence();
+
+		INode parent = exp.parent();
+
+		if (!(parent instanceof SExpCG))
+		{
+			return formattedExp;
+		}
+
+		boolean isolate = precedence.mustIsolate((SExpCG) parent, exp, leftChild);
+
+		return isolate ? "(" + formattedExp + ")" : formattedExp;
+	}
+	
 	public MergeVisitor GetMergeVisitor() {
 		return mergeVisitor;
 	}

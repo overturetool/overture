@@ -1,1 +1,1 @@
-$XFormat.format($node.getLeft(), true) + $XFormat.format($node.getRight(), false)
+vdmSum($XFormat.format($node.getLeft(), true),$XFormat.format($node.getRight(), false))
