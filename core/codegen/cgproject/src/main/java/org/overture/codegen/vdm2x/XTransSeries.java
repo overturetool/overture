@@ -94,14 +94,14 @@ public class XTransSeries {
 		AssignStmTransformation assignTransformation = new AssignStmTransformation(irInfo, classes, transAssistant);
 //		PrePostTransformation prePostTransformation = new PrePostTransformation(irInfo);
 //		IfExpTransformation ifExpTransformation = new IfExpTransformation(transAssistant);
-//		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
+		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 //		ILanguageIterator langIterator = new JavaLanguageIterator(transAssistant, nameGen, varPrefixes);
 //		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, varPrefixes, transAssistant, consExists1CounterData(), langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
 //		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transAssistant, new PatternMatchConfig(), CASES_EXP_NAME_PREFIX);
 //		PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transAssistant, new JavaValueSemanticsTag(false));
 //		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
 //		IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
-//		SeqConversionTransformation seqConversionTransformation = new SeqConversionTransformation(transAssistant);
+		SeqConversionTransformation seqConversionTransformation = new SeqConversionTransformation(transAssistant);
 //		TracesTransformation tracesTransformation = new TracesTransformation(irInfo, classes, transAssistant, varPrefixes, traceNamePrefixes, langIterator, new JavaCallStmToStringBuilder());
 //		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER);
 //		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
@@ -126,7 +126,7 @@ public class XTransSeries {
 		transformations.add(typeTrans);
 		transformations.add(setTrans);
 		transformations.add(seqTrans);
-		transformations.add(assignTransformation);
+		//transformations.add(assignTransformation);
 		
 //		transformations.add(divideTrans);
 
@@ -146,7 +146,7 @@ public class XTransSeries {
 //		transformations.add(concurrencytransform);
 //		transformations.add(mutexTransform);
 //		transformations.add(mainclassTransform);
-//		transformations.add(seqConversionTransformation);
+		transformations.add(seqConversionTransformation);
 //		transformations.add(instanceVarPPEval);
 //		transformations.add(recTransformation);
 

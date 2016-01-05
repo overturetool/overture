@@ -1,14 +1,16 @@
-#set( $exp = $XFormat.format($node.getExp()))
+seqHd($XFormat.format($node.getExp()))
+
+##set( $exp = $XFormat.format($node.getExp()))
 ##
-#if ($XFormat.isStringType($node.getExp().getType()))
-	#set( $getCall = ".charAt(0)")
-	${exp}${getCall}
-#else
-	#set( $getCall = ".get(0)")
-	#set ($call = "(($XFormat.format($node.getType())) ${exp}${getCall})")
-	#if ($ValueSemantics.shouldClone($node))
-		Utils.copy(${call})
-	#else
-		${call}
-	#end	
-#end
+##if ($XFormat.isStringType($node.getExp().getType()))
+##	#set( $getCall = ".charAt(0)")
+##	${exp}${getCall}
+###else
+##	#set( $getCall = ".get(0)")
+##	#set ($call = "(($XFormat.format($node.getType())) ${exp}${getCall})")
+##	#if ($ValueSemantics.shouldClone($node))
+##		Utils.copy(${call})
+##	#else
+##		${call}
+##	#end	
+###end
