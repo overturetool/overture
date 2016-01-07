@@ -116,4 +116,13 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 		
 		return str;
 	}
+
+	@Override
+	public AApplyExpCG toStringOf(SExpCG exp)
+	{
+		AApplyExpCG utilsToStrCall = consUtilsToStringCall();
+		utilsToStrCall.getArgs().add(exp);
+		
+		return utilsToStrCall;
+	}
 }
