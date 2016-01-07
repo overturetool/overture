@@ -5,13 +5,20 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AClassHeaderDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
@@ -24,13 +31,24 @@ import org.overture.codegen.utils.GeneralUtils;
 public class XFormat {
 
 	private MergeVisitor mergeVisitor;
-
-	public XFormat(TempVarPrefixes varPrefixes) {
+	private IRInfo info;
+	private int number = 0;
+	
+	
+	public String getNumber(){
+		number = number +1;
+		
+		return Integer.toString(number-1);
+	}
+	
+	
+	public XFormat(TempVarPrefixes varPrefixes, IRInfo info) {
 		TemplateManager templateManager = new TemplateManager(
 				new TemplateStructure("MyTemplates"));
 		TemplateCallable[] templateCallables = new TemplateCallable[] { new TemplateCallable(
 				"XFormat", this) };
 		this.mergeVisitor = new MergeVisitor(templateManager, templateCallables);
+		this.info=info;
 	}
 
 	public String format(INode node) throws AnalysisException {
@@ -40,14 +58,20 @@ public class XFormat {
 		return writer.toString();
 	}
 
-	private String format(INode node, boolean ignoreContext)
-			throws AnalysisException
+	public boolean isSeqType(SExpCG exp)
 	{
-		StringWriter writer = new StringWriter();
-		node.apply(mergeVisitor, writer);
-
-		return "hi";//writer.toString() + "";//getNumberDereference(node, ignoreContext);
+		return info.getAssistantManager().getTypeAssistant().isSeqType(exp);
 	}
+	
+	public Boolean isClassType(AFormalParamLocalParamCG fp){
+		return fp.getTag()=="class";
+	}
+	
+	public String getEnclosingClass(AFormalParamLocalParamCG fp){
+		return fp.getAncestor(AClassDeclCG.class).getName().toString() + "CLASS";
+	}
+	
+	
 	
 	public String format(SExpCG exp, boolean leftChild)
 			throws AnalysisException
@@ -124,6 +148,27 @@ public class XFormat {
 		return writer.toString();
 	}
 	
+	public boolean isClass(INode node)
+	{
+		return node != null && node instanceof AClassDeclCG;
+	}
+	
+	public String getClassNameId(AIdentifierVarExpCG id){
+		
+		org.overture.ast.node.INode vdm = id.getSourceNode().getVdmNode();
+		
+		if (vdm instanceof AVariableExp && ((AVariableExp)vdm).getVardef() instanceof AInstanceVariableDefinition)
+		{
+			AVariableExp var = ((AVariableExp)vdm);
+			String cl = var.getVardef().getClassDefinition().getName().getName();
+			String fieldName = var.getName().getName().toString();
+			String bcl = cl;
+			return "GET_FIELD_PTR(" + cl + ","+ bcl + "," + "this" + "," + fieldName + ")";
+		}
+		
+		return id.getName().toString();
+	}
+	
 	public String formatArgs(List<? extends SExpCG> exps)
 			throws AnalysisException {
 		StringWriter writer = new StringWriter();
@@ -183,5 +228,17 @@ public class XFormat {
 	
 	public String getTVPtype(){
 		return "TVP";
+	}
+	
+	public String getIncludeClassName(AClassDeclCG cl){
+		return "\"" + cl.getName().toString() + ".h\"";
+	}
+	
+	public String getClassName(AClassDeclCG cl){
+		return cl.getName().toString();
+	}
+	
+	public String getClassHeaderName(AClassHeaderDeclCG ch){
+		return ch.getName().toString();
 	}
 }
