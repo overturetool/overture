@@ -1,1 +1,1 @@
-$node.getValue()
+newReal($node.getValue())
