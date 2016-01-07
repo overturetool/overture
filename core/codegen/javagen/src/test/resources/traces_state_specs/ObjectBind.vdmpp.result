@@ -42,6 +42,9 @@ public class Entry implements java.io.Serializable {
 
         RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_1, 1L, 3L);
 
+        repeat_1.addVarFirst(new TraceVariable("a", "Entry",
+                Utils.toString(((Entry) store.getValue(ID_1)))));
+
         sequence_1.add(repeat_1);
 
         TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);

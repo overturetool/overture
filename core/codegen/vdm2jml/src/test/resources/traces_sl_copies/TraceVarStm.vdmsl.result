@@ -117,6 +117,10 @@ final public class Entry implements java.io.Serializable {
         sequence_2.add(apply_1);
         sequence_2.add(apply_2);
         sequence_2.add(repeat_1);
+        sequence_2.addVarFirst(new TraceVariable("b", "nat",
+                Utils.toString(((Number) store.getValue(ID_3)))));
+        sequence_2.addVarFirst(new TraceVariable("a", "nat",
+                Utils.toString(((Number) store.getValue(ID_2)))));
 
         sequence_1.add(sequence_2);
 

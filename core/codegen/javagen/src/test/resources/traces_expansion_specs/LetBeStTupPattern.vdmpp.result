@@ -76,6 +76,10 @@ public class Entry implements java.io.Serializable {
 
             RepeatTraceNode repeat_1 = new RepeatTraceNode(sequence_2, 1L, 2L);
 
+            repeat_1.addVarFirst(new TraceVariable("b", "nat1",
+                    Utils.toString(b)));
+            repeat_1.addVarFirst(new TraceVariable("a", "nat1",
+                    Utils.toString(a)));
             alternatives_2.add(repeat_1);
         }
 

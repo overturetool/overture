@@ -60,6 +60,8 @@ public class Entry implements java.io.Serializable {
             concurrent_1.add(apply_1);
             concurrent_1.add(apply_2);
 
+            concurrent_1.addVarFirst(new TraceVariable("x", "nat1",
+                    Utils.toString(x)));
             alternatives_2.add(concurrent_1);
         }
 

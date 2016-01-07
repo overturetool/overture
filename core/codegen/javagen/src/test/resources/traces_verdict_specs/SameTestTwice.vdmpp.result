@@ -74,6 +74,8 @@ public class Entry implements java.io.Serializable {
         alternatives_2.add(apply_2);
 
         sequence_2.add(alternatives_2);
+        sequence_2.addVarFirst(new TraceVariable("a", "Entry",
+                Utils.toString(((Entry) store.getValue(ID_1)))));
 
         sequence_1.add(sequence_2);
 

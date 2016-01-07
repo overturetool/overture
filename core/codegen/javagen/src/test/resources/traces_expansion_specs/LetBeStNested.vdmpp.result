@@ -75,9 +75,13 @@ public class Entry implements java.io.Serializable {
                 sequence_2.add(apply_1);
                 sequence_2.add(apply_2);
 
+                sequence_2.addVarFirst(new TraceVariable("b", "Entry",
+                        Utils.toString(b)));
                 alternatives_3.add(sequence_2);
             }
 
+            alternatives_3.addVarFirst(new TraceVariable("a", "Entry",
+                    Utils.toString(a)));
             alternatives_2.add(alternatives_3);
         }
 

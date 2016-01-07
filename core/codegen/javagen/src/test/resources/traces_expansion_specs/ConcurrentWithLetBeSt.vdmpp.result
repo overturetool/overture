@@ -51,6 +51,8 @@ public class Entry implements java.io.Serializable {
 
             StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
 
+            apply_1.addVarFirst(new TraceVariable("e1", "Entry",
+                    Utils.toString(e1)));
             alternatives_2.add(apply_1);
         }
 
@@ -75,6 +77,8 @@ public class Entry implements java.io.Serializable {
 
             StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
 
+            apply_2.addVarFirst(new TraceVariable("e2", "Entry",
+                    Utils.toString(e2)));
             alternatives_3.add(apply_2);
         }
 

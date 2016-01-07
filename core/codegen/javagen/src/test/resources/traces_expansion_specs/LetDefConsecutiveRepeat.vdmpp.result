@@ -50,6 +50,9 @@ public class Entry implements java.io.Serializable {
 
         RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_1, 1L, 2L);
 
+        repeat_1.addVarFirst(new TraceVariable("e1", "Entry",
+                Utils.toString(((Entry) store.getValue(ID_1)))));
+
         final Number ID_2 = gen.inc();
 
         {
@@ -70,6 +73,9 @@ public class Entry implements java.io.Serializable {
         StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
 
         RepeatTraceNode repeat_2 = new RepeatTraceNode(apply_2, 1L, 2L);
+
+        repeat_2.addVarFirst(new TraceVariable("e2", "Entry",
+                Utils.toString(((Entry) store.getValue(ID_2)))));
 
         sequence_1.add(repeat_1);
         sequence_1.add(repeat_2);
