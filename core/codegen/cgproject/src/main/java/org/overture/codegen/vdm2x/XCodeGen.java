@@ -1,13 +1,22 @@
 package org.overture.codegen.vdm2x;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AClassHeaderDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRInfo;
@@ -74,7 +83,7 @@ public class XCodeGen extends CodeGenBase {
 		//templateManager = new TemplateManager(new TemplateStructure("MyTemplates"));
 		//MergeVisitor mergeVisitor = new MergeVisitor(templateManager, new TemplateCallable[]{new TemplateCallable("CGh", new CGHelper())});
 		
-		XFormat my_formatter = new XFormat(varPrefixes);
+		XFormat my_formatter = new XFormat(varPrefixes,generator.getIRInfo());
 		
 		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
 		
@@ -103,7 +112,18 @@ public class XCodeGen extends CodeGenBase {
 		{
 			StringWriter writer = new StringWriter();
 			AClassDeclCG classCg = status.getIrNode();
-
+			
+			try {
+				printClass(classCg, my_formatter);
+				generateClassHeader(classCg, my_formatter);
+			} catch (org.overture.codegen.cgast.analysis.AnalysisException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 			try {
 				classCg.apply(my_formatter.GetMergeVisitor(), writer);
 				
@@ -140,5 +160,69 @@ public class XCodeGen extends CodeGenBase {
 		}
 
 		return classDecls;
+	}
+	
+	private AClassHeaderDeclCG createClassHeader(AClassDeclCG ch)
+	{
+		AClassHeaderDeclCG res = new AClassHeaderDeclCG();
+		
+		res.setMethods((List<? extends AMethodDeclCG>) ch.getMethods().clone());
+		
+		return res;
+	}
+	
+	public boolean isNull(INode node)
+	{
+		return node == null;
+	}
+	
+	private void generateClassHeader(AClassDeclCG cl, XFormat my_formatter) throws IOException, org.overture.codegen.cgast.analysis.AnalysisException{
+		
+		AClassHeaderDeclCG ch = new AClassHeaderDeclCG();
+		
+		for(AFieldDeclCG fi: cl.getFields()){
+			fi.getAccess();
+			fi.getInitial();
+		}
+		
+		ch.setMethods((List<? extends AMethodDeclCG>) cl.getMethods().clone());
+		ch.setFields((List<? extends AFieldDeclCG>) cl.getFields().clone());
+		for(AMethodDeclCG m : ch.getMethods()){
+			m.setBody(null);
+			//m.getSourceNode().getVdmNode();
+		}
+		
+	
+		
+		ch.setName(cl.getName().toString());
+		StringWriter writer = new StringWriter();
+		ch.apply(my_formatter.GetMergeVisitor(), writer);
+		
+		String output_dir = "/Users/Miran/Documents/files/";
+		
+		// Print the class
+		File file = new File(
+				output_dir + cl.getName() + ".h");
+		BufferedWriter output = new BufferedWriter(new FileWriter(file));
+		output.write(writer.toString());
+		output.close();
+	}
+	
+	private void printClass(AClassDeclCG cl, XFormat my_formatter) throws org.overture.codegen.cgast.analysis.AnalysisException, IOException{
+		StringWriter writer = new StringWriter();
+		cl.apply(my_formatter.GetMergeVisitor(), writer);
+		
+		String output_dir = "/Users/Miran/Documents/files/";
+		
+		// Print the class
+		File file = new File(
+				output_dir + cl.getName() + ".c");
+		BufferedWriter output = new BufferedWriter(new FileWriter(file));
+		output.write(writer.toString());
+		output.close();
+	}
+	
+	private void printClassHeader(AClassHeaderDeclCG ch, XFormat my_formatter){
+		
 	}
 }
