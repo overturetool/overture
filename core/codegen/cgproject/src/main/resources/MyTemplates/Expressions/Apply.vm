@@ -8,18 +8,7 @@
 #if ($XFormat.isSeqType($node.getRoot()) && $node.getArgs().size() == 1)
 ##
 	#set( $index = $XFormat.format($node.getArgs().get(0)))
-	#set ( $seqRead = "" )
-	#if ($XFormat.castNotNeeded($node.getType()))
-		#set ( $seqRead = "Utils.get(${root},${index})" )
-	#else
-		#set ( $seqRead = "(($XFormat.format($node.getType())) Utils.get(${root},${index}))" )
-	#end
-##
-	#if ($ValueSemantics.shouldClone($node))
-		Utils.copy(${seqRead})
-	#else
-		${seqRead}
-	#end
+seqIndex(${root},${index})
 ##
 #elseif ($XFormat.isMapType($node.getRoot()) && $node.getArgs().size() == 1)
 	#set( $key = $XFormat.format($node.getArgs().get(0)))

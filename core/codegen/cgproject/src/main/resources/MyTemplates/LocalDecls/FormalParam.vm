@@ -1,1 +1,2 @@
-$XFormat.format($node.getType()) $XFormat.format($node.getPattern())
+#if($XFormat.isClassType($node))
+$XFormat.getEnclosingClass($node) $XFormat.format($node.getPattern())#else $XFormat.format($node.getType()) $XFormat.format($node.getPattern())#end
