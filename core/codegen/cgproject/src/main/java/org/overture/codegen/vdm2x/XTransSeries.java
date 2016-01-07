@@ -1,24 +1,9 @@
 package org.overture.codegen.vdm2x;
 
-import static org.overture.codegen.ir.CodeGenBase.AND_EXP_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.APPLY_EXP_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.CALL_STM_OBJ_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.CASES_EXP_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.CASES_EXP_RESULT_NAME_PREFIX;
 import static org.overture.codegen.ir.CodeGenBase.EVAL_METHOD_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.FUNC_RESULT_NAME_PREFIX;
 import static org.overture.codegen.ir.CodeGenBase.INTERFACE_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.IS_EXP_SUBJECT_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.MISSING_MEMBER;
-import static org.overture.codegen.ir.CodeGenBase.MISSING_OP_MEMBER;
-import static org.overture.codegen.ir.CodeGenBase.OBJ_EXP_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.OR_EXP_NAME_PREFIX;
 import static org.overture.codegen.ir.CodeGenBase.PARAM_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.POST_CHECK_METHOD_NAME;
-import static org.overture.codegen.ir.CodeGenBase.REC_MODIFIER_NAME_PREFIX;
 import static org.overture.codegen.ir.CodeGenBase.TEMPLATE_TYPE_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.TERNARY_IF_EXP_NAME_PREFIX;
-import static org.overture.codegen.ir.CodeGenBase.WHILE_COND_NAME_PREFIX;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,37 +13,18 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.traces.TraceNames;
-import org.overture.codegen.traces.TracesTransformation;
 import org.overture.codegen.trans.AssignStmTransformation;
 import org.overture.codegen.trans.CallObjStmTransformation;
-import org.overture.codegen.trans.DivideTransformation;
-import org.overture.codegen.trans.IPostCheckCreator;
-import org.overture.codegen.trans.IsExpTransformation;
-import org.overture.codegen.trans.PostCheckTransformation;
-import org.overture.codegen.trans.PreCheckTransformation;
-import org.overture.codegen.trans.PrePostTransformation;
 import org.overture.codegen.trans.SeqConversionTransformation;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.TransformationVisitor;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
-import org.overture.codegen.trans.conc.InstanceVarPPEvalTransformation;
-import org.overture.codegen.trans.conc.MainClassConcTransformation;
-import org.overture.codegen.trans.conc.MutexDeclTransformation;
-import org.overture.codegen.trans.conc.SentinelTransformation;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.funcvalues.FunctionValueTransformation;
-import org.overture.codegen.trans.iterator.ILanguageIterator;
-import org.overture.codegen.trans.iterator.JavaLanguageIterator;
 import org.overture.codegen.trans.letexps.FuncTransformation;
-import org.overture.codegen.trans.letexps.IfExpTransformation;
-import org.overture.codegen.trans.patterns.PatternMatchConfig;
-import org.overture.codegen.trans.patterns.PatternTransformation;
-import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 import org.overture.codegen.vdm2x.transformations.MethodParamTransformation;
 import org.overture.codegen.vdm2x.transformations.VdmBasicTypesCppTrans;
 import org.overture.codegen.vdm2x.transformations.VdmSeqCppTrans;
 import org.overture.codegen.vdm2x.transformations.VdmSetCppTrans;
-import org.overture.codegen.vdm2x.transformations.MethodParamTransformation;
 
 public class XTransSeries {
 

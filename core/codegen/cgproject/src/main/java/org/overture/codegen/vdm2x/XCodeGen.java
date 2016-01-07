@@ -15,11 +15,9 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AClassHeaderDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
@@ -198,11 +196,12 @@ public class XCodeGen extends CodeGenBase {
 		StringWriter writer = new StringWriter();
 		ch.apply(my_formatter.GetMergeVisitor(), writer);
 		
-		String output_dir = "/Users/Miran/Documents/files/";
+		File output_dir =new File( "target/xgen".replace('/', File.separatorChar));
+		output_dir.mkdirs();
 		
 		// Print the class
 		File file = new File(
-				output_dir + cl.getName() + ".h");
+				output_dir , cl.getName() + ".h");
 		BufferedWriter output = new BufferedWriter(new FileWriter(file));
 		output.write(writer.toString());
 		output.close();
@@ -212,11 +211,12 @@ public class XCodeGen extends CodeGenBase {
 		StringWriter writer = new StringWriter();
 		cl.apply(my_formatter.GetMergeVisitor(), writer);
 		
-		String output_dir = "/Users/Miran/Documents/files/";
+		File output_dir =new File( "target/xgen".replace('/', File.separatorChar));
+		output_dir.mkdirs();
 		
 		// Print the class
 		File file = new File(
-				output_dir + cl.getName() + ".c");
+				output_dir , cl.getName() + ".c");
 		BufferedWriter output = new BufferedWriter(new FileWriter(file));
 		output.write(writer.toString());
 		output.close();
