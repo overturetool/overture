@@ -272,7 +272,9 @@ public class ExpAssistantCG extends AssistantBase
 	public AQuoteLiteralExpCG consQuoteLiteral(String value)
 	{
 		AQuoteLiteralExpCG quoteLiteral = new AQuoteLiteralExpCG();
-		quoteLiteral.setType(new AQuoteTypeCG());
+		AQuoteTypeCG type = new AQuoteTypeCG();
+		type.setValue(value);
+		quoteLiteral.setType(type);
 		quoteLiteral.setValue(value);
 
 		return quoteLiteral;
