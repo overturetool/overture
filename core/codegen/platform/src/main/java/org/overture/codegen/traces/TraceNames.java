@@ -227,11 +227,6 @@ public class TraceNames
 		return "TraceVariable";
 	}
 	
-	public String addVarMethodName()
-	{
-		return "addVar";
-	}
-	
 	public String addVarFirstMethodName()
 	{
 		return "addVarFirst";

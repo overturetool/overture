@@ -40,11 +40,6 @@ public abstract class TraceNode
 		this.traceVars = new CallSequence();
 	}
 	
-	public void addVar(TraceVariable var)
-	{
-		this.traceVars.add(var);
-	}
-	
 	public void addVarFirst(TraceVariable var)
 	{
 		this.traceVars.add(0, var);

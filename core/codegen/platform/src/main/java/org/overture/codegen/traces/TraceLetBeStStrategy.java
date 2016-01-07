@@ -161,7 +161,7 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 
 		for (int i = traceVars.size() - 1; i >= 0; i--)
 		{
-			block.getStatements().add(builder.consAddTraceVarCall(subject, traceVars.get(i), true));
+			block.getStatements().add(builder.consAddTraceVarCall(subject, traceVars.get(i)));
 		}
 
 		// E.g. alternatives_2.add(apply_1)

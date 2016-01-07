@@ -292,7 +292,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		{
 			AIdentifierVarExpCG a = traceVars.get(i);
 			
-			ACallObjectExpStmCG addVar = consAddTraceVarCall(bodyNodeData.getNodeVar(), a, true);
+			ACallObjectExpStmCG addVar = consAddTraceVarCall(bodyNodeData.getNodeVar(), a);
 			useStoreLookups(addVar);
 			bodyNodeData.getStms().getStatements().add(addVar);
 		}
@@ -808,7 +808,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		return getTransAssist().wrap(getTransAssist().consDecl(varName, classType.clone(), newExp));
 	}
 
-	public ACallObjectExpStmCG consAddTraceVarCall(AIdentifierVarExpCG subject, AIdentifierVarExpCG t, boolean addFirst)
+	public ACallObjectExpStmCG consAddTraceVarCall(AIdentifierVarExpCG subject, AIdentifierVarExpCG t)
 	{
 		ANewExpCG newVar = new ANewExpCG();
 		newVar.setName(getTransAssist().consTypeNameForClass(traceTrans.getTracePrefixes().traceVarClassName()));
@@ -818,10 +818,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		newVar.getArgs().add(getInfo().getExpAssistant().consStringLiteral("" + getTransAssist().getInfo().getTypeAssistant().getVdmType(t.getType()), false));
 		newVar.getArgs().add(traceTrans.getToStringBuilder().toStringOf(t.clone()));
 		
-		String add = addFirst ? traceTrans.getTracePrefixes().addVarFirstMethodName()
-				: traceTrans.getTracePrefixes().addVarMethodName();
-		
-		return getTransAssist().consInstanceCallStm(subject.getType(), subject.getName(), add, newVar);
+		return getTransAssist().consInstanceCallStm(subject.getType(), subject.getName(), traceTrans.getTracePrefixes().addVarFirstMethodName(), newVar);
 	}
 
 	private TransAssistantCG getTransAssist()
