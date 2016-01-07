@@ -23,10 +23,10 @@
 
 package org.overture.codegen.runtime.traces;
 
-import java.util.Vector;
+import java.util.LinkedList;
 
 @SuppressWarnings("serial")
-public class CallSequence extends Vector<Statement>
+public class CallSequence extends LinkedList<Statement>
 {
 	private int filtered = 0;
 
