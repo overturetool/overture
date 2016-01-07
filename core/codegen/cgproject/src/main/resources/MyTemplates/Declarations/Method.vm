@@ -1,4 +1,6 @@
-#if(!$node.getIsConstructor())$node.getMethodType().getResult()#end $node.getName()( $XFormat.format($node.getFormalParams()))
-{
-$XFormat.format($node.getBody())
+static TVP $node.getName()($XFormat.format($node.getFormalParams()))#if($XFormat.isNull($node.getBody()));
+#end
+#if(!$XFormat.isNull($node.getBody())){
+	$XFormat.format($node.getBody())
 }
+#end

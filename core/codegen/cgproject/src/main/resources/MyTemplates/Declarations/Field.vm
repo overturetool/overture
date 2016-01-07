@@ -1,1 +1,1 @@
-$XFormat.format($node.getType()) $node.getName(); // $node
+not used
