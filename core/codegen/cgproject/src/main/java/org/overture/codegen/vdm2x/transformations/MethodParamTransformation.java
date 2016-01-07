@@ -7,6 +7,7 @@ import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
@@ -29,16 +30,14 @@ public class MethodParamTransformation extends DepthFirstAnalysisAdaptor{
 		LinkedList<AFormalParamLocalParamCG> formalPar = node.getFormalParams();
 		
 		LinkedList<AFormalParamLocalParamCG> f = new LinkedList<>();
-		
-		System.out.println("Method name is " + node.getName());
-		
+				
 		AFormalParamLocalParamCG cl = new AFormalParamLocalParamCG();
 		AIdentifierPatternCG id = new AIdentifierPatternCG();
 		
 		AIntNumericBasicTypeCG ty = new AIntNumericBasicTypeCG();
 		
-		
-		cl.setTag("this");
+		// Create the special new parameter for each operation
+		cl.setTag("class");
 		id.setName("this"); // This one gets printed
 		cl.setPattern(id);
 		cl.setType(ty);

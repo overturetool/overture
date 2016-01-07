@@ -123,9 +123,9 @@ public class XTransSeries {
 		// Set up order of transformations
 		List<DepthFirstAnalysisAdaptor> transformations = new LinkedList<DepthFirstAnalysisAdaptor>();
 
-		transformations.add(typeTrans);
+//		transformations.add(typeTrans);
 		transformations.add(setTrans);
-		transformations.add(seqTrans);
+//		transformations.add(seqTrans);
 		//transformations.add(assignTransformation);
 		
 //		transformations.add(divideTrans);
@@ -134,7 +134,7 @@ public class XTransSeries {
 		transformations.add(funcTransformation);
 //		transformations.add(prePostTransformation);
 //		transformations.add(ifExpTransformation);
-//		transformations.add(funcValueTransformation);
+		transformations.add(funcValueTransformation);
 //		transformations.add(transVisitor);
 //		transformations.add(tracesTransformation);
 //		transformations.add(patternTransformation);
