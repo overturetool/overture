@@ -32,6 +32,30 @@ public abstract class TraceNode
 {
 	private static final int ENCLOSING_MODULE_ID = -1;
 	private static final Object NOT_AVAILABLE = new Object();
+	
+	private CallSequence traceVars;
+	
+	public TraceNode()
+	{
+		this.traceVars = new CallSequence();
+	}
+	
+	public void addVar(TraceVariable var)
+	{
+		this.traceVars.add(var);
+	}
+	
+	public void addVarFirst(TraceVariable var)
+	{
+		this.traceVars.add(0, var);
+	}
+	
+	public CallSequence getVars()
+	{
+		CallSequence c = new CallSequence();
+		c.addAll(traceVars);
+		return c;
+	}
 
 	@Override
 	abstract public String toString();
@@ -81,7 +105,14 @@ public abstract class TraceNode
 					int callStmIdx = 0;
 					for (; callStmIdx < test.size(); callStmIdx++)
 					{
-						CallStatement callStm = test.get(callStmIdx);
+						Statement stm = test.get(callStmIdx);
+						
+						if(!(stm instanceof CallStatement))
+						{
+							continue;
+						}
+						
+						CallStatement callStm = (CallStatement) stm;
 						try
 						{
 							callStms.add(callStm.toString());
@@ -116,8 +147,7 @@ public abstract class TraceNode
 						{
 							for (int p = callStmIdx + 1; p < test.size(); p++)
 							{
-								CallStatement notCalled = test.get(callStmIdx);
-								callStms.add(notCalled.toString());
+								callStms.add(callStms.toString());
 							}
 
 							for (; callStmIdx < test.size(); callStmIdx++)

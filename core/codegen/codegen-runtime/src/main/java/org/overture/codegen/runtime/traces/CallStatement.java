@@ -1,6 +1,6 @@
 package org.overture.codegen.runtime.traces;
 
-abstract public class CallStatement
+abstract public class CallStatement implements Statement
 {
 	abstract public Object execute();
 	
