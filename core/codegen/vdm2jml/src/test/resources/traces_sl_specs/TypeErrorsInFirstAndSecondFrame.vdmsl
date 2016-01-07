@@ -1,0 +1,24 @@
+module Entry
+
+exports all
+definitions
+
+functions
+
+idBool :  bool -> bool
+idBool (x) == x;
+
+typeErrSecondFrame :  () -> int
+typeErrSecondFrame () ==
+let a : nat | bool = true
+in
+  a;
+  
+
+traces
+
+T1:
+  (let a in set {1,true} in idBool(a)) |
+  typeErrSecondFrame()
+
+end Entry
