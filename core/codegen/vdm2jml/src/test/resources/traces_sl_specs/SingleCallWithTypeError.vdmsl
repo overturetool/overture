@@ -1,0 +1,20 @@
+module Entry
+
+exports all
+definitions
+
+functions
+
+f :  bool -> bool
+f (x) == x;
+
+traces
+
+T1:
+let a in set {1,true}
+in
+  let b in set {2,false}
+  in
+    (f(a);f(b))
+
+end Entry
