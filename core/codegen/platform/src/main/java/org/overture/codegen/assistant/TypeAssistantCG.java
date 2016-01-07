@@ -38,6 +38,7 @@ import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
 import org.overture.ast.util.PTypeSet;
@@ -830,5 +831,25 @@ public class TypeAssistantCG extends AssistantBase
 					&& (type instanceof AUnknownTypeCG || BooleanUtils.isTrue(type.getOptional()) || isWrapperType(type));
 		}
 		
+	}
+	
+	public PType getVdmType(STypeCG type)
+	{
+		SourceNode source = type.getSourceNode();
+		if(source != null)
+		{
+			org.overture.ast.node.INode vdmNode = source.getVdmNode();
+			
+			if(vdmNode != null)
+			{
+				if(vdmNode instanceof PType)
+				{
+					return (PType) vdmNode;
+				}
+			}
+		}
+		
+		Logger.getLog().printErrorln("Could not get VDM type of " + type + " in '" + this.getClass().getSimpleName() + "'");
+		return new AUnknownType();
 	}
 }
