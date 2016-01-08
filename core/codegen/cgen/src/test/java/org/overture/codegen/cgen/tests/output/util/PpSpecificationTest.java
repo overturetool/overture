@@ -1,5 +1,6 @@
 package org.overture.codegen.cgen.tests.output.util;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,7 +46,7 @@ abstract public class PpSpecificationTest extends SpecificationTestBase
 			}
 		}
 
-		return vdmCodGen.generateXFromVdm(classes);
+		return vdmCodGen.generateXFromVdm(classes,new File("target/test-cgen".replace('/', File.separatorChar)));
 	}
 
 	abstract protected String getUpdatePropertyString();
