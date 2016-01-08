@@ -31,4 +31,10 @@ public class CExamplesTest
 	{
 		CGenMain.main(new String[] {"-dest",outputFolder, getPath("expressions/ExpressionNumeric.vdmrt") });
 	}
+	
+	@Test
+	public void Seq()
+	{
+		CGenMain.main(new String[] {"-dest",outputFolder, getPath("expressions/ExpressionSeq.vdmrt") });
+	}
 }
