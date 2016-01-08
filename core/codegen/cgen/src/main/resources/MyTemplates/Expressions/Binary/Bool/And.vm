@@ -1,1 +1,1 @@
-$CFormat.format($node.getLeft(), true) && $CFormat.format($node.getRight(), false)
+vdmAnd($CFormat.format($node.getLeft(), true) , $CFormat.format($node.getRight(), false))

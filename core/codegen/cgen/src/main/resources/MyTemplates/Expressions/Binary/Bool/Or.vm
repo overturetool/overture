@@ -1,1 +1,1 @@
-$CFormat.format($node.getLeft(), true) || $CFormat.format($node.getRight(), false)
+vdmOr($CFormat.format($node.getLeft(), true) , $CFormat.format($node.getRight(), false))
