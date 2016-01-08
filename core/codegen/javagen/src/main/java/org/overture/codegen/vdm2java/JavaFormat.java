@@ -125,7 +125,7 @@ public class JavaFormat
 		this.valueSemantics = new JavaValueSemantics(this);
 		this.recCreator = new JavaRecordCreator(this);
 		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, valueSemantics, recCreator);
-		this.mergeVisitor = new MergeVisitor(templateStructure, templateCallables);
+		this.mergeVisitor = new MergeVisitor(new JavaTemplateManager(templateStructure), templateCallables);
 		this.funcValAssist = null;
 		this.info = info;
 		this.javaFormatAssistant = new JavaFormatAssistant(this.info);
@@ -613,8 +613,7 @@ public class JavaFormat
 
 	public String formatSuperType(ADefaultClassDeclCG classDecl)
 	{
-		return classDecl.getSuperName() == null ? "" : "extends "
-				+ classDecl.getSuperName();
+		return classDecl.getSuperNames().isEmpty() ? "" : "extends " + classDecl.getSuperNames().get(0);
 	}
 	
 	public String formatInterfaces(ADefaultClassDeclCG classDecl)
