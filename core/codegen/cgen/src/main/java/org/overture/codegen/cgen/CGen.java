@@ -81,7 +81,7 @@ public class CGen extends CodeGenBase {
 		//templateManager = new TemplateManager(new TemplateStructure("MyTemplates"));
 		//MergeVisitor mergeVisitor = new MergeVisitor(templateManager, new TemplateCallable[]{new TemplateCallable("CGh", new CGHelper())});
 		
-		XFormat my_formatter = new XFormat(varPrefixes,generator.getIRInfo());
+		CFormat my_formatter = new CFormat(varPrefixes,generator.getIRInfo());
 		
 		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
 		
@@ -176,7 +176,7 @@ public class CGen extends CodeGenBase {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void generateClassHeader(AClassDeclCG cl, XFormat my_formatter) throws IOException, org.overture.codegen.cgast.analysis.AnalysisException{
+	private void generateClassHeader(AClassDeclCG cl, CFormat my_formatter) throws IOException, org.overture.codegen.cgast.analysis.AnalysisException{
 		
 		AClassHeaderDeclCG ch = new AClassHeaderDeclCG();
 		
@@ -209,7 +209,7 @@ public class CGen extends CodeGenBase {
 		output.close();
 	}
 	
-	private void printClass(AClassDeclCG cl, XFormat my_formatter) throws org.overture.codegen.cgast.analysis.AnalysisException, IOException{
+	private void printClass(AClassDeclCG cl, CFormat my_formatter) throws org.overture.codegen.cgast.analysis.AnalysisException, IOException{
 		StringWriter writer = new StringWriter();
 		cl.apply(my_formatter.GetMergeVisitor(), writer);
 		
@@ -224,7 +224,7 @@ public class CGen extends CodeGenBase {
 		output.close();
 	}
 	
-	private void printClassHeader(AClassHeaderDeclCG ch, XFormat my_formatter){
+	private void printClassHeader(AClassHeaderDeclCG ch, CFormat my_formatter){
 		
 	}
 }

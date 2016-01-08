@@ -27,7 +27,7 @@ import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.utils.GeneralUtils;
 
 
-public class XFormat {
+public class CFormat {
 
 	private MergeVisitor mergeVisitor;
 	private IRInfo info;
@@ -41,7 +41,7 @@ public class XFormat {
 	}
 	
 	
-	public XFormat(TempVarPrefixes varPrefixes, IRInfo info) {
+	public CFormat(TempVarPrefixes varPrefixes, IRInfo info) {
 		TemplateManager templateManager = new TemplateManager(
 				new TemplateStructure("MyTemplates"));
 		TemplateCallable[] templateCallables = new TemplateCallable[] { new TemplateCallable(
