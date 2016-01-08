@@ -613,8 +613,7 @@ public class JavaFormat
 
 	public String formatSuperType(ADefaultClassDeclCG classDecl)
 	{
-		return classDecl.getSuperName() == null ? "" : "extends "
-				+ classDecl.getSuperName();
+		return classDecl.getSuperNames().isEmpty() ? "" : "extends " + classDecl.getSuperNames().get(0);
 	}
 	
 	public String formatInterfaces(ADefaultClassDeclCG classDecl)
