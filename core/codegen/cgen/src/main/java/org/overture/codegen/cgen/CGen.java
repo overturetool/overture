@@ -27,7 +27,7 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 
 
-public class XCodeGen extends CodeGenBase {
+public class CGen extends CodeGenBase {
 	
 	public GeneratedData generateXFromVdm(List<SClassDefinition> ast)
 			throws AnalysisException
@@ -70,7 +70,7 @@ public class XCodeGen extends CodeGenBase {
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
 		
 		// Transform IR	
-		XTransSeries xTransSeries = new XTransSeries(this);
+		CTransSeries xTransSeries = new CTransSeries(this);
 		List<DepthFirstAnalysisAdaptor> transformations = xTransSeries.consAnalyses(classes, functionValueAssistant);
 		
 		// Generate IR to syntax (generate code)
@@ -160,6 +160,7 @@ public class XCodeGen extends CodeGenBase {
 		return classDecls;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private AClassHeaderDeclCG createClassHeader(AClassDeclCG ch)
 	{
 		AClassHeaderDeclCG res = new AClassHeaderDeclCG();
@@ -174,6 +175,7 @@ public class XCodeGen extends CodeGenBase {
 		return node == null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void generateClassHeader(AClassDeclCG cl, XFormat my_formatter) throws IOException, org.overture.codegen.cgast.analysis.AnalysisException{
 		
 		AClassHeaderDeclCG ch = new AClassHeaderDeclCG();

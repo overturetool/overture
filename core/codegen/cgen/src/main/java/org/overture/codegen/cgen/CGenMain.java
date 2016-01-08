@@ -11,7 +11,7 @@ import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 
-public class XGenMain {
+public class CGenMain {
 
 	public static void main(String[] args) {
 
@@ -26,7 +26,7 @@ public class XGenMain {
 			List<SClassDefinition> ast = GeneralCodeGenUtils.consClassList(
 					files, Dialect.VDM_PP);
 
-			XCodeGen xGen = new XCodeGen();
+			CGen xGen = new CGen();
 
 			GeneratedData data = xGen.generateXFromVdm(ast);
 		

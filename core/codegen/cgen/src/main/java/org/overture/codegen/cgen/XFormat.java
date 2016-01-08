@@ -77,7 +77,7 @@ public class XFormat {
 	{
 		String formattedExp = format(exp);
 
-		XPrecedence precedence = new XPrecedence();
+		CPrecedence precedence = new CPrecedence();
 
 		INode parent = exp.parent();
 

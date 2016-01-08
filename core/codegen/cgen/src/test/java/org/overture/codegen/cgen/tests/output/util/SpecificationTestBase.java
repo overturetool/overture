@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
-import org.overture.codegen.cgen.XCodeGen;
+import org.overture.codegen.cgen.CGen;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -33,7 +33,7 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 	protected static final String NAME_VIOLATION_INDICATOR = "*Name Violations*";
 	protected static final String QUOTE_INDICATOR = "*Quotes*";
 
-	protected static XCodeGen vdmCodGen = new XCodeGen();
+	protected static CGen vdmCodGen = new CGen();
 
 	public SpecificationTestBase(String nameParameter, String inputParameter,
 			String resultParameter)

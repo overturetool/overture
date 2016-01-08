@@ -26,11 +26,11 @@ import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.funcvalues.FunctionValueTransformation;
 import org.overture.codegen.trans.letexps.FuncTransformation;
 
-public class XTransSeries {
+public class CTransSeries {
 
-	private XCodeGen codeGen;
+	private CGen codeGen;
 
-	public XTransSeries(XCodeGen codeGen)
+	public CTransSeries(CGen codeGen)
 	{
 		this.codeGen = codeGen;
 	}

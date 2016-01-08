@@ -27,11 +27,11 @@ import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.ir.IROperatorInfo;
 import org.overture.codegen.ir.IROperatorLookup;
 
-public class XPrecedence
+public class CPrecedence
 {
 	public IROperatorLookup opLookup;
 
-	public XPrecedence()
+	public CPrecedence()
 	{
 		this.opLookup = new IROperatorLookup();
 	}
