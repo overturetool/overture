@@ -26,31 +26,31 @@ import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.utils.GeneralUtils;
 
-
-public class CFormat {
+public class CFormat
+{
 
 	private MergeVisitor mergeVisitor;
 	private IRInfo info;
 	private int number = 0;
-	
-	
-	public String getNumber(){
-		number = number +1;
-		
-		return Integer.toString(number-1);
-	}
-	
-	
-	public CFormat(TempVarPrefixes varPrefixes, IRInfo info) {
-		TemplateManager templateManager = new TemplateManager(
-				new TemplateStructure("MyTemplates"));
-		TemplateCallable[] templateCallables = new TemplateCallable[] { new TemplateCallable(
-				"CFormat", this) };
-		this.mergeVisitor = new MergeVisitor(templateManager, templateCallables);
-		this.info=info;
+
+	public String getNumber()
+	{
+		number = number + 1;
+
+		return Integer.toString(number - 1);
 	}
 
-	public String format(INode node) throws AnalysisException {
+	public CFormat(TempVarPrefixes varPrefixes, IRInfo info)
+	{
+		TemplateManager templateManager = new TemplateManager(new TemplateStructure("MyTemplates"));
+		TemplateCallable[] templateCallables = new TemplateCallable[] {
+				new TemplateCallable("CFormat", this) };
+		this.mergeVisitor = new MergeVisitor(templateManager, templateCallables);
+		this.info = info;
+	}
+
+	public String format(INode node) throws AnalysisException
+	{
 		StringWriter writer = new StringWriter();
 		node.apply(mergeVisitor, writer);
 
@@ -61,19 +61,19 @@ public class CFormat {
 	{
 		return info.getAssistantManager().getTypeAssistant().isSeqType(exp);
 	}
-	
-	public Boolean isClassType(AFormalParamLocalParamCG fp){
-		return fp.getTag()=="class";
+
+	public Boolean isClassType(AFormalParamLocalParamCG fp)
+	{
+		return fp.getTag() == "class";
 	}
-	
-	public String getEnclosingClass(AFormalParamLocalParamCG fp){
-		return fp.getAncestor(AClassDeclCG.class).getName().toString() + "CLASS";
+
+	public String getEnclosingClass(AFormalParamLocalParamCG fp)
+	{
+		return fp.getAncestor(AClassDeclCG.class).getName().toString()
+				+ "CLASS";
 	}
-	
-	
-	
-	public String format(SExpCG exp, boolean leftChild)
-			throws AnalysisException
+
+	public String format(SExpCG exp, boolean leftChild) throws AnalysisException
 	{
 		String formattedExp = format(exp);
 
@@ -90,14 +90,17 @@ public class CFormat {
 
 		return isolate ? "(" + formattedExp + ")" : formattedExp;
 	}
-	
-	public MergeVisitor GetMergeVisitor() {
+
+	public MergeVisitor GetMergeVisitor()
+	{
 		return mergeVisitor;
 	}
 
-	public String formatOperationBody(SStmCG body) throws AnalysisException {
+	public String formatOperationBody(SStmCG body) throws AnalysisException
+	{
 		String NEWLINE = "\n";
-		if (body == null) {
+		if (body == null)
+		{
 			return ";";
 		}
 
@@ -110,14 +113,16 @@ public class CFormat {
 		return generatedBody.toString();
 	}
 
-	private String handleOpBody(SStmCG body) throws AnalysisException {
+	private String handleOpBody(SStmCG body) throws AnalysisException
+	{
 		AMethodDeclCG method = body.getAncestor(AMethodDeclCG.class);
 
-		if (method == null) {
-			Logger.getLog().printErrorln(
-					"Could not find enclosing method when formatting operation body. Got: "
-							+ body);
-		} else if (method.getAsync() != null && method.getAsync()) {
+		if (method == null)
+		{
+			Logger.getLog().printErrorln("Could not find enclosing method when formatting operation body. Got: "
+					+ body);
+		} else if (method.getAsync() != null && method.getAsync())
+		{
 			return "new VDMThread(){ " + "\tpublic void run() {" + "\t "
 					+ format(body) + "\t} " + "}.start();";
 		}
@@ -146,40 +151,46 @@ public class CFormat {
 		}
 		return writer.toString();
 	}
-	
+
 	public boolean isClass(INode node)
 	{
 		return node != null && node instanceof AClassDeclCG;
 	}
-	
-	public String getClassNameId(AIdentifierVarExpCG id){
-		
+
+	public String getClassNameId(AIdentifierVarExpCG id)
+	{
+
 		org.overture.ast.node.INode vdm = id.getSourceNode().getVdmNode();
-		
-		if (vdm instanceof AVariableExp && ((AVariableExp)vdm).getVardef() instanceof AInstanceVariableDefinition)
+
+		if (vdm instanceof AVariableExp
+				&& ((AVariableExp) vdm).getVardef() instanceof AInstanceVariableDefinition)
 		{
-			AVariableExp var = ((AVariableExp)vdm);
+			AVariableExp var = ((AVariableExp) vdm);
 			String cl = var.getVardef().getClassDefinition().getName().getName();
 			String fieldName = var.getName().getName().toString();
 			String bcl = cl;
-			return "GET_FIELD_PTR(" + cl + ","+ bcl + "," + "this" + "," + fieldName + ")";
+			return "GET_FIELD_PTR(" + cl + "," + bcl + "," + "this" + ","
+					+ fieldName + ")";
 		}
-		
+
 		return id.getName().toString();
 	}
-	
+
 	public String formatArgs(List<? extends SExpCG> exps)
-			throws AnalysisException {
+			throws AnalysisException
+	{
 		StringWriter writer = new StringWriter();
 
-		if (exps.size() <= 0) {
+		if (exps.size() <= 0)
+		{
 			return "";
 		}
 
 		SExpCG firstExp = exps.get(0);
 		writer.append(format(firstExp));
 
-		for (int i = 1; i < exps.size(); i++) {
+		for (int i = 1; i < exps.size(); i++)
+		{
 			SExpCG exp = exps.get(i);
 			writer.append(", " + format(exp));
 		}
@@ -188,56 +199,65 @@ public class CFormat {
 	}
 
 	public List<AMethodDeclCG> getMethodsByAccess(List<AMethodDeclCG> methods,
-			String access) {
+			String access)
+	{
 		LinkedList<AMethodDeclCG> matches = new LinkedList<AMethodDeclCG>();
 
-		for (AMethodDeclCG m : methods) {
-			if (m.getAccess().equals(access)) {
+		for (AMethodDeclCG m : methods)
+		{
+			if (m.getAccess().equals(access))
+			{
 				matches.add(m);
 			}
 		}
 
 		return matches;
 	}
-	
+
 	public boolean isNull(INode node)
 	{
 		return node == null;
 	}
-	
+
 	public String escapeChar(char c)
 	{
-		return GeneralUtils.isEscapeSequence(c) ? StringEscapeUtils.escapeJavaScript(c
-				+ "")
-				: c + "";
+		return GeneralUtils.isEscapeSequence(c)
+				? StringEscapeUtils.escapeJavaScript(c + "") : c + "";
 	}
 
 	public List<AFieldDeclCG> getFieldsByAccess(List<AFieldDeclCG> fields,
-			String access) {
+			String access)
+	{
 		LinkedList<AFieldDeclCG> matches = new LinkedList<AFieldDeclCG>();
 
-		for (AFieldDeclCG f : fields) {
-			if (f.getAccess().equals(access)) {
+		for (AFieldDeclCG f : fields)
+		{
+			if (f.getAccess().equals(access))
+			{
 				matches.add(f);
 			}
 		}
 
 		return matches;
 	}
-	
-	public String getTVPtype(){
+
+	public String getTVPtype()
+	{
 		return "TVP";
 	}
-	
-	public String getIncludeClassName(AClassDeclCG cl){
+
+	public String getIncludeClassName(AClassDeclCG cl)
+	{
 		return "\"" + cl.getName().toString() + ".h\"";
 	}
-	
-	public String getClassName(AClassDeclCG cl){
+
+	public String getClassName(AClassDeclCG cl)
+	{
 		return cl.getName().toString();
 	}
-	
-	public String getClassHeaderName(AClassHeaderDeclCG ch){
+
+	public String getClassHeaderName(AClassHeaderDeclCG ch)
+	{
 		return ch.getName().toString();
 	}
 }
