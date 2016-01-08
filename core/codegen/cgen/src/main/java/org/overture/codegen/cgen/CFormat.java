@@ -10,13 +10,23 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AClassHeaderDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
+import org.overture.codegen.cgast.expressions.SBinaryExpCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
+import org.overture.codegen.cgast.types.SMapTypeCG;
+import org.overture.codegen.cgast.types.SSeqTypeCG;
+import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
@@ -33,6 +43,8 @@ public class CFormat
 	private IRInfo info;
 	private int number = 0;
 
+	public static final String UTILS_FILE = "Utils";
+	
 	public String getNumber()
 	{
 		number = number + 1;
@@ -241,6 +253,111 @@ public class CFormat
 		return matches;
 	}
 
+	public String formatEqualsBinaryExp(AEqualsBinaryExpCG node)
+			throws AnalysisException
+	{
+		STypeCG leftNodeType = node.getLeft().getType();
+
+		if (leftNodeType instanceof SSeqTypeCG || leftNodeType instanceof SSetTypeCG || leftNodeType instanceof SMapTypeCG)
+		{
+			return handleCollectionComparison(node);
+		}
+		else
+		{
+			return handleEquals(node);
+		}
+	}
+
+	public String formatNotEqualsBinaryExp(ANotEqualsBinaryExpCG node)
+			throws AnalysisException
+	{
+		ANotUnaryExpCG transformed = transNotEquals(node);
+		return formatNotUnary(transformed.getExp());
+	}
+	
+	public String formatNotUnary(SExpCG exp) throws AnalysisException
+	{
+		String formattedExp = format(exp, false);
+
+		boolean doNotWrap = exp instanceof ABoolLiteralExpCG
+				|| formattedExp.startsWith("(") && formattedExp.endsWith(")");
+
+		return doNotWrap ? "!" + formattedExp : "!(" + formattedExp + ")";
+	}
+	
+	private ANotUnaryExpCG transNotEquals(ANotEqualsBinaryExpCG notEqual)
+	{
+		ANotUnaryExpCG notUnary = new ANotUnaryExpCG();
+		notUnary.setType(new ABoolBasicTypeCG());
+
+		AEqualsBinaryExpCG equal = new AEqualsBinaryExpCG();
+		equal.setType(new ABoolBasicTypeCG());
+		equal.setLeft(notEqual.getLeft().clone());
+		equal.setRight(notEqual.getRight().clone());
+
+		notUnary.setExp(equal);
+
+		// Replace the "notEqual" expression with the transformed expression
+		INode parent = notEqual.parent();
+
+		// It may be the case that the parent is null if we execute e.g. [1] <> [1] in isolation
+		if (parent != null)
+		{
+			parent.replaceChild(notEqual, notUnary);
+			notEqual.parent(null);
+		}
+
+		return notUnary;
+	}
+
+	private String handleEquals(AEqualsBinaryExpCG valueType)
+			throws AnalysisException
+	{
+		return String.format("%s.equals(%s, %s)", UTILS_FILE, format(valueType.getLeft()), format(valueType.getRight()));
+	}
+
+	private String handleCollectionComparison(SBinaryExpCG node) throws AnalysisException
+	{
+		// In VDM the types of the equals are compatible when the AST passes the type check
+		SExpCG leftNode = node.getLeft();
+		SExpCG rightNode = node.getRight();
+
+		final String EMPTY = ".isEmpty()";
+
+		if (isEmptyCollection(leftNode.getType()))
+		{
+			return format(node.getRight()) + EMPTY;
+		} else if (isEmptyCollection(rightNode.getType()))
+		{
+			return format(node.getLeft()) + EMPTY;
+		}
+
+		return UTILS_FILE + ".equals(" + format(node.getLeft()) + ", "
+				+ format(node.getRight()) + ")";
+	}
+	
+	private boolean isEmptyCollection(STypeCG type)
+	{
+		if (type instanceof SSeqTypeCG)
+		{
+			SSeqTypeCG seq = (SSeqTypeCG) type;
+
+			return seq.getEmpty();
+		} else if (type instanceof SSetTypeCG)
+		{
+			SSetTypeCG set = (SSetTypeCG) type;
+
+			return set.getEmpty();
+		} else if (type instanceof SMapTypeCG)
+		{
+			SMapTypeCG map = (SMapTypeCG) type;
+
+			return map.getEmpty();
+		}
+
+		return false;
+	}
+	
 	public String getTVPtype()
 	{
 		return "TVP";
