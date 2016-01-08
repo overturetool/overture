@@ -1,8 +1,10 @@
 package org.overture.codegen.cgen;
 
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
@@ -42,6 +44,21 @@ public class CFormat
 	private MergeVisitor mergeVisitor;
 	private IRInfo info;
 	private int number = 0;
+	
+	private long nextClassId = 0;
+	private Map<String,Long> classIds = new HashMap<String,Long>();
+	
+	public String getClassId(String name)
+	{
+		if(classIds.containsKey(name))
+			return classIds.get(name).toString();;
+		
+		Long id = nextClassId;
+		classIds.put(name, id);
+		nextClassId++;
+		return id.toString();
+		
+	}
 
 	public static final String UTILS_FILE = "Utils";
 	

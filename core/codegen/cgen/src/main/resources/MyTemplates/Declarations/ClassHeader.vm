@@ -8,6 +8,7 @@
 \#include "lib/VdmClass.h"
 \#include "lib/VdmBasicTypes.h"
 
+\#define CLASS_ID_$CFormat.getClassHeaderName($node)_ID $CFormat.getClassId($CFormat.getClassHeaderName($node))
 
 \#define $CFormat.getClassHeaderName($node)CLASS struct $CFormat.getClassHeaderName($node)*
 
