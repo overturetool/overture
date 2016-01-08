@@ -26,7 +26,7 @@ public class VdmSetCppTrans extends DepthFirstAnalysisAdaptor {
 	
 	public VdmSetCppTrans(BaseTransformationAssistant baseAss) {
 		// TODO Auto-generated constructor stub
-		System.out.println("Set transform");
+		//System.out.println("Set transform");
 		baseAssistant = baseAss;
 	}
 	

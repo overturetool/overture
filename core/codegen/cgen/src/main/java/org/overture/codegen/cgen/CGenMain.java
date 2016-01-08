@@ -21,11 +21,10 @@ public class CGenMain {
 	private static final String PRINT_ARG = "-print";
 	public static final String OUTPUT_ARG = "-output";
 	private static String output_folder = null;
-	
+
 	public static void main(String[] args) {
 
-		if (args == null || args.length < 1)
-		{
+		if (args == null || args.length < 1) {
 			usage("Expected one or more arguments");
 			return;
 		}
@@ -34,89 +33,72 @@ public class CGenMain {
 		List<File> files = new LinkedList<File>();
 		File outputDir = null;
 		boolean print = false;
-		
-		//File file = new File(args[0]);
 
-		//List<File> files = new LinkedList<>();
-		//files.add(file);
+		// File file = new File(args[0]);
 
-		
-		for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
-		{
+		// List<File> files = new LinkedList<>();
+		// files.add(file);
+
+		for (Iterator<String> i = listArgs.iterator(); i.hasNext();) {
 			String arg = i.next();
-			
-			if (arg.equals(OUTPUT_ARG))
-			{
-				if (i.hasNext())
-				{
+
+			if (arg.equals(OUTPUT_ARG)) {
+				if (i.hasNext()) {
 					outputDir = new File(i.next());
 					outputDir.mkdirs();
 					output_folder = outputDir.toString();
-					
-					if (!outputDir.isDirectory())
-					{
+
+					if (!outputDir.isDirectory()) {
 						usage(outputDir + " is not a directory");
 					}
 
-				} else
-				{
+				} else {
 					usage(OUTPUT_ARG + " requires a directory");
 				}
-			}
-			else if (arg.equals(PRINT_ARG))
-			{
+			} else if (arg.equals(PRINT_ARG)) {
 				print = true;
-			} 
-			else if (arg.equals(FOLDER_ARG))
-			{
-				if (i.hasNext())
-				{
+			} else if (arg.equals(FOLDER_ARG)) {
+				if (i.hasNext()) {
 					File path = new File(i.next());
 
-					if (path.isDirectory())
-					{
+					if (path.isDirectory()) {
 						files.addAll(filterFiles(GeneralUtils.getFiles(path)));
-					} else
-					{
+					} else {
 						usage("Could not find path: " + path);
 					}
-				} else
-				{
+				} else {
 					usage(FOLDER_ARG + " requires a directory");
 				}
-			}
-			else
-			{
+			} else {
 				// It's a file or a directory
 				File file = new File(arg);
 
-				if (file.isFile())
-				{
-					if (isRtFile(file))
-					{
+				if (file.isFile()) {
+					if (isRtFile(file)) {
 						files.add(file);
 					}
-				} else
-				{
+				} else {
 					usage("Not a file: " + file);
 				}
 			}
 		}
-	
+
 		try {
-			List<SClassDefinition> ast = GeneralCodeGenUtils.consClassList(
-					files, Dialect.VDM_RT);
+			List<SClassDefinition> ast = GeneralCodeGenUtils.consClassList(files, Dialect.VDM_RT);
 
 			CGen cGen = new CGen();
 
 			GeneratedData data = cGen.generateCFromVdm(ast, output_folder);
-			for (GeneratedModule module : data.getClasses()) {
-				
-				if (module.canBeGenerated()) {
-					System.out.println(module.getContent());
-					System.out.println(module.getUnsupportedInIr());
-					System.out.println(module.getMergeErrors());
-					System.out.println(module.getUnsupportedInTargLang());
+
+			System.out.println("Generation complete");
+			if (print) {
+				for (GeneratedModule module : data.getClasses()) {
+					if (module.canBeGenerated()) {
+						System.out.println(module.getContent());
+						System.out.println(module.getUnsupportedInIr());
+						System.out.println(module.getMergeErrors());
+						System.out.println(module.getUnsupportedInTargLang());
+					}
 				}
 			}
 
@@ -126,29 +108,24 @@ public class CGenMain {
 		}
 
 	}
-	
-	public static List<File> filterFiles(List<File> files)
-	{
+
+	public static List<File> filterFiles(List<File> files) {
 		List<File> filtered = new LinkedList<File>();
-		
-		for(File f : files)
-		{
-			if(isRtFile(f))
-			{
+
+		for (File f : files) {
+			if (isRtFile(f)) {
 				filtered.add(f);
 			}
 		}
-		
+
 		return filtered;
 	}
 
-	private static boolean isRtFile(File f)
-	{
+	private static boolean isRtFile(File f) {
 		return f.getName().endsWith(".vdmrt") || f.getName().endsWith(".vrt");
 	}
-	
-	private static void usage(String msg)
-	{
+
+	private static void usage(String msg) {
 		Logger.getLog().printErrorln("VDM-RT to C generator: " + msg + "\n");
 		Logger.getLog().printErrorln("Usage: vdm2c [<options>] [<VDM-RT files>]");
 		Logger.getLog().printErrorln(PRINT_ARG + ": print the generated code to the console");

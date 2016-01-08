@@ -46,7 +46,6 @@ public class CGen extends CodeGenBase {
 		{	
 			// Try to produce the IR
 			IRStatus<org.overture.codegen.cgast.INode> status = generator.generateFrom(node);
-			System.out.println("Running..");
 			
 			// If it was successful, then status is different from null
 			if(status != null)
