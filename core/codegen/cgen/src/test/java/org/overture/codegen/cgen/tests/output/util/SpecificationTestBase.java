@@ -1,4 +1,4 @@
-package org.overture.codegen.tests.output.util;
+package org.overture.codegen.cgen.tests.output.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
+import org.overture.codegen.cgen.XCodeGen;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -17,7 +18,6 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 //import org.overture.codegen.vdm2java.JavaCodeGen;
 //import org.overture.codegen.vdm2java.JavaSettings;
-import org.overture.codegen.vdm2x.XCodeGen;
 import org.overture.core.tests.ParamStandardTest;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;

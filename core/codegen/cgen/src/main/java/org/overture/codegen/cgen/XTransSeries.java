@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2x;
+package org.overture.codegen.cgen;
 
 import static org.overture.codegen.ir.CodeGenBase.EVAL_METHOD_PREFIX;
 import static org.overture.codegen.ir.CodeGenBase.INTERFACE_NAME_PREFIX;
@@ -10,6 +10,10 @@ import java.util.List;
 
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgen.transformations.MethodParamTransformation;
+import org.overture.codegen.cgen.transformations.VdmBasicTypesCppTrans;
+import org.overture.codegen.cgen.transformations.VdmSeqCppTrans;
+import org.overture.codegen.cgen.transformations.VdmSetCppTrans;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.traces.TraceNames;
@@ -21,10 +25,6 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.funcvalues.FunctionValueTransformation;
 import org.overture.codegen.trans.letexps.FuncTransformation;
-import org.overture.codegen.vdm2x.transformations.MethodParamTransformation;
-import org.overture.codegen.vdm2x.transformations.VdmBasicTypesCppTrans;
-import org.overture.codegen.vdm2x.transformations.VdmSeqCppTrans;
-import org.overture.codegen.vdm2x.transformations.VdmSetCppTrans;
 
 public class XTransSeries {
 

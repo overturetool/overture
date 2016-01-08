@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.tests.output.util;
+package org.overture.codegen.cgen.tests.output.util;
 
 import java.io.File;
 import java.util.Comparator;

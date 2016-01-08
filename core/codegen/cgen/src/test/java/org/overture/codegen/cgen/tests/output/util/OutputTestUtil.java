@@ -1,4 +1,4 @@
-package org.overture.codegen.tests.output.util;
+package org.overture.codegen.cgen.tests.output.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +13,7 @@ import org.overture.parser.syntax.ParserException;
 
 public class OutputTestUtil
 {
-	public static final String UPDATE_PROPERTY_PREFIX = "tests.javagen.override.";
+	public static final String UPDATE_PROPERTY_PREFIX = "tests.cgen.override.";
 	public static final String UPDATE_ALL_OUTPUT_TESTS_PROPERTY = UPDATE_PROPERTY_PREFIX
 			+ "all";
 	

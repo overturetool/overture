@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2x;
+package org.overture.codegen.cgen;
 
 public class CGHelper {
 	

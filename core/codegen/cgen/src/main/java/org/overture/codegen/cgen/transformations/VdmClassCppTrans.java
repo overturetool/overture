@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2x.transformations;
+package org.overture.codegen.cgen.transformations;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;

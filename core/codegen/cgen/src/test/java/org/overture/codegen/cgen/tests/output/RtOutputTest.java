@@ -1,4 +1,4 @@
-package org.overture.codegen.tests.output;
+package org.overture.codegen.cgen.tests.output;
 
 import java.io.File;
 import java.util.Collection;
@@ -8,9 +8,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.cgen.tests.output.util.OutputTestUtil;
+import org.overture.codegen.cgen.tests.output.util.PpSpecificationTest;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.tests.output.util.OutputTestUtil;
-import org.overture.codegen.tests.output.util.PpSpecificationTest;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.core.tests.PathsProvider;
@@ -18,8 +18,7 @@ import org.overture.core.tests.PathsProvider;
 @RunWith(Parameterized.class)
 public class RtOutputTest extends PpSpecificationTest
 {
-	public static final String ROOT = "src" + File.separatorChar + "test"
-			+ File.separatorChar + "resources" + File.separatorChar + "rt";
+	public static final String ROOT = "src/test/resources/rt".replace('/', File.separatorChar);
 
 	public RtOutputTest(String nameParameter, String inputParameter,
 			String resultParameter)

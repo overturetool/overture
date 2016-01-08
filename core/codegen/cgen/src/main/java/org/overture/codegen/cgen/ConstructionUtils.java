@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2x;
+package org.overture.codegen.cgen;
 
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;

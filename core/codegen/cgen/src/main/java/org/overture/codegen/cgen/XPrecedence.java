@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.vdm2x;
+package org.overture.codegen.cgen;
 
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;

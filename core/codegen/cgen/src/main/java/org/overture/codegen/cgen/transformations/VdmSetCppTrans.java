@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2x.transformations;
+package org.overture.codegen.cgen.transformations;
 
 import java.util.LinkedList;
 
@@ -17,8 +17,8 @@ import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
+import org.overture.codegen.cgen.ConstructionUtils;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
-import org.overture.codegen.vdm2x.ConstructionUtils;
 
 public class VdmSetCppTrans extends DepthFirstAnalysisAdaptor {
 	

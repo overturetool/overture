@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2x;
+package org.overture.codegen.cgen;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -196,7 +196,7 @@ public class XCodeGen extends CodeGenBase {
 		StringWriter writer = new StringWriter();
 		ch.apply(my_formatter.GetMergeVisitor(), writer);
 		
-		File output_dir =new File( "target/xgen".replace('/', File.separatorChar));
+		File output_dir =new File( "target/cgen".replace('/', File.separatorChar));
 		output_dir.mkdirs();
 		
 		// Print the class
@@ -211,7 +211,7 @@ public class XCodeGen extends CodeGenBase {
 		StringWriter writer = new StringWriter();
 		cl.apply(my_formatter.GetMergeVisitor(), writer);
 		
-		File output_dir =new File( "target/xgen".replace('/', File.separatorChar));
+		File output_dir =new File( "target/cgen".replace('/', File.separatorChar));
 		output_dir.mkdirs();
 		
 		// Print the class

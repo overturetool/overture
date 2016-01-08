@@ -1,4 +1,4 @@
-package org.overture.codegen.tests.output.util;
+package org.overture.codegen.cgen.tests.output.util;
 
 import java.util.LinkedList;
 import java.util.List;
