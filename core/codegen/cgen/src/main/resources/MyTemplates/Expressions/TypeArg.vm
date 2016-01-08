@@ -1,1 +1,1 @@
-$XFormat.formatTypeArg($node.getType())
+$CFormat.formatTypeArg($node.getType())

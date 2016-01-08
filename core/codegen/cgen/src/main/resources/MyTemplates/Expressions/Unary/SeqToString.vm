@@ -1,1 +1,1 @@
-SeqUtil.toStr($XFormat.format($node.getExp()))
+SeqUtil.toStr($CFormat.format($node.getExp()))

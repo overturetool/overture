@@ -1,5 +1,5 @@
-#if ($XFormat.isStringType($node.getType()))
-$XFormat.buildString($node.getMembers())
+#if ($CFormat.isStringType($node.getType()))
+$CFormat.buildString($node.getMembers())
 #else
-newSetWithValues($XFormat.formatArgs($node.getMembers()))##
+newSetWithValues($CFormat.formatArgs($node.getMembers()))##
 #end

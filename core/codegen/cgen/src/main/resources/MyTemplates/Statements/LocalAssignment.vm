@@ -1,1 +1,1 @@
-$XFormat.format($node.getTarget()) = $XFormat.format($node.getExp());
+$CFormat.format($node.getTarget()) = $CFormat.format($node.getExp());

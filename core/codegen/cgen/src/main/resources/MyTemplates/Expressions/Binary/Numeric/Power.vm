@@ -1,1 +1,1 @@
-Utils.pow($XFormat.format($node.getLeft()), $XFormat.format($node.getRight()))
+Utils.pow($CFormat.format($node.getLeft()), $CFormat.format($node.getRight()))

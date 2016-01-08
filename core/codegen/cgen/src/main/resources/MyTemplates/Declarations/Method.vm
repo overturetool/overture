@@ -1,6 +1,6 @@
-static TVP $node.getName()($XFormat.format($node.getFormalParams()))#if($XFormat.isNull($node.getBody()));
+static TVP $node.getName()($CFormat.format($node.getFormalParams()))#if($CFormat.isNull($node.getBody()));
 #end
-#if(!$XFormat.isNull($node.getBody())){
-	$XFormat.format($node.getBody())
+#if(!$CFormat.isNull($node.getBody())){
+	$CFormat.format($node.getBody())
 }
 #end

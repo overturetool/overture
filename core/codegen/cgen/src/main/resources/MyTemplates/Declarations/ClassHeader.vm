@@ -9,37 +9,37 @@
 \#include "lib/VdmBasicTypes.h"
 
 
-\#define $XFormat.getClassHeaderName($node)CLASS struct $XFormat.getClassHeaderName($node)*
+\#define $CFormat.getClassHeaderName($node)CLASS struct $CFormat.getClassHeaderName($node)*
 
 
 // The table
 
 #foreach( $method in $node.getMethods() )
-#if(!$method.getIsConstructor())\#define CLASS_$XFormat.getClassHeaderName($node)_$method.getName() $XFormat.getNumber();
+#if(!$method.getIsConstructor())\#define CLASS_$CFormat.getClassHeaderName($node)_$method.getName() $CFormat.getNumber();
 #end
 #end
 
-struct $XFormat.getClassHeaderName($node)
+struct $CFormat.getClassHeaderName($node)
 {
-	VDM_CLASS_BASE_DEFINITIONS($XFormat.getClassHeaderName($node));
+	VDM_CLASS_BASE_DEFINITIONS($CFormat.getClassHeaderName($node));
 	/*vtable
 	 * calc
 	 * sum
 	 * */
 	 
 	#foreach( $field in $node.getFields() )
-VDM_CLASS_FIELD_DEFINITION($XFormat.getClassHeaderName($node),$field.getName());
+VDM_CLASS_FIELD_DEFINITION($CFormat.getClassHeaderName($node),$field.getName());
 	#end
 
 };
 
 
-void $XFormat.getClassHeaderName($node)_free_fields($XFormat.getClassHeaderName($node)CLASS);
-$XFormat.getClassHeaderName($node)CLASS $XFormat.getClassHeaderName($node)_Constructor($XFormat.getClassHeaderName($node)CLASS);
+void $CFormat.getClassHeaderName($node)_free_fields($CFormat.getClassHeaderName($node)CLASS);
+$CFormat.getClassHeaderName($node)CLASS $CFormat.getClassHeaderName($node)_Constructor($CFormat.getClassHeaderName($node)CLASS);
 
-extern const struct $XFormat.getClassHeaderName($node)Class
+extern const struct $CFormat.getClassHeaderName($node)Class
 {
 	TVP (*_new)();
-} $XFormat.getClassHeaderName($node);
+} $CFormat.getClassHeaderName($node);
 
-#endif /* CLASSES_$XFormat.getClassHeaderName($node)_H_ */
+#endif /* CLASSES_$CFormat.getClassHeaderName($node)_H_ */

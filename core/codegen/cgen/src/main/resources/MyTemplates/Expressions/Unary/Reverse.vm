@@ -1,6 +1,6 @@
-#set( $exp = $XFormat.format($node.getExp()) )
+#set( $exp = $CFormat.format($node.getExp()) )
 ##
-#if ($XFormat.isStringType($node.getExp().getType()))
+#if ($CFormat.isStringType($node.getExp().getType()))
 	new StringBuilder($exp).reverse().toString()
 #else
 	SeqUtil.reverse($exp)

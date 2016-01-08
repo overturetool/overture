@@ -1,1 +1,1 @@
-$XFormat.formatMetaData($node.getMetaData())
+$CFormat.formatMetaData($node.getMetaData())

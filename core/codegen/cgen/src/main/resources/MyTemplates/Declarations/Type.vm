@@ -1,9 +1,9 @@
-#if ($XFormat.genDecl(${node}))
-	$node.getAccess() $XFormat.format(${node.getDecl()})
+#if ($CFormat.genDecl(${node}))
+	$node.getAccess() $CFormat.format(${node.getDecl()})
 #end
 ##
 #set( $inv = $node.getInv())
 ##
-#if (!$XFormat.isNull(${inv}))
-	$XFormat.format(${inv})
+#if (!$CFormat.isNull(${inv}))
+	$CFormat.format(${inv})
 #end

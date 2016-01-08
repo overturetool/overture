@@ -1,1 +1,1 @@
-seqTl($XFormat.format($node.getExp()))
+seqTl($CFormat.format($node.getExp()))

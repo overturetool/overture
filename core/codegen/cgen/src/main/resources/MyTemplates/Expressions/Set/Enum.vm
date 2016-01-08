@@ -1,1 +1,1 @@
-{#foreach($m in $node.getMembers())$XFormat.format($m)#if( $foreach.hasNext ),#end#end}
+{#foreach($m in $node.getMembers())$CFormat.format($m)#if( $foreach.hasNext ),#end#end}

@@ -1,1 +1,1 @@
-$XFormat.formatNotEqualsBinaryExp($node)
+$CFormat.formatNotEqualsBinaryExp($node)

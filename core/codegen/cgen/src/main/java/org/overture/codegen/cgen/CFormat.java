@@ -45,7 +45,7 @@ public class CFormat {
 		TemplateManager templateManager = new TemplateManager(
 				new TemplateStructure("MyTemplates"));
 		TemplateCallable[] templateCallables = new TemplateCallable[] { new TemplateCallable(
-				"XFormat", this) };
+				"CFormat", this) };
 		this.mergeVisitor = new MergeVisitor(templateManager, templateCallables);
 		this.info=info;
 	}

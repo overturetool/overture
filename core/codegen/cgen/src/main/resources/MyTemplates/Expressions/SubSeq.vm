@@ -1,5 +1,5 @@
-#set( $from = $XFormat.format($node.getFrom()) )
-#set( $to = $XFormat.format($node.getTo()) )
-#set( $seq = $XFormat.format($node.getSeq()) )
+#set( $from = $CFormat.format($node.getFrom()) )
+#set( $to = $CFormat.format($node.getTo()) )
+#set( $seq = $CFormat.format($node.getSeq()) )
 ##
 SeqUtil.subSeq(${seq}, ${from}, ${to})

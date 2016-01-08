@@ -1,1 +1,1 @@
-$XFormat.getClassNameId($node)
+$CFormat.getClassNameId($node)

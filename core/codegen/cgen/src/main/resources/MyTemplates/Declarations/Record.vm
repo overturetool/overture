@@ -1,12 +1,12 @@
 static class $node.getName() implements Record
 {
 	#foreach( $field in $node.getFields() )
-	$XFormat.format($field)
+	$CFormat.format($field)
 	#end
 
 
 	##
 	#foreach( $method in $node.getMethods() )
-	$XFormat.format($method)
+	$CFormat.format($method)
 	#end
 }

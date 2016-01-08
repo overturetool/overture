@@ -1,1 +1,1 @@
-throw $XFormat.format($node.getError());
+throw $CFormat.format($node.getError());

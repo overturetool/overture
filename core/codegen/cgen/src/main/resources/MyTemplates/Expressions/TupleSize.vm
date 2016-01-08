@@ -1,1 +1,1 @@
-${XFormat.format($node.getTuple())}.size()
+${CFormat.format($node.getTuple())}.size()

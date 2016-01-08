@@ -1,2 +1,2 @@
 ##Only supports basic types
-$XFormat.formatEqualsBinaryExp($node)
+$CFormat.formatEqualsBinaryExp($node)

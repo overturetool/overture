@@ -1,1 +1,1 @@
-new Maplet($XFormat.format($node.getLeft()), $XFormat.format($node.getRight()))
+new Maplet($CFormat.format($node.getLeft()), $CFormat.format($node.getRight()))

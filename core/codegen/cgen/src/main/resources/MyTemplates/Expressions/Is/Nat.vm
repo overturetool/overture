@@ -1,2 +1,2 @@
-#set( $exp = $XFormat.format($node.getExp()) )
+#set( $exp = $CFormat.format($node.getExp()) )
 Utils.is_nat(${exp})

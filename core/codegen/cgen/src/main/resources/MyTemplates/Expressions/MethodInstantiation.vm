@@ -1,2 +1,2 @@
 ##The actual types can be fetched using $node.getActualTypes()
-$XFormat.format($node.getFunc())
+$CFormat.format($node.getFunc())

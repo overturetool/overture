@@ -1,6 +1,6 @@
-new $XFormat.format($node.getType())()
+new $CFormat.format($node.getType())()
 {
 	#foreach( $method in $node.getMethods() )
-	$XFormat.format($method)
+	$CFormat.format($method)
 	#end
 }

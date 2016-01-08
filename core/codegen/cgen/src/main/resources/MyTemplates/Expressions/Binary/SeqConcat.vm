@@ -1,5 +1,5 @@
-#if ($XFormat.isStringType($node.getType()))
-	$XFormat.format($node.getLeft(), true) + $XFormat.format($node.getRight(), false)
+#if ($CFormat.isStringType($node.getType()))
+	$CFormat.format($node.getLeft(), true) + $CFormat.format($node.getRight(), false)
 #else
-	SeqUtil.conc($XFormat.format($node.getLeft()), $XFormat.format($node.getRight()))
+	SeqUtil.conc($CFormat.format($node.getLeft()), $CFormat.format($node.getRight()))
 #end

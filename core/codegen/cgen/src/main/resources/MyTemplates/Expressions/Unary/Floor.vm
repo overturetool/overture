@@ -1,1 +1,1 @@
-Math.round(Utils.floor($XFormat.format($node.getExp())))
+Math.round(Utils.floor($CFormat.format($node.getExp())))

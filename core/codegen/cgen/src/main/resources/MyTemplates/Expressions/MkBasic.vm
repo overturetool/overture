@@ -1,1 +1,1 @@
-new Token($XFormat.format($node.getArg()))
+new Token($CFormat.format($node.getArg()))

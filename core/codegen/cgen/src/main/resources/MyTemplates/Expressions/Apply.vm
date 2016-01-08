@@ -2,21 +2,21 @@
 ##Example2: [1,2](1)
 ##Example3: "kitten"(3)
 ##
-#set( $root = $XFormat.format($node.getRoot()) )
-#set( $args = $XFormat.formatArgs($node.getArgs()) )
+#set( $root = $CFormat.format($node.getRoot()) )
+#set( $args = $CFormat.formatArgs($node.getArgs()) )
 ##
-#if ($XFormat.isSeqType($node.getRoot()) && $node.getArgs().size() == 1)
+#if ($CFormat.isSeqType($node.getRoot()) && $node.getArgs().size() == 1)
 ##
-	#set( $index = $XFormat.format($node.getArgs().get(0)))
+	#set( $index = $CFormat.format($node.getArgs().get(0)))
 seqIndex(${root},${index})
 ##
-#elseif ($XFormat.isMapType($node.getRoot()) && $node.getArgs().size() == 1)
-	#set( $key = $XFormat.format($node.getArgs().get(0)))
+#elseif ($CFormat.isMapType($node.getRoot()) && $node.getArgs().size() == 1)
+	#set( $key = $CFormat.format($node.getArgs().get(0)))
 	#set ( $mapRead = "" )
-	#if ($XFormat.castNotNeeded($node.getType()))
+	#if ($CFormat.castNotNeeded($node.getType()))
 		#set ( $mapRead = "Utils.get(${root},${key})" )
 	#else
-		#set ( $mapRead = "(($XFormat.format($node.getType())) Utils.get(${root},${key}))" )
+		#set ( $mapRead = "(($CFormat.format($node.getType())) Utils.get(${root},${key}))" )
 	#end
 	#if ($ValueSemantics.shouldClone($node))
 		Utils.copy(${mapRead})
@@ -24,11 +24,11 @@ seqIndex(${root},${index})
 		${mapRead}
 	#end
 ##
-#elseif ($XFormat.isStringType($node.getRoot()))
-	#set( $index = $XFormat.format($node.getArgs().get(0)))
+#elseif ($CFormat.isStringType($node.getRoot()))
+	#set( $index = $CFormat.format($node.getArgs().get(0)))
 	${root}.charAt(Utils.index($index))##
 ##
-#elseif ($XFormat.isLambda($node))
+#elseif ($CFormat.isLambda($node))
 	${root}.eval(${args})##
 ##
 #else

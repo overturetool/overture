@@ -1,3 +1,3 @@
 public void run(){
-	$XFormat.format($node.getStm())
+	$CFormat.format($node.getStm())
 }

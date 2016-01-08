@@ -4,12 +4,12 @@
 #end
 ##
 #set( $end = ";")
-#if ( $XFormat.isLoopVar($node) )
+#if ( $CFormat.isLoopVar($node) )
 	#set( $end = "")
 #end
 ##
-#set( $pattern = $XFormat.format($node.getPattern()) )
+#set( $pattern = $CFormat.format($node.getPattern()) )
 ##
-$XFormat.formatMetaData($node.getMetaData())##
+$CFormat.formatMetaData($node.getMetaData())##
 ##
-${final} $XFormat.format($node.getType()) $pattern = $XFormat.format($node.getExp())${end}
+${final} $CFormat.format($node.getType()) $pattern = $CFormat.format($node.getExp())${end}

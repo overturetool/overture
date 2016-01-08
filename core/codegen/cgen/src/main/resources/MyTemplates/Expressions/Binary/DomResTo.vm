@@ -1,4 +1,4 @@
-#set( $left = $XFormat.format($node.getLeft()) )
-#set( $right = $XFormat.format($node.getRight()) )
+#set( $left = $CFormat.format($node.getLeft()) )
+#set( $right = $CFormat.format($node.getRight()) )
 ##
 MapUtil.domResTo(${left}, ${right})

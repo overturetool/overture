@@ -1,1 +1,1 @@
-$XFormat.format($node.getCondition(), false) ? $XFormat.format($node.getTrueValue(), false) : $XFormat.format($node.getFalseValue(), false)
+$CFormat.format($node.getCondition(), false) ? $CFormat.format($node.getTrueValue(), false) : $CFormat.format($node.getFalseValue(), false)

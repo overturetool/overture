@@ -1,6 +1,6 @@
-#set( $iterator = $XFormat.nextVarName($TempVar.getIteratorNamePrefix()) )
-#set( $exp = $XFormat.format($node.getExp()) )
-#set( $var = $XFormat.nextVarName("nextThread_") )
+#set( $iterator = $CFormat.nextVarName($TempVar.getIteratorNamePrefix()) )
+#set( $exp = $CFormat.format($node.getExp()) )
+#set( $var = $CFormat.nextVarName("nextThread_") )
 ##
 for (Iterator ${iterator} = ${exp}.iterator(); ${iterator}.hasNext();)
 {

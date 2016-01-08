@@ -1,1 +1,1 @@
-$XFormat.format($node)
+$CFormat.format($node)

@@ -3,10 +3,10 @@
 #set( $super = "super")
 ##
 #set( $return = "")
-#if (!$XFormat.isVoidType($node.getType()))
+#if (!$CFormat.isVoidType($node.getType()))
 	#set( $return = "return ")
 #end
 ##
 #set( $name = "$node.getName()")
 ##
-${return}${super}.${name}($XFormat.formatArgs($node.getArgs()));
+${return}${super}.${name}($CFormat.formatArgs($node.getArgs()));

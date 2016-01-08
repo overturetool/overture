@@ -1,9 +1,9 @@
-#set( $args = $XFormat.formatArgs($node.getArgs()) )
+#set( $args = $CFormat.formatArgs($node.getArgs()) )
 #set( $field = $node.getFieldName() )
-#set( $obj = $XFormat.format($node.getObj()) )
+#set( $obj = $CFormat.format($node.getObj()) )
 ##
 #set( $return = "")
-#if (!$XFormat.isVoidType($node.getType()))
+#if (!$CFormat.isVoidType($node.getType()))
 	#set( $return = "return ")
 #end
 ##

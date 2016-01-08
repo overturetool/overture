@@ -1,9 +1,9 @@
 #set( $index = $node.getVar())
-#set( $fromExp = $XFormat.formatIgnoreContext($node.getFrom()) )
-#set( $toExp = $XFormat.formatIgnoreContext($node.getTo()) )
-#set( $body = $XFormat.format($node.getBody()) )
-#set( $toVar = $XFormat.nextVarName($TempVar.getForIndexToVarNamePrefix()) )
-#set( $bySpecified = !$XFormat.isNull($node.getBy()) )
+#set( $fromExp = $CFormat.formatIgnoreContext($node.getFrom()) )
+#set( $toExp = $CFormat.formatIgnoreContext($node.getTo()) )
+#set( $body = $CFormat.format($node.getBody()) )
+#set( $toVar = $CFormat.nextVarName($TempVar.getForIndexToVarNamePrefix()) )
+#set( $bySpecified = !$CFormat.isNull($node.getBy()) )
 ##
 long ${toVar} = ${toExp};
 ##
@@ -11,8 +11,8 @@ long ${toVar} = ${toExp};
 #set( $step = "" )
 ##
 #if ( $bySpecified == true )
-	#set($byVar = "$XFormat.nextVarName($TempVar.getForIndexByVarNamePrefix())" )
-	long ${byVar} =  $XFormat.formatIgnoreContext($node.getBy());
+	#set($byVar = "$CFormat.nextVarName($TempVar.getForIndexByVarNamePrefix())" )
+	long ${byVar} =  $CFormat.formatIgnoreContext($node.getBy());
 	#set( $step = "${index} += ${byVar}" )
 	#set( $condition = "${byVar} < 0 ? ${index} >= ${toVar} : ${index} <= ${toVar}")
 #else

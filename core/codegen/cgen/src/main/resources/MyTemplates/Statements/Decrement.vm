@@ -1,1 +1,1 @@
-$XFormat.format($node.getVar())--;
+$CFormat.format($node.getVar())--;

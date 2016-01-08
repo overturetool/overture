@@ -1,1 +1,1 @@
-Utils.div($XFormat.format($node.getLeft()), $XFormat.format($node.getRight()))
+Utils.div($CFormat.format($node.getLeft()), $CFormat.format($node.getRight()))

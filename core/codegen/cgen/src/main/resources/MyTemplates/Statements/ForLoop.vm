@@ -1,19 +1,19 @@
 #set( $init = "" )
-#if ( !$XFormat.isNull($node.getInit()) )
-	#set( $init = $XFormat.format($node.getInit()) )
+#if ( !$CFormat.isNull($node.getInit()) )
+	#set( $init = $CFormat.format($node.getInit()) )
 #end
 ##
 #set( $cond = "" )
-#if ( !$XFormat.isNull($node.getCond()) )
-	#set( $cond = $XFormat.format($node.getCond()) )
+#if ( !$CFormat.isNull($node.getCond()) )
+	#set( $cond = $CFormat.format($node.getCond()) )
 #end
 ##
 #set( $inc = "" )
-#if ( !$XFormat.isNull($node.getInc()) )
-	#set( $inc = $XFormat.format($node.getInc()) )
+#if ( !$CFormat.isNull($node.getInc()) )
+	#set( $inc = $CFormat.format($node.getInc()) )
 #end
 ##
-#set( $body = $XFormat.format($node.getBody()) )
+#set( $body = $CFormat.format($node.getBody()) )
 for(${init}; ${cond}; ${inc})
 {
 	${body}

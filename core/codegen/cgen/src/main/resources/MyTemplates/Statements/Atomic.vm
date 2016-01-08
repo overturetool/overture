@@ -1,5 +1,5 @@
 { /* Start of atomic statement */
 #foreach( $stm in $node.getStatements() )
-$XFormat.format($stm)
+$CFormat.format($stm)
 #end
 }  /* End of atomic statement */
