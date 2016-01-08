@@ -33,62 +33,61 @@ public class Entry implements java.io.Serializable {
         final Store store = new Store();
         final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        final Number ID_1 = gen.inc();
-        final Number ID_2 = gen.inc();
-        final Number ID_3 = gen.inc();
 
         {
+            final Number ID_1 = gen.inc();
+            final Number ID_2 = gen.inc();
+            final Number ID_3 = gen.inc();
             final Number x = op();
             final Number y = op();
             final Number z = op();
             store.register(ID_1, x);
             store.register(ID_2, y);
             store.register(ID_3, z);
+
+            SequenceTraceNode sequence_2 = new SequenceTraceNode();
+            CallStatementPp callStm_1 = new CallStatementPp() {
+                    public Object execute() {
+                        Number result_1 = ((Entry) instance).op();
+
+                        return result_1;
+                    }
+
+                    public String toString() {
+                        return "op()";
+                    }
+                };
+
+            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+            sequence_2.add(apply_1);
+
+            CallStatementPp callStm_2 = new CallStatementPp() {
+                    public Object execute() {
+                        Number result_2 = ((Entry) instance).id(((Number) store.getValue(
+                                    ID_3)));
+
+                        return result_2;
+                    }
+
+                    public String toString() {
+                        return "id(" + Utils.toString(store.getValue(ID_3)) +
+                        ")";
+                    }
+                };
+
+            StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+            sequence_2.add(apply_2);
+
+            RepeatTraceNode repeat_1 = new RepeatTraceNode(sequence_2, 1L, 2L);
+
+            repeat_1.addVarFirst(new TraceVariable("z", "nat",
+                    Utils.toString(((Number) store.getValue(ID_3)))));
+            repeat_1.addVarFirst(new TraceVariable("y", "nat",
+                    Utils.toString(((Number) store.getValue(ID_2)))));
+            repeat_1.addVarFirst(new TraceVariable("x", "nat",
+                    Utils.toString(((Number) store.getValue(ID_1)))));
+            sequence_1.add(repeat_1);
         }
-
-        SequenceTraceNode sequence_2 = new SequenceTraceNode();
-        CallStatementPp callStm_1 = new CallStatementPp() {
-                public Object execute() {
-                    Number result_1 = ((Entry) instance).op();
-
-                    return result_1;
-                }
-
-                public String toString() {
-                    return "op()";
-                }
-            };
-
-        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-
-        CallStatementPp callStm_2 = new CallStatementPp() {
-                public Object execute() {
-                    Number result_2 = ((Entry) instance).id(((Number) store.getValue(
-                                ID_3)));
-
-                    return result_2;
-                }
-
-                public String toString() {
-                    return "id(" + Utils.toString(store.getValue(ID_3)) + ")";
-                }
-            };
-
-        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-
-        sequence_2.add(apply_1);
-        sequence_2.add(apply_2);
-
-        RepeatTraceNode repeat_1 = new RepeatTraceNode(sequence_2, 1L, 2L);
-
-        repeat_1.addVarFirst(new TraceVariable("z", "nat",
-                Utils.toString(((Number) store.getValue(ID_3)))));
-        repeat_1.addVarFirst(new TraceVariable("y", "nat",
-                Utils.toString(((Number) store.getValue(ID_2)))));
-        repeat_1.addVarFirst(new TraceVariable("x", "nat",
-                Utils.toString(((Number) store.getValue(ID_1)))));
-
-        sequence_1.add(repeat_1);
 
         TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
     }

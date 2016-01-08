@@ -51,14 +51,10 @@ final public class Entry implements java.io.Serializable {
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             final Object a = ((Object) iterator_1.next());
-            final Number ID_2 = gen.inc();
-
-            store.register(ID_2, a);
-
             CallStatement callStm_1 = new CallStatement() {
                     public Boolean isTypeCorrect() {
                         try {
-                            //@ assert Utils.is_bool(store.getValue(ID_2));
+                            //@ assert Utils.is_bool(a);
                         } catch (AssertionError e) {
                             return false;
                         }
@@ -67,12 +63,11 @@ final public class Entry implements java.io.Serializable {
                     }
 
                     public Object execute() {
-                        return idBool(((Boolean) store.getValue(ID_2)));
+                        return idBool(((Boolean) a));
                     }
 
                     public String toString() {
-                        return "idBool(" +
-                        Utils.toString(store.getValue(ID_2)) + ")";
+                        return "idBool(" + Utils.toString(a) + ")";
                     }
                 };
 
@@ -99,7 +94,6 @@ final public class Entry implements java.io.Serializable {
 
         alternatives_1.add(sequence_2);
         alternatives_1.add(apply_2);
-
         sequence_1.add(alternatives_1);
 
         TraceNode.executeTests(sequence_1, testAccumulator, store);

@@ -35,6 +35,7 @@ public class Entry implements java.io.Serializable {
             };
 
         StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+        sequence_2.add(apply_1);
 
         SequenceTraceNode sequence_3 = new SequenceTraceNode();
         AlternativeTraceNode alternatives_4 = new AlternativeTraceNode();
@@ -68,10 +69,8 @@ public class Entry implements java.io.Serializable {
 
         alternatives_4.add(apply_2);
         alternatives_4.add(apply_3);
-
         sequence_3.add(alternatives_4);
 
-        sequence_2.add(apply_1);
         sequence_2.add(sequence_3);
 
         sequence_1.add(sequence_2);

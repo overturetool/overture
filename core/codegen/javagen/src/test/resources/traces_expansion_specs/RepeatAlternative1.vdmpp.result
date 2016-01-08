@@ -51,7 +51,6 @@ public class Entry implements java.io.Serializable {
 
         alternatives_2.add(apply_1);
         alternatives_2.add(apply_2);
-
         sequence_2.add(alternatives_2);
 
         RepeatTraceNode repeat_1 = new RepeatTraceNode(sequence_2, 1L, 3L);

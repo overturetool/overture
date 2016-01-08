@@ -56,6 +56,8 @@ public class Entry implements java.io.Serializable {
             alternatives_2.add(apply_1);
         }
 
+        concurrent_1.add(alternatives_2);
+
         AlternativeTraceNode alternatives_3 = new AlternativeTraceNode();
         VDMSet set_2 = SetUtil.set(new Entry(5L), new Entry(6L));
 
@@ -82,7 +84,6 @@ public class Entry implements java.io.Serializable {
             alternatives_3.add(apply_2);
         }
 
-        concurrent_1.add(alternatives_2);
         concurrent_1.add(alternatives_3);
 
         sequence_1.add(concurrent_1);

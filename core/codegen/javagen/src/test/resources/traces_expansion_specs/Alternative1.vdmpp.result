@@ -50,7 +50,6 @@ public class Entry implements java.io.Serializable {
 
         alternatives_1.add(apply_1);
         alternatives_1.add(apply_2);
-
         sequence_1.add(alternatives_1);
 
         TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);

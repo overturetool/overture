@@ -57,6 +57,7 @@ public class Entry implements java.io.Serializable {
                 };
 
             StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+            sequence_2.add(apply_1);
 
             CallStatementPp callStm_2 = new CallStatementPp() {
                     public Object execute() {
@@ -70,8 +71,6 @@ public class Entry implements java.io.Serializable {
                 };
 
             StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-
-            sequence_2.add(apply_1);
             sequence_2.add(apply_2);
 
             RepeatTraceNode repeat_1 = new RepeatTraceNode(sequence_2, 1L, 2L);

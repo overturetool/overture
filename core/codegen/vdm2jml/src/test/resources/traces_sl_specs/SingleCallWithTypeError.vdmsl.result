@@ -38,24 +38,16 @@ final public class Entry implements java.io.Serializable {
 
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             final Object a = ((Object) iterator_2.next());
-            final Number ID_2 = gen.inc();
-
-            store.register(ID_2, a);
-
             AlternativeTraceNode alternatives_3 = new AlternativeTraceNode();
             VDMSet set_1 = SetUtil.set(2L, false);
 
             for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
                 final Object b = ((Object) iterator_1.next());
-                final Number ID_3 = gen.inc();
-
-                store.register(ID_3, b);
-
                 SequenceTraceNode sequence_2 = new SequenceTraceNode();
                 CallStatement callStm_1 = new CallStatement() {
                         public Boolean isTypeCorrect() {
                             try {
-                                //@ assert Utils.is_bool(store.getValue(ID_2));
+                                //@ assert Utils.is_bool(a);
                             } catch (AssertionError e) {
                                 return false;
                             }
@@ -64,21 +56,21 @@ final public class Entry implements java.io.Serializable {
                         }
 
                         public Object execute() {
-                            return f(((Boolean) store.getValue(ID_2)));
+                            return f(((Boolean) a));
                         }
 
                         public String toString() {
-                            return "f(" + Utils.toString(store.getValue(ID_2)) +
-                            ")";
+                            return "f(" + Utils.toString(a) + ")";
                         }
                     };
 
                 StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+                sequence_2.add(apply_1);
 
                 CallStatement callStm_2 = new CallStatement() {
                         public Boolean isTypeCorrect() {
                             try {
-                                //@ assert Utils.is_bool(store.getValue(ID_3));
+                                //@ assert Utils.is_bool(b);
                             } catch (AssertionError e) {
                                 return false;
                             }
@@ -87,18 +79,15 @@ final public class Entry implements java.io.Serializable {
                         }
 
                         public Object execute() {
-                            return f(((Boolean) store.getValue(ID_3)));
+                            return f(((Boolean) b));
                         }
 
                         public String toString() {
-                            return "f(" + Utils.toString(store.getValue(ID_3)) +
-                            ")";
+                            return "f(" + Utils.toString(b) + ")";
                         }
                     };
 
                 StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-
-                sequence_2.add(apply_1);
                 sequence_2.add(apply_2);
 
                 sequence_2.addVarFirst(new TraceVariable("b", "(bool | nat1)",

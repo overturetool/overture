@@ -31,64 +31,60 @@ final public class Entry implements java.io.Serializable {
         }
 
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        final Number ID_2 = gen.inc();
-        final Number ID_3 = gen.inc();
 
         {
             final Number a = op();
             final Number b = op();
-            store.register(ID_2, a);
-            store.register(ID_3, b);
+
+            SequenceTraceNode sequence_2 = new SequenceTraceNode();
+            CallStatement callStm_1 = new CallStatement() {
+                    public Object execute() {
+                        return id(a);
+                    }
+
+                    public String toString() {
+                        return "id(" + Utils.toString(a) + ")";
+                    }
+                };
+
+            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+            sequence_2.add(apply_1);
+
+            CallStatement callStm_2 = new CallStatement() {
+                    public Object execute() {
+                        return id(b);
+                    }
+
+                    public String toString() {
+                        return "id(" + Utils.toString(b) + ")";
+                    }
+                };
+
+            StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+            sequence_2.add(apply_2);
+
+            CallStatement callStm_3 = new CallStatement() {
+                    public Object execute() {
+                        return op();
+                    }
+
+                    public String toString() {
+                        return "op()";
+                    }
+                };
+
+            StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
+
+            RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_3, 1L, 3L);
+
+            sequence_2.add(repeat_1);
+
+            sequence_2.addVarFirst(new TraceVariable("b", "nat",
+                    Utils.toString(b)));
+            sequence_2.addVarFirst(new TraceVariable("a", "nat",
+                    Utils.toString(a)));
+            sequence_1.add(sequence_2);
         }
-
-        SequenceTraceNode sequence_2 = new SequenceTraceNode();
-        CallStatement callStm_1 = new CallStatement() {
-                public Object execute() {
-                    return id(((Number) store.getValue(ID_2)));
-                }
-
-                public String toString() {
-                    return "id(" + Utils.toString(store.getValue(ID_2)) + ")";
-                }
-            };
-
-        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-
-        CallStatement callStm_2 = new CallStatement() {
-                public Object execute() {
-                    return id(((Number) store.getValue(ID_3)));
-                }
-
-                public String toString() {
-                    return "id(" + Utils.toString(store.getValue(ID_3)) + ")";
-                }
-            };
-
-        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-
-        CallStatement callStm_3 = new CallStatement() {
-                public Object execute() {
-                    return op();
-                }
-
-                public String toString() {
-                    return "op()";
-                }
-            };
-
-        StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
-
-        RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_3, 1L, 3L);
-
-        sequence_2.add(apply_1);
-        sequence_2.add(apply_2);
-        sequence_2.add(repeat_1);
-        sequence_2.addVarFirst(new TraceVariable("b", "nat",
-                Utils.toString(((Number) store.getValue(ID_3)))));
-        sequence_2.addVarFirst(new TraceVariable("a", "nat",
-                Utils.toString(((Number) store.getValue(ID_2)))));
-
-        sequence_1.add(sequence_2);
 
         TraceNode.executeTests(sequence_1, testAccumulator, store);
     }
