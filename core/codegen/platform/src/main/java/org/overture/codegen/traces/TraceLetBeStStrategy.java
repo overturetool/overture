@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.overture.ast.lex.Dialect;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
@@ -26,6 +27,7 @@ import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.let.LetBeStStrategy;
+import org.overture.config.Settings;
 
 public class TraceLetBeStStrategy extends LetBeStStrategy
 {
@@ -148,9 +150,13 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 		
 		for (AIdentifierPatternCG idToReg : idCollector.findOccurences())
 		{
-			String idConstName = idConstNameMap.get(idToReg.getName());
-			block.getStatements().add(transAssist.wrap(storeAssistant.consIdConstDecl(idConstName)));
-			storeAssistant.appendStoreRegStms(block, idToReg.getName(), idConstName, false);
+			if(Settings.dialect != Dialect.VDM_SL)
+			{
+				String idConstName = idConstNameMap.get(idToReg.getName());
+				block.getStatements().add(transAssist.wrap(storeAssistant.consIdConstDecl(idConstName)));
+				storeAssistant.appendStoreRegStms(block, idToReg.getName(), idConstName, false);
+			}
+			
 			traceVars.add(this.transAssist.getInfo().getExpAssistant().consIdVar(idToReg.getName(), PatternTypeFinder.getType(typeFinder, idToReg)));
 		}
 

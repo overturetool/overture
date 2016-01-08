@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.overture.ast.lex.Dialect;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -21,6 +22,7 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.traces.ICallStmToStringMethodBuilder;
 import org.overture.codegen.traces.StoreAssistant;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.config.Settings;
 
 public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements ICallStmToStringMethodBuilder
 {
@@ -99,7 +101,14 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 			if(arg instanceof AIdentifierVarExpCG && idConstNameMap.containsKey(((AIdentifierVarExpCG) arg).getName()))
 			{
 				AIdentifierVarExpCG idVarExp = ((AIdentifierVarExpCG) arg);
-				utilsToStrCall.getArgs().add(storeAssistant.consStoreLookup(idVarExp, true));
+				if(Settings.dialect != Dialect.VDM_SL)
+				{
+					utilsToStrCall.getArgs().add(storeAssistant.consStoreLookup(idVarExp, true));
+				}
+				else
+				{
+					utilsToStrCall.getArgs().add(idVarExp);
+				}
 			}
 			else
 			{
