@@ -22,7 +22,7 @@
     <module>ir</module>
     <module>platform</module>
     <module>javagen</module>
-    <module>cgproject</module>
+    <module>cgen</module>
     <module>vdm2jml</module>
     <module>codegen-runtime</module>
     <module>codegen-maven-plugin</module>
