@@ -31,7 +31,7 @@ public class CGen extends CodeGenBase {
 	
 	private String output_folder; 
 	
-	public GeneratedData generateXFromVdm(List<SClassDefinition> ast, String output_folder)
+	public GeneratedData generateCFromVdm(List<SClassDefinition> ast, String output_folder)
 			throws AnalysisException
 	{
 		List<IRStatus<org.overture.codegen.cgast.INode>> statuses = new LinkedList<>();

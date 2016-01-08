@@ -107,9 +107,9 @@ public class CGenMain {
 			List<SClassDefinition> ast = GeneralCodeGenUtils.consClassList(
 					files, Dialect.VDM_RT);
 
-			CGen xGen = new CGen();
+			CGen cGen = new CGen();
 
-			GeneratedData data = xGen.generateXFromVdm(ast, output_folder);
+			GeneratedData data = cGen.generateCFromVdm(ast, output_folder);
 			for (GeneratedModule module : data.getClasses()) {
 				
 				if (module.canBeGenerated()) {
