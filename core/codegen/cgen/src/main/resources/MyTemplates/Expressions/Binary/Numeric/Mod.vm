@@ -1,1 +1,1 @@
-Utils.mod($CFormat.format($node.getLeft()), $CFormat.format($node.getRight()))
+vdmMod($CFormat.format($node.getLeft()), $CFormat.format($node.getRight()))

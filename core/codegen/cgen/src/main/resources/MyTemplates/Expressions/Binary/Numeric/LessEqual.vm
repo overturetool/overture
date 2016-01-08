@@ -1,1 +1,1 @@
-$CFormat.format($node.getLeft(), true) <= $CFormat.format($node.getRight(), false)
+vdmLessOrEqual($CFormat.format($node.getLeft(), true) , $CFormat.format($node.getRight(), false))

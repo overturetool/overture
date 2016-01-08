@@ -1,1 +1,1 @@
-Utils.pow($CFormat.format($node.getLeft()), $CFormat.format($node.getRight()))
+vdmPower($CFormat.format($node.getLeft()), $CFormat.format($node.getRight()))

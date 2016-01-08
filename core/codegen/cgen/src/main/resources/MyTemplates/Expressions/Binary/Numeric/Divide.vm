@@ -1,1 +1,1 @@
-Utils.divide($CFormat.format($node.getLeft()), $CFormat.format($node.getRight()))
+vdmDivision($CFormat.format($node.getLeft()), $CFormat.format($node.getRight()))
