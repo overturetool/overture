@@ -569,10 +569,10 @@ public class TemplateManager
 				+ "Isolation");
 
 		nodeTemplateFileNames.put(ALenUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
-				+ "Len_Card");
+				+ "Len");
 
 		nodeTemplateFileNames.put(ACardUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
-				+ "Len_Card");
+				+ "Card");
 
 		nodeTemplateFileNames.put(AElemsUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "Elems");
