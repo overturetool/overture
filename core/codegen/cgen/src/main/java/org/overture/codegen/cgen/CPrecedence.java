@@ -60,7 +60,8 @@ public class CPrecedence
 		// We don't need to consider 'mod' and 'rem' operators since these are constructed
 		// using other operators and isolated if needed using the isolation expression
 		boolean case1 = !leftChild
-				&& (parentExp instanceof ADivideNumericBinaryExpCG || parentExp instanceof ASubtractNumericBinaryExpCG)
+				&& (parentExp instanceof ADivideNumericBinaryExpCG
+						|| parentExp instanceof ASubtractNumericBinaryExpCG)
 				&& parentOpInfo.getPrecedence() >= expOpInfo.getPrecedence();
 
 		if (case1)

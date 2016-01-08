@@ -77,10 +77,10 @@ public class CGenMain
 			}
 			outputDir = outputPath;
 
-		}else
+		} else
 		{
 			outputDir = new File("target/cgen".replace('/', File.separatorChar));
-			
+
 		}
 		final String[] remainingArguments = cmd.getArgs();
 
@@ -90,28 +90,34 @@ public class CGenMain
 			if (f.exists() && f.isFile())
 			{
 				files.add(f);
-			}else{
-				System.err.println("Not a file: "+s);
+			} else
+			{
+				System.err.println("Not a file: " + s);
 				return;
 			}
 		}
 
-
 		try
 		{
 			List<SClassDefinition> ast = GeneralCodeGenUtils.consClassList(files, Dialect.VDM_RT);
-					
 
 			CGen cGen = new CGen();
 
 			GeneratedData data = cGen.generateCFromVdm(ast, outputDir);
-			for (GeneratedModule module : data.getClasses()) {
-				
-				if (module.canBeGenerated()) {
-					System.out.println(module.getContent());
-					System.out.println(module.getUnsupportedInIr());
-					System.out.println(module.getMergeErrors());
-					System.out.println(module.getUnsupportedInTargLang());
+			System.out.println("C code generated to folder: "
+					+ outputDir.getAbsolutePath());
+			if (print)
+			{
+				for (GeneratedModule module : data.getClasses())
+				{
+
+					if (module.canBeGenerated())
+					{
+						System.out.println(module.getContent());
+						System.out.println(module.getUnsupportedInIr());
+						System.out.println(module.getMergeErrors());
+						System.out.println(module.getUnsupportedInTargLang());
+					}
 				}
 			}
 
@@ -122,19 +128,19 @@ public class CGenMain
 		}
 
 	}
-	
+
 	public static List<File> filterFiles(List<File> files)
 	{
 		List<File> filtered = new LinkedList<File>();
-		
-		for(File f : files)
+
+		for (File f : files)
 		{
-			if(isRtFile(f))
+			if (isRtFile(f))
 			{
 				filtered.add(f);
 			}
 		}
-		
+
 		return filtered;
 	}
 
