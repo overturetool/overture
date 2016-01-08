@@ -14,90 +14,86 @@ import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.apache.commons.cli.*;
+import org.overture.codegen.utils.GeneralUtils;
 
 public class CGenMain
 {
 
-	private static final String FOLDER_ARG = "-folder";
-	private static final String PRINT_ARG = "-print";
-	public static final String OUTPUT_ARG = "-output";
-	private static String output_folder = null;
-
 	public static void main(String[] args)
 	{
 
-		if (args == null || args.length < 1)
+		// create Options object
+		Options options = new Options();
+
+		// add t option
+		Option verboseOpt = Option.builder("v").longOpt("verbose").desc("Print processing information").build();
+		Option sourceOpt = Option.builder("sf").longOpt("folder").desc("Path to a source folder containing VDM files").hasArg().build();
+		Option destOpt = Option.builder("dest").longOpt("destination").desc("Output directory").hasArg().required().build();
+
+		options.addOption(verboseOpt);
+		options.addOption(sourceOpt);
+		options.addOption(destOpt);
+
+		CommandLineParser parser = new DefaultParser();
+		CommandLine cmd = null;
+		try
 		{
-			usage("Expected one or more arguments");
+			cmd = parser.parse(options, args);
+		} catch (ParseException e1)
+		{
+			System.err.println("Parsing failed.  Reason: " + e1.getMessage());
 			return;
 		}
 
-		List<String> listArgs = Arrays.asList(args);
 		List<File> files = new LinkedList<File>();
 		File outputDir = null;
 		boolean print = false;
 
-		// File file = new File(args[0]);
+		print = cmd.hasOption(verboseOpt.getOpt());
 
-		// List<File> files = new LinkedList<>();
-		// files.add(file);
-
-		for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
+		if (cmd.hasOption(sourceOpt.getOpt()))
 		{
-			String arg = i.next();
+			File path = new File(cmd.getOptionValue(sourceOpt.getOpt()));
 
-			if (arg.equals(OUTPUT_ARG))
+			if (!path.isDirectory())
 			{
-				if (i.hasNext())
-				{
-					outputDir = new File(i.next());
-					outputDir.mkdirs();
-					output_folder = outputDir.toString();
+				usage(options, sourceOpt, outputDir + " is not a directory");
+				return;
+			}
 
-					if (!outputDir.isDirectory())
-					{
-						usage(outputDir + " is not a directory");
-					}
+			files.addAll(filterFiles(GeneralUtils.getFiles(path)));
 
-				} else
-				{
-					usage(OUTPUT_ARG + " requires a directory");
-				}
-			} else if (arg.equals(PRINT_ARG))
+		}
+
+		if (cmd.hasOption(destOpt.getOpt()))
+		{
+			File outputPath = new File(cmd.getOptionValue(destOpt.getOpt()).replace('/', File.separatorChar));
+			outputPath.mkdirs();
+			if (!outputPath.isDirectory())
 			{
-				print = true;
-			} else if (arg.equals(FOLDER_ARG))
-			{
-				if (i.hasNext())
-				{
-					File path = new File(i.next());
+				usage(options, destOpt, outputDir + " is not a directory");
+				return;
+			}
+			outputDir = outputPath;
 
-					if (path.isDirectory())
-					{
-						files.addAll(filterFiles(GeneralUtils.getFiles(path)));
-					} else
-					{
-						usage("Could not find path: " + path);
-					}
-				} else
-				{
-					usage(FOLDER_ARG + " requires a directory");
-				}
+		} else
+		{
+			outputDir = new File("target/cgen".replace('/', File.separatorChar));
+
+		}
+		final String[] remainingArguments = cmd.getArgs();
+
+		for (String s : remainingArguments)
+		{
+			File f = new File(s);
+			if (f.exists() && f.isFile())
+			{
+				files.add(f);
 			} else
 			{
-				// It's a file or a directory
-				File file = new File(arg);
-
-				if (file.isFile())
-				{
-					if (isRtFile(file))
-					{
-						files.add(file);
-					}
-				} else
-				{
-					usage("Not a file: " + file);
-				}
+				System.err.println("Not a file: " + s);
+				return;
 			}
 		}
 
@@ -107,13 +103,14 @@ public class CGenMain
 
 			CGen cGen = new CGen();
 
-			GeneratedData data = cGen.generateCFromVdm(ast, output_folder);
-
-			System.out.println("Generation complete");
+			GeneratedData data = cGen.generateCFromVdm(ast, outputDir);
+			System.out.println("C code generated to folder: "
+					+ outputDir.getAbsolutePath());
 			if (print)
 			{
 				for (GeneratedModule module : data.getClasses())
 				{
+
 					if (module.canBeGenerated())
 					{
 						System.out.println(module.getContent());
@@ -152,17 +149,13 @@ public class CGenMain
 		return f.getName().endsWith(".vdmrt") || f.getName().endsWith(".vrt");
 	}
 
-	private static void usage(String msg)
+	private static void usage(Options options, Option opt, String string)
 	{
-		Logger.getLog().printErrorln("VDM-RT to C generator: " + msg + "\n");
-		Logger.getLog().printErrorln("Usage: vdm2c [<options>] [<VDM-RT files>]");
-		Logger.getLog().printErrorln(PRINT_ARG
-				+ ": print the generated code to the console");
-		Logger.getLog().printErrorln(OUTPUT_ARG
-				+ " <folder path>: the output folder of the generated code");
-		Logger.getLog().printErrorln(FOLDER_ARG
-				+ " <folder path>: a folder containing input .vdmrt files");
+		System.err.println("Error in argument: " + opt.getOpt() + " - "
+				+ string);
+		// automatically generate the help statement
+		HelpFormatter formatter = new HelpFormatter();
+		formatter.printHelp("cgen", options);
 
-		System.exit(1);
 	}
 }

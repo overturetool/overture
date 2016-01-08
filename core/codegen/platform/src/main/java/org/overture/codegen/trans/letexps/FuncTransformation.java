@@ -85,6 +85,7 @@ public class FuncTransformation extends DepthFirstAnalysisAdaptor
 		method.setIsConstructor(false);
 		method.setImplicit(node.getImplicit());
 
+
 		if (!(body instanceof ANotImplementedExpCG))
 		{
 			AReturnStmCG returnStm = new AReturnStmCG();

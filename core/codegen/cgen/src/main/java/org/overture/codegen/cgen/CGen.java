@@ -29,17 +29,10 @@ import org.overture.codegen.utils.GeneratedModule;
 public class CGen extends CodeGenBase
 {
 
-	private String output_folder;
-
 	public GeneratedData generateCFromVdm(List<SClassDefinition> ast,
-			String output_folder) throws AnalysisException
+			File outputFolder) throws AnalysisException
 	{
 		List<IRStatus<org.overture.codegen.cgast.INode>> statuses = new LinkedList<>();
-
-		if (output_folder == null)
-			this.output_folder = "target/cgen";
-		else
-			this.output_folder = output_folder;
 
 		// This is run pr. class
 		for (SClassDefinition node : ast)
@@ -118,8 +111,8 @@ public class CGen extends CodeGenBase
 
 			try
 			{
-				printClass(classCg, my_formatter);
-				generateClassHeader(classCg, my_formatter);
+				printClass(classCg, my_formatter, outputFolder);
+				generateClassHeader(classCg, my_formatter, outputFolder);
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e1)
 			{
 				// TODO Auto-generated catch block
@@ -186,9 +179,9 @@ public class CGen extends CodeGenBase
 	}
 
 	@SuppressWarnings("unchecked")
-	private void generateClassHeader(AClassDeclCG cl, CFormat my_formatter)
-			throws IOException,
-			org.overture.codegen.cgast.analysis.AnalysisException
+	private void generateClassHeader(AClassDeclCG cl, CFormat my_formatter,
+			File output_dir) throws IOException,
+					org.overture.codegen.cgast.analysis.AnalysisException
 	{
 
 		AClassHeaderDeclCG ch = new AClassHeaderDeclCG();
@@ -211,7 +204,6 @@ public class CGen extends CodeGenBase
 		StringWriter writer = new StringWriter();
 		ch.apply(my_formatter.GetMergeVisitor(), writer);
 
-		File output_dir = new File(output_folder.replace('/', File.separatorChar));
 		output_dir.mkdirs();
 
 		// Print the class
@@ -221,14 +213,14 @@ public class CGen extends CodeGenBase
 		output.close();
 	}
 
-	private void printClass(AClassDeclCG cl, CFormat my_formatter)
-			throws org.overture.codegen.cgast.analysis.AnalysisException,
-			IOException
+	private void printClass(AClassDeclCG cl, CFormat my_formatter,
+			File output_dir)
+					throws org.overture.codegen.cgast.analysis.AnalysisException,
+					IOException
 	{
 		StringWriter writer = new StringWriter();
 		cl.apply(my_formatter.GetMergeVisitor(), writer);
 
-		File output_dir = new File(output_folder.replace('/', File.separatorChar));
 		output_dir.mkdirs();
 
 		// Print the class
@@ -238,8 +230,4 @@ public class CGen extends CodeGenBase
 		output.close();
 	}
 
-	private void printClassHeader(AClassHeaderDeclCG ch, CFormat my_formatter)
-	{
-
-	}
 }
