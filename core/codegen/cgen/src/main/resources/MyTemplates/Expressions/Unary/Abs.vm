@@ -1,1 +1,1 @@
-Utils.abs($CFormat.format($node.getExp()))
+vdmAbs($CFormat.format($node.getExp()))

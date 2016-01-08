@@ -1,1 +1,1 @@
-$CFormat.formatNotUnary($node.getExp())
+vdmNot($CFormat.format($node.getExp()))

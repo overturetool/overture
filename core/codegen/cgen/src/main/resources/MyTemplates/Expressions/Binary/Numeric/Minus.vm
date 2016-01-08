@@ -1,1 +1,1 @@
-vdmMinus($CFormat.format($node.getLeft(), true) , $CFormat.format($node.getRight(), false))
+vdmDifference($CFormat.format($node.getLeft(), true) , $CFormat.format($node.getRight(), false))
