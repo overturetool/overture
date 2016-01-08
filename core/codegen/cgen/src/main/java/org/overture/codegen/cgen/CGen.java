@@ -29,12 +29,17 @@ import org.overture.codegen.utils.GeneratedModule;
 
 public class CGen extends CodeGenBase {
 	
-	public GeneratedData generateXFromVdm(List<SClassDefinition> ast)
+	private String output_folder; 
+	
+	public GeneratedData generateXFromVdm(List<SClassDefinition> ast, String output_folder)
 			throws AnalysisException
 	{
 		List<IRStatus<org.overture.codegen.cgast.INode>> statuses = new LinkedList<>();
 		
-
+		if(output_folder==null) this.output_folder="target/cgen";
+		else this.output_folder=output_folder;
+		
+		
 		
 		// This is run pr. class
 		for(SClassDefinition node : ast)
@@ -198,7 +203,7 @@ public class CGen extends CodeGenBase {
 		StringWriter writer = new StringWriter();
 		ch.apply(my_formatter.GetMergeVisitor(), writer);
 		
-		File output_dir =new File( "target/cgen".replace('/', File.separatorChar));
+		File output_dir =new File( output_folder.replace('/', File.separatorChar));
 		output_dir.mkdirs();
 		
 		// Print the class
@@ -213,7 +218,7 @@ public class CGen extends CodeGenBase {
 		StringWriter writer = new StringWriter();
 		cl.apply(my_formatter.GetMergeVisitor(), writer);
 		
-		File output_dir =new File( "target/cgen".replace('/', File.separatorChar));
+		File output_dir =new File( output_folder.replace('/', File.separatorChar));
 		output_dir.mkdirs();
 		
 		// Print the class
