@@ -8,9 +8,9 @@ import java.io.InputStreamReader;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.tests.exec.util.ProcessResult;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2jml.JmlGenMain;
-import org.overture.vdm2jml.tests.util.ProcessResult;
 
 abstract public class OpenJmlValidationBase extends JmlGenTestBase
 {
