@@ -46,7 +46,7 @@ abstract public class PpSpecificationTest extends SpecificationTestBase
 			}
 		}
 
-		return vdmCodGen.generateXFromVdm(classes,new File("target/test-cgen".replace('/', File.separatorChar)));
+		return vdmCodGen.generateCFromVdm(classes,new File("target/test-cgen".replace('/', File.separatorChar)));
 	}
 
 	abstract protected String getUpdatePropertyString();

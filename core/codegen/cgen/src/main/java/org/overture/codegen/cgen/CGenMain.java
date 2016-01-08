@@ -1,13 +1,17 @@
 package org.overture.codegen.cgen;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.apache.commons.cli.*;
@@ -86,6 +90,9 @@ public class CGenMain
 			if (f.exists() && f.isFile())
 			{
 				files.add(f);
+			}else{
+				System.err.println("Not a file: "+s);
+				return;
 			}
 		}
 
@@ -93,16 +100,14 @@ public class CGenMain
 		try
 		{
 			List<SClassDefinition> ast = GeneralCodeGenUtils.consClassList(files, Dialect.VDM_RT);
+					
 
-			CGen xGen = new CGen();
+			CGen cGen = new CGen();
 
-			GeneratedData data = xGen.generateXFromVdm(ast, outputDir);
-
-			for (GeneratedModule module : data.getClasses())
-			{
-
-				if (module.canBeGenerated())
-				{
+			GeneratedData data = cGen.generateCFromVdm(ast, outputDir);
+			for (GeneratedModule module : data.getClasses()) {
+				
+				if (module.canBeGenerated()) {
 					System.out.println(module.getContent());
 					System.out.println(module.getUnsupportedInIr());
 					System.out.println(module.getMergeErrors());
@@ -117,19 +122,19 @@ public class CGenMain
 		}
 
 	}
-
+	
 	public static List<File> filterFiles(List<File> files)
 	{
 		List<File> filtered = new LinkedList<File>();
-
-		for (File f : files)
+		
+		for(File f : files)
 		{
-			if (isRtFile(f))
+			if(isRtFile(f))
 			{
 				filtered.add(f);
 			}
 		}
-
+		
 		return filtered;
 	}
 

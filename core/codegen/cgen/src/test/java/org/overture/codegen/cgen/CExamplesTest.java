@@ -6,8 +6,8 @@ import org.junit.Test;
 
 public class CExamplesTest
 {
-	static final String cexamplesBase = System.getProperty("cexamples-path");
-	static final String outputFolder = new File("target/cgen".replace('/', File.separatorChar)).getAbsolutePath();
+	static final String cexamplesBase = System.getProperty("cexamples.path");
+	static final String outputFolder = new File("target/test-cgen/"+CExamplesTest.class.getSimpleName().replace('/', File.separatorChar)).getAbsolutePath();
 
 	static String getPath(String rpath)
 	{
@@ -17,6 +17,12 @@ public class CExamplesTest
 	@Test
 	public void a()
 	{
-		CGenMain.main(new String[] { getPath("classes/A.vdmrt"), outputFolder });
+		CGenMain.main(new String[] {"-dest",outputFolder, getPath("classes/A.vdmrt") });
+	}
+	
+	@Test
+	public void c()
+	{
+		CGenMain.main(new String[] {"-dest",outputFolder, getPath("classes/C.vdmrt") });
 	}
 }
