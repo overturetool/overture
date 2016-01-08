@@ -1,2 +1,2 @@
 ##Only supports basic types
-$CFormat.formatEqualsBinaryExp($node)
+vdmEquals($CFormat.format($node.getLeft(), true) , $CFormat.format($node.getRight(), false))
