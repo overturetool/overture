@@ -35,26 +35,28 @@ final public class Entry implements java.io.Serializable {
             SequenceTraceNode sequence_2 = new SequenceTraceNode();
             AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
             SequenceTraceNode sequence_3 = new SequenceTraceNode();
+            final Number arg_1 = a;
             CallStatement callStm_1 = new CallStatement() {
                     public Object execute() {
-                        return op(a);
+                        return op(arg_1);
                     }
 
                     public String toString() {
-                        return "op(" + Utils.toString(a) + ")";
+                        return "op(" + Utils.toString(arg_1) + ")";
                     }
                 };
 
             StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
             sequence_3.add(apply_1);
 
+            final Number arg_2 = b;
             CallStatement callStm_2 = new CallStatement() {
                     public Object execute() {
-                        return op(b);
+                        return op(arg_2);
                     }
 
                     public String toString() {
-                        return "op(" + Utils.toString(b) + ")";
+                        return "op(" + Utils.toString(arg_2) + ")";
                     }
                 };
 
@@ -62,26 +64,28 @@ final public class Entry implements java.io.Serializable {
             sequence_3.add(apply_2);
 
             SequenceTraceNode sequence_4 = new SequenceTraceNode();
+            final Number arg_3 = b;
             CallStatement callStm_3 = new CallStatement() {
                     public Object execute() {
-                        return op(b);
+                        return op(arg_3);
                     }
 
                     public String toString() {
-                        return "op(" + Utils.toString(b) + ")";
+                        return "op(" + Utils.toString(arg_3) + ")";
                     }
                 };
 
             StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
             sequence_4.add(apply_3);
 
+            final Number arg_4 = a;
             CallStatement callStm_4 = new CallStatement() {
                     public Object execute() {
-                        return op(a);
+                        return op(arg_4);
                     }
 
                     public String toString() {
-                        return "op(" + Utils.toString(a) + ")";
+                        return "op(" + Utils.toString(arg_4) + ")";
                     }
                 };
 

@@ -45,10 +45,11 @@ final public class Entry implements java.io.Serializable {
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             final Object a = ((Object) iterator_1.next());
+            final Object arg_1 = a;
             CallStatement callStm_1 = new CallStatement() {
                     public Boolean isTypeCorrect() {
                         try {
-                            //@ assert Utils.is_nat(a);
+                            //@ assert Utils.is_nat(arg_1);
                         } catch (AssertionError e) {
                             return false;
                         }
@@ -57,17 +58,17 @@ final public class Entry implements java.io.Serializable {
                     }
 
                     public Boolean meetsPreCond() {
-                        return pre_op(((Number) a));
+                        return pre_op(((Number) arg_1));
                     }
 
                     public Object execute() {
-                        op(((Number) a));
+                        op(((Number) arg_1));
 
                         return Utils.VOID_VALUE;
                     }
 
                     public String toString() {
-                        return "op(" + Utils.toString(a) + ")";
+                        return "op(" + Utils.toString(arg_1) + ")";
                     }
                 };
 

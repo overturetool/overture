@@ -31,10 +31,11 @@ final public class Entry implements java.io.Serializable {
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             final Number a = ((Number) iterator_1.next());
+            final Number arg_1 = a;
             CallStatement callStm_1 = new CallStatement() {
                     public Boolean isTypeCorrect() {
                         try {
-                            //@ assert Utils.is_nat(a);
+                            //@ assert Utils.is_nat(arg_1);
                         } catch (AssertionError e) {
                             return false;
                         }
@@ -43,17 +44,17 @@ final public class Entry implements java.io.Serializable {
                     }
 
                     public Boolean meetsPreCond() {
-                        return Other.pre_op(a);
+                        return Other.pre_op(arg_1);
                     }
 
                     public Object execute() {
-                        Other.op(a);
+                        Other.op(arg_1);
 
                         return Utils.VOID_VALUE;
                     }
 
                     public String toString() {
-                        return "Other`op(" + Utils.toString(a) + ")";
+                        return "Other`op(" + Utils.toString(arg_1) + ")";
                     }
                 };
 

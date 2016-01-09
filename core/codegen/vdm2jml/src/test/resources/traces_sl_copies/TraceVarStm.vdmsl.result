@@ -51,10 +51,11 @@ final public class Entry implements java.io.Serializable {
             final Number b = op();
 
             SequenceTraceNode sequence_2 = new SequenceTraceNode();
+            final Number arg_1 = a;
             CallStatement callStm_1 = new CallStatement() {
                     public Boolean isTypeCorrect() {
                         try {
-                            //@ assert Utils.is_nat(a);
+                            //@ assert Utils.is_nat(arg_1);
                         } catch (AssertionError e) {
                             return false;
                         }
@@ -63,21 +64,22 @@ final public class Entry implements java.io.Serializable {
                     }
 
                     public Object execute() {
-                        return id(a);
+                        return id(arg_1);
                     }
 
                     public String toString() {
-                        return "id(" + Utils.toString(a) + ")";
+                        return "id(" + Utils.toString(arg_1) + ")";
                     }
                 };
 
             StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
             sequence_2.add(apply_1);
 
+            final Number arg_2 = b;
             CallStatement callStm_2 = new CallStatement() {
                     public Boolean isTypeCorrect() {
                         try {
-                            //@ assert Utils.is_nat(b);
+                            //@ assert Utils.is_nat(arg_2);
                         } catch (AssertionError e) {
                             return false;
                         }
@@ -86,11 +88,11 @@ final public class Entry implements java.io.Serializable {
                     }
 
                     public Object execute() {
-                        return id(b);
+                        return id(arg_2);
                     }
 
                     public String toString() {
-                        return "id(" + Utils.toString(b) + ")";
+                        return "id(" + Utils.toString(arg_2) + ")";
                     }
                 };
 

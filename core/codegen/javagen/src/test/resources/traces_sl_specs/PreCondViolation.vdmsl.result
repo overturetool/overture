@@ -44,19 +44,20 @@ final public class Entry implements java.io.Serializable {
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             final Number x = ((Number) iterator_1.next());
+            final Number arg_1 = x;
             CallStatement callStm_1 = new CallStatement() {
                     public Boolean meetsPreCond() {
-                        return pre_op(x);
+                        return pre_op(arg_1);
                     }
 
                     public Object execute() {
-                        op(x);
+                        op(arg_1);
 
                         return Utils.VOID_VALUE;
                     }
 
                     public String toString() {
-                        return "op(" + Utils.toString(x) + ")";
+                        return "op(" + Utils.toString(arg_1) + ")";
                     }
                 };
 
