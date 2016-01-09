@@ -1,0 +1,24 @@
+module Entry
+exports all
+definitions
+
+types
+
+R ::
+ x : int
+ y : int;
+
+functions
+
+f :  nat -> nat
+f (x) ==
+  x;
+
+traces
+
+T1:
+let mk_R(a,b) = mk_R(1,2)
+in
+  (f(a);f(b));
+  
+end Entry
