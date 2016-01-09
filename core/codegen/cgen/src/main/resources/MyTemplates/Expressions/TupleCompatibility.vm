@@ -1,0 +1,4 @@
+#set( $tuple = $CFormat.format($node.getTuple()) )
+#set( $typeArgs = $CFormat.formatTypeArgs($node.getTypes()) )
+##
+${tuple}.compatible(${typeArgs})

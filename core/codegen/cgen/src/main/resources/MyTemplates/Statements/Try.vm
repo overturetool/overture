@@ -1,0 +1,20 @@
+#set( $stm = "")
+#if (!$CFormat.isNull($node.getStm()))
+	#set( $stm = $CFormat.format($node.getStm()))
+#end
+##
+#set( $finally = $CFormat.format($node.getFinally()))
+##
+try
+{
+	${stm}
+}
+#foreach( $clause in $node.getCatchClauses() )
+$CFormat.format($clause)
+#end
+#if (!$CFormat.isNull(${finally}))
+finally
+{
+	${finally}
+}
+#end

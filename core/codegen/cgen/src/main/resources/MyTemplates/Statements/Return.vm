@@ -1,0 +1,6 @@
+#set( $exp = "")
+#if (!$CFormat.isNull($node.getExp()))
+#set( $exp = $CFormat.format($node.getExp()))
+#end
+##
+return $exp;

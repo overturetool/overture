@@ -1,0 +1,11 @@
+#set( $iterator = $CFormat.nextVarName($TempVar.getIteratorNamePrefix()) )
+#set( $exp = $CFormat.format($node.getExp()) )
+#set( $var = $CFormat.format($node.getPattern()) )
+#set( $elementType = $CFormat.formatElementType($node.getExp().getType()) )
+#set( $body = $CFormat.format($node.getBody()) )
+##
+for (Iterator ${iterator} = ${exp}.iterator(); ${iterator}.hasNext();)
+{
+	${elementType} ${var} = (${elementType}) ${iterator}.next();
+	${body}
+}

@@ -1,0 +1,19 @@
+#if ($CFormat.isScoped($node))
+{
+#end
+##
+## Local definitions:
+##
+#foreach( $dec in $node.getLocalDefs() )
+$CFormat.format($dec)
+#end
+##
+## Statements:
+##
+#foreach( $stm in $node.getStatements() )
+$CFormat.format($stm)
+#end
+##
+#if ($CFormat.isScoped($node))
+}
+#end

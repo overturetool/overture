@@ -1,0 +1,1 @@
+vdmLessThan($CFormat.format($node.getLeft(), true),$CFormat.format($node.getRight(), false))

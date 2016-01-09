@@ -1,0 +1,2 @@
+#if($CFormat.isClassType($node))
+$CFormat.getEnclosingClass($node) $CFormat.format($node.getPattern())#else $CFormat.format($node.getType()) $CFormat.format($node.getPattern())#end

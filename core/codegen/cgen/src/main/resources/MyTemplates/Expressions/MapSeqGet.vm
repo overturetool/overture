@@ -1,0 +1,5 @@
+#set( $col = $CFormat.format($node.getCol()) )
+#set( $index = $CFormat.format($node.getIndex()) )
+#set( $type = $CFormat.format($node.getType()) )
+##
+((${type}) Utils.get(${col},${index}))

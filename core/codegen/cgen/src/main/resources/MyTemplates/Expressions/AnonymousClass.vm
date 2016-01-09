@@ -1,0 +1,6 @@
+new $CFormat.format($node.getType())()
+{
+	#foreach( $method in $node.getMethods() )
+	$CFormat.format($method)
+	#end
+}

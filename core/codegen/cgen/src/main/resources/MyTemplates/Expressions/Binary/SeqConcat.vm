@@ -1,0 +1,1 @@
+vdmSeqConc($CFormat.format($node.getLeft()), $CFormat.format($node.getRight()))

@@ -1,0 +1,23 @@
+#set( $package = "")
+#set( $packageName = $node.getPackage())
+#if (!$CFormat.isNull($packageName))
+	#set( $package = "package ${packageName};")
+#end
+##
+#set( $templateTypes = "")
+#if ($node.getTemplateTypes().size() > 0)
+	#set( $templateTypes = $CFormat.formatTemplateTypes($node.getTemplateTypes()))
+#end
+##
+$package
+
+public interface $node.getName() $templateTypes
+{
+#foreach( $field in $node.getFields() )
+$CFormat.format($field)
+#end
+##
+#foreach( $methodSig in $node.getMethodSignatures() )
+$CFormat.format($methodSig)
+#end
+}

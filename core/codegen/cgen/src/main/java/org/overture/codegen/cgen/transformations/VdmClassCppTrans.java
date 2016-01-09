@@ -1,0 +1,21 @@
+package org.overture.codegen.cgen.transformations;
+
+import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.statements.ACallObjectStmCG;
+import org.overture.codegen.cgast.statements.APlainCallStmCG;
+import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
+
+public class VdmClassCppTrans extends DepthFirstAnalysisAdaptor
+{
+
+	private BaseTransformationAssistant baseAssistant;
+	private TransAssistantCG trans;
+
+	public VdmClassCppTrans(BaseTransformationAssistant baseAss)
+	{
+		baseAssistant = baseAss;
+	}
+
+}

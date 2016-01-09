@@ -1,0 +1,16 @@
+if ( $CFormat.format($node.getIfExp()) )
+{
+	$CFormat.format($node.getThenStm())
+}
+#foreach( $stm in $node.getElseIf() )
+else if ( $CFormat.format($stm.getElseIf()) )
+{
+	$CFormat.format($stm.getThenStm())
+}
+#end
+#if ( !$CFormat.isNull($node.getElseStm()) )
+else
+{
+	$CFormat.format($node.getElseStm())
+}
+#end

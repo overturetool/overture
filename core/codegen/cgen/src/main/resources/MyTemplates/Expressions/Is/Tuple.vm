@@ -1,0 +1,3 @@
+#set( $exp = $CFormat.format($node.getExp()) )
+#set( $typeArgs = $CFormat.formatTypeArgs($node.getCheckedType()) )
+Utils.is_Tuple(${exp}, ${typeArgs})

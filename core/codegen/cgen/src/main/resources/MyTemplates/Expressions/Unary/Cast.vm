@@ -1,0 +1,4 @@
+#set( $type = $CFormat.format($node.getType()))
+#set( $exp = $CFormat.format($node.getExp(), false))
+##
+(($type) $exp)

@@ -1,0 +1,76 @@
+// The template for class
+
+\#include $CFormat.getIncludeClassName($node)
+\#include <stdio.h>
+
+
+
+// Memory management methods
+void $CFormat.getClassName($node)_free_fields(struct $CFormat.getClassName($node) *this)
+{
+	//free class struct
+#foreach( $field in $node.getFields() )
+	vdmFree(this->m_$CFormat.getClassName($node)_$field.getName());
+#end
+}
+
+static void $CFormat.getClassName($node)_free(struct $CFormat.getClassName($node) *this)
+{
+	--this->_$CFormat.getClassName($node)_refs;
+	if (this->_$CFormat.getClassName($node)_refs < 1)
+	{
+		$CFormat.getClassName($node)_free_fields(this);
+		free(this);
+	}
+}
+
+// The methods
+#foreach( $method in $node.getMethods() )
+#if(!$method.getIsConstructor())
+$CFormat.format($method)
+#end
+#end
+
+// The table
+static struct VTable VTableArrayFor$CFormat.getClassName($node) [] =
+{
+#foreach( $method in $node.getMethods() )
+#if(!$method.getIsConstructor()){ 0, 0, (VirtualFunctionPointer) $method.getName() },
+#end
+#end
+};
+
+// The constructor
+$CFormat.getClassName($node)CLASS $CFormat.getClassName($node)_Constructor($CFormat.getClassName($node)CLASS this_ptr)
+{
+
+	if(this_ptr==NULL)
+	{
+		this_ptr = ($CFormat.getClassName($node)CLASS) malloc(sizeof(struct $CFormat.getClassName($node)));
+	}
+
+	if(this_ptr!=NULL)
+	{
+		this_ptr->_$CFormat.getClassName($node)_id = CLASS_ID_$CFormat.getClassName($node)_ID;
+		this_ptr->_$CFormat.getClassName($node)_refs = 0;
+		this_ptr->_$CFormat.getClassName($node)_pVTable=VTableArrayFor$CFormat.getClassName($node);
+
+	#foreach( $field in $node.getFields() )
+	this_ptr->m_$CFormat.getClassName($node)_$field.getName()= $CFormat.format($field.getInitial());
+	#end
+}
+
+	return this_ptr;
+}
+
+// Method for creating new "class"
+static TVP new()
+{
+	$CFormat.getClassName($node)CLASS ptr=$CFormat.getClassName($node)_Constructor(NULL);
+
+	return newTypeValue(VDM_CLASS, (TypedValueType)
+			{	.ptr=newClassValue(ptr->_$CFormat.getClassName($node)_id, &ptr->_$CFormat.getClassName($node)_refs, (freeVdmClassFunction)&$CFormat.getClassName($node)_free, ptr)});
+}
+
+const struct $CFormat.getClassName($node)Class $CFormat.getClassName($node) =
+{ ._new = &new };

@@ -1,0 +1,4 @@
+#set( $element = $CFormat.format($node.getLeft()) )
+#set( $set = $CFormat.format($node.getRight()) )
+##
+${set}.contains(${element})

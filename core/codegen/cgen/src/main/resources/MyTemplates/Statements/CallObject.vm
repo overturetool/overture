@@ -1,0 +1,10 @@
+#set( $args = $CFormat.formatArgs($node.getArgs()) )
+#set( $field = $node.getFieldName() )
+#set( $designator = $CFormat.format($node.getDesignator()) )
+##
+#set( $return = "")
+#if (!$CFormat.isVoidType($node.getType()))
+	#set( $return = "return ")
+#end
+##
+${return}${designator}.${field}(${args});

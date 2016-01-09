@@ -24,6 +24,7 @@
     <module>ir</module>
     <module>platform</module>
     <module>javagen</module>
+    <module>cgen</module>
     <module>vdm2jml</module>
     <module>vdm2jml-runtime</module>
     <module>codegen-runtime</module>

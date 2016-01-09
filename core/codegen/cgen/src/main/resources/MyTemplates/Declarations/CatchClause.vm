@@ -1,0 +1,8 @@
+#set( $type = $CFormat.format($node.getType()))
+#set( $name = $node.getName())
+#set( $stm = $CFormat.format($node.getStm()))
+##
+catch(${type} ${name})
+{
+	${stm}
+}

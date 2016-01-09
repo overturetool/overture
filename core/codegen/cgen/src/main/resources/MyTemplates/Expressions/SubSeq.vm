@@ -1,0 +1,5 @@
+#set( $from = $CFormat.format($node.getFrom()) )
+#set( $to = $CFormat.format($node.getTo()) )
+#set( $seq = $CFormat.format($node.getSeq()) )
+##
+SeqUtil.subSeq(${seq}, ${from}, ${to})

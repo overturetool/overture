@@ -1,0 +1,36 @@
+##Example1: t.getX(1, 1)
+##Example2: [1,2](1)
+##Example3: "kitten"(3)
+##
+#set( $root = $CFormat.format($node.getRoot()) )
+#set( $args = $CFormat.formatArgs($node.getArgs()) )
+##
+#if ($CFormat.isSeqType($node.getRoot()) && $node.getArgs().size() == 1)
+##
+	#set( $index = $CFormat.format($node.getArgs().get(0)))
+vdmSeqIndex(${root},${index})
+##
+#elseif ($CFormat.isMapType($node.getRoot()) && $node.getArgs().size() == 1)
+	#set( $key = $CFormat.format($node.getArgs().get(0)))
+	#set ( $mapRead = "" )
+	#if ($CFormat.castNotNeeded($node.getType()))
+		#set ( $mapRead = "Utils.get(${root},${key})" )
+	#else
+		#set ( $mapRead = "(($CFormat.format($node.getType())) Utils.get(${root},${key}))" )
+	#end
+	#if ($ValueSemantics.shouldClone($node))
+		Utils.copy(${mapRead})
+	#else
+		${mapRead}
+	#end
+##
+#elseif ($CFormat.isStringType($node.getRoot()))
+	#set( $index = $CFormat.format($node.getArgs().get(0)))
+	${root}.charAt(Utils.index($index))##
+##
+#elseif ($CFormat.isLambda($node))
+	${root}.eval(${args})##
+##
+#else
+${root}($args)##
+#end

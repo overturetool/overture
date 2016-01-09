@@ -1,0 +1,5 @@
+{ /* Start of atomic statement */
+#foreach( $stm in $node.getStatements() )
+$CFormat.format($stm)
+#end
+}  /* End of atomic statement */

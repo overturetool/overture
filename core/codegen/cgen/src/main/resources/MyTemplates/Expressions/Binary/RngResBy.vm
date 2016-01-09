@@ -1,0 +1,4 @@
+#set( $left = $CFormat.format($node.getLeft()) )
+#set( $right = $CFormat.format($node.getRight()) )
+##
+MapUtil.rngResBy(${left}, ${right})

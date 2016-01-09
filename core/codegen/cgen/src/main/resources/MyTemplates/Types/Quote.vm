@@ -1,0 +1,3 @@
+#set( $packagePrefix = $CFormat.getQuotePackagePrefix() )
+##
+${packagePrefix}${node.getValue()}Quote

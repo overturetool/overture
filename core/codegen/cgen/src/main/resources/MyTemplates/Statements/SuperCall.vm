@@ -1,0 +1,12 @@
+##Example: super.op(1, 1)
+##
+#set( $super = "super")
+##
+#set( $return = "")
+#if (!$CFormat.isVoidType($node.getType()))
+	#set( $return = "return ")
+#end
+##
+#set( $name = "$node.getName()")
+##
+${return}${super}.${name}($CFormat.formatArgs($node.getArgs()));

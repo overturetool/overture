@@ -1,0 +1,1 @@
+$CFormat.format($node.getClassType())::$node.getName()

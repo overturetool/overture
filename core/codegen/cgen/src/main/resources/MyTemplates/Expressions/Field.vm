@@ -1,0 +1,6 @@
+#if($CFormat.isClass($node.getParent()))
+GET_FIELD_PTR($node.getParent().getName(),$node.getParent().getName(),this,$node.getName());
+#else
+//FIXME: not supported
+assert(false && "not supported");
+#end
