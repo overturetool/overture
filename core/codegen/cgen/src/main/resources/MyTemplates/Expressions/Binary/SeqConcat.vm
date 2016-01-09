@@ -1,5 +1,1 @@
-#if ($CFormat.isStringType($node.getType()))
-	$CFormat.format($node.getLeft(), true) + $CFormat.format($node.getRight(), false)
-#else
-	SeqUtil.conc($CFormat.format($node.getLeft()), $CFormat.format($node.getRight()))
-#end
+vdmSeqConc($CFormat.format($node.getLeft()), $CFormat.format($node.getRight()))

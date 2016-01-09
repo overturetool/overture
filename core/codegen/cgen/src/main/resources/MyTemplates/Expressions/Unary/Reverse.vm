@@ -1,7 +1,1 @@
-#set( $exp = $CFormat.format($node.getExp()) )
-##
-#if ($CFormat.isStringType($node.getExp().getType()))
-	new StringBuilder($exp).reverse().toString()
-#else
-	SeqUtil.reverse($exp)
-#end
+vdmSeqReverse($CFormat.format($node.getExp()) )

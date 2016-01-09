@@ -8,7 +8,7 @@
 #if ($CFormat.isSeqType($node.getRoot()) && $node.getArgs().size() == 1)
 ##
 	#set( $index = $CFormat.format($node.getArgs().get(0)))
-seqIndex(${root},${index})
+vdmSeqIndex(${root},${index})
 ##
 #elseif ($CFormat.isMapType($node.getRoot()) && $node.getArgs().size() == 1)
 	#set( $key = $CFormat.format($node.getArgs().get(0)))

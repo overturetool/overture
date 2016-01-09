@@ -49,8 +49,8 @@ public class CTransSeries
 		// IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
 
 		VdmBasicTypesCppTrans typeTrans = new VdmBasicTypesCppTrans(transAssistant);
-		VdmSetCppTrans setTrans = new VdmSetCppTrans(transAssistant);
-		VdmSeqCppTrans seqTrans = new VdmSeqCppTrans(transAssistant);
+//		VdmSetCppTrans setTrans = new VdmSetCppTrans(transAssistant);
+//		VdmSeqCppTrans seqTrans = new VdmSeqCppTrans(transAssistant);
 
 		// Construct the transformations
 		FuncTransformation funcTransformation = new FuncTransformation(transAssistant);
@@ -98,7 +98,7 @@ public class CTransSeries
 		List<DepthFirstAnalysisAdaptor> transformations = new LinkedList<DepthFirstAnalysisAdaptor>();
 
 		// transformations.add(typeTrans);
-		transformations.add(setTrans);
+//		transformations.add(setTrans);
 		// transformations.add(seqTrans);
 		// transformations.add(assignTransformation);
 

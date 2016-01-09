@@ -7,6 +7,8 @@
 \#include "lib/TypedValue.h"
 \#include "lib/VdmClass.h"
 \#include "lib/VdmBasicTypes.h"
+\#include "lib/VdmSet.h"
+\#include "lib/VdmSeq.h"
 
 \#define CLASS_ID_$CFormat.getClassHeaderName($node)_ID $CFormat.getClassId($CFormat.getClassHeaderName($node))
 

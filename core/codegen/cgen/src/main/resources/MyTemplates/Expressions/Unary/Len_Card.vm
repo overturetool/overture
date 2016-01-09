@@ -1,8 +1,1 @@
-#set( $sizeCall = "")
-#if ($CFormat.isStringType($node.getExp().getType()))
-	#set( $sizeCall = ".length()")
-#else
-	#set( $sizeCall = ".size()")
-#end
-##
-$CFormat.format($node.getExp())$sizeCall
+newInt(0)/*UNSUPPORTED*/

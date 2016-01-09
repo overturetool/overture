@@ -1,1 +1,1 @@
-SeqUtil.inds($CFormat.format($node.getExp()))
+vdmSeqInds($CFormat.format($node.getExp()))
