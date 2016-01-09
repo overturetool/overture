@@ -31,7 +31,6 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ATypeArgExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
@@ -161,7 +160,12 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		AVarDeclCG stmNodeDecl = getTransAssist().consDecl(stmNodeName, stmTraceNodeType.clone(), newStmTraceNodeExp);
 
 		ABlockStmCG decls = new ABlockStmCG();
-		decls.getLocalDefs().addAll(argDecls);
+		
+		if(!argDecls.isEmpty())
+		{
+			decls.getLocalDefs().addAll(argDecls);
+		}
+		
 		decls.getLocalDefs().add(callStmDecl);
 		decls.getLocalDefs().add(stmNodeDecl);
 
@@ -342,10 +346,25 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		}
 	}
 
+	/**
+	 * Assumes dialect is VDM-SL. This method does not work with store lookups for local variables and since code
+	 * generated VDM-SL traces do not rely on this then it is safe to use this method for this dialect.
+	 * 
+	 * @param callStm
+	 *            the call statement for which we want to replace the arguments with variables
+	 * @return the variable declarations corresponding to the variables that replace the arguments
+	 */
 	protected List<AVarDeclCG> replaceArgsWithVars(SStmCG callStm)
 	{
-		List<SExpCG> args = null;
 		List<AVarDeclCG> decls = new LinkedList<AVarDeclCG>();
+		
+		if(Settings.dialect != Dialect.VDM_SL)
+		{
+			return decls;
+		}
+		
+		List<SExpCG> args = null;
+		
 		if (callStm instanceof SCallStmCG)
 		{
 			args = ((SCallStmCG) callStm).getArgs();
@@ -361,18 +380,14 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		for (SExpCG arg : args)
 		{
-			if (!(arg instanceof SVarExpCG))
-			{
-				String argName = getInfo().getTempVarNameGen().nextVarName(traceTrans.getTracePrefixes().callStmArgNamePrefix());
-				STypeCG type = arg.getType();
+			String argName = getInfo().getTempVarNameGen().nextVarName(traceTrans.getTracePrefixes().callStmArgNamePrefix());
+			STypeCG type = arg.getType();
 
-				AVarDeclCG argDecl = getTransAssist().consDecl(argName, type.clone(), arg.clone());
-				argDecl.setFinal(true);
-				decls.add(argDecl);
+			AVarDeclCG argDecl = getTransAssist().consDecl(argName, type.clone(), arg.clone());
+			argDecl.setFinal(true);
+			decls.add(argDecl);
 
-				getTransAssist().replaceNodeWith(arg, getInfo().getExpAssistant().consIdVar(argName, type.clone()));
-			}
-
+			getTransAssist().replaceNodeWith(arg, getInfo().getExpAssistant().consIdVar(argName, type.clone()));
 		}
 
 		return decls;
