@@ -1,0 +1,48 @@
+// The template for class header
+
+#ifndef CLASSES_A_H_
+\#define CLASSES_A_H_
+
+\#include "Globals.h"
+\#include "lib/TypedValue.h"
+\#include "lib/VdmClass.h"
+\#include "lib/VdmBasicTypes.h"
+\#include "lib/VdmSet.h"
+\#include "lib/VdmSeq.h"
+
+\#define CLASS_ID_$CFormat.getClassHeaderName($node)_ID $CFormat.getClassId($CFormat.getClassHeaderName($node))
+
+\#define $CFormat.getClassHeaderName($node)CLASS struct $CFormat.getClassHeaderName($node)*
+
+
+// The table
+
+#foreach( $method in $node.getMethods() )
+#if(!$method.getIsConstructor())\#define CLASS_$CFormat.getClassHeaderName($node)_$method.getName() $CFormat.getNumber();
+#end
+#end
+
+struct $CFormat.getClassHeaderName($node)
+{
+	VDM_CLASS_BASE_DEFINITIONS($CFormat.getClassHeaderName($node));
+	/*vtable
+	 * calc
+	 * sum
+	 * */
+	 
+	#foreach( $field in $node.getFields() )
+VDM_CLASS_FIELD_DEFINITION($CFormat.getClassHeaderName($node),$field.getName());
+	#end
+
+};
+
+
+void $CFormat.getClassHeaderName($node)_free_fields($CFormat.getClassHeaderName($node)CLASS);
+$CFormat.getClassHeaderName($node)CLASS $CFormat.getClassHeaderName($node)_Constructor($CFormat.getClassHeaderName($node)CLASS);
+
+extern const struct $CFormat.getClassHeaderName($node)Class
+{
+	TVP (*_new)();
+} $CFormat.getClassHeaderName($node);
+
+#endif /* CLASSES_$CFormat.getClassHeaderName($node)_H_ */

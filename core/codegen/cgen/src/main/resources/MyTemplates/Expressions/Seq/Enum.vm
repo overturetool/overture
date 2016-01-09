@@ -1,0 +1,5 @@
+#if ($CFormat.isStringType($node.getType()))
+$CFormat.buildString($node.getMembers())
+#else
+newSeqVar($node.getMembers().size(),$CFormat.formatArgs($node.getMembers()))##
+#end

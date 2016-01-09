@@ -1,0 +1,1 @@
+newSetVar($node.getMembers().size(),$CFormat.formatArgs($node.getMembers()))
