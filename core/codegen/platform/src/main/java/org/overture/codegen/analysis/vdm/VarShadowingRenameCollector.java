@@ -62,7 +62,7 @@ import org.overture.ast.types.PType;
 import org.overture.codegen.ir.TempVarNameGen;
 import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 
 /**
  * This analysis is used to compute new names for variables that shadow other variables. A renaming is suggested if a
@@ -848,7 +848,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 	private List<PDefinition> getParamDefs(AExplicitFunctionDefinition node)
 	{
-		AExplicitFunctionDefinitionAssistantTC funcAssistant = this.af.createAExplicitFunctionDefinitionAssistant();
+		SFunctionDefinitionAssistantTC funcAssistant = this.af.createSFunctionDefinitionAssistant();
 		List<List<PDefinition>> paramDefs = funcAssistant.getParamDefinitions(node, node.getType(), node.getParamPatternList(), node.getLocation());
 
 		List<PDefinition> paramDefFlattened = new LinkedList<PDefinition>();
@@ -1024,7 +1024,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	{
 		if (!contains(name.getLocation()))
 		{
-			renamings.add(new Renaming(name.getLocation(), name.getName(), newName));
+			renamings.add(new Renaming(name.getLocation(), name.getName(), newName, name.getModule(), name.getModule()));
 		}
 	}
 

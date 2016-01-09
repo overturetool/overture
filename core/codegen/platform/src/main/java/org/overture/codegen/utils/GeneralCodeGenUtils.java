@@ -454,6 +454,7 @@ public class GeneralCodeGenUtils
 		List<Violation> reservedWordViolations = asSortedList(invalidNames.getReservedWordViolations());
 		List<Violation> typenameViolations = asSortedList(invalidNames.getTypenameViolations());
 		List<Violation> tempVarViolations = asSortedList(invalidNames.getTempVarViolations());
+		List<Violation> objectMethodViolations = asSortedList(invalidNames.getObjectMethodViolations());
 
 		String correctionMessage = String.format("Prefix '%s' has been added to the name"
 				+ LINE_SEPARATOR, invalidNames.getCorrectionPrefix());
@@ -473,6 +474,12 @@ public class GeneralCodeGenUtils
 		for (Violation violation : tempVarViolations)
 		{
 			buffer.append("Temporary variable violation: " + violation + ". "
+					+ correctionMessage);
+		}
+		
+		for (Violation violation : objectMethodViolations)
+		{
+			buffer.append("java.lang.Object method violation: " + violation + ". "
 					+ correctionMessage);
 		}
 

@@ -1,0 +1,12 @@
+module A
+
+definitions
+
+functions
+f : int -> int
+f(x)== g(x);
+
+g : int -> int
+g(x)== 0;
+
+end A

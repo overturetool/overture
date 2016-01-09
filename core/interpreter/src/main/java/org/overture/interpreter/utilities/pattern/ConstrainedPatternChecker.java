@@ -97,6 +97,24 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 			return true; // Set types are various, so we must permute
 		}
 
+		// Check that lengths of the members are the same
+		int length = 0;
+		
+		for (PPattern p: pattern.getPlist())
+		{
+			if (length == 0)
+			{
+				length = p.apply(af.getLengthFinder());
+			}
+			else
+			{
+				if (p.apply(af.getLengthFinder()) != length)
+				{
+					return true;	// Patterns are different sizes, so permute them
+				}
+			}
+		}
+
 		return isConstrained(pattern.getPlist());
 	}
 

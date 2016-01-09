@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
@@ -60,7 +60,7 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 	public ATypeNameCG consTypeName(ARecordDeclCG record)
 			throws AnalysisException
 	{
-		AClassDeclCG classDef = record.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG classDef = record.getAncestor(ADefaultClassDeclCG.class);
 
 		ATypeNameCG typeName = new ATypeNameCG();
 
@@ -124,7 +124,7 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 	{
 		// Example: objRef instanceof classType
 
-		AClassDeclCG enclosingClass = record.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG enclosingClass = record.getAncestor(ADefaultClassDeclCG.class);
 
 		ATypeNameCG typeName = new ATypeNameCG();
 		typeName.setDefiningClass(enclosingClass.getName());

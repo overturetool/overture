@@ -1,0 +1,11 @@
+
+
+state S of
+	x : int
+end
+
+operations
+op ()
+post x = x~ + 1
+
+

@@ -1,0 +1,15 @@
+state S of
+    x : int
+end
+
+operations
+op1 : () ==> ()
+op1 () == x :=1
+pre x = 0;
+
+op2 : () ==> ()
+op2 () ==
+    op1()
+pre x = 0;
+
+

@@ -1,0 +1,12 @@
+
+state S of
+y : int
+x : nat
+end
+
+operations
+op (ns : set of nat) n : nat
+ext rd y
+post true
+
+

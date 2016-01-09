@@ -1,0 +1,3 @@
+# Copied test sources
+src/test/resources/traces_sl_copies/*.vdmsl
+src/test/resources/traces_sl_copies/*.eval.result

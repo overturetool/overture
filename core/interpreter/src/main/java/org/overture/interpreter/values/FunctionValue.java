@@ -493,6 +493,7 @@ public class FunctionValue extends Value
 				try
 				{
 					evalContext.threadState.setAtomic(true);
+					evalContext.threadState.setPure(true);
 					rv = body.apply(VdmRuntime.getExpressionEvaluator(), evalContext).convertTo(type.getResult(), evalContext);
 				}
 				catch (AnalysisException e)
@@ -506,6 +507,7 @@ public class FunctionValue extends Value
 				finally
 				{
 					evalContext.threadState.setAtomic(false);
+					evalContext.threadState.setPure(false);
 				}
 			}
 

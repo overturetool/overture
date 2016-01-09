@@ -1,7 +1,5 @@
 package org.overture.pog.tests.newtests;
 
-import static org.junit.Assert.fail;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -25,13 +23,15 @@ public class PogTestResult extends Vector<String> implements Serializable,
 		PogTestResult r = new PogTestResult();
 		for (IProofObligation ipo : ipol)
 		{
-			r.add(ipo.getKindString() + " obligation:"
+			r.add(ipo.getKindString() + " obligation "
+					+ipo.getLocation().toString()+": "
 					+ ipo.getFullPredString());
 		}
 		return r;
 	}
 
-	public static void compare(PogTestResult actual, PogTestResult expected)
+	public static ResultComparison compare(PogTestResult actual,
+			PogTestResult expected)
 	{
 		Collection<String> stored_notfound = CollectionUtils.removeAll(expected, actual);
 		Collection<String> found_notstored = CollectionUtils.removeAll(actual, expected);
@@ -58,7 +58,39 @@ public class PogTestResult extends Vector<String> implements Serializable,
 					sb.append(pr + "\n");
 				}
 			}
-			fail(sb.toString());
+			return new ResultComparison(false, sb.toString());
 		}
+
+		return new ResultComparison(true);
+	}
+
+	public static class ResultComparison
+	{
+		final boolean match;
+		final String message;
+
+		public ResultComparison(boolean match, String message)
+		{
+			super();
+			this.match = match;
+			this.message = message;
+		}
+
+		public ResultComparison(boolean match)
+		{
+			this.match = match;
+			this.message = "";
+		}
+
+		public boolean isMatch()
+		{
+			return match;
+		}
+
+		public String getMessage()
+		{
+			return message;
+		}
+
 	}
 }

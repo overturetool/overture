@@ -12,7 +12,7 @@ public class Entry {
 
     public static Object Run() {
         return new StringBuilder("jeh").reverse().toString() +
-        new StringBuilder(a).reverse().toString();
+        new StringBuilder(Entry.a).reverse().toString();
     }
 
     public String toString() {

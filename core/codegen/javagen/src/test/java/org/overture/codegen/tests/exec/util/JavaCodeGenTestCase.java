@@ -134,12 +134,17 @@ public abstract class JavaCodeGenTestCase extends
 	protected void configureResultGeneration()
 	{
 		LexLocation.absoluteToStringLocation = false;
-		if (System.getProperty(TESTS_PROPERTY_PREFIX + "all") != null
+		if (System.getProperty(getTestsPropertyPrefix() + "all") != null
 				|| getPropertyId() != null
-				&& System.getProperty(TESTS_PROPERTY_PREFIX + getPropertyId()) != null)
+				&& System.getProperty(getTestsPropertyPrefix() + getPropertyId()) != null)
 		{
 			Properties.recordTestResults = true;
 		}
+	}
+
+	public String getTestsPropertyPrefix()
+	{
+		return TESTS_PROPERTY_PREFIX;
 	}
 
 	protected void unconfigureResultGeneration()

@@ -44,6 +44,7 @@ public class ThreadState implements Serializable
 	public final CPUValue CPU;
 
 	private int atomic = 0; // Don't reschedule if >0
+	private int pure = 0;	// In a pure operation if >0
 
 	public ILexLocation stepline; // Breakpoint stepping values
 	public RootContext nextctxt;
@@ -99,5 +100,27 @@ public class ThreadState implements Serializable
 		{
 			this.atomic--;
 		}
+	}
+
+	/**
+	 * We set the pure mode when calling a function. The thread stays in pure mode until
+	 * the outermost function call returns. Note that operations can only be called in
+	 * this mode if they are also pure.
+	 */
+	public synchronized void setPure(boolean pure)
+	{
+		if (pure)
+		{
+			this.pure++;
+		}
+		else
+		{
+			this.pure--;
+		}
+	}
+	
+	public synchronized boolean isPure()
+	{
+		return pure > 0;
 	}
 }

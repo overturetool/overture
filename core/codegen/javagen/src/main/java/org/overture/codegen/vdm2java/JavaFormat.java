@@ -36,7 +36,7 @@ import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -48,13 +48,11 @@ import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AHistoryExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
@@ -132,10 +130,9 @@ public class JavaFormat
 	{
 		this.valueSemantics = new JavaValueSemantics(this);
 		this.recCreator = new JavaRecordCreator(this);
-		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this,
-				IRAnalysis.class, varPrefixes, valueSemantics, recCreator);
-		this.mergeVisitor = new MergeVisitor(templateStructure, templateCallables);
-		this.functionValueAssistant = null;
+		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, valueSemantics, recCreator);
+		this.mergeVisitor = new MergeVisitor(new JavaTemplateManager(templateStructure), templateCallables);
+		this.funcValAssist = null;
 		this.info = info;
 		this.javaFormatAssistant = new JavaFormatAssistant(this.info);
 	}
@@ -389,7 +386,7 @@ public class JavaFormat
 			return typeNameStr;
 		}
 		
-		AClassDeclCG classDef = node.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG classDef = node.getAncestor(ADefaultClassDeclCG.class);
 
 		String definingClass = typeName.getDefiningClass() != null
 				&& classDef != null
@@ -626,13 +623,12 @@ public class JavaFormat
 		return writer.toString();
 	}
 
-	public String formatSuperType(AClassDeclCG classDecl)
+	public String formatSuperType(ADefaultClassDeclCG classDecl)
 	{
-		return classDecl.getSuperName() == null ? "" : "extends "
-				+ classDecl.getSuperName();
+		return classDecl.getSuperNames().isEmpty() ? "" : "extends " + classDecl.getSuperNames().get(0);
 	}
 	
-	public String formatInterfaces(AClassDeclCG classDecl)
+	public String formatInterfaces(ADefaultClassDeclCG classDecl)
 	{
 		LinkedList<AInterfaceDeclCG> interfaces = classDecl.getInterfaces();
 		
@@ -669,13 +665,6 @@ public class JavaFormat
 		}
 		
 		return implementsClause;
-	}
-
-	public String formatMaplets(AEnumMapExpCG mapEnum) throws AnalysisException
-	{
-		LinkedList<AMapletExpCG> members = mapEnum.getMembers();
-
-		return "new Maplet[]{" + formatArgs(members) + "}";
 	}
 
 	public String formatArgs(List<? extends SExpCG> exps)
@@ -905,16 +894,11 @@ public class JavaFormat
 				: c + "";
 	}
 	
-	public boolean isInnerClass(AClassDeclCG node)
+	public boolean isInnerClass(ADefaultClassDeclCG node)
 	{
-		return node.parent() != null && node.parent().getAncestor(AClassDeclCG.class) != null;
+		return info.getDeclAssistant().isInnerClass(node);
 	}
 	
-	public static boolean isQuote(AClassDeclCG classCg)
-	{
-		return classCg != null && "quotes".equals(classCg.getPackage());
-	}
-
 	public String formatStartStmExp(AStartStmCG node) throws AnalysisException
 	{
 		String str = format(node.getExp());
@@ -956,12 +940,7 @@ public class JavaFormat
 		return block != null && block.getScoped() != null && block.getScoped();
 	}
 
-	public boolean importTraceSupport(AClassDeclCG node)
-	{
-		return info.getSettings().generateTraces() && !node.getTraces().isEmpty();
-	}
-	
-	public static boolean isMainClass(AClassDeclCG clazz)
+	public static boolean isMainClass(ADefaultClassDeclCG clazz)
 	{
 		return clazz != null && clazz.getTag() instanceof JavaMainTag;
 	}
@@ -980,7 +959,7 @@ public class JavaFormat
 		}
 	}
 
-	public boolean genClassInvariant(AClassDeclCG clazz)
+	public boolean genClassInvariant(ADefaultClassDeclCG clazz)
 	{
 		if(!info.getSettings().generateInvariants())
 		{
@@ -1010,5 +989,35 @@ public class JavaFormat
 	public static boolean isVdmSl()
 	{
 		return Settings.dialect == Dialect.VDM_SL;
+	}
+	
+	public String genIteratorName()
+	{
+		return info.getTempVarNameGen().nextVarName(varPrefixManager.getIteVarPrefixes().iterator());
+	}
+
+	public String genThreadName()
+	{
+		return info.getTempVarNameGen().nextVarName("nextThread_");
+	}
+
+	public String genForIndexToVarName()
+	{
+		return info.getTempVarNameGen().nextVarName(varPrefixManager.getIteVarPrefixes().forIndexToVar());
+	}
+
+	public String genForIndexByVarName()
+	{
+		return info.getTempVarNameGen().nextVarName(varPrefixManager.getIteVarPrefixes().forIndexByVar());
+	}
+	
+	public static String getString(ClonableString c)
+	{
+		return c.value;
+	}
+	
+	public boolean isUndefined(ACastUnaryExpCG cast)
+	{
+		return info.getExpAssistant().isUndefined(cast);
 	}
 }

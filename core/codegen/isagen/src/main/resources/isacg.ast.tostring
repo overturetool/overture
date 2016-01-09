@@ -1,0 +1,7 @@
+To String Extensions
+
+// import packages used by external $$ java code
+import org.overture.ast.util.Utils;
+import org.overture.ast.util.ToStringUtil;
+
+%CG->#decl->mrFuncGroup = "MutRec(" + $Utils.listToString($[funcs]$)$ ")

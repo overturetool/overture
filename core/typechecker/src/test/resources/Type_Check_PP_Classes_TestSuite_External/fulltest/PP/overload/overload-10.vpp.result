@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
+<message column="24" line="24" message="Cannot use 'new' in a functional context" messageType="error" number="3348" resource="overload-10.vpp"/>
+<message column="6" line="25" message="Cannot use 'new' in a functional context" messageType="error" number="3348" resource="overload-10.vpp"/>
 <message column="14" line="25" message="Name fn((A | bool)) is ambiguous" messageType="error" number="3010" resource="overload-10.vpp"/>
 <message column="6" line="25" message="Value is not of the right type" messageType="error" number="3327" resource="overload-10.vpp"/>
 <message column="1" line="22" message="Function returns unexpected type" messageType="error" number="3018" resource="overload-10.vpp"/>

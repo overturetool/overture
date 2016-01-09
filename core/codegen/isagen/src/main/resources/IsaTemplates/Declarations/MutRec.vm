@@ -1,0 +1,7 @@
+begin_mutrec
+
+#foreach ($func in $node.Funcs)
+$Isa.trans($func)
+
+#end
+end_mutrec

@@ -45,8 +45,11 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -211,18 +214,19 @@ public class NameFinder extends
 			return node;
 		}
 
-		PDefinition predef = node.getPredef();
-		if (predef != null && predef.apply(this, question) != null)// PDefinitionAssistantTC.findName(predef, sought,
-																	// scope) != null)
+		if (Settings.dialect == Dialect.VDM_SL || Settings.release == Release.CLASSIC)
 		{
-			return predef;
-		}
-
-		PDefinition postdef = node.getPostdef();
-		if (postdef != null && postdef.apply(this, question) != null)// PDefinitionAssistantTC.findName(postdef, sought,
-																		// scope) != null)
-		{
-			return postdef;
+    		PDefinition predef = node.getPredef();
+    		if (predef != null && predef.apply(this, question) != null)
+    		{
+    			return predef;
+    		}
+    
+    		PDefinition postdef = node.getPostdef();
+    		if (postdef != null && postdef.apply(this, question) != null)
+    		{
+    			return postdef;
+    		}
 		}
 
 		return null;
@@ -277,18 +281,19 @@ public class NameFinder extends
 			return node;
 		}
 
-		PDefinition predef = node.getPredef();
-		if (predef != null && predef.apply(this, question) != null)// PDefinitionAssistantTC.findName(predef, sought,
-																	// scope) != null)
+		if (Settings.dialect == Dialect.VDM_SL || Settings.release == Release.CLASSIC)
 		{
-			return predef;
-		}
-
-		PDefinition postdef = node.getPostdef();
-		if (postdef != null && postdef.apply(this, question) != null)// PDefinitionAssistantTC.findName(postdef, sought,
-																		// scope) != null)
-		{
-			return postdef;
+    		PDefinition predef = node.getPredef();
+    		if (predef != null && predef.apply(this, question) != null)
+    		{
+    			return predef;
+    		}
+    
+    		PDefinition postdef = node.getPostdef();
+    		if (postdef != null && postdef.apply(this, question) != null)
+    		{
+    			return postdef;
+    		}
 		}
 
 		return null;

@@ -25,6 +25,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
@@ -62,6 +63,12 @@ public class GeneratedVarComparison extends NamingComparison
 			}
 		}
 
+		return false;
+	}
+
+	@Override
+	public boolean mustHandleLexIdentifierToken(LexIdentifierToken lexId)
+	{
 		return false;
 	}
 }

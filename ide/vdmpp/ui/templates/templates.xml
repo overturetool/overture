@@ -3,6 +3,13 @@
 
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="The number of times that operation name operation has been activated" enabled="true" name="act" id="actVDMPP">#act(${operationName})</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="The number of operation name operations that are currently active." enabled="true" name="active" id="activeVDMPP">#active(${operationName})</template>
+  <template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
+    deleted="false" description="Literate VDM" enabled="true" name="vdm_al"
+    id="literateVdmVDMPP">
+\begin{vdm_al}
+${cursor}
+\end{vdm_al}
+  </template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Case Expression" enabled="true" name="caseExpression" id="caseExpressionVDMPP">cases ${expression}:
 	${patternList1} -&gt; ${expression1},
 	${patternList2} -&gt; ${expression2},
@@ -35,10 +42,9 @@ end ${className}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="forall in set" enabled="true" name="forallinset" id="forallinsetVDMPP">forall ${element} in set ${set}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Explicit function" enabled="true" name="functionExplicit" id="functionExplicitVDMPP">${private} ${functionName} :  ${parameterTypes} -&gt; ${resultType}
 ${functionName} (${parameterNames}) == ${expression};</template>
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Implicit function" enabled="true" name="functionImplicit" id="functionImplicitVDMPP">${private} ${functionName} (${parameters}) -&gt;
-${resultName}: ${resultType}
-pre ${predicate}
-post ${predicate}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Implicit function" enabled="true" name="functionImplicit" id="functionImplicitVDMPP">${private} ${functionName} (${parameters}) ${resultName}: ${resultType}
+pre ${predicate1}
+post ${predicate2}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Function block" enabled="true" name="functions" id="functionsVDMPP">
 functions
 	${cursor}</template>
@@ -60,12 +66,11 @@ instance variables
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Mutex operation" enabled="true" name="mutex" id="mutexVDMPP">mutex ${operationName}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Explicit Operation" enabled="true" name="operationExplicit" id="operationExplicitVDMPP">${private} ${operationName} : ${parameterTypes} ==&gt; ${resultType}
 ${operationName} (${parameterNames}) == ${statements};</template>
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Implicit operation" enabled="true" name="operationImplicit" id="operationImplicitVDMPP">${private} ${operationName} (${parameters}) ==&gt;
-${resultName}: ${resultType}
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Implicit operation" enabled="true" name="operationImplicit" id="operationImplicitVDMPP">${private} ${operationName} (${parameters}) ${resultName}: ${resultType}
 	ext rd ${instanceVariable1} : ${instanceVariable1Type}
 	wr ${instanceVariable2} : ${instanceVariable2Type}
-	pre ${predicate}
-	post ${predicate};</template>
+	pre ${predicate1}
+	post ${predicate2};</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Operation block" enabled="true" name="operations" id="operationsVDMPP">
 operations
 	${cursor}</template>

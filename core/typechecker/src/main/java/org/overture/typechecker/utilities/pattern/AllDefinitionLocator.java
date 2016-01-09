@@ -368,8 +368,8 @@ public class AllDefinitionLocator
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 		PTypeAssistantTC typeAssistant = af.createPTypeAssistant();
-		AClassType pattype = typeAssistant.getClassType(pattern.getType());
-		AClassType exptype = typeAssistant.getClassType(question.ptype);
+		AClassType pattype = typeAssistant.getClassType(pattern.getType(), null);
+		AClassType exptype = typeAssistant.getClassType(question.ptype, null);
 
 		if (exptype == null || !af.getTypeComparator().isSubType(pattype, exptype))
 		{

@@ -2,13 +2,16 @@ package org.overture.codegen.traces;
 
 import java.util.List;
 
+import org.overture.ast.lex.Dialect;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ATypeArgExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -23,21 +26,21 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
+import org.overture.config.Settings;
 
 public class TracesTransformation extends DepthFirstAnalysisAdaptor
 {
-	private IRInfo irInfo;
-	private List<AClassDeclCG> classes;
-	private TransAssistantCG transAssistant;
-	private TempVarPrefixes tempVarPrefixes;
-	private ILanguageIterator langIterator;
-	private ICallStmToStringMethodBuilder toStringBuilder;
-	private TraceNames tracePrefixes;
+	protected TransAssistantCG transAssistant;
+	protected IterationVarPrefixes iteVarPrefixes;
+	protected ILanguageIterator langIterator;
+	protected ICallStmToStringMethodBuilder toStringBuilder;
+	protected TraceNames tracePrefixes;
+	private List<INode> cloneFreeNodes;
 
-	public TracesTransformation(IRInfo irInfo, List<AClassDeclCG> classes,
-			TransAssistantCG transAssistant, TempVarPrefixes tempVarPrefixes,
-			TraceNames tracePrefixes, ILanguageIterator langIterator,
-			ICallStmToStringMethodBuilder toStringBuilder)
+	public TracesTrans(TransAssistantCG transAssistant,
+			IterationVarPrefixes iteVarPrefixes, TraceNames tracePrefixes,
+			ILanguageIterator langIterator,
+			ICallStmToStringMethodBuilder toStringBuilder, List<INode> cloneFreeNodes)
 	{
 		this.irInfo = irInfo;
 		this.classes = classes;
@@ -47,6 +50,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 		this.toStringBuilder = toStringBuilder;
 
 		this.tracePrefixes = tracePrefixes;
+		this.cloneFreeNodes = cloneFreeNodes;
 	}
 
 	@Override
@@ -65,7 +69,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG enclosingClass = node.getAncestor(ADefaultClassDeclCG.class);
 
 		if (enclosingClass != null)
 		{
@@ -79,7 +83,6 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 
 	private boolean traceIsSupported(TraceSupportedAnalysis supportedAnalysis)
 	{
-		
 		try
 		{
 			supportedAnalysis.run();
@@ -107,6 +110,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 		instanceParam.setPattern(transAssistant.consIdPattern(tracePrefixes.traceMethodParamName()));
 
 		AMethodDeclCG traceMethod = new AMethodDeclCG();
+		traceMethod.setTag(new TraceMethodTag());
 		
 		traceMethod.getFormalParams().add(instanceParam);
 		
@@ -115,7 +119,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 		traceMethod.setAccess(IRConstants.PUBLIC);
 		traceMethod.setBody(consTraceMethodBody(node));
 		traceMethod.setIsConstructor(false);
-		traceMethod.setStatic(false);
+		traceMethod.setStatic(Settings.dialect == Dialect.VDM_SL);
 		traceMethod.setMethodType(methodType);
 		traceMethod.setName(getTraceName(node) + "_"
 				+ tracePrefixes.runTraceMethodName());
@@ -138,8 +142,13 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 		typeArg.setType(transAssistant.consClassType(traceEnclosingClassName));
 
 		executeTestsCall.getArgs().add(nodeVar.clone());
-		executeTestsCall.getArgs().add(typeArg);
-		executeTestsCall.getArgs().add(transAssistant.consIdentifierVar(tracePrefixes.traceMethodParamName(),
+		
+		if(Settings.dialect != Dialect.VDM_SL)
+		{
+			executeTestsCall.getArgs().add(typeArg);
+		}
+		
+		executeTestsCall.getArgs().add(transAssistant.getInfo().getExpAssistant().consIdVar(tracePrefixes.traceMethodParamName(),
 				transAssistant.consClassType(tracePrefixes.testAccumulatorClassName())));
 		executeTestsCall.getArgs().add(transAssistant.consIdentifierVar(tracePrefixes.storeVarName(),
 				transAssistant.consClassType(tracePrefixes.storeClassName())));
@@ -151,36 +160,69 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 	private SStmCG consTraceMethodBody(ANamedTraceDeclCG node)
 			throws AnalysisException
 	{
-		String traceEnclosingClass = getTraceEnclosingClass(node);
-		TraceStmsBuilder stmBuilder = new TraceStmsBuilder(irInfo, classes, transAssistant, 
-				tempVarPrefixes, tracePrefixes, langIterator, toStringBuilder, traceEnclosingClass);
+		StoreAssistant storeAssist = new StoreAssistant(tracePrefixes, transAssistant);
+		
+		String traceEnclosingClass = getClassName(node);
+		
+		TraceStmBuilder stmBuilder = consStmBuilder(storeAssist, traceEnclosingClass);
 
+		SStmCG regModules = registerOtherModules(traceEnclosingClass, storeAssist);
 		TraceNodeData nodeData = stmBuilder.buildFromDeclTerms(node.getTerms());
 
 		ABlockStmCG stms = new ABlockStmCG();
 		stms.getLocalDefs().add(transAssistant.consClassVarDeclDefaultCtor(tracePrefixes.storeClassName(), tracePrefixes.storeVarName()));
 		stms.getLocalDefs().add(transAssistant.consClassVarDeclDefaultCtor(tracePrefixes.idGeneratorClassName(), tracePrefixes.idGeneratorVarName()));
+		
+		if(regModules != null)
+		{
+			stms.getStatements().add(regModules);
+		}
+		
 		stms.getStatements().add(nodeData.getStms());
 		stms.getStatements().add(buildTestExecutionStms(nodeData.getNodeVar(), getClassName(node)));
 
 		return stms;
 	}
-	
-	private String getTraceEnclosingClass(ANamedTraceDeclCG trace)
+
+	public TraceStmBuilder consStmBuilder(StoreAssistant storeAssist, String traceEnclosingClass)
 	{
-		if (trace != null)
+		return new TraceStmBuilder(this, traceEnclosingClass, storeAssist);
+	}
+	
+	private SStmCG registerOtherModules(String encClass, StoreAssistant storeAssist)
+	{
+		// Static registration of other modules
+		if(Settings.dialect == Dialect.VDM_PP && transAssistant.getInfo().getClasses().size() == 1)
 		{
-			AClassDeclCG enclosingClass = trace.getAncestor(AClassDeclCG.class);
-			if (enclosingClass != null)
-			{
-				return enclosingClass.getName();
-			}
+			return null;
 		}
-
-		Logger.getLog().printErrorln("Could not find class declaration enclosing the trace node "
-				+ trace + " in TraceStmsBuilder");
-
-		return null;
+		
+		ABlockStmCG regBlock = new ABlockStmCG();
+		regBlock.setScoped(true);
+		
+		for(SClassDeclCG c : transAssistant.getInfo().getClasses())
+		{
+			if(Settings.dialect == Dialect.VDM_PP && c.getName().equals(encClass))
+			{
+				/**
+				 * There is no need to register the instance of the enclosing class. This is handled by the
+				 * TraceNode.executeTests method
+				 */
+				continue;
+			}
+			
+			String idConstName = transAssistant.getInfo().getTempVarNameGen().nextVarName(tracePrefixes.idConstNamePrefix());
+			regBlock.getLocalDefs().add(storeAssist.consIdConstDecl(idConstName));
+			
+			AClassTypeCG classType = transAssistant.consClassType(c.getName());
+			
+			ATypeArgExpCG classArg = new ATypeArgExpCG();
+			classArg.setType(classType.clone());
+			
+			regBlock.getStatements().add(storeAssist.consStoreRegistration(idConstName, classArg, true));
+		}
+		
+		return regBlock;
 	}
 
 	private String getTraceName(ANamedTraceDeclCG node)
@@ -194,22 +236,51 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 
 		return methodName;
 	}
-
-	private String getClassName(ANamedTraceDeclCG node)
+	
+	public String getClassName(ANamedTraceDeclCG trace)
 	{
-		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
-
-		String traceClassName = "";
-		if (enclosingClass != null)
+		if (trace != null)
 		{
-			traceClassName = enclosingClass.getName();
-		} else
-		{
-			Logger.getLog().printErrorln("Could not find enclosing class for "
-					+ node);
-			traceClassName = "Unknown";
+			ADefaultClassDeclCG enclosingClass = trace.getAncestor(ADefaultClassDeclCG.class);
+			if (enclosingClass != null)
+			{
+				return enclosingClass.getName();
+			}
 		}
 
-		return traceClassName;
+		Logger.getLog().printErrorln("Could not find class declaration enclosing the trace node "
+				+ trace + " in 'TraceStmsBuilder'");
+
+		return null;
+	}
+
+	public TransAssistantCG getTransAssist()
+	{
+		return transAssistant;
+	}
+	
+	public IterationVarPrefixes getIteVarPrefixes()
+	{
+		return iteVarPrefixes;
+	}
+	
+	public TraceNames getTracePrefixes()
+	{
+		return tracePrefixes;
+	}
+	
+	public ILanguageIterator getLangIterator()
+	{
+		return langIterator;
+	}
+	
+	public ICallStmToStringMethodBuilder getToStringBuilder()
+	{
+		return toStringBuilder;
+	}
+	
+	public List<INode> getCloneFreeNodes()
+	{
+		return cloneFreeNodes;
 	}
 }

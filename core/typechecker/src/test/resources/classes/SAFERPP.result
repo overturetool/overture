@@ -13,6 +13,6 @@
 <message column="3" line="479" message="Instance variable 'hcu' is not initialized" messageType="warning" number="5001" resource="SAFERPP"/>
 <message column="3" line="748" message="Instance variable 'vda' is not initialized" messageType="warning" number="5001" resource="SAFERPP"/>
 <message column="3" line="749" message="Instance variable 'intcmd' is not initialized" messageType="warning" number="5001" resource="SAFERPP"/>
-<message column="29" line="968" message="Operation 'ThrusterConsistency' cannot be called from a function" messageType="error" number="3300" resource="SAFERPP"/>
+<message column="29" line="968" message="Impure operation 'ThrusterConsistency' cannot be called from here" messageType="error" number="3300" resource="SAFERPP"/>
 <result/>
 </testResult>

@@ -93,8 +93,6 @@ public class Incrementer1 extends VDMThread implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public Incrementer1(final SharedCounter s) {
-        sentinel = new Incrementer1_sentinel(this);
-
         cg_init_Incrementer1_1(s);
     }
 
@@ -103,6 +101,8 @@ public class Incrementer1 extends VDMThread implements EvaluatePP {
     }
 
     public void cg_init_Incrementer1_1(final SharedCounter s) {
+        sentinel = new Incrementer1_sentinel(this);
+
         sharedCounter = s;
     }
 
@@ -143,12 +143,10 @@ public class Incrementer1 extends VDMThread implements EvaluatePP {
         if (Utils.equals(fnr, 0L)) {
             return true;
         } else if (Utils.equals(fnr, 1L)) {
-            return true;
-        } else if (Utils.equals(fnr, 2L)) {
             return isFinished;
-        } else if (Utils.equals(fnr, 3L)) {
+        } else if (Utils.equals(fnr, 2L)) {
             return true;
-        } else if (Utils.equals(fnr, 4L)) {
+        } else if (Utils.equals(fnr, 3L)) {
             return true;
         } else {
             return true;
@@ -160,12 +158,11 @@ public class Incrementer1 extends VDMThread implements EvaluatePP {
     }
 
     public static class Incrementer1_sentinel extends Sentinel {
-        public static final int cg_init_Incrementer1_1 = 0;
-        public static final int Incrementer1 = 1;
-        public static final int joined = 2;
-        public static final int incCounter = 3;
-        public static final int toString = 4;
-        public final int function_sum = 5;
+        public static final int Incrementer1 = 0;
+        public static final int joined = 1;
+        public static final int incCounter = 2;
+        public static final int toString = 3;
+        public final int function_sum = 4;
 
         public Incrementer1_sentinel() {
         }
@@ -189,8 +186,6 @@ public class Incrementer2 extends VDMThread implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public Incrementer2(final SharedCounter s) {
-        sentinel = new Incrementer2_sentinel(this);
-
         cg_init_Incrementer2_1(s);
     }
 
@@ -199,6 +194,8 @@ public class Incrementer2 extends VDMThread implements EvaluatePP {
     }
 
     public void cg_init_Incrementer2_1(final SharedCounter s) {
+        sentinel = new Incrementer2_sentinel(this);
+
         sharedCounter = s;
     }
 
@@ -239,12 +236,10 @@ public class Incrementer2 extends VDMThread implements EvaluatePP {
         if (Utils.equals(fnr, 0L)) {
             return true;
         } else if (Utils.equals(fnr, 1L)) {
-            return true;
-        } else if (Utils.equals(fnr, 2L)) {
             return isFinished;
-        } else if (Utils.equals(fnr, 3L)) {
+        } else if (Utils.equals(fnr, 2L)) {
             return true;
-        } else if (Utils.equals(fnr, 4L)) {
+        } else if (Utils.equals(fnr, 3L)) {
             return true;
         } else {
             return true;
@@ -256,12 +251,11 @@ public class Incrementer2 extends VDMThread implements EvaluatePP {
     }
 
     public static class Incrementer2_sentinel extends Sentinel {
-        public static final int cg_init_Incrementer2_1 = 0;
-        public static final int Incrementer2 = 1;
-        public static final int joined = 2;
-        public static final int incCounter = 3;
-        public static final int toString = 4;
-        public final int function_sum = 5;
+        public static final int Incrementer2 = 0;
+        public static final int joined = 1;
+        public static final int incCounter = 2;
+        public static final int toString = 3;
+        public final int function_sum = 4;
 
         public Incrementer2_sentinel() {
         }

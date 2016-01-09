@@ -1,0 +1,27 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  let - = f(2) in skip;
+  IO`println("Done! Expected no violations");
+  return 0;
+);
+
+functions
+
+f :  nat -> nat
+f (a) == 
+  cases a:
+	1 -> 4,
+	2 -> 8,
+	others -> 2
+end;
+
+end Entry	

@@ -14,7 +14,8 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
+//import org.overture.codegen.cgast.
 import org.overture.codegen.cgast.declarations.AClassHeaderDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
@@ -35,7 +36,6 @@ import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateManager;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.utils.GeneralUtils;
 
 public class CFormat
@@ -69,7 +69,7 @@ public class CFormat
 		return Integer.toString(number - 1);
 	}
 
-	public CFormat(TempVarPrefixes varPrefixes, IRInfo info)
+	public CFormat(IRInfo info)
 	{
 		TemplateManager templateManager = new TemplateManager(new TemplateStructure("MyTemplates"));
 		TemplateCallable[] templateCallables = new TemplateCallable[] {
@@ -98,7 +98,7 @@ public class CFormat
 
 	public String getEnclosingClass(AFormalParamLocalParamCG fp)
 	{
-		return fp.getAncestor(AClassDeclCG.class).getName().toString()
+		return fp.getAncestor(ADefaultClassDeclCG.class).getName().toString()
 				+ "CLASS";
 	}
 
@@ -183,7 +183,7 @@ public class CFormat
 
 	public boolean isClass(INode node)
 	{
-		return node != null && node instanceof AClassDeclCG;
+		return node != null && node instanceof ADefaultClassDeclCG;
 	}
 
 	public String getClassNameId(AIdentifierVarExpCG id)
@@ -380,12 +380,12 @@ public class CFormat
 		return "TVP";
 	}
 
-	public String getIncludeClassName(AClassDeclCG cl)
+	public String getIncludeClassName(ADefaultClassDeclCG cl)
 	{
 		return "\"" + cl.getName().toString() + ".h\"";
 	}
 
-	public String getClassName(AClassDeclCG cl)
+	public String getClassName(ADefaultClassDeclCG cl)
 	{
 		return cl.getName().toString();
 	}

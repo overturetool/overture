@@ -22,8 +22,8 @@ public class Entry implements java.io.Serializable {
         final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
         ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
-        CallStatement callStm_1 = new CallStatement() {
-                public Object execute(final Object instance) {
+        CallStatementPp callStm_1 = new CallStatementPp() {
+                public Object execute() {
                     ((Entry) instance).op();
 
                     return Utils.VOID_VALUE;
@@ -38,8 +38,10 @@ public class Entry implements java.io.Serializable {
 
         RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_1, 1L, 2L);
 
-        CallStatement callStm_2 = new CallStatement() {
-                public Object execute(final Object instance) {
+        concurrent_1.add(repeat_1);
+
+        CallStatementPp callStm_2 = new CallStatementPp() {
+                public Object execute() {
                     return fun();
                 }
 
@@ -52,7 +54,6 @@ public class Entry implements java.io.Serializable {
 
         RepeatTraceNode repeat_2 = new RepeatTraceNode(apply_2, 1L, 2L);
 
-        concurrent_1.add(repeat_1);
         concurrent_1.add(repeat_2);
 
         sequence_1.add(concurrent_1);

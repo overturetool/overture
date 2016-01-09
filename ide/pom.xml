@@ -5,10 +5,9 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>root</artifactId>
-    <version>2.2.7-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
 </parent>
-
     <packaging>pom</packaging>
   <artifactId>ide</artifactId>
   <name>Overture IDE Top-level</name>
@@ -35,7 +34,6 @@
     <module>platform</module>
     <module>features</module>
     <module>product</module>
-    <module>tests</module>
   </modules>
 
   <reporting>
@@ -384,6 +382,18 @@ the manifests, though.
           </plugin>
         </plugins>
       </build>
+  </profile>
+
+    <profile>
+      <!-- This profile enables UI tests. Must not be enabled if running on terminal server with no UI -->
+      <id>ui-tests</id>
+      <activation>
+	<activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>ui.tests</module>
+      </modules>
     </profile>
+
   </profiles>
 </project>

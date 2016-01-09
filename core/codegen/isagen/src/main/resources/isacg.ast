@@ -1,0 +1,17 @@
+Packages
+
+base org.overture.cgisa.extast.node;
+analysis org.overture.cgisa.extast.analysis;
+
+Tokens
+
+Abstract Syntax Tree
+
+CG = #decl
+    ;
+
+
+#decl {-> package='org.overture.cgisa.extast.declarations'}
+       = {mrFuncGroup}
+          [funcs]:CG.#decl.func*
+       ;

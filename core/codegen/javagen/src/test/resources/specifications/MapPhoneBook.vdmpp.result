@@ -14,6 +14,10 @@ public class PhoneBook {
     public PhoneBook() {
     }
 
+    public void cg_init_PhoneBook_1(final VDMMap pPhoneNumbers) {
+        phoneNumbers = Utils.copy(pPhoneNumbers);
+    }
+
     public static void Test() {
         PhoneBook pb1 = new PhoneBook();
         PhoneBook pb2 = new PhoneBook();
@@ -137,10 +141,6 @@ public class PhoneBook {
                 'e', 'n', 't', 'r', 'i', 'e', 's', ' ', 'i', 'n', ' ', 'p',
                 'b', '1'));
         pb1.listEntries();
-    }
-
-    public void cg_init_PhoneBook_1(final VDMMap pPhoneNumbers) {
-        phoneNumbers = Utils.copy(pPhoneNumbers);
     }
 
     public void loadDemo() {

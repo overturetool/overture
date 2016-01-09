@@ -2,8 +2,8 @@
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
 <message column="3" line="378" message="Recursive function has no measure" messageType="warning" number="5012" resource="SAFERSL"/>
 <message column="10" line="299" message="No such module as GEOM" messageType="error" number="3196" resource="SAFERSL"/>
-<message column="35" line="357" message="Operation 'SAFER`ControlCycle' cannot be called from a function" messageType="error" number="3300" resource="SAFERSL"/>
-<message column="34" line="365" message="Operation 'SAFER`ControlCycle' cannot be called from a function" messageType="error" number="3300" resource="SAFERSL"/>
+<message column="35" line="357" message="Impure operation 'SAFER`ControlCycle' cannot be called from here" messageType="error" number="3300" resource="SAFERSL"/>
+<message column="34" line="365" message="Impure operation 'SAFER`ControlCycle' cannot be called from here" messageType="error" number="3300" resource="SAFERSL"/>
 <message column="20" line="419" message="Operation GEOM`InitGeom is not in scope" messageType="error" number="3213" resource="SAFERSL"/>
 <message column="9" line="439" message="Operation GEOM`ShowThrust is not in scope" messageType="error" number="3213" resource="SAFERSL"/>
 <message column="5" line="448" message="Operation GEOM`ShowThrust is not in scope" messageType="error" number="3213" resource="SAFERSL"/>

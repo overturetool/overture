@@ -1,6 +1,7 @@
 package project;
 
 import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
 
 import java.util.*;
 
@@ -8,10 +9,10 @@ import java.util.*;
 //@ nullable_by_default
 @SuppressWarnings("all")
 final public class Entry {
-    //@ public static invariant inv_Entry_CN(fOk) && (inv_Entry_C(fOk) || inv_Entry_N(fOk));
+    //@ public static invariant (((Utils.is_char(fOk) && inv_Entry_C(fOk)) || (Utils.is_nat(fOk) && inv_Entry_N(fOk))) && inv_Entry_CN(fOk));
     public static final Object fOk = 'a';
 
-    //@ public static invariant inv_Entry_CN(fBreak) && (inv_Entry_C(fBreak) || inv_Entry_N(fBreak));
+    //@ public static invariant (((Utils.is_char(fBreak) && inv_Entry_C(fBreak)) || (Utils.is_nat(fBreak) && inv_Entry_N(fBreak))) && inv_Entry_CN(fBreak));
     public static final Object fBreak = 'b';
 
     private Entry() {
@@ -29,11 +30,6 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_CN(final Object check_cn) {
-        if ((Utils.equals(check_cn, null)) ||
-                !(Utils.is_char(check_cn) || Utils.is_nat(check_cn))) {
-            return false;
-        }
-
         Object cn = ((Object) check_cn);
 
         Boolean orResult_1 = false;
@@ -50,20 +46,12 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_N(final Object check_elem) {
-        if ((Utils.equals(check_elem, null)) || !(Utils.is_nat(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_C(final Object check_elem) {
-        if ((Utils.equals(check_elem, null)) || !(Utils.is_char(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 }

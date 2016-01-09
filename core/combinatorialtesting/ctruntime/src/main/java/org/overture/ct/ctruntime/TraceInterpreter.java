@@ -52,6 +52,7 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.ModuleEnvironment;
 import org.overture.typechecker.PrivateClassEnvironment;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class TraceInterpreter
@@ -307,8 +308,6 @@ public class TraceInterpreter
 			List<Object> result = null;
 			Verdict verdict = null;
 
-			// type check
-			boolean typeOk = false;
 			try
 			{
 				if (interpreter instanceof ClassInterpreter)
@@ -318,32 +317,26 @@ public class TraceInterpreter
 				{
 					typeCheck(traceContainer, interpreter, test, rootEnv);
 				}
-				typeOk = true;
 			} catch (Exception e)
 			{
 				result = new Vector<Object>();
 				result.add(e);
 				verdict = Verdict.FAILED;
 				result.add(verdict);
-
 			}
 
-			// interpret
-			if (typeOk)
+			StopWatch.set();
+			result = evaluateCallSequence(mtd, test);
+			StopWatch.stop("Executing   ");
+			StopWatch.set();
+
+			verdict = (Verdict) result.get(result.size() - 1);
+
+			if (verdict == Verdict.ERROR)
 			{
-				StopWatch.set();
-				result = evaluateCallSequence(mtd, test);
-				StopWatch.stop("Executing   ");
-				StopWatch.set();
-
-				verdict = (Verdict) result.get(result.size() - 1);
-
-				if (verdict == Verdict.ERROR)
-				{
-				} else
-				{
-					tests.filter(result, test, n);
-				}
+			} else
+			{
+				tests.filter(result, test, n);
 			}
 
 			switch (verdict)
@@ -443,7 +436,13 @@ public class TraceInterpreter
 			env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), outer);
 		} else
 		{
-
+			List<PDefinition> defs = new Vector<>();
+			
+			if(classdef instanceof AModuleModules)
+			{
+				defs.addAll(((AModuleModules) classdef).getDefs());
+			}
+			
 			env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(), outer);
 		}
 

@@ -119,10 +119,11 @@ public class PatternVisitorCG extends AbstractVisitorCG<IRInfo, SPatternCG>
 			throws AnalysisException
 	{
 		String value = node.getValue().getValue();
-
+		
 		AQuotePatternCG quotePatternCg = new AQuotePatternCG();
 		quotePatternCg.setValue(value);
 
+		question.registerQuoteValue(value);
 		return quotePatternCg;
 	}
 

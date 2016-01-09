@@ -1,0 +1,294 @@
+types
+    
+RecType :: rt_f1 : nat
+           rt_f2 : nat
+           rt_f3 : nat;
+               
+RecType2 :: rt2_f1 : nat
+            rt2_f2 : nat;
+   
+EnumT = <A>|<B>|<C>|<D>;
+   
+EnumT2 = RecType|RecType2;
+
+SeqT = seq of nat;
+    
+SetT = set of nat;
+    
+MapT = map nat to nat;
+   
+MapT2 = map SeqT to EnumT;
+    
+MapT3 = map SeqT to SeqT;
+   
+UT1 = (int * int) | int;
+
+values
+
+n1 : nat = 3;
+sq1 = [mk_(1,2),1];
+
+functions
+
+
+  --Tests for:
+  -- Satisfiability PO
+  -- NonZero PO
+  impF1 (p1 : nat, p2 : nat, p3 : bool) result : nat
+  pre p3 => p1 / p2 > 0
+  post result = p1 /p2;
+       
+    
+  --Tests for:
+  -- MapT Apply PO
+  -- PostCondition PO
+  expF1 : nat * MapT -> nat
+  expF1(n, m) ==
+  (
+      m(n)
+  )
+  pre n in set dom m
+  post RESULT > n;
+  
+  
+  --Tests for:
+  -- MapT Compatible PO
+  expF2 : MapT * MapT -> MapT
+  expF2 (m1, m2) ==
+      m1 munion m2;
+        
+        
+  --Tests for:
+  -- SeqT Apply PO
+  -- Non-zero PO in explicit func body
+  -- Non-zero PO in explicit func precondition
+  expF3 : nat * SeqT -> nat
+  expF3 (n, s) ==
+      if (len s / n > 4) 
+      then s(n)
+      else n
+  pre len s > n and (len s / n > 4);
+    
+    
+  --Tests for:
+  -- SeqT Modification PO
+  expF4 : SeqT * MapT -> SeqT
+  expF4(s, m) ==
+      s ++ m;
+        
+
+  --Tests for:
+  --  Function Apply PO
+  expF5 : nat -> nat
+  expF5(n) ==
+      expF3(n, []);
+      
+      
+  --Tests for:
+  --  Map Iteration PO
+  expF6 : MapT * nat -> MapT
+  expF6(m,n) ==
+      m ** n;
+     
+   
+  --Tests for:
+  --  Non-empty Sequence PO
+  expF7 : SeqT -> nat
+  expF7(s) ==
+      hd s
+  pre s <> [];
+    
+    
+  --Tests for:
+  --  Non-empty Set PO
+  --  (hint: only seems to be required in DistributedIntersection operator)
+  expF8 : set of set of nat -> set of nat
+  expF8(setn) ==
+    dinter setn;
+
+
+  -- Tests for:
+  --  Basic CasesExhaustive PO
+  expF9 : EnumT -> bool
+  expF9(e) ==
+    cases e:
+      <A> -> true,
+      <B> -> true
+     end;
+     
+     
+   --Tests for:
+   -- Cases PO in expression
+  expF10 : nat -> nat
+  expF10(n) ==
+  ( 
+      cases n :
+        ( 4)  -> 44,
+        ( 5)  -> 43,
+        others -> 42
+      end
+  );
+         
+  -- Tests for:
+  --  Complex CasesExhaustive PO
+  expF11 : EnumT2 -> bool
+  expF11(e) == 
+    cases e:
+       mk_RecType(a,b,c) -> true,
+       mk_RecType2(a,c) -> true
+    end;
+       
+       
+  -- Tests for:
+  --  LetBeExists
+  expF12 : SetT -> bool
+  expF12(s) == 
+    (let x in set s be st x > 5 in
+         true) 
+      or
+      (let x : SetT in
+         false) ;
+         
+
+  --Tests for:
+  --  Map Compose PO
+  --  Function ParameterPatterns PO
+  expF13 : MapT2 * MapT3 -> MapT2
+  expF13(m,m2) ==
+      m comp m2;
+        
+  --Tests for:
+  --  MapSeqCompatible PO
+  expF14 : () -> MapT
+  expF14() ==
+      {1|-> 2, 3 |->4, 4 |->3, 3 |-> 4};
+     
+       
+  --Tests for:
+  --  MapSetCompatible PO
+  expF15 : set of MapT -> MapT
+  expF15(s) ==
+      merge s;
+        
+        
+  --Tests for:
+  --  FiniteMap PO
+  --  MapSetCompatible PO
+  --  Function ParameterPatterns PO
+  expF16 : () -> MapT
+  expF16() ==
+  {a |-> b | a:nat, b:nat & auxFunc(a,b)};
+     
+  auxFunc: nat * nat -> bool
+  auxFunc(n1, n2) == n1 > n2;
+    
+    
+  --Tests for:
+  --  FiniteSet PO
+  --  Function ParameterPatterns PO
+  expF17 : () -> SetT
+  expF17() ==
+    {a | a:nat & auxFunc2(a)};
+    
+  auxFunc2: nat -> bool
+  auxFunc2(n) == n > 2;
+   
+            
+  --Tests for:
+  --  FuncitonIteration PO
+  --  FunctionApply PO
+  expF18: nat -> nat
+  expF18(n) == (auxFunc3 ** n)(0);
+    
+  auxFunc3: nat -> nat1
+  auxFunc3(a) == a + 1
+  pre a < 10;
+  
+  
+  --Tests for:
+  --  FuncCompose PO
+  --  FunctionApply PO
+  expF19: nat  -> nat
+  expF19(n) == (auxFunc4a comp auxFunc4b)(n);
+  
+  --Tests for:
+  --  Func Satisfiability PO
+  auxFunc4a(n:nat) rs : nat
+  pre n < 14
+  post  rs = n * 4;
+  
+  --Tests for:
+  --  Func Satisfiability PO
+  auxFunc4b(n:nat) rs : nat 
+  pre n >6
+  post rs = n;
+  
+  --Tests for:
+  --TupleSelect PO
+  expF20 : UT1 -> int
+  expF20 (x) == x.#1;
+ 
+  -- Tests for:
+  -- ValueBindingPO, SubtypePO, SeqApplyPO
+  exp21: () -> int
+  exp21 () == let mk_(x,y) = sq1(1)
+               in 1;
+
+ 
+   state S of
+    n2 : nat
+    inv s == s.n2 > 4
+   end
+ 
+   operations
+      
+    --Tests for:
+    --  Operation Satisfiability PO
+    impOp1 (s :SeqT) r: nat
+    pre s <> [] 
+    post r = hd s;
+      
+      
+    --Tests for:
+    --  OperationPostcondition PO
+    --  Non-Empty Sequence PO
+    --  Subtype PO
+    expOp1 :(SeqT) ==> nat
+    expOp1(s) ==
+    (
+      return hd s
+    )
+    pre s <> [] 
+    post RESULT = hd s;
+        
+            
+    --Tests for:
+    --  WhileLoop PO
+    --  Non-Empty Sequence PO
+    --  Subtype PO
+    expOp2 : (SeqT) ==> nat
+    expOp2(seqT) ==
+    (
+        dcl s : SeqT := seqT;
+        (dcl n : nat ;
+        (while s <> [] do
+        (
+          n := hd s;
+          s := tl s
+        );
+        return n)  ) 
+    );
+    
+    --Tests for:
+    --  Unique Exisitence PO
+    expOp3 : (SetT) ==> nat
+    expOp3(setT) == 
+      return iota x in set setT & x > 1;
+      
+    expOp4 : (nat) ==> ()
+    expOp4(n) ==
+        n2 := n;
+ 
+
+
+

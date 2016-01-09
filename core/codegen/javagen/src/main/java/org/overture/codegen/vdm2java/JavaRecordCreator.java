@@ -28,7 +28,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -131,7 +131,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 			throws AnalysisException
 	{
 
-		AClassDeclCG defClass = record.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG defClass = record.getAncestor(ADefaultClassDeclCG.class);
 		ATypeNameCG typeName = new ATypeNameCG();
 		typeName.setDefiningClass(defClass.getName());
 		typeName.setName(record.getName());
@@ -262,7 +262,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 
 		AReturnStmCG returnStm = new AReturnStmCG();
 
-		AClassDeclCG enclosingClass = record.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG enclosingClass = record.getAncestor(ADefaultClassDeclCG.class);
 		String className = "";
 		
 		if(enclosingClass != null)
@@ -299,5 +299,18 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		toStringMethod.setBody(returnStm);
 
 		return toStringMethod;
+	}
+	
+	public ARecordTypeCG consRecordType(ARecordDeclCG record)
+	{
+		ADefaultClassDeclCG defClass = record.getAncestor(ADefaultClassDeclCG.class);
+		ATypeNameCG typeName = new ATypeNameCG();
+		typeName.setDefiningClass(defClass.getName());
+		typeName.setName(record.getName());
+
+		ARecordTypeCG returnType = new ARecordTypeCG();
+
+		returnType.setName(typeName);
+		return returnType;
 	}
 }

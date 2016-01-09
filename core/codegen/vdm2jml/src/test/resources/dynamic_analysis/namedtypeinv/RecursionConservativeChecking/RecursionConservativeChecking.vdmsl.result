@@ -1,0 +1,16 @@
+"Before legal use"
+"Before legal use"
+"Before illegal use"
+Entry.java:26: JML assertion is false
+        //@ assert ((Utils.is_nat(ret_2) || (V2J.isSeq(ret_2) && (\forall int i; 0 <= i && i < V2J.size(ret_2); false))) && inv_Entry_T(ret_2));
+            ^
+Entry.java:69: JML assertion is false
+            //@ assert ((Utils.is_nat(ignorePattern_3) || (V2J.isSeq(ignorePattern_3) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_3); false))) && inv_Entry_T(ignorePattern_3));
+                ^
+Entry.java:40: JML assertion is false
+        //@ assert (((V2J.isTup(ret_4,2) && Utils.is_nat(V2J.field(ret_4,0)) && false) || Utils.is_nat(ret_4)) && inv_Entry_T1(ret_4));
+            ^
+Entry.java:77: JML assertion is false
+            //@ assert (((V2J.isTup(ignorePattern_4,2) && Utils.is_nat(V2J.field(ignorePattern_4,0)) && false) || Utils.is_nat(ignorePattern_4)) && inv_Entry_T1(ignorePattern_4));
+                ^
+"After illegal use"

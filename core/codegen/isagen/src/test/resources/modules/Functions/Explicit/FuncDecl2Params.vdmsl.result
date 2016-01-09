@@ -1,0 +1,1 @@
+{"translation":"theory A\n  imports utp_vdm\nbegin\n\nvdmefun f\n  inp x :: \"@nat\" and y :: \"@nat\"\n  out \"@nat\"\n  is \"^x^\"\n\nend","errors":false}

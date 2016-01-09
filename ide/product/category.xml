@@ -42,6 +42,9 @@
    <feature url="features/org.overture.ide.plugins.features.guibuilder_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.guibuilder" version="0.0.0">
       <category name="Overture"/>
    </feature>
+   <!--<feature url="features/org.overture.ide.plugins.features.isatrans_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.isatrans" version="0.0.0">
+      <category name="Overture"/>
+   </feature>-->
    <category-def name="Overture" label="Overture">
       <description>
          The Overture Project

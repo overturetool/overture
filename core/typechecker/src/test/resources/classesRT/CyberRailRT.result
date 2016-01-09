@@ -30,7 +30,6 @@
 <message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
 <message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
 <message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
-<message column="19" line="986" message="Class name IO not in scope" messageType="error" number="3133" resource="CyberRailRT"/>
 <message column="13" line="986" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
 <message column="5" line="1114" message="Operation writef(Grid) is not in scope" messageType="error" number="3213" resource="CyberRailRT"/>
 <message column="29" line="1083" message="Unknown type: (unresolved RailwayGrid`RailwayGrid)" messageType="error" number="3428" resource="CyberRailRT"/>

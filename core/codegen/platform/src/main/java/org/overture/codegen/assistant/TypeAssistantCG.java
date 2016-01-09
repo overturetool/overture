@@ -36,7 +36,9 @@ import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
 import org.overture.ast.util.PTypeSet;
@@ -44,10 +46,10 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
@@ -107,7 +109,7 @@ public class TypeAssistantCG extends AssistantBase
 			if (fieldModule != null)
 			{
 				// It is a class
-				AClassDeclCG clazz = info.getDeclAssistant().findClass(classes, fieldModule);
+				SClassDeclCG clazz = info.getDeclAssistant().findClass(info.getClasses(), fieldModule);
 				AFieldDeclCG field = info.getDeclAssistant().getFieldDecl(clazz, fieldModule);
 				
 				if(field != null)
@@ -164,7 +166,7 @@ public class TypeAssistantCG extends AssistantBase
 			String fieldModule, String fieldName, List<SExpCG> args)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, fieldModule);
+		SClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(info.getClasses(), fieldModule);
 
 		List<AMethodDeclCG> methods = assistantManager.getDeclAssistant().getAllMethods(classDecl, classes);
 
@@ -194,8 +196,8 @@ public class TypeAssistantCG extends AssistantBase
 		return null;
 	}
 
-	public STypeCG getFieldType(AClassDeclCG classDecl, String fieldName,
-			List<AClassDeclCG> classes)
+	public STypeCG getFieldType(SClassDeclCG classDecl, String fieldName,
+			List<SClassDeclCG> classes)
 	{
 		for (AFieldDeclCG field : assistantManager.getDeclAssistant().getAllFields(classDecl, classes))
 		{
@@ -208,7 +210,7 @@ public class TypeAssistantCG extends AssistantBase
 		return null;
 	}
 	
-	public STypeCG getFieldType(List<AClassDeclCG> classes,
+	public STypeCG getFieldType(List<SClassDeclCG> classes,
 			ARecordTypeCG recordType, String memberName)
 	{
 		AFieldDeclCG field = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);
@@ -232,11 +234,40 @@ public class TypeAssistantCG extends AssistantBase
 		return fieldTypes;
 	}
 
-	public STypeCG getFieldType(List<AClassDeclCG> classes, String moduleName,
+	public STypeCG getFieldType(List<SClassDeclCG> classes, String moduleName,
 			String fieldName)
 	{
-		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, moduleName);
+		SClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, moduleName);
 		return getFieldType(classDecl, fieldName, classes);
+	}
+	
+	public boolean compatible(IRInfo info, STypeCG left, STypeCG right)
+	{
+		SourceNode leftSource = left.getSourceNode();
+		SourceNode rightSource = right.getSourceNode();
+		
+		if (leftSource == null || rightSource == null)
+		{
+			return false;
+		}
+		
+		org.overture.ast.node.INode leftType = leftSource.getVdmNode();
+		org.overture.ast.node.INode rightType = rightSource.getVdmNode();
+
+		if (!(leftType instanceof PType)
+				|| !(rightType instanceof PType))
+		{
+			return false;
+		}
+		
+		TypeComparator typeComparator = info.getTcFactory().getTypeComparator();
+		
+		if (!typeComparator.compatible((PType) leftType, (PType) rightType))
+		{
+			return false;
+		}
+		
+		return true;
 	}
 
 	public boolean checkArgTypes(IRInfo info, List<SExpCG> args,
@@ -250,25 +281,10 @@ public class TypeAssistantCG extends AssistantBase
 
 		for (int i = 0; i < paramTypes.size(); i++)
 		{
-			SourceNode paramSourceNode = paramTypes.get(i).getSourceNode();
-			SourceNode argTypeSourceNode = args.get(i).getType().getSourceNode();
-
-			if (paramSourceNode == null || argTypeSourceNode == null)
-			{
-				return false;
-			}
-
-			org.overture.ast.node.INode paramTypeNode = paramSourceNode.getVdmNode();
-			org.overture.ast.node.INode argTypeNode = argTypeSourceNode.getVdmNode();
-
-			if (!(paramTypeNode instanceof PType)
-					|| !(argTypeNode instanceof PType))
-			{
-				return false;
-			}
-
-			TypeComparator typeComparator = info.getTcFactory().getTypeComparator();
-			if (!typeComparator.compatible((PType) paramTypeNode, (PType) argTypeNode))
+			STypeCG paramType = paramTypes.get(i);
+			STypeCG argType = args.get(i).getType();
+			
+			if(!compatible(info, paramType, argType))
 			{
 				return false;
 			}
@@ -292,8 +308,7 @@ public class TypeAssistantCG extends AssistantBase
 		{
 			return null;
 		}
-
-		enclosingClass.getName().getModule();
+		
 		PDefinition typeDef = defAssistant.findType(def, nameToken, enclosingClass.getName().getModule());
 
 		return typeDef;
@@ -304,6 +319,8 @@ public class TypeAssistantCG extends AssistantBase
 	{
 		STypeCG seqOfCg = node.getSeqof().apply(question.getTypeVisitor(), question);
 		boolean emptyCg = node.getEmpty();
+		
+		boolean isSeq1 = node instanceof ASeq1SeqType;
 
 		// This is a special case since sequence of characters are strings
 		if (seqOfCg instanceof ACharBasicTypeCG
@@ -318,6 +335,7 @@ public class TypeAssistantCG extends AssistantBase
 		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
 		seqType.setSeqOf(seqOfCg);
 		seqType.setEmpty(emptyCg);
+		seqType.setSeq1(isSeq1);
 
 		return seqType;
 	}
@@ -339,7 +357,11 @@ public class TypeAssistantCG extends AssistantBase
 		} else if(basicType instanceof ANatNumericBasicTypeCG)
 		{
 			return new ANatBasicTypeWrappersTypeCG();
-		} else if (basicType instanceof ARealNumericBasicTypeCG)
+		} else if(basicType instanceof ARatNumericBasicTypeCG)
+		{
+			return new ARatBasicTypeWrappersTypeCG();
+		}
+		else if (basicType instanceof ARealNumericBasicTypeCG)
 		{
 			return new ARealBasicTypeWrappersTypeCG();
 		} else if (basicType instanceof ACharBasicTypeCG)
@@ -778,11 +800,23 @@ public class TypeAssistantCG extends AssistantBase
 				|| type instanceof ABoolBasicTypeWrappersTypeCG;
 	}
 	
+	public boolean isOptional(STypeCG type)
+	{
+		return BooleanUtils.isTrue(type.getOptional());
+	}
+	
 	public boolean allowsNull(STypeCG type)
 	{
 		if(type instanceof AUnionTypeCG)
 		{
-			for(STypeCG t : ((AUnionTypeCG) type).getTypes())
+			AUnionTypeCG unionType = (AUnionTypeCG) type;
+			
+			if(BooleanUtils.isTrue(unionType.getOptional()))
+			{
+				return true;
+			}
+			
+			for(STypeCG t : unionType.getTypes())
 			{
 				if(allowsNull(t))
 				{
@@ -798,5 +832,25 @@ public class TypeAssistantCG extends AssistantBase
 					&& (type instanceof AUnknownTypeCG || BooleanUtils.isTrue(type.getOptional()) || isWrapperType(type));
 		}
 		
+	}
+	
+	public PType getVdmType(STypeCG type)
+	{
+		SourceNode source = type.getSourceNode();
+		if(source != null)
+		{
+			org.overture.ast.node.INode vdmNode = source.getVdmNode();
+			
+			if(vdmNode != null)
+			{
+				if(vdmNode instanceof PType)
+				{
+					return (PType) vdmNode;
+				}
+			}
+		}
+		
+		Logger.getLog().printErrorln("Could not get VDM type of " + type + " in '" + this.getClass().getSimpleName() + "'");
+		return new AUnknownType();
 	}
 }

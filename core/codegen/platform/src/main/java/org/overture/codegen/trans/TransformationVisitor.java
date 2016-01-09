@@ -57,7 +57,6 @@ import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARecordModExpCG;
 import org.overture.codegen.cgast.expressions.ARecordModifierCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
-import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SBoolBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
@@ -73,7 +72,6 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
-import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -141,12 +139,12 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			// Will not be treated
 			return;
 		}
-		
-		String resultVarName = info.getTempVarNameGen().nextVarName(ternaryIfExpPrefix);
-		
-		AVarDeclCG resultDecl = transformationAssistant.consDecl(resultVarName, node.getType().clone(), info.getExpAssistant().consNullExp());
-		AIdentifierVarExpCG resultVar = transformationAssistant.consIdentifierVar(resultVarName, resultDecl.getType().clone());
-		
+
+		String resultVarName = transAssistant.getInfo().getTempVarNameGen().nextVarName(prefixes.ternaryIfExp());
+
+		AVarDeclCG resultDecl = transAssistant.consDecl(resultVarName, node.getType().clone(), transAssistant.getInfo().getExpAssistant().consUndefinedExp());
+		AIdentifierVarExpCG resultVar = transAssistant.getInfo().getExpAssistant().consIdVar(resultVarName, resultDecl.getType().clone());
+
 		SExpCG condition = node.getCondition();
 		SExpCG trueValue = node.getTrueValue();
 		SExpCG falseValue = node.getFalseValue();
@@ -367,14 +365,14 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		if (transformationAssistant.hasEmptySet(binding))
 		{
-			transformationAssistant.cleanUpBinding(binding);
-			letBeStResult = info.getExpAssistant().consNullExp();
+			transAssistant.cleanUpBinding(binding);
+			letBeStResult = transAssistant.getInfo().getExpAssistant().consUndefinedExp();
 		} else
 		{
-			String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
+			String var = tempVarNameGen.nextVarName(prefixes.letBeSt());
 			SExpCG value = node.getValue();
 
-			AVarDeclCG resultDecl = transformationAssistant.consDecl(var, value.getType().clone(), info.getExpAssistant().consNullExp());
+			AVarDeclCG resultDecl = transAssistant.consDecl(var, value.getType().clone(), transAssistant.getInfo().getExpAssistant().consUndefinedExp());
 			outerBlock.getLocalDefs().add(resultDecl);
 			
 			AAssignToExpStmCG setLetBeStResult = new AAssignToExpStmCG();
@@ -455,9 +453,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		AMapletExpCG first = node.getFirst();
 		SExpCG predicate = node.getPredicate();
 		STypeCG type = node.getType();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_MAP_COMP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
+		String var = tempVarNameGen.nextVarName(prefixes.mapComp());
 
 		ComplexCompStrategy strategy = new MapCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
@@ -489,9 +486,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		SExpCG first = node.getFirst();
 		SExpCG predicate = node.getPredicate();
 		STypeCG type = node.getType();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_SET_COMP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
+		String var = tempVarNameGen.nextVarName(prefixes.setComp());
 
 		ComplexCompStrategy strategy = new SetCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
@@ -522,9 +518,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		SExpCG first = node.getFirst();
 		SExpCG predicate = node.getPredicate();
 		STypeCG type = node.getType();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_SEQ_COMP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
+		String var = tempVarNameGen.nextVarName(prefixes.seqComp());
 
 		SeqCompStrategy strategy = new SeqCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
@@ -556,9 +551,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "forall expression");
 
 		SExpCG predicate = node.getPredicate();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_FORALL_EXP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
+		String var = tempVarNameGen.nextVarName(prefixes.forAll());
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, varPrefixes);
 
@@ -589,9 +583,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "exists expression");
 
 		SExpCG predicate = node.getPredicate();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
+		String var = tempVarNameGen.nextVarName(prefixes.exists());
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, varPrefixes);
 
@@ -622,9 +615,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "exists1 expression");
 
 		SExpCG predicate = node.getPredicate();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX);
-		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
+		String var = tempVarNameGen.nextVarName(prefixes.exists1());
 
 		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transformationAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes, counterData);
 		
@@ -721,11 +713,12 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "cases expression");
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
-		String casesExpResultName = info.getTempVarNameGen().nextVarName(casesExpResultPrefix);
+		IRInfo info = transAssistant.getInfo();
+		String casesExpResultName = info.getTempVarNameGen().nextVarName(prefixes.casesExp());
 		idPattern.setName(casesExpResultName);
 
 		AVarDeclCG resultVarDecl = info.getDeclAssistant().consLocalVarDecl(node.getType().clone(),
-				idPattern, new AUndefinedExpCG());
+				idPattern, info.getExpAssistant().consUndefinedExp());
 
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
 		resultVar.setIsLocal(true);

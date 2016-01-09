@@ -1,0 +1,38 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ (
+   dcl a : nat1 | char | bool := true;
+   a := 1;
+   a := 'a';
+   a := true;
+ );
+ (
+   dcl b : [nat1 | char] | bool := true;
+   b := nil;
+ );
+ IO`println("After legal use");
+ IO`println("Before illegal use");
+ (
+    dcl a : nat1 | char | bool := charNil();
+    skip;
+ );
+ IO`println("After illegal use");
+ return 0;
+);
+  
+functions
+
+charNil :  () -> [char]
+charNil () == nil;  
+  
+end Entry

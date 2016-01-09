@@ -34,10 +34,12 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACardUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
@@ -56,6 +58,7 @@ import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ARemNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpBase;
@@ -250,6 +253,20 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void caseAFieldDeclCG(AFieldDeclCG node) throws AnalysisException
+	{
+		if (node.getInitial() != null)
+		{
+			if (node.getInitial().getType() instanceof AUnionTypeCG)
+			{
+				correctTypes(node.getInitial(), node.getType());
+			}
+			
+			node.getInitial().apply(this);
+		}
+	}
+	
+	@Override
 	public void caseACardUnaryExpCG(ACardUnaryExpCG node)
 			throws AnalysisException
 	{
@@ -357,8 +374,8 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		AIdentifierPatternCG id = new AIdentifierPatternCG();
 		id.setName(applyResultName);
 
-		AVarDeclCG resultDecl = info.getDeclAssistant().
-				consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, info.getExpAssistant().consNullExp());
+		AVarDeclCG resultDecl = transAssistant.getInfo().getDeclAssistant().
+				consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, transAssistant.getInfo().getExpAssistant().consUndefinedExp());
 		
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
 		resultVar.setSourceNode(node.getSourceNode());
@@ -627,7 +644,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		if (type instanceof AClassTypeCG)
 		{
-			for (AClassDeclCG classCg : classes)
+			for (SClassDeclCG classCg : transAssistant.getInfo().getClasses())
 			{
 				for (AMethodDeclCG method : classCg.getMethods())
 				{
@@ -648,8 +665,8 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			String definingClassName = recordType.getName().getDefiningClass();
 			String recordName = recordType.getName().getName();
 
-			AClassDeclCG classDecl = info.getAssistantManager().getDeclAssistant().findClass(classes, definingClassName);
-			ARecordDeclCG record = info.getAssistantManager().getDeclAssistant().findRecord(classDecl, recordName);
+			SClassDeclCG classDecl = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findClass(transAssistant.getInfo().getClasses(), definingClassName);
+			ARecordDeclCG record = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findRecord(classDecl, recordName);
 
 			List<STypeCG> fieldTypes = info.getAssistantManager().getTypeAssistant().getFieldTypes(record);
 
@@ -681,7 +698,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		STypeCG classType = node.getClassType();
 		
 		String className = classType instanceof AClassTypeCG ? ((AClassTypeCG) classType).getName()
-				: node.getAncestor(AClassDeclCG.class).getName();
+				: node.getAncestor(ADefaultClassDeclCG.class).getName();
 		
 		handleCallStm(node, className);
 	}
@@ -846,17 +863,109 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	public void inAVarDeclCG(AVarDeclCG node)
 			throws AnalysisException
 	{
-		STypeCG expectedType = node.getType();
-
-		if(expectedType instanceof AUnknownTypeCG || node.getExp() instanceof ANullExpCG)
+		SExpCG exp = node.getExp();
+		
+		if(exp != null)
+		{
+			exp.apply(this);
+		}
+		
+		STypeCG type = node.getType();
+		
+		if(castNotNeeded(exp, type))
 		{
 			return;
 		}
 		
-		if (!(expectedType instanceof AUnionTypeCG))
+		if (!(type instanceof AUnionTypeCG))
 		{
-			correctTypes(node.getExp(), expectedType);
+			correctTypes(exp, type);
 		}
+	}
+	
+	@Override
+	public void caseAAssignToExpStmCG(AAssignToExpStmCG node) throws AnalysisException
+	{
+		handAssignRighHandSide(node);
+		handleAssignTarget(node);
+	}
+
+	public void handleAssignTarget(AAssignToExpStmCG node) throws AnalysisException
+	{
+		if(node.getTarget() instanceof AFieldExpCG)
+		{
+			AFieldExpCG field = (AFieldExpCG) node.getTarget();
+			
+			if(field.getObject().getType() instanceof AUnionTypeCG)
+			{
+				LinkedList<STypeCG> types = ((AUnionTypeCG) field.getObject().getType()).getTypes();
+
+				AIfStmCG ifChecks = new AIfStmCG();
+				
+				for(int i = 0; i < types.size(); i++)
+				{
+					STypeCG currentType = types.get(i);
+					
+					AInstanceofExpCG cond = consInstanceCheck(field.getObject(), currentType);
+					AAssignToExpStmCG castFieldObj = castFieldObj(node, field, currentType);
+					
+					if(i == 0)
+					{
+						ifChecks.setIfExp(cond);
+						ifChecks.setThenStm(castFieldObj);
+					}
+					else
+					{
+						AElseIfStmCG elseIf = new AElseIfStmCG();
+						elseIf.setElseIf(cond);
+						elseIf.setThenStm(castFieldObj);
+
+						ifChecks.getElseIf().add(elseIf);
+					}
+				}
+				
+				ifChecks.setElseStm(consRaiseStm(MISSING_MEMBER, field.getMemberName()));
+				
+				transAssistant.replaceNodeWith(node, ifChecks);
+				ifChecks.apply(this);
+			}
+		}
+	}
+
+	public void handAssignRighHandSide(AAssignToExpStmCG node) throws AnalysisException
+	{
+		if(node.getExp() != null)
+		{
+			node.getExp().apply(this);
+		}
+		
+		if(!castNotNeeded(node.getExp(), node.getTarget().getType()))
+		{
+			if (!(node.getTarget().getType() instanceof AUnionTypeCG))
+			{
+				correctTypes(node.getExp(), node.getTarget().getType());
+			}
+		}
+	}
+
+	public AAssignToExpStmCG castFieldObj(AAssignToExpStmCG assign, AFieldExpCG target, STypeCG possibleType)
+	{
+		ACastUnaryExpCG cast = new ACastUnaryExpCG();
+		cast.setType(possibleType.clone());
+		cast.setExp(target.getObject().clone());
+		
+		AAssignToExpStmCG assignCopy = assign.clone();
+		AFieldExpCG fieldCopy = target.clone();
+		
+		transAssistant.replaceNodeWith(fieldCopy.getObject(), cast);
+		transAssistant.replaceNodeWith(assignCopy.getTarget(), fieldCopy);
+		
+		return assignCopy;
+	}
+
+	private boolean castNotNeeded(SExpCG exp, STypeCG type)
+	{
+		return type instanceof AUnknownTypeCG || exp instanceof ANullExpCG || exp instanceof AUndefinedExpCG;
 	}
 
 	@Override

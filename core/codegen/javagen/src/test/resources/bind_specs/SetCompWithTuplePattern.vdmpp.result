@@ -51,8 +51,7 @@ public class Entry {
             }
 
             if (Utils.equals(1L, 1L)) {
-                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
-                        SetUtil.set(a));
+                setCompResult_1.add(a);
             }
         }
 

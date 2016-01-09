@@ -36,6 +36,7 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -57,7 +58,10 @@ public class FunctionPostCondition extends ProofObligation
 		List<PExp> params = new LinkedList<PExp>();
 		for (List<PPattern> pl : func.getParamPatternList())
 		{
-			params.addAll(cloneListPExp(assistantFactory.createPPatternListAssistant().getMatchingExpressionList(pl)));
+			for (PPattern p : pl)
+			{
+				params.add(patternToExp(p));
+			}
 		}
 
 		PExp body = null;
@@ -95,7 +99,10 @@ public class FunctionPostCondition extends ProofObligation
 
 		for (List<PPattern> pl : assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(func))
 		{
-			params.addAll(assistantFactory.createPPatternListAssistant().getMatchingExpressionList(pl));
+			for (PPattern p : pl)
+			{
+				params.add(patternToExp(p));
+			}
 		}
 
 		PExp body = null;
@@ -103,10 +110,7 @@ public class FunctionPostCondition extends ProofObligation
 		// implicit body is apparently allowed
 		if (func.getBody() == null)
 		{
-			List<PPattern> aux = new LinkedList<PPattern>();
-			aux.add(func.getResult().getPattern());
-			List<PExp> aux2 = assistantFactory.createPPatternListAssistant().getMatchingExpressionList(aux);
-			body = aux2.get(0);
+			body = patternToExp(func.getResult().getPattern());
 
 		} else if (func.getBody() instanceof ANotYetSpecifiedExp
 				|| func.getBody() instanceof ASubclassResponsibilityExp)
@@ -137,8 +141,10 @@ public class FunctionPostCondition extends ProofObligation
 		{
 			// pre(params) =>
 			AApplyExp applyExp = new AApplyExp();
+			applyExp.setType(new ABooleanBasicType());
 			applyExp.setArgs(cloneListPExp(params));
 			AVariableExp varExp = getVarExp(predef.getName().clone());
+			varExp.setType(predef.getType().clone());
 			applyExp.setRoot(varExp);
 
 			return AstExpressionFactory.newAImpliesBooleanBinaryExp(applyExp, generateBody(postdef, params, body));
@@ -153,11 +159,16 @@ public class FunctionPostCondition extends ProofObligation
 	{
 		// post(params, body)
 		AApplyExp applyExp = new AApplyExp();
+		applyExp.setType(new ABooleanBasicType());
+
 		AVariableExp varExp = getVarExp(postdef.getName());
+		varExp.setType(postdef.getType().clone());
 		applyExp.setRoot(varExp);
+
 		List<PExp> args = params;
 		args.add(body.clone());
 		applyExp.setArgs(args);
+
 		return applyExp;
 	}
 

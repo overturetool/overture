@@ -1,1 +1,1 @@
-["state invariant initialized obligation:(x \u003e 10)","state invariant satisfiable obligation:(exists x:int \u0026 (x \u003e 10))"]
+["state invariant initialized obligation in \u0027A\u0027 (State_Inv_Sat.vdmpp) at line 5:1: (x \u003e 10)","state invariant satisfiable obligation in \u0027A\u0027 (State_Inv_Sat.vdmpp) at line 5:1: (exists x:int \u0026 (x \u003e 10))"]

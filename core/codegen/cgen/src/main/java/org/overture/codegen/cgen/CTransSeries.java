@@ -1,15 +1,18 @@
 package org.overture.codegen.cgen;
 
+/*
 import static org.overture.codegen.ir.CodeGenBase.EVAL_METHOD_PREFIX;
 import static org.overture.codegen.ir.CodeGenBase.INTERFACE_NAME_PREFIX;
 import static org.overture.codegen.ir.CodeGenBase.PARAM_NAME_PREFIX;
 import static org.overture.codegen.ir.CodeGenBase.TEMPLATE_TYPE_PREFIX;
 
+import static org.overture.codegen.ir.CodeGenBase;
+*/
 import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgen.transformations.MethodParamTransformation;
 import org.overture.codegen.cgen.transformations.VdmBasicTypesCppTrans;
 import org.overture.codegen.cgen.transformations.VdmSeqCppTrans;
@@ -17,14 +20,14 @@ import org.overture.codegen.cgen.transformations.VdmSetCppTrans;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.traces.TraceNames;
-import org.overture.codegen.trans.AssignStmTransformation;
-import org.overture.codegen.trans.CallObjStmTransformation;
-import org.overture.codegen.trans.SeqConversionTransformation;
-import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.AssignStmTrans;
+import org.overture.codegen.trans.CallObjStmTrans;
+import org.overture.codegen.trans.SeqConvTrans;
+//import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
-import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
-import org.overture.codegen.trans.funcvalues.FunctionValueTransformation;
-import org.overture.codegen.trans.letexps.FuncTransformation;
+import org.overture.codegen.trans.funcvalues.FuncValAssistant;
+import org.overture.codegen.trans.funcvalues.FuncValTrans;
+import org.overture.codegen.trans.letexps.FuncTrans;
 
 public class CTransSeries
 {
@@ -37,14 +40,14 @@ public class CTransSeries
 	}
 
 	public List<DepthFirstAnalysisAdaptor> consAnalyses(
-			List<AClassDeclCG> classes,
-			FunctionValueAssistant functionValueAssistant)
+			List<ADefaultClassDeclCG> classes,
+			FuncValAssistant functionValueAssistant)
 	{
 		// Data and functionality to support the transformations
 		IRInfo irInfo = codeGen.getIRGenerator().getIRInfo();
-		TempVarPrefixes varPrefixes = codeGen.getTempVarPrefixes();
+		//TempVarPrefixes varPrefixes = codeGen.getTempVarPrefixes();
 		ITempVarGen nameGen = irInfo.getTempVarNameGen();
-		TraceNames traceNamePrefixes = codeGen.getTracePrefixes();
+		//TraceNames traceNamePrefixes = codeGen.getTracePrefixes();
 		TransAssistantCG transAssistant = codeGen.getTransAssistant();
 		// IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
 
@@ -53,13 +56,13 @@ public class CTransSeries
 //		VdmSeqCppTrans seqTrans = new VdmSeqCppTrans(transAssistant);
 
 		// Construct the transformations
-		FuncTransformation funcTransformation = new FuncTransformation(transAssistant);
+		FuncTrans funcTransformation = new FuncTrans(transAssistant);
 		// DivideTransformation divideTrans = new DivideTransformation(irInfo);
-		CallObjStmTransformation callObjTransformation = new CallObjStmTransformation(irInfo, classes);
-		AssignStmTransformation assignTransformation = new AssignStmTransformation(irInfo, classes, transAssistant);
+		CallObjStmTrans callObjTransformation = new CallObjStmTrans(irInfo);
+		AssignStmTrans assignTransformation = new AssignStmTrans(transAssistant);
 		// PrePostTransformation prePostTransformation = new PrePostTransformation(irInfo);
 		// IfExpTransformation ifExpTransformation = new IfExpTransformation(transAssistant);
-		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
+//		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		// ILanguageIterator langIterator = new JavaLanguageIterator(transAssistant, nameGen, varPrefixes);
 		// TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, varPrefixes, transAssistant,
 		// consExists1CounterData(), langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX,
@@ -72,7 +75,7 @@ public class CTransSeries
 		// transAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
 		// IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transAssistant,
 		// IS_EXP_SUBJECT_NAME_PREFIX);
-		SeqConversionTransformation seqConversionTransformation = new SeqConversionTransformation(transAssistant);
+		//SeqConversionTransformation seqConversionTransformation = new SeqConversionTransformation(transAssistant);
 		// TracesTransformation tracesTransformation = new TracesTransformation(irInfo, classes, transAssistant,
 		// varPrefixes, traceNamePrefixes, langIterator, new JavaCallStmToStringBuilder());
 		// UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transAssistant, irInfo,
@@ -108,7 +111,7 @@ public class CTransSeries
 		transformations.add(funcTransformation);
 		// transformations.add(prePostTransformation);
 		// transformations.add(ifExpTransformation);
-		transformations.add(funcValueTransformation);
+//		transformations.add(funcValueTransformation);
 		// transformations.add(transVisitor);
 		// transformations.add(tracesTransformation);
 		// transformations.add(patternTransformation);
@@ -120,7 +123,7 @@ public class CTransSeries
 		// transformations.add(concurrencytransform);
 		// transformations.add(mutexTransform);
 		// transformations.add(mainclassTransform);
-		transformations.add(seqConversionTransformation);
+//		transformations.add(seqConversionTransformation);
 		// transformations.add(instanceVarPPEval);
 		// transformations.add(recTransformation);
 

@@ -3,8 +3,8 @@
 <message column="11" line="13" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefpp.vpp"/>
 <message column="13" line="13" message="Definition 'b' not used" messageType="warning" number="5000" resource="fundefpp.vpp"/>
 <message column="9" line="33" message="Definition 'i' not used" messageType="warning" number="5000" resource="fundefpp.vpp"/>
-<message column="13" line="44" message="Definition 'b' not used" messageType="warning" number="5000" resource="fundefpp.vpp"/>
 <message column="11" line="44" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefpp.vpp"/>
+<message column="13" line="44" message="Definition 'b' not used" messageType="warning" number="5000" resource="fundefpp.vpp"/>
 <message column="20" line="47" message="r at 47:12 hidden by r" messageType="warning" number="5008" resource="fundefpp.vpp"/>
 <message column="20" line="47" message="Definition 'r' not used" messageType="warning" number="5000" resource="fundefpp.vpp"/>
 <message column="3" line="4" message="Instance variable 'inst' is not initialized" messageType="warning" number="5001" resource="fundefpp.vpp"/>

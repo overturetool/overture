@@ -35,6 +35,7 @@ import org.apache.commons.io.input.ClassLoaderObjectInputStream;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.tests.exec.util.ExecutionResult;
 import org.overture.codegen.tests.exec.util.JavaExecution;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
 
 public abstract class ExecutableTestHandler extends TestHandler
@@ -59,11 +60,11 @@ public abstract class ExecutableTestHandler extends TestHandler
 			+ "     }catch(Exception ex){\n"
 			+ "	      ex.printStackTrace();\n " + "     }\n" + "  }\n";
 
-	public String getMainClass()
+	public String getMainClass(String rootPackage)
 	{
 		StringBuilder methodsMerged = new StringBuilder();
 
-		for (String method : getMainClassMethods())
+		for (String method : getMainClassMethods(rootPackage))
 		{
 			methodsMerged.append(method).append("\n\n");
 		}
@@ -74,6 +75,7 @@ public abstract class ExecutableTestHandler extends TestHandler
 				+ "import org.overture.codegen.runtime.*;\n"
 				+ "import org.overture.codegen.runtime.traces.*;\n"
 				+ "import java.util.*;\n\n"
+				+ getMainClassAnnotation() + "\n"
 				+ "public class Exp {\n"
 				+ "  public static Object exp()\n"
 				+ "  {\n"
@@ -89,6 +91,12 @@ public abstract class ExecutableTestHandler extends TestHandler
 	}
 
 
+	public String getMainClassAnnotation()
+	{
+		return "";
+	}
+
+
 	public ExecutableTestHandler(Release release, Dialect dialect)
 	{
 		super(release, dialect);
@@ -97,16 +105,16 @@ public abstract class ExecutableTestHandler extends TestHandler
 	public abstract ExecutionResult interpretVdm(File intputFile)
 			throws Exception;
 
-	public List<String> getMainClassMethods()
+	public List<String> getMainClassMethods(String rootPackage)
 	{
 		return new LinkedList<String>();
 	}
 
-	public void injectArgIntoMainClassFile(File parent, String body)
+	public void injectArgIntoMainClassFile(File parent, String body, String rootPackage)
 			throws IOException
 	{
 		File mainClassFile = getMainClassFile(parent);
-		writeToFile(String.format(getMainClass(), body), mainClassFile);
+		writeToFile(String.format(getMainClass(rootPackage), body), mainClassFile);
 	}
 
 	private File getMainClassFile(File parent) throws IOException
@@ -116,16 +124,20 @@ public abstract class ExecutableTestHandler extends TestHandler
 
 	public ExecutionResult runJava(File folder)
 	{
+		File cgRuntime = new File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+		return produceExecResult(folder, new String[]{/* no args */}, cgRuntime);
+	}
+
+	public static ExecutionResult produceExecResult(File folder, String[] preArgs, File... cpJars)
+	{
 		FileInputStream fin = null;
 		ObjectInputStream ois = null;
 
 		try
 		{
-			File cgRuntime = new File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
-
 			String resultFilename = String.format("serilizedExecutionResult-%d.bin", rand.nextLong());
 
-			String processOutput = JavaExecution.run(ExecutableTestHandler.MAIN_CLASS, new String[] { resultFilename }, folder, folder, cgRuntime);
+			String processOutput = JavaExecution.run(ExecutableTestHandler.MAIN_CLASS, preArgs, new String[] { resultFilename }, folder, GeneralUtils.concat(new File[]{folder}, cpJars));
 
 			File dataFile = new File(folder, resultFilename);
 			dataFile.deleteOnExit();

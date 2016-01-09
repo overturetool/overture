@@ -1,0 +1,27 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Number i = 123.456;
+        i = ((Number) ratOrBool());
+
+        return i;
+    }
+
+    private static Object ratOrBool() {
+        return 5L;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

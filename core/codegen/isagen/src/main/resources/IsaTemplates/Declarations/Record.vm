@@ -1,0 +1,23 @@
+#set( $tyTag = "${node.Name}_Tag")
+
+typedef $tyTag = "{True}" by auto
+instantiation $tyTag :: tag
+begin
+definition "tagName_$tyTag (x::$tyTag) = ''$node.Name''"
+instance
+by (intro_classes, metis (full_types) Abs_${tyTag}_cases singleton_iff)
+end
+
+abbreviation"maxty_$node.Name \<equiv> RecMaximalType \<parallel>$Isa.rec2Tuple($node)\<parallel> TYPE($tyTag)"
+#foreach( $fld in $node.Fields )
+abbreviation"${fld.Name}_fld \<equiv> MkField maxty_${node.Name}#[$velocityCount]\<parallel>$Isa.trans($fld.Type)\<parallel>"
+abbreviation"$fld.Name \<equiv> SelectRec ${fld.Name}_fld"
+#end
+
+$Isa.hackInvDecl($node)
+
+definition "$node.Name \<equiv>\<parallel>@maxty_$node.Name $Isa.hackInv($node)\<parallel>"
+declare ${node.Name}_def [eval,evalp]
+
+definition "mk_$node.Name \<equiv>MkRec $node.Name"
+declare mk_${node.Name}_def [eval,evalp]

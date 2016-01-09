@@ -10,7 +10,7 @@ import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
@@ -44,9 +44,9 @@ public class MethodParamTransformation extends DepthFirstAnalysisAdaptor
 			AIntNumericBasicTypeCG ty = new AIntNumericBasicTypeCG();
 
 			// Get enclosing class
-			AClassDeclCG classname = node.getAncestor(AClassDeclCG.class);
+			//AClassDeclCG classname = node.getAncestor(AClassDeclCG.class);
 
-			INode vdmclass = classname.getSourceNode().getVdmNode();
+			//INode vdmclass = classname.getSourceNode().getVdmNode();
 			/*
 			 * if (vdmclass instanceof AClassClassDefinition) { AClassClassDefinition vdm = (AClassClassDefinition)
 			 * vdmclass; System.out.println("For method: " + node.getName() + " in class: " + vdm.getName());

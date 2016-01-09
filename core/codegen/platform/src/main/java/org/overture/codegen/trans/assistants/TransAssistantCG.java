@@ -24,6 +24,7 @@ package org.overture.codegen.trans.assistants;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
@@ -32,6 +33,7 @@ import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -71,7 +73,8 @@ import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.IIterationStrategy;
-import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.IterationVarPrefixes;
+import org.overture.config.Settings;
 
 public class TransAssistantCG extends BaseTransformationAssistant
 {
@@ -515,6 +518,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return forBody;
 	}
 
+	//FIXME make this method work on generic PMUltipleBinds
 	public ABlockStmCG consComplexCompIterationBlock(
 			List<ASetMultipleBindCG> multipleSetBinds, ITempVarGen tempGen,
 			IIterationStrategy strategy) throws AnalysisException
@@ -641,6 +645,30 @@ public class TransAssistantCG extends BaseTransformationAssistant
 			paramArg.setName(paramId.getName());
 
 			condCall.getArgs().add(paramArg);
+		}
+		
+		if(Settings.dialect == Dialect.VDM_SL)
+		{
+			ADefaultClassDeclCG encClass = node.getAncestor(ADefaultClassDeclCG.class);
+			
+			if(encClass != null)
+			{
+				for(AFieldDeclCG f : encClass.getFields())
+				{
+					if(!f.getFinal())
+					{
+						// It's the state component
+						AIdentifierVarExpCG stateArg = info.getExpAssistant().consIdVar(f.getName(), f.getType().clone());
+						condCall.getArgs().add(stateArg);
+						break;
+					}
+				}
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Could not find enclosing class of " + node + " in '"
+						+ this.getClass().getSimpleName() + "'");
+			}
 		}
 
 		return condCall;

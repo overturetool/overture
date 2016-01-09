@@ -1,0 +1,26 @@
+state S of
+    x : int
+end
+   
+operations
+op1 : () ==> ()
+op1 () ==
+    x := x + 1
+pre x = 0
+post x = x~ + 1;
+
+op2 : () ==> ()
+op2 () ==
+    x := x + 2
+pre x <> 0
+post x = x~ + 2;
+
+op3 : () ==> ()
+op3 () ==
+(    op1();
+    op2();
+    x :=3
+)
+pre x = 0
+post x = x~;
+

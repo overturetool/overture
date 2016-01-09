@@ -1,0 +1,64 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+final public class Entry implements java.io.Serializable {
+    private Entry() {
+    }
+
+    public static void op() {
+        if (!(pre_op())) {
+            throw new RuntimeException("Precondition failure: pre_op");
+        }
+
+        //Skip;
+    }
+
+    public static Boolean pre_op() {
+        return false;
+    }
+
+    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+
+        {
+            final Number ID_1 = gen.inc();
+            store.staticReg(ID_1, Entry.class);
+        }
+
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        CallStatement callStm_1 = new CallStatement() {
+                public Boolean meetsPreCond() {
+                    return pre_op();
+                }
+
+                public Object execute() {
+                    op();
+
+                    return Utils.VOID_VALUE;
+                }
+
+                public String toString() {
+                    return "op()";
+                }
+            };
+
+        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+        RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_1, 1L, 3L);
+
+        sequence_1.add(repeat_1);
+
+        TraceNode.executeTests(sequence_1, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

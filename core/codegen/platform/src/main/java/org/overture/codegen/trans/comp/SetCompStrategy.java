@@ -30,6 +30,7 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
+import org.overture.codegen.cgast.statements.ASetCompAddStmCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -65,15 +66,10 @@ public class SetCompStrategy extends ComplexCompStrategy
 		setCompResult.setIsLambda(false);
 		setCompResult.setIsLocal(true);
 
-		AEnumSetExpCG setToUnion = new AEnumSetExpCG();
-		setToUnion.setType(compType.clone());
-		setToUnion.getMembers().add(first.clone());
-
-		ASetUnionBinaryExpCG setUnion = new ASetUnionBinaryExpCG();
-		setUnion.setType(compType.clone());
-		setUnion.setLeft(setCompResult.clone());
-		setUnion.setRight(setToUnion);
-
-		return consConditionalAdd(setCompResult, setUnion);
+		ASetCompAddStmCG add = new ASetCompAddStmCG();
+		add.setSet(setCompResult);
+		add.setElement(first.clone());
+		
+		return consConditionalAdd(setCompResult, add);
 	}
 }

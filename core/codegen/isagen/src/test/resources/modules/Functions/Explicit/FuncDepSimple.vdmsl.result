@@ -1,0 +1,1 @@
+{"translation":"theory A\n  imports utp_vdm\nbegin\n\nvdmefun g\n  inp x :: \"@int\"\n  out \"@int\"\n  is \"0\"\n\nvdmefun f\n  inp x :: \"@int\"\n  out \"@int\"\n  is \"g(^x^)\"\n\nend","errors":false}

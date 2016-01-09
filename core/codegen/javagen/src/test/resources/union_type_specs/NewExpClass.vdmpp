@@ -17,8 +17,9 @@ Entry (n,c) == skip;
 public static Run : () ==> ?
 Run () ==
 let x : nat | char = 1,
-		y : nat | char = 'a'
+		y : nat | char = 'a',
+    - = new Entry(x,y)
 in
-	return new Entry(x,y);
+	return 0;
 
 end Entry

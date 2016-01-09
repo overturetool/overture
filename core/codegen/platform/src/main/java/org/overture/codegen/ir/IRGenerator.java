@@ -22,26 +22,48 @@
 package org.overture.codegen.ir;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.AIdentifierStateDesignator;
+import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.trans.ITotalTransformation;
 
 public class IRGenerator
 {
 	protected IRInfo codeGenInfo;
 
-	public IRGenerator(String objectInitCallPrefix)
+	public IRGenerator()
 	{
-		this.codeGenInfo = new IRInfo(objectInitCallPrefix);
+		this.codeGenInfo = new IRInfo();
+	}
+	
+	public void computeDefTable(List<? extends org.overture.ast.node.INode> mergedParseLists)
+			throws AnalysisException
+	{
+		List<org.overture.ast.node.INode> classesToConsider = new LinkedList<>();
+
+		for (org.overture.ast.node.INode node : mergedParseLists)
+		{
+			if (!codeGenInfo.getDeclAssistant().isLibrary(node))
+			{
+				classesToConsider.add(node);
+			}
+		}
+		
+		Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(classesToConsider, codeGenInfo.getTcFactory());
+		codeGenInfo.setIdStateDesignatorDefs(idDefs);
 	}
 
 	public void clear()
@@ -56,7 +78,7 @@ public class IRGenerator
 
 		if(node instanceof SClassDefinition)
 		{
-			AClassDeclCG classCg = node.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
+			SClassDeclCG classCg = node.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
 			Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 			String name = ((SClassDefinition) node).getName().getName();
 			

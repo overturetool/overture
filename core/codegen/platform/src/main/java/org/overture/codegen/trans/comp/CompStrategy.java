@@ -30,9 +30,7 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.AbstractIterationStrategy;
@@ -68,26 +66,20 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
 			SPatternCG pattern);
 
-	protected List<SStmCG> consConditionalAdd(AIdentifierVarExpCG compResult,
-			SBinaryExpCG collectionMerge)
+	protected List<SStmCG> consConditionalAdd(AIdentifierVarExpCG compResult, SStmCG collectionAdd)
 	{
-		AIdentifierVarExpCG result = transAssistant.consIdentifierVar(compResult.getName(),
-				compResult.getType().clone());
-
-		AAssignToExpStmCG updateCompResult = new AAssignToExpStmCG();
-		updateCompResult.setTarget(result);
-		updateCompResult.setExp(collectionMerge);
-
 		if (predicate != null)
 		{
 			AIfStmCG condCollectionUnion = new AIfStmCG();
 			condCollectionUnion.setIfExp(predicate.clone());
-			condCollectionUnion.setThenStm(updateCompResult);
+			condCollectionUnion.setThenStm(collectionAdd);
 
 			return packStm(condCollectionUnion);
 		}
-
-		return packStm(updateCompResult);
+		else
+		{
+			return packStm(collectionAdd);
+		}
 	}
 
 	@Override
@@ -97,7 +89,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	{
 		SExpCG emptyCollection = getEmptyCollection();
 		emptyCollection.setType(compType.clone());
-		AVarDeclCG compResultInit = transAssistant.getInfo().getDeclAssistant().
+		AVarDeclCG compResultInit = transAssist.getInfo().getDeclAssistant().
 				consLocalVarDecl(compType.clone(), idPattern.clone(), emptyCollection);
 
 		return packDecl(compResultInit);

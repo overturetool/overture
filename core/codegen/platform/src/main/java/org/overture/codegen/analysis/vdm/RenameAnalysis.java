@@ -42,16 +42,16 @@ class RenameAnalysis extends DepthFirstAnalysisAdaptor
 		{
 			if (node.getLocation().equals(r.getLoc()))
 			{
-				parent.replaceChild(node, consLexNameToken(node, r.getNewName()));
+				parent.replaceChild(node, consLexNameToken(node, r.getNewName(), r.getNewModule()));
 				break;
 			}
 		}
 	}
 
 	private LexNameToken consLexNameToken(ILexNameToken defName,
-			String newName)
+			String newName, String newModule)
 	{
-		LexNameToken newLexName = new LexNameToken(defName.getModule(), newName, defName.getLocation(), defName.getOld(), defName.getExplicit());
+		LexNameToken newLexName = new LexNameToken(newModule, newName, defName.getLocation(), defName.getOld(), defName.getExplicit());
 		newLexName.setTypeQualifier(defName.getTypeQualifier());
 		
 		return newLexName;

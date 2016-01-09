@@ -2,21 +2,20 @@ package org.overture.codegen.vdm2jml;
 
 public class JmlSettings
 {
-	private boolean injectReportCalls;
-
+	private boolean genInvariantFor;
+	
 	public JmlSettings()
 	{
-		super();
-		this.injectReportCalls = false;
+		this.genInvariantFor = false;
 	}
 
-	public boolean injectReportCalls()
+	public boolean genInvariantFor()
 	{
-		return injectReportCalls;
+		return genInvariantFor;
 	}
-
-	public void setInjectReportCalls(boolean injectReportCalls)
+	
+	public void setGenInvariantFor(boolean genInvariantFor)
 	{
-		this.injectReportCalls = injectReportCalls;
+		this.genInvariantFor = genInvariantFor;
 	}
 }

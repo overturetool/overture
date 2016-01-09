@@ -12,7 +12,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AClassHeaderDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -22,7 +22,7 @@ import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
-import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
+import org.overture.codegen.trans.funcvalues.FuncValAssistant;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 
@@ -56,16 +56,18 @@ public class CGen extends CodeGenBase
 		// statuses = initialIrEvent(statuses);
 		// statuses = filter(statuses, generated);
 
-		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
+		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
 
 		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
 		List<IRStatus<org.overture.codegen.cgast.INode>> modulesAsNodes = IRStatus.extract(moduleStatuses);
 
-		List<IRStatus<AClassDeclCG>> classStatuses = IRStatus.extract(modulesAsNodes, AClassDeclCG.class);
-		classStatuses.addAll(IRStatus.extract(statuses, AClassDeclCG.class));
-		List<AClassDeclCG> classes = getClassDecls(classStatuses);
-		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
+		List<IRStatus<ADefaultClassDeclCG>> classStatuses = IRStatus.extract(modulesAsNodes, ADefaultClassDeclCG.class);
+		classStatuses.addAll(IRStatus.extract(statuses, ADefaultClassDeclCG.class));
+		List<ADefaultClassDeclCG> classes = getClassDecls(classStatuses);
+		FuncValAssistant functionValueAssistant = new FuncValAssistant();
 
+		
+		
 		// Transform IR
 		CTransSeries xTransSeries = new CTransSeries(this);
 		List<DepthFirstAnalysisAdaptor> transformations = xTransSeries.consAnalyses(classes, functionValueAssistant);
@@ -79,13 +81,13 @@ public class CGen extends CodeGenBase
 		// MergeVisitor mergeVisitor = new MergeVisitor(templateManager, new TemplateCallable[]{new
 		// TemplateCallable("CGh", new CGHelper())});
 
-		CFormat my_formatter = new CFormat(varPrefixes, generator.getIRInfo());
+		CFormat my_formatter = new CFormat(generator.getIRInfo());
 
 		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
 
 		for (DepthFirstAnalysisAdaptor trans : transformations)
 		{
-			for (IRStatus<AClassDeclCG> status : IRStatus.extract(statuses, AClassDeclCG.class))
+			for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(statuses, ADefaultClassDeclCG.class))
 			{
 				try
 				{
@@ -104,10 +106,10 @@ public class CGen extends CodeGenBase
 			}
 		}
 
-		for (IRStatus<AClassDeclCG> status : IRStatus.extract(statuses, AClassDeclCG.class))
+		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(statuses, ADefaultClassDeclCG.class))
 		{
 			StringWriter writer = new StringWriter();
-			AClassDeclCG classCg = status.getIrNode();
+			ADefaultClassDeclCG classCg = status.getIrNode();
 
 			try
 			{
@@ -123,6 +125,7 @@ public class CGen extends CodeGenBase
 				e1.printStackTrace();
 			}
 
+			/*
 			try
 			{
 				classCg.apply(my_formatter.GetMergeVisitor(), writer);
@@ -143,6 +146,7 @@ public class CGen extends CodeGenBase
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		*/
 		}
 
 		data.setClasses(generated);
@@ -150,12 +154,12 @@ public class CGen extends CodeGenBase
 		return data;
 	}
 
-	private List<AClassDeclCG> getClassDecls(
-			List<IRStatus<AClassDeclCG>> statuses)
+	private List<ADefaultClassDeclCG> getClassDecls(
+			List<IRStatus<ADefaultClassDeclCG>> statuses)
 	{
-		List<AClassDeclCG> classDecls = new LinkedList<AClassDeclCG>();
+		List<ADefaultClassDeclCG> classDecls = new LinkedList<ADefaultClassDeclCG>();
 
-		for (IRStatus<AClassDeclCG> status : statuses)
+		for (IRStatus<ADefaultClassDeclCG> status : statuses)
 		{
 			classDecls.add(status.getIrNode());
 		}
@@ -164,7 +168,7 @@ public class CGen extends CodeGenBase
 	}
 
 	@SuppressWarnings("unchecked")
-	private AClassHeaderDeclCG createClassHeader(AClassDeclCG ch)
+	private AClassHeaderDeclCG createClassHeader(ADefaultClassDeclCG ch)
 	{
 		AClassHeaderDeclCG res = new AClassHeaderDeclCG();
 
@@ -179,7 +183,7 @@ public class CGen extends CodeGenBase
 	}
 
 	@SuppressWarnings("unchecked")
-	private void generateClassHeader(AClassDeclCG cl, CFormat my_formatter,
+	private void generateClassHeader(ADefaultClassDeclCG cl, CFormat my_formatter,
 			File output_dir) throws IOException,
 					org.overture.codegen.cgast.analysis.AnalysisException
 	{
@@ -213,7 +217,7 @@ public class CGen extends CodeGenBase
 		output.close();
 	}
 
-	private void printClass(AClassDeclCG cl, CFormat my_formatter,
+	private void printClass(ADefaultClassDeclCG cl, CFormat my_formatter,
 			File output_dir)
 					throws org.overture.codegen.cgast.analysis.AnalysisException,
 					IOException

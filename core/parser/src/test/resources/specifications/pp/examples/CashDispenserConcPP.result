@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="type_checker">
 <message column="3" line="110" message="Recursive function has no measure" messageType="warning" number="5012" resource="CashDispenserConcPP.result"/>
-<message column="7" line="1199" message="Operation 'CardValidated' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
-<message column="7" line="1188" message="Operation 'CardValidated' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
-<message column="7" line="1177" message="Operation 'CardInside' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
-<message column="7" line="1209" message="Operation 'CardInside' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
-<message column="7" line="1194" message="Operation 'CardValidated' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
-<message column="7" line="1183" message="Operation 'CardInside' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
-<message column="11" line="1143" message="Operation 'CardInside' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
+<message column="7" line="1199" message="Impure operation 'CardValidated' cannot be called from here" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
+<message column="7" line="1188" message="Impure operation 'CardValidated' cannot be called from here" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
+<message column="7" line="1177" message="Impure operation 'CardInside' cannot be called from here" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
+<message column="7" line="1209" message="Impure operation 'CardInside' cannot be called from here" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
+<message column="7" line="1194" message="Impure operation 'CardValidated' cannot be called from here" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
+<message column="7" line="1183" message="Impure operation 'CardInside' cannot be called from here" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
+<message column="11" line="1143" message="Impure operation 'CardInside' cannot be called from here" messageType="error" number="3300" resource="CashDispenserConcPP.result"/>
 </testResult>

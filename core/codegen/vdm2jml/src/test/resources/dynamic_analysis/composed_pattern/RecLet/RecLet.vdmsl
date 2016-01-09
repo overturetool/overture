@@ -1,0 +1,31 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+R ::
+  x : nat
+  y : nat;
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  let - = f() in skip;
+  IO`println("Done! Expected no violations");
+  return 0;
+);
+
+functions
+
+f :  () -> nat
+f () == 
+let mk_R(a,b) = mk_R(1,2)
+in
+  a + b;
+
+end Entry	

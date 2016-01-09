@@ -53,8 +53,7 @@ public class Entry {
                     continue;
                 }
 
-                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
-                        SetUtil.set(a.longValue() + b.longValue()));
+                setCompResult_1.add(a.longValue() + b.longValue());
             }
         }
 

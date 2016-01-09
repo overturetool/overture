@@ -29,8 +29,8 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.AMapUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
+import org.overture.codegen.cgast.statements.AMapCompAddStmCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -66,15 +66,10 @@ public class MapCompStrategy extends ComplexCompStrategy
 		mapCompResult.setIsLambda(false);
 		mapCompResult.setIsLocal(true);
 
-		AEnumMapExpCG mapToUnion = new AEnumMapExpCG();
-		mapToUnion.setType(compType.clone());
-		mapToUnion.getMembers().add(first.clone());
+		AMapCompAddStmCG add = new AMapCompAddStmCG();
+		add.setMap(mapCompResult);
+		add.setElement(first.clone());
 
-		AMapUnionBinaryExpCG mapUnion = new AMapUnionBinaryExpCG();
-		mapUnion.setType(compType.clone());
-		mapUnion.setLeft(mapCompResult.clone());
-		mapUnion.setRight(mapToUnion);
-
-		return consConditionalAdd(mapCompResult, mapUnion);
+		return consConditionalAdd(mapCompResult, add);
 	}
 }

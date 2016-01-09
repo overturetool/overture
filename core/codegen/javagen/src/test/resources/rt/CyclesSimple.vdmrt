@@ -1,0 +1,14 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a = 1
+in
+ cycles(a + a)
+ (
+   return a;
+ );
+
+end Entry

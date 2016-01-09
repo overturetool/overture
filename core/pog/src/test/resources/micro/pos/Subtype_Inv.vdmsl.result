@@ -1,0 +1,1 @@
+["type invariant satisfiable obligation in \u0027DEFAULT\u0027 (Subtype_Inv.vdmsl) at line 8:1: (exists e:Even \u0026 ((e mod 2) \u003d 0))","type compatibility obligation in \u0027DEFAULT\u0027 (Subtype_Inv.vdmsl) at line 13:1: (forall n:int \u0026 inv_Even(n))"]

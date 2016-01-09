@@ -3,35 +3,59 @@ package org.overture.codegen.runtime.traces;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.overture.codegen.runtime.copying.DeepCopy;
+import org.overture.codegen.runtime.Utils;
 
 public class Store
 {
-	private Map<Number, Pair<Object, Object>> values;
+	private Map<Number, ModuleCopy> values;
 	
 	public Store()
 	{
-		this.values = new HashMap<Number, Pair<Object, Object>>();
+		this.values = new HashMap<>();
 	}
 	
 	public void register(Number id, Object val)
 	{
-		Object deepCopy = DeepCopy.copy(val);
-		values.put(id, new Pair<Object, Object>(val, deepCopy));
+		values.put(id, new ObjectCopy(val));
+	}
+	
+	public void staticReg(Number id, Class<?> clazz)
+	{
+		values.put(id, new ModuleCopy(clazz));
 	}
 	
 	public Object getValue(Number id)
 	{
-		return values.get(id).getSecond();
+		return values.get(id).getValue();
 	}
 	
 	public void reset()
 	{
-		// TODO: Optimise this
 		for(Number k : values.keySet())
 		{
-			Pair<Object, Object> v = values.get(k);
-			v.setSecond(DeepCopy.copy(v.getFirst()));
+			values.get(k).reset();
 		}
+	}
+	
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		
+		String sep = "";
+		
+		for(Number k : values.keySet())
+		{
+			sb.append(sep);
+			sb.append(Utils.toString(k));
+			sb.append(" |-> ");
+			sb.append(Utils.toString(values.get(k)));
+			sep = ", ";
+		}
+		
+		sb.append("}");
+		
+		return sb.toString();
 	}
 }

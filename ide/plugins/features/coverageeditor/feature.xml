@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.coverageeditor"
       label="Coverage Editor"
-      version="2.2.7.qualifier">
+      version="2.3.1.qualifier">
 
    <description>
       %description

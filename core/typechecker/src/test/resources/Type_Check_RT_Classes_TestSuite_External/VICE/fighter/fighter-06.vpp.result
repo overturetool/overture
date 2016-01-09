@@ -29,6 +29,6 @@
 <message column="31" line="146" message="Cannot instantiate abstract class FlareDispenser" messageType="error" number="3330" resource="fighter-06.vpp"/>
 <message column="31" line="147" message="Cannot instantiate abstract class FlareDispenser" messageType="error" number="3330" resource="fighter-06.vpp"/>
 <message column="31" line="148" message="Cannot instantiate abstract class FlareDispenser" messageType="error" number="3330" resource="fighter-06.vpp"/>
-<message column="7" line="305" message="Operation 'canObserve' cannot be called from a function" messageType="error" number="3300" resource="fighter-06.vpp"/>
+<message column="7" line="305" message="Impure operation 'canObserve' cannot be called from here" messageType="error" number="3300" resource="fighter-06.vpp"/>
 <result/>
 </testResult>

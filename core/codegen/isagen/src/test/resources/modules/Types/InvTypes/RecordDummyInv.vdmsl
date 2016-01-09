@@ -1,0 +1,4 @@
+types
+    A :: b : char
+         c : int
+    inv a == true

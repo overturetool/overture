@@ -1,0 +1,1 @@
+["legal map application obligation in \u0027DEFAULT\u0027 (MapApply.vdmsl) at line 13:14: (forall n:nat \u0026 ((n in set (dom M)) \u003d\u003e (n in set (dom M))))"]

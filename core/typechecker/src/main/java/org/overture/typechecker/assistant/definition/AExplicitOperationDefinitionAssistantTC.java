@@ -143,7 +143,7 @@ public class AExplicitOperationDefinitionAssistantTC implements IAstAssistant
 		// though at runtime these are passed via a "self" parameter.
 
 		def.setAccess(af.createPAccessSpecifierAssistant().getStatic(def, false));
-		def.setClassDefinition(def.getClassDefinition());
+		def.setClassDefinition(d.getClassDefinition());
 		return def;
 	}
 

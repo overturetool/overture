@@ -1,0 +1,18 @@
+class Entry
+
+operations
+  
+public static Run : () ==> ?
+Run () ==
+(
+  dcl i : rat := 123.456;
+  i := ratOrBool();
+  return i;
+);
+
+functions
+
+ratOrBool :  () -> rat | bool
+ratOrBool () == 5;
+
+end Entry

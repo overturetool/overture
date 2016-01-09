@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
@@ -192,9 +192,9 @@ public class JavaCodeGenUtil
 
 	public static boolean isQuote(org.overture.codegen.cgast.INode decl, JavaSettings settings)
 	{
-		if(decl instanceof AClassDeclCG)
+		if(decl instanceof ADefaultClassDeclCG)
 		{
-			AClassDeclCG clazz = (AClassDeclCG) decl;
+			ADefaultClassDeclCG clazz = (ADefaultClassDeclCG) decl;
 			
 			if(clazz.getPackage() == null)
 			{
@@ -378,9 +378,9 @@ public class JavaCodeGenUtil
 		File moduleOutputDir = outputDir;
 		String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
 		
-		if(generatedClass.getIrNode() instanceof AClassDeclCG)
+		if(generatedClass.getIrNode() instanceof ADefaultClassDeclCG)
 		{
-			javaPackage = ((AClassDeclCG) generatedClass.getIrNode()).getPackage();
+			javaPackage = ((ADefaultClassDeclCG) generatedClass.getIrNode()).getPackage();
 		}
 		else if(generatedClass.getIrNode() instanceof AInterfaceDeclCG)
 		{
@@ -402,5 +402,20 @@ public class JavaCodeGenUtil
 		}
 		
 		return moduleOutputDir;
+	}
+	
+	public static boolean isSupportedVdmSourceFile(File f)
+	{
+		String[] extensions = new String[]{".vdmpp", ".vpp", ".vsl", ".vdmsl", ".vdmrt", ".vrt"};
+		
+		for(String ext : extensions)
+		{
+			if(f.getName().endsWith(ext))
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

@@ -1,0 +1,38 @@
+module Entry
+
+exports all
+imports from IO all
+definitions 
+	
+types
+
+Even = nat
+inv e == e mod 2 = 0;
+
+operations 
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before valid use");
+ (
+  dcl e : [Even] := 2;
+  e := nil;
+ );
+ IO`println("After valid use");
+ 
+ IO`println("Before invalid use");
+ (
+  dcl e : Even := 2;
+  e := Nil();
+ );
+ IO`println("After invalid use");
+  return 0;
+);
+
+functions
+
+Nil : () -> [Even]
+Nil () == nil;
+
+end Entry

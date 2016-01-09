@@ -1,4 +1,8 @@
-#set( $type = $JavaFormat.format($node.getType()))
 #set( $exp = $JavaFormat.format($node.getExp(), false))
 ##
-(($type) $exp)
+#if ($JavaFormat.isUndefined($node))
+  ${exp}##
+#else
+  #set( $type = $JavaFormat.format($node.getType()))
+  (($type) $exp)##
+#end

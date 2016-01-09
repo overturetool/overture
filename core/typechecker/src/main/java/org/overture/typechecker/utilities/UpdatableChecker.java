@@ -91,7 +91,7 @@ public class UpdatableChecker extends AnswerAdaptor<Boolean>
 			throws AnalysisException
 	{
 		return node.getNameScope().matches(NameScope.STATE)
-				|| af.createPTypeAssistant().isClass(af.createPDefinitionAssistant().getType(node));
+				|| af.createPTypeAssistant().isClass(af.createPDefinitionAssistant().getType(node), null);
 	}
 
 	@Override

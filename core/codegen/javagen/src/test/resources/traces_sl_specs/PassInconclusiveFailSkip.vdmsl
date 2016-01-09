@@ -1,0 +1,31 @@
+module Entry
+
+exports all
+definitions
+operations
+
+op : () ==> ()
+op () == skip;
+
+pass : () ==> ()
+pass () == skip
+pre true;
+
+inconclusive : () ==> ()
+inconclusive () == skip
+pre false;
+
+failPre : () ==> ()
+failPre () == inconclusive();
+
+crashPre : () ==> ()
+crashPre () == skip
+pre 1/0 = 0;
+
+
+traces
+
+T1:
+ (pass()|inconclusive()|failPre()|crashPre()|failPre());
+ 
+end Entry

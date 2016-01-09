@@ -25,21 +25,21 @@ import org.overture.codegen.analysis.vdm.AbstractAnalysis;
 import org.overture.codegen.analysis.vdm.QuoteAnalysis;
 import org.overture.codegen.analysis.vdm.UtilAnalysis;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 
 public class IRAnalysis
 {
-	public static boolean usesQuoteLiterals(AClassDeclCG classDecl)
+	public static boolean usesQuoteLiterals(ADefaultClassDeclCG classDecl)
 	{
 		return hasDependency(classDecl, new QuoteAnalysis());
 	}
 
-	public static boolean usesUtils(AClassDeclCG classDecl)
+	public static boolean usesUtils(ADefaultClassDeclCG classDecl)
 	{
 		return hasDependency(classDecl, new UtilAnalysis());
 	}
 
-	private static boolean hasDependency(AClassDeclCG classDecl,
+	private static boolean hasDependency(ADefaultClassDeclCG classDecl,
 			AbstractAnalysis analysis)
 	{
 		try

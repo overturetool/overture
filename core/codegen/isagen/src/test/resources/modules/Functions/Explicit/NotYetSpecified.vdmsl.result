@@ -1,0 +1,1 @@
+{"translation":"theory DEFAULT\n  imports utp_vdm\nbegin\n\nvdmefun f\n  inp x :: \"@int\"\n  out \"@token\"\n  is \"undef\" \n\nend","errors":false}

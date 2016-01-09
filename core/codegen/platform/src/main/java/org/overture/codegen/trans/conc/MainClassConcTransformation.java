@@ -8,12 +8,13 @@ import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
@@ -22,6 +23,7 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
+import org.overture.codegen.cgast.name.ATokenNameCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
@@ -47,6 +49,10 @@ import org.overture.codegen.ir.IRInfo;
  */
 public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 {
+	public static final String MULTIPLE_INHERITANCE_WARNING = "Generation of concurrency "
+			+ "constructs does not support multiple inheritance";
+	
+	private static final String VDM_THREAD = "VDMThread";
 	private IRInfo info;
 	private List<AClassDeclCG> classes;
 
@@ -58,10 +64,16 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
+	public void caseADefaultClassDeclCG(ADefaultClassDeclCG node) throws AnalysisException
 	{
 		if(!info.getSettings().generateConc())
 		{
+			return;
+		}
+		
+		if (node.getSuperNames().size() > 1)
+		{
+			info.addTransformationWarning(node, MULTIPLE_INHERITANCE_WARNING);
 			return;
 		}
 		
@@ -196,10 +208,10 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			
 			LinkedList<AMethodDeclCG>  allMethods;
 			
-			if (node.getSuperName() != null){
-				allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, classes);
-			}
-			else
+			if (!node.getSuperNames().isEmpty())
+			{
+				allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, info.getClasses());
+			} else
 			{
 				allMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
 			}
@@ -299,32 +311,37 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		return method.getTag() instanceof IRGeneratedTag;
 	}
 	
-	private void makeThread(AClassDeclCG node)
+	private void makeThread(ADefaultClassDeclCG node)
 	{
-		AClassDeclCG threadClass = getThreadClass(node.getSuperName(), node);
-		threadClass.setSuperName("VDMThread");
+		SClassDeclCG threadClass = getThreadClass(node.getSuperNames(), node);
+		
+		threadClass.getSuperNames().clear();
+		
+		ATokenNameCG superName = new ATokenNameCG();
+		superName.setName(VDM_THREAD);
+		threadClass.getSuperNames().add(superName);
 	}
 
-	private AClassDeclCG getThreadClass(String superName, AClassDeclCG classCg)
+	private SClassDeclCG getThreadClass(List<ATokenNameCG> superNames, SClassDeclCG classCg)
 	{
-		if(superName == null || superName.equals("VDMThread"))
+		if(superNames.isEmpty() || superNames.get(0).getName().equals(VDM_THREAD))
 		{
 			return classCg;
 		}
 		else
 		{
-			AClassDeclCG superClass = null;
+			SClassDeclCG superClass = null;
 
-			for(AClassDeclCG c : classes)
+			for(SClassDeclCG c : info.getClasses())
 			{
-				if(c.getName().equals(superName))
+				if(c.getName().equals(superNames.get(0).getName()))
 				{
 					superClass = c;
 					break;
 				}
 			}
 
-			return getThreadClass(superClass.getSuperName(), superClass);
+			return getThreadClass(superClass.getSuperNames(), superClass);
 		}
 	}
 }

@@ -9,11 +9,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.overture.codegen.tests.exec.util.ProcessResult;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaToolsUtils;
-import org.overture.codegen.vdm2jml.IOpenJmlConsts;
-import org.overture.vdm2jml.tests.util.ProcessResult;
+import org.overture.vdm2jml.tests.util.IOpenJmlConsts;
+import org.overture.vdm2jml.tests.util.TestUtil;
 
 @RunWith(Parameterized.class)
 public class JmlPassTypeCheckTests extends OpenJmlValidationBase
@@ -67,15 +68,23 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 		// -check
 		// <javafiles>
 		
-		return new String[] { JavaToolsUtils.JAVA, JavaToolsUtils.JAR_ARG,
-				openJml.getAbsolutePath(), IOpenJmlConsts.CP_ARG,
-				cgRuntime.getAbsolutePath(), IOpenJmlConsts.TC };
+		return new String[] { JavaToolsUtils.JAVA, JavaToolsUtils.JAR_ARG, openJml.getAbsolutePath(),
+				IOpenJmlConsts.CP_ARG,
+				"\"" + cgRuntime.getAbsolutePath() + File.pathSeparator + vdm2jmlRuntime.getAbsolutePath() + "\"",
+				IOpenJmlConsts.TC };
 	}
 
 	@Override
 	public void beforeRunningOpenJmlProcess()
 	{
 		clearCodeFolder();
-		codeGenerateInputFile();
+		generateJavaJml();
+	}
+
+	@Override
+	protected String getPropertyId()
+	{
+		// Never configure execution
+		return null;
 	}
 }

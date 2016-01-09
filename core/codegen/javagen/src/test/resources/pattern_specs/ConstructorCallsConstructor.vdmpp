@@ -1,0 +1,24 @@
+class Entry
+
+instance variables
+
+x: int;
+y: int;
+
+operations
+
+Entry : int * int ==> Entry
+Entry(x_,y_) == (x:=x_;y:=y_);
+
+Entry : (int*int) ==> Entry
+Entry(mk_(x_,y_)) == Entry`Entry(x_,y_);
+
+public static Run : () ==> ?
+Run () ==
+let e1 = new Entry(1,2),
+    e2 = new Entry(mk_(3,4))
+in
+  return e1.x + e1.y + e2.x + e2.y;
+
+
+end Entry

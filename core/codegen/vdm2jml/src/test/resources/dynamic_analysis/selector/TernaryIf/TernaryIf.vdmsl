@@ -1,0 +1,35 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+Rec :: x : int
+inv r == r.x > 0;
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  let - = f() in skip;
+  let - = g() in skip;
+  IO`println("Done! Expected no violations");
+  return 0;
+);
+
+functions
+
+g :  () -> nat
+g () == 
+let x = if 1 = 1 then 1 else 2
+in
+  x;
+
+f :  () -> nat
+f () == 
+  if 1 = 1 then 1 else 2;
+
+end Entry	

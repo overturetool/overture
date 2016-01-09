@@ -29,6 +29,7 @@ import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -49,6 +50,7 @@ public class NonZeroObligation extends ProofObligation
 		// exp <> 0
 
 		AIntLiteralExp zeroExp = getIntLiteral(0);
+		zeroExp.setType(new AIntNumericBasicType());
 		ANotEqualBinaryExp notEqualsExp = AstExpressionFactory.newANotEqualBinaryExp(exp.clone(), zeroExp);
 
 		stitch = notEqualsExp;

@@ -60,10 +60,17 @@ public class AlternativeTraceNode extends TraceNode implements
 		if(tmp instanceof IIterableTraceNode)
 		{
 			IIterableTraceNode in = (IIterableTraceNode) tmp;
-			return in.get(v.getSecond());
+			
+			CallSequence callSeq = tmp.getVars();
+			callSeq.addAll(in.get(v.getSecond()));
+			
+			return callSeq;
 		}else
 		{
-			return tmp.getTests().get(v.getSecond());
+			CallSequence callSeq = tmp.getVars();
+			callSeq.addAll(tmp.getTests().get(v.getSecond()));
+			
+			return callSeq;
 		}
 	}
 

@@ -24,27 +24,28 @@ public class Entry {
     public Entry() {
     }
 
-    public void cg_init_Entry_1(final Character c) {
-        //Skip;
-    }
-
-    public void cg_init_Entry_2(final Number n) {
-        //Skip;
+    public void cg_init_Entry_4(final Number n, final Character c) {
+        /* skip */
     }
 
     public void cg_init_Entry_3(final Boolean b, final Number r) {
-        //Skip;
+        /* skip */
     }
 
-    public void cg_init_Entry_4(final Number n, final Character c) {
-        //Skip;
+    public void cg_init_Entry_2(final Number n) {
+        /* skip */
+    }
+
+    public void cg_init_Entry_1(final Character c) {
+        /* skip */
     }
 
     public static Object Run() {
         Object x = 1L;
         Object y = 'a';
+        Entry ignorePattern_1 = new Entry(((Number) x), ((Character) y));
 
-        return new Entry(((Number) x), ((Character) y));
+        return 0L;
     }
 
     public String toString() {

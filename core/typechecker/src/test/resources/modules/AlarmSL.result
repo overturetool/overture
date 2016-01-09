@@ -7,7 +7,5 @@
 <message column="3" line="43" message="Definition 'ExpertToPage' not used" messageType="warning" number="5000" resource="AlarmSL"/>
 <message column="1" line="61" message="Definition 'ChangeExpert' not used" messageType="warning" number="5000" resource="AlarmSL"/>
 <message column="1" line="112" message="Definition 'Run' not used" messageType="warning" number="5000" resource="AlarmSL"/>
-<message column="3" line="117" message="Definition 'Test1' not used" messageType="warning" number="5000" resource="AlarmSL"/>
-<message column="3" line="127" message="Definition 'Test2' not used" messageType="warning" number="5000" resource="AlarmSL"/>
 <result/>
 </testResult>

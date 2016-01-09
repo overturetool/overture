@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.overturetool.ide</groupId>
 		<artifactId>org.overture.ide.plugins</artifactId>
-		<version>2.2.7-SNAPSHOT</version>
+		<version>2.3.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -37,6 +37,11 @@
 								<artifactItem>
 									<groupId>org.overturetool.core.codegen</groupId>
 									<artifactId>codegen-runtime</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.overturetool.core.codegen</groupId>
+									<artifactId>vdm2jml-runtime</artifactId>
 									<version>${project.version}</version>
 								</artifactItem>
 								<artifactItem>
@@ -113,6 +118,25 @@
 									<overWrite>true</overWrite>
 									<outputDirectory>${basedir}/target/runtime</outputDirectory>
 									<destFileName>codegen-runtime-sources.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.overturetool.core.codegen</groupId>
+									<artifactId>vdm2jml-runtime</artifactId>
+									<version>${project.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${basedir}/target/runtime</outputDirectory>
+									<destFileName>vdm2jml-runtime.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.overturetool.core.codegen</groupId>
+									<artifactId>vdm2jml-runtime</artifactId>
+									<version>${project.version}</version>
+									<classifier>sources</classifier>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${basedir}/target/runtime</outputDirectory>
+									<destFileName>vdm2jml-runtime-sources.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>

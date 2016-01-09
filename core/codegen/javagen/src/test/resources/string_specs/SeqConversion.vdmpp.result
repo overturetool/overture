@@ -67,8 +67,9 @@ public class Entry {
     }
 
     public static String Run() {
-        return SeqUtil.toStr(Utils.copy(x)) + f() + op1() + op2() + op3() +
-        op5() + SeqUtil.toStr(op6()) + op7();
+        return SeqUtil.toStr(Utils.copy(Entry.x)) + f() + op1() + op2() +
+        op3() + op5() + SeqUtil.toStr(op6()) + op7() +
+        op8(quotes.AQuote.getInstance());
     }
 
     public static String f() {
@@ -79,9 +80,36 @@ public class Entry {
         }
     }
 
+    private static String op8(final Object a) {
+        VDMSeq casesExpResult_1 = null;
+
+        Object quotePattern_1 = a;
+        Boolean success_1 = Utils.equals(quotePattern_1,
+                quotes.AQuote.getInstance());
+
+        if (success_1) {
+            VDMSeq ternaryIfExp_1 = null;
+
+            if (true) {
+                ternaryIfExp_1 = SeqUtil.toSeq("");
+            } else {
+                ternaryIfExp_1 = null;
+            }
+
+            casesExpResult_1 = Utils.copy(ternaryIfExp_1);
+        } else {
+            throw new RuntimeException("Quote pattern match failed");
+        }
+
+        return SeqUtil.toStr(Utils.copy(casesExpResult_1));
+    }
+
     public String toString() {
         return "Entry{" + "x = " + Utils.toString(x) + "}";
     }
 }
 
+##########
+*Quotes*
+A
 ##########

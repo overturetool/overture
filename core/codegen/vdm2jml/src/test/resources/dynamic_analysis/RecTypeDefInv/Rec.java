@@ -1,6 +1,7 @@
 package project.Entrytypes;
 
 import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
 
 import java.util.*;
 
@@ -13,8 +14,14 @@ final public class Rec implements Record {
 
     //@ public instance invariant inv_Rec(x,y);
     public Rec(final Number _x, final Number _y) {
+        //@ assert Utils.is_int(_x);
+
+        //@ assert Utils.is_int(_y);
         x = _x;
+        //@ assert Utils.is_int(x);
         y = _y;
+
+        //@ assert Utils.is_int(y);
     }
 
     /*@ pure @*/
@@ -41,6 +48,41 @@ final public class Rec implements Record {
     /*@ pure @*/
     public String toString() {
         return "mk_Entry`Rec" + Utils.formatFields(x, y);
+    }
+
+    /*@ pure @*/
+    public Number get_x() {
+        Number ret_1 = x;
+
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(ret_1));
+        return ret_1;
+    }
+
+    public void set_x(final Number _x) {
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(_x));
+        x = _x;
+
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(x));
+    }
+
+    /*@ pure @*/
+    public Number get_y() {
+        Number ret_2 = y;
+
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(ret_2));
+        return ret_2;
+    }
+
+    public void set_y(final Number _y) {
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(_y));
+        y = _y;
+
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(y));
+    }
+
+    /*@ pure @*/
+    public Boolean valid() {
+        return true;
     }
 
     /*@ pure @*/

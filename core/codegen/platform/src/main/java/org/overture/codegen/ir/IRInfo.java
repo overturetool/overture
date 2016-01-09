@@ -28,9 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.assistant.AssistantManager;
@@ -38,6 +36,8 @@ import org.overture.codegen.assistant.BindAssistantCG;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.LocationAssistantCG;
+import org.overture.codegen.assistant.NodeAssistantCG;
+import org.overture.codegen.assistant.PatternAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.SBindCG;
@@ -57,8 +57,8 @@ import org.overture.codegen.cgast.STermCG;
 import org.overture.codegen.cgast.STraceCoreDeclCG;
 import org.overture.codegen.cgast.STraceDeclCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.visitor.CGVisitor;
 import org.overture.codegen.visitor.VisitorManager;
@@ -90,16 +90,16 @@ public class IRInfo
 	// For configuring code generation
 	private IRSettings settings;
 
-	// To look up object initializer call names
-	private Map<AExplicitOperationDefinition, String> objectInitCallNames;
-
-	// Object initialization call prefix
-	private String objectInitCallPrefix;
-	
 	// Definitions for identifier state designators
 	private Map<AIdentifierStateDesignator, PDefinition> idStateDesignatorDefs;
 	
-	public IRInfo(String objectInitCallPrefix)
+	// IR classes
+	private List<SClassDeclCG> classes;
+	
+	// IR modules
+	private List<AModuleDeclCG> modules;
+	
+	public IRInfo()
 	{
 		super();
 
@@ -113,10 +113,9 @@ public class IRInfo
 
 		this.settings = new IRSettings();
 
-		this.objectInitCallPrefix = objectInitCallPrefix;
-		this.objectInitCallNames = new HashMap<AExplicitOperationDefinition, String>();
-		
 		this.idStateDesignatorDefs = new HashMap<AIdentifierStateDesignator, PDefinition>();
+		this.classes = new LinkedList<SClassDeclCG>();
+		this.modules = new LinkedList<AModuleDeclCG>();
 	}
 
 	public AssistantManager getAssistantManager()
@@ -124,7 +123,7 @@ public class IRInfo
 		return assistantManager;
 	}
 
-	public CGVisitor<AClassDeclCG> getClassVisitor()
+	public CGVisitor<SClassDeclCG> getClassVisitor()
 	{
 		return visitorManager.getClassVisitor();
 	}
@@ -219,6 +218,11 @@ public class IRInfo
 		return visitorManager.getTraceCoreDeclVisitor();
 	}
 
+	public NodeAssistantCG getNodeAssistant()
+	{
+		return assistantManager.getNodeAssistant();
+	}
+	
 	public ExpAssistantCG getExpAssistant()
 	{
 		return assistantManager.getExpAssistant();
@@ -330,6 +334,7 @@ public class IRInfo
 		unsupportedNodes.clear();
 		transformationWarnings.clear();
 		tempVarNameGen.clear();
+		idStateDesignatorDefs.clear();
 	}
 
 	public IRSettings getSettings()
@@ -342,22 +347,6 @@ public class IRInfo
 		this.settings = settings;
 	}
 
-	public String getObjectInitializerCall(AExplicitOperationDefinition vdmOp)
-	{
-		if (objectInitCallNames.containsKey(vdmOp))
-		{
-			return objectInitCallNames.get(vdmOp);
-		} else
-		{
-			String enclosingClassName = vdmOp.getAncestor(SClassDefinition.class).getName().getName();
-			String initName = tempVarNameGen.nextVarName(objectInitCallPrefix
-					+ enclosingClassName + "_");
-			objectInitCallNames.put(vdmOp, initName);
-
-			return initName;
-		}
-	}
-
 	public Map<AIdentifierStateDesignator, PDefinition> getIdStateDesignatorDefs()
 	{
 		return idStateDesignatorDefs;
@@ -366,5 +355,85 @@ public class IRInfo
 	public void setIdStateDesignatorDefs(Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
 		this.idStateDesignatorDefs = idDefs;
+	}
+
+	public List<SClassDeclCG> getClasses()
+	{
+		return classes;
+	}
+
+	public void addClass(SClassDeclCG irClass)
+	{
+		if(this.classes != null)
+		{
+			this.classes.add(irClass);
+		}
+	}
+	
+	public void removeClass(String name)
+	{
+		SClassDeclCG classToRemove = null;
+		
+		for (SClassDeclCG clazz : classes)
+		{
+			if(clazz.getName().equals(name))
+			{
+				classToRemove = clazz;
+				break;
+			}
+		}
+		
+		if(classToRemove != null)
+		{
+			classes.remove(classToRemove);
+		}
+	}
+	
+	public void clearClasses()
+	{
+		if(this.classes != null)
+		{
+			this.classes.clear();
+		}
+	}
+	
+	public List<AModuleDeclCG> getModules()
+	{
+		return modules;
+	}
+	
+	public void addModule(AModuleDeclCG irModule)
+	{
+		if(this.modules != null)
+		{
+			this.modules.add(irModule);
+		}
+	}
+	
+	public void removeModule(String name)
+	{
+		AModuleDeclCG moduleToRemove = null;
+		
+		for (AModuleDeclCG module : modules)
+		{
+			if(module.getName().equals(name))
+			{
+				moduleToRemove = module;
+				break;
+			}
+		}
+		
+		if(moduleToRemove != null)
+		{
+			modules.remove(moduleToRemove);
+		}
+	}
+	
+	public void clearModules()
+	{
+		if(this.modules != null)
+		{
+			this.modules.clear();
+		}
 	}
 }

@@ -50,7 +50,10 @@ import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
+import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -131,14 +134,17 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 		List<PDefinition> defs = new Vector<PDefinition>();
 		defs.add(node);
 
-		if (node.getPredef() != null)
+		if (Settings.dialect == Dialect.VDM_SL || Settings.release == Release.CLASSIC)
 		{
-			defs.add(node.getPredef());
-		}
-
-		if (node.getPostdef() != null)
-		{
-			defs.add(node.getPostdef());
+    		if (node.getPredef() != null)
+    		{
+    			defs.add(node.getPredef());
+    		}
+    
+    		if (node.getPostdef() != null)
+    		{
+    			defs.add(node.getPostdef());
+    		}
 		}
 
 		return defs;
@@ -181,14 +187,17 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 		List<PDefinition> defs = new Vector<PDefinition>();
 		defs.add(node);
 
-		if (node.getPredef() != null)
+		if (Settings.dialect == Dialect.VDM_SL || Settings.release == Release.CLASSIC)
 		{
-			defs.add(node.getPredef());
-		}
-
-		if (node.getPostdef() != null)
-		{
-			defs.add(node.getPostdef());
+    		if (node.getPredef() != null)
+    		{
+    			defs.add(node.getPredef());
+    		}
+    
+    		if (node.getPostdef() != null)
+    		{
+    			defs.add(node.getPostdef());
+    		}
 		}
 
 		return defs;

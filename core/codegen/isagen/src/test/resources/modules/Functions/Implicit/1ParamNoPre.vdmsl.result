@@ -1,0 +1,1 @@
+{"translation":"theory DEFAULT\n  imports utp_vdm\nbegin\n\nvdmifun f\n  inp x :: \"@int\"\n  out r :: \"@int\"\n  post \"(^r^ \u003d ^x^)\"\n\nend","errors":false}

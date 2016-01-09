@@ -1,0 +1,7 @@
+"Before valid use"
+"After valid use"
+"Before invalid use"
+Entry.java:35: JML assertion is false
+            //@ assert (Utils.is_nat(e) && inv_Entry_Even(e));
+                ^
+"After invalid use"

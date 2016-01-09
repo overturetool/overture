@@ -9,6 +9,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.vdm2jml.tests.util.TestDataCollector;
+import org.overture.vdm2jml.tests.util.Update;
 
 public class ModuleStateInvTests extends AnnotationTestsBase
 {
@@ -45,17 +46,19 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 
 		if (expectMetaData)
 		{
-			Assert.assertTrue("Expected to find a single assertion in the '"
-					+ methodName + "' method", dataCollector.getAssertions().size() == 1);
+			Assert.assertTrue("Expected to find " + noOfAsserts
+					+ " assertion(s) in the '" + methodName
+					+ "' method", dataCollector.getAssertions().size() == noOfAsserts);
 
-			List<? extends ClonableString> metaData = dataCollector.getAssertions().get(0).getMetaData();
+			for (AMetaStmCG a : dataCollector.getAssertions())
+			{
+				List<? extends ClonableString> metaData = a.getMetaData();
+				Assert.assertTrue("Expected only a single assertion", metaData.size() == 1);
+				String assertStr = metaData.get(0).value;
 
-			Assert.assertTrue("Expected a single assertion annotation", metaData.size() == 1);
-
-			String assertStr = metaData.get(0).value;
-
-			Assert.assertEquals("Got unexpected assertion in method '"
-					+ methodName + "'", "//@ assert inv_St(St);", assertStr);
+				Assert.assertTrue("Got unexpected assertion in method '"
+						+ methodName + "': " + assertStr, assertStr.contains(".valid()") || assertStr.contains("!= null") || assertStr.contains(".is_"));
+			}
 		} else
 		{
 			Assert.assertTrue("Expected no assertions in the '" + methodName
@@ -67,55 +70,57 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 	public void updateEntireState()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignSt", true, false);
+		checkAssertion("assignSt", Update.ASSIGN, 1);
 	}
 
 	@Test
 	public void updateEntireStateAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignSt", true, true);
+		// No need to assert since the violation will be picked up by the
+		// atomicTmp var assignment
+		checkAssertion("atomicAssignSt", Update.ASSIGN, 2);
 	}
 
 	@Test
 	public void updateField()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignX", true, false);
+		checkAssertion("assignX", Update.SET_CALL, 1);
 	}
 
 	@Test
 	public void updateFieldAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignX", true, true);
+		checkAssertion("atomicAssignX", Update.SET_CALL, 4);
 	}
 
 	@Test
 	public void updateSeqElem()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignS", false, true);
+		checkAssertion("assignS", Update.MAP_SEQ_UPDATE, 5);
 	}
 
 	@Test
 	public void updateSeqElemAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignS", false, false);
+		checkAssertion("atomicAssignS", Update.MAP_SEQ_UPDATE, 5);
 	}
 
 	@Test
 	public void updateMapRng()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignM", false, true);
+		checkAssertion("assignM", Update.MAP_SEQ_UPDATE, 5);
 	}
 
 	@Test
 	public void updateMapRngAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignM", false, false);
+		checkAssertion("atomicAssignM", Update.MAP_SEQ_UPDATE, 5);
 	}
 }

@@ -1,0 +1,5 @@
+{##
+#foreach( $m in $node.Members )
+$Isa.trans($m)#if( $foreach.hasNext ), #end
+#end
+}

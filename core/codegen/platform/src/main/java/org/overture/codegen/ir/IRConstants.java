@@ -36,6 +36,9 @@ public class IRConstants
 	public static final String IO_CLASS_NAME = "IO";
 	public static final String MATH_CLASS_NAME = "MATH";
 	public static final String UTIL_CLASS_NAME = "VDMUtil";
+	
+	public static final String TEST_CASE = "TestCase";
+	public static final String TEST_CASE_RUN_FULL_SUITE = "runFullSuite";
 
 	public static final String[] UTIL_NAMES = { IO_CLASS_NAME, MATH_CLASS_NAME,
 			UTIL_CLASS_NAME };
@@ -46,21 +49,4 @@ public class IRConstants
 			"TestResult", "TestRunner", "VDMUtil", "CPU", "BUS" };
 
 	public static final String[] RESERVED_CLASS_NAMES = (String[]) ArrayUtils.addAll(new String[] { QUOTES_INTERFACE_NAME }, CLASS_NAMES_USED_IN_VDM);
-
-	public static final String GENERATED_TEMP_SEQ_COMP_NAME_PREFIX = "seqCompResult_";
-	public static final String GENERATED_TEMP_SET_COMP_NAME_PREFIX = "setCompResult_";
-	public static final String GENERATED_TEMP_MAP_COMP_NAME_PREFIX = "mapCompResult_";
-	public static final String GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX = "letBeStExp_";
-	public static final String GENERATED_TEMP_FORALL_EXP_NAME_PREFIX = "forAllExpResult_";
-	public static final String GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX = "existsExpResult_";
-	public static final String GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX = "exists1Counter_";
-
-	public static final String[] GENERATED_TEMP_NAMES = {
-			GENERATED_TEMP_SEQ_COMP_NAME_PREFIX,
-			GENERATED_TEMP_SET_COMP_NAME_PREFIX,
-			GENERATED_TEMP_MAP_COMP_NAME_PREFIX,
-			GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX,
-			GENERATED_TEMP_FORALL_EXP_NAME_PREFIX,
-			GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX,
-			GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX };
 }

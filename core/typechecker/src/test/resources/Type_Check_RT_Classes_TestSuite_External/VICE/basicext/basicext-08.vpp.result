@@ -2,6 +2,6 @@
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesRtTypeCheckTest">
 <message column="10" line="57" message="Definition 'i' not used" messageType="warning" number="5000" resource="basicext-08.vpp"/>
 <message column="41" line="14" message="Name 'Simple`CPU10' is not in scope" messageType="error" number="3182" resource="basicext-08.vpp"/>
-<message column="16" line="45" message="Asynchronous operation DOITC(map (nat) to (nat), nat) cannot return a value" messageType="error" number="3293" resource="basicext-08.vpp"/>
+<message column="16" line="45" message="Asynchronous operation 'DOITC(map (nat) to (nat), nat)' cannot return a value" messageType="error" number="3293" resource="basicext-08.vpp"/>
 <result/>
 </testResult>

@@ -1,1 +1,0 @@
-{"translation":"theory A\n  imports utp_cml\nbegin\n\ndefinition \"x \u003d +|1 : @nat1|+\"\ndeclare x_def [eval,evalp]\n\ndefinition \"y \u003d +|^x^ : @nat1|+\"\ndeclare y_def [eval,evalp]\n\nend","errors":false}

@@ -42,7 +42,7 @@ public class  VdmRtKeywords implements IVdmKeywords {
 	      "merge", "mod", "mu", "munion", "mutex", "nat", "nat1",
 	      "new", "nil", "not", "of", "operations", "or", "others",
 	      "per", "periodic", "post", "power", "pre", "private",
-	      "protected", "psubset", "public", "rat", "rd", "real",
+	      "protected", "psubset", "public", "pure", "rat", "rd", "real",
 	      "rem", "responsibility", "return", "reverse", "rng",
 	      "samebaseclass", "sameclass", "self", "seq", "seq1",
 	      "set", "skip", "specified", "sporadic", "st", "static",

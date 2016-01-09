@@ -1,0 +1,1 @@
+${Isa.trans($node.Object)}.${node.MemberName}

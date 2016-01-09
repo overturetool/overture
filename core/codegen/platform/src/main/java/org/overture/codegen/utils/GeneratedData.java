@@ -34,12 +34,14 @@ public class GeneratedData
 	private List<String> skippedClasses;
 	private List<Renaming> allRenamings;
 	private List<String> warnings;
-	
-	public GeneratedData() {
+
+	public GeneratedData()
+	{
 	}
-	
+
 	public GeneratedData(List<GeneratedModule> classes,
-			List<GeneratedModule> quoteValues, InvalidNamesResult invalidNamesResult, List<String> skippedClasses)
+			List<GeneratedModule> quoteValues,
+			InvalidNamesResult invalidNamesResult, List<String> skippedClasses)
 	{
 		super();
 		this.classes = classes;
@@ -59,7 +61,7 @@ public class GeneratedData
 	{
 		this.classes = classes;
 	}
-	
+
 	public List<GeneratedModule> getQuoteValues()
 	{
 		return quoteValues;
@@ -74,27 +76,27 @@ public class GeneratedData
 	{
 		return invalidNamesResult;
 	}
-	
+
 	public void setInvalidNamesResult(InvalidNamesResult invalidNamesResult)
 	{
 		this.invalidNamesResult = invalidNamesResult;
 	}
-	
+
 	public List<String> getSkippedClasses()
 	{
 		return skippedClasses;
 	}
-	
+
 	public void setSkippedClasses(List<String> skippedClasses)
 	{
 		this.skippedClasses = skippedClasses;
 	}
-	
+
 	public List<Renaming> getAllRenamings()
 	{
 		return allRenamings;
 	}
-	
+
 	public void setAllRenamings(List<Renaming> allRenamings)
 	{
 		this.allRenamings = allRenamings;
@@ -108,5 +110,20 @@ public class GeneratedData
 	public void setWarnings(List<String> warnings)
 	{
 		this.warnings = warnings;
+	}
+
+	private boolean hasErrors(List<GeneratedModule> modules)
+	{
+		if (modules != null)
+		{
+			for (GeneratedModule clazz : modules)
+			{
+				if (clazz.hasErrors())
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

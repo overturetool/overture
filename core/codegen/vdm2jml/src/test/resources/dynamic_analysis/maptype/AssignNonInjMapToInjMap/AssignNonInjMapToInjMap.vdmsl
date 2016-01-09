@@ -1,0 +1,21 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ let - : map nat to nat = {1 |-> 2, 3 |-> 4} in skip;
+ IO`println("After legal use");
+ IO`println("Before illegal use");
+ let - : inmap nat to nat = {1 |-> 2, 3 |-> 2} in skip;
+ IO`println("After illegal use");
+ return 0;
+);
+
+end Entry	

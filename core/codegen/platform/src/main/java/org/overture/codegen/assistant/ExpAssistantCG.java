@@ -34,7 +34,6 @@ import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.ACaseAlternative;
@@ -50,6 +49,7 @@ import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapTypeBase;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
@@ -58,6 +58,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.ABoolIsExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharIsExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
@@ -69,7 +70,6 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntIsExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapSeqGetExpCG;
 import org.overture.codegen.cgast.expressions.ANat1IsExpCG;
 import org.overture.codegen.cgast.expressions.ANatIsExpCG;
@@ -82,6 +82,7 @@ import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATokenIsExpCG;
 import org.overture.codegen.cgast.expressions.ATupleIsExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SIsExpCG;
 import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
@@ -117,29 +118,6 @@ public class ExpAssistantCG extends AssistantBase
 	public ExpAssistantCG(AssistantManager assistantManager)
 	{
 		super(assistantManager);
-	}
-
-	public SExpCG consLetDefExp(PExp node, List<PDefinition> defs, PExp exp,
-			PType type, IRInfo question, String message)
-			throws AnalysisException
-	{
-		if (question.getExpAssistant().isAssigned(node))
-		{
-			question.addUnsupportedNode(node, message);
-			return null;
-		}
-
-		ALetDefExpCG letDefExp = new ALetDefExpCG();
-
-		question.getDeclAssistant().setLocalDefs(defs, letDefExp.getLocalDefs(), question);
-
-		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
-		letDefExp.setExp(expCg);
-
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		letDefExp.setType(typeCg);
-
-		return letDefExp;
 	}
 
 	public SExpCG isolateExpression(SExpCG exp)
@@ -284,7 +262,9 @@ public class ExpAssistantCG extends AssistantBase
 	public AQuoteLiteralExpCG consQuoteLiteral(String value)
 	{
 		AQuoteLiteralExpCG quoteLiteral = new AQuoteLiteralExpCG();
-		quoteLiteral.setType(new AQuoteTypeCG());
+		AQuoteTypeCG type = new AQuoteTypeCG();
+		type.setValue(value);
+		quoteLiteral.setType(type);
 		quoteLiteral.setValue(value);
 
 		return quoteLiteral;
@@ -680,11 +660,54 @@ public class ExpAssistantCG extends AssistantBase
 		return next;
 	}
 	
+	public AUndefinedExpCG consUndefinedExp()
+	{
+		AUndefinedExpCG undefExp = new AUndefinedExpCG();
+		undefExp.setType(new AUnknownTypeCG());
+		
+		return undefExp;
+	}
+	
 	public ANullExpCG consNullExp()
 	{
 		ANullExpCG nullExp = new ANullExpCG();
 		nullExp.setType(new AUnknownTypeCG());
 
 		return nullExp;
+	}
+	
+	public STypeCG handleMapType(SMapTypeBase node, IRInfo question, boolean isInjective) throws AnalysisException
+	{
+		PType from = node.getFrom();
+		PType to = node.getTo();
+		boolean empty = node.getEmpty();
+
+		STypeCG fromCg = from.apply(question.getTypeVisitor(), question);
+		STypeCG toCg = to.apply(question.getTypeVisitor(), question);
+
+		AMapMapTypeCG mapType = new AMapMapTypeCG();
+		mapType.setFrom(fromCg);
+		mapType.setTo(toCg);
+		mapType.setEmpty(empty);
+		
+		mapType.setInjective(isInjective);
+
+		return mapType;
+	}
+	
+	public boolean isUndefined(SExpCG exp)
+	{
+		if(exp instanceof ACastUnaryExpCG)
+		{
+			return isUndefined(((ACastUnaryExpCG) exp).getExp());
+		}
+		else if(exp instanceof AUndefinedExpCG)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package project.Entrytypes;
 
 import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
 
 import java.util.*;
 
@@ -12,10 +13,10 @@ final public class St implements Record {
     public Object x;
 
     public St(final Object _x) {
-        //@ assert inv_Entry_PT(_x) && (_x == null || inv_Entry_PossiblyOne(_x) || inv_Entry_True(_x));
+        //@ assert (((((_x == null) || Utils.is_nat(_x)) && inv_Entry_PossiblyOne(_x)) || (Utils.is_bool(_x) && inv_Entry_True(_x))) && inv_Entry_PT(_x));
         x = (_x != null) ? _x : null;
 
-        //@ assert inv_Entry_PT(x) && (x == null || inv_Entry_PossiblyOne(x) || inv_Entry_True(x));
+        //@ assert (((((x == null) || Utils.is_nat(x)) && inv_Entry_PossiblyOne(x)) || (Utils.is_bool(x) && inv_Entry_True(x))) && inv_Entry_PT(x));
     }
 
     /*@ pure @*/
@@ -45,23 +46,34 @@ final public class St implements Record {
     }
 
     /*@ pure @*/
+    public Object get_x() {
+        Object ret_1 = x;
+
+        //@ assert project.Entry.invChecksOn ==> ((((((ret_1 == null) || Utils.is_nat(ret_1)) && inv_Entry_PossiblyOne(ret_1)) || (Utils.is_bool(ret_1) && inv_Entry_True(ret_1))) && inv_Entry_PT(ret_1)));
+        return ret_1;
+    }
+
+    public void set_x(final Object _x) {
+        //@ assert project.Entry.invChecksOn ==> ((((((_x == null) || Utils.is_nat(_x)) && inv_Entry_PossiblyOne(_x)) || (Utils.is_bool(_x) && inv_Entry_True(_x))) && inv_Entry_PT(_x)));
+        x = _x;
+
+        //@ assert project.Entry.invChecksOn ==> ((((((x == null) || Utils.is_nat(x)) && inv_Entry_PossiblyOne(x)) || (Utils.is_bool(x) && inv_Entry_True(x))) && inv_Entry_PT(x)));
+    }
+
+    /*@ pure @*/
+    public Boolean valid() {
+        return true;
+    }
+
+    /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_PT(final Object check_elem) {
-        if (!(Utils.equals(check_elem, null)) &&
-                !(Utils.is_nat(check_elem) || Utils.is_bool(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_PossiblyOne(final Object check_p) {
-        if (!(Utils.equals(check_p, null)) && !(Utils.is_nat(check_p))) {
-            return false;
-        }
-
         Number p = ((Number) check_p);
 
         Boolean orResult_1 = false;
@@ -78,10 +90,6 @@ final public class St implements Record {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_True(final Object check_b) {
-        if ((Utils.equals(check_b, null)) || !(Utils.is_bool(check_b))) {
-            return false;
-        }
-
         Boolean b = ((Boolean) check_b);
 
         return b;

@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
  *
+ *	Copyright (C) 2008 Fujitsu Services Ltd.
  *	Author: Nick Battle
  *
  *	This file is part of VDMJ.
@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.expressions.AApplyExp;
+import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
@@ -36,6 +38,8 @@ import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ASetType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -44,10 +48,10 @@ public class MapInjectivityEnum extends ProofObligation
 {
 	private static final long serialVersionUID = 2042036674338877124L;
 
-	public MapInjectivityEnum(AMapEnumMapExp exp, IPOContextStack ctxt,
+	public MapInjectivityEnum(AMapEnumMapExp mapEnumExp, IPOContextStack ctxt,
 			IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.MAP_INJ_ENUM, ctxt, exp.getLocation(), af);
+		super(mapEnumExp, POType.MAP_INJ_ENUM, ctxt, mapEnumExp.getLocation(), af);
 
 		/**
 		 * This obligation applies to a map enumeration. Given a map enum of the form { <maplet>, <maplet>, ... }, the
@@ -60,14 +64,19 @@ public class MapInjectivityEnum extends ProofObligation
 		ILexNameToken m2 = getUnique("m");
 
 		ASetEnumSetExp setOfMaplets = new ASetEnumSetExp();
+		ASetType somType = new ASetType();
+		somType.setSetof(mapEnumExp.getType().clone());
+		setOfMaplets.setType(somType);
+
 		List<AMapEnumMapExp> singleMaplets = new Vector<AMapEnumMapExp>();
 
-		for (AMapletExp maplet : exp.getMembers())
+		for (AMapletExp maplet : mapEnumExp.getMembers())
 		{
 			AMapEnumMapExp mapOfOne = new AMapEnumMapExp();
 			List<AMapletExp> members = new Vector<AMapletExp>();
 			members.add(maplet.clone());
 			mapOfOne.setMembers(members);
+			mapOfOne.setType(maplet.getType().clone());
 
 			singleMaplets.add(mapOfOne);
 		}
@@ -76,15 +85,23 @@ public class MapInjectivityEnum extends ProofObligation
 		List<PMultipleBind> m1m2binding = getMultipleSetBindList(setOfMaplets, m1, m2);
 
 		AForAllExp domForallExp = new AForAllExp();
+		domForallExp.setType(new ABooleanBasicType());
 		ILexNameToken d1 = getUnique("d");
 		ILexNameToken d2 = getUnique("d");
 
 		AMapDomainUnaryExp domM1 = new AMapDomainUnaryExp();
-		domM1.setExp(getVarExp(m1));
+		domM1.setExp(getVarExp(m1, mapEnumExp.getType()));
+		ASetType domType = new ASetType();
+		domType.setSetof(af.createPTypeAssistant().getMap(mapEnumExp.getType().clone()));
+		domM1.setType(domType.clone());
 		AMapDomainUnaryExp domM2 = new AMapDomainUnaryExp();
-		domM2.setExp(getVarExp(m2));
+		domM2.setExp(getVarExp(m2, mapEnumExp.getType()));
+		domM2.setType(domType.clone());
 
-		AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getEqualsExp(getVarExp(d1), getVarExp(d2)), getEqualsExp(getApplyExp(getVarExp(m1), getVarExp(d1)), getApplyExp(getVarExp(m2), getVarExp(d2))));
+		AApplyExp applyExp = getApplyExp(getVarExp(m2, mapEnumExp.getType()), af.createPTypeAssistant().getMap(mapEnumExp.getType()).getTo(), getVarExp(d2, domType));
+		AApplyExp applyExp2 = getApplyExp(getVarExp(m1, mapEnumExp.getType()),af.createPTypeAssistant().getMap(mapEnumExp.getType()).getTo(), getVarExp(d1, domType));
+		AEqualsBinaryExp equalsExp = getEqualsExp(applyExp2, applyExp);
+		AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getEqualsExp(getVarExp(d1, domType), getVarExp(d2, domType)), equalsExp);
 
 		List<PMultipleBind> domBinding = getMultipleSetBindList(domM1, d1);
 		domBinding.addAll(getMultipleSetBindList(domM2, d2));
@@ -93,6 +110,7 @@ public class MapInjectivityEnum extends ProofObligation
 		domForallExp.setPredicate(implies);
 
 		AForAllExp forallExp = new AForAllExp();
+		forallExp.setType(new ABooleanBasicType());
 		forallExp.setBindList(m1m2binding);
 		forallExp.setPredicate(domForallExp);
 

@@ -14,8 +14,13 @@ import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.config.Settings;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import org.apache.commons.cli.*;
 import org.overture.codegen.utils.GeneralUtils;
+
+//import org.overture.codegen.ir.
 
 public class CGenMain
 {
@@ -99,13 +104,24 @@ public class CGenMain
 
 		try
 		{
-			List<SClassDefinition> ast = GeneralCodeGenUtils.consClassList(files, Dialect.VDM_RT);
-
+			//List<SClassDefinition> ast = GeneralCodeGenUtils.consClassList(files, Dialect.VDM_RT);
+			
+			Settings.dialect=Dialect.VDM_RT;
+			
+//			TypeCheckResult<List<SClassDefinition>> vdm_ast = TypeCheckerUtil.typeCheckPp(file);
+//			
+//			List<SClassDefinition> res = vdm_ast.result;
+			
+			TypeCheckResult<List<SClassDefinition>> res = TypeCheckerUtil.typeCheckRt(files);
+			
+			List<SClassDefinition> ast = res.result;
+			
 			CGen cGen = new CGen();
 
 			GeneratedData data = cGen.generateCFromVdm(ast, outputDir);
 			System.out.println("C code generated to folder: "
 					+ outputDir.getAbsolutePath());
+			
 			if (print)
 			{
 				for (GeneratedModule module : data.getClasses())

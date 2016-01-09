@@ -36,11 +36,14 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
+import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.AFieldField;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -74,12 +77,14 @@ public class StateInvariantObligation extends ProofObligation
 		{
 			AStateDefinition def = ass.getStateDefinition();
 			ALetDefExp letExp = new ALetDefExp();
-
+			letExp.setType(def.getInvExpression().getType().clone());
 			List<PDefinition> invDefs = new Vector<PDefinition>();
 			AEqualsDefinition local = new AEqualsDefinition();
 			local.setPattern(def.getInvPattern().clone());
 			local.setName(def.getName().clone());
-			local.setTest(getVarExp(def.getName()));
+			AVariableExp varExp = getVarExp(def.getName());
+			varExp.setType(def.getRecordType().clone());
+			local.setTest(varExp);
 			invDefs.add(local);
 			letExp.setLocalDefs(invDefs);
 			letExp.setExpression(def.getInvExpression().clone());
@@ -120,16 +125,10 @@ public class StateInvariantObligation extends ProofObligation
 		super(atom, POType.STATE_INV, ctxt, atom.getLocation(), af);
 		assistantFactory = af;
 
-		PExp inv_exp = null;
-		if (atom.getStatedef() != null)
-		{
-			inv_exp = atom.getStatedef().getInvExpression().clone();
-			;
-		} else
-		{
-			inv_exp = invDefs(atom.getAssignments().get(0).getClassDefinition());
-		}
-		PExp ant_exp = inv_exp.clone();
+		PExp invApplyExp = makeInvApplyExp(atom);
+
+		PExp invApplyExpForSub = invApplyExp.clone();
+
 		List<Substitution> subs = new LinkedList<Substitution>();
 		for (AAssignmentStm asgn : atom.getAssignments())
 		{
@@ -139,11 +138,46 @@ public class StateInvariantObligation extends ProofObligation
 		IVariableSubVisitor varSubVisitor = af.getVarSubVisitor();
 		for (Substitution sub : subs)
 		{
-			inv_exp = inv_exp.apply(varSubVisitor, sub);
+			invApplyExpForSub = invApplyExpForSub.apply(varSubVisitor, sub);
 		}
 
-		stitch = AstExpressionFactory.newAImpliesBooleanBinaryExp(ant_exp, inv_exp);
+		stitch = AstExpressionFactory.newAImpliesBooleanBinaryExp(invApplyExp, invApplyExpForSub);
 		valuetree.setPredicate(stitch);
+	}
+
+	private PExp makeInvApplyExp(AAtomicStm atom)
+	{
+		AStateDefinition stateDef = atom.getAssignments().get(0).getStateDefinition();
+		if (stateDef == null){
+			return extractInv(atom);
+		}
+		String stateName = getStateName(stateDef);
+		List<PExp> arglist = new Vector<PExp>();
+		for (AFieldField f : stateDef.getFields())
+		{
+			arglist.add(getVarExp(f.getTagname().clone(), f.getType()));
+		}
+		PExp mkExp = AstExpressionFactory.newAMkTypeExp(new LexNameToken("", stateName, null), stateDef.getRecordType().clone(), arglist);
+		PExp invApplyExp = getApplyExp(getVarExp(new LexNameToken("", "inv_"
+				+ stateName, null)), new ABooleanBasicType(), mkExp);
+		return invApplyExp;
+	}
+
+	private String getStateName(PDefinition stateDef)
+	{
+		return stateDef.getName().getName();
+	}
+
+	private PExp extractInv(AAtomicStm atom)
+	{
+		AAssignmentStm x = atom.getAssignments().get(0);
+		if (x.getClassDefinition() != null)
+		{
+			return invDefs(x.getClassDefinition());
+		} else
+		{
+			return invDefs(x.getStateDefinition());
+		}
 	}
 
 	public StateInvariantObligation(AImplicitOperationDefinition def,
@@ -153,7 +187,14 @@ public class StateInvariantObligation extends ProofObligation
 		super(def, POType.STATE_INV, ctxt, def.getLocation(), af);
 		assistantFactory = af;
 
-		stitch = invDefs(def.getClassDefinition());
+		if (def.getClassDefinition() == null)
+		{
+			stitch = invDefs(def.getClassDefinition());
+		} else
+		{
+			stitch = invDefs(def.getStateDefinition());
+		}
+
 		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 		// valuetree.setContext(ctxt.getContextNodeList());
 	}
@@ -170,4 +211,26 @@ public class StateInvariantObligation extends ProofObligation
 
 		return root;
 	}
+
+	private PExp invDefs(PDefinition def)
+	{
+
+		if (def instanceof AStateDefinition)
+		{
+			return ((AStateDefinition) def).getInvdef().getBody();
+		} else
+		{
+
+			PExp root = null;
+
+			for (PDefinition d : assistantFactory.createSClassDefinitionAssistant().getInvDefs((SClassDefinition) def))
+			{
+				AClassInvariantDefinition cid = (AClassInvariantDefinition) d;
+				root = makeAnd(root, cid.getExpression().clone());
+			}
+
+			return root;
+		}
+	}
+
 }

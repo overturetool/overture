@@ -1,0 +1,12 @@
+class Entry
+
+instance variables
+static v : int := let a = 1 in a;
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+  return v;
+
+end Entry

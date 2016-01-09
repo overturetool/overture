@@ -1,0 +1,47 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        cg_Utils.op();
+
+        return 0L;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class cg_Utils {
+    public cg_Utils() {
+    }
+
+    public static void op() {
+        /* skip */
+    }
+
+    public String toString() {
+        return "cg_Utils{}";
+    }
+}
+
+##########
+*Name Violations*
+
+Type name violation: [Violation in module Utils: 'Utils'. Location: line 14 at position: 7 in StaticOpCallReservedClassName.vdmpp]. Prefix 'cg_' has been added to the name
+
+##########

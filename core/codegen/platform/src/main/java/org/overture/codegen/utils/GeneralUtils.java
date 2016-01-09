@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -175,19 +176,12 @@ public class GeneralUtils
 			}
 		}
 	}
-
-	public static String[] concat(String[] left, String[] right)
-	{
-		int leftLength = left.length;
-		int rightLeft = right.length;
-
-		String[] result = new String[leftLength + rightLeft];
-
-		System.arraycopy(left, 0, result, 0, leftLength);
-		System.arraycopy(right, 0, result, leftLength, rightLeft);
-
-		return result;
-	}
+	
+	public static <T> T[] concat(T[] first, T[] second) {
+		  T[] result = Arrays.copyOf(first, first.length + second.length);
+		  System.arraycopy(second, 0, result, first.length, second.length);
+		  return result;
+		}
 	
 	public static String cleanupWhiteSpaces(String str)
 	{

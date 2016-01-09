@@ -1,0 +1,5 @@
+functions
+
+f () r: int
+pre true
+post true

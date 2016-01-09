@@ -1,0 +1,55 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry implements EvaluatePP {
+    public volatile Sentinel sentinel;
+
+    public Entry() {
+        sentinel = new Entry_sentinel(this);
+    }
+
+    public static Object Run() {
+        Number a = 1L;
+        /* Start of cycles */
+        {
+            return a;
+        }
+
+        /* End of cycles */
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (Utils.equals(fnr, 0L)) {
+            return true;
+        } else if (Utils.equals(fnr, 1L)) {
+            return true;
+        } else if (Utils.equals(fnr, 2L)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    public static class Entry_sentinel extends Sentinel {
+        public static final int Run = 0;
+        public static final int Entry = 1;
+        public static final int toString = 2;
+        public final int function_sum = 3;
+
+        public Entry_sentinel() {
+        }
+
+        public Entry_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
+        }
+    }
+}
+
+##########

@@ -4,8 +4,8 @@
 <message column="3" line="257" message="Recursive function has no measure" messageType="warning" number="5012" resource="looseSL"/>
 <message column="14" line="275" message="pat at 182:2 hidden by pat" messageType="warning" number="5008" resource="looseSL"/>
 <message column="3" line="274" message="Recursive function has no measure" messageType="warning" number="5012" resource="looseSL"/>
-<message column="25" line="462" message="expr at 185:2 hidden by expr" messageType="warning" number="5008" resource="looseSL"/>
 <message column="21" line="462" message="pat at 182:2 hidden by pat" messageType="warning" number="5008" resource="looseSL"/>
+<message column="25" line="462" message="expr at 185:2 hidden by expr" messageType="warning" number="5008" resource="looseSL"/>
 <message column="3" line="586" message="Recursive function has no measure" messageType="warning" number="5012" resource="looseSL"/>
 <message column="17" line="631" message="expr at 185:2 hidden by expr" messageType="warning" number="5008" resource="looseSL"/>
 <message column="44" line="648" message="expr at 185:2 hidden by expr" messageType="warning" number="5008" resource="looseSL"/>
@@ -16,7 +16,7 @@
 <message column="38" line="935" message="Definition 'm' not used" messageType="warning" number="5000" resource="looseSL"/>
 <message column="2" line="189" message="Definition 'expr2' not used" messageType="warning" number="5000" resource="looseSL"/>
 <message column="3" line="446" message="Definition 'CreateContext' not used" messageType="warning" number="5000" resource="looseSL"/>
-<message column="50" line="277" message="Operation 'FnInfo' cannot be called from a function" messageType="error" number="3300" resource="looseSL"/>
+<message column="50" line="277" message="Impure operation 'FnInfo' cannot be called from here" messageType="error" number="3300" resource="looseSL"/>
 <message column="3" line="928" message="Operation returns void value" messageType="error" number="3313" resource="looseSL"/>
 <result/>
 </testResult>

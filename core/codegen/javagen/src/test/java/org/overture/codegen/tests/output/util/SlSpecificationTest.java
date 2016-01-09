@@ -24,12 +24,18 @@ abstract public class SlSpecificationTest extends SpecificationTestBase
 	@Before
 	public void init()
 	{
-		super.init();
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
 	}
 
 	public GeneratedData genCode(List<INode> ast) throws AnalysisException
+	{
+		List<AModuleModules> modules = buildModulesList(ast);
+		
+		return getJavaGen().generateJavaFromVdmModules(modules);
+	}
+
+	public List<AModuleModules> buildModulesList(List<INode> ast)
 	{
 		List<AModuleModules> modules = new LinkedList<AModuleModules>();
 
@@ -43,7 +49,6 @@ abstract public class SlSpecificationTest extends SpecificationTestBase
 				Assert.fail("Expected only modules got " + c);
 			}
 		}
-
-		return vdmCodGen.generateJavaFromVdmModules(modules);
+		return modules;
 	}
 }

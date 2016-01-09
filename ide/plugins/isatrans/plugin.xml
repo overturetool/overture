@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+<!-- Translate Model -->
+  <extension point="org.eclipse.ui.commands">
+    <command 
+     defaultHandler="org.overture.ide.plugins.isatrans.commands.IsaTransCommand" 
+     id="org.overture.ide.plugins.isatrans.genthycom" 
+     name="Translate Model to Isabelle"/>
+  </extension>
+  
+    <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="popup:org.overture.ide.ui.VdmExplorer">
+      <menu icon="icons/cview16/isa.png" id="org.overture.ide.plugins.isatrans" label="Isabelle Translation">
+        <command commandId="org.overture.ide.plugins.isatrans.genthycom" label="Translate Model" style="push" tooltip="Translate Model to Isabelle">
+          <visibleWhen checkEnabled="false">
+            <iterate ifEmpty="false">
+              <or>
+                <adapt type="org.overture.ide.core.resources.IVdmProject"/>
+                <adapt type="org.eclipse.core.resources.IFile">
+                  <or>
+                    <test property="org.eclipse.core.resources.extension" value="vdmsl"/>
+                  </or>
+                </adapt>
+              </or>
+            </iterate>
+          </visibleWhen>
+        </command>
+      </menu>
+    </menuContribution>
+  </extension>
+  
+  <extension point="org.eclipse.ui.bindings">
+    <key
+      commandId="org.overture.ide.plugins.isatrans.genthycom"
+      contextId="org.eclipse.ui.contexts.window"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="Ctrl+Alt+J">
+    </key>
+  </extension>
+  
+  
+<!-- Translate Model + POs -->
+  <extension point="org.eclipse.ui.commands">
+    <command 
+     defaultHandler="org.overture.ide.plugins.isatrans.commands.IsaTransBothCommand" 
+     id="org.overture.ide.plugins.isatrans.genbothcom" 
+     name="Translate Model + Pos to Isabelle"/>
+  </extension>
+  
+    <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="popup:org.overture.ide.ui.VdmExplorer">
+      <menu icon="icons/cview16/isa.png" id="org.overture.ide.plugins.isatrans" label="Isabelle Translation">
+        <command commandId="org.overture.ide.plugins.isatrans.genbothcom" label="Translate Model + POs" style="push" tooltip="Translate Model + Pos to Isabelle">
+          <visibleWhen checkEnabled="false">
+            <iterate ifEmpty="false">
+              <or>
+                <adapt type="org.overture.ide.core.resources.IVdmProject"/>
+                <adapt type="org.eclipse.core.resources.IFile">
+                  <or>
+                    <test property="org.eclipse.core.resources.extension" value="vdmsl"/>
+                  </or>
+                </adapt>
+              </or>
+            </iterate>
+          </visibleWhen>
+        </command>
+      </menu>
+    </menuContribution>
+  </extension>
+  
+  <extension point="org.eclipse.ui.bindings">
+    <key
+      commandId="org.overture.ide.plugins.isatrans.genbothcom"
+      contextId="org.eclipse.ui.contexts.window"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="Ctrl+Alt+K">
+    </key>
+  </extension>
+   
+</plugin>

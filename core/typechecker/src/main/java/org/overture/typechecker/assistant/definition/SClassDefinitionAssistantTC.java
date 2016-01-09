@@ -295,6 +295,7 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 		ILexLocation invloc = invdefs.get(invdefs.size() - 1).getLocation();
 
 		AOperationType type = AstFactory.newAOperationType(invloc, new Vector<PType>(), AstFactory.newABooleanBasicType(invloc));
+		type.setPure(true);
 
 		LexNameToken invname = new LexNameToken(d.getName().getName(), "inv_"
 				+ d.getName().getName(), invloc);
@@ -631,6 +632,10 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 				{
 					TypeCheckerErrors.report(3006, "Overriding definition reduces visibility", override.getName().getLocation(),override);
 					TypeCheckerErrors.detail2("This", override.getAccess().getAccess()+" "+ override.getName(), "Super",indef.getAccess().getAccess()+" "+ indef.getName());
+				}
+				else if (override.getAccess().getPure() != indef.getAccess().getPure())
+				{
+					TypeCheckerErrors.report(3341, "Overriding definition must " + (override.getAccess().getPure() ? "not" : "also") + " be pure", override.getName().getLocation(),override);
 				} else
 				{
 					PType to = af.createPDefinitionAssistant().getType(indef);

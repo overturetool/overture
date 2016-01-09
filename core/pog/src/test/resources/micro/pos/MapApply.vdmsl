@@ -1,0 +1,15 @@
+-- This test exercises the generation of a MapApplyObligation
+-- off a Value Definition and an Explicit Function Definition
+
+
+values
+
+M : map nat to nat = {4 |-> 7}
+
+functions
+
+f:nat -> nat
+f(n) == if n in set dom M
+        then M(n)
+        -- PO (forall n:nat & ((n in set (dom M)) => (n in set (dom M))))
+        else 1

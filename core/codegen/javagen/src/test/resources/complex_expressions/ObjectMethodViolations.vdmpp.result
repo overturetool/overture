@@ -1,0 +1,98 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        {
+            Entry e = new Entry();
+            e.cg_wait();
+        }
+
+        {
+            Number ignorePattern_1 = cg_notify();
+
+            /* skip */
+        }
+
+        {
+            Entry e = new Entry();
+            Number ignorePattern_2 = e.cg_notify();
+
+            /* skip */
+        }
+
+        cg_wait();
+
+        return 0L;
+    }
+
+    private void cg_clone() {
+        /* skip */
+    }
+
+    private void cg_equals() {
+        /* skip */
+    }
+
+    private void cg_finalize() {
+        /* skip */
+    }
+
+    private void cg_getClass() {
+        /* skip */
+    }
+
+    private void cg_hashCode() {
+        /* skip */
+    }
+
+    private void cg_notifyAll() {
+        /* skip */
+    }
+
+    private void cg_toString() {
+        /* skip */
+    }
+
+    public static void cg_wait() {
+        /* skip */
+    }
+
+    private static Number cg_notify() {
+        return 1L;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+public interface Func_1<T_1> {
+    public abstract T_1 eval();
+}
+
+##########
+*Name Violations*
+
+java.lang.Object method violation: [Violation in module Entry: 'wait'. Location: line 9 at position: 27 in ObjectMethodViolations.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module Entry: 'notify'. Location: line 12 at position: 10 in ObjectMethodViolations.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module Entry: 'notify'. Location: line 16 at position: 12 in ObjectMethodViolations.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module Entry: 'wait'. Location: line 21 at position: 2 in ObjectMethodViolations.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module Entry: 'clone'. Location: line 25 at position: 9 in ObjectMethodViolations.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module Entry: 'equals'. Location: line 28 at position: 9 in ObjectMethodViolations.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module Entry: 'finalize'. Location: line 31 at position: 9 in ObjectMethodViolations.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module Entry: 'getClass'. Location: line 34 at position: 9 in ObjectMethodViolations.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module Entry: 'hashCode'. Location: line 37 at position: 9 in ObjectMethodViolations.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module Entry: 'notify'. Location: line 42 at position: 9 in ObjectMethodViolations.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module Entry: 'notifyAll'. Location: line 47 at position: 9 in ObjectMethodViolations.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module Entry: 'toString'. Location: line 50 at position: 9 in ObjectMethodViolations.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module Entry: 'wait'. Location: line 53 at position: 15 in ObjectMethodViolations.vdmpp]. Prefix 'cg_' has been added to the name
+
+##########

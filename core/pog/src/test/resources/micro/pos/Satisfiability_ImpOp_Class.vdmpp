@@ -1,0 +1,24 @@
+
+-- This test exercises the generation of a CmlSatisfiabilityObligation
+-- off a Class Definition and an Implicit Operation Definition
+
+class C
+instance variables
+  st1 : nat := 1;
+  
+ 
+operations
+
+Op1(a: nat, b : nat)
+ext wr st1
+pre a < 0
+post b > a and st1~ = st1 -3
+
+
+
+-- Expected Output: (forall a:nat, b:nat, oldself : C & 
+--                    (pre_Op1(a, b, oldself) => 
+--                       exists newself : C & post_Op1(a, b, oldself, newself)))
+
+end C
+

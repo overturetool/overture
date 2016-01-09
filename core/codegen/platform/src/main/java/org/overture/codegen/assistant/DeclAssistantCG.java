@@ -45,18 +45,26 @@ import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
+import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.AMutexSyncDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
+import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
+import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
+import org.overture.codegen.cgast.name.ATokenNameCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -80,6 +88,184 @@ public class DeclAssistantCG extends AssistantBase
 	public DeclAssistantCG(AssistantManager assistantManager)
 	{
 		super(assistantManager);
+	}
+	
+	public void addDependencies(SClassDeclCG clazz, List<ClonableString> extraDeps, boolean prepend)
+	{
+		NodeAssistantCG nodeAssistant = assistantManager.getNodeAssistant();
+		clazz.setDependencies(nodeAssistant.buildData(clazz.getDependencies(), extraDeps, prepend));
+	}
+	
+	public boolean isInnerClass(ADefaultClassDeclCG node)
+	{
+		return node.parent() != null && node.parent().getAncestor(ADefaultClassDeclCG.class) != null;
+	}
+	
+	public boolean isTestCase(INode node)
+	{
+		if(!(node instanceof SClassDefinition))
+		{
+			return false;
+		}
+		
+		SClassDefinition clazz = (SClassDefinition) node;
+		
+		for(SClassDefinition d : clazz.getSuperDefs())
+		{
+			if(d.getName().getName().equals(IRConstants.TEST_CASE))
+			{
+				return true;
+			}
+			
+			if(isTestCase(d))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public <T extends SClassDeclCG> T buildClass(SClassDefinition node, IRInfo question, T classCg) throws AnalysisException
+	{
+		String name = node.getName().getName();
+		String access = node.getAccess().getAccess().toString();
+		boolean isAbstract = node.getIsAbstract();
+		boolean isStatic = false;
+		LinkedList<ILexNameToken> superNames = node.getSupernames();
+
+		classCg.setPackage(null);
+		classCg.setName(name);
+		classCg.setAccess(access);
+		classCg.setAbstract(isAbstract);
+		classCg.setStatic(isStatic);
+		classCg.setStatic(false);
+
+		for(ILexNameToken s : superNames)
+		{
+			ATokenNameCG superName = new ATokenNameCG();
+			superName.setName(s.getName());
+			
+			classCg.getSuperNames().add(superName);
+		}
+
+		LinkedList<PDefinition> defs = node.getDefinitions();
+		
+		for (PDefinition def : defs)
+		{
+			SDeclCG decl = def.apply(question.getDeclVisitor(), question);
+
+			if (decl == null)
+			{
+				continue;// Unspported stuff returns null by default
+			}
+			if (decl instanceof AFieldDeclCG)
+			{
+				classCg.getFields().add((AFieldDeclCG) decl);
+			} else if (decl instanceof AMethodDeclCG)
+			{
+				classCg.getMethods().add((AMethodDeclCG) decl);
+			} else if (decl instanceof ATypeDeclCG)
+			{
+				classCg.getTypeDecls().add((ATypeDeclCG) decl);
+			} else if (decl instanceof AFuncDeclCG)
+			{
+				classCg.getFunctions().add((AFuncDeclCG) decl);
+			} else if (decl instanceof AThreadDeclCG)
+			{
+				if (question.getSettings().generateConc())
+				{
+					classCg.setThread((AThreadDeclCG) decl);
+				}
+			}
+			else if (decl instanceof APersyncDeclCG)
+			{
+				classCg.getPerSyncs().add((APersyncDeclCG) decl);
+			}
+			else if (decl instanceof AMutexSyncDeclCG)
+			{
+				classCg.getMutexSyncs().add((AMutexSyncDeclCG) decl);
+			}
+			else if(decl instanceof ANamedTraceDeclCG)
+			{
+				classCg.getTraces().add((ANamedTraceDeclCG) decl);
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Unexpected definition in class: "
+						+ name + ": " + def.getName().getName() + " at " + def.getLocation());
+			}
+		}
+		
+		if(node.getInvariant() != null && question.getSettings().generateInvariants())
+		{
+			SDeclCG invCg = node.getInvariant().apply(question.getDeclVisitor(), question);
+			classCg.setInvariant(invCg);
+		}
+
+		boolean defaultConstructorExplicit = false;
+		for (AMethodDeclCG method : classCg.getMethods())
+		{
+			if (method.getIsConstructor() && method.getFormalParams().isEmpty())
+			{
+				defaultConstructorExplicit = true;
+				break;
+			}
+		}
+
+		if (!defaultConstructorExplicit)
+		{
+			classCg.getMethods().add(question.getDeclAssistant().consDefaultContructor(name));
+		}
+		
+		question.addClass(classCg);
+
+		return classCg;
+	}
+	
+	public AMethodDeclCG funcToMethod(AFuncDeclCG node)
+	{
+		SDeclCG preCond = node.getPreCond();
+		SDeclCG postCond = node.getPostCond();
+		String access = node.getAccess();
+		Boolean isAbstract = node.getAbstract();
+		LinkedList<ATemplateTypeCG> templateTypes = node.getTemplateTypes();
+		AMethodTypeCG methodType = node.getMethodType();
+		LinkedList<AFormalParamLocalParamCG> formalParams = node.getFormalParams();
+		String name = node.getName();
+		SExpCG body = node.getBody();
+		SourceNode sourceNode = node.getSourceNode();
+
+		AMethodDeclCG method = new AMethodDeclCG();
+		method.setSourceNode(sourceNode);
+
+		if (preCond != null) {
+			method.setPreCond(preCond.clone());
+		}
+		if (postCond != null) {
+			method.setPostCond(postCond.clone());
+		}
+
+		method.setAccess(access);
+		method.setAbstract(isAbstract);
+		method.setTemplateTypes(cloneNodes(templateTypes, ATemplateTypeCG.class));
+		method.setMethodType(methodType.clone());
+		method.setFormalParams(cloneNodes(formalParams, AFormalParamLocalParamCG.class));
+		method.setName(name);
+		method.setStatic(true);
+		method.setIsConstructor(false);
+		method.setImplicit(node.getImplicit());
+
+		if (!(body instanceof ANotImplementedExpCG))
+		{
+			AReturnStmCG returnStm = new AReturnStmCG();
+			returnStm.setExp(body.clone());
+			method.setBody(returnStm);
+		} else
+		{
+			method.setBody(new ANotImplementedStmCG());
+		}
+		return method;
 	}
 	
 	public String getNodeName(INode node)
@@ -120,42 +306,62 @@ public class DeclAssistantCG extends AssistantBase
 		return false;
 	}
 
-	public <T extends SDeclCG> List<T> getAllDecls(AClassDeclCG classDecl,
-			List<AClassDeclCG> classes, DeclStrategy<T> strategy)
+	public <T extends SDeclCG> List<T> getAllDecls(SClassDeclCG classDecl,
+			List<SClassDeclCG> classes, DeclStrategy<T> strategy)
 	{
 		List<T> allDecls = new LinkedList<T>();
 
 		allDecls.addAll(strategy.getDecls(classDecl));
 
-		String superName = classDecl.getSuperName();
-
-		while (superName != null)
+		Set<String> allSuperNames = getSuperClasses(classDecl, classes);
+		
+		for(String s : allSuperNames)
 		{
-			AClassDeclCG superClassDecl = findClass(classes, superName);
+			SClassDeclCG superClassDecl = findClass(classes, s);
 			
-			if(superClassDecl == null)
+			if(superClassDecl != null)
 			{
-				//This would be the case if the super class
-				// declaration is the VDMThread from the runtime
-				break;
-			}
-
-			for (T superDecl : strategy.getDecls(superClassDecl))
-			{
-				if (isInherited(strategy.getAccess(superDecl)))
+				for (T superDecl : strategy.getDecls(superClassDecl))
 				{
-					allDecls.add(superDecl);
+					if (isInherited(strategy.getAccess(superDecl)))
+					{
+						allDecls.add(superDecl);
+					}
 				}
 			}
-
-			superName = superClassDecl.getSuperName();
 		}
 
 		return allDecls;
 	}
 
-	public List<AMethodDeclCG> getAllMethods(AClassDeclCG classDecl,
-			List<AClassDeclCG> classes)
+	public Set<String> getSuperClasses(SClassDeclCG classDecl, List<SClassDeclCG> classes)
+	{
+		if(classDecl.getSuperNames().isEmpty())
+		{
+			return new HashSet<>();
+		}
+		else
+		{
+			Set<String> superClasses = new HashSet<>();
+			
+			for(ATokenNameCG s : classDecl.getSuperNames())
+			{
+				superClasses.add(s.getName());
+
+				SClassDeclCG clazz = findClass(classes, s.getName());
+				
+				if(clazz != null)
+				{
+					superClasses.addAll(getSuperClasses(clazz, classes));
+				}
+			}
+			
+			return superClasses;
+		}
+	}
+
+	public List<AMethodDeclCG> getAllMethods(SClassDeclCG classDecl,
+			List<SClassDeclCG> classes)
 	{
 		DeclStrategy<AMethodDeclCG> methodDeclStrategy = new DeclStrategy<AMethodDeclCG>()
 		{
@@ -166,7 +372,7 @@ public class DeclAssistantCG extends AssistantBase
 			}
 
 			@Override
-			public List<AMethodDeclCG> getDecls(AClassDeclCG classDecl)
+			public List<AMethodDeclCG> getDecls(SClassDeclCG classDecl)
 			{
 				return classDecl.getMethods();
 			}
@@ -175,8 +381,8 @@ public class DeclAssistantCG extends AssistantBase
 		return getAllDecls(classDecl, classes, methodDeclStrategy);
 	}
 
-	public List<AFieldDeclCG> getAllFields(AClassDeclCG classDecl,
-			List<AClassDeclCG> classes)
+	public List<AFieldDeclCG> getAllFields(SClassDeclCG classDecl,
+			List<SClassDeclCG> classes)
 	{
 		DeclStrategy<AFieldDeclCG> fieldDeclStrategy = new DeclStrategy<AFieldDeclCG>()
 		{
@@ -187,7 +393,7 @@ public class DeclAssistantCG extends AssistantBase
 			}
 
 			@Override
-			public List<AFieldDeclCG> getDecls(AClassDeclCG classDecl)
+			public List<AFieldDeclCG> getDecls(SClassDeclCG classDecl)
 			{
 				return classDecl.getFields();
 			}
@@ -218,9 +424,9 @@ public class DeclAssistantCG extends AssistantBase
 		}
 	}
 
-	public AClassDeclCG findClass(List<AClassDeclCG> classes, String moduleName)
+	public SClassDeclCG findClass(List<SClassDeclCG> classes, String moduleName)
 	{
-		for (AClassDeclCG classDecl : classes)
+		for (SClassDeclCG classDecl : classes)
 		{
 			if (classDecl.getName().equals(moduleName))
 			{
@@ -232,7 +438,7 @@ public class DeclAssistantCG extends AssistantBase
 	}
 
 	// This method assumes that the record is defined in definingClass and not a super class
-	public ARecordDeclCG findRecord(AClassDeclCG definingClass,
+	public ARecordDeclCG findRecord(SClassDeclCG definingClass,
 			String recordName)
 	{
 		for (ATypeDeclCG typeDecl : definingClass.getTypeDecls())
@@ -256,7 +462,7 @@ public class DeclAssistantCG extends AssistantBase
 	}
 	
 	// This method assumes that the record is defined in definingClass and not a super class
-	public List<ARecordDeclCG> getRecords(AClassDeclCG definingClass)
+	public List<ARecordDeclCG> getRecords(SClassDeclCG definingClass)
 	{
 		List<ARecordDeclCG> records = new LinkedList<ARecordDeclCG>();
 		
@@ -277,10 +483,10 @@ public class DeclAssistantCG extends AssistantBase
 		return records;
 	}
 
-	public ARecordDeclCG findRecord(List<AClassDeclCG> classes,
+	public ARecordDeclCG findRecord(List<SClassDeclCG> classes,
 			ARecordTypeCG recordType)
 	{
-		AClassDeclCG definingClass = findClass(classes, recordType.getName().getDefiningClass());
+		SClassDeclCG definingClass = findClass(classes, recordType.getName().getDefiningClass());
 		ARecordDeclCG record = findRecord(definingClass, recordType.getName().getName());
 
 		return record;
@@ -432,11 +638,11 @@ public class DeclAssistantCG extends AssistantBase
 			localDecl.setExp(expAssistant.getDefaultBoolValue());
 		} else
 		{
-			localDecl.setExp(assistantManager.getExpAssistant().consNullExp());
+			localDecl.setExp(assistantManager.getExpAssistant().consUndefinedExp());
 		}
 	}
 
-	public AFieldDeclCG getFieldDecl(List<AClassDeclCG> classes,
+	public AFieldDeclCG getFieldDecl(List<SClassDeclCG> classes,
 			ARecordTypeCG recordType, int number)
 	{
 		ARecordDeclCG record = findRecord(classes, recordType);
@@ -444,7 +650,7 @@ public class DeclAssistantCG extends AssistantBase
 		return record.getFields().get(number);
 	}
 	
-	public AFieldDeclCG getFieldDecl(AClassDeclCG clazz, String fieldName)
+	public AFieldDeclCG getFieldDecl(SClassDeclCG clazz, String fieldName)
 	{
 		for(AFieldDeclCG field : clazz.getFields())
 		{
@@ -457,7 +663,7 @@ public class DeclAssistantCG extends AssistantBase
 		return null;
 	}
 
-	public AFieldDeclCG getFieldDecl(List<AClassDeclCG> classes,
+	public AFieldDeclCG getFieldDecl(List<SClassDeclCG> classes,
 			ARecordTypeCG recordType, String memberName)
 	{
 		ATypeNameCG name = recordType.getName();
@@ -484,8 +690,8 @@ public class DeclAssistantCG extends AssistantBase
 					+ recordType);
 		}
 
-		AClassDeclCG definingClass = null;
-		for (AClassDeclCG currentClass : classes)
+		SClassDeclCG definingClass = null;
+		for (SClassDeclCG currentClass : classes)
 		{
 			if (currentClass.getName().equals(definingClassName))
 			{

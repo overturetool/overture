@@ -1,0 +1,29 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+SeqEven = seq of Even;
+
+Even = nat
+inv e == e mod 2 = 0;
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ let - : SeqEven = [] in skip;
+ let - : SeqEven = [2,4,6,8] in skip;
+ IO`println("After legal use");
+ IO`println("Before illegal use");
+ let - : SeqEven = [2,4,6,8,9] in skip;
+ IO`println("After illegal use");
+ return 0;
+);
+
+end Entry

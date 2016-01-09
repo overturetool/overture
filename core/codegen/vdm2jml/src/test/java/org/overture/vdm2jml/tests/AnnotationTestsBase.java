@@ -11,7 +11,7 @@ import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.util.ClonableString;
 import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.cgast.PCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
@@ -43,16 +43,16 @@ abstract public class AnnotationTestsBase
 	private static final boolean VERBOSE = false;
 	
 	// The IR class that the input module generates to
-	protected static AClassDeclCG genModule;
+	protected static ADefaultClassDeclCG genModule;
 	
 	// The IR class that is used to represent the type of the module state
-	protected static AClassDeclCG genStateType;
+	protected static ADefaultClassDeclCG genStateType;
 	
 	public static void init(String fileName) throws AnalysisException
 	{
-		List<AClassDeclCG> classes = getClasses(fileName);
+		List<ADefaultClassDeclCG> classes = getClasses(fileName);
 
-		for (AClassDeclCG clazz : classes)
+		for (ADefaultClassDeclCG clazz : classes)
 		{
 			if (clazz.getName().equals(MODULE_NAME))
 			{
@@ -95,9 +95,9 @@ abstract public class AnnotationTestsBase
 		javaSettings.setGenRecsAsInnerClasses(false);
 	}
 
-	public static List<AClassDeclCG> getClasses(GeneratedData data)
+	public static List<ADefaultClassDeclCG> getClasses(GeneratedData data)
 	{
-		List<AClassDeclCG> classes = new LinkedList<AClassDeclCG>();
+		List<ADefaultClassDeclCG> classes = new LinkedList<ADefaultClassDeclCG>();
 
 		for (GeneratedModule node : data.getClasses())
 		{
@@ -107,9 +107,9 @@ abstract public class AnnotationTestsBase
 				Logger.getLog().println("*******************");
 			}
 			
-			if (node.getIrNode() instanceof AClassDeclCG)
+			if (node.getIrNode() instanceof ADefaultClassDeclCG)
 			{
-				classes.add((AClassDeclCG) node.getIrNode());
+				classes.add((ADefaultClassDeclCG) node.getIrNode());
 			}
 		}
 
@@ -161,7 +161,7 @@ abstract public class AnnotationTestsBase
 		return genOps;
 	}
 	
-	public static List<AClassDeclCG> getClasses(String fileName)
+	public static List<ADefaultClassDeclCG> getClasses(String fileName)
 			throws AnalysisException
 	{
 		List<File> files = new LinkedList<File>();

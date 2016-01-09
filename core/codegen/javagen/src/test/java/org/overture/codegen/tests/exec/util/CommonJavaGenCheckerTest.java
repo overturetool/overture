@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,15 +29,15 @@ import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.test.framework.ConditionalIgnoreMethodRule;
-import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
 import org.overture.test.framework.Properties;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Result;
 
 public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 {
-	private TestHandler testHandler;
-	private File outputDir;
+	public static final String EXEC_TEST_PROPERTY = "tests.javagen.javac";
+	protected TestHandler testHandler;
+	protected File outputDir;
 
 	public CommonJavaGenCheckerTest(File vdmSpec, TestHandler testHandler)
 	{
@@ -74,14 +75,27 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 	@Rule
 	public ConditionalIgnoreMethodRule rule = new ConditionalIgnoreMethodRule();
 
+	public boolean runTest()
+	{
+		return System.getProperty(getExecProperty()) != null;
+	}
+
+	public String getExecProperty()
+	{
+		return EXEC_TEST_PROPERTY;
+	}
+	
 	@Test
-	@ConditionalIgnore(condition = JavaCodeGenJavacEnabledCondition.class)
 	public void test() throws Exception
 	{
+		Assume.assumeTrue("Pass property -D" + getExecProperty() + " to run test", runTest());
+		
+		assumeTest();
+		
 		configureResultGeneration();
 		try
 		{
-			compileCode();
+			genSourcesAndCompile();
 
 			if (testHandler instanceof ExecutableTestHandler)
 			{
@@ -93,26 +107,33 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 			unconfigureResultGeneration();
 		}
 	}
-
-	protected void generateJavaSources(File vdmSource)
+	
+	public void assumeTest()
 	{
-		JavaCodeGen javaCg = new JavaCodeGen();
-		javaCg.setJavaSettings(getJavaSettings());
-		javaCg.setSettings(getIrSettings());
+		/* Allow all tests to run by default */
+	}
 
-		List<File> files = new LinkedList<File>();
-		files.add(vdmSource);
-
+	public void genJavaSources(File vdmSource)
+	{
+		JavaCodeGen javaCg = getJavaGen();
+		
 		try
 		{
 			if (testHandler instanceof ExpressionTestHandler)
 			{
-				String s1 = GeneralUtils.readFromFile(files.get(0));
-				Generated s = JavaCodeGenUtil.generateJavaFromExp(s1, javaCg, Settings.dialect);
-				((ExpressionTestHandler) testHandler).injectArgIntoMainClassFile(outputDir, s.getContent());
+				Generated s = JavaCodeGenUtil.generateJavaFromExp(GeneralUtils.readFromFile(vdmSource), javaCg, Settings.dialect);
+				((ExpressionTestHandler) testHandler).injectArgIntoMainClassFile(outputDir, s.getContent(), javaCg.getJavaSettings().getJavaRootPackage());
 			} else
 			{
-				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(files, javaCg, Settings.dialect);
+				List<File> files = new LinkedList<File>();
+				files.add(vdmSource);
+				
+				GeneratedData data = genData(javaCg, files);
+				
+				if(data == null)
+				{
+					Assert.fail("Problems encountered when trying to code generate VDM model!");
+				}
 
 				javaCg.genJavaSourceFiles(outputDir, data.getClasses());
 
@@ -134,6 +155,48 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 					+ e.getMessage());
 			e.printStackTrace();
 		}
+	}
+
+	public  JavaCodeGen getJavaGen()
+	{
+		JavaCodeGen javaCg = new JavaCodeGen();
+		javaCg.setJavaSettings(getJavaSettings());
+		javaCg.setSettings(getIrSettings());
+		
+		return javaCg;
+	}
+
+	public static GeneratedData genData(JavaCodeGen javaCg, List<File> files)
+			throws AnalysisException, ParserException, LexException
+	{
+		GeneratedData data = null;
+		if(Settings.dialect == Dialect.VDM_SL)
+		{
+			TypeCheckResult<List<AModuleModules>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckSl(files));
+			data = javaCg.generateJavaFromVdmModules(tcResult.result);
+			
+		}
+		else if(Settings.dialect == Dialect.VDM_PP)
+		{
+			TypeCheckResult<List<SClassDefinition>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckPp(files));
+			data = javaCg.generateJavaFromVdm(tcResult.result);
+		}
+		else if(Settings.dialect == Dialect.VDM_RT)
+		{
+			TypeCheckResult<List<SClassDefinition>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckRt(files));
+			data = javaCg.generateJavaFromVdm(tcResult.result);
+		}
+		return data;
+	}
+	
+	public static <T extends TypeCheckResult<?>> T checkTcResult(T tcResult)
+	{
+		if(GeneralCodeGenUtils.hasErrors(tcResult))
+		{
+			Assert.fail("Problems parsing/type checking VDM model:\n" + GeneralCodeGenUtils.errorStr(tcResult));
+		}
+		
+		return tcResult;
 	}
 
 	public IRSettings getIrSettings()
@@ -166,6 +229,7 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 
 			// Note that the classes returned in javaResult may be loaded by another class loader. This is the case for
 			// classes representing VDM classes, Quotes etc. that's not part of the cg-runtime
+			
 			ExecutionResult javaResult = executableTestHandler.runJava(outputDir);
 
 			if (javaResult == null)
@@ -183,18 +247,22 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		return new Result<Object>(null, new Vector<IMessage>(), new Vector<IMessage>());
 	}
 
-	private void compileCode()
+	public void genSourcesAndCompile()
 	{
-		generateJavaSources(file);
+		genJavaSources(file);
+		compile(consCpFiles());
+	}
 
+	public  File[] consCpFiles()
+	{
 		File cgRuntime = new File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+		return new File[]{cgRuntime};
+	}
 
-		boolean compileOk = JavaCommandLineCompiler.compile(outputDir, cgRuntime);
-
-		if (!compileOk)
-		{
-			Assert.fail("Generated Java code did not compile!");
-		}
+	public void compile(File[] cpJars)
+	{
+		ProcessResult result = JavaCommandLineCompiler.compile(outputDir, cpJars);
+		Assert.assertTrue("Generated Java code did not compile: " + result.getOutput().toString(), result.getExitCode() == 0);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package project;
 
 import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
 
 import java.util.*;
 
@@ -13,15 +14,20 @@ final public class Entry {
 
     public static Object Run() {
         VDMSeq s = SeqUtil.seq(10L, 11L, 12L);
-        //@ assert inv_Entry_S(s);
+        //@ assert ((V2J.isSeq(s) && (\forall int i; 0 <= i && i < V2J.size(s); true)) && inv_Entry_S(s));
+
+        //@ assert s != null;
         Utils.mapSeqUpdate(s, 1L, 'a');
-        //@ assert inv_Entry_S(s);
+        //@ assert ((V2J.isSeq(s) && (\forall int i; 0 <= i && i < V2J.size(s); true)) && inv_Entry_S(s));
+
+        //@ assert s != null;
         Utils.mapSeqUpdate(s, 2L, null);
-        //@ assert inv_Entry_S(s);
+        //@ assert ((V2J.isSeq(s) && (\forall int i; 0 <= i && i < V2J.size(s); true)) && inv_Entry_S(s));
         IO.println("Breaking named type invariant for sequence");
+        //@ assert s != null;
         Utils.mapSeqUpdate(s, 3L, 4L);
 
-        //@ assert inv_Entry_S(s);
+        //@ assert ((V2J.isSeq(s) && (\forall int i; 0 <= i && i < V2J.size(s); true)) && inv_Entry_S(s));
         return 0L;
     }
 
@@ -32,11 +38,6 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_S(final Object check_s) {
-        if ((Utils.equals(check_s, null)) ||
-                !(Utils.is_(check_s, VDMSeq.class))) {
-            return false;
-        }
-
         VDMSeq s = ((VDMSeq) check_s);
 
         Boolean forAllExpResult_1 = true;

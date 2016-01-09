@@ -23,6 +23,7 @@ package org.overture.codegen.assistant;
 
 public class AssistantManager
 {
+	private NodeAssistantCG nodeAssistant;
 	private ExpAssistantCG expAssistant;
 	private DeclAssistantCG declAssistant;
 	private StmAssistantCG stmAssistant;
@@ -32,6 +33,7 @@ public class AssistantManager
 
 	public AssistantManager()
 	{
+		this.nodeAssistant = new NodeAssistantCG(this);
 		this.expAssistant = new ExpAssistantCG(this);
 		this.declAssistant = new DeclAssistantCG(this);
 		this.stmAssistant = new StmAssistantCG(this);
@@ -40,6 +42,11 @@ public class AssistantManager
 		this.bindAssistant = new BindAssistantCG(this);
 	}
 
+	public NodeAssistantCG getNodeAssistant()
+	{
+		return nodeAssistant;
+	}
+	
 	public ExpAssistantCG getExpAssistant()
 	{
 		return expAssistant;

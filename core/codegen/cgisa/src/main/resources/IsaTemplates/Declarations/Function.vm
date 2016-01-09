@@ -1,4 +1,0 @@
-cmlefun $node.Name
-  inp $Isa.transTypeParams($node.FormalParams)
-  out "$Isa.trans($node.MethodType.Result)"
-  is "$Isa.trans($node.Body)"

@@ -1,0 +1,1 @@
+{"translation":"theory DEFAULT\n  imports utp_vdm\nbegin\n\nvdmifun f\n  inp emptyParam :: \"@bool\"\n  out r :: \"@int\"\n  pre \"true\"\n  post \"true\"\n\n\nend","errors":false}
