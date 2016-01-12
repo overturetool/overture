@@ -60,7 +60,7 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 			AIdentifierPatternCG name = new AIdentifierPatternCG();
 			name.setName(resultVarName);
 			
-			return packDecl(transAssistant.getInfo().getDeclAssistant().
+			return packDecl(transAssist.getInfo().getDeclAssistant().
 					consLocalVarDecl(counterData.getType().clone(), name, 
 							counterData.getExp().clone()));
 		}
@@ -76,16 +76,16 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 			throws AnalysisException
 	{
 		SExpCG left = langIterator.getForLoopCond(setVar, patterns, pattern);
-		SExpCG right = transAssistant.consLessThanCheck(resultVarName, 2);
+		SExpCG right = transAssist.consLessThanCheck(resultVarName, 2);
 
-		return transAssistant.consAndExp(left, right);
+		return transAssist.consAndExp(left, right);
 	}
 
 	@Override
 	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		return lastBind ? packStm(transAssistant.consConditionalIncrement(resultVarName, predicate))
+		return lastBind ? packStm(transAssist.consConditionalIncrement(resultVarName, predicate))
 				: null;
 	}
 }

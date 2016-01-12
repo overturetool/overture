@@ -15,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
+import org.overture.codegen.tests.exec.util.ProcessResult;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.IJavaConstants;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
@@ -23,7 +24,6 @@ import org.overture.test.framework.Properties;
 import org.overture.vdm2jml.tests.AnnotationTestsBase;
 import org.overture.vdm2jml.tests.OpenJmlValidationBase;
 import org.overture.vdm2jml.tests.util.IOpenJmlConsts;
-import org.overture.vdm2jml.tests.util.ProcessResult;
 
 public abstract class JmlExecTestBase extends OpenJmlValidationBase
 {

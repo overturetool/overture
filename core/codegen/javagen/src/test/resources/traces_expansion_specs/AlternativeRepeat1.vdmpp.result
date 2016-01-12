@@ -55,7 +55,6 @@ public class Entry implements java.io.Serializable {
 
         alternatives_2.add(repeat_1);
         alternatives_2.add(repeat_2);
-
         sequence_2.add(alternatives_2);
 
         sequence_1.add(sequence_2);

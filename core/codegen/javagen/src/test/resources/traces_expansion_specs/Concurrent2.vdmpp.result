@@ -43,6 +43,7 @@ public class Entry implements java.io.Serializable {
                 };
 
             StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+            concurrent_1.add(apply_1);
 
             CallStatementPp callStm_2 = new CallStatementPp() {
                     public Object execute() {
@@ -56,10 +57,10 @@ public class Entry implements java.io.Serializable {
                 };
 
             StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-
-            concurrent_1.add(apply_1);
             concurrent_1.add(apply_2);
 
+            concurrent_1.addVarFirst(new TraceVariable("x", "nat1",
+                    Utils.toString(x)));
             alternatives_2.add(concurrent_1);
         }
 

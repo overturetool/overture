@@ -43,7 +43,7 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 {
-	public static final String EXEC_TEST_PROPERTY = "javagen.javac";
+	public static final String EXEC_TEST_PROPERTY = "tests.javagen.javac";
 	protected TestHandler testHandler;
 	protected File outputDir;
 
@@ -270,12 +270,8 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 
 	public void compile(File[] cpJars)
 	{
-		boolean compileOk = JavaCommandLineCompiler.compile(outputDir, cpJars);
-
-		if (!compileOk)
-		{
-			Assert.fail("Generated Java code did not compile!");
-		}
+		ProcessResult result = JavaCommandLineCompiler.compile(outputDir, cpJars);
+		Assert.assertTrue("Generated Java code did not compile: " + result.getOutput().toString(), result.getExitCode() == 0);
 	}
 
 	/**

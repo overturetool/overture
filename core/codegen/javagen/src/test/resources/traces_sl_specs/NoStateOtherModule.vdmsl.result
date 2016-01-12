@@ -26,29 +26,26 @@ final public class Entry implements java.io.Serializable {
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             final Number a = ((Number) iterator_1.next());
-            final Number ID_3 = gen.inc();
-
-            store.register(ID_3, a);
-
+            final Number arg_1 = a;
             CallStatement callStm_1 = new CallStatement() {
                     public Boolean meetsPreCond() {
-                        return Other.pre_op(((Number) store.getValue(ID_3)));
+                        return Other.pre_op(arg_1);
                     }
 
                     public Object execute() {
-                        Other.op(((Number) store.getValue(ID_3)));
+                        Other.op(arg_1);
 
                         return Utils.VOID_VALUE;
                     }
 
                     public String toString() {
-                        return "Other`op(" +
-                        Utils.toString(store.getValue(ID_3)) + ")";
+                        return "Other`op(" + Utils.toString(arg_1) + ")";
                     }
                 };
 
             StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
 
+            apply_1.addVarFirst(new TraceVariable("a", "int", Utils.toString(a)));
             alternatives_2.add(apply_1);
         }
 

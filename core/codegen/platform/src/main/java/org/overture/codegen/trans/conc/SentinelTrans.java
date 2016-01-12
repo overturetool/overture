@@ -10,6 +10,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AExternalExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.name.ATokenNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
@@ -44,6 +45,12 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
+		
+		if (node.getSuperNames().size() > 1)
+		{
+			info.addTransformationWarning(node, MainClassConcTrans.MULTIPLE_INHERITANCE_WARNING);
+			return;
+		}
 
 		ADefaultClassDeclCG innerClass = new ADefaultClassDeclCG();
 		innerClass.setStatic(true);
@@ -51,14 +58,13 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 		String classname = node.getName();
 		LinkedList<AMethodDeclCG> allMethods;
 
-		if (node.getSuperName() != null){
-				allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, info.getClasses());
-		}
-		else
+		if (!node.getSuperNames().isEmpty())
+		{
+			allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, info.getClasses());
+		} else
 		{
 			allMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
 		}
-		
 
 		LinkedList<AMethodDeclCG> innerClassMethods = allMethods;
 
@@ -193,18 +199,24 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 		innerClass.getMethods().add(method_con);
 		//method_pp.setFormalParams();
 
-		if (node.getSuperName() != null){
-			if(!node.getSuperName().equals("VDMThread")){
-				innerClass.setSuperName(node.getSuperName()+"_sentinel");
-			}
-			else
+		ATokenNameCG superName = new ATokenNameCG();
+		if (!node.getSuperNames().isEmpty()){
+			
+			
+			if (!node.getSuperNames().get(0).equals("VDMThread"))
 			{
-				innerClass.setSuperName("Sentinel");
+				superName.setName(node.getSuperNames().get(0) + "_sentinel");
+			} else
+			{
+				superName.setName("Sentinel");
 			}
+			
+			innerClass.getSuperNames().add(superName);
 		}
 		else{
 
-			innerClass.setSuperName("Sentinel");
+			superName.setName("Sentinel");
+			innerClass.getSuperNames().add(superName);
 		}
 		innerClass.setAccess(IRConstants.PUBLIC);
 

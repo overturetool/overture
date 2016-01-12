@@ -38,6 +38,8 @@ public class Entry implements java.io.Serializable {
 
         RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_1, 1L, 2L);
 
+        concurrent_1.add(repeat_1);
+
         CallStatementPp callStm_2 = new CallStatementPp() {
                 public Object execute() {
                     return fun();
@@ -52,7 +54,6 @@ public class Entry implements java.io.Serializable {
 
         RepeatTraceNode repeat_2 = new RepeatTraceNode(apply_2, 1L, 2L);
 
-        concurrent_1.add(repeat_1);
         concurrent_1.add(repeat_2);
 
         sequence_1.add(concurrent_1);

@@ -34,72 +34,73 @@ public class Entry implements java.io.Serializable {
         }
 
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        final Number ID_2 = gen.inc();
 
         {
+            final Number ID_2 = gen.inc();
             final Entry e = new Entry();
             store.register(ID_2, e);
+
+            SequenceTraceNode sequence_2 = new SequenceTraceNode();
+            CallStatementPp callStm_1 = new CallStatementPp() {
+                    public Object execute() {
+                        ((Entry) instance).opVoid();
+
+                        return Utils.VOID_VALUE;
+                    }
+
+                    public String toString() {
+                        return "self.opVoid()";
+                    }
+                };
+
+            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+            sequence_2.add(apply_1);
+
+            CallStatementPp callStm_2 = new CallStatementPp() {
+                    public Object execute() {
+                        return ((Entry) instance).op();
+                    }
+
+                    public String toString() {
+                        return "self.op()";
+                    }
+                };
+
+            StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+            sequence_2.add(apply_2);
+
+            CallStatementPp callStm_3 = new CallStatementPp() {
+                    public Object execute() {
+                        return ((Entry) store.getValue(ID_2)).op();
+                    }
+
+                    public String toString() {
+                        return "e.op()";
+                    }
+                };
+
+            StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
+            sequence_2.add(apply_3);
+
+            CallStatementPp callStm_4 = new CallStatementPp() {
+                    public Object execute() {
+                        ((Entry) store.getValue(ID_2)).o.opVoid();
+
+                        return Utils.VOID_VALUE;
+                    }
+
+                    public String toString() {
+                        return "e.o.opVoid()";
+                    }
+                };
+
+            StatementTraceNode apply_4 = new StatementTraceNode(callStm_4);
+            sequence_2.add(apply_4);
+
+            sequence_2.addVarFirst(new TraceVariable("e", "Entry",
+                    Utils.toString(((Entry) store.getValue(ID_2)))));
+            sequence_1.add(sequence_2);
         }
-
-        SequenceTraceNode sequence_2 = new SequenceTraceNode();
-        CallStatementPp callStm_1 = new CallStatementPp() {
-                public Object execute() {
-                    ((Entry) instance).opVoid();
-
-                    return Utils.VOID_VALUE;
-                }
-
-                public String toString() {
-                    return "self.opVoid()";
-                }
-            };
-
-        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-
-        CallStatementPp callStm_2 = new CallStatementPp() {
-                public Object execute() {
-                    return ((Entry) instance).op();
-                }
-
-                public String toString() {
-                    return "self.op()";
-                }
-            };
-
-        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-
-        CallStatementPp callStm_3 = new CallStatementPp() {
-                public Object execute() {
-                    return ((Entry) store.getValue(ID_2)).op();
-                }
-
-                public String toString() {
-                    return "e.op()";
-                }
-            };
-
-        StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
-
-        CallStatementPp callStm_4 = new CallStatementPp() {
-                public Object execute() {
-                    ((Entry) store.getValue(ID_2)).o.opVoid();
-
-                    return Utils.VOID_VALUE;
-                }
-
-                public String toString() {
-                    return "e.o.opVoid()";
-                }
-            };
-
-        StatementTraceNode apply_4 = new StatementTraceNode(callStm_4);
-
-        sequence_2.add(apply_1);
-        sequence_2.add(apply_2);
-        sequence_2.add(apply_3);
-        sequence_2.add(apply_4);
-
-        sequence_1.add(sequence_2);
 
         TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
     }

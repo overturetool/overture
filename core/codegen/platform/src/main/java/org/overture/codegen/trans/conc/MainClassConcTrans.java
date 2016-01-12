@@ -4,6 +4,7 @@
 package org.overture.codegen.trans.conc;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -22,6 +23,7 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
+import org.overture.codegen.cgast.name.ATokenNameCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
@@ -47,6 +49,9 @@ import org.overture.codegen.ir.IRInfo;
  */
 public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 {
+	public static final String MULTIPLE_INHERITANCE_WARNING = "Generation of concurrency "
+			+ "constructs does not support multiple inheritance";
+	
 	private static final String VDM_THREAD = "VDMThread";
 	private IRInfo info;
 
@@ -61,6 +66,12 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 	{
 		if(!info.getSettings().generateConc())
 		{
+			return;
+		}
+		
+		if (node.getSuperNames().size() > 1)
+		{
+			info.addTransformationWarning(node, MULTIPLE_INHERITANCE_WARNING);
 			return;
 		}
 		
@@ -196,10 +207,10 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 			
 			LinkedList<AMethodDeclCG>  allMethods;
 			
-			if (node.getSuperName() != null){
+			if (!node.getSuperNames().isEmpty())
+			{
 				allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, info.getClasses());
-			}
-			else
+			} else
 			{
 				allMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
 			}
@@ -301,13 +312,18 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 	
 	private void makeThread(ADefaultClassDeclCG node)
 	{
-		SClassDeclCG threadClass = getThreadClass(node.getSuperName(), node);
-		threadClass.setSuperName(VDM_THREAD);
+		SClassDeclCG threadClass = getThreadClass(node.getSuperNames(), node);
+		
+		threadClass.getSuperNames().clear();
+		
+		ATokenNameCG superName = new ATokenNameCG();
+		superName.setName(VDM_THREAD);
+		threadClass.getSuperNames().add(superName);
 	}
 
-	private SClassDeclCG getThreadClass(String superName, SClassDeclCG classCg)
+	private SClassDeclCG getThreadClass(List<ATokenNameCG> superNames, SClassDeclCG classCg)
 	{
-		if(superName == null || superName.equals(VDM_THREAD))
+		if(superNames.isEmpty() || superNames.get(0).getName().equals(VDM_THREAD))
 		{
 			return classCg;
 		}
@@ -317,14 +333,14 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 
 			for(SClassDeclCG c : info.getClasses())
 			{
-				if(c.getName().equals(superName))
+				if(c.getName().equals(superNames.get(0).getName()))
 				{
 					superClass = c;
 					break;
 				}
 			}
 
-			return getThreadClass(superClass.getSuperName(), superClass);
+			return getThreadClass(superClass.getSuperNames(), superClass);
 		}
 	}
 }

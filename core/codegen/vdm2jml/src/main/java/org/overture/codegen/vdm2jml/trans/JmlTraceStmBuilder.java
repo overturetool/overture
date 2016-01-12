@@ -46,17 +46,10 @@ public class JmlTraceStmBuilder extends TraceStmBuilder
 		 * Don't do anything with 'tc' yet. Later it will be replaced with a proper dynamic type check
 		 */
 		AMetaStmCG tc = new AMetaStmCG();
-		String storeId = storeAssistant.getIdConstNameMap().get(arg.getName());
-		String name = storeId == null ? arg.getName() : consLookup(storeId);
 
-		tcExpInfo.add(new TcExpInfo(name, formalParamType, tc, traceEnclosingClass));
+		tcExpInfo.add(new TcExpInfo(arg.getName(), formalParamType, tc, traceEnclosingClass));
 
 		return tc;
-	}
-	
-	private String consLookup(String storeId)
-	{
-		return traceTrans.getTracePrefixes().storeVarName() + "." + traceTrans.getTracePrefixes().storeGetValueMethodName() + "(" + storeId + ")";
 	}
 	
 	@Override

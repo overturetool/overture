@@ -56,14 +56,11 @@ final public class Entry implements java.io.Serializable {
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             final Number x = ((Number) iterator_1.next());
-            final Number ID_2 = gen.inc();
-
-            store.register(ID_2, x);
-
+            final Number arg_1 = x;
             CallStatement callStm_1 = new CallStatement() {
                     public Boolean isTypeCorrect() {
                         try {
-                            //@ assert Utils.is_nat(store.getValue(ID_2));
+                            //@ assert Utils.is_nat(arg_1);
                         } catch (AssertionError e) {
                             return false;
                         }
@@ -72,23 +69,23 @@ final public class Entry implements java.io.Serializable {
                     }
 
                     public Boolean meetsPreCond() {
-                        return pre_op(((Number) store.getValue(ID_2)));
+                        return pre_op(arg_1);
                     }
 
                     public Object execute() {
-                        op(((Number) store.getValue(ID_2)));
+                        op(arg_1);
 
                         return Utils.VOID_VALUE;
                     }
 
                     public String toString() {
-                        return "op(" + Utils.toString(store.getValue(ID_2)) +
-                        ")";
+                        return "op(" + Utils.toString(arg_1) + ")";
                     }
                 };
 
             StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
 
+            apply_1.addVarFirst(new TraceVariable("x", "nat1", Utils.toString(x)));
             alternatives_2.add(apply_1);
         }
 

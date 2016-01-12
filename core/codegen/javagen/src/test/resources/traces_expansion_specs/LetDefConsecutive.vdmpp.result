@@ -29,46 +29,48 @@ public class Entry implements java.io.Serializable {
         final Store store = new Store();
         final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        final Number ID_1 = gen.inc();
 
         {
+            final Number ID_1 = gen.inc();
             final Entry e1 = new Entry(2L);
             store.register(ID_1, e1);
+
+            CallStatementPp callStm_1 = new CallStatementPp() {
+                    public Object execute() {
+                        return ((Entry) store.getValue(ID_1)).op();
+                    }
+
+                    public String toString() {
+                        return "e1.op()";
+                    }
+                };
+
+            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+            apply_1.addVarFirst(new TraceVariable("e1", "Entry",
+                    Utils.toString(((Entry) store.getValue(ID_1)))));
+            sequence_1.add(apply_1);
         }
-
-        CallStatementPp callStm_1 = new CallStatementPp() {
-                public Object execute() {
-                    return ((Entry) store.getValue(ID_1)).op();
-                }
-
-                public String toString() {
-                    return "e1.op()";
-                }
-            };
-
-        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-
-        final Number ID_2 = gen.inc();
 
         {
+            final Number ID_2 = gen.inc();
             final Entry e2 = new Entry(3L);
             store.register(ID_2, e2);
+
+            CallStatementPp callStm_2 = new CallStatementPp() {
+                    public Object execute() {
+                        return ((Entry) store.getValue(ID_2)).op();
+                    }
+
+                    public String toString() {
+                        return "e2.op()";
+                    }
+                };
+
+            StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+            apply_2.addVarFirst(new TraceVariable("e2", "Entry",
+                    Utils.toString(((Entry) store.getValue(ID_2)))));
+            sequence_1.add(apply_2);
         }
-
-        CallStatementPp callStm_2 = new CallStatementPp() {
-                public Object execute() {
-                    return ((Entry) store.getValue(ID_2)).op();
-                }
-
-                public String toString() {
-                    return "e2.op()";
-                }
-            };
-
-        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-
-        sequence_1.add(apply_1);
-        sequence_1.add(apply_2);
 
         TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
     }

@@ -62,8 +62,9 @@ public class Entry implements java.io.Serializable {
 
         alternatives_2.add(apply_1);
         alternatives_2.add(apply_2);
-
         sequence_2.add(alternatives_2);
+
+        concurrent_1.add(sequence_2);
 
         SequenceTraceNode sequence_3 = new SequenceTraceNode();
         AlternativeTraceNode alternatives_3 = new AlternativeTraceNode();
@@ -93,10 +94,8 @@ public class Entry implements java.io.Serializable {
 
         alternatives_3.add(apply_3);
         alternatives_3.add(apply_4);
-
         sequence_3.add(alternatives_3);
 
-        concurrent_1.add(sequence_2);
         concurrent_1.add(sequence_3);
 
         sequence_1.add(concurrent_1);

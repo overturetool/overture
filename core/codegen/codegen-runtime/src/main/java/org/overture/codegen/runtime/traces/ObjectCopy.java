@@ -3,6 +3,7 @@ package org.overture.codegen.runtime.traces;
 public class ObjectCopy extends ModuleCopy
 {
 	private Object instance;
+	protected Object val;
 	
 	public ObjectCopy(Object orig)
 	{
@@ -18,5 +19,11 @@ public class ObjectCopy extends ModuleCopy
 	{
 		super.reset();
 		val = deepCopy(instance);
+	}
+	
+	@Override
+	public Object getValue()
+	{
+		return val;
 	}
 }

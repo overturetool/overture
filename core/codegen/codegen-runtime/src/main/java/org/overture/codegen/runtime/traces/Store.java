@@ -3,6 +3,8 @@ package org.overture.codegen.runtime.traces;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.overture.codegen.runtime.Utils;
+
 public class Store
 {
 	private Map<Number, ModuleCopy> values;
@@ -33,5 +35,27 @@ public class Store
 		{
 			values.get(k).reset();
 		}
+	}
+	
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		
+		String sep = "";
+		
+		for(Number k : values.keySet())
+		{
+			sb.append(sep);
+			sb.append(Utils.toString(k));
+			sb.append(" |-> ");
+			sb.append(Utils.toString(values.get(k)));
+			sep = ", ";
+		}
+		
+		sb.append("}");
+		
+		return sb.toString();
 	}
 }

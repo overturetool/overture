@@ -49,7 +49,7 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 		/**
 		 * 2) Remove TestCase super class
 		 */
-		node.setSuperName(null);
+		node.getSuperNames().clear();
 		/**
 		 * 3) Import JUnit4
 		 */
@@ -63,7 +63,7 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 
 	public boolean isTest(ADefaultClassDeclCG node)
 	{
-		return node.getSuperName() != null && node.getSuperName().equals(IRConstants.TEST_CASE);
+		return !node.getSuperNames().isEmpty() && node.getSuperNames().get(0).getName().equals(IRConstants.TEST_CASE);
 	}
 
 	public void addTestAnnotations(ADefaultClassDeclCG node)

@@ -30,7 +30,6 @@ public class Entry implements java.io.Serializable {
             };
 
         StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-
         sequence_1.add(apply_1);
 
         TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);

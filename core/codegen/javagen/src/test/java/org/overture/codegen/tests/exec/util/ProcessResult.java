@@ -1,4 +1,4 @@
-package org.overture.vdm2jml.tests.util;
+package org.overture.codegen.tests.exec.util;
 
 public class ProcessResult
 {

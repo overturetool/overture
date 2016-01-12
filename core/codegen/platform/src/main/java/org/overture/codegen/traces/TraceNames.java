@@ -221,4 +221,14 @@ public class TraceNames
 	{
 		return "readState";
 	}
+	
+	public String traceVarClassName()
+	{
+		return "TraceVariable";
+	}
+	
+	public String addVarFirstMethodName()
+	{
+		return "addVarFirst";
+	}
 }

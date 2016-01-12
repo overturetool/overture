@@ -10,6 +10,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.tests.exec.util.CommonJavaGenCheckerTest;
+import org.overture.codegen.tests.exec.util.ProcessResult;
 import org.overture.codegen.tests.exec.util.testhandlers.ExecutableSpecTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
 import org.overture.codegen.utils.GeneralUtils;
@@ -19,7 +20,6 @@ import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import org.overture.vdm2jml.tests.OpenJmlValidationBase;
 import org.overture.vdm2jml.tests.util.IOpenJmlConsts;
-import org.overture.vdm2jml.tests.util.ProcessResult;
 
 public abstract class JmlSlJavaGenTestBase extends CommonJavaGenCheckerTest
 {

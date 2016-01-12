@@ -32,14 +32,14 @@ import org.overture.codegen.vdm2java.JavaToolsUtils;
 
 public class JavaCommandLineCompiler
 {
-	public static boolean compile(File dir, File[] cpJars)
+	public static ProcessResult compile(File dir, File[] cpJars)
 	{
 		String javaHome = System.getenv(JavaToolsUtils.JAVA_HOME);
 		File javac = new File(new File(javaHome, JavaToolsUtils.BIN_FOLDER), JavaToolsUtils.JAVAC);
 		return compile(javac, dir, cpJars);
 	}
 
-	public static boolean compile(File javac, File dir, File[] cpJars)
+	public static ProcessResult compile(File javac, File dir, File[] cpJars)
 	{
 		boolean compileOk = true;
 
@@ -106,13 +106,7 @@ public class JavaCommandLineCompiler
 			}
 		}
 
-		if (!compileOk)
-		{
-			System.err.println(out.toString());
-		}
-
-		return compileOk;
-
+		return new ProcessResult(compileOk ? 0 : 1, out);
 	}
 
 	private static String consCpArg(File[] cpJars)

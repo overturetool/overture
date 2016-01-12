@@ -232,7 +232,7 @@ CG {-> package='org.overture.codegen.cgast'
   | [methods]:CG.#decl.method*
   | [functions]:CG.#decl.func*
   | [traces]:CG.#decl.namedTrace*
-  | [superName]:java_String
+  | [superNames]:CG.#name.token*
   | [thread]:CG.#decl.thread
   | [innerClasses]:CG.#decl.class*
   | [interfaces]:CG.#decl.interface*
