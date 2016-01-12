@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.ide.plugins.codegen;
+package org.overture.ide.plugins.javagen;
 
 import java.io.PrintWriter;
 

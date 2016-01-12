@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.ide.plugins.codegen.commands;
+package org.overture.ide.plugins.javagen.commands;
 
 import java.io.InputStream;
 
@@ -31,8 +31,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.overture.codegen.utils.GeneralUtils;
-import org.overture.ide.plugins.codegen.Activator;
-import org.overture.ide.plugins.codegen.util.PluginVdm2JavaUtil;
+import org.overture.ide.plugins.javagen.Activator;
+import org.overture.ide.plugins.javagen.util.PluginVdm2JavaUtil;
 
 public class AboutCommand extends AbstractHandler
 {

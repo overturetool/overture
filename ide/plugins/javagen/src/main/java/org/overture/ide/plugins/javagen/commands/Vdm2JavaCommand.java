@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.ide.plugins.codegen.commands;
+package org.overture.ide.plugins.javagen.commands;
 
 import java.io.File;
 import java.util.List;
@@ -68,10 +68,10 @@ import org.overture.codegen.vdm2jml.JmlSettings;
 import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.plugins.codegen.Activator;
-import org.overture.ide.plugins.codegen.CodeGenConsole;
-import org.overture.ide.plugins.codegen.ICodeGenConstants;
-import org.overture.ide.plugins.codegen.util.PluginVdm2JavaUtil;
+import org.overture.ide.plugins.javagen.Activator;
+import org.overture.ide.plugins.javagen.CodeGenConsole;
+import org.overture.ide.plugins.javagen.ICodeGenConstants;
+import org.overture.ide.plugins.javagen.util.PluginVdm2JavaUtil;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 
 public class Vdm2JavaCommand extends AbstractHandler

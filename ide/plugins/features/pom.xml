@@ -26,7 +26,7 @@
     <module>uml2</module>
 	<module>probruntime</module>
     <module>rttraceviewer</module>
-	<module>codegen</module>
+	<module>javagen</module>
 	<module>guibuilder</module>
 	<!--<module>isatrans</module>-->
   </modules>

@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.ide.plugins.codegen.preferences;
+package org.overture.ide.plugins.javagen.preferences;
 
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -39,8 +39,8 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.Preferences;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
-import org.overture.ide.plugins.codegen.Activator;
-import org.overture.ide.plugins.codegen.ICodeGenConstants;
+import org.overture.ide.plugins.javagen.Activator;
+import org.overture.ide.plugins.javagen.ICodeGenConstants;
 
 public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implements
 		IWorkbenchPreferencePage

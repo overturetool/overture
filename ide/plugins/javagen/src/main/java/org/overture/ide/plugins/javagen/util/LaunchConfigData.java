@@ -1,4 +1,4 @@
-package org.overture.ide.plugins.codegen.util;
+package org.overture.ide.plugins.javagen.util;
 
 public class LaunchConfigData
 {

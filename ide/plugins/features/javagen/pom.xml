@@ -12,7 +12,7 @@
   <packaging>eclipse-feature</packaging>
 
   <groupId>org.overturetool.ide.plugins.features</groupId>
-  <artifactId>org.overture.ide.plugins.features.codegen</artifactId>
-  <name>Overture IDE Eclipse Code Generator feature</name>
+  <artifactId>org.overture.ide.plugins.features.javagen</artifactId>
+  <name>Overture IDE Eclipse Java Code Generator feature</name>
   
 </project>

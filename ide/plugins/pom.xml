@@ -27,7 +27,7 @@
     <module>developerutils</module>
     <module>uml2</module>
     <module>rttraceviewer</module>
-	<module>codegen</module>
+	<module>javagen</module>
 	<module>prob-runtime</module>
 	<module>guibuilder</module>
 	<!--<module>isatrans</module>-->

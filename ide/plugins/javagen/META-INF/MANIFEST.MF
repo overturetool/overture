@@ -5,13 +5,13 @@ Bundle-Version: 2.3.1.qualifier
 Eclipse-BuddyPolicy: registered
 Bundle-Name: Code Generator
 Bundle-ManifestVersion: 2
-Bundle-SymbolicName: org.overture.ide.plugins.codegen;singleton:=true
+Bundle-SymbolicName: org.overture.ide.plugins.javagen;singleton:=true
 Require-Bundle: org.eclipse.ui.console,
  org.overture.ide.ui,
  org.overture.ide.core,
  org.overture.ide.builders.vdmj,
  org.overture.ide.debug
-Bundle-Activator: org.overture.ide.plugins.codegen.Activator
+Bundle-Activator: org.overture.ide.plugins.javagen.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.apache.velocity.app,org.overture.codegen.cgast,org
  .overture.codegen.cgast.analysis,org.overture.codegen.cgast.analysis.

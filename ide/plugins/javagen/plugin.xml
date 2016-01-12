@@ -5,23 +5,23 @@
   <extension
       point="org.eclipse.ui.commands">
     <command
-        defaultHandler="org.overture.ide.plugins.codegen.commands.Vdm2JavaCommand"
-        id="org.overture.ide.plugins.codegen.vdm2java"
+        defaultHandler="org.overture.ide.plugins.javagen.commands.Vdm2JavaCommand"
+        id="org.overture.ide.plugins.javagen.vdm2java"
         name="VDM to Java">
     </command>
     <command
-        defaultHandler="org.overture.ide.plugins.codegen.commands.Vdm2JavaLaunchConfigCommand"
-        id="org.overture.ide.plugins.codegen.vdm2java_launchconfig"
+        defaultHandler="org.overture.ide.plugins.javagen.commands.Vdm2JavaLaunchConfigCommand"
+        id="org.overture.ide.plugins.javagen.vdm2java_launchconfig"
         name="VDM to Java (Launch Configuration Based)">
     </command>
     <command
-        defaultHandler="org.overture.ide.plugins.codegen.commands.ConfigCommand"
-        id="org.overture.ide.plugins.codegen.config"
+        defaultHandler="org.overture.ide.plugins.javagen.commands.ConfigCommand"
+        id="org.overture.ide.plugins.javagen.config"
         name="Configuration">
     </command>
     <command
-        defaultHandler="org.overture.ide.plugins.codegen.commands.AboutCommand"
-        id="org.overture.ide.plugins.codegen.about"
+        defaultHandler="org.overture.ide.plugins.javagen.commands.AboutCommand"
+        id="org.overture.ide.plugins.javagen.about"
         name="About">
     </command>
   </extension>
@@ -32,10 +32,10 @@
         locationURI="popup:org.overture.ide.ui.VdmExplorer">
       <menu
           icon="icons/codegen.png"
-          id="org.overture.ide.plugins.codegen"
+          id="org.overture.ide.plugins.javagen"
           label="Code Generation">
         <command
-            commandId="org.overture.ide.plugins.codegen.vdm2java"
+            commandId="org.overture.ide.plugins.javagen.vdm2java"
             label="Generate Java"
             style="push">
           <visibleWhen
@@ -62,7 +62,7 @@
           </visibleWhen>
         </command>
         <command
-            commandId="org.overture.ide.plugins.codegen.vdm2java_launchconfig"
+            commandId="org.overture.ide.plugins.javagen.vdm2java_launchconfig"
             label="Generate Java (Launch Configuration Based)"
             style="push">
           <visibleWhen
@@ -79,7 +79,7 @@
           </visibleWhen>
         </command>
         <command
-            commandId="org.overture.ide.plugins.codegen.config"
+            commandId="org.overture.ide.plugins.javagen.config"
             label="Configuration"
             style="push">
           <visibleWhen
@@ -96,13 +96,17 @@
                       property="org.overture.ide.core.resources.dialect"
                       value="VDM_PP">
                   </test>
+                  <test
+                      property="org.overture.ide.core.resources.dialect"
+                      value="VDM_RT">
+                  </test>
                 </or>
               </adapt>
             </iterate>
           </visibleWhen>
         </command>
         <command
-            commandId="org.overture.ide.plugins.codegen.about"
+            commandId="org.overture.ide.plugins.javagen.about"
             label="About"
             style="push">
           <visibleWhen
@@ -119,6 +123,10 @@
                       property="org.overture.ide.core.resources.dialect"
                       value="VDM_PP">
                   </test>
+                 <test
+                      property="org.overture.ide.core.resources.dialect"
+                      value="VDM_RT">
+                 </test>
                 </or>
               </adapt>
             </iterate>
@@ -131,7 +139,7 @@
   <extension
       point="org.eclipse.ui.bindings">
     <key
-        commandId="org.overture.ide.plugins.codegen.vdm2java"
+        commandId="org.overture.ide.plugins.javagen.vdm2java"
         contextId="org.eclipse.ui.contexts.window"
         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
         sequence="Ctrl+Alt+C">
@@ -141,7 +149,7 @@
   <extension
       point="org.eclipse.ui.bindings">
     <key
-        commandId="org.overture.ide.plugins.codegen.vdm2java_launchconfig"
+        commandId="org.overture.ide.plugins.javagen.vdm2java_launchconfig"
         contextId="org.eclipse.ui.contexts.window"
         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
         sequence="Ctrl+Alt+B">
@@ -152,8 +160,8 @@
       point="org.eclipse.ui.preferencePages">
     <page
         category="org.overture.ide.ui.vdm"
-        class="org.overture.ide.plugins.codegen.preferences.WorkbenchPreferencePageJavaCodeGen"
-        id="org.overture.ide.plugins.codegen.pageMain"
+        class="org.overture.ide.plugins.javagen.preferences.WorkbenchPreferencePageJavaCodeGen"
+        id="org.overture.ide.plugins.javagen.pageMain"
         name="Java Code Generation">
     </page>
   </extension>  

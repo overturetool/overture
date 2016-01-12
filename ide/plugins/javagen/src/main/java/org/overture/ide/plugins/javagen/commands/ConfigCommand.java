@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.ide.plugins.codegen.commands;
+package org.overture.ide.plugins.javagen.commands;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -34,7 +34,7 @@ public class ConfigCommand extends AbstractHandler
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(HandlerUtil.getActiveShell(event), "org.overture.ide.plugins.codegen.pageMain", null, null);
+		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(HandlerUtil.getActiveShell(event), "org.overture.ide.plugins.javagen.pageMain", null, null);
 		dialog.open();
 
 		return Status.OK_STATUS;

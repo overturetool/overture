@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.ide.plugins.codegen.util;
+package org.overture.ide.plugins.javagen.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -65,9 +65,9 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.FileUtility;
 import org.overture.ide.debug.core.IDebugConstants;
-import org.overture.ide.plugins.codegen.CodeGenConsole;
-import org.overture.ide.plugins.codegen.ICodeGenConstants;
-import org.overture.ide.plugins.codegen.commands.Vdm2JavaCommand;
+import org.overture.ide.plugins.javagen.CodeGenConsole;
+import org.overture.ide.plugins.javagen.ICodeGenConstants;
+import org.overture.ide.plugins.javagen.commands.Vdm2JavaCommand;
 
 public class PluginVdm2JavaUtil
 {

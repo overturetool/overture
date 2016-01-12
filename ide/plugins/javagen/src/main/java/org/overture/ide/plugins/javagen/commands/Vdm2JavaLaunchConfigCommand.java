@@ -1,12 +1,12 @@
-package org.overture.ide.plugins.codegen.commands;
+package org.overture.ide.plugins.javagen.commands;
 
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.overture.codegen.vdm2java.JavaSettings;
-import org.overture.ide.plugins.codegen.CodeGenConsole;
-import org.overture.ide.plugins.codegen.util.LaunchConfigData;
-import org.overture.ide.plugins.codegen.util.PluginVdm2JavaUtil;
+import org.overture.ide.plugins.javagen.CodeGenConsole;
+import org.overture.ide.plugins.javagen.util.LaunchConfigData;
+import org.overture.ide.plugins.javagen.util.PluginVdm2JavaUtil;
 
 public class Vdm2JavaLaunchConfigCommand extends Vdm2JavaCommand
 {

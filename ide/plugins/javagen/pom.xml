@@ -12,7 +12,7 @@
 	<packaging>eclipse-plugin</packaging>
 
 	<groupId>org.overturetool.ide.plugins</groupId>
-	<artifactId>org.overture.ide.plugins.codegen</artifactId>
+	<artifactId>org.overture.ide.plugins.javagen</artifactId>
 	<name>The Java Code Generator Plugin</name>
 
 	<build>

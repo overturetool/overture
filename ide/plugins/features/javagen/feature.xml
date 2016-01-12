@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.overture.ide.plugins.features.codegen"
-      label="Code Generator"
+      id="org.overture.ide.plugins.features.javagen"
+      label="Java Code Generator"
       version="2.3.1.qualifier">
 
    <description>
@@ -24,7 +24,7 @@
    </requires>
    
    <plugin
-         id="org.overture.ide.plugins.codegen"
+         id="org.overture.ide.plugins.javagen"
          download-size="0"
          install-size="0"
          version="0.0.0"
