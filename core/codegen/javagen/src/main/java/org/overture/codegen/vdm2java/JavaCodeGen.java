@@ -73,7 +73,6 @@ import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
-import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.DivideTrans;
 import org.overture.codegen.trans.ModuleToClassTransformation;
 import org.overture.codegen.trans.OldNameRenamer;
@@ -121,7 +120,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 	public static final String INVALID_NAME_PREFIX = "cg_";
 	
 	private JavaFormat javaFormat;
-	private TemplateStructure javaTemplateStructure;
 	
 	private IREventObserver irObserver;
 	private IJavaQuoteEventObserver quoteObserver;
@@ -144,20 +142,9 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 		this.quoteObserver = null;
 		initVelocity();
 
-		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
 		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
-		this.javaFormat = new JavaFormat(varPrefixManager, javaTemplateStructure, generator.getIRInfo());
+		this.javaFormat = new JavaFormat(varPrefixManager, JAVA_TEMPLATES_ROOT_FOLDER, generator.getIRInfo());
 		this.transSeries = new JavaTransSeries(this);
-	}
-
-	public void setJavaTemplateStructure(TemplateStructure javaTemplateStructure)
-	{
-		this.javaTemplateStructure = javaTemplateStructure;
-	}
-
-	public TemplateStructure getJavaTemplateStructure()
-	{
-		return javaTemplateStructure;
 	}
 
 	public void setJavaSettings(JavaSettings javaSettings)

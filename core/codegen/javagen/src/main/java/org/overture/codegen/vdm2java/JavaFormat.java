@@ -94,7 +94,6 @@ import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
-import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.funcvalues.FuncValAssistant;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Settings;
@@ -119,13 +118,13 @@ public class JavaFormat
 	private JavaVarPrefixManager varPrefixManager;
 	
 	public JavaFormat(JavaVarPrefixManager varPrefixManager,
-			TemplateStructure templateStructure, IRInfo info)
+			String templateRoot, IRInfo info)
 	{
 		this.varPrefixManager = varPrefixManager;
 		this.valueSemantics = new JavaValueSemantics(this);
 		this.recCreator = new JavaRecordCreator(this);
 		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, valueSemantics, recCreator);
-		this.mergeVisitor = new MergeVisitor(new JavaTemplateManager(templateStructure), templateCallables);
+		this.mergeVisitor = new MergeVisitor(new JavaTemplateManager(templateRoot), templateCallables);
 		this.funcValAssist = null;
 		this.info = info;
 		this.javaFormatAssistant = new JavaFormatAssistant(this.info);
