@@ -7,14 +7,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.tests.exec.util.CommonJavaGenCheckerTest;
 import org.overture.codegen.tests.exec.util.testhandlers.ExpressionTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
 import org.overture.codegen.tests.output.ExpOutputTest;
 import org.overture.config.Release;
 
 @RunWith(value = Parameterized.class)
-public class ExpJavaGenTest extends CommonJavaGenCheckerTest
+public class ExpJavaGenTest extends JavaCheckerTest
 {
 	public ExpJavaGenTest(String name,File vdmSpec,
 			TestHandler testHandler)

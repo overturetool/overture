@@ -8,11 +8,10 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.tests.output.util.OutputTestUtil;
-import org.overture.codegen.tests.output.util.PpSpecificationTest;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)
-public class ConcurrencyOutputTest extends PpSpecificationTest
+public class ConcurrencyOutputTest extends Pp2JavaSpecificationTest
 {
 	public ConcurrencyOutputTest(String nameParameter, String inputParameter,
 			String resultParameter)

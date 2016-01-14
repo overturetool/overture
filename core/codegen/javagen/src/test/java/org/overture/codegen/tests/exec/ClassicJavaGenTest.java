@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.tests.exec.util.CommonJavaGenCheckerTest;
 import org.overture.codegen.tests.exec.util.testhandlers.ExecutableSpecTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
 import org.overture.codegen.tests.output.ClassicOutputTest;
@@ -15,7 +14,7 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 
 @RunWith(value = Parameterized.class)
-public class ClassicJavaGenTest extends CommonJavaGenCheckerTest
+public class ClassicJavaGenTest extends JavaCheckerTest
 {
 	public ClassicJavaGenTest(String name, File vdmSpec, TestHandler testHandler)
 	{
