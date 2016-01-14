@@ -15,6 +15,8 @@ import org.overture.codegen.tests.exec.util.testhandlers.ExecutableSpecTestHandl
 import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
+import org.overture.codegen.vdm2java.JavaCodeGen;
+import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
@@ -26,6 +28,32 @@ public abstract class JmlSlJavaGenTestBase extends CommonJavaGenCheckerTest
 	public JmlSlJavaGenTestBase(File vdmSpec, TestHandler testHandler)
 	{
 		super(vdmSpec, testHandler);
+	}
+	
+	public  JavaCodeGen getJavaGen()
+	{
+		JavaCodeGen javaCg = new JavaCodeGen();
+		javaCg.setJavaSettings(getJavaSettings());
+		javaCg.setSettings(getIrSettings());
+		
+		return javaCg;
+	}
+	
+	public JavaSettings getJavaSettings()
+	{
+		JavaSettings javaSettings = new JavaSettings();
+		javaSettings.setDisableCloning(false);
+		javaSettings.setMakeClassesSerializable(true);
+		javaSettings.setFormatCode(false);
+
+		return javaSettings;
+	}
+	
+	@Override
+	public void genSourcesAndCompile()
+	{
+		genJavaSources(file);
+		compile(consCpFiles());
 	}
 
 	@Override
@@ -56,7 +84,6 @@ public abstract class JmlSlJavaGenTestBase extends CommonJavaGenCheckerTest
 		}
 	}
 
-	@Override
 	public void genJavaSources(File vdmSource)
 	{
 		List<File> files = new LinkedList<File>();
