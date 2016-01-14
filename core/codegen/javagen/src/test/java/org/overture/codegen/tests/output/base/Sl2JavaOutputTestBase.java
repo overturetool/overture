@@ -1,18 +1,18 @@
-package org.overture.codegen.tests.output;
+package org.overture.codegen.tests.output.base;
 
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.codegen.tests.output.util.SlSpecificationTest;
+import org.overture.codegen.tests.output.util.SlOutputTestBase;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaSettings;
 
-public abstract class Sl2JavaSpecificationTest extends SlSpecificationTest
+public abstract class Sl2JavaOutputTestBase extends SlOutputTestBase
 {
-	public Sl2JavaSpecificationTest(String nameParameter, String inputParameter, String resultParameter)
+	public Sl2JavaOutputTestBase(String nameParameter, String inputParameter, String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}

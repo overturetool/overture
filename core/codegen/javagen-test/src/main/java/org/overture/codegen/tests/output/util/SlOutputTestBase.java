@@ -11,9 +11,9 @@ import org.overture.ast.node.INode;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
-abstract public class SlSpecificationTest extends SpecificationTestBase
+abstract public class SlOutputTestBase extends SpecificationTestBase
 {
-	public SlSpecificationTest(String nameParameter, String inputParameter,
+	public SlOutputTestBase(String nameParameter, String inputParameter,
 			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);

@@ -1,4 +1,4 @@
-package org.overture.codegen.tests.exec;
+package org.overture.codegen.tests.exec.base;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.codegen.tests.exec.util.CommonJavaGenCheckerTest;
+import org.overture.codegen.tests.exec.util.CheckerTestBase;
 import org.overture.codegen.tests.exec.util.testhandlers.ExecutableSpecTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.ExpressionTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
@@ -26,9 +26,9 @@ import org.overture.parser.syntax.ParserException;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
-public abstract class JavaCheckerTest extends CommonJavaGenCheckerTest
+public abstract class JavaGenTestBase extends CheckerTestBase
 {
-	public JavaCheckerTest(File vdmSpec, TestHandler testHandler)
+	public JavaGenTestBase(File vdmSpec, TestHandler testHandler)
 	{
 		super(vdmSpec, testHandler);
 	}

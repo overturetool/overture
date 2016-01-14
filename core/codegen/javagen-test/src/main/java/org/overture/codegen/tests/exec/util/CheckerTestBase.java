@@ -24,13 +24,13 @@ import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Result;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
-public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
+public abstract class CheckerTestBase extends JavaCodeGenTestCase
 {
 	public static final String EXEC_TEST_PROPERTY = "tests.javagen.javac";
 	protected TestHandler testHandler;
 	protected File outputDir;
 
-	public CommonJavaGenCheckerTest(File vdmSpec, TestHandler testHandler)
+	public CheckerTestBase(File vdmSpec, TestHandler testHandler)
 	{
 		super(vdmSpec, null, null);
 		this.testHandler = testHandler;

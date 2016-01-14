@@ -5,9 +5,9 @@ import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
-abstract public class PpSpecificationTest extends SpecificationTestBase
+abstract public class PpOutputTestBase extends SpecificationTestBase
 {
-	public PpSpecificationTest(String nameParameter, String inputParameter,
+	public PpOutputTestBase(String nameParameter, String inputParameter,
 			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);

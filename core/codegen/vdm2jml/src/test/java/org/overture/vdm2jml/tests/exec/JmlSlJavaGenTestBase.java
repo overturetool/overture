@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.tests.exec.util.CommonJavaGenCheckerTest;
+import org.overture.codegen.tests.exec.util.CheckerTestBase;
 import org.overture.codegen.tests.exec.util.ProcessResult;
 import org.overture.codegen.tests.exec.util.testhandlers.ExecutableSpecTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
@@ -23,7 +23,7 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import org.overture.vdm2jml.tests.OpenJmlValidationBase;
 import org.overture.vdm2jml.tests.util.IOpenJmlConsts;
 
-public abstract class JmlSlJavaGenTestBase extends CommonJavaGenCheckerTest
+public abstract class JmlSlJavaGenTestBase extends CheckerTestBase
 {
 	public JmlSlJavaGenTestBase(File vdmSpec, TestHandler testHandler)
 	{

@@ -8,13 +8,14 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.tests.exec.base.JavaGenTestBase;
 import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.TraceHandler;
 import org.overture.codegen.tests.output.TracesExpansionOutputTest;
 import org.overture.config.Release;
 
 @RunWith(value = Parameterized.class)
-public class TracesExpansionJavaGenTest extends JavaCheckerTest
+public class TracesExpansionJavaGenTest extends JavaGenTestBase
 {
 	public TracesExpansionJavaGenTest(String name, File vdmSpec,
 			TestHandler testHandler)

@@ -1,4 +1,4 @@
-package org.overture.codegen.tests.output;
+package org.overture.codegen.tests.output.base;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -7,14 +7,14 @@ import org.junit.Assert;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
-import org.overture.codegen.tests.output.util.PpSpecificationTest;
+import org.overture.codegen.tests.output.util.PpOutputTestBase;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaSettings;
 
-public abstract class Pp2JavaSpecificationTest extends PpSpecificationTest
+public abstract class Pp2JavaOutputTestBase extends PpOutputTestBase
 {
-	public Pp2JavaSpecificationTest(String nameParameter, String inputParameter, String resultParameter)
+	public Pp2JavaOutputTestBase(String nameParameter, String inputParameter, String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
