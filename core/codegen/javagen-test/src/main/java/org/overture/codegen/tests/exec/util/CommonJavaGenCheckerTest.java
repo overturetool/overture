@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -13,32 +12,16 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.lex.Dialect;
-import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.tests.exec.util.testhandlers.ExecutableSpecTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.ExecutableTestHandler;
-import org.overture.codegen.tests.exec.util.testhandlers.ExpressionTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
 import org.overture.codegen.tests.util.TestUtils;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
-import org.overture.codegen.utils.GeneralUtils;
-import org.overture.codegen.utils.Generated;
-import org.overture.codegen.utils.GeneratedData;
-import org.overture.codegen.vdm2java.JavaCodeGen;
-import org.overture.codegen.vdm2java.JavaCodeGenUtil;
-import org.overture.codegen.vdm2java.JavaSettings;
-import org.overture.config.Settings;
 import org.overture.interpreter.runtime.ContextException;
-import org.overture.parser.lex.LexException;
-import org.overture.parser.syntax.ParserException;
 import org.overture.test.framework.ConditionalIgnoreMethodRule;
 import org.overture.test.framework.Properties;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Result;
-import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
@@ -93,6 +76,8 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		return EXEC_TEST_PROPERTY;
 	}
 	
+	abstract public void genSourcesAndCompile();
+	
 	@Test
 	public void test() throws Exception
 	{
@@ -121,82 +106,6 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		/* Allow all tests to run by default */
 	}
 
-	public void genJavaSources(File vdmSource)
-	{
-		JavaCodeGen javaCg = getJavaGen();
-		
-		try
-		{
-			if (testHandler instanceof ExpressionTestHandler)
-			{
-				Generated s = JavaCodeGenUtil.generateJavaFromExp(GeneralUtils.readFromFile(vdmSource), javaCg, Settings.dialect);
-				((ExpressionTestHandler) testHandler).injectArgIntoMainClassFile(outputDir, s.getContent(), javaCg.getJavaSettings().getJavaRootPackage());
-			} else
-			{
-				List<File> files = new LinkedList<File>();
-				files.add(vdmSource);
-				
-				GeneratedData data = genData(javaCg, files);
-				
-				if(data == null)
-				{
-					Assert.fail("Problems encountered when trying to code generate VDM model!");
-				}
-
-				javaCg.genJavaSourceFiles(outputDir, data.getClasses());
-
-				if (data.getQuoteValues() != null
-						&& !data.getQuoteValues().isEmpty())
-				{
-					javaCg.genJavaSourceFiles(outputDir, data.getQuoteValues());
-				}
-
-				if (testHandler instanceof ExecutableSpecTestHandler)
-				{
-					ExecutableSpecTestHandler ex = (ExecutableSpecTestHandler) testHandler;
-					ex.writeMainClass(outputDir, getJavaSettings().getJavaRootPackage());
-				}
-			}
-		} catch (AnalysisException | IOException e)
-		{
-			Assert.fail("Got unexpected exception when attempting to generate Java code: "
-					+ e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
-	public  JavaCodeGen getJavaGen()
-	{
-		JavaCodeGen javaCg = new JavaCodeGen();
-		javaCg.setJavaSettings(getJavaSettings());
-		javaCg.setSettings(getIrSettings());
-		
-		return javaCg;
-	}
-
-	public static GeneratedData genData(JavaCodeGen javaCg, List<File> files)
-			throws AnalysisException, ParserException, LexException
-	{
-		GeneratedData data = null;
-		if(Settings.dialect == Dialect.VDM_SL)
-		{
-			TypeCheckResult<List<AModuleModules>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckSl(files));
-			data = javaCg.generateJavaFromVdmModules(tcResult.result);
-			
-		}
-		else if(Settings.dialect == Dialect.VDM_PP)
-		{
-			TypeCheckResult<List<SClassDefinition>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckPp(files));
-			data = javaCg.generateJavaFromVdm(tcResult.result);
-		}
-		else if(Settings.dialect == Dialect.VDM_RT)
-		{
-			TypeCheckResult<List<SClassDefinition>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckRt(files));
-			data = javaCg.generateJavaFromVdm(tcResult.result);
-		}
-		return data;
-	}
-	
 	public static <T extends TypeCheckResult<?>> T checkTcResult(T tcResult)
 	{
 		if(GeneralCodeGenUtils.hasErrors(tcResult))
@@ -213,16 +122,6 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 		irSettings.setCharSeqAsString(false);
 
 		return irSettings;
-	}
-
-	public JavaSettings getJavaSettings()
-	{
-		JavaSettings javaSettings = new JavaSettings();
-		javaSettings.setDisableCloning(false);
-		javaSettings.setMakeClassesSerializable(true);
-		javaSettings.setFormatCode(false);
-
-		return javaSettings;
 	}
 
 	private Result<Object> produceResult() throws IOException
@@ -254,12 +153,6 @@ public abstract class CommonJavaGenCheckerTest extends JavaCodeGenTestCase
 				+ testHandler);
 
 		return new Result<Object>(null, new Vector<IMessage>(), new Vector<IMessage>());
-	}
-
-	public void genSourcesAndCompile()
-	{
-		genJavaSources(file);
-		compile(consCpFiles());
 	}
 
 	public  File[] consCpFiles()

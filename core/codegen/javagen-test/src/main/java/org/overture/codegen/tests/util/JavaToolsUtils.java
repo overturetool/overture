@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.vdm2java;
+package org.overture.codegen.tests.util;
 
 public class JavaToolsUtils
 {
@@ -36,6 +36,8 @@ public class JavaToolsUtils
 	public static final String ENABLE_ASSERTIONS_ARG = "-ea";
 	
 	public static final String CP_ARG = "-classpath";
+
+	public static final String JAVA_FILE_EXTENSION = ".java";
 	
 	public static Boolean isWindows()
 	{

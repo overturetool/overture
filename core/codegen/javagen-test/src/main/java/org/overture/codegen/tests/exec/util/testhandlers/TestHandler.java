@@ -29,7 +29,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.vdm2java.IJavaConstants;
+import org.overture.codegen.tests.util.JavaToolsUtils;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
@@ -62,7 +62,7 @@ public class TestHandler
 	public File getFile(File parent, String className) throws IOException
 	{
 		File file = new File(parent, className
-				+ IJavaConstants.JAVA_FILE_EXTENSION);
+				+ JavaToolsUtils.JAVA_FILE_EXTENSION);
 
 		if (!file.exists())
 		{

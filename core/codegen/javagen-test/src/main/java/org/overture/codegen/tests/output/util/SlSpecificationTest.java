@@ -5,11 +5,9 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.codegen.utils.GeneratedData;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
@@ -26,13 +24,6 @@ abstract public class SlSpecificationTest extends SpecificationTestBase
 	{
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
-	}
-
-	public GeneratedData genCode(List<INode> ast) throws AnalysisException
-	{
-		List<AModuleModules> modules = buildModulesList(ast);
-		
-		return getJavaGen().generateJavaFromVdmModules(modules);
 	}
 
 	public List<AModuleModules> buildModulesList(List<INode> ast)

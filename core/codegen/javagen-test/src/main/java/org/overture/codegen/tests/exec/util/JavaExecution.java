@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.codegen.vdm2java.JavaToolsUtils;
+import org.overture.codegen.tests.util.JavaToolsUtils;
 
 public class JavaExecution
 {

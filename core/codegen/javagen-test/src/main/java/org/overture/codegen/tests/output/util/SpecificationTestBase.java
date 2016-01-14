@@ -13,8 +13,6 @@ import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.vdm2java.JavaCodeGen;
-import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.core.tests.ParamStandardTest;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
@@ -36,15 +34,6 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 		super(nameParameter, inputParameter, resultParameter);
 	}
 	
-	public JavaCodeGen getJavaGen()
-	{
-		JavaCodeGen javaGen = new JavaCodeGen();
-		javaGen.setSettings(getIrSettings());
-		javaGen.setJavaSettings(getJavaSettings());
-		
-		return javaGen;
-	}
-	
 	public IRSettings getIrSettings()
 	{
 		IRSettings irSettings = new IRSettings();
@@ -53,14 +42,6 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 		return irSettings;
 	}
 
-	public JavaSettings getJavaSettings()
-	{
-		JavaSettings javaSettings = new JavaSettings();
-		javaSettings.setDisableCloning(false);
-
-		return javaSettings;
-	}
-	
 	@Override
 	public String processModel(List<INode> ast)
 	{
