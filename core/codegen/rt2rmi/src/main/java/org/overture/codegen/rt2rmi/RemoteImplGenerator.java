@@ -3,12 +3,9 @@ package org.overture.codegen.rt2rmi;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.IRGeneratedTag;
 
 /*

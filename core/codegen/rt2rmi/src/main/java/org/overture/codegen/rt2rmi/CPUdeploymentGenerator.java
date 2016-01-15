@@ -8,7 +8,6 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.codegen.cgast.declarations.AClientInstanceDeclCG;
 import org.overture.codegen.cgast.declarations.ACpuDeploymentDeclCG;
@@ -18,7 +17,6 @@ import org.overture.codegen.cgast.declarations.ARMIregistryDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteInstanceDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.ir.IRInfo;
 
 /*
  * This sets up the relevant entry method for each CPU
