@@ -267,6 +267,7 @@ CG {-> package='org.overture.codegen.cgast'
 #stm {-> package='org.overture.codegen.cgast.statements'}
            =	{if} [ifExp]:CG.#exp [thenStm]:CG.#stm [elseIf]:CG.#stm.elseIf* [elseStm]:CG.#stm
            | 	{elseIf} [elseIf]:CG.#exp [thenStm]:CG.#stm
+           |  {exp} [exp]:CG.#exp
            | 	{skip}
            |	{return} [exp]:CG.#exp
            |	{abstractBody}

@@ -9,23 +9,51 @@ import org.junit.Assert;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.tests.exec.util.CommonJavaGenCheckerTest;
+import org.overture.codegen.tests.exec.util.CheckerTestBase;
 import org.overture.codegen.tests.exec.util.ProcessResult;
 import org.overture.codegen.tests.exec.util.testhandlers.ExecutableSpecTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.TestHandler;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
+import org.overture.codegen.vdm2java.JavaCodeGen;
+import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import org.overture.vdm2jml.tests.OpenJmlValidationBase;
 import org.overture.vdm2jml.tests.util.IOpenJmlConsts;
 
-public abstract class JmlSlJavaGenTestBase extends CommonJavaGenCheckerTest
+public abstract class JmlSlJavaGenTestBase extends CheckerTestBase
 {
 	public JmlSlJavaGenTestBase(File vdmSpec, TestHandler testHandler)
 	{
 		super(vdmSpec, testHandler);
+	}
+	
+	public  JavaCodeGen getJavaGen()
+	{
+		JavaCodeGen javaCg = new JavaCodeGen();
+		javaCg.setJavaSettings(getJavaSettings());
+		javaCg.setSettings(getIrSettings());
+		
+		return javaCg;
+	}
+	
+	public JavaSettings getJavaSettings()
+	{
+		JavaSettings javaSettings = new JavaSettings();
+		javaSettings.setDisableCloning(false);
+		javaSettings.setMakeClassesSerializable(true);
+		javaSettings.setFormatCode(false);
+
+		return javaSettings;
+	}
+	
+	@Override
+	public void genSourcesAndCompile()
+	{
+		genJavaSources(file);
+		compile(consCpFiles());
 	}
 
 	@Override
@@ -56,7 +84,6 @@ public abstract class JmlSlJavaGenTestBase extends CommonJavaGenCheckerTest
 		}
 	}
 
-	@Override
 	public void genJavaSources(File vdmSource)
 	{
 		List<File> files = new LinkedList<File>();

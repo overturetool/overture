@@ -43,9 +43,8 @@
     </dependency>
     <dependency>
       <groupId>org.overturetool.core.codegen</groupId>
-      <artifactId>javagen</artifactId>
+      <artifactId>javagen-test</artifactId>
       <version>${project.version}</version>
-      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
   </dependencies>

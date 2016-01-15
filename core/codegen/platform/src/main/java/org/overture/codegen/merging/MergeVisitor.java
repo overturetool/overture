@@ -55,23 +55,6 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements
 	private MergerObserver mergeObserver;
 
 	/**
-	 * Default constructor. <b>NOT</b> for use by extensions.
-	 * 
-	 * @param templateStructure
-	 * @param templateCallables
-	 */
-	public MergeVisitor(TemplateStructure templateStructure,
-			TemplateCallable[] templateCallables)
-	{
-		this.templates = new TemplateManager(templateStructure);
-		this.nodeContexts = new Stack<MergeContext>();
-		this.templateCallables = templateCallables;
-		this.mergeErrors = new LinkedList<Exception>();
-		this.unsupportedInTargLang = new HashSet<IrNodeInfo>();
-		this.mergeObserver = null;
-	}
-
-	/**
 	 * Extensible constructor.
 	 * 
 	 * @param templateManager

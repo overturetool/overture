@@ -8,14 +8,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.tests.output.base.Pp2JavaOutputTestBase;
 import org.overture.codegen.tests.output.util.OutputTestUtil;
-import org.overture.codegen.tests.output.util.PpSpecificationTest;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)
-public class ConcurrencyClassicOutputTest extends PpSpecificationTest
+public class ConcurrencyClassicOutputTest extends Pp2JavaOutputTestBase
 {
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
