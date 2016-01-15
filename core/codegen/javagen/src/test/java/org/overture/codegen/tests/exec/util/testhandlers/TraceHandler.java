@@ -16,6 +16,7 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.traces.TestAccumulator;
 import org.overture.codegen.tests.exec.util.ExecutionResult;
 import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.ct.ctruntime.TraceRunnerMain;
 import org.overture.ct.ctruntime.utils.CtHelper;
 import org.overture.ct.ctruntime.utils.Data;
@@ -30,7 +31,6 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	// The socket is used to communicate with the trace interpreter
 	protected ServerSocket socket;
 	protected static final int SOCKET_TIMEOUT = 0;
-	protected static final int PORT = 8889;
 
 	public TraceHandler(Release release, Dialect dialect)
 	{
@@ -53,14 +53,64 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	{
 		return "computeTests()";
 	}
-
-	public List<String> getMainClassMethods()
+	
+	@Override
+	public String getFullyQualifiedEntry(String rootPackage)
 	{
+		// The entry point is local so we can ignore the package and the enclosing class
+		return getJavaEntry();
+	}
+	
+	public int getFreePort()
+	{
+		ServerSocket s = null;
+		try
+		{
+			s = new ServerSocket(0);
+			
+			// returns the port the system selected
+			return s.getLocalPort();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			if(s != null)
+			{
+				try
+				{
+					s.close();
+				} catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return 8999;
+	}
+
+	@Override
+	public List<String> getMainClassMethods(String rootPackage)
+	{
+		String runTraceCall;
+		
+		if(Settings.dialect == Dialect.VDM_SL)
+		{
+			runTraceCall = toFullName(rootPackage, "Entry.Entry_T1_Run(acc);");
+		}
+		else
+		{
+			runTraceCall = " new " + toFullName(rootPackage, "Entry") + "().Entry_T1_Run(acc);";
+		}
+		
+		
 		String computeTestsMethod = 
 				" public static TestAccumulator computeTests()\n"
 				+ " {\n"
 				+ "    InMemoryTestAccumulator acc = new InMemoryTestAccumulator();\n"
-				+ "    new Entry().Entry_T1_Run(acc);\n"
+				+ runTraceCall + "\n"
 				+ "    return acc;\n"
 				+ " }\n";
 
@@ -73,7 +123,7 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	@Override
 	public ExecutionResult interpretVdm(File intputFile) throws Exception
 	{
-		File vdmTraceResultFile = computeVdmTraceResult(currentInputFile);
+		File vdmTraceResultFile = computeVdmTraceResult(intputFile);
 
 		List<TraceResult> testResult = new TraceResultReader().read(vdmTraceResultFile);
 
@@ -96,13 +146,19 @@ public class TraceHandler extends ExecutableSpecTestHandler
 		return new ExecutionResult(sb.toString(), t1.tests);
 	}
 
+	
 	@Override
 	public ExecutionResult runJava(File folder)
 	{
 		ExecutionResult javaResult = super.runJava(folder);
 
-		Object executionResult = javaResult.getExecutionResult();
+		return processTraceResult(javaResult);
+	}
 
+	public ExecutionResult processTraceResult(ExecutionResult javaResult)
+	{
+		Object executionResult = javaResult.getExecutionResult();
+		
 		if(executionResult instanceof TestAccumulator)
 		{
 			TestAccumulator acc = (TestAccumulator) executionResult;
@@ -120,7 +176,8 @@ public class TraceHandler extends ExecutableSpecTestHandler
 			ParserConfigurationException
 	{
 		// The client thread will close the socket
-		socket = new ServerSocket(PORT);
+		int port = getFreePort();
+		socket = new ServerSocket(port);
 		socket.setSoTimeout(SOCKET_TIMEOUT);
 		final Data data = new Data();
 
@@ -143,16 +200,18 @@ public class TraceHandler extends ExecutableSpecTestHandler
 		TraceRunnerMain.USE_SYSTEM_EXIT = false;
 		TraceReductionInfo info = new TraceReductionInfo();
 
+		String dialect = Settings.dialect == Dialect.VDM_SL ? "-vdmsl" : "-vdmpp";
+		
 		String[] buildArgs = new String[] {
 				"-h",
 				"localhost",
 				"-p",
-				PORT + "",
+				port + "",
 				"-k",
 				"whatever",
 				"-e",
 				"Entry",
-				"-vdmpp",
+				dialect,
 				"-r",
 				"vdm10",
 				"-t",

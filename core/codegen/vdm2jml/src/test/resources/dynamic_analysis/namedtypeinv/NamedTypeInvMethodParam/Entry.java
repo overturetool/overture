@@ -1,6 +1,7 @@
 package project;
 
 import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
 
 import java.util.*;
 
@@ -15,13 +16,14 @@ final public class Entry {
     public static Object Run() {
         Number n1 = 2L;
 
+        //@ assert Utils.is_nat1(n1);
         Number n2 = 3L;
-
+        //@ assert Utils.is_nat1(n2);
         {
             {
                 Number ignorePattern_1 = op(n1, 5L, n1);
 
-                //@ assert inv_Entry_Even(ignorePattern_1);
+                //@ assert (Utils.is_nat(ignorePattern_1) && inv_Entry_Even(ignorePattern_1));
 
                 /* skip */
             }
@@ -31,7 +33,7 @@ final public class Entry {
             {
                 Number ignorePattern_2 = op(n1, 6L, n2);
 
-                //@ assert inv_Entry_Even(ignorePattern_2);
+                //@ assert (Utils.is_nat(ignorePattern_2) && inv_Entry_Even(ignorePattern_2));
 
                 /* skip */
             }
@@ -41,12 +43,14 @@ final public class Entry {
     }
 
     public static Number op(final Number a, final Number b, final Number c) {
-        //@ assert inv_Entry_Even(a);
+        //@ assert (Utils.is_nat(a) && inv_Entry_Even(a));
 
-        //@ assert inv_Entry_Even(c);
+        //@ assert Utils.is_nat(b);
+
+        //@ assert (Utils.is_nat(c) && inv_Entry_Even(c));
         Number ret_1 = b.longValue() * (a.longValue() + c.longValue());
 
-        //@ assert inv_Entry_Even(ret_1);
+        //@ assert (Utils.is_nat(ret_1) && inv_Entry_Even(ret_1));
         return ret_1;
     }
 
@@ -57,10 +61,6 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_Even(final Object check_n) {
-        if ((Utils.equals(check_n, null)) || !(Utils.is_nat(check_n))) {
-            return false;
-        }
-
         Number n = ((Number) check_n);
 
         return Utils.equals(Utils.mod(n.longValue(), 2L), 0L);

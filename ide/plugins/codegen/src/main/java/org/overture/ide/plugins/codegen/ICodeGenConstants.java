@@ -44,4 +44,8 @@ public interface ICodeGenConstants
 	
 	public static final String GENERATE_JML = PLUGIN_ID + ".jml";
 	public static final boolean GENERATE_JML_DEFAULT = false;
+	
+	public static final String JML_USE_INVARIANT_FOR = PLUGIN_ID + ".jml_use_invariant_for";
+	public static final boolean JML_USE_INVARIANT_FOR_DEFAULT = false;
+
 }

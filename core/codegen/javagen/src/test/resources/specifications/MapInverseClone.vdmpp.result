@@ -6,7 +6,7 @@ import java.util.*;
 @SuppressWarnings("all")
 public class A {
     private static final VDMMap a = MapUtil.map(new Maplet(1L, 2L));
-    private static final VDMMap b = MapUtil.inverse(Utils.copy(a));
+    private static final VDMMap b = MapUtil.inverse(Utils.copy(A.a));
     private static final VDMMap c = MapUtil.inverse(op());
 
     public A() {

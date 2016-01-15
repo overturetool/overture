@@ -209,11 +209,39 @@ public class RecordValue extends Value
 	{
 		if (other instanceof Value)
 		{
-			return compareTo((Value) other) == 0;
-		} else
-		{
-			return false;
+			Value val = ((Value)other).deref();
+			
+    		if (val instanceof RecordValue)
+    		{
+    			RecordValue ot = (RecordValue)val;
+    
+    			if (ot.type.getName().equals(type.getName()))	// Should use type equality
+    			{
+    				for (AFieldField f: type.getFields())
+    				{
+    					if (!f.getEqualityAbstraction())
+    					{
+    						Value fv = fieldmap.get(f.getTag());
+    						Value ofv = ot.fieldmap.get(f.getTag());
+    
+    						if (fv == null || ofv == null)
+    						{
+    							return false;
+    						}
+    
+    						if (!fv.equals(ofv))
+    						{
+    							return false;
+    						}
+    					}
+    				}
+    
+    				return true;
+    			}
+    		}
 		}
+
+		return false;
 	}
 
 	@Override

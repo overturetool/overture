@@ -6,7 +6,7 @@ import java.util.*;
 @SuppressWarnings("all")
 public class A {
     private static final R2 a = new R2(new R1(2L), 3L);
-    private static final R2 b = Utils.copy(a);
+    private static final R2 b = Utils.copy(A.a);
     private static final R1 c = Utils.copy(a.r1);
     private static final Number d = a.r1.x;
 

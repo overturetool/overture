@@ -49,6 +49,7 @@ import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapTypeBase;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
@@ -57,6 +58,7 @@ import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolIsExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharIsExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
@@ -80,6 +82,7 @@ import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATokenIsExpCG;
 import org.overture.codegen.cgast.expressions.ATupleIsExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SIsExpCG;
 import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
@@ -269,7 +272,9 @@ public class ExpAssistantCG extends AssistantBase
 	public AQuoteLiteralExpCG consQuoteLiteral(String value)
 	{
 		AQuoteLiteralExpCG quoteLiteral = new AQuoteLiteralExpCG();
-		quoteLiteral.setType(new AQuoteTypeCG());
+		AQuoteTypeCG type = new AQuoteTypeCG();
+		type.setValue(value);
+		quoteLiteral.setType(type);
 		quoteLiteral.setValue(value);
 
 		return quoteLiteral;
@@ -669,11 +674,54 @@ public class ExpAssistantCG extends AssistantBase
 		return next;
 	}
 	
+	public AUndefinedExpCG consUndefinedExp()
+	{
+		AUndefinedExpCG undefExp = new AUndefinedExpCG();
+		undefExp.setType(new AUnknownTypeCG());
+		
+		return undefExp;
+	}
+	
 	public ANullExpCG consNullExp()
 	{
 		ANullExpCG nullExp = new ANullExpCG();
 		nullExp.setType(new AUnknownTypeCG());
 
 		return nullExp;
+	}
+	
+	public STypeCG handleMapType(SMapTypeBase node, IRInfo question, boolean isInjective) throws AnalysisException
+	{
+		PType from = node.getFrom();
+		PType to = node.getTo();
+		boolean empty = node.getEmpty();
+
+		STypeCG fromCg = from.apply(question.getTypeVisitor(), question);
+		STypeCG toCg = to.apply(question.getTypeVisitor(), question);
+
+		AMapMapTypeCG mapType = new AMapMapTypeCG();
+		mapType.setFrom(fromCg);
+		mapType.setTo(toCg);
+		mapType.setEmpty(empty);
+		
+		mapType.setInjective(isInjective);
+
+		return mapType;
+	}
+	
+	public boolean isUndefined(SExpCG exp)
+	{
+		if(exp instanceof ACastUnaryExpCG)
+		{
+			return isUndefined(((ACastUnaryExpCG) exp).getExp());
+		}
+		else if(exp instanceof AUndefinedExpCG)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

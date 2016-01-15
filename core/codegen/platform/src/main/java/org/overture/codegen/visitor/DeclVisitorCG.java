@@ -474,6 +474,12 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			return null;
 		}
 		
+		if(!(node.getType() instanceof AOperationType))
+		{
+			question.addUnsupportedNode(node, "Node type should be an operation type. Got: " + node.getType());
+			return null;
+		}
+		
 		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
 		LinkedList<PPattern> paramPatterns = node.getParameterPatterns();
 		

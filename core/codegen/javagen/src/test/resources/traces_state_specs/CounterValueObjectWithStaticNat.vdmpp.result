@@ -1,0 +1,78 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry implements java.io.Serializable {
+    private static final Counter c = new Counter();
+
+    public Entry() {
+    }
+
+    public Number inc() {
+        return Entry.c.inc();
+    }
+
+    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+
+        {
+            final Number ID_1 = gen.inc();
+            store.staticReg(ID_1, Counter.class);
+        }
+
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        CallStatementPp callStm_1 = new CallStatementPp() {
+                public Object execute() {
+                    Number result_1 = ((Entry) instance).inc();
+
+                    return result_1;
+                }
+
+                public String toString() {
+                    return "inc()";
+                }
+            };
+
+        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+        RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_1, 1L, 2L);
+
+        sequence_1.add(repeat_1);
+
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{" + "c = " + Utils.toString(c) + "}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Counter implements java.io.Serializable {
+    private static Number x = 0L;
+
+    public Counter() {
+    }
+
+    public Number inc() {
+        x = Counter.x.longValue() + 1L;
+
+        return Counter.x;
+    }
+
+    public String toString() {
+        return "Counter{" + "x := " + Utils.toString(x) + "}";
+    }
+}
+
+##########

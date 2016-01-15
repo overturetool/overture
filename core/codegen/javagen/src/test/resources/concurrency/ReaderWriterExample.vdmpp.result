@@ -97,8 +97,6 @@ public class Reader extends VDMThread implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public Reader(final Buffer buf) {
-        sentinel = new Reader_sentinel(this);
-
         cg_init_Reader_1(buf);
     }
 
@@ -107,6 +105,8 @@ public class Reader extends VDMThread implements EvaluatePP {
     }
 
     public void cg_init_Reader_1(final Buffer buf) {
+        sentinel = new Reader_sentinel(this);
+
         b = buf;
     }
 
@@ -132,8 +132,6 @@ public class Reader extends VDMThread implements EvaluatePP {
             return true;
         } else if (Utils.equals(fnr, 2L)) {
             return true;
-        } else if (Utils.equals(fnr, 3L)) {
-            return true;
         } else {
             return true;
         }
@@ -150,11 +148,10 @@ public class Reader extends VDMThread implements EvaluatePP {
     }
 
     public static class Reader_sentinel extends Sentinel {
-        public static final int cg_init_Reader_1 = 0;
-        public static final int Reader = 1;
-        public static final int ended = 2;
-        public static final int toString = 3;
-        public final int function_sum = 4;
+        public static final int Reader = 0;
+        public static final int ended = 1;
+        public static final int toString = 2;
+        public final int function_sum = 3;
 
         public Reader_sentinel() {
         }
@@ -179,8 +176,6 @@ public class Writer extends VDMThread implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public Writer(final Buffer buf) {
-        sentinel = new Writer_sentinel(this);
-
         cg_init_Writer_1(buf);
     }
 
@@ -189,6 +184,8 @@ public class Writer extends VDMThread implements EvaluatePP {
     }
 
     public void cg_init_Writer_1(final Buffer buf) {
+        sentinel = new Writer_sentinel(this);
+
         b = buf;
     }
 
@@ -230,8 +227,6 @@ public class Writer extends VDMThread implements EvaluatePP {
             return true;
         } else if (Utils.equals(fnr, 3L)) {
             return true;
-        } else if (Utils.equals(fnr, 4L)) {
-            return true;
         } else {
             return true;
         }
@@ -247,12 +242,11 @@ public class Writer extends VDMThread implements EvaluatePP {
     }
 
     public static class Writer_sentinel extends Sentinel {
-        public static final int cg_init_Writer_1 = 0;
-        public static final int Writer = 1;
-        public static final int Write = 2;
-        public static final int ended = 3;
-        public static final int toString = 4;
-        public final int function_sum = 5;
+        public static final int Writer = 0;
+        public static final int Write = 1;
+        public static final int ended = 2;
+        public static final int toString = 3;
+        public final int function_sum = 4;
 
         public Writer_sentinel() {
         }

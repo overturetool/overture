@@ -100,10 +100,11 @@ public class Activator extends AbstractUIPlugin
 		store.setDefault(ICodeGenConstants.CLASSES_TO_SKIP, ICodeGenConstants.CLASSES_TO_SKIP_DEFAULT);
 		store.setDefault(ICodeGenConstants.JAVA_PACKAGE, ICodeGenConstants.JAVA_PACKAGE_DEFAULT);
 		store.setDefault(ICodeGenConstants.GENERATE_JML, ICodeGenConstants.GENERATE_JML_DEFAULT);
+		store.setDefault(ICodeGenConstants.JML_USE_INVARIANT_FOR, ICodeGenConstants.JML_USE_INVARIANT_FOR_DEFAULT);
 	}
 	
 	public static void savePluginSettings(boolean disableCloning,
-			boolean genAsStrings, boolean genConc, boolean genJml, String userSpecifiedClassesToSkip, String javaPackage)
+			boolean genAsStrings, boolean genConc, boolean genJml, boolean jmlInvFor, String userSpecifiedClassesToSkip, String javaPackage)
 	{
 		Preferences prefs = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
 		prefs.put(ICodeGenConstants.DISABLE_CLONING, new Boolean(disableCloning).toString());
@@ -121,6 +122,7 @@ public class Activator extends AbstractUIPlugin
 		}
 		
 		prefs.put(ICodeGenConstants.GENERATE_JML, new Boolean(genJml).toString());
+		prefs.put(ICodeGenConstants.JML_USE_INVARIANT_FOR, new Boolean(jmlInvFor).toString());
 
 		try
 		{

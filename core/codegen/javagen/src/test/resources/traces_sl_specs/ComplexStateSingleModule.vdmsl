@@ -1,0 +1,29 @@
+module Entry
+exports all
+definitions 
+
+state St of
+ r : R
+ init s == s = mk_St(mk_R(0))
+end
+
+types
+
+  R :: x : nat;
+
+operations 
+
+op : () ==> nat
+op () ==
+(
+  r.x := r.x + 1;
+  return r.x;
+);
+
+
+traces
+
+T1:
+ op(){1,3};
+
+end Entry

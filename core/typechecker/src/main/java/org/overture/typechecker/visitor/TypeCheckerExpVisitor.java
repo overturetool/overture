@@ -1602,6 +1602,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
     				{
 						TypeCheckerErrors.report(3342, "Cannot use history counters for pure operations", opname.getLocation(), opname);
     				}
+    				
+    				if (def.getAccess().getStatic() == null && question.env.isStatic())
+    				{
+    					TypeCheckerErrors.report(3349,
+    						"Cannot see non-static operation from static context", opname.getLocation(), opname);
+    				}
 				}
 			}
 
@@ -2320,7 +2326,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			}
 		} else
 		{
-			node.setType(AstFactory.newARealNumericBasicType(node.getLocation()));
+			node.setType(AstFactory.newARationalNumericBasicType(node.getLocation()));
 		}
 
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, node.getType(), node.getLocation());

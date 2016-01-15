@@ -6,7 +6,7 @@ import java.util.*;
 @SuppressWarnings("all")
 public class A {
     private static final Tuple a = Tuple.mk_(Tuple.mk_(1L, true), 3L);
-    private static final Tuple b = Utils.copy(a);
+    private static final Tuple b = Utils.copy(A.a);
     private static final Tuple c = Utils.copy(((Tuple) a.get(0)));
     private static final Number d = ((Number) ((Tuple) a.get(0)).get(0));
     private static final Boolean e = ((Boolean) ((Tuple) a.get(0)).get(1));

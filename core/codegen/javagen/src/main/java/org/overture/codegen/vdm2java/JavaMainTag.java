@@ -1,6 +1,6 @@
 package org.overture.codegen.vdm2java;
 
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 
@@ -9,12 +9,12 @@ public class JavaMainTag
 {
 	private boolean isVoidRun;
 	
-	public JavaMainTag(AClassDeclCG classCg)
+	public JavaMainTag(ADefaultClassDeclCG classCg)
 	{
 		checkRunReturnType(classCg);
 	}
 
-	private void checkRunReturnType(AClassDeclCG classCg)
+	private void checkRunReturnType(ADefaultClassDeclCG classCg)
 	{
 		isVoidRun = false;
 		for(AMethodDeclCG m : classCg.getMethods())

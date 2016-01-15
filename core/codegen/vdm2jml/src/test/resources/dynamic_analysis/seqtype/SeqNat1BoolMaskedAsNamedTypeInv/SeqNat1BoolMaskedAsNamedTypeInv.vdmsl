@@ -1,0 +1,30 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+SeqNat1Bool = seq of (nat1 | bool);
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ let - : SeqNat1Bool = [1,true,2,false,3] in skip;
+ IO`println("After legal use");
+ IO`println("Before illegal use");
+ let - : SeqNat1Bool = [1,true,2,false,minusOne()] in skip;
+ IO`println("After illegal use");
+ return 0;
+);
+
+functions
+
+minusOne :  () -> int
+minusOne () == -1;
+
+end Entry

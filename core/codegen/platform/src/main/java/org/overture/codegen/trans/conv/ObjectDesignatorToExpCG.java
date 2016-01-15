@@ -30,7 +30,7 @@ import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.AnswerAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
@@ -143,7 +143,7 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 	public SExpCG caseASelfObjectDesignatorCG(ASelfObjectDesignatorCG node)
 			throws AnalysisException
 	{
-		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG enclosingClass = node.getAncestor(ADefaultClassDeclCG.class);
 
 		String className = enclosingClass.getName();
 		SourceNode sourceNode = node.getSourceNode();

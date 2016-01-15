@@ -12,7 +12,8 @@ public class Entry {
 
     public static Object Run() {
         return SeqUtil.mod("a", MapUtil.map(new Maplet(1L, 'b'))) +
-        SeqUtil.mod(a, MapUtil.map(new Maplet(1L, 'm'), new Maplet(3L, 'l'))) +
+        SeqUtil.mod(Entry.a,
+            MapUtil.map(new Maplet(1L, 'm'), new Maplet(3L, 'l'))) +
         SeqUtil.mod(f(), MapUtil.map(new Maplet(1L, 'b')));
     }
 

@@ -9,13 +9,13 @@
 <message column="52" line="220" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWconcurPP"/>
 <message column="20" line="215" message="Name 'World`timerRef' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
 <message column="11" line="217" message="Name 'World`env' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
-<message column="11" line="217" message="Member handleFOWarningEvent(FOId, Coordinates, Altitude, &lt;EstimationWarning&gt;, MinimumSafetyAltitude, ?) is not in scope" messageType="error" number="3209" resource="MSAWconcurPP"/>
+<message column="11" line="217" message="Member handleFOWarningEvent(FOId, GLOBAL`Coordinates, Altitude, &lt;EstimationWarning&gt;, MinimumSafetyAltitude, ?) is not in scope" messageType="error" number="3209" resource="MSAWconcurPP"/>
 <message column="14" line="230" message="Name 'World`timerRef' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
 <message column="5" line="232" message="Name 'World`env' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
-<message column="5" line="232" message="Member handleFOWarningEvent(FOId, Coordinates, Altitude, ObstacleType, MinimumSafetyAltitude, ?) is not in scope" messageType="error" number="3209" resource="MSAWconcurPP"/>
+<message column="5" line="232" message="Member handleFOWarningEvent(FOId, GLOBAL`Coordinates, Altitude, ObstacleType, MinimumSafetyAltitude, ?) is not in scope" messageType="error" number="3209" resource="MSAWconcurPP"/>
 <message column="17" line="240" message="Name 'World`timerRef' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
 <message column="5" line="242" message="Name 'World`env' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP"/>
-<message column="5" line="242" message="Member handleRadarWarningEvent(Coordinates, nat1, &lt;Saturated&gt;, nat, ?) is not in scope" messageType="error" number="3209" resource="MSAWconcurPP"/>
+<message column="5" line="242" message="Member handleRadarWarningEvent(GLOBAL`Coordinates, nat1, &lt;Saturated&gt;, nat, ?) is not in scope" messageType="error" number="3209" resource="MSAWconcurPP"/>
 <message column="5" line="251" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWconcurPP"/>
 <message column="5" line="265" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWconcurPP"/>
 <message column="51" line="265" message="Impure operation '(fo.getId)' cannot be called from here" messageType="error" number="3300" resource="MSAWconcurPP"/>

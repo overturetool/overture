@@ -24,11 +24,7 @@ public class Entry {
     public Entry() {
     }
 
-    public void cg_init_Entry_1(final Character c) {
-        /* skip */
-    }
-
-    public void cg_init_Entry_2(final Number n) {
+    public void cg_init_Entry_4(final Number n, final Character c) {
         /* skip */
     }
 
@@ -36,7 +32,11 @@ public class Entry {
         /* skip */
     }
 
-    public void cg_init_Entry_4(final Number n, final Character c) {
+    public void cg_init_Entry_2(final Number n) {
+        /* skip */
+    }
+
+    public void cg_init_Entry_1(final Character c) {
         /* skip */
     }
 

@@ -12,7 +12,7 @@ public class Entry {
 
     public static Object Run() {
         return new String(new char[] { "a".charAt(0) }) +
-        new String(new char[] { a.charAt(0) }) +
+        new String(new char[] { Entry.a.charAt(0) }) +
         new String(new char[] { f().charAt(0) });
     }
 

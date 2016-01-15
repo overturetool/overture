@@ -29,7 +29,6 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -45,6 +44,7 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
@@ -1309,21 +1309,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			SClassDefinition owningClass = varDef.getAncestor(SClassDefinition.class);
 			SClassDefinition nodeParentClass = node.getAncestor(SClassDefinition.class);
 			
-			boolean inOwningClass = owningClass == nodeParentClass;
-	
-			boolean isLocalDef = varDef instanceof ALocalDefinition;
+			boolean isLocalDef = varDef.getNameScope() == NameScope.LOCAL || varDef instanceof AAssignmentDefinition;
 			boolean isInstanceVarDef = varDef instanceof AInstanceVariableDefinition;
 			boolean isExplOp = varDef instanceof SOperationDefinition;
 			boolean isExplFunc = varDef instanceof SFunctionDefinition;
-			boolean isAssignmentDef = varDef instanceof AAssignmentDefinition;
 	
-			boolean isDefInOwningClass = inOwningClass
-					&& (isLocalDef || isInstanceVarDef || isExplOp || isExplFunc || isAssignmentDef);
+			boolean isDefInOwningClass = owningClass == nodeParentClass
+					&& (isLocalDef || isInstanceVarDef || isExplOp || isExplFunc);
 			
-			boolean isImplicit = !explicit;
-	
-			boolean isInheritedDef = varDef instanceof AInheritedDefinition;
-	
 			if(isExplOp && !isDefInOwningClass && !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
 			{
 				ASuperVarExpCG superVarExp = new ASuperVarExpCG();
@@ -1335,22 +1328,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	
 				return superVarExp;
 			}
-			else if (owningClass == null
-					|| nodeParentClass == null
-					|| isDefInOwningClass
-					|| isInheritedDef
-					|| isImplicit
-					|| explicit
-					&& !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
-			{
-				return consIdVar(name, isLambda, typeCg, isLocalDef);
-			} else if (explicit)
+			else if (explicit && !isLocalDef && question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
 			{
 				return consExplicitVar(node.getName().getModule(), name, isLambda, typeCg, isLocalDef);
 			} else
 			{
-				question.addUnsupportedNode(node, "Reached unexpected case when generating a variable expression in a PP model in '" + this.getClass().getSimpleName() + "'");
-				return null;
+				return consIdVar(name, isLambda, typeCg, isLocalDef);
 			}
 		}
 		else if(Settings.dialect == Dialect.VDM_SL)

@@ -32,6 +32,9 @@ import java.util.Set;
 
 import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.ACpuClassDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
@@ -43,7 +46,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.util.modules.CombinedDefaultModule;
-import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
@@ -59,7 +61,7 @@ import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
@@ -77,14 +79,17 @@ import org.overture.codegen.trans.ModuleToClassTransformation;
 import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
-import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Settings;
 
-public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
+public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJavaQouteEventCoordinator
 {
+	public static final String TRACE_IMPORT = "org.overture.codegen.runtime.traces.*";
+	public static final String RUNTIME_IMPORT = "org.overture.codegen.runtime.*";
+	public static final String JAVA_UTIL = "java.util.*";
+	
 	public static final String JAVA_TEMPLATES_ROOT_FOLDER = "JavaTemplates";
 
 	public static final String[] JAVA_RESERVED_TYPE_NAMES = {
@@ -92,7 +97,24 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			"Utils", "Record", "Long", "Double", "Character", "String", "List",
 			"Set" };
 
-	public static final String JAVA_QUOTE_NAME_SUFFIX = "Quote";
+	
+	/**
+	 * Signatures of the java.lang.Object methods:<br>
+	 * clone()<br>
+	 * equals(Object obj)<br>
+	 * finalize()<br>
+	 * getClass()<br>
+	 * hashCode()<br>
+	 * notify()<br>
+	 * notifyAll()<br>
+	 * toString()<br>
+	 * wait()<br>
+	 * wait(long timeout, int nanos)<br>
+	 * wait(long timeout)
+	 */
+	public static final String[] JAVA_LANG_OBJECT_METHODS = { "clone", "equals", "finalize", "getClass", "hashCode",
+			"notify", "notifyAll", "toString", "wait" };
+	
 	public static final String JAVA_MAIN_CLASS_NAME = "Main";
 	public static final String JAVA_QUOTES_PACKAGE = "quotes";
 	
@@ -102,6 +124,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	private TemplateStructure javaTemplateStructure;
 	
 	private IREventObserver irObserver;
+	private IJavaQuoteEventObserver quoteObserver;
 	
 	private JavaVarPrefixManager varPrefixManager;
 	
@@ -118,6 +141,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		this.varPrefixManager = new JavaVarPrefixManager();
 		
 		this.irObserver = null;
+		this.quoteObserver = null;
 		initVelocity();
 
 		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
@@ -182,16 +206,31 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 			javaFormat.init();
 
-			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(generator.getIRInfo(), transAssistant);
+			JavaQuoteValueCreator creator = new JavaQuoteValueCreator(generator.getIRInfo(), transAssistant);
 
-			List<GeneratedModule> modules = new LinkedList<GeneratedModule>();
+			List<ADefaultClassDeclCG> quoteClasses = new LinkedList<>();
 			for (String quoteNameVdm : quoteValues)
 			{
-				AClassDeclCG quoteDecl = quoteValueCreator.consQuoteValue(quoteNameVdm
-						+ JAVA_QUOTE_NAME_SUFFIX, quoteNameVdm, getJavaSettings().getJavaRootPackage());
-
+				String pack = getJavaSettings().getJavaRootPackage();
+				ADefaultClassDeclCG quoteDecl = creator.consQuoteValue(quoteNameVdm, quoteNameVdm, pack);
+				
+				quoteClasses.add(quoteDecl);
+			}
+			
+			// Event notification
+			if(quoteObserver != null)
+			{
+				quoteObserver.quoteClassesProduced(quoteClasses);
+			}
+			
+			List<GeneratedModule> modules = new LinkedList<GeneratedModule>();
+			for (int i = 0; i < quoteClasses.size(); i++)
+			{
+				String quoteNameVdm = quoteValues.get(i);
+				ADefaultClassDeclCG qc = quoteClasses.get(i);
+				
 				StringWriter writer = new StringWriter();
-				quoteDecl.apply(javaFormat.getMergeVisitor(), writer);
+				qc.apply(javaFormat.getMergeVisitor(), writer);
 				String code = writer.toString();
 
 				if(getJavaSettings().formatCode())
@@ -199,7 +238,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 					code = JavaCodeGenUtil.formatJavaCode(code);
 				}
 
-				modules.add(new GeneratedModule(quoteNameVdm, quoteDecl, code));
+				modules.add(new GeneratedModule(quoteNameVdm, qc, code, false));
 			}
 
 			return modules;
@@ -253,18 +292,29 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		handleOldNames(ast);
 
 		List<Renaming> allRenamings = normaliseIdentifiers(userModules);
-		computeDefTable(userModules);
+		generator.computeDefTable(userModules);
 
 		// To document any renaming of variables shadowing other variables
 		removeUnreachableStms(ast);
 
 		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs()));
 
+		List<String> userTestCases = new LinkedList<>();
+		
 		for (INode node : ast)
 		{
-			if (generator.getIRInfo().getAssistantManager().getDeclAssistant().isLibrary(node))
+			if (getInfo().getAssistantManager().getDeclAssistant().isLibrary(node))
 			{
 				simplifyLibrary(node);
+			}
+			else
+			{
+				if(getInfo().getDeclAssistant().isTestCase(node))
+				{
+					userTestCases.add(getInfo().getDeclAssistant().getNodeName(node));
+				}
+				
+				preProcessUserClass(node);
 			}
 		}
 
@@ -273,14 +323,17 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 		for (INode node : ast)
 		{
-			genIrStatus(statuses, node);
+			if(!(node instanceof ASystemClassDefinition) && !(node instanceof ACpuClassDefinition))
+			{
+				genIrStatus(statuses, node);
+			}
 		}
 
 		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
 		
 		// Event notification
 		statuses = initialIrEvent(statuses);
-		statuses = filter(statuses, generated);
+		statuses = filter(statuses, generated, userTestCases);
 		
 		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
 		List<IRStatus<org.overture.codegen.cgast.INode>> modulesAsNodes = IRStatus.extract(moduleStatuses);
@@ -304,27 +357,28 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			
 		}
 
-		List<IRStatus<AClassDeclCG>> classStatuses = IRStatus.extract(modulesAsNodes, AClassDeclCG.class);
-		classStatuses.addAll(IRStatus.extract(statuses, AClassDeclCG.class));
+		List<IRStatus<ADefaultClassDeclCG>> classStatuses = IRStatus.extract(modulesAsNodes, ADefaultClassDeclCG.class);
+		classStatuses.addAll(IRStatus.extract(statuses, ADefaultClassDeclCG.class));
 		
 		if (getJavaSettings().getJavaRootPackage() != null)
 		{
-			for (IRStatus<AClassDeclCG> irStatus : classStatuses)
+			for (IRStatus<ADefaultClassDeclCG> irStatus : classStatuses)
 			{
 				irStatus.getIrNode().setPackage(getJavaSettings().getJavaRootPackage());
 			}
 		}
 
-		List<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
+		List<IRStatus<ADefaultClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<ADefaultClassDeclCG>>();
 
-		for (IRStatus<AClassDeclCG> status : classStatuses)
+		for (IRStatus<ADefaultClassDeclCG> status : classStatuses)
 		{
 			if (status.canBeGenerated())
 			{
 				canBeGenerated.add(status);
 			} else
 			{
-				generated.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>()));
+				boolean isTestCase = userTestCases.contains(status.getIrNodeName());
+				generated.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>(), isTestCase));
 			}
 		}
 
@@ -332,7 +386,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 		for (DepthFirstAnalysisAdaptor trans : transformations)
 		{
-			for (IRStatus<AClassDeclCG> status : canBeGenerated)
+			for (IRStatus<ADefaultClassDeclCG> status : canBeGenerated)
 			{
 				try
 				{
@@ -352,18 +406,18 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		}
 		
 		// Event notification
-		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), AClassDeclCG.class);
-		canBeGenerated = filter(canBeGenerated, generated);
+		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), ADefaultClassDeclCG.class);
+		canBeGenerated = filter(canBeGenerated, generated, userTestCases);
 		
 		List<String> skipping = new LinkedList<String>();
 
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
 		javaFormat.setFunctionValueAssistant(transSeries.getFuncValAssist());
 
-		for (IRStatus<AClassDeclCG> status : canBeGenerated)
+		for (IRStatus<ADefaultClassDeclCG> status : canBeGenerated)
 		{
 			StringWriter writer = new StringWriter();
-			AClassDeclCG classCg = status.getIrNode();
+			ADefaultClassDeclCG classCg = status.getIrNode();
 			String className = status.getIrNodeName();
 			INode vdmClass = status.getIrNode().getSourceNode().getVdmNode();
 
@@ -380,12 +434,14 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 				{
 					classCg.apply(mergeVisitor, writer);
 
+					boolean isTestCase = userTestCases.contains(className);
+					
 					if (mergeVisitor.hasMergeErrors())
 					{
-						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors()));
+						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors(), isTestCase));
 					} else if (mergeVisitor.hasUnsupportedTargLangNodes())
 					{
-						generated.add(new GeneratedModule(className, new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang()));
+						generated.add(new GeneratedModule(className, new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang(), isTestCase));
 					} else
 					{
 						String code = writer.toString();
@@ -395,7 +451,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 							code = JavaCodeGenUtil.formatJavaCode(code); 
 						}
 						
-						GeneratedModule generatedModule = new GeneratedModule(className, classCg, code);
+						GeneratedModule generatedModule = new GeneratedModule(className, classCg, code, isTestCase);
 						generatedModule.setTransformationWarnings(status.getTransformationWarnings());
 						generated.add(generatedModule);
 					}
@@ -428,7 +484,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			{
 				funcValueInterface.apply(mergeVisitor, writer);
 				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
-				generated.add(new GeneratedModule(funcValueInterface.getName(), funcValueInterface, formattedJavaCode));
+				generated.add(new GeneratedModule(funcValueInterface.getName(), funcValueInterface, formattedJavaCode, false));
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
@@ -452,6 +508,40 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		data.setWarnings(warnings);
 
 		return data;
+	}
+
+	private void preProcessUserClass(INode node)
+	{
+		if (!getJavaSettings().genJUnit4tests())
+		{
+			return;
+		}
+
+		if (node instanceof SClassDefinition)
+		{
+			SClassDefinition clazz = (SClassDefinition) node;
+
+			if (getInfo().getDeclAssistant().isTestCase(clazz))
+			{
+				List<PDefinition> toRemove = new LinkedList<>();
+
+				for (PDefinition d : clazz.getDefinitions())
+				{
+					if (d instanceof AExplicitOperationDefinition)
+					{
+						AExplicitOperationDefinition op = (AExplicitOperationDefinition) d;
+
+						if (op.getName().getName().equals(IRConstants.TEST_CASE_RUN_FULL_SUITE)
+								&& op.getParameterPatterns().isEmpty())
+						{
+							toRemove.add(op);
+						}
+					}
+				}
+
+				clazz.getDefinitions().removeAll(toRemove);
+			}
+		}
 	}
 
 	private void genIrStatus(
@@ -490,7 +580,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	}
 
 	private <T extends org.overture.codegen.cgast.INode> List<IRStatus<T>> filter(
-			List<IRStatus<T>> statuses, List<GeneratedModule> generated)
+			List<IRStatus<T>> statuses, List<GeneratedModule> generated, List<String> userTestCases)
 	{
 		List<IRStatus<T>> filtered = new LinkedList<IRStatus<T>>();
 		
@@ -502,7 +592,8 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 			}
 			else
 			{
-				generated.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>()));
+				boolean isUserTestCase = userTestCases.contains(status.getIrNodeName());
+				generated.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>(), isUserTestCase));
 			}
 		}
 		
@@ -588,23 +679,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 		return new LinkedList<Renaming>(filteredRenamings);
 	}
 
-	private void computeDefTable(List<INode> mergedParseLists)
-			throws AnalysisException
-	{
-		List<INode> classesToConsider = new LinkedList<>();
-
-		for (INode node : mergedParseLists)
-		{
-			if (!getInfo().getDeclAssistant().isLibrary(node))
-			{
-				classesToConsider.add(node);
-			}
-		}
-		
-		Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(classesToConsider, getInfo().getTcFactory());
-		getInfo().setIdStateDesignatorDefs(idDefs);
-	}
-
 	private void removeUnreachableStms(List<? extends INode> mergedParseLists)
 			throws AnalysisException
 	{
@@ -677,7 +751,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 				func.setPrecondition(null);
 				func.setPostcondition(null);
 			}
-
 		}
 	}
 	
@@ -764,7 +837,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 			if (JavaCodeGenUtil.isQuote(generatedModule.getIrNode(), getJavaSettings()))
 			{
-				javaFileName += JAVA_QUOTE_NAME_SUFFIX;
+				javaFileName += JavaQuoteValueCreator.JAVA_QUOTE_NAME_SUFFIX;
 			}
 
 			javaFileName += IJavaConstants.JAVA_FILE_EXTENSION;
@@ -781,15 +854,17 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 
 		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaConstants.RESERVED_WORDS, generator.getIRInfo(), INVALID_NAME_PREFIX));
 		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(JAVA_RESERVED_TYPE_NAMES, generator.getIRInfo(), INVALID_NAME_PREFIX));
-
-		String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, varPrefixManager.getIteVarPrefixes().GENERATED_TEMP_NAMES);
+		Set<Violation> objectMethodViolations = analysis.usesIllegalNames(mergedParseLists, new ObjectMethodComparison(JAVA_LANG_OBJECT_METHODS, generator.getIRInfo(), INVALID_NAME_PREFIX));
+			
+		//TODO: needs to take all of them into account
+		String[] generatedTempVarNames = varPrefixManager.getIteVarPrefixes().GENERATED_TEMP_NAMES;
 
 		Set<Violation> tempVarViolations = analysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(generatedTempVarNames, generator.getIRInfo(), INVALID_NAME_PREFIX));
 
 		if (!reservedWordViolations.isEmpty() || !typenameViolations.isEmpty()
-				|| !tempVarViolations.isEmpty())
+				|| !tempVarViolations.isEmpty() || !objectMethodViolations.isEmpty())
 		{
-			return new InvalidNamesResult(reservedWordViolations, typenameViolations, tempVarViolations, INVALID_NAME_PREFIX);
+			return new InvalidNamesResult(reservedWordViolations, typenameViolations, tempVarViolations, objectMethodViolations, INVALID_NAME_PREFIX);
 		} else
 		{
 			return new InvalidNamesResult();
@@ -836,7 +911,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	}
 
 	@Override
-	public void register(IREventObserver obs)
+	public void registerIrObs(IREventObserver obs)
 	{
 		if(obs != null && irObserver == null)
 		{
@@ -845,11 +920,29 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator
 	}
 
 	@Override
-	public void unregister(IREventObserver obs)
+	public void unregisterIrObs(IREventObserver obs)
 	{
 		if(obs != null && irObserver == obs)
 		{
 			irObserver = null;
+		}
+	}
+	
+	@Override
+	public void registerJavaQuoteObs(IJavaQuoteEventObserver obs)
+	{
+		if(obs != null && quoteObserver == null)
+		{
+			quoteObserver = obs;
+		}
+	}
+
+	@Override
+	public void unregisterJavaQuoteObs(IJavaQuoteEventObserver obs)
+	{
+		if(obs != null && quoteObserver == obs)
+		{
+			quoteObserver = null;
 		}
 	}
 

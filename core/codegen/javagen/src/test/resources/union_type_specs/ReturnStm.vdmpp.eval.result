@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.codegen.tests.exec.UnionJavaGenTest">
+<testResult type="org.overture.codegen.tests.exec.UnionTypeJavaGenTest">
 <result>
-<output object="rO0ABXNyAClvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLlJlYWxWYWx1ZQAAAAAAAAABAgAAeHIALG9yZy5vdmVydHVyZS5pbnRlcnByZXRlci52YWx1ZXMuTnVtZXJpY1ZhbHVlAAAAAAAAAAECAAFEAAV2YWx1ZXhyACVvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLlZhbHVlAAAAAAAAAAECAAB4cEAEAAAAAAAA" resource="ReturnStm" value="2.5"/>
+<output object="rO0ABXNyAClvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLlJlYWxWYWx1ZQAAAAAAAAABAgAAeHIALG9yZy5vdmVydHVyZS5pbnRlcnByZXRlci52YWx1ZXMuTnVtZXJpY1ZhbHVlAAAAAAAAAAECAAFEAAV2YWx1ZXhyACVvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLlZhbHVlAAAAAAAAAAECAAB4cEAEAAAAAAAA" resource="ReturnStm.vdmpp" value="2.5"/>
 </result>
 </testResult>

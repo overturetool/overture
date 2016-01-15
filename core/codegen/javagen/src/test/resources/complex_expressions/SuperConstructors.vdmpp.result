@@ -22,15 +22,15 @@ public class A {
     public A() {
     }
 
+    public void cg_init_A_2(final Character d, final Character e) {
+        fourth = d;
+        fifth = e;
+    }
+
     public void cg_init_A_1(final Number a, final Boolean b, final Character c) {
         first = a;
         second = b;
         third = c;
-    }
-
-    public void cg_init_A_2(final Character d, final Character e) {
-        fourth = d;
-        fifth = e;
     }
 
     public String toString() {
@@ -57,15 +57,15 @@ public class B extends A {
         cg_init_B_2(x, y);
     }
 
-    public void cg_init_B_1() {
-        Number a = 60L;
-        cg_init_A_1(a, true, 'a');
-    }
-
     public void cg_init_B_2(final Character x, final Character y) {
         /* skip */
         /* skip */
         cg_init_A_2(x, y);
+    }
+
+    public void cg_init_B_1() {
+        Number a = 60L;
+        cg_init_A_1(a, true, 'a');
     }
 
     public String toString() {
@@ -89,13 +89,13 @@ public class C extends B {
         cg_init_C_2();
     }
 
+    public void cg_init_C_2() {
+        cg_init_A_1(2L, false, 'b');
+    }
+
     public void cg_init_C_1(final Boolean t) {
         Number z = 1L;
         cg_init_A_1(z, t, 'b');
-    }
-
-    public void cg_init_C_2() {
-        cg_init_A_1(2L, false, 'b');
     }
 
     public String toString() {

@@ -111,7 +111,7 @@ public class IRTest
 		id.setName("x");
 		
 		AVarDeclCG varDecl = javaCodeGen.getInfo().getDeclAssistant().
-				consLocalVarDecl(new ARealNumericBasicTypeCG(), id, javaCodeGen.getInfo().getExpAssistant().consNullExp());
+				consLocalVarDecl(new ARealNumericBasicTypeCG(), id, javaCodeGen.getInfo().getExpAssistant().consUndefinedExp());
 		varDecl.setFinal(true);
 		
 		String expected = "final Number x = null;";
@@ -149,7 +149,7 @@ public class IRTest
 			if (mergeVisitor.getMergeErrors().isEmpty())
 			{
 				String actual = GeneralUtils.cleanupWhiteSpaces(writer.toString());
-				Assert.assertTrue("Expected: " + expected + ". Got: " + actual, expected.equals(actual));
+				Assert.assertEquals("Got unexpected code generator output", expected, actual);
 			} else
 			{
 				Assert.fail("Could print node: " + node);

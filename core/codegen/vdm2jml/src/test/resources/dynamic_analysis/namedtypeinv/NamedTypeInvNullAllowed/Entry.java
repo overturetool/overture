@@ -1,6 +1,7 @@
 package project;
 
 import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
 
 import java.util.*;
 
@@ -15,7 +16,7 @@ final public class Entry {
     public static Object Run() {
         Object e = null;
 
-        //@ assert inv_Entry_N(e) && (e == null || inv_Entry_X(e) || inv_Entry_Y(e));
+        //@ assert ((e == null) || ((e == null) || (Utils.is_nat(e) && inv_Entry_X(e)) || (Utils.is_char(e) && inv_Entry_Y(e))) && inv_Entry_N(e));
         return e;
     }
 
@@ -26,31 +27,18 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_N(final Object check_elem) {
-        if (!(Utils.equals(check_elem, null)) &&
-                !(Utils.is_nat(check_elem) || Utils.is_char(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_X(final Object check_elem) {
-        if ((Utils.equals(check_elem, null)) || !(Utils.is_nat(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_Y(final Object check_elem) {
-        if ((Utils.equals(check_elem, null)) || !(Utils.is_char(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 }

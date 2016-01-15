@@ -35,8 +35,6 @@ import org.overture.config.Settings;
 
 public class TestHandler
 {
-	protected File currentInputFile = null;
-
 	private Release release;
 	private Dialect dialect;
 	

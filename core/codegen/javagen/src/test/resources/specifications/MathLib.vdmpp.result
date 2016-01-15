@@ -11,24 +11,24 @@ public class A {
     }
 
     public void op() {
-        Number x0 = MATH.sin(x);
-        Number x1 = MATH.cos(x);
-        Number x2 = MATH.tan(x);
-        Number x3 = MATH.cot(x);
-        Number x4 = MATH.asin(x);
-        Number x5 = MATH.acos(x);
-        Number x6 = MATH.atan(x);
-        Number x7 = MATH.acot(x);
-        Number x8 = MATH.sqrt(x);
+        Number x0 = MATH.sin(A.x);
+        Number x1 = MATH.cos(A.x);
+        Number x2 = MATH.tan(A.x);
+        Number x3 = MATH.cot(A.x);
+        Number x4 = MATH.asin(A.x);
+        Number x5 = MATH.acos(A.x);
+        Number x6 = MATH.atan(A.x);
+        Number x7 = MATH.acot(A.x);
+        Number x8 = MATH.sqrt(A.x);
         Number x9 = MATH.pi_f();
-        Number x10 = MATH.rand(x);
-        Number x11 = MATH.srand2(x);
-        Number x12 = MATH.exp(x);
-        Number x13 = MATH.ln(x);
-        Number x14 = MATH.log(x);
-        Number x15 = MATH.fac(x);
+        Number x10 = MATH.rand(A.x);
+        Number x11 = MATH.srand2(A.x);
+        Number x12 = MATH.exp(A.x);
+        Number x13 = MATH.ln(A.x);
+        Number x14 = MATH.log(A.x);
+        Number x15 = MATH.fac(A.x);
         Number x16 = MATH.pi;
-        MATH.srand(x);
+        MATH.srand(A.x);
     }
 
     public String toString() {

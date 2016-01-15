@@ -32,7 +32,7 @@ import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.ACatchClauseDeclCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
@@ -52,8 +52,11 @@ import org.overture.codegen.cgast.statements.ABreakStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.AContinueStmCG;
+import org.overture.codegen.cgast.statements.ACyclesStmCG;
 import org.overture.codegen.cgast.statements.ADecrementStmCG;
+import org.overture.codegen.cgast.statements.ADurationStmCG;
 import org.overture.codegen.cgast.statements.AErrorStmCG;
+import org.overture.codegen.cgast.statements.AExitStmCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
@@ -65,6 +68,7 @@ import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
 import org.overture.codegen.cgast.statements.AInvCheckStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
+import org.overture.codegen.cgast.statements.AMapCompAddStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
@@ -74,6 +78,8 @@ import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
+import org.overture.codegen.cgast.statements.ASeqCompAddStmCG;
+import org.overture.codegen.cgast.statements.ASetCompAddStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.statements.AStartStmCG;
 import org.overture.codegen.cgast.statements.AStartlistStmCG;
@@ -166,7 +172,7 @@ public class TemplateManager
 		nodeTemplateFileNames = new HashMap<Class<? extends INode>, String>();
 
 		// Declarations
-		nodeTemplateFileNames.put(AClassDeclCG.class, templateStructure.DECL_PATH
+		nodeTemplateFileNames.put(ADefaultClassDeclCG.class, templateStructure.DECL_PATH
 				+ "Class");
 
 		nodeTemplateFileNames.put(ARecordDeclCG.class, templateStructure.DECL_PATH
@@ -360,6 +366,9 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AErrorStmCG.class, templateStructure.STM_PATH
 				+ "Error");
+		
+		nodeTemplateFileNames.put(AExitStmCG.class, templateStructure.STM_PATH
+				+ "Exit");
 
 		nodeTemplateFileNames.put(AContinueStmCG.class, templateStructure.STM_PATH
 				+ "Continue");
@@ -384,11 +393,25 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AMetaStmCG.class, templateStructure.STM_PATH
 				+ "Meta");
+		
+		nodeTemplateFileNames.put(ASeqCompAddStmCG.class, templateStructure.STM_PATH
+				+ "SeqCompAdd");
+		
+		nodeTemplateFileNames.put(ASetCompAddStmCG.class, templateStructure.STM_PATH
+				+ "SetCompAdd");
 
-		// The template used for the block statement also works here
+		nodeTemplateFileNames.put(AMapCompAddStmCG.class, templateStructure.STM_PATH
+				+ "MapCompAdd");
+		
 		nodeTemplateFileNames.put(AAtomicStmCG.class, templateStructure.STM_PATH
 				+ "Atomic");
 
+		nodeTemplateFileNames.put(ACyclesStmCG.class, templateStructure.STM_PATH
+				+ "Cycles");
+
+		nodeTemplateFileNames.put(ADurationStmCG.class, templateStructure.STM_PATH
+				+ "Duration");
+		
 		// Expressions
 
 		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH
@@ -546,10 +569,10 @@ public class TemplateManager
 				+ "Isolation");
 
 		nodeTemplateFileNames.put(ALenUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
-				+ "Len_Card");
+				+ "Len");
 
 		nodeTemplateFileNames.put(ACardUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
-				+ "Len_Card");
+				+ "Card");
 
 		nodeTemplateFileNames.put(AElemsUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "Elems");

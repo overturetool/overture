@@ -1,0 +1,24 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    private static final Number FIRST = 1L;
+    private static final Number LAST = 10L;
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return SetUtil.range(Entry.FIRST, Entry.LAST).size();
+    }
+
+    public String toString() {
+        return "Entry{" + "FIRST = " + Utils.toString(FIRST) + ", LAST = " +
+        Utils.toString(LAST) + "}";
+    }
+}
+
+##########

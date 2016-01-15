@@ -24,7 +24,6 @@ abstract public class PpSpecificationTest extends SpecificationTestBase
 	@Before
 	public void init()
 	{
-		super.init();
 		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
 	}
@@ -45,7 +44,7 @@ abstract public class PpSpecificationTest extends SpecificationTestBase
 			}
 		}
 
-		return vdmCodGen.generateJavaFromVdm(classes);
+		return getJavaGen().generateJavaFromVdm(classes);
 	}
 
 	abstract protected String getUpdatePropertyString();

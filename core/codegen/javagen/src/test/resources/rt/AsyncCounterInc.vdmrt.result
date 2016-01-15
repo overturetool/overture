@@ -42,7 +42,7 @@ public class Entry implements EvaluatePP {
         sentinel.entering(((Entry_sentinel) sentinel).fire);
 
         try {
-            long toVar_1 = AsyncCalls.longValue();
+            long toVar_1 = Entry.AsyncCalls.longValue();
 
             for (Long i = 1L; i <= toVar_1; i++) {
                 inc();
@@ -73,7 +73,7 @@ public class Entry implements EvaluatePP {
                 0L);
         } else if (Utils.equals(fnr, 1L)) {
             return Utils.equals(sentinel.fin[((Entry_sentinel) sentinel).inc],
-                AsyncCalls);
+                Entry.AsyncCalls);
         } else if (Utils.equals(fnr, 2L)) {
             return true;
         } else if (Utils.equals(fnr, 3L)) {

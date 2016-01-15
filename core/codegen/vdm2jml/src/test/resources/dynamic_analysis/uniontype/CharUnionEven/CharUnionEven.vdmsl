@@ -1,0 +1,34 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+Even = nat
+inv n == n mod 2 = 0;
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ let - : char | Even = charA() in skip;
+ IO`println("After legal use");
+ IO`println("Before illegal use");
+ let - : char | Even = charNil() in skip;
+ IO`println("After illegal use");
+ return 0;
+);
+  
+functions
+
+charA :  () -> char
+charA () == 'a';  
+
+charNil :  () -> [char]
+charNil () == nil;  
+  
+end Entry

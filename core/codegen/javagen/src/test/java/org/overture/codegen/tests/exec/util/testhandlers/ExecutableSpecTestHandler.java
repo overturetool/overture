@@ -41,7 +41,17 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 	public void writeMainClass(File parent, String rootPackage)
 			throws IOException
 	{
-		injectArgIntoMainClassFile(parent, rootPackage != null ? (rootPackage  + "." + getJavaEntry()) : getJavaEntry());
+		injectArgIntoMainClassFile(parent, getFullyQualifiedEntry(rootPackage), rootPackage);
+	}
+
+	public String getFullyQualifiedEntry(String rootPackage)
+	{
+		return rootPackage != null ? (rootPackage  + "." + getJavaEntry()) : getJavaEntry();
+	}
+	
+	public String toFullName(String rootPackage, String relativeName)
+	{
+		return rootPackage != null ? (rootPackage  + "." + relativeName) : relativeName;
 	}
 	
 	@Override

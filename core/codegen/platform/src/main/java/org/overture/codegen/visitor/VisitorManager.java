@@ -38,15 +38,15 @@ import org.overture.codegen.cgast.STermCG;
 import org.overture.codegen.cgast.STraceCoreDeclCG;
 import org.overture.codegen.cgast.STraceDeclCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.traces.TermVisitorCG;
 import org.overture.codegen.traces.TraceCoreDeclVisitorCG;
 import org.overture.codegen.traces.TraceDeclVisitorCG;
 
 public class VisitorManager
 {
-	private CGVisitor<AClassDeclCG> classVisitor;
+	private CGVisitor<SClassDeclCG> classVisitor;
 	private CGVisitor<AModuleDeclCG> moduleVisitor;
 	private CGVisitor<SImportsCG> importsVisitor;
 	private CGVisitor<SImportCG> importVisitor;
@@ -68,7 +68,7 @@ public class VisitorManager
 
 	public VisitorManager()
 	{
-		this.classVisitor = new CGVisitor<AClassDeclCG>(new ClassVisitorCG());
+		this.classVisitor = new CGVisitor<SClassDeclCG>(new ClassVisitorCG());
 		this.moduleVisitor = new CGVisitor<AModuleDeclCG>(new ModuleVisitorCG());
 		this.importsVisitor = new CGVisitor<SImportsCG>(new ImportsVisitorCG());
 		this.importVisitor = new CGVisitor<SImportCG>(new ImportVisitorCG());
@@ -89,7 +89,7 @@ public class VisitorManager
 		this.traceCoreDeclVisitor = new CGVisitor<STraceCoreDeclCG>(new TraceCoreDeclVisitorCG());
 	}
 
-	public CGVisitor<AClassDeclCG> getClassVisitor()
+	public CGVisitor<SClassDeclCG> getClassVisitor()
 	{
 		return classVisitor;
 	}

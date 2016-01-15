@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2java;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
@@ -12,6 +13,7 @@ import org.overture.codegen.traces.TracesTrans;
 import org.overture.codegen.trans.AssignStmTrans;
 import org.overture.codegen.trans.AtomicStmTrans;
 import org.overture.codegen.trans.CallObjStmTrans;
+import org.overture.codegen.trans.ConstructorTrans;
 import org.overture.codegen.trans.DivideTrans;
 import org.overture.codegen.trans.Exp2StmTrans;
 import org.overture.codegen.trans.Exp2StmVarPrefixes;
@@ -44,6 +46,8 @@ import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
 
 public class JavaTransSeries
 {
+	private static final String OBJ_INIT_CALL_NAME_PREFIX = "cg_init_";
+	
 	private JavaCodeGen codeGen;
 	private List<DepthFirstAnalysisAdaptor> series;
 	private FuncValAssistant funcValAssist;
@@ -77,6 +81,7 @@ public class JavaTransSeries
 		FuncValPrefixes funcValPrefixes = varMan.getFuncValPrefixes();
 		PatternVarPrefixes patternPrefixes = varMan.getPatternPrefixes();
 		UnionTypeVarPrefixes unionTypePrefixes = varMan.getUnionTypePrefixes();
+		List<INode> cloneFreeNodes = codeGen.getJavaFormat().getValueSemantics().getCloneFreeNodes();
 		
 		TransAssistantCG transAssist = codeGen.getTransAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(varMan.postCheckMethodName());
@@ -99,10 +104,13 @@ public class JavaTransSeries
 		PostCheckTrans postCheckTr = new PostCheckTrans(postCheckCreator, transAssist, varMan.funcRes(), new JavaValueSemanticsTag(false));
 		IsExpTrans isExpTr = new IsExpTrans(transAssist, varMan.isExpSubject());
 		SeqConvTrans seqConvTr = new SeqConvTrans(transAssist);
-		TracesTrans tracesTr = new TracesTrans(transAssist, iteVarPrefixes, tracePrefixes, langIte, new JavaCallStmToStringBuilder());
-		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, unionTypePrefixes, codeGen.getJavaFormat().getValueSemantics().getCloneFreeNodes());
+		TracesTrans tracesTr = new TracesTrans(transAssist, iteVarPrefixes, tracePrefixes, langIte, new JavaCallStmToStringBuilder(), cloneFreeNodes);
+		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, unionTypePrefixes, cloneFreeNodes);
 		JavaToStringTrans javaToStringTr = new JavaToStringTrans(info);
 		RecMethodsTrans recTr = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());
+		ConstructorTrans ctorTr = new ConstructorTrans(transAssist, OBJ_INIT_CALL_NAME_PREFIX);
+		ImportsTrans impTr = new ImportsTrans(info);
+		JUnit4Trans junitTr = new JUnit4Trans(transAssist, codeGen);
 
 		// Start concurrency transformations
 		SentinelTrans sentinelTr = new SentinelTrans(info);
@@ -136,6 +144,9 @@ public class JavaTransSeries
 		series.add(seqConvTr);
 		series.add(evalPermPredTr);
 		series.add(recTr);
+		series.add(ctorTr);
+		series.add(impTr);
+		series.add(junitTr);
 
 		return series;
 	}

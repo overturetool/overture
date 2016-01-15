@@ -1,0 +1,22 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+  
+Run : () ==> ?
+Run () ==
+(
+  dcl i : int := -1;
+  IO`println("Before valid use.");
+  i := 1;
+  IO`println("After valid use.");
+  IO`println("Before invalid use.");
+  i := i + 0.5;
+  IO`println("After invalid use.");
+  return 0;
+);
+
+end Entry

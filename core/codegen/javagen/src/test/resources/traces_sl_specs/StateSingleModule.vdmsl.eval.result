@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.codegen.tests.exec.TracesSlJavaGenTest">
+<result>
+<output object="rO0ABXNyABBqYXZhLnV0aWwuVmVjdG9y2Zd9W4A7rwEDAANJABFjYXBhY2l0eUluY3JlbWVudEkADGVsZW1lbnRDb3VudFsAC2VsZW1lbnREYXRhdAATW0xqYXZhL2xhbmcvT2JqZWN0O3hwAAAAAAAAAAJ1cgATW0xqYXZhLmxhbmcuT2JqZWN0O5DOWJ8QcylsAgAAeHAAAAAKc3IAKW9yZy5vdmVydHVyZS5jdC5jdHJ1bnRpbWUudXRpbHMuVHJhY2VUZXN0feFkkkPBXUACAARMAAJub3QAE0xqYXZhL2xhbmcvSW50ZWdlcjtMAAZyZXN1bHR0ABJMamF2YS9sYW5nL1N0cmluZztMAAR0ZXN0cQB+AAdMAAd2ZXJkaWN0dAApTG9yZy9vdmVydHVyZS9pbnRlcnByZXRlci90cmFjZXMvVmVyZGljdDt4cHNyABFqYXZhLmxhbmcuSW50ZWdlchLioKT3gYc4AgABSQAFdmFsdWV4cgAQamF2YS5sYW5nLk51bWJlcoaslR0LlOCLAgAAeHAAAAABdAAFMiA7IDR0AAxvcCgxKTsgb3AoMil+cgAnb3JnLm92ZXJ0dXJlLmludGVycHJldGVyLnRyYWNlcy5WZXJkaWN0AAAAAAAAAAASAAB4cgAOamF2YS5sYW5nLkVudW0AAAAAAAAAABIAAHhwdAAGUEFTU0VEc3EAfgAFc3EAfgAKAAAAAnQABTMgOyAzdAAMb3AoMik7IG9wKDEpcQB+ABFwcHBwcHBwcHg=" resource="StateSingleModule.vdmsl" value="[TraceTest: Number: 1 Test: op(1); op(2) Result: 2 ; 4 Verdict: PASSED, TraceTest: Number: 2 Test: op(2); op(1) Result: 3 ; 3 Verdict: PASSED]"/>
+</result>
+</testResult>

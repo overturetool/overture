@@ -11,7 +11,7 @@ public class Entry {
     }
 
     public static Number id(final Number x) {
-        xs = SeqUtil.conc(Utils.copy(xs), SeqUtil.seq(x));
+        xs = SeqUtil.conc(Utils.copy(Entry.xs), SeqUtil.seq(x));
 
         return x;
     }
@@ -47,7 +47,7 @@ public class Entry {
     public static Object Run() {
         Boolean ignorePattern_1 = op();
 
-        return Utils.copy(xs);
+        return Utils.copy(Entry.xs);
     }
 
     public String toString() {

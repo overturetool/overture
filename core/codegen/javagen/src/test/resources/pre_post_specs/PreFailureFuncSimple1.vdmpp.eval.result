@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.codegen.tests.exec.PrePostJavaGenTest">
 <result>
-<output object="rO0ABXQAVkVycm9yIDQwNTU6IFByZWNvbmRpdGlvbiBmYWlsdXJlOiBwcmVfZiBpbiAnRW50cnknIChQcmVGYWlsdXJlRnVuY1NpbXBsZTEpIGF0IGxpbmUgNzo3" resource="PreFailureFuncSimple1" value="Error 4055: Precondition failure: pre_f in 'Entry' (PreFailureFuncSimple1) at line 7:7"/>
+<output object="rO0ABXQAXEVycm9yIDQwNTU6IFByZWNvbmRpdGlvbiBmYWlsdXJlOiBwcmVfZiBpbiAnRW50cnknIChQcmVGYWlsdXJlRnVuY1NpbXBsZTEudmRtcHApIGF0IGxpbmUgNzo3" resource="PreFailureFuncSimple1.vdmpp" value="Error 4055: Precondition failure: pre_f in 'Entry' (PreFailureFuncSimple1.vdmpp) at line 7:7"/>
 </result>
 </testResult>

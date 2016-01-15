@@ -10,6 +10,7 @@ import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.vdm2jml.tests.util.TestDataCollector;
+import org.overture.vdm2jml.tests.util.Update;
 
 public class ModuleStateInvTests extends AnnotationTestsBase
 {
@@ -81,7 +82,7 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 				String assertStr = metaData.get(0).value;
 
 				Assert.assertTrue("Got unexpected assertion in method '"
-						+ methodName + "'", assertStr.contains(".valid()"));
+						+ methodName + "': " + assertStr, assertStr.contains(".valid()") || assertStr.contains("!= null") || assertStr.contains(".is_"));
 			}
 		} else
 		{
@@ -94,7 +95,7 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 	public void updateEntireState()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignSt", Update.ASSIGN, 0);
+		checkAssertion("assignSt", Update.ASSIGN, 1);
 	}
 
 	@Test
@@ -103,48 +104,48 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 	{
 		// No need to assert since the violation will be picked up by the
 		// atomicTmp var assignment
-		checkAssertion("atomicAssignSt", Update.ASSIGN, 0);
+		checkAssertion("atomicAssignSt", Update.ASSIGN, 2);
 	}
 
 	@Test
 	public void updateField()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignX", Update.SET_CALL, 0);
+		checkAssertion("assignX", Update.SET_CALL, 1);
 	}
 
 	@Test
 	public void updateFieldAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignX", Update.SET_CALL, 1);
+		checkAssertion("atomicAssignX", Update.SET_CALL, 4);
 	}
 
 	@Test
 	public void updateSeqElem()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignS", Update.MAP_SEQ_UPDATE, 1);
+		checkAssertion("assignS", Update.MAP_SEQ_UPDATE, 5);
 	}
 
 	@Test
 	public void updateSeqElemAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignS", Update.MAP_SEQ_UPDATE, 1);
+		checkAssertion("atomicAssignS", Update.MAP_SEQ_UPDATE, 5);
 	}
 
 	@Test
 	public void updateMapRng()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("assignM", Update.MAP_SEQ_UPDATE, 1);
+		checkAssertion("assignM", Update.MAP_SEQ_UPDATE, 5);
 	}
 
 	@Test
 	public void updateMapRngAtomic()
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		checkAssertion("atomicAssignM", Update.MAP_SEQ_UPDATE, 1);
+		checkAssertion("atomicAssignM", Update.MAP_SEQ_UPDATE, 5);
 	}
 }

@@ -1,0 +1,29 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+  
+Run : () ==> ?
+Run () ==
+(
+  IO`println("Before valid use.");
+  let - : char = charA() in skip;
+  IO`println("After valid use.");
+  IO`println("Before invalid use.");
+  let - : char = charNil() in skip;
+  IO`println("After invalid use.");
+  return 0;
+);
+
+functions
+
+charA :  () -> [char]
+charA () == 'a';
+
+charNil :  () -> [char]
+charNil () == nil;
+
+end Entry

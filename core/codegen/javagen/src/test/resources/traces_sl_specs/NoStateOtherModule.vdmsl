@@ -1,0 +1,27 @@
+module Entry
+exports all
+imports from Other all
+definitions 
+
+operations 
+
+traces
+
+T1:
+let a in set {-1,0,1}
+in 
+ Other`op(a);
+
+end Entry
+
+module Other
+exports all
+definitions 
+
+operations 
+
+op : nat ==> ()
+op (x) == skip
+pre 1/x > 0;
+
+end Other

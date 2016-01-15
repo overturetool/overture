@@ -723,8 +723,8 @@ public class StatementReader extends SyntaxReader
 			} catch (ParserException e)
 			{
 				problems = true;
-				if (lastToken().is(VDMToken.KET)
-						|| lastToken().is(VDMToken.EOF))
+				
+				if (lastToken().is(VDMToken.EOF))
 				{
 					break;
 				}

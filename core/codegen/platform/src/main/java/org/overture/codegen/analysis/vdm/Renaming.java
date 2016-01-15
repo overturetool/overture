@@ -5,29 +5,31 @@ import org.overture.ast.intf.lex.ILexLocation;
 public class Renaming implements Comparable<Renaming>
 {
 	private ILexLocation loc;
+	
 	private String oldName;
 	private String newName;
 	
-	public Renaming(ILexLocation loc, String oldName, String newName)
+	private String oldModule;
+	private String newModule;
+	
+	public Renaming(ILexLocation loc, String oldName, String newName, String oldModule, String newModule)
 	{
 		if(loc == null)
 		{
 			throw new IllegalArgumentException("Location cannot be null in Renaming");
 		}
 		
-		if(oldName == null || oldName.isEmpty())
+		if (oldName == null || oldName.isEmpty() || newName == null || newName.isEmpty() || oldModule == null
+				|| oldModule.isEmpty() || newModule == null || newModule.isEmpty())
 		{
-			throw new IllegalArgumentException("The old name of a renaming cannot be null or the empty String");
-		}
-		
-		if(newName == null || newName.isEmpty())
-		{
-			throw new IllegalArgumentException("The new name of a renaming cannot be null or the empty String");
+			throw new IllegalArgumentException("Input names cannot 'null' or empty strings");
 		}
 		
 		this.loc = loc;
 		this.oldName = oldName;
 		this.newName = newName;
+		this.oldModule = oldModule;
+		this.newModule = newModule;
 	}
 	
 	public ILexLocation getLoc()
@@ -45,6 +47,16 @@ public class Renaming implements Comparable<Renaming>
 		return newName;
 	}
 	
+	public String getOldModule()
+	{
+		return oldModule;
+	}
+
+	public String getNewModule()
+	{
+		return newModule;
+	}
+
 	@Override
 	public String toString()
 	{

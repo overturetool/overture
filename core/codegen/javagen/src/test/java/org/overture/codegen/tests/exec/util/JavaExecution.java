@@ -36,16 +36,16 @@ public class JavaExecution
 {
 	public final static String cpPathSeparator = System.getProperty("path.separator");
 
-	public static String run(String mainClassName, String[] args,
+	public static String run(String mainClassName, String[] preArgs, String[] postArgs,
 			File directory, File... cp)
 	{
 		String javaHome = System.getenv(JavaToolsUtils.JAVA_HOME);
 		File java = new File(new File(javaHome, JavaToolsUtils.BIN_FOLDER), JavaToolsUtils.JAVA);
-		return run(java, directory, mainClassName, args, cp);
+		return run(java, directory, mainClassName, preArgs, postArgs, cp);
 	}
 
-	public static String run(File java, File directory, String mainClassName,
-			String[] args, File... cp)
+	public static String run(File java, File directory, String mainClassName, String[] preArgs, String[] postArgs,
+			File... cp)
 	{
 		String cpArgs = consCpArg(cp);
 
@@ -59,10 +59,11 @@ public class JavaExecution
 
 			List<String> commands = new Vector<String>();
 			commands.add(javaArg);
+			commands.addAll(Arrays.asList(preArgs));
 			commands.add("-cp");
 			commands.add(cpArgs);
 			commands.add(mainClassName.trim());
-			commands.addAll(Arrays.asList(args));
+			commands.addAll(Arrays.asList(postArgs));
 
 			pb = new ProcessBuilder(commands);
 
@@ -197,10 +198,6 @@ public class JavaExecution
 				sb.append(currentFile.getAbsolutePath() + cpPathSeparator);
 			}
 		}
-
-		// File cgRuntime = new
-		// File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
-		// sb.append(cgRuntime.getAbsolutePath() + cpPathSeparator);
 
 		if (sb.length() == 0)
 		{

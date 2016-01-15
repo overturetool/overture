@@ -1,0 +1,33 @@
+module Entry
+exports all
+imports from Other all
+definitions 
+
+traces
+
+T1:
+ Other`op(){1,5};
+
+end Entry
+
+module Other
+
+exports all
+definitions
+
+state St of
+ x : nat
+ init s == s = mk_St(0)
+end
+
+operations
+
+op : () ==> nat
+op () ==
+(
+ x := x + 1;
+ return x;
+)
+pre x < 2;
+
+end Other

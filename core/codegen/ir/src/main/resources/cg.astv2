@@ -157,25 +157,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[type]:CG.#type
     	[name]:java_String
     	[initial]:CG.#exp
-   	|	{class}
-   	    (globalMetaData):eString*
-   		[package]:java_String
-      	[access]:java_String
-      	[abstract]:java_Boolean
-      	[static]:java_Boolean 
-    	[name]:java_String
-    	[fields]:field*
-    	[invariant]:CG.#decl
-    	[methods]:CG.#decl.method*
-    	[functions]:CG.#decl.func*
-    	[traces]:CG.#decl.namedTrace*
-    	[superName]:java_String
-    	[thread]:CG.#decl.thread
-    	[innerClasses]:CG.#decl.class*
-    	[interfaces]:CG.#decl.interface*
-    	[typeDecls]:CG.#decl.type*
-    	[perSyncs]:CG.#decl.persync*
-    	[mutexSyncs]:CG.#decl.mutexSync*
+   	|	#Class
     |	{module}
     	[name]:java_String
     	[import]:CG.#imports.module
@@ -237,6 +219,32 @@ CG {-> package='org.overture.codegen.cgast'
     	[terms]:CG.#term.traceDecl*
 	;
 	
+#Class {-> package='org.overture.codegen.cgast.declarations'
+  | (globalMetaData):eString*
+  | [package]:java_String
+  | (dependencies):eString*
+  | [access]:java_String
+  | [abstract]:java_Boolean
+  | [static]:java_Boolean 
+  | [name]:java_String
+  | [fields]:field*
+  | [invariant]:CG.#decl
+  | [methods]:CG.#decl.method*
+  | [functions]:CG.#decl.func*
+  | [traces]:CG.#decl.namedTrace*
+  | [superNames]:CG.#name.token*
+  | [thread]:CG.#decl.thread
+  | [innerClasses]:CG.#decl.class*
+  | [interfaces]:CG.#decl.interface*
+  | [typeDecls]:CG.#decl.type*
+  | [perSyncs]:CG.#decl.persync*
+  | [mutexSyncs]:CG.#decl.mutexSync*}
+   = {bus}
+   | {cpu}
+   | {system}
+   | {default}
+  ;
+	
 #stateDesignator {-> package='org.overture.codegen.cgast.statements'
 	| [type]:CG.#type }
 	= {identifier} [name]:java_String [explicit]:java_Boolean [className]:java_String [isLocal]:java_Boolean
@@ -284,6 +292,7 @@ CG {-> package='org.overture.codegen.cgast'
            |	{cases} [exp]:CG.#exp [cases]:CG.#stm.#altStm.case* [others]:CG.#stm
            |	#altStm
            |	{error}
+           |  {exit} [exp]:CG.#exp
            |	{continue}
            |	{break}
            |	{start} [exp]:CG.#exp [type]:CG.#type
@@ -298,8 +307,13 @@ CG {-> package='org.overture.codegen.cgast'
 			|	{mapSeqUpdate} [col]:CG.#exp [index]:CG.#exp [value]:CG.#exp
 			|	{invCheck} [subject]:CG.#exp
 			|	{atomic} [statements]:CG.#stm*
+			| {cycles} [cycles]:CG.#exp [stm]:CG.#stm
+			| {duration} [duration]:CG.#exp [stm]:CG.#stm
 			|	{meta}
-           ;
+      | {seqCompAdd} [seq]:CG.#exp [element]:CG.#exp
+      | {setCompAdd} [set]:CG.#exp [element]:CG.#exp
+      | {mapCompAdd} [map]:CG.#exp [element]:CG.#exp
+      ;
 
 #call {-> package='org.overture.codegen.cgast.statements'
 	| 	[type]:CG.#type
@@ -572,12 +586,14 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
     
 #seq {-> package='org.overture.codegen.cgast.types'
 	| [empty]:java_Boolean
+	| [seq1]:java_Boolean
 	| [seqOf]:CG.#type}
     =   {seq}
     ;
     
 #map {-> package='org.overture.codegen.cgast.types'
 	| [empty]:java_Boolean
+	| [injective]:java_Boolean
 	| [from]:CG.#type
 	| [to]:CG.#type }
     =   {map}

@@ -42,6 +42,11 @@ public class TraceNames
 	
 	public String callStmClassTypeName()
 	{
+		return "CallStatementPp";
+	}
+	
+	public String callStmBaseClassTypeName()
+	{
 		return "CallStatement";
 	}
 	
@@ -50,7 +55,17 @@ public class TraceNames
 		return "callStm_";
 	}
 	
-	public String callStmMethodNamePrefix()
+	public String callStmIsTypeCorrectNamePrefix()
+	{
+		return "isTypeCorrect";
+	}
+	
+	public String callStmMeetsPreCondNamePrefix()
+	{
+		return "meetsPreCond";
+	}
+	
+	public String callStmExecMethodNamePrefix()
 	{
 		return "execute";
 	}
@@ -138,7 +153,12 @@ public class TraceNames
 		return "store";
 	}
 	
-	public String storeRegisterMethodName()
+	public String storeStaticRegistrationMethodName()
+	{
+		return "staticReg";
+	}
+	
+	public String storeRegistrationMethodName()
 	{
 		return "register";
 	}
@@ -190,5 +210,25 @@ public class TraceNames
 	public String traceMethodParamName()
 	{
 		return "testAccumulator";
+	}
+	
+	public String traceUtilClassName()
+	{
+		return "TraceUtil";
+	}
+	
+	public String readStateMethodName()
+	{
+		return "readState";
+	}
+	
+	public String traceVarClassName()
+	{
+		return "TraceVariable";
+	}
+	
+	public String addVarFirstMethodName()
+	{
+		return "addVarFirst";
 	}
 }

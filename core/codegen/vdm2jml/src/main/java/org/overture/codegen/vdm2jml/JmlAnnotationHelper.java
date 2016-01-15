@@ -7,7 +7,7 @@ import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
@@ -25,7 +25,12 @@ public class JmlAnnotationHelper
 		this.jmlGen = jmlGen;
 	}
 	
-	public void makeNamedTypeInvFuncsPublic(AClassDeclCG clazz)
+	public void makeNullableByDefault(ADefaultClassDeclCG clazz)
+	{
+		clazz.setGlobalMetaData(consMetaData(JmlGenerator.JML_NULLABLE_BY_DEFAULT));
+	}
+	
+	public void makeNamedTypeInvFuncsPublic(ADefaultClassDeclCG clazz)
 	{
 		List<AMethodDeclCG> nameInvMethods = jmlGen.getUtil().getNamedTypeInvMethods(clazz);
 
@@ -76,14 +81,14 @@ public class JmlAnnotationHelper
 		sb.append(");");
 	}
 	
-	public void addInvCheckGhostVarDecl(AClassDeclCG owner)
+	public void addInvCheckGhostVarDecl(ADefaultClassDeclCG owner)
 	{
 		String metaStr = String.format(JmlGenerator.JML_INV_CHECKS_ON_DECL, JmlGenerator.INV_CHECKS_ON_GHOST_VAR_NAME);
 		
 		appendMetaData(owner, consMetaData(metaStr));
 	}
 	
-	public String consInvChecksOnName(AClassDeclCG owner)
+	private String consInvChecksOnName(ADefaultClassDeclCG owner)
 	{
 		StringBuilder prefix = new StringBuilder();
 		
@@ -107,12 +112,29 @@ public class JmlAnnotationHelper
 		String jmlAnno = "public " + JmlGenerator.JML_INSTANCE_INV_ANNOTATION;
 		
 		StringBuilder pred = new StringBuilder();
-		pred.append(consInvChecksOnName(jmlGen.getInvChecksFlagOwner()));
+		pred.append(consInvChecksOnNameEncClass());
 		pred.append(JmlGenerator.JML_IMPLIES);
 		pred.append(JmlGenerator.INV_PREFIX);
 		pred.append(r.getName());
 		
 		appendMetaData(r, consAnno(jmlAnno, pred.toString(), args));
+	}
+
+	public String consInvChecksOnNameEncClass()
+	{
+		return consInvChecksOnNameEncClass(null);
+	}
+	
+	public String consInvChecksOnNameEncClass(ADefaultClassDeclCG enclosingClass)
+	{
+		if(enclosingClass != null && enclosingClass == jmlGen.getInvChecksFlagOwner())
+		{
+			return JmlGenerator.INV_CHECKS_ON_GHOST_VAR_NAME;
+		}
+		else
+		{
+			return consInvChecksOnName(jmlGen.getInvChecksFlagOwner());
+		}
 	}
 
 	
@@ -146,25 +168,7 @@ public class JmlAnnotationHelper
 	
 	public void addMetaData(PCG node, List<ClonableString> extraMetaData, boolean prepend)
 	{
-		if (extraMetaData == null || extraMetaData.isEmpty())
-		{
-			return;
-		}
-
-		List<ClonableString> allMetaData = new LinkedList<ClonableString>();
-
-		if(prepend)
-		{
-			allMetaData.addAll(extraMetaData);
-			allMetaData.addAll(node.getMetaData());
-		}
-		else
-		{
-			allMetaData.addAll(node.getMetaData());
-			allMetaData.addAll(extraMetaData);
-		}
-
-		node.setMetaData(allMetaData);
+		this.jmlGen.getJavaGen().getInfo().getNodeAssistant().addMetaData(node, extraMetaData, prepend);
 	}
 	
 	public void appendMetaData(PCG node, List<ClonableString> extraMetaData)

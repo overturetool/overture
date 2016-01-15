@@ -33,7 +33,7 @@ public class A_X_ {
     }
 
     public Number op() {
-        return q_X_;
+        return A_X_.q_X_;
     }
 
     public String toString() {

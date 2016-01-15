@@ -17,8 +17,8 @@ public class Entry implements java.io.Serializable {
         final Store store = new Store();
         final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        CallStatement callStm_1 = new CallStatement() {
-                public Object execute(final Object instance) {
+        CallStatementPp callStm_1 = new CallStatementPp() {
+                public Object execute() {
                     ((Entry) instance).op();
 
                     return Utils.VOID_VALUE;
@@ -30,7 +30,6 @@ public class Entry implements java.io.Serializable {
             };
 
         StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-
         sequence_1.add(apply_1);
 
         TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);

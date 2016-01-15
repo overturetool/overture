@@ -1,0 +1,90 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+final public class Entry implements java.io.Serializable {
+    private Entry() {
+    }
+
+    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+
+        {
+            final Number ID_1 = gen.inc();
+            final Number ID_2 = gen.inc();
+            store.staticReg(ID_1, Entry.class);
+            store.staticReg(ID_2, Other.class);
+        }
+
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+        VDMSet set_1 = SetUtil.set(-1L, 0L, 1L);
+
+        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
+            final Number a = ((Number) iterator_1.next());
+            final Number arg_1 = a;
+            CallStatement callStm_1 = new CallStatement() {
+                    public Boolean meetsPreCond() {
+                        return Other.pre_op(arg_1);
+                    }
+
+                    public Object execute() {
+                        Other.op(arg_1);
+
+                        return Utils.VOID_VALUE;
+                    }
+
+                    public String toString() {
+                        return "Other`op(" + Utils.toString(arg_1) + ")";
+                    }
+                };
+
+            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+            apply_1.addVarFirst(new TraceVariable("a", "int", Utils.toString(a)));
+            alternatives_2.add(apply_1);
+        }
+
+        sequence_1.add(alternatives_2);
+
+        TraceNode.executeTests(sequence_1, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+final public class Other implements java.io.Serializable {
+    private Other() {
+    }
+
+    public static void op(final Number x) {
+        if (!(pre_op(x))) {
+            throw new RuntimeException("Precondition failure: pre_op");
+        }
+
+        /* skip */
+    }
+
+    public static Boolean pre_op(final Number x) {
+        return Utils.divide((1.0 * 1L), x.longValue()) > 0L;
+    }
+
+    public String toString() {
+        return "Other{}";
+    }
+}
+
+##########

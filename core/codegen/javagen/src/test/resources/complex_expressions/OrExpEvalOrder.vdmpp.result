@@ -20,7 +20,7 @@ public class A {
     }
 
     public Boolean test() {
-        a = a.longValue() + 1L;
+        a = A.a.longValue() + 1L;
 
         return n.longValue() > 6L;
     }
@@ -58,8 +58,7 @@ public class Entry {
             }
 
             if (orResult_1) {
-                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
-                        SetUtil.set(x.n));
+                setCompResult_1.add(x.n);
             }
         }
 

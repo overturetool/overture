@@ -44,8 +44,7 @@ public class Entry {
             }
 
             if (Utils.equals(1L, 1L)) {
-                seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
-                        SeqUtil.seq(a));
+                seqCompResult_1.add(a);
             }
         }
 

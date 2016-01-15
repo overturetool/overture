@@ -3,7 +3,7 @@ package org.overture.codegen.trans.conc;
 import org.overture.codegen.cgast.SNameCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMutexSyncDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
@@ -27,7 +27,7 @@ public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
+	public void caseADefaultClassDeclCG(ADefaultClassDeclCG node) throws AnalysisException
 	{
 		String hop = "active";
 		if(!info.getSettings().generateConc())

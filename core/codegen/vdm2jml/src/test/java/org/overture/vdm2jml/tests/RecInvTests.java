@@ -6,21 +6,21 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 
 public class RecInvTests extends AnnotationTestsBase
 {
 	private static final String REC_NAME = "Rec";
 
-	private static AClassDeclCG recTypeDef;
+	private static ADefaultClassDeclCG recTypeDef;
 
 	@BeforeClass
 	public static void init() throws AnalysisException
 	{
-		List<AClassDeclCG> classes = AnnotationTestsBase.getClasses("RecInv.vdmsl");
+		List<ADefaultClassDeclCG> classes = AnnotationTestsBase.getClasses("RecInv.vdmsl");
 
-		for (AClassDeclCG clazz : classes)
+		for (ADefaultClassDeclCG clazz : classes)
 		{
 			if (clazz.getName().equals(REC_NAME))
 			{

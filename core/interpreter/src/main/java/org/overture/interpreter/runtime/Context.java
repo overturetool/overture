@@ -319,7 +319,7 @@ public class Context extends LexNameTokenMap<Value>
 	public String toString()
 	{
 		return (DEBUG ? "#" + id + " " : "") + format("", this)
-				+ "\n-------------------\n" + outer;
+				+ "-------------------\n" + (outer == null ? "" : outer.toString());
 	}
 
 	protected String format(String indent, Context what)

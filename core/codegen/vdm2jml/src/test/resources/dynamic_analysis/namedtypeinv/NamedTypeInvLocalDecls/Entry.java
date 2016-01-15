@@ -1,6 +1,7 @@
 package project;
 
 import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
 
 import java.util.*;
 
@@ -15,10 +16,13 @@ final public class Entry {
     public static void typeUseOk() {
         Number ignorePattern_1 = 1L;
 
+        //@ assert Utils.is_nat1(ignorePattern_1);
         Object even = 2L;
 
-        //@ assert inv_Entry_No(even) && (inv_Entry_Even(even) || inv_Entry_Large(even));
+        //@ assert (((Utils.is_nat(even) && inv_Entry_Even(even)) || (Utils.is_real(even) && inv_Entry_Large(even))) && inv_Entry_No(even));
         Number ignorePattern_2 = 3L;
+
+        //@ assert Utils.is_nat1(ignorePattern_2);
 
         /* skip */
     }
@@ -28,7 +32,7 @@ final public class Entry {
 
         {
             Object notLarge = 999L;
-            //@ assert inv_Entry_No(notLarge) && (inv_Entry_Even(notLarge) || inv_Entry_Large(notLarge));
+            //@ assert (((Utils.is_nat(notLarge) && inv_Entry_Even(notLarge)) || (Utils.is_real(notLarge) && inv_Entry_Large(notLarge))) && inv_Entry_No(notLarge));
             IO.println("After breaking named type invariant");
 
             /* skip */
@@ -49,21 +53,12 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_No(final Object check_elem) {
-        if ((Utils.equals(check_elem, null)) ||
-                !(Utils.is_nat(check_elem) || Utils.is_real(check_elem))) {
-            return false;
-        }
-
         return true;
     }
 
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_Even(final Object check_ev) {
-        if ((Utils.equals(check_ev, null)) || !(Utils.is_nat(check_ev))) {
-            return false;
-        }
-
         Number ev = ((Number) check_ev);
 
         return Utils.equals(Utils.mod(ev.longValue(), 2L), 0L);
@@ -72,10 +67,6 @@ final public class Entry {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_Large(final Object check_la) {
-        if ((Utils.equals(check_la, null)) || !(Utils.is_real(check_la))) {
-            return false;
-        }
-
         Number la = ((Number) check_la);
 
         return la.doubleValue() > 1000L;

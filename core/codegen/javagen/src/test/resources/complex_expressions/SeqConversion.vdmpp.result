@@ -67,8 +67,8 @@ public class Entry {
 
     public static VDMSeq Run() {
         return SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(
-                            SeqUtil.conc(SeqUtil.conc(Utils.copy(x), f()), op1()),
-                            op2()), op3()), op5()), op6()), op7());
+                            SeqUtil.conc(SeqUtil.conc(Utils.copy(Entry.x), f()),
+                                op1()), op2()), op3()), op5()), op6()), op7());
     }
 
     public static VDMSeq f() {

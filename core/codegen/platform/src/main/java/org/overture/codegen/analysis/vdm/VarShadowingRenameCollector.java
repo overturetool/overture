@@ -1024,7 +1024,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	{
 		if (!contains(name.getLocation()))
 		{
-			renamings.add(new Renaming(name.getLocation(), name.getName(), newName));
+			renamings.add(new Renaming(name.getLocation(), name.getName(), newName, name.getModule(), name.getModule()));
 		}
 	}
 

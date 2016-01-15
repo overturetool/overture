@@ -119,6 +119,14 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
+		
+		if (pattern  instanceof AIgnorePatternCG)
+		{
+			AIdentifierPatternCG idPattern = getIdPattern(config.getIgnorePatternPrefix());
+			transAssistant.replaceNodeWith(node.getTarget(), idPattern);
+			transAssistant.replaceNodeWith(pattern, idPattern.clone());
+			return;
+		}
 
 		DeclarationTag tag = fetchTag(node);
 
@@ -699,40 +707,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			PatternBlockData patternData, SExpCG actualValue,
 			ATuplePatternCG tuplePattern)
 	{
-		List<ATupleTypeCG> tupleTypes = new LinkedList<ATupleTypeCG>();
-
-		for (STypeCG nextType : unionType.getTypes())
-		{
-			if (nextType instanceof ATupleTypeCG)
-			{
-				ATupleTypeCG nextTupleType = ((ATupleTypeCG) nextType);
-
-				if (nextTupleType.getTypes().size() == tuplePattern.getPatterns().size())
-				{
-					tupleTypes.add(nextTupleType);
-				}
-			}
-		}
-
-		ATupleTypeCG resTupleType = new ATupleTypeCG();
-
-		if (tupleTypes.size() == 1)
-		{
-			resTupleType = tupleTypes.get(0);
-		} else
-		{
-			for (int i = 0; i < tuplePattern.getPatterns().size(); i++)
-			{
-				AUnionTypeCG fieldType = new AUnionTypeCG();
-
-				for (ATupleTypeCG t : tupleTypes)
-				{
-					fieldType.getTypes().add(t.getTypes().get(i).clone());
-				}
-
-				resTupleType.getTypes().add(fieldType);
-			}
-		}
+		ATupleTypeCG resTupleType = transAssistant.getInfo().getPatternAssistant().getTupleType(unionType, tuplePattern);
 
 		ABlockStmCG tuplePatternCheck = consTuplePatternCheck(declarePatternVar, tuplePattern, resTupleType, patternData, actualValue, true);
 

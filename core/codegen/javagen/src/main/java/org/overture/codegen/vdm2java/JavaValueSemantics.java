@@ -28,9 +28,10 @@ import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -55,7 +56,10 @@ import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
+import org.overture.codegen.cgast.statements.AMapCompAddStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
+import org.overture.codegen.cgast.statements.ASeqCompAddStmCG;
+import org.overture.codegen.cgast.statements.ASetCompAddStmCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -186,7 +190,7 @@ public class JavaValueSemantics
 
 			String memberName = exp.getMemberName();
 
-			List<AClassDeclCG> classes = javaFormat.getIrInfo().getClasses();
+			List<SClassDeclCG> classes = javaFormat.getIrInfo().getClasses();
 			AssistantManager assistantManager = javaFormat.getIrInfo().getAssistantManager();
 
 			AFieldDeclCG memberField = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);
@@ -214,6 +218,11 @@ public class JavaValueSemantics
 		}
 
 		if(inRecClassNonConstructor(exp))
+		{
+			return false;
+		}
+		
+		if(compAdd(exp))
 		{
 			return false;
 		}
@@ -275,9 +284,34 @@ public class JavaValueSemantics
 		return false;
 	}
 
+	private boolean compAdd(SExpCG exp)
+	{
+		INode parent = exp.parent();
+
+		if (parent instanceof ASeqCompAddStmCG)
+		{
+			ASeqCompAddStmCG add = (ASeqCompAddStmCG) parent;
+			return add.getSeq() == exp;
+		}
+
+		if (parent instanceof ASetCompAddStmCG)
+		{
+			ASetCompAddStmCG add = (ASetCompAddStmCG) parent;
+			return add.getSet() == exp;
+		}
+
+		if (parent instanceof AMapCompAddStmCG)
+		{
+			AMapCompAddStmCG add = (AMapCompAddStmCG) parent;
+			return add.getMap() == exp;
+		}
+
+		return false;
+	}
+
 	private boolean inRecClassNonConstructor(SExpCG exp)
 	{
-		AClassDeclCG encClass = exp.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclCG encClass = exp.getAncestor(ADefaultClassDeclCG.class);
 		
 		if(encClass != null)
 		{

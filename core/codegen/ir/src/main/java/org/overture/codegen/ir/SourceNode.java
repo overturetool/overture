@@ -32,6 +32,18 @@ public class SourceNode
 		super();
 		this.vdmNode = vdmNode;
 	}
+	
+	public static SourceNode copy(SourceNode sourceNode)
+	{
+		if(sourceNode == null)
+		{
+			return null;
+		}
+		else
+		{
+			return new SourceNode(sourceNode.vdmNode);
+		}
+	}
 
 	public INode getVdmNode()
 	{

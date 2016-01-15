@@ -7,11 +7,13 @@ public class TraceNodeData
 {
 	private AIdentifierVarExpCG nodeVar;
 	private ABlockStmCG stms;
+	private ABlockStmCG nodeVarScope;
 	
-	public TraceNodeData(AIdentifierVarExpCG nodeVar, ABlockStmCG stms)
+	public TraceNodeData(AIdentifierVarExpCG nodeVar, ABlockStmCG stms, ABlockStmCG nodeVarScope)
 	{
 		this.nodeVar = nodeVar;
 		this.stms = stms;
+		this.nodeVarScope = nodeVarScope;
 	}
 
 	public AIdentifierVarExpCG getNodeVar()
@@ -22,5 +24,10 @@ public class TraceNodeData
 	public ABlockStmCG getStms()
 	{
 		return stms;
-	}	
+	}
+
+	public ABlockStmCG getNodeVarScope()
+	{
+		return nodeVarScope;
+	}
 }
