@@ -1,1 +1,1 @@
-new $JavaFormat.formatName($node)($JavaFormat.formatArgs($node.getArgs()))
+($JavaFormat.formatName($node)_i) UnicastRemoteObject.exportObject(new $JavaFormat.formatName($node)($JavaFormat.formatArgs($node.getArgs())),0)
