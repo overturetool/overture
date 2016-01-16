@@ -21,8 +21,11 @@
  */
 package org.overture.ide.ui.templates;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.eclipse.jface.text.contentassist.CompletionProposal;
@@ -49,6 +52,8 @@ import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
@@ -62,7 +67,8 @@ import org.overture.ide.ui.utility.ast.AstNameUtil;
 public class VdmCompleteProcesser
 {
 	VdmElementImageProvider imgProvider = new VdmElementImageProvider();
-
+	VdmCompletionExtractor vdmCompletionExtractor = new VdmCompletionExtractor();
+	
 	public void computeCompletionProposals(VdmCompletionContext info,
 			VdmDocument document, List<ICompletionProposal> proposals,
 			int offset)
@@ -75,7 +81,9 @@ public class VdmCompleteProcesser
 		// {
 		// completeFields(info, document, calculatedProposals, offset);
 		// completeFields(info, document, calculatedProposals, offset);
+		
 
+		
 		switch (info.type)
 		{
 			case CallParam:
@@ -92,6 +100,7 @@ public class VdmCompleteProcesser
 				break;
 			case Types:
 				completeTypes(info, document, calculatedProposals, offset);
+				vdmCompletionExtractor.completeBasicTypes(info, document, calculatedProposals, offset,getAst(document));
 				break;
 			default:
 				break;
@@ -193,7 +202,8 @@ public class VdmCompleteProcesser
 			if (info.type == SearchType.Types)
 			{
 				String name = AstNameUtil.getName(element);
-				if (name.startsWith(info.proposalPrefix) || name.length() == 0)
+				
+				if (vdmCompletionExtractor.findInString(info.proposalPrefix,name))
 				{
 					IContextInformation ctxtInfo = new ContextInformation(name, name); //$NON-NLS-1$
 					proposals.add(new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(element, 0), name, ctxtInfo, name));

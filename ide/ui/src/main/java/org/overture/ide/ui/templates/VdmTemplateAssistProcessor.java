@@ -107,7 +107,7 @@ public abstract class VdmTemplateAssistProcessor extends TemplateCompletionProce
 			} catch (TemplateException e) {
 				continue;
 			}
-			if (!prefix.equals("") && prefix.charAt(0) == '<')
+			if (!prefix.equals(""))
 				prefix = prefix.substring(1);
 			if (!prefix.equals("")
 					&& (template.getName().startsWith(prefix) && template

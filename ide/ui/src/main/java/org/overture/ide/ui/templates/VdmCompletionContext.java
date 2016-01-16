@@ -73,6 +73,14 @@ public class VdmCompletionContext
 			type = SearchType.New;
 			return;
 		}
+		//Default
+		index = 0;
+		processedScan = new StringBuffer(rawScan.subSequence(index, rawScan.length()));
+		proposalPrefix = processedScan.toString().trim();
+		offset = -proposalPrefix.length();
+		
+		return;
+		
 	}
 
 	@Override
