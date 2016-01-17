@@ -32,19 +32,19 @@ import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.expressions.ACardUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.utils.GeneralUtils;
 
 public class TemplateManager
 {
 	public static final String TEMPLATE_FILE_EXTENSION = ".vm";
 	
-	protected HashMap<Class<? extends INode>, Class<? extends INode>> reuses;
+	/**
+	 * Relative paths for user-defined template files
+	 */
+	protected HashMap<Class<? extends INode>, String> userDefinedPaths;
 
 	protected String root;
 
-	private boolean isBase;
 	private Class<?> templateLoadRef = null;
 
 	/**
@@ -54,9 +54,7 @@ public class TemplateManager
 	 */
 	public TemplateManager(String root)
 	{
-		this.root = root;
-		initNodeTemplateFileNames();
-		isBase = true;
+		this(root, null);
 	}
 
 	/**
@@ -72,9 +70,8 @@ public class TemplateManager
 	public TemplateManager(String root, Class<?> templateLoadRef)
 	{
 		this.root = root;
-		initNodeTemplateFileNames();
-		isBase = false;
 		this.templateLoadRef = templateLoadRef;
+		initNodeTemplateFileNames();
 	}
 
 	/**
@@ -82,20 +79,31 @@ public class TemplateManager
 	 */
 	protected void initNodeTemplateFileNames()
 	{
-		this.reuses = new HashMap<>();
+		this.userDefinedPaths = new HashMap<>();
 	}
 
 	public Template getTemplate(Class<? extends INode> nodeClass) throws ParseException
 	{
 		try
 		{
-			StringBuffer buffer;
-			if (isBase)
+			String relPath;
+
+			if (isUserDefined(nodeClass))
 			{
-				buffer = GeneralUtils.readFromFile(getTemplateFileRelativePath(nodeClass));
+				relPath = userDefinedPaths.get(nodeClass);
 			} else
 			{
-				buffer = GeneralUtils.readFromFile(getTemplateFileRelativePath(nodeClass), templateLoadRef);
+				relPath = derivePath(nodeClass);
+			}
+			
+			StringBuffer buffer;
+				
+			if (templateLoadRef != null)
+			{
+				buffer = GeneralUtils.readFromFile(relPath, templateLoadRef);
+			} else
+			{
+				buffer = GeneralUtils.readFromFile(relPath);
 			}
 
 			if (buffer == null)
@@ -125,35 +133,30 @@ public class TemplateManager
 		return template;
 
 	}
-	
-	/**
-	 * Enables an IR node to reuse the template of another IR node
-	 * 
-	 * @param templateOwner The IR node which owns the template subject to reuse
-	 * @param reuser The IR node that reuses the template
-	 */
-	protected void reuseTemplate(Class<ACardUnaryExpCG> templateOwner, Class<ALenUnaryExpCG> reuser)
+
+	public void setUserDefinedPath(Class<? extends INode> nodeClass, String relativePath)
 	{
-		reuses.put(reuser, templateOwner);
+		userDefinedPaths.put(nodeClass, relativePath);
 	}
 	
-	protected boolean reuses(Class<? extends INode> nodeClass)
+	public boolean isUserDefined(Class<? extends INode> nodeClass)
 	{
-		return reuses.containsKey(nodeClass);
-	}
-	
-	protected Class<? extends INode> getTemplateOwner(Class<? extends INode> nodeClass)
-	{
-		return reuses.get(nodeClass);
+		return userDefinedPaths.containsKey(nodeClass);
 	}
 
-	protected String getTemplateFileRelativePath(Class<? extends INode> nodeClass)
+	public String getRelativePath(Class<? extends INode> templateOwner)
 	{
-		if (reuses(nodeClass))
+		if (isUserDefined(templateOwner))
 		{
-			nodeClass = getTemplateOwner(nodeClass);
+			return userDefinedPaths.get(templateOwner);
+		} else
+		{
+			return derivePath(templateOwner);
 		}
-
+	}
+	
+	public String derivePath(Class<? extends INode> nodeClass)
+	{
 		return root + File.separatorChar + nodeClass.getName().replaceAll("\\.", File.separator)
 				+ TEMPLATE_FILE_EXTENSION;
 	}
