@@ -80,10 +80,11 @@ forall ${bindList} & ${predicate}
 #end
 --------------------------------------------------------------------
 #name			forallinset
-#description	forall in set
+#description	for all in set do
 #dialect		all
 #begin
-forall ${element} in set ${set}
+for all ${pattern} in set ${s} do
+	${statement}
 #end
 --------------------------------------------------------------------
 #name			forallLoop

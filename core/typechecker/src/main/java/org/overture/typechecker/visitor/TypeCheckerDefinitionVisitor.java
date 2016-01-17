@@ -162,6 +162,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		Environment cenv = new PrivateClassEnvironment(question.assistantFactory, node.getClassDefinition(), question.env);
 
+		if (question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
+		{
+			FlatCheckedEnvironment checked = new FlatCheckedEnvironment(question.assistantFactory, new Vector<PDefinition>(), question.env, NameScope.NAMES);
+			checked.setStatic(true);
+			cenv = checked;
+		}
+		
 		// TODO: This should be a call to the assignment definition typecheck
 		// but instance is not an subclass of
 		// assignment in our tree
