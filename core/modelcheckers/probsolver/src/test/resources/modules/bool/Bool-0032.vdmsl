@@ -1,4 +1,0 @@
-operations
-rem3() m : nat
-  post m = -7 rem -3
-

@@ -27,7 +27,7 @@
     <!-- <module>isapog</module> -->
     <module>guibuilder</module>
     <!-- <module>constraintsolverconn</module> -->
-    <module>modelcheckers</module>
+    <!--module>modelcheckers  prob moved to its own repo </module-->
   </modules>
 
   <build>

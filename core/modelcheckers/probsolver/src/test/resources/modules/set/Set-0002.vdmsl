@@ -1,5 +1,0 @@
-operations
-
-
-  seki() s : set of nat
-  post  s = {1,2} inter {1,3}
