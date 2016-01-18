@@ -82,6 +82,7 @@ import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRGenerator;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
@@ -816,17 +817,26 @@ public class DeclAssistantCG extends AssistantBase
 		return paramsCg;
 	}
 	
+	/**
+	 * Based on the definition table computed by {@link IRGenerator#computeDefTable(List)} this method determines
+	 * whether a identifier state designator is local or not.
+	 * 
+	 * @param id
+	 *            The identifier state designator
+	 * @param info
+	 *            The IR info
+	 * @return True if <code>id</code> is local - false otherwise
+	 */
 	public boolean isLocal(AIdentifierStateDesignator id, IRInfo info)
 	{
 		PDefinition idDef = info.getIdStateDesignatorDefs().get(id);
-		
-		if(idDef == null)
+
+		if (idDef == null)
 		{
-			Logger.getLog().printErrorln("Could not find definition for identifier "
-					+ "state designator " + id + " in '" + this.getClass().getSimpleName() + "'");
+			Logger.getLog().printErrorln("Could not find definition for identifier state designator " + id + " in '"
+					+ this.getClass().getSimpleName());
 			return false;
-		}
-		else
+		} else
 		{
 			return idDef instanceof AAssignmentDefinition;
 		}
