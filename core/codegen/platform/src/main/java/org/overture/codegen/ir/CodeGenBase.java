@@ -206,6 +206,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 	{
 		if (status.canBeGenerated())
 		{
+			mergeVisitor.init();
 			StringWriter writer = new StringWriter();
 			status.getIrNode().apply(mergeVisitor, writer);
 

@@ -152,60 +152,6 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		return javaFormat;
 	}
 
-	public List<GeneratedModule> generateJavaFromVdmQuotes()
-	{
-		try
-		{
-			List<String> quoteValues = generator.getQuoteValues();
-
-			if (quoteValues.isEmpty())
-			{
-				return null; // Nothing to generate
-			}
-
-			javaFormat.getMergeVisitor().init();
-
-			JavaQuoteValueCreator creator = new JavaQuoteValueCreator(generator.getIRInfo(), transAssistant);
-
-			List<ADefaultClassDeclCG> quoteClasses = new LinkedList<>();
-			for (String quoteNameVdm : quoteValues)
-			{
-				String pack = getJavaSettings().getJavaRootPackage();
-				ADefaultClassDeclCG quoteDecl = creator.consQuoteValue(quoteNameVdm, quoteNameVdm, pack);
-				
-				quoteClasses.add(quoteDecl);
-			}
-			
-			// Event notification
-			if(quoteObserver != null)
-			{
-				quoteObserver.quoteClassesProduced(quoteClasses);
-			}
-			
-			List<GeneratedModule> modules = new LinkedList<GeneratedModule>();
-			for (int i = 0; i < quoteClasses.size(); i++)
-			{
-				String quoteNameVdm = quoteValues.get(i);
-				ADefaultClassDeclCG qc = quoteClasses.get(i);
-				
-				StringWriter writer = new StringWriter();
-				qc.apply(javaFormat.getMergeVisitor(), writer);
-
-				modules.add(new GeneratedModule(quoteNameVdm, qc, formatCode(writer), false));
-			}
-
-			return modules;
-
-		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
-		{
-			Logger.getLog().printErrorln("Error when formatting quotes: "
-					+ e.getMessage());
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
 	public GeneratedData generateJavaFromVdmModules(List<AModuleModules> ast)
 			throws AnalysisException {
 
@@ -351,8 +297,6 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 				status.getIrNode().setTag(new JavaMainTag(status.getIrNode()));
 			}
 
-			mergeVisitor.init();
-
 			try
 			{
 				if (shouldGenerateVdmNode(vdmClass))
@@ -412,6 +356,60 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 		return data;
 	}
+	
+	public List<GeneratedModule> generateJavaFromVdmQuotes()
+	{
+		try
+		{
+			List<String> quoteValues = generator.getQuoteValues();
+
+			if (quoteValues.isEmpty())
+			{
+				return null; // Nothing to generate
+			}
+
+			javaFormat.getMergeVisitor().init();
+
+			JavaQuoteValueCreator creator = new JavaQuoteValueCreator(generator.getIRInfo(), transAssistant);
+
+			List<ADefaultClassDeclCG> quoteClasses = new LinkedList<>();
+			for (String quoteNameVdm : quoteValues)
+			{
+				String pack = getJavaSettings().getJavaRootPackage();
+				ADefaultClassDeclCG quoteDecl = creator.consQuoteValue(quoteNameVdm, quoteNameVdm, pack);
+				
+				quoteClasses.add(quoteDecl);
+			}
+			
+			// Event notification
+			if(quoteObserver != null)
+			{
+				quoteObserver.quoteClassesProduced(quoteClasses);
+			}
+			
+			List<GeneratedModule> modules = new LinkedList<GeneratedModule>();
+			for (int i = 0; i < quoteClasses.size(); i++)
+			{
+				String quoteNameVdm = quoteValues.get(i);
+				ADefaultClassDeclCG qc = quoteClasses.get(i);
+				
+				StringWriter writer = new StringWriter();
+				qc.apply(javaFormat.getMergeVisitor(), writer);
+
+				modules.add(new GeneratedModule(quoteNameVdm, qc, formatCode(writer), false));
+			}
+
+			return modules;
+
+		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+		{
+			Logger.getLog().printErrorln("Error when formatting quotes: "
+					+ e.getMessage());
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 
 	@Override
 	public String formatCode(StringWriter writer)
@@ -459,7 +457,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			}
 		}
 	}
-
+	
 	private void genIrStatus(
 			List<IRStatus<org.overture.codegen.cgast.INode>> statuses,
 			INode node) throws AnalysisException
