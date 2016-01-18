@@ -118,6 +118,34 @@ abstract public class CodeGenBase implements IREventCoordinator
 		}
 	}
 	
+	public List<String> preProcessAst(List<? extends INode> ast)
+	{
+		List<String> userTestCases = new LinkedList<>();
+		
+		for (INode node : ast)
+		{
+			if (getInfo().getAssistantManager().getDeclAssistant().isLibrary(node))
+			{
+				simplifyLibrary(node);
+			}
+			else
+			{
+				if(getInfo().getDeclAssistant().isTestCase(node))
+				{
+					userTestCases.add(getInfo().getDeclAssistant().getNodeName(node));
+				}
+				
+				preProcessUserClass(node);
+			}
+		}
+		return userTestCases;
+	}
+	
+	public void preProcessUserClass(INode node)
+	{
+		// Do nothing by default
+	}
+	
 	public boolean shouldGenerateVdmNode(INode node)
 	{
 		DeclAssistantCG declAssistant = getInfo().getDeclAssistant();

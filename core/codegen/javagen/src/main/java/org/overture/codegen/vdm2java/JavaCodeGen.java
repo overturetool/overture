@@ -269,24 +269,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs()));
 
-		List<String> userTestCases = new LinkedList<>();
-		
-		for (INode node : ast)
-		{
-			if (getInfo().getAssistantManager().getDeclAssistant().isLibrary(node))
-			{
-				simplifyLibrary(node);
-			}
-			else
-			{
-				if(getInfo().getDeclAssistant().isTestCase(node))
-				{
-					userTestCases.add(getInfo().getDeclAssistant().getNodeName(node));
-				}
-				
-				preProcessUserClass(node);
-			}
-		}
+		List<String> userTestCases = preProcessAst(ast);
 
 		InvalidNamesResult invalidNamesResult = validateVdmModelNames(userModules);
 		List<IRStatus<org.overture.codegen.cgast.INode>> statuses = new LinkedList<>();
@@ -324,7 +307,6 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 				Logger.getLog().printErrorln("Skipping module..");
 				e.printStackTrace();
 			}
-			
 		}
 
 		List<IRStatus<ADefaultClassDeclCG>> classStatuses = IRStatus.extract(modulesAsNodes, ADefaultClassDeclCG.class);
@@ -485,7 +467,8 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		return code;
 	}
 
-	private void preProcessUserClass(INode node)
+	@Override
+	public void preProcessUserClass(INode node)
 	{
 		if (!getJavaSettings().genJUnit4tests())
 		{
