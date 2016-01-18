@@ -1,5 +1,7 @@
 package org.overture.codegen.ir;
 
+import java.io.StringWriter;
+
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 
@@ -12,6 +14,12 @@ public class CodeGenBase
 	{
 		super();
 		this.generator = new IRGenerator();
+	}
+	
+	public String formatCode(StringWriter writer)
+	{
+		// Do nothing by default
+		return writer.toString();
 	}
 	
 	public void setIRGenerator(IRGenerator generator)

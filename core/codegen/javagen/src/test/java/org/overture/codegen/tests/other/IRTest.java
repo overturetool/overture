@@ -142,7 +142,7 @@ public class IRTest
 		try
 		{
 			JavaFormat javaFormat = javaCodeGen.getJavaFormat();
-			javaFormat.init();
+			javaFormat.getMergeVisitor().init();
 			MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
 			node.apply(mergeVisitor, writer);
 
