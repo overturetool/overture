@@ -37,18 +37,12 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.SFunctionDefinition;
-import org.overture.ast.definitions.SOperationDefinition;
-import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
-import org.overture.ast.statements.ANotYetSpecifiedStm;
-import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
-import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
 import org.overture.codegen.analysis.vdm.VarRenamer;
 import org.overture.codegen.analysis.vdm.VarShadowingRenameCollector;
 import org.overture.codegen.analysis.violations.GeneratedVarComparison;
@@ -58,7 +52,6 @@ import org.overture.codegen.analysis.violations.TypenameComparison;
 import org.overture.codegen.analysis.violations.VdmAstAnalysis;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
-import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
@@ -66,8 +59,6 @@ import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IREventCoordinator;
-import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
@@ -83,7 +74,7 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Settings;
 
-public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJavaQouteEventCoordinator
+public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinator
 {
 	public static final String TRACE_IMPORT = "org.overture.codegen.runtime.traces.*";
 	public static final String RUNTIME_IMPORT = "org.overture.codegen.runtime.*";
@@ -121,7 +112,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 	
 	private JavaFormat javaFormat;
 	
-	private IREventObserver irObserver;
 	private IJavaQuoteEventObserver quoteObserver;
 	
 	private JavaVarPrefixManager varPrefixManager;
@@ -138,7 +128,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 	{
 		this.varPrefixManager = new JavaVarPrefixManager();
 		
-		this.irObserver = null;
 		this.quoteObserver = null;
 		initVelocity();
 
@@ -408,7 +397,7 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 
 			try
 			{
-				if (shouldBeGenerated(vdmClass, generator.getIRInfo().getAssistantManager().getDeclAssistant()))
+				if (shouldGenerateVdmNode(vdmClass))
 				{
 					StringWriter writer = new StringWriter();
 					status.getIrNode().apply(mergeVisitor, writer);
@@ -596,36 +585,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 		}
 	}
 
-	private List<INode> getUserModules(
-			List<? extends INode> mergedParseLists)
-	{
-		List<INode> userModules = new LinkedList<INode>();
-		
-		if(mergedParseLists.size() == 1 && mergedParseLists.get(0) instanceof CombinedDefaultModule)
-		{
-			CombinedDefaultModule combined = (CombinedDefaultModule) mergedParseLists.get(0);
-			
-			for(AModuleModules m : combined.getModules())
-			{
-				userModules.add(m);
-			}
-			
-			return userModules;
-		}
-		else
-		{
-			for (INode node : mergedParseLists)
-			{
-				if(!getInfo().getDeclAssistant().isLibrary(node))
-				{
-					userModules.add(node);
-				}
-			}
-			
-			return userModules;
-		}
-	}
-
 	private List<Renaming> normaliseIdentifiers(
 			List<INode> userModules) throws AnalysisException
 	{
@@ -665,17 +624,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 		return new LinkedList<Renaming>(filteredRenamings);
 	}
 
-	private void removeUnreachableStms(List<? extends INode> mergedParseLists)
-			throws AnalysisException
-	{
-		UnreachableStmRemover remover = new UnreachableStmRemover();
-
-		for (INode node : mergedParseLists)
-		{
-			node.apply(remover);
-		}
-	}
-
 	private List<Renaming> performRenaming(
 			List<INode> mergedParseLists,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
@@ -702,44 +650,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 		return allRenamings;
 	}
 
-	private void simplifyLibrary(INode node)
-	{
-		List<PDefinition> defs = null;
-		
-		if(node instanceof SClassDefinition)
-		{
-			defs = ((SClassDefinition) node).getDefinitions();
-		}
-		else if(node instanceof AModuleModules)
-		{
-			defs = ((AModuleModules) node).getDefs();
-		}
-		else
-		{
-			// Nothing to do
-			return;
-		}
-		
-		for (PDefinition def : defs)
-		{
-			if (def instanceof SOperationDefinition)
-			{
-				SOperationDefinition op = (SOperationDefinition) def;
-
-				op.setBody(new ANotYetSpecifiedStm());
-				op.setPrecondition(null);
-				op.setPostcondition(null);
-			} else if (def instanceof SFunctionDefinition)
-			{
-				SFunctionDefinition func = (SFunctionDefinition) def;
-
-				func.setBody(new ANotYetSpecifiedExp());
-				func.setPrecondition(null);
-				func.setPostcondition(null);
-			}
-		}
-	}
-	
 	private List<AModuleDeclCG> getModuleDecls(List<IRStatus<AModuleDeclCG>> statuses)
 	{
 		List<AModuleDeclCG> modules = new LinkedList<AModuleDeclCG>();
@@ -858,10 +768,9 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 		}
 	}
 
-	private boolean shouldBeGenerated(INode node,
-			DeclAssistantCG declAssistant)
+	public boolean shouldGenerateVdmNode(INode node)
 	{
-		if (declAssistant.isLibrary(node))
+		if(!super.shouldGenerateVdmNode(node))
 		{
 			return false;
 		}
@@ -898,24 +807,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 	}
 
 	@Override
-	public void registerIrObs(IREventObserver obs)
-	{
-		if(obs != null && irObserver == null)
-		{
-			irObserver = obs;
-		}
-	}
-
-	@Override
-	public void unregisterIrObs(IREventObserver obs)
-	{
-		if(obs != null && irObserver == obs)
-		{
-			irObserver = null;
-		}
-	}
-	
-	@Override
 	public void registerJavaQuoteObs(IJavaQuoteEventObserver obs)
 	{
 		if(obs != null && quoteObserver == null)
@@ -931,26 +822,6 @@ public class JavaCodeGen extends CodeGenBase implements IREventCoordinator, IJav
 		{
 			quoteObserver = null;
 		}
-	}
-
-	public List<IRStatus<org.overture.codegen.cgast.INode>> initialIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
-	{
-		if(irObserver != null)
-		{
-			return irObserver.initialIRConstructed(ast, getInfo());
-		}
-		
-		return ast;
-	}
-	
-	public List<IRStatus<org.overture.codegen.cgast.INode>> finalIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
-	{
-		if(irObserver != null)
-		{
-			return irObserver.finalIRConstructed(ast, getInfo());
-		}
-		
-		return ast;
 	}
 
 	public JavaVarPrefixManager getVarPrefixManager()
