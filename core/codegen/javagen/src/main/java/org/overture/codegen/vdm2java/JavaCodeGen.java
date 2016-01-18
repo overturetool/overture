@@ -269,7 +269,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs()));
 
-		List<String> userTestCases = preProcessAst(ast);
+		preProcessAst(ast);
 
 		InvalidNamesResult invalidNamesResult = validateVdmModelNames(userModules);
 		List<IRStatus<org.overture.codegen.cgast.INode>> statuses = new LinkedList<>();
@@ -286,6 +286,8 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		
 		// Event notification
 		statuses = initialIrEvent(statuses);
+		
+		List<String> userTestCases = getUserTestCases(ast);
 		statuses = filter(statuses, genModules, userTestCases);
 		
 		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
@@ -381,25 +383,8 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			{
 				if (shouldGenerateVdmNode(vdmClass))
 				{
-					StringWriter writer = new StringWriter();
-					status.getIrNode().apply(mergeVisitor, writer);
-
-					boolean isTestCase = userTestCases.contains(status.getIrNodeName());
+					genModules.add(genIrModule(mergeVisitor, status));
 					
-					if (mergeVisitor.hasMergeErrors())
-					{
-						genModules.add(new GeneratedModule(status.getIrNodeName(), status.getIrNode(), mergeVisitor.getMergeErrors(), isTestCase));
-					} else if (mergeVisitor.hasUnsupportedTargLangNodes())
-					{
-						genModules.add(new GeneratedModule(status.getIrNodeName(), new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang(), isTestCase));
-					} else
-					{
-						String code = formatCode(writer);
-						
-						GeneratedModule generatedModule = new GeneratedModule(status.getIrNodeName(), status.getIrNode(), code, isTestCase);
-						generatedModule.setTransformationWarnings(status.getTransformationWarnings());
-						genModules.add(generatedModule);
-					}
 				} else
 				{
 					if (!skipping.contains(status.getIrNodeName()))
@@ -427,7 +412,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 			try
 			{
-				funcValueInterface.apply(mergeVisitor, writer);
+				funcValueInterface.apply(javaFormat.getMergeVisitor(), writer);
 				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
 				genModules.add(new GeneratedModule(funcValueInterface.getName(), funcValueInterface, formattedJavaCode, false));
 
@@ -652,36 +637,11 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		
 		generator.applyPartialTransformation(expStatus, new DivideTrans(getInfo()));
 
-		StringWriter writer = new StringWriter();
+		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
 
 		try
 		{
-			SExpCG expCg = expStatus.getIrNode();
-
-			if (expStatus.canBeGenerated())
-			{
-				MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
-				mergeVisitor.init();
-				
-				expCg.apply(mergeVisitor, writer);
-
-				if (mergeVisitor.hasMergeErrors())
-				{
-					return new Generated(mergeVisitor.getMergeErrors());
-				} else if (mergeVisitor.hasUnsupportedTargLangNodes())
-				{
-					return new Generated(new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang());
-				} else
-				{
-					String code = writer.toString();
-
-					return new Generated(code);
-				}
-			} else
-			{
-
-				return new Generated(expStatus.getUnsupportedInIr(), new HashSet<IrNodeInfo>());
-			}
+			return genIrExp(expStatus, mergeVisitor);
 
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 		{

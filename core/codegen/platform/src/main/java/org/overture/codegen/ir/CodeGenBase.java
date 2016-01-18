@@ -1,6 +1,7 @@
 package org.overture.codegen.ir;
 
 import java.io.StringWriter;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,7 +17,12 @@ import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
 import org.overture.codegen.assistant.DeclAssistantCG;
+import org.overture.codegen.cgast.PCG;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.utils.Generated;
+import org.overture.codegen.utils.GeneratedModule;
 
 
 abstract public class CodeGenBase implements IREventCoordinator
@@ -36,6 +42,11 @@ abstract public class CodeGenBase implements IREventCoordinator
 	{
 		// Do nothing by default
 		return writer.toString();
+	}
+	
+	public boolean isTestCase(IRStatus<? extends PCG> status)
+	{
+		return getInfo().getDeclAssistant().isLibrary(status.getIrNode().getSourceNode().getVdmNode());
 	}
 	
 	protected List<INode> getUserModules(
@@ -118,10 +129,8 @@ abstract public class CodeGenBase implements IREventCoordinator
 		}
 	}
 	
-	public List<String> preProcessAst(List<? extends INode> ast)
+	public void preProcessAst(List<? extends INode> ast)
 	{
-		List<String> userTestCases = new LinkedList<>();
-		
 		for (INode node : ast)
 		{
 			if (getInfo().getAssistantManager().getDeclAssistant().isLibrary(node))
@@ -130,14 +139,23 @@ abstract public class CodeGenBase implements IREventCoordinator
 			}
 			else
 			{
-				if(getInfo().getDeclAssistant().isTestCase(node))
-				{
-					userTestCases.add(getInfo().getDeclAssistant().getNodeName(node));
-				}
-				
 				preProcessUserClass(node);
 			}
 		}
+	}
+	
+	public List<String> getUserTestCases(List<? extends INode> ast)
+	{
+		List<String> userTestCases = new LinkedList<>();
+		
+		for (INode node : ast)
+		{
+			if(getInfo().getDeclAssistant().isTestCase(node))
+			{
+				userTestCases.add(getInfo().getDeclAssistant().getNodeName(node));
+			}
+		}
+		
 		return userTestCases;
 	}
 	
@@ -157,6 +175,67 @@ abstract public class CodeGenBase implements IREventCoordinator
 		else
 		{
 			return true;
+		}
+	}
+	
+	public GeneratedModule genIrModule(MergeVisitor mergeVisitor,
+			IRStatus<? extends PCG> status) throws org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		if (status.canBeGenerated())
+		{
+			StringWriter writer = new StringWriter();
+			status.getIrNode().apply(mergeVisitor, writer);
+
+			boolean isTestCase = isTestCase(status);
+
+			GeneratedModule generatedModule;
+			if (mergeVisitor.hasMergeErrors())
+			{
+				generatedModule = new GeneratedModule(status.getIrNodeName(), status.getIrNode(), mergeVisitor.getMergeErrors(), isTestCase);
+			} else if (mergeVisitor.hasUnsupportedTargLangNodes())
+			{
+				generatedModule = new GeneratedModule(status.getIrNodeName(), new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang(), isTestCase);
+			} else
+			{
+				generatedModule = new GeneratedModule(status.getIrNodeName(), status.getIrNode(), formatCode(writer), isTestCase);
+				generatedModule.setTransformationWarnings(status.getTransformationWarnings());
+			}
+
+			return generatedModule;
+		} else
+		{
+			return new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>(), isTestCase(status));
+		}
+	}
+	
+	public Generated genIrExp(IRStatus<SExpCG> expStatus, MergeVisitor mergeVisitor)
+			throws org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		StringWriter writer = new StringWriter();
+		SExpCG expCg = expStatus.getIrNode();
+
+		if (expStatus.canBeGenerated())
+		{
+			mergeVisitor.init();
+			
+			expCg.apply(mergeVisitor, writer);
+
+			if (mergeVisitor.hasMergeErrors())
+			{
+				return new Generated(mergeVisitor.getMergeErrors());
+			} else if (mergeVisitor.hasUnsupportedTargLangNodes())
+			{
+				return new Generated(new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang());
+			} else
+			{
+				String code = writer.toString();
+
+				return new Generated(code);
+			}
+		} else
+		{
+
+			return new Generated(expStatus.getUnsupportedInIr(), new HashSet<IrNodeInfo>());
 		}
 	}
 	
