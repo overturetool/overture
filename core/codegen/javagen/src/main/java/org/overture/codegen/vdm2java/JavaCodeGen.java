@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -66,7 +65,6 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.trans.DivideTrans;
 import org.overture.codegen.trans.ModuleToClassTransformation;
-import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.Generated;
@@ -86,7 +84,6 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			// Classes used from the Java standard library
 			"Utils", "Record", "Long", "Double", "Character", "String", "List",
 			"Set" };
-
 	
 	/**
 	 * Signatures of the java.lang.Object methods:<br>
@@ -121,16 +118,8 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 	public JavaCodeGen()
 	{
 		super();
-		init();
-	}
-
-	private void init()
-	{
 		this.varPrefixManager = new JavaVarPrefixManager();
-		
 		this.quoteObserver = null;
-		initVelocity();
-
 		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
 		this.javaFormat = new JavaFormat(varPrefixManager, JAVA_TEMPLATES_ROOT_FOLDER, generator.getIRInfo());
 		this.transSeries = new JavaTransSeries(this);
@@ -156,12 +145,6 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		javaFormat.getMergeVisitor().init();
 		generator.clear();
 		transSeries.init();
-	}
-
-	private void initVelocity()
-	{
-		Velocity.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
-		Velocity.init();
 	}
 
 	public JavaFormat getJavaFormat()
@@ -257,19 +240,13 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			SClassDefinition mainClass, List<String> warnings)
 			throws AnalysisException {
 		
-		List<INode> userModules = getUserModules(ast);
-		
-		handleOldNames(ast);
-
-		List<Renaming> allRenamings = normaliseIdentifiers(userModules);
-		generator.computeDefTable(userModules);
-
-		// To document any renaming of variables shadowing other variables
-		removeUnreachableStms(ast);
-
-		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs()));
-
 		preProcessAst(ast);
+		
+		List<INode> userModules = getUserModules(ast);
+		List<Renaming> allRenamings = normaliseIdentifiers(userModules);
+		
+		// To document any renaming of variables shadowing other variables
+		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs()));
 
 		InvalidNamesResult invalidNamesResult = validateVdmModelNames(userModules);
 		List<IRStatus<org.overture.codegen.cgast.INode>> statuses = new LinkedList<>();
@@ -331,20 +308,17 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 				canBeGenerated.add(status);
 			} else
 			{
-				boolean isTestCase = userTestCases.contains(status.getIrNodeName());
-				genModules.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>(), isTestCase));
+				genModules.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>(), isTestCase(status)));
 			}
 		}
 
-		 List<DepthFirstAnalysisAdaptor> transformations = transSeries.getSeries();
-
-		for (DepthFirstAnalysisAdaptor trans : transformations)
+		for (DepthFirstAnalysisAdaptor trans : transSeries.getSeries())
 		{
 			for (IRStatus<ADefaultClassDeclCG> status : canBeGenerated)
 			{
 				try
 				{
-					if (!getInfo().getDeclAssistant().isLibraryName(status.getIrNodeName()))
+					if (!isTestCase(status))
 					{
 						generator.applyPartialTransformation(status, trans);
 					}
@@ -408,10 +382,9 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		{
 			funcValueInterface.setPackage(getJavaSettings().getJavaRootPackage());
 			
-			StringWriter writer = new StringWriter();
-
 			try
 			{
+				StringWriter writer = new StringWriter();
 				funcValueInterface.apply(javaFormat.getMergeVisitor(), writer);
 				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
 				genModules.add(new GeneratedModule(funcValueInterface.getName(), funcValueInterface, formattedJavaCode, false));
@@ -541,16 +514,6 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		}
 		
 		return filtered;
-	}
-
-	private void handleOldNames(List<? extends INode> ast) throws AnalysisException
-	{
-		OldNameRenamer oldNameRenamer = new OldNameRenamer();
-		
-		for(INode module : ast)
-		{
-			module.apply(oldNameRenamer);
-		}
 	}
 
 	private List<Renaming> normaliseIdentifiers(

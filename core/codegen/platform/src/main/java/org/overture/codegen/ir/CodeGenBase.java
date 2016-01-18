@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -20,6 +21,7 @@ import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
@@ -34,8 +36,15 @@ abstract public class CodeGenBase implements IREventCoordinator
 	protected CodeGenBase()
 	{
 		super();
+		initVelocity();
 		this.irObserver = null;
 		this.generator = new IRGenerator();
+	}
+	
+	public void initVelocity()
+	{
+		Velocity.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
+		Velocity.init();
 	}
 	
 	public String formatCode(StringWriter writer)
@@ -129,8 +138,22 @@ abstract public class CodeGenBase implements IREventCoordinator
 		}
 	}
 	
-	public void preProcessAst(List<? extends INode> ast)
+	public void handleOldNames(List<? extends INode> ast) throws AnalysisException
 	{
+		OldNameRenamer oldNameRenamer = new OldNameRenamer();
+		
+		for(INode module : ast)
+		{
+			module.apply(oldNameRenamer);
+		}
+	}
+	
+	public void preProcessAst(List<? extends INode> ast) throws AnalysisException
+	{
+		generator.computeDefTable(getUserModules(ast));
+		removeUnreachableStms(ast);
+		handleOldNames(ast);
+		
 		for (INode node : ast)
 		{
 			if (getInfo().getAssistantManager().getDeclAssistant().isLibrary(node))
