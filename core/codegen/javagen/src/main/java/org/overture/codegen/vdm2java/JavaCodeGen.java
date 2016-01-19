@@ -255,7 +255,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			{
 				try
 				{
-					if (!isTestCase(status))
+					if (!getInfo().getDeclAssistant().isLibraryName(status.getIrNodeName()))
 					{
 						generator.applyPartialTransformation(status, trans);
 					}
