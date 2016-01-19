@@ -206,7 +206,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 */
 	protected boolean isTestCase(IRStatus<? extends PCG> status)
 	{
-		return getInfo().getDeclAssistant().isLibrary(status.getIrNode().getSourceNode().getVdmNode());
+		return getInfo().getDeclAssistant().isTestCase(status.getIrNode().getSourceNode().getVdmNode());
 	}
 	
 	/**
