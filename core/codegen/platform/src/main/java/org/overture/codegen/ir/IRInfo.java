@@ -340,6 +340,8 @@ public class IRInfo
 		transformationWarnings.clear();
 		tempVarNameGen.clear();
 		idStateDesignatorDefs.clear();
+		classes.clear();
+		modules.clear();
 	}
 
 	public IRSettings getSettings()
