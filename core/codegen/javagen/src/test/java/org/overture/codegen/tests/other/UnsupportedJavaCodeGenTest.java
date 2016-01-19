@@ -112,13 +112,13 @@ public class UnsupportedJavaCodeGenTest
 			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
 			validateTcResult(tcResult);
 			
-			return javaGen.genVdmToJava(CodeGenBase.getNodes(tcResult.result));
+			return javaGen.generate(CodeGenBase.getNodes(tcResult.result));
 		} else if(Settings.dialect == Dialect.VDM_PP)
 		{
 			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
 			validateTcResult(tcResult);
 
-			return javaGen.genVdmToJava(CodeGenBase.getNodes(tcResult.result));
+			return javaGen.generate(CodeGenBase.getNodes(tcResult.result));
 		}
 		else
 		{

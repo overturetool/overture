@@ -222,7 +222,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		javaGen.registerIrObs(this);
 		javaGen.registerJavaQuoteObs(this);
 
-		return javaGen.genVdmToJava(CodeGenBase.getNodes(ast));
+		return javaGen.generate(CodeGenBase.getNodes(ast));
 	}
 
 	@Override

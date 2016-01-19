@@ -60,18 +60,18 @@ public abstract class JavaGenTestBase extends CheckerTestBase
 		if(Settings.dialect == Dialect.VDM_SL)
 		{
 			TypeCheckResult<List<AModuleModules>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckSl(files));
-			data = javaCg.genVdmToJava(CodeGenBase.getNodes(tcResult.result));
+			data = javaCg.generate(CodeGenBase.getNodes(tcResult.result));
 			
 		}
 		else if(Settings.dialect == Dialect.VDM_PP)
 		{
 			TypeCheckResult<List<SClassDefinition>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckPp(files));
-			data = javaCg.genVdmToJava(CodeGenBase.getNodes(tcResult.result));
+			data = javaCg.generate(CodeGenBase.getNodes(tcResult.result));
 		}
 		else if(Settings.dialect == Dialect.VDM_RT)
 		{
 			TypeCheckResult<List<SClassDefinition>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckRt(files));
-			data = javaCg.genVdmToJava(CodeGenBase.getNodes(tcResult.result));
+			data = javaCg.generate(CodeGenBase.getNodes(tcResult.result));
 		}
 		return data;
 	}

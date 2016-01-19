@@ -128,7 +128,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 			
 			try
 			{
-				genData = javaCodeGen.genVdmToJava(CodeGenBase.getNodes(tcResult.result));
+				genData = javaCodeGen.generate(CodeGenBase.getNodes(tcResult.result));
 			} catch (AnalysisException e)
 			{
 				e.printStackTrace();
@@ -144,7 +144,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 			
 			try
 			{
-				genData = javaCodeGen.genVdmToJava(CodeGenBase.getNodes(tcResult.result));
+				genData = javaCodeGen.generate(CodeGenBase.getNodes(tcResult.result));
 				
 			} catch (AnalysisException e)
 			{

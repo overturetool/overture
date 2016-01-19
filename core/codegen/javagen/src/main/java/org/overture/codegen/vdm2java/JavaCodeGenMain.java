@@ -328,7 +328,7 @@ public class JavaCodeGenMain
 				return;
 			}
 			
-			GeneratedData data = vdmCodGen.genVdmToJava(CodeGenBase.getNodes(tcResult.result));
+			GeneratedData data = vdmCodGen.generate(CodeGenBase.getNodes(tcResult.result));
 			
 			processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
 
@@ -365,7 +365,7 @@ public class JavaCodeGenMain
 				return;
 			}
 			
-			GeneratedData data = vdmCodGen.genVdmToJava(CodeGenBase.getNodes(tcResult.result));
+			GeneratedData data = vdmCodGen.generate(CodeGenBase.getNodes(tcResult.result));
 			
 			processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
 

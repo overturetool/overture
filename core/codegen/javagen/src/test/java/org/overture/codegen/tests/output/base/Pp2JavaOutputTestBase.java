@@ -54,6 +54,6 @@ public abstract class Pp2JavaOutputTestBase extends PpOutputTestBase
 			}
 		}
 
-		return getJavaGen().genVdmToJava(CodeGenBase.getNodes(classes));
+		return getJavaGen().generate(CodeGenBase.getNodes(classes));
 	}
 }

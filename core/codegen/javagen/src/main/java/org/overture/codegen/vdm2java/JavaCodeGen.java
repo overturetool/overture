@@ -141,11 +141,13 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		return this.transSeries;
 	}
 
-	public void clear()
+	@Override
+	protected void clear()
 	{
+		super.clear();
 		javaFormat.getMergeVisitor().init();
-		generator.clear();
-		transSeries.init();
+		transSeries.clear();
+		javaFormat.clearFunctionValueAssistant();
 	}
 
 	public JavaFormat getJavaFormat()
@@ -153,7 +155,8 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		return javaFormat;
 	}
 
-	public GeneratedData genVdmToJava(List<INode> ast)
+	@Override
+	protected GeneratedData genVdmToTargetLang(List<INode> ast)
 			throws AnalysisException {
 		
 		SClassDefinition mainClass = null;
@@ -175,8 +178,6 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 				}
 			}
 		}
-		
-		preProcessAst(ast);
 		
 		List<INode> userModules = getUserModules(ast);
 		List<Renaming> allRenamings = normaliseIdentifiers(userModules);
@@ -331,10 +332,6 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 				e.printStackTrace();
 			}
 		}
-
-		javaFormat.clearFunctionValueAssistant();
-		getInfo().clearClasses();
-		getInfo().clearModules();
 
 		GeneratedData data = new GeneratedData();
 		data.setClasses(genModules);

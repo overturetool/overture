@@ -162,7 +162,7 @@ public class JavaTransSeries
 		return new Exists1CounterData(type, initExp);
 	}
 
-	public void init()
+	public void clear()
 	{
 		funcValAssist.getFuncValInterfaces().clear();
 	}

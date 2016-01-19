@@ -351,7 +351,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 	{
 		if(project.getDialect() != Dialect.VDM_SL)
 		{
-			return vdm2java.genVdmToJava(PluginVdm2JavaUtil.getNodes(model.getSourceUnits()));			
+			return vdm2java.generate(PluginVdm2JavaUtil.getNodes(model.getSourceUnits()));			
 		}
 		else
 		{
@@ -365,7 +365,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 				return jmlGen.generateJml(PluginVdm2JavaUtil.getModules(model.getSourceUnits()));
 			} else
 			{
-				return vdm2java.genVdmToJava(PluginVdm2JavaUtil.getNodes(model.getSourceUnits()));
+				return vdm2java.generate(PluginVdm2JavaUtil.getNodes(model.getSourceUnits()));
 			}
 		}
 	}

@@ -39,6 +39,6 @@ public abstract class Sl2JavaOutputTestBase extends SlOutputTestBase
 	{
 		List<AModuleModules> modules = buildModulesList(ast);
 		
-		return getJavaGen().genVdmToJava(CodeGenBase.getNodes(modules));
+		return getJavaGen().generate(CodeGenBase.getNodes(modules));
 	}
 }
