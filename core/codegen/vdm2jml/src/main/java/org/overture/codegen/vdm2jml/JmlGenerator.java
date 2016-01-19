@@ -27,6 +27,7 @@ import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRInfo;
@@ -221,7 +222,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		javaGen.registerIrObs(this);
 		javaGen.registerJavaQuoteObs(this);
 
-		return javaGen.generateJavaFromVdmModules(ast);
+		return javaGen.genVdmToJava(CodeGenBase.getNodes(ast));
 	}
 
 	@Override

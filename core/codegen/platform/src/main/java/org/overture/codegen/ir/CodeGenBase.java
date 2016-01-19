@@ -53,6 +53,30 @@ abstract public class CodeGenBase implements IREventCoordinator
 		return writer.toString();
 	}
 	
+	public static List<SClassDefinition> getClasses(List<INode> ast)
+	{
+		List<SClassDefinition> classes = new LinkedList<>();
+		
+		for(INode n : ast)
+		{
+			if(n instanceof SClassDefinition)
+			{
+				classes.add((SClassDefinition) n);
+			}
+		}
+		
+		return classes;
+	}
+	
+	public static List<INode> getNodes(List<? extends INode> ast)
+	{
+		List<INode> nodes = new LinkedList<>();
+		
+		nodes.addAll(ast);
+		
+		return nodes;
+	}
+	
 	public boolean isTestCase(IRStatus<? extends PCG> status)
 	{
 		return getInfo().getDeclAssistant().isLibrary(status.getIrNode().getSourceNode().getVdmNode());

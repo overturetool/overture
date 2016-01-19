@@ -43,9 +43,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.osgi.service.prefs.Preferences;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.Violation;
@@ -353,13 +351,10 @@ public class Vdm2JavaCommand extends AbstractHandler
 	{
 		if(project.getDialect() != Dialect.VDM_SL)
 		{
-			List<SClassDefinition> ast = PluginVdm2JavaUtil.getClasses(model.getSourceUnits());
-			return vdm2java.generateJavaFromVdm(ast);			
+			return vdm2java.genVdmToJava(PluginVdm2JavaUtil.getNodes(model.getSourceUnits()));			
 		}
 		else
 		{
-			List<AModuleModules> ast = PluginVdm2JavaUtil.getModules(model.getSourceUnits());
-			
 			if (generateJml(project))
 			{
 				JmlSettings jmlSettings = getJmlSettings();
@@ -367,10 +362,10 @@ public class Vdm2JavaCommand extends AbstractHandler
 				JmlGenerator jmlGen = new JmlGenerator(vdm2java);
 				jmlGen.setJmlSettings(jmlSettings);
 				
-				return jmlGen.generateJml(ast);
+				return jmlGen.generateJml(PluginVdm2JavaUtil.getModules(model.getSourceUnits()));
 			} else
 			{
-				return vdm2java.generateJavaFromVdmModules(ast);
+				return vdm2java.genVdmToJava(PluginVdm2JavaUtil.getNodes(model.getSourceUnits()));
 			}
 		}
 	}

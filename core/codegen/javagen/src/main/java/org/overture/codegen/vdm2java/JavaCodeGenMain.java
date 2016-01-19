@@ -34,6 +34,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
@@ -327,7 +328,7 @@ public class JavaCodeGenMain
 				return;
 			}
 			
-			GeneratedData data = vdmCodGen.generateJavaFromVdmModules(tcResult.result);
+			GeneratedData data = vdmCodGen.genVdmToJava(CodeGenBase.getNodes(tcResult.result));
 			
 			processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
 
@@ -364,7 +365,7 @@ public class JavaCodeGenMain
 				return;
 			}
 			
-			GeneratedData data = vdmCodGen.generateJavaFromVdm(tcResult.result);
+			GeneratedData data = vdmCodGen.genVdmToJava(CodeGenBase.getNodes(tcResult.result));
 			
 			processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
 

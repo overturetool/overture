@@ -5,6 +5,7 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.tests.output.util.SlOutputTestBase;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
@@ -38,6 +39,6 @@ public abstract class Sl2JavaOutputTestBase extends SlOutputTestBase
 	{
 		List<AModuleModules> modules = buildModulesList(ast);
 		
-		return getJavaGen().generateJavaFromVdmModules(modules);
+		return getJavaGen().genVdmToJava(CodeGenBase.getNodes(modules));
 	}
 }

@@ -37,6 +37,7 @@ import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
@@ -152,39 +153,28 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		return javaFormat;
 	}
 
-	public GeneratedData generateJavaFromVdmModules(List<AModuleModules> ast)
+	public GeneratedData genVdmToJava(List<INode> ast)
 			throws AnalysisException {
-
-		return generateVdmFromNodes(ast, null, new LinkedList<String>());
-	}
-	
-	public GeneratedData generateJavaFromVdm(List<SClassDefinition> ast)
-			throws AnalysisException
-	{
+		
 		SClassDefinition mainClass = null;
-
 		List<String> warnings = new LinkedList<String>();
-		if (getJavaSettings().getVdmEntryExp() != null)
+
+		if (Settings.dialect == Dialect.VDM_PP)
 		{
-			try
+			if (getJavaSettings().getVdmEntryExp() != null)
 			{
-				mainClass = GeneralCodeGenUtils.consMainClass(ast, getJavaSettings().getVdmEntryExp(), Settings.dialect, JAVA_MAIN_CLASS_NAME, getInfo().getTempVarNameGen());
-				ast.add(mainClass);
-			} catch (Exception e)
-			{
-				// It can go wrong if the VDM entry point does not type check
-				warnings.add("The chosen launch configuration could not be type checked: "
-						+ e.getMessage());
-				warnings.add("Skipping launch configuration..");
+				try
+				{
+					mainClass = GeneralCodeGenUtils.consMainClass(getClasses(ast), getJavaSettings().getVdmEntryExp(), Settings.dialect, JAVA_MAIN_CLASS_NAME, getInfo().getTempVarNameGen());
+					ast.add(mainClass);
+				} catch (Exception e)
+				{
+					// It can go wrong if the VDM entry point does not type check
+					warnings.add("The chosen launch configuration could not be type checked: " + e.getMessage());
+					warnings.add("Skipping launch configuration..");
+				}
 			}
 		}
-
-		return generateVdmFromNodes(ast, mainClass, warnings);
-	}
-
-	private GeneratedData generateVdmFromNodes(List<? extends INode> ast,
-			SClassDefinition mainClass, List<String> warnings)
-			throws AnalysisException {
 		
 		preProcessAst(ast);
 		

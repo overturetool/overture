@@ -15,6 +15,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.tests.util.TestUtils;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
@@ -111,13 +112,13 @@ public class UnsupportedJavaCodeGenTest
 			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
 			validateTcResult(tcResult);
 			
-			return javaGen.generateJavaFromVdmModules(tcResult.result);
+			return javaGen.genVdmToJava(CodeGenBase.getNodes(tcResult.result));
 		} else if(Settings.dialect == Dialect.VDM_PP)
 		{
 			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
 			validateTcResult(tcResult);
 
-			return javaGen.generateJavaFromVdm(tcResult.result);
+			return javaGen.genVdmToJava(CodeGenBase.getNodes(tcResult.result));
 		}
 		else
 		{

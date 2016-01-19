@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.tests.output.util.PpOutputTestBase;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
@@ -53,6 +54,6 @@ public abstract class Pp2JavaOutputTestBase extends PpOutputTestBase
 			}
 		}
 
-		return getJavaGen().generateJavaFromVdm(classes);
+		return getJavaGen().genVdmToJava(CodeGenBase.getNodes(classes));
 	}
 }
