@@ -157,7 +157,7 @@ public class TemplateManager
 	
 	public String derivePath(Class<? extends INode> nodeClass)
 	{
-		return root + File.separatorChar + nodeClass.getName().replaceAll("\\.", File.separator)
+		return root + File.separatorChar + nodeClass.getName().replace('.', File.separatorChar)
 				+ TEMPLATE_FILE_EXTENSION;
 	}
 }
