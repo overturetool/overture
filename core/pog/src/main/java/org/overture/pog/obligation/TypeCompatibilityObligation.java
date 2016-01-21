@@ -94,7 +94,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 
 	/**
 	 * Factory Method since we need to return null STOs (which should be discarded
-	 * 
+	 *
 	 * @param exp
 	 *            The expression to be checked
 	 * @param etype
@@ -180,7 +180,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 	/**
 	 * Help Constructor for the COMPASS Subtype POs <br>
 	 * <b> Do not use this constructor directly! </b> Use one of the factory methods instead
-	 * 
+	 *
 	 * @param root
 	 *            The root node generating the PO
 	 * @param loc
@@ -610,7 +610,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 
 				for (PExp e : te.getArgs())
 				{
-					PExp s = oneType(true, e, eit.next(), ait.next());
+					PExp s = oneType(true, e.clone(), eit.next(), ait.next());
 
 					if (s != null)
 					{
