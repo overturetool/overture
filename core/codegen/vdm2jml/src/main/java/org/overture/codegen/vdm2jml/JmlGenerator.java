@@ -10,6 +10,7 @@ import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -226,8 +227,8 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	}
 
 	@Override
-	public List<IRStatus<INode>> initialIRConstructed(
-			List<IRStatus<INode>> ast, IRInfo info)
+	public List<IRStatus<PCG>> initialIRConstructed(
+			List<IRStatus<PCG>> ast, IRInfo info)
 	{
 		List<IRStatus<AModuleDeclCG>> modules = IRStatus.extract(ast, AModuleDeclCG.class);
 		
@@ -268,7 +269,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	}
 
 	@Override
-	public List<IRStatus<INode>> finalIRConstructed(List<IRStatus<INode>> ast,
+	public List<IRStatus<PCG>> finalIRConstructed(List<IRStatus<PCG>> ast,
 			IRInfo info)
 	{
 		// In the final version of the IR, received by the Java code generator, all
@@ -285,7 +286,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		 */
 		RecClassInfo recInfo = makeRecStateAccessorBased(ast);
 		
-		List<IRStatus<INode>> newAst = new LinkedList<IRStatus<INode>>(ast);
+		List<IRStatus<PCG>> newAst = new LinkedList<IRStatus<PCG>>(ast);
 
 		// To circumvent a problem with OpenJML. See documentation of makeRecsOuterClasses
 		newAst.addAll(util.makeRecsOuterClasses(ast, recInfo));
@@ -411,11 +412,11 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		clazz.setDependencies(allImports);
 	}
 
-	private RecClassInfo makeRecStateAccessorBased(List<IRStatus<INode>> ast) {
+	private RecClassInfo makeRecStateAccessorBased(List<IRStatus<PCG>> ast) {
 
 		RecAccessorTrans recAccTr = new RecAccessorTrans(this);
 
-		for (IRStatus<INode> status : ast) {
+		for (IRStatus<PCG> status : ast) {
 			try {
 				javaGen.getIRGenerator().applyPartialTransformation(status, recAccTr);
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e) {
@@ -429,7 +430,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		return recAccTr.getRecInfo();
 	}
 
-	private void sortAnnotations(List<IRStatus<INode>> newAst)
+	private void sortAnnotations(List<IRStatus<PCG>> newAst)
 	{
 		AnnotationSorter sorter = new AnnotationSorter();
 
@@ -467,7 +468,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		this.typeInfoList = depCalc.getTypeDataList();
 	}
 
-	private void addAssertions(List<IRStatus<INode>> newAst, TypePredDecorator assertTr)
+	private void addAssertions(List<IRStatus<PCG>> newAst, TypePredDecorator assertTr)
 	{
 		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(newAst, ADefaultClassDeclCG.class))
 		{
@@ -488,7 +489,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		}
 	}
 
-	private void annotateRecsWithInvs(List<IRStatus<INode>> ast)
+	private void annotateRecsWithInvs(List<IRStatus<PCG>> ast)
 	{
 		List<ARecordDeclCG> recs = util.getRecords(ast);
 		
@@ -517,7 +518,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		}
 	}
 
-	private void setInvChecksOnOwner(List<IRStatus<INode>> ast) {
+	private void setInvChecksOnOwner(List<IRStatus<PCG>> ast) {
 		
 		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(ast, ADefaultClassDeclCG.class))
 		{
@@ -665,10 +666,10 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		}
 	}
 	
-	public StateDesInfo normaliseTargets(List<IRStatus<INode>> newAst)
+	public StateDesInfo normaliseTargets(List<IRStatus<PCG>> newAst)
 	{
 		TargetNormaliserTrans normaliser = new TargetNormaliserTrans(this);
-		for (IRStatus<INode> n : newAst)
+		for (IRStatus<PCG> n : newAst)
 		{
 			try
 			{

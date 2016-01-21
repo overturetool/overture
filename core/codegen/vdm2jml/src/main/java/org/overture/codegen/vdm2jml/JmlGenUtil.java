@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
@@ -148,7 +149,7 @@ public class JmlGenUtil
 		return args;
 	}
 	
-	public List<ARecordDeclCG> getRecords(List<IRStatus<INode>> ast)
+	public List<ARecordDeclCG> getRecords(List<IRStatus<PCG>> ast)
 	{
 		List<ARecordDeclCG> records = new LinkedList<ARecordDeclCG>();
 
@@ -216,9 +217,9 @@ public class JmlGenUtil
 	 * @param recInfo
 	 *            Since the new record classes are deep copies we need to update the record info too
 	 */
-	public List<IRStatus<INode>> makeRecsOuterClasses(List<IRStatus<INode>> ast, RecClassInfo recInfo)
+	public List<IRStatus<PCG>> makeRecsOuterClasses(List<IRStatus<PCG>> ast, RecClassInfo recInfo)
 	{
-		List<IRStatus<INode>> extraClasses = new LinkedList<IRStatus<INode>>();
+		List<IRStatus<PCG>> extraClasses = new LinkedList<IRStatus<PCG>>();
 
 		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(ast, ADefaultClassDeclCG.class))
 		{
@@ -309,7 +310,7 @@ public class JmlGenUtil
 				imports.add(new ClonableString(JavaCodeGen.RUNTIME_IMPORT));
 				recClass.setDependencies(imports);
 
-				extraClasses.add(new IRStatus<INode>(recClass.getName(), recClass, new HashSet<VdmNodeInfo>()));
+				extraClasses.add(new IRStatus<PCG>(recClass.getSourceNode().getVdmNode(), recClass.getName(), recClass, new HashSet<VdmNodeInfo>()));
 			}
 		}
 
@@ -418,7 +419,7 @@ public class JmlGenUtil
 	 * 
 	 * @param newAst
 	 */
-	public void distributeNamedTypeInvs(List<IRStatus<INode>> newAst)
+	public void distributeNamedTypeInvs(List<IRStatus<PCG>> newAst)
 	{
 		// Collect all named type invariants
 		List<ATypeDeclCG> allNamedTypeInvTypeDecls = new LinkedList<ATypeDeclCG>();

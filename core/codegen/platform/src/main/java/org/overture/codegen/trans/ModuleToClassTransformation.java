@@ -3,7 +3,7 @@ package org.overture.codegen.trans;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SImportCG;
@@ -313,7 +313,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public INode getResult()
+	public PCG getResult()
 	{
 		return clazz;
 	}
