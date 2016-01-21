@@ -11,4 +11,3 @@ f : () -> T
 f() ==  let a : int =1,
           nt : T = mk_(0,a,0,0)
          in nt
-
