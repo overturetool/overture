@@ -52,6 +52,7 @@ import org.overture.codegen.analysis.violations.TypenameComparison;
 import org.overture.codegen.analysis.violations.VdmAstAnalysis;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
+import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
@@ -115,6 +116,14 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 	private JavaVarPrefixManager varPrefixManager;
 	
 	private JavaTransSeries transSeries;
+	
+	private SClassDefinition mainClass;
+	
+	private List<Renaming> allRenamings;
+	
+	private InvalidNamesResult invalidNamesResult;
+	
+	private List<String> warnings;
 
 	public JavaCodeGen()
 	{
@@ -124,6 +133,16 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
 		this.javaFormat = new JavaFormat(varPrefixManager, JAVA_TEMPLATES_ROOT_FOLDER, generator.getIRInfo());
 		this.transSeries = new JavaTransSeries(this);
+		
+		clearVdmAstData();
+	}
+
+	private void clearVdmAstData()
+	{
+		this.mainClass = null;
+		this.allRenamings = new LinkedList<>();
+		this.invalidNamesResult = new InvalidNamesResult();
+		this.warnings = new LinkedList<>();
 	}
 
 	public void setJavaSettings(JavaSettings javaSettings)
@@ -140,6 +159,11 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 	{
 		return this.transSeries;
 	}
+	
+	public JavaFormat getJavaFormat()
+	{
+		return javaFormat;
+	}
 
 	@Override
 	protected void clear()
@@ -148,69 +172,28 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		javaFormat.getMergeVisitor().init();
 		transSeries.clear();
 		javaFormat.clearFunctionValueAssistant();
-	}
-
-	public JavaFormat getJavaFormat()
-	{
-		return javaFormat;
+		clearVdmAstData();
 	}
 
 	@Override
-	protected GeneratedData genVdmToTargetLang(List<INode> ast)
+	protected GeneratedData genVdmToTargetLang(List<IRStatus<PCG>> statuses)
 			throws AnalysisException {
 		
-		SClassDefinition mainClass = null;
-		List<String> warnings = new LinkedList<String>();
-
-		if (Settings.dialect == Dialect.VDM_PP)
-		{
-			if (getJavaSettings().getVdmEntryExp() != null)
-			{
-				try
-				{
-					mainClass = GeneralCodeGenUtils.consMainClass(getClasses(ast), getJavaSettings().getVdmEntryExp(), Settings.dialect, JAVA_MAIN_CLASS_NAME, getInfo().getTempVarNameGen());
-					ast.add(mainClass);
-				} catch (Exception e)
-				{
-					// It can go wrong if the VDM entry point does not type check
-					warnings.add("The chosen launch configuration could not be type checked: " + e.getMessage());
-					warnings.add("Skipping launch configuration..");
-				}
-			}
-		}
-		
-		List<INode> userModules = getUserModules(ast);
-		List<Renaming> allRenamings = normaliseIdentifiers(userModules);
-		
-		// To document any renaming of variables shadowing other variables
-		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs()));
-
-		InvalidNamesResult invalidNamesResult = validateVdmModelNames(userModules);
-		List<IRStatus<org.overture.codegen.cgast.INode>> statuses = new LinkedList<>();
-
-		for (INode node : ast)
-		{
-			if(!(node instanceof ASystemClassDefinition) && !(node instanceof ACpuClassDefinition))
-			{
-				genIrStatus(statuses, node);
-			}
-		}
-
 		List<GeneratedModule> genModules = new LinkedList<GeneratedModule>();
 		
 		// Event notification
 		statuses = initialIrEvent(statuses);
 		
-		List<String> userTestCases = getUserTestCases(ast);
+		List<String> userTestCases = getUserTestCases(statuses);
 		statuses = filter(statuses, genModules, userTestCases);
 		
 		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
-		List<IRStatus<org.overture.codegen.cgast.INode>> modulesAsNodes = IRStatus.extract(moduleStatuses);
+		List<IRStatus<PCG>> modulesAsNodes = IRStatus.extract(moduleStatuses);
 			
 		ModuleToClassTransformation moduleTransformation = new ModuleToClassTransformation(getInfo(),
 				transAssistant, getModuleDecls(moduleStatuses));
 		
-		for(IRStatus<org.overture.codegen.cgast.INode> status : modulesAsNodes)
+		for(IRStatus<PCG> status : modulesAsNodes)
 		{
 			try
 			{
@@ -281,7 +264,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 		for (IRStatus<ADefaultClassDeclCG> status : canBeGenerated)
 		{
-			INode vdmClass = status.getIrNode().getSourceNode().getVdmNode();
+			INode vdmClass = status.getVdmNode();
 
 			if (vdmClass == mainClass)
 			{
@@ -409,9 +392,40 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		}
 		return code;
 	}
+	
+	@Override
+	protected void preProcessAst(List<INode> ast) throws AnalysisException
+	{
+		super.preProcessAst(ast);
+		
+		if (Settings.dialect == Dialect.VDM_PP)
+		{
+			if (getJavaSettings().getVdmEntryExp() != null)
+			{
+				try
+				{
+					mainClass = GeneralCodeGenUtils.consMainClass(getClasses(ast), getJavaSettings().getVdmEntryExp(), Settings.dialect, JAVA_MAIN_CLASS_NAME, getInfo().getTempVarNameGen());
+					ast.add(mainClass);
+				} catch (Exception e)
+				{
+					// It can go wrong if the VDM entry point does not type check
+					warnings.add("The chosen launch configuration could not be type checked: " + e.getMessage());
+					warnings.add("Skipping launch configuration..");
+				}
+			}
+		}
+		
+		List<INode> userModules = getUserModules(ast);
+		allRenamings = normaliseIdentifiers(userModules);
+		
+		// To document any renaming of variables shadowing other variables
+		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs()));
+
+		invalidNamesResult = validateVdmModelNames(userModules);
+	}
 
 	@Override
-	public void preProcessUserClass(INode node)
+	public void preProcessVdmUserClass(INode node)
 	{
 		if (!getJavaSettings().genJUnit4tests())
 		{
@@ -445,28 +459,23 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		}
 	}
 	
-	private void genIrStatus(
-			List<IRStatus<org.overture.codegen.cgast.INode>> statuses,
-			INode node) throws AnalysisException
+	@Override
+	protected void genIrStatus(List<IRStatus<PCG>> statuses, INode node) throws AnalysisException
 	{
-		VdmAstJavaValidator v = validateVdmNode(node);
-		
-		if(v.hasUnsupportedNodes())
+		if (!(node instanceof ASystemClassDefinition) && !(node instanceof ACpuClassDefinition))
 		{
-			// We can tell by analysing the VDM AST that the IR generator will produce an
-			// IR tree that the Java backend cannot code generate
-			String nodeName = getInfo().getDeclAssistant().getNodeName(node);
-			HashSet<VdmNodeInfo> nodesCopy = new HashSet<VdmNodeInfo>(v.getUnsupportedNodes());
-			statuses.add(new IRStatus<org.overture.codegen.cgast.INode>(nodeName, /* no IR node */null, nodesCopy));
-		}
-		else
-		{
-			// Try to produce the IR
-			IRStatus<org.overture.codegen.cgast.INode> status = generator.generateFrom(node);
-			
-			if(status != null)
+			VdmAstJavaValidator v = validateVdmNode(node);
+
+			if (v.hasUnsupportedNodes())
 			{
-				statuses.add(status);
+				// We can tell by analysing the VDM AST that the IR generator will produce an
+				// IR tree that the Java backend cannot code generate
+				String nodeName = getInfo().getDeclAssistant().getNodeName(node);
+				HashSet<VdmNodeInfo> nodesCopy = new HashSet<VdmNodeInfo>(v.getUnsupportedNodes());
+				statuses.add(new IRStatus<PCG>(node, nodeName, /* no IR node */null, nodesCopy));
+			} else
+			{
+				super.genIrStatus(statuses, node);
 			}
 		}
 	}
@@ -480,7 +489,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		return validator;
 	}
 
-	private <T extends org.overture.codegen.cgast.INode> List<IRStatus<T>> filter(
+	private <T extends PCG> List<IRStatus<T>> filter(
 			List<IRStatus<T>> statuses, List<GeneratedModule> generated, List<String> userTestCases)
 	{
 		List<IRStatus<T>> filtered = new LinkedList<IRStatus<T>>();
