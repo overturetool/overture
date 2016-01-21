@@ -75,6 +75,11 @@ target/
 .project
 bin
 
+# Intellij metadata #
+#####################
+*.iml
+.idea
+
 # Added by Jenkins for local mvn repos #
 ########################################
 .repository/
