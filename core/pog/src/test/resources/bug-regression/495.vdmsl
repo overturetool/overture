@@ -1,0 +1,14 @@
+types
+
+A = int
+inv a == a>0;
+B = nat;
+
+T = B * B *A * B;
+
+functions
+f : () -> T
+f() ==  let a : int =1,
+          nt : T = mk_(0,a,0,0)
+         in nt
+
