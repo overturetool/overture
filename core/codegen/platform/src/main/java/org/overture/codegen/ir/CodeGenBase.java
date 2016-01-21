@@ -90,20 +90,49 @@ abstract public class CodeGenBase implements IREventCoordinator
 		clear();
 		preProcessAst(ast);
 
-		return genVdmToTargetLang(ast);
+		List<IRStatus<PCG>> statuses = new LinkedList<>();
+
+		for (INode node : ast)
+		{
+			genIrStatus(statuses, node);
+		}
+
+		return genVdmToTargetLang(statuses);
 	}
 	
 	/**
-	 * Translates a VDM AST into target language code. This method must be implemented by all code generators that
-	 * inherit from this class. This method is invoked by {@link #generate(List)}.
+	 * This method translates a VDM node into an IR status.
 	 * 
-	 * @param ast
-	 *            The VDM AST subject to code generation.
+	 * @param statuses
+	 *            A list of previously generated IR statuses. The generated IR status will be added to this list.
+	 * @param node
+	 *            The VDM node from which we generate an IR status
+	 * @throws AnalysisException
+	 *             If something goes wrong during the construction of the IR status.
+	 */
+	protected void genIrStatus(
+			List<IRStatus<PCG>> statuses,
+			INode node) throws AnalysisException
+	{
+		IRStatus<PCG> status = generator.generateFrom(node);
+		
+		if(status != null)
+		{
+			statuses.add(status);
+		}
+	}
+	
+	/**
+	 * Translates a list of IR statuses into target language code. This method must be implemented by all code
+	 * generators that inherit from this class. This method is invoked by {@link #generate(List)}.
+	 * 
+	 * @param statuses
+	 *            The IR statuses holding the nodes to be code generated.
 	 * @return The generated code as well as information about the code generation process.
 	 * @throws AnalysisException
 	 *             If something goes wrong during the code generation process.
 	 */
-	abstract protected GeneratedData genVdmToTargetLang(List<INode> ast) throws AnalysisException;
+	abstract protected GeneratedData genVdmToTargetLang(List<IRStatus<PCG>> statuses) throws AnalysisException;
 	
 	/**
 	 * This method pre-processes the VDM AST by<br>
@@ -113,14 +142,14 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 * (3) Normalizing old names by replacing tilde signs '~' with underscores '_' <br>
 	 * (4) Simplifying the standard libraries by cutting nodes that are not likely to be meaningful during the analysis
 	 * of the VDM AST. Library classes are processed using {@link #simplifyLibrary(INode)}, whereas non-library modules
-	 * or classes are processed using {@link #preProcessUserClass(INode)}.
+	 * or classes are processed using {@link #preProcessVdmUserClass(INode)}.
 	 * 
 	 * @param ast
 	 *            The VDM AST subject to pre-processing.
 	 * @throws AnalysisException
 	 *             In case something goes wrong during the VDM AST analysis.
 	 */
-	protected void preProcessAst(List<? extends INode> ast) throws AnalysisException
+	protected void preProcessAst(List<INode> ast) throws AnalysisException
 	{
 		generator.computeDefTable(getUserModules(ast));
 		removeUnreachableStms(ast);
@@ -134,7 +163,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 			}
 			else
 			{
-				preProcessUserClass(node);
+				preProcessVdmUserClass(node);
 			}
 		}
 	}
@@ -325,20 +354,21 @@ abstract public class CodeGenBase implements IREventCoordinator
 	}
 	
 	/**
-	 * Gets the user test cases from a VDM AST.
+	 * Given a list of IR statuses this method retrieves the names of the user-defined test cases.
 	 * 
-	 * @param vdmAst The VDM AST.
-	 * @return The user test cases.
+	 * @param statuses
+	 *            The list of IR statuses from which the test case names are retrieved
+	 * @return The names of the user-defined test cases.
 	 */
-	protected List<String> getUserTestCases(List<? extends INode> vdmAst)
+	protected List<String> getUserTestCases(List<IRStatus<PCG>> statuses)
 	{
 		List<String> userTestCases = new LinkedList<>();
 		
-		for (INode node : vdmAst)
+		for (IRStatus<PCG> s : statuses)
 		{
-			if(getInfo().getDeclAssistant().isTestCase(node))
+			if(getInfo().getDeclAssistant().isTestCase(s.getVdmNode()))
 			{
-				userTestCases.add(getInfo().getDeclAssistant().getNodeName(node));
+				userTestCases.add(getInfo().getDeclAssistant().getNodeName(s.getVdmNode()));
 			}
 		}
 		
@@ -352,7 +382,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 * @param vdmModule
 	 *            The user module or class.
 	 */
-	protected void preProcessUserClass(INode vdmModule)
+	protected void preProcessVdmUserClass(INode vdmModule)
 	{
 	}
 	
@@ -493,7 +523,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 *            The initial version of the IR.
 	 * @return A possibly modified version of the initial IR.
 	 */
-	public List<IRStatus<org.overture.codegen.cgast.INode>> initialIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
+	public List<IRStatus<PCG>> initialIrEvent(List<IRStatus<PCG>> ast)
 	{
 		if(irObserver != null)
 		{
@@ -511,7 +541,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 *            The final version of the IR.
 	 * @return A possibly modified version of the IR
 	 */
-	public List<IRStatus<org.overture.codegen.cgast.INode>> finalIrEvent(List<IRStatus<org.overture.codegen.cgast.INode>> ast)
+	public List<IRStatus<PCG>> finalIrEvent(List<IRStatus<PCG>> ast)
 	{
 		if(irObserver != null)
 		{
