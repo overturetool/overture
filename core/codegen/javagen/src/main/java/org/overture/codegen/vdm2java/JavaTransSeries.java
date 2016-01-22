@@ -115,7 +115,7 @@ public class JavaTransSeries
 		// Start concurrency transformations
 		SentinelTrans sentinelTr = new SentinelTrans(info, varMan.getConcPrefixes());
 		MainClassConcTrans mainClassTr = new MainClassConcTrans(info, varMan.getConcPrefixes());
-		MutexDeclTrans mutexTr = new MutexDeclTrans(info);
+		MutexDeclTrans mutexTr = new MutexDeclTrans(info, varMan.getConcPrefixes());
 		EvalPermPredTrans evalPermPredTr = new EvalPermPredTrans(transAssist);
 		// End concurrency transformations
 

@@ -66,4 +66,9 @@ public class ConcPrefixes
 	{
 		return "evaluatePP";
 	}
+	
+	public String activeHistOpTypeName()
+	{
+		return "active"; 
+	}
 }

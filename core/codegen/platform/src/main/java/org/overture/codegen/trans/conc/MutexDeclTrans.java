@@ -18,14 +18,13 @@ import org.overture.codegen.ir.IRInfo;
 
 public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 {
-	private static final String SENTINEL_CLASS_POSTFIX = "_sentinel";
-	private static final String ACTIVE_HISTORY_OP_TYPE_NAME = "active";
-
 	private IRInfo info;
-
-	public MutexDeclTrans(IRInfo info)
+	private ConcPrefixes concPrefixes;
+	
+	public MutexDeclTrans(IRInfo info, ConcPrefixes concPrefixes)
 	{
 		this.info = info;
+		this.concPrefixes = concPrefixes;
 	}
 
 	@Override
@@ -49,12 +48,12 @@ public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 				AEqualsBinaryExpCG guard = new AEqualsBinaryExpCG();
 
 				AHistoryExpCG histcount = new AHistoryExpCG();
-				histcount.setHistype(ACTIVE_HISTORY_OP_TYPE_NAME);
+				histcount.setHistype(concPrefixes.activeHistOpTypeName());
 				histcount.setOpsname(mutex.getOpnames().getFirst().toString());
 				histcount.setType(new AIntNumericBasicTypeCG());
 
 				AClassTypeCG innerclass = new AClassTypeCG();
-				innerclass.setName(node.getName() + SENTINEL_CLASS_POSTFIX);
+				innerclass.setName(node.getName() + concPrefixes.sentinelClassPostFix());
 
 				histcount.setSentinelType(innerclass);
 
@@ -99,12 +98,12 @@ public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 						perpred.setOpname(((ATokenNameCG) operation).getName());
 
 						AClassTypeCG innerclass = new AClassTypeCG();
-						innerclass.setName(node.getName() + SENTINEL_CLASS_POSTFIX);
+						innerclass.setName(node.getName() + concPrefixes.sentinelClassPostFix());
 
 						APlusNumericBinaryExpCG addedhistcounter = new APlusNumericBinaryExpCG();
 
 						AHistoryExpCG firsthistcount = new AHistoryExpCG();
-						firsthistcount.setHistype(ACTIVE_HISTORY_OP_TYPE_NAME);
+						firsthistcount.setHistype(concPrefixes.activeHistOpTypeName());
 						firsthistcount.setSentinelType(innerclass.clone());
 						firsthistcount.setOpsname(mutex.getOpnames().getFirst().toString());
 						firsthistcount.setType(new AIntNumericBasicTypeCG());
@@ -118,7 +117,7 @@ public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 							String nextOpName = mutex.getOpnames().get(i).toString();
 
 							AHistoryExpCG histcountleft = new AHistoryExpCG();
-							histcountleft.setHistype(ACTIVE_HISTORY_OP_TYPE_NAME);
+							histcountleft.setHistype(concPrefixes.activeHistOpTypeName());
 							histcountleft.setOpsname(nextOpName);
 							histcountleft.setType(new AIntNumericBasicTypeCG());
 							histcountleft.setSentinelType(innerclass.clone());
@@ -135,7 +134,7 @@ public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 						AHistoryExpCG lastHistoryExpCG = new AHistoryExpCG();
 
 						lastHistoryExpCG.setOpsname(lastOpName);
-						lastHistoryExpCG.setHistype(ACTIVE_HISTORY_OP_TYPE_NAME);
+						lastHistoryExpCG.setHistype(concPrefixes.activeHistOpTypeName());
 						lastHistoryExpCG.setType(new AIntNumericBasicTypeCG());
 						lastHistoryExpCG.setSentinelType(innerclass.clone());
 						addition1.setRight(lastHistoryExpCG);
