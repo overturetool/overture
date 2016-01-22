@@ -415,18 +415,30 @@ public class DeclAssistantCG extends AssistantBase
 				|| access.equals(IRConstants.PUBLIC);
 	}
 
-	public void setLocalDefs(List<PDefinition> localDefs,
+	public void setFinalLocalDefs(List<PDefinition> localDefs,
 			List<AVarDeclCG> localDecls, IRInfo question)
 			throws AnalysisException
 	{
 		for (PDefinition def : localDefs)
 		{
+			AVarDeclCG varDecl = null;
+
 			if (def instanceof AValueDefinition)
 			{
-				localDecls.add(consLocalVarDecl((AValueDefinition) def, question));
+				varDecl = consLocalVarDecl((AValueDefinition) def, question);
 			} else if (def instanceof AEqualsDefinition)
 			{
-				localDecls.add(consLocalVarDecl((AEqualsDefinition) def, question));
+				varDecl = consLocalVarDecl((AEqualsDefinition) def, question);
+			}
+
+			if (varDecl != null)
+			{
+				varDecl.setFinal(true);
+				localDecls.add(varDecl);
+			} else
+			{
+				Logger.getLog().printErrorln("Problems encountered when trying to construct local variable in '"
+						+ this.getClass().getSimpleName() + "'");
 			}
 		}
 	}
