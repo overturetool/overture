@@ -67,7 +67,6 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.trans.DivideTrans;
 import org.overture.codegen.trans.ModuleToClassTransformation;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
@@ -130,7 +129,6 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		super();
 		this.varPrefixManager = new JavaVarPrefixManager();
 		this.quoteObserver = null;
-		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
 		this.javaFormat = new JavaFormat(varPrefixManager, JAVA_TEMPLATES_ROOT_FOLDER, generator.getIRInfo());
 		this.transSeries = new JavaTransSeries(this);
 		

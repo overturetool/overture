@@ -63,6 +63,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 		initVelocity();
 		this.irObserver = null;
 		this.generator = new IRGenerator();
+		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
 	}
 	
 	/**
