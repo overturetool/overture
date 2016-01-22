@@ -15,7 +15,7 @@ final public class Entry {
 
     public static Object Run() {
         {
-            Number ignorePattern_1 = f();
+            final Number ignorePattern_1 = f();
 
             //@ assert Utils.is_nat(ignorePattern_1);
 
@@ -29,7 +29,8 @@ final public class Entry {
 
     /*@ pure @*/
     public static Number f() {
-        project.Entrytypes.R recordPattern_1 = new project.Entrytypes.R(1L, 2L);
+        final project.Entrytypes.R recordPattern_1 = new project.Entrytypes.R(1L,
+                2L);
 
         //@ assert Utils.is_(recordPattern_1,project.Entrytypes.R.class);
         Boolean success_1 = true;

@@ -14,7 +14,7 @@ final public class Entry {
     }
 
     public static Object Run() {
-        Object e = null;
+        final Object e = null;
 
         //@ assert ((e == null) || ((e == null) || (Utils.is_nat(e) && inv_Entry_X(e)) || (Utils.is_char(e) && inv_Entry_Y(e))) && inv_Entry_N(e));
         return e;

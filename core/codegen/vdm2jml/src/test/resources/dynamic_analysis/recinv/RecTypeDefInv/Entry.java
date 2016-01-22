@@ -23,7 +23,7 @@ final public class Entry {
     }
 
     public static void recInvOk() {
-        project.Entrytypes.Rec ignorePattern_1 = new project.Entrytypes.Rec(1L,
+        final project.Entrytypes.Rec ignorePattern_1 = new project.Entrytypes.Rec(1L,
                 2L);
 
         //@ assert Utils.is_(ignorePattern_1,project.Entrytypes.Rec.class);
@@ -32,7 +32,7 @@ final public class Entry {
     }
 
     public static void recInvBreak() {
-        project.Entrytypes.Rec ignorePattern_2 = new project.Entrytypes.Rec(1L,
+        final project.Entrytypes.Rec ignorePattern_2 = new project.Entrytypes.Rec(1L,
                 -2L);
 
         //@ assert Utils.is_(ignorePattern_2,project.Entrytypes.Rec.class);

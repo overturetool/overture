@@ -15,7 +15,7 @@ final public class Entry {
 
     public static Object Run() {
         {
-            Number ignorePattern_1 = f(Tuple.mk_(4L, 'a'));
+            final Number ignorePattern_1 = f(Tuple.mk_(4L, 'a'));
 
             //@ assert Utils.is_nat(ignorePattern_1);
 

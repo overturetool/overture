@@ -14,7 +14,7 @@ final public class Entry {
     }
 
     public static Object Run() {
-        Boolean ignorePattern_1 = f();
+        final Boolean ignorePattern_1 = f();
         //@ assert Utils.is_bool(ignorePattern_1);
         {
             IO.println("Done! Expected no errors");

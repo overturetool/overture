@@ -45,7 +45,7 @@ final public class Entry {
         IO.println("Before legal use");
 
         {
-            Object ignorePattern_1 = tNat();
+            final Object ignorePattern_1 = tNat();
 
             //@ assert ((Utils.is_nat(ignorePattern_1) || (V2J.isSeq(ignorePattern_1) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_1); false))) && inv_Entry_T(ignorePattern_1));
 
@@ -53,7 +53,7 @@ final public class Entry {
         }
 
         {
-            Object ignorePattern_2 = t1Nat();
+            final Object ignorePattern_2 = t1Nat();
 
             //@ assert (((V2J.isTup(ignorePattern_2,2) && Utils.is_nat(V2J.field(ignorePattern_2,0)) && false) || Utils.is_nat(ignorePattern_2)) && inv_Entry_T1(ignorePattern_2));
 
@@ -64,7 +64,7 @@ final public class Entry {
         IO.println("Before illegal use");
 
         {
-            Object ignorePattern_3 = tSeq();
+            final Object ignorePattern_3 = tSeq();
 
             //@ assert ((Utils.is_nat(ignorePattern_3) || (V2J.isSeq(ignorePattern_3) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_3); false))) && inv_Entry_T(ignorePattern_3));
 
@@ -72,7 +72,7 @@ final public class Entry {
         }
 
         {
-            Object ignorePattern_4 = t1Tup();
+            final Object ignorePattern_4 = t1Tup();
 
             //@ assert (((V2J.isTup(ignorePattern_4,2) && Utils.is_nat(V2J.field(ignorePattern_4,0)) && false) || Utils.is_nat(ignorePattern_4)) && inv_Entry_T1(ignorePattern_4));
 

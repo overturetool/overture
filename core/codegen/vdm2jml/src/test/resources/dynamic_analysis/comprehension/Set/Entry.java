@@ -32,7 +32,7 @@ final public class Entry {
         }
 
         {
-            VDMSet ignorePattern_1 = Utils.copy(setCompResult_1);
+            final VDMSet ignorePattern_1 = Utils.copy(setCompResult_1);
 
             //@ assert (V2J.isSet(ignorePattern_1) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_1); Utils.is_nat1(V2J.get(ignorePattern_1,i))));
 
@@ -52,7 +52,7 @@ final public class Entry {
         }
 
         {
-            VDMSet ignorePattern_2 = Utils.copy(setCompResult_2);
+            final VDMSet ignorePattern_2 = Utils.copy(setCompResult_2);
 
             //@ assert (V2J.isSet(ignorePattern_2) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_2); Utils.is_nat1(V2J.get(ignorePattern_2,i))));
 
@@ -78,7 +78,7 @@ final public class Entry {
         }
 
         {
-            VDMSet ignorePattern_3 = Utils.copy(setCompResult_3);
+            final VDMSet ignorePattern_3 = Utils.copy(setCompResult_3);
 
             //@ assert (V2J.isSet(ignorePattern_3) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_3); Utils.is_nat1(V2J.get(ignorePattern_3,i))));
 
@@ -98,7 +98,7 @@ final public class Entry {
         }
 
         {
-            VDMSet ignorePattern_4 = Utils.copy(setCompResult_4);
+            final VDMSet ignorePattern_4 = Utils.copy(setCompResult_4);
 
             //@ assert (V2J.isSet(ignorePattern_4) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_4); Utils.is_nat1(V2J.get(ignorePattern_4,i))));
 

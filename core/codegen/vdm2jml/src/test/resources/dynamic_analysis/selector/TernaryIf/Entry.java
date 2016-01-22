@@ -15,7 +15,7 @@ final public class Entry {
 
     public static Object Run() {
         {
-            Number ignorePattern_1 = f();
+            final Number ignorePattern_1 = f();
 
             //@ assert Utils.is_nat(ignorePattern_1);
 
@@ -23,7 +23,7 @@ final public class Entry {
         }
 
         {
-            Number ignorePattern_2 = g();
+            final Number ignorePattern_2 = g();
 
             //@ assert Utils.is_nat(ignorePattern_2);
 
@@ -49,7 +49,7 @@ final public class Entry {
             //@ assert Utils.is_nat1(ternaryIfExp_1);
         }
 
-        Number x = ternaryIfExp_1;
+        final Number x = ternaryIfExp_1;
 
         //@ assert Utils.is_nat1(x);
         Number ret_1 = x;

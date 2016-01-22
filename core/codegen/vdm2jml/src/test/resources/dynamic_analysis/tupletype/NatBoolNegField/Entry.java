@@ -17,7 +17,7 @@ final public class Entry {
         IO.println("Before legal use");
 
         {
-            Tuple ignorePattern_1 = Tuple.mk_(1L, true);
+            final Tuple ignorePattern_1 = Tuple.mk_(1L, true);
 
             //@ assert (V2J.isTup(ignorePattern_1,2) && Utils.is_nat(V2J.field(ignorePattern_1,0)) && Utils.is_bool(V2J.field(ignorePattern_1,1)));
 
@@ -28,7 +28,7 @@ final public class Entry {
         IO.println("Before illegal use");
 
         {
-            Tuple ignorePattern_2 = Tuple.mk_(negInt(), true);
+            final Tuple ignorePattern_2 = Tuple.mk_(negInt(), true);
 
             //@ assert (V2J.isTup(ignorePattern_2,2) && Utils.is_nat(V2J.field(ignorePattern_2,0)) && Utils.is_bool(V2J.field(ignorePattern_2,1)));
 

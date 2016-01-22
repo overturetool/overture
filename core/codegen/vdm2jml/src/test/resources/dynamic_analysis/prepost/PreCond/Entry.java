@@ -17,14 +17,14 @@ final public class Entry {
     }
 
     public static Object Run() {
-        Number ignorePattern_1 = opRet(1L);
+        final Number ignorePattern_1 = opRet(1L);
         //@ assert Utils.is_nat(ignorePattern_1);
         {
             opVoid(2L);
             IO.println("Before breaking pre condition");
 
             {
-                Number ignorePattern_2 = id(-1L);
+                final Number ignorePattern_2 = id(-1L);
 
                 //@ assert Utils.is_int(ignorePattern_2);
 

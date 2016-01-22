@@ -15,7 +15,7 @@ final public class Entry {
 
     public static Object Run() {
         {
-            Number ignorePattern_1 = f();
+            final Number ignorePattern_1 = f();
 
             //@ assert Utils.is_nat(ignorePattern_1);
 
@@ -29,7 +29,7 @@ final public class Entry {
 
     /*@ pure @*/
     public static Number f() {
-        Tuple tuplePattern_1 = Tuple.mk_(1L, 2L);
+        final Tuple tuplePattern_1 = Tuple.mk_(1L, 2L);
 
         //@ assert (V2J.isTup(tuplePattern_1,2) && Utils.is_nat1(V2J.field(tuplePattern_1,0)) && Utils.is_nat1(V2J.field(tuplePattern_1,1)));
         Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);

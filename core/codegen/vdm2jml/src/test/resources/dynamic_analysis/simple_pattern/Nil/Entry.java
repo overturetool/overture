@@ -15,7 +15,7 @@ final public class Entry {
 
     public static Object Run() {
         {
-            Number ignorePattern_1 = f();
+            final Number ignorePattern_1 = f();
 
             //@ assert ((ignorePattern_1 == null) || Utils.is_nat(ignorePattern_1));
 

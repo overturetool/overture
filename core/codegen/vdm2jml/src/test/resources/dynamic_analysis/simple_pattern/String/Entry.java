@@ -15,7 +15,7 @@ final public class Entry {
 
     public static Object Run() {
         {
-            String ignorePattern_1 = f();
+            final String ignorePattern_1 = f();
 
             //@ assert Utils.is_(ignorePattern_1,String.class);
 
@@ -29,7 +29,7 @@ final public class Entry {
 
     /*@ pure @*/
     public static String f() {
-        String stringPattern_1 = "a";
+        final String stringPattern_1 = "a";
 
         //@ assert Utils.is_(stringPattern_1,String.class);
         Boolean success_1 = Utils.equals(stringPattern_1, "a");

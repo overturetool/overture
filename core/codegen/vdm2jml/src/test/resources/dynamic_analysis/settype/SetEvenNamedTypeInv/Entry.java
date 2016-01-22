@@ -17,7 +17,7 @@ final public class Entry {
         IO.println("Before legal use");
 
         {
-            VDMSet ignorePattern_1 = SetUtil.set(2L, 4L, 6L);
+            final VDMSet ignorePattern_1 = SetUtil.set(2L, 4L, 6L);
 
             //@ assert ((V2J.isSet(ignorePattern_1) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_1); (Utils.is_nat(V2J.get(ignorePattern_1,i)) && inv_Entry_Even(V2J.get(ignorePattern_1,i))))) && inv_Entry_SetEven(ignorePattern_1));
 
@@ -28,13 +28,13 @@ final public class Entry {
         IO.println("Before illegal use");
 
         {
-            VDMSet xs = SetUtil.set(2L);
+            final VDMSet xs = SetUtil.set(2L);
 
             //@ assert ((V2J.isSet(xs) && (\forall int i; 0 <= i && i < V2J.size(xs); (Utils.is_nat(V2J.get(xs,i)) && inv_Entry_Even(V2J.get(xs,i))))) && inv_Entry_SetEven(xs));
-            VDMSet ys = SetUtil.set(1L);
+            final VDMSet ys = SetUtil.set(1L);
 
             //@ assert (V2J.isSet(ys) && (\forall int i; 0 <= i && i < V2J.size(ys); Utils.is_nat(V2J.get(ys,i))));
-            VDMSet ignorePattern_2 = SetUtil.union(Utils.copy(xs),
+            final VDMSet ignorePattern_2 = SetUtil.union(Utils.copy(xs),
                     Utils.copy(ys));
 
             //@ assert ((V2J.isSet(ignorePattern_2) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_2); (Utils.is_nat(V2J.get(ignorePattern_2,i)) && inv_Entry_Even(V2J.get(ignorePattern_2,i))))) && inv_Entry_SetEven(ignorePattern_2));
