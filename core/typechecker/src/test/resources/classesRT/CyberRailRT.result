@@ -40,6 +40,7 @@
 <message column="1" line="1251" message="Abstract function/operation must be public or protected" messageType="error" number="3329" resource="CyberRailRT"/>
 <message column="1" line="1255" message="Abstract function/operation must be public or protected" messageType="error" number="3329" resource="CyberRailRT"/>
 <message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
+<message column="24" line="1553" message="Cannot instantiate abstract class Customer" messageType="error" number="3330" resource="CyberRailRT"/>
 <message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
 <result/>
 </testResult>

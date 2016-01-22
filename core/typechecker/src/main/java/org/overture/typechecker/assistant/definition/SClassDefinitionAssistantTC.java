@@ -355,7 +355,8 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 
 			ILexNameToken localname = d.getName().getModifiedName(definition.getName().getName());
 
-			if (af.createPDefinitionListAssistant().findName(definition.getDefinitions(), localname, NameScope.NAMESANDSTATE) == null)
+			if (af.createPDefinitionListAssistant().findName(definition.getDefinitions(), localname, NameScope.NAMESANDSTATE) == null ||
+				af.createPDefinitionAssistant().isSubclassResponsibility(d))
 			{
 				AInheritedDefinition local = AstFactory.newAInheritedDefinition(localname, d);
 				definition.getLocalInheritedDefinitions().add(local);
@@ -728,7 +729,8 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 			localDefs.addAll(c.getDefinitions());
 			localDefs.addAll(c.getLocalInheritedDefinitions());
 			af.createPDefinitionListAssistant().removeDuplicates(localDefs);
-			c.setIsAbstract(af.createPDefinitionListAssistant().hasSubclassResponsibilities(localDefs));
+			c.setIsAbstract(af.createPDefinitionListAssistant().hasSubclassResponsibilities(
+					af.createPDefinitionListAssistant().removeAbstracts(localDefs)));
 		}
 
 		for (PDefinition d : c.getDefinitions())
