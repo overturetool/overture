@@ -113,7 +113,7 @@ public class JavaTransSeries
 		JUnit4Trans junitTr = new JUnit4Trans(transAssist, codeGen);
 
 		// Start concurrency transformations
-		SentinelTrans sentinelTr = new SentinelTrans(info);
+		SentinelTrans sentinelTr = new SentinelTrans(info, varMan.getConcPrefixes());
 		MainClassConcTrans mainClassTr = new MainClassConcTrans(info);
 		MutexDeclTrans mutexTr = new MutexDeclTrans(info);
 		EvalPermPredTrans evalPermPredTr = new EvalPermPredTrans(transAssist);

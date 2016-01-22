@@ -24,24 +24,14 @@ import org.overture.codegen.ir.IRInfo;
 
 public class SentinelTrans extends DepthFirstAnalysisAdaptor
 {
-	private static final String SENTINEL_CLASS_NAME = "Sentinel";
-	private static final String VDM_THREAD = "VDMThread";
-	private static final String INIT_METHOD_NAME = "init";
-	private static final String INSTANCE_PARAM_NAME = "instance";
-	private static final String EVALUATE_PP_TYPE = "EvaluatePP";
-	private static final String SENTINEL_CLASS_POSTFIX = "_sentinel";
-	private static final String FUNC_SUM_CONSTANT_FIELD_NAME = "function_sum";
-
 	private IRInfo info;
 
-	// TODO: If this is suppose to be a general transformation then the integer type
-	// can not be stored like this. Instead it could be passed as a parameter to the
-	// transformation
-	private String INTTYPE = "int";
-
-	public SentinelTrans(IRInfo info)
+	private ConcPrefixes concPrefixes;
+	
+	public SentinelTrans(IRInfo info, ConcPrefixes concPrefixes)
 	{
 		this.info = info;
+		this.concPrefixes = concPrefixes;
 	}
 
 	@Override
@@ -72,7 +62,7 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 			innerClassMethods = node.getMethods();
 		}
 
-		String className = classname + SENTINEL_CLASS_POSTFIX;
+		String className = classname + concPrefixes.sentinelClassPostFix();
 		innerClass.setName(className);
 
 		AClassTypeCG innerClassType = new AClassTypeCG();
@@ -98,7 +88,7 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 			} else
 			{
 				// Set up of the int type of the fields.
-				String intTypeName = INTTYPE;
+				String intTypeName = concPrefixes.nativeIntTypeName();
 				AExternalTypeCG intBasicType = new AExternalTypeCG();
 				intBasicType.setName(intTypeName);
 
@@ -122,16 +112,15 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 		}
 
 		// setting up initial values
-		String intTypeName = INTTYPE;
 		AExternalTypeCG intBasicType = new AExternalTypeCG();
 		// intBasicType.setName(intTypeName);
-		intBasicType.setName(intTypeName);
+		intBasicType.setName(concPrefixes.nativeIntTypeName());
 
 		AExternalExpCG intValue = new AExternalExpCG();
 		intValue.setType(new AIntNumericBasicTypeCG());
 		intValue.setTargetLangExp("" + n);
 
-		innerClass.getFields().add(info.getDeclAssistant().constructField(IRConstants.PUBLIC, FUNC_SUM_CONSTANT_FIELD_NAME, false, true, intBasicType, intValue));
+		innerClass.getFields().add(info.getDeclAssistant().constructField(IRConstants.PUBLIC, concPrefixes.funcSumConstFieldName(), false, true, intBasicType, intValue));
 
 		AMethodDeclCG method_pp = new AMethodDeclCG();
 		AMethodTypeCG method_ppType = new AMethodTypeCG();
@@ -152,7 +141,7 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 
 		// The parameter
 		AExternalTypeCG evalPpType = new AExternalTypeCG();
-		evalPpType.setName(EVALUATE_PP_TYPE);
+		evalPpType.setName(concPrefixes.evalPpTypeName());
 
 		method_con.setName(innerClass.getName());
 		method_con.setIsConstructor(true);
@@ -162,7 +151,7 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 		formalParam.setType(evalPpType);
 
 		AIdentifierPatternCG identifier = new AIdentifierPatternCG();
-		identifier.setName(INSTANCE_PARAM_NAME);
+		identifier.setName(concPrefixes.instanceParamName());
 
 		formalParam.setPattern(identifier);
 		method_con.getFormalParams().add(formalParam);
@@ -179,18 +168,18 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 		AIdentifierVarExpCG instanceParam = new AIdentifierVarExpCG();
 		instanceParam.setIsLambda(false);
 		instanceParam.setIsLocal(true);
-		instanceParam.setName(INSTANCE_PARAM_NAME);
+		instanceParam.setName(concPrefixes.instanceParamName());
 		instanceParam.setType(evalPpType.clone());
 
 		AIdentifierVarExpCG function_sum = new AIdentifierVarExpCG();
 		function_sum.setIsLambda(false);
 		function_sum.setIsLocal(false);
-		function_sum.setName(FUNC_SUM_CONSTANT_FIELD_NAME);
+		function_sum.setName(concPrefixes.funcSumConstFieldName());
 		function_sum.setType(new AIntNumericBasicTypeCG());
 
 		// the init method
 		APlainCallStmCG initCall = new APlainCallStmCG();
-		initCall.setName(INIT_METHOD_NAME);
+		initCall.setName(concPrefixes.initMethodName());
 		initCall.setType(new AVoidTypeCG());
 
 		// Adding argument #1
@@ -205,19 +194,19 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 		ATokenNameCG superName = new ATokenNameCG();
 		if (!node.getSuperNames().isEmpty())
 		{
-			if (!node.getSuperNames().get(0).equals(VDM_THREAD))
+			if (!node.getSuperNames().get(0).equals(concPrefixes.vdmThreadClassName()))
 			{
-				superName.setName(node.getSuperNames().get(0) + SENTINEL_CLASS_POSTFIX);
+				superName.setName(node.getSuperNames().get(0) + concPrefixes.sentinelClassPostFix());
 			} else
 			{
-				superName.setName(SENTINEL_CLASS_NAME);
+				superName.setName(concPrefixes.sentinelClassName());
 			}
 
 			innerClass.getSuperNames().add(superName);
 		} else
 		{
 
-			superName.setName(SENTINEL_CLASS_NAME);
+			superName.setName(concPrefixes.sentinelClassName());
 			innerClass.getSuperNames().add(superName);
 		}
 
