@@ -45,7 +45,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Boolean ignorePattern_1 = op();
+        final Boolean ignorePattern_1 = op();
 
         return Utils.copy(Entry.xs);
     }

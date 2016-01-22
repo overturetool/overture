@@ -9,8 +9,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        A a = new A(1L, 2L);
-        A recordPattern_1 = Utils.copy(a);
+        final A a = new A(1L, 2L);
+        final A recordPattern_1 = Utils.copy(a);
         Boolean success_1 = true;
         Number x = null;
         Number y = null;

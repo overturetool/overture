@@ -79,7 +79,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        X x = new X();
+        final X x = new X();
 
         return x.m1().longValue() + x.m2().longValue() + x.m3().longValue() +
         x.m4().longValue() + x.m5().longValue() + x.m6().longValue() +

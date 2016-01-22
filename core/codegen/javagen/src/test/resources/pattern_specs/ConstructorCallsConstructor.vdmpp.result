@@ -42,8 +42,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        Entry e1 = new Entry(1L, 2L);
-        Entry e2 = new Entry(Tuple.mk_(3L, 4L));
+        final Entry e1 = new Entry(1L, 2L);
+        final Entry e2 = new Entry(Tuple.mk_(3L, 4L));
 
         return e1.x.longValue() + e1.y.longValue() + e2.x.longValue() +
         e2.y.longValue();

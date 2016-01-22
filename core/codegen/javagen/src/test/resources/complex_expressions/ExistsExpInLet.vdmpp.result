@@ -22,7 +22,7 @@ public class Entry {
             existsExpResult_1 = Utils.equals(Utils.mod(x.longValue(), 2L), 0L);
         }
 
-        Boolean x = existsExpResult_1;
+        final Boolean x = existsExpResult_1;
 
         return x;
     }

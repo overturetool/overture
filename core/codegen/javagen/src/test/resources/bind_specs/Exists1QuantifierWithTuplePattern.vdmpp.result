@@ -13,11 +13,11 @@ public class Entry {
     }
 
     public static VDMSeq fun() {
-        VDMSet ts0 = SetUtil.set(Tuple.mk_(10L, Tuple.mk_(3L, 4L)),
+        final VDMSet ts0 = SetUtil.set(Tuple.mk_(10L, Tuple.mk_(3L, 4L)),
                 Tuple.mk_(20L, Tuple.mk_(3L, 10L)),
                 Tuple.mk_(1L, Tuple.mk_(2L, 21L)),
                 Tuple.mk_(1L, Tuple.mk_(3L, 5L)));
-        VDMSet ts1 = SetUtil.set(Tuple.mk_(10L, Tuple.mk_(3L, 4L)),
+        final VDMSet ts1 = SetUtil.set(Tuple.mk_(10L, Tuple.mk_(3L, 4L)),
                 Tuple.mk_(20L, Tuple.mk_(3L, 10L)),
                 Tuple.mk_(1L, Tuple.mk_(2L, 21L)),
                 Tuple.mk_(1L, Tuple.mk_(3L, 4L)));

@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Object a = SeqUtil.seq(1L, 2L, 3L);
+        final Object a = SeqUtil.seq(1L, 2L, 3L);
 
         return SeqUtil.conc(((VDMSeq) a), ((VDMSeq) a));
     }

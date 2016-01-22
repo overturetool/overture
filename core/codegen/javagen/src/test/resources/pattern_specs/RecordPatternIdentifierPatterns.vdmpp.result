@@ -23,7 +23,7 @@ public class Entry {
             throw new RuntimeException("Record pattern match failed");
         }
 
-        Rec recordPattern_2 = new Rec(5L, true, 'g', 2.5);
+        final Rec recordPattern_2 = new Rec(5L, true, 'g', 2.5);
         Boolean success_2 = true;
         Number n2 = null;
         Boolean b2 = null;
@@ -42,8 +42,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        Rec a = new Entry().recPatternOp(new Rec(77L, false, 'e', 4.4));
-        Rec b = recPatternFun(new Rec(77L, false, 'e', 4.4));
+        final Rec a = new Entry().recPatternOp(new Rec(77L, false, 'e', 4.4));
+        final Rec b = recPatternFun(new Rec(77L, false, 'e', 4.4));
 
         return SeqUtil.seq(a.n, a.b, a.c, a.r, b.n, b.b, b.c, b.r);
     }
@@ -63,7 +63,7 @@ public class Entry {
             throw new RuntimeException("Record pattern match failed");
         }
 
-        Rec recordPattern_4 = new Rec(5L, true, 'g', 2.5);
+        final Rec recordPattern_4 = new Rec(5L, true, 'g', 2.5);
         Boolean success_4 = true;
         Number n2 = null;
         Boolean b2 = null;

@@ -17,7 +17,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Entry e = new Entry();
+        final Entry e = new Entry();
 
         return Utils.equals(quotes.AQuote.getInstance(),
             e.app(new Token(1L), new Token(1L)));

@@ -29,9 +29,9 @@ public class B extends A {
     }
 
     public Number go() {
-        Object obj = new B();
-        Object a = 'a';
-        Number b = 2L;
+        final Object obj = new B();
+        final Object a = 'a';
+        final Number b = 2L;
 
         if (obj instanceof A) {
             return ((A) obj).op(((Character) a), b);

@@ -19,8 +19,8 @@ public class PhoneBook {
     }
 
     public static void Test() {
-        PhoneBook pb1 = new PhoneBook();
-        PhoneBook pb2 = new PhoneBook();
+        final PhoneBook pb1 = new PhoneBook();
+        final PhoneBook pb2 = new PhoneBook();
         IO.print(SeqUtil.seq('C', 'r', 'e', 'a', 't', 'i', 'n', 'g', ' ', 'p',
                 'h', 'o', 'n', 'e', ' ', 'b', 'o', 'o', 'k', 's', ' ', 'p',
                 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b', '2', ' ', 'p',

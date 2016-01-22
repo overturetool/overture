@@ -134,7 +134,7 @@ public class Plant {
     }
 
     public void RemoveExpertFromSchedule(final Token p, final Expert ex) {
-        VDMSet exs = ((VDMSet) Utils.get(schedule, p));
+        final VDMSet exs = ((VDMSet) Utils.get(schedule, p));
 
         VDMMap ternaryIfExp_2 = null;
 
@@ -245,9 +245,9 @@ public class Entry {
     }
 
     public static Object Run() {
-        Entry entry = new Entry();
-        VDMSet periods = entry.plant.ExpertIsOnDuty(entry.ex1);
-        Expert expert = entry.plant.ExpertToPage(entry.a1, Entry.p1);
+        final Entry entry = new Entry();
+        final VDMSet periods = entry.plant.ExpertIsOnDuty(entry.ex1);
+        final Expert expert = entry.plant.ExpertToPage(entry.a1, Entry.p1);
 
         return Tuple.mk_(periods.size(), expert.GetQuali().size());
     }

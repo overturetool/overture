@@ -20,7 +20,7 @@ final public class Entry implements java.io.Serializable {
 
         if (Utils.equals(St.x, 3L)) {
             {
-                Number e = null;
+                final Number e = null;
 
                 return e.longValue() + e.longValue();
             }

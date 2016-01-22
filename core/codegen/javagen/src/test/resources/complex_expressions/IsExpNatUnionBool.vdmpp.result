@@ -10,16 +10,16 @@ public class Entry {
 
     public static Object Run() {
         Boolean isExpSubject_1 = true;
-        Boolean a = Utils.is_bool(isExpSubject_1) ||
+        final Boolean a = Utils.is_bool(isExpSubject_1) ||
             Utils.is_nat(isExpSubject_1);
         Object isExpSubject_2 = null;
-        Boolean b = Utils.is_bool(isExpSubject_2) ||
+        final Boolean b = Utils.is_bool(isExpSubject_2) ||
             Utils.is_nat(isExpSubject_2);
         Boolean isExpSubject_3 = true;
-        Boolean c = Utils.is_bool(isExpSubject_3) ||
+        final Boolean c = Utils.is_bool(isExpSubject_3) ||
             Utils.is_nat(isExpSubject_3);
         Character isExpSubject_4 = 'a';
-        Boolean d = Utils.is_bool(isExpSubject_4) ||
+        final Boolean d = Utils.is_bool(isExpSubject_4) ||
             Utils.is_nat(isExpSubject_4);
 
         return SeqUtil.seq(a, b, c, d);

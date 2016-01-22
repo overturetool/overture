@@ -18,7 +18,7 @@ final public class Entry {
     }
 
     public static Number f(final Number x_1) {
-        Number x_2 = x_1.longValue() + 2L;
+        final Number x_2 = x_1.longValue() + 2L;
 
         return x_2.longValue() + 3L;
     }

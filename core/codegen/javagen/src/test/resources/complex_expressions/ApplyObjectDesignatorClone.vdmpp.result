@@ -16,14 +16,14 @@ public class A {
     }
 
     public Number op1() {
-        Tuple a = Tuple.mk_(1L, 2L);
+        final Tuple a = Tuple.mk_(1L, 2L);
 
         return ((A) Utils.get(A.x, a)).no();
     }
 
     public Number op2() {
-        Tuple a = Tuple.mk_('x', 'y');
-        Tuple b = Tuple.mk_(1L, 2L);
+        final Tuple a = Tuple.mk_('x', 'y');
+        final Tuple b = Tuple.mk_(1L, 2L);
 
         return ((A) Utils.get(m(Utils.copy(a), Utils.copy(a)), b)).no();
     }
@@ -49,7 +49,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        A a = new A();
+        final A a = new A();
 
         return a.op1().longValue() + a.op2().longValue();
     }

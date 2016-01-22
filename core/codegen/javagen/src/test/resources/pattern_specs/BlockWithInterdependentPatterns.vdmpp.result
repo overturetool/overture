@@ -10,8 +10,8 @@ public class Entry {
 
     public static Object Run() {
         {
-            Number a = 1L;
-            Tuple tuplePattern_1 = Tuple.mk_(a, 2L);
+            final Number a = 1L;
+            final Tuple tuplePattern_1 = Tuple.mk_(a, 2L);
             Boolean success_1 = tuplePattern_1.compatible(Number.class,
                     Number.class);
             Number b = null;
@@ -26,8 +26,8 @@ public class Entry {
                 throw new RuntimeException("Tuple pattern match failed");
             }
 
-            Number d = 11L;
-            Rec recordPattern_1 = new Rec(a.longValue() + b.longValue() +
+            final Number d = 11L;
+            final Rec recordPattern_1 = new Rec(a.longValue() + b.longValue() +
                     c.longValue(), d);
             Boolean success_2 = true;
             Number e = null;
@@ -39,8 +39,8 @@ public class Entry {
                 throw new RuntimeException("Record pattern match failed");
             }
 
-            Number g = 21L;
-            Tuple tuplePattern_2 = Tuple.mk_(9L, 10L);
+            final Number g = 21L;
+            final Tuple tuplePattern_2 = Tuple.mk_(9L, 10L);
             Boolean success_3 = tuplePattern_2.compatible(Number.class,
                     Number.class);
             Number h = null;

@@ -9,8 +9,9 @@ public class Entry {
     }
 
     public static Object Run() {
-        VDMSeq xs = SeqUtil.seq(Tuple.mk_(5L, true), Tuple.mk_(true, 2L, 3L));
-        Object x = Utils.get(xs, 2L);
+        final VDMSeq xs = SeqUtil.seq(Tuple.mk_(5L, true),
+                Tuple.mk_(true, 2L, 3L));
+        final Object x = Utils.get(xs, 2L);
 
         Object apply_1 = null;
 

@@ -94,7 +94,7 @@ public class C extends B {
     }
 
     public void cg_init_C_1(final Boolean t) {
-        Number z = 1L;
+        final Number z = 1L;
         cg_init_A_1(z, t, 'b');
     }
 
@@ -115,10 +115,10 @@ public class Entry {
     }
 
     public static Object Run() {
-        B b1 = new B();
-        B b2 = new B('h', 'j');
-        C c1 = new C(true);
-        C c2 = new C();
+        final B b1 = new B();
+        final B b2 = new B('h', 'j');
+        final C c1 = new C(true);
+        final C c2 = new C();
 
         return SeqUtil.seq(b1.first, b2.fourth, c1.second, c2.first);
     }

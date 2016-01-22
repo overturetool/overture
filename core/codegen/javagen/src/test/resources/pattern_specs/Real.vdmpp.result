@@ -15,7 +15,7 @@ public class A {
             throw new RuntimeException("Real pattern match failed");
         }
 
-        Number realPattern_2 = 2.1;
+        final Number realPattern_2 = 2.1;
         Boolean success_2 = Utils.equals(realPattern_2, 2.1);
 
         if (!(success_2)) {
@@ -32,7 +32,7 @@ public class A {
             throw new RuntimeException("Real pattern match failed");
         }
 
-        Number realPattern_4 = 2.1;
+        final Number realPattern_4 = 2.1;
         Boolean success_4 = Utils.equals(realPattern_4, 2.1);
 
         if (!(success_4)) {

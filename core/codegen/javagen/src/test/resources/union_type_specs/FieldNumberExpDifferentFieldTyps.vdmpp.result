@@ -9,8 +9,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        VDMSeq s = SeqUtil.seq(Tuple.mk_(5L, true), Tuple.mk_(true, 2L, 3L),
-                Tuple.mk_('a', 'b', true));
+        final VDMSeq s = SeqUtil.seq(Tuple.mk_(5L, true),
+                Tuple.mk_(true, 2L, 3L), Tuple.mk_('a', 'b', true));
 
         {
             VDMSeq ss = SeqUtil.seq();

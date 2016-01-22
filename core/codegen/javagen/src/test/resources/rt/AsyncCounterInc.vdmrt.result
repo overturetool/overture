@@ -57,7 +57,7 @@ public class Entry implements EvaluatePP {
     }
 
     public static Object Run() {
-        Entry e = new Entry();
+        final Entry e = new Entry();
 
         return e.fire();
     }

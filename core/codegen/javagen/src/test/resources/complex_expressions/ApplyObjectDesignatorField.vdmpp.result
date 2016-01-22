@@ -45,7 +45,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        A a = new A();
+        final A a = new A();
 
         return a.op1(a).longValue() + a.op2(a).longValue() +
         a.op3(a).longValue();

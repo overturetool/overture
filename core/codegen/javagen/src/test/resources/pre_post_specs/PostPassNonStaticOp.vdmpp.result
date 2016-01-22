@@ -13,8 +13,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        Entry e = new Entry();
-        Number r = e.op(42L);
+        final Entry e = new Entry();
+        final Number r = e.op(42L);
 
         return r;
     }

@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        VDMSeq inlines = SeqUtil.seq(new R1(4L), new R2(5L));
+        final VDMSeq inlines = SeqUtil.seq(new R1(4L), new R2(5L));
         Object obj_1 = Utils.get(inlines, 1L);
 
         Number apply_1 = null;

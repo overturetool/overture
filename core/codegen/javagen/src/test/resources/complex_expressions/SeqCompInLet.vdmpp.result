@@ -24,7 +24,7 @@ public class Entry {
             }
         }
 
-        VDMSeq x = Utils.copy(seqCompResult_1);
+        final VDMSeq x = Utils.copy(seqCompResult_1);
 
         return Utils.copy(x);
     }

@@ -10,19 +10,19 @@ public class Entry {
 
     public static Object Run() {
         {
-            Entry e = new Entry();
+            final Entry e = new Entry();
             e.cg_wait();
         }
 
         {
-            Number ignorePattern_1 = cg_notify();
+            final Number ignorePattern_1 = cg_notify();
 
             /* skip */
         }
 
         {
-            Entry e = new Entry();
-            Number ignorePattern_2 = e.cg_notify();
+            final Entry e = new Entry();
+            final Number ignorePattern_2 = e.cg_notify();
 
             /* skip */
         }

@@ -37,7 +37,7 @@ public class Entry {
     }
 
     public static String op4() {
-        VDMSeq a = SeqUtil.toSeq(SeqUtil.toStr(SeqUtil.seq()) + "a");
+        final VDMSeq a = SeqUtil.toSeq(SeqUtil.toStr(SeqUtil.seq()) + "a");
 
         return SeqUtil.toStr(Utils.copy(a));
     }

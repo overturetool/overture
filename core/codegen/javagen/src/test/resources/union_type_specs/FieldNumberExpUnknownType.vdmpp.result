@@ -17,7 +17,7 @@ public class Entry {
             ternaryIfExp_1 = SetUtil.set(SeqUtil.seq());
         }
 
-        VDMSet hr = Utils.copy(ternaryIfExp_1);
+        final VDMSet hr = Utils.copy(ternaryIfExp_1);
         VDMMap mapCompResult_1 = MapUtil.map();
         VDMSet set_1 = Utils.copy(hr);
 

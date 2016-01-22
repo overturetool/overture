@@ -15,7 +15,7 @@ public class A {
             throw new RuntimeException("Nil pattern match failed");
         }
 
-        Object nullPattern_2 = null;
+        final Object nullPattern_2 = null;
         Boolean success_2 = Utils.equals(nullPattern_2, null);
 
         if (!(success_2)) {
@@ -32,7 +32,7 @@ public class A {
             throw new RuntimeException("Nil pattern match failed");
         }
 
-        Object nullPattern_4 = null;
+        final Object nullPattern_4 = null;
         Boolean success_4 = Utils.equals(nullPattern_4, null);
 
         if (!(success_4)) {

@@ -29,8 +29,8 @@ public class B extends A {
     }
 
     public Number go() {
-        Object a = 1L;
-        Object b = true;
+        final Object a = 1L;
+        final Object b = true;
 
         return super.op(((Number) a), ((Boolean) b));
     }

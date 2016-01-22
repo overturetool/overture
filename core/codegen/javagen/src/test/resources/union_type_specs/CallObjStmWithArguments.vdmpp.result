@@ -71,12 +71,12 @@ public class Entry {
     }
 
     public static Number Run() {
-        Object a = 1L;
-        Object b = true;
-        Object c1 = 1L;
-        Object c2 = true;
-        Object c3 = 'a';
-        VDMSeq objs = SeqUtil.seq(new A(), new B(), new C());
+        final Object a = 1L;
+        final Object b = true;
+        final Object c1 = 1L;
+        final Object c2 = true;
+        final Object c3 = 'a';
+        final VDMSeq objs = SeqUtil.seq(new A(), new B(), new C());
 
         {
             long toVar_1 = 3L;
