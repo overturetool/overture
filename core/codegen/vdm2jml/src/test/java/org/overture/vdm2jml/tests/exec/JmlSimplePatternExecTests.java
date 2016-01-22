@@ -1,7 +1,9 @@
 package org.overture.vdm2jml.tests.exec;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -19,6 +21,12 @@ public class JmlSimplePatternExecTests extends JmlExecTestBase
 	public JmlSimplePatternExecTests(File inputFile)
 	{
 		super(inputFile);
+	}
+	
+	@Override
+	protected List<String> getSkippedTestsNames()
+	{
+		return Arrays.asList("String.vdmsl");
 	}
 
 	@Parameters(name = "{index}: {0}")
