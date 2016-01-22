@@ -71,4 +71,9 @@ public class ConcPrefixes
 	{
 		return "active"; 
 	}
+	
+	public String stateChangedMethodName()
+	{
+		return "stateChanged";
+	}
 }

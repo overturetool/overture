@@ -27,14 +27,13 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
  */
 public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 {
-	private static final String STATE_CHANGED = "stateChanged";
-	private static final String SENTINEL_FIELD_NAME = "sentinel";
-
 	private TransAssistantCG transAssistant;
+	private ConcPrefixes concPrefixes;
 
-	public EvalPermPredTrans(TransAssistantCG transAssistant)
+	public EvalPermPredTrans(TransAssistantCG transAssistant, ConcPrefixes concPrefixes)
 	{
 		this.transAssistant = transAssistant;
+		this.concPrefixes = concPrefixes;
 	}
 
 	@Override
@@ -107,12 +106,12 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 		AIdentifierVarExpCG sentinelVar = new AIdentifierVarExpCG();
 		sentinelVar.setIsLocal(true);
 		sentinelVar.setIsLambda(false);
-		sentinelVar.setName(SENTINEL_FIELD_NAME);
+		sentinelVar.setName(concPrefixes.sentinelInstanceName());
 		sentinelVar.setType(fieldType);
 
 		ACallObjectExpStmCG callSentinel = new ACallObjectExpStmCG();
 		callSentinel.setObj(sentinelVar);
-		callSentinel.setFieldName(STATE_CHANGED);
+		callSentinel.setFieldName(concPrefixes.stateChangedMethodName());
 		callSentinel.setType(new AVoidTypeCG());
 
 		ABlockStmCG replacementBlock = new ABlockStmCG();
@@ -131,7 +130,7 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 
 		if (enclosingClass != null)
 		{
-			fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(enclosingClass, SENTINEL_FIELD_NAME, transAssistant.getInfo().getClasses());
+			fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(enclosingClass, concPrefixes.sentinelInstanceName(), transAssistant.getInfo().getClasses());
 		} else
 		{
 			Logger.getLog().printErrorln("Could not find enclosing class of assignment statement in InstanceVarPPEvalTransformation");
