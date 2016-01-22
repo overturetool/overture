@@ -41,4 +41,29 @@ public class ConcPrefixes
 	{
 		return "int";
 	}
+	
+	public String enteringMethodName()
+	{
+		return "entering";
+	}
+	
+	public String leavingMethodName()
+	{
+		return "leaving"; 
+	}
+	
+	public String funcNumberParamName()
+	{
+		return "fnr";
+	}
+	
+	public String sentinelInstanceName()
+	{
+		return "sentinel";
+	}
+	
+	public String evalPpMethodName()
+	{
+		return "evaluatePP";
+	}
 }

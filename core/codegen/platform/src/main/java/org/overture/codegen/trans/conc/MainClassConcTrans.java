@@ -48,24 +48,16 @@ import org.overture.codegen.ir.IRInfo;
  */
 public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 {
-	private static final String EVALUATE_PP_METHOD_NAME = "evaluatePP";
-	private static final String LEAVING_METHOD_NAME = "leaving";
-	private static final String ENTERING_METHOD_NAME = "entering";
-	private static final String SENTINEL_CLASS_NAME = "Sentinel";
-	private static final String SENTINEL_INSTANCE_NAME = "sentinel";
-	private static final String EVALUATE_PP_CLASS_NAME = "EvaluatePP";
-	private static final String VDM_THREAD_CLASS_NAME = "VDMThread";
-	private static final String SENTINEL_POST_FIX = "_sentinel";
-	private static final String FUNCTION_NUMBER_PARAM_NAME = "fnr";
-
 	public static final String MULTIPLE_INHERITANCE_WARNING = "Generation of concurrency "
 			+ "constructs does not support multiple inheritance";
 
 	private IRInfo info;
+	private ConcPrefixes concPrefixes;
 
-	public MainClassConcTrans(IRInfo info)
+	public MainClassConcTrans(IRInfo info, ConcPrefixes concPrefixes)
 	{
 		this.info = info;
+		this.concPrefixes = concPrefixes;
 	}
 
 	@Override
@@ -91,14 +83,14 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 		}
 
 		AInterfaceDeclCG interf = new AInterfaceDeclCG();
-		interf.setName(EVALUATE_PP_CLASS_NAME);
+		interf.setName(concPrefixes.evalPpTypeName());
 
 		node.getInterfaces().add(interf);
 
 		AExternalTypeCG sentType = new AExternalTypeCG();
-		sentType.setName(SENTINEL_CLASS_NAME);
+		sentType.setName(concPrefixes.sentinelClassName());
 		AFieldDeclCG sentinelfld = new AFieldDeclCG();
-		sentinelfld.setName(SENTINEL_INSTANCE_NAME);
+		sentinelfld.setName(concPrefixes.sentinelInstanceName());
 		sentinelfld.setType(sentType);
 		sentinelfld.setAccess(IRConstants.PUBLIC);
 		sentinelfld.setVolatile(true);
@@ -117,9 +109,9 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 					APlainCallStmCG entering = new APlainCallStmCG();
 					APlainCallStmCG leaving = new APlainCallStmCG();
 
-					entering.setName(ENTERING_METHOD_NAME);
+					entering.setName(concPrefixes.enteringMethodName());
 					AClassTypeCG sentinel = new AClassTypeCG();
-					sentinel.setName(SENTINEL_INSTANCE_NAME);
+					sentinel.setName(concPrefixes.sentinelInstanceName());
 
 					entering.setClassType(sentinel);
 					entering.setType(new AVoidTypeCG());
@@ -131,10 +123,10 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 					AIdentifierVarExpCG varSentinel = new AIdentifierVarExpCG();
 					varSentinel.setIsLocal(true);
 					varSentinel.setIsLambda(false);
-					varSentinel.setName(SENTINEL_INSTANCE_NAME);
+					varSentinel.setName(concPrefixes.sentinelInstanceName());
 
 					AExternalTypeCG etype = new AExternalTypeCG();
-					etype.setName(node.getName() + SENTINEL_POST_FIX);
+					etype.setName(node.getName() + concPrefixes.sentinelClassPostFix());
 
 					cast.setExp(varSentinel);
 					cast.setType(etype);
@@ -142,7 +134,7 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 
 					entering.getArgs().add(field);
 
-					leaving.setName(LEAVING_METHOD_NAME);
+					leaving.setName(concPrefixes.leavingMethodName());
 					leaving.setClassType(sentinel.clone());
 					leaving.setType(new AVoidTypeCG());
 					leaving.getArgs().add(field.clone());
@@ -165,13 +157,13 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 
 				AIdentifierVarExpCG field = new AIdentifierVarExpCG();
 
-				field.setName(SENTINEL_INSTANCE_NAME);
+				field.setName(concPrefixes.sentinelInstanceName());
 				field.setIsLocal(false);
 
 				ANewExpCG newexp = new ANewExpCG();
 
 				ATypeNameCG classtype = new ATypeNameCG();
-				classtype.setName(node.getName() + SENTINEL_POST_FIX);
+				classtype.setName(node.getName() + concPrefixes.sentinelClassPostFix());
 
 				newexp.setName(classtype);
 				newexp.getArgs().add(new ASelfExpCG());
@@ -189,7 +181,7 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 
 		AIntNumericBasicTypeCG fnr = new AIntNumericBasicTypeCG();
 		AIdentifierPatternCG identifier = new AIdentifierPatternCG();
-		identifier.setName(FUNCTION_NUMBER_PARAM_NAME);
+		identifier.setName(concPrefixes.funcNumberParamName());
 		AFormalParamLocalParamCG fnrloc = new AFormalParamLocalParamCG();
 		fnrloc.setType(fnr);
 		fnrloc.setPattern(identifier);
@@ -198,7 +190,7 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 
 		AMethodDeclCG evaluatePPmethod = new AMethodDeclCG();
 		evaluatePPmethod.setAccess(IRConstants.PUBLIC);
-		evaluatePPmethod.setName(EVALUATE_PP_METHOD_NAME);
+		evaluatePPmethod.setName(concPrefixes.evalPpMethodName());
 		evaluatePPmethod.setImplicit(false);
 		evaluatePPmethod.setMethodType(methType);
 		evaluatePPmethod.setIsConstructor(false);
@@ -243,7 +235,7 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 
 				AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
 				testVar.setType(new AIntNumericBasicTypeCG());
-				testVar.setName(FUNCTION_NUMBER_PARAM_NAME);
+				testVar.setName(concPrefixes.funcNumberParamName());
 				testVar.setIsLocal(true);
 
 				if (i == 0)
@@ -336,13 +328,13 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 		threadClass.getSuperNames().clear();
 
 		ATokenNameCG superName = new ATokenNameCG();
-		superName.setName(VDM_THREAD_CLASS_NAME);
+		superName.setName(concPrefixes.vdmThreadClassName());
 		threadClass.getSuperNames().add(superName);
 	}
 
 	private SClassDeclCG getThreadClass(List<ATokenNameCG> superNames, SClassDeclCG classCg)
 	{
-		if (superNames.isEmpty() || superNames.get(0).getName().equals(VDM_THREAD_CLASS_NAME))
+		if (superNames.isEmpty() || superNames.get(0).getName().equals(concPrefixes.vdmThreadClassName()))
 		{
 			return classCg;
 		} else
