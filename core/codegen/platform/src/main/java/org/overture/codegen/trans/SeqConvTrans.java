@@ -14,8 +14,11 @@ import org.overture.codegen.cgast.expressions.ASeqToStringUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringToSeqUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
+import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -30,6 +33,23 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 		this.transformationAssistant = transformationAssistant;
 	}
 
+	@Override
+	public void caseAForAllStmCG(AForAllStmCG node) throws AnalysisException
+	{
+		if(node.getExp().getType() instanceof AStringTypeCG)
+		{
+			ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
+			seqType.setEmpty(false);
+			seqType.setSeq1(false);
+			seqType.setOptional(false);
+			seqType.setSeqOf(new ACharBasicTypeCG());
+			
+			correctExpToSeq(node.getExp(), seqType);
+		}
+
+		node.getBody().apply(this);
+	}
+	
 	@Override
 	public void inAFieldDeclCG(AFieldDeclCG node) throws AnalysisException
 	{

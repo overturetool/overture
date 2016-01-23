@@ -80,6 +80,7 @@ import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
@@ -815,9 +816,15 @@ public class JavaFormat
 			SSeqTypeCG seqType = (SSeqTypeCG) type;
 
 			return format(seqType.getSeqOf());
+		} else if (type instanceof AStringTypeCG)
+		{
+			return format(new ACharBasicTypeCG());
+		} else
+		{
+			Logger.getLog().printErrorln("Expected set, seq or string type when trying to format element type. Got: "
+					+ type);
+			return format(new AUnknownTypeCG());
 		}
-
-		throw new AnalysisException("Expected set or seq type when trying to format element type");
 	}
 
 	public String nextVarName(String prefix)
