@@ -612,7 +612,10 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 	{
 		for (GeneratedModule classCg : generatedClasses)
 		{
-			genJavaSourceFile(root, classCg);
+			if(classCg.canBeGenerated())
+			{
+				genJavaSourceFile(root, classCg);
+			}
 		}
 	}
 
