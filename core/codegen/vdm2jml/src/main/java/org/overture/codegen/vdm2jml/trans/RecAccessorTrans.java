@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2jml.trans;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -78,7 +79,11 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 				setCall.setFieldName(consSetCallName(target.getMemberName()));
 				setCall.getArgs().add(node.getExp().clone());
 				setCall.setType(new AVoidTypeCG());
-				setCall.setObj(target.getObject().clone());
+
+				SExpCG obj = target.getObject().clone();
+				jmlGen.getJavaGen().getJavaFormat().getValueSemantics().addCloneFreeNode(obj);
+				
+				setCall.setObj(obj);
 				setCall.setSourceNode(node.getSourceNode());
 
 				/**
@@ -163,7 +168,7 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 		JavaValueSemantics valSem = jmlGen.getJavaGen().getJavaFormat().getValueSemantics();
 		
 		return !inTarget && !isObjOfFieldExp(node) && !isColOfMapSeq(node)
-				&& valSem.usesStructuralEquivalence(node.getType());
+				&& valSem.mayBeValueType(node.getType());
 	}
 
 	private boolean isObjOfFieldExp(AFieldExpCG node)

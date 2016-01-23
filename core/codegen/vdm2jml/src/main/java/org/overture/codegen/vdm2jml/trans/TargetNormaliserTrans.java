@@ -6,6 +6,7 @@ import java.util.List;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.PatternAssistantCG;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -71,6 +72,7 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 		SExpCG newTarget = splitTarget(target, varDecls, vars);
 
 		markAsCloneFree(varDecls);
+		markAsCloneFree(vars);
 		
 		stateDesInfo.addStateDesVars(node, vars);
 		stateDesInfo.addStateDesDecl(node, varDecls);
@@ -149,9 +151,9 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private void markAsCloneFree(List<AVarDeclCG> varDecls)
+	private void markAsCloneFree(List<? extends INode> nodes)
 	{
-		for(AVarDeclCG v : varDecls)
+		for(INode v : nodes)
 		{
 			jmlGen.getJavaGen().getJavaFormat().getValueSemantics().addCloneFreeNode(v);
 		}
