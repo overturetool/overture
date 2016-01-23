@@ -10,7 +10,7 @@ public class Entry {
 
     public static Object Run() {
         final VDMSeq inlines = SeqUtil.seq(new R1(4L), new R2(5L));
-        Object obj_1 = Utils.get(inlines, 1L);
+        Object obj_1 = Utils.copy(Utils.get(inlines, 1L));
 
         Number apply_1 = null;
 
@@ -20,7 +20,7 @@ public class Entry {
             throw new RuntimeException("Missing member: x");
         }
 
-        Object obj_2 = Utils.get(inlines, 2L);
+        Object obj_2 = Utils.copy(Utils.get(inlines, 2L));
 
         Number apply_2 = null;
 

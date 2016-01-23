@@ -23,7 +23,7 @@ public class Entry {
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             VDMSeq ss = ((VDMSeq) iterator_1.next());
-            Object obj_1 = Utils.get(ss, 1L);
+            Object obj_1 = Utils.copy(Utils.get(ss, 1L));
 
             Number apply_1 = null;
 
