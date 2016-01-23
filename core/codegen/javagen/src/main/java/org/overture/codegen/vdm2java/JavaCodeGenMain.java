@@ -220,7 +220,7 @@ public class JavaCodeGenMain
 
 				if (file.isFile())
 				{
-					if (JavaCodeGenUtil.isSupportedVdmSourceFile(file))
+					if (GeneralCodeGenUtils.isVdmSourceFile(file))
 					{
 						files.add(file);
 					}
@@ -518,7 +518,7 @@ public class JavaCodeGenMain
 		
 		for(File f : files)
 		{
-			if(JavaCodeGenUtil.isSupportedVdmSourceFile(f))
+			if(GeneralCodeGenUtils.isVdmSourceFile(f))
 			{
 				filtered.add(f);
 			}

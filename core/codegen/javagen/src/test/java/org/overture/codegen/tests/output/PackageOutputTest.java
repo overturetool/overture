@@ -6,13 +6,13 @@ import java.util.Collection;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.overture.codegen.tests.output.base.Pp2JavaOutputTestBase;
+import org.overture.codegen.tests.output.base.JavaOutputTestBase;
 import org.overture.codegen.tests.output.util.OutputTestUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.core.tests.PathsProvider;
 
 @RunWith(Parameterized.class)
-public class PackageOutputTest extends Pp2JavaOutputTestBase
+public class PackageOutputTest extends JavaOutputTestBase
 {
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar

@@ -207,7 +207,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 	{
 		for(File f : GeneralUtils.getFilesRecursively(specificationRoot))
 		{
-			if(JavaCodeGenUtil.isSupportedVdmSourceFile(f))
+			if(GeneralCodeGenUtils.isVdmSourceFile(f))
 			{
 				files.add(f);
 			}
