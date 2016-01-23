@@ -137,8 +137,10 @@ public class Utils
 		{
 			return (T) ((ValueType) t).copy();
 		}
-
-		return null;
+		else
+		{
+			return t;
+		}
 	}
 
 	public static String toString(Object obj)
