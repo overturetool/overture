@@ -514,7 +514,7 @@ public class GeneralCodeGenUtils
 
 			Logger.getLog().print(location != null ? " at [line, pos] = ["
 					+ location.getStartLine() + ", " + location.getStartPos()
-					+ "]" : "");
+					+ "] in " + location.getFile().getName() : "");
 
 			String reason = vdmNodeInfo.getReason();
 
