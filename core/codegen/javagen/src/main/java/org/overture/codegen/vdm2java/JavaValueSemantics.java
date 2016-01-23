@@ -53,6 +53,7 @@ import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
 import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
+import org.overture.codegen.cgast.expressions.SIsExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
@@ -64,6 +65,7 @@ import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
+import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
@@ -136,16 +138,14 @@ public class JavaValueSemantics
 			return false;
 		}
 		
-		STypeCG type = exp.getTuple().getType();
+		List<ATupleTypeCG> tupleTypes = getTypes(exp.getTuple().getType(), ATupleTypeCG.class);
+		final int idx = (int) (exp.getField() - 1);
 
-		if (type instanceof ATupleTypeCG)
+		for (ATupleTypeCG tupleType : tupleTypes)
 		{
-			ATupleTypeCG tupleType = (ATupleTypeCG) type;
+			STypeCG fieldType = tupleType.getTypes().get(idx);
 
-			long field = exp.getField();
-			STypeCG fieldType = tupleType.getTypes().get((int) (field - 1));
-
-			if (usesStructuralEquivalence(fieldType))
+			if (mayBeValueType(fieldType))
 			{
 				return true;
 			}
@@ -182,27 +182,43 @@ public class JavaValueSemantics
 			return false;
 		}
 
-		STypeCG type = exp.getObject().getType();
+		List<ARecordTypeCG> recTypes = getTypes(exp.getObject().getType(), ARecordTypeCG.class);
+		String memberName = exp.getMemberName();
+		List<SClassDeclCG> classes = javaFormat.getIrInfo().getClasses();
+		AssistantManager man = javaFormat.getIrInfo().getAssistantManager();
 
-		if (type instanceof ARecordTypeCG)
+		for (ARecordTypeCG r : recTypes)
 		{
-			ARecordTypeCG recordType = (ARecordTypeCG) type;
+			AFieldDeclCG field = man.getDeclAssistant().getFieldDecl(classes, r, memberName);
 
-			String memberName = exp.getMemberName();
-
-			List<SClassDeclCG> classes = javaFormat.getIrInfo().getClasses();
-			AssistantManager assistantManager = javaFormat.getIrInfo().getAssistantManager();
-
-			AFieldDeclCG memberField = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);
-
-			if (memberField != null
-					&& usesStructuralEquivalence(memberField.getType()))
+			if (field != null && mayBeValueType(field.getType()))
 			{
 				return true;
 			}
 		}
 
 		return false;
+	}
+
+	private <T extends STypeCG> List<T> getTypes(STypeCG type, Class<T> filter)
+	{
+		List<T> filteredTypes = new LinkedList<>();
+		
+		if(filter.isInstance(type))
+		{
+			filteredTypes.add(filter.cast(type));
+		}
+		else if(type instanceof AUnionTypeCG)
+		{
+			List<STypeCG> types = ((AUnionTypeCG) type).getTypes();
+			
+			for(STypeCG t : types)
+			{
+				filteredTypes.addAll(getTypes(t, filter));
+			}
+		}
+		
+		return filteredTypes;
 	}
 
 	public boolean shouldClone(SExpCG exp)
@@ -265,14 +281,14 @@ public class JavaValueSemantics
 		
 		STypeCG type = exp.getType();
 
-		if (usesStructuralEquivalence(type))
+		if (mayBeValueType(type))
 		{
 			if (parent instanceof ANewExpCG)
 			{
 				ANewExpCG newExp = (ANewExpCG) parent;
 				STypeCG newExpType = newExp.getType();
 
-				if (usesStructuralEquivalence(newExpType))
+				if (mayBeValueType(newExpType))
 				{
 					return false;
 				}
@@ -407,6 +423,7 @@ public class JavaValueSemantics
 				|| parent instanceof AAddrNotEqualsBinaryExpCG
 				|| parent instanceof AForAllStmCG
 				|| parent instanceof AInstanceofExpCG
+				|| parent instanceof SIsExpCG
 				|| cloneNotNeededCollectionOperator(parent)
 				|| cloneNotNeededUtilCall(parent);
 	}
@@ -483,11 +500,28 @@ public class JavaValueSemantics
 				&& ((AExternalTypeCG) classType).getName().equals(JavaFormat.UTILS_FILE);
 	}
 
-	public boolean usesStructuralEquivalence(STypeCG type)
+	public boolean mayBeValueType(STypeCG type)
 	{
-		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG
-				|| type instanceof SSeqTypeCG || type instanceof SSetTypeCG
-				|| type instanceof SMapTypeCG;
+		if(type instanceof AUnionTypeCG)
+		{
+			LinkedList<STypeCG> types = ((AUnionTypeCG) type).getTypes();
+			
+			for(STypeCG t : types)
+			{
+				if(mayBeValueType(t))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		else
+		{
+			return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG
+					|| type instanceof SSeqTypeCG || type instanceof SSetTypeCG
+					|| type instanceof SMapTypeCG;
+		}
 	}
 	
 	private boolean cloneNotNeededAssign(SExpCG exp)
