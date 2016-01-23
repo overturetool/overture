@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.analysis.vdm.Renaming;
@@ -29,37 +30,48 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void inILexNameToken(ILexNameToken node) throws AnalysisException
+	public void caseILexIdentifierToken(ILexIdentifierToken node) throws AnalysisException
 	{
-		if (!contains(node.getLocation()))
+		validateName(node.getName(), node.getLocation(), /* no module */ null);
+	}
+	
+	@Override
+	public void caseILexNameToken(ILexNameToken node) throws AnalysisException
+	{
+		validateName(node.getName(), node.getLocation(), node.getModule());
+	}
+
+	private void validateName(String name, ILexLocation location, String module)
+	{
+		if (!contains(location))
 		{
 			boolean rename = false;
-			String newName = node.getName();
+			String newName = name;
 			
-			if (!isImplicitlyNamed(node) && !JavaCodeGenUtil.isValidJavaIdentifier(node.getName()))
+			if (!isImplicitlyNamed(name) && !JavaCodeGenUtil.isValidJavaIdentifier(name))
 			{
-				newName = getReplacementName(node.getName());
+				newName = getReplacementName(name);
 				rename = true;
 			}
 			
-			String newModule = node.getModule();
-			if (!node.getModule().equals("?") && !JavaCodeGenUtil.isValidJavaIdentifier(node.getModule()))
+			String newModule = module;
+			if (module != null && !module.equals("?") && !JavaCodeGenUtil.isValidJavaIdentifier(module))
 			{
-				newModule = getReplacementName(node.getModule());
+				newModule = getReplacementName(module);
 				rename = true;
 			}
 			
 			if(rename)
 			{
-				this.renamings.add(new Renaming(node.getLocation(), node.getName(), newName, node.getModule(), newModule));
+				this.renamings.add(new Renaming(location, name, newName, module, newModule));
 			}
 		}
 	}
 
-	private boolean isImplicitlyNamed(ILexNameToken node)
+	private boolean isImplicitlyNamed(String name)
 	{
 		// "?" is used for implicitly named things
-		return node.getName().equals("?");
+		return name.equals("?");
 	}
 	
 	private boolean contains(ILexLocation loc)

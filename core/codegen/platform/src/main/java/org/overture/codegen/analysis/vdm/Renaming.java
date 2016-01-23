@@ -14,17 +14,6 @@ public class Renaming implements Comparable<Renaming>
 	
 	public Renaming(ILexLocation loc, String oldName, String newName, String oldModule, String newModule)
 	{
-		if(loc == null)
-		{
-			throw new IllegalArgumentException("Location cannot be null in Renaming");
-		}
-		
-		if (oldName == null || oldName.isEmpty() || newName == null || newName.isEmpty() || oldModule == null
-				|| oldModule.isEmpty() || newModule == null || newModule.isEmpty())
-		{
-			throw new IllegalArgumentException("Input names cannot 'null' or empty strings");
-		}
-		
 		this.loc = loc;
 		this.oldName = oldName;
 		this.newName = newName;
