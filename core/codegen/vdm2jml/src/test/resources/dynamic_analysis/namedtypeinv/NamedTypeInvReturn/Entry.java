@@ -14,25 +14,25 @@ final public class Entry {
     }
 
     public static Object Run() {
-        Character ignorePattern_1 = idC('b');
+        final Character ignorePattern_1 = idC('b');
 
         //@ assert (Utils.is_char(ignorePattern_1) && inv_Entry_C(ignorePattern_1));
-        Character ignorePattern_2 = idC('a');
+        final Character ignorePattern_2 = idC('a');
 
         //@ assert (Utils.is_char(ignorePattern_2) && inv_Entry_C(ignorePattern_2));
-        Object ignorePattern_3 = idA(null);
+        final Object ignorePattern_3 = idA(null);
 
         //@ assert ((ignorePattern_3 == null) || ((ignorePattern_3 == null) || (Utils.is_real(ignorePattern_3) && inv_Entry_B(ignorePattern_3)) || (Utils.is_char(ignorePattern_3) && inv_Entry_C(ignorePattern_3))) && inv_Entry_A(ignorePattern_3));
-        Object ignorePattern_4 = idA(2.1);
+        final Object ignorePattern_4 = idA(2.1);
 
         //@ assert ((ignorePattern_4 == null) || ((ignorePattern_4 == null) || (Utils.is_real(ignorePattern_4) && inv_Entry_B(ignorePattern_4)) || (Utils.is_char(ignorePattern_4) && inv_Entry_C(ignorePattern_4))) && inv_Entry_A(ignorePattern_4));
-        Object ignorePattern_5 = constFunc();
+        final Object ignorePattern_5 = constFunc();
         //@ assert ((ignorePattern_5 == null) || ((ignorePattern_5 == null) || (Utils.is_real(ignorePattern_5) && inv_Entry_B(ignorePattern_5)) || (Utils.is_char(ignorePattern_5) && inv_Entry_C(ignorePattern_5))) && inv_Entry_A(ignorePattern_5));
         {
             IO.println("Breaking named type invariant for return value");
 
             {
-                Object ignorePattern_6 = idA('b');
+                final Object ignorePattern_6 = idA('b');
 
                 //@ assert ((ignorePattern_6 == null) || ((ignorePattern_6 == null) || (Utils.is_real(ignorePattern_6) && inv_Entry_B(ignorePattern_6)) || (Utils.is_char(ignorePattern_6) && inv_Entry_C(ignorePattern_6))) && inv_Entry_A(ignorePattern_6));
 

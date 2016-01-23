@@ -68,7 +68,7 @@ final public class R1 implements Record {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_R1(final project.Entrytypes.R2 _r2) {
-        Object obj_2 = _r2.t3;
+        Object obj_2 = Utils.copy(_r2.t3);
         project.Entrytypes.R4 apply_6 = null;
 
         if (obj_2 instanceof project.Entrytypes.R3) {

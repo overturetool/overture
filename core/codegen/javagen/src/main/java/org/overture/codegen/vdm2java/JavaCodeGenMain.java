@@ -34,6 +34,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
@@ -219,7 +220,7 @@ public class JavaCodeGenMain
 
 				if (file.isFile())
 				{
-					if (JavaCodeGenUtil.isSupportedVdmSourceFile(file))
+					if (GeneralCodeGenUtils.isVdmSourceFile(file))
 					{
 						files.add(file);
 					}
@@ -327,7 +328,7 @@ public class JavaCodeGenMain
 				return;
 			}
 			
-			GeneratedData data = vdmCodGen.generateJavaFromVdmModules(tcResult.result);
+			GeneratedData data = vdmCodGen.generate(CodeGenBase.getNodes(tcResult.result));
 			
 			processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
 
@@ -364,7 +365,7 @@ public class JavaCodeGenMain
 				return;
 			}
 			
-			GeneratedData data = vdmCodGen.generateJavaFromVdm(tcResult.result);
+			GeneratedData data = vdmCodGen.generate(CodeGenBase.getNodes(tcResult.result));
 			
 			processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
 
@@ -517,7 +518,7 @@ public class JavaCodeGenMain
 		
 		for(File f : files)
 		{
-			if(JavaCodeGenUtil.isSupportedVdmSourceFile(f))
+			if(GeneralCodeGenUtils.isVdmSourceFile(f))
 			{
 				filtered.add(f);
 			}
@@ -528,8 +529,8 @@ public class JavaCodeGenMain
 	
 	public static void usage(String msg)
 	{
-		Logger.getLog().printErrorln("VDM++ to Java Code Generator: " + msg + "\n");
-		Logger.getLog().printErrorln("Usage: CodeGen <-oo | -sl | -exp> [<options>] [<files>]");
+		Logger.getLog().printErrorln("VDM-to-Java Code Generator: " + msg + "\n");
+		Logger.getLog().printErrorln("Usage: CodeGen <-oo | -sl | -rt | -exp> [<options>] [<files>]");
 		Logger.getLog().printErrorln(OO_ARG
 				+ ": code generate a VDMPP specification consisting of multiple .vdmpp files");
 		Logger.getLog().printErrorln(SL_ARG

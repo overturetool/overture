@@ -19,8 +19,8 @@ public class Entry {
             ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq());
         }
 
-        VDMSeq m = Utils.copy(ternaryIfExp_1);
-        VDMSeq s = Utils.copy(((VDMSeq) Utils.get(m, 1L)));
+        final VDMSeq m = Utils.copy(ternaryIfExp_1);
+        final VDMSeq s = Utils.copy(((VDMSeq) Utils.get(m, 1L)));
 
         Object obj_1 = Utils.get(s, s.size());
 
@@ -32,7 +32,7 @@ public class Entry {
             throw new RuntimeException("Missing member: x");
         }
 
-        Object v = apply_1;
+        final Object v = apply_1;
 
         return v;
     }

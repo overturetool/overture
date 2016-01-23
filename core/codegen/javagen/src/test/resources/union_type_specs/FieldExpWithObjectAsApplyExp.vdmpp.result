@@ -23,10 +23,10 @@ public class Entry {
             ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq());
         }
 
-        VDMSeq ss = Utils.copy(ternaryIfExp_1);
-        VDMSeq s = Utils.copy(((VDMSeq) Utils.get(ss, 1L)));
+        final VDMSeq ss = Utils.copy(ternaryIfExp_1);
+        final VDMSeq s = Utils.copy(((VDMSeq) Utils.get(ss, 1L)));
 
-        Number y = Entry.S(((Entry) Utils.get(s, s.size()))).x;
+        final Number y = Entry.S(((Entry) Utils.get(s, s.size()))).x;
 
         return y;
     }

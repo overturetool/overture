@@ -401,7 +401,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		ABlockStmCG block = new ABlockStmCG();
 		block.setScoped(question.getStmAssistant().isScoped(node));
 		
-		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), block.getLocalDefs(), question);
+		question.getDeclAssistant().setFinalLocalDefs(node.getLocalDefs(), block.getLocalDefs(), question);
 
 		SStmCG stm = node.getStatement().apply(question.getStmVisitor(), question);
 		

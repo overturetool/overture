@@ -12,7 +12,7 @@ public class Entry implements EvaluatePP {
     }
 
     public static Object Run() {
-        Number a = 1L;
+        final Number a = 1L;
         /* Start of cycles */
         {
             return a;

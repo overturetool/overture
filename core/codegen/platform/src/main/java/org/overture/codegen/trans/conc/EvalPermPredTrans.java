@@ -20,80 +20,77 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 /**
  * This transformation generates a "state change" call to the Sentinel class to make it re-evaluate permission
- * predicates. It assumes all state updates to come from the local assignment statement, the assignment statement
- * or the "map put statement".
+ * predicates. It assumes all state updates to come from the local assignment statement, the assignment statement or the
+ * "map put statement".
  * 
  * @author pvj
  */
 public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 {
-	//TODO: put constants somewhere appropriate
-	private static final String SENTINEL_FIELD_NAME = "sentinel";
 	private TransAssistantCG transAssistant;
-	
-	public EvalPermPredTrans(TransAssistantCG transAssistant)
+	private ConcPrefixes concPrefixes;
+
+	public EvalPermPredTrans(TransAssistantCG transAssistant, ConcPrefixes concPrefixes)
 	{
 		this.transAssistant = transAssistant;
+		this.concPrefixes = concPrefixes;
 	}
 
 	@Override
-	public void caseAAssignmentStmCG(AAssignmentStmCG node)
-			throws AnalysisException
+	public void caseAAssignmentStmCG(AAssignmentStmCG node) throws AnalysisException
 	{
 		handleStateUpdate(node);
 	}
-	
+
 	@Override
-	public void caseAAssignToExpStmCG(AAssignToExpStmCG node)
-			throws AnalysisException
+	public void caseAAssignToExpStmCG(AAssignToExpStmCG node) throws AnalysisException
 	{
-		if(node.getTarget() instanceof SVarExpCG)
+		if (node.getTarget() instanceof SVarExpCG)
 		{
-			SVarExpCG var = (SVarExpCG)node.getTarget();
-			if(var.getIsLocal())
+			SVarExpCG var = (SVarExpCG) node.getTarget();
+			if (var.getIsLocal())
 			{
 				return;
 			}
 		}
-		
+
 		handleStateUpdate(node);
 	}
-	
+
 	@Override
 	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node) throws AnalysisException
 	{
 		handleStateUpdate(node);
 	}
-	
+
 	private void handleStateUpdate(SStmCG node)
 	{
-		if(!transAssistant.getInfo().getSettings().generateConc())
+		if (!transAssistant.getInfo().getSettings().generateConc())
 		{
 			return;
 		}
-		
+
 		AMethodDeclCG enclosingMethod = node.getAncestor(AMethodDeclCG.class);
-		
-		if(enclosingMethod != null)
+
+		if (enclosingMethod != null)
 		{
 			Boolean isStatic = enclosingMethod.getStatic();
-			
-			if(isStatic != null && isStatic)
+
+			if (isStatic != null && isStatic)
 			{
 				return;
 			}
-			
-			if(enclosingMethod.getIsConstructor())
+
+			if (enclosingMethod.getIsConstructor())
 			{
 				return;
 			}
-			
-			if(isIRGenerated(enclosingMethod))
+
+			if (isIRGenerated(enclosingMethod))
 			{
 				return;
 			}
-		}
-		else
+		} else
 		{
 			// Can in fact be okay since the IR construction of the thread definition skips the
 			// explicit operation definition implicitly associated with the thread definition.
@@ -103,26 +100,24 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 			// (x := 2;)
 			//
 		}
-		
-		
+
 		STypeCG fieldType = getSentinelFieldType(node);
-		
+
 		AIdentifierVarExpCG sentinelVar = new AIdentifierVarExpCG();
 		sentinelVar.setIsLocal(true);
 		sentinelVar.setIsLambda(false);
-		sentinelVar.setName(SENTINEL_FIELD_NAME);
+		sentinelVar.setName(concPrefixes.sentinelInstanceName());
 		sentinelVar.setType(fieldType);
-		
+
 		ACallObjectExpStmCG callSentinel = new ACallObjectExpStmCG();
 		callSentinel.setObj(sentinelVar);
-		//TODO: put constants somewhere appropriate
-		callSentinel.setFieldName("stateChanged");
+		callSentinel.setFieldName(concPrefixes.stateChangedMethodName());
 		callSentinel.setType(new AVoidTypeCG());
-		
+
 		ABlockStmCG replacementBlock = new ABlockStmCG();
-		
+
 		transAssistant.replaceNodeWith(node, replacementBlock);
-		
+
 		replacementBlock.getStatements().add(node);
 		replacementBlock.getStatements().add(callSentinel);
 	}
@@ -130,20 +125,19 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 	private STypeCG getSentinelFieldType(SStmCG node)
 	{
 		ADefaultClassDeclCG enclosingClass = node.getAncestor(ADefaultClassDeclCG.class);
-		
+
 		STypeCG fieldType = null;
-		
-		if(enclosingClass != null)
+
+		if (enclosingClass != null)
 		{
-			fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(enclosingClass, SENTINEL_FIELD_NAME, transAssistant.getInfo().getClasses());
-		}
-		else
+			fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(enclosingClass, concPrefixes.sentinelInstanceName(), transAssistant.getInfo().getClasses());
+		} else
 		{
 			Logger.getLog().printErrorln("Could not find enclosing class of assignment statement in InstanceVarPPEvalTransformation");
 		}
 		return fieldType;
 	}
-	
+
 	private boolean isIRGenerated(AMethodDeclCG method)
 	{
 		return method.getTag() instanceof IRGeneratedTag;

@@ -1,6 +1,6 @@
 package org.overture.codegen.trans.conc;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -22,30 +22,26 @@ import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 
-
 public class SentinelTrans extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
-	
-	// TODO: If this is suppose to be a general transformation then the integer type
-	// can not be stored like this. Instead it could be passed as a parameter to the
-	// transformation
-	private String INTTYPE = "int";
 
-	public SentinelTrans(IRInfo info)
+	private ConcPrefixes concPrefixes;
+	
+	public SentinelTrans(IRInfo info, ConcPrefixes concPrefixes)
 	{
 		this.info = info;
+		this.concPrefixes = concPrefixes;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void caseADefaultClassDeclCG(ADefaultClassDeclCG node) throws AnalysisException
 	{
-		if(!info.getSettings().generateConc())
+		if (!info.getSettings().generateConc())
 		{
 			return;
 		}
-		
+
 		if (node.getSuperNames().size() > 1)
 		{
 			info.addTransformationWarning(node, MainClassConcTrans.MULTIPLE_INHERITANCE_WARNING);
@@ -56,44 +52,43 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 		innerClass.setStatic(true);
 
 		String classname = node.getName();
-		LinkedList<AMethodDeclCG> allMethods;
+		List<AMethodDeclCG> innerClassMethods;
 
 		if (!node.getSuperNames().isEmpty())
 		{
-			allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, info.getClasses());
+			innerClassMethods = info.getDeclAssistant().getAllMethods(node, info.getClasses());
 		} else
 		{
-			allMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
+			innerClassMethods = node.getMethods();
 		}
 
-		LinkedList<AMethodDeclCG> innerClassMethods = allMethods;
-
-		String className = classname + "_sentinel";
+		String className = classname + concPrefixes.sentinelClassPostFix();
 		innerClass.setName(className);
-		
+
 		AClassTypeCG innerClassType = new AClassTypeCG();
 		innerClassType.setName(classname);
 
 		int n = 0;
 		Boolean existing = false;
-		for(AMethodDeclCG method : innerClassMethods){
+		for (AMethodDeclCG method : innerClassMethods)
+		{
 
-			for(AFieldDeclCG field : innerClass.getFields())
+			for (AFieldDeclCG field : innerClass.getFields())
 			{
 
-				if(field.getName().equals(method.getName()))
+				if (field.getName().equals(method.getName()))
 				{
 					existing = true;
 				}
 			}
-			
-			if(existing)
+
+			if (existing)
 			{
 				existing = false;
-			}
-			else{
-				//Set up of the int type of the fields.
-				String intTypeName = INTTYPE;
+			} else
+			{
+				// Set up of the int type of the fields.
+				String intTypeName = concPrefixes.nativeIntTypeName();
 				AExternalTypeCG intBasicType = new AExternalTypeCG();
 				intBasicType.setName(intTypeName);
 
@@ -103,39 +98,36 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 				field.setFinal(true);
 				field.setType(intBasicType);
 				field.setStatic(true);
-				
-				//setting up initial values
+
+				// setting up initial values
 				AExternalExpCG intValue = new AExternalExpCG();
 				intValue.setType(new AIntNumericBasicTypeCG());
 				intValue.setTargetLangExp("" + n);
 
 				field.setInitial(intValue);
-				//increase the number that initialize the variables.
+				// increase the number that initialize the variables.
 				n++;
 				innerClass.getFields().add(field);
 			}
 		}
 
-		//setting up initial values
-		String intTypeName = INTTYPE;
+		// setting up initial values
 		AExternalTypeCG intBasicType = new AExternalTypeCG();
-		//intBasicType.setName(intTypeName);
-		intBasicType.setName(intTypeName);
+		// intBasicType.setName(intTypeName);
+		intBasicType.setName(concPrefixes.nativeIntTypeName());
 
 		AExternalExpCG intValue = new AExternalExpCG();
 		intValue.setType(new AIntNumericBasicTypeCG());
 		intValue.setTargetLangExp("" + n);
 
-
-		innerClass.getFields().add(info.getDeclAssistant().constructField(IRConstants.PUBLIC, "function_sum", false, true, intBasicType, intValue));
-
+		innerClass.getFields().add(info.getDeclAssistant().constructField(IRConstants.PUBLIC, concPrefixes.funcSumConstFieldName(), false, true, intBasicType, intValue));
 
 		AMethodDeclCG method_pp = new AMethodDeclCG();
 		AMethodTypeCG method_ppType = new AMethodTypeCG();
 		method_ppType.setResult(innerClassType.clone());
 		method_pp.setMethodType(method_ppType);
-		
-		//adding the first constructor to the innerclass
+
+		// adding the first constructor to the innerclass
 		method_pp.setIsConstructor(true);
 		method_pp.setImplicit(false);
 		method_pp.setAccess(IRConstants.PUBLIC);
@@ -143,13 +135,13 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 		method_pp.setBody(new ABlockStmCG());
 		innerClass.getMethods().add(method_pp);
 
-		//adding the second constructor.
+		// adding the second constructor.
 
 		AMethodDeclCG method_con = new AMethodDeclCG();
 
-		//The parameter
+		// The parameter
 		AExternalTypeCG evalPpType = new AExternalTypeCG();
-		evalPpType.setName("EvaluatePP");
+		evalPpType.setName(concPrefixes.evalPpTypeName());
 
 		method_con.setName(innerClass.getName());
 		method_con.setIsConstructor(true);
@@ -159,68 +151,66 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 		formalParam.setType(evalPpType);
 
 		AIdentifierPatternCG identifier = new AIdentifierPatternCG();
-		identifier.setName("instance");
+		identifier.setName(concPrefixes.instanceParamName());
 
 		formalParam.setPattern(identifier);
 		method_con.getFormalParams().add(formalParam);
-		
+
 		AMethodTypeCG evalPPConType = new AMethodTypeCG();
 		evalPPConType.setResult(innerClassType.clone());
 		evalPPConType.getParams().add(evalPpType.clone());
 		method_con.setMethodType(evalPPConType);
 
-		//Creating the body of the constructor.
+		// Creating the body of the constructor.
 
-		//The parameters named ‘instance’ and function_sum passed to the init call statement:
+		// The parameters named ‘instance’ and function_sum passed to the init call statement:
 
 		AIdentifierVarExpCG instanceParam = new AIdentifierVarExpCG();
 		instanceParam.setIsLambda(false);
 		instanceParam.setIsLocal(true);
-		instanceParam.setName("instance");
+		instanceParam.setName(concPrefixes.instanceParamName());
 		instanceParam.setType(evalPpType.clone());
 
 		AIdentifierVarExpCG function_sum = new AIdentifierVarExpCG();
 		function_sum.setIsLambda(false);
 		function_sum.setIsLocal(false);
-		function_sum.setName("function_sum");
+		function_sum.setName(concPrefixes.funcSumConstFieldName());
 		function_sum.setType(new AIntNumericBasicTypeCG());
 
-		//the init method
+		// the init method
 		APlainCallStmCG initCall = new APlainCallStmCG();
-		initCall.setName("init");
+		initCall.setName(concPrefixes.initMethodName());
 		initCall.setType(new AVoidTypeCG());
 
-		//Adding argument #1
+		// Adding argument #1
 		initCall.getArgs().add(instanceParam);
-		//Adding argument #2
+		// Adding argument #2
 		initCall.getArgs().add(function_sum);
-		//Set the body
+		// Set the body
 		method_con.setBody(initCall);
 		innerClass.getMethods().add(method_con);
-		//method_pp.setFormalParams();
+		// method_pp.setFormalParams();
 
 		ATokenNameCG superName = new ATokenNameCG();
-		if (!node.getSuperNames().isEmpty()){
-			
-			
-			if (!node.getSuperNames().get(0).equals("VDMThread"))
+		if (!node.getSuperNames().isEmpty())
+		{
+			if (!node.getSuperNames().get(0).equals(concPrefixes.vdmThreadClassName()))
 			{
-				superName.setName(node.getSuperNames().get(0) + "_sentinel");
+				superName.setName(node.getSuperNames().get(0) + concPrefixes.sentinelClassPostFix());
 			} else
 			{
-				superName.setName("Sentinel");
+				superName.setName(concPrefixes.sentinelClassName());
 			}
-			
-			innerClass.getSuperNames().add(superName);
-		}
-		else{
 
-			superName.setName("Sentinel");
+			innerClass.getSuperNames().add(superName);
+		} else
+		{
+
+			superName.setName(concPrefixes.sentinelClassName());
 			innerClass.getSuperNames().add(superName);
 		}
+
 		innerClass.setAccess(IRConstants.PUBLIC);
-
 		node.getInnerClasses().add(innerClass);
-
 	}
 }

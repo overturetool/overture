@@ -46,8 +46,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        VDMSeq recs = SeqUtil.seq(new A.Rec());
-        A.Rec r = Utils.copy(((A.Rec) Utils.get(recs, 1L)));
+        final VDMSeq recs = SeqUtil.seq(new A.Rec());
+        final A.Rec r = Utils.copy(((A.Rec) Utils.get(recs, 1L)));
 
         return 42L;
     }

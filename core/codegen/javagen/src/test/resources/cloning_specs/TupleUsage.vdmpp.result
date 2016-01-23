@@ -22,8 +22,8 @@ public class Entry {
     }
 
     public static Number op2() {
-        Tuple a_1 = Tuple.mk_(1L, 2L);
-        Tuple b_1 = a_1;
+        final Tuple a_1 = Tuple.mk_(1L, 2L);
+        final Tuple b_1 = a_1;
 
         return ((Number) b_1.get(0));
     }

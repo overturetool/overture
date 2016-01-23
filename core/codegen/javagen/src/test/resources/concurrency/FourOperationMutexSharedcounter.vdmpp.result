@@ -220,10 +220,10 @@ public class Entry implements EvaluatePP {
     }
 
     public static Object Run() {
-        SharedCounter s = new SharedCounter();
-        CountSwitcher i1 = new CountSwitcher(s);
-        CountSwitcher i2 = new CountSwitcher(s);
-        CountSwitcher i3 = new CountSwitcher(s);
+        final SharedCounter s = new SharedCounter();
+        final CountSwitcher i1 = new CountSwitcher(s);
+        final CountSwitcher i2 = new CountSwitcher(s);
+        final CountSwitcher i3 = new CountSwitcher(s);
         i1.start();
         i2.start();
         i3.start();

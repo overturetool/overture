@@ -15,7 +15,7 @@ final public class Entry {
 
     public static Object Run() {
         {
-            Character ignorePattern_1 = f();
+            final Character ignorePattern_1 = f();
 
             //@ assert Utils.is_char(ignorePattern_1);
 

@@ -17,7 +17,7 @@ public class A {
     }
 
     public Number op4() {
-        A a = new A();
+        final A a = new A();
 
         return a.op1();
     }

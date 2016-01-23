@@ -10,6 +10,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.tests.exec.util.CheckerTestBase;
 import org.overture.codegen.tests.exec.util.testhandlers.ExecutableSpecTestHandler;
 import org.overture.codegen.tests.exec.util.testhandlers.ExpressionTestHandler;
@@ -59,18 +60,18 @@ public abstract class JavaGenTestBase extends CheckerTestBase
 		if(Settings.dialect == Dialect.VDM_SL)
 		{
 			TypeCheckResult<List<AModuleModules>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckSl(files));
-			data = javaCg.generateJavaFromVdmModules(tcResult.result);
+			data = javaCg.generate(CodeGenBase.getNodes(tcResult.result));
 			
 		}
 		else if(Settings.dialect == Dialect.VDM_PP)
 		{
 			TypeCheckResult<List<SClassDefinition>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckPp(files));
-			data = javaCg.generateJavaFromVdm(tcResult.result);
+			data = javaCg.generate(CodeGenBase.getNodes(tcResult.result));
 		}
 		else if(Settings.dialect == Dialect.VDM_RT)
 		{
 			TypeCheckResult<List<SClassDefinition>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckRt(files));
-			data = javaCg.generateJavaFromVdm(tcResult.result);
+			data = javaCg.generate(CodeGenBase.getNodes(tcResult.result));
 		}
 		return data;
 	}

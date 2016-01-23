@@ -9,8 +9,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        quotes.AQuote x = quotes.AQuote.getInstance();
-        quotes.BQuote y = quotes.BQuote.getInstance();
+        final quotes.AQuote x = quotes.AQuote.getInstance();
+        final quotes.BQuote y = quotes.BQuote.getInstance();
 
         return SeqUtil.seq(Utils.equals(x, quotes.AQuote.getInstance()),
             Utils.equals(y, quotes.AQuote.getInstance()));

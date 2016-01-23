@@ -1,7 +1,7 @@
 "Before breaking pre condition"
 Entry.java:27: JML precondition is false
-                Number ignorePattern_2 = id(-1L);
-                                           ^
+                final Number ignorePattern_2 = id(-1L);
+                                                 ^
 Entry.java:61: Associated declaration
     //@ requires pre_id(a);
         ^

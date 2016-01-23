@@ -35,6 +35,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.cgast.declarations.SClassDeclCG;
@@ -71,7 +72,7 @@ public class IRGenerator
 		codeGenInfo.clear();
 	}
 
-	public IRStatus<INode> generateFrom(org.overture.ast.node.INode node)
+	public IRStatus<PCG> generateFrom(org.overture.ast.node.INode node)
 			throws AnalysisException
 	{
 		codeGenInfo.clearNodes();
@@ -82,7 +83,7 @@ public class IRGenerator
 			Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 			String name = ((SClassDefinition) node).getName().getName();
 			
-			return new IRStatus<INode>(name, classCg, unsupportedNodes);
+			return new IRStatus<PCG>(node, name, classCg, unsupportedNodes);
 		}
 		else if(node instanceof AModuleModules)
 		{
@@ -90,7 +91,7 @@ public class IRGenerator
 			Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 			String name = ((AModuleModules) node).getName().getName();
 			
-			return new IRStatus<INode>(name, module, unsupportedNodes);
+			return new IRStatus<PCG>(node, name, module, unsupportedNodes);
 		}
 		
 		return null;
@@ -108,7 +109,7 @@ public class IRGenerator
 		status.addTransformationWarnings(transformationWarnings);
 	}
 
-	public void applyTotalTransformation(IRStatus<INode> status,
+	public void applyTotalTransformation(IRStatus<PCG> status,
 			ITotalTransformation trans)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
@@ -127,7 +128,7 @@ public class IRGenerator
 		SExpCG expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
 		Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 
-		return new IRStatus<SExpCG>("expression",expCg, unsupportedNodes);
+		return new IRStatus<SExpCG>(exp, "expression",expCg, unsupportedNodes);
 	}
 
 	public List<String> getQuoteValues()

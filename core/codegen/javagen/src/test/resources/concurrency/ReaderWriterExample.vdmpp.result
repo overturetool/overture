@@ -27,7 +27,7 @@ public class Buffer implements EvaluatePP {
         sentinel.entering(((Buffer_sentinel) sentinel).Read);
 
         try {
-            Number oldData = data;
+            final Number oldData = data;
 
             return oldData;
         } finally {
@@ -141,7 +141,7 @@ public class Reader extends VDMThread implements EvaluatePP {
         long toVar_1 = 3L;
 
         for (Long i = 1L; i <= toVar_1; i++) {
-            Number x = b.Read();
+            final Number x = b.Read();
 
             /* skip */
         }
@@ -236,7 +236,7 @@ public class Writer extends VDMThread implements EvaluatePP {
         long toVar_2 = 3L;
 
         for (Long i = 1L; i <= toVar_2; i++) {
-            Number x = Write();
+            final Number x = Write();
             b.Write(x);
         }
     }
@@ -273,9 +273,9 @@ public class Entry implements EvaluatePP {
 
     public static Number Run() {
         {
-            Buffer B = new Buffer();
-            Writer wrt = new Writer(B);
-            Reader read = new Reader(B);
+            final Buffer B = new Buffer();
+            final Writer wrt = new Writer(B);
+            final Reader read = new Reader(B);
             wrt.start();
             read.start();
             B.IsFinished();

@@ -32,7 +32,7 @@ final public class Entry {
         }
 
         {
-            VDMSeq ignorePattern_1 = Utils.copy(seqCompResult_1);
+            final VDMSeq ignorePattern_1 = Utils.copy(seqCompResult_1);
 
             //@ assert (V2J.isSeq1(ignorePattern_1) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_1); Utils.is_nat(V2J.get(ignorePattern_1,i))));
 
@@ -52,7 +52,7 @@ final public class Entry {
         }
 
         {
-            VDMSeq ignorePattern_2 = Utils.copy(seqCompResult_2);
+            final VDMSeq ignorePattern_2 = Utils.copy(seqCompResult_2);
 
             //@ assert (V2J.isSeq1(ignorePattern_2) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_2); Utils.is_nat(V2J.get(ignorePattern_2,i))));
 
@@ -78,7 +78,7 @@ final public class Entry {
         }
 
         {
-            VDMSeq ignorePattern_3 = Utils.copy(seqCompResult_3);
+            final VDMSeq ignorePattern_3 = Utils.copy(seqCompResult_3);
 
             //@ assert (V2J.isSeq1(ignorePattern_3) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_3); Utils.is_nat(V2J.get(ignorePattern_3,i))));
 
@@ -98,7 +98,7 @@ final public class Entry {
         }
 
         {
-            VDMSeq ignorePattern_4 = Utils.copy(seqCompResult_4);
+            final VDMSeq ignorePattern_4 = Utils.copy(seqCompResult_4);
 
             //@ assert (V2J.isSeq1(ignorePattern_4) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_4); Utils.is_nat(V2J.get(ignorePattern_4,i))));
 

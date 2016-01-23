@@ -9,7 +9,7 @@ public class A {
     }
 
     public static VDMSeq recPatternFun() {
-        Rec recordPattern_1 = new Rec(1L, true, 'a', 1.5,
+        final Rec recordPattern_1 = new Rec(1L, true, 'a', 1.5,
                 SeqUtil.seq('a', 'a', 'a'), null);
         Boolean success_1 = true;
         Number intPattern_1 = recordPattern_1.n;

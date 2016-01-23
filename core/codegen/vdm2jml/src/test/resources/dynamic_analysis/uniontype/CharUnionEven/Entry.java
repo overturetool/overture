@@ -17,7 +17,7 @@ final public class Entry {
         IO.println("Before legal use");
 
         {
-            Object ignorePattern_1 = charA();
+            final Object ignorePattern_1 = charA();
 
             //@ assert ((Utils.is_nat(ignorePattern_1) && inv_Entry_Even(ignorePattern_1)) || Utils.is_char(ignorePattern_1));
 
@@ -28,7 +28,7 @@ final public class Entry {
         IO.println("Before illegal use");
 
         {
-            Object ignorePattern_2 = charNil();
+            final Object ignorePattern_2 = charNil();
 
             //@ assert ((Utils.is_nat(ignorePattern_2) && inv_Entry_Even(ignorePattern_2)) || Utils.is_char(ignorePattern_2));
 

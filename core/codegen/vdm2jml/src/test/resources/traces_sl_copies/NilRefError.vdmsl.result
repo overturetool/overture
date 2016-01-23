@@ -24,7 +24,7 @@ final public class Entry implements java.io.Serializable {
 
         if (Utils.equals(St.get_x(), 3L)) {
             {
-                Number e = null;
+                final Number e = null;
 
                 //@ assert ((e == null) || Utils.is_nat(e));
                 Number ret_1 = e.longValue() + e.longValue();

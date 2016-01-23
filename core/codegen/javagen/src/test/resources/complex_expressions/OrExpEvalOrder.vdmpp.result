@@ -62,8 +62,8 @@ public class Entry {
             }
         }
 
-        VDMSet s = Utils.copy(setCompResult_1);
-        Number a = A.a;
+        final VDMSet s = Utils.copy(setCompResult_1);
+        final Number a = A.a;
 
         return Tuple.mk_(Utils.copy(s), a);
     }

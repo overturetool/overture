@@ -14,7 +14,6 @@ import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGenMain;
-import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.util.TypeCheckerUtil;
@@ -108,7 +107,7 @@ public class JmlGenMain
 
 				if (file.isFile())
 				{
-					if (JavaCodeGenUtil.isSupportedVdmSourceFile(file))
+					if (GeneralCodeGenUtils.isVdmSourceFile(file))
 					{
 						files.add(file);
 					}

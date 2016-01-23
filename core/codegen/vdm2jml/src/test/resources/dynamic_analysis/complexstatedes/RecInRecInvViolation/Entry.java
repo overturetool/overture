@@ -119,7 +119,7 @@ final public class Entry {
         IO.println("Before useOk");
 
         {
-            Number ignorePattern_1 = useOk();
+            final Number ignorePattern_1 = useOk();
 
             //@ assert Utils.is_nat(ignorePattern_1);
 
@@ -130,7 +130,7 @@ final public class Entry {
         IO.println("Before useNotOk");
 
         {
-            Number ignorePattern_2 = useNotOk();
+            final Number ignorePattern_2 = useNotOk();
 
             //@ assert Utils.is_nat(ignorePattern_2);
 

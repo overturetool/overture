@@ -15,7 +15,7 @@ final public class Entry {
 
     public static Object Run() {
         {
-            project.quotes.AQuote ignorePattern_1 = f();
+            final project.quotes.AQuote ignorePattern_1 = f();
 
             //@ assert Utils.is_(ignorePattern_1,project.quotes.AQuote.class);
 
@@ -29,7 +29,7 @@ final public class Entry {
 
     /*@ pure @*/
     public static project.quotes.AQuote f() {
-        project.quotes.AQuote quotePattern_1 = project.quotes.AQuote.getInstance();
+        final project.quotes.AQuote quotePattern_1 = project.quotes.AQuote.getInstance();
 
         //@ assert Utils.is_(quotePattern_1,project.quotes.AQuote.class);
         Boolean success_1 = Utils.equals(quotePattern_1,

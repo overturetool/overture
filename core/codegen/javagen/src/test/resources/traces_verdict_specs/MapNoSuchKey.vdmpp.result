@@ -10,7 +10,7 @@ public class Entry implements java.io.Serializable {
     }
 
     public static Character f(final Number idx) {
-        VDMMap xs = MapUtil.map(new Maplet(1L, 'a'), new Maplet(2L, 'b'));
+        final VDMMap xs = MapUtil.map(new Maplet(1L, 'a'), new Maplet(2L, 'b'));
 
         return ((Character) Utils.get(xs, idx));
     }

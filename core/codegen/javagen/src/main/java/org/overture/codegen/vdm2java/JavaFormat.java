@@ -180,15 +180,10 @@ public class JavaFormat
 	{
 		return valueSemantics.getJavaSettings();
 	}
-
-	public void init()
-	{
-		mergeVisitor.init();
-	}
 	
 	public void clear()
 	{
-		init();
+		mergeVisitor.init();
 		valueSemantics.clear();
 	}
 

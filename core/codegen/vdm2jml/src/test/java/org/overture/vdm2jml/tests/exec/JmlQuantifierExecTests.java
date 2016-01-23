@@ -1,7 +1,9 @@
 package org.overture.vdm2jml.tests.exec;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -21,6 +23,12 @@ public class JmlQuantifierExecTests extends JmlExecTestBase
 		super(inputFile);
 	}
 
+	@Override
+	protected List<String> getSkippedTestsNames()
+	{
+		return Arrays.asList("Exists1.vdmsl");
+	}
+	
 	@Parameters(name = "{index}: {0}")
 	public static Collection<Object[]> data()
 	{

@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,7 +58,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	@Test
 	public void execJml()
 	{
-		checkIfSkipped();
+		checkIfSkipped(inputFile.getName());
 		try
 		{
 			configureResultGeneration();
@@ -86,11 +88,16 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 		}
 	}
 
-	private void checkIfSkipped()
+	private void checkIfSkipped(String testName)
 	{
-		Assume.assumeFalse("OpenJML cannot compile this test - there is a bug", inputFile.getName().equals("Exists1.vdmsl"));
+		Assume.assumeFalse("OpenJML cannot compile this test - OpenJML has a bug", getSkippedTestsNames().contains(testName));
 	}
-
+	
+	protected List<String> getSkippedTestsNames()
+	{
+		return new LinkedList<>();
+	}
+	
 	protected void checkOpenJmlOutput(String actualRes) throws IOException
 	{
 		String expectedRes = GeneralUtils.readFromFile(getResultFile()).trim();

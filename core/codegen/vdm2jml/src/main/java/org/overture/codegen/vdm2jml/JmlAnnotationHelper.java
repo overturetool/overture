@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
@@ -40,7 +39,7 @@ public class JmlAnnotationHelper
 		}
 	}
 	
-	public void makeRecMethodsPure(List<IRStatus<INode>> ast)
+	public void makeRecMethodsPure(List<IRStatus<PCG>> ast)
 	{
 		List<ARecordDeclCG> records = jmlGen.getUtil().getRecords(ast);
 

@@ -9,9 +9,9 @@ public class Entry {
     }
 
     public static Object Run() {
-        Number a = 1L;
-        Number b = 2L;
-        Boolean c = true;
+        final Number a = 1L;
+        final Number b = 2L;
+        final Boolean c = true;
 
         if (c) {
             return a.longValue() + b.longValue();

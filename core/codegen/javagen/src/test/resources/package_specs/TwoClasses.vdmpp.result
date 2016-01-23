@@ -31,7 +31,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        A a = new A();
+        final A a = new A();
 
         return a.x;
     }

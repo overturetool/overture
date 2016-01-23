@@ -9,7 +9,8 @@ public class A {
     }
 
     public static Number recPatternFun() {
-        Rec recordPattern_1 = new Rec(Tuple.mk_(1L, new Rec(Tuple.mk_(2L, null))));
+        final Rec recordPattern_1 = new Rec(Tuple.mk_(1L,
+                    new Rec(Tuple.mk_(2L, null))));
         Boolean success_1 = true;
         Number a = null;
         Number b = null;

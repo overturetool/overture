@@ -17,7 +17,7 @@ final public class Entry {
         IO.println("Before valid use.");
 
         {
-            Character ignorePattern_1 = charA();
+            final Character ignorePattern_1 = charA();
 
             //@ assert Utils.is_char(ignorePattern_1);
 
@@ -28,7 +28,7 @@ final public class Entry {
         IO.println("Before invalid use.");
 
         {
-            Character ignorePattern_2 = charNil();
+            final Character ignorePattern_2 = charNil();
 
             //@ assert Utils.is_char(ignorePattern_2);
 

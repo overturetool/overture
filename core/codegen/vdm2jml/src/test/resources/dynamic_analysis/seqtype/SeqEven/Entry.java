@@ -17,7 +17,7 @@ final public class Entry {
         IO.println("Before legal use");
 
         {
-            VDMSeq ignorePattern_1 = SeqUtil.seq();
+            final VDMSeq ignorePattern_1 = SeqUtil.seq();
 
             //@ assert ((V2J.isSeq(ignorePattern_1) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_1); (Utils.is_nat(V2J.get(ignorePattern_1,i)) && inv_Entry_Even(V2J.get(ignorePattern_1,i))))) && inv_Entry_SeqEven(ignorePattern_1));
 
@@ -25,7 +25,7 @@ final public class Entry {
         }
 
         {
-            VDMSeq ignorePattern_2 = SeqUtil.seq(2L, 4L, 6L, 8L);
+            final VDMSeq ignorePattern_2 = SeqUtil.seq(2L, 4L, 6L, 8L);
 
             //@ assert ((V2J.isSeq(ignorePattern_2) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_2); (Utils.is_nat(V2J.get(ignorePattern_2,i)) && inv_Entry_Even(V2J.get(ignorePattern_2,i))))) && inv_Entry_SeqEven(ignorePattern_2));
 
@@ -36,7 +36,7 @@ final public class Entry {
         IO.println("Before illegal use");
 
         {
-            VDMSeq ignorePattern_3 = SeqUtil.seq(2L, 4L, 6L, 8L, 9L);
+            final VDMSeq ignorePattern_3 = SeqUtil.seq(2L, 4L, 6L, 8L, 9L);
 
             //@ assert ((V2J.isSeq(ignorePattern_3) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_3); (Utils.is_nat(V2J.get(ignorePattern_3,i)) && inv_Entry_Even(V2J.get(ignorePattern_3,i))))) && inv_Entry_SeqEven(ignorePattern_3));
 

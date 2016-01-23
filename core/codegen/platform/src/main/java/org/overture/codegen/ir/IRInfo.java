@@ -287,12 +287,6 @@ public class IRInfo
 		unsupportedNodes.clear();
 	}
 	
-	public void addUnsupportedNode(INode node)
-	{
-		VdmNodeInfo info = new VdmNodeInfo(node);
-		unsupportedNodes.add(info);
-	}
-
 	public void addUnsupportedNode(INode node, String reason)
 	{
 		for(VdmNodeInfo info : unsupportedNodes)
@@ -340,6 +334,8 @@ public class IRInfo
 		transformationWarnings.clear();
 		tempVarNameGen.clear();
 		idStateDesignatorDefs.clear();
+		classes.clear();
+		modules.clear();
 	}
 
 	public IRSettings getSettings()

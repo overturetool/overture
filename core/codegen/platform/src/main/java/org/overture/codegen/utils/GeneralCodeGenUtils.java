@@ -81,6 +81,39 @@ public class GeneralCodeGenUtils
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
+	public static boolean isVdmSourceFile(File f)
+	{
+		return isVdmPpSourceFile(f) || isVdmSlSourceFile(f) || isVdmRtSourceFile(f);
+	}
+	
+	public static boolean isVdmRtSourceFile(File f)
+	{
+		return hasExtension(f, new String[]{".vdmrt", ".vrt"});
+	}
+	
+	public static boolean isVdmSlSourceFile(File f)
+	{
+		return hasExtension(f, new String[]{".vsl", ".vdmsl"});
+	}
+	
+	public static boolean isVdmPpSourceFile(File f)
+	{
+		return hasExtension(f, new String[]{".vdmpp", ".vpp"});
+	}
+
+	private static boolean hasExtension(File f, String[] extensions)
+	{
+		for(String ext : extensions)
+		{
+			if(f.getName().endsWith(ext))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public static String errorStr(TypeCheckResult<?> tcResult)
 	{
 		if(tcResult == null)
@@ -481,7 +514,7 @@ public class GeneralCodeGenUtils
 
 			Logger.getLog().print(location != null ? " at [line, pos] = ["
 					+ location.getStartLine() + ", " + location.getStartPos()
-					+ "]" : "");
+					+ "] in " + location.getFile().getName() : "");
 
 			String reason = vdmNodeInfo.getReason();
 

@@ -21,8 +21,8 @@ public class A {
     }
 
     public Number op2() {
-        R1 a_1 = new R1(5L);
-        R1 b_1 = Utils.copy(a_1);
+        final R1 a_1 = new R1(5L);
+        final R1 b_1 = Utils.copy(a_1);
 
         return b_1.x;
     }

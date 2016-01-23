@@ -32,7 +32,7 @@ final public class Entry {
         }
 
         {
-            VDMMap ignorePattern_1 = Utils.copy(mapCompResult_1);
+            final VDMMap ignorePattern_1 = Utils.copy(mapCompResult_1);
 
             //@ assert (V2J.isInjMap(ignorePattern_1) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_1); Utils.is_nat(V2J.getDom(ignorePattern_1,i)) && Utils.is_nat(V2J.getRng(ignorePattern_1,i))));
 
@@ -52,7 +52,7 @@ final public class Entry {
         }
 
         {
-            VDMMap ignorePattern_2 = Utils.copy(mapCompResult_2);
+            final VDMMap ignorePattern_2 = Utils.copy(mapCompResult_2);
 
             //@ assert (V2J.isInjMap(ignorePattern_2) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_2); Utils.is_nat(V2J.getDom(ignorePattern_2,i)) && Utils.is_nat(V2J.getRng(ignorePattern_2,i))));
 
@@ -78,7 +78,7 @@ final public class Entry {
         }
 
         {
-            VDMMap ignorePattern_3 = Utils.copy(mapCompResult_3);
+            final VDMMap ignorePattern_3 = Utils.copy(mapCompResult_3);
 
             //@ assert (V2J.isInjMap(ignorePattern_3) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_3); Utils.is_nat(V2J.getDom(ignorePattern_3,i)) && Utils.is_nat(V2J.getRng(ignorePattern_3,i))));
 
@@ -98,7 +98,7 @@ final public class Entry {
         }
 
         {
-            VDMMap ignorePattern_4 = Utils.copy(mapCompResult_4);
+            final VDMMap ignorePattern_4 = Utils.copy(mapCompResult_4);
 
             //@ assert (V2J.isInjMap(ignorePattern_4) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_4); Utils.is_nat(V2J.getDom(ignorePattern_4,i)) && Utils.is_nat(V2J.getRng(ignorePattern_4,i))));
 

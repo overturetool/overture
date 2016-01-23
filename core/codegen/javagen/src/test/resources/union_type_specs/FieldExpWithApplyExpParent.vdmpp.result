@@ -49,7 +49,7 @@ public class Entry {
     }
 
     public static Number Run() {
-        VDMSeq xs = SeqUtil.seq(new A(), new B());
+        final VDMSeq xs = SeqUtil.seq(new A(), new B());
 
         {
             Number sum = 0L;

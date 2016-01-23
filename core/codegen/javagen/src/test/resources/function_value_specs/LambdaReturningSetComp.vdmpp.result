@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static VDMSet op() {
-        Func_1<Number, VDMSet> d = new Func_1<Number, VDMSet>() {
+        final Func_1<Number, VDMSet> d = new Func_1<Number, VDMSet>() {
                 public VDMSet eval(final Number x) {
                     VDMSet setCompResult_1 = SetUtil.set();
                     VDMSet set_1 = SetUtil.set(1L, 2L, 3L);

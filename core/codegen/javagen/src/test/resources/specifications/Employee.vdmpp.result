@@ -109,9 +109,9 @@ public class Company {
     }
 
     public void op1() {
-        Number x = employees.size();
-        VDMSeq y = Utils.copy(employees);
-        Employee q = ((Employee) employees.get(0));
+        final Number x = employees.size();
+        final VDMSeq y = Utils.copy(employees);
+        final Employee q = ((Employee) employees.get(0));
 
         /* skip */
     }
@@ -158,12 +158,12 @@ public class World {
     }
 
     public Number run() {
-        HourlyPaidEmployee emp1 = new HourlyPaidEmployee(120.0, 100L);
-        FixedSalaryEmployee emp2 = new FixedSalaryEmployee(10000L);
-        FixedSalaryEmployee emp3 = new FixedSalaryEmployee(5000L);
-        HourlyPaidEmployee emp4 = new HourlyPaidEmployee(100.0, 100L);
-        Company company = new Company().addEmp(emp1).addEmp(emp2).addEmp(emp3)
-                                       .addEmp(emp4);
+        final HourlyPaidEmployee emp1 = new HourlyPaidEmployee(120.0, 100L);
+        final FixedSalaryEmployee emp2 = new FixedSalaryEmployee(10000L);
+        final FixedSalaryEmployee emp3 = new FixedSalaryEmployee(5000L);
+        final HourlyPaidEmployee emp4 = new HourlyPaidEmployee(100.0, 100L);
+        final Company company = new Company().addEmp(emp1).addEmp(emp2)
+                                             .addEmp(emp3).addEmp(emp4);
 
         return company.calculateSalary();
     }

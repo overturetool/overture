@@ -51,9 +51,7 @@ public class GeneralUtils
 	public static StringBuffer readFromFile(String relativepath)
 			throws IOException
 	{
-		InputStream input = GeneralUtils.class.getResourceAsStream('/' + relativepath.replace("\\", "/"));
-
-		return readFromInputStream(input);
+		return readFromFile(relativepath, GeneralUtils.class);
 	}
 	
 	public static StringBuffer readFromFile(String relativepath, Class<?> classRef) throws IOException{
@@ -61,7 +59,7 @@ public class GeneralUtils
 
 		return readFromInputStream(input);
 	}
-
+	
 	public static StringBuffer readFromInputStream(InputStream input)
 			throws IOException
 	{

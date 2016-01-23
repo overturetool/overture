@@ -1,17 +1,555 @@
 package org.overture.codegen.ir;
 
+import java.io.StringWriter;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.velocity.app.Velocity;
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.SFunctionDefinition;
+import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.expressions.ANotYetSpecifiedExp;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
+import org.overture.ast.statements.ANotYetSpecifiedStm;
+import org.overture.ast.util.modules.CombinedDefaultModule;
+import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
+import org.overture.codegen.assistant.DeclAssistantCG;
+import org.overture.codegen.cgast.PCG;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.utils.Generated;
+import org.overture.codegen.utils.GeneratedData;
+import org.overture.codegen.utils.GeneratedModule;
 
 
-public class CodeGenBase
+/**
+ * This class is a base class implementation of a code generator that is developed on top of the Code Generation
+ * Platform (CGP). Code generators that want to translate VDM models into some target language can inherit from this
+ * class.
+ * 
+ * @author pvj
+ */
+abstract public class CodeGenBase implements IREventCoordinator
 {
+	/**
+	 * The {@link #generator} field is used for constructing and transforming the Intermediate Representation (IR)
+	 * generated from the VDM AST.
+	 */
 	protected IRGenerator generator;
+	
+	/**
+	 * The {@link #transAssistant} provides functionality that is convenient when implementing transformations.
+	 */
 	protected TransAssistantCG transAssistant;
 	
+	/**
+	 * The {@link #irObserver} can receive and manipulate the initial and final versions of the IR via the
+	 * {@link #initialIrEvent(List)} and {@link #finalIrEvent(List)} methods.
+	 */
+	protected IREventObserver irObserver;
+	
+	/**
+	 * Constructs this code generator by initializing the template engine and constructing the {@link #generator}.
+	 */
 	protected CodeGenBase()
 	{
 		super();
+		initVelocity();
+		this.irObserver = null;
 		this.generator = new IRGenerator();
+		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
+	}
+	
+	/**
+	 * This method clears the state of the {@link #generator}, which forms the first step of the code generation
+	 * process. That is, this method is invoked upon entering {@link #generate(List)}.
+	 */
+	protected void clear()
+	{
+		generator.clear();
+	}
+	
+	/**
+	 * The entry point of this class. This method translates a VDM AST into target language code. Use of the template
+	 * method design pattern ensures that the state of this code generator is properly initialized and that the VDM AST
+	 * is pre-processed in accordance with the {@link #preProcessAst(List)} method.
+	 * 
+	 * @param ast
+	 *            The VDM AST, which can be either VDM modules or classes.
+	 * @return The data generated from the VDM AST.
+	 * @throws AnalysisException
+	 *             If a problem occurs during the construction of the IR.
+	 */
+	public GeneratedData generate(List<INode> ast) throws AnalysisException
+	{
+		clear();
+		preProcessAst(ast);
+
+		List<IRStatus<PCG>> statuses = new LinkedList<>();
+
+		for (INode node : ast)
+		{
+			genIrStatus(statuses, node);
+		}
+
+		return genVdmToTargetLang(statuses);
+	}
+	
+	/**
+	 * This method translates a VDM node into an IR status.
+	 * 
+	 * @param statuses
+	 *            A list of previously generated IR statuses. The generated IR status will be added to this list.
+	 * @param node
+	 *            The VDM node from which we generate an IR status
+	 * @throws AnalysisException
+	 *             If something goes wrong during the construction of the IR status.
+	 */
+	protected void genIrStatus(
+			List<IRStatus<PCG>> statuses,
+			INode node) throws AnalysisException
+	{
+		IRStatus<PCG> status = generator.generateFrom(node);
+		
+		if(status != null)
+		{
+			statuses.add(status);
+		}
+	}
+	
+	/**
+	 * Translates a list of IR statuses into target language code. This method must be implemented by all code
+	 * generators that inherit from this class. This method is invoked by {@link #generate(List)}.
+	 * 
+	 * @param statuses
+	 *            The IR statuses holding the nodes to be code generated.
+	 * @return The generated code as well as information about the code generation process.
+	 * @throws AnalysisException
+	 *             If something goes wrong during the code generation process.
+	 */
+	abstract protected GeneratedData genVdmToTargetLang(List<IRStatus<PCG>> statuses) throws AnalysisException;
+	
+	/**
+	 * This method pre-processes the VDM AST by<br>
+	 * (1) computing a definition table that can be used during the analysis of the IR to determine if a VDM identifier
+	 * state designator is local or not.<br>
+	 * (2) Removing unreachable statements from the VDM AST <br>
+	 * (3) Normalizing old names by replacing tilde signs '~' with underscores '_' <br>
+	 * (4) Simplifying the standard libraries by cutting nodes that are not likely to be meaningful during the analysis
+	 * of the VDM AST. Library classes are processed using {@link #simplifyLibrary(INode)}, whereas non-library modules
+	 * or classes are processed using {@link #preProcessVdmUserClass(INode)}.
+	 * 
+	 * @param ast
+	 *            The VDM AST subject to pre-processing.
+	 * @throws AnalysisException
+	 *             In case something goes wrong during the VDM AST analysis.
+	 */
+	protected void preProcessAst(List<INode> ast) throws AnalysisException
+	{
+		generator.computeDefTable(getUserModules(ast));
+		removeUnreachableStms(ast);
+		handleOldNames(ast);
+		
+		for (INode node : ast)
+		{
+			if (getInfo().getAssistantManager().getDeclAssistant().isLibrary(node))
+			{
+				simplifyLibrary(node);
+			}
+			else
+			{
+				preProcessVdmUserClass(node);
+			}
+		}
+	}
+	
+	/**
+	 * Initializes the Apache Velocity template engine.
+	 */
+	protected void initVelocity()
+	{
+		Velocity.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
+		Velocity.init();
+	}
+	
+	/**
+	 * Formats the generated code. By default, this method simply returns the input unmodified.
+	 * 
+	 * @param code
+	 *            The unformatted code.
+	 * @return The formatted code.
+	 */
+	protected String formatCode(StringWriter code)
+	{
+		return code.toString();
+	}
+	
+	/**
+	 * Convenience method for extracting the VDM class definitions from a list of VDM nodes.
+	 * 
+	 * @param ast
+	 *            A list of VDM nodes.
+	 * @return The class definitions extracted from <code>ast</code>.
+	 */
+	public static List<SClassDefinition> getClasses(List<INode> ast)
+	{
+		List<SClassDefinition> classes = new LinkedList<>();
+		
+		for(INode n : ast)
+		{
+			if(n instanceof SClassDefinition)
+			{
+				classes.add((SClassDefinition) n);
+			}
+		}
+		
+		return classes;
+	}
+	
+	/**
+	 * Convenience method for converting a VDM AST into a list of nodes.
+	 * 
+	 * @param ast
+	 *            The VDM AST.
+	 * @return The VDM AST as a list of nodes.
+	 */
+	public static List<INode> getNodes(List<? extends INode> ast)
+	{
+		List<INode> nodes = new LinkedList<>();
+		
+		nodes.addAll(ast);
+		
+		return nodes;
+	}
+	
+	/**
+	 * Given an IR status this method determines if it represents a test case or not.
+	 * 
+	 * @param status The IR status.
+	 * @return True if the <code>status</code> represents a test case - false otherwise.
+	 */
+	protected boolean isTestCase(IRStatus<? extends PCG> status)
+	{
+		return getInfo().getDeclAssistant().isTestCase(status.getIrNode().getSourceNode().getVdmNode());
+	}
+	
+	/**
+	 * This method extracts the user modules or classes from a VDM AST.
+	 * 
+	 * @param ast The VDM AST.
+	 * @return A list of user modules or classes.
+	 */
+	protected List<INode> getUserModules(
+			List<? extends INode> ast)
+	{
+		List<INode> userModules = new LinkedList<INode>();
+		
+		if(ast.size() == 1 && ast.get(0) instanceof CombinedDefaultModule)
+		{
+			CombinedDefaultModule combined = (CombinedDefaultModule) ast.get(0);
+			
+			for(AModuleModules m : combined.getModules())
+			{
+				userModules.add(m);
+			}
+			
+			return userModules;
+		}
+		else
+		{
+			for (INode node : ast)
+			{
+				if(!getInfo().getDeclAssistant().isLibrary(node))
+				{
+					userModules.add(node);
+				}
+			}
+			
+			return userModules;
+		}
+	}
+	
+	/**
+	 * This method removes unreachable statements from the VDM AST.
+	 * 
+	 * @param ast
+	 *            The VDM AST subject to processing.
+	 * @throws AnalysisException
+	 *             If something goes wrong when trying to remove unreachable statements from the <code>ast</code>.
+	 */
+	protected void removeUnreachableStms(List<? extends INode> ast) throws AnalysisException
+	{
+		UnreachableStmRemover remover = new UnreachableStmRemover();
+
+		for (INode node : ast)
+		{
+			node.apply(remover);
+		}
+	}
+	
+	/**
+	 * Simplifies a VDM standard library class or module by removing sub-nodes that are likely not to be of interest
+	 * during the generation of the IR.
+	 * 
+	 * @param module
+	 *            A VDM class or module
+	 */
+	protected void simplifyLibrary(INode module)
+	{
+		List<PDefinition> defs = null;
+		
+		if(module instanceof SClassDefinition)
+		{
+			defs = ((SClassDefinition) module).getDefinitions();
+		}
+		else if(module instanceof AModuleModules)
+		{
+			defs = ((AModuleModules) module).getDefs();
+		}
+		else
+		{
+			// Nothing to do
+			return;
+		}
+		
+		for (PDefinition def : defs)
+		{
+			if (def instanceof SOperationDefinition)
+			{
+				SOperationDefinition op = (SOperationDefinition) def;
+
+				op.setBody(new ANotYetSpecifiedStm());
+				op.setPrecondition(null);
+				op.setPostcondition(null);
+			} else if (def instanceof SFunctionDefinition)
+			{
+				SFunctionDefinition func = (SFunctionDefinition) def;
+
+				func.setBody(new ANotYetSpecifiedExp());
+				func.setPrecondition(null);
+				func.setPostcondition(null);
+			}
+		}
+	}
+	
+	/**
+	 * Processes old names by replacing the tilde sign '~' with an underscore.
+	 * 
+	 * @param vdmAst The VDM AST subject to processing.
+	 * @throws AnalysisException If something goes wrong during the renaming process.
+	 */
+	protected void handleOldNames(List<? extends INode> vdmAst) throws AnalysisException
+	{
+		OldNameRenamer oldNameRenamer = new OldNameRenamer();
+		
+		for(INode module : vdmAst)
+		{
+			module.apply(oldNameRenamer);
+		}
+	}
+	
+	/**
+	 * Given a list of IR statuses this method retrieves the names of the user-defined test cases.
+	 * 
+	 * @param statuses
+	 *            The list of IR statuses from which the test case names are retrieved
+	 * @return The names of the user-defined test cases.
+	 */
+	protected List<String> getUserTestCases(List<IRStatus<PCG>> statuses)
+	{
+		List<String> userTestCases = new LinkedList<>();
+		
+		for (IRStatus<PCG> s : statuses)
+		{
+			if(getInfo().getDeclAssistant().isTestCase(s.getVdmNode()))
+			{
+				userTestCases.add(getInfo().getDeclAssistant().getNodeName(s.getVdmNode()));
+			}
+		}
+		
+		return userTestCases;
+	}
+	
+	/**
+	 * Pre-processing of a user class. This method is invoked by {@link #preProcessAst(List)}. This method does nothing
+	 * by default.
+	 * 
+	 * @param vdmModule
+	 *            The user module or class.
+	 */
+	protected void preProcessVdmUserClass(INode vdmModule)
+	{
+	}
+	
+	/**
+	 * Determines whether a VDM module or class should be code generated or not.
+	 * 
+	 * @param vdmNode
+	 *            The node to be checked.
+	 * @return True if <code>node</code> should be code generated - false otherwise.
+	 */
+	protected boolean shouldGenerateVdmNode(INode vdmNode)
+	{
+		DeclAssistantCG declAssistant = getInfo().getDeclAssistant();
+		
+		if (declAssistant.isLibrary(vdmNode))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
+	/**
+	 * This method translates an IR module or class into target language code.
+	 * 
+	 * @param mergeVisitor
+	 *            The visitor that translates the IR module or class into target language code.
+	 * @param status
+	 *            The IR status that holds the IR node that we want to code generate.
+	 * @return The generated code and data about what has been generated.
+	 * @throws org.overture.codegen.cgast.analysis.AnalysisException
+	 *             If something goes wrong during the code generation process.
+	 */
+	protected GeneratedModule genIrModule(MergeVisitor mergeVisitor,
+			IRStatus<? extends PCG> status) throws org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		if (status.canBeGenerated())
+		{
+			mergeVisitor.init();
+			StringWriter writer = new StringWriter();
+			status.getIrNode().apply(mergeVisitor, writer);
+
+			boolean isTestCase = isTestCase(status);
+
+			GeneratedModule generatedModule;
+			if (mergeVisitor.hasMergeErrors())
+			{
+				generatedModule = new GeneratedModule(status.getIrNodeName(), status.getIrNode(), mergeVisitor.getMergeErrors(), isTestCase);
+			} else if (mergeVisitor.hasUnsupportedTargLangNodes())
+			{
+				generatedModule = new GeneratedModule(status.getIrNodeName(), new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang(), isTestCase);
+			} else
+			{
+				generatedModule = new GeneratedModule(status.getIrNodeName(), status.getIrNode(), formatCode(writer), isTestCase);
+				generatedModule.setTransformationWarnings(status.getTransformationWarnings());
+			}
+
+			return generatedModule;
+		} else
+		{
+			return new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>(), isTestCase(status));
+		}
+	}
+	
+	/**
+	 * Translates an IR expression into target language code.
+	 * 
+	 * @param expStatus
+	 *            The IR status that holds the expressions that we want to code generate.
+	 * @param mergeVisitor
+	 *            The visitor that translates the IR expression into target language code.
+	 * @return The generated code and data about what has been generated.
+	 * @throws org.overture.codegen.cgast.analysis.AnalysisException
+	 *             If something goes wrong during the code generation process.
+	 */
+	protected Generated genIrExp(IRStatus<SExpCG> expStatus, MergeVisitor mergeVisitor)
+			throws org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		StringWriter writer = new StringWriter();
+		SExpCG expCg = expStatus.getIrNode();
+
+		if (expStatus.canBeGenerated())
+		{
+			mergeVisitor.init();
+			
+			expCg.apply(mergeVisitor, writer);
+
+			if (mergeVisitor.hasMergeErrors())
+			{
+				return new Generated(mergeVisitor.getMergeErrors());
+			} else if (mergeVisitor.hasUnsupportedTargLangNodes())
+			{
+				return new Generated(new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang());
+			} else
+			{
+				String code = writer.toString();
+
+				return new Generated(code);
+			}
+		} else
+		{
+
+			return new Generated(expStatus.getUnsupportedInIr(), new HashSet<IrNodeInfo>());
+		}
+	}
+	
+	/**
+	 * Registration of the {@link #irObserver}.
+	 */
+	@Override
+	public void registerIrObs(IREventObserver obs)
+	{
+		if(obs != null && irObserver == null)
+		{
+			irObserver = obs;
+		}
+	}
+
+	/**
+	 * Unregistration of the {@link #irObserver}.
+	 */
+	@Override
+	public void unregisterIrObs(IREventObserver obs)
+	{
+		if(obs != null && irObserver == obs)
+		{
+			irObserver = null;
+		}
+	}
+	
+	/**
+	 * Notifies the {@link #irObserver} when the initial version of the IR has been constructed. This method allows the
+	 * {@link #irObserver} to modify the initial version of the IR.
+	 * 
+	 * @param ast
+	 *            The initial version of the IR.
+	 * @return A possibly modified version of the initial IR.
+	 */
+	public List<IRStatus<PCG>> initialIrEvent(List<IRStatus<PCG>> ast)
+	{
+		if(irObserver != null)
+		{
+			return irObserver.initialIRConstructed(ast, getInfo());
+		}
+		
+		return ast;
+	}
+	
+	/**
+	 * Notifies the {@link #irObserver} when the final version of the IR has been constructed. This method allows the
+	 * {@link #irObserver} to modify the IR.
+	 * 
+	 * @param ast
+	 *            The final version of the IR.
+	 * @return A possibly modified version of the IR
+	 */
+	public List<IRStatus<PCG>> finalIrEvent(List<IRStatus<PCG>> ast)
+	{
+		if(irObserver != null)
+		{
+			return irObserver.finalIRConstructed(ast, getInfo());
+		}
+		
+		return ast;
 	}
 	
 	public void setIRGenerator(IRGenerator generator)

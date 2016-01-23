@@ -15,7 +15,8 @@ public class JavaTemplateManager extends TemplateManager
 	protected void initNodeTemplateFileNames()
 	{
 		super.initNodeTemplateFileNames();
-
-		reuseTemplate(ACardUnaryExpCG.class, ALenUnaryExpCG.class);
+		
+		String cardPath = getRelativePath(ACardUnaryExpCG.class);
+		setUserDefinedPath(ALenUnaryExpCG.class, cardPath);
 	}
 }

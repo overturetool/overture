@@ -16,7 +16,7 @@ public class A {
             throw new RuntimeException("String pattern match failed");
         }
 
-        VDMSeq stringPattern_2 = SeqUtil.seq('h', 'e', 'j');
+        final VDMSeq stringPattern_2 = SeqUtil.seq('h', 'e', 'j');
         Boolean success_2 = Utils.equals(stringPattern_2,
                 SeqUtil.seq('h', 'e', 'j'));
 
@@ -35,7 +35,7 @@ public class A {
             throw new RuntimeException("String pattern match failed");
         }
 
-        VDMSeq stringPattern_4 = SeqUtil.seq('h', 'e', 'j');
+        final VDMSeq stringPattern_4 = SeqUtil.seq('h', 'e', 'j');
         Boolean success_4 = Utils.equals(stringPattern_4,
                 SeqUtil.seq('h', 'e', 'j'));
 

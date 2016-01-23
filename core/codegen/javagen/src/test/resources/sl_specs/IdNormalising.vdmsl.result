@@ -11,7 +11,7 @@ final public class Entry {
     }
 
     public static Object Run() {
-        Number y_X_ = 9L;
+        final Number y_X_ = 9L;
 
         return id_X_(3L).longValue() + y_X_.longValue() + St.x_X_.longValue();
     }

@@ -35,7 +35,7 @@ public class Entry {
     }
 
     public static VDMSeq op4() {
-        VDMSeq a = SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq('a'));
+        final VDMSeq a = SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq('a'));
 
         return Utils.copy(a);
     }

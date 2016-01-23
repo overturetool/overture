@@ -24,7 +24,7 @@ public class Entry {
             }
         }
 
-        VDMSet x = Utils.copy(setCompResult_1);
+        final VDMSet x = Utils.copy(setCompResult_1);
 
         return Utils.copy(x);
     }

@@ -13,6 +13,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.mojocg.util.DelegateTrans;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -127,7 +128,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 			
 			try
 			{
-				genData = javaCodeGen.generateJavaFromVdm(tcResult.result);
+				genData = javaCodeGen.generate(CodeGenBase.getNodes(tcResult.result));
 			} catch (AnalysisException e)
 			{
 				e.printStackTrace();
@@ -143,7 +144,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 			
 			try
 			{
-				genData = javaCodeGen.generateJavaFromVdmModules(tcResult.result);
+				genData = javaCodeGen.generate(CodeGenBase.getNodes(tcResult.result));
 				
 			} catch (AnalysisException e)
 			{
@@ -206,7 +207,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 	{
 		for(File f : GeneralUtils.getFilesRecursively(specificationRoot))
 		{
-			if(JavaCodeGenUtil.isSupportedVdmSourceFile(f))
+			if(GeneralCodeGenUtils.isVdmSourceFile(f))
 			{
 				files.add(f);
 			}

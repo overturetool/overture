@@ -15,7 +15,7 @@ public class A {
             throw new RuntimeException("Bool pattern match failed");
         }
 
-        Boolean boolPattern_2 = true;
+        final Boolean boolPattern_2 = true;
         Boolean success_2 = Utils.equals(boolPattern_2, true);
 
         if (!(success_2)) {
@@ -32,7 +32,7 @@ public class A {
             throw new RuntimeException("Bool pattern match failed");
         }
 
-        Boolean boolPattern_4 = true;
+        final Boolean boolPattern_4 = true;
         Boolean success_4 = Utils.equals(boolPattern_4, true);
 
         if (!(success_4)) {

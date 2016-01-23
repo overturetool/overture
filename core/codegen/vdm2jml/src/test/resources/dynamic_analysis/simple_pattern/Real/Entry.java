@@ -15,7 +15,7 @@ final public class Entry {
 
     public static Object Run() {
         {
-            Number ignorePattern_1 = f();
+            final Number ignorePattern_1 = f();
 
             //@ assert Utils.is_real(ignorePattern_1);
 
@@ -29,7 +29,7 @@ final public class Entry {
 
     /*@ pure @*/
     public static Number f() {
-        Number realPattern_1 = 1.5;
+        final Number realPattern_1 = 1.5;
 
         //@ assert Utils.is_rat(realPattern_1);
         Boolean success_1 = Utils.equals(realPattern_1, 1.5);

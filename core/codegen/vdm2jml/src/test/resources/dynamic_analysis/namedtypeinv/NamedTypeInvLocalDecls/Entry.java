@@ -14,13 +14,13 @@ final public class Entry {
     }
 
     public static void typeUseOk() {
-        Number ignorePattern_1 = 1L;
+        final Number ignorePattern_1 = 1L;
 
         //@ assert Utils.is_nat1(ignorePattern_1);
-        Object even = 2L;
+        final Object even = 2L;
 
         //@ assert (((Utils.is_nat(even) && inv_Entry_Even(even)) || (Utils.is_real(even) && inv_Entry_Large(even))) && inv_Entry_No(even));
-        Number ignorePattern_2 = 3L;
+        final Number ignorePattern_2 = 3L;
 
         //@ assert Utils.is_nat1(ignorePattern_2);
 

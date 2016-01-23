@@ -77,7 +77,7 @@ public class TraceDeclVisitorCG extends AbstractVisitorCG<IRInfo, STraceDeclCG>
 		
 		ALetDefBindingTraceDeclCG letDef = new ALetDefBindingTraceDeclCG();
 		
-		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), letDef.getLocalDefs(), question);
+		question.getDeclAssistant().setFinalLocalDefs(node.getLocalDefs(), letDef.getLocalDefs(), question);
 		
 		STraceDeclCG bodyCg = body.apply(question.getTraceDeclVisitor(), question);
 		letDef.setBody(bodyCg);

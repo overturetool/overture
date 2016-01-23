@@ -2,10 +2,10 @@ package org.overture.codegen.ir;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.PCG;
 
 public interface IREventObserver
 {
-	public List<IRStatus<INode>> initialIRConstructed(List<IRStatus<INode>> ast, IRInfo info);
-	public List<IRStatus<INode>> finalIRConstructed(List<IRStatus<INode>> ast, IRInfo info);
+	public List<IRStatus<PCG>> initialIRConstructed(List<IRStatus<PCG>> ast, IRInfo info);
+	public List<IRStatus<PCG>> finalIRConstructed(List<IRStatus<PCG>> ast, IRInfo info);
 }

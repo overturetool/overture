@@ -9,12 +9,12 @@ public class A {
     }
 
     public void op() {
-        A a = new A();
+        final A a = new A();
         a.op();
     }
 
     public Number op1() {
-        A a = new A();
+        final A a = new A();
 
         return a.op1();
     }

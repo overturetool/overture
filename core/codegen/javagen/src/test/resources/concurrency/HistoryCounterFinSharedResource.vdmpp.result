@@ -179,10 +179,10 @@ public class Entry implements EvaluatePP {
     }
 
     public static Object Run() {
-        SharedCounter s = new SharedCounter();
-        Incrementer i1 = new Incrementer(s);
-        Incrementer i2 = new Incrementer(s);
-        Incrementer i3 = new Incrementer(s);
+        final SharedCounter s = new SharedCounter();
+        final Incrementer i1 = new Incrementer(s);
+        final Incrementer i2 = new Incrementer(s);
+        final Incrementer i3 = new Incrementer(s);
         i1.start();
         i2.start();
         i3.start();

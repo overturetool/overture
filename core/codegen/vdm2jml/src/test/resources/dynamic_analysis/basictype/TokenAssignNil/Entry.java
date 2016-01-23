@@ -23,7 +23,7 @@ final public class Entry {
         IO.println("Before valid use.");
 
         {
-            Token ignorePattern_1 = t;
+            final Token ignorePattern_1 = t;
 
             //@ assert Utils.is_token(ignorePattern_1);
 
@@ -34,7 +34,7 @@ final public class Entry {
         IO.println("Before invalid use.");
 
         {
-            Token ignorePattern_2 = n;
+            final Token ignorePattern_2 = n;
 
             //@ assert Utils.is_token(ignorePattern_2);
 

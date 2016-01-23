@@ -17,7 +17,7 @@ final public class Entry {
         IO.println("Before legal use");
 
         {
-            Tuple ignorePattern_1 = ((Tuple) Tup4());
+            final Tuple ignorePattern_1 = ((Tuple) Tup4());
 
             //@ assert (V2J.isTup(ignorePattern_1,4) && Utils.is_nat(V2J.field(ignorePattern_1,0)) && Utils.is_nat(V2J.field(ignorePattern_1,1)) && Utils.is_char(V2J.field(ignorePattern_1,2)) && Utils.is_bool(V2J.field(ignorePattern_1,3)));
 
@@ -28,7 +28,7 @@ final public class Entry {
         IO.println("Before illegal use");
 
         {
-            Tuple ignorePattern_2 = ((Tuple) Tup3());
+            final Tuple ignorePattern_2 = ((Tuple) Tup3());
 
             //@ assert (V2J.isTup(ignorePattern_2,4) && Utils.is_nat(V2J.field(ignorePattern_2,0)) && Utils.is_nat(V2J.field(ignorePattern_2,1)) && Utils.is_char(V2J.field(ignorePattern_2,2)) && Utils.is_bool(V2J.field(ignorePattern_2,3)));
 
@@ -45,7 +45,7 @@ final public class Entry {
         Object ret_1 = Tuple.mk_(1L, 'a', true);
 
         //@ assert ((V2J.isTup(ret_1,3) && Utils.is_nat(V2J.field(ret_1,0)) && Utils.is_char(V2J.field(ret_1,1)) && Utils.is_bool(V2J.field(ret_1,2))) || (V2J.isTup(ret_1,4) && Utils.is_nat(V2J.field(ret_1,0)) && Utils.is_nat(V2J.field(ret_1,1)) && Utils.is_char(V2J.field(ret_1,2)) && Utils.is_bool(V2J.field(ret_1,3))));
-        return ret_1;
+        return Utils.copy(ret_1);
     }
 
     /*@ pure @*/
@@ -53,7 +53,7 @@ final public class Entry {
         Object ret_2 = Tuple.mk_(1L, 2L, 'b', false);
 
         //@ assert ((V2J.isTup(ret_2,3) && Utils.is_nat(V2J.field(ret_2,0)) && Utils.is_char(V2J.field(ret_2,1)) && Utils.is_bool(V2J.field(ret_2,2))) || (V2J.isTup(ret_2,4) && Utils.is_nat(V2J.field(ret_2,0)) && Utils.is_nat(V2J.field(ret_2,1)) && Utils.is_char(V2J.field(ret_2,2)) && Utils.is_bool(V2J.field(ret_2,3))));
-        return ret_2;
+        return Utils.copy(ret_2);
     }
 
     public String toString() {

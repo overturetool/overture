@@ -10,7 +10,7 @@ public class Entry implements java.io.Serializable {
     }
 
     public static Number f(final Number idx) {
-        VDMSeq xs = SeqUtil.seq(1L, 2L);
+        final VDMSeq xs = SeqUtil.seq(1L, 2L);
 
         return ((Number) Utils.get(xs, idx));
     }

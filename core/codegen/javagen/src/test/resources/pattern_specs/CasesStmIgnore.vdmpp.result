@@ -25,8 +25,8 @@ public class Entry {
 
                     if (success_1) {
                         {
-                            Number x = 1L;
-                            Number y = 2L;
+                            final Number x = 1L;
+                            final Number y = 2L;
 
                             return x.longValue() + y.longValue();
                         }

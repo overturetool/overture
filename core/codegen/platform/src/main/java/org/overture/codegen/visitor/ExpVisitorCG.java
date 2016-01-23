@@ -749,7 +749,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		ALetDefExpCG letDefExp = new ALetDefExpCG();
 
-		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), letDefExp.getLocalDefs(), question);
+		question.getDeclAssistant().setFinalLocalDefs(node.getLocalDefs(), letDefExp.getLocalDefs(), question);
 
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		letDefExp.setType(typeCg);

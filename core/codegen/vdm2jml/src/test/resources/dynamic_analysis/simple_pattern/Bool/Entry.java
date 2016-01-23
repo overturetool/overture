@@ -15,7 +15,7 @@ final public class Entry {
 
     public static Object Run() {
         {
-            Boolean ignorePattern_1 = f();
+            final Boolean ignorePattern_1 = f();
 
             //@ assert Utils.is_bool(ignorePattern_1);
 
@@ -29,7 +29,7 @@ final public class Entry {
 
     /*@ pure @*/
     public static Boolean f() {
-        Boolean boolPattern_1 = true;
+        final Boolean boolPattern_1 = true;
 
         //@ assert Utils.is_bool(boolPattern_1);
         Boolean success_1 = Utils.equals(boolPattern_1, true);

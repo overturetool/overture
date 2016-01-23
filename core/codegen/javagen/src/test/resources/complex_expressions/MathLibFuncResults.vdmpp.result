@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Number ignorePattern_1 = MATH.rand(5L).longValue() +
+        final Number ignorePattern_1 = MATH.rand(5L).longValue() +
             MATH.srand2(5L).longValue();
         MATH.srand(5L);
 

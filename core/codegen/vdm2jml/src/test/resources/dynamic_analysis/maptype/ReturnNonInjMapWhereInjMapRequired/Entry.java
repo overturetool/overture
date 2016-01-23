@@ -17,7 +17,7 @@ final public class Entry {
         IO.println("Before legal use");
 
         {
-            VDMMap ignorePattern_1 = consInjMap();
+            final VDMMap ignorePattern_1 = consInjMap();
 
             //@ assert (V2J.isInjMap(ignorePattern_1) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_1); Utils.is_nat(V2J.getDom(ignorePattern_1,i)) && Utils.is_(V2J.getRng(ignorePattern_1,i),project.Entrytypes.V2.class)));
 
@@ -28,7 +28,7 @@ final public class Entry {
         IO.println("Before illegal use");
 
         {
-            VDMMap ignorePattern_2 = consInjMapErr();
+            final VDMMap ignorePattern_2 = consInjMapErr();
 
             //@ assert (V2J.isInjMap(ignorePattern_2) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_2); Utils.is_nat(V2J.getDom(ignorePattern_2,i)) && Utils.is_(V2J.getRng(ignorePattern_2,i),project.Entrytypes.V2.class)));
 

@@ -17,7 +17,7 @@ final public class Entry {
         IO.println("Before legal use");
 
         {
-            VDMSet ignorePattern_1 = SetUtil.set(2L, 4L, 6L);
+            final VDMSet ignorePattern_1 = SetUtil.set(2L, 4L, 6L);
 
             //@ assert (V2J.isSet(ignorePattern_1) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_1); Utils.is_nat(V2J.get(ignorePattern_1,i))));
 
@@ -28,7 +28,7 @@ final public class Entry {
         IO.println("Before illegal use");
 
         {
-            VDMSet ignorePattern_2 = setOfNat();
+            final VDMSet ignorePattern_2 = setOfNat();
 
             //@ assert (V2J.isSet(ignorePattern_2) && (\forall int i; 0 <= i && i < V2J.size(ignorePattern_2); Utils.is_nat(V2J.get(ignorePattern_2,i))));
 

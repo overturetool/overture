@@ -9,10 +9,10 @@ public class Entry {
     }
 
     public static Object Run() {
-        NatList a = new NatList(1L, null);
-        NatList b = new NatList(1L, new NatList(2L, null));
-        NatList c = new NatList(1L, new NatList(2L, new NatList(3L, null)));
-        NatList d = new NatList(1L, new NatList(2L, new NatList(3L, null)));
+        final NatList a = new NatList(1L, null);
+        final NatList b = new NatList(1L, new NatList(2L, null));
+        final NatList c = new NatList(1L, new NatList(2L, new NatList(3L, null)));
+        final NatList d = new NatList(1L, new NatList(2L, new NatList(3L, null)));
 
         return SeqUtil.seq(Utils.equals(a, a), Utils.equals(a, b),
             Utils.equals(a, c), Utils.equals(a, d), Utils.equals(b, b),

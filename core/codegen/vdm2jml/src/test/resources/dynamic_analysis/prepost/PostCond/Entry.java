@@ -17,17 +17,17 @@ final public class Entry {
     }
 
     public static Object Run() {
-        Number ignorePattern_1 = opRet(1L);
+        final Number ignorePattern_1 = opRet(1L);
 
         //@ assert Utils.is_nat(ignorePattern_1);
-        Number ignorePattern_2 = f(3L);
+        final Number ignorePattern_2 = f(3L);
         //@ assert Utils.is_nat(ignorePattern_2);
         {
             opVoid();
             IO.println("Before breaking post condition");
 
             {
-                Number ignorePattern_3 = opRet(4L);
+                final Number ignorePattern_3 = opRet(4L);
 
                 //@ assert Utils.is_nat(ignorePattern_3);
 

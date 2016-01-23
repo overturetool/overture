@@ -16,7 +16,7 @@ public class A {
             throw new RuntimeException("Quote pattern match failed");
         }
 
-        quotes.T1Quote quotePattern_2 = quotes.T1Quote.getInstance();
+        final quotes.T1Quote quotePattern_2 = quotes.T1Quote.getInstance();
         Boolean success_2 = Utils.equals(quotePattern_2,
                 quotes.T1Quote.getInstance());
 
@@ -36,7 +36,7 @@ public class A {
             throw new RuntimeException("Quote pattern match failed");
         }
 
-        quotes.T1Quote quotePattern_4 = quotes.T1Quote.getInstance();
+        final quotes.T1Quote quotePattern_4 = quotes.T1Quote.getInstance();
         Boolean success_4 = Utils.equals(quotePattern_4,
                 quotes.T1Quote.getInstance());
 

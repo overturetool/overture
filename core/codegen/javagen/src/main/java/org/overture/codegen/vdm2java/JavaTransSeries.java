@@ -113,10 +113,10 @@ public class JavaTransSeries
 		JUnit4Trans junitTr = new JUnit4Trans(transAssist, codeGen);
 
 		// Start concurrency transformations
-		SentinelTrans sentinelTr = new SentinelTrans(info);
-		MainClassConcTrans mainClassTr = new MainClassConcTrans(info);
-		MutexDeclTrans mutexTr = new MutexDeclTrans(info);
-		EvalPermPredTrans evalPermPredTr = new EvalPermPredTrans(transAssist);
+		SentinelTrans sentinelTr = new SentinelTrans(info, varMan.getConcPrefixes());
+		MainClassConcTrans mainClassTr = new MainClassConcTrans(info, varMan.getConcPrefixes());
+		MutexDeclTrans mutexTr = new MutexDeclTrans(info, varMan.getConcPrefixes());
+		EvalPermPredTrans evalPermPredTr = new EvalPermPredTrans(transAssist, varMan.getConcPrefixes());
 		// End concurrency transformations
 
 		// Set up order of transformations
@@ -162,7 +162,7 @@ public class JavaTransSeries
 		return new Exists1CounterData(type, initExp);
 	}
 
-	public void init()
+	public void clear()
 	{
 		funcValAssist.getFuncValInterfaces().clear();
 	}

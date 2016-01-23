@@ -9,13 +9,13 @@ public class Entry {
     }
 
     public static Object Run() {
-        Func_1<Number, Number> f = new Func_1<Number, Number>() {
+        final Func_1<Number, Number> f = new Func_1<Number, Number>() {
                 public Number eval(final Number x) {
                     return x.longValue() * x.longValue();
                 }
             };
 
-        VDMSeq xs = SeqUtil.seq(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L);
+        final VDMSeq xs = SeqUtil.seq(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L);
 
         return nat_map(Utils.copy(xs)).eval(f);
     }

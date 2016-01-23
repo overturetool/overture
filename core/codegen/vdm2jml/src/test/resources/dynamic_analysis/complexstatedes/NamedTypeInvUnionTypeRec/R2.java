@@ -14,7 +14,7 @@ final public class R2 implements Record {
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R2(t3);
     public R2(final Object _t3) {
         //@ assert ((Utils.is_(_t3,project.Entrytypes.R3.class) || Utils.is_(_t3,project.Entrytypes.X.class)) && inv_Entry_T3(_t3));
-        t3 = (_t3 != null) ? _t3 : null;
+        t3 = (_t3 != null) ? Utils.copy(_t3) : null;
 
         //@ assert ((Utils.is_(t3,project.Entrytypes.R3.class) || Utils.is_(t3,project.Entrytypes.X.class)) && inv_Entry_T3(t3));
     }

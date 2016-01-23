@@ -9,7 +9,7 @@ public class A {
     }
 
     public static Number recPatternFun() {
-        Rec recordPattern_1 = new Rec();
+        final Rec recordPattern_1 = new Rec();
         Boolean success_1 = true;
 
         if (!(success_1)) {

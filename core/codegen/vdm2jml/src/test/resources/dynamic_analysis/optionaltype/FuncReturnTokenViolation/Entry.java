@@ -17,7 +17,7 @@ final public class Entry {
         IO.println("Before evaluating ok()");
 
         {
-            Token ignorePattern_1 = ok();
+            final Token ignorePattern_1 = ok();
 
             //@ assert Utils.is_token(ignorePattern_1);
 
@@ -28,7 +28,7 @@ final public class Entry {
         IO.println("Before evaluating error()");
 
         {
-            Token ignorePattern_2 = err();
+            final Token ignorePattern_2 = err();
 
             //@ assert Utils.is_token(ignorePattern_2);
 
@@ -42,7 +42,7 @@ final public class Entry {
 
     /*@ pure @*/
     public static Token ok() {
-        Token aOpt = new Token("");
+        final Token aOpt = new Token("");
 
         //@ assert ((aOpt == null) || Utils.is_token(aOpt));
         Token ret_1 = aOpt;
@@ -53,7 +53,7 @@ final public class Entry {
 
     /*@ pure @*/
     public static Token err() {
-        Token aOpt = null;
+        final Token aOpt = null;
 
         //@ assert ((aOpt == null) || Utils.is_token(aOpt));
         Token ret_2 = aOpt;

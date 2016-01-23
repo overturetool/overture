@@ -25,7 +25,7 @@ final public class Entry implements java.io.Serializable {
 
     /*@ pure @*/
     public static Number typeErrSecondFrame() {
-        Object a = true;
+        final Object a = true;
 
         //@ assert (Utils.is_bool(a) || Utils.is_nat(a));
         Number ret_2 = ((Number) a);

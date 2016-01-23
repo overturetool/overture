@@ -9,12 +9,12 @@ public class Entry {
     }
 
     public static Object Run() {
-        Number a1 = 1.5;
-        Number a2 = Math.round(Utils.floor(a1));
-        Number a3 = -9L;
-        Number a4 = Utils.abs(a3.longValue());
-        Number a5 = 2.5;
-        Number a6 = Utils.pow(a5.doubleValue(), a1.doubleValue());
+        final Number a1 = 1.5;
+        final Number a2 = Math.round(Utils.floor(a1));
+        final Number a3 = -9L;
+        final Number a4 = Utils.abs(a3.longValue());
+        final Number a5 = 2.5;
+        final Number a6 = Utils.pow(a5.doubleValue(), a1.doubleValue());
 
         return Math.round(Utils.floor(a2)) + a4.longValue() + a6.doubleValue();
     }

@@ -14,14 +14,14 @@ final public class Entry {
     }
 
     public static Object Run() {
-        Number n1 = 2L;
+        final Number n1 = 2L;
 
         //@ assert Utils.is_nat1(n1);
-        Number n2 = 3L;
+        final Number n2 = 3L;
         //@ assert Utils.is_nat1(n2);
         {
             {
-                Number ignorePattern_1 = op(n1, 5L, n1);
+                final Number ignorePattern_1 = op(n1, 5L, n1);
 
                 //@ assert (Utils.is_nat(ignorePattern_1) && inv_Entry_Even(ignorePattern_1));
 
@@ -31,7 +31,7 @@ final public class Entry {
             IO.println("Breaking named type invariant for method parameter");
 
             {
-                Number ignorePattern_2 = op(n1, 6L, n2);
+                final Number ignorePattern_2 = op(n1, 6L, n2);
 
                 //@ assert (Utils.is_nat(ignorePattern_2) && inv_Entry_Even(ignorePattern_2));
 
