@@ -259,7 +259,7 @@ public class PDefinitionListAssistantTC implements IAstAssistant
 
 			for (PDefinition e : fixed)
 			{
-				if (e.getName() != null && e.getName().equals(d.getName()))
+				if (e.getName() != null && af.getLexNameTokenAssistant().isEqual(e.getName(), d.getName()))
 				{
 					found = true;
 					break;

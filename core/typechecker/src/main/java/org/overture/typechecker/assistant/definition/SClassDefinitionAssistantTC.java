@@ -725,12 +725,12 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 
 		if (p == Pass.TYPES) // First one
 		{
+			PDefinitionListAssistantTC assistant = af.createPDefinitionListAssistant();
+			assistant.removeDuplicates(c.getLocalInheritedDefinitions());
 			List<PDefinition> localDefs = new LinkedList<PDefinition>();
 			localDefs.addAll(c.getDefinitions());
 			localDefs.addAll(c.getLocalInheritedDefinitions());
-			af.createPDefinitionListAssistant().removeDuplicates(localDefs);
-			c.setIsAbstract(af.createPDefinitionListAssistant().hasSubclassResponsibilities(
-					af.createPDefinitionListAssistant().removeAbstracts(localDefs)));
+			c.setIsAbstract(assistant.hasSubclassResponsibilities(assistant.removeAbstracts(localDefs)));
 		}
 
 		for (PDefinition d : c.getDefinitions())
