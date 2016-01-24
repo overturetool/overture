@@ -15,9 +15,10 @@
   <artifactId>codegen</artifactId>
   <name>Code Generation</name>
 
-  <properties> <!-- switch to 1.6.7 for isagen -->
-    <!--<astcreator.version>1.6.7-SNAPSHOT</astcreator.version>-->
-    <astcreator.version>1.6.6</astcreator.version>
+  <properties>
+    <!-- switch to 1.6.7 for isagen -->
+    <astcreator.version>1.6.7-SNAPSHOT</astcreator.version>
+    <!-- <astcreator.version>1.6.6</astcreator.version> -->
   </properties>
 
   <modules>
