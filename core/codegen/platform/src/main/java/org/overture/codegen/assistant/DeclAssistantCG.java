@@ -265,7 +265,7 @@ public class DeclAssistantCG extends AssistantBase
 		{
 			AReturnStmCG returnStm = new AReturnStmCG();
 			// Approximate return statement source node as the function body
-			returnStm.setSourceNode(SourceNode.copy(body.getSourceNode()));
+			returnStm.setSourceNode(body.getSourceNode());
 			returnStm.setExp(body.clone());
 			method.setBody(returnStm);
 		} else

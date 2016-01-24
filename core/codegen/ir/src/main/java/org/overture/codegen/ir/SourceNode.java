@@ -22,7 +22,6 @@
 package org.overture.codegen.ir;
 
 import org.overture.ast.node.INode;
-import org.overture.codegen.cgast.PCG;
 
 public class SourceNode
 {
@@ -32,26 +31,6 @@ public class SourceNode
 	{
 		super();
 		this.vdmNode = vdmNode;
-	}
-	
-	public static SourceNode copy(SourceNode sourceNode)
-	{
-		if(sourceNode == null)
-		{
-			return null;
-		}
-		else
-		{
-			return new SourceNode(sourceNode.vdmNode);
-		}
-	}
-	
-	public static void copy(PCG from, PCG to)
-	{
-		if (from != null && to != null)
-		{
-			to.setSourceNode(SourceNode.copy(from.getSourceNode()));
-		}
 	}
 
 	public INode getVdmNode()

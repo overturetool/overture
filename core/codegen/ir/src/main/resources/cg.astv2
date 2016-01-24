@@ -30,7 +30,7 @@ Abstract Syntax Tree
 /* This section declares the AST by giving root nodes and their possible sub classe */
 
 CG {-> package='org.overture.codegen.cgast'
-	| [sourceNode]:SourceNode
+	| (sourceNode):SourceNode
 	| (tag):java_Object // Tags carry information to support IR analysis
 	| (metaData):eString*} // Meta data is intended to hold printable information such as code annotations
 	= #pattern
