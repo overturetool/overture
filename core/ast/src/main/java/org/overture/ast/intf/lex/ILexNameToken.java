@@ -53,6 +53,8 @@ public interface ILexNameToken extends ILexIdentifierToken
 	ILexLocation getLocation();
 
 	ILexNameToken getModifiedName(String classname);
+	
+	ILexNameToken getModifiedName(List<PType> qualifier);
 
 	String getModule();
 
