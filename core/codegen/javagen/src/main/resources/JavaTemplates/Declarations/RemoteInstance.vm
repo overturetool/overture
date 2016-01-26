@@ -1,2 +1,2 @@
-$node.getName() = $node.getVarExp();
+$node.getName() $JavaFormat.formatInitialExp($node.getInitial());
 registry.bind( $node.getNameString() , $node.getName());

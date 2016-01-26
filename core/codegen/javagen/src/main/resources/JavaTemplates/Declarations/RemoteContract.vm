@@ -1,10 +1,18 @@
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import org.overture.codegen.runtime.*;
+
+#set($UniCast = $node.getSuperName())
+#if ($node.getIsSuperClass())
+	#set($UniCast = "Remote")
+#end
+
+public interface $node.getName() extends $UniCast{
  
-public interface $node.getName() extends Remote{
- 
-	#foreach( $method in $node.getMethodSignatures() )
+	#foreach( $method in $node.getMethodSignatures())
+	#if (!$method.getStatic())
 	$JavaFormat.format($method)
+	#end
+	
 	#end
 }

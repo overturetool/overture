@@ -221,17 +221,22 @@ CG {-> package='org.overture.codegen.cgast'
 	|	{remoteContract}
 		[name]:java_String
 		[methodSignatures]:CG.#decl.method*
+		[superName]:java_String
+		[isSuperClass]:java_Boolean
 	|	{remoteContractImpl}
 		[name]:java_String
 		[methods]:CG.#decl.method*
 		[fields]:field*
 		[superName]:java_String
 		[isUniCast]:java_Boolean
+	 	[typeDecls]:CG.#decl.type*
+  		[abstract]:java_Boolean
 	|	{remoteInstance}
 		[name]:java_String
 		[nameString]:java_String
 		[className]:java_String
 		[varExp]:java_String
+    	[initial]:CG.#exp
 	|	{clientInstance}
 		[name]:java_String
 		[nameString]:java_String
