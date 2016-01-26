@@ -39,6 +39,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 {
 	public static final String VDM_PP = "pp";
 	public static final String VDM_SL = "sl";
+	public static final String VDM_RT = "rt";
 	
 	public static final String VDM_10 = "vdm10";
 	public static final String VDM_CLASSIC = "classic";
@@ -153,7 +154,27 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 						+ e.getMessage());
 			}
 			
-		} else
+		} else if(dialect.equals(VDM_RT))
+		{
+			try
+			{
+				Settings.dialect = Dialect.VDM_RT;
+				TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckRt(files);
+				
+				validateTcResult(tcResult);
+
+				javaSettings.setMakeClassesSerializable(true);
+				
+				genData = javaCodeGen.generate(CodeGenBase.getNodes(tcResult.result));
+				
+			} catch (AnalysisException e)
+			{
+				e.printStackTrace();
+				throw new MojoExecutionException("Got unexpected error when trying to code generate VDM-RT model: "
+						+ e.getMessage());
+			}
+		}
+		else
 		{
 			throw new MojoExecutionException(String.format("Expected dialect to be '%s' or '%s'", VDM_SL, VDM_PP));
 		}
