@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,9 +14,11 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.lex.Dialect;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.ACpuDeploymentDeclCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.ARMIServerDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
@@ -29,19 +32,25 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.rt2rmi.systemanalysis.DistributionMapping;
 import org.overture.codegen.rt2rmi.trans.RemoteTypeTrans;
+import org.overture.codegen.rt2rmi.trans.SystemClassTrans;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
 import org.overture.codegen.vdm2java.JavaSettings;
+import org.overture.config.Settings;
 
 public class RmiGenerator implements IREventObserver {
 	private JavaCodeGen javaGen;
 	private String systemClassName;
-
+	LinkedList<AFieldDeclCG> system_fields;
+	
 	public RmiGenerator() {
 		this.javaGen = new JavaCodeGen();
 		this.javaGen.registerIrObs(this);
+//		this.javaGen.getJavaSettings().
+		IRSettings ir = this.javaGen.getSettings();
+		ir.setCharSeqAsString(true);
 		addTransformations();
 	}
 
@@ -49,11 +58,19 @@ public class RmiGenerator implements IREventObserver {
 		// Add additional transformations
 		IRInfo info = new IRInfo();
 		this.javaGen.getTransSeries().getSeries().add(new RemoteTypeTrans(systemClassName, info));
+		this.javaGen.getTransSeries().getSeries().add(new SystemClassTrans());
 	}
 
 	public void generate(List<SClassDefinition> rtClasses, String output_dir)
 			throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException, IOException {
 
+		
+		XCodeGen xgen = new XCodeGen();
+		
+		system_fields = xgen.generateXFromVdm(rtClasses);
+		
+		
+		
 		/********** Analyse System class **********/
 		// Now the architecture of the VDM-RT model is analysed
 		// in order to extract the Connection map, Distribution map,
@@ -63,6 +80,7 @@ public class RmiGenerator implements IREventObserver {
 		mapping.run();
 
 		try {
+			//Settings.dialect=Dialect.VDM_RT;
 			systemClassName = mapping.getSystemName();
 
 			GeneratedData data = javaGen.generateJavaFromVdm(rtClasses);
@@ -270,7 +288,7 @@ public class RmiGenerator implements IREventObserver {
 		MergeVisitor printer = javaFormat.getMergeVisitor();
 
 		CPUdeploymentGenerator cpuDepGenerator = new CPUdeploymentGenerator(cpuToDeployedObject, cpuToConnectedCPUs,
-				DeployedObjCounter);
+				DeployedObjCounter, system_fields);
 		Set<ACpuDeploymentDeclCG> cpuDeps = cpuDepGenerator.run();
 		Map<String, ADefaultClassDeclCG> cpuToSystemDecl = cpuDepGenerator.getcpuToSystemDecl();
 		
@@ -285,6 +303,8 @@ public class RmiGenerator implements IREventObserver {
 			File file = new File(
 					output_dir + impl.getCpuName() + "/" + impl.getCpuName() + ".java");
 			BufferedWriter output = new BufferedWriter(new FileWriter(file));
+			System.out.println("The entry method for: " + impl.getCpuName());
+			//System.out.println(writer.toString());
 			output.write(JavaCodeGenUtil.formatJavaCode(writer.toString()));
 			output.close();
 
@@ -295,6 +315,10 @@ public class RmiGenerator implements IREventObserver {
 			//System.out.println(JavaCodeGenUtil.formatJavaCode(writer2.toString()));
 			File file2 = new File(
 					output_dir + impl.getCpuName() + "/" + systemClass.getName() + ".java");
+			
+			System.out.println("The system class for: " + impl.getCpuName());
+			//System.out.println(writer2.toString());
+			
 			BufferedWriter output2 = new BufferedWriter(new FileWriter(file2));
 			output2.write(JavaCodeGenUtil.formatJavaCode(writer2.toString()));
 			output2.close();

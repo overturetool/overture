@@ -93,8 +93,19 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 			AIdentifierObjectDesignator id = (AIdentifierObjectDesignator) des;
 
 			String op_name = node.getFieldname().getName();
-			String mod_name = id.getExpression().getType().toString();
+			
+			PType idTy = id.getExpression().getType();
+			
+			String mod_name;
+			
+			if(idTy!=null) 
+				mod_name = id.getExpression().getType().toString();
+			else mod_name = "no";
+			
+			
 
+			//System.out.println("Module name is: " + mod_name);
+			
 			if (mod_name.equals("CPU")) {
 				if (op_name.equals("deploy")) {
 					// System.out.println("The cpu name is: " + des);
