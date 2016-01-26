@@ -2,6 +2,7 @@ package org.overture.codegen.rt2rmi;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AVariableExp;
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AClientInstanceDeclCG;
 import org.overture.codegen.cgast.declarations.ACpuDeploymentDeclCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
@@ -36,21 +38,31 @@ public class CPUdeploymentGenerator {
 	private Map<String, Set<String>> cpuToConnectedCPUs;
 	Map<String, ADefaultClassDeclCG> cpuToSystemDecl = new HashMap<String, ADefaultClassDeclCG>();
 	private int DeployedObjCounter;
+	LinkedList<AFieldDeclCG> system_fields;
 
 	public CPUdeploymentGenerator(
 			Map<String, Set<AVariableExp>> cpuToDeployedObject, 
 			Map<String, Set<String>> cpuToConnectedCPUs, 
-			int DeployedObjCounter) {
+			int DeployedObjCounter,
+			LinkedList<AFieldDeclCG> system_fields) {
 		super();
 		this.cpuToDeployedObject = cpuToDeployedObject;
 		this.cpuToConnectedCPUs = cpuToConnectedCPUs;
 		this.DeployedObjCounter = DeployedObjCounter;
+		this.system_fields=system_fields;
 	}
 
 	public Set<ACpuDeploymentDeclCG> run() throws AnalysisException {
 
 		Set<ACpuDeploymentDeclCG> cpuDeployments = new HashSet<ACpuDeploymentDeclCG>();
 
+		
+
+		for(AFieldDeclCG field : system_fields){
+			System.out.println("Field name is: " + field.getName());
+			SExpCG ex = field.getInitial();
+		}
+		
 		// Number of CPU
 		int numberofCPUs = cpuToDeployedObject.keySet().size();
 		
@@ -127,7 +139,16 @@ public class CPUdeploymentGenerator {
 				inst.setClassName(inst_var.getType().toString());
 
 				AInstanceVariableDefinition varExp = (AInstanceVariableDefinition) inst_var.getVardef();
+				
+				
+				for(AFieldDeclCG field : system_fields){
+					if(inst_var.getName().getName().toString().equals(field.getName())){
+						inst.setInitial(field.getInitial());
+					}
+				}
+				
 				inst.setVarExp(varExp.getExpression().toString());
+				
 				inst.setNameString("\""+inst_var.getName().getName().toString()+"\"");
 
 				cpuDeployment.getRemoteInst().add(inst);
