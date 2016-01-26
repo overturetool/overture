@@ -8,6 +8,7 @@ import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 
 /*
@@ -38,6 +39,9 @@ public class RemoteImplGenerator {
 			contractImpl.setName(classCg.getName());
 			contractImpl.setFields(classCg.getFields());
 			contractImpl.setSuperName(classCg.getSuperName());
+			contractImpl.setAbstract(classCg.getAbstract());
+			// Add type declarations
+			contractImpl.setTypeDecls(classCg.getTypeDecls());
 			
 			if(classCg.getSuperName()==null) contractImpl.setIsUniCast(true);
 			else contractImpl.setIsUniCast(false);
@@ -47,13 +51,13 @@ public class RemoteImplGenerator {
 				if(method.getName().equals("toString")){
 				}
 				else if(method.getAccess().equals("public")){ //&& !method.getIsConstructor()){
-					method.setStatic(false);
+					//method.setStatic(false);
 					method.setIsRemote(true); // only public is remote
 					publicMethods.add(method);
 				}
 				else{
-					method.setStatic(false);
-					method.setIsRemote(false);
+					//method.setStatic(false);
+					method.setIsRemote(true);
 					publicMethods.add(method);
 				}
 			}

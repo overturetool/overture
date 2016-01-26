@@ -46,20 +46,32 @@ public class RemoteContractGenerator {
 
 			remoteContract.setName(currentName + "_i"); // transform name
 
+			if(classCg.getSuperName()==null) {
+				remoteContract.setIsSuperClass(true);
+				remoteContract.setSuperName(currentName);
+			}
+			else{
+				remoteContract.setIsSuperClass(false);
+				remoteContract.setSuperName(classCg.getSuperName()+"_i");
+			}
+			
+//			if(classCg.getSuperName()==null) contractImpl.setIsUniCast(true);
+//			else contractImpl.setIsUniCast(false);
+			
 			for(AMethodDeclCG method : classCg.getMethods()){
 
 				AMethodDeclCG methodSignature = method.clone();
-
+				
 				// Skip the auto generated toString() method
 				if(methodSignature.getName().equals("toString")){
 				}
-				else if(methodSignature.getAccess().equals("public")){ // if public add to remote contract
+				else if(methodSignature.getAccess().equals("public")){// && methodSignature.getStatic()==null){ // if public add to remote contract
 
 					if(methodSignature.getIsConstructor()) continue;
 					methodSignature.setIsRemote(true);
 					methodSignature.setAbstract(false);
 					methodSignature.setBody(null);
-					methodSignature.setStatic(false);
+					//methodSignature.setStatic(false);
 					remoteContract.getMethodSignatures().add(methodSignature);
 				}
 			}
