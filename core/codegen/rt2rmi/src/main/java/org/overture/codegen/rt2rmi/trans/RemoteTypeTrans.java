@@ -29,6 +29,11 @@ public class RemoteTypeTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
+		if(node.getName().equals("Iterator"))
+		{
+			return;
+		}
+		
 		// Do not transform if the name is attached to a new expression
 		if(node.parent() instanceof ANewExpCG)
 		{
@@ -46,6 +51,9 @@ public class RemoteTypeTrans extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
+		
+		if(node.getName().equals("bridge_FieldGraph")) 
+			return;
 		
 		node.setName(node.getName() + "_i");
 	}
