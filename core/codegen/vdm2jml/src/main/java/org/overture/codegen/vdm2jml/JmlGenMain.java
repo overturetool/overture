@@ -118,8 +118,6 @@ public class JmlGenMain
 			}
 		}
 
-		//GeneralUtils.deleteFolderContents(outputDir, true);
-
 		try
 		{
 			Logger.getLog().println("Starting the VDM to JML generator...");
