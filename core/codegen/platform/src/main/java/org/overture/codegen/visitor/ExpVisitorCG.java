@@ -1309,7 +1309,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			SClassDefinition owningClass = varDef.getAncestor(SClassDefinition.class);
 			SClassDefinition nodeParentClass = node.getAncestor(SClassDefinition.class);
 			
-			boolean isLocalDef = varDef.getNameScope() == NameScope.LOCAL || varDef instanceof AAssignmentDefinition;
+			boolean isLocalDef = varDef instanceof AAssignmentDefinition || !(varDef.getNameScope() == NameScope.STATE
+					|| varDef.getNameScope() == NameScope.GLOBAL || varDef.getNameScope() == NameScope.VARSTATE || varDef.getNameScope() == NameScope.VARSANDSTATE);
 			boolean isInstanceVarDef = varDef instanceof AInstanceVariableDefinition;
 			boolean isExplOp = varDef instanceof SOperationDefinition;
 			boolean isExplFunc = varDef instanceof SFunctionDefinition;
