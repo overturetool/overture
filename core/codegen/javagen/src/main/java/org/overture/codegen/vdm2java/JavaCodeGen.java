@@ -143,14 +143,14 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		this.warnings = new LinkedList<>();
 	}
 
-	public void setJavaSettings(JavaSettings javaSettings)
-	{
-		this.javaFormat.setJavaSettings(javaSettings);
-	}
-
 	public JavaSettings getJavaSettings()
 	{
 		return this.javaFormat.getJavaSettings();
+	}
+	
+	public void setJavaSettings(JavaSettings javaSettings)
+	{
+		this.javaFormat.setJavaSettings(javaSettings);
 	}
 	
 	public JavaTransSeries getTransSeries()
@@ -158,9 +158,19 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		return this.transSeries;
 	}
 	
+	public void setTransSeries(JavaTransSeries transSeries)
+	{
+		this.transSeries = transSeries;
+	}
+	
 	public JavaFormat getJavaFormat()
 	{
 		return javaFormat;
+	}
+	
+	public void setJavaFormat(JavaFormat javaFormat)
+	{
+		this.javaFormat = javaFormat;
 	}
 
 	@Override

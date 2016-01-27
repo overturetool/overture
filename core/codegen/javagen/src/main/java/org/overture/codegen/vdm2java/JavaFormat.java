@@ -109,14 +109,14 @@ public class JavaFormat
 	public static final String SET_UTIL_FILE = "SetUtil";
 	public static final String MAP_UTIL_FILE = "MapUtil";
 
-	private IRInfo info;
+	protected IRInfo info;
 
-	private FuncValAssistant funcValAssist;
-	private MergeVisitor mergeVisitor;
-	private JavaValueSemantics valueSemantics;
-	private JavaFormatAssistant javaFormatAssistant;
-	private JavaRecordCreator recCreator;
-	private JavaVarPrefixManager varPrefixManager;
+	protected FuncValAssistant funcValAssist;
+	protected MergeVisitor mergeVisitor;
+	protected JavaValueSemantics valueSemantics;
+	protected JavaFormatAssistant javaFormatAssistant;
+	protected JavaRecordCreator recCreator;
+	protected JavaVarPrefixManager varPrefixManager;
 	
 	public JavaFormat(JavaVarPrefixManager varPrefixManager,
 			String templateRoot, IRInfo info)
