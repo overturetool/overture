@@ -84,12 +84,12 @@ import org.overture.codegen.trans.quantifier.OrdinaryQuantifierStrategy;
 
 public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 {
-	private TransAssistantCG transAssistant;
-	private ILanguageIterator langIterator;
+	protected TransAssistantCG transAssistant;
+	protected ILanguageIterator langIterator;
 
-	private Exists1CounterData counterData;
-	private Exp2StmVarPrefixes prefixes;
-	private IterationVarPrefixes iteVarPrefixes;
+	protected Exists1CounterData counterData;
+	protected Exp2StmVarPrefixes prefixes;
+	protected IterationVarPrefixes iteVarPrefixes;
 
 	public Exp2StmTrans(IterationVarPrefixes iteVarPrefixes,
 			TransAssistantCG transAssistant, Exists1CounterData counterData,
@@ -554,7 +554,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		topBlock.setScoped(transAssistant.getInfo().getStmAssistant().isScoped(topBlock));
 	}
 
-	private void replaceCompWithTransformation(SStmCG enclosingStm,
+	protected void replaceCompWithTransformation(SStmCG enclosingStm,
 			ABlockStmCG block, STypeCG type, String var, SExpCG comp)
 	{
 		AIdentifierVarExpCG compResult = new AIdentifierVarExpCG();
@@ -566,7 +566,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		transform(enclosingStm, block, compResult, comp);
 	}
 
-	private void transform(SStmCG enclosingStm, ABlockStmCG block,
+	protected void transform(SStmCG enclosingStm, ABlockStmCG block,
 			SExpCG nodeResult, SExpCG node)
 	{
 		// Replace the node with the node result
@@ -579,7 +579,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		block.getStatements().add(enclosingStm);
 	}
 
-	private AAssignToExpStmCG assignToVar(AIdentifierVarExpCG var, SExpCG exp)
+	protected AAssignToExpStmCG assignToVar(AIdentifierVarExpCG var, SExpCG exp)
 	{
 		AAssignToExpStmCG assignment = new AAssignToExpStmCG();
 		assignment.setTarget(var.clone());
@@ -638,7 +638,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		casesStm.apply(this);
 	}
 
-	private AIfStmCG consAndExpCheck(AAndBoolBinaryExpCG node,
+	protected AIfStmCG consAndExpCheck(AAndBoolBinaryExpCG node,
 			String andResultVarName)
 	{
 		SExpCG left = node.getLeft().clone();
@@ -661,7 +661,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		return leftCheck;
 	}
 
-	private SStmCG consOrExpCheck(AOrBoolBinaryExpCG node,
+	protected SStmCG consOrExpCheck(AOrBoolBinaryExpCG node,
 			String orResultVarName)
 	{
 		SExpCG left = node.getLeft().clone();
@@ -685,7 +685,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		return leftCheck;
 	}
 
-	private boolean transformBoolBinaryExp(SBoolBinaryExpCG node,
+	protected boolean transformBoolBinaryExp(SBoolBinaryExpCG node,
 			SStmCG enclosingStm)
 	{
 		// First condition: The enclosing statement can be 'null' if we only try to code generate an expression rather
@@ -696,7 +696,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 				&& !transAssistant.getInfo().getExpAssistant().isLoopCondition(node);
 	}
 
-	private void visitBoolBinary(SBoolBinaryExpCG node)
+	protected void visitBoolBinary(SBoolBinaryExpCG node)
 			throws AnalysisException
 	{
 		node.getLeft().apply(this);
@@ -704,7 +704,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		node.getType().apply(this);
 	}
 
-	private void handleLogicExp(SBoolBinaryExpCG node, SStmCG enclosingStm,
+	protected void handleLogicExp(SBoolBinaryExpCG node, SStmCG enclosingStm,
 			SStmCG checkBlock, String resultName) throws AnalysisException
 	{
 		AVarDeclCG andResultDecl = transAssistant.consBoolVarDecl(resultName, false);
@@ -724,7 +724,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		replacementBlock.apply(this);
 	}
 
-	private List<ASetMultipleBindCG> filterBindList(INode node,
+	protected List<ASetMultipleBindCG> filterBindList(INode node,
 			LinkedList<SMultipleBindCG> bindList)
 	{
 		List<ASetMultipleBindCG> multipleSetBinds = new LinkedList<ASetMultipleBindCG>();
