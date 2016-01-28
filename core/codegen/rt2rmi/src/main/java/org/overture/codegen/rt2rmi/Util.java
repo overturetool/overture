@@ -8,7 +8,6 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.utils.GeneratedModule;
 

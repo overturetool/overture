@@ -1,25 +1,16 @@
 package org.overture.codegen.rt2rmi;
 
-import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.cgast.declarations.ASystemClassDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRStatus;
-import org.overture.codegen.ir.IrNodeInfo;
-import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
-import org.overture.codegen.trans.funcvalues.FuncValAssistant;
-import org.overture.codegen.utils.GeneratedData;
-import org.overture.codegen.utils.GeneratedModule;
 
 
 public class XCodeGen extends CodeGenBase {

@@ -9,18 +9,15 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AVariableExp;
-import org.overture.codegen.cgast.SExpCG;
 import org.overture.cgrmi.extast.declarations.AClientInstanceDeclCG;
 import org.overture.cgrmi.extast.declarations.ACpuDeploymentDeclCG;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.cgrmi.extast.declarations.ARMIregistryDeclCG;
 import org.overture.cgrmi.extast.declarations.ARemoteInstanceDeclCG;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.ir.IRInfo;
 
 /*
  * This sets up the relevant entry method for each CPU
@@ -56,13 +53,6 @@ public class CPUdeploymentGenerator {
 
 		Set<ACpuDeploymentDeclCG> cpuDeployments = new HashSet<ACpuDeploymentDeclCG>();
 
-		
-
-		for(AFieldDeclCG field : system_fields){
-			System.out.println("Field name is: " + field.getName());
-			SExpCG ex = field.getInitial();
-		}
-		
 		// Number of CPU
 		int numberofCPUs = cpuToDeployedObject.keySet().size();
 		
