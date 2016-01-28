@@ -1,0 +1,56 @@
+Packages
+
+base org.overture.cgrmi.extast.node;
+analysis org.overture.cgrmi.extast.analysis;
+
+Tokens
+
+Abstract Syntax Tree
+
+CG = #decl
+    ;
+
+
+#decl {-> package='org.overture.cgrmi.extast.declarations'}
+       = {remoteContract}
+		[name]:java_String
+		[methodSignatures]:CG.#decl.method*
+		[superName]:java_String
+		[isSuperClass]:java_Boolean
+	|	{remoteContractImpl}
+		[name]:java_String
+		[methods]:CG.#decl.method*
+		[fields]:CG.#decl.field*
+		[superName]:java_String
+		[isUniCast]:java_Boolean
+	 	[typeDecls]:CG.#decl.type*
+  		[abstract]:java_Boolean
+	|	{remoteInstance}
+		[name]:java_String
+		[nameString]:java_String
+		[className]:java_String
+		[varExp]:java_String
+    	[initial]:CG.#exp
+	|	{clientInstance}
+		[name]:java_String
+		[nameString]:java_String
+		[className]:java_String
+	|	{RMIregistry}
+		[URL]:java_String
+		[portNumber]:java_Integer
+		[funcName]:java_String
+	|	{cpuDeployment}
+		[cpuName]:java_String
+		[cpuNameString]:java_String
+		[remoteInst]:CG.#decl.remoteInstance*
+		[clientInst]:CG.#decl.clientInstance*
+		[RMIreg]:CG.#decl.RMIregistry
+		[DeployedObjCounter]: java_Integer
+		[NumberofCPUs]: java_Integer
+	|	{RMI_Server}
+		[name]:java_String
+		[portNumber]:java_Integer
+	|	{SynchToken}
+	|	{SynchToken_interface}
+       ;
+
