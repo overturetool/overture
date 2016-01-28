@@ -1,8 +1,0 @@
-import org.overture.codegen.runtime.*;
-
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-
-public interface SynchToken_interface extends Remote {
-
-}

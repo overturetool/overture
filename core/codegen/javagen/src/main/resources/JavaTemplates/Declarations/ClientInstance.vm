@@ -1,1 +1,0 @@
-$node.getName() = ($node.getClassName()) registry.lookup($node.getNameString());

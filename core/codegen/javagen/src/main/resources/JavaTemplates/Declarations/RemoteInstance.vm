@@ -1,2 +1,0 @@
-$node.getName() $JavaFormat.formatInitialExp($node.getInitial());
-registry.bind( $node.getNameString() , $node.getName());

@@ -1,1 +1,0 @@
-Registry registry = $node.getFuncName()($node.getURL(),$node.getPortNumber());
