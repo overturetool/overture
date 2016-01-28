@@ -16,20 +16,22 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.declarations.ACpuDeploymentDeclCG;
+import org.overture.cgrmi.extast.declarations.ACpuDeploymentDeclCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.ARMIServerDeclCG;
-import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
-import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
-import org.overture.codegen.cgast.declarations.ASynchTokenDeclCG;
-import org.overture.codegen.cgast.declarations.ASynchTokenInterfaceDeclCG;
+import org.overture.cgrmi.extast.declarations.ARMIServerDeclCG;
+import org.overture.cgrmi.extast.declarations.ARemoteContractDeclCG;
+import org.overture.cgrmi.extast.declarations.ARemoteContractImplDeclCG;
+import org.overture.cgrmi.extast.declarations.ASynchTokenDeclCG;
+import org.overture.cgrmi.extast.declarations.ASynchTokenInterfaceDeclCG;
 import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.merging.TemplateCallable;
+import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.rt2rmi.systemanalysis.DistributionMapping;
 import org.overture.codegen.rt2rmi.trans.RemoteTypeTrans;
 import org.overture.codegen.rt2rmi.trans.SystemClassTrans;
@@ -44,14 +46,18 @@ public class RmiGenerator implements IREventObserver {
 	private JavaCodeGen javaGen;
 	private String systemClassName;
 	LinkedList<AFieldDeclCG> system_fields;
+	private MergeVisitor mergeVisitor;
 	
 	public RmiGenerator() {
 		this.javaGen = new JavaCodeGen();
 		this.javaGen.registerIrObs(this);
-//		this.javaGen.getJavaSettings().
 		IRSettings ir = this.javaGen.getSettings();
 		ir.setCharSeqAsString(true);
 		addTransformations();
+		
+		TemplateStructure ts = new TemplateStructure("RmiTemplates");
+		TemplateCallable[] templateCallables = new TemplateCallable[] { new TemplateCallable("RMI", this) };
+		this.mergeVisitor = new MergeVisitor(new RmiTemplateManager(ts, this.getClass()), templateCallables);
 	}
 
 	private void addTransformations() {
