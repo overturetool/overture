@@ -290,7 +290,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 				if (pattern instanceof AIdentifierPatternCG)
 				{
-					return;
+					continue;
 				}
 
 				// TODO: Make it such that the successer var is passed on (multiple binds)
