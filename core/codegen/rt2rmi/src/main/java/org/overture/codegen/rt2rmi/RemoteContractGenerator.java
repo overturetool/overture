@@ -1,20 +1,13 @@
 package org.overture.codegen.rt2rmi;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.cgrmi.extast.declarations.ARemoteContractDeclCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 
 /*
  * This set up the remote contracts for the generated Java code
@@ -68,7 +61,6 @@ public class RemoteContractGenerator {
 				else if(methodSignature.getAccess().equals("public")){// && methodSignature.getStatic()==null){ // if public add to remote contract
 
 					if(methodSignature.getIsConstructor()) continue;
-					methodSignature.setIsRemote(true);
 					methodSignature.setAbstract(false);
 					methodSignature.setBody(null);
 					//methodSignature.setStatic(false);
