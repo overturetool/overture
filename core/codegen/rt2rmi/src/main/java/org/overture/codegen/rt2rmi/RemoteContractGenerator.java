@@ -8,6 +8,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.cgrmi.extast.declarations.ARemoteContractDeclCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.IRInfo;
 
 /*
  * This set up the remote contracts for the generated Java code
@@ -22,13 +23,28 @@ public class RemoteContractGenerator {
 
 	private List<ADefaultClassDeclCG> irClasses;
 
-	public RemoteContractGenerator(List<ADefaultClassDeclCG> irClasses) {
+	private IRInfo info;
+	
+	public static final String MULTIPLE_INHERITANCE_WARNING = "Code generation of RT models is not supported for multiple inheritance models";
+	
+	public RemoteContractGenerator(List<ADefaultClassDeclCG> irClasses, IRInfo info) {
 		super();
 		this.irClasses = irClasses;
+		this.info = info;
 	}
 
 	public Set<ARemoteContractDeclCG> run() throws AnalysisException {
 
+		for(ADefaultClassDeclCG classCg : irClasses)
+		{
+			if (classCg.getSuperNames().size() > 1)
+			{
+				info.addTransformationWarning(classCg, MULTIPLE_INHERITANCE_WARNING);
+				return new HashSet<>();
+			}
+			
+		}
+		
 		Set<ARemoteContractDeclCG> remoteContracts = new HashSet<ARemoteContractDeclCG>();
 
 		for(ADefaultClassDeclCG classCg : irClasses){
@@ -39,17 +55,14 @@ public class RemoteContractGenerator {
 
 			remoteContract.setName(currentName + "_i"); // transform name
 
-			if(classCg.getSuperName()==null) {
+			if(classCg.getSuperNames().isEmpty()) {
 				remoteContract.setIsSuperClass(true);
 				remoteContract.setSuperName(currentName);
 			}
 			else{
 				remoteContract.setIsSuperClass(false);
-				remoteContract.setSuperName(classCg.getSuperName()+"_i");
+				remoteContract.setSuperName(classCg.getSuperNames().getFirst().getName()+"_i");
 			}
-			
-//			if(classCg.getSuperName()==null) contractImpl.setIsUniCast(true);
-//			else contractImpl.setIsUniCast(false);
 			
 			for(AMethodDeclCG method : classCg.getMethods()){
 

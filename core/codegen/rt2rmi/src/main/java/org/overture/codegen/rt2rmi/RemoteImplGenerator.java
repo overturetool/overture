@@ -6,6 +6,7 @@ import java.util.List;
 import org.overture.cgrmi.extast.declarations.ARemoteContractImplDeclCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.vdm2java.IJavaConstants;
 
 /*
@@ -20,15 +21,27 @@ public class RemoteImplGenerator
 {
 
 	private List<ADefaultClassDeclCG> irClasses;
-
-	public RemoteImplGenerator(List<ADefaultClassDeclCG> irClasses)
+	private IRInfo info;
+	
+	public RemoteImplGenerator(List<ADefaultClassDeclCG> irClasses, IRInfo info)
 	{
 		super();
 		this.irClasses = irClasses;
+		this.info = info;
 	}
 
 	public List<ARemoteContractImplDeclCG> run()
 	{
+		for(ADefaultClassDeclCG classCg : irClasses)
+		{
+			if (classCg.getSuperNames().size() > 1)
+			{
+				info.addTransformationWarning(classCg, RemoteContractGenerator.MULTIPLE_INHERITANCE_WARNING);
+				return new LinkedList<>();
+			}
+			
+		}
+		
 		List<ARemoteContractImplDeclCG> contractImpls = new LinkedList<ARemoteContractImplDeclCG>();
 
 		for (ADefaultClassDeclCG classCg : irClasses)
@@ -37,12 +50,15 @@ public class RemoteImplGenerator
 			ARemoteContractImplDeclCG contractImpl = new ARemoteContractImplDeclCG();
 			contractImpl.setName(classCg.getName());
 			contractImpl.setFields(classCg.getFields());
-			contractImpl.setSuperName(classCg.getSuperName());
+			if(!classCg.getSuperNames().isEmpty())
+			{
+				contractImpl.setSuperName(classCg.getSuperNames().get(0).getName());
+			}
 			contractImpl.setAbstract(classCg.getAbstract());
 			// Add type declarations
 			contractImpl.setTypeDecls(classCg.getTypeDecls());
 
-			if (classCg.getSuperName() == null)
+			if (classCg.getSuperNames().isEmpty())
 				contractImpl.setIsUniCast(true);
 			else
 				contractImpl.setIsUniCast(false);

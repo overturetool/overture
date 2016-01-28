@@ -20,17 +20,16 @@ import org.overture.cgrmi.extast.declarations.ARemoteContractDeclCG;
 import org.overture.cgrmi.extast.declarations.ARemoteContractImplDeclCG;
 import org.overture.cgrmi.extast.declarations.ASynchTokenDeclCG;
 import org.overture.cgrmi.extast.declarations.ASynchTokenInterfaceDeclCG;
-import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
-import org.overture.codegen.merging.TemplateCallable;
-import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.rt2rmi.systemanalysis.DistributionMapping;
 import org.overture.codegen.rt2rmi.trans.RemoteTypeTrans;
 import org.overture.codegen.rt2rmi.trans.SystemClassTrans;
@@ -50,23 +49,19 @@ public class RmiGenerator implements IREventObserver
 	{
 		this.javaGen = new JavaCodeGen();
 		this.javaGen.registerIrObs(this);
-		IRSettings ir = this.javaGen.getSettings();
-		ir.setCharSeqAsString(true);
+		this.javaGen.getSettings().setCharSeqAsString(true);
 		addTransformations();
-
-		TemplateStructure ts = new TemplateStructure("RmiTemplates");
-		TemplateCallable[] templateCallables = new TemplateCallable[] { new TemplateCallable("RMI", this) };
-		new MergeVisitor(new RmiTemplateManager(ts, this.getClass()), templateCallables);
 	}
 
 	private void addTransformations()
 	{
 		// Add additional transformations
-		IRInfo info = new IRInfo();
-		this.javaGen.getTransSeries().getSeries().add(new RemoteTypeTrans(systemClassName, info));
+		this.javaGen.getTransSeries().getSeries().add(new RemoteTypeTrans(systemClassName, this.javaGen.getInfo()));
 		this.javaGen.getTransSeries().getSeries().add(new SystemClassTrans());
 	}
 
+	
+	
 	public void generate(List<SClassDefinition> rtClasses, String output_dir)
 			throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException, IOException
 	{
@@ -88,16 +83,16 @@ public class RmiGenerator implements IREventObserver
 			// Settings.dialect=Dialect.VDM_RT;
 			systemClassName = mapping.getSystemName();
 
-			GeneratedData data = javaGen.generateJavaFromVdm(rtClasses);
+			GeneratedData data = javaGen.generate(CodeGenBase.getNodes(rtClasses));
 
 			List<ADefaultClassDeclCG> irClasses = Util.getClasses(data.getClasses());
 
-			RemoteContractGenerator contractGenerator = new RemoteContractGenerator(irClasses);
+			RemoteContractGenerator contractGenerator = new RemoteContractGenerator(irClasses, this.getJavaGen().getInfo());
 			Set<ARemoteContractDeclCG> remoteContracts = contractGenerator.run();
 
 			// printRemoteContracts(remoteContracts);
 
-			RemoteImplGenerator implsGen = new RemoteImplGenerator(irClasses);
+			RemoteImplGenerator implsGen = new RemoteImplGenerator(irClasses, this.getJavaGen().getInfo());
 			List<ARemoteContractImplDeclCG> remoteImpls = implsGen.run();
 
 			// printRemoteContractsImpl(remoteImpls);
@@ -146,7 +141,7 @@ public class RmiGenerator implements IREventObserver
 	}
 
 	@Override
-	public List<IRStatus<INode>> initialIRConstructed(List<IRStatus<INode>> ast, IRInfo info)
+	public List<IRStatus<PCG>> initialIRConstructed(List<IRStatus<PCG>> ast, IRInfo info)
 	{
 		// This method received the initial version of the IR before it is
 		// transformed
@@ -161,7 +156,7 @@ public class RmiGenerator implements IREventObserver
 	}
 
 	@Override
-	public List<IRStatus<INode>> finalIRConstructed(List<IRStatus<INode>> ast, IRInfo info)
+	public List<IRStatus<PCG>> finalIRConstructed(List<IRStatus<PCG>> ast, IRInfo info)
 	{
 		// The final version of the IR
 

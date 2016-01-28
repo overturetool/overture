@@ -9,48 +9,30 @@ import org.overture.cgrmi.extast.declarations.ARemoteContractImplDeclCG;
 import org.overture.cgrmi.extast.declarations.ARemoteInstanceDeclCG;
 import org.overture.cgrmi.extast.declarations.ASynchTokenDeclCG;
 import org.overture.cgrmi.extast.declarations.ASynchTokenInterfaceDeclCG;
-import org.overture.codegen.merging.TemplateManager;
-import org.overture.codegen.merging.TemplateStructure;
+import org.overture.codegen.vdm2java.JavaTemplateManager;
 
-public class RmiTemplateManager extends TemplateManager
+public class RmiTemplateManager extends JavaTemplateManager
 {
 
-	public RmiTemplateManager(TemplateStructure templateStructure,
-			Class<?> classRef)
+	public RmiTemplateManager(String root)
 	{
-		super(templateStructure, classRef);
-		initRmiNodes();
+		super(root);
 	}
-
-	private void initRmiNodes()
+	
+	@Override
+	protected void initNodeTemplateFileNames()
 	{
-		// RT specific
-		nodeTemplateFileNames.put(ARemoteContractDeclCG.class, templateStructure.DECL_PATH
-				+ "RemoteContract");
+		super.initNodeTemplateFileNames();
 		
-		nodeTemplateFileNames.put(ARemoteContractImplDeclCG.class, templateStructure.DECL_PATH
-				+ "RemoteContractImpl");
-		
-		nodeTemplateFileNames.put(ACpuDeploymentDeclCG.class, templateStructure.DECL_PATH
-				+ "CPUdeployment");
-
-		nodeTemplateFileNames.put(ARemoteInstanceDeclCG.class, templateStructure.DECL_PATH
-				+ "RemoteInstance");
-		
-		nodeTemplateFileNames.put(AClientInstanceDeclCG.class, templateStructure.DECL_PATH
-				+ "ClientInstance");
-		
-		nodeTemplateFileNames.put(ARMIregistryDeclCG.class, templateStructure.DECL_PATH
-				+ "RMIregistry");
-		
-		nodeTemplateFileNames.put(ARMIServerDeclCG.class, templateStructure.DECL_PATH 
-				+ "RMI_Server");
-		
-		nodeTemplateFileNames.put(ASynchTokenDeclCG.class, templateStructure.DECL_PATH
-				+ "SynchToken");
-		
-		nodeTemplateFileNames.put(ASynchTokenInterfaceDeclCG.class, templateStructure.DECL_PATH
-				+ "SynchTokenInterface");	
-
+		setUserDefinedPath(ARemoteContractDeclCG.class, "RemoteContract");
+		setUserDefinedPath(ARemoteContractImplDeclCG.class, "RemoteContractImpl");
+		setUserDefinedPath(ARemoteContractImplDeclCG.class, "RemoteContractImpl");
+		setUserDefinedPath(ACpuDeploymentDeclCG.class,"CPUdeployment");
+		setUserDefinedPath(ARemoteInstanceDeclCG.class,"RemoteInstance");
+		setUserDefinedPath(AClientInstanceDeclCG.class, "ClientInstance");
+		setUserDefinedPath(ARMIregistryDeclCG.class,"RMIregistry");
+		setUserDefinedPath(ARMIServerDeclCG.class, "RMI_Server");
+		setUserDefinedPath(ASynchTokenDeclCG.class, "SynchToken");
+		setUserDefinedPath(ASynchTokenInterfaceDeclCG.class,"SynchTokenInterface");	
 	}
 }
