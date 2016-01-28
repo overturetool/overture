@@ -17,9 +17,6 @@
 	#set( $templateTypes = $JavaFormat.formatTemplateTypes($node.getTemplateTypes()))
 #end
 ##
-#set( $remote = "")
-#if ($node.getIsRemote())
-	#set( $remote = " throws RemoteException")
-#end
+$JavaFormat.formatMetaData($node.getMetaData())##
 ##
-$node.getAccess() $abstract $static $templateTypes $returnType $node.getName()($JavaFormat.format($node.getFormalParams()))${remote}$JavaFormat.formatOperationBody($node.getBody())
+$node.getAccess() $abstract $static $templateTypes $returnType $node.getName()($JavaFormat.format($node.getFormalParams()))$JavaFormat.formatOperationBody($node.getBody())
