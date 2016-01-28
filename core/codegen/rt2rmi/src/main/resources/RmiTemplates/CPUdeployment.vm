@@ -1,0 +1,73 @@
+import java.rmi.AlreadyBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.NotBoundException;
+import org.overture.codegen.runtime.*;
+
+public class $node.getCpuName() {
+
+	public static void main(String[] args) throws RemoteException, AlreadyBoundException, NotBoundException {
+	
+		boolean lock1= true;
+		boolean lock2= true;
+
+		while(lock1){
+			try{
+				System.out.println("Trying to connect to RMI registry...");
+				Thread.sleep(2000);
+
+				$JavaFormat.format($node.getRMIreg())
+
+				#foreach( $remoteInstance in $node.getRemoteInst() )
+				$JavaFormat.format($remoteInstance)
+				#end
+
+				System.out.println("Success to connect and bind..");
+				lock1 = false;
+
+				int DeployedObjCounter = $node.getDeployedObjCounter();
+				while(registry.list().length<DeployedObjCounter) {
+				System.out.println("Waiting for RMI registry full list");
+				Thread.sleep(2000);
+				}
+				// try to look up
+				while(lock2){
+					try{
+						System.out.println("Trying to look up...");
+						Thread.sleep(2000);
+							#foreach( $clientInstance in $node.getClientInst() )
+							$JavaFormat.format($clientInstance)
+							#end
+
+						System.out.println("Synchronization successful...");
+						
+						SynchToken synchToken = new SynchToken();
+						registry.bind($node.getCpuNameString(),synchToken);
+						
+						int NumberOfCPUs = $node.getNumberofCPUs();
+						
+						while(registry.list().length<DeployedObjCounter+NumberOfCPUs) {
+							System.out.println("Waiting for all remote references");
+							Thread.sleep(2000);
+							}
+						
+						lock2=false;
+					}
+					catch(Exception ex){
+						System.out.println("Error catch, tried to look up... " + ex);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				System.out.println("Error catch, tried to bind... " + ex);
+			}
+			
+			if(!lock2){
+				System.out.println("Program starting...");
+			}
+		}
+
+	}
+}
