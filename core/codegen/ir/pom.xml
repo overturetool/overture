@@ -28,6 +28,18 @@
   <build>
     <plugins>
 
+			<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.3</version>
+        <configuration>
+
+          <excludePackageNames>org.overture.codegen.cgast:org.overture.codegen.cgast.*</excludePackageNames>
+
+        </configuration>
+      </plugin>
+
+
       <plugin>
 	      <groupId>org.overturetool.astcreator</groupId>
 	      <artifactId>astcreator-plugin</artifactId>
