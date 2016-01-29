@@ -38,7 +38,7 @@ public class RmiGeneratorCommandLine
 		List<String> listArgs = Arrays.asList(args);
 		List<File> files = new LinkedList<File>();
 		File outputDir = null;
-		boolean print = false;
+//		boolean print = false;
 		
 		for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
 		{
@@ -63,7 +63,7 @@ public class RmiGeneratorCommandLine
 			}
 			else if (arg.equals(PRINT_ARG))
 			{
-				print = true;
+				//print = true;
 			} 
 			else if (arg.equals(FOLDER_ARG))
 			{

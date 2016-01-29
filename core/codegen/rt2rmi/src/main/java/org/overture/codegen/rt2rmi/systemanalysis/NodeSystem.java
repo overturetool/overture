@@ -128,7 +128,7 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 						if (cpuToDeployedObjects.containsKey(key_obj))
 							cpuToDeployedObjects.get(key_obj).add(var_exp);
 						else {
-							Set<AVariableExp> xs = new HashSet();
+							Set<AVariableExp> xs = new HashSet<AVariableExp>();
 							xs.add(var_exp);
 							cpuToDeployedObjects.put(key_obj, xs);
 						}
@@ -170,14 +170,13 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void caseASetEnumSetExp(ASetEnumSetExp node)
 			throws AnalysisException {
 		// System.out.println("Got in set enum: ");
 
 		LinkedList<PExp> set = (LinkedList<PExp>) node.getMembers().clone();
-
-		LinkedList<PExp> set2 = (LinkedList<PExp>) node.getMembers().clone();
 
 		for (PExp exp : node.getMembers()) {
 
@@ -243,7 +242,7 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 			deployedObjectsToPubOp.get(key_obj2).add(
 					var_op_cast);
 		else {
-			Set<AExplicitOperationDefinition> xs2 = new HashSet();
+			Set<AExplicitOperationDefinition> xs2 = new HashSet<AExplicitOperationDefinition>();
 			xs2.add(var_op_cast);
 			deployedObjectsToPubOp.put(key_obj2, xs2);
 		}
@@ -257,7 +256,7 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 			deployedClassesToPubOp2.get(var_classDef).add(
 					var_op_cast);
 		else {
-			Set<AExplicitOperationDefinition> xs2 = new HashSet();
+			Set<AExplicitOperationDefinition> xs2 = new HashSet<AExplicitOperationDefinition>();
 			xs2.add(var_op_cast);
 			deployedClassesToPubOp2.put(var_classDef, xs2);
 		}
@@ -270,7 +269,7 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 			cpuToDeployedClasses.get(key_obj).add(
 					var_classDef);
 		else {
-			Set<AClassClassDefinition> xs2 = new HashSet();
+			Set<AClassClassDefinition> xs2 = new HashSet<AClassClassDefinition>();
 			xs2.add(var_classDef);
 			cpuToDeployedClasses.put(key_obj, xs2);
 		}
@@ -288,7 +287,7 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 		// Convert linked list to set
 		for (String key : cpuToConnectedCPUsList.keySet()) {
 
-			Set<String> foo = new HashSet();
+			Set<String> foo = new HashSet<String>();
 			for (PExp keyy : cpuToConnectedCPUsList.get(key)) {
 				foo.add(keyy.toString());
 			}

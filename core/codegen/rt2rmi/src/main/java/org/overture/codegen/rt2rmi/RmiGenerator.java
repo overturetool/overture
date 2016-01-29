@@ -32,7 +32,6 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.rt2rmi.systemanalysis.DistributionMapping;
 import org.overture.codegen.rt2rmi.trans.RemoteTypeTrans;
-import org.overture.codegen.rt2rmi.trans.SystemClassTrans;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
@@ -57,7 +56,6 @@ public class RmiGenerator implements IREventObserver
 	{
 		// Add additional transformations
 		this.javaGen.getTransSeries().getSeries().add(new RemoteTypeTrans(systemClassName, this.javaGen.getInfo()));
-		this.javaGen.getTransSeries().getSeries().add(new SystemClassTrans());
 	}
 
 	
@@ -196,6 +194,7 @@ public class RmiGenerator implements IREventObserver
 		File file_s = new File(output_dir + RMI_ServerName + "/" + RMI_ServerName + ".java");
 		BufferedWriter output_s = new BufferedWriter(new FileWriter(file_s));
 		output_s.write(JavaCodeGenUtil.formatJavaCode(writer_s.toString()));
+		output_s.flush();
 		output_s.close();
 
 		// Print remote contracts to the RMI server
@@ -207,6 +206,7 @@ public class RmiGenerator implements IREventObserver
 			File file_i = new File(output_dir + RMI_ServerName + "/" + contract.getName() + ".java");
 			BufferedWriter output_i = new BufferedWriter(new FileWriter(file_i));
 			output_i.write(JavaCodeGenUtil.formatJavaCode(writer_i.toString()));
+			output_i.flush();
 			output_i.close();
 		}
 
@@ -219,6 +219,7 @@ public class RmiGenerator implements IREventObserver
 		File file_synch_i_RMI = new File(output_dir + RMI_ServerName + "/" + "SynchToken_interface.java");
 		BufferedWriter output_synch_i_RMI = new BufferedWriter(new FileWriter(file_synch_i_RMI));
 		output_synch_i_RMI.write(JavaCodeGenUtil.formatJavaCode(writer_synch_i_RMI.toString()));
+		output_synch_i_RMI.flush();
 		output_synch_i_RMI.close();
 	}
 
@@ -243,9 +244,9 @@ public class RmiGenerator implements IREventObserver
 		for (String cpu : cpuToDeployedClasses.keySet())
 		{
 
-			for (AClassClassDefinition clas : cpuToDeployedClasses.get(cpu))
+			int size = cpuToDeployedClasses.get(cpu).size();
+			for (int i = 0; i < size; i++)
 			{
-
 				// Generate a SynchToken and its interface for each CPU
 				ASynchTokenDeclCG synchToken = new ASynchTokenDeclCG();
 
@@ -255,6 +256,7 @@ public class RmiGenerator implements IREventObserver
 				File file_synch = new File(output_dir + cpu + "/" + "SynchToken.java");
 				BufferedWriter output_synch = new BufferedWriter(new FileWriter(file_synch));
 				output_synch.write(JavaCodeGenUtil.formatJavaCode(writer_synch.toString()));
+				output_synch.flush();
 				output_synch.close();
 
 				ASynchTokenInterfaceDeclCG synchToken_interface = new ASynchTokenInterfaceDeclCG();
@@ -265,6 +267,7 @@ public class RmiGenerator implements IREventObserver
 				File file_synch_i = new File(output_dir + cpu + "/" + "SynchToken_interface.java");
 				BufferedWriter output_synch_i = new BufferedWriter(new FileWriter(file_synch_i));
 				output_synch_i.write(JavaCodeGenUtil.formatJavaCode(writer_synch_i.toString()));
+				output_synch_i.flush();
 				output_synch_i.close();
 
 				for (ARemoteContractDeclCG contract : remoteContracts)
@@ -275,6 +278,7 @@ public class RmiGenerator implements IREventObserver
 					File file = new File(output_dir + cpu + "/" + contract.getName() + ".java");
 					BufferedWriter output = new BufferedWriter(new FileWriter(file));
 					output.write(JavaCodeGenUtil.formatJavaCode(writer.toString()));
+					output.flush();
 					output.close();
 				}
 
@@ -286,6 +290,7 @@ public class RmiGenerator implements IREventObserver
 					File file = new File(output_dir + cpu + "/" + impl.getName() + ".java");
 					BufferedWriter output = new BufferedWriter(new FileWriter(file));
 					output.write(JavaCodeGenUtil.formatJavaCode(writer.toString()));
+					output.flush();
 					output.close();
 				}
 			}
