@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.modelcheckers.probsolver.CompleteTests">
-<message column="0" line="0" message="cannot be solved" messageType="error" number="0" resource="Operation-empty-frame-class.vdmpp"/>
-<result>
-<output object="null" resource="Operation-empty-frame-class.vdmpp" value="null"/>
-</result>
-</testResult>

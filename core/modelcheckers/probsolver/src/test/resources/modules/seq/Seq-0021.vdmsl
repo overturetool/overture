@@ -1,6 +1,0 @@
-operations
-
-inds1() m : set of nat1
- post m = inds [3,1,4,1,5];
-
- 

@@ -1,4 +1,0 @@
-operations
-
-    rev() r : nat
-    post -(-1) = r;

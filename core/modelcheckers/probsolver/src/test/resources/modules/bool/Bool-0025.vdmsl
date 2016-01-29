@@ -1,4 +1,0 @@
-operations
-
-abso2() m : nat
-  post m = abs -3

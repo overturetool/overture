@@ -1,5 +1,0 @@
-operations
-
--- prodcttest1() m : nat * nat
-producttest1() m : (nat1 * nat1)
-  post m = mk_(2, 3)

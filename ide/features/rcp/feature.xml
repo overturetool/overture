@@ -64,9 +64,6 @@
          id="org.overture.ide.plugins.features.isatrans"
          version="0.0.0"/>-->
 
-   <includes
-         id="org.overture.ide.plugins.features.probruntime"
-         version="0.0.0"/>
 
    <includes
          id="org.overture.ide.plugins.features.developerutils"

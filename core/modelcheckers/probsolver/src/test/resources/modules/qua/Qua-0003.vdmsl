@@ -1,4 +1,0 @@
-operations
-
-  quall() result: bool
-    post result = forall n in set {1,3,2,4} & 3>=n

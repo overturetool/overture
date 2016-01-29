@@ -1,4 +1,0 @@
-operations
-
-concseq2()  n : seq of seq of nat
-post n = [[1,11],[2]] ^ [[2,4]]
