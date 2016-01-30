@@ -314,21 +314,21 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return call;
 	}
 
-	public AVarDeclCG consNextElementDeclared(String iteratorTypeName,
+	public AVarDeclCG consNextElementDeclared(STypeCG iteratorType,
 			STypeCG elementType, SPatternCG id, String iteratorName,
 			String nextElementMethod) throws AnalysisException
 	{
-		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
+		ACastUnaryExpCG cast = consNextElementCall(iteratorType, iteratorName, elementType, nextElementMethod);
 
 		return info.getDeclAssistant().consLocalVarDecl(elementType, id.clone(), cast);
 	}
 
 	public ALocalPatternAssignmentStmCG consNextElementAssignment(
-			String iteratorTypeName, STypeCG elementType, SPatternCG id,
+			STypeCG iteratorType, STypeCG elementType, SPatternCG id,
 			String iteratorName, String nextElementMethod,
 			AVarDeclCG nextElementDecl) throws AnalysisException
 	{
-		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
+		ACastUnaryExpCG cast = consNextElementCall(iteratorType, iteratorName, elementType, nextElementMethod);
 
 		ALocalPatternAssignmentStmCG assignment = new ALocalPatternAssignmentStmCG();
 		assignment.setTarget(id.clone());
@@ -366,12 +366,12 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return typeName;
 	}
 
-	public ACastUnaryExpCG consNextElementCall(String iteratorType,
+	public ACastUnaryExpCG consNextElementCall(STypeCG iteratorType,
 			String iteratorName, STypeCG elementType, String nextElementMethod)
 	{
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(elementType.clone());
-		cast.setExp(consInstanceCall(consClassType(iteratorType), iteratorName, elementType.clone(), nextElementMethod));
+		cast.setExp(consInstanceCall(iteratorType, iteratorName, elementType.clone(), nextElementMethod));
 		return cast;
 	}
 
@@ -546,14 +546,14 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return outerBlock;
 	}
 
-	public ACastUnaryExpCG consNextElementCall(String iteratorTypeName,
+	public ACastUnaryExpCG consNextElementCall(STypeCG instanceType,
 			String instance, String member, ACompSeqExpCG seqComp)
 			throws AnalysisException
 	{
 
 		STypeCG elementType = getSeqTypeCloned(seqComp).getSeqOf();
 
-		SExpCG nextCall = consInstanceCall(consClassType(iteratorTypeName), instance, elementType.clone(), member);
+		SExpCG nextCall = consInstanceCall(instanceType, instance, elementType.clone(), member);
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(elementType.clone());
 		cast.setExp(nextCall);

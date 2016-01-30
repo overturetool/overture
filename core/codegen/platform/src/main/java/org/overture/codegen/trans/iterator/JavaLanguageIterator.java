@@ -97,7 +97,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	{
 		STypeCG elementType = transAssistant.getSetTypeCloned(setVar).getSetOf();
 
-		return transAssistant.consNextElementDeclared(ITERATOR_TYPE, elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR);
+		return transAssistant.consNextElementDeclared(transAssistant.consClassType(ITERATOR_TYPE), elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR);
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	{
 		STypeCG elementType = transAssistant.getSetTypeCloned(setVar).getSetOf();
 
-		return transAssistant.consNextElementAssignment(ITERATOR_TYPE, elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR, nextElementDecl);
+		return transAssistant.consNextElementAssignment(transAssistant.consClassType(ITERATOR_TYPE), elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR, nextElementDecl);
 	}
 	
 	@Override
@@ -116,6 +116,6 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	{
 		STypeCG elementType = transAssistant.getSetTypeCloned(setVar).getSetOf();
 		
-		return transAssistant.consNextElementCall(ITERATOR_TYPE, iteratorName, elementType, NEXT_ELEMENT_ITERATOR);
+		return transAssistant.consNextElementCall(transAssistant.consClassType(ITERATOR_TYPE), iteratorName, elementType, NEXT_ELEMENT_ITERATOR);
 	}
 }
