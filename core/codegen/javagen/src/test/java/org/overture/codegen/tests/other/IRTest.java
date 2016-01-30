@@ -11,16 +11,21 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ACatchClauseDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.ATypeArgExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AMetaStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.statements.ATryStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AVoidTypeCG;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.JavaCodeGen;
@@ -102,6 +107,34 @@ public class IRTest
 		String expected = "try { return 5L; } catch(Exception e1) { return 42L; } catch(Exception e1) { return 42L; }";
 		
 		compare(expected, tryStm);
+	}
+	
+	@Test
+	public void testOpRaises()
+	{
+		AMethodDeclCG method = new AMethodDeclCG();
+		method.setAbstract(false);
+		method.setAccess(IRConstants.PUBLIC);
+		method.setAsync(false);
+		method.setBody(new ASkipStmCG());
+		AMethodTypeCG t = new AMethodTypeCG();
+		t.setResult(new AVoidTypeCG());
+		method.setName("op");
+		method.setMethodType(t);
+		method.setStatic(false);
+		
+		AExternalTypeCG runtimeExpType = new AExternalTypeCG();
+		runtimeExpType.setName("RuntimeException");
+		method.getRaises().add(runtimeExpType);
+		
+		// For one exception
+		compare("public void op() throws RuntimeException { /* skip */ }", method);
+		
+		AExternalTypeCG npeType = new AExternalTypeCG();
+		npeType.setName("NullPointerException");
+		method.getRaises().add(npeType);
+
+		compare("public void op() throws RuntimeException, NullPointerException { /* skip */ }", method);
 	}
 	
 	@Test
