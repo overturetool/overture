@@ -17,6 +17,11 @@
 	#set( $templateTypes = $JavaFormat.formatTemplateTypes($node.getTemplateTypes()))
 #end
 ##
+#set( $params = $JavaFormat.format($node.getFormalParams()))
+##
+#set( $body = $JavaFormat.formatOperationBody($node.getBody()))
+##
 $JavaFormat.formatMetaData($node.getMetaData())##
 ##
-$node.getAccess() $abstract $static $templateTypes $returnType $node.getName()($JavaFormat.format($node.getFormalParams()))$JavaFormat.formatOperationBody($node.getBody())
+$node.getAccess() $abstract $static $templateTypes $returnType $node.getName()(${params})
+$body
