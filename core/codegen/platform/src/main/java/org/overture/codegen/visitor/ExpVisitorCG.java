@@ -154,6 +154,7 @@ import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -1307,13 +1308,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		
+		boolean isLocalDef = varDef instanceof AAssignmentDefinition || !(varDef.getNameScope() == NameScope.STATE
+				|| varDef.getNameScope() == NameScope.GLOBAL || varDef.getNameScope() == NameScope.VARSTATE || varDef.getNameScope() == NameScope.VARSANDSTATE);
+		
 		if(Settings.dialect == Dialect.VDM_PP || Settings.dialect == Dialect.VDM_RT)
 		{
 			SClassDefinition owningClass = varDef.getAncestor(SClassDefinition.class);
 			SClassDefinition nodeParentClass = node.getAncestor(SClassDefinition.class);
 			
-			boolean isLocalDef = varDef instanceof AAssignmentDefinition || !(varDef.getNameScope() == NameScope.STATE
-					|| varDef.getNameScope() == NameScope.GLOBAL || varDef.getNameScope() == NameScope.VARSTATE || varDef.getNameScope() == NameScope.VARSANDSTATE);
 			boolean isInstanceVarDef = varDef instanceof AInstanceVariableDefinition;
 			boolean isExplOp = varDef instanceof SOperationDefinition;
 			boolean isExplFunc = varDef instanceof SFunctionDefinition;
@@ -1354,17 +1356,26 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			}
 			
 			boolean inOwningModule = defModuleName.equals(nodeModuleName);
-			boolean isLocalDef = question.getDeclAssistant().inFunc(node) || 
-					varDef.getAncestor(AStateDefinition.class) == null;
+			
+
+			SVarExpCG res;
 			
 			if(inOwningModule)
 			{
-				return consIdVar(name, isLambda, typeCg, isLocalDef);
+				res = consIdVar(name, isLambda, typeCg, isLocalDef);
 			}
 			else
 			{
-				return consExplicitVar(defModuleName, name, isLambda, typeCg, isLocalDef);
+				res = consExplicitVar(defModuleName, name, isLambda, typeCg, isLocalDef);
 			}
+			
+			if(question.getDeclAssistant().inFunc(node) || 
+					varDef.getAncestor(AStateDefinition.class) == null)
+			{
+				question.registerSlStateRead(res);
+			}
+			
+			return res;
 		}
 		else
 		{
@@ -1373,7 +1384,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		}
 	}
 
-	private SExpCG consExplicitVar(String className, String name, boolean isLambda,
+	private SVarExpCG consExplicitVar(String className, String name, boolean isLambda,
 			STypeCG typeCg, boolean isLocalDef)
 	{
 		AExplicitVarExpCG varExp = new AExplicitVarExpCG();
@@ -1390,7 +1401,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		return varExp;
 	}
 
-	private SExpCG consIdVar(String name, boolean isLambda, STypeCG typeCg,
+	private SVarExpCG consIdVar(String name, boolean isLambda, STypeCG typeCg,
 			boolean isLocalDef)
 	{
 		AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
