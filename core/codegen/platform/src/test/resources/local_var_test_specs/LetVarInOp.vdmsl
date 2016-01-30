@@ -1,0 +1,7 @@
+operations
+
+op : () ==> nat
+op () ==
+let v = 1
+in
+  return v;

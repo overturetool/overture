@@ -1,0 +1,13 @@
+class A
+
+instance variables
+
+iv : nat := 5;
+
+operations
+
+public op : () ==> nat
+op () ==
+ return iv;
+
+end A

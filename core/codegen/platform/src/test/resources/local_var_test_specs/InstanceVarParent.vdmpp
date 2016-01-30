@@ -1,0 +1,16 @@
+class A
+
+instance variables
+
+protected field : nat := 5;
+
+end A
+
+class B is subclass of A
+
+operations 
+public op : () ==> nat
+op () ==
+ return field;
+
+end B
