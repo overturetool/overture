@@ -23,6 +23,8 @@ package org.overture.codegen.vdm2java;
 
 public interface IJavaConstants
 {
+	public static final String THROWS = "throws";
+	
 	public static final String[] RESERVED_WORDS = {
 			// Java Keywords
 			"abstract", "continue", "for", "new", "switch", "assert",

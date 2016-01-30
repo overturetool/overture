@@ -19,9 +19,11 @@
 ##
 #set( $params = $JavaFormat.format($node.getFormalParams()))
 ##
+#set( $throwsClause = $JavaFormat.formatThrows($node.getRaises()))
+##
 #set( $body = $JavaFormat.formatOperationBody($node.getBody()))
 ##
 $JavaFormat.formatMetaData($node.getMetaData())##
 ##
-$node.getAccess() $abstract $static $templateTypes $returnType $node.getName()(${params})
+$node.getAccess() $abstract $static $templateTypes $returnType $node.getName()(${params}) $throwsClause
 $body

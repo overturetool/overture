@@ -690,6 +690,31 @@ public class JavaFormat
 		return exp == null || exp instanceof AUndefinedExpCG ? "" : " = " + format(exp);
 	}
 
+	public String formatThrows(List<STypeCG> types) throws AnalysisException
+	{
+		if(!types.isEmpty())
+		{
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append(IJavaConstants.THROWS);
+			sb.append(' ');
+			
+			String sep = "";
+			for(STypeCG t : types)
+			{
+				sb.append(sep);
+				sb.append(format(t));
+				sep = ", ";
+			}
+			
+			return sb.toString();
+		}
+		else
+		{
+			return "";
+		}
+	}
+	
 	public String formatOperationBody(SStmCG body) throws AnalysisException
 	{
 		String NEWLINE = "\n";
