@@ -7,6 +7,8 @@ import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.cgast.declarations.ASystemClassDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class ImportsTrans extends DepthFirstAnalysisAdaptor
@@ -20,6 +22,17 @@ public class ImportsTrans extends DepthFirstAnalysisAdaptor
 	
 	@Override
 	public void caseADefaultClassDeclCG(ADefaultClassDeclCG node) throws AnalysisException
+	{
+		handleClass(node);
+	}
+	
+	@Override
+	public void caseASystemClassDeclCG(ASystemClassDeclCG node) throws AnalysisException
+	{
+		handleClass(node);
+	}
+
+	private void handleClass(SClassDeclCG node)
 	{
 		List<ClonableString> dep = new LinkedList<>();
 		
@@ -41,12 +54,12 @@ public class ImportsTrans extends DepthFirstAnalysisAdaptor
 		node.setDependencies(dep);
 	}
 	
-	public static boolean isQuote(ADefaultClassDeclCG classCg)
+	public static boolean isQuote(SClassDeclCG classCg)
 	{
 		return classCg != null && JavaCodeGen.JAVA_QUOTES_PACKAGE.equals(classCg.getPackage());
 	}
 	
-	public boolean importTraceSupport(ADefaultClassDeclCG node)
+	public boolean importTraceSupport(SClassDeclCG node)
 	{
 		return info.getSettings().generateTraces() && !node.getTraces().isEmpty();
 	}
