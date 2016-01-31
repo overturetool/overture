@@ -41,7 +41,7 @@ public class TemplateManager
 	/**
 	 * Relative paths for user-defined template files
 	 */
-	protected HashMap<Class<? extends INode>, String> userDefinedPaths;
+	protected HashMap<Class<? extends INode>, TemplateData> userDefinedPaths;
 
 	protected String root;
 
@@ -70,8 +70,27 @@ public class TemplateManager
 	public TemplateManager(String root, Class<?> templateLoadRef)
 	{
 		this.root = root;
-		this.templateLoadRef = templateLoadRef;
+		
+		if(templateLoadRef != null)
+		{
+			this.templateLoadRef = templateLoadRef;
+		}
+		else
+		{
+			this.templateLoadRef = this.getClass();
+		}
+		
 		initNodeTemplateFileNames();
+	}
+	
+	public Class<?> getTemplateLoaderRef()
+	{
+		return templateLoadRef;
+	}
+	
+	public String getRoot()
+	{
+		return root;
 	}
 
 	/**
@@ -86,25 +105,9 @@ public class TemplateManager
 	{
 		try
 		{
-			String relPath;
-
-			if (isUserDefined(nodeClass))
-			{
-				relPath = userDefinedPaths.get(nodeClass);
-			} else
-			{
-				relPath = derivePath(nodeClass);
-			}
+			TemplateData td = getTemplateData(nodeClass);
 			
-			StringBuffer buffer;
-				
-			if (templateLoadRef != null)
-			{
-				buffer = GeneralUtils.readFromFile(relPath, templateLoadRef);
-			} else
-			{
-				buffer = GeneralUtils.readFromFile(relPath);
-			}
+			 StringBuffer buffer = GeneralUtils.readFromFile(td.getTemplatePath(), td.getTemplateLoaderRef());
 
 			if (buffer == null)
 			{
@@ -116,6 +119,22 @@ public class TemplateManager
 		} catch (IOException e)
 		{
 			return null;
+		}
+	}
+	
+	public String getTemplatePath(Class<? extends INode> nodeClass)
+	{
+		return getTemplateData(nodeClass).getTemplatePath();
+	}
+
+	public TemplateData getTemplateData(Class<? extends INode> nodeClass)
+	{
+		if (isUserDefined(nodeClass))
+		{
+			return userDefinedPaths.get(nodeClass);
+		} else
+		{
+			return new TemplateData(templateLoadRef, derivePath(root, nodeClass));
 		}
 	}
 
@@ -134,9 +153,9 @@ public class TemplateManager
 
 	}
 
-	public void setUserDefinedPath(Class<? extends INode> nodeClass, String relativePath)
+	public void setUserTemplatePath(Class<?> templateLoaderRef, Class<? extends INode> nodeClass, String templatePath)
 	{
-		userDefinedPaths.put(nodeClass, relativePath);
+		userDefinedPaths.put(nodeClass, new TemplateData(templateLoadRef, templatePath));
 	}
 	
 	public boolean isUserDefined(Class<? extends INode> nodeClass)
@@ -144,18 +163,7 @@ public class TemplateManager
 		return userDefinedPaths.containsKey(nodeClass);
 	}
 
-	public String getRelativePath(Class<? extends INode> templateOwner)
-	{
-		if (isUserDefined(templateOwner))
-		{
-			return userDefinedPaths.get(templateOwner);
-		} else
-		{
-			return derivePath(templateOwner);
-		}
-	}
-	
-	public String derivePath(Class<? extends INode> nodeClass)
+	public static String derivePath(String root, Class<? extends INode> nodeClass)
 	{
 		return root + File.separatorChar + nodeClass.getName().replace('.', File.separatorChar)
 				+ TEMPLATE_FILE_EXTENSION;
