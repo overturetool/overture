@@ -23,16 +23,6 @@ public class RmiTemplateManager extends JavaTemplateManager
 	protected void initNodeTemplateFileNames()
 	{
 		super.initNodeTemplateFileNames();
-		
-		setUserDefinedPath(ARemoteContractDeclCG.class, "RemoteContract");
-		setUserDefinedPath(ARemoteContractImplDeclCG.class, "RemoteContractImpl");
-		setUserDefinedPath(ARemoteContractImplDeclCG.class, "RemoteContractImpl");
-		setUserDefinedPath(ACpuDeploymentDeclCG.class,"CPUdeployment");
-		setUserDefinedPath(ARemoteInstanceDeclCG.class,"RemoteInstance");
-		setUserDefinedPath(AClientInstanceDeclCG.class, "ClientInstance");
-		setUserDefinedPath(ARMIregistryDeclCG.class,"RMIregistry");
-		setUserDefinedPath(ARMIServerDeclCG.class, "RMI_Server");
-		setUserDefinedPath(ASynchTokenDeclCG.class, "SynchToken");
-		setUserDefinedPath(ASynchTokenInterfaceDeclCG.class,"SynchTokenInterface");	
+
 	}
 }
