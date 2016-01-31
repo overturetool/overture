@@ -51,7 +51,6 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
@@ -101,9 +100,9 @@ public class DeclAssistantCG extends AssistantBase
 		clazz.setDependencies(nodeAssistant.buildData(clazz.getDependencies(), extraDeps, prepend));
 	}
 	
-	public boolean isInnerClass(ADefaultClassDeclCG node)
+	public boolean isInnerClass(SClassDeclCG node)
 	{
-		return node.parent() != null && node.parent().getAncestor(ADefaultClassDeclCG.class) != null;
+		return node.parent() != null && node.parent().getAncestor(SClassDeclCG.class) != null;
 	}
 	
 	public boolean isTestCase(INode node)

@@ -8,21 +8,20 @@ import org.junit.Test;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
+import org.overture.codegen.merging.TemplateData;
 import org.overture.codegen.merging.TemplateManager;
 
 public class TemplateManagerTest
 {
 	public static final String TEST_ROOT = "myRoot";
-	private static final String REL_PATH = TEST_ROOT + File.separator + "TestTemplate.vm";
+	private static final String TEST_TEMPLATE = TEST_ROOT + File.separator + "TestTemplate.vm";
 
 	@Test
 	public void derivePath()
 	{
-		TemplateManager manager = new TemplateManager(TEST_ROOT);
-
 		Class<? extends INode> nodeClass = ADefaultClassDeclCG.class;
 
-		String relPath = manager.derivePath(nodeClass);
+		String relPath = TemplateManager.derivePath(TEST_ROOT, nodeClass);
 
 		Assert.assertEquals("Got unexpected relative path for " + nodeClass, nodePath(nodeClass), relPath);
 	}
@@ -44,7 +43,7 @@ public class TemplateManagerTest
 			Assert.fail(expectNoTemplate);
 		}
 		
-		manager.setUserDefinedPath(nodeClass, REL_PATH);
+		manager.setUserTemplatePath(manager.getTemplateLoaderRef(), nodeClass, TEST_TEMPLATE);
 
 		String expectTemplate = "Expected template to be found";
 		try
@@ -66,7 +65,7 @@ public class TemplateManagerTest
 		Assert.assertFalse("Expected no user-defined template file for node "
 				+ clazz, manager.isUserDefined(clazz));
 
-		manager.setUserDefinedPath(clazz, REL_PATH);
+		manager.setUserTemplatePath(manager.getTemplateLoaderRef(), clazz, TEST_TEMPLATE);
 
 		Assert.assertTrue("Expected a user-defined template file for node " + clazz
 				+ " by now", manager.isUserDefined(clazz));
@@ -76,10 +75,12 @@ public class TemplateManagerTest
 		Assert.assertFalse("Expected no user-defined template file for node "
 				+ plus, manager.isUserDefined(plus));
 
-		manager.setUserDefinedPath(plus, manager.getRelativePath(clazz));
+		TemplateData t = manager.getTemplateData(clazz);
+		
+		manager.setUserTemplatePath(manager.getTemplateLoaderRef(), plus, t.getTemplatePath());
 
 		Assert.assertTrue("Expected node " + plus + " to have reused " + clazz
-				+ "'s template", manager.getRelativePath(plus) == REL_PATH);
+				+ "'s template", manager.getTemplateData(plus).getTemplatePath() == TEST_TEMPLATE);
 	}
 
 	private String nodePath(Class<? extends INode> node)

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.ModulesSlTest">
-<result>
-<output object="mk_R_Book({11, 12, 13, 14, 4, 5, 6, 7, 8, 9}, {15, 16}, 12, 1, 2)" resource="soccer.vdmsl" value="mk_R_Book({11, 12, 13, 14, 4, 5, 6, 7, 8, 9}, {15, 16}, 12, 1, 2)"/>
-</result>
-</testResult>

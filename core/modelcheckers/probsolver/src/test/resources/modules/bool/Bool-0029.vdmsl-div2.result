@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.modelcheckers.probsolver.BoolTests">
-<message column="0" line="0" message="cannot be solved" messageType="error" number="0" resource="Bool-0029.vdmsl"/>
-<result>
-<output object="null" resource="Bool-0029.vdmsl" value="null"/>
-</result>
-</testResult>

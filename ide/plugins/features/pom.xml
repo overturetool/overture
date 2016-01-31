@@ -24,7 +24,7 @@
 	<module>poviewer</module>
     <module>quickinterpreter</module>
     <module>uml2</module>
-	<module>probruntime</module>
+	<!--module>probruntime moved to its own repo</module-->
     <module>rttraceviewer</module>
 	<module>javagen</module>
 	<module>guibuilder</module>

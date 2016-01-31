@@ -36,7 +36,6 @@ import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -44,6 +43,7 @@ import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
@@ -89,7 +89,6 @@ import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
-import org.overture.codegen.ir.IRAnalysis;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
@@ -124,7 +123,7 @@ public class JavaFormat
 		this.varPrefixManager = varPrefixManager;
 		this.valueSemantics = new JavaValueSemantics(this);
 		this.recCreator = new JavaRecordCreator(this);
-		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, valueSemantics, recCreator);
+		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, valueSemantics);
 		this.mergeVisitor = new MergeVisitor(new JavaTemplateManager(templateRoot), templateCallables);
 		this.funcValAssist = null;
 		this.info = info;
@@ -369,7 +368,7 @@ public class JavaFormat
 			return typeNameStr;
 		}
 		
-		ADefaultClassDeclCG classDef = node.getAncestor(ADefaultClassDeclCG.class);
+		SClassDeclCG classDef = node.getAncestor(SClassDeclCG.class);
 
 		String definingClass = typeName.getDefiningClass() != null
 				&& classDef != null
@@ -606,12 +605,12 @@ public class JavaFormat
 		return writer.toString();
 	}
 
-	public String formatSuperType(ADefaultClassDeclCG classDecl)
+	public String formatSuperType(SClassDeclCG classDecl)
 	{
 		return classDecl.getSuperNames().isEmpty() ? "" : "extends " + classDecl.getSuperNames().get(0);
 	}
 	
-	public String formatInterfaces(ADefaultClassDeclCG classDecl)
+	public String formatInterfaces(SClassDeclCG classDecl)
 	{
 		LinkedList<AInterfaceDeclCG> interfaces = classDecl.getInterfaces();
 		
@@ -691,6 +690,31 @@ public class JavaFormat
 		return exp == null || exp instanceof AUndefinedExpCG ? "" : " = " + format(exp);
 	}
 
+	public String formatThrows(List<STypeCG> types) throws AnalysisException
+	{
+		if(!types.isEmpty())
+		{
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append(IJavaConstants.THROWS);
+			sb.append(' ');
+			
+			String sep = "";
+			for(STypeCG t : types)
+			{
+				sb.append(sep);
+				sb.append(format(t));
+				sep = ", ";
+			}
+			
+			return sb.toString();
+		}
+		else
+		{
+			return "";
+		}
+	}
+	
 	public String formatOperationBody(SStmCG body) throws AnalysisException
 	{
 		String NEWLINE = "\n";
@@ -883,7 +907,7 @@ public class JavaFormat
 				: c + "";
 	}
 	
-	public boolean isInnerClass(ADefaultClassDeclCG node)
+	public boolean isInnerClass(SClassDeclCG node)
 	{
 		return info.getDeclAssistant().isInnerClass(node);
 	}
@@ -929,7 +953,7 @@ public class JavaFormat
 		return block != null && block.getScoped() != null && block.getScoped();
 	}
 
-	public static boolean isMainClass(ADefaultClassDeclCG clazz)
+	public static boolean isMainClass(SClassDeclCG clazz)
 	{
 		return clazz != null && clazz.getTag() instanceof JavaMainTag;
 	}
@@ -948,7 +972,7 @@ public class JavaFormat
 		}
 	}
 
-	public boolean genClassInvariant(ADefaultClassDeclCG clazz)
+	public boolean genClassInvariant(SClassDeclCG clazz)
 	{
 		if(!info.getSettings().generateInvariants())
 		{

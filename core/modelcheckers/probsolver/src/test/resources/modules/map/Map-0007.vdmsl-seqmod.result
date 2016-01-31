@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.modelcheckers.probsolver.MapTests">
-<result>
-<output object="(&#10;return ([10, 2, 30, 4, 50])&#10;)" resource="Map-0007.vdmsl" value="(&#10;return ([10, 2, 30, 4, 50])&#10;)"/>
-</result>
-</testResult>

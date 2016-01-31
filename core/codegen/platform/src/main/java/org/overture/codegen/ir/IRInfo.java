@@ -59,6 +59,7 @@ import org.overture.codegen.cgast.STraceDeclCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.cgast.declarations.SClassDeclCG;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.visitor.CGVisitor;
 import org.overture.codegen.visitor.VisitorManager;
@@ -99,6 +100,9 @@ public class IRInfo
 	// IR modules
 	private List<AModuleDeclCG> modules;
 	
+	// SL state reads
+	private List<SVarExpCG> slStateReads;
+	
 	public IRInfo()
 	{
 		super();
@@ -116,6 +120,7 @@ public class IRInfo
 		this.idStateDesignatorDefs = new HashMap<AIdentifierStateDesignator, PDefinition>();
 		this.classes = new LinkedList<SClassDeclCG>();
 		this.modules = new LinkedList<AModuleDeclCG>();
+		this.slStateReads = new LinkedList<>();
 	}
 
 	public AssistantManager getAssistantManager()
@@ -436,5 +441,23 @@ public class IRInfo
 		{
 			this.modules.clear();
 		}
+	}
+	
+	public void registerSlStateRead(SVarExpCG var)
+	{
+		this.slStateReads.add(var);
+	}
+	
+	public boolean isSlStateRead(SVarExpCG var)
+	{
+		for(SVarExpCG v : slStateReads)
+		{
+			if(v == var)
+			{
+				return true;	
+			}
+		}
+		
+		return false;
 	}
 }

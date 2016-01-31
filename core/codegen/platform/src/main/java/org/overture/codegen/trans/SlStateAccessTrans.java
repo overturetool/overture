@@ -63,18 +63,17 @@ public class SlStateAccessTrans extends DepthFirstAnalysisAdaptor
 			// /*1*/ In case we are in a post condition the variable expression may represent a
 			// field of the old state, i.e._f (or f~ in VDM)
 			//
+			// /*2*/ Any other place in the model:
+			// The variable expression represents a field of the current state
+			//
 			// /*3*/ Another possibility is that the variable expression represents
 			// a field of the current state in a pre or post condition of a function or
 			// an operation. This is a special case since the state field can be
 			// read as 'f' although it is only the entire state that is being passed as an argument
-			// to the function. Below is a Java example showin this (result, old state,
+			// to the function. Below is a Java example showing this (result, old state,
 			// current state):
 			//
 			// public static Boolean post_op(final Number RESULT, final St _St, final St St)
-			//
-			// /*2*/ Any other place in the model:
-			// The variable expression represents a field of the current state
-			//
 			// If /*1*/ or /*2*/ or /*3*/ is true we make the field access explicit since IR modules
 			// use a single field to represent state.
 			//
@@ -165,7 +164,7 @@ public class SlStateAccessTrans extends DepthFirstAnalysisAdaptor
 	private boolean isFieldRead(
 			final AStateDeclCG stateDecl, AIdentifierVarExpCG node)
 	{
-		return !node.getIsLocal()
+		return !info.isSlStateRead(node)
 				&& !node.getName().equals(stateDecl.getName());
 	}
 

@@ -1,4 +1,0 @@
-operations
-
-seqcomp() m : seq of nat
-  post m = [ (id-2)*(id-2)| id in set {-1,0,1,2,3,4} & id>0 ]

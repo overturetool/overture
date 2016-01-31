@@ -28,7 +28,7 @@
     <module>uml2</module>
     <module>rttraceviewer</module>
 	<module>javagen</module>
-	<module>prob-runtime</module>
+	<!--module>prob-runtime moved to its own repo </module-->
 	<module>guibuilder</module>
 	<!--<module>isatrans</module>-->
     <!-- features last -->

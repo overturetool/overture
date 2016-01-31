@@ -154,11 +154,15 @@ import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
+import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
+import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
@@ -1304,13 +1308,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		
+		boolean isLocalDef = varDef instanceof AAssignmentDefinition || !(varDef.getNameScope() == NameScope.STATE
+				|| varDef.getNameScope() == NameScope.GLOBAL || varDef.getNameScope() == NameScope.VARSTATE || varDef.getNameScope() == NameScope.VARSANDSTATE);
+		
 		if(Settings.dialect == Dialect.VDM_PP || Settings.dialect == Dialect.VDM_RT)
 		{
 			SClassDefinition owningClass = varDef.getAncestor(SClassDefinition.class);
 			SClassDefinition nodeParentClass = node.getAncestor(SClassDefinition.class);
 			
-			boolean isLocalDef = varDef instanceof AAssignmentDefinition || !(varDef.getNameScope() == NameScope.STATE
-					|| varDef.getNameScope() == NameScope.GLOBAL || varDef.getNameScope() == NameScope.VARSTATE || varDef.getNameScope() == NameScope.VARSANDSTATE);
 			boolean isInstanceVarDef = varDef instanceof AInstanceVariableDefinition;
 			boolean isExplOp = varDef instanceof SOperationDefinition;
 			boolean isExplFunc = varDef instanceof SFunctionDefinition;
@@ -1351,17 +1356,26 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			}
 			
 			boolean inOwningModule = defModuleName.equals(nodeModuleName);
-			boolean isLocalDef = question.getDeclAssistant().inFunc(node) || 
-					varDef.getAncestor(AStateDefinition.class) == null;
+			
+
+			SVarExpCG res;
 			
 			if(inOwningModule)
 			{
-				return consIdVar(name, isLambda, typeCg, isLocalDef);
+				res = consIdVar(name, isLambda, typeCg, isLocalDef);
 			}
 			else
 			{
-				return consExplicitVar(defModuleName, name, isLambda, typeCg, isLocalDef);
+				res = consExplicitVar(defModuleName, name, isLambda, typeCg, isLocalDef);
 			}
+			
+			if(question.getDeclAssistant().inFunc(node) || 
+					varDef.getAncestor(AStateDefinition.class) == null)
+			{
+				question.registerSlStateRead(res);
+			}
+			
+			return res;
 		}
 		else
 		{
@@ -1370,7 +1384,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		}
 	}
 
-	private SExpCG consExplicitVar(String className, String name, boolean isLambda,
+	private SVarExpCG consExplicitVar(String className, String name, boolean isLambda,
 			STypeCG typeCg, boolean isLocalDef)
 	{
 		AExplicitVarExpCG varExp = new AExplicitVarExpCG();
@@ -1387,7 +1401,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		return varExp;
 	}
 
-	private SExpCG consIdVar(String name, boolean isLambda, STypeCG typeCg,
+	private SVarExpCG consIdVar(String name, boolean isLambda, STypeCG typeCg,
 			boolean isLocalDef)
 	{
 		AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
@@ -1722,7 +1736,21 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		{
 			PType type = node.getType();
 
-			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+			STypeCG typeCg;
+			
+			/**
+			 * The operation argument passed to the 'setPriority' of the CPU class (VDM-RT) gets transformed into a
+			 * string literal where the type is missing: CPU1.setPriority(B`op, 4). The check below is really to
+			 * cirumvent this issue.
+			 */
+			if(type != null)
+			{
+				typeCg = type.apply(question.getTypeVisitor(), question);
+			}
+			else
+			{
+				typeCg = new AStringTypeCG();
+			}
 
 			AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
 
@@ -1734,8 +1762,23 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		} else
 		{
-			STypeCG seqTypeCg = node.getType().apply(question.getTypeVisitor(), question);
-			return question.getExpAssistant().consCharSequence(seqTypeCg, value);
+			PType type = node.getType();
+			STypeCG strType;
+			
+			// Same issue with the 'setPriority' operation (see above)
+			if(type != null)
+			{
+				strType = type.apply(question.getTypeVisitor(), question);
+			}
+			else
+			{
+				ASeqSeqTypeCG seqTypeCg = new ASeqSeqTypeCG();
+				seqTypeCg.setEmpty(false);
+				seqTypeCg.setSeqOf(new ACharBasicTypeCG());
+				strType = seqTypeCg;
+			}
+			
+			return question.getExpAssistant().consCharSequence(strType, value);
 		}
 	}
 

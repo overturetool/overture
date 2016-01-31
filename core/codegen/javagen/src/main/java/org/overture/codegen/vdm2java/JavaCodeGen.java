@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
@@ -58,6 +59,7 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.codegen.cgast.declarations.SClassDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
@@ -216,20 +218,25 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			}
 		}
 
-		List<IRStatus<ADefaultClassDeclCG>> classStatuses = IRStatus.extract(modulesAsNodes, ADefaultClassDeclCG.class);
-		classStatuses.addAll(IRStatus.extract(statuses, ADefaultClassDeclCG.class));
+
+		/**
+		 * Note that this will include the system class, whereas the CPU and BUS classes have been filtered out when the
+		 * IR status was generated
+		 */
+		List<IRStatus<SClassDeclCG>> classStatuses = IRStatus.extract(modulesAsNodes, SClassDeclCG.class);
+		classStatuses.addAll(IRStatus.extract(statuses, SClassDeclCG.class));
 		
 		if (getJavaSettings().getJavaRootPackage() != null)
 		{
-			for (IRStatus<ADefaultClassDeclCG> irStatus : classStatuses)
+			for (IRStatus<SClassDeclCG> irStatus : classStatuses)
 			{
 				irStatus.getIrNode().setPackage(getJavaSettings().getJavaRootPackage());
 			}
 		}
 
-		List<IRStatus<ADefaultClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<ADefaultClassDeclCG>>();
+		List<IRStatus<SClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<SClassDeclCG>>();
 
-		for (IRStatus<ADefaultClassDeclCG> status : classStatuses)
+		for (IRStatus<SClassDeclCG> status : classStatuses)
 		{
 			if (status.canBeGenerated())
 			{
@@ -242,7 +249,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 		for (DepthFirstAnalysisAdaptor trans : transSeries.getSeries())
 		{
-			for (IRStatus<ADefaultClassDeclCG> status : canBeGenerated)
+			for (IRStatus<SClassDeclCG> status : canBeGenerated)
 			{
 				try
 				{
@@ -262,7 +269,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		}
 		
 		// Event notification
-		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), ADefaultClassDeclCG.class);
+		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), SClassDeclCG.class);
 		canBeGenerated = filter(canBeGenerated, genModules, userTestCases);
 		
 		List<String> skipping = new LinkedList<String>();
@@ -270,13 +277,22 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
 		javaFormat.setFunctionValueAssistant(transSeries.getFuncValAssist());
 
-		for (IRStatus<ADefaultClassDeclCG> status : canBeGenerated)
+		for (IRStatus<SClassDeclCG> status : canBeGenerated)
 		{
 			INode vdmClass = status.getVdmNode();
 
 			if (vdmClass == mainClass)
 			{
-				status.getIrNode().setTag(new JavaMainTag(status.getIrNode()));
+				SClassDeclCG mainIr = status.getIrNode();
+				if (mainIr instanceof ADefaultClassDeclCG)
+				{
+					status.getIrNode().setTag(new JavaMainTag((ADefaultClassDeclCG) status.getIrNode()));
+				} else
+				{
+					Logger.getLog().printErrorln("Expected main class to be a "
+							+ ADefaultClassDeclCG.class.getSimpleName() + " in '" + this.getClass().getSimpleName()
+							+ "'. Got: " + status.getIrNode());
+				}
 			}
 
 			try
@@ -470,8 +486,13 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 	@Override
 	protected void genIrStatus(List<IRStatus<PCG>> statuses, INode node) throws AnalysisException
 	{
-		if (!(node instanceof ASystemClassDefinition) && !(node instanceof ACpuClassDefinition))
+		if (!(node instanceof ACpuClassDefinition) && !(node instanceof ABusClassDefinition))
 		{
+			if(node instanceof ASystemClassDefinition && !getJavaSettings().genSystemClass())
+			{
+				return;
+			}
+			
 			VdmAstJavaValidator v = validateVdmNode(node);
 
 			if (v.hasUnsupportedNodes())

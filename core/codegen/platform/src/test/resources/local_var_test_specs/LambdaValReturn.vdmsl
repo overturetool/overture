@@ -1,0 +1,11 @@
+values
+
+val = 1;
+
+functions
+
+f :  () -> nat
+f () ==
+let - = (lambda o : int & val)
+in
+  1;

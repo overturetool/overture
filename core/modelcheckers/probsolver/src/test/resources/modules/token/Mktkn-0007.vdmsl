@@ -1,5 +1,0 @@
-operations
-
-mktkntest7() t:token
-  post t = mk_token({3|->10, 3|->12})
-

@@ -16,6 +16,7 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.ASystemClassDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
@@ -44,6 +45,11 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAMethodDeclCG(AMethodDeclCG node) throws AnalysisException
 	{
+		if(node.parent() instanceof ASystemClassDeclCG)
+		{
+			return;
+		}
+		
 		if (node.getIsConstructor())
 		{
 			String initName = getInitName(node);

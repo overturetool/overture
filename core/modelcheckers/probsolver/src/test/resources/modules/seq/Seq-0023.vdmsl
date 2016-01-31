@@ -1,5 +1,0 @@
-operations
-
-inds3() m : bool
-  post m = 0 in set inds [3,1,4]
- 

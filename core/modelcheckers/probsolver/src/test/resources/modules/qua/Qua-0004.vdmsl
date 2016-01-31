@@ -1,5 +1,0 @@
-operations
-
-  quall2() mx : bool
-    post mx = (forall n in set {1,3,2,4} , m in set {3,4,5} & n+m<5)
-

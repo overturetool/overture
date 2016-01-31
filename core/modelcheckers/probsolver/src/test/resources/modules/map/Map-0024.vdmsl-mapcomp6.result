@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.modelcheckers.probsolver.MapTests">
-<result>
-<output object="(&#10;return ({5 |-&gt; 3, 6 |-&gt; 2, 6 |-&gt; 4, 7 |-&gt; 1, 7 |-&gt; 3, 7 |-&gt; 5, 8 |-&gt; 2, 8 |-&gt; 4, 9 |-&gt; 3})&#10;)" resource="Map-0024.vdmsl" value="(&#10;return ({5 |-&gt; 3, 6 |-&gt; 2, 6 |-&gt; 4, 7 |-&gt; 1, 7 |-&gt; 3, 7 |-&gt; 5, 8 |-&gt; 2, 8 |-&gt; 4, 9 |-&gt; 3})&#10;)"/>
-</result>
-</testResult>
