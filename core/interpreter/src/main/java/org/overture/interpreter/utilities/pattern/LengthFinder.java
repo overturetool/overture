@@ -4,6 +4,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AConcatenationPattern;
+import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.AMapPattern;
@@ -50,6 +51,13 @@ public class LengthFinder extends AnswerAdaptor<Integer>
 
 	@Override
 	public Integer caseAIgnorePattern(AIgnorePattern pattern)
+			throws AnalysisException
+	{
+		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
+	}
+
+	@Override
+	public Integer caseAExpressionPattern(AExpressionPattern pattern)
 			throws AnalysisException
 	{
 		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
