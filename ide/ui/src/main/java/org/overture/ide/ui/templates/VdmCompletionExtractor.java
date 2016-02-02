@@ -9,11 +9,16 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AClassInvariantDefinition;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.modules.AFunctionExport;
+import org.overture.ast.modules.AFunctionValueImport;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ACharacterPattern;
 import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
@@ -111,21 +116,22 @@ public final class VdmCompletionExtractor {
 					public void caseANamedInvariantType(ANamedInvariantType node){
 						populateProposals(node, node.toString());
 					}
+				
+					@Override
+					public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
+                            throws AnalysisException{
+						populateProposals(node, functionNameExtractor(node));
+					}
+					
+//					@Override
+//					public void caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node)
+//                            throws AnalysisException{
+//						populateProposals(node, node.toString());
+//					}
 					
 					void populateProposals(INode node, String name)
 					{
-						if(findInString(info.proposalPrefix,name))
-						{
-							
-							IContextInformation contextInfo = new ContextInformation(name, name); //$NON-NLS-1$
-
-							int curOffset = offset + info.offset;// - info2.proposalPrefix.length();
-							int length = name.length();
-							int replacementLength = info.proposalPrefix.length();
-
-							proposals.add(new CompletionProposal(name, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), name, contextInfo, name));
-							
-						}
+						createProposal(node,name,info,proposals,offset);
 					}
 				});
 			} catch (AnalysisException e)
@@ -140,4 +146,35 @@ public final class VdmCompletionExtractor {
 	{
 	  return word.toLowerCase().startsWith(text.toLowerCase());
 	}
+    
+    private void createProposal(INode node, String name,final VdmCompletionContext info, 
+    		final List<ICompletionProposal> proposals,final int offset)
+    {
+    	if(findInString(info.proposalPrefix,name) && name != null && !name.isEmpty())
+		{	
+			IContextInformation contextInfo = new ContextInformation(name, name); //$NON-NLS-1$
+
+			int curOffset = offset + info.offset;// - info2.proposalPrefix.length();
+			int length = name.length();
+			int replacementLength = info.proposalPrefix.length();
+
+			proposals.add(new CompletionProposal(name, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), name, contextInfo, name));
+		}
+    }
+    
+    private String functionNameExtractor(INode node){
+    	
+    	String functionName = "";
+    	
+    	String[] parts = node.toString().split(" ");
+    	
+    	if(parts[1] != null && !parts[1].isEmpty()){
+    		functionName = parts[1];
+    		functionName = functionName.replace(":","");
+    		functionName = new StringBuilder(functionName).append("(").toString();
+    	}
+    	
+    	return functionName;
+    } 
+    
 }
