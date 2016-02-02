@@ -134,14 +134,22 @@ public final class VdmCompletionExtractor {
 					public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
                             throws AnalysisException{
 						String extractedName[] = functionNameExtractor(node);
-						createProposal(node,extractedName[0],extractedName[1],node.toString(),info,proposals,offset);
+						
+						if(extractedName[0] != null && !extractedName[0].isEmpty() && extractedName[1] != null && !extractedName[1].isEmpty()){
+							createProposal(node,extractedName[0],extractedName[1],node.toString(),info,proposals,offset);
+						}
 					}
 					
-//					@Override
-//					public void caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node)
-//                            throws AnalysisException{
-//						populateProposals(node, node.toString());
-//					}					
+					@Override
+					public void caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node)
+                            throws AnalysisException{
+						String extractedName[] = functionNameExtractor(node);
+						
+						if(extractedName[0] != null && !extractedName[0].isEmpty() && extractedName[1] != null && !extractedName[1].isEmpty()){
+							createProposal(node,extractedName[0],extractedName[1],node.toString(),info,proposals,offset);
+						}
+					}
+
 				});
 			} catch (AnalysisException e)
 			{
