@@ -132,7 +132,7 @@ public final class VdmCompletionExtractor {
 					@Override
 					public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
                             throws AnalysisException{
-						String extractedName[] = functionNameExtractor(node);
+						String extractedName[] = explicitFunctionNameExtractor(node);
 						
 						if(nullOrEmptyCheck(extractedName[0])){
 							createProposal(node,extractedName[0],extractedName[1],node.toString(),info,proposals,offset);
@@ -142,7 +142,7 @@ public final class VdmCompletionExtractor {
 					@Override
 					public void caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node)
                             throws AnalysisException{
-						String extractedName[] = functionNameExtractor(node);
+						String extractedName[] = implicitFunctionNameExtractor(node);
 						
 						if(nullOrEmptyCheck(extractedName[0])){
 							createProposal(node,extractedName[0],extractedName[1],node.toString(),info,proposals,offset);
@@ -202,7 +202,7 @@ public final class VdmCompletionExtractor {
 		}
     }
     
-    private static String[] functionNameExtractor(INode node){
+    private static String[] explicitFunctionNameExtractor(INode node){
     	String functionName[] = new String[2];
     	
     	String[] parts = node.toString().split(" ");
@@ -211,6 +211,21 @@ public final class VdmCompletionExtractor {
     		functionName[0] = parts[1];
     		functionName[1] = functionName[0].replace(":","(");  //ReplacemestString
     		functionName[0] = functionName[1].replace("(","()"); //DisplayString
+    	}
+    	
+    	return functionName;
+    }
+    
+    private static String[] implicitFunctionNameExtractor(INode node){
+    	String functionName[] = new String[2];
+    	
+    	String[] parts1 = node.toString().split(" ");
+    	String[] parts2 = parts1[2].split("\\(");
+    	
+    	if(parts2[0] != null && !parts2[0].isEmpty()){
+    		functionName[0] = parts2[0];
+    		functionName[1] = new StringBuilder(functionName[0]).append("(").toString(); //ReplacemestString
+    		functionName[0] = new StringBuilder(functionName[1]).append(")").toString(); //DisplayString
     	}
     	
     	return functionName;
