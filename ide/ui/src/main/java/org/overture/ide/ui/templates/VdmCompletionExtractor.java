@@ -10,15 +10,14 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.modules.AFunctionExport;
-import org.overture.ast.modules.AFunctionValueImport;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ACharacterPattern;
 import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
-import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
@@ -135,7 +134,7 @@ public final class VdmCompletionExtractor {
                             throws AnalysisException{
 						String extractedName[] = functionNameExtractor(node);
 						
-						if(extractedName[0] != null && !extractedName[0].isEmpty() && extractedName[1] != null && !extractedName[1].isEmpty()){
+						if(nullOrEmptyCheck(extractedName[0])){
 							createProposal(node,extractedName[0],extractedName[1],node.toString(),info,proposals,offset);
 						}
 					}
@@ -145,8 +144,28 @@ public final class VdmCompletionExtractor {
                             throws AnalysisException{
 						String extractedName[] = functionNameExtractor(node);
 						
-						if(extractedName[0] != null && !extractedName[0].isEmpty() && extractedName[1] != null && !extractedName[1].isEmpty()){
+						if(nullOrEmptyCheck(extractedName[0])){
 							createProposal(node,extractedName[0],extractedName[1],node.toString(),info,proposals,offset);
+						}
+					}
+					
+					@Override
+					public void caseAExplicitOperationDefinition(AExplicitOperationDefinition node)
+                            throws AnalysisException{
+						String extractedName[] = explicitOperationNameExtractor(node);
+						
+						if(nullOrEmptyCheck(extractedName[0])){
+							createProposal(node, extractedName[0], extractedName[1], node.toString(), info, proposals, offset);
+						}
+					}
+					
+					@Override
+					public void caseAImplicitOperationDefinition(AImplicitOperationDefinition node)
+                            throws AnalysisException{
+						String extractedName[] = implicitOperationNameExtractor(node);
+						
+						if(nullOrEmptyCheck(extractedName[0])){
+							createProposal(node, extractedName[0], extractedName[1], node.toString(), info, proposals, offset);
 						}
 					}
 
@@ -157,6 +176,10 @@ public final class VdmCompletionExtractor {
 						+ "faild during populateNameList", e);
 			}
 		}
+	}
+	
+	private boolean nullOrEmptyCheck(String str){
+		return str != null && !str.isEmpty();
 	}
 
     public boolean findInString(String text,String word)
@@ -180,18 +203,45 @@ public final class VdmCompletionExtractor {
     }
     
     private static String[] functionNameExtractor(INode node){
-    	
     	String functionName[] = new String[2];
     	
     	String[] parts = node.toString().split(" ");
     	
     	if(parts[1] != null && !parts[1].isEmpty()){
     		functionName[0] = parts[1];
-    		functionName[1] = functionName[0].replace(":","(");
-    		functionName[0] = functionName[1].replace("(","()");
+    		functionName[1] = functionName[0].replace(":","(");  //ReplacemestString
+    		functionName[0] = functionName[1].replace("(","()"); //DisplayString
     	}
     	
     	return functionName;
-    } 
+    }
+    
+    private static String[] explicitOperationNameExtractor(INode node){
+		String functionName[] = new String[2];
+    	
+    	String[] parts = node.toString().split(" ");
+    	
+    	if(parts[0] != null && !parts[0].isEmpty()){
+    		functionName[0] = parts[0];
+    		functionName[1] = new StringBuilder(functionName[0]).append("(").toString(); //ReplacemestString
+    		functionName[0] = new StringBuilder(functionName[1]).append(")").toString(); //DisplayString
+    	}
+    	
+    	return functionName;
+    }
+    
+    private static String[] implicitOperationNameExtractor(INode node){
+		String functionName[] = new String[2];
+    	
+    	String[] parts = node.toString().split("\\(");
+    	
+    	if(parts[0] != null && !parts[0].isEmpty()){
+    		functionName[0] = parts[0];
+    		functionName[1] = new StringBuilder(functionName[0]).append("(").toString(); //ReplacemestString
+    		functionName[0] = new StringBuilder(functionName[1]).append(")").toString(); //DisplayString
+    	}
+    	
+    	return functionName;
+    }
     
 }
