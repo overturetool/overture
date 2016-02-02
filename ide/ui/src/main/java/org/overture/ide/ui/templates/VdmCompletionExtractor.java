@@ -52,87 +52,96 @@ public final class VdmCompletionExtractor {
 					public void caseANatNumericBasicType(ANatNumericBasicType node)
 							throws AnalysisException
 					{
-						populateProposals(node, node.toString());
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 					
 					@Override
 					public void caseANatOneNumericBasicType(ANatOneNumericBasicType node)
 							throws AnalysisException
 					{
-						populateProposals(node, node.toString());
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 					
 					@Override
 					public void caseABooleanBasicType(ABooleanBasicType node){
-						populateProposals(node, node.toString());
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 					
 					@Override
 					public void caseAIntNumericBasicType(AIntNumericBasicType node){
-						populateProposals(node, node.toString());
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 					
 					@Override
 					public void caseARationalNumericBasicType(ARationalNumericBasicType node){
-						populateProposals(node, node.toString());
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 					
 					@Override
 					public void caseARealNumericBasicType(ARealNumericBasicType node){
-						populateProposals(node, node.toString());
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 					
 					@Override
 					public void caseACharacterPattern(ACharacterPattern node){
-						populateProposals(node, node.toString());
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 					
 					@Override
 					public void caseACharBasicType(ACharBasicType node){
-						populateProposals(node, node.toString());
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 					
 					@Override
 					public void caseATokenBasicType(ATokenBasicType node){
-						populateProposals(node, node.toString());
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 					
 					@Override
 					public void defaultSNumericBasicType(SNumericBasicType node){
-						populateProposals(node, node.toString());
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 					
 					@Override
 					public void caseAClassInvariantStm(AClassInvariantStm node){
-						populateProposals(node, node.toString());
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 					
 					@Override
 					public void caseAClassInvariantDefinition(AClassInvariantDefinition node){
-						populateProposals(node, node.toString());
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 					
 					@Override
 					public void caseANamedInvariantType(ANamedInvariantType node){
-						populateProposals(node, node.toString());
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 				
 					@Override
 					public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
                             throws AnalysisException{
-						populateProposals(node, functionNameExtractor(node));
+						String extractedName[] = functionNameExtractor(node);
+						createProposal(node,extractedName[0],extractedName[1],node.toString(),info,proposals,offset);
 					}
 					
 //					@Override
 //					public void caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node)
 //                            throws AnalysisException{
 //						populateProposals(node, node.toString());
-//					}
-					
-					void populateProposals(INode node, String name)
-					{
-						createProposal(node,name,info,proposals,offset);
-					}
+//					}					
 				});
 			} catch (AnalysisException e)
 			{
@@ -147,31 +156,31 @@ public final class VdmCompletionExtractor {
 	  return word.toLowerCase().startsWith(text.toLowerCase());
 	}
     
-    private void createProposal(INode node, String name,final VdmCompletionContext info, 
+    private void createProposal(INode node, String displayname, String replacmentString,String additionalProposalInfo,final VdmCompletionContext info, 
     		final List<ICompletionProposal> proposals,final int offset)
     {
-    	if(findInString(info.proposalPrefix,name) && name != null && !name.isEmpty())
+    	if(findInString(info.proposalPrefix,replacmentString) && replacmentString != null && !replacmentString.isEmpty())
 		{	
-			IContextInformation contextInfo = new ContextInformation(name, name); //$NON-NLS-1$
+			IContextInformation contextInfo = new ContextInformation(displayname, displayname); //$NON-NLS-1$
 
 			int curOffset = offset + info.offset;// - info2.proposalPrefix.length();
-			int length = name.length();
+			int length = replacmentString.length();
 			int replacementLength = info.proposalPrefix.length();
 
-			proposals.add(new CompletionProposal(name, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), name, contextInfo, name));
+			proposals.add(new CompletionProposal(replacmentString, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), displayname, contextInfo, additionalProposalInfo));
 		}
     }
     
-    private String functionNameExtractor(INode node){
+    private static String[] functionNameExtractor(INode node){
     	
-    	String functionName = "";
+    	String functionName[] = new String[2];
     	
     	String[] parts = node.toString().split(" ");
     	
     	if(parts[1] != null && !parts[1].isEmpty()){
-    		functionName = parts[1];
-    		functionName = functionName.replace(":","");
-    		functionName = new StringBuilder(functionName).append("(").toString();
+    		functionName[0] = parts[1];
+    		functionName[1] = functionName[0].replace(":","(");
+    		functionName[0] = functionName[1].replace("(","()");
     	}
     	
     	return functionName;
