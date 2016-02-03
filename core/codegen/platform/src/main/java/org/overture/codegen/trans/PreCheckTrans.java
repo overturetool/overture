@@ -1,16 +1,16 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.APreCondRuntimeErrorExpCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
-import org.overture.codegen.cgast.types.AErrorTypeCG;
+import org.overture.codegen.ir.SDeclCG;
+import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.expressions.AApplyExpCG;
+import org.overture.codegen.ir.expressions.APreCondRuntimeErrorExpCG;
+import org.overture.codegen.ir.statements.ABlockStmCG;
+import org.overture.codegen.ir.statements.AIfStmCG;
+import org.overture.codegen.ir.statements.ARaiseErrorStmCG;
+import org.overture.codegen.ir.types.AErrorTypeCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 

@@ -28,12 +28,12 @@ import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AMapSeqStateDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.types.PType;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SStateDesignatorCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
-import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SStateDesignatorCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.statements.AFieldStateDesignatorCG;
+import org.overture.codegen.ir.statements.AIdentifierStateDesignatorCG;
+import org.overture.codegen.ir.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class StateDesignatorVisitorCG extends

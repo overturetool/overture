@@ -2,7 +2,7 @@ package org.overture.codegen.ir;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.PCG;
+import org.overture.codegen.ir.PCG;
 
 public interface IREventObserver
 {

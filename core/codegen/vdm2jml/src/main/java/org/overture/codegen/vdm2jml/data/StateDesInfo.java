@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.AVarDeclCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.traces.Pair;
 

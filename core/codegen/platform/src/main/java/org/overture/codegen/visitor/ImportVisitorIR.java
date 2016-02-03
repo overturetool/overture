@@ -9,17 +9,17 @@ import org.overture.ast.modules.ATypeImport;
 import org.overture.ast.modules.AValueValueImport;
 import org.overture.ast.modules.PImport;
 import org.overture.ast.modules.SValueImport;
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.SImportCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AAllImportCG;
-import org.overture.codegen.cgast.declarations.AFunctionValueImportCG;
-import org.overture.codegen.cgast.declarations.AOperationValueImportCG;
-import org.overture.codegen.cgast.declarations.ATypeDeclCG;
-import org.overture.codegen.cgast.declarations.ATypeImportCG;
-import org.overture.codegen.cgast.declarations.AValueValueImportCG;
-import org.overture.codegen.cgast.declarations.SValueImportCG;
-import org.overture.codegen.cgast.name.ATokenNameCG;
+import org.overture.codegen.ir.SDeclCG;
+import org.overture.codegen.ir.SImportCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.declarations.AAllImportCG;
+import org.overture.codegen.ir.declarations.AFunctionValueImportCG;
+import org.overture.codegen.ir.declarations.AOperationValueImportCG;
+import org.overture.codegen.ir.declarations.ATypeDeclCG;
+import org.overture.codegen.ir.declarations.ATypeImportCG;
+import org.overture.codegen.ir.declarations.AValueValueImportCG;
+import org.overture.codegen.ir.declarations.SValueImportCG;
+import org.overture.codegen.ir.name.ATokenNameCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class ImportVisitorCG extends AbstractVisitorCG<IRInfo, SImportCG>

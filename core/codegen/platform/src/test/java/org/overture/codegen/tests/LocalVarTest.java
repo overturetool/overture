@@ -11,8 +11,8 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.codegen.cgast.PCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.PCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.ir.IRGenerator;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.tests.util.FirstVarFinder;
@@ -128,7 +128,7 @@ public class LocalVarTest
 				}
 			}
 			
-		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+		} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 		{
 		}
 		

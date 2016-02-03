@@ -1,7 +1,7 @@
 package org.overture.codegen.vdm2jml.trans;
 
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.statements.AMetaStmCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.statements.AMetaStmCG;
 
 public class TcExpInfo
 {

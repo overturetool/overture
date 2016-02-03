@@ -28,12 +28,12 @@ import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
-import org.overture.codegen.cgast.SBindCG;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.patterns.ASetBindCG;
-import org.overture.codegen.cgast.patterns.ATypeBindCG;
+import org.overture.codegen.ir.SBindCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SPatternCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.patterns.ASetBindCG;
+import org.overture.codegen.ir.patterns.ATypeBindCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class BindVisitorCG extends AbstractVisitorCG<IRInfo, SBindCG>

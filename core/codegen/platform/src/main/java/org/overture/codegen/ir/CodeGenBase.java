@@ -18,8 +18,8 @@ import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
 import org.overture.codegen.assistant.DeclAssistantCG;
-import org.overture.codegen.cgast.PCG;
-import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.ir.PCG;
+import org.overture.codegen.ir.SExpCG;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -416,11 +416,11 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 * @param status
 	 *            The IR status that holds the IR node that we want to code generate.
 	 * @return The generated code and data about what has been generated.
-	 * @throws org.overture.codegen.cgast.analysis.AnalysisException
+	 * @throws org.overture.codegen.ir.analysis.AnalysisException
 	 *             If something goes wrong during the code generation process.
 	 */
 	protected GeneratedModule genIrModule(MergeVisitor mergeVisitor,
-			IRStatus<? extends PCG> status) throws org.overture.codegen.cgast.analysis.AnalysisException
+			IRStatus<? extends PCG> status) throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		if (status.canBeGenerated())
 		{
@@ -458,11 +458,11 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 * @param mergeVisitor
 	 *            The visitor that translates the IR expression into target language code.
 	 * @return The generated code and data about what has been generated.
-	 * @throws org.overture.codegen.cgast.analysis.AnalysisException
+	 * @throws org.overture.codegen.ir.analysis.AnalysisException
 	 *             If something goes wrong during the code generation process.
 	 */
 	protected Generated genIrExp(IRStatus<SExpCG> expStatus, MergeVisitor mergeVisitor)
-			throws org.overture.codegen.cgast.analysis.AnalysisException
+			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		StringWriter writer = new StringWriter();
 		SExpCG expCg = expStatus.getIrNode();

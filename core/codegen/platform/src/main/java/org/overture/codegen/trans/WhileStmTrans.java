@@ -1,14 +1,14 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ABreakStmCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.AWhileStmCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.AVarDeclCG;
+import org.overture.codegen.ir.statements.ABlockStmCG;
+import org.overture.codegen.ir.statements.ABreakStmCG;
+import org.overture.codegen.ir.statements.AIfStmCG;
+import org.overture.codegen.ir.statements.AWhileStmCG;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class WhileStmTrans extends DepthFirstAnalysisAdaptor

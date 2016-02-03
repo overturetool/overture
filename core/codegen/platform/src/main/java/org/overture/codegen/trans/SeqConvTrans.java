@@ -1,26 +1,26 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
-import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ASeqToStringUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AStringToSeqUnaryExpCG;
-import org.overture.codegen.cgast.expressions.SBinaryExpCG;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.statements.AForAllStmCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.cgast.types.ACharBasicTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.SSeqTypeCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.AFieldDeclCG;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.AVarDeclCG;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.ir.expressions.AFieldNumberExpCG;
+import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpCG;
+import org.overture.codegen.ir.expressions.ASeqToStringUnaryExpCG;
+import org.overture.codegen.ir.expressions.AStringToSeqUnaryExpCG;
+import org.overture.codegen.ir.expressions.SBinaryExpCG;
+import org.overture.codegen.ir.statements.AAssignToExpStmCG;
+import org.overture.codegen.ir.statements.AForAllStmCG;
+import org.overture.codegen.ir.statements.AReturnStmCG;
+import org.overture.codegen.ir.types.ACharBasicTypeCG;
+import org.overture.codegen.ir.types.AMethodTypeCG;
+import org.overture.codegen.ir.types.ASeqSeqTypeCG;
+import org.overture.codegen.ir.types.AStringTypeCG;
+import org.overture.codegen.ir.types.SSeqTypeCG;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class SeqConvTrans extends DepthFirstAnalysisAdaptor

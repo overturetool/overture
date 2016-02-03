@@ -34,8 +34,8 @@ import java.util.regex.Pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.AInterfaceDeclCG;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -79,7 +79,7 @@ public class JavaCodeGenUtil
 		{
 			return vdmCodeGen.generateJavaFromVdmExp(typeCheckResult.result);
 
-		} catch (AnalysisException | org.overture.codegen.cgast.analysis.AnalysisException e)
+		} catch (AnalysisException | org.overture.codegen.ir.analysis.AnalysisException e)
 		{
 			throw new AnalysisException("Unable to generate code from expression: "
 					+ exp + ". Exception message: " + e.getMessage());
@@ -159,7 +159,7 @@ public class JavaCodeGenUtil
 		}
 	}
 
-	public static boolean isQuote(org.overture.codegen.cgast.INode decl, JavaSettings settings)
+	public static boolean isQuote(org.overture.codegen.ir.INode decl, JavaSettings settings)
 	{
 		if(decl instanceof ADefaultClassDeclCG)
 		{

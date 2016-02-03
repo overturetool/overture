@@ -19,7 +19,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapTypeBase;
 import org.overture.ast.types.SSeqTypeBase;
-import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.ir.STypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 

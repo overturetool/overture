@@ -3,18 +3,18 @@ package org.overture.codegen.trans;
 import java.util.List;
 
 import org.overture.codegen.assistant.ExpAssistantCG;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AGeneralIsExpCG;
-import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpBase;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.AVarDeclCG;
+import org.overture.codegen.ir.expressions.AGeneralIsExpCG;
+import org.overture.codegen.ir.expressions.AOrBoolBinaryExpCG;
+import org.overture.codegen.ir.expressions.SVarExpBase;
+import org.overture.codegen.ir.statements.ABlockStmCG;
+import org.overture.codegen.ir.types.ABoolBasicTypeCG;
+import org.overture.codegen.ir.types.AUnionTypeCG;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 

@@ -3,10 +3,10 @@ package org.overture.codegen.vdm2java;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
-import org.overture.codegen.cgast.types.AExternalTypeCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.expressions.AIntLiteralExpCG;
+import org.overture.codegen.ir.types.AExternalTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.traces.TraceNames;
 import org.overture.codegen.traces.TracesTrans;

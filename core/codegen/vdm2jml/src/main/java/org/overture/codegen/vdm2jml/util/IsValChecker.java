@@ -1,15 +1,15 @@
 package org.overture.codegen.vdm2jml.util;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.AnswerAdaptor;
-import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AMkBasicExpCG;
-import org.overture.codegen.cgast.expressions.ANewExpCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
-import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
-import org.overture.codegen.cgast.expressions.SLiteralExpCG;
-import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.AnswerAdaptor;
+import org.overture.codegen.ir.expressions.AMinusUnaryExpCG;
+import org.overture.codegen.ir.expressions.AMkBasicExpCG;
+import org.overture.codegen.ir.expressions.ANewExpCG;
+import org.overture.codegen.ir.expressions.ANullExpCG;
+import org.overture.codegen.ir.expressions.APlusUnaryExpCG;
+import org.overture.codegen.ir.expressions.SLiteralExpCG;
+import org.overture.codegen.ir.expressions.SNumericBinaryExpCG;
 
 public class IsValChecker extends AnswerAdaptor<Boolean>
 {

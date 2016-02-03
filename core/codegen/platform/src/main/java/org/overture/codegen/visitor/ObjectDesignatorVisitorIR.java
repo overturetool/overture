@@ -33,15 +33,15 @@ import org.overture.ast.statements.AIdentifierObjectDesignator;
 import org.overture.ast.statements.ANewObjectDesignator;
 import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.PObjectDesignator;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SObjectDesignatorCG;
-import org.overture.codegen.cgast.expressions.ANewExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
-import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
-import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
-import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
-import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SObjectDesignatorCG;
+import org.overture.codegen.ir.expressions.ANewExpCG;
+import org.overture.codegen.ir.expressions.SVarExpCG;
+import org.overture.codegen.ir.statements.AApplyObjectDesignatorCG;
+import org.overture.codegen.ir.statements.AFieldObjectDesignatorCG;
+import org.overture.codegen.ir.statements.AIdentifierObjectDesignatorCG;
+import org.overture.codegen.ir.statements.ANewObjectDesignatorCG;
+import org.overture.codegen.ir.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class ObjectDesignatorVisitorCG extends

@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.cgast.PCG;
+import org.overture.codegen.ir.PCG;
 
 public class NodeAssistantCG extends AssistantBase
 {

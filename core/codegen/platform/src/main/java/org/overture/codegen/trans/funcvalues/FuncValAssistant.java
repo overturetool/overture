@@ -24,8 +24,8 @@ package org.overture.codegen.trans.funcvalues;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.ir.declarations.AInterfaceDeclCG;
+import org.overture.codegen.ir.types.AMethodTypeCG;
 
 public class FuncValAssistant
 {

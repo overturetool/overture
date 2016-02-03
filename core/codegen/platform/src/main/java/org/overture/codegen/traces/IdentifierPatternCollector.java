@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.patterns.AIdentifierPatternCG;
 import org.overture.codegen.logging.Logger;
 
 public class IdentifierPatternCollector extends DepthFirstAnalysisAdaptor

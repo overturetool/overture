@@ -7,10 +7,10 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.modules.AFromModuleImports;
 import org.overture.ast.modules.AModuleImports;
 import org.overture.ast.modules.PImport;
-import org.overture.codegen.cgast.SImportCG;
-import org.overture.codegen.cgast.SImportsCG;
-import org.overture.codegen.cgast.declarations.AFromModuleImportsCG;
-import org.overture.codegen.cgast.declarations.AModuleImportsCG;
+import org.overture.codegen.ir.SImportCG;
+import org.overture.codegen.ir.SImportsCG;
+import org.overture.codegen.ir.declarations.AFromModuleImportsCG;
+import org.overture.codegen.ir.declarations.AModuleImportsCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 

@@ -2,14 +2,14 @@ package org.overture.codegen.vdm2jml.trans;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AFieldExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.AVarDeclCG;
+import org.overture.codegen.ir.expressions.AFieldExpCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.statements.AAssignToExpStmCG;
+import org.overture.codegen.ir.types.AUnionTypeCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.traces.Pair;
 import org.overture.codegen.trans.assistants.TransAssistantCG;

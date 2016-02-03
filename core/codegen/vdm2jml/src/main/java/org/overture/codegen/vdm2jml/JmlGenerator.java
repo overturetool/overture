@@ -9,25 +9,25 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.PCG;
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.AModuleDeclCG;
-import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.declarations.ATypeDeclCG;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.declarations.SClassDeclCG;
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.types.AUnknownTypeCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.PCG;
+import org.overture.codegen.ir.SDeclCG;
+import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.AFieldDeclCG;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamCG;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.AModuleDeclCG;
+import org.overture.codegen.ir.declarations.ANamedTypeDeclCG;
+import org.overture.codegen.ir.declarations.ARecordDeclCG;
+import org.overture.codegen.ir.declarations.ATypeDeclCG;
+import org.overture.codegen.ir.declarations.AVarDeclCG;
+import org.overture.codegen.ir.declarations.SClassDeclCG;
+import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.statements.ABlockStmCG;
+import org.overture.codegen.ir.types.AUnknownTypeCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IREventObserver;
@@ -255,7 +255,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 								m.addTransformationWarnings(wrap);
 							}
 							
-						} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+						} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 						{
 							e.printStackTrace();
 						}
@@ -419,7 +419,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		for (IRStatus<PCG> status : ast) {
 			try {
 				javaGen.getIRGenerator().applyPartialTransformation(status, recAccTr);
-			} catch (org.overture.codegen.cgast.analysis.AnalysisException e) {
+			} catch (org.overture.codegen.ir.analysis.AnalysisException e) {
 
 				Logger.getLog().printErrorln(
 						"Problems applying '" + RecAccessorTrans.class + "' to status " + status.getIrNodeName());
@@ -441,7 +441,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 				try
 				{
 					status.getIrNode().apply(sorter);
-				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+				} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 				{
 					Logger.getLog().printErrorln("Problems sorting JML annotations for node "
 							+ status.getIrNode()
@@ -479,7 +479,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 				try
 				{
 					this.javaGen.getIRGenerator().applyPartialTransformation(status, assertTr);
-				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+				} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 				{
 					Logger.getLog().printErrorln("Unexpected problem occured when applying transformation in '"
 							+ this.getClass().getSimpleName() + "'");
@@ -545,7 +545,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		try
 		{
 			rec.getInvariant().apply(new RecInvTransformation(javaGen, rec));
-		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+		} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 		{
 			Logger.getLog().printErrorln("Problems transforming the invariant method of a record in '"
 					+ this.getClass().getSimpleName() + "'");
@@ -674,7 +674,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 			try
 			{
 				javaGen.getIRGenerator().applyPartialTransformation(n, normaliser);
-			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Problem normalising state designators in '"
 						+ this.getClass().getSimpleName() + "': "

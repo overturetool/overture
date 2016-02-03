@@ -1,9 +1,9 @@
 package org.overture.codegen.vdm2java;
 
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.ASystemClassDeclCG;
-import org.overture.codegen.cgast.expressions.ACardUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.ASystemClassDeclCG;
+import org.overture.codegen.ir.expressions.ACardUnaryExpCG;
+import org.overture.codegen.ir.expressions.ALenUnaryExpCG;
 import org.overture.codegen.merging.TemplateManager;
 
 public class JavaTemplateManager extends TemplateManager

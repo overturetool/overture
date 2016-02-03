@@ -6,9 +6,9 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.modules.AModuleExports;
 import org.overture.ast.modules.PExport;
-import org.overture.codegen.cgast.SExportCG;
-import org.overture.codegen.cgast.SExportsCG;
-import org.overture.codegen.cgast.declarations.AModuleExportsCG;
+import org.overture.codegen.ir.SExportCG;
+import org.overture.codegen.ir.SExportsCG;
+import org.overture.codegen.ir.declarations.AModuleExportsCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class ExportsVisitorCG extends AbstractVisitorCG<IRInfo,SExportsCG>

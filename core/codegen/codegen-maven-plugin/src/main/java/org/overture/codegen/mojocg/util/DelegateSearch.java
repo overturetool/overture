@@ -1,8 +1,8 @@
 package org.overture.codegen.mojocg.util;
 
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.statements.ANotImplementedStmCG;
 
 public class DelegateSearch extends DepthFirstAnalysisAdaptor
 {

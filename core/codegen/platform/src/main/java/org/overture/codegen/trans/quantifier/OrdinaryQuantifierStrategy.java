@@ -23,12 +23,12 @@ package org.overture.codegen.trans.quantifier;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SPatternCG;
+import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.AVarDeclCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;

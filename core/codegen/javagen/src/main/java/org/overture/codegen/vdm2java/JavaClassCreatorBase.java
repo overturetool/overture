@@ -1,17 +1,17 @@
 package org.overture.codegen.vdm2java;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.types.AExternalTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.ATemplateTypeCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamCG;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.expressions.AApplyExpCG;
+import org.overture.codegen.ir.expressions.AExplicitVarExpCG;
+import org.overture.codegen.ir.patterns.AIdentifierPatternCG;
+import org.overture.codegen.ir.types.AExternalTypeCG;
+import org.overture.codegen.ir.types.AMethodTypeCG;
+import org.overture.codegen.ir.types.AObjectTypeCG;
+import org.overture.codegen.ir.types.AStringTypeCG;
+import org.overture.codegen.ir.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.logging.Logger;
 

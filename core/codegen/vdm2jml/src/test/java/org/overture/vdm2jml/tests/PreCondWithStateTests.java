@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
 
 /**
  * This test is like the  PreCondNoStateTests test except that it

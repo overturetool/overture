@@ -1,7 +1,7 @@
 package org.overture.codegen.trans.patterns;
 
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.ir.declarations.AVarDeclCG;
+import org.overture.codegen.ir.statements.ABlockStmCG;
 
 public class DeclBlockPair
 {

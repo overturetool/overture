@@ -2,12 +2,12 @@ package org.overture.codegen.trans;
 
 import java.util.LinkedList;
 
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.SDeclCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamCG;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
@@ -23,7 +23,7 @@ public class PrePostTrans extends DepthFirstAnalysisAdaptor {
 
 	@Override
 	public void caseAMethodDeclCG(AMethodDeclCG node)
-			throws org.overture.codegen.cgast.analysis.AnalysisException {
+			throws org.overture.codegen.ir.analysis.AnalysisException {
 		
 		if(!info.getSettings().generatePreConds())
 		{

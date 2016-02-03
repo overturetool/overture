@@ -26,11 +26,11 @@ import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
-import org.overture.codegen.cgast.declarations.ABusClassDeclCG;
-import org.overture.codegen.cgast.declarations.ACpuClassDeclCG;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.ASystemClassDeclCG;
-import org.overture.codegen.cgast.declarations.SClassDeclCG;
+import org.overture.codegen.ir.declarations.ABusClassDeclCG;
+import org.overture.codegen.ir.declarations.ACpuClassDeclCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.ASystemClassDeclCG;
+import org.overture.codegen.ir.declarations.SClassDeclCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, SClassDeclCG>

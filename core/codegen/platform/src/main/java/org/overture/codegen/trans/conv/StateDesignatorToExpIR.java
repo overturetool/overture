@@ -1,14 +1,14 @@
 package org.overture.codegen.trans.conv;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.AnswerAdaptor;
-import org.overture.codegen.cgast.expressions.AFieldExpCG;
-import org.overture.codegen.cgast.expressions.AMapSeqGetExpCG;
-import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
-import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.AnswerAdaptor;
+import org.overture.codegen.ir.expressions.AFieldExpCG;
+import org.overture.codegen.ir.expressions.AMapSeqGetExpCG;
+import org.overture.codegen.ir.statements.AFieldStateDesignatorCG;
+import org.overture.codegen.ir.statements.AIdentifierStateDesignatorCG;
+import org.overture.codegen.ir.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 /**

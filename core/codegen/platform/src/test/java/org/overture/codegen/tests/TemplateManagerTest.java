@@ -5,9 +5,9 @@ import java.io.File;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.merging.TemplateData;
 import org.overture.codegen.merging.TemplateManager;
 

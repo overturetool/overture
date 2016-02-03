@@ -1,14 +1,14 @@
 package org.overture.codegen.vdm2java;
 
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.AExternalTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.expressions.AApplyExpCG;
+import org.overture.codegen.ir.expressions.AExplicitVarExpCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.expressions.AStringLiteralExpCG;
+import org.overture.codegen.ir.types.ABoolBasicTypeCG;
+import org.overture.codegen.ir.types.AExternalTypeCG;
+import org.overture.codegen.ir.types.AMethodTypeCG;
+import org.overture.codegen.ir.types.AStringTypeCG;
 import org.overture.codegen.trans.IPostCheckCreator;
 
 public class JavaPostCheckCreator implements IPostCheckCreator

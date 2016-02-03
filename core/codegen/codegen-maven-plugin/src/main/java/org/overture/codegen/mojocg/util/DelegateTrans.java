@@ -3,16 +3,16 @@ package org.overture.codegen.mojocg.util;
 import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.APlainCallStmCG;
-import org.overture.codegen.cgast.types.AExternalTypeCG;
+import org.overture.codegen.ir.SPatternCG;
+import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamCG;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.patterns.AIdentifierPatternCG;
+import org.overture.codegen.ir.statements.APlainCallStmCG;
+import org.overture.codegen.ir.types.AExternalTypeCG;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class DelegateTrans extends DepthFirstAnalysisAdaptor

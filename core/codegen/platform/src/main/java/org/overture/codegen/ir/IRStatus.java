@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.node.INode;
-import org.overture.codegen.cgast.PCG;
+import org.overture.codegen.ir.PCG;
 
 public final class IRStatus<T extends PCG>
 {

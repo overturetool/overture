@@ -1,16 +1,16 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.AAssignmentStmCG;
-import org.overture.codegen.cgast.statements.AAtomicStmCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.AVarDeclCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.patterns.AIdentifierPatternCG;
+import org.overture.codegen.ir.statements.AAssignmentStmCG;
+import org.overture.codegen.ir.statements.AAtomicStmCG;
+import org.overture.codegen.ir.statements.ABlockStmCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 

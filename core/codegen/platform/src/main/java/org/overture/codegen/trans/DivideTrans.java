@@ -1,13 +1,13 @@
 package org.overture.codegen.trans;
 
 import org.overture.ast.types.ARealNumericBasicType;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
-import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.expressions.ADivideNumericBinaryExpCG;
+import org.overture.codegen.ir.expressions.ARealLiteralExpCG;
+import org.overture.codegen.ir.expressions.ATimesNumericBinaryExpCG;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 

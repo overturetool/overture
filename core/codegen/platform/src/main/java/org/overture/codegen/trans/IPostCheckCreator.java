@@ -1,9 +1,9 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.expressions.AApplyExpCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.expressions.AStringLiteralExpCG;
 
 public interface IPostCheckCreator
 {

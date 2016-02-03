@@ -3,18 +3,18 @@ package org.overture.codegen.traces;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.cgast.types.AUnionTypeCG;
-import org.overture.codegen.cgast.types.AUnknownTypeCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.declarations.AVarDeclCG;
+import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.statements.ABlockStmCG;
+import org.overture.codegen.ir.statements.ACallObjectExpStmCG;
+import org.overture.codegen.ir.types.AClassTypeCG;
+import org.overture.codegen.ir.types.ANatNumericBasicTypeCG;
+import org.overture.codegen.ir.types.AObjectTypeCG;
+import org.overture.codegen.ir.types.AUnionTypeCG;
+import org.overture.codegen.ir.types.AUnknownTypeCG;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class StoreAssistant

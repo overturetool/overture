@@ -23,31 +23,31 @@ package org.overture.codegen.ir;
 
 import java.util.HashMap;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AIntDivNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AModNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
-import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
-import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ARemNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
-import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.expressions.AAddrEqualsBinaryExpCG;
+import org.overture.codegen.ir.expressions.AAddrNotEqualsBinaryExpCG;
+import org.overture.codegen.ir.expressions.AAndBoolBinaryExpCG;
+import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
+import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpCG;
+import org.overture.codegen.ir.expressions.ADivideNumericBinaryExpCG;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.ir.expressions.AGreaterEqualNumericBinaryExpCG;
+import org.overture.codegen.ir.expressions.AGreaterNumericBinaryExpCG;
+import org.overture.codegen.ir.expressions.ALessEqualNumericBinaryExpCG;
+import org.overture.codegen.ir.expressions.ALessNumericBinaryExpCG;
+import org.overture.codegen.ir.expressions.AMinusUnaryExpCG;
+import org.overture.codegen.ir.expressions.AModNumericBinaryExpCG;
+import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpCG;
+import org.overture.codegen.ir.expressions.ANotUnaryExpCG;
+import org.overture.codegen.ir.expressions.AOrBoolBinaryExpCG;
+import org.overture.codegen.ir.expressions.APlusNumericBinaryExpCG;
+import org.overture.codegen.ir.expressions.APlusUnaryExpCG;
+import org.overture.codegen.ir.expressions.APowerNumericBinaryExpCG;
+import org.overture.codegen.ir.expressions.ARemNumericBinaryExpCG;
+import org.overture.codegen.ir.expressions.ASubtractNumericBinaryExpCG;
+import org.overture.codegen.ir.expressions.ATernaryIfExpCG;
+import org.overture.codegen.ir.expressions.ATimesNumericBinaryExpCG;
+import org.overture.codegen.ir.expressions.AXorBoolBinaryExpCG;
 
 public class IROperatorLookup
 {

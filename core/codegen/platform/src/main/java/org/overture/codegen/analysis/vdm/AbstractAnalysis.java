@@ -21,7 +21,7 @@
  */
 package org.overture.codegen.analysis.vdm;
 
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 
 public class AbstractAnalysis extends DepthFirstAnalysisAdaptor
 {

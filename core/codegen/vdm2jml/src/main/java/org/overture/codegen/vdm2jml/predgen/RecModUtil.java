@@ -1,12 +1,12 @@
 package org.overture.codegen.vdm2jml.predgen;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.AMetaStmCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.declarations.ARecordDeclCG;
+import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
+import org.overture.codegen.ir.expressions.SVarExpCG;
+import org.overture.codegen.ir.statements.ACallObjectExpStmCG;
+import org.overture.codegen.ir.statements.AMetaStmCG;
+import org.overture.codegen.ir.types.ARecordTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 

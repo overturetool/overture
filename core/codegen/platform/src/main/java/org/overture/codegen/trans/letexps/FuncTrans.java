@@ -21,12 +21,12 @@
  */
 package org.overture.codegen.trans.letexps;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFuncDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.AFuncDeclCG;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class FuncTrans extends DepthFirstAnalysisAdaptor

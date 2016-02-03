@@ -1,6 +1,6 @@
 Packages
-base org.overture.codegen.cgast;
-analysis org.overture.codegen.cgast.analysis;
+base org.overture.codegen.ir;
+analysis org.overture.codegen.ir.analysis;
   
 Tokens
 /* This section declared tokens as internal types or external classes
@@ -29,7 +29,7 @@ Tokens
 Abstract Syntax Tree
 /* This section declares the AST by giving root nodes and their possible sub classe */
 
-CG {-> package='org.overture.codegen.cgast'
+CG {-> package='org.overture.codegen.ir'
 	| (sourceNode):SourceNode
 	| (tag):java_Object // Tags carry information to support IR analysis
 	| (metaData):eString*} // Meta data is intended to hold printable information such as code annotations
@@ -55,12 +55,12 @@ CG {-> package='org.overture.codegen.cgast'
 	| #traceCoreDecl
 	;
 
-#imports {-> package='org.overture.codegen.cgast.declarations'} 
+#imports {-> package='org.overture.codegen.ir.declarations'} 
     = {module} [name]:java_String [imports]:CG.#imports.fromModule*
     | {fromModule} [name]:java_String [signatures]:CG.#import**
     ;
     
-#import {-> package='org.overture.codegen.cgast.declarations'
+#import {-> package='org.overture.codegen.ir.declarations'
 	|	[name]:java_String 
 	|	[renamed]:java_String 
 	|	[fromModuleName]:java_String/*(from):CG.#decl.module*/}
@@ -69,18 +69,18 @@ CG {-> package='org.overture.codegen.cgast'
     |   #value
     ;
     
-#value {-> package='org.overture.codegen.cgast.declarations'
+#value {-> package='org.overture.codegen.ir.declarations'
 	|	(importType):CG.#type}
     =   {value}
     |   {function} [typeParams]:CG.#name.token* //Because [typeParams]:java_String* is not supported by the AstCreator
     |   {operation}
     ;
 
-#exports {-> package='org.overture.codegen.cgast.declarations'}
+#exports {-> package='org.overture.codegen.ir.declarations'}
     =   {module} [exports]:CG.#export**
     ;
 
-#export {-> package='org.overture.codegen.cgast.declarations'
+#export {-> package='org.overture.codegen.ir.declarations'
 	|	[decl]:CG.#decl*}
     =   {all}
     |   {function} [nameList]:CG.#name.token* (exportType):CG.#type
@@ -89,7 +89,7 @@ CG {-> package='org.overture.codegen.cgast'
     |   {value} [nameList]:CG.#name.token* (exportType):CG.#type
     ;
 
-#pattern {-> package='org.overture.codegen.cgast.patterns'}
+#pattern {-> package='org.overture.codegen.ir.patterns'}
 	= {identifier} [name]:java_String
 	| {ignore}
 	| {bool} [value]:java_Boolean
@@ -103,19 +103,19 @@ CG {-> package='org.overture.codegen.cgast'
 	| {record} [typename]:java_String [patterns]:CG.#pattern* [type]:CG.#type
 	;
 
-#bind {-> package='org.overture.codegen.cgast.patterns'
+#bind {-> package='org.overture.codegen.ir.patterns'
 	|	[pattern]:CG.#pattern}
     =   {set} [set]:CG.#exp //binds
     |   {type} [type]:CG.#type
     ;
 		
-#multipleBind {-> package='org.overture.codegen.cgast.patterns'
+#multipleBind {-> package='org.overture.codegen.ir.patterns'
 	|	[patterns]:CG.#pattern*}
     =   {set}  [set]:CG.#exp //binds
     |   {type} [type]:CG.#type
     ;
    
-#name {-> package='org.overture.codegen.cgast.name'}
+#name {-> package='org.overture.codegen.ir.name'}
 	=	{type}
 		[name]:java_String
 		[definingClass]:java_String
@@ -123,7 +123,7 @@ CG {-> package='org.overture.codegen.cgast'
 		[name]:java_String
 	;
     
-#decl {-> package='org.overture.codegen.cgast.declarations'}
+#decl {-> package='org.overture.codegen.ir.declarations'}
 	=	{method} //rename to operation
 		(preCond):CG.#decl
 		(postCond):CG.#decl
@@ -221,7 +221,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[terms]:CG.#term.traceDecl*
 	;
 	
-#Class {-> package='org.overture.codegen.cgast.declarations'
+#Class {-> package='org.overture.codegen.ir.declarations'
   | (globalMetaData):eString*
   | [package]:java_String
   | (dependencies):eString*
@@ -247,14 +247,14 @@ CG {-> package='org.overture.codegen.cgast'
    | {default}
   ;
 	
-#stateDesignator {-> package='org.overture.codegen.cgast.statements'
+#stateDesignator {-> package='org.overture.codegen.ir.statements'
 	| [type]:CG.#type }
 	= {identifier} [name]:java_String [explicit]:java_Boolean [className]:java_String [isLocal]:java_Boolean
 	| {field} [object]:CG.#stateDesignator [field]:java_String
 	| {mapSeq} [mapseq]:CG.#stateDesignator [exp]:CG.#exp
 	;
 
-#objectDesignator {-> package='org.overture.codegen.cgast.statements'}
+#objectDesignator {-> package='org.overture.codegen.ir.statements'}
 	=   {apply} [object]:CG.#objectDesignator [args]:CG.#exp*
     |   {field} [object]:CG.#objectDesignator [fieldModule]:java_String [fieldName]:java_String
     |   {identifier} [exp]:CG.#exp //Normally a var (e.g. [exp]:CG.#exp.#Var) but a transformation may need to replace it with a cast expression
@@ -262,11 +262,11 @@ CG {-> package='org.overture.codegen.cgast'
     |   {self}
     ;
     
-#localParam {-> package='org.overture.codegen.cgast.declarations'}
+#localParam {-> package='org.overture.codegen.ir.declarations'}
            = {formalParam} [type]:CG.#type [pattern]:CG.#pattern
            ;
 
-#stm {-> package='org.overture.codegen.cgast.statements'}
+#stm {-> package='org.overture.codegen.ir.statements'}
            =	{if} [ifExp]:CG.#exp [thenStm]:CG.#stm [elseIf]:CG.#stm.elseIf* [elseStm]:CG.#stm
            | 	{elseIf} [elseIf]:CG.#exp [thenStm]:CG.#stm
            |  {exp} [exp]:CG.#exp
@@ -318,7 +318,7 @@ CG {-> package='org.overture.codegen.cgast'
       | {mapCompAdd} [map]:CG.#exp [element]:CG.#exp
       ;
 
-#call {-> package='org.overture.codegen.cgast.statements'
+#call {-> package='org.overture.codegen.ir.statements'
 	| 	[type]:CG.#type
 	|	[isStatic]:java_Boolean
 	|	[name]:java_String
@@ -328,15 +328,15 @@ CG {-> package='org.overture.codegen.cgast'
     ;
 
            
-#altStm {-> package='org.overture.codegen.cgast.statements'}
+#altStm {-> package='org.overture.codegen.ir.statements'}
     = {case} [pattern]:CG.#pattern [result]:CG.#stm [patternType]:CG.#type
     ;
            
-#letBeSt {-> package='org.overture.codegen.cgast.utils'}
+#letBeSt {-> package='org.overture.codegen.ir.utils'}
 	= {header} [binding]:CG.#multipleBind [suchThat]:CG.#exp //The Overture AST uses a multiplebind 
 	;
 	
-#exp {-> package='org.overture.codegen.cgast.expressions'
+#exp {-> package='org.overture.codegen.ir.expressions'
 	| [type]:CG.#type}
     =	#Unary
     |	#Binary
@@ -389,11 +389,11 @@ CG {-> package='org.overture.codegen.cgast'
     |	{mapSeqGet} [col]:CG.#exp [index]:CG.#exp
     ;
 
-#modifier {-> package='org.overture.codegen.cgast.expressions'}
+#modifier {-> package='org.overture.codegen.ir.expressions'}
     = {record} [name]:java_String [value]:CG.#exp
     ;
 
-#Is {-> package='org.overture.codegen.cgast.expressions'
+#Is {-> package='org.overture.codegen.ir.expressions'
 	| [exp]:CG.#exp}
     =	{bool}
     |	{nat}
@@ -407,11 +407,11 @@ CG {-> package='org.overture.codegen.cgast'
     |	{general} [checkedType]:CG.#type
     ;   
 
-#altExp {-> package='org.overture.codegen.cgast.expressions'}
+#altExp {-> package='org.overture.codegen.ir.expressions'}
     = {case} [pattern]:CG.#pattern [result]:CG.#exp [patternType]:CG.#type
     ;
 
-#RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
+#RuntimeError {-> package='org.overture.codegen.ir.expressions'}
     =   {LetBeStNoBinding}
     |	{patternMatch} [message]:java_String
     |	{missingMember} [message]:java_String
@@ -420,7 +420,7 @@ CG {-> package='org.overture.codegen.cgast'
 	|	{preCond} [message]:java_String
     ;
 
-#Var {-> package='org.overture.codegen.cgast.expressions'
+#Var {-> package='org.overture.codegen.ir.expressions'
 	|	[isLambda]:java_Boolean
 	|	[isLocal]:java_Boolean
 	|	[name]:java_String}
@@ -429,7 +429,7 @@ CG {-> package='org.overture.codegen.cgast'
 	|	{super}
     ;
     
-#Literal {-> package='org.overture.codegen.cgast.expressions'}
+#Literal {-> package='org.overture.codegen.ir.expressions'}
     =	{int} [value]:java_Long
     |	{real} [value]:java_Double
     |	{bool} [value]:java_Boolean
@@ -438,7 +438,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{string} [value]:java_String [isNull]:java_Boolean
 	;
 	
-#Quantifier {-> package='org.overture.codegen.cgast.expressions'
+#Quantifier {-> package='org.overture.codegen.ir.expressions'
 	| [bindList]:CG.#multipleBind*
 	| [predicate]:CG.#exp}
 	= {forAll}
@@ -446,7 +446,7 @@ CG {-> package='org.overture.codegen.cgast'
 	| {exists1}
 	;
     
-#Binary {-> package='org.overture.codegen.cgast.expressions'
+#Binary {-> package='org.overture.codegen.ir.expressions'
 	| [left]:CG.#exp
 	| [right]:CG.#exp}
     =   #Numeric
@@ -475,7 +475,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{rangeResBy} //Syntax: ':->'
     ;
  
-#Numeric {-> package='org.overture.codegen.cgast.expressions'}
+#Numeric {-> package='org.overture.codegen.ir.expressions'}
     =	{intDiv}
     |	{divide}
     |	{greaterEqual}
@@ -490,13 +490,13 @@ CG {-> package='org.overture.codegen.cgast'
     |	{power}       
     ;   
 
-#Bool {-> package='org.overture.codegen.cgast.expressions'}
+#Bool {-> package='org.overture.codegen.ir.expressions'}
     =	{or}
     |	{and}
     |	{xor}
 	;
  
-#Unary {-> package='org.overture.codegen.cgast.expressions'
+#Unary {-> package='org.overture.codegen.ir.expressions'
 	| [exp]:CG.#exp}
     =   {plus} 
     |   {minus}
@@ -524,23 +524,23 @@ CG {-> package='org.overture.codegen.cgast'
     |	{stringToSeq}
     ;
     
-#Seq {-> package='org.overture.codegen.cgast.expressions'}
+#Seq {-> package='org.overture.codegen.ir.expressions'}
 	= {enum} [members]:CG.#exp*
 	| {comp} [first]:CG.#exp [setBind]:CG.#bind.set [set]:CG.#exp [predicate]:CG.#exp
 	;
 
-#Set {-> package='org.overture.codegen.cgast.expressions'}
+#Set {-> package='org.overture.codegen.ir.expressions'}
 	= {enum} [members]:CG.#exp*
 	| {comp} [first]:CG.#exp [bindings]:CG.#multipleBind* [predicate]:CG.#exp//In the Overture AST bindings are of type multipleBind* as it also allows type binds.
 	| {range} [first]:CG.#exp [last]:CG.#exp
 	;
 
-#Map {-> package='org.overture.codegen.cgast.expressions'}
+#Map {-> package='org.overture.codegen.ir.expressions'}
 	= {enum} [members]:CG.#exp.maplet*
 	| {comp} [first]:CG.#exp.maplet [bindings]:CG.#multipleBind* [predicate]:CG.#exp
 	;
 
-#type {-> package='org.overture.codegen.cgast.types'
+#type {-> package='org.overture.codegen.ir.types'
 	| [optional]:java_Boolean
 	| [namedInvType]:CG.#decl.namedType}
     =   #basic
@@ -567,11 +567,11 @@ CG {-> package='org.overture.codegen.cgast'
     |	{unknown}
     ;
     
-externalType {-> package='org.overture.codegen.cgast.utils'}
+externalType {-> package='org.overture.codegen.ir.utils'}
 	= {info} [namespace]:java_String [filePath]:java_String 
 	;
 
-#basicTypeWrappers {-> package='org.overture.codegen.cgast.types'}
+#basicTypeWrappers {-> package='org.overture.codegen.ir.types'}
 	= {Int}
 	| {Nat1}
 	| {Nat}
@@ -581,20 +581,20 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
 	| {Bool}
 	;
 
-#set {-> package='org.overture.codegen.cgast.types'
+#set {-> package='org.overture.codegen.ir.types'
 	| [empty]:java_Boolean
 	| [setOf]:CG.#type}
     =   {set} 
     ;
     
-#seq {-> package='org.overture.codegen.cgast.types'
+#seq {-> package='org.overture.codegen.ir.types'
 	| [empty]:java_Boolean
 	| [seq1]:java_Boolean
 	| [seqOf]:CG.#type}
     =   {seq}
     ;
     
-#map {-> package='org.overture.codegen.cgast.types'
+#map {-> package='org.overture.codegen.ir.types'
 	| [empty]:java_Boolean
 	| [injective]:java_Boolean
 	| [from]:CG.#type
@@ -602,14 +602,14 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
     =   {map}
     ;
     
-#basic {-> package='org.overture.codegen.cgast.types'}
+#basic {-> package='org.overture.codegen.ir.types'}
     =   #numeric
     |	{char}
     |	{bool}
     |	{token}
     ;
 
-#numeric {-> package='org.overture.codegen.cgast.types'}
+#numeric {-> package='org.overture.codegen.ir.types'}
     =   {int}
     |	{nat1}
     |	{nat}
@@ -617,11 +617,11 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
     |   {real} 
     ;
 
-#term {-> package='org.overture.codegen.cgast.traces'}
+#term {-> package='org.overture.codegen.ir.traces'}
     =   {traceDecl} [traceDecls]:CG.#traceDecl*
     ;
     
-#traceDecl {-> package='org.overture.codegen.cgast.traces'}
+#traceDecl {-> package='org.overture.codegen.ir.traces'}
     =   {instance} //Not there...
     |   {letBeStBinding}
     	[bind]:CG.#multipleBind.set //[bind]:CG.#multipleBind (Only set binds are supported)
@@ -633,7 +633,7 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
     |   {repeat} [core]:CG.#traceCoreDecl [from]:java_Long [to]:java_Long
     ;
     
-#traceCoreDecl {-> package='org.overture.codegen.cgast.traces'}
+#traceCoreDecl {-> package='org.overture.codegen.ir.traces'}
     =   {applyExp} [callStm]:CG.#stm
     |   {bracketedExp} [terms]:CG.#term.traceDecl*
     |   {concurrentExp} [decls]:CG.#traceDecl*

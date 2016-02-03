@@ -30,12 +30,12 @@ import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SMultipleBindCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
-import org.overture.codegen.cgast.patterns.ATypeMultipleBindCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SMultipleBindCG;
+import org.overture.codegen.ir.SPatternCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.patterns.ASetMultipleBindCG;
+import org.overture.codegen.ir.patterns.ATypeMultipleBindCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class MultipleBindVisitorCG extends

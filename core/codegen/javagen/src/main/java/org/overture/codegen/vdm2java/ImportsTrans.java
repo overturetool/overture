@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.ASystemClassDeclCG;
-import org.overture.codegen.cgast.declarations.SClassDeclCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.ASystemClassDeclCG;
+import org.overture.codegen.ir.declarations.SClassDeclCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class ImportsTrans extends DepthFirstAnalysisAdaptor

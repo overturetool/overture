@@ -1,6 +1,6 @@
 package org.overture.codegen.assistant;
 
-import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.ir.STypeCG;
 
 public interface CollectionTypeStrategy
 {

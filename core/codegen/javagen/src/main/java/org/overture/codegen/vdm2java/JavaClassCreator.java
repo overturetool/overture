@@ -2,16 +2,16 @@ package org.overture.codegen.vdm2java;
 
 import java.util.LinkedList;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.AFieldDeclCG;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.expressions.AApplyExpCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.expressions.ASeqConcatBinaryExpCG;
+import org.overture.codegen.ir.expressions.AStringLiteralExpCG;
+import org.overture.codegen.ir.statements.AReturnStmCG;
+import org.overture.codegen.ir.types.AStringTypeCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class JavaClassCreator extends JavaClassCreatorBase

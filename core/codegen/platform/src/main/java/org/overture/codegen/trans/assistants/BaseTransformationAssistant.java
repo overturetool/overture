@@ -24,15 +24,15 @@ package org.overture.codegen.trans.assistants;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.AElseIfStmCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.AVarDeclCG;
+import org.overture.codegen.ir.expressions.AAnonymousClassExpCG;
+import org.overture.codegen.ir.statements.ABlockStmCG;
+import org.overture.codegen.ir.statements.AElseIfStmCG;
+import org.overture.codegen.ir.statements.AIfStmCG;
 
 public class BaseTransformationAssistant
 {

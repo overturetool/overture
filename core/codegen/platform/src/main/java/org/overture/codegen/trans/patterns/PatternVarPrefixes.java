@@ -24,17 +24,17 @@ package org.overture.codegen.trans.patterns;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.patterns.ABoolPatternCG;
-import org.overture.codegen.cgast.patterns.ACharPatternCG;
-import org.overture.codegen.cgast.patterns.AIgnorePatternCG;
-import org.overture.codegen.cgast.patterns.AIntPatternCG;
-import org.overture.codegen.cgast.patterns.ANullPatternCG;
-import org.overture.codegen.cgast.patterns.AQuotePatternCG;
-import org.overture.codegen.cgast.patterns.ARealPatternCG;
-import org.overture.codegen.cgast.patterns.ARecordPatternCG;
-import org.overture.codegen.cgast.patterns.AStringPatternCG;
-import org.overture.codegen.cgast.patterns.ATuplePatternCG;
+import org.overture.codegen.ir.SPatternCG;
+import org.overture.codegen.ir.patterns.ABoolPatternCG;
+import org.overture.codegen.ir.patterns.ACharPatternCG;
+import org.overture.codegen.ir.patterns.AIgnorePatternCG;
+import org.overture.codegen.ir.patterns.AIntPatternCG;
+import org.overture.codegen.ir.patterns.ANullPatternCG;
+import org.overture.codegen.ir.patterns.AQuotePatternCG;
+import org.overture.codegen.ir.patterns.ARealPatternCG;
+import org.overture.codegen.ir.patterns.ARecordPatternCG;
+import org.overture.codegen.ir.patterns.AStringPatternCG;
+import org.overture.codegen.ir.patterns.ATuplePatternCG;
 
 public class PatternVarPrefixes
 {

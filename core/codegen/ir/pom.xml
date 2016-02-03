@@ -34,7 +34,7 @@
         <version>2.10.3</version>
         <configuration>
 
-          <excludePackageNames>org.overture.codegen.cgast:org.overture.codegen.cgast.*</excludePackageNames>
+          <excludePackageNames>org.overture.codegen.ir:org.overture.codegen.ir.*</excludePackageNames>
 
         </configuration>
       </plugin>

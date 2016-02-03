@@ -1,13 +1,13 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.statements.AAssignmentStmCG;
-import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
-import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.statements.AAssignToExpStmCG;
+import org.overture.codegen.ir.statements.AAssignmentStmCG;
+import org.overture.codegen.ir.statements.AMapSeqStateDesignatorCG;
+import org.overture.codegen.ir.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.conv.StateDesignatorToExpCG;

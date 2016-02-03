@@ -3,11 +3,11 @@ package org.overture.codegen.assistant;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.patterns.ATuplePatternCG;
-import org.overture.codegen.cgast.types.ATupleTypeCG;
-import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.patterns.AIdentifierPatternCG;
+import org.overture.codegen.ir.patterns.ATuplePatternCG;
+import org.overture.codegen.ir.types.ATupleTypeCG;
+import org.overture.codegen.ir.types.AUnionTypeCG;
 
 public class PatternAssistantCG  extends AssistantBase
 {

@@ -30,7 +30,7 @@ import java.util.Set;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
-import org.overture.codegen.cgast.PCG;
+import org.overture.codegen.ir.PCG;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.VdmNodeInfo;

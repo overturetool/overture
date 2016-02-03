@@ -53,13 +53,13 @@ import org.overture.codegen.analysis.violations.TypenameComparison;
 import org.overture.codegen.analysis.violations.VdmAstAnalysis;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
-import org.overture.codegen.cgast.PCG;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.cgast.declarations.AModuleDeclCG;
-import org.overture.codegen.cgast.declarations.SClassDeclCG;
+import org.overture.codegen.ir.PCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.AInterfaceDeclCG;
+import org.overture.codegen.ir.declarations.AModuleDeclCG;
+import org.overture.codegen.ir.declarations.SClassDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
@@ -209,7 +209,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			{
 				generator.applyTotalTransformation(status, moduleTransformation);
 
-			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Error when generating code for module "
 						+ status.getIrNodeName() + ": " + e.getMessage());
@@ -258,7 +258,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 						generator.applyPartialTransformation(status, trans);
 					}
 
-				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+				} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 				{
 					Logger.getLog().printErrorln("Error when generating code for class "
 							+ status.getIrNodeName() + ": " + e.getMessage());
@@ -309,7 +309,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 					}
 				}
 
-			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Error generating code for class "
 						+ status.getIrNodeName() + ": " + e.getMessage());
@@ -331,7 +331,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
 				genModules.add(new GeneratedModule(funcValueInterface.getName(), funcValueInterface, formattedJavaCode, false));
 
-			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Error generating code for function value interface "
 						+ funcValueInterface.getName() + ": " + e.getMessage());
@@ -395,7 +395,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 			return modules;
 
-		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+		} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 		{
 			Logger.getLog().printErrorln("Error when formatting quotes: "
 					+ e.getMessage());
@@ -616,7 +616,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		return modules;
 	}
 
-	public Generated generateJavaFromVdmExp(PExp exp) throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException
+	public Generated generateJavaFromVdmExp(PExp exp) throws AnalysisException, org.overture.codegen.ir.analysis.AnalysisException
 	{
 		// There is no name validation here.
 		IRStatus<SExpCG> expStatus = generator.generateFrom(exp);
@@ -629,7 +629,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		{
 			return genIrExp(expStatus, mergeVisitor);
 
-		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+		} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 		{
 			Logger.getLog().printErrorln("Could not generate expression: "
 					+ exp);

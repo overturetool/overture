@@ -1,18 +1,18 @@
 package org.overture.codegen.traces;
 
 import org.apache.commons.lang.BooleanUtils;
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.AnswerAdaptor;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AFieldExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.ANewExpCG;
-import org.overture.codegen.cgast.expressions.ASelfExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overture.codegen.cgast.types.AObjectTypeCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.AnswerAdaptor;
+import org.overture.codegen.ir.expressions.AApplyExpCG;
+import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
+import org.overture.codegen.ir.expressions.AFieldExpCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.expressions.ANewExpCG;
+import org.overture.codegen.ir.expressions.ASelfExpCG;
+import org.overture.codegen.ir.expressions.SVarExpCG;
+import org.overture.codegen.ir.types.AObjectTypeCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 

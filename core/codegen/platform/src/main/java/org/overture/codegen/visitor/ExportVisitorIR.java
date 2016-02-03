@@ -13,15 +13,15 @@ import org.overture.ast.modules.ATypeExport;
 import org.overture.ast.modules.AValueExport;
 import org.overture.ast.modules.PExport;
 import org.overture.ast.types.PType;
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.SExportCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AAllExportCG;
-import org.overture.codegen.cgast.declarations.AFunctionExportCG;
-import org.overture.codegen.cgast.declarations.AOperationExportCG;
-import org.overture.codegen.cgast.declarations.ATypeExportCG;
-import org.overture.codegen.cgast.declarations.AValueExportCG;
-import org.overture.codegen.cgast.name.ATokenNameCG;
+import org.overture.codegen.ir.SDeclCG;
+import org.overture.codegen.ir.SExportCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.declarations.AAllExportCG;
+import org.overture.codegen.ir.declarations.AFunctionExportCG;
+import org.overture.codegen.ir.declarations.AOperationExportCG;
+import org.overture.codegen.ir.declarations.ATypeExportCG;
+import org.overture.codegen.ir.declarations.AValueExportCG;
+import org.overture.codegen.ir.name.ATokenNameCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class ExportVisitorCG extends AbstractVisitorCG<IRInfo, SExportCG>

@@ -1,19 +1,19 @@
 package org.overture.codegen.trans.conc;
 
-import org.overture.codegen.cgast.SNameCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AMutexSyncDeclCG;
-import org.overture.codegen.cgast.declarations.APersyncDeclCG;
-import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AHistoryExpCG;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
-import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
-import org.overture.codegen.cgast.name.ATokenNameCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.ir.SNameCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.AMutexSyncDeclCG;
+import org.overture.codegen.ir.declarations.APersyncDeclCG;
+import org.overture.codegen.ir.expressions.AAndBoolBinaryExpCG;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.ir.expressions.AHistoryExpCG;
+import org.overture.codegen.ir.expressions.AIntLiteralExpCG;
+import org.overture.codegen.ir.expressions.APlusNumericBinaryExpCG;
+import org.overture.codegen.ir.name.ATokenNameCG;
+import org.overture.codegen.ir.types.AClassTypeCG;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class MutexDeclTrans extends DepthFirstAnalysisAdaptor

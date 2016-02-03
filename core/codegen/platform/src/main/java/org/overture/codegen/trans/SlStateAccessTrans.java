@@ -1,18 +1,18 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AFuncDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.AStateDeclCG;
-import org.overture.codegen.cgast.expressions.AFieldExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.SDeclCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.AFieldDeclCG;
+import org.overture.codegen.ir.declarations.AFuncDeclCG;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.AStateDeclCG;
+import org.overture.codegen.ir.expressions.AFieldExpCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.statements.AFieldStateDesignatorCG;
+import org.overture.codegen.ir.statements.AIdentifierStateDesignatorCG;
+import org.overture.codegen.ir.types.ARecordTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 

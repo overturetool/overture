@@ -21,10 +21,10 @@
  */
 package org.overture.codegen.trans.patterns;
 
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.ir.SPatternCG;
+import org.overture.codegen.ir.declarations.AVarDeclCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.statements.ABlockStmCG;
 
 public class PatternBlockData
 {

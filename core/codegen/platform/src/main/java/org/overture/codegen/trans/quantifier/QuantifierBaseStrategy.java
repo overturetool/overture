@@ -21,7 +21,7 @@
  */
 package org.overture.codegen.trans.quantifier;
 
-import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.ir.SExpCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.AbstractIterationStrategy;
 import org.overture.codegen.trans.IterationVarPrefixes;

@@ -1,7 +1,7 @@
 package org.overture.codegen.trans.quantifier;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.STypeCG;
 
 public class Exists1CounterData
 {

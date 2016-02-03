@@ -6,8 +6,8 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.types.AObjectTypeCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.types.AObjectTypeCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class CGVisitorRecursiveTypeHandler extends CGVisitor<STypeCG> {

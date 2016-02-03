@@ -34,11 +34,11 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.PCG;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.declarations.AModuleDeclCG;
-import org.overture.codegen.cgast.declarations.SClassDeclCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.PCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.declarations.AModuleDeclCG;
+import org.overture.codegen.ir.declarations.SClassDeclCG;
 import org.overture.codegen.trans.ITotalTransformation;
 
 public class IRGenerator
@@ -98,8 +98,8 @@ public class IRGenerator
 	}
 	
 	public void applyPartialTransformation(IRStatus<? extends INode> status,
-			org.overture.codegen.cgast.analysis.intf.IAnalysis transformation)
-			throws org.overture.codegen.cgast.analysis.AnalysisException
+			org.overture.codegen.ir.analysis.intf.IAnalysis transformation)
+			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		codeGenInfo.clearTransformationWarnings();
 
@@ -111,7 +111,7 @@ public class IRGenerator
 
 	public void applyTotalTransformation(IRStatus<PCG> status,
 			ITotalTransformation trans)
-			throws org.overture.codegen.cgast.analysis.AnalysisException
+			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		codeGenInfo.clearTransformationWarnings();
 

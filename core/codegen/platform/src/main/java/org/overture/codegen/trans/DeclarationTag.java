@@ -1,6 +1,6 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.ir.declarations.AVarDeclCG;
 
 public class DeclarationTag
 {

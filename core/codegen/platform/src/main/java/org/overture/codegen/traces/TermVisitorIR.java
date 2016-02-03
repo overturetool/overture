@@ -3,9 +3,9 @@ package org.overture.codegen.traces;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.definitions.traces.PTraceDefinition;
-import org.overture.codegen.cgast.STermCG;
-import org.overture.codegen.cgast.STraceDeclCG;
-import org.overture.codegen.cgast.traces.ATraceDeclTermCG;
+import org.overture.codegen.ir.STermCG;
+import org.overture.codegen.ir.STraceDeclCG;
+import org.overture.codegen.ir.traces.ATraceDeclTermCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.visitor.AbstractVisitorCG;
 

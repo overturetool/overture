@@ -1,7 +1,7 @@
 package org.overture.codegen.traces;
 
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.statements.ABlockStmCG;
 
 public class TraceNodeData
 {

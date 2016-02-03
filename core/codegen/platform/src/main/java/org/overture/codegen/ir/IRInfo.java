@@ -40,26 +40,26 @@ import org.overture.codegen.assistant.NodeAssistantCG;
 import org.overture.codegen.assistant.PatternAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
-import org.overture.codegen.cgast.SBindCG;
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SExportCG;
-import org.overture.codegen.cgast.SExportsCG;
-import org.overture.codegen.cgast.SImportCG;
-import org.overture.codegen.cgast.SImportsCG;
-import org.overture.codegen.cgast.SModifierCG;
-import org.overture.codegen.cgast.SMultipleBindCG;
-import org.overture.codegen.cgast.SObjectDesignatorCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.SStateDesignatorCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.STermCG;
-import org.overture.codegen.cgast.STraceCoreDeclCG;
-import org.overture.codegen.cgast.STraceDeclCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AModuleDeclCG;
-import org.overture.codegen.cgast.declarations.SClassDeclCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
+import org.overture.codegen.ir.SBindCG;
+import org.overture.codegen.ir.SDeclCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SExportCG;
+import org.overture.codegen.ir.SExportsCG;
+import org.overture.codegen.ir.SImportCG;
+import org.overture.codegen.ir.SImportsCG;
+import org.overture.codegen.ir.SModifierCG;
+import org.overture.codegen.ir.SMultipleBindCG;
+import org.overture.codegen.ir.SObjectDesignatorCG;
+import org.overture.codegen.ir.SPatternCG;
+import org.overture.codegen.ir.SStateDesignatorCG;
+import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.STermCG;
+import org.overture.codegen.ir.STraceCoreDeclCG;
+import org.overture.codegen.ir.STraceDeclCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.declarations.AModuleDeclCG;
+import org.overture.codegen.ir.declarations.SClassDeclCG;
+import org.overture.codegen.ir.expressions.SVarExpCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.visitor.CGVisitor;
 import org.overture.codegen.visitor.VisitorManager;
@@ -316,7 +316,7 @@ public class IRInfo
 		transformationWarnings.clear();
 	}
 	
-	public void addTransformationWarning(org.overture.codegen.cgast.INode node, String warning)
+	public void addTransformationWarning(org.overture.codegen.ir.INode node, String warning)
 	{
 		IrNodeInfo info = new IrNodeInfo(node, warning);
 		transformationWarnings.add(info);

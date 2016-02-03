@@ -3,7 +3,7 @@ package org.overture.codegen.vdm2jml.trans;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.INode;
+import org.overture.codegen.ir.INode;
 import org.overture.codegen.traces.ICallStmToStringMethodBuilder;
 import org.overture.codegen.traces.StoreAssistant;
 import org.overture.codegen.traces.TraceNames;

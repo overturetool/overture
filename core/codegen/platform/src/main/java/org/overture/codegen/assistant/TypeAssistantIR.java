@@ -42,46 +42,46 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
 import org.overture.ast.util.PTypeSet;
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SObjectDesignatorCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.declarations.SClassDeclCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.SBinaryExpCG;
-import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.ACharBasicTypeCG;
-import org.overture.codegen.cgast.types.ACharBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.ANat1BasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ANatBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.cgast.types.ARatBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
-import org.overture.codegen.cgast.types.ASetSetTypeCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
-import org.overture.codegen.cgast.types.ATupleTypeCG;
-import org.overture.codegen.cgast.types.AUnionTypeCG;
-import org.overture.codegen.cgast.types.AUnknownTypeCG;
-import org.overture.codegen.cgast.types.SBasicTypeCG;
-import org.overture.codegen.cgast.types.SMapTypeCG;
-import org.overture.codegen.cgast.types.SSeqTypeCG;
-import org.overture.codegen.cgast.types.SSetTypeCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SObjectDesignatorCG;
+import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.declarations.AFieldDeclCG;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.ARecordDeclCG;
+import org.overture.codegen.ir.declarations.SClassDeclCG;
+import org.overture.codegen.ir.expressions.AApplyExpCG;
+import org.overture.codegen.ir.expressions.SBinaryExpCG;
+import org.overture.codegen.ir.statements.AApplyObjectDesignatorCG;
+import org.overture.codegen.ir.types.ABoolBasicTypeCG;
+import org.overture.codegen.ir.types.ABoolBasicTypeWrappersTypeCG;
+import org.overture.codegen.ir.types.ACharBasicTypeCG;
+import org.overture.codegen.ir.types.ACharBasicTypeWrappersTypeCG;
+import org.overture.codegen.ir.types.AClassTypeCG;
+import org.overture.codegen.ir.types.AIntBasicTypeWrappersTypeCG;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.ir.types.AMethodTypeCG;
+import org.overture.codegen.ir.types.ANat1BasicTypeWrappersTypeCG;
+import org.overture.codegen.ir.types.ANat1NumericBasicTypeCG;
+import org.overture.codegen.ir.types.ANatBasicTypeWrappersTypeCG;
+import org.overture.codegen.ir.types.ANatNumericBasicTypeCG;
+import org.overture.codegen.ir.types.AObjectTypeCG;
+import org.overture.codegen.ir.types.ARatBasicTypeWrappersTypeCG;
+import org.overture.codegen.ir.types.ARatNumericBasicTypeCG;
+import org.overture.codegen.ir.types.ARealBasicTypeWrappersTypeCG;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.ir.types.ARecordTypeCG;
+import org.overture.codegen.ir.types.ASeqSeqTypeCG;
+import org.overture.codegen.ir.types.ASetSetTypeCG;
+import org.overture.codegen.ir.types.AStringTypeCG;
+import org.overture.codegen.ir.types.ATokenBasicTypeCG;
+import org.overture.codegen.ir.types.ATupleTypeCG;
+import org.overture.codegen.ir.types.AUnionTypeCG;
+import org.overture.codegen.ir.types.AUnknownTypeCG;
+import org.overture.codegen.ir.types.SBasicTypeCG;
+import org.overture.codegen.ir.types.SMapTypeCG;
+import org.overture.codegen.ir.types.SSeqTypeCG;
+import org.overture.codegen.ir.types.SSetTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
@@ -99,7 +99,7 @@ public class TypeAssistantCG extends AssistantBase
 
 	public STypeCG getFieldExpType(IRInfo info, String fieldName, String fieldModule,
 			SObjectDesignatorCG obj, INode parent)
-			throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException
+			throws AnalysisException, org.overture.codegen.ir.analysis.AnalysisException
 	{
 		if (parent instanceof AApplyObjectDesignatorCG)
 		{
@@ -152,7 +152,7 @@ public class TypeAssistantCG extends AssistantBase
 					return fieldExpType;
 				}
 			} 
-			catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			catch (org.overture.codegen.ir.analysis.AnalysisException e)
 			{
 			}
 		}
@@ -163,7 +163,7 @@ public class TypeAssistantCG extends AssistantBase
 	
 	public AMethodTypeCG getMethodType(IRInfo info,
 			String fieldModule, String fieldName, List<SExpCG> args)
-			throws org.overture.codegen.cgast.analysis.AnalysisException
+			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		SClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(info.getClasses(), fieldModule);
 
@@ -271,7 +271,7 @@ public class TypeAssistantCG extends AssistantBase
 
 	public boolean checkArgTypes(IRInfo info, List<SExpCG> args,
 			List<STypeCG> paramTypes)
-			throws org.overture.codegen.cgast.analysis.AnalysisException
+			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		if (args.size() != paramTypes.size())
 		{

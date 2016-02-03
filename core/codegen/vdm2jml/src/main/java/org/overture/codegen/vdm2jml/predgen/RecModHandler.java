@@ -1,11 +1,11 @@
 package org.overture.codegen.vdm2jml.predgen;
 
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.AMetaStmCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.expressions.SVarExpCG;
+import org.overture.codegen.ir.statements.ACallObjectExpStmCG;
+import org.overture.codegen.ir.statements.AMetaStmCG;
+import org.overture.codegen.ir.types.ARecordTypeCG;
 import org.overture.codegen.logging.Logger;
 
 public class RecModHandler

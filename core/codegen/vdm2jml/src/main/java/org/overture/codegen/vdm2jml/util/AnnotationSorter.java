@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.cgast.PCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.PCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
 
 public class AnnotationSorter extends DepthFirstAnalysisAdaptor
 {

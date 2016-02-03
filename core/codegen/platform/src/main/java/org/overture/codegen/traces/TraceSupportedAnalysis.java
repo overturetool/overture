@@ -1,10 +1,10 @@
 package org.overture.codegen.traces;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
-import org.overture.codegen.cgast.statements.ASuperCallStmCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ANamedTraceDeclCG;
+import org.overture.codegen.ir.statements.ASuperCallStmCG;
 
 /**
  * This analysis determines if a named trace can be code

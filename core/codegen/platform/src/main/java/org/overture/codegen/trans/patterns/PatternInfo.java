@@ -21,9 +21,9 @@
  */
 package org.overture.codegen.trans.patterns;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SPatternCG;
+import org.overture.codegen.ir.STypeCG;
 
 public class PatternInfo
 {

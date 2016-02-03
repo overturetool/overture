@@ -23,8 +23,8 @@ package org.overture.codegen.assistant;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.declarations.SClassDeclCG;
+import org.overture.codegen.ir.SDeclCG;
+import org.overture.codegen.ir.declarations.SClassDeclCG;
 
 public interface DeclStrategy<T extends SDeclCG>
 {

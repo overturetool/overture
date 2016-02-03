@@ -30,9 +30,9 @@ import java.util.Stack;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.runtime.parser.ParseException;
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.QuestionAdaptor;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.QuestionAdaptor;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.utils.GeneralUtils;
 

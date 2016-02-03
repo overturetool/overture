@@ -4,12 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.cgast.PCG;
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.ir.PCG;
+import org.overture.codegen.ir.SDeclCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.AFieldDeclCG;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.ARecordDeclCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.logging.Logger;

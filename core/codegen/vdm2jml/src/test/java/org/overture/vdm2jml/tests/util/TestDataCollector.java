@@ -4,14 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
-import org.overture.codegen.cgast.statements.AMetaStmCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.AVoidTypeCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.statements.AAssignToExpStmCG;
+import org.overture.codegen.ir.statements.ACallObjectExpStmCG;
+import org.overture.codegen.ir.statements.AMapSeqUpdateStmCG;
+import org.overture.codegen.ir.statements.AMetaStmCG;
+import org.overture.codegen.ir.types.ARecordTypeCG;
+import org.overture.codegen.ir.types.AVoidTypeCG;
 
 public class TestDataCollector extends DepthFirstAnalysisAdaptor
 {

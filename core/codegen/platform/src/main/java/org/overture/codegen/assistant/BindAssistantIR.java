@@ -21,12 +21,12 @@
  */
 package org.overture.codegen.assistant;
 
-import org.overture.codegen.cgast.SBindCG;
-import org.overture.codegen.cgast.SMultipleBindCG;
-import org.overture.codegen.cgast.patterns.ASetBindCG;
-import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
-import org.overture.codegen.cgast.patterns.ATypeBindCG;
-import org.overture.codegen.cgast.patterns.ATypeMultipleBindCG;
+import org.overture.codegen.ir.SBindCG;
+import org.overture.codegen.ir.SMultipleBindCG;
+import org.overture.codegen.ir.patterns.ASetBindCG;
+import org.overture.codegen.ir.patterns.ASetMultipleBindCG;
+import org.overture.codegen.ir.patterns.ATypeBindCG;
+import org.overture.codegen.ir.patterns.ATypeMultipleBindCG;
 import org.overture.codegen.logging.Logger;
 
 public class BindAssistantCG extends AssistantBase
