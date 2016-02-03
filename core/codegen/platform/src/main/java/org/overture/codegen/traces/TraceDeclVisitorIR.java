@@ -10,21 +10,21 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SMultipleBindCG;
-import org.overture.codegen.ir.STraceCoreDeclCG;
-import org.overture.codegen.ir.STraceDeclCG;
-import org.overture.codegen.ir.patterns.ASetMultipleBindCG;
-import org.overture.codegen.ir.traces.ALetBeStBindingTraceDeclCG;
-import org.overture.codegen.ir.traces.ALetDefBindingTraceDeclCG;
-import org.overture.codegen.ir.traces.ARepeatTraceDeclCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SMultipleBindIR;
+import org.overture.codegen.ir.STraceCoreDeclIR;
+import org.overture.codegen.ir.STraceDeclIR;
+import org.overture.codegen.ir.patterns.ASetMultipleBindIR;
+import org.overture.codegen.ir.traces.ALetBeStBindingTraceDeclIR;
+import org.overture.codegen.ir.traces.ALetDefBindingTraceDeclIR;
+import org.overture.codegen.ir.traces.ARepeatTraceDeclIR;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.visitor.AbstractVisitorCG;
+import org.overture.codegen.visitor.AbstractVisitorIR;
 
-public class TraceDeclVisitorCG extends AbstractVisitorCG<IRInfo, STraceDeclCG>
+public class TraceDeclVisitorIR extends AbstractVisitorIR<IRInfo, STraceDeclIR>
 {
 	@Override
-	public STraceDeclCG caseAInstanceTraceDefinition(
+	public STraceDeclIR caseAInstanceTraceDefinition(
 			AInstanceTraceDefinition node, IRInfo question)
 			throws AnalysisException
 	{
@@ -33,7 +33,7 @@ public class TraceDeclVisitorCG extends AbstractVisitorCG<IRInfo, STraceDeclCG>
 	}
 	
 	@Override
-	public STraceDeclCG caseALetBeStBindingTraceDefinition(
+	public STraceDeclIR caseALetBeStBindingTraceDefinition(
 			ALetBeStBindingTraceDefinition node, IRInfo question)
 			throws AnalysisException
 	{
@@ -50,18 +50,18 @@ public class TraceDeclVisitorCG extends AbstractVisitorCG<IRInfo, STraceDeclCG>
 		PTraceDefinition body = node.getBody();
 		PExp stExp = node.getStexp();
 		
-		SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
+		SMultipleBindIR multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
 		
-		if (!(multipleBindCg instanceof ASetMultipleBindCG))
+		if (!(multipleBindCg instanceof ASetMultipleBindIR))
 		{
 			return null;
 		}
 		
-		STraceDeclCG bodyCg = body.apply(question.getTraceDeclVisitor(), question);
-		SExpCG stExpCg = stExp != null ? stExp.apply(question.getExpVisitor(), question) : null;
+		STraceDeclIR bodyCg = body.apply(question.getTraceDeclVisitor(), question);
+		SExpIR stExpCg = stExp != null ? stExp.apply(question.getExpVisitor(), question) : null;
 		
-		ALetBeStBindingTraceDeclCG letBeSt = new ALetBeStBindingTraceDeclCG();
-		letBeSt.setBind((ASetMultipleBindCG) multipleBindCg);
+		ALetBeStBindingTraceDeclIR letBeSt = new ALetBeStBindingTraceDeclIR();
+		letBeSt.setBind((ASetMultipleBindIR) multipleBindCg);
 		letBeSt.setBody(bodyCg);
 		letBeSt.setStExp(stExpCg);;
 		
@@ -69,33 +69,33 @@ public class TraceDeclVisitorCG extends AbstractVisitorCG<IRInfo, STraceDeclCG>
 	}
 	
 	@Override
-	public STraceDeclCG caseALetDefBindingTraceDefinition(
+	public STraceDeclIR caseALetDefBindingTraceDefinition(
 			ALetDefBindingTraceDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		PTraceDefinition body = node.getBody();
 		
-		ALetDefBindingTraceDeclCG letDef = new ALetDefBindingTraceDeclCG();
+		ALetDefBindingTraceDeclIR letDef = new ALetDefBindingTraceDeclIR();
 		
 		question.getDeclAssistant().setFinalLocalDefs(node.getLocalDefs(), letDef.getLocalDefs(), question);
 		
-		STraceDeclCG bodyCg = body.apply(question.getTraceDeclVisitor(), question);
+		STraceDeclIR bodyCg = body.apply(question.getTraceDeclVisitor(), question);
 		letDef.setBody(bodyCg);
 		
 		return letDef;
 	}
 	
 	@Override
-	public STraceDeclCG caseARepeatTraceDefinition(ARepeatTraceDefinition node,
+	public STraceDeclIR caseARepeatTraceDefinition(ARepeatTraceDefinition node,
 			IRInfo question) throws AnalysisException
 	{
 		PTraceCoreDefinition core = node.getCore();
 		Long from = node.getFrom();
 		Long to = node.getTo();
 
-		STraceCoreDeclCG coreCg = core.apply(question.getTraceCoreDeclVisitor(), question);
+		STraceCoreDeclIR coreCg = core.apply(question.getTraceCoreDeclVisitor(), question);
 		
-		ARepeatTraceDeclCG repeatTraceDecl = new ARepeatTraceDeclCG();
+		ARepeatTraceDeclIR repeatTraceDecl = new ARepeatTraceDeclIR();
 		repeatTraceDecl.setCore(coreCg);
 		repeatTraceDecl.setFrom(from);
 		repeatTraceDecl.setTo(to);

@@ -29,66 +29,66 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.assistant.TypeAssistantCG;
+import org.overture.codegen.assistant.TypeAssistantIR;
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SStateDesignatorCG;
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SStateDesignatorIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
-import org.overture.codegen.ir.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.ir.declarations.AInterfaceDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.ANamedTypeDeclCG;
-import org.overture.codegen.ir.declarations.ARecordDeclCG;
-import org.overture.codegen.ir.declarations.ATypeDeclCG;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.declarations.SClassDeclCG;
-import org.overture.codegen.ir.expressions.AAbsUnaryExpCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.ABoolLiteralExpCG;
-import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
-import org.overture.codegen.ir.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.AFieldNumberExpCG;
-import org.overture.codegen.ir.expressions.AHeadUnaryExpCG;
-import org.overture.codegen.ir.expressions.AHistoryExpCG;
-import org.overture.codegen.ir.expressions.AIsolationUnaryExpCG;
-import org.overture.codegen.ir.expressions.AMinusUnaryExpCG;
-import org.overture.codegen.ir.expressions.ANewExpCG;
-import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.ANotUnaryExpCG;
-import org.overture.codegen.ir.expressions.APlusUnaryExpCG;
-import org.overture.codegen.ir.expressions.AQuoteLiteralExpCG;
-import org.overture.codegen.ir.expressions.ASeqToStringUnaryExpCG;
-import org.overture.codegen.ir.expressions.AStringLiteralExpCG;
-import org.overture.codegen.ir.expressions.AStringToSeqUnaryExpCG;
-import org.overture.codegen.ir.expressions.AUndefinedExpCG;
-import org.overture.codegen.ir.expressions.SBinaryExpCG;
-import org.overture.codegen.ir.expressions.SLiteralExpCG;
-import org.overture.codegen.ir.expressions.SNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.SUnaryExpCG;
-import org.overture.codegen.ir.expressions.SVarExpCG;
-import org.overture.codegen.ir.name.ATypeNameCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
-import org.overture.codegen.ir.statements.AForLoopStmCG;
-import org.overture.codegen.ir.statements.AMapSeqStateDesignatorCG;
-import org.overture.codegen.ir.statements.AStartStmCG;
-import org.overture.codegen.ir.types.ABoolBasicTypeCG;
-import org.overture.codegen.ir.types.ACharBasicTypeCG;
-import org.overture.codegen.ir.types.AClassTypeCG;
-import org.overture.codegen.ir.types.AInterfaceTypeCG;
-import org.overture.codegen.ir.types.AMethodTypeCG;
-import org.overture.codegen.ir.types.AObjectTypeCG;
-import org.overture.codegen.ir.types.ARecordTypeCG;
-import org.overture.codegen.ir.types.AStringTypeCG;
-import org.overture.codegen.ir.types.ATupleTypeCG;
-import org.overture.codegen.ir.types.AUnionTypeCG;
-import org.overture.codegen.ir.types.AUnknownTypeCG;
-import org.overture.codegen.ir.types.AVoidTypeCG;
-import org.overture.codegen.ir.types.SBasicTypeCG;
-import org.overture.codegen.ir.types.SMapTypeCG;
-import org.overture.codegen.ir.types.SSeqTypeCG;
-import org.overture.codegen.ir.types.SSetTypeCG;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.declarations.ATypeDeclIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
+import org.overture.codegen.ir.expressions.AAbsUnaryExpIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.ABoolLiteralExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
+import org.overture.codegen.ir.expressions.AHeadUnaryExpIR;
+import org.overture.codegen.ir.expressions.AHistoryExpIR;
+import org.overture.codegen.ir.expressions.AIsolationUnaryExpIR;
+import org.overture.codegen.ir.expressions.AMinusUnaryExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
+import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
+import org.overture.codegen.ir.expressions.APlusUnaryExpIR;
+import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
+import org.overture.codegen.ir.expressions.ASeqToStringUnaryExpIR;
+import org.overture.codegen.ir.expressions.AStringLiteralExpIR;
+import org.overture.codegen.ir.expressions.AStringToSeqUnaryExpIR;
+import org.overture.codegen.ir.expressions.AUndefinedExpIR;
+import org.overture.codegen.ir.expressions.SBinaryExpIR;
+import org.overture.codegen.ir.expressions.SLiteralExpIR;
+import org.overture.codegen.ir.expressions.SNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.SUnaryExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.AForLoopStmIR;
+import org.overture.codegen.ir.statements.AMapSeqStateDesignatorIR;
+import org.overture.codegen.ir.statements.AStartStmIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AInterfaceTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.AObjectTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
+import org.overture.codegen.ir.types.ATupleTypeIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
+import org.overture.codegen.ir.types.AVoidTypeIR;
+import org.overture.codegen.ir.types.SBasicTypeIR;
+import org.overture.codegen.ir.types.SMapTypeIR;
+import org.overture.codegen.ir.types.SSeqTypeIR;
+import org.overture.codegen.ir.types.SSetTypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
@@ -192,7 +192,7 @@ public class JavaFormat
 		return mergeVisitor;
 	}
 
-	public String format(AMethodTypeCG methodType) throws AnalysisException
+	public String format(AMethodTypeIR methodType) throws AnalysisException
 	{
 		final String OBJ = "Object";
 
@@ -201,19 +201,19 @@ public class JavaFormat
 			return OBJ;
 		}
 
-		AInterfaceDeclCG methodTypeInterface = funcValAssist.findInterface(methodType);
+		AInterfaceDeclIR methodTypeInterface = funcValAssist.findInterface(methodType);
 
 		if (methodTypeInterface == null)
 		{
 			return OBJ; // Should not happen
 		}
 
-		AInterfaceTypeCG methodClass = new AInterfaceTypeCG();
+		AInterfaceTypeIR methodClass = new AInterfaceTypeIR();
 		methodClass.setName(methodTypeInterface.getName());
 
-		LinkedList<STypeCG> params = methodType.getParams();
+		LinkedList<STypeIR> params = methodType.getParams();
 
-		for (STypeCG param : params)
+		for (STypeIR param : params)
 		{
 			methodClass.getTypes().add(param.clone());
 		}
@@ -242,9 +242,9 @@ public class JavaFormat
 		return writer.toString() + getNumberDereference(node, ignoreContext);
 	}
 
-	private String findNumberDereferenceCall(STypeCG type)
+	private String findNumberDereferenceCall(STypeIR type)
 	{
-		if (type == null || type.parent() instanceof AHistoryExpCG)
+		if (type == null || type.parent() instanceof AHistoryExpIR)
 		{
 			return "";
 		}
@@ -278,17 +278,17 @@ public class JavaFormat
 		}
 	}
 
-	public static boolean isMapSeq(SStateDesignatorCG stateDesignator)
+	public static boolean isMapSeq(SStateDesignatorIR stateDesignator)
 	{
-		return stateDesignator instanceof AMapSeqStateDesignatorCG;
+		return stateDesignator instanceof AMapSeqStateDesignatorIR;
 	}
 
 	private String getNumberDereference(INode node, boolean ignoreContext)
 	{
-		if (ignoreContext && node instanceof SExpCG)
+		if (ignoreContext && node instanceof SExpIR)
 		{
-			SExpCG exp = (SExpCG) node;
-			STypeCG type = exp.getType();
+			SExpIR exp = (SExpIR) node;
+			STypeIR type = exp.getType();
 
 			if (isNumberDereferenceCandidate(exp))
 			{
@@ -298,13 +298,13 @@ public class JavaFormat
 
 		INode parent = node.parent();
 
-		if (parent instanceof SNumericBinaryExpCG
-				|| parent instanceof AAbsUnaryExpCG
-				|| parent instanceof AMinusUnaryExpCG
-				|| parent instanceof APlusUnaryExpCG)
+		if (parent instanceof SNumericBinaryExpIR
+				|| parent instanceof AAbsUnaryExpIR
+				|| parent instanceof AMinusUnaryExpIR
+				|| parent instanceof APlusUnaryExpIR)
 		{
-			SExpCG exp = (SExpCG) node;
-			STypeCG type = exp.getType();
+			SExpIR exp = (SExpIR) node;
+			STypeIR type = exp.getType();
 
 			if (isNumberDereferenceCandidate(exp))
 			{
@@ -316,31 +316,31 @@ public class JavaFormat
 		return "";
 	}
 
-	private static boolean isNumberDereferenceCandidate(SExpCG node)
+	private static boolean isNumberDereferenceCandidate(SExpIR node)
 	{
-		boolean fitsCategory = !(node instanceof SNumericBinaryExpCG)
-				&& !(node instanceof SLiteralExpCG)
-				&& !(node instanceof AIsolationUnaryExpCG)
-				&& !(node instanceof SUnaryExpCG);
+		boolean fitsCategory = !(node instanceof SNumericBinaryExpIR)
+				&& !(node instanceof SLiteralExpIR)
+				&& !(node instanceof AIsolationUnaryExpIR)
+				&& !(node instanceof SUnaryExpIR);
 
-		boolean isException = node instanceof AHeadUnaryExpCG
-				|| node instanceof AQuoteLiteralExpCG
-				|| node instanceof ACastUnaryExpCG;
+		boolean isException = node instanceof AHeadUnaryExpIR
+				|| node instanceof AQuoteLiteralExpIR
+				|| node instanceof ACastUnaryExpIR;
 
 		return fitsCategory || isException;
 	}
 
 	public String formatName(INode node) throws AnalysisException
 	{
-		if (node instanceof ANewExpCG)
+		if (node instanceof ANewExpIR)
 		{
-			ANewExpCG newExp = (ANewExpCG) node;
+			ANewExpIR newExp = (ANewExpIR) node;
 
 			return formatTypeName(node, newExp.getName());
-		} else if (node instanceof ARecordTypeCG)
+		} else if (node instanceof ARecordTypeIR)
 		{
-			ARecordTypeCG record = (ARecordTypeCG) node;
-			ATypeNameCG typeName = record.getName();
+			ARecordTypeIR record = (ARecordTypeIR) node;
+			ATypeNameIR typeName = record.getName();
 
 			return formatTypeName(node, typeName);
 		}
@@ -349,7 +349,7 @@ public class JavaFormat
 				+ node.getClass().getName());
 	}
 
-	public String formatTypeName(INode node, ATypeNameCG typeName)
+	public String formatTypeName(INode node, ATypeNameIR typeName)
 	{
 		// Type names are also used for quotes, which do not have a defining class.
 		if(typeName.getDefiningClass() != null && !getJavaSettings().genRecsAsInnerClasses())
@@ -368,7 +368,7 @@ public class JavaFormat
 			return typeNameStr;
 		}
 		
-		SClassDeclCG classDef = node.getAncestor(SClassDeclCG.class);
+		SClassDeclIR classDef = node.getAncestor(SClassDeclIR.class);
 
 		String definingClass = typeName.getDefiningClass() != null
 				&& classDef != null
@@ -379,7 +379,7 @@ public class JavaFormat
 		return definingClass + typeName.getName();
 	}
 
-	public String format(SExpCG exp, boolean leftChild)
+	public String format(SExpIR exp, boolean leftChild)
 			throws AnalysisException
 	{
 		String formattedExp = format(exp);
@@ -388,32 +388,32 @@ public class JavaFormat
 
 		INode parent = exp.parent();
 
-		if (!(parent instanceof SExpCG))
+		if (!(parent instanceof SExpIR))
 		{
 			return formattedExp;
 		}
 
-		boolean isolate = precedence.mustIsolate((SExpCG) parent, exp, leftChild);
+		boolean isolate = precedence.mustIsolate((SExpIR) parent, exp, leftChild);
 
 		return isolate ? "(" + formattedExp + ")" : formattedExp;
 	}
 
-	public String formatUnary(SExpCG exp) throws AnalysisException
+	public String formatUnary(SExpIR exp) throws AnalysisException
 	{
 		return format(exp, false);
 	}
 
-	public String formatNotUnary(SExpCG exp) throws AnalysisException
+	public String formatNotUnary(SExpIR exp) throws AnalysisException
 	{
 		String formattedExp = format(exp, false);
 
-		boolean doNotWrap = exp instanceof ABoolLiteralExpCG
+		boolean doNotWrap = exp instanceof ABoolLiteralExpIR
 				|| formattedExp.startsWith("(") && formattedExp.endsWith(")");
 
 		return doNotWrap ? "!" + formattedExp : "!(" + formattedExp + ")";
 	}
 
-	public String formatTemplateTypes(List<STypeCG> types)
+	public String formatTemplateTypes(List<STypeIR> types)
 			throws AnalysisException
 	{
 		if (types.isEmpty())
@@ -424,14 +424,14 @@ public class JavaFormat
 		return "<" + formattedTypes(types, "") + ">";
 	}
 
-	private String formattedTypes(List<STypeCG> types, String typePostFix)
+	private String formattedTypes(List<STypeIR> types, String typePostFix)
 			throws AnalysisException
 	{
-		STypeCG firstType = types.get(0);
+		STypeIR firstType = types.get(0);
 
 		if (info.getAssistantManager().getTypeAssistant().isBasicType(firstType))
 		{
-			firstType = info.getAssistantManager().getTypeAssistant().getWrapperType((SBasicTypeCG) firstType);
+			firstType = info.getAssistantManager().getTypeAssistant().getWrapperType((SBasicTypeIR) firstType);
 		}
 
 		StringWriter writer = new StringWriter();
@@ -439,11 +439,11 @@ public class JavaFormat
 
 		for (int i = 1; i < types.size(); i++)
 		{
-			STypeCG currentType = types.get(i);
+			STypeIR currentType = types.get(i);
 
 			if (info.getAssistantManager().getTypeAssistant().isBasicType(currentType))
 			{
-				currentType = info.getAssistantManager().getTypeAssistant().getWrapperType((SBasicTypeCG) currentType);
+				currentType = info.getAssistantManager().getTypeAssistant().getWrapperType((SBasicTypeIR) currentType);
 			}
 
 			writer.append(", " + format(currentType) + typePostFix);
@@ -454,7 +454,7 @@ public class JavaFormat
 		return result;
 	}
 
-	public String formatTypeArg(STypeCG type) throws AnalysisException
+	public String formatTypeArg(STypeIR type) throws AnalysisException
 	{
 		if(type == null)
 		{
@@ -462,19 +462,19 @@ public class JavaFormat
 		}
 		else
 		{
-			List<STypeCG> types = new LinkedList<STypeCG>();
+			List<STypeIR> types = new LinkedList<STypeIR>();
 			types.add(type);
 			
 			return formattedTypes(types, CLASS_EXTENSION);
 		}
 	}
 	
-	public String formatTypeArgs(ATupleTypeCG tupleType) throws AnalysisException
+	public String formatTypeArgs(ATupleTypeIR tupleType) throws AnalysisException
 	{
 		return formatTypeArgs(tupleType.getTypes());
 	}
 	
-	public String formatTypeArgs(List<STypeCG> types) throws AnalysisException
+	public String formatTypeArgs(List<STypeIR> types) throws AnalysisException
 	{
 		if (types.isEmpty())
 		{
@@ -484,12 +484,12 @@ public class JavaFormat
 		return formattedTypes(types, CLASS_EXTENSION);
 	}
 
-	public String formatEqualsBinaryExp(AEqualsBinaryExpCG node)
+	public String formatEqualsBinaryExp(AEqualsBinaryExpIR node)
 			throws AnalysisException
 	{
-		STypeCG leftNodeType = node.getLeft().getType();
+		STypeIR leftNodeType = node.getLeft().getType();
 
-		if (leftNodeType instanceof SSeqTypeCG || leftNodeType instanceof SSetTypeCG || leftNodeType instanceof SMapTypeCG)
+		if (leftNodeType instanceof SSeqTypeIR || leftNodeType instanceof SSetTypeIR || leftNodeType instanceof SMapTypeIR)
 		{
 			return handleCollectionComparison(node);
 		}
@@ -499,20 +499,20 @@ public class JavaFormat
 		}
 	}
 
-	public String formatNotEqualsBinaryExp(ANotEqualsBinaryExpCG node)
+	public String formatNotEqualsBinaryExp(ANotEqualsBinaryExpIR node)
 			throws AnalysisException
 	{
-		ANotUnaryExpCG transformed = transNotEquals(node);
+		ANotUnaryExpIR transformed = transNotEquals(node);
 		return formatNotUnary(transformed.getExp());
 	}
 
-	private ANotUnaryExpCG transNotEquals(ANotEqualsBinaryExpCG notEqual)
+	private ANotUnaryExpIR transNotEquals(ANotEqualsBinaryExpIR notEqual)
 	{
-		ANotUnaryExpCG notUnary = new ANotUnaryExpCG();
-		notUnary.setType(new ABoolBasicTypeCG());
+		ANotUnaryExpIR notUnary = new ANotUnaryExpIR();
+		notUnary.setType(new ABoolBasicTypeIR());
 
-		AEqualsBinaryExpCG equal = new AEqualsBinaryExpCG();
-		equal.setType(new ABoolBasicTypeCG());
+		AEqualsBinaryExpIR equal = new AEqualsBinaryExpIR();
+		equal.setType(new ABoolBasicTypeIR());
 		equal.setLeft(notEqual.getLeft().clone());
 		equal.setRight(notEqual.getRight().clone());
 
@@ -531,17 +531,17 @@ public class JavaFormat
 		return notUnary;
 	}
 
-	private String handleEquals(AEqualsBinaryExpCG valueType)
+	private String handleEquals(AEqualsBinaryExpIR valueType)
 			throws AnalysisException
 	{
 		return String.format("%s.equals(%s, %s)", UTILS_FILE, format(valueType.getLeft()), format(valueType.getRight()));
 	}
 
-	private String handleCollectionComparison(SBinaryExpCG node) throws AnalysisException
+	private String handleCollectionComparison(SBinaryExpIR node) throws AnalysisException
 	{
 		// In VDM the types of the equals are compatible when the AST passes the type check
-		SExpCG leftNode = node.getLeft();
-		SExpCG rightNode = node.getRight();
+		SExpIR leftNode = node.getLeft();
+		SExpIR rightNode = node.getRight();
 
 		String empty = "Utils.empty(%s)";
 		
@@ -557,21 +557,21 @@ public class JavaFormat
 				+ format(node.getRight()) + ")";
 	}
 
-	private boolean isEmptyCollection(STypeCG type)
+	private boolean isEmptyCollection(STypeIR type)
 	{
-		if (type instanceof SSeqTypeCG)
+		if (type instanceof SSeqTypeIR)
 		{
-			SSeqTypeCG seq = (SSeqTypeCG) type;
+			SSeqTypeIR seq = (SSeqTypeIR) type;
 
 			return seq.getEmpty();
-		} else if (type instanceof SSetTypeCG)
+		} else if (type instanceof SSetTypeIR)
 		{
-			SSetTypeCG set = (SSetTypeCG) type;
+			SSetTypeIR set = (SSetTypeIR) type;
 
 			return set.getEmpty();
-		} else if (type instanceof SMapTypeCG)
+		} else if (type instanceof SMapTypeIR)
 		{
-			SMapTypeCG map = (SMapTypeCG) type;
+			SMapTypeIR map = (SMapTypeIR) type;
 
 			return map.getEmpty();
 		}
@@ -579,7 +579,7 @@ public class JavaFormat
 		return false;
 	}
 
-	public String format(List<AFormalParamLocalParamCG> params)
+	public String format(List<AFormalParamLocalParamIR> params)
 			throws AnalysisException
 	{
 		StringWriter writer = new StringWriter();
@@ -591,13 +591,13 @@ public class JavaFormat
 
 		final String finalPrefix = " final ";
 
-		AFormalParamLocalParamCG firstParam = params.get(0);
+		AFormalParamLocalParamIR firstParam = params.get(0);
 		writer.append(finalPrefix);
 		writer.append(format(firstParam));
 
 		for (int i = 1; i < params.size(); i++)
 		{
-			AFormalParamLocalParamCG param = params.get(i);
+			AFormalParamLocalParamIR param = params.get(i);
 			writer.append(", ");
 			writer.append(finalPrefix);
 			writer.append(format(param));
@@ -605,14 +605,14 @@ public class JavaFormat
 		return writer.toString();
 	}
 
-	public String formatSuperType(SClassDeclCG classDecl)
+	public String formatSuperType(SClassDeclIR classDecl)
 	{
 		return classDecl.getSuperNames().isEmpty() ? "" : "extends " + classDecl.getSuperNames().get(0);
 	}
 	
-	public String formatInterfaces(SClassDeclCG classDecl)
+	public String formatInterfaces(SClassDeclIR classDecl)
 	{
-		LinkedList<AInterfaceDeclCG> interfaces = classDecl.getInterfaces();
+		LinkedList<AInterfaceDeclIR> interfaces = classDecl.getInterfaces();
 		
 		if(interfaces == null)
 		{
@@ -649,7 +649,7 @@ public class JavaFormat
 		return implementsClause;
 	}
 
-	public String formatArgs(List<? extends SExpCG> exps)
+	public String formatArgs(List<? extends SExpIR> exps)
 			throws AnalysisException
 	{
 		StringWriter writer = new StringWriter();
@@ -659,12 +659,12 @@ public class JavaFormat
 			return "";
 		}
 
-		SExpCG firstExp = exps.get(0);
+		SExpIR firstExp = exps.get(0);
 		writer.append(format(firstExp));
 
 		for (int i = 1; i < exps.size(); i++)
 		{
-			SExpCG exp = exps.get(i);
+			SExpIR exp = exps.get(i);
 			writer.append(", " + format(exp));
 		}
 
@@ -676,21 +676,21 @@ public class JavaFormat
 		return node == null;
 	}
 
-	public boolean isVoidType(STypeCG node)
+	public boolean isVoidType(STypeIR node)
 	{
-		return node instanceof AVoidTypeCG;
+		return node instanceof AVoidTypeIR;
 	}
 
-	public String formatInitialExp(SExpCG exp) throws AnalysisException
+	public String formatInitialExp(SExpIR exp) throws AnalysisException
 	{
 		// Examples:
-		// private int a; (exp == null || exp instanceof AUndefinedExpCG)
+		// private int a; (exp == null || exp instanceof AUndefinedExpIR)
 		// private int a = 2; (otherwise)
 
-		return exp == null || exp instanceof AUndefinedExpCG ? "" : " = " + format(exp);
+		return exp == null || exp instanceof AUndefinedExpIR ? "" : " = " + format(exp);
 	}
 
-	public String formatThrows(List<STypeCG> types) throws AnalysisException
+	public String formatThrows(List<STypeIR> types) throws AnalysisException
 	{
 		if(!types.isEmpty())
 		{
@@ -700,7 +700,7 @@ public class JavaFormat
 			sb.append(' ');
 			
 			String sep = "";
-			for(STypeCG t : types)
+			for(STypeIR t : types)
 			{
 				sb.append(sep);
 				sb.append(format(t));
@@ -715,7 +715,7 @@ public class JavaFormat
 		}
 	}
 	
-	public String formatOperationBody(SStmCG body) throws AnalysisException
+	public String formatOperationBody(SStmIR body) throws AnalysisException
 	{
 		String NEWLINE = "\n";
 		if (body == null)
@@ -732,9 +732,9 @@ public class JavaFormat
 		return generatedBody.toString();
 	}
 
-	private String handleOpBody(SStmCG body) throws AnalysisException
+	private String handleOpBody(SStmIR body) throws AnalysisException
 	{
-		AMethodDeclCG method = body.getAncestor(AMethodDeclCG.class);
+		AMethodDeclIR method = body.getAncestor(AMethodDeclIR.class);
 		
 		if(method == null)
 		{
@@ -760,15 +760,15 @@ public class JavaFormat
 			return "";
 		}
 
-		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
+		TypeAssistantIR typeAssistant = info.getAssistantManager().getTypeAssistant();
 		
-		if (potentialBasicType instanceof STypeCG && typeAssistant.isNumericType((STypeCG) potentialBasicType))
+		if (potentialBasicType instanceof STypeIR && typeAssistant.isNumericType((STypeIR) potentialBasicType))
 		{
 			return "Number";
-		} else if (potentialBasicType instanceof ABoolBasicTypeCG)
+		} else if (potentialBasicType instanceof ABoolBasicTypeIR)
 		{
 			return "Boolean";
-		} else if (potentialBasicType instanceof ACharBasicTypeCG)
+		} else if (potentialBasicType instanceof ACharBasicTypeIR)
 		{
 			return "Character";
 		} else
@@ -777,37 +777,37 @@ public class JavaFormat
 		}
 	}
 
-	public boolean isStringLiteral(SExpCG exp)
+	public boolean isStringLiteral(SExpIR exp)
 	{
-		return exp instanceof AStringLiteralExpCG;
+		return exp instanceof AStringLiteralExpIR;
 	}
 
-	public boolean isSeqType(SExpCG exp)
+	public boolean isSeqType(SExpIR exp)
 	{
 		return info.getAssistantManager().getTypeAssistant().isSeqType(exp);
 	}
 
-	public boolean isMapType(SExpCG exp)
+	public boolean isMapType(SExpIR exp)
 	{
 		return info.getAssistantManager().getTypeAssistant().isMapType(exp);
 	}
 
-	public boolean isStringType(STypeCG type)
+	public boolean isStringType(STypeIR type)
 	{
 		return info.getAssistantManager().getTypeAssistant().isStringType(type);
 	}
 
-	public boolean isStringType(SExpCG exp)
+	public boolean isStringType(SExpIR exp)
 	{
 		return info.getAssistantManager().getTypeAssistant().isStringType(exp);
 	}
 
-	public boolean isCharType(STypeCG type)
+	public boolean isCharType(STypeIR type)
 	{
-		return type instanceof ACharBasicTypeCG;
+		return type instanceof ACharBasicTypeIR;
 	}
 
-	public String buildString(List<SExpCG> exps) throws AnalysisException
+	public String buildString(List<SExpIR> exps) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder();
 
@@ -828,26 +828,26 @@ public class JavaFormat
 		return sb.toString();
 	}
 
-	public String formatElementType(STypeCG type) throws AnalysisException
+	public String formatElementType(STypeIR type) throws AnalysisException
 	{
-		if (type instanceof SSetTypeCG)
+		if (type instanceof SSetTypeIR)
 		{
-			SSetTypeCG setType = (SSetTypeCG) type;
+			SSetTypeIR setType = (SSetTypeIR) type;
 
 			return format(setType.getSetOf());
-		} else if (type instanceof SSeqTypeCG)
+		} else if (type instanceof SSeqTypeIR)
 		{
-			SSeqTypeCG seqType = (SSeqTypeCG) type;
+			SSeqTypeIR seqType = (SSeqTypeIR) type;
 
 			return format(seqType.getSeqOf());
-		} else if (type instanceof AStringTypeCG)
+		} else if (type instanceof AStringTypeIR)
 		{
-			return format(new ACharBasicTypeCG());
+			return format(new ACharBasicTypeIR());
 		} else
 		{
 			Logger.getLog().printErrorln("Expected set, seq or string type when trying to format element type. Got: "
 					+ type);
-			return format(new AUnknownTypeCG());
+			return format(new AUnknownTypeIR());
 		}
 	}
 
@@ -856,27 +856,27 @@ public class JavaFormat
 		return info.getTempVarNameGen().nextVarName(prefix);
 	}
 	
-	public boolean isLoopVar(AVarDeclCG localVar)
+	public boolean isLoopVar(AVarDeclIR localVar)
 	{
-		return localVar.parent() instanceof AForLoopStmCG;
+		return localVar.parent() instanceof AForLoopStmIR;
 	}
 
-	public boolean isLambda(AApplyExpCG applyExp)
+	public boolean isLambda(AApplyExpIR applyExp)
 	{
-		SExpCG root = applyExp.getRoot();
+		SExpIR root = applyExp.getRoot();
 
-		if (root instanceof AApplyExpCG
-				&& root.getType() instanceof AMethodTypeCG)
+		if (root instanceof AApplyExpIR
+				&& root.getType() instanceof AMethodTypeIR)
 		{
 			return true;
 		}
 
-		if (!(root instanceof SVarExpCG))
+		if (!(root instanceof SVarExpIR))
 		{
 			return false;
 		}
 
-		SVarExpCG varExp = (SVarExpCG) root;
+		SVarExpIR varExp = (SVarExpIR) root;
 
 		return varExp.getIsLambda() != null && varExp.getIsLambda();
 	}
@@ -895,9 +895,9 @@ public class JavaFormat
 		return escaped;
 	}
 
-	public static boolean castNotNeeded(STypeCG type)
+	public static boolean castNotNeeded(STypeIR type)
 	{
-		return type instanceof AObjectTypeCG || type instanceof AUnknownTypeCG || type instanceof AUnionTypeCG;
+		return type instanceof AObjectTypeIR || type instanceof AUnknownTypeIR || type instanceof AUnionTypeIR;
 	}
 	
 	public String escapeChar(char c)
@@ -907,16 +907,16 @@ public class JavaFormat
 				: c + "";
 	}
 	
-	public boolean isInnerClass(SClassDeclCG node)
+	public boolean isInnerClass(SClassDeclIR node)
 	{
 		return info.getDeclAssistant().isInnerClass(node);
 	}
 	
-	public String formatStartStmExp(AStartStmCG node) throws AnalysisException
+	public String formatStartStmExp(AStartStmIR node) throws AnalysisException
 	{
 		String str = format(node.getExp());
 
-		if (node.getExp().getType() instanceof AClassTypeCG)
+		if (node.getExp().getType() instanceof AClassTypeIR)
 		{
 			return str;
 		} else
@@ -925,14 +925,14 @@ public class JavaFormat
 		}
 	}
 	
-	public boolean genDecl(ATypeDeclCG node)
+	public boolean genDecl(ATypeDeclIR node)
 	{
-		return !(node.getDecl() instanceof ANamedTypeDeclCG);
+		return !(node.getDecl() instanceof ANamedTypeDeclIR);
 	}
 	
-	public boolean genTypeDecl(ATypeDeclCG node)
+	public boolean genTypeDecl(ATypeDeclIR node)
 	{
-		if(node.getDecl() instanceof ARecordDeclCG)
+		if(node.getDecl() instanceof ARecordDeclIR)
 		{
 			return getJavaSettings().genRecsAsInnerClasses();
 		}
@@ -942,18 +942,18 @@ public class JavaFormat
 		}
 	}
 	
-	public static boolean isSeqConversion(AFieldNumberExpCG node)
+	public static boolean isSeqConversion(AFieldNumberExpIR node)
 	{
 		INode parent = node.parent();
-		return parent instanceof ASeqToStringUnaryExpCG || parent instanceof AStringToSeqUnaryExpCG;
+		return parent instanceof ASeqToStringUnaryExpIR || parent instanceof AStringToSeqUnaryExpIR;
 	}
 	
-	public static boolean isScoped(ABlockStmCG block)
+	public static boolean isScoped(ABlockStmIR block)
 	{
 		return block != null && block.getScoped() != null && block.getScoped();
 	}
 
-	public static boolean isMainClass(SClassDeclCG clazz)
+	public static boolean isMainClass(SClassDeclIR clazz)
 	{
 		return clazz != null && clazz.getTag() instanceof JavaMainTag;
 	}
@@ -972,7 +972,7 @@ public class JavaFormat
 		}
 	}
 
-	public boolean genClassInvariant(SClassDeclCG clazz)
+	public boolean genClassInvariant(SClassDeclIR clazz)
 	{
 		if(!info.getSettings().generateInvariants())
 		{
@@ -1029,7 +1029,7 @@ public class JavaFormat
 		return c.value;
 	}
 	
-	public boolean isUndefined(ACastUnaryExpCG cast)
+	public boolean isUndefined(ACastUnaryExpIR cast)
 	{
 		return info.getExpAssistant().isUndefined(cast);
 	}

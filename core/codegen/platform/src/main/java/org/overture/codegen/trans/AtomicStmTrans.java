@@ -1,18 +1,18 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.patterns.AIdentifierPatternCG;
-import org.overture.codegen.ir.statements.AAssignmentStmCG;
-import org.overture.codegen.ir.statements.AAtomicStmCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.statements.AAssignmentStmIR;
+import org.overture.codegen.ir.statements.AAtomicStmIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class AtomicStmTrans extends DepthFirstAnalysisAdaptor
 {
@@ -38,39 +38,39 @@ public class AtomicStmTrans extends DepthFirstAnalysisAdaptor
 	//   -- and check that invariants hold.
 	// );
 
-	private TransAssistantCG transAssistant;
+	private TransAssistantIR transAssistant;
 	private String atomicPrefix;
 
-	public AtomicStmTrans(TransAssistantCG transAssistant, String atomicPrefix)
+	public AtomicStmTrans(TransAssistantIR transAssistant, String atomicPrefix)
 	{
 		this.transAssistant = transAssistant;
 		this.atomicPrefix = atomicPrefix;
 	}
 
 	@Override
-	public void caseAAtomicStmCG(AAtomicStmCG node) throws AnalysisException
+	public void caseAAtomicStmIR(AAtomicStmIR node) throws AnalysisException
 	{
-		ABlockStmCG tmpBlock = new ABlockStmCG();
+		ABlockStmIR tmpBlock = new ABlockStmIR();
 
-		for (SStmCG stm : node.getStatements())
+		for (SStmIR stm : node.getStatements())
 		{
-			if (stm instanceof AAssignmentStmCG)
+			if (stm instanceof AAssignmentStmIR)
 			{
-				AAssignmentStmCG assign = (AAssignmentStmCG) stm;
+				AAssignmentStmIR assign = (AAssignmentStmIR) stm;
 				
 				// Build temporary variable
 				String name = transAssistant.getInfo().getTempVarNameGen().nextVarName(atomicPrefix);
-				STypeCG type = assign.getTarget().getType().clone();
-				AIdentifierPatternCG pattern = transAssistant.getInfo().getPatternAssistant().consIdPattern(name);
-				SExpCG exp = assign.getExp().clone();
+				STypeIR type = assign.getTarget().getType().clone();
+				AIdentifierPatternIR pattern = transAssistant.getInfo().getPatternAssistant().consIdPattern(name);
+				SExpIR exp = assign.getExp().clone();
 
-				AVarDeclCG varDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(type, pattern, exp);
+				AVarDeclIR varDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(type, pattern, exp);
 				
 				// Add temporary variable to the block
 				tmpBlock.getLocalDefs().add(varDecl);
 				
 				// Assign state designator to temporary variable
-				AIdentifierVarExpCG tmpVarExp = transAssistant.getInfo().getExpAssistant().consIdVar(name, type.clone());
+				AIdentifierVarExpIR tmpVarExp = transAssistant.getInfo().getExpAssistant().consIdVar(name, type.clone());
 				transAssistant.replaceNodeWith(assign.getExp(), tmpVarExp);
 			} else
 			{

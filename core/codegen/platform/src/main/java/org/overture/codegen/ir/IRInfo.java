@@ -32,36 +32,36 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.assistant.AssistantManager;
-import org.overture.codegen.assistant.BindAssistantCG;
-import org.overture.codegen.assistant.DeclAssistantCG;
-import org.overture.codegen.assistant.ExpAssistantCG;
-import org.overture.codegen.assistant.LocationAssistantCG;
-import org.overture.codegen.assistant.NodeAssistantCG;
-import org.overture.codegen.assistant.PatternAssistantCG;
-import org.overture.codegen.assistant.StmAssistantCG;
-import org.overture.codegen.assistant.TypeAssistantCG;
-import org.overture.codegen.ir.SBindCG;
-import org.overture.codegen.ir.SDeclCG;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SExportCG;
-import org.overture.codegen.ir.SExportsCG;
-import org.overture.codegen.ir.SImportCG;
-import org.overture.codegen.ir.SImportsCG;
-import org.overture.codegen.ir.SModifierCG;
-import org.overture.codegen.ir.SMultipleBindCG;
-import org.overture.codegen.ir.SObjectDesignatorCG;
-import org.overture.codegen.ir.SPatternCG;
-import org.overture.codegen.ir.SStateDesignatorCG;
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.STermCG;
-import org.overture.codegen.ir.STraceCoreDeclCG;
-import org.overture.codegen.ir.STraceDeclCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.declarations.AModuleDeclCG;
-import org.overture.codegen.ir.declarations.SClassDeclCG;
-import org.overture.codegen.ir.expressions.SVarExpCG;
+import org.overture.codegen.assistant.BindAssistantIR;
+import org.overture.codegen.assistant.DeclAssistantIR;
+import org.overture.codegen.assistant.ExpAssistantIR;
+import org.overture.codegen.assistant.LocationAssistantIR;
+import org.overture.codegen.assistant.NodeAssistantIR;
+import org.overture.codegen.assistant.PatternAssistantIR;
+import org.overture.codegen.assistant.StmAssistantIR;
+import org.overture.codegen.assistant.TypeAssistantIR;
+import org.overture.codegen.ir.SBindIR;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SExportIR;
+import org.overture.codegen.ir.SExportsIR;
+import org.overture.codegen.ir.SImportIR;
+import org.overture.codegen.ir.SImportsIR;
+import org.overture.codegen.ir.SModifierIR;
+import org.overture.codegen.ir.SMultipleBindIR;
+import org.overture.codegen.ir.SObjectDesignatorIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStateDesignatorIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STermIR;
+import org.overture.codegen.ir.STraceCoreDeclIR;
+import org.overture.codegen.ir.STraceDeclIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.visitor.CGVisitor;
+import org.overture.codegen.visitor.IRVisitor;
 import org.overture.codegen.visitor.VisitorManager;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
@@ -95,13 +95,13 @@ public class IRInfo
 	private Map<AIdentifierStateDesignator, PDefinition> idStateDesignatorDefs;
 	
 	// IR classes
-	private List<SClassDeclCG> classes;
+	private List<SClassDeclIR> classes;
 	
 	// IR modules
-	private List<AModuleDeclCG> modules;
+	private List<AModuleDeclIR> modules;
 	
 	// SL state reads
-	private List<SVarExpCG> slStateReads;
+	private List<SVarExpIR> slStateReads;
 	
 	public IRInfo()
 	{
@@ -118,8 +118,8 @@ public class IRInfo
 		this.settings = new IRSettings();
 
 		this.idStateDesignatorDefs = new HashMap<AIdentifierStateDesignator, PDefinition>();
-		this.classes = new LinkedList<SClassDeclCG>();
-		this.modules = new LinkedList<AModuleDeclCG>();
+		this.classes = new LinkedList<SClassDeclIR>();
+		this.modules = new LinkedList<AModuleDeclIR>();
 		this.slStateReads = new LinkedList<>();
 	}
 
@@ -128,137 +128,137 @@ public class IRInfo
 		return assistantManager;
 	}
 
-	public CGVisitor<SClassDeclCG> getClassVisitor()
+	public IRVisitor<SClassDeclIR> getClassVisitor()
 	{
 		return visitorManager.getClassVisitor();
 	}
 	
-	public CGVisitor<AModuleDeclCG> getModuleVisitor()
+	public IRVisitor<AModuleDeclIR> getModuleVisitor()
 	{
 		return visitorManager.getModuleVisitor();
 	}
 	
-	public CGVisitor<SImportsCG> getImportsVisitor()
+	public IRVisitor<SImportsIR> getImportsVisitor()
 	{
 		return visitorManager.getImportsVisitor();
 	}
 	
-	public CGVisitor<SImportCG> getImportVisitor()
+	public IRVisitor<SImportIR> getImportVisitor()
 	{
 		return visitorManager.getImportVisitor();
 	}
 
-	public CGVisitor<SExportsCG> getExportsVisitor()
+	public IRVisitor<SExportsIR> getExportsVisitor()
 	{
 		return visitorManager.getExportsVisitor();
 	}
 	
-	public CGVisitor<SExportCG> getExportVisitor()
+	public IRVisitor<SExportIR> getExportVisitor()
 	{
 		return visitorManager.getExportVisitor();
 	}
 	
-	public CGVisitor<SDeclCG> getDeclVisitor()
+	public IRVisitor<SDeclIR> getDeclVisitor()
 	{
 		return visitorManager.getDeclVisitor();
 	}
 
-	public CGVisitor<SExpCG> getExpVisitor()
+	public IRVisitor<SExpIR> getExpVisitor()
 	{
 		return visitorManager.getExpVisitor();
 	}
 
-	public CGVisitor<STypeCG> getTypeVisitor()
+	public IRVisitor<STypeIR> getTypeVisitor()
 	{
 		return visitorManager.getTypeVisitor();
 	}
 
-	public CGVisitor<SStmCG> getStmVisitor()
+	public IRVisitor<SStmIR> getStmVisitor()
 	{
 		return visitorManager.getStmVisitor();
 	}
 
-	public CGVisitor<SStateDesignatorCG> getStateDesignatorVisitor()
+	public IRVisitor<SStateDesignatorIR> getStateDesignatorVisitor()
 	{
 		return visitorManager.getStateDesignatorVisitor();
 	}
 
-	public CGVisitor<SObjectDesignatorCG> getObjectDesignatorVisitor()
+	public IRVisitor<SObjectDesignatorIR> getObjectDesignatorVisitor()
 	{
 		return visitorManager.getObjectDesignatorVisitor();
 	}
 
-	public CGVisitor<SMultipleBindCG> getMultipleBindVisitor()
+	public IRVisitor<SMultipleBindIR> getMultipleBindVisitor()
 	{
 		return visitorManager.getMultipleBindVisitor();
 	}
 
-	public CGVisitor<SBindCG> getBindVisitor()
+	public IRVisitor<SBindIR> getBindVisitor()
 	{
 		return visitorManager.getBindVisitor();
 	}
 
-	public CGVisitor<SPatternCG> getPatternVisitor()
+	public IRVisitor<SPatternIR> getPatternVisitor()
 	{
 		return visitorManager.getPatternVisitor();
 	}
 
-	public CGVisitor<SModifierCG> getModifierVisitor()
+	public IRVisitor<SModifierIR> getModifierVisitor()
 	{
 		return visitorManager.getModifierVisitor();
 	}
 
-	public CGVisitor<STermCG> getTermVisitor()
+	public IRVisitor<STermIR> getTermVisitor()
 	{
 		return visitorManager.getTermVisitor();
 	}
 
-	public CGVisitor<STraceDeclCG> getTraceDeclVisitor()
+	public IRVisitor<STraceDeclIR> getTraceDeclVisitor()
 	{
 		return visitorManager.getTraceDeclVisitor();
 	}
 
-	public CGVisitor<STraceCoreDeclCG> getTraceCoreDeclVisitor()
+	public IRVisitor<STraceCoreDeclIR> getTraceCoreDeclVisitor()
 	{
 		return visitorManager.getTraceCoreDeclVisitor();
 	}
 
-	public NodeAssistantCG getNodeAssistant()
+	public NodeAssistantIR getNodeAssistant()
 	{
 		return assistantManager.getNodeAssistant();
 	}
 	
-	public ExpAssistantCG getExpAssistant()
+	public ExpAssistantIR getExpAssistant()
 	{
 		return assistantManager.getExpAssistant();
 	}
 
-	public DeclAssistantCG getDeclAssistant()
+	public DeclAssistantIR getDeclAssistant()
 	{
 		return assistantManager.getDeclAssistant();
 	}
 
-	public StmAssistantCG getStmAssistant()
+	public StmAssistantIR getStmAssistant()
 	{
 		return assistantManager.getStmAssistant();
 	}
 
-	public TypeAssistantCG getTypeAssistant()
+	public TypeAssistantIR getTypeAssistant()
 	{
 		return assistantManager.getTypeAssistant();
 	}
 
-	public LocationAssistantCG getLocationAssistant()
+	public LocationAssistantIR getLocationAssistant()
 	{
 		return assistantManager.getLocationAssistant();
 	}
 
-	public BindAssistantCG getBindAssistant()
+	public BindAssistantIR getBindAssistant()
 	{
 		return assistantManager.getBindAssistant();
 	}
 	
-	public PatternAssistantCG getPatternAssistant()
+	public PatternAssistantIR getPatternAssistant()
 	{
 		return assistantManager.getPatternAssistant();
 	}
@@ -363,12 +363,12 @@ public class IRInfo
 		this.idStateDesignatorDefs = idDefs;
 	}
 
-	public List<SClassDeclCG> getClasses()
+	public List<SClassDeclIR> getClasses()
 	{
 		return classes;
 	}
 
-	public void addClass(SClassDeclCG irClass)
+	public void addClass(SClassDeclIR irClass)
 	{
 		if(this.classes != null)
 		{
@@ -378,9 +378,9 @@ public class IRInfo
 	
 	public void removeClass(String name)
 	{
-		SClassDeclCG classToRemove = null;
+		SClassDeclIR classToRemove = null;
 		
-		for (SClassDeclCG clazz : classes)
+		for (SClassDeclIR clazz : classes)
 		{
 			if(clazz.getName().equals(name))
 			{
@@ -403,12 +403,12 @@ public class IRInfo
 		}
 	}
 	
-	public List<AModuleDeclCG> getModules()
+	public List<AModuleDeclIR> getModules()
 	{
 		return modules;
 	}
 	
-	public void addModule(AModuleDeclCG irModule)
+	public void addModule(AModuleDeclIR irModule)
 	{
 		if(this.modules != null)
 		{
@@ -418,9 +418,9 @@ public class IRInfo
 	
 	public void removeModule(String name)
 	{
-		AModuleDeclCG moduleToRemove = null;
+		AModuleDeclIR moduleToRemove = null;
 		
-		for (AModuleDeclCG module : modules)
+		for (AModuleDeclIR module : modules)
 		{
 			if(module.getName().equals(name))
 			{
@@ -443,14 +443,14 @@ public class IRInfo
 		}
 	}
 	
-	public void registerSlStateRead(SVarExpCG var)
+	public void registerSlStateRead(SVarExpIR var)
 	{
 		this.slStateReads.add(var);
 	}
 	
-	public boolean isSlStateRead(SVarExpCG var)
+	public boolean isSlStateRead(SVarExpIR var)
 	{
-		for(SVarExpCG v : slStateReads)
+		for(SVarExpIR v : slStateReads)
 		{
 			if(v == var)
 			{

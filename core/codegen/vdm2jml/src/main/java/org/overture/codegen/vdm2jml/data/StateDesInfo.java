@@ -4,17 +4,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.traces.Pair;
 
 public class StateDesInfo
 {
-	private Map<SStmCG, List<AIdentifierVarExpCG>> stateDesVars;
-	private Map<SStmCG, List<AVarDeclCG>> stateDesDecls;
+	private Map<SStmIR, List<AIdentifierVarExpIR>> stateDesVars;
+	private Map<SStmIR, List<AVarDeclIR>> stateDesDecls;
 	
 	public StateDesInfo()
 	{
@@ -22,27 +22,27 @@ public class StateDesInfo
 		this.stateDesDecls = new HashMap<>();
 	}
 	
-	public void addStateDesVars(SStmCG stm, List<AIdentifierVarExpCG> stateDesVars)
+	public void addStateDesVars(SStmIR stm, List<AIdentifierVarExpIR> stateDesVars)
 	{
 		this.stateDesVars.put(stm, stateDesVars);
 	}
 	
-	public void addStateDesDecl(SStmCG stm, List<AVarDeclCG> stateDesDecls)
+	public void addStateDesDecl(SStmIR stm, List<AVarDeclIR> stateDesDecls)
 	{
 		this.stateDesDecls.put(stm, stateDesDecls);
 	}
 	
-	public void replaceStateDesOwner(SStmCG oldKey, SStmCG newKey)
+	public void replaceStateDesOwner(SStmIR oldKey, SStmIR newKey)
 	{
 		register(newKey, stateDesVars.remove(oldKey), stateDesDecls.remove(oldKey));
 	}
 	
-	public Pair<List<AIdentifierVarExpCG>, List<AVarDeclCG>> remove(SStmCG key)
+	public Pair<List<AIdentifierVarExpIR>, List<AVarDeclIR>> remove(SStmIR key)
 	{
-		return new Pair<List<AIdentifierVarExpCG>, List<AVarDeclCG>>(stateDesVars.remove(key), stateDesDecls.remove(key)); 
+		return new Pair<List<AIdentifierVarExpIR>, List<AVarDeclIR>>(stateDesVars.remove(key), stateDesDecls.remove(key)); 
 	}
 	
-	public void register(SStmCG key, List<AIdentifierVarExpCG> vars, List<AVarDeclCG> decls)
+	public void register(SStmIR key, List<AIdentifierVarExpIR> vars, List<AVarDeclIR> decls)
 	{
 		if(vars != null)
 		{
@@ -55,15 +55,15 @@ public class StateDesInfo
 		}
 	}
 	
-	public boolean isStateDesDecl(AVarDeclCG decl)
+	public boolean isStateDesDecl(AVarDeclIR decl)
 	{
-		for (SStmCG stm : stateDesDecls.keySet())
+		for (SStmIR stm : stateDesDecls.keySet())
 		{
-			List<AVarDeclCG> decls = stateDesDecls.get(stm);
+			List<AVarDeclIR> decls = stateDesDecls.get(stm);
 			
 			if(decls != null)
 			{
-				for (AVarDeclCG d : decls)
+				for (AVarDeclIR d : decls)
 				{
 					if (d == decl)
 					{
@@ -77,20 +77,20 @@ public class StateDesInfo
 		return false;
 	}
 	
-	public List<AIdentifierVarExpCG> getStateDesVars(SStmCG stm)
+	public List<AIdentifierVarExpIR> getStateDesVars(SStmIR stm)
 	{
 		return stateDesVars.get(stm);
 	}
 	
-	public ADefaultClassDeclCG getEnclosingClass(AIdentifierVarExpCG stateDesVar)
+	public ADefaultClassDeclIR getEnclosingClass(AIdentifierVarExpIR stateDesVar)
 	{
-		for(SStmCG k : stateDesVars.keySet())
+		for(SStmIR k : stateDesVars.keySet())
 		{
-			for(AIdentifierVarExpCG v : stateDesVars.get(k))
+			for(AIdentifierVarExpIR v : stateDesVars.get(k))
 			{
 				if(v == stateDesVar)
 				{
-					ADefaultClassDeclCG encClass = k.getAncestor(ADefaultClassDeclCG.class);
+					ADefaultClassDeclIR encClass = k.getAncestor(ADefaultClassDeclIR.class);
 					
 					if (encClass == null)
 					{

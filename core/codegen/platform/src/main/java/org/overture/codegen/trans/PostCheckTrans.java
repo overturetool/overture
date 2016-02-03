@@ -2,30 +2,30 @@ package org.overture.codegen.trans;
 
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.node.INode;
-import org.overture.codegen.ir.SDeclCG;
-import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.expressions.AStringLiteralExpCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
-import org.overture.codegen.ir.statements.AReturnStmCG;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AStringLiteralExpIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class PostCheckTrans extends DepthFirstAnalysisAdaptor
 {
 	private IPostCheckCreator postCheckCreator;
-	private TransAssistantCG transAssistant;
+	private TransAssistantIR transAssistant;
 	private String funcResultNamePrefix;
 	private Object conditionalCallTag;
 
 	public PostCheckTrans(IPostCheckCreator postCheckCreator,
-			TransAssistantCG transAssistant, String funcResultNamePrefix,
+			TransAssistantIR transAssistant, String funcResultNamePrefix,
 			Object conditionalCallTag)
 	{
 		this.postCheckCreator = postCheckCreator;
@@ -35,21 +35,21 @@ public class PostCheckTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAMethodDeclCG(AMethodDeclCG node) throws AnalysisException
+	public void caseAMethodDeclIR(AMethodDeclIR node) throws AnalysisException
 	{
 		if (!transAssistant.getInfo().getSettings().generatePostCondChecks())
 		{
 			return;
 		}
 
-		SDeclCG postCond = node.getPostCond();
+		SDeclIR postCond = node.getPostCond();
 
 		if (postCond == null)
 		{
 			return;
 		}
 
-		if (!(postCond instanceof AMethodDeclCG))
+		if (!(postCond instanceof AMethodDeclIR))
 		{
 			Logger.getLog().printErrorln("Expected post condition to be a method declaration at this point. Got: "
 					+ postCond);
@@ -82,9 +82,9 @@ public class PostCheckTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAReturnStmCG(AReturnStmCG node) throws AnalysisException
+	public void caseAReturnStmIR(AReturnStmIR node) throws AnalysisException
 	{
-		SExpCG result = node.getExp();
+		SExpIR result = node.getExp();
 
 		if (result == null)
 		{
@@ -92,7 +92,7 @@ public class PostCheckTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		AMethodDeclCG method = node.getAncestor(AMethodDeclCG.class);
+		AMethodDeclIR method = node.getAncestor(AMethodDeclIR.class);
 
 		if (method == null)
 		{
@@ -107,27 +107,27 @@ public class PostCheckTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		SDeclCG postCond = method.getPostCond();
+		SDeclIR postCond = method.getPostCond();
 		
-		if (!(postCond instanceof AMethodDeclCG))
+		if (!(postCond instanceof AMethodDeclIR))
 		{
 			Logger.getLog().printErrorln("Expected post condition to be a method declaration at this point. Got: "
 					+ postCond);
 			return;
 		}
 		
-		AApplyExpCG postCondCall = transAssistant.consConditionalCall(method, (AMethodDeclCG) method.getPostCond());
+		AApplyExpIR postCondCall = transAssistant.consConditionalCall(method, (AMethodDeclIR) method.getPostCond());
 		postCondCall.setTag(conditionalCallTag);
 
 		String funcResultVarName = transAssistant.getInfo().getTempVarNameGen().nextVarName(funcResultNamePrefix);
-		AVarDeclCG resultDecl = transAssistant.consDecl(funcResultVarName, method.getMethodType().getResult().clone(), node.getExp().clone());
-		AIdentifierVarExpCG resultVar = transAssistant.getInfo().getExpAssistant().consIdVar(funcResultVarName, resultDecl.getType().clone());
+		AVarDeclIR resultDecl = transAssistant.consDecl(funcResultVarName, method.getMethodType().getResult().clone(), node.getExp().clone());
+		AIdentifierVarExpIR resultVar = transAssistant.getInfo().getExpAssistant().consIdVar(funcResultVarName, resultDecl.getType().clone());
 
 		postCondCall.getArgs().add(resultVar.clone());
-		AStringLiteralExpCG methodName = transAssistant.getInfo().getExpAssistant().consStringLiteral(method.getName(), false);
-		AApplyExpCG postCheckCall = postCheckCreator.consPostCheckCall(method, postCondCall, resultVar, methodName);
+		AStringLiteralExpIR methodName = transAssistant.getInfo().getExpAssistant().consStringLiteral(method.getName(), false);
+		AApplyExpIR postCheckCall = postCheckCreator.consPostCheckCall(method, postCondCall, resultVar, methodName);
 
-		ABlockStmCG replacementBlock = new ABlockStmCG();
+		ABlockStmIR replacementBlock = new ABlockStmIR();
 		replacementBlock.getLocalDefs().add(resultDecl);
 
 		transAssistant.replaceNodeWith(node.getExp(), postCheckCall);

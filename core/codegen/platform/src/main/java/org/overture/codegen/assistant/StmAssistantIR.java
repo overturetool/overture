@@ -36,33 +36,33 @@ import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.statements.AAtomicStmCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
-import org.overture.codegen.ir.statements.ACaseAltStmStmCG;
-import org.overture.codegen.ir.statements.AElseIfStmCG;
-import org.overture.codegen.ir.statements.AForAllStmCG;
-import org.overture.codegen.ir.statements.AForIndexStmCG;
-import org.overture.codegen.ir.statements.AForLoopStmCG;
-import org.overture.codegen.ir.statements.AIfStmCG;
-import org.overture.codegen.ir.statements.AMetaStmCG;
-import org.overture.codegen.ir.statements.ASuperCallStmCG;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.statements.AAtomicStmIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.ACaseAltStmStmIR;
+import org.overture.codegen.ir.statements.AElseIfStmIR;
+import org.overture.codegen.ir.statements.AForAllStmIR;
+import org.overture.codegen.ir.statements.AForIndexStmIR;
+import org.overture.codegen.ir.statements.AForLoopStmIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
+import org.overture.codegen.ir.statements.AMetaStmIR;
+import org.overture.codegen.ir.statements.ASuperCallStmIR;
 import org.overture.codegen.ir.IRInfo;
 
-public class StmAssistantCG extends AssistantBase
+public class StmAssistantIR extends AssistantBase
 {
-	public StmAssistantCG(AssistantManager assistantManager)
+	public StmAssistantIR(AssistantManager assistantManager)
 	{
 		super(assistantManager);
 	}
 
-	public void injectDeclAsStm(ABlockStmCG block, AVarDeclCG decl)
+	public void injectDeclAsStm(ABlockStmIR block, AVarDeclIR decl)
 	{
-		ABlockStmCG wrappingBlock = new ABlockStmCG();
+		ABlockStmIR wrappingBlock = new ABlockStmIR();
 
 		wrappingBlock.getLocalDefs().add(decl);
 
@@ -70,13 +70,13 @@ public class StmAssistantCG extends AssistantBase
 	}
 
 	public void handleAlternativesCasesStm(IRInfo question, PExp exp,
-			List<ACaseAlternativeStm> cases, List<ACaseAltStmStmCG> casesCg)
+			List<ACaseAlternativeStm> cases, List<ACaseAltStmStmIR> casesCg)
 			throws AnalysisException
 	{
 		for (ACaseAlternativeStm alt : cases)
 		{
-			SStmCG altCg = alt.apply(question.getStmVisitor(), question);
-			casesCg.add((ACaseAltStmStmCG) altCg);
+			SStmIR altCg = alt.apply(question.getStmVisitor(), question);
+			casesCg.add((ACaseAltStmStmIR) altCg);
 		}
 
 		PType expType = question.getTypeAssistant().resolve(exp.getType());
@@ -89,31 +89,31 @@ public class StmAssistantCG extends AssistantBase
 			for (int i = 0; i < cases.size(); i++)
 			{
 				ACaseAlternativeStm vdmCase = cases.get(i);
-				ACaseAltStmStmCG cgCase = casesCg.get(i);
+				ACaseAltStmStmIR cgCase = casesCg.get(i);
 
 				PType patternType = question.getAssistantManager().getTypeAssistant().getType(question, unionType, vdmCase.getPattern());
-				STypeCG patternTypeCg = patternType.apply(question.getTypeVisitor(), question);
+				STypeIR patternTypeCg = patternType.apply(question.getTypeVisitor(), question);
 				cgCase.setPatternType(patternTypeCg);
 			}
 		} else
 		{
-			STypeCG expTypeCg = expType.apply(question.getTypeVisitor(), question);
+			STypeIR expTypeCg = expType.apply(question.getTypeVisitor(), question);
 
-			for (ACaseAltStmStmCG altCg : casesCg)
+			for (ACaseAltStmStmIR altCg : casesCg)
 			{
 				altCg.setPatternType(expTypeCg.clone());
 			}
 		}
 	}
 	
-	public boolean inAtomic(SStmCG stm)
+	public boolean inAtomic(SStmIR stm)
 	{
-		return stm.getAncestor(AAtomicStmCG.class) != null;
+		return stm.getAncestor(AAtomicStmIR.class) != null;
 	}
 	
-	public String getSuperClassName(ASuperCallStmCG stm)
+	public String getSuperClassName(ASuperCallStmIR stm)
 	{
-		ADefaultClassDeclCG enclosingClass = stm.getAncestor(ADefaultClassDeclCG.class);
+		ADefaultClassDeclIR enclosingClass = stm.getAncestor(ADefaultClassDeclIR.class);
 		
 		return enclosingClass.getName();
 	}
@@ -137,17 +137,17 @@ public class StmAssistantCG extends AssistantBase
 				!(block.parent() instanceof AForIndexStm);
 	}
 	
-	public boolean isScoped(ABlockStmCG block)
+	public boolean isScoped(ABlockStmIR block)
 	{
-		return !(block.parent() instanceof AMethodDeclCG) &&
-				!(block.parent() instanceof AElseIfStmCG) &&
-				!(block.parent() instanceof AIfStmCG) &&
-				!(block.parent() instanceof AForAllStmCG) &&
-				!(block.parent() instanceof AForIndexStmCG) &&
-				!(block.parent() instanceof AForLoopStmCG);
+		return !(block.parent() instanceof AMethodDeclIR) &&
+				!(block.parent() instanceof AElseIfStmIR) &&
+				!(block.parent() instanceof AIfStmIR) &&
+				!(block.parent() instanceof AForAllStmIR) &&
+				!(block.parent() instanceof AForIndexStmIR) &&
+				!(block.parent() instanceof AForLoopStmIR);
 	}
 	
-	public boolean equal(AMetaStmCG left, AMetaStmCG right)
+	public boolean equal(AMetaStmIR left, AMetaStmIR right)
 	{
 		if(left.getMetaData().size() != right.getMetaData().size())
 		{

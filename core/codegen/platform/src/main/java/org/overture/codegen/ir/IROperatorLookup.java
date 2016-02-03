@@ -23,31 +23,31 @@ package org.overture.codegen.ir;
 
 import java.util.HashMap;
 
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.expressions.AAddrEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.AAddrNotEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.AAndBoolBinaryExpCG;
-import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
-import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ADivideNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.AGreaterEqualNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.AGreaterNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ALessEqualNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ALessNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.AMinusUnaryExpCG;
-import org.overture.codegen.ir.expressions.AModNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.ANotUnaryExpCG;
-import org.overture.codegen.ir.expressions.AOrBoolBinaryExpCG;
-import org.overture.codegen.ir.expressions.APlusNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.APlusUnaryExpCG;
-import org.overture.codegen.ir.expressions.APowerNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ARemNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ASubtractNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ATernaryIfExpCG;
-import org.overture.codegen.ir.expressions.ATimesNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.AXorBoolBinaryExpCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.expressions.AAddrEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AAddrNotEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ADivideNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AGreaterEqualNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.AGreaterNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ALessEqualNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ALessNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.AMinusUnaryExpIR;
+import org.overture.codegen.ir.expressions.AModNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
+import org.overture.codegen.ir.expressions.AOrBoolBinaryExpIR;
+import org.overture.codegen.ir.expressions.APlusNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.APlusUnaryExpIR;
+import org.overture.codegen.ir.expressions.APowerNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ARemNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASubtractNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ATernaryIfExpIR;
+import org.overture.codegen.ir.expressions.ATimesNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.AXorBoolBinaryExpIR;
 
 public class IROperatorLookup
 {
@@ -88,47 +88,47 @@ public class IROperatorLookup
 	private static final int UNARY_PLUS = 13;
 	private static final int UNARY_MINUS = 13;
 
-	private HashMap<Class<? extends SExpCG>, IROperatorInfo> lookup;
+	private HashMap<Class<? extends SExpIR>, IROperatorInfo> lookup;
 
-	public IROperatorInfo find(Class<? extends SExpCG> key)
+	public IROperatorInfo find(Class<? extends SExpIR> key)
 	{
 		return lookup.get(key);
 	}
 
 	public IROperatorLookup()
 	{
-		this.lookup = new HashMap<Class<? extends SExpCG>, IROperatorInfo>();
+		this.lookup = new HashMap<Class<? extends SExpIR>, IROperatorInfo>();
 
-		lookup.put(APlusNumericBinaryExpCG.class, new IROperatorInfo(PLUS, "+"));
-		lookup.put(ASubtractNumericBinaryExpCG.class, new IROperatorInfo(SUB, "-"));
-		lookup.put(ATimesNumericBinaryExpCG.class, new IROperatorInfo(TIMES, "*"));
-		lookup.put(AIntDivNumericBinaryExpCG.class, new IROperatorInfo(DIV, "/"));
-		lookup.put(ARemNumericBinaryExpCG.class, new IROperatorInfo(REM, "%"));
-		lookup.put(AModNumericBinaryExpCG.class, new IROperatorInfo(MOD, "%"));
-		lookup.put(ADivideNumericBinaryExpCG.class, new IROperatorInfo(DIVIDE, "/"));
+		lookup.put(APlusNumericBinaryExpIR.class, new IROperatorInfo(PLUS, "+"));
+		lookup.put(ASubtractNumericBinaryExpIR.class, new IROperatorInfo(SUB, "-"));
+		lookup.put(ATimesNumericBinaryExpIR.class, new IROperatorInfo(TIMES, "*"));
+		lookup.put(AIntDivNumericBinaryExpIR.class, new IROperatorInfo(DIV, "/"));
+		lookup.put(ARemNumericBinaryExpIR.class, new IROperatorInfo(REM, "%"));
+		lookup.put(AModNumericBinaryExpIR.class, new IROperatorInfo(MOD, "%"));
+		lookup.put(ADivideNumericBinaryExpIR.class, new IROperatorInfo(DIVIDE, "/"));
 
-		lookup.put(AEqualsBinaryExpCG.class, new IROperatorInfo(EQUALS, "="));
-		lookup.put(ANotEqualsBinaryExpCG.class, new IROperatorInfo(NOT_EQUALS, "<>"));
-		lookup.put(AAddrEqualsBinaryExpCG.class, new IROperatorInfo(EQUALS, "=="));
-		lookup.put(AAddrNotEqualsBinaryExpCG.class, new IROperatorInfo(NOT_EQUALS, "!="));
+		lookup.put(AEqualsBinaryExpIR.class, new IROperatorInfo(EQUALS, "="));
+		lookup.put(ANotEqualsBinaryExpIR.class, new IROperatorInfo(NOT_EQUALS, "<>"));
+		lookup.put(AAddrEqualsBinaryExpIR.class, new IROperatorInfo(EQUALS, "=="));
+		lookup.put(AAddrNotEqualsBinaryExpIR.class, new IROperatorInfo(NOT_EQUALS, "!="));
 
-		lookup.put(AGreaterEqualNumericBinaryExpCG.class, new IROperatorInfo(GREATER_EQUAL, ">="));
-		lookup.put(AGreaterNumericBinaryExpCG.class, new IROperatorInfo(GREATER, ">"));
-		lookup.put(ALessEqualNumericBinaryExpCG.class, new IROperatorInfo(LESS_EQUAL, "<="));
-		lookup.put(ALessNumericBinaryExpCG.class, new IROperatorInfo(LESS, "<"));
+		lookup.put(AGreaterEqualNumericBinaryExpIR.class, new IROperatorInfo(GREATER_EQUAL, ">="));
+		lookup.put(AGreaterNumericBinaryExpIR.class, new IROperatorInfo(GREATER, ">"));
+		lookup.put(ALessEqualNumericBinaryExpIR.class, new IROperatorInfo(LESS_EQUAL, "<="));
+		lookup.put(ALessNumericBinaryExpIR.class, new IROperatorInfo(LESS, "<"));
 
-		lookup.put(APowerNumericBinaryExpCG.class, new IROperatorInfo(POWER, "**"));
+		lookup.put(APowerNumericBinaryExpIR.class, new IROperatorInfo(POWER, "**"));
 
-		lookup.put(ACastUnaryExpCG.class, new IROperatorInfo(CAST, "()"));
+		lookup.put(ACastUnaryExpIR.class, new IROperatorInfo(CAST, "()"));
 
-		lookup.put(AOrBoolBinaryExpCG.class, new IROperatorInfo(OR, "or"));
-		lookup.put(AAndBoolBinaryExpCG.class, new IROperatorInfo(AND, "and"));
-		lookup.put(AXorBoolBinaryExpCG.class, new IROperatorInfo(XOR, "*^"));
-		lookup.put(ANotUnaryExpCG.class, new IROperatorInfo(NOT, "not"));
+		lookup.put(AOrBoolBinaryExpIR.class, new IROperatorInfo(OR, "or"));
+		lookup.put(AAndBoolBinaryExpIR.class, new IROperatorInfo(AND, "and"));
+		lookup.put(AXorBoolBinaryExpIR.class, new IROperatorInfo(XOR, "*^"));
+		lookup.put(ANotUnaryExpIR.class, new IROperatorInfo(NOT, "not"));
 
-		lookup.put(AMinusUnaryExpCG.class, new IROperatorInfo(UNARY_MINUS, "-"));
-		lookup.put(APlusUnaryExpCG.class, new IROperatorInfo(UNARY_PLUS, "+"));
+		lookup.put(AMinusUnaryExpIR.class, new IROperatorInfo(UNARY_MINUS, "-"));
+		lookup.put(APlusUnaryExpIR.class, new IROperatorInfo(UNARY_PLUS, "+"));
 
-		lookup.put(ATernaryIfExpCG.class, new IROperatorInfo(TERNARY_IF, "?:"));
+		lookup.put(ATernaryIfExpIR.class, new IROperatorInfo(TERNARY_IF, "?:"));
 	}
 }

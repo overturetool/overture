@@ -13,31 +13,31 @@ import org.overture.ast.modules.ATypeExport;
 import org.overture.ast.modules.AValueExport;
 import org.overture.ast.modules.PExport;
 import org.overture.ast.types.PType;
-import org.overture.codegen.ir.SDeclCG;
-import org.overture.codegen.ir.SExportCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.declarations.AAllExportCG;
-import org.overture.codegen.ir.declarations.AFunctionExportCG;
-import org.overture.codegen.ir.declarations.AOperationExportCG;
-import org.overture.codegen.ir.declarations.ATypeExportCG;
-import org.overture.codegen.ir.declarations.AValueExportCG;
-import org.overture.codegen.ir.name.ATokenNameCG;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.SExportIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.AAllExportIR;
+import org.overture.codegen.ir.declarations.AFunctionExportIR;
+import org.overture.codegen.ir.declarations.AOperationExportIR;
+import org.overture.codegen.ir.declarations.ATypeExportIR;
+import org.overture.codegen.ir.declarations.AValueExportIR;
+import org.overture.codegen.ir.name.ATokenNameIR;
 import org.overture.codegen.ir.IRInfo;
 
-public class ExportVisitorCG extends AbstractVisitorCG<IRInfo, SExportCG>
+public class ExportVisitorIR extends AbstractVisitorIR<IRInfo, SExportIR>
 {
 	@Override
-	public SExportCG caseAAllExport(AAllExport node, IRInfo question)
+	public SExportIR caseAAllExport(AAllExport node, IRInfo question)
 			throws AnalysisException
 	{
-		return addDecl(node, new AAllExportCG(), question);
+		return addDecl(node, new AAllExportIR(), question);
 	}
 
 	@Override
-	public SExportCG caseAFunctionExport(AFunctionExport node, IRInfo question)
+	public SExportIR caseAFunctionExport(AFunctionExport node, IRInfo question)
 			throws AnalysisException
 	{
-		AFunctionExportCG funcExportCg = new AFunctionExportCG();
+		AFunctionExportIR funcExportCg = new AFunctionExportIR();
 		
 		funcExportCg.setNameList(consNames(node.getNameList()));
 		funcExportCg.setExportType(consExportType(node.getExportType(), question));
@@ -46,10 +46,10 @@ public class ExportVisitorCG extends AbstractVisitorCG<IRInfo, SExportCG>
 	}
 
 	@Override
-	public SExportCG caseAOperationExport(AOperationExport node, IRInfo question)
+	public SExportIR caseAOperationExport(AOperationExport node, IRInfo question)
 			throws AnalysisException
 	{
-		AOperationExportCG opExportCg = new AOperationExportCG();
+		AOperationExportIR opExportCg = new AOperationExportIR();
 		
 		opExportCg.setNameList(consNames(node.getNameList()));
 		opExportCg.setExportType(consExportType(node.getExportType(), question));
@@ -58,10 +58,10 @@ public class ExportVisitorCG extends AbstractVisitorCG<IRInfo, SExportCG>
 	}
 
 	@Override
-	public SExportCG caseATypeExport(ATypeExport node, IRInfo question)
+	public SExportIR caseATypeExport(ATypeExport node, IRInfo question)
 			throws AnalysisException
 	{
-		ATypeExportCG typeExportCg = new ATypeExportCG();
+		ATypeExportIR typeExportCg = new ATypeExportIR();
 		
 		typeExportCg.setName(node.getName() != null ? node.getName().getName() : null);
 		typeExportCg.setStruct(node.getStruct());
@@ -70,10 +70,10 @@ public class ExportVisitorCG extends AbstractVisitorCG<IRInfo, SExportCG>
 	}
 
 	@Override
-	public SExportCG caseAValueExport(AValueExport node, IRInfo question)
+	public SExportIR caseAValueExport(AValueExport node, IRInfo question)
 			throws AnalysisException
 	{
-		AValueExportCG valueExportCg = new AValueExportCG();
+		AValueExportIR valueExportCg = new AValueExportIR();
 		
 		valueExportCg.setNameList(consNames(node.getNameList()));
 		valueExportCg.setExportType(consExportType(node.getExportType(), question));
@@ -81,7 +81,7 @@ public class ExportVisitorCG extends AbstractVisitorCG<IRInfo, SExportCG>
 		return addDecl(node, valueExportCg, question);
 	}
 
-	private STypeCG consExportType(PType type, IRInfo question) throws AnalysisException
+	private STypeIR consExportType(PType type, IRInfo question) throws AnalysisException
 	{
 		if(type != null)
 		{
@@ -93,13 +93,13 @@ public class ExportVisitorCG extends AbstractVisitorCG<IRInfo, SExportCG>
 		}
 	}
 	
-	private List<ATokenNameCG> consNames(List<ILexNameToken> vdmNames)
+	private List<ATokenNameIR> consNames(List<ILexNameToken> vdmNames)
 	{
-		List<ATokenNameCG> namesCg = new LinkedList<ATokenNameCG>();
+		List<ATokenNameIR> namesCg = new LinkedList<ATokenNameIR>();
 		
 		for(ILexNameToken vdmName : vdmNames)
 		{
-			ATokenNameCG nextNameCg = new ATokenNameCG();
+			ATokenNameIR nextNameCg = new ATokenNameIR();
 			nextNameCg.setName(vdmName.getName());
 			
 			namesCg.add(nextNameCg);
@@ -108,12 +108,12 @@ public class ExportVisitorCG extends AbstractVisitorCG<IRInfo, SExportCG>
 		return namesCg;
 	}
 	
-	private SExportCG addDecl(PExport vdmImport, SExportCG irImport,
+	private SExportIR addDecl(PExport vdmImport, SExportIR irImport,
 			IRInfo question) throws AnalysisException
 	{
 		for(PDefinition defItem : vdmImport.getDefinition())
 		{
-			SDeclCG declItemCg = defItem.apply(question.getDeclVisitor(), question);
+			SDeclIR declItemCg = defItem.apply(question.getDeclVisitor(), question);
 			
 			if(declItemCg != null)
 			{

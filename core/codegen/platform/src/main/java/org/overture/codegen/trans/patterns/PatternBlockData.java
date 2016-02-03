@@ -21,21 +21,21 @@
  */
 package org.overture.codegen.trans.patterns;
 
-import org.overture.codegen.ir.SPatternCG;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
 
 public class PatternBlockData
 {
-	private SPatternCG pattern;
-	private AVarDeclCG successVarDecl;
-	private AIdentifierVarExpCG successVar;
-	private ABlockStmCG declBlock;
-	private AIdentifierVarExpCG rootPatternVar;
+	private SPatternIR pattern;
+	private AVarDeclIR successVarDecl;
+	private AIdentifierVarExpIR successVar;
+	private ABlockStmIR declBlock;
+	private AIdentifierVarExpIR rootPatternVar;
 	private MismatchHandling mismatchHandling;
 
-	public PatternBlockData(SPatternCG pattern, ABlockStmCG declBlock,
+	public PatternBlockData(SPatternIR pattern, ABlockStmIR declBlock,
 			MismatchHandling mismatchHandling)
 	{
 		this.pattern = pattern;
@@ -49,52 +49,52 @@ public class PatternBlockData
 		this(null, null, mismatchHandling);
 	}
 
-	public boolean IsRootPattern(SPatternCG pattern)
+	public boolean IsRootPattern(SPatternIR pattern)
 	{
 		return this.pattern == pattern;
 	}
 
-	public SPatternCG getPattern()
+	public SPatternIR getPattern()
 	{
 		return pattern;
 	}
 
-	public void setPattern(SPatternCG pattern)
+	public void setPattern(SPatternIR pattern)
 	{
 		this.pattern = pattern;
 	}
 
-	public AVarDeclCG getSuccessVarDecl()
+	public AVarDeclIR getSuccessVarDecl()
 	{
 		return successVarDecl;
 	}
 
-	public void setSuccessVarDecl(AVarDeclCG successVarDecl)
+	public void setSuccessVarDecl(AVarDeclIR successVarDecl)
 	{
 		this.successVarDecl = successVarDecl;
 	}
 
-	public AIdentifierVarExpCG getSuccessVar()
+	public AIdentifierVarExpIR getSuccessVar()
 	{
 		return successVar;
 	}
 
-	public void setSuccessVar(AIdentifierVarExpCG successVar)
+	public void setSuccessVar(AIdentifierVarExpIR successVar)
 	{
 		this.successVar = successVar;
 	}
 
-	public ABlockStmCG getDeclBlock()
+	public ABlockStmIR getDeclBlock()
 	{
 		return declBlock;
 	}
 
-	public void setDeclBlock(ABlockStmCG declBlock)
+	public void setDeclBlock(ABlockStmIR declBlock)
 	{
 		this.declBlock = declBlock;
 	}
 	
-	public void setRootPatternVar(AIdentifierVarExpCG var)
+	public void setRootPatternVar(AIdentifierVarExpIR var)
 	{
 		// There can only be one root pattern variable
 		if(this.rootPatternVar == null)
@@ -103,7 +103,7 @@ public class PatternBlockData
 		}
 	}
 	
-	public AIdentifierVarExpCG getRootPatternVar()
+	public AIdentifierVarExpIR getRootPatternVar()
 	{
 		return rootPatternVar;
 	}

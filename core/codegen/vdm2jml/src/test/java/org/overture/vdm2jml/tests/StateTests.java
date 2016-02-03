@@ -7,8 +7,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
 
 public class StateTests extends AnnotationTestsBase
 {
@@ -29,7 +29,7 @@ public class StateTests extends AnnotationTestsBase
 	{
 		Assert.assertTrue("Expected a single field to represent the state", genModule.getFields().size() == 1);
 
-		AFieldDeclCG stateField = genModule.getFields().getFirst();
+		AFieldDeclIR stateField = genModule.getFields().getFirst();
 
 		Assert.assertTrue("Expected only a single JML annotation for the state field", stateField.getMetaData().size() == 1);
 
@@ -41,7 +41,7 @@ public class StateTests extends AnnotationTestsBase
 	@Test
 	public void testGenStateTypeMethodsArePure()
 	{
-		List<AMethodDeclCG> stateMethods = genStateType.getMethods();
+		List<AMethodDeclIR> stateMethods = genStateType.getMethods();
 		Assert.assertTrue("Expected seven methods in the state type ", stateMethods.size() == 8);
 
 		assertRecMethodsPurity(stateMethods);

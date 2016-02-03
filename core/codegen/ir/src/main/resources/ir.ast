@@ -29,7 +29,7 @@ Tokens
 Abstract Syntax Tree
 /* This section declares the AST by giving root nodes and their possible sub classe */
 
-CG {-> package='org.overture.codegen.ir'
+IR {-> package='org.overture.codegen.ir'
 	| (sourceNode):SourceNode
 	| (tag):java_Object // Tags carry information to support IR analysis
 	| (metaData):eString*} // Meta data is intended to hold printable information such as code annotations
@@ -56,37 +56,37 @@ CG {-> package='org.overture.codegen.ir'
 	;
 
 #imports {-> package='org.overture.codegen.ir.declarations'} 
-    = {module} [name]:java_String [imports]:CG.#imports.fromModule*
-    | {fromModule} [name]:java_String [signatures]:CG.#import**
+    = {module} [name]:java_String [imports]:IR.#imports.fromModule*
+    | {fromModule} [name]:java_String [signatures]:IR.#import**
     ;
     
 #import {-> package='org.overture.codegen.ir.declarations'
 	|	[name]:java_String 
 	|	[renamed]:java_String 
-	|	[fromModuleName]:java_String/*(from):CG.#decl.module*/}
+	|	[fromModuleName]:java_String/*(from):IR.#decl.module*/}
     =   {all}
-    |   {type} [decl]:CG.#decl.type
+    |   {type} [decl]:IR.#decl.type
     |   #value
     ;
     
 #value {-> package='org.overture.codegen.ir.declarations'
-	|	(importType):CG.#type}
+	|	(importType):IR.#type}
     =   {value}
-    |   {function} [typeParams]:CG.#name.token* //Because [typeParams]:java_String* is not supported by the AstCreator
+    |   {function} [typeParams]:IR.#name.token* //Because [typeParams]:java_String* is not supported by the AstCreator
     |   {operation}
     ;
 
 #exports {-> package='org.overture.codegen.ir.declarations'}
-    =   {module} [exports]:CG.#export**
+    =   {module} [exports]:IR.#export**
     ;
 
 #export {-> package='org.overture.codegen.ir.declarations'
-	|	[decl]:CG.#decl*}
+	|	[decl]:IR.#decl*}
     =   {all}
-    |   {function} [nameList]:CG.#name.token* (exportType):CG.#type
-    |   {operation} [nameList]:CG.#name.token* (exportType):CG.#type
+    |   {function} [nameList]:IR.#name.token* (exportType):IR.#type
+    |   {operation} [nameList]:IR.#name.token* (exportType):IR.#type
     |   {type} [name]:java_String [struct]:java_Boolean
-    |   {value} [nameList]:CG.#name.token* (exportType):CG.#type
+    |   {value} [nameList]:IR.#name.token* (exportType):IR.#type
     ;
 
 #pattern {-> package='org.overture.codegen.ir.patterns'}
@@ -99,20 +99,20 @@ CG {-> package='org.overture.codegen.ir'
 	| {quote} [value]:java_String
 	| {real} [value]:java_Double
 	| {string} [value]:java_String
-	| {tuple} [patterns]:CG.#pattern*
-	| {record} [typename]:java_String [patterns]:CG.#pattern* [type]:CG.#type
+	| {tuple} [patterns]:IR.#pattern*
+	| {record} [typename]:java_String [patterns]:IR.#pattern* [type]:IR.#type
 	;
 
 #bind {-> package='org.overture.codegen.ir.patterns'
-	|	[pattern]:CG.#pattern}
-    =   {set} [set]:CG.#exp //binds
-    |   {type} [type]:CG.#type
+	|	[pattern]:IR.#pattern}
+    =   {set} [set]:IR.#exp //binds
+    |   {type} [type]:IR.#type
     ;
 		
 #multipleBind {-> package='org.overture.codegen.ir.patterns'
-	|	[patterns]:CG.#pattern*}
-    =   {set}  [set]:CG.#exp //binds
-    |   {type} [type]:CG.#type
+	|	[patterns]:IR.#pattern*}
+    =   {set}  [set]:IR.#exp //binds
+    |   {type} [type]:IR.#type
     ;
    
 #name {-> package='org.overture.codegen.ir.name'}
@@ -125,100 +125,100 @@ CG {-> package='org.overture.codegen.ir'
     
 #decl {-> package='org.overture.codegen.ir.declarations'}
 	=	{method} //rename to operation
-		(preCond):CG.#decl
-		(postCond):CG.#decl
+		(preCond):IR.#decl
+		(postCond):IR.#decl
 		[access]:java_String //Consider introducing access node covering both "access" and "async"
 		[async]:java_Boolean
 		[static]:java_Boolean
 		[abstract]:java_Boolean
-		[methodType]:CG.#type.method
+		[methodType]:IR.#type.method
 		[name]:java_String
-		[formalParams]:CG.#localParam.formalParam*
+		[formalParams]:IR.#localParam.formalParam*
 		[isConstructor]:java_Boolean
-		[templateTypes]:CG.#type.template*
+		[templateTypes]:IR.#type.template*
 		[implicit]:java_Boolean
-		[raises]:CG.#type*
-		[body]:CG.#stm
+		[raises]:IR.#type*
+		[body]:IR.#stm
 	|	{func}
-		(preCond):CG.#decl
-		(postCond):CG.#decl
+		(preCond):IR.#decl
+		(postCond):IR.#decl
 		[access]:java_String
 		[abstract]:java_Boolean
-		[methodType]:CG.#type.method
+		[methodType]:IR.#type.method
 		[name]:java_String
-		[formalParams]:CG.#localParam.formalParam*
-		[templateTypes]:CG.#type.template*
+		[formalParams]:IR.#localParam.formalParam*
+		[templateTypes]:IR.#type.template*
 		[implicit]:java_Boolean
-		[raises]:CG.#type*
-		[body]:CG.#exp
+		[raises]:IR.#type*
+		[body]:IR.#exp
 	|	{field} 
     	[access]:java_String
     	[static]:java_Boolean
     	[volatile]:java_Boolean
     	[final]:java_Boolean
-    	[type]:CG.#type
+    	[type]:IR.#type
     	[name]:java_String
-    	[initial]:CG.#exp
+    	[initial]:IR.#exp
    	|	#Class
     |	{module}
     	[name]:java_String
-    	[import]:CG.#imports.module
-    	[exports]:CG.#exports.module
-    	[decls]:CG.#decl*
+    	[import]:IR.#imports.module
+    	[exports]:IR.#exports.module
+    	[decls]:IR.#decl*
     	[isFlat]:java_Boolean
     	[isDLModule]:java_Boolean
     |   {state}
     	[access]:java_String
     	[executable]:java_Boolean
     	[name]:java_String
-    	[fields]:CG.#decl.field*
-    	[invPattern]:CG.#pattern
-    	[invExp]:CG.#exp
-    	[invDecl]:CG.#decl.func
-    	[initPattern]:CG.#pattern
-    	[initExp]:CG.#exp
-    	[initDecl]:CG.#decl.func
+    	[fields]:IR.#decl.field*
+    	[invPattern]:IR.#pattern
+    	[invExp]:IR.#exp
+    	[invDecl]:IR.#decl.func
+    	[initPattern]:IR.#pattern
+    	[initExp]:IR.#exp
+    	[initDecl]:IR.#decl.func
     |	{interface}
-    	[templateTypes]:CG.#type.template*
+    	[templateTypes]:IR.#type.template*
     	[package]:java_String
     	[name]:java_String
     	[fields]:field*
-    	[methodSignatures]:CG.#decl.method*
+    	[methodSignatures]:IR.#decl.method*
     |	{record}
     	//TODO: Should have [access]:java_String
     	[name]:java_String
-    	[invariant]:CG.#decl
+    	[invariant]:IR.#decl
     	[fields]:field*
-    	[methods]:CG.#decl.method*
+    	[methods]:IR.#decl.method*
     |	{thread}
-    	[def]:CG.#decl
-    	[stm]:CG.#stm
-    	[type]:CG.#type
+    	[def]:IR.#decl
+    	[stm]:IR.#stm
+    	[type]:IR.#type
     |	{type}
     	[access]:java_String
-    	[inv]:CG.#decl
-    	[decl]:CG.#decl
+    	[inv]:IR.#decl
+    	[decl]:IR.#decl
     |	{catchClause}
-    	[type]:CG.#type
+    	[type]:IR.#type
     	[name]:java_String
-    	[stm]:CG.#stm
+    	[stm]:IR.#stm
     |	{persync}
     	[opname]:java_String
     	[guardname]:java_String
-    	[pred]:CG.#exp
+    	[pred]:IR.#exp
     |	{mutexSync}
-    	[opnames]:CG.#name*
+    	[opnames]:IR.#name*
     |	{var}
     	[final]:java_Boolean
-    	[type]:CG.#type
-    	[pattern]:CG.#pattern
-    	[exp]:CG.#exp
+    	[type]:IR.#type
+    	[pattern]:IR.#pattern
+    	[exp]:IR.#exp
     |	{namedType}
-    	[name]:CG.#name.type
-    	[type]:CG.#type
+    	[name]:IR.#name.type
+    	[type]:IR.#type
     |	{namedTrace}
-    	[pathname]:CG.#name.token*
-    	[terms]:CG.#term.traceDecl*
+    	[pathname]:IR.#name.token*
+    	[terms]:IR.#term.traceDecl*
 	;
 	
 #Class {-> package='org.overture.codegen.ir.declarations'
@@ -230,17 +230,17 @@ CG {-> package='org.overture.codegen.ir'
   | [static]:java_Boolean 
   | [name]:java_String
   | [fields]:field*
-  | [invariant]:CG.#decl
-  | [methods]:CG.#decl.method*
-  | [functions]:CG.#decl.func*
-  | [traces]:CG.#decl.namedTrace*
-  | [superNames]:CG.#name.token*
-  | [thread]:CG.#decl.thread
-  | [innerClasses]:CG.#decl.class*
-  | [interfaces]:CG.#decl.interface*
-  | [typeDecls]:CG.#decl.type*
-  | [perSyncs]:CG.#decl.persync*
-  | [mutexSyncs]:CG.#decl.mutexSync*}
+  | [invariant]:IR.#decl
+  | [methods]:IR.#decl.method*
+  | [functions]:IR.#decl.func*
+  | [traces]:IR.#decl.namedTrace*
+  | [superNames]:IR.#name.token*
+  | [thread]:IR.#decl.thread
+  | [innerClasses]:IR.#decl.class*
+  | [interfaces]:IR.#decl.interface*
+  | [typeDecls]:IR.#decl.type*
+  | [perSyncs]:IR.#decl.persync*
+  | [mutexSyncs]:IR.#decl.mutexSync*}
    = {bus}
    | {cpu}
    | {system}
@@ -248,153 +248,153 @@ CG {-> package='org.overture.codegen.ir'
   ;
 	
 #stateDesignator {-> package='org.overture.codegen.ir.statements'
-	| [type]:CG.#type }
+	| [type]:IR.#type }
 	= {identifier} [name]:java_String [explicit]:java_Boolean [className]:java_String [isLocal]:java_Boolean
-	| {field} [object]:CG.#stateDesignator [field]:java_String
-	| {mapSeq} [mapseq]:CG.#stateDesignator [exp]:CG.#exp
+	| {field} [object]:IR.#stateDesignator [field]:java_String
+	| {mapSeq} [mapseq]:IR.#stateDesignator [exp]:IR.#exp
 	;
 
 #objectDesignator {-> package='org.overture.codegen.ir.statements'}
-	=   {apply} [object]:CG.#objectDesignator [args]:CG.#exp*
-    |   {field} [object]:CG.#objectDesignator [fieldModule]:java_String [fieldName]:java_String
-    |   {identifier} [exp]:CG.#exp //Normally a var (e.g. [exp]:CG.#exp.#Var) but a transformation may need to replace it with a cast expression
-    |   {new} [exp]:CG.#exp.new
+	=   {apply} [object]:IR.#objectDesignator [args]:IR.#exp*
+    |   {field} [object]:IR.#objectDesignator [fieldModule]:java_String [fieldName]:java_String
+    |   {identifier} [exp]:IR.#exp //Normally a var (e.g. [exp]:IR.#exp.#Var) but a transformation may need to replace it with a cast expression
+    |   {new} [exp]:IR.#exp.new
     |   {self}
     ;
     
 #localParam {-> package='org.overture.codegen.ir.declarations'}
-           = {formalParam} [type]:CG.#type [pattern]:CG.#pattern
+           = {formalParam} [type]:IR.#type [pattern]:IR.#pattern
            ;
 
 #stm {-> package='org.overture.codegen.ir.statements'}
-           =	{if} [ifExp]:CG.#exp [thenStm]:CG.#stm [elseIf]:CG.#stm.elseIf* [elseStm]:CG.#stm
-           | 	{elseIf} [elseIf]:CG.#exp [thenStm]:CG.#stm
-           |  {exp} [exp]:CG.#exp
+           =	{if} [ifExp]:IR.#exp [thenStm]:IR.#stm [elseIf]:IR.#stm.elseIf* [elseStm]:IR.#stm
+           | 	{elseIf} [elseIf]:IR.#exp [thenStm]:IR.#stm
+           |  {exp} [exp]:IR.#exp
            | 	{skip}
-           |	{return} [exp]:CG.#exp
+           |	{return} [exp]:IR.#exp
            |	{abstractBody}
-           |	{assignment} [target]:CG.#stateDesignator [exp]:CG.#exp
-           |	{assignToExp} [target]:CG.#exp [exp]:CG.#exp
-           |	{localPatternAssignment} [target]:CG.#pattern [exp]:CG.#exp (nextElementDecl):CG.#decl.var
-           |	{block}	[scoped]:java_Boolean [localDefs]:CG.#decl.var* [statements]:CG.#stm*
-           |	{callObject} [type]:CG.#type [designator]:CG.#objectDesignator /*[className]:java_String*/ [fieldName]:java_String 
-           					 [args]:CG.#exp*
-           |	{callObjectExp} [type]:CG.#type [obj]:CG.#exp /*[className]:java_String*/ [fieldName]:java_String 
-           					 [args]:CG.#exp*
+           |	{assignment} [target]:IR.#stateDesignator [exp]:IR.#exp
+           |	{assignToExp} [target]:IR.#exp [exp]:IR.#exp
+           |	{localPatternAssignment} [target]:IR.#pattern [exp]:IR.#exp (nextElementDecl):IR.#decl.var
+           |	{block}	[scoped]:java_Boolean [localDefs]:IR.#decl.var* [statements]:IR.#stm*
+           |	{callObject} [type]:IR.#type [designator]:IR.#objectDesignator /*[className]:java_String*/ [fieldName]:java_String 
+           					 [args]:IR.#exp*
+           |	{callObjectExp} [type]:IR.#type [obj]:IR.#exp /*[className]:java_String*/ [fieldName]:java_String 
+           					 [args]:IR.#exp*
            |	#call
            |	{notImplemented}
-           |	{forIndex} [var]:java_String [from]:CG.#exp [to]:CG.#exp [by]:CG.#exp [body]:CG.#stm
-           |	{forAll} [pattern]:CG.#pattern [exp]:CG.#exp [body]:CG.#stm
-           |	{while} [exp]:CG.#exp [body]:CG.#stm
-           |	{letBeSt} [header]:CG.#letBeSt.header [statement]:CG.#stm
-           |	{throw} [exp]:CG.#exp
-           |	{forLoop} [init]:CG.#decl.var [cond]:CG.#exp [inc]:CG.#exp [body]:CG.#stm
-           |	{increment} [var]:CG.#exp
-           |	{decrement} [var]:CG.#exp
-           |	{raiseError} [error]:CG.#exp.#RuntimeError
-           |	{cases} [exp]:CG.#exp [cases]:CG.#stm.#altStm.case* [others]:CG.#stm
+           |	{forIndex} [var]:java_String [from]:IR.#exp [to]:IR.#exp [by]:IR.#exp [body]:IR.#stm
+           |	{forAll} [pattern]:IR.#pattern [exp]:IR.#exp [body]:IR.#stm
+           |	{while} [exp]:IR.#exp [body]:IR.#stm
+           |	{letBeSt} [header]:IR.#letBeSt.header [statement]:IR.#stm
+           |	{throw} [exp]:IR.#exp
+           |	{forLoop} [init]:IR.#decl.var [cond]:IR.#exp [inc]:IR.#exp [body]:IR.#stm
+           |	{increment} [var]:IR.#exp
+           |	{decrement} [var]:IR.#exp
+           |	{raiseError} [error]:IR.#exp.#RuntimeError
+           |	{cases} [exp]:IR.#exp [cases]:IR.#stm.#altStm.case* [others]:IR.#stm
            |	#altStm
            |	{error}
-           |  {exit} [exp]:CG.#exp
+           |  {exit} [exp]:IR.#exp
            |	{continue}
            |	{break}
-           |	{start} [exp]:CG.#exp [type]:CG.#type
-           |	{startlist} [exp]:CG.#exp [type]:CG.#type
-           |	{try} [stm]:CG.#stm [catchClauses]:CG.#decl.catchClause* [finally]:CG.#stm
-           |	{periodic} [opname]:java_String [args]:CG.#exp*
+           |	{start} [exp]:IR.#exp [type]:IR.#type
+           |	{startlist} [exp]:IR.#exp [type]:IR.#type
+           |	{try} [stm]:IR.#stm [catchClauses]:IR.#decl.catchClause* [finally]:IR.#stm
+           |	{periodic} [opname]:java_String [args]:IR.#exp*
          //|	Sporadic
            |	{stackDecl}
-           		[type]:CG.#type
+           		[type]:IR.#type
            		[name]:java_String
-           		[args]:CG.#exp*
-			|	{mapSeqUpdate} [col]:CG.#exp [index]:CG.#exp [value]:CG.#exp
-			|	{invCheck} [subject]:CG.#exp
-			|	{atomic} [statements]:CG.#stm*
-			| {cycles} [cycles]:CG.#exp [stm]:CG.#stm
-			| {duration} [duration]:CG.#exp [stm]:CG.#stm
+           		[args]:IR.#exp*
+			|	{mapSeqUpdate} [col]:IR.#exp [index]:IR.#exp [value]:IR.#exp
+			|	{invCheck} [subject]:IR.#exp
+			|	{atomic} [statements]:IR.#stm*
+			| {cycles} [cycles]:IR.#exp [stm]:IR.#stm
+			| {duration} [duration]:IR.#exp [stm]:IR.#stm
 			|	{meta}
-      | {seqCompAdd} [seq]:CG.#exp [element]:CG.#exp
-      | {setCompAdd} [set]:CG.#exp [element]:CG.#exp
-      | {mapCompAdd} [map]:CG.#exp [element]:CG.#exp
+      | {seqCompAdd} [seq]:IR.#exp [element]:IR.#exp
+      | {setCompAdd} [set]:IR.#exp [element]:IR.#exp
+      | {mapCompAdd} [map]:IR.#exp [element]:IR.#exp
       ;
 
 #call {-> package='org.overture.codegen.ir.statements'
-	| 	[type]:CG.#type
+	| 	[type]:IR.#type
 	|	[isStatic]:java_Boolean
 	|	[name]:java_String
-	|	[args]:CG.#exp*}
-    =  	{plain} [classType]:CG.#type
+	|	[args]:IR.#exp*}
+    =  	{plain} [classType]:IR.#type
     |	{super} 
     ;
 
            
 #altStm {-> package='org.overture.codegen.ir.statements'}
-    = {case} [pattern]:CG.#pattern [result]:CG.#stm [patternType]:CG.#type
+    = {case} [pattern]:IR.#pattern [result]:IR.#stm [patternType]:IR.#type
     ;
            
 #letBeSt {-> package='org.overture.codegen.ir.utils'}
-	= {header} [binding]:CG.#multipleBind [suchThat]:CG.#exp //The Overture AST uses a multiplebind 
+	= {header} [binding]:IR.#multipleBind [suchThat]:IR.#exp //The Overture AST uses a multiplebind 
 	;
 	
 #exp {-> package='org.overture.codegen.ir.expressions'
-	| [type]:CG.#type}
+	| [type]:IR.#type}
     =	#Unary
     |	#Binary
-    |	{field} [object]:CG.#exp [memberName]: java_String
-    |	{apply} [root]:CG.#exp [args]:CG.#exp*
-	|	{new} [name]:CG.#name.type [args]:CG.#exp*
+    |	{field} [object]:IR.#exp [memberName]: java_String
+    |	{apply} [root]:IR.#exp [args]:IR.#exp*
+	|	{new} [name]:IR.#name.type [args]:IR.#exp*
 	|	#Var
-	|	{instanceof} [checkedType]:CG.#type [exp]:CG.#exp
+	|	{instanceof} [checkedType]:IR.#type [exp]:IR.#exp
 	|	#Is
     |	#Literal
     |	{self}
     |	{null}
-    |	{letDef} [localDefs]:CG.#decl.var* [exp]:CG.#exp
-    |	{methodInstantiation} [func]:CG.#exp [actualTypes]:CG.#type*
-    |	{tuple} [args]:CG.#exp* [tupleType]:CG.#type.tuple
-    |	{fieldNumber} [field]:java_Long [tuple]:CG.#exp
-    |	{tupleSize} [tuple]:CG.#exp
-    |	{ternaryIf} [condition]:CG.#exp [trueValue]:CG.#exp [falseValue]:CG.#exp
-    |   {maplet}  [left]:CG.#exp [right]:CG.#exp
-    |	{letBeSt} [header]:CG.#letBeSt.header [value]:CG.#exp
+    |	{letDef} [localDefs]:IR.#decl.var* [exp]:IR.#exp
+    |	{methodInstantiation} [func]:IR.#exp [actualTypes]:IR.#type*
+    |	{tuple} [args]:IR.#exp* [tupleType]:IR.#type.tuple
+    |	{fieldNumber} [field]:java_Long [tuple]:IR.#exp
+    |	{tupleSize} [tuple]:IR.#exp
+    |	{ternaryIf} [condition]:IR.#exp [trueValue]:IR.#exp [falseValue]:IR.#exp
+    |   {maplet}  [left]:IR.#exp [right]:IR.#exp
+    |	{letBeSt} [header]:IR.#letBeSt.header [value]:IR.#exp
     |	#Seq
     |	#Set
     |	#Map
-    |	{mkBasic} [arg]:CG.#exp
-    |	{recordMod} [rec]:CG.#exp [recType]:CG.#type.record [modifiers]:CG.#modifier.record*
+    |	{mkBasic} [arg]:IR.#exp
+    |	{recordMod} [rec]:IR.#exp [recType]:IR.#type.record [modifiers]:IR.#modifier.record*
     |	#Quantifier
-    |	{preInc} [exp]:CG.#exp
-    |	{preDec} [exp]:CG.#exp
-    |	{postInc} [exp]:CG.#exp
-    |	{postDec} [exp]:CG.#exp
-    |	{deRef} [exp]:CG.#exp //For pointer dereference
+    |	{preInc} [exp]:IR.#exp
+    |	{preDec} [exp]:IR.#exp
+    |	{postInc} [exp]:IR.#exp
+    |	{postDec} [exp]:IR.#exp
+    |	{deRef} [exp]:IR.#exp //For pointer dereference
     |	#RuntimeError
         //When generating code using the abstract syntax of this tree structure "external" 
     	//is used for refering to expressions of the target environment (e.g. that of Java) 
     	//that are not directly mapped to by the code generator.
     |	{external} [targetLangExp]:java_String
-    |	{typeArg} [type]:CG.#type
-    |	{lambda} [params]:CG.#localParam.formalParam* [exp]:CG.#exp
-    |	{anonymousClass} [methods]:CG.#decl.method*
+    |	{typeArg} [type]:IR.#type
+    |	{lambda} [params]:IR.#localParam.formalParam* [exp]:IR.#exp
+    |	{anonymousClass} [methods]:IR.#decl.method*
     |	{notImplemented}
     |	{undefined}
     |	{threadId}
-    |	{tupleCompatibility} [tuple]:CG.#exp [types]:CG.#type*
-    |	{cases} [exp]:CG.#exp [cases]:CG.#exp.#altExp.case* [others]:CG.#exp
+    |	{tupleCompatibility} [tuple]:IR.#exp [types]:IR.#type*
+    |	{cases} [exp]:IR.#exp [cases]:IR.#exp.#altExp.case* [others]:IR.#exp
     |	#altExp
-    |	{subSeq} [seq]:CG.#exp [from]:CG.#exp [to]:CG.#exp
-    |	{history}[histype]:java_String [opsname]:java_String [sentinelType]:CG.#type.class
+    |	{subSeq} [seq]:IR.#exp [from]:IR.#exp [to]:IR.#exp
+    |	{history}[histype]:java_String [opsname]:java_String [sentinelType]:IR.#type.class
     |	{time}
-    |	{assignExp} [target]:CG.#exp [value]:CG.#exp
-    |	{mapSeqGet} [col]:CG.#exp [index]:CG.#exp
+    |	{assignExp} [target]:IR.#exp [value]:IR.#exp
+    |	{mapSeqGet} [col]:IR.#exp [index]:IR.#exp
     ;
 
 #modifier {-> package='org.overture.codegen.ir.expressions'}
-    = {record} [name]:java_String [value]:CG.#exp
+    = {record} [name]:java_String [value]:IR.#exp
     ;
 
 #Is {-> package='org.overture.codegen.ir.expressions'
-	| [exp]:CG.#exp}
+	| [exp]:IR.#exp}
     =	{bool}
     |	{nat}
     |	{nat1}
@@ -403,12 +403,12 @@ CG {-> package='org.overture.codegen.ir'
     |	{real}
     |	{char}
     |	{token}
-    |	{tuple} [checkedType]:CG.#type
-    |	{general} [checkedType]:CG.#type
+    |	{tuple} [checkedType]:IR.#type
+    |	{general} [checkedType]:IR.#type
     ;   
 
 #altExp {-> package='org.overture.codegen.ir.expressions'}
-    = {case} [pattern]:CG.#pattern [result]:CG.#exp [patternType]:CG.#type
+    = {case} [pattern]:IR.#pattern [result]:IR.#exp [patternType]:IR.#type
     ;
 
 #RuntimeError {-> package='org.overture.codegen.ir.expressions'}
@@ -425,7 +425,7 @@ CG {-> package='org.overture.codegen.ir'
 	|	[isLocal]:java_Boolean
 	|	[name]:java_String}
     =   {identifier}
-	|	{explicit} [classType]:CG.#type
+	|	{explicit} [classType]:IR.#type
 	|	{super}
     ;
     
@@ -439,16 +439,16 @@ CG {-> package='org.overture.codegen.ir'
 	;
 	
 #Quantifier {-> package='org.overture.codegen.ir.expressions'
-	| [bindList]:CG.#multipleBind*
-	| [predicate]:CG.#exp}
+	| [bindList]:IR.#multipleBind*
+	| [predicate]:IR.#exp}
 	= {forAll}
 	| {exists}
 	| {exists1}
 	;
     
 #Binary {-> package='org.overture.codegen.ir.expressions'
-	| [left]:CG.#exp
-	| [right]:CG.#exp}
+	| [left]:IR.#exp
+	| [right]:IR.#exp}
     =   #Numeric
     |	#Bool
     //Special tree construct NOT used when constructing the OO AST from 
@@ -497,7 +497,7 @@ CG {-> package='org.overture.codegen.ir'
 	;
  
 #Unary {-> package='org.overture.codegen.ir.expressions'
-	| [exp]:CG.#exp}
+	| [exp]:IR.#exp}
     =   {plus} 
     |   {minus}
     |	{cast}
@@ -525,44 +525,44 @@ CG {-> package='org.overture.codegen.ir'
     ;
     
 #Seq {-> package='org.overture.codegen.ir.expressions'}
-	= {enum} [members]:CG.#exp*
-	| {comp} [first]:CG.#exp [setBind]:CG.#bind.set [set]:CG.#exp [predicate]:CG.#exp
+	= {enum} [members]:IR.#exp*
+	| {comp} [first]:IR.#exp [setBind]:IR.#bind.set [set]:IR.#exp [predicate]:IR.#exp
 	;
 
 #Set {-> package='org.overture.codegen.ir.expressions'}
-	= {enum} [members]:CG.#exp*
-	| {comp} [first]:CG.#exp [bindings]:CG.#multipleBind* [predicate]:CG.#exp//In the Overture AST bindings are of type multipleBind* as it also allows type binds.
-	| {range} [first]:CG.#exp [last]:CG.#exp
+	= {enum} [members]:IR.#exp*
+	| {comp} [first]:IR.#exp [bindings]:IR.#multipleBind* [predicate]:IR.#exp//In the Overture AST bindings are of type multipleBind* as it also allows type binds.
+	| {range} [first]:IR.#exp [last]:IR.#exp
 	;
 
 #Map {-> package='org.overture.codegen.ir.expressions'}
-	= {enum} [members]:CG.#exp.maplet*
-	| {comp} [first]:CG.#exp.maplet [bindings]:CG.#multipleBind* [predicate]:CG.#exp
+	= {enum} [members]:IR.#exp.maplet*
+	| {comp} [first]:IR.#exp.maplet [bindings]:IR.#multipleBind* [predicate]:IR.#exp
 	;
 
 #type {-> package='org.overture.codegen.ir.types'
 	| [optional]:java_Boolean
-	| [namedInvType]:CG.#decl.namedType}
+	| [namedInvType]:IR.#decl.namedType}
     =   #basic
     |	{Object}
     |	{void}
-    |	{class} [types]:CG.#type* [name]:java_String
+    |	{class} [types]:IR.#type* [name]:java_String
     	//When generating code using the abstract syntax of this tree structure "external" 
     	//is used for refering to types of the target environment (e.g. that of Java) 
     	//that are not directly mapped to by the code generator.
     |	{external} [name]:java_String [info]:externalType.info
-    |	{record} [name]:CG.#name.type
+    |	{record} [name]:IR.#name.type
     |	{string}
     |	{template} [name]:java_String
-    |	{tuple} [types]:CG.#type*
-    |   {method} [params]:CG.#type* [result]:CG.#type [equivalent]:vdmType
+    |	{tuple} [types]:IR.#type*
+    |   {method} [params]:IR.#type* [result]:IR.#type [equivalent]:vdmType
     |	#map
     |	#set
     |	#seq
     |	#basicTypeWrappers
     |	{error}
-    |	{interface} [types]:CG.#type* [name]:java_String
-    |	{union} [types]:CG.#type*
+    |	{interface} [types]:IR.#type* [name]:java_String
+    |	{union} [types]:IR.#type*
     |	{quote} [value]:java_String
     |	{unknown}
     ;
@@ -583,22 +583,22 @@ externalType {-> package='org.overture.codegen.ir.utils'}
 
 #set {-> package='org.overture.codegen.ir.types'
 	| [empty]:java_Boolean
-	| [setOf]:CG.#type}
+	| [setOf]:IR.#type}
     =   {set} 
     ;
     
 #seq {-> package='org.overture.codegen.ir.types'
 	| [empty]:java_Boolean
 	| [seq1]:java_Boolean
-	| [seqOf]:CG.#type}
+	| [seqOf]:IR.#type}
     =   {seq}
     ;
     
 #map {-> package='org.overture.codegen.ir.types'
 	| [empty]:java_Boolean
 	| [injective]:java_Boolean
-	| [from]:CG.#type
-	| [to]:CG.#type }
+	| [from]:IR.#type
+	| [to]:IR.#type }
     =   {map}
     ;
     
@@ -618,25 +618,25 @@ externalType {-> package='org.overture.codegen.ir.utils'}
     ;
 
 #term {-> package='org.overture.codegen.ir.traces'}
-    =   {traceDecl} [traceDecls]:CG.#traceDecl*
+    =   {traceDecl} [traceDecls]:IR.#traceDecl*
     ;
     
 #traceDecl {-> package='org.overture.codegen.ir.traces'}
     =   {instance} //Not there...
     |   {letBeStBinding}
-    	[bind]:CG.#multipleBind.set //[bind]:CG.#multipleBind (Only set binds are supported)
-    	[stExp]:CG.#exp
-    	[body]:CG.#traceDecl
+    	[bind]:IR.#multipleBind.set //[bind]:IR.#multipleBind (Only set binds are supported)
+    	[stExp]:IR.#exp
+    	[body]:IR.#traceDecl
     |   {letDefBinding}
-    	[localDefs]:CG.#decl.var*//[localDecls]:CG.#decl*
-    	[body]:CG.traceDecl
-    |   {repeat} [core]:CG.#traceCoreDecl [from]:java_Long [to]:java_Long
+    	[localDefs]:IR.#decl.var*//[localDecls]:IR.#decl*
+    	[body]:IR.traceDecl
+    |   {repeat} [core]:IR.#traceCoreDecl [from]:java_Long [to]:java_Long
     ;
     
 #traceCoreDecl {-> package='org.overture.codegen.ir.traces'}
-    =   {applyExp} [callStm]:CG.#stm
-    |   {bracketedExp} [terms]:CG.#term.traceDecl*
-    |   {concurrentExp} [decls]:CG.#traceDecl*
+    =   {applyExp} [callStm]:IR.#stm
+    |   {bracketedExp} [terms]:IR.#term.traceDecl*
+    |   {concurrentExp} [decls]:IR.#traceDecl*
     ;
      
 Aspect Declaration

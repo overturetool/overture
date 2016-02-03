@@ -6,34 +6,34 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.types.AObjectTypeCG;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.types.AObjectTypeIR;
 import org.overture.codegen.ir.IRInfo;
 
-public class CGVisitorRecursiveTypeHandler extends CGVisitor<STypeCG> {
+public class IRVisitorRecursiveTypeHandler extends IRVisitor<STypeIR> {
 
 	private Stack<PType> typeStack;
 
-	public CGVisitorRecursiveTypeHandler(
-			AbstractVisitorCG<IRInfo, STypeCG> visitor) {
+	public IRVisitorRecursiveTypeHandler(
+			AbstractVisitorIR<IRInfo, STypeIR> visitor) {
 		super(visitor);
 
 		this.typeStack = new Stack<PType>();
 	}
 
 	@Override
-	public STypeCG defaultINode(INode node, IRInfo question)
+	public STypeIR defaultINode(INode node, IRInfo question)
 			throws AnalysisException {
 
 		if (node instanceof PType) {
 			
 			if (contains((PType) node, question)) {
-				return new AObjectTypeCG();
+				return new AObjectTypeIR();
 			}
 
 			typeStack.push((PType) node);
 
-			STypeCG result = super.defaultINode(node, question);
+			STypeIR result = super.defaultINode(node, question);
 
 			typeStack.pop();
 

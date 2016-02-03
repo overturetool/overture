@@ -55,9 +55,9 @@ import org.overture.interpreter.values.TupleValue;
 import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.Value;
 
-public class ComparisonCG
+public class ComparisonIR
 {
-	public ComparisonCG(File testInputFile)
+	public ComparisonIR(File testInputFile)
 	{
 		if (testInputFile == null)
 		{

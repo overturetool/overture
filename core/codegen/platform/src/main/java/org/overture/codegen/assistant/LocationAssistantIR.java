@@ -30,14 +30,14 @@ import java.util.Set;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
-import org.overture.codegen.ir.PCG;
+import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.VdmNodeInfo;
 
-public class LocationAssistantCG extends AssistantBase
+public class LocationAssistantIR extends AssistantBase
 {
-	public LocationAssistantCG(AssistantManager assistantManager)
+	public LocationAssistantIR(AssistantManager assistantManager)
 	{
 		super(assistantManager);
 	}
@@ -93,12 +93,12 @@ public class LocationAssistantCG extends AssistantBase
 			return null;
 		}
 		
-		if(info.getNode() == null || !(info.getNode() instanceof PCG))
+		if(info.getNode() == null || !(info.getNode() instanceof PIR))
 		{
 			return null;
 		}
 		
-		SourceNode sourceNode = ((PCG) info.getNode()).getSourceNode();
+		SourceNode sourceNode = ((PIR) info.getNode()).getSourceNode();
 		
 		if(sourceNode == null)
 		{

@@ -26,44 +26,44 @@ import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
-import org.overture.codegen.ir.declarations.ABusClassDeclCG;
-import org.overture.codegen.ir.declarations.ACpuClassDeclCG;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.ASystemClassDeclCG;
-import org.overture.codegen.ir.declarations.SClassDeclCG;
+import org.overture.codegen.ir.declarations.ABusClassDeclIR;
+import org.overture.codegen.ir.declarations.ACpuClassDeclIR;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.ASystemClassDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
 import org.overture.codegen.ir.IRInfo;
 
-public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, SClassDeclCG>
+public class ClassVisitorIR extends AbstractVisitorIR<IRInfo, SClassDeclIR>
 {
-	public ClassVisitorCG()
+	public ClassVisitorIR()
 	{
 	}
 	
 	@Override
-	public ADefaultClassDeclCG caseAClassClassDefinition(AClassClassDefinition node,
+	public ADefaultClassDeclIR caseAClassClassDefinition(AClassClassDefinition node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getDeclAssistant().buildClass(node, question, new ADefaultClassDeclCG());
+		return question.getDeclAssistant().buildClass(node, question, new ADefaultClassDeclIR());
 	}
 	
 	@Override
-	public SClassDeclCG caseACpuClassDefinition(ACpuClassDefinition node, IRInfo question)
+	public SClassDeclIR caseACpuClassDefinition(ACpuClassDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getDeclAssistant().buildClass(node, question, new ACpuClassDeclCG());
+		return question.getDeclAssistant().buildClass(node, question, new ACpuClassDeclIR());
 	}
 	
 	@Override
-	public SClassDeclCG caseASystemClassDefinition(ASystemClassDefinition node, IRInfo question)
+	public SClassDeclIR caseASystemClassDefinition(ASystemClassDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getDeclAssistant().buildClass(node, question, new ASystemClassDeclCG());
+		return question.getDeclAssistant().buildClass(node, question, new ASystemClassDeclIR());
 	}
 	
 	@Override
-	public SClassDeclCG caseABusClassDefinition(ABusClassDefinition node, IRInfo question)
+	public SClassDeclIR caseABusClassDefinition(ABusClassDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getDeclAssistant().buildClass(node, question, new ABusClassDeclCG());
+		return question.getDeclAssistant().buildClass(node, question, new ABusClassDeclIR());
 	}
 }

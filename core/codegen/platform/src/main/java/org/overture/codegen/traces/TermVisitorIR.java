@@ -3,23 +3,23 @@ package org.overture.codegen.traces;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.definitions.traces.PTraceDefinition;
-import org.overture.codegen.ir.STermCG;
-import org.overture.codegen.ir.STraceDeclCG;
-import org.overture.codegen.ir.traces.ATraceDeclTermCG;
+import org.overture.codegen.ir.STermIR;
+import org.overture.codegen.ir.STraceDeclIR;
+import org.overture.codegen.ir.traces.ATraceDeclTermIR;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.visitor.AbstractVisitorCG;
+import org.overture.codegen.visitor.AbstractVisitorIR;
 
-public class TermVisitorCG extends AbstractVisitorCG<IRInfo, STermCG>
+public class TermVisitorIR extends AbstractVisitorIR<IRInfo, STermIR>
 {
 	@Override
-	public STermCG caseATraceDefinitionTerm(ATraceDefinitionTerm node,
+	public STermIR caseATraceDefinitionTerm(ATraceDefinitionTerm node,
 			IRInfo question) throws AnalysisException
 	{
-		ATraceDeclTermCG termCg = new ATraceDeclTermCG();
+		ATraceDeclTermIR termCg = new ATraceDeclTermIR();
 
 		for(PTraceDefinition traceDef : node.getList())
 		{
-			STraceDeclCG traceDefCg = traceDef.apply(question.getTraceDeclVisitor(), question);
+			STraceDeclIR traceDefCg = traceDef.apply(question.getTraceDeclVisitor(), question);
 			
 			if(traceDefCg != null)
 			{

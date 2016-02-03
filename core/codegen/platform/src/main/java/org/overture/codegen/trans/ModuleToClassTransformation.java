@@ -3,48 +3,48 @@ package org.overture.codegen.trans;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.ir.PCG;
-import org.overture.codegen.ir.SDeclCG;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SImportCG;
+import org.overture.codegen.ir.PIR;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SImportIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.AAllImportCG;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AFromModuleImportsCG;
-import org.overture.codegen.ir.declarations.AFuncDeclCG;
-import org.overture.codegen.ir.declarations.AFunctionValueImportCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.AModuleDeclCG;
-import org.overture.codegen.ir.declarations.AModuleImportsCG;
-import org.overture.codegen.ir.declarations.ANamedTraceDeclCG;
-import org.overture.codegen.ir.declarations.AOperationValueImportCG;
-import org.overture.codegen.ir.declarations.ARecordDeclCG;
-import org.overture.codegen.ir.declarations.AStateDeclCG;
-import org.overture.codegen.ir.declarations.ATypeDeclCG;
-import org.overture.codegen.ir.declarations.ATypeImportCG;
-import org.overture.codegen.ir.declarations.AValueValueImportCG;
-import org.overture.codegen.ir.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.ANewExpCG;
-import org.overture.codegen.ir.expressions.AUndefinedExpCG;
-import org.overture.codegen.ir.name.ATypeNameCG;
-import org.overture.codegen.ir.types.ARecordTypeCG;
+import org.overture.codegen.ir.declarations.AAllImportIR;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AFromModuleImportsIR;
+import org.overture.codegen.ir.declarations.AFuncDeclIR;
+import org.overture.codegen.ir.declarations.AFunctionValueImportIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
+import org.overture.codegen.ir.declarations.AModuleImportsIR;
+import org.overture.codegen.ir.declarations.ANamedTraceDeclIR;
+import org.overture.codegen.ir.declarations.AOperationValueImportIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.declarations.AStateDeclIR;
+import org.overture.codegen.ir.declarations.ATypeDeclIR;
+import org.overture.codegen.ir.declarations.ATypeImportIR;
+import org.overture.codegen.ir.declarations.AValueValueImportIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
+import org.overture.codegen.ir.expressions.AUndefinedExpIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		implements ITotalTransformation
 {
-	private ADefaultClassDeclCG clazz = null;
+	private ADefaultClassDeclIR clazz = null;
 	
 	private IRInfo info;
-	private TransAssistantCG transAssistant;
-	private List<AModuleDeclCG> allModules;
+	private TransAssistantIR transAssistant;
+	private List<AModuleDeclIR> allModules;
 
-	public ModuleToClassTransformation(IRInfo info, TransAssistantCG transAssistant, List<AModuleDeclCG> allModules)
+	public ModuleToClassTransformation(IRInfo info, TransAssistantIR transAssistant, List<AModuleDeclIR> allModules)
 	{
 		this.info = info;
 		this.transAssistant = transAssistant;
@@ -52,15 +52,15 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAModuleDeclCG(AModuleDeclCG node) throws AnalysisException
+	public void caseAModuleDeclIR(AModuleDeclIR node) throws AnalysisException
 	{
-		clazz = new ADefaultClassDeclCG();
+		clazz = new ADefaultClassDeclIR();
 		clazz.setSourceNode(node.getSourceNode());
 		clazz.setAccess(IRConstants.PUBLIC);
 		clazz.setName(node.getName());
 
 		// Prevent instantiation of the class
-		AMethodDeclCG privConstructor = info.getDeclAssistant().consDefaultContructor(node.getName());
+		AMethodDeclIR privConstructor = info.getDeclAssistant().consDefaultContructor(node.getName());
 		privConstructor.setAccess(IRConstants.PRIVATE);
 		clazz.getMethods().add(privConstructor);
 		
@@ -69,42 +69,42 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		
 		// Wrap declarations in a new list to avoid a concurrent modifications
 		// exception when moving the module declarations to the class
-		for (SDeclCG decl : new LinkedList<>(node.getDecls()))
+		for (SDeclIR decl : new LinkedList<>(node.getDecls()))
 		{
-			if (decl instanceof AMethodDeclCG)
+			if (decl instanceof AMethodDeclIR)
 			{
-				AMethodDeclCG method = (AMethodDeclCG) decl;
+				AMethodDeclIR method = (AMethodDeclIR) decl;
 				method.setAccess(IRConstants.PUBLIC);
 				method.setStatic(true);
 
 				clazz.getMethods().add(method);
 
-			} else if (decl instanceof AFuncDeclCG)
+			} else if (decl instanceof AFuncDeclIR)
 			{
 				// Functions are static by definition
-				AFuncDeclCG func = (AFuncDeclCG) decl;
+				AFuncDeclIR func = (AFuncDeclIR) decl;
 				func.setAccess(IRConstants.PUBLIC);
 
 				clazz.getFunctions().add(func);
 
-			} else if (decl instanceof ATypeDeclCG)
+			} else if (decl instanceof ATypeDeclIR)
 			{
-				ATypeDeclCG typeDecl = (ATypeDeclCG) decl;
+				ATypeDeclIR typeDecl = (ATypeDeclIR) decl;
 				typeDecl.setAccess(IRConstants.PUBLIC);
 
 				clazz.getTypeDecls().add(typeDecl);
 
-			} else if (decl instanceof AStateDeclCG)
+			} else if (decl instanceof AStateDeclIR)
 			{
 				// Handle this as the last thing since it may depend on value definitions
 				continue;
-			} else if (decl instanceof ANamedTraceDeclCG)
+			} else if (decl instanceof ANamedTraceDeclIR)
 			{
-				clazz.getTraces().add((ANamedTraceDeclCG) decl);
+				clazz.getTraces().add((ANamedTraceDeclIR) decl);
 
-			} else if (decl instanceof AFieldDeclCG)
+			} else if (decl instanceof AFieldDeclIR)
 			{
-				AFieldDeclCG field = (AFieldDeclCG) decl;
+				AFieldDeclIR field = (AFieldDeclIR) decl;
 				field.setAccess(IRConstants.PUBLIC);
 				field.setStatic(true);
 
@@ -117,11 +117,11 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			}
 		}
 		
-		AStateDeclCG stateDecl = getStateDecl(node);
+		AStateDeclIR stateDecl = getStateDecl(node);
 
 		if (stateDecl != null)
 		{
-			ARecordDeclCG record = new ARecordDeclCG();
+			ARecordDeclIR record = new ARecordDeclIR();
 			record.setSourceNode(stateDecl.getSourceNode());
 			record.setName(stateDecl.getName());
 
@@ -132,22 +132,22 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 				record.setInvariant(stateDecl.getInvDecl().clone());
 			}
 
-			for (AFieldDeclCG field : stateDecl.getFields())
+			for (AFieldDeclIR field : stateDecl.getFields())
 			{
 				record.getFields().add(field.clone());
 			}
 
-			ATypeDeclCG typeDecl = new ATypeDeclCG();
+			ATypeDeclIR typeDecl = new ATypeDeclIR();
 			typeDecl.setAccess(IRConstants.PUBLIC);
 			typeDecl.setDecl(record);
 
 			clazz.getTypeDecls().add(typeDecl);
 
-			ATypeNameCG typeName = new ATypeNameCG();
+			ATypeNameIR typeName = new ATypeNameIR();
 			typeName.setName(stateDecl.getName());
 			typeName.setDefiningClass(clazz.getName());
 
-			ARecordTypeCG stateType = new ARecordTypeCG();
+			ARecordTypeIR stateType = new ARecordTypeIR();
 			stateType.setName(typeName);
 
 			// The state field can't be final since you are allow to assign to it in
@@ -159,7 +159,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		info.addClass(clazz);
 	}
 
-	private void handleImports(final AModuleImportsCG moduleImports, final ADefaultClassDeclCG clazz) throws AnalysisException
+	private void handleImports(final AModuleImportsIR moduleImports, final ADefaultClassDeclIR clazz) throws AnalysisException
 	{
 		//name = moduleImports.getName();
 		
@@ -168,46 +168,46 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		for(AFromModuleImportsCG fromImports : moduleImports.getImports())
+		for(AFromModuleImportsIR fromImports : moduleImports.getImports())
 		{
 			//String fromName = fromImports.getName();
 			
-			for(List<SImportCG> sig : fromImports.getSignatures())
+			for(List<SImportIR> sig : fromImports.getSignatures())
 			{
-				for(SImportCG imp : sig)
+				for(SImportIR imp : sig)
 				{
 					// TODO Implement the import analysis cases
 					imp.apply(new DepthFirstAnalysisAdaptor()
 					{
 						@Override
-						public void caseAAllImportCG(AAllImportCG node)
+						public void caseAAllImportIR(AAllImportIR node)
 								throws AnalysisException
 						{
 						}
 						
 						@Override
-						public void caseATypeImportCG(ATypeImportCG node)
+						public void caseATypeImportIR(ATypeImportIR node)
 								throws AnalysisException
 						{
 						}
 						
 						@Override
-						public void caseAFunctionValueImportCG(
-								AFunctionValueImportCG node)
+						public void caseAFunctionValueImportIR(
+								AFunctionValueImportIR node)
 								throws AnalysisException
 						{
 						}
 						
 						@Override
-						public void caseAOperationValueImportCG(
-								AOperationValueImportCG node)
+						public void caseAOperationValueImportIR(
+								AOperationValueImportIR node)
 								throws AnalysisException
 						{
 						}
 						
 						@Override
-						public void caseAValueValueImportCG(
-								AValueValueImportCG node)
+						public void caseAValueValueImportIR(
+								AValueValueImportIR node)
 								throws AnalysisException
 						{
 							/*
@@ -215,11 +215,11 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 							
 							if (renamed != null)
 							{
-								//STypeCG impType = node.getImportType();
+								//STypeIR impType = node.getImportType();
 								String from = node.getFromModuleName();
 								String name = node.getName();
 
-								AFieldDeclCG impFieldCopy = getValue(name, from).clone();
+								AFieldDeclIR impFieldCopy = getValue(name, from).clone();
 								impFieldCopy.setAccess(IRConstants.PUBLIC);
 								impFieldCopy.setName(renamed);
 
@@ -235,10 +235,10 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private void makeStateAccessExplicit(final AModuleDeclCG module)
+	private void makeStateAccessExplicit(final AModuleDeclIR module)
 			throws AnalysisException
 	{
-		final AStateDeclCG stateDecl = getStateDecl(module);
+		final AStateDeclIR stateDecl = getStateDecl(module);
 
 		if (stateDecl == null)
 		{
@@ -249,35 +249,35 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		module.apply(new SlStateAccessTrans(stateDecl, info, transAssistant));
 	}
 
-	public AStateDeclCG getStateDecl(AModuleDeclCG module)
+	public AStateDeclIR getStateDecl(AModuleDeclIR module)
 	{
-		for (SDeclCG decl : module.getDecls())
+		for (SDeclIR decl : module.getDecls())
 		{
-			if (decl instanceof AStateDeclCG)
+			if (decl instanceof AStateDeclIR)
 			{
-				return (AStateDeclCG) decl;
+				return (AStateDeclIR) decl;
 			}
 		}
 
 		return null;
 	}
 
-	private SExpCG getInitExp(AStateDeclCG stateDecl)
+	private SExpIR getInitExp(AStateDeclIR stateDecl)
 	{
-		if (stateDecl.getInitExp() instanceof AEqualsBinaryExpCG)
+		if (stateDecl.getInitExp() instanceof AEqualsBinaryExpIR)
 		{
-			AEqualsBinaryExpCG eqExp = (AEqualsBinaryExpCG) stateDecl.getInitExp();
+			AEqualsBinaryExpIR eqExp = (AEqualsBinaryExpIR) stateDecl.getInitExp();
 
 			return eqExp.getRight().clone();
 		} else
 		{
-			ANewExpCG defaultRecInit = new ANewExpCG();
+			ANewExpIR defaultRecInit = new ANewExpIR();
 			defaultRecInit.setName(transAssistant.getTypeName(stateDecl));
 			defaultRecInit.setType(transAssistant.getRecType(stateDecl));
 
 			for (int i = 0; i < stateDecl.getFields().size(); i++)
 			{
-				defaultRecInit.getArgs().add(new AUndefinedExpCG());
+				defaultRecInit.getArgs().add(new AUndefinedExpIR());
 			}
 
 			return defaultRecInit;
@@ -285,17 +285,17 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 	}
 	
 	@SuppressWarnings("unused")
-	private AFieldDeclCG getValue(String fieldName, String moduleName)
+	private AFieldDeclIR getValue(String fieldName, String moduleName)
 	{
-		for (AModuleDeclCG module : allModules)
+		for (AModuleDeclIR module : allModules)
 		{
 			if (module.getName().equals(moduleName))
 			{
-				for (SDeclCG decl : module.getDecls())
+				for (SDeclIR decl : module.getDecls())
 				{
-					if (decl instanceof AFieldDeclCG)
+					if (decl instanceof AFieldDeclIR)
 					{
-						AFieldDeclCG fieldDecl = (AFieldDeclCG) decl;
+						AFieldDeclIR fieldDecl = (AFieldDeclIR) decl;
 						if (fieldDecl.getName().equals(fieldName))
 						{
 							return fieldDecl;
@@ -313,7 +313,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public PCG getResult()
+	public PIR getResult()
 	{
 		return clazz;
 	}

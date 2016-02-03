@@ -8,18 +8,18 @@ import org.overture.ast.statements.ACallStm;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.declarations.ACatchClauseDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.expressions.SVarExpCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
-import org.overture.codegen.ir.statements.AMetaStmCG;
-import org.overture.codegen.ir.statements.APlainCallStmCG;
-import org.overture.codegen.ir.statements.AReturnStmCG;
-import org.overture.codegen.ir.statements.ATryStmCG;
-import org.overture.codegen.ir.types.AExternalTypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.ACatchClauseDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.AMetaStmIR;
+import org.overture.codegen.ir.statements.APlainCallStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
+import org.overture.codegen.ir.statements.ATryStmIR;
+import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.traces.StoreAssistant;
@@ -39,13 +39,13 @@ public class JmlTraceStmBuilder extends TraceStmBuilder
 		this.tcExpInfo = tcExpInfo;
 	}
 	
-	private AMetaStmCG consTypeCheckExp(SVarExpCG arg, STypeCG formalParamType, String traceEnclosingClass,
+	private AMetaStmIR consTypeCheckExp(SVarExpIR arg, STypeIR formalParamType, String traceEnclosingClass,
 			StoreAssistant storeAssistant)
 	{
 		/**
 		 * Don't do anything with 'tc' yet. Later it will be replaced with a proper dynamic type check
 		 */
-		AMetaStmCG tc = new AMetaStmCG();
+		AMetaStmIR tc = new AMetaStmIR();
 
 		tcExpInfo.add(new TcExpInfo(arg.getName(), formalParamType, tc, traceEnclosingClass));
 
@@ -53,18 +53,18 @@ public class JmlTraceStmBuilder extends TraceStmBuilder
 	}
 	
 	@Override
-	public AMethodDeclCG consTypeCheckMethod(SStmCG stm)
+	public AMethodDeclIR consTypeCheckMethod(SStmIR stm)
 	{
 		/**
-		 * We don't need to consider the 'ACallObjectExpStmCG' since it only appears in the IR if we code generate a PP
+		 * We don't need to consider the 'ACallObjectExpStmIR' since it only appears in the IR if we code generate a PP
 		 * or RT model
 		 */
-		if(!(stm instanceof APlainCallStmCG))
+		if(!(stm instanceof APlainCallStmIR))
 		{
 			return null;
 		}
 		
-		APlainCallStmCG call = (APlainCallStmCG) stm;
+		APlainCallStmIR call = (APlainCallStmIR) stm;
 		
 		if(call.getArgs().isEmpty())
 		{
@@ -72,7 +72,7 @@ public class JmlTraceStmBuilder extends TraceStmBuilder
 			return null;
 		}
 		
-		List<STypeCG> argTypes = null;
+		List<STypeIR> argTypes = null;
 		SourceNode source = call.getSourceNode();
 		if (source != null)
 		{
@@ -125,12 +125,12 @@ public class JmlTraceStmBuilder extends TraceStmBuilder
 			return null;
 		}
 		
-		ABlockStmCG methodBody = new ABlockStmCG();
+		ABlockStmIR methodBody = new ABlockStmIR();
 		
-		ATryStmCG tryStm = new ATryStmCG();
+		ATryStmIR tryStm = new ATryStmIR();
 		methodBody.getStatements().add(tryStm);
 		
-		ABlockStmCG tryBody = new ABlockStmCG();
+		ABlockStmIR tryBody = new ABlockStmIR();
 		tryStm.setStm(tryBody);
 		tryStm.getCatchClauses().add(consTcFailHandling());
 		
@@ -144,11 +144,11 @@ public class JmlTraceStmBuilder extends TraceStmBuilder
 		
 		for(int i = 0; i < call.getArgs().size(); i++)
 		{
-			SExpCG a = call.getArgs().get(i);
+			SExpIR a = call.getArgs().get(i);
 			
-			if(a instanceof SVarExpCG)
+			if(a instanceof SVarExpIR)
 			{
-				AMetaStmCG tc = consTypeCheckExp((SVarExpCG) a, argTypes.get(i), traceEnclosingClass, storeAssistant);
+				AMetaStmIR tc = consTypeCheckExp((SVarExpIR) a, argTypes.get(i), traceEnclosingClass, storeAssistant);
 				tryBody.getStatements().add(tc);
 			}
 			else
@@ -158,26 +158,26 @@ public class JmlTraceStmBuilder extends TraceStmBuilder
 		}
 		
 		// If we make it to end of the method it means that the arguments type checked successfully
-		AReturnStmCG retTrue = new AReturnStmCG();
+		AReturnStmIR retTrue = new AReturnStmIR();
 		retTrue.setExp(traceTrans.getTransAssist().getInfo().getExpAssistant().consBoolLiteral(true));
 		methodBody.getStatements().add(retTrue);
 		
-		AMethodDeclCG typeCheckMethod = initPredDecl(traceTrans.getTracePrefixes().callStmIsTypeCorrectNamePrefix());
+		AMethodDeclIR typeCheckMethod = initPredDecl(traceTrans.getTracePrefixes().callStmIsTypeCorrectNamePrefix());
 		typeCheckMethod.setBody(methodBody);
 		
 		return typeCheckMethod;
 	}
 
-	private ACatchClauseDeclCG consTcFailHandling()
+	private ACatchClauseDeclIR consTcFailHandling()
 	{
-		AExternalTypeCG externalType = new AExternalTypeCG();
+		AExternalTypeIR externalType = new AExternalTypeIR();
 		externalType.setName(ASSERTION_ERROR_TYPE);
 
-		ACatchClauseDeclCG catchClause = new ACatchClauseDeclCG();
+		ACatchClauseDeclIR catchClause = new ACatchClauseDeclIR();
 		catchClause.setType(externalType);
 		catchClause.setName(ASSERTION_ERROR_PARAM);
 		
-		AReturnStmCG retFalse = new AReturnStmCG();
+		AReturnStmIR retFalse = new AReturnStmIR();
 		retFalse.setExp(traceTrans.getTransAssist().getInfo().getExpAssistant().consBoolLiteral(false));
 		catchClause.setStm(retFalse);
 		

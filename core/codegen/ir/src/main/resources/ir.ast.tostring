@@ -4,90 +4,90 @@ To String Extensions
 import org.overture.ast.util.Utils;
 import org.overture.ast.util.ToStringUtil;
 
-%CG->#decl->method = [name]
-%CG->#decl->class = [name]
+%IR->#decl->method = [name]
+%IR->#decl->class = [name]
 
 
 //start
 
 // patterns
-%CG->#pattern->identifier = [name]
-%CG->#pattern->ignore = "-" 
-%CG->#pattern->bool = [value]
-%CG->#pattern->char = [value]
-%CG->#pattern->int = [value]
-%CG->#pattern->null = "null"
-%CG->#pattern->quote =  [value]
-%CG->#pattern->real =  [value]
-%CG->#pattern->string =  [value]
-%CG->#pattern->tuple = "mk_(" + $Utils.listToString($[patterns]$)$ + ")"
-%CG->#pattern->record = [typename] "_(" + $Utils.listToString($[patterns]$)$ + ")"
+%IR->#pattern->identifier = [name]
+%IR->#pattern->ignore = "-" 
+%IR->#pattern->bool = [value]
+%IR->#pattern->char = [value]
+%IR->#pattern->int = [value]
+%IR->#pattern->null = "null"
+%IR->#pattern->quote =  [value]
+%IR->#pattern->real =  [value]
+%IR->#pattern->string =  [value]
+%IR->#pattern->tuple = "mk_(" + $Utils.listToString($[patterns]$)$ + ")"
+%IR->#pattern->record = [typename] "_(" + $Utils.listToString($[patterns]$)$ + ")"
 
 // binds
-%CG->#bind->set = ""+ [pattern] + " in set " [set];
+%IR->#bind->set = ""+ [pattern] + " in set " [set];
 
 
 // multiple binds
-%CG->multipleBind->set = ""+ $Utils.listToString($[patterns]$)$ + " in set " [set];
+%IR->multipleBind->set = ""+ $Utils.listToString($[patterns]$)$ + " in set " [set];
 
 
 // names
-%CG->name->type = [name]
-%CG->name->token = [name] 
+%IR->name->type = [name]
+%IR->name->token = [name] 
 
 //end
 
 // Object designator
-%CG->#objectDesignator->identifier = [exp];
-%CG->#objectDesignator->apply = [object] "(" + $Utils.listToString($[args]$)$ + ")"
-%CG->#objectDesignator->field = [object]+"."+[fieldName]
-%CG->#objectDesignator->new = "new "+[exp]
-%CG->#objectDesignator->self = "self"
+%IR->#objectDesignator->identifier = [exp];
+%IR->#objectDesignator->apply = [object] "(" + $Utils.listToString($[args]$)$ + ")"
+%IR->#objectDesignator->field = [object]+"."+[fieldName]
+%IR->#objectDesignator->new = "new "+[exp]
+%IR->#objectDesignator->self = "self"
 
 // State designators
-%CG->#stateDesignator->identifier = [name]
-%CG->#stateDesignator->field = [object] "." [field]
-%CG->#stateDesignator->mapSeq = [mapseq] "(" + [exp] + ")"
+%IR->#stateDesignator->identifier = [name]
+%IR->#stateDesignator->field = [object] "." [field]
+%IR->#stateDesignator->mapSeq = [mapseq] "(" + [exp] + ")"
 
 // Types
 //#basic
-%CG->#type->#basic->char = "char"
-%CG->#type->#basic->bool = "bool"
-%CG->#type->#basic->token = "token"
+%IR->#type->#basic->char = "char"
+%IR->#type->#basic->bool = "bool"
+%IR->#type->#basic->token = "token"
 // #basic->numeric
-%CG->#type->#basic->#numeric->int = "int"
-%CG->#type->#basic->#numeric->nat1 = "nat1"
-%CG->#type->#basic->#numeric->nat = "nat"
-%CG->#type->#basic->#numeric->rat = "rat"
-%CG->#type->#basic->#numeric->real = "real" 
+%IR->#type->#basic->#numeric->int = "int"
+%IR->#type->#basic->#numeric->nat1 = "nat1"
+%IR->#type->#basic->#numeric->nat = "nat"
+%IR->#type->#basic->#numeric->rat = "rat"
+%IR->#type->#basic->#numeric->real = "real" 
 
-%CG->#type->Object = "Object"
-%CG->#type->void = "void"
-%CG->#type->class = [name]
-%CG->#type->external = [name]
-%CG->#type->record = [name]
-%CG->#type->string = "String"
-%CG->#type->template = [name]
-%CG->#type->tuple = "" + $Utils.listToString("(",$ [types] $, " * ", ")")$
-%CG->#type->method = "(" + $($[params]$.isEmpty() ? "()" : Utils.listToString($[params]$, " * ")) + " ==> "$ + [result] + ")"
+%IR->#type->Object = "Object"
+%IR->#type->void = "void"
+%IR->#type->class = [name]
+%IR->#type->external = [name]
+%IR->#type->record = [name]
+%IR->#type->string = "String"
+%IR->#type->template = [name]
+%IR->#type->tuple = "" + $Utils.listToString("(",$ [types] $, " * ", ")")$
+%IR->#type->method = "(" + $($[params]$.isEmpty() ? "()" : Utils.listToString($[params]$, " * ")) + " ==> "$ + [result] + ")"
 //    |	#map
 //    |	#set
 //    |	#seq
 //    |	#basicTypeWrappers
-%CG->#type->error = "Error"
-%CG->#type->interface = [name]
-%CG->#type->union = "" +$Utils.listToString("(",$ [types] $, " | ", ")")$
-%CG->#type->quote = "<" + [value] + ">"
-%CG->#type->unknown = "Unknown"
+%IR->#type->error = "Error"
+%IR->#type->interface = [name]
+%IR->#type->union = "" +$Utils.listToString("(",$ [types] $, " | ", ")")$
+%IR->#type->quote = "<" + [value] + ">"
+%IR->#type->unknown = "Unknown"
     ;
 
 // Vars
-%CG->#exp->#Var->identifier = [name]
-%CG->#exp->#Var->explicit = [name]
-%CG->#exp->#Var->super = [name]
+%IR->#exp->#Var->identifier = [name]
+%IR->#exp->#Var->explicit = [name]
+%IR->#exp->#Var->super = [name]
 
 
-%CG->#exp->apply = [root] "(" + $Utils.listToString($[args]$)$ + ")"
-%CG->#exp->field = [object] + "." + [memberName]
-%CG->#exp->new = [name] "(" + $Utils.listToString($[args]$)$ + ")"
-%CG->#exp->self = "self"
+%IR->#exp->apply = [root] "(" + $Utils.listToString($[args]$)$ + ")"
+%IR->#exp->field = [object] + "." + [memberName]
+%IR->#exp->new = [name] "(" + $Utils.listToString($[args]$)$ + ")"
+%IR->#exp->self = "self"

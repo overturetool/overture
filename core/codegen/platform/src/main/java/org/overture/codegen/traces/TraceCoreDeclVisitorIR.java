@@ -7,53 +7,53 @@ import org.overture.ast.definitions.traces.AConcurrentExpressionTraceCoreDefinit
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.statements.PStm;
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.STermCG;
-import org.overture.codegen.ir.STraceCoreDeclCG;
-import org.overture.codegen.ir.STraceDeclCG;
-import org.overture.codegen.ir.traces.AApplyExpTraceCoreDeclCG;
-import org.overture.codegen.ir.traces.ABracketedExpTraceCoreDeclCG;
-import org.overture.codegen.ir.traces.AConcurrentExpTraceCoreDeclCG;
-import org.overture.codegen.ir.traces.ATraceDeclTermCG;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STermIR;
+import org.overture.codegen.ir.STraceCoreDeclIR;
+import org.overture.codegen.ir.STraceDeclIR;
+import org.overture.codegen.ir.traces.AApplyExpTraceCoreDeclIR;
+import org.overture.codegen.ir.traces.ABracketedExpTraceCoreDeclIR;
+import org.overture.codegen.ir.traces.AConcurrentExpTraceCoreDeclIR;
+import org.overture.codegen.ir.traces.ATraceDeclTermIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.visitor.AbstractVisitorCG;
+import org.overture.codegen.visitor.AbstractVisitorIR;
 
-public class TraceCoreDeclVisitorCG extends AbstractVisitorCG<IRInfo, STraceCoreDeclCG>
+public class TraceCoreDeclVisitorIR extends AbstractVisitorIR<IRInfo, STraceCoreDeclIR>
 {
 	@Override
-	public STraceCoreDeclCG caseAApplyExpressionTraceCoreDefinition(
+	public STraceCoreDeclIR caseAApplyExpressionTraceCoreDefinition(
 			AApplyExpressionTraceCoreDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		PStm callStm = node.getCallStatement();
-		SStmCG callStmCg = callStm.apply(question.getStmVisitor(), question);
+		SStmIR callStmCg = callStm.apply(question.getStmVisitor(), question);
 		
-		AApplyExpTraceCoreDeclCG applyTraceCoreDecl = new AApplyExpTraceCoreDeclCG();
+		AApplyExpTraceCoreDeclIR applyTraceCoreDecl = new AApplyExpTraceCoreDeclIR();
 		applyTraceCoreDecl.setCallStm(callStmCg);
 		
 		return applyTraceCoreDecl;
 	}
 	
 	@Override
-	public STraceCoreDeclCG caseABracketedExpressionTraceCoreDefinition(
+	public STraceCoreDeclIR caseABracketedExpressionTraceCoreDefinition(
 			ABracketedExpressionTraceCoreDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		ABracketedExpTraceCoreDeclCG bracketTraceCoreDecl = new ABracketedExpTraceCoreDeclCG();
+		ABracketedExpTraceCoreDeclIR bracketTraceCoreDecl = new ABracketedExpTraceCoreDeclIR();
 		
 		for(ATraceDefinitionTerm term : node.getTerms())
 		{
-			STermCG termCg = term.apply(question.getTermVisitor(), question);
+			STermIR termCg = term.apply(question.getTermVisitor(), question);
 			
-			if(termCg instanceof ATraceDeclTermCG)
+			if(termCg instanceof ATraceDeclTermIR)
 			{
-				bracketTraceCoreDecl.getTerms().add((ATraceDeclTermCG) termCg);
+				bracketTraceCoreDecl.getTerms().add((ATraceDeclTermIR) termCg);
 			}
 			else
 			{
 				Logger.getLog().printErrorln("Expected term to be of"
-						+ " type ATraceDeclTermCG. Got: " + termCg);
+						+ " type ATraceDeclTermIR. Got: " + termCg);
 			}
 		}
 		
@@ -61,15 +61,15 @@ public class TraceCoreDeclVisitorCG extends AbstractVisitorCG<IRInfo, STraceCore
 	}
 	
 	@Override
-	public STraceCoreDeclCG caseAConcurrentExpressionTraceCoreDefinition(
+	public STraceCoreDeclIR caseAConcurrentExpressionTraceCoreDefinition(
 			AConcurrentExpressionTraceCoreDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		AConcurrentExpTraceCoreDeclCG concTraceCoreDecl = new AConcurrentExpTraceCoreDeclCG();
+		AConcurrentExpTraceCoreDeclIR concTraceCoreDecl = new AConcurrentExpTraceCoreDeclIR();
 
 		for(PTraceDefinition def : node.getDefs())
 		{
-			STraceDeclCG traceDefCg = def.apply(question.getTraceDeclVisitor(), question);
+			STraceDeclIR traceDefCg = def.apply(question.getTraceDeclVisitor(), question);
 			concTraceCoreDecl.getDecls().add(traceDefCg);
 		}
 		

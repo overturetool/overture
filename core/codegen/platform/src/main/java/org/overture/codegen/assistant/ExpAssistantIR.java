@@ -51,77 +51,77 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapTypeBase;
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SMultipleBindCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.ABoolIsExpCG;
-import org.overture.codegen.ir.expressions.ABoolLiteralExpCG;
-import org.overture.codegen.ir.expressions.ACaseAltExpExpCG;
-import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
-import org.overture.codegen.ir.expressions.ACharIsExpCG;
-import org.overture.codegen.ir.expressions.ACharLiteralExpCG;
-import org.overture.codegen.ir.expressions.AEnumSeqExpCG;
-import org.overture.codegen.ir.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.AExplicitVarExpCG;
-import org.overture.codegen.ir.expressions.AFieldExpCG;
-import org.overture.codegen.ir.expressions.AGeneralIsExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.expressions.AIntIsExpCG;
-import org.overture.codegen.ir.expressions.AIntLiteralExpCG;
-import org.overture.codegen.ir.expressions.AIsolationUnaryExpCG;
-import org.overture.codegen.ir.expressions.AMapSeqGetExpCG;
-import org.overture.codegen.ir.expressions.ANat1IsExpCG;
-import org.overture.codegen.ir.expressions.ANatIsExpCG;
-import org.overture.codegen.ir.expressions.ANotUnaryExpCG;
-import org.overture.codegen.ir.expressions.ANullExpCG;
-import org.overture.codegen.ir.expressions.AQuoteLiteralExpCG;
-import org.overture.codegen.ir.expressions.ARatIsExpCG;
-import org.overture.codegen.ir.expressions.ARealIsExpCG;
-import org.overture.codegen.ir.expressions.ARealLiteralExpCG;
-import org.overture.codegen.ir.expressions.AStringLiteralExpCG;
-import org.overture.codegen.ir.expressions.ATokenIsExpCG;
-import org.overture.codegen.ir.expressions.ATupleIsExpCG;
-import org.overture.codegen.ir.expressions.AUndefinedExpCG;
-import org.overture.codegen.ir.expressions.SBinaryExpCG;
-import org.overture.codegen.ir.expressions.SIsExpCG;
-import org.overture.codegen.ir.expressions.SQuantifierExpCG;
-import org.overture.codegen.ir.expressions.SUnaryExpCG;
-import org.overture.codegen.ir.expressions.SVarExpCG;
-import org.overture.codegen.ir.statements.AForLoopStmCG;
-import org.overture.codegen.ir.statements.AIdentifierStateDesignatorCG;
-import org.overture.codegen.ir.statements.AWhileStmCG;
-import org.overture.codegen.ir.types.ABoolBasicTypeCG;
-import org.overture.codegen.ir.types.ACharBasicTypeCG;
-import org.overture.codegen.ir.types.AClassTypeCG;
-import org.overture.codegen.ir.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.ir.types.AMapMapTypeCG;
-import org.overture.codegen.ir.types.ANat1NumericBasicTypeCG;
-import org.overture.codegen.ir.types.ANatNumericBasicTypeCG;
-import org.overture.codegen.ir.types.AQuoteTypeCG;
-import org.overture.codegen.ir.types.ARatNumericBasicTypeCG;
-import org.overture.codegen.ir.types.ARealNumericBasicTypeCG;
-import org.overture.codegen.ir.types.ARecordTypeCG;
-import org.overture.codegen.ir.types.ASeqSeqTypeCG;
-import org.overture.codegen.ir.types.AStringTypeCG;
-import org.overture.codegen.ir.types.ATokenBasicTypeCG;
-import org.overture.codegen.ir.types.ATupleTypeCG;
-import org.overture.codegen.ir.types.AUnionTypeCG;
-import org.overture.codegen.ir.types.AUnknownTypeCG;
-import org.overture.codegen.ir.types.SBasicTypeCG;
-import org.overture.codegen.ir.utils.AHeaderLetBeStCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SMultipleBindIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.ABoolIsExpIR;
+import org.overture.codegen.ir.expressions.ABoolLiteralExpIR;
+import org.overture.codegen.ir.expressions.ACaseAltExpExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.ACharIsExpIR;
+import org.overture.codegen.ir.expressions.ACharLiteralExpIR;
+import org.overture.codegen.ir.expressions.AEnumSeqExpIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AGeneralIsExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AIntIsExpIR;
+import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
+import org.overture.codegen.ir.expressions.AIsolationUnaryExpIR;
+import org.overture.codegen.ir.expressions.AMapSeqGetExpIR;
+import org.overture.codegen.ir.expressions.ANat1IsExpIR;
+import org.overture.codegen.ir.expressions.ANatIsExpIR;
+import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
+import org.overture.codegen.ir.expressions.ANullExpIR;
+import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
+import org.overture.codegen.ir.expressions.ARatIsExpIR;
+import org.overture.codegen.ir.expressions.ARealIsExpIR;
+import org.overture.codegen.ir.expressions.ARealLiteralExpIR;
+import org.overture.codegen.ir.expressions.AStringLiteralExpIR;
+import org.overture.codegen.ir.expressions.ATokenIsExpIR;
+import org.overture.codegen.ir.expressions.ATupleIsExpIR;
+import org.overture.codegen.ir.expressions.AUndefinedExpIR;
+import org.overture.codegen.ir.expressions.SBinaryExpIR;
+import org.overture.codegen.ir.expressions.SIsExpIR;
+import org.overture.codegen.ir.expressions.SQuantifierExpIR;
+import org.overture.codegen.ir.expressions.SUnaryExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.statements.AForLoopStmIR;
+import org.overture.codegen.ir.statements.AIdentifierStateDesignatorIR;
+import org.overture.codegen.ir.statements.AWhileStmIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AMapMapTypeIR;
+import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AQuoteTypeIR;
+import org.overture.codegen.ir.types.ARatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.ASeqSeqTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
+import org.overture.codegen.ir.types.ATokenBasicTypeIR;
+import org.overture.codegen.ir.types.ATupleTypeIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
+import org.overture.codegen.ir.types.SBasicTypeIR;
+import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
 import org.overture.codegen.ir.IRInfo;
 
-public class ExpAssistantCG extends AssistantBase
+public class ExpAssistantIR extends AssistantBase
 {
-	public ExpAssistantCG(AssistantManager assistantManager)
+	public ExpAssistantIR(AssistantManager assistantManager)
 	{
 		super(assistantManager);
 	}
 	
-	public AIdentifierVarExpCG consIdVar(String name, STypeCG type)
+	public AIdentifierVarExpIR consIdVar(String name, STypeIR type)
 	{
-		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR var = new AIdentifierVarExpIR();
 		var.setIsLambda(false);
 		var.setIsLocal(true);
 		var.setType(type);
@@ -130,28 +130,28 @@ public class ExpAssistantCG extends AssistantBase
 		return var;
 	}
 
-	public SExpCG isolateExpression(SExpCG exp)
+	public SExpIR isolateExpression(SExpIR exp)
 	{
-		AIsolationUnaryExpCG isolationExp = new AIsolationUnaryExpCG();
+		AIsolationUnaryExpIR isolationExp = new AIsolationUnaryExpIR();
 		isolationExp.setExp(exp);
 		isolationExp.setType(exp.getType().clone());
 		return isolationExp;
 	}
 
-	public ANotUnaryExpCG negate(SExpCG exp)
+	public ANotUnaryExpIR negate(SExpIR exp)
 	{
-		ANotUnaryExpCG negated = new ANotUnaryExpCG();
+		ANotUnaryExpIR negated = new ANotUnaryExpIR();
 		negated.setType(exp.getType().clone());
 		negated.setExp(exp);
 
 		return negated;
 	}
 
-	public SExpCG handleUnaryExp(SUnaryExp vdmExp, SUnaryExpCG codeGenExp,
+	public SExpIR handleUnaryExp(SUnaryExp vdmExp, SUnaryExpIR codeGenExp,
 			IRInfo question) throws AnalysisException
 	{
-		SExpCG expCg = vdmExp.getExp().apply(question.getExpVisitor(), question);
-		STypeCG typeCg = vdmExp.getType().apply(question.getTypeVisitor(), question);
+		SExpIR expCg = vdmExp.getExp().apply(question.getExpVisitor(), question);
+		STypeIR typeCg = vdmExp.getType().apply(question.getTypeVisitor(), question);
 
 		codeGenExp.setType(typeCg);
 		codeGenExp.setExp(expCg);
@@ -159,19 +159,19 @@ public class ExpAssistantCG extends AssistantBase
 		return codeGenExp;
 	}
 
-	public SExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp,
+	public SExpIR handleBinaryExp(SBinaryExp vdmExp, SBinaryExpIR codeGenExp,
 			IRInfo question) throws AnalysisException
 	{
 		PType type = vdmExp.getType();
 
-		STypeCG typeCg = type != null ? type.apply(question.getTypeVisitor(), question) : null;
+		STypeIR typeCg = type != null ? type.apply(question.getTypeVisitor(), question) : null;
 		codeGenExp.setType(typeCg);
 
 		PExp vdmExpLeft = vdmExp.getLeft();
 		PExp vdmExpRight = vdmExp.getRight();
 
-		SExpCG leftExpCg = vdmExpLeft.apply(question.getExpVisitor(), question);
-		SExpCG rightExpCg = vdmExpRight.apply(question.getExpVisitor(), question);
+		SExpIR leftExpCg = vdmExpLeft.apply(question.getExpVisitor(), question);
+		SExpIR rightExpCg = vdmExpRight.apply(question.getExpVisitor(), question);
 
 		codeGenExp.setLeft(leftExpCg);
 		codeGenExp.setRight(rightExpCg);
@@ -191,76 +191,76 @@ public class ExpAssistantCG extends AssistantBase
 				&& !(exp instanceof ARealLiteralExp);
 	}
 	
-	public boolean isIntegerType(SExpCG exp)
+	public boolean isIntegerType(SExpIR exp)
 	{
-		STypeCG type = exp.getType();
+		STypeIR type = exp.getType();
 
 		// Expressions like 1.0 are considered real literal expressions
 		// of type NatOneNumericBasicType
 
-		return (type instanceof ANat1NumericBasicTypeCG
-				|| type instanceof ANatNumericBasicTypeCG || type instanceof AIntNumericBasicTypeCG)
-				&& !(exp instanceof ARealLiteralExpCG);
+		return (type instanceof ANat1NumericBasicTypeIR
+				|| type instanceof ANatNumericBasicTypeIR || type instanceof AIntNumericBasicTypeIR)
+				&& !(exp instanceof ARealLiteralExpIR);
 	}
 
-	public ABoolLiteralExpCG consBoolLiteral(boolean val)
+	public ABoolLiteralExpIR consBoolLiteral(boolean val)
 	{
-		ABoolLiteralExpCG boolLiteral = new ABoolLiteralExpCG();
-		boolLiteral.setType(new ABoolBasicTypeCG());
+		ABoolLiteralExpIR boolLiteral = new ABoolLiteralExpIR();
+		boolLiteral.setType(new ABoolBasicTypeIR());
 		boolLiteral.setValue(val);
 
 		return boolLiteral;
 	}
 
-	public AIntLiteralExpCG consIntLiteral(long value)
+	public AIntLiteralExpIR consIntLiteral(long value)
 	{
-		AIntLiteralExpCG intLiteral = new AIntLiteralExpCG();
-		intLiteral.setType(new AIntNumericBasicTypeCG());
+		AIntLiteralExpIR intLiteral = new AIntLiteralExpIR();
+		intLiteral.setType(new AIntNumericBasicTypeIR());
 		intLiteral.setValue(value);
 
 		return intLiteral;
 	}
 
-	public ARealLiteralExpCG consRealLiteral(double value)
+	public ARealLiteralExpIR consRealLiteral(double value)
 	{
-		ARealLiteralExpCG realLiteral = new ARealLiteralExpCG();
-		realLiteral.setType(new ARealNumericBasicTypeCG());
+		ARealLiteralExpIR realLiteral = new ARealLiteralExpIR();
+		realLiteral.setType(new ARealNumericBasicTypeIR());
 		realLiteral.setValue(value);
 
 		return realLiteral;
 	}
 
-	public ACharLiteralExpCG consCharLiteral(char value)
+	public ACharLiteralExpIR consCharLiteral(char value)
 	{
-		ACharLiteralExpCG charLiteral = new ACharLiteralExpCG();
-		charLiteral.setType(new ACharBasicTypeCG());
+		ACharLiteralExpIR charLiteral = new ACharLiteralExpIR();
+		charLiteral.setType(new ACharBasicTypeIR());
 		charLiteral.setValue(value);
 
 		return charLiteral;
 	}
 
-	public AStringLiteralExpCG consStringLiteral(String value, boolean isNull)
+	public AStringLiteralExpIR consStringLiteral(String value, boolean isNull)
 	{
-		AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
+		AStringLiteralExpIR stringLiteral = new AStringLiteralExpIR();
 
-		stringLiteral.setType(new AStringTypeCG());
+		stringLiteral.setType(new AStringTypeIR());
 		stringLiteral.setIsNull(isNull);
 		stringLiteral.setValue(value);
 
 		return stringLiteral;
 	}
 
-	public SExpCG consCharSequence(STypeCG seqType, String value)
+	public SExpIR consCharSequence(STypeIR seqType, String value)
 	{
-		AEnumSeqExpCG enumSeq = new AEnumSeqExpCG();
+		AEnumSeqExpIR enumSeq = new AEnumSeqExpIR();
 
 		enumSeq.setType(seqType);
 
 		for (int i = 0; i < value.length(); i++)
 		{
 			char currentChar = value.charAt(i);
-			ACharLiteralExpCG charLit = new ACharLiteralExpCG();
-			charLit.setType(new ACharBasicTypeCG());
+			ACharLiteralExpIR charLit = new ACharLiteralExpIR();
+			charLit.setType(new ACharBasicTypeIR());
 			charLit.setValue(currentChar);
 
 			enumSeq.getMembers().add(charLit);
@@ -269,10 +269,10 @@ public class ExpAssistantCG extends AssistantBase
 		return enumSeq;
 	}
 
-	public AQuoteLiteralExpCG consQuoteLiteral(String value)
+	public AQuoteLiteralExpIR consQuoteLiteral(String value)
 	{
-		AQuoteLiteralExpCG quoteLiteral = new AQuoteLiteralExpCG();
-		AQuoteTypeCG type = new AQuoteTypeCG();
+		AQuoteLiteralExpIR quoteLiteral = new AQuoteLiteralExpIR();
+		AQuoteTypeIR type = new AQuoteTypeIR();
 		type.setValue(value);
 		quoteLiteral.setType(type);
 		quoteLiteral.setValue(value);
@@ -280,37 +280,37 @@ public class ExpAssistantCG extends AssistantBase
 		return quoteLiteral;
 	}
 
-	public AIntLiteralExpCG getDefaultIntValue()
+	public AIntLiteralExpIR getDefaultIntValue()
 	{
 		return consIntLiteral(0L);
 	}
 	
-	public AIntLiteralExpCG getDefaultNat1Value()
+	public AIntLiteralExpIR getDefaultNat1Value()
 	{
 		return consIntLiteral(1L);
 	}
 
-	public AIntLiteralExpCG getDefaultNatValue()
+	public AIntLiteralExpIR getDefaultNatValue()
 	{
 		return consIntLiteral(0L);
 	}
 	
-	public ARealLiteralExpCG getDefaultRealValue()
+	public ARealLiteralExpIR getDefaultRealValue()
 	{
 		return consRealLiteral(0.0);
 	}
 
-	public ABoolLiteralExpCG getDefaultBoolValue()
+	public ABoolLiteralExpIR getDefaultBoolValue()
 	{
 		return consBoolLiteral(false);
 	}
 
-	public ACharLiteralExpCG getDefaultCharlValue()
+	public ACharLiteralExpIR getDefaultCharlValue()
 	{
 		return consCharLiteral('0');
 	}
 
-	public AStringLiteralExpCG getDefaultStringlValue()
+	public AStringLiteralExpIR getDefaultStringlValue()
 	{
 		return consStringLiteral("", true);
 	}
@@ -354,10 +354,10 @@ public class ExpAssistantCG extends AssistantBase
 		return false;
 	}
 
-	public AHeaderLetBeStCG consHeader(SMultipleBindCG binding,
-			SExpCG suchThat)
+	public AHeaderLetBeStIR consHeader(SMultipleBindIR binding,
+			SExpIR suchThat)
 	{
-		AHeaderLetBeStCG header = new AHeaderLetBeStCG();
+		AHeaderLetBeStIR header = new AHeaderLetBeStIR();
 
 		header.setBinding(binding);
 		header.setSuchThat(suchThat);
@@ -402,14 +402,14 @@ public class ExpAssistantCG extends AssistantBase
 				&& node.getAncestor(AClassInvariantDefinition.class) == null;
 	}
 
-	public SExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings,
-			PExp predicate, SQuantifierExpCG quantifier, IRInfo question,
+	public SExpIR handleQuantifier(PExp node, List<PMultipleBind> bindings,
+			PExp predicate, SQuantifierExpIR quantifier, IRInfo question,
 			String nodeStr) throws AnalysisException
 	{
-		LinkedList<SMultipleBindCG> bindingsCg = new LinkedList<SMultipleBindCG>();
+		LinkedList<SMultipleBindIR> bindingsCg = new LinkedList<SMultipleBindIR>();
 		for (PMultipleBind multipleBind : bindings)
 		{
-			SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
+			SMultipleBindIR multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
 			
 			if(multipleBindCg != null)
 			{
@@ -419,8 +419,8 @@ public class ExpAssistantCG extends AssistantBase
 
 		PType type = node.getType();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR predicateCg = predicate.apply(question.getExpVisitor(), question);
 
 		quantifier.setType(typeCg);
 		quantifier.setBindList(bindingsCg);
@@ -430,13 +430,13 @@ public class ExpAssistantCG extends AssistantBase
 	}
 
 	public void handleAlternativesCasesExp(IRInfo question, PExp exp,
-			List<ACaseAlternative> cases, List<ACaseAltExpExpCG> casesCg)
+			List<ACaseAlternative> cases, List<ACaseAltExpExpIR> casesCg)
 			throws AnalysisException
 	{
 		for (ACaseAlternative alt : cases)
 		{
-			SExpCG altCg = alt.apply(question.getExpVisitor(), question);
-			casesCg.add((ACaseAltExpExpCG) altCg);
+			SExpIR altCg = alt.apply(question.getExpVisitor(), question);
+			casesCg.add((ACaseAltExpExpIR) altCg);
 		}
 
 		PType expType = question.getTypeAssistant().resolve(exp.getType());
@@ -449,76 +449,76 @@ public class ExpAssistantCG extends AssistantBase
 			for (int i = 0; i < cases.size(); i++)
 			{
 				ACaseAlternative vdmCase = cases.get(i);
-				ACaseAltExpExpCG cgCase = casesCg.get(i);
+				ACaseAltExpExpIR cgCase = casesCg.get(i);
 
 				PType patternType = question.getAssistantManager().getTypeAssistant().getType(question, unionType, vdmCase.getPattern());
-				STypeCG patternTypeCg = patternType.apply(question.getTypeVisitor(), question);
+				STypeIR patternTypeCg = patternType.apply(question.getTypeVisitor(), question);
 				cgCase.setPatternType(patternTypeCg);
 			}
 		} else
 		{
-			STypeCG expTypeCg = expType.apply(question.getTypeVisitor(), question);
+			STypeIR expTypeCg = expType.apply(question.getTypeVisitor(), question);
 
-			for (ACaseAltExpExpCG altCg : casesCg)
+			for (ACaseAltExpExpIR altCg : casesCg)
 			{
 				altCg.setPatternType(expTypeCg.clone());
 			}
 		}
 	}
 	
-	public boolean isLoopCondition(SExpCG exp)
+	public boolean isLoopCondition(SExpIR exp)
 	{
 		INode node = exp.parent();
 		
-		while(node instanceof SExpCG)
+		while(node instanceof SExpIR)
 		{
 			node = node.parent();
 		}
 		
-		return node instanceof AWhileStmCG || node instanceof AForLoopStmCG; 
-		//The ForLoopStmCG is only used in the transformation process. It corresponds 
+		return node instanceof AWhileStmIR || node instanceof AForLoopStmIR; 
+		//The ForLoopStmIR is only used in the transformation process. It corresponds 
 		//to the standard for loop in Java, e.g. for(int i = 0; i < 10; i++){...}
 	}
 	
-	public SExpCG consIsExp(SExpCG exp, STypeCG checkedType)
+	public SExpIR consIsExp(SExpIR exp, STypeIR checkedType)
 	{
 		exp = exp.clone();
 		checkedType = checkedType.clone();
 		
-		if (checkedType instanceof AUnionTypeCG)
+		if (checkedType instanceof AUnionTypeIR)
 		{
 			return consGeneralIsExp(exp, checkedType);
-		} else if (checkedType instanceof SBasicTypeCG)
+		} else if (checkedType instanceof SBasicTypeIR)
 		{
 			return consIsExpBasicType(exp, checkedType);
-		} else if (checkedType instanceof AQuoteTypeCG)
+		} else if (checkedType instanceof AQuoteTypeIR)
 		{
-			return consIsExpQuoteType(exp, (AQuoteTypeCG) checkedType);
-		} else if (checkedType instanceof ATupleTypeCG)
+			return consIsExpQuoteType(exp, (AQuoteTypeIR) checkedType);
+		} else if (checkedType instanceof ATupleTypeIR)
 		{
 			return consTupleIsExp(exp, checkedType);
-		} else if (checkedType instanceof ARecordTypeCG
-				|| checkedType instanceof AClassTypeCG
-				|| checkedType instanceof AStringTypeCG)
+		} else if (checkedType instanceof ARecordTypeIR
+				|| checkedType instanceof AClassTypeIR
+				|| checkedType instanceof AStringTypeIR)
 		{
 			return consGeneralIsExp(exp, checkedType);
 		}
 		else
 		{
-			if(checkedType instanceof ASeqSeqTypeCG)
+			if(checkedType instanceof ASeqSeqTypeIR)
 			{
-				ASeqSeqTypeCG seqType = (ASeqSeqTypeCG) checkedType;
+				ASeqSeqTypeIR seqType = (ASeqSeqTypeIR) checkedType;
 				
-				if(seqType.getSeqOf() instanceof AUnknownTypeCG)
+				if(seqType.getSeqOf() instanceof AUnknownTypeIR)
 				{
 					return consGeneralIsExp(exp, checkedType);
 				}
 			}
-			else if(checkedType instanceof AMapMapTypeCG)
+			else if(checkedType instanceof AMapMapTypeIR)
 			{
-				AMapMapTypeCG mapType = (AMapMapTypeCG) checkedType;
+				AMapMapTypeIR mapType = (AMapMapTypeIR) checkedType;
 				
-				if(mapType.getFrom() instanceof AUnknownTypeCG && mapType.getTo() instanceof AUnknownTypeCG)
+				if(mapType.getFrom() instanceof AUnknownTypeIR && mapType.getTo() instanceof AUnknownTypeIR)
 				{
 					return consGeneralIsExp(exp, checkedType);
 				}
@@ -528,89 +528,89 @@ public class ExpAssistantCG extends AssistantBase
 		}
 	}
 
-	public SExpCG consIsExpQuoteType(SExpCG exp, AQuoteTypeCG quoteType)
+	public SExpIR consIsExpQuoteType(SExpIR exp, AQuoteTypeIR quoteType)
 	{
-		AQuoteLiteralExpCG lit = new AQuoteLiteralExpCG();
+		AQuoteLiteralExpIR lit = new AQuoteLiteralExpIR();
 		lit.setType(quoteType);
 		lit.setValue(quoteType.getValue());
 
-		AEqualsBinaryExpCG equals = new AEqualsBinaryExpCG();
-		equals.setType(new ABoolBasicTypeCG());
+		AEqualsBinaryExpIR equals = new AEqualsBinaryExpIR();
+		equals.setType(new ABoolBasicTypeIR());
 		equals.setLeft(exp);
 		equals.setRight(lit);
 
 		return equals;
 	}
 	
-	public SExpCG consGeneralIsExp(SExpCG expCg, STypeCG checkedTypeCg)
+	public SExpIR consGeneralIsExp(SExpIR expCg, STypeIR checkedTypeCg)
 	{
-		AGeneralIsExpCG generalIsExp = new AGeneralIsExpCG();
-		generalIsExp = new AGeneralIsExpCG();
-		generalIsExp.setType(new ABoolBasicTypeCG());
+		AGeneralIsExpIR generalIsExp = new AGeneralIsExpIR();
+		generalIsExp = new AGeneralIsExpIR();
+		generalIsExp.setType(new ABoolBasicTypeIR());
 		generalIsExp.setExp(expCg);
 		generalIsExp.setCheckedType(checkedTypeCg);
 
 		return generalIsExp;
 	}
 	
-	public ATupleIsExpCG consTupleIsExp(SExpCG exp, STypeCG checkedType)
+	public ATupleIsExpIR consTupleIsExp(SExpIR exp, STypeIR checkedType)
 	{
-		ATupleIsExpCG tupleIsExp = new ATupleIsExpCG();
-		tupleIsExp.setType(new ABoolBasicTypeCG());
+		ATupleIsExpIR tupleIsExp = new ATupleIsExpIR();
+		tupleIsExp.setType(new ABoolBasicTypeIR());
 		tupleIsExp.setExp(exp);
 		tupleIsExp.setCheckedType(checkedType);
 		
 		return tupleIsExp;
 	}
 	
-	public SExpCG consIsExpBasicType(SExpCG expCg, STypeCG checkedType)
+	public SExpIR consIsExpBasicType(SExpIR expCg, STypeIR checkedType)
 	{
-		SIsExpCG basicIsExp = null;
+		SIsExpIR basicIsExp = null;
 
-		if (checkedType instanceof ABoolBasicTypeCG)
+		if (checkedType instanceof ABoolBasicTypeIR)
 		{
-			basicIsExp = new ABoolIsExpCG();
-		} else if (checkedType instanceof ANatNumericBasicTypeCG)
+			basicIsExp = new ABoolIsExpIR();
+		} else if (checkedType instanceof ANatNumericBasicTypeIR)
 		{
-			basicIsExp = new ANatIsExpCG();
-		} else if (checkedType instanceof ANat1NumericBasicTypeCG)
+			basicIsExp = new ANatIsExpIR();
+		} else if (checkedType instanceof ANat1NumericBasicTypeIR)
 		{
-			basicIsExp = new ANat1IsExpCG();
-		} else if (checkedType instanceof AIntNumericBasicTypeCG)
+			basicIsExp = new ANat1IsExpIR();
+		} else if (checkedType instanceof AIntNumericBasicTypeIR)
 		{
-			basicIsExp = new AIntIsExpCG();
-		} else if (checkedType instanceof ARatNumericBasicTypeCG)
+			basicIsExp = new AIntIsExpIR();
+		} else if (checkedType instanceof ARatNumericBasicTypeIR)
 		{
-			basicIsExp = new ARatIsExpCG();
-		} else if (checkedType instanceof ARealNumericBasicTypeCG)
+			basicIsExp = new ARatIsExpIR();
+		} else if (checkedType instanceof ARealNumericBasicTypeIR)
 		{
-			basicIsExp = new ARealIsExpCG();
-		} else if (checkedType instanceof ACharBasicTypeCG)
+			basicIsExp = new ARealIsExpIR();
+		} else if (checkedType instanceof ACharBasicTypeIR)
 		{
-			basicIsExp = new ACharIsExpCG();
-		} else if (checkedType instanceof ATokenBasicTypeCG)
+			basicIsExp = new ACharIsExpIR();
+		} else if (checkedType instanceof ATokenBasicTypeIR)
 		{
-			basicIsExp = new ATokenIsExpCG();
+			basicIsExp = new ATokenIsExpIR();
 		}
 		else
 		{
 			return null;
 		}
 
-		basicIsExp.setType(new ABoolBasicTypeCG());
+		basicIsExp.setType(new ABoolBasicTypeIR());
 		basicIsExp.setExp(expCg);
 
 		return basicIsExp;
 	}
 	
-	public SVarExpCG idStateDesignatorToExp(AIdentifierStateDesignatorCG node)
+	public SVarExpIR idStateDesignatorToExp(AIdentifierStateDesignatorIR node)
 	{
 		if(node.getExplicit())
 		{
-			AClassTypeCG classType = new AClassTypeCG();
+			AClassTypeIR classType = new AClassTypeIR();
 			classType.setName(node.getClassName());
 			
-			AExplicitVarExpCG explicitVar = new AExplicitVarExpCG();
+			AExplicitVarExpIR explicitVar = new AExplicitVarExpIR();
 			explicitVar.setClassType(classType);
 			explicitVar.setIsLambda(false);
 			explicitVar.setIsLocal(node.getIsLocal());
@@ -623,7 +623,7 @@ public class ExpAssistantCG extends AssistantBase
 		}
 		else
 		{
-			AIdentifierVarExpCG idVar = consIdVar(node.getName(), node.getType().clone());
+			AIdentifierVarExpIR idVar = consIdVar(node.getName(), node.getType().clone());
 			idVar.setTag(node.getTag());
 			idVar.setSourceNode(node.getSourceNode());
 			idVar.setIsLocal(node.getIsLocal());
@@ -654,52 +654,52 @@ public class ExpAssistantCG extends AssistantBase
 		return name != null && name.equals("RESULT");
 	}
 	
-	public SExpCG findSubject(SExpCG next)
+	public SExpIR findSubject(SExpIR next)
 	{
-		while (next instanceof AFieldExpCG || next instanceof AMapSeqGetExpCG
-				|| next instanceof AApplyExpCG)
+		while (next instanceof AFieldExpIR || next instanceof AMapSeqGetExpIR
+				|| next instanceof AApplyExpIR)
 		{
-			if (next instanceof AFieldExpCG)
+			if (next instanceof AFieldExpIR)
 			{
-				next = ((AFieldExpCG) next).getObject();
-			} else if (next instanceof AMapSeqGetExpCG)
+				next = ((AFieldExpIR) next).getObject();
+			} else if (next instanceof AMapSeqGetExpIR)
 			{
-				next = ((AMapSeqGetExpCG) next).getCol();
-			} else if (next instanceof AApplyExpCG)
+				next = ((AMapSeqGetExpIR) next).getCol();
+			} else if (next instanceof AApplyExpIR)
 			{
-				next = ((AApplyExpCG) next).getRoot();
+				next = ((AApplyExpIR) next).getRoot();
 			}
 		}
 
 		return next;
 	}
 	
-	public AUndefinedExpCG consUndefinedExp()
+	public AUndefinedExpIR consUndefinedExp()
 	{
-		AUndefinedExpCG undefExp = new AUndefinedExpCG();
-		undefExp.setType(new AUnknownTypeCG());
+		AUndefinedExpIR undefExp = new AUndefinedExpIR();
+		undefExp.setType(new AUnknownTypeIR());
 		
 		return undefExp;
 	}
 	
-	public ANullExpCG consNullExp()
+	public ANullExpIR consNullExp()
 	{
-		ANullExpCG nullExp = new ANullExpCG();
-		nullExp.setType(new AUnknownTypeCG());
+		ANullExpIR nullExp = new ANullExpIR();
+		nullExp.setType(new AUnknownTypeIR());
 
 		return nullExp;
 	}
 	
-	public STypeCG handleMapType(SMapTypeBase node, IRInfo question, boolean isInjective) throws AnalysisException
+	public STypeIR handleMapType(SMapTypeBase node, IRInfo question, boolean isInjective) throws AnalysisException
 	{
 		PType from = node.getFrom();
 		PType to = node.getTo();
 		boolean empty = node.getEmpty();
 
-		STypeCG fromCg = from.apply(question.getTypeVisitor(), question);
-		STypeCG toCg = to.apply(question.getTypeVisitor(), question);
+		STypeIR fromCg = from.apply(question.getTypeVisitor(), question);
+		STypeIR toCg = to.apply(question.getTypeVisitor(), question);
 
-		AMapMapTypeCG mapType = new AMapMapTypeCG();
+		AMapMapTypeIR mapType = new AMapMapTypeIR();
 		mapType.setFrom(fromCg);
 		mapType.setTo(toCg);
 		mapType.setEmpty(empty);
@@ -709,13 +709,13 @@ public class ExpAssistantCG extends AssistantBase
 		return mapType;
 	}
 	
-	public boolean isUndefined(SExpCG exp)
+	public boolean isUndefined(SExpIR exp)
 	{
-		if(exp instanceof ACastUnaryExpCG)
+		if(exp instanceof ACastUnaryExpIR)
 		{
-			return isUndefined(((ACastUnaryExpCG) exp).getExp());
+			return isUndefined(((ACastUnaryExpIR) exp).getExp());
 		}
-		else if(exp instanceof AUndefinedExpCG)
+		else if(exp instanceof AUndefinedExpIR)
 		{
 			return true;
 		}

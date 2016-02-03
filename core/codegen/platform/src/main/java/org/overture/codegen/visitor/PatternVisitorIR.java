@@ -35,92 +35,92 @@ import org.overture.ast.patterns.AStringPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
-import org.overture.codegen.ir.SPatternCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.patterns.ABoolPatternCG;
-import org.overture.codegen.ir.patterns.ACharPatternCG;
-import org.overture.codegen.ir.patterns.AIdentifierPatternCG;
-import org.overture.codegen.ir.patterns.AIgnorePatternCG;
-import org.overture.codegen.ir.patterns.AIntPatternCG;
-import org.overture.codegen.ir.patterns.ANullPatternCG;
-import org.overture.codegen.ir.patterns.AQuotePatternCG;
-import org.overture.codegen.ir.patterns.ARealPatternCG;
-import org.overture.codegen.ir.patterns.ARecordPatternCG;
-import org.overture.codegen.ir.patterns.AStringPatternCG;
-import org.overture.codegen.ir.patterns.ATuplePatternCG;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.patterns.ABoolPatternIR;
+import org.overture.codegen.ir.patterns.ACharPatternIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.patterns.AIgnorePatternIR;
+import org.overture.codegen.ir.patterns.AIntPatternIR;
+import org.overture.codegen.ir.patterns.ANullPatternIR;
+import org.overture.codegen.ir.patterns.AQuotePatternIR;
+import org.overture.codegen.ir.patterns.ARealPatternIR;
+import org.overture.codegen.ir.patterns.ARecordPatternIR;
+import org.overture.codegen.ir.patterns.AStringPatternIR;
+import org.overture.codegen.ir.patterns.ATuplePatternIR;
 import org.overture.codegen.ir.IRInfo;
 
-public class PatternVisitorCG extends AbstractVisitorCG<IRInfo, SPatternCG>
+public class PatternVisitorIR extends AbstractVisitorIR<IRInfo, SPatternIR>
 {
 	@Override
-	public SPatternCG caseAIdentifierPattern(AIdentifierPattern node,
+	public SPatternIR caseAIdentifierPattern(AIdentifierPattern node,
 			IRInfo question) throws AnalysisException
 	{
 		String name = node.getName().getName();
 
-		AIdentifierPatternCG idCg = new AIdentifierPatternCG();
+		AIdentifierPatternIR idCg = new AIdentifierPatternIR();
 		idCg.setName(name);
 
 		return idCg;
 	}
 
 	@Override
-	public SPatternCG caseAIgnorePattern(AIgnorePattern node, IRInfo question)
+	public SPatternIR caseAIgnorePattern(AIgnorePattern node, IRInfo question)
 			throws AnalysisException
 	{
-		return new AIgnorePatternCG();
+		return new AIgnorePatternIR();
 	}
 
 	@Override
-	public SPatternCG caseABooleanPattern(ABooleanPattern node, IRInfo question)
+	public SPatternIR caseABooleanPattern(ABooleanPattern node, IRInfo question)
 			throws AnalysisException
 	{
 		boolean value = node.getValue().getValue();
 
-		ABoolPatternCG boolPatternCg = new ABoolPatternCG();
+		ABoolPatternIR boolPatternCg = new ABoolPatternIR();
 		boolPatternCg.setValue(value);
 
 		return boolPatternCg;
 	}
 
 	@Override
-	public SPatternCG caseACharacterPattern(ACharacterPattern node,
+	public SPatternIR caseACharacterPattern(ACharacterPattern node,
 			IRInfo question) throws AnalysisException
 	{
 		char value = node.getValue().getValue();
 
-		ACharPatternCG charPatternCg = new ACharPatternCG();
+		ACharPatternIR charPatternCg = new ACharPatternIR();
 		charPatternCg.setValue(value);
 
 		return charPatternCg;
 	}
 
 	@Override
-	public SPatternCG caseAIntegerPattern(AIntegerPattern node, IRInfo question)
+	public SPatternIR caseAIntegerPattern(AIntegerPattern node, IRInfo question)
 			throws AnalysisException
 	{
 		long value = node.getValue().getValue();
 
-		AIntPatternCG intPatternCg = new AIntPatternCG();
+		AIntPatternIR intPatternCg = new AIntPatternIR();
 		intPatternCg.setValue(value);
 
 		return intPatternCg;
 	}
 
 	@Override
-	public SPatternCG caseANilPattern(ANilPattern node, IRInfo question)
+	public SPatternIR caseANilPattern(ANilPattern node, IRInfo question)
 			throws AnalysisException
 	{
-		return new ANullPatternCG();
+		return new ANullPatternIR();
 	}
 
 	@Override
-	public SPatternCG caseAQuotePattern(AQuotePattern node, IRInfo question)
+	public SPatternIR caseAQuotePattern(AQuotePattern node, IRInfo question)
 			throws AnalysisException
 	{
 		String value = node.getValue().getValue();
 		
-		AQuotePatternCG quotePatternCg = new AQuotePatternCG();
+		AQuotePatternIR quotePatternCg = new AQuotePatternIR();
 		quotePatternCg.setValue(value);
 
 		question.registerQuoteValue(value);
@@ -128,38 +128,38 @@ public class PatternVisitorCG extends AbstractVisitorCG<IRInfo, SPatternCG>
 	}
 
 	@Override
-	public SPatternCG caseARealPattern(ARealPattern node, IRInfo question)
+	public SPatternIR caseARealPattern(ARealPattern node, IRInfo question)
 			throws AnalysisException
 	{
 		double value = node.getValue().getValue();
 
-		ARealPatternCG realPatternCg = new ARealPatternCG();
+		ARealPatternIR realPatternCg = new ARealPatternIR();
 		realPatternCg.setValue(value);
 
 		return realPatternCg;
 	}
 
 	@Override
-	public SPatternCG caseAStringPattern(AStringPattern node, IRInfo question)
+	public SPatternIR caseAStringPattern(AStringPattern node, IRInfo question)
 			throws AnalysisException
 	{
 		String value = node.getValue().getValue();
 
-		AStringPatternCG stringPatternCg = new AStringPatternCG();
+		AStringPatternIR stringPatternCg = new AStringPatternIR();
 		stringPatternCg.setValue(value);
 
 		return stringPatternCg;
 	}
 
 	@Override
-	public SPatternCG caseATuplePattern(ATuplePattern node, IRInfo question)
+	public SPatternIR caseATuplePattern(ATuplePattern node, IRInfo question)
 			throws AnalysisException
 	{
-		ATuplePatternCG tuplePatternCg = new ATuplePatternCG();
+		ATuplePatternIR tuplePatternCg = new ATuplePatternIR();
 
 		for (PPattern currentPattern : node.getPlist())
 		{
-			SPatternCG patternCg = currentPattern.apply(question.getPatternVisitor(), question);
+			SPatternIR patternCg = currentPattern.apply(question.getPatternVisitor(), question);
 			
 			if(patternCg != null)
 			{
@@ -175,21 +175,21 @@ public class PatternVisitorCG extends AbstractVisitorCG<IRInfo, SPatternCG>
 	}
 
 	@Override
-	public SPatternCG caseARecordPattern(ARecordPattern node, IRInfo question)
+	public SPatternIR caseARecordPattern(ARecordPattern node, IRInfo question)
 			throws AnalysisException
 	{
 		String typeName = node.getTypename().getName();
 		PType type = node.getType();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 
-		ARecordPatternCG recordPatternCg = new ARecordPatternCG();
+		ARecordPatternIR recordPatternCg = new ARecordPatternIR();
 		recordPatternCg.setTypename(typeName);
 		recordPatternCg.setType(typeCg);
 
 		for (PPattern currentPattern : node.getPlist())
 		{
-			SPatternCG patternCg = currentPattern.apply(question.getPatternVisitor(), question);
+			SPatternIR patternCg = currentPattern.apply(question.getPatternVisitor(), question);
 			
 			if(patternCg != null)
 			{

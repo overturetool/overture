@@ -51,7 +51,7 @@ import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
-import org.overture.codegen.assistant.LocationAssistantCG;
+import org.overture.codegen.assistant.LocationAssistantIR;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
@@ -501,7 +501,7 @@ public class GeneralCodeGenUtils
 	public static void printUnsupportedIrNodes(Set<VdmNodeInfo> unsupportedNodes)
 	{
 		AssistantManager assistantManager = new AssistantManager();
-		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+		LocationAssistantIR locationAssistant = assistantManager.getLocationAssistant();
 
 		List<VdmNodeInfo> nodesSorted = locationAssistant.getVdmNodeInfoLocationSorted(unsupportedNodes);
 
@@ -530,7 +530,7 @@ public class GeneralCodeGenUtils
 	public static void printUnsupportedNodes(Set<IrNodeInfo> unsupportedNodes)
 	{
 		AssistantManager assistantManager = new AssistantManager();
-		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+		LocationAssistantIR locationAssistant = assistantManager.getLocationAssistant();
 		
 		List<IrNodeInfo> nodesSorted = locationAssistant.getIrNodeInfoLocationSorted(unsupportedNodes);
 

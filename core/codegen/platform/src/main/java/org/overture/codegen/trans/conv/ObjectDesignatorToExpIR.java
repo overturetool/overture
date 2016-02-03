@@ -25,67 +25,67 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SObjectDesignatorCG;
-import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SObjectDesignatorIR;
+import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.AnswerAdaptor;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.AFieldExpCG;
-import org.overture.codegen.ir.expressions.ASelfExpCG;
-import org.overture.codegen.ir.statements.AApplyObjectDesignatorCG;
-import org.overture.codegen.ir.statements.AFieldObjectDesignatorCG;
-import org.overture.codegen.ir.statements.AIdentifierObjectDesignatorCG;
-import org.overture.codegen.ir.statements.ANewObjectDesignatorCG;
-import org.overture.codegen.ir.statements.ASelfObjectDesignatorCG;
-import org.overture.codegen.ir.types.AClassTypeCG;
-import org.overture.codegen.ir.types.AMethodTypeCG;
-import org.overture.codegen.ir.types.AUnknownTypeCG;
-import org.overture.codegen.ir.types.SMapTypeCG;
-import org.overture.codegen.ir.types.SSeqTypeCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.ASelfExpIR;
+import org.overture.codegen.ir.statements.AApplyObjectDesignatorIR;
+import org.overture.codegen.ir.statements.AFieldObjectDesignatorIR;
+import org.overture.codegen.ir.statements.AIdentifierObjectDesignatorIR;
+import org.overture.codegen.ir.statements.ANewObjectDesignatorIR;
+import org.overture.codegen.ir.statements.ASelfObjectDesignatorIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
+import org.overture.codegen.ir.types.SMapTypeIR;
+import org.overture.codegen.ir.types.SSeqTypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 
-public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
+public class ObjectDesignatorToExpIR extends AnswerAdaptor<SExpIR>
 {
 	private IRInfo info;
 
-	public ObjectDesignatorToExpCG(IRInfo info)
+	public ObjectDesignatorToExpIR(IRInfo info)
 	{
 		this.info = info;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public SExpCG caseAApplyObjectDesignatorCG(AApplyObjectDesignatorCG node)
+	public SExpIR caseAApplyObjectDesignatorIR(AApplyObjectDesignatorIR node)
 			throws AnalysisException
 	{
-		SObjectDesignatorCG object = node.getObject();
+		SObjectDesignatorIR object = node.getObject();
 		SourceNode sourceNode = node.getSourceNode();
-		LinkedList<SExpCG> args = node.getArgs();
+		LinkedList<SExpIR> args = node.getArgs();
 
-		SExpCG root = object.apply(this);
+		SExpIR root = object.apply(this);
 
-		STypeCG rootType = root.getType();
-		STypeCG applyType = null;
+		STypeIR rootType = root.getType();
+		STypeIR applyType = null;
 
-		if (rootType instanceof SSeqTypeCG)
+		if (rootType instanceof SSeqTypeIR)
 		{
-			applyType = ((SSeqTypeCG) rootType).getSeqOf();
-		} else if (rootType instanceof SMapTypeCG)
+			applyType = ((SSeqTypeIR) rootType).getSeqOf();
+		} else if (rootType instanceof SMapTypeIR)
 		{
-			applyType = ((SMapTypeCG) rootType).getTo();
-		} else if (rootType instanceof AMethodTypeCG)
+			applyType = ((SMapTypeIR) rootType).getTo();
+		} else if (rootType instanceof AMethodTypeIR)
 		{
-			applyType = ((AMethodTypeCG) rootType).getResult();
+			applyType = ((AMethodTypeIR) rootType).getResult();
 		}
 
 		applyType = applyType.clone();
 
-		AApplyExpCG applyExp = new AApplyExpCG();
-		applyExp.setArgs((List<? extends SExpCG>) args.clone());
+		AApplyExpIR applyExp = new AApplyExpIR();
+		applyExp.setArgs((List<? extends SExpIR>) args.clone());
 		applyExp.setRoot(root);
 		applyExp.setType(applyType);
 		applyExp.setSourceNode(sourceNode);
@@ -94,29 +94,29 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAFieldObjectDesignatorCG(AFieldObjectDesignatorCG node)
+	public SExpIR caseAFieldObjectDesignatorIR(AFieldObjectDesignatorIR node)
 			throws AnalysisException
 	{
 		String fieldName = node.getFieldName();
 		String fieldModule = node.getFieldModule();
-		SObjectDesignatorCG obj = node.getObject();
+		SObjectDesignatorIR obj = node.getObject();
 		SourceNode sourceNode = node.getSourceNode();
 
 		INode parent = node.parent();
 
-		STypeCG fieldExpType = null;
+		STypeIR fieldExpType = null;
 		try
 		{
 			fieldExpType = info.getTypeAssistant().getFieldExpType(info, fieldName, fieldModule, obj, parent);
 		} catch (org.overture.ast.analysis.AnalysisException e)
 		{
-			Logger.getLog().printErrorln("Could not find field expression type of " + node + " in 'ObjectDesignatorToExpCG'");
-			fieldExpType = new AUnknownTypeCG();
+			Logger.getLog().printErrorln("Could not find field expression type of " + node + " in 'ObjectDesignatorToExpIR'");
+			fieldExpType = new AUnknownTypeIR();
 		}
 
-		SExpCG objExp = obj.apply(this);
+		SExpIR objExp = obj.apply(this);
 
-		AFieldExpCG fieldExp = new AFieldExpCG();
+		AFieldExpIR fieldExp = new AFieldExpIR();
 		fieldExp.setMemberName(fieldName);
 		fieldExp.setType(fieldExpType);
 		fieldExp.setObject(objExp);
@@ -126,32 +126,32 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAIdentifierObjectDesignatorCG(
-			AIdentifierObjectDesignatorCG node) throws AnalysisException
+	public SExpIR caseAIdentifierObjectDesignatorIR(
+			AIdentifierObjectDesignatorIR node) throws AnalysisException
 	{
 		return node.getExp().clone();
 	}
 
 	@Override
-	public SExpCG caseANewObjectDesignatorCG(ANewObjectDesignatorCG node)
+	public SExpIR caseANewObjectDesignatorIR(ANewObjectDesignatorIR node)
 			throws AnalysisException
 	{
 		return node.getExp().clone();
 	}
 
 	@Override
-	public SExpCG caseASelfObjectDesignatorCG(ASelfObjectDesignatorCG node)
+	public SExpIR caseASelfObjectDesignatorIR(ASelfObjectDesignatorIR node)
 			throws AnalysisException
 	{
-		ADefaultClassDeclCG enclosingClass = node.getAncestor(ADefaultClassDeclCG.class);
+		ADefaultClassDeclIR enclosingClass = node.getAncestor(ADefaultClassDeclIR.class);
 
 		String className = enclosingClass.getName();
 		SourceNode sourceNode = node.getSourceNode();
 
-		AClassTypeCG classType = new AClassTypeCG();
+		AClassTypeIR classType = new AClassTypeIR();
 		classType.setName(className);
 
-		ASelfExpCG self = new ASelfExpCG();
+		ASelfExpIR self = new ASelfExpIR();
 		self.setType(classType);
 		self.setSourceNode(sourceNode);
 
@@ -159,14 +159,14 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 	}
 
 	@Override
-	public SExpCG createNewReturnValue(INode node) throws AnalysisException
+	public SExpIR createNewReturnValue(INode node) throws AnalysisException
 	{
 		assert false : "This should never happen";
 		return null;
 	}
 
 	@Override
-	public SExpCG createNewReturnValue(Object node) throws AnalysisException
+	public SExpIR createNewReturnValue(Object node) throws AnalysisException
 	{
 		assert false : "This should never happen";
 		return null;

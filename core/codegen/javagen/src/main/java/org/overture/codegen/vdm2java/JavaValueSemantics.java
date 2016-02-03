@@ -26,49 +26,49 @@ import java.util.List;
 
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.SClassDeclCG;
-import org.overture.codegen.ir.expressions.AAddrEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.AAddrNotEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.ACardUnaryExpCG;
-import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
-import org.overture.codegen.ir.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.AExplicitVarExpCG;
-import org.overture.codegen.ir.expressions.AFieldExpCG;
-import org.overture.codegen.ir.expressions.AFieldNumberExpCG;
-import org.overture.codegen.ir.expressions.AHeadUnaryExpCG;
-import org.overture.codegen.ir.expressions.AInSetBinaryExpCG;
-import org.overture.codegen.ir.expressions.AIndicesUnaryExpCG;
-import org.overture.codegen.ir.expressions.AInstanceofExpCG;
-import org.overture.codegen.ir.expressions.ALenUnaryExpCG;
-import org.overture.codegen.ir.expressions.AMapSeqGetExpCG;
-import org.overture.codegen.ir.expressions.ANewExpCG;
-import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.ASetProperSubsetBinaryExpCG;
-import org.overture.codegen.ir.expressions.ASetSubsetBinaryExpCG;
-import org.overture.codegen.ir.expressions.ATupleCompatibilityExpCG;
-import org.overture.codegen.ir.expressions.ATupleSizeExpCG;
-import org.overture.codegen.ir.expressions.SIsExpCG;
-import org.overture.codegen.ir.statements.AAssignToExpStmCG;
-import org.overture.codegen.ir.statements.ACallObjectExpStmCG;
-import org.overture.codegen.ir.statements.AForAllStmCG;
-import org.overture.codegen.ir.statements.AMapCompAddStmCG;
-import org.overture.codegen.ir.statements.AMapSeqUpdateStmCG;
-import org.overture.codegen.ir.statements.ASeqCompAddStmCG;
-import org.overture.codegen.ir.statements.ASetCompAddStmCG;
-import org.overture.codegen.ir.types.AExternalTypeCG;
-import org.overture.codegen.ir.types.AMethodTypeCG;
-import org.overture.codegen.ir.types.ARecordTypeCG;
-import org.overture.codegen.ir.types.ATupleTypeCG;
-import org.overture.codegen.ir.types.AUnionTypeCG;
-import org.overture.codegen.ir.types.SMapTypeCG;
-import org.overture.codegen.ir.types.SSeqTypeCG;
-import org.overture.codegen.ir.types.SSetTypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
+import org.overture.codegen.ir.expressions.AAddrEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AAddrNotEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.ACardUnaryExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
+import org.overture.codegen.ir.expressions.AHeadUnaryExpIR;
+import org.overture.codegen.ir.expressions.AInSetBinaryExpIR;
+import org.overture.codegen.ir.expressions.AIndicesUnaryExpIR;
+import org.overture.codegen.ir.expressions.AInstanceofExpIR;
+import org.overture.codegen.ir.expressions.ALenUnaryExpIR;
+import org.overture.codegen.ir.expressions.AMapSeqGetExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
+import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASetProperSubsetBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASetSubsetBinaryExpIR;
+import org.overture.codegen.ir.expressions.ATupleCompatibilityExpIR;
+import org.overture.codegen.ir.expressions.ATupleSizeExpIR;
+import org.overture.codegen.ir.expressions.SIsExpIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
+import org.overture.codegen.ir.statements.AForAllStmIR;
+import org.overture.codegen.ir.statements.AMapCompAddStmIR;
+import org.overture.codegen.ir.statements.AMapSeqUpdateStmIR;
+import org.overture.codegen.ir.statements.ASeqCompAddStmIR;
+import org.overture.codegen.ir.statements.ASetCompAddStmIR;
+import org.overture.codegen.ir.types.AExternalTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.ATupleTypeIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
+import org.overture.codegen.ir.types.SMapTypeIR;
+import org.overture.codegen.ir.types.SSeqTypeIR;
+import org.overture.codegen.ir.types.SSetTypeIR;
 
 public class JavaValueSemantics
 {
@@ -108,7 +108,7 @@ public class JavaValueSemantics
 		return javaSettings;
 	}
 
-	public boolean cloneMember(AFieldNumberExpCG exp)
+	public boolean cloneMember(AFieldNumberExpIR exp)
 	{
 		if (javaSettings.getDisableCloning())
 		{
@@ -123,7 +123,7 @@ public class JavaValueSemantics
 		// Generally tuples need to be cloned, for example, if they
 		// contain a record field (that must be cloned)
 
-		if (exp.parent() instanceof AFieldNumberExpCG)
+		if (exp.parent() instanceof AFieldNumberExpIR)
 		{
 			return false;
 		}
@@ -138,12 +138,12 @@ public class JavaValueSemantics
 			return false;
 		}
 		
-		List<ATupleTypeCG> tupleTypes = getTypes(exp.getTuple().getType(), ATupleTypeCG.class);
+		List<ATupleTypeIR> tupleTypes = getTypes(exp.getTuple().getType(), ATupleTypeIR.class);
 		final int idx = (int) (exp.getField() - 1);
 
-		for (ATupleTypeCG tupleType : tupleTypes)
+		for (ATupleTypeIR tupleType : tupleTypes)
 		{
-			STypeCG fieldType = tupleType.getTypes().get(idx);
+			STypeIR fieldType = tupleType.getTypes().get(idx);
 
 			if (mayBeValueType(fieldType))
 			{
@@ -154,7 +154,7 @@ public class JavaValueSemantics
 		return false;
 	}
 	
-	public boolean cloneMember(AFieldExpCG exp)
+	public boolean cloneMember(AFieldExpIR exp)
 	{
 		if (javaSettings.getDisableCloning())
 		{
@@ -182,14 +182,14 @@ public class JavaValueSemantics
 			return false;
 		}
 
-		List<ARecordTypeCG> recTypes = getTypes(exp.getObject().getType(), ARecordTypeCG.class);
+		List<ARecordTypeIR> recTypes = getTypes(exp.getObject().getType(), ARecordTypeIR.class);
 		String memberName = exp.getMemberName();
-		List<SClassDeclCG> classes = javaFormat.getIrInfo().getClasses();
+		List<SClassDeclIR> classes = javaFormat.getIrInfo().getClasses();
 		AssistantManager man = javaFormat.getIrInfo().getAssistantManager();
 
-		for (ARecordTypeCG r : recTypes)
+		for (ARecordTypeIR r : recTypes)
 		{
-			AFieldDeclCG field = man.getDeclAssistant().getFieldDecl(classes, r, memberName);
+			AFieldDeclIR field = man.getDeclAssistant().getFieldDecl(classes, r, memberName);
 
 			if (field != null && mayBeValueType(field.getType()))
 			{
@@ -200,7 +200,7 @@ public class JavaValueSemantics
 		return false;
 	}
 
-	private <T extends STypeCG> List<T> getTypes(STypeCG type, Class<T> filter)
+	private <T extends STypeIR> List<T> getTypes(STypeIR type, Class<T> filter)
 	{
 		List<T> filteredTypes = new LinkedList<>();
 		
@@ -208,11 +208,11 @@ public class JavaValueSemantics
 		{
 			filteredTypes.add(filter.cast(type));
 		}
-		else if(type instanceof AUnionTypeCG)
+		else if(type instanceof AUnionTypeIR)
 		{
-			List<STypeCG> types = ((AUnionTypeCG) type).getTypes();
+			List<STypeIR> types = ((AUnionTypeIR) type).getTypes();
 			
-			for(STypeCG t : types)
+			for(STypeIR t : types)
 			{
 				filteredTypes.addAll(getTypes(t, filter));
 			}
@@ -221,7 +221,7 @@ public class JavaValueSemantics
 		return filteredTypes;
 	}
 
-	public boolean shouldClone(SExpCG exp)
+	public boolean shouldClone(SExpIR exp)
 	{
 		if (javaSettings.getDisableCloning())
 		{
@@ -250,18 +250,18 @@ public class JavaValueSemantics
 			return false;
 		}
 
-		if (parent instanceof AAssignToExpStmCG)
+		if (parent instanceof AAssignToExpStmIR)
 		{
-			AAssignToExpStmCG assignment = (AAssignToExpStmCG) parent;
+			AAssignToExpStmIR assignment = (AAssignToExpStmIR) parent;
 			if (assignment.getTarget() == exp)
 			{
 				return false;
 			}
 		}
 		
-		if(parent instanceof ACallObjectExpStmCG)
+		if(parent instanceof ACallObjectExpStmIR)
 		{
-			ACallObjectExpStmCG callObjStm = (ACallObjectExpStmCG) parent;
+			ACallObjectExpStmIR callObjStm = (ACallObjectExpStmIR) parent;
 			
 			if(callObjStm.getObj() == exp)
 			{
@@ -279,14 +279,14 @@ public class JavaValueSemantics
 			return false;
 		}
 		
-		STypeCG type = exp.getType();
+		STypeIR type = exp.getType();
 
 		if (mayBeValueType(type))
 		{
-			if (parent instanceof ANewExpCG)
+			if (parent instanceof ANewExpIR)
 			{
-				ANewExpCG newExp = (ANewExpCG) parent;
-				STypeCG newExpType = newExp.getType();
+				ANewExpIR newExp = (ANewExpIR) parent;
+				STypeIR newExpType = newExp.getType();
 
 				if (mayBeValueType(newExpType))
 				{
@@ -300,43 +300,43 @@ public class JavaValueSemantics
 		return false;
 	}
 
-	private boolean compAdd(SExpCG exp)
+	private boolean compAdd(SExpIR exp)
 	{
 		INode parent = exp.parent();
 
-		if (parent instanceof ASeqCompAddStmCG)
+		if (parent instanceof ASeqCompAddStmIR)
 		{
-			ASeqCompAddStmCG add = (ASeqCompAddStmCG) parent;
+			ASeqCompAddStmIR add = (ASeqCompAddStmIR) parent;
 			return add.getSeq() == exp;
 		}
 
-		if (parent instanceof ASetCompAddStmCG)
+		if (parent instanceof ASetCompAddStmIR)
 		{
-			ASetCompAddStmCG add = (ASetCompAddStmCG) parent;
+			ASetCompAddStmIR add = (ASetCompAddStmIR) parent;
 			return add.getSet() == exp;
 		}
 
-		if (parent instanceof AMapCompAddStmCG)
+		if (parent instanceof AMapCompAddStmIR)
 		{
-			AMapCompAddStmCG add = (AMapCompAddStmCG) parent;
+			AMapCompAddStmIR add = (AMapCompAddStmIR) parent;
 			return add.getMap() == exp;
 		}
 
 		return false;
 	}
 
-	private boolean inRecClassNonConstructor(SExpCG exp)
+	private boolean inRecClassNonConstructor(SExpIR exp)
 	{
-		ADefaultClassDeclCG encClass = exp.getAncestor(ADefaultClassDeclCG.class);
+		ADefaultClassDeclIR encClass = exp.getAncestor(ADefaultClassDeclIR.class);
 		
 		if(encClass != null)
 		{
-			LinkedList<AMethodDeclCG> methods = encClass.getMethods();
+			LinkedList<AMethodDeclIR> methods = encClass.getMethods();
 			
 			boolean isRec = false;
-			for(AMethodDeclCG m : methods)
+			for(AMethodDeclIR m : methods)
 			{
-				if(m.getIsConstructor() && m.getMethodType().getResult() instanceof ARecordTypeCG)
+				if(m.getIsConstructor() && m.getMethodType().getResult() instanceof ARecordTypeIR)
 				{
 					isRec = true;
 					break;
@@ -349,7 +349,7 @@ public class JavaValueSemantics
 			}
 			else
 			{
-				AMethodDeclCG encMethod = exp.getAncestor(AMethodDeclCG.class);
+				AMethodDeclIR encMethod = exp.getAncestor(AMethodDeclIR.class);
 				
 				if(encMethod != null)
 				{
@@ -367,13 +367,13 @@ public class JavaValueSemantics
 		}
 	}
 
-	private boolean cloneNotNeededMapPutGet(SExpCG exp)
+	private boolean cloneNotNeededMapPutGet(SExpIR exp)
 	{
 		INode parent = exp.parent();
 		
-		if(parent instanceof AMapSeqUpdateStmCG)
+		if(parent instanceof AMapSeqUpdateStmIR)
 		{
-			AMapSeqUpdateStmCG mapSeqUpd = (AMapSeqUpdateStmCG) parent;
+			AMapSeqUpdateStmIR mapSeqUpd = (AMapSeqUpdateStmIR) parent;
 			
 			if(mapSeqUpd.getCol() == exp)
 			{
@@ -381,9 +381,9 @@ public class JavaValueSemantics
 			}
 		}
 		
-		if(parent instanceof AMapSeqGetExpCG)
+		if(parent instanceof AMapSeqGetExpIR)
 		{
-			AMapSeqGetExpCG mapSeqGet = (AMapSeqGetExpCG) parent;
+			AMapSeqGetExpIR mapSeqGet = (AMapSeqGetExpIR) parent;
 			
 			if(mapSeqGet.getCol() == exp)
 			{
@@ -396,48 +396,48 @@ public class JavaValueSemantics
 
 	private boolean cloneNotNeeded(INode parent)
 	{
-		while(parent instanceof ACastUnaryExpCG)
+		while(parent instanceof ACastUnaryExpIR)
 		{
 			parent = parent.parent();
 		}
 		
-		if (parent instanceof AApplyExpCG)
+		if (parent instanceof AApplyExpIR)
 		{
 			// Cloning is not needed if the expression is
 			// used to look up a value in a sequence or a map
-			SExpCG root = ((AApplyExpCG) parent).getRoot();
+			SExpIR root = ((AApplyExpIR) parent).getRoot();
 
-			if (!(root.getType() instanceof AMethodTypeCG))
+			if (!(root.getType() instanceof AMethodTypeIR))
 			{
 				return true;
 			}
 		}
 
-		return parent instanceof AFieldExpCG
-				|| parent instanceof AFieldNumberExpCG
-				|| parent instanceof ATupleSizeExpCG
-				|| parent instanceof ATupleCompatibilityExpCG
-				|| parent instanceof AEqualsBinaryExpCG
-				|| parent instanceof ANotEqualsBinaryExpCG
-				|| parent instanceof AAddrEqualsBinaryExpCG
-				|| parent instanceof AAddrNotEqualsBinaryExpCG
-				|| parent instanceof AForAllStmCG
-				|| parent instanceof AInstanceofExpCG
-				|| parent instanceof SIsExpCG
+		return parent instanceof AFieldExpIR
+				|| parent instanceof AFieldNumberExpIR
+				|| parent instanceof ATupleSizeExpIR
+				|| parent instanceof ATupleCompatibilityExpIR
+				|| parent instanceof AEqualsBinaryExpIR
+				|| parent instanceof ANotEqualsBinaryExpIR
+				|| parent instanceof AAddrEqualsBinaryExpIR
+				|| parent instanceof AAddrNotEqualsBinaryExpIR
+				|| parent instanceof AForAllStmIR
+				|| parent instanceof AInstanceofExpIR
+				|| parent instanceof SIsExpIR
 				|| cloneNotNeededCollectionOperator(parent)
 				|| cloneNotNeededUtilCall(parent);
 	}
 
-	private boolean isPrePostArgument(SExpCG exp)
+	private boolean isPrePostArgument(SExpIR exp)
 	{
 		INode parent = exp.parent();
 		
-		if(!(parent instanceof AApplyExpCG))
+		if(!(parent instanceof AApplyExpIR))
 		{
 			return false;
 		}
 		
-		AApplyExpCG applyExp = (AApplyExpCG) parent;
+		AApplyExpIR applyExp = (AApplyExpIR) parent;
 		
 		Object tag = applyExp.getTag();
 		
@@ -464,49 +464,49 @@ public class JavaValueSemantics
 
 	private boolean cloneNotNeededSeqOperators(INode parent)
 	{
-		return parent instanceof ALenUnaryExpCG
-				|| parent instanceof AIndicesUnaryExpCG
-				|| parent instanceof AHeadUnaryExpCG;
+		return parent instanceof ALenUnaryExpIR
+				|| parent instanceof AIndicesUnaryExpIR
+				|| parent instanceof AHeadUnaryExpIR;
 	}
 
 	private boolean cloneNotNeededSetOperators(INode parent)
 	{
-		return 	parent instanceof ACardUnaryExpCG
-				|| parent instanceof AInSetBinaryExpCG
-				|| parent instanceof ASetSubsetBinaryExpCG
-				|| parent instanceof ASetProperSubsetBinaryExpCG;
+		return 	parent instanceof ACardUnaryExpIR
+				|| parent instanceof AInSetBinaryExpIR
+				|| parent instanceof ASetSubsetBinaryExpIR
+				|| parent instanceof ASetProperSubsetBinaryExpIR;
 	}
 
 	private boolean cloneNotNeededUtilCall(INode node)
 	{
-		if (!(node instanceof AApplyExpCG))
+		if (!(node instanceof AApplyExpIR))
 		{
 			return false;
 		}
 
-		AApplyExpCG applyExp = (AApplyExpCG) node;
-		SExpCG root = applyExp.getRoot();
+		AApplyExpIR applyExp = (AApplyExpIR) node;
+		SExpIR root = applyExp.getRoot();
 
-		if (!(root instanceof AExplicitVarExpCG))
+		if (!(root instanceof AExplicitVarExpIR))
 		{
 			return false;
 		}
 
-		AExplicitVarExpCG explicitVar = (AExplicitVarExpCG) root;
+		AExplicitVarExpIR explicitVar = (AExplicitVarExpIR) root;
 
-		STypeCG classType = explicitVar.getClassType();
+		STypeIR classType = explicitVar.getClassType();
 
-		return classType instanceof AExternalTypeCG
-				&& ((AExternalTypeCG) classType).getName().equals(JavaFormat.UTILS_FILE);
+		return classType instanceof AExternalTypeIR
+				&& ((AExternalTypeIR) classType).getName().equals(JavaFormat.UTILS_FILE);
 	}
 
-	public boolean mayBeValueType(STypeCG type)
+	public boolean mayBeValueType(STypeIR type)
 	{
-		if(type instanceof AUnionTypeCG)
+		if(type instanceof AUnionTypeIR)
 		{
-			LinkedList<STypeCG> types = ((AUnionTypeCG) type).getTypes();
+			LinkedList<STypeIR> types = ((AUnionTypeIR) type).getTypes();
 			
-			for(STypeCG t : types)
+			for(STypeIR t : types)
 			{
 				if(mayBeValueType(t))
 				{
@@ -518,19 +518,19 @@ public class JavaValueSemantics
 		}
 		else
 		{
-			return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG
-					|| type instanceof SSeqTypeCG || type instanceof SSetTypeCG
-					|| type instanceof SMapTypeCG;
+			return type instanceof ARecordTypeIR || type instanceof ATupleTypeIR
+					|| type instanceof SSeqTypeIR || type instanceof SSetTypeIR
+					|| type instanceof SMapTypeIR;
 		}
 	}
 	
-	private boolean cloneNotNeededAssign(SExpCG exp)
+	private boolean cloneNotNeededAssign(SExpIR exp)
 	{
 		INode parent = exp.parent();
 		
-		if (parent instanceof AAssignToExpStmCG)
+		if (parent instanceof AAssignToExpStmIR)
 		{
-			AAssignToExpStmCG assignment = (AAssignToExpStmCG) parent;
+			AAssignToExpStmIR assignment = (AAssignToExpStmIR) parent;
 			if (assignment.getTarget() == exp)
 			{
 				return true;
@@ -540,7 +540,7 @@ public class JavaValueSemantics
 		return false;
 	}
 	
-	public boolean isCloneFree(SExpCG exp)
+	public boolean isCloneFree(SExpIR exp)
 	{
 		if(exp == null)
 		{

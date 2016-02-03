@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
 
 public class PostCondWithStateTests extends PostCondNoStateTests
 {
@@ -18,7 +18,7 @@ public class PostCondWithStateTests extends PostCondNoStateTests
 	@Override
 	public void testOpNoResRequiresAnnotation()
 	{
-		AMethodDeclCG opNoRes = getMethod(genModule.getMethods(), "opNoRes");
+		AMethodDeclIR opNoRes = getMethod(genModule.getMethods(), "opNoRes");
 		
 		Assert.assertEquals("Got unexpected ensures annotation for operation 'opNoRes'",
 				"//@ ensures post_opNoRes(\\old(St.copy()),St);",
@@ -29,7 +29,7 @@ public class PostCondWithStateTests extends PostCondNoStateTests
 	@Override
 	public void testOpResRequresAnnotation()
 	{
-		AMethodDeclCG opRes = getMethod(genModule.getMethods(), "opRes");
+		AMethodDeclIR opRes = getMethod(genModule.getMethods(), "opRes");
 		
 		Assert.assertEquals("Got unexpected ensures annotation for operation 'opRes'",
 				"//@ ensures post_opRes(a,\\result,\\old(St.copy()),St);",

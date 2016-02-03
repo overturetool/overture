@@ -7,8 +7,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.statements.AMetaStmCG;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.statements.AMetaStmIR;
 import org.overture.vdm2jml.tests.util.TestDataCollector;
 import org.overture.vdm2jml.tests.util.Update;
 
@@ -24,7 +24,7 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 			int noOfAsserts)
 					throws org.overture.codegen.ir.analysis.AnalysisException
 	{
-		AMethodDeclCG assignSt = getMethod(genModule.getMethods(), methodName);
+		AMethodDeclIR assignSt = getMethod(genModule.getMethods(), methodName);
 
 		Assert.assertTrue("Could not find method '" + methodName
 				+ "'", assignSt != null);
@@ -75,7 +75,7 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 					+ " assertion(s) in the '" + methodName
 					+ "' method", dataCollector.getAssertions().size() == noOfAsserts);
 
-			for (AMetaStmCG a : dataCollector.getAssertions())
+			for (AMetaStmIR a : dataCollector.getAssertions())
 			{
 				List<? extends ClonableString> metaData = a.getMetaData();
 				Assert.assertTrue("Expected only a single assertion", metaData.size() == 1);

@@ -28,19 +28,19 @@ import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AMapSeqStateDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.types.PType;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SStateDesignatorCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.statements.AFieldStateDesignatorCG;
-import org.overture.codegen.ir.statements.AIdentifierStateDesignatorCG;
-import org.overture.codegen.ir.statements.AMapSeqStateDesignatorCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SStateDesignatorIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.statements.AFieldStateDesignatorIR;
+import org.overture.codegen.ir.statements.AIdentifierStateDesignatorIR;
+import org.overture.codegen.ir.statements.AMapSeqStateDesignatorIR;
 import org.overture.codegen.ir.IRInfo;
 
-public class StateDesignatorVisitorCG extends
-		AbstractVisitorCG<IRInfo, SStateDesignatorCG>
+public class StateDesignatorVisitorIR extends
+		AbstractVisitorIR<IRInfo, SStateDesignatorIR>
 {
 	@Override
-	public SStateDesignatorCG caseAFieldStateDesignator(
+	public SStateDesignatorIR caseAFieldStateDesignator(
 			AFieldStateDesignator node, IRInfo question)
 			throws AnalysisException
 	{
@@ -48,10 +48,10 @@ public class StateDesignatorVisitorCG extends
 		PStateDesignator stateDesignator = node.getObject();
 		String fieldName = node.getField().getName();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SStateDesignatorCG stateDesignatorCg = stateDesignator.apply(question.getStateDesignatorVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SStateDesignatorIR stateDesignatorCg = stateDesignator.apply(question.getStateDesignatorVisitor(), question);
 
-		AFieldStateDesignatorCG field = new AFieldStateDesignatorCG();
+		AFieldStateDesignatorIR field = new AFieldStateDesignatorIR();
 		field.setType(typeCg);
 		field.setObject(stateDesignatorCg);
 		field.setField(fieldName);
@@ -60,7 +60,7 @@ public class StateDesignatorVisitorCG extends
 	}
 
 	@Override
-	public SStateDesignatorCG caseAIdentifierStateDesignator(
+	public SStateDesignatorIR caseAIdentifierStateDesignator(
 			AIdentifierStateDesignator node, IRInfo question)
 			throws AnalysisException
 	{
@@ -70,9 +70,9 @@ public class StateDesignatorVisitorCG extends
 		boolean explicit = node.getName().getExplicit();
 		boolean isLocal = question.getDeclAssistant().isLocal(node, question);
 		
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 
-		AIdentifierStateDesignatorCG idStateDesignatorCg = new AIdentifierStateDesignatorCG();
+		AIdentifierStateDesignatorIR idStateDesignatorCg = new AIdentifierStateDesignatorIR();
 		idStateDesignatorCg.setType(typeCg);
 		idStateDesignatorCg.setName(name);
 		idStateDesignatorCg.setClassName(className);
@@ -83,7 +83,7 @@ public class StateDesignatorVisitorCG extends
 	}
 
 	@Override
-	public SStateDesignatorCG caseAMapSeqStateDesignator(
+	public SStateDesignatorIR caseAMapSeqStateDesignator(
 			AMapSeqStateDesignator node, IRInfo question)
 			throws AnalysisException
 	{
@@ -91,11 +91,11 @@ public class StateDesignatorVisitorCG extends
 		PStateDesignator mapSeq = node.getMapseq();
 		PExp exp = node.getExp();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SStateDesignatorCG mapSeqCg = mapSeq.apply(question.getStateDesignatorVisitor(), question);
-		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SStateDesignatorIR mapSeqCg = mapSeq.apply(question.getStateDesignatorVisitor(), question);
+		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
 
-		AMapSeqStateDesignatorCG mapSeqStateDesignator = new AMapSeqStateDesignatorCG();
+		AMapSeqStateDesignatorIR mapSeqStateDesignator = new AMapSeqStateDesignatorIR();
 		mapSeqStateDesignator.setType(typeCg);
 		mapSeqStateDesignator.setMapseq(mapSeqCg);
 		mapSeqStateDesignator.setExp(expCg);

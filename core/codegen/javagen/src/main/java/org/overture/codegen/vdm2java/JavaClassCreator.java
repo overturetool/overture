@@ -2,16 +2,16 @@ package org.overture.codegen.vdm2java;
 
 import java.util.LinkedList;
 
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.expressions.ASeqConcatBinaryExpCG;
-import org.overture.codegen.ir.expressions.AStringLiteralExpCG;
-import org.overture.codegen.ir.statements.AReturnStmCG;
-import org.overture.codegen.ir.types.AStringTypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.ASeqConcatBinaryExpIR;
+import org.overture.codegen.ir.expressions.AStringLiteralExpIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.ir.IRInfo;
 
 public class JavaClassCreator extends JavaClassCreatorBase
@@ -23,17 +23,17 @@ public class JavaClassCreator extends JavaClassCreatorBase
 		this.info = info;
 	}
 	
-	public AMethodDeclCG generateToString(ADefaultClassDeclCG classDecl)
+	public AMethodDeclIR generateToString(ADefaultClassDeclIR classDecl)
 	{
 		//Example: A{#32, x := 4, c = "STD"} (ID is omitted)
 		
-		AMethodDeclCG toStringMethod = consToStringSignature();
+		AMethodDeclIR toStringMethod = consToStringSignature();
 		
-		LinkedList<AFieldDeclCG> fields = classDecl.getFields();
+		LinkedList<AFieldDeclIR> fields = classDecl.getFields();
 
-		AReturnStmCG body = new AReturnStmCG();
+		AReturnStmIR body = new AReturnStmIR();
 		
-		AStringTypeCG returnType = new AStringTypeCG();
+		AStringTypeIR returnType = new AStringTypeIR();
 		
 		if (fields.isEmpty())
 		{
@@ -41,26 +41,26 @@ public class JavaClassCreator extends JavaClassCreatorBase
 			
 		} else
 		{
-			ASeqConcatBinaryExpCG stringBuffer = new ASeqConcatBinaryExpCG();
+			ASeqConcatBinaryExpIR stringBuffer = new ASeqConcatBinaryExpIR();
 			// "A{#"
-			AStringLiteralExpCG strStart = info.getExpAssistant().consStringLiteral(classDecl.getName()
+			AStringLiteralExpIR strStart = info.getExpAssistant().consStringLiteral(classDecl.getName()
 					+ "{", false);
 
 			stringBuffer.setType(returnType.clone());
 			stringBuffer.setLeft(strStart);
 
-			ASeqConcatBinaryExpCG previous = stringBuffer;
+			ASeqConcatBinaryExpIR previous = stringBuffer;
 
 			// Append instance variables and values
 			for (int i = 0; i < fields.size(); i++)
 			{
-				AFieldDeclCG field = fields.get(i);
-				ASeqConcatBinaryExpCG next = consNext(returnType, previous, field, i > 0);
+				AFieldDeclIR field = fields.get(i);
+				ASeqConcatBinaryExpIR next = consNext(returnType, previous, field, i > 0);
 				previous = next;
 			}
 
 			// "}"
-			AStringLiteralExpCG strEnd = info.getExpAssistant().consStringLiteral("}", false);
+			AStringLiteralExpIR strEnd = info.getExpAssistant().consStringLiteral("}", false);
 			previous.setRight(strEnd);
 			body.setExp(stringBuffer);
 		}
@@ -70,10 +70,10 @@ public class JavaClassCreator extends JavaClassCreatorBase
 		return toStringMethod;
 	}
 
-	private ASeqConcatBinaryExpCG consNext(AStringTypeCG returnType,
-			ASeqConcatBinaryExpCG previous, AFieldDeclCG field, boolean separate)
+	private ASeqConcatBinaryExpIR consNext(AStringTypeIR returnType,
+			ASeqConcatBinaryExpIR previous, AFieldDeclIR field, boolean separate)
 	{
-		ASeqConcatBinaryExpCG next = new ASeqConcatBinaryExpCG();
+		ASeqConcatBinaryExpIR next = new ASeqConcatBinaryExpIR();
 		next.setType(returnType.clone());
 		next.setLeft(consFieldStr(field, separate));
 		
@@ -82,7 +82,7 @@ public class JavaClassCreator extends JavaClassCreatorBase
 		return next;
 	}
 
-	private SExpCG consFieldStr(AFieldDeclCG field, boolean separate)
+	private SExpIR consFieldStr(AFieldDeclIR field, boolean separate)
 	{
 		String left = "";
 		
@@ -94,9 +94,9 @@ public class JavaClassCreator extends JavaClassCreatorBase
 		left += field.getName();
 		left += field.getFinal() != null && field.getFinal() ? " = " : " := ";
 		
-		AApplyExpCG toStringCall = consUtilsToStringCall();
+		AApplyExpIR toStringCall = consUtilsToStringCall();
 		
-		AIdentifierVarExpCG fieldVar = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR fieldVar = new AIdentifierVarExpIR();
 		fieldVar.setType(field.getType().clone());
 		fieldVar.setIsLambda(false);
 		fieldVar.setIsLocal(false);
@@ -104,8 +104,8 @@ public class JavaClassCreator extends JavaClassCreatorBase
 		
 		toStringCall.getArgs().add(fieldVar);
 		
-		ASeqConcatBinaryExpCG fieldStr = new ASeqConcatBinaryExpCG();
-		fieldStr.setType(new AStringTypeCG());
+		ASeqConcatBinaryExpIR fieldStr = new ASeqConcatBinaryExpIR();
+		fieldStr.setType(new AStringTypeIR());
 		fieldStr.setLeft(info.getExpAssistant().consStringLiteral(left, false));
 		fieldStr.setRight(toStringCall);
 		

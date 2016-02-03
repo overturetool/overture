@@ -4,30 +4,30 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.expressions.SVarExpCG;
-import org.overture.codegen.ir.patterns.AIdentifierPatternCG;
-import org.overture.codegen.ir.statements.AAssignToExpStmCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
-import org.overture.codegen.ir.statements.ACallObjectExpStmCG;
-import org.overture.codegen.ir.statements.AForLoopStmCG;
-import org.overture.codegen.ir.statements.AMapSeqUpdateStmCG;
-import org.overture.codegen.ir.statements.AMetaStmCG;
-import org.overture.codegen.ir.statements.AReturnStmCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
+import org.overture.codegen.ir.statements.AForLoopStmIR;
+import org.overture.codegen.ir.statements.AMapSeqUpdateStmIR;
+import org.overture.codegen.ir.statements.AMetaStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.vdm2jml.JmlAnnotationHelper;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.codegen.vdm2jml.predgen.info.AbstractTypeInfo;
@@ -53,29 +53,29 @@ public class TypePredHandler
 		this.util = new TypePredUtil(this);
 	}
 
-	public void handleClass(ADefaultClassDeclCG node) throws AnalysisException
+	public void handleClass(ADefaultClassDeclIR node) throws AnalysisException
 	{
 		// We want only to treat fields and methods specified by the user.
 		// This case helps us avoiding visiting invariant methods
 
-		for (AFieldDeclCG f : node.getFields())
+		for (AFieldDeclIR f : node.getFields())
 		{
 			f.apply(decorator);
 		}
 
-		for (AMethodDeclCG m : node.getMethods())
+		for (AMethodDeclIR m : node.getMethods())
 		{
 			m.apply(decorator);
 		}
 	}
 	
-	public void handleField(AFieldDeclCG node)
+	public void handleField(AFieldDeclIR node)
 	{
 		/**
 		 * Values and record fields will be handled by this handler (not the state component field since its type is a
 		 * record type) Example: val : char | Even = 5;
 		 */
-		ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
+		ADefaultClassDeclIR encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
 		if (encClass == null)
 		{
@@ -92,7 +92,7 @@ public class TypePredHandler
 
 			if (proceed(typeInfo))
 			{
-				AIdentifierVarExpCG var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(node.getName(), node.getType().clone());
+				AIdentifierVarExpIR var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(node.getName(), node.getType().clone());
 				
 				List<String> invStrings = util.consJmlCheck(encClass, JmlGenerator.JML_PUBLIC, JmlGenerator.JML_STATIC_INV_ANNOTATION, false, typeInfo, var);
 				for(String invStr : invStrings)
@@ -121,23 +121,23 @@ public class TypePredHandler
 		return decorator.getJmlGen().getAnnotator();
 	}
 
-	public void handleBlock(ABlockStmCG node) throws AnalysisException
+	public void handleBlock(ABlockStmIR node) throws AnalysisException
 	{
 		if (node.getLocalDefs().size() > 1)
 		{
-			LinkedList<AVarDeclCG> origDecls = new LinkedList<AVarDeclCG>(node.getLocalDefs());
+			LinkedList<AVarDeclIR> origDecls = new LinkedList<AVarDeclIR>(node.getLocalDefs());
 
 			for (int i = origDecls.size() - 1; i >= 0; i--)
 			{
-				AVarDeclCG nextDecl = origDecls.get(i);
+				AVarDeclIR nextDecl = origDecls.get(i);
 
-				ABlockStmCG block = new ABlockStmCG();
+				ABlockStmIR block = new ABlockStmIR();
 				block.getLocalDefs().add(nextDecl);
 
 				node.getStatements().addFirst(block);
 			}
 
-			for (SStmCG stm : node.getStatements())
+			for (SStmIR stm : node.getStatements())
 			{
 				stm.apply(decorator);
 			}
@@ -149,29 +149,29 @@ public class TypePredHandler
 				node.getLocalDefs().getFirst().apply(decorator);
 			}
 
-			for (SStmCG stm : node.getStatements())
+			for (SStmIR stm : node.getStatements())
 			{
 				stm.apply(decorator);
 			}
 		}
 	}
 	
-	public void handleReturn(AReturnStmCG node) throws AnalysisException
+	public void handleReturn(AReturnStmIR node) throws AnalysisException
 	{
 		/**
 		 * The idea is to extract the return value to variable and return that variable. Then it becomes the
 		 * responsibility of the variable declaration case to assert if the named invariant type is violated.
 		 */
-		SExpCG exp = node.getExp();
+		SExpIR exp = node.getExp();
 		
-		AMethodDeclCG encMethod = decorator.getJmlGen().getUtil().getEnclosingMethod(node);
+		AMethodDeclIR encMethod = decorator.getJmlGen().getUtil().getEnclosingMethod(node);
 
 		if (encMethod == null)
 		{
 			return;
 		}
 
-		STypeCG returnType = encMethod.getMethodType().getResult();
+		STypeIR returnType = encMethod.getMethodType().getResult();
 
 		AbstractTypeInfo typeInfo = util.findTypeInfo(returnType);
 
@@ -181,13 +181,13 @@ public class TypePredHandler
 		}
 
 		String name = getInfo().getTempVarNameGen().nextVarName(RET_VAR_NAME_PREFIX);
-		AIdentifierPatternCG id = getInfo().getPatternAssistant().consIdPattern(name);
+		AIdentifierPatternIR id = getInfo().getPatternAssistant().consIdPattern(name);
 
-		AIdentifierVarExpCG varExp = getInfo().getExpAssistant().consIdVar(name, returnType.clone());
+		AIdentifierVarExpIR varExp = getInfo().getExpAssistant().consIdVar(name, returnType.clone());
 		getTransAssist().replaceNodeWith(exp, varExp);
 
-		AVarDeclCG varDecl = getInfo().getDeclAssistant().consLocalVarDecl(returnType.clone(), id, exp.clone());
-		ABlockStmCG replBlock = new ABlockStmCG();
+		AVarDeclIR varDecl = getInfo().getDeclAssistant().consLocalVarDecl(returnType.clone(), id, exp.clone());
+		ABlockStmIR replBlock = new ABlockStmIR();
 		replBlock.getLocalDefs().add(varDecl);
 
 		getTransAssist().replaceNodeWith(node, replBlock);
@@ -196,7 +196,7 @@ public class TypePredHandler
 		varDecl.apply(decorator);
 	}
 
-	public void handleMethod(AMethodDeclCG node) throws AnalysisException
+	public void handleMethod(AMethodDeclIR node) throws AnalysisException
 	{
 		if(!treatMethod(node))
 		{
@@ -205,14 +205,14 @@ public class TypePredHandler
 		
 		// Upon entering the method, assert that the parameters are valid wrt. their named invariant types.
 		
-		ABlockStmCG replBody = new ABlockStmCG();
-		for (AFormalParamLocalParamCG param : node.getFormalParams())
+		ABlockStmIR replBody = new ABlockStmIR();
+		for (AFormalParamLocalParamIR param : node.getFormalParams())
 		{
 			AbstractTypeInfo typeInfo = util.findTypeInfo(param.getType());
 
 			if (proceed(typeInfo))
 			{
-				ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
+				ADefaultClassDeclIR encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
 				if (encClass == null)
 				{
@@ -226,33 +226,33 @@ public class TypePredHandler
 					continue;
 				}
 				
-				SVarExpCG var = getInfo().getExpAssistant().consIdVar(varNameStr, param.getType().clone());
+				SVarExpIR var = getInfo().getExpAssistant().consIdVar(varNameStr, param.getType().clone());
 
 				/**
 				 * Upon entering a record setter it is necessary to check if invariants checks are enabled before
 				 * checking the parameter
 				 */
-				List<AMetaStmCG> as = util.consAssertStm(typeInfo, encClass, var, node, decorator.getRecInfo());
-				for(AMetaStmCG a : as)
+				List<AMetaStmIR> as = util.consAssertStm(typeInfo, encClass, var, node, decorator.getRecInfo());
+				for(AMetaStmIR a : as)
 				{
 					replBody.getStatements().add(a);
 				}
 			}
 		}
 
-		SStmCG body = node.getBody();
+		SStmIR body = node.getBody();
 		getTransAssist().replaceNodeWith(body, replBody);
 		replBody.getStatements().add(body);
 		body.apply(decorator);
 	}
 
-	public List<AMetaStmCG> handleMapSeq(AMapSeqUpdateStmCG node)
+	public List<AMetaStmIR> handleMapSeq(AMapSeqUpdateStmIR node)
 	{
 		// TODO: Consider this for the atomic statement
 
-		SExpCG col = node.getCol();
+		SExpIR col = node.getCol();
 
-		if(!(col instanceof SVarExpCG))
+		if(!(col instanceof SVarExpIR))
 		{
 			Logger.getLog().printErrorln("Expected collection to be a variable expression at this point. Got: "
 					+ col + " in '" + this.getClass().getSimpleName()
@@ -260,7 +260,7 @@ public class TypePredHandler
 			return null;
 		}
 		
-		SVarExpCG var = ((SVarExpCG) col);
+		SVarExpIR var = ((SVarExpIR) col);
 		
 		if (varMayBeNull(var.getType()))
 		{
@@ -269,9 +269,9 @@ public class TypePredHandler
 			//
 			// //@ azzert m != null
 			// Utils.mapSeqUpdate(m,1L,1L);
-			AMetaStmCG assertNotNull = util.consVarNotNullAssert(var.getName());
+			AMetaStmIR assertNotNull = util.consVarNotNullAssert(var.getName());
 
-			ABlockStmCG replStm = new ABlockStmCG();
+			ABlockStmIR replStm = new ABlockStmIR();
 			getTransAssist().replaceNodeWith(node, replStm);
 			replStm.getStatements().add(assertNotNull);
 			replStm.getStatements().add(node);
@@ -281,14 +281,14 @@ public class TypePredHandler
 	
 		if (proceed(typeInfo))
 		{
-			ADefaultClassDeclCG enclosingClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
+			ADefaultClassDeclIR enclosingClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
 			if (enclosingClass == null)
 			{
 				return null;
 			}
 
-			if (col instanceof SVarExpCG)
+			if (col instanceof SVarExpIR)
 			{
 				/**
 				 * Updates to fields in record setters need to check if invariants checks are enabled
@@ -300,7 +300,7 @@ public class TypePredHandler
 		return null;
 	}
 	
-	public List<AMetaStmCG> handleVarDecl(AVarDeclCG node)
+	public List<AMetaStmIR> handleVarDecl(AVarDeclIR node)
 	{
 		// Examples:
 		// let x : Even = 1 in ...
@@ -322,14 +322,14 @@ public class TypePredHandler
 				return null;
 			}
 
-			ADefaultClassDeclCG enclosingClass = node.getAncestor(ADefaultClassDeclCG.class);
+			ADefaultClassDeclIR enclosingClass = node.getAncestor(ADefaultClassDeclIR.class);
 
 			if (enclosingClass == null)
 			{
 				return null;
 			}
 
-			AIdentifierVarExpCG var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(name, node.getType().clone());
+			AIdentifierVarExpIR var = getJmlGen().getJavaGen().getInfo().getExpAssistant().consIdVar(name, node.getType().clone());
 
 			/**
 			 * We do not really need to check if invariant checks are enabled because local variable declarations are
@@ -341,21 +341,21 @@ public class TypePredHandler
 		return null;
 	}
 
-	public List<AMetaStmCG> handleCallObj(ACallObjectExpStmCG node)
+	public List<AMetaStmIR> handleCallObj(ACallObjectExpStmIR node)
 	{
 		/**
 		 * Handling of setter calls to masked records. This will happen for cases like T = R ... ; R :: x : int;
 		 */
-		SExpCG recObj = node.getObj();
+		SExpIR recObj = node.getObj();
 		
-		if(recObj instanceof ACastUnaryExpCG)
+		if(recObj instanceof ACastUnaryExpIR)
 		{
-			recObj = ((ACastUnaryExpCG) recObj).getExp();
+			recObj = ((ACastUnaryExpIR) recObj).getExp();
 		}
 
-		if (recObj instanceof SVarExpCG)
+		if (recObj instanceof SVarExpIR)
 		{
-			SVarExpCG recObjVar = (SVarExpCG) recObj;
+			SVarExpIR recObjVar = (SVarExpIR) recObj;
 
 			if(varMayBeNull(recObj.getType()))
 			{
@@ -364,9 +364,9 @@ public class TypePredHandler
 				//
 				// //@ azzert rec != null
 				// rec.set_x(5);
-				AMetaStmCG assertNotNull = util.consVarNotNullAssert(recObjVar.getName());
+				AMetaStmIR assertNotNull = util.consVarNotNullAssert(recObjVar.getName());
 				
-				ABlockStmCG replStm = new ABlockStmCG();
+				ABlockStmIR replStm = new ABlockStmIR();
 				getTransAssist().replaceNodeWith(node, replStm);
 				replStm.getStatements().add(assertNotNull);
 				replStm.getStatements().add(node);
@@ -378,7 +378,7 @@ public class TypePredHandler
 
 			if (proceed(typeInfo))
 			{
-				ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
+				ADefaultClassDeclIR encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 
 				if (encClass == null)
 				{
@@ -403,31 +403,31 @@ public class TypePredHandler
 		return null;
 	}
 	
-	public void handleAssign(AAssignToExpStmCG node)
+	public void handleAssign(AAssignToExpStmIR node)
 	{
 		// <target> := atomic_tmp;
 
 		/*
-		 * Note that assignment to targets that are of type AFieldNumberExpCG, i.e. tuples (e.g. tup.#1 := 5) is not
+		 * Note that assignment to targets that are of type AFieldNumberExpIR, i.e. tuples (e.g. tup.#1 := 5) is not
 		 * allowed in VDM.
 		 */
 		
-		SExpCG target = node.getTarget();
+		SExpIR target = node.getTarget();
 
-		if (!(target instanceof SVarExpCG))
+		if (!(target instanceof SVarExpIR))
 		{
 			Logger.getLog().printErrorln("By now all assignments should have simple variable expression as target. Got: "
 					+ target);
 			return;
 		}
 
-		SVarExpCG var = (SVarExpCG) target;
+		SVarExpIR var = (SVarExpIR) target;
 		
 		AbstractTypeInfo typeInfo = util.findTypeInfo(node.getTarget().getType());
 
 		if (proceed(typeInfo))
 		{
-			ADefaultClassDeclCG encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
+			ADefaultClassDeclIR encClass = decorator.getJmlGen().getUtil().getEnclosingClass(node);
 			
 			if (encClass == null)
 			{
@@ -438,22 +438,22 @@ public class TypePredHandler
 			 * Since assignments can occur inside record setters in the context of an atomic statement block we need to
 			 * check if invariant checks are enabled
 			 */
-			List<AMetaStmCG> asserts = util.consAssertStm(typeInfo, encClass, var, node, decorator.getRecInfo());
+			List<AMetaStmIR> asserts = util.consAssertStm(typeInfo, encClass, var, node, decorator.getRecInfo());
 			
-			for(AMetaStmCG a : asserts)
+			for(AMetaStmIR a : asserts)
 			{
 				addAssert(node, a);
 			}
 		}
 	}
 
-	public ABlockStmCG getEncBlockStm(AVarDeclCG varDecl)
+	public ABlockStmIR getEncBlockStm(AVarDeclIR varDecl)
 	{
 		INode parent = varDecl.parent();
 		
-		if (parent instanceof ABlockStmCG)
+		if (parent instanceof ABlockStmIR)
 		{
-			ABlockStmCG parentBlock = (ABlockStmCG) varDecl.parent();
+			ABlockStmIR parentBlock = (ABlockStmIR) varDecl.parent();
 
 			if (!parentBlock.getLocalDefs().contains(varDecl))
 			{
@@ -475,7 +475,7 @@ public class TypePredHandler
 			
 			return parentBlock;
 		}
-		else if(parent instanceof AForLoopStmCG)
+		else if(parent instanceof AForLoopStmIR)
 		{
 			// Do nothing
 			return null;
@@ -490,7 +490,7 @@ public class TypePredHandler
 		}
 	}
 	
-	private TransAssistantCG getTransAssist()
+	private TransAssistantIR getTransAssist()
 	{
 		return decorator.getJmlGen().getJavaGen().getTransAssistant();
 	}
@@ -505,7 +505,7 @@ public class TypePredHandler
 		return decorator.getJmlGen();
 	}
 
-	public List<AMetaStmCG> consAsserts(AIdentifierVarExpCG var)
+	public List<AMetaStmIR> consAsserts(AIdentifierVarExpIR var)
 	{
 		AbstractTypeInfo typeInfo = util.findTypeInfo(var.getType());
 
@@ -514,7 +514,7 @@ public class TypePredHandler
 			return null;
 		}
 
-		ADefaultClassDeclCG encClass = decorator.getStateDesInfo().getEnclosingClass(var);
+		ADefaultClassDeclIR encClass = decorator.getStateDesInfo().getEnclosingClass(var);
 
 		if (encClass == null)
 		{
@@ -528,7 +528,7 @@ public class TypePredHandler
 		return util.consAssertStm(typeInfo, encClass, var, var, decorator.getRecInfo());
 	}
 	
-	public boolean rightHandSideMayBeNull(SExpCG exp)
+	public boolean rightHandSideMayBeNull(SExpIR exp)
 	{
 		IsValChecker checker = new IsValChecker();
 		
@@ -542,7 +542,7 @@ public class TypePredHandler
 		}
 	}
 	
-	private boolean varMayBeNull(STypeCG type)
+	private boolean varMayBeNull(STypeIR type)
 	{
 		return treatMethod(type) && !getInfo().getTypeAssistant().allowsNull(type);
 	}
@@ -569,7 +569,7 @@ public class TypePredHandler
 	
 	private boolean inModuleToStringMethod(INode type)
 	{
-		AMethodDeclCG m = type.getAncestor(AMethodDeclCG.class);
+		AMethodDeclIR m = type.getAncestor(AMethodDeclIR.class);
 		
 		if(m == null)
 		{
@@ -584,9 +584,9 @@ public class TypePredHandler
 		return false;
 	}
 
-	private void addAssert(AAssignToExpStmCG node, AMetaStmCG assertStm)
+	private void addAssert(AAssignToExpStmIR node, AMetaStmIR assertStm)
 	{
-		ABlockStmCG replStm = new ABlockStmCG();
+		ABlockStmIR replStm = new ABlockStmIR();
 		getJmlGen().getJavaGen().getTransAssistant().replaceNodeWith(node, replStm);
 		replStm.getStatements().add(node);
 		replStm.getStatements().add(assertStm);

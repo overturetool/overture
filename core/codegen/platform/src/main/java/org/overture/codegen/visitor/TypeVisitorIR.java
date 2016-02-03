@@ -56,44 +56,44 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.declarations.ANamedTypeDeclCG;
-import org.overture.codegen.ir.name.ATypeNameCG;
-import org.overture.codegen.ir.types.ABoolBasicTypeCG;
-import org.overture.codegen.ir.types.ACharBasicTypeCG;
-import org.overture.codegen.ir.types.AClassTypeCG;
-import org.overture.codegen.ir.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.ir.types.ANat1NumericBasicTypeCG;
-import org.overture.codegen.ir.types.ANatNumericBasicTypeCG;
-import org.overture.codegen.ir.types.AQuoteTypeCG;
-import org.overture.codegen.ir.types.ARatNumericBasicTypeCG;
-import org.overture.codegen.ir.types.ARealNumericBasicTypeCG;
-import org.overture.codegen.ir.types.ARecordTypeCG;
-import org.overture.codegen.ir.types.ASetSetTypeCG;
-import org.overture.codegen.ir.types.ATemplateTypeCG;
-import org.overture.codegen.ir.types.ATokenBasicTypeCG;
-import org.overture.codegen.ir.types.ATupleTypeCG;
-import org.overture.codegen.ir.types.AUnionTypeCG;
-import org.overture.codegen.ir.types.AUnknownTypeCG;
-import org.overture.codegen.ir.types.AVoidTypeCG;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AQuoteTypeIR;
+import org.overture.codegen.ir.types.ARatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.ASetSetTypeIR;
+import org.overture.codegen.ir.types.ATemplateTypeIR;
+import org.overture.codegen.ir.types.ATokenBasicTypeIR;
+import org.overture.codegen.ir.types.ATupleTypeIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
+import org.overture.codegen.ir.types.AVoidTypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRNamedTypeInvariantTag;
 import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
+public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 {
 	@Override
-	public STypeCG caseAUnresolvedType(AUnresolvedType node, IRInfo question)
+	public STypeIR caseAUnresolvedType(AUnresolvedType node, IRInfo question)
 			throws AnalysisException
 	{
 		Logger.getLog().printErrorln("Found unresolved type in the VDM AST");
 		//To guard against unresolved type in the type checker
-		return new AUnknownTypeCG();
+		return new AUnknownTypeIR();
 	}
 	
 	@Override
-	public STypeCG caseAUnionType(AUnionType node, IRInfo question)
+	public STypeIR caseAUnionType(AUnionType node, IRInfo question)
 			throws AnalysisException
 	{
 		List<PType> types = node.getTypes();
@@ -130,11 +130,11 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 			}
 			else
 			{
-				AUnionTypeCG unionTypeCg = new AUnionTypeCG();
+				AUnionTypeIR unionTypeCg = new AUnionTypeIR();
 
 				for (PType type : types)
 				{
-					STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+					STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 					
 					if(typeCg != null)
 					{
@@ -152,7 +152,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	}
 	
 	@Override
-	public STypeCG caseABracketType(ABracketType node, IRInfo question)
+	public STypeIR caseABracketType(ABracketType node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -161,28 +161,28 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	}
 
 	@Override
-	public STypeCG caseAUnknownType(AUnknownType node, IRInfo question)
+	public STypeIR caseAUnknownType(AUnknownType node, IRInfo question)
 			throws AnalysisException
 	{
-		return new AUnknownTypeCG(); // '?' Indicates an unknown type
+		return new AUnknownTypeIR(); // '?' Indicates an unknown type
 	}
 
 	@Override
-	public STypeCG caseATokenBasicType(ATokenBasicType node, IRInfo question)
+	public STypeIR caseATokenBasicType(ATokenBasicType node, IRInfo question)
 			throws AnalysisException
 	{
-		return new ATokenBasicTypeCG();
+		return new ATokenBasicTypeIR();
 	}
 
 	@Override
-	public STypeCG caseASetType(ASetType node, IRInfo question)
+	public STypeIR caseASetType(ASetType node, IRInfo question)
 			throws AnalysisException
 	{
 		PType setOf = node.getSetof();
-		STypeCG typeCg = setOf.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = setOf.apply(question.getTypeVisitor(), question);
 		boolean empty = node.getEmpty();
 
-		ASetSetTypeCG setType = new ASetSetTypeCG();
+		ASetSetTypeIR setType = new ASetSetTypeIR();
 		setType.setSetOf(typeCg);
 		setType.setEmpty(empty);
 
@@ -190,29 +190,29 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	}
 
 	@Override
-	public STypeCG caseAMapMapType(AMapMapType node, IRInfo question)
+	public STypeIR caseAMapMapType(AMapMapType node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getExpAssistant().handleMapType(node, question, false);
 	}
 
 	@Override
-	public STypeCG caseAInMapMapType(AInMapMapType node, IRInfo question) throws AnalysisException
+	public STypeIR caseAInMapMapType(AInMapMapType node, IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleMapType(node, question, true);
 	}
 	
 	@Override
-	public STypeCG caseAProductType(AProductType node, IRInfo question)
+	public STypeIR caseAProductType(AProductType node, IRInfo question)
 			throws AnalysisException
 	{
-		ATupleTypeCG tuple = new ATupleTypeCG();
+		ATupleTypeIR tuple = new ATupleTypeIR();
 
 		LinkedList<PType> types = node.getTypes();
 
 		for (PType type : types)
 		{
-			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+			STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 			
 			if (typeCg != null)
 			{
@@ -228,22 +228,22 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	}
 
 	@Override
-	public STypeCG caseAParameterType(AParameterType node, IRInfo question)
+	public STypeIR caseAParameterType(AParameterType node, IRInfo question)
 			throws AnalysisException
 	{
 		String name = node.getName().getName();
 
-		ATemplateTypeCG templateType = new ATemplateTypeCG();
+		ATemplateTypeIR templateType = new ATemplateTypeIR();
 		templateType.setName(name);
 
 		return templateType;
 	}
 
 	@Override
-	public STypeCG caseAOptionalType(AOptionalType node, IRInfo question)
+	public STypeIR caseAOptionalType(AOptionalType node, IRInfo question)
 			throws AnalysisException
 	{
-		STypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = node.getType().apply(question.getTypeVisitor(), question);
 		
 		if(typeCg != null)
 		{
@@ -254,22 +254,22 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	}
 
 	@Override
-	public STypeCG caseANamedInvariantType(ANamedInvariantType node,
+	public STypeIR caseANamedInvariantType(ANamedInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
 		PType type = node.getType();
-		STypeCG underlyingType  = type.apply(question.getTypeVisitor(), question);
+		STypeIR underlyingType  = type.apply(question.getTypeVisitor(), question);
 		
 		// TODO: Morten initially requested some way of knowing whether a type originates
 		// from a named invariant type. With the NamedInvTypeInfo being introduced, using
 		// IR tags for this is redundant. Check if the IR tagging can be removed.
 		underlyingType.setTag(new IRNamedTypeInvariantTag(node.getName().getName()));
 		
-		ATypeNameCG typeName = new ATypeNameCG();
+		ATypeNameIR typeName = new ATypeNameIR();
 		typeName.setDefiningClass(node.getName().getModule());
 		typeName.setName(node.getName().getName());
 		
-		ANamedTypeDeclCG typeDecl = new ANamedTypeDeclCG();
+		ANamedTypeDeclIR typeDecl = new ANamedTypeDeclIR();
 		typeDecl.setName(typeName);
 
 		if(underlyingType != null)
@@ -283,12 +283,12 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	}
 
 	@Override
-	public STypeCG caseAQuoteType(AQuoteType node, IRInfo question)
+	public STypeIR caseAQuoteType(AQuoteType node, IRInfo question)
 			throws AnalysisException
 	{
 		String value = node.getValue().getValue();
 
-		AQuoteTypeCG quoteTypeCg = new AQuoteTypeCG();
+		AQuoteTypeIR quoteTypeCg = new AQuoteTypeIR();
 		quoteTypeCg.setValue(value);
 
 		question.registerQuoteValue(value);
@@ -297,14 +297,14 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	}
 
 	@Override
-	public STypeCG caseARecordInvariantType(ARecordInvariantType node,
+	public STypeIR caseARecordInvariantType(ARecordInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
 		ILexNameToken name = node.getName();
 
-		ARecordTypeCG recordType = new ARecordTypeCG();
+		ARecordTypeIR recordType = new ARecordTypeIR();
 
-		ATypeNameCG typeName = new ATypeNameCG();
+		ATypeNameIR typeName = new ATypeNameIR();
 		typeName.setName(name.getName());
 		typeName.setDefiningClass(name.getModule());
 
@@ -314,99 +314,99 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	}
 
 	@Override
-	public STypeCG caseASeqSeqType(ASeqSeqType node, IRInfo question)
+	public STypeIR caseASeqSeqType(ASeqSeqType node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getTypeAssistant().constructSeqType(node, question);
 	}
 
 	@Override
-	public STypeCG caseASeq1SeqType(ASeq1SeqType node, IRInfo question)
+	public STypeIR caseASeq1SeqType(ASeq1SeqType node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getTypeAssistant().constructSeqType(node, question);
 	}
 
 	@Override
-	public STypeCG caseAOperationType(AOperationType node, IRInfo question)
+	public STypeIR caseAOperationType(AOperationType node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getTypeAssistant().consMethodType(node, node.getParameters(), node.getResult(), question);
 	}
 
 	@Override
-	public STypeCG caseAFunctionType(AFunctionType node, IRInfo question)
+	public STypeIR caseAFunctionType(AFunctionType node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getTypeAssistant().consMethodType(node, node.getParameters(), node.getResult(), question);
 	}
 
 	@Override
-	public STypeCG caseAClassType(AClassType node, IRInfo question)
+	public STypeIR caseAClassType(AClassType node, IRInfo question)
 			throws AnalysisException
 	{
 		String typeName = node.getClassdef().getName().getName();
 
-		AClassTypeCG classType = new AClassTypeCG();
+		AClassTypeIR classType = new AClassTypeIR();
 		classType.setName(typeName);
 
 		return classType;
 	}
 
 	@Override
-	public STypeCG caseAVoidType(AVoidType node, IRInfo question)
+	public STypeIR caseAVoidType(AVoidType node, IRInfo question)
 			throws AnalysisException
 	{
-		return new AVoidTypeCG();
+		return new AVoidTypeIR();
 	}
 
 	@Override
-	public STypeCG caseAIntNumericBasicType(AIntNumericBasicType node,
+	public STypeIR caseAIntNumericBasicType(AIntNumericBasicType node,
 			IRInfo question) throws AnalysisException
 	{
-		return new AIntNumericBasicTypeCG();
+		return new AIntNumericBasicTypeIR();
 	}
 
 	@Override
-	public STypeCG caseANatOneNumericBasicType(ANatOneNumericBasicType node,
+	public STypeIR caseANatOneNumericBasicType(ANatOneNumericBasicType node,
 			IRInfo question) throws AnalysisException
 	{
-		return new ANat1NumericBasicTypeCG();
+		return new ANat1NumericBasicTypeIR();
 	}
 
 	@Override
-	public STypeCG caseANatNumericBasicType(ANatNumericBasicType node,
+	public STypeIR caseANatNumericBasicType(ANatNumericBasicType node,
 			IRInfo question) throws AnalysisException
 	{
-		return new ANatNumericBasicTypeCG();
+		return new ANatNumericBasicTypeIR();
 	}
 
 	@Override
-	public STypeCG caseARealNumericBasicType(ARealNumericBasicType node,
+	public STypeIR caseARealNumericBasicType(ARealNumericBasicType node,
 			IRInfo question) throws AnalysisException
 	{
-		return new ARealNumericBasicTypeCG();
+		return new ARealNumericBasicTypeIR();
 	}
 
 	@Override
-	public STypeCG caseARationalNumericBasicType(
+	public STypeIR caseARationalNumericBasicType(
 			ARationalNumericBasicType node, IRInfo question)
 			throws AnalysisException
 	{
-		return new ARatNumericBasicTypeCG();
+		return new ARatNumericBasicTypeIR();
 	}
 
 	@Override
-	public STypeCG caseACharBasicType(ACharBasicType node, IRInfo question)
+	public STypeIR caseACharBasicType(ACharBasicType node, IRInfo question)
 			throws AnalysisException
 	{
-		return new ACharBasicTypeCG();
+		return new ACharBasicTypeIR();
 	}
 
 	@Override
-	public STypeCG caseABooleanBasicType(ABooleanBasicType node, IRInfo question)
+	public STypeIR caseABooleanBasicType(ABooleanBasicType node, IRInfo question)
 			throws AnalysisException
 	{
-		return new ABoolBasicTypeCG();
+		return new ABoolBasicTypeIR();
 	}
 }

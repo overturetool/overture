@@ -46,40 +46,40 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.ir.SDeclCG;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SPatternCG;
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.ir.declarations.AFuncDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.AMutexSyncDeclCG;
-import org.overture.codegen.ir.declarations.ANamedTraceDeclCG;
-import org.overture.codegen.ir.declarations.APersyncDeclCG;
-import org.overture.codegen.ir.declarations.ARecordDeclCG;
-import org.overture.codegen.ir.declarations.AThreadDeclCG;
-import org.overture.codegen.ir.declarations.ATypeDeclCG;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.declarations.SClassDeclCG;
-import org.overture.codegen.ir.expressions.ANotImplementedExpCG;
-import org.overture.codegen.ir.name.ATokenNameCG;
-import org.overture.codegen.ir.name.ATypeNameCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
-import org.overture.codegen.ir.statements.ANotImplementedStmCG;
-import org.overture.codegen.ir.statements.AReturnStmCG;
-import org.overture.codegen.ir.types.ABoolBasicTypeCG;
-import org.overture.codegen.ir.types.ACharBasicTypeCG;
-import org.overture.codegen.ir.types.AClassTypeCG;
-import org.overture.codegen.ir.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.ir.types.AMethodTypeCG;
-import org.overture.codegen.ir.types.ANat1NumericBasicTypeCG;
-import org.overture.codegen.ir.types.ANatNumericBasicTypeCG;
-import org.overture.codegen.ir.types.ARealNumericBasicTypeCG;
-import org.overture.codegen.ir.types.ARecordTypeCG;
-import org.overture.codegen.ir.types.AStringTypeCG;
-import org.overture.codegen.ir.types.ATemplateTypeCG;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AFuncDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.AMutexSyncDeclIR;
+import org.overture.codegen.ir.declarations.ANamedTraceDeclIR;
+import org.overture.codegen.ir.declarations.APersyncDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.declarations.AThreadDeclIR;
+import org.overture.codegen.ir.declarations.ATypeDeclIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
+import org.overture.codegen.ir.expressions.ANotImplementedExpIR;
+import org.overture.codegen.ir.name.ATokenNameIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.ANotImplementedStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
+import org.overture.codegen.ir.types.ATemplateTypeIR;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRGenerator;
 import org.overture.codegen.ir.IRInfo;
@@ -87,22 +87,22 @@ import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.LexNameTokenWrapper;
 
-public class DeclAssistantCG extends AssistantBase
+public class DeclAssistantIR extends AssistantBase
 {
-	public DeclAssistantCG(AssistantManager assistantManager)
+	public DeclAssistantIR(AssistantManager assistantManager)
 	{
 		super(assistantManager);
 	}
 	
-	public void addDependencies(SClassDeclCG clazz, List<ClonableString> extraDeps, boolean prepend)
+	public void addDependencies(SClassDeclIR clazz, List<ClonableString> extraDeps, boolean prepend)
 	{
-		NodeAssistantCG nodeAssistant = assistantManager.getNodeAssistant();
+		NodeAssistantIR nodeAssistant = assistantManager.getNodeAssistant();
 		clazz.setDependencies(nodeAssistant.buildData(clazz.getDependencies(), extraDeps, prepend));
 	}
 	
-	public boolean isInnerClass(SClassDeclCG node)
+	public boolean isInnerClass(SClassDeclIR node)
 	{
-		return node.parent() != null && node.parent().getAncestor(SClassDeclCG.class) != null;
+		return node.parent() != null && node.parent().getAncestor(SClassDeclIR.class) != null;
 	}
 	
 	public boolean isTestCase(INode node)
@@ -130,7 +130,7 @@ public class DeclAssistantCG extends AssistantBase
 		return false;
 	}
 	
-	public <T extends SClassDeclCG> T buildClass(SClassDefinition node, IRInfo question, T classCg) throws AnalysisException
+	public <T extends SClassDeclIR> T buildClass(SClassDefinition node, IRInfo question, T classCg) throws AnalysisException
 	{
 		String name = node.getName().getName();
 		String access = node.getAccess().getAccess().toString();
@@ -147,7 +147,7 @@ public class DeclAssistantCG extends AssistantBase
 
 		for(ILexNameToken s : superNames)
 		{
-			ATokenNameCG superName = new ATokenNameCG();
+			ATokenNameIR superName = new ATokenNameIR();
 			superName.setName(s.getName());
 			
 			classCg.getSuperNames().add(superName);
@@ -157,42 +157,42 @@ public class DeclAssistantCG extends AssistantBase
 		
 		for (PDefinition def : defs)
 		{
-			SDeclCG decl = def.apply(question.getDeclVisitor(), question);
+			SDeclIR decl = def.apply(question.getDeclVisitor(), question);
 
 			if (decl == null)
 			{
 				continue;// Unspported stuff returns null by default
 			}
-			if (decl instanceof AFieldDeclCG)
+			if (decl instanceof AFieldDeclIR)
 			{
-				classCg.getFields().add((AFieldDeclCG) decl);
-			} else if (decl instanceof AMethodDeclCG)
+				classCg.getFields().add((AFieldDeclIR) decl);
+			} else if (decl instanceof AMethodDeclIR)
 			{
-				classCg.getMethods().add((AMethodDeclCG) decl);
-			} else if (decl instanceof ATypeDeclCG)
+				classCg.getMethods().add((AMethodDeclIR) decl);
+			} else if (decl instanceof ATypeDeclIR)
 			{
-				classCg.getTypeDecls().add((ATypeDeclCG) decl);
-			} else if (decl instanceof AFuncDeclCG)
+				classCg.getTypeDecls().add((ATypeDeclIR) decl);
+			} else if (decl instanceof AFuncDeclIR)
 			{
-				classCg.getFunctions().add((AFuncDeclCG) decl);
-			} else if (decl instanceof AThreadDeclCG)
+				classCg.getFunctions().add((AFuncDeclIR) decl);
+			} else if (decl instanceof AThreadDeclIR)
 			{
 				if (question.getSettings().generateConc())
 				{
-					classCg.setThread((AThreadDeclCG) decl);
+					classCg.setThread((AThreadDeclIR) decl);
 				}
 			}
-			else if (decl instanceof APersyncDeclCG)
+			else if (decl instanceof APersyncDeclIR)
 			{
-				classCg.getPerSyncs().add((APersyncDeclCG) decl);
+				classCg.getPerSyncs().add((APersyncDeclIR) decl);
 			}
-			else if (decl instanceof AMutexSyncDeclCG)
+			else if (decl instanceof AMutexSyncDeclIR)
 			{
-				classCg.getMutexSyncs().add((AMutexSyncDeclCG) decl);
+				classCg.getMutexSyncs().add((AMutexSyncDeclIR) decl);
 			}
-			else if(decl instanceof ANamedTraceDeclCG)
+			else if(decl instanceof ANamedTraceDeclIR)
 			{
-				classCg.getTraces().add((ANamedTraceDeclCG) decl);
+				classCg.getTraces().add((ANamedTraceDeclIR) decl);
 			}
 			else
 			{
@@ -203,12 +203,12 @@ public class DeclAssistantCG extends AssistantBase
 		
 		if(node.getInvariant() != null && question.getSettings().generateInvariants())
 		{
-			SDeclCG invCg = node.getInvariant().apply(question.getDeclVisitor(), question);
+			SDeclIR invCg = node.getInvariant().apply(question.getDeclVisitor(), question);
 			classCg.setInvariant(invCg);
 		}
 
 		boolean defaultConstructorExplicit = false;
-		for (AMethodDeclCG method : classCg.getMethods())
+		for (AMethodDeclIR method : classCg.getMethods())
 		{
 			if (method.getIsConstructor() && method.getFormalParams().isEmpty())
 			{
@@ -227,20 +227,20 @@ public class DeclAssistantCG extends AssistantBase
 		return classCg;
 	}
 	
-	public AMethodDeclCG funcToMethod(AFuncDeclCG node)
+	public AMethodDeclIR funcToMethod(AFuncDeclIR node)
 	{
-		SDeclCG preCond = node.getPreCond();
-		SDeclCG postCond = node.getPostCond();
+		SDeclIR preCond = node.getPreCond();
+		SDeclIR postCond = node.getPostCond();
 		String access = node.getAccess();
 		Boolean isAbstract = node.getAbstract();
-		LinkedList<ATemplateTypeCG> templateTypes = node.getTemplateTypes();
-		AMethodTypeCG methodType = node.getMethodType();
-		LinkedList<AFormalParamLocalParamCG> formalParams = node.getFormalParams();
+		LinkedList<ATemplateTypeIR> templateTypes = node.getTemplateTypes();
+		AMethodTypeIR methodType = node.getMethodType();
+		LinkedList<AFormalParamLocalParamIR> formalParams = node.getFormalParams();
 		String name = node.getName();
-		SExpCG body = node.getBody();
+		SExpIR body = node.getBody();
 		SourceNode sourceNode = node.getSourceNode();
 
-		AMethodDeclCG method = new AMethodDeclCG();
+		AMethodDeclIR method = new AMethodDeclIR();
 		method.setSourceNode(sourceNode);
 
 		if (preCond != null) {
@@ -252,24 +252,24 @@ public class DeclAssistantCG extends AssistantBase
 
 		method.setAccess(access);
 		method.setAbstract(isAbstract);
-		method.setTemplateTypes(cloneNodes(templateTypes, ATemplateTypeCG.class));
+		method.setTemplateTypes(cloneNodes(templateTypes, ATemplateTypeIR.class));
 		method.setMethodType(methodType.clone());
-		method.setFormalParams(cloneNodes(formalParams, AFormalParamLocalParamCG.class));
+		method.setFormalParams(cloneNodes(formalParams, AFormalParamLocalParamIR.class));
 		method.setName(name);
 		method.setStatic(true);
 		method.setIsConstructor(false);
 		method.setImplicit(node.getImplicit());
 
-		if (!(body instanceof ANotImplementedExpCG))
+		if (!(body instanceof ANotImplementedExpIR))
 		{
-			AReturnStmCG returnStm = new AReturnStmCG();
+			AReturnStmIR returnStm = new AReturnStmIR();
 			// Approximate return statement source node as the function body
 			returnStm.setSourceNode(body.getSourceNode());
 			returnStm.setExp(body.clone());
 			method.setBody(returnStm);
 		} else
 		{
-			method.setBody(new ANotImplementedStmCG());
+			method.setBody(new ANotImplementedStmIR());
 		}
 		return method;
 	}
@@ -312,8 +312,8 @@ public class DeclAssistantCG extends AssistantBase
 		return false;
 	}
 
-	public <T extends SDeclCG> List<T> getAllDecls(SClassDeclCG classDecl,
-			List<SClassDeclCG> classes, DeclStrategy<T> strategy)
+	public <T extends SDeclIR> List<T> getAllDecls(SClassDeclIR classDecl,
+			List<SClassDeclIR> classes, DeclStrategy<T> strategy)
 	{
 		List<T> allDecls = new LinkedList<T>();
 
@@ -323,7 +323,7 @@ public class DeclAssistantCG extends AssistantBase
 		
 		for(String s : allSuperNames)
 		{
-			SClassDeclCG superClassDecl = findClass(classes, s);
+			SClassDeclIR superClassDecl = findClass(classes, s);
 			
 			if(superClassDecl != null)
 			{
@@ -340,7 +340,7 @@ public class DeclAssistantCG extends AssistantBase
 		return allDecls;
 	}
 
-	public Set<String> getSuperClasses(SClassDeclCG classDecl, List<SClassDeclCG> classes)
+	public Set<String> getSuperClasses(SClassDeclIR classDecl, List<SClassDeclIR> classes)
 	{
 		if(classDecl.getSuperNames().isEmpty())
 		{
@@ -350,11 +350,11 @@ public class DeclAssistantCG extends AssistantBase
 		{
 			Set<String> superClasses = new HashSet<>();
 			
-			for(ATokenNameCG s : classDecl.getSuperNames())
+			for(ATokenNameIR s : classDecl.getSuperNames())
 			{
 				superClasses.add(s.getName());
 
-				SClassDeclCG clazz = findClass(classes, s.getName());
+				SClassDeclIR clazz = findClass(classes, s.getName());
 				
 				if(clazz != null)
 				{
@@ -366,19 +366,19 @@ public class DeclAssistantCG extends AssistantBase
 		}
 	}
 
-	public List<AMethodDeclCG> getAllMethods(SClassDeclCG classDecl,
-			List<SClassDeclCG> classes)
+	public List<AMethodDeclIR> getAllMethods(SClassDeclIR classDecl,
+			List<SClassDeclIR> classes)
 	{
-		DeclStrategy<AMethodDeclCG> methodDeclStrategy = new DeclStrategy<AMethodDeclCG>()
+		DeclStrategy<AMethodDeclIR> methodDeclStrategy = new DeclStrategy<AMethodDeclIR>()
 		{
 			@Override
-			public String getAccess(AMethodDeclCG decl)
+			public String getAccess(AMethodDeclIR decl)
 			{
 				return decl.getAccess();
 			}
 
 			@Override
-			public List<AMethodDeclCG> getDecls(SClassDeclCG classDecl)
+			public List<AMethodDeclIR> getDecls(SClassDeclIR classDecl)
 			{
 				return classDecl.getMethods();
 			}
@@ -387,19 +387,19 @@ public class DeclAssistantCG extends AssistantBase
 		return getAllDecls(classDecl, classes, methodDeclStrategy);
 	}
 
-	public List<AFieldDeclCG> getAllFields(SClassDeclCG classDecl,
-			List<SClassDeclCG> classes)
+	public List<AFieldDeclIR> getAllFields(SClassDeclIR classDecl,
+			List<SClassDeclIR> classes)
 	{
-		DeclStrategy<AFieldDeclCG> fieldDeclStrategy = new DeclStrategy<AFieldDeclCG>()
+		DeclStrategy<AFieldDeclIR> fieldDeclStrategy = new DeclStrategy<AFieldDeclIR>()
 		{
 			@Override
-			public String getAccess(AFieldDeclCG decl)
+			public String getAccess(AFieldDeclIR decl)
 			{
 				return decl.getAccess();
 			}
 
 			@Override
-			public List<AFieldDeclCG> getDecls(SClassDeclCG classDecl)
+			public List<AFieldDeclIR> getDecls(SClassDeclIR classDecl)
 			{
 				return classDecl.getFields();
 			}
@@ -415,12 +415,12 @@ public class DeclAssistantCG extends AssistantBase
 	}
 
 	public void setFinalLocalDefs(List<PDefinition> localDefs,
-			List<AVarDeclCG> localDecls, IRInfo question)
+			List<AVarDeclIR> localDecls, IRInfo question)
 			throws AnalysisException
 	{
 		for (PDefinition def : localDefs)
 		{
-			AVarDeclCG varDecl = null;
+			AVarDeclIR varDecl = null;
 
 			if (def instanceof AValueDefinition)
 			{
@@ -442,9 +442,9 @@ public class DeclAssistantCG extends AssistantBase
 		}
 	}
 
-	public SClassDeclCG findClass(List<SClassDeclCG> classes, String moduleName)
+	public SClassDeclIR findClass(List<SClassDeclIR> classes, String moduleName)
 	{
-		for (SClassDeclCG classDecl : classes)
+		for (SClassDeclIR classDecl : classes)
 		{
 			if (classDecl.getName().equals(moduleName))
 			{
@@ -456,19 +456,19 @@ public class DeclAssistantCG extends AssistantBase
 	}
 
 	// This method assumes that the record is defined in definingClass and not a super class
-	public ARecordDeclCG findRecord(SClassDeclCG definingClass,
+	public ARecordDeclIR findRecord(SClassDeclIR definingClass,
 			String recordName)
 	{
-		for (ATypeDeclCG typeDecl : definingClass.getTypeDecls())
+		for (ATypeDeclIR typeDecl : definingClass.getTypeDecls())
 		{
-			SDeclCG decl = typeDecl.getDecl();
+			SDeclIR decl = typeDecl.getDecl();
 			
-			if(!(decl instanceof ARecordDeclCG))
+			if(!(decl instanceof ARecordDeclIR))
 			{
 				continue;
 			}
 			
-			ARecordDeclCG recordDecl = (ARecordDeclCG) decl;
+			ARecordDeclIR recordDecl = (ARecordDeclIR) decl;
 			
 			if (recordDecl.getName().equals(recordName))
 			{
@@ -480,20 +480,20 @@ public class DeclAssistantCG extends AssistantBase
 	}
 	
 	// This method assumes that the record is defined in definingClass and not a super class
-	public List<ARecordDeclCG> getRecords(SClassDeclCG definingClass)
+	public List<ARecordDeclIR> getRecords(SClassDeclIR definingClass)
 	{
-		List<ARecordDeclCG> records = new LinkedList<ARecordDeclCG>();
+		List<ARecordDeclIR> records = new LinkedList<ARecordDeclIR>();
 		
-		for (ATypeDeclCG typeDecl : definingClass.getTypeDecls())
+		for (ATypeDeclIR typeDecl : definingClass.getTypeDecls())
 		{
-			SDeclCG decl = typeDecl.getDecl();
+			SDeclIR decl = typeDecl.getDecl();
 			
-			if(!(decl instanceof ARecordDeclCG))
+			if(!(decl instanceof ARecordDeclIR))
 			{
 				continue;
 			}
 			
-			ARecordDeclCG recordDecl = (ARecordDeclCG) decl;
+			ARecordDeclIR recordDecl = (ARecordDeclIR) decl;
 			
 			records.add(recordDecl);
 		}
@@ -501,47 +501,47 @@ public class DeclAssistantCG extends AssistantBase
 		return records;
 	}
 
-	public ARecordDeclCG findRecord(List<SClassDeclCG> classes,
-			ARecordTypeCG recordType)
+	public ARecordDeclIR findRecord(List<SClassDeclIR> classes,
+			ARecordTypeIR recordType)
 	{
-		SClassDeclCG definingClass = findClass(classes, recordType.getName().getDefiningClass());
-		ARecordDeclCG record = findRecord(definingClass, recordType.getName().getName());
+		SClassDeclIR definingClass = findClass(classes, recordType.getName().getDefiningClass());
+		ARecordDeclIR record = findRecord(definingClass, recordType.getName().getName());
 
 		return record;
 	}
 
-	private AVarDeclCG consLocalVarDecl(AValueDefinition valueDef,
+	private AVarDeclIR consLocalVarDecl(AValueDefinition valueDef,
 			IRInfo question) throws AnalysisException
 	{
-		STypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
-		SPatternCG pattern = valueDef.getPattern().apply(question.getPatternVisitor(), question);
-		SExpCG exp = valueDef.getExpression().apply(question.getExpVisitor(), question);
+		STypeIR type = valueDef.getType().apply(question.getTypeVisitor(), question);
+		SPatternIR pattern = valueDef.getPattern().apply(question.getPatternVisitor(), question);
+		SExpIR exp = valueDef.getExpression().apply(question.getExpVisitor(), question);
 
 		return consLocalVarDecl(valueDef, type, pattern, exp);
 
 	}
 
-	private AVarDeclCG consLocalVarDecl(AEqualsDefinition equalsDef,
+	private AVarDeclIR consLocalVarDecl(AEqualsDefinition equalsDef,
 			IRInfo question) throws AnalysisException
 	{
-		STypeCG type = equalsDef.getExpType().apply(question.getTypeVisitor(), question);
-		SPatternCG pattern = equalsDef.getPattern().apply(question.getPatternVisitor(), question);
-		SExpCG exp = equalsDef.getTest().apply(question.getExpVisitor(), question);
+		STypeIR type = equalsDef.getExpType().apply(question.getTypeVisitor(), question);
+		SPatternIR pattern = equalsDef.getPattern().apply(question.getPatternVisitor(), question);
+		SExpIR exp = equalsDef.getTest().apply(question.getExpVisitor(), question);
 
 		return consLocalVarDecl(equalsDef, type, pattern, exp);
 
 	}
 
-	public AVarDeclCG consLocalVarDecl(STypeCG type,
-			SPatternCG pattern, SExpCG exp)
+	public AVarDeclIR consLocalVarDecl(STypeIR type,
+			SPatternIR pattern, SExpIR exp)
 	{
 		return consLocalVarDecl(null, type, pattern, exp);
 	}
 
-	public AVarDeclCG consLocalVarDecl(INode node, STypeCG type,
-			SPatternCG pattern, SExpCG exp)
+	public AVarDeclIR consLocalVarDecl(INode node, STypeIR type,
+			SPatternIR pattern, SExpIR exp)
 	{
-		AVarDeclCG localVarDecl = new AVarDeclCG();
+		AVarDeclIR localVarDecl = new AVarDeclIR();
 		localVarDecl.setType(type);
 		localVarDecl.setFinal(false);
 		localVarDecl.setSourceNode(new SourceNode(node));
@@ -551,11 +551,11 @@ public class DeclAssistantCG extends AssistantBase
 		return localVarDecl;
 	}
 
-	public AFieldDeclCG constructField(String access, String name,
-			boolean isStatic, boolean isFinal, STypeCG type, SExpCG exp)
+	public AFieldDeclIR constructField(String access, String name,
+			boolean isStatic, boolean isFinal, STypeIR type, SExpIR exp)
 	{
 
-		AFieldDeclCG field = new AFieldDeclCG();
+		AFieldDeclIR field = new AFieldDeclIR();
 		field.setAccess(access);
 		field.setName(name);
 		field.setVolatile(false);
@@ -628,30 +628,30 @@ public class DeclAssistantCG extends AssistantBase
 		return methodNames;
 	}
 
-	public void setDefaultValue(AVarDeclCG localDecl, STypeCG typeCg)
+	public void setDefaultValue(AVarDeclIR localDecl, STypeIR typeCg)
 	{
-		ExpAssistantCG expAssistant = assistantManager.getExpAssistant();
+		ExpAssistantIR expAssistant = assistantManager.getExpAssistant();
 
-		if (typeCg instanceof AStringTypeCG)
+		if (typeCg instanceof AStringTypeIR)
 		{
 			localDecl.setExp(expAssistant.getDefaultStringlValue());
-		} else if (typeCg instanceof ACharBasicTypeCG)
+		} else if (typeCg instanceof ACharBasicTypeIR)
 		{
 			localDecl.setExp(expAssistant.getDefaultCharlValue());
-		} else if (typeCg instanceof AIntNumericBasicTypeCG)
+		} else if (typeCg instanceof AIntNumericBasicTypeIR)
 		{
 			localDecl.setExp(expAssistant.getDefaultIntValue());
-		} else if(typeCg instanceof ANat1NumericBasicTypeCG)
+		} else if(typeCg instanceof ANat1NumericBasicTypeIR)
 		{
 			localDecl.setExp(expAssistant.getDefaultNat1Value());
-		} else if(typeCg instanceof ANatNumericBasicTypeCG)
+		} else if(typeCg instanceof ANatNumericBasicTypeIR)
 		{
 			localDecl.setExp(expAssistant.getDefaultNatValue());
 		}
-		else if (typeCg instanceof ARealNumericBasicTypeCG)
+		else if (typeCg instanceof ARealNumericBasicTypeIR)
 		{
 			localDecl.setExp(expAssistant.getDefaultRealValue());
-		} else if (typeCg instanceof ABoolBasicTypeCG)
+		} else if (typeCg instanceof ABoolBasicTypeIR)
 		{
 			localDecl.setExp(expAssistant.getDefaultBoolValue());
 		} else
@@ -660,17 +660,17 @@ public class DeclAssistantCG extends AssistantBase
 		}
 	}
 
-	public AFieldDeclCG getFieldDecl(List<SClassDeclCG> classes,
-			ARecordTypeCG recordType, int number)
+	public AFieldDeclIR getFieldDecl(List<SClassDeclIR> classes,
+			ARecordTypeIR recordType, int number)
 	{
-		ARecordDeclCG record = findRecord(classes, recordType);
+		ARecordDeclIR record = findRecord(classes, recordType);
 
 		return record.getFields().get(number);
 	}
 	
-	public AFieldDeclCG getFieldDecl(SClassDeclCG clazz, String fieldName)
+	public AFieldDeclIR getFieldDecl(SClassDeclIR clazz, String fieldName)
 	{
-		for(AFieldDeclCG field : clazz.getFields())
+		for(AFieldDeclIR field : clazz.getFields())
 		{
 			if(field.getName().equals(fieldName))
 			{
@@ -681,10 +681,10 @@ public class DeclAssistantCG extends AssistantBase
 		return null;
 	}
 
-	public AFieldDeclCG getFieldDecl(List<SClassDeclCG> classes,
-			ARecordTypeCG recordType, String memberName)
+	public AFieldDeclIR getFieldDecl(List<SClassDeclIR> classes,
+			ARecordTypeIR recordType, String memberName)
 	{
-		ATypeNameCG name = recordType.getName();
+		ATypeNameIR name = recordType.getName();
 
 		if (name == null)
 		{
@@ -708,8 +708,8 @@ public class DeclAssistantCG extends AssistantBase
 					+ recordType);
 		}
 
-		SClassDeclCG definingClass = null;
-		for (SClassDeclCG currentClass : classes)
+		SClassDeclIR definingClass = null;
+		for (SClassDeclIR currentClass : classes)
 		{
 			if (currentClass.getName().equals(definingClassName))
 			{
@@ -724,10 +724,10 @@ public class DeclAssistantCG extends AssistantBase
 					+ definingClassName);
 		}
 
-		List<ARecordDeclCG> records = getRecords(definingClass);
+		List<ARecordDeclIR> records = getRecords(definingClass);
 
-		ARecordDeclCG recordDecl = null;
-		for (ARecordDeclCG currentRec : records)
+		ARecordDeclIR recordDecl = null;
+		for (ARecordDeclIR currentRec : records)
 		{
 			if (currentRec.getName().equals(recName))
 			{
@@ -742,10 +742,10 @@ public class DeclAssistantCG extends AssistantBase
 					+ recName + "' in class '" + definingClassName + "'");
 		}
 
-		List<AFieldDeclCG> fields = recordDecl.getFields();
+		List<AFieldDeclIR> fields = recordDecl.getFields();
 
-		AFieldDeclCG field = null;
-		for (AFieldDeclCG currentField : fields)
+		AFieldDeclIR field = null;
+		for (AFieldDeclIR currentField : fields)
 		{
 			if (currentField.getName().equals(memberName))
 			{
@@ -756,22 +756,22 @@ public class DeclAssistantCG extends AssistantBase
 		return field;
 	}
 	
-	public AMethodDeclCG initMethod(SOperationDefinition node, IRInfo question) throws AnalysisException
+	public AMethodDeclIR initMethod(SOperationDefinition node, IRInfo question) throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
 		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
 		boolean isAsync = question.getTcFactory().createPAccessSpecifierAssistant().isAsync(node.getAccess());
 		String operationName = node.getName().getName();
-		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+		STypeIR type = node.getType().apply(question.getTypeVisitor(), question);
 
-		if (!(type instanceof AMethodTypeCG))
+		if (!(type instanceof AMethodTypeIR))
 		{
 			return null;
 		}
 
-		AMethodTypeCG methodType = (AMethodTypeCG) type;
+		AMethodTypeIR methodType = (AMethodTypeIR) type;
 
-		SStmCG bodyCg = null; 
+		SStmIR bodyCg = null; 
 		if (node.getBody() != null)
 		{
 			bodyCg = node.getBody().apply(question.getStmVisitor(), question);
@@ -780,7 +780,7 @@ public class DeclAssistantCG extends AssistantBase
 		boolean isConstructor = node.getIsConstructor();
 		boolean isAbstract = node.getBody() instanceof ASubclassResponsibilityStm;
 
-		AMethodDeclCG method = new AMethodDeclCG();
+		AMethodDeclIR method = new AMethodDeclIR();
 
 		method.setImplicit(false);
 		method.setAccess(access);
@@ -794,31 +794,31 @@ public class DeclAssistantCG extends AssistantBase
 		method.setImplicit(node instanceof AImplicitOperationDefinition);
 		
 		AExplicitFunctionDefinition preCond = node.getPredef();
-		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
+		SDeclIR preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
 		method.setPreCond(preCondCg);
 		
 		AExplicitFunctionDefinition postCond = node.getPostdef();
-		SDeclCG postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
+		SDeclIR postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
 		method.setPostCond(postCondCg);
 		
 		return method;
 	}
 	
 
-	public List<AFormalParamLocalParamCG> consFormalParams(
+	public List<AFormalParamLocalParamIR> consFormalParams(
 			List<APatternListTypePair> params, IRInfo question)
 			throws AnalysisException
 	{
-		List<AFormalParamLocalParamCG> paramsCg = new LinkedList<>();
+		List<AFormalParamLocalParamIR> paramsCg = new LinkedList<>();
 		for(APatternListTypePair patternListPair : params)
 		{
-			STypeCG pairTypeCg = patternListPair.getType().apply(question.getTypeVisitor(), question);
+			STypeIR pairTypeCg = patternListPair.getType().apply(question.getTypeVisitor(), question);
 			
 			for(PPattern p : patternListPair.getPatterns())
 			{
-				SPatternCG patternCg = p.apply(question.getPatternVisitor(), question);
+				SPatternIR patternCg = p.apply(question.getPatternVisitor(), question);
 				
-				AFormalParamLocalParamCG paramCg = new AFormalParamLocalParamCG();
+				AFormalParamLocalParamIR paramCg = new AFormalParamLocalParamIR();
 				paramCg.setPattern(patternCg);
 				paramCg.setType(pairTypeCg.clone());
 				
@@ -916,14 +916,14 @@ public class DeclAssistantCG extends AssistantBase
 		return preCond == next || postCond == next;
 	}
 	
-	public AMethodDeclCG consDefaultContructor(String name)
+	public AMethodDeclIR consDefaultContructor(String name)
 	{
-		AMethodDeclCG constructor = new AMethodDeclCG();
+		AMethodDeclIR constructor = new AMethodDeclIR();
 
-		AClassTypeCG classType = new AClassTypeCG();
+		AClassTypeIR classType = new AClassTypeIR();
 		classType.setName(name);
 
-		AMethodTypeCG methodType = new AMethodTypeCG();
+		AMethodTypeIR methodType = new AMethodTypeIR();
 		methodType.setResult(classType);
 
 		constructor.setMethodType(methodType);
@@ -932,7 +932,7 @@ public class DeclAssistantCG extends AssistantBase
 		constructor.setIsConstructor(true);
 		constructor.setName(name);
 		constructor.setImplicit(false);
-		constructor.setBody(new ABlockStmCG());
+		constructor.setBody(new ABlockStmIR());
 		
 		return constructor;
 	}

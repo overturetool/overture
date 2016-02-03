@@ -28,46 +28,46 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SPatternCG;
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.AModuleDeclCG;
-import org.overture.codegen.ir.declarations.AStateDeclCG;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.expressions.AAndBoolBinaryExpCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
-import org.overture.codegen.ir.expressions.ACompSeqExpCG;
-import org.overture.codegen.ir.expressions.AFieldExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.expressions.AIntLiteralExpCG;
-import org.overture.codegen.ir.expressions.ALessNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ANewExpCG;
-import org.overture.codegen.ir.expressions.ANotUnaryExpCG;
-import org.overture.codegen.ir.name.ATypeNameCG;
-import org.overture.codegen.ir.patterns.AIdentifierPatternCG;
-import org.overture.codegen.ir.patterns.ASetMultipleBindCG;
-import org.overture.codegen.ir.statements.AAssignToExpStmCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
-import org.overture.codegen.ir.statements.ACallObjectExpStmCG;
-import org.overture.codegen.ir.statements.AForLoopStmCG;
-import org.overture.codegen.ir.statements.AIfStmCG;
-import org.overture.codegen.ir.statements.AIncrementStmCG;
-import org.overture.codegen.ir.statements.ALocalPatternAssignmentStmCG;
-import org.overture.codegen.ir.types.ABoolBasicTypeCG;
-import org.overture.codegen.ir.types.AClassTypeCG;
-import org.overture.codegen.ir.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.ir.types.AMethodTypeCG;
-import org.overture.codegen.ir.types.ARecordTypeCG;
-import org.overture.codegen.ir.types.AVoidTypeCG;
-import org.overture.codegen.ir.types.SSeqTypeCG;
-import org.overture.codegen.ir.types.SSetTypeCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
+import org.overture.codegen.ir.declarations.AStateDeclIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.ACompSeqExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
+import org.overture.codegen.ir.expressions.ALessNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
+import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.patterns.ASetMultipleBindIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
+import org.overture.codegen.ir.statements.AForLoopStmIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
+import org.overture.codegen.ir.statements.AIncrementStmIR;
+import org.overture.codegen.ir.statements.ALocalPatternAssignmentStmIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.AVoidTypeIR;
+import org.overture.codegen.ir.types.SSeqTypeIR;
+import org.overture.codegen.ir.types.SSetTypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SourceNode;
@@ -76,11 +76,11 @@ import org.overture.codegen.trans.IIterationStrategy;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.config.Settings;
 
-public class TransAssistantCG extends BaseTransformationAssistant
+public class TransAssistantIR extends BaseTransformationAssistant
 {
 	protected IRInfo info;
 
-	public TransAssistantCG(IRInfo info)
+	public TransAssistantIR(IRInfo info)
 	{
 		this.info = info;
 	}
@@ -90,18 +90,18 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return info;
 	}
 
-	public SSetTypeCG getSetTypeCloned(SExpCG set) throws AnalysisException
+	public SSetTypeIR getSetTypeCloned(SExpIR set) throws AnalysisException
 	{
-		STypeCG typeCg = set.getType();
+		STypeIR typeCg = set.getType();
 
 		return getSetTypeCloned(typeCg);
 	}
 
-	public SSetTypeCG getSetTypeCloned(STypeCG typeCg) throws AnalysisException
+	public SSetTypeIR getSetTypeCloned(STypeIR typeCg) throws AnalysisException
 	{
-		if (typeCg instanceof SSetTypeCG)
+		if (typeCg instanceof SSetTypeIR)
 		{
-			SSetTypeCG setTypeCg = (SSetTypeCG) typeCg;
+			SSetTypeIR setTypeCg = (SSetTypeIR) typeCg;
 
 			return setTypeCg.clone();
 		} else
@@ -115,7 +115,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 				try
 				{
 					typeCg = setType.apply(info.getTypeVisitor(), info);
-					return (SSetTypeCG) typeCg;
+					return (SSetTypeIR) typeCg;
 
 				} catch (org.overture.ast.analysis.AnalysisException e)
 				{
@@ -126,18 +126,18 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		}
 	}
 
-	public SSeqTypeCG getSeqTypeCloned(SExpCG seq) throws AnalysisException
+	public SSeqTypeIR getSeqTypeCloned(SExpIR seq) throws AnalysisException
 	{
-		STypeCG typeCg = seq.getType();
+		STypeIR typeCg = seq.getType();
 
 		return getSeqTypeCloned(typeCg);
 	}
 
-	public SSeqTypeCG getSeqTypeCloned(STypeCG typeCg) throws AnalysisException
+	public SSeqTypeIR getSeqTypeCloned(STypeIR typeCg) throws AnalysisException
 	{
-		if (typeCg instanceof SSeqTypeCG)
+		if (typeCg instanceof SSeqTypeIR)
 		{
-			SSeqTypeCG seqTypeCg = (SSeqTypeCG) typeCg;
+			SSeqTypeIR seqTypeCg = (SSeqTypeIR) typeCg;
 
 			return seqTypeCg.clone();
 		} else
@@ -151,7 +151,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 				try
 				{
 					typeCg = seqType.apply(info.getTypeVisitor(), info);
-					return (SSeqTypeCG) typeCg;
+					return (SSeqTypeIR) typeCg;
 
 				} catch (org.overture.ast.analysis.AnalysisException e)
 				{
@@ -163,61 +163,61 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		}
 	}
 
-	public AIdentifierVarExpCG consSuccessVar(String successVarName)
+	public AIdentifierVarExpIR consSuccessVar(String successVarName)
 	{
-		AIdentifierVarExpCG successVar = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR successVar = new AIdentifierVarExpIR();
 		successVar.setIsLambda(false);
 		successVar.setIsLocal(true);
 		successVar.setName(successVarName);
-		successVar.setType(new ABoolBasicTypeCG());
+		successVar.setType(new ABoolBasicTypeIR());
 
 		return successVar;
 	}
 
-	public AVarDeclCG consBoolVarDecl(String boolVarName, boolean initValue)
+	public AVarDeclIR consBoolVarDecl(String boolVarName, boolean initValue)
 	{
-		return info.getDeclAssistant().consLocalVarDecl(new ABoolBasicTypeCG(),
+		return info.getDeclAssistant().consLocalVarDecl(new ABoolBasicTypeIR(),
 				info.getPatternAssistant().consIdPattern(boolVarName), info.getExpAssistant().consBoolLiteral(initValue));
 	}
 
-	public SExpCG consAndExp(SExpCG left, SExpCG right)
+	public SExpIR consAndExp(SExpIR left, SExpIR right)
 	{
-		AAndBoolBinaryExpCG andExp = new AAndBoolBinaryExpCG();
-		andExp.setType(new ABoolBasicTypeCG());
+		AAndBoolBinaryExpIR andExp = new AAndBoolBinaryExpIR();
+		andExp.setType(new ABoolBasicTypeIR());
 		andExp.setLeft(left);
 		andExp.setRight(right);
 
 		return andExp;
 	}
 
-	public SExpCG consLessThanCheck(String varName, long value)
+	public SExpIR consLessThanCheck(String varName, long value)
 	{
-		AIdentifierVarExpCG left = new AIdentifierVarExpCG();
-		left.setType(new AIntNumericBasicTypeCG());
+		AIdentifierVarExpIR left = new AIdentifierVarExpIR();
+		left.setType(new AIntNumericBasicTypeIR());
 		left.setIsLocal(true);
 		left.setName(varName);
 
-		AIntLiteralExpCG right = info.getExpAssistant().consIntLiteral(value);
+		AIntLiteralExpIR right = info.getExpAssistant().consIntLiteral(value);
 
-		ALessNumericBinaryExpCG less = new ALessNumericBinaryExpCG();
-		less.setType(new ABoolBasicTypeCG());
+		ALessNumericBinaryExpIR less = new ALessNumericBinaryExpIR();
+		less.setType(new ABoolBasicTypeIR());
 		less.setLeft(left);
 		less.setRight(right);
 
 		return less;
 	}
 
-	public SExpCG consBoolCheck(String boolVarName, boolean negate)
+	public SExpIR consBoolCheck(String boolVarName, boolean negate)
 	{
-		AIdentifierVarExpCG boolVarExp = new AIdentifierVarExpCG();
-		boolVarExp.setType(new ABoolBasicTypeCG());
+		AIdentifierVarExpIR boolVarExp = new AIdentifierVarExpIR();
+		boolVarExp.setType(new ABoolBasicTypeIR());
 		boolVarExp.setIsLocal(true);
 		boolVarExp.setName(boolVarName);
 
 		if (negate)
 		{
-			ANotUnaryExpCG negated = new ANotUnaryExpCG();
-			negated.setType(new ABoolBasicTypeCG());
+			ANotUnaryExpIR negated = new ANotUnaryExpIR();
+			negated.setType(new ABoolBasicTypeIR());
 			negated.setExp(boolVarExp);
 
 			return negated;
@@ -227,10 +227,10 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		}
 	}
 
-	public AAssignToExpStmCG consBoolVarAssignment(SExpCG predicate,
+	public AAssignToExpStmIR consBoolVarAssignment(SExpIR predicate,
 			String boolVarName)
 	{
-		AAssignToExpStmCG boolVarAssignment = new AAssignToExpStmCG();
+		AAssignToExpStmIR boolVarAssignment = new AAssignToExpStmIR();
 		boolVarAssignment.setTarget(consBoolCheck(boolVarName, false));
 		boolVarAssignment.setExp(predicate != null ? predicate.clone()
 				: info.getExpAssistant().consBoolLiteral(true));
@@ -238,48 +238,48 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return boolVarAssignment;
 	}
 
-	public AVarDeclCG consSetBindDecl(String setBindName, SExpCG set)
+	public AVarDeclIR consSetBindDecl(String setBindName, SExpIR set)
 			throws AnalysisException
 	{
 		return info.getDeclAssistant().consLocalVarDecl(getSetTypeCloned(set),
 				info.getPatternAssistant().consIdPattern(setBindName), set.clone());
 	}
 
-	public AVarDeclCG consDecl(String varName, STypeCG type, SExpCG exp)
+	public AVarDeclIR consDecl(String varName, STypeIR type, SExpIR exp)
 	{
 		return info.getDeclAssistant().consLocalVarDecl(type, info.getPatternAssistant().consIdPattern(varName), exp);
 	}
 
-	public AClassTypeCG consClassType(String classTypeName)
+	public AClassTypeIR consClassType(String classTypeName)
 	{
-		AClassTypeCG classType = new AClassTypeCG();
+		AClassTypeIR classType = new AClassTypeIR();
 		classType.setName(classTypeName);
 
 		return classType;
 	}
 
-	public SExpCG consInstanceCall(STypeCG instanceType, String instanceName,
-			STypeCG returnType, String memberName, SExpCG... args)
+	public SExpIR consInstanceCall(STypeIR instanceType, String instanceName,
+			STypeIR returnType, String memberName, SExpIR... args)
 	{
-		AIdentifierVarExpCG instance = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR instance = new AIdentifierVarExpIR();
 		instance.setType(instanceType.clone());
 		instance.setName(instanceName);
 		instance.setIsLocal(true);
 
-		AFieldExpCG fieldExp = new AFieldExpCG();
+		AFieldExpIR fieldExp = new AFieldExpIR();
 		fieldExp.setMemberName(memberName);
 		fieldExp.setObject(instance);
 
-		AMethodTypeCG methodType = new AMethodTypeCG();
+		AMethodTypeIR methodType = new AMethodTypeIR();
 		methodType.setResult(returnType.clone());
 
-		AApplyExpCG instanceCall = new AApplyExpCG();
+		AApplyExpIR instanceCall = new AApplyExpIR();
 
 		instanceCall.setType(returnType.clone());
 
 		if (args != null)
 		{
-			for (SExpCG arg : args)
+			for (SExpIR arg : args)
 			{
 				methodType.getParams().add(arg.getType().clone());
 				instanceCall.getArgs().add(arg);
@@ -294,19 +294,19 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	}
 
 	// TODO: This actually forces the return type to be 'void'. Maybe generalise?
-	public ACallObjectExpStmCG consInstanceCallStm(STypeCG instanceType,
-			String instanceName, String memberName, SExpCG... args)
+	public ACallObjectExpStmIR consInstanceCallStm(STypeIR instanceType,
+			String instanceName, String memberName, SExpIR... args)
 	{
-		AIdentifierVarExpCG instance = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR instance = new AIdentifierVarExpIR();
 		instance.setName(instanceName);
 		instance.setType(instanceType.clone());
 
-		ACallObjectExpStmCG call = new ACallObjectExpStmCG();
-		call.setType(new AVoidTypeCG());
+		ACallObjectExpStmIR call = new ACallObjectExpStmIR();
+		call.setType(new AVoidTypeIR());
 		call.setFieldName(memberName);
 		call.setObj(instance);
 
-		for (SExpCG arg : args)
+		for (SExpIR arg : args)
 		{
 			call.getArgs().add(arg);
 		}
@@ -314,23 +314,23 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return call;
 	}
 
-	public AVarDeclCG consNextElementDeclared(STypeCG iteratorType,
-			STypeCG elementType, SPatternCG id, String iteratorName,
+	public AVarDeclIR consNextElementDeclared(STypeIR iteratorType,
+			STypeIR elementType, SPatternIR id, String iteratorName,
 			String nextElementMethod) throws AnalysisException
 	{
-		ACastUnaryExpCG cast = consNextElementCall(iteratorType, iteratorName, elementType, nextElementMethod);
+		ACastUnaryExpIR cast = consNextElementCall(iteratorType, iteratorName, elementType, nextElementMethod);
 
 		return info.getDeclAssistant().consLocalVarDecl(elementType, id.clone(), cast);
 	}
 
-	public ALocalPatternAssignmentStmCG consNextElementAssignment(
-			STypeCG iteratorType, STypeCG elementType, SPatternCG id,
+	public ALocalPatternAssignmentStmIR consNextElementAssignment(
+			STypeIR iteratorType, STypeIR elementType, SPatternIR id,
 			String iteratorName, String nextElementMethod,
-			AVarDeclCG nextElementDecl) throws AnalysisException
+			AVarDeclIR nextElementDecl) throws AnalysisException
 	{
-		ACastUnaryExpCG cast = consNextElementCall(iteratorType, iteratorName, elementType, nextElementMethod);
+		ACastUnaryExpIR cast = consNextElementCall(iteratorType, iteratorName, elementType, nextElementMethod);
 
-		ALocalPatternAssignmentStmCG assignment = new ALocalPatternAssignmentStmCG();
+		ALocalPatternAssignmentStmIR assignment = new ALocalPatternAssignmentStmIR();
 		assignment.setTarget(id.clone());
 		assignment.setExp(cast);
 
@@ -343,77 +343,77 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return assignment;
 	}
 
-	public ANewExpCG consDefaultConsCall(String className)
+	public ANewExpIR consDefaultConsCall(String className)
 	{
 		return consDefaultConsCall(consClassType(className));
 	}
 
-	public ANewExpCG consDefaultConsCall(AClassTypeCG classType)
+	public ANewExpIR consDefaultConsCall(AClassTypeIR classType)
 	{
-		ANewExpCG initAltNode = new ANewExpCG();
+		ANewExpIR initAltNode = new ANewExpIR();
 		initAltNode.setType(classType.clone());
 		initAltNode.setName(consTypeNameForClass(classType.getName()));
 
 		return initAltNode;
 	}
 
-	public ATypeNameCG consTypeNameForClass(String classTypeName)
+	public ATypeNameIR consTypeNameForClass(String classTypeName)
 	{
-		ATypeNameCG typeName = new ATypeNameCG();
+		ATypeNameIR typeName = new ATypeNameIR();
 		typeName.setDefiningClass(null);
 		typeName.setName(classTypeName);
 
 		return typeName;
 	}
 
-	public ACastUnaryExpCG consNextElementCall(STypeCG iteratorType,
-			String iteratorName, STypeCG elementType, String nextElementMethod)
+	public ACastUnaryExpIR consNextElementCall(STypeIR iteratorType,
+			String iteratorName, STypeIR elementType, String nextElementMethod)
 	{
-		ACastUnaryExpCG cast = new ACastUnaryExpCG();
+		ACastUnaryExpIR cast = new ACastUnaryExpIR();
 		cast.setType(elementType.clone());
 		cast.setExp(consInstanceCall(iteratorType, iteratorName, elementType.clone(), nextElementMethod));
 		return cast;
 	}
 
-	public SStmCG consConditionalIncrement(String counterName, SExpCG predicate)
+	public SStmIR consConditionalIncrement(String counterName, SExpIR predicate)
 	{
-		AIdentifierVarExpCG col = new AIdentifierVarExpCG();
-		col.setType(new AIntNumericBasicTypeCG());
+		AIdentifierVarExpIR col = new AIdentifierVarExpIR();
+		col.setType(new AIntNumericBasicTypeIR());
 		col.setIsLambda(false);
 		col.setIsLocal(true);
 		col.setName(counterName);
 
-		AIncrementStmCG inc = new AIncrementStmCG();
+		AIncrementStmIR inc = new AIncrementStmIR();
 		inc.setVar(col);
 
-		AIfStmCG ifStm = new AIfStmCG();
+		AIfStmIR ifStm = new AIfStmIR();
 		ifStm.setIfExp(predicate);
 		ifStm.setThenStm(inc);
 
 		return ifStm;
 	}
 
-	public ABlockStmCG consIterationBlock(List<SPatternCG> ids, SExpCG set,
+	public ABlockStmIR consIterationBlock(List<SPatternIR> ids, SExpIR set,
 			ITempVarGen tempGen, IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes)
 			throws AnalysisException
 	{
-		ABlockStmCG outerBlock = new ABlockStmCG();
+		ABlockStmIR outerBlock = new ABlockStmIR();
 
 		consIterationBlock(outerBlock, ids, set, tempGen, strategy, iteVarPrefixes);
 
 		return outerBlock;
 	}
 
-	public AIdentifierVarExpCG consSetVar(String setName, SExpCG set)
+	public AIdentifierVarExpIR consSetVar(String setName, SExpIR set)
 	{
 		if (set == null)
 		{
 			return null;
 		}
 
-		AIdentifierVarExpCG setVar = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR setVar = new AIdentifierVarExpIR();
 
-		STypeCG setType = set.getType().clone();
+		STypeIR setType = set.getType().clone();
 
 		setVar.setType(setType);
 		setVar.setName(setName);
@@ -422,16 +422,16 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return setVar;
 	}
 
-	private ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
-			List<SPatternCG> patterns, SExpCG set, ITempVarGen tempGen,
+	private ABlockStmIR consIterationBlock(ABlockStmIR outerBlock,
+			List<SPatternIR> patterns, SExpIR set, ITempVarGen tempGen,
 			IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes) throws AnalysisException
 	{
 		// Variable names
 		String setName = tempGen.nextVarName(iteVarPrefixes.set());
-		AIdentifierVarExpCG setVar = consSetVar(setName, set);
+		AIdentifierVarExpIR setVar = consSetVar(setName, set);
 
-		ABlockStmCG forBody = null;
-		List<AVarDeclCG> extraDecls = strategy.getOuterBlockDecls(setVar, patterns);
+		ABlockStmIR forBody = null;
+		List<AVarDeclIR> extraDecls = strategy.getOuterBlockDecls(setVar, patterns);
 
 		if (extraDecls != null)
 		{
@@ -442,13 +442,13 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		{
 			outerBlock.getLocalDefs().add(consSetBindDecl(setName, set));
 
-			ABlockStmCG nextBlock = outerBlock;
+			ABlockStmIR nextBlock = outerBlock;
 
 			for (int i = 0;;)
 			{
-				SPatternCG pattern = patterns.get(i);
+				SPatternIR pattern = patterns.get(i);
 
-				List<SStmCG> stms = strategy.getPreForLoopStms(setVar, patterns, pattern);
+				List<SStmIR> stms = strategy.getPreForLoopStms(setVar, patterns, pattern);
 
 				if (stms != null)
 				{
@@ -456,22 +456,22 @@ public class TransAssistantCG extends BaseTransformationAssistant
 				}
 
 				// Construct next for loop
-				AForLoopStmCG forLoop = new AForLoopStmCG();
+				AForLoopStmIR forLoop = new AForLoopStmIR();
 
 				forLoop.setInit(strategy.getForLoopInit(setVar, patterns, pattern));
 				forLoop.setCond(strategy.getForLoopCond(setVar, patterns, pattern));
 				forLoop.setInc(strategy.getForLoopInc(setVar, patterns, pattern));
 
-				ABlockStmCG stmCollector = new ABlockStmCG();
+				ABlockStmIR stmCollector = new ABlockStmIR();
 
-				AVarDeclCG nextElementDeclared = strategy.getNextElementDeclared(setVar, patterns, pattern);
+				AVarDeclIR nextElementDeclared = strategy.getNextElementDeclared(setVar, patterns, pattern);
 
 				if (nextElementDeclared != null)
 				{
 					stmCollector.getLocalDefs().add(nextElementDeclared);
 				}
 
-				ALocalPatternAssignmentStmCG assignment = strategy.getNextElementAssigned(setVar, patterns, pattern);
+				ALocalPatternAssignmentStmIR assignment = strategy.getNextElementAssigned(setVar, patterns, pattern);
 
 				if (assignment != null)
 				{
@@ -489,7 +489,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 					nextBlock = forBody;
 				} else
 				{
-					List<SStmCG> extraForLoopStatements = strategy.getForLoopStms(setVar, patterns, pattern);
+					List<SStmIR> extraForLoopStatements = strategy.getForLoopStms(setVar, patterns, pattern);
 
 					if (extraForLoopStatements != null)
 					{
@@ -501,7 +501,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 			}
 		}
 
-		List<SStmCG> extraOuterBlockStms = strategy.getPostOuterBlockStms(setVar, patterns);
+		List<SStmIR> extraOuterBlockStms = strategy.getPostOuterBlockStms(setVar, patterns);
 
 		if (extraOuterBlockStms != null)
 		{
@@ -512,17 +512,17 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	}
 
 	//FIXME make this method work on generic PMUltipleBinds
-	public ABlockStmCG consComplexCompIterationBlock(
-			List<ASetMultipleBindCG> multipleSetBinds, ITempVarGen tempGen,
+	public ABlockStmIR consComplexCompIterationBlock(
+			List<ASetMultipleBindIR> multipleSetBinds, ITempVarGen tempGen,
 			IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes) throws AnalysisException
 	{
-		ABlockStmCG outerBlock = new ABlockStmCG();
+		ABlockStmIR outerBlock = new ABlockStmIR();
 
-		ABlockStmCG nextMultiBindBlock = outerBlock;
+		ABlockStmIR nextMultiBindBlock = outerBlock;
 
-		for (ASetMultipleBindCG bind : multipleSetBinds)
+		for (ASetMultipleBindIR bind : multipleSetBinds)
 		{
-			SSetTypeCG setType = getSetTypeCloned(bind.getSet());
+			SSetTypeIR setType = getSetTypeCloned(bind.getSet());
 
 			if (setType.getEmpty())
 			{
@@ -537,7 +537,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		{
 			strategy.setLastBind(i == multipleSetBinds.size() - 1);
 
-			ASetMultipleBindCG mb = multipleSetBinds.get(i);
+			ASetMultipleBindIR mb = multipleSetBinds.get(i);
 			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy, iteVarPrefixes);
 
 			strategy.setFirstBind(false);
@@ -546,41 +546,41 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return outerBlock;
 	}
 
-	public ACastUnaryExpCG consNextElementCall(STypeCG instanceType,
-			String instance, String member, ACompSeqExpCG seqComp)
+	public ACastUnaryExpIR consNextElementCall(STypeIR instanceType,
+			String instance, String member, ACompSeqExpIR seqComp)
 			throws AnalysisException
 	{
 
-		STypeCG elementType = getSeqTypeCloned(seqComp).getSeqOf();
+		STypeIR elementType = getSeqTypeCloned(seqComp).getSeqOf();
 
-		SExpCG nextCall = consInstanceCall(instanceType, instance, elementType.clone(), member);
-		ACastUnaryExpCG cast = new ACastUnaryExpCG();
+		SExpIR nextCall = consInstanceCall(instanceType, instance, elementType.clone(), member);
+		ACastUnaryExpIR cast = new ACastUnaryExpIR();
 		cast.setType(elementType.clone());
 		cast.setExp(nextCall);
 
 		return cast;
 	}
 
-	public Boolean hasEmptySet(ASetMultipleBindCG binding)
+	public Boolean hasEmptySet(ASetMultipleBindIR binding)
 			throws AnalysisException
 	{
 		return isEmptySet(binding.getSet());
 	}
 
-	public Boolean isEmptySet(SExpCG set) throws AnalysisException
+	public Boolean isEmptySet(SExpIR set) throws AnalysisException
 	{
 		return getSetTypeCloned(set).getEmpty();
 	}
 
-	public void cleanUpBinding(ASetMultipleBindCG binding)
+	public void cleanUpBinding(ASetMultipleBindIR binding)
 	{
 		binding.setSet(null);
 		binding.getPatterns().clear();
 	}
 
-	public AFieldDeclCG consField(String access, STypeCG type, String name, SExpCG initExp)
+	public AFieldDeclIR consField(String access, STypeIR type, String name, SExpIR initExp)
 	{
-		AFieldDeclCG stateField = new AFieldDeclCG();
+		AFieldDeclIR stateField = new AFieldDeclIR();
 		stateField.setAccess(access);
 		stateField.setType(type);
 		stateField.setStatic(true);
@@ -592,35 +592,35 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return stateField;
 	}
 
-	public AApplyExpCG consConditionalCall(AMethodDeclCG node,
-			AMethodDeclCG predMethod)
+	public AApplyExpIR consConditionalCall(AMethodDeclIR node,
+			AMethodDeclIR predMethod)
 	{
-		AIdentifierVarExpCG condVar = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR condVar = new AIdentifierVarExpIR();
 		condVar.setType(predMethod.getMethodType().clone());
 		condVar.setName(predMethod.getName());
 		condVar.setIsLambda(false);
 		condVar.setIsLocal(true);
 
-		AApplyExpCG condCall = new AApplyExpCG();
-		condCall.setType(new ABoolBasicTypeCG());
+		AApplyExpIR condCall = new AApplyExpIR();
+		condCall.setType(new ABoolBasicTypeIR());
 		condCall.setRoot(condVar);
 
-		LinkedList<AFormalParamLocalParamCG> params = node.getFormalParams();
+		LinkedList<AFormalParamLocalParamIR> params = node.getFormalParams();
 
-		for (AFormalParamLocalParamCG p : params)
+		for (AFormalParamLocalParamIR p : params)
 		{
-			SPatternCG paramPattern = p.getPattern();
+			SPatternIR paramPattern = p.getPattern();
 
-			if (!(paramPattern instanceof AIdentifierPatternCG))
+			if (!(paramPattern instanceof AIdentifierPatternIR))
 			{
 				Logger.getLog().printErrorln("Expected parameter pattern to be an identifier pattern at this point. Got: "
 						+ paramPattern);
 				return null;
 			}
 
-			AIdentifierPatternCG paramId = (AIdentifierPatternCG) paramPattern;
+			AIdentifierPatternIR paramId = (AIdentifierPatternIR) paramPattern;
 
-			AIdentifierVarExpCG paramArg = new AIdentifierVarExpCG();
+			AIdentifierVarExpIR paramArg = new AIdentifierVarExpIR();
 			paramArg.setType(p.getType().clone());
 			paramArg.setIsLocal(true);
 			paramArg.setIsLambda(false);
@@ -631,16 +631,16 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		
 		if(Settings.dialect == Dialect.VDM_SL)
 		{
-			ADefaultClassDeclCG encClass = node.getAncestor(ADefaultClassDeclCG.class);
+			ADefaultClassDeclIR encClass = node.getAncestor(ADefaultClassDeclIR.class);
 			
 			if(encClass != null)
 			{
-				for(AFieldDeclCG f : encClass.getFields())
+				for(AFieldDeclIR f : encClass.getFields())
 				{
 					if(!f.getFinal())
 					{
 						// It's the state component
-						AIdentifierVarExpCG stateArg = info.getExpAssistant().consIdVar(f.getName(), f.getType().clone());
+						AIdentifierVarExpIR stateArg = info.getExpAssistant().consIdVar(f.getName(), f.getType().clone());
 						condCall.getArgs().add(stateArg);
 						break;
 					}
@@ -656,58 +656,58 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return condCall;
 	}
 
-	public AVarDeclCG consClassVarDeclDefaultCtor(String className,
+	public AVarDeclIR consClassVarDeclDefaultCtor(String className,
 			String varName)
 	{
-		AClassTypeCG classType = consClassType(className);
-		ANewExpCG init = consDefaultConsCall(className);
+		AClassTypeIR classType = consClassType(className);
+		ANewExpIR init = consDefaultConsCall(className);
 
-		AVarDeclCG classDecl = consDecl(varName, classType, init);
+		AVarDeclIR classDecl = consDecl(varName, classType, init);
 		classDecl.setFinal(true);
 
 		return classDecl;
 	}
 
-	public ABlockStmCG wrap(AVarDeclCG decl)
+	public ABlockStmIR wrap(AVarDeclIR decl)
 	{
-		ABlockStmCG block = new ABlockStmCG();
+		ABlockStmIR block = new ABlockStmIR();
 		block.getLocalDefs().add(decl);
 
 		return block;
 	}
 
-	public ARecordTypeCG consRecType(String definingModule, String  recName)
+	public ARecordTypeIR consRecType(String definingModule, String  recName)
 	{
-		ATypeNameCG typeName = new ATypeNameCG();
+		ATypeNameIR typeName = new ATypeNameIR();
 		typeName.setDefiningClass(definingModule);
 		typeName.setName(recName);
 		
-		ARecordTypeCG recType = new ARecordTypeCG();
+		ARecordTypeIR recType = new ARecordTypeIR();
 		recType.setName(typeName);
 
 		return recType;
 	}
 	
-	public ARecordTypeCG getRecType(final AStateDeclCG stateDecl)
+	public ARecordTypeIR getRecType(final AStateDeclIR stateDecl)
 	{
-		ARecordTypeCG stateType = new ARecordTypeCG();
+		ARecordTypeIR stateType = new ARecordTypeIR();
 		stateType.setName(getTypeName(stateDecl));
 
 		return stateType;
 	}
 
-	public ATypeNameCG getTypeName(final AStateDeclCG stateDecl)
+	public ATypeNameIR getTypeName(final AStateDeclIR stateDecl)
 	{
-		ATypeNameCG stateName = new ATypeNameCG();
+		ATypeNameIR stateName = new ATypeNameIR();
 		stateName.setDefiningClass(getEnclosingModuleName(stateDecl));
 		stateName.setName(stateDecl.getName());
 
 		return stateName;
 	}
 
-	public String getEnclosingModuleName(AStateDeclCG stateDecl)
+	public String getEnclosingModuleName(AStateDeclIR stateDecl)
 	{
-		AModuleDeclCG module = stateDecl.getAncestor(AModuleDeclCG.class);
+		AModuleDeclIR module = stateDecl.getAncestor(AModuleDeclIR.class);
 
 		if (module != null)
 		{
@@ -722,9 +722,9 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		}
 	}
 	
-	public ABlockStmCG wrap(SStmCG stm)
+	public ABlockStmIR wrap(SStmIR stm)
 	{
-		ABlockStmCG block = new ABlockStmCG();
+		ABlockStmIR block = new ABlockStmIR();
 		block.getStatements().add(stm);
 
 		return block;

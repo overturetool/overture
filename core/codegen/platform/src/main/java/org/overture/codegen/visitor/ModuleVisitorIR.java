@@ -5,25 +5,25 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleExports;
 import org.overture.ast.modules.AModuleImports;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.codegen.ir.SDeclCG;
-import org.overture.codegen.ir.SExportsCG;
-import org.overture.codegen.ir.SImportsCG;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AFuncDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.AModuleDeclCG;
-import org.overture.codegen.ir.declarations.AModuleExportsCG;
-import org.overture.codegen.ir.declarations.AModuleImportsCG;
-import org.overture.codegen.ir.declarations.ANamedTraceDeclCG;
-import org.overture.codegen.ir.declarations.AStateDeclCG;
-import org.overture.codegen.ir.declarations.ATypeDeclCG;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.SExportsIR;
+import org.overture.codegen.ir.SImportsIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AFuncDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
+import org.overture.codegen.ir.declarations.AModuleExportsIR;
+import org.overture.codegen.ir.declarations.AModuleImportsIR;
+import org.overture.codegen.ir.declarations.ANamedTraceDeclIR;
+import org.overture.codegen.ir.declarations.AStateDeclIR;
+import org.overture.codegen.ir.declarations.ATypeDeclIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 
-public class ModuleVisitorCG extends AbstractVisitorCG<IRInfo, AModuleDeclCG>
+public class ModuleVisitorIR extends AbstractVisitorIR<IRInfo, AModuleDeclIR>
 {
 	@Override
-	public AModuleDeclCG caseAModuleModules(AModuleModules node, IRInfo question)
+	public AModuleDeclIR caseAModuleModules(AModuleModules node, IRInfo question)
 			throws AnalysisException
 	{
 		String name = node.getName().getName();
@@ -32,35 +32,35 @@ public class ModuleVisitorCG extends AbstractVisitorCG<IRInfo, AModuleDeclCG>
 		Boolean isDlModule = node.getIsDLModule();
 		Boolean isFlat = node.getIsFlat();
 
-		AModuleDeclCG moduleCg = new AModuleDeclCG();
+		AModuleDeclIR moduleCg = new AModuleDeclIR();
 		moduleCg.setName(name);
 
 		if (imports != null)
 		{
-			SImportsCG importsCg = imports.apply(question.getImportsVisitor(), question);
+			SImportsIR importsCg = imports.apply(question.getImportsVisitor(), question);
 
-			if (importsCg instanceof AModuleImportsCG)
+			if (importsCg instanceof AModuleImportsIR)
 			{
-				moduleCg.setImport((AModuleImportsCG) importsCg);
+				moduleCg.setImport((AModuleImportsIR) importsCg);
 			} else
 			{
 				Logger.getLog().printErrorln("Expected imports to be of type '"
-						+ AModuleImportsCG.class.getSimpleName() + "'. Got: "
+						+ AModuleImportsIR.class.getSimpleName() + "'. Got: "
 						+ importsCg + " in " + this.getClass().getSimpleName());
 			}
 		}
 
 		if (exports != null)
 		{
-			SExportsCG exportsCg = exports.apply(question.getExportsVisitor(), question);
+			SExportsIR exportsCg = exports.apply(question.getExportsVisitor(), question);
 
-			if (exportsCg instanceof AModuleExportsCG)
+			if (exportsCg instanceof AModuleExportsIR)
 			{
-				moduleCg.setExports((AModuleExportsCG) exportsCg);
+				moduleCg.setExports((AModuleExportsIR) exportsCg);
 			} else
 			{
 				Logger.getLog().printErrorln("Expected export to be of type '"
-						+ AModuleExportsCG.class.getSimpleName() + "'. Got: "
+						+ AModuleExportsIR.class.getSimpleName() + "'. Got: "
 						+ exportsCg + " in " + this.getClass().getSimpleName());
 			}
 		}
@@ -70,19 +70,19 @@ public class ModuleVisitorCG extends AbstractVisitorCG<IRInfo, AModuleDeclCG>
 
 		for (PDefinition def : node.getDefs())
 		{
-			SDeclCG declCg = def.apply(question.getDeclVisitor(), question);
+			SDeclIR declCg = def.apply(question.getDeclVisitor(), question);
 
 			if (declCg == null)
 			{
 				// Unspported stuff returns null by default
 				continue;
 				
-			} else if (declCg instanceof AMethodDeclCG
-					|| declCg instanceof AFuncDeclCG
-					|| declCg instanceof ATypeDeclCG
-					|| declCg instanceof AStateDeclCG
-					|| declCg instanceof ANamedTraceDeclCG
-					|| declCg instanceof AFieldDeclCG)
+			} else if (declCg instanceof AMethodDeclIR
+					|| declCg instanceof AFuncDeclIR
+					|| declCg instanceof ATypeDeclIR
+					|| declCg instanceof AStateDeclIR
+					|| declCg instanceof ANamedTraceDeclIR
+					|| declCg instanceof AFieldDeclIR)
 			{
 				moduleCg.getDecls().add(declCg);
 			} else

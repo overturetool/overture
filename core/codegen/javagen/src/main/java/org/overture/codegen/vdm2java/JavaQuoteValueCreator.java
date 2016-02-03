@@ -4,30 +4,30 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.AExternalExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.expressions.AInstanceofExpCG;
-import org.overture.codegen.ir.expressions.ANewExpCG;
-import org.overture.codegen.ir.expressions.ASuperVarExpCG;
-import org.overture.codegen.ir.name.ATypeNameCG;
-import org.overture.codegen.ir.statements.AAssignToExpStmCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
-import org.overture.codegen.ir.statements.AIfStmCG;
-import org.overture.codegen.ir.statements.AReturnStmCG;
-import org.overture.codegen.ir.types.ABoolBasicTypeCG;
-import org.overture.codegen.ir.types.AClassTypeCG;
-import org.overture.codegen.ir.types.AExternalTypeCG;
-import org.overture.codegen.ir.types.AMethodTypeCG;
-import org.overture.codegen.ir.types.AObjectTypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AExternalExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AInstanceofExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
+import org.overture.codegen.ir.expressions.ASuperVarExpIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AExternalTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.AObjectTypeIR;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class JavaQuoteValueCreator extends JavaClassCreatorBase
 {
@@ -41,18 +41,18 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 	private static final String EQUALS_METHOD_PARAM = "obj";
 	
 	private IRInfo info;
-	private TransAssistantCG transAssistant;
+	private TransAssistantIR transAssistant;
 	
-	public JavaQuoteValueCreator(IRInfo info, TransAssistantCG transformationAssistant)
+	public JavaQuoteValueCreator(IRInfo info, TransAssistantIR transformationAssistant)
 	{
 		this.info = info;
 		this.transAssistant = transformationAssistant;
 	}
 	
-	public ADefaultClassDeclCG consQuoteValue(String quoteClassName, String quoteName, String userCodePackage)
+	public ADefaultClassDeclIR consQuoteValue(String quoteClassName, String quoteName, String userCodePackage)
 	{
 		quoteClassName = quoteClassName + JavaQuoteValueCreator.JAVA_QUOTE_NAME_SUFFIX;
-		ADefaultClassDeclCG decl = new ADefaultClassDeclCG();
+		ADefaultClassDeclIR decl = new ADefaultClassDeclIR();
 		decl.setAbstract(false);
 		decl.setAccess(IJavaConstants.PUBLIC);
 		decl.setName(quoteClassName);
@@ -96,12 +96,12 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		return consQuotePackage(userCodePackage) + "." + vdmValueName + JAVA_QUOTE_NAME_SUFFIX;
 	}
 	
-	private AFieldDeclCG consHashcodeField()
+	private AFieldDeclIR consHashcodeField()
 	{
-		AExternalTypeCG fieldType = new AExternalTypeCG();
+		AExternalTypeIR fieldType = new AExternalTypeIR();
 		fieldType.setName(IJavaConstants.INT);
 		
-		AFieldDeclCG field = new AFieldDeclCG();
+		AFieldDeclIR field = new AFieldDeclIR();
 		field.setAccess(IJavaConstants.PRIVATE);
 		field.setVolatile(false);
 		field.setFinal(false);
@@ -113,12 +113,12 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		return field;
 	}
 	
-	private AFieldDeclCG consInstanceField(String name)
+	private AFieldDeclIR consInstanceField(String name)
 	{
-		AClassTypeCG quoteClassType = new AClassTypeCG();
+		AClassTypeIR quoteClassType = new AClassTypeIR();
 		quoteClassType.setName(name);
 
-		AFieldDeclCG field = new AFieldDeclCG();
+		AFieldDeclIR field = new AFieldDeclIR();
 		field.setAccess(IJavaConstants.PRIVATE);
 		field.setVolatile(false);
 		field.setFinal(false);
@@ -130,99 +130,99 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		return field;
 	}
 	
-	private AMethodDeclCG consQuoteCtor(String name)
+	private AMethodDeclIR consQuoteCtor(String name)
 	{
-		AExternalTypeCG fieldType = new AExternalTypeCG();
+		AExternalTypeIR fieldType = new AExternalTypeIR();
 		fieldType.setName(IJavaConstants.INT);
 		
-		AIdentifierVarExpCG hashcodeVar = transAssistant.getInfo().getExpAssistant().consIdVar(HASHCODE_FIELD, fieldType);
+		AIdentifierVarExpIR hashcodeVar = transAssistant.getInfo().getExpAssistant().consIdVar(HASHCODE_FIELD, fieldType);
 		
-		AEqualsBinaryExpCG hashcodeCompare = new AEqualsBinaryExpCG();
-		hashcodeCompare.setType(new ABoolBasicTypeCG());
+		AEqualsBinaryExpIR hashcodeCompare = new AEqualsBinaryExpIR();
+		hashcodeCompare.setType(new ABoolBasicTypeIR());
 		hashcodeCompare.setLeft(hashcodeVar);
 		hashcodeCompare.setRight(consZero());
 		
-		AIdentifierVarExpCG hashCodeId = transAssistant.getInfo().getExpAssistant().consIdVar(HASHCODE_FIELD, consFieldType());
+		AIdentifierVarExpIR hashCodeId = transAssistant.getInfo().getExpAssistant().consIdVar(HASHCODE_FIELD, consFieldType());
 		
-		AMethodTypeCG hashCodeMethodType = new AMethodTypeCG();
+		AMethodTypeIR hashCodeMethodType = new AMethodTypeIR();
 		hashCodeMethodType.setResult(consFieldType());
 		
-		ASuperVarExpCG superVar = new ASuperVarExpCG();
+		ASuperVarExpIR superVar = new ASuperVarExpIR();
 		superVar.setName(HASH_CODE_METHOD);
 		superVar.setType(hashCodeMethodType);
 		superVar.setIsLambda(false);
 		superVar.setIsLocal(false);
 		
-		AApplyExpCG superCall = new AApplyExpCG();
+		AApplyExpIR superCall = new AApplyExpIR();
 		superCall.setType(consFieldType());
 		superCall.setRoot(superVar);
 		
-		AAssignToExpStmCG assignHashcode = new AAssignToExpStmCG();
+		AAssignToExpStmIR assignHashcode = new AAssignToExpStmIR();
 		assignHashcode.setTarget(hashCodeId);
 		assignHashcode.setExp(superCall);
 		
-		AIfStmCG hashcodeCheck = new AIfStmCG();
+		AIfStmIR hashcodeCheck = new AIfStmIR();
 		hashcodeCheck.setIfExp(hashcodeCompare);
 		hashcodeCheck.setThenStm(assignHashcode);
 		
-		ABlockStmCG body = new ABlockStmCG();
+		ABlockStmIR body = new ABlockStmIR();
 		body.getStatements().add(hashcodeCheck);
 		
-		AClassTypeCG quoteClassType = new AClassTypeCG();
+		AClassTypeIR quoteClassType = new AClassTypeIR();
 		quoteClassType.setName(name);
 		
-		AMethodTypeCG constructorType = new AMethodTypeCG();
+		AMethodTypeIR constructorType = new AMethodTypeIR();
 		constructorType.setResult(quoteClassType);
 
-		AMethodDeclCG ctor = consDefaultCtorSignature(name);
+		AMethodDeclIR ctor = consDefaultCtorSignature(name);
 		ctor.setMethodType(constructorType);
 		ctor.setBody(body);
 		
 		return ctor;
 	}
 	
-	private AMethodDeclCG consGetInstanceMethod(String name)
+	private AMethodDeclIR consGetInstanceMethod(String name)
 	{
-		AClassTypeCG quoteClassType = new AClassTypeCG();
+		AClassTypeIR quoteClassType = new AClassTypeIR();
 		quoteClassType.setName(name);
 
-		AIdentifierVarExpCG instanceVar = transAssistant.getInfo().getExpAssistant().consIdVar(INSTANCE_FIELD, quoteClassType);
+		AIdentifierVarExpIR instanceVar = transAssistant.getInfo().getExpAssistant().consIdVar(INSTANCE_FIELD, quoteClassType);
 		
-		AEqualsBinaryExpCG nullCompare = new AEqualsBinaryExpCG();
-		nullCompare.setType(new ABoolBasicTypeCG());
+		AEqualsBinaryExpIR nullCompare = new AEqualsBinaryExpIR();
+		nullCompare.setType(new ABoolBasicTypeIR());
 		nullCompare.setLeft(instanceVar);
 		nullCompare.setRight(info.getExpAssistant().consNullExp());
 		
-		AIdentifierVarExpCG instanceId = transAssistant.getInfo().getExpAssistant().consIdVar(INSTANCE_FIELD,
+		AIdentifierVarExpIR instanceId = transAssistant.getInfo().getExpAssistant().consIdVar(INSTANCE_FIELD,
 				quoteClassType.clone());
 		
-		ATypeNameCG typeName = new ATypeNameCG();
+		ATypeNameIR typeName = new ATypeNameIR();
 		typeName.setDefiningClass(null);
 		typeName.setName(name);
 		
-		ANewExpCG newQuote = new ANewExpCG();
+		ANewExpIR newQuote = new ANewExpIR();
 		newQuote.setName(typeName);
 		newQuote.setType(quoteClassType);
 		
-		AAssignToExpStmCG assignInstance = new AAssignToExpStmCG();
+		AAssignToExpStmIR assignInstance = new AAssignToExpStmIR();
 		assignInstance.setTarget(instanceId);
 		assignInstance.setExp(newQuote);
 		
-		AIfStmCG ensureInstance = new AIfStmCG();
+		AIfStmIR ensureInstance = new AIfStmIR();
 		ensureInstance.setIfExp(nullCompare);
 		ensureInstance.setThenStm(assignInstance);
 		
-		AReturnStmCG returnInstance = new AReturnStmCG();
+		AReturnStmIR returnInstance = new AReturnStmIR();
 		returnInstance.setExp(instanceVar.clone());
 		
-		ABlockStmCG body = new ABlockStmCG();
+		ABlockStmIR body = new ABlockStmIR();
 		body.getStatements().add(ensureInstance);
 		body.getStatements().add(returnInstance);
 		
-		AMethodTypeCG methodType = new AMethodTypeCG();
+		AMethodTypeIR methodType = new AMethodTypeIR();
 		methodType.setResult(quoteClassType.clone());
 		
-		AMethodDeclCG getInstanceMethod = new AMethodDeclCG();
+		AMethodDeclIR getInstanceMethod = new AMethodDeclIR();
 		
 		getInstanceMethod.setImplicit(false);
 		getInstanceMethod.setAbstract(false);
@@ -237,40 +237,40 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		return getInstanceMethod;
 	}
 	
-	private AMethodDeclCG consHashcodeMethod()
+	private AMethodDeclIR consHashcodeMethod()
 	{
-		AIdentifierVarExpCG hashCodeVar = transAssistant.getInfo().getExpAssistant().consIdVar(HASHCODE_FIELD, consFieldType());
+		AIdentifierVarExpIR hashCodeVar = transAssistant.getInfo().getExpAssistant().consIdVar(HASHCODE_FIELD, consFieldType());
 		
-		AReturnStmCG returnHashCode = new AReturnStmCG();
+		AReturnStmIR returnHashCode = new AReturnStmIR();
 		returnHashCode.setExp(hashCodeVar);
 		
-		AMethodDeclCG hashCodeMethod = consHashcodeMethodSignature();
+		AMethodDeclIR hashCodeMethod = consHashcodeMethodSignature();
 		
-		ABlockStmCG body = new ABlockStmCG();
+		ABlockStmIR body = new ABlockStmIR();
 		body.getStatements().add(returnHashCode);
 		
 		hashCodeMethod.setBody(body);
 		
 		return hashCodeMethod;
 	}
-	private AMethodDeclCG consEqualsMethod(String name)
+	private AMethodDeclIR consEqualsMethod(String name)
 	{
-		AIdentifierVarExpCG paramVar = transAssistant.getInfo().getExpAssistant().consIdVar(EQUALS_METHOD_PARAM, new AObjectTypeCG());
+		AIdentifierVarExpIR paramVar = transAssistant.getInfo().getExpAssistant().consIdVar(EQUALS_METHOD_PARAM, new AObjectTypeIR());
 		
-		AClassTypeCG quoteClass = new AClassTypeCG();
+		AClassTypeIR quoteClass = new AClassTypeIR();
 		quoteClass.setName(name);
 		
-		AInstanceofExpCG instanceCheck = new AInstanceofExpCG();
-		instanceCheck.setType(new ABoolBasicTypeCG());
+		AInstanceofExpIR instanceCheck = new AInstanceofExpIR();
+		instanceCheck.setType(new ABoolBasicTypeIR());
 		instanceCheck.setExp(paramVar);
 		instanceCheck.setCheckedType(quoteClass);
 		
-		AReturnStmCG checkReturned = new AReturnStmCG();
+		AReturnStmIR checkReturned = new AReturnStmIR();
 		checkReturned.setExp(instanceCheck);
 
-		AMethodDeclCG equalsMethod = consEqualMethodSignature(EQUALS_METHOD_PARAM);
+		AMethodDeclIR equalsMethod = consEqualMethodSignature(EQUALS_METHOD_PARAM);
 		
-		ABlockStmCG body = new ABlockStmCG();
+		ABlockStmIR body = new ABlockStmIR();
 		body.getStatements().add(checkReturned);
 		
 		equalsMethod.setBody(body);
@@ -279,16 +279,16 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 	}
 
 	
-	private AMethodDeclCG consToStringMethod(String name)
+	private AMethodDeclIR consToStringMethod(String name)
 	{
-		SExpCG stringLit = info.getExpAssistant().consStringLiteral("<" + name + ">", false);
+		SExpIR stringLit = info.getExpAssistant().consStringLiteral("<" + name + ">", false);
 		
-		AReturnStmCG returnStr = new AReturnStmCG();
+		AReturnStmIR returnStr = new AReturnStmIR();
 		returnStr.setExp(stringLit);
 
-		AMethodDeclCG toStringMethod = consToStringSignature();
+		AMethodDeclIR toStringMethod = consToStringSignature();
 		
-		ABlockStmCG body = new ABlockStmCG();
+		ABlockStmIR body = new ABlockStmIR();
 		body.getStatements().add(returnStr);
 		
 		toStringMethod.setBody(body);
@@ -296,17 +296,17 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		return toStringMethod;
 	}
 	
-	private STypeCG consFieldType()
+	private STypeIR consFieldType()
 	{
-		AExternalTypeCG fieldType = new AExternalTypeCG();
+		AExternalTypeIR fieldType = new AExternalTypeIR();
 		fieldType.setName(IJavaConstants.INT);
 		
 		return fieldType;
 	}
 	
-	private AExternalExpCG consZero()
+	private AExternalExpIR consZero()
 	{
-		AExternalExpCG zero = new AExternalExpCG();
+		AExternalExpIR zero = new AExternalExpIR();
 		zero.setType(consFieldType());
 		zero.setTargetLangExp("0");
 		

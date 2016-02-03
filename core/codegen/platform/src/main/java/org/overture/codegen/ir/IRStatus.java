@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.node.INode;
-import org.overture.codegen.ir.PCG;
+import org.overture.codegen.ir.PIR;
 
-public final class IRStatus<T extends PCG>
+public final class IRStatus<T extends PIR>
 {
 	protected INode vdmNode;
 	protected String irNodeName;
@@ -118,12 +118,12 @@ public final class IRStatus<T extends PCG>
 		return getIrNodeName();
 	}
 	
-	public static <T extends PCG> IRStatus<T> extract(
-			IRStatus<PCG> inputStatus, Class<T> type)
+	public static <T extends PIR> IRStatus<T> extract(
+			IRStatus<PIR> inputStatus, Class<T> type)
 	{
 		String name = inputStatus.getIrNodeName();
 		INode vdmNode = inputStatus.getVdmNode();
-		PCG node = inputStatus.getIrNode();
+		PIR node = inputStatus.getIrNode();
 		Set<VdmNodeInfo> unsupportedInIr = inputStatus.getUnsupportedInIr();
 		Set<IrNodeInfo> warnings = inputStatus.getTransformationWarnings();
 
@@ -136,12 +136,12 @@ public final class IRStatus<T extends PCG>
 		}
 	}
 
-	public static <T extends PCG> List<IRStatus<T>> extract(
-			List<IRStatus<PCG>> inputStatuses, Class<T> type)
+	public static <T extends PIR> List<IRStatus<T>> extract(
+			List<IRStatus<PIR>> inputStatuses, Class<T> type)
 	{
 		List<IRStatus<T>> outputStatuses = new LinkedList<IRStatus<T>>();
 
-		for (IRStatus<PCG> status : inputStatuses)
+		for (IRStatus<PIR> status : inputStatuses)
 		{
 			IRStatus<T> converted = extract(status, type);
 
@@ -154,24 +154,24 @@ public final class IRStatus<T extends PCG>
 		return outputStatuses;
 	}
 	
-	public static <T extends PCG> IRStatus<PCG> extract(IRStatus<T> inputStatus)
+	public static <T extends PIR> IRStatus<PIR> extract(IRStatus<T> inputStatus)
 	{
 		String name = inputStatus.getIrNodeName();
 		INode vdmNode = inputStatus.getVdmNode();
-		PCG node = inputStatus.getIrNode();
+		PIR node = inputStatus.getIrNode();
 		Set<VdmNodeInfo> unsupportedInIr = inputStatus.getUnsupportedInIr();
 		Set<IrNodeInfo> warnings = inputStatus.getTransformationWarnings();
 
-		return new IRStatus<PCG>(vdmNode, name, node, unsupportedInIr, warnings);
+		return new IRStatus<PIR>(vdmNode, name, node, unsupportedInIr, warnings);
 	}
 	
-	public static <T extends PCG> List<IRStatus<PCG>> extract(List<IRStatus<T>> inputStatuses)
+	public static <T extends PIR> List<IRStatus<PIR>> extract(List<IRStatus<T>> inputStatuses)
 	{
-		List<IRStatus<PCG>> outputStatuses = new LinkedList<IRStatus<PCG>>();
+		List<IRStatus<PIR>> outputStatuses = new LinkedList<IRStatus<PIR>>();
 		
 		for(IRStatus<T> status : inputStatuses)
 		{
-			IRStatus<PCG> converted = extract(status);
+			IRStatus<PIR> converted = extract(status);
 
 			if (converted != null)
 			{

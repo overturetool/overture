@@ -24,21 +24,21 @@ package org.overture.codegen.trans.patterns;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.overture.codegen.ir.SPatternCG;
-import org.overture.codegen.ir.patterns.ABoolPatternCG;
-import org.overture.codegen.ir.patterns.ACharPatternCG;
-import org.overture.codegen.ir.patterns.AIgnorePatternCG;
-import org.overture.codegen.ir.patterns.AIntPatternCG;
-import org.overture.codegen.ir.patterns.ANullPatternCG;
-import org.overture.codegen.ir.patterns.AQuotePatternCG;
-import org.overture.codegen.ir.patterns.ARealPatternCG;
-import org.overture.codegen.ir.patterns.ARecordPatternCG;
-import org.overture.codegen.ir.patterns.AStringPatternCG;
-import org.overture.codegen.ir.patterns.ATuplePatternCG;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.patterns.ABoolPatternIR;
+import org.overture.codegen.ir.patterns.ACharPatternIR;
+import org.overture.codegen.ir.patterns.AIgnorePatternIR;
+import org.overture.codegen.ir.patterns.AIntPatternIR;
+import org.overture.codegen.ir.patterns.ANullPatternIR;
+import org.overture.codegen.ir.patterns.AQuotePatternIR;
+import org.overture.codegen.ir.patterns.ARealPatternIR;
+import org.overture.codegen.ir.patterns.ARecordPatternIR;
+import org.overture.codegen.ir.patterns.AStringPatternIR;
+import org.overture.codegen.ir.patterns.ATuplePatternIR;
 
 public class PatternVarPrefixes
 {
-	private Map<Class<? extends SPatternCG>, String> patternNamePrefixes;
+	private Map<Class<? extends SPatternIR>, String> patternNamePrefixes;
 
 	public PatternVarPrefixes()
 	{
@@ -47,21 +47,21 @@ public class PatternVarPrefixes
 
 	private void setupNameLookup()
 	{
-		this.patternNamePrefixes = new HashMap<Class<? extends SPatternCG>, String>();
+		this.patternNamePrefixes = new HashMap<Class<? extends SPatternIR>, String>();
 
-		this.patternNamePrefixes.put(AIgnorePatternCG.class, getIgnorePatternPrefix());
-		this.patternNamePrefixes.put(ABoolPatternCG.class, getBoolPatternPrefix());
-		this.patternNamePrefixes.put(ACharPatternCG.class, getCharPatternPrefix());
-		this.patternNamePrefixes.put(AIntPatternCG.class, getIntPatternPrefix());
-		this.patternNamePrefixes.put(ANullPatternCG.class, getNullPatternPrefix());
-		this.patternNamePrefixes.put(AQuotePatternCG.class, getQuotePatternPrefix());
-		this.patternNamePrefixes.put(ARealPatternCG.class, getRealPatternPrefix());
-		this.patternNamePrefixes.put(AStringPatternCG.class, getStringPatternPrefix());
-		this.patternNamePrefixes.put(ATuplePatternCG.class, getTuplePatternPrefix());
-		this.patternNamePrefixes.put(ARecordPatternCG.class, getRecordPatternPrefix());
+		this.patternNamePrefixes.put(AIgnorePatternIR.class, getIgnorePatternPrefix());
+		this.patternNamePrefixes.put(ABoolPatternIR.class, getBoolPatternPrefix());
+		this.patternNamePrefixes.put(ACharPatternIR.class, getCharPatternPrefix());
+		this.patternNamePrefixes.put(AIntPatternIR.class, getIntPatternPrefix());
+		this.patternNamePrefixes.put(ANullPatternIR.class, getNullPatternPrefix());
+		this.patternNamePrefixes.put(AQuotePatternIR.class, getQuotePatternPrefix());
+		this.patternNamePrefixes.put(ARealPatternIR.class, getRealPatternPrefix());
+		this.patternNamePrefixes.put(AStringPatternIR.class, getStringPatternPrefix());
+		this.patternNamePrefixes.put(ATuplePatternIR.class, getTuplePatternPrefix());
+		this.patternNamePrefixes.put(ARecordPatternIR.class, getRecordPatternPrefix());
 	}
 
-	public String getName(Class<? extends SPatternCG> patternClass)
+	public String getName(Class<? extends SPatternIR> patternClass)
 	{
 		return patternNamePrefixes.get(patternClass);
 	}
@@ -116,41 +116,41 @@ public class PatternVarPrefixes
 		return "recordPattern_";
 	}
 
-	public String getMatchFailedMessage(SPatternCG pattern)
+	public String getMatchFailedMessage(SPatternIR pattern)
 	{
 		return patternToString(pattern) + " pattern match failed";
 	}
 
-	private String patternToString(SPatternCG pattern)
+	private String patternToString(SPatternIR pattern)
 	{
-		if (pattern instanceof AIgnorePatternCG)
+		if (pattern instanceof AIgnorePatternIR)
 		{
 			return "Ignore";
-		} else if (pattern instanceof ABoolPatternCG)
+		} else if (pattern instanceof ABoolPatternIR)
 		{
 			return "Bool";
-		} else if (pattern instanceof ACharPatternCG)
+		} else if (pattern instanceof ACharPatternIR)
 		{
 			return "Char";
-		} else if (pattern instanceof AIntPatternCG)
+		} else if (pattern instanceof AIntPatternIR)
 		{
 			return "Integer";
-		} else if (pattern instanceof ANullPatternCG)
+		} else if (pattern instanceof ANullPatternIR)
 		{
 			return "Nil";
-		} else if (pattern instanceof AQuotePatternCG)
+		} else if (pattern instanceof AQuotePatternIR)
 		{
 			return "Quote";
-		} else if (pattern instanceof ARealPatternCG)
+		} else if (pattern instanceof ARealPatternIR)
 		{
 			return "Real";
-		} else if (pattern instanceof AStringPatternCG)
+		} else if (pattern instanceof AStringPatternIR)
 		{
 			return "String";
-		} else if (pattern instanceof ATuplePatternCG)
+		} else if (pattern instanceof ATuplePatternIR)
 		{
 			return "Tuple";
-		} else if (pattern instanceof ARecordPatternCG)
+		} else if (pattern instanceof ARecordPatternIR)
 		{
 			return "Record";
 		} else

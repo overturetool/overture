@@ -2,9 +2,9 @@ package org.overture.codegen.vdm2java;
 
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.ARecordDeclCG;
-import org.overture.codegen.ir.declarations.ATypeDeclCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.declarations.ATypeDeclIR;
 
 public class RecMethodsTrans extends DepthFirstAnalysisAdaptor
 {
@@ -16,13 +16,13 @@ public class RecMethodsTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseADefaultClassDeclCG(ADefaultClassDeclCG node) throws AnalysisException
+	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node) throws AnalysisException
 	{
-		for(ATypeDeclCG typeDecl : node.getTypeDecls())
+		for(ATypeDeclIR typeDecl : node.getTypeDecls())
 		{
-			if(typeDecl.getDecl() instanceof ARecordDeclCG)
+			if(typeDecl.getDecl() instanceof ARecordDeclIR)
 			{
-				ARecordDeclCG rec = (ARecordDeclCG) typeDecl.getDecl();
+				ARecordDeclIR rec = (ARecordDeclIR) typeDecl.getDecl();
 				
 				rec.getMethods().addFirst(recCreator.genToStringMethod(rec));
 				rec.getMethods().addFirst(recCreator.genCopyMethod(rec));

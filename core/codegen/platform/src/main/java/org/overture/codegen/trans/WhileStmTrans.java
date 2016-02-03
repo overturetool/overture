@@ -1,29 +1,29 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
-import org.overture.codegen.ir.statements.ABreakStmCG;
-import org.overture.codegen.ir.statements.AIfStmCG;
-import org.overture.codegen.ir.statements.AWhileStmCG;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.ABreakStmIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
+import org.overture.codegen.ir.statements.AWhileStmIR;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class WhileStmTrans extends DepthFirstAnalysisAdaptor
 {
-	private TransAssistantCG transAssistant;
+	private TransAssistantIR transAssistant;
 	private String whileCondExpPrefix;
 
-	public WhileStmTrans(TransAssistantCG transAssistant, String whileCondExpPrefix)
+	public WhileStmTrans(TransAssistantIR transAssistant, String whileCondExpPrefix)
 	{
 		this.transAssistant = transAssistant;
 		this.whileCondExpPrefix = whileCondExpPrefix;
 	}
 
 	@Override
-	public void caseAWhileStmCG(AWhileStmCG node) throws AnalysisException
+	public void caseAWhileStmIR(AWhileStmIR node) throws AnalysisException
 	{
 		// while(boolExp) { body; }
 		//
@@ -43,28 +43,28 @@ public class WhileStmTrans extends DepthFirstAnalysisAdaptor
 		// expression that needs to be transformed. For example, when the
 		// while condition is a quantified expression
 		
-		SExpCG exp = node.getExp().clone();
-		SStmCG body = node.getBody().clone();
+		SExpIR exp = node.getExp().clone();
+		SStmIR body = node.getBody().clone();
 		
 		String whileCondName = transAssistant.getInfo().getTempVarNameGen().nextVarName(whileCondExpPrefix);
 		
-		SExpCG whileCondVar = transAssistant.consBoolCheck(whileCondName, false);
+		SExpIR whileCondVar = transAssistant.consBoolCheck(whileCondName, false);
 		
-		AIfStmCG whileCondCheck = new AIfStmCG();
+		AIfStmIR whileCondCheck = new AIfStmIR();
 		whileCondCheck.setIfExp(transAssistant.consBoolCheck(whileCondName, true));
-		whileCondCheck.setThenStm(new ABreakStmCG());
+		whileCondCheck.setThenStm(new ABreakStmIR());
 		
-		ABlockStmCG newWhileBody = new ABlockStmCG();
+		ABlockStmIR newWhileBody = new ABlockStmIR();
 		newWhileBody.getStatements().add(transAssistant.consBoolVarAssignment(exp, whileCondName));
 		newWhileBody.getStatements().add(whileCondCheck);
 		newWhileBody.getStatements().add(body);
 		
-		AWhileStmCG newWhileStm = new AWhileStmCG();
+		AWhileStmIR newWhileStm = new AWhileStmIR();
 		newWhileStm.setExp(whileCondVar);
 		newWhileStm.setBody(newWhileBody);
 		
-		ABlockStmCG declBlock = new ABlockStmCG();
-		AVarDeclCG whileCondVarDecl = transAssistant.consBoolVarDecl(whileCondName, true);
+		ABlockStmIR declBlock = new ABlockStmIR();
+		AVarDeclIR whileCondVarDecl = transAssistant.consBoolVarDecl(whileCondName, true);
 		declBlock.getLocalDefs().add(whileCondVarDecl);
 		declBlock.getStatements().add(newWhileStm);
 		

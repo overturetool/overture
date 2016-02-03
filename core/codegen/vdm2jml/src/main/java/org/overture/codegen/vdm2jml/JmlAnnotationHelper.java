@@ -4,12 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.ir.PCG;
-import org.overture.codegen.ir.SDeclCG;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.ARecordDeclCG;
+import org.overture.codegen.ir.PIR;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.logging.Logger;
@@ -24,28 +24,28 @@ public class JmlAnnotationHelper
 		this.jmlGen = jmlGen;
 	}
 	
-	public void makeNullableByDefault(ADefaultClassDeclCG clazz)
+	public void makeNullableByDefault(ADefaultClassDeclIR clazz)
 	{
 		clazz.setGlobalMetaData(consMetaData(JmlGenerator.JML_NULLABLE_BY_DEFAULT));
 	}
 	
-	public void makeNamedTypeInvFuncsPublic(ADefaultClassDeclCG clazz)
+	public void makeNamedTypeInvFuncsPublic(ADefaultClassDeclIR clazz)
 	{
-		List<AMethodDeclCG> nameInvMethods = jmlGen.getUtil().getNamedTypeInvMethods(clazz);
+		List<AMethodDeclIR> nameInvMethods = jmlGen.getUtil().getNamedTypeInvMethods(clazz);
 
-		for (AMethodDeclCG method : nameInvMethods)
+		for (AMethodDeclIR method : nameInvMethods)
 		{
 			makeCondPublic(method);
 		}
 	}
 	
-	public void makeRecMethodsPure(List<IRStatus<PCG>> ast)
+	public void makeRecMethodsPure(List<IRStatus<PIR>> ast)
 	{
-		List<ARecordDeclCG> records = jmlGen.getUtil().getRecords(ast);
+		List<ARecordDeclIR> records = jmlGen.getUtil().getRecords(ast);
 
-		for (ARecordDeclCG rec : records)
+		for (ARecordDeclIR rec : records)
 		{
-			for (AMethodDeclCG method : rec.getMethods())
+			for (AMethodDeclIR method : rec.getMethods())
 			{
 				if (!method.getIsConstructor())
 				{
@@ -80,14 +80,14 @@ public class JmlAnnotationHelper
 		sb.append(");");
 	}
 	
-	public void addInvCheckGhostVarDecl(ADefaultClassDeclCG owner)
+	public void addInvCheckGhostVarDecl(ADefaultClassDeclIR owner)
 	{
 		String metaStr = String.format(JmlGenerator.JML_INV_CHECKS_ON_DECL, JmlGenerator.INV_CHECKS_ON_GHOST_VAR_NAME);
 		
 		appendMetaData(owner, consMetaData(metaStr));
 	}
 	
-	private String consInvChecksOnName(ADefaultClassDeclCG owner)
+	private String consInvChecksOnName(ADefaultClassDeclIR owner)
 	{
 		StringBuilder prefix = new StringBuilder();
 		
@@ -104,7 +104,7 @@ public class JmlAnnotationHelper
 		return prefix.toString();
 	}
 
-	public void addRecInv(ARecordDeclCG r) {
+	public void addRecInv(ARecordDeclIR r) {
 
 		List<String> args = jmlGen.getUtil().getRecFieldNames(r);
 
@@ -124,7 +124,7 @@ public class JmlAnnotationHelper
 		return consInvChecksOnNameEncClass(null);
 	}
 	
-	public String consInvChecksOnNameEncClass(ADefaultClassDeclCG enclosingClass)
+	public String consInvChecksOnNameEncClass(ADefaultClassDeclIR enclosingClass)
 	{
 		if(enclosingClass != null && enclosingClass == jmlGen.getInvChecksFlagOwner())
 		{
@@ -137,7 +137,7 @@ public class JmlAnnotationHelper
 	}
 
 	
-	public void makePure(SDeclCG cond)
+	public void makePure(SDeclIR cond)
 	{
 		if (cond != null)
 		{
@@ -145,7 +145,7 @@ public class JmlAnnotationHelper
 		}
 	}
 	
-	public void makeHelper(SDeclCG cond)
+	public void makeHelper(SDeclIR cond)
 	{
 		if(cond != null)
 		{
@@ -153,11 +153,11 @@ public class JmlAnnotationHelper
 		}
 	}
 	
-	public void makeCondPublic(SDeclCG cond)
+	public void makeCondPublic(SDeclIR cond)
 	{
-		if (cond instanceof AMethodDeclCG)
+		if (cond instanceof AMethodDeclIR)
 		{
-			((AMethodDeclCG) cond).setAccess(IRConstants.PUBLIC);
+			((AMethodDeclIR) cond).setAccess(IRConstants.PUBLIC);
 		} else
 		{
 			Logger.getLog().printErrorln("Expected method declaration but got "
@@ -165,17 +165,17 @@ public class JmlAnnotationHelper
 		}
 	}
 	
-	public void addMetaData(PCG node, List<ClonableString> extraMetaData, boolean prepend)
+	public void addMetaData(PIR node, List<ClonableString> extraMetaData, boolean prepend)
 	{
 		this.jmlGen.getJavaGen().getInfo().getNodeAssistant().addMetaData(node, extraMetaData, prepend);
 	}
 	
-	public void appendMetaData(PCG node, List<ClonableString> extraMetaData)
+	public void appendMetaData(PIR node, List<ClonableString> extraMetaData)
 	{
 		addMetaData(node, extraMetaData, false);
 	}
 	
-	public void makeSpecPublic(AFieldDeclCG f)
+	public void makeSpecPublic(AFieldDeclIR f)
 	{
 		appendMetaData(f, consMetaData(JmlGenerator.JML_SPEC_PUBLIC));
 	}

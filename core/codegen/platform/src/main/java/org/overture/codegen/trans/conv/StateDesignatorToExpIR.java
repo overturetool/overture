@@ -1,15 +1,15 @@
 package org.overture.codegen.trans.conv;
 
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.AnswerAdaptor;
-import org.overture.codegen.ir.expressions.AFieldExpCG;
-import org.overture.codegen.ir.expressions.AMapSeqGetExpCG;
-import org.overture.codegen.ir.statements.AFieldStateDesignatorCG;
-import org.overture.codegen.ir.statements.AIdentifierStateDesignatorCG;
-import org.overture.codegen.ir.statements.AMapSeqStateDesignatorCG;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AMapSeqGetExpIR;
+import org.overture.codegen.ir.statements.AFieldStateDesignatorIR;
+import org.overture.codegen.ir.statements.AIdentifierStateDesignatorIR;
+import org.overture.codegen.ir.statements.AMapSeqStateDesignatorIR;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 /**
  * Converts a state designator into an equivalent expression. Please note that this converter assumes map sequence state
@@ -18,29 +18,29 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
  * 
  * @author pvj
  */
-public class StateDesignatorToExpCG extends AnswerAdaptor<SExpCG>
+public class StateDesignatorToExpIR extends AnswerAdaptor<SExpIR>
 {
-	private TransAssistantCG transAssistant;
+	private TransAssistantIR transAssistant;
 	
-	public StateDesignatorToExpCG(TransAssistantCG transAssistant)
+	public StateDesignatorToExpIR(TransAssistantIR transAssistant)
 	{
 		this.transAssistant = transAssistant;
 	}
 	
 	@Override
-	public SExpCG caseAIdentifierStateDesignatorCG(
-			AIdentifierStateDesignatorCG node) throws AnalysisException
+	public SExpIR caseAIdentifierStateDesignatorIR(
+			AIdentifierStateDesignatorIR node) throws AnalysisException
 	{
 		return transAssistant.getInfo().getExpAssistant().idStateDesignatorToExp(node);
 	}
 	
 	@Override
-	public SExpCG caseAFieldStateDesignatorCG(AFieldStateDesignatorCG node)
+	public SExpIR caseAFieldStateDesignatorIR(AFieldStateDesignatorIR node)
 			throws AnalysisException
 	{
-		SExpCG objExp = node.getObject().apply(this);
+		SExpIR objExp = node.getObject().apply(this);
 		
-		AFieldExpCG fieldExp = new AFieldExpCG();
+		AFieldExpIR fieldExp = new AFieldExpIR();
 		fieldExp.setMemberName(node.getField());
 		fieldExp.setObject(objExp);
 		fieldExp.setType(node.getType().clone());
@@ -51,16 +51,16 @@ public class StateDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 	}
 	
 	@Override
-	public SExpCG caseAMapSeqStateDesignatorCG(AMapSeqStateDesignatorCG node)
+	public SExpIR caseAMapSeqStateDesignatorIR(AMapSeqStateDesignatorIR node)
 			throws AnalysisException
 	{
 		// Reading a map or a sequence on the left hand
 		// side of an assignment, e.g. m(1).field := 5;
 		
-		SExpCG index = node.getExp();
-		SExpCG col = node.getMapseq().apply(this);
+		SExpIR index = node.getExp();
+		SExpIR col = node.getMapseq().apply(this);
 
-		AMapSeqGetExpCG mapSeqGet = new AMapSeqGetExpCG();
+		AMapSeqGetExpIR mapSeqGet = new AMapSeqGetExpIR();
 		mapSeqGet.setType(node.getType().clone());
 		mapSeqGet.setIndex(index.clone());
 		mapSeqGet.setCol(col);
@@ -71,14 +71,14 @@ public class StateDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 	}
 	
 	@Override
-	public SExpCG createNewReturnValue(INode node) throws AnalysisException
+	public SExpIR createNewReturnValue(INode node) throws AnalysisException
 	{
 		assert false : "This should never happen";
 		return null;
 	}
 
 	@Override
-	public SExpCG createNewReturnValue(Object node) throws AnalysisException
+	public SExpIR createNewReturnValue(Object node) throws AnalysisException
 	{
 		assert false : "This should never happen";
 		return null;

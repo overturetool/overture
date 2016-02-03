@@ -210,7 +210,7 @@ public abstract class CheckerTestBase extends JavaCodeGenTestCase
 		ExecutionResult javaResult = (ExecutionResult) actual;
 
 		// Comparison of VDM and Java results
-		ComparisonCG comp = new ComparisonCG(file);
+		ComparisonIR comp = new ComparisonIR(file);
 		boolean equal = comp.compare(javaResult.getExecutionResult(), expected);
 
 		if (!equal)

@@ -17,12 +17,12 @@ import org.overture.ast.node.INode;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
-import org.overture.codegen.assistant.DeclAssistantCG;
-import org.overture.codegen.ir.PCG;
-import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.assistant.DeclAssistantIR;
+import org.overture.codegen.ir.PIR;
+import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.trans.OldNameRenamer;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
@@ -46,7 +46,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 	/**
 	 * The {@link #transAssistant} provides functionality that is convenient when implementing transformations.
 	 */
-	protected TransAssistantCG transAssistant;
+	protected TransAssistantIR transAssistant;
 	
 	/**
 	 * The {@link #irObserver} can receive and manipulate the initial and final versions of the IR via the
@@ -63,7 +63,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 		initVelocity();
 		this.irObserver = null;
 		this.generator = new IRGenerator();
-		this.transAssistant = new TransAssistantCG(generator.getIRInfo());
+		this.transAssistant = new TransAssistantIR(generator.getIRInfo());
 	}
 	
 	/**
@@ -91,7 +91,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 		clear();
 		preProcessAst(ast);
 
-		List<IRStatus<PCG>> statuses = new LinkedList<>();
+		List<IRStatus<PIR>> statuses = new LinkedList<>();
 
 		for (INode node : ast)
 		{
@@ -112,10 +112,10 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 *             If something goes wrong during the construction of the IR status.
 	 */
 	protected void genIrStatus(
-			List<IRStatus<PCG>> statuses,
+			List<IRStatus<PIR>> statuses,
 			INode node) throws AnalysisException
 	{
-		IRStatus<PCG> status = generator.generateFrom(node);
+		IRStatus<PIR> status = generator.generateFrom(node);
 		
 		if(status != null)
 		{
@@ -133,7 +133,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 * @throws AnalysisException
 	 *             If something goes wrong during the code generation process.
 	 */
-	abstract protected GeneratedData genVdmToTargetLang(List<IRStatus<PCG>> statuses) throws AnalysisException;
+	abstract protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException;
 	
 	/**
 	 * This method pre-processes the VDM AST by<br>
@@ -234,7 +234,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 * @param status The IR status.
 	 * @return True if the <code>status</code> represents a test case - false otherwise.
 	 */
-	protected boolean isTestCase(IRStatus<? extends PCG> status)
+	protected boolean isTestCase(IRStatus<? extends PIR> status)
 	{
 		return getInfo().getDeclAssistant().isTestCase(status.getIrNode().getSourceNode().getVdmNode());
 	}
@@ -361,11 +361,11 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 *            The list of IR statuses from which the test case names are retrieved
 	 * @return The names of the user-defined test cases.
 	 */
-	protected List<String> getUserTestCases(List<IRStatus<PCG>> statuses)
+	protected List<String> getUserTestCases(List<IRStatus<PIR>> statuses)
 	{
 		List<String> userTestCases = new LinkedList<>();
 		
-		for (IRStatus<PCG> s : statuses)
+		for (IRStatus<PIR> s : statuses)
 		{
 			if(getInfo().getDeclAssistant().isTestCase(s.getVdmNode()))
 			{
@@ -396,7 +396,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 */
 	protected boolean shouldGenerateVdmNode(INode vdmNode)
 	{
-		DeclAssistantCG declAssistant = getInfo().getDeclAssistant();
+		DeclAssistantIR declAssistant = getInfo().getDeclAssistant();
 		
 		if (declAssistant.isLibrary(vdmNode))
 		{
@@ -420,7 +420,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 *             If something goes wrong during the code generation process.
 	 */
 	protected GeneratedModule genIrModule(MergeVisitor mergeVisitor,
-			IRStatus<? extends PCG> status) throws org.overture.codegen.ir.analysis.AnalysisException
+			IRStatus<? extends PIR> status) throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		if (status.canBeGenerated())
 		{
@@ -461,11 +461,11 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 * @throws org.overture.codegen.ir.analysis.AnalysisException
 	 *             If something goes wrong during the code generation process.
 	 */
-	protected Generated genIrExp(IRStatus<SExpCG> expStatus, MergeVisitor mergeVisitor)
+	protected Generated genIrExp(IRStatus<SExpIR> expStatus, MergeVisitor mergeVisitor)
 			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		StringWriter writer = new StringWriter();
-		SExpCG expCg = expStatus.getIrNode();
+		SExpIR expCg = expStatus.getIrNode();
 
 		if (expStatus.canBeGenerated())
 		{
@@ -524,7 +524,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 *            The initial version of the IR.
 	 * @return A possibly modified version of the initial IR.
 	 */
-	public List<IRStatus<PCG>> initialIrEvent(List<IRStatus<PCG>> ast)
+	public List<IRStatus<PIR>> initialIrEvent(List<IRStatus<PIR>> ast)
 	{
 		if(irObserver != null)
 		{
@@ -542,7 +542,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 *            The final version of the IR.
 	 * @return A possibly modified version of the IR
 	 */
-	public List<IRStatus<PCG>> finalIrEvent(List<IRStatus<PCG>> ast)
+	public List<IRStatus<PIR>> finalIrEvent(List<IRStatus<PIR>> ast)
 	{
 		if(irObserver != null)
 		{
@@ -577,12 +577,12 @@ abstract public class CodeGenBase implements IREventCoordinator
 		return generator.getIRInfo();
 	}
 	
-	public void setTransAssistant(TransAssistantCG transAssistant)
+	public void setTransAssistant(TransAssistantIR transAssistant)
 	{
 		this.transAssistant = transAssistant;
 	}
 	
-	public TransAssistantCG getTransAssistant()
+	public TransAssistantIR getTransAssistant()
 	{
 		return transAssistant;
 	}

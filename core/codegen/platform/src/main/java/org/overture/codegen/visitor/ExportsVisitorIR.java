@@ -6,26 +6,26 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.modules.AModuleExports;
 import org.overture.ast.modules.PExport;
-import org.overture.codegen.ir.SExportCG;
-import org.overture.codegen.ir.SExportsCG;
-import org.overture.codegen.ir.declarations.AModuleExportsCG;
+import org.overture.codegen.ir.SExportIR;
+import org.overture.codegen.ir.SExportsIR;
+import org.overture.codegen.ir.declarations.AModuleExportsIR;
 import org.overture.codegen.ir.IRInfo;
 
-public class ExportsVisitorCG extends AbstractVisitorCG<IRInfo,SExportsCG>
+public class ExportsVisitorIR extends AbstractVisitorIR<IRInfo,SExportsIR>
 {
 	@Override
-	public SExportsCG caseAModuleExports(AModuleExports node, IRInfo question)
+	public SExportsIR caseAModuleExports(AModuleExports node, IRInfo question)
 			throws AnalysisException
 	{
-		AModuleExportsCG moduleExportsCg = new AModuleExportsCG();
+		AModuleExportsIR moduleExportsCg = new AModuleExportsIR();
 		
 		for(List<PExport> export : node.getExports())
 		{
-			List<SExportCG> exportCg = new LinkedList<SExportCG>();
+			List<SExportIR> exportCg = new LinkedList<SExportIR>();
 			
 			for(PExport exportItem : export)
 			{
-				SExportCG exportItemCg = exportItem.apply(question.getExportVisitor(), question);
+				SExportIR exportItemCg = exportItem.apply(question.getExportVisitor(), question);
 				
 				if(exportItemCg != null)
 				{

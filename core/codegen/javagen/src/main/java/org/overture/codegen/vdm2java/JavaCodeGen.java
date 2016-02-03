@@ -53,13 +53,13 @@ import org.overture.codegen.analysis.violations.TypenameComparison;
 import org.overture.codegen.analysis.violations.VdmAstAnalysis;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
-import org.overture.codegen.ir.PCG;
-import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.PIR;
+import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.AInterfaceDeclCG;
-import org.overture.codegen.ir.declarations.AModuleDeclCG;
-import org.overture.codegen.ir.declarations.SClassDeclCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
@@ -186,7 +186,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 	}
 
 	@Override
-	protected GeneratedData genVdmToTargetLang(List<IRStatus<PCG>> statuses)
+	protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses)
 			throws AnalysisException {
 		
 		List<GeneratedModule> genModules = new LinkedList<GeneratedModule>();
@@ -197,13 +197,13 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		List<String> userTestCases = getUserTestCases(statuses);
 		statuses = filter(statuses, genModules, userTestCases);
 		
-		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
-		List<IRStatus<PCG>> modulesAsNodes = IRStatus.extract(moduleStatuses);
+		List<IRStatus<AModuleDeclIR>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclIR.class);
+		List<IRStatus<PIR>> modulesAsNodes = IRStatus.extract(moduleStatuses);
 			
 		ModuleToClassTransformation moduleTransformation = new ModuleToClassTransformation(getInfo(),
 				transAssistant, getModuleDecls(moduleStatuses));
 		
-		for(IRStatus<PCG> status : modulesAsNodes)
+		for(IRStatus<PIR> status : modulesAsNodes)
 		{
 			try
 			{
@@ -223,20 +223,20 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		 * Note that this will include the system class, whereas the CPU and BUS classes have been filtered out when the
 		 * IR status was generated
 		 */
-		List<IRStatus<SClassDeclCG>> classStatuses = IRStatus.extract(modulesAsNodes, SClassDeclCG.class);
-		classStatuses.addAll(IRStatus.extract(statuses, SClassDeclCG.class));
+		List<IRStatus<SClassDeclIR>> classStatuses = IRStatus.extract(modulesAsNodes, SClassDeclIR.class);
+		classStatuses.addAll(IRStatus.extract(statuses, SClassDeclIR.class));
 		
 		if (getJavaSettings().getJavaRootPackage() != null)
 		{
-			for (IRStatus<SClassDeclCG> irStatus : classStatuses)
+			for (IRStatus<SClassDeclIR> irStatus : classStatuses)
 			{
 				irStatus.getIrNode().setPackage(getJavaSettings().getJavaRootPackage());
 			}
 		}
 
-		List<IRStatus<SClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<SClassDeclCG>>();
+		List<IRStatus<SClassDeclIR>> canBeGenerated = new LinkedList<IRStatus<SClassDeclIR>>();
 
-		for (IRStatus<SClassDeclCG> status : classStatuses)
+		for (IRStatus<SClassDeclIR> status : classStatuses)
 		{
 			if (status.canBeGenerated())
 			{
@@ -249,7 +249,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 		for (DepthFirstAnalysisAdaptor trans : transSeries.getSeries())
 		{
-			for (IRStatus<SClassDeclCG> status : canBeGenerated)
+			for (IRStatus<SClassDeclIR> status : canBeGenerated)
 			{
 				try
 				{
@@ -269,7 +269,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		}
 		
 		// Event notification
-		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), SClassDeclCG.class);
+		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), SClassDeclIR.class);
 		canBeGenerated = filter(canBeGenerated, genModules, userTestCases);
 		
 		List<String> skipping = new LinkedList<String>();
@@ -277,20 +277,20 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
 		javaFormat.setFunctionValueAssistant(transSeries.getFuncValAssist());
 
-		for (IRStatus<SClassDeclCG> status : canBeGenerated)
+		for (IRStatus<SClassDeclIR> status : canBeGenerated)
 		{
 			INode vdmClass = status.getVdmNode();
 
 			if (vdmClass == mainClass)
 			{
-				SClassDeclCG mainIr = status.getIrNode();
-				if (mainIr instanceof ADefaultClassDeclCG)
+				SClassDeclIR mainIr = status.getIrNode();
+				if (mainIr instanceof ADefaultClassDeclIR)
 				{
-					status.getIrNode().setTag(new JavaMainTag((ADefaultClassDeclCG) status.getIrNode()));
+					status.getIrNode().setTag(new JavaMainTag((ADefaultClassDeclIR) status.getIrNode()));
 				} else
 				{
 					Logger.getLog().printErrorln("Expected main class to be a "
-							+ ADefaultClassDeclCG.class.getSimpleName() + " in '" + this.getClass().getSimpleName()
+							+ ADefaultClassDeclIR.class.getSimpleName() + " in '" + this.getClass().getSimpleName()
 							+ "'. Got: " + status.getIrNode());
 				}
 			}
@@ -318,9 +318,9 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			}
 		}
 
-		List<AInterfaceDeclCG> funcValueInterfaces = transSeries.getFuncValAssist().getFuncValInterfaces();
+		List<AInterfaceDeclIR> funcValueInterfaces = transSeries.getFuncValAssist().getFuncValInterfaces();
 
-		for (AInterfaceDeclCG funcValueInterface : funcValueInterfaces)
+		for (AInterfaceDeclIR funcValueInterface : funcValueInterfaces)
 		{
 			funcValueInterface.setPackage(getJavaSettings().getJavaRootPackage());
 			
@@ -366,11 +366,11 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 			JavaQuoteValueCreator creator = new JavaQuoteValueCreator(generator.getIRInfo(), transAssistant);
 
-			List<ADefaultClassDeclCG> quoteClasses = new LinkedList<>();
+			List<ADefaultClassDeclIR> quoteClasses = new LinkedList<>();
 			for (String quoteNameVdm : quoteValues)
 			{
 				String pack = getJavaSettings().getJavaRootPackage();
-				ADefaultClassDeclCG quoteDecl = creator.consQuoteValue(quoteNameVdm, quoteNameVdm, pack);
+				ADefaultClassDeclIR quoteDecl = creator.consQuoteValue(quoteNameVdm, quoteNameVdm, pack);
 				
 				quoteClasses.add(quoteDecl);
 			}
@@ -385,7 +385,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			for (int i = 0; i < quoteClasses.size(); i++)
 			{
 				String quoteNameVdm = quoteValues.get(i);
-				ADefaultClassDeclCG qc = quoteClasses.get(i);
+				ADefaultClassDeclIR qc = quoteClasses.get(i);
 				
 				StringWriter writer = new StringWriter();
 				qc.apply(javaFormat.getMergeVisitor(), writer);
@@ -484,7 +484,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 	}
 	
 	@Override
-	protected void genIrStatus(List<IRStatus<PCG>> statuses, INode node) throws AnalysisException
+	protected void genIrStatus(List<IRStatus<PIR>> statuses, INode node) throws AnalysisException
 	{
 		if (!(node instanceof ACpuClassDefinition) && !(node instanceof ABusClassDefinition))
 		{
@@ -501,7 +501,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 				// IR tree that the Java backend cannot code generate
 				String nodeName = getInfo().getDeclAssistant().getNodeName(node);
 				HashSet<VdmNodeInfo> nodesCopy = new HashSet<VdmNodeInfo>(v.getUnsupportedNodes());
-				statuses.add(new IRStatus<PCG>(node, nodeName, /* no IR node */null, nodesCopy));
+				statuses.add(new IRStatus<PIR>(node, nodeName, /* no IR node */null, nodesCopy));
 			} else
 			{
 				super.genIrStatus(statuses, node);
@@ -518,7 +518,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		return validator;
 	}
 
-	private <T extends PCG> List<IRStatus<T>> filter(
+	private <T extends PIR> List<IRStatus<T>> filter(
 			List<IRStatus<T>> statuses, List<GeneratedModule> generated, List<String> userTestCases)
 	{
 		List<IRStatus<T>> filtered = new LinkedList<IRStatus<T>>();
@@ -604,11 +604,11 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		return allRenamings;
 	}
 
-	private List<AModuleDeclCG> getModuleDecls(List<IRStatus<AModuleDeclCG>> statuses)
+	private List<AModuleDeclIR> getModuleDecls(List<IRStatus<AModuleDeclIR>> statuses)
 	{
-		List<AModuleDeclCG> modules = new LinkedList<AModuleDeclCG>();
+		List<AModuleDeclIR> modules = new LinkedList<AModuleDeclIR>();
 		
-		for(IRStatus<AModuleDeclCG> status : statuses)
+		for(IRStatus<AModuleDeclIR> status : statuses)
 		{
 			modules.add(status.getIrNode());
 		}
@@ -619,7 +619,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 	public Generated generateJavaFromVdmExp(PExp exp) throws AnalysisException, org.overture.codegen.ir.analysis.AnalysisException
 	{
 		// There is no name validation here.
-		IRStatus<SExpCG> expStatus = generator.generateFrom(exp);
+		IRStatus<SExpIR> expStatus = generator.generateFrom(exp);
 		
 		generator.applyPartialTransformation(expStatus, new DivideTrans(getInfo()));
 

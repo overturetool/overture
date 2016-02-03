@@ -1,14 +1,14 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.ir.declarations.AVarDeclCG;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
 
 public class DeclarationTag
 {
 	private boolean declared;
 
-	private AVarDeclCG successVarDecl;
+	private AVarDeclIR successVarDecl;
 
-	public DeclarationTag(boolean declared, AVarDeclCG successVarDecl)
+	public DeclarationTag(boolean declared, AVarDeclIR successVarDecl)
 	{
 		this.declared = declared;
 		this.successVarDecl = successVarDecl;
@@ -19,7 +19,7 @@ public class DeclarationTag
 		return declared;
 	}
 
-	public AVarDeclCG getSuccessVarDecl()
+	public AVarDeclIR getSuccessVarDecl()
 	{
 		return successVarDecl;
 	}

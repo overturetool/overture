@@ -3,26 +3,26 @@ package org.overture.codegen.vdm2jml.trans;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.assistant.DeclAssistantCG;
-import org.overture.codegen.assistant.ExpAssistantCG;
-import org.overture.codegen.assistant.PatternAssistantCG;
+import org.overture.codegen.assistant.DeclAssistantIR;
+import org.overture.codegen.assistant.ExpAssistantIR;
+import org.overture.codegen.assistant.PatternAssistantIR;
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.expressions.AFieldExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.expressions.AMapSeqGetExpCG;
-import org.overture.codegen.ir.expressions.SVarExpCG;
-import org.overture.codegen.ir.patterns.AIdentifierPatternCG;
-import org.overture.codegen.ir.statements.AAssignToExpStmCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
-import org.overture.codegen.ir.statements.AMapSeqUpdateStmCG;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AMapSeqGetExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.AMapSeqUpdateStmIR;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.codegen.vdm2jml.data.StateDesInfo;
 
@@ -41,35 +41,35 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAFieldExpCG(AFieldExpCG node) throws AnalysisException
+	public void caseAFieldExpIR(AFieldExpIR node) throws AnalysisException
 	{
-		if(!(node.parent() instanceof AAssignToExpStmCG))
+		if(!(node.parent() instanceof AAssignToExpStmIR))
 		{
 			return;
 		}
 		
-		if (!(node.getObject() instanceof SVarExpCG))
+		if (!(node.getObject() instanceof SVarExpIR))
 		{
-			normaliseTarget((AAssignToExpStmCG) node.parent() , node.getObject());
+			normaliseTarget((AAssignToExpStmIR) node.parent() , node.getObject());
 		}	
 	}
 
 	@Override
-	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
+	public void caseAMapSeqUpdateStmIR(AMapSeqUpdateStmIR node)
 			throws AnalysisException
 	{
-		if (!(node.getCol() instanceof SVarExpCG))
+		if (!(node.getCol() instanceof SVarExpIR))
 		{
 			normaliseTarget(node, node.getCol());
 		}
 	}
 
-	private void normaliseTarget(SStmCG node, SExpCG target)
+	private void normaliseTarget(SStmIR node, SExpIR target)
 	{
-		List<AVarDeclCG> varDecls = new LinkedList<AVarDeclCG>();
-		List<AIdentifierVarExpCG> vars = new LinkedList<AIdentifierVarExpCG>();
+		List<AVarDeclIR> varDecls = new LinkedList<AVarDeclIR>();
+		List<AIdentifierVarExpIR> vars = new LinkedList<AIdentifierVarExpIR>();
 
-		SExpCG newTarget = splitTarget(target, varDecls, vars);
+		SExpIR newTarget = splitTarget(target, varDecls, vars);
 
 		markAsCloneFree(varDecls);
 		markAsCloneFree(vars);
@@ -82,10 +82,10 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		ABlockStmCG replBlock = new ABlockStmCG();
+		ABlockStmIR replBlock = new ABlockStmIR();
 		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
 
-		for (AVarDeclCG var : varDecls)
+		for (AVarDeclIR var : varDecls)
 		{
 			replBlock.getLocalDefs().add(var);
 		}
@@ -94,53 +94,53 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 		jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(target, newTarget);
 	}
 
-	private SExpCG splitTarget(SExpCG target, List<AVarDeclCG> varDecls,
-			List<AIdentifierVarExpCG> vars)
+	private SExpIR splitTarget(SExpIR target, List<AVarDeclIR> varDecls,
+			List<AIdentifierVarExpIR> vars)
 	{
-		DeclAssistantCG dAssist = jmlGen.getJavaGen().getInfo().getDeclAssistant();
-		PatternAssistantCG pAssist = jmlGen.getJavaGen().getInfo().getPatternAssistant();
-		ExpAssistantCG eAssist = jmlGen.getJavaGen().getInfo().getExpAssistant();
+		DeclAssistantIR dAssist = jmlGen.getJavaGen().getInfo().getDeclAssistant();
+		PatternAssistantIR pAssist = jmlGen.getJavaGen().getInfo().getPatternAssistant();
+		ExpAssistantIR eAssist = jmlGen.getJavaGen().getInfo().getExpAssistant();
 		ITempVarGen nameGen = jmlGen.getJavaGen().getInfo().getTempVarNameGen();
-		TransAssistantCG tr = jmlGen.getJavaGen().getTransAssistant();
+		TransAssistantIR tr = jmlGen.getJavaGen().getTransAssistant();
 
-		if (target instanceof SVarExpCG)
+		if (target instanceof SVarExpIR)
 		{
-			AIdentifierVarExpCG var = ((AIdentifierVarExpCG) target).clone();
+			AIdentifierVarExpIR var = ((AIdentifierVarExpIR) target).clone();
 			vars.add(var);
 			return var;
-		} else if (target instanceof AMapSeqGetExpCG)
+		} else if (target instanceof AMapSeqGetExpIR)
 		{
 			// Utils.mapSeqGet(a.myMap, 1).b
-			AMapSeqGetExpCG get = (AMapSeqGetExpCG) target;
-			SExpCG newCol = splitTarget(get.getCol().clone(), varDecls, vars);
+			AMapSeqGetExpIR get = (AMapSeqGetExpIR) target;
+			SExpIR newCol = splitTarget(get.getCol().clone(), varDecls, vars);
 			tr.replaceNodeWith(get.getCol(), newCol);
 			// Utils.mapSeqGet(tmp_1, 1).b
 
-			AIdentifierPatternCG id = pAssist.consIdPattern(nameGen.nextVarName(STATE_DES));
-			AVarDeclCG varDecl = dAssist.consLocalVarDecl(get.getType().clone(), id, get.clone());
+			AIdentifierPatternIR id = pAssist.consIdPattern(nameGen.nextVarName(STATE_DES));
+			AVarDeclIR varDecl = dAssist.consLocalVarDecl(get.getType().clone(), id, get.clone());
 			varDecls.add(varDecl);
 			// B tmp_2 = Utils.mapSeqGet(tmp_1, 1).b
 
 			// tmp_2
-			AIdentifierVarExpCG var = eAssist.consIdVar(id.getName(), get.getType().clone());
+			AIdentifierVarExpIR var = eAssist.consIdVar(id.getName(), get.getType().clone());
 			vars.add(var);
 			return var;
 
 		}
-		else if (target instanceof AFieldExpCG)
+		else if (target instanceof AFieldExpIR)
 		{
 			// a.b.c
-			AFieldExpCG field = (AFieldExpCG) target;
-			SExpCG newObj = splitTarget(field.getObject().clone(), varDecls, vars);
+			AFieldExpIR field = (AFieldExpIR) target;
+			SExpIR newObj = splitTarget(field.getObject().clone(), varDecls, vars);
 			tr.replaceNodeWith(field.getObject(), newObj);
 			// tmp_1.c
 
-			AIdentifierPatternCG id = pAssist.consIdPattern(nameGen.nextVarName(STATE_DES));
-			AVarDeclCG varDecl = dAssist.consLocalVarDecl(field.getType().clone(), id, field.clone());
+			AIdentifierPatternIR id = pAssist.consIdPattern(nameGen.nextVarName(STATE_DES));
+			AVarDeclIR varDecl = dAssist.consLocalVarDecl(field.getType().clone(), id, field.clone());
 			varDecls.add(varDecl);
 			// C tmp_2 = tmp1.c
 
-			AIdentifierVarExpCG var = eAssist.consIdVar(id.getName(), field.getType().clone());
+			AIdentifierVarExpIR var = eAssist.consIdVar(id.getName(), field.getType().clone());
 			vars.add(var);
 			return var;
 		} else

@@ -23,15 +23,15 @@ package org.overture.codegen.trans.quantifier;
 
 import java.util.List;
 
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SPatternCG;
-import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.IterationVarPrefixes;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
@@ -39,8 +39,8 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	protected OrdinaryQuantifier quantifier;
 
 	public OrdinaryQuantifierStrategy(
-			TransAssistantCG transformationAssistant,
-			SExpCG predicate, String resultVarName,
+			TransAssistantIR transformationAssistant,
+			SExpIR predicate, String resultVarName,
 			OrdinaryQuantifier quantifier, ILanguageIterator langIterator,
 			ITempVarGen tempGen, IterationVarPrefixes iteVarPrefixes)
 	{
@@ -49,8 +49,8 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	}
 
 	@Override
-	public List<AVarDeclCG> getOuterBlockDecls(
-			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
+	public List<AVarDeclIR> getOuterBlockDecls(
+			AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
 			throws AnalysisException
 	{
 		return firstBind ? packDecl(transAssist.consBoolVarDecl(resultVarName, quantifier == OrdinaryQuantifier.FORALL))
@@ -58,19 +58,19 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	}
 
 	@Override
-	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public SExpIR getForLoopCond(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 			throws AnalysisException
 	{
-		SExpCG left = langIterator.getForLoopCond(setVar, patterns, pattern);
-		SExpCG right = transAssist.consBoolCheck(resultVarName, quantifier == OrdinaryQuantifier.EXISTS);
+		SExpIR left = langIterator.getForLoopCond(setVar, patterns, pattern);
+		SExpIR right = transAssist.consBoolCheck(resultVarName, quantifier == OrdinaryQuantifier.EXISTS);
 
 		return transAssist.consAndExp(left, right);
 	}
 
 	@Override
-	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public List<SStmIR> getForLoopStms(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 	{
 		return lastBind ? packStm(transAssist.consBoolVarAssignment(predicate, resultVarName))
 				: null;

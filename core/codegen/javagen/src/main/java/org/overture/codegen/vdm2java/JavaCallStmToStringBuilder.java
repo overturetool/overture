@@ -5,67 +5,67 @@ import java.util.List;
 import java.util.Map;
 
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.expressions.ASeqConcatBinaryExpCG;
-import org.overture.codegen.ir.statements.ACallObjectExpStmCG;
-import org.overture.codegen.ir.statements.APlainCallStmCG;
-import org.overture.codegen.ir.statements.AReturnStmCG;
-import org.overture.codegen.ir.types.AClassTypeCG;
-import org.overture.codegen.ir.types.AStringTypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.ASeqConcatBinaryExpIR;
+import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
+import org.overture.codegen.ir.statements.APlainCallStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.traces.ICallStmToStringMethodBuilder;
 import org.overture.codegen.traces.StoreAssistant;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.config.Settings;
 
 public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements ICallStmToStringMethodBuilder
 {
 	@Override
-	public AMethodDeclCG consToString(IRInfo info, SStmCG callStm, Map<String, String> idConstNameMap, StoreAssistant storeAssistant, TransAssistantCG transAssistant)
+	public AMethodDeclIR consToString(IRInfo info, SStmIR callStm, Map<String, String> idConstNameMap, StoreAssistant storeAssistant, TransAssistantIR transAssistant)
 	{
-		AMethodDeclCG toStringMethod = consToStringSignature();
+		AMethodDeclIR toStringMethod = consToStringSignature();
 
-		AReturnStmCG body = new AReturnStmCG();
+		AReturnStmIR body = new AReturnStmIR();
 
-		if (callStm instanceof APlainCallStmCG)
+		if (callStm instanceof APlainCallStmIR)
 		{
-			APlainCallStmCG plainCall = (APlainCallStmCG) callStm;
+			APlainCallStmIR plainCall = (APlainCallStmIR) callStm;
 
-			STypeCG type = plainCall.getClassType();
+			STypeIR type = plainCall.getClassType();
 			String name = plainCall.getName();
-			LinkedList<SExpCG> args = plainCall.getArgs();
+			LinkedList<SExpIR> args = plainCall.getArgs();
 
 			String prefix = "";
 
-			if (type instanceof AClassTypeCG)
+			if (type instanceof AClassTypeIR)
 			{
-				prefix = ((AClassTypeCG) type).getName() + "`";
+				prefix = ((AClassTypeIR) type).getName() + "`";
 			}
 
 			prefix += name;
 
 			body.setExp(appendArgs(info, args, prefix, idConstNameMap, storeAssistant, transAssistant));
 
-		}  else if (callStm instanceof ACallObjectExpStmCG)
+		}  else if (callStm instanceof ACallObjectExpStmIR)
 		{
-			ACallObjectExpStmCG callObj = (ACallObjectExpStmCG) callStm;
+			ACallObjectExpStmIR callObj = (ACallObjectExpStmIR) callStm;
 
-			SExpCG obj = callObj.getObj();
+			SExpIR obj = callObj.getObj();
 			String field = callObj.getFieldName();
-			LinkedList<SExpCG> args = callObj.getArgs();
+			LinkedList<SExpIR> args = callObj.getArgs();
 
 			String prefix = obj.toString();
 			prefix += "." + field;
 
 			body.setExp(appendArgs(info, args, prefix, idConstNameMap, storeAssistant, transAssistant));
 		}
-		// The CallObjectStmCG node has been transformed out of the tree
+		// The CallObjectStmIR node has been transformed out of the tree
 		else
 		{
 			Logger.getLog().printErrorln("Expected statement to be a call statement or call object statement. Got: "
@@ -78,29 +78,29 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 		return toStringMethod;
 	}
 	
-	private SExpCG appendArgs(IRInfo info, List<SExpCG> args, String prefix, Map<String, String> idConstNameMap, StoreAssistant storeAssistant, TransAssistantCG transAssistant)
+	private SExpIR appendArgs(IRInfo info, List<SExpIR> args, String prefix, Map<String, String> idConstNameMap, StoreAssistant storeAssistant, TransAssistantIR transAssistant)
 	{
 		if (args == null || args.isEmpty())
 		{
 			return info.getExpAssistant().consStringLiteral(prefix + "()", false);
 		}
 
-		ASeqConcatBinaryExpCG str = new ASeqConcatBinaryExpCG();
-		str.setType(new AStringTypeCG());
+		ASeqConcatBinaryExpIR str = new ASeqConcatBinaryExpIR();
+		str.setType(new AStringTypeIR());
 		str.setLeft(info.getExpAssistant().consStringLiteral(prefix + "(", false));
 
-		ASeqConcatBinaryExpCG next = str;
+		ASeqConcatBinaryExpIR next = str;
 
-		for (SExpCG arg : args)
+		for (SExpIR arg : args)
 		{
-			ASeqConcatBinaryExpCG tmp = new ASeqConcatBinaryExpCG();
-			tmp.setType(new AStringTypeCG());
+			ASeqConcatBinaryExpIR tmp = new ASeqConcatBinaryExpIR();
+			tmp.setType(new AStringTypeIR());
 
-			AApplyExpCG utilsToStrCall = consUtilsToStringCall();
+			AApplyExpIR utilsToStrCall = consUtilsToStringCall();
 			
-			if(arg instanceof AIdentifierVarExpCG && idConstNameMap.containsKey(((AIdentifierVarExpCG) arg).getName()))
+			if(arg instanceof AIdentifierVarExpIR && idConstNameMap.containsKey(((AIdentifierVarExpIR) arg).getName()))
 			{
-				AIdentifierVarExpCG idVarExp = ((AIdentifierVarExpCG) arg);
+				AIdentifierVarExpIR idVarExp = ((AIdentifierVarExpIR) arg);
 				if(Settings.dialect != Dialect.VDM_SL)
 				{
 					utilsToStrCall.getArgs().add(storeAssistant.consStoreLookup(idVarExp, true));
@@ -127,9 +127,9 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 	}
 
 	@Override
-	public AApplyExpCG toStringOf(SExpCG exp)
+	public AApplyExpIR toStringOf(SExpIR exp)
 	{
-		AApplyExpCG utilsToStrCall = consUtilsToStringCall();
+		AApplyExpIR utilsToStrCall = consUtilsToStringCall();
 		utilsToStrCall.getArgs().add(exp);
 		
 		return utilsToStrCall;

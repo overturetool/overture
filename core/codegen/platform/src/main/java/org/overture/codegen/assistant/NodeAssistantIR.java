@@ -4,16 +4,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.ir.PCG;
+import org.overture.codegen.ir.PIR;
 
-public class NodeAssistantCG extends AssistantBase
+public class NodeAssistantIR extends AssistantBase
 {
-	public NodeAssistantCG(AssistantManager assistantManager)
+	public NodeAssistantIR(AssistantManager assistantManager)
 	{
 		super(assistantManager);
 	}
 	
-	public void addMetaData(PCG node, List<ClonableString> extraMetaData, boolean prepend)
+	public void addMetaData(PIR node, List<ClonableString> extraMetaData, boolean prepend)
 	{
 		List<ClonableString> allMetaData = buildData(node.getMetaData(), extraMetaData, prepend);
 

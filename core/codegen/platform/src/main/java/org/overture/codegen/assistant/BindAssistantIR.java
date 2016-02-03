@@ -21,41 +21,41 @@
  */
 package org.overture.codegen.assistant;
 
-import org.overture.codegen.ir.SBindCG;
-import org.overture.codegen.ir.SMultipleBindCG;
-import org.overture.codegen.ir.patterns.ASetBindCG;
-import org.overture.codegen.ir.patterns.ASetMultipleBindCG;
-import org.overture.codegen.ir.patterns.ATypeBindCG;
-import org.overture.codegen.ir.patterns.ATypeMultipleBindCG;
+import org.overture.codegen.ir.SBindIR;
+import org.overture.codegen.ir.SMultipleBindIR;
+import org.overture.codegen.ir.patterns.ASetBindIR;
+import org.overture.codegen.ir.patterns.ASetMultipleBindIR;
+import org.overture.codegen.ir.patterns.ATypeBindIR;
+import org.overture.codegen.ir.patterns.ATypeMultipleBindIR;
 import org.overture.codegen.logging.Logger;
 
-public class BindAssistantCG extends AssistantBase
+public class BindAssistantIR extends AssistantBase
 {
-	public BindAssistantCG(AssistantManager assistantManager)
+	public BindAssistantIR(AssistantManager assistantManager)
 	{
 		super(assistantManager);
 	}
 
-	public SMultipleBindCG convertToMultipleBind(SBindCG bind)
+	public SMultipleBindIR convertToMultipleBind(SBindIR bind)
 	{
-		SMultipleBindCG result = null;
+		SMultipleBindIR result = null;
 		
-		if(bind instanceof ASetBindCG)
+		if(bind instanceof ASetBindIR)
 		{
-			ASetBindCG setBind = (ASetBindCG) bind;
+			ASetBindIR setBind = (ASetBindIR) bind;
 			
-			ASetMultipleBindCG multipleSetBind = new ASetMultipleBindCG();
+			ASetMultipleBindIR multipleSetBind = new ASetMultipleBindIR();
 			
 			multipleSetBind.getPatterns().add(bind.getPattern());
 			multipleSetBind.setSet(setBind.getSet());
 			
 			result = multipleSetBind;
 		}
-		else if(bind instanceof ATypeBindCG)
+		else if(bind instanceof ATypeBindIR)
 		{
-			ATypeBindCG typeBind = (ATypeBindCG) bind;
+			ATypeBindIR typeBind = (ATypeBindIR) bind;
 			
-			ATypeMultipleBindCG multipleTypeBind = new ATypeMultipleBindCG();
+			ATypeMultipleBindIR multipleTypeBind = new ATypeMultipleBindIR();
 			
 			multipleTypeBind.getPatterns().add(bind.getPattern());
 			multipleTypeBind.setType(typeBind.getType());

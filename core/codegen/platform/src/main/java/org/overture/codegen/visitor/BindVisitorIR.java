@@ -28,27 +28,27 @@ import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
-import org.overture.codegen.ir.SBindCG;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SPatternCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.patterns.ASetBindCG;
-import org.overture.codegen.ir.patterns.ATypeBindCG;
+import org.overture.codegen.ir.SBindIR;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.patterns.ASetBindIR;
+import org.overture.codegen.ir.patterns.ATypeBindIR;
 import org.overture.codegen.ir.IRInfo;
 
-public class BindVisitorCG extends AbstractVisitorCG<IRInfo, SBindCG>
+public class BindVisitorIR extends AbstractVisitorIR<IRInfo, SBindIR>
 {
 	@Override
-	public SBindCG caseASetBind(ASetBind node, IRInfo question)
+	public SBindIR caseASetBind(ASetBind node, IRInfo question)
 			throws AnalysisException
 	{
 		PPattern pattern = node.getPattern();
-		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
+		SPatternIR patternCg = pattern.apply(question.getPatternVisitor(), question);
 
 		PExp set = node.getSet();
-		SExpCG setCg = set.apply(question.getExpVisitor(), question);
+		SExpIR setCg = set.apply(question.getExpVisitor(), question);
 
-		ASetBindCG setBind = new ASetBindCG();
+		ASetBindIR setBind = new ASetBindIR();
 		setBind.setPattern(patternCg);
 		setBind.setSet(setCg);
 
@@ -56,16 +56,16 @@ public class BindVisitorCG extends AbstractVisitorCG<IRInfo, SBindCG>
 	}
 	
 	@Override
-	public SBindCG caseATypeBind(ATypeBind node, IRInfo question)
+	public SBindIR caseATypeBind(ATypeBind node, IRInfo question)
 			throws AnalysisException
 	{
 		PPattern pattern = node.getPattern();
-		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
+		SPatternIR patternCg = pattern.apply(question.getPatternVisitor(), question);
 
 		PType boundType = node.getType();
-		STypeCG boundTypeCg = boundType.apply(question.getTypeVisitor(), question);
+		STypeIR boundTypeCg = boundType.apply(question.getTypeVisitor(), question);
 
-		ATypeBindCG setBind = new ATypeBindCG();
+		ATypeBindIR setBind = new ATypeBindIR();
 		setBind.setPattern(patternCg);
 		setBind.setType(boundTypeCg);
 

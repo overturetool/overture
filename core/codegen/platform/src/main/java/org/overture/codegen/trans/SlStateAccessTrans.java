@@ -1,29 +1,29 @@
 package org.overture.codegen.trans;
 
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SDeclCG;
+import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AFuncDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.AStateDeclCG;
-import org.overture.codegen.ir.expressions.AFieldExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.statements.AFieldStateDesignatorCG;
-import org.overture.codegen.ir.statements.AIdentifierStateDesignatorCG;
-import org.overture.codegen.ir.types.ARecordTypeCG;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AFuncDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.AStateDeclIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.statements.AFieldStateDesignatorIR;
+import org.overture.codegen.ir.statements.AIdentifierStateDesignatorIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class SlStateAccessTrans extends DepthFirstAnalysisAdaptor
 {
-	private final AStateDeclCG stateDecl;
+	private final AStateDeclIR stateDecl;
 	private IRInfo info;
-	private TransAssistantCG transAssistant;
+	private TransAssistantIR transAssistant;
 	private boolean inPreOrPost;
 	
-	public SlStateAccessTrans(AStateDeclCG stateDecl, IRInfo info, TransAssistantCG transAssistant)
+	public SlStateAccessTrans(AStateDeclIR stateDecl, IRInfo info, TransAssistantIR transAssistant)
 	{
 		this.stateDecl = stateDecl;
 		this.info = info;
@@ -32,21 +32,21 @@ public class SlStateAccessTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseAFuncDeclCG(AFuncDeclCG node)
+	public void caseAFuncDeclIR(AFuncDeclIR node)
 			throws AnalysisException
 	{
 		handleMethodOrFunc(node.getBody(), node.getPreCond(), node.getPostCond());
 	}
 	
 	@Override
-	public void caseAMethodDeclCG(AMethodDeclCG node)
+	public void caseAMethodDeclIR(AMethodDeclIR node)
 			throws AnalysisException
 	{
 		handleMethodOrFunc(node.getBody(), node.getPreCond(), node.getPostCond());
 	}
 
 	@Override
-	public void caseAIdentifierVarExpCG(AIdentifierVarExpCG node)
+	public void caseAIdentifierVarExpIR(AIdentifierVarExpIR node)
 			throws AnalysisException
 	{
 		if (isOldFieldRead(stateDecl, node) /*1*/
@@ -77,7 +77,7 @@ public class SlStateAccessTrans extends DepthFirstAnalysisAdaptor
 			// If /*1*/ or /*2*/ or /*3*/ is true we make the field access explicit since IR modules
 			// use a single field to represent state.
 			//
-			AFieldExpCG fieldExp = new AFieldExpCG();
+			AFieldExpIR fieldExp = new AFieldExpIR();
 			fieldExp.setSourceNode(node.getSourceNode());
 			fieldExp.setTag(node.getTag());
 			fieldExp.setType(node.getType().clone());
@@ -88,25 +88,25 @@ public class SlStateAccessTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseAIdentifierStateDesignatorCG(
-			AIdentifierStateDesignatorCG node) throws AnalysisException
+	public void caseAIdentifierStateDesignatorIR(
+			AIdentifierStateDesignatorIR node) throws AnalysisException
 	{
 		if (!node.getIsLocal()
 				&& !node.getName().equals(stateDecl.getName()))
 		{
-			ARecordTypeCG stateType = transAssistant.getRecType(stateDecl);
+			ARecordTypeIR stateType = transAssistant.getRecType(stateDecl);
 
-			AIdentifierStateDesignatorCG idState = new AIdentifierStateDesignatorCG();
+			AIdentifierStateDesignatorIR idState = new AIdentifierStateDesignatorIR();
 			idState.setClassName(null);
 			idState.setExplicit(false);
 			idState.setIsLocal(false);
 			idState.setName(stateDecl.getName());
 			idState.setType(stateType);
 
-			AFieldStateDesignatorCG field = new AFieldStateDesignatorCG();
+			AFieldStateDesignatorIR field = new AFieldStateDesignatorIR();
 			field.setField(node.getName());
 			field.setObject(idState);
-			for (AFieldDeclCG f : stateDecl.getFields())
+			for (AFieldDeclIR f : stateDecl.getFields())
 			{
 				if (f.getName().equals(node.getName()))
 				{
@@ -118,8 +118,8 @@ public class SlStateAccessTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 	
-	private void handleMethodOrFunc(INode body, SDeclCG preCond,
-			SDeclCG postCond) throws AnalysisException
+	private void handleMethodOrFunc(INode body, SDeclIR preCond,
+			SDeclIR postCond) throws AnalysisException
 	{
 		if(body != null)
 		{
@@ -130,7 +130,7 @@ public class SlStateAccessTrans extends DepthFirstAnalysisAdaptor
 		handleCond(postCond);
 	}
 
-	private void handleCond(SDeclCG cond) throws AnalysisException
+	private void handleCond(SDeclIR cond) throws AnalysisException
 	{
 		if(cond != null)
 		{
@@ -141,7 +141,7 @@ public class SlStateAccessTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	private boolean isFieldReadInPreOrPost(
-			final AStateDeclCG stateDecl, AIdentifierVarExpCG node)
+			final AStateDeclIR stateDecl, AIdentifierVarExpIR node)
 	{
 		if(!inPreOrPost)
 		{
@@ -149,7 +149,7 @@ public class SlStateAccessTrans extends DepthFirstAnalysisAdaptor
 		}
 		
 		boolean matches = false;
-		for(AFieldDeclCG f : stateDecl.getFields())
+		for(AFieldDeclIR f : stateDecl.getFields())
 		{
 			if(f.getName().equals(node.getName()))
 			{
@@ -162,22 +162,22 @@ public class SlStateAccessTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	private boolean isFieldRead(
-			final AStateDeclCG stateDecl, AIdentifierVarExpCG node)
+			final AStateDeclIR stateDecl, AIdentifierVarExpIR node)
 	{
 		return !info.isSlStateRead(node)
 				&& !node.getName().equals(stateDecl.getName());
 	}
 
-	private boolean isOldFieldRead(final AStateDeclCG stateDecl,
-			AIdentifierVarExpCG node)
+	private boolean isOldFieldRead(final AStateDeclIR stateDecl,
+			AIdentifierVarExpIR node)
 	{
 		return info.getExpAssistant().isOld(node.getName())
 				&& !node.getName().equals("_" + stateDecl.getName());
 	}
 
-	private void setFieldNames(AFieldExpCG field, AStateDeclCG stateDecl, String name)
+	private void setFieldNames(AFieldExpIR field, AStateDeclIR stateDecl, String name)
 	{
-		ARecordTypeCG recType = transAssistant.getRecType(stateDecl);
+		ARecordTypeIR recType = transAssistant.getRecType(stateDecl);
 		String stateName = stateDecl.getName();
 		
 		if(info.getExpAssistant().isOld(name))

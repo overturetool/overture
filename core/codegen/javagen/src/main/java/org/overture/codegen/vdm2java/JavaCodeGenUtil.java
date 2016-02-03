@@ -34,8 +34,8 @@ import java.util.regex.Pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.AInterfaceDeclCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -161,9 +161,9 @@ public class JavaCodeGenUtil
 
 	public static boolean isQuote(org.overture.codegen.ir.INode decl, JavaSettings settings)
 	{
-		if(decl instanceof ADefaultClassDeclCG)
+		if(decl instanceof ADefaultClassDeclIR)
 		{
-			ADefaultClassDeclCG clazz = (ADefaultClassDeclCG) decl;
+			ADefaultClassDeclIR clazz = (ADefaultClassDeclIR) decl;
 			
 			if(clazz.getPackage() == null)
 			{
@@ -347,13 +347,13 @@ public class JavaCodeGenUtil
 		File moduleOutputDir = outputDir;
 		String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
 		
-		if(generatedClass.getIrNode() instanceof ADefaultClassDeclCG)
+		if(generatedClass.getIrNode() instanceof ADefaultClassDeclIR)
 		{
-			javaPackage = ((ADefaultClassDeclCG) generatedClass.getIrNode()).getPackage();
+			javaPackage = ((ADefaultClassDeclIR) generatedClass.getIrNode()).getPackage();
 		}
-		else if(generatedClass.getIrNode() instanceof AInterfaceDeclCG)
+		else if(generatedClass.getIrNode() instanceof AInterfaceDeclIR)
 		{
-			javaPackage = ((AInterfaceDeclCG) generatedClass.getIrNode()).getPackage();
+			javaPackage = ((AInterfaceDeclIR) generatedClass.getIrNode()).getPackage();
 		}
 		else
 		{

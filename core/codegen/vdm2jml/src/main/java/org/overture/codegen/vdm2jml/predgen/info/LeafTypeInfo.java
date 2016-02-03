@@ -5,18 +5,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.types.ABoolBasicTypeCG;
-import org.overture.codegen.ir.types.ACharBasicTypeCG;
-import org.overture.codegen.ir.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.ir.types.ANat1NumericBasicTypeCG;
-import org.overture.codegen.ir.types.ANatNumericBasicTypeCG;
-import org.overture.codegen.ir.types.AQuoteTypeCG;
-import org.overture.codegen.ir.types.ARatNumericBasicTypeCG;
-import org.overture.codegen.ir.types.ARealNumericBasicTypeCG;
-import org.overture.codegen.ir.types.ARecordTypeCG;
-import org.overture.codegen.ir.types.AStringTypeCG;
-import org.overture.codegen.ir.types.ATokenBasicTypeCG;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AQuoteTypeIR;
+import org.overture.codegen.ir.types.ARatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
+import org.overture.codegen.ir.types.ATokenBasicTypeIR;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.Utils;
 import org.overture.codegen.vdm2java.JavaQuoteValueCreator;
@@ -37,33 +37,33 @@ public class LeafTypeInfo extends AbstractTypeInfo
 	private static final String IS_TOKEN = "is_token";
 	private static final String IS = "is_";
 
-	private STypeCG type;
+	private STypeIR type;
 	
-	private static Map<Class<? extends STypeCG>, String> utilsCallMap;
+	private static Map<Class<? extends STypeIR>, String> utilsCallMap;
 	
 	static
 	{
 		utilsCallMap = new HashMap<>();
-		utilsCallMap.put(ABoolBasicTypeCG.class, IS_BOOL);
-		utilsCallMap.put(ANatNumericBasicTypeCG.class, IS_NAT);
-		utilsCallMap.put(ANat1NumericBasicTypeCG.class, IS_NAT1);
-		utilsCallMap.put(AIntNumericBasicTypeCG.class, IS_INT);
-		utilsCallMap.put(ARatNumericBasicTypeCG.class, IS_RAT);
-		utilsCallMap.put(ARealNumericBasicTypeCG.class, IS_REAL);
-		utilsCallMap.put(ACharBasicTypeCG.class, IS_CHAR);
-		utilsCallMap.put(ATokenBasicTypeCG.class, IS_TOKEN);
-		utilsCallMap.put(AQuoteTypeCG.class, IS);
-		utilsCallMap.put(ARecordTypeCG.class, IS);
-		utilsCallMap.put(AStringTypeCG.class, IS);
+		utilsCallMap.put(ABoolBasicTypeIR.class, IS_BOOL);
+		utilsCallMap.put(ANatNumericBasicTypeIR.class, IS_NAT);
+		utilsCallMap.put(ANat1NumericBasicTypeIR.class, IS_NAT1);
+		utilsCallMap.put(AIntNumericBasicTypeIR.class, IS_INT);
+		utilsCallMap.put(ARatNumericBasicTypeIR.class, IS_RAT);
+		utilsCallMap.put(ARealNumericBasicTypeIR.class, IS_REAL);
+		utilsCallMap.put(ACharBasicTypeIR.class, IS_CHAR);
+		utilsCallMap.put(ATokenBasicTypeIR.class, IS_TOKEN);
+		utilsCallMap.put(AQuoteTypeIR.class, IS);
+		utilsCallMap.put(ARecordTypeIR.class, IS);
+		utilsCallMap.put(AStringTypeIR.class, IS);
 	}
 	
-	public LeafTypeInfo(STypeCG type, boolean optional)
+	public LeafTypeInfo(STypeIR type, boolean optional)
 	{
 		super(optional);
 		this.type = type;
 	}
 	
-	public STypeCG getType()
+	public STypeIR getType()
 	{
 		return type;
 	}
@@ -103,15 +103,15 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		}
 
 		String call;
-		if(type instanceof AQuoteTypeCG)
+		if(type instanceof AQuoteTypeIR)
 		{
-			String qouteValue = ((AQuoteTypeCG) type).getValue();
+			String qouteValue = ((AQuoteTypeIR) type).getValue();
 			String quoteType = JavaQuoteValueCreator.fullyQualifiedQuoteName(javaRootPackage, qouteValue);
 			call = consSubjectCheckForType(methodName, arg, quoteType);
 		}
-		else if(type instanceof ARecordTypeCG)
+		else if(type instanceof ARecordTypeIR)
 		{
-			ARecordTypeCG rt = (ARecordTypeCG) type;
+			ARecordTypeIR rt = (ARecordTypeIR) type;
 			String defClass = rt.getName().getDefiningClass();
 			String recPackage = JmlGenUtil.consRecPackage(defClass, javaRootPackage);
 			String fullyQualifiedRecType = recPackage + "."
@@ -119,7 +119,7 @@ public class LeafTypeInfo extends AbstractTypeInfo
 			
 			call = consSubjectCheckForType(methodName, arg, fullyQualifiedRecType);
 		}
-		else if(type instanceof AStringTypeCG)
+		else if(type instanceof AStringTypeIR)
 		{
 			call = consSubjectCheckForType(methodName, arg, String.class.getSimpleName());
 		}
@@ -147,7 +147,7 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		return consSubjectCheckExtraArg(Utils.class.getSimpleName(), methodName, arg, type + CLASS_QUALIFIER);
 	}
 	
-	public static Map<Class<? extends STypeCG>, String> getUtilsCallMap()
+	public static Map<Class<? extends STypeIR>, String> getUtilsCallMap()
 	{
 		return utilsCallMap;
 	}

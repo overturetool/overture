@@ -51,40 +51,40 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.ir.SDeclCG;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SPatternCG;
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.STermCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.ir.declarations.AFuncDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.AMutexSyncDeclCG;
-import org.overture.codegen.ir.declarations.ANamedTraceDeclCG;
-import org.overture.codegen.ir.declarations.ANamedTypeDeclCG;
-import org.overture.codegen.ir.declarations.APersyncDeclCG;
-import org.overture.codegen.ir.declarations.ARecordDeclCG;
-import org.overture.codegen.ir.declarations.AStateDeclCG;
-import org.overture.codegen.ir.declarations.AThreadDeclCG;
-import org.overture.codegen.ir.declarations.ATypeDeclCG;
-import org.overture.codegen.ir.expressions.ALambdaExpCG;
-import org.overture.codegen.ir.expressions.ANotImplementedExpCG;
-import org.overture.codegen.ir.name.ATokenNameCG;
-import org.overture.codegen.ir.name.ATypeNameCG;
-import org.overture.codegen.ir.statements.ANotImplementedStmCG;
-import org.overture.codegen.ir.traces.ATraceDeclTermCG;
-import org.overture.codegen.ir.types.AMethodTypeCG;
-import org.overture.codegen.ir.types.ATemplateTypeCG;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STermIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AFuncDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.AMutexSyncDeclIR;
+import org.overture.codegen.ir.declarations.ANamedTraceDeclIR;
+import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
+import org.overture.codegen.ir.declarations.APersyncDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.declarations.AStateDeclIR;
+import org.overture.codegen.ir.declarations.AThreadDeclIR;
+import org.overture.codegen.ir.declarations.ATypeDeclIR;
+import org.overture.codegen.ir.expressions.ALambdaExpIR;
+import org.overture.codegen.ir.expressions.ANotImplementedExpIR;
+import org.overture.codegen.ir.name.ATokenNameIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
+import org.overture.codegen.ir.statements.ANotImplementedStmIR;
+import org.overture.codegen.ir.traces.ATraceDeclTermIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.ATemplateTypeIR;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 
-public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
+public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 {
 	@Override
-	public SDeclCG caseAStateDefinition(AStateDefinition node, IRInfo question)
+	public SDeclIR caseAStateDefinition(AStateDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		AAccessSpecifierAccessSpecifier access = node.getAccess();
@@ -98,33 +98,33 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 		String accessCg = access.getAccess().toString();
 		String nameCg = name != null ? name.getName() : null;
-		SDeclCG initDeclCg = initdef != null ? initdef.apply(question.getDeclVisitor(), question)
+		SDeclIR initDeclCg = initdef != null ? initdef.apply(question.getDeclVisitor(), question)
 				: null;
-		SExpCG initExpCg = initExp != null ? initExp.apply(question.getExpVisitor(), question)
+		SExpIR initExpCg = initExp != null ? initExp.apply(question.getExpVisitor(), question)
 				: null;
-		SPatternCG initPatternCg = initPattern != null ? initPattern.apply(question.getPatternVisitor(), question)
+		SPatternIR initPatternCg = initPattern != null ? initPattern.apply(question.getPatternVisitor(), question)
 				: null;
-		SDeclCG invDeclCg = invdef != null ? invdef.apply(question.getDeclVisitor(), question)
+		SDeclIR invDeclCg = invdef != null ? invdef.apply(question.getDeclVisitor(), question)
 				: null;
-		SExpCG invExpCg = invExp != null ? invExp.apply(question.getExpVisitor(), question)
+		SExpIR invExpCg = invExp != null ? invExp.apply(question.getExpVisitor(), question)
 				: null;
-		SPatternCG invPatternCg = invPattern != null ? invPattern.apply(question.getPatternVisitor(), question)
+		SPatternIR invPatternCg = invPattern != null ? invPattern.apply(question.getPatternVisitor(), question)
 				: null;
 
-		AStateDeclCG stateDeclCg = new AStateDeclCG();
+		AStateDeclIR stateDeclCg = new AStateDeclIR();
 		stateDeclCg.setAccess(accessCg);
 		stateDeclCg.setName(nameCg);
 
-		if (initDeclCg instanceof AFuncDeclCG)
+		if (initDeclCg instanceof AFuncDeclIR)
 		{
-			stateDeclCg.setInitDecl((AFuncDeclCG) initDeclCg);
+			stateDeclCg.setInitDecl((AFuncDeclIR) initDeclCg);
 		}
 		stateDeclCg.setInitExp(initExpCg);
 		stateDeclCg.setInitPattern(initPatternCg);
 
-		if (invDeclCg instanceof AFuncDeclCG)
+		if (invDeclCg instanceof AFuncDeclIR)
 		{
-			stateDeclCg.setInvDecl((AFuncDeclCG) invDeclCg);
+			stateDeclCg.setInvDecl((AFuncDeclIR) invDeclCg);
 		}
 		stateDeclCg.setInvExp(invExpCg);
 		stateDeclCg.setInvPattern(invPatternCg);
@@ -132,11 +132,11 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 		for (AFieldField field : node.getFields())
 		{
-			SDeclCG fieldCg = field.apply(question.getDeclVisitor(), question);
+			SDeclIR fieldCg = field.apply(question.getDeclVisitor(), question);
 
-			if (fieldCg instanceof AFieldDeclCG)
+			if (fieldCg instanceof AFieldDeclIR)
 			{
-				stateDeclCg.getFields().add((AFieldDeclCG) fieldCg);
+				stateDeclCg.getFields().add((AFieldDeclIR) fieldCg);
 			} else
 			{
 				return null;
@@ -147,7 +147,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	}
 	
 	@Override
-	public SDeclCG caseAClassInvariantDefinition(
+	public SDeclIR caseAClassInvariantDefinition(
 			AClassInvariantDefinition node, IRInfo question)
 			throws AnalysisException
 	{
@@ -156,7 +156,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	}
 
 	@Override
-	public SDeclCG caseATraceDefinitionTerm(ATraceDefinitionTerm node,
+	public SDeclIR caseATraceDefinitionTerm(ATraceDefinitionTerm node,
 			IRInfo question) throws AnalysisException
 	{
 		// Do not report the node as unsupported and generate nothing
@@ -164,7 +164,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	}
 
 	@Override
-	public SDeclCG caseANamedTraceDefinition(ANamedTraceDefinition node,
+	public SDeclIR caseANamedTraceDefinition(ANamedTraceDefinition node,
 			IRInfo question) throws AnalysisException
 	{
 		if(!question.getSettings().generateTraces())
@@ -172,11 +172,11 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			return null;
 		}
 		
-		ANamedTraceDeclCG namedTraceDecl = new ANamedTraceDeclCG();
+		ANamedTraceDeclIR namedTraceDecl = new ANamedTraceDeclIR();
 
 		for(ClonableString cloStr : node.getPathname())
 		{
-			ATokenNameCG name = new ATokenNameCG();
+			ATokenNameIR name = new ATokenNameIR();
 			name.setName(cloStr.value);
 			
 			namedTraceDecl.getPathname().add(name);
@@ -184,15 +184,15 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		
 		for(ATraceDefinitionTerm term : node.getTerms())
 		{
-			STermCG termCg = term.apply(question.getTermVisitor(), question);
+			STermIR termCg = term.apply(question.getTermVisitor(), question);
 			
-			if(termCg instanceof ATraceDeclTermCG)
+			if(termCg instanceof ATraceDeclTermIR)
 			{
-				namedTraceDecl.getTerms().add((ATraceDeclTermCG) termCg);
+				namedTraceDecl.getTerms().add((ATraceDeclTermIR) termCg);
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Expected term to be of type ATraceDeclTermCG. Got: " + termCg);
+				Logger.getLog().printErrorln("Expected term to be of type ATraceDeclTermIR. Got: " + termCg);
 				return null;
 			}
 		}
@@ -201,18 +201,18 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	}
 
 	@Override
-	public SDeclCG caseANamedInvariantType(ANamedInvariantType node,
+	public SDeclIR caseANamedInvariantType(ANamedInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
 		PType type = node.getType();
 		
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		
-		ATypeNameCG typeName = new ATypeNameCG();
+		ATypeNameIR typeName = new ATypeNameIR();
 		typeName.setDefiningClass(node.getName().getModule());
 		typeName.setName(node.getName().getName());
 		
-		ANamedTypeDeclCG namedTypeDecl = new ANamedTypeDeclCG();
+		ANamedTypeDeclIR namedTypeDecl = new ANamedTypeDeclIR();
 		namedTypeDecl.setName(typeName);
 		namedTypeDecl.setType(typeCg);
 		
@@ -220,29 +220,29 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	}
 
 	@Override
-	public SDeclCG caseARecordInvariantType(ARecordInvariantType node,
+	public SDeclIR caseARecordInvariantType(ARecordInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
 		ILexNameToken name = node.getName();
 		LinkedList<AFieldField> fields = node.getFields();
 
-		ARecordDeclCG record = new ARecordDeclCG();
+		ARecordDeclIR record = new ARecordDeclIR();
 		record.setName(name.getName());
 		
 		if(node.getInvDef() != null)
 		{
-			SDeclCG invCg = node.getInvDef().apply(question.getDeclVisitor(), question);
+			SDeclIR invCg = node.getInvDef().apply(question.getDeclVisitor(), question);
 			record.setInvariant(invCg);
 		}
 
-		LinkedList<AFieldDeclCG> recordFields = record.getFields();
+		LinkedList<AFieldDeclIR> recordFields = record.getFields();
 		for (AFieldField aFieldField : fields)
 		{
-			SDeclCG res = aFieldField.apply(question.getDeclVisitor(), question);
+			SDeclIR res = aFieldField.apply(question.getDeclVisitor(), question);
 
-			if (res instanceof AFieldDeclCG)
+			if (res instanceof AFieldDeclIR)
 			{
-				AFieldDeclCG fieldDecl = (AFieldDeclCG) res;
+				AFieldDeclIR fieldDecl = (AFieldDeclIR) res;
 				recordFields.add(fieldDecl);
 			} else
 			{
@@ -254,7 +254,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	}
 
 	@Override
-	public SDeclCG caseAFieldField(AFieldField node, IRInfo question)
+	public SDeclIR caseAFieldField(AFieldField node, IRInfo question)
 			throws AnalysisException
 	{
 		// Record fields are public
@@ -262,26 +262,26 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		String name = node.getTagname().getName();
 		boolean isStatic = false;
 		boolean isFinal = false;
-		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-		SExpCG exp = null;
+		STypeIR type = node.getType().apply(question.getTypeVisitor(), question);
+		SExpIR exp = null;
 
 		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, type, exp);
 	}
 
 	@Override
-	public SDeclCG caseATypeDefinition(ATypeDefinition node, IRInfo question)
+	public SDeclIR caseATypeDefinition(ATypeDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
 		PType type = node.getType();
 		
-		SDeclCG declCg = type.apply(question.getDeclVisitor(), question);
+		SDeclIR declCg = type.apply(question.getDeclVisitor(), question);
 
-		SDeclCG invCg = node.getInvdef() != null ?
+		SDeclIR invCg = node.getInvdef() != null ?
 				node.getInvdef().apply(question.getDeclVisitor(), question)
 				: null;
 		
-		ATypeDeclCG typeDecl = new ATypeDeclCG();
+		ATypeDeclIR typeDecl = new ATypeDeclIR();
 		typeDecl.setAccess(access);
 		typeDecl.setDecl(declCg);
 		typeDecl.setInv(invCg);
@@ -290,25 +290,25 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	}
 
 	@Override
-	public SDeclCG caseAExplicitFunctionDefinition(
+	public SDeclIR caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		String accessCg = node.getAccess().getAccess().toString();
 		String funcNameCg = node.getName().getName();
 
-		STypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = node.getType().apply(question.getTypeVisitor(), question);
 
-		if (!(typeCg instanceof AMethodTypeCG))
+		if (!(typeCg instanceof AMethodTypeIR))
 		{
 			question.addUnsupportedNode(node, "Expected method type for explicit function. Got: "
 					+ typeCg);
 			return null;
 		}
 
-		AMethodTypeCG methodTypeCg = (AMethodTypeCG) typeCg;
+		AMethodTypeIR methodTypeCg = (AMethodTypeIR) typeCg;
 
-		AFuncDeclCG method = new AFuncDeclCG();
+		AFuncDeclIR method = new AFuncDeclIR();
 
 		method.setAccess(accessCg);
 		method.setMethodType(methodTypeCg);
@@ -317,13 +317,13 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		Iterator<List<PPattern>> iterator = node.getParamPatternList().iterator();
 		List<PPattern> paramPatterns = iterator.next();
 
-		LinkedList<AFormalParamLocalParamCG> formalParameters = method.getFormalParams();
+		LinkedList<AFormalParamLocalParamIR> formalParameters = method.getFormalParams();
 
 		for (int i = 0; i < paramPatterns.size(); i++)
 		{
-			SPatternCG pattern = paramPatterns.get(i).apply(question.getPatternVisitor(), question);
+			SPatternIR pattern = paramPatterns.get(i).apply(question.getPatternVisitor(), question);
 
-			AFormalParamLocalParamCG param = new AFormalParamLocalParamCG();
+			AFormalParamLocalParamIR param = new AFormalParamLocalParamIR();
 			param.setType(methodTypeCg.getParams().get(i).clone());
 			param.setPattern(pattern);
 
@@ -332,26 +332,26 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 		if (node.getIsUndefined())
 		{
-			method.setBody(new ANotImplementedExpCG());
+			method.setBody(new ANotImplementedExpIR());
 		} else if (node.getIsCurried())
 		{
-			AMethodTypeCG nextLevel = (AMethodTypeCG) methodTypeCg;
+			AMethodTypeIR nextLevel = (AMethodTypeIR) methodTypeCg;
 
-			ALambdaExpCG currentLambda = new ALambdaExpCG();
-			ALambdaExpCG topLambda = currentLambda;
+			ALambdaExpIR currentLambda = new ALambdaExpIR();
+			ALambdaExpIR topLambda = currentLambda;
 
 			while (iterator.hasNext())
 			{
-				nextLevel = (AMethodTypeCG) nextLevel.getResult();
+				nextLevel = (AMethodTypeIR) nextLevel.getResult();
 				paramPatterns = iterator.next();
 
 				for (int i = 0; i < paramPatterns.size(); i++)
 				{
 					PPattern param = paramPatterns.get(i);
 
-					SPatternCG patternCg = param.apply(question.getPatternVisitor(), question);
+					SPatternIR patternCg = param.apply(question.getPatternVisitor(), question);
 
-					AFormalParamLocalParamCG paramCg = new AFormalParamLocalParamCG();
+					AFormalParamLocalParamIR paramCg = new AFormalParamLocalParamIR();
 					paramCg.setPattern(patternCg);
 					paramCg.setType(nextLevel.getParams().get(i).clone());
 
@@ -362,19 +362,19 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 				if (iterator.hasNext())
 				{
-					ALambdaExpCG nextLambda = new ALambdaExpCG();
+					ALambdaExpIR nextLambda = new ALambdaExpIR();
 					currentLambda.setExp(nextLambda);
 					currentLambda = nextLambda;
 				}
 
 			}
 
-			SExpCG bodyExp = node.getBody().apply(question.getExpVisitor(), question);
+			SExpIR bodyExp = node.getBody().apply(question.getExpVisitor(), question);
 			currentLambda.setExp(bodyExp);
 			method.setBody(topLambda);
 		} else
 		{
-			SExpCG bodyCg = node.getBody().apply(question.getExpVisitor(), question);
+			SExpIR bodyCg = node.getBody().apply(question.getExpVisitor(), question);
 			method.setBody(bodyCg);
 		}
 
@@ -387,17 +387,17 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		for (int i = 0; i < typeParams.size(); i++)
 		{
 			ILexNameToken typeParam = typeParams.get(i);
-			ATemplateTypeCG templateType = new ATemplateTypeCG();
+			ATemplateTypeIR templateType = new ATemplateTypeIR();
 			templateType.setName(typeParam.getName());
 			method.getTemplateTypes().add(templateType);
 		}
 		
 		AExplicitFunctionDefinition preCond = node.getPredef();
-		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
+		SDeclIR preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
 		method.setPreCond(preCondCg);
 		
 		AExplicitFunctionDefinition postCond = node.getPostdef();
-		SDeclCG postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
+		SDeclIR postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
 		method.setPostCond(postCondCg);
 
 		method.setImplicit(false);
@@ -406,29 +406,29 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	}
 	
 	@Override
-	public SDeclCG caseAImplicitFunctionDefinition(
+	public SDeclIR caseAImplicitFunctionDefinition(
 			AImplicitFunctionDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		String accessCg = node.getAccess().getAccess().toString();
 		String funcNameCg = node.getName().getName();
 		
-		STypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = node.getType().apply(question.getTypeVisitor(), question);
 		
-		if (!(typeCg instanceof AMethodTypeCG))
+		if (!(typeCg instanceof AMethodTypeIR))
 		{
 			question.addUnsupportedNode(node, "Expected method type for implicit function. Got: "
 					+ typeCg);
 			return null;
 		}
 
-		AFuncDeclCG func = new AFuncDeclCG();
+		AFuncDeclIR func = new AFuncDeclIR();
 		AExplicitFunctionDefinition preCond = node.getPredef();
-		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
+		SDeclIR preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
 		func.setPreCond(preCondCg);
 		
 		AExplicitFunctionDefinition postCond = node.getPostdef();
-		SDeclCG postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
+		SDeclIR postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
 		func.setPostCond(postCondCg);
 
 
@@ -438,7 +438,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		for (int i = 0; i < typeParams.size(); i++)
 		{
 			ILexNameToken typeParam = typeParams.get(i);
-			ATemplateTypeCG templateType = new ATemplateTypeCG();
+			ATemplateTypeIR templateType = new ATemplateTypeIR();
 			templateType.setName(typeParam.getName());
 			func.getTemplateTypes().add(templateType);
 		}
@@ -446,26 +446,26 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		func.setAbstract(false);
 		func.setAccess(accessCg);
 		func.setImplicit(true);
-		func.setBody(new ANotImplementedExpCG());
+		func.setBody(new ANotImplementedExpIR());
 		func.setFormalParams(question.getDeclAssistant().
 				consFormalParams(node.getParamPatterns(), question));
-		func.setMethodType((AMethodTypeCG) typeCg);
+		func.setMethodType((AMethodTypeIR) typeCg);
 		func.setName(funcNameCg);
 		
 		// The implicit function is currently constructed without the result information:
-		//SPatternCG resPatternCg = node.getResult().getPattern().apply(question.getPatternVisitor(), question);
-		//STypeCG resTypeCg = node.getResult().getType().apply(question.getTypeVisitor(), question);
+		//SPatternIR resPatternCg = node.getResult().getPattern().apply(question.getPatternVisitor(), question);
+		//STypeIR resTypeCg = node.getResult().getType().apply(question.getTypeVisitor(), question);
 
 		
 		return func;
 	}
 	
 	@Override
-	public SDeclCG caseAExplicitOperationDefinition(
+	public SDeclIR caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		AMethodDeclCG method = question.getDeclAssistant().initMethod(node, question);
+		AMethodDeclIR method = question.getDeclAssistant().initMethod(node, question);
 		
 		if(method == null)
 		{
@@ -483,14 +483,14 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
 		LinkedList<PPattern> paramPatterns = node.getParameterPatterns();
 		
-		LinkedList<AFormalParamLocalParamCG> formalParameters = method.getFormalParams();
+		LinkedList<AFormalParamLocalParamIR> formalParameters = method.getFormalParams();
 
 		for (int i = 0; i < ptypes.size(); i++)
 		{
-			STypeCG paramType = ptypes.get(i).apply(question.getTypeVisitor(), question);
-			SPatternCG patternCg = paramPatterns.get(i).apply(question.getPatternVisitor(), question);
+			STypeIR paramType = ptypes.get(i).apply(question.getTypeVisitor(), question);
+			SPatternIR patternCg = paramPatterns.get(i).apply(question.getPatternVisitor(), question);
 
-			AFormalParamLocalParamCG param = new AFormalParamLocalParamCG();
+			AFormalParamLocalParamIR param = new AFormalParamLocalParamIR();
 			param.setType(paramType);
 			param.setPattern(patternCg);
 
@@ -501,11 +501,11 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	}
 	
 	@Override
-	public SDeclCG caseAImplicitOperationDefinition(
+	public SDeclIR caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		AMethodDeclCG method = question.getDeclAssistant().initMethod(node, question);
+		AMethodDeclIR method = question.getDeclAssistant().initMethod(node, question);
 		
 		if(method == null)
 		{
@@ -523,14 +523,14 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		// Exceptions thrown:
 		// LinkedList<AErrorCase> errors = node.getErrors();
 		
-		method.setBody(new ANotImplementedStmCG());
+		method.setBody(new ANotImplementedStmIR());
 		method.setFormalParams(question.getDeclAssistant().
 				consFormalParams(node.getParameterPatterns(), question));
 		return method;
 	}
 
 	@Override
-	public SDeclCG caseAInstanceVariableDefinition(
+	public SDeclIR caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition node, IRInfo question)
 			throws AnalysisException
 	{
@@ -538,14 +538,14 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		String name = node.getName().getName();
 		boolean isStatic = node.getAccess().getStatic() != null;
 		boolean isFinal = false;
-		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-		SExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
+		STypeIR type = node.getType().apply(question.getTypeVisitor(), question);
+		SExpIR exp = node.getExpression().apply(question.getExpVisitor(), question);
 
 		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, type, exp);
 	}
 
 	@Override
-	public SDeclCG caseAValueDefinition(AValueDefinition node, IRInfo question)
+	public SDeclIR caseAValueDefinition(AValueDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
@@ -555,24 +555,24 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		PType type = node.getType();
 		PExp exp = node.getExpression();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
 
 		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, typeCg, expCg);
 	}
 	
 	@Override
-	public SDeclCG caseAThreadDefinition(AThreadDefinition node, IRInfo question)
+	public SDeclIR caseAThreadDefinition(AThreadDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 
 		PStm stm = node.getOperationDef().getBody();
 		
-		SStmCG stmCG = stm.apply(question.getStmVisitor(), question);
+		SStmIR stmIR = stm.apply(question.getStmVisitor(), question);
 		
-		AThreadDeclCG threaddcl = new AThreadDeclCG();
+		AThreadDeclIR threaddcl = new AThreadDeclIR();
 	
-		threaddcl.setStm(stmCG);
+		threaddcl.setStm(stmIR);
 
 		
 		return threaddcl;
@@ -580,13 +580,13 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	
 	
 	@Override
-	public SDeclCG caseAPerSyncDefinition(APerSyncDefinition node,
+	public SDeclIR caseAPerSyncDefinition(APerSyncDefinition node,
 			IRInfo question) throws AnalysisException
 	{
 		PExp guard = node.getGuard();
 		ILexNameToken opname = node.getOpname();
 
-		APersyncDeclCG predicate = new APersyncDeclCG();
+		APersyncDeclIR predicate = new APersyncDeclIR();
 		
 		predicate.setPred(guard.apply(question.getExpVisitor(), question));
 		predicate.setOpname(opname.getName());
@@ -596,16 +596,16 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	}
 	
 	@Override
-	public SDeclCG caseAMutexSyncDefinition(AMutexSyncDefinition node,
+	public SDeclIR caseAMutexSyncDefinition(AMutexSyncDefinition node,
 			IRInfo question) throws AnalysisException
 	{
 		LinkedList<ILexNameToken> operations = node.getOperations();
 		
-		AMutexSyncDeclCG mutexdef = new AMutexSyncDeclCG();
+		AMutexSyncDeclIR mutexdef = new AMutexSyncDeclIR();
 		
 		for(ILexNameToken opname : operations)
 		{
-			ATokenNameCG token = new ATokenNameCG();
+			ATokenNameIR token = new ATokenNameIR();
 			token.setName(opname.getName());
 			mutexdef.getOpnames().add(token);
 		}

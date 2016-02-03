@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.expressions.AIntLiteralExpCG;
-import org.overture.codegen.ir.types.AExternalTypeCG;
+import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
+import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.traces.TraceNames;
 import org.overture.codegen.traces.TracesTrans;
@@ -26,7 +26,7 @@ import org.overture.codegen.trans.PreCheckTrans;
 import org.overture.codegen.trans.PrePostTrans;
 import org.overture.codegen.trans.SeqConvTrans;
 import org.overture.codegen.trans.WhileStmTrans;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.conc.EvalPermPredTrans;
 import org.overture.codegen.trans.conc.MainClassConcTrans;
 import org.overture.codegen.trans.conc.MutexDeclTrans;
@@ -83,7 +83,7 @@ public class JavaTransSeries
 		UnionTypeVarPrefixes unionTypePrefixes = varMan.getUnionTypePrefixes();
 		List<INode> cloneFreeNodes = codeGen.getJavaFormat().getValueSemantics().getCloneFreeNodes();
 		
-		TransAssistantCG transAssist = codeGen.getTransAssistant();
+		TransAssistantIR transAssist = codeGen.getTransAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(varMan.postCheckMethodName());
 
 		// Construct the transformations
@@ -153,11 +153,11 @@ public class JavaTransSeries
 
 	private Exists1CounterData consExists1CounterData()
 	{
-		AExternalTypeCG type = new AExternalTypeCG();
+		AExternalTypeIR type = new AExternalTypeIR();
 		type.setName("Long");
 
 		IRInfo irInfo = codeGen.getIRGenerator().getIRInfo();
-		AIntLiteralExpCG initExp = irInfo.getExpAssistant().consIntLiteral(0);
+		AIntLiteralExpIR initExp = irInfo.getExpAssistant().consIntLiteral(0);
 
 		return new Exists1CounterData(type, initExp);
 	}

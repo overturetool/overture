@@ -1,26 +1,26 @@
 package org.overture.codegen.trans.quantifier;
 
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.STypeIR;
 
 public class Exists1CounterData
 {
-	private STypeCG type;
-	private SExpCG exp;
+	private STypeIR type;
+	private SExpIR exp;
 
-	public Exists1CounterData(STypeCG type, SExpCG exp)
+	public Exists1CounterData(STypeIR type, SExpIR exp)
 	{
 		super();
 		this.type = type;
 		this.exp = exp;
 	}
 	
-	public STypeCG getType()
+	public STypeIR getType()
 	{
 		return type;
 	}
 	
-	public SExpCG getExp()
+	public SExpIR getExp()
 	{
 		return exp;
 	}

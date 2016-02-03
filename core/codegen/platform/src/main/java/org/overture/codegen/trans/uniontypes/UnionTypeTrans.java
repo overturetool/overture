@@ -27,93 +27,93 @@ import java.util.List;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-import org.overture.codegen.assistant.TypeAssistantCG;
+import org.overture.codegen.assistant.TypeAssistantIR;
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.ARecordDeclCG;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.declarations.SClassDeclCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.ACardUnaryExpCG;
-import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
-import org.overture.codegen.ir.expressions.AElemsUnaryExpCG;
-import org.overture.codegen.ir.expressions.AFieldExpCG;
-import org.overture.codegen.ir.expressions.AFieldNumberExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.expressions.AInstanceofExpCG;
-import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ALenUnaryExpCG;
-import org.overture.codegen.ir.expressions.AMapDomainUnaryExpCG;
-import org.overture.codegen.ir.expressions.AMissingMemberRuntimeErrorExpCG;
-import org.overture.codegen.ir.expressions.AModNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ANewExpCG;
-import org.overture.codegen.ir.expressions.ANotUnaryExpCG;
-import org.overture.codegen.ir.expressions.ANullExpCG;
-import org.overture.codegen.ir.expressions.ARemNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ASeqConcatBinaryExpCG;
-import org.overture.codegen.ir.expressions.AUndefinedExpCG;
-import org.overture.codegen.ir.expressions.SNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.SUnaryExpCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.ACardUnaryExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.AElemsUnaryExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AInstanceofExpIR;
+import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ALenUnaryExpIR;
+import org.overture.codegen.ir.expressions.AMapDomainUnaryExpIR;
+import org.overture.codegen.ir.expressions.AMissingMemberRuntimeErrorExpIR;
+import org.overture.codegen.ir.expressions.AModNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
+import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
+import org.overture.codegen.ir.expressions.ANullExpIR;
+import org.overture.codegen.ir.expressions.ARemNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASeqConcatBinaryExpIR;
+import org.overture.codegen.ir.expressions.AUndefinedExpIR;
+import org.overture.codegen.ir.expressions.SNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.SUnaryExpIR;
 import org.overture.codegen.ir.expressions.SVarExpBase;
-import org.overture.codegen.ir.expressions.SVarExpCG;
-import org.overture.codegen.ir.patterns.AIdentifierPatternCG;
-import org.overture.codegen.ir.statements.AAssignToExpStmCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
-import org.overture.codegen.ir.statements.ACallObjectExpStmCG;
-import org.overture.codegen.ir.statements.AElseIfStmCG;
-import org.overture.codegen.ir.statements.AIfStmCG;
-import org.overture.codegen.ir.statements.APlainCallStmCG;
-import org.overture.codegen.ir.statements.ARaiseErrorStmCG;
-import org.overture.codegen.ir.statements.AReturnStmCG;
-import org.overture.codegen.ir.statements.ASuperCallStmCG;
-import org.overture.codegen.ir.statements.SCallStmCG;
-import org.overture.codegen.ir.types.ABoolBasicTypeCG;
-import org.overture.codegen.ir.types.AClassTypeCG;
-import org.overture.codegen.ir.types.AErrorTypeCG;
-import org.overture.codegen.ir.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.ir.types.AMethodTypeCG;
-import org.overture.codegen.ir.types.ARealNumericBasicTypeCG;
-import org.overture.codegen.ir.types.ARecordTypeCG;
-import org.overture.codegen.ir.types.ATupleTypeCG;
-import org.overture.codegen.ir.types.AUnionTypeCG;
-import org.overture.codegen.ir.types.AUnknownTypeCG;
-import org.overture.codegen.ir.types.SMapTypeCG;
-import org.overture.codegen.ir.types.SSeqTypeCG;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
+import org.overture.codegen.ir.statements.AElseIfStmIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
+import org.overture.codegen.ir.statements.APlainCallStmIR;
+import org.overture.codegen.ir.statements.ARaiseErrorStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
+import org.overture.codegen.ir.statements.ASuperCallStmIR;
+import org.overture.codegen.ir.statements.SCallStmIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AErrorTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.ATupleTypeIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
+import org.overture.codegen.ir.types.SMapTypeIR;
+import org.overture.codegen.ir.types.SSeqTypeIR;
 import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 {
 	public static final String MISSING_OP_MEMBER = "Missing operation member: ";
 	public static final String MISSING_MEMBER = "Missing member: ";
 	
-	private TransAssistantCG transAssistant;
+	private TransAssistantIR transAssistant;
 
 	private UnionTypeVarPrefixes unionTypePrefixes;
 	
 	private List<INode> cloneFreeNodes;
 	
-	public UnionTypeTrans(TransAssistantCG transAssistant, UnionTypeVarPrefixes unionTypePrefixes, List<INode> cloneFreeNodes)
+	public UnionTypeTrans(TransAssistantIR transAssistant, UnionTypeVarPrefixes unionTypePrefixes, List<INode> cloneFreeNodes)
 	{
 		this.transAssistant = transAssistant;
 		this.unionTypePrefixes = unionTypePrefixes;
 		this.cloneFreeNodes = cloneFreeNodes;
 	}
 
-	private interface TypeFinder<T extends STypeCG>
+	private interface TypeFinder<T extends STypeIR>
 	{
 		public T findType(PType type)
 				throws org.overture.ast.analysis.AnalysisException;
 	}
 
-	public <T extends STypeCG> T searchType(SExpCG exp, TypeFinder<T> typeFinder)
+	public <T extends STypeIR> T searchType(SExpIR exp, TypeFinder<T> typeFinder)
 	{
 		if (exp == null || exp.getType() == null)
 		{
@@ -145,13 +145,13 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		return null;
 	}
 
-	private SExpCG correctTypes(SExpCG exp, STypeCG castedType)
+	private SExpIR correctTypes(SExpIR exp, STypeIR castedType)
 			throws AnalysisException
 	{
-		if ((exp.getType() instanceof AUnknownTypeCG || exp.getType() instanceof AUnionTypeCG)
-				&& !(exp instanceof ACastUnaryExpCG))
+		if ((exp.getType() instanceof AUnknownTypeIR || exp.getType() instanceof AUnionTypeIR)
+				&& !(exp instanceof ACastUnaryExpIR))
 		{
-			ACastUnaryExpCG casted = new ACastUnaryExpCG();
+			ACastUnaryExpIR casted = new ACastUnaryExpIR();
 			casted.setType(castedType.clone());
 			casted.setExp(exp.clone());
 
@@ -163,16 +163,16 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		return exp;
 	}
 	
-	private boolean correctArgTypes(List<SExpCG> args, List<STypeCG> paramTypes)
+	private boolean correctArgTypes(List<SExpIR> args, List<STypeIR> paramTypes)
 			throws AnalysisException
 	{
 		if (transAssistant.getInfo().getAssistantManager().getTypeAssistant().checkArgTypes(transAssistant.getInfo(), args, paramTypes))
 		{
 			for (int k = 0; k < paramTypes.size(); k++)
 			{
-				SExpCG arg = args.get(k);
+				SExpIR arg = args.get(k);
 				
-				if(!(arg instanceof ANullExpCG))
+				if(!(arg instanceof ANullExpIR))
 				{
 					correctTypes(arg, paramTypes.get(k));
 				}
@@ -183,11 +183,11 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		return false;
 	}
 
-	private boolean handleUnaryExp(SUnaryExpCG exp) throws AnalysisException
+	private boolean handleUnaryExp(SUnaryExpIR exp) throws AnalysisException
 	{
-		STypeCG type = exp.getExp().getType();
+		STypeIR type = exp.getExp().getType();
 
-		if (type instanceof AUnionTypeCG)
+		if (type instanceof AUnionTypeIR)
 		{
 			org.overture.ast.node.INode vdmNode = type.getSourceNode().getVdmNode();
 
@@ -200,10 +200,10 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		return false;
 	}
 
-	private AInstanceofExpCG consInstanceCheck(SExpCG copy, STypeCG type)
+	private AInstanceofExpIR consInstanceCheck(SExpIR copy, STypeIR type)
 	{
-		AInstanceofExpCG check = new AInstanceofExpCG();
-		check.setType(new ABoolBasicTypeCG());
+		AInstanceofExpIR check = new AInstanceofExpIR();
+		check.setType(new ABoolBasicTypeIR());
 		check.setCheckedType(type.clone());
 		check.setExp(copy.clone());
 		
@@ -211,10 +211,10 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void defaultInSNumericBinaryExpCG(SNumericBinaryExpCG node)
+	public void defaultInSNumericBinaryExpIR(SNumericBinaryExpIR node)
 			throws AnalysisException
 	{
-		STypeCG expectedType;
+		STypeIR expectedType;
 		
 		if (transAssistant.getInfo().getTypeAssistant().isNumericType(node.getType()))
 		{
@@ -228,24 +228,24 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		correctTypes(node.getRight(), expectedType);
 	}
 	
-	public STypeCG getExpectedOperandType(SNumericBinaryExpCG node)
+	public STypeIR getExpectedOperandType(SNumericBinaryExpIR node)
 	{
-		if(node instanceof AIntDivNumericBinaryExpCG || node instanceof AModNumericBinaryExpCG || node instanceof ARemNumericBinaryExpCG)
+		if(node instanceof AIntDivNumericBinaryExpIR || node instanceof AModNumericBinaryExpIR || node instanceof ARemNumericBinaryExpIR)
 		{
-			return new AIntNumericBasicTypeCG();
+			return new AIntNumericBasicTypeIR();
 		}
 		else
 		{
-			return new ARealNumericBasicTypeCG();
+			return new ARealNumericBasicTypeIR();
 		}
 	}
 	
 	@Override
-	public void caseAFieldDeclCG(AFieldDeclCG node) throws AnalysisException
+	public void caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException
 	{
 		if (node.getInitial() != null)
 		{
-			if (node.getInitial().getType() instanceof AUnionTypeCG)
+			if (node.getInitial().getType() instanceof AUnionTypeIR)
 			{
 				correctTypes(node.getInitial(), node.getType());
 			}
@@ -255,14 +255,14 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseACardUnaryExpCG(ACardUnaryExpCG node)
+	public void caseACardUnaryExpIR(ACardUnaryExpIR node)
 			throws AnalysisException
 	{
-		STypeCG type = node.getExp().getType();
+		STypeIR type = node.getExp().getType();
 		
-		if(type instanceof AUnionTypeCG)
+		if(type instanceof AUnionTypeIR)
 		{
-			STypeCG expectedType = transAssistant.getInfo().getTypeAssistant().getSetType((AUnionTypeCG) type);
+			STypeIR expectedType = transAssistant.getInfo().getTypeAssistant().getSetType((AUnionTypeIR) type);
 			correctTypes(node.getExp(), expectedType);
 		}
 		
@@ -271,14 +271,14 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseALenUnaryExpCG(ALenUnaryExpCG node)
+	public void caseALenUnaryExpIR(ALenUnaryExpIR node)
 			throws AnalysisException
 	{
-		STypeCG type = node.getExp().getType();
+		STypeIR type = node.getExp().getType();
 		
-		if(type instanceof AUnionTypeCG)
+		if(type instanceof AUnionTypeIR)
 		{
-			STypeCG expectedType = transAssistant.getInfo().getTypeAssistant().getSeqType((AUnionTypeCG) type);
+			STypeIR expectedType = transAssistant.getInfo().getTypeAssistant().getSeqType((AUnionTypeIR) type);
 			correctTypes(node.getExp(), expectedType);
 		}
 		
@@ -287,7 +287,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseASeqConcatBinaryExpCG(ASeqConcatBinaryExpCG node)
+	public void caseASeqConcatBinaryExpIR(ASeqConcatBinaryExpIR node)
 			throws AnalysisException
 	{
 		node.getLeft().apply(this);
@@ -299,31 +299,31 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		STypeCG leftType = node.getLeft().getType();
+		STypeIR leftType = node.getLeft().getType();
 
-		if (leftType instanceof AUnionTypeCG)
+		if (leftType instanceof AUnionTypeIR)
 		{
-			STypeCG expectedType = transAssistant.getInfo().getTypeAssistant().getSeqType((AUnionTypeCG) leftType);
+			STypeIR expectedType = transAssistant.getInfo().getTypeAssistant().getSeqType((AUnionTypeIR) leftType);
 			correctTypes(node.getLeft(), expectedType);
 		}
 
-		STypeCG rightType = node.getRight().getType();
+		STypeIR rightType = node.getRight().getType();
 
-		if (rightType instanceof AUnionTypeCG)
+		if (rightType instanceof AUnionTypeIR)
 		{
-			STypeCG expectedType = transAssistant.getInfo().getTypeAssistant().getSeqType((AUnionTypeCG) rightType);
+			STypeIR expectedType = transAssistant.getInfo().getTypeAssistant().getSeqType((AUnionTypeIR) rightType);
 			correctTypes(node.getRight(), expectedType);
 		}
 	}
 	
 	@Override
-	public void caseAFieldNumberExpCG(AFieldNumberExpCG node)
+	public void caseAFieldNumberExpIR(AFieldNumberExpIR node)
 			throws AnalysisException
 	{
-		SExpCG tuple = node.getTuple();
-		STypeCG tupleType = tuple.getType();
+		SExpIR tuple = node.getTuple();
+		STypeIR tupleType = tuple.getType();
 		
-		if(!(tupleType instanceof AUnionTypeCG))
+		if(!(tupleType instanceof AUnionTypeIR))
 		{
 			tuple.apply(this);
 			return;
@@ -333,61 +333,61 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseAFieldExpCG(AFieldExpCG node) throws AnalysisException
+	public void caseAFieldExpIR(AFieldExpIR node) throws AnalysisException
 	{
-		SExpCG object = node.getObject();
-		STypeCG objectType = object.getType();
+		SExpIR object = node.getObject();
+		STypeIR objectType = object.getType();
 		
-		if(!(objectType instanceof AUnionTypeCG))
+		if(!(objectType instanceof AUnionTypeIR))
 		{
 			object.apply(this);
 			return;
 		}
 		
-		STypeCG resultType = getResultType(node, node.parent(), objectType, transAssistant.getInfo().getTypeAssistant());
+		STypeIR resultType = getResultType(node, node.parent(), objectType, transAssistant.getInfo().getTypeAssistant());
 		
 		handleFieldExp(node, node.getMemberName(), object, objectType, resultType);
 	}
 
-	private void handleFieldExp(SExpCG node, String memberName, SExpCG subject, STypeCG fieldObjType, STypeCG resultType) throws AnalysisException
+	private void handleFieldExp(SExpIR node, String memberName, SExpIR subject, STypeIR fieldObjType, STypeIR resultType) throws AnalysisException
 	{
 		INode parent = node.parent();
 
-		TypeAssistantCG typeAssistant = transAssistant.getInfo().getAssistantManager().getTypeAssistant();
+		TypeAssistantIR typeAssistant = transAssistant.getInfo().getAssistantManager().getTypeAssistant();
 
-		SStmCG enclosingStatement = transAssistant.getEnclosingStm(node, "field expression");
+		SStmIR enclosingStatement = transAssistant.getEnclosingStm(node, "field expression");
 
 		String applyResultName = transAssistant.getInfo().getTempVarNameGen().nextVarName(unionTypePrefixes.applyExp());
 
-		AIdentifierPatternCG id = new AIdentifierPatternCG();
+		AIdentifierPatternIR id = new AIdentifierPatternIR();
 		id.setName(applyResultName);
 
-		AVarDeclCG resultDecl = transAssistant.getInfo().getDeclAssistant().
+		AVarDeclIR resultDecl = transAssistant.getInfo().getDeclAssistant().
 				consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, transAssistant.getInfo().getExpAssistant().consUndefinedExp());
 		
-		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR resultVar = new AIdentifierVarExpIR();
 		resultVar.setSourceNode(node.getSourceNode());
 		resultVar.setIsLambda(false);
 		resultVar.setIsLocal(true);
 		resultVar.setName(applyResultName);
 		resultVar.setType(resultDecl.getType().clone());
 
-		ABlockStmCG replacementBlock = new ABlockStmCG();
-		SExpCG obj = null;
+		ABlockStmIR replacementBlock = new ABlockStmIR();
+		SExpIR obj = null;
 		
 		if (!(subject instanceof SVarExpBase))
 		{
 			String objName = transAssistant.getInfo().getTempVarNameGen().nextVarName(unionTypePrefixes.objExp());
 
-			AIdentifierPatternCG objId = new AIdentifierPatternCG();
+			AIdentifierPatternIR objId = new AIdentifierPatternIR();
 			objId.setName(objName);
 
-			AVarDeclCG objectDecl = transAssistant.getInfo().getDeclAssistant().
+			AVarDeclIR objectDecl = transAssistant.getInfo().getDeclAssistant().
 					consLocalVarDecl(subject.getType().clone(), objId, subject.clone());
 			
 			replacementBlock.getLocalDefs().add(objectDecl);
 
-			AIdentifierVarExpCG objectVar = new AIdentifierVarExpCG();
+			AIdentifierVarExpIR objectVar = new AIdentifierVarExpIR();
 			objectVar.setIsLambda(false);
 			objectVar.setIsLocal(true);
 			objectVar.setName(objName);
@@ -398,27 +398,27 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			obj = subject.clone();
 		}
 
-		List<STypeCG> possibleTypes = ((AUnionTypeCG) fieldObjType).getTypes();
+		List<STypeIR> possibleTypes = ((AUnionTypeIR) fieldObjType).getTypes();
 		possibleTypes = typeAssistant.clearDuplicates(possibleTypes);
 
-		AIfStmCG ifChecks = new AIfStmCG();
+		AIfStmIR ifChecks = new AIfStmIR();
 
 		int handledTypes = 0;
 		for (int i = 0; i < possibleTypes.size(); i++)
 		{
-			SExpCG fieldExp = (SExpCG) node.clone();
-			STypeCG currentType = possibleTypes.get(i);
+			SExpIR fieldExp = (SExpIR) node.clone();
+			STypeIR currentType = possibleTypes.get(i);
 			
-			if(currentType instanceof AUnknownTypeCG)
+			if(currentType instanceof AUnknownTypeIR)
 			{
 				// If we are accessing an element of (say) the sequence [new A(), new B(), nil] of type A | B | [?]
 				// then the current IR type will be the unknown type at some point. This case is simply skipped.
 				continue;
 			}
 			
-			if (!(currentType instanceof AClassTypeCG)
-					&& !(currentType instanceof ATupleTypeCG)
-					&& !(currentType instanceof ARecordTypeCG))
+			if (!(currentType instanceof AClassTypeIR)
+					&& !(currentType instanceof ATupleTypeIR)
+					&& !(currentType instanceof ARecordTypeIR))
 			{
 				// If the field cannot possibly exist then continue
 				continue;
@@ -434,13 +434,13 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				continue;
 			}
 			
-			ACastUnaryExpCG castedFieldExp = new ACastUnaryExpCG();
+			ACastUnaryExpIR castedFieldExp = new ACastUnaryExpIR();
 			castedFieldExp.setType(currentType.clone());
 			castedFieldExp.setExp(obj.clone());
 
 			setSubject(fieldExp, castedFieldExp);
 
-			AAssignToExpStmCG assignment = new AAssignToExpStmCG();
+			AAssignToExpStmIR assignment = new AAssignToExpStmIR();
 			cloneFreeNodes.add(assignment);
 			assignment.setTarget(resultVar.clone());
 			assignment.setExp(getAssignmentExp(node, fieldExp));
@@ -451,7 +451,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				ifChecks.setThenStm(assignment);
 			} else
 			{
-				AElseIfStmCG elseIf = new AElseIfStmCG();
+				AElseIfStmIR elseIf = new AElseIfStmIR();
 				elseIf.setElseIf(consInstanceCheck(obj, currentType));
 				elseIf.setThenStm(assignment);
 
@@ -466,10 +466,10 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		ARaiseErrorStmCG raise = consRaiseStm(MISSING_MEMBER, memberName);
+		ARaiseErrorStmIR raise = consRaiseStm(MISSING_MEMBER, memberName);
 		ifChecks.setElseStm(raise);
 
-		if(parent instanceof AApplyExpCG && ((AApplyExpCG) parent).getRoot() == node)
+		if(parent instanceof AApplyExpIR && ((AApplyExpIR) parent).getRoot() == node)
 		{
 			transAssistant.replaceNodeWith(parent, resultVar);
 		}
@@ -487,49 +487,49 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		ifChecks.apply(this);
 	}
 
-	private void setSubject(SExpCG fieldExp, ACastUnaryExpCG castedFieldExp)
+	private void setSubject(SExpIR fieldExp, ACastUnaryExpIR castedFieldExp)
 	{
-		if(fieldExp instanceof AFieldExpCG)
+		if(fieldExp instanceof AFieldExpIR)
 		{
-			((AFieldExpCG) fieldExp).setObject(castedFieldExp);
+			((AFieldExpIR) fieldExp).setObject(castedFieldExp);
 		}
-		else if(fieldExp instanceof AFieldNumberExpCG)
+		else if(fieldExp instanceof AFieldNumberExpIR)
 		{
-			((AFieldNumberExpCG) fieldExp).setTuple(castedFieldExp);
+			((AFieldNumberExpIR) fieldExp).setTuple(castedFieldExp);
 		}
 	}
 
 	private boolean memberExists(String memberName, INode parent,
-			TypeAssistantCG typeAssistant, SExpCG fieldExp,
-			STypeCG currentType) throws AnalysisException
+			TypeAssistantIR typeAssistant, SExpIR fieldExp,
+			STypeIR currentType) throws AnalysisException
 	{
-		if (fieldExp instanceof AFieldExpCG)
+		if (fieldExp instanceof AFieldExpIR)
 		{
-			if (currentType instanceof AClassTypeCG)
+			if (currentType instanceof AClassTypeIR)
 			{
-				String className = ((AClassTypeCG) currentType).getName();
+				String className = ((AClassTypeIR) currentType).getName();
 
 				return memberExists(parent, typeAssistant, className, memberName);
-			} else if (currentType instanceof ARecordTypeCG)
+			} else if (currentType instanceof ARecordTypeIR)
 			{
-				ARecordTypeCG recordType = (ARecordTypeCG) currentType;
+				ARecordTypeIR recordType = (ARecordTypeIR) currentType;
 
 				return transAssistant.getInfo().getDeclAssistant().getFieldDecl(transAssistant.getInfo().getClasses(), recordType, memberName) != null;
 			}
 		}
-		else if(fieldExp instanceof AFieldNumberExpCG && currentType instanceof ATupleTypeCG)
+		else if(fieldExp instanceof AFieldNumberExpIR && currentType instanceof ATupleTypeIR)
 		{
 			return true;
 			
 			// Could possibly be strengthened
-			// AFieldNumberExpCG fieldNumberExp = (AFieldNumberExpCG) fieldExp;
-			// return  fieldNumberExp.getField() <= ((ATupleTypeCG) currentType).getTypes().size();
+			// AFieldNumberExpIR fieldNumberExp = (AFieldNumberExpIR) fieldExp;
+			// return  fieldNumberExp.getField() <= ((ATupleTypeIR) currentType).getTypes().size();
 		}
 		
 		return false;
 	}
 	
-	private boolean memberExists(INode parent, TypeAssistantCG typeAssistant,
+	private boolean memberExists(INode parent, TypeAssistantIR typeAssistant,
 			String className, String memberName) throws AnalysisException
 	{
 		if(typeAssistant.getFieldType(transAssistant.getInfo().getClasses(), className, memberName) != null)
@@ -537,45 +537,45 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			return true;
 		}
 		
-		List<SExpCG> args = ((AApplyExpCG) parent).getArgs();
+		List<SExpIR> args = ((AApplyExpIR) parent).getArgs();
 		
 		return typeAssistant.getMethodType(transAssistant.getInfo(), className, memberName, args) != null;
 	}
 
 	@Override
-	public void caseAApplyExpCG(AApplyExpCG node) throws AnalysisException
+	public void caseAApplyExpIR(AApplyExpIR node) throws AnalysisException
 	{
-		for (SExpCG arg : node.getArgs())
+		for (SExpIR arg : node.getArgs())
 		{
 			arg.apply(this);
 		}
 		
-		SExpCG root = node.getRoot();
+		SExpIR root = node.getRoot();
 		root.apply(this);
 
-		if (root.getType() instanceof AUnionTypeCG) {
-			STypeCG colType = searchType(root, new TypeFinder<SMapTypeCG>() {
+		if (root.getType() instanceof AUnionTypeIR) {
+			STypeIR colType = searchType(root, new TypeFinder<SMapTypeIR>() {
 				@Override
-				public SMapTypeCG findType(PType type)
+				public SMapTypeIR findType(PType type)
 						throws org.overture.ast.analysis.AnalysisException {
 					SMapType mapType = transAssistant.getInfo().getTcFactory()
 							.createPTypeAssistant().getMap(type);
 
-					return mapType != null ? (SMapTypeCG) mapType.apply(
+					return mapType != null ? (SMapTypeIR) mapType.apply(
 							transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo()) : null;
 				}
 			});
 
 			if (colType == null) {
-				colType = searchType(root, new TypeFinder<SSeqTypeCG>() {
+				colType = searchType(root, new TypeFinder<SSeqTypeIR>() {
 					@Override
-					public SSeqTypeCG findType(PType type)
+					public SSeqTypeIR findType(PType type)
 							throws org.overture.ast.analysis.AnalysisException {
 
 						SSeqType seqType = transAssistant.getInfo().getTcFactory()
 								.createPTypeAssistant().getSeq(type);
 
-						return seqType != null ? (SSeqTypeCG) seqType.apply(
+						return seqType != null ? (SSeqTypeIR) seqType.apply(
 								transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo()) : null;
 					}
 				});
@@ -586,34 +586,34 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				return;
 			}
 
-		} else if (root.getType() instanceof AMethodTypeCG)
+		} else if (root.getType() instanceof AMethodTypeIR)
 		{
-			AMethodTypeCG methodType = (AMethodTypeCG) root.getType();
+			AMethodTypeIR methodType = (AMethodTypeIR) root.getType();
 
-			LinkedList<STypeCG> paramTypes = methodType.getParams();
+			LinkedList<STypeIR> paramTypes = methodType.getParams();
 
-			LinkedList<SExpCG> args = node.getArgs();
+			LinkedList<SExpIR> args = node.getArgs();
 
 			correctArgTypes(args, paramTypes);
 		}
 	}
 
 	@Override
-	public void inANotUnaryExpCG(ANotUnaryExpCG node) throws AnalysisException
+	public void inANotUnaryExpIR(ANotUnaryExpIR node) throws AnalysisException
 	{
-		correctTypes(node.getExp(), new ABoolBasicTypeCG());
+		correctTypes(node.getExp(), new ABoolBasicTypeIR());
 	}
 
 	@Override
-	public void inANewExpCG(ANewExpCG node) throws AnalysisException
+	public void inANewExpIR(ANewExpIR node) throws AnalysisException
 	{
-		LinkedList<SExpCG> args = node.getArgs();
+		LinkedList<SExpIR> args = node.getArgs();
 
 		boolean hasUnionTypes = false;
 
-		for (SExpCG arg : args)
+		for (SExpIR arg : args)
 		{
-			if (arg.getType() instanceof AUnionTypeCG)
+			if (arg.getType() instanceof AUnionTypeIR)
 			{
 				hasUnionTypes = true;
 				break;
@@ -625,13 +625,13 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		STypeCG type = node.getType();
+		STypeIR type = node.getType();
 
-		if (type instanceof AClassTypeCG)
+		if (type instanceof AClassTypeIR)
 		{
-			for (SClassDeclCG classCg : transAssistant.getInfo().getClasses())
+			for (SClassDeclIR classCg : transAssistant.getInfo().getClasses())
 			{
-				for (AMethodDeclCG method : classCg.getMethods())
+				for (AMethodDeclIR method : classCg.getMethods())
 				{
 					if (!method.getIsConstructor())
 					{
@@ -644,16 +644,16 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 					}
 				}
 			}
-		} else if (type instanceof ARecordTypeCG)
+		} else if (type instanceof ARecordTypeIR)
 		{
-			ARecordTypeCG recordType = (ARecordTypeCG) type;
+			ARecordTypeIR recordType = (ARecordTypeIR) type;
 			String definingClassName = recordType.getName().getDefiningClass();
 			String recordName = recordType.getName().getName();
 
-			SClassDeclCG classDecl = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findClass(transAssistant.getInfo().getClasses(), definingClassName);
-			ARecordDeclCG record = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findRecord(classDecl, recordName);
+			SClassDeclIR classDecl = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findClass(transAssistant.getInfo().getClasses(), definingClassName);
+			ARecordDeclIR record = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findRecord(classDecl, recordName);
 
-			List<STypeCG> fieldTypes = transAssistant.getInfo().getAssistantManager().getTypeAssistant().getFieldTypes(record);
+			List<STypeIR> fieldTypes = transAssistant.getInfo().getAssistantManager().getTypeAssistant().getFieldTypes(record);
 
 			if (correctArgTypes(args, fieldTypes))
 			{
@@ -663,50 +663,50 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void inAIfStmCG(AIfStmCG node) throws AnalysisException
+	public void inAIfStmIR(AIfStmIR node) throws AnalysisException
 	{
-		ABoolBasicTypeCG expectedType = new ABoolBasicTypeCG();
+		ABoolBasicTypeIR expectedType = new ABoolBasicTypeIR();
 
 		correctTypes(node.getIfExp(), expectedType);
 
-		LinkedList<AElseIfStmCG> elseIfs = node.getElseIf();
+		LinkedList<AElseIfStmIR> elseIfs = node.getElseIf();
 
-		for (AElseIfStmCG currentElseIf : elseIfs)
+		for (AElseIfStmIR currentElseIf : elseIfs)
 		{
 			correctTypes(currentElseIf.getElseIf(), expectedType);
 		}
 	}
 
 	@Override
-	public void caseAPlainCallStmCG(APlainCallStmCG node) throws AnalysisException
+	public void caseAPlainCallStmIR(APlainCallStmIR node) throws AnalysisException
 	{
-		STypeCG classType = node.getClassType();
+		STypeIR classType = node.getClassType();
 		
-		String className = classType instanceof AClassTypeCG ? ((AClassTypeCG) classType).getName()
-				: node.getAncestor(ADefaultClassDeclCG.class).getName();
+		String className = classType instanceof AClassTypeIR ? ((AClassTypeIR) classType).getName()
+				: node.getAncestor(ADefaultClassDeclIR.class).getName();
 		
 		handleCallStm(node, className);
 	}
 	
 	@Override
-	public void caseASuperCallStmCG(ASuperCallStmCG node)
+	public void caseASuperCallStmIR(ASuperCallStmIR node)
 			throws AnalysisException
 	{
 		handleCallStm(node, transAssistant.getInfo().getStmAssistant().getSuperClassName(node));
 	}
 
-	private void handleCallStm(SCallStmCG node, String className) throws AnalysisException
+	private void handleCallStm(SCallStmIR node, String className) throws AnalysisException
 	{
-		for (SExpCG arg : node.getArgs())
+		for (SExpIR arg : node.getArgs())
 		{
 			arg.apply(this);
 		}
 
 		String fieldName = node.getName();
-		LinkedList<SExpCG> args = node.getArgs();
+		LinkedList<SExpIR> args = node.getArgs();
 
-		TypeAssistantCG typeAssistant = transAssistant.getInfo().getAssistantManager().getTypeAssistant();
-		AMethodTypeCG methodType = typeAssistant.getMethodType(transAssistant.getInfo(), className, fieldName, args);
+		TypeAssistantIR typeAssistant = transAssistant.getInfo().getAssistantManager().getTypeAssistant();
+		AMethodTypeIR methodType = typeAssistant.getMethodType(transAssistant.getInfo(), className, fieldName, args);
 
 		if (methodType != null)
 		{
@@ -716,49 +716,49 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void inACallObjectExpStmCG(ACallObjectExpStmCG node)
+	public void inACallObjectExpStmIR(ACallObjectExpStmIR node)
 			throws AnalysisException
 	{
-		for (SExpCG arg : node.getArgs())
+		for (SExpIR arg : node.getArgs())
 		{
 			arg.apply(this);
 		}
 
-		SExpCG objExp = node.getObj();
+		SExpIR objExp = node.getObj();
 
-		STypeCG objType = objExp.getType();
-		if (!(objType instanceof AUnionTypeCG))
+		STypeIR objType = objExp.getType();
+		if (!(objType instanceof AUnionTypeIR))
 		{
 			return;
 		}
 
-		STypeCG type = node.getType();
-		LinkedList<SExpCG> args = node.getArgs();
+		STypeIR type = node.getType();
+		LinkedList<SExpIR> args = node.getArgs();
 		//String className = node.getClassName();
 		String fieldName = node.getFieldName();
 		SourceNode sourceNode = node.getSourceNode();
 
-		ACallObjectExpStmCG call = new ACallObjectExpStmCG();
+		ACallObjectExpStmIR call = new ACallObjectExpStmIR();
 		call.setObj(objExp);
 		call.setType(type.clone());
-		call.setArgs((List<? extends SExpCG>) args.clone());
+		call.setArgs((List<? extends SExpIR>) args.clone());
 		//call.setClassName(className);
 		call.setFieldName(fieldName);
 		call.setSourceNode(sourceNode);
 
-		ABlockStmCG replacementBlock = new ABlockStmCG();
+		ABlockStmIR replacementBlock = new ABlockStmIR();
 
-		if (!(objExp instanceof SVarExpCG))
+		if (!(objExp instanceof SVarExpIR))
 		{
 			String callStmObjName = transAssistant.getInfo().getTempVarNameGen().nextVarName(unionTypePrefixes.callStmObj());
 			
-			AIdentifierPatternCG id = new AIdentifierPatternCG();
+			AIdentifierPatternIR id = new AIdentifierPatternIR();
 			id.setName(callStmObjName);
-			AVarDeclCG objDecl = transAssistant.getInfo().getDeclAssistant().
+			AVarDeclIR objDecl = transAssistant.getInfo().getDeclAssistant().
 					consLocalVarDecl(node.getSourceNode().getVdmNode(),
 							objType.clone(), id, objExp.clone());
 
-			AIdentifierVarExpCG objVar = new AIdentifierVarExpCG();
+			AIdentifierVarExpIR objVar = new AIdentifierVarExpIR();
 			objVar.setSourceNode(node.getSourceNode());
 			objVar.setIsLambda(false);
 			objVar.setIsLocal(true);
@@ -770,19 +770,19 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			replacementBlock.getLocalDefs().add(objDecl);
 		}
 
-		TypeAssistantCG typeAssistant = transAssistant.getInfo().getAssistantManager().getTypeAssistant();
+		TypeAssistantIR typeAssistant = transAssistant.getInfo().getAssistantManager().getTypeAssistant();
 
-		LinkedList<STypeCG> possibleTypes = ((AUnionTypeCG) objType).getTypes();
-		AIfStmCG ifChecks = new AIfStmCG();
+		LinkedList<STypeIR> possibleTypes = ((AUnionTypeIR) objType).getTypes();
+		AIfStmIR ifChecks = new AIfStmIR();
 
 		int handledTypes = 0;
 		for (int i = 0; i < possibleTypes.size(); i++)
 		{
-			ACallObjectExpStmCG callCopy = call.clone();
+			ACallObjectExpStmIR callCopy = call.clone();
 
-			AClassTypeCG currentType = (AClassTypeCG) possibleTypes.get(i);
+			AClassTypeIR currentType = (AClassTypeIR) possibleTypes.get(i);
 
-			AMethodTypeCG methodType = typeAssistant.getMethodType(transAssistant.getInfo(), currentType.getName(), fieldName, args);
+			AMethodTypeIR methodType = typeAssistant.getMethodType(transAssistant.getInfo(), currentType.getName(), fieldName, args);
 
 			if (methodType != null)
 			{
@@ -797,7 +797,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				continue;
 			}
 
-			ACastUnaryExpCG castedVarExp = new ACastUnaryExpCG();
+			ACastUnaryExpIR castedVarExp = new ACastUnaryExpIR();
 			castedVarExp.setType(currentType.clone());
 			castedVarExp.setExp(objExp.clone());
 
@@ -809,7 +809,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				ifChecks.setThenStm(callCopy);
 			} else
 			{
-				AElseIfStmCG elseIf = new AElseIfStmCG();
+				AElseIfStmIR elseIf = new AElseIfStmIR();
 				elseIf.setElseIf(consInstanceCheck(objExp, currentType));
 				elseIf.setThenStm(callCopy);
 
@@ -824,7 +824,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		ARaiseErrorStmCG raiseStm = consRaiseStm(MISSING_OP_MEMBER,fieldName);
+		ARaiseErrorStmIR raiseStm = consRaiseStm(MISSING_OP_MEMBER,fieldName);
 		ifChecks.setElseStm(raiseStm);
 
 		replacementBlock.getStatements().add(ifChecks);
@@ -832,67 +832,67 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		ifChecks.apply(this);
 	}
 
-	private ARaiseErrorStmCG consRaiseStm(String prefix, String fieldName)
+	private ARaiseErrorStmIR consRaiseStm(String prefix, String fieldName)
 	{
-		AMissingMemberRuntimeErrorExpCG missingMember = new AMissingMemberRuntimeErrorExpCG();
-		missingMember.setType(new AErrorTypeCG());
+		AMissingMemberRuntimeErrorExpIR missingMember = new AMissingMemberRuntimeErrorExpIR();
+		missingMember.setType(new AErrorTypeIR());
 		missingMember.setMessage(prefix + fieldName);
 
-		ARaiseErrorStmCG raise = new ARaiseErrorStmCG();
+		ARaiseErrorStmIR raise = new ARaiseErrorStmIR();
 		raise.setError(missingMember);
 		
 		return raise;
 	}
 
 	@Override
-	public void inAVarDeclCG(AVarDeclCG node)
+	public void inAVarDeclIR(AVarDeclIR node)
 			throws AnalysisException
 	{
-		SExpCG exp = node.getExp();
+		SExpIR exp = node.getExp();
 		
 		if(exp != null)
 		{
 			exp.apply(this);
 		}
 		
-		STypeCG type = node.getType();
+		STypeIR type = node.getType();
 		
 		if(castNotNeeded(exp, type))
 		{
 			return;
 		}
 		
-		if (!(type instanceof AUnionTypeCG))
+		if (!(type instanceof AUnionTypeIR))
 		{
 			correctTypes(exp, type);
 		}
 	}
 	
 	@Override
-	public void caseAAssignToExpStmCG(AAssignToExpStmCG node) throws AnalysisException
+	public void caseAAssignToExpStmIR(AAssignToExpStmIR node) throws AnalysisException
 	{
 		handAssignRighHandSide(node);
 		handleAssignTarget(node);
 	}
 
-	public void handleAssignTarget(AAssignToExpStmCG node) throws AnalysisException
+	public void handleAssignTarget(AAssignToExpStmIR node) throws AnalysisException
 	{
-		if(node.getTarget() instanceof AFieldExpCG)
+		if(node.getTarget() instanceof AFieldExpIR)
 		{
-			AFieldExpCG field = (AFieldExpCG) node.getTarget();
+			AFieldExpIR field = (AFieldExpIR) node.getTarget();
 			
-			if(field.getObject().getType() instanceof AUnionTypeCG)
+			if(field.getObject().getType() instanceof AUnionTypeIR)
 			{
-				LinkedList<STypeCG> types = ((AUnionTypeCG) field.getObject().getType()).getTypes();
+				LinkedList<STypeIR> types = ((AUnionTypeIR) field.getObject().getType()).getTypes();
 
-				AIfStmCG ifChecks = new AIfStmCG();
+				AIfStmIR ifChecks = new AIfStmIR();
 				
 				for(int i = 0; i < types.size(); i++)
 				{
-					STypeCG currentType = types.get(i);
+					STypeIR currentType = types.get(i);
 					
-					AInstanceofExpCG cond = consInstanceCheck(field.getObject(), currentType);
-					AAssignToExpStmCG castFieldObj = castFieldObj(node, field, currentType);
+					AInstanceofExpIR cond = consInstanceCheck(field.getObject(), currentType);
+					AAssignToExpStmIR castFieldObj = castFieldObj(node, field, currentType);
 					
 					if(i == 0)
 					{
@@ -901,7 +901,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 					}
 					else
 					{
-						AElseIfStmCG elseIf = new AElseIfStmCG();
+						AElseIfStmIR elseIf = new AElseIfStmIR();
 						elseIf.setElseIf(cond);
 						elseIf.setThenStm(castFieldObj);
 
@@ -917,7 +917,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	public void handAssignRighHandSide(AAssignToExpStmCG node) throws AnalysisException
+	public void handAssignRighHandSide(AAssignToExpStmIR node) throws AnalysisException
 	{
 		if(node.getExp() != null)
 		{
@@ -926,21 +926,21 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		
 		if(!castNotNeeded(node.getExp(), node.getTarget().getType()))
 		{
-			if (!(node.getTarget().getType() instanceof AUnionTypeCG))
+			if (!(node.getTarget().getType() instanceof AUnionTypeIR))
 			{
 				correctTypes(node.getExp(), node.getTarget().getType());
 			}
 		}
 	}
 
-	public AAssignToExpStmCG castFieldObj(AAssignToExpStmCG assign, AFieldExpCG target, STypeCG possibleType)
+	public AAssignToExpStmIR castFieldObj(AAssignToExpStmIR assign, AFieldExpIR target, STypeIR possibleType)
 	{
-		ACastUnaryExpCG cast = new ACastUnaryExpCG();
+		ACastUnaryExpIR cast = new ACastUnaryExpIR();
 		cast.setType(possibleType.clone());
 		cast.setExp(target.getObject().clone());
 		
-		AAssignToExpStmCG assignCopy = assign.clone();
-		AFieldExpCG fieldCopy = target.clone();
+		AAssignToExpStmIR assignCopy = assign.clone();
+		AFieldExpIR fieldCopy = target.clone();
 		
 		transAssistant.replaceNodeWith(fieldCopy.getObject(), cast);
 		transAssistant.replaceNodeWith(assignCopy.getTarget(), fieldCopy);
@@ -948,56 +948,56 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		return assignCopy;
 	}
 
-	private boolean castNotNeeded(SExpCG exp, STypeCG type)
+	private boolean castNotNeeded(SExpIR exp, STypeIR type)
 	{
-		return type instanceof AUnknownTypeCG || exp instanceof ANullExpCG || exp instanceof AUndefinedExpCG;
+		return type instanceof AUnknownTypeIR || exp instanceof ANullExpIR || exp instanceof AUndefinedExpIR;
 	}
 
 	@Override
-	public void caseAReturnStmCG(AReturnStmCG node) throws AnalysisException
+	public void caseAReturnStmIR(AReturnStmIR node) throws AnalysisException
 	{
 		if (node.getExp() == null)
 		{
 			return; // When the return type of the method is 'void'
 		}
 		
-		if(node.getExp() instanceof ANullExpCG)
+		if(node.getExp() instanceof ANullExpIR)
 		{
 			return;
 		}
 
 		node.getExp().apply(this);
 
-		AMethodDeclCG methodDecl = node.getAncestor(AMethodDeclCG.class);
+		AMethodDeclIR methodDecl = node.getAncestor(AMethodDeclIR.class);
 
-		STypeCG expectedType = methodDecl.getMethodType().getResult();
+		STypeIR expectedType = methodDecl.getMethodType().getResult();
 		
-		if(expectedType instanceof AUnknownTypeCG)
+		if(expectedType instanceof AUnknownTypeIR)
 		{
 			return;
 		}
 
-		if (!(expectedType instanceof AUnionTypeCG))
+		if (!(expectedType instanceof AUnionTypeIR))
 		{
 			correctTypes(node.getExp(), expectedType);
 		}
 	}
 
 	@Override
-	public void inAElemsUnaryExpCG(AElemsUnaryExpCG node)
+	public void inAElemsUnaryExpIR(AElemsUnaryExpIR node)
 			throws AnalysisException
 	{
 		if (handleUnaryExp(node))
 		{
-			SExpCG exp = node.getExp();
+			SExpIR exp = node.getExp();
 			PType vdmType = (PType) exp.getType().getSourceNode().getVdmNode();
 			SSeqType seqType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getSeq(vdmType);
 
 			try
 			{
-				STypeCG typeCg = seqType.apply(transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo());
+				STypeIR typeCg = seqType.apply(transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo());
 
-				if (typeCg instanceof SSeqTypeCG)
+				if (typeCg instanceof SSeqTypeIR)
 				{
 					correctTypes(exp, typeCg);
 				}
@@ -1009,20 +1009,20 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void inAMapDomainUnaryExpCG(AMapDomainUnaryExpCG node)
+	public void inAMapDomainUnaryExpIR(AMapDomainUnaryExpIR node)
 			throws AnalysisException
 	{
 		if (handleUnaryExp(node))
 		{
-			SExpCG exp = node.getExp();
+			SExpIR exp = node.getExp();
 			PType vdmType = (PType) exp.getType().getSourceNode().getVdmNode();
 			SMapType mapType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getMap(vdmType);
 
 			try
 			{
-				STypeCG typeCg = mapType.apply(transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo());
+				STypeIR typeCg = mapType.apply(transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo());
 
-				if (typeCg instanceof SMapTypeCG)
+				if (typeCg instanceof SMapTypeIR)
 				{
 					correctTypes(exp, typeCg);
 				}
@@ -1033,13 +1033,13 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 	
-	private SExpCG getAssignmentExp(INode node, SExpCG fieldExp)
+	private SExpIR getAssignmentExp(INode node, SExpIR fieldExp)
 	{
 		INode parent = node.parent();
 		
-		if(parent instanceof AApplyExpCG && ((AApplyExpCG) parent).getRoot() == node)
+		if(parent instanceof AApplyExpIR && ((AApplyExpIR) parent).getRoot() == node)
 		{
-			AApplyExpCG applyExp = (AApplyExpCG) parent.clone();
+			AApplyExpIR applyExp = (AApplyExpIR) parent.clone();
 			applyExp.setRoot(fieldExp);
 			
 			return applyExp;
@@ -1050,39 +1050,39 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private STypeCG getResultType(AFieldExpCG node, INode parent,
-			STypeCG fieldObjType, TypeAssistantCG typeAssistant)
+	private STypeIR getResultType(AFieldExpIR node, INode parent,
+			STypeIR fieldObjType, TypeAssistantIR typeAssistant)
 	{
-		if(parent instanceof SExpCG)
+		if(parent instanceof SExpIR)
 		{
-			if (parent instanceof AApplyExpCG && ((AApplyExpCG) parent).getRoot() == node)
+			if (parent instanceof AApplyExpIR && ((AApplyExpIR) parent).getRoot() == node)
 			{
-				return ((SExpCG) parent).getType().clone();
+				return ((SExpIR) parent).getType().clone();
 			}
 		}
 
 		return fieldType(node, fieldObjType, typeAssistant);
 	}
 
-	private STypeCG fieldType(AFieldExpCG node, STypeCG objectType,
-			TypeAssistantCG typeAssistant)
+	private STypeIR fieldType(AFieldExpIR node, STypeIR objectType,
+			TypeAssistantIR typeAssistant)
 	{
-		List<STypeCG> fieldTypes = new LinkedList<STypeCG>();
-		List<STypeCG> types = ((AUnionTypeCG)objectType).getTypes();
+		List<STypeIR> fieldTypes = new LinkedList<STypeIR>();
+		List<STypeIR> types = ((AUnionTypeIR)objectType).getTypes();
 		
-		for(STypeCG currentType : types)
+		for(STypeIR currentType : types)
 		{
 			String memberName = node.getMemberName();
-			STypeCG fieldType = null;
+			STypeIR fieldType = null;
 			
-			if(currentType instanceof AClassTypeCG)
+			if(currentType instanceof AClassTypeIR)
 			{
-				AClassTypeCG classType = (AClassTypeCG) currentType;
+				AClassTypeIR classType = (AClassTypeIR) currentType;
 				fieldType = typeAssistant.getFieldType(transAssistant.getInfo().getClasses(), classType.getName(), memberName);
 			}
-			else if(currentType instanceof ARecordTypeCG)
+			else if(currentType instanceof ARecordTypeIR)
 			{
-				ARecordTypeCG recordType = (ARecordTypeCG) currentType;
+				ARecordTypeIR recordType = (ARecordTypeIR) currentType;
 				fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(transAssistant.getInfo().getClasses(), recordType, memberName);
 			}
 			else{
@@ -1117,7 +1117,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			AUnionTypeCG unionTypes = new AUnionTypeCG();
+			AUnionTypeIR unionTypes = new AUnionTypeIR();
 			unionTypes.setTypes(fieldTypes);
 			
 			return unionTypes;

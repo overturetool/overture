@@ -3,36 +3,36 @@ package org.overture.codegen.assistant;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.patterns.AIdentifierPatternCG;
-import org.overture.codegen.ir.patterns.ATuplePatternCG;
-import org.overture.codegen.ir.types.ATupleTypeCG;
-import org.overture.codegen.ir.types.AUnionTypeCG;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.patterns.ATuplePatternIR;
+import org.overture.codegen.ir.types.ATupleTypeIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
 
-public class PatternAssistantCG  extends AssistantBase
+public class PatternAssistantIR  extends AssistantBase
 {
-	public PatternAssistantCG(AssistantManager assistantManager)
+	public PatternAssistantIR(AssistantManager assistantManager)
 	{
 		super(assistantManager);
 	}
 
-	public AIdentifierPatternCG consIdPattern(String name)
+	public AIdentifierPatternIR consIdPattern(String name)
 	{
-		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		AIdentifierPatternIR idPattern = new AIdentifierPatternIR();
 		idPattern.setName(name);
 
 		return idPattern;
 	}
 	
-	public ATupleTypeCG getTupleType(AUnionTypeCG unionType, ATuplePatternCG tuplePattern)
+	public ATupleTypeIR getTupleType(AUnionTypeIR unionType, ATuplePatternIR tuplePattern)
 	{
-		List<ATupleTypeCG> tupleTypes = new LinkedList<ATupleTypeCG>();
+		List<ATupleTypeIR> tupleTypes = new LinkedList<ATupleTypeIR>();
 
-		for (STypeCG nextType : unionType.getTypes())
+		for (STypeIR nextType : unionType.getTypes())
 		{
-			if (nextType instanceof ATupleTypeCG)
+			if (nextType instanceof ATupleTypeIR)
 			{
-				ATupleTypeCG nextTupleType = ((ATupleTypeCG) nextType);
+				ATupleTypeIR nextTupleType = ((ATupleTypeIR) nextType);
 
 				if (nextTupleType.getTypes().size() == tuplePattern.getPatterns().size())
 				{
@@ -41,7 +41,7 @@ public class PatternAssistantCG  extends AssistantBase
 			}
 		}
 
-		ATupleTypeCG resTupleType = new ATupleTypeCG();
+		ATupleTypeIR resTupleType = new ATupleTypeIR();
 
 		if (tupleTypes.size() == 1)
 		{
@@ -50,9 +50,9 @@ public class PatternAssistantCG  extends AssistantBase
 		{
 			for (int i = 0; i < tuplePattern.getPatterns().size(); i++)
 			{
-				AUnionTypeCG fieldType = new AUnionTypeCG();
+				AUnionTypeIR fieldType = new AUnionTypeIR();
 
-				for (ATupleTypeCG t : tupleTypes)
+				for (ATupleTypeIR t : tupleTypes)
 				{
 					fieldType.getTypes().add(t.getTypes().get(i).clone());
 				}

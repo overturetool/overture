@@ -9,64 +9,64 @@ import org.overture.ast.modules.ATypeImport;
 import org.overture.ast.modules.AValueValueImport;
 import org.overture.ast.modules.PImport;
 import org.overture.ast.modules.SValueImport;
-import org.overture.codegen.ir.SDeclCG;
-import org.overture.codegen.ir.SImportCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.declarations.AAllImportCG;
-import org.overture.codegen.ir.declarations.AFunctionValueImportCG;
-import org.overture.codegen.ir.declarations.AOperationValueImportCG;
-import org.overture.codegen.ir.declarations.ATypeDeclCG;
-import org.overture.codegen.ir.declarations.ATypeImportCG;
-import org.overture.codegen.ir.declarations.AValueValueImportCG;
-import org.overture.codegen.ir.declarations.SValueImportCG;
-import org.overture.codegen.ir.name.ATokenNameCG;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.SImportIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.AAllImportIR;
+import org.overture.codegen.ir.declarations.AFunctionValueImportIR;
+import org.overture.codegen.ir.declarations.AOperationValueImportIR;
+import org.overture.codegen.ir.declarations.ATypeDeclIR;
+import org.overture.codegen.ir.declarations.ATypeImportIR;
+import org.overture.codegen.ir.declarations.AValueValueImportIR;
+import org.overture.codegen.ir.declarations.SValueImportIR;
+import org.overture.codegen.ir.name.ATokenNameIR;
 import org.overture.codegen.ir.IRInfo;
 
-public class ImportVisitorCG extends AbstractVisitorCG<IRInfo, SImportCG>
+public class ImportVisitorIR extends AbstractVisitorIR<IRInfo, SImportIR>
 {
 	@Override
-	public SImportCG caseAAllImport(AAllImport node, IRInfo question)
+	public SImportIR caseAAllImport(AAllImport node, IRInfo question)
 			throws AnalysisException
 	{
-		return initImport(node, new AAllImportCG());
+		return initImport(node, new AAllImportIR());
 	}
 
 	@Override
-	public SImportCG caseATypeImport(ATypeImport node, IRInfo question)
+	public SImportIR caseATypeImport(ATypeImport node, IRInfo question)
 			throws AnalysisException
 	{
-		ATypeImportCG typeImportCg = new ATypeImportCG();
+		ATypeImportIR typeImportCg = new ATypeImportIR();
 
 		initImport(node, typeImportCg);
 
-		SDeclCG typeDeclCg = node.getDef() != null ? node.getDef().apply(question.getDeclVisitor(), question)
+		SDeclIR typeDeclCg = node.getDef() != null ? node.getDef().apply(question.getDeclVisitor(), question)
 				: null;
 
-		if (typeDeclCg instanceof ATypeDeclCG)
+		if (typeDeclCg instanceof ATypeDeclIR)
 		{
-			typeImportCg.setDecl((ATypeDeclCG) typeDeclCg);
+			typeImportCg.setDecl((ATypeDeclIR) typeDeclCg);
 		}
 
 		return typeImportCg;
 	}
 
 	@Override
-	public SImportCG caseAValueValueImport(AValueValueImport node,
+	public SImportIR caseAValueValueImport(AValueValueImport node,
 			IRInfo question) throws AnalysisException
 	{
-		return initValueImport(node, new AValueValueImportCG(), question);
+		return initValueImport(node, new AValueValueImportIR(), question);
 	}
 
 	@Override
-	public SImportCG caseAFunctionValueImport(AFunctionValueImport node,
+	public SImportIR caseAFunctionValueImport(AFunctionValueImport node,
 			IRInfo question) throws AnalysisException
 	{
-		AFunctionValueImportCG funcImportCg = new AFunctionValueImportCG();
+		AFunctionValueImportIR funcImportCg = new AFunctionValueImportIR();
 		initValueImport(node, funcImportCg, question);
 
 		for (ILexNameToken typeParam : node.getTypeParams())
 		{
-			ATokenNameCG nameCg = new ATokenNameCG();
+			ATokenNameIR nameCg = new ATokenNameIR();
 			nameCg.setName(typeParam.getName());
 			funcImportCg.getTypeParams().add(nameCg);
 		}
@@ -75,18 +75,18 @@ public class ImportVisitorCG extends AbstractVisitorCG<IRInfo, SImportCG>
 	}
 
 	@Override
-	public SImportCG caseAOperationValueImport(AOperationValueImport node,
+	public SImportIR caseAOperationValueImport(AOperationValueImport node,
 			IRInfo question) throws AnalysisException
 	{
-		return initValueImport(node, new AOperationValueImportCG(), question);
+		return initValueImport(node, new AOperationValueImportIR(), question);
 	}
 
-	private SImportCG initValueImport(SValueImport vdmImport,
-			SValueImportCG irImport, IRInfo question) throws AnalysisException
+	private SImportIR initValueImport(SValueImport vdmImport,
+			SValueImportIR irImport, IRInfo question) throws AnalysisException
 	{
 		initImport(vdmImport, irImport);
 
-		STypeCG importTypeCg = vdmImport.getImportType() != null ? vdmImport.getImportType().apply(question.getTypeVisitor(), question)
+		STypeIR importTypeCg = vdmImport.getImportType() != null ? vdmImport.getImportType().apply(question.getTypeVisitor(), question)
 				: null;
 
 		irImport.setImportType(importTypeCg);
@@ -94,7 +94,7 @@ public class ImportVisitorCG extends AbstractVisitorCG<IRInfo, SImportCG>
 		return irImport;
 	}
 
-	private SImportCG initImport(PImport vdmImport, SImportCG irImport)
+	private SImportIR initImport(PImport vdmImport, SImportIR irImport)
 	{
 		String name = vdmImport.getName() != null ? vdmImport.getName().getName()
 				: null;

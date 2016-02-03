@@ -1,54 +1,54 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.ir.SDeclCG;
-import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.APreCondRuntimeErrorExpCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
-import org.overture.codegen.ir.statements.AIfStmCG;
-import org.overture.codegen.ir.statements.ARaiseErrorStmCG;
-import org.overture.codegen.ir.types.AErrorTypeCG;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.APreCondRuntimeErrorExpIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
+import org.overture.codegen.ir.statements.ARaiseErrorStmIR;
+import org.overture.codegen.ir.types.AErrorTypeIR;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class PreCheckTrans extends DepthFirstAnalysisAdaptor {
 
-	private TransAssistantCG transAssistant;
+	private TransAssistantIR transAssistant;
 	private Object conditionalCallTag;
 	
-	public PreCheckTrans(TransAssistantCG transAssistant, Object conditionalCallTag)
+	public PreCheckTrans(TransAssistantIR transAssistant, Object conditionalCallTag)
 	{
 		this.transAssistant = transAssistant;
 		this.conditionalCallTag = conditionalCallTag;
 	}
 	
 	@Override
-	public void caseAMethodDeclCG(AMethodDeclCG node) throws AnalysisException {
+	public void caseAMethodDeclIR(AMethodDeclIR node) throws AnalysisException {
 		
 		if(!transAssistant.getInfo().getSettings().generatePreCondChecks())
 		{
 			return;
 		}
 		
-		SDeclCG preCond = node.getPreCond();
+		SDeclIR preCond = node.getPreCond();
 		
 		if(preCond == null)
 		{
 			return;
 		}
 		
-		if(!(preCond instanceof AMethodDeclCG))
+		if(!(preCond instanceof AMethodDeclIR))
 		{
 			Logger.getLog().printErrorln("Expected pre condition to be a method declaration at this point. Got: " + preCond);
 			return;
 		}
 
-		AMethodDeclCG preCondMethod = (AMethodDeclCG) preCond;
+		AMethodDeclIR preCondMethod = (AMethodDeclIR) preCond;
 		
-		AApplyExpCG preCondCall = transAssistant.consConditionalCall(node, preCondMethod);
+		AApplyExpIR preCondCall = transAssistant.consConditionalCall(node, preCondMethod);
 		
 		if(preCondCall == null)
 		{
@@ -57,20 +57,20 @@ public class PreCheckTrans extends DepthFirstAnalysisAdaptor {
 		
 		preCondCall.setTag(conditionalCallTag);
 		
-		SStmCG body = node.getBody();
+		SStmIR body = node.getBody();
 		
-		APreCondRuntimeErrorExpCG runtimeError = new APreCondRuntimeErrorExpCG();
-		runtimeError.setType(new AErrorTypeCG());
+		APreCondRuntimeErrorExpIR runtimeError = new APreCondRuntimeErrorExpIR();
+		runtimeError.setType(new AErrorTypeIR());
 		runtimeError.setMessage(String.format("Precondition failure: pre_%s", node.getName()));
 		
-		ARaiseErrorStmCG raiseError= new ARaiseErrorStmCG();
+		ARaiseErrorStmIR raiseError= new ARaiseErrorStmIR();
 		raiseError.setError(runtimeError);
 		
-		AIfStmCG ifCheck = new AIfStmCG();
+		AIfStmIR ifCheck = new AIfStmIR();
 		ifCheck.setIfExp(transAssistant.getInfo().getExpAssistant().negate(preCondCall));
 		ifCheck.setThenStm(raiseError);
 		
-		ABlockStmCG newBody = new ABlockStmCG();
+		ABlockStmIR newBody = new ABlockStmIR();
 		newBody.getStatements().add(ifCheck);
 		newBody.getStatements().add(body.clone());
 		

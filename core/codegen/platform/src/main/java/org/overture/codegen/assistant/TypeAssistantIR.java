@@ -43,74 +43,74 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
 import org.overture.ast.util.PTypeSet;
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SObjectDesignatorCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.ARecordDeclCG;
-import org.overture.codegen.ir.declarations.SClassDeclCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.SBinaryExpCG;
-import org.overture.codegen.ir.statements.AApplyObjectDesignatorCG;
-import org.overture.codegen.ir.types.ABoolBasicTypeCG;
-import org.overture.codegen.ir.types.ABoolBasicTypeWrappersTypeCG;
-import org.overture.codegen.ir.types.ACharBasicTypeCG;
-import org.overture.codegen.ir.types.ACharBasicTypeWrappersTypeCG;
-import org.overture.codegen.ir.types.AClassTypeCG;
-import org.overture.codegen.ir.types.AIntBasicTypeWrappersTypeCG;
-import org.overture.codegen.ir.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.ir.types.AMethodTypeCG;
-import org.overture.codegen.ir.types.ANat1BasicTypeWrappersTypeCG;
-import org.overture.codegen.ir.types.ANat1NumericBasicTypeCG;
-import org.overture.codegen.ir.types.ANatBasicTypeWrappersTypeCG;
-import org.overture.codegen.ir.types.ANatNumericBasicTypeCG;
-import org.overture.codegen.ir.types.AObjectTypeCG;
-import org.overture.codegen.ir.types.ARatBasicTypeWrappersTypeCG;
-import org.overture.codegen.ir.types.ARatNumericBasicTypeCG;
-import org.overture.codegen.ir.types.ARealBasicTypeWrappersTypeCG;
-import org.overture.codegen.ir.types.ARealNumericBasicTypeCG;
-import org.overture.codegen.ir.types.ARecordTypeCG;
-import org.overture.codegen.ir.types.ASeqSeqTypeCG;
-import org.overture.codegen.ir.types.ASetSetTypeCG;
-import org.overture.codegen.ir.types.AStringTypeCG;
-import org.overture.codegen.ir.types.ATokenBasicTypeCG;
-import org.overture.codegen.ir.types.ATupleTypeCG;
-import org.overture.codegen.ir.types.AUnionTypeCG;
-import org.overture.codegen.ir.types.AUnknownTypeCG;
-import org.overture.codegen.ir.types.SBasicTypeCG;
-import org.overture.codegen.ir.types.SMapTypeCG;
-import org.overture.codegen.ir.types.SSeqTypeCG;
-import org.overture.codegen.ir.types.SSetTypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SObjectDesignatorIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.SBinaryExpIR;
+import org.overture.codegen.ir.statements.AApplyObjectDesignatorIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeWrappersTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeWrappersTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AIntBasicTypeWrappersTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.ANat1BasicTypeWrappersTypeIR;
+import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANatBasicTypeWrappersTypeIR;
+import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AObjectTypeIR;
+import org.overture.codegen.ir.types.ARatBasicTypeWrappersTypeIR;
+import org.overture.codegen.ir.types.ARatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARealBasicTypeWrappersTypeIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.ASeqSeqTypeIR;
+import org.overture.codegen.ir.types.ASetSetTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
+import org.overture.codegen.ir.types.ATokenBasicTypeIR;
+import org.overture.codegen.ir.types.ATupleTypeIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
+import org.overture.codegen.ir.types.SBasicTypeIR;
+import org.overture.codegen.ir.types.SMapTypeIR;
+import org.overture.codegen.ir.types.SSeqTypeIR;
+import org.overture.codegen.ir.types.SSetTypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.conv.ObjectDesignatorToExpCG;
+import org.overture.codegen.trans.conv.ObjectDesignatorToExpIR;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class TypeAssistantCG extends AssistantBase
+public class TypeAssistantIR extends AssistantBase
 {
-	public TypeAssistantCG(AssistantManager assistantManager)
+	public TypeAssistantIR(AssistantManager assistantManager)
 	{
 		super(assistantManager);
 	}
 
-	public STypeCG getFieldExpType(IRInfo info, String fieldName, String fieldModule,
-			SObjectDesignatorCG obj, INode parent)
+	public STypeIR getFieldExpType(IRInfo info, String fieldName, String fieldModule,
+			SObjectDesignatorIR obj, INode parent)
 			throws AnalysisException, org.overture.codegen.ir.analysis.AnalysisException
 	{
-		if (parent instanceof AApplyObjectDesignatorCG)
+		if (parent instanceof AApplyObjectDesignatorIR)
 		{
-			AApplyObjectDesignatorCG apply = (AApplyObjectDesignatorCG) parent;
-			LinkedList<SExpCG> args = apply.getArgs();
+			AApplyObjectDesignatorIR apply = (AApplyObjectDesignatorIR) parent;
+			LinkedList<SExpIR> args = apply.getArgs();
 
 			if (fieldModule != null)
 			{
 				// It is a class
-				SClassDeclCG clazz = info.getDeclAssistant().findClass(info.getClasses(), fieldModule);
-				AFieldDeclCG field = info.getDeclAssistant().getFieldDecl(clazz, fieldModule);
+				SClassDeclIR clazz = info.getDeclAssistant().findClass(info.getClasses(), fieldModule);
+				AFieldDeclIR field = info.getDeclAssistant().getFieldDecl(clazz, fieldModule);
 				
 				if(field != null)
 				{
@@ -126,7 +126,7 @@ public class TypeAssistantCG extends AssistantBase
 		return getFieldType(info, fieldName, fieldModule, obj);
 	}
 	
-	private STypeCG getFieldType(IRInfo info, String fieldName, String fieldModule, SObjectDesignatorCG obj)
+	private STypeIR getFieldType(IRInfo info, String fieldName, String fieldModule, SObjectDesignatorIR obj)
 	{
 		if (fieldModule != null)
 		{
@@ -137,16 +137,16 @@ public class TypeAssistantCG extends AssistantBase
 			// It is a record
 			try
 			{
-				ObjectDesignatorToExpCG converter = new ObjectDesignatorToExpCG(info);
-				SExpCG objExp = obj.apply(converter);
+				ObjectDesignatorToExpIR converter = new ObjectDesignatorToExpIR(info);
+				SExpIR objExp = obj.apply(converter);
 
-				if (objExp.getType() instanceof ARecordTypeCG)
+				if (objExp.getType() instanceof ARecordTypeIR)
 				{
-					STypeCG fieldExpType = info.getTypeAssistant().getFieldType(info.getClasses(), (ARecordTypeCG) objExp.getType(), fieldName);
+					STypeIR fieldExpType = info.getTypeAssistant().getFieldType(info.getClasses(), (ARecordTypeIR) objExp.getType(), fieldName);
 
 					if (fieldExpType == null)
 					{
-						Logger.getLog().printErrorln("Lookup of field type gave nothing in 'TypeAssistantCG'");
+						Logger.getLog().printErrorln("Lookup of field type gave nothing in 'TypeAssistantIR'");
 					}
 
 					return fieldExpType;
@@ -157,23 +157,23 @@ public class TypeAssistantCG extends AssistantBase
 			}
 		}
 
-		Logger.getLog().printErrorln("Could not determine field type of field expression in 'TypeAssistantCG'");
-		return new AUnknownTypeCG();
+		Logger.getLog().printErrorln("Could not determine field type of field expression in 'TypeAssistantIR'");
+		return new AUnknownTypeIR();
 	}
 	
-	public AMethodTypeCG getMethodType(IRInfo info,
-			String fieldModule, String fieldName, List<SExpCG> args)
+	public AMethodTypeIR getMethodType(IRInfo info,
+			String fieldModule, String fieldName, List<SExpIR> args)
 			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
-		SClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(info.getClasses(), fieldModule);
+		SClassDeclIR classDecl = assistantManager.getDeclAssistant().findClass(info.getClasses(), fieldModule);
 
-		List<AMethodDeclCG> methods = assistantManager.getDeclAssistant().getAllMethods(classDecl, info.getClasses());
+		List<AMethodDeclIR> methods = assistantManager.getDeclAssistant().getAllMethods(classDecl, info.getClasses());
 
-		for (AMethodDeclCG method : methods)
+		for (AMethodDeclIR method : methods)
 		{
 			if (method.getName().equals(fieldName))
 			{
-				LinkedList<STypeCG> params = method.getMethodType().getParams();
+				LinkedList<STypeIR> params = method.getMethodType().getParams();
 
 				if (assistantManager.getTypeAssistant().checkArgTypes(info, args, params))
 				{
@@ -195,10 +195,10 @@ public class TypeAssistantCG extends AssistantBase
 		return null;
 	}
 
-	public STypeCG getFieldType(SClassDeclCG classDecl, String fieldName,
-			List<SClassDeclCG> classes)
+	public STypeIR getFieldType(SClassDeclIR classDecl, String fieldName,
+			List<SClassDeclIR> classes)
 	{
-		for (AFieldDeclCG field : assistantManager.getDeclAssistant().getAllFields(classDecl, classes))
+		for (AFieldDeclIR field : assistantManager.getDeclAssistant().getAllFields(classDecl, classes))
 		{
 			if (field.getName().equals(fieldName))
 			{
@@ -209,10 +209,10 @@ public class TypeAssistantCG extends AssistantBase
 		return null;
 	}
 	
-	public STypeCG getFieldType(List<SClassDeclCG> classes,
-			ARecordTypeCG recordType, String memberName)
+	public STypeIR getFieldType(List<SClassDeclIR> classes,
+			ARecordTypeIR recordType, String memberName)
 	{
-		AFieldDeclCG field = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);
+		AFieldDeclIR field = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);
 
 		if (field != null)
 		{
@@ -221,11 +221,11 @@ public class TypeAssistantCG extends AssistantBase
 		return null;
 	}
 
-	public List<STypeCG> getFieldTypes(ARecordDeclCG record)
+	public List<STypeIR> getFieldTypes(ARecordDeclIR record)
 	{
-		List<STypeCG> fieldTypes = new LinkedList<STypeCG>();
+		List<STypeIR> fieldTypes = new LinkedList<STypeIR>();
 
-		for (AFieldDeclCG field : record.getFields())
+		for (AFieldDeclIR field : record.getFields())
 		{
 			fieldTypes.add(field.getType());
 		}
@@ -233,14 +233,14 @@ public class TypeAssistantCG extends AssistantBase
 		return fieldTypes;
 	}
 
-	public STypeCG getFieldType(List<SClassDeclCG> classes, String moduleName,
+	public STypeIR getFieldType(List<SClassDeclIR> classes, String moduleName,
 			String fieldName)
 	{
-		SClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, moduleName);
+		SClassDeclIR classDecl = assistantManager.getDeclAssistant().findClass(classes, moduleName);
 		return getFieldType(classDecl, fieldName, classes);
 	}
 	
-	public boolean compatible(IRInfo info, STypeCG left, STypeCG right)
+	public boolean compatible(IRInfo info, STypeIR left, STypeIR right)
 	{
 		SourceNode leftSource = left.getSourceNode();
 		SourceNode rightSource = right.getSourceNode();
@@ -269,8 +269,8 @@ public class TypeAssistantCG extends AssistantBase
 		return true;
 	}
 
-	public boolean checkArgTypes(IRInfo info, List<SExpCG> args,
-			List<STypeCG> paramTypes)
+	public boolean checkArgTypes(IRInfo info, List<SExpIR> args,
+			List<STypeIR> paramTypes)
 			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		if (args.size() != paramTypes.size())
@@ -280,8 +280,8 @@ public class TypeAssistantCG extends AssistantBase
 
 		for (int i = 0; i < paramTypes.size(); i++)
 		{
-			STypeCG paramType = paramTypes.get(i);
-			STypeCG argType = args.get(i).getType();
+			STypeIR paramType = paramTypes.get(i);
+			STypeIR argType = args.get(i).getType();
 			
 			if(!compatible(info, paramType, argType))
 			{
@@ -313,25 +313,25 @@ public class TypeAssistantCG extends AssistantBase
 		return typeDef;
 	}
 
-	public STypeCG constructSeqType(SSeqTypeBase node, IRInfo question)
+	public STypeIR constructSeqType(SSeqTypeBase node, IRInfo question)
 			throws AnalysisException
 	{
-		STypeCG seqOfCg = node.getSeqof().apply(question.getTypeVisitor(), question);
+		STypeIR seqOfCg = node.getSeqof().apply(question.getTypeVisitor(), question);
 		boolean emptyCg = node.getEmpty();
 		
 		boolean isSeq1 = node instanceof ASeq1SeqType;
 
 		// This is a special case since sequence of characters are strings
-		if (seqOfCg instanceof ACharBasicTypeCG
+		if (seqOfCg instanceof ACharBasicTypeIR
 				&& question.getSettings().getCharSeqAsString())
 		{
-			AStringTypeCG stringTypeCg = new AStringTypeCG();
+			AStringTypeIR stringTypeCg = new AStringTypeIR();
 			stringTypeCg.setSourceNode(new SourceNode(node));
 
 			return stringTypeCg;
 		}
 
-		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
+		ASeqSeqTypeIR seqType = new ASeqSeqTypeIR();
 		seqType.setSeqOf(seqOfCg);
 		seqType.setEmpty(emptyCg);
 		seqType.setSeq1(isSeq1);
@@ -339,37 +339,37 @@ public class TypeAssistantCG extends AssistantBase
 		return seqType;
 	}
 
-	public boolean isBasicType(STypeCG type)
+	public boolean isBasicType(STypeIR type)
 	{
-		return type instanceof SBasicTypeCG;
+		return type instanceof SBasicTypeIR;
 	}
 
-	public STypeCG getWrapperType(SBasicTypeCG basicType)
+	public STypeIR getWrapperType(SBasicTypeIR basicType)
 	{
 
-		if (basicType instanceof AIntNumericBasicTypeCG)
+		if (basicType instanceof AIntNumericBasicTypeIR)
 		{
-			return new AIntBasicTypeWrappersTypeCG();
-		} else if(basicType instanceof ANat1NumericBasicTypeCG)
+			return new AIntBasicTypeWrappersTypeIR();
+		} else if(basicType instanceof ANat1NumericBasicTypeIR)
 		{
-			return new ANat1BasicTypeWrappersTypeCG();
-		} else if(basicType instanceof ANatNumericBasicTypeCG)
+			return new ANat1BasicTypeWrappersTypeIR();
+		} else if(basicType instanceof ANatNumericBasicTypeIR)
 		{
-			return new ANatBasicTypeWrappersTypeCG();
-		} else if(basicType instanceof ARatNumericBasicTypeCG)
+			return new ANatBasicTypeWrappersTypeIR();
+		} else if(basicType instanceof ARatNumericBasicTypeIR)
 		{
-			return new ARatBasicTypeWrappersTypeCG();
+			return new ARatBasicTypeWrappersTypeIR();
 		}
-		else if (basicType instanceof ARealNumericBasicTypeCG)
+		else if (basicType instanceof ARealNumericBasicTypeIR)
 		{
-			return new ARealBasicTypeWrappersTypeCG();
-		} else if (basicType instanceof ACharBasicTypeCG)
+			return new ARealBasicTypeWrappersTypeIR();
+		} else if (basicType instanceof ACharBasicTypeIR)
 		{
-			return new ACharBasicTypeWrappersTypeCG();
-		} else if (basicType instanceof ABoolBasicTypeCG)
+			return new ACharBasicTypeWrappersTypeIR();
+		} else if (basicType instanceof ABoolBasicTypeIR)
 		{
-			return new ABoolBasicTypeWrappersTypeCG();
-		} else if (basicType instanceof ATokenBasicTypeCG)
+			return new ABoolBasicTypeWrappersTypeIR();
+		} else if (basicType instanceof ATokenBasicTypeIR)
 		{
 			return basicType;
 		} else
@@ -379,18 +379,18 @@ public class TypeAssistantCG extends AssistantBase
 
 	}
 
-	public AMethodTypeCG consMethodType(PType node, List<PType> paramTypes,
+	public AMethodTypeIR consMethodType(PType node, List<PType> paramTypes,
 			PType resultType, IRInfo question) throws AnalysisException
 	{
-		AMethodTypeCG methodType = new AMethodTypeCG();
+		AMethodTypeIR methodType = new AMethodTypeIR();
 
 		methodType.setEquivalent(node.clone());
 
-		STypeCG resultCg = resultType.apply(question.getTypeVisitor(), question);
+		STypeIR resultCg = resultType.apply(question.getTypeVisitor(), question);
 
 		methodType.setResult(resultCg);
 
-		LinkedList<STypeCG> paramsCg = methodType.getParams();
+		LinkedList<STypeIR> paramsCg = methodType.getParams();
 		for (PType paramType : paramTypes)
 		{
 			paramsCg.add(paramType.apply(question.getTypeVisitor(), question));
@@ -511,17 +511,17 @@ public class TypeAssistantCG extends AssistantBase
 		}
 	}
 	
-	public List<STypeCG> clearObjectTypes(List<STypeCG> types)
+	public List<STypeIR> clearObjectTypes(List<STypeIR> types)
 	{
-		types = new LinkedList<STypeCG>(types);
+		types = new LinkedList<STypeIR>(types);
 		
-		List<AObjectTypeCG> objectTypes = new LinkedList<AObjectTypeCG>();
+		List<AObjectTypeIR> objectTypes = new LinkedList<AObjectTypeIR>();
 		
-		for(STypeCG type : types)
+		for(STypeIR type : types)
 		{
-			if(type instanceof AObjectTypeCG)
+			if(type instanceof AObjectTypeIR)
 			{
-				objectTypes.add((AObjectTypeCG) type);
+				objectTypes.add((AObjectTypeIR) type);
 			}
 		}
 		
@@ -530,11 +530,11 @@ public class TypeAssistantCG extends AssistantBase
 		return types;
 	}
 	
-	public List<STypeCG> clearDuplicates(List<STypeCG> types)
+	public List<STypeIR> clearDuplicates(List<STypeIR> types)
 	{
-		List<STypeCG> filtered = new LinkedList<STypeCG>();
+		List<STypeIR> filtered = new LinkedList<STypeIR>();
 
-		for(STypeCG type : types)
+		for(STypeIR type : types)
 		{
 			if(!containsType(filtered, type))
 			{
@@ -545,51 +545,51 @@ public class TypeAssistantCG extends AssistantBase
 		return filtered;
 	}
 	
-	public boolean isStringType(STypeCG type)
+	public boolean isStringType(STypeIR type)
 	{
-		return type instanceof AStringTypeCG;
+		return type instanceof AStringTypeIR;
 	}
 	
-	public boolean isStringType(SExpCG exp)
+	public boolean isStringType(SExpIR exp)
 	{
-		return exp.getType() instanceof AStringTypeCG;
+		return exp.getType() instanceof AStringTypeIR;
 	}
 	
-	public boolean isMapType(SExpCG exp)
+	public boolean isMapType(SExpIR exp)
 	{
-		return exp.getType() instanceof SMapTypeCG;
+		return exp.getType() instanceof SMapTypeIR;
 	}
 	
-	public boolean isSeqType(SExpCG exp)
+	public boolean isSeqType(SExpIR exp)
 	{
-		return exp.getType() instanceof SSeqTypeCG;
+		return exp.getType() instanceof SSeqTypeIR;
 	}
 	
-	public boolean isMapApplication(AApplyExpCG applyExp)
+	public boolean isMapApplication(AApplyExpIR applyExp)
 	{
 		return isMapType(applyExp.getRoot()) && applyExp.getArgs().size() == 1;
 	}
 	
-	public boolean isSeqApplication(AApplyExpCG applyExp)
+	public boolean isSeqApplication(AApplyExpIR applyExp)
 	{
 		return isSeqType(applyExp.getRoot()) && applyExp.getArgs().size() == 1;
 	}
 	
-	public boolean isCharRead(AApplyExpCG applyExp)
+	public boolean isCharRead(AApplyExpIR applyExp)
 	{
 		return isStringType(applyExp.getRoot()) && applyExp.getArgs().size() == 1;
 	}
 
-	public STypeCG findElementType(STypeCG type)
+	public STypeIR findElementType(STypeIR type)
 	{
-		if (type instanceof SSetTypeCG)
+		if (type instanceof SSetTypeIR)
 		{
-			SSetTypeCG setType = (SSetTypeCG) type;
+			SSetTypeIR setType = (SSetTypeIR) type;
 
 			return setType.getSetOf();
-		} else if (type instanceof SSeqTypeCG)
+		} else if (type instanceof SSeqTypeIR)
 		{
-			SSeqTypeCG seqType = (SSeqTypeCG) type;
+			SSeqTypeIR seqType = (SSeqTypeIR) type;
 
 			return seqType.getSeqOf();
 		}
@@ -622,72 +622,72 @@ public class TypeAssistantCG extends AssistantBase
 		return type;
 	}
 	
-	public SSeqTypeCG getSeqType(AUnionTypeCG unionType)
+	public SSeqTypeIR getSeqType(AUnionTypeIR unionType)
 	{
-		AUnionTypeCG seqOf = new AUnionTypeCG();
+		AUnionTypeIR seqOf = new AUnionTypeIR();
 		seqOf.setTypes(findElementTypes(unionType, new CollectionTypeStrategy()
 		{
 			@Override
-			public boolean isCollectionType(STypeCG type)
+			public boolean isCollectionType(STypeIR type)
 			{
-				return type instanceof SSeqTypeCG;
+				return type instanceof SSeqTypeIR;
 			}
 			
 			@Override
-			public STypeCG getElementType(STypeCG type)
+			public STypeIR getElementType(STypeIR type)
 			{
-				return ((SSeqTypeCG) type).getSeqOf();
+				return ((SSeqTypeIR) type).getSeqOf();
 			}
 		}));
 		
-		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
+		ASeqSeqTypeIR seqType = new ASeqSeqTypeIR();
 		seqType.setEmpty(false);
 		seqType.setSeqOf(seqOf);
 		
 		return seqType;
 	}
 	
-	public SSetTypeCG getSetType(AUnionTypeCG unionType)
+	public SSetTypeIR getSetType(AUnionTypeIR unionType)
 	{
-		AUnionTypeCG setOf = new AUnionTypeCG();
+		AUnionTypeIR setOf = new AUnionTypeIR();
 		setOf.setTypes(findElementTypes(unionType, new CollectionTypeStrategy()
 		{
 			@Override
-			public boolean isCollectionType(STypeCG type)
+			public boolean isCollectionType(STypeIR type)
 			{
-				return type instanceof SSetTypeCG;
+				return type instanceof SSetTypeIR;
 			}
 			
 			@Override
-			public STypeCG getElementType(STypeCG type)
+			public STypeIR getElementType(STypeIR type)
 			{
-				return ((SSetTypeCG) type).getSetOf();
+				return ((SSetTypeIR) type).getSetOf();
 			}
 		}));
 		
-		ASetSetTypeCG setType = new ASetSetTypeCG();
+		ASetSetTypeIR setType = new ASetSetTypeIR();
 		setType.setEmpty(false);
 		setType.setSetOf(setOf);
 		
 		return setType;
 	}
 	
-	public boolean usesUnionType(SBinaryExpCG node)
+	public boolean usesUnionType(SBinaryExpIR node)
 	{
-		return node.getLeft().getType() instanceof AUnionTypeCG || node.getRight().getType() instanceof AUnionTypeCG;
+		return node.getLeft().getType() instanceof AUnionTypeIR || node.getRight().getType() instanceof AUnionTypeIR;
 	}
 	
-	public List<STypeCG> findElementTypes(AUnionTypeCG unionType, CollectionTypeStrategy strategy)
+	public List<STypeIR> findElementTypes(AUnionTypeIR unionType, CollectionTypeStrategy strategy)
 	{
-		List<STypeCG> elementTypes = new LinkedList<STypeCG>();
+		List<STypeIR> elementTypes = new LinkedList<STypeIR>();
 		
 		for (int i = 0; i < unionType.getTypes().size(); i++)
 		{
-			STypeCG type = unionType.getTypes().get(i);
+			STypeIR type = unionType.getTypes().get(i);
 
-			if (type instanceof AUnionTypeCG)
+			if (type instanceof AUnionTypeIR)
 			{
-				elementTypes.addAll(findElementTypes((AUnionTypeCG) type, strategy));
+				elementTypes.addAll(findElementTypes((AUnionTypeIR) type, strategy));
 			} else if (strategy.isCollectionType(type))
 			{
 				elementTypes.add(strategy.getElementType(type));
@@ -697,9 +697,9 @@ public class TypeAssistantCG extends AssistantBase
 		return elementTypes;
 	}
 	
-	public boolean containsType(List<STypeCG> types, STypeCG searchedType)
+	public boolean containsType(List<STypeIR> types, STypeIR searchedType)
 	{
-		for (STypeCG currentType : types)
+		for (STypeIR currentType : types)
 		{
 			if (typesEqual(currentType, searchedType))
 			{
@@ -710,44 +710,44 @@ public class TypeAssistantCG extends AssistantBase
 		return false;
 	}
 	
-	private boolean typesEqual(STypeCG left, STypeCG right)
+	private boolean typesEqual(STypeIR left, STypeIR right)
 	{
-		if (left instanceof AClassTypeCG
-				&& right instanceof AClassTypeCG)
+		if (left instanceof AClassTypeIR
+				&& right instanceof AClassTypeIR)
 		{
-			AClassTypeCG currentClassType = (AClassTypeCG) left;
-			AClassTypeCG searchedClassType = (AClassTypeCG) right;
+			AClassTypeIR currentClassType = (AClassTypeIR) left;
+			AClassTypeIR searchedClassType = (AClassTypeIR) right;
 
 			return currentClassType.getName().equals(searchedClassType.getName());
 		}
 
-		if (left instanceof ARecordTypeCG
-				&& right instanceof ARecordTypeCG)
+		if (left instanceof ARecordTypeIR
+				&& right instanceof ARecordTypeIR)
 		{
-			ARecordTypeCG recordType = (ARecordTypeCG) left;
-			ARecordTypeCG searchedRecordType = (ARecordTypeCG) right;
+			ARecordTypeIR recordType = (ARecordTypeIR) left;
+			ARecordTypeIR searchedRecordType = (ARecordTypeIR) right;
 
 			return recordType.getName().equals(searchedRecordType.getName());
 		}
 
-		if (left instanceof ATupleTypeCG
-				&& right instanceof ATupleTypeCG)
+		if (left instanceof ATupleTypeIR
+				&& right instanceof ATupleTypeIR)
 		{
-			ATupleTypeCG currentTupleType = (ATupleTypeCG) left;
-			ATupleTypeCG searchedTupleType = (ATupleTypeCG) right;
+			ATupleTypeIR currentTupleType = (ATupleTypeIR) left;
+			ATupleTypeIR searchedTupleType = (ATupleTypeIR) right;
 			
 			if(currentTupleType.getTypes().size() != searchedTupleType.getTypes().size())
 			{
 				return false;
 			}
 			
-			LinkedList<STypeCG> leftTypes = currentTupleType.getTypes();
-			LinkedList<STypeCG> rightTypes = searchedTupleType.getTypes();
+			LinkedList<STypeIR> leftTypes = currentTupleType.getTypes();
+			LinkedList<STypeIR> rightTypes = searchedTupleType.getTypes();
 			
 			for(int i = 0; i < leftTypes.size(); i++)
 			{
-				STypeCG currentLeftFieldType = leftTypes.get(i);
-				STypeCG currentRightFieldType = rightTypes.get(i);
+				STypeIR currentLeftFieldType = leftTypes.get(i);
+				STypeIR currentRightFieldType = rightTypes.get(i);
 				
 				if(!typesEqual(currentLeftFieldType, currentRightFieldType))
 				{
@@ -766,56 +766,56 @@ public class TypeAssistantCG extends AssistantBase
 		return false;
 	}
 	
-	public boolean isNumericType(STypeCG type)
+	public boolean isNumericType(STypeIR type)
 	{
 		return isInt(type) || isRealOrRat(type);
 	}
 
-	public boolean isRealOrRat(STypeCG type)
+	public boolean isRealOrRat(STypeIR type)
 	{
-		return type instanceof ARatNumericBasicTypeCG
-				|| type instanceof ARatBasicTypeWrappersTypeCG
-				|| type instanceof ARealNumericBasicTypeCG
-				|| type instanceof ARealBasicTypeWrappersTypeCG;
+		return type instanceof ARatNumericBasicTypeIR
+				|| type instanceof ARatBasicTypeWrappersTypeIR
+				|| type instanceof ARealNumericBasicTypeIR
+				|| type instanceof ARealBasicTypeWrappersTypeIR;
 	}
 
-	public boolean isInt(STypeCG type)
+	public boolean isInt(STypeIR type)
 	{
-		return type instanceof AIntNumericBasicTypeCG
-				|| type instanceof AIntBasicTypeWrappersTypeCG
-				|| type instanceof ANat1NumericBasicTypeCG
-				|| type instanceof ANat1BasicTypeWrappersTypeCG
-				|| type instanceof ANatNumericBasicTypeCG
-				|| type instanceof ANatBasicTypeWrappersTypeCG;
+		return type instanceof AIntNumericBasicTypeIR
+				|| type instanceof AIntBasicTypeWrappersTypeIR
+				|| type instanceof ANat1NumericBasicTypeIR
+				|| type instanceof ANat1BasicTypeWrappersTypeIR
+				|| type instanceof ANatNumericBasicTypeIR
+				|| type instanceof ANatBasicTypeWrappersTypeIR;
 	}
 	
-	public boolean isWrapperType(STypeCG type)
+	public boolean isWrapperType(STypeIR type)
 	{
-		return type instanceof ANatBasicTypeWrappersTypeCG
-				|| type instanceof ANat1BasicTypeWrappersTypeCG
-				|| type instanceof ARatBasicTypeWrappersTypeCG
-				|| type instanceof ARealBasicTypeWrappersTypeCG
-				|| type instanceof ACharBasicTypeWrappersTypeCG
-				|| type instanceof ABoolBasicTypeWrappersTypeCG;
+		return type instanceof ANatBasicTypeWrappersTypeIR
+				|| type instanceof ANat1BasicTypeWrappersTypeIR
+				|| type instanceof ARatBasicTypeWrappersTypeIR
+				|| type instanceof ARealBasicTypeWrappersTypeIR
+				|| type instanceof ACharBasicTypeWrappersTypeIR
+				|| type instanceof ABoolBasicTypeWrappersTypeIR;
 	}
 	
-	public boolean isOptional(STypeCG type)
+	public boolean isOptional(STypeIR type)
 	{
 		return BooleanUtils.isTrue(type.getOptional());
 	}
 	
-	public boolean allowsNull(STypeCG type)
+	public boolean allowsNull(STypeIR type)
 	{
-		if(type instanceof AUnionTypeCG)
+		if(type instanceof AUnionTypeIR)
 		{
-			AUnionTypeCG unionType = (AUnionTypeCG) type;
+			AUnionTypeIR unionType = (AUnionTypeIR) type;
 			
 			if(BooleanUtils.isTrue(unionType.getOptional()))
 			{
 				return true;
 			}
 			
-			for(STypeCG t : unionType.getTypes())
+			for(STypeIR t : unionType.getTypes())
 			{
 				if(allowsNull(t))
 				{
@@ -827,13 +827,13 @@ public class TypeAssistantCG extends AssistantBase
 		}
 		else
 		{
-			return /* type instanceof AObjectTypeCG || */type != null
-					&& (type instanceof AUnknownTypeCG || BooleanUtils.isTrue(type.getOptional()) || isWrapperType(type));
+			return /* type instanceof AObjectTypeIR || */type != null
+					&& (type instanceof AUnknownTypeIR || BooleanUtils.isTrue(type.getOptional()) || isWrapperType(type));
 		}
 		
 	}
 	
-	public PType getVdmType(STypeCG type)
+	public PType getVdmType(STypeIR type)
 	{
 		SourceNode source = type.getSourceNode();
 		if(source != null)

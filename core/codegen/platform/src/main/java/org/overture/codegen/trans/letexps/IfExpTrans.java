@@ -24,9 +24,9 @@ package org.overture.codegen.trans.letexps;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.expressions.ATernaryIfExpCG;
-import org.overture.codegen.ir.statements.AIfStmCG;
-import org.overture.codegen.ir.statements.AReturnStmCG;
+import org.overture.codegen.ir.expressions.ATernaryIfExpIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
 
 public class IfExpTrans extends DepthFirstAnalysisAdaptor
@@ -39,23 +39,23 @@ public class IfExpTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void inATernaryIfExpCG(ATernaryIfExpCG node)
+	public void inATernaryIfExpIR(ATernaryIfExpIR node)
 			throws AnalysisException
 	{
 		INode parent = node.parent();
 
-		if (parent instanceof AReturnStmCG)
+		if (parent instanceof AReturnStmIR)
 		{
-			AIfStmCG ifStm = new AIfStmCG();
+			AIfStmIR ifStm = new AIfStmIR();
 			ifStm.setSourceNode(node.getSourceNode());
 
 			ifStm.setIfExp(node.getCondition().clone());
 
-			AReturnStmCG thenStm = new AReturnStmCG();
+			AReturnStmIR thenStm = new AReturnStmIR();
 			thenStm.setExp(node.getTrueValue().clone());
 			ifStm.setThenStm(thenStm);
 
-			AReturnStmCG elseStm = new AReturnStmCG();
+			AReturnStmIR elseStm = new AReturnStmIR();
 			elseStm.setExp(node.getFalseValue().clone());
 			ifStm.setElseStm(elseStm);
 

@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.ir.PCG;
+import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 
 public class AnnotationSorter extends DepthFirstAnalysisAdaptor
 {
@@ -20,16 +20,16 @@ public class AnnotationSorter extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void defaultInPCG(PCG node) throws AnalysisException
+	public void defaultInPIR(PIR node) throws AnalysisException
 	{
 		if(!node.getMetaData().isEmpty())
 		{
 			Collections.sort(node.getMetaData(), comparator);
 		}
 		
-		if(node instanceof ADefaultClassDeclCG)
+		if(node instanceof ADefaultClassDeclIR)
 		{
-			ADefaultClassDeclCG clazz = (ADefaultClassDeclCG) node;
+			ADefaultClassDeclIR clazz = (ADefaultClassDeclIR) node;
 			
 			if(!clazz.getGlobalMetaData().isEmpty())
 			{

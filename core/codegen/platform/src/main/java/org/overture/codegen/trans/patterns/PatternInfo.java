@@ -21,34 +21,34 @@
  */
 package org.overture.codegen.trans.patterns;
 
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SPatternCG;
-import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.STypeIR;
 
 public class PatternInfo
 {
-	private STypeCG type;
-	private SPatternCG pattern;
-	private SExpCG actualValue;
+	private STypeIR type;
+	private SPatternIR pattern;
+	private SExpIR actualValue;
 
-	public PatternInfo(STypeCG type, SPatternCG pattern, SExpCG actualValue)
+	public PatternInfo(STypeIR type, SPatternIR pattern, SExpIR actualValue)
 	{
 		this.type = type;
 		this.pattern = pattern;
 		this.actualValue = actualValue;
 	}
 
-	public STypeCG getType()
+	public STypeIR getType()
 	{
 		return type;
 	}
 
-	public SPatternCG getPattern()
+	public SPatternIR getPattern()
 	{
 		return pattern;
 	}
 
-	public SExpCG getActualValue()
+	public SExpIR getActualValue()
 	{
 		return actualValue;
 	}

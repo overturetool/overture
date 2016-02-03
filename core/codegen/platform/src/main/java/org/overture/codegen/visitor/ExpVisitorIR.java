@@ -52,140 +52,140 @@ import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-import org.overture.codegen.ir.SBindCG;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SModifierCG;
-import org.overture.codegen.ir.SMultipleBindCG;
-import org.overture.codegen.ir.SPatternCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.ir.expressions.AAbsUnaryExpCG;
-import org.overture.codegen.ir.expressions.AAndBoolBinaryExpCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.ABoolLiteralExpCG;
-import org.overture.codegen.ir.expressions.ACardUnaryExpCG;
-import org.overture.codegen.ir.expressions.ACaseAltExpExpCG;
-import org.overture.codegen.ir.expressions.ACasesExpCG;
-import org.overture.codegen.ir.expressions.ACharLiteralExpCG;
-import org.overture.codegen.ir.expressions.ACompMapExpCG;
-import org.overture.codegen.ir.expressions.ACompSeqExpCG;
-import org.overture.codegen.ir.expressions.ACompSetExpCG;
-import org.overture.codegen.ir.expressions.ADistConcatUnaryExpCG;
-import org.overture.codegen.ir.expressions.ADistIntersectUnaryExpCG;
-import org.overture.codegen.ir.expressions.ADistMergeUnaryExpCG;
-import org.overture.codegen.ir.expressions.ADistUnionUnaryExpCG;
-import org.overture.codegen.ir.expressions.ADivideNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ADomainResByBinaryExpCG;
-import org.overture.codegen.ir.expressions.ADomainResToBinaryExpCG;
-import org.overture.codegen.ir.expressions.AElemsUnaryExpCG;
-import org.overture.codegen.ir.expressions.AEnumMapExpCG;
-import org.overture.codegen.ir.expressions.AEnumSeqExpCG;
-import org.overture.codegen.ir.expressions.AEnumSetExpCG;
-import org.overture.codegen.ir.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.AExists1QuantifierExpCG;
-import org.overture.codegen.ir.expressions.AExistsQuantifierExpCG;
-import org.overture.codegen.ir.expressions.AExplicitVarExpCG;
-import org.overture.codegen.ir.expressions.AFieldExpCG;
-import org.overture.codegen.ir.expressions.AFieldNumberExpCG;
-import org.overture.codegen.ir.expressions.AFloorUnaryExpCG;
-import org.overture.codegen.ir.expressions.AForAllQuantifierExpCG;
-import org.overture.codegen.ir.expressions.AGreaterEqualNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.AGreaterNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.AHeadUnaryExpCG;
-import org.overture.codegen.ir.expressions.AHistoryExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.expressions.AInSetBinaryExpCG;
-import org.overture.codegen.ir.expressions.AIndicesUnaryExpCG;
-import org.overture.codegen.ir.expressions.AInstanceofExpCG;
-import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.AIntLiteralExpCG;
-import org.overture.codegen.ir.expressions.ALambdaExpCG;
-import org.overture.codegen.ir.expressions.ALenUnaryExpCG;
-import org.overture.codegen.ir.expressions.ALessEqualNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ALessNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ALetBeStExpCG;
-import org.overture.codegen.ir.expressions.ALetDefExpCG;
-import org.overture.codegen.ir.expressions.AMapDomainUnaryExpCG;
-import org.overture.codegen.ir.expressions.AMapInverseUnaryExpCG;
-import org.overture.codegen.ir.expressions.AMapOverrideBinaryExpCG;
-import org.overture.codegen.ir.expressions.AMapRangeUnaryExpCG;
-import org.overture.codegen.ir.expressions.AMapUnionBinaryExpCG;
-import org.overture.codegen.ir.expressions.AMapletExpCG;
-import org.overture.codegen.ir.expressions.AMethodInstantiationExpCG;
-import org.overture.codegen.ir.expressions.AMinusUnaryExpCG;
-import org.overture.codegen.ir.expressions.AMkBasicExpCG;
-import org.overture.codegen.ir.expressions.AModNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ANewExpCG;
-import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpCG;
-import org.overture.codegen.ir.expressions.ANotImplementedExpCG;
-import org.overture.codegen.ir.expressions.ANotUnaryExpCG;
-import org.overture.codegen.ir.expressions.ANullExpCG;
-import org.overture.codegen.ir.expressions.AOrBoolBinaryExpCG;
-import org.overture.codegen.ir.expressions.APlusNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.APlusUnaryExpCG;
-import org.overture.codegen.ir.expressions.APowerNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.APowerSetUnaryExpCG;
-import org.overture.codegen.ir.expressions.AQuoteLiteralExpCG;
-import org.overture.codegen.ir.expressions.ARangeResByBinaryExpCG;
-import org.overture.codegen.ir.expressions.ARangeResToBinaryExpCG;
-import org.overture.codegen.ir.expressions.ARangeSetExpCG;
-import org.overture.codegen.ir.expressions.ARealLiteralExpCG;
-import org.overture.codegen.ir.expressions.ARecordModExpCG;
-import org.overture.codegen.ir.expressions.ARecordModifierCG;
-import org.overture.codegen.ir.expressions.ARemNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.AReverseUnaryExpCG;
-import org.overture.codegen.ir.expressions.ASelfExpCG;
-import org.overture.codegen.ir.expressions.ASeqConcatBinaryExpCG;
-import org.overture.codegen.ir.expressions.ASeqModificationBinaryExpCG;
-import org.overture.codegen.ir.expressions.ASetDifferenceBinaryExpCG;
-import org.overture.codegen.ir.expressions.ASetIntersectBinaryExpCG;
-import org.overture.codegen.ir.expressions.ASetProperSubsetBinaryExpCG;
-import org.overture.codegen.ir.expressions.ASetSubsetBinaryExpCG;
-import org.overture.codegen.ir.expressions.ASetUnionBinaryExpCG;
-import org.overture.codegen.ir.expressions.AStringLiteralExpCG;
-import org.overture.codegen.ir.expressions.ASubSeqExpCG;
-import org.overture.codegen.ir.expressions.ASubtractNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ASuperVarExpCG;
-import org.overture.codegen.ir.expressions.ATailUnaryExpCG;
-import org.overture.codegen.ir.expressions.ATernaryIfExpCG;
-import org.overture.codegen.ir.expressions.AThreadIdExpCG;
-import org.overture.codegen.ir.expressions.ATimeExpCG;
-import org.overture.codegen.ir.expressions.ATimesNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.ATupleExpCG;
-import org.overture.codegen.ir.expressions.AUndefinedExpCG;
-import org.overture.codegen.ir.expressions.AXorBoolBinaryExpCG;
-import org.overture.codegen.ir.expressions.SVarExpCG;
-import org.overture.codegen.ir.name.ATypeNameCG;
-import org.overture.codegen.ir.patterns.ASetBindCG;
-import org.overture.codegen.ir.types.ABoolBasicTypeCG;
-import org.overture.codegen.ir.types.ACharBasicTypeCG;
-import org.overture.codegen.ir.types.AClassTypeCG;
-import org.overture.codegen.ir.types.ARecordTypeCG;
-import org.overture.codegen.ir.types.ASeqSeqTypeCG;
-import org.overture.codegen.ir.types.AStringTypeCG;
-import org.overture.codegen.ir.utils.AHeaderLetBeStCG;
+import org.overture.codegen.ir.SBindIR;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SModifierIR;
+import org.overture.codegen.ir.SMultipleBindIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.expressions.AAbsUnaryExpIR;
+import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.ABoolLiteralExpIR;
+import org.overture.codegen.ir.expressions.ACardUnaryExpIR;
+import org.overture.codegen.ir.expressions.ACaseAltExpExpIR;
+import org.overture.codegen.ir.expressions.ACasesExpIR;
+import org.overture.codegen.ir.expressions.ACharLiteralExpIR;
+import org.overture.codegen.ir.expressions.ACompMapExpIR;
+import org.overture.codegen.ir.expressions.ACompSeqExpIR;
+import org.overture.codegen.ir.expressions.ACompSetExpIR;
+import org.overture.codegen.ir.expressions.ADistConcatUnaryExpIR;
+import org.overture.codegen.ir.expressions.ADistIntersectUnaryExpIR;
+import org.overture.codegen.ir.expressions.ADistMergeUnaryExpIR;
+import org.overture.codegen.ir.expressions.ADistUnionUnaryExpIR;
+import org.overture.codegen.ir.expressions.ADivideNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ADomainResByBinaryExpIR;
+import org.overture.codegen.ir.expressions.ADomainResToBinaryExpIR;
+import org.overture.codegen.ir.expressions.AElemsUnaryExpIR;
+import org.overture.codegen.ir.expressions.AEnumMapExpIR;
+import org.overture.codegen.ir.expressions.AEnumSeqExpIR;
+import org.overture.codegen.ir.expressions.AEnumSetExpIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AExists1QuantifierExpIR;
+import org.overture.codegen.ir.expressions.AExistsQuantifierExpIR;
+import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
+import org.overture.codegen.ir.expressions.AFloorUnaryExpIR;
+import org.overture.codegen.ir.expressions.AForAllQuantifierExpIR;
+import org.overture.codegen.ir.expressions.AGreaterEqualNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.AGreaterNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.AHeadUnaryExpIR;
+import org.overture.codegen.ir.expressions.AHistoryExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AInSetBinaryExpIR;
+import org.overture.codegen.ir.expressions.AIndicesUnaryExpIR;
+import org.overture.codegen.ir.expressions.AInstanceofExpIR;
+import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
+import org.overture.codegen.ir.expressions.ALambdaExpIR;
+import org.overture.codegen.ir.expressions.ALenUnaryExpIR;
+import org.overture.codegen.ir.expressions.ALessEqualNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ALessNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ALetBeStExpIR;
+import org.overture.codegen.ir.expressions.ALetDefExpIR;
+import org.overture.codegen.ir.expressions.AMapDomainUnaryExpIR;
+import org.overture.codegen.ir.expressions.AMapInverseUnaryExpIR;
+import org.overture.codegen.ir.expressions.AMapOverrideBinaryExpIR;
+import org.overture.codegen.ir.expressions.AMapRangeUnaryExpIR;
+import org.overture.codegen.ir.expressions.AMapUnionBinaryExpIR;
+import org.overture.codegen.ir.expressions.AMapletExpIR;
+import org.overture.codegen.ir.expressions.AMethodInstantiationExpIR;
+import org.overture.codegen.ir.expressions.AMinusUnaryExpIR;
+import org.overture.codegen.ir.expressions.AMkBasicExpIR;
+import org.overture.codegen.ir.expressions.AModNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
+import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.ANotImplementedExpIR;
+import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
+import org.overture.codegen.ir.expressions.ANullExpIR;
+import org.overture.codegen.ir.expressions.AOrBoolBinaryExpIR;
+import org.overture.codegen.ir.expressions.APlusNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.APlusUnaryExpIR;
+import org.overture.codegen.ir.expressions.APowerNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.APowerSetUnaryExpIR;
+import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
+import org.overture.codegen.ir.expressions.ARangeResByBinaryExpIR;
+import org.overture.codegen.ir.expressions.ARangeResToBinaryExpIR;
+import org.overture.codegen.ir.expressions.ARangeSetExpIR;
+import org.overture.codegen.ir.expressions.ARealLiteralExpIR;
+import org.overture.codegen.ir.expressions.ARecordModExpIR;
+import org.overture.codegen.ir.expressions.ARecordModifierIR;
+import org.overture.codegen.ir.expressions.ARemNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.AReverseUnaryExpIR;
+import org.overture.codegen.ir.expressions.ASelfExpIR;
+import org.overture.codegen.ir.expressions.ASeqConcatBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASeqModificationBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASetDifferenceBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASetIntersectBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASetProperSubsetBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASetSubsetBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASetUnionBinaryExpIR;
+import org.overture.codegen.ir.expressions.AStringLiteralExpIR;
+import org.overture.codegen.ir.expressions.ASubSeqExpIR;
+import org.overture.codegen.ir.expressions.ASubtractNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASuperVarExpIR;
+import org.overture.codegen.ir.expressions.ATailUnaryExpIR;
+import org.overture.codegen.ir.expressions.ATernaryIfExpIR;
+import org.overture.codegen.ir.expressions.AThreadIdExpIR;
+import org.overture.codegen.ir.expressions.ATimeExpIR;
+import org.overture.codegen.ir.expressions.ATimesNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ATupleExpIR;
+import org.overture.codegen.ir.expressions.AUndefinedExpIR;
+import org.overture.codegen.ir.expressions.AXorBoolBinaryExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
+import org.overture.codegen.ir.patterns.ASetBindIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.ASeqSeqTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
+import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.config.Settings;
 
-public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
+public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 {
 	@Override
-	public SExpCG caseAStateInitExp(AStateInitExp node, IRInfo question)
+	public SExpIR caseAStateInitExp(AStateInitExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return node.getState().getInitExpression().apply(question.getExpVisitor(), question);
 	}
 	
 	@Override
-	public SExpCG caseAUndefinedExp(AUndefinedExp node, IRInfo question)
+	public SExpIR caseAUndefinedExp(AUndefinedExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return new AUndefinedExpCG();
+		return new AUndefinedExpIR();
 	}
 	
 	@Override
-	public SExpCG caseAPreOpExp(APreOpExp node, IRInfo question)
+	public SExpIR caseAPreOpExp(APreOpExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PExp exp = node.getExpression();
@@ -194,7 +194,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 	
 	@Override
-	public SExpCG caseAPostOpExp(APostOpExp node, IRInfo question)
+	public SExpIR caseAPostOpExp(APostOpExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PExp exp = node.getPostexpression();
@@ -203,54 +203,54 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 	
 	@Override
-	public SExpCG caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
+	public SExpIR caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return new ANotImplementedExpCG();
+		return new ANotImplementedExpIR();
 	}
 	
 	@Override
-	public SExpCG caseATimeExp(ATimeExp node, IRInfo question)
+	public SExpIR caseATimeExp(ATimeExp node, IRInfo question)
 			throws AnalysisException
 	{
-		STypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = node.getType().apply(question.getTypeVisitor(), question);
 		
-		ATimeExpCG timeExp = new ATimeExpCG();
+		ATimeExpIR timeExp = new ATimeExpIR();
 		timeExp.setType(typeCg);
 		
 		return timeExp;
 	}
 	
 	@Override
-	public SExpCG caseAThreadIdExp(AThreadIdExp node, IRInfo question)
+	public SExpIR caseAThreadIdExp(AThreadIdExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
-		STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeIR = type.apply(question.getTypeVisitor(), question);
 
-		AThreadIdExpCG threadId = new AThreadIdExpCG();
-		threadId.setType(typeCG);
+		AThreadIdExpIR threadId = new AThreadIdExpIR();
+		threadId.setType(typeIR);
 
 		return threadId;
 
 	}
 
 	@Override
-	public SExpCG caseANilExp(ANilExp node, IRInfo question)
+	public SExpIR caseANilExp(ANilExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 
-		ANullExpCG nullExpCg = new ANullExpCG();
+		ANullExpIR nullExpCg = new ANullExpIR();
 		nullExpCg.setType(typeCg);
 
 		return nullExpCg;
 	}
 
 	@Override
-	public SExpCG caseAMkBasicExp(AMkBasicExp node, IRInfo question)
+	public SExpIR caseAMkBasicExp(AMkBasicExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -264,10 +264,10 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		PExp arg = node.getArg();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG argCg = arg.apply(question.getExpVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR argCg = arg.apply(question.getExpVisitor(), question);
 
-		AMkBasicExpCG mkBasicExp = new AMkBasicExpCG();
+		AMkBasicExpIR mkBasicExp = new AMkBasicExpIR();
 		mkBasicExp.setType(typeCg);
 		mkBasicExp.setArg(argCg);
 
@@ -275,7 +275,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 	
 	@Override
-	public SExpCG caseAIsExp(AIsExp node, IRInfo question)
+	public SExpIR caseAIsExp(AIsExp node, IRInfo question)
 			throws AnalysisException
 	{
 		//TODO: Optional types and collection types are not yet supported.
@@ -290,21 +290,21 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		}
 		
 		PExp exp = node.getTest();
-		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
 		
 		if(expCg == null)
 		{
 			return null;
 		}
 		
-		STypeCG checkedTypeCg = checkedType.apply(question.getTypeVisitor(), question);
+		STypeIR checkedTypeCg = checkedType.apply(question.getTypeVisitor(), question);
 		
 		if(checkedTypeCg == null)
 		{
 			return null;
 		}
 
-		SExpCG isExp = question.getExpAssistant().consIsExp(expCg, checkedTypeCg);
+		SExpIR isExp = question.getExpAssistant().consIsExp(expCg, checkedTypeCg);
 		
 		if (isExp == null)
 		{
@@ -316,29 +316,29 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAIsOfClassExp(AIsOfClassExp node, IRInfo question)
+	public SExpIR caseAIsOfClassExp(AIsOfClassExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		AClassType classType = node.getClassType();
 		PExp objRef = node.getExp();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		STypeCG classTypeCg = classType.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR classTypeCg = classType.apply(question.getTypeVisitor(), question);
 
-		if (!(classTypeCg instanceof AClassTypeCG))
+		if (!(classTypeCg instanceof AClassTypeIR))
 		{
 			Logger.getLog().printErrorln("Unexpected class type encountered for "
 					+ AIsOfClassExp.class.getName()
 					+ ". Expected class type: "
-					+ AClassTypeCG.class.getName()
+					+ AClassTypeIR.class.getName()
 					+ ". Got: "
 					+ typeCg.getClass().getName() + " at " +  node.getLocation());
 		}
 
-		SExpCG objRefCg = objRef.apply(question.getExpVisitor(), question);
+		SExpIR objRefCg = objRef.apply(question.getExpVisitor(), question);
 
-		AInstanceofExpCG instanceOfExp = new AInstanceofExpCG();
+		AInstanceofExpIR instanceOfExp = new AInstanceofExpIR();
 		instanceOfExp.setType(typeCg);
 		instanceOfExp.setCheckedType(classTypeCg);
 		instanceOfExp.setExp(objRefCg);
@@ -347,84 +347,84 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseACardinalityUnaryExp(ACardinalityUnaryExp node,
+	public SExpIR caseACardinalityUnaryExp(ACardinalityUnaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ACardUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ACardUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAInSetBinaryExp(AInSetBinaryExp node, IRInfo question)
+	public SExpIR caseAInSetBinaryExp(AInSetBinaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new AInSetBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new AInSetBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseANotInSetBinaryExp(ANotInSetBinaryExp node,
+	public SExpIR caseANotInSetBinaryExp(ANotInSetBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().negate(question.getExpAssistant().handleBinaryExp(node, new AInSetBinaryExpCG(), question));
+		return question.getExpAssistant().negate(question.getExpAssistant().handleBinaryExp(node, new AInSetBinaryExpIR(), question));
 	}
 
 	@Override
-	public SExpCG caseASetUnionBinaryExp(ASetUnionBinaryExp node,
+	public SExpIR caseASetUnionBinaryExp(ASetUnionBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ASetUnionBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ASetUnionBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseASetIntersectBinaryExp(ASetIntersectBinaryExp node,
+	public SExpIR caseASetIntersectBinaryExp(ASetIntersectBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ASetIntersectBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ASetIntersectBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseASetDifferenceBinaryExp(ASetDifferenceBinaryExp node,
+	public SExpIR caseASetDifferenceBinaryExp(ASetDifferenceBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ASetDifferenceBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ASetDifferenceBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseASubsetBinaryExp(ASubsetBinaryExp node, IRInfo question)
+	public SExpIR caseASubsetBinaryExp(ASubsetBinaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ASetSubsetBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ASetSubsetBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAProperSubsetBinaryExp(AProperSubsetBinaryExp node,
+	public SExpIR caseAProperSubsetBinaryExp(AProperSubsetBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ASetProperSubsetBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ASetProperSubsetBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseADistUnionUnaryExp(ADistUnionUnaryExp node,
+	public SExpIR caseADistUnionUnaryExp(ADistUnionUnaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ADistUnionUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ADistUnionUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseADistIntersectUnaryExp(ADistIntersectUnaryExp node,
+	public SExpIR caseADistIntersectUnaryExp(ADistIntersectUnaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ADistIntersectUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ADistIntersectUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAPowerSetUnaryExp(APowerSetUnaryExp node, IRInfo question)
+	public SExpIR caseAPowerSetUnaryExp(APowerSetUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new APowerSetUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new APowerSetUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseASetEnumSetExp(ASetEnumSetExp node, IRInfo question)
+	public SExpIR caseASetEnumSetExp(ASetEnumSetExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -437,15 +437,15 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		LinkedList<PExp> members = node.getMembers();
 
-		AEnumSetExpCG enumSet = new AEnumSetExpCG();
+		AEnumSetExpIR enumSet = new AEnumSetExpIR();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		enumSet.setType(typeCg);
-		LinkedList<SExpCG> membersCg = enumSet.getMembers();
+		LinkedList<SExpIR> membersCg = enumSet.getMembers();
 
 		for (PExp member : members)
 		{
-			SExpCG memberCg = member.apply(question.getExpVisitor(), question);
+			SExpIR memberCg = member.apply(question.getExpVisitor(), question);
 			if (memberCg != null)
 			{
 				membersCg.add(memberCg);
@@ -459,37 +459,37 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAForAllExp(AForAllExp node, IRInfo question)
+	public SExpIR caseAForAllExp(AForAllExp node, IRInfo question)
 			throws AnalysisException
 	{
 		// The inheritance hierarchy of the VDM AST tree is structured such that the bindings and the predicate
 		// must also be passed to the method that handles the forall and the exists quantifiers
-		return question.getExpAssistant().handleQuantifier(node, node.getBindList(), node.getPredicate(), new AForAllQuantifierExpCG(), question, "forall expression");
+		return question.getExpAssistant().handleQuantifier(node, node.getBindList(), node.getPredicate(), new AForAllQuantifierExpIR(), question, "forall expression");
 	}
 
 	@Override
-	public SExpCG caseAExistsExp(AExistsExp node, IRInfo question)
+	public SExpIR caseAExistsExp(AExistsExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleQuantifier(node, node.getBindList(), node.getPredicate(), new AExistsQuantifierExpCG(), question, "exists expression");
+		return question.getExpAssistant().handleQuantifier(node, node.getBindList(), node.getPredicate(), new AExistsQuantifierExpIR(), question, "exists expression");
 	}
 
 	@Override
-	public SExpCG caseAExists1Exp(AExists1Exp node, IRInfo question)
+	public SExpIR caseAExists1Exp(AExists1Exp node, IRInfo question)
 			throws AnalysisException
 	{
 		PBind bind = node.getBind();
-		SBindCG bindCg = bind.apply(question.getBindVisitor(), question);
+		SBindIR bindCg = bind.apply(question.getBindVisitor(), question);
 
 		PType type = node.getType();
 		PExp predicate = node.getPredicate();
 
-		SMultipleBindCG multipleBind = question.getBindAssistant().convertToMultipleBind(bindCg);
+		SMultipleBindIR multipleBind = question.getBindAssistant().convertToMultipleBind(bindCg);
 		
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR predicateCg = predicate.apply(question.getExpVisitor(), question);
 
-		AExists1QuantifierExpCG exists1Exp = new AExists1QuantifierExpCG();
+		AExists1QuantifierExpIR exists1Exp = new AExists1QuantifierExpIR();
 		exists1Exp.getBindList().add(multipleBind);
 		exists1Exp.setType(typeCg);
 		exists1Exp.setPredicate(predicateCg);
@@ -498,15 +498,15 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseASetCompSetExp(ASetCompSetExp node, IRInfo question)
+	public SExpIR caseASetCompSetExp(ASetCompSetExp node, IRInfo question)
 			throws AnalysisException
 	{
 		LinkedList<PMultipleBind> bindings = node.getBindings();
 
-		List<SMultipleBindCG> bindingsCg = new LinkedList<SMultipleBindCG>();
+		List<SMultipleBindIR> bindingsCg = new LinkedList<SMultipleBindIR>();
 		for (PMultipleBind multipleBind : bindings)
 		{
-			SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
+			SMultipleBindIR multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
 			bindingsCg.add(multipleBindCg);
 		}
 
@@ -514,12 +514,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		PExp first = node.getFirst();
 		PExp predicate = node.getPredicate();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG firstCg = first.apply(question.getExpVisitor(), question);
-		SExpCG predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question)
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR firstCg = first.apply(question.getExpVisitor(), question);
+		SExpIR predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question)
 				: null;
 
-		ACompSetExpCG setComp = new ACompSetExpCG();
+		ACompSetExpIR setComp = new ACompSetExpIR();
 		setComp.setBindings(bindingsCg);
 		setComp.setType(typeCg);
 		setComp.setFirst(firstCg);
@@ -529,18 +529,18 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseASetRangeSetExp(ASetRangeSetExp node, IRInfo question)
+	public SExpIR caseASetRangeSetExp(ASetRangeSetExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		PExp firstExp = node.getFirst();
 		PExp lastExp = node.getLast();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG firstExpCg = firstExp.apply(question.getExpVisitor(), question);
-		SExpCG lastExpCg = lastExp.apply(question.getExpVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR firstExpCg = firstExp.apply(question.getExpVisitor(), question);
+		SExpIR lastExpCg = lastExp.apply(question.getExpVisitor(), question);
 
-		ARangeSetExpCG setRange = new ARangeSetExpCG();
+		ARangeSetExpIR setRange = new ARangeSetExpIR();
 
 		setRange.setType(typeCg);
 		setRange.setFirst(firstExpCg);
@@ -550,7 +550,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseACasesExp(ACasesExp node, IRInfo question)
+	public SExpIR caseACasesExp(ACasesExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -558,12 +558,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		PExp others = node.getOthers();
 		LinkedList<ACaseAlternative> cases = node.getCases();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
-		SExpCG othersCg = others != null ? others.apply(question.getExpVisitor(), question)
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
+		SExpIR othersCg = others != null ? others.apply(question.getExpVisitor(), question)
 				: null;
 
-		ACasesExpCG casesExpCg = new ACasesExpCG();
+		ACasesExpIR casesExpCg = new ACasesExpIR();
 		casesExpCg.setType(typeCg);
 		casesExpCg.setExp(expCg);
 		casesExpCg.setOthers(othersCg);
@@ -574,16 +574,16 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseACaseAlternative(ACaseAlternative node, IRInfo question)
+	public SExpIR caseACaseAlternative(ACaseAlternative node, IRInfo question)
 			throws AnalysisException
 	{
 		PPattern pattern = node.getPattern();
 		PExp result = node.getResult();
 
-		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
-		SExpCG resultCg = result.apply(question.getExpVisitor(), question);
+		SPatternIR patternCg = pattern.apply(question.getPatternVisitor(), question);
+		SExpIR resultCg = result.apply(question.getExpVisitor(), question);
 
-		ACaseAltExpExpCG altCg = new ACaseAltExpExpCG();
+		ACaseAltExpExpIR altCg = new ACaseAltExpExpIR();
 
 		altCg.setPattern(patternCg);
 		altCg.setResult(resultCg);
@@ -592,14 +592,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAIfExp(AIfExp node, IRInfo question)
+	public SExpIR caseAIfExp(AIfExp node, IRInfo question)
 			throws AnalysisException
 	{
-		SExpCG testExp = node.getTest().apply(question.getExpVisitor(), question);
-		SExpCG thenExp = node.getThen().apply(question.getExpVisitor(), question);
-		STypeCG expectedType = node.getType().apply(question.getTypeVisitor(), question);
+		SExpIR testExp = node.getTest().apply(question.getExpVisitor(), question);
+		SExpIR thenExp = node.getThen().apply(question.getExpVisitor(), question);
+		STypeIR expectedType = node.getType().apply(question.getTypeVisitor(), question);
 
-		ATernaryIfExpCG ternaryIf = new ATernaryIfExpCG();
+		ATernaryIfExpIR ternaryIf = new ATernaryIfExpIR();
 
 		ternaryIf.setCondition(testExp);
 		ternaryIf.setTrueValue(thenExp);
@@ -607,11 +607,11 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		LinkedList<AElseIfExp> elseExpList = node.getElseList();
 
-		ATernaryIfExpCG nextTernaryIf = ternaryIf;
+		ATernaryIfExpIR nextTernaryIf = ternaryIf;
 
 		for (AElseIfExp currentElseExp : elseExpList)
 		{
-			ATernaryIfExpCG tmp = new ATernaryIfExpCG();
+			ATernaryIfExpIR tmp = new ATernaryIfExpIR();
 
 			testExp = currentElseExp.getElseIf().apply(question.getExpVisitor(), question);
 			thenExp = currentElseExp.getThen().apply(question.getExpVisitor(), question);
@@ -626,7 +626,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		}
 
-		SExpCG elseExp = node.getElse().apply(question.getExpVisitor(), question);
+		SExpIR elseExp = node.getElse().apply(question.getExpVisitor(), question);
 		nextTernaryIf.setFalseValue(elseExp);
 
 		if (node.parent() instanceof SBinaryExp)
@@ -638,20 +638,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseATupleExp(ATupleExp node, IRInfo question)
+	public SExpIR caseATupleExp(ATupleExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		LinkedList<PExp> args = node.getArgs();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 
-		ATupleExpCG tupleExp = new ATupleExpCG();
+		ATupleExpIR tupleExp = new ATupleExpIR();
 		tupleExp.setType(typeCg);
 
 		for (PExp exp : args)
 		{
-			SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+			SExpIR expCg = exp.apply(question.getExpVisitor(), question);
 			
 			if (expCg != null)
 			{
@@ -667,16 +667,16 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAFieldNumberExp(AFieldNumberExp node, IRInfo question)
+	public SExpIR caseAFieldNumberExp(AFieldNumberExp node, IRInfo question)
 			throws AnalysisException
 	{
 		long fieldCg = node.getField().getValue();
 		PType type = node.getType();
 		PExp tuple = node.getTuple();
 
-		AFieldNumberExpCG fieldNoExp = new AFieldNumberExpCG();
-		SExpCG tupleCg = tuple.apply(question.getExpVisitor(), question);
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		AFieldNumberExpIR fieldNoExp = new AFieldNumberExpIR();
+		SExpIR tupleCg = tuple.apply(question.getExpVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 
 		fieldNoExp.setField(fieldCg);
 		fieldNoExp.setType(typeCg);
@@ -686,21 +686,21 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAFuncInstatiationExp(AFuncInstatiationExp node,
+	public SExpIR caseAFuncInstatiationExp(AFuncInstatiationExp node,
 			IRInfo question) throws AnalysisException
 	{
 		PType type = node.getType();
 		PExp func = node.getFunction();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG funcCg = func.apply(question.getExpVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR funcCg = func.apply(question.getExpVisitor(), question);
 
-		AMethodInstantiationExpCG methodInst = new AMethodInstantiationExpCG();
+		AMethodInstantiationExpIR methodInst = new AMethodInstantiationExpIR();
 
 		LinkedList<PType> actualTypes = node.getActualTypes();
 		for (PType actualType : actualTypes)
 		{
-			STypeCG actualTypeCg = actualType.apply(question.getTypeVisitor(), question);
+			STypeIR actualTypeCg = actualType.apply(question.getTypeVisitor(), question);
 			
 			if (actualTypeCg != null)
 			{
@@ -718,24 +718,24 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseALetBeStExp(ALetBeStExp node, IRInfo question)
+	public SExpIR caseALetBeStExp(ALetBeStExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PMultipleBind multipleBind = node.getBind();
-		SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
+		SMultipleBindIR multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
 
 		PType type = node.getType();
 		PExp suchThat = node.getSuchThat();
 		PExp value = node.getValue();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question)
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question)
 				: null;
-		SExpCG valueCg = value.apply(question.getExpVisitor(), question);
+		SExpIR valueCg = value.apply(question.getExpVisitor(), question);
 
-		ALetBeStExpCG letBeStExp = new ALetBeStExpCG();
+		ALetBeStExpIR letBeStExp = new ALetBeStExpIR();
 
-		AHeaderLetBeStCG header = question.getExpAssistant().consHeader(multipleBindCg, suchThatCg);
+		AHeaderLetBeStIR header = question.getExpAssistant().consHeader(multipleBindCg, suchThatCg);
 
 		letBeStExp.setType(typeCg);
 		letBeStExp.setHeader(header);
@@ -745,27 +745,27 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseALetDefExp(ALetDefExp node, IRInfo question)
+	public SExpIR caseALetDefExp(ALetDefExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		PExp exp = node.getExpression();
 
-		ALetDefExpCG letDefExp = new ALetDefExpCG();
+		ALetDefExpIR letDefExp = new ALetDefExpIR();
 
 		question.getDeclAssistant().setFinalLocalDefs(node.getLocalDefs(), letDefExp.getLocalDefs(), question);
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		letDefExp.setType(typeCg);
 
-		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
 		letDefExp.setExp(expCg);
 
 		return letDefExp;
 	}
 	
 	@Override
-	public SExpCG caseAMuExp(AMuExp node, IRInfo question)
+	public SExpIR caseAMuExp(AMuExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -773,26 +773,26 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		PExp rec = node.getRecord();
 		List<ARecordModifier> modifiers = node.getModifiers();
 		
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		STypeCG recTypeCg = recType.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR recTypeCg = recType.apply(question.getTypeVisitor(), question);
 		
-		if(!(recTypeCg instanceof ARecordTypeCG))
+		if(!(recTypeCg instanceof ARecordTypeIR))
 		{
 			question.addUnsupportedNode(node, "Expected a record type. Got: " + recTypeCg);
 			return null;
 		}
 		
-		SExpCG recCg = rec.apply(question.getExpVisitor(), question);
+		SExpIR recCg = rec.apply(question.getExpVisitor(), question);
 		
-		List<ARecordModifierCG> modifiersCg = new LinkedList<ARecordModifierCG>();
+		List<ARecordModifierIR> modifiersCg = new LinkedList<ARecordModifierIR>();
 		
 		for(ARecordModifier m : modifiers)
 		{
-			SModifierCG modifier = m.apply(question.getModifierVisitor(), question);
+			SModifierIR modifier = m.apply(question.getModifierVisitor(), question);
 			
-			if(modifier instanceof ARecordModifierCG)
+			if(modifier instanceof ARecordModifierIR)
 			{
-				modifiersCg.add((ARecordModifierCG) modifier);
+				modifiersCg.add((ARecordModifierIR) modifier);
 			} else
 			{
 				question.addUnsupportedNode(node, "Expected modifier to be a record modifier for the 'mu' expression. Got: " + modifier);
@@ -801,9 +801,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			
 		}
 		
-		ARecordModExpCG recModExp = new ARecordModExpCG();
+		ARecordModExpIR recModExp = new ARecordModExpIR();
 		recModExp.setType(typeCg);
-		recModExp.setRecType((ARecordTypeCG) recTypeCg);
+		recModExp.setRecType((ARecordTypeIR) recTypeCg);
 		recModExp.setRec(recCg);
 		recModExp.setModifiers(modifiersCg);
 		
@@ -811,7 +811,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAMkTypeExp(AMkTypeExp node, IRInfo question)
+	public SExpIR caseAMkTypeExp(AMkTypeExp node, IRInfo question)
 			throws AnalysisException
 	{
 		ARecordInvariantType recType = node.getRecordType();
@@ -822,28 +822,28 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			return null;
 		}
 
-		STypeCG typeCg = recType.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = recType.apply(question.getTypeVisitor(), question);
 
-		if (!(typeCg instanceof ARecordTypeCG))
+		if (!(typeCg instanceof ARecordTypeIR))
 		{
 			question.addUnsupportedNode(node, "Expected record type but got: "
 					+ typeCg.getClass().getName() + " in 'mk_' expression");
 			return null;
 		}
 
-		ARecordTypeCG recordTypeCg = (ARecordTypeCG) typeCg;
+		ARecordTypeIR recordTypeCg = (ARecordTypeIR) typeCg;
 
 		LinkedList<PExp> nodeArgs = node.getArgs();
 
-		ANewExpCG newExp = new ANewExpCG();
+		ANewExpIR newExp = new ANewExpIR();
 		newExp.setType(recordTypeCg);
 		newExp.setName(recordTypeCg.getName().clone());
 
-		LinkedList<SExpCG> newExpArgs = newExp.getArgs();
+		LinkedList<SExpIR> newExpArgs = newExp.getArgs();
 
 		for (PExp arg : nodeArgs)
 		{
-			SExpCG argCg = arg.apply(question.getExpVisitor(), question);
+			SExpIR argCg = arg.apply(question.getExpVisitor(), question);
 			
 			if (argCg != null)
 			{
@@ -860,21 +860,21 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	
 
 	@Override
-	public SExpCG caseASelfExp(ASelfExp node, IRInfo question)
+	public SExpIR caseASelfExp(ASelfExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		
-		ASelfExpCG selfExpCg = new ASelfExpCG();
+		ASelfExpIR selfExpCg = new ASelfExpIR();
 		selfExpCg.setType(typeCg);
 		
 		return selfExpCg;
 	}
 
 	@Override
-	public SExpCG caseASubseqExp(ASubseqExp node, IRInfo question)
+	public SExpIR caseASubseqExp(ASubseqExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -882,12 +882,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		PExp to = node.getTo();
 		PExp seq = node.getSeq();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG fromCg = from.apply(question.getExpVisitor(), question);
-		SExpCG toCg = to.apply(question.getExpVisitor(), question);
-		SExpCG seqCg = seq.apply(question.getExpVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR fromCg = from.apply(question.getExpVisitor(), question);
+		SExpIR toCg = to.apply(question.getExpVisitor(), question);
+		SExpIR seqCg = seq.apply(question.getExpVisitor(), question);
 
-		ASubSeqExpCG subSeq = new ASubSeqExpCG();
+		ASubSeqExpIR subSeq = new ASubSeqExpIR();
 		subSeq.setType(typeCg);
 		subSeq.setFrom(fromCg);
 		subSeq.setTo(toCg);
@@ -897,7 +897,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAReverseUnaryExp(AReverseUnaryExp node, IRInfo question)
+	public SExpIR caseAReverseUnaryExp(AReverseUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PExp exp = node.getExp();
@@ -912,10 +912,10 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		SSeqType seqType = (SSeqType) type;
 
-		STypeCG seqTypeCg = seqType.apply(question.getTypeVisitor(), question);
-		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		STypeIR seqTypeCg = seqType.apply(question.getTypeVisitor(), question);
+		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
 
-		AReverseUnaryExpCG reverse = new AReverseUnaryExpCG();
+		AReverseUnaryExpIR reverse = new AReverseUnaryExpIR();
 		reverse.setExp(expCg);
 		reverse.setType(seqTypeCg);
 
@@ -923,14 +923,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseADistConcatUnaryExp(ADistConcatUnaryExp node,
+	public SExpIR caseADistConcatUnaryExp(ADistConcatUnaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ADistConcatUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ADistConcatUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseASeqCompSeqExp(ASeqCompSeqExp node, IRInfo question)
+	public SExpIR caseASeqCompSeqExp(ASeqCompSeqExp node, IRInfo question)
 			throws AnalysisException
 	{
 		ASetBind setBind = node.getSetBind();
@@ -939,23 +939,23 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		PExp set = node.getSetBind().getSet();
 		PExp predicate = node.getPredicate();
 
-		SBindCG bindTempCg = setBind.apply(question.getBindVisitor(), question);
+		SBindIR bindTempCg = setBind.apply(question.getBindVisitor(), question);
 
-		if (!(bindTempCg instanceof ASetBindCG))
+		if (!(bindTempCg instanceof ASetBindIR))
 		{
 			question.addUnsupportedNode(node, "Expected set bind for sequence comprehension. Got: "
 					+ bindTempCg);
 			return null;
 		}
 
-		ASetBindCG setBindCg = (ASetBindCG) bindTempCg;
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG firstCg = first.apply(question.getExpVisitor(), question);
-		SExpCG setCg = set.apply(question.getExpVisitor(), question);
-		SExpCG predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question)
+		ASetBindIR setBindCg = (ASetBindIR) bindTempCg;
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR firstCg = first.apply(question.getExpVisitor(), question);
+		SExpIR setCg = set.apply(question.getExpVisitor(), question);
+		SExpIR predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question)
 				: null;
 
-		ACompSeqExpCG seqComp = new ACompSeqExpCG();
+		ACompSeqExpIR seqComp = new ACompSeqExpIR();
 		seqComp.setSetBind(setBindCg);
 		seqComp.setType(typeCg);
 		seqComp.setFirst(firstCg);
@@ -966,22 +966,22 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseASeqConcatBinaryExp(ASeqConcatBinaryExp node,
+	public SExpIR caseASeqConcatBinaryExp(ASeqConcatBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ASeqConcatBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ASeqConcatBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
+	public SExpIR caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
 		if (node.getType() instanceof SSeqType)
 		{
-			return question.getExpAssistant().handleBinaryExp(node, new ASeqModificationBinaryExpCG(), question);
+			return question.getExpAssistant().handleBinaryExp(node, new ASeqModificationBinaryExpIR(), question);
 		} else if (node.getType() instanceof SMapType)
 		{
-			return question.getExpAssistant().handleBinaryExp(node, new AMapOverrideBinaryExpCG(), question);
+			return question.getExpAssistant().handleBinaryExp(node, new AMapOverrideBinaryExpIR(), question);
 		}
 
 		question.addUnsupportedNode(node, "Expected sequence or map type for '++' binary expression but got: "
@@ -991,22 +991,22 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAMapEnumMapExp(AMapEnumMapExp node, IRInfo question)
+	public SExpIR caseAMapEnumMapExp(AMapEnumMapExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 
-		AEnumMapExpCG enumMap = new AEnumMapExpCG();
+		AEnumMapExpIR enumMap = new AEnumMapExpIR();
 		enumMap.setType(typeCg);
 
 		LinkedList<AMapletExp> members = node.getMembers();
 		for (PExp member : members)
 		{
-			SExpCG memberCg = member.apply(question.getExpVisitor(), question);
+			SExpIR memberCg = member.apply(question.getExpVisitor(), question);
 
-			if (!(memberCg instanceof AMapletExpCG))
+			if (!(memberCg instanceof AMapletExpIR))
 			{
 				question.addUnsupportedNode(node,
 						"Got expected map enumeration member: " + memberCg);
@@ -1014,7 +1014,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			}
 			else
 			{
-				enumMap.getMembers().add((AMapletExpCG) memberCg);
+				enumMap.getMembers().add((AMapletExpIR) memberCg);
 			}
 		}
 
@@ -1022,7 +1022,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAMapletExp(AMapletExp node, IRInfo question)
+	public SExpIR caseAMapletExp(AMapletExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -1030,12 +1030,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		PExp left = node.getLeft();
 		PExp right = node.getRight();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 
-		SExpCG leftCg = left.apply(question.getExpVisitor(), question);
-		SExpCG rightCg = right.apply(question.getExpVisitor(), question);
+		SExpIR leftCg = left.apply(question.getExpVisitor(), question);
+		SExpIR rightCg = right.apply(question.getExpVisitor(), question);
 
-		AMapletExpCG maplet = new AMapletExpCG();
+		AMapletExpIR maplet = new AMapletExpIR();
 		maplet.setType(typeCg);
 		maplet.setLeft(leftCg);
 		maplet.setRight(rightCg);
@@ -1044,7 +1044,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAMapCompMapExp(AMapCompMapExp node, IRInfo question)
+	public SExpIR caseAMapCompMapExp(AMapCompMapExp node, IRInfo question)
 			throws AnalysisException
 	{
 		LinkedList<PMultipleBind> bindings = node.getBindings();
@@ -1052,10 +1052,10 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		AMapletExp first = node.getFirst();
 		PExp predicate = node.getPredicate();
 
-		List<SMultipleBindCG> bindingsCg = new LinkedList<SMultipleBindCG>();
+		List<SMultipleBindIR> bindingsCg = new LinkedList<SMultipleBindIR>();
 		for (PMultipleBind multipleBind : bindings)
 		{
-			SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
+			SMultipleBindIR multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
 
 			if(multipleBindCg != null)
 			{
@@ -1063,21 +1063,21 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			}
 		}
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG firstCg = first.apply(question.getExpVisitor(), question);
-		SExpCG predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question)
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR firstCg = first.apply(question.getExpVisitor(), question);
+		SExpIR predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question)
 				: null;
 
-		if (!(firstCg instanceof AMapletExpCG))
+		if (!(firstCg instanceof AMapletExpIR))
 		{
 			question.addUnsupportedNode(node, "Generation of map comprehension expected a maplet expression. Got: "
 					+ firstCg);
 			return null;
 		}
 
-		AMapletExpCG mapletExpCg = (AMapletExpCG) firstCg;
+		AMapletExpIR mapletExpCg = (AMapletExpIR) firstCg;
 
-		ACompMapExpCG mapComp = new ACompMapExpCG();
+		ACompMapExpIR mapComp = new ACompMapExpIR();
 
 		mapComp.setBindings(bindingsCg);
 		mapComp.setType(typeCg);
@@ -1088,73 +1088,73 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAMapDomainUnaryExp(AMapDomainUnaryExp node,
+	public SExpIR caseAMapDomainUnaryExp(AMapDomainUnaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new AMapDomainUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new AMapDomainUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAMapRangeUnaryExp(AMapRangeUnaryExp node, IRInfo question)
+	public SExpIR caseAMapRangeUnaryExp(AMapRangeUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new AMapRangeUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new AMapRangeUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAMapUnionBinaryExp(AMapUnionBinaryExp node,
+	public SExpIR caseAMapUnionBinaryExp(AMapUnionBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new AMapUnionBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new AMapUnionBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseADistMergeUnaryExp(ADistMergeUnaryExp node,
+	public SExpIR caseADistMergeUnaryExp(ADistMergeUnaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ADistMergeUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ADistMergeUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseADomainResToBinaryExp(ADomainResToBinaryExp node,
+	public SExpIR caseADomainResToBinaryExp(ADomainResToBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ADomainResToBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ADomainResToBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseADomainResByBinaryExp(ADomainResByBinaryExp node,
+	public SExpIR caseADomainResByBinaryExp(ADomainResByBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ADomainResByBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ADomainResByBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseARangeResToBinaryExp(ARangeResToBinaryExp node,
+	public SExpIR caseARangeResToBinaryExp(ARangeResToBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ARangeResToBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ARangeResToBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseARangeResByBinaryExp(ARangeResByBinaryExp node,
+	public SExpIR caseARangeResByBinaryExp(ARangeResByBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ARangeResByBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ARangeResByBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAMapInverseUnaryExp(AMapInverseUnaryExp node,
+	public SExpIR caseAMapInverseUnaryExp(AMapInverseUnaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new AMapInverseUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new AMapInverseUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAEqualsBinaryExp(AEqualsBinaryExp node, IRInfo question)
+	public SExpIR caseAEqualsBinaryExp(AEqualsBinaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		SExpCG eqBinExpCg = question.getExpAssistant().handleBinaryExp(node, new AEqualsBinaryExpCG(), question);
+		SExpIR eqBinExpCg = question.getExpAssistant().handleBinaryExp(node, new AEqualsBinaryExpIR(), question);
 		
 		// TODO: Update the type checker?
 		// PVJ: For some reason the type checker does not decorate the SL
@@ -1164,37 +1164,37 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		// in the IR
 		if(eqBinExpCg.getType() == null)
 		{
-			eqBinExpCg.setType(new ABoolBasicTypeCG());
+			eqBinExpCg.setType(new ABoolBasicTypeIR());
 		}
 		
 		return eqBinExpCg;
 	}
 
 	@Override
-	public SExpCG caseANotEqualBinaryExp(ANotEqualBinaryExp node,
+	public SExpIR caseANotEqualBinaryExp(ANotEqualBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ANotEqualsBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ANotEqualsBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAIndicesUnaryExp(AIndicesUnaryExp node, IRInfo question)
+	public SExpIR caseAIndicesUnaryExp(AIndicesUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new AIndicesUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new AIndicesUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseASeqEnumSeqExp(ASeqEnumSeqExp node, IRInfo question)
+	public SExpIR caseASeqEnumSeqExp(ASeqEnumSeqExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 
-		AEnumSeqExpCG enumSeq = new AEnumSeqExpCG();
+		AEnumSeqExpIR enumSeq = new AEnumSeqExpIR();
 
 		if (type instanceof SSeqType)
 		{
-			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+			STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 			enumSeq.setType(typeCg);
 		} else
 		{
@@ -1206,7 +1206,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		LinkedList<PExp> members = node.getMembers();
 		for (PExp member : members)
 		{
-			SExpCG memberCg = member.apply(question.getExpVisitor(), question);
+			SExpIR memberCg = member.apply(question.getExpVisitor(), question);
 			
 			if(memberCg != null)
 			{
@@ -1222,7 +1222,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseASubclassResponsibilityExp(
+	public SExpIR caseASubclassResponsibilityExp(
 			ASubclassResponsibilityExp node, IRInfo question)
 			throws AnalysisException
 	{
@@ -1230,11 +1230,11 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAFieldExp(AFieldExp node, IRInfo question)
+	public SExpIR caseAFieldExp(AFieldExp node, IRInfo question)
 			throws AnalysisException
 	{
-		SExpCG object = node.getObject().apply(question.getExpVisitor(), question);
-		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+		SExpIR object = node.getObject().apply(question.getExpVisitor(), question);
+		STypeIR type = node.getType().apply(question.getTypeVisitor(), question);
 
 		String memberName = "";
 
@@ -1246,7 +1246,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			memberName = node.getField().getName();
 		}
 
-		AFieldExpCG fieldExp = new AFieldExpCG();
+		AFieldExpIR fieldExp = new AFieldExpIR();
 		fieldExp.setObject(object);
 		fieldExp.setMemberName(memberName);
 		fieldExp.setType(type);
@@ -1255,22 +1255,22 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAApplyExp(AApplyExp node, IRInfo question)
+	public SExpIR caseAApplyExp(AApplyExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		PExp root = node.getRoot();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG rootCg = root.apply(question.getExpVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR rootCg = root.apply(question.getExpVisitor(), question);
 
-		AApplyExpCG applyExp = new AApplyExpCG();
+		AApplyExpIR applyExp = new AApplyExpIR();
 		applyExp.setType(typeCg);
 		applyExp.setRoot(rootCg);
 
 		for (PExp arg : node.getArgs())
 		{
-			SExpCG argCg = arg.apply(question.getExpVisitor(), question);
+			SExpIR argCg = arg.apply(question.getExpVisitor(), question);
 
 			if (argCg != null)
 			{
@@ -1287,7 +1287,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAVariableExp(AVariableExp node, IRInfo question)
+	public SExpIR caseAVariableExp(AVariableExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PDefinition varDef = node.getVardef();
@@ -1306,7 +1306,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		
 		boolean explicit = node.getName().getExplicit();
 		
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		
 		boolean isLocalDef = varDef instanceof AAssignmentDefinition || !(varDef.getNameScope() == NameScope.STATE
 				|| varDef.getNameScope() == NameScope.GLOBAL || varDef.getNameScope() == NameScope.VARSTATE || varDef.getNameScope() == NameScope.VARSANDSTATE);
@@ -1325,7 +1325,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			
 			if(isExplOp && !isDefInOwningClass && !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
 			{
-				ASuperVarExpCG superVarExp = new ASuperVarExpCG();
+				ASuperVarExpIR superVarExp = new ASuperVarExpIR();
 	
 				superVarExp.setType(typeCg);
 				superVarExp.setIsLocal(isLocalDef);
@@ -1358,7 +1358,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			boolean inOwningModule = defModuleName.equals(nodeModuleName);
 			
 
-			SVarExpCG res;
+			SVarExpIR res;
 			
 			if(inOwningModule)
 			{
@@ -1384,12 +1384,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		}
 	}
 
-	private SVarExpCG consExplicitVar(String className, String name, boolean isLambda,
-			STypeCG typeCg, boolean isLocalDef)
+	private SVarExpIR consExplicitVar(String className, String name, boolean isLambda,
+			STypeIR typeCg, boolean isLocalDef)
 	{
-		AExplicitVarExpCG varExp = new AExplicitVarExpCG();
+		AExplicitVarExpIR varExp = new AExplicitVarExpIR();
 
-		AClassTypeCG classType = new AClassTypeCG();
+		AClassTypeIR classType = new AClassTypeIR();
 		classType.setName(className);
 
 		varExp.setType(typeCg);
@@ -1401,10 +1401,10 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		return varExp;
 	}
 
-	private SVarExpCG consIdVar(String name, boolean isLambda, STypeCG typeCg,
+	private SVarExpIR consIdVar(String name, boolean isLambda, STypeIR typeCg,
 			boolean isLocalDef)
 	{
-		AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR varExp = new AIdentifierVarExpIR();
 
 		varExp.setType(typeCg);
 		varExp.setIsLocal(isLocalDef);
@@ -1415,27 +1415,27 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseANewExp(ANewExp node, IRInfo question)
+	public SExpIR caseANewExp(ANewExp node, IRInfo question)
 			throws AnalysisException
 	{
 		String className = node.getClassdef().getName().getName();
-		ATypeNameCG typeName = new ATypeNameCG();
+		ATypeNameIR typeName = new ATypeNameIR();
 		typeName.setDefiningClass(null);
 		typeName.setName(className);
 
 		PType type = node.getType();
 		LinkedList<PExp> nodeArgs = node.getArgs();
 
-		ANewExpCG newExp = new ANewExpCG();
+		ANewExpIR newExp = new ANewExpIR();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		newExp.setType(typeCg);
 		newExp.setName(typeName);
 
-		LinkedList<SExpCG> newExpArgs = newExp.getArgs();
+		LinkedList<SExpIR> newExpArgs = newExp.getArgs();
 		for (PExp arg : nodeArgs)
 		{
-			SExpCG argCg = arg.apply(question.getExpVisitor(), question);
+			SExpIR argCg = arg.apply(question.getExpVisitor(), question);
 			
 			if (argCg != null)
 			{
@@ -1450,106 +1450,106 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
+	public SExpIR caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ATimesNumericBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ATimesNumericBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
+	public SExpIR caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new APlusNumericBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new APlusNumericBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseASubtractNumericBinaryExp(ASubtractNumericBinaryExp node,
+	public SExpIR caseASubtractNumericBinaryExp(ASubtractNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ASubtractNumericBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ASubtractNumericBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAGreaterEqualNumericBinaryExp(
+	public SExpIR caseAGreaterEqualNumericBinaryExp(
 			AGreaterEqualNumericBinaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new AGreaterEqualNumericBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new AGreaterEqualNumericBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAStarStarBinaryExp(AStarStarBinaryExp node,
+	public SExpIR caseAStarStarBinaryExp(AStarStarBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new APowerNumericBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new APowerNumericBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAGreaterNumericBinaryExp(AGreaterNumericBinaryExp node,
+	public SExpIR caseAGreaterNumericBinaryExp(AGreaterNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new AGreaterNumericBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new AGreaterNumericBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseALessEqualNumericBinaryExp(
+	public SExpIR caseALessEqualNumericBinaryExp(
 			ALessEqualNumericBinaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ALessEqualNumericBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ALessEqualNumericBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseALessNumericBinaryExp(ALessNumericBinaryExp node,
+	public SExpIR caseALessNumericBinaryExp(ALessNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ALessNumericBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ALessNumericBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
+	public SExpIR caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new ADivideNumericBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseADivNumericBinaryExp(ADivNumericBinaryExp node,
+	public SExpIR caseADivNumericBinaryExp(ADivNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return (AIntDivNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new AIntDivNumericBinaryExpCG(), question);
+		return (AIntDivNumericBinaryExpIR) question.getExpAssistant().handleBinaryExp(node, new AIntDivNumericBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAModNumericBinaryExp(AModNumericBinaryExp node,
+	public SExpIR caseAModNumericBinaryExp(AModNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return (AModNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new AModNumericBinaryExpCG(), question);
+		return (AModNumericBinaryExpIR) question.getExpAssistant().handleBinaryExp(node, new AModNumericBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseARemNumericBinaryExp(ARemNumericBinaryExp node,
+	public SExpIR caseARemNumericBinaryExp(ARemNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return (ARemNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new ARemNumericBinaryExpCG(), question);
+		return (ARemNumericBinaryExpIR) question.getExpAssistant().handleBinaryExp(node, new ARemNumericBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAImpliesBooleanBinaryExp(AImpliesBooleanBinaryExp node,
+	public SExpIR caseAImpliesBooleanBinaryExp(AImpliesBooleanBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
 		// A => B is constructed as !A || B
 
-		STypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		SExpCG leftExpCg = node.getLeft().apply(question.getExpVisitor(), question);
-		SExpCG rightExpCg = node.getRight().apply(question.getExpVisitor(), question);
+		STypeIR typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		SExpIR leftExpCg = node.getLeft().apply(question.getExpVisitor(), question);
+		SExpIR rightExpCg = node.getRight().apply(question.getExpVisitor(), question);
 
-		ANotUnaryExpCG notExp = new ANotUnaryExpCG();
+		ANotUnaryExpIR notExp = new ANotUnaryExpIR();
 		notExp.setType(typeCg);
 		notExp.setExp(leftExpCg);
 
-		AOrBoolBinaryExpCG orExp = new AOrBoolBinaryExpCG();
+		AOrBoolBinaryExpIR orExp = new AOrBoolBinaryExpIR();
 		orExp.setType(typeCg);
 		orExp.setLeft(notExp);
 		orExp.setRight(rightExpCg);
@@ -1558,21 +1558,21 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAEquivalentBooleanBinaryExp(
+	public SExpIR caseAEquivalentBooleanBinaryExp(
 			AEquivalentBooleanBinaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		// A <=> B is constructed as !(A ^ B)
-		STypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		SExpCG leftExpCg = node.getLeft().apply(question.getExpVisitor(), question);
-		SExpCG rightExpCg = node.getRight().apply(question.getExpVisitor(), question);
+		STypeIR typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		SExpIR leftExpCg = node.getLeft().apply(question.getExpVisitor(), question);
+		SExpIR rightExpCg = node.getRight().apply(question.getExpVisitor(), question);
 
-		AXorBoolBinaryExpCG xorExp = new AXorBoolBinaryExpCG();
+		AXorBoolBinaryExpIR xorExp = new AXorBoolBinaryExpIR();
 		xorExp.setType(typeCg);
 		xorExp.setLeft(leftExpCg);
 		xorExp.setRight(rightExpCg);
 
-		ANotUnaryExpCG notExp = new ANotUnaryExpCG();
+		ANotUnaryExpIR notExp = new ANotUnaryExpIR();
 		notExp.setType(typeCg.clone());
 		notExp.setExp(question.getExpAssistant().isolateExpression(xorExp));
 
@@ -1582,80 +1582,80 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	// Unary
 
 	@Override
-	public SExpCG caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node,
+	public SExpIR caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new APlusUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new APlusUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
+	public SExpIR caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new AMinusUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new AMinusUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAFloorUnaryExp(AFloorUnaryExp node, IRInfo question)
+	public SExpIR caseAFloorUnaryExp(AFloorUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new AFloorUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new AFloorUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node, IRInfo question)
+	public SExpIR caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new AAbsUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new AAbsUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseANotUnaryExp(ANotUnaryExp node, IRInfo question)
+	public SExpIR caseANotUnaryExp(ANotUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ANotUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ANotUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAOrBooleanBinaryExp(AOrBooleanBinaryExp node,
+	public SExpIR caseAOrBooleanBinaryExp(AOrBooleanBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new AOrBoolBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new AOrBoolBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node,
+	public SExpIR caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new AAndBoolBinaryExpCG(), question);
+		return question.getExpAssistant().handleBinaryExp(node, new AAndBoolBinaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseALenUnaryExp(ALenUnaryExp node, IRInfo question)
+	public SExpIR caseALenUnaryExp(ALenUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ALenUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ALenUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAElementsUnaryExp(AElementsUnaryExp node, IRInfo question)
+	public SExpIR caseAElementsUnaryExp(AElementsUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new AElemsUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new AElemsUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseAHeadUnaryExp(AHeadUnaryExp node, IRInfo question)
+	public SExpIR caseAHeadUnaryExp(AHeadUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new AHeadUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new AHeadUnaryExpIR(), question);
 	}
 
 	@Override
-	public SExpCG caseATailUnaryExp(ATailUnaryExp node, IRInfo question)
+	public SExpIR caseATailUnaryExp(ATailUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ATailUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ATailUnaryExpIR(), question);
 	}
 
 	// Literals
@@ -1664,15 +1664,15 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	// setValue at the current time of writing.
 
 	@Override
-	public SExpCG caseABooleanConstExp(ABooleanConstExp node, IRInfo question)
+	public SExpIR caseABooleanConstExp(ABooleanConstExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		boolean value = node.getValue().getValue();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 
-		ABoolLiteralExpCG boolLitCg = new ABoolLiteralExpCG();
+		ABoolLiteralExpIR boolLitCg = new ABoolLiteralExpIR();
 		boolLitCg.setType(typeCg);
 		boolLitCg.setValue(value);
 
@@ -1680,15 +1680,15 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseARealLiteralExp(ARealLiteralExp node, IRInfo question)
+	public SExpIR caseARealLiteralExp(ARealLiteralExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		double value = node.getValue().getValue();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 
-		ARealLiteralExpCG realLitCg = new ARealLiteralExpCG();
+		ARealLiteralExpIR realLitCg = new ARealLiteralExpIR();
 		realLitCg.setType(typeCg);
 		realLitCg.setValue(value);
 
@@ -1696,15 +1696,15 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAIntLiteralExp(AIntLiteralExp node, IRInfo question)
+	public SExpIR caseAIntLiteralExp(AIntLiteralExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		long value = node.getValue().getValue();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 
-		AIntLiteralExpCG intLitCg = new AIntLiteralExpCG();
+		AIntLiteralExpIR intLitCg = new AIntLiteralExpIR();
 		intLitCg.setType(typeCg);
 		intLitCg.setValue(value);
 
@@ -1712,15 +1712,15 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseACharLiteralExp(ACharLiteralExp node, IRInfo question)
+	public SExpIR caseACharLiteralExp(ACharLiteralExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		char value = node.getValue().getValue();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 
-		ACharLiteralExpCG charLitCg = new ACharLiteralExpCG();
+		ACharLiteralExpIR charLitCg = new ACharLiteralExpIR();
 		charLitCg.setType(typeCg);
 		charLitCg.setValue(value);
 
@@ -1728,7 +1728,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAStringLiteralExp(AStringLiteralExp node, IRInfo question)
+	public SExpIR caseAStringLiteralExp(AStringLiteralExp node, IRInfo question)
 			throws AnalysisException
 	{
 		String value = node.getValue().getValue();
@@ -1736,7 +1736,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		{
 			PType type = node.getType();
 
-			STypeCG typeCg;
+			STypeIR typeCg;
 			
 			/**
 			 * The operation argument passed to the 'setPriority' of the CPU class (VDM-RT) gets transformed into a
@@ -1749,10 +1749,10 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			}
 			else
 			{
-				typeCg = new AStringTypeCG();
+				typeCg = new AStringTypeIR();
 			}
 
-			AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
+			AStringLiteralExpIR stringLiteral = new AStringLiteralExpIR();
 
 			stringLiteral.setType(typeCg);
 			stringLiteral.setIsNull(false);
@@ -1763,7 +1763,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		} else
 		{
 			PType type = node.getType();
-			STypeCG strType;
+			STypeIR strType;
 			
 			// Same issue with the 'setPriority' operation (see above)
 			if(type != null)
@@ -1772,9 +1772,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			}
 			else
 			{
-				ASeqSeqTypeCG seqTypeCg = new ASeqSeqTypeCG();
+				ASeqSeqTypeIR seqTypeCg = new ASeqSeqTypeIR();
 				seqTypeCg.setEmpty(false);
-				seqTypeCg.setSeqOf(new ACharBasicTypeCG());
+				seqTypeCg.setSeqOf(new ACharBasicTypeIR());
 				strType = seqTypeCg;
 			}
 			
@@ -1783,13 +1783,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAQuoteLiteralExp(AQuoteLiteralExp node, IRInfo question)
+	public SExpIR caseAQuoteLiteralExp(AQuoteLiteralExp node, IRInfo question)
 			throws AnalysisException
 	{
 		String value = node.getValue().getValue();
-		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+		STypeIR type = node.getType().apply(question.getTypeVisitor(), question);
 
-		AQuoteLiteralExpCG quoteLit = new AQuoteLiteralExpCG();
+		AQuoteLiteralExpIR quoteLit = new AQuoteLiteralExpIR();
 		quoteLit.setValue(value);
 		quoteLit.setType(type);
 
@@ -1799,22 +1799,22 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 
 	@Override
-	public SExpCG caseALambdaExp(ALambdaExp node, IRInfo question)
+	public SExpIR caseALambdaExp(ALambdaExp node, IRInfo question)
 			throws AnalysisException
 	{
 		LinkedList<ATypeBind> bindList = node.getBindList();
 		PExp exp = node.getExpression();
 		PType type = node.getType();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
 
-		ALambdaExpCG lambdaExp = new ALambdaExpCG();
+		ALambdaExpIR lambdaExp = new ALambdaExpIR();
 
 		lambdaExp.setType(typeCg);
 		lambdaExp.setExp(expCg);
 
-		LinkedList<AFormalParamLocalParamCG> params = lambdaExp.getParams();
+		LinkedList<AFormalParamLocalParamIR> params = lambdaExp.getParams();
 
 		for (ATypeBind typeBind : bindList)
 		{
@@ -1828,10 +1828,10 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 				return null;
 			}
 
-			STypeCG bindTypeCg = bindType.apply(question.getTypeVisitor(), question);
-			SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
+			STypeIR bindTypeCg = bindType.apply(question.getTypeVisitor(), question);
+			SPatternIR patternCg = pattern.apply(question.getPatternVisitor(), question);
 
-			AFormalParamLocalParamCG param = new AFormalParamLocalParamCG();
+			AFormalParamLocalParamIR param = new AFormalParamLocalParamIR();
 			param.setPattern(patternCg);
 			param.setType(bindTypeCg);
 
@@ -1842,7 +1842,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	}
 	
 	@Override
-	public SExpCG caseAHistoryExp(AHistoryExp node, IRInfo question)
+	public SExpIR caseAHistoryExp(AHistoryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -1850,18 +1850,18 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		
 		AClassClassDefinition enclosingClass = node.getAncestor(AClassClassDefinition.class);	
 		
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		
-		AHistoryExpCG history = new AHistoryExpCG();
+		AHistoryExpIR history = new AHistoryExpIR();
 		
 		history.setHistype(hop.toString().substring(1));
 		history.setType(typeCg);
 		
-		AClassTypeCG innerclassType = null;
+		AClassTypeIR innerclassType = null;
 		
 		if(enclosingClass != null)
 		{
-			innerclassType = new AClassTypeCG();
+			innerclassType = new AClassTypeIR();
 			innerclassType.setName(enclosingClass.getName() + "_sentinel");
 			history.setSentinelType(innerclassType);
 		}
@@ -1883,23 +1883,23 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		}
 		else
 		{
-			APlusNumericBinaryExpCG historyCounterSum = new APlusNumericBinaryExpCG();
+			APlusNumericBinaryExpIR historyCounterSum = new APlusNumericBinaryExpIR();
 			historyCounterSum.setType(typeCg.clone());
 			historyCounterSum.setLeft(history);
 
-			APlusNumericBinaryExpCG last = historyCounterSum;
+			APlusNumericBinaryExpIR last = historyCounterSum;
 			
 			for(int i = 1; i < node.getOpnames().size() - 1; i++){
 				
 				String nextOpName = node.getOpnames().get(i).toString();
 				
-				AHistoryExpCG left = new AHistoryExpCG();
+				AHistoryExpIR left = new AHistoryExpIR();
 				left.setType(typeCg.clone());
 				left.setSentinelType(innerclassType.clone());
 				left.setHistype(hop.toString().substring(1));
 				left.setOpsname(nextOpName);
 				
-				APlusNumericBinaryExpCG tmp = new APlusNumericBinaryExpCG();
+				APlusNumericBinaryExpIR tmp = new APlusNumericBinaryExpIR();
 				tmp.setType(typeCg.clone());
 				tmp.setLeft(left);
 				
@@ -1911,7 +1911,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			
 			String lastOpName = node.getOpnames().getLast().toString();
 			
-			AHistoryExpCG lastHistoryExp = new AHistoryExpCG();
+			AHistoryExpIR lastHistoryExp = new AHistoryExpIR();
 			lastHistoryExp.setType(typeCg.clone());
 			lastHistoryExp.setSentinelType(innerclassType.clone());
 			lastHistoryExp.setHistype(hop.toString().substring(1));

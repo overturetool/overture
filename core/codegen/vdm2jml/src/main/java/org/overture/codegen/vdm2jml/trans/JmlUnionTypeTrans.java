@@ -3,16 +3,16 @@ package org.overture.codegen.vdm2jml.trans;
 import java.util.List;
 
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.expressions.AFieldExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.statements.AAssignToExpStmCG;
-import org.overture.codegen.ir.types.AUnionTypeCG;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.traces.Pair;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.uniontypes.UnionTypeTrans;
 import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
 import org.overture.codegen.vdm2jml.data.StateDesInfo;
@@ -21,7 +21,7 @@ public class JmlUnionTypeTrans extends UnionTypeTrans
 {
 	private StateDesInfo stateDesInfo;
 
-	public JmlUnionTypeTrans(TransAssistantCG transAssistant, UnionTypeVarPrefixes unionTypePrefixes,
+	public JmlUnionTypeTrans(TransAssistantIR transAssistant, UnionTypeVarPrefixes unionTypePrefixes,
 			List<INode> cloneFreeNodes, StateDesInfo stateDesInfo)
 	{
 		super(transAssistant, unionTypePrefixes, cloneFreeNodes);
@@ -30,13 +30,13 @@ public class JmlUnionTypeTrans extends UnionTypeTrans
 	}
 
 	@Override
-	public void caseAAssignToExpStmCG(AAssignToExpStmCG node) throws AnalysisException
+	public void caseAAssignToExpStmIR(AAssignToExpStmIR node) throws AnalysisException
 	{
-		if (node.getTarget() instanceof AFieldExpCG)
+		if (node.getTarget() instanceof AFieldExpIR)
 		{
-			AFieldExpCG field = (AFieldExpCG) node.getTarget();
+			AFieldExpIR field = (AFieldExpIR) node.getTarget();
 
-			if (field.getObject().getType() instanceof AUnionTypeCG)
+			if (field.getObject().getType() instanceof AUnionTypeIR)
 			{
 				if (p != null)
 				{
@@ -58,12 +58,12 @@ public class JmlUnionTypeTrans extends UnionTypeTrans
 		p = null;
 	}
 
-	Pair<List<AIdentifierVarExpCG>, List<AVarDeclCG>> p = null;
+	Pair<List<AIdentifierVarExpIR>, List<AVarDeclIR>> p = null;
 
 	@Override
-	public AAssignToExpStmCG castFieldObj(AAssignToExpStmCG assign, AFieldExpCG target, STypeCG possibleType)
+	public AAssignToExpStmIR castFieldObj(AAssignToExpStmIR assign, AFieldExpIR target, STypeIR possibleType)
 	{
-		AAssignToExpStmCG ret = super.castFieldObj(assign, target, possibleType);
+		AAssignToExpStmIR ret = super.castFieldObj(assign, target, possibleType);
 
 		if (p != null)
 		{

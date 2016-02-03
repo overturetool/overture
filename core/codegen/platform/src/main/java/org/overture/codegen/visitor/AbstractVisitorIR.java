@@ -27,7 +27,7 @@ import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.node.INode;
 import org.overture.codegen.ir.IRInfo;
 
-public class AbstractVisitorCG<Q extends IRInfo, A extends org.overture.codegen.ir.INode>
+public class AbstractVisitorIR<Q extends IRInfo, A extends org.overture.codegen.ir.INode>
 		extends QuestionAnswerAdaptor<Q, A>
 {
 	@Override

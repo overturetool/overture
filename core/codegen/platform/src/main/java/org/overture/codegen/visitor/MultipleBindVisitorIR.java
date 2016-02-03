@@ -30,30 +30,30 @@ import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SMultipleBindCG;
-import org.overture.codegen.ir.SPatternCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.patterns.ASetMultipleBindCG;
-import org.overture.codegen.ir.patterns.ATypeMultipleBindCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SMultipleBindIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.patterns.ASetMultipleBindIR;
+import org.overture.codegen.ir.patterns.ATypeMultipleBindIR;
 import org.overture.codegen.ir.IRInfo;
 
-public class MultipleBindVisitorCG extends
-		AbstractVisitorCG<IRInfo, SMultipleBindCG>
+public class MultipleBindVisitorIR extends
+		AbstractVisitorIR<IRInfo, SMultipleBindIR>
 {
 
 	@Override
-	public SMultipleBindCG caseASetMultipleBind(ASetMultipleBind node,
+	public SMultipleBindIR caseASetMultipleBind(ASetMultipleBind node,
 			IRInfo question) throws AnalysisException
 	{
 		List<PPattern> patterns = node.getPlist();
 		PExp set = node.getSet();
 
-		LinkedList<SPatternCG> patternsCg = new LinkedList<SPatternCG>();
+		LinkedList<SPatternIR> patternsCg = new LinkedList<SPatternIR>();
 
 		for (PPattern pattern : patterns)
 		{
-			SPatternCG patternTempCg = pattern.apply(question.getPatternVisitor(), question);
+			SPatternIR patternTempCg = pattern.apply(question.getPatternVisitor(), question);
 			
 			if (patternTempCg != null)
 			{
@@ -65,9 +65,9 @@ public class MultipleBindVisitorCG extends
 			}
 		}
 
-		SExpCG setCg = set.apply(question.getExpVisitor(), question);
+		SExpIR setCg = set.apply(question.getExpVisitor(), question);
 
-		ASetMultipleBindCG multipleSetBind = new ASetMultipleBindCG();
+		ASetMultipleBindIR multipleSetBind = new ASetMultipleBindIR();
 
 		multipleSetBind.setPatterns(patternsCg);
 		multipleSetBind.setSet(setCg);
@@ -76,17 +76,17 @@ public class MultipleBindVisitorCG extends
 	}
 	
 	@Override
-	public SMultipleBindCG caseATypeMultipleBind(ATypeMultipleBind node,
+	public SMultipleBindIR caseATypeMultipleBind(ATypeMultipleBind node,
 			IRInfo question) throws AnalysisException
 	{
 		List<PPattern> patterns = node.getPlist();
 		PType boundType = node.getType();
 
-		List<SPatternCG> patternsCg = new LinkedList<SPatternCG>();
+		List<SPatternIR> patternsCg = new LinkedList<SPatternIR>();
 
 		for (PPattern pattern : patterns)
 		{
-			SPatternCG patternTempCg = pattern.apply(question.getPatternVisitor(), question);
+			SPatternIR patternTempCg = pattern.apply(question.getPatternVisitor(), question);
 			
 			if (patternTempCg != null)
 			{
@@ -98,9 +98,9 @@ public class MultipleBindVisitorCG extends
 			}
 		}
 
-		STypeCG boundTypeCg = boundType.apply(question.getTypeVisitor(), question);
+		STypeIR boundTypeCg = boundType.apply(question.getTypeVisitor(), question);
 
-		ATypeMultipleBindCG multipleSetBind = new ATypeMultipleBindCG();
+		ATypeMultipleBindIR multipleSetBind = new ATypeMultipleBindIR();
 
 		multipleSetBind.setPatterns(patternsCg);
 		multipleSetBind.setType(boundTypeCg);

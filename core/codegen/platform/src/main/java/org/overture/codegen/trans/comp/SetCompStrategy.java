@@ -23,24 +23,24 @@ package org.overture.codegen.trans.comp;
 
 import java.util.List;
 
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SPatternCG;
-import org.overture.codegen.ir.SStmCG;
-import org.overture.codegen.ir.STypeCG;
-import org.overture.codegen.ir.expressions.AEnumSetExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.statements.ASetCompAddStmCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.expressions.AEnumSetExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.statements.ASetCompAddStmIR;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.IterationVarPrefixes;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class SetCompStrategy extends ComplexCompStrategy
 {
-	protected SExpCG first;
+	protected SExpIR first;
 
-	public SetCompStrategy(TransAssistantCG transformationAssitant,
-			SExpCG first, SExpCG predicate, String var, STypeCG compType,
+	public SetCompStrategy(TransAssistantIR transformationAssitant,
+			SExpIR first, SExpIR predicate, String var, STypeIR compType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			IterationVarPrefixes iteVarPrefixes)
 	{
@@ -50,22 +50,22 @@ public class SetCompStrategy extends ComplexCompStrategy
 	}
 
 	@Override
-	protected SExpCG getEmptyCollection()
+	protected SExpIR getEmptyCollection()
 	{
-		return new AEnumSetExpCG();
+		return new AEnumSetExpIR();
 	}
 
 	@Override
-	protected List<SStmCG> getConditionalAdd(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	protected List<SStmIR> getConditionalAdd(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 	{
-		AIdentifierVarExpCG setCompResult = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR setCompResult = new AIdentifierVarExpIR();
 		setCompResult.setType(compType.clone());
 		setCompResult.setName(idPattern.getName());
 		setCompResult.setIsLambda(false);
 		setCompResult.setIsLocal(true);
 
-		ASetCompAddStmCG add = new ASetCompAddStmCG();
+		ASetCompAddStmIR add = new ASetCompAddStmIR();
 		add.setSet(setCompResult);
 		add.setElement(first.clone());
 		

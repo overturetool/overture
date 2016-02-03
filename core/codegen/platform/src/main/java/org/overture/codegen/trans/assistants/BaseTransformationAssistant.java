@@ -25,14 +25,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SStmCG;
+import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.AVarDeclCG;
-import org.overture.codegen.ir.expressions.AAnonymousClassExpCG;
-import org.overture.codegen.ir.statements.ABlockStmCG;
-import org.overture.codegen.ir.statements.AElseIfStmCG;
-import org.overture.codegen.ir.statements.AIfStmCG;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AAnonymousClassExpIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.AElseIfStmIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
 
 public class BaseTransformationAssistant
 {
@@ -66,29 +66,29 @@ public class BaseTransformationAssistant
 		original.parent(null);
 	}
 
-	public SStmCG findEnclosingStm(INode node)
+	public SStmIR findEnclosingStm(INode node)
 			throws AnalysisException
 
 	{
-		if (node.getAncestor(AAnonymousClassExpCG.class) == null)
+		if (node.getAncestor(AAnonymousClassExpIR.class) == null)
 		{
-			AVarDeclCG localDecl = node.getAncestor(AVarDeclCG.class);
+			AVarDeclIR localDecl = node.getAncestor(AVarDeclIR.class);
 			
-			if (localDecl != null && localDecl.parent() instanceof ABlockStmCG)
+			if (localDecl != null && localDecl.parent() instanceof ABlockStmIR)
 			{
-				ABlockStmCG block = (ABlockStmCG) localDecl.parent();
+				ABlockStmIR block = (ABlockStmIR) localDecl.parent();
 
 				if (block.getLocalDefs().size() <= 1)
 				{
 					return block;
 				}
 
-				List<AVarDeclCG> defsToLift = new LinkedList<AVarDeclCG>();
+				List<AVarDeclIR> defsToLift = new LinkedList<AVarDeclIR>();
 
 				int i = 0;
 				for (; i < block.getLocalDefs().size(); i++)
 				{
-					AVarDeclCG currentDef = block.getLocalDefs().get(i);
+					AVarDeclIR currentDef = block.getLocalDefs().get(i);
 
 					if (currentDef == localDecl)
 					{
@@ -103,9 +103,9 @@ public class BaseTransformationAssistant
 				}
 
 				block.getLocalDefs().removeAll(defsToLift);
-				LinkedList<SStmCG> statementsToLift = block.getStatements();
+				LinkedList<SStmIR> statementsToLift = block.getStatements();
 
-				ABlockStmCG liftedBlock = new ABlockStmCG();
+				ABlockStmIR liftedBlock = new ABlockStmIR();
 				liftedBlock.setLocalDefs(defsToLift);
 				liftedBlock.setStatements(statementsToLift);
 
@@ -116,26 +116,26 @@ public class BaseTransformationAssistant
 			}
 		}
 		
-		SStmCG enclosingStm = node.getAncestor(SStmCG.class);
+		SStmIR enclosingStm = node.getAncestor(SStmIR.class);
 
 		if (enclosingStm == null)
 		{
 			return null;
 		}
 
-		if (enclosingStm instanceof AElseIfStmCG)
+		if (enclosingStm instanceof AElseIfStmIR)
 		{
-			AElseIfStmCG elseIf = (AElseIfStmCG) enclosingStm;
-			AIfStmCG enclosingIf = elseIf.getAncestor(AIfStmCG.class);
+			AElseIfStmIR elseIf = (AElseIfStmIR) enclosingStm;
+			AIfStmIR enclosingIf = elseIf.getAncestor(AIfStmIR.class);
 
-			LinkedList<AElseIfStmCG> elseIfList = new LinkedList<AElseIfStmCG>(enclosingIf.getElseIf());
+			LinkedList<AElseIfStmIR> elseIfList = new LinkedList<AElseIfStmIR>(enclosingIf.getElseIf());
 			for (int i = 0; i < elseIfList.size(); i++)
 			{
-				AElseIfStmCG currentElseIf = elseIfList.get(i);
+				AElseIfStmIR currentElseIf = elseIfList.get(i);
 				if (elseIf == currentElseIf)
 				{
 					enclosingIf.getElseIf().remove(currentElseIf);
-					AIfStmCG elsePart = new AIfStmCG();
+					AIfStmIR elsePart = new AIfStmIR();
 					elsePart.setIfExp(currentElseIf.getElseIf());
 					elsePart.setThenStm(currentElseIf.getThenStm());
 
@@ -145,7 +145,7 @@ public class BaseTransformationAssistant
 						elsePart.getElseIf().add(elseIfList.get(j));
 					}
 
-					ABlockStmCG block = new ABlockStmCG();
+					ABlockStmIR block = new ABlockStmIR();
 					block.getStatements().add(elsePart);
 
 					elsePart.setElseStm(enclosingIf.getElseStm());
@@ -159,10 +159,10 @@ public class BaseTransformationAssistant
 		return enclosingStm;
 	}
 	
-	public SStmCG getEnclosingStm(INode node, String nodeStr)
+	public SStmIR getEnclosingStm(INode node, String nodeStr)
 			throws AnalysisException
 	{
-		SStmCG enclosingStm = findEnclosingStm(node);
+		SStmIR enclosingStm = findEnclosingStm(node);
 
 		if (enclosingStm == null)
 		{

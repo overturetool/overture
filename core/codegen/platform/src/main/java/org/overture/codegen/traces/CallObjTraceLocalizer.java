@@ -2,27 +2,27 @@ package org.overture.codegen.traces;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.AnswerAdaptor;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.ACastUnaryExpCG;
-import org.overture.codegen.ir.expressions.AFieldExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.expressions.ANewExpCG;
-import org.overture.codegen.ir.expressions.ASelfExpCG;
-import org.overture.codegen.ir.expressions.SVarExpCG;
-import org.overture.codegen.ir.types.AObjectTypeCG;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
+import org.overture.codegen.ir.expressions.ASelfExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.types.AObjectTypeIR;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
-public class CallObjTraceLocalizer extends AnswerAdaptor<SExpCG>
+public class CallObjTraceLocalizer extends AnswerAdaptor<SExpIR>
 {
-	private TransAssistantCG assist;
+	private TransAssistantIR assist;
 	private TraceNames tracePrefixes;
 	private String traceEnclosingClass;
 
-	public CallObjTraceLocalizer(TransAssistantCG transAssistant, TraceNames tracePrefixes, String traceEnclosingClass)
+	public CallObjTraceLocalizer(TransAssistantIR transAssistant, TraceNames tracePrefixes, String traceEnclosingClass)
 	{
 		this.assist = transAssistant;
 		this.tracePrefixes = tracePrefixes;
@@ -30,29 +30,29 @@ public class CallObjTraceLocalizer extends AnswerAdaptor<SExpCG>
 	}
 
 	@Override
-	public SExpCG caseAApplyExpCG(AApplyExpCG node) throws AnalysisException
+	public SExpIR caseAApplyExpIR(AApplyExpIR node) throws AnalysisException
 	{
 		return node.getRoot().apply(this);
 	}
 
 	@Override
-	public SExpCG caseAFieldExpCG(AFieldExpCG node) throws AnalysisException
+	public SExpIR caseAFieldExpIR(AFieldExpIR node) throws AnalysisException
 	{
 		return node.getObject().apply(this);
 	}
 
 	@Override
-	public SExpCG caseAIdentifierVarExpCG(AIdentifierVarExpCG node) throws AnalysisException
+	public SExpIR caseAIdentifierVarExpIR(AIdentifierVarExpIR node) throws AnalysisException
 	{
-		if (node instanceof SVarExpCG)
+		if (node instanceof SVarExpIR)
 		{
-			SVarExpCG varExp = (SVarExpCG) node;
+			SVarExpIR varExp = (SVarExpIR) node;
 
 			if (BooleanUtils.isFalse(varExp.getIsLocal()))
 			{
-				ACastUnaryExpCG objId = consObjId();
+				ACastUnaryExpIR objId = consObjId();
 
-				AFieldExpCG fieldObj = new AFieldExpCG();
+				AFieldExpIR fieldObj = new AFieldExpIR();
 				fieldObj.setType(node.getType().clone());
 				fieldObj.setMemberName(varExp.getName());
 				fieldObj.setObject(objId);
@@ -72,27 +72,27 @@ public class CallObjTraceLocalizer extends AnswerAdaptor<SExpCG>
 	}
 
 	@Override
-	public SExpCG caseASelfExpCG(ASelfExpCG node) throws AnalysisException
+	public SExpIR caseASelfExpIR(ASelfExpIR node) throws AnalysisException
 	{
-		ACastUnaryExpCG objId = consObjId();
+		ACastUnaryExpIR objId = consObjId();
 		assist.replaceNodeWith(node, objId);
 
 		return objId;
 	}
 
 	@Override
-	public SExpCG caseANewExpCG(ANewExpCG node) throws AnalysisException
+	public SExpIR caseANewExpIR(ANewExpIR node) throws AnalysisException
 	{
 		return node;
 	}
 
-	private ACastUnaryExpCG consObjId()
+	private ACastUnaryExpIR consObjId()
 	{
 		String paramName = tracePrefixes.callStmMethodParamName();
 		
-		AIdentifierVarExpCG idVar = assist.getInfo().getExpAssistant().consIdVar(paramName, new AObjectTypeCG());
+		AIdentifierVarExpIR idVar = assist.getInfo().getExpAssistant().consIdVar(paramName, new AObjectTypeIR());
 
-		ACastUnaryExpCG castVar = new ACastUnaryExpCG();
+		ACastUnaryExpIR castVar = new ACastUnaryExpIR();
 
 		castVar.setType(assist.consClassType(traceEnclosingClass));
 		castVar.setExp(idVar);
@@ -101,14 +101,14 @@ public class CallObjTraceLocalizer extends AnswerAdaptor<SExpCG>
 	}
 
 	@Override
-	public SExpCG createNewReturnValue(INode node) throws AnalysisException
+	public SExpIR createNewReturnValue(INode node) throws AnalysisException
 	{
 		assert false : "Should not happen";
 		return null;
 	}
 
 	@Override
-	public SExpCG createNewReturnValue(Object node) throws AnalysisException
+	public SExpIR createNewReturnValue(Object node) throws AnalysisException
 	{
 		assert false : "Should not happen";
 		return null;
