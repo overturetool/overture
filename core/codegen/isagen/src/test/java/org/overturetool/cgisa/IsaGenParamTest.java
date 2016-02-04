@@ -25,10 +25,12 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.Assume;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -43,84 +45,82 @@ import com.google.gson.reflect.TypeToken;
 
 /**
  * Main parameterized test class. Runs tests on modules with minimal
- * definitions to exercise the translation with a single construct 
+ * definitions to exercise the translation with a single construct
  * at a time.
- * @author ldc
  *
+ * @author ldc
  */
 @RunWith(Parameterized.class)
-public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult>
-{
+public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
 
-	public IsaGenParamTest(String nameParameter, String inputParameter,
-			String resultParameter)
-	{
-		super(nameParameter, inputParameter, resultParameter);
-	}
+    public IsaGenParamTest(String nameParameter, String inputParameter,
+                           String resultParameter) {
+        super(nameParameter, inputParameter, resultParameter);
+    }
 
-	private static final String UPDATE = "tests.update.isagen";
-	private static final String CGISA_ROOT = "src/test/resources/modules";
+    private static final String UPDATE = "tests.update.isagen";
+    private static final String CGISA_ROOT = "src/test/resources/modules";
+    private static final List<String> skippedTests = Arrays.asList("EqualsInit.vdmsl","PredicateInit.vdmsl");
 
-	@Override
-	public CgIsaTestResult processModel(List<INode> ast)
-	{
-		IsaGen gen = new IsaGen();
+    @Override
+    public CgIsaTestResult processModel(List<INode> ast) {
 
-		List<AModuleModules> classes = new LinkedList<>();
+        IsaGen gen = new IsaGen();
 
-		for (INode n : ast)
-		{
-			classes.add((AModuleModules) n);
-		}
+        List<AModuleModules> classes = new LinkedList<>();
 
-		List<GeneratedModule> result = null;
-		try
-		{
-			result = gen.generateIsabelleSyntax(classes);
-			if (!result.get(0).canBeGenerated())
-			{
-				StringBuilder sb = new StringBuilder();
-				sb.append(result.get(0).getMergeErrors());
-				sb.append(result.get(0).getUnsupportedInIr());
-				sb.append(result.get(0).getUnsupportedInTargLang());
-				fail(sb.toString());
-			}
-		} catch (AnalysisException
-				| org.overture.codegen.ir.analysis.AnalysisException e)
-		{
-			fail("Could not process test file " + testName);
-			return null;
-		}
+        for (INode n : ast) {
+            classes.add((AModuleModules) n);
+        }
 
-		return CgIsaTestResult.convert(result);
-	}
+        List<GeneratedModule> result = null;
+        try {
+            result = gen.generateIsabelleSyntax(classes);
+            if (!result.get(0).canBeGenerated()) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(result.get(0).getMergeErrors());
+                sb.append(result.get(0).getUnsupportedInIr());
+                sb.append(result.get(0).getUnsupportedInTargLang());
+                fail(sb.toString());
+            }
+        } catch (AnalysisException
+                | org.overture.codegen.ir.analysis.AnalysisException e) {
+            fail("Could not process test file " + testName);
+            return null;
+        }
 
-	@Parameters(name = "{index} : {0}")
-	public static Collection<Object[]> testData()
-	{
-		return PathsProvider.computePaths(CGISA_ROOT);
-	}
+        return CgIsaTestResult.convert(result);
+    }
 
-	@Override
-	public Type getResultType()
-	{
-		Type resultType = new TypeToken<CgIsaTestResult>()
-		{
-		}.getType();
-		return resultType;
-	}
+    @Parameters(name = "{index} : {0}")
+    public static Collection<Object[]> testData() {
+        return PathsProvider.computePaths(CGISA_ROOT);
+    }
 
-	@Override
-	protected String getUpdatePropertyString()
-	{
-		return UPDATE;
-	}
+    @Override
+    public Type getResultType() {
+        Type resultType = new TypeToken<CgIsaTestResult>() {
+        }.getType();
+        return resultType;
+    }
 
-	@Override
-	public void compareResults(CgIsaTestResult actual, CgIsaTestResult expected)
-	{
-		assertTrue("\n --- Expected: ---\n" + expected.translation
-				+ "\n --- Got: ---\n" + actual.translation, expected.compare(actual));
-	}
+    @Override
+    protected String getUpdatePropertyString() {
+        return UPDATE;
+    }
 
+    @Override
+    public void compareResults(CgIsaTestResult actual, CgIsaTestResult expected) {
+        assertTrue("\n --- Expected: ---\n" + expected.translation
+                + "\n --- Got: ---\n" + actual.translation, expected.compare(actual));
+    }
+
+    @Override
+    protected void checkAssumptions() {
+        Assume.assumeTrue("Test in skip list.",notSkipped());
+    }
+
+    private boolean notSkipped() {
+        return !skippedTests.contains(testName);
+    }
 }
