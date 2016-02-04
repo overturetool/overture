@@ -1,7 +1,7 @@
 Packages
 
-base org.overture.cgisa.extast.node;
-analysis org.overture.cgisa.extast.analysis;
+base org.overture.cgisa.isair.node;
+analysis org.overture.cgisa.isair.analysis;
 
 Tokens
   java_Boolean = 'java:java.lang.Boolean';
@@ -10,7 +10,7 @@ Abstract Syntax Tree
 
 IR = #decl;
 
-#decl {-> package='org.overture.cgisa.extast.declarations'}
+#decl {-> package='org.overture.cgisa.isair.declarations'}
        = {mrFuncGroup}
            [funcs]:IR.#decl.func*
        ;
