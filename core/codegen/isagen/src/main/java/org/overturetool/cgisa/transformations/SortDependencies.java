@@ -29,10 +29,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.codegen.ir.SDeclCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.AModuleDeclCG;
 
 public class SortDependencies extends DepthFirstAnalysisAdaptor
 {

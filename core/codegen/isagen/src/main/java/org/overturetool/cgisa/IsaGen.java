@@ -33,9 +33,9 @@ import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
@@ -57,7 +57,7 @@ public class IsaGen extends CodeGenBase
 
 	public static GeneratedModule vdmModule2IsaTheory(AModuleModules module)
 			throws AnalysisException,
-			org.overture.codegen.cgast.analysis.AnalysisException
+			org.overture.codegen.ir.analysis.AnalysisException
 	{
 		IsaGen ig = new IsaGen();
 		List<AModuleModules> ast = new LinkedList<AModuleModules>();
@@ -68,25 +68,25 @@ public class IsaGen extends CodeGenBase
 	}
 
 	public static String vdmExp2IsaString(PExp exp) throws AnalysisException,
-			org.overture.codegen.cgast.analysis.AnalysisException
+			org.overture.codegen.ir.analysis.AnalysisException
 	{
 		IsaGen ig = new IsaGen();
 		GeneratedModule r = ig.generateIsabelleSyntax(exp);
 		if (r.hasMergeErrors())
 		{
-			throw new org.overture.codegen.cgast.analysis.AnalysisException(exp.toString()
+			throw new org.overture.codegen.ir.analysis.AnalysisException(exp.toString()
 					+ " cannot be generated. Merge errors:"
 					+ r.getMergeErrors().toString());
 		}
 		if (r.hasUnsupportedIrNodes())
 		{
-			throw new org.overture.codegen.cgast.analysis.AnalysisException(exp.toString()
+			throw new org.overture.codegen.ir.analysis.AnalysisException(exp.toString()
 					+ " cannot be generated. Unsupported in IR:"
 					+ r.getUnsupportedInIr().toString());
 		}
 		if (r.hasUnsupportedTargLangNodes())
 		{
-			throw new org.overture.codegen.cgast.analysis.AnalysisException(exp.toString()
+			throw new org.overture.codegen.ir.analysis.AnalysisException(exp.toString()
 					+ " cannot be generated. Unsupported in TargLang:"
 					+ r.getUnsupportedInTargLang().toString());
 		}
@@ -107,7 +107,7 @@ public class IsaGen extends CodeGenBase
 
 	public GeneratedModule generateIsabelleSyntax(PExp exp)
 			throws AnalysisException,
-			org.overture.codegen.cgast.analysis.AnalysisException
+			org.overture.codegen.ir.analysis.AnalysisException
 	{
 		IRStatus<SExpCG> status = this.generator.generateFrom(exp);
 
@@ -116,7 +116,7 @@ public class IsaGen extends CodeGenBase
 			return prettyPrint(status);
 		}
 
-		throw new org.overture.codegen.cgast.analysis.AnalysisException(exp.toString()
+		throw new org.overture.codegen.ir.analysis.AnalysisException(exp.toString()
 				+ " cannot be code-generated");
 	}
 
@@ -127,11 +127,11 @@ public class IsaGen extends CodeGenBase
 	 *            of the complete VDM++ model
 	 * @return Isabelly syntax encoded in a string
 	 * @throws AnalysisException
-	 * @throws org.overture.codegen.cgast.analysis.AnalysisException
+	 * @throws org.overture.codegen.ir.analysis.AnalysisException
 	 */
 	public List<GeneratedModule> generateIsabelleSyntax(List<AModuleModules> ast)
 			throws AnalysisException,
-			org.overture.codegen.cgast.analysis.AnalysisException
+			org.overture.codegen.ir.analysis.AnalysisException
 	{
 		// Transform AST into IR
 		List<IRStatus<INode>> statuses = new LinkedList<>();
@@ -175,7 +175,7 @@ public class IsaGen extends CodeGenBase
 	}
 
 	private List<GeneratedModule> prettyPrint(List<IRStatus<INode>> statuses)
-			throws org.overture.codegen.cgast.analysis.AnalysisException
+			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		// Apply merge visitor to pretty print Isabelle syntax
 		TemplateStructure ts = new TemplateStructure("IsaTemplates");
@@ -195,7 +195,7 @@ public class IsaGen extends CodeGenBase
 	}
 
 	private GeneratedModule prettyPrint(IRStatus<? extends INode> status)
-			throws org.overture.codegen.cgast.analysis.AnalysisException
+			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		// Apply merge visitor to pretty print Isabelle syntax
 		TemplateStructure ts = new TemplateStructure("IsaTemplates");
@@ -206,7 +206,7 @@ public class IsaGen extends CodeGenBase
 
 	private GeneratedModule prettyPrintNode(MergeVisitor pp,
 			IRStatus<? extends INode> status)
-			throws org.overture.codegen.cgast.analysis.AnalysisException
+			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		INode irClass = status.getIrNode();
 

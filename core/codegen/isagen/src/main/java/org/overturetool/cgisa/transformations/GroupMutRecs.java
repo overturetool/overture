@@ -31,10 +31,10 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.overture.cgisa.extast.analysis.DepthFirstAnalysisIsaAdaptor;
 import org.overture.cgisa.extast.declarations.AMrFuncGroupDeclCG;
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AFuncDeclCG;
-import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.codegen.ir.SDeclCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.AFuncDeclCG;
+import org.overture.codegen.ir.declarations.AModuleDeclCG;
 import org.overture.codegen.trans.ITotalTransformation;
 
 public class GroupMutRecs extends DepthFirstAnalysisIsaAdaptor implements

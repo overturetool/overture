@@ -1,15 +1,15 @@
 package org.overturetool.cgisa.transformations;
 
 import org.overture.ast.expressions.AEqualsBinaryExp;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.AModuleDeclCG;
-import org.overture.codegen.cgast.declarations.AStateDeclCG;
-import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.statements.AAtomicStmCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.AModuleDeclCG;
+import org.overture.codegen.ir.declarations.AStateDeclCG;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.ir.statements.AAtomicStmCG;
+import org.overture.codegen.ir.statements.AReturnStmCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class StateInit extends DepthFirstAnalysisAdaptor

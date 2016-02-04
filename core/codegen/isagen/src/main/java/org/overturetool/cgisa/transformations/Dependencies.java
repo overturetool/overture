@@ -31,13 +31,13 @@ import org.apache.commons.collections4.map.HashedMap;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AFuncDeclCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.AFieldDeclCG;
+import org.overture.codegen.ir.declarations.AFuncDeclCG;
+import org.overture.codegen.ir.expressions.SVarExpCG;
 import org.overturetool.cgisa.IsaChecks;
-import org.overture.codegen.cgast.SDeclCG;
+import org.overture.codegen.ir.SDeclCG;
 
 public class Dependencies
 {

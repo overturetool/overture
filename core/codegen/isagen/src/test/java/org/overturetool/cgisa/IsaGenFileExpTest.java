@@ -110,7 +110,7 @@ public class IsaGenFileExpTest extends ParamFineGrainTest<CgIsaTestResult>
 				fail(sb.toString());
 			}
 		} catch (AnalysisException
-				| org.overture.codegen.cgast.analysis.AnalysisException
+				| org.overture.codegen.ir.analysis.AnalysisException
 				| IOException e)
 		{
 			fail("Could not process test file " + testName + "Reason: "

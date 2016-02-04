@@ -21,10 +21,10 @@
  */
 package org.overturetool.cgisa;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.declarations.AFieldDeclCG;
+import org.overture.codegen.ir.expressions.AApplyExpCG;
+import org.overture.codegen.ir.expressions.AFieldExpCG;
 
 public class IsaChecks
 {

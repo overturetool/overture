@@ -86,7 +86,7 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult>
 				fail(sb.toString());
 			}
 		} catch (AnalysisException
-				| org.overture.codegen.cgast.analysis.AnalysisException e)
+				| org.overture.codegen.ir.analysis.AnalysisException e)
 		{
 			fail("Could not process test file " + testName);
 			return null;
