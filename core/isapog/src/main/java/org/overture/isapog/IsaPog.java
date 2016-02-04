@@ -44,7 +44,7 @@ public class IsaPog
 	private String posThyName;
 
 	public IsaPog(AModuleModules ast) throws AnalysisException,
-			org.overture.codegen.cgast.analysis.AnalysisException
+			org.overture.codegen.ir.analysis.AnalysisException
 	{
 		IProofObligationList pos = ProofObligationGenerator.generateProofObligations(ast);
 		pos.renumber();
@@ -128,7 +128,7 @@ public class IsaPog
 	}
 
 	private String makePoLemma(IProofObligation po) throws AnalysisException,
-			org.overture.codegen.cgast.analysis.AnalysisException
+			org.overture.codegen.ir.analysis.AnalysisException
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append(ISA_OPEN_COMMENT);
@@ -151,7 +151,7 @@ public class IsaPog
 
 	private String makePosThy(IProofObligationList pos, String moduleName)
 			throws AnalysisException,
-			org.overture.codegen.cgast.analysis.AnalysisException
+			org.overture.codegen.ir.analysis.AnalysisException
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append(makePosThyHeader(moduleName));

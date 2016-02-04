@@ -18,7 +18,7 @@ public class QuickIsaPog
 
 	@Test
 	public void fileWriteTest() throws IOException, AnalysisException,
-			org.overture.codegen.cgast.analysis.AnalysisException
+			org.overture.codegen.ir.analysis.AnalysisException
 	{
 		List<INode> nodelist = ParseTcFacade.typedAst(modelPath, "AdHoc");
 		INode ast = nodelist.get(0);
@@ -42,7 +42,7 @@ public class QuickIsaPog
 
 	@Test
 	public void printTest() throws IOException, AnalysisException,
-			org.overture.codegen.cgast.analysis.AnalysisException
+			org.overture.codegen.ir.analysis.AnalysisException
 	{
 		List<INode> nodelist = ParseTcFacade.typedAst(modelPath, "AdHoc");
 		INode ast = nodelist.get(0);
