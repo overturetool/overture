@@ -30,34 +30,34 @@ import org.jgrapht.alg.StrongConnectivityInspector;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.overture.cgisa.extast.analysis.DepthFirstAnalysisIsaAdaptor;
-import org.overture.cgisa.extast.declarations.AMrFuncGroupDeclCG;
-import org.overture.codegen.ir.SDeclCG;
+import org.overture.cgisa.extast.declarations.AMrFuncGroupDeclIR;
+import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
-import org.overture.codegen.ir.declarations.AFuncDeclCG;
-import org.overture.codegen.ir.declarations.AModuleDeclCG;
+import org.overture.codegen.ir.declarations.AFuncDeclIR;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.trans.ITotalTransformation;
 
 public class GroupMutRecs extends DepthFirstAnalysisIsaAdaptor implements
 		ITotalTransformation
 {
 
-	private AModuleDeclCG result = null;
+	private AModuleDeclIR result = null;
 	Dependencies depUtils;
-	DirectedGraph<AFuncDeclCG, DefaultEdge> deps;
-	List<AFuncDeclCG> funcs;
+	DirectedGraph<AFuncDeclIR, DefaultEdge> deps;
+	List<AFuncDeclIR> funcs;
 
 	public GroupMutRecs()
 	{
 		super();
 		deps = new DefaultDirectedGraph<>(DefaultEdge.class);
 		depUtils = new Dependencies();
-		funcs = new LinkedList<AFuncDeclCG>();
+		funcs = new LinkedList<AFuncDeclIR>();
 	}
 
 	@Override
-	public void caseAModuleDeclCG(AModuleDeclCG node) throws AnalysisException
+	public void caseAModuleDeclIR(AModuleDeclIR node) throws AnalysisException
 	{
-		result = new AModuleDeclCG();
+		result = new AModuleDeclIR();
 		result.setExports(node.getExports());
 		result.setImport(node.getImport());
 		result.setIsDLModule(node.getIsDLModule());
@@ -72,13 +72,13 @@ public class GroupMutRecs extends DepthFirstAnalysisIsaAdaptor implements
 
 	}
 
-	private void filterFunctions(LinkedList<SDeclCG> decls)
+	private void filterFunctions(LinkedList<SDeclIR> decls)
 	{
-		for (SDeclCG d : decls)
+		for (SDeclIR d : decls)
 		{
-			if (d instanceof AFuncDeclCG)
+			if (d instanceof AFuncDeclIR)
 			{
-				funcs.add((AFuncDeclCG) d);
+				funcs.add((AFuncDeclIR) d);
 			}
 		}
 	}
@@ -98,12 +98,12 @@ public class GroupMutRecs extends DepthFirstAnalysisIsaAdaptor implements
 
 	private void groupDeps()
 	{
-		StrongConnectivityInspector<AFuncDeclCG, DefaultEdge> visitor = new StrongConnectivityInspector<>(deps);
-		for (Set<AFuncDeclCG> scs : visitor.stronglyConnectedSets())
+		StrongConnectivityInspector<AFuncDeclIR, DefaultEdge> visitor = new StrongConnectivityInspector<>(deps);
+		for (Set<AFuncDeclIR> scs : visitor.stronglyConnectedSets())
 		{
 			if (scs.size() > 1)
 			{
-				AMrFuncGroupDeclCG aux = new AMrFuncGroupDeclCG();
+				AMrFuncGroupDeclIR aux = new AMrFuncGroupDeclIR();
 				aux.setFuncs(new LinkedList<>(scs));
 				// this line also removes the function from the functions block
 				result.getDecls().add(aux);
@@ -112,7 +112,7 @@ public class GroupMutRecs extends DepthFirstAnalysisIsaAdaptor implements
 	}
 
 	@Override
-	public AModuleDeclCG getResult()
+	public AModuleDeclIR getResult()
 	{
 		return result;
 	}

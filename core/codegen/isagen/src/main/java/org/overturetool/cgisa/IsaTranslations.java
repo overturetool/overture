@@ -27,19 +27,19 @@ import java.util.List;
 
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.SMultipleBindCG;
-import org.overture.codegen.ir.STypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SMultipleBindIR;
+import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.ir.declarations.AFuncDeclCG;
-import org.overture.codegen.ir.declarations.ANamedTypeDeclCG;
-import org.overture.codegen.ir.declarations.ARecordDeclCG;
-import org.overture.codegen.ir.declarations.ATypeDeclCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.types.AMethodTypeCG;
-import org.overture.codegen.ir.types.AVoidTypeCG;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AFuncDeclIR;
+import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.declarations.ATypeDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.AVoidTypeIR;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
@@ -80,19 +80,19 @@ public class IsaTranslations
 		return writer.toString();
 	}
 
-	public String transApplyParams(List<SExpCG> params)
+	public String transApplyParams(List<SExpIR> params)
 			throws AnalysisException
 	{
 		return transNodeList(params, LIST_SEP);
 	}
 
-	public String transTypeParams(List<AFormalParamLocalParamCG> params)
+	public String transTypeParams(List<AFormalParamLocalParamIR> params)
 			throws AnalysisException
 	{
 		return transNodeList(params, TYPE_PARAM_SEP);
 	}
 
-	public String transBinds(List<? extends SMultipleBindCG> binds)
+	public String transBinds(List<? extends SMultipleBindIR> binds)
 			throws AnalysisException
 	{
 		return transNodeList(binds, LIST_SEP);
@@ -118,11 +118,11 @@ public class IsaTranslations
 		return sb.toString();
 	}
 
-	public String transString(List<SExpCG> args) throws AnalysisException
+	public String transString(List<SExpIR> args) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("''");
-		for (SExpCG arg : args)
+		for (SExpIR arg : args)
 		{
 			sb.append(trans(arg));
 		}
@@ -130,7 +130,7 @@ public class IsaTranslations
 		return sb.toString();
 	}
 
-	public String transSeq(List<SExpCG> args) throws AnalysisException
+	public String transSeq(List<SExpIR> args) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
@@ -139,15 +139,15 @@ public class IsaTranslations
 		return sb.toString();
 	}
 
-	public String rec2Tuple(ARecordDeclCG record) throws AnalysisException
+	public String rec2Tuple(ARecordDeclIR record) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder();
 
-		Iterator<AFieldDeclCG> it = record.getFields().iterator();
+		Iterator<AFieldDeclIR> it = record.getFields().iterator();
 
 		while (it.hasNext())
 		{
-			AFieldDeclCG n = it.next();
+			AFieldDeclIR n = it.next();
 
 			sb.append(trans(n.getType()));
 			if (it.hasNext())
@@ -162,7 +162,7 @@ public class IsaTranslations
 	// Hacks - translations that manipulate the tree in grostesque way due to
 	// issues with the IR
 	// FIXME Unhack result name extraction for implicit functions
-	public String hackResultName(AFuncDeclCG func) throws AnalysisException
+	public String hackResultName(AFuncDeclIR func) throws AnalysisException
 	{
 		SourceNode x = func.getSourceNode();
 		if (x.getVdmNode() instanceof AImplicitFunctionDefinition)
@@ -170,18 +170,18 @@ public class IsaTranslations
 			AImplicitFunctionDefinition iFunc = (AImplicitFunctionDefinition) x.getVdmNode();
 			return iFunc.getResult().getPattern().toString();
 		}
-		throw new AnalysisException("Expected AFuncDeclCG in implicit function source. Got: "
+		throw new AnalysisException("Expected AFuncDeclIR in implicit function source. Got: "
 				+ x.getVdmNode().getClass().toString());
 	}
 
 	// FIXME Unhack invariant extraction for named types
-	public String hackInv(ANamedTypeDeclCG type)
+	public String hackInv(ANamedTypeDeclIR type)
 	{
-		ATypeDeclCG tDecl = (ATypeDeclCG) type.parent();
+		ATypeDeclIR tDecl = (ATypeDeclIR) type.parent();
 
 		if (tDecl.getInv() != null)
 		{
-			AFuncDeclCG invFunc = (AFuncDeclCG) tDecl.getInv();
+			AFuncDeclIR invFunc = (AFuncDeclIR) tDecl.getInv();
 			StringBuilder sb = new StringBuilder();
 			sb.append("inv ");
 			sb.append(invFunc.getFormalParams().get(0).getPattern().toString());
@@ -197,12 +197,12 @@ public class IsaTranslations
 	}
 
 	// FIXME Unhack invariant extraction for namedt ypes
-	public String hackInv(ARecordDeclCG type)
+	public String hackInv(ARecordDeclIR type)
 	{
 
 		if (type.getInvariant() != null)
 		{
-			AFuncDeclCG invFunc = (AFuncDeclCG) type.getInvariant();
+			AFuncDeclIR invFunc = (AFuncDeclIR) type.getInvariant();
 			StringBuilder sb = new StringBuilder();
 			sb.append("inv ");
 			sb.append(invFunc.getFormalParams().get(0).getPattern().toString());
@@ -217,7 +217,7 @@ public class IsaTranslations
 		return "";
 	}
 
-	public String hackInvDecl(ARecordDeclCG type) throws AnalysisException
+	public String hackInvDecl(ARecordDeclIR type) throws AnalysisException
 	{
 		if (type.getInvariant() != null)
 		{
@@ -244,7 +244,7 @@ public class IsaTranslations
 
 	// Control flow
 
-	public String filter(AFieldDeclCG field) throws AnalysisException
+	public String filter(AFieldDeclIR field) throws AnalysisException
 	{
 		if (field.getFinal() && field.getStatic())
 		{
@@ -255,9 +255,9 @@ public class IsaTranslations
 	}
 
 	// Checks
-	public boolean hasReturn(AMethodTypeCG node)
+	public boolean hasReturn(AMethodTypeIR node)
 	{
-		return !(node.getResult() instanceof AVoidTypeCG);
+		return !(node.getResult() instanceof AVoidTypeIR);
 	}
 
 	public boolean isRoot(INode node)
@@ -265,23 +265,23 @@ public class IsaTranslations
 		return isaUtils.isRoot(node);
 	}
 
-	public boolean isRootRec(AApplyExpCG node)
+	public boolean isRootRec(AApplyExpIR node)
 	{
 		return isaUtils.isRootRec(node);
 	}
 
-	public boolean isString(STypeCG node) throws AnalysisException
+	public boolean isString(STypeIR node) throws AnalysisException
 	{
 		return node.apply(new IsSeqOfCharTypeVisitor());
 	}
 
-	public boolean isFunc(STypeCG node) throws AnalysisException
+	public boolean isFunc(STypeIR node) throws AnalysisException
 	{
 		return node.apply(new IsMethodTypeVisitor());
 	}
 
-	public boolean isRecordDecl(ATypeDeclCG node)
+	public boolean isRecordDecl(ATypeDeclIR node)
 	{
-		return (node.getDecl() instanceof ARecordDeclCG);
+		return (node.getDecl() instanceof ARecordDeclIR);
 	}
 }

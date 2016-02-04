@@ -22,17 +22,17 @@
 package org.overturetool.cgisa;
 
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.declarations.AFieldDeclCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.AFieldExpCG;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
 
 public class IsaChecks
 {
 	public boolean isRoot(INode node)
 	{
-		if (node.parent() instanceof AApplyExpCG)
+		if (node.parent() instanceof AApplyExpIR)
 		{
-			AApplyExpCG par = (AApplyExpCG) node.parent();
+			AApplyExpIR par = (AApplyExpIR) node.parent();
 			if (par.getRoot() == node)
 			{
 				return true;
@@ -40,14 +40,14 @@ public class IsaChecks
 		}
 		return false;
 	}
-	public boolean isRootRec(AApplyExpCG node)
+	public boolean isRootRec(AApplyExpIR node)
 	{
-		return (node.getRoot() instanceof AFieldExpCG);
+		return (node.getRoot() instanceof AFieldExpIR);
 	}
 
 	public boolean isFieldRHS(INode node)
 	{
-		return node.getAncestor(AFieldDeclCG.class) != null;
+		return node.getAncestor(AFieldDeclIR.class) != null;
 	}
 
 }

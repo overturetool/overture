@@ -34,8 +34,8 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.SExpCG;
-import org.overture.codegen.ir.declarations.AModuleDeclCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
@@ -48,7 +48,7 @@ import org.overturetool.cgisa.transformations.SortDependencies;
 import org.overturetool.cgisa.transformations.StateInit;
 
 /**
- * Main facade class for VDM 2 Isabelle CG
+ * Main facade class for VDM 2 Isabelle IR
  * 
  * @author ldc
  */
@@ -109,7 +109,7 @@ public class IsaGen extends CodeGenBase
 			throws AnalysisException,
 			org.overture.codegen.ir.analysis.AnalysisException
 	{
-		IRStatus<SExpCG> status = this.generator.generateFrom(exp);
+		IRStatus<SExpIR> status = this.generator.generateFrom(exp);
 
 		if (status.canBeGenerated())
 		{
@@ -121,7 +121,7 @@ public class IsaGen extends CodeGenBase
 	}
 
 	/**
-	 * Main entry point into the Isabelle CG component. Takes an AST and returns corresponding Isabelle Syntax.
+	 * Main entry point into the Isabelle IR component. Takes an AST and returns corresponding Isabelle Syntax.
 	 * 
 	 * @param ast
 	 *            of the complete VDM++ model
@@ -161,9 +161,9 @@ public class IsaGen extends CodeGenBase
 			GroupMutRecs groupMR = new GroupMutRecs();
 			generator.applyTotalTransformation(status, groupMR);
 
-			if (status.getIrNode() instanceof AModuleDeclCG)
+			if (status.getIrNode() instanceof AModuleDeclIR)
 			{
-				AModuleDeclCG cClass = (AModuleDeclCG) status.getIrNode();
+				AModuleDeclIR cClass = (AModuleDeclIR) status.getIrNode();
 				// then sort remaining dependencies
 				SortDependencies sortTrans = new SortDependencies(cClass.getDecls());
 				generator.applyPartialTransformation(status, sortTrans);

@@ -23,28 +23,28 @@ package org.overturetool.cgisa;
 
 import java.io.File;
 
-import org.overture.cgisa.extast.declarations.AMrFuncGroupDeclCG;
-import org.overture.codegen.ir.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.ir.declarations.AFuncDeclCG;
-import org.overture.codegen.ir.declarations.AModuleDeclCG;
-import org.overture.codegen.ir.declarations.ANamedTypeDeclCG;
-import org.overture.codegen.ir.declarations.AStateDeclCG;
-import org.overture.codegen.ir.expressions.AApplyExpCG;
-import org.overture.codegen.ir.expressions.ABoolLiteralExpCG;
-import org.overture.codegen.ir.expressions.ACharLiteralExpCG;
-import org.overture.codegen.ir.expressions.AExplicitVarExpCG;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpCG;
-import org.overture.codegen.ir.expressions.AIntLiteralExpCG;
-import org.overture.codegen.ir.expressions.ALetDefExpCG;
-import org.overture.codegen.ir.expressions.ANotImplementedExpCG;
-import org.overture.codegen.ir.expressions.ARealLiteralExpCG;
-import org.overture.codegen.ir.expressions.ATernaryIfExpCG;
-import org.overture.codegen.ir.patterns.ASetMultipleBindCG;
-import org.overture.codegen.ir.patterns.ATypeMultipleBindCG;
-import org.overture.codegen.ir.types.AMapMapTypeCG;
-import org.overture.codegen.ir.types.ASeqSeqTypeCG;
-import org.overture.codegen.ir.types.ASetSetTypeCG;
+import org.overture.cgisa.extast.declarations.AMrFuncGroupDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AFuncDeclIR;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
+import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
+import org.overture.codegen.ir.declarations.AStateDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.ABoolLiteralExpIR;
+import org.overture.codegen.ir.expressions.ACharLiteralExpIR;
+import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
+import org.overture.codegen.ir.expressions.ALetDefExpIR;
+import org.overture.codegen.ir.expressions.ANotImplementedExpIR;
+import org.overture.codegen.ir.expressions.ARealLiteralExpIR;
+import org.overture.codegen.ir.expressions.ATernaryIfExpIR;
+import org.overture.codegen.ir.patterns.ASetMultipleBindIR;
+import org.overture.codegen.ir.patterns.ATypeMultipleBindIR;
+import org.overture.codegen.ir.types.AMapMapTypeIR;
+import org.overture.codegen.ir.types.ASeqSeqTypeIR;
+import org.overture.codegen.ir.types.ASetSetTypeIR;
 import org.overture.codegen.merging.TemplateManager;
 import org.overture.codegen.merging.TemplateStructure;
 
@@ -87,70 +87,70 @@ public class IsaTemplateManager extends TemplateManager
 
 	private void initIsaNodes()
 	{
-		nodeTemplateFileNames.put(AFuncDeclCG.class, templateStructure.DECL_PATH
+		nodeTemplateFileNames.put(AFuncDeclIR.class, templateStructure.DECL_PATH
 				+ FUNCTION);
 
-		nodeTemplateFileNames.put(AFormalParamLocalParamCG.class, templateStructure.LOCAL_DECLS_PATH
+		nodeTemplateFileNames.put(AFormalParamLocalParamIR.class, templateStructure.LOCAL_DECLS_PATH
 				+ FORMAL_PARAM);
 
-		nodeTemplateFileNames.put(AMrFuncGroupDeclCG.class, templateStructure.DECL_PATH
+		nodeTemplateFileNames.put(AMrFuncGroupDeclIR.class, templateStructure.DECL_PATH
 				+ MUT_REC);
 
-		nodeTemplateFileNames.put(AModuleDeclCG.class, templateStructure.DECL_PATH
+		nodeTemplateFileNames.put(AModuleDeclIR.class, templateStructure.DECL_PATH
 				+ MODULE_DECL);
 
-		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH
+		nodeTemplateFileNames.put(AApplyExpIR.class, templateStructure.EXP_PATH
 				+ MISC_EXP_FOLDER + File.separatorChar + APPLY);
 
-		nodeTemplateFileNames.put(AIdentifierVarExpCG.class, templateStructure.EXP_PATH
+		nodeTemplateFileNames.put(AIdentifierVarExpIR.class, templateStructure.EXP_PATH
 				+ MISC_EXP_FOLDER + File.separatorChar + VAR);
 
-		nodeTemplateFileNames.put(ATernaryIfExpCG.class, templateStructure.EXP_PATH
+		nodeTemplateFileNames.put(ATernaryIfExpIR.class, templateStructure.EXP_PATH
 				+ MISC_EXP_FOLDER + File.separatorChar + TERNARY);
 
-		nodeTemplateFileNames.put(ABoolLiteralExpCG.class, templateStructure.EXP_PATH
+		nodeTemplateFileNames.put(ABoolLiteralExpIR.class, templateStructure.EXP_PATH
 				+ LITERAL_EXP_FOLDER + File.separatorChar + BOOL_LIT);
 
-		nodeTemplateFileNames.put(ACharLiteralExpCG.class, templateStructure.EXP_PATH
+		nodeTemplateFileNames.put(ACharLiteralExpIR.class, templateStructure.EXP_PATH
 				+ LITERAL_EXP_FOLDER + File.separatorChar + CHAR_LIT);
 
-		nodeTemplateFileNames.put(AIntLiteralExpCG.class, templateStructure.EXP_PATH
+		nodeTemplateFileNames.put(AIntLiteralExpIR.class, templateStructure.EXP_PATH
 				+ LITERAL_EXP_FOLDER + File.separatorChar + INT_LIT);
 
-		nodeTemplateFileNames.put(ARealLiteralExpCG.class, templateStructure.EXP_PATH
+		nodeTemplateFileNames.put(ARealLiteralExpIR.class, templateStructure.EXP_PATH
 				+ LITERAL_EXP_FOLDER + File.separatorChar + REAL_LIT);
 
-		nodeTemplateFileNames.put(ATypeMultipleBindCG.class, templateStructure.makePath(BINDS_FOLDER)
+		nodeTemplateFileNames.put(ATypeMultipleBindIR.class, templateStructure.makePath(BINDS_FOLDER)
 				+ TYPE_MULTIPLE_BIND);
 
-		nodeTemplateFileNames.put(ASetMultipleBindCG.class, templateStructure.makePath(BINDS_FOLDER)
+		nodeTemplateFileNames.put(ASetMultipleBindIR.class, templateStructure.makePath(BINDS_FOLDER)
 				+ SET_MULT_BIND);
 
-		nodeTemplateFileNames.put(AExplicitVarExpCG.class, templateStructure.EXP_PATH
+		nodeTemplateFileNames.put(AExplicitVarExpIR.class, templateStructure.EXP_PATH
 				+ MISC_EXP_FOLDER + File.separatorChar + EXPLICIT_VAR);
 
-		nodeTemplateFileNames.put(ANamedTypeDeclCG.class, templateStructure.DECL_PATH
+		nodeTemplateFileNames.put(ANamedTypeDeclIR.class, templateStructure.DECL_PATH
 				+ NAMED_TYPE);
 
-		nodeTemplateFileNames.put(ASetSetTypeCG.class, templateStructure.TYPE_PATH
+		nodeTemplateFileNames.put(ASetSetTypeIR.class, templateStructure.TYPE_PATH
 				+ SET_TYPE);
 
-		nodeTemplateFileNames.put(ASeqSeqTypeCG.class, templateStructure.TYPE_PATH
+		nodeTemplateFileNames.put(ASeqSeqTypeIR.class, templateStructure.TYPE_PATH
 				+ SEQ_TYPE);
 
-		nodeTemplateFileNames.put(AMapMapTypeCG.class, templateStructure.TYPE_PATH
+		nodeTemplateFileNames.put(AMapMapTypeIR.class, templateStructure.TYPE_PATH
 				+ MAP_TYPE);
 
-		nodeTemplateFileNames.put(ANotImplementedExpCG.class, templateStructure.EXP_PATH
+		nodeTemplateFileNames.put(ANotImplementedExpIR.class, templateStructure.EXP_PATH
 				+ MISC_EXP_FOLDER + File.separatorChar + NOT_IMPL_EXP);
 
-		nodeTemplateFileNames.put(ALetDefExpCG.class, templateStructure.EXP_PATH
+		nodeTemplateFileNames.put(ALetDefExpIR.class, templateStructure.EXP_PATH
 				+ MISC_EXP_FOLDER + File.separatorChar + LET_DEF_EXP);
 
-		nodeTemplateFileNames.put(AIntDivNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
+		nodeTemplateFileNames.put(AIntDivNumericBinaryExpIR.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ File.separatorChar + DIV_EXP);
 
-		nodeTemplateFileNames.put(AStateDeclCG.class, templateStructure.DECL_PATH
+		nodeTemplateFileNames.put(AStateDeclIR.class, templateStructure.DECL_PATH
 				+ File.separator + STATE_DECL);
 
 	}

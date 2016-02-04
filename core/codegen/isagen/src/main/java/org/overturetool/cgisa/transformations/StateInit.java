@@ -1,15 +1,15 @@
 package org.overturetool.cgisa.transformations;
 
 import org.overture.ast.expressions.AEqualsBinaryExp;
-import org.overture.codegen.ir.SExpCG;
+import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.AMethodDeclCG;
-import org.overture.codegen.ir.declarations.AModuleDeclCG;
-import org.overture.codegen.ir.declarations.AStateDeclCG;
-import org.overture.codegen.ir.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.ir.statements.AAtomicStmCG;
-import org.overture.codegen.ir.statements.AReturnStmCG;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
+import org.overture.codegen.ir.declarations.AStateDeclIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.statements.AAtomicStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.ir.IRInfo;
 
 public class StateInit extends DepthFirstAnalysisAdaptor
@@ -22,11 +22,11 @@ public class StateInit extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAStateDeclCG(AStateDeclCG node) throws AnalysisException
+	public void caseAStateDeclIR(AStateDeclIR node) throws AnalysisException
 	{
 		if (node.getInitDecl() != null)
 		{
-			AMethodDeclCG initOp;
+			AMethodDeclIR initOp;
 			if (node.getExecutable())
 			{
 				initOp = makeExecutableInit(node);
@@ -35,18 +35,18 @@ public class StateInit extends DepthFirstAnalysisAdaptor
 				initOp = info.getDeclAssistant().funcToMethod(node.getInitDecl());
 			}
 
-			AModuleDeclCG module = node.getAncestor(AModuleDeclCG.class);
+			AModuleDeclIR module = node.getAncestor(AModuleDeclIR.class);
 			module.getDecls().add(initOp);
 			node.setInitDecl(null);
 		}
 	}
 
-	private AMethodDeclCG makeExecutableInit(AStateDeclCG node)
+	private AMethodDeclIR makeExecutableInit(AStateDeclIR node)
 	{
-		AMethodDeclCG meth = info.getDeclAssistant().funcToMethod(node.getInitDecl());
-		AReturnStmCG ret = new AReturnStmCG();
+		AMethodDeclIR meth = info.getDeclAssistant().funcToMethod(node.getInitDecl());
+		AReturnStmIR ret = new AReturnStmIR();
 
-		AEqualsBinaryExpCG initExp = (AEqualsBinaryExpCG) node.getInitExp();
+		AEqualsBinaryExpIR initExp = (AEqualsBinaryExpIR) node.getInitExp();
 		ret.setExp(initExp.getRight().clone());
 
 		meth.setBody(ret);

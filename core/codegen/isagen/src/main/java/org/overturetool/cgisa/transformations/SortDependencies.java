@@ -29,33 +29,33 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import org.overture.codegen.ir.SDeclCG;
+import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.ir.declarations.AModuleDeclCG;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
 
 public class SortDependencies extends DepthFirstAnalysisAdaptor
 {
-	List<SDeclCG> decls;
-	Map<SDeclCG, List<SDeclCG>> depGraph;
-	private List<SDeclCG> sorted;
+	List<SDeclIR> decls;
+	Map<SDeclIR, List<SDeclIR>> depGraph;
+	private List<SDeclIR> sorted;
 
 	protected Dependencies depUtils;
 
-	public SortDependencies(LinkedList<SDeclCG> linkedList)
+	public SortDependencies(LinkedList<SDeclIR> linkedList)
 	{
 		this.depUtils = new Dependencies();
 		this.depGraph = new HashMap<>();
-		this.sorted = new Vector<SDeclCG>();
+		this.sorted = new Vector<SDeclIR>();
 		this.decls = linkedList;
 		init();
 	}
 
 	@Override
-	public void caseAModuleDeclCG(AModuleDeclCG node) throws AnalysisException
+	public void caseAModuleDeclIR(AModuleDeclIR node) throws AnalysisException
 	{
 		node.getDecls().clear();
-		for (SDeclCG d : sorted)
+		for (SDeclIR d : sorted)
 		{
 			node.getDecls().add(d.clone());
 		}
@@ -66,7 +66,7 @@ public class SortDependencies extends DepthFirstAnalysisAdaptor
 		this.depGraph = depUtils.calcDepsAsMap(decls);
 
 		// add definitions w/no deps right away (to preserve order)
-		for (SDeclCG d : decls)
+		for (SDeclIR d : decls)
 		{
 			if (depGraph.get(d).isEmpty())
 			{
@@ -79,17 +79,17 @@ public class SortDependencies extends DepthFirstAnalysisAdaptor
 
 	private void sortDeps()
 	{
-		Set<SDeclCG> unmarked = depGraph.keySet();
-		Set<SDeclCG> tempMarks = new HashSet<>();
+		Set<SDeclIR> unmarked = depGraph.keySet();
+		Set<SDeclIR> tempMarks = new HashSet<>();
 
 		while (!unmarked.isEmpty())
 		{
-			SDeclCG n = unmarked.toArray(new SDeclCG[1])[0];
+			SDeclIR n = unmarked.toArray(new SDeclIR[1])[0];
 			visit(n, tempMarks, unmarked);
 		}
 	}
 
-	private void visit(SDeclCG n, Set<SDeclCG> tempMarks, Set<SDeclCG> unmarked)
+	private void visit(SDeclIR n, Set<SDeclIR> tempMarks, Set<SDeclIR> unmarked)
 	{
 		if (tempMarks.contains(n))
 		{
@@ -99,7 +99,7 @@ public class SortDependencies extends DepthFirstAnalysisAdaptor
 		{
 			tempMarks.add(n);
 
-			for (SDeclCG d : depGraph.get(n))
+			for (SDeclIR d : depGraph.get(n))
 			{
 				visit(d, tempMarks, unmarked);
 			}
