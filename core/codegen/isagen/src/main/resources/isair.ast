@@ -11,13 +11,6 @@ Abstract Syntax Tree
 IR = #decl;
 
 #decl {-> package='org.overture.cgisa.extast.declarations'}
-      = #Class
-       | {mrFuncGroup}
+       = {mrFuncGroup}
            [funcs]:IR.#decl.func*
        ;
-
-#Class {-> package='org.overture.cgisa.extast.declarations'}
-      = {isaclass}
-            [baseclass]:IR.#decl.#Class
-            [mutrec]:IR.#decl.mrFuncGroup
-      ;
