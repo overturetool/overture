@@ -147,25 +147,29 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements
 			if (template == null)
 			{
 				unsupportedInTargLang.add(new IrNodeInfo(node, "Template could not be found."));
-			} else
+			}
+			try
 			{
-				try
+				if (mergeObserver != null)
 				{
-					if (mergeObserver != null)
-					{
-						mergeObserver.preMerging(node, question);
-					}
-
-					template.merge(nodeContexts.pop().getVelocityContext(), question);
-
-					if (mergeObserver != null)
-					{
-						mergeObserver.nodeMerged(node, question);
-					}
-				} catch (Exception e)
-				{
-					mergeErrors.add(e);
+					mergeObserver.preMerging(node, question);
 				}
+
+				if (template != null)
+				{
+					template.merge(nodeContexts.pop().getVelocityContext(), question);
+				} else
+				{
+					question.write(String.format("/* Undefined template: %s */", node.getClass().getSimpleName()));
+				}
+
+				if (mergeObserver != null)
+				{
+					mergeObserver.nodeMerged(node, question);
+				}
+			} catch (Exception e)
+			{
+				mergeErrors.add(e);
 			}
 		} catch (ParseException e)
 		{
