@@ -47,6 +47,9 @@ abstract public class Environment
 
 	/** The enclosing func/op definition at this point, or null. */
 	private PDefinition enclosingDefinition = null;
+	
+	/** Whether we are in a functional (true) or operational (false) context, or null. */
+	private Boolean isFunctional = null;
 
 	/**
 	 * Create an environment linking to the given outer chain.
@@ -144,6 +147,21 @@ abstract public class Environment
 	public void setEnclosingDefinition(PDefinition def)
 	{
 		enclosingDefinition = def;
+	}
+
+	public boolean isFunctional()
+	{
+		if (isFunctional != null)
+		{
+			return isFunctional;
+		}
+
+		return outer == null ? false : outer.isFunctional();
+	}
+	
+	public void setFunctional(boolean functional)
+	{
+		isFunctional = Boolean.valueOf(functional);
 	}
 
 	/**

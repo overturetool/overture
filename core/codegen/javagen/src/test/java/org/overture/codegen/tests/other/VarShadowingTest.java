@@ -21,7 +21,6 @@ import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.VarRenamer;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.tests.util.TestUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
@@ -55,7 +54,6 @@ public class VarShadowingTest
 	{
 		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
-		Logger.getLog().setSilent(true);
 	}
 	
 	@Parameters(name = "{index} : {0}")

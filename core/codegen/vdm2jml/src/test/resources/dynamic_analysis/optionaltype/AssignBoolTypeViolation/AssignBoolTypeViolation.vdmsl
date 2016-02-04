@@ -1,0 +1,29 @@
+module Entry
+
+imports from IO all
+exports all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  dcl b : bool := true;
+  dcl bOpt : [bool] := nil;
+
+  IO`println("Before doing valid assignments");
+  bOpt := true;
+  b := bOpt;
+  bOpt := nil;
+  IO`println("After doing valid assignments");	
+  
+  IO`println("Before doing illegal assignments");
+  b := bOpt;
+  IO`println("After doing illegal assignments");
+  
+  return true;		
+);
+
+
+end Entry

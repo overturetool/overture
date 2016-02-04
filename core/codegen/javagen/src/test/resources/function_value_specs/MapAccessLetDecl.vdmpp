@@ -1,0 +1,21 @@
+class Entry
+
+functions
+
+mmap[@a,@b] : (@a->@b) -> seq of @a -> seq of @b
+mmap (f) (l) ==
+  if l = [] 
+  then []
+  else [f(hd l)] ^ mmap[@a,@b](f) (tl l);
+
+operations
+
+public static Run : () ==> ?
+Run() ==
+let c =1,
+    l = [1,2,3],
+    xs = mmap[int,nat](lambda x : nat & x+c) (l)
+in 
+ return xs(1); 
+      
+end Entry

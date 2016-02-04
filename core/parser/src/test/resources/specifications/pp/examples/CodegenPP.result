@@ -6,25 +6,25 @@
 <message column="8" line="2394" message="Recursive function has no measure" messageType="warning" number="5012" resource="CodegenPP.result"/>
 <message column="14" line="2380" message="Definition 'type' not used" messageType="warning" number="5000" resource="CodegenPP.result"/>
 <message column="12" line="2170" message="Operation returns void value" messageType="error" number="3313" resource="CodegenPP.result"/>
-<message column="49" line="2401" message="Operation '(head.getThn)' cannot be called from a function" messageType="error" number="3300" resource="CodegenPP.result"/>
-<message column="49" line="2400" message="Operation '(head.getTest)' cannot be called from a function" messageType="error" number="3300" resource="CodegenPP.result"/>
+<message column="49" line="2401" message="Impure operation '(head.getThn)' cannot be called from here" messageType="error" number="3300" resource="CodegenPP.result"/>
+<message column="49" line="2400" message="Impure operation '(head.getTest)' cannot be called from here" messageType="error" number="3300" resource="CodegenPP.result"/>
 <message column="33" line="2389" message="Cannot access Compile(?) from a static context" messageType="error" number="3181" resource="CodegenPP.result"/>
 <message column="41" line="2400" message="Name Compile(?) is ambiguous" messageType="error" number="3010" resource="CodegenPP.result"/>
 <message column="12" line="2197" message="Operation returns void value" messageType="error" number="3313" resource="CodegenPP.result"/>
-<message column="60" line="2390" message="Operation '(selif.getEse)' cannot be called from a function" messageType="error" number="3300" resource="CodegenPP.result"/>
+<message column="60" line="2390" message="Impure operation '(selif.getEse)' cannot be called from here" messageType="error" number="3300" resource="CodegenPP.result"/>
 <message column="41" line="2401" message="Cannot access Compile(?) from a static context" messageType="error" number="3181" resource="CodegenPP.result"/>
-<message column="43" line="2390" message="Operation '(selif.getElif)' cannot be called from a function" messageType="error" number="3300" resource="CodegenPP.result"/>
+<message column="43" line="2390" message="Impure operation '(selif.getElif)' cannot be called from here" messageType="error" number="3300" resource="CodegenPP.result"/>
 <message column="33" line="2388" message="Cannot access Compile(?) from a static context" messageType="error" number="3181" resource="CodegenPP.result"/>
 <message column="41" line="2401" message="Name Compile(?) is ambiguous" messageType="error" number="3010" resource="CodegenPP.result"/>
 <message column="33" line="2389" message="Name Compile(?) is ambiguous" messageType="error" number="3010" resource="CodegenPP.result"/>
-<message column="5" line="2356" message="Operation '(letExp.getDefs)' cannot be called from a function" messageType="error" number="3300" resource="CodegenPP.result"/>
-<message column="41" line="2388" message="Operation '(selif.getTest)' cannot be called from a function" messageType="error" number="3300" resource="CodegenPP.result"/>
-<message column="9" line="2338" message="Operation '(e.hasDeflt)' cannot be called from a function" messageType="error" number="3300" resource="CodegenPP.result"/>
+<message column="5" line="2356" message="Impure operation '(letExp.getDefs)' cannot be called from here" messageType="error" number="3300" resource="CodegenPP.result"/>
+<message column="41" line="2388" message="Impure operation '(selif.getTest)' cannot be called from here" messageType="error" number="3300" resource="CodegenPP.result"/>
+<message column="9" line="2338" message="Impure operation '(e.hasDeflt)' cannot be called from here" messageType="error" number="3300" resource="CodegenPP.result"/>
 <message column="33" line="2388" message="Name Compile(?) is ambiguous" messageType="error" number="3010" resource="CodegenPP.result"/>
 <message column="12" line="2156" message="Operation returns void value" messageType="error" number="3313" resource="CodegenPP.result"/>
 <message column="12" line="2180" message="Operation returns void value" messageType="error" number="3313" resource="CodegenPP.result"/>
 <message column="9" line="2247" message="Operation returns void value" messageType="error" number="3313" resource="CodegenPP.result"/>
 <message column="9" line="2397" message="Cannot access Compile(SimpleExpression) from a static context" messageType="error" number="3181" resource="CodegenPP.result"/>
 <message column="41" line="2400" message="Cannot access Compile(?) from a static context" messageType="error" number="3181" resource="CodegenPP.result"/>
-<message column="41" line="2389" message="Operation '(selif.getThn)' cannot be called from a function" messageType="error" number="3300" resource="CodegenPP.result"/>
+<message column="41" line="2389" message="Impure operation '(selif.getThn)' cannot be called from here" messageType="error" number="3300" resource="CodegenPP.result"/>
 </testResult>

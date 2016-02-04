@@ -1,0 +1,21 @@
+class Entry
+
+operations
+
+static rev : seq of char ==> seq of char
+rev(s) ==
+(
+  dcl res : seq of char := "";
+  for c in s do
+    res := [c] ^ res;
+  return res;
+);
+
+public static Run : () ==> ?
+Run () ==
+let r = rev("hej")
+in
+  return r(3) = 'h' and r(2) = 'e' and r(1) = 'j';
+   
+
+end Entry

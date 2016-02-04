@@ -9,7 +9,7 @@ public class Alarm {
     private Object reqQuali;
 
     public Alarm(final Object quali, final VDMSeq str) {
-        cg_init_Alarm_1(((Object) quali), str);
+        cg_init_Alarm_1(quali, str);
     }
 
     public Alarm() {
@@ -78,6 +78,11 @@ public class Plant {
     public Plant() {
     }
 
+    public void cg_init_Plant_1(final VDMSet als, final VDMMap sch) {
+        alarms = als;
+        schedule = sch;
+    }
+
     public Expert ExpertToPage(final Alarm a, final Token p) {
         Expert expert = null;
         Boolean success_1 = false;
@@ -86,7 +91,7 @@ public class Plant {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
             expert = ((Expert) iterator_1.next());
-            success_1 = expert.GetQuali().contains(a.GetReqQuali());
+            success_1 = SetUtil.inSet(a.GetReqQuali(), expert.GetQuali());
         }
 
         if (!(success_1)) {
@@ -107,23 +112,18 @@ public class Plant {
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Token p = ((Token) iterator_2.next());
 
-            if (((VDMSet) Utils.get(schedule, p)).contains(ex)) {
-                setCompResult_1 = SetUtil.union(setCompResult_1, SetUtil.set(p));
+            if (SetUtil.inSet(ex, ((VDMSet) Utils.get(schedule, p)))) {
+                setCompResult_1.add(p);
             }
         }
 
         return setCompResult_1;
     }
 
-    public void cg_init_Plant_1(final VDMSet als, final VDMMap sch) {
-        alarms = als;
-        schedule = sch;
-    }
-
     public void AddExpertToSchedule(final Token p, final Expert ex) {
         VDMSet ternaryIfExp_1 = null;
 
-        if (MapUtil.dom(schedule).contains(p)) {
+        if (SetUtil.inSet(p, MapUtil.dom(schedule))) {
             ternaryIfExp_1 = SetUtil.union(((VDMSet) Utils.get(schedule, p)),
                     SetUtil.set(ex));
         } else {
@@ -134,7 +134,7 @@ public class Plant {
     }
 
     public void RemoveExpertFromSchedule(final Token p, final Expert ex) {
-        VDMSet exs = ((VDMSet) Utils.get(schedule, p));
+        final VDMSet exs = ((VDMSet) Utils.get(schedule, p));
 
         VDMMap ternaryIfExp_2 = null;
 
@@ -158,7 +158,7 @@ public class Plant {
         for (Iterator iterator_3 = set_3.iterator();
                 iterator_3.hasNext() && forAllExpResult_1;) {
             Token p = ((Token) iterator_3.next());
-            forAllExpResult_1 = !(((VDMSet) Utils.get(sch, p)).isEmpty());
+            forAllExpResult_1 = !(Utils.empty(((VDMSet) Utils.get(sch, p))));
         }
 
         if (forAllExpResult_1) {
@@ -180,8 +180,8 @@ public class Plant {
                     for (Iterator iterator_6 = set_6.iterator();
                             iterator_6.hasNext() && !(existsExpResult_1);) {
                         Expert expert = ((Expert) iterator_6.next());
-                        existsExpResult_1 = expert.GetQuali()
-                                                  .contains(a.GetReqQuali());
+                        existsExpResult_1 = SetUtil.inSet(a.GetReqQuali(),
+                                expert.GetQuali());
                     }
 
                     forAllExpResult_3 = existsExpResult_1;
@@ -220,7 +220,8 @@ public class Entry {
                 'd', 'a', 'y', ' ', 'd', 'a', 'y'));
     private static final Token p4 = new Token(SeqUtil.seq('T', 'u', 'e', 's',
                 'd', 'a', 'y', ' ', 'n', 'i', 'g', 'h', 't'));
-    private static final VDMSet ps = SetUtil.set(p1, p2, p3, p4);
+    private static final VDMSet ps = SetUtil.set(Entry.p1, Entry.p2, Entry.p3,
+            Entry.p4);
     private Alarm a1 = new Alarm(quotes.MechQuote.getInstance(),
             SeqUtil.seq('M', 'e', 'c', 'h', 'a', 'n', 'i', 'c', 'a', 'l', ' ',
                 'f', 'a', 'u', 'l', 't'));
@@ -236,19 +237,19 @@ public class Entry {
     private Expert ex4 = new Expert(SetUtil.set(
                 quotes.ElecQuote.getInstance(), quotes.ChemQuote.getInstance()));
     private Plant plant = new Plant(SetUtil.set(a1),
-            MapUtil.map(new Maplet(p1, SetUtil.set(ex1, ex4)),
-                new Maplet(p2, SetUtil.set(ex2, ex3))));
+            MapUtil.map(new Maplet(Entry.p1, SetUtil.set(ex1, ex4)),
+                new Maplet(Entry.p2, SetUtil.set(ex2, ex3))));
     private VDMSet exs = SetUtil.set(ex1, ex2, ex3, ex4);
 
     public Entry() {
     }
 
     public static Object Run() {
-        Entry entry = new Entry();
-        VDMSet periods = entry.plant.ExpertIsOnDuty(entry.ex1);
-        Expert expert = entry.plant.ExpertToPage(entry.a1, p1);
+        final Entry entry = new Entry();
+        final VDMSet periods = entry.plant.ExpertIsOnDuty(entry.ex1);
+        final Expert expert = entry.plant.ExpertToPage(entry.a1, Entry.p1);
 
-        return Tuple.mk_(periods, expert);
+        return Tuple.mk_(periods.size(), expert.GetQuali().size());
     }
 
     public String toString() {

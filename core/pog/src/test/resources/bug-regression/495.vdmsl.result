@@ -1,0 +1,1 @@
+["type invariant satisfiable obligation in \u0027DEFAULT\u0027 (495.vdmsl) at line 3:1: (exists a:A \u0026 (a \u003e 0))","type compatibility obligation in \u0027DEFAULT\u0027 (495.vdmsl) at line 12:20: (is_(a, nat) and inv_A(0))"]

@@ -9,7 +9,7 @@ public class A {
     }
 
     public static Number recPatternFun() {
-        Tuple tuplePattern_1 = Tuple.mk_(1L,
+        final Tuple tuplePattern_1 = Tuple.mk_(1L,
                 new Rec(Tuple.mk_(2L, new Rec(Tuple.mk_(3L, null)))));
         Boolean success_1 = tuplePattern_1.compatible(Number.class, Rec.class);
         Number a = null;

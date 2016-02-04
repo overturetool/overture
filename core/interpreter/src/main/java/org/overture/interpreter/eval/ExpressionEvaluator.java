@@ -608,10 +608,16 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			node.getLocation().hit();
 			return new NaturalValue(result);
-		} catch (ValueException e)
+		}
+		catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
-		} catch (Exception e)
+		}
+		catch (ContextException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), 4065, e.getMessage(), ctxt);
 		}
@@ -1671,7 +1677,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (long i = from; i <= to; i++)
 			{
-				set.add(new IntegerValue(i));
+				set.addNoCheck(new IntegerValue(i));
 			}
 
 			return new SetValue(set);
@@ -1873,7 +1879,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 
 			ObjectValue ov = v.objectValue(ctxt);
-			return new BooleanValue(ctxt.assistantFactory.createAIsOfClassExpAssistant().isOfClass(ov, node.getClassName().getName()));
+			return new BooleanValue(isOfClass(ov, node.getClassName().getName()));
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -1942,6 +1948,25 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			if (search(node, svalue))
 			{
 				return true;
+			}
+		}
+
+		return false;
+	}
+	
+	public boolean isOfClass(ObjectValue obj, String name)
+	{
+		if (obj.type.getName().getName().equals(name))
+		{
+			return true;
+		} else
+		{
+			for (ObjectValue objval : obj.superobjects)
+			{
+				if (isOfClass(objval, name))
+				{
+					return true;
+				}
 			}
 		}
 

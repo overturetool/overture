@@ -53,12 +53,12 @@ public class PAccessSpecifierAssistant implements IAstAssistant
 
 	public AAccessSpecifierAccessSpecifier getPublic()
 	{
-		return AstFactory.newAAccessSpecifierAccessSpecifier(new APublicAccess(), false, false);
+		return AstFactory.newAAccessSpecifierAccessSpecifier(new APublicAccess(), false, false, false);
 	}
 
 	public AAccessSpecifierAccessSpecifier getProtected()
 	{
-		return AstFactory.newAAccessSpecifierAccessSpecifier(new AProtectedAccess(), false, false);
+		return AstFactory.newAAccessSpecifierAccessSpecifier(new AProtectedAccess(), false, false, false);
 	}
 
 }

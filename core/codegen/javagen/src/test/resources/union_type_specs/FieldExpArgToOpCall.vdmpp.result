@@ -52,7 +52,7 @@ public class Entry {
 
     public static Object Run() {
         Number sum = 0L;
-        long toVar_1 = hr.size();
+        long toVar_1 = Entry.hr.size();
 
         for (Long i = 1L; i <= toVar_1; i++) {
             Object obj_1 = Utils.get(hr, i);

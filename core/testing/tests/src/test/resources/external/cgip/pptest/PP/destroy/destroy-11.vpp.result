@@ -1,1 +1,1 @@
-["destroy-11.vpp parses and type checks"]
+["Error 3348: destroy-11.vpp at 16:10 Cannot use \u0027new\u0027 in a functional context"]

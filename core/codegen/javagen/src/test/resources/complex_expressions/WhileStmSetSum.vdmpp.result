@@ -11,12 +11,12 @@ public class Entry {
     public static Object Run() {
         Number sum = 0L;
         VDMSet xs = SetUtil.set(1L, 2L, 3L, 4L, 5L);
-        Boolean whileCond1 = true;
+        Boolean whileCond_1 = true;
 
-        while (whileCond1) {
-            whileCond1 = !(xs.isEmpty());
+        while (whileCond_1) {
+            whileCond_1 = !(Utils.empty(xs));
 
-            if (!(whileCond1)) {
+            if (!(whileCond_1)) {
                 break;
             }
 

@@ -42,7 +42,7 @@ public class StatementTraceNode extends TraceNode
 	public TestSequence getTests()
 	{
 		TestSequence tests = new TestSequence();
-		CallSequence seq = new CallSequence(); /* Trace variables visible at this point */
+		CallSequence seq = getVars();
 		seq.add(statement);
 		tests.add(seq);
 

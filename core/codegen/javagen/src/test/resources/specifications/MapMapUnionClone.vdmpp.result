@@ -6,7 +6,7 @@ import java.util.*;
 @SuppressWarnings("all")
 public class A {
     private static final VDMMap a = MapUtil.map(new Maplet(1L, 2L));
-    private static final VDMMap x = MapUtil.munion(Utils.copy(a), op());
+    private static final VDMMap x = MapUtil.munion(Utils.copy(A.a), op());
 
     public A() {
     }

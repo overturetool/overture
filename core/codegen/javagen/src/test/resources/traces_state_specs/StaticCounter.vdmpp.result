@@ -1,0 +1,86 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry implements java.io.Serializable {
+    private static Number x = 0L;
+
+    public Entry() {
+    }
+
+    public Number op() {
+        x = Entry.x.longValue() + 1L;
+
+        return Entry.x;
+    }
+
+    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        SequenceTraceNode sequence_2 = new SequenceTraceNode();
+        CallStatementPp callStm_1 = new CallStatementPp() {
+                public Object execute() {
+                    Number result_1 = ((Entry) instance).op();
+
+                    return result_1;
+                }
+
+                public String toString() {
+                    return "op()";
+                }
+            };
+
+        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+        sequence_2.add(apply_1);
+
+        SequenceTraceNode sequence_3 = new SequenceTraceNode();
+        AlternativeTraceNode alternatives_4 = new AlternativeTraceNode();
+        CallStatementPp callStm_2 = new CallStatementPp() {
+                public Object execute() {
+                    Number result_2 = ((Entry) instance).op();
+
+                    return result_2;
+                }
+
+                public String toString() {
+                    return "op()";
+                }
+            };
+
+        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+
+        CallStatementPp callStm_3 = new CallStatementPp() {
+                public Object execute() {
+                    Number result_3 = ((Entry) instance).op();
+
+                    return result_3;
+                }
+
+                public String toString() {
+                    return "op()";
+                }
+            };
+
+        StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
+
+        alternatives_4.add(apply_2);
+        alternatives_4.add(apply_3);
+        sequence_3.add(alternatives_4);
+
+        sequence_2.add(sequence_3);
+
+        sequence_1.add(sequence_2);
+
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{" + "x := " + Utils.toString(x) + "}";
+    }
+}
+
+##########

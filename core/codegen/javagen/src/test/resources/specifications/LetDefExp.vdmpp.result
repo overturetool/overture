@@ -9,15 +9,15 @@ public class A {
     }
 
     public Number op() {
-        Number x = 1L;
+        final Number x = 1L;
 
         return x;
     }
 
     public static Number f(final Number x) {
-        Number x1 = f(1L);
-        Number x2 = f(2L);
-        Number x3 = f(3L);
+        final Number x1 = f(1L);
+        final Number x2 = f(2L);
+        final Number x3 = f(3L);
 
         return x;
     }

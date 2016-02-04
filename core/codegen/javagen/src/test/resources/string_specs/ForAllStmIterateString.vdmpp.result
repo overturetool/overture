@@ -1,0 +1,49 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    private static String rev(final String s) {
+        String res = "";
+
+        for (Iterator iterator_1 = SeqUtil.toSeq(s).iterator();
+                iterator_1.hasNext();) {
+            Character c = (Character) iterator_1.next();
+            res = new String(new char[] { c }) + res;
+        }
+
+        return res;
+    }
+
+    public static Object Run() {
+        final String r = rev("hej");
+        Boolean andResult_1 = false;
+
+        if (Utils.equals(r.charAt(Utils.index(3L)), 'h')) {
+            Boolean andResult_2 = false;
+
+            if (Utils.equals(r.charAt(Utils.index(2L)), 'e')) {
+                if (Utils.equals(r.charAt(Utils.index(1L)), 'j')) {
+                    andResult_2 = true;
+                }
+            }
+
+            if (andResult_2) {
+                andResult_1 = true;
+            }
+        }
+
+        return andResult_1;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

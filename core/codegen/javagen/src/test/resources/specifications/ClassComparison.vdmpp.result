@@ -7,8 +7,8 @@ import java.util.*;
 public class A {
     public static final A a0 = new A();
     public static final A a1 = new A();
-    public static final Boolean x = Utils.equals(a0, a0);
-    public static final Boolean y = Utils.equals(a0, a1);
+    public static final Boolean x = Utils.equals(A.a0, A.a0);
+    public static final Boolean y = Utils.equals(A.a0, A.a1);
     public static final Boolean z = Utils.equals(new A(), new A());
 
     public A() {

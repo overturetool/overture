@@ -1,1 +1,1 @@
-["type compatibility obligation:((volume - 1) \u003e\u003d 0)","operation call obligation:(forall text:seq of (char) \u0026 ((\"\" \u003d \"\") \u003c\u003d\u003e (\"\" \u003d nil)))"]
+true

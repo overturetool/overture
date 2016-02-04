@@ -49,6 +49,7 @@ import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.AFieldField;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -163,6 +164,35 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		stitch = exists_exp;
 		valuetree.setPredicate(ctxt.getPredWithContext(exists_exp));
+	}
+
+	public SatisfiabilityObligation(AStateDefinition node,
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
+	{
+		super(node, POType.STATE_INV_SAT, ctxt, node.getLocation(), af);
+
+		AExistsExp exists_exp = new AExistsExp();
+		exists_exp.setType(new ABooleanBasicType());
+		List<PMultipleBind> binds = getInvBinds(node);
+
+		exists_exp.setBindList(binds);
+		exists_exp.setPredicate(node.getInvExpression().clone());
+
+		stitch = exists_exp;
+		valuetree.setPredicate(ctxt.getPredWithContext(exists_exp));
+	}
+
+	private List<PMultipleBind> getInvBinds(AStateDefinition node)
+	{
+		List<PMultipleBind> r = new Vector<PMultipleBind>();
+
+		for (AFieldField f : node.getFields())
+		{
+			r.add(getMultipleTypeBind(f.getType().clone(), f.getTagname().clone()));
+		}
+
+		return r;
 	}
 
 	public SatisfiabilityObligation(AClassInvariantDefinition node,

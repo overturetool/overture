@@ -1,1 +1,1 @@
-["type invariant satisfiable obligation:(exists a:A \u0026 true)","type compatibility obligation:inv_A(a)"]
+["type invariant satisfiable obligation in \u0027DEFAULT\u0027 (289.vdmsl) at line 2:3: (exists a:A \u0026 true)","type compatibility obligation in \u0027DEFAULT\u0027 (289.vdmsl) at line 9:24: inv_A(a)"]

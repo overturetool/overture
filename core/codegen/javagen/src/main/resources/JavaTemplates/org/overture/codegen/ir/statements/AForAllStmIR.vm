@@ -1,0 +1,11 @@
+#set( $iterator = $JavaFormat.genIteratorName() )
+#set( $exp = $JavaFormat.format($node.getExp()) )
+#set( $var = $JavaFormat.format($node.getPattern()) )
+#set( $elementType = $JavaFormat.formatElementType($node.getExp().getType()) )
+#set( $body = $JavaFormat.format($node.getBody()) )
+##
+for (Iterator ${iterator} = ${exp}.iterator(); ${iterator}.hasNext();)
+{
+	${elementType} ${var} = (${elementType}) ${iterator}.next();
+	${body}
+}

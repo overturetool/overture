@@ -2,7 +2,7 @@ package org.overture.codegen.merging;
 
 import java.io.StringWriter;
 
-import org.overture.codegen.cgast.INode;
+import org.overture.codegen.ir.INode;
 
 public interface MergerObserver
 {

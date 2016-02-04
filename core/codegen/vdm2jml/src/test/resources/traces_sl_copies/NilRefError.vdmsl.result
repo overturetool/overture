@@ -1,0 +1,158 @@
+package project;
+
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+import org.overture.codegen.vdm2jml.runtime.*;
+
+import java.util.*;
+
+
+//@ nullable_by_default
+@SuppressWarnings("all")
+final public class Entry implements java.io.Serializable {
+    /*@ spec_public @*/
+    private static project.Entrytypes.St St = new project.Entrytypes.St(0L);
+
+    /*@ public ghost static boolean invChecksOn = true; @*/
+    private Entry() {
+    }
+
+    //@ requires pre_op(St);
+    public static Number op() {
+        //@ assert St != null;
+        St.set_x(St.get_x().longValue() + 1L);
+
+        if (Utils.equals(St.get_x(), 3L)) {
+            {
+                final Number e = null;
+
+                //@ assert ((e == null) || Utils.is_nat(e));
+                Number ret_1 = e.longValue() + e.longValue();
+
+                //@ assert Utils.is_nat(ret_1);
+                return ret_1;
+            }
+        }
+
+        Number ret_2 = St.get_x();
+
+        //@ assert Utils.is_nat(ret_2);
+        return ret_2;
+    }
+
+    /*@ pure @*/
+    public static Boolean pre_op(final project.Entrytypes.St St) {
+        //@ assert Utils.is_(St,project.Entrytypes.St.class);
+        Boolean ret_3 = St.get_x().longValue() < 1L;
+
+        //@ assert Utils.is_bool(ret_3);
+        return ret_3;
+    }
+
+    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+
+        {
+            final Number ID_1 = gen.inc();
+            store.staticReg(ID_1, Entry.class);
+        }
+
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        CallStatement callStm_1 = new CallStatement() {
+                public Boolean meetsPreCond() {
+                    return pre_op(St);
+                }
+
+                public Object execute() {
+                    return op();
+                }
+
+                public String toString() {
+                    return "op()";
+                }
+            };
+
+        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+        RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_1, 1L, 3L);
+
+        sequence_1.add(repeat_1);
+
+        TraceNode.executeTests(sequence_1, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{" + "St := " + Utils.toString(St) + "}";
+    }
+}
+
+##########
+package project.Entrytypes;
+
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
+
+import java.util.*;
+
+
+//@ nullable_by_default
+@SuppressWarnings("all")
+final public class St implements Record, java.io.Serializable {
+    public Number x;
+
+    public St(final Number _x) {
+        //@ assert Utils.is_nat(_x);
+        x = _x;
+
+        //@ assert Utils.is_nat(x);
+    }
+
+    /*@ pure @*/
+    public boolean equals(final Object obj) {
+        if (!(obj instanceof project.Entrytypes.St)) {
+            return false;
+        }
+
+        project.Entrytypes.St other = ((project.Entrytypes.St) obj);
+
+        return Utils.equals(x, other.x);
+    }
+
+    /*@ pure @*/
+    public int hashCode() {
+        return Utils.hashCode(x);
+    }
+
+    /*@ pure @*/
+    public project.Entrytypes.St copy() {
+        return new project.Entrytypes.St(x);
+    }
+
+    /*@ pure @*/
+    public String toString() {
+        return "mk_Entry`St" + Utils.formatFields(x);
+    }
+
+    /*@ pure @*/
+    public Number get_x() {
+        Number ret_4 = x;
+
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(ret_4));
+        return ret_4;
+    }
+
+    public void set_x(final Number _x) {
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(_x));
+        x = _x;
+
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(x));
+    }
+
+    /*@ pure @*/
+    public Boolean valid() {
+        return true;
+    }
+}
+
+##########

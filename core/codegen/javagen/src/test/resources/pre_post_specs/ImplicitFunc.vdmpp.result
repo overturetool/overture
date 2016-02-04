@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Tuple Run() {
-        Boolean b = !true;
+        final Boolean b = !true;
 
         if (b) {
             return doImpl(5L, 7L);

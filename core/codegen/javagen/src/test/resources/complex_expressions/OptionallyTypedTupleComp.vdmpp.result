@@ -9,8 +9,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        Tuple a = null;
-        Tuple b = Tuple.mk_(1L, 2L);
+        final Tuple a = null;
+        final Tuple b = Tuple.mk_(1L, 2L);
 
         return Utils.equals(a, b);
     }

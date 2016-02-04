@@ -4,7 +4,7 @@
 <message column="1" line="34" message="Instance variable 'simtime' is not initialized" messageType="warning" number="5001" resource="CMConcPP.result"/>
 <message column="37" line="38" message="Constructor operation must have return type Environment" messageType="error" number="3026" resource="CMConcPP.result"/>
 <message column="6" line="18" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CMConcPP.result"/>
-<message column="5" line="625" message="Operation 'canObserve' cannot be called from a function" messageType="error" number="3300" resource="CMConcPP.result"/>
+<message column="5" line="625" message="Impure operation 'canObserve' cannot be called from here" messageType="error" number="3300" resource="CMConcPP.result"/>
 <message column="12" line="18" message="Class name IO not in scope" messageType="error" number="3133" resource="CMConcPP.result"/>
 <message column="4" line="759" message="Member addSensor(Sensor) is not in scope" messageType="error" number="3209" resource="CMConcPP.result"/>
 <message column="6" line="18" message="Unable to resolve type name 'IO'" messageType="error" number="3427" resource="CMConcPP.result"/>

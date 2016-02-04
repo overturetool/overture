@@ -1,0 +1,21 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+ Utils`op();
+ return 0;
+);
+
+end Entry
+
+class Utils
+
+operations
+
+public static op : () ==> ()
+op () == skip;
+
+end Utils

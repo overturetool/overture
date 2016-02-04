@@ -16,20 +16,20 @@ public class A {
     }
 
     public Number op1() {
-        Tuple a = Tuple.mk_(1L, 2L);
+        final Tuple a = Tuple.mk_(1L, 2L);
 
-        return ((A) Utils.get(x, a)).no();
+        return ((A) Utils.get(A.x, a)).no();
     }
 
     public Number op2() {
-        Tuple a = Tuple.mk_('x', 'y');
-        Tuple b = Tuple.mk_(1L, 2L);
+        final Tuple a = Tuple.mk_('x', 'y');
+        final Tuple b = Tuple.mk_(1L, 2L);
 
         return ((A) Utils.get(m(Utils.copy(a), Utils.copy(a)), b)).no();
     }
 
     public VDMMap m(final Tuple p, final Tuple q) {
-        return Utils.copy(x);
+        return Utils.copy(A.x);
     }
 
     public String toString() {
@@ -49,7 +49,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        A a = new A();
+        final A a = new A();
 
         return a.op1().longValue() + a.op2().longValue();
     }

@@ -1,0 +1,92 @@
+package project;
+
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+import org.overture.codegen.vdm2jml.runtime.*;
+
+import java.util.*;
+
+
+//@ nullable_by_default
+@SuppressWarnings("all")
+final public class Entry implements java.io.Serializable {
+    /*@ public ghost static boolean invChecksOn = true; @*/
+    private Entry() {
+    }
+
+    //@ requires pre_op(ignorePattern_1);
+    public static void op(final Number ignorePattern_1) {
+        //@ assert Utils.is_nat(ignorePattern_1);
+
+        /* skip */
+    }
+
+    /*@ pure @*/
+    public static Boolean pre_op(final Number ignorePattern_2) {
+        //@ assert Utils.is_nat(ignorePattern_2);
+        Boolean ret_1 = true;
+
+        //@ assert Utils.is_bool(ret_1);
+        return ret_1;
+    }
+
+    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+
+        {
+            final Number ID_1 = gen.inc();
+            store.staticReg(ID_1, Entry.class);
+        }
+
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+        VDMSet set_1 = SetUtil.set(-1L, true);
+
+        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
+            final Object a = ((Object) iterator_1.next());
+            final Object arg_1 = a;
+            CallStatement callStm_1 = new CallStatement() {
+                    public Boolean isTypeCorrect() {
+                        try {
+                            //@ assert Utils.is_nat(arg_1);
+                        } catch (AssertionError e) {
+                            return false;
+                        }
+
+                        return true;
+                    }
+
+                    public Boolean meetsPreCond() {
+                        return pre_op(((Number) arg_1));
+                    }
+
+                    public Object execute() {
+                        op(((Number) arg_1));
+
+                        return Utils.VOID_VALUE;
+                    }
+
+                    public String toString() {
+                        return "op(" + Utils.toString(arg_1) + ")";
+                    }
+                };
+
+            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+            apply_1.addVarFirst(new TraceVariable("a", "(bool | int)",
+                    Utils.toString(a)));
+            alternatives_2.add(apply_1);
+        }
+
+        sequence_1.add(alternatives_2);
+
+        TraceNode.executeTests(sequence_1, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

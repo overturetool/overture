@@ -18,10 +18,10 @@
 <message column="18" line="1200" message="Unable to resolve type name 'Test'" messageType="error" number="3428" resource="VDMRT"/>
 <message column="3" line="150" message="Member handleEvent(seq1 of (char)) is not in scope" messageType="error" number="3209" resource="VDMRT"/>
 <message column="14" line="338" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="VDMRT"/>
-<message column="1" line="772" message="Operation '(a.X)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
-<message column="9" line="772" message="Operation '(b.X)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
-<message column="19" line="772" message="Operation '(a.Y)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
-<message column="27" line="772" message="Operation '(b.Y)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
+<message column="1" line="772" message="Impure operation '(a.X)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="9" line="772" message="Impure operation '(b.X)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="19" line="772" message="Impure operation '(a.Y)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="27" line="772" message="Impure operation '(b.Y)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
 <message column="13" line="819" message="Class name IO not in scope" messageType="error" number="3133" resource="VDMRT"/>
 <message column="13" line="824" message="Class name IO not in scope" messageType="error" number="3133" resource="VDMRT"/>
 <message column="12" line="831" message="Name 'VDMUtil`val2seq_of_char(nat)' is not in scope" messageType="error" number="3182" resource="VDMRT"/>
@@ -30,17 +30,19 @@
 <message column="6" line="1212" message="Operation Run(TestResult) is not in scope" messageType="error" number="3213" resource="VDMRT"/>
 <message column="18" line="1200" message="Unable to resolve type name 'Test'" messageType="error" number="3428" resource="VDMRT"/>
 <message column="18" line="1200" message="Unable to resolve type name 'Test'" messageType="error" number="3428" resource="VDMRT"/>
-<message column="12" line="2073" message="Operation '(v1.GetPosition)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
-<message column="37" line="2073" message="Operation '(v2.GetPosition)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
-<message column="11" line="2083" message="Operation '(v.GetDirection)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
-<message column="38" line="2085" message="Operation '(ir.GetDirection)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
-<message column="5" line="2616" message="Operation '(ctrl.GetVehicleID)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
-<message column="5" line="2623" message="Operation '(light.GetID)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
-<message column="23" line="2624" message="Operation '(light.GetID)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
-<message column="12" line="2704" message="Operation '(u1.GetPosition)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
-<message column="37" line="2704" message="Operation '(u2.GetPosition)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
-<message column="29" line="2714" message="Operation '(u.GetDirection)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
-<message column="60" line="2715" message="Operation '(ir.GetDirection)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT"/>
+<message column="12" line="2073" message="Impure operation '(v1.GetPosition)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="37" line="2073" message="Impure operation '(v2.GetPosition)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="11" line="2083" message="Impure operation '(v.GetDirection)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="38" line="2085" message="Impure operation '(ir.GetDirection)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="38" line="2598" message="Impure operation '(ctrlUnits(id).GetVehicleID)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="35" line="2599" message="Impure operation '(lights(id).GetID)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="5" line="2616" message="Impure operation '(ctrl.GetVehicleID)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="5" line="2623" message="Impure operation '(light.GetID)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="23" line="2624" message="Impure operation '(light.GetID)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="12" line="2704" message="Impure operation '(u1.GetPosition)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="37" line="2704" message="Impure operation '(u2.GetPosition)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="29" line="2714" message="Impure operation '(u.GetDirection)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
+<message column="60" line="2715" message="Impure operation '(ir.GetDirection)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
 <message column="9" line="3106" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="VDMRT"/>
 <message column="2" line="3126" message="Member setVDMCtrl(VDMController) is not in scope" messageType="error" number="3209" resource="VDMRT"/>
 <message column="3" line="3136" message="Member run() is not in scope" messageType="error" number="3209" resource="VDMRT"/>

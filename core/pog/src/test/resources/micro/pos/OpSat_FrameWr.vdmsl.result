@@ -1,1 +1,1 @@
-["operation postcondition satisfiable obligation:(exists newstate:S \u0026 post_op(oldstate, newstate))"]
+["operation postcondition satisfiable obligation in \u0027DEFAULT\u0027 (OpSat_FrameWr.vdmsl) at line 7:1: (exists newstate:DEFAULT`S \u0026 post_op(oldstate, newstate))"]

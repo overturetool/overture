@@ -1,4 +1,0 @@
-operations
-
-concseq()  n : seq of nat
- post n = [1,2] ^ [2,4];

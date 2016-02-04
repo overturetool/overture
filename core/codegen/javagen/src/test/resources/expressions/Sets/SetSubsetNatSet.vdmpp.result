@@ -1,1 +1,1 @@
-SetUtil.set(1L, 2L, 3L, 4L).containsAll(SetUtil.set(1L, 2L, 3L))
+SetUtil.subset(SetUtil.set(1L, 2L, 3L),SetUtil.set(1L, 2L, 3L, 4L))

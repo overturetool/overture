@@ -1,0 +1,4 @@
+#set( $element = $JavaFormat.format($node.getLeft()) )
+#set( $set = $JavaFormat.format($node.getRight()) )
+##
+SetUtil.inSet(${element},${set})

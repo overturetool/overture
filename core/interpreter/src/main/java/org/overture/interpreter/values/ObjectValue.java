@@ -165,24 +165,36 @@ public class ObjectValue extends Value
 		{
 			Value v = m.getValue();
 			
-			if (v.deref() instanceof ObjectValue)
+			if (v instanceof UpdatableValue && listeners != null)
 			{
-				// Don't recurse into inner objects, just mark field itself
-				m.setValue(UpdatableValue.factory(v, listeners));
-			}
-			else if (v.deref() instanceof FunctionValue)
-			{
-				// Ignore function members
-			}
-			else if (v.deref() instanceof OperationValue)
-			{
-				// Ignore operation members
-			}
-			else
-			{
-				m.setValue(v.getUpdatable(listeners));
+				// Update one level of listeners in-place (see UpdatableValue)
+				UpdatableValue uv = (UpdatableValue)v;
+				uv.addListeners(listeners);		// Concurrent update with listener invocations
 			}
 		}
+		
+		//		for (Entry<ILexNameToken, Value> m: members.entrySet())
+//		{
+//			Value v = m.getValue();
+//
+//			if (v.deref() instanceof ObjectValue)
+//			{
+//				// Don't recurse into inner objects, just mark field itself
+//				m.setValue(UpdatableValue.factory(v, listeners));
+//			}
+//			else if (v.deref() instanceof FunctionValue)
+//			{
+//				// Ignore function members
+//			}
+//			else if (v.deref() instanceof OperationValue)
+//			{
+//				// Ignore operation members
+//			}
+//			else
+//			{
+//				m.setValue(v.getUpdatable(listeners));
+//			}
+//		}
 
 		return UpdatableValue.factory(this, listeners);
 	}

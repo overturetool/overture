@@ -1,6 +1,0 @@
-functions
-
-compare(a:token , b : token) r:bool
-pre true
-post r=b=a;
-

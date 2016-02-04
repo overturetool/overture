@@ -9,8 +9,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        VDMSet left = null;
-        VDMSet right = null;
+        final VDMSet left = null;
+        final VDMSet right = null;
 
         return SeqUtil.seq(Utils.equals(left, right),
             Utils.equals(left, SetUtil.set(1L, 2L)),

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.analysis.vdm.Renaming;
@@ -29,23 +30,48 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void inILexNameToken(ILexNameToken node) throws AnalysisException
+	public void caseILexIdentifierToken(ILexIdentifierToken node) throws AnalysisException
 	{
-		// "?" is used for implicitly named things
-		if(node.getName().equals("?"))
+		validateName(node.getName(), node.getLocation(), /* no module */ null);
+	}
+	
+	@Override
+	public void caseILexNameToken(ILexNameToken node) throws AnalysisException
+	{
+		validateName(node.getName(), node.getLocation(), node.getModule());
+	}
+
+	private void validateName(String name, ILexLocation location, String module)
+	{
+		if (!contains(location))
 		{
-			return;
-		}
-		
-		if(!JavaCodeGenUtil.isValidJavaIdentifier(node.getName()))
-		{
-			String newName = getReplacementName(node.getName());
+			boolean rename = false;
+			String newName = name;
 			
-			if (!contains(node.getLocation()))
+			if (!isImplicitlyNamed(name) && !JavaCodeGenUtil.isValidJavaIdentifier(name))
 			{
-				this.renamings.add(new Renaming(node.getLocation(), node.getName(), newName));
+				newName = getReplacementName(name);
+				rename = true;
+			}
+			
+			String newModule = module;
+			if (module != null && !module.equals("?") && !JavaCodeGenUtil.isValidJavaIdentifier(module))
+			{
+				newModule = getReplacementName(module);
+				rename = true;
+			}
+			
+			if(rename)
+			{
+				this.renamings.add(new Renaming(location, name, newName, module, newModule));
 			}
 		}
+	}
+
+	private boolean isImplicitlyNamed(String name)
+	{
+		// "?" is used for implicitly named things
+		return name.equals("?");
 	}
 	
 	private boolean contains(ILexLocation loc)

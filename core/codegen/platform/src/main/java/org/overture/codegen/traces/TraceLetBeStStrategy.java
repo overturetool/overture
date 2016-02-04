@@ -1,45 +1,50 @@
 package org.overture.codegen.traces;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.AContinueStmCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
-import org.overture.codegen.cgast.types.SSetTypeCG;
+import org.overture.ast.lex.Dialect;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
+import org.overture.codegen.ir.statements.AContinueStmIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
+import org.overture.codegen.ir.statements.ALocalPatternAssignmentStmIR;
+import org.overture.codegen.ir.types.ASetSetTypeIR;
+import org.overture.codegen.ir.types.SSetTypeIR;
 import org.overture.codegen.ir.ITempVarGen;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.DeclarationTag;
-import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.IterationVarPrefixes;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.let.LetBeStStrategy;
+import org.overture.config.Settings;
 
 public class TraceLetBeStStrategy extends LetBeStStrategy
 {
 	protected TraceNodeData nodeData;
-	protected AVarDeclCG altTests;
-	protected AIdentifierPatternCG id;
+	protected AVarDeclIR altTests;
+	protected AIdentifierPatternIR id;
 	protected TraceNames tracePrefixes;
 	protected StoreAssistant storeAssistant;
 	protected Map<String, String> idConstNameMap;
-	
-	public TraceLetBeStStrategy(TransAssistantCG transAssistant,
-			SExpCG suchThat, SSetTypeCG setType,
-			ILanguageIterator langIterator, ITempVarGen tempGen,
-			TempVarPrefixes varPrefixes, StoreAssistant storeAssistant,Map<String, String> idConstNameMap, TraceNames tracePrefixes,
-			AIdentifierPatternCG id, AVarDeclCG altTests, TraceNodeData nodeData)
+	protected TraceStmBuilder builder;
+
+	public TraceLetBeStStrategy(TransAssistantIR transAssistant, SExpIR suchThat, SSetTypeIR setType,
+			ILanguageIterator langIterator, ITempVarGen tempGen, IterationVarPrefixes iteVarPrefixes,
+			StoreAssistant storeAssistant, Map<String, String> idConstNameMap, TraceNames tracePrefixes,
+			AIdentifierPatternIR id, AVarDeclIR altTests, TraceNodeData nodeData, TraceStmBuilder builder)
 	{
-		super(transAssistant, suchThat, setType, langIterator, tempGen, varPrefixes);
+		super(transAssistant, suchThat, setType, langIterator, tempGen, iteVarPrefixes);
 
 		this.storeAssistant = storeAssistant;
 		this.idConstNameMap = idConstNameMap;
@@ -47,16 +52,16 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 		this.id = id;
 		this.altTests = altTests;
 		this.nodeData = nodeData;
+		this.builder = builder;
 	}
 
 	@Override
-	public List<AVarDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns) throws AnalysisException
+	public List<AVarDeclIR> getOuterBlockDecls(AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
+			throws AnalysisException
 	{
-		for (SPatternCG id : patterns)
+		for (SPatternIR id : patterns)
 		{
-			AVarDeclCG decl = transAssistant.getInfo().getDeclAssistant().
-					consLocalVarDecl(setType.getSetOf().clone(), id.clone(), transAssistant.getInfo().getExpAssistant().consNullExp());
+			AVarDeclIR decl = transAssist.getInfo().getDeclAssistant().consLocalVarDecl(setType.getSetOf().clone(), id.clone(), transAssist.getInfo().getExpAssistant().consUndefinedExp());
 			decl.setFinal(true);
 			decls.add(decl);
 		}
@@ -65,15 +70,13 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 	}
 
 	@Override
-	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public List<SStmIR> getPreForLoopStms(AIdentifierVarExpIR setVar, List<SPatternIR> patterns, SPatternIR pattern)
 	{
 		return null;
 	}
 
 	@Override
-	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public SExpIR getForLoopCond(AIdentifierVarExpIR setVar, List<SPatternIR> patterns, SPatternIR pattern)
 			throws AnalysisException
 	{
 		return langIterator.getForLoopCond(setVar, patterns, pattern);
@@ -86,11 +89,10 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 	}
 
 	@Override
-	public AVarDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public AVarDeclIR getNextElementDeclared(AIdentifierVarExpIR setVar, List<SPatternIR> patterns, SPatternIR pattern)
 			throws AnalysisException
 	{
-		AVarDeclCG nextElementDecl = decls.get(count++);
+		AVarDeclIR nextElementDecl = decls.get(count++);
 		tagNextElementDeclared(nextElementDecl);
 
 		nextElementDecl.setExp(langIterator.consNextElementCall(setVar));
@@ -99,54 +101,84 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 	}
 
 	@Override
-	public ALocalPatternAssignmentStmCG getNextElementAssigned(
-			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
-			SPatternCG pattern) throws AnalysisException
+	public ALocalPatternAssignmentStmIR getNextElementAssigned(AIdentifierVarExpIR setVar, List<SPatternIR> patterns,
+			SPatternIR pattern) throws AnalysisException
 	{
 		return null;
 	}
 
 	@Override
-	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public List<SStmIR> getForLoopStms(AIdentifierVarExpIR setVar, List<SPatternIR> patterns, SPatternIR pattern)
 	{
-		ABlockStmCG block = new ABlockStmCG();
+		ABlockStmIR block = new ABlockStmIR();
 
 		if (suchThat != null)
 		{
-			AIfStmCG ifStm = new AIfStmCG();
-			ifStm.setIfExp(transAssistant.getInfo().getExpAssistant().negate(suchThat.clone()));
-			ifStm.setThenStm(new AContinueStmCG());
+			AIfStmIR ifStm = new AIfStmIR();
+			ifStm.setIfExp(transAssist.getInfo().getExpAssistant().negate(suchThat.clone()));
+			ifStm.setThenStm(new AContinueStmIR());
 			block.getStatements().add(ifStm);
 		}
-		
-		AVarDeclCG nextElementDecl = decls.get(count - 1);
-		
-		
+
+		AVarDeclIR nextElementDecl = decls.get(count - 1);
+
 		IdentifierPatternCollector idCollector = new IdentifierPatternCollector();
 		idCollector.setTopNode(nextElementDecl);
-		
-		for(AIdentifierPatternCG idToReg : idCollector.findOccurences())
+
+		PatternTypeFinder typeFinder = new PatternTypeFinder(transAssist.getInfo());
+
+		if (setVar.getType() instanceof ASetSetTypeIR)
 		{
-			String idConstName = idConstNameMap.get(idToReg.getName());
-			block.getStatements().add(transAssistant.wrap(storeAssistant.consIdConstDecl(idConstName)));
-			storeAssistant.appendStoreRegStms(block, idToReg.getName(), idConstName);
+			STypeIR elemType = ((ASetSetTypeIR) setVar.getType()).getSetOf();
+
+			try
+			{
+				nextElementDecl.getPattern().apply(typeFinder, elemType);
+			} catch (AnalysisException e)
+			{
+				Logger.getLog().printErrorln("Unexpectected problem occurred when trying to determine the type of pattern "
+						+ nextElementDecl.getPattern());
+				e.printStackTrace();
+			}
+		} else
+		{
+			Logger.getLog().printErrorln("Expected type of set to be a set type in '" + this.getClass().getSimpleName()
+					+ "'. Got: " + setVar.getType());
 		}
+
+		List<AIdentifierVarExpIR> traceVars = new LinkedList<>();
 		
+		for (AIdentifierPatternIR idToReg : idCollector.findOccurences())
+		{
+			if(Settings.dialect != Dialect.VDM_SL)
+			{
+				String idConstName = idConstNameMap.get(idToReg.getName());
+				block.getStatements().add(transAssist.wrap(storeAssistant.consIdConstDecl(idConstName)));
+				storeAssistant.appendStoreRegStms(block, idToReg.getName(), idConstName, false);
+			}
+			
+			traceVars.add(this.transAssist.getInfo().getExpAssistant().consIdVar(idToReg.getName(), PatternTypeFinder.getType(typeFinder, idToReg)));
+		}
+
 		block.getStatements().add(nodeData.getStms());
 
-		STypeCG instanceType = altTests.getType().clone();
-		String addName = tracePrefixes.addMethodName();
-		AIdentifierVarExpCG arg = nodeData.getNodeVar();
-		ACallObjectExpStmCG addCall = transAssistant.consInstanceCallStm(instanceType, id.getName(), addName, arg);
+		STypeIR instanceType = altTests.getType().clone();
+		AIdentifierVarExpIR subject = nodeData.getNodeVar();
+
+		for (int i = traceVars.size() - 1; i >= 0; i--)
+		{
+			block.getStatements().add(builder.consAddTraceVarCall(subject, traceVars.get(i)));
+		}
+
+		// E.g. alternatives_2.add(apply_1)
+		ACallObjectExpStmIR addCall = transAssist.consInstanceCallStm(instanceType, id.getName(), tracePrefixes.addMethodName(), subject);
 		block.getStatements().add(addCall);
 
 		return packStm(block);
 	}
 
 	@Override
-	public List<SStmCG> getPostOuterBlockStms(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns)
+	public List<SStmIR> getPostOuterBlockStms(AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
 	{
 		return null;
 	}

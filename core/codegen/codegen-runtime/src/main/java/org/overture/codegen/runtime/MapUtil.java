@@ -24,297 +24,382 @@ package org.overture.codegen.runtime;
 import java.util.LinkedList;
 import java.util.Set;
 
-
 public class MapUtil
 {
 	public static VDMMap map()
 	{
 		return new VDMMap();
 	}
-	
-	public static Object get(VDMMap map, Object key)
+
+	public static Maplet[] toMaplets(Object map)
 	{
-		Object value = map.get(key);
-		if (value != null) {
-		    return value;
-		} else {
-		    // The key may map to null
-		    if (map.containsKey(key)) {
-		       // The key is there
-		    	return null;
-		    } else {
-		    	throw new IllegalArgumentException("No such key in map: " + key);
-		    }
+		validateMap(map, "toMaplets");
+
+		VDMMap vdmMap = (VDMMap) map;
+
+		Maplet[] maplets = new Maplet[vdmMap.size()];
+
+		int nextIndex = 0;
+		for (Object key : vdmMap.keySet())
+		{
+			Object val = vdmMap.get(key);
+
+			maplets[nextIndex++] = new Maplet(key, val);
+		}
+
+		return maplets;
+	}
+
+	public static Object get(Object map, Object key)
+	{
+		validateMap(map, "map read");
+
+		VDMMap vdmMap = (VDMMap) map;
+
+		Object value = vdmMap.get(key);
+		if (value != null)
+		{
+			return value;
+		} else
+		{
+			// The key may map to null
+			if (vdmMap.containsKey(key))
+			{
+				// The key is there
+				return null;
+			} else
+			{
+				throw new IllegalArgumentException("No such key in map: " + key);
+			}
 		}
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public static VDMSet dom(Object map)
+	{
+		validateMap(map, "map domain");
+
+		VDMMap vdmMap = (VDMMap) map;
+
+		VDMSet set = SetUtil.set();
+		set.addAll(vdmMap.keySet());
+
+		return set;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static VDMSet rng(Object map)
+	{
+		validateMap(map, "map range");
+
+		VDMMap vdmMap = (VDMMap) map;
+
+		VDMSet set = SetUtil.set();
+		set.addAll(vdmMap.values());
+
+		return set;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static VDMMap munion(Object left, Object right)
+	{
+		validateMaps(left, right, "map union");
+
+		VDMMap mapLeft = (VDMMap) left;
+		VDMMap mapRight = (VDMMap) right;
+
+		VDMMap result = map();
+
+		result.putAll(mapLeft);
+
+		putAll(result, mapRight);
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void mapAdd(Object map, Object maplet)
+	{
+		if (!(map instanceof VDMMap))
+		{
+			throw new IllegalArgumentException("Expected " + map + " to be a " + VDMMap.class.getSimpleName());
+		}
+
+		if (!(maplet instanceof Maplet))
+		{
+			throw new IllegalArgumentException("Expected " + maplet + " to be a " + Maplet.class.getSimpleName());
+		}
+
+		VDMMap vdmMap = (VDMMap) map;
+		Maplet vdmMaplet = (Maplet) maplet;
+
+		vdmMap.put(vdmMaplet.getLeft(), vdmMaplet.getRight());
+	}
+
+	@SuppressWarnings("unchecked")
+	public static VDMMap override(Object left, Object right)
+	{
+		validateMaps(left, right, "map override");
+
+		VDMMap mapLeft = (VDMMap) left;
+		VDMMap mapRight = (VDMMap) right;
+
+		VDMMap result = map();
+
+		result.putAll(mapLeft);
+		result.putAll(mapRight);
+
+		return result;
+	}
+
+	public static VDMMap merge(Object setOfMaps)
+	{
+		final String MAP_MERGE = "map merge";
+
+		SetUtil.validateSet(setOfMaps, MAP_MERGE);
+
+		VDMSet vdmSetOfMaps = (VDMSet) setOfMaps;
+
+		VDMMap result = map();
+
+		for (Object map : vdmSetOfMaps)
+		{
+			validateMap(map, MAP_MERGE);
+
+			VDMMap vdmMap = (VDMMap) map;
+
+			putAll(result, vdmMap);
+		}
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static VDMMap domResTo(Object dom, Object map)
+	{
+		final String MAP_DOM_RESTRICT_TO = "map domain restrict to";
+
+		SetUtil.validateSet(dom, MAP_DOM_RESTRICT_TO);
+		validateMap(map, MAP_DOM_RESTRICT_TO);
+
+		VDMSet vdmDom = (VDMSet) dom;
+		VDMMap vdmMap = (VDMMap) map;
+
+		VDMMap result = map();
+
+		for (Object key : vdmDom)
+		{
+			if (vdmMap.containsKey(key))
+			{
+				Object value = vdmMap.get(key);
+				result.put(key, value);
+			}
+		}
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static VDMMap domResBy(Object dom, Object map)
+	{
+		final String MAP_DOM_RESTRICT_BY = "map domain restrict by";
+
+		SetUtil.validateSet(dom, MAP_DOM_RESTRICT_BY);
+		validateMap(map, MAP_DOM_RESTRICT_BY);
+
+		VDMSet vdmDom = (VDMSet) dom;
+		VDMMap vdmMap = (VDMMap) map;
+
+		VDMMap result = map();
+
+		for (Object key : vdmMap.keySet())
+		{
+			if (!vdmDom.contains(key))
+			{
+				Object value = vdmMap.get(key);
+				result.put(key, value);
+			}
+		}
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static VDMMap rngResTo(Object map, Object rng)
+	{
+		final String MAP_RANGE_RESTRICT_TO = "map range restrict to";
+
+		validateMap(map, MAP_RANGE_RESTRICT_TO);
+		SetUtil.validateSet(rng, MAP_RANGE_RESTRICT_TO);
+
+		VDMMap vdmMap = (VDMMap) map;
+		VDMSet vdmRng = (VDMSet) rng;
+
+		VDMMap result = map();
+
+		@SuppressWarnings("rawtypes")
+		Set dom = vdmMap.keySet();
+
+		for (Object key : dom)
+		{
+			Object value = vdmMap.get(key);
+
+			if (vdmRng.contains(value))
+			{
+				result.put(key, value);
+			}
+		}
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static VDMMap rngResBy(Object map, Object rng)
+	{
+		final String MAP_RANGE_RESTRICT_BY = "map range restrict by";
+
+		validateMap(map, MAP_RANGE_RESTRICT_BY);
+		SetUtil.validateSet(rng, MAP_RANGE_RESTRICT_BY);
+
+		VDMMap vdmMap = (VDMMap) map;
+		VDMSet vdmRng = (VDMSet) rng;
+
+		VDMMap result = map();
+
+		for (Object key : vdmMap.keySet())
+		{
+			Object value = vdmMap.get(key);
+
+			if (!vdmRng.contains(value))
+			{
+				result.put(key, value);
+			}
+		}
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static VDMMap inverse(Object map)
+	{
+		validateMap(map, "map inverse");
+
+		VDMMap vdmMap = (VDMMap) map;
+
+		VDMMap result = map();
+
+		if (vdmMap.size() == 0)
+		{
+			return result;
+		}
+
+		@SuppressWarnings("rawtypes")
+		Set keysSet = vdmMap.keySet();
+		@SuppressWarnings("rawtypes")
+		LinkedList keyList = new LinkedList(keysSet);
+
+		Object firstKey = keyList.get(0);
+		Object firstValue = vdmMap.get(firstKey);
+		result.put(firstValue, firstKey);
+
+		for (int i = 1; i < keyList.size(); i++)
+		{
+			Object nextKey = keyList.get(i);
+			Object nextValue = vdmMap.get(nextKey);
+
+			if (result.containsKey(nextKey))
+			{
+				throw new IllegalArgumentException("Cannot invert non-injective map");
+			} else
+			{
+				result.put(nextValue, nextKey);
+			}
+		}
+
+		return result;
+	}
+
 	@SuppressWarnings("unchecked")
 	public static VDMMap map(Maplet... elements)
 	{
-		if(elements == null)
+		if (elements == null)
+		{
 			throw new IllegalArgumentException("Cannot instantiate map from null");
+		}
 
 		VDMMap map = map();
-		
-		if(elements.length == 0)
+
+		if (elements.length == 0)
 		{
 			return map;
-		}
-		else
+		} else
 		{
 			Maplet firstElement = elements[0];
 			map.put(firstElement.getLeft(), firstElement.getRight());
 		}
-		
+
 		for (int i = 1; i < elements.length; i++)
 		{
 			Maplet maplet = elements[i];
-			
+
 			Object mapletKey = maplet.getLeft();
 			Object mapletValue = maplet.getRight();
 
-			if(map.containsKey(mapletKey))
+			if (map.containsKey(mapletKey))
 			{
 				Object mapValue = map.get(mapletKey);
-				
+
 				if (differentValues(mapletValue, mapValue))
 					throw new IllegalArgumentException("Duplicate keys that have different values are not allowed");
 			}
-			
-			map.put(mapletKey ,mapletValue);
+
+			map.put(mapletKey, mapletValue);
 		}
-		
+
 		return map;
 	}
-	
-	private static boolean differentValues(Object leftVal, Object rightVal)
-	{
-		return (leftVal == null && rightVal != null)
-				|| (leftVal != null && !leftVal.equals(rightVal));
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static VDMSet dom(VDMMap map)
-	{
-		if(map == null)
-			throw new IllegalArgumentException("Map domain is undefined for null");
-		
-		VDMSet set = SetUtil.set();
-		set.addAll(map.keySet());
-			
-		return set;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static VDMSet rng(VDMMap map)
-	{
-		if(map == null)
-			throw new IllegalArgumentException("Map range is undefined for null");
-		
-		VDMSet set = SetUtil.set();
-		set.addAll(map.values());
-		
-		return set;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static VDMMap munion(VDMMap left, VDMMap right)
-	{
-		if(left == null || right == null)
-			throw new IllegalArgumentException("Cannot munion null");
-		
-		VDMMap result = map();
-		
-		result.putAll(left);
-		
-		putAll(result, right);
-		
-		return result;
-	}
 
-	@SuppressWarnings("unchecked")
-	public static VDMMap override(VDMMap left, VDMMap right)
-	{
-		if(left == null || right == null)
-			throw new IllegalArgumentException("Cannot override null");
-		
-		VDMMap result = map();
-		
-		result.putAll(left);
-		result.putAll(right);
-		
-		return result;
-	}
-	
-	public static VDMMap merge(VDMSet maps)
-	{
-		if(maps == null)
-			throw new IllegalArgumentException("Set of maps to merge cannot be null");
-		
-		VDMMap result = map();
-
-		for(Object map : maps)
-		{
-			if(!(map instanceof VDMMap))
-				throw new IllegalArgumentException("Only maps can be merged. Got: " + map);
-			
-			VDMMap vdmMap = (VDMMap) map;
-			
-			putAll(result, vdmMap);
-		}
-		
-		return result;
-	}
-	
 	@SuppressWarnings("unchecked")
 	private static void putAll(VDMMap to, VDMMap from)
 	{
 		@SuppressWarnings("rawtypes")
 		Set fromKeys = from.keySet();
 
-		for(Object fromKey : fromKeys)
+		for (Object fromKey : fromKeys)
 		{
 			Object fromVal = from.get(fromKey);
 
-			if(to.containsKey(fromKey))
+			if (to.containsKey(fromKey))
 			{
 				Object toVal = to.get(fromKey);
-				if(differentValues(toVal, fromVal))
+				if (differentValues(toVal, fromVal))
 					throw new IllegalAccessError("Duplicate keys that have different values are not allowed");
 			}
-			
-			to.put(fromKey, fromVal);		
+
+			to.put(fromKey, fromVal);
 		}
 	}
-	
-	@SuppressWarnings("unchecked")
-	public static VDMMap domResTo(VDMSet domValues, VDMMap map)
+
+	static void validateMap(Object arg, String operator)
 	{
-		if(domValues == null || map == null)
-			throw new IllegalArgumentException("'Domain restrict to' is undefined for null");
-		
-		VDMMap result = map();
-		
-		for(Object key : domValues)
+		if (!(arg instanceof VDMMap))
 		{
-			if(map.containsKey(key))
-			{
-				Object value = map.get(key);
-				result.put(key, value);
-			}
+			throw new IllegalArgumentException(operator + " is only supported for " + VDMMap.class.getName() + ". Got "
+					+ arg);
 		}
-		
-		return result;
 	}
-	
-	@SuppressWarnings("unchecked")
-	public static VDMMap domResBy(VDMSet domValues, VDMMap map)
+
+	private static void validateMaps(Object left, Object right, String operator)
 	{
-		if(domValues == null || map == null)
-			throw new IllegalArgumentException("'Domain restrict by' is undefined for null");
-		
-		VDMMap result = map();
-		
-		@SuppressWarnings("rawtypes")
-		Set dom = map.keySet();
-		
-		for(Object key : dom)
+		if (!(left instanceof VDMMap) || !(right instanceof VDMMap))
 		{
-			if(!domValues.contains(key))
-			{
-				Object value = map.get(key);
-				result.put(key, value);
-			}
+			throw new IllegalArgumentException(operator + " is only supported for " + VDMMap.class.getName() + ". Got "
+					+ left + " and " + right);
 		}
-		
-		return result;
 	}
-	
-	@SuppressWarnings("unchecked")
-	public static VDMMap rngResTo(VDMMap map, VDMSet rngValues)
+
+	private static boolean differentValues(Object leftVal, Object rightVal)
 	{
-		if(map == null || rngValues == null)
-			throw new IllegalArgumentException("'Range restrict to' is undefined for null");
-		
-		VDMMap result = map();
-		
-		@SuppressWarnings("rawtypes")
-		Set dom = map.keySet();
-		
-		for(Object key : dom)
-		{
-			Object value = map.get(key);
-			
-			if(rngValues.contains(value))
-			{
-				result.put(key, value);
-			}
-		}
-		
-		return result;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static VDMMap rngResBy(VDMMap map, VDMSet rngValues)
-	{
-		if(map == null || rngValues == null)
-			throw new IllegalArgumentException("'Range restrict by' is undefined for null");
-		
-		VDMMap result = map();
-		
-		@SuppressWarnings("rawtypes")
-		Set dom = map.keySet();
-		
-		for(Object key : dom)
-		{
-			Object value = map.get(key);
-			
-			if(!rngValues.contains(value))
-			{
-				result.put(key, value);
-			}
-		}
-		
-		return result;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static VDMMap inverse(VDMMap map)
-	{
-		if(map == null)
-			throw new IllegalArgumentException("Cannot find the inverse map of null");
-		
-		VDMMap result = map();
-		
-		if(map.size() == 0)
-		{
-			return result;
-		}
-		
-		@SuppressWarnings("rawtypes")
-		Set keysSet = map.keySet();
-		@SuppressWarnings("rawtypes")
-		LinkedList keyList = new LinkedList(keysSet);
-		
-		Object firstKey = keyList.get(0);
-		Object firstValue = map.get(firstKey);
-		result.put(firstValue, firstKey);
-		
-		for (int i = 1; i < keyList.size(); i++)
-		{
-			Object nextKey = keyList.get(i);
-			Object nextValue = map.get(nextKey);
-			
-			if(result.containsKey(nextKey))
-			{
-				throw new IllegalArgumentException("Cannot invert non-injective map");
-			}
-			else
-			{
-				result.put(nextValue, nextKey);
-			}
-		}
-		
-		return result;
+		return (leftVal == null && rightVal != null) || (leftVal != null && !leftVal.equals(rightVal));
 	}
 }

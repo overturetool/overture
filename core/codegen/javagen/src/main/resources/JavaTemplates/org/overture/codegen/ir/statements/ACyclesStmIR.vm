@@ -1,0 +1,8 @@
+## #set( $cycles = $JavaFormat.format($node.getCycles()) )
+#set( $stm = $JavaFormat.format($node.getStm()) )
+##
+/* Start of cycles */
+{
+  ${stm}
+}
+/* End of cycles */

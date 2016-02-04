@@ -13,7 +13,7 @@ public class Entry {
     }
 
     public static Number sum(final VDMSet xs) {
-        if (xs.isEmpty()) {
+        if (Utils.empty(xs)) {
             return 0L;
         } else {
             Number letBeStExp_1 = null;

@@ -19,7 +19,7 @@ public class Entry {
         Boolean success_1 = true;
 
         if (r instanceof R1) {
-            R1 recordPattern_1 = ((R1) r);
+            R1 recordPattern_1 = ((R1) Utils.copy(r));
             Number intPattern_1 = recordPattern_1.a;
             success_1 = Utils.equals(intPattern_1, 1L);
 
@@ -33,7 +33,7 @@ public class Entry {
 
         if (!(success_1)) {
             if (r instanceof R2) {
-                R2 recordPattern_2 = ((R2) r);
+                R2 recordPattern_2 = ((R2) Utils.copy(r));
                 success_1 = true;
 
                 Boolean boolPattern_1 = recordPattern_2.c;

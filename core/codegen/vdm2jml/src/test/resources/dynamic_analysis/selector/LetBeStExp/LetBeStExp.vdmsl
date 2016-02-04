@@ -1,0 +1,28 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  let - = f() in skip;
+  let - = g() in skip;
+  IO`println("Done! Expected no violations");
+  return 0;
+);
+
+functions
+
+f :  () -> nat
+f () == 
+  let - in set {1,2,3} in 0;
+
+g : () -> nat
+g () ==
+  let x in set {1,2,3} be st x > 1 in 0;
+
+end Entry	

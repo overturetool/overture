@@ -1,0 +1,35 @@
+module Entry
+
+imports from IO all
+exports all
+
+definitions
+
+types
+A1 :: f : A2
+inv a1 == a1.f.x > 0;
+
+A2 :: x : int
+inv a2 == a2.x > 0;
+
+B1 :: f : B2
+inv b1 == b1.f.x > 0;
+
+B2 :: x : int
+inv b2 == b2.x > 0;
+
+
+operations
+
+Run : () ==> ?
+Run () == 
+(dcl r : A1 | B1 := mk_A1(mk_A2(1));
+ atomic
+ (
+   r.f.x := 5;
+ );
+ IO`println("Done! Expected no violations");
+ return 0;
+)
+
+end Entry

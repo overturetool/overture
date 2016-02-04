@@ -9,7 +9,7 @@ public class A {
     }
 
     public static Tuple tuplePatternFun() {
-        Tuple tuplePattern_1 = Tuple.mk_(5L, true, 'v', 1L);
+        final Tuple tuplePattern_1 = Tuple.mk_(5L, true, 'v', 1L);
         Boolean success_1 = tuplePattern_1.compatible(Number.class,
                 Boolean.class, Character.class, Number.class);
         Number n = null;

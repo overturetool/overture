@@ -139,6 +139,7 @@ public enum VDMToken implements Serializable
 			"def", "def", VDM_SL, VDM_PP, VDM_RT), IS("is", "is", VDM_SL,
 			VDM_PP, VDM_RT), YET("yet", "yet", VDM_SL, VDM_PP, VDM_RT), SPECIFIED(
 			"specified", "specified", VDM_SL, VDM_PP, VDM_RT),
+			PURE("pure", "pure", VDM_SL, VDM_PP, VDM_RT),
 
 	// Expressions
 	LET("let", "let", VDM_SL, VDM_PP, VDM_RT), IN("in", "in", VDM_SL, VDM_PP,

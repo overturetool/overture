@@ -36,15 +36,15 @@
    <feature url="features/org.overture.ide.plugins.features.uml2_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.uml2" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.codegen_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.codegen" version="0.0.0">
+   <feature url="features/org.overture.ide.plugins.features.javagen_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.javagen" version="0.0.0">
       <category name="Overture"/>
    </feature>
    <feature url="features/org.overture.ide.plugins.features.guibuilder_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.guibuilder" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.isatrans_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.isatrans" version="0.0.0">
+   <!--<feature url="features/org.overture.ide.plugins.features.isatrans_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.isatrans" version="0.0.0">
       <category name="Overture"/>
-   </feature>
+   </feature>-->
    <category-def name="Overture" label="Overture">
       <description>
          The Overture Project

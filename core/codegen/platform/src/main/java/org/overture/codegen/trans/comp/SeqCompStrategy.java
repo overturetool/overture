@@ -23,63 +23,58 @@ package org.overture.codegen.trans.comp;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.expressions.AEnumSeqExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.statements.ASeqCompAddStmIR;
 import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.IterationVarPrefixes;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class SeqCompStrategy extends CompStrategy
 {
-	protected SExpCG first;
+	protected SExpIR first;
 
-	public SeqCompStrategy(TransAssistantCG transformationAssitant,
-			SExpCG first, SExpCG predicate, String var, STypeCG compType,
+	public SeqCompStrategy(TransAssistantIR transformationAssitant,
+			SExpIR first, SExpIR predicate, String var, STypeIR compType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
-			TempVarPrefixes varPrefixes)
+			IterationVarPrefixes iteVarPrefixes)
 	{
-		super(transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
+		super(transformationAssitant, predicate, var, compType, langIterator, tempGen, iteVarPrefixes);
 
 		this.first = first;
 	}
 
 	@Override
-	protected SExpCG getEmptyCollection()
+	protected SExpIR getEmptyCollection()
 	{
-		return new AEnumSeqExpCG();
+		return new AEnumSeqExpIR();
 	}
 
 	@Override
-	protected List<SStmCG> getConditionalAdd(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	protected List<SStmIR> getConditionalAdd(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 	{
-		AIdentifierVarExpCG seqCompResult = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR seqCompResult = new AIdentifierVarExpIR();
 		seqCompResult.setType(compType.clone());
 		seqCompResult.setName(idPattern.getName());
 		seqCompResult.setIsLambda(false);
 		seqCompResult.setIsLocal(true);
+		
+		ASeqCompAddStmIR add = new ASeqCompAddStmIR();
+		add.setSeq(seqCompResult);
+		add.setElement(first.clone());
 
-		AEnumSeqExpCG seqToConcat = new AEnumSeqExpCG();
-		seqToConcat.setType(compType.clone());
-		seqToConcat.getMembers().add(first.clone());
-
-		ASeqConcatBinaryExpCG seqConcat = new ASeqConcatBinaryExpCG();
-		seqConcat.setType(compType.clone());
-		seqConcat.setLeft(seqCompResult.clone());
-		seqConcat.setRight(seqToConcat);
-
-		return consConditionalAdd(seqCompResult, seqConcat);
+		return consConditionalAdd(seqCompResult, add);
 	}
 
 	@Override
-	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public List<SStmIR> getForLoopStms(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 	{
 		return getConditionalAdd(setVar, patterns, pattern);
 	}

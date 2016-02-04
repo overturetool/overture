@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
 <message column="21" line="873" message="Definition 'state' not used" messageType="warning" number="5000" resource="trayallocationPP"/>
-<message column="44" line="920" message="Operation '(item.GetSizeOfTrays)' cannot be called from a function" messageType="error" number="3300" resource="trayallocationPP"/>
-<message column="49" line="928" message="Operation '(t.IsTrayEmpty)' cannot be called from a function" messageType="error" number="3300" resource="trayallocationPP"/>
-<message column="56" line="951" message="Operation '(twi.IsTrayFull)' cannot be called from a function" messageType="error" number="3300" resource="trayallocationPP"/>
-<message column="68" line="952" message="Operation '(tw2i.GetItem)' cannot be called from a function" messageType="error" number="3300" resource="trayallocationPP"/>
-<message column="94" line="952" message="Operation '(tw2i.GetItem)' cannot be called from a function" messageType="error" number="3300" resource="trayallocationPP"/>
+<message column="52" line="839" message="Impure operation '(inductionGroup(id).GetId)' cannot be called from here" messageType="error" number="3300" resource="trayallocationPP"/>
+<message column="47" line="845" message="Impure operation '(sorterRing(id).GetId)' cannot be called from here" messageType="error" number="3300" resource="trayallocationPP"/>
+<message column="44" line="920" message="Impure operation '(item.GetSizeOfTrays)' cannot be called from here" messageType="error" number="3300" resource="trayallocationPP"/>
+<message column="49" line="928" message="Impure operation '(t.IsTrayEmpty)' cannot be called from here" messageType="error" number="3300" resource="trayallocationPP"/>
+<message column="56" line="951" message="Impure operation '(twi.IsTrayFull)' cannot be called from here" messageType="error" number="3300" resource="trayallocationPP"/>
+<message column="68" line="952" message="Impure operation '(tw2i.GetItem)' cannot be called from here" messageType="error" number="3300" resource="trayallocationPP"/>
+<message column="94" line="952" message="Impure operation '(tw2i.GetItem)' cannot be called from here" messageType="error" number="3300" resource="trayallocationPP"/>
 <result/>
 </testResult>

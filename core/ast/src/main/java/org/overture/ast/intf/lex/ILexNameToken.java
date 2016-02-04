@@ -48,9 +48,13 @@ public interface ILexNameToken extends ILexIdentifierToken
 
 	ILexNameToken getInvName(ILexLocation l);
 
+	boolean isReserved();
+
 	ILexLocation getLocation();
 
 	ILexNameToken getModifiedName(String classname);
+	
+	ILexNameToken getModifiedName(List<PType> qualifier);
 
 	String getModule();
 

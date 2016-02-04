@@ -1,1 +1,1 @@
-{"result":"true","warnings":[],"errors":[]}
+{"result":"[]","warnings":[],"errors":[{"number":4034,"line":1,"col":1,"message":"Error 4034: Name \u0027X`entry()\u0027 not in scope in \u0027X\u0027 (console) at line 1:1","resource":"console"}]}

@@ -1,5 +1,0 @@
-operations
-
-compareToken(a:token) r:token
-  post r = mk_token({3|->10, 3|->12} )
-

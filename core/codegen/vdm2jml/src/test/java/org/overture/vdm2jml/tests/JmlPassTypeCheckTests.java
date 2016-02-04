@@ -4,16 +4,18 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.overture.codegen.tests.exec.util.ProcessResult;
+import org.overture.codegen.tests.util.JavaToolsUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
-import org.overture.codegen.vdm2java.JavaToolsUtils;
-import org.overture.codegen.vdm2jml.IOpenJmlConsts;
-import org.overture.vdm2jml.tests.util.ProcessResult;
+import org.overture.vdm2jml.tests.util.IOpenJmlConsts;
+import org.overture.vdm2jml.tests.util.TestUtil;
 
 @RunWith(Parameterized.class)
 public class JmlPassTypeCheckTests extends OpenJmlValidationBase
@@ -29,12 +31,14 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 		File folder = new File(AnnotationTestsBase.TEST_RES_STATIC_ANALYSIS_ROOT);
 		List<File> files = GeneralUtils.getFiles(folder);
 
-		return collectVdmslFiles(files);
+		return TestUtil.collectVdmslFiles(files);
 	}
 	
 	@Before
 	public void assumeTools()
 	{
+		Assume.assumeTrue(String.format("JML type checker test will only run if the "
+				+ "property '%s' is passed", EXEC_PROPERTY), System.getProperty(EXEC_PROPERTY) != null);
 		assumeOpenJml();
 	}
 
@@ -67,15 +71,23 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 		// -check
 		// <javafiles>
 		
-		return new String[] { JavaToolsUtils.JAVA, JavaToolsUtils.JAR_ARG,
-				openJml.getAbsolutePath(), IOpenJmlConsts.CP_ARG,
-				cgRuntime.getAbsolutePath(), IOpenJmlConsts.TC };
+		return new String[] { JavaToolsUtils.JAVA, JavaToolsUtils.JAR_ARG, openJml.getAbsolutePath(),
+				IOpenJmlConsts.CP_ARG,
+				"\"" + cgRuntime.getAbsolutePath() + File.pathSeparator + vdm2jmlRuntime.getAbsolutePath() + "\"",
+				IOpenJmlConsts.TC };
 	}
 
 	@Override
 	public void beforeRunningOpenJmlProcess()
 	{
 		clearCodeFolder();
-		codeGenerateInputFile();
+		generateJavaJml();
+	}
+
+	@Override
+	protected String getPropertyId()
+	{
+		// Never configure execution
+		return null;
 	}
 }

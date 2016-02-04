@@ -1,0 +1,27 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+TrueEven = nat * bool
+inv te == te.#1 > 1000 and te.#2;
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ let - : TrueEven = mk_(1001,true) in skip;
+ IO`println("After legal use");
+ IO`println("Before illegal uses");
+ let - : TrueEven = mk_(1000,true) in skip;
+ let - : TrueEven = mk_(1001,false) in skip;
+ IO`println("After illegal uses");
+ return 0;
+);
+  
+end Entry

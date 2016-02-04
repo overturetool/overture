@@ -1,0 +1,30 @@
+module Entry
+exports all
+definitions
+
+state St of
+ x : nat
+ init s == s = mk_St(0)
+end 
+
+operations 
+
+op : () ==> nat
+op () ==
+(
+ x := x + 1;
+ return x;
+);
+
+id : nat ==> nat
+id (a) == return a;
+
+traces
+
+T1:
+let a = op(),
+    b = op()
+in
+  (id(a);id(b);op(){1,3});
+
+end Entry

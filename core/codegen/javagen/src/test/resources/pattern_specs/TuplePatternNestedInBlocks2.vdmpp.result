@@ -11,7 +11,7 @@ public class Entry {
     public static Object Run() {
         /* skip */
         {
-            Tuple tuplePattern_1 = Tuple.mk_(1L, 2L);
+            final Tuple tuplePattern_1 = Tuple.mk_(1L, 2L);
             Boolean success_1 = tuplePattern_1.compatible(Number.class,
                     Number.class);
             Number a = null;
@@ -26,7 +26,7 @@ public class Entry {
                 throw new RuntimeException("Tuple pattern match failed");
             }
 
-            Number r = a.longValue() + b.longValue();
+            final Number r = a.longValue() + b.longValue();
 
             /* skip */
         }

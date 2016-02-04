@@ -13,5 +13,5 @@
 <message column="3" line="20" message="Instance variable 'clock' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
 <message column="3" line="296" message="Instance variable 'aah' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
 <message column="3" line="239" message="Instance variable 'pitch' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
-<message column="29" line="968" message="Operation 'ThrusterConsistency' cannot be called from a function" messageType="error" number="3300" resource="SAFERPP.result"/>
+<message column="29" line="968" message="Impure operation 'ThrusterConsistency' cannot be called from here" messageType="error" number="3300" resource="SAFERPP.result"/>
 </testResult>

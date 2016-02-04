@@ -11,7 +11,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        return SeqUtil.tail("a") + SeqUtil.tail(a) + SeqUtil.tail(f());
+        return SeqUtil.tail("a") + SeqUtil.tail(Entry.a) + SeqUtil.tail(f());
     }
 
     public static String f() {

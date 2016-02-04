@@ -23,7 +23,8 @@ public class PogTestResult extends Vector<String> implements Serializable,
 		PogTestResult r = new PogTestResult();
 		for (IProofObligation ipo : ipol)
 		{
-			r.add(ipo.getKindString() + " obligation:"
+			r.add(ipo.getKindString() + " obligation "
+					+ipo.getLocation().toString()+": "
 					+ ipo.getFullPredString());
 		}
 		return r;

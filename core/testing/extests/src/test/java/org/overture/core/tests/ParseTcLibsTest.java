@@ -28,7 +28,7 @@ public class ParseTcLibsTest
 {
 	ExampleSourceData testData;
 
-	private static String LIBS_ROOT = "../../../documentation/";
+	private static String LIBS_ROOT = "../../../externals/docrepo/examples/libs/";
 	
 	public ParseTcLibsTest(String _, ExampleSourceData testData)
 	{

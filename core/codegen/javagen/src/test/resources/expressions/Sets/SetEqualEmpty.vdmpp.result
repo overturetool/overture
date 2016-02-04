@@ -1,1 +1,1 @@
-SetUtil.set(1L, 2L, 3L).isEmpty()
+Utils.empty(SetUtil.set(1L, 2L, 3L))

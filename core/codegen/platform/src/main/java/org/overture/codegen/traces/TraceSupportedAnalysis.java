@@ -1,10 +1,10 @@
 package org.overture.codegen.traces;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
-import org.overture.codegen.cgast.statements.ASuperCallStmCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ANamedTraceDeclIR;
+import org.overture.codegen.ir.statements.ASuperCallStmIR;
 
 /**
  * This analysis determines if a named trace can be code
@@ -32,17 +32,17 @@ import org.overture.codegen.cgast.statements.ASuperCallStmCG;
  */
 public class TraceSupportedAnalysis extends DepthFirstAnalysisAdaptor
 {
-	private ANamedTraceDeclCG trace;
+	private ANamedTraceDeclIR trace;
 	private boolean isUnsupported = false;
 	private String reason;
 	
-	public TraceSupportedAnalysis(ANamedTraceDeclCG trace)
+	public TraceSupportedAnalysis(ANamedTraceDeclIR trace)
 	{
 		this.trace = trace;
 	}
 	
 	@Override
-	public void caseASuperCallStmCG(ASuperCallStmCG node)
+	public void caseASuperCallStmIR(ASuperCallStmIR node)
 			throws AnalysisException
 	{
 		if(!isWithinTrace(node))
@@ -67,7 +67,7 @@ public class TraceSupportedAnalysis extends DepthFirstAnalysisAdaptor
 	
 	private boolean isWithinTrace(INode node)
 	{
-		return node.getAncestor(ANamedTraceDeclCG.class) == trace;
+		return node.getAncestor(ANamedTraceDeclIR.class) == trace;
 	}
 	
 	public boolean isUnsupported()

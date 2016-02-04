@@ -1,0 +1,17 @@
+class Entry
+
+values 
+
+v = 1;
+
+instance variables
+static iv : nat := 5;
+
+operations
+
+public static Run: () ==> ?
+Run()==
+return card {(let x = c, - = v, - = iv in x*2) | c in set {1} & c=0 };
+   
+
+end Entry

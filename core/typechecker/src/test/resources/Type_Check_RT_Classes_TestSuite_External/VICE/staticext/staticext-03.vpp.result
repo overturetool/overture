@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesRtTypeCheckTest">
 <message column="5" line="31" message="State variable 'Simple`c' cannot be accessed from this context" messageType="error" number="3302" resource="staticext-03.vpp"/>
-<message column="5" line="31" message="Operation '(Simple`c.TestC)' cannot be called from a function" messageType="error" number="3300" resource="staticext-03.vpp"/>
+<message column="5" line="31" message="Impure operation '(Simple`c.TestC)' cannot be called from here" messageType="error" number="3300" resource="staticext-03.vpp"/>
 <result/>
 </testResult>

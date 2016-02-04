@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Func_1<Number, Func_1<Number, Func_1<Number, Number>>> curryAdd = new Func_1<Number, Func_1<Number, Func_1<Number, Number>>>() {
+        final Func_1<Number, Func_1<Number, Func_1<Number, Number>>> curryAdd = new Func_1<Number, Func_1<Number, Func_1<Number, Number>>>() {
                 public Func_1<Number, Func_1<Number, Number>> eval(
                     final Number x0) {
                     return new Func_1<Number, Func_1<Number, Number>>() {

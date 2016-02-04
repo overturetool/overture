@@ -15,7 +15,7 @@ public class A {
             throw new RuntimeException("Integer pattern match failed");
         }
 
-        Number intPattern_2 = 1L;
+        final Number intPattern_2 = 1L;
         Boolean success_2 = Utils.equals(intPattern_2, 1L);
 
         if (!(success_2)) {
@@ -32,7 +32,7 @@ public class A {
             throw new RuntimeException("Integer pattern match failed");
         }
 
-        Number intPattern_4 = 1L;
+        final Number intPattern_4 = 1L;
         Boolean success_4 = Utils.equals(intPattern_4, 1L);
 
         if (!(success_4)) {

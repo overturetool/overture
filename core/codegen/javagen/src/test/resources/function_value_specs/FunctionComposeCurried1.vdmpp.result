@@ -9,19 +9,19 @@ public class Entry {
     }
 
     public static Object Run() {
-        Func_1<Number, Number> f = new Func_1<Number, Number>() {
+        final Func_1<Number, Number> f = new Func_1<Number, Number>() {
                 public Number eval(final Number x) {
                     return x.longValue() + 1L;
                 }
             };
 
-        Func_1<Number, Number> g = new Func_1<Number, Number>() {
+        final Func_1<Number, Number> g = new Func_1<Number, Number>() {
                 public Number eval(final Number x) {
                     return x.longValue() + 2L;
                 }
             };
 
-        Func_1<Number, Number> h = func_compose(f).eval(g);
+        final Func_1<Number, Number> h = func_compose(f).eval(g);
 
         return h.eval(2L);
     }

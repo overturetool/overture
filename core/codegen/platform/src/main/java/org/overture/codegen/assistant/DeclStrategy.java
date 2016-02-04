@@ -23,12 +23,12 @@ package org.overture.codegen.assistant;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
 
-public interface DeclStrategy<T extends SDeclCG>
+public interface DeclStrategy<T extends SDeclIR>
 {
 	public String getAccess(T decl);
 
-	public List<T> getDecls(AClassDeclCG classDecl);
+	public List<T> getDecls(SClassDeclIR classDecl);
 }

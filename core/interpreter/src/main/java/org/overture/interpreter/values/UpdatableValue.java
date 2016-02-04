@@ -103,9 +103,15 @@ public class UpdatableValue extends ReferenceValue
 	{
 		if (watch != null)
 		{
-   			addListeners(watch);
+			addListeners(watch);
 		}
+
+		// We have to calculate the getUpdates to propagate the combined
+		// listeners to the rest of the structure, but we do not want to
+		// create a new UpdatableValue, having updated the listeners.
 		
+		UpdatableValue uv = (UpdatableValue)value.getUpdatable(listeners);
+		value = uv.value;
 		return this;
 	}
 
@@ -134,7 +140,7 @@ public class UpdatableValue extends ReferenceValue
 
 		synchronized (this)
 		{
-			value = newval.getUpdatable(listeners);
+			value = newval.getConstant().getUpdatable(listeners);
 			value = ((UpdatableValue) value).value; // To avoid nested updatables
 
 			if (restrictedTo != null)
@@ -183,7 +189,10 @@ public class UpdatableValue extends ReferenceValue
 		{
 			for (ValueListener vl: list)
 			{
-				listeners.add(vl);
+				if (!listeners.contains(vl))
+				{
+					listeners.add(vl);
+				}
 			}
 		}
 		else

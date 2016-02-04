@@ -26,19 +26,20 @@ public class Entry implements java.io.Serializable {
 
             store.register(ID_1, x);
 
-            CallStatement callStm_1 = new CallStatement() {
-                    public Object execute(final Object instance) {
+            CallStatementPp callStm_1 = new CallStatementPp() {
+                    public Object execute() {
                         return f(((Number) store.getValue(ID_1)));
                     }
 
                     public String toString() {
-                        return "f(" +
-                        Utils.toString(((Number) store.getValue(ID_1))) + ")";
+                        return "f(" + Utils.toString(store.getValue(ID_1)) +
+                        ")";
                     }
                 };
 
             StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
 
+            apply_1.addVarFirst(new TraceVariable("x", "int", Utils.toString(x)));
             alternatives_2.add(apply_1);
         }
 

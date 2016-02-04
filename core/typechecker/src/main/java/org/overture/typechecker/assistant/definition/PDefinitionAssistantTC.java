@@ -427,4 +427,15 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 
 		return false;
 	}
+
+	public boolean isInstanceVariable(PDefinition def)
+	{
+		try
+		{
+			return def.apply(af.getInstanceVariableChecker());
+		} catch (AnalysisException e)
+		{
+			return false;
+		}
+	}
 }

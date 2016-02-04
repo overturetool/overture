@@ -3,6 +3,6 @@
 <message column="10" line="57" message="Definition 'i' not used" messageType="warning" number="5000" resource="basicext-07.vpp"/>
 <message column="7" line="20" message="Name 'Simple`CPU10' is not in scope" messageType="error" number="3182" resource="basicext-07.vpp"/>
 <message column="7" line="20" message="Member deploy(A, seq1 of (char)) is not in scope" messageType="error" number="3209" resource="basicext-07.vpp"/>
-<message column="16" line="45" message="Asynchronous operation DOITC(map (nat) to (nat), nat) cannot return a value" messageType="error" number="3293" resource="basicext-07.vpp"/>
+<message column="16" line="45" message="Asynchronous operation 'DOITC(map (nat) to (nat), nat)' cannot return a value" messageType="error" number="3293" resource="basicext-07.vpp"/>
 <result/>
 </testResult>

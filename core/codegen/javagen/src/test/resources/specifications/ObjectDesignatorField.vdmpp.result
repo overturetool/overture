@@ -11,19 +11,19 @@ public class A {
     }
 
     public Number op() {
-        A a = new A();
+        final A a = new A();
 
         return a.x.f(1L);
     }
 
     public Number op1() {
-        A a = new A();
+        final A a = new A();
 
         return a.x.f(1L);
     }
 
     public Number op2() {
-        A a = new A();
+        final A a = new A();
 
         return a.x.x.x.f(1L);
     }

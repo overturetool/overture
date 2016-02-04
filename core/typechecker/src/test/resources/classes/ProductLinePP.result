@@ -18,10 +18,10 @@
 <message column="3" line="276" message="Instance variable 'liquid_level_sensor' is not initialized" messageType="warning" number="5001" resource="ProductLinePP"/>
 <message column="3" line="308" message="Instance variable 'realworld' is not initialized" messageType="warning" number="5001" resource="ProductLinePP"/>
 <message column="3" line="309" message="Instance variable 'sw' is not initialized" messageType="warning" number="5001" resource="ProductLinePP"/>
-<message column="5" line="121" message="Operation '(aap.GetAtm)' cannot be called from a function" messageType="error" number="3300" resource="ProductLinePP"/>
-<message column="34" line="122" message="Operation '(aap.GetAtm)' cannot be called from a function" messageType="error" number="3300" resource="ProductLinePP"/>
-<message column="34" line="124" message="Operation '(aap.GetAtm)' cannot be called from a function" messageType="error" number="3300" resource="ProductLinePP"/>
-<message column="8" line="297" message="Operation '(liquid_level_sensor.IsOn)' cannot be called from a function" messageType="error" number="3300" resource="ProductLinePP"/>
-<message column="8" line="298" message="Operation '(liquid_level_sensor.IsOn)' cannot be called from a function" messageType="error" number="3300" resource="ProductLinePP"/>
+<message column="5" line="121" message="Impure operation '(aap.GetAtm)' cannot be called from here" messageType="error" number="3300" resource="ProductLinePP"/>
+<message column="34" line="122" message="Impure operation '(aap.GetAtm)' cannot be called from here" messageType="error" number="3300" resource="ProductLinePP"/>
+<message column="34" line="124" message="Impure operation '(aap.GetAtm)' cannot be called from here" messageType="error" number="3300" resource="ProductLinePP"/>
+<message column="8" line="297" message="Impure operation '(liquid_level_sensor.IsOn)' cannot be called from here" messageType="error" number="3300" resource="ProductLinePP"/>
+<message column="8" line="298" message="Impure operation '(liquid_level_sensor.IsOn)' cannot be called from here" messageType="error" number="3300" resource="ProductLinePP"/>
 <result/>
 </testResult>

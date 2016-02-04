@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Func_1<Boolean, Number> f = new Func_1<Boolean, Number>() {
+        final Func_1<Boolean, Number> f = new Func_1<Boolean, Number>() {
                 public Number eval(final Boolean b) {
                     Number ternaryIfExp_1 = null;
 
@@ -23,7 +23,7 @@ public class Entry {
                 }
             };
 
-        VDMSeq xs = SeqUtil.seq(true, false, true, true, true);
+        final VDMSeq xs = SeqUtil.seq(true, false, true, true, true);
 
         return bool_nat_map(Utils.copy(xs)).eval(f);
     }
@@ -34,7 +34,7 @@ public class Entry {
                 public VDMSeq eval(final Func_1<Boolean, Number> f) {
                     VDMSeq ternaryIfExp_2 = null;
 
-                    if (s.isEmpty()) {
+                    if (Utils.empty(s)) {
                         ternaryIfExp_2 = SeqUtil.seq();
                     } else {
                         ternaryIfExp_2 = SeqUtil.conc(SeqUtil.seq(f.eval(((Boolean) s.get(

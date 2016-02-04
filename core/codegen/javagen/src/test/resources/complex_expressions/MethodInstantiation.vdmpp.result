@@ -8,21 +8,21 @@ public class A {
     public A() {
     }
 
+    public Number go() {
+        return f1().longValue() + f2().f1().longValue() +
+        new A().f1().longValue() + g(1L, 'a').longValue();
+    }
+
+    public A f2() {
+        return g(new A(), 2L);
+    }
+
     public static Number f1() {
         return g(1L, 2L);
     }
 
-    public static A f2() {
-        return g(new A(), 2L);
-    }
-
-    public static <T, U> T g(final T arg1, final U arg2) {
+    public static <T, U> T g(final T arg1, final U ignorePattern_1) {
         return arg1;
-    }
-
-    public static Number go() {
-        return f1().longValue() + f2().f1().longValue() +
-        new A().f1().longValue() + g(1L, 'a').longValue();
     }
 
     public String toString() {

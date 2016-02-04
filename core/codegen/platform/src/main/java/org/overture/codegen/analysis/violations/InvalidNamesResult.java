@@ -29,25 +29,28 @@ public class InvalidNamesResult
 	private Set<Violation> reservedWordViolations;
 	private Set<Violation> typenameViolations;
 	private Set<Violation> tempVarViolations;
+	private Set<Violation> objectMethodViolations;
 
 	private String correctionPrefix;
 
 	public InvalidNamesResult(Set<Violation> reservedWordViolations,
 			Set<Violation> typenameViolations,
-			Set<Violation> tempVarViolations, String correctionPrefix)
+			Set<Violation> tempVarViolations, Set<Violation> objectMethodViolations, String correctionPrefix)
 	{
 		this.reservedWordViolations = reservedWordViolations;
 		this.typenameViolations = typenameViolations;
 		this.tempVarViolations = tempVarViolations;
+		this.objectMethodViolations = objectMethodViolations;
 
 		this.correctionPrefix = correctionPrefix;
 	}
 
 	public InvalidNamesResult()
 	{
-		this.reservedWordViolations = new HashSet<Violation>();
-		this.typenameViolations = new HashSet<Violation>();
-		this.tempVarViolations = new HashSet<Violation>();
+		this.reservedWordViolations = new HashSet<>();
+		this.typenameViolations = new HashSet<>();
+		this.tempVarViolations = new HashSet<>();
+		this.objectMethodViolations = new HashSet<>();
 	}
 
 	public Set<Violation> getReservedWordViolations()
@@ -64,11 +67,16 @@ public class InvalidNamesResult
 	{
 		return tempVarViolations;
 	}
+	
+	public Set<Violation> getObjectMethodViolations()
+	{
+		return objectMethodViolations;
+	}
 
 	public boolean isEmpty()
 	{
 		return reservedWordViolations.isEmpty() && typenameViolations.isEmpty()
-				&& tempVarViolations.isEmpty();
+				&& tempVarViolations.isEmpty() && objectMethodViolations.isEmpty();
 	}
 
 	public String getCorrectionPrefix()

@@ -1,0 +1,7 @@
+functions
+
+f :  () -> nat
+f () ==
+let mk_(a,-) = mk_(1,2)
+in
+  a;

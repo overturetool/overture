@@ -26,6 +26,7 @@ package org.overture.interpreter.values;
 import java.io.Serializable;
 
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexNameList;
 import org.overture.typechecker.util.HackLexNameToken;
 import org.overture.typechecker.util.LexNameTokenMap;
 
@@ -75,6 +76,21 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements
 			if (entry.getKey().matches(sought)) // All overloaded names
 			{
 				list.add(entry.getValue());
+			}
+		}
+
+		return list;
+	}
+	
+	public LexNameList getOverloadNames(ILexNameToken sought)
+	{
+		LexNameList list = new LexNameList();
+
+		for (Entry<ILexNameToken, Value> entry: this.entrySet())
+		{
+			if (entry.getKey().matches(sought))		// All overloaded names
+			{
+				list.add(entry.getKey());
 			}
 		}
 

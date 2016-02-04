@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public Number op(final Number ignorePattern_1) {
-        Number ignorePattern_2 = 4L;
+        final Number ignorePattern_2 = 4L;
 
         return 4L;
     }
@@ -20,20 +20,20 @@ public class Entry {
     }
 
     public static Number f() {
-        Entry ignorePattern_3 = new Entry();
-        Entry ignorePattern_4 = new Entry();
+        final Number ignorePattern_3 = 1L;
+        final Number ignorePattern_4 = 2L;
 
         return 1L;
     }
 
     public static Number g() {
-        Number ignorePattern_5 = 2L;
+        final Number ignorePattern_5 = 2L;
 
         return 2L;
     }
 
     public static Number h(final Number ignorePattern_6) {
-        Number ignorePattern_7 = 2L;
+        final Number ignorePattern_7 = 2L;
 
         return 2L;
     }

@@ -1,0 +1,27 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+  
+Run : () ==> ?
+Run () ==
+(
+  dcl i : rat := 123.456;
+  IO`println("Before valid use.");
+  i := i * i;
+  IO`println("After valid use.");
+  IO`println("Before invalid use.");
+  i := ratOpt();
+  IO`println("After invalid use.");
+  return 0;
+);
+
+functions
+
+ratOpt :  () -> [rat]
+ratOpt () == nil;
+
+end Entry

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
 <message column="11" line="135" message="Definition 'x' not used" messageType="warning" number="5000" resource="QuadilateralPP"/>
+<message column="20" line="255" message="Cannot use 'new' in a functional context" messageType="error" number="3348" resource="QuadilateralPP"/>
 <result/>
 </testResult>

@@ -34,8 +34,8 @@ import java.util.regex.Pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -79,7 +79,7 @@ public class JavaCodeGenUtil
 		{
 			return vdmCodeGen.generateJavaFromVdmExp(typeCheckResult.result);
 
-		} catch (AnalysisException | org.overture.codegen.cgast.analysis.AnalysisException e)
+		} catch (AnalysisException | org.overture.codegen.ir.analysis.AnalysisException e)
 		{
 			throw new AnalysisException("Unable to generate code from expression: "
 					+ exp + ". Exception message: " + e.getMessage());
@@ -159,11 +159,11 @@ public class JavaCodeGenUtil
 		}
 	}
 
-	public static boolean isQuote(org.overture.codegen.cgast.INode decl, JavaSettings settings)
+	public static boolean isQuote(org.overture.codegen.ir.INode decl, JavaSettings settings)
 	{
-		if(decl instanceof AClassDeclCG)
+		if(decl instanceof ADefaultClassDeclIR)
 		{
-			AClassDeclCG clazz = (AClassDeclCG) decl;
+			ADefaultClassDeclIR clazz = (ADefaultClassDeclIR) decl;
 			
 			if(clazz.getPackage() == null)
 			{
@@ -243,7 +243,7 @@ public class JavaCodeGenUtil
 			}
 		}
 		
-		for(String kw : IJavaCodeGenConstants.RESERVED_WORDS)
+		for(String kw : IJavaConstants.RESERVED_WORDS)
 		{
 			if(s.equals(kw))
 			{
@@ -332,7 +332,7 @@ public class JavaCodeGenUtil
 
 		for (File f : files)
 		{
-			if (f.getName().endsWith(IJavaCodeGenConstants.JAVA_FILE_EXTENSION))
+			if (f.getName().endsWith(IJavaConstants.JAVA_FILE_EXTENSION))
 			{
 				javaFilePaths.add(f.getAbsolutePath());
 			}
@@ -347,13 +347,13 @@ public class JavaCodeGenUtil
 		File moduleOutputDir = outputDir;
 		String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
 		
-		if(generatedClass.getIrNode() instanceof AClassDeclCG)
+		if(generatedClass.getIrNode() instanceof ADefaultClassDeclIR)
 		{
-			javaPackage = ((AClassDeclCG) generatedClass.getIrNode()).getPackage();
+			javaPackage = ((ADefaultClassDeclIR) generatedClass.getIrNode()).getPackage();
 		}
-		else if(generatedClass.getIrNode() instanceof AInterfaceDeclCG)
+		else if(generatedClass.getIrNode() instanceof AInterfaceDeclIR)
 		{
-			javaPackage = ((AInterfaceDeclCG) generatedClass.getIrNode()).getPackage();
+			javaPackage = ((AInterfaceDeclIR) generatedClass.getIrNode()).getPackage();
 		}
 		else
 		{
@@ -371,20 +371,5 @@ public class JavaCodeGenUtil
 		}
 		
 		return moduleOutputDir;
-	}
-	
-	public static boolean isSupportedVdmSourceFile(File f)
-	{
-		String[] extensions = new String[]{".vdmpp", ".vpp", ".vsl", ".vdmsl"};
-		
-		for(String ext : extensions)
-		{
-			if(f.getName().endsWith(ext))
-			{
-				return true;
-			}
-		}
-		
-		return false;
 	}
 }

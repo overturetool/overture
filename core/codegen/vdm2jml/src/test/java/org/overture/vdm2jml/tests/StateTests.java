@@ -1,12 +1,14 @@
 package org.overture.vdm2jml.tests;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
 
 public class StateTests extends AnnotationTestsBase
 {
@@ -27,7 +29,7 @@ public class StateTests extends AnnotationTestsBase
 	{
 		Assert.assertTrue("Expected a single field to represent the state", genModule.getFields().size() == 1);
 
-		AFieldDeclCG stateField = genModule.getFields().getFirst();
+		AFieldDeclIR stateField = genModule.getFields().getFirst();
 
 		Assert.assertTrue("Expected only a single JML annotation for the state field", stateField.getMetaData().size() == 1);
 
@@ -39,31 +41,26 @@ public class StateTests extends AnnotationTestsBase
 	@Test
 	public void testGenStateTypeMethodsArePure()
 	{
-		Assert.assertTrue("Expected five methods in the state type ", genStateType.getMethods().size() == 5);
+		List<AMethodDeclIR> stateMethods = genStateType.getMethods();
+		Assert.assertTrue("Expected seven methods in the state type ", stateMethods.size() == 8);
 
-		for (AMethodDeclCG m : genStateType.getMethods())
-		{
-			if (!m.getIsConstructor())
-			{
-				assertPureMethod(m);
-			}
-		}
+		assertRecMethodsPurity(stateMethods);
 	}
-	
+
 	@Test
-	public void testInvFuncIsHelper()
+	public void testModuleHasNoInvFunction()
 	{
-		assertHelper(genModule.getInvariant(), "Expected invariant function to be a helper");
+		// The state invariant constrains the type of the state
+		// see https://github.com/overturetool/overture/issues/459
+		Assert.assertTrue("The state invariant constrains the type of the state", genModule.getInvariant() == null);
 	}
 	
 	@Test
 	public void testInv()
 	{
-		Assert.assertTrue("Expected state invariant to exist", !genModule.getMetaData().isEmpty());
+		Assert.assertTrue("Expected only a single ghost variable declaration to exist", genModule.getMetaData().size() == 1);
 		
-		String fieldName = genModule.getFields().getFirst().getName();
-		
-		String expected = String.format("//@ public static invariant St != null ==> inv_%1$s(%1$s);", fieldName);
+		String expected = "/*@ public ghost static boolean invChecksOn = true; @*/";
 		
 		Assert.assertEquals("Got unexpected invariant", expected, genModule.getMetaData().get(0).value);
 	}

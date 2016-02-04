@@ -23,16 +23,16 @@ package org.overture.codegen.trans.quantifier;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.IterationVarPrefixes;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
@@ -40,27 +40,27 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 	protected Exists1CounterData counterData;
 	
 	public Exists1QuantifierStrategy(
-			TransAssistantCG transformationAssistant,
-			SExpCG predicate, String resultVarName,
+			TransAssistantIR transformationAssistant,
+			SExpIR predicate, String resultVarName,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
-			TempVarPrefixes varPrefixes, Exists1CounterData counterData)
+			IterationVarPrefixes iteVarPrefixes, Exists1CounterData counterData)
 	{
-		super(transformationAssistant, predicate, resultVarName, langIterator, tempGen, varPrefixes);
+		super(transformationAssistant, predicate, resultVarName, langIterator, tempGen, iteVarPrefixes);
 		
 		this.counterData = counterData;
 	}
 
 	@Override
-	public List<AVarDeclCG> getOuterBlockDecls(
-			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
+	public List<AVarDeclIR> getOuterBlockDecls(
+			AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
 			throws AnalysisException
 	{
 		if(firstBind)
 		{
-			AIdentifierPatternCG name = new AIdentifierPatternCG();
+			AIdentifierPatternIR name = new AIdentifierPatternIR();
 			name.setName(resultVarName);
 			
-			return packDecl(transAssistant.getInfo().getDeclAssistant().
+			return packDecl(transAssist.getInfo().getDeclAssistant().
 					consLocalVarDecl(counterData.getType().clone(), name, 
 							counterData.getExp().clone()));
 		}
@@ -71,21 +71,21 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 	}
 
 	@Override
-	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public SExpIR getForLoopCond(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 			throws AnalysisException
 	{
-		SExpCG left = langIterator.getForLoopCond(setVar, patterns, pattern);
-		SExpCG right = transAssistant.consLessThanCheck(resultVarName, 2);
+		SExpIR left = langIterator.getForLoopCond(setVar, patterns, pattern);
+		SExpIR right = transAssist.consLessThanCheck(resultVarName, 2);
 
-		return transAssistant.consAndExp(left, right);
+		return transAssist.consAndExp(left, right);
 	}
 
 	@Override
-	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public List<SStmIR> getForLoopStms(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 	{
-		return lastBind ? packStm(transAssistant.consConditionalIncrement(resultVarName, predicate))
+		return lastBind ? packStm(transAssist.consConditionalIncrement(resultVarName, predicate))
 				: null;
 	}
 }

@@ -9,13 +9,13 @@ public class Entry {
     }
 
     public static Object Run() {
-        Func_1<Number, Character> f = new Func_1<Number, Character>() {
+        final Func_1<Number, Character> f = new Func_1<Number, Character>() {
                 public Character eval(final Number x) {
                     return 'a';
                 }
             };
 
-        VDMSeq xs = SeqUtil.seq(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L);
+        final VDMSeq xs = SeqUtil.seq(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L);
 
         return nat_char_map(Utils.copy(xs)).eval(f);
     }
@@ -26,7 +26,7 @@ public class Entry {
                 public VDMSeq eval(final Func_1<Number, Character> f) {
                     VDMSeq ternaryIfExp_1 = null;
 
-                    if (s.isEmpty()) {
+                    if (Utils.empty(s)) {
                         ternaryIfExp_1 = SeqUtil.seq();
                     } else {
                         ternaryIfExp_1 = SeqUtil.conc(SeqUtil.seq(f.eval(((Number) s.get(

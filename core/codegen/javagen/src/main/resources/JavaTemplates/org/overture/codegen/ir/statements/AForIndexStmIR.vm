@@ -1,0 +1,27 @@
+#set( $index = $node.getVar())
+#set( $fromExp = $JavaFormat.formatIgnoreContext($node.getFrom()) )
+#set( $toExp = $JavaFormat.formatIgnoreContext($node.getTo()) )
+#set( $body = $JavaFormat.format($node.getBody()) )
+#set( $toVar = $JavaFormat.genForIndexToVarName() )
+#set( $bySpecified = !$JavaFormat.isNull($node.getBy()) )
+##
+long ${toVar} = ${toExp};
+##
+#set( $condition = "" )
+#set( $step = "" )
+##
+#if ( $bySpecified == true )
+	#set($byVar = "$JavaFormat.genForIndexByVarName()" )
+	long ${byVar} =  $JavaFormat.formatIgnoreContext($node.getBy());
+	#set( $step = "${index} += ${byVar}" )
+	#set( $condition = "${byVar} < 0 ? ${index} >= ${toVar} : ${index} <= ${toVar}")
+#else
+
+	#set( $condition = "${index} <= ${toVar}" )
+	#set( $step = "${index}++" )
+#end
+##
+for(Long ${index} = ${fromExp}; ${condition}; ${step})
+{
+	$body
+}

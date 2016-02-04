@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
 <message column="1" line="21" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="opsigiden03.vpp"/>
-<message column="8" line="23" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="opsigiden03.vpp"/>
 <message column="1" line="29" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="opsigiden03.vpp"/>
 <result/>
 </testResult>

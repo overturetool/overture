@@ -88,6 +88,11 @@ public class Generated
 		return unsupportedInIr.isEmpty() && unsupportedInTargLang.isEmpty();
 	}
 	
+	public boolean hasErrors()
+	{
+		return !unsupportedInIr.isEmpty() || !unsupportedInTargLang.isEmpty() || !mergeErrors.isEmpty();
+	}
+	
 	public boolean hasUnsupportedIrNodes()
 	{
 		return !unsupportedInIr.isEmpty();

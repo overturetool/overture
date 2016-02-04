@@ -11,8 +11,8 @@ public class NoteBook {
     }
 
     public void Test() {
-        NoteBook nb1 = new NoteBook();
-        NoteBook nb2 = new NoteBook();
+        final NoteBook nb1 = new NoteBook();
+        final NoteBook nb2 = new NoteBook();
 
         {
             IO.println(SeqUtil.seq('N', 'o', 't', 'e', 'b', 'o', 'o', 'k', 's',
@@ -120,7 +120,7 @@ public class NoteBook {
             long toVar_1 = nb1.noOfMessgages().longValue();
 
             for (Long i = 1L; i <= toVar_1; i++) {
-                VDMSeq reversed = nb1.getReverseMessages();
+                final VDMSeq reversed = nb1.getReverseMessages();
                 IO.println(Utils.copy(((VDMSeq) Utils.get(reversed, i))));
             }
 
@@ -168,7 +168,7 @@ public class NoteBook {
         long toVar_2 = messages.size();
 
         for (Long i = 1L; i <= toVar_2; i++) {
-            VDMSeq msg = getMessage(i);
+            final VDMSeq msg = getMessage(i);
             IO.println(Utils.copy(msg));
         }
     }
@@ -199,7 +199,7 @@ public class NoteBook {
 
     public void overrideMessage(final Number index, final VDMSeq newMessage) {
         messages = SeqUtil.mod(Utils.copy(messages),
-                new Maplet[] { new Maplet(index, Utils.copy(newMessage)) });
+                MapUtil.map(new Maplet(index, Utils.copy(newMessage))));
     }
 
     public VDMSeq getMessagesOrdered() {

@@ -14,6 +14,12 @@ public class Bag {
     public Bag() {
     }
 
+    public void cg_init_Bag_1(final VDMSet pNumbers) {
+        numbers = Utils.copy(pNumbers);
+
+        return;
+    }
+
     public static void Test() {
         Bag bag1 = new Bag(SetUtil.set(1L, 2L, 3L));
         Bag bag2 = new Bag(SetUtil.set(3L, 4L, 5L));
@@ -164,12 +170,6 @@ public class Bag {
         }
     }
 
-    public void cg_init_Bag_1(final VDMSet pNumbers) {
-        numbers = Utils.copy(pNumbers);
-
-        return;
-    }
-
     public void printBag() {
         IO.print(SeqUtil.seq('{'));
 
@@ -191,11 +191,11 @@ public class Bag {
     }
 
     public Boolean hasNumber(final Number n) {
-        return numbers.contains(n);
+        return SetUtil.inSet(n, numbers);
     }
 
     public Boolean hasNotNumber(final Number n) {
-        return !(numbers.contains(n));
+        return !(SetUtil.inSet(n, numbers));
     }
 
     public void addNumbers(final Bag bag) {
@@ -211,7 +211,7 @@ public class Bag {
     }
 
     public Boolean contains(final Bag bag) {
-        return numbers.containsAll(bag.getNumbers());
+        return SetUtil.subset(bag.getNumbers(), numbers);
     }
 
     public Boolean properContains(final Bag bag) {

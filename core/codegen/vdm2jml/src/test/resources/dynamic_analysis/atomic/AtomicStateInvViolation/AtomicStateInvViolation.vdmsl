@@ -1,0 +1,32 @@
+module Entry
+
+imports from IO all
+definitions
+
+state St of
+  x : nat
+  init s == s = mk_St(1)
+  inv s == s.x = 1
+end
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  IO`println("Before first atomic (expecting violation after atomic)");
+  atomic
+  (
+    x := 2;
+  );
+  IO`println("After first atomic (expected violation before this print statement)");
+  IO`println("Before second atomic");
+  atomic
+  (
+    x := 1;
+  );
+  IO`println("After second atomic");
+  return 2;
+);
+
+end Entry

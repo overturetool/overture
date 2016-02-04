@@ -35,7 +35,6 @@ import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
-import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
@@ -121,10 +120,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		}
 
 		PDefinition func = question.env.getEnclosingDefinition();
-
-		boolean inFunction = func instanceof AExplicitFunctionDefinition
-				|| func instanceof AImplicitFunctionDefinition
-				|| func instanceof APerSyncDefinition;
+		boolean inFunction = question.env.isFunctional();
+		boolean inOperation = !inFunction;
+		boolean inReserved = (func == null || func.getName() == null) ? false : func.getName().isReserved();
 
 		if (inFunction)
 		{
@@ -200,14 +198,26 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			AOperationType ot = question.assistantFactory.createPTypeAssistant().getOperation(node.getType());
 			question.assistantFactory.createPTypeAssistant().typeResolve(ot, null, THIS, question);
 
-			if (inFunction && Settings.release == Release.VDM_10)
+			if (inFunction && Settings.release == Release.VDM_10 && !ot.getPure())
 			{
-				TypeCheckerErrors.report(3300, "Operation '" + node.getRoot()
-						+ "' cannot be called from a function", node.getLocation(), node);
+				TypeCheckerErrors.report(3300, "Impure operation '" + node.getRoot()
+						+ "' cannot be called from here", node.getLocation(), node);
 				results.add(AstFactory.newAUnknownType(node.getLocation()));
-			} else
+			}
+			else if (inOperation && Settings.release == Release.VDM_10 && func != null && func.getAccess().getPure() && !ot.getPure())
+			{
+				TypeCheckerErrors.report(3339, "Cannot call impure operation '" + node.getRoot()
+						+ "' from a pure operation", node.getLocation(), node);
+				results.add(AstFactory.newAUnknownType(node.getLocation()));
+			}
+			else
 			{
 				results.add(operationApply(node, isSimple, ot, question));
+			}
+			
+			if (inFunction && Settings.release == Release.VDM_10 && ot.getPure() && !inReserved)
+			{
+				TypeCheckerErrors.warning(5017, "Pure operation call may not be referentially transparent", node.getLocation(), node);
 			}
 		}
 
@@ -1284,9 +1294,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		}
 
 		if (question.env.isVDMPP()
-				&& question.assistantFactory.createPTypeAssistant().isClass(root))
+				&& question.assistantFactory.createPTypeAssistant().isClass(root, question.env))
 		{
-			AClassType cls = question.assistantFactory.createPTypeAssistant().getClassType(root);
+			AClassType cls = question.assistantFactory.createPTypeAssistant().getClassType(root, question.env);
 			ILexNameToken memberName = node.getMemberName();
 
 			if (memberName == null)
@@ -1587,6 +1597,17 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 						TypeCheckerErrors.report(3105, opname
 								+ " is not an explicit operation", opname.getLocation(), opname);
 					}
+
+					if (def.getAccess().getPure())
+    				{
+						TypeCheckerErrors.report(3342, "Cannot use history counters for pure operations", opname.getLocation(), opname);
+    				}
+    				
+    				if (def.getAccess().getStatic() == null && question.env.isStatic())
+    				{
+    					TypeCheckerErrors.report(3349,
+    						"Cannot see non-static operation from static context", opname.getLocation(), opname);
+    				}
 				}
 			}
 
@@ -1725,7 +1746,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType rt = node.getExp().apply(THIS, question.newConstraint(null));
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(rt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(rt, question.env))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", node.getExp().getLocation(), node.getExp());
 		}
@@ -1753,7 +1774,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType rt = node.getExp().apply(THIS, question.newConstraint(null));
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(rt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(rt, question.env))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", node.getExp().getLocation(), node.getExp());
 		}
@@ -1775,12 +1796,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		// node.setParamPatterns(paramPatterns);
 		for (ATypeBind tb : node.getBindList())
 		{
-			// mbinds.addAll(ATypeBindAssistantTC.getMultipleBindList(tb));
-			// FIXME: I am not sure if this is the way.
 			mbinds.addAll(tb.apply(question.assistantFactory.getMultipleBindLister()));
 			paramDefinitions.addAll(question.assistantFactory.createPPatternAssistant().getDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
 			paramPatterns.add(tb.getPattern());
-			ptypes.add(question.assistantFactory.createPTypeAssistant().typeResolve(tb.getType(), null, THIS, question));
+			tb.setType(question.assistantFactory.createPTypeAssistant().typeResolve(tb.getType(), null, THIS, question));
+			ptypes.add(tb.getType());
 		}
 
 		node.setParamPatterns(paramPatterns);
@@ -1793,8 +1813,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), mbinds);
 		def.apply(THIS, question.newConstraint(null));
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, def, question.env, question.scope);
-		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope);
+		local.setFunctional(true);
 		local.setEnclosingDefinition(def); // Prevent recursive checks
+		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope);
 
 		PType result = node.getExpression().apply(THIS, newInfo);
 		local.unusedCheck();
@@ -2150,6 +2171,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			return node.getType();
 		}
 
+		if (Settings.release == Release.VDM_10 && question.env.isFunctional())
+		{
+			TypeCheckerErrors.report(3348, "Cannot use 'new' in a functional context", node.getLocation(), node);
+		}
+
 		node.setClassdef((SClassDefinition) cdef);
 
 		SClassDefinition classdef = node.getClassdef();
@@ -2299,7 +2325,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			}
 		} else
 		{
-			node.setType(AstFactory.newARealNumericBasicType(node.getLocation()));
+			node.setType(AstFactory.newARationalNumericBasicType(node.getLocation()));
 		}
 
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, node.getType(), node.getLocation());
@@ -2315,7 +2341,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType lt = left.apply(THIS, question.newConstraint(null));
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(lt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(lt, question.env))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", left.getLocation(), left);
 		}
@@ -2323,7 +2349,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType rt = right.apply(THIS, question.newConstraint(null));
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(rt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(rt, question.env))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", right.getLocation(), right);
 		}
@@ -2342,7 +2368,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType lt = left.apply(THIS, question.newConstraint(null));
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(lt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(lt, question.env))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", left.getLocation(), left);
 		}
@@ -2350,7 +2376,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType rt = right.apply(THIS, question.newConstraint(null));
 
-		if (!question.assistantFactory.createPTypeAssistant().isClass(rt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(rt, question.env))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", right.getLocation(), right);
 		}
@@ -2659,6 +2685,18 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override
 	public PType caseAThreadIdExp(AThreadIdExp node, TypeCheckInfo question)
 	{
+		PDefinition encl = question.env.getEnclosingDefinition();
+		
+		if (encl != null && encl.getAccess().getPure())
+		{
+			TypeCheckerErrors.report(3346, "Cannot use 'threadid' in pure operations", node.getLocation(), node);
+		}
+
+		if (Settings.release == Release.VDM_10 && question.env.isFunctional())
+		{
+			TypeCheckerErrors.report(3348, "Cannot use 'threadid' in a functional context", node.getLocation(), node);
+		}
+
 		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, node.getType(), node.getLocation());
 	}
@@ -2666,6 +2704,18 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override
 	public PType caseATimeExp(ATimeExp node, TypeCheckInfo question)
 	{
+		PDefinition encl = question.env.getEnclosingDefinition();
+		
+		if (encl != null && encl.getAccess().getPure())
+		{
+			TypeCheckerErrors.report(3346, "Cannot use 'time' in pure operations", node.getLocation(), node);
+		}
+
+		if (Settings.release == Release.VDM_10 && question.env.isFunctional())
+		{
+			TypeCheckerErrors.report(3348, "Cannot use 'time' in a functional context", node.getLocation(), node);
+		}
+		
 		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, node.getType(), node.getLocation());
 	}

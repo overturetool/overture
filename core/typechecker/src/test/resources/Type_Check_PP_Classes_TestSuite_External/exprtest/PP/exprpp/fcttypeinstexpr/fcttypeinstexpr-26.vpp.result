@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="36" line="63" message="Unknown member x(nat1) of class A" messageType="warning" number="3091" resource="fcttypeinstexpr-26.vpp"/>
+<message column="36" line="63" message="Unknown member x(nat1) of class *union_A_B" messageType="warning" number="3091" resource="fcttypeinstexpr-26.vpp"/>
 <message column="1" line="50" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="fcttypeinstexpr-26.vpp"/>
 <result/>
 </testResult>

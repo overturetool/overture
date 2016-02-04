@@ -1,0 +1,32 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        if (Utils.equals(1L, 2L)) {
+            throw new ExitException(4L + 2L);
+        } else if (Utils.equals(1L, 2L)) {
+            throw new ExitException();
+        } else if (Utils.equals(1L, 2L)) {
+            throw new ExitException(SeqUtil.seq('E', 'r', 'r', 'o', 'r', ' ',
+                    's', 't', 'a', 't', 'e', 'm', 'e', 'n', 't', ' ', 'r', 'e',
+                    'a', 'c', 'h', 'e', 'd'));
+        } else if (Utils.equals(1L, 2L)) {
+            throw new ExitException(true);
+        } else {
+            return 42L;
+        }
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

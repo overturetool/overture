@@ -17,7 +17,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Entry e = new Entry();
+        final Entry e = new Entry();
         Boolean andResult_1 = false;
 
         Boolean forAllExpResult_1 = true;
@@ -65,7 +65,7 @@ public class Entry {
             }
         }
 
-        Boolean b = andResult_1;
+        final Boolean b = andResult_1;
 
         return Tuple.mk_(b, e.n);
     }

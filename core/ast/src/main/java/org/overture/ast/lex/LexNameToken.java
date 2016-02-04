@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IAnalysis;
@@ -150,11 +151,27 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 	{
 		return new LexNameToken(module, "init_" + name, l);
 	}
+	
+	public boolean isReserved()
+	{
+		return
+			name.startsWith("pre_") ||
+			name.startsWith("post_") ||
+			name.startsWith("inv_") ||
+			name.startsWith("init_");
+	}
 
 	public LexNameToken getModifiedName(String classname)
 	{
 		LexNameToken mod = new LexNameToken(classname, name, location, old, explicit);
 		mod.setTypeQualifier(typeQualifier);
+		return mod;
+	}
+
+	public LexNameToken getModifiedName(List<PType> qualifier)
+	{
+		LexNameToken mod = new LexNameToken(module, name, location, old, explicit);
+		mod.setTypeQualifier(qualifier);
 		return mod;
 	}
 
@@ -173,16 +190,23 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 	{
 		if (module.equals("CLASS"))
 		{
-			return new LexNameToken(name, "thread", location);
-		} else
+			LexNameToken thread = new LexNameToken(name, "thread", location);
+			thread.setTypeQualifier(new Vector<PType>());
+			return thread;
+		}
+		else
 		{
-			return new LexNameToken(module, "thread", location);
+			LexNameToken thread = new LexNameToken(module, "thread", location);
+			thread.setTypeQualifier(new Vector<PType>());
+			return thread;
 		}
 	}
 
 	public LexNameToken getThreadName(ILexLocation loc)
 	{
-		return new LexNameToken(loc.getModule(), "thread", loc);
+		LexNameToken thread = new LexNameToken(loc.getModule(), "thread", loc);
+		thread.setTypeQualifier(new Vector<PType>());
+		return thread;
 	}
 
 	public LexNameToken getPerName(ILexLocation loc)

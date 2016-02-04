@@ -1,1 +1,1 @@
-["while loop termination obligation:...","non-empty sequence obligation:((not isEmpty()) \u003d\u003e (vals \u003c\u003e []))","non-empty sequence obligation:((not isEmpty()) \u003d\u003e (vals \u003c\u003e []))","cases exhaustive obligation:(forall t:tree \u0026 ((t \u003d \u003cEmpty\u003e) or (exists mk_node(lt, v, rt):tree \u0026 (t \u003d mk_node(lt, v, rt)))))","while loop termination obligation:..."]
+true

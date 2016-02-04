@@ -3,19 +3,20 @@ package org.overture.pog.tests.newtests;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Type;
+import java.util.LinkedList;
 import java.util.List;
 
-import junitparams.JUnitParamsRunner;
-
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.core.tests.examples.ParamExamplesTest;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
-import org.overture.pog.tests.newtests.PogTestResult.ResultComparison;
 
 import com.google.gson.reflect.TypeToken;
+
+import junitparams.JUnitParamsRunner;
 
 /**
  * Working examples of all examples tests for the pog
@@ -23,37 +24,31 @@ import com.google.gson.reflect.TypeToken;
  * @author ldc
  */
 @RunWith(JUnitParamsRunner.class)
-public class PogAllExamplesTest extends ParamExamplesTest<PogTestResult>
+public class PogAllExamplesTest extends ParamExamplesTest<Boolean>
 {
-
-
-
 	@Override
-	public PogTestResult processModel(List<INode> model)
+	public Boolean processModel(List<INode> model)
 	{
 		IProofObligationList ipol;
 		try
 		{
 			ipol = ProofObligationGenerator.generateProofObligations(model);
-			PogTestResult actual = PogTestResult.convert(ipol);
-			return actual;
+			Assert.assertNotNull(ipol);
+			
+			return true;
 		} catch (AnalysisException e)
 		{
 			fail("Could not process model in test " + testName);
 			e.printStackTrace();
 		}
-		return null;
+		return false;
 
 	}
 
 	@Override
-	public void compareResults(PogTestResult actual, PogTestResult expected)
+	public void compareResults(Boolean actual, Boolean expected)
 	{
-		ResultComparison r = PogTestResult.compare(actual, expected);
-
-		if (!r.isMatch()) {
-			fail(r.getMessage() + getTestResultUpdateMessage());
-		}
+		Assert.assertEquals(expected, actual);
 	}
 
 	@Override
@@ -66,18 +61,27 @@ public class PogAllExamplesTest extends ParamExamplesTest<PogTestResult>
 	@Override
 	public Type getResultType()
 	{
-		Type resultType = new TypeToken<PogTestResult>()
+		Type resultType = new TypeToken<Boolean>()
 		{
 		}.getType();
 		return resultType;
 	}
 
-	private static String EXAMPLES_ROOT = "../../externals/examples/target/classes/";
+	private static String EXAMPLES_ROOT = "../../externals/docrepo/examples/";
 	
 	@Override
 	protected String getRelativeExamplesPath()
 	{
 		return EXAMPLES_ROOT;
+	}
+	
+	@Override
+	protected List<String> getExamplesToSkip()
+	{
+		LinkedList<String> toSkip = new LinkedList<String>();
+		toSkip.add("AutomatedStockBrokerPP");
+		
+		return toSkip;
 	}
 
 }

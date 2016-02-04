@@ -19,7 +19,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Entry a = new Entry();
+        final Entry a = new Entry();
         a.modify();
 
         return a.read();

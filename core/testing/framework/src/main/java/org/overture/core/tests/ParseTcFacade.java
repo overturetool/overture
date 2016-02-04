@@ -216,9 +216,8 @@ public abstract class ParseTcFacade
 	 */
 	public static List<INode> typedAstNoRetry(List<File> sources,
 			String testName, Dialect dialect) throws ParserException,
-			LexException
-	{
-		return typedAst(sources, testName, dialect, true);
+			LexException {
+		return typedAst(sources, testName, dialect, false);
 	}
 
 	/**

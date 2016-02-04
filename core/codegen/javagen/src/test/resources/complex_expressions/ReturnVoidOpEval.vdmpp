@@ -1,0 +1,18 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+ op();
+ return 0;
+);
+
+private static op : () ==> ()
+op () == return voidOp();
+
+private static voidOp : () ==> ()
+voidOp () == return;
+
+end Entry

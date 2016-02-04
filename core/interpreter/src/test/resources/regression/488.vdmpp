@@ -1,0 +1,15 @@
+class A
+types
+public R :: int;  
+public U = R | B`R;
+
+operations
+public op : () ==> U
+op () == return mk_B`R('a');  
+
+end A
+
+class B
+types
+public R :: char;
+end B

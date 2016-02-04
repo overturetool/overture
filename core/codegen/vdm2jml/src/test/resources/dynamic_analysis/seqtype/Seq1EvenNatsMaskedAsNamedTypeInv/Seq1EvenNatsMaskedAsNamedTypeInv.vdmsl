@@ -1,0 +1,32 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+types
+
+Seq1Even = seq1 of nat
+inv xs == forall x in set elems xs & x mod 2 = 0;
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ let - : Seq1Even = [2,4,6] in skip;
+ IO`println("After legal use");
+ IO`println("Before illegal use");
+ let - : Seq1Even = [2,4,6,9] in skip;
+ let - : Seq1Even = emptySeqOfNat() in skip;
+ IO`println("After illegal use");
+ return 0;
+);
+
+functions
+
+emptySeqOfNat :  () -> seq of nat
+emptySeqOfNat () == [];
+
+end Entry

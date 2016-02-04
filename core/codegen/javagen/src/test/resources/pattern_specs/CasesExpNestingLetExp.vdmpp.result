@@ -20,8 +20,8 @@ public class Entry {
     }
 
     public static Number f(final Number n) {
-        Number dummy1 = 10L;
-        Number dummy2 = 20L;
+        final Number dummy1 = 10L;
+        final Number dummy2 = 20L;
 
         Number casesExpResult_1 = null;
 
@@ -44,7 +44,7 @@ public class Entry {
                 }
             } else {
                 {
-                    Number b = 5L;
+                    final Number b = 5L;
 
                     casesExpResult_1 = b;
                 }

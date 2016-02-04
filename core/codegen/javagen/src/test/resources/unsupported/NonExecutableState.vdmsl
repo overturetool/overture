@@ -1,0 +1,9 @@
+module Entry
+
+definitions
+
+state St of
+  init - == false
+end
+
+end Entry

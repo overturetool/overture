@@ -1,5 +1,0 @@
-operations
-
-conc1() m : seq of nat
- post m = conc [[1,2],[3,4]];
-

@@ -7,7 +7,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.ast.util.ClonableString;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
 
 public class PurityTests extends AnnotationTestsBase
 {
@@ -38,11 +39,11 @@ public class PurityTests extends AnnotationTestsBase
 	@Test
 	public void operationsNotAnnotated()
 	{
-		List<AMethodDeclCG> genOps = getGenMethods(genModule.getMethods());
+		List<AMethodDeclIR> genOps = getGenMethods(genModule.getMethods());
 
 		Assert.assertTrue("Expected the generated module to have operations", !genOps.isEmpty());
 
-		for (AMethodDeclCG op : genOps)
+		for (AMethodDeclIR op : genOps)
 		{
 			Assert.assertTrue("Expected operations for this generated module to have no annotations", op.getMetaData().isEmpty());
 		}
@@ -51,6 +52,11 @@ public class PurityTests extends AnnotationTestsBase
 	@Test
 	public void testNoStateInvInGenModule()
 	{
-		Assert.assertTrue("Expected no state annotations", genModule.getMetaData().isEmpty());
+		for(ClonableString m : genModule.getMetaData())
+		{
+			// A bit naive way to check that no instance or static invariant is declared
+			Assert.assertTrue("Expected no state annotations", !m.value.contains("invariant"));
+		}
+		
 	}
 }

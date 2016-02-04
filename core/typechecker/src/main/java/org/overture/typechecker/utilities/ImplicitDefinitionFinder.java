@@ -46,19 +46,20 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 
 /**
  * This class implements a way to find ImplicitDefinitions from nodes from the AST.
@@ -132,7 +133,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 							{
 								TypeCheckerErrors.report(3305, "CPU frequency to slow: "
 										+ speed + " Hz", d.getLocation(), d);
-							} else if (speed > ACpuClassDefinitionAssistantTC.CPU_MAX_FREQUENCY)
+							} else if (speed > AstFactoryTC.CPU_MAX_FREQUENCY)
 							{
 								TypeCheckerErrors.report(3306, "CPU frequency to fast: "
 										+ speed + " Hz", d.getLocation(), d);
@@ -300,7 +301,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		// ORIGINAL CODE FROM ASSISTANT
 		// node.setOperationDef(AThreadDefinitionAssistantTC.getThreadDefinition(node));
 		// Mine non static call of the code.
-		node.setOperationDef(af.createAThreadDefinitionAssistant().getThreadDefinition(node));
+		node.setOperationDef(getThreadDefinition(node));
 	}
 
 	@Override
@@ -310,7 +311,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		if (node.getInvPattern() != null)
 		{
 			// node.setInvdef(getInvDefinition(d)); //Original code from Assistant.
-			node.setInvdef(af.createATypeDefinitionAssistant().getInvDefinition(node));
+			node.setInvdef(getInvDefinition(node));
 			node.getInvType().setInvDef(node.getInvdef());
 		} else
 		{
@@ -372,6 +373,51 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		AFunctionType ftype = AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
 
 		return AstFactory.newAExplicitFunctionDefinition(d.getName().getInvName(loc), NameScope.GLOBAL, null, ftype, parameters, d.getInvExpression(), null, null, true, null);
+	}
+	
+	public AExplicitFunctionDefinition getInvDefinition(ATypeDefinition d)
+	{
+
+		ILexLocation loc = d.getInvPattern().getLocation();
+		List<PPattern> params = new Vector<PPattern>();
+		params.add(d.getInvPattern().clone());
+
+		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		parameters.add(params);
+
+		PTypeList ptypes = new PTypeList();
+
+		if (d.getInvType() instanceof ARecordInvariantType)
+		{
+			// Records are inv_R: R +> bool
+			ptypes.add(AstFactory.newAUnresolvedType(d.getName().clone()));
+		} else
+		{
+			// Named types are inv_T: x +> bool, for T = x
+			ANamedInvariantType nt = (ANamedInvariantType) d.getInvType();
+			ptypes.add(nt.getType().clone());
+		}
+
+		AFunctionType ftype = AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
+
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getInvName(loc), NameScope.GLOBAL, null, ftype, parameters, d.getInvExpression(), null, null, true, null);
+
+		def.setAccess(d.getAccess().clone()); // Same as type's
+		def.setClassDefinition(d.getClassDefinition());
+
+		return def;
+	}
+	
+	public AExplicitOperationDefinition getThreadDefinition(AThreadDefinition d)
+	{
+
+		AOperationType type = AstFactory.newAOperationType(d.getLocation()); // () ==> ()
+
+		AExplicitOperationDefinition def = AstFactory.newAExplicitOperationDefinition(d.getOperationName(), type, new Vector<PPattern>(), null, null, d.getStatement().clone());
+
+		def.setAccess(d.getAccess().clone());
+		def.setClassDefinition(d.getClassDefinition());
+		return def;
 	}
 
 }

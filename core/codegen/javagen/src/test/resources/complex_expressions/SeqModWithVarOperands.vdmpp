@@ -1,0 +1,12 @@
+class Entry
+
+values
+  m = {2 |-> 5};
+  s = [1, 2];
+
+operations
+
+public static Run : () ==> ?
+Run () == return s ++ m;
+
+end Entry

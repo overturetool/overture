@@ -26,10 +26,15 @@ import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexIntegerToken;
+import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.lex.LexToken;
+import org.overture.ast.lex.VDMToken;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
@@ -46,6 +51,7 @@ import org.overture.interpreter.values.BUSValue;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.ClassInvariantListener;
 import org.overture.interpreter.values.MapValue;
+import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.ObjectValue;
@@ -159,7 +165,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		return null;
 	}
 
-	protected ObjectValue makeNewInstance(SClassDefinition node,
+	public ObjectValue makeNewInstance(SClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt,
 
 			Map<ILexNameToken, ObjectValue> done, boolean nested)
@@ -201,7 +207,8 @@ public class SClassDefinitionAssistantInterpreter extends
 				i.getName().setTypeQualifier(i.getSuperdef().getName().getTypeQualifier());
 			}
 
-			if (af.createPDefinitionAssistant().isRuntime(idef)) // eg. TypeDefinitions aren't
+			if (af.createPDefinitionAssistant().isRuntime(idef) &&	 // eg. TypeDefinitions aren't
+				!af.createPDefinitionAssistant().isSubclassResponsibility(idef))
 			{
 				Value v = null;
 
@@ -249,6 +256,8 @@ public class SClassDefinitionAssistantInterpreter extends
 		// there are no spurious free variables created.
 
 		Context empty = new Context(af, node.getLocation(), "empty", null);
+		NameValuePairMap inheritedNames = new NameValuePairMap();
+		inheritedNames.putAll(members);		// Not a clone
 
 		for (PDefinition d : node.getDefinitions())
 		{
@@ -256,8 +265,22 @@ public class SClassDefinitionAssistantInterpreter extends
 					&& af.createPDefinitionAssistant().isFunctionOrOperation(d))
 			{
 				NameValuePairList nvpl = af.createPDefinitionAssistant().getNamedValues(d, empty);
-				initCtxt.putList(nvpl);
-				members.putAll(nvpl);
+
+				for (NameValuePair nvp: nvpl)
+				{
+    				// If there are already overloads inherited, we have to remove them because
+					// any local names hide all inherited overloads (like C++).
+					
+					for (ILexNameToken iname: inheritedNames.getOverloadNames(nvp.name))
+					{
+						initCtxt.remove(iname);
+						members.remove(iname);
+						inheritedNames.remove(iname);
+					}
+					
+					initCtxt.put(nvp.name, nvp.value);
+					members.put(nvp.name, nvp.value);
+				}
 			}
 		}
 
@@ -398,7 +421,7 @@ public class SClassDefinitionAssistantInterpreter extends
 
 				for (ILexNameToken opname : new LexNameList(sync.getOperations()))
 				{
-					PExp exp = af.createAMutexSyncDefinitionAssistant().getExpression(sync.clone(), opname);
+					PExp exp = getExpression(sync.clone(), opname);
 					ValueList overloads = members.getOverloads(opname);
 
 					for (Value op : overloads)
@@ -459,7 +482,7 @@ public class SClassDefinitionAssistantInterpreter extends
 				} else if (af.createPDefinitionAssistant().isStatic(d)
 						&& af.createPDefinitionAssistant().isInstanceVariable(d))
 				{
-					nvl = af.createPDefinitionAssistant().getNamedValues(d, initCtxt).getUpdatable(null);
+					nvl = af.createPDefinitionAssistant().getNamedValues(d, initCtxt);
 				}
 			}
 
@@ -664,6 +687,24 @@ public class SClassDefinitionAssistantInterpreter extends
 		map.putAll(nvpl);
 
 		return new BUSValue((AClassType) node.getClasstype(), map, argvals);
+	}
+	
+	public PExp getExpression(AMutexSyncDefinition sync, ILexNameToken excluding)
+	{
+		LexNameList list = null;
+
+		if (sync.getOperations().size() == 1)
+		{
+			list = new LexNameList();
+			list.addAll(sync.getOperations());
+		} else
+		{
+			list = new LexNameList();
+			list.addAll(sync.getOperations());
+			list.remove(excluding);
+		}
+
+		return AstFactory.newAEqualsBinaryExp(AstFactory.newAHistoryExp(sync.getLocation(), new LexToken(sync.getLocation(), VDMToken.ACTIVE), list), new LexKeywordToken(VDMToken.EQUALS, sync.getLocation()), AstFactory.newAIntLiteralExp(new LexIntegerToken(0, sync.getLocation())));
 	}
 
 }

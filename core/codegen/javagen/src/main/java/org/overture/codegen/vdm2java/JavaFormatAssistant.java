@@ -23,29 +23,29 @@ package org.overture.codegen.vdm2java;
 
 import java.util.LinkedList;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AFieldExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
-import org.overture.codegen.cgast.name.ATypeNameCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.APlainCallStmCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.AExternalTypeCG;
-import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AAddrNotEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AInstanceofExpIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.APlainCallStmIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.AExternalTypeIR;
+import org.overture.codegen.ir.types.AObjectTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.IRInfo;
 
 public class JavaFormatAssistant extends JavaClassCreatorBase
@@ -57,12 +57,12 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 		this.info = info;
 	}
 
-	public ATypeNameCG consTypeName(ARecordDeclCG record)
+	public ATypeNameIR consTypeName(ARecordDeclIR record)
 			throws AnalysisException
 	{
-		AClassDeclCG classDef = record.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclIR classDef = record.getAncestor(ADefaultClassDeclIR.class);
 
-		ATypeNameCG typeName = new ATypeNameCG();
+		ATypeNameIR typeName = new ATypeNameIR();
 
 		if (classDef == null)
 		{
@@ -77,83 +77,83 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 		return typeName;
 	}
 
-	public ABlockStmCG consVarFromCastedExp(ARecordDeclCG record,
+	public ABlockStmIR consVarFromCastedExp(ARecordDeclIR record,
 			String formalParamName, String varName) throws AnalysisException
 	{
 		// Construct a local var in a statement: RecordType varName = ((RecordType) formalParamName);
-		ARecordTypeCG recordType = new ARecordTypeCG();
+		ARecordTypeIR recordType = new ARecordTypeIR();
 		recordType.setName(consTypeName(record));
 
-		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		AIdentifierPatternIR idPattern = new AIdentifierPatternIR();
 		idPattern.setName(varName);
 
-		ACastUnaryExpCG cast = new ACastUnaryExpCG();
+		ACastUnaryExpIR cast = new ACastUnaryExpIR();
 		cast.setType(recordType.clone());
 		
-		AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
-		varExp.setType(new AObjectTypeCG());
+		AIdentifierVarExpIR varExp = new AIdentifierVarExpIR();
+		varExp.setType(new AObjectTypeIR());
 		varExp.setName(formalParamName);
 		varExp.setIsLocal(true);
 		
 		cast.setExp(varExp);
 
-		AVarDeclCG localVar = info.getDeclAssistant().consLocalVarDecl(recordType, idPattern, cast);
+		AVarDeclIR localVar = info.getDeclAssistant().consLocalVarDecl(recordType, idPattern, cast);
 				
-		ABlockStmCG stm = new ABlockStmCG();
+		ABlockStmIR stm = new ABlockStmIR();
 		stm.getLocalDefs().add(localVar);
 
 		return stm;
 	}
 
-	public AAndBoolBinaryExpCG extendAndExp(ARecordDeclCG record,
-			AFieldDeclCG field, SExpCG previous, String paramName)
+	public AAndBoolBinaryExpIR extendAndExp(ARecordDeclIR record,
+			AFieldDeclIR field, SExpIR previous, String paramName)
 			throws AnalysisException
 	{
 		// By recursively calling this method an "and chain" of field
 		// comparisons can be constructed: fieldComp1 && fieldComp2 && fieldComp3 ....
 
-		AAndBoolBinaryExpCG nextAnd = new AAndBoolBinaryExpCG();
-		nextAnd.setType(new ABoolBasicTypeCG());
+		AAndBoolBinaryExpIR nextAnd = new AAndBoolBinaryExpIR();
+		nextAnd.setType(new ABoolBasicTypeIR());
 		nextAnd.setLeft(previous);
 		nextAnd.setRight(consFieldComparison(record, field, paramName));
 		return nextAnd;
 	}
 
-	public AInstanceofExpCG consInstanceOf(ARecordDeclCG record,
+	public AInstanceofExpIR consInstanceOf(ARecordDeclIR record,
 			String formalParamName)
 	{
 		// Example: objRef instanceof classType
 
-		AClassDeclCG enclosingClass = record.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclIR enclosingClass = record.getAncestor(ADefaultClassDeclIR.class);
 
-		ATypeNameCG typeName = new ATypeNameCG();
+		ATypeNameIR typeName = new ATypeNameIR();
 		typeName.setDefiningClass(enclosingClass.getName());
 		typeName.setName(record.getName());
 
-		ARecordTypeCG recordType = new ARecordTypeCG();
+		ARecordTypeIR recordType = new ARecordTypeIR();
 		recordType.setName(typeName);
 
-		AIdentifierVarExpCG objRef = new AIdentifierVarExpCG();
-		objRef.setType(new AObjectTypeCG());
+		AIdentifierVarExpIR objRef = new AIdentifierVarExpIR();
+		objRef.setType(new AObjectTypeIR());
 		objRef.setIsLocal(true);
 		objRef.setName(formalParamName);
 		
-		AInstanceofExpCG instanceOfExp = new AInstanceofExpCG();
-		instanceOfExp.setType(new ABoolBasicTypeCG());
+		AInstanceofExpIR instanceOfExp = new AInstanceofExpIR();
+		instanceOfExp.setType(new ABoolBasicTypeIR());
 		instanceOfExp.setExp(objRef);
 		instanceOfExp.setCheckedType(recordType);
 
 		return instanceOfExp;
 	}
 
-	public AAddrNotEqualsBinaryExpCG consParamNotNullComp(
-			AIdentifierVarExpCG param)
+	public AAddrNotEqualsBinaryExpIR consParamNotNullComp(
+			AIdentifierVarExpIR param)
 	{
-		AAddrNotEqualsBinaryExpCG fieldComparison = new AAddrNotEqualsBinaryExpCG();
+		AAddrNotEqualsBinaryExpIR fieldComparison = new AAddrNotEqualsBinaryExpIR();
 
-		fieldComparison.setType(new ABoolBasicTypeCG());
+		fieldComparison.setType(new ABoolBasicTypeIR());
 
-		AIdentifierVarExpCG instanceField = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR instanceField = new AIdentifierVarExpIR();
 		instanceField.setType(param.getType().clone());
 		instanceField.setIsLocal(false);
 		instanceField.setName(param.getName());
@@ -164,14 +164,14 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 		return fieldComparison;
 	}
 
-	public APlainCallStmCG consCallStm(AFieldDeclCG field)
+	public APlainCallStmIR consCallStm(AFieldDeclIR field)
 	{
-		APlainCallStmCG call = new APlainCallStmCG();
+		APlainCallStmIR call = new APlainCallStmIR();
 
-		AExternalTypeCG classType = new AExternalTypeCG();
+		AExternalTypeIR classType = new AExternalTypeIR();
 		classType.setName(JavaFormat.UTILS_FILE);
 
-		AIdentifierVarExpCG argument = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR argument = new AIdentifierVarExpIR();
 		argument.setType(field.getType().clone());
 		argument.setIsLocal(false);
 		argument.setName(field.getName());
@@ -184,25 +184,25 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 		return call;
 	}
 
-	public AEqualsBinaryExpCG consFieldComparison(ARecordDeclCG record,
-			AFieldDeclCG field, String formalParamName)
+	public AEqualsBinaryExpIR consFieldComparison(ARecordDeclIR record,
+			AFieldDeclIR field, String formalParamName)
 			throws AnalysisException
 	{
 		// Example: fieldName == formalParamName.fieldName
 
-		AEqualsBinaryExpCG fieldComparison = new AEqualsBinaryExpCG();
-		fieldComparison.setType(new ABoolBasicTypeCG());
+		AEqualsBinaryExpIR fieldComparison = new AEqualsBinaryExpIR();
+		fieldComparison.setType(new ABoolBasicTypeIR());
 
-		AIdentifierVarExpCG instanceField = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR instanceField = new AIdentifierVarExpIR();
 		instanceField.setType(field.getType().clone());
 		instanceField.setIsLocal(false);
 		instanceField.setName(field.getName());
 
-		AFieldExpCG formalParamField = new AFieldExpCG();
+		AFieldExpIR formalParamField = new AFieldExpIR();
 		formalParamField.setType(field.getType().clone());
 
-		AIdentifierVarExpCG formalParam = new AIdentifierVarExpCG();
-		ARecordTypeCG recordType = new ARecordTypeCG();
+		AIdentifierVarExpIR formalParam = new AIdentifierVarExpIR();
+		ARecordTypeIR recordType = new ARecordTypeIR();
 		recordType.setName(consTypeName(record));
 		formalParam.setType(recordType);
 		formalParam.setIsLocal(true);
@@ -217,17 +217,17 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 		return fieldComparison;
 	}
 
-	public AApplyExpCG consUtilCallUsingRecFields(ARecordDeclCG record,
-			STypeCG returnType, String memberName)
+	public AApplyExpIR consUtilCallUsingRecFields(ARecordDeclIR record,
+			STypeIR returnType, String memberName)
 	{
-		LinkedList<AFieldDeclCG> fields = record.getFields();
+		LinkedList<AFieldDeclIR> fields = record.getFields();
 
-		AApplyExpCG call = consUtilCall(returnType, memberName);
-		LinkedList<SExpCG> args = call.getArgs();
+		AApplyExpIR call = consUtilCall(returnType, memberName);
+		LinkedList<SExpIR> args = call.getArgs();
 
-		for (AFieldDeclCG field : fields)
+		for (AFieldDeclIR field : fields)
 		{
-			AIdentifierVarExpCG nextArg = new AIdentifierVarExpCG();
+			AIdentifierVarExpIR nextArg = new AIdentifierVarExpIR();
 			nextArg.setName(field.getName());
 			nextArg.setType(field.getType().clone());
 			nextArg.setIsLocal(false);

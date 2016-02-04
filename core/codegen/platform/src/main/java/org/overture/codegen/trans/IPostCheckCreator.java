@@ -1,13 +1,13 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AStringLiteralExpIR;
 
 public interface IPostCheckCreator
 {
-	public AApplyExpCG consPostCheckCall(AMethodDeclCG method,
-			AApplyExpCG postCondCall, AIdentifierVarExpCG resultVar,
-			AStringLiteralExpCG methodName);
+	public AApplyExpIR consPostCheckCall(AMethodDeclIR method,
+			AApplyExpIR postCondCall, AIdentifierVarExpIR resultVar,
+			AStringLiteralExpIR methodName);
 }

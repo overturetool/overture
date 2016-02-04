@@ -1,0 +1,1 @@
+"\invariant_for is not implemented in OpenJML RAC so the \invariant_for check will not detect the invariant violation"
