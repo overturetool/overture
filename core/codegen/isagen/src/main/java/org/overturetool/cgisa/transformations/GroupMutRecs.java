@@ -21,10 +21,6 @@
  */
 package org.overturetool.cgisa.transformations;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.jgrapht.graph.DefaultDirectedGraph;
@@ -37,84 +33,75 @@ import org.overture.codegen.ir.declarations.AFuncDeclIR;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.trans.ITotalTransformation;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 public class GroupMutRecs extends DepthFirstAnalysisIsaAdaptor implements
-		ITotalTransformation
-{
+        ITotalTransformation {
 
-	private AModuleDeclIR result = null;
-	Dependencies depUtils;
-	DirectedGraph<AFuncDeclIR, DefaultEdge> deps;
-	List<AFuncDeclIR> funcs;
+    private AModuleDeclIR result = null;
+    Dependencies depUtils;
+    DirectedGraph<AFuncDeclIR, DefaultEdge> deps;
+    List<AFuncDeclIR> funcs;
 
-	public GroupMutRecs()
-	{
-		super();
-		deps = new DefaultDirectedGraph<>(DefaultEdge.class);
-		depUtils = new Dependencies();
-		funcs = new LinkedList<AFuncDeclIR>();
-	}
+    public GroupMutRecs() {
+        super();
+        deps = new DefaultDirectedGraph<>(DefaultEdge.class);
+        depUtils = new Dependencies();
+        funcs = new LinkedList<AFuncDeclIR>();
+    }
 
-	@Override
-	public void caseAModuleDeclIR(AModuleDeclIR node) throws AnalysisException
-	{
-		result = new AModuleDeclIR();
-		result.setExports(node.getExports());
-		result.setImport(node.getImport());
-		result.setIsDLModule(node.getIsDLModule());
-		result.setIsFlat(node.getIsFlat());
-		result.setMetaData(node.getMetaData());
-		result.setName(node.getName());
-		result.setSourceNode(node.getSourceNode());
-		result.setTag(node.getTag());
-		result.setDecls(node.getDecls());
-		filterFunctions(node.getDecls());
-		calcDependencies();
+    @Override
+    public void caseAModuleDeclIR(AModuleDeclIR node) throws AnalysisException {
+        result = new AModuleDeclIR();
+        result.setExports(node.getExports());
+        result.setImport(node.getImport());
+        result.setIsDLModule(node.getIsDLModule());
+        result.setIsFlat(node.getIsFlat());
+        result.setMetaData(node.getMetaData());
+        result.setName(node.getName());
+        result.setSourceNode(node.getSourceNode());
+        result.setTag(node.getTag());
+        result.setDecls(node.getDecls());
+        filterFunctions(node.getDecls());
+        calcDependencies();
 
-	}
+    }
 
-	private void filterFunctions(LinkedList<SDeclIR> decls)
-	{
-		for (SDeclIR d : decls)
-		{
-			if (d instanceof AFuncDeclIR)
-			{
-				funcs.add((AFuncDeclIR) d);
-			}
-		}
-	}
+    private void filterFunctions(LinkedList<SDeclIR> decls) {
+        for (SDeclIR d : decls) {
+            if (d instanceof AFuncDeclIR) {
+                funcs.add((AFuncDeclIR) d);
+            }
+        }
+    }
 
-	private void calcDependencies()
-	{
-		try
-		{
-			this.deps = depUtils.calDepsAsGraph(funcs);
-		} catch (AnalysisException e)
-		{
-			e.printStackTrace();
-		}
-		groupDeps();
+    private void calcDependencies() {
+        try {
+            this.deps = depUtils.calDepsAsGraph(funcs);
+        } catch (AnalysisException e) {
+            e.printStackTrace();
+        }
+        groupDeps();
 
-	}
+    }
 
-	private void groupDeps()
-	{
-		StrongConnectivityInspector<AFuncDeclIR, DefaultEdge> visitor = new StrongConnectivityInspector<>(deps);
-		for (Set<AFuncDeclIR> scs : visitor.stronglyConnectedSets())
-		{
-			if (scs.size() > 1)
-			{
-				AMrFuncGroupDeclIR aux = new AMrFuncGroupDeclIR();
-				aux.setFuncs(new LinkedList<>(scs));
-				// this line also removes the function from the functions block
-				result.getDecls().add(aux);
-			}
-		}
-	}
+    private void groupDeps() {
+        StrongConnectivityInspector<AFuncDeclIR, DefaultEdge> visitor = new StrongConnectivityInspector<>(deps);
+        for (Set<AFuncDeclIR> scs : visitor.stronglyConnectedSets()) {
+            if (scs.size() > 1) {
+                AMrFuncGroupDeclIR aux = new AMrFuncGroupDeclIR();
+                aux.setFuncs(new LinkedList<>(scs));
+                // this line also removes the function from the functions block
+                result.getDecls().add(aux);
+            }
+        }
+    }
 
-	@Override
-	public AModuleDeclIR getResult()
-	{
-		return result;
-	}
+    @Override
+    public AModuleDeclIR getResult() {
+        return result;
+    }
 
 }
