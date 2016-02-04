@@ -1,0 +1,23 @@
+Packages
+
+base org.overture.cgisa.extast.node;
+analysis org.overture.cgisa.extast.analysis;
+
+Tokens
+  java_Boolean = 'java:java.lang.Boolean';
+
+Abstract Syntax Tree
+
+IR = #decl;
+
+#decl {-> package='org.overture.cgisa.extast.declarations'}
+      = #Class
+       | {mrFuncGroup}
+           [funcs]:IR.#decl.func*
+       ;
+
+#Class {-> package='org.overture.cgisa.extast.declarations'}
+      = {isaclass}
+            [baseclass]:IR.#decl.#Class
+            [mutrec]:IR.#decl.mrFuncGroup
+      ;
