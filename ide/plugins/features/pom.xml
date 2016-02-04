@@ -28,7 +28,7 @@
     <module>rttraceviewer</module>
 	<module>javagen</module>
 	<module>guibuilder</module>
-	<!--<module>isatrans</module>-->
+    <module>isatrans</module>
   </modules>
 
 </project>
