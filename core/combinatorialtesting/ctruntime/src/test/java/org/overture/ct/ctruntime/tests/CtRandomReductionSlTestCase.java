@@ -26,6 +26,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -33,9 +36,12 @@ import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.ct.ctruntime.utils.CtHelper.CtTestData;
+import org.overture.ct.ctruntime.utils.ReductionTestData;
 import org.overture.ct.ctruntime.utils.TraceReductionInfo;
+import org.overture.ct.ctruntime.utils.TraceResult;
+import org.overture.ct.ctruntime.utils.TraceResultReader;
 import org.overture.interpreter.traces.TraceReductionType;
-import org.overture.interpreter.traces.util.Pair;
+import org.overture.test.framework.Properties;
 
 @RunWith(value = Parameterized.class)
 public class CtRandomReductionSlTestCase extends CtTestCaseBase
@@ -52,51 +58,105 @@ public class CtRandomReductionSlTestCase extends CtTestCaseBase
 	protected static final int SEED = 999;
 	
 	final TraceReductionInfo reductionInfo;
+    private final int expectedResultSize;
 
-	@Parameters(name = "{0}")
+    @Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		
-		List<Pair<String, TraceReductionInfo>> testReductionInfo2 = new Vector<Pair<String, TraceReductionInfo>>();
-		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("OpRepeatedTenTimes", new TraceReductionInfo(0.15F, TraceReductionType.RANDOM, SEED)));
-		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("ThreeConcurrentOpCalls", new TraceReductionInfo(0.30F, TraceReductionType.RANDOM, SEED)));
-		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("ThreeAlternativeOpCalls", new TraceReductionInfo(0.1F, TraceReductionType.RANDOM, SEED)));
-		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("SingleOpCall", new TraceReductionInfo(1.0F, TraceReductionType.RANDOM, SEED)));
-		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("FourConcurrentOpCalls", new TraceReductionInfo(0.5F, TraceReductionType.RANDOM, SEED)));
-		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("FiveConcurrentOpCalls", new TraceReductionInfo(0.9F, TraceReductionType.RANDOM, SEED)));
-		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_NOVARS, SEED)));
-		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARNAMES, SEED)));
-		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARVALUES, SEED)));
+	    List<ReductionTestData> testReduction = new Vector<>();
+		testReduction.add(ReductionTestData.create("OpRepeatedTenTimes", new TraceReductionInfo(0.15F, TraceReductionType.RANDOM, SEED),2));
+		testReduction.add(ReductionTestData.create("ThreeAlternativeOpCalls", new TraceReductionInfo(0.1F, TraceReductionType.RANDOM, SEED),1));
+        testReduction.add(ReductionTestData.create("ThreeConcurrentOpCalls", new TraceReductionInfo(0.30F, TraceReductionType.RANDOM, SEED),2));
+        testReduction.add(ReductionTestData.create("SingleOpCall", new TraceReductionInfo(1.0F, TraceReductionType.RANDOM, SEED),1));
+		testReduction.add(ReductionTestData.create("FourConcurrentOpCalls", new TraceReductionInfo(0.5F, TraceReductionType.RANDOM, SEED),12));
+		testReduction.add(ReductionTestData.create("FiveConcurrentOpCalls", new TraceReductionInfo(0.9F, TraceReductionType.RANDOM, SEED),108));
+		testReduction.add(ReductionTestData.create("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_NOVARS, SEED),2));
+		testReduction.add(ReductionTestData.create("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARNAMES, SEED),3));
+		testReduction.add(ReductionTestData.create("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARVALUES, SEED),21));
 
 		Collection<Object[]> tests = new Vector<Object[]>();
 		
 
 		File root = new File(RESOURCES);
 
-		for (Pair<String, TraceReductionInfo> entry : testReductionInfo2)
+		for (ReductionTestData entry : testReduction)
 		{
-			String traceName = entry.first;
+			String traceName = entry.name();
 			File traceFolder = new File((TRACE_OUTPUT_FOLDER
 					+ TEST_INPUT_FOLDER + '/' + traceName).replace('/', File.separatorChar));
 			File specFile = new File(root, traceName + ".vdmsl");
 			tests.add(new Object[] {
-					traceName + " " + entry.second,
+					traceName + " " + entry.reductionInfo(),
 					specFile,
 					traceFolder,
-					new CtTestData( TRACE_NAME,  traceFolder, specFile, entry.second),
-					entry.second });
+					new CtTestData( TRACE_NAME,  traceFolder, specFile, entry.reductionInfo()),
+					entry.reductionInfo(),
+                    entry.expectedResultSize()
+                    });
 		}
 
 		return tests;
 	}
 	
 	public CtRandomReductionSlTestCase(String name, File file, File traceFolder,
-			CtTestData args, TraceReductionInfo reductionInfo)
+			CtTestData args, TraceReductionInfo reductionInfo, int expectedResultSize)
 	{
 		super(file, traceFolder, args);
 		this.reductionInfo = reductionInfo;
+        this.expectedResultSize = expectedResultSize;
 	}
-	
+
+	@Test
+    @Override
+	public void test() throws Exception
+	{
+		if (file == null)
+		{
+			return;
+		}
+
+		try
+		{
+			configureResultGeneration();
+
+			File actualResultsFile = computeActualResults(TRACE_NAME);
+
+			if (Properties.recordTestResults)
+			{
+				try
+				{
+					File resultFile = createResultFile(file.getAbsolutePath());
+					resultFile.getParentFile().mkdirs();
+
+					// Overwrite result file
+					FileUtils.copyFile(actualResultsFile, resultFile);
+
+				} catch (Exception e)
+				{
+					Assert.fail("The produced results could not be stored: "
+							+ e.getMessage());
+				}
+			} else
+			{
+				TraceResultReader reader = new TraceResultReader();
+				List<TraceResult> actualResults = reader.read(actualResultsFile);
+
+                int actualSize =0;
+
+                for (TraceResult td : actualResults){
+                    actualSize += td.tests.size();
+                }
+
+				Assert.assertEquals(expectedResultSize, actualSize);
+
+			}
+		} finally
+		{
+			unconfigureResultGeneration();
+		}
+
+	}
+
 	
 	@Override
 	public void setUp() throws Exception
