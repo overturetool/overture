@@ -88,7 +88,7 @@ final public class Entry {
         VDMSeq seqCompResult_4 = SeqUtil.seq();
 
         //@ assert (V2J.isSeq(seqCompResult_4) && (\forall int i; 0 <= i && i < V2J.size(seqCompResult_4); Utils.is_nat(V2J.get(seqCompResult_4,i))));
-        VDMSet set_4 = Entry.xs();
+        VDMSet set_4 = xs();
 
         //@ assert (V2J.isSet(set_4) && (\forall int i; 0 <= i && i < V2J.size(set_4); Utils.is_nat(V2J.get(set_4,i))));
         for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
