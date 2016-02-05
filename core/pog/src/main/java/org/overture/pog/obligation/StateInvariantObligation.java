@@ -161,7 +161,7 @@ public class StateInvariantObligation extends ProofObligation
 			arglist.add(getVarExp(f.getTagname().clone(), stateDef.clone(),f.getType()));
 		}
 		PExp mkExp = AstExpressionFactory.newAMkTypeExp(new LexNameToken("", stateName, null), stateDef.getRecordType().clone(), arglist);
-		AApplyExp invApplyExp = getApplyExp(getVarExp(stateDef.getInitdef().getName().clone(), stateDef.getInvdef().clone(), stateDef.getInvdef().getType().clone()), new ABooleanBasicType(), mkExp);
+		AApplyExp invApplyExp = getApplyExp(getVarExp(stateDef.getInvdef().getName().clone(), stateDef.getInvdef().clone(), stateDef.getInvdef().getType().clone()), new ABooleanBasicType(), mkExp);
 		invApplyExp.getRoot().setType(stateDef.getInvdef().getType().clone());
 		return invApplyExp;
 	}
