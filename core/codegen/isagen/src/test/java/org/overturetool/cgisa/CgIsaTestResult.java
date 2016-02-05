@@ -40,8 +40,6 @@ public class CgIsaTestResult
 		this.translation = translation;
 		this.errors = errors;
 	}
-	
-	
 
 	@Override
 	public String toString()
@@ -82,17 +80,28 @@ public class CgIsaTestResult
 		return true;
 	}
 
-	public boolean compare(CgIsaTestResult other){
-		if (errors != other.errors){
+	public boolean compare(CgIsaTestResult other)
+	{
+		if (errors != other.errors)
+		{
 			return false;
 		}
-		if (!translation.replaceAll("\\s",  "").equals(other.translation.replaceAll("\\s", ""))){
+		if (!translation.replaceAll("\\s", "").equals(other.translation.replaceAll("\\s", "")))
+		{
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
+	public static CgIsaTestResult convert(GeneratedModule result)
+	{
+		String content = result.getContent();
+		boolean err = result.hasMergeErrors() || !result.canBeGenerated()|| result.hasUnsupportedIrNodes();
+
+		return new CgIsaTestResult(content, err);
+	}
+
 	public static CgIsaTestResult convert(List<GeneratedModule> result)
 	{
 		StringBuilder trans = new StringBuilder();

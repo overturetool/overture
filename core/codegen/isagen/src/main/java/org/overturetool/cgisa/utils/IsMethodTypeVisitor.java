@@ -21,10 +21,10 @@
  */
 package org.overturetool.cgisa.utils;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.AnswerAdaptor;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.AnswerAdaptor;
+import org.overture.codegen.ir.types.AMethodTypeIR;
 
 public class IsMethodTypeVisitor extends AnswerAdaptor<Boolean>
 {
@@ -42,7 +42,7 @@ public class IsMethodTypeVisitor extends AnswerAdaptor<Boolean>
 	}
 
 	@Override
-	public Boolean caseAMethodTypeCG(AMethodTypeCG node)
+	public Boolean caseAMethodTypeIR(AMethodTypeIR node)
 			throws AnalysisException
 	{
 		return true;

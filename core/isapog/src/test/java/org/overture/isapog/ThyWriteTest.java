@@ -25,7 +25,7 @@ public class ThyWriteTest
 
 	@Test
 	public void fileWriteTest() throws IOException, AnalysisException,
-			org.overture.codegen.cgast.analysis.AnalysisException
+			org.overture.codegen.ir.analysis.AnalysisException
 	{
 		List<INode> nodelist = ParseTcFacade.typedAst(modelPath, "ThyWrite");
 		INode ast = nodelist.get(0);

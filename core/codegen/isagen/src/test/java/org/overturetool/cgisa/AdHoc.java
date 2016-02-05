@@ -40,7 +40,7 @@ import org.overture.core.tests.ParseTcFacade;
 public class AdHoc
 {
 	@Test
-	public void testQuick() throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException
+	public void testQuick() throws AnalysisException, org.overture.codegen.ir.analysis.AnalysisException
 	{
 		
 		File f = new File("src/test/resources/test.vdmsl");
