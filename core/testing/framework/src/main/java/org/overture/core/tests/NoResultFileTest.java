@@ -83,7 +83,7 @@ public abstract class NoResultFileTest<R>
 	@Test
 	public void testCase() throws ParserException, LexException, IOException
 	{
-
+        checkAssumptions();
 		List<INode> ast = ParseTcFacade.typedAst(modelPath, testName);
 		R actual = processModel(ast);
 		processResult(actual);
@@ -110,4 +110,6 @@ public abstract class NoResultFileTest<R>
 	 * @return the output of the analysis
 	 */
 	public abstract R processModel(List<INode> ast);
+
+	public void checkAssumptions(){};
 }
