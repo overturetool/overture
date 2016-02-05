@@ -64,15 +64,15 @@ public class CtRandomReductionSlTestCase extends CtTestCaseBase
 	public static Collection<Object[]> getData()
 	{
 	    List<ReductionTestData> testReduction = new Vector<>();
-		testReduction.add(ReductionTestData.create("OpRepeatedTenTimes", new TraceReductionInfo(0.15F, TraceReductionType.RANDOM, SEED),2));
-		testReduction.add(ReductionTestData.create("ThreeAlternativeOpCalls", new TraceReductionInfo(0.1F, TraceReductionType.RANDOM, SEED),1));
-        testReduction.add(ReductionTestData.create("ThreeConcurrentOpCalls", new TraceReductionInfo(0.30F, TraceReductionType.RANDOM, SEED),2));
-        testReduction.add(ReductionTestData.create("SingleOpCall", new TraceReductionInfo(1.0F, TraceReductionType.RANDOM, SEED),1));
-		testReduction.add(ReductionTestData.create("FourConcurrentOpCalls", new TraceReductionInfo(0.5F, TraceReductionType.RANDOM, SEED),12));
-		testReduction.add(ReductionTestData.create("FiveConcurrentOpCalls", new TraceReductionInfo(0.9F, TraceReductionType.RANDOM, SEED),108));
-		testReduction.add(ReductionTestData.create("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_NOVARS, SEED),2));
-		testReduction.add(ReductionTestData.create("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARNAMES, SEED),3));
-		testReduction.add(ReductionTestData.create("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARVALUES, SEED),21));
+		testReduction.add(new ReductionTestData("OpRepeatedTenTimes", new TraceReductionInfo(0.15F, TraceReductionType.RANDOM, SEED),2));
+		testReduction.add(new ReductionTestData("ThreeAlternativeOpCalls", new TraceReductionInfo(0.1F, TraceReductionType.RANDOM, SEED),1));
+        testReduction.add(new ReductionTestData("ThreeConcurrentOpCalls", new TraceReductionInfo(0.30F, TraceReductionType.RANDOM, SEED),2));
+        testReduction.add(new ReductionTestData("SingleOpCall", new TraceReductionInfo(1.0F, TraceReductionType.RANDOM, SEED),1));
+		testReduction.add(new ReductionTestData("FourConcurrentOpCalls", new TraceReductionInfo(0.5F, TraceReductionType.RANDOM, SEED),12));
+		testReduction.add(new ReductionTestData("FiveConcurrentOpCalls", new TraceReductionInfo(0.9F, TraceReductionType.RANDOM, SEED),108));
+		testReduction.add(new ReductionTestData("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_NOVARS, SEED),2));
+		testReduction.add(new ReductionTestData("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARNAMES, SEED),3));
+		testReduction.add(new ReductionTestData("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARVALUES, SEED),21));
 
 		Collection<Object[]> tests = new Vector<Object[]>();
 		
@@ -81,17 +81,17 @@ public class CtRandomReductionSlTestCase extends CtTestCaseBase
 
 		for (ReductionTestData entry : testReduction)
 		{
-			String traceName = entry.name();
+			String traceName = entry.getName();
 			File traceFolder = new File((TRACE_OUTPUT_FOLDER
 					+ TEST_INPUT_FOLDER + '/' + traceName).replace('/', File.separatorChar));
 			File specFile = new File(root, traceName + ".vdmsl");
 			tests.add(new Object[] {
-					traceName + " " + entry.reductionInfo(),
+					traceName + " " + entry.getReductionInfo(),
 					specFile,
 					traceFolder,
-					new CtTestData( TRACE_NAME,  traceFolder, specFile, entry.reductionInfo()),
-					entry.reductionInfo(),
-                    entry.expectedResultSize()
+					new CtTestData( TRACE_NAME,  traceFolder, specFile, entry.getReductionInfo()),
+					entry.getReductionInfo(),
+                    entry.getExpectedResultSize()
                     });
 		}
 
