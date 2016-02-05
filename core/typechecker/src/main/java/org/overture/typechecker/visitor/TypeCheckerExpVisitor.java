@@ -2417,6 +2417,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		// setBindSet));
 
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getSetBind()));
+		def.parent(node.getSetBind());
 		def.apply(THIS, question.newConstraint(null));
 
 		// now they are typechecked, add them again
