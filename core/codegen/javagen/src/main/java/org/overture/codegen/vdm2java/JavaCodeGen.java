@@ -671,7 +671,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 			javaFileName += IJavaConstants.JAVA_FILE_EXTENSION;
 
-			JavaCodeGenUtil.saveJavaClass(moduleOutputDir, javaFileName, generatedModule.getContent());
+			emitCode(moduleOutputDir, javaFileName, generatedModule.getContent());
 		}
 	}
 	

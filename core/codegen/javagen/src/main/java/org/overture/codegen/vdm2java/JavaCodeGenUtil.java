@@ -21,10 +21,8 @@
  */
 package org.overture.codegen.vdm2java;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.LinkedList;
@@ -34,9 +32,9 @@ import java.util.regex.Pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
-import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
@@ -135,28 +133,6 @@ public class JavaCodeGenUtil
 		}
 
 		return null;// could not be formatted
-	}
-
-	public static void saveJavaClass(File outputFolder, String javaFileName,
-			String code)
-	{
-		try
-		{
-			File javaFile = new File(outputFolder, File.separator
-					+ javaFileName);
-			javaFile.getParentFile().mkdirs();
-			javaFile.createNewFile();
-			PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(javaFile, false), "UTF-8"));
-			BufferedWriter out = new BufferedWriter(writer);
-			out.write(code);
-			out.close();
-
-		} catch (IOException e)
-		{
-			Logger.getLog().printErrorln("Error when saving class file: "
-					+ javaFileName);
-			e.printStackTrace();
-		}
 	}
 
 	public static boolean isQuote(org.overture.codegen.ir.INode decl, JavaSettings settings)
