@@ -3,6 +3,7 @@ package org.overture.ide.ui.templates;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 public class VdmCompletionContext
 {
@@ -76,11 +77,34 @@ public class VdmCompletionContext
 		//Default
 		index = 0;
 		processedScan = new StringBuffer(rawScan.subSequence(index, rawScan.length()));
-		proposalPrefix = processedScan.toString().trim();
+		proposalPrefix = processedScan.toString();
+		if( proposalPrefix == null || proposalPrefix.isEmpty()){
+			offset = -proposalPrefix.length();
+			return;
+		}
+		
+		char charMatch = proposalPrefix.charAt(proposalPrefix.length() - 1); //checks the end of the string
+		if( charMatch == ' ' || charMatch == '\r' || charMatch == '\n' || charMatch == '\t' )
+		{
+			proposalPrefix = "";
+		}
+		else{
+			String[] sep_list = { " ", "\n", "\r", "\t", "."};
+			StringBuffer regexp = new StringBuffer("");
+			regexp.append("[");
+			for(String s : sep_list) {
+			    regexp.append("[");
+			    regexp.append(Pattern.quote(s));
+			    regexp.append("]");
+			}
+			regexp.append("]");
+			String test = regexp.toString();
+			String[] bits = proposalPrefix.split(regexp.toString());
+			proposalPrefix = bits[bits.length-1].trim();
+		}
+		
 		offset = -proposalPrefix.length();
-		
 		return;
-		
 	}
 
 	@Override

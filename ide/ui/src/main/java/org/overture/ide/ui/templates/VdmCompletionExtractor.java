@@ -1,6 +1,8 @@
 package org.overture.ide.ui.templates;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ContextInformation;
@@ -13,15 +15,23 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
+import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
+import org.overture.ast.expressions.ALetBeStExp;
+import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ACharacterPattern;
 import org.overture.ast.statements.AClassInvariantStm;
+import org.overture.ast.statements.ALetBeStStm;
+import org.overture.ast.statements.ALetStm;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.ARationalNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ATokenBasicType;
@@ -47,6 +57,16 @@ public final class VdmCompletionExtractor {
 			{
 				element.apply(new DepthFirstAnalysisAdaptor()
 				{
+					
+					@Override
+					public void setVisitedNodes(Set<INode> value){
+						 
+						 for (int i = 0; i < value.size(); i++) {
+							System.out.println(i+": " + value);
+						}
+						 super.setVisitedNodes(value);
+					}
+					
 					@Override
 					public void caseANatNumericBasicType(ANatNumericBasicType node)
 							throws AnalysisException
@@ -128,12 +148,62 @@ public final class VdmCompletionExtractor {
 						String name = node.toString();
 						createProposal(node,name,name,name,info,proposals,offset);
 					}
-				
+					
+					@Override
+					public void caseAInstanceVariableDefinition(AInstanceVariableDefinition node)
+                            throws AnalysisException{
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
+					}
+				///
+					@Override
+					public void caseALetBeStBindingTraceDefinition(ALetBeStBindingTraceDefinition node)
+                            throws AnalysisException{
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
+					}
+					
+					@Override
+					public void caseALetBeStExp(ALetBeStExp node)
+		                     throws AnalysisException{
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
+					}
+					
+					@Override
+					public void caseALetBeStStm(ALetBeStStm node)
+		                     throws AnalysisException{
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
+					}
+					
+					@Override
+					public void caseALetDefBindingTraceDefinition(ALetDefBindingTraceDefinition node)
+                            throws AnalysisException{
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
+					}
+					
+					@Override
+					public void caseALetDefExp(ALetDefExp node)
+		                    throws AnalysisException{
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
+					}
+					
+					@Override
+					public void caseALetStm(ALetStm node)
+			                 throws AnalysisException{
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
+					}
+					
+				///	
 					@Override
 					public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
                             throws AnalysisException{
 						String extractedName[] = explicitFunctionNameExtractor(node);
-						
+
 						if(nullOrEmptyCheck(extractedName[0])){
 							createProposal(node,extractedName[0],extractedName[1],node.toString(),info,proposals,offset);
 						}
@@ -143,7 +213,7 @@ public final class VdmCompletionExtractor {
 					public void caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node)
                             throws AnalysisException{
 						String extractedName[] = implicitFunctionNameExtractor(node);
-						
+
 						if(nullOrEmptyCheck(extractedName[0])){
 							createProposal(node,extractedName[0],extractedName[1],node.toString(),info,proposals,offset);
 						}
@@ -184,6 +254,9 @@ public final class VdmCompletionExtractor {
 
     public boolean findInString(String text,String word)
 	{
+    	if(text == ""){
+    		return true;
+    	}
 	  return word.toLowerCase().startsWith(text.toLowerCase());
 	}
     
@@ -193,11 +266,11 @@ public final class VdmCompletionExtractor {
     	if(findInString(info.proposalPrefix,replacmentString) && replacmentString != null && !replacmentString.isEmpty())
 		{	
 			IContextInformation contextInfo = new ContextInformation(displayname, displayname); //$NON-NLS-1$
-
+			
 			int curOffset = offset + info.offset;// - info2.proposalPrefix.length();
 			int length = replacmentString.length();
 			int replacementLength = info.proposalPrefix.length();
-
+			
 			proposals.add(new CompletionProposal(replacmentString, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), displayname, contextInfo, additionalProposalInfo));
 		}
     }
