@@ -107,8 +107,6 @@ public abstract class VdmTemplateAssistProcessor extends TemplateCompletionProce
 			} catch (TemplateException e) {
 				continue;
 			}
-			if (!prefix.equals(""))
-				prefix = prefix.substring(1);
 			if (!prefix.equals("")
 					&& (template.getName().startsWith(prefix) && template
 							.matches(prefix, context.getContextType().getId())))
