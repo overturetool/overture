@@ -51,14 +51,8 @@ public class AdHoc
 		
 		IsaGen gen = new IsaGen();
 		
-		List<AModuleModules> classes = new LinkedList<>();
-		
-		for(INode n : ast)
-		{
-			classes.add((AModuleModules) n);
-		}
-		
-		List<GeneratedModule> result = gen.generateIsabelleSyntax(classes);
+
+		List<GeneratedModule> result = gen.generate(ast).getClasses();
 		
 		for (GeneratedModule generatedClass : result)
 		{

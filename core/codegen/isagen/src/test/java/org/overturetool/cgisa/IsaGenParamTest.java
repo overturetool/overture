@@ -37,6 +37,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.core.tests.ParamStandardTest;
 import org.overture.core.tests.PathsProvider;
@@ -64,18 +65,22 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
 
     @Override
     public CgIsaTestResult processModel(List<INode> ast) {
-
         IsaGen gen = new IsaGen();
+        GeneratedData genData = null;
+
+        try {
+            genData = gen.generate(ast);
+        } catch (AnalysisException e) {
+            fail("Could not process test file " + testName);
+        }
 
         List<AModuleModules> classes = new LinkedList<>();
-
         for (INode n : ast) {
             classes.add((AModuleModules) n);
         }
 
         List<GeneratedModule> result = null;
-        try {
-            result = gen.generateIsabelleSyntax(classes);
+            result = genData.getClasses();
             if (!result.get(0).canBeGenerated()) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(result.get(0).getMergeErrors());
@@ -83,11 +88,6 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
                 sb.append(result.get(0).getUnsupportedInTargLang());
                 fail(sb.toString());
             }
-        } catch (AnalysisException
-                | org.overture.codegen.ir.analysis.AnalysisException e) {
-            fail("Could not process test file " + testName);
-            return null;
-        }
 
         return CgIsaTestResult.convert(result);
     }
