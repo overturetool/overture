@@ -57,6 +57,11 @@ public abstract class VdmContentAssistProcessor extends
 		// IEditorInput editorInput = editor.getEditorInput();
 		// String text = viewer.getTextWidget().getText();
 
+		if (viewer.getDocument() instanceof VdmDocument)
+		{
+			processer.computeCompletionProposals(computeVdmCompletionContext(viewer.getDocument(), offset), (VdmDocument) viewer.getDocument(), modList, offset);
+		}
+		
 		if (enableTemplate())
 		{
 			ICompletionProposal[] templates = super.computeCompletionProposals(viewer, offset);
@@ -68,13 +73,8 @@ public abstract class VdmContentAssistProcessor extends
 				}
 
 			}
-		}
-
-		if (viewer.getDocument() instanceof VdmDocument)
-		{
-			processer.computeCompletionProposals(computeVdmCompletionContext(viewer.getDocument(), offset), (VdmDocument) viewer.getDocument(), modList, offset);
-		}
-
+		}		
+		
 		if (modList.size() > 0)
 		{
 			return (ICompletionProposal[]) modList.toArray(new ICompletionProposal[modList.size()]);
