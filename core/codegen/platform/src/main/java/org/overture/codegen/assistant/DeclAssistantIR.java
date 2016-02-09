@@ -537,7 +537,7 @@ public class DeclAssistantIR extends AssistantBase
 	public AVarDeclIR consLocalVarDecl(STypeIR type,
 			SPatternIR pattern, SExpIR exp)
 	{
-		return consLocalVarDecl((exp.getSourceNode()!=null ? exp.getSourceNode().getVdmNode():null), type, pattern, exp);
+		return consLocalVarDecl((exp.getSourceNode() != null ? exp.getSourceNode().getVdmNode() : null), type, pattern, exp);
 	}
 
 	public AVarDeclIR consLocalVarDecl(INode node, STypeIR type,
@@ -546,7 +546,7 @@ public class DeclAssistantIR extends AssistantBase
 		AVarDeclIR localVarDecl = new AVarDeclIR();
 		localVarDecl.setType(type);
 		localVarDecl.setFinal(false);
-		localVarDecl.setSourceNode(new SourceNode(node));
+		localVarDecl.setSourceNode(node != null ? new SourceNode(node) : null);
 		localVarDecl.setPattern(pattern);
 		localVarDecl.setExp(exp);
 		
