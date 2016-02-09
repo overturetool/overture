@@ -28,6 +28,8 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.utils.AnalysisExceptionIR;
+import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overturetool.cgisa.transformations.GroupMutRecs;
@@ -43,17 +45,6 @@ import java.util.*;
  * @author ldc
  */
 public class IsaGen extends CodeGenBase {
-
-    public static GeneratedModule vdmModule2IsaTheory(AModuleModules module)
-            throws AnalysisException,
-            org.overture.codegen.ir.analysis.AnalysisException {
-        IsaGen ig = new IsaGen();
-        List<AModuleModules> ast = new LinkedList<AModuleModules>();
-        ast.add(module);
-        List<GeneratedModule> r = ig.generateIsabelleSyntax(ast);
-
-        return r.get(0);
-    }
 
     public static String vdmExp2IsaString(PExp exp) throws AnalysisException,
             org.overture.codegen.ir.analysis.AnalysisException {
@@ -78,13 +69,42 @@ public class IsaGen extends CodeGenBase {
         return r.getContent();
     }
 
-    public IsaGen() {
-        initVelocity();
-    }
 
+    /**
+     * Main entry point into the Isabelle Translator component. Takes an AST and returns corresponding Isabelle Syntax.
+     *
+     * @param statuses The IR statuses holding the nodes to be code generated.
+     * @return
+     * @throws AnalysisException
+     */
     @Override
     protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException {
-        throw new RuntimeException("Not yet implemented");
+        GeneratedData r = new GeneratedData();
+        try {
+            // Apply transformations
+            for (IRStatus<PIR> status : statuses) {
+                // make init expression an op
+                StateInit stateInit = new StateInit(getInfo());
+                generator.applyPartialTransformation(status, stateInit);
+
+                // transform away any recursion cycles
+                GroupMutRecs groupMR = new GroupMutRecs();
+                generator.applyTotalTransformation(status, groupMR);
+
+                if (status.getIrNode() instanceof AModuleDeclIR) {
+                    AModuleDeclIR cClass = (AModuleDeclIR) status.getIrNode();
+                    // then sort remaining dependencies
+                    SortDependencies sortTrans = new SortDependencies(cClass.getDecls());
+                    generator.applyPartialTransformation(status, sortTrans);
+                }
+            }
+
+            r.setClasses(prettyPrint(statuses));
+        } catch (org.overture.codegen.ir.analysis.AnalysisException e) {
+            throw new AnalysisException(e);
+        }
+        return r;
+
     }
 
     public GeneratedModule generateIsabelleSyntax(PExp exp)
@@ -100,52 +120,6 @@ public class IsaGen extends CodeGenBase {
                 + " cannot be code-generated");
     }
 
-    /**
-     * Main entry point into the Isabelle IR component. Takes an AST and returns corresponding Isabelle Syntax.
-     *
-     * @param ast of the complete VDM++ model
-     * @return Isabelly syntax encoded in a string
-     * @throws AnalysisException
-     * @throws org.overture.codegen.ir.analysis.AnalysisException
-     */
-    public List<GeneratedModule> generateIsabelleSyntax(List<AModuleModules> ast)
-            throws AnalysisException,
-            org.overture.codegen.ir.analysis.AnalysisException {
-        // Transform AST into IR
-        List<IRStatus<PIR>> statuses = new LinkedList<>();
-        for (AModuleModules sclass : ast) {
-            IRStatus<PIR> result = this.generator.generateFrom(sclass);
-
-            if (result.canBeGenerated()) {
-                statuses.add(result);
-            } else {
-                Vector<GeneratedModule> r = new Vector<GeneratedModule>();
-                r.add(new GeneratedModule("ERROR", result.getUnsupportedInIr(), new HashSet<IrNodeInfo>(), false));
-                return r;
-            }
-        }
-
-        // Apply transformations
-        for (IRStatus<PIR> status : statuses) {
-            // make init expression an op
-            StateInit stateInit = new StateInit(getInfo());
-            generator.applyPartialTransformation(status, stateInit);
-
-            // transform away any recursion cycles
-            GroupMutRecs groupMR = new GroupMutRecs();
-            generator.applyTotalTransformation(status, groupMR);
-
-            if (status.getIrNode() instanceof AModuleDeclIR) {
-                AModuleDeclIR cClass = (AModuleDeclIR) status.getIrNode();
-                // then sort remaining dependencies
-                SortDependencies sortTrans = new SortDependencies(cClass.getDecls());
-                generator.applyPartialTransformation(status, sortTrans);
-            }
-        }
-
-        return prettyPrint(statuses);
-
-    }
 
     private List<GeneratedModule> prettyPrint(List<IRStatus<PIR>> statuses)
             throws org.overture.codegen.ir.analysis.AnalysisException {
