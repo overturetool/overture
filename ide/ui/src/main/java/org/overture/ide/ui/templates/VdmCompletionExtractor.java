@@ -20,6 +20,7 @@ import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
 import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
 import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ACharacterPattern;
 import org.overture.ast.statements.AClassInvariantStm;
@@ -237,6 +238,13 @@ public final class VdmCompletionExtractor {
 						if(nullOrEmptyCheck(extractedName[0])){
 							createProposal(node, extractedName[0], extractedName[1], node.toString(), info, proposals, offset);
 						}
+					}
+					
+					@Override
+					public void caseAVariableExp(AVariableExp node)
+			                  throws AnalysisException{
+						String name = node.toString();
+						createProposal(node,name,name,name,info,proposals,offset);
 					}
 
 				});
