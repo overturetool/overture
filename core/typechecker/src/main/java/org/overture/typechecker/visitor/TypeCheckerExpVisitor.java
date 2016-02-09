@@ -1718,15 +1718,16 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (typename != null)
 		{
 			PDefinition typeFound = question.env.findType(typename, node.getLocation().getModule());
+			
 			if (typeFound == null)
 			{
 				TypeCheckerErrors.report(3113, "Unknown type name '" + typename
 						+ "'", node.getLocation(), node);
-				node.setType(node.getTest().getType());
-				return node.getType();
 			}
-			node.setTypedef(typeFound.clone());
-
+			else
+			{
+				node.setTypedef(typeFound.clone());
+			}
 		}
 
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
