@@ -14,42 +14,32 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.core.tests.ParseTcFacade;
 
-public class ThyWriteTest
-{
+public class ThyWriteTest {
 
-	private static final String modelPath = "src/test/resources/thywrite/model.vdmsl";
-	private static final String thysPath = "src/test/resources/thywrite/";
+    private static final String modelPath = "src/test/resources/thywrite/model.vdmsl";
+    private static final String thysPath = "src/test/resources/thywrite/";
 
-	private static final String modelThy = thysPath + "DEFAULT.thy";
-	private static final String posThy = thysPath + "DEFAULT_POs.thy";
+    private static final String modelThy = thysPath + "DEFAULT.thy";
+    private static final String posThy = thysPath + "DEFAULT_POs.thy";
 
-	@Test
-	public void fileWriteTest() throws IOException, AnalysisException,
-			org.overture.codegen.ir.analysis.AnalysisException
-	{
-		List<INode> nodelist = ParseTcFacade.typedAst(modelPath, "ThyWrite");
-		INode ast = nodelist.get(0);
+    @Test
+    public void fileWriteTest() throws IOException, AnalysisException,
+            org.overture.codegen.ir.analysis.AnalysisException {
+        List<INode> ast = ParseTcFacade.typedAst(modelPath, "ThyWrite");
 
-		if (ast instanceof AModuleModules)
-		{
-			AModuleModules module = (AModuleModules) ast;
-			IsaPog isapo = new IsaPog(module);
-			isapo.writeThyFiles(thysPath);
+        IsaPog isapo = new IsaPog(ast);
+        isapo.writeThyFiles(thysPath);
 
-			File modelFile = new File(modelThy);
-			File posFile = new File(posThy);
+        File modelFile = new File(modelThy);
+        File posFile = new File(posThy);
 
-			assertNotNull(modelFile);
-			assertNotNull(posFile);
-			assertTrue(modelFile.exists());
-			assertTrue(posFile.exists());
-			modelFile.deleteOnExit();
-			posFile.deleteOnExit();
-		}
+        assertNotNull(modelFile);
+        assertNotNull(posFile);
+        assertTrue(modelFile.exists());
+        assertTrue(posFile.exists());
+        modelFile.deleteOnExit();
+        posFile.deleteOnExit();
+    }
 
-		else
-		{
-			fail();
-		}
-	}
+
 }
