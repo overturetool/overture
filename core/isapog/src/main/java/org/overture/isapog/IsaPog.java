@@ -3,10 +3,12 @@ package org.overture.isapog;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
+import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.pub.IProofObligationList;
@@ -43,13 +45,14 @@ public class IsaPog
 	private String posThy;
 	private String posThyName;
 
-	public IsaPog(AModuleModules ast) throws AnalysisException,
+	public IsaPog(List<INode> ast) throws AnalysisException,
 			org.overture.codegen.ir.analysis.AnalysisException
 	{
 		IProofObligationList pos = ProofObligationGenerator.generateProofObligations(ast);
 		pos.renumber();
+		IsaGen ig = new IsaGen();
 
-		modelThy = IsaGen.vdmModule2IsaTheory(ast);
+		modelThy = ig.generate(ast).getClasses().get(0);
 		modelThyName = modelThy.getName() + THY_EXT;
 		posThy = makePosThy(pos, modelThy.getName());
 		posThyName = modelThy.getName() + POS_THY + THY_EXT;
