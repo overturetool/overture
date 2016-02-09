@@ -219,7 +219,9 @@ public class DeclAssistantIR extends AssistantBase
 
 		if (!defaultConstructorExplicit)
 		{
-			classCg.getMethods().add(question.getDeclAssistant().consDefaultContructor(name));
+			AMethodDeclIR defaultContructor = question.getDeclAssistant().consDefaultContructor(name);
+			defaultContructor.setSourceNode(new SourceNode(node));
+			classCg.getMethods().add(defaultContructor);
 		}
 		
 		question.addClass(classCg);
@@ -535,7 +537,7 @@ public class DeclAssistantIR extends AssistantBase
 	public AVarDeclIR consLocalVarDecl(STypeIR type,
 			SPatternIR pattern, SExpIR exp)
 	{
-		return consLocalVarDecl(null, type, pattern, exp);
+		return consLocalVarDecl((exp.getSourceNode()!=null ? exp.getSourceNode().getVdmNode():null), type, pattern, exp);
 	}
 
 	public AVarDeclIR consLocalVarDecl(INode node, STypeIR type,

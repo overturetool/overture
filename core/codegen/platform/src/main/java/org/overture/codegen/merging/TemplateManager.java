@@ -114,7 +114,7 @@ public class TemplateManager
 				return null;
 			}
 
-			return constructTemplate(buffer);
+			return constructTemplate(td.getTemplatePath(),buffer);
 
 		} catch (IOException e)
 		{
@@ -138,13 +138,13 @@ public class TemplateManager
 		}
 	}
 
-	protected Template constructTemplate(StringBuffer buffer) throws ParseException
+	protected Template constructTemplate(String name, StringBuffer buffer) throws ParseException
 	{
 		Template template = new Template();
 		RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
 		StringReader reader = new StringReader(buffer.toString());
 
-		SimpleNode simpleNode = runtimeServices.parse(reader, "Template name");
+		SimpleNode simpleNode = runtimeServices.parse(reader, name);
 		template.setRuntimeServices(runtimeServices);
 		template.setData(simpleNode);
 		template.initDocument();
