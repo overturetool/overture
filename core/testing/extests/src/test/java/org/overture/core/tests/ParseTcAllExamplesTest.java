@@ -31,7 +31,7 @@ public class ParseTcAllExamplesTest
 
 	private static String EXAMPLES_ROOT = "../../../externals/docrepo/examples/";
 	
-	public ParseTcAllExamplesTest(String _, ExampleSourceData testData)
+	public ParseTcAllExamplesTest(String name, ExampleSourceData testData)
 	{
 		this.testData = testData;
 	}
