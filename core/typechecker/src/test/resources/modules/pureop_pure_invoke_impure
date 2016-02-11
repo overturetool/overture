@@ -1,0 +1,6 @@
+operations
+pure foo :() ==> ()
+foo() == bar();
+
+bar : () ==> ()
+bar() == is not yet specified;

@@ -1,0 +1,6 @@
+operations
+pure foo :() ==> ()
+foo() == skip;
+
+pure bar : () ==> ()
+bar() == foo();
