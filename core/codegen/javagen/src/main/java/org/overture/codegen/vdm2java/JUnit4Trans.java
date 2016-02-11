@@ -5,14 +5,14 @@ import java.util.List;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.assistant.NodeAssistantCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.assistant.NodeAssistantIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRGeneratedTag;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 {
@@ -20,17 +20,17 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 	public static final String TEST_ANNOTATION = "@Test";
 	public static final String JUNI4_IMPORT = "org.junit.*";
 
-	public TransAssistantCG assist;
+	public TransAssistantIR assist;
 	private JavaCodeGen javaCg;
 
-	public JUnit4Trans(TransAssistantCG assist, JavaCodeGen javaCg)
+	public JUnit4Trans(TransAssistantIR assist, JavaCodeGen javaCg)
 	{
 		this.assist = assist;
 		this.javaCg = javaCg;
 	}
 
 	@Override
-	public void caseADefaultClassDeclCG(ADefaultClassDeclCG node) throws AnalysisException
+	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node) throws AnalysisException
 	{
 		if (!javaCg.getJavaSettings().genJUnit4tests())
 		{
@@ -61,16 +61,16 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 		addTestAnnotations(node);
 	}
 
-	public boolean isTest(ADefaultClassDeclCG node)
+	public boolean isTest(ADefaultClassDeclIR node)
 	{
 		return !node.getSuperNames().isEmpty() && node.getSuperNames().get(0).getName().equals(IRConstants.TEST_CASE);
 	}
 
-	public void addTestAnnotations(ADefaultClassDeclCG node)
+	public void addTestAnnotations(ADefaultClassDeclIR node)
 	{
-		NodeAssistantCG nodeAssist = assist.getInfo().getNodeAssistant();
+		NodeAssistantIR nodeAssist = assist.getInfo().getNodeAssistant();
 
-		for (AMethodDeclCG m : node.getMethods())
+		for (AMethodDeclIR m : node.getMethods())
 		{
 			if (m.getName().startsWith(TEST_NAME_PREFIX) && m.getAccess().equals(IRConstants.PUBLIC) && BooleanUtils.isFalse(m.getStatic())
 					&& BooleanUtils.isFalse(m.getIsConstructor()) && m.getFormalParams().isEmpty()
@@ -81,16 +81,16 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	public void importJunit4(ADefaultClassDeclCG node)
+	public void importJunit4(ADefaultClassDeclIR node)
 	{
 		assist.getInfo().getDeclAssistant().addDependencies(node, str2meta(JUNI4_IMPORT), false);
 	}
 
-	public void removeRunFullSuiteMethod(ADefaultClassDeclCG node)
+	public void removeRunFullSuiteMethod(ADefaultClassDeclIR node)
 	{
 		for (int i = 0; i < node.getMethods().size(); i++)
 		{
-			AMethodDeclCG currentMethod = node.getMethods().get(i);
+			AMethodDeclIR currentMethod = node.getMethods().get(i);
 
 			if (currentMethod.getName().equals(IRConstants.TEST_CASE_RUN_FULL_SUITE)
 					&& currentMethod.getFormalParams().isEmpty())

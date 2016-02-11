@@ -1,0 +1,9 @@
+To String Extensions
+
+// import packages used by external $$ java code
+import org.overture.ast.util.Utils;
+import org.overture.ast.util.ToStringUtil;
+
+%IR->#decl->mrFuncGroup = "MutRec(" + $Utils.listToString($[funcs]$)$ + ")"
+%IR->#Class->isaclass ="Class " + [name]
+

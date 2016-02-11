@@ -1,0 +1,9 @@
+values
+
+mk_(p,-) = mk_(1,2);
+
+functions
+
+f :  () -> nat
+f () ==
+  p;

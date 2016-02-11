@@ -3,8 +3,8 @@ package org.overture.codegen.vdm2jml.util;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.SClassDeclCG;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
 
 /**
  * Convenience class for generating parameter names that do not collide with other names used in a given class.
@@ -20,11 +20,11 @@ public class NameGen
 		this.toAvoid = new HashSet<String>();
 	}
 	
-	public NameGen(SClassDeclCG classDecl)
+	public NameGen(SClassDeclIR classDecl)
 	{
 		this();
 
-		for (AFieldDeclCG field : classDecl.getFields())
+		for (AFieldDeclIR field : classDecl.getFields())
 		{
 			this.toAvoid.add(field.getName());
 		}

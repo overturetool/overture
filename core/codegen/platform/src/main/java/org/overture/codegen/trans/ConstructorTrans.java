@@ -9,24 +9,25 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ACallStm;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.APlainCallStmCG;
-import org.overture.codegen.cgast.types.AVoidTypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.ASystemClassDeclIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.statements.APlainCallStmIR;
+import org.overture.codegen.ir.types.AVoidTypeIR;
 import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 {
-	private TransAssistantCG assist;
+	private TransAssistantIR assist;
 	
 	// To look up object initializer call names
 	private Map<AExplicitOperationDefinition, String> objectInitCallNames;
@@ -34,7 +35,7 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 	// Object initialization call prefix
 	private String objectInitCallPrefix;
 
-	public ConstructorTrans(TransAssistantCG assist, String objectInitCallPrefix)
+	public ConstructorTrans(TransAssistantIR assist, String objectInitCallPrefix)
 	{
 		this.assist = assist;
 		this.objectInitCallPrefix = objectInitCallPrefix;
@@ -42,8 +43,13 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAMethodDeclCG(AMethodDeclCG node) throws AnalysisException
+	public void caseAMethodDeclIR(AMethodDeclIR node) throws AnalysisException
 	{
+		if(node.parent() instanceof ASystemClassDeclIR)
+		{
+			return;
+		}
+		
 		if (node.getIsConstructor())
 		{
 			String initName = getInitName(node);
@@ -53,16 +59,16 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 				return;
 			}
 
-			AMethodDeclCG objInitializer = node.clone();
+			AMethodDeclIR objInitializer = node.clone();
 			objInitializer.setSourceNode(node.getSourceNode());
 			objInitializer.setTag(new IRGeneratedTag(getClass().getName()));
 			objInitializer.setName(initName);
-			objInitializer.getMethodType().setResult(new AVoidTypeCG());
+			objInitializer.getMethodType().setResult(new AVoidTypeIR());
 			objInitializer.setIsConstructor(false);
 			objInitializer.setPreCond(null);
 			objInitializer.setPostCond(null);
 
-			ADefaultClassDeclCG classCg = node.getAncestor(ADefaultClassDeclCG.class);
+			ADefaultClassDeclIR classCg = node.getAncestor(ADefaultClassDeclIR.class);
 
 			if (classCg == null)
 			{
@@ -76,20 +82,20 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 			// Apply transformation recursively
 			objInitializer.apply(this);
 
-			APlainCallStmCG initCall = new APlainCallStmCG();
+			APlainCallStmIR initCall = new APlainCallStmIR();
 			initCall.setType(objInitializer.getMethodType().getResult().clone());
 			initCall.setClassType(null);
 			initCall.setName(initName);
 
-			for (AFormalParamLocalParamCG param : node.getFormalParams())
+			for (AFormalParamLocalParamIR param : node.getFormalParams())
 			{
-				SPatternCG pattern = param.getPattern();
+				SPatternIR pattern = param.getPattern();
 
-				if (pattern instanceof AIdentifierPatternCG)
+				if (pattern instanceof AIdentifierPatternIR)
 				{
-					AIdentifierPatternCG idPattern = (AIdentifierPatternCG) pattern;
+					AIdentifierPatternIR idPattern = (AIdentifierPatternIR) pattern;
 
-					AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+					AIdentifierVarExpIR var = new AIdentifierVarExpIR();
 					var.setIsLocal(true);
 					var.setType(param.getType().clone());
 					var.setName(idPattern.getName());
@@ -114,7 +120,7 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAPlainCallStmCG(APlainCallStmCG node) throws AnalysisException
+	public void caseAPlainCallStmIR(APlainCallStmIR node) throws AnalysisException
 	{
 		String initName = getInitName(node);
 
@@ -124,12 +130,12 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		APlainCallStmCG callStm = new APlainCallStmCG();
-		callStm.setType(new AVoidTypeCG());
+		APlainCallStmIR callStm = new APlainCallStmIR();
+		callStm.setType(new AVoidTypeIR());
 		callStm.setClassType(null);
 		callStm.setName(initName);
 
-		for (SExpCG a : node.getArgs())
+		for (SExpIR a : node.getArgs())
 		{
 			callStm.getArgs().add(a.clone());
 		}
@@ -153,7 +159,7 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private String getInitName(APlainCallStmCG node)
+	private String getInitName(APlainCallStmIR node)
 	{
 		if (node.getSourceNode() != null && node.getSourceNode().getVdmNode() != null)
 		{
@@ -185,7 +191,7 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 		return null;
 	}
 
-	private String getInitName(AMethodDeclCG node)
+	private String getInitName(AMethodDeclIR node)
 	{
 		if (node.getSourceNode() != null && node.getSourceNode().getVdmNode() != null)
 		{

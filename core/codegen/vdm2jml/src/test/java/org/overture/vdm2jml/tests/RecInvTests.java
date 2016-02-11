@@ -6,21 +6,21 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
 
 public class RecInvTests extends AnnotationTestsBase
 {
 	private static final String REC_NAME = "Rec";
 
-	private static ADefaultClassDeclCG recTypeDef;
+	private static ADefaultClassDeclIR recTypeDef;
 
 	@BeforeClass
 	public static void init() throws AnalysisException
 	{
-		List<ADefaultClassDeclCG> classes = AnnotationTestsBase.getClasses("RecInv.vdmsl");
+		List<ADefaultClassDeclIR> classes = AnnotationTestsBase.getClasses("RecInv.vdmsl");
 
-		for (ADefaultClassDeclCG clazz : classes)
+		for (ADefaultClassDeclIR clazz : classes)
 		{
 			if (clazz.getName().equals(REC_NAME))
 			{
@@ -48,9 +48,9 @@ public class RecInvTests extends AnnotationTestsBase
 	public void invFuncIsPure()
 	{
 		Assert.assertTrue("Expected the record type definition invariant to be a method declaration at this point",
-				recTypeDef.getInvariant() instanceof AMethodDeclCG);
+				recTypeDef.getInvariant() instanceof AMethodDeclIR);
 
-		AnnotationTestsBase.assertPureMethod((AMethodDeclCG) recTypeDef.getInvariant());
+		AnnotationTestsBase.assertPureMethod((AMethodDeclIR) recTypeDef.getInvariant());
 	}
 	
 	@Test

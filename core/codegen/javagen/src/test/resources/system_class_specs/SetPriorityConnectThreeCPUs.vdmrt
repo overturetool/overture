@@ -1,0 +1,52 @@
+class A
+operations
+public op : () ==> ()
+op () ==
+let b = new B(),
+    c = new C()
+in
+(
+  b.op();
+  c.op();
+);
+
+end A
+
+class B
+operations
+public op : () ==> ()
+op () == skip;
+end B
+
+class C
+operations
+public op : () ==> ()
+op () == skip;
+end C
+
+
+system S
+
+instance variables
+
+  static public a : A := new A();
+  CPU1 : CPU := new CPU (<FP>, 22E6);
+
+  static public b : B := new B();
+  CPU2 : CPU := new CPU (<FP>, 11E6);
+
+  static public c : C:= new C();
+  CPU3 : CPU := new CPU (<FP>, 11E6);
+
+  BUS1 : BUS := new BUS (<CSMACD>, 72E3, {CPU1, CPU2, CPU3})
+
+operations
+  public S: () ==> S
+  S () ==
+    ( -- deploy mmi on CPU1
+      CPU1.deploy(a,"A");
+      CPU2.deploy(b,"B");
+      CPU1.setPriority(B`op, 4);
+    );
+
+end S

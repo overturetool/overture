@@ -252,7 +252,7 @@ public class DefinitionReader extends SyntaxReader
 				if (pureOK)
 				{
 					nextToken();
-					return AstFactory.getDefaultAccessSpecifier();
+					return AstFactory.newAAccessSpecifierAccessSpecifier(new APrivateAccess(), false, false, true);
 				}
 				else
 				{

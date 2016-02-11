@@ -34,6 +34,7 @@ public class JavaSettings
 	private boolean formatCode;
 	private boolean makeClassesSerializable;
 	private boolean genJUnit4tests;
+	private boolean genSystemClass;
 	
 	public JavaSettings()
 	{
@@ -45,6 +46,7 @@ public class JavaSettings
 		this.formatCode = true;
 		this.makeClassesSerializable = false;
 		this.genJUnit4tests = false;
+		this.genSystemClass = false;
 	}
 	
 	public List<String> getModulesToSkip()
@@ -131,5 +133,15 @@ public class JavaSettings
 	public void setGenJUnit4tests(boolean genJUnit4tests)
 	{
 		this.genJUnit4tests = genJUnit4tests;
+	}
+
+	public boolean genSystemClass()
+	{
+		return genSystemClass;
+	}
+
+	public void setGenSystemClass(boolean genSystemClass)
+	{
+		this.genSystemClass = genSystemClass;
 	}
 }

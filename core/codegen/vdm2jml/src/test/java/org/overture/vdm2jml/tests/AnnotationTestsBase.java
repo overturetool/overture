@@ -12,9 +12,9 @@ import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.cgast.PCG;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.PIR;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -46,10 +46,10 @@ abstract public class AnnotationTestsBase
 	private static final boolean VERBOSE = false;
 	
 	// The IR class that the input module generates to
-	protected static ADefaultClassDeclCG genModule;
+	protected static ADefaultClassDeclIR genModule;
 	
 	// The IR class that is used to represent the type of the module state
-	protected static ADefaultClassDeclCG genStateType;
+	protected static ADefaultClassDeclIR genStateType;
 	
 	@BeforeClass
 	public static void prepareVdmTypeChecker()
@@ -60,9 +60,9 @@ abstract public class AnnotationTestsBase
 	
 	public static void init(String fileName) throws AnalysisException
 	{
-		List<ADefaultClassDeclCG> classes = getClasses(fileName);
+		List<ADefaultClassDeclIR> classes = getClasses(fileName);
 
-		for (ADefaultClassDeclCG clazz : classes)
+		for (ADefaultClassDeclIR clazz : classes)
 		{
 			if (clazz.getName().equals(MODULE_NAME))
 			{
@@ -105,9 +105,9 @@ abstract public class AnnotationTestsBase
 		javaSettings.setGenRecsAsInnerClasses(false);
 	}
 
-	public static List<ADefaultClassDeclCG> getClasses(GeneratedData data)
+	public static List<ADefaultClassDeclIR> getClasses(GeneratedData data)
 	{
-		List<ADefaultClassDeclCG> classes = new LinkedList<ADefaultClassDeclCG>();
+		List<ADefaultClassDeclIR> classes = new LinkedList<ADefaultClassDeclIR>();
 
 		for (GeneratedModule node : data.getClasses())
 		{
@@ -117,20 +117,20 @@ abstract public class AnnotationTestsBase
 				Logger.getLog().println("*******************");
 			}
 			
-			if (node.getIrNode() instanceof ADefaultClassDeclCG)
+			if (node.getIrNode() instanceof ADefaultClassDeclIR)
 			{
-				classes.add((ADefaultClassDeclCG) node.getIrNode());
+				classes.add((ADefaultClassDeclIR) node.getIrNode());
 			}
 		}
 
 		return classes;
 	}
 
-	public static List<AMethodDeclCG> getGenFunctions(List<AMethodDeclCG> methods)
+	public static List<AMethodDeclIR> getGenFunctions(List<AMethodDeclIR> methods)
 	{
-		List<AMethodDeclCG> genFuncs = new LinkedList<AMethodDeclCG>();
+		List<AMethodDeclIR> genFuncs = new LinkedList<AMethodDeclIR>();
 
-		for (AMethodDeclCG m : methods)
+		for (AMethodDeclIR m : methods)
 		{
 			if (m.getSourceNode() != null
 					&& m.getSourceNode().getVdmNode() instanceof SFunctionDefinition)
@@ -142,9 +142,9 @@ abstract public class AnnotationTestsBase
 		return genFuncs;
 	}
 	
-	public static AMethodDeclCG getMethod(List<AMethodDeclCG> methods, String name)
+	public static AMethodDeclIR getMethod(List<AMethodDeclIR> methods, String name)
 	{
-		for(AMethodDeclCG m : methods)
+		for(AMethodDeclIR m : methods)
 		{
 			if(m.getName().equals(name))
 			{
@@ -155,11 +155,11 @@ abstract public class AnnotationTestsBase
 		return null;
 	}
 
-	public static List<AMethodDeclCG> getGenMethods(List<AMethodDeclCG> methods)
+	public static List<AMethodDeclIR> getGenMethods(List<AMethodDeclIR> methods)
 	{
-		List<AMethodDeclCG> genOps = new LinkedList<AMethodDeclCG>();
+		List<AMethodDeclIR> genOps = new LinkedList<AMethodDeclIR>();
 
-		for (AMethodDeclCG m : methods)
+		for (AMethodDeclIR m : methods)
 		{
 			if (m.getSourceNode() != null
 					&& m.getSourceNode().getVdmNode() instanceof SOperationDefinition)
@@ -171,7 +171,7 @@ abstract public class AnnotationTestsBase
 		return genOps;
 	}
 	
-	public static List<ADefaultClassDeclCG> getClasses(String fileName)
+	public static List<ADefaultClassDeclIR> getClasses(String fileName)
 			throws AnalysisException
 	{
 		List<File> files = new LinkedList<File>();
@@ -193,7 +193,7 @@ abstract public class AnnotationTestsBase
 		return getClasses(data);
 	}
 
-	public static String getLastAnnotation(PCG node)
+	public static String getLastAnnotation(PIR node)
 	{
 		if (node.getMetaData() != null)
 		{
@@ -204,7 +204,7 @@ abstract public class AnnotationTestsBase
 		}
 	}
 	
-	public static String getAnnotation(PCG node, int idx)
+	public static String getAnnotation(PIR node, int idx)
 	{
 		List<? extends ClonableString> metaData = node.getMetaData();
 		
@@ -218,7 +218,7 @@ abstract public class AnnotationTestsBase
 	
 	public void assertFuncIsPureOnly(String funcName)
 	{
-		AMethodDeclCG preCondFunc = getMethod(genModule.getMethods(), funcName);
+		AMethodDeclIR preCondFunc = getMethod(genModule.getMethods(), funcName);
 
 		Assert.assertTrue("Expected only a @pure annotaton for the pre condition function",
 				preCondFunc.getMetaData().size() == 1);
@@ -228,7 +228,7 @@ abstract public class AnnotationTestsBase
 				getLastAnnotation(preCondFunc));
 	}
 
-	public static void assertHelper(PCG node, String msg)
+	public static void assertHelper(PIR node, String msg)
 	{
 		for(ClonableString m : node.getMetaData())
 		{
@@ -241,11 +241,11 @@ abstract public class AnnotationTestsBase
 		Assert.assertTrue(msg, false);
 	}
 	
-	public static void assertPure(List<AMethodDeclCG> methods)
+	public static void assertPure(List<AMethodDeclIR> methods)
 	{
 		Assert.assertTrue("Expected functions to be defined", methods != null && !methods.isEmpty());
 
-		for (AMethodDeclCG func : methods)
+		for (AMethodDeclIR func : methods)
 		{
 			if (!func.getIsConstructor())
 			{
@@ -254,7 +254,7 @@ abstract public class AnnotationTestsBase
 		}
 	}
 
-	public static void assertPureMethod(AMethodDeclCG method)
+	public static void assertPureMethod(AMethodDeclIR method)
 	{
 		String failureMsg = "Expected method " + method.getName()
 				+ " to be pure";
@@ -275,7 +275,7 @@ abstract public class AnnotationTestsBase
 		Assert.assertTrue(failureMsg, false);
 	}
 	
-	public static void assertNotPureMethod(AMethodDeclCG method)
+	public static void assertNotPureMethod(AMethodDeclIR method)
 	{
 		String failureMsg = "Expected method " + method.getName()
 				+ " not to be pure";
@@ -289,9 +289,9 @@ abstract public class AnnotationTestsBase
 		}
 	}
 	
-	public static void assertRecMethodsPurity(List<AMethodDeclCG> stateMethods)
+	public static void assertRecMethodsPurity(List<AMethodDeclIR> stateMethods)
 	{
-		for (AMethodDeclCG m : stateMethods)
+		for (AMethodDeclIR m : stateMethods)
 		{
 			if (m.getName().equals("hashCode") || m.getName().equals("equals")
 					|| m.getName().equals("toString")

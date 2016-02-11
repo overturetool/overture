@@ -1,15 +1,15 @@
 package org.overture.codegen.vdm2jml.util;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.AnswerAdaptor;
-import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AMkBasicExpCG;
-import org.overture.codegen.cgast.expressions.ANewExpCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
-import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
-import org.overture.codegen.cgast.expressions.SLiteralExpCG;
-import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.AnswerAdaptor;
+import org.overture.codegen.ir.expressions.AMinusUnaryExpIR;
+import org.overture.codegen.ir.expressions.AMkBasicExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
+import org.overture.codegen.ir.expressions.ANullExpIR;
+import org.overture.codegen.ir.expressions.APlusUnaryExpIR;
+import org.overture.codegen.ir.expressions.SLiteralExpIR;
+import org.overture.codegen.ir.expressions.SNumericBinaryExpIR;
 
 public class IsValChecker extends AnswerAdaptor<Boolean>
 {
@@ -21,32 +21,32 @@ public class IsValChecker extends AnswerAdaptor<Boolean>
 	}
 	
 	@Override
-	public Boolean defaultSLiteralExpCG(SLiteralExpCG node) throws AnalysisException
+	public Boolean defaultSLiteralExpIR(SLiteralExpIR node) throws AnalysisException
 	{
 		return true;
 	}
 	
 	@Override
-	public Boolean caseAMkBasicExpCG(AMkBasicExpCG node) throws AnalysisException
+	public Boolean caseAMkBasicExpIR(AMkBasicExpIR node) throws AnalysisException
 	{
 		// Token value
 		return true;
 	}
 	
 	@Override
-	public Boolean caseANullExpCG(ANullExpCG node) throws AnalysisException
+	public Boolean caseANullExpIR(ANullExpIR node) throws AnalysisException
 	{
 		return true;
 	}
 	
 	@Override
-	public Boolean caseANewExpCG(ANewExpCG node) throws AnalysisException
+	public Boolean caseANewExpIR(ANewExpIR node) throws AnalysisException
 	{
 		return true;
 	}
 	
 	@Override
-	public Boolean defaultSNumericBinaryExpCG(SNumericBinaryExpCG node) throws AnalysisException
+	public Boolean defaultSNumericBinaryExpIR(SNumericBinaryExpIR node) throws AnalysisException
 	{
 		if(node.getLeft() == null || node.getRight() == null)
 		{
@@ -57,7 +57,7 @@ public class IsValChecker extends AnswerAdaptor<Boolean>
 	}
 	
 	@Override
-	public Boolean caseAMinusUnaryExpCG(AMinusUnaryExpCG node) throws AnalysisException
+	public Boolean caseAMinusUnaryExpIR(AMinusUnaryExpIR node) throws AnalysisException
 	{
 		if(node.getExp() == null)
 		{
@@ -70,7 +70,7 @@ public class IsValChecker extends AnswerAdaptor<Boolean>
 	}
 	
 	@Override
-	public Boolean caseAPlusUnaryExpCG(APlusUnaryExpCG node) throws AnalysisException
+	public Boolean caseAPlusUnaryExpIR(APlusUnaryExpIR node) throws AnalysisException
 	{
 		if(node.getExp() == null)
 		{

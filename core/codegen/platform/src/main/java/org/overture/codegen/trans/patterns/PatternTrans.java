@@ -24,71 +24,71 @@ package org.overture.codegen.trans.patterns;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.PCG;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
-import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AFieldExpCG;
-import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
-import org.overture.codegen.cgast.expressions.APatternMatchRuntimeErrorExpCG;
-import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
-import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overture.codegen.cgast.patterns.ABoolPatternCG;
-import org.overture.codegen.cgast.patterns.ACharPatternCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.patterns.AIgnorePatternCG;
-import org.overture.codegen.cgast.patterns.AIntPatternCG;
-import org.overture.codegen.cgast.patterns.ANullPatternCG;
-import org.overture.codegen.cgast.patterns.AQuotePatternCG;
-import org.overture.codegen.cgast.patterns.ARealPatternCG;
-import org.overture.codegen.cgast.patterns.ARecordPatternCG;
-import org.overture.codegen.cgast.patterns.AStringPatternCG;
-import org.overture.codegen.cgast.patterns.ATuplePatternCG;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
-import org.overture.codegen.cgast.statements.ACasesStmCG;
-import org.overture.codegen.cgast.statements.AContinueStmCG;
-import org.overture.codegen.cgast.statements.AForAllStmCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
-import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.ACharBasicTypeCG;
-import org.overture.codegen.cgast.types.AErrorTypeCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
-import org.overture.codegen.cgast.types.ATupleTypeCG;
-import org.overture.codegen.cgast.types.AUnionTypeCG;
-import org.overture.codegen.cgast.types.AUnknownTypeCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.PIR;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.ABoolLiteralExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.ACharLiteralExpIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AInstanceofExpIR;
+import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
+import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
+import org.overture.codegen.ir.expressions.APatternMatchRuntimeErrorExpIR;
+import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
+import org.overture.codegen.ir.expressions.ARealLiteralExpIR;
+import org.overture.codegen.ir.expressions.ATupleCompatibilityExpIR;
+import org.overture.codegen.ir.expressions.AUndefinedExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.patterns.ABoolPatternIR;
+import org.overture.codegen.ir.patterns.ACharPatternIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.patterns.AIgnorePatternIR;
+import org.overture.codegen.ir.patterns.AIntPatternIR;
+import org.overture.codegen.ir.patterns.ANullPatternIR;
+import org.overture.codegen.ir.patterns.AQuotePatternIR;
+import org.overture.codegen.ir.patterns.ARealPatternIR;
+import org.overture.codegen.ir.patterns.ARecordPatternIR;
+import org.overture.codegen.ir.patterns.AStringPatternIR;
+import org.overture.codegen.ir.patterns.ATuplePatternIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.ACaseAltStmStmIR;
+import org.overture.codegen.ir.statements.ACasesStmIR;
+import org.overture.codegen.ir.statements.AContinueStmIR;
+import org.overture.codegen.ir.statements.AForAllStmIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
+import org.overture.codegen.ir.statements.ALocalPatternAssignmentStmIR;
+import org.overture.codegen.ir.statements.ARaiseErrorStmIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.AErrorTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.ASeqSeqTypeIR;
+import org.overture.codegen.ir.types.ATupleTypeIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.IterationVarPrefixes;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class PatternTrans extends DepthFirstAnalysisAdaptor
 {
-	private TransAssistantCG transAssistant;
+	private TransAssistantIR transAssistant;
 
 	private PatternVarPrefixes config;
 
@@ -97,7 +97,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	private String casesExpNamePrefix;
 	
 	public PatternTrans(IterationVarPrefixes iteVarPrefixes,
-			TransAssistantCG transAssistant, PatternVarPrefixes config,
+			TransAssistantIR transAssistant, PatternVarPrefixes config,
 			String casesExpNamePrefix)
 	{
 		this.transAssistant = transAssistant;
@@ -109,20 +109,20 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseALocalPatternAssignmentStmCG(
-			ALocalPatternAssignmentStmCG node) throws AnalysisException
+	public void caseALocalPatternAssignmentStmIR(
+			ALocalPatternAssignmentStmIR node) throws AnalysisException
 	{
-		AVarDeclCG nextElementDecl = node.getNextElementDecl();
-		SPatternCG pattern = nextElementDecl.getPattern();
+		AVarDeclIR nextElementDecl = node.getNextElementDecl();
+		SPatternIR pattern = nextElementDecl.getPattern();
 
-		if (pattern instanceof AIdentifierPatternCG)
+		if (pattern instanceof AIdentifierPatternIR)
 		{
 			return;
 		}
 		
-		if (pattern  instanceof AIgnorePatternCG)
+		if (pattern  instanceof AIgnorePatternIR)
 		{
-			AIdentifierPatternCG idPattern = getIdPattern(config.getIgnorePatternPrefix());
+			AIdentifierPatternIR idPattern = getIdPattern(config.getIgnorePatternPrefix());
 			transAssistant.replaceNodeWith(node.getTarget(), idPattern);
 			transAssistant.replaceNodeWith(pattern, idPattern.clone());
 			return;
@@ -130,24 +130,24 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 		DeclarationTag tag = fetchTag(node);
 
-		ABlockStmCG replacementBlock = consPatternHandlingInIterationBlock(nextElementDecl, tag, node.getExp());
+		ABlockStmIR replacementBlock = consPatternHandlingInIterationBlock(nextElementDecl, tag, node.getExp());
 		transAssistant.replaceNodeWith(node, replacementBlock);
 	}
 
 	@Override
-	public void caseACasesStmCG(ACasesStmCG node) throws AnalysisException
+	public void caseACasesStmIR(ACasesStmIR node) throws AnalysisException
 	{
-		List<ACaseAltStmStmCG> nodeCases = node.getCases();
-		SPatternCG firstOriginal = nodeCases.get(0).getPattern().clone();
+		List<ACaseAltStmStmIR> nodeCases = node.getCases();
+		SPatternIR firstOriginal = nodeCases.get(0).getPattern().clone();
 		
-		ABlockStmCG replacementBlock = new ABlockStmCG();
+		ABlockStmIR replacementBlock = new ABlockStmIR();
 		String expName = transAssistant.getInfo().getTempVarNameGen().nextVarName(casesExpNamePrefix);
 
-		SExpCG exp = node.getExp();
+		SExpIR exp = node.getExp();
 		
-		if (!(node.getExp() instanceof SVarExpCG))
+		if (!(node.getExp() instanceof SVarExpIR))
 		{
-			AVarDeclCG expVarDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(node.getExp().getType().clone(),
+			AVarDeclIR expVarDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(node.getExp().getType().clone(),
 					transAssistant.getInfo().getPatternAssistant().consIdPattern(expName), node.getExp().clone());
 			replacementBlock.getLocalDefs().add(expVarDecl);
 			exp = transAssistant.getInfo().getExpAssistant().consIdVar(expName,
@@ -157,28 +157,28 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		List<PatternInfo> patternInfo = extractFromCases(nodeCases, exp);
 		PatternBlockData patternData = new PatternBlockData(MismatchHandling.NONE);
 
-		List<ABlockStmCG> blocks = consPatternHandlingBlockCases(patternInfo, patternData);
+		List<ABlockStmIR> blocks = consPatternHandlingBlockCases(patternInfo, patternData);
 
 		replacementBlock.getStatements().add(blocks.get(0));
 
-		ANotUnaryExpCG notSuccess = transAssistant.getInfo().getExpAssistant().negate(patternData.getSuccessVar());
+		ANotUnaryExpIR notSuccess = transAssistant.getInfo().getExpAssistant().negate(patternData.getSuccessVar());
 
-		AIfStmCG ifStm = new AIfStmCG();
-		ABlockStmCG enclosingIf = new ABlockStmCG();
+		AIfStmIR ifStm = new AIfStmIR();
+		ABlockStmIR enclosingIf = new ABlockStmIR();
 		enclosingIf.getStatements().add(ifStm);
 		replacementBlock.getStatements().add(enclosingIf);
 
 		ifStm.setIfExp(notSuccess);
 
-		AIfStmCG nextCase = ifStm;
+		AIfStmIR nextCase = ifStm;
 
 		if (nodeCases.size() > 1)
 		{
 			ifStm.setElseStm(nodeCases.get(0).getResult().clone());
 			
-			nextCase = new AIfStmCG();
+			nextCase = new AIfStmIR();
 
-			enclosingIf = new ABlockStmCG();
+			enclosingIf = new ABlockStmIR();
 			ifStm.setThenStm(enclosingIf);
 			enclosingIf.getStatements().add(nextCase);
 
@@ -186,13 +186,13 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			for (int i = 1; i < nodeCases.size() - 1; i++)
 			{
 				enclosingIf.getStatements().addFirst(blocks.get(i));
-				enclosingIf = new ABlockStmCG();
+				enclosingIf = new ABlockStmIR();
 
-				ACaseAltStmStmCG currentCase = nodeCases.get(i);
+				ACaseAltStmStmIR currentCase = nodeCases.get(i);
 				nextCase.setIfExp(notSuccess.clone());
 				nextCase.setElseStm(currentCase.getResult().clone());
 
-				AIfStmCG tmp = new AIfStmCG();
+				AIfStmIR tmp = new AIfStmIR();
 				enclosingIf.getStatements().add(tmp);
 
 				nextCase.setThenStm(enclosingIf);
@@ -201,10 +201,10 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			APatternMatchRuntimeErrorExpCG matchFail = new APatternMatchRuntimeErrorExpCG();
-			matchFail.setType(new AErrorTypeCG());
+			APatternMatchRuntimeErrorExpIR matchFail = new APatternMatchRuntimeErrorExpIR();
+			matchFail.setType(new AErrorTypeIR());
 			matchFail.setMessage(config.getMatchFailedMessage(firstOriginal));
-			ARaiseErrorStmCG noMatchStm = new ARaiseErrorStmCG();
+			ARaiseErrorStmIR noMatchStm = new ARaiseErrorStmIR();
 			noMatchStm.setError(matchFail);
 			
 			ifStm.setElseStm(noMatchStm);
@@ -225,35 +225,35 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAMethodDeclCG(AMethodDeclCG node) throws AnalysisException
+	public void caseAMethodDeclIR(AMethodDeclIR node) throws AnalysisException
 	{
 		List<PatternInfo> patternInfo = extractFromParams(node.getFormalParams());
 
 		if (!node.getAbstract() && node.getBody() != null)
 		{
-			ABlockStmCG patternHandlingBlock = consPatternHandlingBlock(patternInfo);
+			ABlockStmIR patternHandlingBlock = consPatternHandlingBlock(patternInfo);
 
-			ABlockStmCG newBody = new ABlockStmCG();
+			ABlockStmIR newBody = new ABlockStmIR();
 			newBody.getStatements().add(patternHandlingBlock);
 
-			SStmCG oldBody = node.getBody();
+			SStmIR oldBody = node.getBody();
 			transAssistant.replaceNodeWith(oldBody, newBody);
 			newBody.getStatements().add(oldBody);
 
 			newBody.apply(this);
 		} else
 		{
-			for (AFormalParamLocalParamCG param : node.getFormalParams())
+			for (AFormalParamLocalParamIR param : node.getFormalParams())
 			{
-				SPatternCG paramPattern = param.getPattern();
+				SPatternIR paramPattern = param.getPattern();
 
-				if (!(paramPattern instanceof AIdentifierPatternCG))
+				if (!(paramPattern instanceof AIdentifierPatternIR))
 				{
 					String prefix = config.getName(param.getPattern().getClass());
 
 					if (prefix != null)
 					{
-						AIdentifierPatternCG idPattern = getIdPattern(prefix);
+						AIdentifierPatternIR idPattern = getIdPattern(prefix);
 						transAssistant.replaceNodeWith(param.getPattern(), idPattern);
 					} else
 					{
@@ -266,12 +266,12 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseABlockStmCG(ABlockStmCG node) throws AnalysisException
+	public void caseABlockStmIR(ABlockStmIR node) throws AnalysisException
 	{
 		boolean taggedBlock = false;
 		for (int i = 0; i < node.getLocalDefs().size(); i++)
 		{
-			AVarDeclCG dec = node.getLocalDefs().get(i);
+			AVarDeclIR dec = node.getLocalDefs().get(i);
 
 			if (dec.getTag() != null)
 			{
@@ -279,24 +279,24 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 				DeclarationTag tag = fetchTag(dec);
 
-				if (tag.isDeclared() || !(dec instanceof AVarDeclCG))
+				if (tag.isDeclared() || !(dec instanceof AVarDeclIR))
 				{
 					continue;
 				}
 
-				AVarDeclCG nextElementDecl = (AVarDeclCG) dec;
+				AVarDeclIR nextElementDecl = (AVarDeclIR) dec;
 
-				SPatternCG pattern = nextElementDecl.getPattern();
+				SPatternIR pattern = nextElementDecl.getPattern();
 
-				if (pattern instanceof AIdentifierPatternCG)
+				if (pattern instanceof AIdentifierPatternIR)
 				{
 					continue;
 				}
 
 				// TODO: Make it such that the successer var is passed on (multiple binds)
-				ABlockStmCG patternHandlingBlock = consPatternHandlingInIterationBlock(nextElementDecl, tag, nextElementDecl.getExp());
+				ABlockStmIR patternHandlingBlock = consPatternHandlingInIterationBlock(nextElementDecl, tag, nextElementDecl.getExp());
 
-				List<SStmCG> stms = new LinkedList<SStmCG>();
+				List<SStmIR> stms = new LinkedList<SStmIR>();
 				stms.addAll(patternHandlingBlock.getStatements());
 				stms.addAll(node.getStatements());
 
@@ -321,8 +321,8 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 					{
 						// The pattern handling block must be put before the
 						// enclosing statement of the next declaration
-						SStmCG stm = transAssistant.getEnclosingStm(currentDeclBlockPair.getNextDecl(), "block statement pattern handling");
-						ABlockStmCG block = new ABlockStmCG();
+						SStmIR stm = transAssistant.getEnclosingStm(currentDeclBlockPair.getNextDecl(), "block statement pattern handling");
+						ABlockStmIR block = new ABlockStmIR();
 						
 						transAssistant.replaceNodeWith(stm, block);
 						block.getStatements().add(currentDeclBlockPair.getBlock());
@@ -334,9 +334,9 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 						// must be the last declaration of the block statement
 						INode parent = currentDeclBlockPair.getDecl().parent();
 						
-						if(parent instanceof ABlockStmCG)
+						if(parent instanceof ABlockStmIR)
 						{
-							ABlockStmCG enc = (ABlockStmCG) parent;
+							ABlockStmIR enc = (ABlockStmIR) parent;
 							enc.getStatements().addFirst(currentDeclBlockPair.getBlock());
 
 						}
@@ -352,36 +352,36 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			}
 		}
 
-		for (SStmCG stm : node.getStatements())
+		for (SStmIR stm : node.getStatements())
 		{
 			stm.apply(this);
 		}
 	}
 	
 	@Override
-	public void caseAForAllStmCG(AForAllStmCG node) throws AnalysisException
+	public void caseAForAllStmIR(AForAllStmIR node) throws AnalysisException
 	{
-		SPatternCG pattern = node.getPattern();
+		SPatternIR pattern = node.getPattern();
 		
-		if(pattern instanceof AIdentifierPatternCG)
+		if(pattern instanceof AIdentifierPatternIR)
 		{
 			node.getExp().apply(this);
 			node.getBody().apply(this);
 			return;
 		}
 
-		if (pattern  instanceof AIgnorePatternCG)
+		if (pattern  instanceof AIgnorePatternIR)
 		{
-			AIdentifierPatternCG idPattern = getIdPattern(config.getIgnorePatternPrefix());
+			AIdentifierPatternIR idPattern = getIdPattern(config.getIgnorePatternPrefix());
 			transAssistant.replaceNodeWith(pattern, idPattern);
 		}
 		
 		PatternBlockData patternData = new PatternBlockData(MismatchHandling.LOOP_CONTINUE);
 		patternData.setPattern(pattern);
-		ABlockStmCG declBlock = new ABlockStmCG();
+		ABlockStmIR declBlock = new ABlockStmIR();
 		patternData.setDeclBlock(declBlock);
 		
-		ABlockStmCG patternHandlingBlock = consPatternCheck(false, pattern, transAssistant.getInfo().getTypeAssistant().findElementType(node.getExp().getType().clone()), patternData, null);
+		ABlockStmIR patternHandlingBlock = consPatternCheck(false, pattern, transAssistant.getInfo().getTypeAssistant().findElementType(node.getExp().getType().clone()), patternData, null);
 
 		if (patternHandlingBlock != null)
 		{
@@ -396,23 +396,23 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		node.getBody().apply(this);
 	}
 
-	private ABlockStmCG consPatternHandlingInIterationBlock(
-			AVarDeclCG nextElementDecl, DeclarationTag tag,
-			SExpCG assignedExp)
+	private ABlockStmIR consPatternHandlingInIterationBlock(
+			AVarDeclIR nextElementDecl, DeclarationTag tag,
+			SExpIR assignedExp)
 	{
 		PatternInfo declInfo = extractPatternInfo(nextElementDecl);
-		ABlockStmCG declBlockTmp = new ABlockStmCG();
+		ABlockStmIR declBlockTmp = new ABlockStmIR();
 		PatternBlockData data = new PatternBlockData(declInfo.getPattern(), declBlockTmp, MismatchHandling.LOOP_CONTINUE);
 
-		AVarDeclCG successVarDecl = tag.getSuccessVarDecl();
+		AVarDeclIR successVarDecl = tag.getSuccessVarDecl();
 		if (successVarDecl != null)
 		{
-			SPatternCG successVarDeclPattern = successVarDecl.getPattern();
-			if (successVarDeclPattern instanceof AIdentifierPatternCG)
+			SPatternIR successVarDeclPattern = successVarDecl.getPattern();
+			if (successVarDeclPattern instanceof AIdentifierPatternIR)
 			{
-				AIdentifierPatternCG idPattern = (AIdentifierPatternCG) successVarDeclPattern;
+				AIdentifierPatternIR idPattern = (AIdentifierPatternIR) successVarDeclPattern;
 				data.setSuccessVarDecl(successVarDecl.clone());
-				AIdentifierVarExpCG successVar = transAssistant.consSuccessVar(idPattern.getName());
+				AIdentifierVarExpIR successVar = transAssistant.consSuccessVar(idPattern.getName());
 				data.setSuccessVar(successVar);
 			} else
 			{
@@ -424,29 +424,29 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
 		patternInfo.add(declInfo);
 
-		ABlockStmCG replacementBlock = new ABlockStmCG();
+		ABlockStmIR replacementBlock = new ABlockStmIR();
 		replacementBlock.getStatements().add(consPatternCheck(false, declInfo.getPattern(), declInfo.getType(), data, declInfo.getActualValue()));
 		replacementBlock.getStatements().addAll(declBlockTmp.getStatements());
-		ABlockStmCG enclosingBlock = nextElementDecl.getAncestor(ABlockStmCG.class);
+		ABlockStmIR enclosingBlock = nextElementDecl.getAncestor(ABlockStmIR.class);
 		enclosingBlock.getLocalDefs().addAll(declBlockTmp.getLocalDefs());
 
-		AVarDeclCG nextDeclCopy = nextElementDecl.clone();
+		AVarDeclIR nextDeclCopy = nextElementDecl.clone();
 
 		if (tag == null || !tag.isDeclared())
 		{
 			replacementBlock.getLocalDefs().addFirst(nextDeclCopy);
 		} else
 		{
-			SPatternCG nextDeclPattern = nextDeclCopy.getPattern();
-			if (nextDeclPattern instanceof AIdentifierPatternCG)
+			SPatternIR nextDeclPattern = nextDeclCopy.getPattern();
+			if (nextDeclPattern instanceof AIdentifierPatternIR)
 			{
-				AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
+				AIdentifierVarExpIR varExp = new AIdentifierVarExpIR();
 				varExp.setType(nextDeclCopy.getType());
 				varExp.setIsLocal(true);
 				varExp.setIsLambda(false);
-				varExp.setName(((AIdentifierPatternCG) nextDeclPattern).getName());
+				varExp.setName(((AIdentifierPatternIR) nextDeclPattern).getName());
 
-				AAssignToExpStmCG assignment = new AAssignToExpStmCG();
+				AAssignToExpStmIR assignment = new AAssignToExpStmIR();
 				assignment.setTarget(varExp);
 				assignment.setExp(assignedExp.clone());
 				replacementBlock.getStatements().addFirst(assignment);
@@ -460,36 +460,36 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return replacementBlock;
 	}
 	
-	private List<ABlockStmCG> consPatternHandlingBlockCases(
+	private List<ABlockStmIR> consPatternHandlingBlockCases(
 			List<PatternInfo> patternInfo, PatternBlockData patternData)
 	{
-		List<ABlockStmCG> patternHandlingBlocks = new LinkedList<ABlockStmCG>();
+		List<ABlockStmIR> patternHandlingBlocks = new LinkedList<ABlockStmIR>();
 
 		for (PatternInfo currentInfo : patternInfo)
 		{
-			SPatternCG currentPattern = currentInfo.getPattern();
+			SPatternIR currentPattern = currentInfo.getPattern();
 
-			ABlockStmCG nextPatternBlock = new ABlockStmCG();
+			ABlockStmIR nextPatternBlock = new ABlockStmIR();
 			patternData.setDeclBlock(nextPatternBlock);
 
 			// Use same success variable
 			patternData.setPattern(currentPattern);
 
-			if (currentPattern instanceof AIdentifierPatternCG)
+			if (currentPattern instanceof AIdentifierPatternIR)
 			{
 				nextPatternBlock.getStatements().add(consIdVarDeclaration(currentInfo, currentPattern));
 				initSuccessVar(patternData, this.transAssistant.getInfo().getExpAssistant().consBoolLiteral(true), nextPatternBlock);
-			} else if (currentPattern instanceof AIgnorePatternCG)
+			} else if (currentPattern instanceof AIgnorePatternIR)
 			{
 				initSuccessVar(patternData, this.transAssistant.getInfo().getExpAssistant().consBoolLiteral(true), nextPatternBlock);
 
 			} else
 			{
-				STypeCG currentType = currentInfo.getType();
-				SExpCG currentActualValue = currentInfo.getActualValue();
+				STypeIR currentType = currentInfo.getType();
+				SExpIR currentActualValue = currentInfo.getActualValue();
 
 				boolean declareVarPattern = true;
-				ABlockStmCG patternCheck = consPatternCheck(declareVarPattern, currentPattern, currentType, patternData, currentActualValue);
+				ABlockStmIR patternCheck = consPatternCheck(declareVarPattern, currentPattern, currentType, patternData, currentActualValue);
 
 				patternCheck.getLocalDefs().addAll(nextPatternBlock.getLocalDefs());
 				nextPatternBlock = patternCheck;
@@ -501,33 +501,33 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return patternHandlingBlocks;
 	}
 
-	private ABlockStmCG consIdVarDeclaration(PatternInfo currentInfo,
-			SPatternCG currentPattern)
+	private ABlockStmIR consIdVarDeclaration(PatternInfo currentInfo,
+			SPatternIR currentPattern)
 	{
-		AIdentifierPatternCG idPattern = (AIdentifierPatternCG) currentPattern;
-		AVarDeclCG idPatternDecl = transAssistant.getInfo().getDeclAssistant().
+		AIdentifierPatternIR idPattern = (AIdentifierPatternIR) currentPattern;
+		AVarDeclIR idPatternDecl = transAssistant.getInfo().getDeclAssistant().
 				consLocalVarDecl(currentInfo.getType().clone(),
 						idPattern.clone(), currentInfo.getActualValue().clone());
 
-		ABlockStmCG wrappingStatement = new ABlockStmCG();
+		ABlockStmIR wrappingStatement = new ABlockStmIR();
 		wrappingStatement.getLocalDefs().add(idPatternDecl);
 
 		return wrappingStatement;
 	}
 
-	private ABlockStmCG consPatternHandlingBlock(List<PatternInfo> patternInfo)
+	private ABlockStmIR consPatternHandlingBlock(List<PatternInfo> patternInfo)
 	{
-		ABlockStmCG topBlock = new ABlockStmCG();
+		ABlockStmIR topBlock = new ABlockStmIR();
 
 		for (PatternInfo info : patternInfo)
 		{
-			SPatternCG currentPattern = info.getPattern();
+			SPatternIR currentPattern = info.getPattern();
 			
 			if(!basicCaseHandled(currentPattern))
 			{
-				ABlockStmCG currentDeclBlock = new ABlockStmCG();
+				ABlockStmIR currentDeclBlock = new ABlockStmIR();
 
-				ABlockStmCG patternHandlingBlock = consPatternCheck(currentPattern, info.getType(), info.getActualValue(), currentDeclBlock);
+				ABlockStmIR patternHandlingBlock = consPatternCheck(currentPattern, info.getType(), info.getActualValue(), currentDeclBlock);
 				currentDeclBlock.getStatements().addFirst(patternHandlingBlock);
 				topBlock.getStatements().add(currentDeclBlock);
 			}
@@ -536,7 +536,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return topBlock;
 	}
 	
-	private List<DeclBlockPair> consPatternHandlingBlocksSeparate(List<AVarDeclCG> decls, List<PatternInfo> patternInfo)
+	private List<DeclBlockPair> consPatternHandlingBlocksSeparate(List<AVarDeclIR> decls, List<PatternInfo> patternInfo)
 	{
 		List<DeclBlockPair> blocks = new LinkedList<DeclBlockPair>();
 		
@@ -546,12 +546,12 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 			if(!basicCaseHandled(info.getPattern()))
 			{
-				ABlockStmCG currentDeclBlock = new ABlockStmCG();
+				ABlockStmIR currentDeclBlock = new ABlockStmIR();
 
-				ABlockStmCG patternHandlingBlock = consPatternCheck(info.getPattern(), info.getType(), info.getActualValue(), currentDeclBlock);
+				ABlockStmIR patternHandlingBlock = consPatternCheck(info.getPattern(), info.getType(), info.getActualValue(), currentDeclBlock);
 				currentDeclBlock.getStatements().addFirst(patternHandlingBlock);
 				
-				AVarDeclCG nextDecl = i < decls.size() - 1 ? decls.get(1 + i) : null;
+				AVarDeclIR nextDecl = i < decls.size() - 1 ? decls.get(1 + i) : null;
 				DeclBlockPair declBlockPair = new DeclBlockPair(decls.get(i), nextDecl, currentDeclBlock);
 				
 				blocks.add(declBlockPair);
@@ -561,14 +561,14 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return blocks;
 	}
 	
-	private boolean basicCaseHandled(SPatternCG currentPattern)
+	private boolean basicCaseHandled(SPatternIR currentPattern)
 	{
-		if (currentPattern instanceof AIdentifierPatternCG)
+		if (currentPattern instanceof AIdentifierPatternIR)
 		{
 			return true;
-		} else if (currentPattern instanceof AIgnorePatternCG)
+		} else if (currentPattern instanceof AIgnorePatternIR)
 		{
-			AIdentifierPatternCG idPattern = getIdPattern(config.getIgnorePatternPrefix());
+			AIdentifierPatternIR idPattern = getIdPattern(config.getIgnorePatternPrefix());
 			transAssistant.replaceNodeWith(currentPattern, idPattern);
 
 			return true;
@@ -577,8 +577,8 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return false;
 	}
 	
-	private ABlockStmCG consPatternCheck(SPatternCG pattern, STypeCG type,
-			SExpCG actualValue, ABlockStmCG declBlock)
+	private ABlockStmIR consPatternCheck(SPatternIR pattern, STypeIR type,
+			SExpIR actualValue, ABlockStmIR declBlock)
 	{
 		boolean declareVarPattern = false;
 		PatternBlockData patternData = new PatternBlockData(pattern, declBlock, MismatchHandling.RAISE_ERROR);
@@ -586,108 +586,108 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return consPatternCheck(declareVarPattern, pattern, type, patternData, actualValue);
 	}
 
-	private ABlockStmCG consPatternCheck(boolean declarePatternVar,
-			SPatternCG pattern, STypeCG type, PatternBlockData patternData,
-			SExpCG actualValue)
+	private ABlockStmIR consPatternCheck(boolean declarePatternVar,
+			SPatternIR pattern, STypeIR type, PatternBlockData patternData,
+			SExpIR actualValue)
 	{
-		if (pattern instanceof ABoolPatternCG)
+		if (pattern instanceof ABoolPatternIR)
 		{
-			ABoolPatternCG boolPattern = (ABoolPatternCG) pattern;
+			ABoolPatternIR boolPattern = (ABoolPatternIR) pattern;
 
 			Boolean value = boolPattern.getValue();
-			ABoolLiteralExpCG consBoolLiteral = transAssistant.getInfo().getExpAssistant().consBoolLiteral(value);
+			ABoolLiteralExpIR consBoolLiteral = transAssistant.getInfo().getExpAssistant().consBoolLiteral(value);
 
 			return consSimplePatternCheck(declarePatternVar, boolPattern, consBoolLiteral, patternData, actualValue);
-		} else if (pattern instanceof ACharPatternCG)
+		} else if (pattern instanceof ACharPatternIR)
 		{
-			ACharPatternCG charPattern = (ACharPatternCG) pattern;
+			ACharPatternIR charPattern = (ACharPatternIR) pattern;
 
 			Character value = charPattern.getValue();
-			ACharLiteralExpCG charLiteral = transAssistant.getInfo().getExpAssistant().consCharLiteral(value);
+			ACharLiteralExpIR charLiteral = transAssistant.getInfo().getExpAssistant().consCharLiteral(value);
 
 			return consSimplePatternCheck(declarePatternVar, charPattern, charLiteral, patternData, actualValue);
-		} else if (pattern instanceof AIntPatternCG)
+		} else if (pattern instanceof AIntPatternIR)
 		{
-			AIntPatternCG intPattern = (AIntPatternCG) pattern;
+			AIntPatternIR intPattern = (AIntPatternIR) pattern;
 
 			Long value = intPattern.getValue();
-			AIntLiteralExpCG intLit = transAssistant.getInfo().getExpAssistant().consIntLiteral(value);
+			AIntLiteralExpIR intLit = transAssistant.getInfo().getExpAssistant().consIntLiteral(value);
 
 			return consSimplePatternCheck(declarePatternVar, intPattern, intLit, patternData, actualValue);
-		} else if (pattern instanceof ANullPatternCG)
+		} else if (pattern instanceof ANullPatternIR)
 		{
 			return consSimplePatternCheck(declarePatternVar, pattern, transAssistant.getInfo().getExpAssistant().consNullExp(), patternData, actualValue);
-		} else if (pattern instanceof AQuotePatternCG)
+		} else if (pattern instanceof AQuotePatternIR)
 		{
-			AQuotePatternCG quotePattern = (AQuotePatternCG) pattern;
+			AQuotePatternIR quotePattern = (AQuotePatternIR) pattern;
 
 			String value = quotePattern.getValue();
-			AQuoteLiteralExpCG quoteLit = transAssistant.getInfo().getExpAssistant().consQuoteLiteral(value);
+			AQuoteLiteralExpIR quoteLit = transAssistant.getInfo().getExpAssistant().consQuoteLiteral(value);
 
 			return consSimplePatternCheck(declarePatternVar, pattern, quoteLit, patternData, actualValue);
-		} else if (pattern instanceof ARealPatternCG)
+		} else if (pattern instanceof ARealPatternIR)
 		{
-			ARealPatternCG realPattern = (ARealPatternCG) pattern;
+			ARealPatternIR realPattern = (ARealPatternIR) pattern;
 
 			Double value = realPattern.getValue();
-			ARealLiteralExpCG realLit = transAssistant.getInfo().getExpAssistant().consRealLiteral(value);
+			ARealLiteralExpIR realLit = transAssistant.getInfo().getExpAssistant().consRealLiteral(value);
 
 			return consSimplePatternCheck(declarePatternVar, realPattern, realLit, patternData, actualValue);
 
-		} else if (pattern instanceof AStringPatternCG)
+		} else if (pattern instanceof AStringPatternIR)
 		{
-			AStringPatternCG stringPattern = (AStringPatternCG) pattern;
+			AStringPatternIR stringPattern = (AStringPatternIR) pattern;
 			String value = stringPattern.getValue();
 
-			SExpCG stringValue = null;
+			SExpIR stringValue = null;
 
 			if (transAssistant.getInfo().getSettings().getCharSeqAsString())
 			{
 				stringValue = transAssistant.getInfo().getExpAssistant().consStringLiteral(value, false);
 			} else
 			{
-				ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
+				ASeqSeqTypeIR seqType = new ASeqSeqTypeIR();
 				seqType.setEmpty(false);
-				seqType.setSeqOf(new ACharBasicTypeCG());
+				seqType.setSeqOf(new ACharBasicTypeIR());
 
 				stringValue = transAssistant.getInfo().getExpAssistant().consCharSequence(seqType, value);
 			}
 
 			return consSimplePatternCheck(declarePatternVar, stringPattern, stringValue, patternData, actualValue);
-		} else if (pattern instanceof ATuplePatternCG)
+		} else if (pattern instanceof ATuplePatternIR)
 		{
-			ATuplePatternCG tuplePattern = (ATuplePatternCG) pattern;
+			ATuplePatternIR tuplePattern = (ATuplePatternIR) pattern;
 			
-			if (type instanceof ATupleTypeCG)
+			if (type instanceof ATupleTypeIR)
 			{
-				ATupleTypeCG tupleType = (ATupleTypeCG) type;
+				ATupleTypeIR tupleType = (ATupleTypeIR) type;
 
 				return consTuplePatternCheck(declarePatternVar, tuplePattern, 
 						tupleType, patternData, actualValue, false);
 			}
-			else if(type instanceof AUnionTypeCG)
+			else if(type instanceof AUnionTypeIR)
 			{
 					return consUnionTypedTuplePatternCheck(declarePatternVar,
-							(AUnionTypeCG) type, patternData, actualValue, tuplePattern);
+							(AUnionTypeIR) type, patternData, actualValue, tuplePattern);
 			}
 			else
 			{
 				Logger.getLog().printErrorln("Expected tuple type or union type "
 						+ "in 'PatternTransformation'. Got: " + type);
 			}
-		} else if (pattern instanceof ARecordPatternCG)
+		} else if (pattern instanceof ARecordPatternIR)
 		{
-			ARecordPatternCG recordPattern = (ARecordPatternCG) pattern;
-			ARecordTypeCG recordType = (ARecordTypeCG) recordPattern.getType();
+			ARecordPatternIR recordPattern = (ARecordPatternIR) pattern;
+			ARecordTypeIR recordType = (ARecordTypeIR) recordPattern.getType();
 			
-			if(type instanceof ARecordTypeCG)
+			if(type instanceof ARecordTypeIR)
 			{
 				
 				return consRecordPatternCheck(declarePatternVar, recordPattern,
 						recordType, patternData, actualValue, checkRecordPattern(actualValue));
 				
 			}
-			else if(type instanceof AUnionTypeCG)
+			else if(type instanceof AUnionTypeIR)
 			{
 				return consRecordPatternCheck(declarePatternVar, recordPattern,
 						recordType, patternData, actualValue, true);
@@ -702,37 +702,37 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return null;
 	}
 
-	private ABlockStmCG consUnionTypedTuplePatternCheck(
-			boolean declarePatternVar, AUnionTypeCG unionType,
-			PatternBlockData patternData, SExpCG actualValue,
-			ATuplePatternCG tuplePattern)
+	private ABlockStmIR consUnionTypedTuplePatternCheck(
+			boolean declarePatternVar, AUnionTypeIR unionType,
+			PatternBlockData patternData, SExpIR actualValue,
+			ATuplePatternIR tuplePattern)
 	{
-		ATupleTypeCG resTupleType = transAssistant.getInfo().getPatternAssistant().getTupleType(unionType, tuplePattern);
+		ATupleTypeIR resTupleType = transAssistant.getInfo().getPatternAssistant().getTupleType(unionType, tuplePattern);
 
-		ABlockStmCG tuplePatternCheck = consTuplePatternCheck(declarePatternVar, tuplePattern, resTupleType, patternData, actualValue, true);
+		ABlockStmIR tuplePatternCheck = consTuplePatternCheck(declarePatternVar, tuplePattern, resTupleType, patternData, actualValue, true);
 
-		AInstanceofExpCG instanceCheck = new AInstanceofExpCG();
-		instanceCheck.setType(new ABoolBasicTypeCG());
+		AInstanceofExpIR instanceCheck = new AInstanceofExpIR();
+		instanceCheck.setType(new ABoolBasicTypeIR());
 		instanceCheck.setCheckedType(patternData.getRootPatternVar().getType().clone());
 		instanceCheck.setExp(patternData.getRootPatternVar().clone());
 
-		AIfStmCG typeCheck = new AIfStmCG();
+		AIfStmIR typeCheck = new AIfStmIR();
 		typeCheck.setIfExp(instanceCheck);
 		typeCheck.setThenStm(tuplePatternCheck);
 
-		ABlockStmCG block = new ABlockStmCG();
+		ABlockStmIR block = new ABlockStmIR();
 		block.getStatements().add(typeCheck);
 
 		return block;
 	}
 
-	private ABlockStmCG consRecordPatternCheck(boolean declarePattern,
-			ARecordPatternCG recordPattern, ARecordTypeCG recordType,
-			PatternBlockData patternData, SExpCG actualValue, boolean checkRecordType)
+	private ABlockStmIR consRecordPatternCheck(boolean declarePattern,
+			ARecordPatternIR recordPattern, ARecordTypeIR recordType,
+			PatternBlockData patternData, SExpIR actualValue, boolean checkRecordType)
 	{
-		AIdentifierPatternCG idPattern = getIdPattern(config.getName(recordPattern.getClass()));
+		AIdentifierPatternIR idPattern = getIdPattern(config.getName(recordPattern.getClass()));
 
-		AIdentifierVarExpCG recordPatternVar = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR recordPatternVar = new AIdentifierVarExpIR();
 		recordPatternVar.setType(recordType.clone());
 		recordPatternVar.setName(idPattern.getName());
 		recordPatternVar.setIsLambda(false);
@@ -744,9 +744,9 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			actualValue = recordPatternVar;
 		}
 		
-		ABlockStmCG recordPatternBlock = initPattern(declarePattern, recordPattern, recordType, actualValue, idPattern);
+		ABlockStmIR recordPatternBlock = initPattern(declarePattern, recordPattern, recordType, actualValue, idPattern);
 
-		ARecordDeclCG record = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findRecord(transAssistant.getInfo().getClasses(), recordType);
+		ARecordDeclIR record = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findRecord(transAssistant.getInfo().getClasses(), recordType);
 
 		if (patternData.getSuccessVarDecl() == null)
 		{
@@ -756,35 +756,35 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		mismatchHandling(recordPattern, patternData);
 		initSuccessVar(patternData, transAssistant.getInfo().getExpAssistant().consBoolLiteral(true), recordPatternBlock);
 
-		List<STypeCG> types = new LinkedList<STypeCG>();
+		List<STypeIR> types = new LinkedList<STypeIR>();
 
-		for (AFieldDeclCG currentField : record.getFields())
+		for (AFieldDeclIR currentField : record.getFields())
 		{
 			types.add(currentField.getType());
 		}
 
-		ABlockStmCG fieldCheckBlock = consFieldCheckBlock(patternData, recordPatternVar, 
+		ABlockStmIR fieldCheckBlock = consFieldCheckBlock(patternData, recordPatternVar, 
 				recordPattern.getPatterns(), types, checkRecordType && !declarePattern);
 
 		recordPatternBlock.getStatements().add(fieldCheckBlock);
 
 		if (checkRecordType)
 		{
-			AInstanceofExpCG instanceOfExp = new AInstanceofExpCG();
-			instanceOfExp.setType(new ABoolBasicTypeCG());
+			AInstanceofExpIR instanceOfExp = new AInstanceofExpIR();
+			instanceOfExp.setType(new ABoolBasicTypeIR());
 			instanceOfExp.setExp(actualValue.clone());
 			instanceOfExp.setCheckedType(recordType.clone());
 
-			AIfStmCG ifStm = new AIfStmCG();
+			AIfStmIR ifStm = new AIfStmIR();
 			ifStm.setIfExp(instanceOfExp);
 			ifStm.setThenStm(recordPatternBlock);
 
-			AAssignToExpStmCG setFalse = new AAssignToExpStmCG();
+			AAssignToExpStmIR setFalse = new AAssignToExpStmIR();
 			setFalse.setTarget(patternData.getSuccessVar().clone());
 			setFalse.setExp(transAssistant.getInfo().getExpAssistant().consBoolLiteral(false));
 			ifStm.setElseStm(setFalse);
 
-			ABlockStmCG wrappingBlock = new ABlockStmCG();
+			ABlockStmIR wrappingBlock = new ABlockStmIR();
 			wrappingBlock.getStatements().add(ifStm);
 
 			return wrappingBlock;
@@ -794,36 +794,36 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@SuppressWarnings("unchecked")
-	private ABlockStmCG consTuplePatternCheck(boolean declarePatternVar,
-			ATuplePatternCG tuplePattern, ATupleTypeCG tupleType,
-			PatternBlockData patternData, SExpCG actualValue, boolean cast)
+	private ABlockStmIR consTuplePatternCheck(boolean declarePatternVar,
+			ATuplePatternIR tuplePattern, ATupleTypeIR tupleType,
+			PatternBlockData patternData, SExpIR actualValue, boolean cast)
 	{
-		AIdentifierPatternCG idPattern = getIdPattern(config.getName(tuplePattern.getClass()));
+		AIdentifierPatternIR idPattern = getIdPattern(config.getName(tuplePattern.getClass()));
 
-		ABlockStmCG tuplePatternBlock = initPattern(declarePatternVar, tuplePattern, tupleType, actualValue, idPattern);
+		ABlockStmIR tuplePatternBlock = initPattern(declarePatternVar, tuplePattern, tupleType, actualValue, idPattern);
 
-		AIdentifierVarExpCG tuplePatternVar = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR tuplePatternVar = new AIdentifierVarExpIR();
 		tuplePatternVar.setType(tupleType.clone());
 		tuplePatternVar.setName(idPattern.getName());
 		tuplePatternVar.setIsLambda(false);
 		tuplePatternVar.setIsLocal(true);
 		patternData.setRootPatternVar(tuplePatternVar);
 
-		ATupleCompatibilityExpCG tupleCheck = new ATupleCompatibilityExpCG();
-		tupleCheck.setType(new ABoolBasicTypeCG());
+		ATupleCompatibilityExpIR tupleCheck = new ATupleCompatibilityExpIR();
+		tupleCheck.setType(new ABoolBasicTypeIR());
 		
 		if (!cast)
 		{
 			tupleCheck.setTuple(tuplePatternVar.clone());
 		} else
 		{
-			ACastUnaryExpCG castTuple = new ACastUnaryExpCG();
+			ACastUnaryExpIR castTuple = new ACastUnaryExpIR();
 			castTuple.setType(tupleType.clone());
 			castTuple.setExp(tuplePatternVar.clone());
 			tupleCheck.setTuple(castTuple);
 		}
 		
-		tupleCheck.setTypes((List<? extends STypeCG>) tupleType.getTypes().clone());
+		tupleCheck.setTypes((List<? extends STypeIR>) tupleType.getTypes().clone());
 
 		if (patternData.getSuccessVarDecl() == null)
 		{
@@ -833,10 +833,10 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		mismatchHandling(tuplePattern, patternData);
 		initSuccessVar(patternData, tupleCheck, tuplePatternBlock);
 
-		LinkedList<SPatternCG> patterns = tuplePattern.getPatterns();
-		LinkedList<STypeCG> types = tupleType.getTypes();
+		LinkedList<SPatternIR> patterns = tuplePattern.getPatterns();
+		LinkedList<STypeIR> types = tupleType.getTypes();
 
-		AIfStmCG fieldSizeCheck = new AIfStmCG();
+		AIfStmIR fieldSizeCheck = new AIfStmIR();
 		fieldSizeCheck.setIfExp(patternData.getSuccessVar().clone());
 		fieldSizeCheck.setThenStm(consFieldCheckBlock(patternData, tuplePatternVar, patterns, types, cast));
 
@@ -845,33 +845,33 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return tuplePatternBlock;
 	}
 
-	private void consSuccessVarCheck(SPatternCG pattern,
+	private void consSuccessVarCheck(SPatternIR pattern,
 			PatternBlockData patternData)
 	{
 		String successVarName = this.transAssistant.getInfo().getTempVarNameGen().nextVarName(iteVarPrefixes.success());
-		SExpCG init = null;
+		SExpIR init = null;
 
 		if (!patternData.IsRootPattern(pattern))
 		{
-			init = transAssistant.getInfo().getExpAssistant().consBoolLiteral(pattern instanceof ATuplePatternCG ? false
+			init = transAssistant.getInfo().getExpAssistant().consBoolLiteral(pattern instanceof ATuplePatternIR ? false
 					: true);
-			init.setType(new ABoolBasicTypeCG());
+			init.setType(new ABoolBasicTypeIR());
 		} else
 		{
-			init = new AUndefinedExpCG();
-			init.setType(new AUnknownTypeCG());
+			init = new AUndefinedExpIR();
+			init.setType(new AUnknownTypeIR());
 		}
 
-		AVarDeclCG successVarDecl = transAssistant.consDecl(successVarName, new ABoolBasicTypeCG(), init);
+		AVarDeclIR successVarDecl = transAssistant.consDecl(successVarName, new ABoolBasicTypeIR(), init);
 		patternData.setSuccessVarDecl(successVarDecl);
 
-		AIdentifierVarExpCG successVar = transAssistant.consSuccessVar(successVarName);
+		AIdentifierVarExpIR successVar = transAssistant.consSuccessVar(successVarName);
 		patternData.setSuccessVar(successVar);
 
 		patternData.getDeclBlock().getLocalDefs().add(successVarDecl);
 	}
 
-	private void mismatchHandling(SPatternCG pattern,
+	private void mismatchHandling(SPatternIR pattern,
 			PatternBlockData patternData)
 	{
 		if (!patternData.IsRootPattern(pattern))
@@ -881,40 +881,40 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 		if (patternData.getMismatchHandling() == MismatchHandling.RAISE_ERROR)
 		{
-			APatternMatchRuntimeErrorExpCG matchFail = new APatternMatchRuntimeErrorExpCG();
-			matchFail.setType(new AErrorTypeCG());
+			APatternMatchRuntimeErrorExpIR matchFail = new APatternMatchRuntimeErrorExpIR();
+			matchFail.setType(new AErrorTypeIR());
 			matchFail.setMessage(config.getMatchFailedMessage(pattern));
-			ARaiseErrorStmCG noMatchStm = new ARaiseErrorStmCG();
+			ARaiseErrorStmIR noMatchStm = new ARaiseErrorStmIR();
 			noMatchStm.setError(matchFail);
 
-			AIfStmCG consMismatchCheck = consMismatchCheck(patternData.getSuccessVar(), noMatchStm);
+			AIfStmIR consMismatchCheck = consMismatchCheck(patternData.getSuccessVar(), noMatchStm);
 			patternData.getDeclBlock().getStatements().add(consMismatchCheck);
 		} else if (patternData.getMismatchHandling() == MismatchHandling.LOOP_CONTINUE)
 		{
-			AIfStmCG consMismatchCheck = consMismatchCheck(patternData.getSuccessVar(), new AContinueStmCG());
+			AIfStmIR consMismatchCheck = consMismatchCheck(patternData.getSuccessVar(), new AContinueStmIR());
 			patternData.getDeclBlock().getStatements().add(consMismatchCheck);
 		}
 	}
 
-	private AIfStmCG consMismatchCheck(AIdentifierVarExpCG successVar,
-			SStmCG noMatchStm)
+	private AIfStmIR consMismatchCheck(AIdentifierVarExpIR successVar,
+			SStmIR noMatchStm)
 	{
-		AIfStmCG ifCheck = new AIfStmCG();
+		AIfStmIR ifCheck = new AIfStmIR();
 		ifCheck.setIfExp(transAssistant.consBoolCheck(successVar.getName(), true));
 		ifCheck.setThenStm(noMatchStm);
 
 		return ifCheck;
 	}
 
-	private void initSuccessVar(PatternBlockData patternData, SExpCG initExp,
-			ABlockStmCG patternBlock)
+	private void initSuccessVar(PatternBlockData patternData, SExpIR initExp,
+			ABlockStmIR patternBlock)
 	{
-		if (patternData.getSuccessVarDecl().getExp() instanceof AUndefinedExpCG)
+		if (patternData.getSuccessVarDecl().getExp() instanceof AUndefinedExpIR)
 		{
 			patternData.getSuccessVarDecl().setExp(initExp);
 		} else
 		{
-			AAssignToExpStmCG successVarAssignment = new AAssignToExpStmCG();
+			AAssignToExpStmIR successVarAssignment = new AAssignToExpStmIR();
 			successVarAssignment.setTarget(patternData.getSuccessVar().clone());
 			successVarAssignment.setExp(initExp);
 
@@ -922,14 +922,14 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private ABlockStmCG initPattern(boolean declare, SPatternCG pattern,
-			STypeCG type, SExpCG actualValue, AIdentifierPatternCG idPattern)
+	private ABlockStmIR initPattern(boolean declare, SPatternIR pattern,
+			STypeIR type, SExpIR actualValue, AIdentifierPatternIR idPattern)
 	{
-		ABlockStmCG patternBlock = new ABlockStmCG();
+		ABlockStmIR patternBlock = new ABlockStmIR();
 
 		if (declare)
 		{
-			AVarDeclCG patternDecl = transAssistant.getInfo().getDeclAssistant().
+			AVarDeclIR patternDecl = transAssistant.getInfo().getDeclAssistant().
 					consLocalVarDecl(type.clone(), idPattern.clone(),
 							actualValue.clone());
 			patternBlock.getLocalDefs().add(patternDecl);
@@ -941,32 +941,32 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return patternBlock;
 	}
 
-	private ABlockStmCG consFieldCheckBlock(PatternBlockData patternData,
-			AIdentifierVarExpCG patternVar, List<SPatternCG> patterns,
-			List<STypeCG> types, boolean cast)
+	private ABlockStmIR consFieldCheckBlock(PatternBlockData patternData,
+			AIdentifierVarExpIR patternVar, List<SPatternIR> patterns,
+			List<STypeIR> types, boolean cast)
 	{
-		ABlockStmCG thenPart = new ABlockStmCG();
-		ABlockStmCG topBlock = thenPart;
+		ABlockStmIR thenPart = new ABlockStmIR();
+		ABlockStmIR topBlock = thenPart;
 
 		for (int i = 0; i < patterns.size(); i++)
 		{
-			SPatternCG currentPattern = patterns.get(i);
-			STypeCG currentType = types.get(i);
+			SPatternIR currentPattern = patterns.get(i);
+			STypeIR currentType = types.get(i);
 
 			if (skipPattern(currentPattern))
 			{
 				continue;
 			} else
 			{
-				SExpCG actualValue = consFieldValueToMatch(patternVar, i, currentType, cast);
+				SExpIR actualValue = consFieldValueToMatch(patternVar, i, currentType, cast);
 
-				if (currentPattern instanceof AIdentifierPatternCG)
+				if (currentPattern instanceof AIdentifierPatternIR)
 				{
-					AAssignToExpStmCG localAssignment = declareAndAssignIdVarAssignment(patternData.getDeclBlock(), currentPattern, currentType, actualValue);
+					AAssignToExpStmIR localAssignment = declareAndAssignIdVarAssignment(patternData.getDeclBlock(), currentPattern, currentType, actualValue);
 					thenPart.getStatements().add(localAssignment);
 				} else
 				{
-					ABlockStmCG patternBlock = consPatternBlock(patternData, currentPattern, currentType, actualValue, cast);
+					ABlockStmIR patternBlock = consPatternBlock(patternData, currentPattern, currentType, actualValue, cast);
 
 					if (patternBlock != null)
 					{
@@ -976,12 +976,12 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 						// Check the success variable and add a new nesting level
 						if (morePatternsToGenerate(patterns,i))
 						{
-							AIfStmCG successVarCheck = new AIfStmCG();
+							AIfStmIR successVarCheck = new AIfStmIR();
 							successVarCheck.setIfExp(patternData.getSuccessVar().clone());
 
 							thenPart.getStatements().add(successVarCheck);
 
-							ABlockStmCG newThenPart = new ABlockStmCG();
+							ABlockStmIR newThenPart = new ABlockStmIR();
 							successVarCheck.setThenStm(newThenPart);
 
 							thenPart = newThenPart;
@@ -994,18 +994,18 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return topBlock;
 	}
 
-	private boolean skipPattern(SPatternCG pattern)
+	private boolean skipPattern(SPatternIR pattern)
 	{
-		return pattern instanceof AIgnorePatternCG;
+		return pattern instanceof AIgnorePatternIR;
 	}
 	
-	private boolean morePatternsToGenerate(List<SPatternCG> patterns, int currentPatternIndex)
+	private boolean morePatternsToGenerate(List<SPatternIR> patterns, int currentPatternIndex)
 	{
 		int nextPatternIndex = currentPatternIndex + 1;
 
 		for (int i = nextPatternIndex; i < patterns.size(); i++)
 		{
-			SPatternCG nextPattern = patterns.get(i);
+			SPatternIR nextPattern = patterns.get(i);
 			
 			if (!skipPattern(nextPattern))
 			{
@@ -1016,22 +1016,22 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return false;
 	}
 
-	private ABlockStmCG consPatternBlock(PatternBlockData patternData,
-			SPatternCG currentPattern, STypeCG currentType, SExpCG actualValue, boolean cast)
+	private ABlockStmIR consPatternBlock(PatternBlockData patternData,
+			SPatternIR currentPattern, STypeIR currentType, SExpIR actualValue, boolean cast)
 	{
-		ABlockStmCG patternBlock = null;
+		ABlockStmIR patternBlock = null;
 
-		if (currentPattern instanceof ATuplePatternCG)
+		if (currentPattern instanceof ATuplePatternIR)
 		{
-			ATuplePatternCG nextTuplePattern = (ATuplePatternCG) currentPattern;
-			ATupleTypeCG nextTupleType = (ATupleTypeCG) currentType;
+			ATuplePatternIR nextTuplePattern = (ATuplePatternIR) currentPattern;
+			ATupleTypeIR nextTupleType = (ATupleTypeIR) currentType;
 
 			patternBlock = consTuplePatternCheck(true, nextTuplePattern, nextTupleType, patternData, actualValue, cast);
 
-		} else if (currentPattern instanceof ARecordPatternCG)
+		} else if (currentPattern instanceof ARecordPatternIR)
 		{
-			ARecordPatternCG nextRecordPattern = (ARecordPatternCG) currentPattern;
-			ARecordTypeCG nextRecordType = (ARecordTypeCG) nextRecordPattern.getType();
+			ARecordPatternIR nextRecordPattern = (ARecordPatternIR) currentPattern;
+			ARecordTypeIR nextRecordType = (ARecordTypeIR) nextRecordPattern.getType();
 			boolean checkRecordPattern = checkRecordPattern(actualValue);
 			
 			patternBlock = consRecordPatternCheck(true, nextRecordPattern, nextRecordType, patternData, actualValue, checkRecordPattern);
@@ -1043,13 +1043,13 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return patternBlock;
 	}
 
-	private SExpCG consFieldValueToMatch(AIdentifierVarExpCG patternVar,
-			int fieldNumber, STypeCG currentType, boolean cast)
+	private SExpIR consFieldValueToMatch(AIdentifierVarExpIR patternVar,
+			int fieldNumber, STypeIR currentType, boolean cast)
 	{
-		if (patternVar.getType() instanceof ATupleTypeCG)
+		if (patternVar.getType() instanceof ATupleTypeIR)
 		{
 			return consTupleFieldExp(patternVar, fieldNumber, currentType, cast);
-		} else if (patternVar.getType() instanceof ARecordTypeCG)
+		} else if (patternVar.getType() instanceof ARecordTypeIR)
 		{
 			return consRecFieldExp(patternVar, fieldNumber, currentType, cast);
 		}
@@ -1057,60 +1057,60 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return null;
 	}
 
-	private AAssignToExpStmCG declareAndAssignIdVarAssignment(
-			ABlockStmCG declBlock, SPatternCG currentPattern,
-			STypeCG currentType, SExpCG valueToMatch)
+	private AAssignToExpStmIR declareAndAssignIdVarAssignment(
+			ABlockStmIR declBlock, SPatternIR currentPattern,
+			STypeIR currentType, SExpIR valueToMatch)
 	{
-		AIdentifierPatternCG currentId = (AIdentifierPatternCG) currentPattern;
+		AIdentifierPatternIR currentId = (AIdentifierPatternIR) currentPattern;
 
-		AVarDeclCG idVarDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(currentType.clone(), 
-				currentPattern.clone(), new AUndefinedExpCG());
+		AVarDeclIR idVarDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(currentType.clone(), 
+				currentPattern.clone(), new AUndefinedExpIR());
 
 		declBlock.getLocalDefs().add(idVarDecl);
 
-		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR var = new AIdentifierVarExpIR();
 		var.setType(currentType.clone());
 		var.setName(currentId.getName());
 		var.setIsLocal(true);
 		var.setIsLambda(false);
 
-		AAssignToExpStmCG localAssignment = new AAssignToExpStmCG();
+		AAssignToExpStmIR localAssignment = new AAssignToExpStmIR();
 		localAssignment.setTarget(var);
 		localAssignment.setExp(valueToMatch);
 
 		return localAssignment;
 	}
 
-	private <T> ABlockStmCG consSimplePatternCheck(boolean declarePatternVar,
-			SPatternCG pattern, SExpCG valueToMatch,
-			PatternBlockData patternData, SExpCG actualValue)
+	private <T> ABlockStmIR consSimplePatternCheck(boolean declarePatternVar,
+			SPatternIR pattern, SExpIR valueToMatch,
+			PatternBlockData patternData, SExpIR actualValue)
 	{
 		// Example:
 		// Number intPattern_2 = 1L;
 		// Boolean success_2 = intPattern_2.longValue() == 1L;
 
-		AIdentifierPatternCG idPattern = getIdPattern(config.getName(pattern.getClass()));
+		AIdentifierPatternIR idPattern = getIdPattern(config.getName(pattern.getClass()));
 		transAssistant.replaceNodeWith(pattern, idPattern);
 
-		ABlockStmCG block = new ABlockStmCG();
+		ABlockStmIR block = new ABlockStmIR();
 
 		if (declarePatternVar)
 		{
-			AVarDeclCG patternDecl = transAssistant.getInfo().getDeclAssistant().
+			AVarDeclIR patternDecl = transAssistant.getInfo().getDeclAssistant().
 					consLocalVarDecl(actualValue.getType().clone(), 
 					idPattern.clone(), actualValue.clone());
 			block.getLocalDefs().add(patternDecl);
 		}
 
-		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR var = new AIdentifierVarExpIR();
 		var.setType(valueToMatch.getType().clone());
 		var.setName(idPattern.getName());
 		var.setIsLambda(false);
 		var.setIsLocal(true);
 		patternData.setRootPatternVar(var);
 
-		AEqualsBinaryExpCG check = new AEqualsBinaryExpCG();
-		check.setType(new ABoolBasicTypeCG());
+		AEqualsBinaryExpIR check = new AEqualsBinaryExpIR();
+		check.setType(new ABoolBasicTypeIR());
 		check.setLeft(var);
 		check.setRight(valueToMatch);
 
@@ -1125,11 +1125,11 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return block;
 	}
 
-	public List<PatternInfo> extractFromLocalDefs(List<AVarDeclCG> localDefs)
+	public List<PatternInfo> extractFromLocalDefs(List<AVarDeclIR> localDefs)
 	{
 		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
 
-		for (AVarDeclCG decl : localDefs)
+		for (AVarDeclIR decl : localDefs)
 		{
 			PatternInfo currentInfo = extractPatternInfo(decl);
 			patternInfo.add(currentInfo);
@@ -1138,24 +1138,24 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return patternInfo;
 	}
 
-	private PatternInfo extractPatternInfo(AVarDeclCG decl)
+	private PatternInfo extractPatternInfo(AVarDeclIR decl)
 	{
-		STypeCG type = decl.getType();
-		SPatternCG pattern = decl.getPattern();
-		SExpCG actualValue = decl.getExp();
+		STypeIR type = decl.getType();
+		SPatternIR pattern = decl.getPattern();
+		SExpIR actualValue = decl.getExp();
 
 		return new PatternInfo(type, pattern, actualValue);
 	}
 
 	public List<PatternInfo> extractFromParams(
-			List<AFormalParamLocalParamCG> params)
+			List<AFormalParamLocalParamIR> params)
 	{
 		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
 
-		for (AFormalParamLocalParamCG param : params)
+		for (AFormalParamLocalParamIR param : params)
 		{
-			STypeCG type = param.getType();
-			SPatternCG pattern = param.getPattern();
+			STypeIR type = param.getType();
+			SPatternIR pattern = param.getPattern();
 
 			patternInfo.add(new PatternInfo(type, pattern, null));
 		}
@@ -1163,12 +1163,12 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return patternInfo;
 	}
 
-	public List<PatternInfo> extractFromCases(List<ACaseAltStmStmCG> cases,
-			SExpCG exp)
+	public List<PatternInfo> extractFromCases(List<ACaseAltStmStmIR> cases,
+			SExpIR exp)
 	{
 		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
 
-		for (ACaseAltStmStmCG alt : cases)
+		for (ACaseAltStmStmIR alt : cases)
 		{
 			patternInfo.add(new PatternInfo(alt.getPatternType(), alt.getPattern(), exp));
 		}
@@ -1176,20 +1176,20 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return patternInfo;
 	}
 
-	private AIdentifierPatternCG getIdPattern(String namePrefix)
+	private AIdentifierPatternIR getIdPattern(String namePrefix)
 	{
 		String name = transAssistant.getInfo().getTempVarNameGen().nextVarName(namePrefix);
 
-		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		AIdentifierPatternIR idPattern = new AIdentifierPatternIR();
 		idPattern.setName(name);
 
 		return idPattern;
 	}
 
-	private AFieldNumberExpCG consTupleFieldExp(
-			AIdentifierVarExpCG tuplePatternVar, int i, STypeCG currentType, boolean cast)
+	private AFieldNumberExpIR consTupleFieldExp(
+			AIdentifierVarExpIR tuplePatternVar, int i, STypeIR currentType, boolean cast)
 	{
-		AFieldNumberExpCG fieldNumberExp = new AFieldNumberExpCG();
+		AFieldNumberExpIR fieldNumberExp = new AFieldNumberExpIR();
 		fieldNumberExp.setType(currentType.clone());
 		
 		if (!cast)
@@ -1198,7 +1198,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			ACastUnaryExpCG castedExp = new ACastUnaryExpCG();
+			ACastUnaryExpIR castedExp = new ACastUnaryExpIR();
 			castedExp.setType(tuplePatternVar.getType().clone());
 			castedExp.setExp(tuplePatternVar.clone());
 			fieldNumberExp.setTuple(castedExp);
@@ -1209,19 +1209,19 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return fieldNumberExp;
 	}
 
-	private SExpCG consRecFieldExp(AIdentifierVarExpCG patternVar, int i,
-			STypeCG currentType, boolean cast)
+	private SExpIR consRecFieldExp(AIdentifierVarExpIR patternVar, int i,
+			STypeIR currentType, boolean cast)
 	{
-		ARecordTypeCG recordType = (ARecordTypeCG) patternVar.getType();
+		ARecordTypeIR recordType = (ARecordTypeIR) patternVar.getType();
 
-		AFieldDeclCG recordField = transAssistant.getInfo().getAssistantManager().getDeclAssistant().getFieldDecl(transAssistant.getInfo().getClasses(), recordType, i);
+		AFieldDeclIR recordField = transAssistant.getInfo().getAssistantManager().getDeclAssistant().getFieldDecl(transAssistant.getInfo().getClasses(), recordType, i);
 		String fieldName = recordField.getName();
 
-		AFieldExpCG fieldExp = consRecFieldExp(patternVar, currentType, fieldName);
+		AFieldExpIR fieldExp = consRecFieldExp(patternVar, currentType, fieldName);
 		
 		if(cast)
 		{
-			ACastUnaryExpCG casted = new ACastUnaryExpCG();
+			ACastUnaryExpIR casted = new ACastUnaryExpIR();
 			casted.setType(recordType.clone());
 			casted.setExp(fieldExp.getObject());
 			
@@ -1231,10 +1231,10 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return fieldExp;
 	}
 
-	private AFieldExpCG consRecFieldExp(AIdentifierVarExpCG patternVar,
-			STypeCG currentType, String fieldName)
+	private AFieldExpIR consRecFieldExp(AIdentifierVarExpIR patternVar,
+			STypeIR currentType, String fieldName)
 	{
-		AFieldExpCG fieldExp = new AFieldExpCG();
+		AFieldExpIR fieldExp = new AFieldExpIR();
 		fieldExp.setType(currentType.clone());
 		fieldExp.setObject(patternVar.clone());
 		fieldExp.setMemberName(fieldName);
@@ -1242,7 +1242,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return fieldExp;
 	}
 
-	private DeclarationTag fetchTag(PCG node)
+	private DeclarationTag fetchTag(PIR node)
 	{
 		if (node != null)
 		{
@@ -1259,8 +1259,8 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return null;
 	}
 
-	private boolean checkRecordPattern(SExpCG actualValue)
+	private boolean checkRecordPattern(SExpIR actualValue)
 	{
-		return actualValue != null && actualValue.getType() instanceof AUnionTypeCG;
+		return actualValue != null && actualValue.getType() instanceof AUnionTypeIR;
 	}
 }

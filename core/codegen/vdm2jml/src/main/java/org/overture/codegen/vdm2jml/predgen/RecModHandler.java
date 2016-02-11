@@ -1,11 +1,11 @@
 package org.overture.codegen.vdm2jml.predgen;
 
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.AMetaStmCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
+import org.overture.codegen.ir.statements.AMetaStmIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.logging.Logger;
 
 public class RecModHandler
@@ -19,7 +19,7 @@ public class RecModHandler
 		this.util = new RecModUtil(this);
 	}
 
-	public AMetaStmCG handleCallObj(ACallObjectExpStmCG node)
+	public AMetaStmIR handleCallObj(ACallObjectExpStmIR node)
 	{
 		if (util.simpleRecSetCallOutsideAtomic(node))
 		{
@@ -28,28 +28,28 @@ public class RecModHandler
 			return null;
 		}
 
-		if (node.getObj() instanceof SVarExpCG)
+		if (node.getObj() instanceof SVarExpIR)
 		{
-			SVarExpCG subject = (SVarExpCG) node.getObj();
+			SVarExpIR subject = (SVarExpIR) node.getObj();
 			
 			if (util.assertRec(subject))
 			{
-				ARecordTypeCG recType = (ARecordTypeCG) subject.getType();
+				ARecordTypeIR recType = (ARecordTypeIR) subject.getType();
 				
 				return util.handleRecAssert(subject, subject.getName(), recType);
 			}
 		}
-		else if(node.getObj() instanceof ACastUnaryExpCG)
+		else if(node.getObj() instanceof ACastUnaryExpIR)
 		{
-			ACastUnaryExpCG subject = (ACastUnaryExpCG) node.getObj();
+			ACastUnaryExpIR subject = (ACastUnaryExpIR) node.getObj();
 			
-			if(subject.getExp() instanceof SVarExpCG)
+			if(subject.getExp() instanceof SVarExpIR)
 			{
-				SVarExpCG var = (SVarExpCG) subject.getExp();
+				SVarExpIR var = (SVarExpIR) subject.getExp();
 				
 				if (util.assertRec(subject))
 				{
-					ARecordTypeCG recType = (ARecordTypeCG) subject.getType();
+					ARecordTypeIR recType = (ARecordTypeIR) subject.getType();
 					
 					return util.handleRecAssert(subject, var.getName(), recType);
 				}
@@ -73,11 +73,11 @@ public class RecModHandler
 		return invTrans;
 	}
 	
-	public AMetaStmCG consAssert(AIdentifierVarExpCG var)
+	public AMetaStmIR consAssert(AIdentifierVarExpIR var)
 	{
 		if (util.assertRec(var))
 		{
-			ARecordTypeCG recType = (ARecordTypeCG) var.getType();
+			ARecordTypeIR recType = (ARecordTypeIR) var.getType();
 			
 			return invTrans.consMetaStm(util.consValidRecCheck(var, var.getName(), recType));
 		} else

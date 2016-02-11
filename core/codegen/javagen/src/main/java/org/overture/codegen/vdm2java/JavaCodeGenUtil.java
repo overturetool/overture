@@ -21,10 +21,8 @@
  */
 package org.overture.codegen.vdm2java;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.LinkedList;
@@ -34,9 +32,9 @@ import java.util.regex.Pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
@@ -79,7 +77,7 @@ public class JavaCodeGenUtil
 		{
 			return vdmCodeGen.generateJavaFromVdmExp(typeCheckResult.result);
 
-		} catch (AnalysisException | org.overture.codegen.cgast.analysis.AnalysisException e)
+		} catch (AnalysisException | org.overture.codegen.ir.analysis.AnalysisException e)
 		{
 			throw new AnalysisException("Unable to generate code from expression: "
 					+ exp + ". Exception message: " + e.getMessage());
@@ -137,33 +135,11 @@ public class JavaCodeGenUtil
 		return null;// could not be formatted
 	}
 
-	public static void saveJavaClass(File outputFolder, String javaFileName,
-			String code)
+	public static boolean isQuote(org.overture.codegen.ir.INode decl, JavaSettings settings)
 	{
-		try
+		if(decl instanceof ADefaultClassDeclIR)
 		{
-			File javaFile = new File(outputFolder, File.separator
-					+ javaFileName);
-			javaFile.getParentFile().mkdirs();
-			javaFile.createNewFile();
-			PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(javaFile, false), "UTF-8"));
-			BufferedWriter out = new BufferedWriter(writer);
-			out.write(code);
-			out.close();
-
-		} catch (IOException e)
-		{
-			Logger.getLog().printErrorln("Error when saving class file: "
-					+ javaFileName);
-			e.printStackTrace();
-		}
-	}
-
-	public static boolean isQuote(org.overture.codegen.cgast.INode decl, JavaSettings settings)
-	{
-		if(decl instanceof ADefaultClassDeclCG)
-		{
-			ADefaultClassDeclCG clazz = (ADefaultClassDeclCG) decl;
+			ADefaultClassDeclIR clazz = (ADefaultClassDeclIR) decl;
 			
 			if(clazz.getPackage() == null)
 			{
@@ -347,13 +323,13 @@ public class JavaCodeGenUtil
 		File moduleOutputDir = outputDir;
 		String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
 		
-		if(generatedClass.getIrNode() instanceof ADefaultClassDeclCG)
+		if(generatedClass.getIrNode() instanceof ADefaultClassDeclIR)
 		{
-			javaPackage = ((ADefaultClassDeclCG) generatedClass.getIrNode()).getPackage();
+			javaPackage = ((ADefaultClassDeclIR) generatedClass.getIrNode()).getPackage();
 		}
-		else if(generatedClass.getIrNode() instanceof AInterfaceDeclCG)
+		else if(generatedClass.getIrNode() instanceof AInterfaceDeclIR)
 		{
-			javaPackage = ((AInterfaceDeclCG) generatedClass.getIrNode()).getPackage();
+			javaPackage = ((AInterfaceDeclIR) generatedClass.getIrNode()).getPackage();
 		}
 		else
 		{

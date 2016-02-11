@@ -1,15 +1,15 @@
 package org.overture.codegen.mojocg.util;
 
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.statements.ANotImplementedStmIR;
 
 public class DelegateSearch extends DepthFirstAnalysisAdaptor
 {
 	private boolean isDelegateCall = false;
 	
 	@Override
-	public void caseANotImplementedStmCG(ANotImplementedStmCG node) throws AnalysisException
+	public void caseANotImplementedStmIR(ANotImplementedStmIR node) throws AnalysisException
 	{
 		isDelegateCall = true;
 	}

@@ -23,25 +23,25 @@ package org.overture.codegen.trans.comp;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.AMapletExpCG;
-import org.overture.codegen.cgast.statements.AMapCompAddStmCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.expressions.AEnumMapExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AMapletExpIR;
+import org.overture.codegen.ir.statements.AMapCompAddStmIR;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.IterationVarPrefixes;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class MapCompStrategy extends ComplexCompStrategy
 {
-	protected AMapletExpCG first;
+	protected AMapletExpIR first;
 
-	public MapCompStrategy(TransAssistantCG transformationAssitant,
-			AMapletExpCG first, SExpCG predicate, String var, STypeCG compType,
+	public MapCompStrategy(TransAssistantIR transformationAssitant,
+			AMapletExpIR first, SExpIR predicate, String var, STypeIR compType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			IterationVarPrefixes iteVarPrefixes)
 	{
@@ -51,22 +51,22 @@ public class MapCompStrategy extends ComplexCompStrategy
 	}
 
 	@Override
-	protected SExpCG getEmptyCollection()
+	protected SExpIR getEmptyCollection()
 	{
-		return new AEnumMapExpCG();
+		return new AEnumMapExpIR();
 	}
 
 	@Override
-	protected List<SStmCG> getConditionalAdd(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	protected List<SStmIR> getConditionalAdd(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 	{
-		AIdentifierVarExpCG mapCompResult = new AIdentifierVarExpCG();
+		AIdentifierVarExpIR mapCompResult = new AIdentifierVarExpIR();
 		mapCompResult.setType(compType.clone());
 		mapCompResult.setName(idPattern.getName());
 		mapCompResult.setIsLambda(false);
 		mapCompResult.setIsLocal(true);
 
-		AMapCompAddStmCG add = new AMapCompAddStmCG();
+		AMapCompAddStmIR add = new AMapCompAddStmIR();
 		add.setMap(mapCompResult);
 		add.setElement(first.clone());
 

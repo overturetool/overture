@@ -1,10 +1,10 @@
 package org.overture.codegen.assistant;
 
-import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.ir.STypeIR;
 
 public interface CollectionTypeStrategy
 {
-	boolean isCollectionType(STypeCG type);
+	boolean isCollectionType(STypeIR type);
 	
-	STypeCG getElementType(STypeCG type);
+	STypeIR getElementType(STypeIR type);
 }

@@ -3,27 +3,27 @@ package org.overture.codegen.mojocg.util;
 import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.APlainCallStmCG;
-import org.overture.codegen.cgast.types.AExternalTypeCG;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.statements.APlainCallStmIR;
+import org.overture.codegen.ir.types.AExternalTypeIR;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class DelegateTrans extends DepthFirstAnalysisAdaptor
 {
 	private static final String FALLBACK_PARAM_NAME_PREFIX = "_param_";
 
 	private Map<String, String> delegateMap;
-	private TransAssistantCG assist;
+	private TransAssistantIR assist;
 	private Log log;
 
-	public DelegateTrans(Map<String, String> buidDelegateMap, TransAssistantCG assist, Log log)
+	public DelegateTrans(Map<String, String> buidDelegateMap, TransAssistantIR assist, Log log)
 	{
 		this.delegateMap = buidDelegateMap;
 		this.assist = assist;
@@ -31,11 +31,11 @@ public class DelegateTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseADefaultClassDeclCG(ADefaultClassDeclCG node) throws AnalysisException
+	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node) throws AnalysisException
 	{
 		if (isBridgeClass(node))
 		{
-			for (AMethodDeclCG m : node.getMethods())
+			for (AMethodDeclIR m : node.getMethods())
 			{
 				if (isDelegateCall(m.getBody()))
 				{
@@ -47,17 +47,17 @@ public class DelegateTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private boolean isBridgeClass(ADefaultClassDeclCG node)
+	private boolean isBridgeClass(ADefaultClassDeclIR node)
 	{
 		return delegateMap.containsKey(node.getName());
 	}
 
-	private String getFullDelegateName(ADefaultClassDeclCG node)
+	private String getFullDelegateName(ADefaultClassDeclIR node)
 	{
 		return delegateMap.get(node.getName());
 	}
 
-	private boolean isDelegateCall(SStmCG body)
+	private boolean isDelegateCall(SStmIR body)
 	{
 		DelegateSearch search = new DelegateSearch();
 
@@ -78,12 +78,12 @@ public class DelegateTrans extends DepthFirstAnalysisAdaptor
 		return false;
 	}
 
-	private APlainCallStmCG consDelegateCall(String className, AMethodDeclCG m)
+	private APlainCallStmIR consDelegateCall(String className, AMethodDeclIR m)
 	{
-		AExternalTypeCG delegateType = new AExternalTypeCG();
+		AExternalTypeIR delegateType = new AExternalTypeIR();
 		delegateType.setName(delegateMap.get(className));
 
-		APlainCallStmCG call = new APlainCallStmCG();
+		APlainCallStmIR call = new APlainCallStmIR();
 		call.setClassType(delegateType);
 		call.setIsStatic(m.getStatic());
 		call.setName(m.getName());
@@ -93,15 +93,15 @@ public class DelegateTrans extends DepthFirstAnalysisAdaptor
 
 		for (int i = 0; i < m.getFormalParams().size(); i++)
 		{
-			AFormalParamLocalParamCG param = m.getFormalParams().get(i);
+			AFormalParamLocalParamIR param = m.getFormalParams().get(i);
 
-			SPatternCG pattern = param.getPattern();
+			SPatternIR pattern = param.getPattern();
 
 			String argName = null;
 
-			if (pattern instanceof AIdentifierPatternCG)
+			if (pattern instanceof AIdentifierPatternIR)
 			{
-				argName = ((AIdentifierPatternCG) pattern).getName();
+				argName = ((AIdentifierPatternIR) pattern).getName();
 			} else
 			{
 				// Should not happen...

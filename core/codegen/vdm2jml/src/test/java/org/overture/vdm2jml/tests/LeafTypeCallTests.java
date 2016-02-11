@@ -5,18 +5,18 @@ import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.ACharBasicTypeCG;
-import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.AQuoteTypeCG;
-import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AQuoteTypeIR;
+import org.overture.codegen.ir.types.ARatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
+import org.overture.codegen.ir.types.ATokenBasicTypeIR;
 import org.overture.codegen.runtime.Utils;
 import org.overture.codegen.vdm2jml.predgen.info.LeafTypeInfo;
 
@@ -25,70 +25,70 @@ public class LeafTypeCallTests
 	@Test
 	public void boolCheck()
 	{
-		assertMethod(ABoolBasicTypeCG.class, Object.class);
+		assertMethod(ABoolBasicTypeIR.class, Object.class);
 	}
 
 	@Test
 	public void natCheck()
 	{
-		assertMethod(ANatNumericBasicTypeCG.class, Object.class);
+		assertMethod(ANatNumericBasicTypeIR.class, Object.class);
 	}
 
 	@Test
 	public void nat1Check()
 	{
-		assertMethod(ANat1NumericBasicTypeCG.class, Object.class);
+		assertMethod(ANat1NumericBasicTypeIR.class, Object.class);
 	}
 
 	@Test
 	public void intCheck()
 	{
-		assertMethod(AIntNumericBasicTypeCG.class, Object.class);
+		assertMethod(AIntNumericBasicTypeIR.class, Object.class);
 	}
 
 	@Test
 	public void ratCheck()
 	{
-		assertMethod(ARatNumericBasicTypeCG.class, Object.class);
+		assertMethod(ARatNumericBasicTypeIR.class, Object.class);
 	}
 
 	@Test
 	public void realCheck()
 	{
-		assertMethod(ARealNumericBasicTypeCG.class, Object.class);
+		assertMethod(ARealNumericBasicTypeIR.class, Object.class);
 	}
 
 	@Test
 	public void charCheck()
 	{
-		assertMethod(ACharBasicTypeCG.class, Object.class);
+		assertMethod(ACharBasicTypeIR.class, Object.class);
 	}
 
 	@Test
 	public void tokenCheck()
 	{
-		assertMethod(ATokenBasicTypeCG.class, Object.class);
+		assertMethod(ATokenBasicTypeIR.class, Object.class);
 	}
 
 	@Test
 	public void quoteCheck()
 	{
-		assertMethod(AQuoteTypeCG.class, Object.class, Class.class);
+		assertMethod(AQuoteTypeIR.class, Object.class, Class.class);
 	}
 
 	@Test
 	public void recTest()
 	{
-		assertMethod(ARecordTypeCG.class, Object.class, Class.class);
+		assertMethod(ARecordTypeIR.class, Object.class, Class.class);
 	}
 	
 	@Test
 	public void stringTest()
 	{
-		assertMethod(AStringTypeCG.class, Object.class, Class.class);
+		assertMethod(AStringTypeIR.class, Object.class, Class.class);
 	}
 
-	private void assertMethod(Class<? extends STypeCG> type, Class<?>... paramTypes)
+	private void assertMethod(Class<? extends STypeIR> type, Class<?>... paramTypes)
 	{
 		String methodName = LeafTypeInfo.getUtilsCallMap().get(type);
 		Assert.assertNotNull("Could not find method name corresponding to type '" + type + "'", methodName);

@@ -23,21 +23,21 @@ package org.overture.codegen.trans.iterator;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.statements.ALocalPatternAssignmentStmIR;
 import org.overture.codegen.trans.IterationVarPrefixes;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public abstract class AbstractLanguageIterator implements ILanguageIterator
 {
-	protected TransAssistantCG transAssistant;
+	protected TransAssistantIR transAssistant;
 	protected IterationVarPrefixes iteVarPrefixes;
 
-	public AbstractLanguageIterator(TransAssistantCG transformationAssistant,
+	public AbstractLanguageIterator(TransAssistantIR transformationAssistant,
 			IterationVarPrefixes iteVarPrefixes)
 	{
 		this.transAssistant = transformationAssistant;
@@ -45,26 +45,26 @@ public abstract class AbstractLanguageIterator implements ILanguageIterator
 	}
 
 	@Override
-	abstract public AVarDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern);
+	abstract public AVarDeclIR getForLoopInit(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern);
 
 	@Override
-	abstract public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	abstract public SExpIR getForLoopCond(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 			throws AnalysisException;
 
 	@Override
-	abstract public SExpCG getForLoopInc(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern);
+	abstract public SExpIR getForLoopInc(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern);
 
 	@Override
-	abstract public AVarDeclCG getNextElementDeclared(
-			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
-			SPatternCG pattern) throws AnalysisException;
+	abstract public AVarDeclIR getNextElementDeclared(
+			AIdentifierVarExpIR setVar, List<SPatternIR> patterns,
+			SPatternIR pattern) throws AnalysisException;
 
 	@Override
-	abstract public ALocalPatternAssignmentStmCG getNextElementAssigned(
-			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
-			SPatternCG pattern, AVarDeclCG successVarDecl,
-			AVarDeclCG nextElementDecl) throws AnalysisException;
+	abstract public ALocalPatternAssignmentStmIR getNextElementAssigned(
+			AIdentifierVarExpIR setVar, List<SPatternIR> patterns,
+			SPatternIR pattern, AVarDeclIR successVarDecl,
+			AVarDeclIR nextElementDecl) throws AnalysisException;
 }

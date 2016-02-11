@@ -1,0 +1,1 @@
+{"translation":"let y : @nat1 \u003d 1 in (1 + \u003cy\u003e)","errors":false}

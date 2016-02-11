@@ -5,24 +5,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
 
 public class RecClassInfo
 {
-	private List<ADefaultClassDeclCG> recClasses;
-	private Set<SDeclCG> members;
+	private List<ADefaultClassDeclIR> recClasses;
+	private Set<SDeclIR> members;
 
 	public RecClassInfo()
 	{
 		this.recClasses = new LinkedList<>();
-		this.members = new HashSet<SDeclCG>();
+		this.members = new HashSet<SDeclIR>();
 	}
 
-	public void register(SDeclCG acc)
+	public void register(SDeclIR acc)
 	{
 		if (!contains(acc))
 		{
@@ -30,9 +30,9 @@ public class RecClassInfo
 		}
 	}
 	
-	private boolean contains(SDeclCG memberToCheck)
+	private boolean contains(SDeclIR memberToCheck)
 	{
-		for (SDeclCG m : members)
+		for (SDeclIR m : members)
 		{
 			if (m == memberToCheck)
 			{
@@ -43,11 +43,11 @@ public class RecClassInfo
 		return false;
 	}
 
-	public void updateAccessor(AMethodDeclCG oldAcc, AMethodDeclCG newAcc)
+	public void updateAccessor(AMethodDeclIR oldAcc, AMethodDeclIR newAcc)
 	{
-		SDeclCG toRemove = null;
+		SDeclIR toRemove = null;
 
-		for (SDeclCG m : members)
+		for (SDeclIR m : members)
 		{
 			if (m == oldAcc)
 			{
@@ -63,14 +63,14 @@ public class RecClassInfo
 		}
 	}
 	
-	public boolean isRecField(AFieldDeclCG field)
+	public boolean isRecField(AFieldDeclIR field)
 	{
 		return contains(field);
 	}
 	
 	public boolean inAccessor(INode node)
 	{
-		AMethodDeclCG anc = node.getAncestor(AMethodDeclCG.class);
+		AMethodDeclIR anc = node.getAncestor(AMethodDeclIR.class);
 
 		if (anc == null)
 		{
@@ -87,7 +87,7 @@ public class RecClassInfo
 			return false;
 		}
 		
-		AMethodDeclCG m = node.getAncestor(AMethodDeclCG.class);
+		AMethodDeclIR m = node.getAncestor(AMethodDeclIR.class);
 		
 		if(m != null)
 		{
@@ -99,14 +99,14 @@ public class RecClassInfo
 	
 	public boolean inRec(INode node)
 	{
-		ADefaultClassDeclCG clazz = node.getAncestor(ADefaultClassDeclCG.class);
+		ADefaultClassDeclIR clazz = node.getAncestor(ADefaultClassDeclIR.class);
 		
 		if(clazz == null)
 		{
 			return false;
 		}
 		
-		for(ADefaultClassDeclCG r : recClasses)
+		for(ADefaultClassDeclIR r : recClasses)
 		{
 			if(clazz == r)
 			{
@@ -117,7 +117,7 @@ public class RecClassInfo
 		return false;
 	}
 
-	public void registerRecClass(ADefaultClassDeclCG recClass)
+	public void registerRecClass(ADefaultClassDeclIR recClass)
 	{
 		recClasses.add(recClass);
 	}

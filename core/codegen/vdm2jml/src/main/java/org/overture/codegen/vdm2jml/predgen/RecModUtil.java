@@ -1,12 +1,12 @@
 package org.overture.codegen.vdm2jml.predgen;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.AMetaStmCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
+import org.overture.codegen.ir.statements.AMetaStmIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 
@@ -19,26 +19,26 @@ public class RecModUtil
 		this.handler = handler;
 	}
 
-	public boolean simpleRecSetCallOutsideAtomic(ACallObjectExpStmCG node)
+	public boolean simpleRecSetCallOutsideAtomic(ACallObjectExpStmIR node)
 	{
 		if(handler.getInvTrans().getJmlGen().getJavaGen().getInfo().getStmAssistant().inAtomic(node))
 		{
 			return false;
 		}
 		
-		SExpCG obj = node.getObj();
+		SExpIR obj = node.getObj();
 		
-		if(!(obj.getType() instanceof ARecordTypeCG))
+		if(!(obj.getType() instanceof ARecordTypeIR))
 		{
 			return false;
 		}
 		
-		if(obj instanceof SVarExpCG)
+		if(obj instanceof SVarExpIR)
 		{
 			return true;
 		}
 
-		if(obj instanceof ACastUnaryExpCG && ((ACastUnaryExpCG) obj).getExp() instanceof SVarExpCG)
+		if(obj instanceof ACastUnaryExpIR && ((ACastUnaryExpIR) obj).getExp() instanceof SVarExpIR)
 		{
 			return true;
 		}
@@ -46,18 +46,18 @@ public class RecModUtil
 		return false;
 	}
 
-	public AMetaStmCG handleRecAssert(SExpCG var, String varName, ARecordTypeCG recType)
+	public AMetaStmIR handleRecAssert(SExpIR var, String varName, ARecordTypeIR recType)
 	{
 		return handler.getInvTrans().consMetaStm(consValidRecCheck(var, varName, recType));
 	}
 
-	public String consValidRecCheck(SExpCG subject, String varName, ARecordTypeCG recType)
+	public String consValidRecCheck(SExpIR subject, String varName, ARecordTypeIR recType)
 	{
 		StringBuilder as = new StringBuilder();
 		as.append("//@ assert ");
 		
 		String subjectStr;
-		if(subject instanceof ACastUnaryExpCG)
+		if(subject instanceof ACastUnaryExpIR)
 		{
 			String fullRecType = handler.getInvTrans().getTypePredUtil().fullyQualifiedRecType(recType);
 			as.append(varName);
@@ -91,15 +91,15 @@ public class RecModUtil
 		return as.toString();
 	}
 
-	public boolean assertRec(SExpCG exp)
+	public boolean assertRec(SExpIR exp)
 	{
-		if(exp.getType().getNamedInvType() != null || !(exp.getType() instanceof ARecordTypeCG))
+		if(exp.getType().getNamedInvType() != null || !(exp.getType() instanceof ARecordTypeIR))
 		{
 			return false;
 		}
 		
 		IRInfo info = handler.getInvTrans().getJmlGen().getJavaGen().getInfo();
-		ARecordDeclCG rec = info.getDeclAssistant().findRecord(info.getClasses(), (ARecordTypeCG) exp.getType());
+		ARecordDeclIR rec = info.getDeclAssistant().findRecord(info.getClasses(), (ARecordTypeIR) exp.getType());
 		
 		return rec.getInvariant() != null;
 	}
