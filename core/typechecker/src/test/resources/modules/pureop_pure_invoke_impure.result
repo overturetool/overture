@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
 <message column="6" line="2" message="Definition 'foo' not used" messageType="warning" number="5000" resource="pureop_pure_invoke_impure"/>
+<message column="11" line="3" message="Cannot call impure operation from a pure operation" messageType="error" number="3339" resource="pureop_pure_invoke_impure"/>
 <result/>
 </testResult>

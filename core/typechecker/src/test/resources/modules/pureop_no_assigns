@@ -3,5 +3,5 @@ state S of
 end
 
 operations
-pure foo : int ==> ()
-foo (p) == skip;
+pure foo : int ==> int
+foo (p) == return 0;

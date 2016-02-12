@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
 <message column="1" line="5" message="Definition 'bar1' not used" messageType="warning" number="5000" resource="pureop_assert_invoke_pure"/>
-<message column="5" line="7" message="Impure operation 'foo' cannot be called from here" messageType="error" number="3300" resource="pureop_assert_invoke_pure"/>
 <result/>
 </testResult>

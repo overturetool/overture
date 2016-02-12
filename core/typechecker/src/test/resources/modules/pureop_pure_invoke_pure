@@ -1,6 +1,6 @@
 operations
-pure foo :() ==> ()
-foo() == skip;
+pure foo :() ==> int
+foo() == return 0;
 
-pure bar : () ==> ()
+pure bar : () ==> int
 bar() == foo();

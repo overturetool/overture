@@ -3,5 +3,5 @@ state S of
 end
 
 operations
-pure foo : int ==> ()
-foo (p) == x:=p;
+pure foo : int ==> int
+foo (p) == (x:=p;return 0)
