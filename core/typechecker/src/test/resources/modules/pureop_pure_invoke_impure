@@ -1,0 +1,6 @@
+operations
+pure foo :() ==> int
+foo() == (bar();return 0);
+
+bar : () ==> ()
+bar() == is not yet specified;
