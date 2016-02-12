@@ -101,6 +101,11 @@ public class IRGenerator
 			org.overture.codegen.ir.analysis.intf.IAnalysis transformation)
 			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
+		if(!status.canBeGenerated())
+		{
+			throw new org.overture.codegen.ir.analysis.AnalysisException("Cannot apply partial transformation to a status that cannot be generated!");
+		}
+		
 		codeGenInfo.clearTransformationWarnings();
 
 		status.getIrNode().apply(transformation);
@@ -113,6 +118,11 @@ public class IRGenerator
 			ITotalTransformation trans)
 			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
+		if(!status.canBeGenerated())
+		{
+			throw new org.overture.codegen.ir.analysis.AnalysisException("Cannot apply total transformation to a status that cannot be generated!");
+		}
+		
 		codeGenInfo.clearTransformationWarnings();
 
 		status.getIrNode().apply(trans);
