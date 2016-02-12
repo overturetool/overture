@@ -621,13 +621,14 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		// There is no name validation here.
 		IRStatus<SExpIR> expStatus = generator.generateFrom(exp);
 		
-		generator.applyPartialTransformation(expStatus, new DivideTrans(getInfo()));
-
-		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
+		if(expStatus.canBeGenerated())
+		{
+			generator.applyPartialTransformation(expStatus, new DivideTrans(getInfo()));
+		}
 
 		try
 		{
-			return genIrExp(expStatus, mergeVisitor);
+			return genIrExp(expStatus, javaFormat.getMergeVisitor());
 
 		} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 		{
