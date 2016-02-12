@@ -230,6 +230,11 @@ public class JavaCodeGenMain
 				}
 			}
 		}
+		
+		if(Settings.dialect == null)
+		{
+			usage("No VDM dialect specified");
+		}
 
 		Logger.getLog().println("Starting code generation...\n");
 
