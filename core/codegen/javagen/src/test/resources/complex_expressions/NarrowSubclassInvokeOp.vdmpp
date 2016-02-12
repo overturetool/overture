@@ -1,0 +1,25 @@
+class A
+end A
+
+
+class B is subclass of A
+
+operations
+
+public op : () ==> nat
+op () == return 1;
+
+end B
+
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a : A = new B()
+in
+  return narrow_(a,B).op();
+
+end Entry

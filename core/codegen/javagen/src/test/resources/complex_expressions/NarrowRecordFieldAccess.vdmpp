@@ -1,0 +1,16 @@
+class Entry
+
+types
+
+R ::
+ x : int;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let r : ? = mk_R(5)
+in
+  return narrow_(r,R).x;
+
+end Entry
