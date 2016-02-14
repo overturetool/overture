@@ -24,7 +24,7 @@ public class RmiGeneratorCommandLine
 	private static final String PRINT_ARG = "-print";
 	public static final String OUTPUT_ARG = "-output";
 
-	public static void main(String[] args) throws org.overture.codegen.cgast.analysis.AnalysisException, IOException, ParserException, LexException
+	public static void main(String[] args) throws org.overture.codegen.ir.analysis.AnalysisException, IOException, ParserException, LexException
 	{
 		if (args == null || args.length < 1)
 		{

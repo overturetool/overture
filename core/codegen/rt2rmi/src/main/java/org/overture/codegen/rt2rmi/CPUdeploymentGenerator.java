@@ -10,14 +10,14 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.expressions.AVariableExp;
-import org.overture.cgrmi.extast.declarations.AClientInstanceDeclCG;
-import org.overture.cgrmi.extast.declarations.ACpuDeploymentDeclCG;
-import org.overture.cgrmi.extast.declarations.ARMIregistryDeclCG;
-import org.overture.cgrmi.extast.declarations.ARemoteInstanceDeclCG;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.cgrmi.extast.declarations.AClientInstanceDeclIR;
+import org.overture.cgrmi.extast.declarations.ACpuDeploymentDeclIR;
+import org.overture.cgrmi.extast.declarations.ARMIregistryDeclIR;
+import org.overture.cgrmi.extast.declarations.ARemoteInstanceDeclIR;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.expressions.ANullExpIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
 
 /*
  * This sets up the relevant entry method for each CPU
@@ -33,15 +33,15 @@ public class CPUdeploymentGenerator {
 
 	private Map<String, Set<AVariableExp>> cpuToDeployedObject;
 	private Map<String, Set<String>> cpuToConnectedCPUs;
-	Map<String, ADefaultClassDeclCG> cpuToSystemDecl = new HashMap<String, ADefaultClassDeclCG>();
+	Map<String, ADefaultClassDeclIR> cpuToSystemDecl = new HashMap<String, ADefaultClassDeclIR>();
 	private int DeployedObjCounter;
-	LinkedList<AFieldDeclCG> system_fields;
+	LinkedList<AFieldDeclIR> system_fields;
 
 	public CPUdeploymentGenerator(
 			Map<String, Set<AVariableExp>> cpuToDeployedObject, 
 			Map<String, Set<String>> cpuToConnectedCPUs, 
 			int DeployedObjCounter,
-			LinkedList<AFieldDeclCG> system_fields) {
+			LinkedList<AFieldDeclIR> system_fields) {
 		super();
 		this.cpuToDeployedObject = cpuToDeployedObject;
 		this.cpuToConnectedCPUs = cpuToConnectedCPUs;
@@ -49,23 +49,23 @@ public class CPUdeploymentGenerator {
 		this.system_fields=system_fields;
 	}
 
-	public Set<ACpuDeploymentDeclCG> run() throws AnalysisException {
+	public Set<ACpuDeploymentDeclIR> run() throws AnalysisException {
 
-		Set<ACpuDeploymentDeclCG> cpuDeployments = new HashSet<ACpuDeploymentDeclCG>();
+		Set<ACpuDeploymentDeclIR> cpuDeployments = new HashSet<ACpuDeploymentDeclIR>();
 
 		// Number of CPU
 		int numberofCPUs = cpuToDeployedObject.keySet().size();
 		
 		for(String cpuDep : cpuToDeployedObject.keySet()){
 			
-			ACpuDeploymentDeclCG cpuDeployment = new ACpuDeploymentDeclCG();
+			ACpuDeploymentDeclIR cpuDeployment = new ACpuDeploymentDeclIR();
 			cpuDeployment.setCpuName(cpuDep);
 			// Set the number of deployed objects
 			cpuDeployment.setDeployedObjCounter(DeployedObjCounter);
 			// Set number of total CPUs
 			cpuDeployment.setNumberofCPUs(numberofCPUs);
 			
-			ARMIregistryDeclCG rmiReg = new ARMIregistryDeclCG();
+			ARMIregistryDeclIR rmiReg = new ARMIregistryDeclIR();
 
 			String URL = "localhost";
 			int PortNumber = 1099;
@@ -78,7 +78,7 @@ public class CPUdeploymentGenerator {
 
 			Set<String> cpuSet = cpuToConnectedCPUs.get(cpuDep);
 
-			ADefaultClassDeclCG systemClass = new ADefaultClassDeclCG();
+			ADefaultClassDeclIR systemClass = new ADefaultClassDeclIR();
 			systemClass.setAccess("public");
 			ASystemClassDefinition sysClass = null;
 			for(String cpuCon : cpuSet){
@@ -90,22 +90,22 @@ public class CPUdeploymentGenerator {
 					
 					// For the system class
 
-					AClassTypeCG classType = new AClassTypeCG();
+					AClassTypeIR classType = new AClassTypeIR();
 					classType.setName(depObj.getType().toString() + "_i");
 					sysClass = depObj.getAncestor(ASystemClassDefinition.class);
-					AFieldDeclCG deploydObj = new AFieldDeclCG();
+					AFieldDeclIR deploydObj = new AFieldDeclIR();
 					deploydObj.setStatic(true);
 					deploydObj.setFinal(false);
 					deploydObj.setAccess("public");
 					deploydObj.setType(classType);
 					deploydObj.setName(depObj.getName().getName().toString());
-					deploydObj.setInitial(new ANullExpCG());
+					deploydObj.setInitial(new ANullExpIR());
 
 					systemClass.getFields().add(deploydObj);
 					
 					// For each deployed object
 					
-					AClientInstanceDeclCG clientObj = new AClientInstanceDeclCG();
+					AClientInstanceDeclIR clientObj = new AClientInstanceDeclIR();
 
 					clientObj.setName(sysClass.getName().toString() + "." + depObj.getName().getName().toString());
 					clientObj.setClassName(depObj.getType().toString() + "_i");
@@ -123,7 +123,7 @@ public class CPUdeploymentGenerator {
 				//inst.setName(inst_var.getName().getName().toString());
 				//inst.setClassName(inst_var.getType().toString());
 
-				ARemoteInstanceDeclCG inst = new ARemoteInstanceDeclCG();
+				ARemoteInstanceDeclIR inst = new ARemoteInstanceDeclIR();
 
 				inst.setName(sysClass.getName().toString() + "." + inst_var.getName().getName().toString());
 				inst.setClassName(inst_var.getType().toString());
@@ -131,7 +131,7 @@ public class CPUdeploymentGenerator {
 				AInstanceVariableDefinition varExp = (AInstanceVariableDefinition) inst_var.getVardef();
 				
 				
-				for(AFieldDeclCG field : system_fields){
+				for(AFieldDeclIR field : system_fields){
 					if(inst_var.getName().getName().toString().equals(field.getName())){
 						inst.setInitial(field.getInitial());
 					}
@@ -145,16 +145,16 @@ public class CPUdeploymentGenerator {
 
 				cpuDeployment.setCpuNameString("\"" + cpuDep + "\"");
 
-				AClassTypeCG classType = new AClassTypeCG();
+				AClassTypeIR classType = new AClassTypeIR();
 				classType.setName(inst_var.getType().toString());
 				sysClass = inst_var.getAncestor(ASystemClassDefinition.class);
-				AFieldDeclCG deploydObj = new AFieldDeclCG();
+				AFieldDeclIR deploydObj = new AFieldDeclIR();
 				deploydObj.setStatic(true);
 				deploydObj.setFinal(false);
 				deploydObj.setAccess("public");
 				deploydObj.setType(classType);
 				deploydObj.setName(inst_var.getName().getName().toString());
-				deploydObj.setInitial(new ANullExpCG());
+				deploydObj.setInitial(new ANullExpIR());
 
 				systemClass.getFields().add(deploydObj);
 			}
@@ -164,7 +164,7 @@ public class CPUdeploymentGenerator {
 		return cpuDeployments;
 	}
 
-	public Map<String, ADefaultClassDeclCG> getcpuToSystemDecl(){
+	public Map<String, ADefaultClassDeclIR> getcpuToSystemDecl(){
 		return cpuToSystemDecl;
 	}
 

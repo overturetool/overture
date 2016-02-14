@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.cgrmi.extast.declarations.ARemoteContractDeclCG;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.cgrmi.extast.declarations.ARemoteContractDeclIR;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.IRInfo;
 
 /*
@@ -21,21 +21,21 @@ import org.overture.codegen.ir.IRInfo;
 
 public class RemoteContractGenerator {
 
-	private List<ADefaultClassDeclCG> irClasses;
+	private List<ADefaultClassDeclIR> irClasses;
 
 	private IRInfo info;
 	
 	public static final String MULTIPLE_INHERITANCE_WARNING = "Code generation of RT models is not supported for multiple inheritance models";
 	
-	public RemoteContractGenerator(List<ADefaultClassDeclCG> irClasses, IRInfo info) {
+	public RemoteContractGenerator(List<ADefaultClassDeclIR> irClasses, IRInfo info) {
 		super();
 		this.irClasses = irClasses;
 		this.info = info;
 	}
 
-	public Set<ARemoteContractDeclCG> run() throws AnalysisException {
+	public Set<ARemoteContractDeclIR> run() throws AnalysisException {
 
-		for(ADefaultClassDeclCG classCg : irClasses)
+		for(ADefaultClassDeclIR classCg : irClasses)
 		{
 			if (classCg.getSuperNames().size() > 1)
 			{
@@ -45,13 +45,13 @@ public class RemoteContractGenerator {
 			
 		}
 		
-		Set<ARemoteContractDeclCG> remoteContracts = new HashSet<ARemoteContractDeclCG>();
+		Set<ARemoteContractDeclIR> remoteContracts = new HashSet<ARemoteContractDeclIR>();
 
-		for(ADefaultClassDeclCG classCg : irClasses){
+		for(ADefaultClassDeclIR classCg : irClasses){
 
 			String currentName = classCg.getName().toString();
 
-			ARemoteContractDeclCG remoteContract = new ARemoteContractDeclCG();
+			ARemoteContractDeclIR remoteContract = new ARemoteContractDeclIR();
 
 			remoteContract.setName(currentName + "_i"); // transform name
 
@@ -64,9 +64,9 @@ public class RemoteContractGenerator {
 				remoteContract.setSuperName(classCg.getSuperNames().getFirst().getName()+"_i");
 			}
 			
-			for(AMethodDeclCG method : classCg.getMethods()){
+			for(AMethodDeclIR method : classCg.getMethods()){
 
-				AMethodDeclCG methodSignature = method.clone();
+				AMethodDeclIR methodSignature = method.clone();
 				
 				// Skip the auto generated toString() method
 				if(methodSignature.getName().equals("toString")){
@@ -77,6 +77,7 @@ public class RemoteContractGenerator {
 					methodSignature.setAbstract(false);
 					methodSignature.setBody(null);
 					//methodSignature.setStatic(false);
+					
 					remoteContract.getMethodSignatures().add(methodSignature);
 				}
 			}

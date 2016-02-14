@@ -7,8 +7,8 @@ import java.util.List;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.utils.GeneratedModule;
 
 /*
@@ -31,16 +31,16 @@ public class Util {
 	}
 	
 	// Get classes
-	public static List<ADefaultClassDeclCG> getClasses(
+	public static List<ADefaultClassDeclIR> getClasses(
 			List<GeneratedModule> generatedModules) {
-		List<ADefaultClassDeclCG> irClasses = new LinkedList<ADefaultClassDeclCG>();
+		List<ADefaultClassDeclIR> irClasses = new LinkedList<ADefaultClassDeclIR>();
 		for (GeneratedModule module : generatedModules) {
 //			SDeclCG irDecl = module.getIrDecl();
 			
 			INode irDecl = module.getIrNode();
 			
-			if (irDecl instanceof ADefaultClassDeclCG) {
-				irClasses.add((ADefaultClassDeclCG) irDecl);
+			if (irDecl instanceof ADefaultClassDeclIR) {
+				irClasses.add((ADefaultClassDeclIR) irDecl);
 			}
 		}
 

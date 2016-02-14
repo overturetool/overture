@@ -5,23 +5,23 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.codegen.cgast.PCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AModuleDeclCG;
-import org.overture.codegen.cgast.declarations.ASystemClassDeclCG;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
+import org.overture.codegen.ir.declarations.ASystemClassDeclIR;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRStatus;
+import org.overture.codegen.ir.PIR;
 import org.overture.codegen.utils.GeneratedData;
 
 
 //FIXME: Eventually this class must be deleted
 public class XCodeGen extends CodeGenBase {
 	
-	public LinkedList<AFieldDeclCG> generateXFromVdm(List<SClassDefinition> ast)
+	public LinkedList<AFieldDeclIR> generateXFromVdm(List<SClassDefinition> ast)
 			throws AnalysisException
 	{
-		List<IRStatus<PCG>> statuses = new LinkedList<>();
+		List<IRStatus<PIR>> statuses = new LinkedList<>();
 		
 		IRInfo ir = generator.getIRInfo();
 		ir.getSettings().setCharSeqAsString(true);
@@ -30,7 +30,7 @@ public class XCodeGen extends CodeGenBase {
 		for(SClassDefinition node : ast)
 		{	
 			// Try to produce the IR
-			IRStatus<PCG> status = generator.generateFrom(node);
+			IRStatus<PIR> status = generator.generateFrom(node);
 			System.out.println("Running..");
 			
 			// If it was successful, then status is different from null
@@ -51,20 +51,20 @@ public class XCodeGen extends CodeGenBase {
 		
 		//this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
 		
-		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
-		List<IRStatus<PCG>> modulesAsNodes = IRStatus.extract(moduleStatuses);
+		List<IRStatus<AModuleDeclIR>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclIR.class);
+		List<IRStatus<PIR>> modulesAsNodes = IRStatus.extract(moduleStatuses);
 		
-		List<IRStatus<ASystemClassDeclCG>> classStatuses = IRStatus.extract(modulesAsNodes, ASystemClassDeclCG.class);
-		classStatuses.addAll(IRStatus.extract(statuses, ASystemClassDeclCG.class));
+		List<IRStatus<ASystemClassDeclIR>> classStatuses = IRStatus.extract(modulesAsNodes, ASystemClassDeclIR.class);
+		classStatuses.addAll(IRStatus.extract(statuses, ASystemClassDeclIR.class));
 		
 		
-		List<ASystemClassDeclCG> classes = getClassDecls(classStatuses);
+		List<ASystemClassDeclIR> classes = getClassDecls(classStatuses);
 		
 		System.out.println("jj");
 		
-		LinkedList<AFieldDeclCG> fields = null;
+		LinkedList<AFieldDeclIR> fields = null;
 		
-		for(ASystemClassDeclCG sys: classes){
+		for(ASystemClassDeclIR sys: classes){
 			fields = sys.getFields();
 		}
 		
@@ -139,12 +139,12 @@ public class XCodeGen extends CodeGenBase {
 		//return data;
 	}
 	
-	private List<ASystemClassDeclCG> getClassDecls(
-			List<IRStatus<ASystemClassDeclCG>> statuses)
+	private List<ASystemClassDeclIR> getClassDecls(
+			List<IRStatus<ASystemClassDeclIR>> statuses)
 	{
-		List<ASystemClassDeclCG> classDecls = new LinkedList<ASystemClassDeclCG>();
+		List<ASystemClassDeclIR> classDecls = new LinkedList<ASystemClassDeclIR>();
 
-		for (IRStatus<ASystemClassDeclCG> status : statuses)
+		for (IRStatus<ASystemClassDeclIR> status : statuses)
 		{
 			classDecls.add(status.getIrNode());
 		}
@@ -153,8 +153,8 @@ public class XCodeGen extends CodeGenBase {
 	}
 
 	@Override
-	protected GeneratedData genVdmToTargetLang(List<IRStatus<PCG>> statuses) throws AnalysisException
-	{
-		throw new RuntimeException("Implement me!");
+	protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
