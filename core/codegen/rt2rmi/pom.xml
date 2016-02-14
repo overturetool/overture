@@ -66,7 +66,7 @@
           </execution>
         </executions>
         <configuration>
-          <ast>cg.astv2</ast>
+          <ast>ir.ast</ast>
           <extendedAst>rmicg.ast</extendedAst>
           <extendedName>RMI</extendedName>
           <extendedTreeOnly>true</extendedTreeOnly>
