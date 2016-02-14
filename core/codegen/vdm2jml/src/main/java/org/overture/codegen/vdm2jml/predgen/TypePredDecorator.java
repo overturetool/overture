@@ -4,21 +4,21 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
-import org.overture.codegen.cgast.statements.AMetaStmCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
+import org.overture.codegen.ir.statements.AMapSeqUpdateStmIR;
+import org.overture.codegen.ir.statements.AMetaStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.traces.TraceMethodTag;
 import org.overture.codegen.vdm2jml.JmlGenerator;
@@ -54,21 +54,21 @@ public class TypePredDecorator extends AtomicAssertTrans
 	}
 
 	@Override
-	public void caseACallObjectExpStmCG(ACallObjectExpStmCG node)
+	public void caseACallObjectExpStmIR(ACallObjectExpStmIR node)
 			throws AnalysisException
 	{
-		if (node.getObj() instanceof SVarExpCG)
+		if (node.getObj() instanceof SVarExpIR)
 		{
-			SVarExpCG obj = (SVarExpCG) node.getObj();
+			SVarExpIR obj = (SVarExpIR) node.getObj();
 			handleStateUpdate(node, obj);
 		}
-		else if(node.getObj() instanceof ACastUnaryExpCG)
+		else if(node.getObj() instanceof ACastUnaryExpIR)
 		{
-			ACastUnaryExpCG cast = (ACastUnaryExpCG) node.getObj();
+			ACastUnaryExpIR cast = (ACastUnaryExpIR) node.getObj();
 			
-			if(cast.getExp() instanceof SVarExpCG)
+			if(cast.getExp() instanceof SVarExpIR)
 			{
-				SVarExpCG obj = (SVarExpCG) cast.getExp();
+				SVarExpIR obj = (SVarExpIR) cast.getExp();
 				handleStateUpdate(node, obj);
 			}
 			else
@@ -86,25 +86,25 @@ public class TypePredDecorator extends AtomicAssertTrans
 		}
 	}
 
-	private void handleStateUpdate(ACallObjectExpStmCG node, SVarExpCG obj)
+	private void handleStateUpdate(ACallObjectExpStmIR node, SVarExpIR obj)
 	{
 		handleStateUpdate(node, obj, stateDesInfo.getStateDesVars(node), recHandler.handleCallObj(node), namedTypeHandler.handleCallObj(node));
 	}
 
 	@Override
-	public void caseAFieldDeclCG(AFieldDeclCG node) throws AnalysisException
+	public void caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException
 	{
 		namedTypeHandler.handleField(node);
 	}
 
 	@Override
-	public void caseABlockStmCG(ABlockStmCG node) throws AnalysisException
+	public void caseABlockStmIR(ABlockStmIR node) throws AnalysisException
 	{
 		namedTypeHandler.handleBlock(node);
 	}
 
 	@Override
-	public void caseAVarDeclCG(AVarDeclCG node) throws AnalysisException
+	public void caseAVarDeclIR(AVarDeclIR node) throws AnalysisException
 	{
 		/**
 		 * Variable declarations occurring inside an atomic statement do not need handling. The reason for this is that
@@ -128,14 +128,14 @@ public class TypePredDecorator extends AtomicAssertTrans
 		 * (e.g. stateDes_3.set_x("a")) (i.e. assignments in the VDM-SL model) are split into variables named stateDes_
 		 * <n> we can also expect local variable declarations in atomic statement blocks
 		 */
-		List<AMetaStmCG> as = namedTypeHandler.handleVarDecl(node);
+		List<AMetaStmIR> as = namedTypeHandler.handleVarDecl(node);
 		
 		if(as == null || as.isEmpty())
 		{
 			return;
 		}
 		
-		ABlockStmCG encBlock = namedTypeHandler.getEncBlockStm(node);
+		ABlockStmIR encBlock = namedTypeHandler.getEncBlockStm(node);
 		
 		if(encBlock == null)
 		{
@@ -149,7 +149,7 @@ public class TypePredDecorator extends AtomicAssertTrans
 		 */
 		if(inAtomic())
 		{
-			for(AMetaStmCG a : as)
+			for(AMetaStmIR a : as)
 			{
 				addPostAtomicCheck(a);
 			}
@@ -164,15 +164,15 @@ public class TypePredDecorator extends AtomicAssertTrans
 	}
 
 	@Override
-	public void caseAAssignToExpStmCG(AAssignToExpStmCG node)
+	public void caseAAssignToExpStmIR(AAssignToExpStmIR node)
 			throws AnalysisException
 	{
 		/**
-		 * Record modifications are now all on the form E.g. St = <recvalue>, i.e. node.getTarget() instanceof SVarExpCG
-		 * && node.getTarget().getType() instanceof ARecordTypeCG. Invariant violations will therefore be detected when
+		 * Record modifications are now all on the form E.g. St = <recvalue>, i.e. node.getTarget() instanceof SVarExpIR
+		 * && node.getTarget().getType() instanceof ARecordTypeIR. Invariant violations will therefore be detected when
 		 * the record value is constructed or it appears in the temporary variable section if the assignment occurs in
 		 * the context of an atomic statement block. Therefore, no record invariant needs to be asserted. Note that more
-		 * complicated record modifications (e.g. rec1.rec2.f := 5) appear as nodes of type caseACallObjectExpStmCG
+		 * complicated record modifications (e.g. rec1.rec2.f := 5) appear as nodes of type caseACallObjectExpStmIR
 		 */
 		
 		if(!inAtomic())
@@ -182,12 +182,12 @@ public class TypePredDecorator extends AtomicAssertTrans
 	}
 
 	@Override
-	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
+	public void caseAMapSeqUpdateStmIR(AMapSeqUpdateStmIR node)
 			throws AnalysisException
 	{
-		if (node.getCol() instanceof SVarExpCG)
+		if (node.getCol() instanceof SVarExpIR)
 		{
-			SVarExpCG col = (SVarExpCG) node.getCol();
+			SVarExpIR col = (SVarExpIR) node.getCol();
 			handleStateUpdate(node, col, stateDesInfo.getStateDesVars(node), null, namedTypeHandler.handleMapSeq(node));
 		} else
 		{
@@ -199,7 +199,7 @@ public class TypePredDecorator extends AtomicAssertTrans
 	}
 
 	@Override
-	public void caseAMethodDeclCG(AMethodDeclCG node) throws AnalysisException
+	public void caseAMethodDeclIR(AMethodDeclIR node) throws AnalysisException
 	{
 		if(node.getTag() instanceof TraceMethodTag)
 		{
@@ -210,20 +210,20 @@ public class TypePredDecorator extends AtomicAssertTrans
 	}
 
 	@Override
-	public void caseAReturnStmCG(AReturnStmCG node) throws AnalysisException
+	public void caseAReturnStmIR(AReturnStmIR node) throws AnalysisException
 	{
 		namedTypeHandler.handleReturn(node);
 	}
 
 	@Override
-	public void caseADefaultClassDeclCG(ADefaultClassDeclCG node) throws AnalysisException
+	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node) throws AnalysisException
 	{
 		namedTypeHandler.handleClass(node);
 	}
 
-	private void handleStateUpdate(SStmCG node, SVarExpCG target,
-			List<AIdentifierVarExpCG> objVars, AMetaStmCG recAssert,
-			List<AMetaStmCG> namedTypeInvAssert)
+	private void handleStateUpdate(SStmIR node, SVarExpIR target,
+			List<AIdentifierVarExpIR> objVars, AMetaStmIR recAssert,
+			List<AMetaStmIR> namedTypeInvAssert)
 	{
 		if (recAssert == null && namedTypeInvAssert == null && objVars == null)
 		{
@@ -233,7 +233,7 @@ public class TypePredDecorator extends AtomicAssertTrans
 		if (!inAtomic())
 		{
 			// NOT inside atomic statement block
-			ABlockStmCG replBlock = new ABlockStmCG();
+			ABlockStmIR replBlock = new ABlockStmIR();
 			jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, replBlock);
 			replBlock.getStatements().add(node);
 
@@ -247,34 +247,34 @@ public class TypePredDecorator extends AtomicAssertTrans
 		}
 	}
 
-	private void addSubjectAssertAtomic(AMetaStmCG recAssert,
-			List<AMetaStmCG> namedTypeInvAssert)
+	private void addSubjectAssertAtomic(AMetaStmIR recAssert,
+			List<AMetaStmIR> namedTypeInvAssert)
 	{
-		for (AMetaStmCG a : consSubjectAsserts(recAssert, namedTypeInvAssert))
+		for (AMetaStmIR a : consSubjectAsserts(recAssert, namedTypeInvAssert))
 		{
 			addPostAtomicCheck(a);
 		}
 	}
 
-	private void addSubjectAsserts(AMetaStmCG recAssert,
-			List<AMetaStmCG> namedTypeInvAssert, ABlockStmCG replBlock)
+	private void addSubjectAsserts(AMetaStmIR recAssert,
+			List<AMetaStmIR> namedTypeInvAssert, ABlockStmIR replBlock)
 	{
-		for (AMetaStmCG a : consSubjectAsserts(recAssert, namedTypeInvAssert))
+		for (AMetaStmIR a : consSubjectAsserts(recAssert, namedTypeInvAssert))
 		{
 			replBlock.getStatements().add(a);
 		}
 	}
 
-	private List<AMetaStmCG> consSubjectAsserts(AMetaStmCG recAssert,
-			List<AMetaStmCG> namedTypeInvAsserts)
+	private List<AMetaStmIR> consSubjectAsserts(AMetaStmIR recAssert,
+			List<AMetaStmIR> namedTypeInvAsserts)
 	{
-		List<AMetaStmCG> allAsserts = new LinkedList<AMetaStmCG>();
+		List<AMetaStmIR> allAsserts = new LinkedList<AMetaStmIR>();
 
 		add(allAsserts, recAssert);
 		
 		if(namedTypeInvAsserts != null)
 		{
-			for(AMetaStmCG a : namedTypeInvAsserts)
+			for(AMetaStmIR a : namedTypeInvAsserts)
 			{
 				add(allAsserts, a);
 			}
@@ -283,27 +283,27 @@ public class TypePredDecorator extends AtomicAssertTrans
 		return allAsserts;
 	}
 
-	private void addStateDesAssertsAtomic(SVarExpCG target, List<AIdentifierVarExpCG> objVars)
+	private void addStateDesAssertsAtomic(SVarExpIR target, List<AIdentifierVarExpIR> objVars)
 	{
-		for (AMetaStmCG a : consObjVarAsserts(target, objVars))
+		for (AMetaStmIR a : consObjVarAsserts(target, objVars))
 		{
 			addPostAtomicCheck(a);
 		}
 	}
 
-	private void addStateDesAsserts(SVarExpCG target, List<AIdentifierVarExpCG> objVars,
-			ABlockStmCG replBlock)
+	private void addStateDesAsserts(SVarExpIR target, List<AIdentifierVarExpIR> objVars,
+			ABlockStmIR replBlock)
 	{
-		for (AMetaStmCG a : consObjVarAsserts(target, objVars))
+		for (AMetaStmIR a : consObjVarAsserts(target, objVars))
 		{
 			add(replBlock, a);
 		}
 	}
 
-	private List<AMetaStmCG> consObjVarAsserts(
-			SVarExpCG target, List<AIdentifierVarExpCG> objVars)
+	private List<AMetaStmIR> consObjVarAsserts(
+			SVarExpIR target, List<AIdentifierVarExpIR> objVars)
 	{
-		List<AMetaStmCG> objVarAsserts = new LinkedList<AMetaStmCG>();
+		List<AMetaStmIR> objVarAsserts = new LinkedList<AMetaStmIR>();
 
 		if (objVars != null)
 		{
@@ -315,7 +315,7 @@ public class TypePredDecorator extends AtomicAssertTrans
 			
 			if(!objVarAsserts.isEmpty())
 			{
-				AIdentifierVarExpCG last = objVars.get(objVars.size() - 1);
+				AIdentifierVarExpIR last = objVars.get(objVars.size() - 1);
 				
 				if(!target.getName().equals(last.getName()))
 				{
@@ -328,23 +328,23 @@ public class TypePredDecorator extends AtomicAssertTrans
 		return objVarAsserts;
 	}
 
-	private void addAsserts(List<AMetaStmCG> objVarAsserts,
-			AIdentifierVarExpCG var)
+	private void addAsserts(List<AMetaStmIR> objVarAsserts,
+			AIdentifierVarExpIR var)
 	{
 		buildRecChecks = true;
-		List<AMetaStmCG> asserts = namedTypeHandler.consAsserts(var);
+		List<AMetaStmIR> asserts = namedTypeHandler.consAsserts(var);
 		buildRecChecks = false;
 		
 		if(asserts != null)
 		{
-			for(AMetaStmCG a : asserts)
+			for(AMetaStmIR a : asserts)
 			{
 				add(objVarAsserts, a);
 			}
 		}
 	}
 
-	private void add(List<AMetaStmCG> asserts, AMetaStmCG as)
+	private void add(List<AMetaStmIR> asserts, AMetaStmIR as)
 	{
 		if (as != null)
 		{
@@ -352,7 +352,7 @@ public class TypePredDecorator extends AtomicAssertTrans
 		}
 	}
 
-	private void add(ABlockStmCG block, AMetaStmCG as)
+	private void add(ABlockStmIR block, AMetaStmIR as)
 	{
 		if (as != null)
 		{

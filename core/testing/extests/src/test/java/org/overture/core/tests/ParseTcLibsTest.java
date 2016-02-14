@@ -30,7 +30,7 @@ public class ParseTcLibsTest
 
 	private static String LIBS_ROOT = "../../../externals/docrepo/examples/libs/";
 	
-	public ParseTcLibsTest(String _, ExampleSourceData testData)
+	public ParseTcLibsTest(String name, ExampleSourceData testData)
 	{
 		this.testData = testData;
 	}

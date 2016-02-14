@@ -1,27 +1,27 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.ACallObjectStmCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
+import org.overture.codegen.ir.statements.ACallObjectStmIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.conv.ObjectDesignatorToExpCG;
+import org.overture.codegen.trans.conv.ObjectDesignatorToExpIR;
 
 public class CallObjStmTrans extends DepthFirstAnalysisAdaptor
 {
-	private ObjectDesignatorToExpCG converter;
+	private ObjectDesignatorToExpIR converter;
 	
 	public CallObjStmTrans(IRInfo info)
 	{
-		this.converter = new ObjectDesignatorToExpCG(info); 
+		this.converter = new ObjectDesignatorToExpIR(info); 
 	}
 	
 	@Override
-	public void caseACallObjectStmCG(ACallObjectStmCG node)
+	public void caseACallObjectStmIR(ACallObjectStmIR node)
 			throws AnalysisException
 	{
-		ACallObjectExpStmCG callObjExpStm = new ACallObjectExpStmCG();
+		ACallObjectExpStmIR callObjExpStm = new ACallObjectExpStmIR();
 		callObjExpStm.setArgs(node.getArgs());
 		callObjExpStm.setObj(node.getDesignator().apply(converter));
 		callObjExpStm.setFieldName(node.getFieldName());

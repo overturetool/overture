@@ -31,10 +31,9 @@
 			<plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.3</version>
         <configuration>
 
-          <excludePackageNames>org.overture.codegen.cgast:org.overture.codegen.cgast.*</excludePackageNames>
+          <excludePackageNames>org.overture.codegen.ir:org.overture.codegen.ir.*</excludePackageNames>
 
         </configuration>
       </plugin>
@@ -58,7 +57,7 @@
 	        <!--   <param>vdm.generated.node</param> -->
 	        <!--   <param>org.overture.ast</param> -->
 	        <!-- </deletePackageOnGenerate> -->
-	        <ast>cg.astv2</ast>
+	        <ast>ir.ast</ast>
 	      </configuration>
       </plugin>
 

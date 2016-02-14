@@ -6,39 +6,39 @@ package org.overture.codegen.trans.conc;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.APersyncDeclCG;
-import org.overture.codegen.cgast.declarations.SClassDeclCG;
-import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AFieldExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ANewExpCG;
-import org.overture.codegen.cgast.expressions.ASelfExpCG;
-import org.overture.codegen.cgast.name.ATokenNameCG;
-import org.overture.codegen.cgast.name.ATypeNameCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.AElseIfStmCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.APlainCallStmCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.cgast.statements.ATryStmCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.cgast.types.AExternalTypeCG;
-import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.AVoidTypeCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.APersyncDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
+import org.overture.codegen.ir.expressions.ABoolLiteralExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
+import org.overture.codegen.ir.expressions.ASelfExpIR;
+import org.overture.codegen.ir.name.ATokenNameIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.AElseIfStmIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
+import org.overture.codegen.ir.statements.APlainCallStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
+import org.overture.codegen.ir.statements.ATryStmIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AExternalTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.AVoidTypeIR;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
@@ -61,7 +61,7 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseADefaultClassDeclCG(ADefaultClassDeclCG node) throws AnalysisException
+	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node) throws AnalysisException
 	{
 		if (!info.getSettings().generateConc())
 		{
@@ -74,22 +74,22 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		for (AFieldDeclCG fieldCG : node.getFields())
+		for (AFieldDeclIR fieldIR : node.getFields())
 		{
-			if (!fieldCG.getFinal())
+			if (!fieldIR.getFinal())
 			{
-				fieldCG.setVolatile(true);
+				fieldIR.setVolatile(true);
 			}
 		}
 
-		AInterfaceDeclCG interf = new AInterfaceDeclCG();
+		AInterfaceDeclIR interf = new AInterfaceDeclIR();
 		interf.setName(concPrefixes.evalPpTypeName());
 
 		node.getInterfaces().add(interf);
 
-		AExternalTypeCG sentType = new AExternalTypeCG();
+		AExternalTypeIR sentType = new AExternalTypeIR();
 		sentType.setName(concPrefixes.sentinelClassName());
-		AFieldDeclCG sentinelfld = new AFieldDeclCG();
+		AFieldDeclIR sentinelfld = new AFieldDeclIR();
 		sentinelfld.setName(concPrefixes.sentinelInstanceName());
 		sentinelfld.setType(sentType);
 		sentinelfld.setAccess(IRConstants.PUBLIC);
@@ -98,34 +98,34 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 
 		node.getFields().add(sentinelfld);
 
-		for (AMethodDeclCG methodCG : node.getMethods())
+		for (AMethodDeclIR methodIR : node.getMethods())
 		{
-			if (methodCG.getStatic() != null && !methodCG.getStatic() && !isIRGenerated(methodCG))
+			if (methodIR.getStatic() != null && !methodIR.getStatic() && !isIRGenerated(methodIR))
 			{
-				if (!methodCG.getIsConstructor())
+				if (!methodIR.getIsConstructor())
 				{
-					ABlockStmCG bodyStm = new ABlockStmCG();
+					ABlockStmIR bodyStm = new ABlockStmIR();
 
-					APlainCallStmCG entering = new APlainCallStmCG();
-					APlainCallStmCG leaving = new APlainCallStmCG();
+					APlainCallStmIR entering = new APlainCallStmIR();
+					APlainCallStmIR leaving = new APlainCallStmIR();
 
 					entering.setName(concPrefixes.enteringMethodName());
-					AClassTypeCG sentinel = new AClassTypeCG();
+					AClassTypeIR sentinel = new AClassTypeIR();
 					sentinel.setName(concPrefixes.sentinelInstanceName());
 
 					entering.setClassType(sentinel);
-					entering.setType(new AVoidTypeCG());
+					entering.setType(new AVoidTypeIR());
 
-					AFieldExpCG field = new AFieldExpCG();
-					field.setMemberName(methodCG.getName());
+					AFieldExpIR field = new AFieldExpIR();
+					field.setMemberName(methodIR.getName());
 
-					ACastUnaryExpCG cast = new ACastUnaryExpCG();
-					AIdentifierVarExpCG varSentinel = new AIdentifierVarExpCG();
+					ACastUnaryExpIR cast = new ACastUnaryExpIR();
+					AIdentifierVarExpIR varSentinel = new AIdentifierVarExpIR();
 					varSentinel.setIsLocal(true);
 					varSentinel.setIsLambda(false);
 					varSentinel.setName(concPrefixes.sentinelInstanceName());
 
-					AExternalTypeCG etype = new AExternalTypeCG();
+					AExternalTypeIR etype = new AExternalTypeIR();
 					etype.setName(node.getName() + concPrefixes.sentinelClassPostFix());
 
 					cast.setExp(varSentinel);
@@ -136,59 +136,59 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 
 					leaving.setName(concPrefixes.leavingMethodName());
 					leaving.setClassType(sentinel.clone());
-					leaving.setType(new AVoidTypeCG());
+					leaving.setType(new AVoidTypeIR());
 					leaving.getArgs().add(field.clone());
 
 					bodyStm.getStatements().add(entering);
-					ATryStmCG trystm = new ATryStmCG();
-					trystm.setStm(methodCG.getBody());
+					ATryStmIR trystm = new ATryStmIR();
+					trystm.setStm(methodIR.getBody());
 					trystm.setFinally(leaving);
 					bodyStm.getStatements().add(trystm);
 
-					methodCG.setBody(bodyStm);
+					methodIR.setBody(bodyStm);
 				}
 			}
 
-			if (methodCG.getIsConstructor())
+			if (methodIR.getIsConstructor())
 			{
-				ABlockStmCG bodyConst = new ABlockStmCG();
+				ABlockStmIR bodyConst = new ABlockStmIR();
 
-				AAssignToExpStmCG stm = new AAssignToExpStmCG();
+				AAssignToExpStmIR stm = new AAssignToExpStmIR();
 
-				AIdentifierVarExpCG field = new AIdentifierVarExpCG();
+				AIdentifierVarExpIR field = new AIdentifierVarExpIR();
 
 				field.setName(concPrefixes.sentinelInstanceName());
 				field.setIsLocal(false);
 
-				ANewExpCG newexp = new ANewExpCG();
+				ANewExpIR newexp = new ANewExpIR();
 
-				ATypeNameCG classtype = new ATypeNameCG();
+				ATypeNameIR classtype = new ATypeNameIR();
 				classtype.setName(node.getName() + concPrefixes.sentinelClassPostFix());
 
 				newexp.setName(classtype);
-				newexp.getArgs().add(new ASelfExpCG());
+				newexp.getArgs().add(new ASelfExpIR());
 
 				stm.setExp(newexp);
 				stm.setTarget(field);
 
 				bodyConst.getStatements().add(stm);
-				bodyConst.getStatements().add(methodCG.getBody());
+				bodyConst.getStatements().add(methodIR.getBody());
 
-				methodCG.setBody(bodyConst);
+				methodIR.setBody(bodyConst);
 			}
 		}
 		// declaration of the method.
 
-		AIntNumericBasicTypeCG fnr = new AIntNumericBasicTypeCG();
-		AIdentifierPatternCG identifier = new AIdentifierPatternCG();
+		AIntNumericBasicTypeIR fnr = new AIntNumericBasicTypeIR();
+		AIdentifierPatternIR identifier = new AIdentifierPatternIR();
 		identifier.setName(concPrefixes.funcNumberParamName());
-		AFormalParamLocalParamCG fnrloc = new AFormalParamLocalParamCG();
+		AFormalParamLocalParamIR fnrloc = new AFormalParamLocalParamIR();
 		fnrloc.setType(fnr);
 		fnrloc.setPattern(identifier);
-		AMethodTypeCG methType = new AMethodTypeCG();
-		methType.setResult(new ABoolBasicTypeCG());
+		AMethodTypeIR methType = new AMethodTypeIR();
+		methType.setResult(new ABoolBasicTypeIR());
 
-		AMethodDeclCG evaluatePPmethod = new AMethodDeclCG();
+		AMethodDeclIR evaluatePPmethod = new AMethodDeclIR();
 		evaluatePPmethod.setAccess(IRConstants.PUBLIC);
 		evaluatePPmethod.setName(concPrefixes.evalPpMethodName());
 		evaluatePPmethod.setImplicit(false);
@@ -202,16 +202,16 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 		{
 
 			// fixing the overloaded operation problem
-			List<AMethodDeclCG> classuniqueMethods = new LinkedList<>();
+			List<AMethodDeclIR> classuniqueMethods = new LinkedList<>();
 
-			for (AMethodDeclCG m : node.getMethods())
+			for (AMethodDeclIR m : node.getMethods())
 			{
 				classuniqueMethods.add(m.clone());
 			}
 
 			classuniqueMethods.clear();
 
-			List<AMethodDeclCG> allMethods;
+			List<AMethodDeclIR> allMethods;
 
 			if (!node.getSuperNames().isEmpty())
 			{
@@ -221,7 +221,7 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 				allMethods = node.getMethods();
 			}
 
-			for (AMethodDeclCG method : allMethods)
+			for (AMethodDeclIR method : allMethods)
 			{
 				if (!classuniqueMethods.contains(method))
 				{
@@ -229,31 +229,31 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 				}
 			}
 
-			AIfStmCG bodyif = new AIfStmCG();
+			AIfStmIR bodyif = new AIfStmIR();
 			for (int i = 0; i < classuniqueMethods.size(); i++)
 			{
 
-				AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
-				testVar.setType(new AIntNumericBasicTypeCG());
+				AIdentifierVarExpIR testVar = new AIdentifierVarExpIR();
+				testVar.setType(new AIntNumericBasicTypeIR());
 				testVar.setName(concPrefixes.funcNumberParamName());
 				testVar.setIsLocal(true);
 
 				if (i == 0)
 				{
-					AEqualsBinaryExpCG firstBranch = new AEqualsBinaryExpCG();
+					AEqualsBinaryExpIR firstBranch = new AEqualsBinaryExpIR();
 
-					AIntLiteralExpCG methNum = new AIntLiteralExpCG();
+					AIntLiteralExpIR methNum = new AIntLiteralExpIR();
 					methNum.setValue((long) i);
 
 					firstBranch.setLeft(testVar);
 					firstBranch.setRight(methNum);
 
-					AReturnStmCG ret = new AReturnStmCG();
-					ABoolLiteralExpCG boolret = new ABoolLiteralExpCG();
+					AReturnStmIR ret = new AReturnStmIR();
+					ABoolLiteralExpIR boolret = new ABoolLiteralExpIR();
 					boolret.setValue(true);
 					ret.setExp(boolret);
 
-					for (APersyncDeclCG per : node.getPerSyncs())
+					for (APersyncDeclIR per : node.getPerSyncs())
 					{
 						if (per.getOpname().equals(classuniqueMethods.get(i).getName()))
 						{
@@ -268,12 +268,12 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 
 				else
 				{
-					AReturnStmCG ret = new AReturnStmCG();
-					ABoolLiteralExpCG boolret = new ABoolLiteralExpCG();
+					AReturnStmIR ret = new AReturnStmIR();
+					ABoolLiteralExpIR boolret = new ABoolLiteralExpIR();
 					boolret.setValue(true);
 					ret.setExp(boolret);
 
-					for (APersyncDeclCG per : node.getPerSyncs())
+					for (APersyncDeclIR per : node.getPerSyncs())
 					{
 						if (per.getOpname().equals(classuniqueMethods.get(i).getName()))
 						{
@@ -281,11 +281,11 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 						}
 					}
 
-					AElseIfStmCG newBranch = new AElseIfStmCG();
+					AElseIfStmIR newBranch = new AElseIfStmIR();
 
-					AEqualsBinaryExpCG Branches = new AEqualsBinaryExpCG();
+					AEqualsBinaryExpIR Branches = new AEqualsBinaryExpIR();
 
-					AIntLiteralExpCG methNum = new AIntLiteralExpCG();
+					AIntLiteralExpIR methNum = new AIntLiteralExpIR();
 					methNum.setValue((long) i);
 
 					Branches.setLeft(testVar);
@@ -297,9 +297,9 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 					bodyif.getElseIf().add(newBranch);
 				}
 			}
-			AReturnStmCG ret = new AReturnStmCG();
+			AReturnStmIR ret = new AReturnStmIR();
 
-			ABoolLiteralExpCG defaultPer = new ABoolLiteralExpCG();
+			ABoolLiteralExpIR defaultPer = new ABoolLiteralExpIR();
 			defaultPer.setValue(true);
 
 			ret.setExp(defaultPer);
@@ -316,32 +316,32 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private boolean isIRGenerated(AMethodDeclCG method)
+	private boolean isIRGenerated(AMethodDeclIR method)
 	{
 		return method.getTag() instanceof IRGeneratedTag;
 	}
 
-	private void makeThread(ADefaultClassDeclCG node)
+	private void makeThread(ADefaultClassDeclIR node)
 	{
-		SClassDeclCG threadClass = getThreadClass(node.getSuperNames(), node);
+		SClassDeclIR threadClass = getThreadClass(node.getSuperNames(), node);
 
 		threadClass.getSuperNames().clear();
 
-		ATokenNameCG superName = new ATokenNameCG();
+		ATokenNameIR superName = new ATokenNameIR();
 		superName.setName(concPrefixes.vdmThreadClassName());
 		threadClass.getSuperNames().add(superName);
 	}
 
-	private SClassDeclCG getThreadClass(List<ATokenNameCG> superNames, SClassDeclCG classCg)
+	private SClassDeclIR getThreadClass(List<ATokenNameIR> superNames, SClassDeclIR classCg)
 	{
 		if (superNames.isEmpty() || superNames.get(0).getName().equals(concPrefixes.vdmThreadClassName()))
 		{
 			return classCg;
 		} else
 		{
-			SClassDeclCG superClass = null;
+			SClassDeclIR superClass = null;
 
-			for (SClassDeclCG c : info.getClasses())
+			for (SClassDeclIR c : info.getClasses())
 			{
 				if (c.getName().equals(superNames.get(0).getName()))
 				{

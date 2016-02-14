@@ -36,10 +36,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
@@ -51,7 +53,7 @@ import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
-import org.overture.codegen.assistant.LocationAssistantCG;
+import org.overture.codegen.assistant.LocationAssistantIR;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
@@ -269,6 +271,11 @@ public class GeneralCodeGenUtils
 		ClassTypeChecker.clearErrors();
 		ClassTypeChecker classTc = new ClassTypeChecker(classes, af);
 
+		for(SClassDefinition c : classes)
+		{
+			clearTypeData(c);
+		}
+		
 		classTc.typeCheck();
 
 		TypeCheckVisitor tc = new TypeCheckVisitor();
@@ -292,6 +299,11 @@ public class GeneralCodeGenUtils
 			VDMErrorsException
 
 	{
+		for(SClassDefinition c : classes)
+		{
+			clearTypeData(c);
+		}
+		
 		TypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
 		ClassTypeChecker.clearErrors();
 		ClassTypeChecker classTc = new ClassTypeChecker(classes, af);
@@ -307,6 +319,23 @@ public class GeneralCodeGenUtils
 		{
 			return clazz;
 		}
+	}
+
+	private static void clearTypeData(SClassDefinition c) throws AnalysisException
+	{
+		// Reset lex name data so the classes can be type checked again
+		c.apply(new DepthFirstAnalysisAdaptor()
+		{
+			@Override
+			public void inILexNameToken(ILexNameToken node) throws AnalysisException
+			{
+				if(node instanceof LexNameToken && node.parent() != null)
+				{
+					((LexNameToken) node).typeQualifier = null;
+					node.parent().replaceChild(node, node.copy());
+				}
+			}
+		});
 	}
 	
 	public static PExp parseExpression(String expression,
@@ -501,7 +530,7 @@ public class GeneralCodeGenUtils
 	public static void printUnsupportedIrNodes(Set<VdmNodeInfo> unsupportedNodes)
 	{
 		AssistantManager assistantManager = new AssistantManager();
-		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+		LocationAssistantIR locationAssistant = assistantManager.getLocationAssistant();
 
 		List<VdmNodeInfo> nodesSorted = locationAssistant.getVdmNodeInfoLocationSorted(unsupportedNodes);
 
@@ -530,7 +559,7 @@ public class GeneralCodeGenUtils
 	public static void printUnsupportedNodes(Set<IrNodeInfo> unsupportedNodes)
 	{
 		AssistantManager assistantManager = new AssistantManager();
-		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+		LocationAssistantIR locationAssistant = assistantManager.getLocationAssistant();
 		
 		List<IrNodeInfo> nodesSorted = locationAssistant.getIrNodeInfoLocationSorted(unsupportedNodes);
 

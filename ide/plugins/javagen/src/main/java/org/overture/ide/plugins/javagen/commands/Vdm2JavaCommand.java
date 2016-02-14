@@ -48,11 +48,11 @@ import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
-import org.overture.codegen.assistant.LocationAssistantCG;
+import org.overture.codegen.assistant.LocationAssistantIR;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
-import org.overture.codegen.utils.AnalysisExceptionCG;
+import org.overture.codegen.utils.AnalysisExceptionIR;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
@@ -327,7 +327,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 
 					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 
-				} catch (AnalysisExceptionCG ex)
+				} catch (AnalysisExceptionIR ex)
 				{
 					CodeGenConsole.GetInstance().println("Could not code generate VDM model: "
 							+ ex.getMessage());
@@ -549,7 +549,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 				
 				if(generatedModule.hasUnsupportedIrNodes())
 				{
-					LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+					LocationAssistantIR locationAssistant = assistantManager.getLocationAssistant();
 
 					List<VdmNodeInfo> unsupportedInIr = locationAssistant.getVdmNodeInfoLocationSorted(generatedModule.getUnsupportedInIr());
 					CodeGenConsole.GetInstance().println("Following VDM constructs are not supported by the code generator:");

@@ -350,6 +350,15 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 		var.setVardef(vardef.clone());
 		return var;
 	}
+	/**
+	 * Generate Var Exp with everything!
+	 * @return
+	 */
+	protected AVariableExp getVarExp(ILexNameToken name, PDefinition vardef, PType type){
+		AVariableExp var = getVarExp(name, vardef);
+		var.setType(type);
+		return var;
+	}
 
 	protected AApplyExp getApplyExp(PExp root, PType type, PExp... arglist)
 	{

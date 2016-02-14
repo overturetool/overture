@@ -304,6 +304,8 @@ public class ExpressionReader extends SyntaxReader
 				nextToken();
 				exp = AstFactory.newANotInSetBinaryExp(exp, token, readNotExpression());
 				break;
+			default:
+				break;
 		}
 
 		return exp;

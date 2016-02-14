@@ -21,14 +21,12 @@
  */
 package org.overture.typechecker.assistant.pattern;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.IAstAssistant;
-import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.patterns.ANamePatternPair;

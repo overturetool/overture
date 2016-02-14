@@ -253,6 +253,8 @@ public enum VDMToken implements Serializable
 						case VDM_RT:
 							rttokens.put(token.keyword, token);
 							break;
+						default:
+							break;
 					}
 				}
 			}
@@ -290,6 +292,8 @@ public enum VDMToken implements Serializable
 
 			case VDM_RT:
 				return rttokens.get(word);
+			default:
+				break;
 		}
 
 		return null;

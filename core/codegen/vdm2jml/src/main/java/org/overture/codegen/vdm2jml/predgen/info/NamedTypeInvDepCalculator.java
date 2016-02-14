@@ -19,7 +19,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapTypeBase;
 import org.overture.ast.types.SSeqTypeBase;
-import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 
@@ -192,11 +192,11 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 		}
 	}
 	
-	public static STypeCG toIrType(PType type, IRInfo info)
+	public static STypeIR toIrType(PType type, IRInfo info)
 	{
 		try
 		{
-			STypeCG irType = type.apply(info.getTypeVisitor(), info);
+			STypeIR irType = type.apply(info.getTypeVisitor(), info);
 			
 			if(irType != null)
 			{

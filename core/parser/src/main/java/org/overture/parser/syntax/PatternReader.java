@@ -89,6 +89,8 @@ public class PatternReader extends SyntaxReader
 						throwMessage(2298, "Map patterns not available in VDM classic");
 					}
 					break;
+				default:
+					break;
 			}
 		}
 

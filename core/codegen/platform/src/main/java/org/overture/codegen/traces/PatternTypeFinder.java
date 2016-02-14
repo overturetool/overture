@@ -2,40 +2,40 @@ package org.overture.codegen.traces;
 
 import java.util.IdentityHashMap;
 
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.QuestionAdaptor;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.patterns.ABoolPatternCG;
-import org.overture.codegen.cgast.patterns.ACharPatternCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.patterns.AIgnorePatternCG;
-import org.overture.codegen.cgast.patterns.AIntPatternCG;
-import org.overture.codegen.cgast.patterns.ANullPatternCG;
-import org.overture.codegen.cgast.patterns.AQuotePatternCG;
-import org.overture.codegen.cgast.patterns.ARealPatternCG;
-import org.overture.codegen.cgast.patterns.ARecordPatternCG;
-import org.overture.codegen.cgast.patterns.AStringPatternCG;
-import org.overture.codegen.cgast.patterns.ATuplePatternCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.ACharBasicTypeCG;
-import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.AQuoteTypeCG;
-import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.ATupleTypeCG;
-import org.overture.codegen.cgast.types.AUnionTypeCG;
-import org.overture.codegen.cgast.types.AUnknownTypeCG;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.QuestionAdaptor;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.patterns.ABoolPatternIR;
+import org.overture.codegen.ir.patterns.ACharPatternIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.patterns.AIgnorePatternIR;
+import org.overture.codegen.ir.patterns.AIntPatternIR;
+import org.overture.codegen.ir.patterns.ANullPatternIR;
+import org.overture.codegen.ir.patterns.AQuotePatternIR;
+import org.overture.codegen.ir.patterns.ARealPatternIR;
+import org.overture.codegen.ir.patterns.ARecordPatternIR;
+import org.overture.codegen.ir.patterns.AStringPatternIR;
+import org.overture.codegen.ir.patterns.ATuplePatternIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AQuoteTypeIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.ATupleTypeIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 
-public class PatternTypeFinder extends QuestionAdaptor<STypeCG>
+public class PatternTypeFinder extends QuestionAdaptor<STypeIR>
 {
 	private IRInfo info;
-	private IdentityHashMap<SPatternCG, STypeCG> typeTable;
+	private IdentityHashMap<SPatternIR, STypeIR> typeTable;
 
 	public PatternTypeFinder(IRInfo info)
 	{
@@ -44,7 +44,7 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeCG>
 	}
 
 	@Override
-	public void defaultSPatternCG(SPatternCG node, STypeCG question) throws AnalysisException
+	public void defaultSPatternIR(SPatternIR node, STypeIR question) throws AnalysisException
 	{
 		storeType(node, question);
 		Logger.getLog().printErrorln("Got unexpected pattern " + node + " in '" + this.getClass().getSimpleName()
@@ -52,85 +52,85 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeCG>
 	}
 
 	@Override
-	public void caseAIdentifierPatternCG(AIdentifierPatternCG node, STypeCG question) throws AnalysisException
+	public void caseAIdentifierPatternIR(AIdentifierPatternIR node, STypeIR question) throws AnalysisException
 	{
 		storeType(node, question);
 	}
 
 	@Override
-	public void caseAIgnorePatternCG(AIgnorePatternCG node, STypeCG question) throws AnalysisException
+	public void caseAIgnorePatternIR(AIgnorePatternIR node, STypeIR question) throws AnalysisException
 	{
 		storeType(node, question);
 	}
 
 	@Override
-	public void caseABoolPatternCG(ABoolPatternCG node, STypeCG question) throws AnalysisException
+	public void caseABoolPatternIR(ABoolPatternIR node, STypeIR question) throws AnalysisException
 	{
-		storeType(node, new ABoolBasicTypeCG());
+		storeType(node, new ABoolBasicTypeIR());
 	}
 
 	@Override
-	public void caseACharPatternCG(ACharPatternCG node, STypeCG question) throws AnalysisException
+	public void caseACharPatternIR(ACharPatternIR node, STypeIR question) throws AnalysisException
 	{
-		storeType(node, new ACharBasicTypeCG());
+		storeType(node, new ACharBasicTypeIR());
 	}
 
 	@Override
-	public void caseAIntPatternCG(AIntPatternCG node, STypeCG question) throws AnalysisException
+	public void caseAIntPatternIR(AIntPatternIR node, STypeIR question) throws AnalysisException
 	{
 		long value = node.getValue();
 
 		if (value > 0)
 		{
-			storeType(node, new ANat1NumericBasicTypeCG());
+			storeType(node, new ANat1NumericBasicTypeIR());
 		} else if (value >= 0)
 		{
-			storeType(node, new ANatNumericBasicTypeCG());
+			storeType(node, new ANatNumericBasicTypeIR());
 		} else
 		{
-			storeType(node, new AIntNumericBasicTypeCG());
+			storeType(node, new AIntNumericBasicTypeIR());
 		}
 	}
 
 	@Override
-	public void caseANullPatternCG(ANullPatternCG node, STypeCG question) throws AnalysisException
+	public void caseANullPatternIR(ANullPatternIR node, STypeIR question) throws AnalysisException
 	{
-		storeType(node, new AUnknownTypeCG());
+		storeType(node, new AUnknownTypeIR());
 	}
 
 	@Override
-	public void caseAQuotePatternCG(AQuotePatternCG node, STypeCG question) throws AnalysisException
+	public void caseAQuotePatternIR(AQuotePatternIR node, STypeIR question) throws AnalysisException
 	{
-		AQuoteTypeCG quoteTypeCg = new AQuoteTypeCG();
+		AQuoteTypeIR quoteTypeCg = new AQuoteTypeIR();
 		quoteTypeCg.setValue(node.getValue());
 
 		storeType(node, quoteTypeCg);
 	}
 
 	@Override
-	public void caseARealPatternCG(ARealPatternCG node, STypeCG question) throws AnalysisException
+	public void caseARealPatternIR(ARealPatternIR node, STypeIR question) throws AnalysisException
 	{
-		storeType(node, new ARealNumericBasicTypeCG());
+		storeType(node, new ARealNumericBasicTypeIR());
 	}
 
 	@Override
-	public void caseAStringPatternCG(AStringPatternCG node, STypeCG question) throws AnalysisException
+	public void caseAStringPatternIR(AStringPatternIR node, STypeIR question) throws AnalysisException
 	{
 		storeType(node, question);
 	}
 
 	@Override
-	public void caseATuplePatternCG(ATuplePatternCG node, STypeCG question) throws AnalysisException
+	public void caseATuplePatternIR(ATuplePatternIR node, STypeIR question) throws AnalysisException
 	{
-		ATupleTypeCG tupType = null;
+		ATupleTypeIR tupType = null;
 
-		if (question instanceof ATupleTypeCG)
+		if (question instanceof ATupleTypeIR)
 		{
-			tupType = (ATupleTypeCG) question;
+			tupType = (ATupleTypeIR) question;
 
-		} else if (question instanceof AUnionTypeCG)
+		} else if (question instanceof AUnionTypeIR)
 		{
-			tupType = info.getPatternAssistant().getTupleType((AUnionTypeCG) question, node);
+			tupType = info.getPatternAssistant().getTupleType((AUnionTypeIR) question, node);
 		}
 
 		storeType(node, question);
@@ -142,8 +142,8 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeCG>
 			{
 				for (int i = 0; i < node.getPatterns().size(); i++)
 				{
-					SPatternCG p = node.getPatterns().get(i);
-					STypeCG t = tupType.getTypes().get(i);
+					SPatternIR p = node.getPatterns().get(i);
+					STypeIR t = tupType.getTypes().get(i);
 
 					p.apply(this, t);
 				}
@@ -162,23 +162,23 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeCG>
 	}
 
 	@Override
-	public void caseARecordPatternCG(ARecordPatternCG node, STypeCG question) throws AnalysisException
+	public void caseARecordPatternIR(ARecordPatternIR node, STypeIR question) throws AnalysisException
 	{
-		STypeCG type = node.getType();
+		STypeIR type = node.getType();
 		storeType(node, type);
 
-		if (type instanceof ARecordTypeCG)
+		if (type instanceof ARecordTypeIR)
 		{
-			ARecordTypeCG recType = (ARecordTypeCG) type;
+			ARecordTypeIR recType = (ARecordTypeIR) type;
 
-			ARecordDeclCG rec = info.getDeclAssistant().findRecord(info.getClasses(), recType);
+			ARecordDeclIR rec = info.getDeclAssistant().findRecord(info.getClasses(), recType);
 
 			if (rec.getFields().size() == node.getPatterns().size())
 			{
 				for (int i = 0; i < node.getPatterns().size(); i++)
 				{
-					SPatternCG p = node.getPatterns().get(i);
-					STypeCG t = rec.getFields().get(i).getType();
+					SPatternIR p = node.getPatterns().get(i);
+					STypeIR t = rec.getFields().get(i).getType();
 
 					p.apply(this, t);
 				}
@@ -195,25 +195,25 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeCG>
 		}
 	}
 
-	private void storeType(SPatternCG pattern, STypeCG type)
+	private void storeType(SPatternIR pattern, STypeIR type)
 	{
 		this.typeTable.put(pattern, type);
 	}
 
-	public STypeCG getPatternType(SPatternCG pattern)
+	public STypeIR getPatternType(SPatternIR pattern)
 	{
 		return this.typeTable.get(pattern);
 	}
 
-	public static STypeCG getType(PatternTypeFinder typeFinder, AIdentifierPatternCG occ)
+	public static STypeIR getType(PatternTypeFinder typeFinder, AIdentifierPatternIR occ)
 	{
-		STypeCG occType = typeFinder.getPatternType(occ);
+		STypeIR occType = typeFinder.getPatternType(occ);
 
 		if (occType == null)
 		{
 			Logger.getLog().printErrorln("Could not find type of identifier pattern " + occ + " in '"
 					+ PatternTypeFinder.class.getSimpleName() + "'");
-			occType = new AUnknownTypeCG();
+			occType = new AUnknownTypeIR();
 		} else
 		{
 			occType = occType.clone();

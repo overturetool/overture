@@ -52,7 +52,6 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.ModuleEnvironment;
 import org.overture.typechecker.PrivateClassEnvironment;
-import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class TraceInterpreter

@@ -23,63 +23,63 @@ package org.overture.codegen.assistant;
 
 public class AssistantManager
 {
-	private NodeAssistantCG nodeAssistant;
-	private ExpAssistantCG expAssistant;
-	private DeclAssistantCG declAssistant;
-	private StmAssistantCG stmAssistant;
-	private TypeAssistantCG typeAssistant;
-	private LocationAssistantCG locationAssistant;
-	private BindAssistantCG bindAssistant;
-	private PatternAssistantCG patternAssistant;
+	private NodeAssistantIR nodeAssistant;
+	private ExpAssistantIR expAssistant;
+	private DeclAssistantIR declAssistant;
+	private StmAssistantIR stmAssistant;
+	private TypeAssistantIR typeAssistant;
+	private LocationAssistantIR locationAssistant;
+	private BindAssistantIR bindAssistant;
+	private PatternAssistantIR patternAssistant;
 
 	public AssistantManager()
 	{
-		this.nodeAssistant = new NodeAssistantCG(this);
-		this.expAssistant = new ExpAssistantCG(this);
-		this.declAssistant = new DeclAssistantCG(this);
-		this.stmAssistant = new StmAssistantCG(this);
-		this.typeAssistant = new TypeAssistantCG(this);
-		this.locationAssistant = new LocationAssistantCG(this);
-		this.bindAssistant = new BindAssistantCG(this);
-		this.patternAssistant = new PatternAssistantCG(this);
+		this.nodeAssistant = new NodeAssistantIR(this);
+		this.expAssistant = new ExpAssistantIR(this);
+		this.declAssistant = new DeclAssistantIR(this);
+		this.stmAssistant = new StmAssistantIR(this);
+		this.typeAssistant = new TypeAssistantIR(this);
+		this.locationAssistant = new LocationAssistantIR(this);
+		this.bindAssistant = new BindAssistantIR(this);
+		this.patternAssistant = new PatternAssistantIR(this);
 	}
 
-	public NodeAssistantCG getNodeAssistant()
+	public NodeAssistantIR getNodeAssistant()
 	{
 		return nodeAssistant;
 	}
 	
-	public ExpAssistantCG getExpAssistant()
+	public ExpAssistantIR getExpAssistant()
 	{
 		return expAssistant;
 	}
 
-	public DeclAssistantCG getDeclAssistant()
+	public DeclAssistantIR getDeclAssistant()
 	{
 		return declAssistant;
 	}
 
-	public StmAssistantCG getStmAssistant()
+	public StmAssistantIR getStmAssistant()
 	{
 		return stmAssistant;
 	}
 
-	public TypeAssistantCG getTypeAssistant()
+	public TypeAssistantIR getTypeAssistant()
 	{
 		return typeAssistant;
 	}
 
-	public LocationAssistantCG getLocationAssistant()
+	public LocationAssistantIR getLocationAssistant()
 	{
 		return locationAssistant;
 	}
 
-	public BindAssistantCG getBindAssistant()
+	public BindAssistantIR getBindAssistant()
 	{
 		return bindAssistant;
 	}
 
-	public PatternAssistantCG getPatternAssistant()
+	public PatternAssistantIR getPatternAssistant()
 	{
 		return patternAssistant;
 	}

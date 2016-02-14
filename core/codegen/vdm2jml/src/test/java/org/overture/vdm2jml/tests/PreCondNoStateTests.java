@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
 
 public class PreCondNoStateTests extends AnnotationTestsBase
 {
@@ -23,7 +23,7 @@ public class PreCondNoStateTests extends AnnotationTestsBase
 	@Test
 	public void testFuncRequiresAnnotation()
 	{
-		AMethodDeclCG func = getMethod(genModule.getMethods(), "f");
+		AMethodDeclIR func = getMethod(genModule.getMethods(), "f");
 		
 		Assert.assertEquals("Got unexpected requires annotation for function 'f'",
 				"//@ requires pre_f(a,b);",
@@ -39,7 +39,7 @@ public class PreCondNoStateTests extends AnnotationTestsBase
 	@Test
 	public void testOpRequiresAnnotation()
 	{
-		AMethodDeclCG op = getMethod(genModule.getMethods(), "op");
+		AMethodDeclIR op = getMethod(genModule.getMethods(), "op");
 		
 		// Note here that no state is expected to be passed
 		// to the pre condition (the module has no state)

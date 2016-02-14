@@ -11,8 +11,8 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.codegen.cgast.PCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.ir.PIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.IRGenerator;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.tests.util.FirstVarFinder;
@@ -21,7 +21,7 @@ import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 /**
- * Tests if the {@link AIdentifierVarExpCG#getIsLocal()} works as intended. For simplicity each test specification
+ * Tests if the {@link AIdentifierVarExpIR#getIsLocal()} works as intended. For simplicity each test specification
  * includes a single variable occurrence in some context.
  * 
  * @author pvj
@@ -103,7 +103,7 @@ public class LocalVarTest
 	
 	protected void checkLocal(String spec, String expectedVarName, boolean expectedLocalVal)
 	{
-		AIdentifierVarExpCG var = findVar(consIrModule(spec));
+		AIdentifierVarExpIR var = findVar(consIrModule(spec));
 		
 		Assert.assertTrue("Could not find variable occurrence in module", var != null);
 		Assert.assertTrue("Expected name of variable occurence to be " + expectedVarName + " but it was " + var.getName(), var.getName().equals(expectedVarName));
@@ -111,13 +111,13 @@ public class LocalVarTest
 	}
 
 
-	protected AIdentifierVarExpCG findVar(List<PCG> irNodes)
+	protected AIdentifierVarExpIR findVar(List<PIR> irNodes)
 	{
 		try
 		{
 			FirstVarFinder finder = new FirstVarFinder();
 			
-			for(PCG n : irNodes)
+			for(PIR n : irNodes)
 			{
 				n.apply(finder);
 				
@@ -128,7 +128,7 @@ public class LocalVarTest
 				}
 			}
 			
-		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+		} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 		{
 		}
 		
@@ -136,7 +136,7 @@ public class LocalVarTest
 	}
 
 
-	protected List<PCG> consIrModule(String fileName)
+	protected List<PIR> consIrModule(String fileName)
 	{
 		File file = new File(ROOT + File.separatorChar + fileName);
 		
@@ -163,11 +163,11 @@ public class LocalVarTest
 		
 		try
 		{
-			List<PCG> irRes = new LinkedList<>();
+			List<PIR> irRes = new LinkedList<>();
 			
 			for(INode n : nodes)
 			{
-				IRStatus<PCG> res = irGen.generateFrom(n);
+				IRStatus<PIR> res = irGen.generateFrom(n);
 				
 				Assert.assertTrue("Expected IR node to generate without problems", irRes != null
 						&& res.canBeGenerated());

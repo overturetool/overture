@@ -29,7 +29,6 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;

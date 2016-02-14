@@ -1,6 +1,6 @@
 package org.overture.codegen.ir;
 
-import org.overture.codegen.cgast.INode;
+import org.overture.codegen.ir.INode;
 
 public class IrNodeInfo
 {

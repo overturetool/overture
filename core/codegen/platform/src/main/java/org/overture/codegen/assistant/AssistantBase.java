@@ -24,7 +24,7 @@ package org.overture.codegen.assistant;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.INode;
+import org.overture.codegen.ir.INode;
 
 public abstract class AssistantBase
 {

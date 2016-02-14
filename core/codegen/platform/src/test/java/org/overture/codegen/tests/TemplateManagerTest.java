@@ -5,9 +5,9 @@ import java.io.File;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.expressions.APlusNumericBinaryExpIR;
 import org.overture.codegen.merging.TemplateData;
 import org.overture.codegen.merging.TemplateManager;
 
@@ -19,7 +19,7 @@ public class TemplateManagerTest
 	@Test
 	public void derivePath()
 	{
-		Class<? extends INode> nodeClass = ADefaultClassDeclCG.class;
+		Class<? extends INode> nodeClass = ADefaultClassDeclIR.class;
 
 		String relPath = TemplateManager.derivePath(TEST_ROOT, nodeClass);
 
@@ -31,7 +31,7 @@ public class TemplateManagerTest
 	{
 		TemplateManager manager = new TemplateManager(TEST_ROOT, TemplateManagerTest.class);
 
-		Class<? extends INode> nodeClass = ADefaultClassDeclCG.class;
+		Class<? extends INode> nodeClass = ADefaultClassDeclIR.class;
 
 		String expectNoTemplate = "Expected no template to be found";
 
@@ -60,7 +60,7 @@ public class TemplateManagerTest
 	{
 		TemplateManager manager = new TemplateManager(TEST_ROOT);
 
-		Class<ADefaultClassDeclCG> clazz = ADefaultClassDeclCG.class;
+		Class<ADefaultClassDeclIR> clazz = ADefaultClassDeclIR.class;
 
 		Assert.assertFalse("Expected no user-defined template file for node "
 				+ clazz, manager.isUserDefined(clazz));
@@ -70,7 +70,7 @@ public class TemplateManagerTest
 		Assert.assertTrue("Expected a user-defined template file for node " + clazz
 				+ " by now", manager.isUserDefined(clazz));
 
-		Class<APlusNumericBinaryExpCG> plus = APlusNumericBinaryExpCG.class;
+		Class<APlusNumericBinaryExpIR> plus = APlusNumericBinaryExpIR.class;
 
 		Assert.assertFalse("Expected no user-defined template file for node "
 				+ plus, manager.isUserDefined(plus));

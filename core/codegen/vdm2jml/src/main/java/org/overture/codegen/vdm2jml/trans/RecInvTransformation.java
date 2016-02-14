@@ -4,24 +4,24 @@ import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
-import org.overture.codegen.cgast.expressions.AFieldExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
@@ -29,9 +29,9 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 {
 	private JavaCodeGen javaGen;
 	private String paramName;
-	private ARecordDeclCG rec;
+	private ARecordDeclIR rec;
 
-	public RecInvTransformation(JavaCodeGen javaGen, ARecordDeclCG rec)
+	public RecInvTransformation(JavaCodeGen javaGen, ARecordDeclIR rec)
 			throws AnalysisException
 	{
 		this.javaGen = javaGen;
@@ -41,7 +41,7 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 
 	private void changeRecInvSignature() throws AnalysisException
 	{
-		if (!(rec.getInvariant() instanceof AMethodDeclCG))
+		if (!(rec.getInvariant() instanceof AMethodDeclIR))
 		{
 			Logger.getLog().printErrorln("Expected invariant to be a method declaration. Got: "
 					+ rec.getInvariant() + " in '"
@@ -49,7 +49,7 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 			terminate();
 		}
 
-		AMethodDeclCG invMethod = (AMethodDeclCG) rec.getInvariant();
+		AMethodDeclIR invMethod = (AMethodDeclIR) rec.getInvariant();
 
 		if (invMethod.getFormalParams().size() != 1)
 		{
@@ -63,9 +63,9 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 			}
 		}
 
-		AFormalParamLocalParamCG param = invMethod.getFormalParams().getFirst();
+		AFormalParamLocalParamIR param = invMethod.getFormalParams().getFirst();
 
-		if (!(param.getPattern() instanceof AIdentifierPatternCG))
+		if (!(param.getPattern() instanceof AIdentifierPatternIR))
 		{
 			Logger.getLog().printErrorln("Expected pattern of formal parameter to be an identifier pattern at this point. Got "
 					+ param.getPattern() + " in '"
@@ -79,22 +79,22 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 		invMethod.setMethodType(null);
 		invMethod.getFormalParams().clear();
 
-		AMethodTypeCG newMethodType = new AMethodTypeCG();
-		newMethodType.setResult(new ABoolBasicTypeCG());
+		AMethodTypeIR newMethodType = new AMethodTypeIR();
+		newMethodType.setResult(new ABoolBasicTypeIR());
 		invMethod.setMethodType(newMethodType);
 
-		for (AFieldDeclCG f : rec.getFields())
+		for (AFieldDeclIR f : rec.getFields())
 		{
 			newMethodType.getParams().add(f.getType().clone());
 
-			AFormalParamLocalParamCG nextParam = new AFormalParamLocalParamCG();
+			AFormalParamLocalParamIR nextParam = new AFormalParamLocalParamIR();
 			nextParam.setPattern(javaGen.getInfo().getPatternAssistant().consIdPattern(consUniqueName(f.getName())));
 			nextParam.setType(f.getType().clone());
 
 			invMethod.getFormalParams().add(nextParam);
 		}
 
-		this.paramName = ((AIdentifierPatternCG) param.getPattern()).getName();
+		this.paramName = ((AIdentifierPatternIR) param.getPattern()).getName();
 	}
 
 	private void terminate() throws AnalysisException
@@ -103,18 +103,18 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAExplicitVarExpCG(AExplicitVarExpCG node)
+	public void caseAExplicitVarExpIR(AExplicitVarExpIR node)
 			throws AnalysisException
 	{
 		String pack = javaGen.getJavaSettings().getJavaRootPackage();
 
 		if (JavaCodeGenUtil.isValidJavaPackage(pack))
 		{
-			STypeCG type = node.getClassType();
+			STypeIR type = node.getClassType();
 
-			if (type instanceof AClassTypeCG)
+			if (type instanceof AClassTypeIR)
 			{
-				AClassTypeCG classType = (AClassTypeCG) type;
+				AClassTypeIR classType = (AClassTypeIR) type;
 				classType.setName(pack + "." + classType.getName());
 			} else
 			{
@@ -125,16 +125,16 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAIdentifierVarExpCG(AIdentifierVarExpCG node)
+	public void caseAIdentifierVarExpIR(AIdentifierVarExpIR node)
 			throws AnalysisException
 	{
-		if (node.parent() instanceof AFieldExpCG
+		if (node.parent() instanceof AFieldExpIR
 				&& node.getName().equals(paramName))
 		{
-			AFieldExpCG field = (AFieldExpCG) node.parent();
+			AFieldExpIR field = (AFieldExpIR) node.parent();
 
-			TransAssistantCG assistant = javaGen.getTransAssistant();
-			AIdentifierVarExpCG replField = javaGen.getInfo().getExpAssistant().consIdVar(consUniqueName(field.getMemberName()), field.getType().clone());
+			TransAssistantIR assistant = javaGen.getTransAssistant();
+			AIdentifierVarExpIR replField = javaGen.getInfo().getExpAssistant().consIdVar(consUniqueName(field.getMemberName()), field.getType().clone());
 			assistant.replaceNodeWith(field, replField);
 		} else
 		{
@@ -150,7 +150,7 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 					if (varExp.getVardef() instanceof SFunctionDefinition
 							|| varExp.getVardef() instanceof SOperationDefinition)
 					{
-						ADefaultClassDeclCG encClass = rec.getAncestor(ADefaultClassDeclCG.class);
+						ADefaultClassDeclIR encClass = rec.getAncestor(ADefaultClassDeclIR.class);
 
 						if (encClass != null)
 						{
@@ -163,9 +163,9 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 
 							defClass += encClass.getName();
 
-							AExplicitVarExpCG func = new AExplicitVarExpCG();
+							AExplicitVarExpIR func = new AExplicitVarExpIR();
 
-							AClassTypeCG classType = new AClassTypeCG();
+							AClassTypeIR classType = new AClassTypeIR();
 							classType.setName(defClass);
 
 							func.setClassType(classType);

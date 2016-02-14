@@ -42,15 +42,22 @@ import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 
 public class AstExpressionFactory
 {
 
-	public static AMkTypeExp newAMkTypeExp(ILexNameToken typeName, PType type, List<PExp> arglist)
+	public static AMkTypeExp newAMkTypeExp(ILexNameToken typeName, PType type,
+			List<PExp> arglist)
 	{
 		AMkTypeExp mktype = new AMkTypeExp();
 		mktype.setType(type);
+		if (type instanceof ARecordInvariantType)
+		{
+			mktype.setRecordType((ARecordInvariantType) type.clone());
+		}
+
 		mktype.setTypeName(typeName);
 		mktype.setArgs(arglist);
 		return mktype;

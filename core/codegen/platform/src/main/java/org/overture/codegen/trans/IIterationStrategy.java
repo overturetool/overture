@@ -23,46 +23,46 @@ package org.overture.codegen.trans;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.statements.ALocalPatternAssignmentStmIR;
 
 public interface IIterationStrategy
 {
-	public List<AVarDeclCG> getOuterBlockDecls(
-			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
+	public List<AVarDeclIR> getOuterBlockDecls(
+			AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
 			throws AnalysisException;
 
-	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern);
+	public List<SStmIR> getPreForLoopStms(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern);
 
-	public AVarDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern);
+	public AVarDeclIR getForLoopInit(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern);
 
-	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public SExpIR getForLoopCond(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 			throws AnalysisException;
 
-	public SExpCG getForLoopInc(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern);
+	public SExpIR getForLoopInc(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern);
 
-	public AVarDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public AVarDeclIR getNextElementDeclared(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 			throws AnalysisException;
 
-	public ALocalPatternAssignmentStmCG getNextElementAssigned(
-			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
-			SPatternCG pattern) throws AnalysisException;
+	public ALocalPatternAssignmentStmIR getNextElementAssigned(
+			AIdentifierVarExpIR setVar, List<SPatternIR> patterns,
+			SPatternIR pattern) throws AnalysisException;
 
-	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern);
+	public List<SStmIR> getForLoopStms(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern);
 
-	public List<SStmCG> getPostOuterBlockStms(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns);
+	public List<SStmIR> getPostOuterBlockStms(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns);
 
 	public void setFirstBind(boolean firstBind);
 

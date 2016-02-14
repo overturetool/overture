@@ -1718,15 +1718,16 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (typename != null)
 		{
 			PDefinition typeFound = question.env.findType(typename, node.getLocation().getModule());
+			
 			if (typeFound == null)
 			{
 				TypeCheckerErrors.report(3113, "Unknown type name '" + typename
 						+ "'", node.getLocation(), node);
-				node.setType(node.getTest().getType());
-				return node.getType();
 			}
-			node.setTypedef(typeFound.clone());
-
+			else
+			{
+				node.setTypedef(typeFound.clone());
+			}
 		}
 
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
@@ -2417,6 +2418,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		// setBindSet));
 
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getSetBind()));
+		def.parent(node.getSetBind());
 		def.apply(THIS, question.newConstraint(null));
 
 		// now they are typechecked, add them again
@@ -2590,6 +2592,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				&& exp instanceof AEqualsBinaryExp)
 		{
 			AEqualsBinaryExp ee = (AEqualsBinaryExp) exp;
+			ee.setType(AstFactory.newABooleanBasicType(ee.getLocation()));
+			
 			question.qualifiers = null;
 			ee.getLeft().apply(THIS, noConstraint);
 

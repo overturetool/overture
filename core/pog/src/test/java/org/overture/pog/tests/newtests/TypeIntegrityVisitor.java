@@ -5,35 +5,67 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.ast.definitions.AEqualsDefinition;
+import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.node.INode;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.ARecordInvariantType;
 
-public class TypeIntegrityVisitor extends DepthFirstAnalysisAdaptor
+public class TypeIntegrityVisitor extends DepthFirstAnalysisAdaptor implements IntegrityCheck
 {
 
-	List<PExp> untypeExps = new Vector<PExp>();
+	List<INode> untypeNodes = new Vector<INode>();
 
 	@Override
 	public void defaultInPExp(PExp node) throws AnalysisException
 	{
 		if (node.getType() == null)
 		{
-			untypeExps.add(node);
+			untypeNodes.add(node);
 		}
 	}
 
-	public List<PExp> getUntypeExps()
+	@Override
+	public List<INode> getProblemNodes()
 	{
-		return untypeExps;
+		return untypeNodes;
 	}
+
 
 	public void reset()
 	{
-		untypeExps.clear();
+		untypeNodes.clear();
+	}
+
+	@Override
+	public void caseAEqualsDefinition(AEqualsDefinition node)
+			throws AnalysisException
+	{
+		if (node.getExpType() == null)
+		{
+			untypeNodes.add(node);
+		}
+	}
+
+	@Override
+	public void caseAMkTypeExp(AMkTypeExp node) throws AnalysisException
+	{
+		if (node.getRecordType()==null){
+			untypeNodes.add(node);
+		}
+		super.caseAMkTypeExp(node);
 	}
 	
 	@Override
 	public void caseAFunctionType(AFunctionType node) throws AnalysisException
+	{
+		// do nothing
+	}
+
+	@Override
+	public void caseARecordInvariantType(ARecordInvariantType node)
+			throws AnalysisException
 	{
 		// do nothing
 	}

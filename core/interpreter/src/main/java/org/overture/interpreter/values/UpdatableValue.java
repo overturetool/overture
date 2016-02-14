@@ -140,7 +140,7 @@ public class UpdatableValue extends ReferenceValue
 
 		synchronized (this)
 		{
-			value = newval.getUpdatable(listeners);
+			value = newval.getConstant().getUpdatable(listeners);
 			value = ((UpdatableValue) value).value; // To avoid nested updatables
 
 			if (restrictedTo != null)

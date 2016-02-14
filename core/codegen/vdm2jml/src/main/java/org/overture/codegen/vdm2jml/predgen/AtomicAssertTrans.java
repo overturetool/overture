@@ -4,18 +4,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.statements.AAtomicStmCG;
-import org.overture.codegen.cgast.statements.AMetaStmCG;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.statements.AAtomicStmIR;
+import org.overture.codegen.ir.statements.AMetaStmIR;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 
 public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 {
 	protected JmlGenerator jmlGen;
-	private List<AMetaStmCG> recVarChecks = null;
+	private List<AMetaStmIR> recVarChecks = null;
 	
 	public AtomicAssertTrans(JmlGenerator jmlGen)
 	{
@@ -23,21 +23,21 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseAAtomicStmCG(AAtomicStmCG node) throws AnalysisException
+	public void caseAAtomicStmIR(AAtomicStmIR node) throws AnalysisException
 	{
-		recVarChecks = new LinkedList<AMetaStmCG>();
+		recVarChecks = new LinkedList<AMetaStmIR>();
 		
-		for(SStmCG stm : node.getStatements())
+		for(SStmIR stm : node.getStatements())
 		{
 			stm.apply(this);
 		}
 		
-		ADefaultClassDeclCG encClass = node.getAncestor(ADefaultClassDeclCG.class);
+		ADefaultClassDeclIR encClass = node.getAncestor(ADefaultClassDeclIR.class);
 		
 		node.getStatements().addFirst(consInvChecksStm(false, encClass));
 		node.getStatements().add(consInvChecksStm(true, encClass));
 		
-		for(AMetaStmCG as : recVarChecks)
+		for(AMetaStmIR as : recVarChecks)
 		{
 			node.getStatements().add(as);
 		}
@@ -45,17 +45,17 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 		recVarChecks = null;
 	}
 	
-	public AMetaStmCG consMetaStm(String str)
+	public AMetaStmIR consMetaStm(String str)
 	{
-		AMetaStmCG assertion = new AMetaStmCG();
+		AMetaStmIR assertion = new AMetaStmIR();
 		jmlGen.getAnnotator().appendMetaData(assertion, jmlGen.getAnnotator().consMetaData(str));
 		
 		return assertion;
 	}
 	
-	protected AMetaStmCG consInvChecksStm(boolean val, ADefaultClassDeclCG encClass)
+	protected AMetaStmIR consInvChecksStm(boolean val, ADefaultClassDeclIR encClass)
 	{
-		AMetaStmCG setStm = new AMetaStmCG();
+		AMetaStmIR setStm = new AMetaStmIR();
 
 		String setStmStr = String.format(JmlGenerator.JML_SET_INV_CHECKS, this.jmlGen.getAnnotator().consInvChecksOnNameEncClass(encClass), val);
 		List<ClonableString> setMetaData = jmlGen.getAnnotator().consMetaData(setStmStr);
@@ -69,7 +69,7 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 		return jmlGen;
 	}
 	
-	public void addPostAtomicCheck(AMetaStmCG check)
+	public void addPostAtomicCheck(AMetaStmIR check)
 	{
 		if(!contains(check))
 		{
@@ -77,9 +77,9 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 	
-	private boolean contains(AMetaStmCG check)
+	private boolean contains(AMetaStmIR check)
 	{
-		for(AMetaStmCG as : recVarChecks)
+		for(AMetaStmIR as : recVarChecks)
 		{
 			if(jmlGen.getJavaGen().getInfo().getStmAssistant().equal(as,check))
 			{

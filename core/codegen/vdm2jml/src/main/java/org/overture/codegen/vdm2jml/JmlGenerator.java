@@ -9,25 +9,25 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.PCG;
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ADefaultClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.AModuleDeclCG;
-import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.declarations.ATypeDeclCG;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.declarations.SClassDeclCG;
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.types.AUnknownTypeCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.PIR;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
+import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.declarations.ATypeDeclIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IREventObserver;
@@ -38,7 +38,7 @@ import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.traces.TracesTrans;
 import org.overture.codegen.trans.AssignStmTrans;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.uniontypes.UnionTypeTrans;
 import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
 import org.overture.codegen.utils.GeneratedData;
@@ -110,7 +110,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	private StateDesInfo stateDesInfo;
 	
 	// The class owning the invChecksOn flag
-	private ADefaultClassDeclCG invChecksFlagOwner = null;
+	private ADefaultClassDeclIR invChecksFlagOwner = null;
 	
 	private List<TcExpInfo> tcExpInfo;
 	
@@ -151,7 +151,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 			
 			if(currentTr instanceof UnionTypeTrans)
 			{
-				TransAssistantCG assist = javaGen.getTransAssistant();
+				TransAssistantIR assist = javaGen.getTransAssistant();
 				UnionTypeVarPrefixes varPrefixes = javaGen.getVarPrefixManager().getUnionTypePrefixes();
 				
 				JmlUnionTypeTrans newUnionTypeTr = new JmlUnionTypeTrans(assist, varPrefixes, cloneFreeNodes, stateDesInfo);
@@ -227,18 +227,18 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	}
 
 	@Override
-	public List<IRStatus<PCG>> initialIRConstructed(
-			List<IRStatus<PCG>> ast, IRInfo info)
+	public List<IRStatus<PIR>> initialIRConstructed(
+			List<IRStatus<PIR>> ast, IRInfo info)
 	{
-		List<IRStatus<AModuleDeclCG>> modules = IRStatus.extract(ast, AModuleDeclCG.class);
+		List<IRStatus<AModuleDeclIR>> modules = IRStatus.extract(ast, AModuleDeclIR.class);
 		
-		for(IRStatus<AModuleDeclCG> m : modules)
+		for(IRStatus<AModuleDeclIR> m : modules)
 		{
-			for(SDeclCG d : m.getIrNode().getDecls())
+			for(SDeclIR d : m.getIrNode().getDecls())
 			{
-				if(d instanceof AFieldDeclCG)
+				if(d instanceof AFieldDeclIR)
 				{
-					AFieldDeclCG f = (AFieldDeclCG) d;
+					AFieldDeclIR f = (AFieldDeclIR) d;
 					
 					if(f.getInitial() != null && f.getFinal())
 					{
@@ -255,7 +255,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 								m.addTransformationWarnings(wrap);
 							}
 							
-						} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+						} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 						{
 							e.printStackTrace();
 						}
@@ -269,7 +269,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	}
 
 	@Override
-	public List<IRStatus<PCG>> finalIRConstructed(List<IRStatus<PCG>> ast,
+	public List<IRStatus<PIR>> finalIRConstructed(List<IRStatus<PIR>> ast,
 			IRInfo info)
 	{
 		// In the final version of the IR, received by the Java code generator, all
@@ -286,15 +286,15 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		 */
 		RecClassInfo recInfo = makeRecStateAccessorBased(ast);
 		
-		List<IRStatus<PCG>> newAst = new LinkedList<IRStatus<PCG>>(ast);
+		List<IRStatus<PIR>> newAst = new LinkedList<IRStatus<PIR>>(ast);
 
 		// To circumvent a problem with OpenJML. See documentation of makeRecsOuterClasses
 		newAst.addAll(util.makeRecsOuterClasses(ast, recInfo));
 		
 		// Also extract classes that are records
-		for(IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(newAst, ADefaultClassDeclCG.class))
+		for(IRStatus<ADefaultClassDeclIR> status : IRStatus.extract(newAst, ADefaultClassDeclIR.class))
 		{
-			ADefaultClassDeclCG clazz = status.getIrNode();
+			ADefaultClassDeclIR clazz = status.getIrNode();
 			
 			// VDM uses the type system to control whether 'nil' is allowed as a value so we'll
 			// just annotate all classes as @nullable_by_default
@@ -305,16 +305,16 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		}
 		
 		// Only extract from 'ast' to not get the record classes
-		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(ast, ADefaultClassDeclCG.class))
+		for (IRStatus<ADefaultClassDeclIR> status : IRStatus.extract(ast, ADefaultClassDeclIR.class))
 		{
-			ADefaultClassDeclCG clazz = status.getIrNode();
+			ADefaultClassDeclIR clazz = status.getIrNode();
 
 			if(info.getDeclAssistant().isLibraryName(clazz.getName()))
 			{
 				continue;
 			}
 			
-			for (AFieldDeclCG f : clazz.getFields())
+			for (AFieldDeclIR f : clazz.getFields())
 			{
 				// Make fields JML @spec_public so they can be passed to post conditions.
 				// However, we'll avoid doing it for public fields as this does not make sense
@@ -339,7 +339,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 
 			// Note that the methods contained in clazz.getMethod() include
 			// pre post and invariant methods
-			for (AMethodDeclCG m : clazz.getMethods())
+			for (AMethodDeclIR m : clazz.getMethods())
 			{
 				if (m.getPreCond() != null)
 				{
@@ -394,7 +394,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 			String enclosingClass = currentInfo.getTraceEnclosingClass();
 			String javaRootPackage = getJavaSettings().getJavaRootPackage();
 			
-			SClassDeclCG clazz = getJavaGen().getInfo().getDeclAssistant().findClass(getJavaGen().getInfo().getClasses(), enclosingClass);
+			SClassDeclIR clazz = getJavaGen().getInfo().getDeclAssistant().findClass(getJavaGen().getInfo().getClasses(), enclosingClass);
 			NameGen nameGen = new NameGen(clazz);
 			String expRef = currentInfo.getExpRef();
 			String checkStr = typeInfo.consCheckExp(enclosingClass, javaRootPackage, expRef, nameGen);
@@ -403,7 +403,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		}
 	}
 
-	private void addVdmToJmlRuntimeImport(ADefaultClassDeclCG clazz)
+	private void addVdmToJmlRuntimeImport(ADefaultClassDeclIR clazz)
 	{
 		String vdmJmlRuntimeImport = VDM_JML_RUNTIME_IMPORT;
 		List<ClonableString> allImports = new LinkedList<>();
@@ -412,14 +412,14 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		clazz.setDependencies(allImports);
 	}
 
-	private RecClassInfo makeRecStateAccessorBased(List<IRStatus<PCG>> ast) {
+	private RecClassInfo makeRecStateAccessorBased(List<IRStatus<PIR>> ast) {
 
 		RecAccessorTrans recAccTr = new RecAccessorTrans(this);
 
-		for (IRStatus<PCG> status : ast) {
+		for (IRStatus<PIR> status : ast) {
 			try {
 				javaGen.getIRGenerator().applyPartialTransformation(status, recAccTr);
-			} catch (org.overture.codegen.cgast.analysis.AnalysisException e) {
+			} catch (org.overture.codegen.ir.analysis.AnalysisException e) {
 
 				Logger.getLog().printErrorln(
 						"Problems applying '" + RecAccessorTrans.class + "' to status " + status.getIrNodeName());
@@ -430,18 +430,18 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		return recAccTr.getRecInfo();
 	}
 
-	private void sortAnnotations(List<IRStatus<PCG>> newAst)
+	private void sortAnnotations(List<IRStatus<PIR>> newAst)
 	{
 		AnnotationSorter sorter = new AnnotationSorter();
 
-		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(newAst, ADefaultClassDeclCG.class))
+		for (IRStatus<ADefaultClassDeclIR> status : IRStatus.extract(newAst, ADefaultClassDeclIR.class))
 		{
 			if (!javaGen.getInfo().getDeclAssistant().isLibraryName(status.getIrNode().getName()))
 			{
 				try
 				{
 					status.getIrNode().apply(sorter);
-				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+				} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 				{
 					Logger.getLog().printErrorln("Problems sorting JML annotations for node "
 							+ status.getIrNode()
@@ -468,18 +468,18 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		this.typeInfoList = depCalc.getTypeDataList();
 	}
 
-	private void addAssertions(List<IRStatus<PCG>> newAst, TypePredDecorator assertTr)
+	private void addAssertions(List<IRStatus<PIR>> newAst, TypePredDecorator assertTr)
 	{
-		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(newAst, ADefaultClassDeclCG.class))
+		for (IRStatus<ADefaultClassDeclIR> status : IRStatus.extract(newAst, ADefaultClassDeclIR.class))
 		{
-			ADefaultClassDeclCG clazz = status.getIrNode();
+			ADefaultClassDeclIR clazz = status.getIrNode();
 
 			if (!this.javaGen.getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
 			{
 				try
 				{
 					this.javaGen.getIRGenerator().applyPartialTransformation(status, assertTr);
-				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+				} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 				{
 					Logger.getLog().printErrorln("Unexpected problem occured when applying transformation in '"
 							+ this.getClass().getSimpleName() + "'");
@@ -489,11 +489,11 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		}
 	}
 
-	private void annotateRecsWithInvs(List<IRStatus<PCG>> ast)
+	private void annotateRecsWithInvs(List<IRStatus<PIR>> ast)
 	{
-		List<ARecordDeclCG> recs = util.getRecords(ast);
+		List<ARecordDeclIR> recs = util.getRecords(ast);
 		
-		for(ARecordDeclCG r : recs)
+		for(ARecordDeclIR r : recs)
 		{
 			if(r.getInvariant() != null)
 			{
@@ -518,9 +518,9 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		}
 	}
 
-	private void setInvChecksOnOwner(List<IRStatus<PCG>> ast) {
+	private void setInvChecksOnOwner(List<IRStatus<PIR>> ast) {
 		
-		for (IRStatus<ADefaultClassDeclCG> status : IRStatus.extract(ast, ADefaultClassDeclCG.class))
+		for (IRStatus<ADefaultClassDeclIR> status : IRStatus.extract(ast, ADefaultClassDeclIR.class))
 		{
 			if(invChecksFlagOwner == null)
 			{
@@ -540,12 +540,12 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	 * 
 	 * @param rec The record for which we will change the invariant method
 	 */
-	private void changeRecInvMethod(ARecordDeclCG rec)
+	private void changeRecInvMethod(ARecordDeclIR rec)
 	{
 		try
 		{
 			rec.getInvariant().apply(new RecInvTransformation(javaGen, rec));
-		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+		} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 		{
 			Logger.getLog().printErrorln("Problems transforming the invariant method of a record in '"
 					+ this.getClass().getSimpleName() + "'");
@@ -553,12 +553,12 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		}
 	}
 
-	private List<ClonableString> consMethodCond(SDeclCG decl,
-			List<AFormalParamLocalParamCG> parentMethodParams, String jmlAnno)
+	private List<ClonableString> consMethodCond(SDeclIR decl,
+			List<AFormalParamLocalParamIR> parentMethodParams, String jmlAnno)
 	{
-		if (decl instanceof AMethodDeclCG)
+		if (decl instanceof AMethodDeclIR)
 		{
-			AMethodDeclCG cond = (AMethodDeclCG) decl;
+			AMethodDeclIR cond = (AMethodDeclIR) decl;
 
 			List<String> fieldNames = new LinkedList<String>();
 
@@ -587,17 +587,17 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		return null;
 	}
 	
-	public void adjustNamedTypeInvFuncs(IRStatus<ADefaultClassDeclCG> status)
+	public void adjustNamedTypeInvFuncs(IRStatus<ADefaultClassDeclIR> status)
 	{
-		ADefaultClassDeclCG clazz = status.getIrNode();
+		ADefaultClassDeclIR clazz = status.getIrNode();
 		
-		for (ATypeDeclCG typeDecl : clazz.getTypeDecls())
+		for (ATypeDeclIR typeDecl : clazz.getTypeDecls())
 		{
-			if (typeDecl.getDecl() instanceof ANamedTypeDeclCG)
+			if (typeDecl.getDecl() instanceof ANamedTypeDeclIR)
 			{
-				ANamedTypeDeclCG namedTypeDecl = (ANamedTypeDeclCG) typeDecl.getDecl();
+				ANamedTypeDeclIR namedTypeDecl = (ANamedTypeDeclIR) typeDecl.getDecl();
 
-				AMethodDeclCG method = util.getInvMethod(typeDecl);
+				AMethodDeclIR method = util.getInvMethod(typeDecl);
 
 				boolean invMethodIsGen = false;
 				
@@ -612,10 +612,10 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 				String name = namedTypeDecl.getName().getName();
 				method.setName(JmlGenerator.INV_PREFIX + defModule + "_" + name);
 				
-				AFormalParamLocalParamCG invParam = util.getInvFormalParam(method);
-				AFormalParamLocalParamCG invParamCopy = invParam.clone();
+				AFormalParamLocalParamIR invParam = util.getInvFormalParam(method);
+				AFormalParamLocalParamIR invParamCopy = invParam.clone();
 				
-				invParam.setType(new AUnknownTypeCG());
+				invParam.setType(new AUnknownTypeIR());
 				
 				String paramName = util.getName(invParam.getPattern());
 				
@@ -635,29 +635,29 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 				// invariant checks and stack-overflow: inv_C(java.lang.Object)"
 				annotator.makeHelper(method);
 				
-				ABlockStmCG declStmBlock = new ABlockStmCG();
+				ABlockStmIR declStmBlock = new ABlockStmIR();
 				
 				if(!invMethodIsGen)
 				{
-					AIdentifierVarExpCG paramVar = util.getInvParamVar(method);
+					AIdentifierVarExpIR paramVar = util.getInvParamVar(method);
 					
 					if(paramVar == null)
 					{
 						continue;
 					}
 					
-					ACastUnaryExpCG cast = new ACastUnaryExpCG();
+					ACastUnaryExpIR cast = new ACastUnaryExpIR();
 					cast.setType(invParamCopy.getType().clone());
 					cast.setExp(paramVar.clone());
 					
-					AVarDeclCG decl = javaGen.getInfo().getDeclAssistant().consLocalVarDecl(invParamCopy.getType(), invParamCopy.getPattern(), cast);
+					AVarDeclIR decl = javaGen.getInfo().getDeclAssistant().consLocalVarDecl(invParamCopy.getType(), invParamCopy.getPattern(), cast);
 					declStmBlock.setScoped(false);
 					declStmBlock.getLocalDefs().add(decl);
 				}
 				
-				SStmCG body = method.getBody();
+				SStmIR body = method.getBody();
 
-				ABlockStmCG repBlock = new ABlockStmCG();
+				ABlockStmIR repBlock = new ABlockStmIR();
 				javaGen.getTransAssistant().replaceNodeWith(body, repBlock);
 
 				repBlock.getStatements().add(declStmBlock);
@@ -666,15 +666,15 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		}
 	}
 	
-	public StateDesInfo normaliseTargets(List<IRStatus<PCG>> newAst)
+	public StateDesInfo normaliseTargets(List<IRStatus<PIR>> newAst)
 	{
 		TargetNormaliserTrans normaliser = new TargetNormaliserTrans(this);
-		for (IRStatus<PCG> n : newAst)
+		for (IRStatus<PIR> n : newAst)
 		{
 			try
 			{
 				javaGen.getIRGenerator().applyPartialTransformation(n, normaliser);
-			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Problem normalising state designators in '"
 						+ this.getClass().getSimpleName() + "': "
@@ -687,9 +687,9 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	}
 	
 	@Override
-	public void quoteClassesProduced(List<ADefaultClassDeclCG> quoteClasses)
+	public void quoteClassesProduced(List<ADefaultClassDeclIR> quoteClasses)
 	{
-		for(ADefaultClassDeclCG qc : quoteClasses)
+		for(ADefaultClassDeclIR qc : quoteClasses)
 		{
 			// Code generated quotes are represented as singletons and by default the instance
 			// field is null. So we'll mark quote classes as nullable_by_default.
@@ -749,7 +749,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		return typeInfoList;
 	}
 
-	public ADefaultClassDeclCG getInvChecksFlagOwner()
+	public ADefaultClassDeclIR getInvChecksFlagOwner()
 	{
 		return invChecksFlagOwner;
 	}

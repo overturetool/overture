@@ -24,7 +24,7 @@ package org.overture.codegen.utils;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.codegen.cgast.INode;
+import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 
