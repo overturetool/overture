@@ -7,30 +7,30 @@ Tokens
 
 Abstract Syntax Tree
 
-CG = #decl
+IR = #decl
     ;
 
 
 #decl {-> package='org.overture.cgrmi.extast.declarations'}
        = {remoteContract}
 		[name]:java_String
-		[methodSignatures]:CG.#decl.method*
+		[methodSignatures]:IR.#decl.method*
 		[superName]:java_String
 		[isSuperClass]:java_Boolean
 	|	{remoteContractImpl}
 		[name]:java_String
-		[methods]:CG.#decl.method*
-		[fields]:CG.#decl.field*
+		[methods]:IR.#decl.method*
+		[fields]:IR.#decl.field*
 		[superName]:java_String
 		[isUniCast]:java_Boolean
-	 	[typeDecls]:CG.#decl.type*
+	 	[typeDecls]:IR.#decl.type*
   		[abstract]:java_Boolean
 	|	{remoteInstance}
 		[name]:java_String
 		[nameString]:java_String
 		[className]:java_String
 		[varExp]:java_String
-    	[initial]:CG.#exp
+    	[initial]:IR.#exp
 	|	{clientInstance}
 		[name]:java_String
 		[nameString]:java_String
@@ -42,9 +42,9 @@ CG = #decl
 	|	{cpuDeployment}
 		[cpuName]:java_String
 		[cpuNameString]:java_String
-		[remoteInst]:CG.#decl.remoteInstance*
-		[clientInst]:CG.#decl.clientInstance*
-		[RMIreg]:CG.#decl.RMIregistry
+		[remoteInst]:IR.#decl.remoteInstance*
+		[clientInst]:IR.#decl.clientInstance*
+		[RMIreg]:IR.#decl.RMIregistry
 		[DeployedObjCounter]: java_Integer
 		[NumberofCPUs]: java_Integer
 	|	{RMI_Server}
