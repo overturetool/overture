@@ -21,10 +21,10 @@
  */
 package org.overturetool.cgisa.utils;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.AnswerAdaptor;
-import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.AnswerAdaptor;
+import org.overture.codegen.ir.types.ASeqSeqTypeIR;
 
 public class IsSeqOfCharTypeVisitor extends AnswerAdaptor<Boolean>
 {
@@ -42,7 +42,7 @@ public class IsSeqOfCharTypeVisitor extends AnswerAdaptor<Boolean>
 	}
 	
 	@Override
-	public Boolean caseASeqSeqTypeCG(ASeqSeqTypeCG node)
+	public Boolean caseASeqSeqTypeIR(ASeqSeqTypeIR node)
 			throws AnalysisException
 	{
 		return node.getSeqOf().apply(new IsCharTypeVisitor());

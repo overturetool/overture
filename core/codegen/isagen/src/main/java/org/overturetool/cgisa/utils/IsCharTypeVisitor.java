@@ -21,10 +21,10 @@
  */
 package org.overturetool.cgisa.utils;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.AnswerAdaptor;
-import org.overture.codegen.cgast.types.ACharBasicTypeCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.AnswerAdaptor;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
 
 public class IsCharTypeVisitor extends AnswerAdaptor<Boolean>
 {
@@ -43,7 +43,7 @@ public class IsCharTypeVisitor extends AnswerAdaptor<Boolean>
 
 	
 	@Override
-	public Boolean caseACharBasicTypeCG(ACharBasicTypeCG node)
+	public Boolean caseACharBasicTypeIR(ACharBasicTypeIR node)
 			throws AnalysisException
 	{
 		return true;

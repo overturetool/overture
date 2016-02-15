@@ -32,8 +32,7 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.lex.LexKeywordToken;
-import org.overture.ast.lex.VDMToken;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
@@ -74,10 +73,7 @@ public class ValueBindingObligation extends ProofObligation
 		bindList.add(typeBind);
 		existsExp.setBindList(bindList);
 
-		AEqualsBinaryExp equals = new AEqualsBinaryExp();
-		equals.setLeft(patternToExp(pattern.clone()));
-		equals.setOp(new LexKeywordToken(VDMToken.EQUALS, null));
-		equals.setRight(exp.clone());
+		AEqualsBinaryExp equals = AstExpressionFactory.newAEqualsBinaryExp(patternToExp(pattern.clone()), exp.clone());
 		existsExp.setPredicate(equals);
 
 		stitch = existsExp;

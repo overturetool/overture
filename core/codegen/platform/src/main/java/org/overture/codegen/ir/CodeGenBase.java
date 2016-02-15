@@ -1,5 +1,11 @@
 package org.overture.codegen.ir;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -20,6 +26,7 @@ import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
 import org.overture.codegen.assistant.DeclAssistantIR;
 import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
@@ -489,6 +496,45 @@ abstract public class CodeGenBase implements IREventCoordinator
 		{
 
 			return new Generated(expStatus.getUnsupportedInIr(), new HashSet<IrNodeInfo>());
+		}
+	}
+
+	/**
+	 * Emits generated code to a file. The file will be encoded using UTF-8.
+	 * 
+	 * @param outputFolder The output folder that will store the generated code.
+	 * @param fileName The name of the file that will store the generated code.
+	 * @param code The generated code.
+	 */
+	public static void emitCode(File outputFolder, String fileName, String code)
+	{
+		emitCode(outputFolder, fileName, code, "UTF-8");
+	}
+
+	/**
+	 * Emits generated code to a file. 
+	 * 
+	 * @param outputFolder outputFolder The output folder that will store the generated code.
+	 * @param fileName The name of the file that will store the generated code.
+	 * @param code The generated code.
+	 * @param encoding The encoding to use for the generated code.
+	 */
+	public static void emitCode(File outputFolder, String fileName, String code, String encoding)
+	{
+		try
+		{
+			File javaFile = new File(outputFolder, File.separator + fileName);
+			javaFile.getParentFile().mkdirs();
+			javaFile.createNewFile();
+			PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(javaFile, false), encoding));
+			BufferedWriter out = new BufferedWriter(writer);
+			out.write(code);
+			out.close();
+
+		} catch (IOException e)
+		{
+			Logger.getLog().printErrorln("Error when saving class file: " + fileName);
+			e.printStackTrace();
 		}
 	}
 	

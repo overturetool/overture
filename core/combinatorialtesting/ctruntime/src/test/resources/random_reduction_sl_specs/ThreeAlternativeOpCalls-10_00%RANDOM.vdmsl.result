@@ -1,9 +1,0 @@
-<traces>
-	<class name="DEFAULT">
-		<trace name="T1" testcount="1" filename="ThreeAlternativeOpCalls.vdmsl" line="14" column="1" subset="0.1" reduction="RANDOM" seed="999">
-			<test no="1">op2()</test>
-			<result no="1" verdict="PASSED">()</result>
-			<status verdict="PASSED" testcount="1" skippedcount="0" faildcount="0" inconclusivecount="0"></status>
-		</trace>
-	</class>
-</traces>

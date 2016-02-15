@@ -64,7 +64,11 @@ public class QualificationVisitor extends
 					if (node.getTypedef() == null)
 					{
 						PDefinition typedef = question.env.findType(node.getTypeName(), node.getLocation().getModule());
-						node.setTypedef(typedef.clone());
+						
+						if (typedef != null)
+						{
+							node.setTypedef(typedef.clone());
+						}
 					}
 
 					if (node.getTypedef() != null)

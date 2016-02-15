@@ -52,12 +52,14 @@ import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SBindIR;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SModifierIR;
 import org.overture.codegen.ir.SMultipleBindIR;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
 import org.overture.codegen.ir.expressions.AAbsUnaryExpIR;
 import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
@@ -66,6 +68,7 @@ import org.overture.codegen.ir.expressions.ABoolLiteralExpIR;
 import org.overture.codegen.ir.expressions.ACardUnaryExpIR;
 import org.overture.codegen.ir.expressions.ACaseAltExpExpIR;
 import org.overture.codegen.ir.expressions.ACasesExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
 import org.overture.codegen.ir.expressions.ACharLiteralExpIR;
 import org.overture.codegen.ir.expressions.ACompMapExpIR;
 import org.overture.codegen.ir.expressions.ACompSeqExpIR;
@@ -163,13 +166,49 @@ import org.overture.codegen.ir.types.AClassTypeIR;
 import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.types.ASeqSeqTypeIR;
 import org.overture.codegen.ir.types.AStringTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.config.Settings;
 
 public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 {
+	@Override
+	public SExpIR caseANarrowExp(ANarrowExp node, IRInfo question) throws AnalysisException
+	{
+		PExp exp = node.getTest();
+		PType type = null;
+		
+		if(node.getBasicType() != null)
+		{
+			type = node.getBasicType();
+		}
+		else if(node.getTypedef() != null)
+		{
+			type = question.getTcFactory().createPDefinitionAssistant().getType(node.getTypedef());
+		}
+		
+		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
+		
+		STypeIR typeCg;
+		if(type != null)
+		{
+			typeCg = type.apply(question.getTypeVisitor(), question);
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Could find type of narrow expression in '" + this.getClass().getSimpleName() + "'");
+			typeCg = new AUnknownTypeIR();
+			typeCg.setSourceNode(new SourceNode(node));
+		}
+		
+		ACastUnaryExpIR cast = new ACastUnaryExpIR();
+		cast.setExp(expCg);
+		cast.setType(typeCg);
+		
+		return cast;
+	}
+	
 	@Override
 	public SExpIR caseAStateInitExp(AStateInitExp node, IRInfo question)
 			throws AnalysisException

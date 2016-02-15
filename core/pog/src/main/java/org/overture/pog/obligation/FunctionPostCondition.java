@@ -72,8 +72,7 @@ public class FunctionPostCondition extends ProofObligation
 		{
 			AApplyExp applyExp = new AApplyExp();
 			applyExp.setArgs(params);
-			AVariableExp varExp = new AVariableExp();
-			varExp.setName(func.getName());
+			AVariableExp varExp = getVarExp(func.getName().clone(), func.clone(), func.getType().clone());
 			applyExp.setRoot(varExp);
 			// We have to say "f(a)" because we have no expression yet
 			// I suppose this still still holds true with ast pos
@@ -117,8 +116,7 @@ public class FunctionPostCondition extends ProofObligation
 		{
 			AApplyExp applyExp = new AApplyExp();
 			applyExp.setArgs(params);
-			AVariableExp varExp = new AVariableExp();
-			varExp.setName(func.getName().clone());
+			AVariableExp varExp = getVarExp(func.getName().clone(), func.clone(), func.getType().clone());
 			applyExp.setRoot(varExp);
 			body = applyExp;
 		} else

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="12" line="7" message="Pure operation call may not be referentially transparent" messageType="warning" number="5017" resource="pureop_func_invokes_pure"/>
+<message column="1" line="6" message="Definition 'bar' not used" messageType="warning" number="5000" resource="pureop_func_invokes_pure"/>
+<result/>
+</testResult>

@@ -1,0 +1,4 @@
+state S of
+  x : nat
+  init s == s = mk_S(0)
+end
