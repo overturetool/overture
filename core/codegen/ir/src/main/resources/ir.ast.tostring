@@ -3,11 +3,13 @@ To String Extensions
 // import packages used by external $$ java code
 import org.overture.ast.util.Utils;
 import org.overture.ast.util.ToStringUtil;
+import org.overture.codegen.ir.IrToStringUtil;
 
 %IR->#decl->method = [name]
-%IR->#decl->class = [name]
-
-
+%IR->#decl->#class->default = [name]
+%IR->#decl->#class->system = "system"+ [name]
+%IR->#decl->field = "" [access]  " "+$($[final]$ !=null && $ [final] $ ? " final ":"")+($[volatile]$? " volatile ":"")$ +   [type]" "  [name] " " +$($[initial]$!=null? " = "+$[initial]$:"")$
+%IR->#decl->var =   ""+$($[final]$ !=null && $ [final] $ ? "final ":"")$ +[type]+" "+ [pattern] +" = "+	[exp]
 //start
 
 // patterns
@@ -86,8 +88,14 @@ import org.overture.ast.util.ToStringUtil;
 %IR->#exp->#Var->explicit = [name]
 %IR->#exp->#Var->super = [name]
 
-
+// Expressions
 %IR->#exp->apply = [root] "(" + $Utils.listToString($[args]$)$ + ")"
 %IR->#exp->field = [object] + "." + [memberName]
 %IR->#exp->new = [name] "(" + $Utils.listToString($[args]$)$ + ")"
 %IR->#exp->self = "self"
+
+// Statements
+%IR->#stm->block = ""+$IrToStringUtil.getBlockSimpleBlockString(this)$
+%IR->#stm->if = "if( "+[ifExp] + " )\n" + [thenStm] + "\n"+ [elseIf] + "\n" + [elseStm]
+%IR->#stm->elseIf = "else if( " +[elseIf] +" )\n" + [thenStm]
+%IR->#stm->return = "return " + [exp]
