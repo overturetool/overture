@@ -28,10 +28,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.text.templates.TemplateContext;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
@@ -71,7 +73,7 @@ public class VdmCompleteProcesser
 	
 	public void computeCompletionProposals(VdmCompletionContext info,
 			VdmDocument document, List<ICompletionProposal> proposals,
-			int offset)
+			int offset, ITextViewer viewer,TemplateContext context)
 	{
 		List<ICompletionProposal> calculatedProposals = new Vector<ICompletionProposal>();
 		// if (info.afterNew || info.afterMk || info.isEmpty)
@@ -87,7 +89,7 @@ public class VdmCompleteProcesser
 		switch (info.type)
 		{
 			case CallParam:
-				vdmCompletionExtractor.completeCallParams(info, document, calculatedProposals, offset, getAst(document));
+				//vdmCompletionExtractor.completeCallParams(info, document, calculatedProposals, offset, getAst(document),viewer);
 				break;
 			case Dot:
 				break;
@@ -101,7 +103,7 @@ public class VdmCompleteProcesser
 				break;
 			case Types:
 				completeTypes(info, document, calculatedProposals, offset);
-				vdmCompletionExtractor.completeBasicTypes(info, document, calculatedProposals, offset, getAst(document));
+				vdmCompletionExtractor.completeBasicTypes(info, document, calculatedProposals, offset, getAst(document), context,viewer);
 				break;
 			default:
 				break;

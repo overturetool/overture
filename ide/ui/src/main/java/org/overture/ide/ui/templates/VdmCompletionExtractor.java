@@ -1,15 +1,23 @@
 package org.overture.ide.ui.templates;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.text.templates.Template;
+import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
+import org.eclipse.jface.text.templates.TemplateContext;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AClassInvariantDefinition;
@@ -45,7 +53,7 @@ import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
 
-public final class VdmCompletionExtractor {
+public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 	
 	static VdmElementImageProvider imgProvider = new VdmElementImageProvider();
 	
@@ -54,8 +62,9 @@ public final class VdmCompletionExtractor {
 	    
 	public void completeBasicTypes(final VdmCompletionContext info,
 			VdmDocument document, final List<ICompletionProposal> proposals,
-			final int offset, List<INode> Ast)
+			final int offset, List<INode> Ast, final TemplateContext context,final ITextViewer viewer)
 	{
+		
 		for (final INode element : Ast)
 		{
 			try
@@ -207,13 +216,15 @@ public final class VdmCompletionExtractor {
 					@Override
 					public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
                             throws AnalysisException{
-						String extractedName[] = explicitFunctionNameExtractor(node);
-
-						if(nullOrEmptyCheck(extractedName[0])){
-							createProposal(node,extractedName[0],extractedName[1],node.toString(),info,proposals,offset);
-						}
+						String extractedName[] = explicitFunctionNameExtractor(node,info);
+						
+						functionTemplateCreator(extractedName,offset,context,proposals,info,viewer);
+						
+						
 					}
 					
+					
+
 					@Override
 					public void caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node)
                             throws AnalysisException{
@@ -260,6 +271,34 @@ public final class VdmCompletionExtractor {
 		}
 	}
 	
+	
+	private void functionTemplateCreator(String[] extractedName, int offset,TemplateContext context,List<ICompletionProposal> proposals,VdmCompletionContext info,ITextViewer viewer) {
+		
+		if (context == null)
+			return;
+		
+		if(nullOrEmptyCheck(extractedName[0])){
+
+			ITextSelection selection = (ITextSelection) viewer
+					.getSelectionProvider().getSelection();
+			// adjust offset to end of normalized selection
+			if (selection.getOffset() == offset)
+				offset = selection.getOffset() + selection.getLength();
+			String prefix = extractPrefix(viewer, offset);
+			Region region = new Region(offset - prefix.length(), prefix.length());
+
+			context.setVariable("selection", selection.getText());
+			
+			Template template = new Template(extractedName[0],extractedName[0],"org.overture.ide.vdmpp.ui.contextType",extractedName[1],true);
+
+			proposals.add(createProposal(template, context, (IRegion) region,
+					getRelevance(template, prefix)));
+			
+		}
+	}
+	
+	
+	
 	private boolean nullOrEmptyCheck(String str){
 		return str != null && !str.isEmpty();
 	}
@@ -303,18 +342,40 @@ public final class VdmCompletionExtractor {
 		}
     }
     
-    private static String[] explicitFunctionNameExtractor(INode node){
+    private String[] explicitFunctionNameExtractor(AExplicitFunctionDefinition node, final VdmCompletionContext info){
     	String functionName[] = new String[2];
     	
     	String[] parts = node.toString().split(":");
     	parts = parts[0].split(" ");
     	
-    	
     	if(parts[parts.length-1] != null && !parts[parts.length-1].isEmpty()){
     		functionName[0] = parts[parts.length-1];
     		functionName[1] = functionName[0] + "(";  //ReplacemestString
-    		functionName[0] = functionName[1] + ")"; //DisplayString
+    		//functionName[0] = functionName[1] + ")"; //DisplayString
     	}
+    	List<String> extractedNames = null;
+		//if (Objects.equals(functionName[1], info.proposalPrefix)) {
+			extractedNames = explicitParameterNameExtractor(node, info.proposalPrefix);
+		//}	
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(functionName[1]);
+		if((extractedNames != null && !extractedNames.isEmpty())){
+			
+			for (int i = 0; i < extractedNames.size(); i++) {
+				String str = extractedNames.get(i);
+			
+				if(str != extractedNames.get(0)){
+					sb.append(", ");
+				}
+				sb.append("${" + str + "}");
+			}
+			
+		}
+		sb.append(")");
+		functionName[1] = sb.toString();
+		functionName[0] = functionName[1];
+
     	
     	return functionName;
     }
@@ -364,7 +425,7 @@ public final class VdmCompletionExtractor {
     
     public void completeCallParams(final VdmCompletionContext info,
 			VdmDocument document, final List<ICompletionProposal> proposals,
-			final int offset, List<INode> Ast) {
+			final int offset, List<INode> Ast, final TemplateContext context) {
     	for (final INode element : Ast)
 		{
 			try
@@ -374,24 +435,34 @@ public final class VdmCompletionExtractor {
 					@Override
 					public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
                             throws AnalysisException{
-						if (Objects.equals(explicitFunctionNameExtractor(node)[1], info.proposalPrefix)) {
-				    		String extractedName = explicitParameterNameExtractor(node, info.proposalPrefix);
+						String extractedName[] = explicitFunctionNameExtractor(node,info);
 
-							if(nullOrEmptyCheck(extractedName)){
-								createCallParamProposal(node,extractedName,extractedName,node.toString(),info,proposals,offset);
-							}
-						}						
+//						if(nullOrEmptyCheck(extractedName[0])){
+//
+//				
+//							int newOffset = offset;
+//							
+//							ITextSelection selection = (ITextSelection) viewer
+//									.getSelectionProvider().getSelection();
+//							// adjust offset to end of normalized selection
+//							if (selection.getOffset() == newOffset)
+//								newOffset = selection.getOffset() + selection.getLength();
+//							
+//							String prefix = extractPrefix(viewer, newOffset);
+//							Region region = new Region(newOffset - prefix.length(), prefix.length());
+//							TemplateContext context = createContext(viewer, region);
+//							if (context == null)
+//								return;
+//							context.setVariable("selection", selection.getText());
+//							
+//							Template template = new Template(extractedName[0],extractedName[0],"org.overture.ide.vdmpp.ui.contextType",extractedName[1],true);
+//
+//							proposals.add(createProposal(template, context, (IRegion) region,
+//									getRelevance(template, prefix)));
+//							
+//						}
 					}
 
-					@Override
-					public void caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node)
-                            throws AnalysisException{
-						String extractedName = ""; //implicitParameterNameExtractor(node);
-
-						if(nullOrEmptyCheck(extractedName)){
-							createCallParamProposal(node,extractedName,extractedName,node.toString(),info,proposals,offset);
-						}
-					}
 				});
 			} catch (AnalysisException e)
 			{
@@ -402,18 +473,17 @@ public final class VdmCompletionExtractor {
 		
 	}
     
-    private String explicitParameterNameExtractor(AExplicitFunctionDefinition node, String proposalPrefix) {
-    	StringBuilder sb = new StringBuilder();
+    private List<String> explicitParameterNameExtractor(AExplicitFunctionDefinition node, String proposalPrefix) {
+
+    	List<String> ParameterNameList = new ArrayList<String>();
     	LinkedList<List<PPattern>> strList = node.getParamPatternList();
     	List<PPattern> paramList = strList.getFirst();
     	for (PPattern str : paramList) {
-			if(str != paramList.get(0)){
-				sb.append(", ");
-			}
-    		sb.append(str.toString());
+
+    		ParameterNameList.add(str.toString());
 		}
-    	sb.append(")");
-		return sb.toString();
+
+		return ParameterNameList;
 	}
     
     private String implicitParameterNameExtractor(AImplicitFunctionDefinition node) {
@@ -430,6 +500,13 @@ public final class VdmCompletionExtractor {
 //		return sb.toString();
     	
     	return null;
+	}
+
+
+	@Override
+	protected String getTempleteContextType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
     
 }

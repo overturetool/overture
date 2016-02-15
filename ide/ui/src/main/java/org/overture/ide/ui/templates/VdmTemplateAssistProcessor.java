@@ -112,6 +112,7 @@ public abstract class VdmTemplateAssistProcessor extends TemplateCompletionProce
 							.matches(prefix, context.getContextType().getId())))
 				matches.add(createProposal(template, context, (IRegion) region,
 						getRelevance(template, prefix)));
+			
 		}
 		return matches.toArray(new ICompletionProposal[matches.size()]);
 	}

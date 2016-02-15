@@ -27,7 +27,9 @@ import java.util.List;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.templates.TemplateContext;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
@@ -56,15 +58,23 @@ public abstract class VdmContentAssistProcessor extends
 
 		// IEditorInput editorInput = editor.getEditorInput();
 		// String text = viewer.getTextWidget().getText();
-
+		
+		//added here
+		String prefix = extractPrefix(viewer, offset);
+		Region region = new Region(offset - prefix.length(), prefix.length());
+		
 		if (viewer.getDocument() instanceof VdmDocument)
 		{
-			processer.computeCompletionProposals(computeVdmCompletionContext(viewer.getDocument(), offset), (VdmDocument) viewer.getDocument(), modList, offset);
+			processer.computeCompletionProposals(computeVdmCompletionContext(viewer.getDocument(), offset), (VdmDocument) viewer.getDocument(), modList, offset,viewer, createContext(viewer, region));
 		}
 		
 		if (enableTemplate())
 		{
 			ICompletionProposal[] templates = super.computeCompletionProposals(viewer, offset);
+			
+			TemplateContext context = createContext(viewer, region);
+			if (context == null)
+				
 			if (templates != null)
 			{
 				for (int i = 0; i < templates.length; i++)
