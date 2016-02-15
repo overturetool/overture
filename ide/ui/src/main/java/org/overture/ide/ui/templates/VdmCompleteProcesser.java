@@ -87,6 +87,7 @@ public class VdmCompleteProcesser
 		switch (info.type)
 		{
 			case CallParam:
+				vdmCompletionExtractor.completeCallParams(info, document, calculatedProposals, offset, getAst(document));
 				break;
 			case Dot:
 				break;
@@ -100,7 +101,7 @@ public class VdmCompleteProcesser
 				break;
 			case Types:
 				completeTypes(info, document, calculatedProposals, offset);
-				vdmCompletionExtractor.completeBasicTypes(info, document, calculatedProposals, offset,getAst(document));
+				vdmCompletionExtractor.completeBasicTypes(info, document, calculatedProposals, offset, getAst(document));
 				break;
 			default:
 				break;
@@ -260,7 +261,7 @@ public class VdmCompleteProcesser
 		}
 
 	}
-
+	
 	private void completeQuotes(final int offset,
 			final List<ICompletionProposal> proposals,
 			final VdmCompletionContext info2, INode m)

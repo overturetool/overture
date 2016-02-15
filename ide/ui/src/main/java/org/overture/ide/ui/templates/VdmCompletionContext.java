@@ -98,14 +98,19 @@ public class VdmCompletionContext
 			    regexp.append("]");
 			}
 			regexp.append("]");
-			String test = regexp.toString();
 			String[] bits = proposalPrefix.split(regexp.toString());
 			proposalPrefix = bits[bits.length-1].trim();
 		}
 		
 		offset = -proposalPrefix.length();
+		
+		char[] arr = proposalPrefix.trim().toCharArray(); 
+		if(arr.length > 0 && arr[arr.length-1] == '('){
+			type = SearchType.CallParam;
+		}
+		
 		return;
-	}
+	} 
 
 	@Override
 	public String toString()

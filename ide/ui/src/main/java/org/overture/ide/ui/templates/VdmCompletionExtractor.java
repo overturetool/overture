@@ -1,7 +1,9 @@
 package org.overture.ide.ui.templates;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.jface.text.contentassist.CompletionProposal;
@@ -23,6 +25,8 @@ import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ACharacterPattern;
+import org.overture.ast.patterns.APatternListTypePair;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
@@ -156,7 +160,7 @@ public final class VdmCompletionExtractor {
 						String name = node.toString();
 						createProposal(node,name,name,name,info,proposals,offset);
 					}
-				///
+
 					@Override
 					public void caseALetBeStBindingTraceDefinition(ALetBeStBindingTraceDefinition node)
                             throws AnalysisException{
@@ -199,7 +203,7 @@ public final class VdmCompletionExtractor {
 						createProposal(node,name,name,name,info,proposals,offset);
 					}
 					
-				///	
+					
 					@Override
 					public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
                             throws AnalysisException{
@@ -283,15 +287,33 @@ public final class VdmCompletionExtractor {
 		}
     }
     
+    private void createCallParamProposal(INode node, String displayname, String replacmentString,String additionalProposalInfo,final VdmCompletionContext info, 
+    		final List<ICompletionProposal> proposals,final int offset){
+    	if(replacmentString != null && !replacmentString.isEmpty())
+		{	
+			IContextInformation contextInfo = new ContextInformation(displayname, displayname); //$NON-NLS-1$
+			
+			replacmentString = info.proposalPrefix.trim() + replacmentString;
+			
+			int curOffset = offset + info.offset;// - info2.proposalPrefix.length();
+			int length = replacmentString.length();
+			int replacementLength = info.proposalPrefix.length();
+			
+			proposals.add(new CompletionProposal(replacmentString, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), displayname, contextInfo, additionalProposalInfo));
+		}
+    }
+    
     private static String[] explicitFunctionNameExtractor(INode node){
     	String functionName[] = new String[2];
     	
-    	String[] parts = node.toString().split(" ");
+    	String[] parts = node.toString().split(":");
+    	parts = parts[0].split(" ");
     	
-    	if(parts[1] != null && !parts[1].isEmpty()){
-    		functionName[0] = parts[1];
-    		functionName[1] = functionName[0].replace(":","(");  //ReplacemestString
-    		functionName[0] = functionName[1].replace("(","()"); //DisplayString
+    	
+    	if(parts[parts.length-1] != null && !parts[parts.length-1].isEmpty()){
+    		functionName[0] = parts[parts.length-1];
+    		functionName[1] = functionName[0] + "(";  //ReplacemestString
+    		functionName[0] = functionName[1] + ")"; //DisplayString
     	}
     	
     	return functionName;
@@ -339,5 +361,75 @@ public final class VdmCompletionExtractor {
     	
     	return functionName;
     }
+    
+    public void completeCallParams(final VdmCompletionContext info,
+			VdmDocument document, final List<ICompletionProposal> proposals,
+			final int offset, List<INode> Ast) {
+    	for (final INode element : Ast)
+		{
+			try
+			{
+				element.apply(new DepthFirstAnalysisAdaptor()
+				{
+					@Override
+					public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
+                            throws AnalysisException{
+						if (Objects.equals(explicitFunctionNameExtractor(node)[1], info.proposalPrefix)) {
+				    		String extractedName = explicitParameterNameExtractor(node, info.proposalPrefix);
+
+							if(nullOrEmptyCheck(extractedName)){
+								createCallParamProposal(node,extractedName,extractedName,node.toString(),info,proposals,offset);
+							}
+						}						
+					}
+
+					@Override
+					public void caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node)
+                            throws AnalysisException{
+						String extractedName = ""; //implicitParameterNameExtractor(node);
+
+						if(nullOrEmptyCheck(extractedName)){
+							createCallParamProposal(node,extractedName,extractedName,node.toString(),info,proposals,offset);
+						}
+					}
+				});
+			} catch (AnalysisException e)
+			{
+				VdmUIPlugin.log("Completion error in " + getClass().getSimpleName()
+						+ "faild during populateNameList", e);
+			}
+		}
+		
+	}
+    
+    private String explicitParameterNameExtractor(AExplicitFunctionDefinition node, String proposalPrefix) {
+    	StringBuilder sb = new StringBuilder();
+    	LinkedList<List<PPattern>> strList = node.getParamPatternList();
+    	List<PPattern> paramList = strList.getFirst();
+    	for (PPattern str : paramList) {
+			if(str != paramList.get(0)){
+				sb.append(", ");
+			}
+    		sb.append(str.toString());
+		}
+    	sb.append(")");
+		return sb.toString();
+	}
+    
+    private String implicitParameterNameExtractor(AImplicitFunctionDefinition node) {
+//    	StringBuilder sb = new StringBuilder();
+//    	LinkedList<APatternListTypePair> strList = node.getParamPatterns();
+//    	List<PPattern> paramList = strList.getFirst();
+//    	for (PPattern str : paramList) {
+//			if(str != paramList.get(0)){
+//				sb.append(", ");
+//			}
+//    		sb.append(str.toString());
+//		}
+//    	sb.append(")");
+//		return sb.toString();
+    	
+    	return null;
+	}
     
 }
