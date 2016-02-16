@@ -289,7 +289,7 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 
 			context.setVariable("selection", selection.getText());
 			
-			Template template = new Template(extractedName[0],extractedName[0],"org.overture.ide.vdmpp.ui.contextType",extractedName[1],true);
+			Template template = new Template(extractedName[0],"Explicit Function","org.overture.ide.vdmpp.ui.contextType",extractedName[1],true);
 
 			proposals.add(createProposal(template, context, (IRegion) region,
 					getRelevance(template, prefix)));
@@ -351,30 +351,34 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
     	if(parts[parts.length-1] != null && !parts[parts.length-1].isEmpty()){
     		functionName[0] = parts[parts.length-1];
     		functionName[1] = functionName[0] + "(";  //ReplacemestString
-    		//functionName[0] = functionName[1] + ")"; //DisplayString
     	}
     	List<String> extractedNames = null;
-		//if (Objects.equals(functionName[1], info.proposalPrefix)) {
-			extractedNames = explicitParameterNameExtractor(node, info.proposalPrefix);
-		//}	
+
+		extractedNames = explicitParameterNameExtractor(node, info.proposalPrefix);
 		
-		StringBuilder sb = new StringBuilder();
-		sb.append(functionName[1]);
+		StringBuilder sbPattern = new StringBuilder();
+		StringBuilder sbDisplayName = new StringBuilder();
+		sbPattern.append(functionName[1]);
+		sbDisplayName.append(functionName[1]);
 		if((extractedNames != null && !extractedNames.isEmpty())){
 			
 			for (int i = 0; i < extractedNames.size(); i++) {
 				String str = extractedNames.get(i);
 			
 				if(str != extractedNames.get(0)){
-					sb.append(", ");
+					sbPattern.append(", ");
+					sbDisplayName.append(", ");
 				}
-				sb.append("${" + str + "}");
+				sbPattern.append("${" + str + "}");
+				sbDisplayName.append(str);
 			}
 			
 		}
-		sb.append(")");
-		functionName[1] = sb.toString();
-		functionName[0] = functionName[1];
+		sbPattern.append(")");
+		sbDisplayName.append(")");
+		
+		functionName[1] = sbPattern.toString();
+		functionName[0] = sbDisplayName.toString();
 
     	
     	return functionName;
@@ -435,32 +439,7 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 					@Override
 					public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
                             throws AnalysisException{
-						String extractedName[] = explicitFunctionNameExtractor(node,info);
-
-//						if(nullOrEmptyCheck(extractedName[0])){
-//
-//				
-//							int newOffset = offset;
-//							
-//							ITextSelection selection = (ITextSelection) viewer
-//									.getSelectionProvider().getSelection();
-//							// adjust offset to end of normalized selection
-//							if (selection.getOffset() == newOffset)
-//								newOffset = selection.getOffset() + selection.getLength();
-//							
-//							String prefix = extractPrefix(viewer, newOffset);
-//							Region region = new Region(newOffset - prefix.length(), prefix.length());
-//							TemplateContext context = createContext(viewer, region);
-//							if (context == null)
-//								return;
-//							context.setVariable("selection", selection.getText());
-//							
-//							Template template = new Template(extractedName[0],extractedName[0],"org.overture.ide.vdmpp.ui.contextType",extractedName[1],true);
-//
-//							proposals.add(createProposal(template, context, (IRegion) region,
-//									getRelevance(template, prefix)));
-//							
-//						}
+//						String extractedName[] = explicitFunctionNameExtractor(node,info);
 					}
 
 				});
