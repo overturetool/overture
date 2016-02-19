@@ -58,17 +58,17 @@
         <!--
             This plugin allows you to run
 
-            $ mvn versions:set -Dtycho.mode=maven -PWith-IDE -DnewVersion=2.0.4
+$ mvn versions:set -Dtycho.mode=maven -PWith-IDE -DnewVersion=2.0.4
 
-            and get all the version numbers updated nearly for free.
-            The tycho bit on the end just tells tycho (used in the
-            eclipse plugin build) to piss off.
+and get all the version numbers updated nearly for free.
+The tycho bit on the end just tells tycho (used in the
+eclipse plugin build) to piss off.
 
-            Note that the versions in MANIFEST.MF files, etc, still
-            need to be set.
+Note that the versions in MANIFEST.MF files, etc, still
+need to be set.
 
-            More details on the versions-maven-plugin are at
-            http://mojo.codehaus.org/versions-maven-plugin/
+More details on the versions-maven-plugin are at
+http://mojo.codehaus.org/versions-maven-plugin/
         -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
@@ -77,6 +77,32 @@
           <generateBackupPoms>false</generateBackupPoms>
         </configuration>
       </plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.5.201505241946</version>
+
+				<configuration>
+					<destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
+					<dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+				</configuration>
+				<executions>
+					<execution>
+						<id>jacoco-initialize</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>jacoco-site</id>
+						<phase>package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
     </plugins>
 
     <!-- Configuration of plugins for inheriting pom.xml files should
@@ -144,6 +170,8 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.19.1</version>
         </plugin>
+
+
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -220,17 +248,17 @@
         </plugin>
 
         <plugin>
-           <groupId>org.apache.maven.plugins</groupId>
-           <artifactId>maven-release-plugin</artifactId>
-           <version>2.5</version>
-           <configuration>
-             <tagNameFormat>Release/@{project.version}</tagNameFormat>
-           </configuration>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.5</version>
+          <configuration>
+            <tagNameFormat>Release/@{project.version}</tagNameFormat>
+          </configuration>
         </plugin>
 
 
-		<!-- Disable the maven enforcer warning in Eclipse -->
-				 <plugin>
+				<!-- Disable the maven enforcer warning in Eclipse -->
+				<plugin>
           <groupId>org.eclipse.m2e</groupId>
           <artifactId>lifecycle-mapping</artifactId>
           <version>1.0.0</version>
@@ -255,32 +283,32 @@
           </configuration>
         </plugin>
 
-		<!-- Plugin for license headers-->
-		 <plugin>
+				<!-- Plugin for license headers-->
+				<plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>license-maven-plugin</artifactId>
           <version>1.7</version>
-		   <configuration>
-          <verbose>true</verbose>
-          <addSvnKeyWords>false</addSvnKeyWords>
-		  <processEndTag>#~%</processEndTag>
-		   <processStartTag>#%~</processStartTag>
-		   <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-		   <!--descriptionTemplate>${basedir}/src/license/myDescriptionTemplate.ftl</descriptionTemplate-->
-              <licenseName>gpl_v3</licenseName>
-              <roots>
-                <root>src/main/java</root>
-                <root>src/test/java</root>
-              </roots>
+					<configuration>
+						<verbose>true</verbose>
+						<addSvnKeyWords>false</addSvnKeyWords>
+						<processEndTag>#~%</processEndTag>
+						<processStartTag>#%~</processStartTag>
+						<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+						<!--descriptionTemplate>${basedir}/src/license/myDescriptionTemplate.ftl</descriptionTemplate-->
+            <licenseName>gpl_v3</licenseName>
+            <roots>
+              <root>src/main/java</root>
+              <root>src/test/java</root>
+            </roots>
 
-			  <includes>
-                <include>**/*.java</include>
-              </includes>
-			  <excludes>
-                <exclude>*.ftl</exclude>
+						<includes>
+              <include>**/*.java</include>
+            </includes>
+						<excludes>
+              <exclude>*.ftl</exclude>
 
-              </excludes>
-        </configuration>
+            </excludes>
+					</configuration>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -347,5 +375,5 @@
     <url>http://overturetool.org/</url>
   </organization>
 
-    <inceptionYear>2008</inceptionYear>
+  <inceptionYear>2008</inceptionYear>
 </project>
