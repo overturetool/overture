@@ -99,3 +99,5 @@ import org.overture.codegen.ir.IrToStringUtil;
 %IR->#stm->if = "if( "+[ifExp] + " )\n" + [thenStm] + "\n"+ [elseIf] + "\n" + [elseStm]
 %IR->#stm->elseIf = "else if( " +[elseIf] +" )\n" + [thenStm]
 %IR->#stm->return = "return " + [exp]
+%IR->#stm->callObjectExp = ""+[obj] + "."  +[fieldName] "("+ $Utils.listToString($[args]$)$ +")"
+// 
