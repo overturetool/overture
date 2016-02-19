@@ -166,11 +166,6 @@ public class JavaFormat
 		this.funcValAssist = functionValueAssistant;
 	}
 
-	public void clearFunctionValueAssistant()
-	{
-		this.funcValAssist = null;
-	}
-
 	public void setJavaSettings(JavaSettings javaSettings)
 	{
 		valueSemantics.setJavaSettings(javaSettings);
@@ -185,6 +180,7 @@ public class JavaFormat
 	{
 		mergeVisitor.init();
 		valueSemantics.clear();
+		this.funcValAssist = null;
 	}
 
 	public MergeVisitor getMergeVisitor()
