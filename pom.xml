@@ -94,19 +94,19 @@ http://mojo.codehaus.org/versions-maven-plugin/
 					<dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
 					<!-- Exclude the overture AST -->
 					<excludes>
-						<exclude>org/overture/ast/analysis/**/*.*</exclude>
-						<exclude>org/overture/ast/expressions/**/*.*</exclude>
-						<exclude>org/overture/ast/modules/**/*.*</exclude>
-						<exclude>org/overture/ast/node/**/*.*</exclude>
-						<exclude>org/overture/ast/patterns/**/*.*</exclude>
-						<exclude>org/overture/ast/statements/**/*.*</exclude>
-						<exclude>org/overture/ast/types/**/*.*</exclude>
+						<exclude>**/org/overture/ast/analysis/**/*.*</exclude>
+						<exclude>**/org/overture/ast/expressions/**/*.*</exclude>
+						<exclude>**/org/overture/ast/modules/**/*.*</exclude>
+						<exclude>**/org/overture/ast/node/**/*.*</exclude>
+						<exclude>**/org/overture/ast/patterns/**/*.*</exclude>
+						<exclude>**/org/overture/ast/statements/**/*.*</exclude>
+						<exclude>**/org/overture/ast/types/**/*.*</exclude>
 
 						<!-- ir AST -->
-						<exclude>org/overture/codegen/ir/**/*</exclude>
+						<exclude>**/org/overture/codegen/ir/**/*</exclude>
 
 						<!-- Overture IDE - it has currently no tests -->
-						<exclude>org/overture/ide/**/*</exclude>
+						<exclude>**/org/overture/ide/**/*</exclude>
 
 						
 					</excludes>
@@ -254,6 +254,12 @@ http://mojo.codehaus.org/versions-maven-plugin/
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
           <version>1.8</version>
+        </plugin>
+
+				<plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>2.8.1</version>
         </plugin>
 
 				
