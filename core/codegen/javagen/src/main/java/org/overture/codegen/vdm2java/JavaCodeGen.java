@@ -179,9 +179,8 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 	protected void clear()
 	{
 		super.clear();
-		javaFormat.getMergeVisitor().init();
+		javaFormat.clear();
 		transSeries.clear();
-		javaFormat.clearFunctionValueAssistant();
 		clearVdmAstData();
 	}
 

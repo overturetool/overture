@@ -77,8 +77,7 @@ public class TypePredUtil
 
 		String javaPackage = handler.getJmlGen().getJavaSettings().getJavaRootPackage();
 		
-		//TODO: Add names of parameters of the enclosing method to 'names-to-avoid' in name generator
-		NameGen nameGen = new NameGen();
+		NameGen nameGen = new NameGen(encClass);
 		String consCheckExp = typeInfo.consCheckExp(encClass.getName(), javaPackage, var.getName(), nameGen);
 		
 		if (consCheckExp != null)

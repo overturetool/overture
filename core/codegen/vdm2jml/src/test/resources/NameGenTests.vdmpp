@@ -1,0 +1,14 @@
+class Entry
+
+instance variables
+private field : nat := 1;
+
+functions
+
+public op : () -> nat
+op () ==
+let i = 1
+in
+  i;
+
+end Entry

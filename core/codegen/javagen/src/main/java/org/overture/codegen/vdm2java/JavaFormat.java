@@ -31,10 +31,11 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.assistant.TypeAssistantIR;
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SExpIR;
-import org.overture.codegen.ir.SStateDesignatorIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
 import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
@@ -60,7 +61,6 @@ import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
 import org.overture.codegen.ir.expressions.APlusUnaryExpIR;
 import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
 import org.overture.codegen.ir.expressions.ASeqToStringUnaryExpIR;
-import org.overture.codegen.ir.expressions.AStringLiteralExpIR;
 import org.overture.codegen.ir.expressions.AStringToSeqUnaryExpIR;
 import org.overture.codegen.ir.expressions.AUndefinedExpIR;
 import org.overture.codegen.ir.expressions.SBinaryExpIR;
@@ -71,7 +71,6 @@ import org.overture.codegen.ir.expressions.SVarExpIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.statements.AForLoopStmIR;
-import org.overture.codegen.ir.statements.AMapSeqStateDesignatorIR;
 import org.overture.codegen.ir.statements.AStartStmIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.ACharBasicTypeIR;
@@ -89,8 +88,6 @@ import org.overture.codegen.ir.types.SBasicTypeIR;
 import org.overture.codegen.ir.types.SMapTypeIR;
 import org.overture.codegen.ir.types.SSeqTypeIR;
 import org.overture.codegen.ir.types.SSetTypeIR;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
@@ -166,11 +163,6 @@ public class JavaFormat
 		this.funcValAssist = functionValueAssistant;
 	}
 
-	public void clearFunctionValueAssistant()
-	{
-		this.funcValAssist = null;
-	}
-
 	public void setJavaSettings(JavaSettings javaSettings)
 	{
 		valueSemantics.setJavaSettings(javaSettings);
@@ -185,6 +177,7 @@ public class JavaFormat
 	{
 		mergeVisitor.init();
 		valueSemantics.clear();
+		this.funcValAssist = null;
 	}
 
 	public MergeVisitor getMergeVisitor()
@@ -277,12 +270,7 @@ public class JavaFormat
 			return "";
 		}
 	}
-
-	public static boolean isMapSeq(SStateDesignatorIR stateDesignator)
-	{
-		return stateDesignator instanceof AMapSeqStateDesignatorIR;
-	}
-
+	
 	private String getNumberDereference(INode node, boolean ignoreContext)
 	{
 		if (ignoreContext && node instanceof SExpIR)
@@ -777,11 +765,6 @@ public class JavaFormat
 		}
 	}
 
-	public boolean isStringLiteral(SExpIR exp)
-	{
-		return exp instanceof AStringLiteralExpIR;
-	}
-
 	public boolean isSeqType(SExpIR exp)
 	{
 		return info.getAssistantManager().getTypeAssistant().isSeqType(exp);
@@ -800,11 +783,6 @@ public class JavaFormat
 	public boolean isStringType(SExpIR exp)
 	{
 		return info.getAssistantManager().getTypeAssistant().isStringType(exp);
-	}
-
-	public boolean isCharType(STypeIR type)
-	{
-		return type instanceof ACharBasicTypeIR;
 	}
 
 	public String buildString(List<SExpIR> exps) throws AnalysisException
@@ -851,11 +829,6 @@ public class JavaFormat
 		}
 	}
 
-	public String nextVarName(String prefix)
-	{
-		return info.getTempVarNameGen().nextVarName(prefix);
-	}
-	
 	public boolean isLoopVar(AVarDeclIR localVar)
 	{
 		return localVar.parent() instanceof AForLoopStmIR;
