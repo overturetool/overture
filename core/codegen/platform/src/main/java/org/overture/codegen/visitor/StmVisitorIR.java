@@ -492,12 +492,10 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 		
 		if(!isConstructorCall && !isStaticOrSl)
 		{
-			ILexNameToken rootDefClassName = node.getRootdef().getClassDefinition().getName();
 			ILexNameToken enclosingClassName = node.getAncestor(SClassDefinition.class).getName();
 
-			if (!rootDefClassName.equals(enclosingClassName))
+			if (node.getName().getExplicit() && !node.getName().equals(enclosingClassName))
 			{
-
 				ASuperCallStmIR superCall = new ASuperCallStmIR();
 				superCall.setIsStatic(isStaticOrSl);
 				superCall.setType(typeCg);
