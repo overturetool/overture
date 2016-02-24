@@ -106,7 +106,6 @@ public class Reader extends VDMThread implements EvaluatePP {
 
     public void cg_init_Reader_1(final Buffer buf) {
         sentinel = new Reader_sentinel(this);
-
         b = buf;
     }
 
@@ -185,7 +184,6 @@ public class Writer extends VDMThread implements EvaluatePP {
 
     public void cg_init_Writer_1(final Buffer buf) {
         sentinel = new Writer_sentinel(this);
-
         b = buf;
     }
 

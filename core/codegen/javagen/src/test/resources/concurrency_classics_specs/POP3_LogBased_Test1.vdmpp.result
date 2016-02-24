@@ -456,7 +456,6 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
     public void cg_init_POP3ClientHandler_1(final POP3Server nparent,
         final MessageChannel nch) {
         sentinel = new POP3ClientHandler_sentinel(this);
-
         ss = quotes.AuthorizationQuote.getInstance();
         parent = nparent;
         msgChannel = nch;
@@ -1335,7 +1334,6 @@ public class POP3Message implements EvaluatePP {
     public void cg_init_POP3Message_1(final String nheader, final String nbody,
         final String nuniqueId) {
         sentinel = new POP3Message_sentinel(this);
-
         header = nheader;
         body = nbody;
         deleted = false;
@@ -1510,7 +1508,6 @@ public class POP3Server extends VDMThread implements EvaluatePP {
     public void cg_init_POP3Server_1(final VDMMap nmd,
         final MessageChannelBuffer nch, final VDMMap npasswords) {
         sentinel = new POP3Server_sentinel(this);
-
         maildrop = Utils.copy(nmd);
         connChannel = nch;
         locks = MapUtil.map();
@@ -2151,7 +2148,6 @@ public class POP3Test implements EvaluatePP {
 
     public void cg_init_POP3Test_1() {
         sentinel = new POP3Test_sentinel(this);
-
         ch = new MessageChannelBuffer();
         server = new POP3Server(MakeMailDrop(), ch, MakePasswordMap());
         mc1 = new MessageChannel();
@@ -2394,7 +2390,6 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
     public void cg_init_POP3TestSender_1(final String idarg,
         final VDMSeq cmdsarg, final MessageChannel mcarg) {
         sentinel = new POP3TestSender_sentinel(this);
-
         id = idarg;
         cmds = Utils.copy(cmdsarg);
         mc = mcarg;
@@ -2488,7 +2483,6 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
     public void cg_init_POP3TestListener_1(final String idarg,
         final MessageChannel mcarg) {
         sentinel = new POP3TestListener_sentinel(this);
-
         id = idarg;
         mc = mcarg;
         finished = false;

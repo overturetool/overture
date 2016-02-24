@@ -102,7 +102,6 @@ public class Incrementer1 extends VDMThread implements EvaluatePP {
 
     public void cg_init_Incrementer1_1(final SharedCounter s) {
         sentinel = new Incrementer1_sentinel(this);
-
         sharedCounter = s;
     }
 
@@ -195,7 +194,6 @@ public class Incrementer2 extends VDMThread implements EvaluatePP {
 
     public void cg_init_Incrementer2_1(final SharedCounter s) {
         sentinel = new Incrementer2_sentinel(this);
-
         sharedCounter = s;
     }
 
