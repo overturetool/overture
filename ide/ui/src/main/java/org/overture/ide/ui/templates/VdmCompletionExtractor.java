@@ -218,13 +218,9 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
                             throws AnalysisException{
 						String extractedName[] = explicitFunctionNameExtractor(node,info);
 						
-						functionTemplateCreator(extractedName,offset,context,proposals,info,viewer);
-						
-						
+						functionTemplateCreator(extractedName,offset,context,proposals,info,viewer,node.getLocation().getEndOffset());
 					}
 					
-					
-
 					@Override
 					public void caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node)
                             throws AnalysisException{
@@ -272,7 +268,7 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 	}
 	
 	
-	private void functionTemplateCreator(String[] extractedName, int offset,TemplateContext context,List<ICompletionProposal> proposals,VdmCompletionContext info,ITextViewer viewer) {
+	private void functionTemplateCreator(String[] extractedName, int offset,TemplateContext context,List<ICompletionProposal> proposals,VdmCompletionContext info,ITextViewer viewer,int nodeOffsetPosition) {
 		
 		if (context == null)
 			return;
@@ -281,19 +277,19 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 
 			ITextSelection selection = (ITextSelection) viewer
 					.getSelectionProvider().getSelection();
-			// adjust offset to end of normalized selection
-			if (selection.getOffset() == offset)
-				offset = selection.getOffset() + selection.getLength();
-			String prefix = extractPrefix(viewer, offset);
-			Region region = new Region(offset - prefix.length(), prefix.length());
-
-			context.setVariable("selection", selection.getText());
-			
-			Template template = new Template(extractedName[0],"Explicit Function","org.overture.ide.vdmpp.ui.contextType",extractedName[1],true);
-
-			proposals.add(createProposal(template, context, (IRegion) region,
-					getRelevance(template, prefix)));
-			
+			//if(selection.getOffset() > nodeOffsetPosition){
+				// adjust offset to end of normalized selection
+				if (selection.getOffset() == offset)
+					offset = selection.getOffset() + selection.getLength();
+				String prefix = extractPrefix(viewer, offset);
+				Region region = new Region(offset - prefix.length(), prefix.length());
+	
+				context.setVariable("selection", selection.getText());
+				
+				Template template = new Template(extractedName[0],"Explicit Function","org.overture.ide.vdmpp.ui.contextType",extractedName[1],true);
+				
+				proposals.add(createProposal(template, context, (IRegion) region,
+						getRelevance(template, prefix)));
 		}
 	}
 	
@@ -317,22 +313,6 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
     	if(findInString(info.proposalPrefix,replacmentString) && replacmentString != null && !replacmentString.isEmpty())
 		{	
 			IContextInformation contextInfo = new ContextInformation(displayname, displayname); //$NON-NLS-1$
-			
-			int curOffset = offset + info.offset;// - info2.proposalPrefix.length();
-			int length = replacmentString.length();
-			int replacementLength = info.proposalPrefix.length();
-			
-			proposals.add(new CompletionProposal(replacmentString, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), displayname, contextInfo, additionalProposalInfo));
-		}
-    }
-    
-    private void createCallParamProposal(INode node, String displayname, String replacmentString,String additionalProposalInfo,final VdmCompletionContext info, 
-    		final List<ICompletionProposal> proposals,final int offset){
-    	if(replacmentString != null && !replacmentString.isEmpty())
-		{	
-			IContextInformation contextInfo = new ContextInformation(displayname, displayname); //$NON-NLS-1$
-			
-			replacmentString = info.proposalPrefix.trim() + replacmentString;
 			
 			int curOffset = offset + info.offset;// - info2.proposalPrefix.length();
 			int length = replacmentString.length();
@@ -427,30 +407,6 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
     	return functionName;
     }
     
-    public void completeCallParams(final VdmCompletionContext info,
-			VdmDocument document, final List<ICompletionProposal> proposals,
-			final int offset, List<INode> Ast, final TemplateContext context) {
-    	for (final INode element : Ast)
-		{
-			try
-			{
-				element.apply(new DepthFirstAnalysisAdaptor()
-				{
-					@Override
-					public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
-                            throws AnalysisException{
-//						String extractedName[] = explicitFunctionNameExtractor(node,info);
-					}
-
-				});
-			} catch (AnalysisException e)
-			{
-				VdmUIPlugin.log("Completion error in " + getClass().getSimpleName()
-						+ "faild during populateNameList", e);
-			}
-		}
-		
-	}
     
     private List<String> explicitParameterNameExtractor(AExplicitFunctionDefinition node, String proposalPrefix) {
 
@@ -465,22 +421,6 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 		return ParameterNameList;
 	}
     
-    private String implicitParameterNameExtractor(AImplicitFunctionDefinition node) {
-//    	StringBuilder sb = new StringBuilder();
-//    	LinkedList<APatternListTypePair> strList = node.getParamPatterns();
-//    	List<PPattern> paramList = strList.getFirst();
-//    	for (PPattern str : paramList) {
-//			if(str != paramList.get(0)){
-//				sb.append(", ");
-//			}
-//    		sb.append(str.toString());
-//		}
-//    	sb.append(")");
-//		return sb.toString();
-    	
-    	return null;
-	}
-
 
 	@Override
 	protected String getTempleteContextType() {

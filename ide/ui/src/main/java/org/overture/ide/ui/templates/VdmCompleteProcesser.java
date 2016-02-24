@@ -89,7 +89,6 @@ public class VdmCompleteProcesser
 		switch (info.type)
 		{
 			case CallParam:
-				//vdmCompletionExtractor.completeCallParams(info, document, calculatedProposals, offset, getAst(document),viewer);
 				break;
 			case Dot:
 				break;
