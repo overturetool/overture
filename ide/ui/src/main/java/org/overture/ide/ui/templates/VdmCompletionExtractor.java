@@ -240,8 +240,9 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 					.getSelectionProvider().getSelection();
 			//if(selection.getOffset() > nodeOffsetPosition){
 				// adjust offset to end of normalized selection
-				if (selection.getOffset() == offset)
+				if (selection.getOffset() == offset){
 					offset = selection.getOffset() + selection.getLength();
+				}
 				String prefix = extractPrefix(viewer, offset);
 				Region region = new Region(offset - prefix.length(), prefix.length());
 	
@@ -284,7 +285,7 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
     private void createProposal(INode node, String displayname, String replacmentString,String additionalProposalInfo,final VdmCompletionContext info, 
     		final List<ICompletionProposal> proposals,final int offset)
     {
-    	if(findInString(info.proposalPrefix,replacmentString) && replacmentString != null && !replacmentString.isEmpty())
+    	if(nullOrEmptyCheck(replacmentString) && findInString(info.proposalPrefix,replacmentString))
 		{	
 			IContextInformation contextInfo = new ContextInformation(displayname, displayname); //$NON-NLS-1$
 			
