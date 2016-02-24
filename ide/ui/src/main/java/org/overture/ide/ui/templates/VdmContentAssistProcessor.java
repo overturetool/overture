@@ -69,25 +69,13 @@ public abstract class VdmContentAssistProcessor extends
 		}
 		
 		if (enableTemplate())
-		{
-			
-			
-			
+		{	
 			TemplateContext context = createContext(viewer, region);
 			if (context != null){
 				super.computeCompletionProposals(viewer, offset,modList);
 			}
 		}	
-//			if (templates != null)
-//			{
-//				for (int i = 0; i < templates.length; i++)
-//				{
-//					modList.add(templates[i]);
-//				}
-//
-//			}
-			
-		
+
 		if (modList.size() > 0)
 		{
 			return (ICompletionProposal[]) modList.toArray(new ICompletionProposal[modList.size()]);
