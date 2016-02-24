@@ -26,12 +26,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.ClonableString;
+import org.overture.codegen.assistant.LocationAssistantIR;
 import org.overture.codegen.assistant.TypeAssistantIR;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
@@ -930,6 +933,28 @@ public class JavaFormat
 	{
 		return clazz != null && clazz.getTag() instanceof JavaMainTag;
 	}
+	
+	public String formatVdmSource(PIR irNode)
+	{
+		if (getJavaSettings().printVdmSource() && irNode != null)
+		{
+			org.overture.ast.node.INode vdmNode = LocationAssistantIR.getVdmNode(irNode);
+
+			if (vdmNode != null)
+			{
+				ILexLocation loc = info.getLocationAssistant().findLocation(vdmNode);
+
+				if (loc != null)
+				{
+					return String.format("/* %s %d:%d */\n", loc.getFile().getName(), loc.getStartLine(), loc.getStartPos());
+				}
+			}
+
+		}
+
+		return "";
+	}
+	
 	
 	public String getQuotePackagePrefix()
 	{
