@@ -107,12 +107,10 @@ public abstract class VdmTemplateAssistProcessor extends TemplateCompletionProce
 			} catch (TemplateException e) {
 				continue;
 			}
-			if (!prefix.equals("")
-					&& (template.getName().startsWith(prefix) && template
-							.matches(prefix, context.getContextType().getId())))
-				matches.add(createProposal(template, context, (IRegion) region,
-						getRelevance(template, prefix)));
-			
+			if (!prefix.equals("") && (template.getName().startsWith(prefix) && template.matches(prefix, context.getContextType().getId()))){				
+				matches.add(createProposal(template, context, (IRegion) region,	getRelevance(template, prefix)));
+				
+			}
 		}
 		return matches.toArray(new ICompletionProposal[matches.size()]);
 	}

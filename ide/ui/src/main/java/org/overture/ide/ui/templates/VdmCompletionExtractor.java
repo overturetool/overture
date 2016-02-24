@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
@@ -16,11 +14,9 @@ import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.templates.Template;
-import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -32,23 +28,9 @@ import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
-import org.overture.ast.patterns.ACharacterPattern;
-import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
-import org.overture.ast.types.ABooleanBasicType;
-import org.overture.ast.types.ACharBasicType;
-import org.overture.ast.types.AIntNumericBasicType;
-import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.ANatNumericBasicType;
-import org.overture.ast.types.ANatOneNumericBasicType;
-import org.overture.ast.types.AParameterType;
-import org.overture.ast.types.ARationalNumericBasicType;
-import org.overture.ast.types.ARealNumericBasicType;
-import org.overture.ast.types.ATokenBasicType;
-import org.overture.ast.types.SNumericBasicType;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
@@ -89,7 +71,7 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
                             throws AnalysisException{
 						String name = node.toString();
 						if(!checkForDuplicates(name,dynamicTemplateProposals)){
-							createProposal(node,name,name,name,info,proposals,offset);
+							createProposal(node,name,name,"Instance Variable",info,proposals,offset);
 							dynamicTemplateProposals.add(name);
 						}
 					}
@@ -202,7 +184,7 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 			                  throws AnalysisException{
 						String name = node.toString();
 						if(!checkForDuplicates(name,dynamicTemplateProposals)){
-							createProposal(node,name,name,name,info,proposals,offset);
+							createProposal(node,name,name,"Variable Exp",info,proposals,offset);
 							dynamicTemplateProposals.add(name);
 						}
 					}
@@ -225,7 +207,7 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 		Iterator<String> iter = basicTypes.iterator();
 		while(iter.hasNext()){
 			String item = iter.next();
-			createProposal(null,item,item,item,info,proposals,offset);			
+			createProposal(null,item,item,"Basic Type",info,proposals,offset);			
 		}
 	}
 	
@@ -238,34 +220,32 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 
 			ITextSelection selection = (ITextSelection) viewer
 					.getSelectionProvider().getSelection();
-			//if(selection.getOffset() > nodeOffsetPosition){
-				// adjust offset to end of normalized selection
-				if (selection.getOffset() == offset){
-					offset = selection.getOffset() + selection.getLength();
-				}
-				String prefix = extractPrefix(viewer, offset);
-				Region region = new Region(offset - prefix.length(), prefix.length());
-	
-				context.setVariable("selection", selection.getText());
+			// get caret pos = selection.getOffset()
 				
-				Template template = new Template(extractedName[0],"Explicit Function","org.overture.ide.vdmpp.ui.contextType",extractedName[1],true);
-				
-				proposals.add(createProposal(template, context, (IRegion) region,
-						getRelevance(template, prefix)));
+			if (selection.getOffset() == offset){
+				offset = selection.getOffset() + selection.getLength();
+			}
+			String prefix = extractPrefix(viewer, offset);
+			Region region = new Region(offset - prefix.length(), prefix.length());
+
+			context.setVariable("selection", selection.getText());
+			
+			Template template = new Template(extractedName[0],"Explicit Function","org.overture.ide.vdmpp.ui.contextType",extractedName[1],true);
+			
+			proposals.add(createProposal(template, context, (IRegion) region, getRelevance(template, prefix)));
 		}
 	}
 	
 	private boolean checkForDuplicates(String value, ArrayList<String> container){
 		
 		Iterator<String> iter = container.iterator();
-		//if(container == null || container.size() <= 0){
-			while(iter.hasNext()){
-				String item = iter.next();
-				if(Objects.equals(value, item)){
-					return true;
-				}
+
+		while(iter.hasNext()){
+			String item = iter.next();
+			if(Objects.equals(value, item)){
+				return true;
 			}
-		//}
+		}
 		return false;
 	}
 	
@@ -279,7 +259,7 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
     	if(text == ""){
     		return true;
     	}
-	  return word.toLowerCase().startsWith(text.toLowerCase());
+    	return word.toLowerCase().startsWith(text.toLowerCase());
 	}
     
     private void createProposal(INode node, String displayname, String replacmentString,String additionalProposalInfo,final VdmCompletionContext info, 
@@ -299,7 +279,6 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
     
     private String[] explicitFunctionNameExtractor(AExplicitFunctionDefinition node, final VdmCompletionContext info){
     	String functionName[] = new String[2];
-    	
     	String[] parts = node.toString().split(":");
     	parts = parts[0].split(" ");
     	
@@ -335,13 +314,11 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 		functionName[1] = sbPattern.toString();
 		functionName[0] = sbDisplayName.toString();
 
-    	
     	return functionName;
     }
     
     private static String[] implicitFunctionNameExtractor(INode node){
     	String functionName[] = new String[2];
-    	
     	String[] parts1 = node.toString().split(" ");
     	String[] parts2 = parts1[2].split("\\(");
     	
@@ -356,7 +333,6 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
     
     private static String[] explicitOperationNameExtractor(INode node){
 		String functionName[] = new String[2];
-    	
     	String[] parts = node.toString().split(" ");
     	
     	if(parts[0] != null && !parts[0].isEmpty()){
@@ -382,21 +358,19 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
     	return functionName;
     }
     
-    
     private List<String> explicitParameterNameExtractor(AExplicitFunctionDefinition node, String proposalPrefix) {
 
     	List<String> ParameterNameList = new ArrayList<String>();
     	LinkedList<List<PPattern>> strList = node.getParamPatternList();
     	List<PPattern> paramList = strList.getFirst();
+    	
     	for (PPattern str : paramList) {
-
     		ParameterNameList.add(str.toString());
 		}
 
 		return ParameterNameList;
 	}
     
-
 	@Override
 	protected String getTempleteContextType() {
 		// TODO Auto-generated method stub

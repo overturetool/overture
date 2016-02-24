@@ -21,11 +21,8 @@
  */
 package org.overture.ide.ui.templates;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 import org.eclipse.jface.text.ITextViewer;
@@ -54,8 +51,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
-import org.overture.ast.types.ANatNumericBasicType;
-import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
