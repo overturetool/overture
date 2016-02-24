@@ -57,6 +57,18 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 	
 	static VdmElementImageProvider imgProvider = new VdmElementImageProvider();
 	
+	private ArrayList<String> basicTypes = new ArrayList<String>() {{
+	    add("nat");
+	    add("nat1");
+	    add("bool");
+	    add("int");
+	    add("real");
+	    add("char");
+	}};
+	
+	private ArrayList<String> dynamicTemplateProposals = new ArrayList<String>();
+	private ArrayList<String> dynamicProposals = new ArrayList<String>();
+	
 	public VdmCompletionExtractor(){}
 	
 	    
@@ -73,152 +85,83 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 				{
 					
 					@Override
-					public void setVisitedNodes(Set<INode> value){
-						 
-						 for (int i = 0; i < value.size(); i++) {
-							System.out.println(i+": " + value);
-						}
-						 super.setVisitedNodes(value);
-					}
-					
-					@Override
-					public void caseANatNumericBasicType(ANatNumericBasicType node)
-							throws AnalysisException
-					{
-						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
-					}
-					
-					@Override
-					public void caseANatOneNumericBasicType(ANatOneNumericBasicType node)
-							throws AnalysisException
-					{
-						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
-					}
-					
-					@Override
-					public void caseABooleanBasicType(ABooleanBasicType node){
-						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
-					}
-					
-					@Override
-					public void caseAIntNumericBasicType(AIntNumericBasicType node){
-						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
-					}
-					
-					@Override
-					public void caseARationalNumericBasicType(ARationalNumericBasicType node){
-						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
-					}
-					
-					@Override
-					public void caseARealNumericBasicType(ARealNumericBasicType node){
-						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
-					}
-					
-					@Override
-					public void caseACharacterPattern(ACharacterPattern node){
-						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
-					}
-					
-					@Override
-					public void caseACharBasicType(ACharBasicType node){
-						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
-					}
-					
-					@Override
-					public void caseATokenBasicType(ATokenBasicType node){
-						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
-					}
-					
-					@Override
-					public void defaultSNumericBasicType(SNumericBasicType node){
-						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
-					}
-					
-					@Override
-					public void caseAClassInvariantStm(AClassInvariantStm node){
-						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
-					}
-					
-					@Override
-					public void caseAClassInvariantDefinition(AClassInvariantDefinition node){
-						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
-					}
-					
-					@Override
-					public void caseANamedInvariantType(ANamedInvariantType node){
-						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
-					}
-					
-					@Override
 					public void caseAInstanceVariableDefinition(AInstanceVariableDefinition node)
                             throws AnalysisException{
 						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
+						if(!checkForDuplicates(name,dynamicTemplateProposals)){
+							createProposal(node,name,name,name,info,proposals,offset);
+							dynamicTemplateProposals.add(name);
+						}
 					}
 
 					@Override
 					public void caseALetBeStBindingTraceDefinition(ALetBeStBindingTraceDefinition node)
                             throws AnalysisException{
 						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
+						if(!checkForDuplicates(name,dynamicTemplateProposals)){
+							createProposal(node,name,name,name,info,proposals,offset);
+							dynamicTemplateProposals.add(name);
+						}
 					}
 					
 					@Override
 					public void caseALetBeStExp(ALetBeStExp node)
 		                     throws AnalysisException{
 						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
+						if(!checkForDuplicates(name,dynamicTemplateProposals)){
+							createProposal(node,name,name,name,info,proposals,offset);
+							dynamicTemplateProposals.add(name);
+						}
 					}
 					
 					@Override
 					public void caseALetBeStStm(ALetBeStStm node)
 		                     throws AnalysisException{
 						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
+						if(!checkForDuplicates(name,dynamicTemplateProposals)){
+							createProposal(node,name,name,name,info,proposals,offset);
+							dynamicTemplateProposals.add(name);
+						}
 					}
 					
 					@Override
 					public void caseALetDefBindingTraceDefinition(ALetDefBindingTraceDefinition node)
                             throws AnalysisException{
 						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
+						if(!checkForDuplicates(name,dynamicTemplateProposals)){
+							createProposal(node,name,name,name,info,proposals,offset);
+							dynamicTemplateProposals.add(name);
+						}
 					}
 					
 					@Override
 					public void caseALetDefExp(ALetDefExp node)
 		                    throws AnalysisException{
 						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
+						if(!checkForDuplicates(name,dynamicTemplateProposals)){
+							createProposal(node,name,name,name,info,proposals,offset);
+							dynamicTemplateProposals.add(name);
+						}
 					}
 					
 					@Override
 					public void caseALetStm(ALetStm node)
 			                 throws AnalysisException{
 						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
+						if(!checkForDuplicates(name,dynamicTemplateProposals)){
+							createProposal(node,name,name,name,info,proposals,offset);
+							dynamicTemplateProposals.add(name);
+						}
 					}
-					
 					
 					@Override
 					public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
                             throws AnalysisException{
 						String extractedName[] = explicitFunctionNameExtractor(node,info);
-						
-						functionTemplateCreator(extractedName,offset,context,proposals,info,viewer,node.getLocation().getEndOffset());
+						if(nullOrEmptyCheck(extractedName[1]) && !checkForDuplicates(extractedName[1],dynamicTemplateProposals)){
+							functionTemplateCreator(extractedName,offset,context,proposals,info,viewer,node.getLocation().getEndOffset());
+							dynamicTemplateProposals.add(extractedName[1]);
+						}
 					}
 					
 					@Override
@@ -226,8 +169,9 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
                             throws AnalysisException{
 						String extractedName[] = implicitFunctionNameExtractor(node);
 
-						if(nullOrEmptyCheck(extractedName[0])){
+						if(nullOrEmptyCheck(extractedName[0]) && !checkForDuplicates(extractedName[1],dynamicProposals)){
 							createProposal(node,extractedName[0],extractedName[1],node.toString(),info,proposals,offset);
+							dynamicProposals.add(extractedName[1]);
 						}
 					}
 					
@@ -236,8 +180,9 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
                             throws AnalysisException{
 						String extractedName[] = explicitOperationNameExtractor(node);
 						
-						if(nullOrEmptyCheck(extractedName[0])){
+						if(nullOrEmptyCheck(extractedName[0]) && !checkForDuplicates(extractedName[1],dynamicProposals)){
 							createProposal(node, extractedName[0], extractedName[1], node.toString(), info, proposals, offset);
+							dynamicProposals.add(extractedName[1]);
 						}
 					}
 					
@@ -246,8 +191,9 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
                             throws AnalysisException{
 						String extractedName[] = implicitOperationNameExtractor(node);
 						
-						if(nullOrEmptyCheck(extractedName[0])){
+						if(nullOrEmptyCheck(extractedName[0]) && !checkForDuplicates(extractedName[1],dynamicProposals)){
 							createProposal(node, extractedName[0], extractedName[1], node.toString(), info, proposals, offset);
+							dynamicProposals.add(extractedName[1]);
 						}
 					}
 					
@@ -255,7 +201,10 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 					public void caseAVariableExp(AVariableExp node)
 			                  throws AnalysisException{
 						String name = node.toString();
-						createProposal(node,name,name,name,info,proposals,offset);
+						if(!checkForDuplicates(name,dynamicTemplateProposals)){
+							createProposal(node,name,name,name,info,proposals,offset);
+							dynamicTemplateProposals.add(name);
+						}
 					}
 
 				});
@@ -265,15 +214,27 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 						+ "faild during populateNameList", e);
 			}
 		}
+		basicTypeProposalFunction(info, proposals, offset);
+		dynamicTemplateProposals.clear();
+		dynamicProposals.clear();
 	}
 	
+	private void basicTypeProposalFunction(final VdmCompletionContext info, final List<ICompletionProposal> proposals,
+			final int offset){
+		
+		Iterator<String> iter = basicTypes.iterator();
+		while(iter.hasNext()){
+			String item = iter.next();
+			createProposal(null,item,item,item,info,proposals,offset);			
+		}
+	}
 	
 	private void functionTemplateCreator(String[] extractedName, int offset,TemplateContext context,List<ICompletionProposal> proposals,VdmCompletionContext info,ITextViewer viewer,int nodeOffsetPosition) {
 		
 		if (context == null)
 			return;
 		
-		if(nullOrEmptyCheck(extractedName[0])){
+		if(nullOrEmptyCheck(extractedName[0]) && findInString(info.proposalPrefix,extractedName[0])){
 
 			ITextSelection selection = (ITextSelection) viewer
 					.getSelectionProvider().getSelection();
@@ -293,6 +254,19 @@ public final class VdmCompletionExtractor extends VdmTemplateAssistProcessor {
 		}
 	}
 	
+	private boolean checkForDuplicates(String value, ArrayList<String> container){
+		
+		Iterator<String> iter = container.iterator();
+		//if(container == null || container.size() <= 0){
+			while(iter.hasNext()){
+				String item = iter.next();
+				if(Objects.equals(value, item)){
+					return true;
+				}
+			}
+		//}
+		return false;
+	}
 	
 	
 	private boolean nullOrEmptyCheck(String str){
