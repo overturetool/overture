@@ -66,6 +66,7 @@ public class JavaCodeGenMain
 	public static final String NO_CODE_FORMAT = "-nocodeformat";
 	public static final String JUNIT4 = "-junit4";
 	public static final String SEP_TEST_CODE = "-separate";
+	public static final String VDM_LOC = "-vdmloc";
 	
 	// Folder names
 	private static final String GEN_MODEL_CODE_FOLDER = "main";
@@ -212,6 +213,10 @@ public class JavaCodeGenMain
 			else if(arg.equals(SEP_TEST_CODE))
 			{
 				separateTestCode = true;
+			}
+			else if(arg.equals(VDM_LOC))
+			{
+				javaSettings.setPrintVdmSource(true);
 			}
 			else
 			{
@@ -556,6 +561,7 @@ public class JavaCodeGenMain
 		Logger.getLog().printErrorln(JUNIT4 + ": to generate VDMUnit " + IRConstants.TEST_CASE + " sub-classes to JUnit4 tests");
 		Logger.getLog().printErrorln(SEP_TEST_CODE + ": to place the code generated model and the test code into separate folders named '"
 				+ GEN_MODEL_CODE_FOLDER + "' and '" + GEN_TESTS_FOLDER + "', respectively");
+		Logger.getLog().printErrorln(VDM_LOC + ": Generate VDM location information for code generated constructs");
 
 		// Terminate
 		System.exit(1);
