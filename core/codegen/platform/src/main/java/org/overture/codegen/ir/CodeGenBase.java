@@ -26,8 +26,10 @@ import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
 import org.overture.codegen.assistant.DeclAssistantIR;
 import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.trans.BlockCleanupTrans;
 import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.utils.Generated;
@@ -233,6 +235,43 @@ abstract public class CodeGenBase implements IREventCoordinator
 		nodes.addAll(ast);
 		
 		return nodes;
+	}
+	
+	/**
+	 * Applies the {@link #cleanup(IRStatus)} method to all the IR statuses.
+	 * 
+	 * @param statuses
+	 *            The IR statuses
+	 */
+	public void cleanup(List<IRStatus<PIR>> statuses)
+	{
+		for (IRStatus<PIR> s : statuses)
+		{
+			cleanup(s);
+		}
+	}
+
+	/**
+	 * Cleans up an IR status by removing redundant {@link ABlockStmIR} nodes using the {@link BlockCleanupTrans}
+	 * transformation.
+	 * 
+	 * @param status
+	 *            The IR status
+	 */
+	public void cleanup(IRStatus<PIR> status)
+	{
+		if (status != null && status.getIrNode() != null)
+		{
+			try
+			{
+				status.getIrNode().apply(new BlockCleanupTrans());
+			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
+			{
+				e.printStackTrace();
+				Logger.getLog().printErrorln("Problem encountered when trying to cleanup blocks in '"
+						+ this.getClass().getSimpleName() + "'");
+			}
+		}
 	}
 	
 	/**
