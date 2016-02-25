@@ -936,7 +936,7 @@ public class JavaFormat
 	
 	public String formatVdmSource(PIR irNode)
 	{
-		if (getJavaSettings().printVdmSource() && irNode != null)
+		if (getJavaSettings().printVdmLocations() && irNode != null)
 		{
 			org.overture.ast.node.INode vdmNode = LocationAssistantIR.getVdmNode(irNode);
 

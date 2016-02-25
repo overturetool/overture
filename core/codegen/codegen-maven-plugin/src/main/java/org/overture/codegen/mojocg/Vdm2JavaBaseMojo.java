@@ -60,6 +60,13 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	 * @parameter
 	 */
 	protected boolean formatCode = true;
+	
+	/**
+	 * Generate VDM location information for code generated constructs
+	 * 
+	 * @parameter
+	 */
+	protected boolean printVdmLocations = false;
 
 	/**
 	 * @parameter property="project" default-value="${project}"

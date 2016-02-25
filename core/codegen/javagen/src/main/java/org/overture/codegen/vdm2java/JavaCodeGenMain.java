@@ -216,7 +216,7 @@ public class JavaCodeGenMain
 			}
 			else if(arg.equals(VDM_LOC))
 			{
-				javaSettings.setPrintVdmSource(true);
+				javaSettings.setPrintVdmLocations(true);
 			}
 			else
 			{

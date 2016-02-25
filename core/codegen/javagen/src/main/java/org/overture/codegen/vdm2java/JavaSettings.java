@@ -35,7 +35,7 @@ public class JavaSettings
 	private boolean makeClassesSerializable;
 	private boolean genJUnit4tests;
 	private boolean genSystemClass;
-	private boolean printVdmSource;
+	private boolean printVdmLocations;
 	
 	public JavaSettings()
 	{
@@ -48,7 +48,7 @@ public class JavaSettings
 		this.makeClassesSerializable = false;
 		this.genJUnit4tests = false;
 		this.genSystemClass = false;
-		this.printVdmSource = false;
+		this.printVdmLocations = false;
 	}
 	
 	public List<String> getModulesToSkip()
@@ -147,13 +147,13 @@ public class JavaSettings
 		this.genSystemClass = genSystemClass;
 	}
 
-	public boolean printVdmSource()
+	public boolean printVdmLocations()
 	{
-		return printVdmSource;
+		return printVdmLocations;
 	}
 
-	public void setPrintVdmSource(boolean printVdmSource)
+	public void setPrintVdmLocations(boolean printVdmSource)
 	{
-		this.printVdmSource = printVdmSource;
+		this.printVdmLocations = printVdmSource;
 	}
 }
