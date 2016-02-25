@@ -414,11 +414,13 @@ public class Vdm2JavaCommand extends AbstractHandler
 		
 		boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
 		String javaPackage = preferences.get(ICodeGenConstants.JAVA_PACKAGE, ICodeGenConstants.JAVA_PACKAGE_DEFAULT);
+		boolean genVdmLoc = preferences.getBoolean(ICodeGenConstants.GENERATE_VDM_LOCATIONS_INFO, ICodeGenConstants.GENERATE_VDM_LOCATIONS_INFO_DEFAULT);
 		
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(disableCloning);
 		javaSettings.setModulesToSkip(classesToSkip);
 		javaSettings.setJavaRootPackage(javaPackage);
+		javaSettings.setPrintVdmLocations(genVdmLoc);
 		
 		if (!JavaCodeGenUtil.isValidJavaPackage(javaSettings.getJavaRootPackage()))
 		{

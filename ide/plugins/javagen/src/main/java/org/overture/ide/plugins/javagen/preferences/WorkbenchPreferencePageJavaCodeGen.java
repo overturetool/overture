@@ -50,6 +50,7 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 	private Button genConcMechanismsCheckBox;
 	private Text classesToSkipField;
 	private Text packageField;
+	private Button genVdmLocCheckBox;
 	private Button genJmlCheckBox;
 	private Button jmlUseInvForCheckBox;
 	
@@ -80,6 +81,9 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		jmlUseInvForCheckBox = new Button(composite, SWT.CHECK);
 		jmlUseInvForCheckBox.setText("Use JML \\invariant_for to explicitly check record invariants");
 
+		genVdmLocCheckBox = new Button(composite, SWT.CHECK);
+		genVdmLocCheckBox.setText("Generate VDM location information for code generated constructs");
+		
 		Label packageLabel = new Label(composite, SWT.NULL);
 		packageLabel.setText("Output package of the generated Java code (e.g. my.pack)");
 		final GridData gridData2 = new GridData();
@@ -163,8 +167,11 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 			// To indicate that we do not want the user specified package to be saved
 			javaPackage = null;
 		}
+		
+		boolean genVdmLocations = genVdmLocCheckBox.getSelection();
+		store.setDefault(ICodeGenConstants.GENERATE_VDM_LOCATIONS_INFO, genVdmLocations);
 
-		Activator.savePluginSettings(disableCloning, genAsStrings, genConcMechanisms, genJml, jmlUseInvFor, userSpecifiedClassesToSkip, javaPackage);
+		Activator.savePluginSettings(disableCloning, genAsStrings, genConcMechanisms, genJml, jmlUseInvFor, userSpecifiedClassesToSkip, javaPackage, genVdmLocations);
 		
 		refreshControls();
 	}
@@ -207,6 +214,11 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		if(packageField != null)
 		{
 			packageField.setText(ICodeGenConstants.JAVA_PACKAGE_DEFAULT);
+		}
+		
+		if(genVdmLocCheckBox != null)
+		{
+			genVdmLocCheckBox.setSelection(ICodeGenConstants.GENERATE_VDM_LOCATIONS_INFO_DEFAULT);
 		}
 	}
 	
@@ -253,6 +265,11 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		if(packageField != null)
 		{
 			packageField.setText(preferences.get(ICodeGenConstants.JAVA_PACKAGE, ICodeGenConstants.JAVA_PACKAGE_DEFAULT));
+		}
+		
+		if (genVdmLocCheckBox != null)
+		{
+			genVdmLocCheckBox.setSelection(preferences.getBoolean(ICodeGenConstants.GENERATE_VDM_LOCATIONS_INFO, ICodeGenConstants.GENERATE_VDM_LOCATIONS_INFO_DEFAULT));
 		}
 	}
 }
