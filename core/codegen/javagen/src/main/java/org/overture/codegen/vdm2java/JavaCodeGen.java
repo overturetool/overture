@@ -53,18 +53,18 @@ import org.overture.codegen.analysis.violations.TypenameComparison;
 import org.overture.codegen.analysis.violations.VdmAstAnalysis;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
+import org.overture.codegen.ir.CodeGenBase;
+import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRStatus;
+import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.ir.declarations.SClassDeclIR;
-import org.overture.codegen.ir.CodeGenBase;
-import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRStatus;
-import org.overture.codegen.ir.IrNodeInfo;
-import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.trans.DivideTrans;
@@ -266,6 +266,8 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 				}
 			}
 		}
+		
+		cleanup(IRStatus.extract(canBeGenerated));
 		
 		// Event notification
 		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), SClassDeclIR.class);
