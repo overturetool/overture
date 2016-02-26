@@ -29,6 +29,7 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.lex.LexQuoteToken;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -90,33 +91,61 @@ public class RecordBasisChecker extends TypeUnwrapper<Boolean>
 			// record types, making the field types the union of the original
 			// fields' types...
 
-			Map<String, PTypeSet> common = new HashMap<String, PTypeSet>();
+			Map<String, Vector<PType>> common = new HashMap<String, Vector<PType>>();
+			int recordCount = 0;
 
 			for (PType t : type.getTypes())
 			{
 				if (af.createPTypeAssistant().isRecord(t))
 				{
+					recordCount++;
+					
 					for (AFieldField f : af.createPTypeAssistant().getRecord(t).getFields())
 					{
-						PTypeSet current = common.get(f.getTag());
+						List<PType> current = common.get(f.getTag());
 
 						if (current == null)
 						{
-							common.put(f.getTag(), new PTypeSet(f.getType(), af));
-						} else
+							Vector<PType> list = new Vector<PType>();
+							list.add(f.getType());
+							common.put(f.getTag(), list);
+						}
+						else
 						{
 							current.add(f.getType());
 						}
 					}
 				}
 			}
+			
+    		// If all fields were present in all records, the TypeLists will be the
+    		// same size. But if not, the shorter ones have to have UnknownTypes added,
+    		// because some of the records do not have that field.
+    		
+    		Map<String, PTypeSet> typesets = new HashMap<String, PTypeSet>();
+    		
+    		for (String field: common.keySet())
+    		{
+    			List<PType> list = common.get(field);
+    			
+    			if (list.size() != recordCount)
+    			{
+    				// Both unknown and undefined types do not trigger isSubType, so we use
+    				// an illegal quote type, <?>.
+    				list.add(AstFactory.newAQuoteType(new LexQuoteToken("?", type.getLocation())));
+    			}
+    			
+    			PTypeSet set = new PTypeSet(af);
+    			set.addAll(list);
+    			typesets.put(field, set);
+    		}
 
 			List<AFieldField> fields = new Vector<AFieldField>();
 
-			for (String tag : common.keySet())
+			for (String tag : typesets.keySet())
 			{
 				LexNameToken tagname = new LexNameToken("?", tag, type.getLocation());
-				fields.add(AstFactory.newAFieldField(tagname, tag, common.get(tag).getType(type.getLocation()), false));
+				fields.add(AstFactory.newAFieldField(tagname, tag, typesets.get(tag).getType(type.getLocation()), false));
 			}
 
 			type.setRecType(fields.isEmpty() ? null
