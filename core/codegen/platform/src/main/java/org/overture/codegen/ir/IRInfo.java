@@ -265,6 +265,12 @@ public class IRInfo
 
 	public void registerQuoteValue(String value)
 	{
+		// Illegal quote types are used internally so ignore it.
+		if("?".equals(value))
+		{
+			return;
+		}
+		
 		if (value == null || value.isEmpty())
 		{
 			Logger.getLog().printErrorln("Tried to register invalid qoute value");

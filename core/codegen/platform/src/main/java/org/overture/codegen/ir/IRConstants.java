@@ -41,5 +41,7 @@ public class IRConstants
 			"Assert", "Test", "TestCase", "TestSuite", "TestListener",
 			"TestResult", "TestRunner", "VDMUtil", "CPU", "BUS" };
 
+	public static final String ILLEGAL_QUOTE_VALUE = "?";
+	
 	public static final String[] RESERVED_CLASS_NAMES = (String[]) ArrayUtils.addAll(new String[] { QUOTES_INTERFACE_NAME }, CLASS_NAMES_USED_IN_VDM);
 }

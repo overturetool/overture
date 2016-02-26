@@ -36,6 +36,7 @@ import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -43,6 +44,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
 import org.overture.ast.util.PTypeSet;
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SObjectDesignatorIR;
 import org.overture.codegen.ir.STypeIR;
@@ -95,6 +97,27 @@ public class TypeAssistantIR extends AssistantBase
 	public TypeAssistantIR(AssistantManager assistantManager)
 	{
 		super(assistantManager);
+	}
+	
+	public void removeIllegalQuoteTypes(List<PType> types)
+	{
+		List<Integer> illegalIndices = new LinkedList<>();
+
+		for (int i = 0; i < types.size(); i++)
+		{
+			PType t = types.get(i);
+
+			if (t instanceof AQuoteType
+					&& ((AQuoteType) t).getValue().getValue().equals(IRConstants.ILLEGAL_QUOTE_VALUE))
+			{
+				illegalIndices.add(i);
+			}
+		}
+
+		for (int i = illegalIndices.size() - 1; i >= 0; i--)
+		{
+			types.remove(i);
+		}
 	}
 
 	public STypeIR getFieldExpType(IRInfo info, String fieldName, String fieldModule,
