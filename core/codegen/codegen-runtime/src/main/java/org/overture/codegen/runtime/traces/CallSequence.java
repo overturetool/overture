@@ -23,10 +23,10 @@
 
 package org.overture.codegen.runtime.traces;
 
-import java.util.Vector;
+import java.util.LinkedList;
 
 @SuppressWarnings("serial")
-public class CallSequence extends Vector<CallStatement>
+public class CallSequence extends LinkedList<Statement>
 {
 	private int filtered = 0;
 
@@ -36,29 +36,17 @@ public class CallSequence extends Vector<CallStatement>
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
 
-		for (CallStatement stmt : this)
+		for (Statement stmt : this)
 		{
-			sb.append(sep);
-			sb.append(stmt.toString());
-			sep = "; ";
+			if (!(stmt instanceof TraceVariable))
+			{
+				sb.append(sep);
+				sb.append(stmt.toString());
+				sep = "; ";
+			}
 		}
 
 		return sb.toString();
-
-//		StringBuilder sb = new StringBuilder();
-//		String sep = "";
-//
-//		for (PStm stmt : this)
-//		{
-//			if (!(stmt instanceof TraceVariableStatement))
-//			{
-//				sb.append(sep);
-//				sb.append(stmt.toString());
-//				sep = "; ";
-//			}
-//		}
-//
-//		return sb.toString();
 	}
 
 	public String toShape(TraceReductionType type)
@@ -133,12 +121,10 @@ public class CallSequence extends Vector<CallStatement>
 				return false;
 			}
 
-			// pvj: This will always be true since there are no trace variable statements
-			// as they are stored in a separate environment
-			// if (!(get(i) instanceof TraceVariableStatement))
-			// {
+			if (!(get(i) instanceof TraceVariable))
+			{
 				count++; // Only increment for non-variable statements
-			// }
+			}
 
 			i++;
 		}

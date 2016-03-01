@@ -1,5 +1,0 @@
-operations
-
-mktkntest2() r:bool
-  post r = mk_token({1,2}) = mk_token({2,1})
-

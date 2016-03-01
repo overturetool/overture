@@ -28,11 +28,17 @@ public class IRSettings
 {
 	private boolean charSeqAsString;
 	private boolean generateConc;
+	
 	private boolean generatePreConds;
 	private boolean generatePreCondChecks;
+	private boolean makePreCondsPublic;
+	
 	private boolean generatePostConds;
 	private boolean generatePostCondChecks;
+	private boolean makePostCondsPublic;
+	
 	private boolean generateTraces;
+	
 	private boolean generateInvariantChecks;
 
 	public IRSettings()
@@ -78,6 +84,16 @@ public class IRSettings
 	{
 		this.generatePreCondChecks = generatePreCondChecks;
 	}
+	
+	public boolean makePreCondsPublic()
+	{
+		return makePreCondsPublic;
+	}
+
+	public void setMakePreCondsPublic(boolean makePreCondsPublic)
+	{
+		this.makePreCondsPublic = makePreCondsPublic;
+	}
 
 	public boolean generatePostConds()
 	{
@@ -97,6 +113,16 @@ public class IRSettings
 	public void setGeneratePostCondChecks(boolean generatePostCondChecks)
 	{
 		this.generatePostCondChecks = generatePostCondChecks;
+	}
+	
+	public boolean makePostCondsPublic()
+	{
+		return makePostCondsPublic;
+	}
+
+	public void setMakePostCondsPublic(boolean makePostCondsPublic)
+	{
+		this.makePostCondsPublic = makePostCondsPublic;
 	}
 
 	public boolean generateTraces()

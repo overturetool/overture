@@ -9,8 +9,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        VDMSeq xs = SeqUtil.seq(1L, 2L, 3L);
-        Func_1<Number, Number> func = new Func_1<Number, Number>() {
+        final VDMSeq xs = SeqUtil.seq(1L, 2L, 3L);
+        final Func_1<Number, Number> func = new Func_1<Number, Number>() {
                 public Number eval(final Number x) {
                     return x.longValue() + 1L;
                 }

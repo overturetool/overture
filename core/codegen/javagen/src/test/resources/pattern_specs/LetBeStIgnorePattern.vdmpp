@@ -1,0 +1,9 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+  let - in set {1,2,3} in return 0;
+
+end Entry

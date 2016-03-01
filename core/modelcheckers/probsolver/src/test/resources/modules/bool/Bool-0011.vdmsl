@@ -1,5 +1,0 @@
-operations
-
-
-    sub() r : nat
-    post 4 - 1 = r;

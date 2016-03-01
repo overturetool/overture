@@ -9,7 +9,7 @@ public class A {
     }
 
     public void op() {
-        VDMSeq x = SeqUtil.seq(new Rec(1L), new Rec(2L), new Rec(3L));
+        final VDMSeq x = SeqUtil.seq(new Rec(1L), new Rec(2L), new Rec(3L));
 
         for (Iterator iterator_1 = x.iterator(); iterator_1.hasNext();) {
             Rec e = (Rec) iterator_1.next();

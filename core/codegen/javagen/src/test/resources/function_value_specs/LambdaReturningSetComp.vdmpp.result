@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static VDMSet op() {
-        Func_1<Number, VDMSet> d = new Func_1<Number, VDMSet>() {
+        final Func_1<Number, VDMSet> d = new Func_1<Number, VDMSet>() {
                 public VDMSet eval(final Number x) {
                     VDMSet setCompResult_1 = SetUtil.set();
                     VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
@@ -17,8 +17,7 @@ public class Entry {
                     for (Iterator iterator_1 = set_1.iterator();
                             iterator_1.hasNext();) {
                         Number z = ((Number) iterator_1.next());
-                        setCompResult_1 = SetUtil.union(Utils.copy(
-                                    setCompResult_1), SetUtil.set(z));
+                        setCompResult_1.add(z);
                     }
 
                     return Utils.copy(setCompResult_1);

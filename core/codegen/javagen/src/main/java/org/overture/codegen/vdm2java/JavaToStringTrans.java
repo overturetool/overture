@@ -1,8 +1,8 @@
 package org.overture.codegen.vdm2java;
 
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.IRInfo;
 
 public class JavaToStringTrans extends DepthFirstAnalysisAdaptor
@@ -15,7 +15,7 @@ public class JavaToStringTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
+	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node) throws AnalysisException
 	{
 		node.getMethods().add(creator.generateToString(node));
 	}

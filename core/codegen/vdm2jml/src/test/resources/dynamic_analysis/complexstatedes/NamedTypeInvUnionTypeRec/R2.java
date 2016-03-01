@@ -1,6 +1,7 @@
 package project.Entrytypes;
 
 import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
 
 import java.util.*;
 
@@ -12,14 +13,10 @@ final public class R2 implements Record {
 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R2(t3);
     public R2(final Object _t3) {
-        //@ assert _t3 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) _t3).valid();
-        //@ assert _t3 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) _t3).valid();
-        //@ assert inv_Entry_T3(_t3);
-        t3 = (_t3 != null) ? _t3 : null;
+        //@ assert ((Utils.is_(_t3,project.Entrytypes.R3.class) || Utils.is_(_t3,project.Entrytypes.X.class)) && inv_Entry_T3(_t3));
+        t3 = (_t3 != null) ? Utils.copy(_t3) : null;
 
-        //@ assert t3 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) t3).valid();
-        //@ assert t3 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) t3).valid();
-        //@ assert inv_Entry_T3(t3);
+        //@ assert ((Utils.is_(t3,project.Entrytypes.R3.class) || Utils.is_(t3,project.Entrytypes.X.class)) && inv_Entry_T3(t3));
     }
 
     /*@ pure @*/
@@ -50,23 +47,17 @@ final public class R2 implements Record {
 
     /*@ pure @*/
     public Object get_t3() {
-        Object ret_1 = t3;
+        Object ret_4 = t3;
 
-        //@ assert project.Entry.invChecksOn ==> ret_1 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) ret_1).valid();
-        //@ assert project.Entry.invChecksOn ==> ret_1 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) ret_1).valid();
-        //@ assert project.Entry.invChecksOn ==> (inv_Entry_T3(ret_1));
-        return ret_1;
+        //@ assert project.Entry.invChecksOn ==> (((Utils.is_(ret_4,project.Entrytypes.R3.class) || Utils.is_(ret_4,project.Entrytypes.X.class)) && inv_Entry_T3(ret_4)));
+        return ret_4;
     }
 
     public void set_t3(final Object _t3) {
-        //@ assert project.Entry.invChecksOn ==> _t3 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) _t3).valid();
-        //@ assert project.Entry.invChecksOn ==> _t3 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) _t3).valid();
-        //@ assert project.Entry.invChecksOn ==> (inv_Entry_T3(_t3));
+        //@ assert project.Entry.invChecksOn ==> (((Utils.is_(_t3,project.Entrytypes.R3.class) || Utils.is_(_t3,project.Entrytypes.X.class)) && inv_Entry_T3(_t3)));
         t3 = _t3;
 
-        //@ assert project.Entry.invChecksOn ==> t3 instanceof project.Entrytypes.R3 ==> ((project.Entrytypes.R3) t3).valid();
-        //@ assert project.Entry.invChecksOn ==> t3 instanceof project.Entrytypes.X ==> ((project.Entrytypes.X) t3).valid();
-        //@ assert project.Entry.invChecksOn ==> (inv_Entry_T3(t3));
+        //@ assert project.Entry.invChecksOn ==> (((Utils.is_(t3,project.Entrytypes.R3.class) || Utils.is_(t3,project.Entrytypes.X.class)) && inv_Entry_T3(t3)));
     }
 
     /*@ pure @*/
@@ -92,12 +83,6 @@ final public class R2 implements Record {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_T3(final Object check_t3) {
-        if ((Utils.equals(check_t3, null)) ||
-                !(Utils.is_(check_t3, project.Entrytypes.R3.class) ||
-                Utils.is_(check_t3, project.Entrytypes.X.class))) {
-            return false;
-        }
-
         Object t3 = ((Object) check_t3);
 
         Boolean andResult_1 = false;

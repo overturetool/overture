@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        A_X_ a = new A_X_();
+        final A_X_ a = new A_X_();
 
         return a.op().longValue() + a.op1().longValue();
     }
@@ -37,7 +37,7 @@ public class A_X_ {
     }
 
     public Number op1() {
-        Number y_X_ = 42L;
+        final Number y_X_ = 42L;
 
         return y_X_;
     }

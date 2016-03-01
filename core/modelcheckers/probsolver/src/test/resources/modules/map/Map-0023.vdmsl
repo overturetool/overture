@@ -1,4 +1,0 @@
-operations
-
-emptymap() m : map nat1 to nat1
-  post m = {|->}

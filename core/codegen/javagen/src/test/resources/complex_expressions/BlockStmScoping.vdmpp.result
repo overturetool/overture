@@ -12,12 +12,12 @@ public class Entry {
         Number sum = 0L;
 
         {
-            Number x = 999L;
+            final Number x = 999L;
             sum = sum.longValue() + x.longValue();
         }
 
         {
-            Number x = 999L;
+            final Number x = 999L;
             sum = sum.longValue() + x.longValue();
         }
 

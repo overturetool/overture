@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="6" line="6" message="Definition 'foo' not used" messageType="warning" number="5000" resource="pureop_assigns"/>
+<message column="13" line="7" message="Cannot update state in a pure operation" messageType="error" number="3338" resource="pureop_assigns"/>
+<result/>
+</testResult>

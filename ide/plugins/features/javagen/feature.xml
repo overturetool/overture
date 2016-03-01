@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.overture.ide.plugins.features.javagen"
+      label="Java Code Generator"
+      version="2.3.2">
+
+   <description>
+      %description
+   </description>
+
+   <copyright url="%copyURL">
+      %copyNotice
+   </copyright>
+
+   <license url="%licenseURL">
+      %agreement
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.ui.console"/>
+      <import plugin="org.overture.ide.ui"/>
+      <import plugin="org.overture.ide.core"/>
+      <import plugin="org.eclipse.core.runtime" version="3.5.0" match="compatible"/>
+   </requires>
+   
+   <plugin
+         id="org.overture.ide.plugins.javagen"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

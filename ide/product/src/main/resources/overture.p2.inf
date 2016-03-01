@@ -3,6 +3,7 @@ instructions.configure=\
   copy(source:${documentation.root}/VDM10LangMan/VDM10_lang_man.pdf,target:${installFolder}/documentation/VDM10_lang_man.pdf,overwrite:true);\
   copy(source:${documentation.root}/UserGuideOvertureIDE/OvertureIDEUserGuide.pdf,target:${installFolder}/documentation/OvertureIDEUserGuide.pdf,overwrite:true);\
   copy(source:${documentation.root}/tutorials/VDM++OvertureTutorial/VDMPPGuideToOverture.pdf,target:${installFolder}/documentation/VDMPPGuideToOverture.pdf,overwrite:true);\
+  copy(source:${documentation.root}/tutorials/VDM++OvertureTutorial/AlarmInitUML.uml,target:${installFolder}/documentation/AlarmInitUML.uml,overwrite:true);\
   copy(source:${documentation.root}/tutorials/VDMRTOvertureTutorial/VDMRTGuideToOverture.pdf,target:${installFolder}/documentation/VDMRTGuideToOverture.pdf,overwrite:true);\
   copy(source:${documentation.root}/tutorials/VDMSLOvertureTutorial/VDMSLGuideToOverture.pdf,target:${installFolder}/documentation/VDMSLGuideToOverture.pdf,overwrite:true);\
   copy(source:${documentation.root}/VDMRTProcess/VDMRTProcess.pdf,target:${installFolder}/documentation/VDMRTProcess.pdf,overwrite:true);\

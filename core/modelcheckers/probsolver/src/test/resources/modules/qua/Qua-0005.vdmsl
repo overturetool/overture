@@ -1,4 +1,0 @@
-operations
-
-  quex() mx : bool
-    post mx = (exists n in set {1,3,2,4} & n<3)

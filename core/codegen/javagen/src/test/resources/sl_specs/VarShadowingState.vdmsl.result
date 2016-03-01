@@ -11,7 +11,7 @@ final public class Entry {
     }
 
     public static Object Run() {
-        Number x_1 = 10L;
+        final Number x_1 = 10L;
 
         return x_1.longValue() + St.x.longValue();
     }

@@ -1,0 +1,26 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ let - : nat * bool = mk_(1,true) in skip;
+ IO`println("After legal use");
+ IO`println("Before illegal use");
+ let - : nat * bool = mk_(negInt(),true) in skip;
+ IO`println("After illegal use");
+ return 0;
+);
+
+functions
+
+negInt :  () -> int
+negInt () == -1;
+  
+end Entry

@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        quotes.AQuote a = quotes.AQuote.getInstance();
+        final quotes.AQuote a = quotes.AQuote.getInstance();
 
         return Utils.equals(a, quotes.AQuote.getInstance());
     }

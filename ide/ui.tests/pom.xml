@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.overturetool.ide</groupId>
+    <artifactId>org.overture.ide.tests</artifactId>
+    <version>2.3.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <packaging>eclipse-test-plugin</packaging>
+
+  <groupId>org.overturetool.ide.tests</groupId>
+  <artifactId>org.overture.ide.tests.ui</artifactId>
+  <name>org.overture.ide.tests.ui</name>
+  
+  <build>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-surefire-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <configuration>
+		<failIfNoTests>true</failIfNoTests>
+		<!--providerHint>junit47</providerHint-->
+		<redirectTestOutputToFile>true</redirectTestOutputToFile>
+		<product>org.overture.ide.platform.product</product>
+          <useUIHarness>false</useUIHarness>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

@@ -1,6 +1,7 @@
 package project.Entrytypes;
 
 import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
 
 import java.util.*;
 
@@ -12,7 +13,10 @@ final public class R1 implements Record {
 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R1(r2);
     public R1(final project.Entrytypes.R2 _r2) {
+        //@ assert Utils.is_(_r2,project.Entrytypes.R2.class);
         r2 = (_r2 != null) ? Utils.copy(_r2) : null;
+
+        //@ assert Utils.is_(r2,project.Entrytypes.R2.class);
     }
 
     /*@ pure @*/
@@ -43,11 +47,17 @@ final public class R1 implements Record {
 
     /*@ pure @*/
     public project.Entrytypes.R2 get_r2() {
-        return r2;
+        project.Entrytypes.R2 ret_3 = r2;
+
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_(ret_3,project.Entrytypes.R2.class));
+        return ret_3;
     }
 
     public void set_r2(final project.Entrytypes.R2 _r2) {
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_(_r2,project.Entrytypes.R2.class));
         r2 = _r2;
+
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_(r2,project.Entrytypes.R2.class));
     }
 
     /*@ pure @*/

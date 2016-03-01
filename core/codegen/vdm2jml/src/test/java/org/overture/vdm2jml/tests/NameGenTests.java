@@ -3,9 +3,9 @@ package org.overture.vdm2jml.tests;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.vdm2jml.NameGen;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.vdm2jml.util.NameGen;
 
 public class NameGenTests
 {
@@ -16,9 +16,9 @@ public class NameGenTests
 	@Before
 	public void init()
 	{
-		AClassDeclCG testClass = new AClassDeclCG();
+		ADefaultClassDeclIR testClass = new ADefaultClassDeclIR();
 		
-		AFieldDeclCG field = new AFieldDeclCG();
+		AFieldDeclIR field = new AFieldDeclIR();
 		field.setName("field");
 		
 		testClass.getFields().add(field);

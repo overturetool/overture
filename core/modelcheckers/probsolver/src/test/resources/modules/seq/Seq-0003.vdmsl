@@ -1,6 +1,0 @@
-
-operations
-
-
-  retseq() s : seq of nat
-     post s = [1,2]

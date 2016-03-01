@@ -1,13 +1,13 @@
 package org.overture.codegen.trans;
 
 import org.overture.ast.types.ARealNumericBasicType;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
-import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.expressions.ADivideNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ARealLiteralExpIR;
+import org.overture.codegen.ir.expressions.ATimesNumericBinaryExpIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 
@@ -21,25 +21,25 @@ public class DivideTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseADivideNumericBinaryExpCG(ADivideNumericBinaryExpCG node)
+	public void caseADivideNumericBinaryExpIR(ADivideNumericBinaryExpIR node)
 			throws AnalysisException
 	{
-		SExpCG leftExp = node.getLeft();
+		SExpIR leftExp = node.getLeft();
 		leftExp.apply(this);
 		
-		SExpCG rightExp = node.getRight();
+		SExpIR rightExp = node.getRight();
 		rightExp.apply(this);
 
 		if (info.getExpAssistant().isIntegerType(leftExp)
 				&& info.getExpAssistant().isIntegerType(rightExp))
 		{
-			ARealLiteralExpCG one = new ARealLiteralExpCG();
-			ARealNumericBasicTypeCG realTypeCg = new ARealNumericBasicTypeCG();
+			ARealLiteralExpIR one = new ARealLiteralExpIR();
+			ARealNumericBasicTypeIR realTypeCg = new ARealNumericBasicTypeIR();
 			realTypeCg.setSourceNode(new SourceNode(new ARealNumericBasicType()));
 			one.setType(realTypeCg);
 			one.setValue(1.0);
 
-			ATimesNumericBinaryExpCG neutralMul = new ATimesNumericBinaryExpCG();
+			ATimesNumericBinaryExpIR neutralMul = new ATimesNumericBinaryExpIR();
 			neutralMul.setType(realTypeCg.clone());
 			neutralMul.setLeft(one);
 			neutralMul.setRight(leftExp);

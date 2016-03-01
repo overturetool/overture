@@ -1,0 +1,7 @@
+types
+
+N = nat;
+
+functions   
+f2 : () -> nat
+f2 () == (lambda x: N &x) (1)

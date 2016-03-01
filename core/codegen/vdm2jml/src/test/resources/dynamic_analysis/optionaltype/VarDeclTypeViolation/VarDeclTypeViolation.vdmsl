@@ -1,0 +1,31 @@
+module Entry
+
+imports from IO all
+exports all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  IO`println("Before VALID initialisation");
+  (dcl bOkay : nat := natOne(); skip);
+  IO`println("After VALID initialisation");	
+  
+  IO`println("Before INVALID initialisation");
+  (dcl bError : nat := natNil(); skip);
+  IO`println("After INVALID initialisation");
+  
+  return true;		
+);
+
+functions
+
+natNil :  () -> [nat]
+natNil () == nil;
+
+natOne :  () -> [nat]
+natOne () == 1;
+
+end Entry

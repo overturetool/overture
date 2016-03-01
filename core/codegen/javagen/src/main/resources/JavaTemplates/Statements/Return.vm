@@ -1,6 +1,0 @@
-#set( $exp = "")
-#if (!$JavaFormat.isNull($node.getExp()))
-	#set( $exp = $JavaFormat.format($node.getExp()))
-#end
-##
-return $exp;

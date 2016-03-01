@@ -9,17 +9,17 @@ public class Entry {
     }
 
     public static Object Run() {
-        Boolean x1 = Utils.is_Tuple(Tuple.mk_(1L, 1L), Number.class,
+        final Boolean x1 = Utils.is_Tuple(Tuple.mk_(1L, 1L), Number.class,
                 Boolean.class);
-        Boolean x2 = Utils.is_Tuple(Tuple.mk_(1L, false), Number.class,
+        final Boolean x2 = Utils.is_Tuple(Tuple.mk_(1L, false), Number.class,
                 Boolean.class);
-        Boolean x3 = Utils.is_(Tuple.mk_(1L, 2L), Rec.class);
+        final Boolean x3 = Utils.is_(Tuple.mk_(1L, 2L), Rec.class);
 
-        Boolean x4 = Utils.is_(new Rec(5L, 5L), Rec.class);
+        final Boolean x4 = Utils.is_(new Rec(5L, 5L), Rec.class);
 
-        Boolean x5 = Utils.is_(new Entry(), Entry.class);
+        final Boolean x5 = Utils.is_(new Entry(), Entry.class);
 
-        Boolean x6 = Utils.is_(55L, Entry.class);
+        final Boolean x6 = Utils.is_(55L, Entry.class);
 
         return SeqUtil.seq(x1, x2, x3, x4, x5, x6);
     }

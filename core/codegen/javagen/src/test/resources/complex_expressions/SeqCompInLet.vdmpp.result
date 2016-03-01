@@ -20,12 +20,11 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (Utils.equals(1L, 1L)) {
-                seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
-                        SeqUtil.seq(x.longValue() * 2L));
+                seqCompResult_1.add(x.longValue() * 2L);
             }
         }
 
-        VDMSeq x = Utils.copy(seqCompResult_1);
+        final VDMSeq x = Utils.copy(seqCompResult_1);
 
         return Utils.copy(x);
     }

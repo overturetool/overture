@@ -30,10 +30,10 @@ public class PogBugRegressionTest extends ParamStandardTest<PogTestResult>
 
 	private static final String UPDATE_PROPERTY = "tests.update.pog.bugreg";
 
-	public PogBugRegressionTest(String _, String testParameter,
+	public PogBugRegressionTest(String name, String testParameter,
 			String resultParameter)
 	{
-		super(_, testParameter, resultParameter);
+		super(name, testParameter, resultParameter);
 		// updateResult=true;
 	}
 

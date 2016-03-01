@@ -13,7 +13,7 @@ public class Entry {
     public static Object Run() {
         Utils.mapSeqUpdate(x, 4L, false);
 
-        return Utils.copy(x);
+        return Utils.copy(Entry.x);
     }
 
     public String toString() {

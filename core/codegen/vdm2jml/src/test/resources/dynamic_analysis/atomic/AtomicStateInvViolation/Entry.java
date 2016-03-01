@@ -1,6 +1,7 @@
 package project;
 
 import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
 
 import java.util.*;
 
@@ -19,9 +20,11 @@ final public class Entry {
         IO.println("Before first atomic (expecting violation after atomic)");
 
         Number atomicTmp_1 = 2L;
-
+        //@ assert Utils.is_nat(atomicTmp_1);
         { /* Start of atomic statement */
             //@ set invChecksOn = false;
+
+            //@ assert St != null;
             St.set_x(atomicTmp_1);
 
             //@ set invChecksOn = true;
@@ -33,9 +36,11 @@ final public class Entry {
         IO.println("Before second atomic");
 
         Number atomicTmp_2 = 1L;
-
+        //@ assert Utils.is_nat(atomicTmp_2);
         { /* Start of atomic statement */
             //@ set invChecksOn = false;
+
+            //@ assert St != null;
             St.set_x(atomicTmp_2);
 
             //@ set invChecksOn = true;

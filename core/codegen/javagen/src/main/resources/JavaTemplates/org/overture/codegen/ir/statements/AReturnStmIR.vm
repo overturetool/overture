@@ -1,0 +1,7 @@
+#if ( $JavaFormat.isNull($node.getExp()) )
+	return;
+#elseif ( $JavaFormat.isVoidType($node.getExp().getType()) )
+  $JavaFormat.format($node.getExp());
+#else
+  return $JavaFormat.format($node.getExp());
+#end

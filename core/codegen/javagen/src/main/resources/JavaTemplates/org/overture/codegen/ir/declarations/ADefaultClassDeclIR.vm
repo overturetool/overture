@@ -1,0 +1,66 @@
+#set( $package = "")
+#if (!$JavaFormat.isNull($node.getPackage()))
+	#set( $package = "package ${node.getPackage()};")
+#end
+##
+$package
+##
+#foreach( $dep in $node.getDependencies() )
+import ${JavaFormat.getString($dep)};
+#end##
+##
+#set( $abstract = "")
+#if ($node.getAbstract())
+	#set( $abstract = "abstract")
+#end
+#set( $final = "")
+#if ($JavaFormat.isVdmSl())
+	#set( $final = "final")
+#end
+##
+#set( $static = "")
+#if ($node.getStatic())
+	#set( $static = "static")
+#end
+#set( $threadMethod = "")
+#if (!$JavaFormat.isNull($node.getThread()))
+	#set( $threadMethod = $JavaFormat.format($node.getThread()))
+#end
+##
+#if (!$JavaFormat.isInnerClass($node))
+@SuppressWarnings("all")
+#end
+##
+$JavaFormat.formatMetaData($node.getGlobalMetaData())##
+##
+$final $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node) $JavaFormat.formatInterfaces($node)
+{
+	#foreach( $class in $node.getInnerClasses() )
+	$JavaFormat.format($class)
+	#end##
+	#foreach( $field in $node.getFields() )
+	$JavaFormat.format($field)
+	#end
+	##
+	$JavaFormat.formatMetaData($node.getMetaData())##
+	##
+	#foreach( $method in $node.getMethods() )
+	$JavaFormat.format($method)
+	#end
+	##
+	#if ($JavaFormat.isMainClass($node))
+	$node.getTag().getMainMethod()
+	#end
+	##
+	#if ($JavaFormat.genClassInvariant($node))
+	$JavaFormat.format($node.getInvariant())
+	#end	
+	
+	#foreach( $typeDecl in $node.getTypeDecls() )
+		#if ($JavaFormat.genTypeDecl($typeDecl))
+		$JavaFormat.format($typeDecl)
+		#end
+	#end
+	##
+	${threadMethod}##
+}

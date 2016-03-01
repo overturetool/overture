@@ -71,7 +71,7 @@ public class Entry {
     }
 
     public static Number Run() {
-        Entry e = new Entry();
+        final Entry e = new Entry();
         Object callStmObj_1 = e.w;
 
         if (callStmObj_1 instanceof A) {

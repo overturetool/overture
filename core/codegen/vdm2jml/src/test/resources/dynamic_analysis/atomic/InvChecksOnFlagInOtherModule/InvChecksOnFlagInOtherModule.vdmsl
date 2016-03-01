@@ -1,0 +1,49 @@
+module Mod
+
+exports all
+definitions
+types
+
+M :: x : int
+inv m == m.x > 0;
+
+operations
+
+op : () ==> ()
+op () == 
+(
+  dcl m : M := mk_M(1);
+  atomic
+  (
+    m.x := -20;
+    m.x := 20;
+  );
+);
+
+end Mod
+
+module Entry
+
+exports all
+imports from IO all
+definitions
+types
+
+E :: x : int
+inv e == e.x > 0;
+
+operations
+
+Run : () ==> ()
+Run () == 
+(
+  dcl e : E := mk_E(1);
+  atomic
+  (
+    e.x := -20;
+    e.x := 20;
+  );
+  IO`println("Done! Expected to exit without any errors");
+);
+
+end Entry

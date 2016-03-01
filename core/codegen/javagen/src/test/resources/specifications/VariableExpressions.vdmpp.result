@@ -15,8 +15,8 @@ public class A {
     }
 
     public Number o1() {
-        return f().longValue() + g(3L).longValue() + h(1L, 2L).longValue() +
-        op2(3L).longValue() + op2(3L).longValue();
+        return A.f().longValue() + A.g(3L).longValue() + h(1L, 2L).longValue() +
+        op2(3L).longValue() + A.op2(3L).longValue();
     }
 
     public static Number op2(final Number x) {

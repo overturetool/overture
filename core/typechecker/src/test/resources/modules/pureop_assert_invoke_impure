@@ -1,0 +1,7 @@
+operations
+foo :() ==> bool
+foo() == is not yet specified;
+
+bar1 : () ==> ()
+bar1() == skip
+pre foo();

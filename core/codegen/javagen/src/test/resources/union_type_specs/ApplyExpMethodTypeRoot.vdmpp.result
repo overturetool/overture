@@ -13,9 +13,9 @@ public class Entry {
     }
 
     public static Boolean Run() {
-        Entry e = new Entry();
-        Object x = 1L;
-        Object y = 'a';
+        final Entry e = new Entry();
+        final Object x = 1L;
+        final Object y = 'a';
 
         return e.op(((Number) x), ((Character) y));
     }

@@ -17,7 +17,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Entry e = new Entry();
+        final Entry e = new Entry();
         Boolean orResult_1 = false;
 
         Long exists1Counter_1 = 0L;
@@ -68,7 +68,7 @@ public class Entry {
             orResult_1 = orResult_2;
         }
 
-        Boolean b = orResult_1;
+        final Boolean b = orResult_1;
 
         return Tuple.mk_(b, e.n);
     }

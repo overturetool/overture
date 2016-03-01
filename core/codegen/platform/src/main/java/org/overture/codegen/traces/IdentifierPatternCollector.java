@@ -5,16 +5,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.logging.Logger;
 
 public class IdentifierPatternCollector extends DepthFirstAnalysisAdaptor
 {
 	private INode topNode;
-	private List<AIdentifierPatternCG> idOccurences;
+	private List<AIdentifierPatternIR> idOccurences;
 	
 	public IdentifierPatternCollector()
 	{
@@ -27,9 +27,9 @@ public class IdentifierPatternCollector extends DepthFirstAnalysisAdaptor
 		this.topNode = topNode;
 	}
 	
-	public List<AIdentifierPatternCG> findOccurences()
+	public List<AIdentifierPatternIR> findOccurences()
 	{
-		idOccurences = new LinkedList<AIdentifierPatternCG>();
+		idOccurences = new LinkedList<AIdentifierPatternIR>();
 		
 		try
 		{
@@ -45,7 +45,7 @@ public class IdentifierPatternCollector extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAIdentifierPatternCG(AIdentifierPatternCG node)
+	public void caseAIdentifierPatternIR(AIdentifierPatternIR node)
 			throws AnalysisException
 	{
 		if (proceed(node))

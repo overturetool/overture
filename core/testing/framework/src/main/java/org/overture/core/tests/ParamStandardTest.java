@@ -96,6 +96,7 @@ public abstract class ParamStandardTest<R> extends AbsResultTest<R>
 	public void testCase() throws ParserException, LexException, IOException
 	{
 
+		checkAssumptions();
 		List<INode> ast = ParseTcFacade.typedAst(modelPath, testName);
 		R actual = processModel(ast);
 		if (updateResult)
@@ -131,4 +132,6 @@ public abstract class ParamStandardTest<R> extends AbsResultTest<R>
 	 * @return the output of the analysis
 	 */
 	public abstract R processModel(List<INode> ast);
+
+	protected void checkAssumptions() {}
 }

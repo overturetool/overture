@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>ide</artifactId>
-    <version>2.3.0</version>
+    <version>2.3.2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -27,9 +27,8 @@
     <module>developerutils</module>
     <module>uml2</module>
     <module>rttraceviewer</module>
-	<module>codegen</module>
-	<module>prob-runtime</module>
-	<module>guibuilder</module>
+	<module>javagen</module>
+	<!--module>prob-runtime moved to its own repo </module-->
 	<!--<module>isatrans</module>-->
     <!-- features last -->
     <module>features</module>

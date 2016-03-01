@@ -1,0 +1,34 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Number ignorePattern_1 = null;
+        Boolean success_1 = false;
+        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+
+        for (Iterator iterator_1 = set_1.iterator();
+                iterator_1.hasNext() && !(success_1);) {
+            ignorePattern_1 = ((Number) iterator_1.next());
+            success_1 = true;
+        }
+
+        if (!(success_1)) {
+            throw new RuntimeException("Let Be St found no applicable bindings");
+        }
+
+        return 0L;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

@@ -24,7 +24,9 @@ package org.overture.codegen.analysis.violations;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.codegen.assistant.TypeAssistantCG;
+import org.overture.ast.lex.LexIdentifierToken;
+import org.overture.ast.statements.ACallStm;
+import org.overture.codegen.assistant.TypeAssistantIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
@@ -37,12 +39,18 @@ public class TypenameComparison extends NamingComparison
 	}
 
 	@Override
+	public boolean isModuleViolation(ILexNameToken nameToken)
+	{
+		return nameToken.parent() instanceof ACallStm && this.getNames().contains(nameToken.getModule());
+	}
+	
+	@Override
 	public boolean mustHandleNameToken(ILexNameToken nameToken)
 	{
 		if (this.getNames().contains(nameToken.getName()))
 		{
 			PDefinitionAssistantTC defAssistant = irInfo.getTcFactory().createPDefinitionAssistant();
-			TypeAssistantCG typeAssistantCg = irInfo.getAssistantManager().getTypeAssistant();
+			TypeAssistantIR typeAssistantCg = irInfo.getAssistantManager().getTypeAssistant();
 			
 			PDefinition def = typeAssistantCg.getTypeDef(nameToken, defAssistant);
 
@@ -54,7 +62,17 @@ public class TypenameComparison extends NamingComparison
 
 			return def != null;
 		}
+		else if(isModuleViolation(nameToken))
+		{
+			return true;
+		}
 
+		return false;
+	}
+
+	@Override
+	public boolean mustHandleLexIdentifierToken(LexIdentifierToken lexId)
+	{
 		return false;
 	}
 }

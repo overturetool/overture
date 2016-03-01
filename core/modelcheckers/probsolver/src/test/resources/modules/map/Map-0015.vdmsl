@@ -1,4 +1,0 @@
-operations
-
-mapinverse() m : map nat to nat
-  post m = inverse {1|->10, 2|->20,3|->30,4|->40};

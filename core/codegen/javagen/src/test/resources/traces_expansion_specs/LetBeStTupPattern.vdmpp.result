@@ -45,37 +45,40 @@ public class Entry implements java.io.Serializable {
             store.register(ID_2, b);
 
             SequenceTraceNode sequence_2 = new SequenceTraceNode();
-            CallStatement callStm_1 = new CallStatement() {
-                    public Object execute(final Object instance) {
+            CallStatementPp callStm_1 = new CallStatementPp() {
+                    public Object execute() {
                         return f(((Number) store.getValue(ID_1)));
                     }
 
                     public String toString() {
-                        return "f(" +
-                        Utils.toString(((Number) store.getValue(ID_1))) + ")";
+                        return "f(" + Utils.toString(store.getValue(ID_1)) +
+                        ")";
                     }
                 };
 
             StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+            sequence_2.add(apply_1);
 
-            CallStatement callStm_2 = new CallStatement() {
-                    public Object execute(final Object instance) {
+            CallStatementPp callStm_2 = new CallStatementPp() {
+                    public Object execute() {
                         return f(((Number) store.getValue(ID_2)));
                     }
 
                     public String toString() {
-                        return "f(" +
-                        Utils.toString(((Number) store.getValue(ID_2))) + ")";
+                        return "f(" + Utils.toString(store.getValue(ID_2)) +
+                        ")";
                     }
                 };
 
             StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-
-            sequence_2.add(apply_1);
             sequence_2.add(apply_2);
 
             RepeatTraceNode repeat_1 = new RepeatTraceNode(sequence_2, 1L, 2L);
 
+            repeat_1.addVarFirst(new TraceVariable("b", "nat1",
+                    Utils.toString(b)));
+            repeat_1.addVarFirst(new TraceVariable("a", "nat1",
+                    Utils.toString(a)));
             alternatives_2.add(repeat_1);
         }
 

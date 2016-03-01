@@ -30,10 +30,11 @@ import java.util.Stack;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.runtime.parser.ParseException;
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.QuestionAdaptor;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.QuestionAdaptor;
 import org.overture.codegen.ir.IrNodeInfo;
+import org.overture.codegen.utils.GeneralUtils;
 
 public class MergeVisitor extends QuestionAdaptor<StringWriter> implements
 		MergeCoordinator
@@ -54,23 +55,6 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements
 	private MergerObserver mergeObserver;
 
 	/**
-	 * Default constructor. <b>NOT</b> for use by extensions.
-	 * 
-	 * @param templateStructure
-	 * @param templateCallables
-	 */
-	public MergeVisitor(TemplateStructure templateStructure,
-			TemplateCallable[] templateCallables)
-	{
-		this.templates = new TemplateManager(templateStructure);
-		this.nodeContexts = new Stack<MergeContext>();
-		this.templateCallables = templateCallables;
-		this.mergeErrors = new LinkedList<Exception>();
-		this.unsupportedInTargLang = new HashSet<IrNodeInfo>();
-		this.mergeObserver = null;
-	}
-
-	/**
 	 * Extensible constructor.
 	 * 
 	 * @param templateManager
@@ -81,9 +65,31 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements
 	{
 		this.templates = templateManager;
 		this.nodeContexts = new Stack<MergeContext>();
-		this.templateCallables = templateCallables;
+		this.templateCallables = addDefaults(templateCallables);
 		this.mergeErrors = new LinkedList<Exception>();
 		this.unsupportedInTargLang = new HashSet<IrNodeInfo>();
+	}
+
+	/**
+	 * Enables the static methods of the java.lang.String class to be called from the templates. If the key "String" is
+	 * already reserved by the user, this method simply returns the input parameter.
+	 * 
+	 * @param userCallables
+	 * @return all the template callables
+	 */
+	public TemplateCallable[] addDefaults(TemplateCallable[] userCallables)
+	{
+		TemplateCallable strFunctionality = new TemplateCallable(String.class.getSimpleName(), String.class);
+
+		for (TemplateCallable u : userCallables)
+		{
+			if (u.equals(strFunctionality))
+			{
+				return userCallables;
+			}
+		}
+
+		return GeneralUtils.concat(userCallables, new TemplateCallable[] { strFunctionality });
 	}
 
 	public List<Exception> getMergeErrors()
@@ -141,25 +147,29 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements
 			if (template == null)
 			{
 				unsupportedInTargLang.add(new IrNodeInfo(node, "Template could not be found."));
-			} else
+			}
+			try
 			{
-				try
+				if (mergeObserver != null)
 				{
-					if (mergeObserver != null)
-					{
-						mergeObserver.preMerging(node, question);
-					}
-
-					template.merge(nodeContexts.pop().getVelocityContext(), question);
-
-					if (mergeObserver != null)
-					{
-						mergeObserver.nodeMerged(node, question);
-					}
-				} catch (Exception e)
-				{
-					mergeErrors.add(e);
+					mergeObserver.preMerging(node, question);
 				}
+
+				if (template != null)
+				{
+					template.merge(nodeContexts.pop().getVelocityContext(), question);
+				} else
+				{
+					question.write(String.format("/* Undefined template: %s */", node.getClass().getSimpleName()));
+				}
+
+				if (mergeObserver != null)
+				{
+					mergeObserver.nodeMerged(node, question);
+				}
+			} catch (Exception e)
+			{
+				mergeErrors.add(e);
 			}
 		} catch (ParseException e)
 		{

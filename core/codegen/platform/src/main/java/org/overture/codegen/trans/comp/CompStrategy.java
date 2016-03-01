@@ -23,31 +23,29 @@ package org.overture.codegen.trans.comp;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.SBinaryExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.AbstractIterationStrategy;
 import org.overture.codegen.trans.IterationVarPrefixes;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public abstract class CompStrategy extends AbstractIterationStrategy
 {
-	protected SExpCG predicate;
-	protected AIdentifierPatternCG idPattern;
-	protected STypeCG compType;
+	protected SExpIR predicate;
+	protected AIdentifierPatternIR idPattern;
+	protected STypeIR compType;
 
-	public CompStrategy(TransAssistantCG transformationAssistant,
-			SExpCG predicate, String varName, STypeCG compType,
+	public CompStrategy(TransAssistantIR transformationAssistant,
+			SExpIR predicate, String varName, STypeIR compType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			IterationVarPrefixes iteVarPrefixes)
 	{
@@ -55,49 +53,43 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 
 		this.predicate = predicate;
 
-		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		AIdentifierPatternIR idPattern = new AIdentifierPatternIR();
 		idPattern.setName(varName);
 
 		this.idPattern = idPattern;
 		this.compType = compType;
 	}
 
-	protected abstract SExpCG getEmptyCollection();
+	protected abstract SExpIR getEmptyCollection();
 
-	protected abstract List<SStmCG> getConditionalAdd(
-			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
-			SPatternCG pattern);
+	protected abstract List<SStmIR> getConditionalAdd(
+			AIdentifierVarExpIR setVar, List<SPatternIR> patterns,
+			SPatternIR pattern);
 
-	protected List<SStmCG> consConditionalAdd(AIdentifierVarExpCG compResult,
-			SBinaryExpCG collectionMerge)
+	protected List<SStmIR> consConditionalAdd(AIdentifierVarExpIR compResult, SStmIR collectionAdd)
 	{
-		AIdentifierVarExpCG result = transAssistant.getInfo().getExpAssistant().consIdVar(compResult.getName(),
-				compResult.getType().clone());
-
-		AAssignToExpStmCG updateCompResult = new AAssignToExpStmCG();
-		updateCompResult.setTarget(result);
-		updateCompResult.setExp(collectionMerge);
-
 		if (predicate != null)
 		{
-			AIfStmCG condCollectionUnion = new AIfStmCG();
+			AIfStmIR condCollectionUnion = new AIfStmIR();
 			condCollectionUnion.setIfExp(predicate.clone());
-			condCollectionUnion.setThenStm(updateCompResult);
+			condCollectionUnion.setThenStm(collectionAdd);
 
 			return packStm(condCollectionUnion);
 		}
-
-		return packStm(updateCompResult);
+		else
+		{
+			return packStm(collectionAdd);
+		}
 	}
 
 	@Override
-	public List<AVarDeclCG> getOuterBlockDecls(
-			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
+	public List<AVarDeclIR> getOuterBlockDecls(
+			AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
 			throws AnalysisException
 	{
-		SExpCG emptyCollection = getEmptyCollection();
+		SExpIR emptyCollection = getEmptyCollection();
 		emptyCollection.setType(compType.clone());
-		AVarDeclCG compResultInit = transAssistant.getInfo().getDeclAssistant().
+		AVarDeclIR compResultInit = transAssist.getInfo().getDeclAssistant().
 				consLocalVarDecl(compType.clone(), idPattern.clone(), emptyCollection);
 
 		return packDecl(compResultInit);

@@ -19,7 +19,7 @@ public class Entry {
             if (Utils.equals(text.charAt(0), '\n')) {
                 return Tuple.mk_(SeqUtil.seq(), SeqUtil.tail(text));
             } else {
-                Tuple tuplePattern_1 = GetLine(SeqUtil.tail(text));
+                final Tuple tuplePattern_1 = GetLine(SeqUtil.tail(text));
                 Boolean success_1 = tuplePattern_1.compatible(String.class,
                         String.class);
                 String line = null;

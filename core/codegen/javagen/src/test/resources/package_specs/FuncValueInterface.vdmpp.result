@@ -11,7 +11,7 @@ public class Entry {
     }
 
     public static Number Run() {
-        Func_1<Number, Number> f = new Func_1<Number, Number>() {
+        final Func_1<Number, Number> f = new Func_1<Number, Number>() {
                 public Number eval(final Number x) {
                     return x.longValue() * x.longValue();
                 }

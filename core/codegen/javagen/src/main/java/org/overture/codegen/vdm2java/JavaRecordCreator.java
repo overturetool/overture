@@ -24,31 +24,31 @@ package org.overture.codegen.vdm2java;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.expressions.AExternalExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.ANewExpCG;
-import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
-import org.overture.codegen.cgast.name.ATypeNameCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.expressions.AExternalExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
+import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
+import org.overture.codegen.ir.expressions.ASeqConcatBinaryExpIR;
+import org.overture.codegen.ir.expressions.AStringLiteralExpIR;
+import org.overture.codegen.ir.expressions.ATernaryIfExpIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.logging.Logger;
 
 public class JavaRecordCreator extends JavaClassCreatorBase
@@ -60,52 +60,52 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		this.javaFormat = javaFormat;
 	}
 	
-	public AMethodDeclCG genRecConstructor(ARecordDeclCG record)
+	public AMethodDeclIR genRecConstructor(ARecordDeclIR record)
 			throws AnalysisException
 	{
 		// Since Java does not have records but the OO AST does a record is generated as a Java class.
 		// To make sure that the record can be instantiated we must explicitly add a constructor.
 		
-		AMethodDeclCG constructor = consDefaultCtorSignature(record.getName());
+		AMethodDeclIR constructor = consDefaultCtorSignature(record.getName());
 		
-		AMethodTypeCG methodType = new AMethodTypeCG();
+		AMethodTypeIR methodType = new AMethodTypeIR();
 		methodType.setResult(consRecordType(record));
 
-		ABlockStmCG body = new ABlockStmCG();
+		ABlockStmIR body = new ABlockStmIR();
 		constructor.setBody(body);
 
-		LinkedList<AFormalParamLocalParamCG> formalParams = constructor.getFormalParams();
-		LinkedList<SStmCG> bodyStms = body.getStatements();
-		LinkedList<AFieldDeclCG> fields = record.getFields();
+		LinkedList<AFormalParamLocalParamIR> formalParams = constructor.getFormalParams();
+		LinkedList<SStmIR> bodyStms = body.getStatements();
+		LinkedList<AFieldDeclIR> fields = record.getFields();
 		
-		for (AFieldDeclCG field : fields)
+		for (AFieldDeclIR field : fields)
 		{
 			String name = field.getName();
-			STypeCG type = field.getType();
+			STypeIR type = field.getType();
 
 			String paramName = "_" + name;
 
-			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+			AIdentifierPatternIR idPattern = new AIdentifierPatternIR();
 			idPattern.setName(paramName);
 
 			methodType.getParams().add(type.clone());
 			
 			// Construct formal parameter of the constructor
-			AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
+			AFormalParamLocalParamIR formalParam = new AFormalParamLocalParamIR();
 			formalParam.setPattern(idPattern);
 			formalParam.setType(type.clone());
 			formalParams.add(formalParam);
 
 			// Construct the initialization of the record field using the
 			// corresponding formal parameter.
-			AAssignToExpStmCG assignment = new AAssignToExpStmCG();
-			AIdentifierVarExpCG id = new AIdentifierVarExpCG();
+			AAssignToExpStmIR assignment = new AAssignToExpStmIR();
+			AIdentifierVarExpIR id = new AIdentifierVarExpIR();
 			id.setName(name);
 			id.setType(type.clone());
 			id.setIsLambda(false);
 			id.setIsLocal(true);
 
-			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
+			AIdentifierVarExpIR varExp = new AIdentifierVarExpIR();
 			varExp.setType(type.clone());
 			varExp.setName(paramName);
 			varExp.setIsLocal(true);
@@ -115,8 +115,8 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 			if (!javaFormat.getIrInfo().getAssistantManager().getTypeAssistant().isBasicType(varExp.getType()))
 			{
 				// Example: b = (_b != null) ? _b.clone() : null;
-				ATernaryIfExpCG checkedAssignment = new ATernaryIfExpCG();
-				checkedAssignment.setType(new ABoolBasicTypeCG());
+				ATernaryIfExpIR checkedAssignment = new ATernaryIfExpIR();
+				checkedAssignment.setType(new ABoolBasicTypeIR());
 				checkedAssignment.setCondition(javaFormat.getJavaFormatAssistant().consParamNotNullComp(varExp));
 				checkedAssignment.setTrueValue(varExp);
 				checkedAssignment.setFalseValue(javaFormat.getIrInfo().getExpAssistant().consNullExp());
@@ -134,34 +134,34 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		return constructor;
 	}
 
-	public AMethodDeclCG genCopyMethod(ARecordDeclCG record)
+	public AMethodDeclIR genCopyMethod(ARecordDeclIR record)
 			throws AnalysisException
 	{
 
-		AClassDeclCG defClass = record.getAncestor(AClassDeclCG.class);
-		ATypeNameCG typeName = new ATypeNameCG();
+		ADefaultClassDeclIR defClass = record.getAncestor(ADefaultClassDeclIR.class);
+		ATypeNameIR typeName = new ATypeNameIR();
 		typeName.setDefiningClass(defClass.getName());
 		typeName.setName(record.getName());
 
-		ARecordTypeCG returnType = new ARecordTypeCG();
+		ARecordTypeIR returnType = new ARecordTypeIR();
 		returnType.setName(typeName);
 
-		AMethodTypeCG methodType = new AMethodTypeCG();
+		AMethodTypeIR methodType = new AMethodTypeIR();
 		methodType.setResult(returnType);
 
-		AMethodDeclCG method = consCopySignature(methodType);
+		AMethodDeclIR method = consCopySignature(methodType);
 
-		ANewExpCG newExp = new ANewExpCG();
+		ANewExpIR newExp = new ANewExpIR();
 		newExp.setType(returnType.clone());
 		newExp.setName(typeName.clone());
-		List<SExpCG> args = newExp.getArgs();
+		List<SExpIR> args = newExp.getArgs();
 
-		List<AFieldDeclCG> fields = record.getFields();
-		for (AFieldDeclCG field : fields)
+		List<AFieldDeclIR> fields = record.getFields();
+		for (AFieldDeclIR field : fields)
 		{
 			String name = field.getName();
 
-			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
+			AIdentifierVarExpIR varExp = new AIdentifierVarExpIR();
 			varExp.setName(name);
 			varExp.setType(field.getType().clone());
 			varExp.setIsLocal(false);
@@ -169,26 +169,26 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 			args.add(varExp);
 		}
 
-		AReturnStmCG body = new AReturnStmCG();
+		AReturnStmIR body = new AReturnStmIR();
 		body.setExp(newExp);
 		method.setBody(body);
 
 		return method;
 	}
 
-	public AMethodDeclCG genEqualsMethod(ARecordDeclCG record)
+	public AMethodDeclIR genEqualsMethod(ARecordDeclIR record)
 			throws AnalysisException
 	{
 		String paramName = "obj";
 		
 		// Construct equals method to be used for comparing records using
 		// "structural" equivalence
-		AMethodDeclCG equalsMethod = consEqualMethodSignature(paramName);
+		AMethodDeclIR equalsMethod = consEqualMethodSignature(paramName);
 
-		ABlockStmCG equalsMethodBody = new ABlockStmCG();
-		LinkedList<SStmCG> equalsStms = equalsMethodBody.getStatements();
+		ABlockStmIR equalsMethodBody = new ABlockStmIR();
+		LinkedList<SStmIR> equalsStms = equalsMethodBody.getStatements();
 		
-		AReturnStmCG returnTypeComp = new AReturnStmCG();
+		AReturnStmIR returnTypeComp = new AReturnStmIR();
 		if (record.getFields().isEmpty())
 		{
 			// If the record has no fields equality is simply:
@@ -202,9 +202,9 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 			// Construct the initial check:
 			// if ((!obj instanceof RecordType))
 			// return false;
-			AIfStmCG ifStm = new AIfStmCG();
-			ANotUnaryExpCG negated = new ANotUnaryExpCG();
-			negated.setType(new ABoolBasicTypeCG());
+			AIfStmIR ifStm = new AIfStmIR();
+			ANotUnaryExpIR negated = new ANotUnaryExpIR();
+			negated.setType(new ABoolBasicTypeIR());
 			negated.setExp(javaFormat.getJavaFormatAssistant().consInstanceOf(record, paramName));
 			ifStm.setIfExp(negated);
 
@@ -214,19 +214,19 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 			// If the inital check is passed we can safely cast the formal parameter
 			// To the record type: RecordType other = ((RecordType) obj);
 			String localVarName = "other";
-			ABlockStmCG formalParamCasted = javaFormat.getJavaFormatAssistant().consVarFromCastedExp(record, paramName, localVarName);
+			ABlockStmIR formalParamCasted = javaFormat.getJavaFormatAssistant().consVarFromCastedExp(record, paramName, localVarName);
 
 			// Next compare the fields of the instance with the fields of the formal parameter "obj":
 			// return (field1 == obj.field1) && (field2 == other.field2)...
-			LinkedList<AFieldDeclCG> fields = record.getFields();
-			SExpCG previousComparisons = javaFormat.getJavaFormatAssistant().consFieldComparison(record, fields.get(0), localVarName);
+			LinkedList<AFieldDeclIR> fields = record.getFields();
+			SExpIR previousComparisons = javaFormat.getJavaFormatAssistant().consFieldComparison(record, fields.get(0), localVarName);
 
 			for (int i = 1; i < fields.size(); i++)
 			{
 				previousComparisons = javaFormat.getJavaFormatAssistant().extendAndExp(record, fields.get(i), previousComparisons, localVarName);
 			}
 
-			AReturnStmCG fieldsComparison = new AReturnStmCG();
+			AReturnStmIR fieldsComparison = new AReturnStmIR();
 			fieldsComparison.setExp(previousComparisons);
 
 			equalsStms.add(ifStm);
@@ -239,16 +239,16 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		return equalsMethod;
 	}
 
-	public AMethodDeclCG genHashcodeMethod(ARecordDeclCG record)
+	public AMethodDeclIR genHashcodeMethod(ARecordDeclIR record)
 			throws AnalysisException
 	{
-		AMethodDeclCG hashcodeMethod = consHashcodeMethodSignature();
+		AMethodDeclIR hashcodeMethod = consHashcodeMethodSignature();
 
-		AReturnStmCG returnStm = new AReturnStmCG();
+		AReturnStmIR returnStm = new AReturnStmIR();
 
 		if (record.getFields().isEmpty())
 		{
-			AExternalExpCG zero = new AExternalExpCG();
+			AExternalExpIR zero = new AExternalExpIR();
 			zero.setType(hashcodeMethod.getMethodType().getResult().clone());
 			zero.setTargetLangExp("0");
 			returnStm.setExp(zero);
@@ -262,14 +262,14 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		return hashcodeMethod;
 	}
 
-	public AMethodDeclCG genToStringMethod(ARecordDeclCG record)
+	public AMethodDeclIR genToStringMethod(ARecordDeclIR record)
 			throws AnalysisException
 	{
-		AMethodDeclCG toStringMethod = consToStringSignature();
+		AMethodDeclIR toStringMethod = consToStringSignature();
 
-		AReturnStmCG returnStm = new AReturnStmCG();
+		AReturnStmIR returnStm = new AReturnStmIR();
 
-		AClassDeclCG enclosingClass = record.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclIR enclosingClass = record.getAncestor(ADefaultClassDeclIR.class);
 		String className = "";
 		
 		if(enclosingClass != null)
@@ -283,9 +283,9 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		
 		String recToStrPrefix = String.format("mk_%s%s", className + "`" , record.getName());
 		
-		AStringLiteralExpCG emptyRecStr = new AStringLiteralExpCG();
+		AStringLiteralExpIR emptyRecStr = new AStringLiteralExpIR();
 		emptyRecStr.setIsNull(false);
-		STypeCG strType = toStringMethod.getMethodType().getResult();
+		STypeIR strType = toStringMethod.getMethodType().getResult();
 		emptyRecStr.setType(strType.clone());
 		
 		if (record.getFields().isEmpty())
@@ -295,7 +295,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 			returnStm.setExp(emptyRecStr);
 		} else
 		{
-			ASeqConcatBinaryExpCG stringBuffer = new ASeqConcatBinaryExpCG();
+			ASeqConcatBinaryExpIR stringBuffer = new ASeqConcatBinaryExpIR();
 			stringBuffer.setType(strType.clone());
 			stringBuffer.setLeft(javaFormat.getIrInfo().getExpAssistant().consStringLiteral(recToStrPrefix, false));
 			stringBuffer.setRight(javaFormat.getJavaFormatAssistant().consUtilCallUsingRecFields(record, strType, "formatFields"));
@@ -308,14 +308,14 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		return toStringMethod;
 	}
 	
-	public ARecordTypeCG consRecordType(ARecordDeclCG record)
+	public ARecordTypeIR consRecordType(ARecordDeclIR record)
 	{
-		AClassDeclCG defClass = record.getAncestor(AClassDeclCG.class);
-		ATypeNameCG typeName = new ATypeNameCG();
+		ADefaultClassDeclIR defClass = record.getAncestor(ADefaultClassDeclIR.class);
+		ATypeNameIR typeName = new ATypeNameIR();
 		typeName.setDefiningClass(defClass.getName());
 		typeName.setName(record.getName());
 
-		ARecordTypeCG returnType = new ARecordTypeCG();
+		ARecordTypeIR returnType = new ARecordTypeIR();
 
 		returnType.setName(typeName);
 		return returnType;

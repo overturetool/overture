@@ -17,6 +17,7 @@ import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
+import org.overture.ast.expressions.ATimeExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
@@ -169,6 +170,12 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 			info.addUnsupportedNode(node, "Generation of a sequence comprehension is only supported within operations/functions");
 			return;
 		}
+	}
+	
+	@Override
+	public void caseATimeExp(ATimeExp node) throws AnalysisException
+	{
+		info.addUnsupportedNode(node, "The 'time' expression is not supported");
 	}
 	
 	/**

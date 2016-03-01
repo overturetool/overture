@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
 
 public class PostCondNoStateTests extends AnnotationTestsBase
 {
@@ -23,7 +23,7 @@ public class PostCondNoStateTests extends AnnotationTestsBase
 	@Test
 	public void testFuncEnsuresAnnotation()
 	{
-		AMethodDeclCG func = getMethod(genModule.getMethods(), "f");
+		AMethodDeclIR func = getMethod(genModule.getMethods(), "f");
 		
 		Assert.assertEquals("Got unexpected ensures annotation for function 'f'", 
 				"//@ ensures post_f(a,b,\\result);",
@@ -39,7 +39,7 @@ public class PostCondNoStateTests extends AnnotationTestsBase
 	@Test
 	public void testOpNoResRequiresAnnotation()
 	{
-		AMethodDeclCG opNoRes = getMethod(genModule.getMethods(), "opNoRes");
+		AMethodDeclIR opNoRes = getMethod(genModule.getMethods(), "opNoRes");
 		
 		Assert.assertEquals("Got unexpected ensures annotation for operation 'opNoRes'",
 				"//@ ensures post_opNoRes();",
@@ -51,7 +51,7 @@ public class PostCondNoStateTests extends AnnotationTestsBase
 	@Test
 	public void testOpResRequresAnnotation()
 	{
-		AMethodDeclCG opRes = getMethod(genModule.getMethods(), "opRes");
+		AMethodDeclIR opRes = getMethod(genModule.getMethods(), "opRes");
 		
 		Assert.assertEquals("Got unexpected ensures annotation for operation 'opRes'",
 				"//@ ensures post_opRes(a,\\result);",

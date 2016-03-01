@@ -11,11 +11,11 @@ public class Entry {
     }
 
     public static Object Run() {
-        if (!(((Boolean) x))) {
+        if (!(((Boolean) Entry.x))) {
             return 1L;
-        } else if (((Boolean) x)) {
+        } else if (((Boolean) Entry.x)) {
             return 2L;
-        } else if (((Boolean) x)) {
+        } else if (((Boolean) Entry.x)) {
             return 3L;
         } else {
             return 4L;

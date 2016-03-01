@@ -25,6 +25,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.node.INode;
 import org.overture.codegen.assistant.AssistantManager;
 
@@ -52,17 +53,42 @@ public class NameViolationAnalysis extends ViolationAnalysis
 
 				SClassDefinition enclosingClass = node.getAncestor(SClassDefinition.class);
 
-				if (enclosingClass == null
-						|| enclosingClass != null
-						&& !assistantManager.getDeclAssistant().isLibrary(enclosingClass))
+				if (moduleNeedsHandling(enclosingClass))
 				{
-					String name = nameToken.getName();
-					ILexLocation location = nameToken.getLocation();
-
-					Violation violation = new Violation(name, location, assistantManager.getLocationAssistant());
-					addViolation(violation);
+					if (!comparison.isModuleViolation(nameToken))
+					{
+						registerViolation(nameToken.getName(), nameToken.getLocation());
+					}
 				}
 			}
 		}
+		else if(node instanceof LexIdentifierToken)
+		{
+			LexIdentifierToken lexId = (LexIdentifierToken) node;
+			
+			if(comparison.mustHandleLexIdentifierToken(lexId))
+			{
+				comparison.correctLexIdentifierToken(lexId);
+				
+				SClassDefinition enclosingClass = node.getAncestor(SClassDefinition.class);
+				
+				if(moduleNeedsHandling(enclosingClass))
+				{
+					registerViolation(lexId.getName(), lexId.getLocation());
+				}
+			}
+		}
+	}
+
+	private boolean moduleNeedsHandling(SClassDefinition enclosingClass)
+	{
+		return enclosingClass != null
+				&& !assistantManager.getDeclAssistant().isLibrary(enclosingClass);
+	}
+
+	private void registerViolation(String name, ILexLocation location)
+	{
+		Violation violation = new Violation(name, location, assistantManager.getLocationAssistant());
+		addViolation(violation);
 	}
 }

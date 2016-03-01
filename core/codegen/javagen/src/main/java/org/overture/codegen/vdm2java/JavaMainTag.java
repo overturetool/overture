@@ -1,25 +1,25 @@
 package org.overture.codegen.vdm2java;
 
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.types.AVoidTypeCG;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.types.AVoidTypeIR;
 
 
 public class JavaMainTag
 {
 	private boolean isVoidRun;
 	
-	public JavaMainTag(AClassDeclCG classCg)
+	public JavaMainTag(ADefaultClassDeclIR classCg)
 	{
 		checkRunReturnType(classCg);
 	}
 
-	private void checkRunReturnType(AClassDeclCG classCg)
+	private void checkRunReturnType(ADefaultClassDeclIR classCg)
 	{
 		isVoidRun = false;
-		for(AMethodDeclCG m : classCg.getMethods())
+		for(AMethodDeclIR m : classCg.getMethods())
 		{
-			if(m.getName().equals("Run") && m.getMethodType().getResult() instanceof AVoidTypeCG)
+			if(m.getName().equals("Run") && m.getMethodType().getResult() instanceof AVoidTypeIR)
 			{
 				isVoidRun = true;
 			}

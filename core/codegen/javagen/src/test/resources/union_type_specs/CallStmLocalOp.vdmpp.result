@@ -13,8 +13,8 @@ public class A {
     }
 
     public Number go() {
-        Object a = 1L;
-        Boolean b = true;
+        final Object a = 1L;
+        final Boolean b = true;
 
         return op(((Number) a), b);
     }

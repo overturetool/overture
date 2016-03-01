@@ -1,0 +1,5 @@
+operations
+
+op : nat ==> nat
+op (x) ==
+  return x;

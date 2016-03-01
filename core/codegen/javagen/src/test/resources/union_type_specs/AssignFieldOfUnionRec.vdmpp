@@ -1,0 +1,23 @@
+class Entry
+
+types
+R1 :: x : int
+inv r1 == r1.x > 0;
+
+R2 :: x : int
+inv r2 == r2.x > 0;
+
+operations
+
+public static Run : () ==> ?
+Run () == 
+(dcl r : R1 | R2 := mk_R1(1);
+ 
+ atomic
+ (
+   r.x := 4;
+ );
+ return r.x;
+)
+
+end Entry

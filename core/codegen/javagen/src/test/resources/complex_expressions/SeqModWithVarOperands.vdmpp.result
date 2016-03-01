@@ -12,7 +12,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        return SeqUtil.mod(Utils.copy(s), Utils.copy(m));
+        return SeqUtil.mod(Utils.copy(Entry.s), Utils.copy(Entry.m));
     }
 
     public String toString() {

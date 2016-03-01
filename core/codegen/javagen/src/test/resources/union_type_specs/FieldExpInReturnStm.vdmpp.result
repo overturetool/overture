@@ -47,7 +47,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Object obj_1 = Utils.get(hr, hr.size());
+        Object obj_1 = Utils.get(hr, Entry.hr.size());
 
         Number apply_1 = null;
 

@@ -4,57 +4,57 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.util.ClonableString;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
-import org.overture.codegen.cgast.statements.AMetaStmCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.AVoidTypeCG;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
+import org.overture.codegen.ir.statements.AMapSeqUpdateStmIR;
+import org.overture.codegen.ir.statements.AMetaStmIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.AVoidTypeIR;
 
 public class TestDataCollector extends DepthFirstAnalysisAdaptor
 {
-	private final List<AAssignToExpStmCG> assignments;
-	private final List<ACallObjectExpStmCG> setCalls;
-	private final List<AMapSeqUpdateStmCG> mapSeqUpdates;
-	private final List<AMetaStmCG> assertions;
+	private final List<AAssignToExpStmIR> assignments;
+	private final List<ACallObjectExpStmIR> setCalls;
+	private final List<AMapSeqUpdateStmIR> mapSeqUpdates;
+	private final List<AMetaStmIR> assertions;
 	
 	public TestDataCollector()
 	{
-		this.assignments = new LinkedList<AAssignToExpStmCG>();
-		this.setCalls = new LinkedList<ACallObjectExpStmCG>();
-		this.mapSeqUpdates = new LinkedList<AMapSeqUpdateStmCG>();
-		this.assertions = new LinkedList<AMetaStmCG>();
+		this.assignments = new LinkedList<AAssignToExpStmIR>();
+		this.setCalls = new LinkedList<ACallObjectExpStmIR>();
+		this.mapSeqUpdates = new LinkedList<AMapSeqUpdateStmIR>();
+		this.assertions = new LinkedList<AMetaStmIR>();
 	}
 	
 	@Override
-	public void caseAAssignToExpStmCG(AAssignToExpStmCG node)
+	public void caseAAssignToExpStmIR(AAssignToExpStmIR node)
 			throws AnalysisException
 	{
 		assignments.add(node);
 	}
 	
 	@Override
-	public void caseACallObjectExpStmCG(ACallObjectExpStmCG node)
+	public void caseACallObjectExpStmIR(ACallObjectExpStmIR node)
 			throws AnalysisException
 	{
-		if (node.getObj().getType() instanceof ARecordTypeCG
-				&& node.getType() instanceof AVoidTypeCG)
+		if (node.getObj().getType() instanceof ARecordTypeIR
+				&& node.getType() instanceof AVoidTypeIR)
 		{
 			setCalls.add(node);
 		}
 	}
 	
 	@Override
-	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node)
+	public void caseAMapSeqUpdateStmIR(AMapSeqUpdateStmIR node)
 			throws AnalysisException
 	{
 		mapSeqUpdates.add(node);
 	}
 
 	@Override
-	public void caseAMetaStmCG(AMetaStmCG node)
+	public void caseAMetaStmIR(AMetaStmIR node)
 			throws AnalysisException
 	{
 		if(node.getMetaData().size() == 1)
@@ -71,22 +71,22 @@ public class TestDataCollector extends DepthFirstAnalysisAdaptor
 		assertions.add(node);
 	}
 
-	public List<AAssignToExpStmCG> getAssignments()
+	public List<AAssignToExpStmIR> getAssignments()
 	{
 		return assignments;
 	}
 
-	public List<ACallObjectExpStmCG> getSetCalls()
+	public List<ACallObjectExpStmIR> getSetCalls()
 	{
 		return setCalls;
 	}
 	
-	public List<AMapSeqUpdateStmCG> getMapSeqUpdates()
+	public List<AMapSeqUpdateStmIR> getMapSeqUpdates()
 	{
 		return mapSeqUpdates;
 	}
 
-	public List<AMetaStmCG> getAssertions()
+	public List<AMetaStmIR> getAssertions()
 	{
 		return assertions;
 	}

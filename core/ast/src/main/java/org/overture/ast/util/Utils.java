@@ -29,6 +29,7 @@ import java.util.List;
 
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 
 public class Utils
 {
@@ -133,4 +134,26 @@ public class Utils
 
 		return sb.toString();
 	}
+	
+	public static String recNameToString(ILexNameToken name)
+	{
+		String fullRecName;
+		
+		// Flat specifications have blank module names
+		if(name.getModule().length() == 0)
+		{
+			fullRecName = "DEFAULT";
+		}
+		else
+		{
+			fullRecName = name.getModule();
+		}
+		
+		fullRecName += "`";
+		fullRecName += name.getName();
+		
+		return fullRecName;
+	}
+	
+	
 }

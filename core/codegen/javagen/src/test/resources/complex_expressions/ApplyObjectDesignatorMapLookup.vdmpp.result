@@ -49,7 +49,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Storage s = new Storage();
+        final Storage s = new Storage();
 
         return ((X) Utils.get(s.getXs(), 1L)).fun();
     }

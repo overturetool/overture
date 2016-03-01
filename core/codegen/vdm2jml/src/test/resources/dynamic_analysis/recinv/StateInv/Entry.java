@@ -1,6 +1,7 @@
 package project;
 
 import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
 
 import java.util.*;
 
@@ -27,11 +28,16 @@ final public class Entry {
     public static void opAtomic() {
         Number atomicTmp_1 = -1L;
 
+        //@ assert Utils.is_int(atomicTmp_1);
         Number atomicTmp_2 = 1L;
-
+        //@ assert Utils.is_int(atomicTmp_2);
         { /* Start of atomic statement */
             //@ set invChecksOn = false;
+
+            //@ assert St != null;
             St.set_x(atomicTmp_1);
+
+            //@ assert St != null;
             St.set_x(atomicTmp_2);
 
             //@ set invChecksOn = true;
@@ -40,7 +46,10 @@ final public class Entry {
         } /* End of atomic statement */}
 
     public static void op() {
+        //@ assert St != null;
         St.set_x(-10L);
+
+        //@ assert St != null;
         St.set_x(10L);
     }
 

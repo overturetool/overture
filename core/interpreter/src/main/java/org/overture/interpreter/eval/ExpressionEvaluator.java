@@ -608,10 +608,16 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			node.getLocation().hit();
 			return new NaturalValue(result);
-		} catch (ValueException e)
+		}
+		catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
-		} catch (Exception e)
+		}
+		catch (ContextException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), 4065, e.getMessage(), ctxt);
 		}
@@ -1671,7 +1677,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (long i = from; i <= to; i++)
 			{
-				set.add(new IntegerValue(i));
+				set.addNoCheck(new IntegerValue(i));
 			}
 
 			return new SetValue(set);

@@ -60,11 +60,10 @@ public class RepeatTraceNode extends TraceNode implements IIterableTraceNode
 
 		if (r == 0)
 		{
-			CallSequence seq = new CallSequence();
-			/* Trace variables visible at this point */
+			CallSequence seq = getVars();
 			CallStatement skip = new CallStatement()
 			{
-				public Object execute(final Object instance)
+				public Object execute()
 				{
 					return Utils.VOID_VALUE;
 				}
@@ -98,8 +97,7 @@ public class RepeatTraceNode extends TraceNode implements IIterableTraceNode
 				select = p.next();
 			}
 
-			CallSequence seq = new CallSequence();
-			/* Trace variables visible at this point */
+			CallSequence seq = getVars();
 
 			for (int i = 0; i < r; i++)
 			{

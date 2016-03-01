@@ -1,39 +1,60 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
-import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ASeqToStringUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AStringToSeqUnaryExpCG;
-import org.overture.codegen.cgast.expressions.SBinaryExpCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.SSeqTypeCG;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
+import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASeqToStringUnaryExpIR;
+import org.overture.codegen.ir.expressions.AStringToSeqUnaryExpIR;
+import org.overture.codegen.ir.expressions.SBinaryExpIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.AForAllStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.ASeqSeqTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
+import org.overture.codegen.ir.types.SSeqTypeIR;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 {
-	private TransAssistantCG transformationAssistant;
+	private TransAssistantIR transformationAssistant;
 
 	public SeqConvTrans(
-			TransAssistantCG transformationAssistant)
+			TransAssistantIR transformationAssistant)
 	{
 		this.transformationAssistant = transformationAssistant;
 	}
 
 	@Override
-	public void inAFieldDeclCG(AFieldDeclCG node) throws AnalysisException
+	public void caseAForAllStmIR(AForAllStmIR node) throws AnalysisException
 	{
-		STypeCG nodeType = node.getType();
-		SExpCG initial = node.getInitial();
+		if(node.getExp().getType() instanceof AStringTypeIR)
+		{
+			ASeqSeqTypeIR seqType = new ASeqSeqTypeIR();
+			seqType.setEmpty(false);
+			seqType.setSeq1(false);
+			seqType.setOptional(false);
+			seqType.setSeqOf(new ACharBasicTypeIR());
+			
+			correctExpToSeq(node.getExp(), seqType);
+		}
+
+		node.getBody().apply(this);
+	}
+	
+	@Override
+	public void inAFieldDeclIR(AFieldDeclIR node) throws AnalysisException
+	{
+		STypeIR nodeType = node.getType();
+		SExpIR initial = node.getInitial();
 
 		handleVarExp(nodeType, initial);
 
@@ -46,27 +67,27 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void inAFieldNumberExpCG(AFieldNumberExpCG node)
+	public void inAFieldNumberExpIR(AFieldNumberExpIR node)
 			throws AnalysisException
 	{
 		node.getTuple().apply(this);
 		
-		if(node.getType() instanceof AStringTypeCG)
+		if(node.getType() instanceof AStringTypeIR)
 		{
 			correctExpToString(node);
 		}
-		else if(node.getType() instanceof SSeqTypeCG)
+		else if(node.getType() instanceof SSeqTypeIR)
 		{
 			correctExpToSeq(node, node.getType());
 		}
 	}
 
 	@Override
-	public void inAVarDeclCG(AVarDeclCG node)
+	public void inAVarDeclIR(AVarDeclIR node)
 			throws AnalysisException
 	{
-		STypeCG nodeType = node.getType();
-		SExpCG exp = node.getExp();
+		STypeIR nodeType = node.getType();
+		SExpIR exp = node.getExp();
 
 		handleVarExp(nodeType, exp);
 
@@ -77,24 +98,34 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 
 		handleExp(exp, nodeType);
 	}
-
-	private void handleExp(SExpCG exp, STypeCG nodeType)
+	
+	@Override
+	public void caseAAssignToExpStmIR(AAssignToExpStmIR node) throws AnalysisException
 	{
-		if (exp.getType() instanceof AStringTypeCG
-				&& nodeType instanceof SSeqTypeCG)
+		if(node.getExp() != null)
+		{
+			node.getExp().apply(this);
+			handleExp(node.getExp(), node.getTarget().getType());
+		}
+	}
+
+	private void handleExp(SExpIR exp, STypeIR nodeType)
+	{
+		if (exp.getType() instanceof AStringTypeIR
+				&& nodeType instanceof SSeqTypeIR)
 		{
 			correctExpToSeq(exp, nodeType);
-		} else if (exp.getType() instanceof SSeqTypeCG
-				&& nodeType instanceof AStringTypeCG)
+		} else if (exp.getType() instanceof SSeqTypeIR
+				&& nodeType instanceof AStringTypeIR)
 		{
 			correctExpToString(exp);
 		}
 	}
 
-	private void handleVarExp(STypeCG nodeType, SExpCG exp)
+	private void handleVarExp(STypeIR nodeType, SExpIR exp)
 			throws AnalysisException
 	{
-		if (!(nodeType instanceof SSeqTypeCG))
+		if (!(nodeType instanceof SSeqTypeIR))
 		{
 			return;
 		}
@@ -106,30 +137,30 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void defaultInSBinaryExpCG(SBinaryExpCG node)
+	public void defaultInSBinaryExpIR(SBinaryExpIR node)
 			throws AnalysisException
 	{
-		SExpCG left = node.getLeft();
-		SExpCG right = node.getRight();
+		SExpIR left = node.getLeft();
+		SExpIR right = node.getRight();
 
 		left.apply(this);
 		right.apply(this);
 
-		if (left.getType() instanceof AStringTypeCG
-				&& right.getType() instanceof AStringTypeCG)
+		if (left.getType() instanceof AStringTypeIR
+				&& right.getType() instanceof AStringTypeIR)
 		{
-			node.setType(new AStringTypeCG());
+			node.setType(new AStringTypeIR());
 			return;
 		}
 
-		if (node.getType() instanceof SSeqTypeCG || node instanceof AEqualsBinaryExpCG || node instanceof ANotEqualsBinaryExpCG)
+		if (node.getType() instanceof SSeqTypeIR || node instanceof AEqualsBinaryExpIR || node instanceof ANotEqualsBinaryExpIR)
 		{
-			if (left.getType() instanceof AStringTypeCG
-					&& right.getType() instanceof SSeqTypeCG)
+			if (left.getType() instanceof AStringTypeIR
+					&& right.getType() instanceof SSeqTypeIR)
 			{
 				correctExpToString(right);
-			} else if (right.getType() instanceof AStringTypeCG
-					&& left.getType() instanceof SSeqTypeCG)
+			} else if (right.getType() instanceof AStringTypeIR
+					&& left.getType() instanceof SSeqTypeIR)
 			{
 				correctExpToString(left);
 			} else
@@ -137,14 +168,14 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 				return;
 			}
 
-			node.setType(new AStringTypeCG());
+			node.setType(new AStringTypeIR());
 		}
 	}
 
 	@Override
-	public void inAReturnStmCG(AReturnStmCG node) throws AnalysisException
+	public void inAReturnStmIR(AReturnStmIR node) throws AnalysisException
 	{
-		SExpCG exp = node.getExp();
+		SExpIR exp = node.getExp();
 
 		if (exp != null)
 		{
@@ -154,21 +185,21 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		AMethodDeclCG method = node.getAncestor(AMethodDeclCG.class);
-		AMethodTypeCG methodType = method.getMethodType();
+		AMethodDeclIR method = node.getAncestor(AMethodDeclIR.class);
+		AMethodTypeIR methodType = method.getMethodType();
 
-		if (methodType.getResult() instanceof AStringTypeCG)
+		if (methodType.getResult() instanceof AStringTypeIR)
 		{
-			if (!(exp.getType() instanceof SSeqTypeCG))
+			if (!(exp.getType() instanceof SSeqTypeIR))
 			{
 				return;
 			}
 
 			correctExpToString(exp);
 			;
-		} else if (methodType.getResult() instanceof SSeqTypeCG)
+		} else if (methodType.getResult() instanceof SSeqTypeIR)
 		{
-			if (!(exp.getType() instanceof AStringTypeCG))
+			if (!(exp.getType() instanceof AStringTypeIR))
 			{
 				return;
 			}
@@ -177,9 +208,9 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private void correctExpToSeq(SExpCG toCorrect, STypeCG type)
+	private void correctExpToSeq(SExpIR toCorrect, STypeIR type)
 	{
-		AStringToSeqUnaryExpCG conversion = new AStringToSeqUnaryExpCG();
+		AStringToSeqUnaryExpIR conversion = new AStringToSeqUnaryExpIR();
 
 		transformationAssistant.replaceNodeWith(toCorrect, conversion);
 
@@ -187,13 +218,13 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 		conversion.setExp(toCorrect);
 	}
 
-	private void correctExpToString(SExpCG toCorrect)
+	private void correctExpToString(SExpIR toCorrect)
 	{
-		ASeqToStringUnaryExpCG conversion = new ASeqToStringUnaryExpCG();
+		ASeqToStringUnaryExpIR conversion = new ASeqToStringUnaryExpIR();
 
 		transformationAssistant.replaceNodeWith(toCorrect, conversion);
 
-		conversion.setType(new AStringTypeCG());
+		conversion.setType(new AStringTypeIR());
 		conversion.setExp(toCorrect);
 	}
 }

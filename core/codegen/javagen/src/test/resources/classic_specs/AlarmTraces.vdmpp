@@ -150,7 +150,7 @@ Run() ==
   		periods = entry.plant.ExpertIsOnDuty(entry.ex1),
       expert  = entry.plant.ExpertToPage(entry.a1,p1)
   in 
-    return mk_(periods,expert);
+    return mk_(card periods,card expert.GetQuali());
 
 traces
 

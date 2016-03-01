@@ -11,8 +11,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        my.model.quotes.AQuote q = my.model.quotes.AQuote.getInstance();
-        my.model.quotes.AQuote b = q;
+        final my.model.quotes.AQuote q = my.model.quotes.AQuote.getInstance();
+        final my.model.quotes.AQuote b = q;
 
         return Utils.equals(b, q);
     }

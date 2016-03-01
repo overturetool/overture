@@ -40,7 +40,7 @@ import org.overture.core.tests.ParseTcFacade;
 public class AdHoc
 {
 	@Test
-	public void testQuick() throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException
+	public void testQuick() throws AnalysisException, org.overture.codegen.ir.analysis.AnalysisException
 	{
 		
 		File f = new File("src/test/resources/test.vdmsl");
@@ -51,14 +51,8 @@ public class AdHoc
 		
 		IsaGen gen = new IsaGen();
 		
-		List<AModuleModules> classes = new LinkedList<>();
-		
-		for(INode n : ast)
-		{
-			classes.add((AModuleModules) n);
-		}
-		
-		List<GeneratedModule> result = gen.generateIsabelleSyntax(classes);
+
+		List<GeneratedModule> result = gen.generate(ast).getClasses();
 		
 		for (GeneratedModule generatedClass : result)
 		{

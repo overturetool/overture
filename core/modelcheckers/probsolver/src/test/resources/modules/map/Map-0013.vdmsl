@@ -1,4 +1,0 @@
-operations
-
-mapapp() m : nat
-  post m = {1|->11, 2|->21, 3|->31, 4|->41}(3);

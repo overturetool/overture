@@ -5,7 +5,6 @@
 <message column="3" line="89" message="Definition 'MakeWithdrawal' not used" messageType="warning" number="5000" resource="cashdispenserSL"/>
 <message column="3" line="107" message="Definition 'RequestStatement' not used" messageType="warning" number="5000" resource="cashdispenserSL"/>
 <message column="3" line="125" message="Definition 'AddAccount' not used" messageType="warning" number="5000" resource="cashdispenserSL"/>
-<message column="1" line="148" message="Definition 'TestCash' not used" messageType="warning" number="5000" resource="cashdispenserSL"/>
 <message column="37" line="87" message="Impure operation 'IsLegalCard' cannot be called from here" messageType="error" number="3300" resource="cashdispenserSL"/>
 <message column="37" line="105" message="Impure operation 'IsLegalCard' cannot be called from here" messageType="error" number="3300" resource="cashdispenserSL"/>
 <message column="37" line="113" message="Impure operation 'IsLegalCard' cannot be called from here" messageType="error" number="3300" resource="cashdispenserSL"/>

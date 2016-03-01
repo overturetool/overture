@@ -36,10 +36,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
@@ -51,7 +53,7 @@ import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
-import org.overture.codegen.assistant.LocationAssistantCG;
+import org.overture.codegen.assistant.LocationAssistantIR;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
@@ -80,6 +82,39 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 public class GeneralCodeGenUtils
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	
+	public static boolean isVdmSourceFile(File f)
+	{
+		return isVdmPpSourceFile(f) || isVdmSlSourceFile(f) || isVdmRtSourceFile(f);
+	}
+	
+	public static boolean isVdmRtSourceFile(File f)
+	{
+		return hasExtension(f, new String[]{".vdmrt", ".vrt"});
+	}
+	
+	public static boolean isVdmSlSourceFile(File f)
+	{
+		return hasExtension(f, new String[]{".vsl", ".vdmsl"});
+	}
+	
+	public static boolean isVdmPpSourceFile(File f)
+	{
+		return hasExtension(f, new String[]{".vdmpp", ".vpp"});
+	}
+
+	private static boolean hasExtension(File f, String[] extensions)
+	{
+		for(String ext : extensions)
+		{
+			if(f.getName().endsWith(ext))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	
 	public static String errorStr(TypeCheckResult<?> tcResult)
 	{
@@ -236,6 +271,11 @@ public class GeneralCodeGenUtils
 		ClassTypeChecker.clearErrors();
 		ClassTypeChecker classTc = new ClassTypeChecker(classes, af);
 
+		for(SClassDefinition c : classes)
+		{
+			clearTypeData(c);
+		}
+		
 		classTc.typeCheck();
 
 		TypeCheckVisitor tc = new TypeCheckVisitor();
@@ -259,6 +299,11 @@ public class GeneralCodeGenUtils
 			VDMErrorsException
 
 	{
+		for(SClassDefinition c : classes)
+		{
+			clearTypeData(c);
+		}
+		
 		TypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
 		ClassTypeChecker.clearErrors();
 		ClassTypeChecker classTc = new ClassTypeChecker(classes, af);
@@ -274,6 +319,23 @@ public class GeneralCodeGenUtils
 		{
 			return clazz;
 		}
+	}
+
+	private static void clearTypeData(SClassDefinition c) throws AnalysisException
+	{
+		// Reset lex name data so the classes can be type checked again
+		c.apply(new DepthFirstAnalysisAdaptor()
+		{
+			@Override
+			public void inILexNameToken(ILexNameToken node) throws AnalysisException
+			{
+				if(node instanceof LexNameToken && node.parent() != null)
+				{
+					((LexNameToken) node).typeQualifier = null;
+					node.parent().replaceChild(node, node.copy());
+				}
+			}
+		});
 	}
 	
 	public static PExp parseExpression(String expression,
@@ -405,6 +467,7 @@ public class GeneralCodeGenUtils
 		List<Violation> reservedWordViolations = asSortedList(invalidNames.getReservedWordViolations());
 		List<Violation> typenameViolations = asSortedList(invalidNames.getTypenameViolations());
 		List<Violation> tempVarViolations = asSortedList(invalidNames.getTempVarViolations());
+		List<Violation> objectMethodViolations = asSortedList(invalidNames.getObjectMethodViolations());
 
 		String correctionMessage = String.format("Prefix '%s' has been added to the name"
 				+ LINE_SEPARATOR, invalidNames.getCorrectionPrefix());
@@ -424,6 +487,12 @@ public class GeneralCodeGenUtils
 		for (Violation violation : tempVarViolations)
 		{
 			buffer.append("Temporary variable violation: " + violation + ". "
+					+ correctionMessage);
+		}
+		
+		for (Violation violation : objectMethodViolations)
+		{
+			buffer.append("java.lang.Object method violation: " + violation + ". "
 					+ correctionMessage);
 		}
 
@@ -461,7 +530,7 @@ public class GeneralCodeGenUtils
 	public static void printUnsupportedIrNodes(Set<VdmNodeInfo> unsupportedNodes)
 	{
 		AssistantManager assistantManager = new AssistantManager();
-		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+		LocationAssistantIR locationAssistant = assistantManager.getLocationAssistant();
 
 		List<VdmNodeInfo> nodesSorted = locationAssistant.getVdmNodeInfoLocationSorted(unsupportedNodes);
 
@@ -474,7 +543,7 @@ public class GeneralCodeGenUtils
 
 			Logger.getLog().print(location != null ? " at [line, pos] = ["
 					+ location.getStartLine() + ", " + location.getStartPos()
-					+ "]" : "");
+					+ "] in " + location.getFile().getName() : "");
 
 			String reason = vdmNodeInfo.getReason();
 
@@ -490,7 +559,7 @@ public class GeneralCodeGenUtils
 	public static void printUnsupportedNodes(Set<IrNodeInfo> unsupportedNodes)
 	{
 		AssistantManager assistantManager = new AssistantManager();
-		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+		LocationAssistantIR locationAssistant = assistantManager.getLocationAssistant();
 		
 		List<IrNodeInfo> nodesSorted = locationAssistant.getIrNodeInfoLocationSorted(unsupportedNodes);
 

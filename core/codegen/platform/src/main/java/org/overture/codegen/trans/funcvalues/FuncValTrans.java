@@ -26,33 +26,33 @@ import java.util.List;
 
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
-import org.overture.codegen.cgast.expressions.ALambdaExpCG;
-import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.cgast.types.AInterfaceTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.ATemplateTypeCG;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.expressions.AAnonymousClassExpIR;
+import org.overture.codegen.ir.expressions.ALambdaExpIR;
+import org.overture.codegen.ir.expressions.AMethodInstantiationExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.AReturnStmIR;
+import org.overture.codegen.ir.types.AInterfaceTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.ATemplateTypeIR;
 import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class FuncValTrans extends DepthFirstAnalysisAdaptor
 {
-	private TransAssistantCG transformationAssistant;
+	private TransAssistantIR transformationAssistant;
 	private FuncValAssistant functionValueAssistant;
 	private FuncValPrefixes funcValPrefixes;
 
-	public FuncValTrans(TransAssistantCG transformationAssistant,
+	public FuncValTrans(TransAssistantIR transformationAssistant,
 			FuncValAssistant functionValueAssistant,
 			FuncValPrefixes funcValPrefixes)
 	{
@@ -67,19 +67,19 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void inAMethodTypeCG(AMethodTypeCG node) throws AnalysisException
+	public void inAMethodTypeIR(AMethodTypeIR node) throws AnalysisException
 	{
-		if (node.parent() instanceof AMethodDeclCG)
+		if (node.parent() instanceof AMethodDeclIR)
 		{
 			return;
 		}
 
-		if (node.parent() instanceof SVarExpCG)
+		if (node.parent() instanceof SVarExpIR)
 		{
 			return;
 		}
 
-		if (node.parent() instanceof AMethodInstantiationExpCG)
+		if (node.parent() instanceof AMethodInstantiationExpIR)
 		{
 			return;
 		}
@@ -97,7 +97,7 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		AInterfaceDeclCG info = functionValueAssistant.findInterface(node);
+		AInterfaceDeclIR info = functionValueAssistant.findInterface(node);
 
 		if (info == null)
 		{
@@ -107,32 +107,32 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void inALambdaExpCG(ALambdaExpCG node) throws AnalysisException
+	public void inALambdaExpIR(ALambdaExpIR node) throws AnalysisException
 	{
-		AMethodTypeCG methodType = (AMethodTypeCG) node.getType().clone();
-		AInterfaceDeclCG lambdaInterface = functionValueAssistant.findInterface(methodType);
+		AMethodTypeIR methodType = (AMethodTypeIR) node.getType().clone();
+		AInterfaceDeclIR lambdaInterface = functionValueAssistant.findInterface(methodType);
 
 		if (lambdaInterface == null)
 		{
 			@SuppressWarnings("unchecked")
-			List<? extends AFormalParamLocalParamCG> formalParams = (List<? extends AFormalParamLocalParamCG>) node.getParams().clone();
+			List<? extends AFormalParamLocalParamIR> formalParams = (List<? extends AFormalParamLocalParamIR>) node.getParams().clone();
 			lambdaInterface = consInterface(methodType, formalParams);
 
 			functionValueAssistant.registerInterface(lambdaInterface);
 		}
 
-		LinkedList<AFormalParamLocalParamCG> params = node.getParams();
+		LinkedList<AFormalParamLocalParamIR> params = node.getParams();
 
-		AInterfaceTypeCG classType = new AInterfaceTypeCG();
+		AInterfaceTypeIR classType = new AInterfaceTypeIR();
 		classType.setName(lambdaInterface.getName());
 
-		AMethodDeclCG lambdaDecl = lambdaInterface.getMethodSignatures().get(0).clone();
+		AMethodDeclIR lambdaDecl = lambdaInterface.getMethodSignatures().get(0).clone();
 
 		for (int i = 0; i < params.size(); i++)
 		{
-			AFormalParamLocalParamCG paramLocalDeclCG = params.get(i);
-			STypeCG paramType = paramLocalDeclCG.getType();
-			SPatternCG pattern = paramLocalDeclCG.getPattern();
+			AFormalParamLocalParamIR paramLocalDeclIR = params.get(i);
+			STypeIR paramType = paramLocalDeclIR.getType();
+			SPatternIR pattern = paramLocalDeclIR.getPattern();
 
 			classType.getTypes().add(paramType.clone());
 			lambdaDecl.getFormalParams().get(i).setType(paramType.clone());
@@ -142,36 +142,36 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 		classType.getTypes().add(methodType.getResult().clone());
 		lambdaDecl.getMethodType().setResult(methodType.getResult().clone());
 
-		AReturnStmCG lambdaReturn = new AReturnStmCG();
+		AReturnStmIR lambdaReturn = new AReturnStmIR();
 		lambdaReturn.setExp(node.getExp().clone());
 
-		ABlockStmCG lambdaBody = new ABlockStmCG();
+		ABlockStmIR lambdaBody = new ABlockStmIR();
 		lambdaBody.getStatements().add(lambdaReturn);
 
 		lambdaDecl.setAbstract(false);
 		lambdaDecl.setBody(lambdaBody);
 
-		AAnonymousClassExpCG classExp = new AAnonymousClassExpCG();
+		AAnonymousClassExpIR classExp = new AAnonymousClassExpIR();
 		classExp.setType(classType);
 		classExp.getMethods().add(lambdaDecl);
 
 		transformationAssistant.replaceNodeWithRecursively(node, classExp, this);
 	}
 
-	private AInterfaceDeclCG consInterface(AMethodTypeCG methodType)
+	private AInterfaceDeclIR consInterface(AMethodTypeIR methodType)
 	{
-		List<AFormalParamLocalParamCG> params = new LinkedList<AFormalParamLocalParamCG>();
+		List<AFormalParamLocalParamIR> params = new LinkedList<AFormalParamLocalParamIR>();
 
-		List<STypeCG> paramTypes = methodType.getParams();
+		List<STypeIR> paramTypes = methodType.getParams();
 
 		for (int i = 0; i < paramTypes.size(); i++)
 		{
-			STypeCG paramType = paramTypes.get(i);
+			STypeIR paramType = paramTypes.get(i);
 
-			AFormalParamLocalParamCG param = new AFormalParamLocalParamCG();
+			AFormalParamLocalParamIR param = new AFormalParamLocalParamIR();
 
 			String nextParamName = funcValPrefixes.param() + (i + 1);
-			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+			AIdentifierPatternIR idPattern = new AIdentifierPatternIR();
 			idPattern.setName(nextParamName);
 
 			param.setType(paramType.clone());
@@ -183,15 +183,15 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 		return consInterface(methodType, params);
 	}
 
-	private AInterfaceDeclCG consInterface(AMethodTypeCG methodType,
-			List<? extends AFormalParamLocalParamCG> params)
+	private AInterfaceDeclIR consInterface(AMethodTypeIR methodType,
+			List<? extends AFormalParamLocalParamIR> params)
 	{
-		AInterfaceDeclCG methodTypeInterface = new AInterfaceDeclCG();
+		AInterfaceDeclIR methodTypeInterface = new AInterfaceDeclIR();
 
 		methodTypeInterface.setPackage(null);
 		methodTypeInterface.setName(transformationAssistant.getInfo().getTempVarNameGen().nextVarName(funcValPrefixes.funcInterface()));
 
-		AMethodDeclCG evalMethod = new AMethodDeclCG();
+		AMethodDeclIR evalMethod = new AMethodDeclIR();
 		evalMethod.setImplicit(false);
 		evalMethod.setAbstract(true);
 		evalMethod.setAccess(IRConstants.PUBLIC);
@@ -201,14 +201,14 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 		evalMethod.setName(funcValPrefixes.evalMethod());
 		evalMethod.setStatic(false);
 
-		AMethodTypeCG evalMethodType = new AMethodTypeCG();
+		AMethodTypeIR evalMethodType = new AMethodTypeIR();
 
 		for (int i = 0; i < params.size(); i++)
 		{
-			ATemplateTypeCG templateType = new ATemplateTypeCG();
+			ATemplateTypeIR templateType = new ATemplateTypeIR();
 			templateType.setName(funcValPrefixes.templateType() + (i + 1));
 
-			AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
+			AFormalParamLocalParamIR formalParam = new AFormalParamLocalParamIR();
 			formalParam.setType(templateType);
 			formalParam.setPattern(params.get(i).getPattern().clone());
 
@@ -219,7 +219,7 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 
 		methodTypeInterface.getMethodSignatures().add(evalMethod);
 
-		ATemplateTypeCG templateTypeResult = new ATemplateTypeCG();
+		ATemplateTypeIR templateTypeResult = new ATemplateTypeIR();
 		templateTypeResult.setName(funcValPrefixes.templateType()
 				+ (methodType.getParams().size() + 1));
 		methodTypeInterface.getTemplateTypes().add(templateTypeResult);

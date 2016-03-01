@@ -9,10 +9,10 @@ public class Entry {
     }
 
     public static Object Run() {
-        Func_1<Number, Number> f = new Func_1<Number, Number>() {
+        final Func_1<Number, Number> f = new Func_1<Number, Number>() {
                 public Number eval(final Number x) {
                     {
-                        Number y = x;
+                        final Number y = x;
 
                         return y;
                     }

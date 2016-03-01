@@ -100,7 +100,7 @@ public class ClasspathUtils {
 		}
 	}
 
-	private static void getPluginClassPath(String bundleId, List<String> entries)
+	private static void getPluginClassPath(String bundleId, List<String> entries) throws CoreException
 	{
 		try {
 			final Bundle bundle = Platform.getBundle(bundleId);
@@ -136,6 +136,7 @@ public class ClasspathUtils {
 		} catch (Exception e) {
 			final String msg = NLS.bind(PLUGIN_LOCATION_ERROR, bundleId);
 			System.out.println(msg);
+			throw new CoreException(new Status(IStatus.ERROR, ICoreConstants.PLUGIN_ID, IStatus.ERROR, msg, e));
 		}
 
 	}
@@ -143,7 +144,12 @@ public class ClasspathUtils {
 
 	private static File getPluginLocation(String bundleId) throws CoreException {
 		try {
-			final Bundle bundle = Platform.getBundle(bundleId);			
+			final Bundle bundle = Platform.getBundle(bundleId);		
+			if(bundle==null)
+			{
+				final String msg = NLS.bind(PLUGIN_LOCATION_ERROR, bundleId);
+				throw new CoreException(new Status(IStatus.ERROR, ICoreConstants.PLUGIN_ID, IStatus.ERROR, msg,null));
+			}
 			return getBundleFile(bundle);
 		} catch (IOException e) {
 			final String msg = NLS.bind(PLUGIN_LOCATION_ERROR, bundleId);

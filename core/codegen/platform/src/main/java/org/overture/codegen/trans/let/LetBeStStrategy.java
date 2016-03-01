@@ -24,37 +24,37 @@ package org.overture.codegen.trans.let;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarDeclCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.ALetBeStNoBindingRuntimeErrorExpCG;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
-import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
-import org.overture.codegen.cgast.types.AErrorTypeCG;
-import org.overture.codegen.cgast.types.SSetTypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.AVarDeclIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.ALetBeStNoBindingRuntimeErrorExpIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.AIfStmIR;
+import org.overture.codegen.ir.statements.ALocalPatternAssignmentStmIR;
+import org.overture.codegen.ir.statements.ARaiseErrorStmIR;
+import org.overture.codegen.ir.types.AErrorTypeIR;
+import org.overture.codegen.ir.types.SSetTypeIR;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.AbstractIterationStrategy;
 import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.IterationVarPrefixes;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class LetBeStStrategy extends AbstractIterationStrategy
 {
 	protected String successVarName;
-	protected SExpCG suchThat;
-	protected SSetTypeCG setType;
+	protected SExpIR suchThat;
+	protected SSetTypeIR setType;
 
 	protected int count = 0;
-	protected List<AVarDeclCG> decls = new LinkedList<AVarDeclCG>();
+	protected List<AVarDeclIR> decls = new LinkedList<AVarDeclIR>();
 
-	public LetBeStStrategy(TransAssistantCG transformationAssistant,
-			SExpCG suchThat, SSetTypeCG setType,
+	public LetBeStStrategy(TransAssistantIR transformationAssistant,
+			SExpIR suchThat, SSetTypeIR setType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			IterationVarPrefixes iteVarPrefixes)
 	{
@@ -69,36 +69,36 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public List<AVarDeclCG> getOuterBlockDecls(
-			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
+	public List<AVarDeclIR> getOuterBlockDecls(
+			AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
 			throws AnalysisException
 	{
-		List<AVarDeclCG> outerBlockDecls = new LinkedList<AVarDeclCG>();
+		List<AVarDeclIR> outerBlockDecls = new LinkedList<AVarDeclIR>();
 
-		for (SPatternCG id : patterns)
+		for (SPatternIR id : patterns)
 		{
-			AVarDeclCG decl = transAssistant.getInfo().getDeclAssistant().
-					consLocalVarDecl(transAssistant.getSetTypeCloned(setType).getSetOf(),
-					id.clone(), transAssistant.getInfo().getExpAssistant().consNullExp());
+			AVarDeclIR decl = transAssist.getInfo().getDeclAssistant().
+					consLocalVarDecl(transAssist.getSetTypeCloned(setType).getSetOf(),
+					id.clone(), transAssist.getInfo().getExpAssistant().consUndefinedExp());
 			decls.add(decl);
 			outerBlockDecls.add(decl);
 		}
 
-		successVarDecl = transAssistant.consBoolVarDecl(successVarName, false);
+		successVarDecl = transAssist.consBoolVarDecl(successVarName, false);
 		outerBlockDecls.add(successVarDecl);
 
 		return outerBlockDecls;
 	}
 
 	@Override
-	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public List<SStmIR> getPreForLoopStms(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 	{
 		if (count > 0)
 		{
-			AAssignToExpStmCG successAssignment = new AAssignToExpStmCG();
-			successAssignment.setExp(transAssistant.getInfo().getExpAssistant().consBoolLiteral(false));
-			successAssignment.setTarget(transAssistant.consSuccessVar(successVarName));
+			AAssignToExpStmIR successAssignment = new AAssignToExpStmIR();
+			successAssignment.setExp(transAssist.getInfo().getExpAssistant().consBoolLiteral(false));
+			successAssignment.setTarget(transAssist.consSuccessVar(successVarName));
 
 			return packStm(successAssignment);
 		} else
@@ -108,14 +108,14 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public SExpIR getForLoopCond(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 			throws AnalysisException
 	{
-		SExpCG left = langIterator.getForLoopCond(setVar, patterns, pattern);
-		SExpCG right = transAssistant.consBoolCheck(successVarName, true);
+		SExpIR left = langIterator.getForLoopCond(setVar, patterns, pattern);
+		SExpIR right = transAssist.consBoolCheck(successVarName, true);
 
-		return transAssistant.consAndExp(left, right);
+		return transAssist.consAndExp(left, right);
 	}
 
 	@Override
@@ -125,42 +125,42 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public AVarDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public AVarDeclIR getNextElementDeclared(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 			throws AnalysisException
 	{
-		AVarDeclCG nextElementDecl = decls.get(count++);
+		AVarDeclIR nextElementDecl = decls.get(count++);
 		tagNextElementDeclared(nextElementDecl);
 		return null;
 	}
 
 	@Override
-	public ALocalPatternAssignmentStmCG getNextElementAssigned(
-			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
-			SPatternCG pattern) throws AnalysisException
+	public ALocalPatternAssignmentStmIR getNextElementAssigned(
+			AIdentifierVarExpIR setVar, List<SPatternIR> patterns,
+			SPatternIR pattern) throws AnalysisException
 	{
 		return langIterator.getNextElementAssigned(setVar, patterns, pattern, successVarDecl, this.nextElementDeclared);
 	}
 
 	@Override
-	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+	public List<SStmIR> getForLoopStms(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns, SPatternIR pattern)
 	{
-		return packStm(transAssistant.consBoolVarAssignment(suchThat, successVarName));
+		return packStm(transAssist.consBoolVarAssignment(suchThat, successVarName));
 	}
 
 	@Override
-	public List<SStmCG> getPostOuterBlockStms(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns)
+	public List<SStmIR> getPostOuterBlockStms(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns)
 	{
-		ALetBeStNoBindingRuntimeErrorExpCG noBinding = new ALetBeStNoBindingRuntimeErrorExpCG();
-		noBinding.setType(new AErrorTypeCG());
+		ALetBeStNoBindingRuntimeErrorExpIR noBinding = new ALetBeStNoBindingRuntimeErrorExpIR();
+		noBinding.setType(new AErrorTypeIR());
 
-		ARaiseErrorStmCG raise = new ARaiseErrorStmCG();
+		ARaiseErrorStmIR raise = new ARaiseErrorStmIR();
 		raise.setError(noBinding);
 
-		AIfStmCG ifStm = new AIfStmCG();
-		ifStm.setIfExp(transAssistant.consBoolCheck(successVarName, true));
+		AIfStmIR ifStm = new AIfStmIR();
+		ifStm.setIfExp(transAssist.consBoolCheck(successVarName, true));
 		ifStm.setThenStm(raise);
 
 		return packStm(ifStm);

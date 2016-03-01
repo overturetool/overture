@@ -21,33 +21,33 @@
  */
 package org.overture.codegen.trans.letexps;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFuncDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFuncDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class FuncTrans extends DepthFirstAnalysisAdaptor
 {
-	private TransAssistantCG transAssistant;
+	private TransAssistantIR transAssistant;
 	
-	public FuncTrans(TransAssistantCG transformationAssistant)
+	public FuncTrans(TransAssistantIR transformationAssistant)
 	{
 		this.transAssistant = transformationAssistant;
 	}
 
 	@Override
-	public void caseAFuncDeclCG(AFuncDeclCG node) throws AnalysisException
+	public void caseAFuncDeclIR(AFuncDeclIR node) throws AnalysisException
 	{
-		AMethodDeclCG method = transAssistant.getInfo().getDeclAssistant().funcToMethod(node);
+		AMethodDeclIR method = transAssistant.getInfo().getDeclAssistant().funcToMethod(node);
 
 		INode parent = node.parent();
 		
-		if(parent instanceof AClassDeclCG)
+		if(parent instanceof ADefaultClassDeclIR)
 		{
-			AClassDeclCG enclosingClass = (AClassDeclCG) parent;
+			ADefaultClassDeclIR enclosingClass = (ADefaultClassDeclIR) parent;
 			
 			if(enclosingClass.getInvariant() == node)
 			{

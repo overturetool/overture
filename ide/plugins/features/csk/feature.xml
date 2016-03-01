@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.csk"
       label="CSK VDM Tools link"
-      version="2.3.0">
+      version="2.3.2">
 
   <description>
       %description

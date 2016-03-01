@@ -1,0 +1,126 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+final public class Entry implements java.io.Serializable {
+    private static St St = new St(new R(0L));
+
+    private Entry() {
+    }
+
+    public static Number op() {
+        if (!(pre_op(St))) {
+            throw new RuntimeException("Precondition failure: pre_op");
+        }
+
+        St.r.x = St.r.x.longValue() + 1L;
+
+        return St.r.x;
+    }
+
+    public static Boolean pre_op(final St St) {
+        return St.r.x.longValue() < 1L;
+    }
+
+    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+
+        {
+            final Number ID_1 = gen.inc();
+            store.staticReg(ID_1, Entry.class);
+        }
+
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        CallStatement callStm_1 = new CallStatement() {
+                public Boolean meetsPreCond() {
+                    return pre_op(St);
+                }
+
+                public Object execute() {
+                    return op();
+                }
+
+                public String toString() {
+                    return "op()";
+                }
+            };
+
+        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+        RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_1, 1L, 4L);
+
+        sequence_1.add(repeat_1);
+
+        TraceNode.executeTests(sequence_1, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{" + "St := " + Utils.toString(St) + "}";
+    }
+
+    public static class R implements Record {
+        public Number x;
+
+        public R(final Number _x) {
+            x = _x;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof R)) {
+                return false;
+            }
+
+            R other = ((R) obj);
+
+            return Utils.equals(x, other.x);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x);
+        }
+
+        public R copy() {
+            return new R(x);
+        }
+
+        public String toString() {
+            return "mk_Entry`R" + Utils.formatFields(x);
+        }
+    }
+
+    public static class St implements Record {
+        public R r;
+
+        public St(final R _r) {
+            r = (_r != null) ? Utils.copy(_r) : null;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof St)) {
+                return false;
+            }
+
+            St other = ((St) obj);
+
+            return Utils.equals(r, other.r);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(r);
+        }
+
+        public St copy() {
+            return new St(r);
+        }
+
+        public String toString() {
+            return "mk_Entry`St" + Utils.formatFields(r);
+        }
+    }
+}
+
+##########

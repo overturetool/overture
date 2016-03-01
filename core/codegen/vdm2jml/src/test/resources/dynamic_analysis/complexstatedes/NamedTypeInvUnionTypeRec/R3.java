@@ -1,6 +1,7 @@
 package project.Entrytypes;
 
 import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
 
 import java.util.*;
 
@@ -12,7 +13,10 @@ final public class R3 implements Record {
 
     //@ public instance invariant project.Entry.invChecksOn ==> inv_R3(r4);
     public R3(final project.Entrytypes.R4 _r4) {
+        //@ assert Utils.is_(_r4,project.Entrytypes.R4.class);
         r4 = (_r4 != null) ? Utils.copy(_r4) : null;
+
+        //@ assert Utils.is_(r4,project.Entrytypes.R4.class);
     }
 
     /*@ pure @*/
@@ -43,11 +47,17 @@ final public class R3 implements Record {
 
     /*@ pure @*/
     public project.Entrytypes.R4 get_r4() {
-        return r4;
+        project.Entrytypes.R4 ret_5 = r4;
+
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_(ret_5,project.Entrytypes.R4.class));
+        return ret_5;
     }
 
     public void set_r4(final project.Entrytypes.R4 _r4) {
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_(_r4,project.Entrytypes.R4.class));
         r4 = _r4;
+
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_(r4,project.Entrytypes.R4.class));
     }
 
     /*@ pure @*/
@@ -64,12 +74,6 @@ final public class R3 implements Record {
     /*@ pure @*/
     /*@ helper @*/
     public static Boolean inv_Entry_T3(final Object check_t3) {
-        if ((Utils.equals(check_t3, null)) ||
-                !(Utils.is_(check_t3, project.Entrytypes.R3.class) ||
-                Utils.is_(check_t3, project.Entrytypes.X.class))) {
-            return false;
-        }
-
         Object t3 = ((Object) check_t3);
 
         Boolean andResult_1 = false;

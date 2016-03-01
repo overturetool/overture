@@ -56,6 +56,8 @@ import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
+import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.PType;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.debug.BreakpointManager;
@@ -273,6 +275,54 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		try
 		{
+			ValueList argValues = new ValueList();
+
+			for (PExp arg: node.getArgs())
+			{
+				argValues.add(arg.apply(VdmRuntime.getStatementEvaluator(), ctxt));
+			}
+			
+			// Work out the actual types of the arguments, so we bind the right op/fn
+			List<PType> argTypes = new Vector<PType>();
+			int arg = 0;
+			
+			for (PType argType: node.getField().getTypeQualifier())
+			{
+				if (argType instanceof AUnionType)
+				{
+					AUnionType u = (AUnionType)argType;
+					
+					for (PType possible: u.getTypes())
+					{
+						try
+						{
+							argValues.get(arg).convertTo(possible, ctxt);
+							argTypes.add(possible);
+							break;
+						}
+						catch (ValueException e)
+						{
+							// Try again
+						}
+					}
+				}
+				else
+				{
+					argTypes.add(argType);
+				}
+				
+				arg++;
+			}
+			
+			if (argTypes.size() != node.getField().getTypeQualifier().size())
+			{
+				VdmRuntimeError.abort(node.getField().getLocation(), 4168, "Arguments do not match parameters: " + node.getField(), ctxt);
+			}
+			else
+			{
+				node.setField(node.getField().getModifiedName(argTypes));
+			}
+
 			ObjectValue obj = node.getDesignator().apply(VdmRuntime.getStatementEvaluator(), ctxt).objectValue(ctxt);
 			Value v = obj.get(node.getField(), node.getExplicit());
 
@@ -287,24 +337,10 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			if (v instanceof OperationValue)
 			{
 				OperationValue op = v.operationValue(ctxt);
-				ValueList argValues = new ValueList();
-
-				for (PExp arg : node.getArgs())
-				{
-					argValues.add(arg.apply(VdmRuntime.getStatementEvaluator(), ctxt));
-				}
-
 				return op.eval(node.getLocation(), argValues, ctxt);
 			} else
 			{
 				FunctionValue op = v.functionValue(ctxt);
-				ValueList argValues = new ValueList();
-
-				for (PExp arg : node.getArgs())
-				{
-					argValues.add(arg.apply(VdmRuntime.getStatementEvaluator(), ctxt));
-				}
-
 				return op.eval(node.getLocation(), argValues, ctxt);
 			}
 		} catch (ValueException e)

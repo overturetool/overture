@@ -6,7 +6,7 @@ import java.util.*;
 @SuppressWarnings("all")
 public class A {
     private static final VDMSet a = SetUtil.set(1L, 2L);
-    private static final VDMMap x = MapUtil.rngResTo(m1(), Utils.copy(a));
+    private static final VDMMap x = MapUtil.rngResTo(m1(), Utils.copy(A.a));
 
     public A() {
     }

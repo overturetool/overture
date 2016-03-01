@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Number x = 1.1;
+        final Number x = 1.1;
 
         return f(+x.doubleValue());
     }

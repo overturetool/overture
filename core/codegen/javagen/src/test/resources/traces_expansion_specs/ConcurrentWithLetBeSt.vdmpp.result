@@ -39,8 +39,8 @@ public class Entry implements java.io.Serializable {
 
             store.register(ID_1, e1);
 
-            CallStatement callStm_1 = new CallStatement() {
-                    public Object execute(final Object instance) {
+            CallStatementPp callStm_1 = new CallStatementPp() {
+                    public Object execute() {
                         return ((Entry) store.getValue(ID_1)).op();
                     }
 
@@ -51,8 +51,12 @@ public class Entry implements java.io.Serializable {
 
             StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
 
+            apply_1.addVarFirst(new TraceVariable("e1", "Entry",
+                    Utils.toString(e1)));
             alternatives_2.add(apply_1);
         }
+
+        concurrent_1.add(alternatives_2);
 
         AlternativeTraceNode alternatives_3 = new AlternativeTraceNode();
         VDMSet set_2 = SetUtil.set(new Entry(5L), new Entry(6L));
@@ -63,8 +67,8 @@ public class Entry implements java.io.Serializable {
 
             store.register(ID_2, e2);
 
-            CallStatement callStm_2 = new CallStatement() {
-                    public Object execute(final Object instance) {
+            CallStatementPp callStm_2 = new CallStatementPp() {
+                    public Object execute() {
                         return ((Entry) store.getValue(ID_2)).op();
                     }
 
@@ -75,10 +79,11 @@ public class Entry implements java.io.Serializable {
 
             StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
 
+            apply_2.addVarFirst(new TraceVariable("e2", "Entry",
+                    Utils.toString(e2)));
             alternatives_3.add(apply_2);
         }
 
-        concurrent_1.add(alternatives_2);
         concurrent_1.add(alternatives_3);
 
         sequence_1.add(concurrent_1);

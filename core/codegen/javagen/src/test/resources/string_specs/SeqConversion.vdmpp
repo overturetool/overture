@@ -61,8 +61,22 @@ if 1 = 1 then
 else
   return "b";
 
+functions
+
+op8 : ? -> seq of char
+op8(a) ==
+cases a:
+	<A> ->
+	  if true then 
+		  "" 
+		else
+		  undefined
+end
+
+operations
+
 public static Run : () ==> seq of char
 Run () ==
-  return x ^ f() ^ op1() ^ op2() ^ op3() ^ op5() ^ op6() ^ op7();-- ^ op4();
+  return x ^ f() ^ op1() ^ op2() ^ op3() ^ op5() ^ op6() ^ op7() ^ op8(<A>);-- ^ op4();
 
 end Entry

@@ -1,0 +1,29 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+ IO`println("Before legal use");
+ let - : nat * nat * char * bool = Tup4() in skip;
+ IO`println("After legal use");
+ IO`println("Before illegal use");
+ let - : nat * nat * char * bool = Tup3() in skip;
+ IO`println("After illegal use");
+ return 0;
+);
+
+functions
+
+Tup3 :  () -> (nat * char * bool) | (nat * nat * char * bool)
+Tup3 () == mk_(1,'a',true);
+
+Tup4 :  () -> (nat * char * bool) | (nat * nat * char * bool)
+Tup4 () == mk_(1,2,'b',false);
+  
+end Entry

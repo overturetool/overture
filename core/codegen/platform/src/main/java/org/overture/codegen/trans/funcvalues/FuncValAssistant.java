@@ -24,31 +24,31 @@ package org.overture.codegen.trans.funcvalues;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
 
 public class FuncValAssistant
 {
-	private List<AInterfaceDeclCG> funcValInterfaces;
+	private List<AInterfaceDeclIR> funcValInterfaces;
 
 	public FuncValAssistant()
 	{
-		this.funcValInterfaces = new LinkedList<AInterfaceDeclCG>();
+		this.funcValInterfaces = new LinkedList<AInterfaceDeclIR>();
 	}
 
-	public List<AInterfaceDeclCG> getFuncValInterfaces()
+	public List<AInterfaceDeclIR> getFuncValInterfaces()
 	{
 		return funcValInterfaces;
 	}
 
-	public void registerInterface(AInterfaceDeclCG functionValueInterface)
+	public void registerInterface(AInterfaceDeclIR functionValueInterface)
 	{
 		funcValInterfaces.add(functionValueInterface);
 	}
 
-	public AInterfaceDeclCG findInterface(AMethodTypeCG methodType)
+	public AInterfaceDeclIR findInterface(AMethodTypeIR methodType)
 	{
-		for (AInterfaceDeclCG functionValueInterface : funcValInterfaces)
+		for (AInterfaceDeclIR functionValueInterface : funcValInterfaces)
 		{
 			if (1 + methodType.getParams().size() == functionValueInterface.getTemplateTypes().size())
 			{

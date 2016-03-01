@@ -1602,6 +1602,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
     				{
 						TypeCheckerErrors.report(3342, "Cannot use history counters for pure operations", opname.getLocation(), opname);
     				}
+    				
+    				if (def.getAccess().getStatic() == null && question.env.isStatic())
+    				{
+    					TypeCheckerErrors.report(3349,
+    						"Cannot see non-static operation from static context", opname.getLocation(), opname);
+    				}
 				}
 			}
 
@@ -1712,15 +1718,16 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (typename != null)
 		{
 			PDefinition typeFound = question.env.findType(typename, node.getLocation().getModule());
+			
 			if (typeFound == null)
 			{
 				TypeCheckerErrors.report(3113, "Unknown type name '" + typename
 						+ "'", node.getLocation(), node);
-				node.setType(node.getTest().getType());
-				return node.getType();
 			}
-			node.setTypedef(typeFound.clone());
-
+			else
+			{
+				node.setTypedef(typeFound.clone());
+			}
 		}
 
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
@@ -1790,12 +1797,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		// node.setParamPatterns(paramPatterns);
 		for (ATypeBind tb : node.getBindList())
 		{
-			// mbinds.addAll(ATypeBindAssistantTC.getMultipleBindList(tb));
-			// FIXME: I am not sure if this is the way.
 			mbinds.addAll(tb.apply(question.assistantFactory.getMultipleBindLister()));
 			paramDefinitions.addAll(question.assistantFactory.createPPatternAssistant().getDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
 			paramPatterns.add(tb.getPattern());
-			ptypes.add(question.assistantFactory.createPTypeAssistant().typeResolve(tb.getType(), null, THIS, question));
+			tb.setType(question.assistantFactory.createPTypeAssistant().typeResolve(tb.getType(), null, THIS, question));
+			ptypes.add(tb.getType());
 		}
 
 		node.setParamPatterns(paramPatterns);
@@ -2320,7 +2326,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			}
 		} else
 		{
-			node.setType(AstFactory.newARealNumericBasicType(node.getLocation()));
+			node.setType(AstFactory.newARationalNumericBasicType(node.getLocation()));
 		}
 
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, node.getType(), node.getLocation());
@@ -2412,6 +2418,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		// setBindSet));
 
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getSetBind()));
+		def.parent(node.getSetBind());
 		def.apply(THIS, question.newConstraint(null));
 
 		// now they are typechecked, add them again
@@ -2585,6 +2592,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				&& exp instanceof AEqualsBinaryExp)
 		{
 			AEqualsBinaryExp ee = (AEqualsBinaryExp) exp;
+			ee.setType(AstFactory.newABooleanBasicType(ee.getLocation()));
+			
 			question.qualifiers = null;
 			ee.getLeft().apply(THIS, noConstraint);
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.codegen.tests.exec.PrePostJavaGenTest">
 <result>
-<output object="rO0ABXQAW0Vycm9yIDQwNzE6IFByZWNvbmRpdGlvbiBmYWlsdXJlOiBwcmVfb3AgaW4gJ0VudHJ5JyAoUHJlRmFpbHVyZU9wVHVwbGVQYXR0ZXJuKSBhdCBsaW5lIDExOjc=" resource="PreFailureOpTuplePattern" value="Error 4071: Precondition failure: pre_op in 'Entry' (PreFailureOpTuplePattern) at line 11:7"/>
+<output object="rO0ABXQAYUVycm9yIDQwNzE6IFByZWNvbmRpdGlvbiBmYWlsdXJlOiBwcmVfb3AgaW4gJ0VudHJ5JyAoUHJlRmFpbHVyZU9wVHVwbGVQYXR0ZXJuLnZkbXBwKSBhdCBsaW5lIDExOjc=" resource="PreFailureOpTuplePattern.vdmpp" value="Error 4071: Precondition failure: pre_op in 'Entry' (PreFailureOpTuplePattern.vdmpp) at line 11:7"/>
 </result>
 </testResult>

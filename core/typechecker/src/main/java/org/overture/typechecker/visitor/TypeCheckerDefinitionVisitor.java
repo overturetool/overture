@@ -119,12 +119,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	{
 		question.qualifiers = null;
 
-		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
+		node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(node), null, THIS, question));
 
 		ExcludedDefinitions.setExcluded(node);
 		node.setExpType(node.getExpression().apply(THIS, question));
 		ExcludedDefinitions.clearExcluded();
-		node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(node), null, THIS, question));
+
+		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 
 		if (node.getExpType() instanceof AVoidType)
 		{
@@ -161,6 +162,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		Environment cenv = new PrivateClassEnvironment(question.assistantFactory, node.getClassDefinition(), question.env);
 
+		if (question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
+		{
+			FlatCheckedEnvironment checked = new FlatCheckedEnvironment(question.assistantFactory, new Vector<PDefinition>(), question.env, NameScope.NAMES);
+			checked.setStatic(true);
+			cenv = checked;
+		}
+		
 		// TODO: This should be a call to the assignment definition typecheck
 		// but instance is not an subclass of
 		// assignment in our tree
@@ -1295,6 +1303,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			typeCheck(term.getList(), THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE));
 		}
 
+		// Mark node as used, as traces are not used anyway
+		question.assistantFactory.createPDefinitionAssistant().markUsed(node);
+		
 		return null;
 	}
 

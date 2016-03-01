@@ -27,13 +27,17 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AUnionType;
@@ -43,6 +47,7 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.LexNameTokenMap;
 
 /**
@@ -83,7 +88,6 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 	@Override
 	public AClassType caseAUnionType(AUnionType type) throws AnalysisException
 	{
-
 		if (!type.getClassDone())
 		{
 			type.setClassDone(true); // Mark early to avoid recursion.
@@ -96,18 +100,40 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 
 			Map<ILexNameToken, PTypeSet> common = new HashMap<ILexNameToken, PTypeSet>();
 			Map<ILexNameToken, AAccessSpecifierAccessSpecifier> access = new LexNameTokenMap<AAccessSpecifierAccessSpecifier>();
-			ILexNameToken classname = null;
+
+			// Derive the pseudoclass name for the combined union
+    		String classString = "*union";	// NB, illegal class name
+    		int count = 0;
+    		AClassType found = null;
+
+    		for (PType t: type.getTypes())
+    		{
+    			if (af.createPTypeAssistant().isClass(t, env))
+    			{
+    				found = t.apply(THIS);
+    				classString = classString + "_" + found.getName().getName();	// eg. "*union_A_B"
+    				count++;
+    			}
+    		}
+    		
+    		if (count == 1)		// Only one class in union, so just return this one
+    		{
+    			type.setClassType(found);
+    			return found;
+    		}
+    		else if (count == 0)
+    		{
+    			type.setClassType(null);
+    			return null;
+    		}
+
+    		ILexNameToken classname = new LexNameToken("CLASS", classString, new LexLocation());
 
 			for (PType t : type.getTypes())
 			{
 				if (af.createPTypeAssistant().isClass(t, env))
 				{
 					AClassType ct = t.apply(THIS);// PTypeAssistantTC.getClassType(t);
-
-					if (classname == null)
-					{
-						classname = ct.getClassdef().getName();
-					}
 
 					for (PDefinition f : af.createPDefinitionAssistant().getDefinitions(ct.getClassdef()))
 					{
@@ -144,44 +170,48 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 
 						if (curracc == null)
 						{
-							access.put(synthname, f.getAccess());
+							AAccessSpecifierAccessSpecifier acc = f.getAccess().clone();
+							acc.setAccess(new APublicAccess());  // Guaranteed to be accessible
+							
+							access.put(synthname, acc);
 						}
-						else
+						else if (!curracc.getPure() && f.getAccess().getPure())
 						{
-							if (af.createPAccessSpecifierAssistant().narrowerThan(curracc, f.getAccess()) ||
-								(!curracc.getPure() && f.getAccess().getPure()))
-							{
-								AAccessSpecifierAccessSpecifier purified = AstFactory.newAAccessSpecifierAccessSpecifier(
-									f.getAccess().getAccess().clone(),
-									f.getAccess().getStatic() != null,
-									f.getAccess().getAsync() != null,
-									curracc.getPure() || f.getAccess().getPure());
+							AAccessSpecifierAccessSpecifier purified = AstFactory.newAAccessSpecifierAccessSpecifier(
+								new APublicAccess(),
+								f.getAccess().getStatic() != null,
+								f.getAccess().getAsync() != null,
+								curracc.getPure() || f.getAccess().getPure());
 
-								access.put(synthname, purified);
-							}
+							access.put(synthname, purified);
 						}
 					}
 				}
 			}
 
 			List<PDefinition> newdefs = new Vector<PDefinition>();
-
-			// Note that the pseudo-class is named after one arbitrary
-			// member of the union, even though it has all the distinct
-			// fields of the set of classes within the union.
+			PTypeAssistantTC assistant = af.createPTypeAssistant();
 
 			for (ILexNameToken synthname : common.keySet())
 			{
     			PType ptype = common.get(synthname).getType(type.getLocation());
+    			ILexNameToken newname = null;
     			
-    			if (ptype instanceof AOperationType)
+    			if (assistant.isOperation(ptype))
     			{
-    				AOperationType optype = (AOperationType)ptype.clone();
+    				AOperationType optype = assistant.getOperation(ptype);
     				optype.setPure(access.get(synthname).getPure());
     				ptype = optype;
+    				newname = synthname.getModifiedName(optype.getParameters());
     			}
-
-    			PDefinition def = AstFactory.newALocalDefinition(synthname.getLocation(), synthname, NameScope.GLOBAL, ptype);
+    			else if (assistant.isFunction(ptype))
+    			{
+    				AFunctionType ftype = assistant.getFunction(ptype);
+    				newname = synthname.getModifiedName(ftype.getParameters());
+    			}
+    			
+    			PDefinition def = AstFactory.newALocalDefinition(synthname.getLocation(),
+    				(newname == null ? synthname : newname), NameScope.GLOBAL, ptype);
 
 				def.setAccess(access.get(synthname).clone());
 				newdefs.add(def);

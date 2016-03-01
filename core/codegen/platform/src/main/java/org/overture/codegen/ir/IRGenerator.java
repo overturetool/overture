@@ -22,26 +22,49 @@
 package org.overture.codegen.ir;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.ast.statements.AIdentifierStateDesignator;
+import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.PIR;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
 import org.overture.codegen.trans.ITotalTransformation;
 
 public class IRGenerator
 {
 	protected IRInfo codeGenInfo;
 
-	public IRGenerator(String objectInitCallPrefix)
+	public IRGenerator()
 	{
-		this.codeGenInfo = new IRInfo(objectInitCallPrefix);
+		this.codeGenInfo = new IRInfo();
+	}
+	
+	public void computeDefTable(List<? extends org.overture.ast.node.INode> mergedParseLists)
+			throws AnalysisException
+	{
+		List<org.overture.ast.node.INode> classesToConsider = new LinkedList<>();
+
+		for (org.overture.ast.node.INode node : mergedParseLists)
+		{
+			if (!codeGenInfo.getDeclAssistant().isLibrary(node))
+			{
+				classesToConsider.add(node);
+			}
+		}
+		
+		Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(classesToConsider, codeGenInfo.getTcFactory());
+		codeGenInfo.setIdStateDesignatorDefs(idDefs);
 	}
 
 	public void clear()
@@ -49,35 +72,40 @@ public class IRGenerator
 		codeGenInfo.clear();
 	}
 
-	public IRStatus<INode> generateFrom(org.overture.ast.node.INode node)
+	public IRStatus<PIR> generateFrom(org.overture.ast.node.INode node)
 			throws AnalysisException
 	{
 		codeGenInfo.clearNodes();
 
 		if(node instanceof SClassDefinition)
 		{
-			AClassDeclCG classCg = node.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
+			SClassDeclIR classCg = node.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
 			Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 			String name = ((SClassDefinition) node).getName().getName();
 			
-			return new IRStatus<INode>(name, classCg, unsupportedNodes);
+			return new IRStatus<PIR>(node, name, classCg, unsupportedNodes);
 		}
 		else if(node instanceof AModuleModules)
 		{
-			AModuleDeclCG module = node.apply(codeGenInfo.getModuleVisitor(), codeGenInfo);
+			AModuleDeclIR module = node.apply(codeGenInfo.getModuleVisitor(), codeGenInfo);
 			Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 			String name = ((AModuleModules) node).getName().getName();
 			
-			return new IRStatus<INode>(name, module, unsupportedNodes);
+			return new IRStatus<PIR>(node, name, module, unsupportedNodes);
 		}
 		
 		return null;
 	}
 	
 	public void applyPartialTransformation(IRStatus<? extends INode> status,
-			org.overture.codegen.cgast.analysis.intf.IAnalysis transformation)
-			throws org.overture.codegen.cgast.analysis.AnalysisException
+			org.overture.codegen.ir.analysis.intf.IAnalysis transformation)
+			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
+		if(!status.canBeGenerated())
+		{
+			throw new org.overture.codegen.ir.analysis.AnalysisException("Cannot apply partial transformation to a status that cannot be generated!");
+		}
+		
 		codeGenInfo.clearTransformationWarnings();
 
 		status.getIrNode().apply(transformation);
@@ -86,10 +114,15 @@ public class IRGenerator
 		status.addTransformationWarnings(transformationWarnings);
 	}
 
-	public void applyTotalTransformation(IRStatus<INode> status,
+	public void applyTotalTransformation(IRStatus<PIR> status,
 			ITotalTransformation trans)
-			throws org.overture.codegen.cgast.analysis.AnalysisException
+			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
+		if(!status.canBeGenerated())
+		{
+			throw new org.overture.codegen.ir.analysis.AnalysisException("Cannot apply total transformation to a status that cannot be generated!");
+		}
+		
 		codeGenInfo.clearTransformationWarnings();
 
 		status.getIrNode().apply(trans);
@@ -98,14 +131,14 @@ public class IRGenerator
 		status.setIrNode(trans.getResult());
 	}
 
-	public IRStatus<SExpCG> generateFrom(PExp exp) throws AnalysisException
+	public IRStatus<SExpIR> generateFrom(PExp exp) throws AnalysisException
 	{
 		codeGenInfo.clearNodes();
 
-		SExpCG expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
+		SExpIR expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
 		Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 
-		return new IRStatus<SExpCG>("expression",expCg, unsupportedNodes);
+		return new IRStatus<SExpIR>(exp, "expression",expCg, unsupportedNodes);
 	}
 
 	public List<String> getQuoteValues()

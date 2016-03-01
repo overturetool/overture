@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Boolean Run() {
-        Number x = null;
+        final Number x = null;
 
         return Utils.equals(x, null);
     }

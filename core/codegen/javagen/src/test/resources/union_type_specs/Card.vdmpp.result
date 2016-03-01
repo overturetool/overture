@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Object a = SetUtil.set(1L, 2L);
+        final Object a = SetUtil.set(1L, 2L);
 
         return ((VDMSet) a).size();
     }

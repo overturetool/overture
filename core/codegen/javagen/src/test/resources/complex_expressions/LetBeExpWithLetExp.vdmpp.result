@@ -29,7 +29,7 @@ public class Entry {
         }
 
         {
-            Number b = 2L;
+            final Number b = 2L;
 
             letBeStExp_1 = 3L;
         }

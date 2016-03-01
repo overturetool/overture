@@ -49,8 +49,9 @@ public class Entry {
     }
 
     public static Number Run() {
-        VDMMap xs = MapUtil.map(new Maplet(1L, new A()), new Maplet(2L, new B()));
-        Object x = Utils.get(xs, 1L);
+        final VDMMap xs = MapUtil.map(new Maplet(1L, new A()),
+                new Maplet(2L, new B()));
+        final Object x = Utils.get(xs, 1L);
 
         Number apply_1 = null;
 
@@ -72,7 +73,7 @@ public class Entry {
             throw new RuntimeException("Missing member: op");
         }
 
-        Number q = apply_2;
+        final Number q = apply_2;
 
         return 1L;
     }

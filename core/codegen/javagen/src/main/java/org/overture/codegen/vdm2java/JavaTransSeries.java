@@ -3,15 +3,17 @@ package org.overture.codegen.vdm2java;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
-import org.overture.codegen.cgast.types.AExternalTypeCG;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
+import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.traces.TraceNames;
 import org.overture.codegen.traces.TracesTrans;
 import org.overture.codegen.trans.AssignStmTrans;
 import org.overture.codegen.trans.AtomicStmTrans;
 import org.overture.codegen.trans.CallObjStmTrans;
+import org.overture.codegen.trans.ConstructorTrans;
 import org.overture.codegen.trans.DivideTrans;
 import org.overture.codegen.trans.Exp2StmTrans;
 import org.overture.codegen.trans.Exp2StmVarPrefixes;
@@ -24,7 +26,7 @@ import org.overture.codegen.trans.PreCheckTrans;
 import org.overture.codegen.trans.PrePostTrans;
 import org.overture.codegen.trans.SeqConvTrans;
 import org.overture.codegen.trans.WhileStmTrans;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.conc.EvalPermPredTrans;
 import org.overture.codegen.trans.conc.MainClassConcTrans;
 import org.overture.codegen.trans.conc.MutexDeclTrans;
@@ -44,6 +46,8 @@ import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
 
 public class JavaTransSeries
 {
+	private static final String OBJ_INIT_CALL_NAME_PREFIX = "cg_init_";
+	
 	private JavaCodeGen codeGen;
 	private List<DepthFirstAnalysisAdaptor> series;
 	private FuncValAssistant funcValAssist;
@@ -77,8 +81,9 @@ public class JavaTransSeries
 		FuncValPrefixes funcValPrefixes = varMan.getFuncValPrefixes();
 		PatternVarPrefixes patternPrefixes = varMan.getPatternPrefixes();
 		UnionTypeVarPrefixes unionTypePrefixes = varMan.getUnionTypePrefixes();
+		List<INode> cloneFreeNodes = codeGen.getJavaFormat().getValueSemantics().getCloneFreeNodes();
 		
-		TransAssistantCG transAssist = codeGen.getTransAssistant();
+		TransAssistantIR transAssist = codeGen.getTransAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(varMan.postCheckMethodName());
 
 		// Construct the transformations
@@ -99,16 +104,19 @@ public class JavaTransSeries
 		PostCheckTrans postCheckTr = new PostCheckTrans(postCheckCreator, transAssist, varMan.funcRes(), new JavaValueSemanticsTag(false));
 		IsExpTrans isExpTr = new IsExpTrans(transAssist, varMan.isExpSubject());
 		SeqConvTrans seqConvTr = new SeqConvTrans(transAssist);
-		TracesTrans tracesTr = new TracesTrans(transAssist, iteVarPrefixes, tracePrefixes, langIte, new JavaCallStmToStringBuilder());
-		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, unionTypePrefixes, codeGen.getJavaFormat().getValueSemantics().getCloneFreeNodes());
+		TracesTrans tracesTr = new TracesTrans(transAssist, iteVarPrefixes, tracePrefixes, langIte, new JavaCallStmToStringBuilder(), cloneFreeNodes);
+		UnionTypeTrans unionTypeTr = new UnionTypeTrans(transAssist, unionTypePrefixes, cloneFreeNodes);
 		JavaToStringTrans javaToStringTr = new JavaToStringTrans(info);
 		RecMethodsTrans recTr = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());
+		ConstructorTrans ctorTr = new ConstructorTrans(transAssist, OBJ_INIT_CALL_NAME_PREFIX);
+		ImportsTrans impTr = new ImportsTrans(info);
+		JUnit4Trans junitTr = new JUnit4Trans(transAssist, codeGen);
 
 		// Start concurrency transformations
-		SentinelTrans sentinelTr = new SentinelTrans(info);
-		MainClassConcTrans mainClassTr = new MainClassConcTrans(info);
-		MutexDeclTrans mutexTr = new MutexDeclTrans(info);
-		EvalPermPredTrans evalPermPredTr = new EvalPermPredTrans(transAssist);
+		SentinelTrans sentinelTr = new SentinelTrans(info, varMan.getConcPrefixes());
+		MainClassConcTrans mainClassTr = new MainClassConcTrans(info, varMan.getConcPrefixes());
+		MutexDeclTrans mutexTr = new MutexDeclTrans(info, varMan.getConcPrefixes());
+		EvalPermPredTrans evalPermPredTr = new EvalPermPredTrans(transAssist, varMan.getConcPrefixes());
 		// End concurrency transformations
 
 		// Set up order of transformations
@@ -136,22 +144,25 @@ public class JavaTransSeries
 		series.add(seqConvTr);
 		series.add(evalPermPredTr);
 		series.add(recTr);
+		series.add(ctorTr);
+		series.add(impTr);
+		series.add(junitTr);
 
 		return series;
 	}
 
 	private Exists1CounterData consExists1CounterData()
 	{
-		AExternalTypeCG type = new AExternalTypeCG();
+		AExternalTypeIR type = new AExternalTypeIR();
 		type.setName("Long");
 
 		IRInfo irInfo = codeGen.getIRGenerator().getIRInfo();
-		AIntLiteralExpCG initExp = irInfo.getExpAssistant().consIntLiteral(0);
+		AIntLiteralExpIR initExp = irInfo.getExpAssistant().consIntLiteral(0);
 
 		return new Exists1CounterData(type, initExp);
 	}
 
-	public void init()
+	public void clear()
 	{
 		funcValAssist.getFuncValInterfaces().clear();
 	}
