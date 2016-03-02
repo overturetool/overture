@@ -325,34 +325,19 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 * @param ast The VDM AST.
 	 * @return A list of user modules or classes.
 	 */
-	protected List<INode> getUserModules(
-			List<? extends INode> ast)
+	protected List<INode> getUserModules(List<? extends INode> ast)
 	{
 		List<INode> userModules = new LinkedList<INode>();
-		
-		if(ast.size() == 1 && ast.get(0) instanceof CombinedDefaultModule)
+
+		for (INode node : ast)
 		{
-			CombinedDefaultModule combined = (CombinedDefaultModule) ast.get(0);
-			
-			for(AModuleModules m : combined.getModules())
+			if (!getInfo().getDeclAssistant().isLibrary(node))
 			{
-				userModules.add(m);
+				userModules.add(node);
 			}
-			
-			return userModules;
 		}
-		else
-		{
-			for (INode node : ast)
-			{
-				if(!getInfo().getDeclAssistant().isLibrary(node))
-				{
-					userModules.add(node);
-				}
-			}
-			
-			return userModules;
-		}
+
+		return userModules;
 	}
 	
 	/**
