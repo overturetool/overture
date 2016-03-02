@@ -44,6 +44,7 @@
           </execution>
         </executions>
         <configuration>
+					<dotGitDirectory>../../.git</dotGitDirectory>
           <skip>${git-commit-id.skip}</skip>
           <prefix>git</prefix>
           <dateFormat>yyyy MMM dd HH:mm z</dateFormat>
