@@ -19,7 +19,7 @@
   <groupId>org.overturetool</groupId>
   <artifactId>root</artifactId>
 
-  <version>2.3.1-SNAPSHOT</version>
+  <version>2.3.3-SNAPSHOT</version>
 
   <name>The Overture Tool Platform root</name>
   <description>
@@ -281,7 +281,7 @@ http://mojo.codehaus.org/versions-maven-plugin/
           <artifactId>git-commit-id-plugin</artifactId>
           <version>2.2.0</version>
           <configuration>
-            <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+            <!--dotGitDirectory>${project.basedir}/.git</dotGitDirectory this is not wokring, set in build section instead -->
           </configuration>
         </plugin>
 
