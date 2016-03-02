@@ -64,7 +64,8 @@ import org.overture.ide.ui.utility.ast.AstNameUtil;
 public class VdmCompleteProcesser
 {
 	VdmElementImageProvider imgProvider = new VdmElementImageProvider();
-	VdmCompletionExtractor vdmCompletionExtractor = new VdmCompletionExtractor();
+	private static VdmCompletionExtractor vdmCompletionExtractor = new VdmCompletionExtractor();
+	private static VdmCompletionHelper VdmHelper = new VdmCompletionHelper();
 	
 	public void computeCompletionProposals(VdmCompletionContext info,
 			VdmDocument document, List<ICompletionProposal> proposals,
@@ -200,7 +201,7 @@ public class VdmCompleteProcesser
 			{
 				String name = AstNameUtil.getName(element);
 				
-				if (vdmCompletionExtractor.findInString(info.proposalPrefix,name))
+				if (VdmHelper.findInString(info.proposalPrefix,name))
 				{
 					IContextInformation ctxtInfo = new ContextInformation(name, name); //$NON-NLS-1$
 					proposals.add(new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(element, 0), name, ctxtInfo, name));
