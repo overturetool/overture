@@ -18,10 +18,12 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.util.modules.CombinedDefaultModule;
+import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
 import org.overture.codegen.assistant.DeclAssistantIR;
 import org.overture.codegen.ir.PIR;
@@ -35,6 +37,7 @@ import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.config.Settings;
 
 
 /**
@@ -98,6 +101,14 @@ abstract public class CodeGenBase implements IREventCoordinator
 	public GeneratedData generate(List<INode> ast) throws AnalysisException
 	{
 		clear();
+
+		if(Settings.dialect == Dialect.VDM_SL)
+		{
+			ModuleList moduleList = new ModuleList(getModules(ast));
+			moduleList.combineDefaults();
+			ast = getNodes(moduleList);
+		}
+		
 		preProcessAst(ast);
 
 		List<IRStatus<PIR>> statuses = new LinkedList<>();
@@ -197,6 +208,29 @@ abstract public class CodeGenBase implements IREventCoordinator
 	protected String formatCode(StringWriter code)
 	{
 		return code.toString();
+	}
+	
+	
+	/**
+	 * Convenience method for extracting the VDM module definitions from a list of VDM nodes.
+	 * 
+	 * @param ast
+	 *            A list of VDM nodes.
+	 * @return The module definitions extracted from <code>ast</code>.
+	 */
+	public static List<AModuleModules> getModules(List<INode> ast)
+	{
+		List<AModuleModules> modules = new LinkedList<>();
+		
+		for(INode n : ast)
+		{
+			if(n instanceof AModuleModules)
+			{
+				modules.add((AModuleModules) n);
+			}
+		}
+		
+		return modules;
 	}
 	
 	/**
