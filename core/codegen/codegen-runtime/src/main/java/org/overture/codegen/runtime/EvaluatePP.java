@@ -6,7 +6,6 @@ import java.io.Serializable;
  * when the concurrency features are selected for generation.
  * Returns a boolean value which is the result of the evaluation of the corresponding permission predicate generated
  *
- * @param A number which represents the constant that is assigned to each class method.
  * 
  * @author gkanos
  *
