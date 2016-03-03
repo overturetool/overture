@@ -78,10 +78,9 @@ public class IsaGen extends CodeGenBase {
      * Main entry point into the Isabelle Translator component. Takes an AST and returns corresponding Isabelle Syntax.
      *
      * @param statuses The IR statuses holding the nodes to be code generated.
-     * @return
+     * @return The generated Isabelle syntax
      * @throws AnalysisException
      *
-     * @return The generated Isabelle syntax
      */
     @Override
     protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException {
