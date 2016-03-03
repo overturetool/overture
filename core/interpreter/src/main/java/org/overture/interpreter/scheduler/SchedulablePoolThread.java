@@ -127,7 +127,7 @@ public abstract class SchedulablePoolThread implements Serializable, Runnable,
 	 * Thread pool used by SchedulablePoolThread. It is a none blocking queue with an upper limit set to
 	 * Integer.MAX_VALUE allowing it to freely expand. The thread pool will most likely make the Java VM throw
 	 * OutOfMemoryError before Integer.MAX_VALUE is reached do the the native thread creation requiring 2 MB for each
-	 * thread. {@link "http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/ThreadPoolExecutor.html"}
+	 * thread. <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/ThreadPoolExecutor.html">link</a>
 	 */
 	public final static VdmThreadPoolExecutor pool = new VdmThreadPoolExecutor(200, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());// LinkedBlockingQueue
 
