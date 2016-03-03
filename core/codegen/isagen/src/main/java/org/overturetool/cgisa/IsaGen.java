@@ -22,22 +22,26 @@
 
 package org.overturetool.cgisa;
 
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.modules.AModuleModules;
-import org.overture.codegen.ir.*;
+import org.overture.codegen.ir.CodeGenBase;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.IRStatus;
+import org.overture.codegen.ir.PIR;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.merging.MergeVisitor;
-import org.overture.codegen.utils.AnalysisExceptionIR;
-import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overturetool.cgisa.transformations.GroupMutRecs;
 import org.overturetool.cgisa.transformations.SortDependencies;
 import org.overturetool.cgisa.transformations.StateInit;
-
-import java.io.StringWriter;
-import java.util.*;
 
 /**
  * Main facade class for VDM 2 Isabelle IR
@@ -76,6 +80,8 @@ public class IsaGen extends CodeGenBase {
      * @param statuses The IR statuses holding the nodes to be code generated.
      * @return
      * @throws AnalysisException
+     *
+     * @return The generated Isabelle syntax
      */
     @Override
     protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException {
