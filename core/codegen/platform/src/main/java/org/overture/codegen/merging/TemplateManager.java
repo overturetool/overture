@@ -48,7 +48,7 @@ public class TemplateManager
 	private Class<?> templateLoadRef = null;
 
 	/**
-	 * Not for use with extensions. Use {@link #TemplateManager(TemplateStructure, Class)} instead.
+	 * Not for use with extensions. Use {@link #TemplateManager(String, Class)} instead.
 	 * 
 	 * @param root The template root folder
 	 */
@@ -93,9 +93,6 @@ public class TemplateManager
 		return root;
 	}
 
-	/**
-	 * Initialize the mapping of IR nodes {@link TemplateStructure}
-	 */
 	protected void initNodeTemplateFileNames()
 	{
 		this.userDefinedPaths = new HashMap<>();
