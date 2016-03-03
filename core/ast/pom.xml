@@ -70,40 +70,41 @@
           </execution>
 				</executions>
       </plugin>
+
+			<plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/VDMToken.java</exclude>
+						<exclude>**/Pass.java</exclude>
+						<exclude>**/Release.java</exclude>
+						<exclude>**/Base64.java</exclude>
+						<exclude>**/Dialect.java</exclude>
+						<exclude>**/LexBooleanToken.java</exclude>
+						<exclude>**/LexCharacterToken.java</exclude>
+						<exclude>**/LexIntegerToken.java</exclude>
+						<exclude>**/LexKeywordToken.java</exclude>
+						<exclude>**/LexLocation.java</exclude>
+						<exclude>**/LexNameList.java</exclude>
+						<exclude>**/LexQuoteToken.java</exclude>
+						<exclude>**/LexRealToken.java</exclude>
+						<exclude>**/LexStringToken.java</exclude>
+						<exclude>**/LexToken.java</exclude>
+						<exclude>**/InternalException.java</exclude>
+						<exclude>**/Utils.java</exclude>
+						<exclude>**/Settings.java</exclude>
+						<exclude>**/ConfigBase.java</exclude>
+          </excludes>
+				</configuration>
+      </plugin>
     </plugins>
 
     <pluginManagement>
       <plugins>
 
 				<!-- Plugin for license headers-->
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>license-maven-plugin</artifactId>
-          <version>1.7</version>
-          <configuration>
-            <excludes>
-              <exclude>**/VDMToken.java</exclude>
-							<exclude>**/Pass.java</exclude>
-							<exclude>**/Release.java</exclude>
-							<exclude>**/Base64.java</exclude>
-							<exclude>**/Dialect.java</exclude>
-							<exclude>**/LexBooleanToken.java</exclude>
-							<exclude>**/LexCharacterToken.java</exclude>
-							<exclude>**/LexIntegerToken.java</exclude>
-							<exclude>**/LexKeywordToken.java</exclude>
-							<exclude>**/LexLocation.java</exclude>
-							<exclude>**/LexNameList.java</exclude>
-							<exclude>**/LexQuoteToken.java</exclude>
-							<exclude>**/LexRealToken.java</exclude>
-							<exclude>**/LexStringToken.java</exclude>
-							<exclude>**/LexToken.java</exclude>
-							<exclude>**/InternalException.java</exclude>
-							<exclude>**/Utils.java</exclude>
-							<exclude>**/Settings.java</exclude>
-							<exclude>**/ConfigBase.java</exclude>
-            </excludes>
-					</configuration>
-        </plugin>
+				
 
 
 				<!--This plugin's configuration is used to store Eclipse m2e settings 

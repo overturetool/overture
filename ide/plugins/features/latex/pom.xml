@@ -13,6 +13,6 @@
 
   <groupId>org.overturetool.ide.plugins.features</groupId>
   <artifactId>org.overture.ide.plugins.features.latex</artifactId>
-  <name>Overture IDE Eclipse VDM LaTeX Documentation Creator feature</name>
+  <name>Overture IDE Eclipse LaTeX Creator feature</name>
   
 </project>

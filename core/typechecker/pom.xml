@@ -59,16 +59,10 @@
           </descriptorRefs>
         </configuration>
       </plugin>
-    </plugins>
 
-
- <pluginManagement>
-      <plugins>
-  <!-- Plugin for license headers-->
-         <plugin>
+			  <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>license-maven-plugin</artifactId>
-          <version>1.7</version>
            <configuration>
               <excludes>
                 <exclude>**/ClassTypeChecker.java</exclude>
@@ -85,7 +79,6 @@
               </excludes>
         </configuration>
         </plugin>
- </plugins>
-    </pluginManagement>
+    </plugins>
   </build>
 </project>
