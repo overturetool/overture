@@ -1,3 +1,1 @@
-["Error 3330: op-01.vpp at 293:31 Cannot instantiate abstract class ATestSuite",
-"Error 3330: op-01.vpp at 294:19 Cannot instantiate abstract class test00",
-"Error 3330: op-01.vpp at 295:19 Cannot instantiate abstract class test01"]
+["Error 3330: op-01.vpp at 293:31 Cannot instantiate abstract class ATestSuite","Error 3330: op-01.vpp at 294:19 Cannot instantiate abstract class test00","Error 3330: op-01.vpp at 295:19 Cannot instantiate abstract class test01"]

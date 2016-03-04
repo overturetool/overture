@@ -7,12 +7,5 @@
 <message column="6" line="55" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="PacemakerSeqPP"/>
 <message column="6" line="55" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="PacemakerSeqPP"/>
 <message column="9" line="566" message="Impure operation '(World`timerRef.GetTime)' cannot be called from here" messageType="error" number="3300" resource="PacemakerSeqPP"/>
-<message column="5" line="575" message="Member handleEvent(Pulse, Chamber, Time) is not in scope" messageType="error" number="3209" resource="PacemakerSeqPP"/>
-<message column="13" line="963" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="PacemakerSeqPP"/>
-<message column="6" line="966" message="Member addLeadSensor(Lead) is not in scope" messageType="error" number="3209" resource="PacemakerSeqPP"/>
-<message column="6" line="967" message="Member addLeadSensor(Lead) is not in scope" messageType="error" number="3209" resource="PacemakerSeqPP"/>
-<message column="6" line="970" message="Member addAccelerometer(Accelerometer) is not in scope" messageType="error" number="3209" resource="PacemakerSeqPP"/>
-<message column="12" line="985" message="Member Run() is not in scope" messageType="error" number="3209" resource="PacemakerSeqPP"/>
-<message column="23" line="985" message="Member showResult() is not in scope" messageType="error" number="3209" resource="PacemakerSeqPP"/>
 <result/>
 </testResult>
