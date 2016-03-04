@@ -6,7 +6,6 @@
 <message column="10" line="179" message="Name 'G`vFromPars' is not in scope" messageType="error" number="3182" resource="lookup.vpp"/>
 <message column="3" line="183" message="Value is not of the right type" messageType="error" number="3327" resource="lookup.vpp"/>
 <message column="1" line="181" message="Operation returns unexpected type" messageType="error" number="3027" resource="lookup.vpp"/>
-<message column="3" line="191" message="Operation mF() is not in scope" messageType="error" number="3213" resource="lookup.vpp"/>
 <message column="10" line="201" message="Inaccessible member Different`instDifferent of class Different" messageType="error" number="3180" resource="lookup.vpp"/>
 <message column="10" line="204" message="Inaccessible member Different`mDifferent() of class Different" messageType="error" number="3180" resource="lookup.vpp"/>
 <message column="3" line="207" message="Operation Different`mDifferent() is not static" messageType="error" number="3324" resource="lookup.vpp"/>

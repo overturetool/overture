@@ -10,7 +10,7 @@
 <message column="6" line="161" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="POP3PP"/>
 <message column="6" line="161" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="POP3PP"/>
 <message column="6" line="161" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="POP3PP"/>
-<message column="16" line="173" message="Unknown type: (unresolved POP3Types`ClientCommand)" messageType="error" number="3428" resource="POP3PP"/>
+<message column="6" line="161" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="POP3PP"/>
 <message column="6" line="161" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="POP3PP"/>
 <message column="6" line="161" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="POP3PP"/>
 <result/>

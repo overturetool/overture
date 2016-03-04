@@ -42,6 +42,7 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
+import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -185,11 +186,31 @@ public class PDefinitionListAssistantTC implements IAstAssistant
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		TypeCheckException problem = null;
+		
 		for (PDefinition definition : definitions)
 		{
-			af.createPDefinitionAssistant().typeResolve(definition, rootVisitor, question);
+			try
+			{
+				af.createPDefinitionAssistant().typeResolve(definition, rootVisitor, question);
+			}
+			catch (TypeCheckException te)
+			{
+				if (problem == null)
+				{
+					problem = te;
+				}
+				else
+				{
+					problem.addExtra(te);
+				}
+			}
 		}
-
+		
+		if (problem != null)
+		{
+			throw problem;
+		}
 	}
 
 	public PDefinition findType(LinkedList<PDefinition> actualDefs,

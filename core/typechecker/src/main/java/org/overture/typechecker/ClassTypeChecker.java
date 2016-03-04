@@ -134,6 +134,14 @@ public class ClassTypeChecker extends TypeChecker
 				} catch (TypeCheckException te)
 				{
 					report(3427, te.getMessage(), te.location);
+					
+    				if (te.extras != null)
+    				{
+    					for (TypeCheckException e: te.extras)
+    					{
+    						report(3427, e.getMessage(), e.location);
+    					}
+    				}
 				} catch (AnalysisException te)
 				{
 					report(3431, te.getMessage(), null);// FIXME: internal error
@@ -163,6 +171,14 @@ public class ClassTypeChecker extends TypeChecker
 					} catch (TypeCheckException te)
 					{
 						report(3428, te.getMessage(), te.location);
+						
+	    				if (te.extras != null)
+	    				{
+	    					for (TypeCheckException e: te.extras)
+	    					{
+	    						report(3428, e.getMessage(), e.location);
+	    					}
+	    				}
 					} catch (AnalysisException te)
 					{
 						report(3431, te.getMessage(), null);// FIXME: internal error

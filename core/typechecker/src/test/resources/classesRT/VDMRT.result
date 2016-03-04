@@ -16,7 +16,6 @@
 <message column="20" line="338" message="Class name IO not in scope" messageType="error" number="3133" resource="VDMRT"/>
 <message column="14" line="338" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="VDMRT"/>
 <message column="18" line="1200" message="Unable to resolve type name 'Test'" messageType="error" number="3428" resource="VDMRT"/>
-<message column="3" line="150" message="Member handleEvent(seq1 of (char)) is not in scope" messageType="error" number="3209" resource="VDMRT"/>
 <message column="14" line="338" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="VDMRT"/>
 <message column="1" line="772" message="Impure operation '(a.X)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
 <message column="9" line="772" message="Impure operation '(b.X)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
@@ -27,7 +26,6 @@
 <message column="12" line="831" message="Name 'VDMUtil`val2seq_of_char(nat)' is not in scope" messageType="error" number="3182" resource="VDMRT"/>
 <message column="12" line="837" message="Name 'VDMUtil`val2seq_of_char(int)' is not in scope" messageType="error" number="3182" resource="VDMRT"/>
 <message column="13" line="1174" message="Class name IO not in scope" messageType="error" number="3133" resource="VDMRT"/>
-<message column="6" line="1212" message="Operation Run(TestResult) is not in scope" messageType="error" number="3213" resource="VDMRT"/>
 <message column="18" line="1200" message="Unable to resolve type name 'Test'" messageType="error" number="3428" resource="VDMRT"/>
 <message column="18" line="1200" message="Unable to resolve type name 'Test'" messageType="error" number="3428" resource="VDMRT"/>
 <message column="12" line="2073" message="Impure operation '(v1.GetPosition)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
@@ -43,10 +41,5 @@
 <message column="37" line="2704" message="Impure operation '(u2.GetPosition)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
 <message column="29" line="2714" message="Impure operation '(u.GetDirection)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
 <message column="60" line="2715" message="Impure operation '(ir.GetDirection)' cannot be called from here" messageType="error" number="3300" resource="VDMRT"/>
-<message column="9" line="3106" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="VDMRT"/>
-<message column="2" line="3126" message="Member setVDMCtrl(VDMController) is not in scope" messageType="error" number="3209" resource="VDMRT"/>
-<message column="3" line="3136" message="Member run() is not in scope" messageType="error" number="3209" resource="VDMRT"/>
-<message column="3" line="3137" message="Member isFinished() is not in scope" messageType="error" number="3209" resource="VDMRT"/>
-<message column="3" line="3139" message="Member report() is not in scope" messageType="error" number="3209" resource="VDMRT"/>
 <result/>
 </testResult>
