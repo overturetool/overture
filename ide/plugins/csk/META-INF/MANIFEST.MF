@@ -7,7 +7,7 @@ Bundle-Localization: plugin
 Bundle-Name: org.overture.ide.plugins.csk
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.csk;singleton:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.ui,
  org.overture.ide.core,
  org.overture.ide.ui

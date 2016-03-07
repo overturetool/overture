@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.ui.console,
  org.overture.ide.builders.vdmj,
  org.overture.ide.debug
 Bundle-Activator: org.overture.ide.plugins.javagen.Activator
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.apache.velocity.app,org.overture.codegen.ir,org.ov
  erture.codegen.ir.analysis,org.overture.codegen.ir.analysis.intf,org.
  overture.codegen.ir.declarations,org.overture.codegen.ir.expressions,

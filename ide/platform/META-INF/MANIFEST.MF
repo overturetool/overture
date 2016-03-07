@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.intro,
  org.eclipse.ui.ide.application,
  org.eclipse.ui.views.log
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: Overture
 Bundle-Activator: org.overture.ide.platform.Activator
 Bundle-ActivationPolicy: lazy
