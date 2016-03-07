@@ -49,8 +49,10 @@ public class FiniteSetObligation extends ProofObligation
 	private static final long serialVersionUID = 4471304924561635823L;
 
 	/**
-	 * { f(a) | a:A & p(a) } yields exists m:map nat to map A to :f & forall a:A & p(a) => exists idx in set dom m &
+	 * {@code 
+{ f(a) | a:A & p(a) }  yields exists m:map nat to map A to :f & forall a:A & p(a) => exists idx in set dom m &
 	 * m(idx) = f(a)
+* }
 	 * 
 	 * @param exp
 	 * @param settype

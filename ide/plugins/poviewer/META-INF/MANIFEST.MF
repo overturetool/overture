@@ -8,7 +8,7 @@ Bundle-Localization: plugin
 Bundle-Name: org.overture.ide.plugins.poviewer
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.poviewer;singleton:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.overture.ide.plugins.poviewer,org.overture.ide.plu
  gins.poviewer.commands,org.overture.ide.plugins.poviewer.view,org.ove
  rture.pof,org.overture.pog.contexts,org.overture.pog.obligation,org.o

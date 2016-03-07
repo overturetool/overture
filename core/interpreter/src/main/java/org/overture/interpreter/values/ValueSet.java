@@ -33,8 +33,8 @@ import org.overture.interpreter.traces.PermuteArray;
 
 /**
  * A set of values. Note that although this class implements a set (no duplicates) it is not based on a
- * java.util.Set<Value>, but rather a Vector<Value>. This is so that the possible orderings of set values can be
- * enumerated when performing quantifiers like "a,b,c in set {{1,2,3}, {4,5,6}}".
+ * {@code java.util.Set<Value>}, but rather a {@code Vector<Value>}. This is so that the possible orderings of set values can be
+ * enumerated when performing quantifiers like {@code "a,b,c in set {{1,2,3}, {4,5,6}}"}.
  */
 
 public class ValueSet extends Vector<Value> // NB based on Vector
