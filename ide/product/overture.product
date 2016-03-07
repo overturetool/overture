@@ -14,7 +14,7 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-XX:MaxPermSize=128m -Xmx512m -Dosgi.requiredJavaVersion=1.7</vmArgs>
+      <vmArgs>-XX:MaxPermSize=128m -Xmx512m -Dosgi.requiredJavaVersion=1.8</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
