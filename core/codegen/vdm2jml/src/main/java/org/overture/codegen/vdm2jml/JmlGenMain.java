@@ -26,6 +26,7 @@ public class JmlGenMain
 	public static final String FOLDER_ARG = "-folder";
 	public static final String INVARIANT_FOR = "-invariant_for";
 	public static final String NO_TRACE = "-notrace";
+	public static final String NO_CLONING = "-nocloning";
 
 	public static void main(String[] args)
 	{
@@ -100,6 +101,10 @@ public class JmlGenMain
 				jmlGen.getIrSettings().setGenerateTraces(false);
 				jmlGen.getJavaSettings().setMakeClassesSerializable(false);
 			}
+			else if(arg.equals(NO_CLONING))
+			{
+				jmlGen.getJavaSettings().setDisableCloning(true);
+			}
 			else
 			{
 				// It's a file or a directory
@@ -152,6 +157,7 @@ public class JmlGenMain
 		Logger.getLog().printErrorln(FOLDER_ARG + " <folder path>: a folder containing input .vdmsl files");
 		Logger.getLog().printErrorln(INVARIANT_FOR
 				+ ": to check record invariants explicitly using JML's invariant_for");
+		Logger.getLog().printErrorln(NO_CLONING + ": To disable deep cloning of value types");
 		System.exit(1);
 	}
 }
