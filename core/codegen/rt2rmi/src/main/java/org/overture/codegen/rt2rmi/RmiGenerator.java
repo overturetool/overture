@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +15,13 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AVariableExp;
+import org.overture.cgrmi.extast.declarations.AClientInstanceDeclIR;
 import org.overture.cgrmi.extast.declarations.ACpuDeploymentDeclIR;
 import org.overture.cgrmi.extast.declarations.ARMIServerDeclIR;
+import org.overture.cgrmi.extast.declarations.ARMIregistryDeclIR;
 import org.overture.cgrmi.extast.declarations.ARemoteContractDeclIR;
 import org.overture.cgrmi.extast.declarations.ARemoteContractImplDeclIR;
+import org.overture.cgrmi.extast.declarations.ARemoteInstanceDeclIR;
 import org.overture.cgrmi.extast.declarations.ASynchTokenDeclIR;
 import org.overture.cgrmi.extast.declarations.ASynchTokenInterfaceDeclIR;
 //import org.overture.cgrmi.extast.node.PCG;
@@ -29,10 +33,13 @@ import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IRStatus;
+import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.PIR;
+import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.rt2rmi.systemanalysis.DistributionMapping;
+import org.overture.codegen.rt2rmi.trans.FunctionToRemoteTrans;
 import org.overture.codegen.rt2rmi.trans.RemoteTypeTrans;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGen;
@@ -51,6 +58,35 @@ public class RmiGenerator implements IREventObserver
 		this.javaGen = new JavaCodeGen();
 		this.javaGen.registerIrObs(this);
 		this.javaGen.getSettings().setCharSeqAsString(true);
+//		this.javaGen.emitCode(, fileName, code);
+		
+		this.javaGen.getJavaFormat().getMergeVisitor().getTemplateManager().setUserTemplatePath(
+				RmiTemplateManager.class, ACpuDeploymentDeclIR.class, "RmiTemplates/ACpuDeploymentDeclCG.vm");
+		
+		this.javaGen.getJavaFormat().getMergeVisitor().getTemplateManager().setUserTemplatePath(
+				RmiTemplateManager.class, AClientInstanceDeclIR.class, "RmiTemplates/AClientInstanceDeclCG.vm");
+		
+		this.javaGen.getJavaFormat().getMergeVisitor().getTemplateManager().setUserTemplatePath(
+				RmiTemplateManager.class, ARemoteContractDeclIR.class, "RmiTemplates/ARemoteContractDeclCG.vm");
+		
+		this.javaGen.getJavaFormat().getMergeVisitor().getTemplateManager().setUserTemplatePath(
+				RmiTemplateManager.class, ARemoteContractImplDeclIR.class, "RmiTemplates/ARemoteContractImplDeclCG.vm");
+		
+		this.javaGen.getJavaFormat().getMergeVisitor().getTemplateManager().setUserTemplatePath(
+				RmiTemplateManager.class, ARemoteInstanceDeclIR.class, "RmiTemplates/ARemoteInstanceDeclCG.vm");
+		
+		this.javaGen.getJavaFormat().getMergeVisitor().getTemplateManager().setUserTemplatePath(
+				RmiTemplateManager.class, ARMIregistryDeclIR.class, "RmiTemplates/ARMIregistryDeclCG.vm");
+		
+		this.javaGen.getJavaFormat().getMergeVisitor().getTemplateManager().setUserTemplatePath(
+				RmiTemplateManager.class, ARMIServerDeclIR.class, "RmiTemplates/ARMIServerDeclCG.vm");
+		
+		this.javaGen.getJavaFormat().getMergeVisitor().getTemplateManager().setUserTemplatePath(
+				RmiTemplateManager.class, ASynchTokenDeclIR.class, "RmiTemplates/ASynchTokenDeclCG.vm");
+		
+		this.javaGen.getJavaFormat().getMergeVisitor().getTemplateManager().setUserTemplatePath(
+				RmiTemplateManager.class, ASynchTokenInterfaceDeclIR.class, "RmiTemplates/ASynchTokenInterfaceDeclCG.vm");
+		
 		addTransformations();
 	}
 
@@ -58,9 +94,8 @@ public class RmiGenerator implements IREventObserver
 	{
 		// Add additional transformations
 		this.javaGen.getTransSeries().getSeries().add(new RemoteTypeTrans(systemClassName, this.javaGen.getInfo()));
+		this.javaGen.getTransSeries().getSeries().add(new FunctionToRemoteTrans(systemClassName, this.javaGen.getInfo()));
 	}
-
-	
 	
 	public void generate(List<SClassDefinition> rtClasses, String output_dir)
 			throws AnalysisException, org.overture.codegen.ir.analysis.AnalysisException, IOException
@@ -139,31 +174,6 @@ public class RmiGenerator implements IREventObserver
 	{
 		return this.javaGen.getJavaSettings();
 	}
-
-//	@Override
-//	public List<IRStatus<PCG>> initialIRConstructed(List<IRStatus<PCG>> ast, IRInfo info)
-//	{
-//		// This method received the initial version of the IR before it is
-//		// transformed
-//		Logger.getLog().println("Initial IR has " + ast.size() + " node(s)");
-//
-//		// For an example of how to process/modify the IR see
-//		// org.overture.codegen.vdm2jml.JmlGenerator
-//
-//		// Return the (possibly modified) AST that the Java code generator
-//		// should use subsequently
-//		return ast;
-//	}
-
-//	@Override
-//	public List<IRStatus<PCG>> finalIRConstructed(List<IRStatus<PCG>> ast, IRInfo info)
-//	{
-//		// The final version of the IR
-//
-//		Logger.getLog().println("Final version of the IR has " + ast.size() + " node(s)");
-//
-//		return ast;
-//	}
 
 	/*
 	 * In this the ARMIServerDeclCG node is set up in order to code generate the global registration service. In
@@ -378,13 +388,65 @@ public class RmiGenerator implements IREventObserver
 
 	@Override
 	public List<IRStatus<PIR>> initialIRConstructed(List<IRStatus<PIR>> ast, IRInfo info) {
-		// TODO Auto-generated method stub
+		// This method received the initial version of the IR before it is
+		// transformed
+		
+		Logger.getLog().println("Initial IR has " + ast.size() + " node(s)");
+		
 		return ast;
 	}
 
 	@Override
 	public List<IRStatus<PIR>> finalIRConstructed(List<IRStatus<PIR>> ast, IRInfo info) {
-		// TODO Auto-generated method stub
+//		// The final version of the IR
+//
+		
+		ACpuDeploymentDeclIR dep = new ACpuDeploymentDeclIR();
+		
+		IRStatus<PIR> stat = new IRStatus<PIR>(null, "Demo", dep, new HashSet<VdmNodeInfo>(), new HashSet<IrNodeInfo>());
+		LinkedList<IRStatus> li = new LinkedList<IRStatus>();
+		
+		li.add(stat);
+		
+//		ast.add(cpuD);
+//		ast.a
+		ast.add(stat);
+		
+		Logger.getLog().println("Final version of the IR has " + ast.size() + " node(s)");
+		
 		return ast;
 	}
+
+//	@Override
+//	protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException {
+//		// TODO Auto-generated method stub
+////		return this.javaGen.generate(CodeGenBase.getNodes(statuses));
+//		return null;
+//	}
+	
+	
+//	@Override
+//	public List<IRStatus<PCG>> initialIRConstructed(List<IRStatus<PCG>> ast, IRInfo info)
+//	{
+//		// This method received the initial version of the IR before it is
+//		// transformed
+//		Logger.getLog().println("Initial IR has " + ast.size() + " node(s)");
+//
+//		// For an example of how to process/modify the IR see
+//		// org.overture.codegen.vdm2jml.JmlGenerator
+//
+//		// Return the (possibly modified) AST that the Java code generator
+//		// should use subsequently
+//		return ast;
+//	}
+
+//	@Override
+//	public List<IRStatus<PCG>> finalIRConstructed(List<IRStatus<PCG>> ast, IRInfo info)
+//	{
+//		// The final version of the IR
+//
+//		Logger.getLog().println("Final version of the IR has " + ast.size() + " node(s)");
+//
+//		return ast;
+//	}
 }
