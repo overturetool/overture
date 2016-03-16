@@ -5,9 +5,9 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>root</artifactId>
-    <version>2.3.2</version>
+    <version>2.3.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
-</parent>
+  </parent>
     <packaging>pom</packaging>
   <artifactId>ide</artifactId>
   <name>Overture IDE Top-level</name>
@@ -396,5 +396,4 @@ the manifests, though.
     </profile>
 
   </profiles>
-<version>2.3.3-SNAPSHOT</version>
 </project>
