@@ -13,7 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.runtime.traces.TestAccumulator;
+import org.overture.codegen.runtime.traces.InMemoryTestAccumulator;
 import org.overture.codegen.tests.exec.util.ExecutionResult;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -159,9 +159,9 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	{
 		Object executionResult = javaResult.getExecutionResult();
 		
-		if(executionResult instanceof TestAccumulator)
+		if(executionResult instanceof InMemoryTestAccumulator)
 		{
-			TestAccumulator acc = (TestAccumulator) executionResult;
+			InMemoryTestAccumulator acc = (InMemoryTestAccumulator) executionResult;
 
 			return new ExecutionResult(javaResult.getStrRepresentation(), acc.getAllTests());
 		}

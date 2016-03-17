@@ -61,19 +61,13 @@
 					</includes>
 				</configuration>
 			</plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.3</version>
-                <configuration>
-<!--Skip IR Javadoc. They are full of error :)-->
-                    <excludePackageNames>org.overture.codegen.ir:org.overture.codegen.ir.*:org.overture.cgisa.isair:org.overture.cgisa.isair.*</excludePackageNames>
-
-                </configuration>
-            </plugin>
-
-
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <sourcepath>${basedir}/src/main/java</sourcepath>
+        </configuration>
+      </plugin>
 			<plugin>
 				<groupId>org.overturetool.astcreator</groupId>
 				<artifactId>astcreator-plugin</artifactId>

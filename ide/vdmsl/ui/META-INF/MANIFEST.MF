@@ -7,7 +7,7 @@ Bundle-Localization: plugin
 Bundle-Name: org.overture.ide.vdmsl.ui
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.vdmsl.ui;singleton:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: org.overture.ide.vdmsl.ui.VdmSlUIPlugin
 Require-Bundle: org.overture.ide.core,
  org.overture.ide.ui,

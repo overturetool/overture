@@ -153,7 +153,6 @@ public abstract class ParamExamplesTest<R> extends AbsResultTest<R> {
 	 * the path via this method. <br>
 	 * <br>
 	 * For reference the examples are in
-	 * <code>[repository root]/externals/examples/target/code>
 	 * 
 	 * @return the path to the Overture examples, relative to the current
 	 *         project.

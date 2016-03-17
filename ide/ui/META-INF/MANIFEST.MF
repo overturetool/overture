@@ -7,7 +7,7 @@ Bundle-Localization: plugin
 Bundle-Name: org.overture.ide.ui
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.ui;singleton:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: org.overture.ide.ui.VdmUIPlugin
 Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.eclipse.ui.editors;visibility:=reexport,

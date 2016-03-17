@@ -12,5 +12,5 @@ Bundle-Activator: org.overture.ide.help.VdmHelpPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.overture.ide.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .

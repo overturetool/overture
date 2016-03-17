@@ -1,8 +1,14 @@
 package org.overture.codegen.vdm2jml.util;
 
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.AnswerAdaptor;
+import org.overture.codegen.ir.expressions.AEnumMapExpIR;
+import org.overture.codegen.ir.expressions.AEnumSeqExpIR;
+import org.overture.codegen.ir.expressions.AEnumSetExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AMapletExpIR;
 import org.overture.codegen.ir.expressions.AMinusUnaryExpIR;
 import org.overture.codegen.ir.expressions.AMkBasicExpIR;
 import org.overture.codegen.ir.expressions.ANewExpIR;
@@ -18,6 +24,12 @@ public class IsValChecker extends AnswerAdaptor<Boolean>
 	{
 		// Return false for all other cases
 		return false;
+	}
+	
+	@Override
+	public Boolean caseAIdentifierVarExpIR(AIdentifierVarExpIR node) throws AnalysisException {
+
+		return true;
 	}
 	
 	@Override
@@ -43,6 +55,54 @@ public class IsValChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseANewExpIR(ANewExpIR node) throws AnalysisException
 	{
 		return true;
+	}
+	
+	@Override
+	public Boolean caseAEnumMapExpIR(AEnumMapExpIR node) throws AnalysisException {
+
+		for(AMapletExpIR m : node.getMembers())
+		{
+			if(!m.apply(this))
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	@Override
+	public Boolean caseAEnumSeqExpIR(AEnumSeqExpIR node) throws AnalysisException {
+
+		for(SExpIR m : node.getMembers())
+		{
+			if(!m.apply(this))
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	@Override
+	public Boolean caseAEnumSetExpIR(AEnumSetExpIR node) throws AnalysisException {
+
+		for(SExpIR m : node.getMembers())
+		{
+			if(!m.apply(this))
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	@Override
+	public Boolean caseAMapletExpIR(AMapletExpIR node) throws AnalysisException {
+
+		return node.getLeft().apply(this) && node.getRight().apply(this);
 	}
 	
 	@Override

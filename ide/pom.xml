@@ -16,7 +16,7 @@
   <properties>
     <maven.test.skip>false</maven.test.skip>
     <maven.javadoc.skip>true</maven.javadoc.skip>
-    <tycho.version>0.20.0</tycho.version>
+    <tycho.version>0.24.0</tycho.version>
   </properties>
 
   <modules>

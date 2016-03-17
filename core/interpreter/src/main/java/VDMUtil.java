@@ -22,7 +22,7 @@ import org.overture.parser.syntax.ExpressionReader;
  * Software Foundation, either version 3 of the License, or (at your option) any later version. VDMJ is distributed in
  * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a
- * copy of the GNU General Public License along with VDMJ. If not, see <http://www.gnu.org/licenses/>.
+ * copy of the GNU General Public License along with VDMJ. If not, see <a href="http://www.gnu.org/licenses/">gnu license</a>.
  ******************************************************************************/
 
 // This must be in the default package to work with VDMJ's native delegation.

@@ -7,7 +7,7 @@ Bundle-Localization: plugin
 Bundle-Name: org.overture.ide.debug
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.debug;singleton:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.debug.core;visibility:=reexport,
  org.eclipse.ui.console,
  org.eclipse.debug.ui;visibility:=reexport,
