@@ -67,6 +67,7 @@ public class JavaCodeGenMain
 	public static final String JUNIT4 = "-junit4";
 	public static final String SEP_TEST_CODE = "-separate";
 	public static final String VDM_LOC = "-vdmloc";
+	public static final String NO_CLONING = "-nocloning";
 	
 	// Folder names
 	private static final String GEN_MODEL_CODE_FOLDER = "main";
@@ -217,6 +218,10 @@ public class JavaCodeGenMain
 			else if(arg.equals(VDM_LOC))
 			{
 				javaSettings.setPrintVdmLocations(true);
+			}
+			else if(arg.equals(NO_CLONING))
+			{
+				javaSettings.setDisableCloning(true);
 			}
 			else
 			{
@@ -562,6 +567,7 @@ public class JavaCodeGenMain
 		Logger.getLog().printErrorln(SEP_TEST_CODE + ": to place the code generated model and the test code into separate folders named '"
 				+ GEN_MODEL_CODE_FOLDER + "' and '" + GEN_TESTS_FOLDER + "', respectively");
 		Logger.getLog().printErrorln(VDM_LOC + ": Generate VDM location information for code generated constructs");
+		Logger.getLog().printErrorln(NO_CLONING + ": To disable deep cloning of value types");
 
 		// Terminate
 		System.exit(1);

@@ -19,7 +19,7 @@
   <groupId>org.overturetool</groupId>
   <artifactId>root</artifactId>
 
-  <version>2.3.3-SNAPSHOT</version>
+  <version>2.3.5-SNAPSHOT</version>
 
   <name>The Overture Tool Platform root</name>
   <description>
@@ -140,8 +140,8 @@ http://mojo.codehaus.org/versions-maven-plugin/
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.5.1</version>
           <configuration>
-            <source>1.7</source>
-            <target>1.7</target>
+            <source>1.8</source>
+            <target>1.8</target>
           </configuration>
         </plugin>
 

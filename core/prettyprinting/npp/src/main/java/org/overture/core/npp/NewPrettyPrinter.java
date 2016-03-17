@@ -54,7 +54,7 @@ public class NewPrettyPrinter extends
 	/**
 	 * Creates a VDM-syntax pretty printer. <br>
 	 * <b>Warning:</b> this method pre-loads {@link VdmSymbolTable} attributes. Extensions should use
-	 * {@link NewPrettyPrinter#PrettyPrinter(ISymbolTable)} and configure it instead.
+	 * {@link #NewPrettyPrinter(ISymbolTable)} and configure it instead.
 	 * 
 	 * @return a new instance of {@link NewPrettyPrinter}
 	 */

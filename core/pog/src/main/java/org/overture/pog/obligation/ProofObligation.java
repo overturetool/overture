@@ -281,7 +281,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	}
 
 	/**
-	 * As above, but create a List<PMultipleBind> with one element, for convenience.
+	 * As above, but create a List of PMultipleBind with one element, for convenience.
 	 */
 	protected List<PMultipleBind> getMultipleTypeBindList(PType patternType,
 			ILexNameToken... patternNames)
@@ -292,7 +292,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	}
 
 	/**
-	 * As above, but create a List<PMultipleBind> with one element, for convenience.
+	 * As above, but create a List of PMultipleBind with one element, for convenience.
 	 */
 	protected List<PMultipleBind> getMultipleSetBindList(PExp setExp,
 			ILexNameToken... patternNames)
@@ -469,7 +469,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	/**
 	 * Clone a list of PTypes (and return a typed list)
 	 * 
-	 * @param the
+	 * @param types the
 	 *            list to clone
 	 * @return a Typed list of PTypes
 	 */
@@ -486,7 +486,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	/**
 	 * Clone a list of PExps (and return a typed list)
 	 * 
-	 * @param the
+	 * @param args the
 	 *            list to clone
 	 * @return a Typed list of PExps
 	 */

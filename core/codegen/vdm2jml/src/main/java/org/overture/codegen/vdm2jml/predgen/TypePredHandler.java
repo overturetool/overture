@@ -89,6 +89,23 @@ public class TypePredHandler
 			 */
 			
 			AbstractTypeInfo typeInfo = util.findTypeInfo(node.getType());
+			
+			/**
+			 * Since we only allow value definitions to be initialized using literals they must be different from
+			 * 'null'. However, there is a bug in OpenJML that sometimes cause the invariant check for a field to
+			 * trigger before the field is properly initialized. As a work-around for this OpenJML bug, this trick
+			 * guards against this bug, i.e. the static invariant check triggering pre-maturely. Since </br>
+			 * fieldInitialised ==> invariant</br>
+			 * =</br>
+			 * !fieldInitialized || invariant</br>
+			 * =</br>
+			 * !(field != null) || invariant</br>
+			 * =</br>
+			 * field == null || invariant</br>
+			 * </br>
+			 * .. it suffices to simply consider the type as being optional.
+			 */
+			typeInfo.setOptional(true);
 
 			if (proceed(typeInfo))
 			{

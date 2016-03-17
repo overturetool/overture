@@ -18,6 +18,11 @@ public abstract class AbstractTypeInfo
 		return optional;
 	}
 	
+	public void setOptional(boolean optional)
+	{
+		this.optional = optional;
+	}
+	
 	abstract public List<LeafTypeInfo> getLeafTypesRecursively();
 
 	abstract public String consCheckExp(String enclosingClass, String javaRootPackage, String arg, NameGen nameGen);

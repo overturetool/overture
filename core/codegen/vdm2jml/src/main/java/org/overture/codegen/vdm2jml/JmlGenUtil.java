@@ -411,7 +411,7 @@ public class JmlGenUtil
 	 * methods across classes. Until these bugs are fixed the workaround is simply
 	 * to make sure that all generated classes have a local copy of a named invariant method.
 	 * 
-	 * TODO: Currently invariant method are named on the form <module>_<typename> although
+	 * TODO: Currently invariant method are named on the form "module_typename" although
 	 * this does not truly garuantee uniqueness. For example if module A defines type
 	 * B_C the invariant method name is A_B_C. However if module A_B defines type C
 	 * then the invariant method will also be named A_B_C. So something needs to be

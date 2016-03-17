@@ -111,7 +111,7 @@ public class DebuggerReader extends CommandReader
 	 * Evaluate an expression in the breakpoint's context. This is similar to the superclass method, except that the
 	 * context is the one taken from the breakpoint, and the execution is not timed.
 	 * 
-	 * @see org.overture.vdmj.commands.CommandReader#doEvaluate(java.lang.String)
+	 * @see org.overture.interpreter.commands.CommandReader#doEvaluate(java.lang.String)
 	 */
 
 	@Override

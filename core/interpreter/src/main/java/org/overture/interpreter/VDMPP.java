@@ -273,7 +273,7 @@ public class VDMPP extends VDMJ
 	}
 
 	/**
-	 * @see org.overture.vdmj.VDMJ#interpret(List, String)
+	 * @see org.overture.interpreter.VDMJ#interpret(List, String)
 	 */
 
 	@Override
