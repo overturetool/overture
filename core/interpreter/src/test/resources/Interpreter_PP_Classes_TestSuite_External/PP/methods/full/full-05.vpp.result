@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
-<message column="15" line="50" message="Error 4071: Precondition failure: pre_m4 in 'B' (full-05.vpp) at line 50:15" messageType="error" number="4071" resource="full-05.vpp.result"/>
+<testResult type="org.overture.interpreter.tests.external.ExternalClassesPpTest">
+<message column="15" line="50" message="Error 4071: Precondition failure: pre_m4 in 'B' (full-05.vpp) at line 50:15" messageType="error" number="4071" resource="full-05.vpp"/>
 <result>
 <output object="[]" resource="full-05.vpp" value="[]"/>
 </result>

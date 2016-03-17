@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
-<message column="9" line="24" message="Error 4079: Type invariant violated by mk_B arguments in 'A' (state-11.vdm) at line 24:9" messageType="error" number="4079" resource="state-11.vdm"/>
 <message column="29" line="15" message="Error 4079: Type invariant violated by mk_B arguments in 'A' (state-11.vdm) at line 15:29" messageType="error" number="4079" resource="state-11.vdm"/>
+<message column="9" line="24" message="Error 4079: Type invariant violated by mk_B arguments in 'A' (state-11.vdm) at line 24:9" messageType="error" number="4079" resource="state-11.vdm"/>
 <result>
 <output object="[]" resource="state-11.vdm" value="[]"/>
 </result>

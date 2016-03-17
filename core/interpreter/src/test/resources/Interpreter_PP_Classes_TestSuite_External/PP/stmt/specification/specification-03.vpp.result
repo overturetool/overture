@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
-<message column="5" line="14" message="Error 4047: Cannot execute specification statement in 'A' (specification-03.vpp) at line 14:5" messageType="error" number="4047" resource="specification-03.vpp.result"/>
+<testResult type="org.overture.interpreter.tests.external.ExternalClassesPpTest">
+<message column="5" line="14" message="Error 4047: Cannot execute specification statement in 'A' (specification-03.vpp) at line 14:5" messageType="error" number="4047" resource="specification-03.vpp"/>
 <result>
 <output object="[]" resource="specification-03.vpp" value="[]"/>
 </result>

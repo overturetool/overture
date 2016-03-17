@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
-<message column="5" line="35" message="Error 4041: 'is not yet specified' statement reached in 'B' (prelim-03.vpp) at line 35:5" messageType="error" number="4041" resource="prelim-03.vpp.result"/>
+<testResult type="org.overture.interpreter.tests.external.ExternalClassesPpTest">
+<message column="5" line="35" message="Error 4041: 'is not yet specified' statement reached in 'B' (prelim-03.vpp) at line 35:5" messageType="error" number="4041" resource="prelim-03.vpp"/>
 <result>
 <output object="[]" resource="prelim-03.vpp" value="[]"/>
 </result>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
-<message column="4" line="11" message="Error 4130: Instance invariant violated: inv_A in 'A' (assign-01.vpp) at line 11:4" messageType="error" number="4130" resource="assign-01.vpp.result"/>
+<testResult type="org.overture.interpreter.tests.external.ExternalClassesPpTest">
+<message column="4" line="11" message="Error 4130: Instance invariant violated: inv_A in 'A' (assign-01.vpp) at line 11:4" messageType="error" number="4130" resource="assign-01.vpp"/>
 <result>
 <output object="[]" resource="assign-01.vpp" value="[]"/>
 </result>

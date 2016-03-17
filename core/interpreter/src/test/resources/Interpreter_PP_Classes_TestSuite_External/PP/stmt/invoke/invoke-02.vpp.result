@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
-<message column="10" line="28" message="Error 4097: Can't get record value of undefined in 'B' (invoke-02.vpp) at line 28:10" messageType="error" number="4097" resource="invoke-02.vpp.result"/>
+<testResult type="org.overture.interpreter.tests.external.ExternalClassesPpTest">
+<message column="10" line="28" message="Error 4097: Can't get record value of undefined in 'B' (invoke-02.vpp) at line 28:10" messageType="error" number="4097" resource="invoke-02.vpp"/>
 <result>
 <output object="[]" resource="invoke-02.vpp" value="[]"/>
 </result>
