@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        A a = new A(SeqUtil.seq(new B(new C(new Entry()))));
+        final A a = new A(SeqUtil.seq(new B(new C(new Entry()))));
 
         return op(Utils.copy(a));
     }

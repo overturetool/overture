@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ClassesRtTypeCheckTest">
+<message column="9" line="1120" message="grid at 1068:9 hidden by grid" messageType="warning" number="5008" resource="CyberRailRT"/>
+<message column="12" line="1173" message="grid at 1068:9 hidden by grid" messageType="warning" number="5008" resource="CyberRailRT"/>
 <message column="9" line="24" message="Instance variable 'q_CR_out' is not initialized" messageType="warning" number="5001" resource="CyberRailRT"/>
 <message column="9" line="26" message="Instance variable 'tokenDevices' is not initialized" messageType="warning" number="5001" resource="CyberRailRT"/>
 <message column="11" line="271" message="Instance variable 'cyberrail' is not initialized" messageType="warning" number="5001" resource="CyberRailRT"/>
 <message column="9" line="427" message="Instance variable 'cyberrail' is not initialized" messageType="warning" number="5001" resource="CyberRailRT"/>
 <message column="9" line="547" message="Instance variable 'railway' is not initialized" messageType="warning" number="5001" resource="CyberRailRT"/>
 <message column="9" line="548" message="Instance variable 'q_APM_out' is not initialized" messageType="warning" number="5001" resource="CyberRailRT"/>
-<message column="9" line="1067" message="Instance variable 'routeList' is not initialized" messageType="warning" number="5001" resource="CyberRailRT"/>
 <message column="11" line="1278" message="Instance variable 'q_Env_out' is not initialized" messageType="warning" number="5001" resource="CyberRailRT"/>
 <message column="11" line="1279" message="Instance variable 'q_APM_out' is not initialized" messageType="warning" number="5001" resource="CyberRailRT"/>
 <message column="11" line="1379" message="Instance variable 'totalFee' is not initialized" messageType="warning" number="5001" resource="CyberRailRT"/>
@@ -24,16 +25,14 @@
 <message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
 <message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
 <message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
-<message column="4" line="277" message="Member Environment(seq of (char)) is not in scope" messageType="error" number="3209" resource="CyberRailRT"/>
 <message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
 <message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
 <message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
 <message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
 <message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
-<message column="19" line="986" message="Class name IO not in scope" messageType="error" number="3133" resource="CyberRailRT"/>
 <message column="13" line="986" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
-<message column="5" line="1114" message="Operation writef(Grid) is not in scope" messageType="error" number="3213" resource="CyberRailRT"/>
-<message column="29" line="1083" message="Unknown type: (unresolved RailwayGrid`RailwayGrid)" messageType="error" number="3428" resource="CyberRailRT"/>
+<message column="47" line="1149" message="Value is not of the right type" messageType="error" number="3327" resource="CyberRailRT"/>
+<message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
 <message column="1" line="1212" message="Abstract function/operation must be public or protected" messageType="error" number="3329" resource="CyberRailRT"/>
 <message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT"/>
 <message column="1" line="1243" message="Abstract function/operation must be public or protected" messageType="error" number="3329" resource="CyberRailRT"/>

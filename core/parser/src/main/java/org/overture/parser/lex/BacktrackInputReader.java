@@ -42,7 +42,7 @@ import org.overture.ast.messages.InternalException;
 public class BacktrackInputReader extends Reader
 {
 	/**
-	 * The different types of reader that may be obtained from a <{@link BacktrackInputReader}
+	 * The different types of reader that may be obtained from a {@link BacktrackInputReader}
 	 * 
 	 * @author pvj
 	 */

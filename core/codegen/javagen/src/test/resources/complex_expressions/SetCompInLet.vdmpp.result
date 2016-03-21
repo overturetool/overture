@@ -20,12 +20,11 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (Utils.equals(1L, 1L)) {
-                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
-                        SetUtil.set(x.longValue() * 2L));
+                setCompResult_1.add(x.longValue() * 2L);
             }
         }
 
-        VDMSet x = Utils.copy(setCompResult_1);
+        final VDMSet x = Utils.copy(setCompResult_1);
 
         return Utils.copy(x);
     }

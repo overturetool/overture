@@ -1,0 +1,22 @@
+class A
+operations
+public m : () ==> ()
+m () == is subclass responsibility;
+end A
+
+class B is subclass of A
+operations
+end B
+
+class C is subclass of B
+operations
+
+public m : () ==> ()
+m () == skip;
+
+end C
+
+class D
+values
+x = new C();
+end D

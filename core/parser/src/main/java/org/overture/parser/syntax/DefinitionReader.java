@@ -252,7 +252,7 @@ public class DefinitionReader extends SyntaxReader
 				if (pureOK)
 				{
 					nextToken();
-					return AstFactory.getDefaultAccessSpecifier();
+					return AstFactory.newAAccessSpecifierAccessSpecifier(new APrivateAccess(), false, false, true);
 				}
 				else
 				{
@@ -1485,6 +1485,8 @@ public class DefinitionReader extends SyntaxReader
 					default:
 						throwMessage(2266, "Expecting '{n}' or '{n1, n2}' after trace definition");
 				}
+				break;
+			default:
 				break;
 		}
 

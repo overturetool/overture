@@ -28,40 +28,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.assistant.AssistantManager;
-import org.overture.codegen.assistant.BindAssistantCG;
-import org.overture.codegen.assistant.DeclAssistantCG;
-import org.overture.codegen.assistant.ExpAssistantCG;
-import org.overture.codegen.assistant.LocationAssistantCG;
-import org.overture.codegen.assistant.PatternAssistantCG;
-import org.overture.codegen.assistant.StmAssistantCG;
-import org.overture.codegen.assistant.TypeAssistantCG;
-import org.overture.codegen.cgast.SBindCG;
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SExportCG;
-import org.overture.codegen.cgast.SExportsCG;
-import org.overture.codegen.cgast.SImportCG;
-import org.overture.codegen.cgast.SImportsCG;
-import org.overture.codegen.cgast.SModifierCG;
-import org.overture.codegen.cgast.SMultipleBindCG;
-import org.overture.codegen.cgast.SObjectDesignatorCG;
-import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.SStateDesignatorCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.STermCG;
-import org.overture.codegen.cgast.STraceCoreDeclCG;
-import org.overture.codegen.cgast.STraceDeclCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AModuleDeclCG;
+import org.overture.codegen.assistant.BindAssistantIR;
+import org.overture.codegen.assistant.DeclAssistantIR;
+import org.overture.codegen.assistant.ExpAssistantIR;
+import org.overture.codegen.assistant.LocationAssistantIR;
+import org.overture.codegen.assistant.NodeAssistantIR;
+import org.overture.codegen.assistant.PatternAssistantIR;
+import org.overture.codegen.assistant.StmAssistantIR;
+import org.overture.codegen.assistant.TypeAssistantIR;
+import org.overture.codegen.ir.SBindIR;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SExportIR;
+import org.overture.codegen.ir.SExportsIR;
+import org.overture.codegen.ir.SImportIR;
+import org.overture.codegen.ir.SImportsIR;
+import org.overture.codegen.ir.SModifierIR;
+import org.overture.codegen.ir.SMultipleBindIR;
+import org.overture.codegen.ir.SObjectDesignatorIR;
+import org.overture.codegen.ir.SPatternIR;
+import org.overture.codegen.ir.SStateDesignatorIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STermIR;
+import org.overture.codegen.ir.STraceCoreDeclIR;
+import org.overture.codegen.ir.STraceDeclIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.visitor.CGVisitor;
+import org.overture.codegen.visitor.IRVisitor;
 import org.overture.codegen.visitor.VisitorManager;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
@@ -91,22 +91,19 @@ public class IRInfo
 	// For configuring code generation
 	private IRSettings settings;
 
-	// To look up object initializer call names
-	private Map<AExplicitOperationDefinition, String> objectInitCallNames;
-
-	// Object initialization call prefix
-	private String objectInitCallPrefix;
-	
 	// Definitions for identifier state designators
 	private Map<AIdentifierStateDesignator, PDefinition> idStateDesignatorDefs;
 	
 	// IR classes
-	private List<AClassDeclCG> classes;
+	private List<SClassDeclIR> classes;
 	
 	// IR modules
-	private List<AModuleDeclCG> modules;
+	private List<AModuleDeclIR> modules;
 	
-	public IRInfo(String objectInitCallPrefix)
+	// SL state reads
+	private List<SVarExpIR> slStateReads;
+	
+	public IRInfo()
 	{
 		super();
 
@@ -120,12 +117,10 @@ public class IRInfo
 
 		this.settings = new IRSettings();
 
-		this.objectInitCallPrefix = objectInitCallPrefix;
-		this.objectInitCallNames = new HashMap<AExplicitOperationDefinition, String>();
-		
 		this.idStateDesignatorDefs = new HashMap<AIdentifierStateDesignator, PDefinition>();
-		this.classes = new LinkedList<AClassDeclCG>();
-		this.modules = new LinkedList<AModuleDeclCG>();
+		this.classes = new LinkedList<SClassDeclIR>();
+		this.modules = new LinkedList<AModuleDeclIR>();
+		this.slStateReads = new LinkedList<>();
 	}
 
 	public AssistantManager getAssistantManager()
@@ -133,138 +128,149 @@ public class IRInfo
 		return assistantManager;
 	}
 
-	public CGVisitor<AClassDeclCG> getClassVisitor()
+	public IRVisitor<SClassDeclIR> getClassVisitor()
 	{
 		return visitorManager.getClassVisitor();
 	}
 	
-	public CGVisitor<AModuleDeclCG> getModuleVisitor()
+	public IRVisitor<AModuleDeclIR> getModuleVisitor()
 	{
 		return visitorManager.getModuleVisitor();
 	}
 	
-	public CGVisitor<SImportsCG> getImportsVisitor()
+	public IRVisitor<SImportsIR> getImportsVisitor()
 	{
 		return visitorManager.getImportsVisitor();
 	}
 	
-	public CGVisitor<SImportCG> getImportVisitor()
+	public IRVisitor<SImportIR> getImportVisitor()
 	{
 		return visitorManager.getImportVisitor();
 	}
 
-	public CGVisitor<SExportsCG> getExportsVisitor()
+	public IRVisitor<SExportsIR> getExportsVisitor()
 	{
 		return visitorManager.getExportsVisitor();
 	}
 	
-	public CGVisitor<SExportCG> getExportVisitor()
+	public IRVisitor<SExportIR> getExportVisitor()
 	{
 		return visitorManager.getExportVisitor();
 	}
 	
-	public CGVisitor<SDeclCG> getDeclVisitor()
+	public IRVisitor<SDeclIR> getDeclVisitor()
 	{
 		return visitorManager.getDeclVisitor();
 	}
 
-	public CGVisitor<SExpCG> getExpVisitor()
+	public IRVisitor<SExpIR> getExpVisitor()
 	{
 		return visitorManager.getExpVisitor();
 	}
 
-	public CGVisitor<STypeCG> getTypeVisitor()
+	public IRVisitor<STypeIR> getTypeVisitor()
 	{
 		return visitorManager.getTypeVisitor();
 	}
 
-	public CGVisitor<SStmCG> getStmVisitor()
+	public IRVisitor<SStmIR> getStmVisitor()
 	{
 		return visitorManager.getStmVisitor();
 	}
 
-	public CGVisitor<SStateDesignatorCG> getStateDesignatorVisitor()
+	public IRVisitor<SStateDesignatorIR> getStateDesignatorVisitor()
 	{
 		return visitorManager.getStateDesignatorVisitor();
 	}
 
-	public CGVisitor<SObjectDesignatorCG> getObjectDesignatorVisitor()
+	public IRVisitor<SObjectDesignatorIR> getObjectDesignatorVisitor()
 	{
 		return visitorManager.getObjectDesignatorVisitor();
 	}
 
-	public CGVisitor<SMultipleBindCG> getMultipleBindVisitor()
+	public IRVisitor<SMultipleBindIR> getMultipleBindVisitor()
 	{
 		return visitorManager.getMultipleBindVisitor();
 	}
 
-	public CGVisitor<SBindCG> getBindVisitor()
+	public IRVisitor<SBindIR> getBindVisitor()
 	{
 		return visitorManager.getBindVisitor();
 	}
 
-	public CGVisitor<SPatternCG> getPatternVisitor()
+	public IRVisitor<SPatternIR> getPatternVisitor()
 	{
 		return visitorManager.getPatternVisitor();
 	}
 
-	public CGVisitor<SModifierCG> getModifierVisitor()
+	public IRVisitor<SModifierIR> getModifierVisitor()
 	{
 		return visitorManager.getModifierVisitor();
 	}
 
-	public CGVisitor<STermCG> getTermVisitor()
+	public IRVisitor<STermIR> getTermVisitor()
 	{
 		return visitorManager.getTermVisitor();
 	}
 
-	public CGVisitor<STraceDeclCG> getTraceDeclVisitor()
+	public IRVisitor<STraceDeclIR> getTraceDeclVisitor()
 	{
 		return visitorManager.getTraceDeclVisitor();
 	}
 
-	public CGVisitor<STraceCoreDeclCG> getTraceCoreDeclVisitor()
+	public IRVisitor<STraceCoreDeclIR> getTraceCoreDeclVisitor()
 	{
 		return visitorManager.getTraceCoreDeclVisitor();
 	}
 
-	public ExpAssistantCG getExpAssistant()
+	public NodeAssistantIR getNodeAssistant()
+	{
+		return assistantManager.getNodeAssistant();
+	}
+	
+	public ExpAssistantIR getExpAssistant()
 	{
 		return assistantManager.getExpAssistant();
 	}
 
-	public DeclAssistantCG getDeclAssistant()
+	public DeclAssistantIR getDeclAssistant()
 	{
 		return assistantManager.getDeclAssistant();
 	}
 
-	public StmAssistantCG getStmAssistant()
+	public StmAssistantIR getStmAssistant()
 	{
 		return assistantManager.getStmAssistant();
 	}
 
-	public TypeAssistantCG getTypeAssistant()
+	public TypeAssistantIR getTypeAssistant()
 	{
 		return assistantManager.getTypeAssistant();
 	}
 
-	public LocationAssistantCG getLocationAssistant()
+	public LocationAssistantIR getLocationAssistant()
 	{
 		return assistantManager.getLocationAssistant();
 	}
 
-	public BindAssistantCG getBindAssistant()
+	public BindAssistantIR getBindAssistant()
 	{
 		return assistantManager.getBindAssistant();
 	}
 	
-	public PatternAssistantCG getPatternAssistant()
+	public PatternAssistantIR getPatternAssistant()
 	{
 		return assistantManager.getPatternAssistant();
 	}
 
 	public void registerQuoteValue(String value)
 	{
+		// Illegal quote types are used internally so ignore it.
+		if("?".equals(value))
+		{
+			return;
+		}
+		
 		if (value == null || value.isEmpty())
 		{
 			Logger.getLog().printErrorln("Tried to register invalid qoute value");
@@ -292,12 +298,6 @@ public class IRInfo
 		unsupportedNodes.clear();
 	}
 	
-	public void addUnsupportedNode(INode node)
-	{
-		VdmNodeInfo info = new VdmNodeInfo(node);
-		unsupportedNodes.add(info);
-	}
-
 	public void addUnsupportedNode(INode node, String reason)
 	{
 		for(VdmNodeInfo info : unsupportedNodes)
@@ -322,7 +322,7 @@ public class IRInfo
 		transformationWarnings.clear();
 	}
 	
-	public void addTransformationWarning(org.overture.codegen.cgast.INode node, String warning)
+	public void addTransformationWarning(org.overture.codegen.ir.INode node, String warning)
 	{
 		IrNodeInfo info = new IrNodeInfo(node, warning);
 		transformationWarnings.add(info);
@@ -344,6 +344,9 @@ public class IRInfo
 		unsupportedNodes.clear();
 		transformationWarnings.clear();
 		tempVarNameGen.clear();
+		idStateDesignatorDefs.clear();
+		classes.clear();
+		modules.clear();
 	}
 
 	public IRSettings getSettings()
@@ -356,22 +359,6 @@ public class IRInfo
 		this.settings = settings;
 	}
 
-	public String getObjectInitializerCall(AExplicitOperationDefinition vdmOp)
-	{
-		if (objectInitCallNames.containsKey(vdmOp))
-		{
-			return objectInitCallNames.get(vdmOp);
-		} else
-		{
-			String enclosingClassName = vdmOp.getAncestor(SClassDefinition.class).getName().getName();
-			String initName = tempVarNameGen.nextVarName(objectInitCallPrefix
-					+ enclosingClassName + "_");
-			objectInitCallNames.put(vdmOp, initName);
-
-			return initName;
-		}
-	}
-
 	public Map<AIdentifierStateDesignator, PDefinition> getIdStateDesignatorDefs()
 	{
 		return idStateDesignatorDefs;
@@ -382,12 +369,12 @@ public class IRInfo
 		this.idStateDesignatorDefs = idDefs;
 	}
 
-	public List<AClassDeclCG> getClasses()
+	public List<SClassDeclIR> getClasses()
 	{
 		return classes;
 	}
 
-	public void addClass(AClassDeclCG irClass)
+	public void addClass(SClassDeclIR irClass)
 	{
 		if(this.classes != null)
 		{
@@ -397,9 +384,9 @@ public class IRInfo
 	
 	public void removeClass(String name)
 	{
-		AClassDeclCG classToRemove = null;
+		SClassDeclIR classToRemove = null;
 		
-		for (AClassDeclCG clazz : classes)
+		for (SClassDeclIR clazz : classes)
 		{
 			if(clazz.getName().equals(name))
 			{
@@ -422,12 +409,12 @@ public class IRInfo
 		}
 	}
 	
-	public List<AModuleDeclCG> getModules()
+	public List<AModuleDeclIR> getModules()
 	{
 		return modules;
 	}
 	
-	public void addModule(AModuleDeclCG irModule)
+	public void addModule(AModuleDeclIR irModule)
 	{
 		if(this.modules != null)
 		{
@@ -437,9 +424,9 @@ public class IRInfo
 	
 	public void removeModule(String name)
 	{
-		AModuleDeclCG moduleToRemove = null;
+		AModuleDeclIR moduleToRemove = null;
 		
-		for (AModuleDeclCG module : modules)
+		for (AModuleDeclIR module : modules)
 		{
 			if(module.getName().equals(name))
 			{
@@ -460,5 +447,23 @@ public class IRInfo
 		{
 			this.modules.clear();
 		}
+	}
+	
+	public void registerSlStateRead(SVarExpIR var)
+	{
+		this.slStateReads.add(var);
+	}
+	
+	public boolean isSlStateRead(SVarExpIR var)
+	{
+		for(SVarExpIR v : slStateReads)
+		{
+			if(v == var)
+			{
+				return true;	
+			}
+		}
+		
+		return false;
 	}
 }

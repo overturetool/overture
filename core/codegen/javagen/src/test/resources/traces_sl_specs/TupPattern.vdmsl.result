@@ -1,0 +1,87 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+final public class Entry implements java.io.Serializable {
+    private Entry() {
+    }
+
+    public static Number f(final Number x) {
+        return x;
+    }
+
+    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
+
+        {
+            final Number ID_1 = gen.inc();
+            store.staticReg(ID_1, Entry.class);
+        }
+
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+
+        {
+            final Tuple tuplePattern_1 = Tuple.mk_(1L, 2L);
+            Boolean success_1 = tuplePattern_1.compatible(Number.class,
+                    Number.class);
+            Number a = null;
+            Number b = null;
+
+            if (success_1) {
+                a = ((Number) tuplePattern_1.get(0));
+                b = ((Number) tuplePattern_1.get(1));
+            }
+
+            if (!(success_1)) {
+                throw new RuntimeException("Tuple pattern match failed");
+            }
+
+            SequenceTraceNode sequence_2 = new SequenceTraceNode();
+            final Number arg_1 = a;
+            CallStatement callStm_1 = new CallStatement() {
+                    public Object execute() {
+                        return f(arg_1);
+                    }
+
+                    public String toString() {
+                        return "f(" + Utils.toString(arg_1) + ")";
+                    }
+                };
+
+            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+            sequence_2.add(apply_1);
+
+            final Number arg_2 = b;
+            CallStatement callStm_2 = new CallStatement() {
+                    public Object execute() {
+                        return f(arg_2);
+                    }
+
+                    public String toString() {
+                        return "f(" + Utils.toString(arg_2) + ")";
+                    }
+                };
+
+            StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+            sequence_2.add(apply_2);
+
+            sequence_2.addVarFirst(new TraceVariable("b", "nat1",
+                    Utils.toString(b)));
+            sequence_2.addVarFirst(new TraceVariable("a", "nat1",
+                    Utils.toString(a)));
+            sequence_1.add(sequence_2);
+        }
+
+        TraceNode.executeTests(sequence_1, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

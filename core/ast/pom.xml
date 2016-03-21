@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>core</artifactId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.3.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -18,32 +18,44 @@
 
   <build>
     <plugins>
+
+			<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+
+          <excludePackageNames>org.overture.ast.*</excludePackageNames>
+          
+        </configuration>
+      </plugin>
+
+			
       <plugin>
-	<groupId>org.overturetool.astcreator</groupId>
-	<artifactId>astcreator-plugin</artifactId>
-	<version>${astcreator.version}</version>
-	<executions>
-	  <execution>
-	    <id>java</id>
-	    <phase>generate-sources</phase>
-	    <goals>
-	      <goal>generate</goal>
-	    </goals>
-	  </execution>
-	</executions>
-	<configuration>
-	  <!-- <deletePackageOnGenerate> -->
-	  <!--   <param>vdm.generated.node</param> -->
-	  <!--   <param>org.overture.ast</param> -->
-	  <!-- </deletePackageOnGenerate> -->
-	  <ast>overtureII.astv2</ast>
-	</configuration>
+				<groupId>org.overturetool.astcreator</groupId>
+				<artifactId>astcreator-plugin</artifactId>
+				<version>${astcreator.version}</version>
+				<executions>
+					<execution>
+						<id>java</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- <deletePackageOnGenerate> -->
+					<!--   <param>vdm.generated.node</param> -->
+					<!--   <param>org.overture.ast</param> -->
+					<!-- </deletePackageOnGenerate> -->
+					<ast>overtureII.astv2</ast>
+				</configuration>
       </plugin>
 
       <plugin>
-	<groupId>org.codehaus.mojo</groupId>
-	<artifactId>build-helper-maven-plugin</artifactId>
-	<executions>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
           <execution>
             <id>add-source</id>
             <phase>generate-sources</phase>
@@ -52,76 +64,77 @@
             </goals>
             <configuration>
               <sources>
-		<source>${project.build.directory}/generated-sources/astCreator/</source>
+								<source>${project.build.directory}/generated-sources/astCreator/</source>
               </sources>
             </configuration>
           </execution>
-	</executions>
+				</executions>
+      </plugin>
+
+			<plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/VDMToken.java</exclude>
+						<exclude>**/Pass.java</exclude>
+						<exclude>**/Release.java</exclude>
+						<exclude>**/Base64.java</exclude>
+						<exclude>**/Dialect.java</exclude>
+						<exclude>**/LexBooleanToken.java</exclude>
+						<exclude>**/LexCharacterToken.java</exclude>
+						<exclude>**/LexIntegerToken.java</exclude>
+						<exclude>**/LexKeywordToken.java</exclude>
+						<exclude>**/LexLocation.java</exclude>
+						<exclude>**/LexNameList.java</exclude>
+						<exclude>**/LexQuoteToken.java</exclude>
+						<exclude>**/LexRealToken.java</exclude>
+						<exclude>**/LexStringToken.java</exclude>
+						<exclude>**/LexToken.java</exclude>
+						<exclude>**/InternalException.java</exclude>
+						<exclude>**/Utils.java</exclude>
+						<exclude>**/Settings.java</exclude>
+						<exclude>**/ConfigBase.java</exclude>
+          </excludes>
+				</configuration>
       </plugin>
     </plugins>
 
     <pluginManagement>
       <plugins>
 
- <!-- Plugin for license headers-->
-         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>license-maven-plugin</artifactId>
-          <version>1.7</version>
-           <configuration>
-              <excludes>
-                <exclude>**/VDMToken.java</exclude>
- <exclude>**/Pass.java</exclude>
- <exclude>**/Release.java</exclude>
- <exclude>**/Base64.java</exclude>
- <exclude>**/Dialect.java</exclude>
- <exclude>**/LexBooleanToken.java</exclude>
- <exclude>**/LexCharacterToken.java</exclude>
- <exclude>**/LexIntegerToken.java</exclude>
- <exclude>**/LexKeywordToken.java</exclude>
- <exclude>**/LexLocation.java</exclude>
- <exclude>**/LexNameList.java</exclude>
- <exclude>**/LexQuoteToken.java</exclude>
- <exclude>**/LexRealToken.java</exclude>
- <exclude>**/LexStringToken.java</exclude>
- <exclude>**/LexToken.java</exclude>
- <exclude>**/InternalException.java</exclude>
- <exclude>**/Utils.java</exclude>
- <exclude>**/Settings.java</exclude>
- <exclude>**/ConfigBase.java</exclude>
-              </excludes>
-        </configuration>
-        </plugin>
+				<!-- Plugin for license headers-->
+				
 
 
-	<!--This plugin's configuration is used to store Eclipse m2e settings 
-	    only. It has no influence on the Maven build itself. -->
-	<plugin>
-	  <groupId>org.eclipse.m2e</groupId>
-	  <artifactId>lifecycle-mapping</artifactId>
-	  <version>1.0.0</version>
-	  <configuration>
-	    <lifecycleMappingMetadata>
-	      <pluginExecutions>
-		<pluginExecution>
-		  <pluginExecutionFilter>
-	            <groupId>org.overturetool.astcreator</groupId>
-	            <artifactId>astcreator-plugin</artifactId>
-		    <versionRange>${astcreator.version}</versionRange>
-		    <goals>
-		      <goal>generate</goal>
-		    </goals>
-		  </pluginExecutionFilter>
-		  <action>
-		    <execute>
-		      <runOnIncremental>false</runOnIncremental>
-		    </execute>
-		  </action>
-		</pluginExecution>
-	      </pluginExecutions>
-	    </lifecycleMappingMetadata>
-	  </configuration>
-	</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+						only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.overturetool.astcreator</groupId>
+										<artifactId>astcreator-plugin</artifactId>
+										<versionRange>${astcreator.version}</versionRange>
+										<goals>
+											<goal>generate</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnIncremental>false</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
       </plugins>
     </pluginManagement>
   </build>

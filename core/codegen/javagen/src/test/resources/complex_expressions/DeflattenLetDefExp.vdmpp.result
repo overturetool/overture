@@ -13,32 +13,30 @@ public class Entry {
     }
 
     public static VDMSet f() {
-        Number a = 1L;
+        final Number a = 1L;
         VDMSet setCompResult_2 = SetUtil.set();
         VDMSet set_2 = SetUtil.set(1L, 2L, 3L);
 
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Number x = ((Number) iterator_2.next());
-            setCompResult_2 = SetUtil.union(Utils.copy(setCompResult_2),
-                    SetUtil.set(x.longValue() + a.longValue()));
+            setCompResult_2.add(x.longValue() + a.longValue());
         }
 
-        VDMSet b = Utils.copy(setCompResult_2);
-        Number c = 2L;
+        final VDMSet b = Utils.copy(setCompResult_2);
+        final Number c = 2L;
 
         {
-            Number d = 10L;
+            final Number d = 10L;
             VDMSet setCompResult_1 = SetUtil.set();
             VDMSet set_1 = SetUtil.set(4L, 5L, 6L);
 
             for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
                 Number x = ((Number) iterator_1.next());
-                setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
-                        SetUtil.set(x.longValue() + d.longValue()));
+                setCompResult_1.add(x.longValue() + d.longValue());
             }
 
-            VDMSet e = Utils.copy(setCompResult_1);
-            Number f = 20L;
+            final VDMSet e = Utils.copy(setCompResult_1);
+            final Number f = 20L;
 
             return SetUtil.union(Utils.copy(b), Utils.copy(e));
         }

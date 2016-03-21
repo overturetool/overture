@@ -1,0 +1,11 @@
+module Entry
+
+exports all
+definitions
+
+types
+CN = [C]|N;
+N = nat;
+C = char;
+
+end Entry

@@ -23,10 +23,8 @@ public class Entry {
                     Number z = ((Number) iterator_3.next());
 
                     if (Utils.equals(1L, 1L)) {
-                        setCompResult_1 = SetUtil.union(Utils.copy(
-                                    setCompResult_1),
-                                SetUtil.set(x.longValue() + y.longValue() +
-                                    z.longValue()));
+                        setCompResult_1.add(x.longValue() + y.longValue() +
+                            z.longValue());
                     }
                 }
             }

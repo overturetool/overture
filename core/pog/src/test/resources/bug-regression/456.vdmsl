@@ -7,5 +7,3 @@ end
 operations
 op : () ==> ()
 op()== atomic(x:=1; y:=1)
-
-

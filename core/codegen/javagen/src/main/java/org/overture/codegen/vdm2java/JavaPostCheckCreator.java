@@ -1,14 +1,14 @@
 package org.overture.codegen.vdm2java;
 
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.AExternalTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AStringLiteralExpIR;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.AExternalTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.trans.IPostCheckCreator;
 
 public class JavaPostCheckCreator implements IPostCheckCreator
@@ -20,27 +20,27 @@ public class JavaPostCheckCreator implements IPostCheckCreator
 		this.postCheckMethodName = postCheckMethodName;
 	}
 
-	public AApplyExpCG consPostCheckCall(AMethodDeclCG method,
-			AApplyExpCG postCondCall, AIdentifierVarExpCG resultVar,
-			AStringLiteralExpCG methodName)
+	public AApplyExpIR consPostCheckCall(AMethodDeclIR method,
+			AApplyExpIR postCondCall, AIdentifierVarExpIR resultVar,
+			AStringLiteralExpIR methodName)
 	{
-		AExternalTypeCG externalType = new AExternalTypeCG();
+		AExternalTypeIR externalType = new AExternalTypeIR();
 		externalType.setName(JavaFormat.UTILS_FILE);
 
-		AMethodTypeCG methodType = new AMethodTypeCG();
-		methodType.setResult(new ABoolBasicTypeCG());
+		AMethodTypeIR methodType = new AMethodTypeIR();
+		methodType.setResult(new ABoolBasicTypeIR());
 		methodType.getParams().add(method.getMethodType().getResult().clone());
-		methodType.getParams().add(new ABoolBasicTypeCG());
-		methodType.getParams().add(new AStringTypeCG());
+		methodType.getParams().add(new ABoolBasicTypeIR());
+		methodType.getParams().add(new AStringTypeIR());
 
-		AExplicitVarExpCG explicitVar = new AExplicitVarExpCG();
+		AExplicitVarExpIR explicitVar = new AExplicitVarExpIR();
 		explicitVar.setType(methodType);
 		explicitVar.setIsLambda(false);
 		explicitVar.setIsLocal(false);
 		explicitVar.setName(postCheckMethodName);
 		explicitVar.setClassType(externalType);
 
-		AApplyExpCG utilsCall = new AApplyExpCG();
+		AApplyExpIR utilsCall = new AApplyExpIR();
 		utilsCall.setRoot(explicitVar);
 		utilsCall.setType(methodType.getResult().clone());
 		utilsCall.getArgs().add(resultVar);

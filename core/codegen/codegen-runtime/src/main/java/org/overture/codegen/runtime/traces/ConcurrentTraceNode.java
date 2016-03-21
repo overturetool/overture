@@ -92,8 +92,7 @@ public class ConcurrentTraceNode extends TraceNode implements
 				{
 					continue;
 				}
-				CallSequence seq = new CallSequence();
-				/* Trace variables visible at this point */
+				CallSequence seq = getVars();
 
 				for (int i = 0; i < count; i++)
 				{

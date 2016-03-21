@@ -49,7 +49,7 @@ public class Entry {
     }
 
     public static Number Run() {
-        B b = new B();
+        final B b = new B();
 
         return b.op();
     }

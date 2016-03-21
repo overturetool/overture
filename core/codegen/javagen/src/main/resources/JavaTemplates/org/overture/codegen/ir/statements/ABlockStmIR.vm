@@ -1,0 +1,21 @@
+#if ($JavaFormat.isScoped($node))
+{
+#end
+##
+## Local definitions:
+##
+	#foreach( $dec in $node.getLocalDefs() )
+	$JavaFormat.formatVdmSource($dec)##
+	$JavaFormat.format($dec)
+	#end
+##
+## Statements:
+##
+	#foreach( $stm in $node.getStatements() )
+	$JavaFormat.formatVdmSource($stm)##
+	$JavaFormat.format($stm)
+	#end
+##
+#if ($JavaFormat.isScoped($node))
+}
+#end

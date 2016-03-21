@@ -9,13 +9,13 @@ public class Entry {
     }
 
     public static Object Run() {
-        Func_1<Number, Boolean> f = new Func_1<Number, Boolean>() {
+        final Func_1<Number, Boolean> f = new Func_1<Number, Boolean>() {
                 public Boolean eval(final Number x) {
                     return x.longValue() >= 1L;
                 }
             };
 
-        Func_1<Boolean, Number> g = new Func_1<Boolean, Number>() {
+        final Func_1<Boolean, Number> g = new Func_1<Boolean, Number>() {
                 public Number eval(final Boolean b) {
                     Number ternaryIfExp_1 = null;
 
@@ -29,7 +29,7 @@ public class Entry {
                 }
             };
 
-        Func_1<Number, Number> h = func_compose(f).eval(g);
+        final Func_1<Number, Number> h = func_compose(f).eval(g);
 
         return SeqUtil.seq(h.eval(-2L), h.eval(-1L), h.eval(0L), h.eval(1L),
             h.eval(2L));

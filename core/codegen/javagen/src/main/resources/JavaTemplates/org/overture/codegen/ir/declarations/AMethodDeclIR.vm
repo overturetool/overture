@@ -1,0 +1,31 @@
+#set( $static = "")
+#if ($node.getStatic())
+	#set( $static = "static")
+#end
+##
+#set( $returnType = "")
+#if (!$node.getIsConstructor())
+	#set( $returnType = $JavaFormat.format($node.getMethodType().getResult()) )
+#end
+#set( $abstract = "")
+#if ($node.getAbstract())
+	#set( $abstract = "abstract")
+#end
+##
+#set( $templateTypes = "")
+#if ($node.getTemplateTypes().size() > 0)
+	#set( $templateTypes = $JavaFormat.formatTemplateTypes($node.getTemplateTypes()))
+#end
+##
+#set( $params = $JavaFormat.format($node.getFormalParams()))
+##
+#set( $throwsClause = $JavaFormat.formatThrows($node.getRaises()))
+##
+#set( $body = $JavaFormat.formatOperationBody($node.getBody()))
+##
+$JavaFormat.formatVdmSource($node)##
+##
+$JavaFormat.formatMetaData($node.getMetaData())##
+##
+$node.getAccess() $abstract $static $templateTypes $returnType $node.getName()(${params}) $throwsClause
+$body

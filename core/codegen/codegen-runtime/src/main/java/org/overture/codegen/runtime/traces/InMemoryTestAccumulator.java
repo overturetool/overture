@@ -23,19 +23,16 @@ public class InMemoryTestAccumulator implements TestAccumulator
 		this.tests.add(test);
 	}
 
-	@Override
 	public boolean hasNext()
 	{
 		return nextIdx < tests.size();
 	}
 
-	@Override
 	public TraceTest getNext()
 	{
 		return tests.get(nextIdx++);
 	}
 
-	@Override
 	public List<TraceTest> getAllTests()
 	{
 		return tests;

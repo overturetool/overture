@@ -1,0 +1,37 @@
+class Entry
+
+instance variables
+
+o : Other;
+
+operations
+
+public Entry : () ==> Entry
+Entry () == o := new Other();
+
+public op : () ==> nat
+op () ==
+  return 1;
+  
+public opVoid : () ==> ()
+opVoid () ==
+  skip;
+
+traces
+
+T1:
+let e = new Entry()
+in
+  (self.opVoid();self.op();e.op();e.o.opVoid());
+
+
+end Entry
+
+class Other
+
+operations
+
+public opVoid : () ==> ()
+opVoid () == skip;
+
+end Other

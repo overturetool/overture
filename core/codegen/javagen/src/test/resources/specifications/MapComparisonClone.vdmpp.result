@@ -6,8 +6,8 @@ import java.util.*;
 @SuppressWarnings("all")
 public class A {
     private static final VDMMap a = MapUtil.map(new Maplet(1L, 2L));
-    private static final Boolean b = Utils.equals(a, op());
-    private static final Boolean c = !(Utils.equals(a, op()));
+    private static final Boolean b = Utils.equals(A.a, op());
+    private static final Boolean c = !(Utils.equals(A.a, op()));
 
     public A() {
     }

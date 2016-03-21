@@ -1,0 +1,31 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+types
+
+R1 :: r2 : R2
+inv r1 == r1.r2.x <> -1;
+
+R2 :: x : int
+inv r2 == r2.x <> -2;
+
+operations
+
+Run: () ==> ?
+Run () ==
+(
+ dcl r1 : R1 | nat := mk_R1(mk_R2(5));
+ 
+ atomic
+ (
+   r1.r2.x := -1;
+   r1.r2.x := 1;
+ );
+ 
+ IO`println("\\invariant_for is not implemented in OpenJML RAC " ^ 
+   "so the \\invariant_for check will not detect the invariant violation");
+ return 0;
+)
+end Entry

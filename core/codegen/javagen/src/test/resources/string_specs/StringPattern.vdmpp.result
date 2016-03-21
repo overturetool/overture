@@ -15,7 +15,7 @@ public class A {
             throw new RuntimeException("String pattern match failed");
         }
 
-        String stringPattern_2 = "hej";
+        final String stringPattern_2 = "hej";
         Boolean success_2 = Utils.equals(stringPattern_2, "hej");
 
         if (!(success_2)) {
@@ -32,7 +32,7 @@ public class A {
             throw new RuntimeException("String pattern match failed");
         }
 
-        String stringPattern_4 = "hej";
+        final String stringPattern_4 = "hej";
         Boolean success_4 = Utils.equals(stringPattern_4, "hej");
 
         if (!(success_4)) {

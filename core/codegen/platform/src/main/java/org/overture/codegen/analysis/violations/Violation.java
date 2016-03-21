@@ -22,16 +22,16 @@
 package org.overture.codegen.analysis.violations;
 
 import org.overture.ast.intf.lex.ILexLocation;
-import org.overture.codegen.assistant.LocationAssistantCG;
+import org.overture.codegen.assistant.LocationAssistantIR;
 
 public class Violation implements Comparable<Violation>
 {
 	private ILexLocation location;
 	private String description;
-	private LocationAssistantCG locationAssistant;
+	private LocationAssistantIR locationAssistant;
 
 	public Violation(String description, ILexLocation location,
-			LocationAssistantCG locationAssistant)
+			LocationAssistantIR locationAssistant)
 	{
 		super();
 		this.description = description;

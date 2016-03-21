@@ -1,0 +1,6 @@
+operations
+pure foo :() ==> int
+foo() == return 0;
+
+pure bar : () ==> int
+bar() == foo();

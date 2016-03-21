@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
 
 /**
  * This test is like the  PreCondNoStateTests test except that it
@@ -26,7 +26,7 @@ public class PreCondWithStateTests extends PreCondNoStateTests
 	@Override
 	public void testOpRequiresAnnotation()
 	{
-		AMethodDeclCG op = getMethod(genModule.getMethods(), "op");
+		AMethodDeclIR op = getMethod(genModule.getMethods(), "op");
 		
 		// The generated module has a state component, which must be passed to the
 		// pre condition function

@@ -53,8 +53,7 @@ public class SequenceTraceNode extends TraceNode implements IIterableTraceNode
 		}
 		Integer[] select = indics.get(index);
 
-		CallSequence seq = new CallSequence();
-		/* Trace variables visible at this point */
+		CallSequence seq = getVars();
 
 		List<TestSequence> nodetests = new Vector<TestSequence>();
 		int count = nodes.size();

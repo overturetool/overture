@@ -320,6 +320,11 @@ public class NameFinder extends
 	{
 		// The problem is, when the InheritedDefinition is created, we
 		// don't know its fully qualified name.
+		
+		if (node.getSuperdef() instanceof AInheritedDefinition)
+		{
+			node.getSuperdef().apply(this, question);
+		}
 
 		ILexNameToken name = node.getName();
 		name.setTypeQualifier(node.getSuperdef().getName().getTypeQualifier());

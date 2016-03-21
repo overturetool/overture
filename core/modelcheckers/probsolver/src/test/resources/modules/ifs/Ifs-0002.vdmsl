@@ -1,5 +1,0 @@
-operations
-
-  if2() m : set of nat
-    post if 0 in set {1,2,3,4,5} then m = {1,2,3,4,5}\{2} else m = {1,2,3,4,5}
- 

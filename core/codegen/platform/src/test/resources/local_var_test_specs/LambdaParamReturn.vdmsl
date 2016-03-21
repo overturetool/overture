@@ -1,0 +1,7 @@
+functions
+
+f :  () -> nat
+f () ==
+let - = (lambda o : int & o)
+in
+  1;

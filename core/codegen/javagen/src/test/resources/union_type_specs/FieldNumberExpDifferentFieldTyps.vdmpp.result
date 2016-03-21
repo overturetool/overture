@@ -9,15 +9,15 @@ public class Entry {
     }
 
     public static Object Run() {
-        VDMSeq s = SeqUtil.seq(Tuple.mk_(5L, true), Tuple.mk_(true, 2L, 3L),
-                Tuple.mk_('a', 'b', true));
+        final VDMSeq s = SeqUtil.seq(Tuple.mk_(5L, true),
+                Tuple.mk_(true, 2L, 3L), Tuple.mk_('a', 'b', true));
 
         {
             VDMSeq ss = SeqUtil.seq();
             long toVar_1 = 3L;
 
             for (Long i = 1L; i <= toVar_1; i++) {
-                Object obj_1 = Utils.get(s, i);
+                Object obj_1 = Utils.copy(Utils.get(s, i));
 
                 Object apply_1 = null;
 

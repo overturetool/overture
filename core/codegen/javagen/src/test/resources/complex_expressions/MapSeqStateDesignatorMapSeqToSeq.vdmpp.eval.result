@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.codegen.tests.exec.ComplexExpJavaGenTest">
 <result>
-<output object="rO0ABXNyAC5vcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLkNoYXJhY3RlclZhbHVlAAAAAAAAAAECAAFDAAd1bmljb2RleHIAJW9yZy5vdmVydHVyZS5pbnRlcnByZXRlci52YWx1ZXMuVmFsdWUAAAAAAAAAAQIAAHhwAGQ=" resource="MapSeqStateDesignatorMapSeqToSeq" value="'d'"/>
+<output object="rO0ABXNyAC5vcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLkNoYXJhY3RlclZhbHVlAAAAAAAAAAECAAFDAAd1bmljb2RleHIAJW9yZy5vdmVydHVyZS5pbnRlcnByZXRlci52YWx1ZXMuVmFsdWUAAAAAAAAAAQIAAHhwAGQ=" resource="MapSeqStateDesignatorMapSeqToSeq.vdmpp" value="'d'"/>
 </result>
 </testResult>

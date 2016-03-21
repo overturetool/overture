@@ -1,0 +1,28 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+(
+  IO`println("Before legal use");
+  let - : seq1 of nat = [x | x in set {1,2,3} & x > 0] in skip;
+  let - : seq1 of nat = [x | x in set {1,2,3}] in skip;
+  IO`println("After legal use");
+  IO`println("Before violations");
+  let - : seq1 of nat = [x | x in set {1,2,3} & x > 4] in skip;
+  let - : seq1 of nat = [x | x in set xs()] in skip;
+  IO`println("After violations");
+  return 0;
+);
+
+functions
+
+xs :  () -> set of nat
+xs () == {};
+
+end Entry	

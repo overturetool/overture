@@ -17,6 +17,7 @@ import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
+import org.overture.ast.expressions.ATimeExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
@@ -171,8 +172,14 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 		}
 	}
 	
+	@Override
+	public void caseATimeExp(ATimeExp node) throws AnalysisException
+	{
+		info.addUnsupportedNode(node, "The 'time' expression is not supported");
+	}
+	
 	/**
-	 * Single type binds are supported for lambda expression, e.g. (lambda x : int & x) so we cannot report all of the
+	 * Single type binds are supported for lambda expression, e.g. (lambda x : int &amp; x) so we cannot report all of the
 	 * unsupported.
 	 */
 	

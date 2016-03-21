@@ -11,7 +11,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        return "a" + a + f();
+        return "a" + Entry.a + f();
     }
 
     public static String f() {

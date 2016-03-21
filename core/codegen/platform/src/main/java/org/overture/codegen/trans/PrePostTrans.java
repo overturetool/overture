@@ -2,12 +2,13 @@ package org.overture.codegen.trans;
 
 import java.util.LinkedList;
 
-import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.ir.SDeclIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 
@@ -21,15 +22,15 @@ public class PrePostTrans extends DepthFirstAnalysisAdaptor {
 	}
 
 	@Override
-	public void caseAMethodDeclCG(AMethodDeclCG node)
-			throws org.overture.codegen.cgast.analysis.AnalysisException {
+	public void caseAMethodDeclIR(AMethodDeclIR node)
+			throws org.overture.codegen.ir.analysis.AnalysisException {
 		
 		if(!info.getSettings().generatePreConds())
 		{
 			return;
 		}
 		
-		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
+		ADefaultClassDeclIR enclosingClass = node.getAncestor(ADefaultClassDeclIR.class);
 		
 		if(enclosingClass == null)
 		{
@@ -37,10 +38,16 @@ public class PrePostTrans extends DepthFirstAnalysisAdaptor {
 			return;
 		}
 		
-		SDeclCG preCond = node.getPreCond();
-		if(preCond instanceof AMethodDeclCG)
+		SDeclIR preCond = node.getPreCond();
+		if(preCond instanceof AMethodDeclIR)
 		{
-			AMethodDeclCG preCondMethod = (AMethodDeclCG) preCond;			
+			AMethodDeclIR preCondMethod = (AMethodDeclIR) preCond;			
+			
+			if(info.getSettings().makePreCondsPublic())
+			{
+				preCondMethod.setAccess(IRConstants.PUBLIC);
+			}
+			
 			enclosingClass.getMethods().add(preCondMethod);
 
 			if(node.getStatic() != null && !node.getStatic())
@@ -48,18 +55,23 @@ public class PrePostTrans extends DepthFirstAnalysisAdaptor {
 				preCondMethod.setStatic(false);
 				
 				//No need to pass self as the last argument
-				LinkedList<STypeCG> paramTypes = preCondMethod.getMethodType().getParams();
+				LinkedList<STypeIR> paramTypes = preCondMethod.getMethodType().getParams();
 				paramTypes.remove(paramTypes.size() - 1);
 				
-				LinkedList<AFormalParamLocalParamCG> formalParams = preCondMethod.getFormalParams();
+				LinkedList<AFormalParamLocalParamIR> formalParams = preCondMethod.getFormalParams();
 				formalParams.remove(formalParams.size() - 1);
 			}
 		}
 
-		SDeclCG postCond = node.getPostCond();
-		if(postCond instanceof AMethodDeclCG)
+		SDeclIR postCond = node.getPostCond();
+		if(postCond instanceof AMethodDeclIR)
 		{
-			AMethodDeclCG postCondMethod = (AMethodDeclCG) postCond;
+			AMethodDeclIR postCondMethod = (AMethodDeclIR) postCond;
+			
+			if(info.getSettings().makePostCondsPublic())
+			{
+				postCondMethod.setAccess(IRConstants.PUBLIC);
+			}
 
 			// Generation of a post condition is only supported for static operations
 			// where no 'self' and '~self' are being passed

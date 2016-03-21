@@ -30,18 +30,49 @@ import org.overture.codegen.runtime.Utils;
 
 public abstract class TraceNode
 {
+	private static final int ENCLOSING_MODULE_ID = -1;
+	private static final Object NOT_AVAILABLE = new Object();
+	
+	private CallSequence traceVars;
+	
+	public TraceNode()
+	{
+		this.traceVars = new CallSequence();
+	}
+	
+	public void addVarFirst(TraceVariable var)
+	{
+		this.traceVars.add(0, var);
+	}
+	
+	public CallSequence getVars()
+	{
+		CallSequence c = new CallSequence();
+		c.addAll(traceVars);
+		return c;
+	}
+
 	@Override
 	abstract public String toString();
 
 	abstract public TestSequence getTests();
 
-	// Added
-	@SuppressWarnings("rawtypes")
-	public static void executeTests(TraceNode trace, Class instanceType,
-			TestAccumulator acc, Store store)
+	// SL
+	public static void executeTests(TraceNode trace, TestAccumulator acc, Store store)
+	{
+		executeTests(trace, null, acc, store);
+	}
+
+	// PP
+	public static void executeTests(TraceNode trace, Class<?> instanceType, TestAccumulator acc, Store store)
 	{
 		try
 		{
+			if (instanceType != null)
+			{
+				store.register(ENCLOSING_MODULE_ID, instanceType.newInstance());
+			}
+
 			int testNo = 1;
 
 			TestSequence tests = trace.getTests();
@@ -50,77 +81,91 @@ public abstract class TraceNode
 
 			for (CallSequence test : tests)
 			{
+				/**
+				 * We should reset the state before running the test in case the trace variable statements have modified
+				 * it, e.g. let a = opWithSideEffects() in ....
+				 */
+				store.reset();
 				List<String> callStms = new LinkedList<String>();
 				List<Object> callStmResults = new LinkedList<Object>();
-
-				boolean failureOccured = false;
 
 				/*
 				 * TODO: Type check missing here If the type check fails we would also have to do filtering
 				 */
-
 				if (test.getFilter() > 0)
 				{
 					acc.registerTest(new TraceTest(testNo, test.toString(), "", Verdict.SKIPPED));
 				} else
 				{
-					Object instance = instanceType.newInstance();
 					int callStmIdx = 0;
 					for (; callStmIdx < test.size(); callStmIdx++)
 					{
-						CallStatement callStm = test.get(callStmIdx);
+						Statement stm = test.get(callStmIdx);
+						
+						if(!(stm instanceof CallStatement))
+						{
+							continue;
+						}
+						
+						CallStatement callStm = (CallStatement) stm;
 						try
 						{
 							callStms.add(callStm.toString());
-							Object result = callStm.execute(instance);
+
+							if (callStm instanceof CallStatementPp)
+							{
+								((CallStatementPp) callStm).setInstance(store.getValue(ENCLOSING_MODULE_ID));
+							}
+
+							// TODO: To be done. Consider where the right place is to check for this.
+							if (!callStm.isTypeCorrect() || !callStm.meetsPreCond())
+							{
+								// Inconclusive
+								callStmResults.add(NOT_AVAILABLE);
+								callStmResults.add(Verdict.INCONCLUSIVE);
+								tests.filter(callStmResults, test, testNo);
+								acc.registerTest(new TraceTest(testNo, test.toString(), "", Verdict.INCONCLUSIVE));
+								break;
+							}
+
+							Object result = callStm.execute();
 							callStmResults.add(result);
 
-						} catch (RuntimeException e)
+							if (callStmIdx == test.size() - 1)
+							{
+								callStmResults.add(Verdict.PASSED);
+								acc.registerTest(new TraceTest(testNo, getResultStr(callStms, "; "), getResultStr(callStmResults.subList(0, callStmResults.size()
+										- 1), " ; "), Verdict.PASSED));
+							}
+
+						} catch (RuntimeException | AssertionError e)
 						{
 							for (int p = callStmIdx + 1; p < test.size(); p++)
 							{
-								CallStatement notCalled = test.get(callStmIdx);
-								callStms.add(notCalled.toString());
+								callStms.add(callStms.toString());
 							}
-
-							boolean preCondViolation = e.getMessage() != null
-									&& e.getMessage().contains("Precondition failure");
 
 							for (; callStmIdx < test.size(); callStmIdx++)
 							{
 								if (e.getMessage() != null)
 								{
-									callStmResults.add(e.getClass().getSimpleName()
-											+ ": " + e.getMessage());
+									callStmResults.add(e.getClass().getSimpleName() + ": " + e.getMessage());
 								} else
 								{
-									callStmResults.add(e.getClass().getSimpleName());// Happens for null pointer
-																						// exceptions
+									// Happens for null pointer exceptions
+									callStmResults.add(e.getClass().getSimpleName());
 								}
 							}
 
-							Verdict verdict = preCondViolation ? Verdict.INCONCLUSIVE
-									: Verdict.FAILED;
+							Verdict verdict = Verdict.FAILED;
 
-							// Filter
 							callStmResults.add(verdict);
+
 							tests.filter(callStmResults, test, testNo);
-
-							failureOccured = true;
-
-							acc.registerTest(new TraceTest(testNo, getResultStr(callStms, "; "), getResultStr(callStmResults.subList(0, callStmResults.size() - 1), " ; "), verdict));
+							acc.registerTest(new TraceTest(testNo, getResultStr(callStms, "; "), getResultStr(callStmResults.subList(0, callStmResults.size()
+									- 1), " ; "), verdict));
 						}
 
-					}
-
-					if (!failureOccured)
-					{
-						// Filter
-						// TODO: but filtering a passed test should be useless)
-						callStmResults.add(Verdict.PASSED);
-						tests.filter(callStmResults, test, testNo);
-
-						acc.registerTest(new TraceTest(testNo, getResultStr(callStms, "; "), getResultStr(callStmResults.subList(0, callStmResults.size() - 1), " ; "), Verdict.PASSED));
 					}
 				}
 
@@ -128,10 +173,7 @@ public abstract class TraceNode
 				callStmResults.clear();
 
 				testNo++;
-				store.reset();
 			}
-
-			// showResults(results);
 
 		} catch (InstantiationException e)
 		{
@@ -142,8 +184,7 @@ public abstract class TraceNode
 		}
 	}
 
-	private static String getResultStr(List<? extends Object> results,
-			String sep)
+	private static String getResultStr(List<? extends Object> results, String sep)
 	{
 		StringBuilder sb = new StringBuilder();
 

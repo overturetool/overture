@@ -1,99 +1,96 @@
 package org.overture.codegen.trans.conc;
 
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.statements.AAssignmentStmCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
-import org.overture.codegen.cgast.types.AVoidTypeCG;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.AAssignmentStmIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
+import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
+import org.overture.codegen.ir.statements.AMapSeqUpdateStmIR;
+import org.overture.codegen.ir.types.AVoidTypeIR;
 import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 /**
  * This transformation generates a "state change" call to the Sentinel class to make it re-evaluate permission
- * predicates. It assumes all state updates to come from the local assignment statement, the assignment statement
- * or the "map put statement".
+ * predicates. It assumes all state updates to come from the local assignment statement, the assignment statement or the
+ * "map put statement".
  * 
  * @author pvj
  */
 public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 {
-	//TODO: put constants somewhere appropriate
-	private static final String SENTINEL_FIELD_NAME = "sentinel";
-	private TransAssistantCG transAssistant;
-	
-	public EvalPermPredTrans(TransAssistantCG transAssistant)
+	private TransAssistantIR transAssistant;
+	private ConcPrefixes concPrefixes;
+
+	public EvalPermPredTrans(TransAssistantIR transAssistant, ConcPrefixes concPrefixes)
 	{
 		this.transAssistant = transAssistant;
+		this.concPrefixes = concPrefixes;
 	}
 
 	@Override
-	public void caseAAssignmentStmCG(AAssignmentStmCG node)
-			throws AnalysisException
+	public void caseAAssignmentStmIR(AAssignmentStmIR node) throws AnalysisException
 	{
 		handleStateUpdate(node);
 	}
-	
+
 	@Override
-	public void caseAAssignToExpStmCG(AAssignToExpStmCG node)
-			throws AnalysisException
+	public void caseAAssignToExpStmIR(AAssignToExpStmIR node) throws AnalysisException
 	{
-		if(node.getTarget() instanceof SVarExpCG)
+		if (node.getTarget() instanceof SVarExpIR)
 		{
-			SVarExpCG var = (SVarExpCG)node.getTarget();
-			if(var.getIsLocal())
+			SVarExpIR var = (SVarExpIR) node.getTarget();
+			if (var.getIsLocal())
 			{
 				return;
 			}
 		}
-		
+
 		handleStateUpdate(node);
 	}
-	
+
 	@Override
-	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node) throws AnalysisException
+	public void caseAMapSeqUpdateStmIR(AMapSeqUpdateStmIR node) throws AnalysisException
 	{
 		handleStateUpdate(node);
 	}
-	
-	private void handleStateUpdate(SStmCG node)
+
+	private void handleStateUpdate(SStmIR node)
 	{
-		if(!transAssistant.getInfo().getSettings().generateConc())
+		if (!transAssistant.getInfo().getSettings().generateConc())
 		{
 			return;
 		}
-		
-		AMethodDeclCG enclosingMethod = node.getAncestor(AMethodDeclCG.class);
-		
-		if(enclosingMethod != null)
+
+		AMethodDeclIR enclosingMethod = node.getAncestor(AMethodDeclIR.class);
+
+		if (enclosingMethod != null)
 		{
 			Boolean isStatic = enclosingMethod.getStatic();
-			
-			if(isStatic != null && isStatic)
+
+			if (isStatic != null && isStatic)
 			{
 				return;
 			}
-			
-			if(enclosingMethod.getIsConstructor())
+
+			if (enclosingMethod.getIsConstructor())
 			{
 				return;
 			}
-			
-			if(isIRGenerated(enclosingMethod))
+
+			if (isIRGenerated(enclosingMethod))
 			{
 				return;
 			}
-		}
-		else
+		} else
 		{
 			// Can in fact be okay since the IR construction of the thread definition skips the
 			// explicit operation definition implicitly associated with the thread definition.
@@ -103,48 +100,45 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 			// (x := 2;)
 			//
 		}
-		
-		
-		STypeCG fieldType = getSentinelFieldType(node);
-		
-		AIdentifierVarExpCG sentinelVar = new AIdentifierVarExpCG();
+
+		STypeIR fieldType = getSentinelFieldType(node);
+
+		AIdentifierVarExpIR sentinelVar = new AIdentifierVarExpIR();
 		sentinelVar.setIsLocal(true);
 		sentinelVar.setIsLambda(false);
-		sentinelVar.setName(SENTINEL_FIELD_NAME);
+		sentinelVar.setName(concPrefixes.sentinelInstanceName());
 		sentinelVar.setType(fieldType);
-		
-		ACallObjectExpStmCG callSentinel = new ACallObjectExpStmCG();
+
+		ACallObjectExpStmIR callSentinel = new ACallObjectExpStmIR();
 		callSentinel.setObj(sentinelVar);
-		//TODO: put constants somewhere appropriate
-		callSentinel.setFieldName("stateChanged");
-		callSentinel.setType(new AVoidTypeCG());
-		
-		ABlockStmCG replacementBlock = new ABlockStmCG();
-		
+		callSentinel.setFieldName(concPrefixes.stateChangedMethodName());
+		callSentinel.setType(new AVoidTypeIR());
+
+		ABlockStmIR replacementBlock = new ABlockStmIR();
+
 		transAssistant.replaceNodeWith(node, replacementBlock);
-		
+
 		replacementBlock.getStatements().add(node);
 		replacementBlock.getStatements().add(callSentinel);
 	}
 
-	private STypeCG getSentinelFieldType(SStmCG node)
+	private STypeIR getSentinelFieldType(SStmIR node)
 	{
-		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
-		
-		STypeCG fieldType = null;
-		
-		if(enclosingClass != null)
+		ADefaultClassDeclIR enclosingClass = node.getAncestor(ADefaultClassDeclIR.class);
+
+		STypeIR fieldType = null;
+
+		if (enclosingClass != null)
 		{
-			fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(enclosingClass, SENTINEL_FIELD_NAME, transAssistant.getInfo().getClasses());
-		}
-		else
+			fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(enclosingClass, concPrefixes.sentinelInstanceName(), transAssistant.getInfo().getClasses());
+		} else
 		{
 			Logger.getLog().printErrorln("Could not find enclosing class of assignment statement in InstanceVarPPEvalTransformation");
 		}
 		return fieldType;
 	}
-	
-	private boolean isIRGenerated(AMethodDeclCG method)
+
+	private boolean isIRGenerated(AMethodDeclIR method)
 	{
 		return method.getTag() instanceof IRGeneratedTag;
 	}

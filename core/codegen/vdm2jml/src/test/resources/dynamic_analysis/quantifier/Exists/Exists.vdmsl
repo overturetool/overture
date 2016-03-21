@@ -1,0 +1,24 @@
+module Entry
+
+exports all
+imports from IO all
+definitions
+
+operations
+
+Run : () ==> ?
+Run () ==
+let - = f()
+in
+(
+  IO`println("Done! Expected no errors");
+  return 0;
+);
+
+functions
+
+f :  () -> bool
+f () ==
+  exists x in set {1,2,3} & x > 0;
+
+end Entry	

@@ -34,8 +34,8 @@ public class StaticSentinel
 	//this method is registering the termination of a method.
 	public synchronized static void leaving(String classname, int fnr2){
 		int fn = fnr2;
-		m.put(classname, counter.fin[fn]++);//fin[fn]++; //changes the #fin counter adding one to it.
-		m.put(classname, counter.active[fn]--); //changes the #active counter removing one to it.
+		m.put(classname, StaticOperationsCounters.fin[fn]++);//fin[fn]++; //changes the #fin counter adding one to it.
+		m.put(classname, StaticOperationsCounters.active[fn]--); //changes the #active counter removing one to it.
 		stateChanged();
 	}
 	//this method notifies the threads that a counter has be changed to reevaluate their permission predicates.
@@ -44,26 +44,26 @@ public class StaticSentinel
 	}
 	//The method that actually changes the #req history counter.
 	private synchronized static void requesting(String classname,int fn){
-		m.put(classname, counter.req[fn]++);
+		m.put(classname, StaticOperationsCounters.req[fn]++);
 		stateChanged();
 	}
 	//The method that actually changing the #act and #active history counters.
 	private synchronized static void activating(String classname,int fn){
-		m.put(classname, counter.act[fn]++);
-		m.put(classname, counter.active[fn]++);
+		m.put(classname, StaticOperationsCounters.act[fn]++);
+		m.put(classname, StaticOperationsCounters.active[fn]++);
 		stateChanged();
 	}
 	//The method that actually changing the #waiting history counter. 
 	//The offset defines how many methods of the same name are waiting.
 	private synchronized static void waiting(String classname, int fnr, int offset){
-		m.put(classname, counter.waiting[fnr] += offset);
+		m.put(classname, StaticOperationsCounters.waiting[fnr] += offset);
 		stateChanged();
 	}
 	
 	public static boolean evalPP(String ClassName, Long fnr)
 	{	
 		try{
-			Class c = Class.forName(ClassName);
+			Class<?> c = Class.forName(ClassName);
 			Method m = c.getDeclaredMethod("evaluatePP", Number.class);
 			Object o = m.invoke(c.newInstance(), fnr);
 
@@ -92,20 +92,4 @@ public class StaticSentinel
 		}
 		return true; 
 	}
-//	public static boolean evalPP(String ClassName, Long fnr)
-//	{	
-//		try{
-//			Class c = Class.forName(ClassName);
-//			Method m = c.getDeclaredMethod(null, Number.class);
-//			Object o = m.invoke(null, fnr);
-//
-//			return (Boolean) o;
-//		}
-//		catch(Exception e)
-//		{
-//
-//		}
-//		return true; 
-//	}
- 
 }

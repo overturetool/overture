@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let t : ? = mk_(1,2)
+in
+  return narrow_(t, nat * nat).#2
+
+end Entry

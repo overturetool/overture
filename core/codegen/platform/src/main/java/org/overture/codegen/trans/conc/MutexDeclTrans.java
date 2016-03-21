@@ -1,75 +1,70 @@
 package org.overture.codegen.trans.conc;
 
-import org.overture.codegen.cgast.SNameCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AMutexSyncDeclCG;
-import org.overture.codegen.cgast.declarations.APersyncDeclCG;
-import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AHistoryExpCG;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
-import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
-import org.overture.codegen.cgast.name.ATokenNameCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.ir.SNameIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AMutexSyncDeclIR;
+import org.overture.codegen.ir.declarations.APersyncDeclIR;
+import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AHistoryExpIR;
+import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
+import org.overture.codegen.ir.expressions.APlusNumericBinaryExpIR;
+import org.overture.codegen.ir.name.ATokenNameIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
 import org.overture.codegen.ir.IRInfo;
 
 public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
+	private ConcPrefixes concPrefixes;
 	
-	
-	public MutexDeclTrans(IRInfo info)
+	public MutexDeclTrans(IRInfo info, ConcPrefixes concPrefixes)
 	{
 		this.info = info;
+		this.concPrefixes = concPrefixes;
 	}
-	
+
 	@Override
-	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
+	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node) throws AnalysisException
 	{
-		String hop = "active";
-		if(!info.getSettings().generateConc())
+		if (!info.getSettings().generateConc())
 		{
 			return;
 		}
-				
-		for(AMutexSyncDeclCG mutex : node.getMutexSyncs())
+
+		for (AMutexSyncDeclIR mutex : node.getMutexSyncs())
 		{
-			
 			if (mutex.getOpnames().size() == 1)
 			{
 				Boolean foundsame = false;
 				int foundplace = 0;
-			
-				APersyncDeclCG perpred = new APersyncDeclCG();
+
+				APersyncDeclIR perpred = new APersyncDeclIR();
 				perpred.setOpname(mutex.getOpnames().getFirst().toString());
 
-				
-				AEqualsBinaryExpCG guard = new AEqualsBinaryExpCG();
+				AEqualsBinaryExpIR guard = new AEqualsBinaryExpIR();
 
-				AHistoryExpCG histcount = new AHistoryExpCG();
-				histcount.setHistype(hop);
+				AHistoryExpIR histcount = new AHistoryExpIR();
+				histcount.setHistype(concPrefixes.activeHistOpTypeName());
 				histcount.setOpsname(mutex.getOpnames().getFirst().toString());
-				histcount.setType(new AIntNumericBasicTypeCG());
+				histcount.setType(new AIntNumericBasicTypeIR());
 
-				AClassTypeCG innerclass = new AClassTypeCG();
-				innerclass.setName(node.getName() + "_sentinel");
+				AClassTypeIR innerclass = new AClassTypeIR();
+				innerclass.setName(node.getName() + concPrefixes.sentinelClassPostFix());
 
 				histcount.setSentinelType(innerclass);
 
-				
-				AIntLiteralExpCG zero = new AIntLiteralExpCG();
+				AIntLiteralExpIR zero = new AIntLiteralExpIR();
 				zero.setValue(0L);
 
 				guard.setLeft(histcount);
 				guard.setRight(zero);
 
-				
 				for (int i = 0; i < node.getPerSyncs().size(); i++)
 				{
-					
 					if (node.getPerSyncs().get(i).getOpname().equals(perpred.getOpname()))
 					{
 
@@ -78,107 +73,100 @@ public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 					}
 				}
 
-				
 				if (!foundsame)
 				{
-
 					perpred.setPred(guard);
 					node.getPerSyncs().add(perpred);
-					
+
 				} else
 				{
-					AAndBoolBinaryExpCG newpred = new AAndBoolBinaryExpCG();
+					AAndBoolBinaryExpIR newpred = new AAndBoolBinaryExpIR();
 					newpred.setLeft(node.getPerSyncs().get(foundplace).getPred().clone());
 					newpred.setRight(guard);
 					node.getPerSyncs().get(foundplace).setPred(newpred);
 				}
 			} else
 			{
-				for (SNameCG operation : mutex.getOpnames())
+				for (SNameIR operation : mutex.getOpnames())
 				{
 					Boolean foundsame = false;
 					int foundplace = 0;
-					
-					if (operation instanceof ATokenNameCG)
-					{
-						APersyncDeclCG perpred = new APersyncDeclCG();
-						perpred.setOpname(((ATokenNameCG) operation).getName());
-						
-						AClassTypeCG innerclass = new AClassTypeCG();
-						innerclass.setName(node.getName() + "_sentinel");
 
-						APlusNumericBinaryExpCG addedhistcounter = new APlusNumericBinaryExpCG();
-						
-						AHistoryExpCG firsthistcount = new AHistoryExpCG();
-						firsthistcount.setHistype(hop);
+					if (operation instanceof ATokenNameIR)
+					{
+						APersyncDeclIR perpred = new APersyncDeclIR();
+						perpred.setOpname(((ATokenNameIR) operation).getName());
+
+						AClassTypeIR innerclass = new AClassTypeIR();
+						innerclass.setName(node.getName() + concPrefixes.sentinelClassPostFix());
+
+						APlusNumericBinaryExpIR addedhistcounter = new APlusNumericBinaryExpIR();
+
+						AHistoryExpIR firsthistcount = new AHistoryExpIR();
+						firsthistcount.setHistype(concPrefixes.activeHistOpTypeName());
 						firsthistcount.setSentinelType(innerclass.clone());
 						firsthistcount.setOpsname(mutex.getOpnames().getFirst().toString());
-						firsthistcount.setType(new AIntNumericBasicTypeCG());
-						
+						firsthistcount.setType(new AIntNumericBasicTypeIR());
+
 						addedhistcounter.setLeft(firsthistcount);
-						APlusNumericBinaryExpCG addition1 = new APlusNumericBinaryExpCG();
+						APlusNumericBinaryExpIR addition1 = new APlusNumericBinaryExpIR();
 						addition1 = addedhistcounter;
+
 						for (int i = 1; i < mutex.getOpnames().size() - 1; i++)
 						{
 							String nextOpName = mutex.getOpnames().get(i).toString();
-													
-							AHistoryExpCG histcountleft = new AHistoryExpCG();
-							histcountleft.setHistype(hop);
-							histcountleft.setOpsname(nextOpName);	
-							histcountleft.setType(new AIntNumericBasicTypeCG());
+
+							AHistoryExpIR histcountleft = new AHistoryExpIR();
+							histcountleft.setHistype(concPrefixes.activeHistOpTypeName());
+							histcountleft.setOpsname(nextOpName);
+							histcountleft.setType(new AIntNumericBasicTypeIR());
 							histcountleft.setSentinelType(innerclass.clone());
-							
-							APlusNumericBinaryExpCG addition = new APlusNumericBinaryExpCG();
+
+							APlusNumericBinaryExpIR addition = new APlusNumericBinaryExpIR();
 							addition.setLeft(histcountleft);
-							
+
 							addition1.setRight(addition);
-							
+
 							addition1 = addition;
 						}
 						String lastOpName = mutex.getOpnames().getLast().toString();
-						
-						
-						AHistoryExpCG lastHistoryExpCG = new AHistoryExpCG();
-						
-						lastHistoryExpCG.setOpsname(lastOpName);
-						lastHistoryExpCG.setHistype(hop);
-						lastHistoryExpCG.setType(new AIntNumericBasicTypeCG());
-						lastHistoryExpCG.setSentinelType(innerclass.clone());
-						addition1.setRight(lastHistoryExpCG);
-						
-						AIntLiteralExpCG zeronum = new AIntLiteralExpCG();
+
+						AHistoryExpIR lastHistoryExpIR = new AHistoryExpIR();
+
+						lastHistoryExpIR.setOpsname(lastOpName);
+						lastHistoryExpIR.setHistype(concPrefixes.activeHistOpTypeName());
+						lastHistoryExpIR.setType(new AIntNumericBasicTypeIR());
+						lastHistoryExpIR.setSentinelType(innerclass.clone());
+						addition1.setRight(lastHistoryExpIR);
+
+						AIntLiteralExpIR zeronum = new AIntLiteralExpIR();
 						zeronum.setValue(0L);
-						
-						AEqualsBinaryExpCG equalzero = new AEqualsBinaryExpCG();			
+
+						AEqualsBinaryExpIR equalzero = new AEqualsBinaryExpIR();
 						equalzero.setLeft(addedhistcounter);
 						equalzero.setRight(zeronum);
-						
+
 						for (int i = 0; i < node.getPerSyncs().size(); i++)
 						{
 							if (node.getPerSyncs().get(i).getOpname().equals(perpred.getOpname()))
 							{
-
 								foundsame = true;
 								foundplace = i;
 							}
 						}
 						if (!foundsame)
 						{
-
 							perpred.setPred(equalzero);
 							node.getPerSyncs().add(perpred);
-							
+
 						} else
 						{
-							AAndBoolBinaryExpCG newpred = new AAndBoolBinaryExpCG();
+							AAndBoolBinaryExpIR newpred = new AAndBoolBinaryExpIR();
 							newpred.setLeft(node.getPerSyncs().get(foundplace).getPred().clone());
 							newpred.setRight(equalzero);
 							node.getPerSyncs().get(foundplace).setPred(newpred);
 						}
 					}
-					
-					
-
 				}
 			}
 		}

@@ -1,0 +1,4 @@
+state S of
+  x : nat
+  init s == s.x >0
+end

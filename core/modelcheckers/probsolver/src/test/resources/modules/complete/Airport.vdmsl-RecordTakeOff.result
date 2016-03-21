@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.modelcheckers.probsolver.CompleteTests">
-<result>
-<output object="(&#10;atomic (permission := {}, landed := {})&#10;)" resource="Airport.vdmsl" value="(&#10;atomic (permission := {}, landed := {})&#10;)"/>
-</result>
-</testResult>

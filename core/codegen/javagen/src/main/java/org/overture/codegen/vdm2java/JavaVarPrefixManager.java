@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2java;
 import org.overture.codegen.traces.TraceNames;
 import org.overture.codegen.trans.Exp2StmVarPrefixes;
 import org.overture.codegen.trans.IterationVarPrefixes;
+import org.overture.codegen.trans.conc.ConcPrefixes;
 import org.overture.codegen.trans.funcvalues.FuncValPrefixes;
 import org.overture.codegen.trans.patterns.PatternVarPrefixes;
 import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
@@ -15,6 +16,7 @@ public class JavaVarPrefixManager
 	protected FuncValPrefixes funcValPrefixes;
 	protected PatternVarPrefixes patternPrefixes;
 	protected UnionTypeVarPrefixes unionTypePrefixes;
+	protected ConcPrefixes concPrefixes;
 	
 	public JavaVarPrefixManager()
 	{
@@ -24,6 +26,7 @@ public class JavaVarPrefixManager
 		this.funcValPrefixes = new FuncValPrefixes();
 		this.patternPrefixes = new PatternVarPrefixes();
 		this.unionTypePrefixes = new UnionTypeVarPrefixes();
+		this.concPrefixes = new ConcPrefixes();
 	}
 	
 	public void setTempVarPrefixes(IterationVarPrefixes iteVarPrefixes)
@@ -86,6 +89,16 @@ public class JavaVarPrefixManager
 		this.unionTypePrefixes = unionTypePrefixes;
 	}
 	
+	public ConcPrefixes getConcPrefixes()
+	{
+		return concPrefixes;
+	}
+
+	public void setConcPrefixes(ConcPrefixes concPrefixes)
+	{
+		this.concPrefixes = concPrefixes;
+	}
+
 	public String postCheckMethodName()
 	{
 		return "postCheck"; 

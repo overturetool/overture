@@ -11,8 +11,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        return SetUtil.union(SetUtil.union(SeqUtil.elems("a"), SeqUtil.elems(a)),
-            SeqUtil.elems(f()));
+        return SetUtil.union(SetUtil.union(SeqUtil.elems("a"),
+                SeqUtil.elems(Entry.a)), SeqUtil.elems(f()));
     }
 
     public static String f() {

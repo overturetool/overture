@@ -1,0 +1,7 @@
+state S of
+	  x : int
+end
+
+operations
+pure foo : int ==> int
+foo (p) == return 0;

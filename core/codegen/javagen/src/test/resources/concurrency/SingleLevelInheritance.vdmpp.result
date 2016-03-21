@@ -103,7 +103,7 @@ public class B extends A implements EvaluatePP {
 
     public void run() {
         opB();
-        super.opA();
+        opA();
     }
 
     public static class B_sentinel extends A_sentinel {
@@ -138,8 +138,8 @@ public class Entry implements EvaluatePP {
     }
 
     public static Object Run() {
-        A i1 = new A();
-        B i2 = new B();
+        final A i1 = new A();
+        final B i2 = new B();
         i2.start();
 
         return i1.predA;

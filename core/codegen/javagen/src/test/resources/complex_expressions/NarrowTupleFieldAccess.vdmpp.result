@@ -1,0 +1,22 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        final Tuple t = Tuple.mk_(1L, 2L);
+
+        return ((Number) ((Tuple) t).get(1));
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

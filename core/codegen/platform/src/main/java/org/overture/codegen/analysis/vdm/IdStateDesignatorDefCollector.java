@@ -14,9 +14,11 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
@@ -39,13 +41,36 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 	private Set<INode> visited;
 	private ITypeCheckerAssistantFactory af;
 	
-	public IdStateDesignatorDefCollector(INode topNode, ITypeCheckerAssistantFactory af)
+	public IdStateDesignatorDefCollector(INode topNode, List<? extends INode> classes, ITypeCheckerAssistantFactory af)
 	{
 		super(topNode);
-		this.defsInScope = new LinkedList<PDefinition>();
+		this.af = af;
+		loadGlobals(classes);
 		this.idDefs = new HashMap<>();
 		this.visited = new HashSet<>();
-		this.af = af;
+	}
+
+	private void loadGlobals(List<? extends INode> classes)
+	{
+		this.defsInScope = new LinkedList<>();
+
+		for (INode n : classes)
+		{
+			if (n != topNode)
+			{
+				if (n instanceof SClassDefinition)
+				{
+					loadClassGlobals((SClassDefinition) n);
+				} else if (n instanceof AModuleModules)
+				{
+					loadModuleGlobals((AModuleModules) n);
+				} else
+				{
+					Logger.getLog().printErrorln("Expected class or module in '" + this.getClass().getSimpleName()
+							+ "'. Got: " + n);
+				}
+			}
+		}
 	}
 	
 	public static Map<AIdentifierStateDesignator, PDefinition> getIdDefs(List<? extends INode> classes, ITypeCheckerAssistantFactory af) throws AnalysisException
@@ -54,7 +79,7 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 		
 		for(INode node : classes)
 		{
-			IdStateDesignatorDefCollector collector = new IdStateDesignatorDefCollector(node, af);
+			IdStateDesignatorDefCollector collector = new IdStateDesignatorDefCollector(node, classes, af);
 			node.apply(collector);
 			allDefs.putAll(collector.idDefs);
 		}
@@ -66,11 +91,36 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 	public void caseAClassClassDefinition(AClassClassDefinition node)
 			throws AnalysisException
 	{
+		handleClass(node);
+	}
+	
+	@Override
+	public void caseASystemClassDefinition(ASystemClassDefinition node) throws AnalysisException
+	{
+		handleClass(node);
+	}
+
+	private void handleClass(SClassDefinition node) throws AnalysisException
+	{
 		if(!proceed(node))
 		{
 			return;
 		}
 		
+		loadClassGlobals(node);
+		
+		for(PDefinition def : node.getDefinitions())
+		{
+			// Check only explicit operations or threads within the enclosing class
+			if(def instanceof AExplicitOperationDefinition || def instanceof AThreadDefinition)
+			{
+				def.apply(this);
+			}
+		}
+	}
+
+	private void loadClassGlobals(SClassDefinition node)
+	{
 		LinkedList<PDefinition> allDefs = new LinkedList<PDefinition>(node.getAllInheritedDefinitions());
 		allDefs.addAll(node.getDefinitions());
 		
@@ -89,15 +139,6 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 				defsInScope.addAll(af.createPDefinitionAssistant().getDefinitions(def));
 			}
 		}
-		
-		for(PDefinition def : node.getDefinitions())
-		{
-			// Check only explicit operations or threads within the enclosing class
-			if(def instanceof AExplicitOperationDefinition || def instanceof AThreadDefinition)
-			{
-				def.apply(this);
-			}
-		}
 	}
 	
 	@Override
@@ -109,14 +150,7 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 			return;
 		}
 		
-		for(PDefinition def : node.getDefs())
-		{
-			if (def instanceof AStateDefinition
-					|| def instanceof AValueDefinition)
-			{
-				defsInScope.addAll(af.createPDefinitionAssistant().getDefinitions(def));
-			}
-		}
+		loadModuleGlobals(node);
 		
 		for(PDefinition def : node.getDefs())
 		{
@@ -124,6 +158,18 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 			if(def instanceof AExplicitOperationDefinition)
 			{
 				def.apply(this);
+			}
+		}
+	}
+
+	private void loadModuleGlobals(AModuleModules node)
+	{
+		for(PDefinition def : node.getDefs())
+		{
+			if (def instanceof AStateDefinition
+					|| def instanceof AValueDefinition)
+			{
+				defsInScope.addAll(af.createPDefinitionAssistant().getDefinitions(def));
 			}
 		}
 	}

@@ -48,7 +48,7 @@ public abstract class AbsExpTest
 
 	@Test
 	public void testCase() throws AnalysisException,
-			org.overture.codegen.cgast.analysis.AnalysisException
+			org.overture.codegen.ir.analysis.AnalysisException
 	{
 		PExp exp = ParseTcFacade.parseTcExpressionString(expression);
 		IsaGen isagen = new IsaGen();

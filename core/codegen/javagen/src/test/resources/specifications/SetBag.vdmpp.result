@@ -14,6 +14,12 @@ public class Bag {
     public Bag() {
     }
 
+    public void cg_init_Bag_1(final VDMSet pNumbers) {
+        numbers = Utils.copy(pNumbers);
+
+        return;
+    }
+
     public static void Test() {
         Bag bag1 = new Bag(SetUtil.set(1L, 2L, 3L));
         Bag bag2 = new Bag(SetUtil.set(3L, 4L, 5L));
@@ -162,12 +168,6 @@ public class Bag {
             b.printBag();
             IO.print(SeqUtil.seq('\n'));
         }
-    }
-
-    public void cg_init_Bag_1(final VDMSet pNumbers) {
-        numbers = Utils.copy(pNumbers);
-
-        return;
     }
 
     public void printBag() {

@@ -51,6 +51,7 @@ import org.overture.interpreter.values.BUSValue;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.ClassInvariantListener;
 import org.overture.interpreter.values.MapValue;
+import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.ObjectValue;
@@ -206,7 +207,8 @@ public class SClassDefinitionAssistantInterpreter extends
 				i.getName().setTypeQualifier(i.getSuperdef().getName().getTypeQualifier());
 			}
 
-			if (af.createPDefinitionAssistant().isRuntime(idef)) // eg. TypeDefinitions aren't
+			if (af.createPDefinitionAssistant().isRuntime(idef) &&	 // eg. TypeDefinitions aren't
+				!af.createPDefinitionAssistant().isSubclassResponsibility(idef))
 			{
 				Value v = null;
 
@@ -254,6 +256,8 @@ public class SClassDefinitionAssistantInterpreter extends
 		// there are no spurious free variables created.
 
 		Context empty = new Context(af, node.getLocation(), "empty", null);
+		NameValuePairMap inheritedNames = new NameValuePairMap();
+		inheritedNames.putAll(members);		// Not a clone
 
 		for (PDefinition d : node.getDefinitions())
 		{
@@ -261,8 +265,22 @@ public class SClassDefinitionAssistantInterpreter extends
 					&& af.createPDefinitionAssistant().isFunctionOrOperation(d))
 			{
 				NameValuePairList nvpl = af.createPDefinitionAssistant().getNamedValues(d, empty);
-				initCtxt.putList(nvpl);
-				members.putAll(nvpl);
+
+				for (NameValuePair nvp: nvpl)
+				{
+    				// If there are already overloads inherited, we have to remove them because
+					// any local names hide all inherited overloads (like C++).
+					
+					for (ILexNameToken iname: inheritedNames.getOverloadNames(nvp.name))
+					{
+						initCtxt.remove(iname);
+						members.remove(iname);
+						inheritedNames.remove(iname);
+					}
+					
+					initCtxt.put(nvp.name, nvp.value);
+					members.put(nvp.name, nvp.value);
+				}
 			}
 		}
 

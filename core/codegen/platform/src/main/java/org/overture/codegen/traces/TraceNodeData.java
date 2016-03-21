@@ -1,26 +1,33 @@
 package org.overture.codegen.traces;
 
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
 
 public class TraceNodeData
 {
-	private AIdentifierVarExpCG nodeVar;
-	private ABlockStmCG stms;
+	private AIdentifierVarExpIR nodeVar;
+	private ABlockStmIR stms;
+	private ABlockStmIR nodeVarScope;
 	
-	public TraceNodeData(AIdentifierVarExpCG nodeVar, ABlockStmCG stms)
+	public TraceNodeData(AIdentifierVarExpIR nodeVar, ABlockStmIR stms, ABlockStmIR nodeVarScope)
 	{
 		this.nodeVar = nodeVar;
 		this.stms = stms;
+		this.nodeVarScope = nodeVarScope;
 	}
 
-	public AIdentifierVarExpCG getNodeVar()
+	public AIdentifierVarExpIR getNodeVar()
 	{
 		return nodeVar;
 	}
 
-	public ABlockStmCG getStms()
+	public ABlockStmIR getStms()
 	{
 		return stms;
-	}	
+	}
+
+	public ABlockStmIR getNodeVarScope()
+	{
+		return nodeVarScope;
+	}
 }

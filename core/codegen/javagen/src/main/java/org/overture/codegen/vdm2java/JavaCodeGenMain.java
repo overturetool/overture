@@ -34,6 +34,8 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
+import org.overture.codegen.ir.CodeGenBase;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
@@ -49,7 +51,9 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class JavaCodeGenMain
 {
+	// Command-line args
 	public static final String OO_ARG = "-pp";
+	public static final String RT_ARG = "-rt";
 	public static final String SL_ARG = "-sl";
 	public static final String CLASSIC = "-classic";
 	public static final String VDM10 = "-vdm10";
@@ -60,11 +64,18 @@ public class JavaCodeGenMain
 	public static final String OUTPUT_ARG = "-output";
 	public static final String VDM_ENTRY_EXP = "-entry";
 	public static final String NO_CODE_FORMAT = "-nocodeformat";
+	public static final String JUNIT4 = "-junit4";
+	public static final String SEP_TEST_CODE = "-separate";
+	public static final String VDM_LOC = "-vdmloc";
+	public static final String NO_CLONING = "-nocloning";
+	
+	// Folder names
+	private static final String GEN_MODEL_CODE_FOLDER = "main";
+	private static final String GEN_TESTS_FOLDER = "test";
 	
 	public static void main(String[] args)
 	{
 		Settings.release = Release.VDM_10;
-		Dialect dialect = Dialect.VDM_PP;
 
 		JavaCodeGenMode cgMode = null;
 		boolean printClasses = false;
@@ -92,6 +103,8 @@ public class JavaCodeGenMain
 
 		Settings.release = Release.VDM_10;
 		
+		boolean separateTestCode = false;
+		
 		for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
 		{
 			String arg = i.next();
@@ -100,6 +113,11 @@ public class JavaCodeGenMain
 			{
 				cgMode = JavaCodeGenMode.OO_SPEC;
 				Settings.dialect = Dialect.VDM_PP;
+			}
+			else if(arg.equals(RT_ARG))
+			{
+				cgMode = JavaCodeGenMode.OO_SPEC;
+				Settings.dialect = Dialect.VDM_RT;
 			}
 			else if(arg.equals(SL_ARG))
 			{
@@ -189,6 +207,22 @@ public class JavaCodeGenMain
 			{
 				javaSettings.setFormatCode(false);
 			}
+			else if(arg.equals(JUNIT4))
+			{
+				javaSettings.setGenJUnit4tests(true);
+			}
+			else if(arg.equals(SEP_TEST_CODE))
+			{
+				separateTestCode = true;
+			}
+			else if(arg.equals(VDM_LOC))
+			{
+				javaSettings.setPrintVdmLocations(true);
+			}
+			else if(arg.equals(NO_CLONING))
+			{
+				javaSettings.setDisableCloning(true);
+			}
 			else
 			{
 				// It's a file or a directory
@@ -196,7 +230,7 @@ public class JavaCodeGenMain
 
 				if (file.isFile())
 				{
-					if (JavaCodeGenUtil.isSupportedVdmSourceFile(file))
+					if (GeneralCodeGenUtils.isVdmSourceFile(file))
 					{
 						files.add(file);
 					}
@@ -206,13 +240,18 @@ public class JavaCodeGenMain
 				}
 			}
 		}
+		
+		if(Settings.dialect == null)
+		{
+			usage("No VDM dialect specified");
+		}
 
 		Logger.getLog().println("Starting code generation...\n");
 
 		
 		if(cgMode == JavaCodeGenMode.EXP)
 		{
-			handleExp(exp, irSettings, javaSettings, dialect);
+			handleExp(exp, irSettings, javaSettings, Settings.dialect);
 		}
 		else
 		{
@@ -228,11 +267,11 @@ public class JavaCodeGenMain
 			}
 			
 			if (cgMode == JavaCodeGenMode.OO_SPEC) {
-				handleOo(files, irSettings, javaSettings, dialect,
-						printClasses, outputDir);
+				handleOo(files, irSettings, javaSettings, Settings.dialect,
+						printClasses, outputDir, separateTestCode);
 			} else if(cgMode == JavaCodeGenMode.SL_SPEC) {
 				handleSl(files, irSettings, javaSettings, printClasses,
-						outputDir);
+						outputDir, separateTestCode);
 			}
 			else
 			{
@@ -286,7 +325,7 @@ public class JavaCodeGenMain
 	}
 	
 	public static void handleSl(List<File> files, IRSettings irSettings,
-			JavaSettings javaSettings, boolean printCode, File outputDir)
+			JavaSettings javaSettings, boolean printCode, File outputDir, boolean separateTestCode)
 	{
 		try
 		{
@@ -304,9 +343,9 @@ public class JavaCodeGenMain
 				return;
 			}
 			
-			GeneratedData data = vdmCodGen.generateJavaFromVdmModules(tcResult.result);
+			GeneratedData data = vdmCodGen.generate(CodeGenBase.getNodes(tcResult.result));
 			
-			processData(printCode, outputDir, vdmCodGen, data);
+			processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
 
 		} catch (AnalysisException e)
 		{
@@ -316,7 +355,7 @@ public class JavaCodeGenMain
 	}
 
 	public static void handleOo(List<File> files, IRSettings irSettings,
-			JavaSettings javaSettings, Dialect dialect, boolean printCode, File outputDir)
+			JavaSettings javaSettings, Dialect dialect, boolean printCode, File outputDir, boolean separateTestCode)
 	{
 		try
 		{
@@ -324,7 +363,15 @@ public class JavaCodeGenMain
 			vdmCodGen.setSettings(irSettings);
 			vdmCodGen.setJavaSettings(javaSettings);
 			
-			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
+			TypeCheckResult<List<SClassDefinition>> tcResult = null;
+			
+			if (dialect == Dialect.VDM_PP)
+			{
+				tcResult = TypeCheckerUtil.typeCheckPp(files);
+			} else
+			{
+				tcResult = TypeCheckerUtil.typeCheckRt(files);
+			}
 			
 			if(GeneralCodeGenUtils.hasErrors(tcResult))
 			{
@@ -333,9 +380,9 @@ public class JavaCodeGenMain
 				return;
 			}
 			
-			GeneratedData data = vdmCodGen.generateJavaFromVdm(tcResult.result);
+			GeneratedData data = vdmCodGen.generate(CodeGenBase.getNodes(tcResult.result));
 			
-			processData(printCode, outputDir, vdmCodGen, data);
+			processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
 
 		} catch (AnalysisException e)
 		{
@@ -344,9 +391,9 @@ public class JavaCodeGenMain
 
 		}
 	}
-
+	
 	public static void processData(boolean printCode,
-			final File outputDir, JavaCodeGen vdmCodGen, GeneratedData data) {
+			final File outputDir, JavaCodeGen vdmCodGen, GeneratedData data, boolean separateTestCode) {
 		List<GeneratedModule> generatedClasses = data.getClasses();
 
 		Logger.getLog().println("");
@@ -382,7 +429,21 @@ public class JavaCodeGenMain
 					
 					if (outputDir != null)
 					{
-						vdmCodGen.genJavaSourceFile(outputDir, generatedClass);
+						if(separateTestCode)
+						{
+							if(generatedClass.isTestCase())
+							{
+								vdmCodGen.genJavaSourceFile(new File(outputDir, GEN_TESTS_FOLDER), generatedClass);
+							}
+							else
+							{
+								vdmCodGen.genJavaSourceFile(new File(outputDir, GEN_MODEL_CODE_FOLDER), generatedClass);
+							}
+						}
+						else
+						{
+							vdmCodGen.genJavaSourceFile(outputDir, generatedClass);
+						}
 					}
 					
 					if (printCode)
@@ -421,7 +482,14 @@ public class JavaCodeGenMain
 			{
 				for (GeneratedModule q : quotes)
 				{
-					vdmCodGen.genJavaSourceFile(outputDir, q);
+					if(separateTestCode)
+					{
+						vdmCodGen.genJavaSourceFile(new File(outputDir, GEN_MODEL_CODE_FOLDER), q);
+					}
+					else
+					{
+						vdmCodGen.genJavaSourceFile(outputDir, q);
+					}
 				}
 			}
 			
@@ -465,7 +533,7 @@ public class JavaCodeGenMain
 		
 		for(File f : files)
 		{
-			if(JavaCodeGenUtil.isSupportedVdmSourceFile(f))
+			if(GeneralCodeGenUtils.isVdmSourceFile(f))
 			{
 				filtered.add(f);
 			}
@@ -476,17 +544,31 @@ public class JavaCodeGenMain
 	
 	public static void usage(String msg)
 	{
-		Logger.getLog().printErrorln("VDM++ to Java Code Generator: " + msg
-				+ "\n");
-		Logger.getLog().printErrorln("Usage: CodeGen <-oo | -sl | -exp> [<options>] [<files>]");
-		Logger.getLog().printErrorln(OO_ARG + ": code generate a VDMPP specification consisting of multiple .vdmpp files");
+		Logger.getLog().printErrorln("VDM-to-Java Code Generator: " + msg + "\n");
+		Logger.getLog().printErrorln("Usage: CodeGen <-oo | -sl | -rt | -exp> [<options>] [<files>]");
+		Logger.getLog().printErrorln(OO_ARG
+				+ ": code generate a VDMPP specification consisting of multiple .vdmpp files");
+		Logger.getLog().printErrorln(SL_ARG
+				+ ": code generate a VDMSL specification consisting of multiple .vdmsl files");
+		Logger.getLog().printErrorln(RT_ARG
+				+ ": code generate a limited part of a VDMRT specification consisting of multiple .vdmrt files");
+		Logger.getLog().printErrorln(CLASSIC + ": code generate using the VDM classic language release");
+		Logger.getLog().printErrorln(VDM10 + ": code generate using the VDM-10 language release");
 		Logger.getLog().printErrorln(EXP_ARG + " <expression>: code generate a VDMPP expression");
-		Logger.getLog().printErrorln(FOLDER_ARG + " <folder path>: a folder containing input .vdmpp files");
-		Logger.getLog().printErrorln(PRINT_ARG  + ": print the generated code to the console");
-		Logger.getLog().printErrorln(PACKAGE_ARG + " <java package>:  the output java package of the generated code (e.g. my.code)");
+		Logger.getLog().printErrorln(FOLDER_ARG + " <folder path>: a folder containing input vdm source files");
+		Logger.getLog().printErrorln(PRINT_ARG + ": print the generated code to the console");
+		Logger.getLog().printErrorln(PACKAGE_ARG
+				+ " <java package>:  the output java package of the generated code (e.g. my.code)");
 		Logger.getLog().printErrorln(OUTPUT_ARG + " <folder path>: the output folder of the generated code");
-		Logger.getLog().printErrorln(VDM_ENTRY_EXP + " <vdm entry point expression>: generate a Java main method based on the specified entry point");
-		
+		Logger.getLog().printErrorln(VDM_ENTRY_EXP
+				+ " <vdm entry point expression>: generate a Java main method based on the specified entry point");
+		Logger.getLog().printErrorln(NO_CODE_FORMAT + ": to NOT format the generated Java code");
+		Logger.getLog().printErrorln(JUNIT4 + ": to generate VDMUnit " + IRConstants.TEST_CASE + " sub-classes to JUnit4 tests");
+		Logger.getLog().printErrorln(SEP_TEST_CODE + ": to place the code generated model and the test code into separate folders named '"
+				+ GEN_MODEL_CODE_FOLDER + "' and '" + GEN_TESTS_FOLDER + "', respectively");
+		Logger.getLog().printErrorln(VDM_LOC + ": Generate VDM location information for code generated constructs");
+		Logger.getLog().printErrorln(NO_CLONING + ": To disable deep cloning of value types");
+
 		// Terminate
 		System.exit(1);
 	}

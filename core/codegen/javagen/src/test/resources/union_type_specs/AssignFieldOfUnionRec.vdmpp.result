@@ -1,0 +1,109 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+@SuppressWarnings("all")
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Object r = new R1(1L);
+        Number atomicTmp_1 = 4L;
+
+        if (r instanceof R1) {
+            ((R1) r).x = atomicTmp_1;
+        } else if (r instanceof R2) {
+            ((R2) r).x = atomicTmp_1;
+        } else {
+            throw new RuntimeException("Missing member: x");
+        }
+
+        Number apply_1 = null;
+
+        if (r instanceof R1) {
+            apply_1 = ((R1) r).x;
+        } else if (r instanceof R2) {
+            apply_1 = ((R2) r).x;
+        } else {
+            throw new RuntimeException("Missing member: x");
+        }
+
+        return apply_1;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    private static Boolean inv_R1(final R1 r1) {
+        return r1.x.longValue() > 0L;
+    }
+
+    private static Boolean inv_R2(final R2 r2) {
+        return r2.x.longValue() > 0L;
+    }
+
+    private static class R1 implements Record {
+        public Number x;
+
+        public R1(final Number _x) {
+            x = _x;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof R1)) {
+                return false;
+            }
+
+            R1 other = ((R1) obj);
+
+            return Utils.equals(x, other.x);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x);
+        }
+
+        public R1 copy() {
+            return new R1(x);
+        }
+
+        public String toString() {
+            return "mk_Entry`R1" + Utils.formatFields(x);
+        }
+    }
+
+    private static class R2 implements Record {
+        public Number x;
+
+        public R2(final Number _x) {
+            x = _x;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof R2)) {
+                return false;
+            }
+
+            R2 other = ((R2) obj);
+
+            return Utils.equals(x, other.x);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x);
+        }
+
+        public R2 copy() {
+            return new R2(x);
+        }
+
+        public String toString() {
+            return "mk_Entry`R2" + Utils.formatFields(x);
+        }
+    }
+}
+
+##########

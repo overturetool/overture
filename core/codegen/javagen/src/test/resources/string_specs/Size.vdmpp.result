@@ -11,7 +11,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        return "a".length() + a.length() + f().length();
+        return "a".length() + Entry.a.length() + f().length();
     }
 
     public static String f() {

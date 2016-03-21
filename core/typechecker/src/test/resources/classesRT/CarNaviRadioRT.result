@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ClassesRtTypeCheckTest">
+<message column="26" line="89" message="Cannot see non-static operation from static context" messageType="error" number="3349" resource="CarNaviRadioRT"/>
 <result/>
 </testResult>

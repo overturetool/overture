@@ -1,4 +1,0 @@
-operations
-
-prodcttest8() m : nat
-  post m = mk_(2, 3).#1

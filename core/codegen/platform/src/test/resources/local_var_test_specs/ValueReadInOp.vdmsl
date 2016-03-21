@@ -1,0 +1,9 @@
+values
+
+q = 1;
+
+operations
+
+op : () ==> nat
+op () ==
+  return q;

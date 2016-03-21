@@ -1,0 +1,103 @@
+To String Extensions
+
+// import packages used by external $$ java code
+import org.overture.ast.util.Utils;
+import org.overture.ast.util.ToStringUtil;
+import org.overture.codegen.ir.IrToStringUtil;
+
+%IR->#decl->method = [name]
+%IR->#decl->#class->default = [name]
+%IR->#decl->#class->system = "system"+ [name]
+%IR->#decl->field = "" [access]  " "+$($[final]$ !=null && $ [final] $ ? " final ":"")+($[volatile]$? " volatile ":"")$ +   [type]" "  [name] " " +$($[initial]$!=null? " = "+$[initial]$:"")$
+%IR->#decl->var =   ""+$($[final]$ !=null && $ [final] $ ? "final ":"")$ +[type]+" "+ [pattern] +" = "+	[exp]
+//start
+
+// patterns
+%IR->#pattern->identifier = [name]
+%IR->#pattern->ignore = "-" 
+%IR->#pattern->bool = [value]
+%IR->#pattern->char = [value]
+%IR->#pattern->int = [value]
+%IR->#pattern->null = "null"
+%IR->#pattern->quote =  [value]
+%IR->#pattern->real =  [value]
+%IR->#pattern->string =  [value]
+%IR->#pattern->tuple = "mk_(" + $Utils.listToString($[patterns]$)$ + ")"
+%IR->#pattern->record = [typename] "_(" + $Utils.listToString($[patterns]$)$ + ")"
+
+// binds
+%IR->#bind->set = ""+ [pattern] + " in set " [set];
+
+
+// multiple binds
+%IR->multipleBind->set = ""+ $Utils.listToString($[patterns]$)$ + " in set " [set];
+
+
+// names
+%IR->name->type = [name]
+%IR->name->token = [name] 
+
+//end
+
+// Object designator
+%IR->#objectDesignator->identifier = [exp];
+%IR->#objectDesignator->apply = [object] "(" + $Utils.listToString($[args]$)$ + ")"
+%IR->#objectDesignator->field = [object]+"."+[fieldName]
+%IR->#objectDesignator->new = "new "+[exp]
+%IR->#objectDesignator->self = "self"
+
+// State designators
+%IR->#stateDesignator->identifier = [name]
+%IR->#stateDesignator->field = [object] "." [field]
+%IR->#stateDesignator->mapSeq = [mapseq] "(" + [exp] + ")"
+
+// Types
+//#basic
+%IR->#type->#basic->char = "char"
+%IR->#type->#basic->bool = "bool"
+%IR->#type->#basic->token = "token"
+// #basic->numeric
+%IR->#type->#basic->#numeric->int = "int"
+%IR->#type->#basic->#numeric->nat1 = "nat1"
+%IR->#type->#basic->#numeric->nat = "nat"
+%IR->#type->#basic->#numeric->rat = "rat"
+%IR->#type->#basic->#numeric->real = "real" 
+
+%IR->#type->Object = "Object"
+%IR->#type->void = "void"
+%IR->#type->class = [name]
+%IR->#type->external = [name]
+%IR->#type->record = [name]
+%IR->#type->string = "String"
+%IR->#type->template = [name]
+%IR->#type->tuple = "" + $Utils.listToString("(",$ [types] $, " * ", ")")$
+%IR->#type->method = "(" + $($[params]$.isEmpty() ? "()" : Utils.listToString($[params]$, " * ")) + " ==> "$ + [result] + ")"
+//    |	#map
+//    |	#set
+//    |	#seq
+//    |	#basicTypeWrappers
+%IR->#type->error = "Error"
+%IR->#type->interface = [name]
+%IR->#type->union = "" +$Utils.listToString("(",$ [types] $, " | ", ")")$
+%IR->#type->quote = "<" + [value] + ">"
+%IR->#type->unknown = "Unknown"
+    ;
+
+// Vars
+%IR->#exp->#Var->identifier = [name]
+%IR->#exp->#Var->explicit = [name]
+%IR->#exp->#Var->super = [name]
+
+// Expressions
+%IR->#exp->apply = [root] "(" + $Utils.listToString($[args]$)$ + ")"
+%IR->#exp->field = [object] + "." + [memberName]
+%IR->#exp->new = [name] "(" + $Utils.listToString($[args]$)$ + ")"
+%IR->#exp->self = "self"
+
+// Statements
+%IR->#stm->block = ""+$IrToStringUtil.getBlockSimpleBlockString(this)$
+%IR->#stm->if = "if( "+[ifExp] + " )\n" + [thenStm] + "\n"+ [elseIf] + "\n" + [elseStm]
+%IR->#stm->elseIf = "else if( " +[elseIf] +" )\n" + [thenStm]
+%IR->#stm->return = "return " + [exp]
+%IR->#stm->callObjectExp = ""+[obj] + "."  +[fieldName] "("+ $Utils.listToString($[args]$)$ +")"
+// 

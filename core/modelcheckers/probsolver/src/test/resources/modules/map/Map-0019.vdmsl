@@ -1,4 +1,0 @@
-operations
-
-mapcomp() m : map nat1 to nat1
-  post m = {a |-> a+1 | a in set {1,2,3,4,5} & a >3}

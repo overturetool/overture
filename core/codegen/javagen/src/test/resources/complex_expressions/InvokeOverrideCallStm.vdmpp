@@ -1,0 +1,37 @@
+class A
+
+operations
+public increment : () ==> int
+increment() ==
+ return 1;
+
+end A
+
+class B is subclass of A
+
+operations
+public harvest : () ==> int
+harvest() ==
+ increment(); 
+
+end B
+
+class C is subclass of B
+
+operations
+public increment : () ==> int
+increment() ==
+ return 2;
+		
+end C
+
+class Entry 
+
+operations
+public static Run : () ==> ?
+Run() ==
+let b : B = new C()
+in 
+ return b.harvest();
+
+end Entry

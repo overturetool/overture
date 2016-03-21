@@ -1,17 +1,17 @@
 package org.overture.codegen.vdm2java;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.types.AExternalTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.ATemplateTypeCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
+import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.types.AExternalTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.AObjectTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
+import org.overture.codegen.ir.types.ATemplateTypeIR;
 import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.logging.Logger;
 
@@ -24,9 +24,9 @@ abstract public class JavaClassCreatorBase
 		super();
 	}
 	
-	public AMethodDeclCG consDefaultCtorSignature(String className)
+	public AMethodDeclIR consDefaultCtorSignature(String className)
 	{
-		AMethodDeclCG constructor = new AMethodDeclCG();
+		AMethodDeclIR constructor = new AMethodDeclIR();
 		constructor.setImplicit(false);
 		constructor.setAccess(IJavaConstants.PUBLIC);
 		constructor.setIsConstructor(true);
@@ -35,9 +35,9 @@ abstract public class JavaClassCreatorBase
 		return constructor;
 	}
 
-	public AMethodDeclCG consCopySignature(AMethodTypeCG methodType)
+	public AMethodDeclIR consCopySignature(AMethodTypeIR methodType)
 	{
-		AMethodDeclCG method = new AMethodDeclCG();
+		AMethodDeclIR method = new AMethodDeclIR();
 		method.setIsConstructor(false);
 		method.setImplicit(false);
 		method.setAccess(IJavaConstants.PUBLIC);
@@ -47,15 +47,15 @@ abstract public class JavaClassCreatorBase
 		return method;
 	}
 
-	public AMethodDeclCG consEqualMethodSignature(String paramName)
+	public AMethodDeclIR consEqualMethodSignature(String paramName)
 	{
-		AMethodDeclCG equalsMethod = new AMethodDeclCG();
+		AMethodDeclIR equalsMethod = new AMethodDeclIR();
 		
 		equalsMethod.setImplicit(false);
-		AMethodTypeCG methodType = new AMethodTypeCG();
-		methodType.getParams().add(new AObjectTypeCG());
+		AMethodTypeIR methodType = new AMethodTypeIR();
+		methodType.getParams().add(new AObjectTypeIR());
 	
-		AExternalTypeCG returnType = new AExternalTypeCG();
+		AExternalTypeIR returnType = new AExternalTypeIR();
 		returnType.setInfo(null);
 		returnType.setName(IJavaConstants.BOOLEAN);
 	
@@ -67,41 +67,41 @@ abstract public class JavaClassCreatorBase
 		equalsMethod.setMethodType(methodType);
 	
 		// Add the formal parameter "Object obj" to the method
-		AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
+		AFormalParamLocalParamIR formalParam = new AFormalParamLocalParamIR();
 	
-		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		AIdentifierPatternIR idPattern = new AIdentifierPatternIR();
 		idPattern.setName(paramName);
 	
 		formalParam.setPattern(idPattern);
-		AObjectTypeCG paramType = new AObjectTypeCG();
+		AObjectTypeIR paramType = new AObjectTypeIR();
 		formalParam.setType(paramType);
 		equalsMethod.getFormalParams().add(formalParam);
 	
 		return equalsMethod;
 	}
 
-	public AMethodDeclCG consHashcodeMethodSignature()
+	public AMethodDeclIR consHashcodeMethodSignature()
 	{
-		AMethodDeclCG hashcodeMethod = new AMethodDeclCG();
+		AMethodDeclIR hashcodeMethod = new AMethodDeclIR();
 		hashcodeMethod.setImplicit(false);
 		hashcodeMethod.setIsConstructor(false);
 		hashcodeMethod.setAccess(IJavaConstants.PUBLIC);
 		hashcodeMethod.setName(IJavaConstants.HASH_CODE);
 	
 		String intTypeName = IJavaConstants.INT;
-		AExternalTypeCG intBasicType = new AExternalTypeCG();
+		AExternalTypeIR intBasicType = new AExternalTypeIR();
 		intBasicType.setName(intTypeName);
 	
-		AMethodTypeCG methodType = new AMethodTypeCG();
+		AMethodTypeIR methodType = new AMethodTypeIR();
 		methodType.setResult(intBasicType);
 	
 		hashcodeMethod.setMethodType(methodType);
 		return hashcodeMethod;
 	}
 
-	public AMethodDeclCG consToStringSignature()
+	public AMethodDeclIR consToStringSignature()
 	{
-		AMethodDeclCG toStringMethod = new AMethodDeclCG();
+		AMethodDeclIR toStringMethod = new AMethodDeclIR();
 		toStringMethod.setTag(new IRGeneratedTag(getClass().getName()));
 	
 		toStringMethod.setIsConstructor(false);
@@ -109,47 +109,47 @@ abstract public class JavaClassCreatorBase
 		toStringMethod.setStatic(false);
 		toStringMethod.setName(IJavaConstants.TO_STRING);
 	
-		AStringTypeCG returnType = new AStringTypeCG();
+		AStringTypeIR returnType = new AStringTypeIR();
 	
-		AMethodTypeCG methodType = new AMethodTypeCG();
+		AMethodTypeIR methodType = new AMethodTypeIR();
 		methodType.setResult(returnType);
 	
 		toStringMethod.setMethodType(methodType);
 		return toStringMethod;
 	}
 	
-	public AApplyExpCG consUtilCall(STypeCG returnType, String memberName)
+	public AApplyExpIR consUtilCall(STypeIR returnType, String memberName)
 	{
-		AExplicitVarExpCG member = new AExplicitVarExpCG();
+		AExplicitVarExpIR member = new AExplicitVarExpIR();
 
-		AMethodTypeCG methodType = new AMethodTypeCG();
+		AMethodTypeIR methodType = new AMethodTypeIR();
 		methodType.setResult(returnType.clone());
 		member.setType(methodType);
 		member.setIsLambda(false);
 		member.setIsLocal(false);
-		AExternalTypeCG classType = new AExternalTypeCG();
+		AExternalTypeIR classType = new AExternalTypeIR();
 		classType.setName(JavaFormat.UTILS_FILE);
 		member.setClassType(classType);
 		member.setName(memberName);
-		AApplyExpCG call = new AApplyExpCG();
+		AApplyExpIR call = new AApplyExpIR();
 		call.setType(returnType.clone());
 		call.setRoot(member);
 		
 		return call;
 	}
 	
-	public AApplyExpCG consUtilCopyCall()
+	public AApplyExpIR consUtilCopyCall()
 	{
-		ATemplateTypeCG copyType = new ATemplateTypeCG();
+		ATemplateTypeIR copyType = new ATemplateTypeIR();
 		copyType.setName("T");
 		
-		AApplyExpCG copyCall = consUtilCall(copyType, COPY);
+		AApplyExpIR copyCall = consUtilCall(copyType, COPY);
 		
-		SExpCG member = copyCall.getRoot();
+		SExpIR member = copyCall.getRoot();
 		
-		if (member instanceof AExplicitVarExpCG && ((AExplicitVarExpCG) member).getType() instanceof AMethodTypeCG)
+		if (member instanceof AExplicitVarExpIR && ((AExplicitVarExpIR) member).getType() instanceof AMethodTypeIR)
 		{
-			AMethodTypeCG methodType = (AMethodTypeCG) member.getType();
+			AMethodTypeIR methodType = (AMethodTypeIR) member.getType();
 			methodType.getParams().add(member.getType().clone());
 		} else
 		{
@@ -161,8 +161,8 @@ abstract public class JavaClassCreatorBase
 		return copyCall;
 	}
 	
-	public AApplyExpCG consUtilsToStringCall()
+	public AApplyExpIR consUtilsToStringCall()
 	{
-		return consUtilCall(new AStringTypeCG(), IJavaConstants.TO_STRING);
+		return consUtilCall(new AStringTypeIR(), IJavaConstants.TO_STRING);
 	}
 }

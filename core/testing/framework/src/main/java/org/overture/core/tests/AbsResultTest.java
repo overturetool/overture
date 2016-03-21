@@ -41,7 +41,6 @@ import com.google.gson.reflect.TypeToken;
  * should <b>not</b> be subclassed directly. Use one of its existing subclasses instead. Test results are always stored
  * with UTF-8 encoding.
  * 
- * @see ParamExamplesTest
  * @see ParamExternalsTest
  * @see ParamFineGrainTest
  * @see ParamStandardTest
@@ -91,10 +90,10 @@ public abstract class AbsResultTest<R>
 	 * Calculate the type of the test result. This method must be overridden to provide the specific result type for
 	 * each test. When doing so, you can use the snippet below (replacing <code>R</code> with the actual type of your
 	 * result). Keep in mind this does not work for wildcards or type parameters. You <b>must</b> declare the actual
-	 * type. <blockquote><code>
+	 * type. <pre>{@code
 	 * Type resultType = new TypeToken< R >() {}.getType(); <br> 
 	 * return resultType; 
-	 * </blockquote></code>
+	 * }</pre>
 	 * 
 	 * @see TypeToken
 	 * @return the {@link Type} of the result file

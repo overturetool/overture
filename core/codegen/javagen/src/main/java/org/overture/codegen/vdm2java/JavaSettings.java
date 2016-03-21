@@ -33,6 +33,9 @@ public class JavaSettings
 	private boolean genRecsAsInnerClasses;
 	private boolean formatCode;
 	private boolean makeClassesSerializable;
+	private boolean genJUnit4tests;
+	private boolean genSystemClass;
+	private boolean printVdmLocations;
 	
 	public JavaSettings()
 	{
@@ -43,6 +46,9 @@ public class JavaSettings
 		this.genRecsAsInnerClasses = true;
 		this.formatCode = true;
 		this.makeClassesSerializable = false;
+		this.genJUnit4tests = false;
+		this.genSystemClass = false;
+		this.printVdmLocations = false;
 	}
 	
 	public List<String> getModulesToSkip()
@@ -119,5 +125,35 @@ public class JavaSettings
 	public void setMakeClassesSerializable(boolean makeClassesSerializable)
 	{
 		this.makeClassesSerializable = makeClassesSerializable;
+	}
+
+	public boolean genJUnit4tests()
+	{
+		return genJUnit4tests;
+	}
+
+	public void setGenJUnit4tests(boolean genJUnit4tests)
+	{
+		this.genJUnit4tests = genJUnit4tests;
+	}
+
+	public boolean genSystemClass()
+	{
+		return genSystemClass;
+	}
+
+	public void setGenSystemClass(boolean genSystemClass)
+	{
+		this.genSystemClass = genSystemClass;
+	}
+
+	public boolean printVdmLocations()
+	{
+		return printVdmLocations;
+	}
+
+	public void setPrintVdmLocations(boolean printVdmSource)
+	{
+		this.printVdmLocations = printVdmSource;
 	}
 }

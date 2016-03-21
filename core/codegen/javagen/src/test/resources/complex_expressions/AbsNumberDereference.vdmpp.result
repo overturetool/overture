@@ -9,7 +9,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        Number x0 = -1.1;
+        final Number x0 = -1.1;
 
         return Utils.abs(x0.doubleValue());
     }

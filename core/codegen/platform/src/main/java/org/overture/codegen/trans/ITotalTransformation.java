@@ -1,11 +1,9 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.analysis.intf.IAnalysis;
+import org.overture.codegen.ir.PIR;
+import org.overture.codegen.ir.analysis.intf.IAnalysis;
 
 public interface ITotalTransformation extends IAnalysis
 {
-	
-	public INode getResult();
-	
+	public PIR getResult();
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
 <message column="3" line="29" message="Definition 'Control' not used" messageType="warning" number="5000" resource="dwarfSL"/>
-<message column="3" line="167" message="Definition 'SeqTest' not used" messageType="warning" number="5000" resource="dwarfSL"/>
 <message column="3" line="61" message="Operation returns void value" messageType="error" number="3313" resource="dwarfSL"/>
 <message column="3" line="96" message="Operation returns void value" messageType="error" number="3313" resource="dwarfSL"/>
 <result/>

@@ -1,6 +1,7 @@
 package project.Entrytypes;
 
 import org.overture.codegen.runtime.*;
+import org.overture.codegen.vdm2jml.runtime.*;
 
 import java.util.*;
 
@@ -11,7 +12,10 @@ final public class B implements Record {
     public Number x;
 
     public B(final Number _x) {
+        //@ assert Utils.is_nat(_x);
         x = _x;
+
+        //@ assert Utils.is_nat(x);
     }
 
     /*@ pure @*/
@@ -42,11 +46,17 @@ final public class B implements Record {
 
     /*@ pure @*/
     public Number get_x() {
-        return x;
+        Number ret_4 = x;
+
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(ret_4));
+        return ret_4;
     }
 
     public void set_x(final Number _x) {
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(_x));
         x = _x;
+
+        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(x));
     }
 
     /*@ pure @*/

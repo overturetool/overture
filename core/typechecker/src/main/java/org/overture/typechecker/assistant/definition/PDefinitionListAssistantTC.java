@@ -26,10 +26,12 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.IAstAssistant;
+import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -40,6 +42,7 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
+import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -183,11 +186,31 @@ public class PDefinitionListAssistantTC implements IAstAssistant
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		TypeCheckException problem = null;
+		
 		for (PDefinition definition : definitions)
 		{
-			af.createPDefinitionAssistant().typeResolve(definition, rootVisitor, question);
+			try
+			{
+				af.createPDefinitionAssistant().typeResolve(definition, rootVisitor, question);
+			}
+			catch (TypeCheckException te)
+			{
+				if (problem == null)
+				{
+					problem = te;
+				}
+				else
+				{
+					problem.addExtra(te);
+				}
+			}
 		}
-
+		
+		if (problem != null)
+		{
+			throw problem;
+		}
 	}
 
 	public PDefinition findType(LinkedList<PDefinition> actualDefs,
@@ -248,9 +271,16 @@ public class PDefinitionListAssistantTC implements IAstAssistant
 		{
 			boolean found = false;
 
+			if (d instanceof AInheritedDefinition)
+			{
+				AInheritedDefinition indef = (AInheritedDefinition)d;
+				List<PType> q = indef.getSuperdef().getName().getTypeQualifier();
+				indef.getName().setTypeQualifier(q);
+			}
+
 			for (PDefinition e : fixed)
 			{
-				if (e.getName() != null && e.getName().equals(d.getName()))
+				if (e.getName() != null && af.getLexNameTokenAssistant().isEqual(e.getName(), d.getName()))
 				{
 					found = true;
 					break;
@@ -268,6 +298,49 @@ public class PDefinitionListAssistantTC implements IAstAssistant
 			definitions.clear();
 			definitions.addAll(fixed);
 		}
+	}
+	
+	
+	public List<PDefinition> removeAbstracts(List<PDefinition> list)
+	{
+		List<PDefinition> keep = new Vector<PDefinition>();
+		PDefinitionAssistantTC assistant = af.createPDefinitionAssistant();
+		
+		for (PDefinition def: list)
+		{
+			if (assistant.isSubclassResponsibility(def))
+			{
+				boolean found = false;
+				
+				for (PDefinition def2: list)
+				{
+					if (def2 instanceof AInheritedDefinition)
+					{
+						AInheritedDefinition indef2 = (AInheritedDefinition)def2;
+						List<PType> q = indef2.getSuperdef().getName().getTypeQualifier();
+						indef2.getName().setTypeQualifier(q);
+					}
+					
+					if (!assistant.isSubclassResponsibility(def2) &&
+						af.createPDefinitionAssistant().findName(def, def2.getName(), NameScope.NAMESANDSTATE) != null)
+					{
+						found = true;
+						break;
+					}
+				}
+				
+				if (!found)
+				{
+					keep.add(def);
+				}
+			}
+			else
+			{
+				keep.add(def);
+			}
+		}
+		
+		return keep;
 	}
 	
 	public void initializedCheck(AInstanceVariableDefinition ivd)

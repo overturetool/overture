@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.overturetool.core</groupId>
     <artifactId>codegen</artifactId>
-    <version>2.3.1-SNAPSHOT<!--Replaceable: Main Version--></version>
+    <version>2.3.5-SNAPSHOT<!--Replaceable: Main Version--></version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -13,88 +13,102 @@
   <name>The Intermediate Representation Tree</name>
 
   <dependencies>
-      <dependency>
+    <dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>ast</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
 
+			<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+					<sourcepath>${basedir}/src/main/java</sourcepath>
+        </configuration>
+      </plugin>
+
+
       <plugin>
-	<groupId>org.overturetool.astcreator</groupId>
-	<artifactId>astcreator-plugin</artifactId>
-	<version>${astcreator.version}</version>
-	<executions>
-	  <execution>
-	    <id>java</id>
-	    <phase>generate-sources</phase>
-	    <goals>
-	      <goal>generate</goal>
-	    </goals>
-	  </execution>
-	</executions>
-	<configuration>
-	  <!-- <deletePackageOnGenerate> -->
-	  <!--   <param>vdm.generated.node</param> -->
-	  <!--   <param>org.overture.ast</param> -->
-	  <!-- </deletePackageOnGenerate> -->
-	  <ast>cg.astv2</ast>
-	</configuration>
+	      <groupId>org.overturetool.astcreator</groupId>
+	      <artifactId>astcreator-plugin</artifactId>
+	      <version>${astcreator.version}</version>
+	      <executions>
+	        <execution>
+	          <id>java</id>
+	          <phase>generate-sources</phase>
+	          <goals>
+	            <goal>generate</goal>
+	          </goals>
+	        </execution>
+	      </executions>
+	      <configuration>
+	        <!-- <deletePackageOnGenerate> -->
+	        <!--   <param>vdm.generated.node</param> -->
+	        <!--   <param>org.overture.ast</param> -->
+	        <!-- </deletePackageOnGenerate> -->
+	        <ast>ir.ast</ast>
+	      </configuration>
       </plugin>
 
       <plugin>
-	<groupId>org.codehaus.mojo</groupId>
-	<artifactId>build-helper-maven-plugin</artifactId>
-	<executions>
-	  <execution>
-	    <id>add-source</id>
-	    <phase>generate-sources</phase>
-	    <goals>
-	      <goal>add-source</goal>
-	    </goals>
-	    <configuration>
-	      <sources>
-		<source>${project.build.directory}/generated-sources/astCreator/</source>
-	      </sources>
-	    </configuration>
-	  </execution>
-	</executions>
+	      <groupId>org.codehaus.mojo</groupId>
+	      <artifactId>build-helper-maven-plugin</artifactId>
+	      <executions>
+	        <execution>
+	          <id>add-source</id>
+	          <phase>generate-sources</phase>
+	          <goals>
+	            <goal>add-source</goal>
+	          </goals>
+	          <configuration>
+	            <sources>
+		            <source>${project.build.directory}/generated-sources/astCreator/</source>
+	            </sources>
+	          </configuration>
+	        </execution>
+	      </executions>
       </plugin>
     </plugins>
 
     <pluginManagement>
       <plugins>
-	<!--This plugin's configuration is used to store Eclipse m2e settings 
-	    only. It has no influence on the Maven build itself. -->
-	<plugin>
-	  <groupId>org.eclipse.m2e</groupId>
-	  <artifactId>lifecycle-mapping</artifactId>
-	  <version>1.0.0</version>
-	  <configuration>
-	    <lifecycleMappingMetadata>
-	      <pluginExecutions>
-		<pluginExecution>
-		  <pluginExecutionFilter>
-		    <groupId>org.overturetool.astcreator</groupId>
- 		    <artifactId>astcreator-plugin</artifactId>
-		    <versionRange>${astcreator.version}</versionRange>
-		    <goals>
-		      <goal>generate</goal>
-		    </goals>
-		  </pluginExecutionFilter>
-		  <action>
-		    <execute>
-		      <runOnIncremental>false</runOnIncremental>
-		    </execute>
-		  </action>
-		</pluginExecution>
-	      </pluginExecutions>
-	    </lifecycleMappingMetadata>
-	  </configuration>
-	</plugin>
+	      <!--This plugin's configuration is used to store Eclipse m2e settings 
+	          only. It has no influence on the Maven build itself. -->
+	      <plugin>
+	        <groupId>org.eclipse.m2e</groupId>
+	        <artifactId>lifecycle-mapping</artifactId>
+	        <version>1.0.0</version>
+	        <configuration>
+	          <lifecycleMappingMetadata>
+	            <pluginExecutions>
+		            <pluginExecution>
+		              <pluginExecutionFilter>
+		                <groupId>org.overturetool.astcreator</groupId>
+ 		                <artifactId>astcreator-plugin</artifactId>
+		                <versionRange>${astcreator.version}</versionRange>
+		                <goals>
+		                  <goal>generate</goal>
+		                </goals>
+		              </pluginExecutionFilter>
+		              <action>
+		                <execute>
+		                  <runOnIncremental>false</runOnIncremental>
+		                </execute>
+		              </action>
+		            </pluginExecution>
+	            </pluginExecutions>
+	          </lifecycleMappingMetadata>
+	        </configuration>
+	      </plugin>
       </plugins>
     </pluginManagement>
 

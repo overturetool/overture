@@ -27,7 +27,7 @@ public class A {
             throw new RuntimeException("Tuple pattern match failed");
         }
 
-        Tuple tuplePattern_2 = Tuple.mk_(5L, true, 'g', 2.5);
+        final Tuple tuplePattern_2 = Tuple.mk_(5L, true, 'g', 2.5);
         Boolean success_2 = tuplePattern_2.compatible(Number.class,
                 Boolean.class, Character.class, Number.class);
         Number n2 = null;
@@ -68,7 +68,7 @@ public class A {
             throw new RuntimeException("Tuple pattern match failed");
         }
 
-        Tuple tuplePattern_4 = Tuple.mk_(5L, true, 'g', 2.5);
+        final Tuple tuplePattern_4 = Tuple.mk_(5L, true, 'g', 2.5);
         Boolean success_4 = tuplePattern_4.compatible(Number.class,
                 Boolean.class, Character.class, Number.class);
         Number n2 = null;

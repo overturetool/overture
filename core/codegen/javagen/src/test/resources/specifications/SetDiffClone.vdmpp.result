@@ -6,7 +6,7 @@ import java.util.*;
 @SuppressWarnings("all")
 public class A {
     private static final VDMSet a = SetUtil.set(1L, 2L, 3L);
-    private static final VDMSet x = SetUtil.diff(Utils.copy(a), op());
+    private static final VDMSet x = SetUtil.diff(Utils.copy(A.a), op());
 
     public A() {
     }

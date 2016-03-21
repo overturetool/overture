@@ -1,0 +1,17 @@
+module A
+
+exports all
+definitions
+
+state St of
+  h : int
+  init s == s = mk_St(5)
+end
+
+operations
+
+op : () ==> nat
+op () ==
+ return h;
+  
+end A

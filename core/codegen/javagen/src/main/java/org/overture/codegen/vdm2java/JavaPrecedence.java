@@ -21,9 +21,9 @@
  */
 package org.overture.codegen.vdm2java;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.expressions.ADivideNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASubtractNumericBinaryExpIR;
 import org.overture.codegen.ir.IROperatorInfo;
 import org.overture.codegen.ir.IROperatorLookup;
 
@@ -36,7 +36,7 @@ public class JavaPrecedence
 		this.opLookup = new IROperatorLookup();
 	}
 
-	public boolean mustIsolate(SExpCG parentExp, SExpCG exp, boolean leftChild)
+	public boolean mustIsolate(SExpIR parentExp, SExpIR exp, boolean leftChild)
 	{
 		IROperatorInfo parentOpInfo = opLookup.find(parentExp.getClass());
 
@@ -60,7 +60,7 @@ public class JavaPrecedence
 		// We don't need to consider 'mod' and 'rem' operators since these are constructed
 		// using other operators and isolated if needed using the isolation expression
 		boolean case1 = !leftChild
-				&& (parentExp instanceof ADivideNumericBinaryExpCG || parentExp instanceof ASubtractNumericBinaryExpCG)
+				&& (parentExp instanceof ADivideNumericBinaryExpIR || parentExp instanceof ASubtractNumericBinaryExpIR)
 				&& parentOpInfo.getPrecedence() >= expOpInfo.getPrecedence();
 
 		if (case1)

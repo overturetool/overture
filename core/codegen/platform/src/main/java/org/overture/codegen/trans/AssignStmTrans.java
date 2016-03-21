@@ -1,41 +1,41 @@
 package org.overture.codegen.trans;
 
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SStmCG;
-import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
-import org.overture.codegen.cgast.statements.AAssignmentStmCG;
-import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
-import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
+import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.ir.statements.AAssignToExpStmIR;
+import org.overture.codegen.ir.statements.AAssignmentStmIR;
+import org.overture.codegen.ir.statements.AMapSeqStateDesignatorIR;
+import org.overture.codegen.ir.statements.AMapSeqUpdateStmIR;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransAssistantCG;
-import org.overture.codegen.trans.conv.StateDesignatorToExpCG;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
+import org.overture.codegen.trans.conv.StateDesignatorToExpIR;
 
 public class AssignStmTrans extends DepthFirstAnalysisAdaptor
 {
-	private StateDesignatorToExpCG converter;
+	private StateDesignatorToExpIR converter;
 	
-	public AssignStmTrans(TransAssistantCG transAssistant)
+	public AssignStmTrans(TransAssistantIR transAssistant)
 	{
-		this.converter = new StateDesignatorToExpCG(transAssistant);
+		this.converter = new StateDesignatorToExpIR(transAssistant);
 	}
 	
 	@Override
-	public void caseAAssignmentStmCG(AAssignmentStmCG node)
+	public void caseAAssignmentStmIR(AAssignmentStmIR node)
 			throws AnalysisException
 	{
-		SStmCG newNode = null;
+		SStmIR newNode = null;
 		
-		if(node.getTarget() instanceof AMapSeqStateDesignatorCG)
+		if(node.getTarget() instanceof AMapSeqStateDesignatorIR)
 		{
-			AMapSeqStateDesignatorCG target = (AMapSeqStateDesignatorCG) node.getTarget();
+			AMapSeqStateDesignatorIR target = (AMapSeqStateDesignatorIR) node.getTarget();
 
-			SExpCG col = target.getMapseq().apply(converter);
-			SExpCG index = target.getExp();
-			SExpCG value = node.getExp();
+			SExpIR col = target.getMapseq().apply(converter);
+			SExpIR index = target.getExp();
+			SExpIR value = node.getExp();
 
-			AMapSeqUpdateStmCG mapSeqUpd = new AMapSeqUpdateStmCG();
+			AMapSeqUpdateStmIR mapSeqUpd = new AMapSeqUpdateStmIR();
 			mapSeqUpd.setCol(col);
 			mapSeqUpd.setIndex(index.clone());
 			mapSeqUpd.setValue(value.clone());
@@ -47,7 +47,7 @@ public class AssignStmTrans extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			AAssignToExpStmCG assign = new AAssignToExpStmCG();
+			AAssignToExpStmIR assign = new AAssignToExpStmIR();
 			assign.setTarget(node.getTarget().apply(converter));
 			assign.setExp(node.getExp().clone());
 			assign.setSourceNode(node.getSourceNode());

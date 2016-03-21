@@ -1,0 +1,15 @@
+module Entry
+
+definitions
+operations
+
+op : () ==> ()
+op () == skip
+pre false;
+
+traces
+
+T1:
+  op(){1,3};
+
+end Entry

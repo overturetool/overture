@@ -14,7 +14,7 @@ public class Entry {
     public static Object Run() {
         Object recordPattern_1 = null;
         Boolean success_1 = false;
-        VDMSet set_1 = Utils.copy(xs);
+        VDMSet set_1 = Utils.copy(Entry.xs);
         Number a = null;
 
         for (Iterator iterator_1 = set_1.iterator();

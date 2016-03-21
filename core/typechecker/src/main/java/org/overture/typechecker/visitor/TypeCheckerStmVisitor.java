@@ -281,7 +281,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 			question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
-			d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+			d.setType(question.assistantFactory.createPTypeAssistant().typeResolve(d.getType(), null, THIS, question));
+			d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, d.getType(), question.returnType));
 		}
 
 		// For type checking purposes, the definitions are treated as
@@ -408,6 +409,13 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		if (question.assistantFactory.createPTypeAssistant().isOperation(type))
 		{
 			AOperationType optype = question.assistantFactory.createPTypeAssistant().getOperation(type);
+			PDefinition encl = question.env.getEnclosingDefinition();
+
+			if (encl != null && encl.getAccess().getPure() && !optype.getPure())
+			{
+				TypeCheckerErrors.report(3339, "Cannot call impure operation from a pure operation", node.getLocation(), node);
+			}
+
 			optype.apply(THIS, question);
 			node.getField().setTypeQualifier(optype.getParameters());
 			checkArgTypes(type, optype.getParameters(), atypes, question); // Not
@@ -500,8 +508,14 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		if (question.assistantFactory.createPTypeAssistant().isOperation(type))
 		{
 			AOperationType optype = question.assistantFactory.createPTypeAssistant().getOperation(type);
-
 			question.assistantFactory.createPTypeAssistant().typeResolve(optype, null, THIS, question);
+			PDefinition encl = question.env.getEnclosingDefinition();
+
+			if (encl != null && encl.getAccess().getPure() && !optype.getPure())
+			{
+				TypeCheckerErrors.report(3339, "Cannot call impure operation from a pure operation", node.getLocation(), node);
+			}
+
 			// Reset the name's qualifier with the actual operation type so
 			// that runtime search has a simple TypeComparator call.
 

@@ -26,10 +26,10 @@ import java.util.*;
 @SuppressWarnings("all")
 public class SimpleTest {
     private static final Card c1 = new Card(123456L, 1L, 1L);
-    private static final VDMSet cards = SetUtil.set(c1);
+    private static final VDMSet cards = SetUtil.set(SimpleTest.c1);
     private static final CentralResource resource = new CentralResource();
     private static final VDMMap tills = MapUtil.map(new Maplet(1L,
-                new Till(resource)));
+                new Till(SimpleTest.resource)));
     private Clock clock = new Clock();
     private Letterbox letterbox = new Letterbox();
 
@@ -40,18 +40,18 @@ public class SimpleTest {
         clock.SetDate(SeqUtil.seq('1', '5', '0', '9', '9', '9'));
 
         {
-            Cardholder peter = new Cardholder().Create(SeqUtil.seq('P', 'e',
-                        't', 'e', 'r', ' ', 'G', 'o', 'r', 'm', ' ', 'L', 'a',
-                        'r', 's', 'e', 'n'),
+            final Cardholder peter = new Cardholder().Create(SeqUtil.seq('P',
+                        'e', 't', 'e', 'r', ' ', 'G', 'o', 'r', 'm', ' ', 'L',
+                        'a', 'r', 's', 'e', 'n'),
                     SeqUtil.seq('G', 'r', 'a', 'n', 'v', 'e', 'j', ' ', '2', '4'));
 
             {
-                Account pglacc1 = new Account().Create(MapUtil.map(
+                final Account pglacc1 = new Account().Create(MapUtil.map(
                             new Maplet(1L, peter)), 5000L);
-                Number pglid1 = 1L;
-                resource.AddAccount(pglid1, pglacc1);
-                resource.AddLetterbox(clock, new Letterbox());
-                ((Till) Utils.get(tills, 1L)).InsertCard(c1);
+                final Number pglid1 = 1L;
+                SimpleTest.resource.AddAccount(pglid1, pglacc1);
+                SimpleTest.resource.AddLetterbox(clock, new Letterbox());
+                ((Till) Utils.get(SimpleTest.tills, 1L)).InsertCard(SimpleTest.c1);
 
                 if (Utils.equals(((Till) Utils.get(tills, 1L)).Validate(123456L),
                             quotes.PinOkQuote.getInstance())) {
@@ -105,13 +105,13 @@ public class Account {
 
     public Boolean Withdrawal(final Number cardId, final Number amount,
         final VDMSeq date) {
-        Transaction transaction = new Transaction(date, cardId, amount);
+        final Transaction transaction = new Transaction(date, cardId, amount);
         Boolean andResult_1 = false;
 
         if ((balance.longValue() - amount.longValue()) >= 0L) {
             if (DateTotal(Utils.copy(date),
                         SeqUtil.conc(Utils.copy(transactions),
-                            SeqUtil.seq(Utils.copy(transaction)))).longValue() <= dailyLimit.longValue()) {
+                            SeqUtil.seq(Utils.copy(transaction)))).longValue() <= Account.dailyLimit.longValue()) {
                 andResult_1 = true;
             }
         }
@@ -128,8 +128,8 @@ public class Account {
     }
 
     public Letter MakeStatement(final Number cardId, final VDMSeq date) {
-        VDMSeq nm = ((Cardholder) Utils.get(cards, cardId)).GetName();
-        VDMSeq addr = ((Cardholder) Utils.get(cards, cardId)).GetAddress();
+        final VDMSeq nm = ((Cardholder) Utils.get(cards, cardId)).GetName();
+        final VDMSeq addr = ((Cardholder) Utils.get(cards, cardId)).GetAddress();
 
         {
             Letter letter = new Letter();
@@ -159,9 +159,8 @@ public class Account {
 
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Number i = ((Number) iterator_2.next());
-            setCompResult_1 = SetUtil.union(Utils.copy(setCompResult_1),
-                    SetUtil.set(Utils.copy(
-                            ((Transaction) Utils.get(ts, i)).date)));
+            setCompResult_1.add(Utils.copy(
+                    ((Transaction) Utils.get(ts, i)).date));
         }
 
         VDMSet set_1 = Utils.copy(setCompResult_1);
@@ -170,7 +169,7 @@ public class Account {
                 iterator_1.hasNext() && forAllExpResult_1;) {
             VDMSeq date = ((VDMSeq) iterator_1.next());
             forAllExpResult_1 = DateTotal(Utils.copy(date), Utils.copy(ts))
-                                    .longValue() <= dailyLimit.longValue();
+                                    .longValue() <= Account.dailyLimit.longValue();
         }
 
         return forAllExpResult_1;
@@ -184,8 +183,7 @@ public class Account {
             Number i = ((Number) iterator_3.next());
 
             if (Utils.equals(((Transaction) Utils.get(ts, i)).date, date)) {
-                seqCompResult_1 = SeqUtil.conc(Utils.copy(seqCompResult_1),
-                        SeqUtil.seq(((Transaction) Utils.get(ts, i)).amount));
+                seqCompResult_1.add(((Transaction) Utils.get(ts, i)).amount);
             }
         }
 
@@ -400,7 +398,7 @@ public class CentralResource {
     }
 
     public Boolean NumberOfTriesExceeded(final Number cardId) {
-        return ((Number) Utils.get(numberOfTries, cardId)).longValue() >= maxNumberOfTries.longValue();
+        return ((Number) Utils.get(numberOfTries, cardId)).longValue() >= CentralResource.maxNumberOfTries.longValue();
     }
 
     public void ResetNumberOfTries(final Number cardId) {
@@ -420,8 +418,7 @@ public class CentralResource {
 
         for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
             Number cId = ((Number) iterator_4.next());
-            mapCompResult_1 = MapUtil.munion(Utils.copy(mapCompResult_1),
-                    MapUtil.map(new Maplet(cId, 0L)));
+            MapUtil.mapAdd(mapCompResult_1, new Maplet(cId, 0L));
         }
 
         VDMMap atomicTmp_2 = MapUtil.override(Utils.copy(numberOfTries),
@@ -562,9 +559,9 @@ public class Till {
     }
 
     public Object Validate(final Number pin) {
-        Number cardId = curCard.GetCardId();
-        Boolean codeOk = Utils.equals(curCard.GetCode(), Encode(pin));
-        Boolean cardLegal = IsLegalCard();
+        final Number cardId = curCard.GetCardId();
+        final Boolean codeOk = Utils.equals(curCard.GetCode(), Encode(pin));
+        final Boolean cardLegal = IsLegalCard();
 
         {
             Boolean andResult_5 = false;
@@ -695,7 +692,7 @@ public class GetBalance extends Event {
     }
 
     public Object execute(final System sys) {
-        Till till = sys.GetTill(tillid);
+        final Till till = sys.GetTill(tillid);
 
         if (till.CardValidated()) {
             return till.GetBalance();
@@ -793,7 +790,7 @@ public class ReturnCard extends Event {
 
     public Object execute(final System sys) {
         {
-            Till till = sys.GetTill(tillid);
+            final Till till = sys.GetTill(tillid);
 
             if (till.CardInside()) {
                 till.ReturnCard();
@@ -830,7 +827,7 @@ public class SendStatement extends Event {
     }
 
     public Object execute(final System sys) {
-        Till till = sys.GetTill(tillid);
+        final Till till = sys.GetTill(tillid);
 
         if (till.CardValidated()) {
             return till.RequestStatement();
@@ -859,11 +856,13 @@ public class System {
     private static final Card c5 = new Card(123460L, 5L, 5L);
     private static final Card c6 = new Card(123461L, 6L, 5L);
     private static final Card c7 = new Card(123462L, 7L, 5L);
-    private static final VDMSet cards = SetUtil.set(c1, c2, c3, c4, c5, c6, c7);
+    private static final VDMSet cards = SetUtil.set(System.c1, System.c2,
+            System.c3, System.c4, System.c5, System.c6, System.c7);
     private static final CentralResource resource = new CentralResource();
     private static final VDMMap tills = MapUtil.map(new Maplet(1L,
-                new Till(resource)), new Maplet(2L, new Till(resource)),
-            new Maplet(3L, new Till(resource)));
+                new Till(System.resource)),
+            new Maplet(2L, new Till(System.resource)),
+            new Maplet(3L, new Till(System.resource)));
     private Clock clock = new Clock();
     private Letterbox letterbox = new Letterbox();
 
@@ -871,63 +870,65 @@ public class System {
         cg_init_System_1();
     }
 
+    public void cg_init_System_1() {
+        clock.SetDate(SeqUtil.seq('1', '5', '0', '9', '9', '9'));
+
+        {
+            final Cardholder peter = new Cardholder().Create(SeqUtil.seq('P',
+                        'e', 't', 'e', 'r', ' ', 'G', 'o', 'r', 'm', ' ', 'L',
+                        'a', 'r', 's', 'e', 'n'),
+                    SeqUtil.seq('G', 'r', 'a', 'n', 'v', 'e', 'j', ' ', '2', '4'));
+            final Cardholder paul = new Cardholder().Create(SeqUtil.seq('P',
+                        'a', 'u', 'l', ' ', 'M', 'u', 'k', 'h', 'e', 'r', 'j',
+                        'e', 'e'),
+                    SeqUtil.seq('R', 'u', 'g', 'a', 'a', 'r', 'd', 's', 'v',
+                        'e', 'j', ' ', '4', '7'));
+            final Cardholder sten = new Cardholder().Create(SeqUtil.seq('S',
+                        't', 'e', 'n', ' ', 'A', 'g', 'e', 'r', 'h', 'o', 'l',
+                        'm'),
+                    SeqUtil.seq('T', 'e', 'i', 's', 'e', 'n', 's', 'v', 'e',
+                        'j', ' ', '?', '?'));
+            final Cardholder kim = new Cardholder().Create(SeqUtil.seq('K',
+                        'i', 'm', ' ', 'S', 'u', 'n', 'e', 's', 'e', 'n'),
+                    SeqUtil.seq('?', '?'));
+            final Cardholder CSK = new Cardholder().Create(SeqUtil.seq('C',
+                        'S', 'K'),
+                    SeqUtil.seq('F', 'o', 'r', 's', 'k', 'e', 'r', 'p', 'a',
+                        'r', 'k', 'e', 'n', ' ', '1', '0', 'A'));
+
+            {
+                final Account pglacc1 = new Account().Create(MapUtil.map(
+                            new Maplet(1L, peter)), 5000L);
+                final Account saacc1 = new Account().Create(MapUtil.map(
+                            new Maplet(2L, sten)), 0L);
+                final Account ksacc1 = new Account().Create(MapUtil.map(
+                            new Maplet(3L, kim)), 9000L);
+                final Account pmacc1 = new Account().Create(MapUtil.map(
+                            new Maplet(4L, paul)), 6000L);
+                final Account ifacc1 = new Account().Create(MapUtil.map(
+                            new Maplet(5L, peter), new Maplet(6L, sten),
+                            new Maplet(7L, CSK)), 70000L);
+                final Number pglid1 = 1L;
+                final Number said1 = 2L;
+                final Number ksid1 = 3L;
+                final Number pmid1 = 4L;
+                final Number ifid1 = 5L;
+                System.resource.AddAccount(pglid1, pglacc1);
+                System.resource.AddAccount(said1, saacc1);
+                System.resource.AddAccount(ksid1, ksacc1);
+                System.resource.AddAccount(pmid1, pmacc1);
+                System.resource.AddAccount(ifid1, ifacc1);
+                System.resource.AddLetterbox(clock, new Letterbox());
+            }
+        }
+    }
+
     public Till GetTill(final Number tid) {
         return ((Till) Utils.get(tills, tid));
     }
 
     public CentralResource GetResource() {
-        return resource;
-    }
-
-    public void cg_init_System_1() {
-        clock.SetDate(SeqUtil.seq('1', '5', '0', '9', '9', '9'));
-
-        {
-            Cardholder peter = new Cardholder().Create(SeqUtil.seq('P', 'e',
-                        't', 'e', 'r', ' ', 'G', 'o', 'r', 'm', ' ', 'L', 'a',
-                        'r', 's', 'e', 'n'),
-                    SeqUtil.seq('G', 'r', 'a', 'n', 'v', 'e', 'j', ' ', '2', '4'));
-            Cardholder paul = new Cardholder().Create(SeqUtil.seq('P', 'a',
-                        'u', 'l', ' ', 'M', 'u', 'k', 'h', 'e', 'r', 'j', 'e',
-                        'e'),
-                    SeqUtil.seq('R', 'u', 'g', 'a', 'a', 'r', 'd', 's', 'v',
-                        'e', 'j', ' ', '4', '7'));
-            Cardholder sten = new Cardholder().Create(SeqUtil.seq('S', 't',
-                        'e', 'n', ' ', 'A', 'g', 'e', 'r', 'h', 'o', 'l', 'm'),
-                    SeqUtil.seq('T', 'e', 'i', 's', 'e', 'n', 's', 'v', 'e',
-                        'j', ' ', '?', '?'));
-            Cardholder kim = new Cardholder().Create(SeqUtil.seq('K', 'i', 'm',
-                        ' ', 'S', 'u', 'n', 'e', 's', 'e', 'n'),
-                    SeqUtil.seq('?', '?'));
-            Cardholder CSK = new Cardholder().Create(SeqUtil.seq('C', 'S', 'K'),
-                    SeqUtil.seq('F', 'o', 'r', 's', 'k', 'e', 'r', 'p', 'a',
-                        'r', 'k', 'e', 'n', ' ', '1', '0', 'A'));
-
-            {
-                Account pglacc1 = new Account().Create(MapUtil.map(
-                            new Maplet(1L, peter)), 5000L);
-                Account saacc1 = new Account().Create(MapUtil.map(
-                            new Maplet(2L, sten)), 0L);
-                Account ksacc1 = new Account().Create(MapUtil.map(
-                            new Maplet(3L, kim)), 9000L);
-                Account pmacc1 = new Account().Create(MapUtil.map(
-                            new Maplet(4L, paul)), 6000L);
-                Account ifacc1 = new Account().Create(MapUtil.map(
-                            new Maplet(5L, peter), new Maplet(6L, sten),
-                            new Maplet(7L, CSK)), 70000L);
-                Number pglid1 = 1L;
-                Number said1 = 2L;
-                Number ksid1 = 3L;
-                Number pmid1 = 4L;
-                Number ifid1 = 5L;
-                resource.AddAccount(pglid1, pglacc1);
-                resource.AddAccount(said1, saacc1);
-                resource.AddAccount(ksid1, ksacc1);
-                resource.AddAccount(pmid1, pmacc1);
-                resource.AddAccount(ifid1, ifacc1);
-                resource.AddLetterbox(clock, new Letterbox());
-            }
-        }
+        return System.resource;
     }
 
     public String toString() {
@@ -995,7 +996,7 @@ public class Withdrawal extends Event {
     }
 
     public Object execute(final System sys) {
-        Till till = sys.GetTill(tillid);
+        final Till till = sys.GetTill(tillid);
 
         if (till.CardValidated()) {
             return till.MakeWithdrawal(amount);

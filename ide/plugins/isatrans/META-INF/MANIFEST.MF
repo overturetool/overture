@@ -8,7 +8,7 @@ Bundle-Localization: plugin
 Bundle-Name: IsaTrans
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.isatrans;singleton:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: org.overture.ide.plugins.isatrans.Activator
 Bundle-ClassPath: .,
  jars/isagen.jar,
@@ -23,17 +23,17 @@ Import-Package: org.apache.commons.io,
  org.overture.ast.definitions,
  org.overture.ast.lex,
  org.overture.ast.util.definitions,
- org.overture.codegen.cgast,
- org.overture.codegen.cgast.analysis,
- org.overture.codegen.cgast.analysis.intf,
- org.overture.codegen.cgast.declarations,
- org.overture.codegen.cgast.expressions,
- org.overture.codegen.cgast.name,
- org.overture.codegen.cgast.patterns,
- org.overture.codegen.cgast.statements,
- org.overture.codegen.cgast.traces,
- org.overture.codegen.cgast.types,
- org.overture.codegen.cgast.utils,
+ org.overture.codegen.ir,
+ org.overture.codegen.ir.analysis,
+ org.overture.codegen.ir.analysis.intf,
+ org.overture.codegen.ir.declarations,
+ org.overture.codegen.ir.expressions,
+ org.overture.codegen.ir.name,
+ org.overture.codegen.ir.patterns,
+ org.overture.codegen.ir.statements,
+ org.overture.codegen.ir.traces,
+ org.overture.codegen.ir.types,
+ org.overture.codegen.ir.utils,
  org.overture.codegen.ir,
  org.overture.codegen.merging,
  org.overture.codegen.trans,

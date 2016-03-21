@@ -24,7 +24,8 @@ package org.overture.codegen.assistant;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.INode;
+import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.PIR;
 
 public abstract class AssistantBase
 {
@@ -34,6 +35,18 @@ public abstract class AssistantBase
 	{
 		super();
 		this.assistantManager = assistantManager;
+	}
+	
+	public static org.overture.ast.node.INode getVdmNode(PIR irNode)
+	{
+		if(irNode != null && irNode.getSourceNode() != null)
+		{
+			return irNode.getSourceNode().getVdmNode();
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	public <T extends INode> List<T> cloneNodes(List<T> list, Class<T> nodeType)

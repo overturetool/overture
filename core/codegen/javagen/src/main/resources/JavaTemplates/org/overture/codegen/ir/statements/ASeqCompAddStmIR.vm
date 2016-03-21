@@ -1,0 +1,4 @@
+#set( $seq = $JavaFormat.format($node.getSeq()) )
+#set( $element = $JavaFormat.format($node.getElement()) )
+##
+${seq}.add(${element});

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.ModulesSlTest">
-<result>
-<output object="3" resource="AirportNat.vdmsl" value="3"/>
-</result>
-</testResult>

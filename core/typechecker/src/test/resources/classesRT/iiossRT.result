@@ -15,19 +15,15 @@
 <message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT"/>
 <message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT"/>
 <message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT"/>
-<message column="49" line="23" message="Name 'VDMUtil`val2seq_of_char(PigPosition)' is not in scope" messageType="error" number="3182" resource="iiossRT"/>
-<message column="9" line="22" message="Member handleEvent(EventId, &lt;SHOW_PIG&gt;, seq1 of ((? | char)), nat) is not in scope" messageType="error" number="3209" resource="iiossRT"/>
+<message column="49" line="23" message="Name 'VDMUtil`val2seq_of_char(IIOSSTYPES`PigPosition)' is not in scope" messageType="error" number="3182" resource="iiossRT"/>
 <message column="10" line="52" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT"/>
 <message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT"/>
 <message column="20" line="314" message="Class name IO not in scope" messageType="error" number="3133" resource="iiossRT"/>
 <message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT"/>
-<message column="45" line="481" message="Name 'VDMUtil`val2seq_of_char(PigId)' is not in scope" messageType="error" number="3182" resource="iiossRT"/>
-<message column="13" line="480" message="Member handleEvent(EventId, &lt;SHOW_PIG&gt;, seq1 of ((? | char)), nat) is not in scope" messageType="error" number="3209" resource="iiossRT"/>
 <message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT"/>
 <message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT"/>
 <message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT"/>
 <message column="17" line="838" message="Class name IO not in scope" messageType="error" number="3133" resource="iiossRT"/>
-<message column="15" line="898" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="iiossRT"/>
 <message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT"/>
 <result/>
 </testResult>

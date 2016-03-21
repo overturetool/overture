@@ -45,7 +45,7 @@ public class Entry {
     }
 
     public static Number Run() {
-        VDMSeq xs = SeqUtil.seq(new A());
+        final VDMSeq xs = SeqUtil.seq(new A());
 
         for (Iterator iterator_1 = xs.iterator(); iterator_1.hasNext();) {
             Object x = (Object) iterator_1.next();

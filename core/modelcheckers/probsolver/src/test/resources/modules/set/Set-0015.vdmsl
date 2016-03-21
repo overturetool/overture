@@ -1,5 +1,0 @@
-operations
-
-
-   issubset() r : set of nat
- post {1,2} subset {1,2,3} => r = {1,2}
