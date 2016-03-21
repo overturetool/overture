@@ -43,7 +43,7 @@ public abstract class VdmContentAssistProcessor extends
 		VdmTemplateAssistProcessor {
 
 	VdmElementImageProvider imgProvider = new VdmElementImageProvider();
-	private VdmCompleteProcesser processer = new VdmCompleteProcesser();
+	VdmCompleteProcessor processer = new VdmCompleteProcessor();
 
 	public boolean enableTemplate() {
 		return true;
@@ -78,10 +78,6 @@ public abstract class VdmContentAssistProcessor extends
 			if (context != null) {
 				super.computeCompletionProposals(viewer, offset, modList);
 			}
-
-		if (viewer.getDocument() instanceof VdmDocument)
-		{
-			processer.computeCompletionProposals(CompletionUtil.computeVdmCompletionContext(viewer.getDocument(), offset), (VdmDocument) viewer.getDocument(), modList, offset);
 		}
 
 		if (modList.size() > 0) {

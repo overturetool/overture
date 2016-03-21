@@ -61,7 +61,7 @@ import org.overture.ide.ui.utility.ast.AstLocationSearcher2;
 import org.overture.ide.ui.utility.ast.AstLocationSearcher2.TextReference;
 import org.overture.ide.ui.utility.ast.AstNameUtil;
 
-public class VdmCompleteProcesser
+public class VdmCompleteProcessor
 {
 	VdmElementImageProvider imgProvider = new VdmElementImageProvider();
 	private static VdmCompletionExtractor vdmCompletionExtractor = new VdmCompletionExtractor();

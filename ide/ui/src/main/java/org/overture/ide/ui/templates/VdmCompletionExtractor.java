@@ -2,19 +2,9 @@ package org.overture.ide.ui.templates;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
-
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.contentassist.CompletionProposal;
-import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.contentassist.IContextInformation;
-import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
@@ -23,15 +13,8 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
-import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
-import org.overture.ast.expressions.ALetBeStExp;
-import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
-import org.overture.ast.patterns.PPattern;
-import org.overture.ast.statements.ALetBeStStm;
-import org.overture.ast.statements.ALetStm;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
@@ -55,7 +38,7 @@ public final class VdmCompletionExtractor {
 		basicTypes.add("char");
 	}
 	
-	public void CreateProposals(final VdmCompletionContext info,
+	public void completeBasicTypes(final VdmCompletionContext info,
 			VdmDocument document, final List<ICompletionProposal> proposals,
 			final int offset, List<INode> Ast, final TemplateContext context,final ITextViewer viewer)
 	{
