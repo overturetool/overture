@@ -55,7 +55,7 @@ public final class VdmCompletionExtractor {
 		basicTypes.add("char");
 	}
 	
-	public void completeBasicTypes(final VdmCompletionContext info,
+	public void CreateProposals(final VdmCompletionContext info,
 			VdmDocument document, final List<ICompletionProposal> proposals,
 			final int offset, List<INode> Ast, final TemplateContext context,final ITextViewer viewer)
 	{

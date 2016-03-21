@@ -107,3 +107,10 @@ ide/ui/includes/lib/
 # Vim Swap Files #
 ##################
 *.swp
+*.useq
+documentation/sequence1.png
+documentation/UML main.png
+documentation/sequence2.png
+documentation/sequence3.png
+documentation/sequence4.png
+documentation/UML main.ucls
