@@ -17,12 +17,15 @@ public class RmiTemplateManager extends JavaTemplateManager
 	public RmiTemplateManager(String root)
 	{
 		super(root);
+		initNodeTemplateFileNames();
 	}
 	
 	@Override
 	protected void initNodeTemplateFileNames()
 	{
 		super.initNodeTemplateFileNames();
+		setUserTemplatePath(RmiTemplateManager.class, ACpuDeploymentDeclIR.class, 
+				"/Users/Miran/Documents/AGCO/CodeGenerator/overture/core/codegen/javagen/src/main/resources/JavaTemplates/org/overture/cgrmi/extast");
 
 	}
 }
