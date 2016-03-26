@@ -79,7 +79,7 @@ public class RemoteImplGenerator
 				}
 			}
 
-			//contractImpl.setMethods(publicMethods);
+			contractImpl.setMethods(publicMethods);
 
 			contractImpls.add(contractImpl);
 		}
