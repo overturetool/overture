@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
-<message column="5" line="51" message="Error 4069: Parameter patterns do not match arguments in 'B' (full-03.vpp) at line 51:5" messageType="error" number="4069" resource="full-03.vpp.result"/>
+<testResult type="org.overture.interpreter.tests.external.ExternalClassesPpTest">
+<message column="5" line="51" message="Error 4069: Parameter patterns do not match arguments in 'B' (full-03.vpp) at line 51:5" messageType="error" number="4069" resource="full-03.vpp"/>
 <result>
 <output object="[]" resource="full-03.vpp" value="[]"/>
 </result>

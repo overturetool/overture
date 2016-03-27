@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
 <result>
-<output object="true" resource="quantexpr-03.vdm" value="true"/>
+<output object="false" resource="quantexpr-03.vdm" value="false"/>
 </result>
 </testResult>

@@ -269,7 +269,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-			allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getBind(), ctxt);
+			allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getBind(), ctxt, false);
 		} catch (ValueException e)
 		{
 			VdmRuntimeError.abort(node.getLocation(), e);
@@ -315,7 +315,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb : node.getBindList())
 			{
-				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
+				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt, false);
 
 				for (PPattern p : mb.getPlist())
 				{
@@ -416,7 +416,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb : node.getBindList())
 			{
-				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
+				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt, false);
 
 				for (PPattern p : mb.getPlist())
 				{
@@ -757,7 +757,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-			allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getBind(), ctxt);
+			allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getBind(), ctxt, false);
 		} catch (ValueException e)
 		{
 			VdmRuntimeError.abort(node.getLocation(), e);
@@ -832,7 +832,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb : binding.getBindings())
 			{
-				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
+				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt, false);
 
 				for (PPattern p : mb.getPlist())
 				{
@@ -939,7 +939,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb : node.getBindings())
 			{
-				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
+				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt, false);
 
 				for (PPattern p : mb.getPlist())
 				{
@@ -1510,7 +1510,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		ValueList allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getSetBind(), ctxt);
+		ValueList allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getSetBind(), ctxt, false);
 
 		ValueSet seq = new ValueSet(); // Bind variable values
 		ValueMap map = new ValueMap(); // Map bind values to output values
@@ -1615,7 +1615,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb : node.getBindings())
 			{
-				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
+				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt, false);
 
 				for (PPattern p : mb.getPlist())
 				{

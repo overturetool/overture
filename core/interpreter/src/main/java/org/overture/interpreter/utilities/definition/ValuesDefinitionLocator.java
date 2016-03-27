@@ -42,8 +42,7 @@ public class ValuesDefinitionLocator extends
 
 		if (def.getSetbind() != null)
 		{
-			list.addAll(af.createPBindAssistant().getBindValues(def.getSetbind(), ctxt));// (ASetBindAssistantInterpreter.getValues(def.getSetbind(),
-																							// ctxt));
+			list.addAll(af.createPBindAssistant().getBindValues(def.getSetbind(), ctxt, false));
 		}
 
 		return list;

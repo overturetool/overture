@@ -7,7 +7,7 @@ import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.eval.BindState;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -23,7 +23,7 @@ import org.overture.interpreter.values.ValueSet;
  ****************************************/
 
 public class SingleBindValuesCollector extends
-		QuestionAnswerAdaptor<Context, ValueList>
+		QuestionAnswerAdaptor<BindState, ValueList>
 {
 	protected IInterpreterAssistantFactory af;
 
@@ -33,20 +33,20 @@ public class SingleBindValuesCollector extends
 	}
 
 	@Override
-	public ValueList caseASetBind(ASetBind bind, Context ctxt)
+	public ValueList caseASetBind(ASetBind bind, BindState state)
 			throws AnalysisException
 	{
 		try
 		{
 			ValueList results = new ValueList();
-			ValueSet elements = bind.getSet().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
+			ValueSet elements = bind.getSet().apply(VdmRuntime.getExpressionEvaluator(), state.ctxt).setValue(state.ctxt);
 			elements.sort();
 
 			for (Value e : elements)
 			{
 				e = e.deref();
 
-				if (e instanceof SetValue)
+				if (e instanceof SetValue && state.permuted)
 				{
 					SetValue sv = (SetValue) e;
 					results.addAll(sv.permutedSets());
@@ -69,22 +69,14 @@ public class SingleBindValuesCollector extends
 	}
 
 	@Override
-	public ValueList caseATypeBind(ATypeBind bind, Context ctxt)
+	public ValueList caseATypeBind(ATypeBind bind, BindState state)
 			throws AnalysisException
 	{
-		return af.createPTypeAssistant().getAllValues(bind.getType(), ctxt);
+		return af.createPTypeAssistant().getAllValues(bind.getType(), state.ctxt);
 	}
 
 	@Override
-	public ValueList defaultPBind(PBind bind, Context ctxt)
-			throws AnalysisException
-	{
-		assert false : "Should not happen";
-		return null;
-	}
-
-	@Override
-	public ValueList createNewReturnValue(INode node, Context question)
+	public ValueList defaultPBind(PBind bind, BindState state)
 			throws AnalysisException
 	{
 		assert false : "Should not happen";
@@ -92,7 +84,15 @@ public class SingleBindValuesCollector extends
 	}
 
 	@Override
-	public ValueList createNewReturnValue(Object node, Context question)
+	public ValueList createNewReturnValue(INode node, BindState question)
+			throws AnalysisException
+	{
+		assert false : "Should not happen";
+		return null;
+	}
+
+	@Override
+	public ValueList createNewReturnValue(Object node, BindState question)
 			throws AnalysisException
 	{
 		assert false : "Should not happen";

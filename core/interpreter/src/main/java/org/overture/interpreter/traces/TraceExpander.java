@@ -239,7 +239,7 @@ public class TraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 
 			for (PMultipleBind mb : term.getDef().getBindings())
 			{
-				ValueList bvals = af.createPMultipleBindAssistant().getBindValues(mb, ctxt);
+				ValueList bvals = af.createPMultipleBindAssistant().getBindValues(mb, ctxt, true);	// NB permuted
 
 				for (PPattern p : mb.getPlist())
 				{
