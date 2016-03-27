@@ -85,7 +85,7 @@ public class VdmFunctionCompletionExtractor extends VdmTemplateAssistProcessor{
     	}
     	List<String> extractedNames = null;
 
-		extractedNames = explicitParameterNameExtractor(node, info.proposalPrefix);
+		extractedNames = explicitParameterNameExtractor(node, info.getProposalPrefix());
 		
 		StringBuilder sbPattern = new StringBuilder();
 		StringBuilder sbDisplayName = new StringBuilder();
@@ -120,7 +120,7 @@ public class VdmFunctionCompletionExtractor extends VdmTemplateAssistProcessor{
 		if (context == null)
 			return;
 		
-		if(VdmHelper.nullOrEmptyCheck(extractedName[0]) && VdmHelper.findInString(info.proposalPrefix,extractedName[0])){
+		if(VdmHelper.nullOrEmptyCheck(extractedName[0]) && VdmHelper.findInString(info.getProposalPrefix(),extractedName[0])){
 
 			ITextSelection selection = (ITextSelection) viewer
 					.getSelectionProvider().getSelection();
@@ -134,7 +134,7 @@ public class VdmFunctionCompletionExtractor extends VdmTemplateAssistProcessor{
 
 			context.setVariable("selection", selection.getText());
 			
-			Template template = new Template(extractedName[0],"Explicit Function","org.overture.ide.vdmpp.ui.contextType",extractedName[1],true);
+			Template template = new Template(extractedName[0],"Explicit Function","org.overture.ide.vdmsl.ui.contextType",extractedName[1],true);
 			
 			proposals.add(createProposal(template, context, (IRegion) region, getRelevance(template, prefix)));
 		}

@@ -34,16 +34,11 @@ import org.eclipse.jface.text.templates.TemplateContext;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.AImplicitOperationDefinition;
-import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
@@ -51,8 +46,11 @@ import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ATokenBasicType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
@@ -63,32 +61,23 @@ import org.overture.ide.ui.utility.ast.AstNameUtil;
 
 public class VdmCompleteProcessor
 {
-	VdmElementImageProvider imgProvider = new VdmElementImageProvider();
-	private static VdmCompletionExtractor vdmCompletionExtractor = new VdmCompletionExtractor();
-	private static VdmCompletionHelper VdmHelper = new VdmCompletionHelper();
-	
+	private VdmElementImageProvider imgProvider = new VdmElementImageProvider();
+
 	public void computeCompletionProposals(VdmCompletionContext info,
 			VdmDocument document, List<ICompletionProposal> proposals,
 			int offset, ITextViewer viewer,TemplateContext context)
 	{
 		List<ICompletionProposal> calculatedProposals = new Vector<ICompletionProposal>();
-		// if (info.afterNew || info.afterMk || info.isEmpty)
-		// {
-		// completeTypes(info, document, calculatedProposals, offset);
-		// } else
-		// {
-		// completeFields(info, document, calculatedProposals, offset);
-		// completeFields(info, document, calculatedProposals, offset);
-		
+		VdmCompletionExtractor vdmCompletionExtractor = new VdmCompletionExtractor();
 
-		
-		switch (info.type)
+		switch (info.getType())
 		{
 			case CallParam:
 				break;
 			case Dot:
 				break;
 			case Mk:
+				completeMK(info, document, calculatedProposals,offset);
 				break;
 			case New:
 				completeNew(info, document, calculatedProposals, offset);
@@ -111,18 +100,27 @@ public class VdmCompleteProcessor
 			if (proposal instanceof CompletionProposal)
 			{
 				CompletionProposal cp = (CompletionProposal) proposal;
-				if (replacementDisplayString.contains(cp.getDisplayString())
-				// || !cp.getDisplayString().toLowerCase().replace('<',
-				// ' ').trim().startsWith(info.prefix.toString().toLowerCase())
-				)
+				if (replacementDisplayString.contains(cp.getDisplayString()))
 				{
 					continue;
 				}
+
 				replacementDisplayString.add(cp.getDisplayString());
 			}
 			proposals.add(proposal);
 
 		}
+	}
+
+	private void completeMK(VdmCompletionContext info, VdmDocument document,
+			List<ICompletionProposal> calculatedProposals, int offset) {
+
+		for(INode def : getAst(document))
+		{
+			completeRecords(offset, calculatedProposals, info, def);
+			completeMk_tokens(offset,calculatedProposals,info, def);
+			completetuples(offset, calculatedProposals, info,def);
+		}	
 	}
 
 	private void completeQuotes(final VdmCompletionContext info,
@@ -156,8 +154,8 @@ public class VdmCompleteProcessor
 								&& new PAccessSpecifierAssistant(null).isPublic(node.getAccess()))
 						{
 							String name = node.getName().getName();
-							if (info.proposalPrefix.isEmpty()
-									|| name.toLowerCase().startsWith(info.proposalPrefix.toLowerCase()))
+							if (info.getProposalPrefix().isEmpty()
+									|| name.toLowerCase().startsWith(info.getProposalPrefix().toLowerCase()))
 							{
 								IContextInformation infoComplete = new ContextInformation(name, name);
 
@@ -175,33 +173,126 @@ public class VdmCompleteProcessor
 								replacementString += ")";
 
 								proposals.add(new CompletionProposal(replacementString, offset
-										+ info.offset, info.proposalPrefix.length(), replacementString.length(), imgProvider.getImageLabel(node, 0), replacementString, infoComplete, node.toString()));
+										+ info.getReplacementOffset(), info.getProposalPrefix().length(), replacementString.length(), imgProvider.getImageLabel(node, 0), replacementString, infoComplete, node.toString()));
 							}
 						}
 					}
 				});
 			} catch (AnalysisException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private void completeRecords(final int offset,
+			final List<ICompletionProposal> calculatedProposals,
+			VdmCompletionContext info, final INode def) {
+
+		try {
+			def.apply(new DepthFirstAnalysisAdaptor() {
+				@Override
+				public void caseARecordInvariantType(ARecordInvariantType arg0)
+						throws AnalysisException {
+					
+					String name = arg0.getName().getName();
+					IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
+					
+					
+					
+					
+					String replacementString = name + "(";
+					String displayString = replacementString;
+					
+					String sep = "";
+
+					for (Iterator<AFieldField> iterator = arg0.getFields().iterator(); iterator.hasNext();)
+					{
+						AFieldField field = iterator.next();
+
+						replacementString += sep + field.getTagname().getName();
+						displayString += sep + field.toString();
+						sep = ", ";
+
+					}
+					
+					replacementString += ")";
+					displayString += ")";
+					
+					calculatedProposals.add(new CompletionProposal(replacementString , offset, 0, replacementString.length(), imgProvider.getImageLabel(def, 0), replacementString, info, displayString));
+				}
+			});
+		} catch (AnalysisException e) {
+			VdmUIPlugin.log("Completion error in " + getClass().getSimpleName()
+					+ "faild during record search", e);
+		}
+		
+	}
+	
+	private void completetuples(final int offset,
+			final List<ICompletionProposal> calculatedProposals,
+			final VdmCompletionContext info, final INode def) {
+		try
+		{
+			def.apply(new DepthFirstAnalysisAdaptor() {			
+				@Override
+				public void caseAProductType(AProductType arg0)
+						throws AnalysisException {
+					
+					String name = arg0.toString();
+					IContextInformation info = new ContextInformation(name, name);
+					
+					String replacementString = "(";
+					//String display = replacementString;
+					
+					String sep = "";
+					
+					for(Iterator<PDefinition> iterator = arg0.getDefinitions().iterator(); iterator.hasNext();)
+					{
+						PDefinition type = iterator.next();
+						replacementString += sep + type.getType();
+						//display += sep + type.toString();
+						sep = ", ";
+					}
+					replacementString += ")";
+					//display += ")";
+					
+					calculatedProposals.add(new CompletionProposal(replacementString , offset, 0, replacementString.length(), imgProvider.getImageLabel(def, 0), replacementString, info, replacementString));
+				}
+			});
+			
+		}
+		catch(AnalysisException e)
+		{
+			VdmUIPlugin.log("Completion error in " + getClass().getSimpleName()
+					+ "faild during tuple search", e);
+		}
+		//
+		
+		
+	}
+	
+	private void completeMk_tokens(final int offset,
+			final List<ICompletionProposal> calculatedProposals,
+			final VdmCompletionContext info, INode def) {
+		
+		String name = "token()";
+		String display = "mk_token() Token Representation, can take an arbitary expression";
+		IContextInformation ctxtInfo = new ContextInformation(name, name); //$NON-NLS-1$
+		calculatedProposals.add(new CompletionProposal(name, offset, 0, name.length() - 1, imgProvider.getImageLabel(def, 0), name, ctxtInfo, display));
+		
 	}
 
 	public void completeTypes(VdmCompletionContext info, VdmDocument document,
 			List<ICompletionProposal> proposals, int offset)
 	{
-		// boolean modulesOnly = info.afterNew || info.isEmpty;
-		// boolean recordTypesOnly = info.afterMk || info.isEmpty;
-		// String typeName = info.field.toString();
-
 		for (INode element : getAst(document))
 		{
-			if (info.type == SearchType.Types)
+			if (info.getType() == SearchType.Types)
 			{
 				String name = AstNameUtil.getName(element);
-				
-				if (VdmHelper.findInString(info.proposalPrefix,name))
+				if (name.startsWith(info.getProposalPrefix())
+						|| name.length() == 0)
 				{
 					IContextInformation ctxtInfo = new ContextInformation(name, name); //$NON-NLS-1$
 					proposals.add(new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(element, 0), name, ctxtInfo, name));
@@ -246,10 +337,10 @@ public class VdmCompleteProcessor
 					String name = prefix + element.getName();
 					IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
 
-					if (name.toLowerCase().startsWith(info2.proposalPrefix.toString().toLowerCase()))
+					if (name.toLowerCase().startsWith(info2.getProposalPrefix().toLowerCase()))
 					{
 						proposals.add(new CompletionProposal(name, offset
-								- info2.proposalPrefix.length(), info2.proposalPrefix.length(), name.length(), imgProvider.getImageLabel(element, 0), name, info, element.toString()));
+								- info2.getProposalPrefix().length(), info2.getProposalPrefix().length(), name.length(), imgProvider.getImageLabel(element, 0), name, info, element.toString()));
 					}
 				}
 			}
@@ -258,7 +349,7 @@ public class VdmCompleteProcessor
 		}
 
 	}
-	
+
 	private void completeQuotes(final int offset,
 			final List<ICompletionProposal> proposals,
 			final VdmCompletionContext info2, INode m)
@@ -283,28 +374,22 @@ public class VdmCompleteProcessor
 
 				void populateQuotes(INode node, String baseValue, String name)
 				{
-					// if (!info2.prefix.toString().equals(baseValue))
+
+					IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
+
+					int curOffset = offset + info2.getReplacementOffset();// - info2.proposalPrefix.length();
+					int length = name.length();
+					int replacementLength = info2.getProposalPrefix().length();
+
+					if (info2.getProposalPrefix().equals("<" + baseValue + ">"))
 					{
+						curOffset = offset;
+						replacementLength = 0;
+					}
 
-						IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
-
-						int curOffset = offset + info2.offset;// - info2.proposalPrefix.length();
-						int length = name.length();
-						int replacementLength = info2.proposalPrefix.length();
-
-						if (info2.proposalPrefix.toString().equals("<"
-								+ baseValue + ">"))
-						{
-							// replacementLength+=1;
-							// length+=1;
-							curOffset = offset;
-							replacementLength = 0;
-						}
-
-						if (("<" + baseValue).toLowerCase().startsWith(info2.proposalPrefix.toString().toLowerCase()))
-						{
-							proposals.add(new CompletionProposal(name, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), name, info, name));
-						}
+					if (("<" + baseValue).toLowerCase().startsWith(info2.getProposalPrefix().toLowerCase()))
+					{
+						proposals.add(new CompletionProposal(name, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), name, info, name));
 					}
 				}
 			});
@@ -320,8 +405,6 @@ public class VdmCompleteProcessor
 	{
 		try
 		{
-			List<INode> ast = getAst(document);
-
 			INode found = new AstLocationSearcher2().getNode(new TextReference(document.getSourceUnit().getSystemFile(), offset), getLocalFileAst(document));
 
 			if (found != null)
@@ -341,110 +424,17 @@ public class VdmCompleteProcessor
 
 					for (AFieldField field : rt.getFields())
 					{
-						if (field.getTag().toLowerCase().startsWith(info.proposalPrefix.toString().toLowerCase()))
+						if (field.getTag().toLowerCase().startsWith(info.getProposalPrefix().toLowerCase()))
 						{
 							proposals.add(createProposal(field, offset, info));
 						}
 					}
 				}
-			} else
-			{
-				// FIXME old code
-
-				// if (info.fieldType.toString().trim().length() != 0)
-				// {
-				// completeFromType(info.fieldType.toString(), info.proposalPrefix.toString(), proposals, offset, ast);
-				// } else
-				// {
-				// List<INode> possibleMatch = new Vector<INode>();
-				// for (INode node : getLocalFileAst(document))
-				// {
-				// for (INode field : getFields(node))
-				// {
-				// if (AstNameUtil.getName(field).equals(info.field.toString()))
-				// {
-				// // Ok match then complete it
-				// completeFromType(getTypeName(field), info.proposalPrefix.toString(), proposals, offset, ast);
-				// } else if (AstNameUtil.getName(field).startsWith(info.field.toString()))
-				// {
-				// possibleMatch.add(field);
-				// }
-				//
-				// }
-				//
-				// }
-				// }
 			}
 		} catch (Exception e)
 		{
 			VdmUIPlugin.log("Completion error in " + getClass().getSimpleName(), e);
 		}
-	}
-
-	private String getTypeName(INode field)
-	{
-		if (field instanceof AInstanceVariableDefinition)
-		{
-			return ((AInstanceVariableDefinition) field).getType().toString();
-		}
-		return "";
-	}
-
-	private void completeFromType(String typeName, String proposal,
-			List<ICompletionProposal> proposals, int offset, List<INode> ast)
-	{
-		// System.out.println("Complete for type: " + typeName
-		// + " with proposal: " + proposal);
-		INode type = getType(typeName, ast);
-
-		// Fields
-		for (INode field : getFields(type))
-		{
-			if (AstNameUtil.getName(field).startsWith(proposal)
-					|| proposal.isEmpty())
-			{
-				proposals.add(createProposal(field, offset));
-			}
-		}
-		// Operations
-		for (INode op : getOperations(type))
-		{
-			if (AstNameUtil.getName(op).startsWith(proposal)
-					|| proposal.isEmpty())
-			{
-				proposals.add(createProposal(op, offset));
-			}
-		}
-		// Functions
-		for (INode fn : getFunctions(type))
-		{
-			if (AstNameUtil.getName(fn).startsWith(proposal)
-					|| proposal.isEmpty())
-			{
-				proposals.add(createProposal(fn, offset));
-			}
-		}
-		// Types
-		for (INode tp : getTypes(type))
-		{
-			if (AstNameUtil.getName(tp).startsWith(proposal)
-					|| proposal.isEmpty())
-			{
-				proposals.add(createProposal(tp, offset));
-			}
-		}
-	}
-
-	private ICompletionProposal createProposal(INode node, int offset)
-	{
-		String name = AstNameUtil.getName(node);
-		if (node instanceof ATypeDefinition)
-		{
-			name = ((ATypeDefinition) node).getLocation().getModule() + "`"
-					+ name;
-		}
-		IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
-		return new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(node, 0), name, info, name);
 	}
 
 	private ICompletionProposal createProposal(INode node, int offset,
@@ -458,107 +448,7 @@ public class VdmCompleteProcessor
 		}
 		IContextInformation info2 = new ContextInformation(name, name); //$NON-NLS-1$
 		return new CompletionProposal(name, offset
-				- info.proposalPrefix.length(), info.proposalPrefix.length(), name.length(), imgProvider.getImageLabel(node, 0), name, info2, node.toString());
-	}
-
-	private INode getType(String typeName, List<INode> ast)
-	{
-		for (INode node : ast)
-		{
-			if (AstNameUtil.getName(node).equals(typeName))
-			{
-				return node;
-			}
-		}
-		return null;
-	}
-
-	private List<INode> getFields(INode node)
-	{
-		List<INode> fields = new Vector<INode>();
-		List<PDefinition> list = getDefinitions(node);
-
-		if (list != null)
-		{
-			for (PDefinition definition : list)
-			{
-				if (definition instanceof ALocalDefinition
-						|| definition instanceof AValueDefinition
-						|| definition instanceof AInstanceVariableDefinition)
-				{
-					fields.add(definition);
-				}
-			}
-		}
-		return fields;
-	}
-
-	private List<INode> getTypes(INode node)
-	{
-		List<INode> types = new Vector<INode>();
-		List<PDefinition> list = getDefinitions(node);
-		if (list != null)
-		{
-			for (PDefinition definition : list)
-			{
-				if (definition instanceof ATypeDefinition)
-				{
-					types.add(definition);
-				}
-			}
-		}
-		return types;
-	}
-
-	private List<INode> getOperations(INode node)
-	{
-		List<INode> ops = new Vector<INode>();
-		List<PDefinition> list = getDefinitions(node);
-
-		if (list != null)
-		{
-			for (PDefinition definition : list)
-			{
-				if (definition instanceof AExplicitOperationDefinition
-						|| definition instanceof AImplicitOperationDefinition)
-				{
-					ops.add(definition);
-				}
-			}
-		}
-		return ops;
-	}
-
-	private List<INode> getFunctions(INode node)
-	{
-		List<INode> fns = new Vector<INode>();
-		List<PDefinition> list = getDefinitions(node);
-
-		if (list != null)
-		{
-			for (PDefinition definition : list)
-			{
-				if (definition instanceof AExplicitFunctionDefinition
-						|| definition instanceof AImplicitFunctionDefinition)
-				{
-					fns.add(definition);
-				}
-			}
-		}
-		return fns;
-	}
-
-	private List<PDefinition> getDefinitions(INode node)
-	{
-		List<PDefinition> list = null;
-		if (node instanceof SClassDefinition)
-		{
-			list = ((SClassDefinition) node).getDefinitions();
-		} else if (node instanceof AModuleModules)
-		{
-			list = ((AModuleModules) node).getDefs();
-		}
-		return list;
+				- info.getProposalPrefix().length(), info.getProposalPrefix().length(), name.length(), imgProvider.getImageLabel(node, 0), name, info2, node.toString());
 	}
 
 	private List<INode> getAst(VdmDocument document)
