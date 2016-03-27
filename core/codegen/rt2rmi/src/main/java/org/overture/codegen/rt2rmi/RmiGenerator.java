@@ -313,7 +313,6 @@ public class RmiGenerator implements IREventObserver
 					
 					// Filter these methods currently
 					if(impl.getName().equals("bridge_FieldGraph")) continue;
-					if(impl.getName().equals("FieldRegister")) continue;
 					if(impl.getName().equals("MyUtils")) continue;
 					
 					File file = new File(output_dir + cpu + "/" + mvn_path + impl.getName() + ".java");

@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.overture.cgrmi.extast.declarations.ARemoteContractImplDeclIR;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.ATypeDeclIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.vdm2java.IJavaConstants;
 
@@ -50,7 +52,7 @@ public class RemoteImplGenerator
 			ARemoteContractImplDeclIR contractImpl = new ARemoteContractImplDeclIR();
 			contractImpl.setName(classCg.getName());
 			
-			contractImpl.setFields(classCg.getFields());
+			contractImpl.setFields((LinkedList<AFieldDeclIR>) classCg.getFields().clone());
 			if(!classCg.getSuperNames().isEmpty())
 			{
 				contractImpl.setSuperName(classCg.getSuperNames().get(0).getName());
@@ -58,7 +60,7 @@ public class RemoteImplGenerator
 			contractImpl.setAbstract(classCg.getAbstract());
 			// Add type declarations
 	
-			contractImpl.setTypeDecls(classCg.getTypeDecls());
+			contractImpl.setTypeDecls((List<ATypeDeclIR>) classCg.getTypeDecls().clone());
 
 			if (classCg.getSuperNames().isEmpty())
 				contractImpl.setIsUniCast(true);
@@ -72,10 +74,10 @@ public class RemoteImplGenerator
 				{
 				} else if (method.getAccess().equals(IJavaConstants.PUBLIC))
 				{
-					publicMethods.add(method);
+					publicMethods.add(method.clone());
 				} else
 				{
-					publicMethods.add(method);
+					publicMethods.add(method.clone());
 				}
 			}
 
