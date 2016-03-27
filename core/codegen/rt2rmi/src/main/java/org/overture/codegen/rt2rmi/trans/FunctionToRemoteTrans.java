@@ -3,6 +3,7 @@ package org.overture.codegen.rt2rmi.trans;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
 import org.overture.codegen.ir.expressions.ANewExpIR;
 import org.overture.codegen.ir.types.AClassTypeIR;
@@ -22,9 +23,14 @@ public class FunctionToRemoteTrans extends DepthFirstAnalysisAdaptor
 	
 	@Override
 	public void caseAMethodDeclIR(AMethodDeclIR node) throws AnalysisException {
-		// TODO Auto-generated method stub
+		
+		if(node.getAncestor(ARecordDeclIR.class)!=null){
+			return;
+		}
 		AExternalTypeIR runtimeExpType = new AExternalTypeIR();
 		runtimeExpType.setName("RemoteException");
 		node.getRaises().add(runtimeExpType);
+		
+
 	}
 }
