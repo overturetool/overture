@@ -28,6 +28,7 @@ import org.overture.cgrmi.extast.declarations.ASynchTokenInterfaceDeclIR;
 //import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRInfo;
@@ -42,6 +43,7 @@ import org.overture.codegen.rt2rmi.systemanalysis.DistributionMapping;
 import org.overture.codegen.rt2rmi.trans.FunctionToRemoteTrans;
 import org.overture.codegen.rt2rmi.trans.RemoteTypeTrans;
 import org.overture.codegen.utils.GeneratedData;
+import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
@@ -120,6 +122,14 @@ public class RmiGenerator implements IREventObserver
 
 			GeneratedData data = javaGen.generate(CodeGenBase.getNodes(rtClasses));
 
+			List<GeneratedModule> qutes = data.getQuoteValues();
+			
+			for(GeneratedModule li : data.getClasses()){
+				if(li.getIrNode() instanceof AInterfaceDeclIR);
+			}
+			
+			// JavaCGMain line: 
+			
 			List<ADefaultClassDeclIR> irClasses = Util.getClasses(data.getClasses());
 
 			RemoteContractGenerator contractGenerator = new RemoteContractGenerator(irClasses, this.getJavaGen().getInfo());
