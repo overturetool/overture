@@ -55,6 +55,8 @@ public class RmiGenerator implements IREventObserver
 	private String systemClassName;
 	LinkedList<AFieldDeclIR> system_fields;
 
+	public static String mvn_path = "src/main/java/";
+	
 	public RmiGenerator()
 	{
 		this.javaGen = new JavaCodeGen();
@@ -213,7 +215,7 @@ public class RmiGenerator implements IREventObserver
 
 		theDir_s.mkdir();
 
-		File file_s = new File(output_dir + RMI_ServerName + "/" + RMI_ServerName + ".java");
+		File file_s = new File(output_dir + RMI_ServerName + "/" + mvn_path  + RMI_ServerName + ".java");
 		BufferedWriter output_s = new BufferedWriter(new FileWriter(file_s));
 		output_s.write(JavaCodeGenUtil.formatJavaCode(writer_s.toString()));
 		output_s.flush();
@@ -225,7 +227,7 @@ public class RmiGenerator implements IREventObserver
 			StringWriter writer_i = new StringWriter();
 			contract.apply(printer, writer_i);
 
-			File file_i = new File(output_dir + RMI_ServerName + "/" + contract.getName() + ".java");
+			File file_i = new File(output_dir + RMI_ServerName + "/" + mvn_path  + contract.getName() + ".java");
 			BufferedWriter output_i = new BufferedWriter(new FileWriter(file_i));
 			output_i.write(JavaCodeGenUtil.formatJavaCode(writer_i.toString()));
 			output_i.flush();
@@ -238,7 +240,7 @@ public class RmiGenerator implements IREventObserver
 		StringWriter writer_synch_i_RMI = new StringWriter();
 		synchToken_interface_RMI.apply(printer, writer_synch_i_RMI);
 
-		File file_synch_i_RMI = new File(output_dir + RMI_ServerName + "/" + "SynchToken_interface.java");
+		File file_synch_i_RMI = new File(output_dir + RMI_ServerName + "/" + mvn_path  + "SynchToken_interface.java");
 		BufferedWriter output_synch_i_RMI = new BufferedWriter(new FileWriter(file_synch_i_RMI));
 		output_synch_i_RMI.write(JavaCodeGenUtil.formatJavaCode(writer_synch_i_RMI.toString()));
 		output_synch_i_RMI.flush();
@@ -275,7 +277,7 @@ public class RmiGenerator implements IREventObserver
 				StringWriter writer_synch = new StringWriter();
 				synchToken.apply(printer, writer_synch);
 
-				File file_synch = new File(output_dir + cpu + "/" + "SynchToken.java");
+				File file_synch = new File(output_dir + cpu + "/" + mvn_path  + "SynchToken.java");
 				BufferedWriter output_synch = new BufferedWriter(new FileWriter(file_synch));
 				output_synch.write(JavaCodeGenUtil.formatJavaCode(writer_synch.toString()));
 				output_synch.flush();
@@ -286,7 +288,7 @@ public class RmiGenerator implements IREventObserver
 				StringWriter writer_synch_i = new StringWriter();
 				synchToken_interface.apply(printer, writer_synch_i);
 
-				File file_synch_i = new File(output_dir + cpu + "/" + "SynchToken_interface.java");
+				File file_synch_i = new File(output_dir + cpu + "/" + mvn_path  + "SynchToken_interface.java");
 				BufferedWriter output_synch_i = new BufferedWriter(new FileWriter(file_synch_i));
 				output_synch_i.write(JavaCodeGenUtil.formatJavaCode(writer_synch_i.toString()));
 				output_synch_i.flush();
@@ -297,7 +299,7 @@ public class RmiGenerator implements IREventObserver
 					StringWriter writer = new StringWriter();
 					contract.apply(printer, writer);
 
-					File file = new File(output_dir + cpu + "/" + contract.getName() + ".java");
+					File file = new File(output_dir + cpu + "/" + mvn_path  +  contract.getName() + ".java");
 					BufferedWriter output = new BufferedWriter(new FileWriter(file));
 					output.write(JavaCodeGenUtil.formatJavaCode(writer.toString()));
 					output.flush();
@@ -308,8 +310,13 @@ public class RmiGenerator implements IREventObserver
 				{
 					StringWriter writer = new StringWriter();
 					impl.apply(printer, writer);
-
-					File file = new File(output_dir + cpu + "/" + impl.getName() + ".java");
+					
+					// Filter these methods currently
+					if(impl.getName().equals("bridge_FieldGraph")) continue;
+					if(impl.getName().equals("FieldRegister")) continue;
+					if(impl.getName().equals("MyUtils")) continue;
+					
+					File file = new File(output_dir + cpu + "/" + mvn_path + impl.getName() + ".java");
 					BufferedWriter output = new BufferedWriter(new FileWriter(file));
 					output.write(JavaCodeGenUtil.formatJavaCode(writer.toString()));
 					output.flush();
@@ -339,20 +346,25 @@ public class RmiGenerator implements IREventObserver
 
 			// System.out.println(JavaCodeGenUtil.formatJavaCode(writer.toString()));
 
+			// FIXME: Do not print entry method currently
+			
 			// The CPU entry method
-			File file = new File(output_dir + impl.getCpuName() + "/" + impl.getCpuName() + ".java");
-			BufferedWriter output = new BufferedWriter(new FileWriter(file));
-			System.out.println("The entry method for: " + impl.getCpuName());
+			//File file = new File(output_dir + impl.getCpuName() + "/" + impl.getCpuName() + ".java");
+			//BufferedWriter output = new BufferedWriter(new FileWriter(file));
+			//System.out.println("The entry method for: " + impl.getCpuName());
 			// System.out.println(writer.toString());
-			output.write(JavaCodeGenUtil.formatJavaCode(writer.toString()));
-			output.close();
+			//output.write(JavaCodeGenUtil.formatJavaCode(writer.toString()));
+			//output.close();
 
+			
+			
 			// Create the unique system class for each CPU
 			ADefaultClassDeclIR systemClass = cpuToSystemDecl.get(impl.getCpuName());
 			StringWriter writer2 = new StringWriter();
 			systemClass.apply(printer, writer2);
 			// System.out.println(JavaCodeGenUtil.formatJavaCode(writer2.toString()));
-			File file2 = new File(output_dir + impl.getCpuName() + "/" + systemClass.getName() + ".java");
+			
+			File file2 = new File(output_dir + impl.getCpuName() + "/" + mvn_path  + systemClass.getName() + ".java");
 
 			System.out.println("The system class for: " + impl.getCpuName());
 			// System.out.println(writer2.toString());
