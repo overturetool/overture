@@ -9,8 +9,10 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralUtils;
+import org.overture.codegen.utils.GeneratedData;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.parser.lex.LexException;
@@ -24,7 +26,7 @@ public class RmiGeneratorCommandLine
 	private static final String PRINT_ARG = "-print";
 	public static final String OUTPUT_ARG = "-output";
 
-	public static void main(String[] args) throws org.overture.codegen.ir.analysis.AnalysisException, IOException, ParserException, LexException
+	public static void main(String[] args) throws org.overture.codegen.ir.analysis.AnalysisException, IOException, AnalysisException
 	{
 		if (args == null || args.length < 1)
 		{
@@ -101,10 +103,24 @@ public class RmiGeneratorCommandLine
 			}
 		}
 		
+		TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckRt(files);
+		
+		RmiGenerator rmiGen = new RmiGenerator();
+		
+//		GeneratedData data = rmiGen.generate(CodeGenBase.getNodes(tcResult.result));
+		
+		// Process the data
+		// processData(data,...)
+		
 //		try
 //		{
-			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckRt(files);
-			RmiGenerator rmiGen = new RmiGenerator();
+		/*
+		 * New Interface
+		 * 
+		 */
+		
+			
+//			RmiGenerator rmiGen = new RmiGenerator();
 			try {
 				rmiGen.generate(tcResult.result, outputDir.toString()+"/");
 			} catch (AnalysisException e) {
