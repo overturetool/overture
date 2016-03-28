@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
+<testResult type="org.overture.interpreter.tests.external.ExternalClassesPpTest">
 <result>
 <output object="true" resource="reperr-26.vpp" value="true"/>
 </result>

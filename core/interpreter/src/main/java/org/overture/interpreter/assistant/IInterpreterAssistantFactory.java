@@ -28,6 +28,7 @@ import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
+import org.overture.interpreter.eval.BindState;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.traces.TraceNode;
@@ -351,7 +352,7 @@ public interface IInterpreterAssistantFactory extends
 	/* visitors */
 	IAnswer<LexNameList> getOldNameCollector();
 
-	QuestionAnswerAdaptor<Context, ValueList> getBindValuesCollector();
+	QuestionAnswerAdaptor<BindState, ValueList> getBindValuesCollector();
 
 	QuestionAnswerAdaptor<ObjectContext, ValueList> getValueCollector();
 
@@ -391,7 +392,7 @@ public interface IInterpreterAssistantFactory extends
 
 	IAnswer<List<PExp>> getSubExpressionsLocator();
 
-	IQuestionAnswer<Context, ValueList> getSingleBindValuesCollector();
+	IQuestionAnswer<BindState, ValueList> getSingleBindValuesCollector();
 
 	IQuestionAnswer<ObjectContext, ValueList> getBindValueCollector();
 

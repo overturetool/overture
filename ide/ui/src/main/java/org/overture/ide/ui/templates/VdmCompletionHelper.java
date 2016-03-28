@@ -44,13 +44,13 @@ public class VdmCompletionHelper {
 	public void createProposal(INode node, String displayname, String replacmentString,String additionalProposalInfo,final VdmCompletionContext info, 
     		final List<ICompletionProposal> proposals,final int offset)
     {
-    	if(nullOrEmptyCheck(replacmentString) && findInString(info.proposalPrefix,replacmentString))
+    	if(nullOrEmptyCheck(replacmentString) && findInString(info.getProposalPrefix(),replacmentString))
 		{	
 			IContextInformation contextInfo = new ContextInformation(displayname, displayname); //$NON-NLS-1$
 			
-			int curOffset = offset + info.offset;// - info2.proposalPrefix.length();
+			int curOffset = offset + info.getReplacementOffset();// - info2.proposalPrefix.length();
 			int length = replacmentString.length();
-			int replacementLength = info.proposalPrefix.length();
+			int replacementLength = info.getProposalPrefix().length();
 			
 			proposals.add(new CompletionProposal(replacmentString, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), displayname, contextInfo, additionalProposalInfo));
 		}

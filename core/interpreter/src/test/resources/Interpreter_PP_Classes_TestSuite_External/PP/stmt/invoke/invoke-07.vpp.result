@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
-<message column="9" line="41" message="Error 4035: Object has no field: M20XXX in 'B' (invoke-07.vpp) at line 41:9" messageType="error" number="4035" resource="invoke-07.vpp.result"/>
+<testResult type="org.overture.interpreter.tests.external.ExternalClassesPpTest">
+<message column="9" line="41" message="Error 4035: Object has no field: M20XXX in 'B' (invoke-07.vpp) at line 41:9" messageType="error" number="4035" resource="invoke-07.vpp"/>
 <result>
 <output object="[]" resource="invoke-07.vpp" value="[]"/>
 </result>

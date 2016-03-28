@@ -164,9 +164,9 @@ the manifests, though.
 
   <repositories>
     <repository>
-      <id>eclipse-luna</id>
+      <id>eclipse-mars</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/luna</url>
+      <url>http://download.eclipse.org/releases/mars</url>
     </repository>
   </repositories>
 

@@ -29,6 +29,7 @@ import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
+import org.overture.interpreter.eval.BindState;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.traces.TraceExpander;
@@ -828,7 +829,7 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	}
 
 	@Override
-	public QuestionAnswerAdaptor<Context, ValueList> getBindValuesCollector()
+	public QuestionAnswerAdaptor<BindState, ValueList> getBindValuesCollector()
 	{
 		return new MultipleBindValuesCollector(this);
 	}
@@ -948,7 +949,7 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	}
 
 	@Override
-	public IQuestionAnswer<Context, ValueList> getSingleBindValuesCollector()
+	public IQuestionAnswer<BindState, ValueList> getSingleBindValuesCollector()
 	{
 		return new SingleBindValuesCollector(this);
 	}
