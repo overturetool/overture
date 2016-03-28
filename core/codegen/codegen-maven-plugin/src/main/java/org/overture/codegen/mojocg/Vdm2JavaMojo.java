@@ -1,6 +1,7 @@
 package org.overture.codegen.mojocg;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.mojocg.util.DelegateTrans;
+import org.overture.codegen.rt2rmi.RmiGenerator;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
@@ -27,6 +29,7 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
+//import org.overture.codegen.
 
 /**
  * VDM-to-Java code generator mojo
@@ -53,7 +56,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 			return;
 		}
 
-		getLog().info("Starting the VDM-to-Java code generator...");
+		getLog().info("Starting the VDM-to-Java code generator...Miran");
 		
 		// Let's make sure that maven knows to look in the output directory
 		project.addCompileSourceRoot(outputDirectory.getPath());
@@ -115,7 +118,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 		JavaCodeGen javaCodeGen = new JavaCodeGen();
 		javaCodeGen.setSettings(irSettings);
 		javaCodeGen.setJavaSettings(javaSettings);
-
+		
 		addDelegateTrans(javaCodeGen);
 		
 		GeneratedData genData = null;
@@ -160,12 +163,39 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 			{
 				Settings.dialect = Dialect.VDM_RT;
 				TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckRt(files);
+
+				RmiGenerator rmiGen = new RmiGenerator();
+				//addDelegateTrans(rmiGen.getJavaGen());
+				
+				try {
+//					System.out.println("The current path is: " + );
+					
+					String current = new java.io.File( "." ).getCanonicalPath();
+			        System.out.println("Current dir:"+current);
+			        String currentDir = System.getProperty("user.dir");
+			        System.out.println("Current dir using System:" + currentDir);
+					
+					rmiGen.generate(tcResult.result,  "../distcg/");
+				} catch (org.overture.codegen.ir.analysis.AnalysisException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				validateTcResult(tcResult);
 
 				javaSettings.setMakeClassesSerializable(true);
 				
 				genData = javaCodeGen.generate(CodeGenBase.getNodes(tcResult.result));
+				
+				System.out.println("Hello From RT parts..");
+				
+				/* Start the Java RMI generator part */
+				
+
+				
 				
 			} catch (AnalysisException e)
 			{

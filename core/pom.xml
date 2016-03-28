@@ -24,7 +24,6 @@
     <module>prettyprinting</module>
     <module>commandline</module>
     <module>codegen</module>
-     <module>isapog</module>
   </modules>
 
   <build>
