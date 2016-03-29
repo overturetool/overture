@@ -89,7 +89,7 @@ public class VdmCompleteProcessor
 				break;
 			case Types:
 				completeTypes(info, document, calculatedProposals, offset);
-				vdmCompletionExtractor.completeBasicTypes(info, document, calculatedProposals, offset, getAst(document), context,viewer);
+				vdmCompletionExtractor.generateCompleteProposals(info, document, calculatedProposals, offset, getAst(document), context,viewer);
 				break;
 			default:
 				break;
