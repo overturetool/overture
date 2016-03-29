@@ -165,17 +165,19 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 				TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckRt(files);
 
 				RmiGenerator rmiGen = new RmiGenerator();
-				//addDelegateTrans(rmiGen.getJavaGen());
+				addDelegateTrans(rmiGen.getJavaGen());
 				
 				try {
 //					System.out.println("The current path is: " + );
 					
+					if((new File("../distcg")).exists()){
 					String current = new java.io.File( "." ).getCanonicalPath();
 			        System.out.println("Current dir:"+current);
 			        String currentDir = System.getProperty("user.dir");
 			        System.out.println("Current dir using System:" + currentDir);
-					
 					rmiGen.generate(tcResult.result,  "../distcg/");
+					}
+					else System.out.println("distcg directory does not exist");
 				} catch (org.overture.codegen.ir.analysis.AnalysisException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
