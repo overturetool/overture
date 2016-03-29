@@ -150,6 +150,8 @@ public class AExplicitFunctionDefinitionAssistantTC implements IAstAssistant
 				PType ptype = ti.next();
 				ftype = (AFunctionType) af.createPTypeAssistant().polymorph(ftype, pname, ptype);
 			}
+			
+			ftype.setInstantiated(true);
 		}
 
 		return ftype;
