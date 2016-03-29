@@ -24,7 +24,8 @@ public final class VdmCompletionExtractor {
 	private static VdmElementImageProvider imgProvider = new VdmElementImageProvider();
 	private static VdmCompletionHelper VdmHelper = new VdmCompletionHelper();
 	private static VdmFunctionCompletionExtractor VdmFunctionHelper = new VdmFunctionCompletionExtractor();
-	
+	private static VdmOperationCompletionExtractor VdmOperationHelper = new VdmOperationCompletionExtractor();
+
 	private ArrayList<String> basicTypes = new ArrayList<String>();
 	private ArrayList<String> dynamicTemplateProposals = new ArrayList<String>();
 	private ArrayList<String> dynamicProposals = new ArrayList<String>();
@@ -38,7 +39,7 @@ public final class VdmCompletionExtractor {
 		basicTypes.add("char");
 	}
 	
-	public void completeBasicTypes(final VdmCompletionContext info,
+	public void generateCompleteProposals(final VdmCompletionContext info,
 			VdmDocument document, final List<ICompletionProposal> proposals,
 			final int offset, List<INode> Ast, final TemplateContext context,final ITextViewer viewer)
 	{
@@ -53,6 +54,7 @@ public final class VdmCompletionExtractor {
 					public void caseAInstanceVariableDefinition(AInstanceVariableDefinition node)
                             throws AnalysisException{
 						String name = node.toString();
+						
 						if(!VdmHelper.checkForDuplicates(name,dynamicTemplateProposals)){
 							VdmHelper.createProposal(node,name,name,"Instance Variable",info,proposals,offset);
 							dynamicTemplateProposals.add(name);
@@ -62,9 +64,10 @@ public final class VdmCompletionExtractor {
 					@Override
 					public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
                             throws AnalysisException{
-						String extractedName[] = VdmFunctionHelper.explicitFunctionNameExtractor(node,info);
+						String extractedName[] = VdmFunctionHelper.explicitFunctionNameExtractor(node);
+						
 						if(VdmHelper.nullOrEmptyCheck(extractedName[1]) && !VdmHelper.checkForDuplicates(extractedName[1],dynamicTemplateProposals)){
-							VdmFunctionHelper.functionTemplateCreator(extractedName,offset,context,proposals,info,viewer,node.getLocation().getEndOffset());
+							VdmHelper.dynamicTemplateCreator(extractedName,"Explicit Function",offset,context,proposals,info,viewer,node.getLocation().getEndOffset());
 							dynamicTemplateProposals.add(extractedName[1]);
 						}
 					}
@@ -73,39 +76,40 @@ public final class VdmCompletionExtractor {
 					public void caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node)
                             throws AnalysisException{
 						String extractedName[] = VdmFunctionHelper.implicitFunctionNameExtractor(node);
-
-						if(VdmHelper.nullOrEmptyCheck(extractedName[0]) && !VdmHelper.checkForDuplicates(extractedName[1],dynamicProposals)){
-							VdmHelper.createProposal(node,extractedName[0],extractedName[1],node.toString(),info,proposals,offset);
-							dynamicProposals.add(extractedName[1]);
-						}
+						
+						if(VdmHelper.nullOrEmptyCheck(extractedName[1]) && !VdmHelper.checkForDuplicates(extractedName[1],dynamicTemplateProposals)){
+							VdmHelper.dynamicTemplateCreator(extractedName,"Implicit Function",offset,context,proposals,info,viewer,node.getLocation().getEndOffset());
+							dynamicTemplateProposals.add(extractedName[1]);
+						}	
 					}
 					
 					@Override
 					public void caseAExplicitOperationDefinition(AExplicitOperationDefinition node)
                             throws AnalysisException{
-						String extractedName[] = VdmFunctionHelper.explicitOperationNameExtractor(node);
+						String extractedName[] = VdmOperationHelper.explicitOperationNameExtractor(node);
 						
-						if(VdmHelper.nullOrEmptyCheck(extractedName[0]) && !VdmHelper.checkForDuplicates(extractedName[1],dynamicProposals)){
-							VdmHelper.createProposal(node, extractedName[0], extractedName[1], node.toString(), info, proposals, offset);
-							dynamicProposals.add(extractedName[1]);
-						}
+						if(VdmHelper.nullOrEmptyCheck(extractedName[1]) && !VdmHelper.checkForDuplicates(extractedName[1],dynamicTemplateProposals)){
+							VdmHelper.dynamicTemplateCreator(extractedName,"Explicit Operation",offset,context,proposals,info,viewer,node.getLocation().getEndOffset());
+							dynamicTemplateProposals.add(extractedName[1]);
+						}	
 					}
 					
 					@Override
 					public void caseAImplicitOperationDefinition(AImplicitOperationDefinition node)
                             throws AnalysisException{
-						String extractedName[] = VdmFunctionHelper.implicitOperationNameExtractor(node);
+						String extractedName[] = VdmOperationHelper.implicitOperationNameExtractor(node);
 						
-						if(VdmHelper.nullOrEmptyCheck(extractedName[0]) && !VdmHelper.checkForDuplicates(extractedName[1],dynamicProposals)){
-							VdmHelper.createProposal(node, extractedName[0], extractedName[1], node.toString(), info, proposals, offset);
-							dynamicProposals.add(extractedName[1]);
-						}
+						if(VdmHelper.nullOrEmptyCheck(extractedName[1]) && !VdmHelper.checkForDuplicates(extractedName[1],dynamicTemplateProposals)){
+							VdmHelper.dynamicTemplateCreator(extractedName,"Implicit Operation",offset,context,proposals,info,viewer,node.getLocation().getEndOffset());
+							dynamicTemplateProposals.add(extractedName[1]);
+						}	
 					}
 					
 					@Override
 					public void caseAVariableExp(AVariableExp node)
 			                  throws AnalysisException{
 						String name = node.toString();
+						
 						if(!VdmHelper.checkForDuplicates(name,dynamicTemplateProposals)){
 							VdmHelper.createProposal(node,name,name,"Variable Exp",info,proposals,offset);
 							dynamicTemplateProposals.add(name);

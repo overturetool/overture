@@ -21,6 +21,7 @@
  */
 package org.overture.ide.ui.templates;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -62,7 +63,8 @@ import org.overture.ide.ui.utility.ast.AstNameUtil;
 public class VdmCompleteProcessor
 {
 	private VdmElementImageProvider imgProvider = new VdmElementImageProvider();
-
+	private VdmCompletionHelper VdmHelper = new VdmCompletionHelper();
+	private ArrayList<String> MkDynamicTemplateProposals = new ArrayList<String>();
 	public void computeCompletionProposals(VdmCompletionContext info,
 			VdmDocument document, List<ICompletionProposal> proposals,
 			int offset, ITextViewer viewer,TemplateContext context)
@@ -77,7 +79,7 @@ public class VdmCompleteProcessor
 			case Dot:
 				break;
 			case Mk:
-				completeMK(info, document, calculatedProposals,offset);
+				completeMK(info, document, calculatedProposals, offset, context, viewer);
 				break;
 			case New:
 				completeNew(info, document, calculatedProposals, offset);
@@ -87,7 +89,7 @@ public class VdmCompleteProcessor
 				break;
 			case Types:
 				completeTypes(info, document, calculatedProposals, offset);
-				vdmCompletionExtractor.completeBasicTypes(info, document, calculatedProposals, offset, getAst(document), context,viewer);
+				vdmCompletionExtractor.generateCompleteProposals(info, document, calculatedProposals, offset, getAst(document), context,viewer);
 				break;
 			default:
 				break;
@@ -113,11 +115,11 @@ public class VdmCompleteProcessor
 	}
 
 	private void completeMK(VdmCompletionContext info, VdmDocument document,
-			List<ICompletionProposal> calculatedProposals, int offset) {
+			List<ICompletionProposal> calculatedProposals, int offset, final TemplateContext context,final ITextViewer viewer) {
 
 		for(INode def : getAst(document))
 		{
-			completeRecords(offset, calculatedProposals, info, def);
+			completeRecords(offset, calculatedProposals, info, def, context, viewer);
 			completeMk_tokens(offset,calculatedProposals,info, def);
 			completetuples(offset, calculatedProposals, info,def);
 		}	
@@ -187,7 +189,7 @@ public class VdmCompleteProcessor
 	
 	private void completeRecords(final int offset,
 			final List<ICompletionProposal> calculatedProposals,
-			VdmCompletionContext info, final INode def) {
+			VdmCompletionContext info, final INode def, final TemplateContext context,final ITextViewer viewer) {
 
 		try {
 			def.apply(new DepthFirstAnalysisAdaptor() {
@@ -196,30 +198,27 @@ public class VdmCompleteProcessor
 						throws AnalysisException {
 					
 					String name = arg0.getName().getName();
-					IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
-					
-					
-					
-					
-					String replacementString = name + "(";
-					String displayString = replacementString;
+
+					String[] functionName = {name, (name + "(")};
+					String displayString = functionName[1];
 					
 					String sep = "";
+			    	List<String> parameterNameList = new ArrayList<String>();
 
 					for (Iterator<AFieldField> iterator = arg0.getFields().iterator(); iterator.hasNext();)
 					{
 						AFieldField field = iterator.next();
-
-						replacementString += sep + field.getTagname().getName();
+						parameterNameList.add(field.getTagname().getName());
 						displayString += sep + field.toString();
 						sep = ", ";
-
 					}
-					
-					replacementString += ")";
-					displayString += ")";
-					
-					calculatedProposals.add(new CompletionProposal(replacementString , offset, 0, replacementString.length(), imgProvider.getImageLabel(def, 0), replacementString, info, displayString));
+
+			    	String extractedName[] = VdmHelper.templatePatternGenerator(parameterNameList,functionName);
+			    	extractedName[0] = displayString + ")";
+					if(VdmHelper.nullOrEmptyCheck(extractedName[1]) && !VdmHelper.checkForDuplicates(extractedName[1],MkDynamicTemplateProposals)){
+						VdmHelper.dynamicTemplateCreator(extractedName,"MK Record",offset,context,calculatedProposals,info,viewer,arg0.getLocation().getEndOffset());
+						MkDynamicTemplateProposals.add(extractedName[1]);
+					}				
 				}
 			});
 		} catch (AnalysisException e) {
