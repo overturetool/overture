@@ -81,7 +81,7 @@ public abstract class VdmContentAssistProcessor extends
 
 		if (modList.size() > 0)
 		{
-			return (ICompletionProposal[]) modList.toArray(new ICompletionProposal[modList.size()]);
+			completionProposals = (ICompletionProposal[]) modList.toArray(new ICompletionProposal[modList.size()]);
 		}
 		sortProposals(completionProposals);
 		return completionProposals;
