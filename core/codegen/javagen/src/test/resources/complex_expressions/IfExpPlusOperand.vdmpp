@@ -1,0 +1,19 @@
+
+class Entry
+  
+operations
+op : () ==> ()
+op() ==
+(
+ dcl x:real := 0.0;
+ x := x * 2 + if x > 10 then 1.0 else 2.0
+);
+
+public static Run : () ==> ?
+Run () ==
+(
+ new Entry().op();
+ return 0;
+);
+
+end Entry
