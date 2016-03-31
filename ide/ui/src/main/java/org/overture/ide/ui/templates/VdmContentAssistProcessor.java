@@ -70,13 +70,12 @@ public abstract class VdmContentAssistProcessor extends
 
 		if (viewer.getDocument() instanceof VdmDocument)
 		{
-			String prefix = extractPrefix(viewer, offset);
-			Region region = new Region(offset - prefix.length(), prefix.length());
-
-			processer.computeCompletionProposals(
-					CompletionUtil.computeVdmCompletionContext(viewer.getDocument(), offset),
-					(VdmDocument) viewer.getDocument(), modList, offset,
-					viewer, createContext(viewer, region));
+			VdmCompletionContext completionContext = CompletionUtil.computeVdmCompletionContext(viewer.getDocument(), offset);
+		    Region region = new Region(offset - completionContext.getProposalPrefix().length(), completionContext.getProposalPrefix().length());
+		
+		    processer.computeCompletionProposals(completionContext, 
+		    		(VdmDocument) viewer.getDocument(), modList, offset,
+		    		viewer, createContext(viewer, region));
 		}
 
 		if (modList.size() > 0)

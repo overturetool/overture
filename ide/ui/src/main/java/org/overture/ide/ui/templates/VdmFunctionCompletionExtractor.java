@@ -26,7 +26,8 @@ public class VdmFunctionCompletionExtractor{
 	public String[] implicitFunctionNameExtractor(AImplicitFunctionDefinition node){
 
     	String functionName[] = new String[2];
-    	functionName[0] = node.getName().toString();
+    	String[] SplitName = (node.getName().toString()).split("\\(");
+    	functionName[0] = SplitName[0];
     	
     	if(functionName[0] != null && !functionName[0].isEmpty()){
     		functionName[1] = functionName[0] + "(";  //ReplacemestString
@@ -41,7 +42,8 @@ public class VdmFunctionCompletionExtractor{
 	
 	public String[] explicitFunctionNameExtractor(AExplicitFunctionDefinition node){
     	String functionName[] = new String[2];
-    	functionName[0] = node.getName().toString();
+    	String[] SplitName = (node.getName().toString()).split("\\(");
+    	functionName[0] = SplitName[0];
     	
     	if(functionName[0] != null && !functionName[0].isEmpty()){
     		functionName[1] = functionName[0] + "(";  //ReplacemestString

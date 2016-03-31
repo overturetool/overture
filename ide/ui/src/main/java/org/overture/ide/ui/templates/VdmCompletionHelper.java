@@ -19,7 +19,7 @@ import org.overture.ast.node.INode;
 import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
 
 public class VdmCompletionHelper  extends VdmTemplateAssistProcessor{
-
+	
 	static VdmElementImageProvider imgProvider = new VdmElementImageProvider();
 	
 	public boolean checkForDuplicates(String value, ArrayList<String> container){
@@ -62,17 +62,17 @@ public class VdmCompletionHelper  extends VdmTemplateAssistProcessor{
 		}
     }
 
-	public String[] templatePatternGenerator(List<String> extractedNames,String[] functionName){
+	public String[] templatePatternGenerator(List<String> parameterNames,String[] functionName){
 		StringBuilder sbPattern = new StringBuilder();
 		StringBuilder sbDisplayName = new StringBuilder();
 		sbPattern.append(functionName[1]);
 		sbDisplayName.append(functionName[1]);
-		if((extractedNames != null && !extractedNames.isEmpty())){
+		if((parameterNames != null && !parameterNames.isEmpty())){
 			
-			for (int i = 0; i < extractedNames.size(); i++) {
-				String str = extractedNames.get(i);
+			for (int i = 0; i < parameterNames.size(); i++) {
+				String str = parameterNames.get(i);
 			
-				if(str != extractedNames.get(0)){
+				if(str != parameterNames.get(0)){
 					sbPattern.append(", ");
 					sbDisplayName.append(", ");
 				}
@@ -89,27 +89,31 @@ public class VdmCompletionHelper  extends VdmTemplateAssistProcessor{
 
     	return functionName;
 	}
+	public void dynamicTemplateCreator(String[] extractedNames, String type, int offset,TemplateContext context,List<ICompletionProposal> proposals,VdmCompletionContext info,ITextViewer viewer,int nodeOffsetPosition) {
 	
-	public void dynamicTemplateCreator(String[] extractedName, String type, int offset,TemplateContext context,List<ICompletionProposal> proposals,VdmCompletionContext info,ITextViewer viewer,int nodeOffsetPosition) {
+		dynamicTemplateCreator( extractedNames, type, offset, context, proposals, info, viewer, nodeOffsetPosition, null);
+	}
+		
+	public void dynamicTemplateCreator(String[] extractedNames, String type, int offset,TemplateContext context,List<ICompletionProposal> proposals,VdmCompletionContext info,ITextViewer viewer,int nodeOffsetPosition, String prefix) {
 		
 		if (context == null)
 			return;
 		
-		if(nullOrEmptyCheck(extractedName[0]) && findInString(info.getProposalPrefix(),extractedName[0])){
+		if(nullOrEmptyCheck(extractedNames[0]) && findInString(info.getProposalPrefix(),extractedNames[1])){ 
 
-			ITextSelection selection = (ITextSelection) viewer
-					.getSelectionProvider().getSelection();
+			ITextSelection selection = (ITextSelection) viewer.getSelectionProvider().getSelection();
 			// get caret pos = selection.getOffset()
 				
 			if (selection.getOffset() == offset){
 				offset = selection.getOffset() + selection.getLength();
 			}
-			String prefix = extractPrefix(viewer, offset);
+			if(prefix == null){
+				prefix = extractPrefix(viewer, offset);
+			}
 			Region region = new Region(offset - prefix.length(), prefix.length());
-
 			context.setVariable("selection", selection.getText());
 			
-			Template template = new Template(extractedName[0],type,"org.overture.ide.vdmsl.ui.contextType",extractedName[1],true);
+			Template template = new Template(extractedNames[0],type,"org.overture.ide.vdmsl.ui.contextType",extractedNames[1],true);
 			
 			proposals.add(createProposal(template, context, (IRegion) region, getRelevance(template, prefix)));
 		}

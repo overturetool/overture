@@ -36,16 +36,16 @@ public class VdmCompletionContext
 			consQuoteContext(index);
 			return;
 		}
-
-		// 'new' must appear at the first index of the raw scan
-		if (checkLastInString("new",rawScan.toString().trim()))
+		
+		String[] sepList = {"\n", "\r", "\t", "."};
+		proposalPrefix = regexStringCleaner(rawScan.toString(),sepList);
+		if (proposalPrefix.contains("new"))
 		{
 			// Completion of constructors
 			consConstructorCallContext();
 			return;
 		}
 		
-		// 'mk_' must appear at the first index of the raw scan
 		if(checkLastInString("mk_",rawScan.toString()))
 		{
 			consMkContext();
@@ -63,36 +63,37 @@ public class VdmCompletionContext
 			return;
 		}
 		
-		typeContext();
+		String[] typeSepList = { " ", "\n", "\r", "\t", "."};
+		proposalPrefix = regexStringCleaner(proposalPrefix,typeSepList);		
 	}
-
-	private void typeContext(){
+	
+	private String regexStringCleaner(String proposalPrefix,String[] sepList){
 		//Default
 		proposalPrefix = rawScan.toString();
 		if( proposalPrefix == null || proposalPrefix.isEmpty()){
-			return;
+			return "";
 		}
 		
 		char charMatch = proposalPrefix.charAt(proposalPrefix.length() - 1); //checks the end of the string
-		if( charMatch == ' ' || charMatch == '\r' || charMatch == '\n' || charMatch == '\t' )
+		if(charMatch == '\r' || charMatch == '\n' || charMatch == '\t' )
 		{
 			proposalPrefix = "";
 		}
 		else{
-			String[] sep_list = { " ", "\n", "\r", "\t", "."};
 			StringBuffer regexp = new StringBuffer("");
 			regexp.append("[");
-			for(String s : sep_list) {
+			for(String s : sepList) {
 			    regexp.append("[");
 			    regexp.append(Pattern.quote(s));
 			    regexp.append("]");
 			}
 			regexp.append("]");
 			String[] bits = proposalPrefix.split(regexp.toString());
-			proposalPrefix = bits[bits.length-1].trim();
-		}
+			proposalPrefix = bits[bits.length-1];
+			proposalPrefix = proposalPrefix.trim();
 
-		return;
+		}
+		return proposalPrefix;
 	}
 	
 	private void consDotContext(String[] split)
@@ -125,9 +126,7 @@ public class VdmCompletionContext
 		// This gives us everything after new, e.g. ' MyClass' if you type 'new MyClass'
 		CharSequence subSeq = rawScan.subSequence(NEW_LENGTH, rawScan.length());
 
-		processedScan = new StringBuffer(subSeq);
-		proposalPrefix = processedScan.toString().trim();
-
+		processedScan = rawScan; //new StringBuffer(subSeq);
 		type = SearchType.New;
 	}
 	
