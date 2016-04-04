@@ -2886,8 +2886,23 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			env.listAlternatives(name);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
-		} else
+		}
+		else
 		{
+			PType result = question.assistantFactory.createPDefinitionAssistant().getType(node.getVardef());
+			
+			if (result instanceof AParameterType)
+			{
+				AParameterType ptype = (AParameterType)result;
+				
+				if (ptype.getName().equals(name))	// Referring to "T" of @T
+				{
+					TypeCheckerErrors.report(3351, "Type parameter '" + name.getName() + "' cannot be used here", node.getLocation(), node);
+					node.setType(AstFactory.newAUnknownType(node.getLocation()));
+					return node.getType();
+				}
+			}
+
 			// Note that we perform an extra typeResolve here. This is
 			// how forward referenced types are resolved, and is the reason
 			// we don't need to retry at the top level (assuming all names
