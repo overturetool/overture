@@ -65,6 +65,7 @@ import org.overture.codegen.ir.expressions.APlusUnaryExpIR;
 import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
 import org.overture.codegen.ir.expressions.ASeqToStringUnaryExpIR;
 import org.overture.codegen.ir.expressions.AStringToSeqUnaryExpIR;
+import org.overture.codegen.ir.expressions.ATernaryIfExpIR;
 import org.overture.codegen.ir.expressions.AUndefinedExpIR;
 import org.overture.codegen.ir.expressions.SBinaryExpIR;
 import org.overture.codegen.ir.expressions.SLiteralExpIR;
@@ -292,7 +293,8 @@ public class JavaFormat
 		if (parent instanceof SNumericBinaryExpIR
 				|| parent instanceof AAbsUnaryExpIR
 				|| parent instanceof AMinusUnaryExpIR
-				|| parent instanceof APlusUnaryExpIR)
+				|| parent instanceof APlusUnaryExpIR
+				|| parent instanceof AIsolationUnaryExpIR)
 		{
 			SExpIR exp = (SExpIR) node;
 			STypeIR type = exp.getType();
@@ -310,6 +312,7 @@ public class JavaFormat
 	private static boolean isNumberDereferenceCandidate(SExpIR node)
 	{
 		boolean fitsCategory = !(node instanceof SNumericBinaryExpIR)
+				&& !(node instanceof ATernaryIfExpIR)
 				&& !(node instanceof SLiteralExpIR)
 				&& !(node instanceof AIsolationUnaryExpIR)
 				&& !(node instanceof SUnaryExpIR);
