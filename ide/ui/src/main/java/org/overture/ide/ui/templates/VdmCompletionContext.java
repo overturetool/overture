@@ -125,6 +125,8 @@ public class VdmCompletionContext
 
 		// This gives us everything after new, e.g. ' MyClass' if you type 'new MyClass'
 		CharSequence subSeq = rawScan.subSequence(NEW_LENGTH, rawScan.length());
+		
+		proposalPrefix = rawScan.subSequence(rawScan.indexOf("new"),rawScan.length()).toString();
 
 		processedScan = rawScan; //new StringBuffer(subSeq);
 		type = SearchType.New;
