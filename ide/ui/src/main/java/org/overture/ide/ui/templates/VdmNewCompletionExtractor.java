@@ -44,11 +44,20 @@ public class VdmNewCompletionExtractor {
 								typeList.add(type);
 							}
 						}
-
-				    	String extractedNames[] = newTemplatePatternGenerator(typeList,names);
+						
+						String extractedNames[] = newTemplatePatternGenerator(typeList,names);		    	
 				    	if(VdmHelper.nullOrEmptyCheck(extractedNames[1]) && !VdmHelper.checkForDuplicates(extractedNames[1],dynamicTemplateProposals)){
 							VdmHelper.dynamicTemplateCreator(extractedNames,"New",offset,context,proposals,info,viewer,node.getLocation().getEndOffset(),info.getProposalPrefix());
 							dynamicTemplateProposals.add(extractedNames[1]);
+						}
+				    	
+				    	String[] namesForDefaultCtor = {name, (name + "(")};
+				    	
+				    	//For the default constructor proposals
+				    	String extractedNamesDefaultCtor[] = newTemplatePatternGenerator(null,namesForDefaultCtor);		    	
+				    	if(VdmHelper.nullOrEmptyCheck(extractedNamesDefaultCtor[1]) && !VdmHelper.checkForDuplicates(extractedNamesDefaultCtor[1],dynamicTemplateProposals)){
+							VdmHelper.dynamicTemplateCreator(extractedNamesDefaultCtor,"New",offset,context,proposals,info,viewer,node.getLocation().getEndOffset(),info.getProposalPrefix());
+							dynamicTemplateProposals.add(extractedNamesDefaultCtor[1]);
 						}
 					}
 					
@@ -92,8 +101,12 @@ public class VdmNewCompletionExtractor {
 	private String[] newTemplatePatternGenerator(List<PType> parameterTypes,String[] names){
 		StringBuilder sbName = new StringBuilder();
 		StringBuilder sbDisplayName = new StringBuilder();
+		StringBuilder sbDefaultCtorName = new StringBuilder();
+		StringBuilder sbDefaultCtorDisplayName = new StringBuilder();
+			
 		sbName.append(names[1]);
 		sbDisplayName.append(names[1]);
+		
 		if((parameterTypes != null && !parameterTypes.isEmpty())){
 			for (int i = 0; i < parameterTypes.size(); i++) {
 				if(i != 0){
@@ -102,7 +115,19 @@ public class VdmNewCompletionExtractor {
 				}
 				generateParameterFromType(parameterTypes.get(i), sbName, sbDisplayName);
 			}			
+		} else {
+			//For creating the default constructor proposal
+			sbDefaultCtorName.append(names[1]);
+			sbDefaultCtorDisplayName.append(names[1]);
+			sbDefaultCtorName.append("${}");
+			sbDefaultCtorName.append(")");
+			sbDefaultCtorDisplayName.append(")");
+			
+			names[1] = "new " + sbDefaultCtorName.toString();
+			names[0] = sbDefaultCtorDisplayName.toString();
+			return names;
 		}
+		
 		sbName.append(")");
 		sbDisplayName.append(")");
 		
