@@ -55,11 +55,16 @@ public class AImplicitFunctionDefinitionAssistantTC implements IAstAssistant
 		Iterator<PType> ti = actualTypes.iterator();
 		AFunctionType ftype = (AFunctionType) impdef.getType();
 
-		for (ILexNameToken pname : impdef.getTypeParams())
+		if (impdef.getTypeParams() != null)
 		{
-			PType ptype = ti.next();
-			// AFunctionTypeAssistent.
-			ftype = (AFunctionType) af.createPTypeAssistant().polymorph(ftype, pname, ptype);
+    		for (ILexNameToken pname : impdef.getTypeParams())
+    		{
+    			PType ptype = ti.next();
+    			// AFunctionTypeAssistent.
+    			ftype = (AFunctionType) af.createPTypeAssistant().polymorph(ftype, pname, ptype);
+    		}
+			
+			ftype.setInstantiated(true);
 		}
 
 		return ftype;

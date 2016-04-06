@@ -5,6 +5,7 @@
 <message column="8" line="2394" message="Recursive function has no measure" messageType="warning" number="5012" resource="CodegenPP"/>
 <message column="13" line="2524" message="Definition 'd' not used" messageType="warning" number="5000" resource="CodegenPP"/>
 <message column="13" line="2523" message="Definition 'c' not used" messageType="warning" number="5000" resource="CodegenPP"/>
+<message column="54" line="2140" message="Polymorphic function has not been instantiated" messageType="error" number="3350" resource="CodegenPP"/>
 <message column="12" line="2156" message="Operation returns void value" messageType="error" number="3313" resource="CodegenPP"/>
 <message column="12" line="2170" message="Operation returns void value" messageType="error" number="3313" resource="CodegenPP"/>
 <message column="12" line="2180" message="Operation returns void value" messageType="error" number="3313" resource="CodegenPP"/>

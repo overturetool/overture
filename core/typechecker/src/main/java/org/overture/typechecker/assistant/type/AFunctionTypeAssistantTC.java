@@ -49,6 +49,7 @@ public class AFunctionTypeAssistantTC implements IAstAssistant
 			AFunctionType ft = (AFunctionType) t.getResult().clone();
 			AFunctionType type = AstFactory.newAFunctionType(t.getLocation(), false, (List<PType>) t.getParameters().clone(), getCurriedPreType(ft, isCurried));
 			type.setDefinitions((List<PDefinition>) t.getDefinitions().clone());
+			type.setInstantiated(null);
 			return type;
 		} else
 		{
@@ -61,6 +62,7 @@ public class AFunctionTypeAssistantTC implements IAstAssistant
 	{
 		AFunctionType type = AstFactory.newAFunctionType(t.getLocation(), false, (List<PType>) t.getParameters().clone(), AstFactory.newABooleanBasicType(t.getLocation()));
 		type.setDefinitions((List<PDefinition>) t.getDefinitions().clone());
+		type.setInstantiated(null);
 		return type;
 	}
 
@@ -73,6 +75,7 @@ public class AFunctionTypeAssistantTC implements IAstAssistant
 			AFunctionType ft = (AFunctionType) type.getResult().clone();
 			AFunctionType t = AstFactory.newAFunctionType(type.getLocation(), false, ((List<PType>) type.getParameters().clone()), getCurriedPostType(ft, isCurried));
 			t.setDefinitions(type.getDefinitions());
+			t.setInstantiated(null);
 			return t;
 		} else
 		{
@@ -88,6 +91,7 @@ public class AFunctionTypeAssistantTC implements IAstAssistant
 		params.add(t.getResult().clone());
 		AFunctionType type = AstFactory.newAFunctionType(t.getLocation(), false, params, AstFactory.newABooleanBasicType(t.getLocation()));
 		type.setDefinitions((List<? extends PDefinition>) t.getDefinitions().clone());
+		type.setInstantiated(null);
 		return type;
 	}
 

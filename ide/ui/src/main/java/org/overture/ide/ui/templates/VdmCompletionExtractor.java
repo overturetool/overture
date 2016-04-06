@@ -13,6 +13,7 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 import org.overture.ide.ui.VdmUIPlugin;
@@ -53,7 +54,7 @@ public final class VdmCompletionExtractor {
 					@Override
 					public void caseAInstanceVariableDefinition(AInstanceVariableDefinition node)
                             throws AnalysisException{
-						String name = node.toString();
+						String name = node.getName().toString();
 						
 						if(!VdmHelper.checkForDuplicates(name,dynamicTemplateProposals)){
 							VdmHelper.createProposal(node,name,name,"Instance Variable",info,proposals,offset);
@@ -115,7 +116,6 @@ public final class VdmCompletionExtractor {
 							dynamicTemplateProposals.add(name);
 						}
 					}
-
 				});
 			} catch (AnalysisException e)
 			{

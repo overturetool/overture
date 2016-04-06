@@ -176,6 +176,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (question.assistantFactory.createPTypeAssistant().isFunction(node.getType()))
 		{
 			AFunctionType ft = question.assistantFactory.createPTypeAssistant().getFunction(node.getType());
+			
+			if (ft.getInstantiated() != null && !ft.getInstantiated())
+			{
+				// Something like f(x) rather than f[nat](x)
+				TypeCheckerErrors.report(3350, "Polymorphic function has not been instantiated", node.getRoot().getLocation(), node);
+			}
+			
 			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, THIS, question);
 			results.add(functionApply(node, isSimple, ft, question));
 		}
