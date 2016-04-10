@@ -336,7 +336,7 @@ public class StatementReader extends SyntaxReader
 		return AstFactory.newAAtomicStm(token, assignments);
 	}
 
-	private PStm readCallStatement() throws ParserException, LexException
+	public PStm readCallStatement() throws ParserException, LexException
 	{
 		if (dialect != Dialect.VDM_SL)
 		{
