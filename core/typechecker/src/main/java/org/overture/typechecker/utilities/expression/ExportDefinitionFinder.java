@@ -91,14 +91,7 @@ public class ExportDefinitionFinder
 				PType act = af.createPDefinitionAssistant().getType(def);
 				PType type = exp.getExportType();
 
-				if (act != null && !af.createPTypeAssistant().equals(act, type))
-				{
-					TypeCheckerErrors.report(3184, "Exported " + name
-							+ " function type incorrect", name.getLocation(), exp);
-					TypeCheckerErrors.detail2("Exported", type, "Actual", act);
-				}
-				
-				if (exp.getTypeParams() != null)
+				if (exp.getTypeParams() != null && !exp.getTypeParams().isEmpty())
 				{
 					if (def instanceof AExplicitFunctionDefinition)
 					{
@@ -112,6 +105,13 @@ public class ExportDefinitionFinder
 						{
 							TypeCheckerErrors.report(3353, "Exported " + name + " function type parameters incorrect", name.getLocation(), exp);
 							TypeCheckerErrors.detail2("Exported", exp.getTypeParams(), "Actual", efd.getTypeParams());
+						}
+						
+						if (act != null && !act.toString().equals(type.toString()))
+						{
+							TypeCheckerErrors.report(3184, "Exported " + name
+									+ " function type incorrect", name.getLocation(), exp);
+							TypeCheckerErrors.detail2("Exported", type, "Actual", act);
 						}
 					}
 					else if (def instanceof AImplicitFunctionDefinition)
@@ -127,7 +127,20 @@ public class ExportDefinitionFinder
 							TypeCheckerErrors.report(3353, "Exported " + name + " function type parameters incorrect", name.getLocation(), exp);
 							TypeCheckerErrors.detail2("Exported", exp.getTypeParams(), "Actual", ifd.getTypeParams());
 						}
+						
+						if (act != null && !act.toString().equals(type.toString()))
+						{
+							TypeCheckerErrors.report(3184, "Exported " + name
+									+ " function type incorrect", name.getLocation(), exp);
+							TypeCheckerErrors.detail2("Exported", type, "Actual", act);
+						}
 					}
+				}
+				else if (act != null && !af.createPTypeAssistant().equals(act, type))
+				{
+					TypeCheckerErrors.report(3184, "Exported " + name
+							+ " function type incorrect", name.getLocation(), exp);
+					TypeCheckerErrors.detail2("Exported", type, "Actual", act);
 				}
 
 				list.add(def);
