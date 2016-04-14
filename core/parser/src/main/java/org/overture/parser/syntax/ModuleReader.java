@@ -393,7 +393,7 @@ public class ModuleReader extends SyntaxReader
 	{
 		LexToken token = lastToken();
 		List<ILexNameToken> nameList = readIdList();
-		ignoreTypeParams();
+		List<ILexNameToken> typeParams = ignoreTypeParams();
 		checkFor(VDMToken.COLON, 2176, "Expecting ':' after export name");
 		LexToken tloc = lastToken();
 		PType type = getTypeReader().readType();
@@ -404,7 +404,7 @@ public class ModuleReader extends SyntaxReader
 		}
 
 		ignore(VDMToken.SEMICOLON);
-		return AstFactory.newAFunctionExport(token.location, nameList, type);
+		return AstFactory.newAFunctionExport(token.location, nameList, type, typeParams);
 	}
 
 	private List<PExport> readExportedOperations() throws ParserException,
@@ -729,11 +729,15 @@ public class ModuleReader extends SyntaxReader
 		return name;
 	}
 
-	private void ignoreTypeParams() throws LexException, ParserException
+	private LexNameList ignoreTypeParams() throws LexException, ParserException
 	{
 		if (lastToken().is(VDMToken.SEQ_OPEN))
 		{
-			getDefinitionReader().readTypeParams();
+			return getDefinitionReader().readTypeParams();
+		}
+		else
+		{
+			return null;
 		}
 	}
 }

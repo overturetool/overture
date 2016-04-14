@@ -539,7 +539,7 @@ export {-> package='org.overture.ast.modules'
 	|	[location]:location 
 	|	[definition]:definition*}
     =   {all}
-    |   {function} [nameList]:LexNameToken* (exportType):type
+    |   {function} [nameList]:LexNameToken* (exportType):type [typeParams]:LexNameToken*
     |   {operation} [nameList]:LexNameToken* (exportType):type
     |   {type} [name]:LexNameToken [struct]:java_Boolean
     |   {value} [nameList]:LexNameToken* (exportType):type
