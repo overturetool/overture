@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
 <message column="26" line="14" message="Definition 's' not used" messageType="warning" number="5000" resource="extexplopdef.vpp"/>
-<message column="26" line="20" message="Definition 's' not used" messageType="warning" number="5000" resource="extexplopdef.vpp"/>
 <message column="35" line="20" message="Definition 't' not used" messageType="warning" number="5000" resource="extexplopdef.vpp"/>
+<message column="26" line="20" message="Definition 's' not used" messageType="warning" number="5000" resource="extexplopdef.vpp"/>
 <message column="17" line="27" message="Definition 'r' not used" messageType="warning" number="5000" resource="extexplopdef.vpp"/>
 <message column="7" line="48" message="Duplicate definition: a" messageType="warning" number="5007" resource="extexplopdef.vpp"/>
 <message column="7" line="48" message="a at 3:7 hidden by a" messageType="warning" number="5008" resource="extexplopdef.vpp"/>
