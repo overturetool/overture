@@ -123,12 +123,20 @@ public class RecursiveObligation extends ProofObligation
 
 		if (typeParams != null && !typeParams.isEmpty())
 		{
-			AFuncInstatiationExp func_exp = new AFuncInstatiationExp();
-			func_exp.setActualTypes(cloneListType(apply.getArgtypes()));
-			func_exp.setFunction(wrapName(measure.clone()));
-			apply_exp.setRoot(func_exp);
+			if (apply.getRoot() instanceof AFuncInstatiationExp)
+			{
+				AFuncInstatiationExp func_exp = (AFuncInstatiationExp) apply.getRoot().clone();
+				func_exp.setFunction(wrapName(measure.clone()));
+				apply_exp.setRoot(func_exp);
+			}
+			else
+			{
+				AFuncInstatiationExp func_exp = new AFuncInstatiationExp();
+				func_exp.setActualTypes(cloneListType(apply.getArgtypes()));	// Not sure about this?
+				func_exp.setFunction(wrapName(measure.clone()));
+				apply_exp.setRoot(func_exp);
+			}
 		}
-
 		else
 		{
 			apply_exp.setRoot(wrapName(measure.clone()));
