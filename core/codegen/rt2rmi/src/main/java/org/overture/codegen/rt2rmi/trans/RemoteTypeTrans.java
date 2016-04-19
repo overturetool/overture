@@ -55,6 +55,9 @@ public class RemoteTypeTrans extends DepthFirstAnalysisAdaptor
 		if(node.getName().equals("bridge_FieldGraph")) 
 			return;
 		
+		if(node.getName().equals("MyUtils")) 
+			return;
+		
 		node.setName(node.getName() + "_i");
 	}
 }
