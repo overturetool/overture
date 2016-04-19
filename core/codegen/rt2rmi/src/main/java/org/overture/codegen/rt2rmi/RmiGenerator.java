@@ -69,6 +69,9 @@ public class RmiGenerator implements IREventObserver
 		this.javaGen = new JavaCodeGen();
 		this.javaGen.registerIrObs(this);
 		this.javaGen.getSettings().setCharSeqAsString(true);
+		
+		this.javaGen.getJavaSettings().setMakeClassesSerializable(true);
+		
 //		this.javaGen.emitCode(, fileName, code);
 		
 		this.javaGen.getJavaFormat().getMergeVisitor().getTemplateManager().setUserTemplatePath(
