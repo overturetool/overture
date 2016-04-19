@@ -4,9 +4,7 @@ import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
-import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
-import org.overture.codegen.ir.expressions.ANewExpIR;
-import org.overture.codegen.ir.types.AClassTypeIR;
+
 import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.ir.IRInfo;
 

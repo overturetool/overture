@@ -192,7 +192,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 				
 				genData = javaCodeGen.generate(CodeGenBase.getNodes(tcResult.result));
 				
-				System.out.println("Hello From RT parts..");
+				System.out.println("Hello From RT parts.. New update ;-)");
 				
 				/* Start the Java RMI generator part */
 				

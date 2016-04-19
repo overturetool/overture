@@ -29,7 +29,10 @@ import org.overture.cgrmi.extast.declarations.ASynchTokenInterfaceDeclIR;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AFieldDeclIR;
 import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
+import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.ir.CodeGenBase;
+import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.IREventObserver;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
@@ -41,13 +44,17 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.rt2rmi.systemanalysis.DistributionMapping;
 import org.overture.codegen.rt2rmi.trans.FunctionToRemoteTrans;
+import org.overture.codegen.rt2rmi.trans.InterfaceFuncToRemoteTrans;
 import org.overture.codegen.rt2rmi.trans.RemoteTypeTrans;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.vdm2java.IJavaConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
+import org.overture.codegen.vdm2java.JavaQuoteValueCreator;
 import org.overture.codegen.vdm2java.JavaSettings;
+import org.overture.codegen.ir.CodeGenBase;
 
 public class RmiGenerator implements IREventObserver
 {
@@ -99,6 +106,7 @@ public class RmiGenerator implements IREventObserver
 		// Add additional transformations
 		this.javaGen.getTransSeries().getSeries().add(new RemoteTypeTrans(systemClassName, this.javaGen.getInfo()));
 		this.javaGen.getTransSeries().getSeries().add(new FunctionToRemoteTrans(systemClassName, this.javaGen.getInfo()));
+		//this.javaGen.getTransSeries().getSeries().add(new InterfaceFuncToRemoteTrans(systemClassName, this.javaGen.getInfo()));
 	}
 	
 	public void generate(List<SClassDefinition> rtClasses, String output_dir)
@@ -123,12 +131,6 @@ public class RmiGenerator implements IREventObserver
 			systemClassName = mapping.getSystemName();
 
 			GeneratedData data = javaGen.generate(CodeGenBase.getNodes(rtClasses));
-
-			List<GeneratedModule> qutes = data.getQuoteValues();
-			
-			for(GeneratedModule li : data.getClasses()){
-				if(li.getIrNode() instanceof AInterfaceDeclIR);
-			}
 			
 			// JavaCGMain line: 
 			
@@ -155,7 +157,7 @@ public class RmiGenerator implements IREventObserver
 			generateRMIserver(output_dir, 1099, remoteContracts);
 
 			// Distributed the generate remote contracts and their implementation
-			generateRemConAndRemConImp(output_dir, remoteContracts, cpuToDeployedClasses, cpuToConnectedCPUs, remoteImpls);
+			generateRemConAndRemConImp(output_dir, remoteContracts, cpuToDeployedClasses, cpuToConnectedCPUs, remoteImpls, data);
 
 			// Generate entry method for each CPU and the local system class
 			generateEntryAndSystemClass(output_dir, cpuToDeployedObject, cpuToConnectedCPUs, deployedObjCounter);
@@ -252,7 +254,7 @@ public class RmiGenerator implements IREventObserver
 
 	public void generateRemConAndRemConImp(String output_dir, Set<ARemoteContractDeclIR> remoteContracts,
 			Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses, Map<String, Set<String>> cpuToConnectedCPUs,
-			List<ARemoteContractImplDeclIR> remoteImpls)
+			List<ARemoteContractImplDeclIR> remoteImpls, GeneratedData data)
 					throws org.overture.codegen.ir.analysis.AnalysisException, IOException
 	{
 
@@ -294,6 +296,38 @@ public class RmiGenerator implements IREventObserver
 				output_synch_i.flush();
 				output_synch_i.close();
 
+				List<GeneratedModule> qutes = data.getQuoteValues();
+				
+				for(GeneratedModule q : qutes){
+					String javaFileName = q.getName();
+					javaFileName += JavaQuoteValueCreator.JAVA_QUOTE_NAME_SUFFIX;
+					javaFileName += IJavaConstants.JAVA_FILE_EXTENSION;
+					CodeGenBase.emitCode(new File(output_dir + cpu + "/" + mvn_path + "quotes"), javaFileName, q.getContent());
+				}
+				
+				for(GeneratedModule li : data.getClasses()){
+					if(li.getIrNode() instanceof AInterfaceDeclIR)
+						{
+							AInterfaceDeclIR hi = (AInterfaceDeclIR) li.getIrNode();
+							
+							LinkedList<AMethodDeclIR> met = hi.getMethodSignatures();
+							
+							for(AMethodDeclIR m:met){
+								AExternalTypeIR runtimeExpType = new AExternalTypeIR();
+								runtimeExpType.setName("java.rmi.RemoteException");
+								m.getRaises().add(runtimeExpType);
+							}
+							
+							String tr = li.getContent();
+							
+							
+							
+							String javaFileName = li.getName();
+							javaFileName += IJavaConstants.JAVA_FILE_EXTENSION;
+							CodeGenBase.emitCode(new File(output_dir + cpu + "/" + mvn_path), javaFileName, li.getContent());
+						}
+				}
+				
 				for (ARemoteContractDeclIR contract : remoteContracts)
 				{
 					StringWriter writer = new StringWriter();
@@ -312,7 +346,7 @@ public class RmiGenerator implements IREventObserver
 					impl.apply(printer, writer);
 					
 					// Filter these methods currently
-					if(impl.getName().equals("bridge_FieldGraph")) continue;
+					//if(impl.getName().equals("bridge_FieldGraph")) continue;
 					if(impl.getName().equals("MyUtils")) continue;
 					
 					File file = new File(output_dir + cpu + "/" + mvn_path + impl.getName() + ".java");
