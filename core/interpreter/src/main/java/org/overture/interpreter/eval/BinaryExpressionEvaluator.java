@@ -1038,49 +1038,39 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		}
 	}
 	
-	// These are included in Java 8 Math.java
-	
 	private long addExact(long x, long y, Context ctxt) throws ValueException
 	{
-		long r = x + y;
-		// HD 2-12 Overflow iff both arguments have the opposite sign of the result
-		
-		if (((x ^ r) & (y ^ r)) < 0)
+		try
+		{
+			return Math.addExact(x, y);
+		}
+		catch (ArithmeticException e)
 		{
 			throw new ValueException(4169, "Arithmetic overflow", ctxt);
 		}
-		
-		return r;
 	}
 
 	private long subtractExact(long x, long y, Context ctxt) throws ValueException
 	{
-		long r = x - y;
-		// HD 2-12 Overflow iff the arguments have different signs and
-		// the sign of the result is different than the sign of x
-
-		if (((x ^ y) & (x ^ r)) < 0)
+		try
+		{
+			return Math.subtractExact(x, y);
+		}
+		catch (ArithmeticException e)
 		{
 			throw new ValueException(4169, "Arithmetic overflow", ctxt);
 		}
-
-		return r;
 	}
 
     private long multiplyExact(long x, long y, Context ctxt) throws ValueException
     {
-    	long r = x * y;
-    	long ax = Math.abs(x);
-    	long ay = Math.abs(y);
-
-    	if (((ax | ay) >>> 31 != 0))
-    	{
-    		if (((y != 0) && (r / y != x)) || (x == Long.MIN_VALUE && y == -1))
-    		{
-    			throw new ValueException(4169, "Arithmetic overflow", ctxt);
-    		}
-    	}
-
-    	return r;
+		try
+		{
+			return Math.multiplyExact(x, y);
+		}
+		catch (ArithmeticException e)
+		{
+			throw new ValueException(4169, "Arithmetic overflow", ctxt);
+		}
     }
 }
