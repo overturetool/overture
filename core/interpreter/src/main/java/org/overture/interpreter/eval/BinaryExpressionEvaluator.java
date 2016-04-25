@@ -588,10 +588,23 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 		try
 		{
-			double lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).realValue(ctxt);
-			double rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).realValue(ctxt);
+    		Value l = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+    		Value r = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-			return NumericValue.valueOf(lv + rv, ctxt);
+			if (NumericValue.areIntegers(l, r))
+			{
+				long lv = l.intValue(ctxt);
+				long rv = r.intValue(ctxt);
+				long sum = addExact(lv, rv, ctxt);
+				return NumericValue.valueOf(sum, ctxt);
+			}
+			else
+			{
+				double lv = l.realValue(ctxt);
+				double rv = r.realValue(ctxt);
+	    		return NumericValue.valueOf(lv + rv, ctxt);
+			}
+
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -641,10 +654,22 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 		try
 		{
-			double lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).realValue(ctxt);
-			double rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).realValue(ctxt);
+    		Value l = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+    		Value r = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-			return NumericValue.valueOf(lv - rv, ctxt);
+			if (NumericValue.areIntegers(l, r))
+			{
+				long lv = l.intValue(ctxt);
+				long rv = r.intValue(ctxt);
+				long diff = subtractExact(lv, rv, ctxt);
+				return NumericValue.valueOf(diff, ctxt);
+			}
+			else
+			{
+				double lv = l.realValue(ctxt);
+				double rv = r.realValue(ctxt);
+	    		return NumericValue.valueOf(lv - rv, ctxt);
+			}
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -660,10 +685,22 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 		try
 		{
-			double lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).realValue(ctxt);
-			double rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).realValue(ctxt);
+    		Value l = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+    		Value r = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-			return NumericValue.valueOf(lv * rv, ctxt);
+			if (NumericValue.areIntegers(l, r))
+			{
+				long lv = l.intValue(ctxt);
+				long rv = r.intValue(ctxt);
+				long mult = multiplyExact(lv, rv, ctxt);
+				return NumericValue.valueOf(mult, ctxt);
+			}
+			else
+			{
+				double lv = l.realValue(ctxt);
+				double rv = r.realValue(ctxt);
+	    		return NumericValue.valueOf(lv * rv, ctxt);
+			}
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -1000,4 +1037,50 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return (long) Math.floor(Math.abs(-lv / rv));
 		}
 	}
+	
+	// These are included in Java 8 Math.java
+	
+	private long addExact(long x, long y, Context ctxt) throws ValueException
+	{
+		long r = x + y;
+		// HD 2-12 Overflow iff both arguments have the opposite sign of the result
+		
+		if (((x ^ r) & (y ^ r)) < 0)
+		{
+			throw new ValueException(4169, "Arithmetic overflow", ctxt);
+		}
+		
+		return r;
+	}
+
+	private long subtractExact(long x, long y, Context ctxt) throws ValueException
+	{
+		long r = x - y;
+		// HD 2-12 Overflow iff the arguments have different signs and
+		// the sign of the result is different than the sign of x
+
+		if (((x ^ y) & (x ^ r)) < 0)
+		{
+			throw new ValueException(4169, "Arithmetic overflow", ctxt);
+		}
+
+		return r;
+	}
+
+    private long multiplyExact(long x, long y, Context ctxt) throws ValueException
+    {
+    	long r = x * y;
+    	long ax = Math.abs(x);
+    	long ay = Math.abs(y);
+
+    	if (((ax | ay) >>> 31 != 0))
+    	{
+    		if (((y != 0) && (r / y != x)) || (x == Long.MIN_VALUE && y == -1))
+    		{
+    			throw new ValueException(4169, "Arithmetic overflow", ctxt);
+    		}
+    	}
+
+    	return r;
+    }
 }
