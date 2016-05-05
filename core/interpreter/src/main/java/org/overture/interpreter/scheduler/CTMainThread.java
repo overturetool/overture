@@ -148,6 +148,7 @@ public class CTMainThread extends MainThread
 			{
 				return;
 			}
+			
 			if (result.lastIndexOf(Verdict.FAILED) < 0)
 			{
 				if (!getExceptions().isEmpty())
@@ -155,7 +156,14 @@ public class CTMainThread extends MainThread
 					result.addAll(getExceptions());
 				} else
 				{
-					result.add(e.getMessage());
+					if(e instanceof StackOverflowError)
+					{
+						result.add("Thread died due to stack overflow");
+					}
+					else
+					{
+						result.add(e.getMessage());
+					}
 				}
 
 				result.add(Verdict.FAILED);
