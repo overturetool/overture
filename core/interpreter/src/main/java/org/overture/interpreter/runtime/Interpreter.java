@@ -722,16 +722,16 @@ abstract public class Interpreter
 				rootEnv = new ModuleEnvironment(getAssistantFactory(), (AModuleModules) traceContainer);
 			}
 
-			List<Object> result;
+			List<Object> result = new Vector<>();
 			try
 			{
 				typeCheck(traceContainer, this, test, rootEnv);
 			}
 			catch (Exception e)
 			{
-				result = new Vector<Object>();
 				result.add(e);
 				result.add(Verdict.FAILED);
+				failed = true;
 			}
 			
 			// Bodge until we figure out how to not have explicit op names.
@@ -744,11 +744,14 @@ abstract public class Interpreter
 						+ test.getFilter());
 			} else
 			{
-				// Initialize completely between every run...
-				init(ctxt.threadState.dbgp);
-				result = runOneTrace(tracedef, test, debug);
-				tests.filter(result, test, n);
+				if(!failed)
+				{
+					// Initialize completely between every run...
+					init(ctxt.threadState.dbgp);
+					result = runOneTrace(tracedef, test, debug);
+				}
 
+				tests.filter(result, test, n);
 				writer.println("Test " + n + " = " + clean);
 				writer.println("Result = " + result);
 
