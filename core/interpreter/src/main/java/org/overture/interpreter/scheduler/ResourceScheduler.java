@@ -76,7 +76,7 @@ public class ResourceScheduler implements Serializable
 		mainThread = main;
 		// BUSValue.start(); // Start BUS threads first...
 
-		boolean idle = true;
+		boolean idle;
 		stopping = false;
 
 		do

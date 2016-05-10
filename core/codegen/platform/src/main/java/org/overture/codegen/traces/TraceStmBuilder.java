@@ -363,7 +363,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			return decls;
 		}
 		
-		List<SExpIR> args = null;
+		List<SExpIR> args;
 		
 		if (callStm instanceof SCallStmIR)
 		{
@@ -490,7 +490,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		boolean isOp = false;
 		String pre = "pre_";
-		List<SExpIR> args = null;
+		List<SExpIR> args;
 
 		if (stm instanceof APlainCallStmIR)
 		{

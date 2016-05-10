@@ -38,7 +38,7 @@ public class IsaPogIntegrationTest extends ParamStandardTest<IsaPogResult> {
 
     @Override
     public IsaPogResult processModel(List<INode> ast) {
-        IsaPog ip = null;
+        IsaPog ip;
         try {
             ip = new IsaPog(ast);
         } catch (org.overture.codegen.ir.analysis.AnalysisException | AnalysisException e) {

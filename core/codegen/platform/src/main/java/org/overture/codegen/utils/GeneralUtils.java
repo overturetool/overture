@@ -57,7 +57,7 @@ public class GeneralUtils
 		}
 
 		StringBuffer data = new StringBuffer();
-		int c = 0;
+		int c;
 		while ((c = input.read()) != -1)
 		{
 			data.append((char) c);
@@ -83,7 +83,7 @@ public class GeneralUtils
 		{
 			in = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 
-			String str = "";
+			String str;
 
 			while ((str = in.readLine()) != null)
 			{

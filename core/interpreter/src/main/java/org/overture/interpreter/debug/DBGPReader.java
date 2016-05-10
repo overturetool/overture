@@ -836,7 +836,7 @@ public class DBGPReader
 
 	protected void run() throws IOException
 	{
-		String line = null;
+		String line;
 
 		do
 		{
@@ -1560,7 +1560,7 @@ public class DBGPReader
 		}
 
 		option = c.getOption(DBGPOptionType.F);
-		File filename = null;
+		File filename;
 
 		if (option != null)
 		{
@@ -1612,7 +1612,7 @@ public class DBGPReader
 			}
 		}
 
-		Breakpoint bp = null;
+		Breakpoint bp;
 		PStm stmt = interpreter.findStatement(filename, lineno);
 
 		if (stmt == null)
@@ -2134,7 +2134,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
 
-		File file = null;
+		File file;
 
 		try
 		{
@@ -2368,9 +2368,9 @@ public class DBGPReader
 
 	protected void processTrace(DBGPCommand c) throws DBGPException
 	{
-		File file = null;
-		int line = 0;
-		String trace = null;
+		File file;
+		int line;
+		String trace;
 
 		try
 		{
@@ -2680,7 +2680,7 @@ public class DBGPReader
 			AnalysisException
 	{
 		IProofObligationList all = interpreter.getProofObligations();
-		IProofObligationList list = null;
+		IProofObligationList list;
 
 		if (c.data.equals("*"))
 		{

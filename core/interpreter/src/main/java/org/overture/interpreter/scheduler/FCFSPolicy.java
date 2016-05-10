@@ -139,7 +139,7 @@ public class FCFSPolicy extends SchedulingPolicy
 	@Override
 	public long getTimeslice()
 	{
-		long slice = 0;
+		long slice;
 
 		if (bestThread.isVirtual())
 		{

@@ -92,7 +92,7 @@ public abstract class BaseParserTestCase<T extends SyntaxReader, R> extends
 	protected void internal(LexTokenReader ltr) throws ParserException,
 			LexException
 	{
-		T reader = null;
+		T reader;
 		R result = null;
 		try
 		{

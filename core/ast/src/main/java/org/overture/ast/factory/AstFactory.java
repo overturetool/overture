@@ -710,7 +710,7 @@ public class AstFactory
 
 		result.setRecordType(AstFactory.newARecordInvariantType(name.clone(), fields));
 
-		ALocalDefinition recordDefinition = null;
+		ALocalDefinition recordDefinition;
 
 		recordDefinition = AstFactory.newALocalDefinition(result.getLocation(), name, NameScope.STATE, result.getRecordType());
 		recordDefinition.setUsed(true); // Can't be exported anyway

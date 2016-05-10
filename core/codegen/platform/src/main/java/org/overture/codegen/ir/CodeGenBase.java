@@ -364,7 +364,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 */
 	protected void simplifyLibrary(INode module)
 	{
-		List<PDefinition> defs = null;
+		List<PDefinition> defs;
 		
 		if(module instanceof SClassDefinition)
 		{

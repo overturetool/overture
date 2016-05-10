@@ -147,7 +147,7 @@ abstract public class CommandReader
 
 	public ExitStatus run(List<File> filenames)
 	{
-		String line = "";
+		String line;
 		String lastline = "";
 		boolean carryOn = true;
 		long timestamp = System.currentTimeMillis();
@@ -578,7 +578,7 @@ abstract public class CommandReader
 	protected boolean doPog(String line) throws AnalysisException
 	{
 		IProofObligationList all = interpreter.getProofObligations();
-		IProofObligationList list = null;
+		IProofObligationList list;
 
 		if (line.equals("pog"))
 		{
@@ -1087,7 +1087,7 @@ abstract public class CommandReader
 
 	protected boolean doAssert(String line)
 	{
-		File filename = null;
+		File filename;
 
 		try
 		{
@@ -1155,7 +1155,7 @@ abstract public class CommandReader
 
 	public boolean assertFile(File filename)
 	{
-		BufferedReader input = null;
+		BufferedReader input;
 
 		try
 		{

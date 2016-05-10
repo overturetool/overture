@@ -57,7 +57,7 @@ abstract public class XMLStreamReader extends InputStreamReader
 				byte[] bytes = new byte[ARRAYCHUNK];
 				int space = ARRAYCHUNK;
 				int p = 0;
-				int r = 0;
+				int r;
 
 				do
 				{

@@ -92,7 +92,7 @@ public abstract class JmlSlJavaGenTestBase extends CheckerTestBase
 		TypeCheckResult<List<AModuleModules>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckSl(files));
 
 		JmlGenerator jmlGen = new JmlGenerator(getJavaGen());
-		GeneratedData data = null;
+		GeneratedData data;
 		try
 		{
 			data = jmlGen.generateJml(tcResult.result);

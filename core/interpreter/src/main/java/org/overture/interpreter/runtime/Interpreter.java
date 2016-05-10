@@ -620,7 +620,7 @@ abstract public class Interpreter
 		LexTokenReader ltr = new LexTokenReader(name, Dialect.VDM_SL);
 		LexToken token = ltr.nextToken();
 		ltr.close();
-		LexNameToken lexname = null;
+		LexNameToken lexname;
 
 		switch (token.type)
 		{
@@ -649,9 +649,9 @@ abstract public class Interpreter
 			throw new Exception("Trace " + lexname + " not found");
 		}
 
-		TestSequence tests = null;
+		TestSequence tests;
 
-		Context ctxt = null;
+		Context ctxt;
 
 		ctxt = getInitialTraceContext(tracedef, debug);
 

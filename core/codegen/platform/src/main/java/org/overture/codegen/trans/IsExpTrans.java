@@ -61,7 +61,7 @@ public class IsExpTrans extends DepthFirstAnalysisAdaptor
 
 			ABlockStmIR replacementBlock = new ABlockStmIR();
 
-			SExpIR expVar = null;
+			SExpIR expVar;
 
 			if (!(exp instanceof SVarExpBase))
 			{

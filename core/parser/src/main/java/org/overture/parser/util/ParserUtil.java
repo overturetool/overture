@@ -131,8 +131,8 @@ public class ParserUtil
 			String charset)
 	{
 		LexTokenReader ltr = getReader(file, Settings.dialect, charset);
-		ClassReader reader = null;
-		List<SClassDefinition> result = null;
+		ClassReader reader;
+		List<SClassDefinition> result;
 
 		reader = new ClassReader(ltr);
 		result = reader.readClasses();
@@ -167,8 +167,8 @@ public class ParserUtil
 			String charset)
 	{
 		LexTokenReader ltr = getReader(content, Settings.dialect, charset);
-		ClassReader reader = null;
-		List<SClassDefinition> result = null;
+		ClassReader reader;
+		List<SClassDefinition> result;
 
 		reader = new ClassReader(ltr);
 		result = reader.readClasses();
@@ -217,8 +217,8 @@ public class ParserUtil
 			String charset)
 	{
 		LexTokenReader ltr = getReader(file, Settings.dialect, charset);
-		ModuleReader reader = null;
-		List<AModuleModules> result = null;
+		ModuleReader reader;
+		List<AModuleModules> result;
 
 		reader = new ModuleReader(ltr);
 		result = reader.readModules();
@@ -235,8 +235,8 @@ public class ParserUtil
 			String charset)
 	{
 		LexTokenReader ltr = getReader(content, Settings.dialect, charset);
-		ModuleReader reader = null;
-		List<AModuleModules> result = null;
+		ModuleReader reader;
+		List<AModuleModules> result;
 
 		reader = new ModuleReader(ltr);
 		result = reader.readModules();
@@ -248,7 +248,7 @@ public class ParserUtil
 			throws ParserException, LexException
 	{
 		LexTokenReader ltr = new LexTokenReader(content, Settings.dialect);
-		PExp result = null;
+		PExp result;
 		ExpressionReader reader = new ExpressionReader(ltr);
 		// reader.setCurrentModule(getDefaultName());
 		result = reader.readExpression();

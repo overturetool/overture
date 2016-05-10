@@ -1275,7 +1275,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		SExpIR object = node.getObject().apply(question.getExpVisitor(), question);
 		STypeIR type = node.getType().apply(question.getTypeVisitor(), question);
 
-		String memberName = "";
+		String memberName;
 
 		if (node.getMemberName() != null)
 		{
@@ -1896,7 +1896,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		history.setHistype(hop.toString().substring(1));
 		history.setType(typeCg);
 		
-		AClassTypeIR innerclassType = null;
+		AClassTypeIR innerclassType;
 		
 		if(enclosingClass != null)
 		{

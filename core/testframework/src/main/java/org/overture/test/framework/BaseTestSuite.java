@@ -172,7 +172,7 @@ public class BaseTestSuite extends TestSuite
 		} else
 		{
 			// System.out.println("Creating test for:" + file);
-			Object instance = null;
+			Object instance;
 			if (ctorCustom == null)
 			{
 				instance = ctor.newInstance(new Object[] { file });
@@ -296,7 +296,7 @@ public class BaseTestSuite extends TestSuite
 		try
 		{
 			reader = new BufferedReader(new FileReader(file));
-			String text = null;
+			String text;
 
 			// repeat until all lines is read
 			while ((text = reader.readLine()) != null)

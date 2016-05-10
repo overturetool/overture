@@ -66,7 +66,7 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
     @Override
     public CgIsaTestResult processModel(List<INode> ast) {
         IsaGen gen = new IsaGen();
-        GeneratedData genData = null;
+        GeneratedData genData;
 
         try {
             genData = gen.generate(ast);
@@ -79,7 +79,7 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
             classes.add((AModuleModules) n);
         }
 
-        List<GeneratedModule> result = null;
+        List<GeneratedModule> result;
             result = genData.getClasses();
             if (!result.get(0).canBeGenerated()) {
                 StringBuilder sb = new StringBuilder();

@@ -64,7 +64,7 @@ public class TraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 	{
 		// return AApplyExpressionTraceCoreDefinitionAssistantInterpreter.expand(core, ctxt);
 		List<PExp> newargs = new Vector<PExp>();
-		List<PExp> args = null;
+		List<PExp> args;
 
 		if (core.getCallStatement() instanceof ACallStm)
 		{
@@ -78,7 +78,7 @@ public class TraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 
 		for (PExp arg : args)
 		{
-			Value v = null;
+			Value v;
 			try
 			{
 				v = arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
@@ -113,7 +113,7 @@ public class TraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 			}
 		}
 
-		PStm newStatement = null;
+		PStm newStatement;
 
 		if (core.getCallStatement() instanceof ACallStm)
 		{

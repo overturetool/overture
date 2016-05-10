@@ -56,7 +56,7 @@ public abstract class AbstractExternalTest extends CommonTypeCheckerTest
 		String name = externalSuiteName;
 		File root = getBasePath(inputRelativePathPart);
 
-		Collection<Object[]> tests = null;
+		Collection<Object[]> tests;
 		if (root != null && root.exists())
 		{
 			tests = TestSourceFinder.createTestCompleteFile(dialect, name, root.getAbsolutePath(), extension);

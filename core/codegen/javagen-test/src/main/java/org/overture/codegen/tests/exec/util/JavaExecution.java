@@ -50,7 +50,7 @@ public class JavaExecution
 		String cpArgs = consCpArg(cp);
 
 		Process p = null;
-		ProcessBuilder pb = null;
+		ProcessBuilder pb;
 
 		try
 		{

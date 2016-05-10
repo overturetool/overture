@@ -124,7 +124,7 @@ public class CtHelper
 						conn = socket.accept();
 						BufferedReader input = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-						String line = null;
+						String line;
 						while ((line = input.readLine()) != null)
 						{
 							line = line.trim();

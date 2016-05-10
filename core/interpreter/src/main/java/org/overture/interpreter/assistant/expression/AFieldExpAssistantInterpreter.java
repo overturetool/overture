@@ -27,8 +27,8 @@ public class AFieldExpAssistantInterpreter implements IAstAssistant
 			throws AnalysisException
 	{
 		Value v = node.getObject().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
-		PType objtype = null;
-		Value r = null;
+		PType objtype;
+		Value r;
 
 		if (v.isType(ObjectValue.class))
 		{

@@ -64,7 +64,7 @@ public class AssignmentContext extends StatefulContext
 	public PExp getContextNode(PExp stitch)
 	{
 
-		PExp r = null;
+		PExp r;
 		try
 		{
 			if (first)

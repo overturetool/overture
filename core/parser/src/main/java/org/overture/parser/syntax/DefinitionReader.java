@@ -769,7 +769,7 @@ public class DefinitionReader extends SyntaxReader
 			throwMessage(2261, "Missing comma between return types?");
 		}
 
-		APatternTypePair resultPattern = null;
+		APatternTypePair resultPattern;
 
 		if (resultNames.size() > 1)
 		{
@@ -823,7 +823,7 @@ public class DefinitionReader extends SyntaxReader
 	public PDefinition readLocalDefinition(NameScope scope)
 			throws ParserException, LexException
 	{
-		ParserException funcDefError = null;
+		ParserException funcDefError;
 
 		try
 		{
@@ -958,7 +958,7 @@ public class DefinitionReader extends SyntaxReader
 			throwMessage(2023, "Expecting '(' after operation name");
 		}
 
-		List<PPattern> parameters = null;
+		List<PPattern> parameters;
 
 		if (nextToken().isNot(VDMToken.KET))
 		{
@@ -1179,7 +1179,7 @@ public class DefinitionReader extends SyntaxReader
 		// expression in the third case.
 
 		ILexLocation location = lastToken().location;
-		ParserException equalsDefError = null;
+		ParserException equalsDefError;
 
 		try
 		// "def" <pattern> "=" <expression> "in" ...
@@ -1497,7 +1497,7 @@ public class DefinitionReader extends SyntaxReader
 			LexException
 	{
 		checkFor(VDMToken.LET, 2230, "Expecting 'let'");
-		ParserException letDefError = null;
+		ParserException letDefError;
 
 		try
 		{

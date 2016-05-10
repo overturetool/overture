@@ -162,7 +162,7 @@ public class PTypeSet extends TreeSet<PType>
 		// }
 
 		assert this.size() > 0 : "Getting type of empty TypeSet";
-		PType result = null;
+		PType result;
 
 		if (this.size() == 1)
 		{

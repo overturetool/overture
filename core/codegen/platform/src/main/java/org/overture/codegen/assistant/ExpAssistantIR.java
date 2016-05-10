@@ -565,7 +565,7 @@ public class ExpAssistantIR extends AssistantBase
 	
 	public SExpIR consIsExpBasicType(SExpIR expCg, STypeIR checkedType)
 	{
-		SIsExpIR basicIsExp = null;
+		SIsExpIR basicIsExp;
 
 		if (checkedType instanceof ABoolBasicTypeIR)
 		{

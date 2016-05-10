@@ -279,7 +279,7 @@ public class VDMPP extends VDMJ
 	@Override
 	protected ExitStatus interpret(List<File> filenames, String defaultName)
 	{
-		ClassInterpreter interpreter = null;
+		ClassInterpreter interpreter;
 
 		if (logfile != null)
 		{

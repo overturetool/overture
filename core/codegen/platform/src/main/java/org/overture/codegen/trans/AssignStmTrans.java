@@ -25,7 +25,7 @@ public class AssignStmTrans extends DepthFirstAnalysisAdaptor
 	public void caseAAssignmentStmIR(AAssignmentStmIR node)
 			throws AnalysisException
 	{
-		SStmIR newNode = null;
+		SStmIR newNode;
 		
 		if(node.getTarget() instanceof AMapSeqStateDesignatorIR)
 		{

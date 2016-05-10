@@ -586,7 +586,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getPostdef() != null)
 		{
-			PType b = null;
+			PType b;
 
 			if (node.getResult() != null)
 			{
@@ -1113,7 +1113,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getPostdef() != null)
 		{
-			PType b = null;
+			PType b;
 
 			if (node.getResult() != null)
 			{

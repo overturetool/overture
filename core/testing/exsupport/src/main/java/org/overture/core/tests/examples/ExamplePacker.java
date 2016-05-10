@@ -116,7 +116,7 @@ class ExamplePacker
 			BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 			try
 			{
-				String line = null;
+				String line;
 				StringBuilder sb = new StringBuilder();
 				while ((line = input.readLine()) != null)
 				{

@@ -178,7 +178,7 @@ public class ExpressionReader extends SyntaxReader
 
 	private PExp readNotExpression() throws ParserException, LexException
 	{
-		PExp exp = null;
+		PExp exp;
 		LexToken token = lastToken();
 
 		if (token.is(VDMToken.NOT))
@@ -423,7 +423,7 @@ public class ExpressionReader extends SyntaxReader
 	private PExp readEvaluatorP3Expression() throws ParserException,
 			LexException
 	{
-		PExp exp = null;
+		PExp exp;
 		LexToken token = lastToken();
 
 		if (token.is(VDMToken.INVERSE))
@@ -504,7 +504,7 @@ public class ExpressionReader extends SyntaxReader
 	private PExp readEvaluatorP6Expression() throws ParserException,
 			LexException
 	{
-		PExp exp = null;
+		PExp exp;
 		LexToken token = lastToken();
 		ILexLocation location = token.location;
 
@@ -1168,7 +1168,7 @@ public class ExpressionReader extends SyntaxReader
 	private PExp readNarrowExpression(AVariableExp ve) throws ParserException,
 			LexException
 	{
-		ANarrowExp exp = null;
+		ANarrowExp exp;
 
 		PExp test = readExpression();
 		checkFor(VDMToken.COMMA, 2301, "Expecting narrow_(expression, type)");
@@ -1238,7 +1238,7 @@ public class ExpressionReader extends SyntaxReader
 	private SSetExp readSetExpression(ILexLocation start, PExp first)
 			throws ParserException, LexException
 	{
-		SSetExp result = null;
+		SSetExp result;
 
 		if (lastToken().is(VDMToken.PIPE))
 		{
@@ -1292,7 +1292,7 @@ public class ExpressionReader extends SyntaxReader
 	private SMapExp readMapExpression(ILexLocation start, AMapletExp first)
 			throws ParserException, LexException
 	{
-		SMapExp result = null;
+		SMapExp result;
 
 		if (lastToken().is(VDMToken.PIPE))
 		{
@@ -1346,7 +1346,7 @@ public class ExpressionReader extends SyntaxReader
 			return AstFactory.newASeqEnumSeqExp(start);
 		}
 
-		SSeqExp result = null;
+		SSeqExp result;
 		PExp first = readExpression();
 
 		if (lastToken().is(VDMToken.PIPE))
@@ -1465,7 +1465,7 @@ public class ExpressionReader extends SyntaxReader
 	private PExp readLetExpression(ILexLocation start) throws ParserException,
 			LexException
 	{
-		ParserException letDefError = null;
+		ParserException letDefError;
 
 		try
 		{

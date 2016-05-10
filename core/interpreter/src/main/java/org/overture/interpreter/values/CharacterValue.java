@@ -81,7 +81,7 @@ public class CharacterValue extends Value
 	public void formatTo(Formatter formatter, int flags, int width,
 			int precision)
 	{
-		String s = null;
+		String s;
 
 		if ((flags & FormattableFlags.ALTERNATE) > 0)
 		{

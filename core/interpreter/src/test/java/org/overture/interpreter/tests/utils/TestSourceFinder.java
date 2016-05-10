@@ -245,7 +245,7 @@ public class TestSourceFinder
 		try
 		{
 			reader = new BufferedReader(new FileReader(file));
-			String text = null;
+			String text;
 
 			// repeat until all lines is read
 			while ((text = reader.readLine()) != null)

@@ -206,8 +206,8 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 		if (lv instanceof MapValue)
 		{
-			ValueMap lm = null;
-			ValueMap rm = null;
+			ValueMap lm;
+			ValueMap rm;
 
 			try
 			{
@@ -358,8 +358,8 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
 
-		ValueMap lm = null;
-		ValueMap rm = null;
+		ValueMap lm;
+		ValueMap rm;
 
 		try
 		{
@@ -788,8 +788,8 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
 
-		ValueSet set = null;
-		ValueMap map = null;
+		ValueSet set;
+		ValueMap map;
 
 		try
 		{
@@ -820,8 +820,8 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
 
-		ValueSet set = null;
-		ValueMap map = null;
+		ValueSet set;
+		ValueMap map;
 
 		try
 		{
@@ -876,7 +876,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		node.getLocation().hit(); // Mark as covered
 
 		ValueSet result = new ValueSet();
-		ValueSet togo = null;
+		ValueSet togo;
 
 		try
 		{

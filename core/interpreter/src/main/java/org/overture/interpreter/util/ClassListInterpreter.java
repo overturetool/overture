@@ -67,7 +67,7 @@ public class ClassListInterpreter extends ClassList
 	public void systemInit(ResourceScheduler scheduler, DBGPReader dbgp,
 			RootContext initialContext)
 	{
-		ASystemClassDefinition systemClass = null;
+		ASystemClassDefinition systemClass;
 
 		for (SClassDefinition cdef : this)
 		{
@@ -83,7 +83,7 @@ public class ClassListInterpreter extends ClassList
 	public RootContext initialize(IInterpreterAssistantFactory af,
 			DBGPReader dbgp)
 	{
-		StateContext globalContext = null;
+		StateContext globalContext;
 
 		if (isEmpty())
 		{
@@ -107,7 +107,7 @@ public class ClassListInterpreter extends ClassList
 		// know what order to initialize the classes in. So we have a crude
 		// retry mechanism, looking for "forward reference" like exceptions.
 
-		ContextException failed = null;
+		ContextException failed;
 		int retries = 3; // Potentially not enough.
 		Set<ContextException> trouble = new HashSet<ContextException>();
 
@@ -259,7 +259,7 @@ public class ClassListInterpreter extends ClassList
 			for (PDefinition d : cpudefs)
 			{
 				UpdatableValue v = (UpdatableValue) ASystemClassDefinitionRuntime.system.members.get(d.getName());
-				CPUValue cpu = null;
+				CPUValue cpu;
 
 				if (v.isUndefined())
 				{
@@ -302,7 +302,7 @@ public class ClassListInterpreter extends ClassList
 					if (ct.getClassdef() instanceof ABusClassDefinition)
 					{
 						UpdatableValue v = (UpdatableValue) ASystemClassDefinitionRuntime.system.members.get(d.getName());
-						BUSValue bus = null;
+						BUSValue bus;
 
 						if (!v.isUndefined())
 						{

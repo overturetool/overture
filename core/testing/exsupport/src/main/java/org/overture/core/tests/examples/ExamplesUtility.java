@@ -92,7 +92,7 @@ abstract public class ExamplesUtility {
 	 */
 	public static ExampleAstData parseTcExample(ExampleSourceData e)
 			throws ParserException, LexException {
-		List<INode> ast = new LinkedList<INode>();
+		List<INode> ast;
 		Settings.release = e.getRelease();
 
 		ast = ParseTcFacade.typedAstNoRetry(e.getSource(), e.getName(),

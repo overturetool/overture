@@ -82,7 +82,7 @@ public class ObjectDesignatorVisitorIR extends
 	{
 		PObjectDesignator obj = node.getObject();
 
-		String fieldCg = null;
+		String fieldCg;
 		String fieldModuleCg = null;
 
 		if(node.getField() != null)

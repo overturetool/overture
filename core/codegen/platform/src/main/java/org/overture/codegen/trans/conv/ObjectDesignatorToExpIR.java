@@ -104,7 +104,7 @@ public class ObjectDesignatorToExpIR extends AnswerAdaptor<SExpIR>
 
 		INode parent = node.parent();
 
-		STypeIR fieldExpType = null;
+		STypeIR fieldExpType;
 		try
 		{
 			fieldExpType = info.getTypeAssistant().getFieldExpType(info, fieldName, fieldModule, obj, parent);

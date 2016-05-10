@@ -972,7 +972,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		Integer pageSize = Integer.parseInt(features.getProperty(DBGPFeatures.MAX_CHILDREN));
 
 		Integer key = null;
-		String data = null;
+		String data;
 		StringBuilder nestedChildren = null;
 
 		// store property for retrieval of additional pages or value editing
@@ -1806,8 +1806,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		Integer numChildren = getChildCount(value);
 
 		Integer pageSize = Integer.parseInt(features.getProperty(DBGPFeatures.MAX_CHILDREN));
-		String data = null;
-		StringBuilder nestedChildren = null;
+		String data;
+		StringBuilder nestedChildren;
 		String name = "(ref=" + key + ")";
 
 		if (numChildren > 0)

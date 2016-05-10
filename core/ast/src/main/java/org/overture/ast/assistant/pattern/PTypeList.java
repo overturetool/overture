@@ -50,7 +50,7 @@ public class PTypeList extends Vector<PType>
 
 	public PType getType(ILexLocation location)
 	{
-		PType result = null;
+		PType result;
 
 		if (this.size() == 1)
 		{

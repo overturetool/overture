@@ -312,7 +312,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		SClassDefinition classdef = ctype.getClassdef();
 		SClassDefinition self = question.env.findClassDefinition();
-		Environment classenv = null;
+		Environment classenv;
 
 		if (self == classdef
 				|| question.assistantFactory.createPDefinitionAssistant().hasSupertype(self, question.assistantFactory.createPDefinitionAssistant().getType(classdef)))
@@ -981,7 +981,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		rtypes.add(bt);
 
 		PTypeSet extype = exitCheck(body, question);
-		PType ptype = null;
+		PType ptype;
 
 		if (extype.isEmpty())
 		{

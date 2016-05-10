@@ -77,7 +77,7 @@ public class TestSuite
 									+ " has no public constructor TestCase(String name) or TestCase()");
 						}
 
-						String vdmTestExpression = "";
+						String vdmTestExpression;
 						if (((AOperationType) ctor.getType()).getParameters().size() == 1)
 						{
 							vdmTestExpression = "new " + p.name.getModule()

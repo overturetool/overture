@@ -422,7 +422,7 @@ public class FunctionValue extends Value
 				// If this is a curried function, then the measure is called with all of the
 				// previously applied argument values, in addition to the argValues.
 
-				ValueList measureArgs = null;
+				ValueList measureArgs;
 
 				if (curriedArgs == null)
 				{

@@ -51,7 +51,7 @@ public class JavaCommandLineCompiler
 		Process p = null;
 		try
 		{
-			String line = "";
+			String line;
 			ProcessBuilder pb = null;
 			String arg = "";
 

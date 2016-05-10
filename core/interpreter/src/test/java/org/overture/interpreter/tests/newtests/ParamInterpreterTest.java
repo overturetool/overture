@@ -109,7 +109,7 @@ public abstract class ParamInterpreterTest extends
 		BufferedReader reader = new BufferedReader(new FileReader(
 				getEntryFile()));
 		List<String> data = new Vector<String>();
-		String text = null;
+		String text;
 		while ((text = reader.readLine()) != null) {
 			data.add(text.trim());
 		}
@@ -144,7 +144,7 @@ public abstract class ParamInterpreterTest extends
 			try {
 				reader = new BufferedReader(new FileReader(readme));
 
-				String text = null;
+				String text;
 				while ((text = reader.readLine()) != null) {
 					text = text.trim();
 					if (text.startsWith("#ENTRY_POINT")) {

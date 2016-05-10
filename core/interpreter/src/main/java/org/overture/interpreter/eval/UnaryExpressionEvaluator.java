@@ -410,7 +410,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		ValueList seq = null;
+		ValueList seq;
 
 		try
 		{
@@ -430,7 +430,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		ValueList seq = null;
+		ValueList seq;
 
 		try
 		{

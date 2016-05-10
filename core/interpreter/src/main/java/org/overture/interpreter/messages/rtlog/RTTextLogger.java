@@ -83,7 +83,7 @@ public class RTTextLogger implements IRTLogger
 	{
 		if (logfile != null)
 		{
-			PrintWriter writer = null;
+			PrintWriter writer;
 
 			try
 			{

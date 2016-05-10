@@ -93,7 +93,7 @@ public class IsaGenFileExpTest extends ParamFineGrainTest<CgIsaTestResult>
 	public CgIsaTestResult processSource()
 	{
 		IsaGen gen = new IsaGen();
-		GeneratedModule result = null;
+		GeneratedModule result;
 		try
 		{
 			String exp = FileUtils.readFileToString(new File(modelPath));

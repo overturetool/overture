@@ -836,7 +836,7 @@ public class OperationValue extends Value
 
 			if (isStatic)
 			{
-				CPUResource cpu = null;
+				CPUResource cpu;
 				if (ct instanceof InitThread)
 				{
 					cpu = CPUValue.vCPU.resource; // Initialization on vCPU

@@ -362,7 +362,7 @@ public class ModuleInterpreter extends Interpreter
 			CallSequence test, boolean debug)
 	{
 		List<Object> list = new Vector<Object>();
-		Context ctxt = null;
+		Context ctxt;
 
 		try
 		{

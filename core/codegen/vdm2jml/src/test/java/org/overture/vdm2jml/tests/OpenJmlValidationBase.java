@@ -99,7 +99,7 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 	{
 		String s;
 		Process p;
-		int exitCode = 1;
+		int exitCode;
 		StringBuilder processOutput = new StringBuilder();
 		
 		ProcessBuilder pb = new ProcessBuilder(openJmlArgs);

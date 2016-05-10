@@ -231,7 +231,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 	{
 		super(func, POType.TYPE_COMP, ctxt, func.getLocation(), assistantFactory);
 		this.assistantFactory = assistantFactory;
-		PExp body = null;
+		PExp body;
 
 		if (func.getBody() instanceof ANotYetSpecifiedExp
 				|| func.getBody() instanceof ASubclassResponsibilityExp)
@@ -261,7 +261,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 	{
 		super(func, POType.TYPE_COMP, ctxt, func.getLocation(), assistantFactory);
 		this.assistantFactory = assistantFactory;
-		PExp body = null;
+		PExp body;
 
 		if (func.getBody() instanceof ANotYetSpecifiedExp
 				|| func.getBody() instanceof ASubclassResponsibilityExp)
@@ -307,7 +307,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 	{
 		super(def, POType.TYPE_COMP, ctxt, def.getLocation(), assistantFactory);
 		this.assistantFactory = assistantFactory;
-		PExp result = null;
+		PExp result;
 
 		if (def.getResult().getPattern() instanceof AIdentifierPattern)
 		{

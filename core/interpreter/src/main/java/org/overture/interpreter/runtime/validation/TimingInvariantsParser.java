@@ -48,7 +48,7 @@ public class TimingInvariantsParser
 		try
 		{
 			reader = new BufferedReader(new FileReader(file));
-			String text = null;
+			String text;
 
 			// repeat until all lines is read
 			while ((text = reader.readLine()) != null)
@@ -93,7 +93,7 @@ public class TimingInvariantsParser
 
 		try
 		{
-			int indexOfLParn = contents.indexOf('(');
+			int indexOfLParn;
 
 			while ((indexOfLParn = contents.indexOf('(')) != -1)
 			{
@@ -105,7 +105,7 @@ public class TimingInvariantsParser
 
 				String[] elements = propBody.split(",");
 				List<String> elemsFirst = Arrays.asList(elements);
-				List<String> elems = null;
+				List<String> elems;
 				if (elemsFirst.size() > 3)
 				{
 					elems = new ArrayList<String>();
@@ -119,10 +119,10 @@ public class TimingInvariantsParser
 
 				List<IValidationExpression> args = decodeArg(elems.get(0));
 
-				OperationValidationExpression initOp = null;
+				OperationValidationExpression initOp;
 				ValueValidationExpression initValue = null;
-				OperationValidationExpression endOp = null;
-				int interval = 0;
+				OperationValidationExpression endOp;
+				int interval;
 
 				initOp = (OperationValidationExpression) args.get(0);
 				if (args.size() > 1)

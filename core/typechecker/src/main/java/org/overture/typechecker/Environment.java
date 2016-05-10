@@ -115,7 +115,7 @@ abstract public class Environment
 						&& def.getNameScope().matches(scope))
 				{
 					// Reduce clutter for names in the same module/class
-					String message = null;
+					String message;
 
 					if (def.getLocation().getFile().equals(n1.getLocation().getFile()))
 					{

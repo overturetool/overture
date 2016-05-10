@@ -49,7 +49,7 @@ public class Holder<T> implements Serializable
 			cq.block(ctxt, location);
 		}
 
-		T result = null;
+		T result;
 
 		synchronized (this)
 		{

@@ -363,7 +363,7 @@ public class JavaCodeGenMain
 			vdmCodGen.setSettings(irSettings);
 			vdmCodGen.setJavaSettings(javaSettings);
 			
-			TypeCheckResult<List<SClassDefinition>> tcResult = null;
+			TypeCheckResult<List<SClassDefinition>> tcResult;
 			
 			if (dialect == Dialect.VDM_PP)
 			{
