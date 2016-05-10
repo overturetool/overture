@@ -924,12 +924,9 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			node.getExp().apply(this);
 		}
 		
-		if(!castNotNeeded(node.getExp(), node.getTarget().getType()))
+		if(!castNotNeeded(node.getExp(), node.getTarget().getType()) && !(node.getTarget().getType() instanceof AUnionTypeIR))
 		{
-			if (!(node.getTarget().getType() instanceof AUnionTypeIR))
-			{
-				correctTypes(node.getExp(), node.getTarget().getType());
-			}
+			correctTypes(node.getExp(), node.getTarget().getType());
 		}
 	}
 

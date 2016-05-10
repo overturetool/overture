@@ -108,12 +108,9 @@ public class ComparisonIR
 								return false;
 							}
 							
-							if(vdmTest.getVerdict() == Verdict.PASSED)
+							if(vdmTest.getVerdict() == Verdict.PASSED && !vdmTest.getResult().equals(cgTest.getResult()))
 							{
-								if(!vdmTest.getResult().equals(cgTest.getResult()))
-								{
-									return false;
-								}
+								return false;
 							}
 						}
 						else 

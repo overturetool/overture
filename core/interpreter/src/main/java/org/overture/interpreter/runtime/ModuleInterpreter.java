@@ -391,12 +391,9 @@ public class ModuleInterpreter extends Interpreter
 		{
 			for (PDefinition def : module.getDefs())
 			{
-				if (def instanceof ATypeDefinition)
+				if (def instanceof ATypeDefinition && def.getName().equals(typename))
 				{
-					if (def.getName().equals(typename))
-					{
-						return def.getType();
-					}
+					return def.getType();
 				}
 			}
 		}

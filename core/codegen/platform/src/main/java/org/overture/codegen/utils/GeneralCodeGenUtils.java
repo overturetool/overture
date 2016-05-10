@@ -447,12 +447,9 @@ public class GeneralCodeGenUtils
 		{
 			element = element.trim();
 			
-			if(element != null && !element.isEmpty())
+			if(element != null && !element.isEmpty() && !classesToSkip.contains(element))
 			{
-				if(!classesToSkip.contains(element))
-				{
-					classesToSkip.add(element);
-				}
+				classesToSkip.add(element);
 			}
 		}
 		

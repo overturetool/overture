@@ -1670,12 +1670,9 @@ public class DBGPReader
 
 		option = c.getOption(DBGPOptionType.S);
 
-		if (option != null)
+		if (option != null && !option.value.equalsIgnoreCase("enabled"))
 		{
-			if (!option.value.equalsIgnoreCase("enabled"))
-			{
-				bp.setEnabled(false);
-			}
+			bp.setEnabled(false);
 		}
 
 		StringBuilder hdr = new StringBuilder("state=\""

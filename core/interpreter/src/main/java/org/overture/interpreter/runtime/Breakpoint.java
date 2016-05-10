@@ -192,29 +192,26 @@ public class Breakpoint implements Serializable
 			state.reschedule(ctxt, execl);
 		}
 
-		if (state.stepline != null)
+		if (state.stepline != null && execl.getStartLine() != state.stepline.getStartLine())
 		{
-			if (execl.getStartLine() != state.stepline.getStartLine()) // NB just line, not pos
+			if (state.nextctxt == null && state.outctxt == null
+					|| state.nextctxt != null
+					&& !isAboveNext(ctxt.getRoot())
+					|| state.outctxt != null && isOutOrBelow(ctxt))
 			{
-				if (state.nextctxt == null && state.outctxt == null
-						|| state.nextctxt != null
-						&& !isAboveNext(ctxt.getRoot())
-						|| state.outctxt != null && isOutOrBelow(ctxt))
+				try
 				{
-					try
-					{
-						new Stoppoint(location, 0, null).check(location, ctxt);
-					} catch (DebuggerException e)
-					{
-						throw e;
-					} catch (Exception e)
-					{
-						// This happens when the Stoppoint throws an error, which
-						// can't happen. But we need a catch clause for it anyway.
+					new Stoppoint(location, 0, null).check(location, ctxt);
+				} catch (DebuggerException e)
+				{
+					throw e;
+				} catch (Exception e)
+				{
+					// This happens when the Stoppoint throws an error, which
+					// can't happen. But we need a catch clause for it anyway.
 
-						throw new DebuggerException("Breakpoint [" + number
-								+ "]: " + e.getMessage());
-					}
+					throw new DebuggerException("Breakpoint [" + number
+							+ "]: " + e.getMessage());
 				}
 			}
 		}

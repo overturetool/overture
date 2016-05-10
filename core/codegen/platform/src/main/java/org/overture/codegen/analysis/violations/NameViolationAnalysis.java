@@ -53,12 +53,9 @@ public class NameViolationAnalysis extends ViolationAnalysis
 
 				SClassDefinition enclosingClass = node.getAncestor(SClassDefinition.class);
 
-				if (moduleNeedsHandling(enclosingClass))
+				if (moduleNeedsHandling(enclosingClass) && !comparison.isModuleViolation(nameToken))
 				{
-					if (!comparison.isModuleViolation(nameToken))
-					{
-						registerViolation(nameToken.getName(), nameToken.getLocation());
-					}
+					registerViolation(nameToken.getName(), nameToken.getLocation());
 				}
 			}
 		}
