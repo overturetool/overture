@@ -429,7 +429,7 @@ public class ClassInterpreter extends Interpreter
 	public Context getInitialTraceContext(ANamedTraceDefinition tracedef,
 			boolean debug) throws AnalysisException
 	{
-		ObjectValue object = null;
+		ObjectValue object;
 
 		SClassDefinition classdef = tracedef.getClassDefinition();
 
@@ -449,7 +449,7 @@ public class ClassInterpreter extends Interpreter
 			CallSequence test, boolean debug) throws AnalysisException
 	{
 		List<Object> list = new Vector<Object>();
-		Context ctxt = null;
+		Context ctxt;
 
 		try
 		{

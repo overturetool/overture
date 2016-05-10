@@ -298,7 +298,7 @@ public class XMLParser
 		String tag = value;
 		checkFor(Token.TAG);
 
-		Properties attr = null;
+		Properties attr;
 		List<XMLNode> children = new Vector<XMLNode>();
 
 		if (token == Token.TAG)

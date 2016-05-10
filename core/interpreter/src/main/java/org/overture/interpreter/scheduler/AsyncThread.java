@@ -90,7 +90,7 @@ public class AsyncThread extends SchedulablePoolThread
 	{
 		try
 		{
-			MessageResponse response = null;
+			MessageResponse response;
 
 			try
 			{

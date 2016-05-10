@@ -50,8 +50,8 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 			}
 		}
 
-		FunctionValue prefv = null;
-		FunctionValue postfv = null;
+		FunctionValue prefv;
+		FunctionValue postfv;
 
 		if (expdef.getPredef() != null)
 		{

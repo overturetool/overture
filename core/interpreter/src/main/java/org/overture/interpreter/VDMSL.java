@@ -266,7 +266,7 @@ public class VDMSL extends VDMJ
 	@Override
 	protected ExitStatus interpret(List<File> filenames, String defaultName)
 	{
-		ModuleInterpreter interpreter = null;
+		ModuleInterpreter interpreter;
 
 		try
 		{

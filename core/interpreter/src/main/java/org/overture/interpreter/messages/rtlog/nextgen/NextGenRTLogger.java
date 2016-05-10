@@ -364,7 +364,7 @@ public class NextGenRTLogger implements IRTLogger
 	{
 
 		MessagePacket mp = message.message;
-		NextGenBusMessage busMessage = null;
+		NextGenBusMessage busMessage;
 
 		if (message instanceof RTBusRequestMessage)
 		{
@@ -556,7 +556,7 @@ public class NextGenRTLogger implements IRTLogger
 
 	private NextGenClassDefinition getClassDefinition(String name)
 	{
-		NextGenClassDefinition classDef = null;
+		NextGenClassDefinition classDef;
 		if (this.classDefMap.containsKey(name))
 		{
 			classDef = this.classDefMap.get(name);
@@ -602,8 +602,8 @@ public class NextGenRTLogger implements IRTLogger
 	{
 		ObjectValue obj = thread.getObject();
 		int id;
-		NextGenClassDefinition classDef = null;
-		NextGenCpu cpu = null;
+		NextGenClassDefinition classDef;
+		NextGenCpu cpu;
 
 		if (obj == null)
 		{

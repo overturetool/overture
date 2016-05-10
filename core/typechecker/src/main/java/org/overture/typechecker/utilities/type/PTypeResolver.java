@@ -718,7 +718,7 @@ public class PTypeResolver extends
 					+ "' outside system class", type.getLocation(), type);
 		}
 
-		PType r = null;
+		PType r;
 		r = af.createPDefinitionAssistant().getType(def);
 
 		List<PDefinition> tempDefs = new Vector<PDefinition>();

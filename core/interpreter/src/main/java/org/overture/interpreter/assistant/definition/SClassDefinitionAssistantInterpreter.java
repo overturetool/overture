@@ -691,7 +691,7 @@ public class SClassDefinitionAssistantInterpreter extends
 	
 	public PExp getExpression(AMutexSyncDefinition sync, ILexNameToken excluding)
 	{
-		LexNameList list = null;
+		LexNameList list;
 
 		if (sync.getOperations().size() == 1)
 		{

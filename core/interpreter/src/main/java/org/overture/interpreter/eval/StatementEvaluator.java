@@ -527,7 +527,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		Value v = null;
+		Value v;
 
 		if (Settings.release == Release.VDM_10 && ctxt.threadState.isPure())
 		{
@@ -924,7 +924,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		Value rv = null;
+		Value rv;
 
 		try
 		{

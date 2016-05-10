@@ -144,7 +144,7 @@ public abstract class ExecutableTestHandler extends TestHandler
 			fin = new FileInputStream(dataFile);
 
 			// Create a new class loader to load classes specific to the run folder
-			URL[] urls = null;
+			URL[] urls;
 			urls = new URL[] { folder.toURI().toURL() };
 			ClassLoader cl = new URLClassLoader(urls);
 

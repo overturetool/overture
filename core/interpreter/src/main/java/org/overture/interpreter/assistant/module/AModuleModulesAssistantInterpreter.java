@@ -38,7 +38,7 @@ public class AModuleModulesAssistantInterpreter extends
 	{
 		for (AModuleModules m : modules)
 		{
-			PStm stmt = null;
+			PStm stmt;
 			if (m instanceof CombinedDefaultModule)
 			{
 				stmt = findStatement((CombinedDefaultModule) m, file, lineno);
@@ -83,7 +83,7 @@ public class AModuleModulesAssistantInterpreter extends
 	{
 		for (AModuleModules m : modules)
 		{
-			PExp exp = null;
+			PExp exp;
 			if (m instanceof CombinedDefaultModule)
 			{
 				exp = findExpression((CombinedDefaultModule) m, file, lineno);

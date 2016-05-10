@@ -13,7 +13,7 @@ public class DelegateStatementEvaluator extends StatementEvaluator
 	public Value caseANotYetSpecifiedStm(ANotYetSpecifiedStm node, Context ctxt)
 			throws AnalysisException
 	{
-		Value val = null;
+		Value val;
 
 		val = evalDelegatedANotYetSpecified(node, node.getLocation(), 4041, "statement", false, ctxt);
 		if (val != null)

@@ -91,7 +91,7 @@ public class FuncComposeObligation extends ProofObligation
 			}
 		}
 
-		PExp secondPart = null;
+		PExp secondPart;
 
 		if (pref1 != null)
 		{

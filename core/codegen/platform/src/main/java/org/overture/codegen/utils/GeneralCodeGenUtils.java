@@ -176,7 +176,7 @@ public class GeneralCodeGenUtils
 			throw new AnalysisException("No expression to generate from");
 		}
 
-		ParserResult<PExp> parseResult = null;
+		ParserResult<PExp> parseResult;
 		try
 		{
 			parseResult = ParserUtil.parseExpression(exp);
@@ -191,7 +191,7 @@ public class GeneralCodeGenUtils
 			throw new AnalysisException("Unable to parse expression: " + exp);
 		}
 
-		TypeCheckResult<PExp> typeCheckResult = null;
+		TypeCheckResult<PExp> typeCheckResult;
 		try
 		{
 			typeCheckResult = TypeCheckerUtil.typeCheckExpression(exp);
@@ -254,7 +254,7 @@ public class GeneralCodeGenUtils
 	public static PExp typeCheckEntryPoint(ClassList classes, String expression, Dialect dialect)
 			throws VDMErrorsException, AnalysisException
 	{
-		SClassDefinition defaultModule = null;
+		SClassDefinition defaultModule;
 
 		LexNameToken name =new LexNameToken("CLASS", "DEFAULT", new LexLocation());
 		defaultModule = AstFactory.newAClassClassDefinition(name, null, null);
@@ -379,7 +379,7 @@ public class GeneralCodeGenUtils
 		{
 			File file = new File(filePath);
 			BufferedReader reader = new BufferedReader(new FileReader(file));
-			String line = "", oldtext = "";
+			String line, oldtext = "";
 			while ((line = reader.readLine()) != null)
 			{
 				oldtext += line + "\n";

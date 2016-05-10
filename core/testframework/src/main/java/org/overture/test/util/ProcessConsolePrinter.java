@@ -53,7 +53,7 @@ public class ProcessConsolePrinter extends Thread
 	public void run()
 	{
 
-		String line = null;
+		String line;
 		BufferedReader input = new BufferedReader(new InputStreamReader(stream));
 		FileWriter outputFileReader;
 		try

@@ -170,7 +170,7 @@ public class RecursiveObligation extends ProofObligation
 	private PExp buildMeasureRightParams(AApplyExp apply,
 			ILexNameToken measure, PType actualResult)
 	{
-		PExp start = null;
+		PExp start;
 		PExp root = apply.getRoot().clone();
 
 		if (root instanceof AApplyExp)

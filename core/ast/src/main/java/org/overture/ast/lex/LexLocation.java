@@ -395,7 +395,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	{
 		int hits = 0;
 		int misses = 0;
-		LexLocation span = null;
+		LexLocation span;
 
 		synchronized (nameSpans)
 		{
@@ -428,7 +428,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 		// The assumption is that the first executable location in
 		// the span for the name is hit as many time as the span is called.
 
-		LexLocation span = null;
+		LexLocation span;
 
 		synchronized (nameSpans)
 		{

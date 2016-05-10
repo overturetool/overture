@@ -216,7 +216,7 @@ public class PatternReader extends SyntaxReader
 					{
 						checkFor(VDMToken.BRA, 2185, "Expecting '(' after "
 								+ id + " record");
-						LexNameToken typename = null;
+						LexNameToken typename;
 						int backtick = id.name.indexOf('`');
 
 						if (backtick >= 0)

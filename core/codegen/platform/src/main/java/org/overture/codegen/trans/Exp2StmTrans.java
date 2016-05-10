@@ -243,7 +243,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 
 		ABlockStmIR outerBlock = new ABlockStmIR();
 
-		SExpIR letBeStResult = null;
+		SExpIR letBeStResult;
 
 		if (transAssistant.hasEmptySet(binding))
 		{

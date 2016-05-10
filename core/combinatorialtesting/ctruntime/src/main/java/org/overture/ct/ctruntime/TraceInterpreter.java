@@ -247,7 +247,7 @@ public class TraceInterpreter
 			Object traceDefinition, Context ctxt) throws Exception
 	{
 		ANamedTraceDefinition mtd = (ANamedTraceDefinition) traceDefinition;
-		TestSequence tests = null;
+		TestSequence tests;
 		if (!reduce)
 		{
 			subset = 1.0F;
@@ -265,8 +265,8 @@ public class TraceInterpreter
 			storage.StartTrace(mtd.getName().getName(), mtd.getLocation().getFile().getName(), mtd.getLocation().getStartLine(), mtd.getLocation().getStartPos(), size, new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
 		}
 
-		INode traceContainer = null;
-		Environment rootEnv = null;
+		INode traceContainer;
+		Environment rootEnv;
 		if (interpreter instanceof ClassInterpreter)
 		{
 			traceContainer = mtd.getClassDefinition();
@@ -304,8 +304,8 @@ public class TraceInterpreter
 
 			infoProcessingTest(className, mtd.getName().getName(), n, size);
 
-			List<Object> result = null;
-			Verdict verdict = null;
+			List<Object> result;
+			Verdict verdict;
 
 			try
 			{
@@ -427,7 +427,7 @@ public class TraceInterpreter
 			CallSequence test, Environment outer) throws AnalysisException,
 			Exception
 	{
-		FlatEnvironment env = null;
+		FlatEnvironment env;
 
 		if (classdef instanceof SClassDefinition)
 		{

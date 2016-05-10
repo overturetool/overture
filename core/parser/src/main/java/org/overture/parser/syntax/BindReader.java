@@ -51,7 +51,7 @@ public class BindReader extends SyntaxReader
 	public ADefPatternBind readPatternOrBind() throws ParserException,
 			LexException
 	{
-		ParserException bindError = null;
+		ParserException bindError;
 
 		try
 		{
@@ -82,7 +82,7 @@ public class BindReader extends SyntaxReader
 
 	public PBind readBind() throws ParserException, LexException
 	{
-		ParserException setBindError = null;
+		ParserException setBindError;
 
 		try
 		{

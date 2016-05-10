@@ -264,7 +264,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		ValueList allValues = null;
+		ValueList allValues;
 		boolean alreadyFound = false;
 
 		try
@@ -508,7 +508,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 			}
 
-			FunctionValue rv = null;
+			FunctionValue rv;
 
 			if (node.getExpdef() == null)
 			{
@@ -752,7 +752,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		ValueList allValues = null;
+		ValueList allValues;
 		Value result = null;
 
 		try
@@ -1910,8 +1910,8 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 		}
 
-		FunctionValue prefv = null;
-		FunctionValue postfv = null;
+		FunctionValue prefv;
+		FunctionValue postfv;
 
 		if (impdef.getPredef() != null)
 		{

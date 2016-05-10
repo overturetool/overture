@@ -373,7 +373,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		resultVar.setType(resultDecl.getType().clone());
 
 		ABlockStmIR replacementBlock = new ABlockStmIR();
-		SExpIR obj = null;
+		SExpIR obj;
 		
 		if (!(subject instanceof SVarExpBase))
 		{
@@ -424,7 +424,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				continue;
 			}
 			
-			boolean memberExists = false;
+			boolean memberExists;
 
 			memberExists = memberExists(memberName, parent, typeAssistant, fieldExp, currentType);
 
@@ -1073,7 +1073,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		for(STypeIR currentType : types)
 		{
 			String memberName = node.getMemberName();
-			STypeIR fieldType = null;
+			STypeIR fieldType;
 			
 			if(currentType instanceof AClassTypeIR)
 			{

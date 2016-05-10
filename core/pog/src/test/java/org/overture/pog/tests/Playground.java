@@ -64,7 +64,7 @@ public class Playground
 	{
 
 		// switch this flag to update a test result file
-		boolean write_result = false;
+		boolean write_result;
 		 write_result = true;
 
 		// switch this flag to print the stored results

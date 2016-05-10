@@ -709,7 +709,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			return false;
 		}
 
-		String name = null;
+		String name;
 		
 		if(node instanceof SClassDefinition)
 		{

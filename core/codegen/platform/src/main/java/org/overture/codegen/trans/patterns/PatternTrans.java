@@ -639,7 +639,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			AStringPatternIR stringPattern = (AStringPatternIR) pattern;
 			String value = stringPattern.getValue();
 
-			SExpIR stringValue = null;
+			SExpIR stringValue;
 
 			if (transAssistant.getInfo().getSettings().getCharSeqAsString())
 			{
@@ -849,7 +849,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			PatternBlockData patternData)
 	{
 		String successVarName = this.transAssistant.getInfo().getTempVarNameGen().nextVarName(iteVarPrefixes.success());
-		SExpIR init = null;
+		SExpIR init;
 
 		if (!patternData.IsRootPattern(pattern))
 		{
@@ -1019,7 +1019,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	private ABlockStmIR consPatternBlock(PatternBlockData patternData,
 			SPatternIR currentPattern, STypeIR currentType, SExpIR actualValue, boolean cast)
 	{
-		ABlockStmIR patternBlock = null;
+		ABlockStmIR patternBlock;
 
 		if (currentPattern instanceof ATuplePatternIR)
 		{

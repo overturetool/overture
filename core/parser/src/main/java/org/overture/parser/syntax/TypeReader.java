@@ -113,7 +113,7 @@ public class TypeReader extends SyntaxReader
 
 	private PType readComposeType() throws ParserException, LexException
 	{
-		PType type = null;
+		PType type;
 
 		if (lastToken().is(VDMToken.COMPOSE))
 		{
@@ -218,7 +218,7 @@ public class TypeReader extends SyntaxReader
 
 	private PType readMapType() throws ParserException, LexException
 	{
-		PType type = null;
+		PType type;
 		LexToken token = lastToken();
 
 		switch (token.type)
@@ -247,7 +247,7 @@ public class TypeReader extends SyntaxReader
 
 	private PType readSetSeqType() throws ParserException, LexException
 	{
-		PType type = null;
+		PType type;
 		LexToken token = lastToken();
 
 		switch (token.type)

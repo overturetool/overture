@@ -50,7 +50,7 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 		configureResultGeneration();
 		try
 		{
-			Result<String> result = null;
+			Result<String> result;
 			@SuppressWarnings("rawtypes")
 			TypeCheckResult tcResult = typeCheck();
 			if (!tcResult.parserResult.errors.isEmpty()
@@ -62,7 +62,7 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 				return;
 				// fail("Model did not pass type check!."+ tcResult.errors);
 			}
-			String entry = "1+1";
+			String entry;
 			if (getEntryFile() == null || !getEntryFile().exists())
 			{
 				entry = createEntryFile();
@@ -171,7 +171,7 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 			{
 				reader = new BufferedReader(new FileReader(readme));
 
-				String text = null;
+				String text;
 				while ((text = reader.readLine()) != null)
 				{
 					text = text.trim();
@@ -192,7 +192,7 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(getEntryFile()));
 		List<String> data = new Vector<String>();
-		String text = null;
+		String text;
 		while ((text = reader.readLine()) != null)
 		{
 			data.add(text.trim());

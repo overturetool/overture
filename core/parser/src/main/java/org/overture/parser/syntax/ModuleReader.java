@@ -179,7 +179,7 @@ public class ModuleReader extends SyntaxReader
 			report(e, after, upto);
 		}
 
-		List<PDefinition> defs = null;
+		List<PDefinition> defs;
 
 		if (lastToken().is(VDMToken.DEFINITIONS))
 		{

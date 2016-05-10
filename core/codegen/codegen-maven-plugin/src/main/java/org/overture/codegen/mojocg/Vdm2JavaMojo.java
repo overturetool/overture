@@ -119,7 +119,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 
 		addDelegateTrans(javaCodeGen);
 		
-		GeneratedData genData = null;
+		GeneratedData genData;
 
 		if (dialect.equals(VDM_PP))
 		{

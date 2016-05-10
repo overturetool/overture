@@ -425,7 +425,7 @@ public class NamedValueLister extends
 	public NameValuePairList caseAValueDefinition(AValueDefinition def,
 			Context initialContext) throws AnalysisException
 	{
-		Value v = null;
+		Value v;
 
 		try
 		{

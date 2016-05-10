@@ -58,7 +58,7 @@ public class OpPostConditionContext extends StatefulContext implements
 	private PExp buildInvExp(SOperationDefinitionBase calledOp,
 			IPogAssistantFactory af)
 	{
-		List<PExp> invariants = new LinkedList<PExp>();
+		List<PExp> invariants;
 		if (calledOp.getClassDefinition() != null)
 		{
 			try

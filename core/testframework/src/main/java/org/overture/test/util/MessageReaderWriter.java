@@ -110,7 +110,7 @@ public class MessageReaderWriter
 			String line;
 			while ((line = in.readLine()) != null)
 			{
-				MsgType type = null;
+				MsgType type;
 				if (line.startsWith(ERROR_LABEL))
 				{
 					type = MsgType.Error;

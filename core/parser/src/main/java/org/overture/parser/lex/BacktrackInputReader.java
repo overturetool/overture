@@ -156,7 +156,7 @@ public class BacktrackInputReader extends Reader
 
 			ByteArrayInputStream is = new ByteArrayInputStream(expression.getBytes(charset));
 
-			InputStreamReader isr = null;
+			InputStreamReader isr;
 
 			switch (streamReaderType)
 			{

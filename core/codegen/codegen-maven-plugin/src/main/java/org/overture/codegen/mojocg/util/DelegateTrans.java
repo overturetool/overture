@@ -97,7 +97,7 @@ public class DelegateTrans extends DepthFirstAnalysisAdaptor
 
 			SPatternIR pattern = param.getPattern();
 
-			String argName = null;
+			String argName;
 
 			if (pattern instanceof AIdentifierPatternIR)
 			{

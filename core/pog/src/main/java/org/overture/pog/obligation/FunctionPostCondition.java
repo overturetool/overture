@@ -64,7 +64,7 @@ public class FunctionPostCondition extends ProofObligation
 			}
 		}
 
-		PExp body = null;
+		PExp body;
 		// String body = null;
 
 		if (func.getBody() instanceof ANotYetSpecifiedExp
@@ -104,7 +104,7 @@ public class FunctionPostCondition extends ProofObligation
 			}
 		}
 
-		PExp body = null;
+		PExp body;
 
 		// implicit body is apparently allowed
 		if (func.getBody() == null)

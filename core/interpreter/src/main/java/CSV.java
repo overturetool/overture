@@ -106,7 +106,7 @@ public class CSV extends IO implements Serializable
 			long index = indexVal.intValue(null);
 			SeqValue lineCells = new SeqValue();
 
-			boolean success = false;
+			boolean success;
 			try
 			{
 				for (String value : getLine(file, index))
@@ -184,7 +184,7 @@ public class CSV extends IO implements Serializable
 			throws IOException
 	{
 		BufferedReader bufRdr = new BufferedReader(new FileReader(file));
-		String line = null;
+		String line;
 		int lineIndex = 0;
 		List<String> cells = new Vector<String>();
 

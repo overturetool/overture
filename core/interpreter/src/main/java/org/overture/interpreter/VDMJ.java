@@ -328,7 +328,7 @@ abstract public class VDMJ
 			}
 		}
 
-		ExitStatus status = null;
+		ExitStatus status;
 
 		if (filenames.isEmpty() && (!interpret || remoteClass != null))
 		{

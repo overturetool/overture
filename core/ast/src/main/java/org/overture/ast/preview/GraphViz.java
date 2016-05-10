@@ -136,7 +136,7 @@ public class GraphViz
 			throws GraphVizException
 	{
 		File dot;
-		byte[] img_stream = null;
+		byte[] img_stream;
 		try
 		{
 			dot = writeDotSourceToFile(dot_source);
@@ -213,7 +213,7 @@ public class GraphViz
 			throws GraphVizException
 	{
 		File img;
-		byte[] img_stream = null;
+		byte[] img_stream;
 		try
 		{
 			img = File.createTempFile("graph_", "." + type);

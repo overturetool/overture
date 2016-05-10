@@ -1498,7 +1498,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				for (PDefinition def : t.getDefinitions()) // Possibly a union
 															// of several
 				{
-					List<ILexNameToken> typeParams = null;
+					List<ILexNameToken> typeParams;
 					def = question.assistantFactory.createPDefinitionAssistant().deref(def);
 
 					if (def instanceof AExplicitFunctionDefinition)
@@ -1670,7 +1670,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		def.apply(THIS, question.newConstraint(null));
 
-		PType rt = null;
+		PType rt;
 		PBind bind = node.getBind();
 
 		if (bind instanceof ASetBind)
@@ -2003,7 +2003,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			return node.getType();
 		}
 
-		PType rec = null;
+		PType rec;
 		if (typeDef instanceof ATypeDefinition)
 		{
 			rec = ((ATypeDefinition) typeDef).getType();
@@ -2133,7 +2133,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	{
 		node.getTest().setType(node.getTest().apply(THIS, question.newConstraint(null)));
 
-		PType result = null;
+		PType result;
 
 		if (node.getBasicType() != null)
 		{
@@ -3587,7 +3587,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public String getMeasureApply(AApplyExp node, ILexNameToken measure,
 			boolean close)
 	{
-		String start = null;
+		String start;
 		PExp root = node.getRoot();
 
 		if (root instanceof AApplyExp)

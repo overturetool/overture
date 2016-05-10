@@ -286,8 +286,8 @@ public class StatementReader extends SyntaxReader
 	private PStm readAssignmentOrCallStatement(LexToken token)
 			throws ParserException, LexException
 	{
-		ParserException assignError = null;
-		PStm stmt = null;
+		ParserException assignError;
+		PStm stmt;
 
 		try
 		{
@@ -531,7 +531,7 @@ public class StatementReader extends SyntaxReader
 			LexException
 	{
 		checkFor(VDMToken.FOR, 2210, "Expecting 'for'");
-		PStm forstmt = null;
+		PStm forstmt;
 
 		if (lastToken().is(VDMToken.ALL))
 		{
@@ -545,7 +545,7 @@ public class StatementReader extends SyntaxReader
 			return AstFactory.newAForAllStm(token, p, set, body);
 		} else
 		{
-			ParserException forIndexError = null;
+			ParserException forIndexError;
 
 			try
 			{
@@ -823,7 +823,7 @@ public class StatementReader extends SyntaxReader
 			LexException
 	{
 		checkFor(VDMToken.LET, 2230, "Expecting 'let'");
-		ParserException letDefError = null;
+		ParserException letDefError;
 
 		try
 		{

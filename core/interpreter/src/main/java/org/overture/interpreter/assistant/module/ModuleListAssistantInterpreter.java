@@ -30,7 +30,7 @@ public class ModuleListAssistantInterpreter
 
 	public RootContext initialize(ModuleList modules, DBGPReader dbgp)
 	{
-		StateContext initialContext = null;
+		StateContext initialContext;
 
 		if (modules.isEmpty())
 		{
@@ -41,7 +41,7 @@ public class ModuleListAssistantInterpreter
 		}
 
 		initialContext.setThreadState(dbgp, null);
-		Set<ContextException> problems = null;
+		Set<ContextException> problems;
 		int retries = 5;
 
 		do

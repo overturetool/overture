@@ -183,7 +183,7 @@ public class ReducedTestSequence extends TestSequence
 
 			int index = chosenTestIndices.get(choosenIndexPtr++);
 
-			CallSequence test = null;
+			CallSequence test;
 			do
 			{
 				test = choosenTestItr.next();

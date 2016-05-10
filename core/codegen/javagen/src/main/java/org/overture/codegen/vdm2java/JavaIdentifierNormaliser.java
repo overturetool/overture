@@ -102,7 +102,7 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 			return name;
 		}
 		
-		String suggestion = "";
+		String suggestion;
 		
 		if (JavaCodeGenUtil.isJavaKeyword(invalidName))
 		{

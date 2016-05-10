@@ -137,7 +137,7 @@ public class LexLocationUtils implements Serializable
 	{
 		int hits = 0;
 		int misses = 0;
-		ILexLocation span = null;
+		ILexLocation span;
 
 		synchronized (nameSpans)
 		{
@@ -170,7 +170,7 @@ public class LexLocationUtils implements Serializable
 		// The assumption is that the first executable location in
 		// the span for the name is hit as many time as the span is called.
 
-		ILexLocation span = null;
+		ILexLocation span;
 
 		synchronized (nameSpans)
 		{

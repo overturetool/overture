@@ -96,7 +96,7 @@ public class AlternativeTraceNode extends TraceNode implements
 			// Alternatives within an alternative are just like larger alts,
 			// so we add all the lower alts to the list...
 			
-			int s = 0;
+			int s;
 			if(node instanceof IIterableTraceNode)
 			{
 				s = ((IIterableTraceNode)node).size();
