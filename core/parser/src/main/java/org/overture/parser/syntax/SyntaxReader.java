@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexToken;
@@ -616,7 +617,7 @@ public abstract class SyntaxReader
 
 	public List<VDMError> getErrors()
 	{
-		List<VDMError> list = new Vector<VDMError>();
+		List<VDMError> list = new ArrayList<VDMError>();
 
 		for (SyntaxReader rdr : readers)
 		{
@@ -649,7 +650,7 @@ public abstract class SyntaxReader
 
 	public List<VDMWarning> getWarnings()
 	{
-		List<VDMWarning> list = new Vector<VDMWarning>();
+		List<VDMWarning> list = new ArrayList<VDMWarning>();
 
 		for (SyntaxReader rdr : readers)
 		{

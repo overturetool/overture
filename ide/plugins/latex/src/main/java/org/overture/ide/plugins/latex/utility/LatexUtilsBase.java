@@ -76,7 +76,7 @@ public class LatexUtilsBase
 
 	static List<File> getFileChildern(File file)
 	{
-		List<File> list = new Vector<File>();
+		List<File> list = new ArrayList<File>();
 
 		if (file.isFile())
 		{

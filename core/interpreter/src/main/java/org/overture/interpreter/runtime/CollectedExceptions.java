@@ -1,5 +1,6 @@
 package org.overture.interpreter.runtime;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -16,7 +17,7 @@ public class CollectedExceptions extends RuntimeException implements
 
 	public CollectedExceptions(Set<ContextException> problems)
 	{
-		this(new Vector<Exception>(problems));
+		this(new ArrayList<Exception>(problems));
 	}
 
 	/**

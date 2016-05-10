@@ -83,7 +83,7 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 			LexTokenReader ltr = new LexTokenReader(source, Settings.dialect, file.getSystemFile(), charset, streamReaderType);
 			reader = new ClassReader(ltr);
 			classes.addAll(reader.readClasses());
-			List<INode> nodes = new Vector<INode>();
+			List<INode> nodes = new ArrayList<INode>();
 			for (SClassDefinition classDefinition : classes)
 			{
 				nodes.add(classDefinition);

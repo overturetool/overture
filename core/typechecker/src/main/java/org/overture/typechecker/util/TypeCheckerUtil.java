@@ -24,6 +24,7 @@ package org.overture.typechecker.util;
 import java.io.File;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
@@ -120,7 +121,7 @@ public class TypeCheckerUtil
 
 		public ExpressionTypeChecker(PExp expression)
 		{
-			this(expression, new FlatEnvironment(new TypeCheckerAssistantFactory(), new Vector<PDefinition>()));// new
+			this(expression, new FlatEnvironment(new TypeCheckerAssistantFactory(), new ArrayList<PDefinition>()));// new
 																												// ModuleEnvironment(""));
 		}
 
@@ -264,7 +265,7 @@ public class TypeCheckerUtil
 			throws ParserException, LexException
 	{
 		final ITypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
-		List<SClassDefinition> classes = new Vector<SClassDefinition>();
+		List<SClassDefinition> classes = new ArrayList<SClassDefinition>();
 		classes.addAll(parserResult.result);
 		classes.add(AstFactoryTC.newACpuClassDefinition(af));
 		classes.add(AstFactoryTC.newABusClassDefinition(af));
@@ -287,7 +288,7 @@ public class TypeCheckerUtil
 			tc.typeCheck();
 			return new TypeCheckResult<P>(parserResult, parserResult.result, TypeChecker.getWarnings(), TypeChecker.getErrors());
 		}
-		return new TypeCheckResult<P>(parserResult, null, new Vector<VDMWarning>(), new Vector<VDMError>());
+		return new TypeCheckResult<P>(parserResult, null, new ArrayList<VDMWarning>(), new ArrayList<VDMError>());
 	}
 
 }

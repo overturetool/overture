@@ -25,6 +25,7 @@ package org.overture.pog.contexts;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -83,7 +84,7 @@ public class POCaseContext extends POContext
 			local.setPattern(pattern.clone());
 			// local.setName(def.getName().clone());
 			local.setTest(exp.clone());
-			List<PDefinition> lDefs = new Vector<PDefinition>();
+			List<PDefinition> lDefs = new ArrayList<PDefinition>();
 			lDefs.add(local);
 			letDefExp.setLocalDefs(lDefs);
 			letDefExp.setExpression(stitch);

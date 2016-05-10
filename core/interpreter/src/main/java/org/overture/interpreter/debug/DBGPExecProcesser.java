@@ -10,6 +10,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.interpreter.commands.ClassCommandReader;
 import org.overture.interpreter.commands.ModuleCommandReader;
@@ -44,7 +45,7 @@ public class DBGPExecProcesser
 
 		Interpreter i = interpreter;
 		final DBGPReader d = reader;
-		List<File> fileList = new Vector<File>(i.getSourceFiles());
+		List<File> fileList = new ArrayList<File>(i.getSourceFiles());
 		final Writer result = new StringWriter();
 		final Reader input = new StringReader(command);
 		// System.out.println("Command session started in " + new File(".").getAbsolutePath());

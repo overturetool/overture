@@ -83,7 +83,7 @@ public class Dependencies
 					r.put(decl, dependencies);
 				} else
 				{
-					r.put(decl, new Vector<SDeclIR>());
+					r.put(decl, new ArrayList<SDeclIR>());
 				}
 			} catch (AnalysisException e)
 			{
@@ -110,7 +110,7 @@ public class Dependencies
 			}
 		});
 
-		List<SDeclIR> deps = new Vector<SDeclIR>();
+		List<SDeclIR> deps = new ArrayList<SDeclIR>();
 		for (SVarExpIR v : vars)
 		{
 			for (SDeclIR d : decls)

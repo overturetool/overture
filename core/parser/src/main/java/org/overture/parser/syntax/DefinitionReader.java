@@ -26,6 +26,7 @@ package org.overture.parser.syntax;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
@@ -118,7 +119,7 @@ public class DefinitionReader extends SyntaxReader
 	public List<PDefinition> readDefinitions() throws ParserException,
 			LexException
 	{
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 		boolean threadDone = false;
 
 		while (lastToken().isNot(VDMToken.EOF)
@@ -387,7 +388,7 @@ public class DefinitionReader extends SyntaxReader
 	private List<PDefinition> readTypes() throws LexException, ParserException
 	{
 		checkFor(VDMToken.TYPES, 2013, "Expected 'types'");
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 
 		while (!newSection())
 		{
@@ -417,7 +418,7 @@ public class DefinitionReader extends SyntaxReader
 	private List<PDefinition> readValues() throws LexException, ParserException
 	{
 		checkFor(VDMToken.VALUES, 2013, "Expected 'values'");
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 
 		while (!newSection())
 		{
@@ -457,7 +458,7 @@ public class DefinitionReader extends SyntaxReader
 			ParserException
 	{
 		checkFor(VDMToken.FUNCTIONS, 2013, "Expected 'functions'");
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 
 		while (!newSection())
 		{
@@ -495,7 +496,7 @@ public class DefinitionReader extends SyntaxReader
 			ParserException
 	{
 		checkFor(VDMToken.OPERATIONS, 2013, "Expected 'operations'");
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 
 		while (!newSection())
 		{
@@ -525,7 +526,7 @@ public class DefinitionReader extends SyntaxReader
 	{
 		checkFor(VDMToken.INSTANCE, 2083, "Expected 'instance variables'");
 		checkFor(VDMToken.VARIABLES, 2083, "Expecting 'instance variables'");
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 
 		while (!newSection())
 		{
@@ -550,7 +551,7 @@ public class DefinitionReader extends SyntaxReader
 	private List<PDefinition> readTraces() throws LexException, ParserException
 	{
 		checkFor(VDMToken.TRACES, 2013, "Expected 'traces'");
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 
 		while (!newSection())
 		{
@@ -575,7 +576,7 @@ public class DefinitionReader extends SyntaxReader
 	private List<PDefinition> readSyncs() throws LexException, ParserException
 	{
 		checkFor(VDMToken.SYNC, 2013, "Expected 'sync'");
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 
 		while (!newSection())
 		{
@@ -680,7 +681,7 @@ public class DefinitionReader extends SyntaxReader
 			throwMessage(2020, "Expecting '(' after function name");
 		}
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
 
 		while (lastToken().is(VDMToken.BRA))
 		{
@@ -690,7 +691,7 @@ public class DefinitionReader extends SyntaxReader
 				checkFor(VDMToken.KET, 2091, "Expecting ')' after function parameters");
 			} else
 			{
-				parameters.add(new Vector<PPattern>()); // empty "()"
+				parameters.add(new ArrayList<PPattern>()); // empty "()"
 				nextToken();
 			}
 		}
@@ -734,7 +735,7 @@ public class DefinitionReader extends SyntaxReader
 
 		PatternReader pr = getPatternReader();
 		TypeReader tr = getTypeReader();
-		List<APatternListTypePair> parameterPatterns = new Vector<APatternListTypePair>();
+		List<APatternListTypePair> parameterPatterns = new ArrayList<APatternListTypePair>();
 
 		if (lastToken().isNot(VDMToken.KET))
 		{
@@ -753,8 +754,8 @@ public class DefinitionReader extends SyntaxReader
 		checkFor(VDMToken.KET, 2124, "Expecting ')' after parameters");
 
 		LexToken firstResult = lastToken();
-		List<PPattern> resultNames = new Vector<PPattern>();
-		List<PType> resultTypes = new Vector<PType>();
+		List<PPattern> resultNames = new ArrayList<PPattern>();
+		List<PType> resultTypes = new ArrayList<PType>();
 
 		do
 		{
@@ -966,7 +967,7 @@ public class DefinitionReader extends SyntaxReader
 			checkFor(VDMToken.KET, 2101, "Expecting ')' after operation parameters");
 		} else
 		{
-			parameters = new Vector<PPattern>(); // empty "()"
+			parameters = new ArrayList<PPattern>(); // empty "()"
 			nextToken();
 		}
 
@@ -998,7 +999,7 @@ public class DefinitionReader extends SyntaxReader
 		nextToken();
 		PatternReader pr = getPatternReader();
 		TypeReader tr = getTypeReader();
-		List<APatternListTypePair> parameterPatterns = new Vector<APatternListTypePair>();
+		List<APatternListTypePair> parameterPatterns = new ArrayList<APatternListTypePair>();
 
 		if (lastToken().isNot(VDMToken.KET))
 		{
@@ -1021,8 +1022,8 @@ public class DefinitionReader extends SyntaxReader
 
 		if (firstResult.is(VDMToken.IDENTIFIER))
 		{
-			List<PPattern> resultNames = new Vector<PPattern>();
-			List<PType> resultTypes = new Vector<PType>();
+			List<PPattern> resultNames = new ArrayList<PPattern>();
+			List<PType> resultTypes = new ArrayList<PType>();
 
 			do
 			{
@@ -1068,7 +1069,7 @@ public class DefinitionReader extends SyntaxReader
 
 		if (lastToken().is(VDMToken.EXTERNAL))
 		{
-			externals = new Vector<AExternalClause>();
+			externals = new ArrayList<AExternalClause>();
 			nextToken();
 
 			while (lastToken().is(VDMToken.READ)
@@ -1110,7 +1111,7 @@ public class DefinitionReader extends SyntaxReader
 
 		if (lastToken().is(VDMToken.ERRS))
 		{
-			errors = new Vector<AErrorCase>();
+			errors = new ArrayList<AErrorCase>();
 			nextToken();
 
 			while (lastToken() instanceof LexIdentifierToken)
@@ -1363,7 +1364,7 @@ public class DefinitionReader extends SyntaxReader
 	private List<String> readTraceIdentifierList() throws ParserException,
 			LexException
 	{
-		List<String> names = new Vector<String>();
+		List<String> names = new ArrayList<String>();
 		names.add(readIdToken("Expecting trace identifier").getName());
 
 		while (lastToken().is(VDMToken.DIVIDE))
@@ -1378,7 +1379,7 @@ public class DefinitionReader extends SyntaxReader
 	private List<ATraceDefinitionTerm> readTraceDefinitionList()
 			throws LexException, ParserException
 	{
-		List<ATraceDefinitionTerm> list = new Vector<ATraceDefinitionTerm>();
+		List<ATraceDefinitionTerm> list = new ArrayList<ATraceDefinitionTerm>();
 		list.add(readTraceDefinitionTerm());
 
 		while (lastToken().is(VDMToken.SEMICOLON))
@@ -1402,7 +1403,7 @@ public class DefinitionReader extends SyntaxReader
 	private ATraceDefinitionTerm readTraceDefinitionTerm() throws LexException,
 			ParserException
 	{
-		List<PTraceDefinition> term = new Vector<PTraceDefinition>();
+		List<PTraceDefinition> term = new ArrayList<PTraceDefinition>();
 		term.add(readTraceDefinition());
 
 		while (lastToken().is(VDMToken.PIPE))
@@ -1529,7 +1530,7 @@ public class DefinitionReader extends SyntaxReader
 	private PTraceDefinition readLetDefBinding() throws ParserException,
 			LexException
 	{
-		List<AValueDefinition> localDefs = new Vector<AValueDefinition>();
+		List<AValueDefinition> localDefs = new ArrayList<AValueDefinition>();
 		LexToken start = lastToken();
 
 		PDefinition def = readLocalDefinition(NameScope.LOCAL);
@@ -1609,7 +1610,7 @@ public class DefinitionReader extends SyntaxReader
 			case PIPEPIPE:
 				nextToken();
 				checkFor(VDMToken.BRA, 2292, "Expecting '|| (...)'");
-				List<PTraceDefinition> defs = new Vector<PTraceDefinition>();
+				List<PTraceDefinition> defs = new ArrayList<PTraceDefinition>();
 				defs.add(readTraceDefinition());
 				checkFor(VDMToken.COMMA, 2293, "Expecting '|| (a, b {,...})'");
 				defs.add(readTraceDefinition());

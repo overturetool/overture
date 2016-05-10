@@ -57,7 +57,7 @@ public class AExplicitOperationDefinitionAssistantTC implements IAstAssistant
 			AExplicitOperationDefinition node)
 	{
 
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 		Iterator<PType> titer = ((AOperationType) node.getType()).getParameters().iterator();
 
 		for (PPattern p : node.getParameterPatterns())
@@ -73,8 +73,8 @@ public class AExplicitOperationDefinitionAssistantTC implements IAstAssistant
 			AExplicitOperationDefinition d, Environment base)
 	{
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
-		List<PPattern> plist = new Vector<PPattern>();
+		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
+		List<PPattern> plist = new ArrayList<PPattern>();
 		plist.addAll((List<PPattern>) d.getParameterPatterns().clone());
 
 		if (!(((AOperationType) d.getType()).getResult() instanceof AVoidType))
@@ -120,8 +120,8 @@ public class AExplicitOperationDefinitionAssistantTC implements IAstAssistant
 			AExplicitOperationDefinition d, Environment base)
 	{
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
-		List<PPattern> plist = new Vector<PPattern>();
+		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
+		List<PPattern> plist = new ArrayList<PPattern>();
 		plist.addAll((List<PPattern>) d.getParameterPatterns().clone());
 
 		if (d.getState() != null)

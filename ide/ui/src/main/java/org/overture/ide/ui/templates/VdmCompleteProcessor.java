@@ -65,7 +65,7 @@ public class VdmCompleteProcessor
 			VdmDocument document, List<ICompletionProposal> proposals,
 			int offset)
 	{
-		List<ICompletionProposal> calculatedProposals = new Vector<ICompletionProposal>();
+		List<ICompletionProposal> calculatedProposals = new ArrayList<ICompletionProposal>();
 
 		switch (info.getType())
 		{
@@ -90,7 +90,7 @@ public class VdmCompleteProcessor
 
 		}
 
-		List<String> replacementDisplayString = new Vector<String>();
+		List<String> replacementDisplayString = new ArrayList<String>();
 		for (ICompletionProposal proposal : calculatedProposals)
 		{
 			if (proposal instanceof CompletionProposal)
@@ -449,7 +449,7 @@ public class VdmCompleteProcessor
 
 	private List<INode> getAst(VdmDocument document)
 	{
-		List<INode> ast = new Vector<INode>();
+		List<INode> ast = new ArrayList<INode>();
 		ast.addAll(document.getProject().getModel().getRootElementList());
 		ast.addAll(document.getSourceUnit().getParseList());// maybe add broken parse tree
 		return ast;
@@ -457,7 +457,7 @@ public class VdmCompleteProcessor
 
 	private List<INode> getLocalFileAst(VdmDocument document)
 	{
-		List<INode> ast = new Vector<INode>();
+		List<INode> ast = new ArrayList<INode>();
 		ast.addAll(document.getSourceUnit().getParseList());
 		return ast;
 	}

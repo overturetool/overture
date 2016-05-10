@@ -25,6 +25,7 @@ package org.overture.parser.syntax;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -224,7 +225,7 @@ public class StatementReader extends SyntaxReader
 	{
 		checkFor(VDMToken.TIXE, 2191, "Expecting 'tixe'");
 
-		List<ATixeStmtAlternative> traps = new Vector<ATixeStmtAlternative>();
+		List<ATixeStmtAlternative> traps = new ArrayList<ATixeStmtAlternative>();
 		BindReader br = getBindReader();
 		checkFor(VDMToken.SET_OPEN, 2192, "Expecting '{' after 'tixe'");
 
@@ -321,7 +322,7 @@ public class StatementReader extends SyntaxReader
 	{
 		checkFor(VDMToken.ATOMIC, 2203, "Expecting 'atomic'");
 		checkFor(VDMToken.BRA, 2204, "Expecting '(' after 'atomic'");
-		List<AAssignmentStm> assignments = new Vector<AAssignmentStm>();
+		List<AAssignmentStm> assignments = new ArrayList<AAssignmentStm>();
 
 		assignments.add(readAssignmentStatement(lastToken().location));
 		ignore(VDMToken.SEMICOLON); // Every statement has an ignorable semicolon
@@ -352,7 +353,7 @@ public class StatementReader extends SyntaxReader
 		LexNameToken name = readNameToken("Expecting operation name in call statement");
 
 		checkFor(VDMToken.BRA, 2206, "Expecting '(' after call operation name");
-		List<PExp> args = new Vector<PExp>();
+		List<PExp> args = new ArrayList<PExp>();
 		ExpressionReader er = getExpressionReader();
 
 		if (lastToken().isNot(VDMToken.KET))
@@ -445,7 +446,7 @@ public class StatementReader extends SyntaxReader
 				case BRA:
 					nextToken();
 					ExpressionReader er = getExpressionReader();
-					List<PExp> args = new Vector<PExp>();
+					List<PExp> args = new ArrayList<PExp>();
 
 					if (lastToken().isNot(VDMToken.KET))
 					{
@@ -492,7 +493,7 @@ public class StatementReader extends SyntaxReader
 				LexIdentifierToken name = readIdToken("Expecting class name after 'new'");
 				checkFor(VDMToken.BRA, 2207, "Expecting '(' after new class name");
 
-				List<PExp> args = new Vector<PExp>();
+				List<PExp> args = new ArrayList<PExp>();
 				ExpressionReader er = getExpressionReader();
 
 				if (lastToken().isNot(VDMToken.KET))
@@ -628,7 +629,7 @@ public class StatementReader extends SyntaxReader
 		PExp exp = getExpressionReader().readExpression();
 		checkFor(VDMToken.THEN, 2219, "Missing 'then'");
 		PStm thenStmt = readStatement();
-		List<AElseIfStm> elseIfList = new Vector<AElseIfStm>();
+		List<AElseIfStm> elseIfList = new ArrayList<AElseIfStm>();
 
 		while (lastToken().is(VDMToken.ELSEIF))
 		{
@@ -748,7 +749,7 @@ public class StatementReader extends SyntaxReader
 	private List<AAssignmentDefinition> readDclStatements()
 			throws ParserException, LexException
 	{
-		List<AAssignmentDefinition> defs = new Vector<AAssignmentDefinition>();
+		List<AAssignmentDefinition> defs = new ArrayList<AAssignmentDefinition>();
 
 		while (lastToken().is(VDMToken.DCL))
 		{
@@ -856,7 +857,7 @@ public class StatementReader extends SyntaxReader
 			throws ParserException, LexException
 	{
 		DefinitionReader dr = getDefinitionReader();
-		List<PDefinition> localDefs = new Vector<PDefinition>();
+		List<PDefinition> localDefs = new ArrayList<PDefinition>();
 		localDefs.add(dr.readLocalDefinition(NameScope.LOCAL));
 
 		while (ignore(VDMToken.COMMA))
@@ -892,7 +893,7 @@ public class StatementReader extends SyntaxReader
 		PExp exp = getExpressionReader().readExpression();
 		checkFor(VDMToken.COLON, 2235, "Expecting ':' after cases expression");
 
-		List<ACaseAlternativeStm> cases = new Vector<ACaseAlternativeStm>();
+		List<ACaseAlternativeStm> cases = new ArrayList<ACaseAlternativeStm>();
 		PStm others = null;
 		cases.addAll(readCaseAlternatives());
 
@@ -917,7 +918,7 @@ public class StatementReader extends SyntaxReader
 	private List<ACaseAlternativeStm> readCaseAlternatives()
 			throws ParserException, LexException
 	{
-		List<ACaseAlternativeStm> alts = new Vector<ACaseAlternativeStm>();
+		List<ACaseAlternativeStm> alts = new ArrayList<ACaseAlternativeStm>();
 		List<PPattern> plist = getPatternReader().readPatternList();
 		checkFor(VDMToken.ARROW, 2236, "Expecting '->' after case pattern list");
 		PStm result = readStatement();
@@ -936,7 +937,7 @@ public class StatementReader extends SyntaxReader
 	{
 		checkFor(VDMToken.DEF, 2239, "Expecting 'def'");
 		DefinitionReader dr = getDefinitionReader();
-		List<PDefinition> equalsDefs = new Vector<PDefinition>();
+		List<PDefinition> equalsDefs = new ArrayList<PDefinition>();
 
 		while (lastToken().isNot(VDMToken.IN))
 		{

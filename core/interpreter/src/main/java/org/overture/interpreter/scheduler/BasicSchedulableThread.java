@@ -24,6 +24,7 @@
 package org.overture.interpreter.scheduler;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -198,7 +199,7 @@ public class BasicSchedulableThread implements Serializable
 	{
 		synchronized (allThreads)
 		{
-			List<ISchedulableThread> list = new Vector<ISchedulableThread>();
+			List<ISchedulableThread> list = new ArrayList<ISchedulableThread>();
 
 			for (ISchedulableThread th : allThreads)
 			{

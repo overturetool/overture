@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
@@ -106,7 +107,7 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 
 			PTypeSet result = new PTypeSet(af);
 			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
-			List<PDefinition> defs = new Vector<PDefinition>();
+			List<PDefinition> defs = new ArrayList<PDefinition>();
 
 			for (PType t : type.getTypes())
 			{

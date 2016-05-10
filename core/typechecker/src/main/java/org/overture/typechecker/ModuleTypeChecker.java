@@ -25,6 +25,7 @@ package org.overture.typechecker;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
@@ -169,8 +170,8 @@ public class ModuleTypeChecker extends TypeChecker
 		// Create a list of all definitions from all modules, including
 		// imports of renamed definitions.
 
-		List<PDefinition> alldefs = new Vector<PDefinition>();
-		List<PDefinition> checkDefs = new Vector<PDefinition>();
+		List<PDefinition> alldefs = new ArrayList<PDefinition>();
+		List<PDefinition> checkDefs = new ArrayList<PDefinition>();
 
 		for (AModuleModules m : modules)
 		{

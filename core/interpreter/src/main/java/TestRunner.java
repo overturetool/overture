@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -15,7 +16,7 @@ public class TestRunner
 {
 	public static Value collectTests(Value obj)
 	{
-		List<String> tests = new Vector<String>();
+		List<String> tests = new ArrayList<String>();
 		ObjectValue instance = (ObjectValue) obj;
 
 		if (ClassInterpreter.getInstance() instanceof ClassInterpreter)

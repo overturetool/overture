@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -439,7 +440,7 @@ public class ObjectValue extends Value
 			return mycopy;
 		}
 
-		mycopy = new ObjectValue(type, new NameValuePairMap(), new Vector<ObjectValue>(), CPU, creator);
+		mycopy = new ObjectValue(type, new NameValuePairMap(), new ArrayList<ObjectValue>(), CPU, creator);
 
 		List<ObjectValue> supers = mycopy.superobjects;
 		NameValuePairMap memcopy = mycopy.members;
@@ -447,7 +448,7 @@ public class ObjectValue extends Value
 		for (ObjectValue sobj : superobjects)
 		{
 			supers.add( // Type skeleton only...
-			new ObjectValue(sobj.type, new NameValuePairMap(), new Vector<ObjectValue>(), sobj.CPU, creator));
+			new ObjectValue(sobj.type, new NameValuePairMap(), new ArrayList<ObjectValue>(), sobj.CPU, creator));
 		}
 
 		for (ILexNameToken name : members.keySet())

@@ -30,6 +30,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Message;
@@ -47,8 +48,8 @@ public class MessageReaderWriter
 	public static String ERROR_LABEL = "ERROR";
 	public static String RESULT_LABEL = "RESULT";
 
-	final List<IMessage> errors = new Vector<IMessage>();
-	final List<IMessage> warnings = new Vector<IMessage>();
+	final List<IMessage> errors = new ArrayList<IMessage>();
+	final List<IMessage> warnings = new ArrayList<IMessage>();
 	String result = "";
 	final File file;
 

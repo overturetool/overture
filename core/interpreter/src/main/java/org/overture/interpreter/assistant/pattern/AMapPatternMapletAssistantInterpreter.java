@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.pattern;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Vector;
@@ -30,7 +31,7 @@ public class AMapPatternMapletAssistantInterpreter implements IAstAssistant
 	{
 		List<NameValuePairList> flist = af.createPPatternAssistant().getAllNamedValues(p.getFrom(), maplet.getKey(), ctxt);
 		List<NameValuePairList> tlist = af.createPPatternAssistant().getAllNamedValues(p.getTo(), maplet.getValue(), ctxt);
-		List<NameValuePairList> results = new Vector<NameValuePairList>();
+		List<NameValuePairList> results = new ArrayList<NameValuePairList>();
 
 		for (NameValuePairList f : flist)
 		{
@@ -48,7 +49,7 @@ public class AMapPatternMapletAssistantInterpreter implements IAstAssistant
 
 	public List<AIdentifierPattern> findIdentifiers(AMapletPatternMaplet p)
 	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+		List<AIdentifierPattern> list = new ArrayList<AIdentifierPattern>();
 
 		list.addAll(af.createPPatternAssistant().findIdentifiers(p.getFrom()));
 		list.addAll(af.createPPatternAssistant().findIdentifiers(p.getTo()));

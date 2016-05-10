@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -120,7 +121,7 @@ public class Delegate implements Serializable
 
 			// FIXME: this is to handle inheritance in the same way as VDMJ did. See CSV and IO, where the subclass
 			// declared methods is in the tail of the list
-			List<PDefinition> defs = new Vector<PDefinition>(definitions);
+			List<PDefinition> defs = new ArrayList<PDefinition>(definitions);
 			Collections.reverse(defs);
 
 			for (PDefinition d : defs)
@@ -158,7 +159,7 @@ public class Delegate implements Serializable
 			}
 
 			LexNameList anames = new LexNameList();
-			List<Class<?>> ptypes = new Vector<Class<?>>();
+			List<Class<?>> ptypes = new ArrayList<Class<?>>();
 
 			if (plist != null)
 			{

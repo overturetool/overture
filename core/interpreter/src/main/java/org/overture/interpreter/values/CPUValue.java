@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -46,22 +47,22 @@ public class CPUValue extends ObjectValue
 	public CPUValue(AClassType aClassType, NameValuePairMap map,
 			ValueList argvals)
 	{
-		super(aClassType, map, new Vector<ObjectValue>(), null, null);
+		super(aClassType, map, new ArrayList<ObjectValue>(), null, null);
 
 		QuoteValue parg = (QuoteValue) argvals.get(0);
 		SchedulingPolicy cpup = SchedulingPolicy.factory(parg.value.toUpperCase());
 		RealValue sarg = (RealValue) argvals.get(1);
 
 		resource = new CPUResource(cpup, sarg.value);
-		deployed = new Vector<ObjectValue>();
+		deployed = new ArrayList<ObjectValue>();
 
 	}
 
 	public CPUValue(AClassType classtype) // for virtual CPUs
 	{
-		super(classtype, new NameValuePairMap(), new Vector<ObjectValue>(), null, null);
+		super(classtype, new NameValuePairMap(), new ArrayList<ObjectValue>(), null, null);
 		resource = new CPUResource(new FCFSPolicy(), 0);
-		deployed = new Vector<ObjectValue>();
+		deployed = new ArrayList<ObjectValue>();
 	}
 
 	public void setup(ResourceScheduler scheduler, String name)

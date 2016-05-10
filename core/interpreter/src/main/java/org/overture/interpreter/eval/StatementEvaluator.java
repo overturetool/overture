@@ -1,5 +1,6 @@
 package org.overture.interpreter.eval;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
@@ -231,7 +232,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		try
 		{
 			ctxt.threadState.setAtomic(true);
-			List<ValueListenerList> listenerLists = new Vector<ValueListenerList>(size);
+			List<ValueListenerList> listenerLists = new ArrayList<ValueListenerList>(size);
 
 			for (int i = 0; i < size; i++)
 			{
@@ -283,7 +284,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			}
 			
 			// Work out the actual types of the arguments, so we bind the right op/fn
-			List<PType> argTypes = new Vector<PType>();
+			List<PType> argTypes = new ArrayList<PType>();
 			int arg = 0;
 			
 			for (PType argType: node.getField().getTypeQualifier())

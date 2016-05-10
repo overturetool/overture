@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.IAstAssistant;
@@ -118,7 +119,7 @@ public class AModuleModulesAssistantTC implements IAstAssistant
 	public Collection<? extends PDefinition> getDefinitions(
 			AModuleExports aModuleExports, LinkedList<PDefinition> actualDefs)
 	{
-		List<PDefinition> exportDefs = new Vector<PDefinition>();
+		List<PDefinition> exportDefs = new ArrayList<PDefinition>();
 
 		for (List<PExport> etype : aModuleExports.getExports())
 		{
@@ -141,7 +142,7 @@ public class AModuleModulesAssistantTC implements IAstAssistant
 	public Collection<? extends PDefinition> getDefinitions(
 			AModuleExports aModuleExports)
 	{
-		List<PDefinition> exportDefs = new Vector<PDefinition>();
+		List<PDefinition> exportDefs = new ArrayList<PDefinition>();
 
 		for (List<PExport> etype : aModuleExports.getExports())
 		{

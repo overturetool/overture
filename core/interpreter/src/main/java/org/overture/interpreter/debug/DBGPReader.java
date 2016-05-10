@@ -37,6 +37,7 @@ import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -147,7 +148,7 @@ public class DBGPReader
 		String ideKey = null;
 		Settings.dialect = null;
 		String expression = null;
-		List<File> files = new Vector<File>();
+		List<File> files = new ArrayList<File>();
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 		boolean warnings = true;
@@ -1089,7 +1090,7 @@ public class DBGPReader
 	{
 		// "<type> [<options>] [-- <base64 args>]"
 
-		List<DBGPOption> options = new Vector<DBGPOption>();
+		List<DBGPOption> options = new ArrayList<DBGPOption>();
 		String args = null;
 		boolean doneOpts = false;
 		boolean gotXID = false;

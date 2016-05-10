@@ -22,6 +22,7 @@
 package org.overture.typechecker.utilities;
 
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
@@ -217,7 +218,7 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseANamedTraceDefinition(ANamedTraceDefinition node)
 			throws AnalysisException
 	{
-		return AstFactory.newAOperationType(node.getLocation(), new Vector<PType>(), AstFactory.newAVoidType(node.getLocation()));
+		return AstFactory.newAOperationType(node.getLocation(), new ArrayList<PType>(), AstFactory.newAVoidType(node.getLocation()));
 	}
 
 	@Override

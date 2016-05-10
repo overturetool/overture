@@ -23,6 +23,7 @@ package org.overture.core.tests;
 
 import java.util.Collection;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -77,7 +78,7 @@ public abstract class ParamExternalsTest<R> extends ParamFineGrainTest<R>
 
 		if (external == null)
 		{
-			return new Vector<Object[]>();
+			return new ArrayList<Object[]>();
 		} else
 		{
 			return PathsProvider.computeExternalPaths(external);

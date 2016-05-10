@@ -25,6 +25,7 @@ package org.overture.interpreter.scheduler;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.statements.PStm;
@@ -47,7 +48,7 @@ public class CTMainThread extends MainThread
 	private final CallSequence test;
 	private final boolean debug;
 
-	private List<Object> result = new Vector<Object>();
+	private List<Object> result = new ArrayList<Object>();
 
 	public CTMainThread(CallSequence test, Context ctxt, boolean debug)
 	{

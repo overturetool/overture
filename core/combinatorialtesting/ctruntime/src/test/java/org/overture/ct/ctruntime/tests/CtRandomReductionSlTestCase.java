@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
@@ -63,7 +64,7 @@ public class CtRandomReductionSlTestCase extends CtTestCaseBase
     @Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-	    List<ReductionTestData> testReduction = new Vector<>();
+	    List<ReductionTestData> testReduction = new ArrayList<>();
 		testReduction.add(new ReductionTestData("OpRepeatedTenTimes", new TraceReductionInfo(0.15F, TraceReductionType.RANDOM, SEED),2));
 		testReduction.add(new ReductionTestData("ThreeAlternativeOpCalls", new TraceReductionInfo(0.1F, TraceReductionType.RANDOM, SEED),1));
         testReduction.add(new ReductionTestData("ThreeConcurrentOpCalls", new TraceReductionInfo(0.30F, TraceReductionType.RANDOM, SEED),2));
@@ -74,7 +75,7 @@ public class CtRandomReductionSlTestCase extends CtTestCaseBase
 		testReduction.add(new ReductionTestData("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARNAMES, SEED),3));
 		testReduction.add(new ReductionTestData("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARVALUES, SEED),21));
 
-		Collection<Object[]> tests = new Vector<Object[]>();
+		Collection<Object[]> tests = new ArrayList<Object[]>();
 		
 
 		File root = new File(RESOURCES);

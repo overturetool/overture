@@ -89,7 +89,7 @@ public class TimingInvariantsParser
 
 	private List<ConjectureDefinition> parse(String contents)
 	{
-		List<ConjectureDefinition> defs = new Vector<ConjectureDefinition>();
+		List<ConjectureDefinition> defs = new ArrayList<ConjectureDefinition>();
 
 		try
 		{

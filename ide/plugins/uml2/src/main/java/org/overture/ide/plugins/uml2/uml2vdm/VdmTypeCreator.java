@@ -303,7 +303,7 @@ public class VdmTypeCreator
 	public PType createRecord(Class innerType)
 	{
 
-		List<AFieldField> fields = new Vector<AFieldField>();
+		List<AFieldField> fields = new ArrayList<AFieldField>();
 
 		for (Property p : innerType.getOwnedAttributes())
 		{

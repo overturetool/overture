@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AMutexSyncDefinition;
@@ -150,7 +151,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		String ideKey = null;
 		Settings.dialect = null;
 		String expression = null;
-		List<File> files = new Vector<File>();
+		List<File> files = new ArrayList<File>();
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 		boolean warnings = true;

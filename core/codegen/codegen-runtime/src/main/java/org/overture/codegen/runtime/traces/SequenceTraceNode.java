@@ -55,7 +55,7 @@ public class SequenceTraceNode extends TraceNode implements IIterableTraceNode
 
 		CallSequence seq = getVars();
 
-		List<TestSequence> nodetests = new Vector<TestSequence>();
+		List<TestSequence> nodetests = new ArrayList<TestSequence>();
 		int count = nodes.size();
 
 		for (TraceNode node : nodes)
@@ -93,7 +93,7 @@ public class SequenceTraceNode extends TraceNode implements IIterableTraceNode
 
 		indics = new HashMap<Integer, Integer[]>();
 
-		List<TestSequence> nodetests = new Vector<TestSequence>();
+		List<TestSequence> nodetests = new ArrayList<TestSequence>();
 		int count = nodes.size();
 		int[] sizes = new int[count];
 		int n = 0;

@@ -208,7 +208,7 @@ public class TestEngineDelegate
 	private Collection<? extends String> getVmArguments(
 			IPreferenceStore preferences)
 	{
-		List<String> options = new Vector<String>();
+		List<String> options = new ArrayList<String>();
 		String opt = preferences.getString(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION);
 		if (opt.trim().length() != 0)
 		{
@@ -246,7 +246,7 @@ public class TestEngineDelegate
 
 	private List<String> getSpecFiles(IVdmProject project) throws CoreException
 	{
-		List<String> files = new Vector<String>();
+		List<String> files = new ArrayList<String>();
 
 		for (IVdmSourceUnit unit : project.getSpecFiles())
 		{

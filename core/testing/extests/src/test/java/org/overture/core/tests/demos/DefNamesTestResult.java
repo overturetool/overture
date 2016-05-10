@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.overture.ast.definitions.PDefinition;
@@ -36,7 +37,7 @@ public class DefNamesTestResult {
 
 	public DefNamesTestResult(List<INode> ast, String name) {
 		this.exampleName = name;
-		defNames = new Vector<String>();
+		defNames = new ArrayList<String>();
 		for (INode n : ast) {
 			if (n instanceof AModuleModules) // ModuleModules prints the file
 												// path so we skip it

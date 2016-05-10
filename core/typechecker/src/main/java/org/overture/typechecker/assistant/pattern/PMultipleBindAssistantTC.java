@@ -24,6 +24,7 @@ package org.overture.typechecker.assistant.pattern;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.IAstAssistant;
@@ -47,7 +48,7 @@ public class PMultipleBindAssistantTC implements IAstAssistant
 			PType type, TypeCheckInfo question)
 	{
 
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		for (PPattern p : mb.getPlist())
 		{
@@ -59,7 +60,7 @@ public class PMultipleBindAssistantTC implements IAstAssistant
 
 	public List<PMultipleBind> getMultipleBindList(PMultipleBind bind)
 	{
-		List<PMultipleBind> list = new Vector<PMultipleBind>();
+		List<PMultipleBind> list = new ArrayList<PMultipleBind>();
 		list.add(bind);
 		return list;
 	}

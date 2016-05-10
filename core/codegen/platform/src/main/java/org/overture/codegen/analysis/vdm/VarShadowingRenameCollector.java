@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
@@ -672,7 +673,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	
 	private List<PDefinition> getMultipleBindDefs(List<PMultipleBind> bindings)
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		for (PMultipleBind mb : bindings)
 		{

@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.lex.Dialect;
 
@@ -239,7 +240,7 @@ public class TestSourceFinder
 
 	protected static List<String> readFile(File file) throws IOException
 	{
-		List<String> lines = new Vector<String>();
+		List<String> lines = new ArrayList<String>();
 		BufferedReader reader = null;
 
 		try

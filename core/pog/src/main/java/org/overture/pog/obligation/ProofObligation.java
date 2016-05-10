@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
@@ -242,7 +243,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 			ILexNameToken... patternNames)
 	{
 		ATypeMultipleBind typeBind = new ATypeMultipleBind();
-		List<PPattern> patternList = new Vector<PPattern>();
+		List<PPattern> patternList = new ArrayList<PPattern>();
 
 		for (ILexNameToken patternName : patternNames)
 		{
@@ -265,7 +266,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 			ILexNameToken... patternNames)
 	{
 		ASetMultipleBind setBind = new ASetMultipleBind();
-		List<PPattern> patternList = new Vector<PPattern>();
+		List<PPattern> patternList = new ArrayList<PPattern>();
 
 		for (ILexNameToken patternName : patternNames)
 		{
@@ -286,7 +287,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	protected List<PMultipleBind> getMultipleTypeBindList(PType patternType,
 			ILexNameToken... patternNames)
 	{
-		List<PMultipleBind> typeBindList = new Vector<PMultipleBind>();
+		List<PMultipleBind> typeBindList = new ArrayList<PMultipleBind>();
 		typeBindList.add(getMultipleTypeBind(patternType, patternNames));
 		return typeBindList;
 	}
@@ -297,7 +298,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	protected List<PMultipleBind> getMultipleSetBindList(PExp setExp,
 			ILexNameToken... patternNames)
 	{
-		List<PMultipleBind> setBindList = new Vector<PMultipleBind>();
+		List<PMultipleBind> setBindList = new ArrayList<PMultipleBind>();
 		setBindList.add(getMultipleSetBind(setExp, patternNames));
 		return setBindList;
 	}
@@ -382,7 +383,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	{
 		AApplyExp apply = new AApplyExp();
 		apply.setRoot(root.clone());
-		List<PExp> args = new Vector<PExp>();
+		List<PExp> args = new ArrayList<PExp>();
 
 		for (PExp arg : arglist)
 		{

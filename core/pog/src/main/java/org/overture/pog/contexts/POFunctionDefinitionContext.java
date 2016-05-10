@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -135,7 +136,7 @@ public class POFunctionDefinitionContext extends POContext {
 
 			for (PPattern param : params) {
 				ATypeMultipleBind typeBind = new ATypeMultipleBind();
-				List<PPattern> one = new Vector<PPattern>();
+				List<PPattern> one = new ArrayList<PPattern>();
 				one.add(param.clone());
 				typeBind.setPlist(one);
 				PType type = types.next();

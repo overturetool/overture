@@ -349,7 +349,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 	private File prepareCustomDebuggerProperties(IVdmProject project,
 			ILaunchConfiguration configuration) throws CoreException
 	{
-		List<String> properties = new Vector<String>();
+		List<String> properties = new ArrayList<String>();
 
 		String propertyCfg = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CUSTOM_DEBUGGER_PROPERTIES, "");
 
@@ -370,7 +370,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 	public static File prepareCustomOvertureProperties(IVdmProject project,
 			ILaunchConfiguration configuration) throws CoreException
 	{
-		List<String> properties = new Vector<String>();
+		List<String> properties = new ArrayList<String>();
 
 		if (VdmDebugPlugin.getDefault().getPreferenceStore().getBoolean(IDebugPreferenceConstants.PREF_DBGP_ENABLE_EXPERIMENTAL_MODELCHECKER))
 		{
@@ -427,7 +427,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 	private Collection<? extends String> getVmArguments(
 			ILaunchConfiguration configuration) throws CoreException
 	{
-		List<String> options = new Vector<String>();
+		List<String> options = new ArrayList<String>();
 		String opt = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, "");
 		if (opt.trim().length() != 0)
 		{
@@ -490,7 +490,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			IVdmProject project, ILaunchConfiguration configuration)
 			throws CoreException
 	{
-		return new Vector<String>();
+		return new ArrayList<String>();
 	}
 
 	private String getRemoteControllerName(ILaunchConfiguration configuration)
@@ -625,7 +625,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 	private List<String> getSpecFiles(IVdmProject project) throws CoreException
 	{
-		List<String> files = new Vector<String>();
+		List<String> files = new ArrayList<String>();
 
 		for (IVdmSourceUnit unit : project.getSpecFiles())
 		{

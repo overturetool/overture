@@ -25,6 +25,7 @@ package org.overture.parser.syntax;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.VDMToken;
@@ -154,7 +155,7 @@ public class BindReader extends SyntaxReader
 	public List<ATypeBind> readTypeBindList() throws ParserException,
 			LexException
 	{
-		List<ATypeBind> list = new Vector<ATypeBind>();
+		List<ATypeBind> list = new ArrayList<ATypeBind>();
 		list.add(readTypeBind());
 
 		while (ignore(VDMToken.COMMA))
@@ -199,7 +200,7 @@ public class BindReader extends SyntaxReader
 	public List<PMultipleBind> readBindList() throws ParserException,
 			LexException
 	{
-		List<PMultipleBind> list = new Vector<PMultipleBind>();
+		List<PMultipleBind> list = new ArrayList<PMultipleBind>();
 		list.add(readMultipleBind());
 
 		while (ignore(VDMToken.COMMA))

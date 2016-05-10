@@ -76,7 +76,7 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 			reader = new ModuleReader(ltr);
 			modules.addAll(reader.readModules());
 
-			List<INode> nodes = new Vector<INode>();
+			List<INode> nodes = new ArrayList<INode>();
 			for (AModuleModules module : modules)
 			{
 				nodes.add(module);

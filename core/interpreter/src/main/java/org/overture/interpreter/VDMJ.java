@@ -25,6 +25,7 @@ package org.overture.interpreter;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -82,8 +83,8 @@ abstract public class VDMJ
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args)
 	{
-		List<File> filenames = new Vector<File>();
-		List<File> pathnames = new Vector<File>();
+		List<File> filenames = new ArrayList<File>();
+		List<File> pathnames = new ArrayList<File>();
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 		Dialect dialect = Dialect.VDM_SL;

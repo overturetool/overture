@@ -3,6 +3,7 @@ package org.overture.interpreter.runtime;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.ArrayList;
 
 public class CollectedContextException extends ContextException implements
 		ICollectedRuntimeExceptions
@@ -21,7 +22,7 @@ public class CollectedContextException extends ContextException implements
 	public CollectedContextException(ContextException toThrow,
 			Set<ContextException> problems)
 	{
-		this(toThrow, new Vector<Exception>(problems));
+		this(toThrow, new ArrayList<Exception>(problems));
 	}
 
 	/**

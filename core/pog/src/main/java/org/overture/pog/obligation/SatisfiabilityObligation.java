@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
@@ -73,7 +74,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		 * f: A * B -> R [pre ...] post ... [pre_f(a, b) =>] exists r:R & post_f(a, b, r)
 		 */
 
-		List<PExp> arglist = new Vector<PExp>();
+		List<PExp> arglist = new ArrayList<PExp>();
 
 		for (APatternListTypePair pltp : func.getParamPatterns())
 		{
@@ -94,7 +95,7 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		AExistsExp existsExp = new AExistsExp();
 		existsExp.setType(new ABooleanBasicType());
-		List<PExp> postArglist = new Vector<PExp>(arglist);
+		List<PExp> postArglist = new ArrayList<PExp>(arglist);
 
 		if (func.getResult().getPattern() instanceof AIdentifierPattern)
 		{
@@ -185,7 +186,7 @@ public class SatisfiabilityObligation extends ProofObligation
 
 	private List<PMultipleBind> getInvBinds(AStateDefinition node)
 	{
-		List<PMultipleBind> r = new Vector<PMultipleBind>();
+		List<PMultipleBind> r = new ArrayList<PMultipleBind>();
 
 		for (AFieldField f : node.getFields())
 		{
@@ -230,7 +231,7 @@ public class SatisfiabilityObligation extends ProofObligation
 	PExp buildPredicate(AImplicitOperationDefinition op,
 			PDefinition stateDefinition) throws AnalysisException
 	{
-		List<PExp> arglist = new Vector<PExp>();
+		List<PExp> arglist = new ArrayList<PExp>();
 
 		for (APatternListTypePair pltp : op.getParameterPatterns())
 		{
@@ -261,7 +262,7 @@ public class SatisfiabilityObligation extends ProofObligation
 
 			AExistsExp existsExp = new AExistsExp();
 			existsExp.setType(new ABooleanBasicType());
-			List<PExp> postArglist = new Vector<PExp>(arglist);
+			List<PExp> postArglist = new ArrayList<PExp>(arglist);
 
 			if (op.getResult().getPattern() instanceof AIdentifierPattern)
 			{
@@ -309,7 +310,7 @@ public class SatisfiabilityObligation extends ProofObligation
 
 			AExistsExp exists_exp = new AExistsExp();
 			exists_exp.setType(new ABooleanBasicType());
-			List<PExp> postArglist = new Vector<PExp>(arglist);
+			List<PExp> postArglist = new ArrayList<PExp>(arglist);
 
 			List<PMultipleBind> exists_binds = new LinkedList<PMultipleBind>();
 			if (stateDefinition != null)
@@ -317,7 +318,7 @@ public class SatisfiabilityObligation extends ProofObligation
 				stateInPost(exists_binds, postArglist, stateDefinition);
 			}
 			exists_exp.setBindList(exists_binds);
-			AApplyExp postApply = getApplyExp(getVarExp(op.getPostdef().getName(),op.getPostdef().clone()), new Vector<PExp>(postArglist));
+			AApplyExp postApply = getApplyExp(getVarExp(op.getPostdef().getName(),op.getPostdef().clone()), new ArrayList<PExp>(postArglist));
 			postApply.setType(new ABooleanBasicType());
 			postApply.getRoot().setType(op.getPostdef().getType().clone());
 			exists_exp.setPredicate(postApply);

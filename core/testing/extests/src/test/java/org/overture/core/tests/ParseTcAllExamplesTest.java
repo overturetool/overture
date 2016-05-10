@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +40,7 @@ public class ParseTcAllExamplesTest
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData() throws IOException, URISyntaxException
 	{
-		Collection<Object[]> r = new Vector<Object[]>();
+		Collection<Object[]> r = new ArrayList<Object[]>();
 
 		Collection<ExampleSourceData> examples = ExamplesUtility.getExamplesSources(EXAMPLES_ROOT);
 

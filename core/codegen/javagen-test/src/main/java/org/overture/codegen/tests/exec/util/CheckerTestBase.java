@@ -39,7 +39,7 @@ public abstract class CheckerTestBase extends JavaCodeGenTestCase
 	protected static Collection<Object[]> collectTests(File root,
 			TestHandler handler)
 	{
-		Collection<Object[]> tests = new Vector<Object[]>();
+		Collection<Object[]> tests = new ArrayList<Object[]>();
 
 		List<File> vdmSources = TestUtils.getTestInputFiles(root);
 
@@ -132,7 +132,7 @@ public abstract class CheckerTestBase extends JavaCodeGenTestCase
 			if (Properties.recordTestResults)
 			{
 				Object vdmResult = evalVdm(file, executableTestHandler);
-				return new Result<Object>(vdmResult, new Vector<IMessage>(), new Vector<IMessage>());
+				return new Result<Object>(vdmResult, new ArrayList<IMessage>(), new ArrayList<IMessage>());
 			}
 
 			// Note that the classes returned in javaResult may be loaded by another class loader. This is the case for
@@ -145,14 +145,14 @@ public abstract class CheckerTestBase extends JavaCodeGenTestCase
 				Assert.fail("No Java result could be produced");
 			}
 
-			return new Result<Object>(javaResult, new Vector<IMessage>(), new Vector<IMessage>());
+			return new Result<Object>(javaResult, new ArrayList<IMessage>(), new ArrayList<IMessage>());
 
 		}
 
 		Assert.fail("Trying to produce result using an unsupported test handler: "
 				+ testHandler);
 
-		return new Result<Object>(null, new Vector<IMessage>(), new Vector<IMessage>());
+		return new Result<Object>(null, new ArrayList<IMessage>(), new ArrayList<IMessage>());
 	}
 
 	public  File[] consCpFiles()

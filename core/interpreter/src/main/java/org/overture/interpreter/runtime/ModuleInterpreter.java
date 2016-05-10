@@ -24,6 +24,7 @@
 package org.overture.interpreter.runtime;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -361,7 +362,7 @@ public class ModuleInterpreter extends Interpreter
 	public List<Object> runOneTrace(ANamedTraceDefinition tracedef,
 			CallSequence test, boolean debug)
 	{
-		List<Object> list = new Vector<Object>();
+		List<Object> list = new ArrayList<Object>();
 		Context ctxt = null;
 
 		try

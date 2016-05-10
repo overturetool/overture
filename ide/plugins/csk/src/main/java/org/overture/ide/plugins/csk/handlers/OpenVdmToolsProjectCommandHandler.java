@@ -58,7 +58,7 @@ public class OpenVdmToolsProjectCommandHandler extends AbstractHandler
 		
 		if (vdmProject != null)
 		{
-			final List<File> files = new Vector<File>();
+			final List<File> files = new ArrayList<File>();
 
 			try
 			{

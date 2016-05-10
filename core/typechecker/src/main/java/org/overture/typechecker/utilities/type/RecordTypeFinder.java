@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.factory.AstFactory;
@@ -138,7 +139,7 @@ public class RecordTypeFinder extends TypeUnwrapper<ARecordInvariantType>
     			typesets.put(field, set);
     		}
 
-			List<AFieldField> fields = new Vector<AFieldField>();
+			List<AFieldField> fields = new ArrayList<AFieldField>();
 
 			for (String tag : typesets.keySet())
 			{
@@ -157,7 +158,7 @@ public class RecordTypeFinder extends TypeUnwrapper<ARecordInvariantType>
 	public ARecordInvariantType caseAUnknownType(AUnknownType type)
 			throws AnalysisException
 	{
-		return AstFactory.newARecordInvariantType(type.getLocation(), new Vector<AFieldField>());
+		return AstFactory.newARecordInvariantType(type.getLocation(), new ArrayList<AFieldField>());
 	}
 
 	@Override

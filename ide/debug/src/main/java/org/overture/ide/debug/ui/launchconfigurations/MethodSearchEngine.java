@@ -62,7 +62,7 @@ public class MethodSearchEngine
 		final String RUN_NAME = "run";
 		final String WORLD_NAME = "world";
 
-		List<INode> matched = new Vector<INode>();
+		List<INode> matched = new ArrayList<INode>();
 
 		for (int i = 0; i < nodes.length; i++)
 		{

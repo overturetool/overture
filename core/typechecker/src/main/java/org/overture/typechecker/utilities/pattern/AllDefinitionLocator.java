@@ -112,63 +112,63 @@ public class AllDefinitionLocator
 	public List<PDefinition> caseABooleanPattern(ABooleanPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		return new Vector<PDefinition>();
+		return new ArrayList<PDefinition>();
 	}
 
 	@Override
 	public List<PDefinition> caseACharacterPattern(ACharacterPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		return new Vector<PDefinition>();
+		return new ArrayList<PDefinition>();
 	}
 
 	@Override
 	public List<PDefinition> caseAExpressionPattern(AExpressionPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		return new Vector<PDefinition>();
+		return new ArrayList<PDefinition>();
 	}
 
 	@Override
 	public List<PDefinition> caseAIgnorePattern(AIgnorePattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		return new Vector<PDefinition>();
+		return new ArrayList<PDefinition>();
 	}
 
 	@Override
 	public List<PDefinition> caseAIntegerPattern(AIntegerPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		return new Vector<PDefinition>();
+		return new ArrayList<PDefinition>();
 	}
 
 	@Override
 	public List<PDefinition> caseANilPattern(ANilPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		return new Vector<PDefinition>();
+		return new ArrayList<PDefinition>();
 	}
 
 	@Override
 	public List<PDefinition> caseAQuotePattern(AQuotePattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		return new Vector<PDefinition>();
+		return new ArrayList<PDefinition>();
 	}
 
 	@Override
 	public List<PDefinition> caseARealPattern(ARealPattern node,
 			NewQuestion question) throws AnalysisException
 	{
-		return new Vector<PDefinition>();
+		return new ArrayList<PDefinition>();
 	}
 
 	@Override
 	public List<PDefinition> caseAStringPattern(AStringPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		return new Vector<PDefinition>();
+		return new ArrayList<PDefinition>();
 	}
 
 	@Override
@@ -185,7 +185,7 @@ public class AllDefinitionLocator
 	public List<PDefinition> caseARecordPattern(ARecordPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		PType type = pattern.getType();
 
@@ -230,7 +230,7 @@ public class AllDefinitionLocator
 	public List<PDefinition> caseASeqPattern(ASeqPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		if (!af.createPTypeAssistant().isSeq(question.ptype))
 		{
@@ -254,7 +254,7 @@ public class AllDefinitionLocator
 			NewQuestion question) throws AnalysisException
 	{
 		// return ASetPatternAssistantTC.getAllDefinitions(pattern, question.ptype, question.scope);
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		if (!af.createPTypeAssistant().isSet(question.ptype))
 		{
@@ -280,7 +280,7 @@ public class AllDefinitionLocator
 	public List<PDefinition> caseATuplePattern(ATuplePattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		if (!af.createPTypeAssistant().isProduct(question.ptype, pattern.getPlist().size()))
 		{
@@ -305,7 +305,7 @@ public class AllDefinitionLocator
 	public List<PDefinition> caseAUnionPattern(AUnionPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		if (!af.createPTypeAssistant().isSet(question.ptype))
 		{
@@ -322,7 +322,7 @@ public class AllDefinitionLocator
 	public List<PDefinition> caseAMapUnionPattern(AMapUnionPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		if (!af.createPTypeAssistant().isMap(question.ptype))
 		{
@@ -339,7 +339,7 @@ public class AllDefinitionLocator
 	public List<PDefinition> caseAMapPattern(AMapPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		if (!af.createPTypeAssistant().isMap(question.ptype))
 		{
@@ -366,7 +366,7 @@ public class AllDefinitionLocator
 	public List<PDefinition> caseAObjectPattern(AObjectPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 		PTypeAssistantTC typeAssistant = af.createPTypeAssistant();
 		AClassType pattype = typeAssistant.getClassType(pattern.getType(), null);
 		AClassType exptype = typeAssistant.getClassType(question.ptype, null);
@@ -422,7 +422,7 @@ public class AllDefinitionLocator
 	public Collection<? extends PDefinition> getDefinitions(
 			AMapletPatternMaplet p, SMapType map, NameScope scope) {
 
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 		list.addAll(af.createPPatternAssistant().getDefinitions(p.getFrom(),
 				map.getFrom(), scope));
 		list.addAll(af.createPPatternAssistant().getDefinitions(p.getTo(),

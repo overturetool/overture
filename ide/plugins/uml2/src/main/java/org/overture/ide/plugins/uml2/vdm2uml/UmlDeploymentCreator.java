@@ -77,7 +77,7 @@ public class UmlDeploymentCreator
 	public void buildDeployment(List<SClassDefinition> classes2)
 	{
 		Map<String, Node> nodes = new HashMap<String, Node>();
-		List<AInstanceVariableDefinition> systemInsts = new Vector<AInstanceVariableDefinition>();
+		List<AInstanceVariableDefinition> systemInsts = new ArrayList<AInstanceVariableDefinition>();
 		ASystemClassDefinition system = null;
 		Package deploymentPackage = null;
 		for (SClassDefinition c : classes2)

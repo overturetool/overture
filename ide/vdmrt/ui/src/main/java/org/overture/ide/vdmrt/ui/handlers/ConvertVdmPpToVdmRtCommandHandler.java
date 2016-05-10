@@ -78,7 +78,7 @@ public class ConvertVdmPpToVdmRtCommandHandler extends AbstractHandler
 								IProjectDescription description = new ProjectDescription();
 								description.setName(project.getName() + "_VDM_RT");
 								description.setBuildSpec(project.getDescription().getBuildSpec());
-								List<String> natures = new Vector<String>();
+								List<String> natures = new ArrayList<String>();
 								natures.addAll(Arrays.asList(project.getDescription().getNatureIds()));
 
 								if (natures.contains(IVdmPpCoreConstants.NATURE))

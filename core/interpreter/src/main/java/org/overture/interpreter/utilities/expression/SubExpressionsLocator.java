@@ -2,6 +2,7 @@ package org.overture.interpreter.utilities.expression;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
@@ -32,7 +33,7 @@ public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 	@Override
 	public List<PExp> caseAApplyExp(AApplyExp exp) throws AnalysisException
 	{
-		List<PExp> subs = new Vector<PExp>();
+		List<PExp> subs = new ArrayList<PExp>();
 		subs.addAll(exp.getRoot().apply(THIS));
 		subs.add(exp);
 		return subs;
@@ -106,7 +107,7 @@ public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 	@Override
 	public List<PExp> defaultPExp(PExp exp) throws AnalysisException
 	{
-		List<PExp> subs = new Vector<PExp>();
+		List<PExp> subs = new ArrayList<PExp>();
 		subs.add(exp);
 		return subs;
 	}

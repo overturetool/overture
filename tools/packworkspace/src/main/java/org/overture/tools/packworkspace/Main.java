@@ -85,12 +85,12 @@ public class Main
 			else
 				return;
 		}
-		List<Controller> controllers = new Vector<Controller>();
+		List<Controller> controllers = new ArrayList<Controller>();
 
 		Controller controller = runController(dialect, inputRootFolder, tmpFolder);
 		controllers.add(controller);
 
-		List<RssItem> items = new Vector<RssItem>();
+		List<RssItem> items = new ArrayList<RssItem>();
 		for (Controller c : controllers)
 		{
 			items.addAll(c.getRssItems());
@@ -134,7 +134,7 @@ static	List<File> zipFiles = new Vector<File>();
 
 		File tmpFolder = new File("tmp");
 
-		List<Controller> controllers = new Vector<Controller>();
+		List<Controller> controllers = new ArrayList<Controller>();
 
 		Controller controller = runController(Dialect.VDM_SL, new File(root, "VDMSL"), tmpFolder);
 		controllers.add(controller);
@@ -147,7 +147,7 @@ static	List<File> zipFiles = new Vector<File>();
 		controller = runController(Dialect.VDM_RT, new File(root, "VDMRT"), tmpFolder);
 		controllers.add(controller);
 
-		List<RssItem> items = new Vector<RssItem>();
+		List<RssItem> items = new ArrayList<RssItem>();
 		for (Controller c : controllers)
 		{
 			c.createWebSite();

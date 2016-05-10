@@ -502,7 +502,7 @@ public class PTypeResolver extends
 			type.setResolved(true);
 		}
 
-		List<PType> fixed = new Vector<PType>();
+		List<PType> fixed = new ArrayList<PType>();
 		TypeCheckException problem = null;
 
 		for (PType t : type.getTypes())
@@ -641,7 +641,7 @@ public class PTypeResolver extends
 			throw problem;
 		}
 
-		type.setTypes(new Vector<PType>(fixed));
+		type.setTypes(new ArrayList<PType>(fixed));
 		
 		if (question.root != null)
 		{
@@ -721,7 +721,7 @@ public class PTypeResolver extends
 		PType r = null;
 		r = af.createPDefinitionAssistant().getType(def);
 
-		List<PDefinition> tempDefs = new Vector<PDefinition>();
+		List<PDefinition> tempDefs = new ArrayList<PDefinition>();
 		tempDefs.add(def);
 		r.setDefinitions(tempDefs);
 		return r;

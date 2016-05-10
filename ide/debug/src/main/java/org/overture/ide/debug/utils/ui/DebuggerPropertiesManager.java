@@ -77,7 +77,7 @@ public class DebuggerPropertiesManager
 		rowLayout.spacing = 0;
 		group.setLayout(rowLayout);
 
-		List<DebuggerProperty> sorted = new Vector<DebuggerProperty>();
+		List<DebuggerProperty> sorted = new ArrayList<DebuggerProperty>();
 		sorted.addAll(props);
 		Collections.sort(sorted);
 
@@ -180,7 +180,7 @@ public class DebuggerPropertiesManager
 		// configuration.setAttribute(launchConfigkey, getConfigString(props));
 		try
 		{
-			List<DebuggerProperty> sorted = new Vector<DebuggerProperty>();
+			List<DebuggerProperty> sorted = new ArrayList<DebuggerProperty>();
 			sorted.addAll(props);
 			Collections.sort(sorted);
 
@@ -214,7 +214,7 @@ public class DebuggerPropertiesManager
 	public void setDefaults(Set<DebuggerProperty> defaultProps,
 			ILaunchConfigurationWorkingCopy configuration)
 	{
-		List<DebuggerProperty> dProps = new Vector<DebuggerProperty>(defaultProps);
+		List<DebuggerProperty> dProps = new ArrayList<DebuggerProperty>(defaultProps);
 		Collections.sort(dProps);
 		initializeFrom(getConfigString(dProps));
 		performApply(configuration);

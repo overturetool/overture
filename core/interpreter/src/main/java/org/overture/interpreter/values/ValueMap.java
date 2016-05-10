@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -100,7 +101,7 @@ public class ValueMap extends LinkedHashMap<Value, Value>
 		// This is a 1st order permutation, which does not take account of the possible
 		// nesting of maps or the presence of other permutable values with them (sets).
 
-		List<ValueMap> results = new Vector<ValueMap>();
+		List<ValueMap> results = new ArrayList<ValueMap>();
 		Object[] entries = entrySet().toArray();
 		int size = entries.length;
 

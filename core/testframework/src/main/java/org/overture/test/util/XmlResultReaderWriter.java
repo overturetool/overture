@@ -24,6 +24,7 @@ package org.overture.test.util;
 import java.io.File;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -168,8 +169,8 @@ public class XmlResultReaderWriter<R>
 	public boolean loadFromXml()
 	{
 		// File resultFile = new File(file.getAbsoluteFile()+ ".result");
-		List<IMessage> warnings = new Vector<IMessage>();
-		List<IMessage> errors = new Vector<IMessage>();
+		List<IMessage> warnings = new ArrayList<IMessage>();
+		List<IMessage> errors = new ArrayList<IMessage>();
 		R readResult = null;
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

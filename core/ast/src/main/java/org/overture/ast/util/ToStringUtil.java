@@ -21,6 +21,7 @@
  */
 package org.overture.ast.util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -112,7 +113,7 @@ public class ToStringUtil
 
 	private static List<String> getString(List<APatternListTypePair> node)
 	{
-		List<String> list = new Vector<String>();
+		List<String> list = new ArrayList<String>();
 		for (APatternListTypePair pl : node)
 		{
 			list.add("(" + getStringPattern(pl.getPatterns()) + ":"

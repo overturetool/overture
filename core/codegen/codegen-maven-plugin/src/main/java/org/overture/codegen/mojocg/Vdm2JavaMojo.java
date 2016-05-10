@@ -97,7 +97,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 
 		outputDirectory.mkdirs();
 
-		List<File> tmp = new Vector<File>();
+		List<File> tmp = new ArrayList<File>();
 		tmp.addAll(files);
 		
 		if(release.equals(VDM_10))

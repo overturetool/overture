@@ -278,10 +278,10 @@ public class Uml2Vdm
 		console.out.println("\tConverting function: " + op.getName());
 		LexNameToken name = new LexNameToken(c.getName().getName(), op.getName(), null);
 
-		List<List<PPattern>> paramPatternList = new Vector<List<PPattern>>();
-		List<PPattern> paramPatterns = new Vector<PPattern>();
+		List<List<PPattern>> paramPatternList = new ArrayList<List<PPattern>>();
+		List<PPattern> paramPatterns = new ArrayList<PPattern>();
 		paramPatternList.add(paramPatterns);
-		List<PType> parameterTypes = new Vector<PType>();
+		List<PType> parameterTypes = new ArrayList<PType>();
 
 		for (Parameter p : op.getOwnedParameters())
 		{
@@ -304,8 +304,8 @@ public class Uml2Vdm
 	{
 		console.out.println("\tConverting operation: " + op.getName());
 		LexNameToken name = new LexNameToken(c.getName().getName(), op.getName(), null);
-		List<PType> parameterTypes = new Vector<PType>();
-		List<PPattern> parameters = new Vector<PPattern>();
+		List<PType> parameterTypes = new ArrayList<PType>();
+		List<PPattern> parameters = new ArrayList<PPattern>();
 		for (Parameter p : op.getOwnedParameters())
 		{
 			if (p.getName() == null)

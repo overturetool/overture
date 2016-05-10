@@ -23,6 +23,7 @@ package org.overture.typechecker.visitor;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -127,7 +128,7 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 		}
 		else
 		{
-			List<PDefinition> defs = new Vector<PDefinition>();
+			List<PDefinition> defs = new ArrayList<PDefinition>();
 
 			for (ILexNameToken pname : node.getTypeParams())
 			{

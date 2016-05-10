@@ -464,7 +464,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 				ANotEqualBinaryExp ne = new ANotEqualBinaryExp();
 				ne.setLeft(exp);
 				ASeqEnumSeqExp empty = new ASeqEnumSeqExp();
-				empty.setMembers(new Vector<PExp>());
+				empty.setMembers(new ArrayList<PExp>());
 				ne.setRight(empty);
 			}
 

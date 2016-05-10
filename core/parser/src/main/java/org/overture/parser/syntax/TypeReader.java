@@ -25,6 +25,7 @@ package org.overture.parser.syntax;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
@@ -94,7 +95,7 @@ public class TypeReader extends SyntaxReader
 	{
 		LexToken token = lastToken();
 		PType type = readComposeType();
-		List<PType> productList = new Vector<PType>();
+		List<PType> productList = new ArrayList<PType>();
 		productList.add(type);
 
 		while (lastToken().type == VDMToken.TIMES)
@@ -135,7 +136,7 @@ public class TypeReader extends SyntaxReader
 	public List<AFieldField> readFieldList() throws ParserException,
 			LexException
 	{
-		List<AFieldField> list = new Vector<AFieldField>();
+		List<AFieldField> list = new ArrayList<AFieldField>();
 
 		while (lastToken().isNot(VDMToken.END)
 				&& lastToken().isNot(VDMToken.SEMICOLON)
@@ -389,7 +390,7 @@ public class TypeReader extends SyntaxReader
 
 	private List<PType> productExpand(PType parameters)
 	{
-		List<PType> types = new Vector<PType>();
+		List<PType> types = new ArrayList<PType>();
 
 		if (parameters instanceof AProductType)
 		{

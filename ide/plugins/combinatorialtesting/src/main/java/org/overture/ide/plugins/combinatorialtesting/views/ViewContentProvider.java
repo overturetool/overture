@@ -117,7 +117,7 @@ public class ViewContentProvider implements IStructuredContentProvider,
 		if (parent instanceof SClassDefinition
 				|| parent instanceof AModuleModules)
 		{
-			List<TraceTreeNode> children = new Vector<TraceTreeNode>();
+			List<TraceTreeNode> children = new ArrayList<TraceTreeNode>();
 
 			List<ANamedTraceDefinition> traceDefs = TraceAstUtility.getTraceDefinitions((INode) parent);
 			if (containerNodes.containsKey(parent)
@@ -289,7 +289,7 @@ public class ViewContentProvider implements IStructuredContentProvider,
 
 	static class TraceSearch extends AnalysisAdaptor
 	{
-		List<ANamedTraceDefinition> containers = new Vector<ANamedTraceDefinition>();
+		List<ANamedTraceDefinition> containers = new ArrayList<ANamedTraceDefinition>();
 
 		public List<ANamedTraceDefinition> getTraces(INode node)
 		{

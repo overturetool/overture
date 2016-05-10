@@ -23,6 +23,7 @@ package org.overture.prettyprinter;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -110,7 +111,7 @@ public class TypePrettyPrinterVisitor extends
 	public String caseAProductType(AProductType node, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
-		List<String> types = new Vector<String>();
+		List<String> types = new ArrayList<String>();
 		for (PType t : node.getTypes())
 		{
 			types.add(t.apply(this, question));
@@ -129,7 +130,7 @@ public class TypePrettyPrinterVisitor extends
 	public String caseAUnionType(AUnionType node, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
-		List<String> types = new Vector<String>();
+		List<String> types = new ArrayList<String>();
 		for (PType t : node.getTypes())
 		{
 			types.add(t.apply(this, question));

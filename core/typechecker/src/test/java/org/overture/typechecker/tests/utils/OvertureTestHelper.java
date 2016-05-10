@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.junit.Assert;
 import org.overture.ast.analysis.AnalysisException;
@@ -83,7 +84,7 @@ public class OvertureTestHelper
 
 	public static List<IMessage> convert(List<? extends VDMMessage> messages)
 	{
-		List<IMessage> testMessages = new Vector<IMessage>();
+		List<IMessage> testMessages = new ArrayList<IMessage>();
 
 		for (VDMMessage msg : messages)
 		{

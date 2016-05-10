@@ -25,6 +25,7 @@ package org.overture.interpreter.debug;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -148,7 +149,7 @@ public class RemoteInterpreter
 
 	public List<String> getModules() throws Exception
 	{
-		List<String> names = new Vector<String>();
+		List<String> names = new ArrayList<String>();
 
 		if (interpreter instanceof ClassInterpreter)
 		{
@@ -166,7 +167,7 @@ public class RemoteInterpreter
 
 	public List<String> getClasses() throws Exception
 	{
-		List<String> names = new Vector<String>();
+		List<String> names = new ArrayList<String>();
 
 		if (interpreter instanceof ClassInterpreter)
 		{

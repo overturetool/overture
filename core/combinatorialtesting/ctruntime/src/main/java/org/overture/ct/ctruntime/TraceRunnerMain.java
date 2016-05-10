@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
@@ -121,7 +122,7 @@ public class TraceRunnerMain implements IProgressMonitor
 		String ideKey = null;
 		Settings.dialect = null;
 		String moduleName = null;
-		List<File> files = new Vector<File>();
+		List<File> files = new ArrayList<File>();
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 		boolean warnings = true;

@@ -92,7 +92,7 @@ public class VdmModelManager implements IVdmModelManager
 
 	public List<IProject> getProjects()
 	{
-		List<IProject> projects = new Vector<IProject>();
+		List<IProject> projects = new ArrayList<IProject>();
 		for (IVdmProject vdmProject : asts.keySet())
 		{
 			IProject project = (IProject) vdmProject.getAdapter(IProject.class);
@@ -108,7 +108,7 @@ public class VdmModelManager implements IVdmModelManager
 
 	public List<String> getNatures(IProject project)
 	{
-		List<String> natures = new Vector<String>();
+		List<String> natures = new ArrayList<String>();
 
 		IVdmProject p = (IVdmProject) project.getAdapter(IVdmProject.class);
 		

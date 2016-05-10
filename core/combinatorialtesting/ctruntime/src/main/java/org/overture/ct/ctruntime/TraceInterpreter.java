@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ANamedTraceDefinition;
@@ -217,7 +218,7 @@ public class TraceInterpreter
 	private List<ANamedTraceDefinition> getAllTraceDefinitions(
 			List<PDefinition> definitions, String traceName)
 	{
-		List<ANamedTraceDefinition> traceDefs = new Vector<ANamedTraceDefinition>();
+		List<ANamedTraceDefinition> traceDefs = new ArrayList<ANamedTraceDefinition>();
 
 		for (Object definition : definitions)
 		{
@@ -318,7 +319,7 @@ public class TraceInterpreter
 				}
 			} catch (Exception e)
 			{
-				result = new Vector<Object>();
+				result = new ArrayList<Object>();
 				result.add(e);
 				verdict = Verdict.FAILED;
 				result.add(verdict);
@@ -435,14 +436,14 @@ public class TraceInterpreter
 			env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), outer);
 		} else
 		{
-			List<PDefinition> defs = new Vector<>();
+			List<PDefinition> defs = new ArrayList<>();
 			
 			if(classdef instanceof AModuleModules)
 			{
 				defs.addAll(((AModuleModules) classdef).getDefs());
 			}
 			
-			env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(), outer);
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), new ArrayList<PDefinition>(), outer);
 		}
 
 		for (int i = 0; i < test.size(); i++)
@@ -479,7 +480,7 @@ public class TraceInterpreter
 			result = interpreter.runOneTrace(mtd, test, false);
 		} catch (Exception e)
 		{
-			result = new Vector<Object>();
+			result = new ArrayList<Object>();
 			result.add(e.getMessage());
 			result.add(e);
 			result.add(Verdict.ERROR);

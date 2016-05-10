@@ -34,7 +34,7 @@ public class TestUtils
 {
 	public static List<File> getTestInputFiles(File file)
 	{
-		List<File> files = new Vector<File>();
+		List<File> files = new ArrayList<File>();
 		for (File f : file.listFiles())
 		{
 			Collections.sort(files, new FileComparator());

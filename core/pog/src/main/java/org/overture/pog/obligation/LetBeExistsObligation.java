@@ -25,6 +25,7 @@ package org.overture.pog.obligation;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ABooleanConstExp;
@@ -51,7 +52,7 @@ public class LetBeExistsObligation extends ProofObligation
 		 */
 
 		AExistsExp exists = new AExistsExp();
-		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
+		List<PMultipleBind> bindList = new ArrayList<PMultipleBind>();
 		bindList.add(exp.getBind().clone());
 		exists.setBindList(bindList);
 
@@ -78,7 +79,7 @@ public class LetBeExistsObligation extends ProofObligation
 		super(stmt, POType.LET_BE_EXISTS, ctxt, stmt.getBind().getLocation(), af);
 
 		AExistsExp exists = new AExistsExp();
-		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
+		List<PMultipleBind> bindList = new ArrayList<PMultipleBind>();
 		bindList.add(stmt.getBind().clone());
 		exists.setBindList(bindList);
 

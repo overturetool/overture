@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -149,7 +150,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			LinkedList<PDefinition> definitions,
 			Class<? extends PDefinition> pDefClass)
 	{
-		List<PDefinition> result = new Vector<PDefinition>();
+		List<PDefinition> result = new ArrayList<PDefinition>();
 
 		for (PDefinition pDefinition : definitions)
 		{

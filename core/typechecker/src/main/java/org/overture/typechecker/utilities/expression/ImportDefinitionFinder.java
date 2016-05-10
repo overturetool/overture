@@ -22,7 +22,7 @@
 package org.overture.typechecker.utilities.expression;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -65,7 +65,7 @@ public class ImportDefinitionFinder extends
 			TypeCheckerErrors.report(3190, "Import all from module with no exports?", imp.getLocation(), imp);
 		}
 
-		List<PDefinition> imported = new Vector<PDefinition>();
+		List<PDefinition> imported = new ArrayList<PDefinition>();
 
 		for (PDefinition d : imp.getFrom().getExportdefs())
 		{
@@ -82,7 +82,7 @@ public class ImportDefinitionFinder extends
 	public List<PDefinition> caseATypeImport(ATypeImport imp,
 			AModuleModules module) throws AnalysisException
 	{
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 		imp.setFrom(module);
 
 		PDefinition expdef = af.createPDefinitionListAssistant().findType(imp.getFrom().getExportdefs(), imp.getName(), null);
@@ -111,7 +111,7 @@ public class ImportDefinitionFinder extends
 	public List<PDefinition> defaultSValueImport(SValueImport imp,
 			AModuleModules module) throws AnalysisException
 	{
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 		imp.setFrom(module);
 		ILexNameToken name = imp.getName();
 

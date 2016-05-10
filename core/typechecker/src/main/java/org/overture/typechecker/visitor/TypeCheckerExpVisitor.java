@@ -1528,7 +1528,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 						continue;
 					}
 
-					List<PType> fixed = new Vector<PType>();
+					List<PType> fixed = new ArrayList<PType>();
 
 					for (PType ptype : node.getActualTypes())
 					{
@@ -1795,11 +1795,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseALambdaExp(ALambdaExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		List<PMultipleBind> mbinds = new Vector<PMultipleBind>();
-		List<PType> ptypes = new Vector<PType>();
+		List<PMultipleBind> mbinds = new ArrayList<PMultipleBind>();
+		List<PType> ptypes = new ArrayList<PType>();
 
-		List<PPattern> paramPatterns = new Vector<PPattern>();
-		List<PDefinition> paramDefinitions = new Vector<PDefinition>();
+		List<PPattern> paramPatterns = new ArrayList<PPattern>();
+		List<PDefinition> paramDefinitions = new ArrayList<PDefinition>();
 
 		// node.setParamPatterns(paramPatterns);
 		for (ATypeBind tb : node.getBindList())
@@ -1919,8 +1919,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAMapEnumMapExp(AMapEnumMapExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		node.setDomTypes(new Vector<PType>());
-		node.setRngTypes(new Vector<PType>());
+		node.setDomTypes(new ArrayList<PType>());
+		node.setRngTypes(new ArrayList<PType>());
 
 		if (node.getMembers().isEmpty())
 		{

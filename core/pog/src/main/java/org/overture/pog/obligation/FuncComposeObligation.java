@@ -25,6 +25,7 @@ package org.overture.pog.obligation;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ACompBinaryExp;
@@ -83,7 +84,7 @@ public class FuncComposeObligation extends ProofObligation
 				// pre_(exp.getRight(), arg) =>
 				APreExp preExp = new APreExp();
 				preExp.setFunction(exp.getRight().clone());
-				List<PExp> args = new Vector<PExp>();
+				List<PExp> args = new ArrayList<PExp>();
 				args.add(getVarExp(arg));
 				preExp.setArgs(args);
 
@@ -102,7 +103,7 @@ public class FuncComposeObligation extends ProofObligation
 			// pre_(exp.getLeft(), exp.getRight()(arg))
 			APreExp preExp = new APreExp();
 			preExp.setFunction(exp.getLeft().clone());
-			List<PExp> args = new Vector<PExp>();
+			List<PExp> args = new ArrayList<PExp>();
 			args.add(getApplyExp(exp.getRight().clone(), getVarExp(arg)));
 			preExp.setArgs(args);
 			secondPart = preExp;

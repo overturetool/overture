@@ -2,6 +2,7 @@ package org.overture.pog.visitors;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
@@ -180,7 +181,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	{
 		AMkTypeExp mkExp = new AMkTypeExp();
 		mkExp.setTypeName(node.getTypename().clone());
-		List<PExp> args = new Vector<PExp>();
+		List<PExp> args = new ArrayList<PExp>();
 
 		for (PPattern p : node.getPlist())
 		{
@@ -194,7 +195,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	public PExp caseATuplePattern(ATuplePattern node) throws AnalysisException
 	{
 		ATupleExp tuple = new ATupleExp();
-		List<PExp> values = new Vector<PExp>();
+		List<PExp> values = new ArrayList<PExp>();
 
 		for (PPattern p : node.getPlist())
 		{
@@ -210,7 +211,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	public PExp caseASeqPattern(ASeqPattern node) throws AnalysisException
 	{
 		ASeqEnumSeqExp seq = new ASeqEnumSeqExp();
-		List<PExp> values = new Vector<PExp>();
+		List<PExp> values = new ArrayList<PExp>();
 
 		for (PPattern p : node.getPlist())
 		{
@@ -234,7 +235,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	public PExp caseASetPattern(ASetPattern node) throws AnalysisException
 	{
 		ASetEnumSetExp set = new ASetEnumSetExp();
-		List<PExp> values = new Vector<PExp>();
+		List<PExp> values = new ArrayList<PExp>();
 
 		for (PPattern p : node.getPlist())
 		{
@@ -257,7 +258,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	public PExp caseAMapPattern(AMapPattern node) throws AnalysisException
 	{
 		AMapEnumMapExp map = new AMapEnumMapExp();
-		List<AMapletExp> values = new Vector<AMapletExp>();
+		List<AMapletExp> values = new ArrayList<AMapletExp>();
 
 		for (AMapletPatternMaplet p : node.getMaplets())
 		{

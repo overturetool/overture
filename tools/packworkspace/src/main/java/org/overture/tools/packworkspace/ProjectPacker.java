@@ -152,7 +152,7 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 
 	public List<File> getSpecFiles(File root)
 	{
-		List<File> specFiles = new Vector<File>();
+		List<File> specFiles = new ArrayList<File>();
 		for (File f : root.listFiles())
 		{
 			if (f.isFile() && f.getName().toLowerCase().endsWith(".vdmpp")
