@@ -1515,7 +1515,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 						continue;
 					}
 
-					if (typeParams.size() == 0)
+					if (typeParams.isEmpty())
 					{
 						TypeCheckerErrors.concern(serious, 3100, "Function has no type parameters", node.getLocation(), node);
 						continue;

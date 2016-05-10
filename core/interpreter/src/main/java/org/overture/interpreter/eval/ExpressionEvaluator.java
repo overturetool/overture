@@ -1248,7 +1248,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 				ObjectValue subself = ctxt.assistantFactory.createAPostOpExpAssistant().findObject(node, node.getOpname().getModule(), self);
 
-				if (self.superobjects.size() == 0)
+				if (self.superobjects.isEmpty())
 				{
 					subself = self;
 				}

@@ -80,7 +80,7 @@ public class BasicRuntimeValidator implements IRuntimeValidatior
 			return;
 		}
 
-		if (conjectures.size() > 0)
+		if (!conjectures.isEmpty())
 		{
 			ISchedulableThread ct = BasicSchedulableThread.getThread(Thread.currentThread());
 
@@ -191,7 +191,7 @@ public class BasicRuntimeValidator implements IRuntimeValidatior
 
 	public void validateAsync(OperationValue op, AsyncThread t)
 	{
-		if (conjectures.size() > 0)
+		if (!conjectures.isEmpty())
 		{
 
 			for (ConjectureDefinition conj : conjectures)

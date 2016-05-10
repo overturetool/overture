@@ -69,7 +69,7 @@ public final class IRStatus<T extends PIR>
 
 	public boolean canBeGenerated()
 	{
-		return unsupportedInIr.size() == 0;
+		return unsupportedInIr.isEmpty();
 	}
 
 	public Set<IrNodeInfo> getTransformationWarnings()

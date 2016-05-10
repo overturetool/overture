@@ -182,7 +182,7 @@ abstract public class ExamplesUtility {
 							DirectoryFileFilter.DIRECTORY);
 					source.addAll(files);
 
-					if (p.getLibs().size() > 0) {
+					if (!p.getLibs().isEmpty()) {
 						for (String lib : p.getLibs()) {
 							source.add(new File(externalsRoot + LIBS_ROOT
 									+ ExamplePacker.getName(dialect) + "/"

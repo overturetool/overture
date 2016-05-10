@@ -797,7 +797,7 @@ public class JavaFormat
 
 		sb.append("new String(new char[]{");
 
-		if (exps.size() > 0)
+		if (!exps.isEmpty())
 		{
 			sb.append(format(exps.get(0)));
 

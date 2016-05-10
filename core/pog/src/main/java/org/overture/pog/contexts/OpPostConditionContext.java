@@ -64,7 +64,7 @@ public class OpPostConditionContext extends StatefulContext implements
 			try
 			{
 				invariants = calledOp.getClassDefinition().apply(af.getInvExpGetVisitor());
-				if (invariants.size() > 0)
+				if (!invariants.isEmpty())
 				{
 
 					PExp inv = invariants.get(0).clone();

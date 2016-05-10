@@ -186,7 +186,7 @@ public class GeneralCodeGenUtils
 					+ ". Message: " + e.getMessage());
 		}
 
-		if (parseResult.errors.size() > 0)
+		if (!parseResult.errors.isEmpty())
 		{
 			throw new AnalysisException("Unable to parse expression: " + exp);
 		}

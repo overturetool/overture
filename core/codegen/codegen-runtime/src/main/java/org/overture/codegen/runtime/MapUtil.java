@@ -288,7 +288,7 @@ public class MapUtil
 
 		VDMMap result = map();
 
-		if (vdmMap.size() == 0)
+		if (vdmMap.isEmpty())
 		{
 			return result;
 		}
