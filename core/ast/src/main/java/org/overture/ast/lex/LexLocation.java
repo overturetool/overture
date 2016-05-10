@@ -45,15 +45,6 @@ import org.overture.ast.node.ExternalNode;
 
 public class LexLocation implements Serializable, ExternalNode, ILexLocation
 {
-	@Override
-	public LexLocation clone()
-	{
-		LexLocation location = new LexLocation(file, module, startLine, startPos, endLine, endPos, startOffset, endOffset);
-		location.hits = hits;
-		location.executable = executable;
-		return location;
-	}
-
 	public static boolean absoluteToStringLocation = true;
 
 	private static final long serialVersionUID = 1L;
@@ -244,6 +235,15 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 		{
 			return "at " + startLine + ":" + startPos;
 		}
+	}
+
+	@Override
+	public LexLocation clone()
+	{
+		LexLocation location = new LexLocation(file, module, startLine, startPos, endLine, endPos, startOffset, endOffset);
+		location.hits = hits;
+		location.executable = executable;
+		return location;
 	}
 
 	/**
