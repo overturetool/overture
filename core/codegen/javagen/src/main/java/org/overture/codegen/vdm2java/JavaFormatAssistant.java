@@ -22,6 +22,7 @@
 package org.overture.codegen.vdm2java;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.STypeIR;
@@ -220,10 +221,10 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 	public AApplyExpIR consUtilCallUsingRecFields(ARecordDeclIR record,
 			STypeIR returnType, String memberName)
 	{
-		LinkedList<AFieldDeclIR> fields = record.getFields();
+		List<AFieldDeclIR> fields = record.getFields();
 
 		AApplyExpIR call = consUtilCall(returnType, memberName);
-		LinkedList<SExpIR> args = call.getArgs();
+		List<SExpIR> args = call.getArgs();
 
 		for (AFieldDeclIR field : fields)
 		{

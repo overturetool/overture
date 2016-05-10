@@ -331,7 +331,7 @@ public class JavaValueSemantics
 		
 		if(encClass != null)
 		{
-			LinkedList<AMethodDeclIR> methods = encClass.getMethods();
+			List<AMethodDeclIR> methods = encClass.getMethods();
 			
 			boolean isRec = false;
 			for(AMethodDeclIR m : methods)
@@ -504,7 +504,7 @@ public class JavaValueSemantics
 	{
 		if(type instanceof AUnionTypeIR)
 		{
-			LinkedList<STypeIR> types = ((AUnionTypeIR) type).getTypes();
+			List<STypeIR> types = ((AUnionTypeIR) type).getTypes();
 			
 			for(STypeIR t : types)
 			{

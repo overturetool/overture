@@ -136,7 +136,7 @@ public class DeclAssistantIR extends AssistantBase
 		String access = node.getAccess().getAccess().toString();
 		boolean isAbstract = node.getIsAbstract();
 		boolean isStatic = false;
-		LinkedList<ILexNameToken> superNames = node.getSupernames();
+		List<ILexNameToken> superNames = node.getSupernames();
 
 		classCg.setPackage(null);
 		classCg.setName(name);
@@ -153,7 +153,7 @@ public class DeclAssistantIR extends AssistantBase
 			classCg.getSuperNames().add(superName);
 		}
 
-		LinkedList<PDefinition> defs = node.getDefinitions();
+		List<PDefinition> defs = node.getDefinitions();
 		
 		for (PDefinition def : defs)
 		{
@@ -235,9 +235,9 @@ public class DeclAssistantIR extends AssistantBase
 		SDeclIR postCond = node.getPostCond();
 		String access = node.getAccess();
 		Boolean isAbstract = node.getAbstract();
-		LinkedList<ATemplateTypeIR> templateTypes = node.getTemplateTypes();
+		List<ATemplateTypeIR> templateTypes = node.getTemplateTypes();
 		AMethodTypeIR methodType = node.getMethodType();
-		LinkedList<AFormalParamLocalParamIR> formalParams = node.getFormalParams();
+		List<AFormalParamLocalParamIR> formalParams = node.getFormalParams();
 		String name = node.getName();
 		SExpIR body = node.getBody();
 		SourceNode sourceNode = node.getSourceNode();
@@ -612,8 +612,8 @@ public class DeclAssistantIR extends AssistantBase
 
 		List<PDefinition> allDefs = new LinkedList<PDefinition>();
 
-		LinkedList<PDefinition> defs = classDef.getDefinitions();
-		LinkedList<PDefinition> inheritedDefs = classDef.getAllInheritedDefinitions();
+		List<PDefinition> defs = classDef.getDefinitions();
+		List<PDefinition> inheritedDefs = classDef.getAllInheritedDefinitions();
 
 		allDefs.addAll(defs);
 		allDefs.addAll(inheritedDefs);

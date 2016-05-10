@@ -1,6 +1,7 @@
 package org.overture.codegen.vdm2java;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
@@ -29,7 +30,7 @@ public class JavaClassCreator extends JavaClassCreatorBase
 		
 		AMethodDeclIR toStringMethod = consToStringSignature();
 		
-		LinkedList<AFieldDeclIR> fields = classDecl.getFields();
+		List<AFieldDeclIR> fields = classDecl.getFields();
 
 		AReturnStmIR body = new AReturnStmIR();
 		
