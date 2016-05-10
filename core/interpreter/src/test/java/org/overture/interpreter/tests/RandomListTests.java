@@ -22,14 +22,14 @@ public class RandomListTests
 		RandomList randList = new RandomList(N, R, gen);
 		
 		
-		List<Integer> actualResults = new LinkedList<Integer>();
+		List<Integer> actualResults = new LinkedList<>();
 		
 		for(int i = 0; i < R + 1; i++)
 		{
 			actualResults.add(randList.next());
 		}
 		
-		List<Integer> expectedNumbers = new LinkedList<Integer>();
+		List<Integer> expectedNumbers = new LinkedList<>();
 		expectedNumbers.add(121);
 		expectedNumbers.add(488);
 		expectedNumbers.add(597);

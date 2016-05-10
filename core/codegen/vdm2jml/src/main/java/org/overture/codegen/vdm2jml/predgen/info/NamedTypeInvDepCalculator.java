@@ -32,7 +32,7 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 	{
 		super();
 		this.info = info;
-		this.typeInfoList = new LinkedList<NamedTypeInfo>();
+		this.typeInfoList = new LinkedList<>();
 	}
 
 	public List<NamedTypeInfo> getTypeDataList()

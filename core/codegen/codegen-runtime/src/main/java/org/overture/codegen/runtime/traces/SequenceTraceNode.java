@@ -41,7 +41,7 @@ public class SequenceTraceNode extends TraceNode implements IIterableTraceNode
 
 	public SequenceTraceNode()
 	{
-		this.nodes = new Vector<TraceNode>();
+		this.nodes = new Vector<>();
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class SequenceTraceNode extends TraceNode implements IIterableTraceNode
 
 		CallSequence seq = getVars();
 
-		List<TestSequence> nodetests = new Vector<TestSequence>();
+		List<TestSequence> nodetests = new Vector<>();
 		int count = nodes.size();
 
 		for (TraceNode node : nodes)
@@ -91,9 +91,9 @@ public class SequenceTraceNode extends TraceNode implements IIterableTraceNode
 			return indics.size();
 		}
 
-		indics = new HashMap<Integer, Integer[]>();
+		indics = new HashMap<>();
 
-		List<TestSequence> nodetests = new Vector<TestSequence>();
+		List<TestSequence> nodetests = new Vector<>();
 		int count = nodes.size();
 		int[] sizes = new int[count];
 		int n = 0;

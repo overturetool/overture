@@ -286,7 +286,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		 */
 		RecClassInfo recInfo = makeRecStateAccessorBased(ast);
 		
-		List<IRStatus<PIR>> newAst = new LinkedList<IRStatus<PIR>>(ast);
+		List<IRStatus<PIR>> newAst = new LinkedList<>(ast);
 
 		// To circumvent a problem with OpenJML. See documentation of makeRecsOuterClasses
 		newAst.addAll(util.makeRecsOuterClasses(ast, recInfo));
@@ -560,7 +560,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		{
 			AMethodDeclIR cond = (AMethodDeclIR) decl;
 
-			List<String> fieldNames = new LinkedList<String>();
+			List<String> fieldNames = new LinkedList<>();
 
 			// The arguments of a function or an operation are passed to the pre/post condition
 			int i;

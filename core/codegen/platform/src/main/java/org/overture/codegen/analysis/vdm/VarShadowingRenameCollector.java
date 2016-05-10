@@ -95,11 +95,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		this.enclosingDef = null;
 		this.idDefs = idDefs;
-		this.localDefsInScope = new Stack<ILexNameToken>();
+		this.localDefsInScope = new Stack<>();
 		this.enclosingCounter = 0;
 
-		this.renamings = new HashSet<Renaming>();
-		this.namesToAvoid = new HashSet<String>();
+		this.renamings = new HashSet<>();
+		this.namesToAvoid = new HashSet<>();
 		this.nameGen = new TempVarNameGen();
 	}
 

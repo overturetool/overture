@@ -46,7 +46,7 @@ public class QualificationVisitor extends
 	public List<QualifiedDefinition> caseAIsExp(AIsExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		List<QualifiedDefinition> result = new Vector<QualifiedDefinition>();
+		List<QualifiedDefinition> result = new Vector<>();
 
 		if (node.getTest() instanceof AVariableExp)
 		{
@@ -101,13 +101,13 @@ public class QualificationVisitor extends
 	public List<QualifiedDefinition> createNewReturnValue(INode node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		return new Vector<QualifiedDefinition>();
+		return new Vector<>();
 	}
 
 	@Override
 	public List<QualifiedDefinition> createNewReturnValue(Object node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		return new Vector<QualifiedDefinition>();
+		return new Vector<>();
 	}
 }

@@ -59,13 +59,13 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	private static final long serialVersionUID = 1L;
 
 	/** A collection of all LexLocation objects. */
-	private static List<LexLocation> allLocations = new Vector<LexLocation>();
+	private static List<LexLocation> allLocations = new Vector<>();
 
 	/** A unique map of LexLocation objects, for rapid searching. */
-	private static Map<LexLocation, LexLocation> uniqueLocations = new HashMap<LexLocation, LexLocation>();
+	private static Map<LexLocation, LexLocation> uniqueLocations = new HashMap<>();
 
 	/** A map of f/op/class names to their lexical span, for coverage. */
-	private static Map<LexNameToken, LexLocation> nameSpans = new HashMap<LexNameToken, LexLocation>();// TODO
+	private static Map<LexNameToken, LexLocation> nameSpans = new HashMap<>();// TODO
 
 	/** True if the location is executable. */
 	private boolean executable = false;
@@ -322,12 +322,12 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	{
 		synchronized (allLocations)
 		{
-			allLocations = new Vector<LexLocation>();
+			allLocations = new Vector<>();
 		}
 
 		synchronized (uniqueLocations)
 		{
-			uniqueLocations = new HashMap<LexLocation, LexLocation>();
+			uniqueLocations = new HashMap<>();
 		}
 
 		// synchronized (locationToAstNode)
@@ -453,7 +453,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	{
 		//FIXME skip lex location in other files
 		// idea: if !lextLocation.getFile().equals(file) then continue; 
-		List<Integer> hits = new Vector<Integer>();
+		List<Integer> hits = new Vector<>();
 
 		synchronized (allLocations)
 		{
@@ -471,7 +471,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 	public static List<Integer> getMissList(File file)
 	{
-		List<Integer> misses = new Vector<Integer>();
+		List<Integer> misses = new Vector<>();
 
 		synchronized (allLocations)
 		{
@@ -489,7 +489,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 	public static List<Integer> getSourceList(File file)
 	{
-		List<Integer> lines = new Vector<Integer>();
+		List<Integer> lines = new Vector<>();
 		int last = 0;
 
 		synchronized (allLocations)
@@ -509,7 +509,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 	public static Map<Integer, List<LexLocation>> getHitLocations(File file)
 	{
-		Map<Integer, List<LexLocation>> map = new HashMap<Integer, List<LexLocation>>();
+		Map<Integer, List<LexLocation>> map = new HashMap<>();
 
 		synchronized (allLocations)
 		{
@@ -521,7 +521,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 					if (list == null)
 					{
-						list = new Vector<LexLocation>();
+						list = new Vector<>();
 						map.put(l.startLine, list);
 					}
 
@@ -561,7 +561,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 	public static Map<Integer, List<LexLocation>> getMissLocations(File file)
 	{
-		Map<Integer, List<LexLocation>> map = new HashMap<Integer, List<LexLocation>>();
+		Map<Integer, List<LexLocation>> map = new HashMap<>();
 
 		synchronized (allLocations)
 		{
@@ -573,7 +573,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 					if (list == null)
 					{
-						list = new Vector<LexLocation>();
+						list = new Vector<>();
 						map.put(l.startLine, list);
 					}
 
@@ -587,7 +587,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 	public static List<LexLocation> getSourceLocations(File file)
 	{
-		List<LexLocation> locations = new Vector<LexLocation>();
+		List<LexLocation> locations = new Vector<>();
 
 		synchronized (allLocations)
 		{
@@ -650,7 +650,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	 */
 	public static List<LexLocation> removeDuplicates(List<LexLocation> locations)
 	{
-		List<LexLocation> tmp = new Vector<LexLocation>();
+		List<LexLocation> tmp = new Vector<>();
 		c: for (LexLocation l1 : locations)
 		{
 			if (l1.hits == 0)

@@ -344,7 +344,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		List<PPattern> params = new Vector<PPattern>();
 		params.add(d.getInitPattern().clone());
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new Vector<>();
 		parameters.add(params);
 
 		PTypeList ptypes = new PTypeList();
@@ -365,7 +365,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		List<PPattern> params = new Vector<PPattern>();
 		params.add(d.getInvPattern().clone());
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new Vector<>();
 		parameters.add(params);
 
 		PTypeList ptypes = new PTypeList();
@@ -382,7 +382,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		List<PPattern> params = new Vector<PPattern>();
 		params.add(d.getInvPattern().clone());
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new Vector<>();
 		parameters.add(params);
 
 		PTypeList ptypes = new PTypeList();

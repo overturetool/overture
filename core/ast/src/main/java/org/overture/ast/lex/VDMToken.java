@@ -230,9 +230,9 @@ public enum VDMToken implements Serializable
 		// initializes its members before any statics (or member inits)
 		// are performed.
 
-		sltokens = new HashMap<String, VDMToken>(256);
-		pptokens = new HashMap<String, VDMToken>(256);
-		rttokens = new HashMap<String, VDMToken>(256);
+		sltokens = new HashMap<>(256);
+		pptokens = new HashMap<>(256);
+		rttokens = new HashMap<>(256);
 
 		for (VDMToken token : values())
 		{

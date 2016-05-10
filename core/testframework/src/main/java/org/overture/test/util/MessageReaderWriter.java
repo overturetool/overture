@@ -47,8 +47,8 @@ public class MessageReaderWriter
 	public static String ERROR_LABEL = "ERROR";
 	public static String RESULT_LABEL = "RESULT";
 
-	final List<IMessage> errors = new Vector<IMessage>();
-	final List<IMessage> warnings = new Vector<IMessage>();
+	final List<IMessage> errors = new Vector<>();
+	final List<IMessage> warnings = new Vector<>();
 	String result = "";
 	final File file;
 

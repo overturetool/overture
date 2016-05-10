@@ -68,7 +68,7 @@ public class TypeComparator
 	 * compared without infinite regress.
 	 */
 
-	private static Vector<TypePair> done = new Vector<TypePair>(256);
+	private static Vector<TypePair> done = new Vector<>(256);
 
 	private final ITypeCheckerAssistantFactory assistantFactory;
 

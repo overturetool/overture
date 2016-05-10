@@ -15,8 +15,8 @@ public abstract class RTMessage
 		Request, Activate, Completed
 	}
 
-	static Map<String, Long> staticIds = new Hashtable<String, Long>();
-	public final static List<RTDeployStaticMessage> cachedStaticDeploys = new Vector<RTDeployStaticMessage>();
+	static Map<String, Long> staticIds = new Hashtable<>();
+	public final static List<RTDeployStaticMessage> cachedStaticDeploys = new Vector<>();
 
 	protected Long time = SystemClock.getWallTime();// Timestamp the message
 

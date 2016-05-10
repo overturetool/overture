@@ -149,7 +149,7 @@ public class AModuleModulesAssistantInterpreter extends
 			StateContext initialContext)
 	{
 
-		Set<ContextException> trouble = new HashSet<ContextException>();
+		Set<ContextException> trouble = new HashSet<>();
 
 		for (PDefinition d : m.getImportdefs())
 		{

@@ -492,13 +492,13 @@ public class OperationValue extends Value
 	{
 		try
 		{
-			Map<String, String> argExps = new HashMap<String, String>();
+			Map<String, String> argExps = new HashMap<>();
 			for (Entry<ILexNameToken, Value> argVal : args.entrySet())
 			{
 				argExps.put(argVal.getKey().getName(), argVal.getValue().toString());
 			}
 
-			Map<String, String> stateExps = new HashMap<String, String>();
+			Map<String, String> stateExps = new HashMap<>();
 
 			if (stateContext != null)
 			{
@@ -708,7 +708,7 @@ public class OperationValue extends Value
 				return new VoidValue();
 			} else
 			{
-				Holder<MessageResponse> result = new Holder<MessageResponse>();
+				Holder<MessageResponse> result = new Holder<>();
 				MessageRequest request = new MessageRequest(ctxt.threadState.dbgp, bus, from, to, self, this, argValues, result, stepping);
 
 				bus.transmit(request);

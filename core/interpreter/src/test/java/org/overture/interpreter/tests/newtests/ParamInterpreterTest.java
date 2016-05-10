@@ -61,8 +61,8 @@ public abstract class ParamInterpreterTest extends
 			Value val = InterpreterUtil.interpret(ast, entry, Settings.dialect);
 
 			StringInterpreterResult result = new StringInterpreterResult(
-					val.toString(), new Vector<Message>(),
-					new Vector<Message>());
+					val.toString(), new Vector<>(),
+					new Vector<>());
 
 			return result;
 		} catch (Exception e) {
@@ -72,11 +72,11 @@ public abstract class ParamInterpreterTest extends
 
 	private StringInterpreterResult wrap(Exception e) {
 
-		Vector<Message> errors = new Vector<Message>();
+		Vector<Message> errors = new Vector<>();
 		String message = e.getMessage();
 		if (e instanceof ICollectedRuntimeExceptions) {
-			List<String> messages = new Vector<String>();
-			List<Exception> collectedExceptions = new ArrayList<Exception>(
+			List<String> messages = new Vector<>();
+			List<Exception> collectedExceptions = new ArrayList<>(
 					((ICollectedRuntimeExceptions) e).getCollectedExceptions());
 			for (Exception err : collectedExceptions) {
 				if (err instanceof ContextException) {
@@ -101,14 +101,14 @@ public abstract class ParamInterpreterTest extends
 			Collections.sort(messages);
 			message = messages.toString();
 		}
-		return new StringInterpreterResult(message, new Vector<Message>(),
+		return new StringInterpreterResult(message, new Vector<>(),
 				errors);
 	}
 
 	private List<String> getEntries() throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(
 				getEntryFile()));
-		List<String> data = new Vector<String>();
+		List<String> data = new Vector<>();
 		String text = null;
 		while ((text = reader.readLine()) != null) {
 			data.add(text.trim());

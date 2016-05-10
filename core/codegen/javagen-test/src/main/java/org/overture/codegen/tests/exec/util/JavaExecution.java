@@ -57,7 +57,7 @@ public class JavaExecution
 			String javaArg = JavaToolsUtils.isWindows() ? java.getAbsolutePath()
 					: "java";
 
-			List<String> commands = new Vector<String>();
+			List<String> commands = new Vector<>();
 			commands.add(javaArg);
 			commands.addAll(Arrays.asList(preArgs));
 			commands.add("-cp");

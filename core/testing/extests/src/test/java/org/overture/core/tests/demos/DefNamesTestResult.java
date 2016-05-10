@@ -36,7 +36,7 @@ public class DefNamesTestResult {
 
 	public DefNamesTestResult(List<INode> ast, String name) {
 		this.exampleName = name;
-		defNames = new Vector<String>();
+		defNames = new Vector<>();
 		for (INode n : ast) {
 			if (n instanceof AModuleModules) // ModuleModules prints the file
 												// path so we skip it

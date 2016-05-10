@@ -88,7 +88,7 @@ public abstract class JavaGenTestBase extends CheckerTestBase
 				((ExpressionTestHandler) testHandler).injectArgIntoMainClassFile(outputDir, s.getContent(), javaCg.getJavaSettings().getJavaRootPackage());
 			} else
 			{
-				List<File> files = new LinkedList<File>();
+				List<File> files = new LinkedList<>();
 				files.add(vdmSource);
 				
 				GeneratedData data = genData(javaCg, files);

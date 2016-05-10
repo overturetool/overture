@@ -41,7 +41,7 @@ public class DefinitionInfo
 	{
 		List<PDefinition> allLocalDefs = getAllLocalDefs();
 		
-		List<ILexNameToken> names = new LinkedList<ILexNameToken>();
+		List<ILexNameToken> names = new LinkedList<>();
 		
 		for(PDefinition def : allLocalDefs)
 		{

@@ -21,7 +21,7 @@ public class OpBodyEndContext extends StatefulContext
 			IPogAssistantFactory af)
 	{
 		this.af = af;
-		subs = new LinkedList<Substitution>();
+		subs = new LinkedList<>();
 		for (AInstanceVariableDefinition i : state)
 		{
 			AVariableExp var_exp = new AVariableExp();

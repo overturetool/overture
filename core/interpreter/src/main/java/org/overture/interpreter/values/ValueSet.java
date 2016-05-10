@@ -144,7 +144,7 @@ public class ValueSet extends Vector<Value> // NB based on Vector
 		// This is a 1st order permutation, which does not take account of the possible
 		// nesting of sets or the presence of other permutable values with them (maps).
 
-		List<ValueSet> results = new Vector<ValueSet>();
+		List<ValueSet> results = new Vector<>();
 		int size = size();
 
 		if (size == 0)
@@ -173,7 +173,7 @@ public class ValueSet extends Vector<Value> // NB based on Vector
 
 	public List<ValueSet> powerSet()
 	{
-		List<ValueSet> sets = new Vector<ValueSet>(2 ^ size());
+		List<ValueSet> sets = new Vector<>(2 ^ size());
 
 		if (isEmpty())
 		{

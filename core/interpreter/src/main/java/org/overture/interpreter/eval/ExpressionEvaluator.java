@@ -1894,7 +1894,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		if (polyfuncs == null)
 		{
-			polyfuncs = new HashMap<List<PType>, FunctionValue>();
+			polyfuncs = new HashMap<>();
 		} else
 		{
 			// We always return the same function value for a polymorph

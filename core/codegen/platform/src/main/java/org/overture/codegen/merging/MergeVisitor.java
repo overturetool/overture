@@ -64,10 +64,10 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements
 			TemplateCallable[] templateCallables)
 	{
 		this.templates = templateManager;
-		this.nodeContexts = new Stack<MergeContext>();
+		this.nodeContexts = new Stack<>();
 		this.templateCallables = addDefaults(templateCallables);
-		this.mergeErrors = new LinkedList<Exception>();
-		this.unsupportedInTargLang = new HashSet<IrNodeInfo>();
+		this.mergeErrors = new LinkedList<>();
+		this.unsupportedInTargLang = new HashSet<>();
 	}
 
 	/**
@@ -116,8 +116,8 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements
 	public void init()
 	{
 		// Avoid clearing the data structures if others are using them
-		mergeErrors = new LinkedList<Exception>();
-		unsupportedInTargLang = new HashSet<IrNodeInfo>();
+		mergeErrors = new LinkedList<>();
+		unsupportedInTargLang = new HashSet<>();
 	}
 
 	private void initCodeGenContext(INode node,

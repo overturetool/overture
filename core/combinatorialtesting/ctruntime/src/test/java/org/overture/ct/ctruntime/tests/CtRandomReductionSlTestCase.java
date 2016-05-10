@@ -74,7 +74,7 @@ public class CtRandomReductionSlTestCase extends CtTestCaseBase
 		testReduction.add(new ReductionTestData("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARNAMES, SEED),3));
 		testReduction.add(new ReductionTestData("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARVALUES, SEED),21));
 
-		Collection<Object[]> tests = new Vector<Object[]>();
+		Collection<Object[]> tests = new Vector<>();
 		
 
 		File root = new File(RESOURCES);

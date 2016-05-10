@@ -45,13 +45,13 @@ public class LexLocationUtils implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** A collection of all LexLocation objects. */
-	private static List<ILexLocation> allLocations = new Vector<ILexLocation>();
+	private static List<ILexLocation> allLocations = new Vector<>();
 
 	/** A collection of all LexLocation objects to the AstNodes. */
 	private static Map<ILexLocation, INode> locationToAstNode = new Hashtable<ILexLocation, INode>();
 
 	/** A map of f/op/class names to their lexical span, for coverage. */
-	private static Map<LexNameToken, ILexLocation> nameSpans = new HashMap<LexNameToken, ILexLocation>();// TODO
+	private static Map<LexNameToken, ILexLocation> nameSpans = new HashMap<>();// TODO
 
 	public static void clearLocations()
 	{
@@ -68,7 +68,7 @@ public class LexLocationUtils implements Serializable
 	{
 		synchronized (allLocations)
 		{
-			allLocations = new Vector<ILexLocation>();
+			allLocations = new Vector<>();
 		}
 
 		synchronized (locationToAstNode)
@@ -193,7 +193,7 @@ public class LexLocationUtils implements Serializable
 
 	public static List<Integer> getHitList(File file)
 	{
-		List<Integer> hits = new Vector<Integer>();
+		List<Integer> hits = new Vector<>();
 
 		synchronized (allLocations)
 		{
@@ -211,7 +211,7 @@ public class LexLocationUtils implements Serializable
 
 	public static List<Integer> getMissList(File file)
 	{
-		List<Integer> misses = new Vector<Integer>();
+		List<Integer> misses = new Vector<>();
 
 		synchronized (allLocations)
 		{
@@ -229,7 +229,7 @@ public class LexLocationUtils implements Serializable
 
 	public static List<Integer> getSourceList(File file)
 	{
-		List<Integer> lines = new Vector<Integer>();
+		List<Integer> lines = new Vector<>();
 		int last = 0;
 
 		synchronized (allLocations)
@@ -250,7 +250,7 @@ public class LexLocationUtils implements Serializable
 
 	public static Map<Integer, List<ILexLocation>> getHitLocations(File file)
 	{
-		Map<Integer, List<ILexLocation>> map = new HashMap<Integer, List<ILexLocation>>();
+		Map<Integer, List<ILexLocation>> map = new HashMap<>();
 
 		synchronized (allLocations)
 		{
@@ -263,7 +263,7 @@ public class LexLocationUtils implements Serializable
 
 					if (list == null)
 					{
-						list = new Vector<ILexLocation>();
+						list = new Vector<>();
 						map.put(l.getStartLine(), list);
 					}
 
@@ -303,7 +303,7 @@ public class LexLocationUtils implements Serializable
 
 	public static Map<Integer, List<ILexLocation>> getMissLocations(File file)
 	{
-		Map<Integer, List<ILexLocation>> map = new HashMap<Integer, List<ILexLocation>>();
+		Map<Integer, List<ILexLocation>> map = new HashMap<>();
 
 		synchronized (allLocations)
 		{
@@ -316,7 +316,7 @@ public class LexLocationUtils implements Serializable
 
 					if (list == null)
 					{
-						list = new Vector<ILexLocation>();
+						list = new Vector<>();
 						map.put(l.getStartLine(), list);
 					}
 
@@ -330,7 +330,7 @@ public class LexLocationUtils implements Serializable
 
 	public static List<ILexLocation> getSourceLocations(File file)
 	{
-		List<ILexLocation> locations = new Vector<ILexLocation>();
+		List<ILexLocation> locations = new Vector<>();
 
 		synchronized (allLocations)
 		{

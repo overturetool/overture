@@ -168,8 +168,8 @@ public class XmlResultReaderWriter<R>
 	public boolean loadFromXml()
 	{
 		// File resultFile = new File(file.getAbsoluteFile()+ ".result");
-		List<IMessage> warnings = new Vector<IMessage>();
-		List<IMessage> errors = new Vector<IMessage>();
+		List<IMessage> warnings = new Vector<>();
+		List<IMessage> errors = new Vector<>();
 		R readResult = null;
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -208,7 +208,7 @@ public class XmlResultReaderWriter<R>
 			// doc.getDocumentElement().getChildNodes().getElementsByTagName("result")
 
 			String type = doc.getDocumentElement().getAttributes().getNamedItem("type").getNodeValue();
-			setResult(type, new Result<R>(readResult, warnings, errors));
+			setResult(type, new Result<>(readResult, warnings, errors));
 		} catch (Exception e)
 		{
 			return false;

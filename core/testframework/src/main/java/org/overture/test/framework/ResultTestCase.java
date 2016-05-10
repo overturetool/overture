@@ -62,7 +62,7 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements
 			// mrw.save();
 			File resultFile = createResultFile(filename);
 			resultFile.getParentFile().mkdirs();
-			XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<R>(resultFile, this);
+			XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<>(resultFile, this);
 			xmlResult.setResult(this.getClass().getName(), result);
 			try
 			{
@@ -86,7 +86,7 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements
 		assertTrue("Result file " + file.getAbsolutePath() + " does not exist", file.exists());
 
 		// MessageReaderWriter mrw = new MessageReaderWriter(file);
-		XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<R>(file, this);
+		XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<>(file, this);
 		boolean parsed = xmlResult.loadFromXml();
 
 		assertTrue("Could not read result file: " + file.getName(), parsed);
@@ -162,8 +162,8 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements
 	protected <T> Result<T> mergeResults(Set<? extends Result<T>> parse,
 			IResultCombiner<T> c)
 	{
-		List<IMessage> warnings = new Vector<IMessage>();
-		List<IMessage> errors = new Vector<IMessage>();
+		List<IMessage> warnings = new Vector<>();
+		List<IMessage> errors = new Vector<>();
 		T result = null;
 
 		for (Result<T> r : parse)
@@ -172,7 +172,7 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements
 			errors.addAll(r.errors);
 			result = c.combine(result, r.result);
 		}
-		return new Result<T>(result, warnings, errors);
+		return new Result<>(result, warnings, errors);
 	}
 
 }

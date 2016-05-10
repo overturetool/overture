@@ -122,7 +122,7 @@ public class LocationAssistantIR extends AssistantBase
 	
 	public List<IrNodeInfo> getIrNodeInfoLocationSorted(Set<IrNodeInfo> nodes)
 	{
-		List<IrNodeInfo> list = new LinkedList<IrNodeInfo>(nodes);
+		List<IrNodeInfo> list = new LinkedList<>(nodes);
 		
 		Collections.sort(list, new Comparator<IrNodeInfo>(){
 			
@@ -152,7 +152,7 @@ public class LocationAssistantIR extends AssistantBase
 	}
 	public List<VdmNodeInfo> getVdmNodeInfoLocationSorted(Set<VdmNodeInfo> nodes)
 	{
-		List<VdmNodeInfo> list = new LinkedList<VdmNodeInfo>(nodes);
+		List<VdmNodeInfo> list = new LinkedList<>(nodes);
 
 		Collections.sort(list, new Comparator<VdmNodeInfo>()
 		{

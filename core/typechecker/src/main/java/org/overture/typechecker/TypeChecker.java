@@ -48,14 +48,14 @@ abstract public class TypeChecker
 		void warning(VDMWarning warning);
 	}
 
-	private static List<VDMError> errors = new Vector<VDMError>();
-	private static List<VDMWarning> warnings = new Vector<VDMWarning>();
+	private static List<VDMError> errors = new Vector<>();
+	private static List<VDMWarning> warnings = new Vector<>();
 	private static VDMMessage lastMessage = null;
 	private static final int MAX = 200;
 
 	final protected ITypeCheckerAssistantFactory assistantFactory;
 
-	static List<IStatusListener> listners = new Vector<IStatusListener>();
+	static List<IStatusListener> listners = new Vector<>();
 
 	/**
 	 * VDM-only constructor. <b>NOT</b> for use by extensions.

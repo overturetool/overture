@@ -21,7 +21,7 @@ public class NameGen
 	
 	public NameGen()
 	{
-		this.toAvoid = new HashSet<String>();
+		this.toAvoid = new HashSet<>();
 	}
 	
 	public NameGen(INode vdmNode)

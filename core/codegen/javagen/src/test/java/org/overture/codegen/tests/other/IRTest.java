@@ -157,7 +157,7 @@ public class IRTest
 	{
 		String metaDataStr = "/*@ some meta data @*/";
 		
-		List<ClonableString> metaData = new LinkedList<ClonableString>();
+		List<ClonableString> metaData = new LinkedList<>();
 		metaData.add(new ClonableString("/*@ some meta data @*/"));
 		
 		AMetaStmIR meta = new AMetaStmIR();

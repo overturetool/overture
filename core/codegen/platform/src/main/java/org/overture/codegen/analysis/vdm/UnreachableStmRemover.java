@@ -18,7 +18,7 @@ public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 	public void caseABlockSimpleBlockStm(ABlockSimpleBlockStm node)
 			throws AnalysisException
 	{
-		List<Integer> unreachStmIndices = new LinkedList<Integer>();
+		List<Integer> unreachStmIndices = new LinkedList<>();
 		
 		boolean notreached = false;
 

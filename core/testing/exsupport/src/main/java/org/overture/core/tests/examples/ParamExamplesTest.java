@@ -167,6 +167,6 @@ public abstract class ParamExamplesTest<R> extends AbsResultTest<R> {
 	 */
 	protected List<String> getExamplesToSkip()
 	{
-		return new LinkedList<String>();
+		return new LinkedList<>();
 	}
 }

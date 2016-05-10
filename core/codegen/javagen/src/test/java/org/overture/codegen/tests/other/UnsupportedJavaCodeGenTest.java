@@ -72,7 +72,7 @@ public class UnsupportedJavaCodeGenTest
 	@Test
 	public void test()
 	{
-		List<File> files = new LinkedList<File>();
+		List<File> files = new LinkedList<>();
 		files.add(testInputFile);
 
 		try

@@ -74,7 +74,7 @@ public class VarShadowingTest
 			Value orgSpecResult = evalSpec(originalSpecTcResult.result);
 			
 			
-			List<Renaming> renamings = new LinkedList<Renaming>(new VarRenamer().computeRenamings(originalSpecTcResult.result, af, idDefs));
+			List<Renaming> renamings = new LinkedList<>(new VarRenamer().computeRenamings(originalSpecTcResult.result, af, idDefs));
 			
 			// It is very important that renamings are performed from the bottom, right to left, in order
 			// not to mess up the location of the names!!
@@ -130,7 +130,7 @@ public class VarShadowingTest
 
 	private List<VDMWarning> filter(List<VDMWarning> warnings)
 	{
-		List<VDMWarning> filtered = new LinkedList<VDMWarning>();
+		List<VDMWarning> filtered = new LinkedList<>();
 
 		for (VDMWarning w : warnings)
 		{

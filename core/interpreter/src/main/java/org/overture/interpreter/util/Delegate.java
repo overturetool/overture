@@ -77,8 +77,8 @@ public class Delegate implements Serializable
 			{
 				String classname = name.replace('_', '.');
 				delegateClass = this.getClass().getClassLoader().loadClass(classname);
-				delegateMethods = new HashMap<String, Method>();
-				delegateArgs = new HashMap<String, LexNameList>();
+				delegateMethods = new HashMap<>();
+				delegateArgs = new HashMap<>();
 				definitions = assistantFactory.createPDefinitionListAssistant().singleDefinitions(definitions);
 			} catch (ClassNotFoundException e)
 			{
@@ -158,7 +158,7 @@ public class Delegate implements Serializable
 			}
 
 			LexNameList anames = new LexNameList();
-			List<Class<?>> ptypes = new Vector<Class<?>>();
+			List<Class<?>> ptypes = new Vector<>();
 
 			if (plist != null)
 			{

@@ -34,7 +34,7 @@ public class ViolationAnalysis extends DepthFirstAnalysisAdaptor
 
 	public ViolationAnalysis(AssistantManager assistantManager)
 	{
-		this.violations = new LinkedList<Violation>();
+		this.violations = new LinkedList<>();
 		this.assistantManager = assistantManager;
 	}
 

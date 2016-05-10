@@ -99,7 +99,7 @@ public class JavaCodeGenMain
 		String exp = null;
 		File outputDir = null;
 		
-		List<File> files = new LinkedList<File>();
+		List<File> files = new LinkedList<>();
 
 		Settings.release = Release.VDM_10;
 		
@@ -529,7 +529,7 @@ public class JavaCodeGenMain
 	
 	public static List<File> filterFiles(List<File> files)
 	{
-		List<File> filtered = new LinkedList<File>();
+		List<File> filtered = new LinkedList<>();
 		
 		for(File f : files)
 		{

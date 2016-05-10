@@ -107,7 +107,7 @@ public abstract class ExecutableTestHandler extends TestHandler
 
 	public List<String> getMainClassMethods(String rootPackage)
 	{
-		return new LinkedList<String>();
+		return new LinkedList<>();
 	}
 
 	public void injectArgIntoMainClassFile(File parent, String body, String rootPackage)

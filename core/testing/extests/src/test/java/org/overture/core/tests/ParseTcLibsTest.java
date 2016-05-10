@@ -38,7 +38,7 @@ public class ParseTcLibsTest
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData() throws IOException, URISyntaxException
 	{
-		Collection<Object[]> r = new Vector<Object[]>();
+		Collection<Object[]> r = new Vector<>();
 
 		Collection<ExampleSourceData> examples = ExamplesUtility.getLibSources(LIBS_ROOT);
 

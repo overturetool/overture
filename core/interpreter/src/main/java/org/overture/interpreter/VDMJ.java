@@ -82,8 +82,8 @@ abstract public class VDMJ
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args)
 	{
-		List<File> filenames = new Vector<File>();
-		List<File> pathnames = new Vector<File>();
+		List<File> filenames = new Vector<>();
+		List<File> pathnames = new Vector<>();
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 		Dialect dialect = Dialect.VDM_SL;

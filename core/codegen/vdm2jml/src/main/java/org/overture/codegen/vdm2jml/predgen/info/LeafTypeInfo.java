@@ -85,7 +85,7 @@ public class LeafTypeInfo extends AbstractTypeInfo
 	@Override
 	public List<LeafTypeInfo> getLeafTypesRecursively()
 	{
-		List<LeafTypeInfo> types = new LinkedList<LeafTypeInfo>();
+		List<LeafTypeInfo> types = new LinkedList<>();
 		types.add(this);
 		
 		return types;

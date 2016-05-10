@@ -46,7 +46,7 @@ public class TestSequence extends Vector<CallSequence>
 		}
 	}
 
-	final List<TestData> failedCallSeqs = new Vector<TestData>();
+	final List<TestData> failedCallSeqs = new Vector<>();
 
 	/**
 	 * Filter remaining tests based on one set of results. The result list passed in is the result of running the test,

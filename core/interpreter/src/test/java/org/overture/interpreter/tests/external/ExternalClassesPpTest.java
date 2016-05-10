@@ -17,7 +17,7 @@ import org.overture.config.Settings;
 public class ExternalClassesPpTest extends AbstractExternalTest
 
 {
-	Set<String> classicSpecifications = new HashSet<String>(Arrays.asList(new String[] {
+	Set<String> classicSpecifications = new HashSet<>(Arrays.asList(new String[]{
 			"instvars-01.vpp", "type-02.vpp", "type-03.vpp", "type-04.vpp",
 			"depend-04.vpp", "reperr-01.vpp", "reperr-19.vpp", "reperr-21.vpp",
 			"reperr-22.vpp", "reperr-23.vpp", "reperr-24.vpp", "reperr-25.vpp",
@@ -54,7 +54,7 @@ public class ExternalClassesPpTest extends AbstractExternalTest
 			"types-40.vpp", "types-41.vpp", "types-42.vpp", "types-44.vpp",
 			"types-45.vpp", "types-46.vpp", "values-01.vpp", "values-02.vpp",
 			"values-03.vpp", "values-05.vpp", "values-06.vpp", "values-13.vpp",
-			"values-14.vpp", "invoke-15.vpp" }));
+			"values-14.vpp", "invoke-15.vpp"}));
 
 	public ExternalClassesPpTest(Dialect dialect, String suiteName,
 			File testSuiteRoot, File file, String storeLocationPart)

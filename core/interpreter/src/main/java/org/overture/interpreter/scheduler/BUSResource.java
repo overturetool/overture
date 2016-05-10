@@ -57,7 +57,7 @@ public class BUSResource extends Resource
 		this.cq = new ControlQueue();
 		this.speed = speed;
 		this.cpus = cpus;
-		this.messages = new LinkedList<MessagePacket>();
+		this.messages = new LinkedList<>();
 
 		busThread = null;
 

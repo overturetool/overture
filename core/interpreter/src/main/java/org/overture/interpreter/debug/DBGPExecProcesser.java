@@ -44,7 +44,7 @@ public class DBGPExecProcesser
 
 		Interpreter i = interpreter;
 		final DBGPReader d = reader;
-		List<File> fileList = new Vector<File>(i.getSourceFiles());
+		List<File> fileList = new Vector<>(i.getSourceFiles());
 		final Writer result = new StringWriter();
 		final Reader input = new StringReader(command);
 		// System.out.println("Command session started in " + new File(".").getAbsolutePath());

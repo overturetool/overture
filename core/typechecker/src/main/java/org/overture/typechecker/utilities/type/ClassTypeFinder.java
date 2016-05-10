@@ -98,7 +98,7 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 			// class types, making the field types the union of the original
 			// fields' types...
 
-			Map<ILexNameToken, PTypeSet> common = new HashMap<ILexNameToken, PTypeSet>();
+			Map<ILexNameToken, PTypeSet> common = new HashMap<>();
 			Map<ILexNameToken, AAccessSpecifierAccessSpecifier> access = new LexNameTokenMap<AAccessSpecifierAccessSpecifier>();
 
 			// Derive the pseudoclass name for the combined union

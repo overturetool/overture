@@ -231,7 +231,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		try
 		{
 			ctxt.threadState.setAtomic(true);
-			List<ValueListenerList> listenerLists = new Vector<ValueListenerList>(size);
+			List<ValueListenerList> listenerLists = new Vector<>(size);
 
 			for (int i = 0; i < size; i++)
 			{

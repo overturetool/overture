@@ -38,7 +38,7 @@ import org.overture.config.Settings;
 
 public class LatexStreamReader extends InputStreamReader
 {
-	private Stack<Boolean> ifstack = new Stack<Boolean>();
+	private Stack<Boolean> ifstack = new Stack<>();
 
 	public LatexStreamReader(InputStream in, String charsetName)
 			throws UnsupportedEncodingException

@@ -48,8 +48,8 @@ import org.overture.interpreter.values.Value;
 public class BasicRuntimeValidator implements IRuntimeValidatior
 {
 
-	final List<ConjectureDefinition> conjectures = new ArrayList<ConjectureDefinition>();
-	final List<String[]> variables = new ArrayList<String[]>();
+	final List<ConjectureDefinition> conjectures = new ArrayList<>();
+	final List<String[]> variables = new ArrayList<>();
 
 	public void init(ClassInterpreter classInterpreter)
 	{
@@ -115,7 +115,7 @@ public class BasicRuntimeValidator implements IRuntimeValidatior
 	private Value digInCtxt(String[] strings, Context ctxt)
 	{
 
-		List<String> rest = new ArrayList<String>();
+		List<String> rest = new ArrayList<>();
 		for (int i = 1; i < strings.length; i++)
 		{
 			rest.add(strings[i]);

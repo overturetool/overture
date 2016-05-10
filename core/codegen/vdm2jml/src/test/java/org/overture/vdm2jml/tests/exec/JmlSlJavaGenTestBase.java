@@ -86,7 +86,7 @@ public abstract class JmlSlJavaGenTestBase extends CheckerTestBase
 
 	public void genJavaSources(File vdmSource)
 	{
-		List<File> files = new LinkedList<File>();
+		List<File> files = new LinkedList<>();
 		files.add(vdmSource);
 
 		TypeCheckResult<List<AModuleModules>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckSl(files));

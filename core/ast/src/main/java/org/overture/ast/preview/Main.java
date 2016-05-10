@@ -53,7 +53,7 @@ public class Main
 
 	public static File dot = null;
 
-	public static Set<String> filterClassNames = new HashSet<String>();
+	public static Set<String> filterClassNames = new HashSet<>();
 
 	// digraph ast
 	// {

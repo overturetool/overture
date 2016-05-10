@@ -66,7 +66,7 @@ public class TestSourceFinder
 	{
 		File testRoot = getFile(testRootPath.replace('/', File.separatorChar));
 
-		Collection<Object[]> tests = new LinkedList<Object[]>();
+		Collection<Object[]> tests = new LinkedList<>();
 
 		if (testRoot != null && testRoot.exists())
 		{
@@ -105,7 +105,7 @@ public class TestSourceFinder
 		File testRoot = getFile(testRootPath);
 
 		// TestSuite suite = new TestSourceFinder(name);
-		Collection<Object[]> tests = new LinkedList<Object[]>();
+		Collection<Object[]> tests = new LinkedList<>();
 
 		if (testRoot != null && testRoot.exists())
 		{
@@ -121,7 +121,7 @@ public class TestSourceFinder
 	private static Collection<Object[]> createCompleteFile(Dialect dialect,
 			String suite, File file, File testRoot, String... extensions)
 	{
-		Collection<Object[]> tests = new LinkedList<Object[]>();
+		Collection<Object[]> tests = new LinkedList<>();
 
 		if (file.getName().startsWith(".")
 				|| !isNotAcceptedFile(file, Arrays.asList(extensions)))
@@ -178,7 +178,7 @@ public class TestSourceFinder
 	private static Collection<Object[]> createDirectory(Dialect dialect,
 			String suite, File file, String... extensions)
 	{
-		Collection<Object[]> tests = new LinkedList<Object[]>();
+		Collection<Object[]> tests = new LinkedList<>();
 
 		if (file.getName().startsWith(".")
 				|| !isNotAcceptedFile(file, Arrays.asList(extensions)))
@@ -225,7 +225,7 @@ public class TestSourceFinder
 	{
 		File testRoot = getFile(testRootPath);
 
-		Collection<Object[]> tests = new LinkedList<Object[]>();
+		Collection<Object[]> tests = new LinkedList<>();
 
 		if (testRoot != null && testRoot.exists())
 		{
@@ -260,7 +260,7 @@ public class TestSourceFinder
 
 	protected static List<String> readFile(File file) throws IOException
 	{
-		List<String> lines = new Vector<String>();
+		List<String> lines = new Vector<>();
 		BufferedReader reader = null;
 
 		try

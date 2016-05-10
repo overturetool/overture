@@ -34,7 +34,7 @@ public class TestUtils
 {
 	public static List<File> getTestInputFiles(File file)
 	{
-		List<File> files = new Vector<File>();
+		List<File> files = new Vector<>();
 		for (File f : file.listFiles())
 		{
 			Collections.sort(files, new FileComparator());
@@ -63,7 +63,7 @@ public class TestUtils
 	{
 		List<File> testFiles = getTestInputFiles(new File(root));
 		
-		List<Object[]> testFilesPacked = new LinkedList<Object[]>();
+		List<Object[]> testFilesPacked = new LinkedList<>();
 		
 		for(File file : testFiles)
 		{

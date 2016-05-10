@@ -55,7 +55,7 @@ public class AImplicitOperationDefinitionAssistantTC implements IAstAssistant
 			AImplicitOperationDefinition d, Environment base)
 	{
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new Vector<>();
 		List<PPattern> plist = new Vector<PPattern>();
 
 		for (APatternListTypePair pl : (LinkedList<APatternListTypePair>) d.getParameterPatterns())
@@ -103,7 +103,7 @@ public class AImplicitOperationDefinitionAssistantTC implements IAstAssistant
 			AImplicitOperationDefinition d, Environment base)
 	{
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new Vector<>();
 		List<PPattern> plist = new Vector<PPattern>();
 
 		for (APatternListTypePair pl : (LinkedList<APatternListTypePair>) d.getParameterPatterns())
@@ -152,7 +152,7 @@ public class AImplicitOperationDefinitionAssistantTC implements IAstAssistant
 	public List<List<PPattern>> getListParamPatternList(
 			AImplicitOperationDefinition func)
 	{
-		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
+		List<List<PPattern>> parameters = new ArrayList<>();
 		List<PPattern> plist = new ArrayList<PPattern>();
 
 		for (APatternListTypePair pl : func.getParameterPatterns())

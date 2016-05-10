@@ -51,7 +51,7 @@ public abstract class AssistantBase
 	
 	public <T extends INode> List<T> cloneNodes(List<T> list, Class<T> nodeType)
 	{
-		List<T> cloneList = new LinkedList<T>();
+		List<T> cloneList = new LinkedList<>();
 		
 		for(T e : list)
 		{

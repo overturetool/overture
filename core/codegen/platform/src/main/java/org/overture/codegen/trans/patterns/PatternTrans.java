@@ -421,7 +421,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			}
 		}
 
-		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
+		List<PatternInfo> patternInfo = new LinkedList<>();
 		patternInfo.add(declInfo);
 
 		ABlockStmIR replacementBlock = new ABlockStmIR();
@@ -538,7 +538,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	
 	private List<DeclBlockPair> consPatternHandlingBlocksSeparate(List<AVarDeclIR> decls, List<PatternInfo> patternInfo)
 	{
-		List<DeclBlockPair> blocks = new LinkedList<DeclBlockPair>();
+		List<DeclBlockPair> blocks = new LinkedList<>();
 		
 		for (int i = 0; i < patternInfo.size(); i++)
 		{
@@ -1127,7 +1127,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 	public List<PatternInfo> extractFromLocalDefs(List<AVarDeclIR> localDefs)
 	{
-		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
+		List<PatternInfo> patternInfo = new LinkedList<>();
 
 		for (AVarDeclIR decl : localDefs)
 		{
@@ -1150,7 +1150,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	public List<PatternInfo> extractFromParams(
 			List<AFormalParamLocalParamIR> params)
 	{
-		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
+		List<PatternInfo> patternInfo = new LinkedList<>();
 
 		for (AFormalParamLocalParamIR param : params)
 		{
@@ -1166,7 +1166,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	public List<PatternInfo> extractFromCases(List<ACaseAltStmStmIR> cases,
 			SExpIR exp)
 	{
-		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
+		List<PatternInfo> patternInfo = new LinkedList<>();
 
 		for (ACaseAltStmStmIR alt : cases)
 		{

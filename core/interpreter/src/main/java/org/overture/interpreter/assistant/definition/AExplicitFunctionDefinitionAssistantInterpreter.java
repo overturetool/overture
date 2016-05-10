@@ -34,7 +34,7 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 
 		if (state.polyfuncs == null)
 		{
-			state.polyfuncs = new HashMap<List<PType>, FunctionValue>();
+			state.polyfuncs = new HashMap<>();
 		} else
 		{
 			// We always return the same function value for a polymorph

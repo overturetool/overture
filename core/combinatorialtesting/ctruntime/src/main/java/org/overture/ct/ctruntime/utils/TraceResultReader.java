@@ -48,7 +48,7 @@ public class TraceResultReader
 	public List<TraceResult> read(File file) throws SAXException, IOException,
 			ParserConfigurationException, XPathExpressionException
 	{
-		List<TraceResult> results = new Vector<TraceResult>();
+		List<TraceResult> results = new Vector<>();
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);

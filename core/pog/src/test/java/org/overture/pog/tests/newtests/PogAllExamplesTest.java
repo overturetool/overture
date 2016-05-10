@@ -78,7 +78,7 @@ public class PogAllExamplesTest extends ParamExamplesTest<Boolean>
 	@Override
 	protected List<String> getExamplesToSkip()
 	{
-		LinkedList<String> toSkip = new LinkedList<String>();
+		LinkedList<String> toSkip = new LinkedList<>();
 		toSkip.add("AutomatedStockBrokerPP");
 		
 		return toSkip;

@@ -24,7 +24,7 @@ public class OperationCallObligation extends ProofObligation
 		super(stm, POType.OP_CALL, ctxt, stm.getLocation(), af);
 
 		// cannot quote pre-cond so we spell it out with rewritten arguments
-		List<Substitution> subs = new LinkedList<Substitution>();
+		List<Substitution> subs = new LinkedList<>();
 
 		for (int i = 0; i < stm.getArgs().size(); i++)
 		{

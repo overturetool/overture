@@ -79,7 +79,7 @@ public class CombinedDefaultModule extends AModuleModules
 	@Override
 	public List<? extends ClonableFile> getFiles()
 	{
-		LinkedList<ClonableFile> allFiles = new LinkedList<ClonableFile>();
+		LinkedList<ClonableFile> allFiles = new LinkedList<>();
 
 		for (AModuleModules m : modules)
 		{

@@ -69,7 +69,7 @@ class ExamplePacker
 	String name;
 	List<File> sources;
 
-	private List<String> libs = new Vector<String>();
+	private List<String> libs = new Vector<>();
 
 	public ExamplePacker(File root, Dialect dialect)
 	{

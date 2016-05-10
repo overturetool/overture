@@ -20,17 +20,17 @@ public class ExecutionToResultTranslator
 	public static Result<Value> wrapValue(Exception e)
 	{
 		Result<String> result = wrap(e);
-		return new Result<Value>(new SeqValue(result.getStringResult()), result.warnings, result.errors);
+		return new Result<>(new SeqValue(result.getStringResult()), result.warnings, result.errors);
 	}
 
 	public static Result<String> wrap(Exception e)
 	{
-		List<IMessage> errors = new Vector<IMessage>();
+		List<IMessage> errors = new Vector<>();
 		String message = e.getMessage();
 		if (e instanceof ICollectedRuntimeExceptions)
 		{
-			List<String> messages = new Vector<String>();
-			List<Exception> collectedExceptions = new ArrayList<Exception>(((ICollectedRuntimeExceptions) e).getCollectedExceptions());
+			List<String> messages = new Vector<>();
+			List<Exception> collectedExceptions = new ArrayList<>(((ICollectedRuntimeExceptions) e).getCollectedExceptions());
 			for (Exception err : collectedExceptions)
 			{
 				if (err instanceof ContextException)
@@ -54,6 +54,6 @@ public class ExecutionToResultTranslator
 			Collections.sort(messages);
 			message = messages.toString();
 		}
-		return new Result<String>(message, new Vector<IMessage>(), errors);
+		return new Result<>(message, new Vector<>(), errors);
 	}
 }

@@ -56,7 +56,7 @@ public class ValueMap extends LinkedHashMap<Value, Value>
 
 	public boolean isInjective()
 	{
-		Set<Value> rng = new HashSet<Value>(values());
+		Set<Value> rng = new HashSet<>(values());
 		return keySet().size() == rng.size();
 	}
 
@@ -100,7 +100,7 @@ public class ValueMap extends LinkedHashMap<Value, Value>
 		// This is a 1st order permutation, which does not take account of the possible
 		// nesting of maps or the presence of other permutable values with them (sets).
 
-		List<ValueMap> results = new Vector<ValueMap>();
+		List<ValueMap> results = new Vector<>();
 		Object[] entries = entrySet().toArray();
 		int size = entries.length;
 

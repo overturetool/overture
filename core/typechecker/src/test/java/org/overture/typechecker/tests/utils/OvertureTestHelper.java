@@ -48,9 +48,9 @@ public class OvertureTestHelper
 	{
 		if (result.result == null)
 		{
-			return new Result<Boolean>(false, convert(result.parserResult.warnings), convert(result.parserResult.errors));
+			return new Result<>(false, convert(result.parserResult.warnings), convert(result.parserResult.errors));
 		}
-		return new Result<Boolean>(true, convert(result.warnings), convert(result.errors));
+		return new Result<>(true, convert(result.warnings), convert(result.errors));
 	}
 
 	public Result<Boolean> typeCheckSl(File file)
@@ -83,7 +83,7 @@ public class OvertureTestHelper
 
 	public static List<IMessage> convert(List<? extends VDMMessage> messages)
 	{
-		List<IMessage> testMessages = new Vector<IMessage>();
+		List<IMessage> testMessages = new Vector<>();
 
 		for (VDMMessage msg : messages)
 		{

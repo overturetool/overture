@@ -62,10 +62,10 @@ public abstract class AbstractExternalTest extends CommonTypeCheckerTest
 			tests = TestSourceFinder.createTestCompleteFile(dialect, name, root.getAbsolutePath(), extension);
 		} else
 		{
-			tests = new LinkedList<Object[]>();
+			tests = new LinkedList<>();
 		}
 
-		Collection<Object[]> actualTests = new LinkedList<Object[]>();
+		Collection<Object[]> actualTests = new LinkedList<>();
 		for (Object[] objects : tests)
 		{
 			Object[] temp = objects.clone();

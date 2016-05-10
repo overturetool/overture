@@ -125,7 +125,7 @@ public class ModuleReader extends SyntaxReader
 
 	public static AFromModuleImports importAll(LexIdentifierToken from)
 	{
-		List<List<PImport>> types = new Vector<List<PImport>>();
+		List<List<PImport>> types = new Vector<>();
 		LexNameToken all = new LexNameToken(from.getName(), "all", from.location);
 		List<PImport> impAll = new Vector<PImport>();
 		impAll.add(AstFactory.newAAllImport(all));
@@ -253,7 +253,7 @@ public class ModuleReader extends SyntaxReader
 		}
 
 		// return new DLModule(name, imports, exports, library);
-		List<ClonableFile> files = new Vector<ClonableFile>();
+		List<ClonableFile> files = new Vector<>();
 		files.add(new ClonableFile(name.location.getFile()));
 
 		AModuleModules module = AstFactory.newAModuleModules(name, imports, exports, null);
@@ -271,7 +271,7 @@ public class ModuleReader extends SyntaxReader
 	private List<List<PExport>> readExportsFromModule() throws ParserException,
 			LexException
 	{
-		List<List<PExport>> types = new Vector<List<PExport>>();
+		List<List<PExport>> types = new Vector<>();
 
 		if (lastToken().is(VDMToken.ALL))
 		{
@@ -436,7 +436,7 @@ public class ModuleReader extends SyntaxReader
 	private List<ILexNameToken> readIdList() throws ParserException,
 			LexException
 	{
-		List<ILexNameToken> list = new Vector<ILexNameToken>();
+		List<ILexNameToken> list = new Vector<>();
 		list.add(readNameToken("Expecting name list"));
 
 		while (ignore(VDMToken.COMMA))
@@ -473,7 +473,7 @@ public class ModuleReader extends SyntaxReader
 	private List<List<PImport>> readImportsFromModule(LexIdentifierToken from)
 			throws ParserException, LexException
 	{
-		List<List<PImport>> types = new Vector<List<PImport>>();
+		List<List<PImport>> types = new Vector<>();
 
 		if (lastToken().is(VDMToken.ALL))
 		{

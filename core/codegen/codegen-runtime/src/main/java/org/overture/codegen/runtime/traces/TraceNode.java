@@ -86,8 +86,8 @@ public abstract class TraceNode
 				 * it, e.g. let a = opWithSideEffects() in ....
 				 */
 				store.reset();
-				List<String> callStms = new LinkedList<String>();
-				List<Object> callStmResults = new LinkedList<Object>();
+				List<String> callStms = new LinkedList<>();
+				List<Object> callStmResults = new LinkedList<>();
 
 				/*
 				 * TODO: Type check missing here If the type check fails we would also have to do filtering

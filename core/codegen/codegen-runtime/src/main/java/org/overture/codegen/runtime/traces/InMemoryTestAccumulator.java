@@ -13,7 +13,7 @@ public class InMemoryTestAccumulator implements TestAccumulator
 
 	public InMemoryTestAccumulator()
 	{
-		this.tests = new LinkedList<TraceTest>();
+		this.tests = new LinkedList<>();
 		this.nextIdx = 0;
 	}
 

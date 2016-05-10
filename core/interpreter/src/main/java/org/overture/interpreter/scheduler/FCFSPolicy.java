@@ -41,7 +41,7 @@ public class FCFSPolicy extends SchedulingPolicy
 
 	public FCFSPolicy()
 	{
-		threads = new LinkedList<ISchedulableThread>();
+		threads = new LinkedList<>();
 		PRNG = new Random(); // NB deliberately non-deterministic!
 	}
 

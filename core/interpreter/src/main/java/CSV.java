@@ -186,7 +186,7 @@ public class CSV extends IO implements Serializable
 		BufferedReader bufRdr = new BufferedReader(new FileReader(file));
 		String line = null;
 		int lineIndex = 0;
-		List<String> cells = new Vector<String>();
+		List<String> cells = new Vector<>();
 
 		if (index < 1)
 		{

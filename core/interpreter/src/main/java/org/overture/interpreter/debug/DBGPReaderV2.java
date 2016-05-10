@@ -129,7 +129,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 	/**
 	 * Map containing Values accessible from the client by a key. Should be emptied at resume
 	 */
-	private Map<Integer, Value> debugValueMap = new Hashtable<Integer, Value>();
+	private Map<Integer, Value> debugValueMap = new Hashtable<>();
 	/**
 	 * Debug key counter for the client
 	 */
@@ -150,7 +150,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		String ideKey = null;
 		Settings.dialect = null;
 		String expression = null;
-		List<File> files = new Vector<File>();
+		List<File> files = new Vector<>();
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 		boolean warnings = true;

@@ -131,7 +131,7 @@ public class StateInvariantObligation extends ProofObligation
 
 		PExp invApplyExpForSub = invApplyExp.clone();
 
-		List<Substitution> subs = new LinkedList<Substitution>();
+		List<Substitution> subs = new LinkedList<>();
 		for (AAssignmentStm asgn : atom.getAssignments())
 		{
 			String hash = asgn.getTarget().apply(af.getStateDesignatorNameGetter());

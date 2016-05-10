@@ -26,8 +26,8 @@ import java.util.Vector;
 
 public class TraceTestResult extends TraceTestStatus
 {
-	private List<String> arguments = new Vector<String>();
-	private List<String> results = new Vector<String>();
+	private List<String> arguments = new Vector<>();
+	private List<String> results = new Vector<>();
 
 	/**
 	 * @param results

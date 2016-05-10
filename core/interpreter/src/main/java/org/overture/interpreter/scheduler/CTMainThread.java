@@ -47,7 +47,7 @@ public class CTMainThread extends MainThread
 	private final CallSequence test;
 	private final boolean debug;
 
-	private List<Object> result = new Vector<Object>();
+	private List<Object> result = new Vector<>();
 
 	public CTMainThread(CallSequence test, Context ctxt, boolean debug)
 	{

@@ -126,7 +126,7 @@ public class RepeatTraceNode extends TraceNode implements IIterableTraceNode
 			return indics.size();
 		}
 
-		indics = new HashMap<Integer, Pair<Integer, Integer>>();
+		indics = new HashMap<>();
 
 		int size = 0;
 		TestSequence rtests = repeat.getTests();
@@ -136,7 +136,7 @@ public class RepeatTraceNode extends TraceNode implements IIterableTraceNode
 			if (r == 0)
 			{
 
-				indics.put(size, new Pair<Integer, Integer>(r, 0));
+				indics.put(size, new Pair<>(r, 0));
 				size++;
 				continue;
 			}
@@ -155,7 +155,7 @@ public class RepeatTraceNode extends TraceNode implements IIterableTraceNode
 			{
 				j++;
 				p.next();
-				indics.put(size, new Pair<Integer, Integer>(r, j));
+				indics.put(size, new Pair<>(r, j));
 				size++;
 			}
 		}

@@ -82,7 +82,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 			}
 		}
 
-		List<File> files = new LinkedList<File>();
+		List<File> files = new LinkedList<>();
 		
 		if (specificationDir != null && specificationDir.isDirectory())
 		{
@@ -97,7 +97,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 
 		outputDirectory.mkdirs();
 
-		List<File> tmp = new Vector<File>();
+		List<File> tmp = new Vector<>();
 		tmp.addAll(files);
 		
 		if(release.equals(VDM_10))
@@ -200,7 +200,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 			return new HashMap<>();
 		}
 		
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		for (String key : delegates.stringPropertyNames()) {
 		    map.put(key, delegates.getProperty(key));
 		}

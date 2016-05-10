@@ -246,7 +246,7 @@ public abstract class ParseTcFacade
 			ext = parts[1];
 		}
 		File f = new File(sourcePath);
-		List<File> sources = new Vector<File>();
+		List<File> sources = new Vector<>();
 		sources.add(f);
 
 		if (ext.equals("vdmsl") | ext.equals("vdm"))
@@ -258,7 +258,7 @@ public abstract class ParseTcFacade
 		{
 			if (ext.equals("vdmpp") | ext.equals("vpp"))
 			{
-				List<File> files = new Vector<File>();
+				List<File> files = new Vector<>();
 				files.add(f);
 				return parseTcPpContent(files, testName, true);
 
@@ -266,7 +266,7 @@ public abstract class ParseTcFacade
 			{
 				if (ext.equals("vdmrt"))
 				{
-					List<File> files = new Vector<File>();
+					List<File> files = new Vector<>();
 					files.add(f);
 					return parseTcRtContent(files, testName, true);
 				} else

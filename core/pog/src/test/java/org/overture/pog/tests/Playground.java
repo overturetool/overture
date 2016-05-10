@@ -52,7 +52,7 @@ public class Playground
 		
 		Collection<File> x = FileUtils.listFiles(new File("src/test/resources/adhoc/proj"), new String[]{"vdmpp"}, false);
 		
-		List<File> sources= new LinkedList<File>();
+		List<File> sources= new LinkedList<>();
 		sources.addAll(x);
 		
 		List<INode> ast = ParseTcFacade.typedAstNoRetry(sources, "Playground", Dialect.VDM_PP);

@@ -96,7 +96,7 @@ public class ReducedTestSequence extends TestSequence
 		private int size;
 		private TraceReductionType type;
 
-		private List<Integer> chosenTestIndices = new Vector<Integer>();
+		private List<Integer> chosenTestIndices = new Vector<>();
 		private int choosenIndexPtr = 0;
 		private Iterator<CallSequence> choosenTestItr;
 		private int choosenTestIndexPtr = 0;
@@ -115,7 +115,7 @@ public class ReducedTestSequence extends TestSequence
 
 		private void initialize()
 		{
-			Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
+			Map<String, List<Integer>> map = new HashMap<>();
 
 			int index = 0;
 			for (Iterator<CallSequence> itr = data.iterator(); itr.hasNext();)
@@ -125,7 +125,7 @@ public class ReducedTestSequence extends TestSequence
 
 				if (subset == null)
 				{
-					subset = new Vector<Integer>();
+					subset = new Vector<>();
 					map.put(shape, subset);
 				}
 

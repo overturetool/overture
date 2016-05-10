@@ -47,7 +47,7 @@ public class OpPostConditionContext extends StatefulContext implements
 	{
 		super(ctxt);
 		this.gen = ctxt.getGenerator();
-		this.subs = new LinkedList<Substitution>();
+		this.subs = new LinkedList<>();
 		this.forall_exp = getChangedVarsExp(postDef, calledOp);
 		PExp inv = buildInvExp(calledOp, af);
 		this.pred = spellCondition(postDef, af, stm.getArgs(), inv);
@@ -94,7 +94,7 @@ public class OpPostConditionContext extends StatefulContext implements
 		super(ctxt);
 		this.visitor = af.getVarSubVisitor();
 		this.gen = ctxt.getGenerator();
-		this.subs = new LinkedList<Substitution>();
+		this.subs = new LinkedList<>();
 		this.forall_exp = getChangedVarsExp(postDef, calledOp);
 		PExp inv = buildInvExp(calledOp, af);
 		this.pred = spellCondition(postDef, af, exp.getArgs(), inv);
@@ -303,7 +303,7 @@ public class OpPostConditionContext extends StatefulContext implements
 			post_exp = AstExpressionFactory.newAAndBooleanBinaryExp(post_exp, invariant);
 		}
 
-		List<Substitution> subs = new LinkedList<Substitution>();
+		List<Substitution> subs = new LinkedList<>();
 
 		for (int i = 0; i < args.size(); i++)
 		{

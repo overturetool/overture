@@ -41,7 +41,7 @@ public class JmlGenMain
 
 		List<String> listArgs = Arrays.asList(args);
 
-		List<File> files = new LinkedList<File>();
+		List<File> files = new LinkedList<>();
 		
 		File outputDir = null;
 

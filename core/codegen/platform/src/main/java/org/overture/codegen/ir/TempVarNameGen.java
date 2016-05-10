@@ -32,7 +32,7 @@ public class TempVarNameGen implements ITempVarGen
 	public TempVarNameGen()
 	{
 		super();
-		this.counters = new HashMap<String, Integer>();
+		this.counters = new HashMap<>();
 	}
 	
 	@Override

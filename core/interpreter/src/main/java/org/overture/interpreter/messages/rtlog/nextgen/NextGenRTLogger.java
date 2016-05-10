@@ -57,15 +57,15 @@ public class NextGenRTLogger implements IRTLogger
 		return logger;
 	}
 
-	private Map<Integer, NextGenCpu> cpuMap = new HashMap<Integer, NextGenCpu>();
-	private Map<Integer, NextGenBus> busMap = new HashMap<Integer, NextGenBus>();
-	private Map<Integer, NextGenObject> objectMap = new HashMap<Integer, NextGenObject>();
-	private Map<Integer, NextGenClassDefinition> classDefMap = new HashMap<Integer, NextGenClassDefinition>();
-	private Map<String, NextGenOperation> operationMap = new HashMap<String, NextGenOperation>();
-	private Map<Long, NextGenBusMessage> busMessage = new HashMap<Long, NextGenBusMessage>();
-	private Map<Long, NextGenThread> threadMap = new HashMap<Long, NextGenThread>();
+	private Map<Integer, NextGenCpu> cpuMap = new HashMap<>();
+	private Map<Integer, NextGenBus> busMap = new HashMap<>();
+	private Map<Integer, NextGenObject> objectMap = new HashMap<>();
+	private Map<Integer, NextGenClassDefinition> classDefMap = new HashMap<>();
+	private Map<String, NextGenOperation> operationMap = new HashMap<>();
+	private Map<Long, NextGenBusMessage> busMessage = new HashMap<>();
+	private Map<Long, NextGenThread> threadMap = new HashMap<>();
 	// private ArrayList<INextGenEvent> events = new ArrayList<INextGenEvent>();
-	private Map<Long, ArrayList<INextGenEvent>> events = new TreeMap<Long, ArrayList<INextGenEvent>>();
+	private Map<Long, ArrayList<INextGenEvent>> events = new TreeMap<>();
 	private NextGenBus vBus;
 	private File logFile = null;
 	private long currentAbsoluteTime = -1L;
@@ -73,7 +73,7 @@ public class NextGenRTLogger implements IRTLogger
 
 	public NextGenRTLogger()
 	{
-		this.addBus(0, new ArrayList<Integer>(), "vBus");
+		this.addBus(0, new ArrayList<>(), "vBus");
 		vBus = this.busMap.get(0);
 		this.addCpu(0, false, "vCpu", "system"); // Add the implicit virtual CPU - assuming expl means explicit
 	}
@@ -538,7 +538,7 @@ public class NextGenRTLogger implements IRTLogger
 
 	private void addBus(int busNumber, List<Integer> cpus, String name)
 	{
-		ArrayList<NextGenCpu> newCpus = new ArrayList<NextGenCpu>();
+		ArrayList<NextGenCpu> newCpus = new ArrayList<>();
 
 		for (Integer cpuId : cpus)
 		{
@@ -619,7 +619,7 @@ public class NextGenRTLogger implements IRTLogger
 
 	private List<Integer> parseCpuIds(String cpus)
 	{
-		List<Integer> res = new ArrayList<Integer>();
+		List<Integer> res = new ArrayList<>();
 
 		cpus = cpus.replace("{", "");
 		cpus = cpus.replace("}", "");
@@ -711,7 +711,7 @@ public class NextGenRTLogger implements IRTLogger
 
 		if (!events.containsKey(eventTime.getAbsoluteTime()))
 		{
-			events.put(eventTime.getAbsoluteTime(), new ArrayList<INextGenEvent>());
+			events.put(eventTime.getAbsoluteTime(), new ArrayList<>());
 		}
 
 		ArrayList<INextGenEvent> eventList = events.get(eventTime.getAbsoluteTime());

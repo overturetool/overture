@@ -41,7 +41,7 @@ public class Quantifier
 	{
 		this.pattern = pattern;
 		this.values = values;
-		this.nvlist = new Vector<NameValuePairList>(values.size());
+		this.nvlist = new Vector<>(values.size());
 	}
 
 	public int size(Context ctxt, boolean allPossibilities)

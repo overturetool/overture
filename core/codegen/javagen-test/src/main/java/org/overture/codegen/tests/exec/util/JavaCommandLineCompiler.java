@@ -157,7 +157,7 @@ public class JavaCommandLineCompiler
 
 	private static List<File> getJavaSourceFiles(File file)
 	{
-		List<File> files = new Vector<File>();
+		List<File> files = new Vector<>();
 
 		if (file.isFile())
 		{

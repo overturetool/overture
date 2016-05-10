@@ -12,7 +12,7 @@ public class PermutorTest
 	{
 		Permutor p = new Permutor(limits);
 
-		List<int[]> intArrays = new LinkedList<int[]>();
+		List<int[]> intArrays = new LinkedList<>();
 
 		while (p.hasNext())
 		{

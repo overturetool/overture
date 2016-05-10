@@ -524,7 +524,7 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 		int inheritedThreads = 0;
 		af.createSClassDefinitionAssistant().checkOverloads(c);
 
-		List<List<PDefinition>> superlist = new Vector<List<PDefinition>>();
+		List<List<PDefinition>> superlist = new Vector<>();
 
 		for (PDefinition def : c.getSuperDefs())
 		{
@@ -659,7 +659,7 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 
 	private void checkOverloads(SClassDefinition c)
 	{
-		List<String> done = new Vector<String>();
+		List<String> done = new Vector<>();
 
 		List<PDefinition> singles = af.createPDefinitionListAssistant().singleDefinitions(c.getDefinitions());
 

@@ -88,7 +88,7 @@ public class ObjectValue extends Value
 		this.superobjects = superobjects;
 		this.CPU = cpu;
 		this.guardLock = new Lock();
-		this.children = new LinkedList<ObjectValue>();
+		this.children = new LinkedList<>();
 
 		if (creator != null)
 		{
@@ -439,7 +439,7 @@ public class ObjectValue extends Value
 			return mycopy;
 		}
 
-		mycopy = new ObjectValue(type, new NameValuePairMap(), new Vector<ObjectValue>(), CPU, creator);
+		mycopy = new ObjectValue(type, new NameValuePairMap(), new Vector<>(), CPU, creator);
 
 		List<ObjectValue> supers = mycopy.superobjects;
 		NameValuePairMap memcopy = mycopy.members;
@@ -447,7 +447,7 @@ public class ObjectValue extends Value
 		for (ObjectValue sobj : superobjects)
 		{
 			supers.add( // Type skeleton only...
-			new ObjectValue(sobj.type, new NameValuePairMap(), new Vector<ObjectValue>(), sobj.CPU, creator));
+			new ObjectValue(sobj.type, new NameValuePairMap(), new Vector<>(), sobj.CPU, creator));
 		}
 
 		for (ILexNameToken name : members.keySet())

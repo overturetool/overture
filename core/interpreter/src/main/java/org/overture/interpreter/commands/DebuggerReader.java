@@ -89,7 +89,7 @@ public class DebuggerReader extends CommandReader
 				throw new InternalException(52, "Cannot set default name at breakpoint");
 			}
 
-			ExitStatus status = super.run(new Vector<File>());
+			ExitStatus status = super.run(new Vector<>());
 
 			return status;
 		}

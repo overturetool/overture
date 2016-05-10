@@ -51,7 +51,7 @@ public class SFunctionDefinitionAssistantTC implements IAstAssistant
 			SFunctionDefinition node, AFunctionType type,
 			List<List<PPattern>> paramPatternList, ILexLocation location)
 	{
-		List<List<PDefinition>> defList = new ArrayList<List<PDefinition>>(); // new Vector<DefinitionList>();
+		List<List<PDefinition>> defList = new ArrayList<>(); // new Vector<DefinitionList>();
 		AFunctionType ftype = type; // Start with the overall function
 		Iterator<List<PPattern>> piter = paramPatternList.iterator();
 

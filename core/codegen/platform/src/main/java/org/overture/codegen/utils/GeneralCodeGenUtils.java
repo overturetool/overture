@@ -436,12 +436,12 @@ public class GeneralCodeGenUtils
 	{
 		if(userInput == null)
 		{
-			return new LinkedList<String>();
+			return new LinkedList<>();
 		}
 		
 		String[] split = userInput.split(";");
 
-		List<String> classesToSkip = new LinkedList<String>();
+		List<String> classesToSkip = new LinkedList<>();
 		
 		for(String element : split)
 		{
@@ -513,7 +513,7 @@ public class GeneralCodeGenUtils
 	
 	public static List<Violation> asSortedList(Set<Violation> violations)
 	{
-		LinkedList<Violation> list = new LinkedList<Violation>(violations);
+		LinkedList<Violation> list = new LinkedList<>(violations);
 		Collections.sort(list);
 
 		return list;

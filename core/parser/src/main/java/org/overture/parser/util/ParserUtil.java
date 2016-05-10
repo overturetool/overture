@@ -137,7 +137,7 @@ public class ParserUtil
 		reader = new ClassReader(ltr);
 		result = reader.readClasses();
 
-		return new ParserResult<List<SClassDefinition>>(result, reader.getWarnings(), reader.getErrors());
+		return new ParserResult<>(result, reader.getWarnings(), reader.getErrors());
 	}
 
 	private static LexTokenReader getReader(File file, Dialect dialect,
@@ -173,7 +173,7 @@ public class ParserUtil
 		reader = new ClassReader(ltr);
 		result = reader.readClasses();
 
-		return new ParserResult<List<SClassDefinition>>(result, reader.getWarnings(), reader.getErrors());
+		return new ParserResult<>(result, reader.getWarnings(), reader.getErrors());
 	}
 
 	public static ParserResult<List<AModuleModules>> parseSl(List<File> files)
@@ -223,7 +223,7 @@ public class ParserUtil
 		reader = new ModuleReader(ltr);
 		result = reader.readModules();
 
-		return new ParserResult<List<AModuleModules>>(result, reader.getWarnings(), reader.getErrors());
+		return new ParserResult<>(result, reader.getWarnings(), reader.getErrors());
 	}
 
 	public static ParserResult<List<AModuleModules>> parseSl(String content)
@@ -241,7 +241,7 @@ public class ParserUtil
 		reader = new ModuleReader(ltr);
 		result = reader.readModules();
 
-		return new ParserResult<List<AModuleModules>>(result, reader.getWarnings(), reader.getErrors());
+		return new ParserResult<>(result, reader.getWarnings(), reader.getErrors());
 	}
 
 	public static ParserResult<PExp> parseExpression(String content)

@@ -11,7 +11,7 @@ public class PermuteArrayTest
 	{
 		PermuteArray p = new PermuteArray(n);
 		
-		List<int[]> intArrays = new LinkedList<int[]>();
+		List<int[]> intArrays = new LinkedList<>();
 		
 		while(p.hasNext())
 		{

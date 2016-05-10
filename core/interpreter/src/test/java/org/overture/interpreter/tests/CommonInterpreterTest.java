@@ -81,7 +81,7 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 			try
 			{
 				Value val = InterpreterUtil.interpret(Settings.dialect, entry, file);
-				result = new Result<String>(val.toString(), new Vector<IMessage>(), new Vector<IMessage>());
+				result = new Result<>(val.toString(), new Vector<>(), new Vector<>());
 				System.out.println(file.getName() + " -> " + val);
 			} catch (Exception e)
 			{
@@ -191,7 +191,7 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 	private List<String> getEntries() throws IOException
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(getEntryFile()));
-		List<String> data = new Vector<String>();
+		List<String> data = new Vector<>();
 		String text = null;
 		while ((text = reader.readLine()) != null)
 		{

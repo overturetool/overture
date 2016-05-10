@@ -80,18 +80,18 @@ public class IRGenerator
 		if(node instanceof SClassDefinition)
 		{
 			SClassDeclIR classCg = node.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
-			Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
+			Set<VdmNodeInfo> unsupportedNodes = new HashSet<>(codeGenInfo.getUnsupportedNodes());
 			String name = ((SClassDefinition) node).getName().getName();
 			
-			return new IRStatus<PIR>(node, name, classCg, unsupportedNodes);
+			return new IRStatus<>(node, name, classCg, unsupportedNodes);
 		}
 		else if(node instanceof AModuleModules)
 		{
 			AModuleDeclIR module = node.apply(codeGenInfo.getModuleVisitor(), codeGenInfo);
-			Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
+			Set<VdmNodeInfo> unsupportedNodes = new HashSet<>(codeGenInfo.getUnsupportedNodes());
 			String name = ((AModuleModules) node).getName().getName();
 			
-			return new IRStatus<PIR>(node, name, module, unsupportedNodes);
+			return new IRStatus<>(node, name, module, unsupportedNodes);
 		}
 		
 		return null;
@@ -109,7 +109,7 @@ public class IRGenerator
 		codeGenInfo.clearTransformationWarnings();
 
 		status.getIrNode().apply(transformation);
-		HashSet<IrNodeInfo> transformationWarnings = new HashSet<IrNodeInfo>(codeGenInfo.getTransformationWarnings());
+		HashSet<IrNodeInfo> transformationWarnings = new HashSet<>(codeGenInfo.getTransformationWarnings());
 
 		status.addTransformationWarnings(transformationWarnings);
 	}
@@ -126,7 +126,7 @@ public class IRGenerator
 		codeGenInfo.clearTransformationWarnings();
 
 		status.getIrNode().apply(trans);
-		HashSet<IrNodeInfo> transformationWarnings = new HashSet<IrNodeInfo>(codeGenInfo.getTransformationWarnings());
+		HashSet<IrNodeInfo> transformationWarnings = new HashSet<>(codeGenInfo.getTransformationWarnings());
 		status.addTransformationWarnings(transformationWarnings);
 		status.setIrNode(trans.getResult());
 	}
@@ -136,7 +136,7 @@ public class IRGenerator
 		codeGenInfo.clearNodes();
 
 		SExpIR expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
-		Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
+		Set<VdmNodeInfo> unsupportedNodes = new HashSet<>(codeGenInfo.getUnsupportedNodes());
 
 		return new IRStatus<SExpIR>(exp, "expression",expCg, unsupportedNodes);
 	}

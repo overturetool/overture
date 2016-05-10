@@ -105,7 +105,7 @@ public class ProductExtendedTypeFinder extends
 			// Build a N-ary product type, making the types the union of the
 			// original N-ary products' types...
 
-			Map<Integer, PTypeSet> result = new HashMap<Integer, PTypeSet>();
+			Map<Integer, PTypeSet> result = new HashMap<>();
 
 			for (PType t : type.getTypes())
 			{

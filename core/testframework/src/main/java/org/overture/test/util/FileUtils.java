@@ -40,7 +40,7 @@ public class FileUtils
 		InputStream is = null;
 		BufferedReader br = null;
 		String line;
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 
 		try
 		{
@@ -98,7 +98,7 @@ public class FileUtils
 
 	private static List<String> readTextFromSource(String relativePath)
 	{
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		try
 		{
 			BufferedReader in = new BufferedReader(new FileReader(new File(new File("."), ("src/test/resources/" + relativePath).replace('/', File.separatorChar))));
