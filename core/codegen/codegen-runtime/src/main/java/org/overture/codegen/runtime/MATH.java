@@ -26,7 +26,7 @@ import java.util.Random;
 public class MATH
 {
 
-	public static final Number pi = 3.141592653589793;
+	public static final Number PI = 3.141592653589793;
 	private static Random random = new Random();
 	private static long seed = 0;
 	
