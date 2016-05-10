@@ -78,6 +78,7 @@ import org.overture.pog.pub.IProofObligationList;
 
 abstract public class CommandReader
 {
+	public static final String CREATED = "Created ";
 	/** The interpreter to use for the execution of commands. */
 	protected final Interpreter interpreter;
 
@@ -1338,14 +1339,14 @@ abstract public class CommandReader
 			{
 				interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
 				Breakpoint bp = interpreter.setBreakpoint(exp, condition);
-				println("Created " + bp);
+				println(CREATED + bp);
 				println(interpreter.getSourceLine(bp.location));
 			}
 		} else
 		{
 			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
 			Breakpoint bp = interpreter.setBreakpoint(stmt, condition);
-			println("Created " + bp);
+			println(CREATED + bp);
 			println(interpreter.getSourceLine(bp.location));
 		}
 	}
@@ -1385,7 +1386,7 @@ abstract public class CommandReader
 			PExp exp = fv.body;
 			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
 			Breakpoint bp = interpreter.setBreakpoint(exp, condition);
-			println("Created " + bp);
+			println(CREATED + bp);
 			println(interpreter.getSourceLine(bp.location));
 		} else if (v instanceof OperationValue)
 		{
@@ -1393,7 +1394,7 @@ abstract public class CommandReader
 			PStm stmt = ov.body;
 			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
 			Breakpoint bp = interpreter.setBreakpoint(stmt, condition);
-			println("Created " + bp);
+			println(CREATED + bp);
 			println(interpreter.getSourceLine(bp.location));
 		} else if (v == null)
 		{
@@ -1456,14 +1457,14 @@ abstract public class CommandReader
 			{
 				interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
 				Breakpoint bp = interpreter.setTracepoint(exp, trace);
-				println("Created " + bp);
+				println(CREATED + bp);
 				println(interpreter.getSourceLine(bp.location));
 			}
 		} else
 		{
 			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
 			Breakpoint bp = interpreter.setTracepoint(stmt, trace);
-			println("Created " + bp);
+			println(CREATED + bp);
 			println(interpreter.getSourceLine(bp.location));
 		}
 	}
@@ -1504,7 +1505,7 @@ abstract public class CommandReader
 			PExp exp = fv.body;
 			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
 			Breakpoint bp = interpreter.setTracepoint(exp, trace);
-			println("Created " + bp);
+			println(CREATED + bp);
 			println(interpreter.getSourceLine(bp.location));
 		} else if (v instanceof OperationValue)
 		{
@@ -1512,7 +1513,7 @@ abstract public class CommandReader
 			PStm stmt = ov.body;
 			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
 			Breakpoint bp = interpreter.setTracepoint(stmt, trace);
-			println("Created " + bp);
+			println(CREATED + bp);
 			println(interpreter.getSourceLine(bp.location));
 		} else
 		{

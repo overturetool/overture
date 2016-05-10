@@ -68,11 +68,12 @@ public class JavaCodeGenMain
 	public static final String SEP_TEST_CODE = "-separate";
 	public static final String VDM_LOC = "-vdmloc";
 	public static final String NO_CLONING = "-nocloning";
-	
+
 	// Folder names
 	private static final String GEN_MODEL_CODE_FOLDER = "main";
 	private static final String GEN_TESTS_FOLDER = "test";
-	
+	public static final String COULD_NOT_CODE_GENERATE_MODEL = "Could not code generate model: ";
+
 	public static void main(String[] args)
 	{
 		Settings.release = Release.VDM_10;
@@ -318,7 +319,7 @@ public class JavaCodeGenMain
 			}
 		} catch (AnalysisException e)
 		{
-			Logger.getLog().println("Could not code generate model: "
+			Logger.getLog().println(COULD_NOT_CODE_GENERATE_MODEL
 					+ e.getMessage());
 
 		}
@@ -349,7 +350,7 @@ public class JavaCodeGenMain
 
 		} catch (AnalysisException e)
 		{
-			Logger.getLog().println("Could not code generate model: "
+			Logger.getLog().println(COULD_NOT_CODE_GENERATE_MODEL
 					+ e.getMessage());
 		}
 	}
@@ -386,7 +387,7 @@ public class JavaCodeGenMain
 
 		} catch (AnalysisException e)
 		{
-			Logger.getLog().println("Could not code generate model: "
+			Logger.getLog().println(COULD_NOT_CODE_GENERATE_MODEL
 					+ e.getMessage());
 
 		}

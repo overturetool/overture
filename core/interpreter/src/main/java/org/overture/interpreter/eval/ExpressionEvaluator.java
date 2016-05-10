@@ -123,6 +123,8 @@ import org.overture.typechecker.assistant.pattern.PatternListTC;
 public class ExpressionEvaluator extends BinaryExpressionEvaluator
 {
 
+	public static final String EXPRESSION = "expression";
+
 	@Override
 	public Value caseAApplyExp(AApplyExp node, Context ctxt)
 			throws AnalysisException
@@ -817,7 +819,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseALetBeStExp(ALetBeStExp node, Context ctxt)
 			throws AnalysisException
 	{
-		return evalLetBeSt(node, node.getLocation(), node.getDef(), node.getSuchThat(), node.getValue(), 4015, "expression", ctxt);
+		return evalLetBeSt(node, node.getLocation(), node.getDef(), node.getSuchThat(), node.getValue(), 4015, EXPRESSION, ctxt);
 	}
 
 	public Value evalLetBeSt(INode node, ILexLocation nodeLocation,
@@ -885,7 +887,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseALetDefExp(ALetDefExp node, Context ctxt)
 			throws AnalysisException
 	{
-		return evalLet(node, node.getLocation(), node.getLocalDefs(), node.getExpression(), "expression", ctxt);
+		return evalLet(node, node.getLocation(), node.getLocalDefs(), node.getExpression(), EXPRESSION, ctxt);
 	}
 
 	public Value evalLet(INode node, ILexLocation nodeLocation,
@@ -1193,7 +1195,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node, Context ctxt)
 			throws AnalysisException
 	{
-		return evalANotYetSpecified(node, node.getLocation(), 4024, "expression", ctxt);
+		return evalANotYetSpecified(node, node.getLocation(), 4024, EXPRESSION, ctxt);
 	}
 
 	protected Value evalANotYetSpecified(INode node, ILexLocation location,

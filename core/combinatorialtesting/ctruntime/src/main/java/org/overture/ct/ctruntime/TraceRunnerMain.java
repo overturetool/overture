@@ -64,6 +64,8 @@ import org.overture.util.Base64;
 
 public class TraceRunnerMain implements IProgressMonitor
 {
+	public static final String INITIALIZATION = "Initialization: ";
+	public static final String UTF_8 = "UTF-8";
 	public static boolean USE_SYSTEM_EXIT = true;
 	private final static boolean DEBUG = false;
 	
@@ -524,20 +526,20 @@ public class TraceRunnerMain implements IProgressMonitor
 					exit(0);
 				} catch (ContextException e)
 				{
-					System.err.println("Initialization: " + e);
+					System.err.println(INITIALIZATION + e);
 					e.ctxt.printStackTrace(Console.out, true);
 					RTLogger.dump(true);
 					exit(3);
 				} catch (ValueException e)
 				{
-					System.err.println("Initialization: " + e);
+					System.err.println(INITIALIZATION + e);
 					e.ctxt.printStackTrace(Console.out, true);
 					RTLogger.dump(true);
 					exit(3);
 				} catch (Exception e)
 
 				{
-					System.err.println("Initialization: " + e);
+					System.err.println(INITIALIZATION + e);
 					e.printStackTrace();
 					RTLogger.dump(true);
 					exit(3);
@@ -835,9 +837,9 @@ public class TraceRunnerMain implements IProgressMonitor
 			System.err.println("Socket to IDE not valid.");
 			return;
 		}
-		byte[] header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes("UTF-8");
-		byte[] body = data.toString().getBytes("UTF-8");
-		byte[] size = Integer.toString(header.length + body.length).getBytes("UTF-8");
+		byte[] header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes(UTF_8);
+		byte[] body = data.toString().getBytes(UTF_8);
+		byte[] size = Integer.toString(header.length + body.length).getBytes(UTF_8);
 
 		output.write(size);
 		output.write(separator);
