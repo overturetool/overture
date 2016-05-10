@@ -148,7 +148,7 @@ public class RemoteInterpreter
 
 	public List<String> getModules() throws Exception
 	{
-		List<String> names = new Vector<String>();
+		List<String> names = new Vector<>();
 
 		if (interpreter instanceof ClassInterpreter)
 		{
@@ -166,7 +166,7 @@ public class RemoteInterpreter
 
 	public List<String> getClasses() throws Exception
 	{
-		List<String> names = new Vector<String>();
+		List<String> names = new Vector<>();
 
 		if (interpreter instanceof ClassInterpreter)
 		{
@@ -191,8 +191,8 @@ public class RemoteInterpreter
 		}
 	}
 
-	ArrayBlockingQueue<Call> executionQueueRequest = new ArrayBlockingQueue<Call>(1);
-	ArrayBlockingQueue<Object> executionQueueResult = new ArrayBlockingQueue<Object>(1);
+	ArrayBlockingQueue<Call> executionQueueRequest = new ArrayBlockingQueue<>(1);
+	ArrayBlockingQueue<Object> executionQueueResult = new ArrayBlockingQueue<>(1);
 	private boolean isFinished;
 
 	public static class Call

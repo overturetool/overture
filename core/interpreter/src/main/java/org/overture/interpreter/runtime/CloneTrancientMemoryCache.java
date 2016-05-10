@@ -46,7 +46,7 @@ class CloneTrancientMemoryCache<T>
 		}
 	}
 
-	Map<Integer, EntryPair<Integer, T>> map = new HashMap<Integer, EntryPair<Integer, T>>();
+	Map<Integer, EntryPair<Integer, T>> map = new HashMap<>();
 
 	public synchronized int store(T o)
 	{
@@ -54,7 +54,7 @@ class CloneTrancientMemoryCache<T>
 		EntryPair<Integer, T> val = map.get(key);
 		if (val == null)
 		{
-			val = new EntryPair<Integer, T>(1, o);
+			val = new EntryPair<>(1, o);
 			map.put(key, val);
 		} else
 		{

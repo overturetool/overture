@@ -172,7 +172,7 @@ public class AExplicitFunctionDefinitionAssistantTC implements IAstAssistant
 		LexNameToken result = new LexNameToken(d.getName().getModule(), "RESULT", d.getLocation());
 		last.add(AstFactory.newAIdentifierPattern(result));
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new Vector<>();
 
 		if (psize > 1)
 		{

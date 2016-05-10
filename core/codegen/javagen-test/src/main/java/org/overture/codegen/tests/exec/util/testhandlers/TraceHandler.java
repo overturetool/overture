@@ -114,7 +114,7 @@ public class TraceHandler extends ExecutableSpecTestHandler
 				+ "    return acc;\n"
 				+ " }\n";
 
-		List<String> methods = new LinkedList<String>();
+		List<String> methods = new LinkedList<>();
 		methods.add(computeTestsMethod);
 
 		return methods;

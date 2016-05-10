@@ -38,7 +38,7 @@ public class VDMMessage
 	public final String message;
 	public final ILexLocation location;
 
-	protected List<String> details = new Vector<String>();
+	protected List<String> details = new Vector<>();
 
 	public VDMMessage(int number)
 	{

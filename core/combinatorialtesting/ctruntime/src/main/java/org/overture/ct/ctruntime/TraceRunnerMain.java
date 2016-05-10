@@ -121,7 +121,7 @@ public class TraceRunnerMain implements IProgressMonitor
 		String ideKey = null;
 		Settings.dialect = null;
 		String moduleName = null;
-		List<File> files = new Vector<File>();
+		List<File> files = new Vector<>();
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 		boolean warnings = true;

@@ -27,7 +27,7 @@ public class StoreAssistant
 	{
 		super();
 		this.tracePrefixes = tracePrefixes;
-		this.idConstNameMap = new HashMap<String, String>();
+		this.idConstNameMap = new HashMap<>();
 		this.transAssistant = transAssistant;
 	}
 	

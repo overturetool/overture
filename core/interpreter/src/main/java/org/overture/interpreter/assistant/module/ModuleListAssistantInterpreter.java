@@ -46,7 +46,7 @@ public class ModuleListAssistantInterpreter
 
 		do
 		{
-			problems = new HashSet<ContextException>();
+			problems = new HashSet<>();
 
 			for (AModuleModules m : modules)
 			{

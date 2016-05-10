@@ -87,7 +87,7 @@ public class RecordTypeFinder extends TypeUnwrapper<ARecordInvariantType>
 			// record types, making the field types the union of the original
 			// fields' types...
 
-			Map<String, Vector<PType>> common = new HashMap<String, Vector<PType>>();
+			Map<String, Vector<PType>> common = new HashMap<>();
 			int recordCount = 0;
 
 			for (PType t : type.getTypes())
@@ -120,7 +120,7 @@ public class RecordTypeFinder extends TypeUnwrapper<ARecordInvariantType>
     		// same size. But if not, the shorter ones have to have UnknownTypes added,
     		// because some of the records do not have that field.
     		
-    		Map<String, PTypeSet> typesets = new HashMap<String, PTypeSet>();
+    		Map<String, PTypeSet> typesets = new HashMap<>();
     		
     		for (String field: common.keySet())
     		{

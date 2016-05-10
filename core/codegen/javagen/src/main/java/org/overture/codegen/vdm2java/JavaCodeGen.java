@@ -188,7 +188,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 	protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses)
 			throws AnalysisException {
 		
-		List<GeneratedModule> genModules = new LinkedList<GeneratedModule>();
+		List<GeneratedModule> genModules = new LinkedList<>();
 		
 		// Event notification
 		statuses = initialIrEvent(statuses);
@@ -233,7 +233,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			}
 		}
 
-		List<IRStatus<SClassDeclIR>> canBeGenerated = new LinkedList<IRStatus<SClassDeclIR>>();
+		List<IRStatus<SClassDeclIR>> canBeGenerated = new LinkedList<>();
 
 		for (IRStatus<SClassDeclIR> status : classStatuses)
 		{
@@ -242,7 +242,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 				canBeGenerated.add(status);
 			} else
 			{
-				genModules.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>(), isTestCase(status)));
+				genModules.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<>(), isTestCase(status)));
 			}
 		}
 
@@ -273,7 +273,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 		canBeGenerated = IRStatus.extract(finalIrEvent(IRStatus.extract(canBeGenerated)), SClassDeclIR.class);
 		canBeGenerated = filter(canBeGenerated, genModules, userTestCases);
 		
-		List<String> skipping = new LinkedList<String>();
+		List<String> skipping = new LinkedList<>();
 
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
 		javaFormat.setFunctionValueAssistant(transSeries.getFuncValAssist());
@@ -382,7 +382,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 				quoteObserver.quoteClassesProduced(quoteClasses);
 			}
 			
-			List<GeneratedModule> modules = new LinkedList<GeneratedModule>();
+			List<GeneratedModule> modules = new LinkedList<>();
 			for (int i = 0; i < quoteClasses.size(); i++)
 			{
 				String quoteNameVdm = quoteValues.get(i);
@@ -501,8 +501,8 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 				// We can tell by analysing the VDM AST that the IR generator will produce an
 				// IR tree that the Java backend cannot code generate
 				String nodeName = getInfo().getDeclAssistant().getNodeName(node);
-				HashSet<VdmNodeInfo> nodesCopy = new HashSet<VdmNodeInfo>(v.getUnsupportedNodes());
-				statuses.add(new IRStatus<PIR>(node, nodeName, /* no IR node */null, nodesCopy));
+				HashSet<VdmNodeInfo> nodesCopy = new HashSet<>(v.getUnsupportedNodes());
+				statuses.add(new IRStatus<>(node, nodeName, /* no IR node */null, nodesCopy));
 			} else
 			{
 				super.genIrStatus(statuses, node);
@@ -522,7 +522,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 	private <T extends PIR> List<IRStatus<T>> filter(
 			List<IRStatus<T>> statuses, List<GeneratedModule> generated, List<String> userTestCases)
 	{
-		List<IRStatus<T>> filtered = new LinkedList<IRStatus<T>>();
+		List<IRStatus<T>> filtered = new LinkedList<>();
 		
 		for(IRStatus<T> status : statuses)
 		{
@@ -533,7 +533,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			else
 			{
 				boolean isUserTestCase = userTestCases.contains(status.getIrNodeName());
-				generated.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>(), isUserTestCase));
+				generated.add(new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<>(), isUserTestCase));
 			}
 		}
 		
@@ -561,7 +561,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 		VarRenamer renamer = new VarRenamer();
 		
-		Set<Renaming> filteredRenamings = new HashSet<Renaming>();
+		Set<Renaming> filteredRenamings = new HashSet<>();
 		
 		for(Renaming r : normaliser.getRenamings())
 		{
@@ -576,7 +576,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			renamer.rename(node, filteredRenamings);
 		}
 
-		return new LinkedList<Renaming>(filteredRenamings);
+		return new LinkedList<>(filteredRenamings);
 	}
 
 	private List<Renaming> performRenaming(
@@ -584,7 +584,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 			throws AnalysisException
 	{
-		List<Renaming> allRenamings = new LinkedList<Renaming>();
+		List<Renaming> allRenamings = new LinkedList<>();
 
 		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
 		VarRenamer renamer = new VarRenamer();

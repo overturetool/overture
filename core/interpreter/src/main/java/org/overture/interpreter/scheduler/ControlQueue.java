@@ -35,7 +35,7 @@ public class ControlQueue implements Serializable
 	private static final long serialVersionUID = 1L;
 	private ISchedulableThread joined = null;
 	private boolean stimmed = false;
-	private List<ISchedulableThread> waiters = new LinkedList<ISchedulableThread>();
+	private List<ISchedulableThread> waiters = new LinkedList<>();
 
 	public void reset()
 	{

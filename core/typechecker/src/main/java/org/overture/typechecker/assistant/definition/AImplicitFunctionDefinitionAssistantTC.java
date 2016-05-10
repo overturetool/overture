@@ -122,7 +122,7 @@ public class AImplicitFunctionDefinitionAssistantTC implements IAstAssistant
 			AImplicitFunctionDefinition d)
 	{
 
-		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
+		List<List<PPattern>> parameters = new ArrayList<>();
 		List<PPattern> plist = new ArrayList<PPattern>();
 
 		for (APatternListTypePair pl : d.getParamPatterns())

@@ -89,7 +89,7 @@ public class TimingInvariantsParser
 
 	private List<ConjectureDefinition> parse(String contents)
 	{
-		List<ConjectureDefinition> defs = new Vector<ConjectureDefinition>();
+		List<ConjectureDefinition> defs = new Vector<>();
 
 		try
 		{
@@ -108,7 +108,7 @@ public class TimingInvariantsParser
 				List<String> elems = null;
 				if (elemsFirst.size() > 3)
 				{
-					elems = new ArrayList<String>();
+					elems = new ArrayList<>();
 					elems.add(elemsFirst.get(0) + "," + elemsFirst.get(1));
 					elems.add(elemsFirst.get(2));
 					elems.add(elemsFirst.get(3));
@@ -158,7 +158,7 @@ public class TimingInvariantsParser
 
 	private List<IValidationExpression> decodeArg(String string)
 	{
-		List<IValidationExpression> res = new ArrayList<IValidationExpression>();
+		List<IValidationExpression> res = new ArrayList<>();
 		string = string.trim();
 		if (string.startsWith("("))
 		{

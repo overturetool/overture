@@ -110,7 +110,7 @@ public class TypePrettyPrinterVisitor extends
 	public String caseAProductType(AProductType node, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
-		List<String> types = new Vector<String>();
+		List<String> types = new Vector<>();
 		for (PType t : node.getTypes())
 		{
 			types.add(t.apply(this, question));
@@ -129,7 +129,7 @@ public class TypePrettyPrinterVisitor extends
 	public String caseAUnionType(AUnionType node, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
-		List<String> types = new Vector<String>();
+		List<String> types = new Vector<>();
 		for (PType t : node.getTypes())
 		{
 			types.add(t.apply(this, question));

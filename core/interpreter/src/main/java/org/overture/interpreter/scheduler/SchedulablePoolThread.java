@@ -129,7 +129,7 @@ public abstract class SchedulablePoolThread implements Serializable, Runnable,
 	 * OutOfMemoryError before Integer.MAX_VALUE is reached do the the native thread creation requiring 2 MB for each
 	 * thread. <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/ThreadPoolExecutor.html">link</a>
 	 */
-	public final static VdmThreadPoolExecutor pool = new VdmThreadPoolExecutor(200, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());// LinkedBlockingQueue
+	public final static VdmThreadPoolExecutor pool = new VdmThreadPoolExecutor(200, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<>());// LinkedBlockingQueue
 
 	public SchedulablePoolThread(Resource resource, ObjectValue object,
 			long priority, boolean periodic, long swapInBy)

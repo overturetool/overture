@@ -62,7 +62,7 @@ public class TraceXmlWrapper
 		// openElements.push(ROOT_TAG);
 	}
 
-	Stack<String> openElements = new Stack<String>();
+	Stack<String> openElements = new Stack<>();
 
 	public void StartClass(String className) throws IOException
 	{

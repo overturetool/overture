@@ -58,7 +58,7 @@ public class SharedStateListner
 		boolean reuiresCheck(PStateDesignator target);
 	}
 
-	private static final Set<ILexLocation> values = new HashSet<ILexLocation>();
+	private static final Set<ILexLocation> values = new HashSet<>();
 	private static Boolean autoIncrementTime = true;
 	private static IdentityChecker checker = null;
 

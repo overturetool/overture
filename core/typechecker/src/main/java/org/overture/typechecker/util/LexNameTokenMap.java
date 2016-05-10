@@ -39,7 +39,7 @@ public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 	 */
 	private static final long serialVersionUID = -1122692848887584905L;
 
-	private final HashMap<LexNameTokenWrapper, V> map = new HashMap<LexNameTokenWrapper, V>();
+	private final HashMap<LexNameTokenWrapper, V> map = new HashMap<>();
 
 	public V put(ILexNameToken key, V value)
 	{
@@ -57,11 +57,11 @@ public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 
 	public Set<Entry<ILexNameToken, V>> entrySet()
 	{
-		Set<Entry<ILexNameToken, V>> result = new HashSet<Entry<ILexNameToken, V>>();
+		Set<Entry<ILexNameToken, V>> result = new HashSet<>();
 
 		for (Entry<LexNameTokenWrapper, V> lexNameTokenEntry : map.entrySet())
 		{
-			result.add(new LexNameTokenEntry<V>(lexNameTokenEntry));
+			result.add(new LexNameTokenEntry<>(lexNameTokenEntry));
 		}
 
 		return result;
@@ -116,7 +116,7 @@ public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 
 	public Set<ILexNameToken> keySet()
 	{
-		Set<ILexNameToken> result = new HashSet<ILexNameToken>();
+		Set<ILexNameToken> result = new HashSet<>();
 
 		for (LexNameTokenWrapper item : this.map.keySet())
 		{

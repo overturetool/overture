@@ -97,7 +97,7 @@ public class CtHelper
 						+ data.reduction.getReductionType().toString() + ","
 						+ data.reduction.getSeed() + "}" };
 		
-		List<String> argArray = new Vector<String>(Arrays.asList(args));
+		List<String> argArray = new Vector<>(Arrays.asList(args));
 		
 		
 		for (Iterator<File> itr = data.specFiles.iterator(); itr.hasNext();)

@@ -7,7 +7,7 @@ import org.overture.parser.messages.VDMErrorsException;
 
 public class TypeCheckedTestSequence extends TestSequence
 {
-	Map<CallSequence, VDMErrorsException> tcFailedTests = new HashMap<CallSequence, VDMErrorsException>();
+	Map<CallSequence, VDMErrorsException> tcFailedTests = new HashMap<>();
 	/**
 	 * 
 	 */

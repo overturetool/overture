@@ -16,7 +16,7 @@ public class CollectedExceptions extends RuntimeException implements
 
 	public CollectedExceptions(Set<ContextException> problems)
 	{
-		this(new Vector<Exception>(problems));
+		this(new Vector<>(problems));
 	}
 
 	/**

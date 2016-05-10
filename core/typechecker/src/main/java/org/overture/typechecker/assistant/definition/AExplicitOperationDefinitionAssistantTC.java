@@ -73,7 +73,7 @@ public class AExplicitOperationDefinitionAssistantTC implements IAstAssistant
 			AExplicitOperationDefinition d, Environment base)
 	{
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new Vector<>();
 		List<PPattern> plist = new Vector<PPattern>();
 		plist.addAll((List<PPattern>) d.getParameterPatterns().clone());
 
@@ -120,7 +120,7 @@ public class AExplicitOperationDefinitionAssistantTC implements IAstAssistant
 			AExplicitOperationDefinition d, Environment base)
 	{
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new Vector<>();
 		List<PPattern> plist = new Vector<PPattern>();
 		plist.addAll((List<PPattern>) d.getParameterPatterns().clone());
 
@@ -150,7 +150,7 @@ public class AExplicitOperationDefinitionAssistantTC implements IAstAssistant
 	public List<List<PPattern>> getParamPatternList(
 			AExplicitOperationDefinition func)
 	{
-		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
+		List<List<PPattern>> parameters = new ArrayList<>();
 		List<PPattern> plist = new ArrayList<PPattern>();
 
 		for (PPattern p : func.getParameterPatterns())

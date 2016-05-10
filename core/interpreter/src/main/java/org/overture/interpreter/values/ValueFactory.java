@@ -138,7 +138,7 @@ public class ValueFactory
 	public RecordValue createRecord(String recordName, Object... fields)
 			throws ValueFactoryException
 	{
-		List<Value> values = new Vector<Value>();
+		List<Value> values = new Vector<>();
 		for (Object object : fields)
 		{
 			if (object instanceof Boolean)

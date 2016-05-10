@@ -99,7 +99,7 @@ public class LexStringToken extends LexToken implements ILexStringToken
 	@Override
 	public Map<String, Object> getChildren(Boolean includeInheritedFields)
 	{
-		Map<String, Object> fields = new HashMap<String, Object>();
+		Map<String, Object> fields = new HashMap<>();
 		if (includeInheritedFields)
 		{
 			fields.putAll(super.getChildren(includeInheritedFields));

@@ -135,7 +135,7 @@ public class DBGPReader
 
 	protected static final int SOURCE_LINES = 5;
 
-	protected static List<DBGPReader> connectecReaders = new Vector<DBGPReader>();
+	protected static List<DBGPReader> connectecReaders = new Vector<>();
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args)
@@ -147,7 +147,7 @@ public class DBGPReader
 		String ideKey = null;
 		Settings.dialect = null;
 		String expression = null;
-		List<File> files = new Vector<File>();
+		List<File> files = new Vector<>();
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 		boolean warnings = true;
@@ -1089,7 +1089,7 @@ public class DBGPReader
 	{
 		// "<type> [<options>] [-- <base64 args>]"
 
-		List<DBGPOption> options = new Vector<DBGPOption>();
+		List<DBGPOption> options = new Vector<>();
 		String args = null;
 		boolean doneOpts = false;
 		boolean gotXID = false;

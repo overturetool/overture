@@ -132,7 +132,7 @@ public class IsaGen extends CodeGenBase {
         IsaTranslations isa = new IsaTranslations();
         MergeVisitor pp = isa.getMergeVisitor();
 
-        List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
+        List<GeneratedModule> generated = new ArrayList<>();
 
         for (IRStatus<PIR> status : statuses) {
             generated.add(prettyPrintNode(pp, status));
@@ -163,7 +163,7 @@ public class IsaGen extends CodeGenBase {
         if (pp.hasMergeErrors()) {
             return new GeneratedModule(status.getIrNodeName(), irClass, pp.getMergeErrors(), false);
         } else if (pp.hasUnsupportedTargLangNodes()) {
-            return new GeneratedModule(status.getIrNodeName(), new HashSet<VdmNodeInfo>(), pp.getUnsupportedInTargLang(), false);
+            return new GeneratedModule(status.getIrNodeName(), new HashSet<>(), pp.getUnsupportedInTargLang(), false);
         } else {
             // Code can be generated. Ideally, should format it
             GeneratedModule generatedModule = new GeneratedModule(status.getIrNodeName(), irClass, sw.toString(), false);

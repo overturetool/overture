@@ -105,7 +105,7 @@ public class GeneralUtils
 	{
 		File[] listOfFiles = folder.listFiles();
 
-		List<File> fileList = new LinkedList<File>();
+		List<File> fileList = new LinkedList<>();
 
 		if (listOfFiles == null || listOfFiles.length == 0)
 		{
@@ -125,7 +125,7 @@ public class GeneralUtils
 
 	public static void deleteFolderContents(File folder, boolean removeFolders)
 	{
-		deleteFolderContents(folder, new ArrayList<String>(), removeFolders);
+		deleteFolderContents(folder, new ArrayList<>(), removeFolders);
 	}
 
 	public static void deleteFolderContents(File folder,
@@ -178,7 +178,7 @@ public class GeneralUtils
 	{
 		File[] listOfFiles = folder.listFiles();
 		
-		List<File> fileList = new LinkedList<File>();
+		List<File> fileList = new LinkedList<>();
 
 		if(listOfFiles == null || listOfFiles.length == 0)
 			return fileList;

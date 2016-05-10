@@ -13,7 +13,7 @@ public class NameCollector extends DepthFirstAnalysisAdaptor
 
 	public NameCollector()
 	{
-		this.names = new HashSet<String>();
+		this.names = new HashSet<>();
 	}
 	
 	public Set<String> namesToAvoid()

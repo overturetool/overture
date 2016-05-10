@@ -57,7 +57,7 @@ public class BacktrackInputReader extends Reader
 	private static final char[] EMPTY_DATA = new char[] {};
 
 	/** A stack of position markers for popping. */
-	private Stack<Integer> stack = new Stack<Integer>();
+	private Stack<Integer> stack = new Stack<>();
 
 	/** The characters from the file. */
 	private final char[] data;

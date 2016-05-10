@@ -139,7 +139,7 @@ public class FunctionValue extends Value
 		this.name = name;
 		this.typeValues = null;
 		this.type = type;
-		this.paramPatternList = new Vector<List<PPattern>>();
+		this.paramPatternList = new Vector<>();
 		this.body = body;
 		this.precondition = null;
 		this.postcondition = null;
@@ -170,7 +170,7 @@ public class FunctionValue extends Value
 		if (Settings.measureChecks && def.getMeasureDef() != null)
 		{
 			measureName = def.getMeasureDef().getName();
-			measureValues = Collections.synchronizedMap(new HashMap<Long, Stack<Value>>());
+			measureValues = Collections.synchronizedMap(new HashMap<>());
 		}
 	}
 
@@ -183,7 +183,7 @@ public class FunctionValue extends Value
 		this.typeValues = null;
 		this.type = (AFunctionType) def.getType();
 
-		this.paramPatternList = new Vector<List<PPattern>>();
+		this.paramPatternList = new Vector<>();
 		PatternListTC plist = Interpreter.getInstance().getAssistantFactory().createPatternList();
 
 		for (APatternListTypePair ptp : def.getParamPatterns())
@@ -204,7 +204,7 @@ public class FunctionValue extends Value
 		if (Settings.measureChecks && def.getMeasureDef() != null)
 		{
 			measureName = def.getMeasureDef().getName();
-			measureValues = Collections.synchronizedMap(new HashMap<Long, Stack<Value>>());
+			measureValues = Collections.synchronizedMap(new HashMap<>());
 		}
 	}
 
@@ -414,8 +414,8 @@ public class FunctionValue extends Value
 						measure.typeValues = typeValues;
 					}
 
-					measure.measuringThreads = Collections.synchronizedSet(new HashSet<Long>());
-					measure.callingThreads = Collections.synchronizedSet(new HashSet<Long>());
+					measure.measuringThreads = Collections.synchronizedSet(new HashSet<>());
+					measure.callingThreads = Collections.synchronizedSet(new HashSet<>());
 					measure.isMeasure = true;
 				}
 
@@ -452,7 +452,7 @@ public class FunctionValue extends Value
 
 				if (stack == null)
 				{
-					stack = new Stack<Value>();
+					stack = new Stack<>();
 					measureValues.put(tid, stack);
 				}
 
@@ -617,13 +617,13 @@ public class FunctionValue extends Value
 		Value rv = null;
 		try
 		{
-			Map<String, String> argExps = new HashMap<String, String>();
+			Map<String, String> argExps = new HashMap<>();
 			for (Entry<ILexNameToken, Value> argVal : args.entrySet())
 			{
 				argExps.put(argVal.getKey().getName(), argVal.getValue().toString());
 			}
 
-			Map<String, String> stateExps = new HashMap<String, String>();
+			Map<String, String> stateExps = new HashMap<>();
 
 			Interpreter interpreter = Interpreter.getInstance();
 			List<PDefinition> allDefs = new Vector<PDefinition>();

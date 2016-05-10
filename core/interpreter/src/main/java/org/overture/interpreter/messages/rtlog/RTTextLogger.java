@@ -14,7 +14,7 @@ import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
 
 public class RTTextLogger implements IRTLogger
 {
-	private List<RTMessage> events = new LinkedList<RTMessage>();
+	private List<RTMessage> events = new LinkedList<>();
 	private File logfile = null;
 	private RTMessage cached = null;
 	private boolean enabled = false;

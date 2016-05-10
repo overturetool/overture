@@ -26,7 +26,7 @@ public class LatexSourceFile extends SourceFile
 	private static final String BREAKLINES_OPTION = "[breaklines=true]";
 	private static final String BEGIN = "\\begin";
 	private static final String END = "\\end";
-	public List<String> rawLines = new Vector<String>();
+	public List<String> rawLines = new Vector<>();
 	public final boolean hasVdm_al;
 	// The argument to lstset is: escapeinside={(*@}{@*)}
 	public final String LST_ESCAPE_BEGIN = "(*@";

@@ -40,7 +40,7 @@ public class JavaSettings
 	public JavaSettings()
 	{
 		this.disableCloning = false;
-		this.modulesToSkip = new LinkedList<String>();
+		this.modulesToSkip = new LinkedList<>();
 		this.vdmEntryExp = null;
 		this.javaRootPackage = null;
 		this.genRecsAsInnerClasses = true;

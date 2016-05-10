@@ -51,7 +51,7 @@ public class TypeCheckException extends RuntimeException
 	{
 		if (extras == null)
 		{
-			extras = new Vector<TypeCheckException>();
+			extras = new Vector<>();
 		}
 		
 		extras.add(e);

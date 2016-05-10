@@ -116,7 +116,7 @@ abstract public class ExamplesUtility {
 	 */
 	public static Collection<ExampleSourceData> getExamplesSources(
 			String examplesRoot) throws IOException, URISyntaxException {
-		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
+		List<ExampleSourceData> r = new LinkedList<>();
 
 		r.addAll(getExamples_(examplesRoot, SL_EXAMPLES_ROOT, Dialect.VDM_SL));
 		r.addAll(getExamples_(examplesRoot, PP_EXAMPLES_ROOT, Dialect.VDM_PP));
@@ -137,7 +137,7 @@ abstract public class ExamplesUtility {
 	 */
 	public static Collection<ExampleSourceData> getLibSources(String libsRoot)
 			throws IOException, URISyntaxException {
-		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
+		List<ExampleSourceData> r = new LinkedList<>();
 
 		r.addAll(getLibs_(libsRoot + SL_LIBS_ROOT, Dialect.VDM_SL));
 		r.addAll(getLibs_(libsRoot + PP_LIBS_ROOT, Dialect.VDM_PP));
@@ -150,9 +150,9 @@ abstract public class ExamplesUtility {
 			Dialect dialect) throws IOException, URISyntaxException {
 
 		File dir = new File(libsroot);
-		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
+		List<ExampleSourceData> r = new LinkedList<>();
 
-		List<File> libs = new LinkedList<File>();
+		List<File> libs = new LinkedList<>();
 
 		for (File f : dir.listFiles()) {
 			libs.add(f);
@@ -165,12 +165,12 @@ abstract public class ExamplesUtility {
 	private static Collection<ExampleSourceData> getExamples_(
 			String externalsRoot, String examplesRoot, Dialect dialect)
 			throws IOException, URISyntaxException {
-		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
+		List<ExampleSourceData> r = new LinkedList<>();
 
 		File dir = new File(externalsRoot + examplesRoot);
 		dir.mkdirs();
 
-		List<File> source = new LinkedList<File>();
+		List<File> source = new LinkedList<>();
 		// grab examples groups
 		for (File f : dir.listFiles()) {
 			// grab example projects
@@ -192,7 +192,7 @@ abstract public class ExamplesUtility {
 					}
 					r.add(new ExampleSourceData(p.getName(), dialect, p
 							.getLanguageVersion(), source));
-					source = new LinkedList<File>();
+					source = new LinkedList<>();
 				}
 			}
 		}

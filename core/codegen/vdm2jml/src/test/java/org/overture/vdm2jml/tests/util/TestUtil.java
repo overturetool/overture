@@ -17,7 +17,7 @@ public class TestUtil
 	{
 		List<File> files = GeneralUtils.getFiles(folder);
 		
-		LinkedList<File> javaFiles = new LinkedList<File>();
+		LinkedList<File> javaFiles = new LinkedList<>();
 		
 		for(File f : files)
 		{
@@ -39,7 +39,7 @@ public class TestUtil
 		String quotesDir = File.separatorChar + JavaCodeGen.JAVA_QUOTES_PACKAGE
 				+ File.separatorChar;
 		
-		List<File> filesToStore = new LinkedList<File>();
+		List<File> filesToStore = new LinkedList<>();
 	
 		for (File file : files)
 		{
@@ -58,7 +58,7 @@ public class TestUtil
 	
 	public static Collection<Object[]> collectVdmslFiles(List<File> files)
 	{
-		List<Object[]> testInputFiles = new LinkedList<Object[]>();
+		List<Object[]> testInputFiles = new LinkedList<>();
 
 		for (File f : files)
 		{

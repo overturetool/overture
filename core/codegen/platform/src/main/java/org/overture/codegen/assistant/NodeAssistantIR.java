@@ -27,7 +27,7 @@ public class NodeAssistantIR extends AssistantBase
 			return new LinkedList<>();
 		}
 
-		List<ClonableString> allMetaData = new LinkedList<ClonableString>();
+		List<ClonableString> allMetaData = new LinkedList<>();
 
 		if(prepend)
 		{

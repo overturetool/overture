@@ -21,7 +21,7 @@ public class CollectedContextException extends ContextException implements
 	public CollectedContextException(ContextException toThrow,
 			Set<ContextException> problems)
 	{
-		this(toThrow, new Vector<Exception>(problems));
+		this(toThrow, new Vector<>(problems));
 	}
 
 	/**

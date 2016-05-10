@@ -101,11 +101,11 @@ public abstract class BaseParserTestCase<T extends SyntaxReader, R> extends
 
 			System.out.println();
 
-			List<IMessage> warnings = new Vector<IMessage>();
-			List<IMessage> errors = new Vector<IMessage>();
+			List<IMessage> warnings = new Vector<>();
+			List<IMessage> errors = new Vector<>();
 
 			collectParserErrorsAndWarnings(reader, errors, warnings);
-			Result<R> resultFinal = new Result<R>(result, warnings, errors);
+			Result<R> resultFinal = new Result<>(result, warnings, errors);
 
 			if (result instanceof List || result instanceof INode)
 			{

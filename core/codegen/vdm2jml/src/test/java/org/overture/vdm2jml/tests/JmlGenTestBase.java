@@ -72,7 +72,7 @@ abstract public class JmlGenTestBase
 	
 	public String[] getJmlGenMainProcessArgs(File outputFolder)
 	{
-		List<String> javaCgArgs = new LinkedList<String>();
+		List<String> javaCgArgs = new LinkedList<>();
 		
 		javaCgArgs.add(inputFile.getAbsolutePath());
 		if(VERBOSE)

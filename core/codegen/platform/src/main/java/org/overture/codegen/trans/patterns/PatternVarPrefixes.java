@@ -47,7 +47,7 @@ public class PatternVarPrefixes
 
 	private void setupNameLookup()
 	{
-		this.patternNamePrefixes = new HashMap<Class<? extends SPatternIR>, String>();
+		this.patternNamePrefixes = new HashMap<>();
 
 		this.patternNamePrefixes.put(AIgnorePatternIR.class, getIgnorePatternPrefix());
 		this.patternNamePrefixes.put(ABoolPatternIR.class, getBoolPatternPrefix());

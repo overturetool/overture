@@ -124,7 +124,7 @@ public class ParameterPatternObligation extends ProofObligation
 				List<PMultipleBind> existsBindList = new Vector<PMultipleBind>();
 				PExp existsPredicate = null;
 
-				Set<ILexNameToken> previousBindings = new HashSet<ILexNameToken>();
+				Set<ILexNameToken> previousBindings = new HashSet<>();
 
 				for (PPattern param : paramList)
 				{
@@ -185,7 +185,7 @@ public class ParameterPatternObligation extends ProofObligation
 
 	private List<List<PPattern>> cloneListPatternList(List<List<PPattern>> list)
 	{
-		List<List<PPattern>> r = new LinkedList<List<PPattern>>();
+		List<List<PPattern>> r = new LinkedList<>();
 		for (List<PPattern> list2 : list)
 		{
 			r.add(cloneList(list2));

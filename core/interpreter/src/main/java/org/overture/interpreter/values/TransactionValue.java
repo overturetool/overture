@@ -48,7 +48,7 @@ public class TransactionValue extends UpdatableValue
 {
 	private static final long serialVersionUID = 1L;
 
-	private static List<TransactionValue> commitList = new Vector<TransactionValue>();
+	private static List<TransactionValue> commitList = new Vector<>();
 
 	private Value newvalue = null; // The pending value before a commit
 	private long newthreadid = -1; // The thread that made the change

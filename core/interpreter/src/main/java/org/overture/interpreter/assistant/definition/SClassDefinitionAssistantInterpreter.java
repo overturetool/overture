@@ -151,7 +151,7 @@ public class SClassDefinitionAssistantInterpreter extends
 						+ node.getName(), ctxt);
 			}
 
-			return af.createSClassDefinitionAssistant().makeNewInstance(node, ctorDefinition, argvals, ctxt, new HashMap<ILexNameToken, ObjectValue>(), false);
+			return af.createSClassDefinitionAssistant().makeNewInstance(node, ctorDefinition, argvals, ctxt, new HashMap<>(), false);
 			//return af.createAClassClassDefinitionAssistant().newInstance((AClassClassDefinition) node, ctorDefinition, argvals, ctxt);
 		} else if (node instanceof ACpuClassDefinition)
 		{
@@ -175,7 +175,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		setStaticDefinitions(node, ctxt.getGlobal()); // When static member := new X()
 		setStaticValues(node, ctxt.getGlobal()); // When static member := new X()
 
-		List<ObjectValue> inherited = new Vector<ObjectValue>();
+		List<ObjectValue> inherited = new Vector<>();
 		NameValuePairMap members = new NameValuePairMap();
 
 		for (SClassDefinition sdef : node.getSuperDefs())

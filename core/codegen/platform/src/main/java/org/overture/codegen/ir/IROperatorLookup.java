@@ -97,7 +97,7 @@ public class IROperatorLookup
 
 	public IROperatorLookup()
 	{
-		this.lookup = new HashMap<Class<? extends SExpIR>, IROperatorInfo>();
+		this.lookup = new HashMap<>();
 
 		lookup.put(APlusNumericBinaryExpIR.class, new IROperatorInfo(PLUS, "+"));
 		lookup.put(ASubtractNumericBinaryExpIR.class, new IROperatorInfo(SUB, "-"));

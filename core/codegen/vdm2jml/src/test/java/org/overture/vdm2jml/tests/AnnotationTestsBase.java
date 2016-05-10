@@ -174,7 +174,7 @@ abstract public class AnnotationTestsBase
 	public static List<ADefaultClassDeclIR> getClasses(String fileName)
 			throws AnalysisException
 	{
-		List<File> files = new LinkedList<File>();
+		List<File> files = new LinkedList<>();
 		files.add(new File(TEST_RES_STATIC_ANALYSIS_ROOT + fileName));
 
 		

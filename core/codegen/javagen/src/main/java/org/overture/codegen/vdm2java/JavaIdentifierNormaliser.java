@@ -24,9 +24,9 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 	public JavaIdentifierNormaliser(Set<String> allNames, ITempVarGen nameGen)
 	{
 		this.allNames = allNames;
-		this.renamingsSoFar = new HashMap<String, String>();
+		this.renamingsSoFar = new HashMap<>();
 		this.nameGen = nameGen;
-		this.renamings = new HashSet<Renaming>();
+		this.renamings = new HashSet<>();
 	}
 	
 	@Override

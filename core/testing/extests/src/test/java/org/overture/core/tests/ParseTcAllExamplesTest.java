@@ -39,7 +39,7 @@ public class ParseTcAllExamplesTest
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData() throws IOException, URISyntaxException
 	{
-		Collection<Object[]> r = new Vector<Object[]>();
+		Collection<Object[]> r = new Vector<>();
 
 		Collection<ExampleSourceData> examples = ExamplesUtility.getExamplesSources(EXAMPLES_ROOT);
 

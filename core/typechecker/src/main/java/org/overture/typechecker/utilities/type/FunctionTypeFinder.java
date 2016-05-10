@@ -105,7 +105,7 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 			type.setFuncType(af.createPTypeAssistant().getFunction(AstFactory.newAUnknownType(type.getLocation())));
 
 			PTypeSet result = new PTypeSet(af);
-			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
+			Map<Integer, PTypeSet> params = new HashMap<>();
 			List<PDefinition> defs = new Vector<PDefinition>();
 
 			for (PType t : type.getTypes())

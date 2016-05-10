@@ -1018,7 +1018,7 @@ public class AstFactory
 		// Definition initialization
 		initDefinition(result, Pass.DEFS, location, new LexNameToken(location.getModule(), Utils.listToString(pathname, "_"), location), NameScope.GLOBAL);
 
-		List<ClonableString> namesClonable = new Vector<ClonableString>();
+		List<ClonableString> namesClonable = new Vector<>();
 		for (String string : pathname)
 		{
 			namesClonable.add(new ClonableString(string));
@@ -2136,7 +2136,7 @@ public class AstFactory
 		result.setTypeChecked(false);
 		result.setIsDLModule(false); // TODO: this does not exist in VDMj
 
-		List<ClonableFile> files = new Vector<ClonableFile>();
+		List<ClonableFile> files = new Vector<>();
 		if (file != null)
 		{
 			files.add(new ClonableFile(file));
@@ -2178,7 +2178,7 @@ public class AstFactory
 		result.setExports(exports);
 		result.setDefs(defs);
 
-		List<ClonableFile> files = new Vector<ClonableFile>();
+		List<ClonableFile> files = new Vector<>();
 		files.add(new ClonableFile(name.location.getFile()));
 		result.setFiles(files);
 		result.setIsFlat(false);

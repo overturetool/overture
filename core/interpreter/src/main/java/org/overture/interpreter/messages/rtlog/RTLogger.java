@@ -41,7 +41,7 @@ public class RTLogger
 	static int eventCount = 0;
 	static boolean enabled = false;
 
-	private static List<IRTLogger> loggers = new Vector<IRTLogger>();
+	private static List<IRTLogger> loggers = new Vector<>();
 
 	static
 	{

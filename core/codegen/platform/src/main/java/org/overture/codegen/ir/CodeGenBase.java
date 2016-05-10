@@ -498,7 +498,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 				generatedModule = new GeneratedModule(status.getIrNodeName(), status.getIrNode(), mergeVisitor.getMergeErrors(), isTestCase);
 			} else if (mergeVisitor.hasUnsupportedTargLangNodes())
 			{
-				generatedModule = new GeneratedModule(status.getIrNodeName(), new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang(), isTestCase);
+				generatedModule = new GeneratedModule(status.getIrNodeName(), new HashSet<>(), mergeVisitor.getUnsupportedInTargLang(), isTestCase);
 			} else
 			{
 				generatedModule = new GeneratedModule(status.getIrNodeName(), status.getIrNode(), formatCode(writer), isTestCase);
@@ -508,7 +508,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 			return generatedModule;
 		} else
 		{
-			return new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>(), isTestCase(status));
+			return new GeneratedModule(status.getIrNodeName(), status.getUnsupportedInIr(), new HashSet<>(), isTestCase(status));
 		}
 	}
 	
@@ -540,7 +540,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 				return new Generated(mergeVisitor.getMergeErrors());
 			} else if (mergeVisitor.hasUnsupportedTargLangNodes())
 			{
-				return new Generated(new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang());
+				return new Generated(new HashSet<>(), mergeVisitor.getUnsupportedInTargLang());
 			} else
 			{
 				String code = writer.toString();
@@ -550,7 +550,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 		} else
 		{
 
-			return new Generated(expStatus.getUnsupportedInIr(), new HashSet<IrNodeInfo>());
+			return new Generated(expStatus.getUnsupportedInIr(), new HashSet<>());
 		}
 	}
 

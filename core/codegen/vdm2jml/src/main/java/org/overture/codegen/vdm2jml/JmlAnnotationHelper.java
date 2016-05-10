@@ -187,7 +187,7 @@ public class JmlAnnotationHelper
 
 	public List<ClonableString> consMetaData(String str)
 	{
-		List<ClonableString> inv = new LinkedList<ClonableString>();
+		List<ClonableString> inv = new LinkedList<>();
 
 		inv.add(new ClonableString(str));
 

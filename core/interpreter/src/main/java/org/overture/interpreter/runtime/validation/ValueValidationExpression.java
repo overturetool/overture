@@ -94,7 +94,7 @@ public class ValueValidationExpression implements IValidationExpression
 
 	public List<String[]> getMonitoredValues()
 	{
-		ArrayList<String[]> res = new ArrayList<String[]>();
+		ArrayList<String[]> res = new ArrayList<>();
 		res.add(leftName);
 		res.add(rightName);
 		return res;

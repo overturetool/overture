@@ -361,7 +361,7 @@ public class ModuleInterpreter extends Interpreter
 	public List<Object> runOneTrace(ANamedTraceDefinition tracedef,
 			CallSequence test, boolean debug)
 	{
-		List<Object> list = new Vector<Object>();
+		List<Object> list = new Vector<>();
 		Context ctxt = null;
 
 		try

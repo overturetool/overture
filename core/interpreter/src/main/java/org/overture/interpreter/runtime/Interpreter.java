@@ -107,8 +107,8 @@ abstract public class Interpreter
 	public Interpreter(IInterpreterAssistantFactory assistantFactory)
 	{
 		scheduler = new ResourceScheduler();
-		breakpoints = new TreeMap<Integer, Breakpoint>();
-		sourceFiles = new HashMap<File, SourceFile>();
+		breakpoints = new TreeMap<>();
+		sourceFiles = new HashMap<>();
 		this.assistantFactory = assistantFactory;
 		instance = this;
 	}

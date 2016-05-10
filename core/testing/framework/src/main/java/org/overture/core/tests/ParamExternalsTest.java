@@ -77,7 +77,7 @@ public abstract class ParamExternalsTest<R> extends ParamFineGrainTest<R>
 
 		if (external == null)
 		{
-			return new Vector<Object[]>();
+			return new Vector<>();
 		} else
 		{
 			return PathsProvider.computeExternalPaths(external);

@@ -317,7 +317,7 @@ public class DeclAssistantIR extends AssistantBase
 	public <T extends SDeclIR> List<T> getAllDecls(SClassDeclIR classDecl,
 			List<SClassDeclIR> classes, DeclStrategy<T> strategy)
 	{
-		List<T> allDecls = new LinkedList<T>();
+		List<T> allDecls = new LinkedList<>();
 
 		allDecls.addAll(strategy.getDecls(classDecl));
 
@@ -575,7 +575,7 @@ public class DeclAssistantIR extends AssistantBase
 		List<LexNameTokenWrapper> methodNames = getMethodNames(classDef);
 		Set<LexNameTokenWrapper> duplicates = findDuplicates(methodNames);
 
-		Set<ILexNameToken> overloadedMethodNames = new HashSet<ILexNameToken>();
+		Set<ILexNameToken> overloadedMethodNames = new HashSet<>();
 
 		for (LexNameTokenWrapper wrapper : methodNames)
 		{
@@ -591,8 +591,8 @@ public class DeclAssistantIR extends AssistantBase
 	private Set<LexNameTokenWrapper> findDuplicates(
 			List<LexNameTokenWrapper> nameWrappers)
 	{
-		Set<LexNameTokenWrapper> duplicates = new HashSet<LexNameTokenWrapper>();
-		Set<LexNameTokenWrapper> temp = new HashSet<LexNameTokenWrapper>();
+		Set<LexNameTokenWrapper> duplicates = new HashSet<>();
+		Set<LexNameTokenWrapper> temp = new HashSet<>();
 
 		for (LexNameTokenWrapper wrapper : nameWrappers)
 		{
@@ -608,7 +608,7 @@ public class DeclAssistantIR extends AssistantBase
 	private List<LexNameTokenWrapper> getMethodNames(
 			AClassClassDefinition classDef)
 	{
-		List<LexNameTokenWrapper> methodNames = new LinkedList<LexNameTokenWrapper>();
+		List<LexNameTokenWrapper> methodNames = new LinkedList<>();
 
 		List<PDefinition> allDefs = new LinkedList<PDefinition>();
 

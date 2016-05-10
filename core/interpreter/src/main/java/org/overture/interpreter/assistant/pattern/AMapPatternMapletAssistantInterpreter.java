@@ -30,7 +30,7 @@ public class AMapPatternMapletAssistantInterpreter implements IAstAssistant
 	{
 		List<NameValuePairList> flist = af.createPPatternAssistant().getAllNamedValues(p.getFrom(), maplet.getKey(), ctxt);
 		List<NameValuePairList> tlist = af.createPPatternAssistant().getAllNamedValues(p.getTo(), maplet.getValue(), ctxt);
-		List<NameValuePairList> results = new Vector<NameValuePairList>();
+		List<NameValuePairList> results = new Vector<>();
 
 		for (NameValuePairList f : flist)
 		{

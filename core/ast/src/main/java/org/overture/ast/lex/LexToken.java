@@ -163,7 +163,7 @@ public class LexToken extends Node implements ILexToken, Serializable
 	@Override
 	public Map<String, Object> getChildren(Boolean includeInheritedFields)
 	{
-		Map<String, Object> fields = new HashMap<String, Object>();
+		Map<String, Object> fields = new HashMap<>();
 		if (includeInheritedFields)
 		{
 			fields.putAll(super.getChildren(includeInheritedFields));

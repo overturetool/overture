@@ -51,7 +51,7 @@ public class Context extends LexNameTokenMap<Value>
 	/** The running debug id of contexts */
 	private static int nextid = 0;
 	/** cache for transient serialization */
-	private static final CloneTrancientMemoryCache<ThreadState> serilizationCache = new CloneTrancientMemoryCache<ThreadState>();
+	private static final CloneTrancientMemoryCache<ThreadState> serilizationCache = new CloneTrancientMemoryCache<>();
 	/** The debug if of this context */
 	protected final int id;
 	/** The Assistant factory used by this context */

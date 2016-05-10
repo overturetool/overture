@@ -290,7 +290,7 @@ public class BaseTestSuite extends TestSuite
 
 	protected static List<String> readFile(File file) throws IOException
 	{
-		List<String> lines = new Vector<String>();
+		List<String> lines = new Vector<>();
 		BufferedReader reader = null;
 
 		try

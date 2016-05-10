@@ -318,7 +318,7 @@ public class TraceInterpreter
 				}
 			} catch (Exception e)
 			{
-				result = new Vector<Object>();
+				result = new Vector<>();
 				result.add(e);
 				verdict = Verdict.FAILED;
 				result.add(verdict);
@@ -479,7 +479,7 @@ public class TraceInterpreter
 			result = interpreter.runOneTrace(mtd, test, false);
 		} catch (Exception e)
 		{
-			result = new Vector<Object>();
+			result = new Vector<>();
 			result.add(e.getMessage());
 			result.add(e);
 			result.add(Verdict.ERROR);

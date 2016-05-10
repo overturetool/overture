@@ -128,7 +128,7 @@ public class LexTokenReader extends BacktrackInputReader
 	}
 
 	/** A stack of Positions for backtracking. */
-	private Stack<Position> stack = new Stack<Position>();
+	private Stack<Position> stack = new Stack<>();
 
 	/** An end of file symbol. */
 	private static final char EOF = (char) -1;
@@ -1205,7 +1205,7 @@ public class LexTokenReader extends BacktrackInputReader
 
 	private List<String> rdName()
 	{
-		List<String> names = new Vector<String>();
+		List<String> names = new Vector<>();
 		names.add(rdIdentifier());
 
 		if (ch == '`')
@@ -1224,7 +1224,7 @@ public class LexTokenReader extends BacktrackInputReader
 
 			if (first.startsWith("mk_") || first.startsWith("is_"))
 			{
-				List<String> one = new Vector<String>();
+				List<String> one = new Vector<>();
 				one.add(first + "`" + names.get(1));
 				names = one;
 			}

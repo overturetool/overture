@@ -38,7 +38,7 @@ public abstract class ConjectureDefinition
 	public ValueValidationExpression valueExpr;
 	public IValidationExpression endingExpr;
 	public int interval;
-	private List<ConjectureValue> conjectureValues = new ArrayList<ConjectureValue>();
+	private List<ConjectureValue> conjectureValues = new ArrayList<>();
 	public boolean startupValue;
 
 	public ConjectureDefinition(String name,
@@ -95,7 +95,7 @@ public abstract class ConjectureDefinition
 
 	public List<String[]> getMonitoredValues()
 	{
-		List<String[]> res = new ArrayList<String[]>();
+		List<String[]> res = new ArrayList<>();
 
 		if (this.valueExpr != null)
 		{

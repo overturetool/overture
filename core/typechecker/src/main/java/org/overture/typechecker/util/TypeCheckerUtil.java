@@ -285,9 +285,9 @@ public class TypeCheckerUtil
 		{
 			TypeChecker.clearErrors();
 			tc.typeCheck();
-			return new TypeCheckResult<P>(parserResult, parserResult.result, TypeChecker.getWarnings(), TypeChecker.getErrors());
+			return new TypeCheckResult<>(parserResult, parserResult.result, TypeChecker.getWarnings(), TypeChecker.getErrors());
 		}
-		return new TypeCheckResult<P>(parserResult, null, new Vector<VDMWarning>(), new Vector<VDMError>());
+		return new TypeCheckResult<>(parserResult, null, new Vector<>(), new Vector<>());
 	}
 
 }

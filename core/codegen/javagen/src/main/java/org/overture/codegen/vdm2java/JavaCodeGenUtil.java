@@ -275,7 +275,7 @@ public class JavaCodeGenUtil
 	 */
 	public static List<Integer> computeJavaIdentifierCorrections(String s)
 	{
-		List<Integer> correctionIndices = new LinkedList<Integer>();
+		List<Integer> correctionIndices = new LinkedList<>();
 
 		if (s == null || s.length() == 0)
 		{
@@ -304,7 +304,7 @@ public class JavaCodeGenUtil
 	{
 		List<File> files = GeneralUtils.getFilesRecursively(srcCodeFolder);
 
-		List<String> javaFilePaths = new LinkedList<String>();
+		List<String> javaFilePaths = new LinkedList<>();
 
 		for (File f : files)
 		{

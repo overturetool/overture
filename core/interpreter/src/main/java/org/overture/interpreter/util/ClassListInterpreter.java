@@ -109,7 +109,7 @@ public class ClassListInterpreter extends ClassList
 
 		ContextException failed = null;
 		int retries = 3; // Potentially not enough.
-		Set<ContextException> trouble = new HashSet<ContextException>();
+		Set<ContextException> trouble = new HashSet<>();
 
 		do
 		{
@@ -247,7 +247,7 @@ public class ClassListInterpreter extends ClassList
 			}
 
 			// Run the constructor to do any deploys etc.
-			ASystemClassDefinitionRuntime.system = initialContext.assistantFactory.createSClassDefinitionAssistant().makeNewInstance(systemClass, null, new ValueList(), initialContext, new HashMap<ILexNameToken, ObjectValue>(), false);
+			ASystemClassDefinitionRuntime.system = initialContext.assistantFactory.createSClassDefinitionAssistant().makeNewInstance(systemClass, null, new ValueList(), initialContext, new HashMap<>(), false);
 
 			// Bind system instances to runtime validator
 			RuntimeValidator.bindSystemVariables(systemClass, initialContext.assistantFactory);

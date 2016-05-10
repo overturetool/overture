@@ -62,14 +62,14 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 
 		public String id;
 		public String name;
-		public Map<String, Object> childToId = new HashMap<String, Object>();
+		public Map<String, Object> childToId = new HashMap<>();
 	}
 
 	private StringBuilder resultString;
 	public boolean showNullPointers = false;
 	Set<INode> visitedNodes = null;
 
-	Set<String> filterClassNames = new HashSet<String>();
+	Set<String> filterClassNames = new HashSet<>();
 
 	public DotGraphVisitor()
 	{
@@ -145,7 +145,7 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 		{
 			tmp += " |{";
 			boolean firstChild = true;
-			Map<String, Object> children = new HashMap<String, Object>();
+			Map<String, Object> children = new HashMap<>();
 			String nt = node.toString();
 			if (nt.length() > 150)
 			{

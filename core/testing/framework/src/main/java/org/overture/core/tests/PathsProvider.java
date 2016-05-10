@@ -119,7 +119,7 @@ public class PathsProvider
 	{
 		Collection<File> files = FileUtils.listFiles(dir, new RegexFileFilter(EXTERNAL_VDM_EXTENSION_REGEX), DirectoryFileFilter.DIRECTORY);
 
-		List<Object[]> paths = new Vector<Object[]>();
+		List<Object[]> paths = new Vector<>();
 
 		for (File file : files)
 		{
@@ -155,7 +155,7 @@ public class PathsProvider
 	{
 		Collection<File> files = FileUtils.listFiles(dir, new RegexFileFilter(VDM_EXTENSION_REGEX), DirectoryFileFilter.DIRECTORY);
 
-		List<Object[]> paths = new Vector<Object[]>();
+		List<Object[]> paths = new Vector<>();
 
 		for (File file : files)
 		{

@@ -47,7 +47,7 @@ public class SourceFile
 {
 	public final File filename;
 	public final String charset;
-	public List<String> lines = new Vector<String>();
+	public List<String> lines = new Vector<>();
 
 	private final static String HTMLSTART = "<p class=MsoNormal style='text-autospace:none'><span style='font-size:10.0pt; font-family:\"Courier New\"; color:black'>";
 	private final static String HTMLEND = "</span></p>";

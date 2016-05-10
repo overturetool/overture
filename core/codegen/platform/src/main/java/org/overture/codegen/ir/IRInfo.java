@@ -110,9 +110,9 @@ public class IRInfo
 		this.visitorManager = new VisitorManager();
 		this.assistantManager = new AssistantManager();
 		this.tcFactory = new TypeCheckerAssistantFactory();
-		this.quoteVaues = new LinkedList<String>();
-		this.unsupportedNodes = new HashSet<VdmNodeInfo>();
-		this.transformationWarnings = new HashSet<IrNodeInfo>();
+		this.quoteVaues = new LinkedList<>();
+		this.unsupportedNodes = new HashSet<>();
+		this.transformationWarnings = new HashSet<>();
 		this.tempVarNameGen = new TempVarNameGen();
 
 		this.settings = new IRSettings();

@@ -680,7 +680,7 @@ public class DefinitionReader extends SyntaxReader
 			throwMessage(2020, "Expecting '(' after function name");
 		}
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new Vector<>();
 
 		while (lastToken().is(VDMToken.BRA))
 		{
@@ -1363,7 +1363,7 @@ public class DefinitionReader extends SyntaxReader
 	private List<String> readTraceIdentifierList() throws ParserException,
 			LexException
 	{
-		List<String> names = new Vector<String>();
+		List<String> names = new Vector<>();
 		names.add(readIdToken("Expecting trace identifier").getName());
 
 		while (lastToken().is(VDMToken.DIVIDE))

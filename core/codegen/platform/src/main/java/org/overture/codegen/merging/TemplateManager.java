@@ -46,7 +46,7 @@ public class TemplateManager
 	/**
 	 * cache
 	 */
-	final protected HashMap<Class<? extends INode>, Template> cache = new HashMap<Class<? extends INode>, Template>();
+	final protected HashMap<Class<? extends INode>, Template> cache = new HashMap<>();
 
 	protected String root;
 

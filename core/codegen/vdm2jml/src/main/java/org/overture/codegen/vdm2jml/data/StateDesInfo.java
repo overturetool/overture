@@ -39,7 +39,7 @@ public class StateDesInfo
 	
 	public Pair<List<AIdentifierVarExpIR>, List<AVarDeclIR>> remove(SStmIR key)
 	{
-		return new Pair<List<AIdentifierVarExpIR>, List<AVarDeclIR>>(stateDesVars.remove(key), stateDesDecls.remove(key)); 
+		return new Pair<>(stateDesVars.remove(key), stateDesDecls.remove(key)); 
 	}
 	
 	public void register(SStmIR key, List<AIdentifierVarExpIR> vars, List<AVarDeclIR> decls)

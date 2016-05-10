@@ -44,23 +44,23 @@ public class Generated
 		this.content = content;
 		this.unsupportedInIr = unsupportedInIr;
 		this.unsupportedInTargLang = unsupportedInTargLang;
-		this.transformationWarnings = new HashSet<IrNodeInfo>();
+		this.transformationWarnings = new HashSet<>();
 		this.mergeErrors = mergeErrors;
 	}
 
 	public Generated(String content)
 	{
-		this(content, new HashSet<VdmNodeInfo>(), new HashSet<IrNodeInfo>(),new LinkedList<Exception>());
+		this(content, new HashSet<>(), new HashSet<>(), new LinkedList<>());
 	}
 
 	public Generated(Set<VdmNodeInfo> unsupportedNodes, Set<IrNodeInfo> unsupportedInTargLang)
 	{
-		this(null, unsupportedNodes, unsupportedInTargLang,new LinkedList<Exception>());
+		this(null, unsupportedNodes, unsupportedInTargLang, new LinkedList<>());
 	}
 
 	public Generated(List<Exception> mergeErrrors)
 	{
-		this(null, new HashSet<VdmNodeInfo>(), new HashSet<IrNodeInfo>(),mergeErrrors);
+		this(null, new HashSet<>(), new HashSet<>(),mergeErrrors);
 	}
 
 	public String getContent()

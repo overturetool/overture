@@ -39,7 +39,7 @@ public class ConcurrentTraceNode extends TraceNode implements
 
 	public ConcurrentTraceNode()
 	{
-		nodes = new Vector<TraceNode>();
+		nodes = new Vector<>();
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class ConcurrentTraceNode extends TraceNode implements
 		}
 		Pair<Integer, Integer> v = indics.get(index);
 
-		List<TestSequence> nodetests = new Vector<TestSequence>();
+		List<TestSequence> nodetests = new Vector<>();
 		int count = nodes.size();
 
 		for (TraceNode node : nodes)
@@ -124,11 +124,11 @@ public class ConcurrentTraceNode extends TraceNode implements
 			return indics.size();
 		}
 
-		indics = new HashMap<Integer, Pair<Integer, Integer>>();
+		indics = new HashMap<>();
 
 		int size = 0;
 
-		List<TestSequence> nodetests = new Vector<TestSequence>();
+		List<TestSequence> nodetests = new Vector<>();
 		int count = nodes.size();
 
 		for (TraceNode node : nodes)
@@ -157,7 +157,7 @@ public class ConcurrentTraceNode extends TraceNode implements
 			{
 				j++;
 				p.next();
-				indics.put(size, new Pair<Integer, Integer>(r, j));
+				indics.put(size, new Pair<>(r, j));
 				size++;
 			}
 		}

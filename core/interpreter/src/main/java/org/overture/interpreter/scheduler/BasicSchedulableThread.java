@@ -38,7 +38,7 @@ public class BasicSchedulableThread implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private static List<ISchedulableThread> allThreads = new LinkedList<ISchedulableThread>();
+	private static List<ISchedulableThread> allThreads = new LinkedList<>();
 
 	private static InitThread initialThread = null;
 
@@ -198,7 +198,7 @@ public class BasicSchedulableThread implements Serializable
 	{
 		synchronized (allThreads)
 		{
-			List<ISchedulableThread> list = new Vector<ISchedulableThread>();
+			List<ISchedulableThread> list = new Vector<>();
 
 			for (ISchedulableThread th : allThreads)
 			{

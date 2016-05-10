@@ -60,7 +60,7 @@ public class PPatternAssistant implements IAstAssistant
 
 	public LexNameList getVariableNamesBaseCase(PPattern pattern)
 	{
-		Set<ILexNameToken> set = new HashSet<ILexNameToken>();
+		Set<ILexNameToken> set = new HashSet<>();
 		set.addAll(af.createPPatternAssistant().getAllVariableNames(pattern));
 		LexNameList list = new LexNameList();
 		list.addAll(set);

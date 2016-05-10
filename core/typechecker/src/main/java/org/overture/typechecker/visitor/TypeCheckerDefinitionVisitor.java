@@ -318,7 +318,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 		}
 
-		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>();
+		List<QualifiedDefinition> qualified = new Vector<>();
 
 		if (node.getPredef() != null)
 		{
@@ -523,7 +523,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 
-		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>();
+		List<QualifiedDefinition> qualified = new Vector<>();
 
 		if (node.getPredef() != null)
 		{
@@ -765,7 +765,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>();
+		List<QualifiedDefinition> qualified = new Vector<>();
 
 		if (node.getPredef() != null)
 		{
@@ -1008,7 +1008,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>();
+		List<QualifiedDefinition> qualified = new Vector<>();
 
 		if (node.getPredef() != null)
 		{

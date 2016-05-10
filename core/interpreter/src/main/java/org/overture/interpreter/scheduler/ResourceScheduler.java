@@ -36,7 +36,7 @@ public class ResourceScheduler implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	public String name = "scheduler";
-	protected List<Resource> resources = new LinkedList<Resource>();
+	protected List<Resource> resources = new LinkedList<>();
 	protected static boolean stopping = false;
 	protected static MainThread mainThread = null;
 

@@ -84,7 +84,7 @@ public class ClassList extends Vector<SClassDefinition>
 
 	public Set<File> getSourceFiles()
 	{
-		Set<File> files = new HashSet<File>();
+		Set<File> files = new HashSet<>();
 
 		for (SClassDefinition def : this)
 		{

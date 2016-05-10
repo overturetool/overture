@@ -35,7 +35,7 @@ public class Lock implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	private ISchedulableThread lockedBy = null;
-	private Set<ISchedulableThread> waiters = new HashSet<ISchedulableThread>();
+	private Set<ISchedulableThread> waiters = new HashSet<>();
 
 	public void reset()
 	{

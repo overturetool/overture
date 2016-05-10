@@ -27,7 +27,7 @@ import java.util.Vector;
 public class TraceResult
 {
 	public String traceName;
-	public List<TraceTest> tests = new Vector<TraceTest>();
+	public List<TraceTest> tests = new Vector<>();
 
 	@Override
 	public String toString()

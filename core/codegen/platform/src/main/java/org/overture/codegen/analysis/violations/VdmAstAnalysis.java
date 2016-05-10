@@ -50,7 +50,7 @@ public class VdmAstAnalysis
 	private Set<Violation> findViolations(List<? extends INode> nodes,
 			ViolationAnalysisApplication application) throws AnalysisException
 	{
-		Set<Violation> allViolations = new HashSet<Violation>();
+		Set<Violation> allViolations = new HashSet<>();
 
 		for (INode currentNode : nodes)
 		{

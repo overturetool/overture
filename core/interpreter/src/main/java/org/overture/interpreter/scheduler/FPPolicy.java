@@ -35,7 +35,7 @@ public class FPPolicy extends FCFSPolicy
 
 	public FPPolicy()
 	{
-		this.priorities = new HashMap<ISchedulableThread, Long>();
+		this.priorities = new HashMap<>();
 	}
 
 	@Override

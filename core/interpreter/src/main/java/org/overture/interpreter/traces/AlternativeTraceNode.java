@@ -40,7 +40,7 @@ public class AlternativeTraceNode extends TraceNode implements
 
 	public AlternativeTraceNode()
 	{
-		this.alternatives = new Vector<TraceNode>();
+		this.alternatives = new Vector<>();
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class AlternativeTraceNode extends TraceNode implements
 			return indics.size();
 		}
 		
-		indics = new HashMap<Integer, Pair<Integer, Integer>>();
+		indics = new HashMap<>();
 		int k=0;
 		
 		for (TraceNode node : alternatives)
@@ -107,7 +107,7 @@ public class AlternativeTraceNode extends TraceNode implements
 			
 			for (int i = 0; i < s; i++)
 			{
-				indics.put(size+i, new Pair<Integer,Integer>(k,i));
+				indics.put(size+i, new Pair<>(k, i));
 			}
 			
 			size+=s;

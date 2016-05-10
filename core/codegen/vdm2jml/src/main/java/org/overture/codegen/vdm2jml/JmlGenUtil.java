@@ -140,7 +140,7 @@ public class JmlGenUtil
 	
 	public List<String> getRecFieldNames(ARecordDeclIR r)
 	{
-		List<String> args = new LinkedList<String>();
+		List<String> args = new LinkedList<>();
 		
 		for(AFieldDeclIR f : r.getFields())
 		{
@@ -219,7 +219,7 @@ public class JmlGenUtil
 	 */
 	public List<IRStatus<PIR>> makeRecsOuterClasses(List<IRStatus<PIR>> ast, RecClassInfo recInfo)
 	{
-		List<IRStatus<PIR>> extraClasses = new LinkedList<IRStatus<PIR>>();
+		List<IRStatus<PIR>> extraClasses = new LinkedList<>();
 
 		for (IRStatus<ADefaultClassDeclIR> status : IRStatus.extract(ast, ADefaultClassDeclIR.class))
 		{
@@ -310,7 +310,7 @@ public class JmlGenUtil
 				imports.add(new ClonableString(JavaCodeGen.RUNTIME_IMPORT));
 				recClass.setDependencies(imports);
 
-				extraClasses.add(new IRStatus<PIR>(recClass.getSourceNode().getVdmNode(), recClass.getName(), recClass, new HashSet<VdmNodeInfo>()));
+				extraClasses.add(new IRStatus<>(recClass.getSourceNode().getVdmNode(), recClass.getName(), recClass, new HashSet<>()));
 			}
 		}
 

@@ -44,7 +44,7 @@ public class TypeCheckInfo
 	 * context the earlier AnotherQuestion. Other things can be added to the context and it may be used for any purpose.
 	 * It is not used by Overture. (Remove this comment it is starts getting used by overture !)
 	 */
-	private static final Map<Class<?>, Object> context = new HashMap<Class<?>, Object>();
+	private static final Map<Class<?>, Object> context = new HashMap<>();
 
 	public static void clearContext()
 	{
@@ -105,7 +105,7 @@ public class TypeCheckInfo
 			Stack<T> contextStack = lookupListForType(key);
 			if (contextStack == null)
 			{
-				contextStack = new Stack<T>();
+				contextStack = new Stack<>();
 				context.put(key, contextStack);
 			}
 			contextStack.push(value);

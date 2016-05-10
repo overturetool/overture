@@ -15,7 +15,7 @@ public class TestRunner
 {
 	public static Value collectTests(Value obj)
 	{
-		List<String> tests = new Vector<String>();
+		List<String> tests = new Vector<>();
 		ObjectValue instance = (ObjectValue) obj;
 
 		if (ClassInterpreter.getInstance() instanceof ClassInterpreter)

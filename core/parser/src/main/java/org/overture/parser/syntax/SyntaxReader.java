@@ -69,13 +69,13 @@ public abstract class SyntaxReader
 	protected ClassReader classReader = null;
 
 	/** The errors raised. */
-	private List<VDMError> errors = new Vector<VDMError>();
+	private List<VDMError> errors = new Vector<>();
 
 	/** The warnings raised. */
-	private List<VDMWarning> warnings = new Vector<VDMWarning>();
+	private List<VDMWarning> warnings = new Vector<>();
 
 	/** The sub-readers defined, if any. */
-	private List<SyntaxReader> readers = new Vector<SyntaxReader>();
+	private List<SyntaxReader> readers = new Vector<>();
 
 	/** The maximum number of syntax errors allowed in one Reader. */
 	private static final int MAX = 100;
@@ -616,7 +616,7 @@ public abstract class SyntaxReader
 
 	public List<VDMError> getErrors()
 	{
-		List<VDMError> list = new Vector<VDMError>();
+		List<VDMError> list = new Vector<>();
 
 		for (SyntaxReader rdr : readers)
 		{
@@ -649,7 +649,7 @@ public abstract class SyntaxReader
 
 	public List<VDMWarning> getWarnings()
 	{
-		List<VDMWarning> list = new Vector<VDMWarning>();
+		List<VDMWarning> list = new Vector<>();
 
 		for (SyntaxReader rdr : readers)
 		{

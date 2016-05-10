@@ -63,7 +63,7 @@ public class ModuleList extends Vector<AModuleModules>
 
 	public Set<File> getSourceFiles()
 	{
-		Set<File> files = new HashSet<File>();
+		Set<File> files = new HashSet<>();
 
 		for (AModuleModules def : this)
 		{
@@ -165,7 +165,7 @@ public class ModuleList extends Vector<AModuleModules>
 	// This function is copied from the module reader
 	private AFromModuleImports importAll(ILexIdentifierToken from)
 	{
-		List<List<PImport>> types = new Vector<List<PImport>>();
+		List<List<PImport>> types = new Vector<>();
 		ILexNameToken all = new LexNameToken(from.getName(), "all", from.getLocation());
 		List<PImport> impAll = new Vector<PImport>();
 		AAllImport iport = AstFactory.newAAllImport(all);

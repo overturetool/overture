@@ -42,7 +42,7 @@ import org.overture.interpreter.scheduler.SchedulingPolicy;
 public class BUSValue extends ObjectValue
 {
 	private static final long serialVersionUID = 1L;
-	private static List<BUSValue> busses = new LinkedList<BUSValue>();
+	private static List<BUSValue> busses = new LinkedList<>();
 	private static BUSValue[][] cpumap = null;
 
 	public static BUSValue vBUS = null;
@@ -51,7 +51,7 @@ public class BUSValue extends ObjectValue
 	public BUSValue(AClassType classtype, NameValuePairMap map,
 			ValueList argvals)
 	{
-		super(classtype, map, new Vector<ObjectValue>(), null, null);
+		super(classtype, map, new Vector<>(), null, null);
 
 		QuoteValue parg = (QuoteValue) argvals.get(0);
 		SchedulingPolicy policy = SchedulingPolicy.factory(parg.value.toUpperCase());
@@ -60,7 +60,7 @@ public class BUSValue extends ObjectValue
 		double speed = sarg.value;
 
 		SetValue set = (SetValue) argvals.get(2);
-		List<CPUResource> cpulist = new Vector<CPUResource>();
+		List<CPUResource> cpulist = new Vector<>();
 
 		for (Value v : set.values)
 		{
@@ -74,8 +74,8 @@ public class BUSValue extends ObjectValue
 
 	public BUSValue(AClassType type, ValueSet cpus)
 	{
-		super(type, new NameValuePairMap(), new Vector<ObjectValue>(), null, null);
-		List<CPUResource> cpulist = new Vector<CPUResource>();
+		super(type, new NameValuePairMap(), new Vector<>(), null, null);
+		List<CPUResource> cpulist = new Vector<>();
 
 		for (Value v : cpus)
 		{

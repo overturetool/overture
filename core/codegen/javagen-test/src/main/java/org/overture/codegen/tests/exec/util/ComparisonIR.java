@@ -395,8 +395,8 @@ public class ComparisonIR
 		}
 
 		@SuppressWarnings("unchecked")
-		List<Object> cgValuesList = new LinkedList<Object>(cgSet);
-		List<Value> vdmValuesList = new LinkedList<Value>(vdmSet.values);
+		List<Object> cgValuesList = new LinkedList<>(cgSet);
+		List<Value> vdmValuesList = new LinkedList<>(vdmSet.values);
 
 		for (int i = 0; i < cgValuesList.size(); i++)
 		{

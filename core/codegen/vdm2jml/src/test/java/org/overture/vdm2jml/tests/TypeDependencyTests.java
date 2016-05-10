@@ -30,7 +30,7 @@ public class TypeDependencyTests extends AnnotationTestsBase
 	{
 		try
 		{
-			List<File> files = new LinkedList<File>();
+			List<File> files = new LinkedList<>();
 
 			files.add(new File(TEST_RES_TYPE_DEP_ROOT + filename));
 
