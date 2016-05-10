@@ -31,9 +31,9 @@ public class Store
 	
 	public void reset()
 	{
-		for(Number k : values.keySet())
+		for(Map.Entry<Number, ModuleCopy> entry : values.entrySet())
 		{
-			values.get(k).reset();
+			entry.getValue().reset();
 		}
 	}
 	
@@ -45,12 +45,12 @@ public class Store
 		
 		String sep = "";
 		
-		for(Number k : values.keySet())
+		for(Map.Entry<Number, ModuleCopy> entry : values.entrySet())
 		{
 			sb.append(sep);
-			sb.append(Utils.toString(k));
+			sb.append(Utils.toString(entry.getKey()));
 			sb.append(" |-> ");
-			sb.append(Utils.toString(values.get(k)));
+			sb.append(Utils.toString(entry.getValue()));
 			sep = ", ";
 		}
 		

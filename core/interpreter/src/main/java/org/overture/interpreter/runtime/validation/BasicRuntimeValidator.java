@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -121,11 +122,11 @@ public class BasicRuntimeValidator implements IRuntimeValidatior
 			rest.add(strings[i]);
 		}
 
-		for (ILexNameToken name : ctxt.keySet())
+		for (Map.Entry<ILexNameToken, Value> entry : ctxt.entrySet())
 		{
-			if (name.getName().equals(rest.get(0)))
+			if (entry.getKey().getName().equals(rest.get(0)))
 			{
-				Value v = ctxt.get(name);
+				Value v = entry.getValue();
 				if (rest.size() > 1)
 				{
 					return digInVariable(v, rest.subList(1, rest.size()), ctxt);
@@ -148,11 +149,11 @@ public class BasicRuntimeValidator implements IRuntimeValidatior
 			ObjectValue ov = value.objectValue(ctxt);
 			NameValuePairMap nvpm = ov.members;
 
-			for (ILexNameToken name : nvpm.keySet())
+			for (Map.Entry<ILexNameToken, Value> entry : nvpm.entrySet())
 			{
-				if (name.getName().equals(rest.get(0)))
+				if (entry.getKey().getName().equals(rest.get(0)))
 				{
-					Value v = nvpm.get(name);
+					Value v = entry.getValue();
 
 					if (rest.size() > 1)
 					{

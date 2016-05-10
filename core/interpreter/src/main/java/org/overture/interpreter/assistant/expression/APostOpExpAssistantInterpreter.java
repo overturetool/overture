@@ -12,6 +12,8 @@ import org.overture.interpreter.values.OperationValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueMap;
 
+import java.util.Map;
+
 public class APostOpExpAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
@@ -25,10 +27,10 @@ public class APostOpExpAssistantInterpreter implements IAstAssistant
 	public void populate(APostOpExp node, Context ctxt, String classname,
 			ValueMap oldvalues) throws ValueException
 	{
-		for (Value var : oldvalues.keySet())
+		for (Map.Entry<Value, Value> entry : oldvalues.entrySet())
 		{
-			String name = var.stringValue(ctxt);
-			Value val = oldvalues.get(var);
+			String name = entry.getKey().stringValue(ctxt);
+			Value val = entry.getValue();
 
 			if (!(val instanceof FunctionValue)
 					&& !(val instanceof OperationValue))

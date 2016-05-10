@@ -50,15 +50,15 @@ public class ModuleCopy
 			return;
 		}
 		
-		for (Field f : staticFields.keySet())
+		for (Map.Entry<Field, Object> entry : staticFields.entrySet())
 		{
-			f.setAccessible(true);
+			entry.getKey().setAccessible(true);
 	
-			Object v = deepCopy(staticFields.get(f));
+			Object v = deepCopy(entry.getValue());
 	
 			try
 			{
-				f.set(null, v);
+				entry.getKey().set(null, v);
 			} catch (IllegalArgumentException | IllegalAccessException e)
 			{
 				e.printStackTrace();

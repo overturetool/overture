@@ -216,9 +216,9 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 			
 			getLog().info("Found following bridge/delegate pairs:");
 			
-			for(String entry : delegateMap.keySet())
+			for(Map.Entry<String, String> entry : delegateMap.entrySet())
 			{
-				getLog().info("  Bridge class: " + entry + ". Delegate class: " + delegateMap.get(entry));
+				getLog().info("  Bridge class: " + entry.getKey() + ". Delegate class: " + entry.getValue());
 			}
 			
 			javaCodeGen.getTransSeries().getSeries().add(new DelegateTrans(delegateMap, javaCodeGen.getTransAssistant(), getLog()));

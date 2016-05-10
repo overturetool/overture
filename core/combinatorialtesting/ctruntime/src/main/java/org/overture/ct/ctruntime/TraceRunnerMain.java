@@ -590,9 +590,9 @@ public class TraceRunnerMain implements IProgressMonitor
 			System.err.println("Default = " + Charset.defaultCharset());
 			Map<String, Charset> available = Charset.availableCharsets();
 
-			for (String name : available.keySet())
+			for (Map.Entry<String, Charset> entry : available.entrySet())
 			{
-				System.err.println(name + " " + available.get(name).aliases());
+				System.err.println(entry.getKey() + " " + entry.getValue().aliases());
 			}
 
 			System.err.println("");

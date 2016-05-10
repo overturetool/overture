@@ -48,9 +48,9 @@ public class LocationAssistantIR extends AssistantBase
 
 		Set<String> allKeys = children.keySet();
 
-		for (String key : allKeys)
+		for (Map.Entry<String, Object> entry : children.entrySet())
 		{
-			Object child = children.get(key);
+			Object child = entry.getValue();
 
 			if (child instanceof ILexLocation)
 			{

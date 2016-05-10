@@ -25,6 +25,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -252,11 +253,11 @@ public class ComparisonIR
 		{
 			boolean foundMatchingField = false;
 
-			for (ILexNameToken tok : keySet)
+			for (Map.Entry<ILexNameToken, Value> entry : memberValues.entrySet())
 			{
-				if (field.getName().equals(tok.getName()))
+				if (field.getName().equals(entry.getKey().getName()))
 				{
-					Value vdmFieldValue = memberValues.get(tok);
+					Value vdmFieldValue = entry.getValue();
 
 					if (vdmFieldValue != null)
 					{
@@ -490,14 +491,14 @@ public class ComparisonIR
 			return false;
 		}
 
-		for (Object cgKey : cgMap.keySet())
+		for (Object o : cgMap.entrySet())
 		{
 			boolean match = false;
 			for (Value vdmKey : vdmMap.values.keySet())
 			{
-				if (compare(cgKey, vdmKey))
+				if (compare(((Map.Entry) o).getKey(), vdmKey))
 				{
-					Object cgVal = cgMap.get(cgKey);
+					Object cgVal = ((Map.Entry) o).getValue();
 					Value vdmVal = vdmMap.values.get(vdmKey);
 
 					if (compare(cgVal, vdmVal))

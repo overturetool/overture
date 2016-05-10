@@ -24,6 +24,7 @@
 package org.overture.ct.ctruntime.server.xml;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class XMLOpenTagNode extends XMLTagNode
@@ -75,12 +76,12 @@ public class XMLOpenTagNode extends XMLTagNode
 		sb.append("<");
 		sb.append(tag);
 
-		for (Object name : attrs.keySet())
+		for (Map.Entry<Object, Object> entry : attrs.entrySet())
 		{
 			sb.append(" ");
-			sb.append(name);
+			sb.append(entry.getKey());
 			sb.append("=\"");
-			sb.append(attrs.get(name));
+			sb.append(entry.getValue());
 			sb.append("\"");
 		}
 

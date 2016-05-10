@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -58,10 +59,10 @@ public class MapValue extends Value
 	{
 		ValueMap nm = new ValueMap();
 
-		for (Value k : values.keySet())
+		for (Map.Entry<Value, Value> entry : values.entrySet())
 		{
-			Value v = values.get(k).getUpdatable(listeners);
-			nm.put(k, v);
+			Value v = entry.getValue().getUpdatable(listeners);
+			nm.put(entry.getKey(), v);
 		}
 
 		return UpdatableValue.factory(new MapValue(nm), listeners);
@@ -72,10 +73,10 @@ public class MapValue extends Value
 	{
 		ValueMap nm = new ValueMap();
 
-		for (Value k : values.keySet())
+		for (Map.Entry<Value, Value> entry : values.entrySet())
 		{
-			Value v = values.get(k).getConstant();
-			nm.put(k, v);
+			Value v = entry.getValue().getConstant();
+			nm.put(entry.getKey(), v);
 		}
 
 		return new MapValue(nm);
@@ -142,10 +143,10 @@ public class MapValue extends Value
 			SMapType mapto = ctxt.assistantFactory.createPTypeAssistant().getMap(to);
 			ValueMap nm = new ValueMap();
 
-			for (Value k : values.keySet())
+			for (Map.Entry<Value, Value> entry : values.entrySet())
 			{
-				Value v = values.get(k);
-				Value dom = k.convertValueTo(mapto.getFrom(), ctxt);
+				Value v = entry.getValue();
+				Value dom = entry.getKey().convertValueTo(mapto.getFrom(), ctxt);
 				Value rng = v.convertValueTo(mapto.getTo(), ctxt);
 
 				Value old = nm.put(dom, rng);

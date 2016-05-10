@@ -124,9 +124,9 @@ public class RecordBasisChecker extends TypeUnwrapper<Boolean>
     		
     		Map<String, PTypeSet> typesets = new HashMap<String, PTypeSet>();
     		
-    		for (String field: common.keySet())
+    		for (Map.Entry<String, Vector<PType>> entry : common.entrySet())
     		{
-    			List<PType> list = common.get(field);
+    			List<PType> list = entry.getValue();
     			
     			if (list.size() != recordCount)
     			{
@@ -137,15 +137,15 @@ public class RecordBasisChecker extends TypeUnwrapper<Boolean>
     			
     			PTypeSet set = new PTypeSet(af);
     			set.addAll(list);
-    			typesets.put(field, set);
+    			typesets.put(entry.getKey(), set);
     		}
 
 			List<AFieldField> fields = new Vector<AFieldField>();
 
-			for (String tag : typesets.keySet())
+			for (Map.Entry<String, PTypeSet> entry : typesets.entrySet())
 			{
-				LexNameToken tagname = new LexNameToken("?", tag, type.getLocation());
-				fields.add(AstFactory.newAFieldField(tagname, tag, typesets.get(tag).getType(type.getLocation()), false));
+				LexNameToken tagname = new LexNameToken("?", entry.getKey(), type.getLocation());
+				fields.add(AstFactory.newAFieldField(tagname, entry.getKey(), entry.getValue().getType(type.getLocation()), false));
 			}
 
 			type.setRecType(fields.isEmpty() ? null

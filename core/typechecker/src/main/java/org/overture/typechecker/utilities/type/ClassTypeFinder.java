@@ -147,11 +147,11 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 						ILexNameToken synthname = f.getName().getModifiedName(classname.getName());
 						PTypeSet current = null;
 
-						for (ILexNameToken n : common.keySet())
+						for (Map.Entry<ILexNameToken, PTypeSet> entry : common.entrySet())
 						{
-							if (n.getName().equals(synthname.getName()))
+							if (entry.getKey().getName().equals(synthname.getName()))
 							{
-								current = common.get(n);
+								current = entry.getValue();
 								break;
 							}
 						}
@@ -192,28 +192,28 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 			List<PDefinition> newdefs = new Vector<PDefinition>();
 			PTypeAssistantTC assistant = af.createPTypeAssistant();
 
-			for (ILexNameToken synthname : common.keySet())
+			for (Map.Entry<ILexNameToken, PTypeSet> entry : common.entrySet())
 			{
-    			PType ptype = common.get(synthname).getType(type.getLocation());
+    			PType ptype = entry.getValue().getType(type.getLocation());
     			ILexNameToken newname = null;
     			
     			if (assistant.isOperation(ptype))
     			{
     				AOperationType optype = assistant.getOperation(ptype);
-    				optype.setPure(access.get(synthname).getPure());
+    				optype.setPure(access.get(entry.getKey()).getPure());
     				ptype = optype;
-    				newname = synthname.getModifiedName(optype.getParameters());
+    				newname = entry.getKey().getModifiedName(optype.getParameters());
     			}
     			else if (assistant.isFunction(ptype))
     			{
     				AFunctionType ftype = assistant.getFunction(ptype);
-    				newname = synthname.getModifiedName(ftype.getParameters());
+    				newname = entry.getKey().getModifiedName(ftype.getParameters());
     			}
     			
-    			PDefinition def = AstFactory.newALocalDefinition(synthname.getLocation(),
-    				(newname == null ? synthname : newname), NameScope.GLOBAL, ptype);
+    			PDefinition def = AstFactory.newALocalDefinition(entry.getKey().getLocation(),
+    				(newname == null ? entry.getKey() : newname), NameScope.GLOBAL, ptype);
 
-				def.setAccess(access.get(synthname).clone());
+				def.setAccess(access.get(entry.getKey()).clone());
 				newdefs.add(def);
 			}
 

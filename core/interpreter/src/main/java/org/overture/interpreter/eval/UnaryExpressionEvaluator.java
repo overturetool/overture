@@ -2,6 +2,7 @@ package org.overture.interpreter.eval;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
@@ -154,15 +155,15 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 			{
 				ValueMap m = v.mapValue(ctxt);
 
-				for (Value k : m.keySet())
+				for (Map.Entry<Value, Value> entry : m.entrySet())
 				{
-					Value rng = m.get(k);
-					Value old = result.put(k, rng);
+					Value rng = entry.getValue();
+					Value old = result.put(entry.getKey(), rng);
 
 					if (old != null && !old.equals(rng))
 					{
 						VdmRuntimeError.abort(node.getLocation(), 4021, "Duplicate map keys have different values: "
-								+ k, ctxt);
+								+ entry.getKey(), ctxt);
 					}
 				}
 			}
@@ -334,9 +335,9 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 
 			ValueMap result = new ValueMap();
 
-			for (Value k : map.keySet())
+			for (Map.Entry<Value, Value> entry : map.entrySet())
 			{
-				result.put(map.get(k), k);
+				result.put(entry.getValue(), entry.getKey());
 			}
 
 			return new MapValue(result);

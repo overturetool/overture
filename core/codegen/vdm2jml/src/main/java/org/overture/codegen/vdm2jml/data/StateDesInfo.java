@@ -57,9 +57,9 @@ public class StateDesInfo
 	
 	public boolean isStateDesDecl(AVarDeclIR decl)
 	{
-		for (SStmIR stm : stateDesDecls.keySet())
+		for (Map.Entry<SStmIR, List<AVarDeclIR>> entry : stateDesDecls.entrySet())
 		{
-			List<AVarDeclIR> decls = stateDesDecls.get(stm);
+			List<AVarDeclIR> decls = entry.getValue();
 			
 			if(decls != null)
 			{
@@ -84,13 +84,13 @@ public class StateDesInfo
 	
 	public ADefaultClassDeclIR getEnclosingClass(AIdentifierVarExpIR stateDesVar)
 	{
-		for(SStmIR k : stateDesVars.keySet())
+		for(Map.Entry<SStmIR, List<AIdentifierVarExpIR>> entry : stateDesVars.entrySet())
 		{
-			for(AIdentifierVarExpIR v : stateDesVars.get(k))
+			for(AIdentifierVarExpIR v : entry.getValue())
 			{
 				if(v == stateDesVar)
 				{
-					ADefaultClassDeclIR encClass = k.getAncestor(ADefaultClassDeclIR.class);
+					ADefaultClassDeclIR encClass = entry.getKey().getAncestor(ADefaultClassDeclIR.class);
 					
 					if (encClass == null)
 					{
