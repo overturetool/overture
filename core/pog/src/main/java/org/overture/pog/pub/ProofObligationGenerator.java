@@ -10,6 +10,9 @@ import org.overture.pog.visitors.PogVisitor;
 
 public class ProofObligationGenerator
 {
+	private ProofObligationGenerator() {
+	}
+
 	public static IProofObligationList generateProofObligations(INode root)
 			throws AnalysisException
 	{

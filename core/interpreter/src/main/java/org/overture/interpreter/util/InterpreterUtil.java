@@ -16,6 +16,9 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class InterpreterUtil
 {
+	private InterpreterUtil() {
+	}
+
 	public static Interpreter getInterpreter(ModuleListInterpreter modules)
 			throws Exception
 	{

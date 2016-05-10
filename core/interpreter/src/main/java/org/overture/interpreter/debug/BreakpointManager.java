@@ -19,7 +19,10 @@ public class BreakpointManager
 
 	static final Map<PExp, Breakpoint> expressionMap = new HashMap<PExp, Breakpoint>();
 	static final Map<PStm, Breakpoint> statementMap = new HashMap<PStm, Breakpoint>();
-	
+
+	private BreakpointManager() {
+	}
+
 	public static Breakpoint getBreakpoint(INode node) throws AnalysisException
 	{
 		if(node instanceof PExp)

@@ -33,6 +33,9 @@ import org.overture.ast.intf.lex.ILexNameToken;
 
 public class Utils
 {
+	private Utils() {
+	}
+
 	public static <T> String listToString(List<T> list)
 	{
 		return listToString("", list, ", ", "");

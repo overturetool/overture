@@ -24,6 +24,9 @@ import org.overture.parser.syntax.ParserException;
 
 public class DBGPExecProcesser
 {
+	private DBGPExecProcesser() {
+	}
+
 	public static class DBGPExecResult
 	{
 		public final String result;

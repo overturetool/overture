@@ -38,7 +38,10 @@ public class JavaToolsUtils
 	public static final String CP_ARG = "-classpath";
 
 	public static final String JAVA_FILE_EXTENSION = ".java";
-	
+
+	private JavaToolsUtils() {
+	}
+
 	public static Boolean isWindows()
 	{
 		String osName = System.getProperty("os.name");

@@ -40,6 +40,9 @@ import org.overture.parser.syntax.ParserException;
 
 public class ParserUtil
 {
+	private ParserUtil() {
+	}
+
 	public static class ParserResult<T>
 	{
 		public static interface IResultCombiner<T>

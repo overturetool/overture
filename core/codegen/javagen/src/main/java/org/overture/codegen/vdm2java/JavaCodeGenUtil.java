@@ -48,6 +48,9 @@ import de.hunsicker.jalopy.Jalopy;
 
 public class JavaCodeGenUtil
 {
+	private JavaCodeGenUtil() {
+	}
+
 	public static Generated generateJavaFromExp(String exp,
 			IRSettings irSettings, JavaSettings javaSettings, Dialect dialect)
 			throws AnalysisException

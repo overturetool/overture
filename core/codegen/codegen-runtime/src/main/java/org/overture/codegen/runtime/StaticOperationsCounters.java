@@ -9,7 +9,10 @@ public class StaticOperationsCounters
 	public volatile static long[] req = new long[methodnumber]; //holds the #req history counter.
 	public volatile static long[] active = new long[methodnumber]; //holds the #active history counter.
 	public volatile static long[] waiting = new long[methodnumber]; //holds the #waiting history counter.
-	
+
+	private StaticOperationsCounters() {
+	}
+
 //	public StaticOperationsCounters()
 //	{
 //		

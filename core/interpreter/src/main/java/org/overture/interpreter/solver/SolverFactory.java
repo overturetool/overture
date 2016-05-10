@@ -7,6 +7,9 @@ import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 public class SolverFactory
 {
 
+	private SolverFactory() {
+	}
+
 	public static IConstraintSolver getSolver(Dialect dialect)
 	{
 		try

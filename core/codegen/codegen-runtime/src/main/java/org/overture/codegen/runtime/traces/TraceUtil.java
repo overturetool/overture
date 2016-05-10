@@ -4,6 +4,9 @@ import java.lang.reflect.Field;
 
 public class TraceUtil
 {
+	private TraceUtil() {
+	}
+
 	public static <T> T readState(Class<?> module, Class<T> stateType)
 	{
 		Field[] fields = module.getDeclaredFields();

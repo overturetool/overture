@@ -26,6 +26,9 @@ import java.util.Set;
 
 public class MapUtil
 {
+	private MapUtil() {
+	}
+
 	public static VDMMap map()
 	{
 		return new VDMMap();

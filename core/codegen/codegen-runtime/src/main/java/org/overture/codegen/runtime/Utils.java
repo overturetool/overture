@@ -25,6 +25,9 @@ public class Utils
 {
 	public static final Object VOID_VALUE = new Object();
 
+	private Utils() {
+	}
+
 	public static boolean isVoidValue(Object value)
 	{
 		return value == VOID_VALUE;

@@ -17,6 +17,9 @@ import org.overture.test.framework.results.Result;
 
 public class ExecutionToResultTranslator
 {
+	private ExecutionToResultTranslator() {
+	}
+
 	public static Result<Value> wrapValue(Exception e)
 	{
 		Result<String> result = wrap(e);

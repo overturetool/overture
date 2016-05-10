@@ -23,6 +23,9 @@ package org.overture.ct.ctruntime.server.common;
 
 public class Utils
 {
+	private Utils() {
+	}
+
 	public static void pause(int secs)
 	{
 		milliPause(secs * 1000);

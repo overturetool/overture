@@ -25,6 +25,9 @@ import java.util.Collections;
 
 public class SeqUtil
 {
+	private SeqUtil() {
+	}
+
 	public static VDMSeq seq()
 	{
 		return new VDMSeq();
