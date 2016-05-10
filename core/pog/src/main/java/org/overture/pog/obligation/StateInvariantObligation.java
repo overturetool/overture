@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
@@ -79,7 +80,7 @@ public class StateInvariantObligation extends ProofObligation
 			AStateDefinition def = ass.getStateDefinition();
 			ALetDefExp letExp = new ALetDefExp();
 			letExp.setType(def.getInvExpression().getType().clone());
-			List<PDefinition> invDefs = new Vector<PDefinition>();
+			List<PDefinition> invDefs = new ArrayList<PDefinition>();
 			AEqualsDefinition local = new AEqualsDefinition();
 			local.setExpType(def.getRecordType().clone());
 			local.setPattern(def.getInvPattern().clone());
@@ -155,7 +156,7 @@ public class StateInvariantObligation extends ProofObligation
 			return extractInv(atom);
 		}
 		String stateName = getStateName(stateDef);
-		List<PExp> arglist = new Vector<PExp>();
+		List<PExp> arglist = new ArrayList<PExp>();
 		for (AFieldField f : stateDef.getFields())
 		{
 			arglist.add(getVarExp(f.getTagname().clone(), stateDef.clone(),f.getType()));

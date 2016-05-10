@@ -79,7 +79,7 @@ public class ArchitectureViewer extends TraceViewer {
 			
 			tab.addFigure(rectFigure);
 
-			vLines.put(cpu.getId(), new Vector<Line>());
+			vLines.put(cpu.getId(), new ArrayList<Line>());
 			cpuCoordinates.put(cpu.getId(), rectPoint);
 		}
 	}

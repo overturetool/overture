@@ -337,7 +337,7 @@ public class DbgpXmlEntityParser extends DbgpXmlParser
 
 	{
 
-		List<Element> elements = new Vector<Element>();
+		List<Element> elements = new ArrayList<Element>();
 
 		NodeList childs = node.getChildNodes();
 

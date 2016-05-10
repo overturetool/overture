@@ -23,6 +23,7 @@ package org.overture.typechecker.visitor;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -46,7 +47,7 @@ public class QualificationVisitor extends
 	public List<QualifiedDefinition> caseAIsExp(AIsExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		List<QualifiedDefinition> result = new Vector<QualifiedDefinition>();
+		List<QualifiedDefinition> result = new ArrayList<QualifiedDefinition>();
 
 		if (node.getTest() instanceof AVariableExp)
 		{
@@ -101,13 +102,13 @@ public class QualificationVisitor extends
 	public List<QualifiedDefinition> createNewReturnValue(INode node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		return new Vector<QualifiedDefinition>();
+		return new ArrayList<QualifiedDefinition>();
 	}
 
 	@Override
 	public List<QualifiedDefinition> createNewReturnValue(Object node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		return new Vector<QualifiedDefinition>();
+		return new ArrayList<QualifiedDefinition>();
 	}
 }

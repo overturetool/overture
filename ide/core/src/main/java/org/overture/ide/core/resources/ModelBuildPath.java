@@ -77,7 +77,7 @@ public class ModelBuildPath
 
 	public List<IContainer> getModelSrcPaths()
 	{
-		List<IContainer> tmp = new Vector<IContainer>(srcPaths.size());
+		List<IContainer> tmp = new ArrayList<IContainer>(srcPaths.size());
 		tmp.addAll(srcPaths);
 		return tmp;
 	}

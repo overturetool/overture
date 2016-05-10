@@ -23,6 +23,7 @@ package org.overture.typechecker.assistant.module;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.IAstAssistant;
@@ -49,7 +50,7 @@ public class AModuleImportsAssistantTC implements IAstAssistant
 	public List<PDefinition> getDefinitions(AModuleImports imports,
 			List<AModuleModules> allModules)
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		for (AFromModuleImports ifm : imports.getImports())
 		{
@@ -89,7 +90,7 @@ public class AModuleImportsAssistantTC implements IAstAssistant
 			AModuleModules from)
 	{
 
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		for (List<PImport> ofType : ifm.getSignatures())
 		{

@@ -24,6 +24,7 @@ package org.overture.typechecker.assistant.definition;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.definitions.PDefinition;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -70,7 +71,7 @@ public class PDefinitionSet extends HashSet<PDefinition>
 
 	public List<PDefinition> asList()
 	{
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 		list.addAll(this);
 		return list;
 	}

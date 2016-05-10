@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -51,7 +52,7 @@ public class BUSValue extends ObjectValue
 	public BUSValue(AClassType classtype, NameValuePairMap map,
 			ValueList argvals)
 	{
-		super(classtype, map, new Vector<ObjectValue>(), null, null);
+		super(classtype, map, new ArrayList<ObjectValue>(), null, null);
 
 		QuoteValue parg = (QuoteValue) argvals.get(0);
 		SchedulingPolicy policy = SchedulingPolicy.factory(parg.value.toUpperCase());
@@ -60,7 +61,7 @@ public class BUSValue extends ObjectValue
 		double speed = sarg.value;
 
 		SetValue set = (SetValue) argvals.get(2);
-		List<CPUResource> cpulist = new Vector<CPUResource>();
+		List<CPUResource> cpulist = new ArrayList<CPUResource>();
 
 		for (Value v : set.values)
 		{
@@ -74,8 +75,8 @@ public class BUSValue extends ObjectValue
 
 	public BUSValue(AClassType type, ValueSet cpus)
 	{
-		super(type, new NameValuePairMap(), new Vector<ObjectValue>(), null, null);
-		List<CPUResource> cpulist = new Vector<CPUResource>();
+		super(type, new NameValuePairMap(), new ArrayList<ObjectValue>(), null, null);
+		List<CPUResource> cpulist = new ArrayList<CPUResource>();
 
 		for (Value v : cpus)
 		{

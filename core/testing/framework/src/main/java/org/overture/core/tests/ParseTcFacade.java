@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
@@ -246,7 +247,7 @@ public abstract class ParseTcFacade
 			ext = parts[1];
 		}
 		File f = new File(sourcePath);
-		List<File> sources = new Vector<File>();
+		List<File> sources = new ArrayList<File>();
 		sources.add(f);
 
 		if (ext.equals("vdmsl") | ext.equals("vdm"))
@@ -258,7 +259,7 @@ public abstract class ParseTcFacade
 		{
 			if (ext.equals("vdmpp") | ext.equals("vpp"))
 			{
-				List<File> files = new Vector<File>();
+				List<File> files = new ArrayList<File>();
 				files.add(f);
 				return parseTcPpContent(files, testName, true);
 
@@ -266,7 +267,7 @@ public abstract class ParseTcFacade
 			{
 				if (ext.equals("vdmrt"))
 				{
-					List<File> files = new Vector<File>();
+					List<File> files = new ArrayList<File>();
 					files.add(f);
 					return parseTcRtContent(files, testName, true);
 				} else

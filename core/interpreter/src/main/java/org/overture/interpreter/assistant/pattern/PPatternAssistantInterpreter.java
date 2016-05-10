@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.pattern;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.IAstAssistant;
@@ -66,7 +67,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC implements
 			return pattern.apply(af.getIdentifierPatternFinder());// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
-			return new Vector<AIdentifierPattern>(); // Most have none
+			return new ArrayList<AIdentifierPattern>(); // Most have none
 		}
 
 	}

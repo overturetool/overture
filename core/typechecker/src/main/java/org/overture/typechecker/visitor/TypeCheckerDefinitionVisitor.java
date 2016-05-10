@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -164,7 +165,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
 		{
-			FlatCheckedEnvironment checked = new FlatCheckedEnvironment(question.assistantFactory, new Vector<PDefinition>(), question.env, NameScope.NAMES);
+			FlatCheckedEnvironment checked = new FlatCheckedEnvironment(question.assistantFactory, new ArrayList<PDefinition>(), question.env, NameScope.NAMES);
 			checked.setStatic(true);
 			cenv = checked;
 		}
@@ -318,7 +319,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 		}
 
-		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>();
+		List<QualifiedDefinition> qualified = new ArrayList<QualifiedDefinition>();
 
 		if (node.getPredef() != null)
 		{
@@ -501,14 +502,14 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		if (node.getTypeParams() != null)
 		{
 			defs.addAll(question.assistantFactory.createAImplicitFunctionDefinitionAssistant().getTypeParamDefinitions(node));
 		}
 
-		List<PDefinition> argdefs = new Vector<PDefinition>();
+		List<PDefinition> argdefs = new ArrayList<PDefinition>();
 
 		for (APatternListTypePair pltp : node.getParamPatterns())
 		{
@@ -523,7 +524,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 
-		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>();
+		List<QualifiedDefinition> qualified = new ArrayList<QualifiedDefinition>();
 
 		if (node.getPredef() != null)
 		{
@@ -765,11 +766,11 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>();
+		List<QualifiedDefinition> qualified = new ArrayList<QualifiedDefinition>();
 
 		if (node.getPredef() != null)
 		{
-			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
+			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new ArrayList<PDefinition>(), local);
 			pre.setEnclosingDefinition(node.getPredef());
 			pre.setFunctional(true);
 
@@ -892,8 +893,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	{
 		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		question = new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers);
-		List<PDefinition> defs = new Vector<PDefinition>();
-		List<PDefinition> argdefs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
+		List<PDefinition> argdefs = new ArrayList<PDefinition>();
 
 		if (question.env.isVDMPP())
 		{
@@ -1008,11 +1009,11 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>();
+		List<QualifiedDefinition> qualified = new ArrayList<QualifiedDefinition>();
 
 		if (node.getPredef() != null)
 		{
-			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
+			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new ArrayList<PDefinition>(), local);
 			pre.setEnclosingDefinition(node.getPredef());
 			pre.setFunctional(true);
 			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
@@ -1126,7 +1127,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				post.unusedCheck();
 			} else
 			{
-				FlatEnvironment post = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
+				FlatEnvironment post = new FlatEnvironment(question.assistantFactory, new ArrayList<PDefinition>(), local);
 				post.setEnclosingDefinition(node.getPostdef());
 				post.setFunctional(true);
 				b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMESANDANYSTATE));
@@ -1210,7 +1211,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		}
 
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		for (PMultipleBind mb : node.getBindings())
 		{
@@ -1699,7 +1700,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	public Collection<? extends PDefinition> getDefinitions(
 			APatternListTypePair pltp, NameScope scope, ITypeCheckerAssistantFactory assistantFactory)
 	{
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 
 		for (PPattern p : pltp.getPatterns())
 		{

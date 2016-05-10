@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -77,7 +78,7 @@ public class ExportDefinitionFinder
 			AFunctionExport exp, LinkedList<PDefinition> actualDefs)
 			throws AnalysisException
 	{
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 		for (ILexNameToken name : exp.getNameList())
 		{
 			PDefinition def = af.createPDefinitionListAssistant().findName(actualDefs, name, NameScope.NAMES);
@@ -155,7 +156,7 @@ public class ExportDefinitionFinder
 			AOperationExport exp, LinkedList<PDefinition> actualDefs)
 			throws AnalysisException
 	{
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 		for (ILexNameToken name : ((AOperationExport) exp).getNameList())
 		{
 			PDefinition def = af.createPDefinitionListAssistant().findName(actualDefs, name, NameScope.NAMES);
@@ -186,7 +187,7 @@ public class ExportDefinitionFinder
 			LinkedList<PDefinition> actualDefs) throws AnalysisException
 	{
 		ILexNameToken name = ((ATypeExport) exp).getName();
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 		PDefinition def = af.createPDefinitionListAssistant().findType(actualDefs, name, name.getModule());
 		if (def == null)
 		{
@@ -240,7 +241,7 @@ public class ExportDefinitionFinder
 	public Collection<? extends PDefinition> caseAValueExport(AValueExport exp,
 			LinkedList<PDefinition> actualDefs) throws AnalysisException
 	{
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 		for (ILexNameToken name : ((AValueExport) exp).getNameList())
 		{
 			PDefinition def = af.createPDefinitionListAssistant().findName(actualDefs, name, NameScope.NAMES);

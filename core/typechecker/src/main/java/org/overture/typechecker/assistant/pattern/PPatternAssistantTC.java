@@ -23,6 +23,7 @@ package org.overture.typechecker.assistant.pattern;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -63,7 +64,7 @@ public class PPatternAssistantTC extends PPatternAssistant implements IAstAssist
 	{
 		PDefinitionSet set = af.createPDefinitionSet();
 		set.addAll(af.createPPatternAssistant().getAllDefinitions(rp, ptype, scope));
-		List<PDefinition> result = new Vector<PDefinition>(set);
+		List<PDefinition> result = new ArrayList<PDefinition>(set);
 		return result;
 	}
 

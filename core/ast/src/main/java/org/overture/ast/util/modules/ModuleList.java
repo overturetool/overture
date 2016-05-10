@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -99,7 +100,7 @@ public class ModuleList extends Vector<AModuleModules>
 				// In VDM-10, we implicitly import all from the other
 				// modules included with the flat specifications (if any).
 
-				List<AFromModuleImports> imports = new Vector<AFromModuleImports>();
+				List<AFromModuleImports> imports = new ArrayList<AFromModuleImports>();
 
 				for (AModuleModules m : this)
 				{
@@ -165,9 +166,9 @@ public class ModuleList extends Vector<AModuleModules>
 	// This function is copied from the module reader
 	private AFromModuleImports importAll(ILexIdentifierToken from)
 	{
-		List<List<PImport>> types = new Vector<List<PImport>>();
+		List<List<PImport>> types = new ArrayList<List<PImport>>();
 		ILexNameToken all = new LexNameToken(from.getName(), "all", from.getLocation());
-		List<PImport> impAll = new Vector<PImport>();
+		List<PImport> impAll = new ArrayList<PImport>();
 		AAllImport iport = AstFactory.newAAllImport(all);
 		iport.setLocation(all.getLocation());
 		iport.setName(all);

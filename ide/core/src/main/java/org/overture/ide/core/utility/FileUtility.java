@@ -278,7 +278,7 @@ public class FileUtility
 	public static List<Character> convert(String text, String encoding)
 	{
 		InputStreamReader in = null;
-		List<Character> content = new Vector<Character>();
+		List<Character> content = new ArrayList<Character>();
 		try
 		{
 			in = new InputStreamReader(new ByteArrayInputStream(text.getBytes(encoding)), encoding);
@@ -368,7 +368,7 @@ public class FileUtility
 	{
 		InputStream inStream;
 		InputStreamReader in = null;
-		List<Character> content = new Vector<Character>();
+		List<Character> content = new ArrayList<Character>();
 		try
 		{
 			inStream = file.getContents();

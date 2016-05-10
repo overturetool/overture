@@ -62,7 +62,7 @@ public class LanguageManager
 
 	private List<ILanguage> getLoadLanguages()
 	{
-		List<ILanguage> languages = new Vector<ILanguage>();
+		List<ILanguage> languages = new ArrayList<ILanguage>();
 
 		IConfigurationElement[] config = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(ICoreConstants.EXTENSION_LANGUAGE_ID);

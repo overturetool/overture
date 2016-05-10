@@ -23,6 +23,7 @@ package org.overture.ast.assistant.type;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.IAstAssistantFactory;
@@ -67,7 +68,7 @@ public class AUnionTypeAssistant implements IAstAssistant
 			}
 		}
 
-		Vector<PType> v = new Vector<PType>(exptypes);
+		ArrayList<PType> v = new ArrayList<PType>(exptypes);
 		type.setTypes(v);
 		type.setExpanded(true);
 		List<PDefinition> definitions = type.getDefinitions();

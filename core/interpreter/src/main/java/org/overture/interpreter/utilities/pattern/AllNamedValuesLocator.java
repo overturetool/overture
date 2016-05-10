@@ -1,5 +1,6 @@
 package org.overture.interpreter.utilities.pattern;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -82,7 +83,7 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseABooleanPattern(ABooleanPattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		List<NameValuePairList> result = new Vector<NameValuePairList>();
+		List<NameValuePairList> result = new ArrayList<NameValuePairList>();
 
 		try
 		{
@@ -104,7 +105,7 @@ public class AllNamedValuesLocator
 			ACharacterPattern pattern, Newquestion question)
 			throws AnalysisException
 	{
-		List<NameValuePairList> result = new Vector<NameValuePairList>();
+		List<NameValuePairList> result = new ArrayList<NameValuePairList>();
 
 		try
 		{
@@ -153,7 +154,7 @@ public class AllNamedValuesLocator
 		// generate a set of splits of the values, and offer these to sub-matches
 		// to see whether they fit. Otherwise, there is just one split at this level.
 
-		List<Integer> leftSizes = new Vector<Integer>();
+		List<Integer> leftSizes = new ArrayList<Integer>();
 
 		if (llen == PPatternAssistantInterpreter.ANY)
 		{
@@ -208,7 +209,7 @@ public class AllNamedValuesLocator
 		// Now loop through the various splits and attempt to match the l/r
 		// sub-patterns to the split sequence value.
 
-		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+		List<NameValuePairList> finalResults = new ArrayList<NameValuePairList>();
 
 		for (Integer lsize : leftSizes)
 		{
@@ -227,7 +228,7 @@ public class AllNamedValuesLocator
 				tail.add(iter.next());
 			}
 
-			List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+			List<List<NameValuePairList>> nvplists = new ArrayList<List<NameValuePairList>>();
 			int psize = 2;
 			int[] counts = new int[psize];
 
@@ -295,7 +296,7 @@ public class AllNamedValuesLocator
 			AExpressionPattern pattern, Newquestion question)
 			throws AnalysisException
 	{
-		List<NameValuePairList> result = new Vector<NameValuePairList>();
+		List<NameValuePairList> result = new ArrayList<NameValuePairList>();
 
 		try
 		{
@@ -321,7 +322,7 @@ public class AllNamedValuesLocator
 			AIdentifierPattern pattern, Newquestion question)
 			throws AnalysisException
 	{
-		List<NameValuePairList> result = new Vector<NameValuePairList>();
+		List<NameValuePairList> result = new ArrayList<NameValuePairList>();
 		NameValuePairList list = new NameValuePairList();
 		list.add(new NameValuePair(pattern.getName(), question.expval));
 		result.add(list);
@@ -332,7 +333,7 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseAIgnorePattern(AIgnorePattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		List<NameValuePairList> result = new Vector<NameValuePairList>();
+		List<NameValuePairList> result = new ArrayList<NameValuePairList>();
 		result.add(new NameValuePairList());
 		return result;
 	}
@@ -341,7 +342,7 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseAIntegerPattern(AIntegerPattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		List<NameValuePairList> result = new Vector<NameValuePairList>();
+		List<NameValuePairList> result = new ArrayList<NameValuePairList>();
 
 		try
 		{
@@ -390,11 +391,11 @@ public class AllNamedValuesLocator
 			allMaps = values.permutedMaps();
 		} else
 		{
-			allMaps = new Vector<ValueMap>();
+			allMaps = new ArrayList<ValueMap>();
 			allMaps.add(values);
 		}
 
-		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+		List<NameValuePairList> finalResults = new ArrayList<NameValuePairList>();
 		int psize = pattern.getMaplets().size();
 
 		if (pattern.getMaplets().isEmpty())
@@ -407,7 +408,7 @@ public class AllNamedValuesLocator
 		{
 			Iterator<Entry<Value, Value>> iter = mapPerm.entrySet().iterator();
 
-			List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+			List<List<NameValuePairList>> nvplists = new ArrayList<List<NameValuePairList>>();
 			int[] counts = new int[psize];
 			int i = 0;
 
@@ -501,7 +502,7 @@ public class AllNamedValuesLocator
 		// generate a set of splits of the values, and offer these to sub-matches
 		// to see whether they fit. Otherwise, there is just one split at this level.
 
-		List<Integer> leftSizes = new Vector<Integer>();
+		List<Integer> leftSizes = new ArrayList<Integer>();
 
 		if (llen == PPatternAssistantInterpreter.ANY)
 		{
@@ -566,14 +567,14 @@ public class AllNamedValuesLocator
 			allMaps = values.permutedMaps();
 		} else
 		{
-			allMaps = new Vector<ValueMap>();
+			allMaps = new ArrayList<ValueMap>();
 			allMaps.add(values);
 		}
 
 		// Now loop through the various splits and attempt to match the l/r
 		// sub-patterns to the split map value.
 
-		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+		List<NameValuePairList> finalResults = new ArrayList<NameValuePairList>();
 
 		for (Integer lsize : leftSizes)
 		{
@@ -596,7 +597,7 @@ public class AllNamedValuesLocator
 					second.put(e.getKey(), e.getValue());
 				}
 
-				List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+				List<List<NameValuePairList>> nvplists = new ArrayList<List<NameValuePairList>>();
 				int psize = 2;
 				int[] counts = new int[psize];
 
@@ -665,7 +666,7 @@ public class AllNamedValuesLocator
 			Newquestion question) throws AnalysisException
 	{
 		// return ANilPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
-		List<NameValuePairList> result = new Vector<NameValuePairList>();
+		List<NameValuePairList> result = new ArrayList<NameValuePairList>();
 
 		if (!(question.expval.deref() instanceof NilValue))
 		{
@@ -680,7 +681,7 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseAQuotePattern(AQuotePattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		List<NameValuePairList> result = new Vector<NameValuePairList>();
+		List<NameValuePairList> result = new ArrayList<NameValuePairList>();
 
 		try
 		{
@@ -701,7 +702,7 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseARealPattern(ARealPattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		List<NameValuePairList> result = new Vector<NameValuePairList>();
+		List<NameValuePairList> result = new ArrayList<NameValuePairList>();
 
 		try
 		{
@@ -746,7 +747,7 @@ public class AllNamedValuesLocator
 		}
 
 		Iterator<FieldValue> iter = fields.iterator();
-		List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+		List<List<NameValuePairList>> nvplists = new ArrayList<List<NameValuePairList>>();
 		int psize = pattern.getPlist().size();
 		int[] counts = new int[psize];
 		int i = 0;
@@ -759,7 +760,7 @@ public class AllNamedValuesLocator
 		}
 
 		Permutor permutor = new Permutor(counts);
-		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+		List<NameValuePairList> finalResults = new ArrayList<NameValuePairList>();
 
 		if (pattern.getPlist().isEmpty())
 		{
@@ -829,7 +830,7 @@ public class AllNamedValuesLocator
 		}
 
 		ListIterator<Value> iter = values.listIterator();
-		List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+		List<List<NameValuePairList>> nvplists = new ArrayList<List<NameValuePairList>>();
 		int psize = pattern.getPlist().size();
 		int[] counts = new int[psize];
 		int i = 0;
@@ -842,7 +843,7 @@ public class AllNamedValuesLocator
 		}
 
 		Permutor permutor = new Permutor(counts);
-		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+		List<NameValuePairList> finalResults = new ArrayList<NameValuePairList>();
 
 		if (pattern.getPlist().isEmpty())
 		{
@@ -925,11 +926,11 @@ public class AllNamedValuesLocator
 			allSets = values.permutedSets();
 		} else
 		{
-			allSets = new Vector<ValueSet>();
+			allSets = new ArrayList<ValueSet>();
 			allSets.add(values);
 		}
 
-		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+		List<NameValuePairList> finalResults = new ArrayList<NameValuePairList>();
 		int psize = pattern.getPlist().size();
 
 		if (pattern.getPlist().isEmpty())
@@ -942,7 +943,7 @@ public class AllNamedValuesLocator
 		{
 			Iterator<Value> iter = setPerm.iterator();
 
-			List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+			List<List<NameValuePairList>> nvplists = new ArrayList<List<NameValuePairList>>();
 			int[] counts = new int[psize];
 			int i = 0;
 
@@ -1008,7 +1009,7 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseAStringPattern(AStringPattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		List<NameValuePairList> result = new Vector<NameValuePairList>();
+		List<NameValuePairList> result = new ArrayList<NameValuePairList>();
 
 		try
 		{
@@ -1045,7 +1046,7 @@ public class AllNamedValuesLocator
 		}
 
 		ListIterator<Value> iter = values.listIterator();
-		List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+		List<List<NameValuePairList>> nvplists = new ArrayList<List<NameValuePairList>>();
 		int psize = pattern.getPlist().size();
 		int[] counts = new int[psize];
 		int i = 0;
@@ -1059,7 +1060,7 @@ public class AllNamedValuesLocator
 		}
 
 		Permutor permutor = new Permutor(counts);
-		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+		List<NameValuePairList> finalResults = new ArrayList<NameValuePairList>();
 
 		while (permutor.hasNext())
 		{
@@ -1134,7 +1135,7 @@ public class AllNamedValuesLocator
 		// generate a set of splits of the values, and offer these to sub-matches
 		// to see whether they fit. Otherwise, there is just one split at this level.
 
-		List<Integer> leftSizes = new Vector<Integer>();
+		List<Integer> leftSizes = new ArrayList<Integer>();
 
 		if (llen == PPatternAssistantInterpreter.ANY)
 		{
@@ -1199,14 +1200,14 @@ public class AllNamedValuesLocator
 			allSets = values.permutedSets();
 		} else
 		{
-			allSets = new Vector<ValueSet>();
+			allSets = new ArrayList<ValueSet>();
 			allSets.add(values);
 		}
 
 		// Now loop through the various splits and attempt to match the l/r
 		// sub-patterns to the split set value.
 
-		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+		List<NameValuePairList> finalResults = new ArrayList<NameValuePairList>();
 
 		for (Integer lsize : leftSizes)
 		{
@@ -1227,7 +1228,7 @@ public class AllNamedValuesLocator
 					second.add(iter.next());
 				}
 
-				List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+				List<List<NameValuePairList>> nvplists = new ArrayList<List<NameValuePairList>>();
 				int psize = 2;
 				int[] counts = new int[psize];
 
@@ -1311,7 +1312,7 @@ public class AllNamedValuesLocator
 			VdmRuntimeError.patternFail(4114, "Object type does not match pattern", pattern.getLocation());
 		}
 
-		List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+		List<List<NameValuePairList>> nvplists = new ArrayList<List<NameValuePairList>>();
 		int psize = pattern.getFields().size();
 		int[] counts = new int[psize];
 		int i = 0;
@@ -1331,7 +1332,7 @@ public class AllNamedValuesLocator
 		}
 
 		Permutor permutor = new Permutor(counts);
-		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+		List<NameValuePairList> finalResults = new ArrayList<NameValuePairList>();
 
 		if (pattern.getFields().isEmpty())
 		{

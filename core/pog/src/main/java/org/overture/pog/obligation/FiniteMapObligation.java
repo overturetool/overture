@@ -25,6 +25,7 @@ package org.overture.pog.obligation;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AApplyExp;
@@ -138,7 +139,7 @@ public class FiniteMapObligation extends ProofObligation
 		AApplyExp apply = getApplyExp(getVarExp(finmap), getVarExp(findex));
 
 		AMapEnumMapExp setEnum = new AMapEnumMapExp();
-		List<AMapletExp> members = new Vector<AMapletExp>();
+		List<AMapletExp> members = new ArrayList<AMapletExp>();
 		members.add(exp.getFirst().clone());
 		setEnum.setMembers(members);
 

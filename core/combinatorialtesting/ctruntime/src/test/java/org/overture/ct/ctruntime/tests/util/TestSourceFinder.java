@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.ct.ctruntime.tests.CtTestCaseBase;
@@ -55,7 +56,7 @@ public class TestSourceFinder
 				if (file.isDirectory() && !file.getName().startsWith("."))
 				{
 					//tests.addAll(createCompleteFile(dialect, name, file, testRoot, extensions));
-					List<File> specFiles = new Vector<File>();
+					List<File> specFiles = new ArrayList<File>();
 					for (File f : file.listFiles())
 					{
 						if(isNotAcceptedFile(f, Arrays.asList(extensions)))
@@ -297,7 +298,7 @@ public class TestSourceFinder
 
 	protected static List<String> readFile(File file) throws IOException
 	{
-		List<String> lines = new Vector<String>();
+		List<String> lines = new ArrayList<String>();
 		BufferedReader reader = null;
 
 		try

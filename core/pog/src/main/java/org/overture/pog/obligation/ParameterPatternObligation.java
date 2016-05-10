@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -110,8 +110,8 @@ public class ParameterPatternObligation extends ProofObligation
 			List<PType> params, PType result) throws AnalysisException
 	{
 		AForAllExp forallExp = new AForAllExp();
-		List<PMultipleBind> forallBindList = new Vector<PMultipleBind>();
-		List<PExp> arglist = new Vector<PExp>();
+		List<PMultipleBind> forallBindList = new ArrayList<PMultipleBind>();
+		List<PExp> arglist = new ArrayList<PExp>();
 		PExp forallPredicate = null;
 
 		for (List<PPattern> paramList : plist)
@@ -121,7 +121,7 @@ public class ParameterPatternObligation extends ProofObligation
 			if (!paramList.isEmpty())
 			{
 				AExistsExp existsExp = new AExistsExp();
-				List<PMultipleBind> existsBindList = new Vector<PMultipleBind>();
+				List<PMultipleBind> existsBindList = new ArrayList<PMultipleBind>();
 				PExp existsPredicate = null;
 
 				Set<ILexNameToken> previousBindings = new HashSet<ILexNameToken>();

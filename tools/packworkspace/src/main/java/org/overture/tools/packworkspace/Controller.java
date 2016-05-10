@@ -267,7 +267,7 @@ public class Controller
 
 	public List<RssItem> getRssItems()
 	{
-		List<RssItem> items = new Vector<RssItem>();
+		List<RssItem> items = new ArrayList<RssItem>();
 
 		for (ProjectPacker p : projects)
 		{

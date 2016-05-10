@@ -58,7 +58,7 @@ public class SFunctionDefinitionAssistantTC implements IAstAssistant
 		while (piter.hasNext())
 		{
 			List<PPattern> plist = piter.next();
-			List<PDefinition> defs = new Vector<PDefinition>();
+			List<PDefinition> defs = new ArrayList<PDefinition>();
 			List<PType> ptypes = ftype.getParameters();
 			Iterator<PType> titer = ptypes.iterator();
 

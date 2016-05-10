@@ -55,8 +55,8 @@ public class AImplicitOperationDefinitionAssistantTC implements IAstAssistant
 			AImplicitOperationDefinition d, Environment base)
 	{
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
-		List<PPattern> plist = new Vector<PPattern>();
+		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
+		List<PPattern> plist = new ArrayList<PPattern>();
 
 		for (APatternListTypePair pl : (LinkedList<APatternListTypePair>) d.getParameterPatterns())
 		{
@@ -103,8 +103,8 @@ public class AImplicitOperationDefinitionAssistantTC implements IAstAssistant
 			AImplicitOperationDefinition d, Environment base)
 	{
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
-		List<PPattern> plist = new Vector<PPattern>();
+		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
+		List<PPattern> plist = new ArrayList<PPattern>();
 
 		for (APatternListTypePair pl : (LinkedList<APatternListTypePair>) d.getParameterPatterns())
 		{

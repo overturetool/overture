@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
@@ -138,7 +139,7 @@ public class ValueFactory
 	public RecordValue createRecord(String recordName, Object... fields)
 			throws ValueFactoryException
 	{
-		List<Value> values = new Vector<Value>();
+		List<Value> values = new ArrayList<Value>();
 		for (Object object : fields)
 		{
 			if (object instanceof Boolean)

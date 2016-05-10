@@ -79,7 +79,7 @@ public class JarClassSelector
 			});
 		}
 
-		List<String> classes = new Vector<String>();
+		List<String> classes = new ArrayList<String>();
 		for (String path : jars)
 		{
 			classes.addAll(PackageUtils.getClasseNamesInPackage(path, null));

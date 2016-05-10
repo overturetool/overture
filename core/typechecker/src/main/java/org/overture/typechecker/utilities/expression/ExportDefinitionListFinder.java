@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
@@ -66,7 +67,7 @@ public class ExportDefinitionListFinder extends
 	public Collection<? extends PDefinition> caseAFunctionExport(
 			AFunctionExport exp) throws AnalysisException
 	{
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 		// AAccessSpecifierAccessSpecifier
 		for (ILexNameToken name : exp.getNameList())
 		{
@@ -82,7 +83,7 @@ public class ExportDefinitionListFinder extends
 	public Collection<? extends PDefinition> caseAOperationExport(
 			AOperationExport exp) throws AnalysisException
 	{
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 		for (ILexNameToken name : exp.getNameList())
 		{
 			list.add(AstFactory.newALocalDefinition(name.getLocation(), name.clone(), NameScope.GLOBAL, exp.getExportType()));
@@ -104,7 +105,7 @@ public class ExportDefinitionListFinder extends
 	public Collection<? extends PDefinition> caseAValueExport(AValueExport exp)
 			throws AnalysisException
 	{
-		List<PDefinition> list = new Vector<PDefinition>();
+		List<PDefinition> list = new ArrayList<PDefinition>();
 		for (ILexNameToken name : exp.getNameList())
 		{
 			list.add(AstFactory.newALocalDefinition(name.getLocation(), name.clone(), NameScope.GLOBAL, exp.getExportType()));

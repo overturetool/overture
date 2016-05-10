@@ -162,7 +162,7 @@ public class VdmjTracesHelper
 			IProgressMonitor monitor, ITracesDisplay display,
 			boolean useReduction) throws IOException, CoreException
 	{
-		List<TraceExecutionSetup> traceSetups = new Vector<TraceExecutionSetup>();
+		List<TraceExecutionSetup> traceSetups = new ArrayList<TraceExecutionSetup>();
 
 		if (container != null)
 		{

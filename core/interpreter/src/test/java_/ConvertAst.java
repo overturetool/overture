@@ -125,7 +125,7 @@ public class ConvertAst extends BasicTypeCheckTestCase
 		public List<? extends ClonableFile> convert(
 				List<? extends org.overture.util.ClonableFile> node)
 		{
-			List<ClonableFile> files = new Vector<ClonableFile>();
+			List<ClonableFile> files = new ArrayList<ClonableFile>();
 			for (org.overture.util.ClonableFile clonableFile : node)
 			{
 				files.add(new ClonableFile(clonableFile));

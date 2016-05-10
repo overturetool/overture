@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -1036,7 +1037,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 			if (boolLiteral.getValue().getValue()) // while true do...
 			{
-				List<PType> edited = new Vector<PType>();
+				List<PType> edited = new ArrayList<PType>();
 				AUnionType original = (AUnionType) stype;
 
 				for (PType t : original.getTypes())
@@ -1179,7 +1180,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		// Operation must be "() ==> ()"
 
-		AOperationType expected = AstFactory.newAOperationType(node.getLocation(), new Vector<PType>(), AstFactory.newAVoidType(node.getLocation()));
+		AOperationType expected = AstFactory.newAOperationType(node.getLocation(), new ArrayList<PType>(), AstFactory.newAVoidType(node.getLocation()));
 		opdef = question.assistantFactory.createPDefinitionAssistant().deref(opdef);
 
 		if (opdef instanceof AExplicitOperationDefinition)

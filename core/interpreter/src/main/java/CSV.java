@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
@@ -186,7 +187,7 @@ public class CSV extends IO implements Serializable
 		BufferedReader bufRdr = new BufferedReader(new FileReader(file));
 		String line = null;
 		int lineIndex = 0;
-		List<String> cells = new Vector<String>();
+		List<String> cells = new ArrayList<String>();
 
 		if (index < 1)
 		{

@@ -74,7 +74,7 @@ public class VdmModel implements IVdmModel
 	 */
 	public synchronized List<INode> getRootElementList()
 	{
-		List<INode> list = new Vector<INode>();
+		List<INode> list = new ArrayList<INode>();
 		for (IVdmSourceUnit unit : vdmSourceUnits)
 		{
 			list.addAll(unit.getParseList());

@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -302,12 +303,12 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 
 		PStm body = AstFactory.newAClassInvariantStm(invname, invdefs);
 
-		return AstFactory.newAExplicitOperationDefinition(invname, type, new Vector<PPattern>(), null, null, body);
+		return AstFactory.newAExplicitOperationDefinition(invname, type, new ArrayList<PPattern>(), null, null, body);
 	}
 
 	public List<PDefinition> getInvDefs(SClassDefinition def)
 	{
-		List<PDefinition> invdefs = new Vector<PDefinition>();
+		List<PDefinition> invdefs = new ArrayList<PDefinition>();
 
 		if (def.getGettingInvDefs())
 		{
@@ -336,7 +337,7 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 
 	private void setInheritedDefinitions(SClassDefinition definition)
 	{
-		List<PDefinition> indefs = new Vector<PDefinition>();
+		List<PDefinition> indefs = new ArrayList<PDefinition>();
 
 		for (SClassDefinition sclass : definition.getSuperDefs())
 		{
@@ -347,7 +348,7 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 		// definitions, taken in order, will consider the overriding
 		// members before others.
 
-		List<PDefinition> superInheritedDefinitions = new Vector<PDefinition>();
+		List<PDefinition> superInheritedDefinitions = new ArrayList<PDefinition>();
 
 		for (PDefinition d : indefs)
 		{
@@ -364,7 +365,7 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 		}
 
 		definition.setSuperInheritedDefinitions(superInheritedDefinitions);
-		definition.setAllInheritedDefinitions(new Vector<PDefinition>());
+		definition.setAllInheritedDefinitions(new ArrayList<PDefinition>());
 		definition.getAllInheritedDefinitions().addAll(superInheritedDefinitions);
 		definition.getAllInheritedDefinitions().addAll(definition.getLocalInheritedDefinitions());
 
@@ -373,7 +374,7 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 	private List<PDefinition> getInheritable(SClassDefinition def)
 	{
 
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		if (def.getGettingInheritable())
 		{
@@ -524,7 +525,7 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 		int inheritedThreads = 0;
 		af.createSClassDefinitionAssistant().checkOverloads(c);
 
-		List<List<PDefinition>> superlist = new Vector<List<PDefinition>>();
+		List<List<PDefinition>> superlist = new ArrayList<List<PDefinition>>();
 
 		for (PDefinition def : c.getSuperDefs())
 		{
@@ -659,7 +660,7 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 
 	private void checkOverloads(SClassDefinition c)
 	{
-		List<String> done = new Vector<String>();
+		List<String> done = new ArrayList<String>();
 
 		List<PDefinition> singles = af.createPDefinitionListAssistant().singleDefinitions(c.getDefinitions());
 
@@ -742,7 +743,7 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 				if (d instanceof AValueDefinition)
 				{
 					// ValueDefinition body always a static context
-					FlatCheckedEnvironment checked = new FlatCheckedEnvironment(af, new Vector<PDefinition>(), base, NameScope.NAMES);
+					FlatCheckedEnvironment checked = new FlatCheckedEnvironment(af, new ArrayList<PDefinition>(), base, NameScope.NAMES);
 					checked.setStatic(true);
 					env = checked;
 				}

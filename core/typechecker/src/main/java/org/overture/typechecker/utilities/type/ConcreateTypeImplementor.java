@@ -23,6 +23,7 @@ package org.overture.typechecker.utilities.type;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -82,7 +83,7 @@ public class ConcreateTypeImplementor extends
 			throws AnalysisException
 	{
 		// return AFunctionTypeAssistantTC.polymorph(type, question.pname, question.actualType);
-		List<PType> polyparams = new Vector<PType>();
+		List<PType> polyparams = new ArrayList<PType>();
 
 		for (PType ptype : type.getParameters())
 		{
@@ -115,7 +116,7 @@ public class ConcreateTypeImplementor extends
 	public PType caseAProductType(AProductType type, Newquestion question)
 			throws AnalysisException
 	{
-		List<PType> polytypes = new Vector<PType>();
+		List<PType> polytypes = new ArrayList<PType>();
 
 		for (PType ptype : ((AProductType) type).getTypes())
 		{

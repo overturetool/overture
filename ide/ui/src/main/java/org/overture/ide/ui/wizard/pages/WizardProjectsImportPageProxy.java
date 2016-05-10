@@ -190,7 +190,7 @@ public class WizardProjectsImportPageProxy {
 			m = mainPage.getClass().getDeclaredMethod(method);
 			args = null;
 		} else {
-			List<Class<?>> parameterTypes = new Vector<Class<?>>();
+			List<Class<?>> parameterTypes = new ArrayList<Class<?>>();
 			for (Object object : args) {
 				if(object instanceof Boolean)
 				{

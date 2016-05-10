@@ -30,6 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -290,7 +291,7 @@ public class BaseTestSuite extends TestSuite
 
 	protected static List<String> readFile(File file) throws IOException
 	{
-		List<String> lines = new Vector<String>();
+		List<String> lines = new ArrayList<String>();
 		BufferedReader reader = null;
 
 		try

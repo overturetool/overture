@@ -149,7 +149,7 @@ public class ResourceManager implements IResourceChangeListener
 			IResource resource, IContentType contentTypeId)
 			throws CoreException
 	{
-		List<IVdmSourceUnit> list = new Vector<IVdmSourceUnit>();
+		List<IVdmSourceUnit> list = new ArrayList<IVdmSourceUnit>();
 
 		if (resource instanceof IFolder)
 		{
@@ -438,7 +438,7 @@ public class ResourceManager implements IResourceChangeListener
 	{
 		List<IVdmSourceUnit> syncedVdmSourceUnits = project.getSpecFiles();
 
-		List<IFile> removedFiles = new Vector<IFile>();
+		List<IFile> removedFiles = new ArrayList<IFile>();
 		IProject p = (IProject) project.getAdapter(IProject.class);
 
 		for (IFile file : vdmSourceUnits.keySet())

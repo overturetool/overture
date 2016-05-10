@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ANamedTraceDefinition;
@@ -448,7 +449,7 @@ public class ClassInterpreter extends Interpreter
 	public List<Object> runOneTrace(ANamedTraceDefinition tracedef,
 			CallSequence test, boolean debug) throws AnalysisException
 	{
-		List<Object> list = new Vector<Object>();
+		List<Object> list = new ArrayList<Object>();
 		Context ctxt = null;
 
 		try

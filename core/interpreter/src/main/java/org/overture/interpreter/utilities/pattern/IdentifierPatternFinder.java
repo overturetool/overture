@@ -2,6 +2,7 @@ package org.overture.interpreter.utilities.pattern;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
@@ -41,7 +42,7 @@ public class IdentifierPatternFinder extends
 			AConcatenationPattern pattern) throws AnalysisException
 	{
 
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+		List<AIdentifierPattern> list = new ArrayList<AIdentifierPattern>();
 
 		list.addAll(pattern.getLeft().apply(THIS));
 		list.addAll(pattern.getRight().apply(THIS));
@@ -52,7 +53,7 @@ public class IdentifierPatternFinder extends
 	public List<AIdentifierPattern> caseAIdentifierPattern(
 			AIdentifierPattern pattern) throws AnalysisException
 	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+		List<AIdentifierPattern> list = new ArrayList<AIdentifierPattern>();
 		list.add(pattern);
 		return list;
 	}
@@ -61,7 +62,7 @@ public class IdentifierPatternFinder extends
 	public List<AIdentifierPattern> caseAMapPattern(AMapPattern pattern)
 			throws AnalysisException
 	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+		List<AIdentifierPattern> list = new ArrayList<AIdentifierPattern>();
 
 		for (AMapletPatternMaplet p : pattern.getMaplets())
 		{
@@ -75,7 +76,7 @@ public class IdentifierPatternFinder extends
 	public List<AIdentifierPattern> caseAMapUnionPattern(
 			AMapUnionPattern pattern) throws AnalysisException
 	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+		List<AIdentifierPattern> list = new ArrayList<AIdentifierPattern>();
 
 		list.addAll(pattern.getLeft().apply(THIS));
 		list.addAll(pattern.getRight().apply(THIS));
@@ -86,7 +87,7 @@ public class IdentifierPatternFinder extends
 	public List<AIdentifierPattern> caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
 	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+		List<AIdentifierPattern> list = new ArrayList<AIdentifierPattern>();
 
 		for (PPattern p : pattern.getPlist())
 		{
@@ -100,7 +101,7 @@ public class IdentifierPatternFinder extends
 	public List<AIdentifierPattern> caseASeqPattern(ASeqPattern pattern)
 			throws AnalysisException
 	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+		List<AIdentifierPattern> list = new ArrayList<AIdentifierPattern>();
 
 		for (PPattern p : pattern.getPlist())
 		{
@@ -114,7 +115,7 @@ public class IdentifierPatternFinder extends
 	public List<AIdentifierPattern> caseASetPattern(ASetPattern pattern)
 			throws AnalysisException
 	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+		List<AIdentifierPattern> list = new ArrayList<AIdentifierPattern>();
 
 		for (PPattern p : pattern.getPlist())
 		{
@@ -128,7 +129,7 @@ public class IdentifierPatternFinder extends
 	public List<AIdentifierPattern> caseATuplePattern(ATuplePattern pattern)
 			throws AnalysisException
 	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+		List<AIdentifierPattern> list = new ArrayList<AIdentifierPattern>();
 
 		for (PPattern p : pattern.getPlist())
 		{
@@ -142,7 +143,7 @@ public class IdentifierPatternFinder extends
 	public List<AIdentifierPattern> caseAUnionPattern(AUnionPattern pattern)
 			throws AnalysisException
 	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+		List<AIdentifierPattern> list = new ArrayList<AIdentifierPattern>();
 
 		list.addAll(pattern.getLeft().apply(THIS));
 		list.addAll(pattern.getRight().apply(THIS));
@@ -153,7 +154,7 @@ public class IdentifierPatternFinder extends
 	public List<AIdentifierPattern> caseAObjectPattern(AObjectPattern pattern)
 			throws AnalysisException
 	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+		List<AIdentifierPattern> list = new ArrayList<AIdentifierPattern>();
 
 		for (ANamePatternPair npp : pattern.getFields())
 		{
@@ -167,7 +168,7 @@ public class IdentifierPatternFinder extends
 	public List<AIdentifierPattern> defaultPPattern(PPattern node)
 			throws AnalysisException
 	{
-		return new Vector<AIdentifierPattern>(); // Most have none
+		return new ArrayList<AIdentifierPattern>(); // Most have none
 	}
 
 	@Override

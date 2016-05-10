@@ -303,7 +303,7 @@ public class PDefinitionListAssistantTC implements IAstAssistant
 	
 	public List<PDefinition> removeAbstracts(List<PDefinition> list)
 	{
-		List<PDefinition> keep = new Vector<PDefinition>();
+		List<PDefinition> keep = new ArrayList<PDefinition>();
 		PDefinitionAssistantTC assistant = af.createPDefinitionAssistant();
 		
 		for (PDefinition def: list)

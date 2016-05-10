@@ -23,11 +23,12 @@ package org.overture.ct.ctruntime.utils;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 public class TraceResult
 {
 	public String traceName;
-	public List<TraceTest> tests = new Vector<TraceTest>();
+	public List<TraceTest> tests = new ArrayList<TraceTest>();
 
 	@Override
 	public String toString()

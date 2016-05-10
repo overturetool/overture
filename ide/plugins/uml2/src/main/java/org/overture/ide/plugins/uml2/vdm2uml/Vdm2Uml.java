@@ -178,7 +178,7 @@ public class Vdm2Uml
 
 		utc.setModelWorkingCopy(modelWorkingCopy);
 
-		List<SClassDefinition> onlyClasses = new Vector<SClassDefinition>();
+		List<SClassDefinition> onlyClasses = new ArrayList<SClassDefinition>();
 		onlyClasses.addAll(classes);
 		for (SClassDefinition sClassDefinition : classes)
 		{
@@ -210,7 +210,7 @@ public class Vdm2Uml
 			BufferedReader br = new BufferedReader(fr);
 
 			String line = null;
-			List<String> buffer = new Vector<String>();
+			List<String> buffer = new ArrayList<String>();
 			while ((line = br.readLine()) != null)
 			{
 				line = line.replace("\"http://www.eclipse.org/uml2/4.0.0/UML\"", "\"http://www.eclipse.org/uml2/3.0.0/UML\"");

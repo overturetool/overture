@@ -33,6 +33,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
@@ -626,7 +627,7 @@ public class FunctionValue extends Value
 			Map<String, String> stateExps = new HashMap<String, String>();
 
 			Interpreter interpreter = Interpreter.getInstance();
-			List<PDefinition> allDefs = new Vector<PDefinition>();
+			List<PDefinition> allDefs = new ArrayList<PDefinition>();
 			if (interpreter instanceof ClassInterpreter)
 			{
 				for (SClassDefinition c : ((ClassInterpreter) interpreter).getClasses())

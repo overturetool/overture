@@ -29,6 +29,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -453,7 +454,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	{
 		//FIXME skip lex location in other files
 		// idea: if !lextLocation.getFile().equals(file) then continue; 
-		List<Integer> hits = new Vector<Integer>();
+		List<Integer> hits = new ArrayList<Integer>();
 
 		synchronized (allLocations)
 		{
@@ -471,7 +472,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 	public static List<Integer> getMissList(File file)
 	{
-		List<Integer> misses = new Vector<Integer>();
+		List<Integer> misses = new ArrayList<Integer>();
 
 		synchronized (allLocations)
 		{
@@ -489,7 +490,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 	public static List<Integer> getSourceList(File file)
 	{
-		List<Integer> lines = new Vector<Integer>();
+		List<Integer> lines = new ArrayList<Integer>();
 		int last = 0;
 
 		synchronized (allLocations)
@@ -521,7 +522,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 					if (list == null)
 					{
-						list = new Vector<LexLocation>();
+						list = new ArrayList<LexLocation>();
 						map.put(l.startLine, list);
 					}
 
@@ -573,7 +574,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 					if (list == null)
 					{
-						list = new Vector<LexLocation>();
+						list = new ArrayList<LexLocation>();
 						map.put(l.startLine, list);
 					}
 
@@ -587,7 +588,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 	public static List<LexLocation> getSourceLocations(File file)
 	{
-		List<LexLocation> locations = new Vector<LexLocation>();
+		List<LexLocation> locations = new ArrayList<LexLocation>();
 
 		synchronized (allLocations)
 		{
@@ -650,7 +651,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	 */
 	public static List<LexLocation> removeDuplicates(List<LexLocation> locations)
 	{
-		List<LexLocation> tmp = new Vector<LexLocation>();
+		List<LexLocation> tmp = new ArrayList<LexLocation>();
 		c: for (LexLocation l1 : locations)
 		{
 			if (l1.hits == 0)

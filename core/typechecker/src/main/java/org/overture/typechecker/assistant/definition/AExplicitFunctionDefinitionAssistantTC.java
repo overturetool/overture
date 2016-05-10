@@ -161,7 +161,7 @@ public class AExplicitFunctionDefinitionAssistantTC implements IAstAssistant
 			AExplicitFunctionDefinition d)
 	{
 
-		List<PPattern> last = new Vector<PPattern>();
+		List<PPattern> last = new ArrayList<PPattern>();
 		int psize = d.getParamPatternList().size();
 
 		for (PPattern p : d.getParamPatternList().get(psize - 1))
@@ -172,7 +172,7 @@ public class AExplicitFunctionDefinitionAssistantTC implements IAstAssistant
 		LexNameToken result = new LexNameToken(d.getName().getModule(), "RESULT", d.getLocation());
 		last.add(AstFactory.newAIdentifierPattern(result));
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
 
 		if (psize > 1)
 		{

@@ -2,6 +2,7 @@ package org.overture.interpreter.utilities.type;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -162,7 +163,7 @@ public class AllValuesCollector extends
 	public ValueList caseARecordInvariantType(ARecordInvariantType type,
 			Context ctxt) throws AnalysisException
 	{
-		List<PType> types = new Vector<PType>();
+		List<PType> types = new ArrayList<PType>();
 
 		for (AFieldField f : type.getFields())
 		{

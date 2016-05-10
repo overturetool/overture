@@ -2,6 +2,7 @@ package org.overture.interpreter.traces;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -63,7 +64,7 @@ public class TraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 			throws AnalysisException
 	{
 		// return AApplyExpressionTraceCoreDefinitionAssistantInterpreter.expand(core, ctxt);
-		List<PExp> newargs = new Vector<PExp>();
+		List<PExp> newargs = new ArrayList<PExp>();
 		List<PExp> args = null;
 
 		if (core.getCallStatement() instanceof ACallStm)

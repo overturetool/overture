@@ -26,6 +26,7 @@ package org.overture.interpreter.commands;
 import java.io.File;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.messages.InternalException;
@@ -89,7 +90,7 @@ public class DebuggerReader extends CommandReader
 				throw new InternalException(52, "Cannot set default name at breakpoint");
 			}
 
-			ExitStatus status = super.run(new Vector<File>());
+			ExitStatus status = super.run(new ArrayList<File>());
 
 			return status;
 		}

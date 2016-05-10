@@ -428,7 +428,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 					@Override
 					public Object[] getElements(Object element)
 					{
-						List<IProject> elements = new Vector<IProject>();
+						List<IProject> elements = new ArrayList<IProject>();
 						Object[] arr = super.getElements(element);
 						if (arr != null)
 						{

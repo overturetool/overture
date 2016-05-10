@@ -2,6 +2,7 @@ package org.overture.pog.visitors;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -140,7 +141,7 @@ public class VariableSubVisitor extends
 	private List<PExp> distribute(List<PExp> args, Substitution question)
 			throws AnalysisException
 	{
-		List<PExp> subs = new Vector<PExp>();
+		List<PExp> subs = new ArrayList<PExp>();
 		for (PExp a : args)
 		{
 			subs.add(a.clone().apply(main, question));

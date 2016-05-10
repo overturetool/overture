@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -20,7 +21,7 @@ public class TestSuite
 {
 	public static Value getTestMethodNamed(Value test)
 	{
-		List<String> tests = new Vector<String>();
+		List<String> tests = new ArrayList<String>();
 		ObjectValue instance = (ObjectValue) test;
 
 		for (NameValuePair p : instance.members.asList())
@@ -45,7 +46,7 @@ public class TestSuite
 
 	public static Value createTests(Value test) throws Exception
 	{
-		List<String> tests = new Vector<String>();
+		List<String> tests = new ArrayList<String>();
 		ValueList vals = new ValueList();
 		ObjectValue instance = (ObjectValue) test;
 

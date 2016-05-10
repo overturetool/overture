@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -396,7 +397,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 			noDuplicates.add(d1);
 		}
 
-		return new Vector<PDefinition>(noDuplicates);
+		return new ArrayList<PDefinition>(noDuplicates);
 	}
 
 	public boolean isSubclassResponsibility(PDefinition d)

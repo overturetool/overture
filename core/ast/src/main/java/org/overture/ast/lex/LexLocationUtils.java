@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -193,7 +194,7 @@ public class LexLocationUtils implements Serializable
 
 	public static List<Integer> getHitList(File file)
 	{
-		List<Integer> hits = new Vector<Integer>();
+		List<Integer> hits = new ArrayList<Integer>();
 
 		synchronized (allLocations)
 		{
@@ -211,7 +212,7 @@ public class LexLocationUtils implements Serializable
 
 	public static List<Integer> getMissList(File file)
 	{
-		List<Integer> misses = new Vector<Integer>();
+		List<Integer> misses = new ArrayList<Integer>();
 
 		synchronized (allLocations)
 		{
@@ -229,7 +230,7 @@ public class LexLocationUtils implements Serializable
 
 	public static List<Integer> getSourceList(File file)
 	{
-		List<Integer> lines = new Vector<Integer>();
+		List<Integer> lines = new ArrayList<Integer>();
 		int last = 0;
 
 		synchronized (allLocations)
@@ -263,7 +264,7 @@ public class LexLocationUtils implements Serializable
 
 					if (list == null)
 					{
-						list = new Vector<ILexLocation>();
+						list = new ArrayList<ILexLocation>();
 						map.put(l.getStartLine(), list);
 					}
 
@@ -316,7 +317,7 @@ public class LexLocationUtils implements Serializable
 
 					if (list == null)
 					{
-						list = new Vector<ILexLocation>();
+						list = new ArrayList<ILexLocation>();
 						map.put(l.getStartLine(), list);
 					}
 
@@ -330,7 +331,7 @@ public class LexLocationUtils implements Serializable
 
 	public static List<ILexLocation> getSourceLocations(File file)
 	{
-		List<ILexLocation> locations = new Vector<ILexLocation>();
+		List<ILexLocation> locations = new ArrayList<ILexLocation>();
 
 		synchronized (allLocations)
 		{

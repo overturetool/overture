@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.APublicAccess;
@@ -189,7 +190,7 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 				}
 			}
 
-			List<PDefinition> newdefs = new Vector<PDefinition>();
+			List<PDefinition> newdefs = new ArrayList<PDefinition>();
 			PTypeAssistantTC assistant = af.createPTypeAssistant();
 
 			for (ILexNameToken synthname : common.keySet())

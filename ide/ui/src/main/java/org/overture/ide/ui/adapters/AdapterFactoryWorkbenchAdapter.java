@@ -246,7 +246,7 @@ public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 
 	private static List<IOvertureWorkbenchAdapter> getOvertureWorkbenchAdapterExtensions()
 	{
-		List<IOvertureWorkbenchAdapter> extensions = new Vector<IOvertureWorkbenchAdapter>();
+		List<IOvertureWorkbenchAdapter> extensions = new ArrayList<IOvertureWorkbenchAdapter>();
 		try
 		{
 			IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(IVdmUiConstants.EXTENSION_WORKBENCH_DISPLAY);

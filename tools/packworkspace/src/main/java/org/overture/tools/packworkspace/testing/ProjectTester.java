@@ -374,7 +374,7 @@ public class ProjectTester
 			throws IOException, InterruptedException
 	{
 
-		List<String> command = new Vector<String>();
+		List<String> command = new ArrayList<String>();
 		command.add("java");
 		for (String argument : project.getSettings().getVmArguments())
 		{

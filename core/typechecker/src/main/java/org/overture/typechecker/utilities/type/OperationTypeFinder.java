@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
@@ -86,7 +87,7 @@ public class OperationTypeFinder extends TypeUnwrapper<AOperationType>
 			type.setOpType(af.createPTypeAssistant().getOperation(AstFactory.newAUnknownType(type.getLocation())));
 			PTypeSet result = new PTypeSet(af);
 			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
-			List<PDefinition> defs = new Vector<PDefinition>();
+			List<PDefinition> defs = new ArrayList<PDefinition>();
 
 			for (PType t : type.getTypes())
 			{

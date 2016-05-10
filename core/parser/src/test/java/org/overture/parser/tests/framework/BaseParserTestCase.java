@@ -24,6 +24,7 @@ package org.overture.parser.tests.framework;
 import java.io.File;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
@@ -101,8 +102,8 @@ public abstract class BaseParserTestCase<T extends SyntaxReader, R> extends
 
 			System.out.println();
 
-			List<IMessage> warnings = new Vector<IMessage>();
-			List<IMessage> errors = new Vector<IMessage>();
+			List<IMessage> warnings = new ArrayList<IMessage>();
+			List<IMessage> errors = new ArrayList<IMessage>();
 
 			collectParserErrorsAndWarnings(reader, errors, warnings);
 			Result<R> resultFinal = new Result<R>(result, warnings, errors);

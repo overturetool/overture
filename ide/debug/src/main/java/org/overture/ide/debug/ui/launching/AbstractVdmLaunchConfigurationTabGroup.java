@@ -34,7 +34,7 @@ public abstract class AbstractVdmLaunchConfigurationTabGroup extends
 {
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode)
 	{
-		List<ILaunchConfigurationTab> tabs = new Vector<ILaunchConfigurationTab>();
+		List<ILaunchConfigurationTab> tabs = new ArrayList<ILaunchConfigurationTab>();
 		tabs.add(getMainTab());
 		tabs.add(getRuntimeTab());
 		tabs.add(new VmArgumentsLaunchConfigurationTab());
@@ -66,7 +66,7 @@ public abstract class AbstractVdmLaunchConfigurationTabGroup extends
 	 */
 	protected List<ILaunchConfigurationTab> getAdditionalTabs()
 	{
-		return new Vector<ILaunchConfigurationTab>();
+		return new ArrayList<ILaunchConfigurationTab>();
 	}
 
 }

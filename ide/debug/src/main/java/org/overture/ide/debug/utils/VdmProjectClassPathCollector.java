@@ -47,7 +47,7 @@ public class VdmProjectClassPathCollector extends ClassPathCollector
 	public static List<String> getClassPath(IProject project,
 			String[] bundleIds, String... additionalCpEntries)
 	{
-		List<String> entries = new Vector<String>();
+		List<String> entries = new ArrayList<String>();
 		// get the class path for all jars in the project lib folder
 		File lib = new File(project.getLocation().toFile(), "lib");
 		if (lib.exists() && lib.isDirectory())
@@ -71,7 +71,7 @@ public class VdmProjectClassPathCollector extends ClassPathCollector
 
 	private static List<File> getAllDirectories(File file)
 	{
-		List<File> files = new Vector<File>();
+		List<File> files = new ArrayList<File>();
 		if (file.isDirectory())
 		{
 			files.add(file);
@@ -86,7 +86,7 @@ public class VdmProjectClassPathCollector extends ClassPathCollector
 
 	private static List<File> getAllFiles(File file, Set<String> extensionFilter)
 	{
-		List<File> files = new Vector<File>();
+		List<File> files = new ArrayList<File>();
 		if (file.isDirectory())
 		{
 			for (File f : file.listFiles())

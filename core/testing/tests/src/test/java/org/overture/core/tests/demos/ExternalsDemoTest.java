@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -167,7 +168,7 @@ public class ExternalsDemoTest extends ParamExternalsTest<IdTestResult> {
 				modelPath));
 		if (pr.errors.isEmpty()) {
 			ITypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
-			List<SClassDefinition> classes = new Vector<SClassDefinition>();
+			List<SClassDefinition> classes = new ArrayList<SClassDefinition>();
 			classes.addAll(pr.result);
 			classes.add(AstFactoryTC.newACpuClassDefinition(af));
 			classes.add(AstFactoryTC.newABusClassDefinition(af));

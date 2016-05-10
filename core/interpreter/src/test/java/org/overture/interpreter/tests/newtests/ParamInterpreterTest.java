@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.junit.Assert;
 import org.overture.ast.node.INode;
@@ -75,7 +76,7 @@ public abstract class ParamInterpreterTest extends
 		Vector<Message> errors = new Vector<Message>();
 		String message = e.getMessage();
 		if (e instanceof ICollectedRuntimeExceptions) {
-			List<String> messages = new Vector<String>();
+			List<String> messages = new ArrayList<String>();
 			List<Exception> collectedExceptions = new ArrayList<Exception>(
 					((ICollectedRuntimeExceptions) e).getCollectedExceptions());
 			for (Exception err : collectedExceptions) {
@@ -108,7 +109,7 @@ public abstract class ParamInterpreterTest extends
 	private List<String> getEntries() throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(
 				getEntryFile()));
-		List<String> data = new Vector<String>();
+		List<String> data = new ArrayList<String>();
 		String text = null;
 		while ((text = reader.readLine()) != null) {
 			data.add(text.trim());

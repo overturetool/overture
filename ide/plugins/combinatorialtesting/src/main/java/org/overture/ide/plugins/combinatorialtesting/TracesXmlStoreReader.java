@@ -239,7 +239,7 @@ public class TracesXmlStoreReader extends DefaultHandler
 			Integer startNumber, Integer stopNumber) throws SAXException,
 			IOException
 	{
-		traceTestResults = new Vector<TraceTestResult>();
+		traceTestResults = new ArrayList<TraceTestResult>();
 
 		this.traceTaceTestStartNumber = startNumber;
 		this.traceTaceTestStopNumber = stopNumber;
@@ -395,7 +395,7 @@ public class TracesXmlStoreReader extends DefaultHandler
 		{
 			if (insertArgument)
 			{
-				List<String> arguments = new Vector<String>();
+				List<String> arguments = new ArrayList<String>();
 				for (String string : XmlFileWriter.deNormalizeValue(data.toString()).trim().split(";"))
 				{
 					arguments.add(string.trim());
@@ -404,7 +404,7 @@ public class TracesXmlStoreReader extends DefaultHandler
 
 			} else if (insertResult)
 			{
-				List<String> results = new Vector<String>();
+				List<String> results = new ArrayList<String>();
 				for (String string : XmlFileWriter.deNormalizeValue(data.toString()).trim().split(";"))
 				{
 					results.add(string.trim());

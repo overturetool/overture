@@ -21,6 +21,7 @@
  */
 package org.overture.ast.util.modules;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class CombinedDefaultModule extends AModuleModules
 	@SuppressWarnings("deprecation")
 	public CombinedDefaultModule(Set<AModuleModules> modules)
 	{
-		super(null, null, null, new Vector<PDefinition>(), new Vector<ClonableFile>(), true, false);
+		super(null, null, null, new ArrayList<PDefinition>(), new ArrayList<ClonableFile>(), true, false);
 		this.modules.addAll(modules);
 
 		if (getDefs().isEmpty())

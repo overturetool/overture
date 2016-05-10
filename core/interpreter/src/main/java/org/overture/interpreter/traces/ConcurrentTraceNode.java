@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.interpreter.traces.util.LazyTestSequence;
 import org.overture.interpreter.traces.util.Pair;
@@ -51,7 +52,7 @@ public class ConcurrentTraceNode extends TraceNode implements
 		}
 		Pair<Integer, Integer> v = indics.get(index);
 
-		List<TestSequence> nodetests = new Vector<TestSequence>();
+		List<TestSequence> nodetests = new ArrayList<TestSequence>();
 		int count = nodes.size();
 
 		for (TraceNode node : nodes)
@@ -128,7 +129,7 @@ public class ConcurrentTraceNode extends TraceNode implements
 
 		int size = 0;
 
-		List<TestSequence> nodetests = new Vector<TestSequence>();
+		List<TestSequence> nodetests = new ArrayList<TestSequence>();
 		int count = nodes.size();
 
 		for (TraceNode node : nodes)

@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
@@ -119,7 +120,7 @@ public class PathsProvider
 	{
 		Collection<File> files = FileUtils.listFiles(dir, new RegexFileFilter(EXTERNAL_VDM_EXTENSION_REGEX), DirectoryFileFilter.DIRECTORY);
 
-		List<Object[]> paths = new Vector<Object[]>();
+		List<Object[]> paths = new ArrayList<Object[]>();
 
 		for (File file : files)
 		{
@@ -155,7 +156,7 @@ public class PathsProvider
 	{
 		Collection<File> files = FileUtils.listFiles(dir, new RegexFileFilter(VDM_EXTENSION_REGEX), DirectoryFileFilter.DIRECTORY);
 
-		List<Object[]> paths = new Vector<Object[]>();
+		List<Object[]> paths = new ArrayList<Object[]>();
 
 		for (File file : files)
 		{

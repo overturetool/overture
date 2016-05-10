@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.definition;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -175,7 +176,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		setStaticDefinitions(node, ctxt.getGlobal()); // When static member := new X()
 		setStaticValues(node, ctxt.getGlobal()); // When static member := new X()
 
-		List<ObjectValue> inherited = new Vector<ObjectValue>();
+		List<ObjectValue> inherited = new ArrayList<ObjectValue>();
 		NameValuePairMap members = new NameValuePairMap();
 
 		for (SClassDefinition sdef : node.getSuperDefs())

@@ -25,6 +25,7 @@ package org.overture.parser.syntax;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ACaseAlternative;
@@ -726,7 +727,7 @@ public class ExpressionReader extends SyntaxReader
 
 				case SEQ_OPEN:
 					// Polymorphic function instantiation
-					List<PType> types = new Vector<PType>();
+					List<PType> types = new ArrayList<PType>();
 					TypeReader tr = getTypeReader();
 
 					nextToken();
@@ -968,7 +969,7 @@ public class ExpressionReader extends SyntaxReader
 	private AMuExp readMuExpression(AVariableExp ve) throws ParserException,
 			LexException
 	{
-		List<ARecordModifier> args = new Vector<ARecordModifier>();
+		List<ARecordModifier> args = new ArrayList<ARecordModifier>();
 		PExp record = readExpression();
 
 		do
@@ -1192,7 +1193,7 @@ public class ExpressionReader extends SyntaxReader
 	private APreExp readPreExpression(AVariableExp ve) throws ParserException,
 			LexException
 	{
-		List<PExp> args = new Vector<PExp>();
+		List<PExp> args = new ArrayList<PExp>();
 		PExp function = readExpression();
 
 		while (ignore(VDMToken.COMMA))
@@ -1311,7 +1312,7 @@ public class ExpressionReader extends SyntaxReader
 			result = AstFactory.newAMapCompMapExp(start, first, bindings, exp);
 		} else
 		{
-			List<AMapletExp> members = new Vector<AMapletExp>();
+			List<AMapletExp> members = new ArrayList<AMapletExp>();
 			members.add(first);
 
 			while (ignore(VDMToken.COMMA))
@@ -1387,7 +1388,7 @@ public class ExpressionReader extends SyntaxReader
 		PExp exp = readExpression();
 		checkFor(VDMToken.THEN, 2144, "Missing 'then'");
 		PExp thenExp = readExpression();
-		List<AElseIfExp> elseList = new Vector<AElseIfExp>();
+		List<AElseIfExp> elseList = new ArrayList<AElseIfExp>();
 
 		while (lastToken().is(VDMToken.ELSEIF))
 		{
@@ -1424,7 +1425,7 @@ public class ExpressionReader extends SyntaxReader
 		PExp exp = readExpression();
 		checkFor(VDMToken.COLON, 2146, "Expecting ':' after cases expression");
 
-		List<ACaseAlternative> cases = new Vector<ACaseAlternative>();
+		List<ACaseAlternative> cases = new ArrayList<ACaseAlternative>();
 		PExp others = null;
 		cases.addAll(readCaseAlternatives(exp));
 
@@ -1449,7 +1450,7 @@ public class ExpressionReader extends SyntaxReader
 	private List<ACaseAlternative> readCaseAlternatives(PExp exp)
 			throws ParserException, LexException
 	{
-		List<ACaseAlternative> alts = new Vector<ACaseAlternative>();
+		List<ACaseAlternative> alts = new ArrayList<ACaseAlternative>();
 		List<PPattern> plist = getPatternReader().readPatternList();
 		checkFor(VDMToken.ARROW, 2149, "Expecting '->' after case pattern list");
 		PExp then = readExpression();
@@ -1499,7 +1500,7 @@ public class ExpressionReader extends SyntaxReader
 	{
 		DefinitionReader dr = getDefinitionReader();
 
-		List<PDefinition> localDefs = new Vector<PDefinition>();
+		List<PDefinition> localDefs = new ArrayList<PDefinition>();
 
 		localDefs.add(dr.readLocalDefinition(NameScope.LOCAL));
 
@@ -1577,7 +1578,7 @@ public class ExpressionReader extends SyntaxReader
 			throws ParserException, LexException
 	{
 		DefinitionReader dr = getDefinitionReader();
-		List<PDefinition> equalsDefs = new Vector<PDefinition>();
+		List<PDefinition> equalsDefs = new ArrayList<PDefinition>();
 
 		while (lastToken().isNot(VDMToken.IN))
 		{

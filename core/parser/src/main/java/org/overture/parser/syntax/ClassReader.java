@@ -25,6 +25,7 @@ package org.overture.parser.syntax;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -173,7 +174,7 @@ public class ClassReader extends SyntaxReader
 				throwMessage(2280, "System class cannot be a subclass");
 			}
 
-			List<PDefinition> members = new Vector<PDefinition>();
+			List<PDefinition> members = new ArrayList<PDefinition>();
 			DefinitionReader dr = getDefinitionReader();
 
 			while (lastToken().is(VDMToken.INSTANCE)

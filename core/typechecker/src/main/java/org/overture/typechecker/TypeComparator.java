@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.ATypeDefinition;
@@ -1077,7 +1078,7 @@ public class TypeComparator
 			return null;
 		} else
 		{
-			List<PType> list = new Vector<PType>();
+			List<PType> list = new ArrayList<PType>();
 			list.addAll(result);
 			return AstFactory.newAUnionType(a.getLocation(), list);
 		}

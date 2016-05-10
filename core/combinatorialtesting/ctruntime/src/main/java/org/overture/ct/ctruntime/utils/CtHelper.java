@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
@@ -97,7 +98,7 @@ public class CtHelper
 						+ data.reduction.getReductionType().toString() + ","
 						+ data.reduction.getSeed() + "}" };
 		
-		List<String> argArray = new Vector<String>(Arrays.asList(args));
+		List<String> argArray = new ArrayList<String>(Arrays.asList(args));
 		
 		
 		for (Iterator<File> itr = data.specFiles.iterator(); itr.hasNext();)

@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -162,8 +163,8 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements
 	protected <T> Result<T> mergeResults(Set<? extends Result<T>> parse,
 			IResultCombiner<T> c)
 	{
-		List<IMessage> warnings = new Vector<IMessage>();
-		List<IMessage> errors = new Vector<IMessage>();
+		List<IMessage> warnings = new ArrayList<IMessage>();
+		List<IMessage> errors = new ArrayList<IMessage>();
 		T result = null;
 
 		for (Result<T> r : parse)

@@ -25,6 +25,7 @@ package org.overture.parser.syntax;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexBooleanToken;
@@ -145,12 +146,12 @@ public class PatternReader extends SyntaxReader
 			case SET_OPEN:
 				if (nextToken().is(VDMToken.SET_CLOSE))
 				{
-					pattern = AstFactory.newASetPattern(token.location, new Vector<PPattern>());
+					pattern = AstFactory.newASetPattern(token.location, new ArrayList<PPattern>());
 				} else if (lastToken().is(VDMToken.MAPLET))
 				{
 					if (Settings.release == Release.VDM_10)
 					{
-						pattern = AstFactory.newAMapPattern(token.location, new Vector<AMapletPatternMaplet>());
+						pattern = AstFactory.newAMapPattern(token.location, new ArrayList<AMapletPatternMaplet>());
 						nextToken();
 						checkFor(VDMToken.SET_CLOSE, 2299, "Expecting {|->} empty map pattern");
 						rdtok = false;
@@ -187,7 +188,7 @@ public class PatternReader extends SyntaxReader
 			case SEQ_OPEN:
 				if (nextToken().is(VDMToken.SEQ_CLOSE))
 				{
-					pattern = AstFactory.newASeqPattern(token.location, new Vector<PPattern>());
+					pattern = AstFactory.newASeqPattern(token.location, new ArrayList<PPattern>());
 				} else
 				{
 					pattern = AstFactory.newASeqPattern(token.location, readPatternList());
@@ -235,7 +236,7 @@ public class PatternReader extends SyntaxReader
 						if (lastToken().is(VDMToken.KET))
 						{
 							// An empty pattern list
-							pattern = AstFactory.newARecordPattern(typename, new Vector<PPattern>());
+							pattern = AstFactory.newARecordPattern(typename, new ArrayList<PPattern>());
 							nextToken();
 						} else
 						{
@@ -292,7 +293,7 @@ public class PatternReader extends SyntaxReader
 	private List<AMapletPatternMaplet> readMapletPatternList()
 			throws LexException, ParserException
 	{
-		List<AMapletPatternMaplet> list = new Vector<AMapletPatternMaplet>();
+		List<AMapletPatternMaplet> list = new ArrayList<AMapletPatternMaplet>();
 		list.add(readMaplet());
 
 		while (ignore(VDMToken.COMMA))
@@ -316,7 +317,7 @@ public class PatternReader extends SyntaxReader
 	public List<PPattern> readPatternList() throws ParserException,
 			LexException
 	{
-		List<PPattern> list = new Vector<PPattern>();
+		List<PPattern> list = new ArrayList<PPattern>();
 		list.add(readPattern());
 
 		while (ignore(VDMToken.COMMA))
@@ -339,7 +340,7 @@ public class PatternReader extends SyntaxReader
 
 	private List<ANamePatternPair> readNamePatternList(String classname) throws LexException, ParserException
 	{
-		List<ANamePatternPair> list = new Vector<ANamePatternPair>();
+		List<ANamePatternPair> list = new ArrayList<ANamePatternPair>();
 		
 		if (lastToken().is(VDMToken.IDENTIFIER))	// Can be empty
 		{

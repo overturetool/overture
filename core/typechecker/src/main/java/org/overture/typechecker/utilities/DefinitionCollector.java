@@ -23,6 +23,7 @@ package org.overture.typechecker.utilities;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
@@ -75,7 +76,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAAssignmentDefinition(
 			AAssignmentDefinition node) throws AnalysisException
 	{
-		List<PDefinition> res = new Vector<PDefinition>();
+		List<PDefinition> res = new ArrayList<PDefinition>();
 		res.add(node);
 		return res;
 	}
@@ -84,7 +85,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> defaultSClassDefinition(SClassDefinition node)
 			throws AnalysisException
 	{
-		List<PDefinition> all = new Vector<PDefinition>();
+		List<PDefinition> all = new ArrayList<PDefinition>();
 
 		all.addAll(node.getAllInheritedDefinitions());
 		all.addAll(af.createPDefinitionListAssistant().singleDefinitions(node.getDefinitions()));
@@ -96,14 +97,14 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAClassInvariantDefinition(
 			AClassInvariantDefinition node) throws AnalysisException
 	{
-		return new Vector<PDefinition>();
+		return new ArrayList<PDefinition>();
 	}
 
 	@Override
 	public List<PDefinition> caseAEqualsDefinition(AEqualsDefinition node)
 			throws AnalysisException
 	{
-		return node.getDefs() == null ? new Vector<PDefinition>()
+		return node.getDefs() == null ? new ArrayList<PDefinition>()
 				: node.getDefs();
 	}
 
@@ -111,7 +112,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node) throws AnalysisException
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 		defs.add(node);
 
 		if (node.getPredef() != null)
@@ -131,7 +132,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node) throws AnalysisException
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 		defs.add(node);
 
 		if (Settings.dialect == Dialect.VDM_SL || Settings.release == Release.CLASSIC)
@@ -154,7 +155,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAExternalDefinition(AExternalDefinition node)
 			throws AnalysisException
 	{
-		List<PDefinition> result = new Vector<PDefinition>();
+		List<PDefinition> result = new ArrayList<PDefinition>();
 		result.add(node.getState());
 
 		return result;
@@ -164,7 +165,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAImplicitFunctionDefinition(
 			AImplicitFunctionDefinition node) throws AnalysisException
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 		defs.add(node);
 
 		if (node.getPredef() != null)
@@ -184,7 +185,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node) throws AnalysisException
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 		defs.add(node);
 
 		if (Settings.dialect == Dialect.VDM_SL || Settings.release == Release.CLASSIC)
@@ -207,7 +208,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
-		List<PDefinition> result = new Vector<PDefinition>();
+		List<PDefinition> result = new ArrayList<PDefinition>();
 		result.add(node.getDef());
 		return result;
 	}
@@ -223,7 +224,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition node) throws AnalysisException
 	{
-		List<PDefinition> res = new Vector<PDefinition>();
+		List<PDefinition> res = new ArrayList<PDefinition>();
 		res.add(node);
 		return res;
 	}
@@ -232,7 +233,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseALocalDefinition(ALocalDefinition node)
 			throws AnalysisException
 	{
-		List<PDefinition> res = new Vector<PDefinition>();
+		List<PDefinition> res = new ArrayList<PDefinition>();
 		res.add(node);
 		return res;
 	}
@@ -241,7 +242,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAMultiBindListDefinition(
 			AMultiBindListDefinition node) throws AnalysisException
 	{
-		return node.getDefs() == null ? new Vector<PDefinition>()
+		return node.getDefs() == null ? new ArrayList<PDefinition>()
 				: node.getDefs();
 	}
 
@@ -249,14 +250,14 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAMutexSyncDefinition(AMutexSyncDefinition node)
 			throws AnalysisException
 	{
-		return new Vector<PDefinition>();
+		return new ArrayList<PDefinition>();
 	}
 
 	@Override
 	public List<PDefinition> caseANamedTraceDefinition(
 			ANamedTraceDefinition node) throws AnalysisException
 	{
-		List<PDefinition> result = new Vector<PDefinition>();
+		List<PDefinition> result = new ArrayList<PDefinition>();
 		result.add(node);
 		return result;
 	}
@@ -265,7 +266,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAPerSyncDefinition(APerSyncDefinition node)
 			throws AnalysisException
 	{
-		List<PDefinition> result = new Vector<PDefinition>();
+		List<PDefinition> result = new ArrayList<PDefinition>();
 		result.add(node);
 		return result;
 	}
@@ -274,7 +275,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
-		List<PDefinition> result = new Vector<PDefinition>();
+		List<PDefinition> result = new ArrayList<PDefinition>();
 		result.add(node);
 		return result;
 	}
@@ -291,7 +292,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 			throws AnalysisException
 	{
 
-		List<PDefinition> result = new Vector<PDefinition>();
+		List<PDefinition> result = new ArrayList<PDefinition>();
 		result.add(node.getOperationDef());
 		return result;
 	}
@@ -300,7 +301,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseATypeDefinition(ATypeDefinition node)
 			throws AnalysisException
 	{
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 		defs.add(node);
 		defs.addAll(node.getComposeDefinitions());
 
@@ -317,7 +318,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 			throws AnalysisException
 	{
 
-		List<PDefinition> result = new Vector<PDefinition>();
+		List<PDefinition> result = new ArrayList<PDefinition>();
 		result.add(node);
 		return result;
 	}

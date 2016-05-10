@@ -23,6 +23,7 @@ package org.overture.typechecker.utilities;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
@@ -341,10 +342,10 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 	public AExplicitFunctionDefinition getInitDefinition(AStateDefinition d)
 	{
 		ILexLocation loc = d.getInitPattern().getLocation();
-		List<PPattern> params = new Vector<PPattern>();
+		List<PPattern> params = new ArrayList<PPattern>();
 		params.add(d.getInitPattern().clone());
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
 		parameters.add(params);
 
 		PTypeList ptypes = new PTypeList();
@@ -362,10 +363,10 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 	{
 
 		ILexLocation loc = d.getInvPattern().getLocation();
-		List<PPattern> params = new Vector<PPattern>();
+		List<PPattern> params = new ArrayList<PPattern>();
 		params.add(d.getInvPattern().clone());
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
 		parameters.add(params);
 
 		PTypeList ptypes = new PTypeList();
@@ -379,10 +380,10 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 	{
 
 		ILexLocation loc = d.getInvPattern().getLocation();
-		List<PPattern> params = new Vector<PPattern>();
+		List<PPattern> params = new ArrayList<PPattern>();
 		params.add(d.getInvPattern().clone());
 
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
 		parameters.add(params);
 
 		PTypeList ptypes = new PTypeList();

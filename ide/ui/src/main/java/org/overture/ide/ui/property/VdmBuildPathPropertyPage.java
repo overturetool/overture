@@ -168,7 +168,7 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 					@Override
 					public Object[] getElements(Object element)
 					{
-						List<IFolder> elements = new Vector<IFolder>();
+						List<IFolder> elements = new ArrayList<IFolder>();
 						Object[] arr = super.getElements(element);
 						if (arr != null)
 						{
@@ -188,7 +188,7 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 					@Override
 					public Object[] getChildren(Object element)
 					{
-						List<IFolder> elements = new Vector<IFolder>();
+						List<IFolder> elements = new ArrayList<IFolder>();
 						Object[] arr = super.getChildren(element);
 						if (arr != null)
 						{

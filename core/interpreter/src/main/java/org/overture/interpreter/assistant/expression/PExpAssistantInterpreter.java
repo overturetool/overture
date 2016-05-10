@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.expression;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.IAstAssistant;
@@ -70,7 +71,7 @@ public class PExpAssistantInterpreter implements IAstAssistant
 			return exp.apply(af.getSubExpressionsLocator());// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
-			List<PExp> subs = new Vector<PExp>();
+			List<PExp> subs = new ArrayList<PExp>();
 			subs.add(exp);
 			return subs;
 		}

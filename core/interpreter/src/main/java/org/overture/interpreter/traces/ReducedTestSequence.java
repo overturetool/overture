@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.interpreter.traces.util.RandomList;
 
@@ -125,7 +126,7 @@ public class ReducedTestSequence extends TestSequence
 
 				if (subset == null)
 				{
-					subset = new Vector<Integer>();
+					subset = new ArrayList<Integer>();
 					map.put(shape, subset);
 				}
 

@@ -25,6 +25,7 @@ package org.overture.pog.obligation;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AEqualsDefinition;
@@ -64,12 +65,12 @@ public class ValueBindingObligation extends ProofObligation
 		super(pattern, POType.VALUE_BINDING, ctxt, pattern.getLocation(), af);
 		AExistsExp existsExp = new AExistsExp();
 
-		List<PPattern> patternList = new Vector<PPattern>();
+		List<PPattern> patternList = new ArrayList<PPattern>();
 		patternList.add(pattern.clone());
 		ATypeMultipleBind typeBind = new ATypeMultipleBind();
 		typeBind.setPlist(patternList);
 		typeBind.setType(type.clone());
-		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
+		List<PMultipleBind> bindList = new ArrayList<PMultipleBind>();
 		bindList.add(typeBind);
 		existsExp.setBindList(bindList);
 

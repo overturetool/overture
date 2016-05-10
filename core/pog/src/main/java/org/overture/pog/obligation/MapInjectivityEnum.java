@@ -25,6 +25,7 @@ package org.overture.pog.obligation;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AApplyExp;
@@ -68,12 +69,12 @@ public class MapInjectivityEnum extends ProofObligation
 		somType.setSetof(mapEnumExp.getType().clone());
 		setOfMaplets.setType(somType);
 
-		List<AMapEnumMapExp> singleMaplets = new Vector<AMapEnumMapExp>();
+		List<AMapEnumMapExp> singleMaplets = new ArrayList<AMapEnumMapExp>();
 
 		for (AMapletExp maplet : mapEnumExp.getMembers())
 		{
 			AMapEnumMapExp mapOfOne = new AMapEnumMapExp();
-			List<AMapletExp> members = new Vector<AMapletExp>();
+			List<AMapletExp> members = new ArrayList<AMapletExp>();
 			members.add(maplet.clone());
 			mapOfOne.setMembers(members);
 			mapOfOne.setType(maplet.getType().clone());

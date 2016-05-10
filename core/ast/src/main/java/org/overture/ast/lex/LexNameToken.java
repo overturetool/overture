@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IAnalysis;
@@ -191,13 +192,13 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 		if (module.equals("CLASS"))
 		{
 			LexNameToken thread = new LexNameToken(name, "thread", location);
-			thread.setTypeQualifier(new Vector<PType>());
+			thread.setTypeQualifier(new ArrayList<PType>());
 			return thread;
 		}
 		else
 		{
 			LexNameToken thread = new LexNameToken(module, "thread", location);
-			thread.setTypeQualifier(new Vector<PType>());
+			thread.setTypeQualifier(new ArrayList<PType>());
 			return thread;
 		}
 	}
@@ -205,7 +206,7 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 	public LexNameToken getThreadName(ILexLocation loc)
 	{
 		LexNameToken thread = new LexNameToken(loc.getModule(), "thread", loc);
-		thread.setTypeQualifier(new Vector<PType>());
+		thread.setTypeQualifier(new ArrayList<PType>());
 		return thread;
 	}
 

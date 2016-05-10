@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
@@ -1205,7 +1206,7 @@ public class LexTokenReader extends BacktrackInputReader
 
 	private List<String> rdName()
 	{
-		List<String> names = new Vector<String>();
+		List<String> names = new ArrayList<String>();
 		names.add(rdIdentifier());
 
 		if (ch == '`')
@@ -1224,7 +1225,7 @@ public class LexTokenReader extends BacktrackInputReader
 
 			if (first.startsWith("mk_") || first.startsWith("is_"))
 			{
-				List<String> one = new Vector<String>();
+				List<String> one = new ArrayList<String>();
 				one.add(first + "`" + names.get(1));
 				names = one;
 			}

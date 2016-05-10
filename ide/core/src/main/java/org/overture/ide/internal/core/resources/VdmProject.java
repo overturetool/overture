@@ -642,7 +642,7 @@ public class VdmProject implements IVdmProject
 	 */
 	public List<IVdmSourceUnit> getSpecFiles() throws CoreException
 	{
-		List<IVdmSourceUnit> list = new Vector<IVdmSourceUnit>();
+		List<IVdmSourceUnit> list = new ArrayList<IVdmSourceUnit>();
 		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 		for (String contentTypeId : language.getContentTypes())
 		{
@@ -676,7 +676,7 @@ public class VdmProject implements IVdmProject
 	public List<IVdmSourceUnit> getFiles(IContentType iContentType)
 			throws CoreException
 	{
-		List<IVdmSourceUnit> list = new Vector<IVdmSourceUnit>();
+		List<IVdmSourceUnit> list = new ArrayList<IVdmSourceUnit>();
 
 		for (IContainer container : modelpath.getModelSrcPaths())
 		{
@@ -824,7 +824,7 @@ public class VdmProject implements IVdmProject
 	public List<IContentType> getContentTypeIds()
 	{
 		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
-		List<IContentType> types = new Vector<IContentType>();
+		List<IContentType> types = new ArrayList<IContentType>();
 		for (String type : language.getContentTypes())
 		{
 			types.add(contentTypeManager.getContentType(type));

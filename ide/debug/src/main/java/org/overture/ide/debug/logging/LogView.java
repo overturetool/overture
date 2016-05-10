@@ -175,7 +175,7 @@ public class LogView extends ViewPart
 			{
 				synchronized (viewer)
 				{
-					List<ViewerFilter> filters = new Vector<ViewerFilter>();
+					List<ViewerFilter> filters = new ArrayList<ViewerFilter>();
 					filters.addAll(Arrays.asList(viewer.getFilters()));
 					if (executionFilterAction.isChecked())
 					{

@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.traces;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class SequenceTraceNode extends TraceNode implements IIterableTraceNode
 
 		CallSequence seq = getVariables();
 
-		List<TestSequence> nodetests = new Vector<TestSequence>();
+		List<TestSequence> nodetests = new ArrayList<TestSequence>();
 		int count = nodes.size();
 
 		// TODO not good, poor performance
@@ -91,7 +92,7 @@ public class SequenceTraceNode extends TraceNode implements IIterableTraceNode
 
 		indics = new HashMap<Integer, Integer[]>();
 
-		List<TestSequence> nodetests = new Vector<TestSequence>();
+		List<TestSequence> nodetests = new ArrayList<TestSequence>();
 		int count = nodes.size();
 		int[] sizes = new int[count];
 		int n = 0;

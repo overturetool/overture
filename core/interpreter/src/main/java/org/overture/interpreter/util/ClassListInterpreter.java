@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ABusClassDefinition;
@@ -227,7 +228,7 @@ public class ClassListInterpreter extends ClassList
 			// before we can deploy to them in the constructor. We have to
 			// predict the CPU numbers at this point.
 
-			List<PDefinition> cpudefs = new Vector<PDefinition>();
+			List<PDefinition> cpudefs = new ArrayList<PDefinition>();
 			ACpuClassDefinition instance = null;
 
 			for (PDefinition d : systemClass.getDefinitions())

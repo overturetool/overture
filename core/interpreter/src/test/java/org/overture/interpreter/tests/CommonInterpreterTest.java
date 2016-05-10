@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.junit.Assert;
 import org.junit.Assume;
@@ -81,7 +82,7 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 			try
 			{
 				Value val = InterpreterUtil.interpret(Settings.dialect, entry, file);
-				result = new Result<String>(val.toString(), new Vector<IMessage>(), new Vector<IMessage>());
+				result = new Result<String>(val.toString(), new ArrayList<IMessage>(), new Vector<IMessage>());
 				System.out.println(file.getName() + " -> " + val);
 			} catch (Exception e)
 			{
@@ -191,7 +192,7 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 	private List<String> getEntries() throws IOException
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(getEntryFile()));
-		List<String> data = new Vector<String>();
+		List<String> data = new ArrayList<String>();
 		String text = null;
 		while ((text = reader.readLine()) != null)
 		{

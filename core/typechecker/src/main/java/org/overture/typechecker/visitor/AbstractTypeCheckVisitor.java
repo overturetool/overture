@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -250,7 +251,7 @@ public class AbstractTypeCheckVisitor extends
 
 		def.apply(THIS, question.newConstraint(null));
 		
-		List<PDefinition> qualified = new Vector<PDefinition>();
+		List<PDefinition> qualified = new ArrayList<PDefinition>();
 		
 		for (PDefinition d: question.assistantFactory.createPDefinitionAssistant().getDefinitions(def))
 		{

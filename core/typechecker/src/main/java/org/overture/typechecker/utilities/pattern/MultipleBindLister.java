@@ -51,7 +51,7 @@ public class MultipleBindLister extends AnswerAdaptor<List<PMultipleBind>>
 	{
 		List<PPattern> plist = new ArrayList<PPattern>();
 		plist.add(bind.getPattern());
-		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
+		List<PMultipleBind> mblist = new ArrayList<PMultipleBind>();
 		mblist.add(AstFactory.newASetMultipleBind(plist, bind.getSet()));
 		return mblist;
 	}
@@ -60,9 +60,9 @@ public class MultipleBindLister extends AnswerAdaptor<List<PMultipleBind>>
 	public List<PMultipleBind> caseATypeBind(ATypeBind bind)
 			throws AnalysisException
 	{
-		List<PPattern> plist = new Vector<PPattern>();
+		List<PPattern> plist = new ArrayList<PPattern>();
 		plist.add(bind.getPattern().clone());
-		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
+		List<PMultipleBind> mblist = new ArrayList<PMultipleBind>();
 		mblist.add(AstFactory.newATypeMultipleBind(plist, bind.getType().clone()));
 		return mblist;
 	}

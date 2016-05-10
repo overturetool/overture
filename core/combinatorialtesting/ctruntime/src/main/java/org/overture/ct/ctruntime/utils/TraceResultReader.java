@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -48,7 +49,7 @@ public class TraceResultReader
 	public List<TraceResult> read(File file) throws SAXException, IOException,
 			ParserConfigurationException, XPathExpressionException
 	{
-		List<TraceResult> results = new Vector<TraceResult>();
+		List<TraceResult> results = new ArrayList<TraceResult>();
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);

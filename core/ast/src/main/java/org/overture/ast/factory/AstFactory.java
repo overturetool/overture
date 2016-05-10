@@ -606,7 +606,7 @@ public class AstFactory
 		AFunctionType type = AstFactory.newAFunctionType(result.getLocation(), false, ptypes, resultPattern.getType());
 		type.setInstantiated(typeParams == null || typeParams.isEmpty() ? null : false);
 
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 		defs.add(result);
 		type.setDefinitions(defs);
 		result.setType(type);
@@ -630,7 +630,7 @@ public class AstFactory
 
 	private static List<PType> getTypeList(APatternListTypePair node)
 	{
-		List<PType> list = new Vector<PType>();
+		List<PType> list = new ArrayList<PType>();
 
 		for (int i = 0; i < node.getPatterns().size(); i++)
 		{
@@ -658,7 +658,7 @@ public class AstFactory
 		result.setType(type);
 		result.setExpression(readExpression);
 
-		List<PDefinition> defs = new Vector<PDefinition>();
+		List<PDefinition> defs = new ArrayList<PDefinition>();
 
 		for (ILexNameToken var : af.createPPatternAssistant().getVariableNames(p))
 		{
@@ -697,7 +697,7 @@ public class AstFactory
 		result.setInitPattern(initPattern);
 		result.setInitExpression(initExpression);
 
-		List<PDefinition> stateDefs = new Vector<PDefinition>();
+		List<PDefinition> stateDefs = new ArrayList<PDefinition>();
 
 		for (AFieldField f : fields)
 		{
@@ -775,7 +775,7 @@ public class AstFactory
 		result.setErrors(spec.getErrors());
 		result.setIsConstructor(false);
 
-		List<PType> ptypes = new Vector<PType>();
+		List<PType> ptypes = new ArrayList<PType>();
 
 		for (APatternListTypePair ptp : parameterPatterns)
 		{
@@ -935,7 +935,7 @@ public class AstFactory
 		// used to be a static method on LexNameToken - removed when we went to
 		// interface
 		result.setOperationName(new LexNameToken(statement.getLocation().getModule(), "thread", statement.getLocation()));
-		result.getOperationName().setTypeQualifier(new Vector<PType>());
+		result.getOperationName().setTypeQualifier(new ArrayList<PType>());
 		result.setAccess(af.createPAccessSpecifierAssistant().getProtected());
 
 		return result;
@@ -1018,7 +1018,7 @@ public class AstFactory
 		// Definition initialization
 		initDefinition(result, Pass.DEFS, location, new LexNameToken(location.getModule(), Utils.listToString(pathname, "_"), location), NameScope.GLOBAL);
 
-		List<ClonableString> namesClonable = new Vector<ClonableString>();
+		List<ClonableString> namesClonable = new ArrayList<ClonableString>();
 		for (String string : pathname)
 		{
 			namesClonable.add(new ClonableString(string));
@@ -1433,7 +1433,7 @@ public class AstFactory
 		AApplyExp result = new AApplyExp();
 		result.setLocation(root.getLocation());
 		result.setRoot(root);
-		result.setArgs(new Vector<PExp>());
+		result.setArgs(new ArrayList<PExp>());
 		return result;
 	}
 
@@ -1778,7 +1778,7 @@ public class AstFactory
 		ASetEnumSetExp result = new ASetEnumSetExp();
 		initExpression(result, start);
 
-		result.setMembers(new Vector<PExp>());
+		result.setMembers(new ArrayList<PExp>());
 		return result;
 	}
 
@@ -1787,7 +1787,7 @@ public class AstFactory
 		AMapEnumMapExp result = new AMapEnumMapExp();
 		initExpression(result, start);
 
-		result.setMembers(new Vector<AMapletExp>());
+		result.setMembers(new ArrayList<AMapletExp>());
 		return result;
 	}
 
@@ -1854,7 +1854,7 @@ public class AstFactory
 		ASeqEnumSeqExp result = new ASeqEnumSeqExp();
 		initExpression(result, start);
 
-		result.setMembers(new Vector<PExp>());
+		result.setMembers(new ArrayList<PExp>());
 
 		return result;
 	}
@@ -2136,15 +2136,15 @@ public class AstFactory
 		result.setTypeChecked(false);
 		result.setIsDLModule(false); // TODO: this does not exist in VDMj
 
-		List<ClonableFile> files = new Vector<ClonableFile>();
+		List<ClonableFile> files = new ArrayList<ClonableFile>();
 		if (file != null)
 		{
 			files.add(new ClonableFile(file));
 		}
 		result.setFiles(files);
 
-		result.setExportdefs(new Vector<PDefinition>()); // Export nothing
-		result.setImportdefs(new Vector<PDefinition>()); // and import nothing
+		result.setExportdefs(new ArrayList<PDefinition>()); // Export nothing
+		result.setImportdefs(new ArrayList<PDefinition>()); // and import nothing
 
 		result.setIsFlat(true);
 
@@ -2178,16 +2178,16 @@ public class AstFactory
 		result.setExports(exports);
 		result.setDefs(defs);
 
-		List<ClonableFile> files = new Vector<ClonableFile>();
+		List<ClonableFile> files = new ArrayList<ClonableFile>();
 		files.add(new ClonableFile(name.location.getFile()));
 		result.setFiles(files);
 		result.setIsFlat(false);
 		result.setTypeChecked(false);
 		result.setIsDLModule(false); // TODO: this does not exist in VDMj
 
-		result.setExportdefs(new Vector<PDefinition>()); // By default, export
+		result.setExportdefs(new ArrayList<PDefinition>()); // By default, export
 															// nothing
-		result.setImportdefs(new Vector<PDefinition>()); // and import nothing
+		result.setImportdefs(new ArrayList<PDefinition>()); // and import nothing
 
 		// Reset parent set by member graph field
 		result.parent(null);
@@ -2546,7 +2546,7 @@ public class AstFactory
 		ANonDeterministicSimpleBlockStm result = new ANonDeterministicSimpleBlockStm();
 		initStatement(result, token);
 
-		result.setStatements(new Vector<PStm>());
+		result.setStatements(new ArrayList<PStm>());
 
 		return result;
 	}
@@ -2917,7 +2917,7 @@ public class AstFactory
 		initType(result, location);
 		initUnionType(result);
 
-		List<PType> list = new Vector<PType>();
+		List<PType> list = new ArrayList<PType>();
 		list.add(a);
 		list.add(b);
 		result.setTypes(list);
@@ -3056,7 +3056,7 @@ public class AstFactory
 	{
 		AOperationType result = new AOperationType();
 		initType(result, location);
-		result.setParameters(new Vector<PType>());
+		result.setParameters(new ArrayList<PType>());
 		result.setResult(AstFactory.newAVoidType(location));
 		result.setPure(false);
 
@@ -3114,7 +3114,7 @@ public class AstFactory
 
 	public static AClassClassDefinition newAClassClassDefinition()
 	{
-		AClassClassDefinition result = AstFactory.newAClassClassDefinition(new LexNameToken("CLASS", "DEFAULT", new LexLocation()), new LexNameList(), new Vector<PDefinition>());
+		AClassClassDefinition result = AstFactory.newAClassClassDefinition(new LexNameToken("CLASS", "DEFAULT", new LexLocation()), new LexNameList(), new ArrayList<PDefinition>());
 		// TODO: missing types in AClassClassDefinition
 		// privateStaticValues = new NameValuePairMap();
 		// publicStaticValues = new NameValuePairMap();
@@ -3482,7 +3482,7 @@ public class AstFactory
 
 	public static AModuleModules newAModuleModules()
 	{
-		return newAModuleModules(null, new Vector<PDefinition>());
+		return newAModuleModules(null, new ArrayList<PDefinition>());
 	}
 
 	public static ANarrowExp newANarrowExpression(ILexLocation location,
