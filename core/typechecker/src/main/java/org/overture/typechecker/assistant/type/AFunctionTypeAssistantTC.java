@@ -73,7 +73,7 @@ public class AFunctionTypeAssistantTC implements IAstAssistant
 		if (isCurried && type.getResult() instanceof AFunctionType)
 		{
 			AFunctionType ft = (AFunctionType) type.getResult().clone();
-			AFunctionType t = AstFactory.newAFunctionType(type.getLocation(), false, ((List<PType>) type.getParameters().clone()), getCurriedPostType(ft, isCurried));
+			AFunctionType t = AstFactory.newAFunctionType(type.getLocation(), false, (List<PType>) type.getParameters().clone(), getCurriedPostType(ft, isCurried));
 			t.setDefinitions(type.getDefinitions());
 			t.setInstantiated(null);
 			return t;

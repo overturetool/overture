@@ -32,7 +32,7 @@ public class PatternAssistantIR  extends AssistantBase
 		{
 			if (nextType instanceof ATupleTypeIR)
 			{
-				ATupleTypeIR nextTupleType = ((ATupleTypeIR) nextType);
+				ATupleTypeIR nextTupleType = (ATupleTypeIR) nextType;
 
 				if (nextTupleType.getTypes().size() == tuplePattern.getPatterns().size())
 				{
