@@ -930,13 +930,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 
 		for (Entry<ILexNameToken, Value> e : vars.entrySet())
 		{
-			if (!e.getKey().getName().equals("self"))
+			if (!e.getKey().getName().equals("self") && isDebugVisible(e.getValue()))
 			{ // This test makes the self not appear
 
-				if (isDebugVisible(e.getValue()))
-				{
-					sb.append(propertyResponse(e.getKey(), e.getValue(), context));
-				}
+				sb.append(propertyResponse(e.getKey(), e.getValue(), context));
 			}
 		}
 

@@ -366,15 +366,12 @@ public class XMLParser
 
 		while (true)
 		{
-			if (ch == ']')
+			if (ch == ']' && buffer.substring(pos - 1, pos + 2).equals("]]>"))
 			{
-				if (buffer.substring(pos - 1, pos + 2).equals("]]>"))
-				{
-					rdCh();
-					rdCh();
-					rdCh();
-					break;
-				}
+				rdCh();
+				rdCh();
+				rdCh();
+				break;
 			}
 
 			sb.append(ch);

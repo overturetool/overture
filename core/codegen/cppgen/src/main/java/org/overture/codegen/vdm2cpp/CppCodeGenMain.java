@@ -50,12 +50,9 @@ public class CppCodeGenMain
 		String setting = args[0];
 		String cpp_gen_type = args[1];
 		
-		if(args.length > 2)
+		if(args.length > 2 && Boolean.parseBoolean(args[2]))
 		{
-			if(Boolean.parseBoolean(args[2]))
-			{
-				gen_timing = true;
-			}
+			gen_timing = true;
 		}
 		File inputRoot = new File(args[3]);
 		if (setting.toLowerCase().equals("oo"))
