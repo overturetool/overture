@@ -1,0 +1,6 @@
+class Entry
+
+values
+foo = { let x=1 in x };
+
+end Entry
