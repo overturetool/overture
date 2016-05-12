@@ -277,7 +277,7 @@ public class TypePredHandler
 			return null;
 		}
 		
-		SVarExpIR var = ((SVarExpIR) col);
+		SVarExpIR var = (SVarExpIR) col;
 		
 		if (varMayBeNull(var.getType()))
 		{

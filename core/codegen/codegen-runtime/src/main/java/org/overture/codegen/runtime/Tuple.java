@@ -96,7 +96,7 @@ public class Tuple implements ValueType, Comparable
 
 			if(toValue instanceof VDMSeq && type == String.class)
 			{
-				for(Object c : ((VDMSeq) toValue))
+				for(Object c : (VDMSeq) toValue)
 				{
 					if(!(c instanceof Character))
 					{
@@ -112,7 +112,7 @@ public class Tuple implements ValueType, Comparable
 				return true;
 			}
 			
-			if (toValue != null && !(type.isInstance(toValue)))
+			if (toValue != null && !type.isInstance(toValue))
 			{
 				return false;
 			}
