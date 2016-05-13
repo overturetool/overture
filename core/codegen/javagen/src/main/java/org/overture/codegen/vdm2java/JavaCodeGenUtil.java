@@ -67,7 +67,7 @@ public class JavaCodeGenUtil
 		Settings.dialect = dialect;
 		TypeCheckResult<PExp> typeCheckResult = GeneralCodeGenUtils.validateExp(exp);
 
-		if (typeCheckResult.errors.size() > 0)
+		if (!typeCheckResult.errors.isEmpty())
 		{
 			throw new AnalysisException("Unable to type check expression: "
 					+ exp);

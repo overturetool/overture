@@ -58,7 +58,7 @@ public class TypeCheckInfo
 		if (o instanceof List<?>)
 		{
 			List<?> list = List.class.cast(o);
-			if (list.size() > 0)
+			if (!list.isEmpty())
 			{
 				Object first = list.get(0);
 				if (first != null && clz.isInstance(first))

@@ -40,7 +40,7 @@ public class Result<R>
 	public String toString()
 	{
 		StringBuffer buf = new StringBuffer();
-		if (errors.size() > 0)
+		if (!errors.isEmpty())
 		{
 			buf.append("Errors:\n");
 			for (IMessage m : errors)
@@ -49,7 +49,7 @@ public class Result<R>
 			}
 		}
 
-		if (warnings.size() > 0)
+		if (!warnings.isEmpty())
 		{
 			buf.append("Warnings:\n");
 			for (IMessage m : warnings)
