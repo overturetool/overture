@@ -798,7 +798,7 @@ abstract public class Interpreter
 				defs.addAll(((AModuleModules) classdef).getDefs());
 			}
 			
-			env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(), outer);
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), defs, outer);
 		}
 
 		for (int i = 0; i < test.size(); i++)
