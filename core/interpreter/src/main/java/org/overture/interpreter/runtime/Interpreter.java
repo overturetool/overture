@@ -702,7 +702,7 @@ abstract public class Interpreter
 			if (this instanceof ClassInterpreter)
 			{
 				traceContainer = tracedef.getClassDefinition();
-				rootEnv = new PrivateClassEnvironment(getAssistantFactory(), tracedef.getClassDefinition().getClassDefinition(), getGlobalEnvironment());
+				rootEnv = new PrivateClassEnvironment(getAssistantFactory(), tracedef.getClassDefinition(), getGlobalEnvironment());
 			} else
 			{
 				traceContainer = tracedef.parent();
