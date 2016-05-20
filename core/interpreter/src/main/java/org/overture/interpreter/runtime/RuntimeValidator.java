@@ -41,6 +41,9 @@ public class RuntimeValidator
 	public static IRuntimeValidatior validator;
 	private static PrintWriter logfile = null;
 
+	private RuntimeValidator() {
+	}
+
 	public static void init(ClassInterpreter classInterpreter)
 	{
 		if (Settings.timingInvChecks)

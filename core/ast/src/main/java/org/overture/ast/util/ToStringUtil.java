@@ -63,6 +63,9 @@ import org.overture.ast.typechecker.NameScope;
 
 public class ToStringUtil
 {
+	private ToStringUtil() {
+	}
+
 	public static String getExplicitFunctionString(AExplicitFunctionDefinition d)
 	{
 		StringBuilder params = new StringBuilder();

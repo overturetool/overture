@@ -16,7 +16,10 @@ public class OutputTestUtil
 	public static final String UPDATE_PROPERTY_PREFIX = "tests.javagen.override.";
 	public static final String UPDATE_ALL_OUTPUT_TESTS_PROPERTY = UPDATE_PROPERTY_PREFIX
 			+ "all";
-	
+
+	private OutputTestUtil() {
+	}
+
 	public static void compare(String expected, String actual)
 	{
 		Assert.assertEquals("Unexpected code produced by the Java code generator", expected.trim(), actual.trim());

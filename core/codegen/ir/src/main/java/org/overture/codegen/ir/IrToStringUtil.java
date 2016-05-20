@@ -5,6 +5,9 @@ import org.overture.codegen.ir.statements.ABlockStmIR;
 
 public class IrToStringUtil
 {
+	private IrToStringUtil() {
+	}
+
 	public static String getSimpleBlockString(ABlockStmIR node)
 	{
 		StringBuilder sb = new StringBuilder();

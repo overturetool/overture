@@ -29,6 +29,9 @@ import org.overture.parser.syntax.ExpressionReader;
 
 public class VDMUtil
 {
+	private VDMUtil() {
+	}
+
 	public static Value set2seq(Value arg) throws ValueException
 	{
 		ValueSet set = arg.setValue(null);

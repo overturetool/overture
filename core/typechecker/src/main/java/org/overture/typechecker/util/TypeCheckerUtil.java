@@ -52,6 +52,9 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 public class TypeCheckerUtil
 {
+	private TypeCheckerUtil() {
+	}
+
 	public static class TypeCheckResult<T>
 	{
 		public final ParserResult<T> parserResult;

@@ -28,6 +28,9 @@ public class TemplateCallableManager
 	private static final String JAVA_FORMAT_KEY = "JavaFormat";
 	private static final String VALUE_SEMANTICS = "ValueSemantics";
 
+	private TemplateCallableManager() {
+	}
+
 	public final static TemplateCallable[] constructTemplateCallables(
 			Object javaFormat, Object valueSemantics)
 	{

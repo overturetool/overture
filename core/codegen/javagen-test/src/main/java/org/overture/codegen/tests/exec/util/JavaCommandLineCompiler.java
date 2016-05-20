@@ -32,6 +32,9 @@ import org.overture.codegen.tests.util.JavaToolsUtils;
 
 public class JavaCommandLineCompiler
 {
+	private JavaCommandLineCompiler() {
+	}
+
 	public static ProcessResult compile(File dir, File[] cpJars)
 	{
 		String javaHome = System.getenv(JavaToolsUtils.JAVA_HOME);

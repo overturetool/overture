@@ -23,6 +23,9 @@ package org.overture.codegen.runtime;
 
 public class SetUtil
 {
+	private SetUtil() {
+	}
+
 	public static VDMSet set()
 	{
 		return new VDMSet();

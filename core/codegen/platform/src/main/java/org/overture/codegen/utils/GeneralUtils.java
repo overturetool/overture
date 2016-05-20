@@ -36,6 +36,9 @@ import java.util.List;
 
 public class GeneralUtils
 {
+	private GeneralUtils() {
+	}
+
 	public static boolean isEscapeSequence(char c)
 	{
 		return c == '\t' || c == '\b' || c == '\n' || c == '\r' || c == '\f'

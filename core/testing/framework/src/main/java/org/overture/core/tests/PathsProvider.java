@@ -50,6 +50,9 @@ public class PathsProvider
 
 	private final static String EXTERNAL_VDM_EXTENSION_REGEX = "(.*)\\.(vdm|vpp)";
 
+	private PathsProvider() {
+	}
+
 	/**
 	 * Processes (recursively) a folder of source inputs. The source input files must have one of the
 	 * three VDM extensions (,vdmsl, .vdmpp, .vdmrt). <br>

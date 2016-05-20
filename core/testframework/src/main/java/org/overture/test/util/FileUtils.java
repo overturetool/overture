@@ -35,6 +35,9 @@ import java.util.List;
 public class FileUtils
 {
 
+	private FileUtils() {
+	}
+
 	public static List<String> readTextFromJar(String s) throws Exception
 	{
 		InputStream is = null;

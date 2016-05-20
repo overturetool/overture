@@ -48,7 +48,10 @@ import org.overture.ast.types.PType;
 public class AstExpressionFactory
 {
 
-	public static AMkTypeExp newAMkTypeExp(ILexNameToken typeName, PType type,
+	private AstExpressionFactory() {
+	}
+
+	public static AMkTypeExp newAMkTypeExp(ILexNameToken typeName, PType type, 
 			List<PExp> arglist)
 	{
 		AMkTypeExp mktype = new AMkTypeExp();

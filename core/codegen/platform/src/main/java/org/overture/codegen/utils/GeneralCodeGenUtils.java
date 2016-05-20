@@ -82,7 +82,10 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 public class GeneralCodeGenUtils
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-	
+
+	private GeneralCodeGenUtils() {
+	}
+
 	public static boolean isVdmSourceFile(File f)
 	{
 		return isVdmPpSourceFile(f) || isVdmSlSourceFile(f) || isVdmRtSourceFile(f);
