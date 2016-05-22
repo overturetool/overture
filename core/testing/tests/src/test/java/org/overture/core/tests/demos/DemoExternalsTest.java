@@ -32,12 +32,14 @@ import com.google.gson.reflect.TypeToken;
  * A simple test to demo the use of external test inputs. This class reuses
  * {@link DemoTestResult} but rather than printing the entire test model, it just
  * prints a success/failure message regarding the type checking of the test
- * source. <br>
+ * source. </p>
  * Also note that since this test works with external inputs, the data provider
  * is already set up in {@link ParamExternalsTest}. To launch these tests simply
- * use the property <code>-DexternalTestsPath=/path/to/files/</code>. This test
- * is intended to run on the tc external tests only.<br>
- * <br>
+ * use the property <code>-DexternalTestsPath=/path/to/files/</code>.
+ * </p>
+ * This test also demonstrates explicitl invocation of the parser and type checker,
+ * per {@link org.overture.core.tests.ParamFineGrainTest}.
+ * </p>
  * <b>Note:</b> Due to some quirks with Parameterized JUnit tests, if the
  * property is not set, the test will still launch, only with 0 cases. It's fine
  * in Maven but in Eclipse you will get a single test run that does nothing.
@@ -51,7 +53,7 @@ public class DemoExternalsTest extends ParamExternalsTest<DemoTestResult> {
 	private static final String UPDATE_PROPERTY = "tests.update.example.ExternalsDemo";
 
 	/**
-	 * As usual in the new tests, the constructor only needs to pass the
+	 * For this test, the constructor only needs to pass the
 	 * parameters up to super.
 	 *
 	 * @param nameParameter
@@ -64,11 +66,13 @@ public class DemoExternalsTest extends ParamExternalsTest<DemoTestResult> {
 	}
 
 	/**
-	 * Main comparison method. Simply call on {@link DemoTestResult}.
+	 * Override result comparison with the one from {@link DemoTestResult}. Notice
+	 * that testInfo() is passed to the comparison method in order to print meaningful
+	 * error messages.
 	 */
 	@Override
 	public void compareResults(DemoTestResult actual, DemoTestResult expected) {
-		DemoTestResult.compare(actual, expected, testName);
+		DemoTestResult.compare(actual, expected, testInfo());
 	}
 
 	/**
@@ -81,7 +85,7 @@ public class DemoExternalsTest extends ParamExternalsTest<DemoTestResult> {
 	}
 
 	/**
-	 * Return the {@link Type} or reulst for this test. This is needed to help
+	 * Return the {@link Type} or resust for this test. This is needed to help
 	 * out with reflection in the deserialization of results.
 	 */
 	@Override
@@ -95,16 +99,16 @@ public class DemoExternalsTest extends ParamExternalsTest<DemoTestResult> {
 	 * Process the VDM source. External inputs can be negative so we control the
 	 * parsing and type checking ourselves. This makes the method much longer
 	 * and more complex. If we were certain the sources were correct, we could
-	 * just call a method from {@link ParseTcFacade}.<br>
-	 * <br>
+	 * just call a method from {@link ParseTcFacade}.
+	 * </p>
 	 * Remember that you must always track the VDM dialect of the source and the
 	 * only way to do this with external inputs is by placing them in dialect
-	 * folders as we have done here. <br>
-	 * <br>
+	 * folders.
+	 * </p>>
 	 * Because of this extra size and complexity it's a good idea to split up
 	 * the method according to dialect and do some dispatching.
 	 *
-	 * @return an {@link DemoTestResult} with a list of error messages or an all
+	 * @return a {@link DemoTestResult} with a list of error messages or an all
 	 *         clear message
 	 */
 	@Override
