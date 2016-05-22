@@ -51,8 +51,6 @@ import org.overture.parser.syntax.ParserException;
 public abstract class ParamStandardTest<R> extends AbsResultTest<R>
 {
 
-	protected String modelPath;
-
 	/**
 	 * Constructor for the test. In order to use JUnit parameterized tests, the inputs for this class must be supplied
 	 * by a public static method. Subclasses must implement this method themselves and annotate with

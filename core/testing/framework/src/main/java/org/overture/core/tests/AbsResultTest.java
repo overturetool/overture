@@ -53,6 +53,7 @@ public abstract class AbsResultTest<R> {
     protected boolean updateResult;
     protected String resultPath;
     protected String testName;
+    protected String modelPath;
 
     /**
      * Deserialize test results. This method is capable of deserializing most results, provided the correct type
@@ -158,7 +159,7 @@ public abstract class AbsResultTest<R> {
     protected String testInfo() {
         StringBuilder sb = new StringBuilder();
         sb.append("[Input: ");
-        sb.append(getInputPath());
+        sb.append(modelPath);
         sb.append(", Result:");
         sb.append(resultPath);
         sb.append(", Update Property:");
@@ -168,15 +169,6 @@ public abstract class AbsResultTest<R> {
         sb.append("]");
         return sb.toString();
     }
-
-    /**
-     * Returns the path to the input used to run this test. This is left up to individual subclasses since
-     * there are various ways of grabbing inputs.
-     * method.
-     *
-     * @return path to the input file, as a String.
-     */
-    protected abstract String getInputPath();
 
     /**
      * Check if test running in result update mode. This is done by consulting the update property as returned by {

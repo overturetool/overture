@@ -46,8 +46,6 @@ import org.overture.parser.syntax.ParserException;
 abstract public class ParamFineGrainTest<R> extends AbsResultTest<R>
 {
 
-	protected String modelPath;
-
 	/**
 	 * Constructor simply passes parameters up to super class.
 	 * 
