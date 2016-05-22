@@ -111,5 +111,9 @@ public abstract class NoResultFileTest<R>
 	 */
 	public abstract R processModel(List<INode> ast);
 
+	/**
+	 * This is the first method to be invoked in the test case. It provides a convenient place to place
+	 * {@link org.junit.Assume} assumptions.
+	 */
 	public void checkAssumptions(){};
 }
