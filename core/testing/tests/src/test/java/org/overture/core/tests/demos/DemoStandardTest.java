@@ -24,14 +24,14 @@ import com.google.gson.reflect.TypeToken;
  * @author ldc
  */
 @RunWith(Parameterized.class)
-public class IdStandardTest extends ParamStandardTest<IdTestResult>
+public class DemoStandardTest extends ParamStandardTest<IdTestResult>
 {
 
 	// Root location of the test input and result files
 	private static final String EXAMPLE_TEST_FILES = "src/test/resources/demos";
 
 	// The update property for this test
-	private static final String UPDATE_PROPERTY = "tests.update.example.StandardID";
+	private static final String UPDATE_PROPERTY = "tests.update.testing.tests.DemoStandardTest";
 
 	/**
 	 * The default constructor must always pass the name of the test and the paths of the test input and result. <br>
@@ -45,7 +45,7 @@ public class IdStandardTest extends ParamStandardTest<IdTestResult>
 	 * @param testResult
 	 *            Path to the test result file
 	 */
-	public IdStandardTest(String name, String testInput, String testResult)
+	public DemoStandardTest(String name, String testInput, String testResult)
 	{
 		super(name, testInput, testResult);
 	}
@@ -75,9 +75,9 @@ public class IdStandardTest extends ParamStandardTest<IdTestResult>
 	 * stuff, the classic Utils class is also a good place.
 	 */
 	@Override
-	public void compareResults(IdTestResult actual, IdTestResult expected)
+	public boolean compareResults(IdTestResult actual, IdTestResult expected)
 	{
-		IdTestResult.compare(actual, expected, testName);
+		return IdTestResult.compare(actual, expected, testName);
 	}
 
 	/**
