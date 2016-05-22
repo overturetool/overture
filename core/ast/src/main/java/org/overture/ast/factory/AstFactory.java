@@ -564,6 +564,8 @@ public class AstFactory
 		List<PDefinition> defsList = new LinkedList<PDefinition>();
 		defsList.add(result);
 		type.getDefinitions().add(result);
+		
+		type.setInstantiated(typeParams == null || typeParams.isEmpty() ? null : false);
 
 		return result;
 	}
@@ -601,13 +603,8 @@ public class AstFactory
 		}
 
 		// NB: implicit functions are always +> total, apparently
-		AFunctionType type = AstFactory.newAFunctionType(result.getLocation(), false, ptypes, resultPattern.getType());// AFunctionType(funcName.location,
-																														// false,
-																														// null,
-																														// false,
-																														// ptypes,
-																														// (PType)
-																														// resultPattern.getType());
+		AFunctionType type = AstFactory.newAFunctionType(result.getLocation(), false, ptypes, resultPattern.getType());
+		type.setInstantiated(typeParams == null || typeParams.isEmpty() ? null : false);
 
 		List<PDefinition> defs = new Vector<PDefinition>();
 		defs.add(result);
@@ -626,6 +623,7 @@ public class AstFactory
 		result.setParameters(parameters);
 		result.setResult(resultType);
 		result.setPartial(partial);
+		result.setInstantiated(null);
 
 		return result;
 	}
@@ -2229,12 +2227,13 @@ public class AstFactory
 	}
 
 	public static AFunctionExport newAFunctionExport(ILexLocation location,
-			List<ILexNameToken> nameList, PType type)
+			List<ILexNameToken> nameList, PType type, List<ILexNameToken> typeParams)
 	{
 		AFunctionExport result = new AFunctionExport();
 		result.setLocation(location);
 		result.setNameList(nameList);
 		result.setExportType(type);
+		result.setTypeParams(typeParams);
 		return result;
 	}
 

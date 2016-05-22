@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
-<message column="6" line="13" message="Error 4032: 'is subclass responsibility' expression reached in 'A' (rep-53.vpp) at line 13:6" messageType="error" number="4032" resource="rep-53.vpp.result"/>
+<testResult type="org.overture.interpreter.tests.external.ExternalClassesPpTest">
+<message column="6" line="13" message="Error 4032: 'is subclass responsibility' expression reached in 'A' (rep-53.vpp) at line 13:6" messageType="error" number="4032" resource="rep-53.vpp"/>
 <result>
 <output object="[]" resource="rep-53.vpp" value="[]"/>
 </result>

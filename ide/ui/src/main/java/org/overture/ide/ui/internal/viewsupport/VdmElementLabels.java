@@ -30,6 +30,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
@@ -41,6 +42,7 @@ import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.modules.AAllImport;
 import org.overture.ast.modules.AFromModuleImports;
 import org.overture.ast.modules.AModuleImports;
@@ -178,11 +180,51 @@ public class VdmElementLabels {
 			return getRenamedDefinitionLabel((ARenamedDefinition) element, flags);
 		}
 
+		if(element instanceof AImportedDefinition)
+		{
+			return getImportedDefinitionLabel(element, flags);
+		}
+		
 //		StyledString result = new StyledString();
 //		result.append("Unsupported type reached: " + element);
 //		return result;
 		return null;
 
+	}
+
+	private static StyledString getImportedDefinitionLabel(Object element, long flags)
+	{
+		AImportedDefinition e = (AImportedDefinition) element;
+		
+		StyledString defStr = getStyledTextLabel(e.getDef(), flags);
+		
+		if(defStr == null)
+		{
+			return null;
+		}
+		else
+		{
+			PDefinition def = e.getDef();
+
+			if (def != null)
+			{
+				ILexLocation loc = def.getLocation();
+
+				if (loc != null)
+				{
+					String module = loc.getModule();
+
+					if (module != null)
+					{
+						StyledString fromModuleStr = new StyledString(module
+								+ ": ");
+						return fromModuleStr.append(defStr);
+					}
+				}
+			}
+
+			return defStr;
+		}
 	}
 
 	private static StyledString getRenamedDefinitionLabel(

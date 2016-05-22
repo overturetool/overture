@@ -19,6 +19,8 @@ instructions.configure=\
   addRepository(type:1,name:Overture,enabled:true,location:http${#58}//dl.bintray.com/overturetool/overturetool/);\
   addRepository(type:0,name:Overture Development,enabled:false,location:http${#58}//dl.bintray.com/overturetool/overturetool-development/);\
   addRepository(type:1,name:Overture Development,enabled:false,location:http${#58}//dl.bintray.com/overturetool/overturetool-development/);\
+  addRepository(type:0,name:Overture VDM2C Development,enabled:true,location:http${#58}//overture.au.dk/vdm2c/development/ide/repository/target/repository/);\
+  addRepository(type:1,name:Overture VDM2C Development,enabled:true,location:http${#58}//overture.au.dk/vdm2c/development/ide/repository/target/repository/);\
   addRepository(type:0,name:JODTool,enabled:true,location:http${#58}//aofa.csce.kyushu-u.ac.jp/JODTool/);\
   addRepository(type:1,name:JODTool,enabled:true,location:http${#58}//aofa.csce.kyushu-u.ac.jp/JODTool/);
 instructions.configure.import=\

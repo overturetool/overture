@@ -176,6 +176,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (question.assistantFactory.createPTypeAssistant().isFunction(node.getType()))
 		{
 			AFunctionType ft = question.assistantFactory.createPTypeAssistant().getFunction(node.getType());
+			
+			if (ft.getInstantiated() != null && !ft.getInstantiated())
+			{
+				// Something like f(x) rather than f[nat](x)
+				TypeCheckerErrors.report(3350, "Polymorphic function has not been instantiated", node.getRoot().getLocation(), node);
+			}
+			
 			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, THIS, question);
 			results.add(functionApply(node, isSimple, ft, question));
 		}
@@ -2879,8 +2886,23 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			env.listAlternatives(name);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
-		} else
+		}
+		else
 		{
+			PType result = question.assistantFactory.createPDefinitionAssistant().getType(node.getVardef());
+			
+			if (result instanceof AParameterType)
+			{
+				AParameterType ptype = (AParameterType)result;
+				
+				if (ptype.getName().equals(name))	// Referring to "T" of @T
+				{
+					TypeCheckerErrors.report(3351, "Type parameter '" + name.getName() + "' cannot be used here", node.getLocation(), node);
+					node.setType(AstFactory.newAUnknownType(node.getLocation()));
+					return node.getType();
+				}
+			}
+
 			// Note that we perform an extra typeResolve here. This is
 			// how forward referenced types are resolved, and is the reason
 			// we don't need to retry at the top level (assuming all names

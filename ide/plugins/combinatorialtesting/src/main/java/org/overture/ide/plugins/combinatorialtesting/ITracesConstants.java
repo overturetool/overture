@@ -27,6 +27,8 @@ import org.overture.ide.debug.core.IDebugConstants;
 
 public interface ITracesConstants
 {
+	public static final String TRACES_CONSOLE = "TracesConsole";
+	
 	public final String TRACES_VIEW_ID = "org.overture.ide.plugins.combinatorialtesting.views.TracesView";
 	public final String TRACES_TEST_ID = "org.overture.ide.plugins.combinatorialtesting.views.TraceTest";
 	public final String PLUGIN_ID = "org.overture.ide.plugins.combinatorialtesting";

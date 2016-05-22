@@ -23,6 +23,8 @@
 ##
 #set( $body = $JavaFormat.formatOperationBody($node.getBody()))
 ##
+$JavaFormat.formatVdmSource($node)##
+##
 $JavaFormat.formatMetaData($node.getMetaData())##
 ##
 $node.getAccess() $abstract $static $templateTypes $returnType $node.getName()(${params}) $throwsClause

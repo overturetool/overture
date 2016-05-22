@@ -1,23 +1,23 @@
 <traces>
 	<class name="DEFAULT">
 		<trace name="T1" testcount="9" filename="XO" line="185" column="2" subset="1.0" reduction="NONE" seed="999">
-			<test no="1">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [mk_Pos(1, 1)])</test>
+			<test no="1">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [m1])</test>
 			<result no="1" verdict="INCONCLUSIVE">Error 4060: Type invariant violated for Moves in &apos;DEFAULT&apos; at line 196:4</result>
-			<test no="2">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [mk_Pos(1, 2)])</test>
+			<test no="2">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [m1])</test>
 			<result no="2" verdict="INCONCLUSIVE">Error 4060: Type invariant violated for Moves in &apos;DEFAULT&apos; at line 196:4</result>
-			<test no="3">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [mk_Pos(1, 3)])</test>
+			<test no="3">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [m1])</test>
 			<result no="3" verdict="INCONCLUSIVE">Error 4060: Type invariant violated for Moves in &apos;DEFAULT&apos; at line 196:4</result>
-			<test no="4">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [mk_Pos(2, 1)])</test>
+			<test no="4">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [m1])</test>
 			<result no="4" verdict="INCONCLUSIVE">Error 4060: Type invariant violated for Moves in &apos;DEFAULT&apos; at line 196:4</result>
-			<test no="5">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [mk_Pos(2, 2)])</test>
+			<test no="5">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [m1])</test>
 			<result no="5" verdict="INCONCLUSIVE">Error 4060: Type invariant violated for Moves in &apos;DEFAULT&apos; at line 196:4</result>
-			<test no="6">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [mk_Pos(2, 3)])</test>
+			<test no="6">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [m1])</test>
 			<result no="6" verdict="INCONCLUSIVE">Error 4060: Type invariant violated for Moves in &apos;DEFAULT&apos; at line 196:4</result>
-			<test no="7">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [mk_Pos(3, 1)])</test>
+			<test no="7">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [m1])</test>
 			<result no="7" verdict="INCONCLUSIVE">Error 4060: Type invariant violated for Moves in &apos;DEFAULT&apos; at line 196:4</result>
-			<test no="8">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [mk_Pos(3, 2)])</test>
+			<test no="8">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [m1])</test>
 			<result no="8" verdict="INCONCLUSIVE">Error 4060: Type invariant violated for Moves in &apos;DEFAULT&apos; at line 196:4</result>
-			<test no="9">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [mk_Pos(3, 3)])</test>
+			<test no="9">XO`play([&amp;lt;CROSS&amp;gt;, &amp;lt;NOUGHT&amp;gt;], [m1])</test>
 			<result no="9" verdict="INCONCLUSIVE">Error 4060: Type invariant violated for Moves in &apos;DEFAULT&apos; at line 196:4</result>
 			<status verdict="INCONCLUSIVE" testcount="9" skippedcount="0" faildcount="0" inconclusivecount="9"></status>
 		</trace>

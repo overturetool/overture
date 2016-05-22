@@ -26,15 +26,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.ClonableString;
+import org.overture.codegen.assistant.LocationAssistantIR;
 import org.overture.codegen.assistant.TypeAssistantIR;
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SExpIR;
-import org.overture.codegen.ir.SStateDesignatorIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
 import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
@@ -60,8 +64,8 @@ import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
 import org.overture.codegen.ir.expressions.APlusUnaryExpIR;
 import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
 import org.overture.codegen.ir.expressions.ASeqToStringUnaryExpIR;
-import org.overture.codegen.ir.expressions.AStringLiteralExpIR;
 import org.overture.codegen.ir.expressions.AStringToSeqUnaryExpIR;
+import org.overture.codegen.ir.expressions.ATernaryIfExpIR;
 import org.overture.codegen.ir.expressions.AUndefinedExpIR;
 import org.overture.codegen.ir.expressions.SBinaryExpIR;
 import org.overture.codegen.ir.expressions.SLiteralExpIR;
@@ -71,7 +75,6 @@ import org.overture.codegen.ir.expressions.SVarExpIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.statements.AForLoopStmIR;
-import org.overture.codegen.ir.statements.AMapSeqStateDesignatorIR;
 import org.overture.codegen.ir.statements.AStartStmIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.ACharBasicTypeIR;
@@ -89,8 +92,6 @@ import org.overture.codegen.ir.types.SBasicTypeIR;
 import org.overture.codegen.ir.types.SMapTypeIR;
 import org.overture.codegen.ir.types.SSeqTypeIR;
 import org.overture.codegen.ir.types.SSetTypeIR;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
@@ -166,11 +167,6 @@ public class JavaFormat
 		this.funcValAssist = functionValueAssistant;
 	}
 
-	public void clearFunctionValueAssistant()
-	{
-		this.funcValAssist = null;
-	}
-
 	public void setJavaSettings(JavaSettings javaSettings)
 	{
 		valueSemantics.setJavaSettings(javaSettings);
@@ -185,6 +181,7 @@ public class JavaFormat
 	{
 		mergeVisitor.init();
 		valueSemantics.clear();
+		this.funcValAssist = null;
 	}
 
 	public MergeVisitor getMergeVisitor()
@@ -277,12 +274,7 @@ public class JavaFormat
 			return "";
 		}
 	}
-
-	public static boolean isMapSeq(SStateDesignatorIR stateDesignator)
-	{
-		return stateDesignator instanceof AMapSeqStateDesignatorIR;
-	}
-
+	
 	private String getNumberDereference(INode node, boolean ignoreContext)
 	{
 		if (ignoreContext && node instanceof SExpIR)
@@ -301,7 +293,8 @@ public class JavaFormat
 		if (parent instanceof SNumericBinaryExpIR
 				|| parent instanceof AAbsUnaryExpIR
 				|| parent instanceof AMinusUnaryExpIR
-				|| parent instanceof APlusUnaryExpIR)
+				|| parent instanceof APlusUnaryExpIR
+				|| parent instanceof AIsolationUnaryExpIR)
 		{
 			SExpIR exp = (SExpIR) node;
 			STypeIR type = exp.getType();
@@ -319,6 +312,7 @@ public class JavaFormat
 	private static boolean isNumberDereferenceCandidate(SExpIR node)
 	{
 		boolean fitsCategory = !(node instanceof SNumericBinaryExpIR)
+				&& !(node instanceof ATernaryIfExpIR)
 				&& !(node instanceof SLiteralExpIR)
 				&& !(node instanceof AIsolationUnaryExpIR)
 				&& !(node instanceof SUnaryExpIR);
@@ -777,11 +771,6 @@ public class JavaFormat
 		}
 	}
 
-	public boolean isStringLiteral(SExpIR exp)
-	{
-		return exp instanceof AStringLiteralExpIR;
-	}
-
 	public boolean isSeqType(SExpIR exp)
 	{
 		return info.getAssistantManager().getTypeAssistant().isSeqType(exp);
@@ -800,11 +789,6 @@ public class JavaFormat
 	public boolean isStringType(SExpIR exp)
 	{
 		return info.getAssistantManager().getTypeAssistant().isStringType(exp);
-	}
-
-	public boolean isCharType(STypeIR type)
-	{
-		return type instanceof ACharBasicTypeIR;
 	}
 
 	public String buildString(List<SExpIR> exps) throws AnalysisException
@@ -851,11 +835,6 @@ public class JavaFormat
 		}
 	}
 
-	public String nextVarName(String prefix)
-	{
-		return info.getTempVarNameGen().nextVarName(prefix);
-	}
-	
 	public boolean isLoopVar(AVarDeclIR localVar)
 	{
 		return localVar.parent() instanceof AForLoopStmIR;
@@ -957,6 +936,28 @@ public class JavaFormat
 	{
 		return clazz != null && clazz.getTag() instanceof JavaMainTag;
 	}
+	
+	public String formatVdmSource(PIR irNode)
+	{
+		if (getJavaSettings().printVdmLocations() && irNode != null)
+		{
+			org.overture.ast.node.INode vdmNode = LocationAssistantIR.getVdmNode(irNode);
+
+			if (vdmNode != null)
+			{
+				ILexLocation loc = info.getLocationAssistant().findLocation(vdmNode);
+
+				if (loc != null)
+				{
+					return String.format("/* %s %d:%d */\n", loc.getFile().getName(), loc.getStartLine(), loc.getStartPos());
+				}
+			}
+
+		}
+
+		return "";
+	}
+	
 	
 	public String getQuotePackagePrefix()
 	{

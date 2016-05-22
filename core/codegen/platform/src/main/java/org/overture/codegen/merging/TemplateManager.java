@@ -42,13 +42,18 @@ public class TemplateManager
 	 * Relative paths for user-defined template files
 	 */
 	protected HashMap<Class<? extends INode>, TemplateData> userDefinedPaths;
+	
+	/**
+	 * cache
+	 */
+	final protected HashMap<Class<? extends INode>, Template> cache = new HashMap<Class<? extends INode>, Template>();
 
 	protected String root;
 
 	private Class<?> templateLoadRef = null;
 
 	/**
-	 * Not for use with extensions. Use {@link #TemplateManager(TemplateStructure, Class)} instead.
+	 * Not for use with extensions. Use {@link #TemplateManager(String, Class)} instead.
 	 * 
 	 * @param root The template root folder
 	 */
@@ -93,9 +98,6 @@ public class TemplateManager
 		return root;
 	}
 
-	/**
-	 * Initialize the mapping of IR nodes {@link TemplateStructure}
-	 */
 	protected void initNodeTemplateFileNames()
 	{
 		this.userDefinedPaths = new HashMap<>();
@@ -103,6 +105,11 @@ public class TemplateManager
 
 	public Template getTemplate(Class<? extends INode> nodeClass) throws ParseException
 	{
+		if(cache.containsKey(nodeClass))
+		{
+			return cache.get(nodeClass);
+		}
+		
 		try
 		{
 			TemplateData td = getTemplateData(nodeClass);
@@ -114,7 +121,9 @@ public class TemplateManager
 				return null;
 			}
 
-			return constructTemplate(td.getTemplatePath(),buffer);
+			Template template = constructTemplate(td.getTemplatePath(),buffer);
+			cache.put(nodeClass, template);
+			return template;
 
 		} catch (IOException e)
 		{

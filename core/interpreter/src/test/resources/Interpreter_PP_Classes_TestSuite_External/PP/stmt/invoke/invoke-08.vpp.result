@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
-<message column="5" line="37" message="Error 4105: Can't get object value of seq in 'B' (invoke-08.vpp) at line 37:5" messageType="error" number="4105" resource="invoke-08.vpp.result"/>
+<testResult type="org.overture.interpreter.tests.external.ExternalClassesPpTest">
+<message column="5" line="37" message="Error 4105: Can't get object value of seq in 'B' (invoke-08.vpp) at line 37:5" messageType="error" number="4105" resource="invoke-08.vpp"/>
 <result>
 <output object="[]" resource="invoke-08.vpp" value="[]"/>
 </result>

@@ -92,23 +92,34 @@ public class TraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 				newargs.add(arg.clone());
 			} else
 			{
-				// TODO This rewrites the source code and enables stepping when evaluating the
-				// arguments where the location is off since the new arguments do not exist in the source
-				// file. What to do? Use the same location as the call statement? or..
 				String value = v.toString();
-				LexTokenReader ltr = new LexTokenReader(value, Settings.dialect, arg.getLocation());
-				ExpressionReader er = new ExpressionReader(ltr);
-				er.setCurrentModule(core.getCurrentModule());
-
-				try
-				{
-					newargs.add(er.readExpression());
-				} catch (ParserException e)
-				{
-					newargs.add(arg.clone()); // Give up!
-				} catch (LexException e)
+				
+				// If the value includes mk_R() expressions, we may not be able to resolve the type,
+				// either because the type R is not explicit (like mk_M`R) or because the type may
+				// have been exported from its module as a "struct" and so mk_R(x) is not legal.
+				// Note that a RecordValue's toString does not explicitly expand the module name.
+				// So we exclude anything with mk_R expressions too...
+				
+				if (value.matches(".*mk_\\w+\\(.*"))
 				{
 					newargs.add(arg.clone()); // Give up!
+				}
+				else
+				{
+    				LexTokenReader ltr = new LexTokenReader(value, Settings.dialect, arg.getLocation());
+    				ExpressionReader er = new ExpressionReader(ltr);
+    				er.setCurrentModule(core.getCurrentModule());
+    
+    				try
+    				{
+    					newargs.add(er.readExpression());
+    				} catch (ParserException e)
+    				{
+    					newargs.add(arg.clone()); // Give up!
+    				} catch (LexException e)
+    				{
+    					newargs.add(arg.clone()); // Give up!
+    				}
 				}
 			}
 		}
@@ -239,7 +250,7 @@ public class TraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 
 			for (PMultipleBind mb : term.getDef().getBindings())
 			{
-				ValueList bvals = af.createPMultipleBindAssistant().getBindValues(mb, ctxt);
+				ValueList bvals = af.createPMultipleBindAssistant().getBindValues(mb, ctxt, true);	// NB permuted
 
 				for (PPattern p : mb.getPlist())
 				{

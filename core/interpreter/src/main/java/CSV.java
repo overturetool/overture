@@ -4,9 +4,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.Vector;
 
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
@@ -14,6 +11,9 @@ import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.utilities.stdlibs.CsvParser;
+import org.overture.interpreter.utilities.stdlibs.CsvResult;
+import org.overture.interpreter.utilities.stdlibs.CsvValueBuilder;
 import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.IntegerValue;
@@ -109,11 +109,28 @@ public class CSV extends IO implements Serializable
 			boolean success = false;
 			try
 			{
-				for (String value : getLine(file, index))
+				CsvParser parser = new CsvParser(new CsvValueBuilder()
 				{
-					lineCells.values.add(createValue("CSV", "freadval", value));
+					@Override
+					public Value createValue(String value)
+							throws Exception
+					{
+						return CSV.createValue("CSV", "freadval", value);
+					}
+				});
+				
+				CsvResult res = parser.parseValues(getLine(file, index));
+				
+				if(!res.dataOk())
+				{
+					lastError = res.getErrorMsg();
+					success = false;
 				}
-				success = true;
+				else
+				{
+					lineCells.values.addAll(res.getValues());
+					success = true;
+				}
 			} catch (Exception e)
 			{
 				success = false;
@@ -180,13 +197,12 @@ public class CSV extends IO implements Serializable
 		return lines;
 	}
 
-	private static List<String> getLine(File file, long index)
+	private static String getLine(File file, long index)
 			throws IOException
 	{
 		BufferedReader bufRdr = new BufferedReader(new FileReader(file));
 		String line = null;
 		int lineIndex = 0;
-		List<String> cells = new Vector<String>();
 
 		if (index < 1)
 		{
@@ -201,11 +217,6 @@ public class CSV extends IO implements Serializable
 				lineIndex++;
 				if (lineIndex == index)
 				{
-					StringTokenizer st = new StringTokenizer(line, ",");
-					while (st.hasMoreTokens())
-					{
-						cells.add(st.nextToken());
-					}
 					break;
 				}
 
@@ -215,12 +226,12 @@ public class CSV extends IO implements Serializable
 			bufRdr.close();
 		}
 
-		if (cells.isEmpty())
+		if (line == null)
 		{
 			throw new IOException("CSV no data read. Empty line.");
 		}
 
-		return cells;
+		return line;
 	}
 
 	private static Value createValue(String module, String method, String value)

@@ -214,7 +214,7 @@ type {-> package='org.overture.ast.types'
     =   #basic
     |   {bracket} (type):type
     |   {class} [name]:LexNameToken (classdef):definition.#class //change classdef to graf - is this correct dont see how it could have worked before
-    |   {function} [partial]:java_Boolean (parameters):type* (result):type 
+    |   {function} [partial]:java_Boolean (parameters):type* (result):type [instantiated]:java_Boolean
     |   #invariant
     |   #Map 
     |   {operation} (parameters):type* (result):type (pure):java_Boolean
@@ -539,7 +539,7 @@ export {-> package='org.overture.ast.modules'
 	|	[location]:location 
 	|	[definition]:definition*}
     =   {all}
-    |   {function} [nameList]:LexNameToken* (exportType):type
+    |   {function} [nameList]:LexNameToken* (exportType):type [typeParams]:LexNameToken*
     |   {operation} [nameList]:LexNameToken* (exportType):type
     |   {type} [name]:LexNameToken [struct]:java_Boolean
     |   {value} [nameList]:LexNameToken* (exportType):type

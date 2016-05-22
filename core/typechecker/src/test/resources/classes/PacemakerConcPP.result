@@ -8,12 +8,5 @@
 <message column="12" line="43" message="Class name IO not in scope" messageType="error" number="3133" resource="PacemakerConcPP"/>
 <message column="6" line="43" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="PacemakerConcPP"/>
 <message column="6" line="43" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="PacemakerConcPP"/>
-<message column="5" line="548" message="Member handleEvent(Pulse, Chamber, nat) is not in scope" messageType="error" number="3209" resource="PacemakerConcPP"/>
-<message column="13" line="1004" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="PacemakerConcPP"/>
-<message column="6" line="1007" message="Member addLeadSensor(Lead) is not in scope" messageType="error" number="3209" resource="PacemakerConcPP"/>
-<message column="6" line="1008" message="Member addLeadSensor(Lead) is not in scope" messageType="error" number="3209" resource="PacemakerConcPP"/>
-<message column="6" line="1011" message="Member addAccelerometer(Accelerometer) is not in scope" messageType="error" number="3209" resource="PacemakerConcPP"/>
-<message column="4" line="1035" message="Member isFinished() is not in scope" messageType="error" number="3209" resource="PacemakerConcPP"/>
-<message column="4" line="1037" message="Member showResult() is not in scope" messageType="error" number="3209" resource="PacemakerConcPP"/>
 <result/>
 </testResult>

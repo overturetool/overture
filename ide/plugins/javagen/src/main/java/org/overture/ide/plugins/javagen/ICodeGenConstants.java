@@ -42,6 +42,11 @@ public interface ICodeGenConstants
 	public static final String JAVA_PACKAGE = PLUGIN_ID + ".java_package";
 	public static final String JAVA_PACKAGE_DEFAULT = "";
 	
+	public static final String GENERATE_VDM_LOCATIONS_INFO = PLUGIN_ID + ".vdm_locations";
+	public static final boolean GENERATE_VDM_LOCATIONS_INFO_DEFAULT = false;
+	
+	// JML related
+	
 	public static final String GENERATE_JML = PLUGIN_ID + ".jml";
 	public static final boolean GENERATE_JML_DEFAULT = false;
 	

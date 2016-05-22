@@ -7,7 +7,7 @@ import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.eval.BindState;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -23,7 +23,7 @@ import org.overture.interpreter.values.ValueSet;
  ****************************************/
 
 public class MultipleBindValuesCollector extends
-		QuestionAnswerAdaptor<Context, ValueList>
+		QuestionAnswerAdaptor<BindState, ValueList>
 {
 	protected IInterpreterAssistantFactory af;
 
@@ -33,20 +33,20 @@ public class MultipleBindValuesCollector extends
 	}
 
 	@Override
-	public ValueList caseASetMultipleBind(ASetMultipleBind node, Context ctxt)
+	public ValueList caseASetMultipleBind(ASetMultipleBind node, BindState state)
 			throws AnalysisException
 	{
 		try
 		{
 			ValueList vl = new ValueList();
-			ValueSet vs = node.getSet().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
+			ValueSet vs = node.getSet().apply(VdmRuntime.getExpressionEvaluator(), state.ctxt).setValue(state.ctxt);
 			vs.sort();
 
 			for (Value v : vs)
 			{
 				v = v.deref();
 
-				if (v instanceof SetValue)
+				if (v instanceof SetValue && state.permuted)
 				{
 					SetValue sv = (SetValue) v;
 					vl.addAll(sv.permutedSets());
@@ -69,33 +69,30 @@ public class MultipleBindValuesCollector extends
 	}
 
 	@Override
-	public ValueList caseATypeMultipleBind(ATypeMultipleBind node, Context ctxt)
+	public ValueList caseATypeMultipleBind(ATypeMultipleBind node, BindState state)
 			throws AnalysisException
 	{
-		return af.createPTypeAssistant().getAllValues(node.getType(), ctxt);
+		return af.createPTypeAssistant().getAllValues(node.getType(), state.ctxt);
 	}
 
 	@Override
-	public ValueList defaultPMultipleBind(PMultipleBind node, Context question)
+	public ValueList defaultPMultipleBind(PMultipleBind node, BindState question)
 			throws AnalysisException
 	{
 		return null;
 	}
 
 	@Override
-	public ValueList createNewReturnValue(INode node, Context question)
+	public ValueList createNewReturnValue(INode node, BindState question)
 			throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ValueList createNewReturnValue(Object node, Context question)
+	public ValueList createNewReturnValue(Object node, BindState question)
 			throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

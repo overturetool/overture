@@ -437,7 +437,15 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 				AFunctionType mtype = (AFunctionType) efd.getType();
 
-				if (!question.assistantFactory.getTypeComparator().compatible(mtype.getParameters(), question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node)))
+				if (node.getTypeParams() != null && !node.getTypeParams().isEmpty())
+				{
+					if (!mtype.getParameters().toString().equals(question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node).toString()))
+					{
+						TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
+						TypeChecker.detail2(node.getMeasure().getFullName(), mtype.getParameters(), "Expected", question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node));
+					}
+				}
+				else if (!question.assistantFactory.getTypeComparator().compatible(mtype.getParameters(), question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node)))
 				{
 					TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
 					TypeChecker.detail2(node.getMeasure().getFullName(), mtype.getParameters(), "Expected", question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node));

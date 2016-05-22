@@ -205,7 +205,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 	public PExp caseAStateDefinition(AStateDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		if (def.getInitExpression() != null)
+		if (def.getInvExpression() != null)
 		{
 			PExp found = af.createPExpAssistant().findExpression(def.getInvExpression(), lineno);
 			if (found != null)

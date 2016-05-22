@@ -28,6 +28,8 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
@@ -76,7 +78,7 @@ public class ExportDefinitionFinder
 			throws AnalysisException
 	{
 		List<PDefinition> list = new Vector<PDefinition>();
-		for (ILexNameToken name : ((AFunctionExport) exp).getNameList())
+		for (ILexNameToken name : exp.getNameList())
 		{
 			PDefinition def = af.createPDefinitionListAssistant().findName(actualDefs, name, NameScope.NAMES);
 
@@ -87,9 +89,54 @@ public class ExportDefinitionFinder
 			} else
 			{
 				PType act = af.createPDefinitionAssistant().getType(def);
-				PType type = ((AFunctionExport) exp).getExportType();
+				PType type = exp.getExportType();
 
-				if (act != null && !af.createPTypeAssistant().equals(act, type))
+				if (exp.getTypeParams() != null && !exp.getTypeParams().isEmpty())
+				{
+					if (def instanceof AExplicitFunctionDefinition)
+					{
+						AExplicitFunctionDefinition efd = (AExplicitFunctionDefinition)def;
+						
+						if (efd.getTypeParams() == null)
+						{
+							TypeCheckerErrors.report(3352, "Exported " + name + " function has no type paramaters", name.getLocation(), exp);
+						}
+						else if (!efd.getTypeParams().equals(exp.getTypeParams()))
+						{
+							TypeCheckerErrors.report(3353, "Exported " + name + " function type parameters incorrect", name.getLocation(), exp);
+							TypeCheckerErrors.detail2("Exported", exp.getTypeParams(), "Actual", efd.getTypeParams());
+						}
+						
+						if (act != null && !act.toString().equals(type.toString()))
+						{
+							TypeCheckerErrors.report(3184, "Exported " + name
+									+ " function type incorrect", name.getLocation(), exp);
+							TypeCheckerErrors.detail2("Exported", type, "Actual", act);
+						}
+					}
+					else if (def instanceof AImplicitFunctionDefinition)
+					{
+						AImplicitFunctionDefinition ifd = (AImplicitFunctionDefinition)def;
+						
+						if (ifd.getTypeParams() == null)
+						{
+							TypeCheckerErrors.report(3352, "Exported " + name + " function has no type paramaters", name.getLocation(), exp);
+						}
+						else if (!ifd.getTypeParams().equals(exp.getTypeParams()))
+						{
+							TypeCheckerErrors.report(3353, "Exported " + name + " function type parameters incorrect", name.getLocation(), exp);
+							TypeCheckerErrors.detail2("Exported", exp.getTypeParams(), "Actual", ifd.getTypeParams());
+						}
+						
+						if (act != null && !act.toString().equals(type.toString()))
+						{
+							TypeCheckerErrors.report(3184, "Exported " + name
+									+ " function type incorrect", name.getLocation(), exp);
+							TypeCheckerErrors.detail2("Exported", type, "Actual", act);
+						}
+					}
+				}
+				else if (act != null && !af.createPTypeAssistant().equals(act, type))
 				{
 					TypeCheckerErrors.report(3184, "Exported " + name
 							+ " function type incorrect", name.getLocation(), exp);
@@ -99,6 +146,7 @@ public class ExportDefinitionFinder
 				list.add(def);
 			}
 		}
+		
 		return list;
 	}
 

@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -119,11 +121,11 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 	public PType caseAFunctionValueImport(AFunctionValueImport node,
 			TypeCheckInfo question)
 	{
-		// TODO: This might need to be made in another way
 		if (node.getTypeParams().size() == 0)
 		{
-			defaultSValueImport(node, question);
-		} else
+			return defaultSValueImport(node, question);
+		}
+		else
 		{
 			List<PDefinition> defs = new Vector<PDefinition>();
 
@@ -137,9 +139,56 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 			}
 
 			FlatCheckedEnvironment params = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, NameScope.NAMES);
-
-			defaultSValueImport(node, new TypeCheckInfo(question.assistantFactory, params, question.scope, question.qualifiers));
+			PType rtype = question.assistantFactory.createPTypeAssistant().typeResolve(node.getImportType(), null, THIS, question.newInfo(params));
+			node.setImportType(rtype);
+			PDefinition def = question.assistantFactory.createPDefinitionListAssistant().findName(node.getFrom().getExportdefs(), node.getName(), NameScope.NAMES);
+			
+			if (def instanceof AExplicitFunctionDefinition)
+			{
+				AExplicitFunctionDefinition efd = (AExplicitFunctionDefinition)def;
+				
+				if (efd.getTypeParams() == null || efd.getTypeParams().isEmpty())
+				{
+					TypeCheckerErrors.report(3352, "Imported " + node.getName() + " function has no type paramaters", node.getLocation(), node);
+				}
+				else if (!efd.getTypeParams().toString().equals(node.getTypeParams().toString()))
+				{
+					TypeCheckerErrors.report(3353, "Imported " + node.getName() + " function type parameters incorrect", node.getLocation(), node);
+					TypeCheckerErrors.detail2("Imported", node.getTypeParams(), "Actual", efd.getTypeParams());
+				}
+				
+				if (efd.getType() != null && !efd.getType().toString().equals(node.getImportType().toString()))
+				{
+					TypeCheckerErrors.report(3184, "Imported " + node.getName() + " function type incorrect", node.getLocation(), node);
+					TypeCheckerErrors.detail2("Imported", node.getImportType(), "Actual", efd.getType());
+				}
+				
+				node.setImportType(efd.getType().clone());
+			}
+			else if (def instanceof AImplicitFunctionDefinition)
+			{
+				AImplicitFunctionDefinition ifd = (AImplicitFunctionDefinition)def;
+				
+				if (ifd.getTypeParams() == null || ifd.getTypeParams().isEmpty())
+				{
+					TypeCheckerErrors.report(3352, "Imported " + node.getName() + " function has no type paramaters", node.getLocation(), node);
+				}
+				else if (!ifd.getTypeParams().toString().equals(node.getTypeParams().toString()))
+				{
+					TypeCheckerErrors.report(3353, "Imported " + node.getName() + " function type parameters incorrect", node.getLocation(), node);
+					TypeCheckerErrors.detail2("Imported", node.getTypeParams(), "Actual", ifd.getTypeParams());
+				}
+				
+				if (ifd.getType() != null && !ifd.getType().toString().equals(node.getImportType().toString()))
+				{
+					TypeCheckerErrors.report(3184, "Imported " + node.getName() + " function type incorrect", node.getLocation(), node);
+					TypeCheckerErrors.detail2("Imported", node.getImportType(), "Actual", ifd.getType());
+				}
+				
+				node.setImportType(ifd.getType().clone());
+			}
 		}
+
 		return null;
 	}
 

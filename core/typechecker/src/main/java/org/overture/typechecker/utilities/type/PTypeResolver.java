@@ -38,6 +38,7 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ABracketType;
@@ -191,24 +192,56 @@ public class PTypeResolver extends
 			type.setResolved(true);
 		}
 
-		try
-		{
-			List<PType> fixed = new ArrayList<PType>();
+		List<PType> fixed = new ArrayList<PType>();
+		TypeCheckException problem = null;
 
-			for (PType ft : type.getParameters())
+		for (PType ft : type.getParameters())
+		{
+			try
 			{
 				fixed.add(af.createPTypeAssistant().typeResolve(ft, question.root, question.rootVisitor, question.question));
 			}
+			catch (TypeCheckException e)
+			{
+				if (problem == null)
+				{
+					problem = e;
+				}
+				else
+				{
+					problem.addExtra(e);
+				}
+				
+				fixed.add(AstFactory.newAUnknownType(type.getLocation()));
+			}
+		}
 
+		try
+		{
 			type.setParameters(fixed);
 			type.setResult(af.createPTypeAssistant().typeResolve(type.getResult(), question.root, question.rootVisitor, question.question));
-			return type;
-		} catch (TypeCheckException e)
-		{
-
-			type.apply(af.getTypeUnresolver());
-			throw e;
 		}
+		catch (TypeCheckException e)
+		{
+			if (problem == null)
+			{
+				problem = e;
+			}
+			else
+			{
+				problem.addExtra(e);
+			}
+			
+			fixed.add(AstFactory.newAUnknownType(type.getLocation()));
+		}
+		
+		if (problem != null)
+		{
+			type.apply(af.getTypeUnresolver());
+			throw problem;
+		}
+
+		return type;
 	}
 
 	@Override
@@ -246,6 +279,8 @@ public class PTypeResolver extends
 			type.setResolved(true);
 			type.setInfinite(false);
 		}
+		
+		TypeCheckException problem = null;
 
 		for (AFieldField f : type.getFields())
 		{
@@ -254,7 +289,21 @@ public class PTypeResolver extends
 				question.root.setInfinite(false);
 			}
 
-			f.apply(THIS, question);
+			try
+			{
+				f.apply(THIS, question);
+			}
+			catch (TypeCheckException e)
+			{
+				if (problem == null)
+				{
+					problem = e;
+				}
+				else
+				{
+					problem.addExtra(e);
+				}
+			}
 
 			if (question.root != null)
 			{
@@ -262,11 +311,18 @@ public class PTypeResolver extends
 						|| question.root.getInfinite());
 			}
 		}
+		
+		if (problem != null)
+		{
+			type.apply(af.getTypeUnresolver());
+			throw problem;
+		}
 
 		if (question.root != null)
 		{
 			question.root.setInfinite(type.getInfinite());
 		}
+		
 		return type;
 	}
 
@@ -338,23 +394,56 @@ public class PTypeResolver extends
 			type.setResolved(true);
 		}
 
-		try
-		{
-			List<PType> fixed = new ArrayList<PType>();
+		List<PType> fixed = new ArrayList<PType>();
+		TypeCheckException problem = null;
 
-			for (PType ot : type.getParameters())
+		for (PType ot : type.getParameters())
+		{
+			try
 			{
 				fixed.add(af.createPTypeAssistant().typeResolve(ot, question.root, question.rootVisitor, question.question));
 			}
+			catch (TypeCheckException e)
+			{
+				if (problem == null)
+				{
+					problem = e;
+				}
+				else
+				{
+					problem.addExtra(e);
+				}
+				
+				fixed.add(AstFactory.newAUnknownType(type.getLocation()));
+			}
+		}
 
+		try
+		{
 			type.setParameters(fixed);
 			type.setResult(af.createPTypeAssistant().typeResolve(type.getResult(), question.root, question.rootVisitor, question.question));
-			return type;
-		} catch (TypeCheckException e)
+		}
+		catch (TypeCheckException e)
+		{
+			if (problem == null)
+			{
+				problem = e;
+			}
+			else
+			{
+				problem.addExtra(e);
+			}
+			
+			fixed.add(AstFactory.newAUnknownType(type.getLocation()));
+		}
+		
+		if (problem != null)
 		{
 			type.apply(af.getTypeUnresolver());
-			throw e;
+			throw problem;
 		}
+
+		return type;
 	}
 
 	@Override
@@ -413,23 +502,37 @@ public class PTypeResolver extends
 			type.setResolved(true);
 		}
 
-		try
-		{
-			List<PType> fixed = new Vector<PType>();
+		List<PType> fixed = new Vector<PType>();
+		TypeCheckException problem = null;
 
-			for (PType t : type.getTypes())
+		for (PType t : type.getTypes())
+		{
+			try
 			{
 				PType rt = af.createPTypeAssistant().typeResolve(t, question.root, question.rootVisitor, question.question);
 				fixed.add(rt);
 			}
-
-			type.setTypes(fixed);
-			return type;
-		} catch (TypeCheckException e)
+			catch (TypeCheckException e)
+			{
+				if (problem == null)
+				{
+					problem = e;
+				}
+				else
+				{
+					problem.addExtra(e);
+				}
+			}
+		}
+		
+		if (problem != null)
 		{
 			type.apply(af.getTypeUnresolver());
-			throw e;
+			throw problem;
 		}
+
+		type.setTypes(fixed);
+		return type;
 	}
 
 	@Override
@@ -499,41 +602,57 @@ public class PTypeResolver extends
 			type.setInfinite(true);
 		}
 
-		try
+		PTypeSet fixed = new PTypeSet(af);
+		TypeCheckException problem = null;
+
+		for (PType t : type.getTypes())
 		{
-			PTypeSet fixed = new PTypeSet(af);
-			for (PType t : type.getTypes())
-			{
-				if (question.root != null)
-				{
-					question.root.setInfinite(false);
-				}
-
-				fixed.add(af.createPTypeAssistant().typeResolve(t, question.root, question.rootVisitor, question.question));
-
-				if (question.root != null)
-				{
-					type.setInfinite(type.getInfinite()
-							&& question.root.getInfinite());
-				}
-			}
-
-			type.setTypes(new Vector<PType>(fixed));
 			if (question.root != null)
 			{
-				question.root.setInfinite(type.getInfinite());
+				question.root.setInfinite(false);
 			}
 
-			// Resolved types may be unions, so force a re-expand
-			type.setExpanded(false);
-			af.createAUnionTypeAssistant().expand(type);
+			try
+			{
+				fixed.add(af.createPTypeAssistant().typeResolve(t, question.root, question.rootVisitor, question.question));
+			}
+			catch (TypeCheckException e)
+			{
+				if (problem == null)
+				{
+					problem = e;
+				}
+				else
+				{
+					problem.addExtra(e);
+				}
+			}
 
-			return type;
-		} catch (TypeCheckException e)
+			if (question.root != null)
+			{
+				type.setInfinite(type.getInfinite()
+						&& question.root.getInfinite());
+			}
+		}
+		
+		if (problem != null)
 		{
 			type.apply(af.getTypeUnresolver());
-			throw e;
+			throw problem;
 		}
+
+		type.setTypes(new Vector<PType>(fixed));
+		
+		if (question.root != null)
+		{
+			question.root.setInfinite(type.getInfinite());
+		}
+
+		// Resolved types may be unions, so force a re-expand
+		type.setExpanded(false);
+		af.createAUnionTypeAssistant().expand(type);
+
+		return type;
 	}
 
 	@Override

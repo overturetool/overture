@@ -123,7 +123,7 @@ public class VdmjTracesHelper
 
 	}
 
-	private MessageConsole findConsole(String name)
+	public static MessageConsole findConsole(String name)
 	{
 		ConsolePlugin plugin = ConsolePlugin.getDefault();
 		IConsoleManager conMan = plugin.getConsoleManager();

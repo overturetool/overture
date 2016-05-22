@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
-<message column="22" line="60" message="Error 4087: Cannot convert C{#16} (C) to (B | E) in 'A' (isofclass-02.vpp) at line 60:22" messageType="error" number="4087" resource="isofclass-02.vpp.result"/>
+<testResult type="org.overture.interpreter.tests.external.ExternalClassesPpTest">
+<message column="22" line="60" message="Error 4087: Cannot convert C{#16} (C) to (B | E) in 'A' (isofclass-02.vpp) at line 60:22" messageType="error" number="4087" resource="isofclass-02.vpp"/>
 <result>
 <output object="[]" resource="isofclass-02.vpp" value="[]"/>
 </result>

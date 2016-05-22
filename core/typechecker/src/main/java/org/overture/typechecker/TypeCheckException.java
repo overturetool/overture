@@ -23,6 +23,9 @@
 
 package org.overture.typechecker;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
 
@@ -35,11 +38,27 @@ public class TypeCheckException extends RuntimeException
 {
 	public final ILexLocation location;
 	public final INode node;
+	public List<TypeCheckException> extras = null;
 
 	public TypeCheckException(String msg, ILexLocation location, INode node)
 	{
 		super(msg);
 		this.location = location;
 		this.node = node;
+	}
+	
+	public void addExtra(TypeCheckException e)
+	{
+		if (extras == null)
+		{
+			extras = new Vector<TypeCheckException>();
+		}
+		
+		extras.add(e);
+		
+		if (e.extras != null)
+		{
+			extras.addAll(e.extras);
+		}
 	}
 }

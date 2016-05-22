@@ -18,21 +18,23 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.ast.statements.ANotYetSpecifiedStm;
-import org.overture.ast.util.modules.CombinedDefaultModule;
+import org.overture.ast.statements.ANotYetSpecifiedStm;	
+import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
 import org.overture.codegen.assistant.DeclAssistantIR;
-import org.overture.codegen.ir.PIR;
-import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.trans.BlockCleanupTrans;
 import org.overture.codegen.trans.OldNameRenamer;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.config.Settings;
 
 
 /**
@@ -96,6 +98,14 @@ abstract public class CodeGenBase implements IREventCoordinator
 	public GeneratedData generate(List<INode> ast) throws AnalysisException
 	{
 		clear();
+
+		if(Settings.dialect == Dialect.VDM_SL)
+		{
+			ModuleList moduleList = new ModuleList(getModules(ast));
+			moduleList.combineDefaults();
+			ast = getNodes(moduleList);
+		}
+		
 		preProcessAst(ast);
 
 		List<IRStatus<PIR>> statuses = new LinkedList<>();
@@ -197,6 +207,29 @@ abstract public class CodeGenBase implements IREventCoordinator
 		return code.toString();
 	}
 	
+	
+	/**
+	 * Convenience method for extracting the VDM module definitions from a list of VDM nodes.
+	 * 
+	 * @param ast
+	 *            A list of VDM nodes.
+	 * @return The module definitions extracted from <code>ast</code>.
+	 */
+	public static List<AModuleModules> getModules(List<INode> ast)
+	{
+		List<AModuleModules> modules = new LinkedList<>();
+		
+		for(INode n : ast)
+		{
+			if(n instanceof AModuleModules)
+			{
+				modules.add((AModuleModules) n);
+			}
+		}
+		
+		return modules;
+	}
+	
 	/**
 	 * Convenience method for extracting the VDM class definitions from a list of VDM nodes.
 	 * 
@@ -236,6 +269,43 @@ abstract public class CodeGenBase implements IREventCoordinator
 	}
 	
 	/**
+	 * Applies the {@link #cleanup(IRStatus)} method to all the IR statuses.
+	 * 
+	 * @param statuses
+	 *            The IR statuses
+	 */
+	public void cleanup(List<IRStatus<PIR>> statuses)
+	{
+		for (IRStatus<PIR> s : statuses)
+		{
+			cleanup(s);
+		}
+	}
+
+	/**
+	 * Cleans up an IR status by removing redundant {@link ABlockStmIR} nodes using the {@link BlockCleanupTrans}
+	 * transformation.
+	 * 
+	 * @param status
+	 *            The IR status
+	 */
+	public void cleanup(IRStatus<PIR> status)
+	{
+		if (status != null && status.getIrNode() != null)
+		{
+			try
+			{
+				status.getIrNode().apply(new BlockCleanupTrans());
+			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
+			{
+				e.printStackTrace();
+				Logger.getLog().printErrorln("Problem encountered when trying to cleanup blocks in '"
+						+ this.getClass().getSimpleName() + "'");
+			}
+		}
+	}
+	
+	/**
 	 * Given an IR status this method determines if it represents a test case or not.
 	 * 
 	 * @param status The IR status.
@@ -252,34 +322,19 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 * @param ast The VDM AST.
 	 * @return A list of user modules or classes.
 	 */
-	protected List<INode> getUserModules(
-			List<? extends INode> ast)
+	protected List<INode> getUserModules(List<? extends INode> ast)
 	{
 		List<INode> userModules = new LinkedList<INode>();
-		
-		if(ast.size() == 1 && ast.get(0) instanceof CombinedDefaultModule)
+
+		for (INode node : ast)
 		{
-			CombinedDefaultModule combined = (CombinedDefaultModule) ast.get(0);
-			
-			for(AModuleModules m : combined.getModules())
+			if (!getInfo().getDeclAssistant().isLibrary(node))
 			{
-				userModules.add(m);
+				userModules.add(node);
 			}
-			
-			return userModules;
 		}
-		else
-		{
-			for (INode node : ast)
-			{
-				if(!getInfo().getDeclAssistant().isLibrary(node))
-				{
-					userModules.add(node);
-				}
-			}
-			
-			return userModules;
-		}
+
+		return userModules;
 	}
 	
 	/**

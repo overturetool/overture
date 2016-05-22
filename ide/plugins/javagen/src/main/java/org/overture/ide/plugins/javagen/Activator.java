@@ -99,12 +99,13 @@ public class Activator extends AbstractUIPlugin
 		store.setDefault(ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS, ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS_DEFAULT);
 		store.setDefault(ICodeGenConstants.CLASSES_TO_SKIP, ICodeGenConstants.CLASSES_TO_SKIP_DEFAULT);
 		store.setDefault(ICodeGenConstants.JAVA_PACKAGE, ICodeGenConstants.JAVA_PACKAGE_DEFAULT);
+		store.setDefault(ICodeGenConstants.GENERATE_VDM_LOCATIONS_INFO, ICodeGenConstants.GENERATE_VDM_LOCATIONS_INFO_DEFAULT);
 		store.setDefault(ICodeGenConstants.GENERATE_JML, ICodeGenConstants.GENERATE_JML_DEFAULT);
 		store.setDefault(ICodeGenConstants.JML_USE_INVARIANT_FOR, ICodeGenConstants.JML_USE_INVARIANT_FOR_DEFAULT);
 	}
 	
 	public static void savePluginSettings(boolean disableCloning,
-			boolean genAsStrings, boolean genConc, boolean genJml, boolean jmlInvFor, String userSpecifiedClassesToSkip, String javaPackage)
+			boolean genAsStrings, boolean genConc, boolean genJml, boolean jmlInvFor, String userSpecifiedClassesToSkip, String javaPackage, boolean genVdmLoc)
 	{
 		Preferences prefs = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
 		prefs.put(ICodeGenConstants.DISABLE_CLONING, new Boolean(disableCloning).toString());
@@ -120,6 +121,8 @@ public class Activator extends AbstractUIPlugin
 		{
 			prefs.put(ICodeGenConstants.JAVA_PACKAGE, javaPackage);
 		}
+		
+		prefs.put(ICodeGenConstants.GENERATE_VDM_LOCATIONS_INFO, new Boolean(genVdmLoc).toString());
 		
 		prefs.put(ICodeGenConstants.GENERATE_JML, new Boolean(genJml).toString());
 		prefs.put(ICodeGenConstants.JML_USE_INVARIANT_FOR, new Boolean(jmlInvFor).toString());

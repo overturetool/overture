@@ -195,4 +195,14 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements
 			mergeObserver = null;
 		}
 	}
+
+	public TemplateManager getTemplateManager()
+	{
+		return templates;
+	}
+
+	public void setTemplateManager(TemplateManager templates)
+	{
+		this.templates = templates;
+	}
 }

@@ -28,8 +28,10 @@ import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SNumericBasicType;
 
@@ -111,6 +113,16 @@ public class PTypeSet extends TreeSet<PType>
 				}
 			}
 		}
+		else if (t instanceof AOptionalType)
+		{
+			AOptionalType opt = (AOptionalType)t;
+			
+			if (!(opt.getType() instanceof AUnknownType) && contains(opt.getType()))
+			{
+				remove(opt.getType());	// Because T | [T] = [T]
+			}
+		}
+
 
 		return super.add(t);
 	}

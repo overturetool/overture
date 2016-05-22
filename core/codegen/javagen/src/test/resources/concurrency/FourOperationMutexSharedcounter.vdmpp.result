@@ -133,7 +133,6 @@ public class CountSwitcher extends VDMThread implements EvaluatePP {
 
     public void cg_init_CountSwitcher_1(final SharedCounter s) {
         sentinel = new CountSwitcher_sentinel(this);
-
         sharedCounter = s;
     }
 

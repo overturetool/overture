@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterPpTestCase">
-<message column="10" line="40" message="Error 4036: ERROR statement reached in 'A' (depend-12.vpp) at line 40:10" messageType="error" number="4036" resource="depend-12.vpp.result"/>
+<testResult type="org.overture.interpreter.tests.external.ExternalClassesPpTest">
+<message column="10" line="40" message="Error 4036: ERROR statement reached in 'A' (depend-12.vpp) at line 40:10" messageType="error" number="4036" resource="depend-12.vpp"/>
 <result>
 <output object="[]" resource="depend-12.vpp" value="[]"/>
 </result>

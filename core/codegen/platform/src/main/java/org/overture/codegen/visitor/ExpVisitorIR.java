@@ -546,7 +546,15 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		for (PMultipleBind multipleBind : bindings)
 		{
 			SMultipleBindIR multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
-			bindingsCg.add(multipleBindCg);
+			
+			if(multipleBindCg != null)
+			{
+				bindingsCg.add(multipleBindCg);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		PType type = node.getType();
@@ -1099,6 +1107,10 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			if(multipleBindCg != null)
 			{
 				bindingsCg.add(multipleBindCg);
+			}
+			else
+			{
+				return null;
 			}
 		}
 

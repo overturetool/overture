@@ -97,7 +97,9 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 			throws AnalysisException
 	{
 		List<PType> types = node.getTypes();
-
+		
+		question.getTypeAssistant().removeIllegalQuoteTypes(types);
+		
 		PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
 
 		if (question.getTypeAssistant().isUnionOfType(node, ASetType.class, typeAssistant))

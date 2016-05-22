@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="Maven">
-	<skin>
+	<!--skin>
 		<groupId>org.overturetool.tools</groupId>
 		<artifactId>overture-skin</artifactId>
 		<version>1.0</version>
-	</skin>
+	</skin-->
 	
 	
 	
@@ -16,7 +16,7 @@
 	
 	
 	<links>
-			<item name="Overture Tool" href="http://overture.sourceforge.net/maven/doc/" />
+			<!--item name="Overture Tool" href="http://overture.sourceforge.net/maven/doc/" /-->
 			
 		</links>
 		<menu name="Documentation">
@@ -24,8 +24,8 @@
 			
 		</menu>
 		<menu name="Overture">
-			<item name="Twiki" href="http://www.overturetool.org" />
-			<item name="Downloads" href="http://sf.net/projects/overture" />
+			<item name="Wiki" href="http://www.overturetool.org" />
+			<!--item name="Downloads" href="http://sf.net/projects/overture" /-->
 		</menu>
 		$modules
 		

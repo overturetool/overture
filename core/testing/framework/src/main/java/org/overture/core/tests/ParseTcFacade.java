@@ -94,7 +94,7 @@ public abstract class ParseTcFacade
 	 *            the String representing the model
 	 * @param dialect
 	 *            the VDM dialect the model is in
-	 * @returnthe AST of the model, as a list of {@link INode}
+	 * @return the AST of the model, as a list of {@link INode}
 	 */
 	public static List<INode> parseModelString(String model, Dialect dialect)
 	{
@@ -175,7 +175,7 @@ public abstract class ParseTcFacade
 	 *            the String representing the model
 	 * @param dialect
 	 *            the VDM dialect the model is in
-	 * @returnthe AST of the model, as a list of {@link INode}
+	 * @return the AST of the model, as a list of {@link INode}
 	 */
 	public static List<INode> typedAstFromString(String model, Dialect dialect)
 			throws ParserException, LexException
