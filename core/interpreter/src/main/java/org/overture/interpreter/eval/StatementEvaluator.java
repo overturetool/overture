@@ -1113,15 +1113,12 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					+ node.getPeriod(), ctxt);
 		}
 
-		if (node.getArgs().size() == 4)
+		if (node.getArgs().size() == 4 && node.getDelay() >= node.getPeriod())
 		{
-			if (node.getDelay() >= node.getPeriod())
-			{
-				VdmRuntimeError.abort(node.getLocation(), 4159, "Delay argument ("
-						+ node.getDelay()
-						+ ") must be less than the period ("
-						+ node.getPeriod() + ")", ctxt);
-			}
+			VdmRuntimeError.abort(node.getLocation(), 4159, "Delay argument ("
+					+ node.getDelay()
+					+ ") must be less than the period ("
+					+ node.getPeriod() + ")", ctxt);
 		}
 
 		return null; // Not actually used - see StartStatement

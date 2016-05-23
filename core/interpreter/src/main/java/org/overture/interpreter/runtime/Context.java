@@ -257,12 +257,9 @@ public class Context extends LexNameTokenMap<Value>
 	{
 		Value v = get(name);
 
-		if (v == null)
+		if (v == null && outer != null)
 		{
-			if (outer != null)
-			{
-				return outer.check(name);
-			}
+			return outer.check(name);
 		}
 
 		return v;

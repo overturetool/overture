@@ -61,13 +61,10 @@ public class DependencyAnalyser extends DepthFirstAnalysisAdaptorQuestion<Depend
 	@Override
 	public void inAExplicitVarExpCG(AExplicitVarExpCG node, DependencyManager question) throws AnalysisException {
 		STypeCG class_type = node.getClassType();
-		if(class_type != null)
+		if(class_type != null && class_type instanceof AClassTypeCG)
 		{
-			if(class_type instanceof AClassTypeCG)
-			{
-				AClassTypeCG cg = (AClassTypeCG) class_type;
-				question.addClassType(cg.getName(),cg.getName());
-			}
+			AClassTypeCG cg = (AClassTypeCG) class_type;
+			question.addClassType(cg.getName(),cg.getName());
 		}
 	}
 	

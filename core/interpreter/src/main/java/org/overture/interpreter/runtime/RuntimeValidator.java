@@ -54,36 +54,27 @@ public class RuntimeValidator
 			ASystemClassDefinition systemDefinition,
 			IInterpreterAssistantFactory af)
 	{
-		if (Settings.timingInvChecks)
+		if (Settings.timingInvChecks && validator != null)
 		{
-			if (validator != null)
-			{
-				validator.bindSystemVariables(systemDefinition, af);
-			}
+			validator.bindSystemVariables(systemDefinition, af);
 
 		}
 	}
 
 	public static void validate(OperationValue operationValue, MessageType type)
 	{
-		if (Settings.timingInvChecks)
+		if (Settings.timingInvChecks && validator != null)
 		{
-			if (validator != null)
-			{
-				validator.validate(operationValue, type);
-			}
+			validator.validate(operationValue, type);
 		}
 	}
 
 	public static void validateAsync(OperationValue operationValue,
 			AsyncThread t)
 	{
-		if (Settings.timingInvChecks)
+		if (Settings.timingInvChecks && validator != null)
 		{
-			if (validator != null)
-			{
-				validator.validateAsync(operationValue, t);
-			}
+			validator.validateAsync(operationValue, t);
 		}
 	}
 

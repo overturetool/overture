@@ -79,12 +79,9 @@ public class Renaming implements Comparable<Renaming>
 	@Override
 	public int compareTo(Renaming other)
 	{
-		if(loc.getModule() != null && other.loc.getModule() != null)
+		if(loc.getModule() != null && other.loc.getModule() != null && !loc.getModule().equals(other.loc.getModule()))
 		{
-			if(!loc.getModule().equals(other.loc.getModule()))
-			{
-				return other.loc.getModule().compareTo(loc.getModule());
-			}
+			return other.loc.getModule().compareTo(loc.getModule());
 		}
 		
 		ILexLocation otherLoc = other.getLoc();

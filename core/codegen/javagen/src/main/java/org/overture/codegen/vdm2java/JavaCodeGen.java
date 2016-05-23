@@ -423,20 +423,17 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 	{
 		super.preProcessAst(ast);
 		
-		if (Settings.dialect == Dialect.VDM_PP)
+		if (Settings.dialect == Dialect.VDM_PP && getJavaSettings().getVdmEntryExp() != null)
 		{
-			if (getJavaSettings().getVdmEntryExp() != null)
+			try
 			{
-				try
-				{
-					mainClass = GeneralCodeGenUtils.consMainClass(getClasses(ast), getJavaSettings().getVdmEntryExp(), Settings.dialect, JAVA_MAIN_CLASS_NAME, getInfo().getTempVarNameGen());
-					ast.add(mainClass);
-				} catch (Exception e)
-				{
-					// It can go wrong if the VDM entry point does not type check
-					warnings.add("The chosen launch configuration could not be type checked: " + e.getMessage());
-					warnings.add("Skipping launch configuration..");
-				}
+				mainClass = GeneralCodeGenUtils.consMainClass(getClasses(ast), getJavaSettings().getVdmEntryExp(), Settings.dialect, JAVA_MAIN_CLASS_NAME, getInfo().getTempVarNameGen());
+				ast.add(mainClass);
+			} catch (Exception e)
+			{
+				// It can go wrong if the VDM entry point does not type check
+				warnings.add("The chosen launch configuration could not be type checked: " + e.getMessage());
+				warnings.add("Skipping launch configuration..");
 			}
 		}
 		
