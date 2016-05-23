@@ -43,7 +43,7 @@ import org.overture.parser.syntax.ParserException;
  * @author ldc
  * @param <R>
  */
-public abstract class NoResultFileTest<R>
+public abstract class ParamNoResultFileTest<R>
 {
 
 	protected String modelPath;
@@ -62,7 +62,7 @@ public abstract class NoResultFileTest<R>
 	 * @param inputParameter
 	 *            file path for the VDM source to test
 	 */
-	public NoResultFileTest(String nameParameter, String inputParameter)
+	public ParamNoResultFileTest(String nameParameter, String inputParameter)
 	{
 		this.testName = nameParameter;
 		this.modelPath = inputParameter;

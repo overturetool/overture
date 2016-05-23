@@ -50,7 +50,7 @@ import com.google.gson.reflect.TypeToken;
 public class SampleExternalsTest extends ParamExternalsTest<SampleTestResult> {
 
 	// the update property for this test
-	private static final String UPDATE_PROPERTY = "tests.update.testing.samples.SampleExternalsTest";
+	private static final String UPDATE_PROPERTY = "tests.update.testing.standard.SampleExternalsTest";
 
 	/**
 	 * For this test, the constructor only needs to pass the

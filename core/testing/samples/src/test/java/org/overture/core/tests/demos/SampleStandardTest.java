@@ -28,10 +28,10 @@ public class SampleStandardTest extends ParamStandardTest<SampleTestResult>
 {
 
 	// Root location of the test input and result files
-	private static final String EXAMPLE_TEST_FILES = "src/test/resources/demos";
+	private static final String EXAMPLE_TEST_FILES = "src/test/resources/standard";
 
 	// The update property for this test
-	private static final String UPDATE_PROPERTY = "tests.update.testing.samples.SampleStandardTest";
+	private static final String UPDATE_PROPERTY = "tests.update.testing.standard.SampleStandardTest";
 
 	/**
 	 * The default constructor must always pass the name of the test and the paths of the test input and result. <br>
