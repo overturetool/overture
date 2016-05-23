@@ -12,8 +12,8 @@
   <packaging>jar</packaging>
 
   <groupId>org.overturetool.core.testing</groupId>
-  <artifactId>tests</artifactId>
-  <name>Overture Demo Tests</name>
+  <artifactId>samples</artifactId>
+  <name>Overture Sample Tests</name>
 
   <dependencies>
     <dependency>

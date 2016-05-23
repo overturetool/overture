@@ -22,12 +22,12 @@ import org.overture.core.tests.AbsResultTest;
  * your module's output directly. But it's a good idea to have a dedicated result class. It should be as small as
  * possible and only contain data that is actually relevant for test purposes.
  * </p>
- * {@link DemoTestResult} is extremely simple. It's simply a collection of strings, implemented by extending
+ * {@link SampleTestResult} is extremely simple. It's simply a collection of strings, implemented by extending
  * {@link Vector}. It also has a couple of utility methods.
  *
  * @author ldc
  */
-public class DemoTestResult extends Vector<String> implements Serializable,
+public class SampleTestResult extends Vector<String> implements Serializable,
         List<String> {
 
     private static final long serialVersionUID = 1L;
@@ -39,10 +39,10 @@ public class DemoTestResult extends Vector<String> implements Serializable,
      *
      * @param ast This will typically be the output of your analysis. The ID analysis does nothing so this is just the
      *            AST itself.
-     * @return a new instance of {@link DemoTestResult}
+     * @return a new instance of {@link SampleTestResult}
      */
-    public static DemoTestResult convert(List<INode> ast) {
-        DemoTestResult r = new DemoTestResult();
+    public static SampleTestResult convert(List<INode> ast) {
+        SampleTestResult r = new SampleTestResult();
         for (INode n : ast) {
             if (n instanceof AModuleModules) // ModuleModules prints the file path so we skip it
             {
@@ -70,8 +70,8 @@ public class DemoTestResult extends Vector<String> implements Serializable,
      * @param expected expected result
      * @param infoMessage name of the test
      */
-    public static void compare(DemoTestResult actual, DemoTestResult expected,
-                                  String infoMessage) {
+    public static void compare(SampleTestResult actual, SampleTestResult expected,
+                               String infoMessage) {
             Collection<String> stored_notfound = CollectionUtils.removeAll(expected, actual);
             Collection<String> found_notstored = CollectionUtils.removeAll(actual, expected);
 

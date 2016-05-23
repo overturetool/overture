@@ -19,19 +19,19 @@ import com.google.gson.reflect.TypeToken;
  * not run otherwise.<br>
  * <br>
  * In addition, every tests in runs a specific result type that is fed to the test as a parameter, in
- * this case {@link DemoTestResult}.
+ * this case {@link SampleTestResult}.
  * 
  * @author ldc
  */
 @RunWith(Parameterized.class)
-public class DemoStandardTest extends ParamStandardTest<DemoTestResult>
+public class SampleStandardTest extends ParamStandardTest<SampleTestResult>
 {
 
 	// Root location of the test input and result files
 	private static final String EXAMPLE_TEST_FILES = "src/test/resources/demos";
 
 	// The update property for this test
-	private static final String UPDATE_PROPERTY = "tests.update.testing.tests.DemoStandardTest";
+	private static final String UPDATE_PROPERTY = "tests.update.testing.samples.SampleStandardTest";
 
 	/**
 	 * The default constructor must always pass the name of the test and the paths of the test input and result. <br>
@@ -45,7 +45,7 @@ public class DemoStandardTest extends ParamStandardTest<DemoTestResult>
 	 * @param testResult
 	 *            Path to the test result file
 	 */
-	public DemoStandardTest(String name, String testInput, String testResult)
+	public SampleStandardTest(String name, String testInput, String testResult)
 	{
 		super(name, testInput, testResult);
 	}
@@ -70,12 +70,12 @@ public class DemoStandardTest extends ParamStandardTest<DemoTestResult>
 	 * method between the output of your module and the new result type that you've created.
 	 * </p>
 	 * Our example is just the ID function so it doesn't do anything to the AST. But we do have a conversion method. It
-	 * is placed in the result class so it can be reused in multiple tests that use {@link DemoTestResult}.
+	 * is placed in the result class so it can be reused in multiple tests that use {@link SampleTestResult}.
 	 */
 	@Override
-	public DemoTestResult processModel(List<INode> ast)
+	public SampleTestResult processModel(List<INode> ast)
 	{
-		DemoTestResult actual = DemoTestResult.convert(ast);
+		SampleTestResult actual = SampleTestResult.convert(ast);
 		return actual;
 	}
 
@@ -89,7 +89,7 @@ public class DemoStandardTest extends ParamStandardTest<DemoTestResult>
 	@Override
 	public Type getResultType()
 	{
-		Type resultType = new TypeToken<DemoTestResult>()
+		Type resultType = new TypeToken<SampleTestResult>()
 		{
 		}.getType();
 		return resultType;

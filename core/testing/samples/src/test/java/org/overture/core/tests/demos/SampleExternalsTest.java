@@ -30,7 +30,7 @@ import com.google.gson.reflect.TypeToken;
 
 /**
  * A simple test to demo the use of external test inputs. This class reuses
- * {@link DemoTestResult} but rather than printing the entire test model, it just
+ * {@link SampleTestResult} but rather than printing the entire test model, it just
  * prints a success/failure message regarding the type checking of the test
  * source. </p>
  * Also note that since this test works with external inputs, the data provider
@@ -47,10 +47,10 @@ import com.google.gson.reflect.TypeToken;
  * @author ldc
  */
 @RunWith(Parameterized.class)
-public class DemoExternalsTest extends ParamExternalsTest<DemoTestResult> {
+public class SampleExternalsTest extends ParamExternalsTest<SampleTestResult> {
 
 	// the update property for this test
-	private static final String UPDATE_PROPERTY = "tests.update.example.ExternalsDemo";
+	private static final String UPDATE_PROPERTY = "tests.update.testing.samples.SampleExternalsTest";
 
 	/**
 	 * For this test, the constructor only needs to pass the
@@ -60,19 +60,19 @@ public class DemoExternalsTest extends ParamExternalsTest<DemoTestResult> {
 	 * @param testParameter
 	 * @param resultParameter
 	 */
-	public DemoExternalsTest(String nameParameter, String testParameter,
-							 String resultParameter) {
+	public SampleExternalsTest(String nameParameter, String testParameter,
+							   String resultParameter) {
 		super(nameParameter, testParameter, resultParameter);
 	}
 
 	/**
-	 * Override result comparison with the one from {@link DemoTestResult}. Notice
+	 * Override result comparison with the one from {@link SampleTestResult}. Notice
 	 * that testInfo() is passed to the comparison method in order to print meaningful
 	 * error messages.
 	 */
 	@Override
-	public void compareResults(DemoTestResult actual, DemoTestResult expected) {
-		DemoTestResult.compare(actual, expected, testInfo());
+	public void compareResults(SampleTestResult actual, SampleTestResult expected) {
+		SampleTestResult.compare(actual, expected, testInfo());
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class DemoExternalsTest extends ParamExternalsTest<DemoTestResult> {
 	 */
 	@Override
 	public Type getResultType() {
-		Type resultType = new TypeToken<DemoTestResult>() {
+		Type resultType = new TypeToken<SampleTestResult>() {
 		}.getType();
 		return resultType;
 	}
@@ -108,15 +108,15 @@ public class DemoExternalsTest extends ParamExternalsTest<DemoTestResult> {
 	 * Because of this extra size and complexity it's a good idea to split up
 	 * the method according to dialect and do some dispatching.
 	 *
-	 * @return a {@link DemoTestResult} with a list of error messages or an all
+	 * @return a {@link SampleTestResult} with a list of error messages or an all
 	 *         clear message
 	 */
 	@Override
-	public DemoTestResult processSource() {
+	public SampleTestResult processSource() {
 		// Use file names only in error messages
 		LexLocation.absoluteToStringLocation = false;
 
-		DemoTestResult r = new DemoTestResult();
+		SampleTestResult r = new SampleTestResult();
 		if (modelPath.contains("sltest")) {
 			return processSl();
 		}
@@ -133,15 +133,15 @@ public class DemoExternalsTest extends ParamExternalsTest<DemoTestResult> {
 			return processPp();
 		}
 
-		r = new DemoTestResult();
+		r = new SampleTestResult();
 		r.add("Could not test " + testName
 				+ " unable to locate model in path: " + modelPath);
 		return r;
 	}
 
-	private DemoTestResult processPp() {
+	private SampleTestResult processPp() {
 		Settings.dialect = Dialect.VDM_PP;
-		DemoTestResult r = new DemoTestResult();
+		SampleTestResult r = new SampleTestResult();
 
 		ParserResult<List<SClassDefinition>> pr = ParserUtil.parseOo(new File(
 				modelPath));
@@ -163,9 +163,9 @@ public class DemoExternalsTest extends ParamExternalsTest<DemoTestResult> {
 		return r;
 	}
 
-	private DemoTestResult processRt() throws ParserException, LexException {
+	private SampleTestResult processRt() throws ParserException, LexException {
 		Settings.dialect = Dialect.VDM_RT;
-		DemoTestResult r = new DemoTestResult();
+		SampleTestResult r = new SampleTestResult();
 
 		ParserResult<List<SClassDefinition>> pr = ParserUtil.parseOo(new File(
 				modelPath));
@@ -192,9 +192,9 @@ public class DemoExternalsTest extends ParamExternalsTest<DemoTestResult> {
 		return r;
 	}
 
-	private DemoTestResult processSl() {
+	private SampleTestResult processSl() {
 		Settings.dialect = Dialect.VDM_SL;
-		DemoTestResult r = new DemoTestResult();
+		SampleTestResult r = new SampleTestResult();
 
 		File modelFile = new File(modelPath);
 
