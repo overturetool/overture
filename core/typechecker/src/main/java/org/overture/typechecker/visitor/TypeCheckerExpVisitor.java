@@ -3457,6 +3457,17 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 						+ i, node.getLocation(), node);
 				TypeCheckerErrors.detail2(isSimple, "Expect", pt, "Actual", at);
 			}
+			else if (at instanceof AFunctionType)
+			{
+				AFunctionType fat = (AFunctionType)at;
+				
+				if (fat.getInstantiated() != null && !fat.getInstantiated())
+				{
+					// Cannot pass uninstantiated polymorphic function arguments
+					TypeCheckerErrors.concern(isSimple, 3354, "Function argument must be instantiated",
+						node.getArgs().get(i-1).getLocation(), node);
+				}
+			}
 		}
 
 		return ft.getResult();
