@@ -100,7 +100,7 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 			
 			if(arg instanceof AIdentifierVarExpIR && idConstNameMap.containsKey(((AIdentifierVarExpIR) arg).getName()))
 			{
-				AIdentifierVarExpIR idVarExp = ((AIdentifierVarExpIR) arg);
+				AIdentifierVarExpIR idVarExp = (AIdentifierVarExpIR) arg;
 				if(Settings.dialect != Dialect.VDM_SL)
 				{
 					utilsToStrCall.getArgs().add(storeAssistant.consStoreLookup(idVarExp, true));

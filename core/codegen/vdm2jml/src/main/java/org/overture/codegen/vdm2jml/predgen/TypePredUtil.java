@@ -297,7 +297,7 @@ public class TypePredUtil
 			}
 			else if(type instanceof ASeqSeqTypeIR)
 			{
-				ASeqSeqTypeIR seqType = ((ASeqSeqTypeIR) type);
+				ASeqSeqTypeIR seqType = (ASeqSeqTypeIR) type;
 				STypeIR elementType = seqType.getSeqOf();
 				
 				return new SeqInfo(assist.isOptional(seqType), findTypeInfo(elementType), BooleanUtils.isTrue(seqType.getSeq1()));
