@@ -62,6 +62,7 @@ import org.overture.typechecker.TypeChecker;
 
 public class VDMPP extends VDMJ
 {
+	public static final String CLASS = "class";
 	protected ClassListInterpreter classes = new ClassListInterpreter();
 
 	public VDMPP()
@@ -116,7 +117,7 @@ public class VDMPP extends VDMJ
 					classes.addAll(loaded);
 					classes.remap();
 
-					infoln("Loaded " + plural(loaded.size(), "class", "es")
+					infoln("Loaded " + plural(loaded.size(), CLASS, "es")
 							+ " from " + file + " in " + (double) (end - begin)
 							/ 1000 + " secs");
 				} else
@@ -155,7 +156,7 @@ public class VDMPP extends VDMJ
 
 		if (n > 0)
 		{
-			info("Parsed " + plural(n, "class", "es") + " in "
+			info("Parsed " + plural(n, CLASS, "es") + " in "
 					+ (double) duration / 1000 + " secs. ");
 			info(perrs == 0 ? "No syntax errors" : "Found "
 					+ plural(perrs, "syntax error", "s"));
@@ -214,7 +215,7 @@ public class VDMPP extends VDMJ
 
 		if (n > 0)
 		{
-			info("Type checked " + plural(n, "class", "es") + " in "
+			info("Type checked " + plural(n, CLASS, "es") + " in "
 					+ (double) (after - before) / 1000 + " secs. ");
 			info(terrs == 0 ? "No type errors" : "Found "
 					+ plural(terrs, "type error", "s"));
@@ -235,7 +236,7 @@ public class VDMPP extends VDMJ
 				oos.close();
 				after = System.currentTimeMillis();
 
-				infoln("Saved " + plural(classes.size(), "class", "es")
+				infoln("Saved " + plural(classes.size(), CLASS, "es")
 						+ " to " + outfile + " in " + (double) (after - before)
 						/ 1000 + " secs. ");
 			} catch (IOException e)
@@ -308,7 +309,7 @@ public class VDMPP extends VDMJ
 
 			long after = System.currentTimeMillis();
 
-			infoln("Initialized " + plural(classes.size(), "class", "es")
+			infoln("Initialized " + plural(classes.size(), CLASS, "es")
 					+ " in " + (double) (after - before) / 1000 + " secs. ");
 		} catch (ContextException e)
 		{

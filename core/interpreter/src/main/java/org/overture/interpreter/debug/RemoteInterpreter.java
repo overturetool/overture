@@ -43,6 +43,7 @@ import org.overture.interpreter.values.ValueFactory;
 
 public class RemoteInterpreter
 {
+	public static final String REMOTE_INTERPRETER_HAS_FINISHED = "RemoteInterpreter has finished.";
 	private final Interpreter interpreter;
 	private final DBGPReader dbgp;
 	private boolean running = false;
@@ -73,7 +74,7 @@ public class RemoteInterpreter
 	{
 		if (isFinished)
 		{
-			throw new Exception("RemoteInterpreter has finished.");
+			throw new Exception(REMOTE_INTERPRETER_HAS_FINISHED);
 		}
 
 		executionQueueRequest.add(new Call(CallType.Execute, line));
@@ -91,7 +92,7 @@ public class RemoteInterpreter
 	{
 		if (isFinished)
 		{
-			throw new Exception("RemoteInterpreter has finished.");
+			throw new Exception(REMOTE_INTERPRETER_HAS_FINISHED);
 		}
 
 		executionQueueRequest.add(new Call(CallType.Execute, line));
@@ -114,7 +115,7 @@ public class RemoteInterpreter
 	{
 		if (isFinished)
 		{
-			throw new Exception("RemoteInterpreter has finished.");
+			throw new Exception(REMOTE_INTERPRETER_HAS_FINISHED);
 		}
 
 		if (interpreter instanceof ClassInterpreter)

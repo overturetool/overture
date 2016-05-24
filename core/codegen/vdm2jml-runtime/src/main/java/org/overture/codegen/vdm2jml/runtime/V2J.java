@@ -17,7 +17,10 @@ import org.overture.codegen.runtime.VDMSet;
  */
 public class V2J
 {
-    /*@ pure @*/
+
+	public static final String METHOD_IS_ONLY_SUPPORTED_FOR = "Method is only supported for ";
+
+	/*@ pure @*/
     /*@ helper @*/
 	public static boolean isMap(Object subject)
 	{
@@ -95,7 +98,7 @@ public class V2J
 			return tuple.get(fieldNo);
 		} else
 		{
-			throw new IllegalArgumentException("Method is only supported for " + Tuple.class);
+			throw new IllegalArgumentException(METHOD_IS_ONLY_SUPPORTED_FOR + Tuple.class);
 		}
 	}
 	
@@ -115,7 +118,7 @@ public class V2J
 			return seq.get(index);
 		}
 
-		throw new IllegalArgumentException("Method is only supported for " + VDMSeq.class + " and " + VDMSet.class);
+		throw new IllegalArgumentException(METHOD_IS_ONLY_SUPPORTED_FOR + VDMSeq.class + " and " + VDMSet.class);
 	}
 	
     /*@ pure @*/
@@ -134,7 +137,7 @@ public class V2J
 			return seq.get(index);
 		}
 
-		throw new IllegalArgumentException("Method is only supported for " + VDMMap.class);
+		throw new IllegalArgumentException(METHOD_IS_ONLY_SUPPORTED_FOR + VDMMap.class);
 	}
 	
     /*@ pure @*/
@@ -152,7 +155,7 @@ public class V2J
 			return seq.get(index);
 		}
 
-		throw new IllegalArgumentException("Method is only supported for " + VDMMap.class);
+		throw new IllegalArgumentException(METHOD_IS_ONLY_SUPPORTED_FOR + VDMMap.class);
 	}
 	
     /*@ pure @*/
@@ -175,7 +178,7 @@ public class V2J
 			return map.size();
 		}
 
-		throw new IllegalArgumentException("Method is only supported for " + Collection.class + " and " + VDMMap.class);
+		throw new IllegalArgumentException(METHOD_IS_ONLY_SUPPORTED_FOR + Collection.class + " and " + VDMMap.class);
 	}
 
     /*@ pure @*/
@@ -191,6 +194,6 @@ public class V2J
 			return seq;
 		}
 
-		throw new IllegalArgumentException("Method is only supported for " + VDMSet.class);
+		throw new IllegalArgumentException(METHOD_IS_ONLY_SUPPORTED_FOR + VDMSet.class);
 	}
 }

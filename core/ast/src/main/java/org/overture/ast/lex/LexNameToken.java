@@ -43,6 +43,8 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 		Serializable
 {
 	private static final long serialVersionUID = 1L;
+	public static final String CLASS = "CLASS";
+	public static final String THREAD = "thread";
 
 	public final String module;
 	public final String name;
@@ -177,7 +179,7 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 
 	public LexNameToken getSelfName()
 	{
-		if (module.equals("CLASS"))
+		if (module.equals(CLASS))
 		{
 			return new LexNameToken(name, "self", location);
 		} else
@@ -188,15 +190,15 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 
 	public LexNameToken getThreadName()
 	{
-		if (module.equals("CLASS"))
+		if (module.equals(CLASS))
 		{
-			LexNameToken thread = new LexNameToken(name, "thread", location);
+			LexNameToken thread = new LexNameToken(name, THREAD, location);
 			thread.setTypeQualifier(new Vector<PType>());
 			return thread;
 		}
 		else
 		{
-			LexNameToken thread = new LexNameToken(module, "thread", location);
+			LexNameToken thread = new LexNameToken(module, THREAD, location);
 			thread.setTypeQualifier(new Vector<PType>());
 			return thread;
 		}
@@ -204,7 +206,7 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 
 	public LexNameToken getThreadName(ILexLocation loc)
 	{
-		LexNameToken thread = new LexNameToken(loc.getModule(), "thread", loc);
+		LexNameToken thread = new LexNameToken(loc.getModule(), THREAD, loc);
 		thread.setTypeQualifier(new Vector<PType>());
 		return thread;
 	}
@@ -216,7 +218,7 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 
 	public LexNameToken getClassName()
 	{
-		return new LexNameToken("CLASS", name, location);
+		return new LexNameToken(CLASS, name, location);
 	}
 
 	public void setTypeQualifier(List<PType> types)

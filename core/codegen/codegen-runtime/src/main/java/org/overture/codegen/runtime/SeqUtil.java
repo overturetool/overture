@@ -25,6 +25,9 @@ import java.util.Collections;
 
 public class SeqUtil
 {
+
+	public static final String CANNOT_MODIFY_SEQUENCE_FROM_NULL = "Cannot modify sequence from null";
+
 	public static VDMSeq seq()
 	{
 		return new VDMSeq();
@@ -48,13 +51,13 @@ public class SeqUtil
 	{
 		if(map == null)
 		{
-			throw new IllegalArgumentException("Cannot modify sequence from null");
+			throw new IllegalArgumentException(CANNOT_MODIFY_SEQUENCE_FROM_NULL);
 		}
 		
 		Maplet[] maplets = MapUtil.toMaplets(map);
 		
 		if(maplets == null)
-			throw new IllegalArgumentException("Cannot modify sequence from null");
+			throw new IllegalArgumentException(CANNOT_MODIFY_SEQUENCE_FROM_NULL);
 		
 		if(seq == null)
 			throw new IllegalArgumentException("Cannot modify null");
@@ -78,13 +81,13 @@ public class SeqUtil
 	{
 		if(map == null)
 		{
-			throw new IllegalArgumentException("Cannot modify sequence from null");
+			throw new IllegalArgumentException(CANNOT_MODIFY_SEQUENCE_FROM_NULL);
 		}
 		
 		Maplet[] maplets = MapUtil.toMaplets(map);
 		
 		if(maplets == null)
-			throw new IllegalArgumentException("Cannot modify sequence from null");
+			throw new IllegalArgumentException(CANNOT_MODIFY_SEQUENCE_FROM_NULL);
 
 		if(string == null)
 			throw new IllegalArgumentException("Cannot modify null");

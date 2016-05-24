@@ -105,6 +105,7 @@ import org.overture.util.Base64;
 
 public class DBGPReader
 {
+	public static final String UTF_8 = "UTF-8";
 	protected final String host;
 	protected final int port;
 	protected final String ideKey;
@@ -651,9 +652,9 @@ public class DBGPReader
 			System.err.println("Socket to IDE not valid.");
 			return;
 		}
-		byte[] header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes("UTF-8");
-		byte[] body = data.toString().getBytes("UTF-8");
-		byte[] size = Integer.toString(header.length + body.length).getBytes("UTF-8");
+		byte[] header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes(UTF_8);
+		byte[] body = data.toString().getBytes(UTF_8);
+		byte[] size = Integer.toString(header.length + body.length).getBytes(UTF_8);
 
 		output.write(size);
 		output.write(separator);
@@ -817,7 +818,7 @@ public class DBGPReader
 		sb.append(" size=\"" + value.length() + "\"");
 		sb.append(" encoding=\"base64\"");
 		sb.append("><![CDATA[");
-		sb.append(Base64.encode(value.getBytes("UTF-8")));
+		sb.append(Base64.encode(value.getBytes(UTF_8)));
 		sb.append("]]></property>");
 
 		return sb;
@@ -2201,7 +2202,7 @@ public class DBGPReader
 	public synchronized void stdout(String line) throws IOException
 	{
 		StringBuilder sb = new StringBuilder("<stream type=\"stdout\"><![CDATA[");
-		sb.append(Base64.encode(line.getBytes("UTF-8")));
+		sb.append(Base64.encode(line.getBytes(UTF_8)));
 		sb.append("]]></stream>\n");
 		write(sb);
 	}
@@ -2209,7 +2210,7 @@ public class DBGPReader
 	public synchronized void stderr(String line) throws IOException
 	{
 		StringBuilder sb = new StringBuilder("<stream type=\"stderr\"><![CDATA[");
-		sb.append(Base64.encode(line.getBytes("UTF-8")));
+		sb.append(Base64.encode(line.getBytes(UTF_8)));
 		sb.append("]]></stream>\n");
 		write(sb);
 	}
