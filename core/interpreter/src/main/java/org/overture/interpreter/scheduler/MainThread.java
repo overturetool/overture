@@ -178,12 +178,12 @@ public class MainThread extends SchedulablePoolThread
 		{
 			if(e.getCause() instanceof Error)
 			{
-				Console.err.println(e.getCause());
 				e.getCause().printStackTrace(Console.err);
 			}
 			else
 			{
 				Console.err.println(e.getCause().getMessage());
+				e.getCause().printStackTrace(Console.err);
 			}
 		}
 		exception.add(e);
