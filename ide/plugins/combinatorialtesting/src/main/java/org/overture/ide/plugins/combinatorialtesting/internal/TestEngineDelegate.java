@@ -34,7 +34,9 @@ import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.console.MessageConsole;
 import org.overture.combinatorialtesting.vdmj.server.common.Utils;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -44,6 +46,7 @@ import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.launching.VdmLaunchConfigurationDelegate;
 import org.overture.ide.debug.utils.VdmProjectClassPathCollector;
 import org.overture.ide.plugins.combinatorialtesting.ITracesConstants;
+import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.util.Base64;
 
 public class TestEngineDelegate
@@ -51,7 +54,7 @@ public class TestEngineDelegate
 	static int sessionId = 0;
 
 	public Process launch(TraceExecutionSetup texe,
-			IPreferenceStore preferences, File traceFolder, Integer port)
+			IPreferenceStore preferences, File traceFolder, Integer port, IProgressMonitor monitor)
 			throws CoreException, IOException
 	{
 		ProcessBuilder pb = new ProcessBuilder(initializeLaunch(texe, preferences, traceFolder, port));
@@ -59,6 +62,19 @@ public class TestEngineDelegate
 		IProject project = (IProject) texe.project.getAdapter(IProject.class);
 		
 		IVdmProject vdmProject = (IVdmProject) texe.project.getAdapter(IVdmProject.class);
+		
+		if(!vdmProject.getModel().isTypeChecked())
+		{
+			VdmTypeCheckerUi.typeCheck(vdmProject, monitor);
+		}
+		
+		if(!vdmProject.getModel().isTypeCorrect())
+		{
+			MessageConsole console = VdmjTracesHelper.findConsole(ITracesConstants.TRACES_CONSOLE);
+			console.newMessageStream().println(vdmProject.getName() + ": Model is not type correct!");
+			monitor.setCanceled(true);
+			return null;
+		}
 		
 		File overturePropertiesFile = VdmLaunchConfigurationDelegate.prepareCustomOvertureProperties(vdmProject, null);
 		

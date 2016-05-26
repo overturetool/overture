@@ -346,10 +346,17 @@ public class ExpAssistantIR extends AssistantBase
 
 			if (parent != null)
 			{
-				visitedNodes.add(parent);
+				if(visitedNodes.contains(parent))
+				{
+					parent = null;
+				}
+				else
+				{
+					visitedNodes.add(parent);
+				}
 			}
 			
-		} while (parent != null && !visitedNodes.contains(parent));
+		} while (parent != null);
 		
 		return false;
 	}

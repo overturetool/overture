@@ -1590,7 +1590,7 @@ public class DefinitionReader extends SyntaxReader
 			case NAME:
 			case SELF:
 				StatementReader sr = getStatementReader();
-				PStm stmt = sr.readStatement();
+				PStm stmt = sr.readCallStatement();
 
 				if (!(stmt instanceof ACallStm)
 						&& !(stmt instanceof ACallObjectStm))

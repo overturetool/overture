@@ -1,1 +1,1 @@
-{"exampleName":"VCParser-masterSL","defNames":["SOURCE","ERROR","LABEL","TREE","PARSED","PARSER","takeChar","takeString","series","either","star","option","trimBlanks","fail","concat","pass","label","trans","transtree","iferror","TREE","PARSED","evalInt","evalTree","eval"]}
+{"exampleName":"VCParser-masterSL","defNames":["SOURCE","ERROR","LABEL","TREE","PARSED","PARSER","takeChar","takeString","series","either","star","option","trimBlanks","fail","concat","pass","label","trans","transtree","iferror","TREE","liftOperator","evalInt","lenChar","evalTree","eval"]}

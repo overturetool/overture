@@ -2227,12 +2227,13 @@ public class AstFactory
 	}
 
 	public static AFunctionExport newAFunctionExport(ILexLocation location,
-			List<ILexNameToken> nameList, PType type)
+			List<ILexNameToken> nameList, PType type, List<ILexNameToken> typeParams)
 	{
 		AFunctionExport result = new AFunctionExport();
 		result.setLocation(location);
 		result.setNameList(nameList);
 		result.setExportType(type);
+		result.setTypeParams(typeParams);
 		return result;
 	}
 

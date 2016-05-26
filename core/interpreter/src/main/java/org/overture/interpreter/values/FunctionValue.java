@@ -441,7 +441,7 @@ public class FunctionValue extends Value
 				{
 					measure.measuringThreads.add(tid);
 					evalContext.threadState.setAtomic(true);
-					mv = measure.eval(measure.location, measureArgs, evalContext);
+					mv = measure.eval(measure.location, measureArgs, evalContext).deref();
 				} finally
 				{
 					evalContext.threadState.setAtomic(false);

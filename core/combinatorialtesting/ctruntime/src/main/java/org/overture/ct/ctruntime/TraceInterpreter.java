@@ -32,8 +32,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.ast.statements.PStm;
-import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.config.Settings;
 import org.overture.ct.utils.TraceXmlWrapper;
@@ -46,10 +44,8 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.traces.CallSequence;
 import org.overture.interpreter.traces.TestSequence;
 import org.overture.interpreter.traces.TraceReductionType;
-import org.overture.interpreter.traces.TraceVariableStatement;
 import org.overture.interpreter.traces.Verdict;
 import org.overture.typechecker.Environment;
-import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.ModuleEnvironment;
 import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -311,10 +307,10 @@ public class TraceInterpreter
 			{
 				if (interpreter instanceof ClassInterpreter)
 				{
-					typeCheck(traceContainer, interpreter, test, rootEnv);
+					Interpreter.typeCheck(traceContainer, interpreter, test, rootEnv);
 				} else
 				{
-					typeCheck(traceContainer, interpreter, test, rootEnv);
+					Interpreter.typeCheck(traceContainer, interpreter, test, rootEnv);
 				}
 			} catch (Exception e)
 			{
@@ -412,54 +408,6 @@ public class TraceInterpreter
 		}
 
 		infoProcessingTraceFinished(className, mtd.getName().getName(), size, faildCount, inconclusiveCount, skippedCount);
-	}
-
-	/**
-	 * type check a test
-	 * 
-	 * @param classdef
-	 * @param interpreter
-	 * @param test
-	 * @throws AnalysisException
-	 * @throws Exception
-	 */
-	protected void typeCheck(INode classdef, Interpreter interpreter,
-			CallSequence test, Environment outer) throws AnalysisException,
-			Exception
-	{
-		FlatEnvironment env = null;
-
-		if (classdef instanceof SClassDefinition)
-		{
-
-			env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), outer);
-		} else
-		{
-			List<PDefinition> defs = new Vector<>();
-			
-			if(classdef instanceof AModuleModules)
-			{
-				defs.addAll(((AModuleModules) classdef).getDefs());
-			}
-			
-			env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(), outer);
-		}
-
-		for (int i = 0; i < test.size(); i++)
-		{
-			PStm statement = test.get(i);
-
-			if (statement instanceof TraceVariableStatement)
-			{
-				((TraceVariableStatement) statement).typeCheck(env, NameScope.NAMESANDSTATE);
-			} else
-			{
-				statement = statement.clone();
-				test.set(i, statement);
-				interpreter.typeCheck(statement, env);
-			}
-
-		}
 	}
 
 	/**
