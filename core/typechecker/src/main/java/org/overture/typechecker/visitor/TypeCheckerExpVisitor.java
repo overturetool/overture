@@ -3454,7 +3454,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				// TypeCheckerErrors.concern(isSimple, 3061, "Inappropriate type for argument " + i +
 				// ". (Expected: "+pt+" Actual: "+at+")",node.getLocation(),node);
 				TypeCheckerErrors.concern(isSimple, 3061, "Inappropriate type for argument "
-						+ i, node.getLocation(), node);
+						+ i, node.getArgs().get(i-1).getLocation(), node);
 				TypeCheckerErrors.detail2(isSimple, "Expect", pt, "Actual", at);
 			}
 			else if (at instanceof AFunctionType)

@@ -2,6 +2,6 @@
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
 <message column="50" line="63" message="Function has no type parameters" messageType="warning" number="3100" resource="fcttypeinstexpr-20.vpp"/>
 <message column="1" line="50" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="fcttypeinstexpr-20.vpp"/>
-<message column="50" line="63" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fcttypeinstexpr-20.vpp"/>
+<message column="61" line="63" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fcttypeinstexpr-20.vpp"/>
 <result/>
 </testResult>
