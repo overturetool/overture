@@ -262,9 +262,9 @@ public class TypeComparator
 			return Result.Yes; // Not defined "yet"...?
 		}
 
-		if (to instanceof AParameterType || from instanceof AParameterType)
+		if (from instanceof AParameterType)
 		{
-			return Result.Yes; // Runtime checked...
+			return Result.Yes;	// Runtime checked... Note "to" checked below
 		}
 
 		// Obtain the fundamental type of BracketTypes, NamedTypes and
@@ -489,7 +489,26 @@ public class TypeComparator
 				{
 					return Result.No;
 				}
-			} else
+			} 
+			else if (to instanceof AParameterType)
+			{
+				// If the from type includes the "to" parameter anywhere, then the types must be identical,
+				// otherwise they match. We can only test for that easily with toString() :-(
+				// See overture bug #562.
+				
+				String fstr = from.toString();
+				String tstr = to.toString();
+				
+				if (fstr.indexOf(tstr) >= 0)
+				{
+					return to.equals(from) ? Result.Yes : Result.No;
+				}
+				else
+				{
+					return Result.Yes;
+				}
+			}
+			else
 			{
 				return assistantFactory.createPTypeAssistant().equals(to, from) ? Result.Yes
 						: Result.No;

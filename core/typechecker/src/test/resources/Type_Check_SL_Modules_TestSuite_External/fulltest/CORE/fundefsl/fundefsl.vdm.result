@@ -17,25 +17,25 @@
 <message column="3" line="65" message="Too many curried parameters" messageType="error" number="3022" resource="fundefsl.vdm"/>
 <message column="6" line="67" message="Left hand of + is not numeric" messageType="error" number="3139" resource="fundefsl.vdm"/>
 <message column="6" line="67" message="Right hand of + is not numeric" messageType="error" number="3140" resource="fundefsl.vdm"/>
-<message column="5" line="73" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
+<message column="28" line="73" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
 <message column="5" line="73" message="Type int cannot be applied" messageType="error" number="3054" resource="fundefsl.vdm"/>
 <message column="3" line="79" message="Precondition returns unexpected type" messageType="error" number="3018" resource="fundefsl.vdm"/>
 <message column="3" line="84" message="Too many curried parameters" messageType="error" number="3022" resource="fundefsl.vdm"/>
-<message column="5" line="86" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
-<message column="5" line="86" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
+<message column="9" line="86" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
+<message column="13" line="86" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
 <message column="5" line="86" message="Value is not of the right type" messageType="error" number="3327" resource="fundefsl.vdm"/>
 <message column="3" line="84" message="Function returns unexpected type" messageType="error" number="3018" resource="fundefsl.vdm"/>
 <message column="3" line="88" message="Too many curried parameters" messageType="error" number="3022" resource="fundefsl.vdm"/>
-<message column="11" line="90" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
-<message column="11" line="90" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
-<message column="11" line="90" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
-<message column="11" line="90" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
+<message column="16" line="90" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
+<message column="19" line="90" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
+<message column="23" line="90" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
+<message column="27" line="90" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
 <message column="11" line="90" message="Value is not of the right type" messageType="error" number="3327" resource="fundefsl.vdm"/>
 <message column="7" line="90" message="Left hand of &lt;=&gt; is not bool" messageType="error" number="3065" resource="fundefsl.vdm"/>
 <message column="7" line="90" message="Value is not of the right type" messageType="error" number="3327" resource="fundefsl.vdm"/>
 <message column="3" line="88" message="Function returns unexpected type" messageType="error" number="3018" resource="fundefsl.vdm"/>
 <message column="27" line="95" message="Value is not of the right type" messageType="error" number="3327" resource="fundefsl.vdm"/>
-<message column="6" line="112" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
+<message column="10" line="112" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm"/>
 <message column="3" line="124" message="Function returns unexpected type" messageType="error" number="3018" resource="fundefsl.vdm"/>
 <message column="11" line="145" message="Value is not of the right type" messageType="error" number="3327" resource="fundefsl.vdm"/>
 <message column="25" line="146" message="Value is not of the right type" messageType="error" number="3327" resource="fundefsl.vdm"/>
