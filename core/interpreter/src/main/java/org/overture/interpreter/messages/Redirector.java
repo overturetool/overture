@@ -61,4 +61,12 @@ abstract public class Redirector extends PrintWriter
 		flush();
 		return this;
 	}
+	
+	
+	@Override
+	public void println()
+	{
+		print("\n");
+		flush();
+	}
 }
