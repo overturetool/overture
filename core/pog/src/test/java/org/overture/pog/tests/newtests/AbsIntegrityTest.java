@@ -8,13 +8,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.NoResultFileTest;
+import org.overture.core.tests.ParamNoResultFileTest;
 import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
 
 @RunWith(Parameterized.class)
-public abstract class AbsIntegrityTest extends NoResultFileTest<Boolean>
+public abstract class AbsIntegrityTest extends ParamNoResultFileTest<Boolean>
 {
 
 	protected final IntegrityCheck icVisitor;

@@ -1,11 +1,6 @@
 package org.overture.pog.tests.newtests;
 
-import static org.junit.Assert.fail;
-
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
-
+import com.google.gson.reflect.TypeToken;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -15,9 +10,12 @@ import org.overture.core.tests.ParamStandardTest;
 import org.overture.core.tests.PathsProvider;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
-import org.overture.pog.tests.newtests.PogTestResult.ResultComparison;
 
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.List;
+
+import static org.junit.Assert.fail;
 
 @RunWith(Parameterized.class)
 public class PogIntegrationTest extends ParamStandardTest<PogTestResult>
@@ -59,17 +57,6 @@ public class PogIntegrationTest extends ParamStandardTest<PogTestResult>
 	protected String getUpdatePropertyString()
 	{
 		return UPDATE_PROPERTY;
-	}
-
-	@Override
-	public void compareResults(PogTestResult actual, PogTestResult expected)
-	{
-		ResultComparison r = PogTestResult.compare(actual, expected);
-
-		if (!r.isMatch())
-		{
-			fail(r.getMessage() + getTestResultUpdateMessage());
-		}
 	}
 
 	@Override
