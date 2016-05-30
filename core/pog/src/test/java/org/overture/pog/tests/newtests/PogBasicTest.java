@@ -23,7 +23,7 @@ public class PogBasicTest extends ParamStandardTest<PogTestResult>
 {
 
 	private final static String MICRO_ROOT = "src/test/resources/micro";
-	private static final String UPDATE_PROPERTY = "tests.update.pog.PogBasicTest";
+	private static final String UPDATE_PROPERTY = "tests.update.pog.basic";
 
 	public PogBasicTest(String nameParameter, String testParameter,
 			String resultParameter)

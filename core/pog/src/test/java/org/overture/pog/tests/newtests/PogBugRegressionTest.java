@@ -27,7 +27,7 @@ import com.google.gson.reflect.TypeToken;
 public class PogBugRegressionTest extends ParamStandardTest<PogTestResult>
 {
 
-	private static final String UPDATE_PROPERTY = "tests.update.pog.bugreg";
+	private static final String UPDATE_PROPERTY = "tests.update.pog.bugregression";
 
 	public PogBugRegressionTest(String name, String testParameter,
 			String resultParameter)

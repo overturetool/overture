@@ -24,7 +24,7 @@ public class PogIntegrationTest extends ParamStandardTest<PogTestResult>
 	private final static String INTEGRATION_ROOT = "src/test/resources/integration";
 	
 
-	private static final String UPDATE_PROPERTY = "tests.update.pog.legacy";
+	private static final String UPDATE_PROPERTY = "tests.update.pog.integration";
 
 	public PogIntegrationTest(String nameParameter, String testParameter,
 			String resultParameter)
