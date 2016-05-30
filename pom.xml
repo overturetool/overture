@@ -29,6 +29,7 @@
   <modules>
     <module>externals</module>
     <module>core</module>
+		<module>documentation</module>
     <!-- <module>tools</module> -->
     <!-- The ide module is Tycho and the -PWith-IDE profile. -->
     <!-- <module>ide</module> -->
