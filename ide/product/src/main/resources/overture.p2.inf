@@ -1,26 +1,14 @@
 instructions.configure=\
-  copy(source:${documentation.root}/QuickOverviewVDMPPOperators/QuickOverviewofVDMOperators.pdf,target:${installFolder}/documentation/QuickOverviewofVDMOperators.pdf,overwrite:true);\
-  copy(source:${documentation.root}/VDM10LangMan/VDM10_lang_man.pdf,target:${installFolder}/documentation/VDM10_lang_man.pdf,overwrite:true);\
-  copy(source:${documentation.root}/UserGuideOvertureIDE/OvertureIDEUserGuide.pdf,target:${installFolder}/documentation/OvertureIDEUserGuide.pdf,overwrite:true);\
-  copy(source:${documentation.root}/tutorials/VDM++OvertureTutorial/VDMPPGuideToOverture.pdf,target:${installFolder}/documentation/VDMPPGuideToOverture.pdf,overwrite:true);\
-  copy(source:${documentation.root}/tutorials/VDM++OvertureTutorial/AlarmInitUML.uml,target:${installFolder}/documentation/AlarmInitUML.uml,overwrite:true);\
-  copy(source:${documentation.root}/tutorials/VDMRTOvertureTutorial/VDMRTGuideToOverture.pdf,target:${installFolder}/documentation/VDMRTGuideToOverture.pdf,overwrite:true);\
-  copy(source:${documentation.root}/tutorials/VDMSLOvertureTutorial/VDMSLGuideToOverture.pdf,target:${installFolder}/documentation/VDMSLGuideToOverture.pdf,overwrite:true);\
-  copy(source:${documentation.root}/VDMRTProcess/VDMRTProcess.pdf,target:${installFolder}/documentation/VDMRTProcess.pdf,overwrite:true);\
-  copy(source:${repo.root}/documentation/releasenotes/,target:${installFolder}/releasenotes,overwrite:true);\
-  copy(source:${repo.root}/core/commandline/target/overture,target:${installFolder}/commandline/overture,overwrite:true);\
-  chmod(targetDir:${installFolder},targetFile:commandline/overture,permissions:755);\
-  copy(source:${repo.root}/core/commandline/target/overture.bat,target:${installFolder}/commandline/overture.bat,overwrite:true);\
-  copy(source:${repo.root}/core/commandline/target/Overture-${project.version}.jar,target:${installFolder}/commandline/Overture-${project.version}.jar,overwrite:true);\
-  remove(path:${installFolder}/epl-v10.html);\
-  remove(path:${installFolder}/notice.html);\
-  remove(path:${installFolder}/readme);\
   addRepository(type:0,name:Overture,enabled:false,location:http${#58}//dl.bintray.com/overturetool/overturetool/);\
   addRepository(type:1,name:Overture,enabled:false,location:http${#58}//dl.bintray.com/overturetool/overturetool/);\
   addRepository(type:0,name:Overture Development,enabled:true,location:http${#58}//dl.bintray.com/overturetool/overturetool-development/);\
   addRepository(type:1,name:Overture Development,enabled:true,location:http${#58}//dl.bintray.com/overturetool/overturetool-development/);\
 	addRepository(type:0,name:Overture VDM2C Development,enabled:true,location:http${#58}//overture.au.dk/vdm2c/development/ide/repository/target/repository/);\
   addRepository(type:1,name:Overture VDM2C Development,enabled:true,location:http${#58}//overture.au.dk/vdm2c/development/ide/repository/target/repository/);\
+  addRepository(type:0,name:Subclipse,enabled:true,location:http${#58}//subclipse.tigris.org/update_1.12.x);\
+  addRepository(type:1,name:Subclipse,enabled:true,location:http${#58}//subclipse.tigris.org/update_1.12.x);\
+  addRepository(type:0,name:EGit,enabled:true,location:http${#58}//download.eclipse.org/egit/updates);\
+  addRepository(type:1,name:EGit,enabled:true,location:http${#58}//download.eclipse.org/egit/updates);\
   addRepository(type:0,name:JODTool,enabled:true,location:http${#58}//aofa.csce.kyushu-u.ac.jp/JODTool/);\
   addRepository(type:1,name:JODTool,enabled:true,location:http${#58}//aofa.csce.kyushu-u.ac.jp/JODTool/);
 instructions.configure.import=\
