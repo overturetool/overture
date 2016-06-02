@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.core.tests;
+package org.overture.core.testing;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +38,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * Top level class for new tests framework. Provides common result handling code to all other test classes. This class
+ * Top level class for new testing framework. Provides common result handling code to all other test classes. This class
  * should <b>not</b> be subclassed directly. Use one of its existing subclasses instead. Test results are always stored
  * with UTF-8 encoding.
  *
@@ -98,8 +98,8 @@ public abstract class AbsResultTest<R> {
     abstract public Type getResultType();
 
     /**
-     * Return the Java System property to update this set of tests. Should have the following naming scheme:
-     * <code>tests.update.[maven-module].[test-class].[testcase/input-file]>. <br>
+     * Return the Java System property to update this set of testing. Should have the following naming scheme:
+     * <code>testing.update.[maven-module].[test-class].[testcase/input-file]>. <br>
      * <br>
      * The test ID <b>must</b> be unique to each test.
      * the module is enough.

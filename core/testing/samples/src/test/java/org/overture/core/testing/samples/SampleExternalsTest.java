@@ -1,4 +1,4 @@
-package org.overture.core.tests.demos;
+package org.overture.core.testing.samples;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -13,8 +13,8 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.config.Settings;
-import org.overture.core.tests.ParamExternalsTest;
-import org.overture.core.tests.ParseTcFacade;
+import org.overture.core.testing.ParamExternalsTest;
+import org.overture.core.testing.ParseTcFacade;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.messages.VDMError;
 import org.overture.parser.syntax.ParserException;
@@ -34,13 +34,13 @@ import com.google.gson.reflect.TypeToken;
  * prints a success/failure message regarding the type checking of the test
  * source. </p>
  * Also note that since this test works with external inputs, the data provider
- * is already set up in {@link ParamExternalsTest}. To launch these tests simply
+ * is already set up in {@link ParamExternalsTest}. To launch these testing simply
  * use the property <code>-DexternalTestsPath=/path/to/files/</code>.
  * </p>
  * This test also demonstrates explicitl invocation of the parser and type checker,
- * per {@link org.overture.core.tests.ParamFineGrainTest}.
+ * per {@link org.overture.core.testing.ParamFineGrainTest}.
  * </p>
- * <b>Note:</b> Due to some quirks with Parameterized JUnit tests, if the
+ * <b>Note:</b> Due to some quirks with Parameterized JUnit testing, if the
  * property is not set, the test will still launch, only with 0 cases. It's fine
  * in Maven but in Eclipse you will get a single test run that does nothing.
  *
@@ -50,7 +50,7 @@ import com.google.gson.reflect.TypeToken;
 public class SampleExternalsTest extends ParamExternalsTest<SampleTestResult> {
 
 	// the update property for this test
-	private static final String UPDATE_PROPERTY = "tests.update.testing.standard.SampleExternalsTest";
+	private static final String UPDATE_PROPERTY = "testing.update.testing.standard.SampleExternalsTest";
 
 	/**
 	 * For this test, the constructor only needs to pass the
@@ -75,25 +75,6 @@ public class SampleExternalsTest extends ParamExternalsTest<SampleTestResult> {
 		SampleTestResult.compare(actual, expected, testInfo());
 	}
 
-	/**
-	 * Return the update property for this test. In general, it's good practice
-	 * to do put it in a constant and return that.
-	 */
-	@Override
-	protected String getUpdatePropertyString() {
-		return UPDATE_PROPERTY;
-	}
-
-	/**
-	 * Return the {@link Type} or resust for this test. This is needed to help
-	 * out with reflection in the deserialization of results.
-	 */
-	@Override
-	public Type getResultType() {
-		Type resultType = new TypeToken<SampleTestResult>() {
-		}.getType();
-		return resultType;
-	}
 
 	/**
 	 * Process the VDM source. External inputs can be negative so we control the
@@ -138,6 +119,29 @@ public class SampleExternalsTest extends ParamExternalsTest<SampleTestResult> {
 				+ " unable to locate model in path: " + modelPath);
 		return r;
 	}
+
+	/**
+	 * Return the update property for this test. In general, it's good practice
+	 * to do put it in a constant and return that.
+	 */
+	@Override
+	protected String getUpdatePropertyString() {
+		return UPDATE_PROPERTY;
+	}
+
+	/**
+	 * Return the {@link Type} or resust for this test. This is needed to help
+	 * out with reflection in the deserialization of results.
+	 */
+	@Override
+	public Type getResultType() {
+		Type resultType = new TypeToken<SampleTestResult>() {
+		}.getType();
+		return resultType;
+	}
+
+
+// All the code below is for handling parser and type checker calls. Now you know why you should avoid it.
 
 	private SampleTestResult processPp() {
 		Settings.dialect = Dialect.VDM_PP;

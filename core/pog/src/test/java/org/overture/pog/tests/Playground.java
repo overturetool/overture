@@ -19,7 +19,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.core.tests.ParseTcFacade;
+import org.overture.core.testing.ParseTcFacade;
 import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;

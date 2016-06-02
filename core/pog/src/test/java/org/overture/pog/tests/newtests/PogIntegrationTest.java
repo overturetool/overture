@@ -6,8 +6,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.ParamStandardTest;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.ParamStandardTest;
+import org.overture.core.testing.PathsProvider;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
 
@@ -24,7 +24,7 @@ public class PogIntegrationTest extends ParamStandardTest<PogTestResult>
 	private final static String INTEGRATION_ROOT = "src/test/resources/integration";
 	
 
-	private static final String UPDATE_PROPERTY = "tests.update.pog.integration";
+	private static final String UPDATE_PROPERTY = "testing.update.pog.integration";
 
 	public PogIntegrationTest(String nameParameter, String testParameter,
 			String resultParameter)

@@ -11,8 +11,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.ParamStandardTest;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.ParamStandardTest;
+import org.overture.core.testing.PathsProvider;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
 
@@ -23,7 +23,7 @@ public class PogBasicTest extends ParamStandardTest<PogTestResult>
 {
 
 	private final static String MICRO_ROOT = "src/test/resources/micro";
-	private static final String UPDATE_PROPERTY = "tests.update.pog.basic";
+	private static final String UPDATE_PROPERTY = "testing.update.pog.basic";
 
 	public PogBasicTest(String nameParameter, String testParameter,
 			String resultParameter)

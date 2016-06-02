@@ -8,7 +8,7 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <!-- Want to use jar packaging so that tests fire off. -->
+  <!-- Want to use jar packaging so that testing fire off. -->
   <packaging>jar</packaging>
 
   <groupId>org.overturetool.core.testing</groupId>

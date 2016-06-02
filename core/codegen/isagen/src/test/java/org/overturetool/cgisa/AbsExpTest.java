@@ -30,7 +30,7 @@ import org.junit.runners.Parameterized;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.core.tests.ParseTcFacade;
+import org.overture.core.testing.ParseTcFacade;
 
 @RunWith(Parameterized.class)
 public abstract class AbsExpTest

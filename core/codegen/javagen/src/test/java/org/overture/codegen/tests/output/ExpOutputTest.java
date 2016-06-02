@@ -19,8 +19,8 @@ import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.core.tests.ParamFineGrainTest;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.ParamFineGrainTest;
+import org.overture.core.testing.PathsProvider;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 

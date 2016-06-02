@@ -1,4 +1,4 @@
-package org.overture.core.tests.demos;
+package org.overture.core.testing.samples;
 
 import static org.junit.Assert.fail;
 
@@ -12,11 +12,11 @@ import org.junit.Assert;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.AbsResultTest;
+import org.overture.core.testing.AbsResultTest;
 
 /**
  * When setting up a test you need a specific result type for your test. You can reuse it for
- * multiple tests but it will typically be specific to a particular module.
+ * multiple testing but it will typically be specific to a particular module.
  * </p>
  * There is no interface defining this result so you can use whatever you want, including the classes that represent
  * your module's output directly. But it's a good idea to have a dedicated result class. It should be as small as
@@ -60,7 +60,7 @@ public class SampleTestResult extends Vector<String> implements Serializable,
     /**
      * By default, result comparison is based on an equality check as part of assertEquals. This
      * behavior can be overridden to provide more sophisticated result comparison. If the comparison is
-     * to be reused in multiple tests, it should be placed in a separate class as we have done here.
+     * to be reused in multiple testing, it should be placed in a separate class as we have done here.
      * </p>
      * When overriding the behavior, it is important to do things: calling JUnit assertions or failures to ensure
      * the test integrates correctly and using {@link AbsResultTest#testInfo()} in failure messages so the test results are easy to update.
@@ -77,7 +77,7 @@ public class SampleTestResult extends Vector<String> implements Serializable,
 
             if (stored_notfound.isEmpty() && found_notstored.isEmpty())
             {
-                // Results match, tests pass;do nothing
+                // Results match, testing pass;do nothing
             } else
             {
                 StringBuilder sb = new StringBuilder();

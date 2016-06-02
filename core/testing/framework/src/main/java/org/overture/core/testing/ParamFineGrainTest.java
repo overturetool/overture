@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.core.tests;
+package org.overture.core.testing;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

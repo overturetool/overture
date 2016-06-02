@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.core.tests;
+package org.overture.core.testing;
 
 import java.io.File;
 import java.util.Collection;
@@ -101,11 +101,11 @@ public class PathsProvider
 	/**
 	 * Processes (recursively) a folder with external test inputs. <br>
 	 * <br>
-	 * The results for these tests are <b>not</b> stored in the external directory but under each plugin's
-	 * <code>RESULTS_EXTERNAL</code> folder. If you use these tests, please keep that folder pure.
+	 * The results for these testing are <b>not</b> stored in the external directory but under each plugin's
+	 * <code>RESULTS_EXTERNAL</code> folder. If you use these testing, please keep that folder pure.
 	 * 
 	 * @param root
-	 *            the root folder of the external tests
+	 *            the root folder of the external testing
 	 * @return
 	 */
 	public static Collection<Object[]> computeExternalPaths(String root)

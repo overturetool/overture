@@ -1,4 +1,4 @@
-package org.overture.core.tests.demos;
+package org.overture.core.testing.samples;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -8,17 +8,17 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.ParamStandardTest;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.ParamStandardTest;
+import org.overture.core.testing.PathsProvider;
 
 import com.google.gson.reflect.TypeToken;
 
 /**
  * Simple demonstration of the overture test framework. Takes an AST and dumps the entire content into a string. The new
- * tests rely heavily on JUnit Parameterized tests so the <code>@RunWith</code> annotation is essential. The test will
+ * testing rely heavily on JUnit Parameterized testing so the <code>@RunWith</code> annotation is essential. The test will
  * not run otherwise.<br>
  * <br>
- * In addition, every tests in runs a specific result type that is fed to the test as a parameter, in
+ * In addition, every testing in runs a specific result type that is fed to the test as a parameter, in
  * this case {@link SampleTestResult}.
  * 
  * @author ldc
@@ -31,7 +31,7 @@ public class SampleStandardTest extends ParamStandardTest<SampleTestResult>
 	private static final String EXAMPLE_TEST_FILES = "src/test/resources/standard";
 
 	// The update property for this test
-	private static final String UPDATE_PROPERTY = "tests.update.testing.standard.SampleStandardTest";
+	private static final String UPDATE_PROPERTY = "testing.update.testing.standard.SampleStandardTest";
 
 	/**
 	 * The default constructor must always pass the name of the test and the paths of the test input and result. <br>
@@ -51,7 +51,7 @@ public class SampleStandardTest extends ParamStandardTest<SampleTestResult>
 	}
 
 	/**
-	 * Due to some annoying limitations to JUnit parameterized tests, we must create a new test data provider for each
+	 * Due to some annoying limitations to JUnit parameterized testing, we must create a new test data provider for each
 	 * test we create. In most of them, it should be enough to call {@link PathsProvider} and ask for the files. The
 	 * <code>Parameters</code> annotation is crucial for the whole thing to work. Don't forget it.
 	 * 
@@ -70,7 +70,7 @@ public class SampleStandardTest extends ParamStandardTest<SampleTestResult>
 	 * method between the output of your module and the new result type that you've created.
 	 * </p>
 	 * Our example is just the ID function so it doesn't do anything to the AST. But we do have a conversion method. It
-	 * is placed in the result class so it can be reused in multiple tests that use {@link SampleTestResult}.
+	 * is placed in the result class so it can be reused in multiple testing that use {@link SampleTestResult}.
 	 */
 	@Override
 	public SampleTestResult processModel(List<INode> ast)
@@ -97,7 +97,7 @@ public class SampleStandardTest extends ParamStandardTest<SampleTestResult>
 
 	/**
 	 * If we wish to update the test results, this is done through Java Properties (passed to the VM as arguments with
-	 * <code>-D</code>. So, we must define a specific property for this set of tests that we can then use to update
+	 * <code>-D</code>. So, we must define a specific property for this set of testing that we can then use to update
 	 * results.
 	 */
 	@Override

@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.core.tests;
+package org.overture.core.testing;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,13 +32,13 @@ import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
 /**
- * Standard test in the new Overture test framework. This class runs tests on (correct) VDM sources and compares them
+ * Standard test in the new Overture test framework. This class runs testing on (correct) VDM sources and compares them
  * with stored result files. It is meant to be subclassed as a way to quickly create your own test suites.<br>
  * <br>
  * A comparison method for results must be provided. JSON-based serialization of results is fully automated and
  * deserialization is close to it.<br>
  * <br>
- * These tests are meant to be run as parameterized JUnit test and so any subclass must be annotated with
+ * These testing are meant to be run as parameterized JUnit test and so any subclass must be annotated with
  * <code>@RunWith(Parameterized.class)</code>. <br>
  * <br>
  * This class also has a type parameter <code>R</code> that represents the output of the functionality under test. You
@@ -52,12 +52,12 @@ public abstract class ParamStandardTest<R> extends AbsResultTest<R>
 {
 
 	/**
-	 * Constructor for the test. In order to use JUnit parameterized tests, the inputs for this class must be supplied
+	 * Constructor for the test. In order to use JUnit parameterized testing, the inputs for this class must be supplied
 	 * by a public static method. Subclasses must implement this method themselves and annotate with
 	 * <code>@Parameters(name = "{index} : {0}")</code>.<br>
 	 * <br>
 	 * The {@link PathsProvider#computePaths(String...)} method produces the correct input for this constructor and
-	 * should be called with the root folder of your tests inputs as its argument.
+	 * should be called with the root folder of your testing inputs as its argument.
 	 * 
 	 * @param nameParameter
 	 *            the name of the test. Normally derived from the test input file
