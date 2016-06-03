@@ -79,7 +79,14 @@ public class Stoppoint extends Breakpoint
 					
 				} catch (Exception e)
 				{
-					println("Breakpoint [" + number + "]: " + e.getMessage()
+					String message = e.getMessage();
+					
+					if(message == null)
+					{
+						message = "breakpoint condition could not be evaluated";
+					}
+					
+					println("Breakpoint [" + number + "]: " + message
 							+ " \"" + trace + "\"");
 				}
 				finally
