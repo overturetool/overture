@@ -64,15 +64,28 @@ public class Stoppoint extends Breakpoint
 
 			if (!shouldBreak)
 			{
-				// Clear thread state while evaluating the expression and set
-				// the state back after. Done to prevent the debugger from stopping
-				// in the expression
-				Context outctxt = ctxt.threadState.outctxt;
-				RootContext rootContext = ctxt.threadState.nextctxt;
-				ILexLocation stepline = ctxt.threadState.stepline;
-				ctxt.threadState.init();
-				shouldBreak = BreakpointManager.shouldStop(parsed, ctxt);
-				ctxt.threadState.setBreaks(stepline, rootContext, outctxt);
+				try
+				{
+					// Clear thread state while evaluating the expression and set
+					// the state back after. Done to prevent the debugger from stopping
+					// in the expression
+					Context outctxt = ctxt.threadState.outctxt;
+					RootContext rootContext = ctxt.threadState.nextctxt;
+					ILexLocation stepline = ctxt.threadState.stepline;
+					ctxt.threadState.init();
+					ctxt.threadState.setAtomic(true);
+					shouldBreak = BreakpointManager.shouldStop(parsed, ctxt);
+					ctxt.threadState.setBreaks(stepline, rootContext, outctxt);
+					
+				} catch (Exception e)
+				{
+					println("Breakpoint [" + number + "]: " + e.getMessage()
+							+ " \"" + trace + "\"");
+				}
+				finally
+				{
+					ctxt.threadState.setAtomic(false);
+				}
 			}
 
 			if (shouldBreak)
@@ -95,10 +108,6 @@ public class Stoppoint extends Breakpoint
 		} catch (DebuggerException e)
 		{
 			throw e;
-		} catch (ValueException e)
-		{
-			println("Breakpoint [" + number + "]: " + e.getMessage() + " \""
-					+ trace + "\"");
 		}
 	}
 
