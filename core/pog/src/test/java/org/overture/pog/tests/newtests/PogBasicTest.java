@@ -11,11 +11,10 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.ParamStandardTest;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.ParamStandardTest;
+import org.overture.core.testing.PathsProvider;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
-import org.overture.pog.tests.newtests.PogTestResult.ResultComparison;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -24,7 +23,7 @@ public class PogBasicTest extends ParamStandardTest<PogTestResult>
 {
 
 	private final static String MICRO_ROOT = "src/test/resources/micro";
-	private static final String UPDATE_PROPERTY = "tests.update.pog.micro";
+	private static final String UPDATE_PROPERTY = "testing.update.pog.basic";
 
 	public PogBasicTest(String nameParameter, String testParameter,
 			String resultParameter)
@@ -57,17 +56,6 @@ public class PogBasicTest extends ParamStandardTest<PogTestResult>
 	protected String getUpdatePropertyString()
 	{
 		return UPDATE_PROPERTY;
-	}
-
-	@Override
-	public void compareResults(PogTestResult actual, PogTestResult expected)
-	{
-		ResultComparison r = PogTestResult.compare(actual, expected);
-
-		if (!r.isMatch())
-		{
-			fail(r.getMessage() + getTestResultUpdateMessage());
-		}
 	}
 
 	@Override

@@ -1,1 +1,0 @@
-{"exampleName":"cashdispenserSL","defNames":["System","Account","Transaction","Card","Cardholder","AccountId","Name","CardId","Code","PinCode","Date","TransactionsInvariant","DateTotal","InsertCard","Validate","ReturnCard","GetBalance","MakeWithdrawal","RequestStatement","IsLegalCard","ReportIllegalCard","AddAccount","Encode","Sum","Len","TestCash"]}

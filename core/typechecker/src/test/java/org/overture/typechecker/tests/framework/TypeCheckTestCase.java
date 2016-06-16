@@ -35,7 +35,7 @@ public abstract class TypeCheckTestCase extends
 		TestResourcesResultTestCase4<Boolean>
 {
 
-	private static final String TESTS_TC_PROPERTY_PREFIX = "tests.tc.override.";
+	private static final String TESTS_TC_PROPERTY_PREFIX = "testing.tc.override.";
 
 	public TypeCheckTestCase(File file, String suiteName, File testSuiteRoot)
 	{

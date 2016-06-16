@@ -44,12 +44,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.overturetool.core.testing</groupId>
-      <artifactId>exsupport</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.overturetool.core.prettyprinting</groupId>
       <artifactId>prettyprinter</artifactId>
       <version>${project.version}</version>

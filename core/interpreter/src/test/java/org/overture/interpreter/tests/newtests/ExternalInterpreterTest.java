@@ -3,7 +3,7 @@ package org.overture.interpreter.tests.newtests;
 import java.lang.reflect.Type;
 
 import org.junit.Ignore;
-import org.overture.core.tests.ParamExternalsTest;
+import org.overture.core.testing.ParamExternalsTest;
 
 import com.google.gson.reflect.TypeToken;
 

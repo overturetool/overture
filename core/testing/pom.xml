@@ -15,9 +15,7 @@
 
   <modules>
     <module>framework</module>
-    <module>tests</module>
-    <module>exsupport</module>
-    <module>extests</module>
+    <module>samples</module>
   </modules>
 
   <build>

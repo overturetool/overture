@@ -34,7 +34,7 @@ import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.core.tests.ParseTcFacade;
+import org.overture.core.testing.ParseTcFacade;
 
 public class AdHoc
 {

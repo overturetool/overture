@@ -14,8 +14,8 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.ParamStandardTest;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.ParamStandardTest;
+import org.overture.core.testing.PathsProvider;
 
 import com.google.gson.reflect.TypeToken;
 
