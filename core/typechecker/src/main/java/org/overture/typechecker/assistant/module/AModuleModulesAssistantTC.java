@@ -112,7 +112,14 @@ public class AModuleModulesAssistantTC implements IAstAssistant
 		{
 			af.createAModuleImportsAssistant().typeCheck(m.getImports(), new ModuleEnvironment(af, m));
 		}
+	}
 
+	public void typeCheckExports(AModuleModules m) throws AnalysisException
+	{
+		if (m.getExports() != null)
+		{
+			af.createAModuleExportsAssistant().typeCheck(m.getExports(), new ModuleEnvironment(af, m));
+		}
 	}
 	
 	public Collection<? extends PDefinition> getDefinitions(
