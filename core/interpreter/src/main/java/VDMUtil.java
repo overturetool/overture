@@ -48,12 +48,12 @@ public class VDMUtil
 
 		try
 		{
-			SeqValue seq = (SeqValue) arg;
+			SeqValue seq = (SeqValue) arg.deref();
 			StringBuilder expression = new StringBuilder();
 
 			for (Value v : seq.values)
 			{
-				CharacterValue ch = (CharacterValue) v;
+				CharacterValue ch = (CharacterValue) v.deref();
 				expression.append(ch.unicode);
 			}
 
