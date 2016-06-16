@@ -213,7 +213,7 @@ public class PDefinitionListAssistantTC implements IAstAssistant
 		}
 	}
 
-	public PDefinition findType(LinkedList<PDefinition> actualDefs,
+	public PDefinition findType(List<PDefinition> actualDefs,
 			ILexNameToken name, String fromModule)
 	{
 		for (PDefinition d : actualDefs)

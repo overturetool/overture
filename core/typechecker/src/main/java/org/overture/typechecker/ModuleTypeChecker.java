@@ -271,15 +271,14 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
-				// TODO
 				assistantFactory.createAModuleModulesAssistant().processImports(m, modules); // Re-populate importDefs
 
 				try
 				{
-					// TODO
+					assistantFactory.createAModuleModulesAssistant().typeCheckExports(m);
 					assistantFactory.createAModuleModulesAssistant().typeCheckImports(m);
-					// m.typeCheckImports(); // Imports compared to exports
-				} catch (TypeCheckException te)
+				}
+				catch (TypeCheckException te)
 				{
 					report(3432, te.getMessage(), te.location);
 					
@@ -290,7 +289,8 @@ public class ModuleTypeChecker extends TypeChecker
 							report(3432, e.getMessage(), e.location);
 						}
 					}
-				} catch (AnalysisException te)
+				}
+				catch (AnalysisException te)
 				{
 					report(3431, te.getMessage(), null);// FIXME: internal error
 				}
