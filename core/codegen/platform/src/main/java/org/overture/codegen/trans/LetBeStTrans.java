@@ -1,6 +1,7 @@
 package org.overture.codegen.trans;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
@@ -57,7 +58,7 @@ public class LetBeStTrans extends DepthFirstAnalysisAdaptor
 			node.setStatement(new ABlockStmIR());
 		}
 
-		LinkedList<SPatternIR> patterns = binding.getPatterns();
+		List<SPatternIR> patterns = binding.getPatterns();
 		ABlockStmIR outerBlock = transAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy, iteVarPrefixes);
 
 		// Only the statement of the let be st statement is added to the outer block statements.

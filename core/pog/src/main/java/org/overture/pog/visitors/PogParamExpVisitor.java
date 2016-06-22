@@ -731,7 +731,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		IProofObligationList obligations = node.getRecord().apply(rootVisitor, question);
 		Queue<ARecordModifier> modifiers = node.getModifiers();
 		ARecordInvariantType recordType = node.getRecordType();
-		LinkedList<PType> mTypes = node.getModTypes();
+		List<PType> mTypes = node.getModTypes();
 
 		int i = 0;
 		for (ARecordModifier mod : modifiers)

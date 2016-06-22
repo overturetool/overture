@@ -74,9 +74,9 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		ABlockStmIR body = new ABlockStmIR();
 		constructor.setBody(body);
 
-		LinkedList<AFormalParamLocalParamIR> formalParams = constructor.getFormalParams();
-		LinkedList<SStmIR> bodyStms = body.getStatements();
-		LinkedList<AFieldDeclIR> fields = record.getFields();
+		List<AFormalParamLocalParamIR> formalParams = constructor.getFormalParams();
+		List<SStmIR> bodyStms = body.getStatements();
+		List<AFieldDeclIR> fields = record.getFields();
 		
 		for (AFieldDeclIR field : fields)
 		{
@@ -186,7 +186,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		AMethodDeclIR equalsMethod = consEqualMethodSignature(paramName);
 
 		ABlockStmIR equalsMethodBody = new ABlockStmIR();
-		LinkedList<SStmIR> equalsStms = equalsMethodBody.getStatements();
+		List<SStmIR> equalsStms = equalsMethodBody.getStatements();
 		
 		AReturnStmIR returnTypeComp = new AReturnStmIR();
 		if (record.getFields().isEmpty())
@@ -218,7 +218,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 
 			// Next compare the fields of the instance with the fields of the formal parameter "obj":
 			// return (field1 == obj.field1) && (field2 == other.field2)...
-			LinkedList<AFieldDeclIR> fields = record.getFields();
+			List<AFieldDeclIR> fields = record.getFields();
 			SExpIR previousComparisons = javaFormat.getJavaFormatAssistant().consFieldComparison(record, fields.get(0), localVarName);
 
 			for (int i = 1; i < fields.size(); i++)

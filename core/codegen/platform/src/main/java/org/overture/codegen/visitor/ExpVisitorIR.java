@@ -474,13 +474,13 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 					+ type.getClass().getName() + " at "  + node.getLocation());
 		}
 
-		LinkedList<PExp> members = node.getMembers();
+		List<PExp> members = node.getMembers();
 
 		AEnumSetExpIR enumSet = new AEnumSetExpIR();
 
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		enumSet.setType(typeCg);
-		LinkedList<SExpIR> membersCg = enumSet.getMembers();
+		List<SExpIR> membersCg = enumSet.getMembers();
 
 		for (PExp member : members)
 		{
@@ -540,7 +540,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	public SExpIR caseASetCompSetExp(ASetCompSetExp node, IRInfo question)
 			throws AnalysisException
 	{
-		LinkedList<PMultipleBind> bindings = node.getBindings();
+		List<PMultipleBind> bindings = node.getBindings();
 
 		List<SMultipleBindIR> bindingsCg = new LinkedList<SMultipleBindIR>();
 		for (PMultipleBind multipleBind : bindings)
@@ -603,7 +603,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		PType type = node.getType();
 		PExp exp = node.getExpression();
 		PExp others = node.getOthers();
-		LinkedList<ACaseAlternative> cases = node.getCases();
+		List<ACaseAlternative> cases = node.getCases();
 
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
@@ -652,7 +652,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		ternaryIf.setTrueValue(thenExp);
 		ternaryIf.setType(expectedType);
 
-		LinkedList<AElseIfExp> elseExpList = node.getElseList();
+		List<AElseIfExp> elseExpList = node.getElseList();
 
 		ATernaryIfExpIR nextTernaryIf = ternaryIf;
 
@@ -689,7 +689,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			throws AnalysisException
 	{
 		PType type = node.getType();
-		LinkedList<PExp> args = node.getArgs();
+		List<PExp> args = node.getArgs();
 
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 
@@ -744,7 +744,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		AMethodInstantiationExpIR methodInst = new AMethodInstantiationExpIR();
 
-		LinkedList<PType> actualTypes = node.getActualTypes();
+		List<PType> actualTypes = node.getActualTypes();
 		for (PType actualType : actualTypes)
 		{
 			STypeIR actualTypeCg = actualType.apply(question.getTypeVisitor(), question);
@@ -880,13 +880,13 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		ARecordTypeIR recordTypeCg = (ARecordTypeIR) typeCg;
 
-		LinkedList<PExp> nodeArgs = node.getArgs();
+		List<PExp> nodeArgs = node.getArgs();
 
 		ANewExpIR newExp = new ANewExpIR();
 		newExp.setType(recordTypeCg);
 		newExp.setName(recordTypeCg.getName().clone());
 
-		LinkedList<SExpIR> newExpArgs = newExp.getArgs();
+		List<SExpIR> newExpArgs = newExp.getArgs();
 
 		for (PExp arg : nodeArgs)
 		{
@@ -1048,7 +1048,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		AEnumMapExpIR enumMap = new AEnumMapExpIR();
 		enumMap.setType(typeCg);
 
-		LinkedList<AMapletExp> members = node.getMembers();
+		List<AMapletExp> members = node.getMembers();
 		for (PExp member : members)
 		{
 			SExpIR memberCg = member.apply(question.getExpVisitor(), question);
@@ -1094,7 +1094,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	public SExpIR caseAMapCompMapExp(AMapCompMapExp node, IRInfo question)
 			throws AnalysisException
 	{
-		LinkedList<PMultipleBind> bindings = node.getBindings();
+		List<PMultipleBind> bindings = node.getBindings();
 		PType type = node.getType();
 		AMapletExp first = node.getFirst();
 		PExp predicate = node.getPredicate();
@@ -1254,7 +1254,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			return null;
 		}
 
-		LinkedList<PExp> members = node.getMembers();
+		List<PExp> members = node.getMembers();
 		for (PExp member : members)
 		{
 			SExpIR memberCg = member.apply(question.getExpVisitor(), question);
@@ -1475,7 +1475,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		typeName.setName(className);
 
 		PType type = node.getType();
-		LinkedList<PExp> nodeArgs = node.getArgs();
+		List<PExp> nodeArgs = node.getArgs();
 
 		ANewExpIR newExp = new ANewExpIR();
 
@@ -1483,7 +1483,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		newExp.setType(typeCg);
 		newExp.setName(typeName);
 
-		LinkedList<SExpIR> newExpArgs = newExp.getArgs();
+		List<SExpIR> newExpArgs = newExp.getArgs();
 		for (PExp arg : nodeArgs)
 		{
 			SExpIR argCg = arg.apply(question.getExpVisitor(), question);
@@ -1853,7 +1853,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	public SExpIR caseALambdaExp(ALambdaExp node, IRInfo question)
 			throws AnalysisException
 	{
-		LinkedList<ATypeBind> bindList = node.getBindList();
+		List<ATypeBind> bindList = node.getBindList();
 		PExp exp = node.getExpression();
 		PType type = node.getType();
 
@@ -1865,7 +1865,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		lambdaExp.setType(typeCg);
 		lambdaExp.setExp(expCg);
 
-		LinkedList<AFormalParamLocalParamIR> params = lambdaExp.getParams();
+		List<AFormalParamLocalParamIR> params = lambdaExp.getParams();
 
 		for (ATypeBind typeBind : bindList)
 		{

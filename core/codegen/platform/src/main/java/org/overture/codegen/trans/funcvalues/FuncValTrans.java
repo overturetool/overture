@@ -121,7 +121,7 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 			functionValueAssistant.registerInterface(lambdaInterface);
 		}
 
-		LinkedList<AFormalParamLocalParamIR> params = node.getParams();
+		List<AFormalParamLocalParamIR> params = node.getParams();
 
 		AInterfaceTypeIR classType = new AInterfaceTypeIR();
 		classType.setName(lambdaInterface.getName());

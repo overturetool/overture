@@ -39,7 +39,7 @@ public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 	 */
 	private static final long serialVersionUID = -1122692848887584905L;
 
-	private final HashMap<LexNameTokenWrapper, V> map = new HashMap<LexNameTokenWrapper, V>();
+	private final Map<LexNameTokenWrapper, V> map = new HashMap<LexNameTokenWrapper, V>();
 
 	public V put(ILexNameToken key, V value)
 	{

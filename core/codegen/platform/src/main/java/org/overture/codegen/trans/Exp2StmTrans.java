@@ -272,7 +272,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		// Replace the let be st expression with the result expression
 		transAssistant.replaceNodeWith(node, letBeStResult);
 
-		LinkedList<SPatternIR> patterns = binding.getPatterns();
+		List<SPatternIR> patterns = binding.getPatterns();
 		ABlockStmIR block = transAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy, iteVarPrefixes);
 		outerBlock.getStatements().addFirst(block);
 

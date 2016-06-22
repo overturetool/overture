@@ -714,7 +714,7 @@ public class NextGenRTLogger implements IRTLogger
 			events.put(eventTime.getAbsoluteTime(), new ArrayList<INextGenEvent>());
 		}
 
-		ArrayList<INextGenEvent> eventList = events.get(eventTime.getAbsoluteTime());
+		List<INextGenEvent> eventList = events.get(eventTime.getAbsoluteTime());
 		eventList.add(event);
 	}
 

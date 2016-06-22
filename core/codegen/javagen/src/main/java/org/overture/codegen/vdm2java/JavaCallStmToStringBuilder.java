@@ -39,7 +39,7 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 
 			STypeIR type = plainCall.getClassType();
 			String name = plainCall.getName();
-			LinkedList<SExpIR> args = plainCall.getArgs();
+			List<SExpIR> args = plainCall.getArgs();
 
 			String prefix = "";
 
@@ -58,7 +58,7 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 
 			SExpIR obj = callObj.getObj();
 			String field = callObj.getFieldName();
-			LinkedList<SExpIR> args = callObj.getArgs();
+			List<SExpIR> args = callObj.getArgs();
 
 			String prefix = obj.toString();
 			prefix += "." + field;

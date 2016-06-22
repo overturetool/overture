@@ -109,7 +109,7 @@ public class IRGenerator
 		codeGenInfo.clearTransformationWarnings();
 
 		status.getIrNode().apply(transformation);
-		HashSet<IrNodeInfo> transformationWarnings = new HashSet<IrNodeInfo>(codeGenInfo.getTransformationWarnings());
+		Set<IrNodeInfo> transformationWarnings = new HashSet<IrNodeInfo>(codeGenInfo.getTransformationWarnings());
 
 		status.addTransformationWarnings(transformationWarnings);
 	}
@@ -126,7 +126,7 @@ public class IRGenerator
 		codeGenInfo.clearTransformationWarnings();
 
 		status.getIrNode().apply(trans);
-		HashSet<IrNodeInfo> transformationWarnings = new HashSet<IrNodeInfo>(codeGenInfo.getTransformationWarnings());
+		Set<IrNodeInfo> transformationWarnings = new HashSet<IrNodeInfo>(codeGenInfo.getTransformationWarnings());
 		status.addTransformationWarnings(transformationWarnings);
 		status.setIrNode(trans.getResult());
 	}

@@ -224,7 +224,7 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 			IRInfo question) throws AnalysisException
 	{
 		ILexNameToken name = node.getName();
-		LinkedList<AFieldField> fields = node.getFields();
+		List<AFieldField> fields = node.getFields();
 
 		ARecordDeclIR record = new ARecordDeclIR();
 		record.setName(name.getName());
@@ -235,7 +235,7 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 			record.setInvariant(invCg);
 		}
 
-		LinkedList<AFieldDeclIR> recordFields = record.getFields();
+		List<AFieldDeclIR> recordFields = record.getFields();
 		for (AFieldField aFieldField : fields)
 		{
 			SDeclIR res = aFieldField.apply(question.getDeclVisitor(), question);
@@ -317,7 +317,7 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		Iterator<List<PPattern>> iterator = node.getParamPatternList().iterator();
 		List<PPattern> paramPatterns = iterator.next();
 
-		LinkedList<AFormalParamLocalParamIR> formalParameters = method.getFormalParams();
+		List<AFormalParamLocalParamIR> formalParameters = method.getFormalParams();
 
 		for (int i = 0; i < paramPatterns.size(); i++)
 		{
@@ -383,7 +383,7 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 
 		// If the function uses any type parameters they will be
 		// registered as part of the method declaration
-		LinkedList<ILexNameToken> typeParams = node.getTypeParams();
+		List<ILexNameToken> typeParams = node.getTypeParams();
 		for (int i = 0; i < typeParams.size(); i++)
 		{
 			ILexNameToken typeParam = typeParams.get(i);
@@ -481,9 +481,9 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		}
 		
 		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
-		LinkedList<PPattern> paramPatterns = node.getParameterPatterns();
+		List<PPattern> paramPatterns = node.getParameterPatterns();
 		
-		LinkedList<AFormalParamLocalParamIR> formalParameters = method.getFormalParams();
+		List<AFormalParamLocalParamIR> formalParameters = method.getFormalParams();
 
 		for (int i = 0; i < ptypes.size(); i++)
 		{
@@ -599,7 +599,7 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 	public SDeclIR caseAMutexSyncDefinition(AMutexSyncDefinition node,
 			IRInfo question) throws AnalysisException
 	{
-		LinkedList<ILexNameToken> operations = node.getOperations();
+		List<ILexNameToken> operations = node.getOperations();
 		
 		AMutexSyncDeclIR mutexdef = new AMutexSyncDeclIR();
 		

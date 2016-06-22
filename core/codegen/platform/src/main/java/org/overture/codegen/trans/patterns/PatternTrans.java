@@ -833,8 +833,8 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		mismatchHandling(tuplePattern, patternData);
 		initSuccessVar(patternData, tupleCheck, tuplePatternBlock);
 
-		LinkedList<SPatternIR> patterns = tuplePattern.getPatterns();
-		LinkedList<STypeIR> types = tupleType.getTypes();
+		List<SPatternIR> patterns = tuplePattern.getPatterns();
+		List<STypeIR> types = tupleType.getTypes();
 
 		AIfStmIR fieldSizeCheck = new AIfStmIR();
 		fieldSizeCheck.setIfExp(patternData.getSuccessVar().clone());

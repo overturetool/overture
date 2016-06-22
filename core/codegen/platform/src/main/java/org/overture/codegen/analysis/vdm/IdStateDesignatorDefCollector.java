@@ -121,7 +121,7 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 
 	private void loadClassGlobals(SClassDefinition node)
 	{
-		LinkedList<PDefinition> allDefs = new LinkedList<PDefinition>(node.getAllInheritedDefinitions());
+		List<PDefinition> allDefs = new LinkedList<PDefinition>(node.getAllInheritedDefinitions());
 		allDefs.addAll(node.getDefinitions());
 		
 		// Instance variables and values are visible to all operations

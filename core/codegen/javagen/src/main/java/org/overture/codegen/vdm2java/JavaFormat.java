@@ -208,7 +208,7 @@ public class JavaFormat
 		AInterfaceTypeIR methodClass = new AInterfaceTypeIR();
 		methodClass.setName(methodTypeInterface.getName());
 
-		LinkedList<STypeIR> params = methodType.getParams();
+		List<STypeIR> params = methodType.getParams();
 
 		for (STypeIR param : params)
 		{
@@ -606,7 +606,7 @@ public class JavaFormat
 	
 	public String formatInterfaces(SClassDeclIR classDecl)
 	{
-		LinkedList<AInterfaceDeclIR> interfaces = classDecl.getInterfaces();
+		List<AInterfaceDeclIR> interfaces = classDecl.getInterfaces();
 		
 		if(interfaces == null)
 		{
