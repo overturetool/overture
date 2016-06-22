@@ -30,6 +30,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
@@ -236,11 +237,11 @@ public class ObjectValue extends Value
 
 		if (rv == null)
 		{
-			for (ILexNameToken var : members.keySet())
+			for (Entry<ILexNameToken, Value> entry : members.entrySet())
 			{
-				if (HackLexNameToken.isEqual(var, localname))
+				if (HackLexNameToken.isEqual(entry.getKey(), localname))
 				{
-					rv = members.get(var);
+					rv = entry.getValue();
 					break;
 				}
 			}
@@ -272,11 +273,11 @@ public class ObjectValue extends Value
 		// rather than using the map's hash, because the hash includes the
 		// overloaded type qualifiers...
 
-		for (ILexNameToken var : members.keySet())
+		for (Entry<ILexNameToken, Value> entry : members.entrySet())
 		{
-			if (var.matches(field)) // Ignore type qualifiers
+			if (entry.getKey().matches(field)) // Ignore type qualifiers
 			{
-				list.add(members.get(var));
+				list.add(entry.getValue());
 			}
 		}
 
@@ -342,15 +343,15 @@ public class ObjectValue extends Value
 		sb.append(type.toString());
 		sb.append("{#" + objectReference);
 
-		for (ILexNameToken name : members.keySet())
+		for (Entry<ILexNameToken, Value> entry : members.entrySet())
 		{
-			Value ov = members.get(name);
+			Value ov = entry.getValue();
 			Value v = ov.deref();
 
 			if (!(v instanceof FunctionValue) && !(v instanceof OperationValue))
 			{
 				sb.append(", ");
-				sb.append(name.getName());
+				sb.append(entry.getKey().getName());
 
 				if (ov instanceof UpdatableValue)
 				{
@@ -450,17 +451,17 @@ public class ObjectValue extends Value
 			new ObjectValue(sobj.type, new NameValuePairMap(), new Vector<ObjectValue>(), sobj.CPU, creator));
 		}
 
-		for (ILexNameToken name : members.keySet())
+		for (Entry<ILexNameToken, Value> entry : members.entrySet())
 		{
-			Value mv = members.get(name);
+			Value mv = entry.getValue();
 
 			if (mv.deref() instanceof ObjectValue)
 			{
 				ObjectValue om = (ObjectValue) mv.deref();
-				memcopy.put(name, om.shallowCopy());
+				memcopy.put(entry.getKey(), om.shallowCopy());
 			} else
 			{
-				memcopy.put(name, (Value) mv.clone());
+				memcopy.put(entry.getKey(), (Value) mv.clone());
 			}
 		}
 

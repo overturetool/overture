@@ -11,6 +11,8 @@ import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.Substitution;
 import org.overture.pog.visitors.IVariableSubVisitor;
 
+import java.util.Map;
+
 public class AssignmentContext extends StatefulContext
 {
 	Substitution subLast;

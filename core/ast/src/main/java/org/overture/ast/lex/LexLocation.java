@@ -378,13 +378,13 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	{
 		LexNameList list = new LexNameList();
 
-		for (LexNameToken name : nameSpans.keySet())
+		for (Map.Entry<LexNameToken, LexLocation> entry : nameSpans.entrySet())
 		{
-			LexLocation span = nameSpans.get(name);
+			LexLocation span = entry.getValue();
 
 			if (span.file.equals(filename))
 			{
-				list.add(name);
+				list.add(entry.getKey());
 			}
 		}
 

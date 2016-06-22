@@ -24,6 +24,7 @@
 package org.overture.interpreter.runtime;
 
 import java.io.PrintWriter;
+import java.util.Map;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -326,9 +327,9 @@ public class Context extends LexNameTokenMap<Value>
 	{
 		StringBuilder sb = new StringBuilder();
 
-		for (ILexNameToken name : what.keySet())
+		for (Entry<ILexNameToken, Value> entry : what.entrySet())
 		{
-			sb.append(indent + name + " = " + what.get(name).toShortString(100)
+			sb.append(indent + entry.getKey() + " = " + entry.getValue().toShortString(100)
 					+ "\n");
 		}
 

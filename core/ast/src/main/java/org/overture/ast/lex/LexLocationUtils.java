@@ -120,13 +120,13 @@ public class LexLocationUtils implements Serializable
 	{
 		LexNameList list = new LexNameList();
 
-		for (LexNameToken name : nameSpans.keySet())
+		for (Map.Entry<LexNameToken, ILexLocation> entry : nameSpans.entrySet())
 		{
-			ILexLocation span = nameSpans.get(name);
+			ILexLocation span = entry.getValue();
 
 			if (span.getFile().equals(filename))
 			{
-				list.add(name);
+				list.add(entry.getKey());
 			}
 		}
 

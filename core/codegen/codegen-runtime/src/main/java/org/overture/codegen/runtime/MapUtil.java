@@ -22,6 +22,7 @@
 package org.overture.codegen.runtime;
 
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 
 public class MapUtil
@@ -40,11 +41,11 @@ public class MapUtil
 		Maplet[] maplets = new Maplet[vdmMap.size()];
 
 		int nextIndex = 0;
-		for (Object key : vdmMap.keySet())
+		for (Object o : vdmMap.entrySet())
 		{
-			Object val = vdmMap.get(key);
+			Object val = ((Map.Entry) o).getValue();
 
-			maplets[nextIndex++] = new Maplet(key, val);
+			maplets[nextIndex++] = new Maplet(((Map.Entry) o).getKey(), val);
 		}
 
 		return maplets;
@@ -212,12 +213,12 @@ public class MapUtil
 
 		VDMMap result = map();
 
-		for (Object key : vdmMap.keySet())
+		for (Object o : vdmMap.entrySet())
 		{
-			if (!vdmDom.contains(key))
+			if (!vdmDom.contains(((Map.Entry) o).getKey()))
 			{
-				Object value = vdmMap.get(key);
-				result.put(key, value);
+				Object value = ((Map.Entry) o).getValue();
+				result.put(((Map.Entry) o).getKey(), value);
 			}
 		}
 
@@ -240,13 +241,13 @@ public class MapUtil
 		@SuppressWarnings("rawtypes")
 		Set dom = vdmMap.keySet();
 
-		for (Object key : dom)
+		for (Object o : vdmMap.entrySet())
 		{
-			Object value = vdmMap.get(key);
+			Object value = ((Map.Entry) o).getValue();
 
 			if (vdmRng.contains(value))
 			{
-				result.put(key, value);
+				result.put(((Map.Entry) o).getKey(), value);
 			}
 		}
 
@@ -266,13 +267,13 @@ public class MapUtil
 
 		VDMMap result = map();
 
-		for (Object key : vdmMap.keySet())
+		for (Object o : vdmMap.entrySet())
 		{
-			Object value = vdmMap.get(key);
+			Object value = ((Map.Entry) o).getValue();
 
 			if (!vdmRng.contains(value))
 			{
-				result.put(key, value);
+				result.put(((Map.Entry) o).getKey(), value);
 			}
 		}
 
@@ -365,18 +366,18 @@ public class MapUtil
 		@SuppressWarnings("rawtypes")
 		Set fromKeys = from.keySet();
 
-		for (Object fromKey : fromKeys)
+		for (Object o : from.entrySet())
 		{
-			Object fromVal = from.get(fromKey);
+			Object fromVal = ((Map.Entry) o).getValue();
 
-			if (to.containsKey(fromKey))
+			if (to.containsKey(((Map.Entry) o).getKey()))
 			{
-				Object toVal = to.get(fromKey);
+				Object toVal = to.get(((Map.Entry) o).getKey());
 				if (differentValues(toVal, fromVal))
 					throw new IllegalAccessError("Duplicate keys that have different values are not allowed");
 			}
 
-			to.put(fromKey, fromVal);
+			to.put(((Map.Entry) o).getKey(), fromVal);
 		}
 	}
 

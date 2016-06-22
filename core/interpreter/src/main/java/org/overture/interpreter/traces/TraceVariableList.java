@@ -24,6 +24,7 @@
 package org.overture.interpreter.traces;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.overture.ast.definitions.PDefinition;
@@ -48,10 +49,10 @@ public class TraceVariableList extends Vector<TraceVariable>
 	{
 		Environment local = new FlatEnvironment(ctxt.assistantFactory, localDefs);
 
-		for (ILexNameToken key : ctxt.keySet())
+		for (Map.Entry<ILexNameToken, Value> entry : ctxt.entrySet())
 		{
-			Value value = ctxt.get(key);
-			PDefinition d = local.findName(key, NameScope.NAMES);
+			Value value = entry.getValue();
+			PDefinition d = local.findName(entry.getKey(), NameScope.NAMES);
 			boolean clone = false;
 
 			if (value.isType(ObjectValue.class))
@@ -65,7 +66,7 @@ public class TraceVariableList extends Vector<TraceVariable>
 						&& obj.objectReference > self.objectReference;
 			}
 
-			add(new TraceVariable(key.getLocation(), key, value, d.getType(), clone));
+			add(new TraceVariable(entry.getKey().getLocation(), entry.getKey(), value, d.getType(), clone));
 		}
 	}
 

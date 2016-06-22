@@ -52,6 +52,8 @@ import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
 
+import java.util.Map;
+
 public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 {
 
@@ -220,16 +222,16 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 			ValueMap result = new ValueMap();
 
-			for (Value v : rm.keySet())
+			for (Map.Entry<Value, Value> entry : rm.entrySet())
 			{
-				Value rng = lm.get(rm.get(v));
+				Value rng = lm.get(entry.getValue());
 
 				if (rng == null)
 				{
 					VdmRuntimeError.abort(node.getLocation(), 4162, "The RHS range is not a subset of the LHS domain", ctxt);
 				}
 
-				Value old = result.put(v, rng);
+				Value old = result.put(entry.getKey(), rng);
 
 				if (old != null && !old.equals(rng))
 				{
@@ -373,15 +375,15 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		ValueMap result = new ValueMap();
 		result.putAll(lm);
 
-		for (Value k : rm.keySet())
+		for (Map.Entry<Value, Value> entry : rm.entrySet())
 		{
-			Value rng = rm.get(k);
-			Value old = result.put(k, rng);
+			Value rng = entry.getValue();
+			Value old = result.put(entry.getKey(), rng);
 
 			if (old != null && !old.equals(rng))
 			{
 				VdmRuntimeError.abort(node.getLocation(), 4021, "Duplicate map keys have different values: "
-						+ k, ctxt);
+						+ entry.getKey(), ctxt);
 			}
 		}
 
@@ -728,9 +730,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				ValueMap lm = new ValueMap(lv.mapValue(ctxt));
 				ValueMap rm = rv.mapValue(ctxt);
 
-				for (Value k : rm.keySet())
+				for (Map.Entry<Value, Value> entry : rm.entrySet())
 				{
-					lm.put(k, rm.get(k));
+					lm.put(entry.getKey(), entry.getValue());
 				}
 
 				return new MapValue(lm);
@@ -802,11 +804,11 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 		ValueMap modified = new ValueMap(map);
 
-		for (Value k : map.keySet())
+		for (Map.Entry<Value, Value> entry : map.entrySet())
 		{
-			if (set.contains(map.get(k)))
+			if (set.contains(entry.getValue()))
 			{
-				modified.remove(k);
+				modified.remove(entry.getKey());
 			}
 		}
 
@@ -834,11 +836,11 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 		ValueMap modified = new ValueMap(map);
 
-		for (Value k : map.keySet())
+		for (Map.Entry<Value, Value> entry : map.entrySet())
 		{
-			if (!set.contains(map.get(k)))
+			if (!set.contains(entry.getValue()))
 			{
-				modified.remove(k);
+				modified.remove(entry.getKey());
 			}
 		}
 
