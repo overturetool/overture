@@ -3,8 +3,8 @@ instructions.configure=\
   addRepository(type:1,name:Overture,enabled:false,location:http${#58}//dl.bintray.com/overturetool/overturetool/);\
   addRepository(type:0,name:Overture Development,enabled:true,location:http${#58}//dl.bintray.com/overturetool/overturetool-development/);\
   addRepository(type:1,name:Overture Development,enabled:true,location:http${#58}//dl.bintray.com/overturetool/overturetool-development/);\
-	addRepository(type:0,name:Overture VDM2C Development,enabled:true,location:http${#58}//overture.au.dk/vdm2c/development/ide/repository/target/repository/);\
-  addRepository(type:1,name:Overture VDM2C Development,enabled:true,location:http${#58}//overture.au.dk/vdm2c/development/ide/repository/target/repository/);\
+  addRepository(type:0,name:Overture VDM2C Development,enabled:true,location:http${#58}//overture.au.dk/vdm2c/master/repository/);\
+  addRepository(type:1,name:Overture VDM2C Development,enabled:true,location:http${#58}//overture.au.dk/vdm2c/master/repository/);\
   addRepository(type:0,name:Subclipse,enabled:true,location:http${#58}//subclipse.tigris.org/update_1.12.x);\
   addRepository(type:1,name:Subclipse,enabled:true,location:http${#58}//subclipse.tigris.org/update_1.12.x);\
   addRepository(type:0,name:EGit,enabled:true,location:http${#58}//download.eclipse.org/egit/updates);\
