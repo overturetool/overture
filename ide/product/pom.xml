@@ -14,18 +14,18 @@
 	<artifactId>org.overture.ide.product</artifactId>
 	<name>Overture IDE Standalone Product</name>
 
-	<properties>
-		<repo.root>${project.basedir}/../..</repo.root>
-		<documentation.root>${repo.root}/externals/docrepo/documentation</documentation.root>
-	</properties>
-
 	<build>
 		<resources>
 			<resource>
 				<targetPath>${basedir}</targetPath>
-				<directory>${basedir}/src/main/resources</directory>
+				<directory>${basedir}/src/main/resources/p2</directory>
 				<filtering>true</filtering>
 			</resource>
+			<resource>
+        <targetPath>${basedir}</targetPath>
+        <directory>${basedir}/src/main/resources/product</directory>
+        <filtering>false</filtering>
+      </resource>
 		</resources>
 		<plugins>
 			<plugin>
@@ -37,10 +37,14 @@
 						<goals>
 							<goal>resources</goal>
 						</goals>
-						<phase>process-resources</phase>
+						<phase>generate-resources</phase>
 					</execution>
 				</executions>
+				<configuration>
+					<overwrite>true</overwrite>
+        </configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-director-plugin</artifactId>
@@ -71,7 +75,79 @@
 					</products>
 				</configuration>
 			</plugin>
+
+			<plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <configuration>
+              <tasks>
+
+                <replace dir="${basedir}/" >
+                  <include name="*.product"/>
+                  <replacefilter     token="VERSION" value="${project.version}"/>
+                </replace>
+								<replace dir="${basedir}/" >
+                  <include name="*.product"/>
+                  <replacefilter     token="-SNAPSHOT" value=".qualifier"/>
+                </replace>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
 		</plugins>
 	</build>
+
+
+
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>process-resources</phase>
+								<configuration>
+									<tasks>
+
+										<replace dir="${basedir}/" >
+											<include name="*.product"/>
+											<replacefilter     token="DELETE.FOR.RELEASE.osgi.instance.area.default" value="osgi.instance.area.default"/>
+											<replacefilter     token="VERSION" value="${project.version}"/>
+											<replacefilter     token="-SNAPSHOT" value=".qualifier"/>
+										</replace>
+										
+										<replace dir="${basedir}/" >
+											<include name="overture.p2.inf"/>
+											<replacefilter     token="name:Overture,enabled:false" value="name:Overture,enabled:true"/>
+											<replacefilter     token="name:Overture Development,enabled:true" value="name:Overture Development,enabled:false"/>
+										</replace>
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+
+		</profile>
+	</profiles>
 
 </project>

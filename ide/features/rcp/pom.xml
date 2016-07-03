@@ -32,7 +32,7 @@
 								<artifactItem>
 									<groupId>org.overturetool</groupId>
 									<artifactId>externals</artifactId>
-									<version>2.3.7-SNAPSHOT</version>
+									<version>${project.version}</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/rootfiles</outputDirectory>
@@ -43,7 +43,7 @@
 								<artifactItem>
 									<groupId>org.overturetool.core</groupId>
 									<artifactId>commandlinetool</artifactId>
-									<version>2.3.7-SNAPSHOT</version>
+									<version>${project.version}</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/rootfiles/commandline</outputDirectory>
@@ -53,7 +53,7 @@
 								<artifactItem>
 									<groupId>org.overturetool.documentation</groupId>
 									<artifactId>releasenotes</artifactId>
-									<version>2.3.7-SNAPSHOT</version>
+									<version>${project.version}</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/rootfiles</outputDirectory>
@@ -94,7 +94,7 @@
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
 			<artifactId>commandlinetool</artifactId>
-			<version>2.3.7-SNAPSHOT</version>
+			<version>${project.version}</version>
 			<classifier>jar-with-dependencies</classifier>
 		</dependency>
 	</dependencies>
