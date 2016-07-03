@@ -75,6 +75,32 @@
 					</products>
 				</configuration>
 			</plugin>
+
+			<plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <configuration>
+              <tasks>
+
+                <replace dir="${basedir}/" >
+                  <include name="*.product"/>
+                  <replacefilter     token="VERSION" value="${project.version}"/>
+                </replace>
+								<replace dir="${basedir}/" >
+                  <include name="*.product"/>
+                  <replacefilter     token="-SNAPSHOT" value=".qualifier"/>
+                </replace>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
 		</plugins>
 	</build>
 
@@ -100,13 +126,14 @@
 
 										<replace dir="${basedir}/" >
 											<include name="*.product"/>
-											<replacefilter     token="DELETE.FOR.RELEASE." value=""/>
+											<replacefilter     token="DELETE.FOR.RELEASE.osgi.instance.area.default" value="osgi.instance.area.default"/>
+											<replacefilter     token="VERSION" value="${project.version}"/>
+											<replacefilter     token="-SNAPSHOT" value=".qualifier"/>
 										</replace>
-
+										
 										<replace dir="${basedir}/" >
 											<include name="overture.p2.inf"/>
 											<replacefilter     token="name:Overture,enabled:false" value="name:Overture,enabled:true"/>
-
 											<replacefilter     token="name:Overture Development,enabled:true" value="name:Overture Development,enabled:false"/>
 										</replace>
 									</tasks>
