@@ -937,6 +937,26 @@ public class LexTokenReader extends BacktrackInputReader
 				type = VDMToken.SETDIFF;
 				break;
 
+			case '0':
+				push();
+				rdCh();
+
+				if (ch == 'x' || ch == 'X')
+				{
+					unpush();
+					rdCh();
+					String decimal = String.valueOf(Long.parseLong(rdNumber(16), 16));
+					last = new LexIntegerToken(decimal, location(tokline, tokpos, tokOffset, offset));
+				}
+				else
+				{
+					pop();
+					last = rdReal(tokline, tokpos, tokOffset);
+				}
+
+				rdch = false;
+				break;
+
 			default:
 				if (ch >= '0' && ch <= '9')
 				{
