@@ -13,7 +13,7 @@ import org.overture.codegen.tests.output.util.OutputTestUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.PathsProvider;
 
 @RunWith(Parameterized.class)
 public class SystemClassOutputTest extends JavaOutputTestBase

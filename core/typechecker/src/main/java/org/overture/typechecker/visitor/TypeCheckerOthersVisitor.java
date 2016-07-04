@@ -114,11 +114,21 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			} else
 			{
 				ASetBind setbind = (ASetBind) node.getBind();
-				ASetType settype = question.assistantFactory.createPTypeAssistant().getSet(setbind.getSet().apply(THIS, question));
-				if (!question.assistantFactory.getTypeComparator().compatible(type, settype.getSetof()))
+				PType bindtype = setbind.getSet().apply(THIS, question);
+				
+				if (!question.assistantFactory.createPTypeAssistant().isSet(bindtype))
 				{
 					TypeCheckerErrors.report(3199, "Set bind not compatible with expression", node.getBind().getLocation(), node.getBind());
-					TypeCheckerErrors.detail2("Bind", settype.getSetof(), "Exp", type);
+				}
+				else
+				{
+    				ASetType settype = question.assistantFactory.createPTypeAssistant().getSet(bindtype);
+    				
+    				if (!question.assistantFactory.getTypeComparator().compatible(type, settype.getSetof()))
+    				{
+    					TypeCheckerErrors.report(3199, "Set bind not compatible with expression", node.getBind().getLocation(), node.getBind());
+    					TypeCheckerErrors.detail2("Bind", settype.getSetof(), "Exp", type);
+    				}
 				}
 			}
 

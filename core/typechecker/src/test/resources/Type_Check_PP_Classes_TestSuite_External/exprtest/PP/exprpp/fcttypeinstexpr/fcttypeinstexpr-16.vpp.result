@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
 <message column="1" line="50" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="fcttypeinstexpr-16.vpp"/>
-<message column="11" line="63" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fcttypeinstexpr-16.vpp"/>
+<message column="20" line="63" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fcttypeinstexpr-16.vpp"/>
 <result/>
 </testResult>

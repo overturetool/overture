@@ -1,48 +1,114 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.overturetool</groupId>
-        <artifactId>root</artifactId>
-        <version>2.3.6</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+	<parent>
+		<groupId>org.overturetool</groupId>
+		<artifactId>root</artifactId>
+		<version>2.3.8</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 
-    <artifactId>externals</artifactId>
-    <packaging>pom</packaging>
-    <name>Overture External Resources</name>
+	<artifactId>externals</artifactId>
+	<packaging>jar</packaging>
+	<name>Overture External Resources</name>
 
-<build>
-    <plugins>
-        <plugin>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-                <execution>
-                    <id>update-docs</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>run</goal>
-                    </goals>
-                    <configuration>
-                        <target>
-                            <exec executable="git" failonerror="true">
-                                <arg value="submodule" />
-                                <arg value="update" />
-                                <arg value="--init" />
-                                <arg value="--force" />
-                                <redirector outputproperty="redirector.out" errorproperty="redirector.err">
-                                    <inputfilterchain>
-                                        <replacestring from="before" to="after" />
-                                    </inputfilterchain>
-                                    <outputmapper type="merge" to="target/redirector.out" />
-                                    <errormapper type="merge" to="target/redirector.err" />
-                                </redirector>
-                            </exec>
-                        </target>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
-</build> 
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>update-docs</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<exec executable="git" failonerror="true">
+									<arg value="submodule" />
+									<arg value="update" />
+									<arg value="--init" />
+									<arg value="--force" />
+									<redirector outputproperty="redirector.out" errorproperty="redirector.err">
+										<inputfilterchain>
+											<replacestring from="before" to="after" />
+										</inputfilterchain>
+										<outputmapper type="merge" to="target/redirector.out" />
+										<errormapper type="merge" to="target/redirector.err" />
+									</redirector>
+								</exec>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+
+				<executions>
+					<execution>
+						<id>copy-resources01</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/classes/documentation</outputDirectory>
+							<encoding>UTF-8</encoding>
+							<resources>
+								<resource>
+									<directory>${basedir}/docrepo/documentation/tutorials/VDM++OvertureTutorial</directory>
+									<includes>
+										<include>*.pdf</include>
+										<include>*.uml</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>${basedir}/docrepo/documentation/tutorials/VDMRTOvertureTutorial</directory>
+									<includes>
+										<include>*.pdf</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>${basedir}/docrepo/documentation/tutorials/VDMSLOvertureTutorial</directory>
+									<includes>
+										<include>*.pdf</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>${basedir}/docrepo/documentation/VDMRTProcess</directory>
+									<includes>
+										<include>*.pdf</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>${basedir}/docrepo/documentation/UserGuideOvertureIDE</directory>
+									<includes>
+										<include>*.pdf</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>${basedir}/docrepo/documentation/VDM10LangMan</directory>
+									<includes>
+										<include>*.pdf</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>${basedir}/docrepo/documentation/QuickOverviewVDMPPOperators</directory>
+									<includes>
+										<include>*.pdf</include>
+									</includes>
+								</resource>
+
+
+							</resources>
+						</configuration>
+					</execution>
+					<!-- execution> <id>copy-resources02</id> <phase>verify</phase> <goals> <goal>copy-resources</goal> </goals> <configuration> <outputDirectory>${basedir}/build/lib</outputDirectory> <encoding>UTF-8</encoding> <resources> <resource> <directory>${basedir}/target/</directory> <include>*.jar</include> 
+						</resource> </resources> </configuration> </execution -->
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

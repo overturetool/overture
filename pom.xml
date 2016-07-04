@@ -19,7 +19,7 @@
   <groupId>org.overturetool</groupId>
   <artifactId>root</artifactId>
 
-  <version>2.3.6</version>
+  <version>2.3.8</version>
 
   <name>The Overture Tool Platform root</name>
   <description>
@@ -29,6 +29,7 @@
   <modules>
     <module>externals</module>
     <module>core</module>
+		<module>documentation</module>
     <!-- <module>tools</module> -->
     <!-- The ide module is Tycho and the -PWith-IDE profile. -->
     <!-- <module>ide</module> -->
@@ -290,6 +291,7 @@ http://mojo.codehaus.org/versions-maven-plugin/
           <artifactId>maven-release-plugin</artifactId>
           <version>2.5.3</version>
           <configuration>
+						<releaseProfiles>release,With-IDE,all-platforms</releaseProfiles>
             <tagNameFormat>Release/@{project.version}</tagNameFormat>
           </configuration>
         </plugin>
@@ -364,7 +366,7 @@ http://mojo.codehaus.org/versions-maven-plugin/
     <url>git@github.com:overturetool/overture.git</url>
     <connection>scm:git:git://github.com/overturetool/overture.git</connection>
     <developerConnection>scm:git:git@github.com:overturetool/overture.git</developerConnection>
-    <tag>Release/2.3.6</tag>
+    <tag>Release/2.3.8</tag>
   </scm>
 
   <developers>

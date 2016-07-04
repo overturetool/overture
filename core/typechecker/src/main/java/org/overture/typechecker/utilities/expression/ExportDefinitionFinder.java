@@ -28,8 +28,6 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
@@ -46,7 +44,6 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
-import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -78,71 +75,13 @@ public class ExportDefinitionFinder
 			throws AnalysisException
 	{
 		List<PDefinition> list = new Vector<PDefinition>();
+		
 		for (ILexNameToken name : exp.getNameList())
 		{
 			PDefinition def = af.createPDefinitionListAssistant().findName(actualDefs, name, NameScope.NAMES);
 
-			if (def == null)
+			if (def != null)
 			{
-				TypeCheckerErrors.report(3183, "Exported function " + name
-						+ " not defined in module", name.getLocation(), exp);
-			} else
-			{
-				PType act = af.createPDefinitionAssistant().getType(def);
-				PType type = exp.getExportType();
-
-				if (exp.getTypeParams() != null && !exp.getTypeParams().isEmpty())
-				{
-					if (def instanceof AExplicitFunctionDefinition)
-					{
-						AExplicitFunctionDefinition efd = (AExplicitFunctionDefinition)def;
-						
-						if (efd.getTypeParams() == null)
-						{
-							TypeCheckerErrors.report(3352, "Exported " + name + " function has no type paramaters", name.getLocation(), exp);
-						}
-						else if (!efd.getTypeParams().equals(exp.getTypeParams()))
-						{
-							TypeCheckerErrors.report(3353, "Exported " + name + " function type parameters incorrect", name.getLocation(), exp);
-							TypeCheckerErrors.detail2("Exported", exp.getTypeParams(), "Actual", efd.getTypeParams());
-						}
-						
-						if (act != null && !act.toString().equals(type.toString()))
-						{
-							TypeCheckerErrors.report(3184, "Exported " + name
-									+ " function type incorrect", name.getLocation(), exp);
-							TypeCheckerErrors.detail2("Exported", type, "Actual", act);
-						}
-					}
-					else if (def instanceof AImplicitFunctionDefinition)
-					{
-						AImplicitFunctionDefinition ifd = (AImplicitFunctionDefinition)def;
-						
-						if (ifd.getTypeParams() == null)
-						{
-							TypeCheckerErrors.report(3352, "Exported " + name + " function has no type paramaters", name.getLocation(), exp);
-						}
-						else if (!ifd.getTypeParams().equals(exp.getTypeParams()))
-						{
-							TypeCheckerErrors.report(3353, "Exported " + name + " function type parameters incorrect", name.getLocation(), exp);
-							TypeCheckerErrors.detail2("Exported", exp.getTypeParams(), "Actual", ifd.getTypeParams());
-						}
-						
-						if (act != null && !act.toString().equals(type.toString()))
-						{
-							TypeCheckerErrors.report(3184, "Exported " + name
-									+ " function type incorrect", name.getLocation(), exp);
-							TypeCheckerErrors.detail2("Exported", type, "Actual", act);
-						}
-					}
-				}
-				else if (act != null && !af.createPTypeAssistant().equals(act, type))
-				{
-					TypeCheckerErrors.report(3184, "Exported " + name
-							+ " function type incorrect", name.getLocation(), exp);
-					TypeCheckerErrors.detail2("Exported", type, "Actual", act);
-				}
-
 				list.add(def);
 			}
 		}
@@ -156,28 +95,17 @@ public class ExportDefinitionFinder
 			throws AnalysisException
 	{
 		List<PDefinition> list = new Vector<PDefinition>();
+		
 		for (ILexNameToken name : ((AOperationExport) exp).getNameList())
 		{
 			PDefinition def = af.createPDefinitionListAssistant().findName(actualDefs, name, NameScope.NAMES);
 
-			if (def == null)
+			if (def != null)
 			{
-				TypeCheckerErrors.report(3185, "Exported operation " + name
-						+ " not defined in module", name.getLocation(), exp);
-			} else
-			{
-				PType act = def.getType();
-				PType type = ((AOperationExport) exp).getExportType();
-
-				if (act != null && !af.createPTypeAssistant().equals(act, type))
-				{
-					TypeCheckerErrors.report(3186, "Exported operation type does not match actual type", name.getLocation(), exp);
-					TypeCheckerErrors.detail2("Exported", type, "Actual", act);
-				}
-
 				list.add(def);
 			}
 		}
+		
 		return list;
 	}
 
@@ -188,16 +116,14 @@ public class ExportDefinitionFinder
 		ILexNameToken name = ((ATypeExport) exp).getName();
 		List<PDefinition> list = new Vector<PDefinition>();
 		PDefinition def = af.createPDefinitionListAssistant().findType(actualDefs, name, name.getModule());
-		if (def == null)
+		
+		if (def != null)
 		{
-			TypeCheckerErrors.report(3187, "Exported type " + name
-					+ " not defined in module", name.getLocation(), exp);
-		} else
-		{
-			if (((ATypeExport) exp).getStruct())
+			if (exp.getStruct())
 			{
 				list.add(def);
-			} else
+			}
+			else
 			{
 				PType type = af.createPDefinitionAssistant().getType(def);
 
@@ -213,7 +139,8 @@ public class ExportDefinitionFinder
 					// list.add(new ATypeDefinition(def.getName().location,
 					// NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(),null, copy,
 					// null,null,null,false,def.getName()));
-				} else if (type instanceof ARecordInvariantType)
+				}
+				else if (type instanceof ARecordInvariantType)
 				{
 					ARecordInvariantType rtype = (ARecordInvariantType) type;
 					@SuppressWarnings("unchecked")
@@ -226,10 +153,6 @@ public class ExportDefinitionFinder
 					// new ATypeDefinition(def.getName().location,
 					// NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(),null,
 					// copy,null,null,null,false,def.getName()));
-				} else
-				{
-					TypeCheckerErrors.report(67, "Exported type " + name
-							+ " not structured", name.getLocation(), exp);
 				}
 			}
 		}
@@ -241,34 +164,28 @@ public class ExportDefinitionFinder
 			LinkedList<PDefinition> actualDefs) throws AnalysisException
 	{
 		List<PDefinition> list = new Vector<PDefinition>();
-		for (ILexNameToken name : ((AValueExport) exp).getNameList())
+		
+		for (ILexNameToken name : exp.getNameList())
 		{
 			PDefinition def = af.createPDefinitionListAssistant().findName(actualDefs, name, NameScope.NAMES);
-			PType type = ((AValueExport) exp).getExportType().clone();
+			PType type = exp.getExportType().clone();
 
-			if (def == null)
+			if (def != null)
 			{
-				TypeCheckerErrors.report(3188, "Exported value " + name
-						+ " not defined in module", name.getLocation(), exp);
-			} else if (def instanceof AUntypedDefinition)
-			{
-				AUntypedDefinition untyped = (AUntypedDefinition) def;
-				list.add(AstFactory.newALocalDefinition(untyped.getLocation(), untyped.getName(), NameScope.GLOBAL, type));
-				// new ALocalDefinition(untyped.getLocation(), NameScope.GLOBAL,
-				// false,null,PAccessSpecifierAssistant.getDefault(),type, false,untyped.getName()));
-			} else
-			{
-				PType act = def.getType();
-
-				if (act != null && !act.equals(type))
-				{
-					TypeCheckerErrors.report(3189, "Exported type does not match actual type", act.getLocation(), act);
-					TypeCheckerErrors.detail2("Exported", type, "Actual", act);
-				}
-
-				list.add(def);
+    			if (def instanceof AUntypedDefinition)
+    			{
+    				AUntypedDefinition untyped = (AUntypedDefinition) def;
+    				list.add(AstFactory.newALocalDefinition(untyped.getLocation(), untyped.getName(), NameScope.GLOBAL, type));
+    				// new ALocalDefinition(untyped.getLocation(), NameScope.GLOBAL,
+    				// false,null,PAccessSpecifierAssistant.getDefault(),type, false,untyped.getName()));
+    			}
+    			else
+    			{
+    				list.add(def);
+    			}
 			}
 		}
+		
 		return list;
 	}
 

@@ -998,9 +998,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			data = value.toString();
 		}
 
-		if (value.deref() instanceof FunctionValue)
+		Value valDeref = value.deref();
+		if (valDeref instanceof FunctionValue)
 		{
-			data = formatFunctionValue((FunctionValue) value);
+			data = formatFunctionValue((FunctionValue) valDeref);
 		}
 
 		if (currentDepth < depth && numChildren > 0)

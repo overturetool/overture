@@ -13,7 +13,7 @@ import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.core.tests.ParamStandardTest;
+import org.overture.core.testing.ParamStandardTest;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 

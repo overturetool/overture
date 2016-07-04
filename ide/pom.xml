@@ -5,10 +5,10 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>root</artifactId>
-    <version>2.3.6</version>
+    <version>2.3.8</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-    <packaging>pom</packaging>
+<packaging>pom</packaging>
   <artifactId>ide</artifactId>
   <name>Overture IDE Top-level</name>
   <description>Super POM for all IDE (Eclipse) artifacts.</description>
@@ -16,7 +16,7 @@
   <properties>
     <maven.test.skip>false</maven.test.skip>
     <maven.javadoc.skip>true</maven.javadoc.skip>
-    <tycho.version>0.24.0</tycho.version>
+    <tycho.version>0.25.0</tycho.version>
   </properties>
 
   <modules>

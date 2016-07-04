@@ -1,0 +1,16 @@
+#!/bin/bash
+
+BASE=`dirname $0`
+VERSION=${project.version}
+NAME=${project.artifactId}
+
+JAR=$BASE/${NAME}-${VERSION}-jar-with-dependencies.jar
+
+if [ ! -f ${JAR} ]; then
+    echo -e "Executable jar: \n\n${JAR}\n\ndoes not exist.  It must be in the same directory as this command ($0)."
+    exit -1;
+fi
+
+java -jar ${JAR} $@
+
+
