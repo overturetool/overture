@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Overture Tools" uid="org.overture.ide.platform.product" id="org.overture.ide.platform.product" application="org.eclipse.ui.ide.workbench" version="VERSION" useFeatures="true" includeLaunchers="true">
+
+   <aboutInfo>
+      <image path="/icons/ctool128/overture_misc.png"/>
+      <text>
+         %aboutText
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <vmArgs>-Xmx512m -Dosgi.requiredJavaVersion=1.8</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages i16="/icons/ctool16/overture_misc.png" i32="/icons/ctool32/overture_misc.png" i48="/icons/ctool48/overture_misc.png" i64="/icons/ctool64/overture_misc.png" i128="/icons/ctool128/overture_misc.png"/>
+
+   <splash
+      location="org.overture.ide.platform"
+      startupProgressRect="75,235,300,20"
+      startupMessageRect="75,250,300,15"
+      startupForegroundColor="FFFFFF" />
+   <launcher name="Overture">
+      <linux icon="/icons/linux/Overture.xpm"/>
+      <macosx icon="/icons/osx/Overture.icns"/>
+      <solaris/>
+      <win useIco="true">
+         <ico path="/icons/win/Overture.ico"/>
+         <bmp/>
+      </win>
+   </launcher>
+
+   <intro introId="org.overture.ide.platform.intro"/>
+
+   <vm>
+   </vm>
+
+   <license>
+        <url>www.overturetool.org</url>
+        <text>
+   Overture Tools 
+
+Overture is an open source tool for the Vienna Development Method (VDM). 
+The tool supports different VDM dialects which include the ISO VDM-SL
+standard, as well as the object-oriented extension VDM++ and the real-time
+extension of that called VDM-RT. 
+
+Copyright (C) 2010 Overture contributors and others
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+         </text>
+   </license>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="org.overture.ide.features.rcp"/>
+      <feature id="org.eclipse.equinox.p2.core.feature"/>
+      <feature id="org.eclipse.platform"/>
+      <feature id="org.eclipse.rcp"/>
+      <feature id="org.eclipse.help"/>
+      <feature id="org.eclipse.emf.ecore"/>
+      <feature id="org.eclipse.e4.rcp"/>
+      <feature id="org.eclipse.emf.common"/>
+      <feature id="org.eclipse.equinox.p2.rcp.feature"/>
+      <feature id="org.eclipse.equinox.p2.user.ui"/>
+      <feature id="org.eclipse.equinox.p2.extras.feature"/>
+   </features>
+
+   <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4" />
+      <property name="DELETE.FOR.RELEASE.osgi.instance.area.default" value="@user.home/Documents/Overture/workspace" />
+      <property name="org.eclipse.update.reconcile" value="false" />
+   </configurations>
+
+</product>
