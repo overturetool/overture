@@ -170,17 +170,12 @@ public class ModuleTypeChecker extends TypeChecker
 		// imports of renamed definitions.
 
 		List<PDefinition> alldefs = new Vector<PDefinition>();
-		List<PDefinition> checkDefs = new Vector<PDefinition>();
 
 		for (AModuleModules m : modules)
 		{
 			for (PDefinition d : m.getImportdefs())
 			{
 				alldefs.add(d);
-				if (!m.getTypeChecked())
-				{
-					checkDefs.add(d);
-				}
 			}
 		}
 
@@ -189,36 +184,42 @@ public class ModuleTypeChecker extends TypeChecker
 			for (PDefinition d : m.getDefs())
 			{
 				alldefs.add(d);
-				if (!m.getTypeChecked())
-				{
-					checkDefs.add(d);
-				}
 			}
 		}
 
+		// Do a global duplicate definition check by defining an environment
+		new FlatCheckedEnvironment(assistantFactory, alldefs, NameScope.NAMESANDSTATE);
+			
 		// Attempt type resolution of unchecked definitions from all modules.
-		Environment env = new FlatCheckedEnvironment(assistantFactory, alldefs, NameScope.NAMESANDSTATE);
 		TypeCheckVisitor tc = new TypeCheckVisitor();
-		for (PDefinition d : checkDefs)
+		
+		for (AModuleModules m : modules)
 		{
-			try
-			{
-				assistantFactory.createPDefinitionAssistant().typeResolve(d, tc, new TypeCheckInfo(assistantFactory, env));
-			} catch (TypeCheckException te)
-			{
-				report(3430, te.getMessage(), te.location);
-				
-				if (te.extras != null)
-				{
-					for (TypeCheckException e: te.extras)
-					{
-						report(3430, e.getMessage(), e.location);
-					}
-				}
-			} catch (AnalysisException te)
-			{
-				report(3431, te.getMessage(), null);// FIXME: internal error
-			}
+			Environment me = new ModuleEnvironment(assistantFactory, m);
+
+			for (PDefinition d : m.getDefs())
+    		{
+    			try
+    			{
+    				assistantFactory.createPDefinitionAssistant().typeResolve(d, tc, new TypeCheckInfo(assistantFactory, me));
+    			}
+    			catch (TypeCheckException te)
+    			{
+    				report(3430, te.getMessage(), te.location);
+    				
+    				if (te.extras != null)
+    				{
+    					for (TypeCheckException e: te.extras)
+    					{
+    						report(3430, e.getMessage(), e.location);
+    					}
+    				}
+    			}
+    			catch (AnalysisException te)
+    			{
+    				report(3431, te.getMessage(), null);// FIXME: internal error
+    			}
+    		}
 		}
 
 		// Proceed to type check all definitions, considering types, values
