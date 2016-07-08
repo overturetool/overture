@@ -68,6 +68,7 @@ import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.ASet1SetType;
 import org.overture.ast.types.SSetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
@@ -994,6 +995,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.detail2("Left", ltype, "Right", rtype);
 		}
 
+		if (ltype instanceof ASet1SetType)
+		{
+			ASet1SetType set1 = (ASet1SetType)ltype;
+			ltype = AstFactory.newASetSetType(node.getLocation(), set1.getSetof());
+		}
+		
 		node.setType(ltype);
 		return ltype;
 	}
@@ -1068,18 +1075,28 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			TypeCheckerErrors.report(3168, "Left hand of " + node.getOp()
 					+ " is not a set", node.getLocation(), node);
+			ltype = AstFactory.newASetSetType(node.getLocation());
 		}
 
 		if (!question.assistantFactory.createPTypeAssistant().isSet(rtype))
 		{
 			TypeCheckerErrors.report(3169, "Right hand of " + node.getOp()
 					+ " is not a set", node.getLocation(), node);
+			rtype = AstFactory.newASetSetType(node.getLocation());
 		}
+		
+		PType lof = question.assistantFactory.createPTypeAssistant().getSet(ltype).getSetof();
+		PType rof = question.assistantFactory.createPTypeAssistant().getSet(rtype).getSetof();
+		boolean set1 = lof instanceof ASet1SetType || rof instanceof ASet1SetType;
 
 		PTypeSet result = new PTypeSet(question.assistantFactory);
-		result.add(ltype);
-		result.add(rtype);
-		node.setType(result.getType(node.getLocation()));
+		result.add(lof);
+		result.add(rof);
+		
+		node.setType(set1 ?
+			AstFactory.newASet1SetType(node.getLocation(), result.getType(node.getLocation())) :
+			AstFactory.newASetSetType(node.getLocation(), result.getType(node.getLocation())));
+		
 		return node.getType();
 	}
 
@@ -2544,7 +2561,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.setType(ts.isEmpty() ? AstFactory.newASetSetType(node.getLocation())
-				: AstFactory.newASetSetType(node.getLocation(), ts.getType(node.getLocation())));
+				: AstFactory.newASet1SetType(node.getLocation(), ts.getType(node.getLocation())));
 
 		return node.getType();
 	}

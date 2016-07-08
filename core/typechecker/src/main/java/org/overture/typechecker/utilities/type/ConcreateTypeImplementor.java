@@ -34,7 +34,8 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
-import org.overture.ast.types.SSetType;
+import org.overture.ast.types.ASet1SetType;
+import org.overture.ast.types.ASetSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
@@ -133,11 +134,17 @@ public class ConcreateTypeImplementor extends
 	}
 
 	@Override
-	public PType defaultSSetType(SSetType type, Newquestion question)
+	public PType caseASetSetType(ASetSetType type, Newquestion question)
 			throws AnalysisException
 	{
-		// return ASetTypeAssistantTC.polymorph(type, question.pname, question.actualType);
 		return AstFactory.newASetSetType(type.getLocation(), af.createPTypeAssistant().polymorph(type.getSetof(), question.pname, question.actualType));
+	}
+
+	@Override
+	public PType caseASet1SetType(ASet1SetType type, Newquestion question)
+			throws AnalysisException
+	{
+		return AstFactory.newASet1SetType(type.getLocation(), af.createPTypeAssistant().polymorph(type.getSetof(), question.pname, question.actualType));
 	}
 
 	@Override

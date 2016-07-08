@@ -73,6 +73,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
+import org.overture.ast.types.ASet1SetType;
 import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
@@ -546,6 +547,15 @@ public class TypeCompatibilityObligation extends ProofObligation
 		} else if (etype instanceof SSetType)
 		{
 			po = null;
+
+			if (etype instanceof ASet1SetType)
+			{
+				ANotEqualBinaryExp ne = new ANotEqualBinaryExp();
+				ne.setLeft(exp);
+				ASetEnumSetExp empty = new ASetEnumSetExp();
+				empty.setMembers(new Vector<PExp>());
+				ne.setRight(empty);
+    		}
 
 			if (exp instanceof ASetEnumSetExp)
 			{
