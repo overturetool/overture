@@ -255,7 +255,7 @@ public class TypeReader extends SyntaxReader
 			case SET:
 				nextToken();
 				checkFor(VDMToken.OF, 2253, "Expecting 'of' after set");
-				type = AstFactory.newASetType(token.location, readComposeType());
+				type = AstFactory.newASetSetType(token.location, readComposeType());
 				break;
 
 			case SEQ:

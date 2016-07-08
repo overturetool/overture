@@ -1,4 +1,3 @@
-//TODO1: maybe generate classes with the Comparable interface 
 Packages
 base org.overture.ast.node;
 analysis org.overture.ast.analysis;
@@ -192,7 +191,7 @@ exp {-> package='org.overture.ast.expressions'
     ;
     
 #Set {-> package='org.overture.ast.expressions'
-	|	(setType):type.set}
+	|	(setType):type.#set}
     =   {setComp} [first]:exp [bindings]:multipleBind* [predicate]:exp
     |   {setEnum} [members]:exp* (types):type*
     |   {setRange} [first]:exp [last]:exp (ftype):type (ltype):type
@@ -223,11 +222,11 @@ type {-> package='org.overture.ast.types'
     |   {product} (types):type*
     |   {quote} [value]:LexQuoteToken 
     |   #seq 
-    |   {set} (setof):type [empty]:java_Boolean [infinite]:java_Boolean
+    |   #set
     |   {undefined}
     |   {union} (types):type* [infinite]:java_Boolean [expanded]:java_Boolean 
         (seqDone):java_Boolean (seqType):type.#seq 
-        (setDone):java_Boolean (setType):type.set 
+        (setDone):java_Boolean (setType):type.#set 
         (mapDone):java_Boolean (mapType):type.#Map
         (prodCard):java_Integer (prodType):type.product
         (funcDone):java_Boolean (funcType):type
@@ -247,6 +246,14 @@ type {-> package='org.overture.ast.types'
 	|	[empty]:java_Boolean}
     =   {seq} 
     |   {seq1} 
+    ;
+
+#set {-> package='org.overture.ast.types'
+	|	(setof):type 
+	|	[empty]:java_Boolean
+	|	[infinite]:java_Boolean}
+    =   {set} 
+    |   {set1} 
     ;
 
 #Map  {-> package='org.overture.ast.types'

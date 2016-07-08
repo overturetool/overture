@@ -25,7 +25,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
@@ -38,7 +38,7 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author kel
  */
-public class SetTypeFinder extends TypeUnwrapper<ASetType>
+public class SetTypeFinder extends TypeUnwrapper<SSetType>
 {
 
 	protected ITypeCheckerAssistantFactory af;
@@ -49,13 +49,13 @@ public class SetTypeFinder extends TypeUnwrapper<ASetType>
 	}
 
 	@Override
-	public ASetType caseASetType(ASetType type) throws AnalysisException
+	public SSetType defaultSSetType(SSetType type) throws AnalysisException
 	{
 		return type;
 	}
 
 	@Override
-	public ASetType defaultSInvariantType(SInvariantType type)
+	public SSetType defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		if (type instanceof ANamedInvariantType)
@@ -69,7 +69,7 @@ public class SetTypeFinder extends TypeUnwrapper<ASetType>
 	}
 
 	@Override
-	public ASetType caseAUnionType(AUnionType type) throws AnalysisException
+	public SSetType caseAUnionType(AUnionType type) throws AnalysisException
 	{
 		ILexLocation location = type.getLocation();
 
@@ -90,21 +90,21 @@ public class SetTypeFinder extends TypeUnwrapper<ASetType>
 			}
 
 			type.setSetType(set.isEmpty() ? null
-					: AstFactory.newASetType(location, set.getType(location)));
+					: AstFactory.newASetSetType(location, set.getType(location)));
 		}
 
 		return type.getSetType();
 	}
 
 	@Override
-	public ASetType caseAUnknownType(AUnknownType type)
+	public SSetType caseAUnknownType(AUnknownType type)
 			throws AnalysisException
 	{
-		return AstFactory.newASetType(type.getLocation()); // empty
+		return AstFactory.newASetSetType(type.getLocation()); // empty
 	}
 
 	@Override
-	public ASetType defaultPType(PType type) throws AnalysisException
+	public SSetType defaultPType(PType type) throws AnalysisException
 	{
 		assert false : "Can't getSet of a non-set";
 		return null;

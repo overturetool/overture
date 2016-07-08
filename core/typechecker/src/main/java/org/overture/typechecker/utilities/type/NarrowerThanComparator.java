@@ -33,7 +33,7 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
@@ -116,7 +116,7 @@ public class NarrowerThanComparator extends
 	}
 
 	@Override
-	public Boolean caseASetType(ASetType type,
+	public Boolean defaultSSetType(SSetType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier)
 			throws AnalysisException
 	{

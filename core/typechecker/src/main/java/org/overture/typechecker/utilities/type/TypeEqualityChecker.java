@@ -33,7 +33,7 @@ import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -237,15 +237,15 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 	}
 
 	@Override
-	public Boolean caseASetType(ASetType type, Object other)
+	public Boolean defaultSSetType(SSetType type, Object other)
 			throws AnalysisException
 	{
 		// return ASetTypeAssistantTC.equals(type, other);
 		other = deBracket((PType) other);
 
-		if (other instanceof ASetType)
+		if (other instanceof SSetType)
 		{
-			ASetType os = (ASetType) other;
+			SSetType os = (SSetType) other;
 			// NB empty set same type as any set
 			return type.getEmpty() || os.getEmpty()
 					|| type.getSetof().apply(this, os.getSetof());

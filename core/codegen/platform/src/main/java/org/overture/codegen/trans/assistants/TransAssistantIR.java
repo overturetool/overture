@@ -25,7 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
 import org.overture.codegen.ir.SExpIR;
@@ -111,7 +111,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			if (sourceNode != null && sourceNode.getVdmNode() instanceof PType)
 			{
 				PType vdmType = (PType) sourceNode.getVdmNode();
-				ASetType setType = info.getTcFactory().createPTypeAssistant().getSet(vdmType);
+				SSetType setType = info.getTcFactory().createPTypeAssistant().getSet(vdmType);
 				try
 				{
 					typeCg = setType.apply(info.getTypeVisitor(), info);

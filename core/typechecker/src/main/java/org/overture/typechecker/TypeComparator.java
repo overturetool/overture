@@ -44,7 +44,7 @@ import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -381,15 +381,15 @@ public class TypeComparator
 						|| searchCompatible(ma.getFrom(), mb.getFrom(), paramOnly) == Result.Yes
 						&& searchCompatible(ma.getTo(), mb.getTo(), paramOnly) == Result.Yes ? Result.Yes
 						: Result.No;
-			} else if (to instanceof ASetType)
+			} else if (to instanceof SSetType)
 			{
-				if (!(from instanceof ASetType))
+				if (!(from instanceof SSetType))
 				{
 					return Result.No;
 				}
 
-				ASetType sa = (ASetType) to;
-				ASetType sb = (ASetType) from;
+				SSetType sa = (SSetType) to;
+				SSetType sb = (SSetType) from;
 
 				return sa.getEmpty()
 						|| sb.getEmpty()
@@ -801,15 +801,15 @@ public class TypeComparator
 					return Result.No;
 				}
 
-			} else if (sub instanceof ASetType)
+			} else if (sub instanceof SSetType)
 			{
-				if (!(sup instanceof ASetType))
+				if (!(sup instanceof SSetType))
 				{
 					return Result.No;
 				}
 
-				ASetType subs = (ASetType) sub;
-				ASetType sups = (ASetType) sup;
+				SSetType subs = (SSetType) sub;
+				SSetType sups = (SSetType) sup;
 
 				return subs.getEmpty()
 						|| sups.getEmpty()

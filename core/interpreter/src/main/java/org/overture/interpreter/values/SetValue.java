@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 
@@ -146,9 +146,9 @@ public class SetValue extends Value
 	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
-		if (to instanceof ASetType)
+		if (to instanceof SSetType)
 		{
-			ASetType setto = (ASetType) to;
+			SSetType setto = (SSetType) to;
 			ValueSet ns = new ValueSet();
 
 			for (Value v : values)

@@ -73,7 +73,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
@@ -543,13 +543,13 @@ public class TypeCompatibilityObligation extends ProofObligation
 			{
 				po = addIs(exp, etype);
 			}
-		} else if (etype instanceof ASetType)
+		} else if (etype instanceof SSetType)
 		{
 			po = null;
 
 			if (exp instanceof ASetEnumSetExp)
 			{
-				ASetType stype = (ASetType) etype;
+				SSetType stype = (SSetType) etype;
 				ASetEnumSetExp set = (ASetEnumSetExp) exp;
 				Iterator<PType> it = set.getTypes().iterator();
 
@@ -564,7 +564,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 				}
 			} else if (exp instanceof ASetRangeSetExp)
 			{
-				ASetType stype = (ASetType) etype;
+				SSetType stype = (SSetType) etype;
 				ASetRangeSetExp range = (ASetRangeSetExp) exp;
 				PType itype = AstFactory.newAIntNumericBasicType(exp.getLocation());
 

@@ -47,7 +47,7 @@ import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
@@ -267,7 +267,7 @@ public class TypeDisplayer extends AnswerAdaptor<String>
 	}
 
 	@Override
-	public String caseASetType(ASetType type) throws AnalysisException
+	public String defaultSSetType(SSetType type) throws AnalysisException
 	{
 		return type.getEmpty() ? "{}" : "set of (" + type.getSetof() + ")";
 	}
