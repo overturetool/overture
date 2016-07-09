@@ -36,7 +36,7 @@ public class VdmSlKeywords implements IVdmKeywords {
 			"measure", "merge", "mod", "module", "mu", "munion", "nat", "nat1",
 			"nil", "not", "of", "operations", "or", "others", "post", "power",
 			"pre", "psubset", "pure", "rat", "rd", "real", "rem", "renamed", "return",
-			"reverse", "rng", "seq", "seq1", "set", "skip", "specified", "st",
+			"reverse", "rng", "seq", "seq1", "set", "set1", "skip", "specified", "st",
 			"state", "struct", "subset", "then", "tixe", "tl", "to", "token",
 			"trap", "traces", "true", "types", "undefined", "union", "uselib",
 			"values", "while", "with", "wr", "yet", "RESULT" };

@@ -81,7 +81,7 @@ public class VdmTypeCreator
 				}
 			} else
 			{
-				type = AstFactory.newASetType(location, type);
+				type = AstFactory.newASetSetType(location, type);
 			}
 		} else if (p.getLower() == 0 && p.getUpper() == 1)
 		{
@@ -204,7 +204,7 @@ public class VdmTypeCreator
 			return AstFactory.newAInMapMapType(location, types.get(0), types.get(1));
 		} else if (type.startsWith(SET_TYPE))
 		{
-			return AstFactory.newASetType(location, convertGeneric(type).get(0));
+			return AstFactory.newASetSetType(location, convertGeneric(type).get(0));
 		} else if (type.startsWith(SEQ_TYPE))
 		{
 			return AstFactory.newASeqSeqType(location, convertGeneric(type).get(0));
