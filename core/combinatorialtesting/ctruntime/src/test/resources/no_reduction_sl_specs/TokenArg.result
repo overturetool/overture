@@ -1,0 +1,9 @@
+<traces>
+	<class name="DEFAULT">
+		<trace name="T1" testcount="1" filename="TokenArg" line="9" column="1" subset="1.0" reduction="NONE" seed="999">
+			<test no="1">f(mk_token(&amp;quot;somArg&amp;quot;))</test>
+			<result no="1" verdict="PASSED">mk_token(&amp;quot;somArg&amp;quot;)</result>
+			<status verdict="PASSED" testcount="1" skippedcount="0" faildcount="0" inconclusivecount="0"></status>
+		</trace>
+	</class>
+</traces>
