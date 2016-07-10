@@ -846,16 +846,14 @@ public class TypeComparator
 				SSeqType subs = (SSeqType) sub;
 				SSeqType sups = (SSeqType) sup;
 
-				if (subs.getEmpty() && !(sup instanceof ASeq1SeqType)
-						|| sups.getEmpty())
+				if ((subs.getEmpty() && !(sup instanceof ASeq1SeqType)) || sups.getEmpty())
 				{
 					return Result.Yes;
 				}
 
 				if (searchSubType(subs.getSeqof(), sups.getSeqof(), invignore) == Result.Yes)
 				{
-					if (!(sub instanceof ASeq1SeqType)
-							&& sup instanceof ASeq1SeqType)
+					if (!(sub instanceof ASeq1SeqType) && sup instanceof ASeq1SeqType)
 					{
 						return Result.No;
 					}

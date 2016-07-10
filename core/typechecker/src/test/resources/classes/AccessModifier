@@ -26,8 +26,8 @@ operations
   get0() == return a.var0;
   
   --Access to instance variable in A implcitly declared as private
- 	set1: nat ==> ()
-  set1(n) == a.var1 := n;
+  set01: nat ==> ()
+  set01(n) == a.var1 := n;
 
   get1: () ==> real
   get1() == return a.var1;
@@ -63,8 +63,8 @@ operations
   get0() == return a.var0;
   
   --Access to instance variable in A implcitly declared as private
- 	set1: nat ==> ()
-  set1(n) == a.var1 := n;
+  set01: nat ==> ()
+  set01(n) == a.var1 := n;
 
   get1: () ==> real
   get1() == return a.var1;
