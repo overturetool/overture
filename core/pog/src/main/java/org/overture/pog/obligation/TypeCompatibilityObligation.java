@@ -464,9 +464,12 @@ public class TypeCompatibilityObligation extends ProofObligation
 			{
 				ANotEqualBinaryExp ne = new ANotEqualBinaryExp();
 				ne.setLeft(exp);
+				ne.setOp(new LexKeywordToken(VDMToken.NE, exp.getLocation()));
 				ASeqEnumSeqExp empty = new ASeqEnumSeqExp();
 				empty.setMembers(new Vector<PExp>());
 				ne.setRight(empty);
+				
+				po = ne;
 			}
 
 			if (exp instanceof ASeqEnumSeqExp)
@@ -552,9 +555,12 @@ public class TypeCompatibilityObligation extends ProofObligation
 			{
 				ANotEqualBinaryExp ne = new ANotEqualBinaryExp();
 				ne.setLeft(exp);
+				ne.setOp(new LexKeywordToken(VDMToken.NE, exp.getLocation()));
 				ASetEnumSetExp empty = new ASetEnumSetExp();
 				empty.setMembers(new Vector<PExp>());
 				ne.setRight(empty);
+				
+				po = ne;
     		}
 
 			if (exp instanceof ASetEnumSetExp)
