@@ -1,0 +1,5 @@
+functions
+	f: nat -> set1 of nat
+	f(n) ==
+		let s = {n} in
+			if is_(s, set1 of nat) then s else {};
