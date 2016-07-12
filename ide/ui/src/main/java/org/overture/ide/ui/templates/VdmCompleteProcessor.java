@@ -243,10 +243,14 @@ public class VdmCompleteProcessor
 			if (info.getType() == SearchType.Types)
 			{
 				String name = AstNameUtil.getName(element);
-				if (VdmHelper.findInString(info.getProposalPrefix(), name) || name.length() == 0)
+				String prefix = info.getProposalPrefix();
+				if (VdmHelper.findInString(prefix, name) || name.length() == 0)
 				{
 					IContextInformation ctxtInfo = new ContextInformation(name, name); //$NON-NLS-1$
-					proposals.add(new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(element, 0), name, ctxtInfo, name));
+					int newOffset = offset - prefix.length();
+					int prefixLength = prefix.length();
+					
+					proposals.add(new CompletionProposal(name, newOffset, prefixLength, name.length(), imgProvider.getImageLabel(element, 0), name, ctxtInfo, name));
 				}
 			}
 			//addContainerTypes(element, offset, proposals, info);
