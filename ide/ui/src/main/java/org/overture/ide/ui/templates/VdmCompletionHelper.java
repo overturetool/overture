@@ -69,10 +69,18 @@ public class VdmCompletionHelper  extends VdmTemplateAssistProcessor{
 		sbDisplayName.append(functionName[1]);
 		if((parameterNames != null && !parameterNames.isEmpty())){
 			
+			String firstStr = parameterNames.get(0);
 			for (int i = 0; i < parameterNames.size(); i++) {
 				String str = parameterNames.get(i);
+				
+				//The hyphen is a special character and has the same id even for two different strings,
+				//therefore it is not possbile to compare them by id.
+				if(str == "-" && i > 0){
+					sbPattern.append(", ");
+					sbDisplayName.append(", ");
+				}
 			
-				if(str != parameterNames.get(0)){
+				if(str != firstStr){
 					sbPattern.append(", ");
 					sbDisplayName.append(", ");
 				}
@@ -89,6 +97,7 @@ public class VdmCompletionHelper  extends VdmTemplateAssistProcessor{
 
     	return functionName;
 	}
+	
 	public void dynamicTemplateCreator(String[] extractedNames, String type, int offset,TemplateContext context,List<ICompletionProposal> proposals,VdmCompletionContext info,ITextViewer viewer,int nodeOffsetPosition) {
 	
 		dynamicTemplateCreator( extractedNames, type, offset, context, proposals, info, viewer, nodeOffsetPosition, null);
