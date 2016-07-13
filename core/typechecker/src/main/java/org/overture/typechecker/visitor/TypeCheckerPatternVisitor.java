@@ -31,7 +31,7 @@ import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
@@ -62,7 +62,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.detail("Actual type", type);
 		} else
 		{
-			ASetType st = question.assistantFactory.createPTypeAssistant().getSet(type);
+			SSetType st = question.assistantFactory.createPTypeAssistant().getSet(type);
 
 			if (!st.getEmpty())
 			{

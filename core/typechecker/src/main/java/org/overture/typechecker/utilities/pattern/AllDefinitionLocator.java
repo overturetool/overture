@@ -61,7 +61,7 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.typechecker.TypeCheckerErrors;
@@ -262,7 +262,7 @@ public class AllDefinitionLocator
 			TypeCheckerErrors.detail("Actual type", question.ptype);
 		} else
 		{
-			ASetType set = af.createPTypeAssistant().getSet(question.ptype);
+			SSetType set = af.createPTypeAssistant().getSet(question.ptype);
 
 			if (!set.getEmpty())
 			{

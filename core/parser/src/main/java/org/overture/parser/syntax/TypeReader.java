@@ -40,6 +40,8 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PField;
 import org.overture.ast.types.PType;
+import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 
@@ -255,7 +257,18 @@ public class TypeReader extends SyntaxReader
 			case SET:
 				nextToken();
 				checkFor(VDMToken.OF, 2253, "Expecting 'of' after set");
-				type = AstFactory.newASetType(token.location, readComposeType());
+				type = AstFactory.newASetSetType(token.location, readComposeType());
+				break;
+
+			case SET1:
+				if (Settings.release == Release.CLASSIC)
+				{
+					throwMessage(2327, "Type set1 is not available in classic");
+				}
+				
+				nextToken();
+				checkFor(VDMToken.OF, 2326, "Expecting 'of' after set1");
+				type = AstFactory.newASet1SetType(token.location, readComposeType());
 				break;
 
 			case SEQ:

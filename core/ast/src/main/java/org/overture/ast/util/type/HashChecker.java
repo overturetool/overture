@@ -35,13 +35,13 @@ import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.ast.types.SSetType;
 
 /**
  * Used to check if a given type is having a hash.
@@ -154,10 +154,9 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	}
 
 	@Override
-	public Integer caseASetType(ASetType type) throws AnalysisException
+	public Integer defaultSSetType(SSetType type) throws AnalysisException
 	{
-		ASetType stype = type;
-		return stype.getEmpty() ? 0 : stype.getSetof().apply(THIS); // hashCode(stype.getSetof());
+		return type.getEmpty() ? 0 : type.getSetof().apply(THIS);
 	}
 
 	@Override

@@ -20,7 +20,7 @@ import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
@@ -272,7 +272,7 @@ public class AllValuesCollector extends
 	}
 
 	@Override
-	public ValueList caseASetType(ASetType type, Context ctxt)
+	public ValueList defaultSSetType(SSetType type, Context ctxt)
 			throws AnalysisException
 	{
 		ValueList list = type.getSetof().apply(THIS, ctxt);

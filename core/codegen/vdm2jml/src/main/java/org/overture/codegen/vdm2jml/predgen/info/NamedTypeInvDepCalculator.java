@@ -13,7 +13,7 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ASeq1SeqType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
@@ -165,9 +165,9 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			
 			return new SeqInfo(optional, create(info, seqType.getSeqof(), visited), isSeq1);
 		}
-		else if(type instanceof ASetType)
+		else if(type instanceof SSetType)
 		{
-			ASetType setType = (ASetType) type;
+			SSetType setType = (SSetType) type;
 			
 			return new SetInfo(optional, create(info, setType.getSetof(), visited));
 		}

@@ -66,7 +66,7 @@ import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SMultipleBindIR;
@@ -765,7 +765,7 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 		PType type = node.getType();
 		PExp exp = node.getObj();
 
-		if (exp.getType() instanceof ASetType)
+		if (exp.getType() instanceof SSetType)
 
 		{
 			STypeIR typeIR = type.apply(question.getTypeVisitor(), question);

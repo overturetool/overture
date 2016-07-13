@@ -23,7 +23,7 @@ package org.overture.typechecker.utilities.type;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
@@ -46,7 +46,7 @@ public class SetBasisChecker extends TypeUnwrapper<Boolean>
 	}
 
 	@Override
-	public Boolean caseASetType(ASetType type) throws AnalysisException
+	public Boolean defaultSSetType(SSetType type) throws AnalysisException
 	{
 		return true;
 	}

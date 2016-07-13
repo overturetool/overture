@@ -38,7 +38,7 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANatNumericBasicType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -60,7 +60,7 @@ public class FiniteSetObligation extends ProofObligation
 	 * @param af
 	 * @throws AnalysisException
 	 */
-	public FiniteSetObligation(ASetCompSetExp exp, ASetType settype,
+	public FiniteSetObligation(ASetCompSetExp exp, SSetType settype,
 			IPOContextStack ctxt, IPogAssistantFactory af)
 			throws AnalysisException
 	{

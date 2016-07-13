@@ -57,7 +57,7 @@
 <message column="11" line="92" message="Name 'CasesStmtTest`n' is not in scope" messageType="error" number="3182" resource="casesstmt.vpp"/>
 <message column="10" line="93" message="Operation Cases10(nat1) is not in scope" messageType="error" number="3213" resource="casesstmt.vpp"/>
 <message column="10" line="94" message="Value is not of the right type" messageType="error" number="3327" resource="casesstmt.vpp"/>
-<message column="10" line="95" message="Operation Cases12(set of (nat1)) is not in scope" messageType="error" number="3213" resource="casesstmt.vpp"/>
+<message column="10" line="95" message="Operation Cases12(set1 of (nat1)) is not in scope" messageType="error" number="3213" resource="casesstmt.vpp"/>
 <message column="15" line="96" message="Operation Cases13(seq1 of (nat1)) is not in scope" messageType="error" number="3213" resource="casesstmt.vpp"/>
 <message column="32" line="104" message="Value is not of the right type" messageType="error" number="3327" resource="casesstmt.vpp"/>
 <message column="27" line="104" message="Incompatible types in assignment" messageType="error" number="3239" resource="casesstmt.vpp"/>

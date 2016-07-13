@@ -1,0 +1,4 @@
+functions
+
+f: () -> set of nat1
+f() == if true then {} else {1};

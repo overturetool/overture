@@ -47,7 +47,7 @@ import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -102,9 +102,9 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 		
 		PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
 
-		if (question.getTypeAssistant().isUnionOfType(node, ASetType.class, typeAssistant))
+		if (question.getTypeAssistant().isUnionOfType(node, SSetType.class, typeAssistant))
 		{
-			ASetType setType = typeAssistant.getSet(node);
+			SSetType setType = typeAssistant.getSet(node);
 			
 			return setType.apply(question.getTypeVisitor(), question);
 
@@ -177,7 +177,7 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 	}
 
 	@Override
-	public STypeIR caseASetType(ASetType node, IRInfo question)
+	public STypeIR defaultSSetType(SSetType node, IRInfo question)
 			throws AnalysisException
 	{
 		PType setOf = node.getSetof();
