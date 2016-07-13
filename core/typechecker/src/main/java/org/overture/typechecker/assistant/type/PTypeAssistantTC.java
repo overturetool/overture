@@ -39,7 +39,7 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
@@ -251,7 +251,7 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 		}
 	}
 
-	public ASetType getSet(PType type)
+	public SSetType getSet(PType type)
 	{
 		try
 		{

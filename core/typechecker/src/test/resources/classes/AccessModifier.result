@@ -2,13 +2,13 @@
 <testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
 <message column="16" line="23" message="Inaccessible member var0 of class A" messageType="error" number="3092" resource="AccessModifier"/>
 <message column="22" line="26" message="Inaccessible member var0 of class A" messageType="error" number="3092" resource="AccessModifier"/>
-<message column="16" line="30" message="Inaccessible member var1 of class A" messageType="error" number="3092" resource="AccessModifier"/>
+<message column="17" line="30" message="Inaccessible member var1 of class A" messageType="error" number="3092" resource="AccessModifier"/>
 <message column="22" line="33" message="Inaccessible member var1 of class A" messageType="error" number="3092" resource="AccessModifier"/>
 <message column="16" line="37" message="Inaccessible member var2 of class A" messageType="error" number="3092" resource="AccessModifier"/>
 <message column="22" line="40" message="Inaccessible member var2 of class A" messageType="error" number="3092" resource="AccessModifier"/>
 <message column="16" line="60" message="Inaccessible member var0 of class A" messageType="error" number="3092" resource="AccessModifier"/>
 <message column="22" line="63" message="Inaccessible member var0 of class A" messageType="error" number="3092" resource="AccessModifier"/>
-<message column="16" line="67" message="Inaccessible member var1 of class A" messageType="error" number="3092" resource="AccessModifier"/>
+<message column="17" line="67" message="Inaccessible member var1 of class A" messageType="error" number="3092" resource="AccessModifier"/>
 <message column="22" line="70" message="Inaccessible member var1 of class A" messageType="error" number="3092" resource="AccessModifier"/>
 <result/>
 </testResult>

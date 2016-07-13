@@ -55,7 +55,7 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
@@ -122,7 +122,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 				}
 				else
 				{
-    				ASetType settype = question.assistantFactory.createPTypeAssistant().getSet(bindtype);
+    				SSetType settype = question.assistantFactory.createPTypeAssistant().getSet(bindtype);
     				
     				if (!question.assistantFactory.getTypeComparator().compatible(type, settype.getSetof()))
     				{

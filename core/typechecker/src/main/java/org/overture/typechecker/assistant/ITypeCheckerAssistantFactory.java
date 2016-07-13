@@ -43,7 +43,7 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
@@ -320,7 +320,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	AnswerAdaptor<Boolean> getSetBasisChecker();
 
-	IAnswer<ASetType> getSetTypeFinder();
+	IAnswer<SSetType> getSetTypeFinder();
 
 	AnswerAdaptor<Boolean> getRecordBasisChecker();
 

@@ -47,7 +47,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
@@ -468,7 +468,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	{
 		PType type = node.getType();
 
-		if (!(type instanceof ASetType))
+		if (!(type instanceof SSetType))
 		{
 			Logger.getLog().printErrorln("Unexpected set type for set enumeration expression: "
 					+ type.getClass().getName() + " at "  + node.getLocation());

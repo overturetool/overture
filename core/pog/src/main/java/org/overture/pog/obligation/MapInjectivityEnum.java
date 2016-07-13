@@ -39,7 +39,8 @@ import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.ABooleanBasicType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.ASetSetType;
+import org.overture.ast.types.SSetType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -64,7 +65,7 @@ public class MapInjectivityEnum extends ProofObligation
 		ILexNameToken m2 = getUnique("m");
 
 		ASetEnumSetExp setOfMaplets = new ASetEnumSetExp();
-		ASetType somType = new ASetType();
+		SSetType somType = new ASetSetType();
 		somType.setSetof(mapEnumExp.getType().clone());
 		setOfMaplets.setType(somType);
 
@@ -91,7 +92,7 @@ public class MapInjectivityEnum extends ProofObligation
 
 		AMapDomainUnaryExp domM1 = new AMapDomainUnaryExp();
 		domM1.setExp(getVarExp(m1, mapEnumExp.getType()));
-		ASetType domType = new ASetType();
+		SSetType domType = new ASetSetType();
 		domType.setSetof(af.createPTypeAssistant().getMap(mapEnumExp.getType().clone()));
 		domM1.setType(domType.clone());
 		AMapDomainUnaryExp domM2 = new AMapDomainUnaryExp();

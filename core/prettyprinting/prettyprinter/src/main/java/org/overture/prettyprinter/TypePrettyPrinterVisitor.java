@@ -36,7 +36,7 @@ import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
@@ -64,7 +64,7 @@ public class TypePrettyPrinterVisitor extends
 	}
 
 	@Override
-	public String caseASetType(ASetType node, PrettyPrinterEnv question)
+	public String defaultSSetType(SSetType node, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
 		return ""

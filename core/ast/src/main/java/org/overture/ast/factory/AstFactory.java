@@ -209,7 +209,8 @@ import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.ASet1SetType;
+import org.overture.ast.types.ASetSetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
@@ -2966,9 +2967,20 @@ public class AstFactory
 		return result;
 	}
 
-	public static ASetType newASetType(ILexLocation location, PType type)
+	public static ASetSetType newASetSetType(ILexLocation location, PType type)
 	{
-		ASetType result = new ASetType();
+		ASetSetType result = new ASetSetType();
+
+		initType(result, location);
+		result.setSetof(type);
+		result.setEmpty(false);
+
+		return result;
+	}
+
+	public static ASet1SetType newASet1SetType(ILexLocation location, PType type)
+	{
+		ASet1SetType result = new ASet1SetType();
 
 		initType(result, location);
 		result.setSetof(type);
@@ -3145,9 +3157,20 @@ public class AstFactory
 		return result;
 	}
 
-	public static ASetType newASetType(ILexLocation location)
+	public static ASetSetType newASetSetType(ILexLocation location)
 	{
-		ASetType result = new ASetType();
+		ASetSetType result = new ASetSetType();
+		initType(result, location);
+
+		result.setSetof(AstFactory.newAUnknownType(location));
+		result.setEmpty(true);
+
+		return result;
+	}
+
+	public static ASet1SetType newASet1SetType(ILexLocation location)
+	{
+		ASet1SetType result = new ASet1SetType();
 		initType(result, location);
 
 		result.setSetof(AstFactory.newAUnknownType(location));

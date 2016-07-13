@@ -36,7 +36,7 @@ import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 
@@ -91,7 +91,7 @@ public class ComposeTypeCollector extends AnswerAdaptor<PTypeList>
 	}
 
 	@Override
-	public PTypeList caseASetType(ASetType node) throws AnalysisException
+	public PTypeList defaultSSetType(SSetType node) throws AnalysisException
 	{
 		return node.getSetof().apply(THIS);
 	}
