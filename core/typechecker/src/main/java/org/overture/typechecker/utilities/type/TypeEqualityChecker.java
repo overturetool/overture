@@ -33,7 +33,10 @@ import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.SSetType;
+import org.overture.ast.types.ASeq1SeqType;
+import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.ASet1SetType;
+import org.overture.ast.types.ASetSetType;
 import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -43,7 +46,6 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
-import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -217,16 +219,49 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 
 		return false;
 	}
+	
+	@Override
+	public Boolean caseASet1SetType(ASet1SetType type, Object other) throws AnalysisException
+	{
+		other = deBracket((PType) other);
+
+		if (other instanceof ASet1SetType)
+		{
+			ASet1SetType os = (ASet1SetType) other;
+			// NB empty set same type as any set
+			return type.getEmpty() || os.getEmpty()
+					|| type.getSetof().apply(this, os.getSetof());
+		}
+
+		return false;
+	}
 
 	@Override
-	public Boolean defaultSSeqType(SSeqType type, Object other)
+	public Boolean caseASetSetType(ASetSetType type, Object other)
+			throws AnalysisException
+	{
+		other = deBracket((PType) other);
+	
+		if (other instanceof ASetSetType)
+		{
+			ASetSetType os = (ASetSetType) other;
+			// NB empty set same type as any set
+			return type.getEmpty() || os.getEmpty()
+					|| type.getSetof().apply(this, os.getSetof());
+		}
+	
+		return false;
+	}
+
+	@Override
+	public Boolean caseASeqSeqType(ASeqSeqType type, Object other)
 			throws AnalysisException
 	{
 		other = deBracket((PType) other);
 
-		if (other instanceof SSeqType)
+		if (other instanceof ASeqSeqType)
 		{
-			SSeqType os = (SSeqType) other;
+			ASeqSeqType os = (ASeqSeqType) other;
 			// NB. Empty sequence is the same type as any sequence
 			return type.getEmpty()
 					|| os.getEmpty()
@@ -237,18 +272,18 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 	}
 
 	@Override
-	public Boolean defaultSSetType(SSetType type, Object other)
+	public Boolean caseASeq1SeqType(ASeq1SeqType type, Object other)
 			throws AnalysisException
 	{
-		// return ASetTypeAssistantTC.equals(type, other);
 		other = deBracket((PType) other);
 
-		if (other instanceof SSetType)
+		if (other instanceof ASeq1SeqType)
 		{
-			SSetType os = (SSetType) other;
-			// NB empty set same type as any set
-			return type.getEmpty() || os.getEmpty()
-					|| type.getSetof().apply(this, os.getSetof());
+			ASeq1SeqType os = (ASeq1SeqType) other;
+			// NB. Empty sequence is the same type as any sequence
+			return type.getEmpty()
+					|| os.getEmpty()
+					|| af.createPTypeAssistant().equals(type.getSeqof(), os.getSeqof());
 		}
 
 		return false;
