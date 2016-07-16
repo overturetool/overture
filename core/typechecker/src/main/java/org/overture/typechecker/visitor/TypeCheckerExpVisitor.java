@@ -3314,8 +3314,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
+		
+		SSetType eset = question.assistantFactory.createPTypeAssistant().getSet(etype);
 
-		node.setType(AstFactory.newASetSetType(node.getLocation(), etype));
+		node.setType(AstFactory.newASetSetType(node.getLocation(),
+				AstFactory.newASetSetType(node.getLocation(), eset.getSetof())));
 		return node.getType();
 	}
 
