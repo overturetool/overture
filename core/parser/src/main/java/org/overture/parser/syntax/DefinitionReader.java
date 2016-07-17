@@ -58,6 +58,7 @@ import org.overture.ast.lex.VDMToken;
 import org.overture.ast.node.tokens.TStatic;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
+import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -1169,14 +1170,15 @@ public class DefinitionReader extends SyntaxReader
 		// "def" <patternBind>=<expression> "in" <expression>, but since
 		// a set bind is "s in set S" that naively parses as
 		// "s in set (S = <expression>)". Talking to PGL, we have to
-		// make a special parse here. It is one of three forms:
+		// make a special parse here. It is one of these forms:
 		//
 		// "def" <pattern> "=" <expression> "in" ...
 		// "def" <type bind> "=" <expression> "in" ...
 		// "def" <pattern> "in set" <equals-expression> "in" ...
+		// "def" <pattern> "in seq" <equals-expression> "in" ...
 		//
 		// and the "=" is unpicked from the left and right of the equals
-		// expression in the third case.
+		// expression in the last two cases.
 
 		ILexLocation location = lastToken().location;
 		ParserException equalsDefError = null;
@@ -1214,20 +1216,33 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		try
-		// "def" <pattern> "in set" <equals-expression> "in" ...
 		{
 			reader.push();
 			PPattern pattern = getPatternReader().readPattern();
-			checkFor(VDMToken.IN, 2110, "Expecting <pattern> in set <set exp>");
-			checkFor(VDMToken.SET, 2111, "Expecting <pattern> in set <set exp>");
-			AEqualsBinaryExp test = getExpressionReader().readDefEqualsExpression();
-			ASetBind setbind = AstFactory.newASetBind(pattern, test.getLeft());
-			reader.unpush();
-			return AstFactory.newAEqualsDefinition(location, setbind, test.getRight());
-			// TODO: why does this have patterns.getDefinitions() for defs?!
-			// return new AEqualsDefinition(location, null, null, null, null, null, null, null, null, null, setbind,
-			// test.getRight(), null, null, pattern.getDefinitions());
-		} catch (ParserException e)
+			checkFor(VDMToken.IN, 2110, "Expecting <pattern> in set|seq <exp>");
+			AEqualsBinaryExp test = null;
+			
+			switch (lastToken().type)
+			{
+			case SET:		// "def" <pattern> "in set" <equals-expression> "in" ...
+				test = getExpressionReader().readDefEqualsExpression();
+				ASetBind setbind = AstFactory.newASetBind(pattern, test.getLeft());
+				reader.unpush();
+				return AstFactory.newAEqualsDefinition(location, setbind, test.getRight());
+
+			case SEQ:		// "def" <pattern> "in seq" <equals-expression> "in" ...
+				test = getExpressionReader().readDefEqualsExpression();
+				ASeqBind seqbind = AstFactory.newASeqBind(pattern, test.getLeft());
+				reader.unpush();
+				return AstFactory.newAEqualsDefinition(location, seqbind, test.getRight());
+
+			default:
+				throwMessage(2111, "Expecting <pattern> in set|seq <exp>");
+				return null;
+			}
+			
+		}
+		catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
 			reader.pop();
