@@ -228,7 +228,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			question.assistantFactory.createPPatternAssistant().typeResolve(pattern, THIS, question);
 			node.setDefs(question.assistantFactory.createPPatternAssistant().getDefinitions(pattern, node.getExpType(), question.scope));
 			node.setDefType(node.getExpType());
-		} else if (node.getTypebind() != null)
+		}
+		else if (node.getTypebind() != null)
 		{
 			question.assistantFactory.createATypeBindAssistant().typeResolve(node.getTypebind(), THIS, question);
 			ATypeBind typebind = node.getTypebind();
@@ -240,7 +241,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			node.setDefType(typebind.getType()); // Effectively a cast
 			node.setDefs(question.assistantFactory.createPPatternAssistant().getDefinitions(typebind.getPattern(), node.getDefType(), question.scope));
-		} else
+		}
+		else if (node.getSetbind() != null)
 		{
 			question.qualifiers = null;
 			PType st = node.getSetbind().getSet().apply(THIS, question);
@@ -249,7 +251,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			{
 				TypeCheckerErrors.report(3015, "Set bind is not a set type?", node.getLocation(), node);
 				node.setDefType(node.getExpType());
-			} else
+			}
+			else
 			{
 				PType setof = question.assistantFactory.createPTypeAssistant().getSet(st).getSetof();
 
@@ -263,6 +266,31 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			question.assistantFactory.createPPatternAssistant().typeResolve(node.getSetbind().getPattern(), THIS, question);
 			node.setDefs(question.assistantFactory.createPPatternAssistant().getDefinitions(node.getSetbind().getPattern(), node.getDefType(), question.scope));
+		}
+		else // Seq bind
+		{
+			question.qualifiers = null;
+			PType st = node.getSeqbind().getSeq().apply(THIS, question);
+
+			if (!question.assistantFactory.createPTypeAssistant().isSet(st))
+			{
+				TypeCheckerErrors.report(3015, "Seq bind is not a seq type?", node.getLocation(), node);
+				node.setDefType(node.getExpType());
+			}
+			else
+			{
+				PType seqof = question.assistantFactory.createPTypeAssistant().getSeq(st).getSeqof();
+
+				if (!question.assistantFactory.getTypeComparator().compatible(node.getExpType(), seqof))
+				{
+					TypeCheckerErrors.report(3016, "Expression is not compatible with seq bind", node.getSeqbind().getLocation(), node.getSeqbind());
+				}
+
+				node.setDefType(seqof); // Effectively a cast
+			}
+
+			question.assistantFactory.createPPatternAssistant().typeResolve(node.getSeqbind().getPattern(), THIS, question);
+			node.setDefs(question.assistantFactory.createPPatternAssistant().getDefinitions(node.getSeqbind().getPattern(), node.getDefType(), question.scope));
 		}
 
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getDefs(), THIS, question);

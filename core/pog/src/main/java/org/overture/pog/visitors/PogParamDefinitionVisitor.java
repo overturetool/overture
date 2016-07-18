@@ -304,7 +304,8 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						}
 					}
 				}
-			} else if (node.getTypebind() != null)
+			}
+			else if (node.getTypebind() != null)
 			{
 				if (!assistantFactory.getTypeComparator().isSubType(question.checkType(node.getTest(), node.getExpType()), node.getDefType()))
 				{
@@ -314,9 +315,14 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						list.add(sto);
 					}
 				}
-			} else if (node.getSetbind() != null)
+			}
+			else if (node.getSetbind() != null)
 			{
 				list.addAll(node.getSetbind().getSet().apply(rootVisitor, question));
+			}
+			else if (node.getSeqbind() != null)
+			{
+				list.addAll(node.getSeqbind().getSeq().apply(rootVisitor, question));
 			}
 
 			list.addAll(node.getTest().apply(rootVisitor, question));
