@@ -95,7 +95,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 			List<SPatternIR> patterns, SPatternIR pattern)
 			throws AnalysisException
 	{
-		STypeIR elementType = transAssistant.getSetTypeCloned(setVar).getSetOf();
+		STypeIR elementType = transAssistant.getElementType(setVar.getType());
 
 		return transAssistant.consNextElementDeclared(transAssistant.consClassType(ITERATOR_TYPE), elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR);
 	}
@@ -106,7 +106,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 			SPatternIR pattern, AVarDeclIR successVarDecl,
 			AVarDeclIR nextElementDecl) throws AnalysisException
 	{
-		STypeIR elementType = transAssistant.getSetTypeCloned(setVar).getSetOf();
+		STypeIR elementType = transAssistant.getElementType(setVar.getType());
 
 		return transAssistant.consNextElementAssignment(transAssistant.consClassType(ITERATOR_TYPE), elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR, nextElementDecl);
 	}

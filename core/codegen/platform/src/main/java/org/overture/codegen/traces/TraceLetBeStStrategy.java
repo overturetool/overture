@@ -59,9 +59,11 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 	public List<AVarDeclIR> getOuterBlockDecls(AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
 			throws AnalysisException
 	{
+		STypeIR elementType = transAssist.getElementType(setSeqType);
+		
 		for (SPatternIR id : patterns)
 		{
-			AVarDeclIR decl = transAssist.getInfo().getDeclAssistant().consLocalVarDecl(setType.getSetOf().clone(), id.clone(), transAssist.getInfo().getExpAssistant().consUndefinedExp());
+			AVarDeclIR decl = transAssist.getInfo().getDeclAssistant().consLocalVarDecl(elementType.clone(), id.clone(), transAssist.getInfo().getExpAssistant().consUndefinedExp());
 			decl.setFinal(true);
 			decls.add(decl);
 		}
