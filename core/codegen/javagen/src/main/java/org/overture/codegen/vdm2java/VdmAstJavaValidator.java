@@ -19,7 +19,6 @@ import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ATimeExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.codegen.ir.IRInfo;
@@ -90,11 +89,6 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 		if (inUnsupportedContext(node))
 		{
 			info.addUnsupportedNode(node, String.format("Generation of a %s is only supported within operations/functions", "exists1 expression"));
-		}
-		
-		if (!(node.getBind() instanceof ASetBind))
-		{
-			info.addUnsupportedNode(node, String.format("Generation of a exist1 expression is only supported for set binds. Got: %s", node.getBind()));
 		}
 	}
 
