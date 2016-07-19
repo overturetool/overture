@@ -186,7 +186,7 @@ exp {-> package='org.overture.ast.expressions'
     ;
     
 #Seq {-> package='org.overture.ast.expressions'}
-    =   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
+    =   {seqComp} [first]:exp [setBind]:bind.set [seqBind]:bind.seq [predicate]:exp
     |   {seqEnum} [members]:exp* (types):type*
     ;
     
@@ -339,16 +339,18 @@ pair {-> package='org.overture.ast.patterns'
 bind {-> package='org.overture.ast.patterns'
 	|	[location]:location 
 	|	(pattern):pattern}
-    =   {set} (set):exp //binds
-    |   {type} (type):type //binds
+    =   {set} (set):exp
+    |   {type} (type):type
+    |   {seq} (seq):exp
     ;
 
 //This is used in PExp and PDefinition
 multipleBind {-> package='org.overture.ast.patterns'
 	|	[location]:location 
 	|	[plist]:pattern*}
-    =   {set}  [set]:exp //binds
-    |   {type} (type):type //binds
+    =   {set}  [set]:exp
+    |   {type} (type):type
+    |   {seq} [seq]:exp
     ;
 
 patternBind {-> package='org.overture.ast.patterns'}
@@ -368,7 +370,7 @@ definition {-> package='org.overture.ast.definitions'
     |   {instanceVariable} [expression]:exp (expType):type [initialized]:java_Boolean [oldname]:LexNameToken //this actually inherits assignment in Nicks tree
     |   #class 
     |   {classInvariant}  [expression]:exp
-    |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp 
+    |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [seqbind]:bind.seq [test]:exp 
                  (expType):type (defType):type [defs]:definition*
   	|	#Function
   	|   {external} (state):definition [readOnly]:java_Boolean (oldname):LexNameToken

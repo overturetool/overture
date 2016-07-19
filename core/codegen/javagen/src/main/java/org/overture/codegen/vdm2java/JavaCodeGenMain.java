@@ -545,7 +545,7 @@ public class JavaCodeGenMain
 	public static void usage(String msg)
 	{
 		Logger.getLog().printErrorln("VDM-to-Java Code Generator: " + msg + "\n");
-		Logger.getLog().printErrorln("Usage: CodeGen <-oo | -sl | -rt | -exp> [<options>] [<files>]");
+		Logger.getLog().printErrorln("Usage: CodeGen < " + OO_ARG + " | " + SL_ARG + " | " + RT_ARG + " | -exp > [<options>] [<files>]");
 		Logger.getLog().printErrorln(OO_ARG
 				+ ": code generate a VDMPP specification consisting of multiple .vdmpp files");
 		Logger.getLog().printErrorln(SL_ARG

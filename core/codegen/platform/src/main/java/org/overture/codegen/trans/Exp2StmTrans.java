@@ -59,6 +59,7 @@ import org.overture.codegen.ir.expressions.ATernaryIfExpIR;
 import org.overture.codegen.ir.expressions.SBoolBinaryExpIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.patterns.ASetMultipleBindIR;
+import org.overture.codegen.ir.patterns.ATypeMultipleBindIR;
 import org.overture.codegen.ir.statements.AAssignToExpStmIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.statements.ACaseAltStmStmIR;
@@ -340,7 +341,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 
 		ComplexCompStrategy strategy = new MapCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, iteVarPrefixes);
 
-		List<ASetMultipleBindIR> bindings = filterBindList(node, node.getBindings());
+		List<SMultipleBindIR> bindings = filterBindList(node, node.getBindings());
 
 		ABlockStmIR block = transAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy, iteVarPrefixes);
 
@@ -373,7 +374,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 
 		ComplexCompStrategy strategy = new SetCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, iteVarPrefixes);
 
-		List<ASetMultipleBindIR> bindings = filterBindList(node, node.getBindings());
+		List<SMultipleBindIR> bindings = filterBindList(node, node.getBindings());
 		ABlockStmIR block = transAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy, iteVarPrefixes);
 
 		if (block.getStatements().isEmpty())
@@ -405,7 +406,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 
 		SeqCompStrategy strategy = new SeqCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, iteVarPrefixes);
 
-		if (transAssistant.isEmptySet(node.getSet()))
+		if (transAssistant.isEmptySetSeq(node.getSetSeq()))
 		{
 			// In case the block has no statements the result of the sequence comprehension is the empty sequence
 			AEnumSeqExpIR emptySeq = new AEnumSeqExpIR();
@@ -416,9 +417,17 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		} else
 		{
 			LinkedList<SPatternIR> patterns = new LinkedList<SPatternIR>();
-			patterns.add(node.getSetBind().getPattern().clone());
+			
+			if(node.getSetBind() != null)
+			{
+				patterns.add(node.getSetBind().getPattern().clone());
+			}
+			else
+			{
+				patterns.add(node.getSeqBind().getPattern().clone());
+			}
 
-			ABlockStmIR block = transAssistant.consIterationBlock(patterns, node.getSet(), transAssistant.getInfo().getTempVarNameGen(), strategy, iteVarPrefixes);
+			ABlockStmIR block = transAssistant.consIterationBlock(patterns, node.getSetSeq(), transAssistant.getInfo().getTempVarNameGen(), strategy, iteVarPrefixes);
 
 			replaceCompWithTransformation(enclosingStm, block, type, var, node);
 
@@ -438,7 +447,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, iteVarPrefixes);
 
-		List<ASetMultipleBindIR> multipleSetBinds = filterBindList(node, node.getBindList());
+		List<SMultipleBindIR> multipleSetBinds = filterBindList(node, node.getBindList());
 
 		ABlockStmIR block = transAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy, iteVarPrefixes);
 
@@ -470,7 +479,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, iteVarPrefixes);
 
-		List<ASetMultipleBindIR> multipleSetBinds = filterBindList(node, node.getBindList());
+		List<SMultipleBindIR> multipleSetBinds = filterBindList(node, node.getBindList());
 
 		ABlockStmIR block = transAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy, iteVarPrefixes);
 
@@ -502,7 +511,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 
 		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transAssistant, predicate, var, langIterator, tempVarNameGen, iteVarPrefixes, counterData);
 
-		List<ASetMultipleBindIR> multipleSetBinds = filterBindList(node, node.getBindList());
+		List<SMultipleBindIR> multipleSetBinds = filterBindList(node, node.getBindList());
 
 		ABlockStmIR block = transAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy, iteVarPrefixes);
 
@@ -724,18 +733,14 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		replacementBlock.apply(this);
 	}
 
-	protected List<ASetMultipleBindIR> filterBindList(INode node,
-			LinkedList<SMultipleBindIR> bindList)
+	protected List<SMultipleBindIR> filterBindList(INode node,
+			List<SMultipleBindIR> bindList)
 	{
-		List<ASetMultipleBindIR> multipleSetBinds = new LinkedList<ASetMultipleBindIR>();
+		List<SMultipleBindIR> multipleBinds = new LinkedList<SMultipleBindIR>();
 
 		for (SMultipleBindIR b : bindList)
 		{
-
-			if (b instanceof ASetMultipleBindIR)
-			{
-				multipleSetBinds.add((ASetMultipleBindIR) b.clone());
-			} else
+			if(b instanceof ATypeMultipleBindIR)
 			{
 				transAssistant.getInfo().addTransformationWarning(node, "Transformation only works for "
 						+ "expressions with multiple set binds and not multiple "
@@ -743,8 +748,12 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 						+ this.getClass().getSimpleName()
 						+ "'");
 			}
+			else
+			{
+				multipleBinds.add(b.clone());
+			}
 		}
-
-		return multipleSetBinds;
+		
+		return multipleBinds;
 	}
 }

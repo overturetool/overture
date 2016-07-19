@@ -27,10 +27,12 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ANamePatternPair;
 import org.overture.ast.patterns.AObjectPattern;
+import org.overture.ast.patterns.ASeqMultipleBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.SSetType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
@@ -77,6 +79,43 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 			} else
 			{
 				TypeCheckerErrors.warning(3264, "Empty set used in bind", node.getSet().getLocation(), node.getSet());
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public PType caseASeqMultipleBind(ASeqMultipleBind node,
+			TypeCheckInfo question) throws AnalysisException
+	{
+		question.assistantFactory.createPPatternListAssistant().typeResolve(node.getPlist(), THIS, question);
+		question.qualifiers = null;
+		PType type = node.getSeq().apply(THIS, question);
+		PType result = AstFactory.newAUnknownType(node.getLocation());
+
+		if (!question.assistantFactory.createPTypeAssistant().isSeq(type))
+		{
+			TypeCheckerErrors.report(3197, "Expression matching seq bind is not a sequence", node.getSeq().getLocation(), node.getSeq());
+			TypeCheckerErrors.detail("Actual type", type);
+		}
+		else
+		{
+			SSeqType st = question.assistantFactory.createPTypeAssistant().getSeq(type);
+
+			if (!st.getEmpty())
+			{
+				result = st.getSeqof();
+				PType ptype = question.assistantFactory.createPMultipleBindAssistant().getPossibleType(node);
+
+				if (!question.assistantFactory.getTypeComparator().compatible(ptype, result))
+				{
+					TypeCheckerErrors.report(3264, "At least one bind cannot match sequence", node.getSeq().getLocation(), node.getSeq());
+					TypeCheckerErrors.detail2("Binds", ptype, "Seq of", st);
+				}
+			} else
+			{
+				TypeCheckerErrors.warning(3264, "Empty squence used in bind", node.getSeq().getLocation(), node.getSeq());
 			}
 		}
 

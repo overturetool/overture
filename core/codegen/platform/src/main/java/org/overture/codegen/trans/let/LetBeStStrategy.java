@@ -24,9 +24,11 @@ package org.overture.codegen.trans.let;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.SStmIR;
+import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.AVarDeclIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
@@ -36,8 +38,6 @@ import org.overture.codegen.ir.statements.AIfStmIR;
 import org.overture.codegen.ir.statements.ALocalPatternAssignmentStmIR;
 import org.overture.codegen.ir.statements.ARaiseErrorStmIR;
 import org.overture.codegen.ir.types.AErrorTypeIR;
-import org.overture.codegen.ir.types.SSetTypeIR;
-import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.AbstractIterationStrategy;
 import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.IterationVarPrefixes;
@@ -48,13 +48,13 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 {
 	protected String successVarName;
 	protected SExpIR suchThat;
-	protected SSetTypeIR setType;
+	protected STypeIR setSeqType;
 
 	protected int count = 0;
 	protected List<AVarDeclIR> decls = new LinkedList<AVarDeclIR>();
 
 	public LetBeStStrategy(TransAssistantIR transformationAssistant,
-			SExpIR suchThat, SSetTypeIR setType,
+			SExpIR suchThat, STypeIR setSeqType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			IterationVarPrefixes iteVarPrefixes)
 	{
@@ -65,21 +65,20 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 
 		this.successVarName = tempVarNameGen.nextVarName(successVarNamePrefix);
 		this.suchThat = suchThat;
-		this.setType = setType;
+		this.setSeqType = setSeqType;
 	}
 
 	@Override
-	public List<AVarDeclIR> getOuterBlockDecls(
-			AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
-			throws AnalysisException
+	public List<AVarDeclIR> getOuterBlockDecls(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns) throws AnalysisException
 	{
 		List<AVarDeclIR> outerBlockDecls = new LinkedList<AVarDeclIR>();
 
+		STypeIR elementType = transAssist.getElementType(setSeqType);
+
 		for (SPatternIR id : patterns)
 		{
-			AVarDeclIR decl = transAssist.getInfo().getDeclAssistant().
-					consLocalVarDecl(transAssist.getSetTypeCloned(setType).getSetOf(),
-					id.clone(), transAssist.getInfo().getExpAssistant().consUndefinedExp());
+			AVarDeclIR decl = transAssist.getInfo().getDeclAssistant().consLocalVarDecl(elementType.clone(), id.clone(), transAssist.getInfo().getExpAssistant().consUndefinedExp());
 			decls.add(decl);
 			outerBlockDecls.add(decl);
 		}

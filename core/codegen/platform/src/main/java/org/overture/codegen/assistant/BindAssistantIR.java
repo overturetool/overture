@@ -23,6 +23,8 @@ package org.overture.codegen.assistant;
 
 import org.overture.codegen.ir.SBindIR;
 import org.overture.codegen.ir.SMultipleBindIR;
+import org.overture.codegen.ir.patterns.ASeqBindIR;
+import org.overture.codegen.ir.patterns.ASeqMultipleBindIR;
 import org.overture.codegen.ir.patterns.ASetBindIR;
 import org.overture.codegen.ir.patterns.ASetMultipleBindIR;
 import org.overture.codegen.ir.patterns.ATypeBindIR;
@@ -50,6 +52,17 @@ public class BindAssistantIR extends AssistantBase
 			multipleSetBind.setSet(setBind.getSet());
 			
 			result = multipleSetBind;
+		}
+		else if(bind instanceof ASeqBindIR)
+		{
+			ASeqBindIR seqBind = (ASeqBindIR) bind;
+			
+			ASeqMultipleBindIR multipleSeqBind = new ASeqMultipleBindIR();
+			
+			multipleSeqBind.getPatterns().add(bind.getPattern());
+			multipleSeqBind.setSeq(seqBind.getSeq());
+			
+			result = multipleSeqBind;
 		}
 		else if(bind instanceof ATypeBindIR)
 		{

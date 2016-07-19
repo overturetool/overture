@@ -29,6 +29,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
@@ -53,6 +54,17 @@ public class MultipleBindLister extends AnswerAdaptor<List<PMultipleBind>>
 		plist.add(bind.getPattern());
 		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
 		mblist.add(AstFactory.newASetMultipleBind(plist, bind.getSet()));
+		return mblist;
+	}
+
+	@Override
+	public List<PMultipleBind> caseASeqBind(ASeqBind bind)
+			throws AnalysisException
+	{
+		List<PPattern> plist = new ArrayList<PPattern>();
+		plist.add(bind.getPattern());
+		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
+		mblist.add(AstFactory.newASeqMultipleBind(plist, bind.getSeq()));
 		return mblist;
 	}
 

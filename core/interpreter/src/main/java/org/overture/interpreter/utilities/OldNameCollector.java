@@ -49,6 +49,7 @@ import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.ASeqMultipleBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
@@ -425,7 +426,15 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 			throws AnalysisException
 	{
 		LexNameList list = af.createPExpAssistant().getOldNames(expression.getFirst());
-		list.addAll(expression.getSetBind().apply(this));
+		
+		if (expression.getSetBind() != null)
+		{
+			list.addAll(expression.getSetBind().apply(this));
+		}
+		else
+		{
+			list.addAll(expression.getSeqBind().apply(this));
+		}
 
 		if (expression.getPredicate() != null)
 		{
@@ -502,6 +511,13 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	}
 
 	@Override
+	public LexNameList caseASeqMultipleBind(ASeqMultipleBind mb)
+			throws AnalysisException
+	{
+		return af.createPExpAssistant().getOldNames(mb.getSeq());
+	}
+
+	@Override
 	public LexNameList defaultPBind(PBind bind) throws AnalysisException
 	{
 		if (bind instanceof ASetBind)
@@ -543,6 +559,10 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 		if (def.getSetbind() != null)
 		{
 			list.addAll(def.getSetbind().apply(this));
+		}
+		else if (def.getSeqbind() != null)
+		{
+			list.addAll(def.getSeqbind().apply(this));
 		}
 
 		return list;

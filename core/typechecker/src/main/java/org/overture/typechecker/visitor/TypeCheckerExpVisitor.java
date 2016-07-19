@@ -47,6 +47,7 @@ import org.overture.ast.intf.lex.ILexRealToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
@@ -1699,11 +1700,28 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			if (question.assistantFactory.createPTypeAssistant().isSet(rt))
 			{
 				rt = question.assistantFactory.createPTypeAssistant().getSet(rt).getSetof();
-			} else
+			}
+			else
 			{
 				TypeCheckerErrors.report(3112, "Iota set bind is not a set", node.getLocation(), node);
 			}
-		} else
+		}
+		else if (bind instanceof ASeqBind)
+		{
+			ASeqBind sb = (ASeqBind) bind;
+			question.qualifiers = null;
+			rt = sb.getSeq().apply(THIS, question.newConstraint(null));
+
+			if (question.assistantFactory.createPTypeAssistant().isSeq(rt))
+			{
+				rt = question.assistantFactory.createPTypeAssistant().getSeq(rt).getSeqof();
+			}
+			else
+			{
+				TypeCheckerErrors.report(3112, "Iota seq bind is not a sequence", node.getLocation(), node);
+			}
+		}
+		else
 		{
 			ATypeBind tb = (ATypeBind) bind;
 			question.assistantFactory.createATypeBindAssistant().typeResolve(tb, THIS, question);
@@ -2440,17 +2458,29 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		// List<PMultipleBind> mblist = new Vector<PMultipleBind>();
 		// mblist.add(new ASetMultipleBind(plist.get(0).getLocation(), plist,
 		// setBindSet));
+		
+		PDefinition def = null;
+		
+		if (node.getSetBind() != null)
+		{
+			def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getSetBind()));
+			def.parent(node.getSetBind());
+		}
+		else
+		{
+			def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getSeqBind()));
+			def.parent(node.getSeqBind());
+		}
 
-		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getSetBind()));
-		def.parent(node.getSetBind());
 		def.apply(THIS, question.newConstraint(null));
 
 		// now they are typechecked, add them again
 		// node.getSetBind().setSet(setBindSet.clone());
 		// node.getSetBind().setPattern(setBindPattern.clone());
 
-		if (question.assistantFactory.createPPatternAssistant().getVariableNames(node.getSetBind().getPattern()).size() != 1
-				|| !question.assistantFactory.createPTypeAssistant().isNumeric(question.assistantFactory.createPDefinitionAssistant().getType(def)))
+		if (node.getSetBind() != null &&
+			(question.assistantFactory.createPPatternAssistant().getVariableNames(node.getSetBind().getPattern()).size() != 1
+			|| !question.assistantFactory.createPTypeAssistant().isNumeric(question.assistantFactory.createPDefinitionAssistant().getType(def))))
 		{
 			TypeCheckerErrors.report(3155, "List comprehension must define one numeric bind variable", node.getLocation(), node);
 		}
