@@ -1225,12 +1225,19 @@ public class DefinitionReader extends SyntaxReader
 			switch (lastToken().type)
 			{
 			case SET:		// "def" <pattern> "in set" <equals-expression> "in" ...
+				nextToken();
 				test = getExpressionReader().readDefEqualsExpression();
 				ASetBind setbind = AstFactory.newASetBind(pattern, test.getLeft());
 				reader.unpush();
 				return AstFactory.newAEqualsDefinition(location, setbind, test.getRight());
 
 			case SEQ:		// "def" <pattern> "in seq" <equals-expression> "in" ...
+				if (Settings.release == Release.CLASSIC)
+				{
+					throwMessage(2328, "Sequence binds are not available in classic");
+				}
+
+				nextToken();
 				test = getExpressionReader().readDefEqualsExpression();
 				ASeqBind seqbind = AstFactory.newASeqBind(pattern, test.getLeft());
 				reader.unpush();

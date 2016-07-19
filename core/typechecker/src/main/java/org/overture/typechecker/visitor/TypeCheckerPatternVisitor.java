@@ -78,7 +78,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 				}
 			} else
 			{
-				TypeCheckerErrors.warning(5009, "Empty set used in bind", node.getSet().getLocation(), node.getSet());
+				TypeCheckerErrors.warning(3264, "Empty set used in bind", node.getSet().getLocation(), node.getSet());
 			}
 		}
 
@@ -115,7 +115,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 				}
 			} else
 			{
-				TypeCheckerErrors.warning(5009, "Empty squence used in bind", node.getSeq().getLocation(), node.getSeq());
+				TypeCheckerErrors.warning(3264, "Empty squence used in bind", node.getSeq().getLocation(), node.getSeq());
 			}
 		}
 

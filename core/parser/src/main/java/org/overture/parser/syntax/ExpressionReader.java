@@ -953,7 +953,7 @@ public class ExpressionReader extends SyntaxReader
 				return readTimeExpression(token.location);
 
 			default:
-				throwMessage(2034, "Unexpected token in expression");
+				throwMessage(2034, "Unexpected token in expression: " + token.type);
 				return null;
 		}
 	}

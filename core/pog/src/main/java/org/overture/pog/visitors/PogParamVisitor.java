@@ -12,6 +12,8 @@ import org.overture.ast.modules.PExports;
 import org.overture.ast.modules.PImports;
 import org.overture.ast.modules.PModules;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.ASeqBind;
+import org.overture.ast.patterns.ASeqMultipleBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
@@ -192,12 +194,38 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 	}
 
 	@Override
+	public IProofObligationList caseASeqBind(ASeqBind node,
+			IPOContextStack question) throws AnalysisException
+	{
+		try
+		{
+			return node.getSeq().apply(this.pogExpVisitor, question);
+		} catch (Exception e)
+		{
+			throw new POException(node, e.getMessage());
+		}
+	}
+
+	@Override
 	public IProofObligationList caseASetMultipleBind(ASetMultipleBind node,
 			IPOContextStack question) throws AnalysisException
 	{
 		try
 		{
 			return node.getSet().apply(this.pogExpVisitor, question);
+		} catch (Exception e)
+		{
+			throw new POException(node, e.getMessage());
+		}
+	}
+
+	@Override
+	public IProofObligationList caseASeqMultipleBind(ASeqMultipleBind node,
+			IPOContextStack question) throws AnalysisException
+	{
+		try
+		{
+			return node.getSeq().apply(this.pogExpVisitor, question);
 		} catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());

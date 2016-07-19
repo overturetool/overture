@@ -272,7 +272,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			question.qualifiers = null;
 			PType st = node.getSeqbind().getSeq().apply(THIS, question);
 
-			if (!question.assistantFactory.createPTypeAssistant().isSet(st))
+			if (!question.assistantFactory.createPTypeAssistant().isSeq(st))
 			{
 				TypeCheckerErrors.report(3015, "Seq bind is not a seq type?", node.getLocation(), node);
 				node.setDefType(node.getExpType());
