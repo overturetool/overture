@@ -440,7 +440,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 
 						for (PExp e : mk.getArgs())
 						{
-							PExp s = oneType(true, e, fit.next().getType(), ait.next());
+							PExp s = oneType(true, e.clone(), fit.next().getType(), ait.next());
 
 							if (s != null)
 							{

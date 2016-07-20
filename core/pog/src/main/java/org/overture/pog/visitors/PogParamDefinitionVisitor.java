@@ -30,6 +30,8 @@ import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.APatternListTypePair;
+import org.overture.ast.patterns.ASeqBind;
+import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.typechecker.NameScope;
@@ -50,6 +52,8 @@ import org.overture.pog.obligation.OperationPostConditionObligation;
 import org.overture.pog.obligation.ParameterPatternObligation;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.obligation.SatisfiabilityObligation;
+import org.overture.pog.obligation.SeqMembershipObligation;
+import org.overture.pog.obligation.SetMembershipObligation;
 import org.overture.pog.obligation.StateInvariantObligation;
 import org.overture.pog.obligation.TypeCompatibilityObligation;
 import org.overture.pog.obligation.ValueBindingObligation;
@@ -318,11 +322,15 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			}
 			else if (node.getSetbind() != null)
 			{
-				list.addAll(node.getSetbind().getSet().apply(rootVisitor, question));
+				ASetBind bind = node.getSetbind();
+				list.addAll(bind.getSet().apply(rootVisitor, question));
+				list.add(new SetMembershipObligation(bind.getPattern(), bind.getSet(), question, assistantFactory));
 			}
 			else if (node.getSeqbind() != null)
 			{
-				list.addAll(node.getSeqbind().getSeq().apply(rootVisitor, question));
+				ASeqBind bind = node.getSeqbind();
+				list.addAll(bind.getSeq().apply(rootVisitor, question));
+				list.add(new SeqMembershipObligation(bind.getPattern(), bind.getSeq(), question, assistantFactory));
 			}
 
 			list.addAll(node.getTest().apply(rootVisitor, question));
