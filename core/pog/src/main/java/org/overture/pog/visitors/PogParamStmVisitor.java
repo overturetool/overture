@@ -7,6 +7,7 @@ import org.overture.ast.definitions.SOperationDefinitionBase;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIgnorePattern;
+import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.statements.AAlwaysStm;
@@ -37,11 +38,14 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.pog.contexts.AssignmentContext;
 import org.overture.pog.contexts.OpPostConditionContext;
+import org.overture.pog.contexts.POForAllContext;
 import org.overture.pog.contexts.PONameContext;
 import org.overture.pog.contexts.POScopeContext;
 import org.overture.pog.obligation.LetBeExistsObligation;
 import org.overture.pog.obligation.OperationCallObligation;
 import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.obligation.SeqMembershipObligation;
+import org.overture.pog.obligation.SetMembershipObligation;
 import org.overture.pog.obligation.StateInvariantObligation;
 import org.overture.pog.obligation.TypeCompatibilityObligation;
 import org.overture.pog.obligation.WhileLoopObligation;
@@ -361,19 +365,34 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			if (node.getPatternBind().getPattern() != null)
 			{
 				// Nothing to do
-			} else if (node.getPatternBind().getBind() instanceof ATypeBind)
+			}
+			else if (node.getPatternBind().getBind() instanceof ATypeBind)
 			{
-
 				// Nothing to do
-			} else if (node.getPatternBind().getBind() instanceof ASetBind)
+			}
+			else if (node.getPatternBind().getBind() instanceof ASetBind)
 			{
 				ASetBind bind = (ASetBind) node.getPatternBind().getBind();
 				list.addAll(bind.getSet().apply(rootVisitor, question));
+				
+				question.push(new POForAllContext(bind, node.getExp()));
+				list.add(new SetMembershipObligation(bind.getPattern(), bind.getSet(), question, aF));
+				question.pop();
+			}
+			else if (node.getPatternBind().getBind() instanceof ASeqBind)
+			{
+				ASeqBind bind = (ASeqBind) node.getPatternBind().getBind();
+				list.addAll(bind.getSeq().apply(rootVisitor, question));
+
+				question.push(new POForAllContext(bind, node.getExp()));
+				list.add(new SeqMembershipObligation(bind.getPattern(), bind.getSeq(), question, aF));
+				question.pop();
 			}
 
 			list.addAll(node.getStatement().apply(mainVisitor, question));
 			return list;
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
