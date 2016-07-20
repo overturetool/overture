@@ -563,6 +563,19 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			for (ATixeStmtAlternative alt : node.getTraps())
 			{
 				obligations.addAll(alt.apply(rootVisitor, question));
+				
+				if (alt.getPatternBind().getBind() instanceof ASetBind)
+				{
+					ASetBind bind = (ASetBind) alt.getPatternBind().getBind();
+					obligations.addAll(bind.getSet().apply(rootVisitor, question));
+					obligations.add(new SetMembershipObligation(bind.getPattern(), bind.getSet(), question, aF));
+				}
+				else if (alt.getPatternBind().getBind() instanceof ASeqBind)
+				{
+					ASeqBind bind = (ASeqBind) alt.getPatternBind().getBind();
+					obligations.addAll(bind.getSeq().apply(rootVisitor, question));
+					obligations.add(new SeqMembershipObligation(bind.getPattern(), bind.getSeq(), question, aF));
+				}
 			}
 
 			obligations.addAll(node.getBody().apply(rootVisitor, question));
@@ -584,13 +597,22 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			if (node.getPatternBind().getPattern() != null)
 			{
 				// Nothing to do
-			} else if (node.getPatternBind().getBind() instanceof ATypeBind)
+			}
+			else if (node.getPatternBind().getBind() instanceof ATypeBind)
 			{
 				// Nothing to do
-			} else if (node.getPatternBind().getBind() instanceof ASetBind)
+			}
+			else if (node.getPatternBind().getBind() instanceof ASetBind)
 			{
 				ASetBind bind = (ASetBind) node.getPatternBind().getBind();
 				list.addAll(bind.getSet().apply(rootVisitor, question));
+				list.add(new SetMembershipObligation(bind.getPattern(), bind.getSet(), question, aF));
+			}
+			else if (node.getPatternBind().getBind() instanceof ASeqBind)
+			{
+				ASeqBind bind = (ASeqBind) node.getPatternBind().getBind();
+				list.addAll(bind.getSeq().apply(rootVisitor, question));
+				list.add(new SeqMembershipObligation(bind.getPattern(), bind.getSeq(), question, aF));
 			}
 
 			list.addAll(node.getWith().apply(rootVisitor, question));
