@@ -1049,7 +1049,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					else
 					{
 						VdmRuntimeError.abort(node.getLocation(), 4050, "Value "
-								+ exval + " is not in set bind", ctxt);
+								+ exval + " is not in seq bind", ctxt);
 					}
 				}
 				else
