@@ -25,13 +25,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.types.SSetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
+import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SMultipleBindIR;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AFieldDeclIR;
@@ -52,6 +55,7 @@ import org.overture.codegen.ir.expressions.ANewExpIR;
 import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
+import org.overture.codegen.ir.patterns.ASeqMultipleBindIR;
 import org.overture.codegen.ir.patterns.ASetMultipleBindIR;
 import org.overture.codegen.ir.statements.AAssignToExpStmIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
@@ -65,15 +69,16 @@ import org.overture.codegen.ir.types.AClassTypeIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.ASeqSeqTypeIR;
+import org.overture.codegen.ir.types.ASetSetTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
 import org.overture.codegen.ir.types.SSeqTypeIR;
 import org.overture.codegen.ir.types.SSetTypeIR;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.IIterationStrategy;
 import org.overture.codegen.trans.IterationVarPrefixes;
+import org.overture.codegen.trans.let.LetBeStStrategy;
 import org.overture.config.Settings;
 
 public class TransAssistantIR extends BaseTransformationAssistant
@@ -104,28 +109,11 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			SSetTypeIR setTypeCg = (SSetTypeIR) typeCg;
 
 			return setTypeCg.clone();
-		} else
-		{
-			SourceNode sourceNode = typeCg.getSourceNode();
-
-			if (sourceNode != null && sourceNode.getVdmNode() instanceof PType)
-			{
-				PType vdmType = (PType) sourceNode.getVdmNode();
-				SSetType setType = info.getTcFactory().createPTypeAssistant().getSet(vdmType);
-				try
-				{
-					typeCg = setType.apply(info.getTypeVisitor(), info);
-					return (SSetTypeIR) typeCg;
-
-				} catch (org.overture.ast.analysis.AnalysisException e)
-				{
-				}
-			}
-
-			throw new AnalysisException("Exptected set type. Got: " + typeCg);
 		}
+		
+		return null;
 	}
-
+	
 	public SSeqTypeIR getSeqTypeCloned(SExpIR seq) throws AnalysisException
 	{
 		STypeIR typeCg = seq.getType();
@@ -161,6 +149,27 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			throw new AnalysisException("Exptected sequence type. Got: "
 					+ typeCg);
 		}
+	}
+	
+	public STypeIR getElementType(STypeIR t) {
+		STypeIR elementType;
+		
+		if(t instanceof ASetSetTypeIR)
+		{
+			elementType = ((ASetSetTypeIR) t).getSetOf().clone();
+		}
+		else if(t instanceof ASeqSeqTypeIR)
+		{
+			elementType = ((ASeqSeqTypeIR) t).getSeqOf().clone();
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Expected set or sequence type in '" + LetBeStStrategy.class.getSimpleName() + "'. Got: " + t);
+			elementType = new AUnknownTypeIR();
+			elementType.setSourceNode(t.getSourceNode());
+		}
+		
+		return elementType;
 	}
 
 	public AIdentifierVarExpIR consSuccessVar(String successVarName)
@@ -238,11 +247,11 @@ public class TransAssistantIR extends BaseTransformationAssistant
 		return boolVarAssignment;
 	}
 
-	public AVarDeclIR consSetBindDecl(String setBindName, SExpIR set)
+	public AVarDeclIR consSetBindDecl(String setBindName, SExpIR col)
 			throws AnalysisException
 	{
-		return info.getDeclAssistant().consLocalVarDecl(getSetTypeCloned(set),
-				info.getPatternAssistant().consIdPattern(setBindName), set.clone());
+		return info.getDeclAssistant().consLocalVarDecl(col.getType().clone(),
+				info.getPatternAssistant().consIdPattern(setBindName), col.clone());
 	}
 
 	public AVarDeclIR consDecl(String varName, STypeIR type, SExpIR exp)
@@ -513,18 +522,16 @@ public class TransAssistantIR extends BaseTransformationAssistant
 
 	//FIXME make this method work on generic PMUltipleBinds
 	public ABlockStmIR consComplexCompIterationBlock(
-			List<ASetMultipleBindIR> multipleSetBinds, ITempVarGen tempGen,
+			List<SMultipleBindIR> multipleSetBinds, ITempVarGen tempGen,
 			IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes) throws AnalysisException
 	{
 		ABlockStmIR outerBlock = new ABlockStmIR();
 
 		ABlockStmIR nextMultiBindBlock = outerBlock;
 
-		for (ASetMultipleBindIR bind : multipleSetBinds)
+		for (SMultipleBindIR bind : multipleSetBinds)
 		{
-			SSetTypeIR setType = getSetTypeCloned(bind.getSet());
-
-			if (setType.getEmpty())
+			if (hasEmptySet(bind))
 			{
 				multipleSetBinds.clear();
 				return outerBlock;
@@ -537,8 +544,21 @@ public class TransAssistantIR extends BaseTransformationAssistant
 		{
 			strategy.setLastBind(i == multipleSetBinds.size() - 1);
 
-			ASetMultipleBindIR mb = multipleSetBinds.get(i);
-			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy, iteVarPrefixes);
+			SMultipleBindIR mb = multipleSetBinds.get(i);
+			
+			if(mb instanceof ASetMultipleBindIR)
+			{
+				nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), ((ASetMultipleBindIR)mb).getSet(), tempGen, strategy, iteVarPrefixes);
+			}
+			else if(mb instanceof ASeqMultipleBindIR)
+			{
+				nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), ((ASeqMultipleBindIR)mb).getSeq(), tempGen, strategy, iteVarPrefixes);
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Expected set multiple bind or sequence multiple bind in '"
+						+ this.getClass().getSimpleName() + "'. Got: " + mb);
+			}
 
 			strategy.setFirstBind(false);
 		}
@@ -561,21 +581,56 @@ public class TransAssistantIR extends BaseTransformationAssistant
 		return cast;
 	}
 
-	public Boolean hasEmptySet(ASetMultipleBindIR binding)
+	public Boolean hasEmptySet(SMultipleBindIR binding)
 			throws AnalysisException
 	{
-		return isEmptySet(binding.getSet());
+		if(binding instanceof ASetMultipleBindIR)
+		{
+			return isEmptySetSeq(((ASetMultipleBindIR)binding).getSet());
+		}
+		else if(binding instanceof ASeqMultipleBindIR)
+		{
+			return isEmptySetSeq(((ASeqMultipleBindIR)binding).getSeq());
+		}
+		
+		return false;
 	}
 
-	public Boolean isEmptySet(SExpIR set) throws AnalysisException
+	public Boolean isEmptySetSeq(SExpIR set) throws AnalysisException
 	{
-		return getSetTypeCloned(set).getEmpty();
+		if(set.getType() instanceof SSetTypeIR)
+		{
+			return ((SSetTypeIR) set.getType()).getEmpty();
+		}
+		else if(set.getType() instanceof SSeqTypeIR)
+		{
+			return ((SSeqTypeIR) set.getType()).getEmpty();
+		}
+		
+		return false;
 	}
 
-	public void cleanUpBinding(ASetMultipleBindIR binding)
+	public void cleanUpBinding(SMultipleBindIR binding)
 	{
-		binding.setSet(null);
-		binding.getPatterns().clear();
+		if(binding instanceof ASetMultipleBindIR)
+		{
+			ASetMultipleBindIR sb = (ASetMultipleBindIR) binding;
+			
+			sb.setSet(null);
+			sb.getPatterns().clear();
+		}
+		else if(binding instanceof ASeqMultipleBindIR)
+		{
+			ASeqMultipleBindIR sb = (ASeqMultipleBindIR) binding;
+			
+			sb.setSeq(null);
+			sb.getPatterns().clear();
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Expected multiple set bind or multiple sequence bind in '"
+					+ this.getClass().getSimpleName() + "'. Got: " + binding);
+		}
 	}
 
 	public AFieldDeclIR consField(String access, STypeIR type, String name, SExpIR initExp)

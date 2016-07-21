@@ -39,6 +39,7 @@ import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
@@ -159,6 +160,7 @@ import org.overture.codegen.ir.expressions.AUndefinedExpIR;
 import org.overture.codegen.ir.expressions.AXorBoolBinaryExpIR;
 import org.overture.codegen.ir.expressions.SVarExpIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
+import org.overture.codegen.ir.patterns.ASeqBindIR;
 import org.overture.codegen.ir.patterns.ASetBindIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.ACharBasicTypeIR;
@@ -980,33 +982,59 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	public SExpIR caseASeqCompSeqExp(ASeqCompSeqExp node, IRInfo question)
 			throws AnalysisException
 	{
-		ASetBind setBind = node.getSetBind();
-		PType type = node.getType();
-		PExp first = node.getFirst();
-		PExp set = node.getSetBind().getSet();
-		PExp predicate = node.getPredicate();
+		ACompSeqExpIR seqComp = new ACompSeqExpIR();
 
-		SBindIR bindTempCg = setBind.apply(question.getBindVisitor(), question);
-
-		if (!(bindTempCg instanceof ASetBindIR))
+		if (node.getSetBind() != null)
 		{
-			question.addUnsupportedNode(node, "Expected set bind for sequence comprehension. Got: "
-					+ bindTempCg);
-			return null;
+			ASetBind setBind = node.getSetBind();
+			SBindIR bindTempCg = setBind.apply(question.getBindVisitor(), question);
+
+			if (!(bindTempCg instanceof ASetBindIR))
+			{
+				question.addUnsupportedNode(node, "Expected set bind for sequence comprehension. Got: "
+						+ bindTempCg);
+				return null;
+			}
+			ASetBindIR setBindCg = (ASetBindIR) bindTempCg;
+			seqComp.setSetBind(setBindCg);
+
+			PExp set = node.getSetBind().getSet();
+			SExpIR setCg = set.apply(question.getExpVisitor(), question);
+			seqComp.setSetSeq(setCg);
+		} else
+		{
+			ASeqBind seqBind = node.getSeqBind();
+			SBindIR bindTempCg = seqBind.apply(question.getBindVisitor(), question);
+
+			if (!(bindTempCg instanceof ASeqBindIR))
+			{
+				question.addUnsupportedNode(node, "Expected seq bind for sequence comprehension. Got: "
+						+ bindTempCg);
+				return null;
+			}
+
+			ASeqBindIR seqBindCg = (ASeqBindIR) bindTempCg;
+			seqComp.setSeqBind(seqBindCg);
+
+			PExp seq = node.getSeqBind().getSeq();
+			SExpIR seqCg = seq.apply(question.getExpVisitor(), question);
+			seqComp.setSetSeq(seqCg);
 		}
 
-		ASetBindIR setBindCg = (ASetBindIR) bindTempCg;
+		PType type = node.getType();
+		PExp first = node.getFirst();
+
+		PExp predicate = node.getPredicate();
+
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		SExpIR firstCg = first.apply(question.getExpVisitor(), question);
-		SExpIR setCg = set.apply(question.getExpVisitor(), question);
-		SExpIR predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question)
-				: null;
 
-		ACompSeqExpIR seqComp = new ACompSeqExpIR();
-		seqComp.setSetBind(setBindCg);
+		SExpIR predicateCg = predicate != null
+				? predicate.apply(question.getExpVisitor(), question) : null;
+
 		seqComp.setType(typeCg);
 		seqComp.setFirst(firstCg);
-		seqComp.setSet(setCg);
+
 		seqComp.setPredicate(predicateCg);
 
 		return seqComp;

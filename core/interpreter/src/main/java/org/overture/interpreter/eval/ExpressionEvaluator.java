@@ -1510,8 +1510,53 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		ValueList allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getSetBind(), ctxt, false);
+		if (node.getSetBind() != null)
+		{
+			return evalSetBind(node, ctxt);
+		}
+		else
+		{
+			return evalSeqBind(node, ctxt);
+		}
+	}
+	
+	private Value evalSeqBind(ASeqCompSeqExp node, Context ctxt) throws AnalysisException
+	{
+		ValueList allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getSeqBind(), ctxt, false);
+		ValueList seq = new ValueList();	// Bind variable values
 
+		for (Value val: allValues)
+		{
+			try
+			{
+				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "seq comprehension", ctxt);
+				NameValuePairList nvpl = ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getSeqBind().getPattern(), val, ctxt);
+
+				evalContext.putList(nvpl);
+
+				if (node.getPredicate() == null
+					|| node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
+				{
+					Value out = node.getFirst().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
+					seq.add(out);
+				}
+			}
+			catch (ValueException e)
+			{
+				VdmRuntimeError.abort(node.getLocation(), e);
+			}
+			catch (PatternMatchException e)
+			{
+				// Ignore mismatches
+			}
+		}
+
+		return new SeqValue(seq);
+	}
+
+	private Value evalSetBind(ASeqCompSeqExp node, Context ctxt) throws AnalysisException
+	{
+		ValueList allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getSetBind(), ctxt, false);
 		ValueSet seq = new ValueSet(); // Bind variable values
 		ValueMap map = new ValueMap(); // Map bind values to output values
 
@@ -1540,10 +1585,12 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 						map.put(sortOn, out);
 					}
 				}
-			} catch (ValueException e)
+			}
+			catch (ValueException e)
 			{
 				VdmRuntimeError.abort(node.getLocation(), e);
-			} catch (PatternMatchException e)
+			}
+			catch (PatternMatchException e)
 			{
 				// Ignore mismatches
 			}

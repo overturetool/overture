@@ -10,6 +10,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.statements.AAlwaysStm;
@@ -662,7 +663,8 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 						// Ignore mismatches
 					}
 				}
-			} else if (node.getPatternBind().getBind() instanceof ASetBind)
+			}
+			else if (node.getPatternBind().getBind() instanceof ASetBind)
 			{
 				ASetBind setbind = (ASetBind) node.getPatternBind().getBind();
 				ValueSet set = setbind.getSet().apply(VdmRuntime.getStatementEvaluator(), ctxt).setValue(ctxt);
@@ -685,12 +687,44 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 						{
 							return rv;
 						}
-					} catch (PatternMatchException e)
+					}
+					catch (PatternMatchException e)
 					{
 						// Ignore mismatches
 					}
 				}
-			} else
+			}
+			else if (node.getPatternBind().getBind() instanceof ASeqBind)
+			{
+				ASeqBind seqbind = (ASeqBind) node.getPatternBind().getBind();
+				ValueList seq = seqbind.getSeq().apply(VdmRuntime.getStatementEvaluator(), ctxt).seqValue(ctxt);
+
+				for (Value val : values)
+				{
+					try
+					{
+						if (!seq.contains(val))
+						{
+							VdmRuntimeError.abort(node.getLocation(), 4039, "Seq bind does not contain value "
+									+ val, ctxt);
+						}
+
+						Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "for seq bind", ctxt);
+						evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(seqbind.getPattern(), val, ctxt));
+						Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(), evalContext);
+
+						if (!rv.isVoid())
+						{
+							return rv;
+						}
+					}
+					catch (PatternMatchException e)
+					{
+						// Ignore mismatches
+					}
+				}
+			}
+			else
 			{
 				ATypeBind typebind = (ATypeBind) node.getPatternBind().getBind();
 
@@ -983,7 +1017,8 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "trap pattern", ctxt);
 					evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getPatternBind().getPattern(), exval, ctxt));
 					rv = node.getWith().apply(VdmRuntime.getStatementEvaluator(), evalContext);
-				} else if (node.getPatternBind().getBind() instanceof ASetBind)
+				}
+				else if (node.getPatternBind().getBind() instanceof ASetBind)
 				{
 					ASetBind setbind = (ASetBind) node.getPatternBind().getBind();
 					ValueSet set = setbind.getSet().apply(VdmRuntime.getStatementEvaluator(), ctxt).setValue(ctxt);
@@ -993,12 +1028,31 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 						Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "trap set", ctxt);
 						evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(setbind.getPattern(), exval, ctxt));
 						rv = node.getWith().apply(VdmRuntime.getStatementEvaluator(), evalContext);
-					} else
+					}
+					else
 					{
 						VdmRuntimeError.abort(node.getLocation(), 4050, "Value "
 								+ exval + " is not in set bind", ctxt);
 					}
-				} else
+				}
+				else if (node.getPatternBind().getBind() instanceof ASeqBind)
+				{
+					ASeqBind seqbind = (ASeqBind) node.getPatternBind().getBind();
+					ValueList seq = seqbind.getSeq().apply(VdmRuntime.getStatementEvaluator(), ctxt).seqValue(ctxt);
+
+					if (seq.contains(exval))
+					{
+						Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "trap seq", ctxt);
+						evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(seqbind.getPattern(), exval, ctxt));
+						rv = node.getWith().apply(VdmRuntime.getStatementEvaluator(), evalContext);
+					}
+					else
+					{
+						VdmRuntimeError.abort(node.getLocation(), 4050, "Value "
+								+ exval + " is not in seq bind", ctxt);
+					}
+				}
+				else
 				{
 					ATypeBind typebind = (ATypeBind) node.getPatternBind().getBind();
 					Value converted = exval.convertTo(typebind.getType(), ctxt);
@@ -1006,10 +1060,12 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(typebind.getPattern(), converted, ctxt));
 					rv = node.getWith().apply(VdmRuntime.getStatementEvaluator(), evalContext);
 				}
-			} catch (ValueException ve)
+			}
+			catch (ValueException ve)
 			{
 				VdmRuntimeError.abort(node.getLocation(), ve);
-			} catch (PatternMatchException pe)
+			}
+			catch (PatternMatchException pe)
 			{
 				throw e;
 			}
@@ -1467,7 +1523,8 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			{
 				evalContext = new Context(ctxt.assistantFactory, location, "tixe pattern", ctxt);
 				evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getPatternBind().getPattern(), exval, ctxt));
-			} else if (node.getPatternBind().getBind() instanceof ASetBind)
+			}
+			else if (node.getPatternBind().getBind() instanceof ASetBind)
 			{
 				ASetBind setbind = (ASetBind) node.getPatternBind().getBind();
 				ValueSet set = setbind.getSet().apply(VdmRuntime.getStatementEvaluator(), ctxt).setValue(ctxt);
@@ -1476,12 +1533,30 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				{
 					evalContext = new Context(ctxt.assistantFactory, location, "tixe set", ctxt);
 					evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(setbind.getPattern(), exval, ctxt));
-				} else
+				}
+				else
 				{
 					VdmRuntimeError.abort(setbind.getLocation(), 4049, "Value "
 							+ exval + " is not in set bind", ctxt);
 				}
-			} else
+			}
+			else if (node.getPatternBind().getBind() instanceof ASeqBind)
+			{
+				ASeqBind seqbind = (ASeqBind) node.getPatternBind().getBind();
+				ValueList seq = seqbind.getSeq().apply(VdmRuntime.getStatementEvaluator(), ctxt).seqValue(ctxt);
+
+				if (seq.contains(exval))
+				{
+					evalContext = new Context(ctxt.assistantFactory, location, "tixe seq", ctxt);
+					evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(seqbind.getPattern(), exval, ctxt));
+				}
+				else
+				{
+					VdmRuntimeError.abort(seqbind.getLocation(), 4049, "Value "
+							+ exval + " is not in seq bind", ctxt);
+				}
+			}
+			else
 			{
 				ATypeBind typebind = (ATypeBind) node.getPatternBind().getBind();
 				// Note we always perform DTC checks here...

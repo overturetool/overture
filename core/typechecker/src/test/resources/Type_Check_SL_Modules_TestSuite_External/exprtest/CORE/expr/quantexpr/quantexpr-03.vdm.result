@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="28" line="12" message="Empty set used in bind" messageType="warning" number="3264" resource="quantexpr-03.vdm"/>
+<message column="28" line="12" message="Empty set used in bind" messageType="warning" number="5009" resource="quantexpr-03.vdm"/>
 <message column="19" line="12" message="Definition 'x' not used" messageType="warning" number="5000" resource="quantexpr-03.vdm"/>
 <result/>
 </testResult>
