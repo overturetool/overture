@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run: () ==> ?
+Run() ==
+let x in seq [3,2,1]
+in
+  return x;
+
+end Entry

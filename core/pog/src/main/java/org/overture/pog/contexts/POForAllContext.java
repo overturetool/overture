@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.expressions.AElementsUnaryExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
@@ -39,9 +40,12 @@ import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
+import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
+import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.ABooleanBasicType;
@@ -65,7 +69,14 @@ public class POForAllContext extends POContext
 	public POForAllContext(ASeqCompSeqExp exp,
 			IPogAssistantFactory assistantFactory)
 	{
-		this.bindings = getMultipleBindList(exp.getSetBind());
+		if (exp.getSetBind() != null)
+		{
+			this.bindings = getMultipleBindList(exp.getSetBind());
+		}
+		else
+		{
+			this.bindings = getMultipleBindList(exp.getSeqBind());
+		}
 	}
 
 	public POForAllContext(AForAllExp exp)
@@ -105,6 +116,18 @@ public class POForAllContext extends POContext
 			IPogAssistantFactory assistantFactory)
 	{
 		this.bindings = cloneBinds(assistantFactory.createPMultipleBindAssistant().getMultipleBindList(exp.getBind()));
+	}
+
+	public POForAllContext(PBind bind, PExp exp)
+	{
+		// Create new binding for "bind.pattern in set elems exp"
+		bindings = new Vector<PMultipleBind>();
+		List<PPattern> pl = new ArrayList<PPattern>();
+		pl.add(bind.getPattern().clone());
+		
+		AElementsUnaryExp elems = AstFactory.newAElementsUnaryExp(exp.getLocation(), exp.clone());
+		ASetMultipleBind msb = AstFactory.newASetMultipleBind(pl, elems);
+		bindings.add(msb);
 	}
 
 	private List<PMultipleBind> cloneBinds(List<PMultipleBind> multipleBindList)
@@ -158,13 +181,21 @@ public class POForAllContext extends POContext
 		return sb.toString();
 	}
 	
-	public List<PMultipleBind> getMultipleBindList(ASetBind bind)
+	public List<PMultipleBind> getMultipleBindList(PBind bind)
 	{
-
 		List<PPattern> plist = new ArrayList<PPattern>();
 		plist.add(bind.getPattern());
 		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
-		mblist.add(AstFactory.newASetMultipleBind(plist, bind.getSet()));
+		
+		if (bind instanceof ASetBind)
+		{
+			mblist.add(AstFactory.newASetMultipleBind(plist, ((ASetBind)bind).getSet()));
+		}
+		else
+		{
+			mblist.add(AstFactory.newASetMultipleBind(plist, ((ASeqBind)bind).getSeq()));
+		}
+
 		return mblist;
 	}
 }

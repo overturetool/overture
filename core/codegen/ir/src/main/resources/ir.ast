@@ -105,14 +105,16 @@ IR {-> package='org.overture.codegen.ir'
 
 #bind {-> package='org.overture.codegen.ir.patterns'
 	|	[pattern]:IR.#pattern}
-    =   {set} [set]:IR.#exp //binds
+    =   {set} [set]:IR.#exp
     |   {type} [type]:IR.#type
+    |   {seq} [seq]:IR.#exp
     ;
 		
 #multipleBind {-> package='org.overture.codegen.ir.patterns'
 	|	[patterns]:IR.#pattern*}
     =   {set}  [set]:IR.#exp //binds
     |   {type} [type]:IR.#type
+    |   {seq} [seq]:IR.#exp
     ;
    
 #name {-> package='org.overture.codegen.ir.name'}
@@ -526,7 +528,7 @@ IR {-> package='org.overture.codegen.ir'
     
 #Seq {-> package='org.overture.codegen.ir.expressions'}
 	= {enum} [members]:IR.#exp*
-	| {comp} [first]:IR.#exp [setBind]:IR.#bind.set [set]:IR.#exp [predicate]:IR.#exp
+	| {comp} [first]:IR.#exp [setBind]:IR.#bind.set [seqBind]:IR.#bind.seq [setSeq]:IR.#exp [predicate]:IR.#exp
 	;
 
 #Set {-> package='org.overture.codegen.ir.expressions'}

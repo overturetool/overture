@@ -24,6 +24,7 @@ package org.overture.codegen.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PPattern;
@@ -32,6 +33,7 @@ import org.overture.codegen.ir.SBindIR;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.patterns.ASeqBindIR;
 import org.overture.codegen.ir.patterns.ASetBindIR;
 import org.overture.codegen.ir.patterns.ATypeBindIR;
 import org.overture.codegen.ir.IRInfo;
@@ -70,5 +72,21 @@ public class BindVisitorIR extends AbstractVisitorIR<IRInfo, SBindIR>
 		setBind.setType(boundTypeCg);
 
 		return setBind;
+	}
+	
+	@Override
+	public SBindIR caseASeqBind(ASeqBind node, IRInfo question) throws AnalysisException {
+		
+		PPattern pattern = node.getPattern();
+		SPatternIR patternCg = pattern.apply(question.getPatternVisitor(), question);
+		
+		PExp seq = node.getSeq();
+		SExpIR seqCg = seq.apply(question.getExpVisitor(), question);
+		
+		ASeqBindIR seqBind = new ASeqBindIR();
+		seqBind.setPattern(patternCg);
+		seqBind.setSeq(seqCg);
+		
+		return seqBind;
 	}
 }

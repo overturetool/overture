@@ -24,6 +24,7 @@ package org.overture.typechecker.utilities.pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.ASeqMultipleBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.types.PType;
@@ -40,6 +41,13 @@ public class PossibleBindTypeFinder extends AnswerAdaptor<PType>
 
 	@Override
 	public PType caseASetMultipleBind(ASetMultipleBind mb)
+			throws AnalysisException
+	{
+		return af.createPPatternListAssistant().getPossibleType(mb.getPlist(), mb.getLocation());
+	}
+
+	@Override
+	public PType caseASeqMultipleBind(ASeqMultipleBind mb)
 			throws AnalysisException
 	{
 		return af.createPPatternListAssistant().getPossibleType(mb.getPlist(), mb.getLocation());

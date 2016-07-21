@@ -36,6 +36,7 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.node.Node;
 import org.overture.ast.patterns.ADefPatternBind;
+import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.statements.AApplyObjectDesignator;
@@ -111,7 +112,8 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 					TypeCheckerErrors.report(3198, "Type bind not compatible with expression", node.getBind().getLocation(), node.getBind());
 					TypeCheckerErrors.detail2("Bind", typebind.getType(), "Exp", type);
 				}
-			} else
+			}
+			else if (node.getBind() instanceof ASetBind)
 			{
 				ASetBind setbind = (ASetBind) node.getBind();
 				PType bindtype = setbind.getSet().apply(THIS, question);
@@ -128,6 +130,26 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
     				{
     					TypeCheckerErrors.report(3199, "Set bind not compatible with expression", node.getBind().getLocation(), node.getBind());
     					TypeCheckerErrors.detail2("Bind", settype.getSetof(), "Exp", type);
+    				}
+				}
+			}
+			else
+			{
+				ASeqBind seqbind = (ASeqBind) node.getBind();
+				PType bindtype = seqbind.getSeq().apply(THIS, question);
+				
+				if (!question.assistantFactory.createPTypeAssistant().isSeq(bindtype))
+				{
+					TypeCheckerErrors.report(3199, "Seq bind not compatible with expression", node.getBind().getLocation(), node.getBind());
+				}
+				else
+				{
+    				SSeqType seqtype = question.assistantFactory.createPTypeAssistant().getSeq(bindtype);
+    				
+    				if (!question.assistantFactory.getTypeComparator().compatible(type, seqtype.getSeqof()))
+    				{
+    					TypeCheckerErrors.report(3199, "Seq bind not compatible with expression", node.getBind().getLocation(), node.getBind());
+    					TypeCheckerErrors.detail2("Bind", seqtype.getSeqof(), "Exp", type);
     				}
 				}
 			}

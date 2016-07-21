@@ -100,7 +100,7 @@ public class TraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 				// Note that a RecordValue's toString does not explicitly expand the module name.
 				// So we exclude anything with mk_R expressions too...
 				
-				if (value.matches(".*mk_\\w+\\(.*"))
+				if (!value.matches("mk_token\\(.*\\)") && value.matches(".*mk_\\w+\\(.*"))
 				{
 					newargs.add(arg.clone()); // Give up!
 				}
