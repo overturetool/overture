@@ -1,0 +1,2 @@
+values
+	x = [ a | a in seq [1,4,3,2] ];

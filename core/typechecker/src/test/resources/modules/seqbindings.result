@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="5" line="2" message="Definition 'x' not used" messageType="warning" number="5000" resource="seqbindings"/>
+<message column="5" line="3" message="Definition 'y' not used" messageType="warning" number="5000" resource="seqbindings"/>
+<message column="28" line="2" message="Expression matching seq bind is not a sequence" messageType="error" number="3197" resource="seqbindings"/>
+<result/>
+</testResult>
