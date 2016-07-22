@@ -62,7 +62,7 @@ public class VDMUtil
 			reader.setCurrentModule("VDMUtil");
 			PExp exp = reader.readExpression();
 			result.add(new BooleanValue(true));
-			Context ctxt = new Context(Interpreter.getInstance().getAssistantFactory(), null, "seq_of_char2val", null);
+			Context ctxt = new Context(Interpreter.getInstance().getAssistantFactory(), null, "seq_of_char2val_", null);
 			ctxt.setThreadState(null, null);
 			result.add(exp.apply(VdmRuntime.getExpressionEvaluator(), ctxt));
 		} catch (Exception e)
