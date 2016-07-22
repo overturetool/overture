@@ -168,8 +168,8 @@ public class DEFAULT implements Serializable
 		return VDMUtil.val2seq_of_char(arg);
 	}
 
-	public static Value seq_of_char2val(Value arg)
+	public static Value seq_of_char2val_(Value arg)
 	{
-		return VDMUtil.seq_of_char2val(arg);
+		return VDMUtil.seq_of_char2val_(arg);
 	}
 }

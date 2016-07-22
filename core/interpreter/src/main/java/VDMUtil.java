@@ -42,7 +42,7 @@ public class VDMUtil
 		return new SeqValue(arg.toString());
 	}
 
-	public static Value seq_of_char2val(Value arg)
+	public static Value seq_of_char2val_(Value arg)
 	{
 		ValueList result = new ValueList();
 

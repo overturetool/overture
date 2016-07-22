@@ -1,7 +1,8 @@
 class VDMUtil
 
---  Overture STANDARD LIBRARY: MiscUtils
+-- 	Overture STANDARD LIBRARY: MiscUtils
 --      --------------------------------------------
+-- Version 1.0.0 
 -- 
 -- Standard library for the Overture Interpreter. When the interpreter
 -- evaluates the preliminary functions/operations in this file,
@@ -29,8 +30,15 @@ val2seq_of_char(x) == is not yet specified;
 -- RESULT.#1 = false implies a conversion failure
 static public seq_of_char2val[@p]:seq1 of char -> bool * [@p]
 seq_of_char2val(s) ==
-  is not yet specified
-  post let mk_(b,t) = RESULT in not b => t = nil;
+let mk_(b, v) = seq_of_char2val_(s) in
+if is_(v, @p) then mk_(b, v) else mk_(false, nil)
+post let mk_(b,t) = RESULT in not b => t = nil;
+
+static private seq_of_char2val_:seq1 of char -> bool * ?
+seq_of_char2val_(s) == is not yet specified;
+
+static public classname[@T] : @T -> [seq1 of char]
+    classname(s) == is not yet specified;
 
 end VDMUtil
 
