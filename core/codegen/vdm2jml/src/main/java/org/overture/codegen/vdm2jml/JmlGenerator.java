@@ -9,7 +9,14 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.util.ClonableString;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IREventObserver;
+import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.ir.IRStatus;
+import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.SStmIR;
@@ -28,13 +35,6 @@ import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
-import org.overture.codegen.ir.CodeGenBase;
-import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IREventObserver;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.ir.IRStatus;
-import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.traces.TracesTrans;
 import org.overture.codegen.trans.AssignStmTrans;
@@ -61,9 +61,6 @@ import org.overture.codegen.vdm2jml.trans.TcExpInfo;
 import org.overture.codegen.vdm2jml.util.AnnotationSorter;
 import org.overture.codegen.vdm2jml.util.IsValChecker;
 import org.overture.codegen.vdm2jml.util.NameGen;
-
-import de.hunsicker.jalopy.storage.Convention;
-import de.hunsicker.jalopy.storage.ConventionKeys;
 
 public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 {
@@ -202,10 +199,6 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		
 		JavaSettings javaSettings = getJavaSettings();
 		javaSettings.setGenRecsAsInnerClasses(false);
-		
-		// Bugs in Jalopy requires a small tweak to the code formatting conventions.
-		// Force Jalopy to not remove 'scope' braces
-		Convention.getInstance().putBoolean(ConventionKeys.BRACE_REMOVE_BLOCK, false);
 		
 		this.jmlSettings = new JmlSettings();
 	}
