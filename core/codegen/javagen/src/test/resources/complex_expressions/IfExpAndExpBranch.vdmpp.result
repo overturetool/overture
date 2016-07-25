@@ -1,58 +1,59 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static VDMSeq xs = SeqUtil.seq();
+  private static VDMSeq xs = SeqUtil.seq();
 
-    public Entry() {
-    }
+  public static Number id(final Number x) {
 
-    public static Number id(final Number x) {
-        xs = SeqUtil.conc(Utils.copy(Entry.xs), SeqUtil.seq(x));
+    xs = SeqUtil.conc(Utils.copy(Entry.xs), SeqUtil.seq(x));
+    return x;
+  }
 
-        return x;
-    }
+  public static Boolean op() {
 
-    public static Boolean op() {
-        Boolean andResult_1 = false;
+    Boolean andResult_1 = false;
 
-        if (id(1L).longValue() < id(2L).longValue()) {
-            Boolean ternaryIfExp_1 = null;
+    if (id(1L).longValue() < id(2L).longValue()) {
+      Boolean ternaryIfExp_1 = null;
 
-            if (id(3L).longValue() < id(4L).longValue()) {
-                Boolean andResult_2 = false;
+      if (id(3L).longValue() < id(4L).longValue()) {
+        Boolean andResult_2 = false;
 
-                if (id(5L).longValue() < id(6L).longValue()) {
-                    if (true) {
-                        andResult_2 = true;
-                    }
-                }
-
-                ternaryIfExp_1 = andResult_2;
-            } else {
-                ternaryIfExp_1 = false;
-            }
-
-            if ((ternaryIfExp_1)) {
-                andResult_1 = true;
-            }
+        if (id(5L).longValue() < id(6L).longValue()) {
+          if (true) {
+            andResult_2 = true;
+          }
         }
 
-        return andResult_1;
+        ternaryIfExp_1 = andResult_2;
+
+      } else {
+        ternaryIfExp_1 = false;
+      }
+
+      if ((ternaryIfExp_1)) {
+        andResult_1 = true;
+      }
     }
 
-    public static Object Run() {
-        final Boolean ignorePattern_1 = op();
+    return andResult_1;
+  }
 
-        return Utils.copy(Entry.xs);
-    }
+  public static Object Run() {
 
-    public String toString() {
-        return "Entry{" + "xs := " + Utils.toString(xs) + "}";
-    }
+    final Boolean ignorePattern_1 = op();
+    return Utils.copy(Entry.xs);
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{" + "xs := " + Utils.toString(xs) + "}";
+  }
 }
 
 ##########

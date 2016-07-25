@@ -1,63 +1,71 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private VDMMap m = MapUtil.map(new Maplet(true, new Rec(10L)));
+  private VDMMap m = MapUtil.map(new Maplet(true, new Rec(10L)));
 
-    public Entry() {
+  public void modify() {
+
+    ((Rec) Utils.get(m, true)).field = 20L;
+  }
+
+  public Number read() {
+
+    return ((Rec) Utils.get(m, true)).field;
+  }
+
+  public static Object Run() {
+
+    final Entry a = new Entry();
+    {
+      a.modify();
+      return a.read();
+    }
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{" + "m := " + Utils.toString(m) + "}";
+  }
+
+  private static class Rec implements Record {
+    public Number field;
+
+    public Rec(final Number _field) {
+
+      field = _field;
     }
 
-    public void modify() {
-        ((Rec) Utils.get(m, true)).field = 20L;
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof Rec)) {
+        return false;
+      }
+
+      Rec other = ((Rec) obj);
+
+      return Utils.equals(field, other.field);
     }
 
-    public Number read() {
-        return ((Rec) Utils.get(m, true)).field;
+    public int hashCode() {
+
+      return Utils.hashCode(field);
     }
 
-    public static Object Run() {
-        final Entry a = new Entry();
-        a.modify();
+    public Rec copy() {
 
-        return a.read();
+      return new Rec(field);
     }
 
     public String toString() {
-        return "Entry{" + "m := " + Utils.toString(m) + "}";
+
+      return "mk_Entry`Rec" + Utils.formatFields(field);
     }
-
-    private static class Rec implements Record {
-        public Number field;
-
-        public Rec(final Number _field) {
-            field = _field;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Rec)) {
-                return false;
-            }
-
-            Rec other = ((Rec) obj);
-
-            return Utils.equals(field, other.field);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(field);
-        }
-
-        public Rec copy() {
-            return new Rec(field);
-        }
-
-        public String toString() {
-            return "mk_Entry`Rec" + Utils.formatFields(field);
-        }
-    }
+  }
 }
 
 ##########

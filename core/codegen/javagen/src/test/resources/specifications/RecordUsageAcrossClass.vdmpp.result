@@ -1,96 +1,103 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    private static final B.RecB x = new B.RecB(1L);
-    private static final RecA y = new RecA(new B.RecB(2L));
+  private static final B.RecB x = new B.RecB(1L);
+  private static final RecA y = new RecA(new B.RecB(2L));
 
-    public A() {
+  public A() {}
+
+  public String toString() {
+
+    return "A{" + "x = " + Utils.toString(x) + ", y = " + Utils.toString(y) + "}";
+  }
+
+  public static class RecA implements Record {
+    public B.RecB b;
+
+    public RecA(final B.RecB _b) {
+
+      b = _b != null ? Utils.copy(_b) : null;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof RecA)) {
+        return false;
+      }
+
+      RecA other = ((RecA) obj);
+
+      return Utils.equals(b, other.b);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(b);
+    }
+
+    public RecA copy() {
+
+      return new RecA(b);
     }
 
     public String toString() {
-        return "A{" + "x = " + Utils.toString(x) + ", y = " +
-        Utils.toString(y) + "}";
+
+      return "mk_A`RecA" + Utils.formatFields(b);
     }
-
-    public static class RecA implements Record {
-        public B.RecB b;
-
-        public RecA(final B.RecB _b) {
-            b = (_b != null) ? Utils.copy(_b) : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof RecA)) {
-                return false;
-            }
-
-            RecA other = ((RecA) obj);
-
-            return Utils.equals(b, other.b);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(b);
-        }
-
-        public RecA copy() {
-            return new RecA(b);
-        }
-
-        public String toString() {
-            return "mk_A`RecA" + Utils.formatFields(b);
-        }
-    }
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public B() {
+  public B() {}
+
+  public String toString() {
+
+    return "B{}";
+  }
+
+  public static class RecB implements Record {
+    public Number b;
+
+    public RecB(final Number _b) {
+
+      b = _b;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof RecB)) {
+        return false;
+      }
+
+      RecB other = ((RecB) obj);
+
+      return Utils.equals(b, other.b);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(b);
+    }
+
+    public RecB copy() {
+
+      return new RecB(b);
     }
 
     public String toString() {
-        return "B{}";
+
+      return "mk_B`RecB" + Utils.formatFields(b);
     }
-
-    public static class RecB implements Record {
-        public Number b;
-
-        public RecB(final Number _b) {
-            b = _b;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof RecB)) {
-                return false;
-            }
-
-            RecB other = ((RecB) obj);
-
-            return Utils.equals(b, other.b);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(b);
-        }
-
-        public RecB copy() {
-            return new RecB(b);
-        }
-
-        public String toString() {
-            return "mk_B`RecB" + Utils.formatFields(b);
-        }
-    }
+  }
 }
 
 ##########

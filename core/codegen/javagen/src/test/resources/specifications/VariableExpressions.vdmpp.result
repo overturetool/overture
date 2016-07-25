@@ -1,43 +1,51 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    private Number n = 2L;
+  private Number n = 2L;
 
-    public A() {
-    }
+  public Number getN() {
 
-    public Number getN() {
-        return n;
-    }
+    return n;
+  }
 
-    public Number o1() {
-        return A.f().longValue() + A.g(3L).longValue() + h(1L, 2L).longValue() +
-        op2(3L).longValue() + A.op2(3L).longValue();
-    }
+  public Number o1() {
 
-    public static Number op2(final Number x) {
-        return 2L + x.longValue();
-    }
+    return A.f().longValue()
+        + A.g(3L).longValue()
+        + h(1L, 2L).longValue()
+        + op2(3L).longValue()
+        + A.op2(3L).longValue();
+  }
 
-    public static Number f() {
-        return 2L;
-    }
+  public static Number op2(final Number x) {
 
-    public static Number g(final Number x) {
-        return x;
-    }
+    return 2L + x.longValue();
+  }
 
-    public static Number h(final Number x, final Number y) {
-        return x.longValue() + y.longValue();
-    }
+  public A() {}
 
-    public String toString() {
-        return "A{" + "n := " + Utils.toString(n) + "}";
-    }
+  public static Number f() {
+
+    return 2L;
+  }
+
+  public static Number g(final Number x) {
+
+    return x;
+  }
+
+  public static Number h(final Number x, final Number y) {
+
+    return x.longValue() + y.longValue();
+  }
+
+  public String toString() {
+
+    return "A{" + "n := " + Utils.toString(n) + "}";
+  }
 }
 
 ##########

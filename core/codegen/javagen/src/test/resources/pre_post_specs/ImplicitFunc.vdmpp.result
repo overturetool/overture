@@ -1,56 +1,58 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Tuple Run() {
+
+    final Boolean b = !true;
+    if (b) {
+      return doImpl(5L, 7L);
+
+    } else {
+      return Tuple.mk_(7L, 5L);
+    }
+  }
+
+  public Entry() {}
+
+  private static Tuple doImpl(final Number left, final Number right) {
+
+    if (!(pre_doImpl(left, right))) {
+      throw new RuntimeException("Precondition failure: pre_doImpl");
     }
 
-    public static Tuple Run() {
-        final Boolean b = !true;
+    throw new UnsupportedOperationException();
+  }
 
-        if (b) {
-            return doImpl(5L, 7L);
-        } else {
-            return Tuple.mk_(7L, 5L);
-        }
+  private static Boolean pre_doImpl(final Number left, final Number right) {
+
+    return true;
+  }
+
+  private static Boolean post_doImpl(
+      final Number left, final Number right, final Tuple tuplePattern_1) {
+
+    Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);
+    Number res = null;
+    Number res2 = null;
+    if (success_1) {
+      res = ((Number) tuplePattern_1.get(0));
+      res2 = ((Number) tuplePattern_1.get(1));
     }
 
-    private static Tuple doImpl(final Number left, final Number right) {
-        if (!(pre_doImpl(left, right))) {
-            throw new RuntimeException("Precondition failure: pre_doImpl");
-        }
-
-        throw new UnsupportedOperationException();
+    if (!(success_1)) {
+      throw new RuntimeException("Tuple pattern match failed");
     }
 
-    private static Boolean pre_doImpl(final Number left, final Number right) {
-        return true;
-    }
+    return Utils.equals(left.longValue() + right.longValue(), res);
+  }
 
-    private static Boolean post_doImpl(final Number left, final Number right,
-        final Tuple tuplePattern_1) {
-        Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);
-        Number res = null;
-        Number res2 = null;
+  public String toString() {
 
-        if (success_1) {
-            res = ((Number) tuplePattern_1.get(0));
-            res2 = ((Number) tuplePattern_1.get(1));
-        }
-
-        if (!(success_1)) {
-            throw new RuntimeException("Tuple pattern match failed");
-        }
-
-        return Utils.equals(left.longValue() + right.longValue(), res);
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

@@ -1,48 +1,41 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Number Run() {
 
-    public static Number Run() {
-        Number x = null;
-        Number y = null;
-        Number z = null;
-        Boolean success_1 = false;
-        VDMSet set_1 = SetUtil.set(1L, 2L);
-
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && !(success_1);) {
-            x = ((Number) iterator_1.next());
-            success_1 = false;
-
-            for (Iterator iterator_2 = set_1.iterator();
-                    iterator_2.hasNext() && !(success_1);) {
-                y = ((Number) iterator_2.next());
-                success_1 = false;
-
-                for (Iterator iterator_3 = set_1.iterator();
-                        iterator_3.hasNext() && !(success_1);) {
-                    z = ((Number) iterator_3.next());
-                    success_1 = true;
-                }
-            }
+    Number x = null;
+    Number y = null;
+    Number z = null;
+    Boolean success_1 = false;
+    VDMSet set_1 = SetUtil.set(1L, 2L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && !(success_1); ) {
+      x = ((Number) iterator_1.next());
+      success_1 = false;
+      for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext() && !(success_1); ) {
+        y = ((Number) iterator_2.next());
+        success_1 = false;
+        for (Iterator iterator_3 = set_1.iterator(); iterator_3.hasNext() && !(success_1); ) {
+          z = ((Number) iterator_3.next());
+          success_1 = true;
         }
-
-        if (!(success_1)) {
-            throw new RuntimeException("Let Be St found no applicable bindings");
-        }
-
-        return x.longValue() * y.longValue() * z.longValue();
+      }
+    }
+    if (!(success_1)) {
+      throw new RuntimeException("Let Be St found no applicable bindings");
     }
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return x.longValue() * y.longValue() * z.longValue();
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

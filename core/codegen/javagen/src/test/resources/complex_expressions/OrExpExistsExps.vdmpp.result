@@ -1,68 +1,62 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private Number n = 0L;
+  private Number n = 0L;
 
-    public Entry() {
+  public Boolean op() {
+
+    Boolean orResult_1 = false;
+
+    Boolean existsExpResult_1 = false;
+    VDMSet set_1 = SetUtil.set(3L, 4L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && !(existsExpResult_1); ) {
+      Number x = ((Number) iterator_1.next());
+      existsExpResult_1 = inc(x);
+    }
+    if (existsExpResult_1) {
+      orResult_1 = true;
+    } else {
+      Boolean existsExpResult_2 = false;
+      VDMSet set_2 = SetUtil.set(4L, 5L, 6L);
+      for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext() && !(existsExpResult_2); ) {
+        Number y = ((Number) iterator_2.next());
+        existsExpResult_2 = inc(y);
+      }
+      orResult_1 = existsExpResult_2;
     }
 
-    public Boolean op() {
-        Boolean orResult_1 = false;
+    return orResult_1;
+  }
 
-        Boolean existsExpResult_1 = false;
-        VDMSet set_1 = SetUtil.set(3L, 4L);
+  public Boolean inc(final Number p) {
 
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && !(existsExpResult_1);) {
-            Number x = ((Number) iterator_1.next());
-            existsExpResult_1 = inc(x);
-        }
-
-        if (existsExpResult_1) {
-            orResult_1 = true;
-        } else {
-            Boolean existsExpResult_2 = false;
-            VDMSet set_2 = SetUtil.set(4L, 5L, 6L);
-
-            for (Iterator iterator_2 = set_2.iterator();
-                    iterator_2.hasNext() && !(existsExpResult_2);) {
-                Number y = ((Number) iterator_2.next());
-                existsExpResult_2 = inc(y);
-            }
-
-            orResult_1 = existsExpResult_2;
-        }
-
-        return orResult_1;
+    n = n.longValue() + 1L;
+    if (Utils.equals(p, 3L)) {
+      return false;
     }
 
-    public Boolean inc(final Number p) {
-        n = n.longValue() + 1L;
-
-        if (Utils.equals(p, 3L)) {
-            return false;
-        }
-
-        if (Utils.equals(p, 4L)) {
-            return false;
-        }
-
-        return true;
+    if (Utils.equals(p, 4L)) {
+      return false;
     }
 
-    public static Object Run() {
-        final Entry a = new Entry();
+    return true;
+  }
 
-        return Tuple.mk_(a.op(), a.n);
-    }
+  public static Object Run() {
 
-    public String toString() {
-        return "Entry{" + "n := " + Utils.toString(n) + "}";
-    }
+    final Entry a = new Entry();
+    return Tuple.mk_(a.op(), a.n);
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{" + "n := " + Utils.toString(n) + "}";
+  }
 }
 
 ##########

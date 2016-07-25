@@ -1,56 +1,52 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private Number n = 0L;
+  private Number n = 0L;
 
-    public Entry() {
-    }
+  public Boolean inc() {
 
-    public Boolean inc() {
-        n = n.longValue() + 1L;
+    n = n.longValue() + 1L;
+    return true;
+  }
 
-        return true;
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final Entry e = new Entry();
-        Boolean forAllExpResult_1 = true;
-        VDMSet set_1 = SetUtil.set(1L, 2L, 3L, 4L);
+    final Entry e = new Entry();
+    Boolean forAllExpResult_1 = true;
+    VDMSet set_1 = SetUtil.set(1L, 2L, 3L, 4L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && forAllExpResult_1; ) {
+      Number x = ((Number) iterator_1.next());
+      Boolean orResult_1 = false;
 
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && forAllExpResult_1;) {
-            Number x = ((Number) iterator_1.next());
-            Boolean orResult_1 = false;
+      if (false) {
+        orResult_1 = true;
+      } else {
+        Boolean orResult_2 = false;
 
-            if (false) {
-                orResult_1 = true;
-            } else {
-                Boolean orResult_2 = false;
-
-                if (e.inc()) {
-                    orResult_2 = true;
-                } else {
-                    orResult_2 = e.inc();
-                }
-
-                orResult_1 = orResult_2;
-            }
-
-            forAllExpResult_1 = orResult_1;
+        if (e.inc()) {
+          orResult_2 = true;
+        } else {
+          orResult_2 = e.inc();
         }
 
-        final Boolean b = forAllExpResult_1;
+        orResult_1 = orResult_2;
+      }
 
-        return Tuple.mk_(b, e.n);
+      forAllExpResult_1 = orResult_1;
     }
+    final Boolean b = forAllExpResult_1;
+    return Tuple.mk_(b, e.n);
+  }
 
-    public String toString() {
-        return "Entry{" + "n := " + Utils.toString(n) + "}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{" + "n := " + Utils.toString(n) + "}";
+  }
 }
 
 ##########

@@ -1,33 +1,30 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final VDMSeq xs = SeqUtil.seq(1L, 2L);
+  private static final VDMSeq xs = SeqUtil.seq(1L, 2L);
 
-    public Entry() {
+  public static Object Run() {
+
+    VDMSeq seqCompResult_1 = SeqUtil.seq();
+    VDMSet set_1 = SeqUtil.elems(Utils.copy(Entry.xs));
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Object e = ((Object) iterator_1.next());
+      if (Utils.equals(e, 2L)) {
+        seqCompResult_1.add(e);
+      }
     }
+    return Utils.copy(seqCompResult_1);
+  }
 
-    public static Object Run() {
-        VDMSeq seqCompResult_1 = SeqUtil.seq();
-        VDMSet set_1 = SeqUtil.elems(Utils.copy(Entry.xs));
+  public Entry() {}
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Object e = ((Object) iterator_1.next());
+  public String toString() {
 
-            if (Utils.equals(e, 2L)) {
-                seqCompResult_1.add(e);
-            }
-        }
-
-        return Utils.copy(seqCompResult_1);
-    }
-
-    public String toString() {
-        return "Entry{" + "xs = " + Utils.toString(xs) + "}";
-    }
+    return "Entry{" + "xs = " + Utils.toString(xs) + "}";
+  }
 }
 
 ##########

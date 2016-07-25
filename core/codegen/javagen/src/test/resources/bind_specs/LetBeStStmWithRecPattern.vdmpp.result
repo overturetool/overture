@@ -1,82 +1,84 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Number op() {
+
+    Vec recordPattern_1 = null;
+    Boolean success_1 = false;
+    VDMSet set_1 =
+        SetUtil.set(new Vec(1L, 11L), new Vec(2L, 22L), new Vec(3L, 33L), new Vec(4L, 44L));
+    Number a = null;
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && !(success_1); ) {
+      recordPattern_1 = ((Vec) iterator_1.next());
+      success_1 = true;
+      a = recordPattern_1.x;
+      Number intPattern_1 = recordPattern_1.y;
+      success_1 = Utils.equals(intPattern_1, 33L);
+
+      if (!(success_1)) {
+        continue;
+      }
+
+      success_1 = true;
+    }
+    if (!(success_1)) {
+      throw new RuntimeException("Let Be St found no applicable bindings");
     }
 
-    public static Number op() {
-        Vec recordPattern_1 = null;
-        Boolean success_1 = false;
-        VDMSet set_1 = SetUtil.set(new Vec(1L, 11L), new Vec(2L, 22L),
-                new Vec(3L, 33L), new Vec(4L, 44L));
-        Number a = null;
+    return a;
+  }
 
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && !(success_1);) {
-            recordPattern_1 = ((Vec) iterator_1.next());
-            success_1 = true;
-            a = recordPattern_1.x;
+  public static Object Run() {
 
-            Number intPattern_1 = recordPattern_1.y;
-            success_1 = Utils.equals(intPattern_1, 33L);
+    return op();
+  }
 
-            if (!(success_1)) {
-                continue;
-            }
+  public Entry() {}
 
-            success_1 = true;
-        }
+  public String toString() {
 
-        if (!(success_1)) {
-            throw new RuntimeException("Let Be St found no applicable bindings");
-        }
+    return "Entry{}";
+  }
 
-        return a;
+  public static class Vec implements Record {
+    public Number x;
+    public Number y;
+
+    public Vec(final Number _x, final Number _y) {
+
+      x = _x;
+      y = _y;
     }
 
-    public static Object Run() {
-        return op();
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof Vec)) {
+        return false;
+      }
+
+      Vec other = ((Vec) obj);
+
+      return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x, y);
+    }
+
+    public Vec copy() {
+
+      return new Vec(x, y);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`Vec" + Utils.formatFields(x, y);
     }
-
-    public static class Vec implements Record {
-        public Number x;
-        public Number y;
-
-        public Vec(final Number _x, final Number _y) {
-            x = _x;
-            y = _y;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Vec)) {
-                return false;
-            }
-
-            Vec other = ((Vec) obj);
-
-            return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x, y);
-        }
-
-        public Vec copy() {
-            return new Vec(x, y);
-        }
-
-        public String toString() {
-            return "mk_Entry`Vec" + Utils.formatFields(x, y);
-        }
-    }
+  }
 }
 
 ##########

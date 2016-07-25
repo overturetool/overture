@@ -1,24 +1,22 @@
 package my.model;
 
-import org.overture.codegen.runtime.*;
-
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final VDMSeq xs = SeqUtil.seq(3L, 4L, 5L);
+    final VDMSeq xs = SeqUtil.seq(3L, 4L, 5L);
+    return ((Number) Utils.get(xs, 3L));
+  }
 
-        return ((Number) Utils.get(xs, 3L));
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

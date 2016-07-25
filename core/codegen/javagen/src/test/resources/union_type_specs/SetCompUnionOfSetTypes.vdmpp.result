@@ -1,33 +1,30 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final VDMSet xs = SetUtil.set(true, false);
+  private static final VDMSet xs = SetUtil.set(true, false);
 
-    public Entry() {
+  public static Object Run() {
+
+    VDMSet setCompResult_1 = SetUtil.set();
+    VDMSet set_1 = Utils.copy(Entry.xs);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Object e = ((Object) iterator_1.next());
+      if (((Boolean) e)) {
+        setCompResult_1.add(e);
+      }
     }
+    return Utils.copy(setCompResult_1);
+  }
 
-    public static Object Run() {
-        VDMSet setCompResult_1 = SetUtil.set();
-        VDMSet set_1 = Utils.copy(Entry.xs);
+  public Entry() {}
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Object e = ((Object) iterator_1.next());
+  public String toString() {
 
-            if (((Boolean) e)) {
-                setCompResult_1.add(e);
-            }
-        }
-
-        return Utils.copy(setCompResult_1);
-    }
-
-    public String toString() {
-        return "Entry{" + "xs = " + Utils.toString(xs) + "}";
-    }
+    return "Entry{" + "xs = " + Utils.toString(xs) + "}";
+  }
 }
 
 ##########

@@ -1,64 +1,66 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    VDMSeq result = SeqUtil.seq();
+    long toVar_1 = 4L;
+
+    for (Long i = 1L; i <= toVar_1; i++) {
+      result = SeqUtil.conc(Utils.copy(result), SeqUtil.seq(f(i)));
     }
+    return Utils.copy(result);
+  }
 
-    public static Object Run() {
-        VDMSeq result = SeqUtil.seq();
-        long toVar_1 = 4L;
+  public Entry() {}
 
-        for (Long i = 1L; i <= toVar_1; i++) {
-            result = SeqUtil.conc(Utils.copy(result), SeqUtil.seq(f(i)));
-        }
+  public static Number f(final Number n) {
 
-        return Utils.copy(result);
-    }
+    final Number dummy1 = 10L;
+    final Number dummy2 = 20L;
 
-    public static Number f(final Number n) {
-        final Number dummy1 = 10L;
-        final Number dummy2 = 20L;
+    Number casesExpResult_1 = null;
 
-        Number casesExpResult_1 = null;
+    Number intPattern_1 = n;
+    Boolean success_1 = Utils.equals(intPattern_1, 1L);
 
-        Number intPattern_1 = n;
-        Boolean success_1 = Utils.equals(intPattern_1, 1L);
+    if (!(success_1)) {
+      Number intPattern_2 = n;
+      success_1 = Utils.equals(intPattern_2, 2L);
 
-        if (!(success_1)) {
-            Number intPattern_2 = n;
-            success_1 = Utils.equals(intPattern_2, 2L);
+      if (!(success_1)) {
+        Number a = n;
 
-            if (!(success_1)) {
-                Number a = n;
+        success_1 = true;
 
-                success_1 = true;
-
-                if (success_1) {
-                    casesExpResult_1 = a;
-                } else {
-                    casesExpResult_1 = 3L;
-                }
-            } else {
-                {
-                    final Number b = 5L;
-
-                    casesExpResult_1 = b;
-                }
-            }
+        if (success_1) {
+          casesExpResult_1 = a;
         } else {
-            casesExpResult_1 = 50L;
+          casesExpResult_1 = 3L;
         }
 
-        return casesExpResult_1;
+      } else {
+        {
+          final Number b = 5L;
+
+          casesExpResult_1 = b;
+        }
+      }
+
+    } else {
+      casesExpResult_1 = 50L;
     }
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return casesExpResult_1;
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

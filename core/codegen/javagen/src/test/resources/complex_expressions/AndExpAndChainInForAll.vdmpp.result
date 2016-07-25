@@ -1,64 +1,60 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private Number n = 0L;
+  private Number n = 0L;
 
-    public Entry() {
-    }
+  public Boolean inc() {
 
-    public Boolean inc() {
-        n = n.longValue() + 1L;
+    n = n.longValue() + 1L;
+    return true;
+  }
 
-        return true;
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final Entry e = new Entry();
-        Boolean forAllExpResult_1 = true;
-        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+    final Entry e = new Entry();
+    Boolean forAllExpResult_1 = true;
+    VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && forAllExpResult_1; ) {
+      Number x = ((Number) iterator_1.next());
+      Boolean andResult_1 = false;
 
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && forAllExpResult_1;) {
-            Number x = ((Number) iterator_1.next());
-            Boolean andResult_1 = false;
+      if (e.inc()) {
+        Boolean andResult_2 = false;
 
+        if (e.inc()) {
+          Boolean andResult_3 = false;
+
+          if (false) {
             if (e.inc()) {
-                Boolean andResult_2 = false;
-
-                if (e.inc()) {
-                    Boolean andResult_3 = false;
-
-                    if (false) {
-                        if (e.inc()) {
-                            andResult_3 = true;
-                        }
-                    }
-
-                    if (andResult_3) {
-                        andResult_2 = true;
-                    }
-                }
-
-                if (andResult_2) {
-                    andResult_1 = true;
-                }
+              andResult_3 = true;
             }
+          }
 
-            forAllExpResult_1 = andResult_1;
+          if (andResult_3) {
+            andResult_2 = true;
+          }
         }
 
-        final Boolean b = forAllExpResult_1;
+        if (andResult_2) {
+          andResult_1 = true;
+        }
+      }
 
-        return Tuple.mk_(b, e.n);
+      forAllExpResult_1 = andResult_1;
     }
+    final Boolean b = forAllExpResult_1;
+    return Tuple.mk_(b, e.n);
+  }
 
-    public String toString() {
-        return "Entry{" + "n := " + Utils.toString(n) + "}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{" + "n := " + Utils.toString(n) + "}";
+  }
 }
 
 ##########

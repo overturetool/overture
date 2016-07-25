@@ -1,63 +1,62 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  protected Number op(final Number a, final Boolean b) {
 
-    protected Number op(final Number a, final Boolean b) {
-        return 1L;
-    }
+    return 1L;
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B extends A {
-    public B() {
-    }
+  public Number go() {
 
-    public Number go() {
-        final Object a = 1L;
-        final Object b = true;
+    final Object a = 1L;
+    final Object b = true;
+    return op(((Number) a), ((Boolean) b));
+  }
 
-        return op(((Number) a), ((Boolean) b));
-    }
+  public B() {}
 
-    public String toString() {
-        return "B{}";
-    }
+  public String toString() {
+
+    return "B{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return new B().go();
-    }
+    return new B().go();
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

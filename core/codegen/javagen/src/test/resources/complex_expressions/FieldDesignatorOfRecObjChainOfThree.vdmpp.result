@@ -1,118 +1,135 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    return op1(new R1(new R2(new R3(new Entry()))));
+  }
+
+  public static Number op1(final R1 r1) {
+
+    return r1.r2.r3.e.getConst();
+  }
+
+  public Number getConst() {
+
+    return 3L;
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  public static class R1 implements Record {
+    public R2 r2;
+
+    public R1(final R2 _r2) {
+
+      r2 = _r2 != null ? Utils.copy(_r2) : null;
     }
 
-    public static Object Run() {
-        return op1(new R1(new R2(new R3(new Entry()))));
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof R1)) {
+        return false;
+      }
+
+      R1 other = ((R1) obj);
+
+      return Utils.equals(r2, other.r2);
     }
 
-    public static Number op1(final R1 r1) {
-        return r1.r2.r3.e.getConst();
+    public int hashCode() {
+
+      return Utils.hashCode(r2);
     }
 
-    public Number getConst() {
-        return 3L;
+    public R1 copy() {
+
+      return new R1(r2);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`R1" + Utils.formatFields(r2);
+    }
+  }
+
+  public static class R2 implements Record {
+    public R3 r3;
+
+    public R2(final R3 _r3) {
+
+      r3 = _r3 != null ? Utils.copy(_r3) : null;
     }
 
-    public static class R1 implements Record {
-        public R2 r2;
+    public boolean equals(final Object obj) {
 
-        public R1(final R2 _r2) {
-            r2 = (_r2 != null) ? Utils.copy(_r2) : null;
-        }
+      if (!(obj instanceof R2)) {
+        return false;
+      }
 
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof R1)) {
-                return false;
-            }
+      R2 other = ((R2) obj);
 
-            R1 other = ((R1) obj);
-
-            return Utils.equals(r2, other.r2);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(r2);
-        }
-
-        public R1 copy() {
-            return new R1(r2);
-        }
-
-        public String toString() {
-            return "mk_Entry`R1" + Utils.formatFields(r2);
-        }
+      return Utils.equals(r3, other.r3);
     }
 
-    public static class R2 implements Record {
-        public R3 r3;
+    public int hashCode() {
 
-        public R2(final R3 _r3) {
-            r3 = (_r3 != null) ? Utils.copy(_r3) : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof R2)) {
-                return false;
-            }
-
-            R2 other = ((R2) obj);
-
-            return Utils.equals(r3, other.r3);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(r3);
-        }
-
-        public R2 copy() {
-            return new R2(r3);
-        }
-
-        public String toString() {
-            return "mk_Entry`R2" + Utils.formatFields(r3);
-        }
+      return Utils.hashCode(r3);
     }
 
-    public static class R3 implements Record {
-        public Entry e;
+    public R2 copy() {
 
-        public R3(final Entry _e) {
-            e = (_e != null) ? _e : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof R3)) {
-                return false;
-            }
-
-            R3 other = ((R3) obj);
-
-            return Utils.equals(e, other.e);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(e);
-        }
-
-        public R3 copy() {
-            return new R3(e);
-        }
-
-        public String toString() {
-            return "mk_Entry`R3" + Utils.formatFields(e);
-        }
+      return new R2(r3);
     }
+
+    public String toString() {
+
+      return "mk_Entry`R2" + Utils.formatFields(r3);
+    }
+  }
+
+  public static class R3 implements Record {
+    public Entry e;
+
+    public R3(final Entry _e) {
+
+      e = _e != null ? _e : null;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof R3)) {
+        return false;
+      }
+
+      R3 other = ((R3) obj);
+
+      return Utils.equals(e, other.e);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(e);
+    }
+
+    public R3 copy() {
+
+      return new R3(e);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`R3" + Utils.formatFields(e);
+    }
+  }
 }
 
 ##########

@@ -1,70 +1,67 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public A nilPatternOp(final A nullPattern_1) {
+
+    Boolean success_1 = Utils.equals(nullPattern_1, null);
+    if (!(success_1)) {
+      throw new RuntimeException("Nil pattern match failed");
     }
 
-    public A nilPatternOp(final A nullPattern_1) {
-        Boolean success_1 = Utils.equals(nullPattern_1, null);
-
-        if (!(success_1)) {
-            throw new RuntimeException("Nil pattern match failed");
-        }
-
-        final Object nullPattern_2 = null;
-        Boolean success_2 = Utils.equals(nullPattern_2, null);
-
-        if (!(success_2)) {
-            throw new RuntimeException("Nil pattern match failed");
-        }
-
-        return null;
+    final Object nullPattern_2 = null;
+    Boolean success_2 = Utils.equals(nullPattern_2, null);
+    if (!(success_2)) {
+      throw new RuntimeException("Nil pattern match failed");
     }
 
-    public static A nilPatternFun(final A nullPattern_3) {
-        Boolean success_3 = Utils.equals(nullPattern_3, null);
+    return null;
+  }
 
-        if (!(success_3)) {
-            throw new RuntimeException("Nil pattern match failed");
-        }
+  public A() {}
 
-        final Object nullPattern_4 = null;
-        Boolean success_4 = Utils.equals(nullPattern_4, null);
+  public static A nilPatternFun(final A nullPattern_3) {
 
-        if (!(success_4)) {
-            throw new RuntimeException("Nil pattern match failed");
-        }
-
-        return null;
+    Boolean success_3 = Utils.equals(nullPattern_3, null);
+    if (!(success_3)) {
+      throw new RuntimeException("Nil pattern match failed");
     }
 
-    public String toString() {
-        return "A{}";
+    final Object nullPattern_4 = null;
+    Boolean success_4 = Utils.equals(nullPattern_4, null);
+    if (!(success_4)) {
+      throw new RuntimeException("Nil pattern match failed");
     }
+
+    return null;
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return SeqUtil.seq(new A().nilPatternOp(null), A.nilPatternFun(null));
-    }
+    return SeqUtil.seq(new A().nilPatternOp(null), A.nilPatternFun(null));
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

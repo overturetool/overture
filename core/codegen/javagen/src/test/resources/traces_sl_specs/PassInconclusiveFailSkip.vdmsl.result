@@ -1,167 +1,186 @@
+
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 
-import java.util.*;
-
-
 @SuppressWarnings("all")
 final public class Entry implements java.io.Serializable {
-    private Entry() {
+  private Entry() {}
+
+  public static void op() {
+
+    /* skip */
+
+  }
+
+  public static void pass() {
+
+    if (!(pre_pass())) {
+      throw new RuntimeException("Precondition failure: pre_pass");
     }
 
-    public static void op() {
-        /* skip */
+    /* skip */
+
+  }
+
+  public static void inconclusive() {
+
+    if (!(pre_inconclusive())) {
+      throw new RuntimeException("Precondition failure: pre_inconclusive");
     }
 
-    public static void pass() {
-        if (!(pre_pass())) {
-            throw new RuntimeException("Precondition failure: pre_pass");
-        }
+    /* skip */
 
-        /* skip */
+  }
+
+  public static void failPre() {
+
+    inconclusive();
+  }
+
+  public static void crashPre() {
+
+    if (!(pre_crashPre())) {
+      throw new RuntimeException("Precondition failure: pre_crashPre");
     }
 
-    public static void inconclusive() {
-        if (!(pre_inconclusive())) {
-            throw new RuntimeException("Precondition failure: pre_inconclusive");
-        }
+    /* skip */
 
-        /* skip */
+  }
+
+  public static Boolean pre_pass() {
+
+    return true;
+  }
+
+  public static Boolean pre_inconclusive() {
+
+    return false;
+  }
+
+  public static Boolean pre_crashPre() {
+
+    return Utils.equals(Utils.divide((1.0 * 1L), 0L), 0L);
+  }
+
+  public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    {
+      final Number ID_1 = gen.inc();
+      store.staticReg(ID_1, Entry.class);
     }
 
-    public static void failPre() {
-        inconclusive();
-    }
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    SequenceTraceNode sequence_2 = new SequenceTraceNode();
+    AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+    CallStatement callStm_1 =
+        new CallStatement() {
+          public Boolean meetsPreCond() {
 
-    public static void crashPre() {
-        if (!(pre_crashPre())) {
-            throw new RuntimeException("Precondition failure: pre_crashPre");
-        }
+            return pre_pass();
+          }
 
-        /* skip */
-    }
+          public Object execute() {
 
-    public static Boolean pre_pass() {
-        return true;
-    }
+            pass();
+            return Utils.VOID_VALUE;
+          }
 
-    public static Boolean pre_inconclusive() {
-        return false;
-    }
+          public String toString() {
 
-    public static Boolean pre_crashPre() {
-        return Utils.equals(Utils.divide((1.0 * 1L), 0L), 0L);
-    }
+            return "pass()";
+          }
+        };
+    StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
 
-    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
+    CallStatement callStm_2 =
+        new CallStatement() {
+          public Boolean meetsPreCond() {
 
-        {
-            final Number ID_1 = gen.inc();
-            store.staticReg(ID_1, Entry.class);
-        }
+            return pre_inconclusive();
+          }
 
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        SequenceTraceNode sequence_2 = new SequenceTraceNode();
-        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
-        CallStatement callStm_1 = new CallStatement() {
-                public Boolean meetsPreCond() {
-                    return pre_pass();
-                }
+          public Object execute() {
 
-                public Object execute() {
-                    pass();
+            inconclusive();
+            return Utils.VOID_VALUE;
+          }
 
-                    return Utils.VOID_VALUE;
-                }
+          public String toString() {
 
-                public String toString() {
-                    return "pass()";
-                }
-            };
+            return "inconclusive()";
+          }
+        };
+    StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
 
-        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+    CallStatement callStm_3 =
+        new CallStatement() {
+          public Object execute() {
 
-        CallStatement callStm_2 = new CallStatement() {
-                public Boolean meetsPreCond() {
-                    return pre_inconclusive();
-                }
+            failPre();
+            return Utils.VOID_VALUE;
+          }
 
-                public Object execute() {
-                    inconclusive();
+          public String toString() {
 
-                    return Utils.VOID_VALUE;
-                }
+            return "failPre()";
+          }
+        };
+    StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
 
-                public String toString() {
-                    return "inconclusive()";
-                }
-            };
+    CallStatement callStm_4 =
+        new CallStatement() {
+          public Boolean meetsPreCond() {
 
-        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+            return pre_crashPre();
+          }
 
-        CallStatement callStm_3 = new CallStatement() {
-                public Object execute() {
-                    failPre();
+          public Object execute() {
 
-                    return Utils.VOID_VALUE;
-                }
+            crashPre();
+            return Utils.VOID_VALUE;
+          }
 
-                public String toString() {
-                    return "failPre()";
-                }
-            };
+          public String toString() {
 
-        StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
+            return "crashPre()";
+          }
+        };
+    StatementTraceNode apply_4 = new StatementTraceNode(callStm_4);
 
-        CallStatement callStm_4 = new CallStatement() {
-                public Boolean meetsPreCond() {
-                    return pre_crashPre();
-                }
+    CallStatement callStm_5 =
+        new CallStatement() {
+          public Object execute() {
 
-                public Object execute() {
-                    crashPre();
+            failPre();
+            return Utils.VOID_VALUE;
+          }
 
-                    return Utils.VOID_VALUE;
-                }
+          public String toString() {
 
-                public String toString() {
-                    return "crashPre()";
-                }
-            };
+            return "failPre()";
+          }
+        };
+    StatementTraceNode apply_5 = new StatementTraceNode(callStm_5);
 
-        StatementTraceNode apply_4 = new StatementTraceNode(callStm_4);
+    alternatives_2.add(apply_1);
+    alternatives_2.add(apply_2);
+    alternatives_2.add(apply_3);
+    alternatives_2.add(apply_4);
+    alternatives_2.add(apply_5);
+    sequence_2.add(alternatives_2);
 
-        CallStatement callStm_5 = new CallStatement() {
-                public Object execute() {
-                    failPre();
+    sequence_1.add(sequence_2);
 
-                    return Utils.VOID_VALUE;
-                }
+    TraceNode.executeTests(sequence_1, testAccumulator, store);
+  }
 
-                public String toString() {
-                    return "failPre()";
-                }
-            };
+  public String toString() {
 
-        StatementTraceNode apply_5 = new StatementTraceNode(callStm_5);
-
-        alternatives_2.add(apply_1);
-        alternatives_2.add(apply_2);
-        alternatives_2.add(apply_3);
-        alternatives_2.add(apply_4);
-        alternatives_2.add(apply_5);
-        sequence_2.add(alternatives_2);
-
-        sequence_1.add(sequence_2);
-
-        TraceNode.executeTests(sequence_1, testAccumulator, store);
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

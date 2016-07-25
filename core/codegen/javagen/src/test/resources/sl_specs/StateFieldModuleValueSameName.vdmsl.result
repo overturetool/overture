@@ -1,70 +1,74 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 final public class Entry {
-    private static Other Other = new Other(10L);
+  private static Other Other = new Other(10L);
 
-    private Entry() {
+  private Entry() {}
+
+  public static Object Run() {
+
+    return Other.x;
+  }
+
+  public String toString() {
+
+    return "Entry{" + "Other := " + Utils.toString(Other) + "}";
+  }
+
+  public static class Other implements Record {
+    public Number x;
+
+    public Other(final Number _x) {
+
+      x = _x;
     }
 
-    public static Object Run() {
-        return Other.x;
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof Other)) {
+        return false;
+      }
+
+      Other other = ((Other) obj);
+
+      return Utils.equals(x, other.x);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x);
+    }
+
+    public Other copy() {
+
+      return new Other(x);
     }
 
     public String toString() {
-        return "Entry{" + "Other := " + Utils.toString(Other) + "}";
+
+      return "mk_Entry`Other" + Utils.formatFields(x);
     }
-
-    public static class Other implements Record {
-        public Number x;
-
-        public Other(final Number _x) {
-            x = _x;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Other)) {
-                return false;
-            }
-
-            Other other = ((Other) obj);
-
-            return Utils.equals(x, other.x);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x);
-        }
-
-        public Other copy() {
-            return new Other(x);
-        }
-
-        public String toString() {
-            return "mk_Entry`Other" + Utils.formatFields(x);
-        }
-    }
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 final public class Other {
-    public static final Number x = 5L;
+  public static final Number x = 5L;
 
-    private Other() {
-    }
+  private Other() {}
 
-    public String toString() {
-        return "Other{" + "x = " + Utils.toString(x) + "}";
-    }
+  public String toString() {
+
+    return "Other{" + "x = " + Utils.toString(x) + "}";
+  }
 }
 
 ##########

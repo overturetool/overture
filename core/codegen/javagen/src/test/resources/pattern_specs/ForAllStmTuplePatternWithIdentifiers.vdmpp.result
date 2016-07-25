@@ -1,43 +1,46 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Number Run() {
+
+    Number result = 0L;
+    for (Iterator iterator_1 =
+            SetUtil.set(
+                    Tuple.mk_(1L, 2L),
+                    Tuple.mk_(2L, 3L),
+                    Tuple.mk_(3L, 4L),
+                    Tuple.mk_(4L, 5L),
+                    Tuple.mk_(5L, 6L))
+                .iterator();
+        iterator_1.hasNext();
+        ) {
+      Tuple tuplePattern_1 = (Tuple) iterator_1.next();
+      Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);
+      Number a = null;
+      Number b = null;
+      if (success_1) {
+        a = ((Number) tuplePattern_1.get(0));
+        b = ((Number) tuplePattern_1.get(1));
+      }
+
+      if (!(success_1)) {
+        continue;
+      }
+
+      result = result.longValue() + a.longValue() * b.longValue();
     }
+    return result;
+  }
 
-    public static Number Run() {
-        Number result = 0L;
+  public Entry() {}
 
-        for (Iterator iterator_1 = SetUtil.set(Tuple.mk_(1L, 2L),
-                    Tuple.mk_(2L, 3L), Tuple.mk_(3L, 4L), Tuple.mk_(4L, 5L),
-                    Tuple.mk_(5L, 6L)).iterator(); iterator_1.hasNext();) {
-            Tuple tuplePattern_1 = (Tuple) iterator_1.next();
-            Boolean success_1 = tuplePattern_1.compatible(Number.class,
-                    Number.class);
-            Number a = null;
-            Number b = null;
+  public String toString() {
 
-            if (success_1) {
-                a = ((Number) tuplePattern_1.get(0));
-                b = ((Number) tuplePattern_1.get(1));
-            }
-
-            if (!(success_1)) {
-                continue;
-            }
-
-            result = result.longValue() + (a.longValue() * b.longValue());
-        }
-
-        return result;
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

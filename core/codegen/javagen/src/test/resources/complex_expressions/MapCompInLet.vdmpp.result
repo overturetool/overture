@@ -1,38 +1,34 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    return Test();
+  }
+
+  public static VDMMap Test() {
+
+    VDMMap mapCompResult_1 = MapUtil.map();
+    VDMSet set_1 = SeqUtil.elems(SeqUtil.seq(1L, 2L, 3L));
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Number x = ((Number) iterator_1.next());
+      if (Utils.equals(1L, 1L)) {
+        MapUtil.mapAdd(mapCompResult_1, new Maplet(x.longValue() * 2L, x));
+      }
     }
+    final VDMMap x = Utils.copy(mapCompResult_1);
+    return Utils.copy(x);
+  }
 
-    public static Object Run() {
-        return Test();
-    }
+  public Entry() {}
 
-    public static VDMMap Test() {
-        VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_1 = SeqUtil.elems(SeqUtil.seq(1L, 2L, 3L));
+  public String toString() {
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Number x = ((Number) iterator_1.next());
-
-            if (Utils.equals(1L, 1L)) {
-                MapUtil.mapAdd(mapCompResult_1,
-                    new Maplet(x.longValue() * 2L, x));
-            }
-        }
-
-        final VDMMap x = Utils.copy(mapCompResult_1);
-
-        return Utils.copy(x);
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

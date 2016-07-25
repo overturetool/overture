@@ -1,111 +1,123 @@
+
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 
-import java.util.*;
-
-
 @SuppressWarnings("all")
 public class Entry implements java.io.Serializable {
-    public Entry() {
-    }
+  private void op1() {
 
-    private void op1() {
-        /* skip */
-    }
+    /* skip */
 
-    private void op2() {
-        /* skip */
-    }
+  }
 
-    private static Number fun1() {
-        return 1L;
-    }
+  private void op2() {
 
-    private static Number fun2() {
-        return 2L;
-    }
+    /* skip */
 
-    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
-        SequenceTraceNode sequence_2 = new SequenceTraceNode();
-        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
-        CallStatementPp callStm_1 = new CallStatementPp() {
-                public Object execute() {
-                    ((Entry) instance).op1();
+  }
 
-                    return Utils.VOID_VALUE;
-                }
+  public Entry() {}
 
-                public String toString() {
-                    return "op1()";
-                }
-            };
+  private static Number fun1() {
 
-        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+    return 1L;
+  }
 
-        CallStatementPp callStm_2 = new CallStatementPp() {
-                public Object execute() {
-                    ((Entry) instance).op2();
+  private static Number fun2() {
 
-                    return Utils.VOID_VALUE;
-                }
+    return 2L;
+  }
 
-                public String toString() {
-                    return "op2()";
-                }
-            };
+  public void Entry_T1_Run(final TestAccumulator testAccumulator) {
 
-        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
+    SequenceTraceNode sequence_2 = new SequenceTraceNode();
+    AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+    CallStatementPp callStm_1 =
+        new CallStatementPp() {
+          public Object execute() {
 
-        alternatives_2.add(apply_1);
-        alternatives_2.add(apply_2);
-        sequence_2.add(alternatives_2);
+            ((Entry) instance).op1();
+            return Utils.VOID_VALUE;
+          }
 
-        concurrent_1.add(sequence_2);
+          public String toString() {
 
-        SequenceTraceNode sequence_3 = new SequenceTraceNode();
-        AlternativeTraceNode alternatives_3 = new AlternativeTraceNode();
-        CallStatementPp callStm_3 = new CallStatementPp() {
-                public Object execute() {
-                    return fun1();
-                }
+            return "op1()";
+          }
+        };
+    StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
 
-                public String toString() {
-                    return "fun1()";
-                }
-            };
+    CallStatementPp callStm_2 =
+        new CallStatementPp() {
+          public Object execute() {
 
-        StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
+            ((Entry) instance).op2();
+            return Utils.VOID_VALUE;
+          }
 
-        CallStatementPp callStm_4 = new CallStatementPp() {
-                public Object execute() {
-                    return fun2();
-                }
+          public String toString() {
 
-                public String toString() {
-                    return "fun2()";
-                }
-            };
+            return "op2()";
+          }
+        };
+    StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
 
-        StatementTraceNode apply_4 = new StatementTraceNode(callStm_4);
+    alternatives_2.add(apply_1);
+    alternatives_2.add(apply_2);
+    sequence_2.add(alternatives_2);
 
-        alternatives_3.add(apply_3);
-        alternatives_3.add(apply_4);
-        sequence_3.add(alternatives_3);
+    concurrent_1.add(sequence_2);
 
-        concurrent_1.add(sequence_3);
+    SequenceTraceNode sequence_3 = new SequenceTraceNode();
+    AlternativeTraceNode alternatives_3 = new AlternativeTraceNode();
+    CallStatementPp callStm_3 =
+        new CallStatementPp() {
+          public Object execute() {
 
-        sequence_1.add(concurrent_1);
+            return fun1();
+          }
 
-        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
-    }
+          public String toString() {
 
-    public String toString() {
-        return "Entry{}";
-    }
+            return "fun1()";
+          }
+        };
+    StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
+
+    CallStatementPp callStm_4 =
+        new CallStatementPp() {
+          public Object execute() {
+
+            return fun2();
+          }
+
+          public String toString() {
+
+            return "fun2()";
+          }
+        };
+    StatementTraceNode apply_4 = new StatementTraceNode(callStm_4);
+
+    alternatives_3.add(apply_3);
+    alternatives_3.add(apply_4);
+    sequence_3.add(alternatives_3);
+
+    concurrent_1.add(sequence_3);
+
+    sequence_1.add(concurrent_1);
+
+    TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

@@ -1,102 +1,107 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    {
+      final Number a = 1L;
+      final Tuple tuplePattern_1 = Tuple.mk_(a, 2L);
+      Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);
+      Number b = null;
+      Number c = null;
+      if (success_1) {
+        b = ((Number) tuplePattern_1.get(0));
+        c = ((Number) tuplePattern_1.get(1));
+      }
+
+      if (!(success_1)) {
+        throw new RuntimeException("Tuple pattern match failed");
+      }
+
+      final Number d = 11L;
+      final Rec recordPattern_1 = new Rec(a.longValue() + b.longValue() + c.longValue(), d);
+      Boolean success_2 = true;
+      Number e = null;
+      Number f = null;
+      e = recordPattern_1.f1;
+      f = recordPattern_1.f2;
+
+      if (!(success_2)) {
+        throw new RuntimeException("Record pattern match failed");
+      }
+
+      final Number g = 21L;
+      final Tuple tuplePattern_2 = Tuple.mk_(9L, 10L);
+      Boolean success_3 = tuplePattern_2.compatible(Number.class, Number.class);
+      Number h = null;
+      Number i = null;
+      if (success_3) {
+        h = ((Number) tuplePattern_2.get(0));
+        i = ((Number) tuplePattern_2.get(1));
+      }
+
+      if (!(success_3)) {
+        throw new RuntimeException("Tuple pattern match failed");
+      }
+
+      return a.longValue()
+          + b.longValue()
+          + c.longValue()
+          + d.longValue()
+          + e.longValue()
+          + f.longValue()
+          + g.longValue()
+          + h.longValue()
+          + i.longValue();
+    }
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  private static class Rec implements Record {
+    public Number f1;
+    public Number f2;
+
+    public Rec(final Number _f1, final Number _f2) {
+
+      f1 = _f1;
+      f2 = _f2;
     }
 
-    public static Object Run() {
-        {
-            final Number a = 1L;
-            final Tuple tuplePattern_1 = Tuple.mk_(a, 2L);
-            Boolean success_1 = tuplePattern_1.compatible(Number.class,
-                    Number.class);
-            Number b = null;
-            Number c = null;
+    public boolean equals(final Object obj) {
 
-            if (success_1) {
-                b = ((Number) tuplePattern_1.get(0));
-                c = ((Number) tuplePattern_1.get(1));
-            }
+      if (!(obj instanceof Rec)) {
+        return false;
+      }
 
-            if (!(success_1)) {
-                throw new RuntimeException("Tuple pattern match failed");
-            }
+      Rec other = ((Rec) obj);
 
-            final Number d = 11L;
-            final Rec recordPattern_1 = new Rec(a.longValue() + b.longValue() +
-                    c.longValue(), d);
-            Boolean success_2 = true;
-            Number e = null;
-            Number f = null;
-            e = recordPattern_1.f1;
-            f = recordPattern_1.f2;
+      return (Utils.equals(f1, other.f1)) && (Utils.equals(f2, other.f2));
+    }
 
-            if (!(success_2)) {
-                throw new RuntimeException("Record pattern match failed");
-            }
+    public int hashCode() {
 
-            final Number g = 21L;
-            final Tuple tuplePattern_2 = Tuple.mk_(9L, 10L);
-            Boolean success_3 = tuplePattern_2.compatible(Number.class,
-                    Number.class);
-            Number h = null;
-            Number i = null;
+      return Utils.hashCode(f1, f2);
+    }
 
-            if (success_3) {
-                h = ((Number) tuplePattern_2.get(0));
-                i = ((Number) tuplePattern_2.get(1));
-            }
+    public Rec copy() {
 
-            if (!(success_3)) {
-                throw new RuntimeException("Tuple pattern match failed");
-            }
-
-            return a.longValue() + b.longValue() + c.longValue() +
-            d.longValue() + e.longValue() + f.longValue() + g.longValue() +
-            h.longValue() + i.longValue();
-        }
+      return new Rec(f1, f2);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`Rec" + Utils.formatFields(f1, f2);
     }
-
-    private static class Rec implements Record {
-        public Number f1;
-        public Number f2;
-
-        public Rec(final Number _f1, final Number _f2) {
-            f1 = _f1;
-            f2 = _f2;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Rec)) {
-                return false;
-            }
-
-            Rec other = ((Rec) obj);
-
-            return (Utils.equals(f1, other.f1)) &&
-            (Utils.equals(f2, other.f2));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(f1, f2);
-        }
-
-        public Rec copy() {
-            return new Rec(f1, f2);
-        }
-
-        public String toString() {
-            return "mk_Entry`Rec" + Utils.formatFields(f1, f2);
-        }
-    }
+  }
 }
 
 ##########

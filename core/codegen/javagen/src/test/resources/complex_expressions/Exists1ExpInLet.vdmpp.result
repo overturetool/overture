@@ -1,38 +1,36 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    return Test();
+  }
+
+  public static Boolean Test() {
+
+    Long exists1Counter_1 = 0L;
+    VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+    for (Iterator iterator_1 = set_1.iterator();
+        iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);
+        ) {
+      Number x = ((Number) iterator_1.next());
+      if (Utils.equals(Utils.mod(x.longValue(), 2L), 0L)) {
+        exists1Counter_1++;
+      }
     }
+    final Boolean x = Utils.equals(exists1Counter_1, 1L);
+    return x;
+  }
 
-    public static Object Run() {
-        return Test();
-    }
+  public Entry() {}
 
-    public static Boolean Test() {
-        Long exists1Counter_1 = 0L;
-        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+  public String toString() {
 
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);) {
-            Number x = ((Number) iterator_1.next());
-
-            if (Utils.equals(Utils.mod(x.longValue(), 2L), 0L)) {
-                exists1Counter_1++;
-            }
-        }
-
-        final Boolean x = Utils.equals(exists1Counter_1, 1L);
-
-        return x;
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

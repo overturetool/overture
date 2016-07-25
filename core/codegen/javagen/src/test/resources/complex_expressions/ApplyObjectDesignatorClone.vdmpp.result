@@ -1,62 +1,61 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public static final VDMMap x = MapUtil.map(new Maplet(Tuple.mk_(1L, 2L),
-                new A()));
+  public static final VDMMap x = MapUtil.map(new Maplet(Tuple.mk_(1L, 2L), new A()));
 
-    public A() {
-    }
+  public Number no() {
 
-    public Number no() {
-        return 50L;
-    }
+    return 50L;
+  }
 
-    public Number op1() {
-        final Tuple a = Tuple.mk_(1L, 2L);
+  public Number op1() {
 
-        return ((A) Utils.get(A.x, a)).no();
-    }
+    final Tuple a = Tuple.mk_(1L, 2L);
+    return ((A) Utils.get(A.x, a)).no();
+  }
 
-    public Number op2() {
-        final Tuple a = Tuple.mk_('x', 'y');
-        final Tuple b = Tuple.mk_(1L, 2L);
+  public Number op2() {
 
-        return ((A) Utils.get(m(Utils.copy(a), Utils.copy(a)), b)).no();
-    }
+    final Tuple a = Tuple.mk_('x', 'y');
+    final Tuple b = Tuple.mk_(1L, 2L);
+    return ((A) Utils.get(m(Utils.copy(a), Utils.copy(a)), b)).no();
+  }
 
-    public VDMMap m(final Tuple p, final Tuple q) {
-        return Utils.copy(A.x);
-    }
+  public VDMMap m(final Tuple p, final Tuple q) {
 
-    public String toString() {
-        return "A{" + "x = " + Utils.toString(x) + "}";
-    }
+    return Utils.copy(A.x);
+  }
+
+  public A() {}
+
+  public String toString() {
+
+    return "A{" + "x = " + Utils.toString(x) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final A a = new A();
+    final A a = new A();
+    return a.op1().longValue() + a.op2().longValue();
+  }
 
-        return a.op1().longValue() + a.op2().longValue();
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

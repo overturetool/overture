@@ -1,45 +1,41 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Number x = 4L;
+  public Number x = 4L;
 
-    public Entry() {
+  public static Object Run() {
+
+    VDMSeq ternaryIfExp_1 = null;
+
+    if (Utils.equals(1L, 1L)) {
+      ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq(new Entry()));
+    } else {
+      ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq());
     }
 
-    public static Object Run() {
-        VDMSeq ternaryIfExp_1 = null;
-
-        if (Utils.equals(1L, 1L)) {
-            ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq(new Entry()));
-        } else {
-            ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq());
-        }
-
-        final VDMSeq m = Utils.copy(ternaryIfExp_1);
-        final VDMSeq s = Utils.copy(((VDMSeq) Utils.get(m, 1L)));
-
-        Object obj_1 = Utils.get(s, s.size());
-
-        Number apply_1 = null;
-
-        if (obj_1 instanceof Entry) {
-            apply_1 = ((Number) ((Entry) obj_1).x);
-        } else {
-            throw new RuntimeException("Missing member: x");
-        }
-
-        final Object v = apply_1;
-
-        return v;
+    final VDMSeq m = Utils.copy(ternaryIfExp_1);
+    final VDMSeq s = Utils.copy(((VDMSeq) Utils.get(m, 1L)));
+    Object obj_1 = Utils.get(s, s.size());
+    Number apply_1 = null;
+    if (obj_1 instanceof Entry) {
+      apply_1 = ((Number) ((Entry) obj_1).x);
+    } else {
+      throw new RuntimeException("Missing member: x");
     }
 
-    public String toString() {
-        return "Entry{" + "x := " + Utils.toString(x) + "}";
-    }
+    final Object v = apply_1;
+    return v;
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{" + "x := " + Utils.toString(x) + "}";
+  }
 }
 
 ##########

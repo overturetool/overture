@@ -1,62 +1,68 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public void q1() {
 
-    public void q1() {
-        q2();
-    }
+    q2();
+  }
 
-    public void q2() {
-        /* skip */
-    }
+  public void q2() {
 
-    public void q3() {
-        q2();
-        q2();
-        q2();
-    }
+    /* skip */
 
-    public Number op1() {
-        return f(1L);
-    }
+  }
 
-    public Number op2() {
-        return B.f(1L);
-    }
+  public void q3() {
 
-    public static Number f(final Number x) {
-        return x;
-    }
+    q2();
+    q2();
+    q2();
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public Number op1() {
+
+    return f(1L);
+  }
+
+  public Number op2() {
+
+    return B.f(1L);
+  }
+
+  public A() {}
+
+  public static Number f(final Number x) {
+
+    return x;
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public B() {
-    }
+  public B() {}
 
-    public static Number f(final Number x) {
-        return x;
-    }
+  public static Number f(final Number x) {
 
-    public String toString() {
-        return "B{}";
-    }
+    return x;
+  }
+
+  public String toString() {
+
+    return "B{}";
+  }
 }
 
 ##########

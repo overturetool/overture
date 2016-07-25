@@ -1,99 +1,97 @@
+
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 
-import java.util.*;
-
-
 @SuppressWarnings("all")
 public class Entry implements java.io.Serializable {
-    private Number x = 1L;
+  private Number x = 1L;
 
-    public Entry(final Number px) {
-        cg_init_Entry_1(px);
+  public void cg_init_Entry_1(final Number px) {
+
+    x = px;
+  }
+
+  public Entry(final Number px) {
+
+    cg_init_Entry_1(px);
+  }
+
+  public Number op() {
+
+    x = x.longValue() + 1L;
+    return x;
+  }
+
+  public Entry() {}
+
+  public void Entry_T1_Run(final TestAccumulator testAccumulator) {
+
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
+    AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+    VDMSet set_1 = SetUtil.set(new Entry(3L), new Entry(4L));
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      final Entry e1 = ((Entry) iterator_1.next());
+      final Number ID_1 = gen.inc();
+
+      store.register(ID_1, e1);
+      CallStatementPp callStm_1 =
+          new CallStatementPp() {
+            public Object execute() {
+
+              return ((Entry) store.getValue(ID_1)).op();
+            }
+
+            public String toString() {
+
+              return "e1.op()";
+            }
+          };
+      StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+      apply_1.addVarFirst(new TraceVariable("e1", "Entry", Utils.toString(e1)));
+      alternatives_2.add(apply_1);
     }
+    concurrent_1.add(alternatives_2);
 
-    public Entry() {
+    AlternativeTraceNode alternatives_3 = new AlternativeTraceNode();
+    VDMSet set_2 = SetUtil.set(new Entry(5L), new Entry(6L));
+    for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext(); ) {
+      final Entry e2 = ((Entry) iterator_2.next());
+      final Number ID_2 = gen.inc();
+
+      store.register(ID_2, e2);
+      CallStatementPp callStm_2 =
+          new CallStatementPp() {
+            public Object execute() {
+
+              return ((Entry) store.getValue(ID_2)).op();
+            }
+
+            public String toString() {
+
+              return "e2.op()";
+            }
+          };
+      StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+
+      apply_2.addVarFirst(new TraceVariable("e2", "Entry", Utils.toString(e2)));
+      alternatives_3.add(apply_2);
     }
+    concurrent_1.add(alternatives_3);
 
-    public void cg_init_Entry_1(final Number px) {
-        x = px;
-    }
+    sequence_1.add(concurrent_1);
 
-    public Number op() {
-        x = x.longValue() + 1L;
+    TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+  }
 
-        return x;
-    }
+  public String toString() {
 
-    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
-        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
-        VDMSet set_1 = SetUtil.set(new Entry(3L), new Entry(4L));
-
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            final Entry e1 = ((Entry) iterator_1.next());
-            final Number ID_1 = gen.inc();
-
-            store.register(ID_1, e1);
-
-            CallStatementPp callStm_1 = new CallStatementPp() {
-                    public Object execute() {
-                        return ((Entry) store.getValue(ID_1)).op();
-                    }
-
-                    public String toString() {
-                        return "e1.op()";
-                    }
-                };
-
-            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-
-            apply_1.addVarFirst(new TraceVariable("e1", "Entry",
-                    Utils.toString(e1)));
-            alternatives_2.add(apply_1);
-        }
-
-        concurrent_1.add(alternatives_2);
-
-        AlternativeTraceNode alternatives_3 = new AlternativeTraceNode();
-        VDMSet set_2 = SetUtil.set(new Entry(5L), new Entry(6L));
-
-        for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
-            final Entry e2 = ((Entry) iterator_2.next());
-            final Number ID_2 = gen.inc();
-
-            store.register(ID_2, e2);
-
-            CallStatementPp callStm_2 = new CallStatementPp() {
-                    public Object execute() {
-                        return ((Entry) store.getValue(ID_2)).op();
-                    }
-
-                    public String toString() {
-                        return "e2.op()";
-                    }
-                };
-
-            StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-
-            apply_2.addVarFirst(new TraceVariable("e2", "Entry",
-                    Utils.toString(e2)));
-            alternatives_3.add(apply_2);
-        }
-
-        concurrent_1.add(alternatives_3);
-
-        sequence_1.add(concurrent_1);
-
-        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
-    }
-
-    public String toString() {
-        return "Entry{" + "x := " + Utils.toString(x) + "}";
-    }
+    return "Entry{" + "x := " + Utils.toString(x) + "}";
+  }
 }
 
 ##########

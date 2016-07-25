@@ -1,127 +1,134 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public Rec recPatternOp(final Rec recordPattern_1) {
+
+    Boolean success_1 = true;
+    Number n1 = null;
+    Boolean b1 = null;
+    Character c1 = null;
+    Number r1 = null;
+    n1 = recordPattern_1.n;
+    b1 = recordPattern_1.b;
+    c1 = recordPattern_1.c;
+    r1 = recordPattern_1.r;
+
+    if (!(success_1)) {
+      throw new RuntimeException("Record pattern match failed");
     }
 
-    public Rec recPatternOp(final Rec recordPattern_1) {
-        Boolean success_1 = true;
-        Number n1 = null;
-        Boolean b1 = null;
-        Character c1 = null;
-        Number r1 = null;
-        n1 = recordPattern_1.n;
-        b1 = recordPattern_1.b;
-        c1 = recordPattern_1.c;
-        r1 = recordPattern_1.r;
+    final Rec recordPattern_2 = new Rec(5L, true, 'g', 2.5);
+    Boolean success_2 = true;
+    Number n2 = null;
+    Boolean b2 = null;
+    Character c2 = null;
+    Number r2 = null;
+    n2 = recordPattern_2.n;
+    b2 = recordPattern_2.b;
+    c2 = recordPattern_2.c;
+    r2 = recordPattern_2.r;
 
-        if (!(success_1)) {
-            throw new RuntimeException("Record pattern match failed");
-        }
-
-        final Rec recordPattern_2 = new Rec(5L, true, 'g', 2.5);
-        Boolean success_2 = true;
-        Number n2 = null;
-        Boolean b2 = null;
-        Character c2 = null;
-        Number r2 = null;
-        n2 = recordPattern_2.n;
-        b2 = recordPattern_2.b;
-        c2 = recordPattern_2.c;
-        r2 = recordPattern_2.r;
-
-        if (!(success_2)) {
-            throw new RuntimeException("Record pattern match failed");
-        }
-
-        return new Rec(n1, b2, c1, r2);
+    if (!(success_2)) {
+      throw new RuntimeException("Record pattern match failed");
     }
 
-    public static Object Run() {
-        final Rec a = new Entry().recPatternOp(new Rec(77L, false, 'e', 4.4));
-        final Rec b = recPatternFun(new Rec(77L, false, 'e', 4.4));
+    return new Rec(n1, b2, c1, r2);
+  }
 
-        return SeqUtil.seq(a.n, a.b, a.c, a.r, b.n, b.b, b.c, b.r);
+  public static Object Run() {
+
+    final Rec a = new Entry().recPatternOp(new Rec(77L, false, 'e', 4.4));
+    final Rec b = recPatternFun(new Rec(77L, false, 'e', 4.4));
+    return SeqUtil.seq(a.n, a.b, a.c, a.r, b.n, b.b, b.c, b.r);
+  }
+
+  public Entry() {}
+
+  public static Rec recPatternFun(final Rec recordPattern_3) {
+
+    Boolean success_3 = true;
+    Number n1 = null;
+    Boolean b1 = null;
+    Character c1 = null;
+    Number r1 = null;
+    n1 = recordPattern_3.n;
+    b1 = recordPattern_3.b;
+    c1 = recordPattern_3.c;
+    r1 = recordPattern_3.r;
+
+    if (!(success_3)) {
+      throw new RuntimeException("Record pattern match failed");
     }
 
-    public static Rec recPatternFun(final Rec recordPattern_3) {
-        Boolean success_3 = true;
-        Number n1 = null;
-        Boolean b1 = null;
-        Character c1 = null;
-        Number r1 = null;
-        n1 = recordPattern_3.n;
-        b1 = recordPattern_3.b;
-        c1 = recordPattern_3.c;
-        r1 = recordPattern_3.r;
+    final Rec recordPattern_4 = new Rec(5L, true, 'g', 2.5);
+    Boolean success_4 = true;
+    Number n2 = null;
+    Boolean b2 = null;
+    Character c2 = null;
+    Number r2 = null;
+    n2 = recordPattern_4.n;
+    b2 = recordPattern_4.b;
+    c2 = recordPattern_4.c;
+    r2 = recordPattern_4.r;
 
-        if (!(success_3)) {
-            throw new RuntimeException("Record pattern match failed");
-        }
+    if (!(success_4)) {
+      throw new RuntimeException("Record pattern match failed");
+    }
 
-        final Rec recordPattern_4 = new Rec(5L, true, 'g', 2.5);
-        Boolean success_4 = true;
-        Number n2 = null;
-        Boolean b2 = null;
-        Character c2 = null;
-        Number r2 = null;
-        n2 = recordPattern_4.n;
-        b2 = recordPattern_4.b;
-        c2 = recordPattern_4.c;
-        r2 = recordPattern_4.r;
+    return new Rec(n1, b2, c1, r2);
+  }
 
-        if (!(success_4)) {
-            throw new RuntimeException("Record pattern match failed");
-        }
+  public String toString() {
 
-        return new Rec(n1, b2, c1, r2);
+    return "Entry{}";
+  }
+
+  public static class Rec implements Record {
+    public Number n;
+    public Boolean b;
+    public Character c;
+    public Number r;
+
+    public Rec(final Number _n, final Boolean _b, final Character _c, final Number _r) {
+
+      n = _n;
+      b = _b;
+      c = _c;
+      r = _r;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof Rec)) {
+        return false;
+      }
+
+      Rec other = ((Rec) obj);
+
+      return (Utils.equals(n, other.n))
+          && (Utils.equals(b, other.b))
+          && (Utils.equals(c, other.c))
+          && (Utils.equals(r, other.r));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(n, b, c, r);
+    }
+
+    public Rec copy() {
+
+      return new Rec(n, b, c, r);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`Rec" + Utils.formatFields(n, b, c, r);
     }
-
-    public static class Rec implements Record {
-        public Number n;
-        public Boolean b;
-        public Character c;
-        public Number r;
-
-        public Rec(final Number _n, final Boolean _b, final Character _c,
-            final Number _r) {
-            n = _n;
-            b = _b;
-            c = _c;
-            r = _r;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Rec)) {
-                return false;
-            }
-
-            Rec other = ((Rec) obj);
-
-            return (Utils.equals(n, other.n)) && (Utils.equals(b, other.b)) &&
-            (Utils.equals(c, other.c)) && (Utils.equals(r, other.r));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(n, b, c, r);
-        }
-
-        public Rec copy() {
-            return new Rec(n, b, c, r);
-        }
-
-        public String toString() {
-            return "mk_Entry`Rec" + Utils.formatFields(n, b, c, r);
-        }
-    }
+  }
 }
 
 ##########

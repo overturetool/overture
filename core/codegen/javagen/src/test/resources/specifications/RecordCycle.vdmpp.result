@@ -1,92 +1,100 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
+
+  public static class RecA implements Record {
+    public B.RecB b;
+
+    public RecA(final B.RecB _b) {
+
+      b = _b != null ? Utils.copy(_b) : null;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof RecA)) {
+        return false;
+      }
+
+      RecA other = ((RecA) obj);
+
+      return Utils.equals(b, other.b);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(b);
+    }
+
+    public RecA copy() {
+
+      return new RecA(b);
     }
 
     public String toString() {
-        return "A{}";
+
+      return "mk_A`RecA" + Utils.formatFields(b);
     }
-
-    public static class RecA implements Record {
-        public B.RecB b;
-
-        public RecA(final B.RecB _b) {
-            b = (_b != null) ? Utils.copy(_b) : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof RecA)) {
-                return false;
-            }
-
-            RecA other = ((RecA) obj);
-
-            return Utils.equals(b, other.b);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(b);
-        }
-
-        public RecA copy() {
-            return new RecA(b);
-        }
-
-        public String toString() {
-            return "mk_A`RecA" + Utils.formatFields(b);
-        }
-    }
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public B() {
+  public B() {}
+
+  public String toString() {
+
+    return "B{}";
+  }
+
+  public static class RecB implements Record {
+    public A.RecA a;
+
+    public RecB(final A.RecA _a) {
+
+      a = _a != null ? Utils.copy(_a) : null;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof RecB)) {
+        return false;
+      }
+
+      RecB other = ((RecB) obj);
+
+      return Utils.equals(a, other.a);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(a);
+    }
+
+    public RecB copy() {
+
+      return new RecB(a);
     }
 
     public String toString() {
-        return "B{}";
+
+      return "mk_B`RecB" + Utils.formatFields(a);
     }
-
-    public static class RecB implements Record {
-        public A.RecA a;
-
-        public RecB(final A.RecA _a) {
-            a = (_a != null) ? Utils.copy(_a) : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof RecB)) {
-                return false;
-            }
-
-            RecB other = ((RecB) obj);
-
-            return Utils.equals(a, other.a);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(a);
-        }
-
-        public RecB copy() {
-            return new RecB(a);
-        }
-
-        public String toString() {
-            return "mk_B`RecB" + Utils.formatFields(a);
-        }
-    }
+  }
 }
 
 ##########

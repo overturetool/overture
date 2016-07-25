@@ -1,80 +1,82 @@
+
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 
-import java.util.*;
-
-
 @SuppressWarnings("all")
 final public class Entry implements java.io.Serializable {
-    private Entry() {
+  private Entry() {}
+
+  public static void op(final Number x) {
+
+    if (!(pre_op(x))) {
+      throw new RuntimeException("Precondition failure: pre_op");
     }
 
-    public static void op(final Number x) {
-        if (!(pre_op(x))) {
-            throw new RuntimeException("Precondition failure: pre_op");
-        }
+    /* skip */
 
-        /* skip */
+  }
+
+  public static Boolean pre_op(final Number x) {
+
+    Boolean andResult_1 = false;
+
+    if (!(Utils.equals(x, 2L))) {
+      if (!(Utils.equals(x, 4L))) {
+        andResult_1 = true;
+      }
     }
 
-    public static Boolean pre_op(final Number x) {
-        Boolean andResult_1 = false;
+    return andResult_1;
+  }
 
-        if (!(Utils.equals(x, 2L))) {
-            if (!(Utils.equals(x, 4L))) {
-                andResult_1 = true;
+  public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    {
+      final Number ID_1 = gen.inc();
+      store.staticReg(ID_1, Entry.class);
+    }
+
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+    VDMSet set_1 = SetUtil.set(1L, 2L, 3L, 4L, 5L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      final Number x = ((Number) iterator_1.next());
+      final Number arg_1 = x;
+      CallStatement callStm_1 =
+          new CallStatement() {
+            public Boolean meetsPreCond() {
+
+              return pre_op(arg_1);
             }
-        }
 
-        return andResult_1;
+            public Object execute() {
+
+              op(arg_1);
+              return Utils.VOID_VALUE;
+            }
+
+            public String toString() {
+
+              return "op(" + Utils.toString(arg_1) + ")";
+            }
+          };
+      StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+      apply_1.addVarFirst(new TraceVariable("x", "nat1", Utils.toString(x)));
+      alternatives_2.add(apply_1);
     }
+    sequence_1.add(alternatives_2);
 
-    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
+    TraceNode.executeTests(sequence_1, testAccumulator, store);
+  }
 
-        {
-            final Number ID_1 = gen.inc();
-            store.staticReg(ID_1, Entry.class);
-        }
+  public String toString() {
 
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
-        VDMSet set_1 = SetUtil.set(1L, 2L, 3L, 4L, 5L);
-
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            final Number x = ((Number) iterator_1.next());
-            final Number arg_1 = x;
-            CallStatement callStm_1 = new CallStatement() {
-                    public Boolean meetsPreCond() {
-                        return pre_op(arg_1);
-                    }
-
-                    public Object execute() {
-                        op(arg_1);
-
-                        return Utils.VOID_VALUE;
-                    }
-
-                    public String toString() {
-                        return "op(" + Utils.toString(arg_1) + ")";
-                    }
-                };
-
-            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-
-            apply_1.addVarFirst(new TraceVariable("x", "nat1", Utils.toString(x)));
-            alternatives_2.add(apply_1);
-        }
-
-        sequence_1.add(alternatives_2);
-
-        TraceNode.executeTests(sequence_1, testAccumulator, store);
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

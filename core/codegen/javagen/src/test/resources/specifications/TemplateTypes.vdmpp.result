@@ -1,24 +1,25 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public A() {}
 
-    public static <T> T f(final T arg1) {
-        return null;
-    }
+  public static <T> T f(final T arg1) {
 
-    public static <T, U> T g(final T arg1, final U arg2) {
-        return null;
-    }
+    return null;
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public static <T, U> T g(final T arg1, final U arg2) {
+
+    return null;
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########

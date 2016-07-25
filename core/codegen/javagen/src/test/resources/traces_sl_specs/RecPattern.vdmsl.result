@@ -1,115 +1,121 @@
+
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 
-import java.util.*;
-
-
 @SuppressWarnings("all")
 final public class Entry implements java.io.Serializable {
-    private Entry() {
+  private Entry() {}
+
+  public static Number f(final Number x) {
+
+    return x;
+  }
+
+  public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    {
+      final Number ID_1 = gen.inc();
+      store.staticReg(ID_1, Entry.class);
     }
 
-    public static Number f(final Number x) {
-        return x;
-    }
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    {
+      final R recordPattern_1 = new R(1L, 2L);
+      Boolean success_1 = true;
+      Number a = null;
+      Number b = null;
+      a = recordPattern_1.x;
+      b = recordPattern_1.y;
 
-    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
+      if (!(success_1)) {
+        throw new RuntimeException("Record pattern match failed");
+      }
 
-        {
-            final Number ID_1 = gen.inc();
-            store.staticReg(ID_1, Entry.class);
-        }
+      SequenceTraceNode sequence_2 = new SequenceTraceNode();
+      final Number arg_1 = a;
+      CallStatement callStm_1 =
+          new CallStatement() {
+            public Object execute() {
 
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
-
-        {
-            final R recordPattern_1 = new R(1L, 2L);
-            Boolean success_1 = true;
-            Number a = null;
-            Number b = null;
-            a = recordPattern_1.x;
-            b = recordPattern_1.y;
-
-            if (!(success_1)) {
-                throw new RuntimeException("Record pattern match failed");
+              return f(arg_1);
             }
 
-            SequenceTraceNode sequence_2 = new SequenceTraceNode();
-            final Number arg_1 = a;
-            CallStatement callStm_1 = new CallStatement() {
-                    public Object execute() {
-                        return f(arg_1);
-                    }
+            public String toString() {
 
-                    public String toString() {
-                        return "f(" + Utils.toString(arg_1) + ")";
-                    }
-                };
+              return "f(" + Utils.toString(arg_1) + ")";
+            }
+          };
+      StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+      sequence_2.add(apply_1);
 
-            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-            sequence_2.add(apply_1);
+      final Number arg_2 = b;
+      CallStatement callStm_2 =
+          new CallStatement() {
+            public Object execute() {
 
-            final Number arg_2 = b;
-            CallStatement callStm_2 = new CallStatement() {
-                    public Object execute() {
-                        return f(arg_2);
-                    }
+              return f(arg_2);
+            }
 
-                    public String toString() {
-                        return "f(" + Utils.toString(arg_2) + ")";
-                    }
-                };
+            public String toString() {
 
-            StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-            sequence_2.add(apply_2);
+              return "f(" + Utils.toString(arg_2) + ")";
+            }
+          };
+      StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+      sequence_2.add(apply_2);
 
-            sequence_2.addVarFirst(new TraceVariable("b", "int",
-                    Utils.toString(b)));
-            sequence_2.addVarFirst(new TraceVariable("a", "int",
-                    Utils.toString(a)));
-            sequence_1.add(sequence_2);
-        }
+      sequence_2.addVarFirst(new TraceVariable("b", "int", Utils.toString(b)));
+      sequence_2.addVarFirst(new TraceVariable("a", "int", Utils.toString(a)));
+      sequence_1.add(sequence_2);
+    }
 
-        TraceNode.executeTests(sequence_1, testAccumulator, store);
+    TraceNode.executeTests(sequence_1, testAccumulator, store);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  public static class R implements Record {
+    public Number x;
+    public Number y;
+
+    public R(final Number _x, final Number _y) {
+
+      x = _x;
+      y = _y;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof R)) {
+        return false;
+      }
+
+      R other = ((R) obj);
+
+      return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x, y);
+    }
+
+    public R copy() {
+
+      return new R(x, y);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`R" + Utils.formatFields(x, y);
     }
-
-    public static class R implements Record {
-        public Number x;
-        public Number y;
-
-        public R(final Number _x, final Number _y) {
-            x = _x;
-            y = _y;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof R)) {
-                return false;
-            }
-
-            R other = ((R) obj);
-
-            return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x, y);
-        }
-
-        public R copy() {
-            return new R(x, y);
-        }
-
-        public String toString() {
-            return "mk_Entry`R" + Utils.formatFields(x, y);
-        }
-    }
+  }
 }
 
 ##########

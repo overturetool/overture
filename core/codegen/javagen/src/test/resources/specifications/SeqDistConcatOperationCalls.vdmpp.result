@@ -1,22 +1,22 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    private VDMSeq y = SeqUtil.distConc(SeqUtil.seq(op(), op()));
+  private VDMSeq y = SeqUtil.distConc(SeqUtil.seq(op(), op()));
 
-    public A() {
-    }
+  public VDMSeq op() {
 
-    public VDMSeq op() {
-        return SeqUtil.seq(1L, 2L);
-    }
+    return SeqUtil.seq(1L, 2L);
+  }
 
-    public String toString() {
-        return "A{" + "y := " + Utils.toString(y) + "}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{" + "y := " + Utils.toString(y) + "}";
+  }
 }
 
 ##########

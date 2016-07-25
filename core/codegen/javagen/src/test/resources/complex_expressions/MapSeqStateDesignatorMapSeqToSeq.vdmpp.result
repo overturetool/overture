@@ -1,32 +1,31 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        VDMMap xs = MapUtil.map(new Maplet(SeqUtil.seq('a'), SeqUtil.seq('b')),
-                new Maplet(SeqUtil.seq('c'), SeqUtil.seq('d')));
-        Utils.mapSeqUpdate(((VDMSeq) Utils.get(xs, SeqUtil.seq('a'))), 1L, 'x');
+    VDMMap xs =
+        MapUtil.map(
+            new Maplet(SeqUtil.seq('a'), SeqUtil.seq('b')),
+            new Maplet(SeqUtil.seq('c'), SeqUtil.seq('d')));
+    Utils.mapSeqUpdate(((VDMSeq) Utils.get(xs, SeqUtil.seq('a'))), 1L, 'x');
+    if (Utils.equals(
+        ((Character) Utils.get(((VDMSeq) Utils.get(xs, SeqUtil.seq('a'))), 1L)), 'x')) {
+      return ((Character) Utils.get(((VDMSeq) Utils.get(xs, SeqUtil.seq('c'))), 1L));
 
-        if (Utils.equals(
-                    ((Character) Utils.get(
-                        ((VDMSeq) Utils.get(xs, SeqUtil.seq('a'))), 1L)), 'x')) {
-            return ((Character) Utils.get(((VDMSeq) Utils.get(xs,
-                    SeqUtil.seq('c'))), 1L));
-        } else {
-            return ((Character) Utils.get(((VDMSeq) Utils.get(xs,
-                    SeqUtil.seq('a'))), 1L));
-        }
+    } else {
+      return ((Character) Utils.get(((VDMSeq) Utils.get(xs, SeqUtil.seq('a'))), 1L));
     }
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

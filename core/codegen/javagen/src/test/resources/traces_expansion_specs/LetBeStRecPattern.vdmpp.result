@@ -1,109 +1,110 @@
+
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 
-import java.util.*;
-
-
 @SuppressWarnings("all")
 public class Entry implements java.io.Serializable {
-    private static final VDMSet xs = SetUtil.set(1L, 2L, 3L, 4L, new A(5L), 6L,
-            7L, 8L);
+  private static final VDMSet xs = SetUtil.set(1L, 2L, 3L, 4L, new A(5L), 6L, 7L, 8L);
 
-    public Entry() {
+  private Number id(final Number x) {
+
+    return x;
+  }
+
+  public Entry() {}
+
+  public void Entry_T1_Run(final TestAccumulator testAccumulator) {
+
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+    VDMSet set_1 = Utils.copy(Entry.xs);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      final Object recordPattern_1 = ((Object) iterator_1.next());
+      Boolean success_2 = true;
+      Number a = null;
+      if (recordPattern_1 instanceof A) {
+        a = ((A) recordPattern_1).a;
+
+      } else {
+        success_2 = false;
+      }
+
+      if (!(success_2)) {
+        continue;
+      }
+
+      if (!(Utils.equals(a, 5L))) {
+        continue;
+      }
+
+      final Number ID_1 = gen.inc();
+
+      store.register(ID_1, a);
+      CallStatementPp callStm_1 =
+          new CallStatementPp() {
+            public Object execute() {
+
+              Number result_1 = ((Entry) instance).id(((Number) store.getValue(ID_1)));
+              return result_1;
+            }
+
+            public String toString() {
+
+              return "id(" + Utils.toString(store.getValue(ID_1)) + ")";
+            }
+          };
+      StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+      apply_1.addVarFirst(new TraceVariable("a", "int", Utils.toString(a)));
+      alternatives_2.add(apply_1);
+    }
+    sequence_1.add(alternatives_2);
+
+    TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+  }
+
+  public String toString() {
+
+    return "Entry{" + "xs = " + Utils.toString(xs) + "}";
+  }
+
+  private static class A implements Record {
+    public Number a;
+
+    public A(final Number _a) {
+
+      a = _a;
     }
 
-    private Number id(final Number x) {
-        return x;
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof A)) {
+        return false;
+      }
+
+      A other = ((A) obj);
+
+      return Utils.equals(a, other.a);
     }
 
-    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
-        VDMSet set_1 = Utils.copy(Entry.xs);
+    public int hashCode() {
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            final Object recordPattern_1 = ((Object) iterator_1.next());
-            Boolean success_2 = true;
-            Number a = null;
+      return Utils.hashCode(a);
+    }
 
-            if (recordPattern_1 instanceof A) {
-                a = ((A) recordPattern_1).a;
-            } else {
-                success_2 = false;
-            }
+    public A copy() {
 
-            if (!(success_2)) {
-                continue;
-            }
-
-            if (!(Utils.equals(a, 5L))) {
-                continue;
-            }
-
-            final Number ID_1 = gen.inc();
-
-            store.register(ID_1, a);
-
-            CallStatementPp callStm_1 = new CallStatementPp() {
-                    public Object execute() {
-                        Number result_1 = ((Entry) instance).id(((Number) store.getValue(
-                                    ID_1)));
-
-                        return result_1;
-                    }
-
-                    public String toString() {
-                        return "id(" + Utils.toString(store.getValue(ID_1)) +
-                        ")";
-                    }
-                };
-
-            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-
-            apply_1.addVarFirst(new TraceVariable("a", "int", Utils.toString(a)));
-            alternatives_2.add(apply_1);
-        }
-
-        sequence_1.add(alternatives_2);
-
-        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+      return new A(a);
     }
 
     public String toString() {
-        return "Entry{" + "xs = " + Utils.toString(xs) + "}";
+
+      return "mk_Entry`A" + Utils.formatFields(a);
     }
-
-    private static class A implements Record {
-        public Number a;
-
-        public A(final Number _a) {
-            a = _a;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof A)) {
-                return false;
-            }
-
-            A other = ((A) obj);
-
-            return Utils.equals(a, other.a);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(a);
-        }
-
-        public A copy() {
-            return new A(a);
-        }
-
-        public String toString() {
-            return "mk_Entry`A" + Utils.formatFields(a);
-        }
-    }
+  }
 }
 
 ##########

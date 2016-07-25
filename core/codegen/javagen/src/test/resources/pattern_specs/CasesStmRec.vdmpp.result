@@ -1,130 +1,135 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Number casesRec(final Rec t) {
+
+    Rec recordPattern_1 = Utils.copy(t);
+    Boolean success_1 = true;
+    Number intPattern_1 = recordPattern_1.a;
+    success_1 = Utils.equals(intPattern_1, 2L);
+
+    if (success_1) {
+      Number intPattern_2 = recordPattern_1.b;
+      success_1 = Utils.equals(intPattern_2, 2L);
+
+      if (success_1) {
+        Number intPattern_3 = recordPattern_1.c;
+        success_1 = Utils.equals(intPattern_3, 2L);
+      }
     }
 
-    public static Number casesRec(final Rec t) {
-        Rec recordPattern_1 = Utils.copy(t);
-        Boolean success_1 = true;
-        Number intPattern_1 = recordPattern_1.a;
-        success_1 = Utils.equals(intPattern_1, 2L);
+    if (!(success_1)) {
+      Rec recordPattern_2 = Utils.copy(t);
+      Number a = null;
+      success_1 = true;
+      a = recordPattern_2.a;
+      Number intPattern_4 = recordPattern_2.c;
+      success_1 = Utils.equals(intPattern_4, 1L);
+
+      if (!(success_1)) {
+        Rec recordPattern_3 = Utils.copy(t);
+        Number b = null;
+        Number c = null;
+        success_1 = true;
+        Number intPattern_5 = recordPattern_3.a;
+        success_1 = Utils.equals(intPattern_5, 1L);
 
         if (success_1) {
-            Number intPattern_2 = recordPattern_1.b;
-            success_1 = Utils.equals(intPattern_2, 2L);
-
-            if (success_1) {
-                Number intPattern_3 = recordPattern_1.c;
-                success_1 = Utils.equals(intPattern_3, 2L);
-            }
+          b = recordPattern_3.b;
+          c = recordPattern_3.c;
         }
 
         if (!(success_1)) {
-            Rec recordPattern_2 = Utils.copy(t);
-            Number a = null;
-            success_1 = true;
-            a = recordPattern_2.a;
+          Rec recordPattern_4 = Utils.copy(t);
+          success_1 = true;
 
-            Number intPattern_4 = recordPattern_2.c;
-            success_1 = Utils.equals(intPattern_4, 1L);
+          if (success_1) {
+            return -1L;
 
-            if (!(success_1)) {
-                Rec recordPattern_3 = Utils.copy(t);
-                Number b = null;
-                Number c = null;
-                success_1 = true;
+          } else {
+            return 0L;
+          }
 
-                Number intPattern_5 = recordPattern_3.a;
-                success_1 = Utils.equals(intPattern_5, 1L);
-
-                if (success_1) {
-                    b = recordPattern_3.b;
-                    c = recordPattern_3.c;
-                }
-
-                if (!(success_1)) {
-                    Rec recordPattern_4 = Utils.copy(t);
-                    success_1 = true;
-
-                    if (success_1) {
-                        return -1L;
-                    } else {
-                        return 0L;
-                    }
-                } else {
-                    return 1L + b.longValue() + c.longValue();
-                }
-            } else {
-                return a.longValue() + 1L;
-            }
         } else {
-            return 6L;
+          return 1L + b.longValue() + c.longValue();
         }
+
+      } else {
+        return a.longValue() + 1L;
+      }
+
+    } else {
+      return 6L;
+    }
+  }
+
+  public static Object Run() {
+
+    VDMSeq result = SeqUtil.seq();
+    long toVar_3 = 2L;
+
+    for (Long i = 1L; i <= toVar_3; i++) {
+      long toVar_2 = 2L;
+
+      for (Long j = 1L; j <= toVar_2; j++) {
+        long toVar_1 = 3L;
+
+        for (Long k = 1L; k <= toVar_1; k++) {
+          result = SeqUtil.conc(Utils.copy(result), SeqUtil.seq(casesRec(new Rec(i, j, k))));
+        }
+      }
+    }
+    return Utils.copy(result);
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  public static class Rec implements Record {
+    public Number a;
+    public Number b;
+    public Number c;
+
+    public Rec(final Number _a, final Number _b, final Number _c) {
+
+      a = _a;
+      b = _b;
+      c = _c;
     }
 
-    public static Object Run() {
-        VDMSeq result = SeqUtil.seq();
-        long toVar_3 = 2L;
+    public boolean equals(final Object obj) {
 
-        for (Long i = 1L; i <= toVar_3; i++) {
-            long toVar_2 = 2L;
+      if (!(obj instanceof Rec)) {
+        return false;
+      }
 
-            for (Long j = 1L; j <= toVar_2; j++) {
-                long toVar_1 = 3L;
+      Rec other = ((Rec) obj);
 
-                for (Long k = 1L; k <= toVar_1; k++) {
-                    result = SeqUtil.conc(Utils.copy(result),
-                            SeqUtil.seq(casesRec(new Rec(i, j, k))));
-                }
-            }
-        }
+      return (Utils.equals(a, other.a)) && (Utils.equals(b, other.b)) && (Utils.equals(c, other.c));
+    }
 
-        return Utils.copy(result);
+    public int hashCode() {
+
+      return Utils.hashCode(a, b, c);
+    }
+
+    public Rec copy() {
+
+      return new Rec(a, b, c);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`Rec" + Utils.formatFields(a, b, c);
     }
-
-    public static class Rec implements Record {
-        public Number a;
-        public Number b;
-        public Number c;
-
-        public Rec(final Number _a, final Number _b, final Number _c) {
-            a = _a;
-            b = _b;
-            c = _c;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Rec)) {
-                return false;
-            }
-
-            Rec other = ((Rec) obj);
-
-            return (Utils.equals(a, other.a)) && (Utils.equals(b, other.b)) &&
-            (Utils.equals(c, other.c));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(a, b, c);
-        }
-
-        public Rec copy() {
-            return new Rec(a, b, c);
-        }
-
-        public String toString() {
-            return "mk_Entry`Rec" + Utils.formatFields(a, b, c);
-        }
-    }
+  }
 }
 
 ##########

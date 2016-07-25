@@ -1,35 +1,36 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    return f(5L);
+  }
+
+  public Entry() {}
+
+  public static Number f(final Number x) {
+
+    Number casesExpResult_1 = null;
+
+    Number intPattern_1 = x;
+    Boolean success_1 = Utils.equals(intPattern_1, 5L);
+
+    if (success_1) {
+      casesExpResult_1 = 5L;
+    } else {
+      throw new RuntimeException("Integer pattern match failed");
     }
 
-    public static Object Run() {
-        return f(5L);
-    }
+    return casesExpResult_1;
+  }
 
-    public static Number f(final Number x) {
-        Number casesExpResult_1 = null;
+  public String toString() {
 
-        Number intPattern_1 = x;
-        Boolean success_1 = Utils.equals(intPattern_1, 5L);
-
-        if (success_1) {
-            casesExpResult_1 = 5L;
-        } else {
-            throw new RuntimeException("Integer pattern match failed");
-        }
-
-        return casesExpResult_1;
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

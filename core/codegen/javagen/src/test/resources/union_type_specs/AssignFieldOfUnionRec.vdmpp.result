@@ -1,109 +1,122 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    Object r = new R1(1L);
+    Number atomicTmp_1 = 4L;
+    {
+        /* Start of atomic statement */
+      if (r instanceof R1) {
+        ((R1) r).x = atomicTmp_1;
+      } else if (r instanceof R2) {
+        ((R2) r).x = atomicTmp_1;
+      } else {
+        throw new RuntimeException("Missing member: x");
+      }
+    } /* End of atomic statement */
+
+    Number apply_1 = null;
+    if (r instanceof R1) {
+      apply_1 = ((R1) r).x;
+    } else if (r instanceof R2) {
+      apply_1 = ((R2) r).x;
+    } else {
+      throw new RuntimeException("Missing member: x");
     }
 
-    public static Object Run() {
-        Object r = new R1(1L);
-        Number atomicTmp_1 = 4L;
+    return apply_1;
+  }
 
-        if (r instanceof R1) {
-            ((R1) r).x = atomicTmp_1;
-        } else if (r instanceof R2) {
-            ((R2) r).x = atomicTmp_1;
-        } else {
-            throw new RuntimeException("Missing member: x");
-        }
+  public Entry() {}
 
-        Number apply_1 = null;
+  public String toString() {
 
-        if (r instanceof R1) {
-            apply_1 = ((R1) r).x;
-        } else if (r instanceof R2) {
-            apply_1 = ((R2) r).x;
-        } else {
-            throw new RuntimeException("Missing member: x");
-        }
+    return "Entry{}";
+  }
 
-        return apply_1;
+  private static class R1 implements Record {
+    public Number x;
+
+    public R1(final Number _x) {
+
+      x = _x;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof R1)) {
+        return false;
+      }
+
+      R1 other = ((R1) obj);
+
+      return Utils.equals(x, other.x);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x);
+    }
+
+    public R1 copy() {
+
+      return new R1(x);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`R1" + Utils.formatFields(x);
+    }
+  }
+
+  private static Boolean inv_R1(final R1 r1) {
+
+    return r1.x.longValue() > 0L;
+  }
+
+  private static class R2 implements Record {
+    public Number x;
+
+    public R2(final Number _x) {
+
+      x = _x;
     }
 
-    private static Boolean inv_R1(final R1 r1) {
-        return r1.x.longValue() > 0L;
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof R2)) {
+        return false;
+      }
+
+      R2 other = ((R2) obj);
+
+      return Utils.equals(x, other.x);
     }
 
-    private static Boolean inv_R2(final R2 r2) {
-        return r2.x.longValue() > 0L;
+    public int hashCode() {
+
+      return Utils.hashCode(x);
     }
 
-    private static class R1 implements Record {
-        public Number x;
+    public R2 copy() {
 
-        public R1(final Number _x) {
-            x = _x;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof R1)) {
-                return false;
-            }
-
-            R1 other = ((R1) obj);
-
-            return Utils.equals(x, other.x);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x);
-        }
-
-        public R1 copy() {
-            return new R1(x);
-        }
-
-        public String toString() {
-            return "mk_Entry`R1" + Utils.formatFields(x);
-        }
+      return new R2(x);
     }
 
-    private static class R2 implements Record {
-        public Number x;
+    public String toString() {
 
-        public R2(final Number _x) {
-            x = _x;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof R2)) {
-                return false;
-            }
-
-            R2 other = ((R2) obj);
-
-            return Utils.equals(x, other.x);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x);
-        }
-
-        public R2 copy() {
-            return new R2(x);
-        }
-
-        public String toString() {
-            return "mk_Entry`R2" + Utils.formatFields(x);
-        }
+      return "mk_Entry`R2" + Utils.formatFields(x);
     }
+  }
+
+  private static Boolean inv_R2(final R2 r2) {
+
+    return r2.x.longValue() > 0L;
+  }
 }
 
 ##########
