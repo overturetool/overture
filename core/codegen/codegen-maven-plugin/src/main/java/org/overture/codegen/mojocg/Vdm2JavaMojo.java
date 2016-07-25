@@ -15,6 +15,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.logging.DefaultLogger;
 import org.overture.codegen.mojocg.util.DelegateTrans;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
@@ -44,6 +45,14 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 	public static final String VDM_10 = "vdm10";
 	public static final String VDM_CLASSIC = "classic";
 
+	public Vdm2JavaMojo()
+	{
+		if(!getLog().isDebugEnabled())
+		{
+			DefaultLogger.getDefaultLogger().setSilent(true);
+		}
+	}
+	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
@@ -214,11 +223,11 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 		{
 			Map<String, String> delegateMap = buidDelegateMap();
 			
-			getLog().info("Found following bridge/delegate pairs:");
+			getLog().debug("Found following bridge/delegate pairs:");
 			
 			for(String entry : delegateMap.keySet())
 			{
-				getLog().info("  Bridge class: " + entry + ". Delegate class: " + delegateMap.get(entry));
+				getLog().debug("  Bridge class: " + entry + ". Delegate class: " + delegateMap.get(entry));
 			}
 			
 			javaCodeGen.getTransSeries().getSeries().add(new DelegateTrans(delegateMap, javaCodeGen.getTransAssistant(), getLog()));

@@ -39,7 +39,7 @@ public class DelegateTrans extends DepthFirstAnalysisAdaptor
 			{
 				if (isDelegateCall(m.getBody()))
 				{
-					log.info("Updating " + node.getName() + "." + m.getName() + " to use delegate method "
+					log.debug("Updating " + node.getName() + "." + m.getName() + " to use delegate method "
 							+ getFullDelegateName(node) + "." + m.getName());
 					assist.replaceNodeWith(m.getBody(), consDelegateCall(node.getName(), m));
 				}
