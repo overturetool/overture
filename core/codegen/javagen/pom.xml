@@ -39,9 +39,9 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>jalopy</groupId>
-      <artifactId>jalopy</artifactId>
-      <version>1.5rc3</version>
+      <groupId>com.google.googlejavaformat</groupId>
+      <artifactId>google-java-format</artifactId>
+      <version>1.0</version>
     </dependency>
     <dependency>
       <groupId>org.overturetool.core.testing</groupId>

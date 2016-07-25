@@ -22,9 +22,6 @@
 package org.overture.codegen.vdm2java;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -43,8 +40,8 @@ import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Settings;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
-import de.hunsicker.io.FileFormat;
-import de.hunsicker.jalopy.Jalopy;
+import com.google.googlejavaformat.java.Formatter;
+import com.google.googlejavaformat.java.FormatterException;
 
 public class JavaCodeGenUtil
 {
@@ -86,53 +83,15 @@ public class JavaCodeGenUtil
 
 	public static String formatJavaCode(String code)
 	{
-		File tempFile = null;
-		StringBuffer b = new StringBuffer();
 		try
 		{
-			tempFile = new File("target" + File.separatorChar + "temp.java");
-			tempFile.getParentFile().mkdirs();
-			tempFile.createNewFile();
-
-			PrintWriter xwriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tempFile, false), "UTF-8"));
-			xwriter.write(code.toString());
-			xwriter.flush();
-
-			Jalopy jalopy = new Jalopy();
-			jalopy.setFileFormat(FileFormat.DEFAULT);
-			jalopy.setInput(tempFile);
-			jalopy.setOutput(b);
-			jalopy.format();
-
-			xwriter.close();
-
-			String result = null;
-
-			if (jalopy.getState() == Jalopy.State.OK
-					|| jalopy.getState() == Jalopy.State.PARSED)
-			{
-				result = b.toString();
-			} else if (jalopy.getState() == Jalopy.State.WARN)
-			{
-				result = code;// formatted with warnings
-			} else if (jalopy.getState() == Jalopy.State.ERROR)
-			{
-				result = code; // could not be formatted
-			}
-
-			return result.toString();
-
-		} catch (Exception e)
+			return new Formatter().formatSource(code);
+		} catch (FormatterException e)
 		{
-			Logger.getLog().printErrorln("Could not format code: "
-					+ e.toString());
+			Logger.getLog().printErrorln("Could not format code: " + e.getMessage());
 			e.printStackTrace();
-		} finally
-		{
-			tempFile.delete();
+			return null;
 		}
-
-		return null;// could not be formatted
 	}
 
 	public static boolean isQuote(org.overture.codegen.ir.INode decl, JavaSettings settings)
