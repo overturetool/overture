@@ -1,74 +1,81 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Entry {
-    /*@ public ghost static boolean invChecksOn = true; @*/
-    private Entry() {
+  /*@ public ghost static boolean invChecksOn = true; @*/
+
+  private Entry() {}
+
+  public static void typeUseOk() {
+
+    final Number ignorePattern_1 = 1L;
+    //@ assert Utils.is_nat1(ignorePattern_1);
+
+    final Object even = 2L;
+    //@ assert (((Utils.is_nat(even) && inv_Entry_Even(even)) || (Utils.is_real(even) && inv_Entry_Large(even))) && inv_Entry_No(even));
+
+    final Number ignorePattern_2 = 3L;
+    //@ assert Utils.is_nat1(ignorePattern_2);
+
+    /* skip */
+
+  }
+
+  public static void typeUseNotOk() {
+
+    IO.println("Before breaking named type invariant");
+    {
+      Object notLarge = 999L;
+      //@ assert (((Utils.is_nat(notLarge) && inv_Entry_Even(notLarge)) || (Utils.is_real(notLarge) && inv_Entry_Large(notLarge))) && inv_Entry_No(notLarge));
+
+      IO.println("After breaking named type invariant");
+      /* skip */
     }
+  }
 
-    public static void typeUseOk() {
-        final Number ignorePattern_1 = 1L;
+  public static Object Run() {
 
-        //@ assert Utils.is_nat1(ignorePattern_1);
-        final Object even = 2L;
+    typeUseOk();
+    typeUseNotOk();
+    return 0L;
+  }
 
-        //@ assert (((Utils.is_nat(even) && inv_Entry_Even(even)) || (Utils.is_real(even) && inv_Entry_Large(even))) && inv_Entry_No(even));
-        final Number ignorePattern_2 = 3L;
+  public String toString() {
 
-        //@ assert Utils.is_nat1(ignorePattern_2);
+    return "Entry{}";
+  }
 
-        /* skip */
-    }
+  /*@ pure @*/
+  /*@ helper @*/
 
-    public static void typeUseNotOk() {
-        IO.println("Before breaking named type invariant");
+  public static Boolean inv_Entry_No(final Object check_elem) {
 
-        {
-            Object notLarge = 999L;
-            //@ assert (((Utils.is_nat(notLarge) && inv_Entry_Even(notLarge)) || (Utils.is_real(notLarge) && inv_Entry_Large(notLarge))) && inv_Entry_No(notLarge));
-            IO.println("After breaking named type invariant");
+    return true;
+  }
 
-            /* skip */
-        }
-    }
+  /*@ pure @*/
+  /*@ helper @*/
 
-    public static Object Run() {
-        typeUseOk();
-        typeUseNotOk();
+  public static Boolean inv_Entry_Even(final Object check_ev) {
 
-        return 0L;
-    }
+    Number ev = ((Number) check_ev);
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return Utils.equals(Utils.mod(ev.longValue(), 2L), 0L);
+  }
 
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_Entry_No(final Object check_elem) {
-        return true;
-    }
+  /*@ pure @*/
+  /*@ helper @*/
 
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_Entry_Even(final Object check_ev) {
-        Number ev = ((Number) check_ev);
+  public static Boolean inv_Entry_Large(final Object check_la) {
 
-        return Utils.equals(Utils.mod(ev.longValue(), 2L), 0L);
-    }
+    Number la = ((Number) check_la);
 
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_Entry_Large(final Object check_la) {
-        Number la = ((Number) check_la);
-
-        return la.doubleValue() > 1000L;
-    }
+    return la.doubleValue() > 1000L;
+  }
 }

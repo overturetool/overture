@@ -1,158 +1,171 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Entry {
-    /*@ public ghost static boolean invChecksOn = true; @*/
-    private Entry() {
+  /*@ public ghost static boolean invChecksOn = true; @*/
+
+  private Entry() {}
+
+  public static Object Run() {
+
+    IO.println("Before useOk");
+    {
+      final Number ignorePattern_1 = useOk();
+      //@ assert Utils.is_nat(ignorePattern_1);
+
+      /* skip */
     }
 
-    public static Object Run() {
-        IO.println("Before useOk");
+    IO.println("After useOk");
+    IO.println("Before useNotOk");
+    {
+      final Number ignorePattern_2 = useNotOk();
+      //@ assert Utils.is_nat(ignorePattern_2);
 
-        {
-            final Number ignorePattern_1 = useOk();
-
-            //@ assert Utils.is_nat(ignorePattern_1);
-
-            /* skip */
-        }
-
-        IO.println("After useOk");
-        IO.println("Before useNotOk");
-
-        {
-            final Number ignorePattern_2 = useNotOk();
-
-            //@ assert Utils.is_nat(ignorePattern_2);
-
-            /* skip */
-        }
-
-        IO.println("After useNotOk");
-
-        return 0L;
+      /* skip */
     }
 
-    public static Number useOk() {
-        project.Entrytypes.R1 r1 = new project.Entrytypes.R1(new project.Entrytypes.R2(
-                    new project.Entrytypes.R3(new project.Entrytypes.R4(5L))));
+    IO.println("After useNotOk");
+    return 0L;
+  }
 
-        //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
-        Number atomicTmp_1 = 10L;
+  public static Number useOk() {
 
-        //@ assert Utils.is_int(atomicTmp_1);
-        Number atomicTmp_2 = 5L;
-        //@ assert Utils.is_int(atomicTmp_2);
-        { /* Start of atomic statement */
+    project.Entrytypes.R1 r1 =
+        new project.Entrytypes.R1(
+            new project.Entrytypes.R2(new project.Entrytypes.R3(new project.Entrytypes.R4(5L))));
+    //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
 
-            //@ set invChecksOn = false;
-            project.Entrytypes.R2 stateDes_1 = r1.get_r2();
+    Number atomicTmp_1 = 10L;
+    //@ assert Utils.is_int(atomicTmp_1);
 
-            project.Entrytypes.R3 stateDes_2 = stateDes_1.get_t3();
+    Number atomicTmp_2 = 5L;
+    //@ assert Utils.is_int(atomicTmp_2);
 
-            project.Entrytypes.R4 stateDes_3 = stateDes_2.get_r4();
+    {
+        /* Start of atomic statement */
+      //@ set invChecksOn = false;
 
-            //@ assert stateDes_3 != null;
-            stateDes_3.set_x(atomicTmp_1);
+      project.Entrytypes.R2 stateDes_1 = r1.get_r2();
 
-            project.Entrytypes.R2 stateDes_4 = r1.get_r2();
+      project.Entrytypes.R3 stateDes_2 = stateDes_1.get_t3();
 
-            project.Entrytypes.R3 stateDes_5 = stateDes_4.get_t3();
+      project.Entrytypes.R4 stateDes_3 = stateDes_2.get_r4();
 
-            project.Entrytypes.R4 stateDes_6 = stateDes_5.get_r4();
+      //@ assert stateDes_3 != null;
 
-            //@ assert stateDes_6 != null;
-            stateDes_6.set_x(atomicTmp_2);
+      stateDes_3.set_x(atomicTmp_1);
 
-            //@ set invChecksOn = true;
+      project.Entrytypes.R2 stateDes_4 = r1.get_r2();
 
-            //@ assert stateDes_3.valid();
+      project.Entrytypes.R3 stateDes_5 = stateDes_4.get_t3();
 
-            //@ assert (Utils.is_(stateDes_2,project.Entrytypes.R3.class) && inv_Entry_T3(stateDes_2));
+      project.Entrytypes.R4 stateDes_6 = stateDes_5.get_r4();
 
-            //@ assert stateDes_2.valid();
+      //@ assert stateDes_6 != null;
 
-            //@ assert Utils.is_(stateDes_1,project.Entrytypes.R2.class);
+      stateDes_6.set_x(atomicTmp_2);
 
-            //@ assert stateDes_1.valid();
+      //@ set invChecksOn = true;
 
-            //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
+      //@ assert stateDes_3.valid();
 
-            //@ assert r1.valid();
+      //@ assert (Utils.is_(stateDes_2,project.Entrytypes.R3.class) && inv_Entry_T3(stateDes_2));
 
-            //@ assert stateDes_6.valid();
+      //@ assert stateDes_2.valid();
 
-            //@ assert (Utils.is_(stateDes_5,project.Entrytypes.R3.class) && inv_Entry_T3(stateDes_5));
+      //@ assert Utils.is_(stateDes_1,project.Entrytypes.R2.class);
 
-            //@ assert stateDes_5.valid();
+      //@ assert stateDes_1.valid();
 
-            //@ assert Utils.is_(stateDes_4,project.Entrytypes.R2.class);
+      //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
 
-            //@ assert stateDes_4.valid();
-        } /* End of atomic statement */
-        Number ret_1 = 0L;
+      //@ assert r1.valid();
 
-        //@ assert Utils.is_nat(ret_1);
-        return ret_1;
-    }
+      //@ assert stateDes_6.valid();
 
-    public static Number useNotOk() {
-        project.Entrytypes.R1 r1 = new project.Entrytypes.R1(new project.Entrytypes.R2(
-                    new project.Entrytypes.R3(new project.Entrytypes.R4(5L))));
+      //@ assert (Utils.is_(stateDes_5,project.Entrytypes.R3.class) && inv_Entry_T3(stateDes_5));
 
-        //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
-        Number atomicTmp_3 = 10L;
-        //@ assert Utils.is_int(atomicTmp_3);
-        { /* Start of atomic statement */
+      //@ assert stateDes_5.valid();
 
-            //@ set invChecksOn = false;
-            project.Entrytypes.R2 stateDes_7 = r1.get_r2();
+      //@ assert Utils.is_(stateDes_4,project.Entrytypes.R2.class);
 
-            project.Entrytypes.R3 stateDes_8 = stateDes_7.get_t3();
+      //@ assert stateDes_4.valid();
 
-            project.Entrytypes.R4 stateDes_9 = stateDes_8.get_r4();
+    } /* End of atomic statement */
 
-            //@ assert stateDes_9 != null;
-            stateDes_9.set_x(atomicTmp_3);
+    Number ret_1 = 0L;
+    //@ assert Utils.is_nat(ret_1);
 
-            //@ set invChecksOn = true;
+    return ret_1;
+  }
 
-            //@ assert stateDes_9.valid();
+  public static Number useNotOk() {
 
-            //@ assert (Utils.is_(stateDes_8,project.Entrytypes.R3.class) && inv_Entry_T3(stateDes_8));
+    project.Entrytypes.R1 r1 =
+        new project.Entrytypes.R1(
+            new project.Entrytypes.R2(new project.Entrytypes.R3(new project.Entrytypes.R4(5L))));
+    //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
 
-            //@ assert stateDes_8.valid();
+    Number atomicTmp_3 = 10L;
+    //@ assert Utils.is_int(atomicTmp_3);
 
-            //@ assert Utils.is_(stateDes_7,project.Entrytypes.R2.class);
+    {
+        /* Start of atomic statement */
+      //@ set invChecksOn = false;
 
-            //@ assert stateDes_7.valid();
+      project.Entrytypes.R2 stateDes_7 = r1.get_r2();
 
-            //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
+      project.Entrytypes.R3 stateDes_8 = stateDes_7.get_t3();
 
-            //@ assert r1.valid();
-        } /* End of atomic statement */
-        Number ret_2 = 0L;
+      project.Entrytypes.R4 stateDes_9 = stateDes_8.get_r4();
 
-        //@ assert Utils.is_nat(ret_2);
-        return ret_2;
-    }
+      //@ assert stateDes_9 != null;
 
-    public String toString() {
-        return "Entry{}";
-    }
+      stateDes_9.set_x(atomicTmp_3);
 
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_Entry_T3(final Object check_t3) {
-        project.Entrytypes.R3 t3 = ((project.Entrytypes.R3) check_t3);
+      //@ set invChecksOn = true;
 
-        return !(Utils.equals(t3.get_r4().get_x(), 10L));
-    }
+      //@ assert stateDes_9.valid();
+
+      //@ assert (Utils.is_(stateDes_8,project.Entrytypes.R3.class) && inv_Entry_T3(stateDes_8));
+
+      //@ assert stateDes_8.valid();
+
+      //@ assert Utils.is_(stateDes_7,project.Entrytypes.R2.class);
+
+      //@ assert stateDes_7.valid();
+
+      //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
+
+      //@ assert r1.valid();
+
+    } /* End of atomic statement */
+
+    Number ret_2 = 0L;
+    //@ assert Utils.is_nat(ret_2);
+
+    return ret_2;
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  /*@ pure @*/
+  /*@ helper @*/
+
+  public static Boolean inv_Entry_T3(final Object check_t3) {
+
+    project.Entrytypes.R3 t3 = ((project.Entrytypes.R3) check_t3);
+
+    return !(Utils.equals(t3.get_r4().get_x(), 10L));
+  }
 }

@@ -1,73 +1,83 @@
 package project.Entrytypes;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class T4 implements Record {
-    public Number x;
+  public Number x;
+  //@ public instance invariant project.Entry.invChecksOn ==> inv_T4(x);
 
-    //@ public instance invariant project.Entry.invChecksOn ==> inv_T4(x);
-    public T4(final Number _x) {
-        //@ assert Utils.is_nat(_x);
-        x = _x;
+  public T4(final Number _x) {
 
-        //@ assert Utils.is_nat(x);
+    //@ assert Utils.is_nat(_x);
+
+    x = _x;
+    //@ assert Utils.is_nat(x);
+
+  }
+  /*@ pure @*/
+
+  public boolean equals(final Object obj) {
+
+    if (!(obj instanceof project.Entrytypes.T4)) {
+      return false;
     }
 
-    /*@ pure @*/
-    public boolean equals(final Object obj) {
-        if (!(obj instanceof project.Entrytypes.T4)) {
-            return false;
-        }
+    project.Entrytypes.T4 other = ((project.Entrytypes.T4) obj);
 
-        project.Entrytypes.T4 other = ((project.Entrytypes.T4) obj);
+    return Utils.equals(x, other.x);
+  }
+  /*@ pure @*/
 
-        return Utils.equals(x, other.x);
-    }
+  public int hashCode() {
 
-    /*@ pure @*/
-    public int hashCode() {
-        return Utils.hashCode(x);
-    }
+    return Utils.hashCode(x);
+  }
+  /*@ pure @*/
 
-    /*@ pure @*/
-    public project.Entrytypes.T4 copy() {
-        return new project.Entrytypes.T4(x);
-    }
+  public project.Entrytypes.T4 copy() {
 
-    /*@ pure @*/
-    public String toString() {
-        return "mk_Entry`T4" + Utils.formatFields(x);
-    }
+    return new project.Entrytypes.T4(x);
+  }
+  /*@ pure @*/
 
-    /*@ pure @*/
-    public Number get_x() {
-        Number ret_6 = x;
+  public String toString() {
 
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(ret_6));
-        return ret_6;
-    }
+    return "mk_Entry`T4" + Utils.formatFields(x);
+  }
+  /*@ pure @*/
 
-    public void set_x(final Number _x) {
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(_x));
-        x = _x;
+  public Number get_x() {
 
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(x));
-    }
+    Number ret_6 = x;
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(ret_6));
 
-    /*@ pure @*/
-    public Boolean valid() {
-        return true;
-    }
+    return ret_6;
+  }
 
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_T4(final Number _x) {
-        return _x.longValue() > 4L;
-    }
+  public void set_x(final Number _x) {
+
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(_x));
+
+    x = _x;
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(x));
+
+  }
+  /*@ pure @*/
+
+  public Boolean valid() {
+
+    return true;
+  }
+  /*@ pure @*/
+  /*@ helper @*/
+
+  public static Boolean inv_T4(final Number _x) {
+
+    return _x.longValue() > 4L;
+  }
 }

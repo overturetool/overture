@@ -1,42 +1,49 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Mod {
-    /*@ public ghost static boolean invChecksOn = true; @*/
-    private Mod() {
-    }
+  /*@ public ghost static boolean invChecksOn = true; @*/
 
-    public static void op() {
-        project.Modtypes.M m = new project.Modtypes.M(1L);
+  private Mod() {}
 
-        //@ assert Utils.is_(m,project.Modtypes.M.class);
-        Number atomicTmp_1 = -20L;
+  public static void op() {
 
-        //@ assert Utils.is_int(atomicTmp_1);
-        Number atomicTmp_2 = 20L;
-        //@ assert Utils.is_int(atomicTmp_2);
-        { /* Start of atomic statement */
-            //@ set invChecksOn = false;
+    project.Modtypes.M m = new project.Modtypes.M(1L);
+    //@ assert Utils.is_(m,project.Modtypes.M.class);
 
-            //@ assert m != null;
-            m.set_x(atomicTmp_1);
+    Number atomicTmp_1 = -20L;
+    //@ assert Utils.is_int(atomicTmp_1);
 
-            //@ assert m != null;
-            m.set_x(atomicTmp_2);
+    Number atomicTmp_2 = 20L;
+    //@ assert Utils.is_int(atomicTmp_2);
 
-            //@ set invChecksOn = true;
+    {
+        /* Start of atomic statement */
+      //@ set invChecksOn = false;
 
-            //@ assert m.valid();
-        } /* End of atomic statement */}
+      //@ assert m != null;
 
-    public String toString() {
-        return "Mod{}";
-    }
+      m.set_x(atomicTmp_1);
+
+      //@ assert m != null;
+
+      m.set_x(atomicTmp_2);
+
+      //@ set invChecksOn = true;
+
+      //@ assert m.valid();
+
+    } /* End of atomic statement */
+  }
+
+  public String toString() {
+
+    return "Mod{}";
+  }
 }

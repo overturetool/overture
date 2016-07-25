@@ -1,46 +1,46 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Entry {
-    /*@ public ghost static boolean invChecksOn = true; @*/
-    private Entry() {
-    }
+  /*@ public ghost static boolean invChecksOn = true; @*/
 
-    public static Object Run() {
-        recInvOk();
-        IO.println("Before breaking record invariant");
-        recInvBreak();
-        IO.println("After breaking record invariant");
+  private Entry() {}
 
-        return 0L;
-    }
+  public static Object Run() {
 
-    public static void recInvOk() {
-        final project.Entrytypes.Rec ignorePattern_1 = new project.Entrytypes.Rec(1L,
-                2L);
+    recInvOk();
+    IO.println("Before breaking record invariant");
+    recInvBreak();
+    IO.println("After breaking record invariant");
+    return 0L;
+  }
 
-        //@ assert Utils.is_(ignorePattern_1,project.Entrytypes.Rec.class);
+  public static void recInvOk() {
 
-        /* skip */
-    }
+    final project.Entrytypes.Rec ignorePattern_1 = new project.Entrytypes.Rec(1L, 2L);
+    //@ assert Utils.is_(ignorePattern_1,project.Entrytypes.Rec.class);
 
-    public static void recInvBreak() {
-        final project.Entrytypes.Rec ignorePattern_2 = new project.Entrytypes.Rec(1L,
-                -2L);
+    /* skip */
 
-        //@ assert Utils.is_(ignorePattern_2,project.Entrytypes.Rec.class);
+  }
 
-        /* skip */
-    }
+  public static void recInvBreak() {
 
-    public String toString() {
-        return "Entry{}";
-    }
+    final project.Entrytypes.Rec ignorePattern_2 = new project.Entrytypes.Rec(1L, -2L);
+    //@ assert Utils.is_(ignorePattern_2,project.Entrytypes.Rec.class);
+
+    /* skip */
+
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
