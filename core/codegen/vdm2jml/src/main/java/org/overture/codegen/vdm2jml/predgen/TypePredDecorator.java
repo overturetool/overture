@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
@@ -19,7 +20,6 @@ import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
 import org.overture.codegen.ir.statements.AMapSeqUpdateStmIR;
 import org.overture.codegen.ir.statements.AMetaStmIR;
 import org.overture.codegen.ir.statements.AReturnStmIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.traces.TraceMethodTag;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.codegen.vdm2jml.data.RecClassInfo;
@@ -42,6 +42,8 @@ public class TypePredDecorator extends AtomicAssertTrans
 	private RecClassInfo recInfo;
 	
 	private boolean buildRecChecks = false;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public TypePredDecorator(JmlGenerator jmlGen, StateDesInfo stateDesInfo,
 			RecClassInfo recInfo)
@@ -73,15 +75,14 @@ public class TypePredDecorator extends AtomicAssertTrans
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Expected subject of cast expression to be a variable expression at this point in '"
-						+ this.getClass().getSimpleName() + "'. Got: " + cast.getExp());
+				log.error("Expected subject of cast expression to be a variable expression at this point. Got: "
+						+ cast.getExp());
 			}
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Expected object of call object statement "
-					+ " to be a variable or cast expression by now in '"
-					+ this.getClass().getSimpleName() + "'. Got: "
+			log.error("Expected object of call object statement "
+					+ " to be a variable or cast expression by now. Got: "
 					+ node.getObj());
 		}
 	}
@@ -191,9 +192,8 @@ public class TypePredDecorator extends AtomicAssertTrans
 			handleStateUpdate(node, col, stateDesInfo.getStateDesVars(node), null, namedTypeHandler.handleMapSeq(node));
 		} else
 		{
-			Logger.getLog().printErrorln("Expected collection of map/sequence"
-					+ " update to be a variable expression by now in '"
-					+ this.getClass().getSimpleName() + "'. Got: "
+			log.error("Expected collection of map/sequence"
+					+ " update to be a variable expression by now. Got: "
 					+ node.getCol());
 		}
 	}

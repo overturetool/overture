@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.PIR;
@@ -26,7 +27,6 @@ import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.VdmNodeInfo;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
@@ -36,6 +36,8 @@ import org.overture.codegen.vdm2jml.util.NameGen;
 public class JmlGenUtil
 {
 	private JmlGenerator jmlGen;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public JmlGenUtil(JmlGenerator jmlGen)
 	{
@@ -67,10 +69,8 @@ public class JmlGenUtil
 	{
 		if (!(id instanceof AIdentifierPatternIR))
 		{
-			Logger.getLog().printErrorln("Expected identifier pattern "
-					+ "to be an identifier pattern at this point. Got: "
-					+ id
-					+ " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Expected identifier pattern "
+					+ "to be an identifier pattern at this point. Got: " + id);
 			return null;
 		}
 
@@ -84,12 +84,9 @@ public class JmlGenUtil
 			return invMethod.getFormalParams().get(0);
 		} else
 		{
-			Logger.getLog().printErrorln("Expected only a single formal parameter "
-					+ "for named invariant type method "
-					+ invMethod.getName()
-					+ " but got "
-					+ invMethod.getFormalParams().size()
-					+ " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Expected only a single formal parameter "
+					+ "for named invariant type method " + invMethod.getName()
+					+ " but got " + invMethod.getFormalParams().size());
 
 			if (!invMethod.getFormalParams().isEmpty())
 			{
@@ -108,11 +105,9 @@ public class JmlGenUtil
 			return (AMethodDeclIR) typeDecl.getInv();
 		} else if (typeDecl.getInv() != null)
 		{
-			Logger.getLog().printErrorln("Expected named type invariant function "
+			log.error("Expected named type invariant function "
 					+ "to be a method declaration at this point. Got: "
-					+ typeDecl.getDecl()
-					+ " in '"
-					+ this.getClass().getSimpleName() + "'");
+					+ typeDecl.getDecl());
 		}
 
 		return null;
@@ -187,8 +182,8 @@ public class JmlGenUtil
 
 		} else
 		{
-			Logger.getLog().printErrorln("Expected formal parameter pattern to be an indentifier pattern. Got: "
-					+ pattern + " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Expected formal parameter pattern to be an indentifier pattern. Got: "
+					+ pattern);
 
 			return "UNKNOWN";
 		}
@@ -384,8 +379,7 @@ public class JmlGenUtil
 			return enclosingClass;
 		} else
 		{
-			Logger.getLog().printErrorln("Could not find enclosing class of node "
-					+ node + " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Could not find enclosing class of node: " + node);
 			return null;
 		}
 	}
@@ -399,9 +393,7 @@ public class JmlGenUtil
 			return enclosingMethod;
 		} else
 		{
-			Logger.getLog().printErrorln("Could not find enclosing method of node "
-					+ node + " in " + this.getClass().getSimpleName());
-
+			log.error("Could not find enclosing method of node: " + node);
 			return null;
 		}
 	}

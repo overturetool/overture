@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2jml.trans;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.assistant.DeclAssistantIR;
 import org.overture.codegen.assistant.ExpAssistantIR;
 import org.overture.codegen.assistant.PatternAssistantIR;
@@ -21,7 +22,6 @@ import org.overture.codegen.ir.statements.AAssignToExpStmIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.statements.AMapSeqUpdateStmIR;
 import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.codegen.vdm2jml.data.StateDesInfo;
@@ -34,6 +34,8 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 
 	private StateDesInfo stateDesInfo;
 
+	private Logger log = Logger.getLogger(this.getClass().getName());
+	
 	public TargetNormaliserTrans(JmlGenerator jmlGen)
 	{
 		this.jmlGen = jmlGen;
@@ -145,8 +147,7 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 			return var;
 		} else
 		{
-			Logger.getLog().printErrorln("Got unexpected target in '"
-					+ this.getClass().getSimpleName() + "'. Got " + target);
+			log.error("Got unexpected target:" + target);
 			return null;
 		}
 	}

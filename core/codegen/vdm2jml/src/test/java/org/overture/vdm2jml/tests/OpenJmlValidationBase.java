@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Assume;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.tests.exec.util.ProcessResult;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2jml.JmlGenMain;
@@ -41,6 +41,9 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 	protected File jmlRuntime;
 	protected File cgRuntime;
 	protected File vdm2jmlRuntime;
+	
+	protected static Logger log = Logger.getLogger(OpenJmlValidationBase.class.getName());
+	
 	public OpenJmlValidationBase(File inputFile)
 	{
 		super(inputFile);
@@ -131,8 +134,8 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 
 		if (VERBOSE)
 		{
-			Logger.getLog().println(processOutput.toString());
-			Logger.getLog().println("Exit value: " + p.exitValue());
+			log.info(processOutput.toString());
+			log.info("Exit value: " + p.exitValue());
 		}
 
 		p.destroy();

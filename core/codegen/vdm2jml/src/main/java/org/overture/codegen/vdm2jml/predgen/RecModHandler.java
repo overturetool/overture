@@ -1,17 +1,19 @@
 package org.overture.codegen.vdm2jml.predgen;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.expressions.SVarExpIR;
 import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
 import org.overture.codegen.ir.statements.AMetaStmIR;
 import org.overture.codegen.ir.types.ARecordTypeIR;
-import org.overture.codegen.logging.Logger;
 
 public class RecModHandler
 {
 	private TypePredDecorator invTrans;
 	private RecModUtil util;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public RecModHandler(TypePredDecorator invTrans)
 	{
@@ -56,14 +58,14 @@ public class RecModHandler
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Expected subject of cast expression to be a variable in '"
-						+ this.getClass().getSimpleName() + "'. Got: " + subject.getExp());
+				log.error("Expected subject of cast expression to be a variable. Got: "
+						+ subject.getExp());
 			}
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Expected target to be a variable or cast expression at this point. Got "
-					+ node.getObj() + " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Expected target to be a variable or cast expression at this point. Got "
+					+ node.getObj());
 		}
 		return null;
 	}

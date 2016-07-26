@@ -4,17 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AVarDeclIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.traces.Pair;
 
 public class StateDesInfo
 {
 	private Map<SStmIR, List<AIdentifierVarExpIR>> stateDesVars;
 	private Map<SStmIR, List<AVarDeclIR>> stateDesDecls;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public StateDesInfo()
 	{
@@ -94,8 +96,8 @@ public class StateDesInfo
 					
 					if (encClass == null)
 					{
-						Logger.getLog().printErrorln("Could not find enclosing class of " + stateDesVar + " in '"
-								+ this.getClass().getSimpleName() + "'");
+						log.error("Could not find enclosing class of "
+								+ stateDesVar);
 					}
 					
 					return encClass;

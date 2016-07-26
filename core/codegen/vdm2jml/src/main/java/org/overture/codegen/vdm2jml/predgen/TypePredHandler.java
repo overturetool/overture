@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2jml.predgen;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SStmIR;
@@ -26,7 +27,6 @@ import org.overture.codegen.ir.statements.AMetaStmIR;
 import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.vdm2jml.JmlAnnotationHelper;
 import org.overture.codegen.vdm2jml.JmlGenerator;
@@ -41,6 +41,8 @@ public class TypePredHandler
 
 	private TypePredDecorator decorator;
 	private TypePredUtil util;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public TypePredDecorator getDecorator()
 	{
@@ -271,9 +273,8 @@ public class TypePredHandler
 
 		if(!(col instanceof SVarExpIR))
 		{
-			Logger.getLog().printErrorln("Expected collection to be a variable expression at this point. Got: "
-					+ col + " in '" + this.getClass().getSimpleName()
-					+ "'");
+			log.error("Expected collection to be a variable expression at this point. Got: "
+					+ col);
 			return null;
 		}
 		
@@ -411,9 +412,7 @@ public class TypePredHandler
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Found unexpected record object of call expression "
-					+ " statement inside atomic statement block in '"
-					+ this.getClass().getSimpleName() + "'. Target found: "
+			log.error("Found unexpected record object of call expression statement inside atomic statement block. Target found: "
 					+ recObj);
 		}
 		
@@ -433,7 +432,7 @@ public class TypePredHandler
 
 		if (!(target instanceof SVarExpIR))
 		{
-			Logger.getLog().printErrorln("By now all assignments should have simple variable expression as target. Got: "
+			log.error("By now all assignments should have simple variable expression as target. Got: "
 					+ target);
 			return;
 		}
@@ -474,19 +473,17 @@ public class TypePredHandler
 
 			if (!parentBlock.getLocalDefs().contains(varDecl))
 			{
-				Logger.getLog().printErrorln("Expected local variable declaration to be "
+				log.error("Expected local variable declaration to be "
 						+ "one of the local variable declarations of "
-						+ "the parent statement block in '"
-						+ this.getClass().getSimpleName() + "'");
+						+ "the parent statement block");
 				return null;
 			}
 
 			if (parentBlock.getLocalDefs().size() > 1)
 			{
 				// The block statement case method should have ensured that the size == 1
-				Logger.getLog().printErrorln("Expected only a single local declaration in "
-						+ "the parent block at this point in '"
-						+ this.getClass().getSimpleName() + "'");
+				log.error("Expected only a single local declaration in "
+						+ "the parent block at this point");
 				return null;
 			}
 			
@@ -499,10 +496,9 @@ public class TypePredHandler
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Expected parent of local variable "
+			log.error("Expected parent of local variable "
 					+ "declaration to be a statement block. Got: "
-					+ varDecl.parent() + " in '" + this.getClass().getSimpleName()
-					+ "'");
+					+ varDecl.parent());
 			return null;
 		}
 	}

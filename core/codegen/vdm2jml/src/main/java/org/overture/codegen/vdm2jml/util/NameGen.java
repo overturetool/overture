@@ -3,12 +3,12 @@ package org.overture.codegen.vdm2jml.util;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.assistant.AssistantBase;
 import org.overture.codegen.ir.declarations.SClassDeclIR;
-import org.overture.codegen.logging.Logger;
 
 /**
  * Convenience class for generating parameter names that do not collide with other names used in a given class.
@@ -18,6 +18,8 @@ import org.overture.codegen.logging.Logger;
 public class NameGen
 {
 	private Set<String> toAvoid;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public NameGen()
 	{
@@ -38,8 +40,8 @@ public class NameGen
 				this.toAvoid.addAll(collector.namesToAvoid());
 			} catch (AnalysisException e)
 			{
-				Logger.getLog().printErrorln("Problems encountered when trying to collect names from "
-						+ vdmNode + " in '" + this.getClass().getSimpleName() + "'");
+				log.error("Problems encountered when trying to collect names from "
+						+ vdmNode);
 				e.printStackTrace();
 			}
 		}

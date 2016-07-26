@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2jml;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SDeclIR;
@@ -12,12 +13,13 @@ import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class JmlAnnotationHelper
 {
 	private JmlGenerator jmlGen;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public JmlAnnotationHelper(JmlGenerator jmlGen)
 	{
@@ -160,8 +162,7 @@ public class JmlAnnotationHelper
 			((AMethodDeclIR) cond).setAccess(IRConstants.PUBLIC);
 		} else
 		{
-			Logger.getLog().printErrorln("Expected method declaration but got "
-					+ cond + " in makePCondPublic");
+			log.error("Expected method declaration but got: " + cond);
 		}
 	}
 	

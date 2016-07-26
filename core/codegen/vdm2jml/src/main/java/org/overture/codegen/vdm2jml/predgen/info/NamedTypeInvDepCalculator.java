@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.types.ABracketType;
@@ -21,12 +22,13 @@ import org.overture.ast.types.SMapTypeBase;
 import org.overture.ast.types.SSeqTypeBase;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 
 public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 {
 	private List<NamedTypeInfo> typeInfoList;
 	private IRInfo info;
+	
+	private static Logger log = Logger.getLogger(NamedTypeInvDepCalculator.class.getName());
 	
 	public NamedTypeInvDepCalculator(IRInfo info)
 	{
@@ -85,7 +87,7 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Expected a '" + NamedTypeInfo.class.getSimpleName()
+				log.error("Expected a '" + NamedTypeInfo.class.getSimpleName()
 						+ "' to be returned. Got: " + typeInfo);
 			}
 		}
@@ -207,10 +209,9 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 			
 		} catch (AnalysisException e)
 		{
-			Logger.getLog().printErrorln("Problems encountered while attempting "
+			log.error("Problems encountered while attempting "
 					+ "to construct the IR type from a VDM type: "
-					+ e.getMessage() + " in '"
-					+ LeafTypeInfo.class.getSimpleName() + "'");
+					+ e.getMessage());
 			e.printStackTrace();
 			return null;
 		}

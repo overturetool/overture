@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.modules.AModuleModules;
@@ -35,7 +36,6 @@ import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.traces.TracesTrans;
 import org.overture.codegen.trans.AssignStmTrans;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
@@ -111,6 +111,8 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 	
 	private List<TcExpInfo> tcExpInfo;
 	
+	private Logger log = Logger.getLogger(this.getClass().getName());
+	
 	public JmlGenerator()
 	{
 		this(new JavaCodeGen());
@@ -177,9 +179,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 					series.add(targetTransIdx, targetNormaliserTrans);
 				} else
 				{
-					Logger.getLog().printErrorln("Could not add transformations "
-							+ " to Java transformation series in '"
-							+ this.getClass().getSimpleName());
+					log.error("Could not add transformations to the transformation series");
 				}
 				
 				break;
@@ -414,8 +414,8 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 				javaGen.getIRGenerator().applyPartialTransformation(status, recAccTr);
 			} catch (org.overture.codegen.ir.analysis.AnalysisException e) {
 
-				Logger.getLog().printErrorln(
-						"Problems applying '" + RecAccessorTrans.class + "' to status " + status.getIrNodeName());
+				log.error("Could not apply '" + RecAccessorTrans.class
+						+ "' to status " + status.getIrNodeName());
 				e.printStackTrace();
 			}
 		}
@@ -436,10 +436,8 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 					status.getIrNode().apply(sorter);
 				} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 				{
-					Logger.getLog().printErrorln("Problems sorting JML annotations for node "
-							+ status.getIrNode()
-							+ " in '"
-							+ this.getClass().getSimpleName() + "'");
+					log.error("Could not sort JML annotations for node "
+							+ status.getIrNode());
 					e.printStackTrace();
 				}
 			}
@@ -474,8 +472,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 					this.javaGen.getIRGenerator().applyPartialTransformation(status, assertTr);
 				} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 				{
-					Logger.getLog().printErrorln("Unexpected problem occured when applying transformation in '"
-							+ this.getClass().getSimpleName() + "'");
+					log.error("Unexpected problem occured when applying transformation");
 					e.printStackTrace();
 				}
 			}
@@ -540,8 +537,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 			rec.getInvariant().apply(new RecInvTransformation(javaGen, rec));
 		} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 		{
-			Logger.getLog().printErrorln("Problems transforming the invariant method of a record in '"
-					+ this.getClass().getSimpleName() + "'");
+			log.error("Could not transform the invariant method of a record");
 			e.printStackTrace();
 		}
 	}
@@ -573,8 +569,8 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 
 		} else if (decl != null)
 		{
-			Logger.getLog().printErrorln("Expected pre/post condition to be a method declaration at this point. Got: "
-					+ decl + " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Expected pre/post condition to be a method declaration at this point. Got: "
+					+ decl);
 		}
 
 		return null;
@@ -669,8 +665,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 				javaGen.getIRGenerator().applyPartialTransformation(n, normaliser);
 			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 			{
-				Logger.getLog().printErrorln("Problem normalising state designators in '"
-						+ this.getClass().getSimpleName() + "': "
+				log.error("Problem normalising state designators: "
 						+ e.getMessage());
 				e.printStackTrace();
 			}

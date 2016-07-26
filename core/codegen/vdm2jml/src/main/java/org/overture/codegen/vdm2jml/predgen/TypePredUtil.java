@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.log4j.Logger;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.assistant.TypeAssistantIR;
 import org.overture.codegen.ir.INode;
@@ -21,7 +22,6 @@ import org.overture.codegen.ir.types.ASetSetTypeIR;
 import org.overture.codegen.ir.types.ATupleTypeIR;
 import org.overture.codegen.ir.types.AUnionTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.vdm2jml.JmlGenUtil;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.codegen.vdm2jml.data.RecClassInfo;
@@ -40,6 +40,8 @@ import org.overture.codegen.vdm2jml.util.NameGen;
 public class TypePredUtil
 {
 	private TypePredHandler handler;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public TypePredUtil(TypePredHandler handler)
 	{
@@ -85,8 +87,7 @@ public class TypePredUtil
 			inv.append(consCheckExp);
 		} else
 		{
-			Logger.getLog().printErrorln("Expression could not be checked in '" + this.getClass().getSimpleName()
-					+ "'");
+			log.error("Expression could not be checked");
 			// TODO: Consider better handling
 			inv.append("true");
 		}
@@ -263,9 +264,8 @@ public class TypePredUtil
 
 			if (info == null)
 			{
-				Logger.getLog().printErrorln("Could not find info for named type '"
-						+ typeName + "' defined in module '" + defModule
-						+ "' in '" + this.getClass().getSimpleName() + "'");
+				log.error("Could not find info for named type '" + typeName
+						+ "' defined in module '" + defModule);
 			}
 			
 			return info;

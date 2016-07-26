@@ -21,7 +21,6 @@ import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.ir.statements.ATryStmIR;
 import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.traces.StoreAssistant;
 import org.overture.codegen.traces.TraceStmBuilder;
 import org.overture.codegen.traces.TracesTrans;
@@ -115,13 +114,13 @@ public class JmlTraceStmBuilder extends TraceStmBuilder
 		
 		if(argTypes == null)
 		{
-			Logger.getLog().printErrorln("Could not find argument types for call statement " + call + " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Could not find argument types for call statement: " + call);
 			return null;
 		}
 		
 		if(argTypes.size() != call.getArgs().size())
 		{
-			Logger.getLog().printErrorln("Argument types and arguments do not match in '" + this.getClass().getSimpleName() + "'");
+			log.error("Argument types and arguments do not match");
 			return null;
 		}
 		
@@ -153,7 +152,7 @@ public class JmlTraceStmBuilder extends TraceStmBuilder
 			}
 			else
 			{
-				Logger.getLog().printError("Expected argument to be a variable expression by now. Got: " + a);
+				log.error("Expected argument to be a variable expression by now. Got: " + a);
 			}
 		}
 		

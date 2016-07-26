@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.ACharBasicTypeIR;
@@ -17,7 +18,6 @@ import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
 import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.ir.types.ATokenBasicTypeIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.Utils;
 import org.overture.codegen.vdm2java.JavaQuoteValueCreator;
 import org.overture.codegen.vdm2jml.JmlGenUtil;
@@ -38,6 +38,8 @@ public class LeafTypeInfo extends AbstractTypeInfo
 	private static final String IS = "is_";
 
 	private STypeIR type;
+	
+	protected Logger log = Logger.getLogger(this.getClass().getName());
 	
 	private static Map<Class<? extends STypeIR>, String> utilsCallMap;
 	
@@ -98,7 +100,7 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		
 		if(methodName == null)
 		{
-			Logger.getLog().printErrorln("Got unhandled case");
+			log.error("Got unhandled case");
 			return "true";
 		}
 

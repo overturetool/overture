@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.overture.ast.analysis.AnalysisException;
@@ -16,7 +17,6 @@ import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
@@ -50,6 +50,8 @@ abstract public class AnnotationTestsBase
 	
 	// The IR class that is used to represent the type of the module state
 	protected static ADefaultClassDeclIR genStateType;
+	
+	private static Logger log = Logger.getLogger(AnnotationTestsBase.class.getName());
 	
 	@BeforeClass
 	public static void prepareVdmTypeChecker()
@@ -113,8 +115,8 @@ abstract public class AnnotationTestsBase
 		{
 			if(VERBOSE)
 			{
-				Logger.getLog().println(node.getContent());
-				Logger.getLog().println("*******************");
+				log.info(node.getContent());
+				log.info("*******************");
 			}
 			
 			if (node.getIrNode() instanceof ADefaultClassDeclIR)
