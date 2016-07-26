@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SStmIR;
@@ -18,7 +19,6 @@ import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.ir.types.AClassTypeIR;
 import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.traces.ICallStmToStringMethodBuilder;
 import org.overture.codegen.traces.StoreAssistant;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
@@ -26,6 +26,8 @@ import org.overture.config.Settings;
 
 public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements ICallStmToStringMethodBuilder
 {
+	private Logger log = Logger.getLogger(this.getClass().getName());
+	
 	@Override
 	public AMethodDeclIR consToString(IRInfo info, SStmIR callStm, Map<String, String> idConstNameMap, StoreAssistant storeAssistant, TransAssistantIR transAssistant)
 	{
@@ -68,7 +70,7 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 		// The CallObjectStmIR node has been transformed out of the tree
 		else
 		{
-			Logger.getLog().printErrorln("Expected statement to be a call statement or call object statement. Got: "
+			log.error("Expected statement to be a call statement or call object statement. Got: "
 					+ callStm);
 			body.setExp(info.getExpAssistant().consStringLiteral("Unknown", false));
 		}

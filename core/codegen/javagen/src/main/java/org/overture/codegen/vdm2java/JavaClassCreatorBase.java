@@ -12,12 +12,14 @@ import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.types.AObjectTypeIR;
 import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.ir.types.ATemplateTypeIR;
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.IRGeneratedTag;
-import org.overture.codegen.logging.Logger;
 
 abstract public class JavaClassCreatorBase
 {
 	private static final String COPY = "copy";
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public JavaClassCreatorBase()
 	{
@@ -153,8 +155,7 @@ abstract public class JavaClassCreatorBase
 			methodType.getParams().add(member.getType().clone());
 		} else
 		{
-			Logger.getLog().printErrorln("Expected type of call expression to be a method type at this point in '"
-					+ this.getClass().getSimpleName() + "'. Got: "
+			log.error("Expected type of call expression to be a method type at this point. Got: "
 					+ copyCall.getType());
 		}
 		

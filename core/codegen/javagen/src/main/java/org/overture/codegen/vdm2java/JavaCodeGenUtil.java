@@ -26,13 +26,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
@@ -45,6 +45,8 @@ import com.google.googlejavaformat.java.FormatterException;
 
 public class JavaCodeGenUtil
 {
+	private static Logger log = Logger.getLogger(JavaCodeGenUtil.class.getName());
+	
 	public static Generated generateJavaFromExp(String exp,
 			IRSettings irSettings, JavaSettings javaSettings, Dialect dialect)
 			throws AnalysisException
@@ -88,7 +90,7 @@ public class JavaCodeGenUtil
 			return new Formatter().formatSource(code);
 		} catch (FormatterException e)
 		{
-			Logger.getLog().printErrorln("Could not format code: " + e.getMessage());
+			log.error("Could not format code: " + e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
@@ -292,8 +294,7 @@ public class JavaCodeGenUtil
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Expected IR node of "
-					+ generatedClass.getName()
+			log.error("Expected IR node of " + generatedClass.getName()
 					+ " to be a class or interface  declaration at this point. Got: "
 					+ generatedClass.getIrNode());
 			return null;

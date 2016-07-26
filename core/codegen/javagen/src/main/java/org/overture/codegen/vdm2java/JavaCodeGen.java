@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
@@ -65,7 +66,6 @@ import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.ir.declarations.SClassDeclIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.trans.DivideTrans;
 import org.overture.codegen.trans.ModuleToClassTransformation;
@@ -126,6 +126,8 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 	
 	private List<String> warnings;
 
+	private Logger log = Logger.getLogger(this.getClass().getName());
+	
 	public JavaCodeGen()
 	{
 		super();
@@ -210,9 +212,9 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 			{
-				Logger.getLog().printErrorln("Error when generating code for module "
+				log.error("Error when generating code for module "
 						+ status.getIrNodeName() + ": " + e.getMessage());
-				Logger.getLog().printErrorln("Skipping module..");
+				log.error("Skipping module..");
 				e.printStackTrace();
 			}
 		}
@@ -259,9 +261,9 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 				} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 				{
-					Logger.getLog().printErrorln("Error when generating code for class "
+					log.error("Error when generating code for class "
 							+ status.getIrNodeName() + ": " + e.getMessage());
-					Logger.getLog().printErrorln("Skipping class..");
+					log.error("Skipping class..");
 					e.printStackTrace();
 				}
 			}
@@ -290,9 +292,9 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 					status.getIrNode().setTag(new JavaMainTag((ADefaultClassDeclIR) status.getIrNode()));
 				} else
 				{
-					Logger.getLog().printErrorln("Expected main class to be a "
-							+ ADefaultClassDeclIR.class.getSimpleName() + " in '" + this.getClass().getSimpleName()
-							+ "'. Got: " + status.getIrNode());
+					log.error("Expected main class to be a "
+							+ ADefaultClassDeclIR.class.getSimpleName()
+							+ ". Got: " + status.getIrNode());
 				}
 			}
 
@@ -312,9 +314,9 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 			{
-				Logger.getLog().printErrorln("Error generating code for class "
+				log.error("Error generating code for class "
 						+ status.getIrNodeName() + ": " + e.getMessage());
-				Logger.getLog().printErrorln("Skipping class..");
+				log.error("Skipping class..");
 				e.printStackTrace();
 			}
 		}
@@ -334,9 +336,9 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 			{
-				Logger.getLog().printErrorln("Error generating code for function value interface "
+				log.error("Error generating code for function value interface "
 						+ funcValueInterface.getName() + ": " + e.getMessage());
-				Logger.getLog().printErrorln("Skipping interface..");
+				log.error("Skipping interface..");
 				e.printStackTrace();
 			}
 		}
@@ -398,8 +400,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 		} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 		{
-			Logger.getLog().printErrorln("Error when formatting quotes: "
-					+ e.getMessage());
+			log.error("Error encountered when formatting quotes: " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -633,8 +634,7 @@ public class JavaCodeGen extends CodeGenBase implements IJavaQouteEventCoordinat
 
 		} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 		{
-			Logger.getLog().printErrorln("Could not generate expression: "
-					+ exp);
+			log.error("Could not generate expression: " + exp);
 			e.printStackTrace();
 			return null;
 		}

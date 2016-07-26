@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.PType;
@@ -92,7 +93,6 @@ import org.overture.codegen.ir.types.SBasicTypeIR;
 import org.overture.codegen.ir.types.SMapTypeIR;
 import org.overture.codegen.ir.types.SSeqTypeIR;
 import org.overture.codegen.ir.types.SSetTypeIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.trans.funcvalues.FuncValAssistant;
@@ -117,6 +117,8 @@ public class JavaFormat
 	protected JavaFormatAssistant javaFormatAssistant;
 	protected JavaRecordCreator recCreator;
 	protected JavaVarPrefixManager varPrefixManager;
+	
+	protected Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public JavaFormat(JavaVarPrefixManager varPrefixManager,
 			String templateRoot, IRInfo info)
@@ -732,7 +734,7 @@ public class JavaFormat
 		
 		if(method == null)
 		{
-			Logger.getLog().printErrorln("Could not find enclosing method when formatting operation body. Got: " + body);
+			log.error("Could not find enclosing method when formatting operation body. Got: " + body);
 		}
 		else if(method.getAsync() != null && method.getAsync())
 		{
@@ -829,7 +831,7 @@ public class JavaFormat
 			return format(new ACharBasicTypeIR());
 		} else
 		{
-			Logger.getLog().printErrorln("Expected set, seq or string type when trying to format element type. Got: "
+			log.error("Expected set, seq or string type when trying to format element type. Got: "
 					+ type);
 			return format(new AUnknownTypeIR());
 		}

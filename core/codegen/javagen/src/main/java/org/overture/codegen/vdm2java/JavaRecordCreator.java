@@ -24,6 +24,7 @@ package org.overture.codegen.vdm2java;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
@@ -49,11 +50,12 @@ import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.types.ARecordTypeIR;
-import org.overture.codegen.logging.Logger;
 
 public class JavaRecordCreator extends JavaClassCreatorBase
 {
 	private JavaFormat javaFormat;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public JavaRecordCreator(JavaFormat javaFormat)
 	{
@@ -278,7 +280,8 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Could not find enclosing class for record: " + record.getName());
+			log.error("Could not find enclosing class for record: "
+					+ record.getName());
 		}
 		
 		String recToStrPrefix = String.format("mk_%s%s", className + "`" , record.getName());

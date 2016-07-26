@@ -10,9 +10,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.traces.InMemoryTestAccumulator;
 import org.overture.codegen.tests.exec.util.ExecutionResult;
 import org.overture.config.Release;
@@ -31,6 +31,8 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	// The socket is used to communicate with the trace interpreter
 	protected ServerSocket socket;
 	protected static final int SOCKET_TIMEOUT = 0;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public TraceHandler(Release release, Dialect dialect)
 	{
@@ -129,8 +131,8 @@ public class TraceHandler extends ExecutableSpecTestHandler
 
 		if (testResult.size() != 1 || !testResult.get(0).traceName.equals(getTraceName()))
 		{
-			Logger.getLog().printErrorln("Expected a single trace named " + getTraceName() + "!. Got: "
-					+ testResult);
+			log.error("Expected a single trace named: " + getTraceName()
+					+ ". Got: " + testResult);
 			return null;
 		}
 
