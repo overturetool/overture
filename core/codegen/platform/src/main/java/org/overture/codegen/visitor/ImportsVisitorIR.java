@@ -12,7 +12,6 @@ import org.overture.codegen.ir.SImportsIR;
 import org.overture.codegen.ir.declarations.AFromModuleImportsIR;
 import org.overture.codegen.ir.declarations.AModuleImportsIR;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 
 public class ImportsVisitorIR  extends AbstractVisitorIR<IRInfo, SImportsIR> {
 
@@ -35,10 +34,9 @@ public class ImportsVisitorIR  extends AbstractVisitorIR<IRInfo, SImportsIR> {
 			}
 			else
 			{
-				Logger.getLog().printErrorln(
-						"Expected fromModuleImportCg to be of type '"
-								+ AFromModuleImportsIR.class.getSimpleName()
-								+ "'. Got: " + fromModuleImportCg + " in " + this.getClass().getSimpleName());
+				log.error("Expected fromModuleImportCg to be of type '"
+						+ AFromModuleImportsIR.class.getSimpleName()
+						+ "'. Got: " + fromModuleImportCg);
 				return null;
 			}
 		}

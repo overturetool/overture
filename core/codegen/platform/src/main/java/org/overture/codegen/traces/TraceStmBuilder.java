@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.lex.Dialect;
@@ -57,7 +58,6 @@ import org.overture.codegen.ir.types.SSetTypeIR;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.config.Settings;
 
@@ -66,6 +66,8 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 	protected String traceEnclosingClass;
 	protected StoreAssistant storeAssistant; 
 	protected TracesTrans traceTrans;
+	
+	protected Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public TraceStmBuilder(TracesTrans traceTrans, String traceEnclosingClass, StoreAssistant storeAssist)
 	{
@@ -373,8 +375,8 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			args = ((ACallObjectExpStmIR) callStm).getArgs();
 		} else
 		{
-			Logger.getLog().printErrorln("Expected a call statement or call object statement in '"
-					+ this.getClass().getSimpleName() + "'. Got: " + callStm);
+			log.error("Expected a call statement or call object statement. Got: "
+					+ callStm);
 			return decls;
 		}
 
@@ -446,7 +448,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			
 		} catch (AnalysisException e)
 		{
-			Logger.getLog().printErrorln("Problem replacing variable expressions with storage lookups in TraceStmBuilder");
+			log.error("Problem replacing variable expressions with storage lookups");
 		}
 	}
 
@@ -528,13 +530,13 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 					}
 				} else
 				{
-					Logger.getLog().printErrorln("Expected VDM source node to be a call statement at this point in '"
-							+ this.getClass().getSimpleName() + "' but got: " + vdmNode);
+					log.error("Expected VDM source node to be a call statement at this point. Got: "
+							+ vdmNode);
 				}
 			} else
 			{
-				Logger.getLog().printErrorln("Could not find VDM source node for the plain statement call '" + plainCall
-						+ "' in '" + this.getClass().getSimpleName() + "'.");
+				log.error("Could not find VDM source node for the plain statement call: "
+						+ plainCall);
 			}
 
 			plainCall.setName(pre + plainCall.getName());
@@ -543,9 +545,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			meetsPredMethod.setBody(plainCall);
 		} else
 		{
-			Logger.getLog().printErrorln("Got unexpected statement type in '" + this.getClass().getSimpleName() + "': "
-					+ stm);
-
+			log.error("Got unexpected statement: " + stm);
 			return null;
 		}
 
@@ -608,8 +608,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			}
 		} else
 		{
-			Logger.getLog().printErrorln("Could not find args for " + stm + " in '" + this.getClass().getSimpleName()
-					+ "'");
+			log.error("Could not find args for: " + stm);
 		}
 
 		ensureStoreLookups(meetsPredMethod.getBody());
@@ -674,8 +673,8 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 				call.getObj().apply(new CallObjTraceLocalizer(getTransAssist(), traceTrans.getTracePrefixes(), traceEnclosingClass));
 			} catch (AnalysisException e)
 			{
-				Logger.getLog().printErrorln("Got unexpected problem when trying to apply "
-						+ CallObjTraceLocalizer.class.getSimpleName() + " in '" + this.getClass().getSimpleName() + "'");
+				log.error("Got unexpected problem when trying to create instance call"
+						+ e.getMessage());
 				e.printStackTrace();
 			}
 			
@@ -700,15 +699,14 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 				return handlePlainCallStm((APlainCallStmIR) stm);
 			} catch (AnalysisException e)
 			{
-				Logger.getLog().printErrorln("Got unexpected problem when handling plain call statement in '"
-						+ this.getClass().getSimpleName() + "'");
+				log.error("Got unexpected problem when handling plain call statement: "
+						+ e.getMessage());
 				e.printStackTrace();
 			}
 		}
 		// Super call statements are not supported and this case should not be reached!
 
-		Logger.getLog().printErrorln("Got unexpected statement type in TraceStmsBuilder: "
-				+ stm);
+		log.error("Got unexpected statement: " + stm);
 
 		return stm;
 	}

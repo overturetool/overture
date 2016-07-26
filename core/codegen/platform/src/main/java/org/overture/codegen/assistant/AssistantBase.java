@@ -24,11 +24,14 @@ package org.overture.codegen.assistant;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.PIR;
 
 public abstract class AssistantBase
 {
+	protected Logger log = Logger.getLogger(this.getClass().getName());
+	
 	protected AssistantManager assistantManager;
 
 	public AssistantBase(AssistantManager assistantManager)

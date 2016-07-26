@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
@@ -60,7 +61,6 @@ import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.ir.declarations.SClassDeclIR;
 import org.overture.codegen.ir.expressions.SVarExpIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.visitor.IRVisitor;
 import org.overture.codegen.visitor.VisitorManager;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
@@ -102,6 +102,8 @@ public class IRInfo
 	
 	// SL state reads
 	private List<SVarExpIR> slStateReads;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public IRInfo()
 	{
@@ -273,7 +275,7 @@ public class IRInfo
 		
 		if (value == null || value.isEmpty())
 		{
-			Logger.getLog().printErrorln("Tried to register invalid qoute value");
+			log.error("Tried to register invalid qoute value");
 		} else
 		{
 			if (!quoteVaues.contains(value))

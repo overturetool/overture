@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -79,10 +80,11 @@ import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.types.ATemplateTypeIR;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 
 public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 {
+	private Logger log = Logger.getLogger(this.getClass().getName());
+	
 	@Override
 	public SDeclIR caseAStateDefinition(AStateDefinition node, IRInfo question)
 			throws AnalysisException
@@ -192,7 +194,9 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Expected term to be of type ATraceDeclTermIR. Got: " + termCg);
+				log.error("Expected term to be of type "
+						+ ATraceDeclTermIR.class.getName() + ". Got: "
+						+ termCg);
 				return null;
 			}
 		}

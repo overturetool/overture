@@ -3,6 +3,7 @@ package org.overture.codegen.trans;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -22,7 +23,6 @@ import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.statements.APlainCallStmIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
 import org.overture.codegen.ir.IRGeneratedTag;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class ConstructorTrans extends DepthFirstAnalysisAdaptor
@@ -34,6 +34,8 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 
 	// Object initialization call prefix
 	private String objectInitCallPrefix;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public ConstructorTrans(TransAssistantIR assist, String objectInitCallPrefix)
 	{
@@ -72,8 +74,8 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 
 			if (classCg == null)
 			{
-				Logger.getLog().printErrorln("Could not find enclosing class of constructor " + node.getName() + " in '"
-						+ this.getClass().getSimpleName() + "'");
+				log.error("Could not find enclosing class of constructor "
+						+ node.getName());
 				return;
 			}
 
@@ -105,8 +107,8 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 					initCall.getArgs().add(var);
 				} else
 				{
-					Logger.getLog().printErrorln("Expected all parameters to be identifier patterns by now in '"
-							+ this.getClass().getSimpleName() + "'. Got: " + pattern);
+					log.error("Expected all parameters to be identifier patterns by now. Got: "
+							+ pattern);
 				}
 			}
 

@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
@@ -26,7 +27,6 @@ import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
 import org.overture.codegen.assistant.DeclAssistantIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.trans.BlockCleanupTrans;
 import org.overture.codegen.trans.OldNameRenamer;
@@ -62,6 +62,11 @@ abstract public class CodeGenBase implements IREventCoordinator
 	 * {@link #initialIrEvent(List)} and {@link #finalIrEvent(List)} methods.
 	 */
 	protected IREventObserver irObserver;
+	
+	/**
+	 * Used to log information during the code generation process. 
+	 */
+	protected static Logger log = Logger.getLogger(CodeGenBase.class.getName());
 	
 	/**
 	 * Constructs this code generator by initializing the template engine and constructing the {@link #generator}.
@@ -299,8 +304,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 			{
 				e.printStackTrace();
-				Logger.getLog().printErrorln("Problem encountered when trying to cleanup blocks in '"
-						+ this.getClass().getSimpleName() + "'");
+				log.error("Problem encountered when trying to clean up blocks");
 			}
 		}
 	}
@@ -588,7 +592,7 @@ abstract public class CodeGenBase implements IREventCoordinator
 
 		} catch (IOException e)
 		{
-			Logger.getLog().printErrorln("Error when saving class file: " + fileName);
+			log.error("Error when saving class file: " + fileName);
 			e.printStackTrace();
 		}
 	}

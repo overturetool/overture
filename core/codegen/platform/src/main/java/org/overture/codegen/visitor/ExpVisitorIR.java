@@ -170,7 +170,6 @@ import org.overture.codegen.ir.types.ASeqSeqTypeIR;
 import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.config.Settings;
 
 public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
@@ -199,7 +198,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Could find type of narrow expression in '" + this.getClass().getSimpleName() + "'");
+			log.error("Could not find type of narrow expression");
 			typeCg = new AUnknownTypeIR();
 			typeCg.setSourceNode(new SourceNode(node));
 		}
@@ -369,12 +368,11 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		if (!(classTypeCg instanceof AClassTypeIR))
 		{
-			Logger.getLog().printErrorln("Unexpected class type encountered for "
-					+ AIsOfClassExp.class.getName()
-					+ ". Expected class type: "
-					+ AClassTypeIR.class.getName()
-					+ ". Got: "
-					+ typeCg.getClass().getName() + " at " +  node.getLocation());
+			log.error("Unexpected class type encountered for "
+					+ AIsOfClassExp.class.getName() + ". Expected class type: "
+					+ AClassTypeIR.class.getName() + ". Got: "
+					+ typeCg.getClass().getName() + " at "
+					+ node.getLocation());
 		}
 
 		SExpIR objRefCg = objRef.apply(question.getExpVisitor(), question);
@@ -472,8 +470,8 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		if (!(type instanceof SSetType))
 		{
-			Logger.getLog().printErrorln("Unexpected set type for set enumeration expression: "
-					+ type.getClass().getName() + " at "  + node.getLocation());
+			log.error("Unexpected set type for set enumeration expression: "
+					+ type.getClass().getName() + " at " + node.getLocation());
 		}
 
 		LinkedList<PExp> members = node.getMembers();
@@ -1458,7 +1456,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Got unexpected dialect " + Settings.dialect + " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Got unexpected dialect " + Settings.dialect);
 			return null;
 		}
 	}
@@ -1947,7 +1945,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		else
 		{
 			String msg = "Enclosing class could not be found for history expression.";
-			Logger.getLog().printErrorln(msg);
+			log.error(msg);
 			question.addUnsupportedNode(node, msg);
 			
 			return null;

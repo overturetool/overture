@@ -46,11 +46,15 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.util.ClonableString;
+import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRGenerator;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.declarations.AFieldDeclIR;
 import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
 import org.overture.codegen.ir.declarations.AFuncDeclIR;
@@ -80,11 +84,6 @@ import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
 import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.ir.types.ATemplateTypeIR;
-import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRGenerator;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.LexNameTokenWrapper;
 
 public class DeclAssistantIR extends AssistantBase
@@ -196,8 +195,8 @@ public class DeclAssistantIR extends AssistantBase
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Unexpected definition in class: "
-						+ name + ": " + def.getName().getName() + " at " + def.getLocation());
+				log.error("Unexpected definition in class: " + name + ": "
+						+ def.getName().getName() + " at " + def.getLocation());
 			}
 		}
 		
@@ -438,8 +437,7 @@ public class DeclAssistantIR extends AssistantBase
 				localDecls.add(varDecl);
 			} else
 			{
-				Logger.getLog().printErrorln("Problems encountered when trying to construct local variable in '"
-						+ this.getClass().getSimpleName() + "'");
+				log.error("Problems encountered when trying to construct local variable");
 			}
 		}
 	}
@@ -846,8 +844,7 @@ public class DeclAssistantIR extends AssistantBase
 
 		if (idDef == null)
 		{
-			Logger.getLog().printErrorln("Could not find definition for identifier state designator " + id + " in '"
-					+ this.getClass().getSimpleName());
+			log.error("Could not find definition for identifier state designator ");
 			return false;
 		} else
 		{

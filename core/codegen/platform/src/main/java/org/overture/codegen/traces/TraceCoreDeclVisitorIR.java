@@ -1,5 +1,6 @@
 package org.overture.codegen.traces;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
@@ -16,11 +17,12 @@ import org.overture.codegen.ir.traces.ABracketedExpTraceCoreDeclIR;
 import org.overture.codegen.ir.traces.AConcurrentExpTraceCoreDeclIR;
 import org.overture.codegen.ir.traces.ATraceDeclTermIR;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.visitor.AbstractVisitorIR;
 
 public class TraceCoreDeclVisitorIR extends AbstractVisitorIR<IRInfo, STraceCoreDeclIR>
 {
+	private Logger log = Logger.getLogger(this.getClass().getName());
+	
 	@Override
 	public STraceCoreDeclIR caseAApplyExpressionTraceCoreDefinition(
 			AApplyExpressionTraceCoreDefinition node, IRInfo question)
@@ -52,8 +54,8 @@ public class TraceCoreDeclVisitorIR extends AbstractVisitorIR<IRInfo, STraceCore
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Expected term to be of"
-						+ " type ATraceDeclTermIR. Got: " + termCg);
+				log.error("Expected term to be of type ATraceDeclTermIR. Got: "
+						+ termCg);
 			}
 		}
 		

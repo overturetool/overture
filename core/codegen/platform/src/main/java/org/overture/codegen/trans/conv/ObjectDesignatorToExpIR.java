@@ -24,6 +24,7 @@ package org.overture.codegen.trans.conv;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SObjectDesignatorIR;
@@ -46,11 +47,12 @@ import org.overture.codegen.ir.types.SMapTypeIR;
 import org.overture.codegen.ir.types.SSeqTypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.logging.Logger;
 
 public class ObjectDesignatorToExpIR extends AnswerAdaptor<SExpIR>
 {
 	private IRInfo info;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public ObjectDesignatorToExpIR(IRInfo info)
 	{
@@ -110,7 +112,7 @@ public class ObjectDesignatorToExpIR extends AnswerAdaptor<SExpIR>
 			fieldExpType = info.getTypeAssistant().getFieldExpType(info, fieldName, fieldModule, obj, parent);
 		} catch (org.overture.ast.analysis.AnalysisException e)
 		{
-			Logger.getLog().printErrorln("Could not find field expression type of " + node + " in 'ObjectDesignatorToExpIR'");
+			log.error("Could not find field expression type of " + node);
 			fieldExpType = new AUnknownTypeIR();
 		}
 

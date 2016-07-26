@@ -24,6 +24,7 @@ package org.overture.codegen.trans.assistants;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
@@ -75,15 +76,15 @@ import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
 import org.overture.codegen.ir.types.SSeqTypeIR;
 import org.overture.codegen.ir.types.SSetTypeIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.IIterationStrategy;
 import org.overture.codegen.trans.IterationVarPrefixes;
-import org.overture.codegen.trans.let.LetBeStStrategy;
 import org.overture.config.Settings;
 
 public class TransAssistantIR extends BaseTransformationAssistant
 {
 	protected IRInfo info;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public TransAssistantIR(IRInfo info)
 	{
@@ -164,7 +165,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Expected set or sequence type in '" + LetBeStStrategy.class.getSimpleName() + "'. Got: " + t);
+			log.error("Expected set or sequence type. Got: " + t);
 			elementType = new AUnknownTypeIR();
 			elementType.setSourceNode(t.getSourceNode());
 		}
@@ -556,8 +557,8 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Expected set multiple bind or sequence multiple bind in '"
-						+ this.getClass().getSimpleName() + "'. Got: " + mb);
+				log.error("Expected set multiple bind or sequence multiple bind. Got: "
+						+ mb);
 			}
 
 			strategy.setFirstBind(false);
@@ -628,8 +629,8 @@ public class TransAssistantIR extends BaseTransformationAssistant
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Expected multiple set bind or multiple sequence bind in '"
-					+ this.getClass().getSimpleName() + "'. Got: " + binding);
+			log.error("Expected multiple set bind or multiple sequence bind. Got: "
+					+ binding);
 		}
 	}
 
@@ -668,7 +669,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 
 			if (!(paramPattern instanceof AIdentifierPatternIR))
 			{
-				Logger.getLog().printErrorln("Expected parameter pattern to be an identifier pattern at this point. Got: "
+				log.error("Expected parameter pattern to be an identifier pattern at this point. Got: "
 						+ paramPattern);
 				return null;
 			}
@@ -703,8 +704,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Could not find enclosing class of " + node + " in '"
-						+ this.getClass().getSimpleName() + "'");
+				log.error("Could not find enclosing class of " + node);
 			}
 		}
 
@@ -769,10 +769,8 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			return module.getName();
 		} else
 		{
-			Logger.getLog().printErrorln("Could not find enclosing module name of state declaration "
-					+ stateDecl.getName()
-					+ " in '"
-					+ this.getClass().getSimpleName() + "'");
+			log.error("Could not find enclosing module name of state declaration "
+					+ stateDecl.getName());
 			return null;
 		}
 	}

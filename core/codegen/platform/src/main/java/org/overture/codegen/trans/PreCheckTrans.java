@@ -1,5 +1,6 @@
 package org.overture.codegen.trans;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
@@ -11,13 +12,14 @@ import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.statements.AIfStmIR;
 import org.overture.codegen.ir.statements.ARaiseErrorStmIR;
 import org.overture.codegen.ir.types.AErrorTypeIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class PreCheckTrans extends DepthFirstAnalysisAdaptor {
 
 	private TransAssistantIR transAssistant;
 	private Object conditionalCallTag;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public PreCheckTrans(TransAssistantIR transAssistant, Object conditionalCallTag)
 	{
@@ -42,7 +44,8 @@ public class PreCheckTrans extends DepthFirstAnalysisAdaptor {
 		
 		if(!(preCond instanceof AMethodDeclIR))
 		{
-			Logger.getLog().printErrorln("Expected pre condition to be a method declaration at this point. Got: " + preCond);
+			log.error("Expected pre condition to be a method declaration at this point. Got: "
+					+ preCond);
 			return;
 		}
 

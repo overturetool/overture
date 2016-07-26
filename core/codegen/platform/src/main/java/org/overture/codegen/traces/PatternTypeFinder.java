@@ -29,13 +29,15 @@ import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.types.ATupleTypeIR;
 import org.overture.codegen.ir.types.AUnionTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 
 public class PatternTypeFinder extends QuestionAdaptor<STypeIR>
 {
 	private IRInfo info;
 	private IdentityHashMap<SPatternIR, STypeIR> typeTable;
+	
+	private static Logger log = Logger.getLogger(PatternTypeFinder.class.getName());
 
 	public PatternTypeFinder(IRInfo info)
 	{
@@ -47,8 +49,7 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeIR>
 	public void defaultSPatternIR(SPatternIR node, STypeIR question) throws AnalysisException
 	{
 		storeType(node, question);
-		Logger.getLog().printErrorln("Got unexpected pattern " + node + " in '" + this.getClass().getSimpleName()
-				+ "'");
+		log.error("Got unexpected pattern: " + node);
 	}
 
 	@Override
@@ -149,15 +150,12 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeIR>
 				}
 			} else
 			{
-				Logger.getLog().printErrorln("Problem encountered when determining the "
-						+ "type of a tuple pattern. Patterns and types do not match in terms of size in '"
-						+ this.getClass().getSimpleName() + "'");
+				log.error("Problem encountered when determining the type of a tuple pattern. Patterns and types do not match in terms of size");
 			}
 
 		} else
 		{
-			Logger.getLog().printErrorln("Expected tuple type or union type in '" + this.getClass().getSimpleName()
-					+ "'.  Got: " + question);
+			log.error("Expected tuple type or union type. Got: " + question);
 		}
 	}
 
@@ -184,14 +182,13 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeIR>
 				}
 			} else
 			{
-				Logger.getLog().printErrorln("Record patterns and record fields do not match in terms of size in '"
-						+ this.getClass().getSimpleName() + "'");
+				log.error("Record patterns and record fields do not match in terms of size");
 			}
 
 		} else
 		{
-			Logger.getLog().printErrorln("Expected record pattern to have a record type in '"
-					+ this.getClass().getSimpleName() + "'. Got: " + type);
+			log.error("Expected record pattern to have a record type. Got: "
+					+ type);
 		}
 	}
 
@@ -211,8 +208,7 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeIR>
 
 		if (occType == null)
 		{
-			Logger.getLog().printErrorln("Could not find type of identifier pattern " + occ + " in '"
-					+ PatternTypeFinder.class.getSimpleName() + "'");
+			log.error("Could not find type of identifier pattern " + occ);
 			occType = new AUnknownTypeIR();
 		} else
 		{

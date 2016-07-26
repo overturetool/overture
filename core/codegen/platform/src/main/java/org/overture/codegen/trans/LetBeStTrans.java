@@ -2,6 +2,7 @@ package org.overture.codegen.trans;
 
 import java.util.LinkedList;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SMultipleBindIR;
@@ -15,7 +16,6 @@ import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.statements.ALetBeStStmIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.let.LetBeStStrategy;
@@ -25,6 +25,8 @@ public class LetBeStTrans extends DepthFirstAnalysisAdaptor
 	private TransAssistantIR transAssistant;
 	private ILanguageIterator langIterator;
 	private IterationVarPrefixes iteVarPrefixes;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public LetBeStTrans(TransAssistantIR transAssistant,
 			ILanguageIterator langIterator, IterationVarPrefixes iteVarPrefixes)
@@ -61,8 +63,8 @@ public class LetBeStTrans extends DepthFirstAnalysisAdaptor
 			setSeqType = sb.getSeq().getType().clone();
 		} else
 		{
-			Logger.getLog().printErrorln("Expected multiple set bind or multiple sequence bind in '"
-					+ this.getClass().getSimpleName() + "'. Got: " + binding);
+			log.error("Expected multiple set bind or multiple sequence bind. Got: "
+					+ binding);
 			setSeqType = new AUnknownTypeIR();
 
 			// The closest we get
@@ -104,8 +106,8 @@ public class LetBeStTrans extends DepthFirstAnalysisAdaptor
 			return ((ASeqMultipleBindIR) binding).getSeq();
 		} else
 		{
-			Logger.getLog().printErrorln("Expected multiple set bind or multiple sequence bind in '"
-					+ this.getClass().getSimpleName() + "'. Got: " + binding);
+			log.error("Expected multiple set bind or multiple sequence bind. Got: "
+					+ binding);
 			return null;
 		}
 	}

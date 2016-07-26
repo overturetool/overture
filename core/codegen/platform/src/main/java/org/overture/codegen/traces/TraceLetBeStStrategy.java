@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
@@ -21,7 +22,6 @@ import org.overture.codegen.ir.statements.ALocalPatternAssignmentStmIR;
 import org.overture.codegen.ir.types.ASetSetTypeIR;
 import org.overture.codegen.ir.types.SSetTypeIR;
 import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
@@ -38,6 +38,8 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 	protected StoreAssistant storeAssistant;
 	protected Map<String, String> idConstNameMap;
 	protected TraceStmBuilder builder;
+	
+	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
 
 	public TraceLetBeStStrategy(TransAssistantIR transAssistant, SExpIR suchThat, SSetTypeIR setType,
 			ILanguageIterator langIterator, ITempVarGen tempGen, IterationVarPrefixes iteVarPrefixes,
@@ -138,14 +140,14 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 				nextElementDecl.getPattern().apply(typeFinder, elemType);
 			} catch (AnalysisException e)
 			{
-				Logger.getLog().printErrorln("Unexpectected problem occurred when trying to determine the type of pattern "
+				log.error("Unexpectected problem occurred when trying to determine the type of pattern "
 						+ nextElementDecl.getPattern());
 				e.printStackTrace();
 			}
 		} else
 		{
-			Logger.getLog().printErrorln("Expected type of set to be a set type in '" + this.getClass().getSimpleName()
-					+ "'. Got: " + setVar.getType());
+			log.error("Expected set type. Got: "
+					+ setVar.getType());
 		}
 
 		List<AIdentifierVarExpIR> traceVars = new LinkedList<>();

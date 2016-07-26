@@ -45,9 +45,11 @@ import org.overture.ast.types.SSeqTypeBase;
 import org.overture.ast.util.PTypeSet;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SObjectDesignatorIR;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.declarations.AFieldDeclIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
@@ -84,9 +86,6 @@ import org.overture.codegen.ir.types.SBasicTypeIR;
 import org.overture.codegen.ir.types.SMapTypeIR;
 import org.overture.codegen.ir.types.SSeqTypeIR;
 import org.overture.codegen.ir.types.SSetTypeIR;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.conv.ObjectDesignatorToExpIR;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -169,7 +168,7 @@ public class TypeAssistantIR extends AssistantBase
 
 					if (fieldExpType == null)
 					{
-						Logger.getLog().printErrorln("Lookup of field type gave nothing in 'TypeAssistantIR'");
+						log.error("Could not find field type");
 					}
 
 					return fieldExpType;
@@ -180,7 +179,8 @@ public class TypeAssistantIR extends AssistantBase
 			}
 		}
 
-		Logger.getLog().printErrorln("Could not determine field type of field expression in 'TypeAssistantIR'");
+		log.error("Could not determine field type");
+		
 		return new AUnknownTypeIR();
 	}
 	
@@ -495,7 +495,7 @@ public class TypeAssistantIR extends AssistantBase
 
 		if (possibleTypes.isEmpty())
 		{
-			Logger.getLog().printError("Could not find any possible types for pattern: "
+			log.error("Could not find any possible types for pattern: "
 					+ pattern);
 			return null;
 		} else if (possibleTypes.size() == 1)
@@ -617,7 +617,7 @@ public class TypeAssistantIR extends AssistantBase
 			return seqType.getSeqOf();
 		}
 
-		Logger.getLog().printErrorln("Expected set or sequence type in findElementType. Got: " + type);
+		log.error("Expected set or sequence type in findElementType. Got: " + type);
 		
 		return null;
 	}
@@ -872,7 +872,7 @@ public class TypeAssistantIR extends AssistantBase
 			}
 		}
 		
-		Logger.getLog().printErrorln("Could not get VDM type of " + type + " in '" + this.getClass().getSimpleName() + "'");
+		log.error("Could not get VDM type of " + type);
 		return new AUnknownType();
 	}
 }

@@ -78,7 +78,6 @@ import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRNamedTypeInvariantTag;
-import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
@@ -87,7 +86,7 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 	public STypeIR caseAUnresolvedType(AUnresolvedType node, IRInfo question)
 			throws AnalysisException
 	{
-		Logger.getLog().printErrorln("Found unresolved type in the VDM AST");
+		log.error("Found unresolved type in the VDM AST");
 		//To guard against unresolved type in the type checker
 		return new AUnknownTypeIR();
 	}

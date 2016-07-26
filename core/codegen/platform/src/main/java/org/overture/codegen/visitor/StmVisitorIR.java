@@ -108,7 +108,6 @@ import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AClassTypeIR;
 import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 import org.overture.config.Settings;
 
 public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
@@ -146,7 +145,7 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 		{
 			if(!(d instanceof AClassInvariantDefinition))
 			{
-				Logger.getLog().printErrorln("Expected class invariant definition in '" + this.getClass().getName() + "'. Got: " + d);
+				log.error("Expected class invariant definition: " + d);
 				return null;
 			}
 			
@@ -553,7 +552,7 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Could not find enclosing the statement of call a call object statement.");
+				log.error("Could not find enclosing the statement of call object statement.");
 			}
 		}
 

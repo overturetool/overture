@@ -1,5 +1,6 @@
 package org.overture.codegen.trans;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
@@ -11,7 +12,6 @@ import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.statements.AAssignmentStmIR;
 import org.overture.codegen.ir.statements.AAtomicStmIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class AtomicStmTrans extends DepthFirstAnalysisAdaptor
@@ -40,6 +40,8 @@ public class AtomicStmTrans extends DepthFirstAnalysisAdaptor
 
 	private TransAssistantIR transAssistant;
 	private String atomicPrefix;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public AtomicStmTrans(TransAssistantIR transAssistant, String atomicPrefix)
 	{
@@ -74,8 +76,8 @@ public class AtomicStmTrans extends DepthFirstAnalysisAdaptor
 				transAssistant.replaceNodeWith(assign.getExp(), tmpVarExp);
 			} else
 			{
-				Logger.getLog().printErrorln("Expected all statements in atomic "
-						+ "statement block to be assignments. Got: " + stm);
+				log.error("Expected all statements in atomic statement block to be assignments. Got: "
+						+ stm);
 			}
 		}
 		

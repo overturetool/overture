@@ -30,9 +30,9 @@ import org.overture.codegen.ir.expressions.ANewExpIR;
 import org.overture.codegen.ir.expressions.AUndefinedExpIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
@@ -43,6 +43,8 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 	private IRInfo info;
 	private TransAssistantIR transAssistant;
 	private List<AModuleDeclIR> allModules;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public ModuleToClassTransformation(IRInfo info, TransAssistantIR transAssistant, List<AModuleDeclIR> allModules)
 	{
@@ -111,9 +113,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 				clazz.getFields().add(field);
 			} else
 			{
-				Logger.getLog().printErrorln("Got unexpected declaration: "
-						+ decl + " in '" + this.getClass().getSimpleName()
-						+ "'");
+				log.error("Got unexpected declaration: " + decl);
 			}
 		}
 		
@@ -305,9 +305,8 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			}
 		}
 
-		Logger.getLog().printErrorln("Could not find field " + fieldName
-				+ " in module " + moduleName + " in '"
-				+ this.getClass().getSimpleName() + "'");
+		log.error("Could not find field " + fieldName + " in module "
+				+ moduleName);
 
 		return null;
 	}

@@ -24,6 +24,7 @@ package org.overture.codegen.trans.patterns;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SExpIR;
@@ -81,7 +82,6 @@ import org.overture.codegen.ir.types.ASeqSeqTypeIR;
 import org.overture.codegen.ir.types.ATupleTypeIR;
 import org.overture.codegen.ir.types.AUnionTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
@@ -95,6 +95,8 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	private IterationVarPrefixes iteVarPrefixes;
 
 	private String casesExpNamePrefix;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public PatternTrans(IterationVarPrefixes iteVarPrefixes,
 			TransAssistantIR transAssistant, PatternVarPrefixes config,
@@ -257,7 +259,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 						transAssistant.replaceNodeWith(param.getPattern(), idPattern);
 					} else
 					{
-						Logger.getLog().printError("Could not find prefix for pattern: "
+						log.error("Could not find prefix for pattern: "
 								+ paramPattern);
 					}
 				}
@@ -342,8 +344,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 						}
 						else
 						{
-							Logger.getLog().printErrorln("Expected parent of current declaration "
-									+ "to be a block statement but got: "
+							log.error("Expected parent of current declaration to be a block statement but got: "
 									+ parent
 									+ ". Pattern handling block could not be added.");
 						}
@@ -416,7 +417,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 				data.setSuccessVar(successVar);
 			} else
 			{
-				Logger.getLog().printErrorln("Expected success variable declaration to use an identifier pattern. Got: "
+				log.error("Expected success variable declaration to use an identifier pattern. Got: "
 						+ successVarDeclPattern);
 			}
 		}
@@ -452,7 +453,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 				replacementBlock.getStatements().addFirst(assignment);
 			} else
 			{
-				Logger.getLog().printErrorln("Expected the declaration to have its pattern transformed into an identifier pattern. Got: "
+				log.error("Expected the declaration to have its pattern transformed into an identifier pattern. Got: "
 						+ nextDeclPattern);
 			}
 		}
@@ -672,8 +673,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Expected tuple type or union type "
-						+ "in 'PatternTransformation'. Got: " + type);
+				log.error("Expected tuple type or union type. Got: " + type);
 			}
 		} else if (pattern instanceof ARecordPatternIR)
 		{
@@ -694,8 +694,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Expected record type or union type"
-						+ "in PatternTransformation. Got: " + type);
+				log.error("Expected record type or union type. Got: " + type);
 			}
 		}
 
@@ -1253,7 +1252,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			}
 		}
 
-		Logger.getLog().printErrorln("Could not fetch declaration tag from pattern assignment: "
+		log.error("Could not fetch declaration tag from pattern assignment: "
 				+ node);
 
 		return null;

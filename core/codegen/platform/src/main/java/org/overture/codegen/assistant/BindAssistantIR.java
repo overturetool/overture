@@ -29,7 +29,6 @@ import org.overture.codegen.ir.patterns.ASetBindIR;
 import org.overture.codegen.ir.patterns.ASetMultipleBindIR;
 import org.overture.codegen.ir.patterns.ATypeBindIR;
 import org.overture.codegen.ir.patterns.ATypeMultipleBindIR;
-import org.overture.codegen.logging.Logger;
 
 public class BindAssistantIR extends AssistantBase
 {
@@ -84,7 +83,7 @@ public class BindAssistantIR extends AssistantBase
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Expected set or type bind in '" + this.getClass().getSimpleName() + "'");
+			log.error("Expected set or type bind");
 		}
 		
 		return result; 

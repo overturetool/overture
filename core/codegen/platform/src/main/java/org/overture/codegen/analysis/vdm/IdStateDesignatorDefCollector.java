@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
@@ -25,7 +26,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.PStm;
-import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -40,6 +40,8 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 	private Map<AIdentifierStateDesignator, PDefinition> idDefs;
 	private Set<INode> visited;
 	private ITypeCheckerAssistantFactory af;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public IdStateDesignatorDefCollector(INode topNode, List<? extends INode> classes, ITypeCheckerAssistantFactory af)
 	{
@@ -66,8 +68,7 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 					loadModuleGlobals((AModuleModules) n);
 				} else
 				{
-					Logger.getLog().printErrorln("Expected class or module in '" + this.getClass().getSimpleName()
-							+ "'. Got: " + n);
+					log.error("Expected class or module. Got: " + n);
 				}
 			}
 		}
@@ -218,7 +219,7 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 			
 			if(defname == null)
 			{
-				Logger.getLog().printErrorln("Found definition name to be null in '" + this.getClass().getSimpleName() + "'");
+				log.error("Definition name was null");
 			}
 			else if(node.getName().getName().equals(nextDef.getName().getName()))
 			{

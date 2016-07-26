@@ -4,13 +4,15 @@ import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
 import org.overture.codegen.ir.statements.ACallObjectStmIR;
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.conv.ObjectDesignatorToExpIR;
 
 public class CallObjStmTrans extends DepthFirstAnalysisAdaptor
 {
 	private ObjectDesignatorToExpIR converter;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public CallObjStmTrans(IRInfo info)
 	{
@@ -35,7 +37,7 @@ public class CallObjStmTrans extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Could not find parent of " + node + " in " + "'CallObjStmTransformation'");
+			log.error("Could not find parent of " + node);
 		}
 	}
 }

@@ -18,7 +18,6 @@ import org.overture.codegen.ir.declarations.ANamedTraceDeclIR;
 import org.overture.codegen.ir.declarations.AStateDeclIR;
 import org.overture.codegen.ir.declarations.ATypeDeclIR;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 
 public class ModuleVisitorIR extends AbstractVisitorIR<IRInfo, AModuleDeclIR>
 {
@@ -44,9 +43,9 @@ public class ModuleVisitorIR extends AbstractVisitorIR<IRInfo, AModuleDeclIR>
 				moduleCg.setImport((AModuleImportsIR) importsCg);
 			} else
 			{
-				Logger.getLog().printErrorln("Expected imports to be of type '"
+				log.error("Expected imports to be of type '"
 						+ AModuleImportsIR.class.getSimpleName() + "'. Got: "
-						+ importsCg + " in " + this.getClass().getSimpleName());
+						+ importsCg);
 			}
 		}
 
@@ -59,9 +58,9 @@ public class ModuleVisitorIR extends AbstractVisitorIR<IRInfo, AModuleDeclIR>
 				moduleCg.setExports((AModuleExportsIR) exportsCg);
 			} else
 			{
-				Logger.getLog().printErrorln("Expected export to be of type '"
+				log.error("Expected export to be of type '"
 						+ AModuleExportsIR.class.getSimpleName() + "'. Got: "
-						+ exportsCg + " in " + this.getClass().getSimpleName());
+						+ exportsCg);
 			}
 		}
 
@@ -87,7 +86,7 @@ public class ModuleVisitorIR extends AbstractVisitorIR<IRInfo, AModuleDeclIR>
 				moduleCg.getDecls().add(declCg);
 			} else
 			{
-				Logger.getLog().printErrorln("Unexpected definition in module: " + def);
+				log.error("Unexpected definition in module: " + def);
 			}
 		}
 

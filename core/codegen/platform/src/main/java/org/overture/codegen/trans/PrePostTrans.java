@@ -8,13 +8,15 @@ import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 
 public class PrePostTrans extends DepthFirstAnalysisAdaptor {
 	
 	private IRInfo info;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public PrePostTrans(IRInfo info)
 	{
@@ -34,7 +36,7 @@ public class PrePostTrans extends DepthFirstAnalysisAdaptor {
 		
 		if(enclosingClass == null)
 		{
-			Logger.getLog().printErrorln("Could not find enclosing class for method: " + node);
+			log.error("Could not find enclosing class for method: " + node);
 			return;
 		}
 		

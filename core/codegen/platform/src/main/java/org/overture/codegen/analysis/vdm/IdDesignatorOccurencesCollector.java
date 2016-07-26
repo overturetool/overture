@@ -4,18 +4,20 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.statements.AIdentifierStateDesignator;
-import org.overture.codegen.logging.Logger;
 
 public class IdDesignatorOccurencesCollector extends DepthFirstAnalysisAdaptor 
 {
 	private ILexLocation defLoc;
 	private Set<AIdentifierStateDesignator> idOccurences;
 	private Map<AIdentifierStateDesignator, PDefinition> idDefs;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public IdDesignatorOccurencesCollector(ILexLocation defLoc, Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
@@ -37,7 +39,7 @@ public class IdDesignatorOccurencesCollector extends DepthFirstAnalysisAdaptor
 		
 		if(def == null)
 		{
-			Logger.getLog().printErrorln("Could not find definition for " + node + " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Could not find definition for " + node);
 		}
 		else
 		{

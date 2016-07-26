@@ -1,5 +1,6 @@
 package org.overture.codegen.trans;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
@@ -8,13 +9,14 @@ import org.overture.codegen.ir.statements.AAssignToExpStmIR;
 import org.overture.codegen.ir.statements.AAssignmentStmIR;
 import org.overture.codegen.ir.statements.AMapSeqStateDesignatorIR;
 import org.overture.codegen.ir.statements.AMapSeqUpdateStmIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.conv.StateDesignatorToExpIR;
 
 public class AssignStmTrans extends DepthFirstAnalysisAdaptor
 {
 	private StateDesignatorToExpIR converter;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	
 	public AssignStmTrans(TransAssistantIR transAssistant)
 	{
@@ -62,7 +64,7 @@ public class AssignStmTrans extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Could not find parent of " + node + " in " + "'" + this.getClass().getSimpleName() + "'" );
+			log.error("Could not find parent of " + node);
 		}
 	}
 }

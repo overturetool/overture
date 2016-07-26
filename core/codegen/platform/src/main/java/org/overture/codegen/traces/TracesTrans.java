@@ -2,6 +2,7 @@ package org.overture.codegen.traces;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.SStmIR;
@@ -21,7 +22,6 @@ import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
 import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
@@ -35,6 +35,8 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 	protected ICallStmToStringMethodBuilder toStringBuilder;
 	protected TraceNames tracePrefixes;
 	private List<INode> cloneFreeNodes;
+	
+	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public TracesTrans(TransAssistantIR transAssistant,
 			IterationVarPrefixes iteVarPrefixes, TraceNames tracePrefixes,
@@ -73,8 +75,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 			enclosingClass.getMethods().add(consTraceMethod(node));
 		} else
 		{
-			Logger.getLog().printErrorln("Class enclosing trace could not be found so the "
-					+ "generated trace could not be added as a method to the corresponding class");
+			log.error("Class enclosing trace could not be found so the generated trace could not be added as a method to the corresponding class");
 		}
 	}
 
@@ -85,7 +86,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 			supportedAnalysis.run();
 		} catch (AnalysisException e)
 		{
-			Logger.getLog().printErrorln("Could not determine if a trace could be code generated");
+			log.error("Could not determine if a trace could be code generated");
 			e.printStackTrace();
 			return false;
 		}
@@ -245,8 +246,8 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 			}
 		}
 
-		Logger.getLog().printErrorln("Could not find class declaration enclosing the trace node "
-				+ trace + " in 'TraceStmsBuilder'");
+		log.error("Could not find class declaration enclosing the trace node "
+				+ trace);
 
 		return null;
 	}

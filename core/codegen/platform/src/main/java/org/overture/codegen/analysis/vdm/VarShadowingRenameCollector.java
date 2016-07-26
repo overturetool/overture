@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
@@ -60,7 +61,6 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.PType;
 import org.overture.codegen.ir.TempVarNameGen;
-import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 
@@ -88,6 +88,8 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	private Set<Renaming> renamings;
 	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
+	
+	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
 	
 	public VarShadowingRenameCollector(ITypeCheckerAssistantFactory af, Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
@@ -785,7 +787,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Expected module or class definition. Got: " + module + " in '" + this.getClass().getSimpleName() +"'");
+			log.error("Expected module or class definition. Got: " + module);
 			return null;
 		}
 	}
@@ -908,8 +910,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		if (def == null)
 		{
-			Logger.getLog().printError("Got unexpected definition in '" + this.getClass().getSimpleName() + "'. Got: "
-					+ enclosingDef);
+			log.error("Got unexpected definition: " + enclosingDef);
 		}
 
 		return enclosingDef == def;
