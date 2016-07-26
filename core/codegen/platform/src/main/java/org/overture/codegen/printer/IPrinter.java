@@ -19,9 +19,9 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.logging;
+package org.overture.codegen.printer;
 
-public interface ILogger
+public interface IPrinter
 {
 	public void setSilent(boolean silent);
 
@@ -29,8 +29,8 @@ public interface ILogger
 
 	public void print(String msg);
 
-	public void printErrorln(String msg);
+	public void errorln(String msg);
 
-	public void printError(String msg);
+	public void error(String msg);
 
 }

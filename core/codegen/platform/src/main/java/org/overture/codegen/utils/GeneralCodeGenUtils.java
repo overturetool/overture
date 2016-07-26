@@ -57,7 +57,7 @@ import org.overture.codegen.assistant.LocationAssistantIR;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
-import org.overture.codegen.logging.Logger;
+import org.overture.codegen.printer.MsgPrinter;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.Console;
@@ -392,7 +392,7 @@ public class GeneralCodeGenUtils
 			writer.close();
 		} catch (IOException ioe)
 		{
-			Logger.getLog().printErrorln("Error replacing characters in file: "
+			MsgPrinter.getPrinter().errorln("Error replacing characters in file: "
 					+ filePath);
 			ioe.printStackTrace();
 		}
@@ -523,7 +523,7 @@ public class GeneralCodeGenUtils
 	{
 		for (Exception error : mergeErrors)
 		{
-			Logger.getLog().println(error.toString());
+			MsgPrinter.getPrinter().println(error.toString());
 		}
 	}
 	
@@ -536,12 +536,12 @@ public class GeneralCodeGenUtils
 
 		for (VdmNodeInfo vdmNodeInfo : nodesSorted)
 		{
-			Logger.getLog().print(vdmNodeInfo.getNode().toString() + 
+			MsgPrinter.getPrinter().print(vdmNodeInfo.getNode().toString() + 
 					" (" + vdmNodeInfo.getNode().getClass().getSimpleName() + ")");
 
 			ILexLocation location = locationAssistant.findLocation(vdmNodeInfo.getNode());
 
-			Logger.getLog().print(location != null ? " at [line, pos] = ["
+			MsgPrinter.getPrinter().print(location != null ? " at [line, pos] = ["
 					+ location.getStartLine() + ", " + location.getStartPos()
 					+ "] in " + location.getFile().getName() : "");
 
@@ -549,10 +549,10 @@ public class GeneralCodeGenUtils
 
 			if (reason != null)
 			{
-				Logger.getLog().print(". Reason: " + reason);
+				MsgPrinter.getPrinter().print(". Reason: " + reason);
 			}
 
-			Logger.getLog().println("");
+			MsgPrinter.getPrinter().println("");
 		}
 	}
 	
@@ -566,11 +566,11 @@ public class GeneralCodeGenUtils
 		for (IrNodeInfo nodeInfo : nodesSorted)
 		{
 			INode vdmNode = locationAssistant.getVdmNode(nodeInfo);
-			Logger.getLog().print(vdmNode != null ? vdmNode.toString() : nodeInfo.getNode().getClass().getSimpleName());
+			MsgPrinter.getPrinter().print(vdmNode != null ? vdmNode.toString() : nodeInfo.getNode().getClass().getSimpleName());
 
 			ILexLocation location = locationAssistant.findLocation(nodeInfo);
 
-			Logger.getLog().print(location != null ? " at [line, pos] = ["
+			MsgPrinter.getPrinter().print(location != null ? " at [line, pos] = ["
 					+ location.getStartLine() + ", " + location.getStartPos()
 					+ "]" : "");
 
@@ -578,10 +578,10 @@ public class GeneralCodeGenUtils
 
 			if (reason != null)
 			{
-				Logger.getLog().print(". Reason: " + reason);
+				MsgPrinter.getPrinter().print(". Reason: " + reason);
 			}
 
-			Logger.getLog().println("");
+			MsgPrinter.getPrinter().println("");
 		}
 	}
 }

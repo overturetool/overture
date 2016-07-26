@@ -38,7 +38,7 @@ import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
-import org.overture.codegen.logging.Logger;
+import org.overture.codegen.printer.MsgPrinter;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
@@ -175,7 +175,7 @@ public class JavaCodeGenMain
 					}
 					else
 					{
-						Logger.getLog().printErrorln("Not a valid java package. Using the default java package instead..\n");
+						MsgPrinter.getPrinter().errorln("Not a valid java package. Using the default java package instead..\n");
 					}
 				}
 			}
@@ -246,7 +246,7 @@ public class JavaCodeGenMain
 			usage("No VDM dialect specified");
 		}
 
-		Logger.getLog().println("Starting code generation...\n");
+		MsgPrinter.getPrinter().println("Starting code generation...\n");
 
 		
 		if(cgMode == JavaCodeGenMode.EXP)
@@ -262,7 +262,7 @@ public class JavaCodeGenMain
 			
 			if(outputDir == null && !printClasses)
 			{
-				Logger.getLog().println("No output directory specified - printing code generated classes instead..\n");
+				MsgPrinter.getPrinter().println("No output directory specified - printing code generated classes instead..\n");
 				printClasses = true;
 			}
 			
@@ -275,11 +275,11 @@ public class JavaCodeGenMain
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Unexpected dialect: " + cgMode);
+				MsgPrinter.getPrinter().errorln("Unexpected dialect: " + cgMode);
 			}
 		}
 
-		Logger.getLog().println("\nFinished code generation! Bye...");
+		MsgPrinter.getPrinter().println("\nFinished code generation! Bye...");
 	}
 
 	private static void handleExp(String exp, IRSettings irSettings,
@@ -294,11 +294,11 @@ public class JavaCodeGenMain
 
 			if (generated.hasMergeErrors())
 			{
-				Logger.getLog().println(String.format("VDM expression '%s' could not be merged. Following merge errors were found:", exp));
+				MsgPrinter.getPrinter().println(String.format("VDM expression '%s' could not be merged. Following merge errors were found:", exp));
 				GeneralCodeGenUtils.printMergeErrors(generated.getMergeErrors());
 			} else if (!generated.canBeGenerated())
 			{
-				Logger.getLog().println("Could not generate VDM expression: "
+				MsgPrinter.getPrinter().println("Could not generate VDM expression: "
 						+ exp);
 
 				if (generated.hasUnsupportedIrNodes())
@@ -313,12 +313,12 @@ public class JavaCodeGenMain
 
 			} else
 			{
-				Logger.getLog().println("Code generated expression: "
+				MsgPrinter.getPrinter().println("Code generated expression: "
 						+ generated.getContent().trim());
 			}
 		} catch (AnalysisException e)
 		{
-			Logger.getLog().println("Could not code generate model: "
+			MsgPrinter.getPrinter().println("Could not code generate model: "
 					+ e.getMessage());
 
 		}
@@ -338,8 +338,8 @@ public class JavaCodeGenMain
 			
 			if(GeneralCodeGenUtils.hasErrors(tcResult))
 			{
-				Logger.getLog().printError("Found errors in VDM model:");
-				Logger.getLog().printErrorln(GeneralCodeGenUtils.errorStr(tcResult));
+				MsgPrinter.getPrinter().error("Found errors in VDM model:");
+				MsgPrinter.getPrinter().errorln(GeneralCodeGenUtils.errorStr(tcResult));
 				return;
 			}
 			
@@ -349,7 +349,7 @@ public class JavaCodeGenMain
 
 		} catch (AnalysisException e)
 		{
-			Logger.getLog().println("Could not code generate model: "
+			MsgPrinter.getPrinter().println("Could not code generate model: "
 					+ e.getMessage());
 		}
 	}
@@ -375,8 +375,8 @@ public class JavaCodeGenMain
 			
 			if(GeneralCodeGenUtils.hasErrors(tcResult))
 			{
-				Logger.getLog().printError("Found errors in VDM model:");
-				Logger.getLog().printErrorln(GeneralCodeGenUtils.errorStr(tcResult));
+				MsgPrinter.getPrinter().error("Found errors in VDM model:");
+				MsgPrinter.getPrinter().errorln(GeneralCodeGenUtils.errorStr(tcResult));
 				return;
 			}
 			
@@ -386,7 +386,7 @@ public class JavaCodeGenMain
 
 		} catch (AnalysisException e)
 		{
-			Logger.getLog().println("Could not code generate model: "
+			MsgPrinter.getPrinter().println("Could not code generate model: "
 					+ e.getMessage());
 
 		}
@@ -396,7 +396,7 @@ public class JavaCodeGenMain
 			final File outputDir, JavaCodeGen vdmCodGen, GeneratedData data, boolean separateTestCode) {
 		List<GeneratedModule> generatedClasses = data.getClasses();
 
-		Logger.getLog().println("");
+		MsgPrinter.getPrinter().println("");
 		
 		if(!generatedClasses.isEmpty())
 		{
@@ -404,23 +404,23 @@ public class JavaCodeGenMain
 			{
 				if (generatedClass.hasMergeErrors())
 				{
-					Logger.getLog().println(String.format("Class %s could not be merged. Following merge errors were found:", generatedClass.getName()));
+					MsgPrinter.getPrinter().println(String.format("Class %s could not be merged. Following merge errors were found:", generatedClass.getName()));
 	
 					GeneralCodeGenUtils.printMergeErrors(generatedClass.getMergeErrors());
 				} else if (!generatedClass.canBeGenerated())
 				{
-					Logger.getLog().println("Could not generate class: "
+					MsgPrinter.getPrinter().println("Could not generate class: "
 							+ generatedClass.getName() + "\n");
 	
 					if (generatedClass.hasUnsupportedIrNodes())
 					{
-						Logger.getLog().println("Following VDM constructs are not supported by the code generator:");
+						MsgPrinter.getPrinter().println("Following VDM constructs are not supported by the code generator:");
 						GeneralCodeGenUtils.printUnsupportedIrNodes(generatedClass.getUnsupportedInIr());
 					}
 	
 					if (generatedClass.hasUnsupportedTargLangNodes())
 					{
-						Logger.getLog().println("Following constructs are not supported by the code generator:");
+						MsgPrinter.getPrinter().println("Following constructs are not supported by the code generator:");
 						GeneralCodeGenUtils.printUnsupportedNodes(generatedClass.getUnsupportedInTargLang());
 					}
 	
@@ -448,12 +448,12 @@ public class JavaCodeGenMain
 					
 					if (printCode)
 					{
-						Logger.getLog().println("**********");
-						Logger.getLog().println(generatedClass.getContent());
-						Logger.getLog().println("\n");
+						MsgPrinter.getPrinter().println("**********");
+						MsgPrinter.getPrinter().println(generatedClass.getContent());
+						MsgPrinter.getPrinter().println("\n");
 					} else
 					{
-						Logger.getLog().println("Generated class : "
+						MsgPrinter.getPrinter().println("Generated class : "
 								+ generatedClass.getName());
 					}
 	
@@ -461,7 +461,7 @@ public class JavaCodeGenMain
 	
 					if (!warnings.isEmpty())
 					{
-						Logger.getLog().println("Following transformation warnings were found:");
+						MsgPrinter.getPrinter().println("Following transformation warnings were found:");
 						GeneralCodeGenUtils.printUnsupportedNodes(generatedClass.getTransformationWarnings());
 					}
 				}
@@ -469,12 +469,12 @@ public class JavaCodeGenMain
 		}
 		else
 		{
-			Logger.getLog().println("No classes were generated!");
+			MsgPrinter.getPrinter().println("No classes were generated!");
 		}
 
 		List<GeneratedModule> quotes = data.getQuoteValues();
 
-		Logger.getLog().println("\nGenerated following quotes:");
+		MsgPrinter.getPrinter().println("\nGenerated following quotes:");
 
 		if (quotes != null && !quotes.isEmpty())
 		{
@@ -495,34 +495,34 @@ public class JavaCodeGenMain
 			
 			for (GeneratedModule q : quotes)
 			{
-				Logger.getLog().print(q.getName() + " ");
+				MsgPrinter.getPrinter().print(q.getName() + " ");
 			}
 
-			Logger.getLog().println("");
+			MsgPrinter.getPrinter().println("");
 		}
 
 		InvalidNamesResult invalidName = data.getInvalidNamesResult();
 
 		if (!invalidName.isEmpty())
 		{
-			Logger.getLog().println(GeneralCodeGenUtils.constructNameViolationsString(invalidName));
+			MsgPrinter.getPrinter().println(GeneralCodeGenUtils.constructNameViolationsString(invalidName));
 		}
 
 		List<Renaming> allRenamings = data.getAllRenamings();
 
 		if (!allRenamings.isEmpty())
 		{
-			Logger.getLog().println("\nDue to variable shadowing or normalisation of Java identifiers the following renamings of variables have been made: ");
+			MsgPrinter.getPrinter().println("\nDue to variable shadowing or normalisation of Java identifiers the following renamings of variables have been made: ");
 
-			Logger.getLog().println(GeneralCodeGenUtils.constructVarRenamingString(allRenamings));
+			MsgPrinter.getPrinter().println(GeneralCodeGenUtils.constructVarRenamingString(allRenamings));
 		}
 		
 		if(data.getWarnings() != null && !data.getWarnings().isEmpty())
 		{
-			Logger.getLog().println("");
+			MsgPrinter.getPrinter().println("");
 			for(String w : data.getWarnings())
 			{
-				Logger.getLog().println("[WARNING] " + w);
+				MsgPrinter.getPrinter().println("[WARNING] " + w);
 			}
 		}
 	}
@@ -544,30 +544,30 @@ public class JavaCodeGenMain
 	
 	public static void usage(String msg)
 	{
-		Logger.getLog().printErrorln("VDM-to-Java Code Generator: " + msg + "\n");
-		Logger.getLog().printErrorln("Usage: CodeGen < " + OO_ARG + " | " + SL_ARG + " | " + RT_ARG + " | -exp > [<options>] [<files>]");
-		Logger.getLog().printErrorln(OO_ARG
+		MsgPrinter.getPrinter().errorln("VDM-to-Java Code Generator: " + msg + "\n");
+		MsgPrinter.getPrinter().errorln("Usage: CodeGen < " + OO_ARG + " | " + SL_ARG + " | " + RT_ARG + " | -exp > [<options>] [<files>]");
+		MsgPrinter.getPrinter().errorln(OO_ARG
 				+ ": code generate a VDMPP specification consisting of multiple .vdmpp files");
-		Logger.getLog().printErrorln(SL_ARG
+		MsgPrinter.getPrinter().errorln(SL_ARG
 				+ ": code generate a VDMSL specification consisting of multiple .vdmsl files");
-		Logger.getLog().printErrorln(RT_ARG
+		MsgPrinter.getPrinter().errorln(RT_ARG
 				+ ": code generate a limited part of a VDMRT specification consisting of multiple .vdmrt files");
-		Logger.getLog().printErrorln(CLASSIC + ": code generate using the VDM classic language release");
-		Logger.getLog().printErrorln(VDM10 + ": code generate using the VDM-10 language release");
-		Logger.getLog().printErrorln(EXP_ARG + " <expression>: code generate a VDMPP expression");
-		Logger.getLog().printErrorln(FOLDER_ARG + " <folder path>: a folder containing input vdm source files");
-		Logger.getLog().printErrorln(PRINT_ARG + ": print the generated code to the console");
-		Logger.getLog().printErrorln(PACKAGE_ARG
+		MsgPrinter.getPrinter().errorln(CLASSIC + ": code generate using the VDM classic language release");
+		MsgPrinter.getPrinter().errorln(VDM10 + ": code generate using the VDM-10 language release");
+		MsgPrinter.getPrinter().errorln(EXP_ARG + " <expression>: code generate a VDMPP expression");
+		MsgPrinter.getPrinter().errorln(FOLDER_ARG + " <folder path>: a folder containing input vdm source files");
+		MsgPrinter.getPrinter().errorln(PRINT_ARG + ": print the generated code to the console");
+		MsgPrinter.getPrinter().errorln(PACKAGE_ARG
 				+ " <java package>:  the output java package of the generated code (e.g. my.code)");
-		Logger.getLog().printErrorln(OUTPUT_ARG + " <folder path>: the output folder of the generated code");
-		Logger.getLog().printErrorln(VDM_ENTRY_EXP
+		MsgPrinter.getPrinter().errorln(OUTPUT_ARG + " <folder path>: the output folder of the generated code");
+		MsgPrinter.getPrinter().errorln(VDM_ENTRY_EXP
 				+ " <vdm entry point expression>: generate a Java main method based on the specified entry point");
-		Logger.getLog().printErrorln(NO_CODE_FORMAT + ": to NOT format the generated Java code");
-		Logger.getLog().printErrorln(JUNIT4 + ": to generate VDMUnit " + IRConstants.TEST_CASE + " sub-classes to JUnit4 tests");
-		Logger.getLog().printErrorln(SEP_TEST_CODE + ": to place the code generated model and the test code into separate folders named '"
+		MsgPrinter.getPrinter().errorln(NO_CODE_FORMAT + ": to NOT format the generated Java code");
+		MsgPrinter.getPrinter().errorln(JUNIT4 + ": to generate VDMUnit " + IRConstants.TEST_CASE + " sub-classes to JUnit4 tests");
+		MsgPrinter.getPrinter().errorln(SEP_TEST_CODE + ": to place the code generated model and the test code into separate folders named '"
 				+ GEN_MODEL_CODE_FOLDER + "' and '" + GEN_TESTS_FOLDER + "', respectively");
-		Logger.getLog().printErrorln(VDM_LOC + ": Generate VDM location information for code generated constructs");
-		Logger.getLog().printErrorln(NO_CLONING + ": To disable deep cloning of value types");
+		MsgPrinter.getPrinter().errorln(VDM_LOC + ": Generate VDM location information for code generated constructs");
+		MsgPrinter.getPrinter().errorln(NO_CLONING + ": To disable deep cloning of value types");
 
 		// Terminate
 		System.exit(1);

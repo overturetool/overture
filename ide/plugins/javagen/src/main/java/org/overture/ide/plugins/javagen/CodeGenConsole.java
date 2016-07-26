@@ -30,9 +30,9 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.overture.codegen.logging.ILogger;
+import org.overture.codegen.printer.IPrinter;
 
-public class CodeGenConsole implements ILogger
+public class CodeGenConsole implements IPrinter
 {
 	private final PrintWriter out;
 	private final PrintWriter err;
@@ -103,13 +103,13 @@ public class CodeGenConsole implements ILogger
 	}
 
 	@Override
-	public void printErrorln(String msg)
+	public void errorln(String msg)
 	{
 		err.println(msg);
 	}
 
 	@Override
-	public void printError(String msg)
+	public void error(String msg)
 	{
 		err.print(msg);
 	}

@@ -19,18 +19,18 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.logging;
+package org.overture.codegen.printer;
 
-public class DefaultLogger implements ILogger
+public class DefaultConsolePrinter implements IPrinter
 {
 
-	private static DefaultLogger log;
+	private static DefaultConsolePrinter log;
 
-	public static DefaultLogger getDefaultLogger()
+	public static DefaultConsolePrinter getDefaultLogger()
 	{
 		if (log == null)
 		{
-			log = new DefaultLogger();
+			log = new DefaultConsolePrinter();
 		}
 
 		return log;
@@ -38,7 +38,7 @@ public class DefaultLogger implements ILogger
 
 	private boolean silent;
 
-	private DefaultLogger()
+	private DefaultConsolePrinter()
 	{
 		this.silent = false;
 	}
@@ -72,7 +72,7 @@ public class DefaultLogger implements ILogger
 	}
 
 	@Override
-	public void printErrorln(String msg)
+	public void errorln(String msg)
 	{
 		if (silent)
 		{
@@ -83,7 +83,7 @@ public class DefaultLogger implements ILogger
 	}
 
 	@Override
-	public void printError(String msg)
+	public void error(String msg)
 	{
 		if (silent)
 		{

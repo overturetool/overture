@@ -15,8 +15,8 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.logging.DefaultLogger;
 import org.overture.codegen.mojocg.util.DelegateTrans;
+import org.overture.codegen.printer.DefaultConsolePrinter;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
@@ -49,7 +49,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 	{
 		if(!getLog().isDebugEnabled())
 		{
-			DefaultLogger.getDefaultLogger().setSilent(true);
+			DefaultConsolePrinter.getDefaultLogger().setSilent(true);
 		}
 	}
 	

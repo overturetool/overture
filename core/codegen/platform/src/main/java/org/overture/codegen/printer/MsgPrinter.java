@@ -19,27 +19,27 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.logging;
+package org.overture.codegen.printer;
 
-public class Logger
+public class MsgPrinter
 {
 
-	private static ILogger log;
+	private static IPrinter log;
 
-	private Logger()
+	private MsgPrinter()
 	{
 	}
 
-	public static void setLog(ILogger newLog)
+	public static void setPrinter(IPrinter newLog)
 	{
 		log = newLog;
 	}
 
-	public static ILogger getLog()
+	public static IPrinter getPrinter()
 	{
 		if (log == null)
 		{
-			log = DefaultLogger.getDefaultLogger();
+			log = DefaultConsolePrinter.getDefaultLogger();
 		}
 
 		return log;
