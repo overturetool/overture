@@ -45,17 +45,14 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 	public static final String VDM_10 = "vdm10";
 	public static final String VDM_CLASSIC = "classic";
 
-	public Vdm2JavaMojo()
-	{
-		if(!getLog().isDebugEnabled())
-		{
-			DefaultConsolePrinter.getDefaultLogger().setSilent(true);
-		}
-	}
-	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
+		if(!verbose)
+		{
+			DefaultConsolePrinter.getDefaultLogger().setSilent(true);
+		}
+		
 		if (outputDirectory != null && outputDirectory.exists())
 		{
 			getLog().info(String.format("Skipping Java code generation. Output folder '%s' already exists.", outputDirectory.getAbsolutePath()));

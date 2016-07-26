@@ -69,6 +69,13 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	protected boolean printVdmLocations = false;
 
 	/**
+	 * Print detailed information about the code generation process
+	 * 
+	 * @parameter
+	 */
+	protected boolean verbose = false;
+	
+	/**
 	 * @parameter property="project" default-value="${project}"
 	 * @required
 	 * @readonly
