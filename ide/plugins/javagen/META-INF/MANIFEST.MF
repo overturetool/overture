@@ -6,7 +6,8 @@ Eclipse-BuddyPolicy: registered
 Bundle-Name: Code Generator
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.javagen;singleton:=true
-Require-Bundle: org.eclipse.ui.console,
+Require-Bundle: org.eclipse.jdt.core,
+ org.eclipse.ui.console,
  org.overture.ide.ui,
  org.overture.ide.core,
  org.overture.ide.builders.vdmj,
@@ -30,6 +31,7 @@ Bundle-ClassPath: .,
  jars/vdm2jml-runtime.jar,
  jars/commons-collections.jar,
  jars/commons-lang.jar,
- jars/jalopy.jar,
+ jars/google-java-format.jar,
+ jars/guava.jar,
  jars/log4j.jar,
  jars/velocity.jar
