@@ -13,6 +13,7 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.ir.ITempVarGen;
+import org.overture.typechecker.utilities.type.ClassTypeFinder;
 
 public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 {
@@ -55,7 +56,7 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 			}
 			
 			String newModule = module;
-			if (module != null && !module.equals("?") && !JavaCodeGenUtil.isValidJavaIdentifier(module))
+			if (module != null && !isImplicitlyNamed(module) && !JavaCodeGenUtil.isValidJavaIdentifier(module))
 			{
 				newModule = getReplacementName(module);
 				rename = true;
@@ -71,7 +72,7 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 	private boolean isImplicitlyNamed(String name)
 	{
 		// "?" is used for implicitly named things
-		return name.equals("?");
+		return name.equals("?") || name.startsWith(ClassTypeFinder.UNION_CLASS_PREFIX);
 	}
 	
 	private boolean contains(ILexLocation loc)
