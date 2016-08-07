@@ -150,6 +150,11 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 
 	private boolean cloneFieldRead(AFieldExpIR node)
 	{
+		if(jmlGen.getJavaSettings().getDisableCloning())
+		{
+			return false;
+		}
+		
 		AVarDeclIR decl = node.getAncestor(AVarDeclIR.class);
 		
 		/*
