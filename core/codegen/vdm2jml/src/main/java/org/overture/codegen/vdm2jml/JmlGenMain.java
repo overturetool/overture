@@ -14,6 +14,7 @@ import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.vdm2java.JavaCodeGenMain;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.util.TypeCheckerUtil;
@@ -27,6 +28,7 @@ public class JmlGenMain
 	public static final String INVARIANT_FOR = "-invariant_for";
 	public static final String NO_TRACE = "-notrace";
 	public static final String NO_CLONING = "-nocloning";
+	public static final String PACKAGE_ARG = "-package";
 
 	public static void main(String[] args)
 	{
@@ -73,7 +75,22 @@ public class JmlGenMain
 			} else if (arg.equals(PRINT_ARG))
 			{
 				print = true;
-			} 
+			}
+			else if (arg.equals(PACKAGE_ARG))
+			{
+				if (i.hasNext())
+				{
+					String javaPackage = i.next();
+
+					if (JavaCodeGenUtil.isValidJavaPackage(javaPackage))
+					{
+						jmlGen.getJavaSettings().setJavaRootPackage(javaPackage);
+					} else
+					{
+						MsgPrinter.getPrinter().errorln("Not a valid java package. Using the default java package instead..\n");
+					}
+				}
+			}
 			else if (arg.equals(FOLDER_ARG))
 			{
 				if (i.hasNext())
