@@ -51,7 +51,7 @@ public class VdmRtLaunchConfigurationDelegate extends
 		File logDir = new File(getOutputFolder(project, configuration), "logs");
 		String dateString = dateFormat.format(date);
 		
-		if (configuration.getAttribute(IVdmRtDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_REALTIME_LOGGING, false))
+		if (configuration.getAttribute(IVdmRtDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_REALTIME_LOGGING, IVdmRtDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_REALTIME_LOGGING_DEFAULT))
 		{
 			// log
 			logDir.mkdirs();
