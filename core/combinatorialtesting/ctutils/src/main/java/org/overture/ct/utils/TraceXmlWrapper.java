@@ -78,8 +78,7 @@ public class TraceXmlWrapper
 
 	public void StartTrace(String traceName, String fileName, Integer line,
 			Integer col, Integer numberOfTests, Float subset,
-			TraceReductionType traceReductionType, Long seed)
-			throws IOException
+			TraceReductionType traceReductionType, Long seed) throws IOException
 	{
 		xml.startElement(TRACE_TAG, NAME_TAG, traceName, NUMBER_OF_TESTS_TAG, numberOfTests.toString(), FILE_NAME_TAG, fileName, START_LINE_TAG, line.toString(), START_COL_TAG, col.toString(), SUBSET, subset.toString(), TRACE_REDUCTION, traceReductionType.toString(), SEED, seed.toString());
 		openElements.push(TRACE_TAG);
