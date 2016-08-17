@@ -6,6 +6,7 @@ import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
@@ -20,7 +21,6 @@ import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AClassTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
-import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
@@ -30,7 +30,7 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 	private JavaCodeGen javaGen;
 	private String paramName;
 	private ARecordDeclIR rec;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public RecInvTransformation(JavaCodeGen javaGen, ARecordDeclIR rec)
@@ -174,13 +174,12 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 							func.setName(node.getName());
 
 							javaGen.getTransAssistant().replaceNodeWith(node, func);
-						}
-						else
+						} else
 						{
 							log.error("Could not find enclosing class of record "
 									+ rec.getName());
 						}
-					} 
+					}
 				}
 			}
 		}

@@ -38,11 +38,11 @@ public class LeafTypeInfo extends AbstractTypeInfo
 	private static final String IS = "is_";
 
 	private STypeIR type;
-	
+
 	protected Logger log = Logger.getLogger(this.getClass().getName());
-	
+
 	private static Map<Class<? extends STypeIR>, String> utilsCallMap;
-	
+
 	static
 	{
 		utilsCallMap = new HashMap<>();
@@ -58,13 +58,13 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		utilsCallMap.put(ARecordTypeIR.class, IS);
 		utilsCallMap.put(AStringTypeIR.class, IS);
 	}
-	
+
 	public LeafTypeInfo(STypeIR type, boolean optional)
 	{
 		super(optional);
 		this.type = type;
 	}
-	
+
 	public STypeIR getType()
 	{
 		return type;
@@ -73,69 +73,66 @@ public class LeafTypeInfo extends AbstractTypeInfo
 	@Override
 	public String toString()
 	{
-		if(isOptional())
+		if (isOptional())
 		{
 			return "[" + type.toString() + "]";
-		}
-		else
+		} else
 		{
 			return type.toString();
 		}
 	}
-
 
 	@Override
 	public List<LeafTypeInfo> getLeafTypesRecursively()
 	{
 		List<LeafTypeInfo> types = new LinkedList<LeafTypeInfo>();
 		types.add(this);
-		
+
 		return types;
 	}
-	
+
 	@Override
-	public String consCheckExp(String enclosingClass, String javaRootPackage, String arg, NameGen nameGen)
+	public String consCheckExp(String enclosingClass, String javaRootPackage,
+			String arg, NameGen nameGen)
 	{
 		String methodName = utilsCallMap.get(type.getClass());
-		
-		if(methodName == null)
+
+		if (methodName == null)
 		{
 			log.error("Got unhandled case");
 			return "true";
 		}
 
 		String call;
-		if(type instanceof AQuoteTypeIR)
+		if (type instanceof AQuoteTypeIR)
 		{
 			String qouteValue = ((AQuoteTypeIR) type).getValue();
 			String quoteType = JavaQuoteValueCreator.fullyQualifiedQuoteName(javaRootPackage, qouteValue);
 			call = consSubjectCheckForType(methodName, arg, quoteType);
-		}
-		else if(type instanceof ARecordTypeIR)
+		} else if (type instanceof ARecordTypeIR)
 		{
 			ARecordTypeIR rt = (ARecordTypeIR) type;
 			String defClass = rt.getName().getDefiningClass();
 			String recPackage = JmlGenUtil.consRecPackage(defClass, javaRootPackage);
 			String fullyQualifiedRecType = recPackage + "."
 					+ rt.getName().getName();
-			
+
 			call = consSubjectCheckForType(methodName, arg, fullyQualifiedRecType);
-		}
-		else if(type instanceof AStringTypeIR)
+		} else if (type instanceof AStringTypeIR)
 		{
 			call = consSubjectCheckForType(methodName, arg, String.class.getSimpleName());
-		}
-		else
+		} else
 		{
 			call = consSubjectCheck(methodName, arg);
 		}
-		
+
 		// If the type is optional 'null' is also a legal value
-		if(isOptional())
+		if (isOptional())
 		{
-			return "(" + consIsNullCheck(arg) + JmlGenerator.JML_OR + call + ")";
+			return "(" + consIsNullCheck(arg) + JmlGenerator.JML_OR + call
+					+ ")";
 		}
-		
+
 		return call;
 	}
 
@@ -144,11 +141,13 @@ public class LeafTypeInfo extends AbstractTypeInfo
 		return consSubjectCheck(Utils.class.getSimpleName(), methodName, arg);
 	}
 
-	private String consSubjectCheckForType(String methodName, String arg, String type)
+	private String consSubjectCheckForType(String methodName, String arg,
+			String type)
 	{
-		return consSubjectCheckExtraArg(Utils.class.getSimpleName(), methodName, arg, type + CLASS_QUALIFIER);
+		return consSubjectCheckExtraArg(Utils.class.getSimpleName(), methodName, arg, type
+				+ CLASS_QUALIFIER);
 	}
-	
+
 	public static Map<Class<? extends STypeIR>, String> getUtilsCallMap()
 	{
 		return utilsCallMap;

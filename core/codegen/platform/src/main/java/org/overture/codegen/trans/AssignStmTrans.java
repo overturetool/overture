@@ -15,21 +15,21 @@ import org.overture.codegen.trans.conv.StateDesignatorToExpIR;
 public class AssignStmTrans extends DepthFirstAnalysisAdaptor
 {
 	private StateDesignatorToExpIR converter;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
-	
+
 	public AssignStmTrans(TransAssistantIR transAssistant)
 	{
 		this.converter = new StateDesignatorToExpIR(transAssistant);
 	}
-	
+
 	@Override
 	public void caseAAssignmentStmIR(AAssignmentStmIR node)
 			throws AnalysisException
 	{
 		SStmIR newNode = null;
-		
-		if(node.getTarget() instanceof AMapSeqStateDesignatorIR)
+
+		if (node.getTarget() instanceof AMapSeqStateDesignatorIR)
 		{
 			AMapSeqStateDesignatorIR target = (AMapSeqStateDesignatorIR) node.getTarget();
 
@@ -43,26 +43,24 @@ public class AssignStmTrans extends DepthFirstAnalysisAdaptor
 			mapSeqUpd.setValue(value.clone());
 			mapSeqUpd.setSourceNode(node.getSourceNode());
 			mapSeqUpd.setTag(node.getTag());
-			
+
 			newNode = mapSeqUpd;
 
-		}
-		else
+		} else
 		{
 			AAssignToExpStmIR assign = new AAssignToExpStmIR();
 			assign.setTarget(node.getTarget().apply(converter));
 			assign.setExp(node.getExp().clone());
 			assign.setSourceNode(node.getSourceNode());
 			assign.setTag(node.getTag());
-			
+
 			newNode = assign;
 		}
-		
-		if(node.parent() != null)
+
+		if (node.parent() != null)
 		{
 			node.parent().replaceChild(node, newNode);
-		}
-		else
+		} else
 		{
 			log.error("Could not find parent of " + node);
 		}

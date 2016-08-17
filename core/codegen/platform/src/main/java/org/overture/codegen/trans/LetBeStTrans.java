@@ -25,7 +25,7 @@ public class LetBeStTrans extends DepthFirstAnalysisAdaptor
 	private TransAssistantIR transAssistant;
 	private ILanguageIterator langIterator;
 	private IterationVarPrefixes iteVarPrefixes;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public LetBeStTrans(TransAssistantIR transAssistant,
@@ -41,7 +41,8 @@ public class LetBeStTrans extends DepthFirstAnalysisAdaptor
 	{
 		AHeaderLetBeStIR header = node.getHeader();
 
-		if (!(header.getBinding() instanceof ASetMultipleBindIR || header.getBinding() instanceof ASeqMultipleBindIR))
+		if (!(header.getBinding() instanceof ASetMultipleBindIR
+				|| header.getBinding() instanceof ASeqMultipleBindIR))
 		{
 			transAssistant.getInfo().addTransformationWarning(node.getHeader().getBinding(), "This transformation only works for 'let be st' "
 					+ "statements with with multiple set binds and not multiple type binds in '"
@@ -70,8 +71,7 @@ public class LetBeStTrans extends DepthFirstAnalysisAdaptor
 			// The closest we get
 			setSeqType.setSourceNode(binding.getSourceNode());
 		}
-		
-		
+
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 
 		LetBeStStrategy strategy = new LetBeStStrategy(transAssistant, suchThat, setSeqType.clone(), langIterator, tempVarNameGen, iteVarPrefixes);
@@ -95,7 +95,7 @@ public class LetBeStTrans extends DepthFirstAnalysisAdaptor
 
 		outerBlock.setScoped(transAssistant.getInfo().getStmAssistant().isScoped(outerBlock));
 	}
-	
+
 	private SExpIR getCol(SMultipleBindIR binding)
 	{
 		if (binding instanceof ASetMultipleBindIR)

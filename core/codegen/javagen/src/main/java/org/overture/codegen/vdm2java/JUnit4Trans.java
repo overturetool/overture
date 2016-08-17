@@ -6,12 +6,12 @@ import java.util.List;
 import org.apache.commons.lang.BooleanUtils;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.assistant.NodeAssistantIR;
+import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
-import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class JUnit4Trans extends DepthFirstAnalysisAdaptor
@@ -30,7 +30,8 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node) throws AnalysisException
+	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node)
+			throws AnalysisException
 	{
 		if (!javaCg.getJavaSettings().genJUnit4tests())
 		{
@@ -63,7 +64,8 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 
 	public boolean isTest(ADefaultClassDeclIR node)
 	{
-		return !node.getSuperNames().isEmpty() && node.getSuperNames().get(0).getName().equals(IRConstants.TEST_CASE);
+		return !node.getSuperNames().isEmpty()
+				&& node.getSuperNames().get(0).getName().equals(IRConstants.TEST_CASE);
 	}
 
 	public void addTestAnnotations(ADefaultClassDeclIR node)
@@ -72,8 +74,11 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 
 		for (AMethodDeclIR m : node.getMethods())
 		{
-			if (m.getName().startsWith(TEST_NAME_PREFIX) && m.getAccess().equals(IRConstants.PUBLIC) && BooleanUtils.isFalse(m.getStatic())
-					&& BooleanUtils.isFalse(m.getIsConstructor()) && m.getFormalParams().isEmpty()
+			if (m.getName().startsWith(TEST_NAME_PREFIX)
+					&& m.getAccess().equals(IRConstants.PUBLIC)
+					&& BooleanUtils.isFalse(m.getStatic())
+					&& BooleanUtils.isFalse(m.getIsConstructor())
+					&& m.getFormalParams().isEmpty()
 					&& !(m.getTag() instanceof IRGeneratedTag))
 			{
 				nodeAssist.addMetaData(m, str2meta(TEST_ANNOTATION), false);

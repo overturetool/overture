@@ -28,7 +28,7 @@ public class RecInvTests extends AnnotationTestsBase
 			}
 		}
 	}
-	
+
 	@Test
 	public void recMethodsPure()
 	{
@@ -40,23 +40,20 @@ public class RecInvTests extends AnnotationTestsBase
 	{
 		Assert.assertTrue("Expected a record type definition in the generated module", recTypeDef != null);
 
-		Assert.assertEquals("Got unexpected record type definition invariant",
-				"//@ public instance invariant project.Entry.invChecksOn ==> inv_Rec(x);", AnnotationTestsBase.getLastAnnotation(recTypeDef));
+		Assert.assertEquals("Got unexpected record type definition invariant", "//@ public instance invariant project.Entry.invChecksOn ==> inv_Rec(x);", AnnotationTestsBase.getLastAnnotation(recTypeDef));
 	}
-	
+
 	@Test
 	public void invFuncIsPure()
 	{
-		Assert.assertTrue("Expected the record type definition invariant to be a method declaration at this point",
-				recTypeDef.getInvariant() instanceof AMethodDeclIR);
+		Assert.assertTrue("Expected the record type definition invariant to be a method declaration at this point", recTypeDef.getInvariant() instanceof AMethodDeclIR);
 
 		AnnotationTestsBase.assertPureMethod((AMethodDeclIR) recTypeDef.getInvariant());
 	}
-	
+
 	@Test
 	public void invFuncIsHelper()
 	{
-		AnnotationTestsBase.assertHelper(recTypeDef.getInvariant(),
-				"Expected record type definition invariant function to be a helper");
+		AnnotationTestsBase.assertHelper(recTypeDef.getInvariant(), "Expected record type definition invariant function to be a helper");
 	}
 }

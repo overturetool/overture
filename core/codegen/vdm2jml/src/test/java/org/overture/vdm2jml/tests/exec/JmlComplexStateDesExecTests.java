@@ -12,10 +12,11 @@ import org.overture.vdm2jml.tests.util.TestUtil;
 @RunWith(Parameterized.class)
 public class JmlComplexStateDesExecTests extends JmlExecTestBase
 {
-	public static final String TEST_DIR = JmlExecTestBase.TEST_RES_DYNAMIC_ANALYSIS_ROOT + "complexstatedes";
+	public static final String TEST_DIR = JmlExecTestBase.TEST_RES_DYNAMIC_ANALYSIS_ROOT
+			+ "complexstatedes";
 
 	public static final String PROPERTY_ID = "complexstatedes";
-	
+
 	public JmlComplexStateDesExecTests(File inputFile)
 	{
 		super(inputFile);
@@ -26,7 +27,7 @@ public class JmlComplexStateDesExecTests extends JmlExecTestBase
 	{
 		return TestUtil.collectVdmslFiles(GeneralUtils.getFilesRecursively(new File(TEST_DIR)));
 	}
-	
+
 	protected String getPropertyId()
 	{
 		return PROPERTY_ID;

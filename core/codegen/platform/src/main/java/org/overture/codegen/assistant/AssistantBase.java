@@ -31,7 +31,7 @@ import org.overture.codegen.ir.PIR;
 public abstract class AssistantBase
 {
 	protected Logger log = Logger.getLogger(this.getClass().getName());
-	
+
 	protected AssistantManager assistantManager;
 
 	public AssistantBase(AssistantManager assistantManager)
@@ -39,33 +39,32 @@ public abstract class AssistantBase
 		super();
 		this.assistantManager = assistantManager;
 	}
-	
+
 	public static org.overture.ast.node.INode getVdmNode(PIR irNode)
 	{
-		if(irNode != null && irNode.getSourceNode() != null)
+		if (irNode != null && irNode.getSourceNode() != null)
 		{
 			return irNode.getSourceNode().getVdmNode();
-		}
-		else
+		} else
 		{
 			return null;
 		}
 	}
-	
+
 	public <T extends INode> List<T> cloneNodes(List<T> list, Class<T> nodeType)
 	{
 		List<T> cloneList = new LinkedList<T>();
-		
-		for(T e : list)
+
+		for (T e : list)
 		{
 			Object clone = e.clone();
-			
-			if(nodeType.isInstance(clone))
+
+			if (nodeType.isInstance(clone))
 			{
 				cloneList.add(nodeType.cast(clone));
 			}
 		}
-		
+
 		return cloneList;
 	}
 }

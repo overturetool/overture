@@ -21,11 +21,11 @@
  */
 package org.overture.codegen.vdm2java;
 
+import org.overture.codegen.ir.IROperatorInfo;
+import org.overture.codegen.ir.IROperatorLookup;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.expressions.ADivideNumericBinaryExpIR;
 import org.overture.codegen.ir.expressions.ASubtractNumericBinaryExpIR;
-import org.overture.codegen.ir.IROperatorInfo;
-import org.overture.codegen.ir.IROperatorLookup;
 
 public class JavaPrecedence
 {
@@ -60,7 +60,8 @@ public class JavaPrecedence
 		// We don't need to consider 'mod' and 'rem' operators since these are constructed
 		// using other operators and isolated if needed using the isolation expression
 		boolean case1 = !leftChild
-				&& (parentExp instanceof ADivideNumericBinaryExpIR || parentExp instanceof ASubtractNumericBinaryExpIR)
+				&& (parentExp instanceof ADivideNumericBinaryExpIR
+						|| parentExp instanceof ASubtractNumericBinaryExpIR)
 				&& parentOpInfo.getPrecedence() >= expOpInfo.getPrecedence();
 
 		if (case1)

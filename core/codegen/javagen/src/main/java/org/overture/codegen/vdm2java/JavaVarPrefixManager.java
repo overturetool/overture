@@ -17,7 +17,7 @@ public class JavaVarPrefixManager
 	protected PatternVarPrefixes patternPrefixes;
 	protected UnionTypeVarPrefixes unionTypePrefixes;
 	protected ConcPrefixes concPrefixes;
-	
+
 	public JavaVarPrefixManager()
 	{
 		this.iteVarPrefixes = new IterationVarPrefixes();
@@ -28,12 +28,12 @@ public class JavaVarPrefixManager
 		this.unionTypePrefixes = new UnionTypeVarPrefixes();
 		this.concPrefixes = new ConcPrefixes();
 	}
-	
+
 	public void setTempVarPrefixes(IterationVarPrefixes iteVarPrefixes)
 	{
 		this.iteVarPrefixes = iteVarPrefixes;
 	}
-	
+
 	public IterationVarPrefixes getIteVarPrefixes()
 	{
 		return iteVarPrefixes;
@@ -48,7 +48,7 @@ public class JavaVarPrefixManager
 	{
 		this.tracePrefixes = tracePrefixes;
 	}
-	
+
 	public Exp2StmVarPrefixes getExp2stmPrefixes()
 	{
 		return exp2stmPrefixes;
@@ -68,7 +68,7 @@ public class JavaVarPrefixManager
 	{
 		this.funcValPrefixes = funcValPrefixes;
 	}
-	
+
 	public PatternVarPrefixes getPatternPrefixes()
 	{
 		return patternPrefixes;
@@ -78,7 +78,7 @@ public class JavaVarPrefixManager
 	{
 		this.patternPrefixes = patternPrefixes;
 	}
-	
+
 	public UnionTypeVarPrefixes getUnionTypePrefixes()
 	{
 		return unionTypePrefixes;
@@ -88,7 +88,7 @@ public class JavaVarPrefixManager
 	{
 		this.unionTypePrefixes = unionTypePrefixes;
 	}
-	
+
 	public ConcPrefixes getConcPrefixes()
 	{
 		return concPrefixes;
@@ -101,29 +101,29 @@ public class JavaVarPrefixManager
 
 	public String postCheckMethodName()
 	{
-		return "postCheck"; 
+		return "postCheck";
 	}
-	
+
 	public String casesExp()
 	{
 		return "casesExp_";
 	}
-	
+
 	public String whileCond()
 	{
 		return "whileCond_";
 	}
-	
+
 	public String isExpSubject()
 	{
 		return "isExpSubject_";
 	}
-	
+
 	public String funcRes()
 	{
 		return "funcResult_";
 	}
-	
+
 	public String atomicTmpVar()
 	{
 		return "atomicTmp_";

@@ -54,9 +54,8 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	protected List<AVarDeclIR> decls = new LinkedList<AVarDeclIR>();
 
 	public LetBeStStrategy(TransAssistantIR transformationAssistant,
-			SExpIR suchThat, STypeIR setSeqType,
-			ILanguageIterator langIterator, ITempVarGen tempGen,
-			IterationVarPrefixes iteVarPrefixes)
+			SExpIR suchThat, STypeIR setSeqType, ILanguageIterator langIterator,
+			ITempVarGen tempGen, IterationVarPrefixes iteVarPrefixes)
 	{
 		super(transformationAssistant, langIterator, tempGen, iteVarPrefixes);
 

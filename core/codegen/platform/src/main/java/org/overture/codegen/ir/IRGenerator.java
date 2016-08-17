@@ -34,9 +34,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
-import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.PIR;
-import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.ir.declarations.SClassDeclIR;
 import org.overture.codegen.trans.ITotalTransformation;
@@ -49,8 +46,9 @@ public class IRGenerator
 	{
 		this.codeGenInfo = new IRInfo();
 	}
-	
-	public void computeDefTable(List<? extends org.overture.ast.node.INode> mergedParseLists)
+
+	public void computeDefTable(
+			List<? extends org.overture.ast.node.INode> mergedParseLists)
 			throws AnalysisException
 	{
 		List<org.overture.ast.node.INode> classesToConsider = new LinkedList<>();
@@ -62,7 +60,7 @@ public class IRGenerator
 				classesToConsider.add(node);
 			}
 		}
-		
+
 		Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(classesToConsider, codeGenInfo.getTcFactory());
 		codeGenInfo.setIdStateDesignatorDefs(idDefs);
 	}
@@ -77,35 +75,34 @@ public class IRGenerator
 	{
 		codeGenInfo.clearNodes();
 
-		if(node instanceof SClassDefinition)
+		if (node instanceof SClassDefinition)
 		{
 			SClassDeclIR classCg = node.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
 			Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 			String name = ((SClassDefinition) node).getName().getName();
-			
+
 			return new IRStatus<PIR>(node, name, classCg, unsupportedNodes);
-		}
-		else if(node instanceof AModuleModules)
+		} else if (node instanceof AModuleModules)
 		{
 			AModuleDeclIR module = node.apply(codeGenInfo.getModuleVisitor(), codeGenInfo);
 			Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 			String name = ((AModuleModules) node).getName().getName();
-			
+
 			return new IRStatus<PIR>(node, name, module, unsupportedNodes);
 		}
-		
+
 		return null;
 	}
-	
+
 	public void applyPartialTransformation(IRStatus<? extends INode> status,
 			org.overture.codegen.ir.analysis.intf.IAnalysis transformation)
 			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
-		if(!status.canBeGenerated())
+		if (!status.canBeGenerated())
 		{
 			throw new org.overture.codegen.ir.analysis.AnalysisException("Cannot apply partial transformation to a status that cannot be generated!");
 		}
-		
+
 		codeGenInfo.clearTransformationWarnings();
 
 		status.getIrNode().apply(transformation);
@@ -118,11 +115,11 @@ public class IRGenerator
 			ITotalTransformation trans)
 			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
-		if(!status.canBeGenerated())
+		if (!status.canBeGenerated())
 		{
 			throw new org.overture.codegen.ir.analysis.AnalysisException("Cannot apply total transformation to a status that cannot be generated!");
 		}
-		
+
 		codeGenInfo.clearTransformationWarnings();
 
 		status.getIrNode().apply(trans);
@@ -138,7 +135,7 @@ public class IRGenerator
 		SExpIR expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
 		Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 
-		return new IRStatus<SExpIR>(exp, "expression",expCg, unsupportedNodes);
+		return new IRStatus<SExpIR>(exp, "expression", expCg, unsupportedNodes);
 	}
 
 	public List<String> getQuoteValues()

@@ -23,7 +23,7 @@ public class ConfiguredStringOutputTest extends JavaOutputTestBase
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "string_specs";
-	
+
 	@Override
 	public IRSettings getIrSettings()
 	{
@@ -32,7 +32,7 @@ public class ConfiguredStringOutputTest extends JavaOutputTestBase
 
 		return settings;
 	}
-	
+
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData()
 	{

@@ -19,9 +19,9 @@ public class AtomicStmTrans extends DepthFirstAnalysisAdaptor
 	// In VDM...
 	// atomic
 	// (
-	//   sd1 := ec1;
-	//   ...;
-	//   sdN := ecN
+	// sd1 := ec1;
+	// ...;
+	// sdN := ecN
 	// )
 	//
 	// ..Is evaluated as:
@@ -30,17 +30,17 @@ public class AtomicStmTrans extends DepthFirstAnalysisAdaptor
 	// ...
 	// tN : TN = ecN in
 	// (
-	//   -- turn off invariants, threading and durations
-	//   sd1 := t1;
-	//   ...
-	//   sdN := tN;
-	//   -- turn on invariants, threading and durations
-	//   -- and check that invariants hold.
+	// -- turn off invariants, threading and durations
+	// sd1 := t1;
+	// ...
+	// sdN := tN;
+	// -- turn on invariants, threading and durations
+	// -- and check that invariants hold.
 	// );
 
 	private TransAssistantIR transAssistant;
 	private String atomicPrefix;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public AtomicStmTrans(TransAssistantIR transAssistant, String atomicPrefix)
@@ -59,7 +59,7 @@ public class AtomicStmTrans extends DepthFirstAnalysisAdaptor
 			if (stm instanceof AAssignmentStmIR)
 			{
 				AAssignmentStmIR assign = (AAssignmentStmIR) stm;
-				
+
 				// Build temporary variable
 				String name = transAssistant.getInfo().getTempVarNameGen().nextVarName(atomicPrefix);
 				STypeIR type = assign.getTarget().getType().clone();
@@ -67,10 +67,10 @@ public class AtomicStmTrans extends DepthFirstAnalysisAdaptor
 				SExpIR exp = assign.getExp().clone();
 
 				AVarDeclIR varDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(type, pattern, exp);
-				
+
 				// Add temporary variable to the block
 				tmpBlock.getLocalDefs().add(varDecl);
-				
+
 				// Assign state designator to temporary variable
 				AIdentifierVarExpIR tmpVarExp = transAssistant.getInfo().getExpAssistant().consIdVar(name, type.clone());
 				transAssistant.replaceNodeWith(assign.getExp(), tmpVarExp);
@@ -80,7 +80,7 @@ public class AtomicStmTrans extends DepthFirstAnalysisAdaptor
 						+ stm);
 			}
 		}
-		
+
 		// Replace the atomic statement with the 'let' statement and make
 		// the atomic statement its body
 		transAssistant.replaceNodeWith(node, tmpBlock);

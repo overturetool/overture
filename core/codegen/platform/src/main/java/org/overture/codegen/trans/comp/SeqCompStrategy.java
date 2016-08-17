@@ -23,6 +23,7 @@ package org.overture.codegen.trans.comp;
 
 import java.util.List;
 
+import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.SStmIR;
@@ -30,7 +31,6 @@ import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.expressions.AEnumSeqExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.statements.ASeqCompAddStmIR;
-import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
@@ -64,7 +64,7 @@ public class SeqCompStrategy extends CompStrategy
 		seqCompResult.setName(idPattern.getName());
 		seqCompResult.setIsLambda(false);
 		seqCompResult.setIsLocal(true);
-		
+
 		ASeqCompAddStmIR add = new ASeqCompAddStmIR();
 		add.setSeq(seqCompResult);
 		add.setElement(first.clone());

@@ -14,22 +14,22 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ASeq1SeqType;
-import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapTypeBase;
 import org.overture.ast.types.SSeqTypeBase;
-import org.overture.codegen.ir.STypeIR;
+import org.overture.ast.types.SSetType;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.STypeIR;
 
 public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 {
 	private List<NamedTypeInfo> typeInfoList;
 	private IRInfo info;
-	
+
 	private static Logger log = Logger.getLogger(NamedTypeInvDepCalculator.class.getName());
-	
+
 	public NamedTypeInvDepCalculator(IRInfo info)
 	{
 		super();
@@ -80,31 +80,30 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 		if (!containsExactly(node))
 		{
 			AbstractTypeInfo typeInfo = create(info, node, new HashSet<PType>());
-			
-			if(typeInfo instanceof NamedTypeInfo)
+
+			if (typeInfo instanceof NamedTypeInfo)
 			{
 				typeInfoList.add((NamedTypeInfo) typeInfo);
-			}
-			else
+			} else
 			{
 				log.error("Expected a '" + NamedTypeInfo.class.getSimpleName()
 						+ "' to be returned. Got: " + typeInfo);
 			}
 		}
 	}
-	
-	private static AbstractTypeInfo create(IRInfo info, PType type, Set<PType> visited)
+
+	private static AbstractTypeInfo create(IRInfo info, PType type,
+			Set<PType> visited)
 	{
-		if(visited.contains(type))
+		if (visited.contains(type))
 		{
 			// Type recursion
-			return new RecursiveLeaf(); 
-		}
-		else
+			return new RecursiveLeaf();
+		} else
 		{
 			visited.add(type);
 		}
-		
+
 		boolean optional = false;
 		while (type instanceof AOptionalType || type instanceof ABracketType)
 		{
@@ -121,92 +120,86 @@ public class NamedTypeInvDepCalculator extends DepthFirstAnalysisAdaptor
 		if (type instanceof ANamedInvariantType)
 		{
 			ANamedInvariantType namedType = (ANamedInvariantType) type;
-			
+
 			AbstractTypeInfo domainInfo = create(info, namedType.getType(), visited);
-			NamedTypeInfo namedInfo = new NamedTypeInfo(namedType.getName().getName(),
-					namedType.getName().getModule(), namedType.getInvDef() != null, optional, domainInfo);
+			NamedTypeInfo namedInfo = new NamedTypeInfo(namedType.getName().getName(), namedType.getName().getModule(), namedType.getInvDef() != null, optional, domainInfo);
 
 			return namedInfo;
-			
+
 		} else if (type instanceof AUnionType)
 		{
 			List<AbstractTypeInfo> types = new LinkedList<>();
-			
+
 			for (PType t : ((AUnionType) type).getTypes())
 			{
 				AbstractTypeInfo tInfo = create(info, t, visited);
-				
-				if(tInfo != null)
+
+				if (tInfo != null)
 				{
 					types.add(tInfo);
 				}
 			}
-			
+
 			return new UnionInfo(optional, types);
-			
-		} else if(type instanceof AProductType)
+
+		} else if (type instanceof AProductType)
 		{
 			List<AbstractTypeInfo> types = new LinkedList<>();
-			
-			for(PType t : ((AProductType) type).getTypes())
+
+			for (PType t : ((AProductType) type).getTypes())
 			{
 				AbstractTypeInfo tInfo = create(info, t, visited);
-				
-				if(tInfo != null)
+
+				if (tInfo != null)
 				{
 					types.add(tInfo);
 				}
 			}
-			
+
 			return new TupleInfo(optional, types);
-		}
-		else if(type instanceof SSeqTypeBase)
+		} else if (type instanceof SSeqTypeBase)
 		{
 			SSeqTypeBase seqType = (SSeqTypeBase) type;
 			boolean isSeq1 = seqType instanceof ASeq1SeqType;
-			
+
 			return new SeqInfo(optional, create(info, seqType.getSeqof(), visited), isSeq1);
-		}
-		else if(type instanceof SSetType)
+		} else if (type instanceof SSetType)
 		{
 			SSetType setType = (SSetType) type;
-			
+
 			return new SetInfo(optional, create(info, setType.getSetof(), visited));
-		}
-		else if(type instanceof SMapTypeBase)
+		} else if (type instanceof SMapTypeBase)
 		{
 			SMapTypeBase mapType = (SMapTypeBase) type;
-			
+
 			AbstractTypeInfo fromInfo = create(info, mapType.getFrom(), visited);
 			AbstractTypeInfo toInfo = create(info, mapType.getTo(), visited);
-			
+
 			boolean injective = type instanceof AInMapMapType;
-			
+
 			return new MapInfo(optional, fromInfo, toInfo, injective);
-		}
-		else if(type instanceof AUnknownType)
+		} else if (type instanceof AUnknownType)
 		{
 			return new UnknownLeaf();
-		}
-		else
+		} else
 		{
 			return new LeafTypeInfo(toIrType(type, info), optional);
 		}
 	}
-	
+
 	public static STypeIR toIrType(PType type, IRInfo info)
 	{
 		try
 		{
 			STypeIR irType = type.apply(info.getTypeVisitor(), info);
-			
-			if(irType != null)
+
+			if (irType != null)
 			{
 				irType.setOptional(false);
 			}
-			
+
 			return irType;
-			
+
 		} catch (AnalysisException e)
 		{
 			log.error("Problems encountered while attempting "

@@ -33,7 +33,7 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 
 		return TestUtil.collectVdmslFiles(files);
 	}
-	
+
 	@Before
 	public void assumeTools()
 	{
@@ -58,7 +58,7 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 
 		return GeneralUtils.concat(openJmlConfig, javaFiles);
 	}
-	
+
 	public String[] getTypeCheckArgs()
 	{
 		// Arguments to run the OpenJML type checker on a set of Java files.
@@ -70,10 +70,11 @@ public class JmlPassTypeCheckTests extends OpenJmlValidationBase
 		// codegen-runtime.jar
 		// -check
 		// <javafiles>
-		
-		return new String[] { JavaToolsUtils.JAVA, JavaToolsUtils.JAR_ARG, openJml.getAbsolutePath(),
-				IOpenJmlConsts.CP_ARG,
-				"\"" + cgRuntime.getAbsolutePath() + File.pathSeparator + vdm2jmlRuntime.getAbsolutePath() + "\"",
+
+		return new String[] { JavaToolsUtils.JAVA, JavaToolsUtils.JAR_ARG,
+				openJml.getAbsolutePath(), IOpenJmlConsts.CP_ARG,
+				"\"" + cgRuntime.getAbsolutePath() + File.pathSeparator
+						+ vdm2jmlRuntime.getAbsolutePath() + "\"",
 				IOpenJmlConsts.TC };
 	}
 

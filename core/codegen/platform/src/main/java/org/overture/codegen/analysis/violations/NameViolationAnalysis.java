@@ -61,18 +61,17 @@ public class NameViolationAnalysis extends ViolationAnalysis
 					}
 				}
 			}
-		}
-		else if(node instanceof LexIdentifierToken)
+		} else if (node instanceof LexIdentifierToken)
 		{
 			LexIdentifierToken lexId = (LexIdentifierToken) node;
-			
-			if(comparison.mustHandleLexIdentifierToken(lexId))
+
+			if (comparison.mustHandleLexIdentifierToken(lexId))
 			{
 				comparison.correctLexIdentifierToken(lexId);
-				
+
 				SClassDefinition enclosingClass = node.getAncestor(SClassDefinition.class);
-				
-				if(moduleNeedsHandling(enclosingClass))
+
+				if (moduleNeedsHandling(enclosingClass))
 				{
 					registerViolation(lexId.getName(), lexId.getLocation());
 				}

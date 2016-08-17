@@ -35,7 +35,7 @@ public interface ILanguageIterator
 {
 	public List<SStmIR> getPreForLoopStms(AIdentifierVarExpIR setVar,
 			List<SPatternIR> patterns, SPatternIR pattern);
-	
+
 	public AVarDeclIR getForLoopInit(AIdentifierVarExpIR setVar,
 			List<SPatternIR> patterns, SPatternIR pattern);
 
@@ -54,7 +54,8 @@ public interface ILanguageIterator
 			AIdentifierVarExpIR setVar, List<SPatternIR> patterns,
 			SPatternIR pattern, AVarDeclIR successVarDecl,
 			AVarDeclIR nextElementDecl) throws AnalysisException;
-	
-	public SExpIR consNextElementCall(AIdentifierVarExpIR setVar) throws AnalysisException;
+
+	public SExpIR consNextElementCall(AIdentifierVarExpIR setVar)
+			throws AnalysisException;
 
 }

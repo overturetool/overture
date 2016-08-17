@@ -9,7 +9,7 @@ import org.overture.codegen.ir.patterns.ATuplePatternIR;
 import org.overture.codegen.ir.types.ATupleTypeIR;
 import org.overture.codegen.ir.types.AUnionTypeIR;
 
-public class PatternAssistantIR  extends AssistantBase
+public class PatternAssistantIR extends AssistantBase
 {
 	public PatternAssistantIR(AssistantManager assistantManager)
 	{
@@ -23,8 +23,9 @@ public class PatternAssistantIR  extends AssistantBase
 
 		return idPattern;
 	}
-	
-	public ATupleTypeIR getTupleType(AUnionTypeIR unionType, ATuplePatternIR tuplePattern)
+
+	public ATupleTypeIR getTupleType(AUnionTypeIR unionType,
+			ATuplePatternIR tuplePattern)
 	{
 		List<ATupleTypeIR> tupleTypes = new LinkedList<ATupleTypeIR>();
 
@@ -32,7 +33,7 @@ public class PatternAssistantIR  extends AssistantBase
 		{
 			if (nextType instanceof ATupleTypeIR)
 			{
-				ATupleTypeIR nextTupleType = ((ATupleTypeIR) nextType);
+				ATupleTypeIR nextTupleType = (ATupleTypeIR) nextType;
 
 				if (nextTupleType.getTypes().size() == tuplePattern.getPatterns().size())
 				{

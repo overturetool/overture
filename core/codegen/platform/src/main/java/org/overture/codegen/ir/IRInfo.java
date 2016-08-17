@@ -41,23 +41,6 @@ import org.overture.codegen.assistant.NodeAssistantIR;
 import org.overture.codegen.assistant.PatternAssistantIR;
 import org.overture.codegen.assistant.StmAssistantIR;
 import org.overture.codegen.assistant.TypeAssistantIR;
-import org.overture.codegen.ir.SBindIR;
-import org.overture.codegen.ir.SDeclIR;
-import org.overture.codegen.ir.SExpIR;
-import org.overture.codegen.ir.SExportIR;
-import org.overture.codegen.ir.SExportsIR;
-import org.overture.codegen.ir.SImportIR;
-import org.overture.codegen.ir.SImportsIR;
-import org.overture.codegen.ir.SModifierIR;
-import org.overture.codegen.ir.SMultipleBindIR;
-import org.overture.codegen.ir.SObjectDesignatorIR;
-import org.overture.codegen.ir.SPatternIR;
-import org.overture.codegen.ir.SStateDesignatorIR;
-import org.overture.codegen.ir.SStmIR;
-import org.overture.codegen.ir.STermIR;
-import org.overture.codegen.ir.STraceCoreDeclIR;
-import org.overture.codegen.ir.STraceDeclIR;
-import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.ir.declarations.SClassDeclIR;
 import org.overture.codegen.ir.expressions.SVarExpIR;
@@ -81,7 +64,7 @@ public class IRInfo
 
 	// Unsupported VDM nodes
 	private Set<VdmNodeInfo> unsupportedNodes;
-	
+
 	// Transformation warnings
 	private Set<IrNodeInfo> transformationWarnings;
 
@@ -93,18 +76,18 @@ public class IRInfo
 
 	// Definitions for identifier state designators
 	private Map<AIdentifierStateDesignator, PDefinition> idStateDesignatorDefs;
-	
+
 	// IR classes
 	private List<SClassDeclIR> classes;
-	
+
 	// IR modules
 	private List<AModuleDeclIR> modules;
-	
+
 	// SL state reads
 	private List<SVarExpIR> slStateReads;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
-	
+
 	public IRInfo()
 	{
 		super();
@@ -134,17 +117,17 @@ public class IRInfo
 	{
 		return visitorManager.getClassVisitor();
 	}
-	
+
 	public IRVisitor<AModuleDeclIR> getModuleVisitor()
 	{
 		return visitorManager.getModuleVisitor();
 	}
-	
+
 	public IRVisitor<SImportsIR> getImportsVisitor()
 	{
 		return visitorManager.getImportsVisitor();
 	}
-	
+
 	public IRVisitor<SImportIR> getImportVisitor()
 	{
 		return visitorManager.getImportVisitor();
@@ -154,12 +137,12 @@ public class IRInfo
 	{
 		return visitorManager.getExportsVisitor();
 	}
-	
+
 	public IRVisitor<SExportIR> getExportVisitor()
 	{
 		return visitorManager.getExportVisitor();
 	}
-	
+
 	public IRVisitor<SDeclIR> getDeclVisitor()
 	{
 		return visitorManager.getDeclVisitor();
@@ -229,7 +212,7 @@ public class IRInfo
 	{
 		return assistantManager.getNodeAssistant();
 	}
-	
+
 	public ExpAssistantIR getExpAssistant()
 	{
 		return assistantManager.getExpAssistant();
@@ -259,7 +242,7 @@ public class IRInfo
 	{
 		return assistantManager.getBindAssistant();
 	}
-	
+
 	public PatternAssistantIR getPatternAssistant()
 	{
 		return assistantManager.getPatternAssistant();
@@ -268,11 +251,11 @@ public class IRInfo
 	public void registerQuoteValue(String value)
 	{
 		// Illegal quote types are used internally so ignore it.
-		if("?".equals(value))
+		if ("?".equals(value))
 		{
 			return;
 		}
-		
+
 		if (value == null || value.isEmpty())
 		{
 			log.error("Tried to register invalid qoute value");
@@ -299,17 +282,17 @@ public class IRInfo
 	{
 		unsupportedNodes.clear();
 	}
-	
+
 	public void addUnsupportedNode(INode node, String reason)
 	{
-		for(VdmNodeInfo info : unsupportedNodes)
+		for (VdmNodeInfo info : unsupportedNodes)
 		{
-			if(VdmNodeInfo.matches(info, node, reason))
+			if (VdmNodeInfo.matches(info, node, reason))
 			{
 				return;
 			}
 		}
-		
+
 		VdmNodeInfo info = new VdmNodeInfo(node, reason);
 		unsupportedNodes.add(info);
 	}
@@ -318,18 +301,19 @@ public class IRInfo
 	{
 		return unsupportedNodes;
 	}
-	
+
 	public void clearTransformationWarnings()
 	{
 		transformationWarnings.clear();
 	}
-	
-	public void addTransformationWarning(org.overture.codegen.ir.INode node, String warning)
+
+	public void addTransformationWarning(org.overture.codegen.ir.INode node,
+			String warning)
 	{
 		IrNodeInfo info = new IrNodeInfo(node, warning);
 		transformationWarnings.add(info);
 	}
-	
+
 	public Set<IrNodeInfo> getTransformationWarnings()
 	{
 		return transformationWarnings;
@@ -339,7 +323,7 @@ public class IRInfo
 	{
 		return tempVarNameGen;
 	}
-	
+
 	public void clear()
 	{
 		quoteVaues.clear();
@@ -366,7 +350,8 @@ public class IRInfo
 		return idStateDesignatorDefs;
 	}
 
-	public void setIdStateDesignatorDefs(Map<AIdentifierStateDesignator, PDefinition> idDefs)
+	public void setIdStateDesignatorDefs(
+			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
 		this.idStateDesignatorDefs = idDefs;
 	}
@@ -378,94 +363,94 @@ public class IRInfo
 
 	public void addClass(SClassDeclIR irClass)
 	{
-		if(this.classes != null)
+		if (this.classes != null)
 		{
 			this.classes.add(irClass);
 		}
 	}
-	
+
 	public void removeClass(String name)
 	{
 		SClassDeclIR classToRemove = null;
-		
+
 		for (SClassDeclIR clazz : classes)
 		{
-			if(clazz.getName().equals(name))
+			if (clazz.getName().equals(name))
 			{
 				classToRemove = clazz;
 				break;
 			}
 		}
-		
-		if(classToRemove != null)
+
+		if (classToRemove != null)
 		{
 			classes.remove(classToRemove);
 		}
 	}
-	
+
 	public void clearClasses()
 	{
-		if(this.classes != null)
+		if (this.classes != null)
 		{
 			this.classes.clear();
 		}
 	}
-	
+
 	public List<AModuleDeclIR> getModules()
 	{
 		return modules;
 	}
-	
+
 	public void addModule(AModuleDeclIR irModule)
 	{
-		if(this.modules != null)
+		if (this.modules != null)
 		{
 			this.modules.add(irModule);
 		}
 	}
-	
+
 	public void removeModule(String name)
 	{
 		AModuleDeclIR moduleToRemove = null;
-		
+
 		for (AModuleDeclIR module : modules)
 		{
-			if(module.getName().equals(name))
+			if (module.getName().equals(name))
 			{
 				moduleToRemove = module;
 				break;
 			}
 		}
-		
-		if(moduleToRemove != null)
+
+		if (moduleToRemove != null)
 		{
 			modules.remove(moduleToRemove);
 		}
 	}
-	
+
 	public void clearModules()
 	{
-		if(this.modules != null)
+		if (this.modules != null)
 		{
 			this.modules.clear();
 		}
 	}
-	
+
 	public void registerSlStateRead(SVarExpIR var)
 	{
 		this.slStateReads.add(var);
 	}
-	
+
 	public boolean isSlStateRead(SVarExpIR var)
 	{
-		for(SVarExpIR v : slStateReads)
+		for (SVarExpIR v : slStateReads)
 		{
-			if(v == var)
+			if (v == var)
 			{
-				return true;	
+				return true;
 			}
 		}
-		
+
 		return false;
 	}
 }

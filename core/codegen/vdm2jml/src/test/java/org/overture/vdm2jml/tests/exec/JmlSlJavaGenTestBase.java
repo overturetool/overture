@@ -29,16 +29,16 @@ public abstract class JmlSlJavaGenTestBase extends CheckerTestBase
 	{
 		super(vdmSpec, testHandler);
 	}
-	
-	public  JavaCodeGen getJavaGen()
+
+	public JavaCodeGen getJavaGen()
 	{
 		JavaCodeGen javaCg = new JavaCodeGen();
 		javaCg.setJavaSettings(getJavaSettings());
 		javaCg.setSettings(getIrSettings());
-		
+
 		return javaCg;
 	}
-	
+
 	public JavaSettings getJavaSettings()
 	{
 		JavaSettings javaSettings = new JavaSettings();
@@ -48,7 +48,7 @@ public abstract class JmlSlJavaGenTestBase extends CheckerTestBase
 
 		return javaSettings;
 	}
-	
+
 	@Override
 	public void genSourcesAndCompile()
 	{
@@ -75,12 +75,14 @@ public abstract class JmlSlJavaGenTestBase extends CheckerTestBase
 		try
 		{
 			ProcessResult res = JmlExecTestBase.runProcess(args);
-			Assert.assertTrue("Got errors when running process:\n" + res.getOutput(), res.getExitCode() == 0);
-			
+			Assert.assertTrue("Got errors when running process:\n"
+					+ res.getOutput(), res.getExitCode() == 0);
+
 		} catch (IOException | InterruptedException e)
 		{
 			e.printStackTrace();
-			Assert.fail("Could not type check model with OpenJML: " + e.getMessage());
+			Assert.fail("Could not type check model with OpenJML: "
+					+ e.getMessage());
 		}
 	}
 
@@ -98,7 +100,8 @@ public abstract class JmlSlJavaGenTestBase extends CheckerTestBase
 			data = jmlGen.generateJml(tcResult.result);
 		} catch (AnalysisException e1)
 		{
-			Assert.fail("Could not type check VDM-SL model: " + e1.getMessage());
+			Assert.fail("Could not type check VDM-SL model: "
+					+ e1.getMessage());
 			e1.printStackTrace();
 		}
 
@@ -118,7 +121,8 @@ public abstract class JmlSlJavaGenTestBase extends CheckerTestBase
 				ex.writeMainClass(outputDir, jmlGen.getJavaSettings().getJavaRootPackage());
 			} catch (IOException e)
 			{
-				Assert.fail("Got unexpected exception when attempting to generate Java/JML code: " + e.getMessage());
+				Assert.fail("Got unexpected exception when attempting to generate Java/JML code: "
+						+ e.getMessage());
 				e.printStackTrace();
 			}
 		}

@@ -18,22 +18,22 @@ import org.overture.codegen.ir.declarations.SClassDeclIR;
 public class NameGen
 {
 	private Set<String> toAvoid;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
-	
+
 	public NameGen()
 	{
 		this.toAvoid = new HashSet<String>();
 	}
-	
+
 	public NameGen(INode vdmNode)
 	{
 		this();
-		
-		if(vdmNode != null)
+
+		if (vdmNode != null)
 		{
 			NameCollector collector = new NameCollector();
-			
+
 			try
 			{
 				vdmNode.apply(collector);
@@ -46,13 +46,13 @@ public class NameGen
 			}
 		}
 	}
-	
+
 	public NameGen(SClassDeclIR classDecl)
 	{
 		this(AssistantBase.getVdmNode(classDecl));
 
 	}
-	
+
 	public void addName(String name)
 	{
 		toAvoid.add(name);
@@ -69,7 +69,7 @@ public class NameGen
 			int counter = 1;
 
 			String prefix = suggestion + "_";
-			
+
 			String newSuggestion = prefix + counter;
 
 			while (toAvoid.contains(newSuggestion))
@@ -77,7 +77,7 @@ public class NameGen
 				counter++;
 				newSuggestion = prefix + counter;
 			}
-			
+
 			toAvoid.add(newSuggestion);
 			return newSuggestion;
 		}

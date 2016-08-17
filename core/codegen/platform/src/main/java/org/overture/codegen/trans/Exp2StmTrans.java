@@ -25,6 +25,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SMultipleBindIR;
 import org.overture.codegen.ir.SPatternIR;
@@ -69,8 +71,6 @@ import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
 import org.overture.codegen.ir.types.SSetTypeIR;
 import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.comp.ComplexCompStrategy;
 import org.overture.codegen.trans.comp.MapCompStrategy;
@@ -417,12 +417,11 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		} else
 		{
 			LinkedList<SPatternIR> patterns = new LinkedList<SPatternIR>();
-			
-			if(node.getSetBind() != null)
+
+			if (node.getSetBind() != null)
 			{
 				patterns.add(node.getSetBind().getPattern().clone());
-			}
-			else
+			} else
 			{
 				patterns.add(node.getSeqBind().getPattern().clone());
 			}
@@ -607,8 +606,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		String casesExpResultName = info.getTempVarNameGen().nextVarName(prefixes.casesExp());
 		idPattern.setName(casesExpResultName);
 
-		AVarDeclIR resultVarDecl = info.getDeclAssistant().consLocalVarDecl(node.getType().clone(),
-				idPattern, info.getExpAssistant().consUndefinedExp());
+		AVarDeclIR resultVarDecl = info.getDeclAssistant().consLocalVarDecl(node.getType().clone(), idPattern, info.getExpAssistant().consUndefinedExp());
 
 		AIdentifierVarExpIR resultVar = new AIdentifierVarExpIR();
 		resultVar.setIsLocal(true);
@@ -740,20 +738,18 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 
 		for (SMultipleBindIR b : bindList)
 		{
-			if(b instanceof ATypeMultipleBindIR)
+			if (b instanceof ATypeMultipleBindIR)
 			{
 				transAssistant.getInfo().addTransformationWarning(node, "Transformation only works for "
 						+ "expressions with multiple set binds and not multiple "
-						+ "type binds in '"
-						+ this.getClass().getSimpleName()
+						+ "type binds in '" + this.getClass().getSimpleName()
 						+ "'");
-			}
-			else
+			} else
 			{
 				multipleBinds.add(b.clone());
 			}
 		}
-		
+
 		return multipleBinds;
 	}
 }

@@ -21,10 +21,11 @@ public class CallObjTraceLocalizer extends AnswerAdaptor<SExpIR>
 	private TransAssistantIR assist;
 	private TraceNames tracePrefixes;
 	private String traceEnclosingClass;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
 
-	public CallObjTraceLocalizer(TransAssistantIR transAssistant, TraceNames tracePrefixes, String traceEnclosingClass)
+	public CallObjTraceLocalizer(TransAssistantIR transAssistant,
+			TraceNames tracePrefixes, String traceEnclosingClass)
 	{
 		this.assist = transAssistant;
 		this.tracePrefixes = tracePrefixes;
@@ -44,7 +45,8 @@ public class CallObjTraceLocalizer extends AnswerAdaptor<SExpIR>
 	}
 
 	@Override
-	public SExpIR caseAIdentifierVarExpIR(AIdentifierVarExpIR node) throws AnalysisException
+	public SExpIR caseAIdentifierVarExpIR(AIdentifierVarExpIR node)
+			throws AnalysisException
 	{
 		if (node instanceof SVarExpIR)
 		{
@@ -90,7 +92,7 @@ public class CallObjTraceLocalizer extends AnswerAdaptor<SExpIR>
 	private ACastUnaryExpIR consObjId()
 	{
 		String paramName = tracePrefixes.callStmMethodParamName();
-		
+
 		AIdentifierVarExpIR idVar = assist.getInfo().getExpAssistant().consIdVar(paramName, new AObjectTypeIR());
 
 		ACastUnaryExpIR castVar = new ACastUnaryExpIR();

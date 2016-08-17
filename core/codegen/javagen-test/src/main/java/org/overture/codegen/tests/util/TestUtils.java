@@ -58,18 +58,18 @@ public class TestUtils
 
 		return files;
 	}
-	
+
 	public static Collection<Object[]> collectFiles(String root)
 	{
 		List<File> testFiles = getTestInputFiles(new File(root));
-		
+
 		List<Object[]> testFilesPacked = new LinkedList<Object[]>();
-		
-		for(File file : testFiles)
+
+		for (File file : testFiles)
 		{
-			testFilesPacked.add(new Object[]{file});
+			testFilesPacked.add(new Object[] { file });
 		}
-		
+
 		return testFilesPacked;
 	}
 }

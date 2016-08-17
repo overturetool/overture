@@ -66,14 +66,13 @@ public class BaseTransformationAssistant
 		original.parent(null);
 	}
 
-	public SStmIR findEnclosingStm(INode node)
-			throws AnalysisException
+	public SStmIR findEnclosingStm(INode node) throws AnalysisException
 
 	{
 		if (node.getAncestor(AAnonymousClassExpIR.class) == null)
 		{
 			AVarDeclIR localDecl = node.getAncestor(AVarDeclIR.class);
-			
+
 			if (localDecl != null && localDecl.parent() instanceof ABlockStmIR)
 			{
 				ABlockStmIR block = (ABlockStmIR) localDecl.parent();
@@ -115,7 +114,7 @@ public class BaseTransformationAssistant
 				return liftedBlock;
 			}
 		}
-		
+
 		SStmIR enclosingStm = node.getAncestor(SStmIR.class);
 
 		if (enclosingStm == null)
@@ -158,7 +157,7 @@ public class BaseTransformationAssistant
 
 		return enclosingStm;
 	}
-	
+
 	public SStmIR getEnclosingStm(INode node, String nodeStr)
 			throws AnalysisException
 	{
@@ -168,7 +167,7 @@ public class BaseTransformationAssistant
 		{
 			new AnalysisException(String.format("Could not find enclosing statement for %s", node));
 		}
-		
+
 		return enclosingStm;
 	}
 }

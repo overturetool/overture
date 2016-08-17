@@ -66,8 +66,9 @@ import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.types.SSetType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SSetType;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SMultipleBindIR;
 import org.overture.codegen.ir.SObjectDesignatorIR;
@@ -107,7 +108,6 @@ import org.overture.codegen.ir.statements.AWhileStmIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AClassTypeIR;
 import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.config.Settings;
 
 public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
@@ -115,11 +115,13 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 	public StmVisitorIR()
 	{
 	}
-	
+
 	@Override
-	public SStmIR caseAExitStm(AExitStm node, IRInfo question) throws AnalysisException
+	public SStmIR caseAExitStm(AExitStm node, IRInfo question)
+			throws AnalysisException
 	{
-		SExpIR expCg = node.getExpression() != null ? node.getExpression().apply(question.getExpVisitor(), question)
+		SExpIR expCg = node.getExpression() != null
+				? node.getExpression().apply(question.getExpVisitor(), question)
 				: null;
 
 		AExitStmIR exitCg = new AExitStmIR();
@@ -134,90 +136,88 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 	{
 		return new AErrorStmIR();
 	}
-	
+
 	@Override
 	public SStmIR caseAClassInvariantStm(AClassInvariantStm node,
 			IRInfo question) throws AnalysisException
 	{
 		List<PExp> exps = new LinkedList<PExp>();
-		
+
 		for (PDefinition d : node.getInvDefs())
 		{
-			if(!(d instanceof AClassInvariantDefinition))
+			if (!(d instanceof AClassInvariantDefinition))
 			{
 				log.error("Expected class invariant definition: " + d);
 				return null;
 			}
-			
+
 			AClassInvariantDefinition invDef = (AClassInvariantDefinition) d;
 			exps.add(invDef.getExpression());
 		}
-		
+
 		AReturnStmIR returnStmCg = new AReturnStmIR();
-		
-		if(exps.isEmpty())
+
+		if (exps.isEmpty())
 		{
 			// Should not really be necessary
 			returnStmCg.setExp(question.getExpAssistant().consBoolLiteral(true));
-		}
-		else if(exps.size() == 1)
+		} else if (exps.size() == 1)
 		{
 			SExpIR expCg = exps.get(0).apply(question.getExpVisitor(), question);
 			returnStmCg.setExp(expCg);
-		}
-		else
+		} else
 		{
 			// We have more than one expressions from which we will build an 'and chain'
 			AAndBoolBinaryExpIR andExpTopCg = new AAndBoolBinaryExpIR();
 			andExpTopCg.setType(new ABoolBasicTypeIR());
 			andExpTopCg.setLeft(exps.get(0).apply(question.getExpVisitor(), question));
-			
+
 			AAndBoolBinaryExpIR previousAndExpCg = andExpTopCg;
-			
+
 			// The remaining ones except the last
-			for(int i = 1; i < exps.size() - 1; i++)
+			for (int i = 1; i < exps.size() - 1; i++)
 			{
 				SExpIR nextExpCg = exps.get(i).apply(question.getExpVisitor(), question);
-				
+
 				AAndBoolBinaryExpIR nextAndExpCg = new AAndBoolBinaryExpIR();
 				nextAndExpCg.setType(new ABoolBasicTypeIR());
 				nextAndExpCg.setLeft(nextExpCg);
-				
+
 				previousAndExpCg.setRight(nextAndExpCg);
 				previousAndExpCg = nextAndExpCg;
 			}
-			
-			previousAndExpCg.setRight(exps.get(exps.size() - 1).apply(question.getExpVisitor(), question));
-			
+
+			previousAndExpCg.setRight(exps.get(exps.size()
+					- 1).apply(question.getExpVisitor(), question));
+
 			returnStmCg.setExp(andExpTopCg);
 		}
 
 		return returnStmCg;
 	}
-	
+
 	@Override
 	public SStmIR caseAPeriodicStm(APeriodicStm node, IRInfo question)
 			throws AnalysisException
 	{
 		String opName = node.getOpname().getName();
-		
+
 		APeriodicStmIR periodicStmCg = new APeriodicStmIR();
 		periodicStmCg.setOpname(opName);
-		
-		for(PExp exp : node.getArgs())
+
+		for (PExp exp : node.getArgs())
 		{
 			SExpIR expCg = exp.apply(question.getExpVisitor(), question);
-			
-			if(expCg != null)
+
+			if (expCg != null)
 			{
 				periodicStmCg.getArgs().add(expCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
 		}
-		
+
 		return periodicStmCg;
 	}
 
@@ -226,16 +226,15 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 			throws AnalysisException
 	{
 		AAtomicStmIR atomicBlock = new AAtomicStmIR();
-		
+
 		for (AAssignmentStm assignment : node.getAssignments())
 		{
 			SStmIR stmCg = assignment.apply(question.getStmVisitor(), question);
-			
-			if(stmCg != null)
+
+			if (stmCg != null)
 			{
 				atomicBlock.getStatements().add(stmCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -243,36 +242,39 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 
 		return atomicBlock;
 	}
-	
+
 	@Override
-	public SStmIR caseACyclesStm(ACyclesStm node, IRInfo question) throws AnalysisException
+	public SStmIR caseACyclesStm(ACyclesStm node, IRInfo question)
+			throws AnalysisException
 	{
 		PExp cycles = node.getCycles();
 		PStm stm = node.getStatement();
-		
+
 		SExpIR cyclesCg = cycles.apply(question.getExpVisitor(), question);
 		SStmIR stmCg = stm.apply(question.getStmVisitor(), question);
-		
+
 		ACyclesStmIR cycStm = new ACyclesStmIR();
 		cycStm.setCycles(cyclesCg);
 		cycStm.setStm(stmCg);
-		
+
 		return cycStm;
 	}
-	
+
 	@Override
-	public SStmIR caseADurationStm(ADurationStm node, IRInfo question) throws AnalysisException
+	public SStmIR caseADurationStm(ADurationStm node, IRInfo question)
+			throws AnalysisException
 	{
 		PExp duration = node.getDuration();
 		PStm stm = node.getStatement();
-		
+
 		SExpIR durationCg = duration.apply(question.getExpVisitor(), question);
 		SStmIR stmCg = stm.apply(question.getStmVisitor(), question);
-		
+
 		ADurationStmIR durStm = new ADurationStmIR();
 		durStm.setDuration(durationCg);
-		durStm.setStm(stmCg);;
-		
+		durStm.setStm(stmCg);
+		;
+
 		return durStm;
 	}
 
@@ -282,12 +284,12 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 	{
 		PMultipleBind multipleBind = node.getBind();
 		SMultipleBindIR multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
-		
+
 		PExp suchThat = node.getSuchThat();
 		PStm stm = node.getStatement();
 
-		SExpIR suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question)
-				: null;
+		SExpIR suchThatCg = suchThat != null
+				? suchThat.apply(question.getExpVisitor(), question) : null;
 		SStmIR stmCg = stm.apply(question.getStmVisitor(), question);
 
 		ALetBeStStmIR letBeSt = new ALetBeStStmIR();
@@ -343,9 +345,9 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 			AIdentifierPatternIR idPattern = new AIdentifierPatternIR();
 			idPattern.setName(name);
 			SExpIR expCg = exp.apply(question.getExpVisitor(), question);
-			
+
 			AVarDeclIR localDecl = question.getDeclAssistant().consLocalVarDecl(def, typeCg, idPattern, expCg);
-			
+
 			if (expCg instanceof AUndefinedExpIR)
 			{
 				question.getDeclAssistant().setDefaultValue(localDecl, typeCg);
@@ -353,7 +355,7 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 			{
 				localDecl.setExp(expCg);
 			}
-			
+
 			blockStm.getLocalDefs().add(localDecl);
 		}
 
@@ -366,8 +368,7 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 			if (stmCg != null)
 			{
 				blockStm.getStatements().add(stmCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -399,11 +400,11 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 	{
 		ABlockStmIR block = new ABlockStmIR();
 		block.setScoped(question.getStmAssistant().isScoped(node));
-		
+
 		question.getDeclAssistant().setFinalLocalDefs(node.getLocalDefs(), block.getLocalDefs(), question);
 
 		SStmIR stm = node.getStatement().apply(question.getStmVisitor(), question);
-		
+
 		if (stm != null)
 		{
 			block.getStatements().add(stm);
@@ -455,7 +456,7 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 		LinkedList<PExp> args = node.getArgs();
 
 		List<SExpIR> argsCg = new LinkedList<SExpIR>();
-		
+
 		for (PExp arg : args)
 		{
 			SExpIR argCg = arg.apply(question.getExpVisitor(), question);
@@ -463,15 +464,14 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 			if (argCg != null)
 			{
 				argsCg.add(argCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
 		}
-		
-		boolean isStaticOrSl = Settings.dialect == Dialect.VDM_SL ||
-				question.getTcFactory().createPDefinitionAssistant().isStatic(rootdef);
+
+		boolean isStaticOrSl = Settings.dialect == Dialect.VDM_SL
+				|| question.getTcFactory().createPDefinitionAssistant().isStatic(rootdef);
 
 		while (rootdef instanceof AInheritedDefinition)
 		{
@@ -485,15 +485,16 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 		AClassTypeIR classType = null;
 
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
-		
+
 		boolean isConstructorCall = rootdef instanceof AExplicitOperationDefinition
 				&& ((AExplicitOperationDefinition) rootdef).getIsConstructor();
-		
-		if(!isConstructorCall && !isStaticOrSl)
+
+		if (!isConstructorCall && !isStaticOrSl)
 		{
 			ILexNameToken enclosingClassName = node.getAncestor(SClassDefinition.class).getName();
 
-			if (node.getName().getExplicit() && !node.getName().equals(enclosingClassName))
+			if (node.getName().getExplicit()
+					&& !node.getName().equals(enclosingClassName))
 			{
 				ASuperCallStmIR superCall = new ASuperCallStmIR();
 				superCall.setIsStatic(isStaticOrSl);
@@ -503,8 +504,7 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 
 				return superCall;
 			}
-		}
-		else if (nameToken != null && nameToken.getExplicit() && isStaticOrSl)
+		} else if (nameToken != null && nameToken.getExplicit() && isStaticOrSl)
 		{
 			String className = nameToken.getModule();
 			classType = new AClassTypeIR();
@@ -512,13 +512,13 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 		}
 
 		APlainCallStmIR callStm = new APlainCallStmIR();
-		
+
 		callStm.setType(typeCg);
 		callStm.setIsStatic(isStaticOrSl);
 		callStm.setName(name);
 		callStm.setClassType(classType);
 		callStm.setArgs(argsCg);
-		
+
 		return callStm;
 	}
 
@@ -537,20 +537,19 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 		if (node.getExplicit())
 		{
 			SClassDefinition enclosingClass = node.getAncestor(SClassDefinition.class);
-			
-			if(enclosingClass != null)
+
+			if (enclosingClass != null)
 			{
-				if(!field.getModule().equals(enclosingClass.getName().getName()))
+				if (!field.getModule().equals(enclosingClass.getName().getName()))
 				{
 					// A quoted method call is only supported if the explicit
 					// module name is equal to that of the enclosing class. Say A
 					// is a sub class of S and 'a' is an instance of A then a.A`op();
-					//  is allowed (although it is the same as a.op()). However,
+					// is allowed (although it is the same as a.op()). However,
 					// a.S`op(); is not allowed.
 					question.addUnsupportedNode(node, "A quoted object call statement is only supported if the explicit module name is equal to that of the enclosing class");
 				}
-			}
-			else
+			} else
 			{
 				log.error("Could not find enclosing the statement of call object statement.");
 			}
@@ -570,8 +569,7 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 			if (argCg != null)
 			{
 				callObject.getArgs().add(argCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -597,8 +595,8 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 		LinkedList<ACaseAlternativeStm> cases = node.getCases();
 
 		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
-		SStmIR othersCg = others != null ? others.apply(question.getStmVisitor(), question)
-				: null;
+		SStmIR othersCg = others != null
+				? others.apply(question.getStmVisitor(), question) : null;
 
 		ACasesStmIR casesStmCg = new ACasesStmIR();
 		casesStmCg.setExp(expCg);
@@ -708,7 +706,7 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 	public SStmIR caseAForAllStm(AForAllStm node, IRInfo question)
 			throws AnalysisException
 	{
-		//Example: for all x in set {1,2,3} do skip;
+		// Example: for all x in set {1,2,3} do skip;
 		PPattern pattern = node.getPattern();
 		PExp set = node.getSet();
 		PStm body = node.getStatement();
@@ -729,7 +727,7 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 	public SStmIR caseAForPatternBindStm(AForPatternBindStm node,
 			IRInfo question) throws AnalysisException
 	{
-		//Example for mk_(a,b) in [mk_(1,2), mk_(3,4)] do skip;
+		// Example for mk_(a,b) in [mk_(1,2), mk_(3,4)] do skip;
 		PPattern pattern = node.getPatternBind().getPattern();
 		PExp exp = node.getExp();
 		PStm stm = node.getStatement();
@@ -756,7 +754,7 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 
 		return forAll;
 	}
-	
+
 	@Override
 	public SStmIR caseAStartStm(AStartStm node, IRInfo question)
 			throws AnalysisException

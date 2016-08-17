@@ -22,9 +22,10 @@ public class JmlUnionTypeTrans extends UnionTypeTrans
 	private StateDesInfo stateDesInfo;
 
 	private Logger log = Logger.getLogger(this.getClass().getName());
-	
-	public JmlUnionTypeTrans(TransAssistantIR transAssistant, UnionTypeVarPrefixes unionTypePrefixes,
-			List<INode> cloneFreeNodes, StateDesInfo stateDesInfo)
+
+	public JmlUnionTypeTrans(TransAssistantIR transAssistant,
+			UnionTypeVarPrefixes unionTypePrefixes, List<INode> cloneFreeNodes,
+			StateDesInfo stateDesInfo)
 	{
 		super(transAssistant, unionTypePrefixes, cloneFreeNodes);
 
@@ -32,7 +33,8 @@ public class JmlUnionTypeTrans extends UnionTypeTrans
 	}
 
 	@Override
-	public void caseAAssignToExpStmIR(AAssignToExpStmIR node) throws AnalysisException
+	public void caseAAssignToExpStmIR(AAssignToExpStmIR node)
+			throws AnalysisException
 	{
 		if (node.getTarget() instanceof AFieldExpIR)
 		{
@@ -44,25 +46,25 @@ public class JmlUnionTypeTrans extends UnionTypeTrans
 				{
 					log.error("Expected no state designator data by now");
 				}
-				
+
 				p = this.stateDesInfo.remove(node);
-				
+
 				handAssignRighHandSide(node);
 				handleAssignTarget(node);
 			}
-		}
-		else
+		} else
 		{
 			handAssignRighHandSide(node);
 		}
-		
+
 		p = null;
 	}
 
 	Pair<List<AIdentifierVarExpIR>, List<AVarDeclIR>> p = null;
 
 	@Override
-	public AAssignToExpStmIR castFieldObj(AAssignToExpStmIR assign, AFieldExpIR target, STypeIR possibleType)
+	public AAssignToExpStmIR castFieldObj(AAssignToExpStmIR assign,
+			AFieldExpIR target, STypeIR possibleType)
 	{
 		AAssignToExpStmIR ret = super.castFieldObj(assign, target, possibleType);
 

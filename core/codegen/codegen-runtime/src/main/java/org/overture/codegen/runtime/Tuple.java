@@ -21,7 +21,6 @@
  */
 package org.overture.codegen.runtime;
 
-
 /*
  * The source of inspiration for the implementation of this class:
  * https://github.com/ripper234/Basic/tree/master/java/src/main/java/org/basic/datastructures/tuple
@@ -94,25 +93,25 @@ public class Tuple implements ValueType, Comparable
 				return false;
 			}
 
-			if(toValue instanceof VDMSeq && type == String.class)
+			if (toValue instanceof VDMSeq && type == String.class)
 			{
-				for(Object c : ((VDMSeq) toValue))
+				for (Object c : (VDMSeq) toValue)
 				{
-					if(!(c instanceof Character))
+					if (!(c instanceof Character))
 					{
 						return false;
 					}
 				}
-				
+
 				return true;
 			}
-			
-			if(toValue instanceof String && type == VDMSeq.class)
+
+			if (toValue instanceof String && type == VDMSeq.class)
 			{
 				return true;
 			}
-			
-			if (toValue != null && !(type.isInstance(toValue)))
+
+			if (toValue != null && !type.isInstance(toValue))
 			{
 				return false;
 			}
@@ -120,30 +119,39 @@ public class Tuple implements ValueType, Comparable
 
 		return true;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj == null)
+		{
 			return false;
+		}
 
 		if (this == obj)
+		{
 			return true;
+		}
 
 		if (!(obj instanceof Tuple))
+		{
 			return false;
+		}
 
 		final Tuple other = (Tuple) obj;
 		if (other.size() != size())
+		{
 			return false;
+		}
 
 		final int size = values.length;
 		for (int i = 0; i < size; i++)
 		{
 			final Object thisNthValue = get(i);
 			final Object otherNthValue = other.get(i);
-			if ((thisNthValue == null && otherNthValue != null)
-					|| (thisNthValue != null && !thisNthValue.equals(otherNthValue)))
+			if (thisNthValue == null && otherNthValue != null
+					|| thisNthValue != null
+							&& !thisNthValue.equals(otherNthValue))
 			{
 				return false;
 			}
@@ -191,20 +199,19 @@ public class Tuple implements ValueType, Comparable
 	{
 		if (o instanceof Tuple)
 		{
-			Tuple ot = (Tuple)o;
+			Tuple ot = (Tuple) o;
 			int diff = values.length - ot.values.length;
 
 			if (diff != 0)
 			{
 				return diff;
-			}
-			else
+			} else
 			{
-				for (int i=0; i < values.length; i++)
+				for (int i = 0; i < values.length; i++)
 				{
 					Object val = values[i];
-					
-					if(val instanceof Comparable)
+
+					if (val instanceof Comparable)
 					{
 						Comparable compVal = (Comparable) val;
 
@@ -215,17 +222,20 @@ public class Tuple implements ValueType, Comparable
 						{
 							return c;
 						}
-					}
-					else
+					} else
+					{
 						return 1;
+					}
 				}
 
 				return 0;
 			}
 		}
-		
-		if(o == null)
+
+		if (o == null)
+		{
 			return 1;
+		}
 
 		return this.toString().compareTo(o.toString());
 	}

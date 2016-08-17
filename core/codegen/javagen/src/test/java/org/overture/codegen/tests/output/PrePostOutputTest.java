@@ -23,7 +23,7 @@ public class PrePostOutputTest extends JavaOutputTestBase
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
-	
+
 	@Override
 	public IRSettings getIrSettings()
 	{

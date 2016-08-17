@@ -26,16 +26,16 @@ public class RtOutputTest extends JavaOutputTestBase
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
-	
+
 	@Before
 	public void init()
 	{
 		super.init();
-		
+
 		Settings.release = Release.VDM_10;
 		Settings.dialect = Dialect.VDM_RT;
 	}
-	
+
 	@Override
 	public IRSettings getIrSettings()
 	{

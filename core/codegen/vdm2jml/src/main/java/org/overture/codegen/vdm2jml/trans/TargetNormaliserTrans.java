@@ -8,6 +8,7 @@ import org.overture.codegen.assistant.DeclAssistantIR;
 import org.overture.codegen.assistant.ExpAssistantIR;
 import org.overture.codegen.assistant.PatternAssistantIR;
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
@@ -21,7 +22,6 @@ import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.statements.AAssignToExpStmIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.statements.AMapSeqUpdateStmIR;
-import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.codegen.vdm2jml.data.StateDesInfo;
@@ -35,7 +35,7 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 	private StateDesInfo stateDesInfo;
 
 	private Logger log = Logger.getLogger(this.getClass().getName());
-	
+
 	public TargetNormaliserTrans(JmlGenerator jmlGen)
 	{
 		this.jmlGen = jmlGen;
@@ -45,15 +45,15 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAFieldExpIR(AFieldExpIR node) throws AnalysisException
 	{
-		if(!(node.parent() instanceof AAssignToExpStmIR))
+		if (!(node.parent() instanceof AAssignToExpStmIR))
 		{
 			return;
 		}
-		
+
 		if (!(node.getObject() instanceof SVarExpIR))
 		{
-			normaliseTarget((AAssignToExpStmIR) node.parent() , node.getObject());
-		}	
+			normaliseTarget((AAssignToExpStmIR) node.parent(), node.getObject());
+		}
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 
 		markAsCloneFree(varDecls);
 		markAsCloneFree(vars);
-		
+
 		stateDesInfo.addStateDesVars(node, vars);
 		stateDesInfo.addStateDesDecl(node, varDecls);
 
@@ -128,8 +128,7 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 			vars.add(var);
 			return var;
 
-		}
-		else if (target instanceof AFieldExpIR)
+		} else if (target instanceof AFieldExpIR)
 		{
 			// a.b.c
 			AFieldExpIR field = (AFieldExpIR) target;
@@ -154,12 +153,12 @@ public class TargetNormaliserTrans extends DepthFirstAnalysisAdaptor
 
 	private void markAsCloneFree(List<? extends INode> nodes)
 	{
-		for(INode v : nodes)
+		for (INode v : nodes)
 		{
 			jmlGen.getJavaGen().getJavaFormat().getValueSemantics().addCloneFreeNode(v);
 		}
 	}
-	
+
 	public StateDesInfo getStateDesInfo()
 	{
 		return stateDesInfo;

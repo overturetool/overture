@@ -16,16 +16,20 @@ import org.overture.codegen.trans.iterator.ILanguageIterator;
 public class JmlTraceTrans extends TracesTrans
 {
 	private List<TcExpInfo> tcExpInfo;
-	
-	public JmlTraceTrans(TransAssistantIR transAssistant, IterationVarPrefixes iteVarPrefixes, TraceNames tracePrefixes,
-			ILanguageIterator langIterator, ICallStmToStringMethodBuilder toStringBuilder, List<INode> cloneFreeNodes)
+
+	public JmlTraceTrans(TransAssistantIR transAssistant,
+			IterationVarPrefixes iteVarPrefixes, TraceNames tracePrefixes,
+			ILanguageIterator langIterator,
+			ICallStmToStringMethodBuilder toStringBuilder,
+			List<INode> cloneFreeNodes)
 	{
 		super(transAssistant, iteVarPrefixes, tracePrefixes, langIterator, toStringBuilder, cloneFreeNodes);
 		this.tcExpInfo = new LinkedList<>();
 	}
-	
+
 	@Override
-	public TraceStmBuilder consStmBuilder(StoreAssistant storeAssist, String traceEnclosingClass)
+	public TraceStmBuilder consStmBuilder(StoreAssistant storeAssist,
+			String traceEnclosingClass)
 	{
 		return new JmlTraceStmBuilder(this, traceEnclosingClass, storeAssist, tcExpInfo);
 	}

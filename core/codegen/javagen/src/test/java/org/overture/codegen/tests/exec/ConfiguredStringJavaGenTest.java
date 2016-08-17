@@ -26,7 +26,7 @@ public class ConfiguredStringJavaGenTest extends JavaGenTestBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(ConfiguredStringOutputTest.ROOT),new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
+		return collectTests(new File(ConfiguredStringOutputTest.ROOT), new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class ConfiguredStringJavaGenTest extends JavaGenTestBase
 
 		return settings;
 	}
-	
+
 	@Override
 	protected String getPropertyId()
 	{

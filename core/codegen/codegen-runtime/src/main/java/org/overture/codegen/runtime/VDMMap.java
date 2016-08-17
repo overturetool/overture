@@ -26,7 +26,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-
 @SuppressWarnings("rawtypes")
 public class VDMMap extends LinkedHashMap implements ValueType
 {
@@ -36,59 +35,70 @@ public class VDMMap extends LinkedHashMap implements ValueType
 	public VDMMap copy()
 	{
 		VDMMap mapClone = new VDMMap();
-		
+
 		Iterator iterator = this.entrySet().iterator();
-		
-		while(iterator.hasNext())
+
+		while (iterator.hasNext())
 		{
 			Map.Entry entry = (Map.Entry) iterator.next();
-			
+
 			Object key = entry.getKey();
 			Object value = entry.getValue();
-			
-			if(key instanceof ValueType)
+
+			if (key instanceof ValueType)
+			{
 				key = ((ValueType) key).copy();
-			
-			if(value instanceof ValueType)
+			}
+
+			if (value instanceof ValueType)
+			{
 				value = ((ValueType) value).copy();
-			
+			}
+
 			mapClone.put(key, value);
 		}
-		
+
 		return mapClone;
 	}
-	
+
 	@Override
 	public String toString()
 	{
-		Set entries = this.entrySet(); 
+		Set entries = this.entrySet();
 		Iterator iterator = entries.iterator();
-		
-		if(!iterator.hasNext())
+
+		if (!iterator.hasNext())
+		{
 			return "{|->}";
-		
+		}
+
 		StringBuilder sb = new StringBuilder();
 		sb.append('{');
-		
+
 		for (;;)
 		{
 			Object next = iterator.next();
-			
-			if(!(next instanceof Map.Entry))
+
+			if (!(next instanceof Map.Entry))
+			{
 				continue;
-			
+			}
+
 			Map.Entry entry = (Map.Entry) next;
-			
+
 			Object key = entry.getKey();
 			Object value = entry.getValue();
 
 			sb.append(key == this ? "(this Collection)" : Utils.toString(key));
 			sb.append(" |-> ");
-			sb.append(value == this ? "(this Collection)" : Utils.toString(value));
-			
-			if(!iterator.hasNext())
+			sb.append(value == this ? "(this Collection)"
+					: Utils.toString(value));
+
+			if (!iterator.hasNext())
+			{
 				return sb.append('}').toString();
-			
+			}
+
 			sb.append(", ");
 		}
 	}

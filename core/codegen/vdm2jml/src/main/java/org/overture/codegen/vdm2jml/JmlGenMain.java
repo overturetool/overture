@@ -44,11 +44,11 @@ public class JmlGenMain
 		List<String> listArgs = Arrays.asList(args);
 
 		List<File> files = new LinkedList<File>();
-		
+
 		File outputDir = null;
 
 		boolean print = false;
-		
+
 		JmlGenerator jmlGen = new JmlGenerator();
 		jmlGen.getIrSettings().setCharSeqAsString(true);
 
@@ -75,8 +75,7 @@ public class JmlGenMain
 			} else if (arg.equals(PRINT_ARG))
 			{
 				print = true;
-			}
-			else if (arg.equals(PACKAGE_ARG))
+			} else if (arg.equals(PACKAGE_ARG))
 			{
 				if (i.hasNext())
 				{
@@ -90,8 +89,7 @@ public class JmlGenMain
 						MsgPrinter.getPrinter().errorln("Not a valid java package. Using the default java package instead..\n");
 					}
 				}
-			}
-			else if (arg.equals(FOLDER_ARG))
+			} else if (arg.equals(FOLDER_ARG))
 			{
 				if (i.hasNext())
 				{
@@ -108,21 +106,17 @@ public class JmlGenMain
 				{
 					usage(FOLDER_ARG + " requires a directory");
 				}
-			}
-			else if(arg.equals(INVARIANT_FOR))
+			} else if (arg.equals(INVARIANT_FOR))
 			{
 				jmlGen.getJmlSettings().setGenInvariantFor(true);
-			}
-			else if(arg.equals(NO_TRACE))
+			} else if (arg.equals(NO_TRACE))
 			{
 				jmlGen.getIrSettings().setGenerateTraces(false);
 				jmlGen.getJavaSettings().setMakeClassesSerializable(false);
-			}
-			else if(arg.equals(NO_CLONING))
+			} else if (arg.equals(NO_CLONING))
 			{
 				jmlGen.getJavaSettings().setDisableCloning(true);
-			}
-			else
+			} else
 			{
 				// It's a file or a directory
 				File file = new File(arg);
@@ -143,20 +137,18 @@ public class JmlGenMain
 		try
 		{
 			MsgPrinter.getPrinter().println("Starting the VDM to JML generator...");
-			
+
 			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
-			
-			if(!GeneralCodeGenUtils.hasErrors(tcResult))
+
+			if (!GeneralCodeGenUtils.hasErrors(tcResult))
 			{
 				GeneratedData data = jmlGen.generateJml(tcResult.result);
 				JavaCodeGenMain.processData(print, outputDir, jmlGen.getJavaGen(), data, false);
-			}
-			else
+			} else
 			{
 				MsgPrinter.getPrinter().errorln("Could not parse/type check VDM model:\n"
 						+ GeneralCodeGenUtils.errorStr(tcResult));
 			}
-			
 
 		} catch (AnalysisException e)
 		{
@@ -167,14 +159,19 @@ public class JmlGenMain
 
 	private static void usage(String msg)
 	{
-		MsgPrinter.getPrinter().errorln("VDMSL to JML/Java generator: " + msg + "\n");
+		MsgPrinter.getPrinter().errorln("VDMSL to JML/Java generator: " + msg
+				+ "\n");
 		MsgPrinter.getPrinter().errorln("Usage: vdm2jml [<options>] [<VDM SL files>]");
-		MsgPrinter.getPrinter().errorln(PRINT_ARG + ": print the generated code to the console");
-		MsgPrinter.getPrinter().errorln(OUTPUT_ARG + " <folder path>: the output folder of the generated code");
-		MsgPrinter.getPrinter().errorln(FOLDER_ARG + " <folder path>: a folder containing input .vdmsl files");
+		MsgPrinter.getPrinter().errorln(PRINT_ARG
+				+ ": print the generated code to the console");
+		MsgPrinter.getPrinter().errorln(OUTPUT_ARG
+				+ " <folder path>: the output folder of the generated code");
+		MsgPrinter.getPrinter().errorln(FOLDER_ARG
+				+ " <folder path>: a folder containing input .vdmsl files");
 		MsgPrinter.getPrinter().errorln(INVARIANT_FOR
 				+ ": to check record invariants explicitly using JML's invariant_for");
-		MsgPrinter.getPrinter().errorln(NO_CLONING + ": To disable deep cloning of value types");
+		MsgPrinter.getPrinter().errorln(NO_CLONING
+				+ ": To disable deep cloning of value types");
 		System.exit(1);
 	}
 }

@@ -23,7 +23,6 @@
 
 package org.overture.codegen.runtime.traces;
 
-
 public class Permutor
 {
 	private final int[] limit;

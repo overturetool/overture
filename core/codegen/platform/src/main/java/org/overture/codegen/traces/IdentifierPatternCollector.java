@@ -15,9 +15,9 @@ public class IdentifierPatternCollector extends DepthFirstAnalysisAdaptor
 {
 	private INode topNode;
 	private List<AIdentifierPatternIR> idOccurences;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
-	
+
 	public IdentifierPatternCollector()
 	{
 		this.topNode = null;
@@ -28,11 +28,11 @@ public class IdentifierPatternCollector extends DepthFirstAnalysisAdaptor
 	{
 		this.topNode = topNode;
 	}
-	
+
 	public List<AIdentifierPatternIR> findOccurences()
 	{
 		idOccurences = new LinkedList<AIdentifierPatternIR>();
-		
+
 		try
 		{
 			topNode.apply(this);
@@ -42,7 +42,7 @@ public class IdentifierPatternCollector extends DepthFirstAnalysisAdaptor
 					+ topNode);
 			e.printStackTrace();
 		}
-		
+
 		return idOccurences;
 	}
 
@@ -58,11 +58,11 @@ public class IdentifierPatternCollector extends DepthFirstAnalysisAdaptor
 
 	private boolean proceed(INode node)
 	{
-		if(topNode == null)
+		if (topNode == null)
 		{
 			return false;
 		}
-		
+
 		if (node == topNode)
 		{
 			return true;

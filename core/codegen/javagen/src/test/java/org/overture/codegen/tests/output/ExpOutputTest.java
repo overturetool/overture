@@ -95,8 +95,8 @@ public class ExpOutputTest extends ParamFineGrainTest<String>
 	}
 
 	@Override
-	protected void testUpdate(String actual) throws ParserException,
-			LexException, IOException
+	protected void testUpdate(String actual)
+			throws ParserException, LexException, IOException
 	{
 		OutputTestUtil.testUpdate(actual, resultPath);
 	}

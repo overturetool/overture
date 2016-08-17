@@ -32,7 +32,7 @@ public class AbstractVisitorIR<Q extends IRInfo, A extends org.overture.codegen.
 		extends QuestionAnswerAdaptor<Q, A>
 {
 	protected Logger log = Logger.getLogger(this.getClass().getName());
-	
+
 	@Override
 	public A defaultINode(INode node, Q question) throws AnalysisException
 	{

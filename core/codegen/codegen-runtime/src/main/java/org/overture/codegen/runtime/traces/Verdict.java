@@ -25,5 +25,5 @@ package org.overture.codegen.runtime.traces;
 
 public enum Verdict
 {
-	PASSED, INCONCLUSIVE, FAILED, SKIPPED,ERROR
+	PASSED, INCONCLUSIVE, FAILED, SKIPPED, ERROR
 }

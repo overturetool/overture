@@ -117,9 +117,9 @@ public class JavaFormat
 	protected JavaFormatAssistant javaFormatAssistant;
 	protected JavaRecordCreator recCreator;
 	protected JavaVarPrefixManager varPrefixManager;
-	
+
 	protected Logger log = Logger.getLogger(this.getClass().getName());
-	
+
 	public JavaFormat(JavaVarPrefixManager varPrefixManager,
 			String templateRoot, IRInfo info)
 	{
@@ -132,12 +132,12 @@ public class JavaFormat
 		this.info = info;
 		this.javaFormatAssistant = new JavaFormatAssistant(this.info);
 	}
-	
+
 	public JavaValueSemantics getValueSemantics()
 	{
 		return valueSemantics;
 	}
-	
+
 	public void setValueSemantics(JavaValueSemantics valueSemantics)
 	{
 		this.valueSemantics = valueSemantics;
@@ -147,7 +147,7 @@ public class JavaFormat
 	{
 		return recCreator;
 	}
-	
+
 	public JavaFormatAssistant getJavaFormatAssistant()
 	{
 		return javaFormatAssistant;
@@ -173,12 +173,12 @@ public class JavaFormat
 	{
 		valueSemantics.setJavaSettings(javaSettings);
 	}
-	
+
 	public JavaSettings getJavaSettings()
 	{
 		return valueSemantics.getJavaSettings();
 	}
-	
+
 	public void clear()
 	{
 		mergeVisitor.init();
@@ -247,13 +247,13 @@ public class JavaFormat
 		{
 			return "";
 		}
-		
+
 		final String DOUBLE_VALUE = ".doubleValue()";
 		final String LONG_VALUE = ".longValue()";
 
 		if (info.getAssistantManager().getTypeAssistant().isInt(type))
 		{
-			return LONG_VALUE; 
+			return LONG_VALUE;
 		} else if (info.getAssistantManager().getTypeAssistant().isRealOrRat(type))
 		{
 			return DOUBLE_VALUE;
@@ -276,7 +276,7 @@ public class JavaFormat
 			return "";
 		}
 	}
-	
+
 	private String getNumberDereference(INode node, boolean ignoreContext)
 	{
 		if (ignoreContext && node instanceof SExpIR)
@@ -348,35 +348,35 @@ public class JavaFormat
 	public String formatTypeName(INode node, ATypeNameIR typeName)
 	{
 		// Type names are also used for quotes, which do not have a defining class.
-		if(typeName.getDefiningClass() != null && !getJavaSettings().genRecsAsInnerClasses())
+		if (typeName.getDefiningClass() != null
+				&& !getJavaSettings().genRecsAsInnerClasses())
 		{
 			String typeNameStr = "";
-			
-			if(JavaCodeGenUtil.isValidJavaPackage(getJavaSettings().getJavaRootPackage()))
+
+			if (JavaCodeGenUtil.isValidJavaPackage(getJavaSettings().getJavaRootPackage()))
 			{
 				typeNameStr += getJavaSettings().getJavaRootPackage() + ".";
 			}
-			
-			typeNameStr += typeName.getDefiningClass() + TYPE_DECL_PACKAGE_SUFFIX + ".";
-			
+
+			typeNameStr += typeName.getDefiningClass()
+					+ TYPE_DECL_PACKAGE_SUFFIX + ".";
+
 			typeNameStr += typeName.getName();
-			
+
 			return typeNameStr;
 		}
-		
+
 		SClassDeclIR classDef = node.getAncestor(SClassDeclIR.class);
 
 		String definingClass = typeName.getDefiningClass() != null
 				&& classDef != null
-				&& !classDef.getName().equals(typeName.getDefiningClass()) ? typeName.getDefiningClass()
-				+ "."
-				: "";
+				&& !classDef.getName().equals(typeName.getDefiningClass())
+						? typeName.getDefiningClass() + "." : "";
 
 		return definingClass + typeName.getName();
 	}
 
-	public String format(SExpIR exp, boolean leftChild)
-			throws AnalysisException
+	public String format(SExpIR exp, boolean leftChild) throws AnalysisException
 	{
 		String formattedExp = format(exp);
 
@@ -446,30 +446,30 @@ public class JavaFormat
 		}
 
 		String result = writer.toString();
-		
+
 		return result;
 	}
 
 	public String formatTypeArg(STypeIR type) throws AnalysisException
 	{
-		if(type == null)
+		if (type == null)
 		{
 			return null;
-		}
-		else
+		} else
 		{
 			List<STypeIR> types = new LinkedList<STypeIR>();
 			types.add(type);
-			
+
 			return formattedTypes(types, CLASS_EXTENSION);
 		}
 	}
-	
-	public String formatTypeArgs(ATupleTypeIR tupleType) throws AnalysisException
+
+	public String formatTypeArgs(ATupleTypeIR tupleType)
+			throws AnalysisException
 	{
 		return formatTypeArgs(tupleType.getTypes());
 	}
-	
+
 	public String formatTypeArgs(List<STypeIR> types) throws AnalysisException
 	{
 		if (types.isEmpty())
@@ -485,11 +485,12 @@ public class JavaFormat
 	{
 		STypeIR leftNodeType = node.getLeft().getType();
 
-		if (leftNodeType instanceof SSeqTypeIR || leftNodeType instanceof SSetTypeIR || leftNodeType instanceof SMapTypeIR)
+		if (leftNodeType instanceof SSeqTypeIR
+				|| leftNodeType instanceof SSetTypeIR
+				|| leftNodeType instanceof SMapTypeIR)
 		{
 			return handleCollectionComparison(node);
-		}
-		else
+		} else
 		{
 			return handleEquals(node);
 		}
@@ -533,14 +534,15 @@ public class JavaFormat
 		return String.format("%s.equals(%s, %s)", UTILS_FILE, format(valueType.getLeft()), format(valueType.getRight()));
 	}
 
-	private String handleCollectionComparison(SBinaryExpIR node) throws AnalysisException
+	private String handleCollectionComparison(SBinaryExpIR node)
+			throws AnalysisException
 	{
 		// In VDM the types of the equals are compatible when the AST passes the type check
 		SExpIR leftNode = node.getLeft();
 		SExpIR rightNode = node.getRight();
 
 		String empty = "Utils.empty(%s)";
-		
+
 		if (isEmptyCollection(leftNode.getType()))
 		{
 			return String.format(empty, format(node.getRight()));
@@ -603,45 +605,48 @@ public class JavaFormat
 
 	public String formatSuperType(SClassDeclIR classDecl)
 	{
-		return classDecl.getSuperNames().isEmpty() ? "" : "extends " + classDecl.getSuperNames().get(0);
+		return classDecl.getSuperNames().isEmpty() ? ""
+				: "extends " + classDecl.getSuperNames().get(0);
 	}
-	
+
 	public String formatInterfaces(SClassDeclIR classDecl)
 	{
 		LinkedList<AInterfaceDeclIR> interfaces = classDecl.getInterfaces();
-		
-		if(interfaces == null)
+
+		if (interfaces == null)
 		{
 			return "";
 		}
-		
+
 		String implementsClause = "implements";
 		String sep = " ";
-		
-		if(interfaces.isEmpty())
+
+		if (interfaces.isEmpty())
 		{
 			// All classes must be declared Serializable when traces are being generated.
-			if(info.getSettings().generateTraces() || getJavaSettings().makeClassesSerializable())
+			if (info.getSettings().generateTraces()
+					|| getJavaSettings().makeClassesSerializable())
 			{
-				return implementsClause + sep + java.io.Serializable.class.getName();
-			}
-			else
+				return implementsClause + sep
+						+ java.io.Serializable.class.getName();
+			} else
 			{
 				return "";
 			}
 		}
-		
-		for(int i = 0; i < interfaces.size(); i++)
+
+		for (int i = 0; i < interfaces.size(); i++)
 		{
 			implementsClause += sep + interfaces.get(i).getName();
 			sep = ", ";
 		}
-		
-		if(info.getSettings().generateTraces() || getJavaSettings().makeClassesSerializable())
+
+		if (info.getSettings().generateTraces()
+				|| getJavaSettings().makeClassesSerializable())
 		{
 			implementsClause += sep + java.io.Serializable.class.getName();
 		}
-		
+
 		return implementsClause;
 	}
 
@@ -683,34 +688,34 @@ public class JavaFormat
 		// private int a; (exp == null || exp instanceof AUndefinedExpIR)
 		// private int a = 2; (otherwise)
 
-		return exp == null || exp instanceof AUndefinedExpIR ? "" : " = " + format(exp);
+		return exp == null || exp instanceof AUndefinedExpIR ? ""
+				: " = " + format(exp);
 	}
 
 	public String formatThrows(List<STypeIR> types) throws AnalysisException
 	{
-		if(!types.isEmpty())
+		if (!types.isEmpty())
 		{
 			StringBuilder sb = new StringBuilder();
-			
+
 			sb.append(IJavaConstants.THROWS);
 			sb.append(' ');
-			
+
 			String sep = "";
-			for(STypeIR t : types)
+			for (STypeIR t : types)
 			{
 				sb.append(sep);
 				sb.append(format(t));
 				sep = ", ";
 			}
-			
+
 			return sb.toString();
-		}
-		else
+		} else
 		{
 			return "";
 		}
 	}
-	
+
 	public String formatOperationBody(SStmIR body) throws AnalysisException
 	{
 		String NEWLINE = "\n";
@@ -731,23 +736,20 @@ public class JavaFormat
 	private String handleOpBody(SStmIR body) throws AnalysisException
 	{
 		AMethodDeclIR method = body.getAncestor(AMethodDeclIR.class);
-		
-		if(method == null)
+
+		if (method == null)
 		{
-			log.error("Could not find enclosing method when formatting operation body. Got: " + body);
-		}
-		else if(method.getAsync() != null && method.getAsync())
+			log.error("Could not find enclosing method when formatting operation body. Got: "
+					+ body);
+		} else if (method.getAsync() != null && method.getAsync())
 		{
-			return "new VDMThread(){ "
-			+ "\tpublic void run() {"
-			+ "\t " + format(body)
-			+ "\t} "
-			+ "}.start();";
+			return "new VDMThread(){ " + "\tpublic void run() {" + "\t "
+					+ format(body) + "\t} " + "}.start();";
 		}
-		
+
 		return format(body);
 	}
-	
+
 	public String formatTemplateParam(INode potentialBasicType)
 			throws AnalysisException
 	{
@@ -757,8 +759,9 @@ public class JavaFormat
 		}
 
 		TypeAssistantIR typeAssistant = info.getAssistantManager().getTypeAssistant();
-		
-		if (potentialBasicType instanceof STypeIR && typeAssistant.isNumericType((STypeIR) potentialBasicType))
+
+		if (potentialBasicType instanceof STypeIR
+				&& typeAssistant.isNumericType((STypeIR) potentialBasicType))
 		{
 			return "Number";
 		} else if (potentialBasicType instanceof ABoolBasicTypeIR)
@@ -868,8 +871,8 @@ public class JavaFormat
 		for (int i = 0; i < str.length(); i++)
 		{
 			char currentChar = str.charAt(i);
-			escaped += GeneralUtils.isEscapeSequence(currentChar) ? StringEscapeUtils.escapeJava(currentChar
-					+ "")
+			escaped += GeneralUtils.isEscapeSequence(currentChar)
+					? StringEscapeUtils.escapeJava(currentChar + "")
 					: currentChar + "";
 		}
 
@@ -878,21 +881,21 @@ public class JavaFormat
 
 	public static boolean castNotNeeded(STypeIR type)
 	{
-		return type instanceof AObjectTypeIR || type instanceof AUnknownTypeIR || type instanceof AUnionTypeIR;
+		return type instanceof AObjectTypeIR || type instanceof AUnknownTypeIR
+				|| type instanceof AUnionTypeIR;
 	}
-	
+
 	public String escapeChar(char c)
 	{
-		return GeneralUtils.isEscapeSequence(c) ? StringEscapeUtils.escapeJavaScript(c
-				+ "")
-				: c + "";
+		return GeneralUtils.isEscapeSequence(c)
+				? StringEscapeUtils.escapeJavaScript(c + "") : c + "";
 	}
-	
+
 	public boolean isInnerClass(SClassDeclIR node)
 	{
 		return info.getDeclAssistant().isInnerClass(node);
 	}
-	
+
 	public String formatStartStmExp(AStartStmIR node) throws AnalysisException
 	{
 		String str = format(node.getExp());
@@ -905,30 +908,30 @@ public class JavaFormat
 			return "((Thread)" + str + ")";
 		}
 	}
-	
+
 	public boolean genDecl(ATypeDeclIR node)
 	{
 		return !(node.getDecl() instanceof ANamedTypeDeclIR);
 	}
-	
+
 	public boolean genTypeDecl(ATypeDeclIR node)
 	{
-		if(node.getDecl() instanceof ARecordDeclIR)
+		if (node.getDecl() instanceof ARecordDeclIR)
 		{
 			return getJavaSettings().genRecsAsInnerClasses();
-		}
-		else
+		} else
 		{
 			return info.getSettings().generateInvariants();
 		}
 	}
-	
+
 	public static boolean isSeqConversion(AFieldNumberExpIR node)
 	{
 		INode parent = node.parent();
-		return parent instanceof ASeqToStringUnaryExpIR || parent instanceof AStringToSeqUnaryExpIR;
+		return parent instanceof ASeqToStringUnaryExpIR
+				|| parent instanceof AStringToSeqUnaryExpIR;
 	}
-	
+
 	public static boolean isScoped(ABlockStmIR block)
 	{
 		return block != null && block.getScoped() != null && block.getScoped();
@@ -938,7 +941,7 @@ public class JavaFormat
 	{
 		return clazz != null && clazz.getTag() instanceof JavaMainTag;
 	}
-	
+
 	public String formatVdmSource(PIR irNode)
 	{
 		if (getJavaSettings().printVdmLocations() && irNode != null)
@@ -959,17 +962,15 @@ public class JavaFormat
 
 		return "";
 	}
-	
-	
+
 	public String getQuotePackagePrefix()
 	{
 		String settings = getJavaSettings().getJavaRootPackage();
-		
-		if(settings != null && !settings.trim().isEmpty())
+
+		if (settings != null && !settings.trim().isEmpty())
 		{
 			return settings + "." + JavaCodeGen.JAVA_QUOTES_PACKAGE + ".";
-		}
-		else
+		} else
 		{
 			return JavaCodeGen.JAVA_QUOTES_PACKAGE + ".";
 		}
@@ -977,36 +978,36 @@ public class JavaFormat
 
 	public boolean genClassInvariant(SClassDeclIR clazz)
 	{
-		if(!info.getSettings().generateInvariants())
+		if (!info.getSettings().generateInvariants())
 		{
 			return false;
 		}
-		
+
 		return clazz.getInvariant() != null;
 	}
-	
+
 	public static String formatMetaData(List<ClonableString> metaData)
 	{
-		if(metaData == null || metaData.isEmpty())
+		if (metaData == null || metaData.isEmpty())
 		{
 			return "";
 		}
-		
+
 		StringBuilder sb = new StringBuilder();
-		
-		for(ClonableString str : metaData)
+
+		for (ClonableString str : metaData)
 		{
 			sb.append(str.value).append('\n');
 		}
-		
+
 		return sb.append('\n').toString();
 	}
-	
+
 	public static boolean isVdmSl()
 	{
 		return Settings.dialect == Dialect.VDM_SL;
 	}
-	
+
 	public String genIteratorName()
 	{
 		return info.getTempVarNameGen().nextVarName(varPrefixManager.getIteVarPrefixes().iterator());
@@ -1026,12 +1027,12 @@ public class JavaFormat
 	{
 		return info.getTempVarNameGen().nextVarName(varPrefixManager.getIteVarPrefixes().forIndexByVar());
 	}
-	
+
 	public static String getString(ClonableString c)
 	{
 		return c.value;
 	}
-	
+
 	public boolean isUndefined(ACastUnaryExpIR cast)
 	{
 		return info.getExpAssistant().isUndefined(cast);

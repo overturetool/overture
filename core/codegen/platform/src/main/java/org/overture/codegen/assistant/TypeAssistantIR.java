@@ -97,7 +97,7 @@ public class TypeAssistantIR extends AssistantBase
 	{
 		super(assistantManager);
 	}
-	
+
 	public void removeIllegalQuoteTypes(List<PType> types)
 	{
 		List<Integer> illegalIndices = new LinkedList<>();
@@ -119,9 +119,10 @@ public class TypeAssistantIR extends AssistantBase
 		}
 	}
 
-	public STypeIR getFieldExpType(IRInfo info, String fieldName, String fieldModule,
-			SObjectDesignatorIR obj, INode parent)
-			throws AnalysisException, org.overture.codegen.ir.analysis.AnalysisException
+	public STypeIR getFieldExpType(IRInfo info, String fieldName,
+			String fieldModule, SObjectDesignatorIR obj, INode parent)
+			throws AnalysisException,
+			org.overture.codegen.ir.analysis.AnalysisException
 	{
 		if (parent instanceof AApplyObjectDesignatorIR)
 		{
@@ -133,12 +134,11 @@ public class TypeAssistantIR extends AssistantBase
 				// It is a class
 				SClassDeclIR clazz = info.getDeclAssistant().findClass(info.getClasses(), fieldModule);
 				AFieldDeclIR field = info.getDeclAssistant().getFieldDecl(clazz, fieldModule);
-				
-				if(field != null)
+
+				if (field != null)
 				{
 					return field.getType().clone();
-				}
-				else
+				} else
 				{
 					// It must be a method
 					return info.getTypeAssistant().getMethodType(info, fieldModule, fieldName, args);
@@ -147,8 +147,9 @@ public class TypeAssistantIR extends AssistantBase
 		}
 		return getFieldType(info, fieldName, fieldModule, obj);
 	}
-	
-	private STypeIR getFieldType(IRInfo info, String fieldName, String fieldModule, SObjectDesignatorIR obj)
+
+	private STypeIR getFieldType(IRInfo info, String fieldName,
+			String fieldModule, SObjectDesignatorIR obj)
 	{
 		if (fieldModule != null)
 		{
@@ -173,19 +174,18 @@ public class TypeAssistantIR extends AssistantBase
 
 					return fieldExpType;
 				}
-			} 
-			catch (org.overture.codegen.ir.analysis.AnalysisException e)
+			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
 			{
 			}
 		}
 
 		log.error("Could not determine field type");
-		
+
 		return new AUnknownTypeIR();
 	}
-	
-	public AMethodTypeIR getMethodType(IRInfo info,
-			String fieldModule, String fieldName, List<SExpIR> args)
+
+	public AMethodTypeIR getMethodType(IRInfo info, String fieldModule,
+			String fieldName, List<SExpIR> args)
 			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		SClassDeclIR classDecl = assistantManager.getDeclAssistant().findClass(info.getClasses(), fieldModule);
@@ -204,17 +204,17 @@ public class TypeAssistantIR extends AssistantBase
 				}
 			}
 		}
-		
+
 		// Union type transformations may ask for the method type of a field to find out
 		// that it does not exist. Consider for example the (legal) snippet below where
 		// class A has an operation 'op()' and B is a completely empty class definition
 		//
 		// let xs = [new A(), new B()]
 		// in
-		//	for x in xs do
-		// 		x.op();
-		
-		//If the field does not exist then the method type does not exist
+		// for x in xs do
+		// x.op();
+
+		// If the field does not exist then the method type does not exist
 		return null;
 	}
 
@@ -231,7 +231,7 @@ public class TypeAssistantIR extends AssistantBase
 
 		return null;
 	}
-	
+
 	public STypeIR getFieldType(List<SClassDeclIR> classes,
 			ARecordTypeIR recordType, String memberName)
 	{
@@ -262,33 +262,32 @@ public class TypeAssistantIR extends AssistantBase
 		SClassDeclIR classDecl = assistantManager.getDeclAssistant().findClass(classes, moduleName);
 		return getFieldType(classDecl, fieldName, classes);
 	}
-	
+
 	public boolean compatible(IRInfo info, STypeIR left, STypeIR right)
 	{
 		SourceNode leftSource = left.getSourceNode();
 		SourceNode rightSource = right.getSourceNode();
-		
+
 		if (leftSource == null || rightSource == null)
 		{
 			return false;
 		}
-		
+
 		org.overture.ast.node.INode leftType = leftSource.getVdmNode();
 		org.overture.ast.node.INode rightType = rightSource.getVdmNode();
 
-		if (!(leftType instanceof PType)
-				|| !(rightType instanceof PType))
+		if (!(leftType instanceof PType) || !(rightType instanceof PType))
 		{
 			return false;
 		}
-		
+
 		TypeComparator typeComparator = info.getTcFactory().getTypeComparator();
-		
+
 		if (!typeComparator.compatible((PType) leftType, (PType) rightType))
 		{
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -305,8 +304,8 @@ public class TypeAssistantIR extends AssistantBase
 		{
 			STypeIR paramType = paramTypes.get(i);
 			STypeIR argType = args.get(i).getType();
-			
-			if(!compatible(info, paramType, argType))
+
+			if (!compatible(info, paramType, argType))
 			{
 				return false;
 			}
@@ -315,7 +314,8 @@ public class TypeAssistantIR extends AssistantBase
 		return true;
 	}
 
-	public PDefinition getTypeDef(ILexNameToken nameToken, PDefinitionAssistantTC defAssistant)
+	public PDefinition getTypeDef(ILexNameToken nameToken,
+			PDefinitionAssistantTC defAssistant)
 	{
 		PDefinition def = (PDefinition) nameToken.getAncestor(PDefinition.class);
 
@@ -330,7 +330,7 @@ public class TypeAssistantIR extends AssistantBase
 		{
 			return null;
 		}
-		
+
 		PDefinition typeDef = defAssistant.findType(def, nameToken, enclosingClass.getName().getModule());
 
 		return typeDef;
@@ -341,7 +341,7 @@ public class TypeAssistantIR extends AssistantBase
 	{
 		STypeIR seqOfCg = node.getSeqof().apply(question.getTypeVisitor(), question);
 		boolean emptyCg = node.getEmpty();
-		
+
 		boolean isSeq1 = node instanceof ASeq1SeqType;
 
 		// This is a special case since sequence of characters are strings
@@ -373,17 +373,16 @@ public class TypeAssistantIR extends AssistantBase
 		if (basicType instanceof AIntNumericBasicTypeIR)
 		{
 			return new AIntBasicTypeWrappersTypeIR();
-		} else if(basicType instanceof ANat1NumericBasicTypeIR)
+		} else if (basicType instanceof ANat1NumericBasicTypeIR)
 		{
 			return new ANat1BasicTypeWrappersTypeIR();
-		} else if(basicType instanceof ANatNumericBasicTypeIR)
+		} else if (basicType instanceof ANatNumericBasicTypeIR)
 		{
 			return new ANatBasicTypeWrappersTypeIR();
-		} else if(basicType instanceof ARatNumericBasicTypeIR)
+		} else if (basicType instanceof ARatNumericBasicTypeIR)
 		{
 			return new ARatBasicTypeWrappersTypeIR();
-		}
-		else if (basicType instanceof ARealNumericBasicTypeIR)
+		} else if (basicType instanceof ARealNumericBasicTypeIR)
 		{
 			return new ARealBasicTypeWrappersTypeIR();
 		} else if (basicType instanceof ACharBasicTypeIR)
@@ -441,7 +440,7 @@ public class TypeAssistantIR extends AssistantBase
 
 		return true;
 	}
-	
+
 	public boolean isProductOfSameSize(AUnionType unionType,
 			PTypeAssistantTC typeAssistant)
 	{
@@ -478,8 +477,9 @@ public class TypeAssistantIR extends AssistantBase
 
 		return true;
 	}
-	
-	public PType getType(IRInfo question, AUnionType unionType, PPattern pattern)
+
+	public PType getType(IRInfo question, AUnionType unionType,
+			PPattern pattern)
 	{
 		PTypeSet possibleTypes = new PTypeSet(question.getTcFactory());
 		PType patternType = question.getTcFactory().createPPatternAssistant().getPossibleType(pattern);
@@ -508,7 +508,7 @@ public class TypeAssistantIR extends AssistantBase
 			unionType.getTypes().addAll(possibleTypes);
 
 			PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
-			
+
 			if (question.getTypeAssistant().isUnionOfType(unionType, AProductType.class, typeAssistant))
 			{
 				List<PType> fieldsTypes = new LinkedList<PType>();
@@ -533,74 +533,75 @@ public class TypeAssistantIR extends AssistantBase
 			}
 		}
 	}
-	
+
 	public List<STypeIR> clearObjectTypes(List<STypeIR> types)
 	{
 		types = new LinkedList<STypeIR>(types);
-		
+
 		List<AObjectTypeIR> objectTypes = new LinkedList<AObjectTypeIR>();
-		
-		for(STypeIR type : types)
+
+		for (STypeIR type : types)
 		{
-			if(type instanceof AObjectTypeIR)
+			if (type instanceof AObjectTypeIR)
 			{
 				objectTypes.add((AObjectTypeIR) type);
 			}
 		}
-		
+
 		types.removeAll(objectTypes);
-		
+
 		return types;
 	}
-	
+
 	public List<STypeIR> clearDuplicates(List<STypeIR> types)
 	{
 		List<STypeIR> filtered = new LinkedList<STypeIR>();
 
-		for(STypeIR type : types)
+		for (STypeIR type : types)
 		{
-			if(!containsType(filtered, type))
+			if (!containsType(filtered, type))
 			{
 				filtered.add(type);
 			}
 		}
-		
+
 		return filtered;
 	}
-	
+
 	public boolean isStringType(STypeIR type)
 	{
 		return type instanceof AStringTypeIR;
 	}
-	
+
 	public boolean isStringType(SExpIR exp)
 	{
 		return exp.getType() instanceof AStringTypeIR;
 	}
-	
+
 	public boolean isMapType(SExpIR exp)
 	{
 		return exp.getType() instanceof SMapTypeIR;
 	}
-	
+
 	public boolean isSeqType(SExpIR exp)
 	{
 		return exp.getType() instanceof SSeqTypeIR;
 	}
-	
+
 	public boolean isMapApplication(AApplyExpIR applyExp)
 	{
 		return isMapType(applyExp.getRoot()) && applyExp.getArgs().size() == 1;
 	}
-	
+
 	public boolean isSeqApplication(AApplyExpIR applyExp)
 	{
 		return isSeqType(applyExp.getRoot()) && applyExp.getArgs().size() == 1;
 	}
-	
+
 	public boolean isCharRead(AApplyExpIR applyExp)
 	{
-		return isStringType(applyExp.getRoot()) && applyExp.getArgs().size() == 1;
+		return isStringType(applyExp.getRoot())
+				&& applyExp.getArgs().size() == 1;
 	}
 
 	public STypeIR findElementType(STypeIR type)
@@ -617,14 +618,17 @@ public class TypeAssistantIR extends AssistantBase
 			return seqType.getSeqOf();
 		}
 
-		log.error("Expected set or sequence type in findElementType. Got: " + type);
-		
+		log.error("Expected set or sequence type in findElementType. Got: "
+				+ type);
+
 		return null;
 	}
-	
+
 	public PType resolve(PType type)
 	{
-		while (type instanceof ABracketType || type instanceof ANamedInvariantType || type instanceof AOptionalType)
+		while (type instanceof ABracketType
+				|| type instanceof ANamedInvariantType
+				|| type instanceof AOptionalType)
 		{
 			if (type instanceof ABracketType)
 			{
@@ -641,10 +645,10 @@ public class TypeAssistantIR extends AssistantBase
 				type = ((AOptionalType) type).getType();
 			}
 		}
-		
+
 		return type;
 	}
-	
+
 	public SSeqTypeIR getSeqType(AUnionTypeIR unionType)
 	{
 		AUnionTypeIR seqOf = new AUnionTypeIR();
@@ -655,21 +659,21 @@ public class TypeAssistantIR extends AssistantBase
 			{
 				return type instanceof SSeqTypeIR;
 			}
-			
+
 			@Override
 			public STypeIR getElementType(STypeIR type)
 			{
 				return ((SSeqTypeIR) type).getSeqOf();
 			}
 		}));
-		
+
 		ASeqSeqTypeIR seqType = new ASeqSeqTypeIR();
 		seqType.setEmpty(false);
 		seqType.setSeqOf(seqOf);
-		
+
 		return seqType;
 	}
-	
+
 	public SSetTypeIR getSetType(AUnionTypeIR unionType)
 	{
 		AUnionTypeIR setOf = new AUnionTypeIR();
@@ -680,30 +684,32 @@ public class TypeAssistantIR extends AssistantBase
 			{
 				return type instanceof SSetTypeIR;
 			}
-			
+
 			@Override
 			public STypeIR getElementType(STypeIR type)
 			{
 				return ((SSetTypeIR) type).getSetOf();
 			}
 		}));
-		
+
 		ASetSetTypeIR setType = new ASetSetTypeIR();
 		setType.setEmpty(false);
 		setType.setSetOf(setOf);
-		
+
 		return setType;
 	}
-	
+
 	public boolean usesUnionType(SBinaryExpIR node)
 	{
-		return node.getLeft().getType() instanceof AUnionTypeIR || node.getRight().getType() instanceof AUnionTypeIR;
+		return node.getLeft().getType() instanceof AUnionTypeIR
+				|| node.getRight().getType() instanceof AUnionTypeIR;
 	}
-	
-	public List<STypeIR> findElementTypes(AUnionTypeIR unionType, CollectionTypeStrategy strategy)
+
+	public List<STypeIR> findElementTypes(AUnionTypeIR unionType,
+			CollectionTypeStrategy strategy)
 	{
 		List<STypeIR> elementTypes = new LinkedList<STypeIR>();
-		
+
 		for (int i = 0; i < unionType.getTypes().size(); i++)
 		{
 			STypeIR type = unionType.getTypes().get(i);
@@ -716,10 +722,10 @@ public class TypeAssistantIR extends AssistantBase
 				elementTypes.add(strategy.getElementType(type));
 			}
 		}
-		
+
 		return elementTypes;
 	}
-	
+
 	public boolean containsType(List<STypeIR> types, STypeIR searchedType)
 	{
 		for (STypeIR currentType : types)
@@ -732,11 +738,10 @@ public class TypeAssistantIR extends AssistantBase
 
 		return false;
 	}
-	
+
 	private boolean typesEqual(STypeIR left, STypeIR right)
 	{
-		if (left instanceof AClassTypeIR
-				&& right instanceof AClassTypeIR)
+		if (left instanceof AClassTypeIR && right instanceof AClassTypeIR)
 		{
 			AClassTypeIR currentClassType = (AClassTypeIR) left;
 			AClassTypeIR searchedClassType = (AClassTypeIR) right;
@@ -744,8 +749,7 @@ public class TypeAssistantIR extends AssistantBase
 			return currentClassType.getName().equals(searchedClassType.getName());
 		}
 
-		if (left instanceof ARecordTypeIR
-				&& right instanceof ARecordTypeIR)
+		if (left instanceof ARecordTypeIR && right instanceof ARecordTypeIR)
 		{
 			ARecordTypeIR recordType = (ARecordTypeIR) left;
 			ARecordTypeIR searchedRecordType = (ARecordTypeIR) right;
@@ -753,31 +757,30 @@ public class TypeAssistantIR extends AssistantBase
 			return recordType.getName().equals(searchedRecordType.getName());
 		}
 
-		if (left instanceof ATupleTypeIR
-				&& right instanceof ATupleTypeIR)
+		if (left instanceof ATupleTypeIR && right instanceof ATupleTypeIR)
 		{
 			ATupleTypeIR currentTupleType = (ATupleTypeIR) left;
 			ATupleTypeIR searchedTupleType = (ATupleTypeIR) right;
-			
-			if(currentTupleType.getTypes().size() != searchedTupleType.getTypes().size())
+
+			if (currentTupleType.getTypes().size() != searchedTupleType.getTypes().size())
 			{
 				return false;
 			}
-			
+
 			LinkedList<STypeIR> leftTypes = currentTupleType.getTypes();
 			LinkedList<STypeIR> rightTypes = searchedTupleType.getTypes();
-			
-			for(int i = 0; i < leftTypes.size(); i++)
+
+			for (int i = 0; i < leftTypes.size(); i++)
 			{
 				STypeIR currentLeftFieldType = leftTypes.get(i);
 				STypeIR currentRightFieldType = rightTypes.get(i);
-				
-				if(!typesEqual(currentLeftFieldType, currentRightFieldType))
+
+				if (!typesEqual(currentLeftFieldType, currentRightFieldType))
 				{
 					return false;
 				}
 			}
-			
+
 			return true;
 		}
 
@@ -788,7 +791,7 @@ public class TypeAssistantIR extends AssistantBase
 
 		return false;
 	}
-	
+
 	public boolean isNumericType(STypeIR type)
 	{
 		return isInt(type) || isRealOrRat(type);
@@ -811,7 +814,7 @@ public class TypeAssistantIR extends AssistantBase
 				|| type instanceof ANatNumericBasicTypeIR
 				|| type instanceof ANatBasicTypeWrappersTypeIR;
 	}
-	
+
 	public boolean isWrapperType(STypeIR type)
 	{
 		return type instanceof ANatBasicTypeWrappersTypeIR
@@ -821,57 +824,58 @@ public class TypeAssistantIR extends AssistantBase
 				|| type instanceof ACharBasicTypeWrappersTypeIR
 				|| type instanceof ABoolBasicTypeWrappersTypeIR;
 	}
-	
+
 	public boolean isOptional(STypeIR type)
 	{
 		return BooleanUtils.isTrue(type.getOptional());
 	}
-	
+
 	public boolean allowsNull(STypeIR type)
 	{
-		if(type instanceof AUnionTypeIR)
+		if (type instanceof AUnionTypeIR)
 		{
 			AUnionTypeIR unionType = (AUnionTypeIR) type;
-			
-			if(BooleanUtils.isTrue(unionType.getOptional()))
+
+			if (BooleanUtils.isTrue(unionType.getOptional()))
 			{
 				return true;
 			}
-			
-			for(STypeIR t : unionType.getTypes())
+
+			for (STypeIR t : unionType.getTypes())
 			{
-				if(allowsNull(t))
+				if (allowsNull(t))
 				{
 					return true;
 				}
 			}
-			
+
 			return false;
-		}
-		else
+		} else
 		{
 			return /* type instanceof AObjectTypeIR || */type != null
-					&& (type instanceof AUnknownTypeIR || BooleanUtils.isTrue(type.getOptional()) || isWrapperType(type));
+					&& (type instanceof AUnknownTypeIR
+							|| BooleanUtils.isTrue(type.getOptional())
+							|| isWrapperType(type));
 		}
-		
+
 	}
-	
+
 	public PType getVdmType(STypeIR type)
 	{
 		SourceNode source = type.getSourceNode();
-		if(source != null)
+		if (source != null)
 		{
 			org.overture.ast.node.INode vdmNode = source.getVdmNode();
-			
-			if(vdmNode != null)
+
+			if (vdmNode != null)
 			{
-				if(vdmNode instanceof PType)
+				if (vdmNode instanceof PType)
 				{
 					return (PType) vdmNode;
 				}
 			}
 		}
-		
+
 		log.error("Could not get VDM type of " + type);
 		return new AUnknownType();
 	}

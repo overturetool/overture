@@ -29,7 +29,7 @@ public class MATH
 	public static final Number pi = 3.141592653589793;
 	private static Random random = new Random();
 	private static long seed = 0;
-	
+
 	public static Number sin(Number v)
 	{
 		return Math.sin(v.doubleValue());
@@ -47,7 +47,7 @@ public class MATH
 
 	public static Number cot(Number a)
 	{
-		return 1/Math.tan(a.doubleValue());
+		return 1 / Math.tan(a.doubleValue());
 	}
 
 	public static Number asin(Number a)
@@ -92,12 +92,10 @@ public class MATH
 		if (seed == -1)
 		{
 			return lv;
-		}
-		else if (lv == 0)
+		} else if (lv == 0)
 		{
 			return 0;
-		}
-		else
+		} else
 		{
 			return Math.abs(random.nextLong() % lv);
 		}
@@ -130,7 +128,8 @@ public class MATH
 
 	public static Number fac(Number a)
 	{
-		return (a.longValue() < 1) ? 1 : a.longValue() * fac(a.longValue()-1).longValue();
+		return a.longValue() < 1 ? 1
+				: a.longValue() * fac(a.longValue() - 1).longValue();
 	}
 
 }

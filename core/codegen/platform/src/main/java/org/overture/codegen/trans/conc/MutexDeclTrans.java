@@ -1,5 +1,6 @@
 package org.overture.codegen.trans.conc;
 
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SNameIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
@@ -14,13 +15,12 @@ import org.overture.codegen.ir.expressions.APlusNumericBinaryExpIR;
 import org.overture.codegen.ir.name.ATokenNameIR;
 import org.overture.codegen.ir.types.AClassTypeIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
-import org.overture.codegen.ir.IRInfo;
 
 public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
 	private ConcPrefixes concPrefixes;
-	
+
 	public MutexDeclTrans(IRInfo info, ConcPrefixes concPrefixes)
 	{
 		this.info = info;
@@ -28,7 +28,8 @@ public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node) throws AnalysisException
+	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node)
+			throws AnalysisException
 	{
 		if (!info.getSettings().generateConc())
 		{
@@ -53,7 +54,8 @@ public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 				histcount.setType(new AIntNumericBasicTypeIR());
 
 				AClassTypeIR innerclass = new AClassTypeIR();
-				innerclass.setName(node.getName() + concPrefixes.sentinelClassPostFix());
+				innerclass.setName(node.getName()
+						+ concPrefixes.sentinelClassPostFix());
 
 				histcount.setSentinelType(innerclass);
 
@@ -98,7 +100,8 @@ public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 						perpred.setOpname(((ATokenNameIR) operation).getName());
 
 						AClassTypeIR innerclass = new AClassTypeIR();
-						innerclass.setName(node.getName() + concPrefixes.sentinelClassPostFix());
+						innerclass.setName(node.getName()
+								+ concPrefixes.sentinelClassPostFix());
 
 						APlusNumericBinaryExpIR addedhistcounter = new APlusNumericBinaryExpIR();
 

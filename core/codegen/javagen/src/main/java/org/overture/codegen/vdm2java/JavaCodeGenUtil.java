@@ -46,7 +46,7 @@ import com.google.googlejavaformat.java.FormatterException;
 public class JavaCodeGenUtil
 {
 	private static Logger log = Logger.getLogger(JavaCodeGenUtil.class.getName());
-	
+
 	public static Generated generateJavaFromExp(String exp,
 			IRSettings irSettings, JavaSettings javaSettings, Dialect dialect)
 			throws AnalysisException
@@ -59,8 +59,7 @@ public class JavaCodeGenUtil
 	}
 
 	public static Generated generateJavaFromExp(String exp,
-			JavaCodeGen vdmCodeGen, Dialect dialect)
-			throws AnalysisException
+			JavaCodeGen vdmCodeGen, Dialect dialect) throws AnalysisException
 
 	{
 		Settings.dialect = dialect;
@@ -76,7 +75,8 @@ public class JavaCodeGenUtil
 		{
 			return vdmCodeGen.generateJavaFromVdmExp(typeCheckResult.result);
 
-		} catch (AnalysisException | org.overture.codegen.ir.analysis.AnalysisException e)
+		} catch (AnalysisException
+				| org.overture.codegen.ir.analysis.AnalysisException e)
 		{
 			throw new AnalysisException("Unable to generate code from expression: "
 					+ exp + ". Exception message: " + e.getMessage());
@@ -96,105 +96,106 @@ public class JavaCodeGenUtil
 		}
 	}
 
-	public static boolean isQuote(org.overture.codegen.ir.INode decl, JavaSettings settings)
+	public static boolean isQuote(org.overture.codegen.ir.INode decl,
+			JavaSettings settings)
 	{
-		if(decl instanceof ADefaultClassDeclIR)
+		if (decl instanceof ADefaultClassDeclIR)
 		{
 			ADefaultClassDeclIR clazz = (ADefaultClassDeclIR) decl;
-			
-			if(clazz.getPackage() == null)
+
+			if (clazz.getPackage() == null)
 			{
 				return false;
 			}
-			
+
 			String javaPackage = settings.getJavaRootPackage();
 
-			if(javaPackage == null || javaPackage.equals(""))
+			if (javaPackage == null || javaPackage.equals(""))
 			{
 				return clazz.getPackage().equals(JavaCodeGen.JAVA_QUOTES_PACKAGE);
 			}
-			
-			if(clazz.getPackage().equals(javaPackage + "." + JavaCodeGen.JAVA_QUOTES_PACKAGE))
+
+			if (clazz.getPackage().equals(javaPackage + "."
+					+ JavaCodeGen.JAVA_QUOTES_PACKAGE))
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public static boolean isValidJavaPackage(String pack)
 	{
-		if(pack == null)
+		if (pack == null)
 		{
 			return false;
 		}
-		
+
 		pack = pack.trim();
-		
+
 		Pattern pattern = Pattern.compile("^[a-zA-Z_\\$][\\w\\$]*(?:\\.[a-zA-Z_\\$][\\w\\$]*)*$");
-		
-		if(!pattern.matcher(pack).matches())
+
+		if (!pattern.matcher(pack).matches())
 		{
 			return false;
 		}
-		
-		String [] split = pack.split("\\.");
-		
-		for(String s : split)
+
+		String[] split = pack.split("\\.");
+
+		for (String s : split)
 		{
-			if(isJavaKeyword(s))
+			if (isJavaKeyword(s))
 			{
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	public static String getFolderFromJavaRootPackage(String pack)
 	{
-		if(!isValidJavaPackage(pack))
+		if (!isValidJavaPackage(pack))
 		{
 			return null;
-		}
-		else
+		} else
 		{
 			return pack.replaceAll("\\.", "/");
 		}
 	}
-	
+
 	public static boolean isJavaKeyword(String s)
 	{
-		if(s == null)
+		if (s == null)
 		{
 			return false;
-		}
-		else
+		} else
 		{
 			s = s.trim();
-			
-			if(s.isEmpty())
+
+			if (s.isEmpty())
 			{
 				return false;
 			}
 		}
-		
-		for(String kw : IJavaConstants.RESERVED_WORDS)
+
+		for (String kw : IJavaConstants.RESERVED_WORDS)
 		{
-			if(s.equals(kw))
+			if (s.equals(kw))
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Checks whether the given String is a valid Java identifier.
 	 *
-	 * @param s the String to check
+	 * @param s
+	 *            the String to check
 	 * @return <code>true</code> if 's' is an identifier, <code>false</code> otherwise
 	 */
 	public static boolean isValidJavaIdentifier(String s)
@@ -203,8 +204,8 @@ public class JavaCodeGenUtil
 		{
 			return false;
 		}
-		
-		if(isJavaKeyword(s))
+
+		if (isJavaKeyword(s))
 		{
 			return false;
 		}
@@ -230,9 +231,10 @@ public class JavaCodeGenUtil
 	 * Computes the indices of characters that need to be replaced with valid characters in order to make 's' a valid
 	 * Java identifier. Please note that this method assumes that 's' is NOT a keyword.
 	 * 
-	 * @param s the identifier to compute correction indices for.
+	 * @param s
+	 *            the identifier to compute correction indices for.
 	 * @return the indices of the characters that need to be corrected in order to make the identifier a valid Java
-	 * identifier
+	 *         identifier
 	 */
 	public static List<Integer> computeJavaIdentifierCorrections(String s)
 	{
@@ -244,7 +246,7 @@ public class JavaCodeGenUtil
 		}
 
 		char[] c = s.toCharArray();
-		
+
 		if (!Character.isJavaIdentifierStart(c[0]))
 		{
 			correctionIndices.add(0);
@@ -260,7 +262,7 @@ public class JavaCodeGenUtil
 
 		return correctionIndices;
 	}
-	
+
 	public static String[] findJavaFilePathsRec(File srcCodeFolder)
 	{
 		List<File> files = GeneralUtils.getFilesRecursively(srcCodeFolder);
@@ -277,35 +279,33 @@ public class JavaCodeGenUtil
 
 		return javaFilePaths.toArray(new String[] {});
 	}
-	
+
 	public static File getModuleOutputDir(File outputDir, JavaCodeGen vdmCodGen,
 			GeneratedModule generatedClass)
 	{
 		File moduleOutputDir = outputDir;
 		String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
-		
-		if(generatedClass.getIrNode() instanceof ADefaultClassDeclIR)
+
+		if (generatedClass.getIrNode() instanceof ADefaultClassDeclIR)
 		{
 			javaPackage = ((ADefaultClassDeclIR) generatedClass.getIrNode()).getPackage();
-		}
-		else if(generatedClass.getIrNode() instanceof AInterfaceDeclIR)
+		} else if (generatedClass.getIrNode() instanceof AInterfaceDeclIR)
 		{
 			javaPackage = ((AInterfaceDeclIR) generatedClass.getIrNode()).getPackage();
-		}
-		else
+		} else
 		{
 			log.error("Expected IR node of " + generatedClass.getName()
 					+ " to be a class or interface  declaration at this point. Got: "
 					+ generatedClass.getIrNode());
 			return null;
 		}
-		
+
 		if (JavaCodeGenUtil.isValidJavaPackage(javaPackage))
 		{
 			String packageFolderPath = JavaCodeGenUtil.getFolderFromJavaRootPackage(javaPackage);
 			moduleOutputDir = new File(outputDir, packageFolderPath);
 		}
-		
+
 		return moduleOutputDir;
 	}
 }

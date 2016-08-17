@@ -18,8 +18,8 @@ import org.overture.config.Release;
 public class PackageJavaGenTest extends JavaGenTestBase
 {
 	private static final String JAVA_ROOT_PACKAGE = "my.model";
-	
-	public PackageJavaGenTest(String name,File vdmSpec,
+
+	public PackageJavaGenTest(String name, File vdmSpec,
 			TestHandler testHandler)
 	{
 		super(vdmSpec, testHandler);
@@ -28,7 +28,7 @@ public class PackageJavaGenTest extends JavaGenTestBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(PackageOutputTest.ROOT),new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
+		return collectTests(new File(PackageOutputTest.ROOT), new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
 	@Override
@@ -36,10 +36,10 @@ public class PackageJavaGenTest extends JavaGenTestBase
 	{
 		JavaSettings javaSettings = super.getJavaSettings();
 		javaSettings.setJavaRootPackage(JAVA_ROOT_PACKAGE);
-		
+
 		return javaSettings;
 	}
-	
+
 	@Override
 	protected String getPropertyId()
 	{

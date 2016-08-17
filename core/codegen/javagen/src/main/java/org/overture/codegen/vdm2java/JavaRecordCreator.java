@@ -54,22 +54,22 @@ import org.overture.codegen.ir.types.ARecordTypeIR;
 public class JavaRecordCreator extends JavaClassCreatorBase
 {
 	private JavaFormat javaFormat;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public JavaRecordCreator(JavaFormat javaFormat)
 	{
 		this.javaFormat = javaFormat;
 	}
-	
+
 	public AMethodDeclIR genRecConstructor(ARecordDeclIR record)
 			throws AnalysisException
 	{
 		// Since Java does not have records but the OO AST does a record is generated as a Java class.
 		// To make sure that the record can be instantiated we must explicitly add a constructor.
-		
+
 		AMethodDeclIR constructor = consDefaultCtorSignature(record.getName());
-		
+
 		AMethodTypeIR methodType = new AMethodTypeIR();
 		methodType.setResult(consRecordType(record));
 
@@ -79,7 +79,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		LinkedList<AFormalParamLocalParamIR> formalParams = constructor.getFormalParams();
 		LinkedList<SStmIR> bodyStms = body.getStatements();
 		LinkedList<AFieldDeclIR> fields = record.getFields();
-		
+
 		for (AFieldDeclIR field : fields)
 		{
 			String name = field.getName();
@@ -91,7 +91,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 			idPattern.setName(paramName);
 
 			methodType.getParams().add(type.clone());
-			
+
 			// Construct formal parameter of the constructor
 			AFormalParamLocalParamIR formalParam = new AFormalParamLocalParamIR();
 			formalParam.setPattern(idPattern);
@@ -132,7 +132,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		}
 
 		constructor.setMethodType(methodType);
-		
+
 		return constructor;
 	}
 
@@ -167,7 +167,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 			varExp.setName(name);
 			varExp.setType(field.getType().clone());
 			varExp.setIsLocal(false);
-			
+
 			args.add(varExp);
 		}
 
@@ -182,14 +182,14 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 			throws AnalysisException
 	{
 		String paramName = "obj";
-		
+
 		// Construct equals method to be used for comparing records using
 		// "structural" equivalence
 		AMethodDeclIR equalsMethod = consEqualMethodSignature(paramName);
 
 		ABlockStmIR equalsMethodBody = new ABlockStmIR();
 		LinkedList<SStmIR> equalsStms = equalsMethodBody.getStatements();
-		
+
 		AReturnStmIR returnTypeComp = new AReturnStmIR();
 		if (record.getFields().isEmpty())
 		{
@@ -273,24 +273,24 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 
 		ADefaultClassDeclIR enclosingClass = record.getAncestor(ADefaultClassDeclIR.class);
 		String className = "";
-		
-		if(enclosingClass != null)
+
+		if (enclosingClass != null)
 		{
 			className = enclosingClass.getName();
-		}
-		else
+		} else
 		{
 			log.error("Could not find enclosing class for record: "
 					+ record.getName());
 		}
-		
-		String recToStrPrefix = String.format("mk_%s%s", className + "`" , record.getName());
-		
+
+		String recToStrPrefix = String.format("mk_%s%s", className
+				+ "`", record.getName());
+
 		AStringLiteralExpIR emptyRecStr = new AStringLiteralExpIR();
 		emptyRecStr.setIsNull(false);
 		STypeIR strType = toStringMethod.getMethodType().getResult();
 		emptyRecStr.setType(strType.clone());
-		
+
 		if (record.getFields().isEmpty())
 		{
 			emptyRecStr.setValue(recToStrPrefix + "()");
@@ -302,7 +302,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 			stringBuffer.setType(strType.clone());
 			stringBuffer.setLeft(javaFormat.getIrInfo().getExpAssistant().consStringLiteral(recToStrPrefix, false));
 			stringBuffer.setRight(javaFormat.getJavaFormatAssistant().consUtilCallUsingRecFields(record, strType, "formatFields"));
-			
+
 			returnStm.setExp(stringBuffer);
 		}
 
@@ -310,7 +310,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 
 		return toStringMethod;
 	}
-	
+
 	public ARecordTypeIR consRecordType(ARecordDeclIR record)
 	{
 		ADefaultClassDeclIR defClass = record.getAncestor(ADefaultClassDeclIR.class);

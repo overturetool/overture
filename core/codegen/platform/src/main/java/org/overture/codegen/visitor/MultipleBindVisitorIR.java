@@ -31,6 +31,7 @@ import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SMultipleBindIR;
 import org.overture.codegen.ir.SPatternIR;
@@ -38,10 +39,9 @@ import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.patterns.ASeqMultipleBindIR;
 import org.overture.codegen.ir.patterns.ASetMultipleBindIR;
 import org.overture.codegen.ir.patterns.ATypeMultipleBindIR;
-import org.overture.codegen.ir.IRInfo;
 
-public class MultipleBindVisitorIR extends
-		AbstractVisitorIR<IRInfo, SMultipleBindIR>
+public class MultipleBindVisitorIR
+		extends AbstractVisitorIR<IRInfo, SMultipleBindIR>
 {
 	@Override
 	public SMultipleBindIR caseASetMultipleBind(ASetMultipleBind node,
@@ -55,12 +55,11 @@ public class MultipleBindVisitorIR extends
 		for (PPattern pattern : patterns)
 		{
 			SPatternIR patternTempCg = pattern.apply(question.getPatternVisitor(), question);
-			
+
 			if (patternTempCg != null)
 			{
 				patternsCg.add(patternTempCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -75,7 +74,7 @@ public class MultipleBindVisitorIR extends
 
 		return multipleSetBind;
 	}
-	
+
 	@Override
 	public SMultipleBindIR caseATypeMultipleBind(ATypeMultipleBind node,
 			IRInfo question) throws AnalysisException
@@ -88,12 +87,11 @@ public class MultipleBindVisitorIR extends
 		for (PPattern pattern : patterns)
 		{
 			SPatternIR patternTempCg = pattern.apply(question.getPatternVisitor(), question);
-			
+
 			if (patternTempCg != null)
 			{
 				patternsCg.add(patternTempCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -109,10 +107,11 @@ public class MultipleBindVisitorIR extends
 		return multipleSetBind;
 	}
 
-	
 	@Override
-	public SMultipleBindIR caseASeqMultipleBind(ASeqMultipleBind node, IRInfo question) throws AnalysisException {
-	
+	public SMultipleBindIR caseASeqMultipleBind(ASeqMultipleBind node,
+			IRInfo question) throws AnalysisException
+	{
+
 		List<PPattern> patterns = node.getPlist();
 		PExp set = node.getSeq();
 
@@ -121,12 +120,11 @@ public class MultipleBindVisitorIR extends
 		for (PPattern pattern : patterns)
 		{
 			SPatternIR patternTempCg = pattern.apply(question.getPatternVisitor(), question);
-			
+
 			if (patternTempCg != null)
 			{
 				patternsCg.add(patternTempCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}

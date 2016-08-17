@@ -42,12 +42,15 @@ public class GeneralUtils
 				|| c == '\'' || c == '\"' || c == '\\';
 	}
 
-	public static StringBuffer readFromFile(String relativepath, Class<?> classRef) throws IOException{
-		InputStream input = classRef.getResourceAsStream('/' + relativepath.replace("\\", "/"));
+	public static StringBuffer readFromFile(String relativepath,
+			Class<?> classRef) throws IOException
+	{
+		InputStream input = classRef.getResourceAsStream('/'
+				+ relativepath.replace("\\", "/"));
 
 		return readFromInputStream(input);
 	}
-	
+
 	public static StringBuffer readFromInputStream(InputStream input)
 			throws IOException
 	{
@@ -155,41 +158,44 @@ public class GeneralUtils
 			{
 				f.delete();
 			}
-			
-			if(removeFolders)
+
+			if (removeFolders)
 			{
 				f.delete();
 			}
 		}
 	}
-	
-	public static <T> T[] concat(T[] first, T[] second) {
-		  T[] result = Arrays.copyOf(first, first.length + second.length);
-		  System.arraycopy(second, 0, result, first.length, second.length);
-		  return result;
-		}
-	
+
+	public static <T> T[] concat(T[] first, T[] second)
+	{
+		T[] result = Arrays.copyOf(first, first.length + second.length);
+		System.arraycopy(second, 0, result, first.length, second.length);
+		return result;
+	}
+
 	public static String cleanupWhiteSpaces(String str)
 	{
 		return str.replaceAll("\\s+", " ").trim();
 	}
-	
+
 	public static List<File> getFilesRecursively(File folder)
 	{
 		File[] listOfFiles = folder.listFiles();
-		
+
 		List<File> fileList = new LinkedList<File>();
 
-		if(listOfFiles == null || listOfFiles.length == 0)
+		if (listOfFiles == null || listOfFiles.length == 0)
+		{
 			return fileList;
-		
+		}
+
 		for (File file : listOfFiles)
 		{
 			if (file.isFile())
 			{
 				fileList.add(file);
 			}
-			if(file.isDirectory())
+			if (file.isDirectory())
 			{
 				fileList.addAll(getFilesRecursively(file));
 			}

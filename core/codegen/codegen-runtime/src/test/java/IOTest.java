@@ -31,6 +31,7 @@ public class IOTest
 		new IO().fecho(filename, "Some message", null /* Works like passing <start> */);
 
 		File file = new File(filename);
-		Assert.assertTrue("Expected " + file.getAbsolutePath() + " to exists", file.exists());
+		Assert.assertTrue("Expected " + file.getAbsolutePath()
+				+ " to exists", file.exists());
 	}
 }

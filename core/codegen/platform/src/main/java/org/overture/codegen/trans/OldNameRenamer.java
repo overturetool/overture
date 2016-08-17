@@ -13,9 +13,9 @@ import org.overture.ast.types.PType;
 public class OldNameRenamer extends DepthFirstAnalysisAdaptor
 {
 	private char OLD_PREFIX = '_';
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
-	
+
 	@Override
 	public void caseILexNameToken(ILexNameToken node) throws AnalysisException
 	{

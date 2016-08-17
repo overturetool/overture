@@ -117,7 +117,7 @@ public class TestSequence extends Vector<CallSequence>
 		String before = "";
 		String separator = "";
 		String after = "";
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append(before);
 

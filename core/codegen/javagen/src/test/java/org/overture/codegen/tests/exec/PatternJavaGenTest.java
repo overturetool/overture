@@ -16,7 +16,8 @@ import org.overture.config.Release;
 @RunWith(value = Parameterized.class)
 public class PatternJavaGenTest extends JavaGenTestBase
 {
-	public PatternJavaGenTest(String name, File vdmSpec, TestHandler testHandler)
+	public PatternJavaGenTest(String name, File vdmSpec,
+			TestHandler testHandler)
 	{
 		super(vdmSpec, testHandler);
 	}

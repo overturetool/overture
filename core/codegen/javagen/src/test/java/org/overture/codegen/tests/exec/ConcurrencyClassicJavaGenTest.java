@@ -27,7 +27,7 @@ public class ConcurrencyClassicJavaGenTest extends JavaGenTestBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(ConcurrencyClassicOutputTest.ROOT),new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
+		return collectTests(new File(ConcurrencyClassicOutputTest.ROOT), new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
 	}
 
 	@Override
@@ -36,17 +36,17 @@ public class ConcurrencyClassicJavaGenTest extends JavaGenTestBase
 		super.setUp();
 		Settings.release = Release.CLASSIC;
 	}
-	
+
 	@Override
 	public IRSettings getIrSettings()
 	{
 		IRSettings irSettings = new IRSettings();
 		irSettings.setGenerateConc(true);
 		irSettings.setCharSeqAsString(true);
-		
+
 		return irSettings;
 	}
-	
+
 	@Override
 	protected String getPropertyId()
 	{

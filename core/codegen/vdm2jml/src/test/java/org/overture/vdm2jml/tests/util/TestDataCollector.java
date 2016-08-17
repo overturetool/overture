@@ -19,7 +19,7 @@ public class TestDataCollector extends DepthFirstAnalysisAdaptor
 	private final List<ACallObjectExpStmIR> setCalls;
 	private final List<AMapSeqUpdateStmIR> mapSeqUpdates;
 	private final List<AMetaStmIR> assertions;
-	
+
 	public TestDataCollector()
 	{
 		this.assignments = new LinkedList<AAssignToExpStmIR>();
@@ -27,14 +27,14 @@ public class TestDataCollector extends DepthFirstAnalysisAdaptor
 		this.mapSeqUpdates = new LinkedList<AMapSeqUpdateStmIR>();
 		this.assertions = new LinkedList<AMetaStmIR>();
 	}
-	
+
 	@Override
 	public void caseAAssignToExpStmIR(AAssignToExpStmIR node)
 			throws AnalysisException
 	{
 		assignments.add(node);
 	}
-	
+
 	@Override
 	public void caseACallObjectExpStmIR(ACallObjectExpStmIR node)
 			throws AnalysisException
@@ -45,7 +45,7 @@ public class TestDataCollector extends DepthFirstAnalysisAdaptor
 			setCalls.add(node);
 		}
 	}
-	
+
 	@Override
 	public void caseAMapSeqUpdateStmIR(AMapSeqUpdateStmIR node)
 			throws AnalysisException
@@ -54,20 +54,19 @@ public class TestDataCollector extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAMetaStmIR(AMetaStmIR node)
-			throws AnalysisException
+	public void caseAMetaStmIR(AMetaStmIR node) throws AnalysisException
 	{
-		if(node.getMetaData().size() == 1)
+		if (node.getMetaData().size() == 1)
 		{
 			ClonableString elem = node.getMetaData().get(0);
-			
+
 			if (elem.value.equals("//@ set invChecksOn = false;")
 					|| elem.value.equals("//@ set invChecksOn = true;"))
 			{
 				return;
 			}
 		}
-		
+
 		assertions.add(node);
 	}
 
@@ -80,7 +79,7 @@ public class TestDataCollector extends DepthFirstAnalysisAdaptor
 	{
 		return setCalls;
 	}
-	
+
 	public List<AMapSeqUpdateStmIR> getMapSeqUpdates()
 	{
 		return mapSeqUpdates;

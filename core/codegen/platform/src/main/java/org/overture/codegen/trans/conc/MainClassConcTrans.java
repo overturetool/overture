@@ -6,6 +6,9 @@ package org.overture.codegen.trans.conc;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRGeneratedTag;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
@@ -39,9 +42,6 @@ import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
-import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRGeneratedTag;
-import org.overture.codegen.ir.IRInfo;
 
 /**
  * @author gkanos
@@ -61,7 +61,8 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node) throws AnalysisException
+	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node)
+			throws AnalysisException
 	{
 		if (!info.getSettings().generateConc())
 		{
@@ -100,7 +101,8 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 
 		for (AMethodDeclIR methodIR : node.getMethods())
 		{
-			if (methodIR.getStatic() != null && !methodIR.getStatic() && !isIRGenerated(methodIR))
+			if (methodIR.getStatic() != null && !methodIR.getStatic()
+					&& !isIRGenerated(methodIR))
 			{
 				if (!methodIR.getIsConstructor())
 				{
@@ -126,7 +128,8 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 					varSentinel.setName(concPrefixes.sentinelInstanceName());
 
 					AExternalTypeIR etype = new AExternalTypeIR();
-					etype.setName(node.getName() + concPrefixes.sentinelClassPostFix());
+					etype.setName(node.getName()
+							+ concPrefixes.sentinelClassPostFix());
 
 					cast.setExp(varSentinel);
 					cast.setType(etype);
@@ -163,7 +166,8 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 				ANewExpIR newexp = new ANewExpIR();
 
 				ATypeNameIR classtype = new ATypeNameIR();
-				classtype.setName(node.getName() + concPrefixes.sentinelClassPostFix());
+				classtype.setName(node.getName()
+						+ concPrefixes.sentinelClassPostFix());
 
 				newexp.setName(classtype);
 				newexp.getArgs().add(new ASelfExpIR());
@@ -332,9 +336,11 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 		threadClass.getSuperNames().add(superName);
 	}
 
-	private SClassDeclIR getThreadClass(List<ATokenNameIR> superNames, SClassDeclIR classCg)
+	private SClassDeclIR getThreadClass(List<ATokenNameIR> superNames,
+			SClassDeclIR classCg)
 	{
-		if (superNames.isEmpty() || superNames.get(0).getName().equals(concPrefixes.vdmThreadClassName()))
+		if (superNames.isEmpty()
+				|| superNames.get(0).getName().equals(concPrefixes.vdmThreadClassName()))
 		{
 			return classCg;
 		} else

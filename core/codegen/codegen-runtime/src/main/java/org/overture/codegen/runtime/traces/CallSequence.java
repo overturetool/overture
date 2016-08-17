@@ -52,52 +52,52 @@ public class CallSequence extends LinkedList<Statement>
 	public String toShape(TraceReductionType type)
 	{
 		throw new UnsupportedOperationException("Support for shaping has not yet been implemented");
-		
-//		StringBuilder sb = new StringBuilder();
-//		String sep = "";
-//
-//		for (PStm stmt : this)
-//		{
-//			if (stmt instanceof TraceVariableStatement)
-//			{
-//				TraceVariableStatement tvs = (TraceVariableStatement) stmt;
-//
-//				switch (type)
-//				{
-//					case SHAPES_NOVARS:
-//						break;
-//
-//					case SHAPES_VARNAMES:
-//						sb.append(sep);
-//						sb.append(tvs.var.name);
-//						sep = "; ";
-//						break;
-//
-//					case SHAPES_VARVALUES:
-//						sb.append(sep);
-//						sb.append(tvs.toString());
-//						sep = "; ";
-//						break;
-//
-//					default:
-//						break;
-//				}
-//			} else if (stmt instanceof ACallStm)
-//			{
-//				ACallStm cs = (ACallStm) stmt;
-//				sb.append(sep);
-//				sb.append(cs.getName().getName());
-//				sep = "; ";
-//			} else if (stmt instanceof ACallObjectStm)
-//			{
-//				ACallObjectStm cs = (ACallObjectStm) stmt;
-//				sb.append(sep);
-//				sb.append(cs.getFieldname());
-//				sep = "; ";
-//			}
-//		}
-//
-//		return sb.toString();
+
+		// StringBuilder sb = new StringBuilder();
+		// String sep = "";
+		//
+		// for (PStm stmt : this)
+		// {
+		// if (stmt instanceof TraceVariableStatement)
+		// {
+		// TraceVariableStatement tvs = (TraceVariableStatement) stmt;
+		//
+		// switch (type)
+		// {
+		// case SHAPES_NOVARS:
+		// break;
+		//
+		// case SHAPES_VARNAMES:
+		// sb.append(sep);
+		// sb.append(tvs.var.name);
+		// sep = "; ";
+		// break;
+		//
+		// case SHAPES_VARVALUES:
+		// sb.append(sep);
+		// sb.append(tvs.toString());
+		// sep = "; ";
+		// break;
+		//
+		// default:
+		// break;
+		// }
+		// } else if (stmt instanceof ACallStm)
+		// {
+		// ACallStm cs = (ACallStm) stmt;
+		// sb.append(sep);
+		// sb.append(cs.getName().getName());
+		// sep = "; ";
+		// } else if (stmt instanceof ACallObjectStm)
+		// {
+		// ACallObjectStm cs = (ACallObjectStm) stmt;
+		// sb.append(sep);
+		// sb.append(cs.getFieldname());
+		// sep = "; ";
+		// }
+		// }
+		//
+		// return sb.toString();
 	}
 
 	public boolean compareStem(CallSequence other, int upto)

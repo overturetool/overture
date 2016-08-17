@@ -23,7 +23,8 @@ public class DelegateTrans extends DepthFirstAnalysisAdaptor
 	private TransAssistantIR assist;
 	private Log log;
 
-	public DelegateTrans(Map<String, String> buidDelegateMap, TransAssistantIR assist, Log log)
+	public DelegateTrans(Map<String, String> buidDelegateMap,
+			TransAssistantIR assist, Log log)
 	{
 		this.delegateMap = buidDelegateMap;
 		this.assist = assist;
@@ -31,7 +32,8 @@ public class DelegateTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node) throws AnalysisException
+	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node)
+			throws AnalysisException
 	{
 		if (isBridgeClass(node))
 		{
@@ -39,7 +41,8 @@ public class DelegateTrans extends DepthFirstAnalysisAdaptor
 			{
 				if (isDelegateCall(m.getBody()))
 				{
-					log.debug("Updating " + node.getName() + "." + m.getName() + " to use delegate method "
+					log.debug("Updating " + node.getName() + "." + m.getName()
+							+ " to use delegate method "
 							+ getFullDelegateName(node) + "." + m.getName());
 					assist.replaceNodeWith(m.getBody(), consDelegateCall(node.getName(), m));
 				}

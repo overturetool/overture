@@ -5,6 +5,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleExports;
 import org.overture.ast.modules.AModuleImports;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.SExportsIR;
 import org.overture.codegen.ir.SImportsIR;
@@ -17,13 +18,12 @@ import org.overture.codegen.ir.declarations.AModuleImportsIR;
 import org.overture.codegen.ir.declarations.ANamedTraceDeclIR;
 import org.overture.codegen.ir.declarations.AStateDeclIR;
 import org.overture.codegen.ir.declarations.ATypeDeclIR;
-import org.overture.codegen.ir.IRInfo;
 
 public class ModuleVisitorIR extends AbstractVisitorIR<IRInfo, AModuleDeclIR>
 {
 	@Override
-	public AModuleDeclIR caseAModuleModules(AModuleModules node, IRInfo question)
-			throws AnalysisException
+	public AModuleDeclIR caseAModuleModules(AModuleModules node,
+			IRInfo question) throws AnalysisException
 	{
 		String name = node.getName().getName();
 		AModuleImports imports = node.getImports();
@@ -75,7 +75,7 @@ public class ModuleVisitorIR extends AbstractVisitorIR<IRInfo, AModuleDeclIR>
 			{
 				// Unspported stuff returns null by default
 				continue;
-				
+
 			} else if (declCg instanceof AMethodDeclIR
 					|| declCg instanceof AFuncDeclIR
 					|| declCg instanceof ATypeDeclIR

@@ -68,75 +68,73 @@ public class ComparisonIR
 	public boolean compare(Object cgResult, Object vdmResult)
 	{
 		// If the VDM result is a String then it must be an error message
-		if(vdmResult instanceof String)
+		if (vdmResult instanceof String)
 		{
 			String vdmError = vdmResult.toString();
 			String cgError = cgResult.toString();
-			
-			return vdmError.toLowerCase().contains("error") && vdmError.contains(cgError);
+
+			return vdmError.toLowerCase().contains("error")
+					&& vdmError.contains(cgError);
 		}
-		
-		if(!(vdmResult instanceof Value))
+
+		if (!(vdmResult instanceof Value))
 		{
-			if(vdmResult instanceof List && cgResult instanceof List)
+			if (vdmResult instanceof List && cgResult instanceof List)
 			{
 				@SuppressWarnings("rawtypes")
 				List vdmList = (List) vdmResult;
 				@SuppressWarnings("rawtypes")
 				List cgList = (List) cgResult;
-				
-				if(vdmList.size() != cgList.size())
+
+				if (vdmList.size() != cgList.size())
 				{
 					return false;
 				}
-				
-				for(int i = 0; i < vdmList.size(); i++)
+
+				for (int i = 0; i < vdmList.size(); i++)
 				{
 					Object vdmElem = vdmList.get(i);
 					Object cgElem = cgList.get(i);
-					
-					if(vdmElem instanceof TraceTest && 
-							cgElem instanceof org.overture.codegen.runtime.traces.TraceTest)
+
+					if (vdmElem instanceof TraceTest
+							&& cgElem instanceof org.overture.codegen.runtime.traces.TraceTest)
 					{
 						TraceTest vdmTest = (TraceTest) vdmElem;
 						org.overture.codegen.runtime.traces.TraceTest cgTest = (org.overture.codegen.runtime.traces.TraceTest) cgElem;
-						
-						if(vdmTest.getVerdict().toString().equals(cgTest.getVerdict().toString()))
+
+						if (vdmTest.getVerdict().toString().equals(cgTest.getVerdict().toString()))
 						{
-							if(!(vdmTest.getNo().equals(cgTest.getNo()) && vdmTest.getTest().equals(cgTest.getTest())))
+							if (!(vdmTest.getNo().equals(cgTest.getNo())
+									&& vdmTest.getTest().equals(cgTest.getTest())))
 							{
 								return false;
 							}
-							
-							if(vdmTest.getVerdict() == Verdict.PASSED)
+
+							if (vdmTest.getVerdict() == Verdict.PASSED)
 							{
-								if(!vdmTest.getResult().equals(cgTest.getResult()))
+								if (!vdmTest.getResult().equals(cgTest.getResult()))
 								{
 									return false;
 								}
 							}
-						}
-						else 
+						} else
 						{
 							return false;
 						}
-					}
-					else 
+					} else
 					{
 						return false;
 					}
 				}
 				return true;
-			}
-			else
+			} else
 			{
-			  return false;
+				return false;
 			}
 		}
-		
+
 		Value vdmValue = (Value) vdmResult;
-		
-		
+
 		while (vdmValue instanceof UpdatableValue)
 		{
 			UpdatableValue upValue = (UpdatableValue) vdmValue;
@@ -290,12 +288,12 @@ public class ComparisonIR
 
 	private boolean handleQuote(Object cgValue, Value vdmValue)
 	{
-		if(cgValue == null)
+		if (cgValue == null)
 		{
 			return false;
 		}
-		
-		// For example, the replacement constructs <A> from <AQuote> 
+
+		// For example, the replacement constructs <A> from <AQuote>
 		return cgValue.toString().replace("Quote>", ">").equals(vdmValue.toString());
 	}
 

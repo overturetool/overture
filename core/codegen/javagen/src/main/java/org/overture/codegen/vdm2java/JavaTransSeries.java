@@ -4,10 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
 import org.overture.codegen.ir.types.AExternalTypeIR;
-import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.traces.TraceNames;
 import org.overture.codegen.traces.TracesTrans;
 import org.overture.codegen.trans.AssignStmTrans;
@@ -47,11 +47,11 @@ import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
 public class JavaTransSeries
 {
 	private static final String OBJ_INIT_CALL_NAME_PREFIX = "cg_init_";
-	
+
 	private JavaCodeGen codeGen;
 	private List<DepthFirstAnalysisAdaptor> series;
 	private FuncValAssistant funcValAssist;
-	
+
 	public JavaTransSeries(JavaCodeGen codeGen)
 	{
 		this.codeGen = codeGen;
@@ -64,7 +64,7 @@ public class JavaTransSeries
 	{
 		return funcValAssist;
 	}
-	
+
 	public List<DepthFirstAnalysisAdaptor> getSeries()
 	{
 		return series;
@@ -82,7 +82,7 @@ public class JavaTransSeries
 		PatternVarPrefixes patternPrefixes = varMan.getPatternPrefixes();
 		UnionTypeVarPrefixes unionTypePrefixes = varMan.getUnionTypePrefixes();
 		List<INode> cloneFreeNodes = codeGen.getJavaFormat().getValueSemantics().getCloneFreeNodes();
-		
+
 		TransAssistantIR transAssist = codeGen.getTransAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(varMan.postCheckMethodName());
 

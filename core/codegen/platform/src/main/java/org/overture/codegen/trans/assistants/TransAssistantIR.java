@@ -83,7 +83,7 @@ import org.overture.config.Settings;
 public class TransAssistantIR extends BaseTransformationAssistant
 {
 	protected IRInfo info;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public TransAssistantIR(IRInfo info)
@@ -111,10 +111,10 @@ public class TransAssistantIR extends BaseTransformationAssistant
 
 			return setTypeCg.clone();
 		}
-		
+
 		return null;
 	}
-	
+
 	public SSeqTypeIR getSeqTypeCloned(SExpIR seq) throws AnalysisException
 	{
 		STypeIR typeCg = seq.getType();
@@ -151,25 +151,24 @@ public class TransAssistantIR extends BaseTransformationAssistant
 					+ typeCg);
 		}
 	}
-	
-	public STypeIR getElementType(STypeIR t) {
+
+	public STypeIR getElementType(STypeIR t)
+	{
 		STypeIR elementType;
-		
-		if(t instanceof ASetSetTypeIR)
+
+		if (t instanceof ASetSetTypeIR)
 		{
 			elementType = ((ASetSetTypeIR) t).getSetOf().clone();
-		}
-		else if(t instanceof ASeqSeqTypeIR)
+		} else if (t instanceof ASeqSeqTypeIR)
 		{
 			elementType = ((ASeqSeqTypeIR) t).getSeqOf().clone();
-		}
-		else
+		} else
 		{
 			log.error("Expected set or sequence type. Got: " + t);
 			elementType = new AUnknownTypeIR();
 			elementType.setSourceNode(t.getSourceNode());
 		}
-		
+
 		return elementType;
 	}
 
@@ -186,8 +185,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 
 	public AVarDeclIR consBoolVarDecl(String boolVarName, boolean initValue)
 	{
-		return info.getDeclAssistant().consLocalVarDecl(new ABoolBasicTypeIR(),
-				info.getPatternAssistant().consIdPattern(boolVarName), info.getExpAssistant().consBoolLiteral(initValue));
+		return info.getDeclAssistant().consLocalVarDecl(new ABoolBasicTypeIR(), info.getPatternAssistant().consIdPattern(boolVarName), info.getExpAssistant().consBoolLiteral(initValue));
 	}
 
 	public SExpIR consAndExp(SExpIR left, SExpIR right)
@@ -251,8 +249,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 	public AVarDeclIR consSetBindDecl(String setBindName, SExpIR col)
 			throws AnalysisException
 	{
-		return info.getDeclAssistant().consLocalVarDecl(col.getType().clone(),
-				info.getPatternAssistant().consIdPattern(setBindName), col.clone());
+		return info.getDeclAssistant().consLocalVarDecl(col.getType().clone(), info.getPatternAssistant().consIdPattern(setBindName), col.clone());
 	}
 
 	public AVarDeclIR consDecl(String varName, STypeIR type, SExpIR exp)
@@ -404,8 +401,8 @@ public class TransAssistantIR extends BaseTransformationAssistant
 	}
 
 	public ABlockStmIR consIterationBlock(List<SPatternIR> ids, SExpIR set,
-			ITempVarGen tempGen, IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes)
-			throws AnalysisException
+			ITempVarGen tempGen, IIterationStrategy strategy,
+			IterationVarPrefixes iteVarPrefixes) throws AnalysisException
 	{
 		ABlockStmIR outerBlock = new ABlockStmIR();
 
@@ -434,7 +431,8 @@ public class TransAssistantIR extends BaseTransformationAssistant
 
 	private ABlockStmIR consIterationBlock(ABlockStmIR outerBlock,
 			List<SPatternIR> patterns, SExpIR set, ITempVarGen tempGen,
-			IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes) throws AnalysisException
+			IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes)
+			throws AnalysisException
 	{
 		// Variable names
 		String setName = tempGen.nextVarName(iteVarPrefixes.set());
@@ -521,10 +519,11 @@ public class TransAssistantIR extends BaseTransformationAssistant
 		return forBody;
 	}
 
-	//FIXME make this method work on generic PMUltipleBinds
+	// FIXME make this method work on generic PMUltipleBinds
 	public ABlockStmIR consComplexCompIterationBlock(
 			List<SMultipleBindIR> multipleSetBinds, ITempVarGen tempGen,
-			IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes) throws AnalysisException
+			IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes)
+			throws AnalysisException
 	{
 		ABlockStmIR outerBlock = new ABlockStmIR();
 
@@ -546,16 +545,14 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			strategy.setLastBind(i == multipleSetBinds.size() - 1);
 
 			SMultipleBindIR mb = multipleSetBinds.get(i);
-			
-			if(mb instanceof ASetMultipleBindIR)
+
+			if (mb instanceof ASetMultipleBindIR)
 			{
-				nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), ((ASetMultipleBindIR)mb).getSet(), tempGen, strategy, iteVarPrefixes);
-			}
-			else if(mb instanceof ASeqMultipleBindIR)
+				nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), ((ASetMultipleBindIR) mb).getSet(), tempGen, strategy, iteVarPrefixes);
+			} else if (mb instanceof ASeqMultipleBindIR)
 			{
-				nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), ((ASeqMultipleBindIR)mb).getSeq(), tempGen, strategy, iteVarPrefixes);
-			}
-			else
+				nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), ((ASeqMultipleBindIR) mb).getSeq(), tempGen, strategy, iteVarPrefixes);
+			} else
 			{
 				log.error("Expected set multiple bind or sequence multiple bind. Got: "
 						+ mb);
@@ -582,59 +579,55 @@ public class TransAssistantIR extends BaseTransformationAssistant
 		return cast;
 	}
 
-	public Boolean hasEmptySet(SMultipleBindIR binding)
-			throws AnalysisException
+	public Boolean hasEmptySet(SMultipleBindIR binding) throws AnalysisException
 	{
-		if(binding instanceof ASetMultipleBindIR)
+		if (binding instanceof ASetMultipleBindIR)
 		{
-			return isEmptySetSeq(((ASetMultipleBindIR)binding).getSet());
-		}
-		else if(binding instanceof ASeqMultipleBindIR)
+			return isEmptySetSeq(((ASetMultipleBindIR) binding).getSet());
+		} else if (binding instanceof ASeqMultipleBindIR)
 		{
-			return isEmptySetSeq(((ASeqMultipleBindIR)binding).getSeq());
+			return isEmptySetSeq(((ASeqMultipleBindIR) binding).getSeq());
 		}
-		
+
 		return false;
 	}
 
 	public Boolean isEmptySetSeq(SExpIR set) throws AnalysisException
 	{
-		if(set.getType() instanceof SSetTypeIR)
+		if (set.getType() instanceof SSetTypeIR)
 		{
 			return ((SSetTypeIR) set.getType()).getEmpty();
-		}
-		else if(set.getType() instanceof SSeqTypeIR)
+		} else if (set.getType() instanceof SSeqTypeIR)
 		{
 			return ((SSeqTypeIR) set.getType()).getEmpty();
 		}
-		
+
 		return false;
 	}
 
 	public void cleanUpBinding(SMultipleBindIR binding)
 	{
-		if(binding instanceof ASetMultipleBindIR)
+		if (binding instanceof ASetMultipleBindIR)
 		{
 			ASetMultipleBindIR sb = (ASetMultipleBindIR) binding;
-			
+
 			sb.setSet(null);
 			sb.getPatterns().clear();
-		}
-		else if(binding instanceof ASeqMultipleBindIR)
+		} else if (binding instanceof ASeqMultipleBindIR)
 		{
 			ASeqMultipleBindIR sb = (ASeqMultipleBindIR) binding;
-			
+
 			sb.setSeq(null);
 			sb.getPatterns().clear();
-		}
-		else
+		} else
 		{
 			log.error("Expected multiple set bind or multiple sequence bind. Got: "
 					+ binding);
 		}
 	}
 
-	public AFieldDeclIR consField(String access, STypeIR type, String name, SExpIR initExp)
+	public AFieldDeclIR consField(String access, STypeIR type, String name,
+			SExpIR initExp)
 	{
 		AFieldDeclIR stateField = new AFieldDeclIR();
 		stateField.setAccess(access);
@@ -644,7 +637,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 		stateField.setVolatile(false);
 		stateField.setName(name);
 		stateField.setInitial(initExp);
-		
+
 		return stateField;
 	}
 
@@ -684,16 +677,16 @@ public class TransAssistantIR extends BaseTransformationAssistant
 
 			condCall.getArgs().add(paramArg);
 		}
-		
-		if(Settings.dialect == Dialect.VDM_SL)
+
+		if (Settings.dialect == Dialect.VDM_SL)
 		{
 			ADefaultClassDeclIR encClass = node.getAncestor(ADefaultClassDeclIR.class);
-			
-			if(encClass != null)
+
+			if (encClass != null)
 			{
-				for(AFieldDeclIR f : encClass.getFields())
+				for (AFieldDeclIR f : encClass.getFields())
 				{
-					if(!f.getFinal())
+					if (!f.getFinal())
 					{
 						// It's the state component
 						AIdentifierVarExpIR stateArg = info.getExpAssistant().consIdVar(f.getName(), f.getType().clone());
@@ -701,8 +694,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 						break;
 					}
 				}
-			}
-			else
+			} else
 			{
 				log.error("Could not find enclosing class of " + node);
 			}
@@ -731,18 +723,18 @@ public class TransAssistantIR extends BaseTransformationAssistant
 		return block;
 	}
 
-	public ARecordTypeIR consRecType(String definingModule, String  recName)
+	public ARecordTypeIR consRecType(String definingModule, String recName)
 	{
 		ATypeNameIR typeName = new ATypeNameIR();
 		typeName.setDefiningClass(definingModule);
 		typeName.setName(recName);
-		
+
 		ARecordTypeIR recType = new ARecordTypeIR();
 		recType.setName(typeName);
 
 		return recType;
 	}
-	
+
 	public ARecordTypeIR getRecType(final AStateDeclIR stateDecl)
 	{
 		ARecordTypeIR stateType = new ARecordTypeIR();
@@ -774,7 +766,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			return null;
 		}
 	}
-	
+
 	public ABlockStmIR wrap(SStmIR stm)
 	{
 		ABlockStmIR block = new ABlockStmIR();

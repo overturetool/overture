@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
@@ -21,7 +22,6 @@ import org.overture.codegen.ir.types.AClassTypeIR;
 import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
-import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
@@ -35,13 +35,14 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 	protected ICallStmToStringMethodBuilder toStringBuilder;
 	protected TraceNames tracePrefixes;
 	private List<INode> cloneFreeNodes;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public TracesTrans(TransAssistantIR transAssistant,
 			IterationVarPrefixes iteVarPrefixes, TraceNames tracePrefixes,
 			ILanguageIterator langIterator,
-			ICallStmToStringMethodBuilder toStringBuilder, List<INode> cloneFreeNodes)
+			ICallStmToStringMethodBuilder toStringBuilder,
+			List<INode> cloneFreeNodes)
 	{
 		this.transAssistant = transAssistant;
 		this.iteVarPrefixes = iteVarPrefixes;
@@ -56,11 +57,11 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 	public void caseANamedTraceDeclIR(ANamedTraceDeclIR node)
 			throws AnalysisException
 	{
-		if(!transAssistant.getInfo().getSettings().generateTraces())
+		if (!transAssistant.getInfo().getSettings().generateTraces())
 		{
 			return;
 		}
-		
+
 		TraceSupportedAnalysis supportedAnalysis = new TraceSupportedAnalysis(node);
 		if (!traceIsSupported(supportedAnalysis))
 		{
@@ -98,20 +99,20 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		AClassTypeIR testAccType = transAssistant.consClassType(tracePrefixes.testAccumulatorClassName());
-		
+
 		AMethodTypeIR methodType = new AMethodTypeIR();
 		methodType.setResult(new AVoidTypeIR());
 		methodType.getParams().add(testAccType);
-		
+
 		AFormalParamLocalParamIR instanceParam = new AFormalParamLocalParamIR();
 		instanceParam.setType(testAccType.clone());
 		instanceParam.setPattern(transAssistant.getInfo().getPatternAssistant().consIdPattern(tracePrefixes.traceMethodParamName()));
 
 		AMethodDeclIR traceMethod = new AMethodDeclIR();
 		traceMethod.setTag(new TraceMethodTag());
-		
+
 		traceMethod.getFormalParams().add(instanceParam);
-		
+
 		traceMethod.setImplicit(false);
 		traceMethod.setAbstract(false);
 		traceMethod.setAccess(IRConstants.PUBLIC);
@@ -140,28 +141,25 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 		typeArg.setType(transAssistant.consClassType(traceEnclosingClassName));
 
 		executeTestsCall.getArgs().add(nodeVar.clone());
-		
-		if(Settings.dialect != Dialect.VDM_SL)
+
+		if (Settings.dialect != Dialect.VDM_SL)
 		{
 			executeTestsCall.getArgs().add(typeArg);
 		}
-		
-		executeTestsCall.getArgs().add(transAssistant.getInfo().getExpAssistant().consIdVar(tracePrefixes.traceMethodParamName(),
-				transAssistant.consClassType(tracePrefixes.testAccumulatorClassName())));
-		executeTestsCall.getArgs().add(transAssistant.getInfo().getExpAssistant().consIdVar(tracePrefixes.storeVarName(),
-				transAssistant.consClassType(tracePrefixes.storeClassName())));
-		
+
+		executeTestsCall.getArgs().add(transAssistant.getInfo().getExpAssistant().consIdVar(tracePrefixes.traceMethodParamName(), transAssistant.consClassType(tracePrefixes.testAccumulatorClassName())));
+		executeTestsCall.getArgs().add(transAssistant.getInfo().getExpAssistant().consIdVar(tracePrefixes.storeVarName(), transAssistant.consClassType(tracePrefixes.storeClassName())));
 
 		return executeTestsCall;
 	}
-	
+
 	private SStmIR consTraceMethodBody(ANamedTraceDeclIR node)
 			throws AnalysisException
 	{
 		StoreAssistant storeAssist = new StoreAssistant(tracePrefixes, transAssistant);
-		
+
 		String traceEnclosingClass = getClassName(node);
-		
+
 		TraceStmBuilder stmBuilder = consStmBuilder(storeAssist, traceEnclosingClass);
 
 		SStmIR regModules = registerOtherModules(traceEnclosingClass, storeAssist);
@@ -170,37 +168,41 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 		ABlockStmIR stms = new ABlockStmIR();
 		stms.getLocalDefs().add(transAssistant.consClassVarDeclDefaultCtor(tracePrefixes.storeClassName(), tracePrefixes.storeVarName()));
 		stms.getLocalDefs().add(transAssistant.consClassVarDeclDefaultCtor(tracePrefixes.idGeneratorClassName(), tracePrefixes.idGeneratorVarName()));
-		
-		if(regModules != null)
+
+		if (regModules != null)
 		{
 			stms.getStatements().add(regModules);
 		}
-		
+
 		stms.getStatements().add(nodeData.getStms());
 		stms.getStatements().add(buildTestExecutionStms(nodeData.getNodeVar(), getClassName(node)));
 
 		return stms;
 	}
 
-	public TraceStmBuilder consStmBuilder(StoreAssistant storeAssist, String traceEnclosingClass)
+	public TraceStmBuilder consStmBuilder(StoreAssistant storeAssist,
+			String traceEnclosingClass)
 	{
 		return new TraceStmBuilder(this, traceEnclosingClass, storeAssist);
 	}
-	
-	private SStmIR registerOtherModules(String encClass, StoreAssistant storeAssist)
+
+	private SStmIR registerOtherModules(String encClass,
+			StoreAssistant storeAssist)
 	{
 		// Static registration of other modules
-		if(Settings.dialect == Dialect.VDM_PP && transAssistant.getInfo().getClasses().size() == 1)
+		if (Settings.dialect == Dialect.VDM_PP
+				&& transAssistant.getInfo().getClasses().size() == 1)
 		{
 			return null;
 		}
-		
+
 		ABlockStmIR regBlock = new ABlockStmIR();
 		regBlock.setScoped(true);
-		
-		for(SClassDeclIR c : transAssistant.getInfo().getClasses())
+
+		for (SClassDeclIR c : transAssistant.getInfo().getClasses())
 		{
-			if(Settings.dialect == Dialect.VDM_PP && c.getName().equals(encClass))
+			if (Settings.dialect == Dialect.VDM_PP
+					&& c.getName().equals(encClass))
 			{
 				/**
 				 * There is no need to register the instance of the enclosing class. This is handled by the
@@ -208,18 +210,18 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 				 */
 				continue;
 			}
-			
+
 			String idConstName = transAssistant.getInfo().getTempVarNameGen().nextVarName(tracePrefixes.idConstNamePrefix());
 			regBlock.getLocalDefs().add(storeAssist.consIdConstDecl(idConstName));
-			
+
 			AClassTypeIR classType = transAssistant.consClassType(c.getName());
-			
+
 			ATypeArgExpIR classArg = new ATypeArgExpIR();
 			classArg.setType(classType.clone());
-			
+
 			regBlock.getStatements().add(storeAssist.consStoreRegistration(idConstName, classArg, true));
 		}
-		
+
 		return regBlock;
 	}
 
@@ -234,7 +236,7 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 
 		return methodName;
 	}
-	
+
 	public String getClassName(ANamedTraceDeclIR trace)
 	{
 		if (trace != null)
@@ -256,27 +258,27 @@ public class TracesTrans extends DepthFirstAnalysisAdaptor
 	{
 		return transAssistant;
 	}
-	
+
 	public IterationVarPrefixes getIteVarPrefixes()
 	{
 		return iteVarPrefixes;
 	}
-	
+
 	public TraceNames getTracePrefixes()
 	{
 		return tracePrefixes;
 	}
-	
+
 	public ILanguageIterator getLangIterator()
 	{
 		return langIterator;
 	}
-	
+
 	public ICallStmToStringMethodBuilder getToStringBuilder()
 	{
 		return toStringBuilder;
 	}
-	
+
 	public List<INode> getCloneFreeNodes()
 	{
 		return cloneFreeNodes;

@@ -7,10 +7,10 @@ public class TraceUtil
 	public static <T> T readState(Class<?> module, Class<T> stateType)
 	{
 		Field[] fields = module.getDeclaredFields();
-		
-		for(Field f : fields)
+
+		for (Field f : fields)
 		{
-			if(!ModuleCopy.isFinal(f))
+			if (!ModuleCopy.isFinal(f))
 			{
 				// It' the state component
 				f.setAccessible(true);
@@ -24,7 +24,7 @@ public class TraceUtil
 				}
 			}
 		}
-		
+
 		return null;
 	}
 }

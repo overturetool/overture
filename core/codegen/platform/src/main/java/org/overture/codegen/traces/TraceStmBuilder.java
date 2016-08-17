@@ -12,10 +12,13 @@ import org.overture.ast.statements.ACallStm;
 import org.overture.codegen.assistant.DeclAssistantIR;
 import org.overture.codegen.assistant.ExpAssistantIR;
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STraceDeclIR;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.AnswerAdaptor;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
@@ -55,21 +58,19 @@ import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.types.AObjectTypeIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
 import org.overture.codegen.ir.types.SSetTypeIR;
-import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.config.Settings;
 
 public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 {
 	protected String traceEnclosingClass;
-	protected StoreAssistant storeAssistant; 
+	protected StoreAssistant storeAssistant;
 	protected TracesTrans traceTrans;
-	
+
 	protected Logger log = Logger.getLogger(this.getClass().getName());
-	
-	public TraceStmBuilder(TracesTrans traceTrans, String traceEnclosingClass, StoreAssistant storeAssist)
+
+	public TraceStmBuilder(TracesTrans traceTrans, String traceEnclosingClass,
+			StoreAssistant storeAssist)
 	{
 		this.traceTrans = traceTrans;
 		this.traceEnclosingClass = traceEnclosingClass;
@@ -80,7 +81,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 	{
 		return getTransAssist().getInfo();
 	}
-	
+
 	@Override
 	public TraceNodeData caseATraceDeclTermIR(ATraceDeclTermIR node)
 			throws AnalysisException
@@ -107,7 +108,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 				stms.getStatements().add(nodeData.getStms());
 				addStms.add(getTransAssist().consInstanceCallStm(classType, name, traceTrans.getTracePrefixes().addMethodName(), nodeData.getNodeVar()));
 			}
-			
+
 			stms.getStatements().addAll(addStms);
 
 			return new TraceNodeData(getInfo().getExpAssistant().consIdVar(name, classType.clone()), stms, stms);
@@ -121,31 +122,30 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		List<AVarDeclIR> argDecls = replaceArgsWithVars(node.getCallStm());
 
 		String classTypeName;
-		
-		if(Settings.dialect != Dialect.VDM_SL)
+
+		if (Settings.dialect != Dialect.VDM_SL)
 		{
 			classTypeName = traceTrans.getTracePrefixes().callStmClassTypeName();
-		}
-		else 
+		} else
 		{
 			classTypeName = traceTrans.getTracePrefixes().callStmBaseClassTypeName();
 		}
-		
+
 		AClassTypeIR callStmType = getTransAssist().consClassType(classTypeName);
 		String callStmName = getInfo().getTempVarNameGen().nextVarName(traceTrans.getTracePrefixes().callStmNamePrefix());
 		AAnonymousClassExpIR callStmCreation = new AAnonymousClassExpIR();
 		callStmCreation.setType(callStmType);
-		
+
 		AMethodDeclIR typeCheckMethod = consTypeCheckMethod(node.getCallStm().clone());
-		
-		if(typeCheckMethod != null)
+
+		if (typeCheckMethod != null)
 		{
 			callStmCreation.getMethods().add(typeCheckMethod);
 		}
-		
+
 		AMethodDeclIR preCondMethod = condMeetsPreCondMethod(node.getCallStm().clone());
-		
-		if(preCondMethod != null)
+
+		if (preCondMethod != null)
 		{
 			callStmCreation.getMethods().add(preCondMethod);
 		}
@@ -162,12 +162,12 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		AVarDeclIR stmNodeDecl = getTransAssist().consDecl(stmNodeName, stmTraceNodeType.clone(), newStmTraceNodeExp);
 
 		ABlockStmIR decls = new ABlockStmIR();
-		
-		if(!argDecls.isEmpty())
+
+		if (!argDecls.isEmpty())
 		{
 			decls.getLocalDefs().addAll(argDecls);
 		}
-		
+
 		decls.getLocalDefs().add(callStmDecl);
 		decls.getLocalDefs().add(stmNodeDecl);
 
@@ -202,7 +202,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			TraceNodeData nodeData = term.apply(this);
 			AIdentifierVarExpIR var = nodeData.getNodeVar();
 			nodeData.getNodeVarScope().getStatements().add(getTransAssist().consInstanceCallStm(classType, name, traceTrans.getTracePrefixes().addMethodName(), var));
-			
+
 			stms.getStatements().add(nodeData.getStms());
 		}
 
@@ -210,17 +210,17 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		return new TraceNodeData(getInfo().getExpAssistant().consIdVar(name, classType.clone()), stms, stms);
 	}
-	
+
 	@Override
 	public TraceNodeData caseALetBeStBindingTraceDeclIR(
 			ALetBeStBindingTraceDeclIR node) throws AnalysisException
 	{
 		ASetMultipleBindIR bind = node.getBind();
-		
+
 		IdentifierPatternCollector idCollector = new IdentifierPatternCollector();
 		idCollector.setTopNode(bind);
-		
-		if(Settings.dialect != Dialect.VDM_SL)
+
+		if (Settings.dialect != Dialect.VDM_SL)
 		{
 			List<AIdentifierPatternIR> patterns = idCollector.findOccurences();
 
@@ -230,7 +230,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 				storeAssistant.getIdConstNameMap().put(((AIdentifierPatternIR) p).getName(), idConstName);
 			}
 		}
-		
+
 		String name = getInfo().getTempVarNameGen().nextVarName(traceTrans.getTracePrefixes().altTraceNodeNamePrefix());
 
 		AClassTypeIR classType = getTransAssist().consClassType(traceTrans.getTracePrefixes().altTraceNodeNodeClassName());
@@ -245,13 +245,12 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		TraceNodeData bodyTraceData = body.apply(this);
 
 		SSetTypeIR setType = getTransAssist().getSetTypeCloned(bind.getSet());
-		TraceLetBeStStrategy strategy = new TraceLetBeStStrategy(getTransAssist(), exp, setType, traceTrans.getLangIterator(), 
-				getInfo().getTempVarNameGen(), traceTrans.getIteVarPrefixes(), storeAssistant, storeAssistant.getIdConstNameMap(), traceTrans.getTracePrefixes(), id, altTests, bodyTraceData, this);
+		TraceLetBeStStrategy strategy = new TraceLetBeStStrategy(getTransAssist(), exp, setType, traceTrans.getLangIterator(), getInfo().getTempVarNameGen(), traceTrans.getIteVarPrefixes(), storeAssistant, storeAssistant.getIdConstNameMap(), traceTrans.getTracePrefixes(), id, altTests, bodyTraceData, this);
 
 		if (getTransAssist().hasEmptySet(bind))
 		{
 			getTransAssist().cleanUpBinding(bind);
-			
+
 			ABlockStmIR skip = getTransAssist().wrap(new ASkipStmIR());
 			return new TraceNodeData(null, skip, skip);
 		}
@@ -260,61 +259,61 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		return new TraceNodeData(getInfo().getExpAssistant().consIdVar(name, classType.clone()), outerBlock, outerBlock);
 	}
-	
+
 	@Override
 	public TraceNodeData caseALetDefBindingTraceDeclIR(
 			ALetDefBindingTraceDeclIR node) throws AnalysisException
 	{
 		ABlockStmIR outer = new ABlockStmIR();
 		outer.setScoped(true);
-		
+
 		IdentifierPatternCollector idCollector = new IdentifierPatternCollector();
-		
+
 		ABlockStmIR declBlock = new ABlockStmIR();
-		
+
 		List<AIdentifierVarExpIR> traceVars = new LinkedList<>();
-		
+
 		for (AVarDeclIR dec : node.getLocalDefs())
 		{
 			// Find types for all sub patterns
 			PatternTypeFinder typeFinder = new PatternTypeFinder(getInfo());
 			dec.getPattern().apply(typeFinder, dec.getType());
-			
+
 			idCollector.setTopNode(dec);
 			List<AIdentifierPatternIR> idOccurences = idCollector.findOccurences();
-			
+
 			AVarDeclIR decCopy = dec.clone();
 			decCopy.setFinal(true);
 			declBlock.getLocalDefs().add(decCopy);
-			
-			for(AIdentifierPatternIR occ : idOccurences)
+
+			for (AIdentifierPatternIR occ : idOccurences)
 			{
-				if(Settings.dialect != Dialect.VDM_SL)
+				if (Settings.dialect != Dialect.VDM_SL)
 				{
 					String idConstName = getInfo().getTempVarNameGen().nextVarName(traceTrans.getTracePrefixes().idConstNamePrefix());
 					storeAssistant.getIdConstNameMap().put(occ.getName(), idConstName);
 					outer.getLocalDefs().add(storeAssistant.consIdConstDecl(idConstName));
 					storeAssistant.appendStoreRegStms(declBlock, occ.getName(), idConstName, false);
 				}
-				
+
 				traceVars.add(getInfo().getExpAssistant().consIdVar(occ.getName(), PatternTypeFinder.getType(typeFinder, occ)));
 			}
 		}
-		
+
 		TraceNodeData bodyNodeData = node.getBody().apply(this);
 
-		for(int i = traceVars.size() - 1; i >= 0; i--)
+		for (int i = traceVars.size() - 1; i >= 0; i--)
 		{
 			AIdentifierVarExpIR a = traceVars.get(i);
-			
+
 			ACallObjectExpStmIR addVar = consAddTraceVarCall(bodyNodeData.getNodeVar(), a);
 			ensureStoreLookups(addVar);
 			bodyNodeData.getNodeVarScope().getStatements().add(addVar);
 		}
-		
+
 		outer.getStatements().add(declBlock);
 		outer.getStatements().add(bodyNodeData.getStms());
-		
+
 		return new TraceNodeData(bodyNodeData.getNodeVar(), outer, bodyNodeData.getNodeVarScope());
 	}
 
@@ -359,14 +358,14 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 	protected List<AVarDeclIR> replaceArgsWithVars(SStmIR callStm)
 	{
 		List<AVarDeclIR> decls = new LinkedList<AVarDeclIR>();
-		
-		if(Settings.dialect != Dialect.VDM_SL)
+
+		if (Settings.dialect != Dialect.VDM_SL)
 		{
 			return decls;
 		}
-		
+
 		List<SExpIR> args = null;
-		
+
 		if (callStm instanceof SCallStmIR)
 		{
 			args = ((SCallStmIR) callStm).getArgs();
@@ -394,12 +393,12 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		return decls;
 	}
-	
+
 	protected AMethodDeclIR consExecuteMethod(SStmIR stm)
 	{
 		AMethodTypeIR methodType = new AMethodTypeIR();
 		methodType.setResult(new AObjectTypeIR());
-		
+
 		AMethodDeclIR execMethod = new AMethodDeclIR();
 		execMethod.setImplicit(false);
 		execMethod.setAbstract(false);
@@ -412,40 +411,40 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		ABlockStmIR body = new ABlockStmIR();
 		body.getStatements().add(makeInstanceCall(stm));
-		
+
 		ensureStoreLookups(body);
-		
+
 		execMethod.setBody(body);
-		
+
 		return execMethod;
 	}
 
 	protected void ensureStoreLookups(SStmIR body)
 	{
-		if(Settings.dialect == Dialect.VDM_SL)
+		if (Settings.dialect == Dialect.VDM_SL)
 		{
 			return;
 		}
-		
+
 		try
 		{
 			final Set<String> localVarNames = storeAssistant.getIdConstNameMap().keySet();
-			
+
 			body.apply(new DepthFirstAnalysisAdaptor()
 			{
 				// No need to consider explicit variables because they cannot be local
-				
+
 				@Override
 				public void caseAIdentifierVarExpIR(AIdentifierVarExpIR node)
 						throws AnalysisException
 				{
-					if(localVarNames.contains(node.getName()))
+					if (localVarNames.contains(node.getName()))
 					{
 						getTransAssist().replaceNodeWith(node, storeAssistant.consStoreLookup(node));
 					}
 				}
 			});
-			
+
 		} catch (AnalysisException e)
 		{
 			log.error("Problem replacing variable expressions with storage lookups");
@@ -475,12 +474,12 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		return new TraceNodeData(getInfo().getExpAssistant().consIdVar(name, classType.clone()), stms, stms);
 	}
-	
+
 	public AMethodDeclIR consTypeCheckMethod(SStmIR stm)
 	{
 		return null;
 	}
-	
+
 	public AMethodDeclIR condMeetsPreCondMethod(SStmIR stm)
 	{
 		if (!canBeGenerated())
@@ -517,12 +516,11 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 						}
 
 						isOp = true;
-					}
-					else if(callStm.getRootdef() instanceof SFunctionDefinition)
+					} else if (callStm.getRootdef() instanceof SFunctionDefinition)
 					{
 						SFunctionDefinition func = (SFunctionDefinition) callStm.getRootdef();
-						
-						if(func.getPredef() == null)
+
+						if (func.getPredef() == null)
 						{
 							// The pre condition is true
 							return null;
@@ -615,12 +613,12 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 
 		return meetsPredMethod;
 	}
-	
+
 	protected AMethodDeclIR initPredDecl(String name)
 	{
 		AMethodTypeIR methodType = new AMethodTypeIR();
 		methodType.setResult(new ABoolBasicTypeIR());
-		
+
 		AMethodDeclIR meetsPredMethod = new AMethodDeclIR();
 		meetsPredMethod.setImplicit(false);
 		meetsPredMethod.setAbstract(false);
@@ -630,44 +628,45 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		meetsPredMethod.setMethodType(methodType);
 		meetsPredMethod.setStatic(false);
 		meetsPredMethod.setName(name);
-		
+
 		return meetsPredMethod;
 	}
 
 	protected boolean canBeGenerated()
 	{
 		// This only works for VDM-SL
-		return Settings.dialect == Dialect.VDM_SL && getInfo().getSettings().generatePreConds();
+		return Settings.dialect == Dialect.VDM_SL
+				&& getInfo().getSettings().generatePreConds();
 	}
-	
+
 	protected String getInvokedModule(SStmIR stm)
 	{
-		if(stm instanceof APlainCallStmIR)
+		if (stm instanceof APlainCallStmIR)
 		{
 			APlainCallStmIR call = (APlainCallStmIR) stm;
-			
+
 			STypeIR type = call.getClassType();
-			
-			if(type instanceof AClassTypeIR)
+
+			if (type instanceof AClassTypeIR)
 			{
 				return ((AClassTypeIR) type).getName();
 			}
 		}
-		
+
 		return traceEnclosingClass;
 	}
 
 	protected SStmIR makeInstanceCall(SStmIR stm)
 	{
-		if(stm instanceof ACallObjectExpStmIR)
+		if (stm instanceof ACallObjectExpStmIR)
 		{
 			// Assume the class enclosing the trace to be S
 			// self.op(42) becomes ((S)instance).op(42L)
 			// a.op(42) remains a.op(42L) if a is local
 			// a.op(42) becomes ((S)instance).a.op(42L) if a is an instance variable
-			
+
 			ACallObjectExpStmIR call = (ACallObjectExpStmIR) stm;
-			
+
 			try
 			{
 				call.getObj().apply(new CallObjTraceLocalizer(getTransAssist(), traceTrans.getTracePrefixes(), traceEnclosingClass));
@@ -677,20 +676,19 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 						+ e.getMessage());
 				e.printStackTrace();
 			}
-			
+
 			/**
 			 * We don't narrow the types of the arguments, which we should and which we do for the 'APlainCallStmIR'
 			 * case using <code>castArgs(call);</code>. Code generation of traces does not really work for PP..
 			 */
-			
-			if(call.getType() instanceof AVoidTypeIR)
+
+			if (call.getType() instanceof AVoidTypeIR)
 			{
 				return handleVoidValueReturn(call);
 			}
-			
+
 			return stm;
-		}
-	    else if (stm instanceof APlainCallStmIR)
+		} else if (stm instanceof APlainCallStmIR)
 		{
 			// Assume the class enclosing the trace to be S
 			// Example: op(42) becomes ((S)instance).op(42L)
@@ -738,7 +736,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 			throws AnalysisException
 	{
 		STypeIR type = callStmIR.getType();
-		
+
 		if (callStmIR.getIsStatic())
 		{
 			if (type instanceof AVoidTypeIR)
@@ -753,7 +751,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		List<SExpIR> args = callStmIR.getArgs();
 		STypeIR classType = callStmIR.getClassType();
 		String name = callStmIR.getName();
-		
+
 		SourceNode sourceNode = callStmIR.getSourceNode();
 
 		AClassTypeIR consClassType = getTransAssist().consClassType(traceEnclosingClass);
@@ -781,7 +779,8 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		} else
 		{
 			AFieldExpIR field = new AFieldExpIR();
-			String fieldModule = classType instanceof AClassTypeIR ? ((AClassTypeIR) classType).getName()
+			String fieldModule = classType instanceof AClassTypeIR
+					? ((AClassTypeIR) classType).getName()
 					: traceEnclosingClass;
 			field.setType(getInfo().getTypeAssistant().getMethodType(getInfo(), fieldModule, name, args));
 			field.setMemberName(name);
@@ -831,16 +830,18 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 		return getTransAssist().wrap(getTransAssist().consDecl(varName, classType.clone(), newExp));
 	}
 
-	public ACallObjectExpStmIR consAddTraceVarCall(AIdentifierVarExpIR subject, AIdentifierVarExpIR t)
+	public ACallObjectExpStmIR consAddTraceVarCall(AIdentifierVarExpIR subject,
+			AIdentifierVarExpIR t)
 	{
 		ANewExpIR newVar = new ANewExpIR();
 		newVar.setName(getTransAssist().consTypeNameForClass(traceTrans.getTracePrefixes().traceVarClassName()));
 		newVar.setType(getTransAssist().consClassType(traceTrans.getTracePrefixes().traceVarClassName()));
-		
+
 		newVar.getArgs().add(getInfo().getExpAssistant().consStringLiteral(t.getName(), false));
-		newVar.getArgs().add(getInfo().getExpAssistant().consStringLiteral("" + getTransAssist().getInfo().getTypeAssistant().getVdmType(t.getType()), false));
+		newVar.getArgs().add(getInfo().getExpAssistant().consStringLiteral(""
+				+ getTransAssist().getInfo().getTypeAssistant().getVdmType(t.getType()), false));
 		newVar.getArgs().add(traceTrans.getToStringBuilder().toStringOf(t.clone()));
-		
+
 		return getTransAssist().consInstanceCallStm(subject.getType(), subject.getName(), traceTrans.getTracePrefixes().addVarFirstMethodName(), newVar);
 	}
 
@@ -848,7 +849,7 @@ public class TraceStmBuilder extends AnswerAdaptor<TraceNodeData>
 	{
 		return traceTrans.getTransAssist();
 	}
-	
+
 	@Override
 	public TraceNodeData createNewReturnValue(INode node)
 			throws AnalysisException

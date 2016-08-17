@@ -23,6 +23,7 @@ package org.overture.codegen.trans.comp;
 
 import java.util.List;
 
+import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.SStmIR;
@@ -32,7 +33,6 @@ import org.overture.codegen.ir.declarations.AVarDeclIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.statements.AIfStmIR;
-import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.AbstractIterationStrategy;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
@@ -66,7 +66,8 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 			AIdentifierVarExpIR setVar, List<SPatternIR> patterns,
 			SPatternIR pattern);
 
-	protected List<SStmIR> consConditionalAdd(AIdentifierVarExpIR compResult, SStmIR collectionAdd)
+	protected List<SStmIR> consConditionalAdd(AIdentifierVarExpIR compResult,
+			SStmIR collectionAdd)
 	{
 		if (predicate != null)
 		{
@@ -75,22 +76,19 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 			condCollectionUnion.setThenStm(collectionAdd);
 
 			return packStm(condCollectionUnion);
-		}
-		else
+		} else
 		{
 			return packStm(collectionAdd);
 		}
 	}
 
 	@Override
-	public List<AVarDeclIR> getOuterBlockDecls(
-			AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
-			throws AnalysisException
+	public List<AVarDeclIR> getOuterBlockDecls(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns) throws AnalysisException
 	{
 		SExpIR emptyCollection = getEmptyCollection();
 		emptyCollection.setType(compType.clone());
-		AVarDeclIR compResultInit = transAssist.getInfo().getDeclAssistant().
-				consLocalVarDecl(compType.clone(), idPattern.clone(), emptyCollection);
+		AVarDeclIR compResultInit = transAssist.getInfo().getDeclAssistant().consLocalVarDecl(compType.clone(), idPattern.clone(), emptyCollection);
 
 		return packDecl(compResultInit);
 	}

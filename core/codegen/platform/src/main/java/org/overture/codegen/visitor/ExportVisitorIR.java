@@ -13,6 +13,7 @@ import org.overture.ast.modules.ATypeExport;
 import org.overture.ast.modules.AValueExport;
 import org.overture.ast.modules.PExport;
 import org.overture.ast.types.PType;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.SExportIR;
 import org.overture.codegen.ir.STypeIR;
@@ -22,7 +23,6 @@ import org.overture.codegen.ir.declarations.AOperationExportIR;
 import org.overture.codegen.ir.declarations.ATypeExportIR;
 import org.overture.codegen.ir.declarations.AValueExportIR;
 import org.overture.codegen.ir.name.ATokenNameIR;
-import org.overture.codegen.ir.IRInfo;
 
 public class ExportVisitorIR extends AbstractVisitorIR<IRInfo, SExportIR>
 {
@@ -38,22 +38,22 @@ public class ExportVisitorIR extends AbstractVisitorIR<IRInfo, SExportIR>
 			throws AnalysisException
 	{
 		AFunctionExportIR funcExportCg = new AFunctionExportIR();
-		
+
 		funcExportCg.setNameList(consNames(node.getNameList()));
 		funcExportCg.setExportType(consExportType(node.getExportType(), question));
-		
+
 		return addDecl(node, funcExportCg, question);
 	}
 
 	@Override
-	public SExportIR caseAOperationExport(AOperationExport node, IRInfo question)
-			throws AnalysisException
+	public SExportIR caseAOperationExport(AOperationExport node,
+			IRInfo question) throws AnalysisException
 	{
 		AOperationExportIR opExportCg = new AOperationExportIR();
-		
+
 		opExportCg.setNameList(consNames(node.getNameList()));
 		opExportCg.setExportType(consExportType(node.getExportType(), question));
-		
+
 		return addDecl(node, opExportCg, question);
 	}
 
@@ -62,10 +62,11 @@ public class ExportVisitorIR extends AbstractVisitorIR<IRInfo, SExportIR>
 			throws AnalysisException
 	{
 		ATypeExportIR typeExportCg = new ATypeExportIR();
-		
-		typeExportCg.setName(node.getName() != null ? node.getName().getName() : null);
+
+		typeExportCg.setName(node.getName() != null ? node.getName().getName()
+				: null);
 		typeExportCg.setStruct(node.getStruct());
-		
+
 		return addDecl(node, typeExportCg, question);
 	}
 
@@ -74,57 +75,56 @@ public class ExportVisitorIR extends AbstractVisitorIR<IRInfo, SExportIR>
 			throws AnalysisException
 	{
 		AValueExportIR valueExportCg = new AValueExportIR();
-		
+
 		valueExportCg.setNameList(consNames(node.getNameList()));
 		valueExportCg.setExportType(consExportType(node.getExportType(), question));
-		
+
 		return addDecl(node, valueExportCg, question);
 	}
 
-	private STypeIR consExportType(PType type, IRInfo question) throws AnalysisException
+	private STypeIR consExportType(PType type, IRInfo question)
+			throws AnalysisException
 	{
-		if(type != null)
+		if (type != null)
 		{
 			return type.apply(question.getTypeVisitor(), question);
-		}
-		else
+		} else
 		{
 			return null;
 		}
 	}
-	
+
 	private List<ATokenNameIR> consNames(List<ILexNameToken> vdmNames)
 	{
 		List<ATokenNameIR> namesCg = new LinkedList<ATokenNameIR>();
-		
-		for(ILexNameToken vdmName : vdmNames)
+
+		for (ILexNameToken vdmName : vdmNames)
 		{
 			ATokenNameIR nextNameCg = new ATokenNameIR();
 			nextNameCg.setName(vdmName.getName());
-			
+
 			namesCg.add(nextNameCg);
 		}
-		
+
 		return namesCg;
 	}
-	
+
 	private SExportIR addDecl(PExport vdmImport, SExportIR irImport,
 			IRInfo question) throws AnalysisException
 	{
-		for(PDefinition defItem : vdmImport.getDefinition())
+		for (PDefinition defItem : vdmImport.getDefinition())
 		{
 			SDeclIR declItemCg = defItem.apply(question.getDeclVisitor(), question);
-			
-			if(declItemCg != null)
+
+			if (declItemCg != null)
 			{
 				irImport.getDecl().add(declItemCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
 		}
-		
+
 		return irImport;
 	}
 }

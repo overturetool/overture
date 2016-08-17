@@ -5,6 +5,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.node.INode;
 import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.SExpIR;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
@@ -14,7 +15,6 @@ import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.expressions.AStringLiteralExpIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.statements.AReturnStmIR;
-import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class PostCheckTrans extends DepthFirstAnalysisAdaptor
@@ -23,7 +23,7 @@ public class PostCheckTrans extends DepthFirstAnalysisAdaptor
 	private TransAssistantIR transAssistant;
 	private String funcResultNamePrefix;
 	private Object conditionalCallTag;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public PostCheckTrans(IPostCheckCreator postCheckCreator,
@@ -101,8 +101,8 @@ public class PostCheckTrans extends DepthFirstAnalysisAdaptor
 			log.error("Could not find enclosing method for a return statement");
 			return;
 		}
-		
-		if(method.getStatic() == null || !method.getStatic())
+
+		if (method.getStatic() == null || !method.getStatic())
 		{
 			// Generation of a post condition is only supported for static operations
 			// where no 'self' and '~self' are being passed
@@ -110,14 +110,14 @@ public class PostCheckTrans extends DepthFirstAnalysisAdaptor
 		}
 
 		SDeclIR postCond = method.getPostCond();
-		
+
 		if (!(postCond instanceof AMethodDeclIR))
 		{
 			log.error("Expected post condition to be a method declaration at this point. Got: "
 					+ postCond);
 			return;
 		}
-		
+
 		AApplyExpIR postCondCall = transAssistant.consConditionalCall(method, (AMethodDeclIR) method.getPostCond());
 		postCondCall.setTag(conditionalCallTag);
 

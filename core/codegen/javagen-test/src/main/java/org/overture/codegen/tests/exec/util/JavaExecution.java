@@ -36,16 +36,16 @@ public class JavaExecution
 {
 	public final static String cpPathSeparator = System.getProperty("path.separator");
 
-	public static String run(String mainClassName, String[] preArgs, String[] postArgs,
-			File directory, File... cp)
+	public static String run(String mainClassName, String[] preArgs,
+			String[] postArgs, File directory, File... cp)
 	{
 		String javaHome = System.getenv(JavaToolsUtils.JAVA_HOME);
 		File java = new File(new File(javaHome, JavaToolsUtils.BIN_FOLDER), JavaToolsUtils.JAVA);
 		return run(java, directory, mainClassName, preArgs, postArgs, cp);
 	}
 
-	public static String run(File java, File directory, String mainClassName, String[] preArgs, String[] postArgs,
-			File... cp)
+	public static String run(File java, File directory, String mainClassName,
+			String[] preArgs, String[] postArgs, File... cp)
 	{
 		String cpArgs = consCpArg(cp);
 

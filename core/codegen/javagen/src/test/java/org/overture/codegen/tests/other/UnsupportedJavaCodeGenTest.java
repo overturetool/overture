@@ -86,7 +86,8 @@ public class UnsupportedJavaCodeGenTest
 				if (!mod.getUnsupportedInIr().isEmpty())
 				{
 					// Sometimes a renamed definitions may also appear implicitly in the default module
-					if (!(Settings.dialect == Dialect.VDM_SL && mod.getName().equals("DEFAULT")))
+					if (!(Settings.dialect == Dialect.VDM_SL
+							&& mod.getName().equals("DEFAULT")))
 					{
 						noOfUnsupportedModules++;
 					}
@@ -97,7 +98,8 @@ public class UnsupportedJavaCodeGenTest
 			}
 
 			Assert.assertTrue("Expected a single module to be unsupported. "
-					+ "Got: " + noOfUnsupportedModules, noOfUnsupportedModules == 1);
+					+ "Got: "
+					+ noOfUnsupportedModules, noOfUnsupportedModules == 1);
 
 		} catch (AnalysisException e)
 		{
@@ -111,16 +113,15 @@ public class UnsupportedJavaCodeGenTest
 		{
 			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
 			validateTcResult(tcResult);
-			
+
 			return javaGen.generate(CodeGenBase.getNodes(tcResult.result));
-		} else if(Settings.dialect == Dialect.VDM_PP)
+		} else if (Settings.dialect == Dialect.VDM_PP)
 		{
 			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
 			validateTcResult(tcResult);
 
 			return javaGen.generate(CodeGenBase.getNodes(tcResult.result));
-		}
-		else
+		} else
 		{
 			Assert.fail("Only VDM-SL and VDM++ are supported for this test");
 			return null;
@@ -129,9 +130,10 @@ public class UnsupportedJavaCodeGenTest
 
 	private void validateTcResult(TypeCheckResult<?> tcResult)
 	{
-		if(GeneralCodeGenUtils.hasErrors(tcResult))
+		if (GeneralCodeGenUtils.hasErrors(tcResult))
 		{
-			Assert.fail("Could not parse/type check VDM model:\n" + GeneralCodeGenUtils.errorStr(tcResult));
+			Assert.fail("Could not parse/type check VDM model:\n"
+					+ GeneralCodeGenUtils.errorStr(tcResult));
 		}
 	}
 }

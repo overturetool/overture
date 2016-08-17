@@ -43,8 +43,8 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	private static final String HAS_NEXT_ELEMENT_ITERATOR = "hasNext";
 	private static final String ITERATOR_TYPE = "Iterator";
 
-	public JavaLanguageIterator(
-			TransAssistantIR transformationAssistant,IterationVarPrefixes iteVarPrefixes)
+	public JavaLanguageIterator(TransAssistantIR transformationAssistant,
+			IterationVarPrefixes iteVarPrefixes)
 	{
 		super(transformationAssistant, iteVarPrefixes);
 	}
@@ -55,10 +55,10 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	public List<SStmIR> getPreForLoopStms(AIdentifierVarExpIR setVar,
 			List<SPatternIR> patterns, SPatternIR pattern)
 	{
-		//Generate nothing
+		// Generate nothing
 		return null;
 	}
-	
+
 	@Override
 	public AVarDeclIR getForLoopInit(AIdentifierVarExpIR setVar,
 			List<SPatternIR> patterns, SPatternIR pattern)
@@ -69,8 +69,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 		STypeIR setType = setVar.getType().clone();
 		SExpIR getIteratorCall = transAssistant.consInstanceCall(setType, setName, iteratorType.clone(), GET_ITERATOR);
 
-		return transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(iteratorType,
-				transAssistant.getInfo().getPatternAssistant().consIdPattern(iteratorName),getIteratorCall);
+		return transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(iteratorType, transAssistant.getInfo().getPatternAssistant().consIdPattern(iteratorName), getIteratorCall);
 	}
 
 	@Override
@@ -110,12 +109,13 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 		return transAssistant.consNextElementAssignment(transAssistant.consClassType(ITERATOR_TYPE), elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR, nextElementDecl);
 	}
-	
+
 	@Override
-	public SExpIR consNextElementCall(AIdentifierVarExpIR setVar) throws AnalysisException
+	public SExpIR consNextElementCall(AIdentifierVarExpIR setVar)
+			throws AnalysisException
 	{
 		STypeIR elementType = transAssistant.getSetTypeCloned(setVar).getSetOf();
-		
+
 		return transAssistant.consNextElementCall(transAssistant.consClassType(ITERATOR_TYPE), iteratorName, elementType, NEXT_ELEMENT_ITERATOR);
 	}
 }

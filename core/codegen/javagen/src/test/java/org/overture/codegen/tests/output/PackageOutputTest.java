@@ -23,13 +23,13 @@ public class PackageOutputTest extends JavaOutputTestBase
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
-	
+
 	@Override
 	public JavaSettings getJavaSettings()
 	{
 		JavaSettings javaSettings = super.getJavaSettings();
 		javaSettings.setJavaRootPackage("my.model");
-		
+
 		return javaSettings;
 	}
 

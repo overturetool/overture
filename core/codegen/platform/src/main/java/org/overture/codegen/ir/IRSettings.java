@@ -28,17 +28,17 @@ public class IRSettings
 {
 	private boolean charSeqAsString;
 	private boolean generateConc;
-	
+
 	private boolean generatePreConds;
 	private boolean generatePreCondChecks;
 	private boolean makePreCondsPublic;
-	
+
 	private boolean generatePostConds;
 	private boolean generatePostCondChecks;
 	private boolean makePostCondsPublic;
-	
+
 	private boolean generateTraces;
-	
+
 	private boolean generateInvariantChecks;
 
 	public IRSettings()
@@ -47,9 +47,10 @@ public class IRSettings
 
 	public boolean generateConc()
 	{
-		return generateConc && (Settings.dialect == Dialect.VDM_PP || Settings.dialect == Dialect.VDM_RT);
+		return generateConc && (Settings.dialect == Dialect.VDM_PP
+				|| Settings.dialect == Dialect.VDM_RT);
 	}
-	
+
 	public void setGenerateConc(boolean generateConc)
 	{
 		this.generateConc = generateConc;
@@ -84,7 +85,7 @@ public class IRSettings
 	{
 		this.generatePreCondChecks = generatePreCondChecks;
 	}
-	
+
 	public boolean makePreCondsPublic()
 	{
 		return makePreCondsPublic;
@@ -114,7 +115,7 @@ public class IRSettings
 	{
 		this.generatePostCondChecks = generatePostCondChecks;
 	}
-	
+
 	public boolean makePostCondsPublic()
 	{
 		return makePostCondsPublic;

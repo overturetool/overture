@@ -32,6 +32,6 @@ public abstract class EntryBasedTestHandler extends ExecutableTestHandler
 	}
 
 	abstract public String getVdmEntry();
-	
+
 	abstract public String getJavaEntry();
 }

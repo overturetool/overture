@@ -11,7 +11,7 @@ public class TemplateData
 	 * The reference loader used to load the template
 	 */
 	private Class<?> templateLoaderRef;
-	
+
 	/**
 	 * The path to the template, e.g. path/to/Node.vm
 	 */
@@ -37,6 +37,7 @@ public class TemplateData
 	@Override
 	public String toString()
 	{
-		return "TemplateData [templateLoaderRef =" + templateLoaderRef + ", templatePath =" + templatePath + "]";
+		return "TemplateData [templateLoaderRef =" + templateLoaderRef
+				+ ", templatePath =" + templatePath + "]";
 	}
 }

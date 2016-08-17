@@ -10,6 +10,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ACallStm;
+import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
@@ -22,22 +23,22 @@ import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.statements.APlainCallStmIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
-import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantIR assist;
-	
+
 	// To look up object initializer call names
 	private Map<AExplicitOperationDefinition, String> objectInitCallNames;
 
 	// Object initialization call prefix
 	private String objectInitCallPrefix;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
 
-	public ConstructorTrans(TransAssistantIR assist, String objectInitCallPrefix)
+	public ConstructorTrans(TransAssistantIR assist,
+			String objectInitCallPrefix)
 	{
 		this.assist = assist;
 		this.objectInitCallPrefix = objectInitCallPrefix;
@@ -47,11 +48,11 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAMethodDeclIR(AMethodDeclIR node) throws AnalysisException
 	{
-		if(node.parent() instanceof ASystemClassDeclIR)
+		if (node.parent() instanceof ASystemClassDeclIR)
 		{
 			return;
 		}
-		
+
 		if (node.getIsConstructor())
 		{
 			String initName = getInitName(node);
@@ -122,7 +123,8 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAPlainCallStmIR(APlainCallStmIR node) throws AnalysisException
+	public void caseAPlainCallStmIR(APlainCallStmIR node)
+			throws AnalysisException
 	{
 		String initName = getInitName(node);
 
@@ -144,7 +146,7 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 
 		assist.replaceNodeWith(node, callStm);
 	}
-	
+
 	public String getObjectInitializerCall(AExplicitOperationDefinition vdmOp)
 	{
 		if (objectInitCallNames.containsKey(vdmOp))
@@ -163,7 +165,8 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 
 	private String getInitName(APlainCallStmIR node)
 	{
-		if (node.getSourceNode() != null && node.getSourceNode().getVdmNode() != null)
+		if (node.getSourceNode() != null
+				&& node.getSourceNode().getVdmNode() != null)
 		{
 			INode vdmNode = node.getSourceNode().getVdmNode();
 
@@ -195,7 +198,8 @@ public class ConstructorTrans extends DepthFirstAnalysisAdaptor
 
 	private String getInitName(AMethodDeclIR node)
 	{
-		if (node.getSourceNode() != null && node.getSourceNode().getVdmNode() != null)
+		if (node.getSourceNode() != null
+				&& node.getSourceNode().getVdmNode() != null)
 		{
 			INode vdmNode = node.getSourceNode().getVdmNode();
 

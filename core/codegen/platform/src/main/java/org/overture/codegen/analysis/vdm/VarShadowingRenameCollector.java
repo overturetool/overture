@@ -84,14 +84,15 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	private Map<AIdentifierStateDesignator, PDefinition> idDefs;
 	private Stack<ILexNameToken> localDefsInScope;
 	private int enclosingCounter;
-	
+
 	private Set<Renaming> renamings;
 	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
-	
-	public VarShadowingRenameCollector(ITypeCheckerAssistantFactory af, Map<AIdentifierStateDesignator, PDefinition> idDefs)
+
+	public VarShadowingRenameCollector(ITypeCheckerAssistantFactory af,
+			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
 		this.af = af;
 
@@ -106,17 +107,16 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAModuleModules(AModuleModules node)
-			throws AnalysisException
+	public void caseAModuleModules(AModuleModules node) throws AnalysisException
 	{
-		if(enclosingDef != null)
+		if (enclosingDef != null)
 		{
 			return;
 		}
 
 		visitModuleDefs(node.getDefs(), node);
 	}
-	
+
 	@Override
 	public void caseAClassClassDefinition(AClassClassDefinition node)
 			throws AnalysisException
@@ -143,10 +143,9 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 	// For operations and functions it works as a single pattern
 	// Thus f(1,mk_(2,2),5) will fail
-	// public f :  nat * (nat * nat) * nat -> nat
+	// public f : nat * (nat * nat) * nat -> nat
 	// f (b,mk_(b,b), a) == b;
 
-	
 	@Override
 	public void caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node) throws AnalysisException
@@ -155,9 +154,9 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
+
 		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
-		
+
 		openScope(defInfo, node);
 
 		node.getBody().apply(this);
@@ -166,8 +165,8 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node)
-			throws AnalysisException
+	public void caseAExplicitFunctionDefinition(
+			AExplicitFunctionDefinition node) throws AnalysisException
 	{
 		if (!proceed(node))
 		{
@@ -175,7 +174,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		DefinitionInfo defInfo = new DefinitionInfo(getParamDefs(node), af);
-		
+
 		openScope(defInfo, node);
 
 		node.getBody().apply(this);
@@ -193,7 +192,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		DefinitionInfo defInfo = new DefinitionInfo(node.getAssignmentDefs(), af);
-		
+
 		visitDefs(defInfo.getNodeDefs());
 
 		openScope(defInfo, node);
@@ -210,10 +209,9 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
-		
+
 		DefinitionInfo defInfo = new DefinitionInfo(node.getLocalDefs(), af);
-		
+
 		visitDefs(defInfo.getNodeDefs());
 
 		openScope(defInfo, node);
@@ -230,9 +228,9 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
+
 		DefinitionInfo defInfo = new DefinitionInfo(node.getLocalDefs(), af);
-		
+
 		visitDefs(defInfo.getNodeDefs());
 
 		openScope(defInfo, node);
@@ -249,11 +247,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
+
 		node.getDef().apply(this);
-		
+
 		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
-		
+
 		openScope(defInfo, node);
 
 		if (node.getSuchThat() != null)
@@ -269,7 +267,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	/*
 	 * Exists1 needs no treatment it uses only a bind
 	 */
-	
+
 	@Override
 	public void caseAForAllExp(AForAllExp node) throws AnalysisException
 	{
@@ -277,10 +275,10 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
+
 		handleMultipleBindConstruct(node, node.getBindList(), null, node.getPredicate());
 	}
-	
+
 	@Override
 	public void caseAExistsExp(AExistsExp node) throws AnalysisException
 	{
@@ -288,36 +286,33 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
-		handleMultipleBindConstruct(node, node.getBindList(), null,node.getPredicate());
+
+		handleMultipleBindConstruct(node, node.getBindList(), null, node.getPredicate());
 	}
-	
-	
+
 	/*
 	 * Sequence comp needs no treatment it uses only a bind
 	 */
-	
+
 	@Override
-	public void caseASetCompSetExp(ASetCompSetExp node)
-			throws AnalysisException
+	public void caseASetCompSetExp(ASetCompSetExp node) throws AnalysisException
 	{
 		if (!proceed(node))
 		{
 			return;
 		}
-		
+
 		handleMultipleBindConstruct(node, node.getBindings(), node.getFirst(), node.getPredicate());
 	}
-	
+
 	@Override
-	public void caseAMapCompMapExp(AMapCompMapExp node)
-			throws AnalysisException
+	public void caseAMapCompMapExp(AMapCompMapExp node) throws AnalysisException
 	{
 		if (!proceed(node))
 		{
 			return;
 		}
-		
+
 		handleMultipleBindConstruct(node, node.getBindings(), node.getFirst(), node.getPredicate());
 	}
 
@@ -330,9 +325,9 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		node.getDef().apply(this);
-		
+
 		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
-		
+
 		openScope(defInfo, node);
 
 		if (node.getSuchThat() != null)
@@ -344,7 +339,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		endScope(defInfo);
 	}
-	
+
 	@Override
 	public void caseALetBeStBindingTraceDefinition(
 			ALetBeStBindingTraceDefinition node) throws AnalysisException
@@ -355,9 +350,9 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		node.getDef().apply(this);
-		
+
 		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
-		
+
 		openScope(defInfo, node);
 
 		if (node.getStexp() != null)
@@ -379,44 +374,44 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
-		
+
 		openScope(defInfo, node);
 
 		node.getExpression().apply(this);
 
 		endScope(defInfo);
 	}
-	
+
 	@Override
 	public void caseATixeStm(ATixeStm node) throws AnalysisException
 	{
-		if(node.getBody() != null)
+		if (node.getBody() != null)
 		{
 			node.getBody().apply(this);
 		}
-		
+
 		// The trap alternatives will be responsible for opening/ending the scope
-		for(ATixeStmtAlternative trap : node.getTraps())
+		for (ATixeStmtAlternative trap : node.getTraps())
 		{
 			trap.apply(this);
 		}
 	}
-	
+
 	@Override
 	public void caseATixeStmtAlternative(ATixeStmtAlternative node)
 			throws AnalysisException
 	{
 		openScope(node.getPatternBind(), node.getPatternBind().getDefs(), node.getStatement());
-		
+
 		node.getStatement().apply(this);
-		
-		//End scope
-		for(PDefinition def : node.getPatternBind().getDefs())
+
+		// End scope
+		for (PDefinition def : node.getPatternBind().getDefs())
 		{
 			removeLocalDefFromScope(def);
 		}
 	}
-	
+
 	@Override
 	public void caseATrapStm(ATrapStm node) throws AnalysisException
 	{
@@ -429,20 +424,20 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			node.getBody().apply(this);
 		}
-		
+
 		openScope(node.getPatternBind().getPattern(), node.getPatternBind().getDefs(), node.getWith());
-		
-		if(node.getWith() != null)
+
+		if (node.getWith() != null)
 		{
 			node.getWith().apply(this);
 		}
 
-		for(PDefinition def : node.getPatternBind().getDefs())
+		for (PDefinition def : node.getPatternBind().getDefs())
 		{
 			removeLocalDefFromScope(def);
 		}
 	}
-	
+
 	@Override
 	public void caseAForPatternBindStm(AForPatternBindStm node)
 			throws AnalysisException
@@ -451,22 +446,22 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
-		if(node.getExp() != null)
+
+		if (node.getExp() != null)
 		{
 			node.getExp().apply(this);
 		}
-		
+
 		openScope(node.getPatternBind().getPattern(), node.getPatternBind().getDefs(), node.getStatement());
-		
+
 		node.getStatement().apply(this);
-		
-		for(PDefinition def : node.getPatternBind().getDefs())
+
+		for (PDefinition def : node.getPatternBind().getDefs())
 		{
 			removeLocalDefFromScope(def);
 		}
 	}
-	
+
 	@Override
 	public void caseAForAllStm(AForAllStm node) throws AnalysisException
 	{
@@ -475,27 +470,27 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		if(node.getSet() != null)
+		if (node.getSet() != null)
 		{
 			node.getSet().apply(this);
 		}
 
 		PType possibleType = af.createPPatternAssistant().getPossibleType(node.getPattern());
 		List<PDefinition> defs = af.createPPatternAssistant().getDefinitions(node.getPattern(), possibleType, NameScope.LOCAL);
-		
-		for(PDefinition d : defs)
+
+		for (PDefinition d : defs)
 		{
 			openLoop(d.getName(), node.getPattern(), node.getStatement());
 		}
 
 		node.getStatement().apply(this);
-		
-		for(PDefinition def : defs)
+
+		for (PDefinition def : defs)
 		{
 			removeLocalDefFromScope(def);
 		}
 	}
-	
+
 	@Override
 	public void caseAForIndexStm(AForIndexStm node) throws AnalysisException
 	{
@@ -504,17 +499,17 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		if(node.getFrom() != null)
+		if (node.getFrom() != null)
 		{
 			node.getFrom().apply(this);
 		}
-		
-		if(node.getTo() != null)
+
+		if (node.getTo() != null)
 		{
 			node.getTo().apply(this);
 		}
-		
-		if(node.getBy() != null)
+
+		if (node.getBy() != null)
 		{
 			node.getBy().apply(this);
 		}
@@ -522,12 +517,12 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		ILexNameToken var = node.getVar();
 
 		openLoop(var, null, node.getStatement());
-		
+
 		node.getStatement().apply(this);
-		
+
 		localDefsInScope.remove(var);
 	}
-	
+
 	@Override
 	public void caseACasesStm(ACasesStm node) throws AnalysisException
 	{
@@ -535,10 +530,10 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
+
 		handleCaseNode(node.getExp(), node.getCases(), node.getOthers());
 	}
-	
+
 	@Override
 	public void caseACasesExp(ACasesExp node) throws AnalysisException
 	{
@@ -546,7 +541,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
+
 		handleCaseNode(node.getExpression(), node.getCases(), node.getOthers());
 	}
 
@@ -558,10 +553,10 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
+
 		handleCase(node.getDefs(), node.getPattern(), node.getResult());
 	}
-	
+
 	@Override
 	public void caseACaseAlternative(ACaseAlternative node)
 			throws AnalysisException
@@ -570,7 +565,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
+
 		handleCase(node.getDefs(), node.getPattern(), node.getResult());
 	}
 
@@ -579,20 +574,21 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	{
 		// No need to visit names
 	}
-	
-	private void handleCaseNode(PExp cond, List<? extends INode> cases, INode others) throws AnalysisException
+
+	private void handleCaseNode(PExp cond, List<? extends INode> cases,
+			INode others) throws AnalysisException
 	{
-		if(cond != null)
+		if (cond != null)
 		{
 			cond.apply(this);
 		}
-		
+
 		// The cases will be responsible for opening/ending the scope
-		for(INode c : cases)
+		for (INode c : cases)
 		{
 			c.apply(this);
 		}
-		
+
 		if (others != null)
 		{
 			others.apply(this);
@@ -602,76 +598,78 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	private void openLoop(ILexNameToken var, INode varParent, PStm body)
 			throws AnalysisException
 	{
-		if(!contains(var))
+		if (!contains(var))
 		{
-			localDefsInScope.add(var);			
-		}
-		else
+			localDefsInScope.add(var);
+		} else
 		{
 			String newName = computeNewName(var.getName());
-			
+
 			registerRenaming(var, newName);
-			
-			if(varParent != null)
+
+			if (varParent != null)
 			{
 				Set<AIdentifierPattern> idPatterns = collectIdOccurences(var, varParent);
-				
-				for(AIdentifierPattern id : idPatterns)
+
+				for (AIdentifierPattern id : idPatterns)
 				{
 					registerRenaming(id.getName(), newName);
 				}
 			}
-			
+
 			Set<AVariableExp> vars = collectVarOccurences(var.getLocation(), body);
 
 			for (AVariableExp varExp : vars)
 			{
 				registerRenaming(varExp.getName(), newName);
 			}
-			
+
 			Set<AIdentifierStateDesignator> idStateDesignators = collectIdDesignatorOccurrences(var.getLocation(), body);
-			
-			for(AIdentifierStateDesignator id : idStateDesignators)
+
+			for (AIdentifierStateDesignator id : idStateDesignators)
 			{
 				registerRenaming(id.getName(), newName);
 			}
 		}
 	}
-	
-	private void handleCase(LinkedList<PDefinition> localDefs, PPattern pattern, INode result) throws AnalysisException
+
+	private void handleCase(LinkedList<PDefinition> localDefs, PPattern pattern,
+			INode result) throws AnalysisException
 	{
 		// Do not visit the conditional exp (cexp)
 		openScope(pattern, localDefs, result);
-		
+
 		result.apply(this);
-		
-		//End scope
-		for(PDefinition def : localDefs)
+
+		// End scope
+		for (PDefinition def : localDefs)
 		{
 			removeLocalDefFromScope(def);
 		}
 	}
-	
-	private void handleMultipleBindConstruct(INode node, LinkedList<PMultipleBind> bindings, PExp first, PExp pred) throws AnalysisException
+
+	private void handleMultipleBindConstruct(INode node,
+			LinkedList<PMultipleBind> bindings, PExp first, PExp pred)
+			throws AnalysisException
 	{
-		
+
 		DefinitionInfo defInfo = new DefinitionInfo(getMultipleBindDefs(bindings), af);
-		
+
 		openScope(defInfo, node);
-		
+
 		if (first != null)
 		{
 			first.apply(this);
 		}
-		
-		if(pred != null)
+
+		if (pred != null)
 		{
 			pred.apply(this);
 		}
-		
+
 		endScope(defInfo);
 	}
-	
+
 	private List<PDefinition> getMultipleBindDefs(List<PMultipleBind> bindings)
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -707,20 +705,20 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		DefinitionInfo defInfo = getStateDefs(defs, module);
-		
-		if(defInfo != null)
+
+		if (defInfo != null)
 		{
 			addLocalDefs(defInfo);
 			handleExecutables(defs);
 			removeLocalDefs(defInfo);
-		}
-		else
+		} else
 		{
 			handleExecutables(defs);
 		}
 	}
 
-	private void handleExecutables(List<PDefinition> defs) throws AnalysisException
+	private void handleExecutables(List<PDefinition> defs)
+			throws AnalysisException
 	{
 		for (PDefinition def : defs)
 		{
@@ -740,28 +738,27 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 	private DefinitionInfo getStateDefs(List<PDefinition> defs, INode module)
 	{
-		if(module instanceof AModuleModules)
+		if (module instanceof AModuleModules)
 		{
 			List<PDefinition> fieldDefs = new LinkedList<PDefinition>();
 
 			AStateDefinition stateDef = getStateDef(defs);
-			
-			if(stateDef != null)
+
+			if (stateDef != null)
 			{
 				fieldDefs.addAll(findFieldDefs(stateDef.getStateDefs(), stateDef.getFields()));
 			}
-			
-			for(PDefinition def : defs)
+
+			for (PDefinition def : defs)
 			{
-				if(def instanceof AValueDefinition)
+				if (def instanceof AValueDefinition)
 				{
 					fieldDefs.add(def);
 				}
 			}
 
 			return new DefinitionInfo(fieldDefs, af);
-		}
-		else if(module instanceof SClassDefinition)
+		} else if (module instanceof SClassDefinition)
 		{
 			SClassDefinition classDef = (SClassDefinition) module;
 			List<PDefinition> allDefs = new LinkedList<PDefinition>();
@@ -771,9 +768,9 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 			allDefs.addAll(enclosedDefs);
 			allDefs.addAll(inheritedDefs);
-			
+
 			List<PDefinition> fields = new LinkedList<PDefinition>();
-			
+
 			for (PDefinition def : allDefs)
 			{
 				if (def instanceof AInstanceVariableDefinition
@@ -782,16 +779,15 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 					fields.add(def);
 				}
 			}
-			
+
 			return new DefinitionInfo(fields, af);
-		}
-		else
+		} else
 		{
 			log.error("Expected module or class definition. Got: " + module);
 			return null;
 		}
 	}
-	
+
 	private AStateDefinition getStateDef(List<PDefinition> defs)
 	{
 		for (PDefinition def : defs)
@@ -801,19 +797,20 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 				return (AStateDefinition) def;
 			}
 		}
-		
+
 		return null;
 	}
 
-	private List<PDefinition> findFieldDefs(List<PDefinition> stateDefs, List<AFieldField> fields)
+	private List<PDefinition> findFieldDefs(List<PDefinition> stateDefs,
+			List<AFieldField> fields)
 	{
 		List<PDefinition> fieldDefs = new LinkedList<PDefinition>();
-		
-		for(PDefinition d : stateDefs)
+
+		for (PDefinition d : stateDefs)
 		{
-			for(AFieldField f : fields)
+			for (AFieldField f : fields)
 			{
-				if(f.getTagname().equals(d.getName()))
+				if (f.getTagname().equals(d.getName()))
 				{
 					fieldDefs.add(d);
 					break;
@@ -885,20 +882,20 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			if (def == null)
 			{
 				def = node.getAncestor(ANamedTraceDefinition.class);
-				
-				if(def == null)
+
+				if (def == null)
 				{
 					def = node.getAncestor(AValueDefinition.class);
-					
-					if(def == null)
+
+					if (def == null)
 					{
 						def = node.getAncestor(AInstanceVariableDefinition.class);
-						
-						if(def == null)
+
+						if (def == null)
 						{
 							def = node.getAncestor(ATypeDefinition.class);
-							
-							if(def == null)
+
+							if (def == null)
 							{
 								def = node.getAncestor(AStateDefinition.class);
 							}
@@ -915,20 +912,20 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		return enclosingDef == def;
 	}
-	
+
 	private void addLocalDefs(DefinitionInfo defInfo)
 	{
 		List<PDefinition> allLocalDefs = defInfo.getAllLocalDefs();
-		
-		for(PDefinition localDef : allLocalDefs)
+
+		for (PDefinition localDef : allLocalDefs)
 		{
-			if(!contains(localDef))
+			if (!contains(localDef))
 			{
 				localDefsInScope.add(localDef.getName());
 			}
 		}
 	}
-	
+
 	private void removeLocalDefs(DefinitionInfo defInfo)
 	{
 		localDefsInScope.removeAll(defInfo.getAllLocalDefNames());
@@ -938,14 +935,14 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		List<? extends PDefinition> nodeDefs = defInfo.getNodeDefs();
-		
+
 		for (int i = 0; i < nodeDefs.size(); i++)
 		{
 			PDefinition parentDef = nodeDefs.get(i);
-			
+
 			List<? extends PDefinition> localDefs = defInfo.getLocalDefs(parentDef);
-			
-			for(PDefinition localDef : localDefs)
+
+			for (PDefinition localDef : localDefs)
 			{
 				if (contains(localDef))
 				{
@@ -957,10 +954,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			}
 		}
 	}
-	
-	public void openScope(INode parentNode, List<PDefinition> localDefs, INode defScope) throws AnalysisException
+
+	public void openScope(INode parentNode, List<PDefinition> localDefs,
+			INode defScope) throws AnalysisException
 	{
-		for(PDefinition localDef : localDefs)
+		for (PDefinition localDef : localDefs)
 		{
 			if (contains(localDef))
 			{
@@ -976,14 +974,14 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	{
 		this.localDefsInScope.removeAll(defInfo.getAllLocalDefNames());
 	}
-	
+
 	public void removeLocalDefFromScope(PDefinition localDef)
 	{
 		localDefsInScope.remove(localDef.getName());
 	}
 
-	private void findRenamings(PDefinition localDefToRename, INode parentNode, INode defScope)
-			throws AnalysisException
+	private void findRenamings(PDefinition localDefToRename, INode parentNode,
+			INode defScope) throws AnalysisException
 	{
 		ILexNameToken localDefName = getName(localDefToRename);
 
@@ -1005,10 +1003,10 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			registerRenaming(varExp.getName(), newName);
 		}
-		
+
 		Set<AIdentifierStateDesignator> idStateDesignators = collectIdDesignatorOccurrences(localDefToRename.getLocation(), defScope);
-		
-		for(AIdentifierStateDesignator id : idStateDesignators)
+
+		for (AIdentifierStateDesignator id : idStateDesignators)
 		{
 			registerRenaming(id.getName(), newName);
 		}
@@ -1042,8 +1040,8 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		return false;
 	}
 
-	private Set<AVariableExp> collectVarOccurences(ILexLocation defLoc, INode defScope)
-			throws AnalysisException
+	private Set<AVariableExp> collectVarOccurences(ILexLocation defLoc,
+			INode defScope) throws AnalysisException
 	{
 		VarOccurencesCollector collector = new VarOccurencesCollector(defLoc);
 
@@ -1051,7 +1049,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		return collector.getVars();
 	}
-	
+
 	private Set<AIdentifierStateDesignator> collectIdDesignatorOccurrences(
 			ILexLocation defLoc, INode defScope) throws AnalysisException
 	{
@@ -1061,13 +1059,14 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		return collector.getIds();
 	}
-	
-	private Set<AIdentifierPattern> collectIdOccurences(ILexNameToken name, INode parent) throws AnalysisException
+
+	private Set<AIdentifierPattern> collectIdOccurences(ILexNameToken name,
+			INode parent) throws AnalysisException
 	{
 		IdOccurencesCollector collector = new IdOccurencesCollector(name, parent);
-		
+
 		parent.apply(collector);
-		
+
 		return collector.getIdOccurences();
 	}
 

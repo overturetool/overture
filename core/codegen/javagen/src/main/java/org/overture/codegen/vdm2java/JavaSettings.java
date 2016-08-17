@@ -36,7 +36,7 @@ public class JavaSettings
 	private boolean genJUnit4tests;
 	private boolean genSystemClass;
 	private boolean printVdmLocations;
-	
+
 	public JavaSettings()
 	{
 		this.disableCloning = false;
@@ -50,7 +50,7 @@ public class JavaSettings
 		this.genSystemClass = false;
 		this.printVdmLocations = false;
 	}
-	
+
 	public List<String> getModulesToSkip()
 	{
 		return modulesToSkip;

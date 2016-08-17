@@ -23,8 +23,8 @@ package org.overture.codegen.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SourceNode;
 
 public class IRVisitor<A extends PIR> extends QuestionAnswerAdaptor<IRInfo, A>

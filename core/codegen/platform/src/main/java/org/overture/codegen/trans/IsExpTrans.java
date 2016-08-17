@@ -17,45 +17,46 @@ import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AUnionTypeIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
-
 public class IsExpTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantIR transAssistant;
 	private String isExpSubjectNamePrefix;
-	
-	public IsExpTrans(TransAssistantIR transAssistant, String isExpSubjectNamePrefix)
+
+	public IsExpTrans(TransAssistantIR transAssistant,
+			String isExpSubjectNamePrefix)
 	{
 		this.transAssistant = transAssistant;
 		this.isExpSubjectNamePrefix = isExpSubjectNamePrefix;
 	}
+
 	@Override
 	public void caseAGeneralIsExpIR(AGeneralIsExpIR node)
 			throws AnalysisException
 	{
 		STypeIR checkedType = node.getCheckedType();
-		
-		if(!(checkedType instanceof AUnionTypeIR))
+
+		if (!(checkedType instanceof AUnionTypeIR))
 		{
 			node.getExp().apply(this);
 			return;
 		}
-		
+
 		AUnionTypeIR unionType = (AUnionTypeIR) checkedType;
 		List<STypeIR> types = unionType.getTypes();
 		types = transAssistant.getInfo().getTypeAssistant().clearObjectTypes(types);
 
 		SExpIR exp = node.getExp();
 		STypeIR expType = node.getExp().getType();
-		
+
 		ExpAssistantIR expAssistant = transAssistant.getInfo().getExpAssistant();
-		
-		if(types.size() == 1)
+
+		if (types.size() == 1)
 		{
 			SExpIR isExp = expAssistant.consIsExp(exp, types.get(0));
 			transAssistant.replaceNodeWith(node, isExp);
-			
+
 			isExp.apply(this);
-			
+
 		} else
 		{
 
@@ -97,7 +98,7 @@ public class IsExpTrans extends DepthFirstAnalysisAdaptor
 				nextOrExp = tmp;
 			}
 
-			STypeIR lastType = types.get(types.size()-1);
+			STypeIR lastType = types.get(types.size() - 1);
 
 			nextIsExp = expAssistant.consIsExp(expVar, lastType);
 

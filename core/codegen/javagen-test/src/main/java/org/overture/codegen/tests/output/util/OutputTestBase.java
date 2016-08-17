@@ -26,27 +26,25 @@ abstract public class OutputTestBase extends SpecificationTestBase
 	public void init()
 	{
 		File f = new File(modelPath);
-		
-		if(GeneralCodeGenUtils.isVdmPpSourceFile(f))
+
+		if (GeneralCodeGenUtils.isVdmPpSourceFile(f))
 		{
 			Settings.dialect = Dialect.VDM_PP;
-		}
-		else if(GeneralCodeGenUtils.isVdmSlSourceFile(f))
+		} else if (GeneralCodeGenUtils.isVdmSlSourceFile(f))
 		{
 			Settings.dialect = Dialect.VDM_SL;
-		}
-		else if(GeneralCodeGenUtils.isVdmRtSourceFile(f))
+		} else if (GeneralCodeGenUtils.isVdmRtSourceFile(f))
 		{
 			Settings.dialect = Dialect.VDM_RT;
-		}
-		else
+		} else
 		{
-			Assert.fail("The file does not have a valid VDM source file extension. Got: " + modelPath);
+			Assert.fail("The file does not have a valid VDM source file extension. Got: "
+					+ modelPath);
 		}
-		
+
 		Settings.release = Release.VDM_10;
 	}
-	
+
 	public List<AModuleModules> buildModulesList(List<INode> ast)
 	{
 		List<AModuleModules> modules = new LinkedList<AModuleModules>();
@@ -63,7 +61,7 @@ abstract public class OutputTestBase extends SpecificationTestBase
 		}
 		return modules;
 	}
-	
+
 	public List<SClassDefinition> buildClassList(List<INode> ast)
 	{
 		List<SClassDefinition> classes = new LinkedList<SClassDefinition>();

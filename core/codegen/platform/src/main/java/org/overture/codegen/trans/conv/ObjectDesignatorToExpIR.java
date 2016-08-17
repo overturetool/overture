@@ -26,9 +26,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SObjectDesignatorIR;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.AnswerAdaptor;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
@@ -45,13 +47,11 @@ import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.types.SMapTypeIR;
 import org.overture.codegen.ir.types.SSeqTypeIR;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.SourceNode;
 
 public class ObjectDesignatorToExpIR extends AnswerAdaptor<SExpIR>
 {
 	private IRInfo info;
-	
+
 	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public ObjectDesignatorToExpIR(IRInfo info)

@@ -20,13 +20,13 @@ public class ConfiguredCloningOutputTest extends JavaOutputTestBase
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "cloning_specs";
-	
+
 	public ConfiguredCloningOutputTest(String nameParameter,
 			String inputParameter, String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
-	
+
 	@Before
 	public void init()
 	{
@@ -42,7 +42,7 @@ public class ConfiguredCloningOutputTest extends JavaOutputTestBase
 
 		return javaSettings;
 	}
-	
+
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData()
 	{

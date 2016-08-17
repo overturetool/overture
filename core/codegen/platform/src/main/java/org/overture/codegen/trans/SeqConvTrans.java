@@ -27,8 +27,7 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantIR transformationAssistant;
 
-	public SeqConvTrans(
-			TransAssistantIR transformationAssistant)
+	public SeqConvTrans(TransAssistantIR transformationAssistant)
 	{
 		this.transformationAssistant = transformationAssistant;
 	}
@@ -36,20 +35,20 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAForAllStmIR(AForAllStmIR node) throws AnalysisException
 	{
-		if(node.getExp().getType() instanceof AStringTypeIR)
+		if (node.getExp().getType() instanceof AStringTypeIR)
 		{
 			ASeqSeqTypeIR seqType = new ASeqSeqTypeIR();
 			seqType.setEmpty(false);
 			seqType.setSeq1(false);
 			seqType.setOptional(false);
 			seqType.setSeqOf(new ACharBasicTypeIR());
-			
+
 			correctExpToSeq(node.getExp(), seqType);
 		}
 
 		node.getBody().apply(this);
 	}
-	
+
 	@Override
 	public void inAFieldDeclIR(AFieldDeclIR node) throws AnalysisException
 	{
@@ -65,26 +64,24 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 
 		handleExp(initial, nodeType);
 	}
-	
+
 	@Override
 	public void inAFieldNumberExpIR(AFieldNumberExpIR node)
 			throws AnalysisException
 	{
 		node.getTuple().apply(this);
-		
-		if(node.getType() instanceof AStringTypeIR)
+
+		if (node.getType() instanceof AStringTypeIR)
 		{
 			correctExpToString(node);
-		}
-		else if(node.getType() instanceof SSeqTypeIR)
+		} else if (node.getType() instanceof SSeqTypeIR)
 		{
 			correctExpToSeq(node, node.getType());
 		}
 	}
 
 	@Override
-	public void inAVarDeclIR(AVarDeclIR node)
-			throws AnalysisException
+	public void inAVarDeclIR(AVarDeclIR node) throws AnalysisException
 	{
 		STypeIR nodeType = node.getType();
 		SExpIR exp = node.getExp();
@@ -98,11 +95,12 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 
 		handleExp(exp, nodeType);
 	}
-	
+
 	@Override
-	public void caseAAssignToExpStmIR(AAssignToExpStmIR node) throws AnalysisException
+	public void caseAAssignToExpStmIR(AAssignToExpStmIR node)
+			throws AnalysisException
 	{
-		if(node.getExp() != null)
+		if (node.getExp() != null)
 		{
 			node.getExp().apply(this);
 			handleExp(node.getExp(), node.getTarget().getType());
@@ -153,7 +151,9 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		if (node.getType() instanceof SSeqTypeIR || node instanceof AEqualsBinaryExpIR || node instanceof ANotEqualsBinaryExpIR)
+		if (node.getType() instanceof SSeqTypeIR
+				|| node instanceof AEqualsBinaryExpIR
+				|| node instanceof ANotEqualsBinaryExpIR)
 		{
 			if (left.getType() instanceof AStringTypeIR
 					&& right.getType() instanceof SSeqTypeIR)
