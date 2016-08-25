@@ -68,10 +68,10 @@ public class VdmCompletionHelper  extends VdmTemplateAssistProcessor{
 		sbPattern.append(functionName[1]);
 		sbDisplayName.append(functionName[1]);
 		if((parameterNames != null && !parameterNames.isEmpty())){
-			
-			String firstStr = parameterNames.get(0);
-			for (int i = 0; i < parameterNames.size(); i++) {
-				String str = parameterNames.get(i);
+			List<String> checkedParamenterNames = parameterNameChecker(parameterNames);
+			String firstStr = checkedParamenterNames.get(0);
+			for (int i = 0; i < checkedParamenterNames.size(); i++) {
+				String str = checkedParamenterNames.get(i);
 				
 				//The hyphen is a special character and has the same id even for two different strings,
 				//therefore it is not possbile to compare them by id.
@@ -134,4 +134,19 @@ public class VdmCompletionHelper  extends VdmTemplateAssistProcessor{
 		return null;
 	}
 	
+	private List<String> parameterNameChecker(List<String> parameterNames){
+		//TODO Temp class which has to be removed and replaced with the NameGen from package org.overture.codegen.vdm2jml.util; since it duplicates functionality
+		NameGen nameGen = new NameGen();
+		List<String> checkedParameterNames = new ArrayList<String>();
+		for (String parm : parameterNames) {
+			String tempParm = parm;
+			tempParm = parm.replaceAll("[^a-zA-Z0-9_]", "");
+			
+			if(tempParm.length() <= 0){
+				tempParm = "parameter";
+			}
+			checkedParameterNames.add(nameGen.getName(tempParm));
+		}
+		return checkedParameterNames;
+	}
 }
