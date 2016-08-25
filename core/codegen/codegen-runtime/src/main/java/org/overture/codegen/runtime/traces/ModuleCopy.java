@@ -15,14 +15,14 @@ public class ModuleCopy
 {
 	private static final String MODIFIERS_FIELD = "modifiers";
 	private static final String JAVA_LANG = "java.lang";
-	
+
 	protected Map<Field, Object> staticFields;
-	
+
 	public ModuleCopy(Class<?> clazz)
 	{
 		super();
-		
-		if(!isJavaLangClass(clazz))
+
+		if (!isJavaLangClass(clazz))
 		{
 			copyStaticFields(clazz);
 		}
@@ -32,7 +32,7 @@ public class ModuleCopy
 	{
 		return clazz.getName().startsWith(JAVA_LANG);
 	}
-	
+
 	public void reset()
 	{
 		resetStaticFields();
@@ -45,17 +45,17 @@ public class ModuleCopy
 
 	public void resetStaticFields()
 	{
-		if(staticFields == null)
+		if (staticFields == null)
 		{
 			return;
 		}
-		
+
 		for (Field f : staticFields.keySet())
 		{
 			f.setAccessible(true);
-	
+
 			Object v = deepCopy(staticFields.get(f));
-	
+
 			try
 			{
 				f.set(null, v);
@@ -84,7 +84,7 @@ public class ModuleCopy
 					 * Remove the 'final' modifier so we can set it later
 					 */
 					unfinal(f);
-					
+
 					/**
 					 * The Java code generator also makes 'final' fields 'static'
 					 */
@@ -93,26 +93,28 @@ public class ModuleCopy
 				{
 					staticFields.put(f, deepCopy(f.get(null)));
 				}
-			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
+			} catch (NoSuchFieldException | SecurityException
+					| IllegalArgumentException | IllegalAccessException e)
 			{
 				e.printStackTrace();
 			}
 		}
 	}
 
-	private static void unfinal(Field f) throws NoSuchFieldException, IllegalAccessException
+	private static void unfinal(Field f)
+			throws NoSuchFieldException, IllegalAccessException
 	{
 		f.setAccessible(true);
 		Field modifiersField = Field.class.getDeclaredField(MODIFIERS_FIELD);
 		modifiersField.setAccessible(true);
 		modifiersField.setInt(f, f.getModifiers() & ~Modifier.FINAL);
 	}
-	
+
 	public static boolean isFinal(Field f)
 	{
 		return Modifier.isFinal(f.getModifiers());
 	}
-	
+
 	public static boolean isStatic(Field f)
 	{
 		return Modifier.isStatic(f.getModifiers());
@@ -121,31 +123,30 @@ public class ModuleCopy
 	public static List<Field> getAllFields(List<Field> fields, Class<?> type)
 	{
 		fields.addAll(Arrays.asList(type.getDeclaredFields()));
-	
+
 		if (type.getSuperclass() != null)
 		{
 			fields = getAllFields(fields, type.getSuperclass());
 		}
-	
+
 		return fields;
 	}
-	
+
 	public static Object deepCopy(Object orig)
 	{
-		if(orig == null)
+		if (orig == null)
 		{
 			return null;
-		}
-		else if(orig instanceof ValueType)
+		} else if (orig instanceof ValueType)
 		{
 			ValueType vt = (ValueType) orig;
-			
+
 			return vt.copy();
-		}else if(orig instanceof Number || orig instanceof Character || orig instanceof Boolean)
+		} else if (orig instanceof Number || orig instanceof Character
+				|| orig instanceof Boolean)
 		{
 			return orig;
-		}
-		else
+		} else
 		{
 			return DeepCopy.copy(orig);
 		}

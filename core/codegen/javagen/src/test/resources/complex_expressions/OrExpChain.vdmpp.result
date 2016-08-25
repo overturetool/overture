@@ -1,81 +1,72 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private Number n = 0L;
+  private Number n = 0L;
 
-    public Entry() {
+  public Boolean inc() {
+
+    n = n.longValue() + 1L;
+    return true;
+  }
+
+  public static Object Run() {
+
+    final Entry e = new Entry();
+    Boolean orResult_1 = false;
+
+    Long exists1Counter_1 = 0L;
+    VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+    for (Iterator iterator_1 = set_1.iterator();
+        iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);
+        ) {
+      Number x = ((Number) iterator_1.next());
+      if (e.inc()) {
+        exists1Counter_1++;
+      }
     }
+    if (Utils.equals(exists1Counter_1, 1L)) {
+      orResult_1 = true;
+    } else {
+      Boolean orResult_2 = false;
 
-    public Boolean inc() {
-        n = n.longValue() + 1L;
-
-        return true;
-    }
-
-    public static Object Run() {
-        final Entry e = new Entry();
-        Boolean orResult_1 = false;
-
-        Long exists1Counter_1 = 0L;
-        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
-
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);) {
-            Number x = ((Number) iterator_1.next());
-
-            if (e.inc()) {
-                exists1Counter_1++;
-            }
+      Long exists1Counter_2 = 0L;
+      VDMSet set_2 = SetUtil.set(4L, 5L, 6L);
+      for (Iterator iterator_2 = set_2.iterator();
+          iterator_2.hasNext() && (exists1Counter_2.longValue() < 2L);
+          ) {
+        Number x = ((Number) iterator_2.next());
+        if (e.inc()) {
+          exists1Counter_2++;
         }
-
-        if (Utils.equals(exists1Counter_1, 1L)) {
-            orResult_1 = true;
-        } else {
-            Boolean orResult_2 = false;
-
-            Long exists1Counter_2 = 0L;
-            VDMSet set_2 = SetUtil.set(4L, 5L, 6L);
-
-            for (Iterator iterator_2 = set_2.iterator();
-                    iterator_2.hasNext() &&
-                    (exists1Counter_2.longValue() < 2L);) {
-                Number x = ((Number) iterator_2.next());
-
-                if (e.inc()) {
-                    exists1Counter_2++;
-                }
-            }
-
-            if (Utils.equals(exists1Counter_2, 1L)) {
-                orResult_2 = true;
-            } else {
-                Boolean forAllExpResult_1 = true;
-                VDMSet set_3 = SetUtil.set(1L, 2L, 3L, 4L);
-
-                for (Iterator iterator_3 = set_3.iterator();
-                        iterator_3.hasNext() && forAllExpResult_1;) {
-                    Number x = ((Number) iterator_3.next());
-                    forAllExpResult_1 = e.inc();
-                }
-
-                orResult_2 = forAllExpResult_1;
-            }
-
-            orResult_1 = orResult_2;
+      }
+      if (Utils.equals(exists1Counter_2, 1L)) {
+        orResult_2 = true;
+      } else {
+        Boolean forAllExpResult_1 = true;
+        VDMSet set_3 = SetUtil.set(1L, 2L, 3L, 4L);
+        for (Iterator iterator_3 = set_3.iterator(); iterator_3.hasNext() && forAllExpResult_1; ) {
+          Number x = ((Number) iterator_3.next());
+          forAllExpResult_1 = e.inc();
         }
+        orResult_2 = forAllExpResult_1;
+      }
 
-        final Boolean b = orResult_1;
-
-        return Tuple.mk_(b, e.n);
+      orResult_1 = orResult_2;
     }
 
-    public String toString() {
-        return "Entry{" + "n := " + Utils.toString(n) + "}";
-    }
+    final Boolean b = orResult_1;
+    return Tuple.mk_(b, e.n);
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{" + "n := " + Utils.toString(n) + "}";
+  }
 }
 
 ##########

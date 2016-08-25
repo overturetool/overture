@@ -4,11 +4,15 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AFieldDeclIR;
 import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
@@ -23,10 +27,6 @@ import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
-import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRStatus;
-import org.overture.codegen.ir.VdmNodeInfo;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
@@ -36,6 +36,8 @@ import org.overture.codegen.vdm2jml.util.NameGen;
 public class JmlGenUtil
 {
 	private JmlGenerator jmlGen;
+
+	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public JmlGenUtil(JmlGenerator jmlGen)
 	{
@@ -52,12 +54,12 @@ public class JmlGenUtil
 		}
 
 		String paramName = getName(formalParam.getPattern());
-		
-		if(paramName == null)
+
+		if (paramName == null)
 		{
 			return null;
 		}
-		
+
 		STypeIR paramType = formalParam.getType().clone();
 
 		return jmlGen.getJavaGen().getInfo().getExpAssistant().consIdVar(paramName, paramType);
@@ -67,16 +69,14 @@ public class JmlGenUtil
 	{
 		if (!(id instanceof AIdentifierPatternIR))
 		{
-			Logger.getLog().printErrorln("Expected identifier pattern "
-					+ "to be an identifier pattern at this point. Got: "
-					+ id
-					+ " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Expected identifier pattern "
+					+ "to be an identifier pattern at this point. Got: " + id);
 			return null;
 		}
 
 		return ((AIdentifierPatternIR) id).getName();
 	}
-	
+
 	public AFormalParamLocalParamIR getInvFormalParam(AMethodDeclIR invMethod)
 	{
 		if (invMethod.getFormalParams().size() == 1)
@@ -84,12 +84,9 @@ public class JmlGenUtil
 			return invMethod.getFormalParams().get(0);
 		} else
 		{
-			Logger.getLog().printErrorln("Expected only a single formal parameter "
-					+ "for named invariant type method "
-					+ invMethod.getName()
-					+ " but got "
-					+ invMethod.getFormalParams().size()
-					+ " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Expected only a single formal parameter "
+					+ "for named invariant type method " + invMethod.getName()
+					+ " but got " + invMethod.getFormalParams().size());
 
 			if (!invMethod.getFormalParams().isEmpty())
 			{
@@ -108,16 +105,14 @@ public class JmlGenUtil
 			return (AMethodDeclIR) typeDecl.getInv();
 		} else if (typeDecl.getInv() != null)
 		{
-			Logger.getLog().printErrorln("Expected named type invariant function "
+			log.error("Expected named type invariant function "
 					+ "to be a method declaration at this point. Got: "
-					+ typeDecl.getDecl()
-					+ " in '"
-					+ this.getClass().getSimpleName() + "'");
+					+ typeDecl.getDecl());
 		}
 
 		return null;
 	}
-	
+
 	public List<AMethodDeclIR> getNamedTypeInvMethods(ADefaultClassDeclIR clazz)
 	{
 		List<AMethodDeclIR> invDecls = new LinkedList<AMethodDeclIR>();
@@ -127,8 +122,8 @@ public class JmlGenUtil
 			if (typeDecl.getDecl() instanceof ANamedTypeDeclIR)
 			{
 				AMethodDeclIR m = getInvMethod(typeDecl);
-				
-				if(m != null)
+
+				if (m != null)
 				{
 					invDecls.add(m);
 				}
@@ -137,18 +132,18 @@ public class JmlGenUtil
 
 		return invDecls;
 	}
-	
+
 	public List<String> getRecFieldNames(ARecordDeclIR r)
 	{
 		List<String> args = new LinkedList<String>();
-		
-		for(AFieldDeclIR f : r.getFields())
+
+		for (AFieldDeclIR f : r.getFields())
 		{
 			args.add(f.getName());
 		}
 		return args;
 	}
-	
+
 	public List<ARecordDeclIR> getRecords(List<IRStatus<PIR>> ast)
 	{
 		List<ARecordDeclIR> records = new LinkedList<ARecordDeclIR>();
@@ -166,7 +161,7 @@ public class JmlGenUtil
 
 		return records;
 	}
-	
+
 	public String getMethodCondArgName(SPatternIR pattern)
 	{
 		// By now all patterns should be identifier patterns
@@ -187,13 +182,13 @@ public class JmlGenUtil
 
 		} else
 		{
-			Logger.getLog().printErrorln("Expected formal parameter pattern to be an indentifier pattern. Got: "
-					+ pattern + " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Expected formal parameter pattern to be an indentifier pattern. Got: "
+					+ pattern);
 
 			return "UNKNOWN";
 		}
 	}
-	
+
 	public String toJmlOldExp(String paramName)
 	{
 		// Convert old name to current name (e.g. _St to St)
@@ -206,7 +201,7 @@ public class JmlGenUtil
 		// Convert current name to JML old expression (e.g. \old(St)
 		return String.format("%s(%s)", JmlGenerator.JML_OLD_PREFIX, currentArg);
 	}
-	
+
 	/**
 	 * This change to the IR is really only to circumvent a bug in OpenJML with loading of inner classes. The only thing
 	 * that the Java code generator uses inner classes for is records. If this problem gets fixed the workaround
@@ -217,7 +212,8 @@ public class JmlGenUtil
 	 * @param recInfo
 	 *            Since the new record classes are deep copies we need to update the record info too
 	 */
-	public List<IRStatus<PIR>> makeRecsOuterClasses(List<IRStatus<PIR>> ast, RecClassInfo recInfo)
+	public List<IRStatus<PIR>> makeRecsOuterClasses(List<IRStatus<PIR>> ast,
+			RecClassInfo recInfo)
 	{
 		List<IRStatus<PIR>> extraClasses = new LinkedList<IRStatus<PIR>>();
 
@@ -241,7 +237,7 @@ public class JmlGenUtil
 			for (ARecordDeclIR recDecl : recDecls)
 			{
 				ADefaultClassDeclIR recClass = new ADefaultClassDeclIR();
-				
+
 				recInfo.registerRecClass(recClass);
 
 				recClass.setMetaData(recDecl.getMetaData());
@@ -250,35 +246,34 @@ public class JmlGenUtil
 				recClass.setSourceNode(recDecl.getSourceNode());
 				recClass.setStatic(false);
 				recClass.setName(recDecl.getName());
-				
-				if(recDecl.getInvariant() != null)
+
+				if (recDecl.getInvariant() != null)
 				{
 					recClass.setInvariant(recDecl.getInvariant().clone());
 				}
-				
+
 				AInterfaceDeclIR recInterface = new AInterfaceDeclIR();
 				recInterface.setPackage("org.overture.codegen.runtime");
-				
+
 				final String RECORD_NAME = "Record";
 				recInterface.setName(RECORD_NAME);
 				AExternalTypeIR recInterfaceType = new AExternalTypeIR();
 				recInterfaceType.setName(RECORD_NAME);
 				AMethodTypeIR copyMethodType = new AMethodTypeIR();
 				copyMethodType.setResult(recInterfaceType);
-				
-				AMethodDeclIR copyMethod = jmlGen.getJavaGen().getJavaFormat().
-						getRecCreator().consCopySignature(copyMethodType);
+
+				AMethodDeclIR copyMethod = jmlGen.getJavaGen().getJavaFormat().getRecCreator().consCopySignature(copyMethodType);
 				copyMethod.setAbstract(true);
-				
+
 				recInterface.getMethodSignatures().add(copyMethod);
-				
+
 				recClass.getInterfaces().add(recInterface);
 
 				// Copy the record methods to the class
 				List<AMethodDeclIR> methods = new LinkedList<AMethodDeclIR>();
 				for (AMethodDeclIR m : recDecl.getMethods())
 				{
-					AMethodDeclIR newMethod = m.clone(); 
+					AMethodDeclIR newMethod = m.clone();
 					methods.add(newMethod);
 					recInfo.updateAccessor(m, newMethod);
 				}
@@ -302,9 +297,10 @@ public class JmlGenUtil
 					recClass.setPackage(recPackage);
 				} else
 				{
-					recClass.setPackage(clazz.getName() + JavaFormat.TYPE_DECL_PACKAGE_SUFFIX);
+					recClass.setPackage(clazz.getName()
+							+ JavaFormat.TYPE_DECL_PACKAGE_SUFFIX);
 				}
-				
+
 				List<ClonableString> imports = new LinkedList<>();
 				imports.add(new ClonableString(JavaCodeGen.JAVA_UTIL));
 				imports.add(new ClonableString(JavaCodeGen.RUNTIME_IMPORT));
@@ -330,25 +326,25 @@ public class JmlGenUtil
 
 		return recPackage;
 	}
-	
+
 	public AMethodDeclIR genInvMethod(ADefaultClassDeclIR clazz,
 			ANamedTypeDeclIR namedTypeDecl)
 	{
 		AReturnStmIR body = new AReturnStmIR();
 		body.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consBoolLiteral(true));
-		
+
 		STypeIR paramType = namedTypeDecl.getType();
-		
+
 		AMethodTypeIR invMethodType = new AMethodTypeIR();
 		invMethodType.setResult(new ABoolBasicTypeIR());
 		invMethodType.getParams().add(paramType.clone());
-		
+
 		String formalParamName = new NameGen(clazz).getName(JmlGenerator.GEN_INV_METHOD_PARAM_NAME);
-		
+
 		AFormalParamLocalParamIR formalParam = new AFormalParamLocalParamIR();
 		formalParam.setType(paramType.clone());
 		formalParam.setPattern(jmlGen.getJavaGen().getInfo().getPatternAssistant().consIdPattern(formalParamName));
-		
+
 		AMethodDeclIR method = new AMethodDeclIR();
 		method.setImplicit(false);
 		method.setAbstract(false);
@@ -360,21 +356,22 @@ public class JmlGenUtil
 		method.setMethodType(invMethodType);
 		method.setName("inv_" + namedTypeDecl.getName());
 		method.setStatic(true);
-		
+
 		return method;
 	}
-	
-	public AIdentifierPatternIR consInvParamReplacementId(ADefaultClassDeclIR encClass, String originalParamName)
+
+	public AIdentifierPatternIR consInvParamReplacementId(
+			ADefaultClassDeclIR encClass, String originalParamName)
 	{
 		NameGen nameGen = new NameGen(encClass);
 		nameGen.addName(originalParamName);
-		
+
 		String newParamName = nameGen.getName(JmlGenerator.INV_METHOD_REPLACEMENT_NAME_PREFIX
 				+ originalParamName);
-		
+
 		return jmlGen.getJavaGen().getInfo().getPatternAssistant().consIdPattern(newParamName);
 	}
-	
+
 	public ADefaultClassDeclIR getEnclosingClass(INode node)
 	{
 		ADefaultClassDeclIR enclosingClass = node.getAncestor(ADefaultClassDeclIR.class);
@@ -384,12 +381,11 @@ public class JmlGenUtil
 			return enclosingClass;
 		} else
 		{
-			Logger.getLog().printErrorln("Could not find enclosing class of node "
-					+ node + " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Could not find enclosing class of node: " + node);
 			return null;
 		}
 	}
-	
+
 	public AMethodDeclIR getEnclosingMethod(INode node)
 	{
 		AMethodDeclIR enclosingMethod = node.getAncestor(AMethodDeclIR.class);
@@ -399,23 +395,18 @@ public class JmlGenUtil
 			return enclosingMethod;
 		} else
 		{
-			Logger.getLog().printErrorln("Could not find enclosing method of node "
-					+ node + " in " + this.getClass().getSimpleName());
-
+			log.error("Could not find enclosing method of node: " + node);
 			return null;
 		}
 	}
-	
+
 	/**
-	 * There are problems with OpenJML when you invoke named type invariant
-	 * methods across classes. Until these bugs are fixed the workaround is simply
-	 * to make sure that all generated classes have a local copy of a named invariant method.
-	 * 
-	 * TODO: Currently invariant method are named on the form "module_typename" although
-	 * this does not truly garuantee uniqueness. For example if module A defines type
-	 * B_C the invariant method name is A_B_C. However if module A_B defines type C
-	 * then the invariant method will also be named A_B_C. So something needs to be
-	 * done about this.
+	 * There are problems with OpenJML when you invoke named type invariant methods across classes. Until these bugs are
+	 * fixed the workaround is simply to make sure that all generated classes have a local copy of a named invariant
+	 * method. TODO: Currently invariant method are named on the form "module_typename" although this does not truly
+	 * garuantee uniqueness. For example if module A defines type B_C the invariant method name is A_B_C. However if
+	 * module A_B defines type C then the invariant method will also be named A_B_C. So something needs to be done about
+	 * this.
 	 * 
 	 * @param newAst
 	 */
@@ -423,43 +414,43 @@ public class JmlGenUtil
 	{
 		// Collect all named type invariants
 		List<ATypeDeclIR> allNamedTypeInvTypeDecls = new LinkedList<ATypeDeclIR>();
-		for(IRStatus<ADefaultClassDeclIR> status : IRStatus.extract(newAst, ADefaultClassDeclIR.class))
+		for (IRStatus<ADefaultClassDeclIR> status : IRStatus.extract(newAst, ADefaultClassDeclIR.class))
 		{
 			ADefaultClassDeclIR clazz = status.getIrNode();
-		
-			if(jmlGen.getJavaGen().getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
+
+			if (jmlGen.getJavaGen().getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
 			{
 				continue;
 			}
-			
-			for(ATypeDeclIR typeDecl : clazz.getTypeDecls())
+
+			for (ATypeDeclIR typeDecl : clazz.getTypeDecls())
 			{
-				if(typeDecl.getDecl() instanceof ANamedTypeDeclIR)
+				if (typeDecl.getDecl() instanceof ANamedTypeDeclIR)
 				{
 					allNamedTypeInvTypeDecls.add(typeDecl);
 				}
 			}
 		}
-		
-		for(IRStatus<ADefaultClassDeclIR> status : IRStatus.extract(newAst, ADefaultClassDeclIR.class))
+
+		for (IRStatus<ADefaultClassDeclIR> status : IRStatus.extract(newAst, ADefaultClassDeclIR.class))
 		{
 			ADefaultClassDeclIR clazz = status.getIrNode();
-			
-			if(jmlGen.getJavaGen().getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
+
+			if (jmlGen.getJavaGen().getInfo().getDeclAssistant().isLibraryName(clazz.getName()))
 			{
 				continue;
 			}
-			
+
 			List<ATypeDeclIR> classTypeDecls = new LinkedList<ATypeDeclIR>(clazz.getTypeDecls());
-			
-			for(ATypeDeclIR namedTypeInv : allNamedTypeInvTypeDecls)
+
+			for (ATypeDeclIR namedTypeInv : allNamedTypeInvTypeDecls)
 			{
-				if(!classTypeDecls.contains(namedTypeInv))
+				if (!classTypeDecls.contains(namedTypeInv))
 				{
 					classTypeDecls.add(namedTypeInv.clone());
 				}
 			}
-			
+
 			clazz.setTypeDecls(classTypeDecls);
 		}
 	}

@@ -1,51 +1,51 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Entry {
-    /*@ public ghost static boolean invChecksOn = true; @*/
-    private Entry() {
+  /*@ public ghost static boolean invChecksOn = true; @*/
+
+  private Entry() {}
+
+  public static Object Run() {
+
+    {
+      final Number ignorePattern_1 = f();
+      //@ assert Utils.is_real(ignorePattern_1);
+
+      /* skip */
     }
 
-    public static Object Run() {
-        {
-            final Number ignorePattern_1 = f();
+    IO.println("Done! Expected no violations");
+    return 0L;
+  }
+  /*@ pure @*/
 
-            //@ assert Utils.is_real(ignorePattern_1);
+  public static Number f() {
 
-            /* skip */
-        }
+    final Number realPattern_1 = 1.5;
+    //@ assert Utils.is_rat(realPattern_1);
 
-        IO.println("Done! Expected no violations");
+    Boolean success_1 = Utils.equals(realPattern_1, 1.5);
+    //@ assert Utils.is_bool(success_1);
 
-        return 0L;
+    if (!(success_1)) {
+      throw new RuntimeException("Real pattern match failed");
     }
 
-    /*@ pure @*/
-    public static Number f() {
-        final Number realPattern_1 = 1.5;
+    Number ret_1 = 1.5;
+    //@ assert Utils.is_real(ret_1);
 
-        //@ assert Utils.is_rat(realPattern_1);
-        Boolean success_1 = Utils.equals(realPattern_1, 1.5);
+    return ret_1;
+  }
 
-        //@ assert Utils.is_bool(success_1);
-        if (!(success_1)) {
-            throw new RuntimeException("Real pattern match failed");
-        }
+  public String toString() {
 
-        Number ret_1 = 1.5;
-
-        //@ assert Utils.is_real(ret_1);
-        return ret_1;
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }

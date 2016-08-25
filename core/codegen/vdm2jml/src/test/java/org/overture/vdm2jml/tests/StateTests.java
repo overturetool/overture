@@ -17,13 +17,13 @@ public class StateTests extends AnnotationTestsBase
 	{
 		AnnotationTestsBase.init("State.vdmsl");
 	}
-	
+
 	@Before
 	public void prepareTest()
 	{
 		validateGenModuleAndStateType();
 	}
-	
+
 	@Test
 	public void testModuleStateIsSpecPublic()
 	{
@@ -37,7 +37,7 @@ public class StateTests extends AnnotationTestsBase
 
 		Assert.assertEquals("Expected state field to be @spec_public", SPEC_PUBLIC_ANNOTATION, annotation);
 	}
-	
+
 	@Test
 	public void testGenStateTypeMethodsArePure()
 	{
@@ -54,14 +54,14 @@ public class StateTests extends AnnotationTestsBase
 		// see https://github.com/overturetool/overture/issues/459
 		Assert.assertTrue("The state invariant constrains the type of the state", genModule.getInvariant() == null);
 	}
-	
+
 	@Test
 	public void testInv()
 	{
 		Assert.assertTrue("Expected only a single ghost variable declaration to exist", genModule.getMetaData().size() == 1);
-		
+
 		String expected = "/*@ public ghost static boolean invChecksOn = true; @*/";
-		
+
 		Assert.assertEquals("Got unexpected invariant", expected, genModule.getMetaData().get(0).value);
 	}
 }

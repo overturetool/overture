@@ -1,25 +1,28 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        String a = "a";
-        String b = "b";
+    String a = "a";
+    String b = "b";
+    return SeqUtil.seq(
+        Utils.equals(a, a),
+        Utils.equals(a, b),
+        Utils.equals(b, "b"),
+        !(Utils.equals(a, a)),
+        !(Utils.equals(a, b)),
+        !(Utils.equals(b, "b")));
+  }
 
-        return SeqUtil.seq(Utils.equals(a, a), Utils.equals(a, b),
-            Utils.equals(b, "b"), !(Utils.equals(a, a)), !(Utils.equals(a, b)),
-            !(Utils.equals(b, "b")));
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

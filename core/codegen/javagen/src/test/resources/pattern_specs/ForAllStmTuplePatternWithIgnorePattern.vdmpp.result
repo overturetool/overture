@@ -1,44 +1,41 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Number Run() {
+
+    Number result = 1L;
+    for (Iterator iterator_1 =
+            SetUtil.set(Tuple.mk_(3L, 3L, 3L), Tuple.mk_(4L, 2L, 6L), Tuple.mk_(7L, 2L, 9L))
+                .iterator();
+        iterator_1.hasNext();
+        ) {
+      Tuple tuplePattern_1 = (Tuple) iterator_1.next();
+      Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class, Number.class);
+      Number a = null;
+      if (success_1) {
+        a = ((Number) tuplePattern_1.get(0));
+        Number intPattern_1 = ((Number) tuplePattern_1.get(1));
+        success_1 = Utils.equals(intPattern_1, 2L);
+      }
+
+      if (!(success_1)) {
+        continue;
+      }
+
+      result = result.longValue() * a.longValue();
     }
+    return result;
+  }
 
-    public static Number Run() {
-        Number result = 1L;
+  public Entry() {}
 
-        for (Iterator iterator_1 = SetUtil.set(Tuple.mk_(3L, 3L, 3L),
-                    Tuple.mk_(4L, 2L, 6L), Tuple.mk_(7L, 2L, 9L)).iterator();
-                iterator_1.hasNext();) {
-            Tuple tuplePattern_1 = (Tuple) iterator_1.next();
-            Boolean success_1 = tuplePattern_1.compatible(Number.class,
-                    Number.class, Number.class);
-            Number a = null;
+  public String toString() {
 
-            if (success_1) {
-                a = ((Number) tuplePattern_1.get(0));
-
-                Number intPattern_1 = ((Number) tuplePattern_1.get(1));
-                success_1 = Utils.equals(intPattern_1, 2L);
-            }
-
-            if (!(success_1)) {
-                continue;
-            }
-
-            result = result.longValue() * a.longValue();
-        }
-
-        return result;
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

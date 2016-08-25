@@ -1,27 +1,26 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public Number op() {
 
-    public Number op() {
-        Number n = 1L;
-        Boolean b = true;
-        Number r = 1.0;
-        Character c = '1';
-        VDMSeq s1 = SeqUtil.seq('1');
-        A a = new A();
+    Number n = 1L;
+    Boolean b = true;
+    Number r = 1.0;
+    Character c = '1';
+    VDMSeq s1 = SeqUtil.seq('1');
+    A a = new A();
+    return 0L;
+  }
 
-        return 0L;
-    }
+  public A() {}
 
-    public String toString() {
-        return "A{}";
-    }
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########

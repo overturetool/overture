@@ -21,24 +21,19 @@
  */
 package org.overture.core.npp;
 
-import javax.security.sasl.RealmCallback;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
-import org.overture.ast.expressions.AMuExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
-import org.overture.ast.types.ARealNumericBasicType;
 
 class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		implements IPrettyPrinter

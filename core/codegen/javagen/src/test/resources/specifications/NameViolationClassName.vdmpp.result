@@ -1,24 +1,25 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class cg_Long {
-    public cg_Long() {
-    }
+  public void op(final Number Character) {
 
-    public void op(final Number Character) {
-        if (!(Utils.equals(1L, 2L))) {
-            op(3L);
-        } else {
-            op(3L);
-        }
-    }
+    if (!(Utils.equals(1L, 2L))) {
+      op(3L);
 
-    public String toString() {
-        return "cg_Long{}";
+    } else {
+      op(3L);
     }
+  }
+
+  public cg_Long() {}
+
+  public String toString() {
+
+    return "cg_Long{}";
+  }
 }
 
 ##########

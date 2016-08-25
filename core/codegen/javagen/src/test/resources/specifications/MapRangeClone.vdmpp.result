@@ -1,27 +1,34 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    private static final VDMMap a = MapUtil.map(new Maplet(1L, 2L));
-    private static final VDMSet x = MapUtil.rng(MapUtil.map(new Maplet(1L, 2L)));
-    private static final VDMSet y = MapUtil.rng(op());
-    private static final VDMSet z = MapUtil.rng(Utils.copy(A.a));
+  private static final VDMMap a = MapUtil.map(new Maplet(1L, 2L));
+  private static final VDMSet x = MapUtil.rng(MapUtil.map(new Maplet(1L, 2L)));
+  private static final VDMSet y = MapUtil.rng(op());
+  private static final VDMSet z = MapUtil.rng(Utils.copy(A.a));
 
-    public A() {
-    }
+  public static VDMMap op() {
 
-    public static VDMMap op() {
-        return MapUtil.map(new Maplet(1L, 2L), new Maplet(3L, 4L));
-    }
+    return MapUtil.map(new Maplet(1L, 2L), new Maplet(3L, 4L));
+  }
 
-    public String toString() {
-        return "A{" + "a = " + Utils.toString(a) + ", x = " +
-        Utils.toString(x) + ", y = " + Utils.toString(y) + ", z = " +
-        Utils.toString(z) + "}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{"
+        + "a = "
+        + Utils.toString(a)
+        + ", x = "
+        + Utils.toString(x)
+        + ", y = "
+        + Utils.toString(y)
+        + ", z = "
+        + Utils.toString(z)
+        + "}";
+  }
 }
 
 ##########

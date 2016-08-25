@@ -21,42 +21,42 @@ import org.overture.codegen.trans.assistants.TransAssistantIR;
 public class StateDesignatorToExpIR extends AnswerAdaptor<SExpIR>
 {
 	private TransAssistantIR transAssistant;
-	
+
 	public StateDesignatorToExpIR(TransAssistantIR transAssistant)
 	{
 		this.transAssistant = transAssistant;
 	}
-	
+
 	@Override
 	public SExpIR caseAIdentifierStateDesignatorIR(
 			AIdentifierStateDesignatorIR node) throws AnalysisException
 	{
 		return transAssistant.getInfo().getExpAssistant().idStateDesignatorToExp(node);
 	}
-	
+
 	@Override
 	public SExpIR caseAFieldStateDesignatorIR(AFieldStateDesignatorIR node)
 			throws AnalysisException
 	{
 		SExpIR objExp = node.getObject().apply(this);
-		
+
 		AFieldExpIR fieldExp = new AFieldExpIR();
 		fieldExp.setMemberName(node.getField());
 		fieldExp.setObject(objExp);
 		fieldExp.setType(node.getType().clone());
 		fieldExp.setTag(node.getTag());
 		fieldExp.setSourceNode(node.getSourceNode());
-		
+
 		return fieldExp;
 	}
-	
+
 	@Override
 	public SExpIR caseAMapSeqStateDesignatorIR(AMapSeqStateDesignatorIR node)
 			throws AnalysisException
 	{
 		// Reading a map or a sequence on the left hand
 		// side of an assignment, e.g. m(1).field := 5;
-		
+
 		SExpIR index = node.getExp();
 		SExpIR col = node.getMapseq().apply(this);
 
@@ -69,7 +69,7 @@ public class StateDesignatorToExpIR extends AnswerAdaptor<SExpIR>
 
 		return mapSeqGet;
 	}
-	
+
 	@Override
 	public SExpIR createNewReturnValue(INode node) throws AnalysisException
 	{

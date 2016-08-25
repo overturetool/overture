@@ -24,6 +24,7 @@ package org.overture.codegen.trans.patterns;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SExpIR;
@@ -81,7 +82,6 @@ import org.overture.codegen.ir.types.ASeqSeqTypeIR;
 import org.overture.codegen.ir.types.ATupleTypeIR;
 import org.overture.codegen.ir.types.AUnionTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
@@ -95,7 +95,9 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	private IterationVarPrefixes iteVarPrefixes;
 
 	private String casesExpNamePrefix;
-	
+
+	private Logger log = Logger.getLogger(this.getClass().getName());
+
 	public PatternTrans(IterationVarPrefixes iteVarPrefixes,
 			TransAssistantIR transAssistant, PatternVarPrefixes config,
 			String casesExpNamePrefix)
@@ -119,8 +121,8 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
-		if (pattern  instanceof AIgnorePatternIR)
+
+		if (pattern instanceof AIgnorePatternIR)
 		{
 			AIdentifierPatternIR idPattern = getIdPattern(config.getIgnorePatternPrefix());
 			transAssistant.replaceNodeWith(node.getTarget(), idPattern);
@@ -139,21 +141,19 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	{
 		List<ACaseAltStmStmIR> nodeCases = node.getCases();
 		SPatternIR firstOriginal = nodeCases.get(0).getPattern().clone();
-		
+
 		ABlockStmIR replacementBlock = new ABlockStmIR();
 		String expName = transAssistant.getInfo().getTempVarNameGen().nextVarName(casesExpNamePrefix);
 
 		SExpIR exp = node.getExp();
-		
+
 		if (!(node.getExp() instanceof SVarExpIR))
 		{
-			AVarDeclIR expVarDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(node.getExp().getType().clone(),
-					transAssistant.getInfo().getPatternAssistant().consIdPattern(expName), node.getExp().clone());
+			AVarDeclIR expVarDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(node.getExp().getType().clone(), transAssistant.getInfo().getPatternAssistant().consIdPattern(expName), node.getExp().clone());
 			replacementBlock.getLocalDefs().add(expVarDecl);
-			exp = transAssistant.getInfo().getExpAssistant().consIdVar(expName,
-					node.getExp().getType().clone());
+			exp = transAssistant.getInfo().getExpAssistant().consIdVar(expName, node.getExp().getType().clone());
 		}
-		
+
 		List<PatternInfo> patternInfo = extractFromCases(nodeCases, exp);
 		PatternBlockData patternData = new PatternBlockData(MismatchHandling.NONE);
 
@@ -175,7 +175,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		if (nodeCases.size() > 1)
 		{
 			ifStm.setElseStm(nodeCases.get(0).getResult().clone());
-			
+
 			nextCase = new AIfStmIR();
 
 			enclosingIf = new ABlockStmIR();
@@ -198,21 +198,21 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 				nextCase.setThenStm(enclosingIf);
 				nextCase = tmp;
 			}
-		}
-		else
+		} else
 		{
 			APatternMatchRuntimeErrorExpIR matchFail = new APatternMatchRuntimeErrorExpIR();
 			matchFail.setType(new AErrorTypeIR());
 			matchFail.setMessage(config.getMatchFailedMessage(firstOriginal));
 			ARaiseErrorStmIR noMatchStm = new ARaiseErrorStmIR();
 			noMatchStm.setError(matchFail);
-			
+
 			ifStm.setElseStm(noMatchStm);
 		}
 
 		enclosingIf.getStatements().addFirst(blocks.get(blocks.size() - 1));
 		nextCase.setIfExp(patternData.getSuccessVar().clone());
-		nextCase.setThenStm(nodeCases.get(nodeCases.size() - 1).getResult().clone());
+		nextCase.setThenStm(nodeCases.get(nodeCases.size()
+				- 1).getResult().clone());
 
 		if (node.getOthers() != null)
 		{
@@ -257,7 +257,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 						transAssistant.replaceNodeWith(param.getPattern(), idPattern);
 					} else
 					{
-						Logger.getLog().printError("Could not find prefix for pattern: "
+						log.error("Could not find prefix for pattern: "
 								+ paramPattern);
 					}
 				}
@@ -313,37 +313,34 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			if (!patternInfo.isEmpty())
 			{
 				List<DeclBlockPair> declBlockPairs = consPatternHandlingBlocksSeparate(node.getLocalDefs(), patternInfo);
-				
-				for(int i = 0; i < declBlockPairs.size(); i++)
+
+				for (int i = 0; i < declBlockPairs.size(); i++)
 				{
 					DeclBlockPair currentDeclBlockPair = declBlockPairs.get(i);
-					if(currentDeclBlockPair.getNextDecl() != null)
+					if (currentDeclBlockPair.getNextDecl() != null)
 					{
 						// The pattern handling block must be put before the
 						// enclosing statement of the next declaration
 						SStmIR stm = transAssistant.getEnclosingStm(currentDeclBlockPair.getNextDecl(), "block statement pattern handling");
 						ABlockStmIR block = new ABlockStmIR();
-						
+
 						transAssistant.replaceNodeWith(stm, block);
 						block.getStatements().add(currentDeclBlockPair.getBlock());
 						block.getStatements().add(stm);
-					}
-					else
+					} else
 					{
 						// If there is no next declaration the current declaration
 						// must be the last declaration of the block statement
 						INode parent = currentDeclBlockPair.getDecl().parent();
-						
-						if(parent instanceof ABlockStmIR)
+
+						if (parent instanceof ABlockStmIR)
 						{
 							ABlockStmIR enc = (ABlockStmIR) parent;
 							enc.getStatements().addFirst(currentDeclBlockPair.getBlock());
 
-						}
-						else
+						} else
 						{
-							Logger.getLog().printErrorln("Expected parent of current declaration "
-									+ "to be a block statement but got: "
+							log.error("Expected parent of current declaration to be a block statement but got: "
 									+ parent
 									+ ". Pattern handling block could not be added.");
 						}
@@ -357,48 +354,47 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			stm.apply(this);
 		}
 	}
-	
+
 	@Override
 	public void caseAForAllStmIR(AForAllStmIR node) throws AnalysisException
 	{
 		SPatternIR pattern = node.getPattern();
-		
-		if(pattern instanceof AIdentifierPatternIR)
+
+		if (pattern instanceof AIdentifierPatternIR)
 		{
 			node.getExp().apply(this);
 			node.getBody().apply(this);
 			return;
 		}
 
-		if (pattern  instanceof AIgnorePatternIR)
+		if (pattern instanceof AIgnorePatternIR)
 		{
 			AIdentifierPatternIR idPattern = getIdPattern(config.getIgnorePatternPrefix());
 			transAssistant.replaceNodeWith(pattern, idPattern);
 		}
-		
+
 		PatternBlockData patternData = new PatternBlockData(MismatchHandling.LOOP_CONTINUE);
 		patternData.setPattern(pattern);
 		ABlockStmIR declBlock = new ABlockStmIR();
 		patternData.setDeclBlock(declBlock);
-		
+
 		ABlockStmIR patternHandlingBlock = consPatternCheck(false, pattern, transAssistant.getInfo().getTypeAssistant().findElementType(node.getExp().getType().clone()), patternData, null);
 
 		if (patternHandlingBlock != null)
 		{
 			declBlock.getStatements().addFirst(patternHandlingBlock);
 		}
-		
+
 		declBlock.getStatements().add(node.getBody().clone());
 
 		transAssistant.replaceNodeWith(node.getBody(), declBlock);
-		
+
 		node.getExp().apply(this);
 		node.getBody().apply(this);
 	}
 
 	private ABlockStmIR consPatternHandlingInIterationBlock(
-			AVarDeclIR nextElementDecl, DeclarationTag tag,
-			SExpIR assignedExp)
+			AVarDeclIR nextElementDecl, DeclarationTag tag, SExpIR assignedExp)
 	{
 		PatternInfo declInfo = extractPatternInfo(nextElementDecl);
 		ABlockStmIR declBlockTmp = new ABlockStmIR();
@@ -416,7 +412,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 				data.setSuccessVar(successVar);
 			} else
 			{
-				Logger.getLog().printErrorln("Expected success variable declaration to use an identifier pattern. Got: "
+				log.error("Expected success variable declaration to use an identifier pattern. Got: "
 						+ successVarDeclPattern);
 			}
 		}
@@ -452,14 +448,14 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 				replacementBlock.getStatements().addFirst(assignment);
 			} else
 			{
-				Logger.getLog().printErrorln("Expected the declaration to have its pattern transformed into an identifier pattern. Got: "
+				log.error("Expected the declaration to have its pattern transformed into an identifier pattern. Got: "
 						+ nextDeclPattern);
 			}
 		}
 
 		return replacementBlock;
 	}
-	
+
 	private List<ABlockStmIR> consPatternHandlingBlockCases(
 			List<PatternInfo> patternInfo, PatternBlockData patternData)
 	{
@@ -505,9 +501,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			SPatternIR currentPattern)
 	{
 		AIdentifierPatternIR idPattern = (AIdentifierPatternIR) currentPattern;
-		AVarDeclIR idPatternDecl = transAssistant.getInfo().getDeclAssistant().
-				consLocalVarDecl(currentInfo.getType().clone(),
-						idPattern.clone(), currentInfo.getActualValue().clone());
+		AVarDeclIR idPatternDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(currentInfo.getType().clone(), idPattern.clone(), currentInfo.getActualValue().clone());
 
 		ABlockStmIR wrappingStatement = new ABlockStmIR();
 		wrappingStatement.getLocalDefs().add(idPatternDecl);
@@ -522,8 +516,8 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		for (PatternInfo info : patternInfo)
 		{
 			SPatternIR currentPattern = info.getPattern();
-			
-			if(!basicCaseHandled(currentPattern))
+
+			if (!basicCaseHandled(currentPattern))
 			{
 				ABlockStmIR currentDeclBlock = new ABlockStmIR();
 
@@ -535,32 +529,34 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 		return topBlock;
 	}
-	
-	private List<DeclBlockPair> consPatternHandlingBlocksSeparate(List<AVarDeclIR> decls, List<PatternInfo> patternInfo)
+
+	private List<DeclBlockPair> consPatternHandlingBlocksSeparate(
+			List<AVarDeclIR> decls, List<PatternInfo> patternInfo)
 	{
 		List<DeclBlockPair> blocks = new LinkedList<DeclBlockPair>();
-		
+
 		for (int i = 0; i < patternInfo.size(); i++)
 		{
 			PatternInfo info = patternInfo.get(i);
 
-			if(!basicCaseHandled(info.getPattern()))
+			if (!basicCaseHandled(info.getPattern()))
 			{
 				ABlockStmIR currentDeclBlock = new ABlockStmIR();
 
 				ABlockStmIR patternHandlingBlock = consPatternCheck(info.getPattern(), info.getType(), info.getActualValue(), currentDeclBlock);
 				currentDeclBlock.getStatements().addFirst(patternHandlingBlock);
-				
-				AVarDeclIR nextDecl = i < decls.size() - 1 ? decls.get(1 + i) : null;
+
+				AVarDeclIR nextDecl = i < decls.size() - 1 ? decls.get(1 + i)
+						: null;
 				DeclBlockPair declBlockPair = new DeclBlockPair(decls.get(i), nextDecl, currentDeclBlock);
-				
+
 				blocks.add(declBlockPair);
 			}
 		}
 
 		return blocks;
 	}
-	
+
 	private boolean basicCaseHandled(SPatternIR currentPattern)
 	{
 		if (currentPattern instanceof AIdentifierPatternIR)
@@ -573,10 +569,10 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	private ABlockStmIR consPatternCheck(SPatternIR pattern, STypeIR type,
 			SExpIR actualValue, ABlockStmIR declBlock)
 	{
@@ -657,45 +653,35 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		} else if (pattern instanceof ATuplePatternIR)
 		{
 			ATuplePatternIR tuplePattern = (ATuplePatternIR) pattern;
-			
+
 			if (type instanceof ATupleTypeIR)
 			{
 				ATupleTypeIR tupleType = (ATupleTypeIR) type;
 
-				return consTuplePatternCheck(declarePatternVar, tuplePattern, 
-						tupleType, patternData, actualValue, false);
-			}
-			else if(type instanceof AUnionTypeIR)
+				return consTuplePatternCheck(declarePatternVar, tuplePattern, tupleType, patternData, actualValue, false);
+			} else if (type instanceof AUnionTypeIR)
 			{
-					return consUnionTypedTuplePatternCheck(declarePatternVar,
-							(AUnionTypeIR) type, patternData, actualValue, tuplePattern);
-			}
-			else
+				return consUnionTypedTuplePatternCheck(declarePatternVar, (AUnionTypeIR) type, patternData, actualValue, tuplePattern);
+			} else
 			{
-				Logger.getLog().printErrorln("Expected tuple type or union type "
-						+ "in 'PatternTransformation'. Got: " + type);
+				log.error("Expected tuple type or union type. Got: " + type);
 			}
 		} else if (pattern instanceof ARecordPatternIR)
 		{
 			ARecordPatternIR recordPattern = (ARecordPatternIR) pattern;
 			ARecordTypeIR recordType = (ARecordTypeIR) recordPattern.getType();
-			
-			if(type instanceof ARecordTypeIR)
+
+			if (type instanceof ARecordTypeIR)
 			{
-				
-				return consRecordPatternCheck(declarePatternVar, recordPattern,
-						recordType, patternData, actualValue, checkRecordPattern(actualValue));
-				
-			}
-			else if(type instanceof AUnionTypeIR)
+
+				return consRecordPatternCheck(declarePatternVar, recordPattern, recordType, patternData, actualValue, checkRecordPattern(actualValue));
+
+			} else if (type instanceof AUnionTypeIR)
 			{
-				return consRecordPatternCheck(declarePatternVar, recordPattern,
-						recordType, patternData, actualValue, true);
-			}
-			else
+				return consRecordPatternCheck(declarePatternVar, recordPattern, recordType, patternData, actualValue, true);
+			} else
 			{
-				Logger.getLog().printErrorln("Expected record type or union type"
-						+ "in PatternTransformation. Got: " + type);
+				log.error("Expected record type or union type. Got: " + type);
 			}
 		}
 
@@ -728,7 +714,8 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 	private ABlockStmIR consRecordPatternCheck(boolean declarePattern,
 			ARecordPatternIR recordPattern, ARecordTypeIR recordType,
-			PatternBlockData patternData, SExpIR actualValue, boolean checkRecordType)
+			PatternBlockData patternData, SExpIR actualValue,
+			boolean checkRecordType)
 	{
 		AIdentifierPatternIR idPattern = getIdPattern(config.getName(recordPattern.getClass()));
 
@@ -738,12 +725,12 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		recordPatternVar.setIsLambda(false);
 		recordPatternVar.setIsLocal(true);
 		patternData.setRootPatternVar(recordPatternVar);
-		
-		if(!declarePattern)
+
+		if (!declarePattern)
 		{
 			actualValue = recordPatternVar;
 		}
-		
+
 		ABlockStmIR recordPatternBlock = initPattern(declarePattern, recordPattern, recordType, actualValue, idPattern);
 
 		ARecordDeclIR record = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findRecord(transAssistant.getInfo().getClasses(), recordType);
@@ -763,8 +750,8 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			types.add(currentField.getType());
 		}
 
-		ABlockStmIR fieldCheckBlock = consFieldCheckBlock(patternData, recordPatternVar, 
-				recordPattern.getPatterns(), types, checkRecordType && !declarePattern);
+		ABlockStmIR fieldCheckBlock = consFieldCheckBlock(patternData, recordPatternVar, recordPattern.getPatterns(), types, checkRecordType
+				&& !declarePattern);
 
 		recordPatternBlock.getStatements().add(fieldCheckBlock);
 
@@ -789,7 +776,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 			return wrappingBlock;
 		}
-		
+
 		return recordPatternBlock;
 	}
 
@@ -811,7 +798,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 		ATupleCompatibilityExpIR tupleCheck = new ATupleCompatibilityExpIR();
 		tupleCheck.setType(new ABoolBasicTypeIR());
-		
+
 		if (!cast)
 		{
 			tupleCheck.setTuple(tuplePatternVar.clone());
@@ -822,7 +809,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			castTuple.setExp(tuplePatternVar.clone());
 			tupleCheck.setTuple(castTuple);
 		}
-		
+
 		tupleCheck.setTypes((List<? extends STypeIR>) tupleType.getTypes().clone());
 
 		if (patternData.getSuccessVarDecl() == null)
@@ -853,8 +840,8 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 		if (!patternData.IsRootPattern(pattern))
 		{
-			init = transAssistant.getInfo().getExpAssistant().consBoolLiteral(pattern instanceof ATuplePatternIR ? false
-					: true);
+			init = transAssistant.getInfo().getExpAssistant().consBoolLiteral(pattern instanceof ATuplePatternIR
+					? false : true);
 			init.setType(new ABoolBasicTypeIR());
 		} else
 		{
@@ -929,9 +916,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 		if (declare)
 		{
-			AVarDeclIR patternDecl = transAssistant.getInfo().getDeclAssistant().
-					consLocalVarDecl(type.clone(), idPattern.clone(),
-							actualValue.clone());
+			AVarDeclIR patternDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(type.clone(), idPattern.clone(), actualValue.clone());
 			patternBlock.getLocalDefs().add(patternDecl);
 		} else
 		{
@@ -974,7 +959,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 						// The tuple/record pattern have more field patterns to be generated.
 						// Check the success variable and add a new nesting level
-						if (morePatternsToGenerate(patterns,i))
+						if (morePatternsToGenerate(patterns, i))
 						{
 							AIfStmIR successVarCheck = new AIfStmIR();
 							successVarCheck.setIfExp(patternData.getSuccessVar().clone());
@@ -998,15 +983,16 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	{
 		return pattern instanceof AIgnorePatternIR;
 	}
-	
-	private boolean morePatternsToGenerate(List<SPatternIR> patterns, int currentPatternIndex)
+
+	private boolean morePatternsToGenerate(List<SPatternIR> patterns,
+			int currentPatternIndex)
 	{
 		int nextPatternIndex = currentPatternIndex + 1;
 
 		for (int i = nextPatternIndex; i < patterns.size(); i++)
 		{
 			SPatternIR nextPattern = patterns.get(i);
-			
+
 			if (!skipPattern(nextPattern))
 			{
 				return true;
@@ -1017,7 +1003,8 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	private ABlockStmIR consPatternBlock(PatternBlockData patternData,
-			SPatternIR currentPattern, STypeIR currentType, SExpIR actualValue, boolean cast)
+			SPatternIR currentPattern, STypeIR currentType, SExpIR actualValue,
+			boolean cast)
 	{
 		ABlockStmIR patternBlock = null;
 
@@ -1033,7 +1020,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			ARecordPatternIR nextRecordPattern = (ARecordPatternIR) currentPattern;
 			ARecordTypeIR nextRecordType = (ARecordTypeIR) nextRecordPattern.getType();
 			boolean checkRecordPattern = checkRecordPattern(actualValue);
-			
+
 			patternBlock = consRecordPatternCheck(true, nextRecordPattern, nextRecordType, patternData, actualValue, checkRecordPattern);
 		} else
 		{
@@ -1063,8 +1050,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	{
 		AIdentifierPatternIR currentId = (AIdentifierPatternIR) currentPattern;
 
-		AVarDeclIR idVarDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(currentType.clone(), 
-				currentPattern.clone(), new AUndefinedExpIR());
+		AVarDeclIR idVarDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(currentType.clone(), currentPattern.clone(), new AUndefinedExpIR());
 
 		declBlock.getLocalDefs().add(idVarDecl);
 
@@ -1096,9 +1082,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 		if (declarePatternVar)
 		{
-			AVarDeclIR patternDecl = transAssistant.getInfo().getDeclAssistant().
-					consLocalVarDecl(actualValue.getType().clone(), 
-					idPattern.clone(), actualValue.clone());
+			AVarDeclIR patternDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(actualValue.getType().clone(), idPattern.clone(), actualValue.clone());
 			block.getLocalDefs().add(patternDecl);
 		}
 
@@ -1187,23 +1171,23 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	private AFieldNumberExpIR consTupleFieldExp(
-			AIdentifierVarExpIR tuplePatternVar, int i, STypeIR currentType, boolean cast)
+			AIdentifierVarExpIR tuplePatternVar, int i, STypeIR currentType,
+			boolean cast)
 	{
 		AFieldNumberExpIR fieldNumberExp = new AFieldNumberExpIR();
 		fieldNumberExp.setType(currentType.clone());
-		
+
 		if (!cast)
 		{
 			fieldNumberExp.setTuple(tuplePatternVar.clone());
-		}
-		else
+		} else
 		{
 			ACastUnaryExpIR castedExp = new ACastUnaryExpIR();
 			castedExp.setType(tuplePatternVar.getType().clone());
 			castedExp.setExp(tuplePatternVar.clone());
 			fieldNumberExp.setTuple(castedExp);
 		}
-		
+
 		fieldNumberExp.setField(new Long(1 + i));
 
 		return fieldNumberExp;
@@ -1218,16 +1202,16 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		String fieldName = recordField.getName();
 
 		AFieldExpIR fieldExp = consRecFieldExp(patternVar, currentType, fieldName);
-		
-		if(cast)
+
+		if (cast)
 		{
 			ACastUnaryExpIR casted = new ACastUnaryExpIR();
 			casted.setType(recordType.clone());
 			casted.setExp(fieldExp.getObject());
-			
+
 			fieldExp.setObject(casted);
 		}
-		
+
 		return fieldExp;
 	}
 
@@ -1253,7 +1237,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			}
 		}
 
-		Logger.getLog().printErrorln("Could not fetch declaration tag from pattern assignment: "
+		log.error("Could not fetch declaration tag from pattern assignment: "
 				+ node);
 
 		return null;
@@ -1261,6 +1245,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 	private boolean checkRecordPattern(SExpIR actualValue)
 	{
-		return actualValue != null && actualValue.getType() instanceof AUnionTypeIR;
+		return actualValue != null
+				&& actualValue.getType() instanceof AUnionTypeIR;
 	}
 }

@@ -1,78 +1,74 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public A() {}
 
-    public static Number tuplePatternFun() {
-        final Tuple tuplePattern_1 = Tuple.mk_(1L, 2L,
-                Tuple.mk_(3L, 4L, Tuple.mk_(5L, 6L)));
-        Boolean success_1 = tuplePattern_1.compatible(Number.class,
-                Number.class, Tuple.class);
-        Number a = null;
-        Number b = null;
-        Number c = null;
-        Number d = null;
-        Number e = null;
-        Number f = null;
+  public static Number tuplePatternFun() {
 
+    final Tuple tuplePattern_1 = Tuple.mk_(1L, 2L, Tuple.mk_(3L, 4L, Tuple.mk_(5L, 6L)));
+    Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class, Tuple.class);
+    Number a = null;
+    Number b = null;
+    Number c = null;
+    Number d = null;
+    Number e = null;
+    Number f = null;
+    if (success_1) {
+      a = ((Number) tuplePattern_1.get(0));
+      b = ((Number) tuplePattern_1.get(1));
+      Tuple tuplePattern_2 = Utils.copy(((Tuple) tuplePattern_1.get(2)));
+      success_1 = tuplePattern_2.compatible(Number.class, Number.class, Tuple.class);
+      if (success_1) {
+        c = ((Number) tuplePattern_2.get(0));
+        d = ((Number) tuplePattern_2.get(1));
+        Tuple tuplePattern_3 = Utils.copy(((Tuple) tuplePattern_2.get(2)));
+        success_1 = tuplePattern_3.compatible(Number.class, Number.class);
         if (success_1) {
-            a = ((Number) tuplePattern_1.get(0));
-            b = ((Number) tuplePattern_1.get(1));
-
-            Tuple tuplePattern_2 = Utils.copy(((Tuple) tuplePattern_1.get(2)));
-            success_1 = tuplePattern_2.compatible(Number.class, Number.class,
-                    Tuple.class);
-
-            if (success_1) {
-                c = ((Number) tuplePattern_2.get(0));
-                d = ((Number) tuplePattern_2.get(1));
-
-                Tuple tuplePattern_3 = Utils.copy(((Tuple) tuplePattern_2.get(2)));
-                success_1 = tuplePattern_3.compatible(Number.class, Number.class);
-
-                if (success_1) {
-                    e = ((Number) tuplePattern_3.get(0));
-                    f = ((Number) tuplePattern_3.get(1));
-                }
-            }
+          e = ((Number) tuplePattern_3.get(0));
+          f = ((Number) tuplePattern_3.get(1));
         }
-
-        if (!(success_1)) {
-            throw new RuntimeException("Tuple pattern match failed");
-        }
-
-        return a.longValue() + b.longValue() + c.longValue() + d.longValue() +
-        e.longValue() + f.longValue();
+      }
     }
 
-    public String toString() {
-        return "A{}";
+    if (!(success_1)) {
+      throw new RuntimeException("Tuple pattern match failed");
     }
+
+    return a.longValue()
+        + b.longValue()
+        + c.longValue()
+        + d.longValue()
+        + e.longValue()
+        + f.longValue();
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return A.tuplePatternFun();
-    }
+    return A.tuplePatternFun();
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

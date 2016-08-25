@@ -16,7 +16,8 @@ public class WhileStmTrans extends DepthFirstAnalysisAdaptor
 	private TransAssistantIR transAssistant;
 	private String whileCondExpPrefix;
 
-	public WhileStmTrans(TransAssistantIR transAssistant, String whileCondExpPrefix)
+	public WhileStmTrans(TransAssistantIR transAssistant,
+			String whileCondExpPrefix)
 	{
 		this.transAssistant = transAssistant;
 		this.whileCondExpPrefix = whileCondExpPrefix;
@@ -34,40 +35,40 @@ public class WhileStmTrans extends DepthFirstAnalysisAdaptor
 		//
 		// while(whileCond)
 		// {
-		//   whileCond = boolExp;
-		//   if (!whileCond) { break; }
-		//   body;
+		// whileCond = boolExp;
+		// if (!whileCond) { break; }
+		// body;
 		// }
 		//
 		// This is needed for cases where the while condition is a complex
 		// expression that needs to be transformed. For example, when the
 		// while condition is a quantified expression
-		
+
 		SExpIR exp = node.getExp().clone();
 		SStmIR body = node.getBody().clone();
-		
+
 		String whileCondName = transAssistant.getInfo().getTempVarNameGen().nextVarName(whileCondExpPrefix);
-		
+
 		SExpIR whileCondVar = transAssistant.consBoolCheck(whileCondName, false);
-		
+
 		AIfStmIR whileCondCheck = new AIfStmIR();
 		whileCondCheck.setIfExp(transAssistant.consBoolCheck(whileCondName, true));
 		whileCondCheck.setThenStm(new ABreakStmIR());
-		
+
 		ABlockStmIR newWhileBody = new ABlockStmIR();
 		newWhileBody.getStatements().add(transAssistant.consBoolVarAssignment(exp, whileCondName));
 		newWhileBody.getStatements().add(whileCondCheck);
 		newWhileBody.getStatements().add(body);
-		
+
 		AWhileStmIR newWhileStm = new AWhileStmIR();
 		newWhileStm.setExp(whileCondVar);
 		newWhileStm.setBody(newWhileBody);
-		
+
 		ABlockStmIR declBlock = new ABlockStmIR();
 		AVarDeclIR whileCondVarDecl = transAssistant.consBoolVarDecl(whileCondName, true);
 		declBlock.getLocalDefs().add(whileCondVarDecl);
 		declBlock.getStatements().add(newWhileStm);
-		
+
 		transAssistant.replaceNodeWith(node, declBlock);
 
 		newWhileStm.getBody().apply(this);

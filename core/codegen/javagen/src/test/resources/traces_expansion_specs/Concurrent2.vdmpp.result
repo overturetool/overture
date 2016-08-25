@@ -1,77 +1,77 @@
+
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 
-import java.util.*;
-
-
 @SuppressWarnings("all")
 public class Entry implements java.io.Serializable {
-    public Entry() {
+  public Entry() {}
+
+  private static Number fun1(final Number a) {
+
+    return a;
+  }
+
+  private static Number fun2(final Number b) {
+
+    return b;
+  }
+
+  public void Entry_T1_Run(final TestAccumulator testAccumulator) {
+
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+    VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      final Number x = ((Number) iterator_1.next());
+      final Number ID_1 = gen.inc();
+
+      store.register(ID_1, x);
+      ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
+      CallStatementPp callStm_1 =
+          new CallStatementPp() {
+            public Object execute() {
+
+              return fun1(((Number) store.getValue(ID_1)));
+            }
+
+            public String toString() {
+
+              return "fun1(" + Utils.toString(store.getValue(ID_1)) + ")";
+            }
+          };
+      StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+      concurrent_1.add(apply_1);
+
+      CallStatementPp callStm_2 =
+          new CallStatementPp() {
+            public Object execute() {
+
+              return fun2(((Number) store.getValue(ID_1)));
+            }
+
+            public String toString() {
+
+              return "fun2(" + Utils.toString(store.getValue(ID_1)) + ")";
+            }
+          };
+      StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+      concurrent_1.add(apply_2);
+
+      concurrent_1.addVarFirst(new TraceVariable("x", "nat1", Utils.toString(x)));
+      alternatives_2.add(concurrent_1);
     }
+    sequence_1.add(alternatives_2);
 
-    private static Number fun1(final Number a) {
-        return a;
-    }
+    TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+  }
 
-    private static Number fun2(final Number b) {
-        return b;
-    }
+  public String toString() {
 
-    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
-        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
-
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            final Number x = ((Number) iterator_1.next());
-            final Number ID_1 = gen.inc();
-
-            store.register(ID_1, x);
-
-            ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
-            CallStatementPp callStm_1 = new CallStatementPp() {
-                    public Object execute() {
-                        return fun1(((Number) store.getValue(ID_1)));
-                    }
-
-                    public String toString() {
-                        return "fun1(" + Utils.toString(store.getValue(ID_1)) +
-                        ")";
-                    }
-                };
-
-            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-            concurrent_1.add(apply_1);
-
-            CallStatementPp callStm_2 = new CallStatementPp() {
-                    public Object execute() {
-                        return fun2(((Number) store.getValue(ID_1)));
-                    }
-
-                    public String toString() {
-                        return "fun2(" + Utils.toString(store.getValue(ID_1)) +
-                        ")";
-                    }
-                };
-
-            StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-            concurrent_1.add(apply_2);
-
-            concurrent_1.addVarFirst(new TraceVariable("x", "nat1",
-                    Utils.toString(x)));
-            alternatives_2.add(concurrent_1);
-        }
-
-        sequence_1.add(alternatives_2);
-
-        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

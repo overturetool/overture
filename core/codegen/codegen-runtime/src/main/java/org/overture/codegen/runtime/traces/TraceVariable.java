@@ -5,7 +5,7 @@ public class TraceVariable implements Statement
 	private String name;
 	private String type;
 	private String value;
-	
+
 	public TraceVariable(String name, String type, String value)
 	{
 		super();

@@ -40,7 +40,7 @@ import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -162,9 +162,9 @@ public class UmlTypeCreatorBase
 		} else if (type instanceof SSeqType)
 		{
 			return "Seq<" + getName(((SSeqType) type).getSeqof()) + ">";
-		} else if (type instanceof ASetType)
+		} else if (type instanceof SSetType)
 		{
-			return "Set<" + getName(((ASetType) type).getSetof()) + ">";
+			return "Set<" + getName(((SSetType) type).getSetof()) + ">";
 		} else if (type instanceof AUndefinedType)
 		{
 		} else if (type instanceof AUnionType)

@@ -13,7 +13,7 @@ import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.core.tests.ParamStandardTest;
+import org.overture.core.testing.ParamStandardTest;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
@@ -33,7 +33,7 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
-	
+
 	public IRSettings getIrSettings()
 	{
 		IRSettings irSettings = new IRSettings();
@@ -89,8 +89,7 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 
 			return generatedCode.toString();
 
-		}
-		catch (AnalysisException e)
+		} catch (AnalysisException e)
 		{
 			Assert.fail("Unexpected problem encountered when attempting to code generate VDM model: "
 					+ e.getMessage());
@@ -125,8 +124,8 @@ public abstract class SpecificationTestBase extends ParamStandardTest<String>
 	}
 
 	@Override
-	protected void testUpdate(String actual) throws ParserException,
-			LexException, IOException
+	protected void testUpdate(String actual)
+			throws ParserException, LexException, IOException
 	{
 		OutputTestUtil.testUpdate(actual, resultPath);
 	}

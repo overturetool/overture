@@ -36,9 +36,9 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.core.tests.ParamFineGrainTest;
-import org.overture.core.tests.ParseTcFacade;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.ParamFineGrainTest;
+import org.overture.core.testing.ParseTcFacade;
+import org.overture.core.testing.PathsProvider;
 
 import com.google.gson.reflect.TypeToken;
 

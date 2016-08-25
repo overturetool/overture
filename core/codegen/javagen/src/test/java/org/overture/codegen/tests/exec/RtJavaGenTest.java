@@ -33,11 +33,11 @@ public class RtJavaGenTest extends JavaGenTestBase
 	public void setUp() throws Exception
 	{
 		super.setUp();
-		
+
 		Settings.release = Release.VDM_10;
 		Settings.dialect = Dialect.VDM_RT;
 	}
-	
+
 	@Override
 	public IRSettings getIrSettings()
 	{
@@ -46,7 +46,7 @@ public class RtJavaGenTest extends JavaGenTestBase
 
 		return irSettings;
 	}
-	
+
 	@Override
 	protected String getPropertyId()
 	{

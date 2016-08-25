@@ -117,7 +117,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 						if (ut.getName().getFullName().equals("CPU"))
 						{
 							ANewExp newExp = (ANewExp) iv.getExpression();
-							PExp exp = newExp.getArgs().get(1);
+							PExp exp = newExp.getArgs().size() > 0 ? newExp.getArgs().get(1) : null;
 							double speed = 0;
 							if (exp instanceof AIntLiteralExp)
 							{

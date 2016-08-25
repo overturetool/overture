@@ -9,7 +9,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.tests.output.base.JavaOutputTestBase;
 import org.overture.codegen.tests.output.util.OutputTestUtil;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.PathsProvider;
 
 @RunWith(Parameterized.class)
 public class TracesStateOutputTest extends JavaOutputTestBase
@@ -18,8 +18,8 @@ public class TracesStateOutputTest extends JavaOutputTestBase
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "traces_state_specs";
 
-	public TracesStateOutputTest(String nameParameter,
-			String inputParameter, String resultParameter)
+	public TracesStateOutputTest(String nameParameter, String inputParameter,
+			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}

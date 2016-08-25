@@ -4,7 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
@@ -17,17 +19,20 @@ import org.overture.codegen.ir.statements.APlainCallStmIR;
 import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.ir.types.AClassTypeIR;
 import org.overture.codegen.ir.types.AStringTypeIR;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.traces.ICallStmToStringMethodBuilder;
 import org.overture.codegen.traces.StoreAssistant;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.config.Settings;
 
-public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements ICallStmToStringMethodBuilder
+public class JavaCallStmToStringBuilder extends JavaClassCreatorBase
+		implements ICallStmToStringMethodBuilder
 {
+	private Logger log = Logger.getLogger(this.getClass().getName());
+
 	@Override
-	public AMethodDeclIR consToString(IRInfo info, SStmIR callStm, Map<String, String> idConstNameMap, StoreAssistant storeAssistant, TransAssistantIR transAssistant)
+	public AMethodDeclIR consToString(IRInfo info, SStmIR callStm,
+			Map<String, String> idConstNameMap, StoreAssistant storeAssistant,
+			TransAssistantIR transAssistant)
 	{
 		AMethodDeclIR toStringMethod = consToStringSignature();
 
@@ -52,7 +57,7 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 
 			body.setExp(appendArgs(info, args, prefix, idConstNameMap, storeAssistant, transAssistant));
 
-		}  else if (callStm instanceof ACallObjectExpStmIR)
+		} else if (callStm instanceof ACallObjectExpStmIR)
 		{
 			ACallObjectExpStmIR callObj = (ACallObjectExpStmIR) callStm;
 
@@ -68,7 +73,7 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 		// The CallObjectStmIR node has been transformed out of the tree
 		else
 		{
-			Logger.getLog().printErrorln("Expected statement to be a call statement or call object statement. Got: "
+			log.error("Expected statement to be a call statement or call object statement. Got: "
 					+ callStm);
 			body.setExp(info.getExpAssistant().consStringLiteral("Unknown", false));
 		}
@@ -77,17 +82,21 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 
 		return toStringMethod;
 	}
-	
-	private SExpIR appendArgs(IRInfo info, List<SExpIR> args, String prefix, Map<String, String> idConstNameMap, StoreAssistant storeAssistant, TransAssistantIR transAssistant)
+
+	private SExpIR appendArgs(IRInfo info, List<SExpIR> args, String prefix,
+			Map<String, String> idConstNameMap, StoreAssistant storeAssistant,
+			TransAssistantIR transAssistant)
 	{
 		if (args == null || args.isEmpty())
 		{
-			return info.getExpAssistant().consStringLiteral(prefix + "()", false);
+			return info.getExpAssistant().consStringLiteral(prefix
+					+ "()", false);
 		}
 
 		ASeqConcatBinaryExpIR str = new ASeqConcatBinaryExpIR();
 		str.setType(new AStringTypeIR());
-		str.setLeft(info.getExpAssistant().consStringLiteral(prefix + "(", false));
+		str.setLeft(info.getExpAssistant().consStringLiteral(prefix
+				+ "(", false));
 
 		ASeqConcatBinaryExpIR next = str;
 
@@ -97,24 +106,23 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 			tmp.setType(new AStringTypeIR());
 
 			AApplyExpIR utilsToStrCall = consUtilsToStringCall();
-			
-			if(arg instanceof AIdentifierVarExpIR && idConstNameMap.containsKey(((AIdentifierVarExpIR) arg).getName()))
+
+			if (arg instanceof AIdentifierVarExpIR
+					&& idConstNameMap.containsKey(((AIdentifierVarExpIR) arg).getName()))
 			{
-				AIdentifierVarExpIR idVarExp = ((AIdentifierVarExpIR) arg);
-				if(Settings.dialect != Dialect.VDM_SL)
+				AIdentifierVarExpIR idVarExp = (AIdentifierVarExpIR) arg;
+				if (Settings.dialect != Dialect.VDM_SL)
 				{
 					utilsToStrCall.getArgs().add(storeAssistant.consStoreLookup(idVarExp, true));
-				}
-				else
+				} else
 				{
 					utilsToStrCall.getArgs().add(idVarExp);
 				}
-			}
-			else
+			} else
 			{
 				utilsToStrCall.getArgs().add(arg.clone());
 			}
-			
+
 			tmp.setLeft(utilsToStrCall);
 
 			next.setRight(tmp);
@@ -122,7 +130,7 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 		}
 
 		next.setRight(info.getExpAssistant().consStringLiteral(")", false));
-		
+
 		return str;
 	}
 
@@ -131,7 +139,7 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 	{
 		AApplyExpIR utilsToStrCall = consUtilsToStringCall();
 		utilsToStrCall.getArgs().add(exp);
-		
+
 		return utilsToStrCall;
 	}
 }

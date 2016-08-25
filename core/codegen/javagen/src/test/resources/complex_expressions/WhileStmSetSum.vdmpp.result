@@ -1,52 +1,48 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        Number sum = 0L;
-        VDMSet xs = SetUtil.set(1L, 2L, 3L, 4L, 5L);
-        Boolean whileCond_1 = true;
+    Number sum = 0L;
+    VDMSet xs = SetUtil.set(1L, 2L, 3L, 4L, 5L);
+    Boolean whileCond_1 = true;
+    while (whileCond_1) {
+      whileCond_1 = !(Utils.empty(xs));
+      if (!(whileCond_1)) {
+        break;
+      }
 
-        while (whileCond_1) {
-            whileCond_1 = !(Utils.empty(xs));
-
-            if (!(whileCond_1)) {
-                break;
-            }
-
-            {
-                Number x = null;
-                Boolean success_1 = false;
-                VDMSet set_1 = Utils.copy(xs);
-
-                for (Iterator iterator_1 = set_1.iterator();
-                        iterator_1.hasNext() && !(success_1);) {
-                    x = ((Number) iterator_1.next());
-                    success_1 = true;
-                }
-
-                if (!(success_1)) {
-                    throw new RuntimeException(
-                        "Let Be St found no applicable bindings");
-                }
-
-                sum = sum.longValue() + x.longValue();
-                xs = SetUtil.diff(Utils.copy(xs), SetUtil.set(x));
-            }
+      {
+        Number x = null;
+        Boolean success_1 = false;
+        VDMSet set_1 = Utils.copy(xs);
+        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && !(success_1); ) {
+          x = ((Number) iterator_1.next());
+          success_1 = true;
+        }
+        if (!(success_1)) {
+          throw new RuntimeException("Let Be St found no applicable bindings");
         }
 
-        return sum;
+        {
+          sum = sum.longValue() + x.longValue();
+          xs = SetUtil.diff(Utils.copy(xs), SetUtil.set(x));
+        }
+      }
     }
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return sum;
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

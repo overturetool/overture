@@ -38,15 +38,14 @@ public class Token implements Serializable
 	{
 		return value;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
-		if(value == null)
+		if (value == null)
 		{
 			return 0;
-		}
-		else
+		} else
 		{
 			return value.hashCode();
 		}
@@ -56,13 +55,17 @@ public class Token implements Serializable
 	public boolean equals(Object obj)
 	{
 		if (!(obj instanceof Token))
+		{
 			return false;
+		}
 
 		Token other = (Token) obj;
 
-		if ((value == null && other.value != null)
-				|| (value != null && !value.equals(other.value)))
+		if (value == null && other.value != null
+				|| value != null && !value.equals(other.value))
+		{
 			return false;
+		}
 
 		return true;
 	}

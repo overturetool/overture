@@ -1,83 +1,82 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final VDMSet xs = SetUtil.set(new A(5L));
+  private static final VDMSet xs = SetUtil.set(new A(5L));
 
-    public Entry() {
+  public static Object Run() {
+
+    Object r = null;
+    Boolean success_1 = false;
+    VDMSet set_1 = Utils.copy(Entry.xs);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && !(success_1); ) {
+      r = ((Object) iterator_1.next());
+      Number apply_1 = null;
+      if (r instanceof A) {
+        apply_1 = ((A) r).a;
+      } else {
+        throw new RuntimeException("Missing member: a");
+      }
+
+      success_1 = Utils.equals(apply_1, 5L);
+    }
+    if (!(success_1)) {
+      throw new RuntimeException("Let Be St found no applicable bindings");
     }
 
-    public static Object Run() {
-        Object r = null;
-        Boolean success_1 = false;
-        VDMSet set_1 = Utils.copy(Entry.xs);
+    Number apply_2 = null;
+    if (r instanceof A) {
+      apply_2 = ((A) r).a;
+    } else {
+      throw new RuntimeException("Missing member: a");
+    }
 
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && !(success_1);) {
-            r = ((Object) iterator_1.next());
+    return apply_2;
+  }
 
-            Number apply_1 = null;
+  public Entry() {}
 
-            if (r instanceof A) {
-                apply_1 = ((A) r).a;
-            } else {
-                throw new RuntimeException("Missing member: a");
-            }
+  public String toString() {
 
-            success_1 = Utils.equals(apply_1, 5L);
-        }
+    return "Entry{" + "xs = " + Utils.toString(xs) + "}";
+  }
 
-        if (!(success_1)) {
-            throw new RuntimeException("Let Be St found no applicable bindings");
-        }
+  private static class A implements Record {
+    public Number a;
 
-        Number apply_2 = null;
+    public A(final Number _a) {
 
-        if (r instanceof A) {
-            apply_2 = ((A) r).a;
-        } else {
-            throw new RuntimeException("Missing member: a");
-        }
+      a = _a;
+    }
 
-        return apply_2;
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof A)) {
+        return false;
+      }
+
+      A other = ((A) obj);
+
+      return Utils.equals(a, other.a);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(a);
+    }
+
+    public A copy() {
+
+      return new A(a);
     }
 
     public String toString() {
-        return "Entry{" + "xs = " + Utils.toString(xs) + "}";
+
+      return "mk_Entry`A" + Utils.formatFields(a);
     }
-
-    private static class A implements Record {
-        public Number a;
-
-        public A(final Number _a) {
-            a = _a;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof A)) {
-                return false;
-            }
-
-            A other = ((A) obj);
-
-            return Utils.equals(a, other.a);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(a);
-        }
-
-        public A copy() {
-            return new A(a);
-        }
-
-        public String toString() {
-            return "mk_Entry`A" + Utils.formatFields(a);
-        }
-    }
+  }
 }
 
 ##########

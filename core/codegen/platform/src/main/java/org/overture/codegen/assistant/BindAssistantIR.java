@@ -23,11 +23,12 @@ package org.overture.codegen.assistant;
 
 import org.overture.codegen.ir.SBindIR;
 import org.overture.codegen.ir.SMultipleBindIR;
+import org.overture.codegen.ir.patterns.ASeqBindIR;
+import org.overture.codegen.ir.patterns.ASeqMultipleBindIR;
 import org.overture.codegen.ir.patterns.ASetBindIR;
 import org.overture.codegen.ir.patterns.ASetMultipleBindIR;
 import org.overture.codegen.ir.patterns.ATypeBindIR;
 import org.overture.codegen.ir.patterns.ATypeMultipleBindIR;
-import org.overture.codegen.logging.Logger;
 
 public class BindAssistantIR extends AssistantBase
 {
@@ -39,41 +40,49 @@ public class BindAssistantIR extends AssistantBase
 	public SMultipleBindIR convertToMultipleBind(SBindIR bind)
 	{
 		SMultipleBindIR result = null;
-		
-		if(bind instanceof ASetBindIR)
+
+		if (bind instanceof ASetBindIR)
 		{
 			ASetBindIR setBind = (ASetBindIR) bind;
-			
+
 			ASetMultipleBindIR multipleSetBind = new ASetMultipleBindIR();
-			
+
 			multipleSetBind.getPatterns().add(bind.getPattern());
 			multipleSetBind.setSet(setBind.getSet());
-			
+
 			result = multipleSetBind;
-		}
-		else if(bind instanceof ATypeBindIR)
+		} else if (bind instanceof ASeqBindIR)
+		{
+			ASeqBindIR seqBind = (ASeqBindIR) bind;
+
+			ASeqMultipleBindIR multipleSeqBind = new ASeqMultipleBindIR();
+
+			multipleSeqBind.getPatterns().add(bind.getPattern());
+			multipleSeqBind.setSeq(seqBind.getSeq());
+
+			result = multipleSeqBind;
+		} else if (bind instanceof ATypeBindIR)
 		{
 			ATypeBindIR typeBind = (ATypeBindIR) bind;
-			
+
 			ATypeMultipleBindIR multipleTypeBind = new ATypeMultipleBindIR();
-			
+
 			multipleTypeBind.getPatterns().add(bind.getPattern());
 			multipleTypeBind.setType(typeBind.getType());
-			
-			result = multipleTypeBind; 
+
+			result = multipleTypeBind;
 		}
-		
-		if(result != null)
+
+		if (result != null)
 		{
 			result.setTag(bind.getTag());
 			result.setSourceNode(bind.getSourceNode());
 			result.setMetaData(bind.getMetaData());
-		}
-		else
+		} else
 		{
-			Logger.getLog().printErrorln("Expected set or type bind in '" + this.getClass().getSimpleName() + "'");
+			log.error("Expected set or type bind");
 		}
-		
-		return result; 
+
+		return result;
 	}
 }

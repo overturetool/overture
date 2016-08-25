@@ -42,18 +42,18 @@ public class VDMUtil
 		return new SeqValue(arg.toString());
 	}
 
-	public static Value seq_of_char2val(Value arg)
+	public static Value seq_of_char2val_(Value arg)
 	{
 		ValueList result = new ValueList();
 
 		try
 		{
-			SeqValue seq = (SeqValue) arg;
+			SeqValue seq = (SeqValue) arg.deref();
 			StringBuilder expression = new StringBuilder();
 
 			for (Value v : seq.values)
 			{
-				CharacterValue ch = (CharacterValue) v;
+				CharacterValue ch = (CharacterValue) v.deref();
 				expression.append(ch.unicode);
 			}
 
@@ -62,7 +62,7 @@ public class VDMUtil
 			reader.setCurrentModule("VDMUtil");
 			PExp exp = reader.readExpression();
 			result.add(new BooleanValue(true));
-			Context ctxt = new Context(Interpreter.getInstance().getAssistantFactory(), null, "seq_of_char2val", null);
+			Context ctxt = new Context(Interpreter.getInstance().getAssistantFactory(), null, "seq_of_char2val_", null);
 			ctxt.setThreadState(null, null);
 			result.add(exp.apply(VdmRuntime.getExpressionEvaluator(), ctxt));
 		} catch (Exception e)

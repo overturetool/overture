@@ -37,12 +37,12 @@ import org.overture.codegen.utils.GeneralUtils;
 public class TemplateManager
 {
 	public static final String TEMPLATE_FILE_EXTENSION = ".vm";
-	
+
 	/**
 	 * Relative paths for user-defined template files
 	 */
 	protected HashMap<Class<? extends INode>, TemplateData> userDefinedPaths;
-	
+
 	/**
 	 * cache
 	 */
@@ -55,7 +55,8 @@ public class TemplateManager
 	/**
 	 * Not for use with extensions. Use {@link #TemplateManager(String, Class)} instead.
 	 * 
-	 * @param root The template root folder
+	 * @param root
+	 *            The template root folder
 	 */
 	public TemplateManager(String root)
 	{
@@ -69,30 +70,30 @@ public class TemplateManager
 	 * bundle. This provides a workaround by using templateLoadRef to provide a specific class. Just pass it any class
 	 * that is native to the extension bundle and it should work.
 	 * 
-	 * @param root The template root folder
+	 * @param root
+	 *            The template root folder
 	 * @param templateLoadRef
 	 */
 	public TemplateManager(String root, Class<?> templateLoadRef)
 	{
 		this.root = root;
-		
-		if(templateLoadRef != null)
+
+		if (templateLoadRef != null)
 		{
 			this.templateLoadRef = templateLoadRef;
-		}
-		else
+		} else
 		{
 			this.templateLoadRef = this.getClass();
 		}
-		
+
 		initNodeTemplateFileNames();
 	}
-	
+
 	public Class<?> getTemplateLoaderRef()
 	{
 		return templateLoadRef;
 	}
-	
+
 	public String getRoot()
 	{
 		return root;
@@ -103,25 +104,26 @@ public class TemplateManager
 		this.userDefinedPaths = new HashMap<>();
 	}
 
-	public Template getTemplate(Class<? extends INode> nodeClass) throws ParseException
+	public Template getTemplate(Class<? extends INode> nodeClass)
+			throws ParseException
 	{
-		if(cache.containsKey(nodeClass))
+		if (cache.containsKey(nodeClass))
 		{
 			return cache.get(nodeClass);
 		}
-		
+
 		try
 		{
 			TemplateData td = getTemplateData(nodeClass);
-			
-			 StringBuffer buffer = GeneralUtils.readFromFile(td.getTemplatePath(), td.getTemplateLoaderRef());
+
+			StringBuffer buffer = GeneralUtils.readFromFile(td.getTemplatePath(), td.getTemplateLoaderRef());
 
 			if (buffer == null)
 			{
 				return null;
 			}
 
-			Template template = constructTemplate(td.getTemplatePath(),buffer);
+			Template template = constructTemplate(td.getTemplatePath(), buffer);
 			cache.put(nodeClass, template);
 			return template;
 
@@ -130,7 +132,7 @@ public class TemplateManager
 			return null;
 		}
 	}
-	
+
 	public String getTemplatePath(Class<? extends INode> nodeClass)
 	{
 		return getTemplateData(nodeClass).getTemplatePath();
@@ -147,7 +149,8 @@ public class TemplateManager
 		}
 	}
 
-	protected Template constructTemplate(String name, StringBuffer buffer) throws ParseException
+	protected Template constructTemplate(String name, StringBuffer buffer)
+			throws ParseException
 	{
 		Template template = new Template();
 		RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
@@ -162,19 +165,22 @@ public class TemplateManager
 
 	}
 
-	public void setUserTemplatePath(Class<?> templateLoaderRef, Class<? extends INode> nodeClass, String templatePath)
+	public void setUserTemplatePath(Class<?> templateLoaderRef,
+			Class<? extends INode> nodeClass, String templatePath)
 	{
 		userDefinedPaths.put(nodeClass, new TemplateData(templateLoadRef, templatePath));
 	}
-	
+
 	public boolean isUserDefined(Class<? extends INode> nodeClass)
 	{
 		return userDefinedPaths.containsKey(nodeClass);
 	}
 
-	public static String derivePath(String root, Class<? extends INode> nodeClass)
+	public static String derivePath(String root,
+			Class<? extends INode> nodeClass)
 	{
-		return root + File.separatorChar + nodeClass.getName().replace('.', File.separatorChar)
+		return root + File.separatorChar
+				+ nodeClass.getName().replace('.', File.separatorChar)
 				+ TEMPLATE_FILE_EXTENSION;
 	}
 }

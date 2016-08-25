@@ -1,58 +1,65 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Entry {
-    /*@ spec_public @*/
-    private static project.Entrytypes.St St = new project.Entrytypes.St(1L);
+  /*@ spec_public @*/
 
-    /*@ public ghost static boolean invChecksOn = true; @*/
-    private Entry() {
-    }
+  private static project.Entrytypes.St St = new project.Entrytypes.St(1L);
+  /*@ public ghost static boolean invChecksOn = true; @*/
 
-    public static Object Run() {
-        IO.println("Before first atomic (expecting violation after atomic)");
+  private Entry() {}
 
-        Number atomicTmp_1 = 2L;
-        //@ assert Utils.is_nat(atomicTmp_1);
-        { /* Start of atomic statement */
-            //@ set invChecksOn = false;
+  public static Object Run() {
 
-            //@ assert St != null;
-            St.set_x(atomicTmp_1);
+    IO.println("Before first atomic (expecting violation after atomic)");
+    Number atomicTmp_1 = 2L;
+    //@ assert Utils.is_nat(atomicTmp_1);
 
-            //@ set invChecksOn = true;
+    {
+        /* Start of atomic statement */
+      //@ set invChecksOn = false;
 
-            //@ assert St.valid();
-        } /* End of atomic statement */
-        IO.println(
-            "After first atomic (expected violation before this print statement)");
-        IO.println("Before second atomic");
+      //@ assert St != null;
 
-        Number atomicTmp_2 = 1L;
-        //@ assert Utils.is_nat(atomicTmp_2);
-        { /* Start of atomic statement */
-            //@ set invChecksOn = false;
+      St.set_x(atomicTmp_1);
 
-            //@ assert St != null;
-            St.set_x(atomicTmp_2);
+      //@ set invChecksOn = true;
 
-            //@ set invChecksOn = true;
+      //@ assert St.valid();
 
-            //@ assert St.valid();
-        } /* End of atomic statement */
-        IO.println("After second atomic");
+    } /* End of atomic statement */
 
-        return 2L;
-    }
+    IO.println("After first atomic (expected violation before this print statement)");
+    IO.println("Before second atomic");
+    Number atomicTmp_2 = 1L;
+    //@ assert Utils.is_nat(atomicTmp_2);
 
-    public String toString() {
-        return "Entry{" + "St := " + Utils.toString(St) + "}";
-    }
+    {
+        /* Start of atomic statement */
+      //@ set invChecksOn = false;
+
+      //@ assert St != null;
+
+      St.set_x(atomicTmp_2);
+
+      //@ set invChecksOn = true;
+
+      //@ assert St.valid();
+
+    } /* End of atomic statement */
+
+    IO.println("After second atomic");
+    return 2L;
+  }
+
+  public String toString() {
+
+    return "Entry{" + "St := " + Utils.toString(St) + "}";
+  }
 }

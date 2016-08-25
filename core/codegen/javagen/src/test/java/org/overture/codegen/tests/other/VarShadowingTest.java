@@ -36,10 +36,10 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 public class VarShadowingTest
 {
 	public static final String EVAL_ENTRY_POINT = "Entry`Run()";
-	
+
 	private File inputFile;
 	private static final TypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
-	
+
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "var_shadowing_specs";
@@ -48,14 +48,14 @@ public class VarShadowingTest
 	{
 		this.inputFile = inputFile;
 	}
-	
+
 	@Before
 	public void init() throws Exception
 	{
 		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
 	}
-	
+
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData()
 	{
@@ -70,19 +70,18 @@ public class VarShadowingTest
 			TypeCheckResult<List<SClassDefinition>> originalSpecTcResult = TypeCheckerUtil.typeCheckPp(inputFile);
 			Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(originalSpecTcResult.result, af);
 
-			Assert.assertTrue(inputFile.getName() + " has type errors", originalSpecTcResult.errors.isEmpty());
+			Assert.assertTrue(inputFile.getName()
+					+ " has type errors", originalSpecTcResult.errors.isEmpty());
 			Value orgSpecResult = evalSpec(originalSpecTcResult.result);
-			
-			
+
 			List<Renaming> renamings = new LinkedList<Renaming>(new VarRenamer().computeRenamings(originalSpecTcResult.result, af, idDefs));
-			
+
 			// It is very important that renamings are performed from the bottom, right to left, in order
 			// not to mess up the location of the names!!
 			Collections.sort(renamings);
-			
 
 			StringBuilder sb = GeneralUtils.readLines(inputFile, "\n");
-			
+
 			// Perform the renaming in a string buffer
 			rename(renamings, sb);
 
@@ -92,24 +91,21 @@ public class VarShadowingTest
 			// The renamed specification must contain no type errors and no warnings about hidden variables
 			Assert.assertTrue("Renamed specification contains errors", renamed.errors.isEmpty());
 			Assert.assertTrue("Found hidden variable warnings in renamed specification", filter(renamed.warnings).isEmpty());
-			
+
 			Value renamedSpecResult = evalSpec(renamed.result);
-			
+
 			// The two specifications must evaluate to the same result
 			Assert.assertTrue("Expected same value to be produced "
 					+ "for the original specification and the specification with "
-					+ "renamed variables. Got values "
-					+ orgSpecResult
-					+ " and "
-					+ renamedSpecResult
-					+ " from the original and "
+					+ "renamed variables. Got values " + orgSpecResult + " and "
+					+ renamedSpecResult + " from the original and "
 					+ "the renamed specification, respectively", orgSpecResult.equals(renamedSpecResult));
 
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 			Assert.fail("Test: " + inputFile.getName() + " did not parse!");
-		}	
+		}
 	}
 
 	private void rename(List<Renaming> renamings, StringBuilder sb)

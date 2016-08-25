@@ -93,6 +93,7 @@ import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		AbstractLaunchConfigurationTab
 {
+	private static final String MODULE_POST_FIX = "()";
 	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 
 	/**
@@ -132,7 +133,6 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 	class WidgetListener implements ModifyListener, SelectionListener
 	{
-
 		public void modifyText(ModifyEvent e)
 		{
 			updateLaunchConfigurationDialog();
@@ -233,7 +233,10 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 					return syntaxCorrect;
 				} else if (project != null)
 				{
-					expression = getExpression(fModuleNameText.getText().trim(), fOperationText.getText().trim(), staticOperation);
+					String moduleText = fModuleNameText.getText().trim();
+					
+					defaultModule = moduleText.replace(MODULE_POST_FIX, "");
+					expression = getExpression(moduleText, fOperationText.getText().trim(), staticOperation);
 					return validateTypes(project, expression);
 				}
 			}
@@ -766,7 +769,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 							module = method.getClassDefinition();
 							defaultModule = method.getClassDefinition().getName().getName();
 							fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.getClassDefinition())
-									+ "()");
+									+ MODULE_POST_FIX);
 						}
 					} else
 					{

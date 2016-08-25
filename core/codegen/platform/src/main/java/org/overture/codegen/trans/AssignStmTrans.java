@@ -1,5 +1,6 @@
 package org.overture.codegen.trans;
 
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
@@ -8,26 +9,27 @@ import org.overture.codegen.ir.statements.AAssignToExpStmIR;
 import org.overture.codegen.ir.statements.AAssignmentStmIR;
 import org.overture.codegen.ir.statements.AMapSeqStateDesignatorIR;
 import org.overture.codegen.ir.statements.AMapSeqUpdateStmIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.conv.StateDesignatorToExpIR;
 
 public class AssignStmTrans extends DepthFirstAnalysisAdaptor
 {
 	private StateDesignatorToExpIR converter;
-	
+
+	private Logger log = Logger.getLogger(this.getClass().getName());
+
 	public AssignStmTrans(TransAssistantIR transAssistant)
 	{
 		this.converter = new StateDesignatorToExpIR(transAssistant);
 	}
-	
+
 	@Override
 	public void caseAAssignmentStmIR(AAssignmentStmIR node)
 			throws AnalysisException
 	{
 		SStmIR newNode = null;
-		
-		if(node.getTarget() instanceof AMapSeqStateDesignatorIR)
+
+		if (node.getTarget() instanceof AMapSeqStateDesignatorIR)
 		{
 			AMapSeqStateDesignatorIR target = (AMapSeqStateDesignatorIR) node.getTarget();
 
@@ -41,28 +43,26 @@ public class AssignStmTrans extends DepthFirstAnalysisAdaptor
 			mapSeqUpd.setValue(value.clone());
 			mapSeqUpd.setSourceNode(node.getSourceNode());
 			mapSeqUpd.setTag(node.getTag());
-			
+
 			newNode = mapSeqUpd;
 
-		}
-		else
+		} else
 		{
 			AAssignToExpStmIR assign = new AAssignToExpStmIR();
 			assign.setTarget(node.getTarget().apply(converter));
 			assign.setExp(node.getExp().clone());
 			assign.setSourceNode(node.getSourceNode());
 			assign.setTag(node.getTag());
-			
+
 			newNode = assign;
 		}
-		
-		if(node.parent() != null)
+
+		if (node.parent() != null)
 		{
 			node.parent().replaceChild(node, newNode);
-		}
-		else
+		} else
 		{
-			Logger.getLog().printErrorln("Could not find parent of " + node + " in " + "'" + this.getClass().getSimpleName() + "'" );
+			log.error("Could not find parent of " + node);
 		}
 	}
 }

@@ -1,60 +1,63 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
+
+  public static class Rec implements Record {
+
+    public Rec() {}
+
+    public boolean equals(final Object obj) {
+
+      return obj instanceof Rec;
+    }
+
+    public int hashCode() {
+
+      return 0;
+    }
+
+    public Rec copy() {
+
+      return new Rec();
     }
 
     public String toString() {
-        return "A{}";
+
+      return "mk_A`Rec()";
     }
-
-    public static class Rec implements Record {
-        public Rec() {
-        }
-
-        public boolean equals(final Object obj) {
-            return obj instanceof Rec;
-        }
-
-        public int hashCode() {
-            return 0;
-        }
-
-        public Rec copy() {
-            return new Rec();
-        }
-
-        public String toString() {
-            return "mk_A`Rec()";
-        }
-    }
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final VDMSeq recs = SeqUtil.seq(new A.Rec());
-        final A.Rec r = Utils.copy(((A.Rec) Utils.get(recs, 1L)));
+    final VDMSeq recs = SeqUtil.seq(new A.Rec());
+    final A.Rec r = Utils.copy(((A.Rec) Utils.get(recs, 1L)));
 
-        return 42L;
-    }
+    return 42L;
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

@@ -29,7 +29,7 @@ public class IdOccurencesCollector extends VdmAnalysis
 	public void caseAIdentifierPattern(AIdentifierPattern node)
 			throws AnalysisException
 	{
-		if(proceed(node))
+		if (proceed(node))
 		{
 			if (node.getName().equals(name))
 			{

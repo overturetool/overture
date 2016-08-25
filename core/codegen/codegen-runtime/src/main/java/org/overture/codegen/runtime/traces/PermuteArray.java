@@ -25,7 +25,6 @@
 
 package org.overture.codegen.runtime.traces;
 
-
 public class PermuteArray
 {
 	private int[] a;

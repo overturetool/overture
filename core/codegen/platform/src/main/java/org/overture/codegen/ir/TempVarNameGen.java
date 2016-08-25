@@ -34,7 +34,7 @@ public class TempVarNameGen implements ITempVarGen
 		super();
 		this.counters = new HashMap<String, Integer>();
 	}
-	
+
 	@Override
 	public void clear()
 	{

@@ -1,40 +1,45 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return f(1L, 'a').eval(SeqUtil.seq('a'), SeqUtil.seq(1L))
-                   .eval(Tuple.mk_(1L, 1L), Tuple.mk_('a', 'a'));
-    }
+    return f(1L, 'a')
+        .eval(SeqUtil.seq('a'), SeqUtil.seq(1L))
+        .eval(Tuple.mk_(1L, 1L), Tuple.mk_('a', 'a'));
+  }
 
-    public static Func_1<VDMSeq, VDMSeq, Func_1<Tuple, Tuple, Number>> f(
-        final Number n, final Character c) {
-        return new Func_1<VDMSeq, VDMSeq, Func_1<Tuple, Tuple, Number>>() {
-                public Func_1<Tuple, Tuple, Number> eval(final VDMSeq xs,
-                    final VDMSeq ys) {
-                    return new Func_1<Tuple, Tuple, Number>() {
-                            public Number eval(final Tuple tn, final Tuple tc) {
-                                return 2.1;
-                            }
-                        };
-                }
-            };
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public static Func_1<VDMSeq, VDMSeq, Func_1<Tuple, Tuple, Number>> f(
+      final Number n, final Character c) {
+
+    return new Func_1<VDMSeq, VDMSeq, Func_1<Tuple, Tuple, Number>>() {
+      public Func_1<Tuple, Tuple, Number> eval(final VDMSeq xs, final VDMSeq ys) {
+
+        return new Func_1<Tuple, Tuple, Number>() {
+          public Number eval(final Tuple tn, final Tuple tc) {
+
+            return 2.1;
+          }
+        };
+      }
+    };
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########
+
+
 public interface Func_1<T_1, T_2, T_3> {
-    public abstract T_3 eval(final T_1 param_1, final T_2 param_2);
+  public abstract T_3 eval(final T_1 param_1, final T_2 param_2);
 }
 
 ##########

@@ -1,49 +1,47 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    return f(SetUtil.set(Tuple.mk_(2.6, 2.6)));
+  }
+
+  public Entry() {}
+
+  private static Number f(final VDMSet tups) {
+
+    Object letBeStExp_1 = null;
+    Tuple e = null;
+    Boolean success_1 = false;
+    VDMSet set_1 = Utils.copy(tups);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && !(success_1); ) {
+      e = ((Tuple) iterator_1.next());
+      success_1 = true;
+    }
+    if (!(success_1)) {
+      throw new RuntimeException("Let Be St found no applicable bindings");
     }
 
-    public static Object Run() {
-        return f(SetUtil.set(Tuple.mk_(2.6, 2.6)));
+    Object ternaryIfExp_1 = null;
+
+    if (Utils.equals(1L, 1L)) {
+      ternaryIfExp_1 = 2.5;
+    } else {
+      ternaryIfExp_1 = ((Number) e.get(0));
     }
 
-    private static Number f(final VDMSet tups) {
-        Object letBeStExp_1 = null;
-        Tuple e = null;
-        Boolean success_1 = false;
-        VDMSet set_1 = Utils.copy(tups);
+    letBeStExp_1 = ternaryIfExp_1;
 
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && !(success_1);) {
-            e = ((Tuple) iterator_1.next());
-            success_1 = true;
-        }
+    return ((Number) letBeStExp_1);
+  }
 
-        if (!(success_1)) {
-            throw new RuntimeException("Let Be St found no applicable bindings");
-        }
+  public String toString() {
 
-        Object ternaryIfExp_1 = null;
-
-        if (Utils.equals(1L, 1L)) {
-            ternaryIfExp_1 = 2.5;
-        } else {
-            ternaryIfExp_1 = ((Number) e.get(0));
-        }
-
-        letBeStExp_1 = ternaryIfExp_1;
-
-        return ((Number) letBeStExp_1);
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

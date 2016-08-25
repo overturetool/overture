@@ -19,13 +19,13 @@ public class JmlSlTraceJavaGenTest extends JmlSlJavaGenTestBase
 	{
 		super(vdmSpec, testHandler);
 	}
-	
+
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(JmlSlTraceOutputTest.ROOT),new JmlTraceTestHandler(Release.VDM_10, Dialect.VDM_SL));
+		return collectTests(new File(JmlSlTraceOutputTest.ROOT), new JmlTraceTestHandler(Release.VDM_10, Dialect.VDM_SL));
 	}
-	
+
 	@Override
 	protected String getPropertyId()
 	{

@@ -1,29 +1,30 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return g() + SeqUtil.distConcStrings(h());
-    }
+    return g() + SeqUtil.distConcStrings(h());
+  }
 
-    public static String g() {
-        return SeqUtil.distConcStrings(SeqUtil.seq("first, ", "second, ",
-                "third, "));
-    }
+  public Entry() {}
 
-    public static VDMSeq h() {
-        return SeqUtil.seq("fourth, ", "fifth, ", "sixth");
-    }
+  public static String g() {
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return SeqUtil.distConcStrings(SeqUtil.seq("first, ", "second, ", "third, "));
+  }
+
+  public static VDMSeq h() {
+
+    return SeqUtil.seq("fourth, ", "fifth, ", "sixth");
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

@@ -1,58 +1,65 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public Number go() {
 
-    public Number go() {
-        return f1().longValue() + f2().f1().longValue() +
-        new A().f1().longValue() + g(1L, 'a').longValue();
-    }
+    return f1().longValue()
+        + f2().f1().longValue()
+        + new A().f1().longValue()
+        + g(1L, 'a').longValue();
+  }
 
-    public A f2() {
-        return g(new A(), 2L);
-    }
+  public A f2() {
 
-    public static Number f1() {
-        return g(1L, 2L);
-    }
+    return g(new A(), 2L);
+  }
 
-    public static <T, U> T g(final T arg1, final U ignorePattern_1) {
-        return arg1;
-    }
+  public A() {}
 
-    public String toString() {
-        return "A{}";
-    }
+  public static Number f1() {
+
+    return g(1L, 2L);
+  }
+
+  public static <T, U> T g(final T arg1, final U ignorePattern_1) {
+
+    return arg1;
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return new A().go();
-    }
+    return new A().go();
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########
+
+
 public interface Func_1<T_1> {
-    public abstract T_1 eval();
+  public abstract T_1 eval();
 }
 
 ##########

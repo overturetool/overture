@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ClassesRtTypeCheckTest">
+<message column="15" line="5" message="CPU frequency to slow: 0.0 Hz" messageType="error" number="3305" resource="InvalidCpuConstructorCall"/>
+<message column="29" line="5" message="Cannot use default constructor for this class" messageType="error" number="3297" resource="InvalidCpuConstructorCall"/>
+<result/>
+</testResult>

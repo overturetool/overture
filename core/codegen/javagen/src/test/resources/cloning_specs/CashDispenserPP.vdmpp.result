@@ -1,1008 +1,1107 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return new SimpleTest().Run();
-    }
+    return new SimpleTest().Run();
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class SimpleTest {
-    private static final Card c1 = new Card(123456L, 1L, 1L);
-    private static final VDMSet cards = SetUtil.set(SimpleTest.c1);
-    private static final CentralResource resource = new CentralResource();
-    private static final VDMMap tills = MapUtil.map(new Maplet(1L,
-                new Till(SimpleTest.resource)));
-    private Clock clock = new Clock();
-    private Letterbox letterbox = new Letterbox();
+  private static final Card c1 = new Card(123456L, 1L, 1L);
+  private static final VDMSet cards = SetUtil.set(SimpleTest.c1);
+  private static final CentralResource resource = new CentralResource();
+  private static final VDMMap tills = MapUtil.map(new Maplet(1L, new Till(SimpleTest.resource)));
+  private Clock clock = new Clock();
+  private Letterbox letterbox = new Letterbox();
 
-    public SimpleTest() {
-    }
+  public Boolean Run() {
 
-    public Boolean Run() {
-        clock.SetDate(SeqUtil.seq('1', '5', '0', '9', '9', '9'));
-
+    clock.SetDate(SeqUtil.seq('1', '5', '0', '9', '9', '9'));
+    {
+      final Cardholder peter =
+          new Cardholder()
+              .Create(
+                  SeqUtil.seq(
+                      'P', 'e', 't', 'e', 'r', ' ', 'G', 'o', 'r', 'm', ' ', 'L', 'a', 'r', 's',
+                      'e', 'n'),
+                  SeqUtil.seq('G', 'r', 'a', 'n', 'v', 'e', 'j', ' ', '2', '4'));
+      {
+        final Account pglacc1 = new Account().Create(MapUtil.map(new Maplet(1L, peter)), 5000L);
+        final Number pglid1 = 1L;
         {
-            final Cardholder peter = new Cardholder().Create(SeqUtil.seq('P',
-                        'e', 't', 'e', 'r', ' ', 'G', 'o', 'r', 'm', ' ', 'L',
-                        'a', 'r', 's', 'e', 'n'),
-                    SeqUtil.seq('G', 'r', 'a', 'n', 'v', 'e', 'j', ' ', '2', '4'));
+          SimpleTest.resource.AddAccount(pglid1, pglacc1);
+          SimpleTest.resource.AddLetterbox(clock, new Letterbox());
+          ((Till) Utils.get(SimpleTest.tills, 1L)).InsertCard(SimpleTest.c1);
+          if (Utils.equals(
+              ((Till) Utils.get(tills, 1L)).Validate(123456L), quotes.PinOkQuote.getInstance())) {
+            return ((Till) Utils.get(tills, 1L)).MakeWithdrawal(800L);
 
-            {
-                final Account pglacc1 = new Account().Create(MapUtil.map(
-                            new Maplet(1L, peter)), 5000L);
-                final Number pglid1 = 1L;
-                SimpleTest.resource.AddAccount(pglid1, pglacc1);
-                SimpleTest.resource.AddLetterbox(clock, new Letterbox());
-                ((Till) Utils.get(SimpleTest.tills, 1L)).InsertCard(SimpleTest.c1);
-
-                if (Utils.equals(((Till) Utils.get(tills, 1L)).Validate(123456L),
-                            quotes.PinOkQuote.getInstance())) {
-                    return ((Till) Utils.get(tills, 1L)).MakeWithdrawal(800L);
-                } else {
-                    return false;
-                }
-            }
+          } else {
+            return false;
+          }
         }
+      }
     }
+  }
 
-    public String toString() {
-        return "SimpleTest{" + "c1 = " + Utils.toString(c1) + ", cards = " +
-        Utils.toString(cards) + ", resource = " + Utils.toString(resource) +
-        ", tills = " + Utils.toString(tills) + ", clock := " +
-        Utils.toString(clock) + ", letterbox := " + Utils.toString(letterbox) +
-        "}";
-    }
+  public SimpleTest() {}
+
+  public String toString() {
+
+    return "SimpleTest{"
+        + "c1 = "
+        + Utils.toString(c1)
+        + ", cards = "
+        + Utils.toString(cards)
+        + ", resource = "
+        + Utils.toString(resource)
+        + ", tills = "
+        + Utils.toString(tills)
+        + ", clock := "
+        + Utils.toString(clock)
+        + ", letterbox := "
+        + Utils.toString(letterbox)
+        + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Account {
-    private static final Number dailyLimit = 2000L;
-    private VDMMap cards;
-    private Number balance;
-    private VDMSeq transactions = SeqUtil.seq();
+  private VDMMap cards;
+  private Number balance;
+  private VDMSeq transactions = SeqUtil.seq();
+  private static final Number dailyLimit = 2000L;
 
-    public Account() {
+  private Boolean ValidTransaction(final Transaction transaction) {
+
+    throw new UnsupportedOperationException();
+  }
+
+  public Account Create(final VDMMap cs, final Number b) {
+
+    cards = cs;
+    balance = b;
+    return this;
+  }
+
+  public Number GetBalance() {
+
+    return balance;
+  }
+
+  public Boolean Withdrawal(final Number cardId, final Number amount, final VDMSeq date) {
+
+    final Transaction transaction = new Transaction(date, cardId, amount);
+    Boolean andResult_1 = false;
+
+    if (balance.longValue() - amount.longValue() >= 0L) {
+      if (DateTotal(date, SeqUtil.conc(transactions, SeqUtil.seq(transaction))).longValue()
+          <= Account.dailyLimit.longValue()) {
+        andResult_1 = true;
+      }
     }
 
-    private Boolean ValidTransaction(final Transaction transaction) {
-        throw new UnsupportedOperationException();
+    if (andResult_1) {
+      balance = balance.longValue() - amount.longValue();
+      transactions = SeqUtil.conc(transactions, SeqUtil.seq(transaction));
+      return true;
+
+    } else {
+      return false;
+    }
+  }
+
+  public Letter MakeStatement(final Number cardId, final VDMSeq date) {
+
+    final VDMSeq nm = ((Cardholder) Utils.get(cards, cardId)).GetName();
+    final VDMSeq addr = ((Cardholder) Utils.get(cards, cardId)).GetAddress();
+    {
+      Letter letter = new Letter();
+      return letter.Create(nm, addr, date, transactions, balance);
+    }
+  }
+
+  public VDMSet GetCardIds() {
+
+    return MapUtil.dom(cards);
+  }
+
+  public void AddCard(final Number cId, final Cardholder ch) {
+
+    cards = MapUtil.munion(cards, MapUtil.map(new Maplet(cId, ch)));
+  }
+
+  public void RemoveCard(final Number cId) {
+
+    cards = MapUtil.domResBy(SetUtil.set(cId), cards);
+  }
+
+  public Account() {}
+
+  private static Boolean TransactionsInvariant(final VDMSeq ts) {
+
+    Boolean forAllExpResult_1 = true;
+    VDMSet setCompResult_1 = SetUtil.set();
+    VDMSet set_2 = SeqUtil.inds(ts);
+    for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext(); ) {
+      Number i = ((Number) iterator_2.next());
+      setCompResult_1.add(((Transaction) Utils.get(ts, i)).date);
+    }
+    VDMSet set_1 = setCompResult_1;
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && forAllExpResult_1; ) {
+      VDMSeq date = ((VDMSeq) iterator_1.next());
+      forAllExpResult_1 = DateTotal(date, ts).longValue() <= Account.dailyLimit.longValue();
+    }
+    return forAllExpResult_1;
+  }
+
+  private static Number DateTotal(final VDMSeq date, final VDMSeq ts) {
+
+    VDMSeq seqCompResult_1 = SeqUtil.seq();
+    VDMSet set_3 = SeqUtil.inds(ts);
+    for (Iterator iterator_3 = set_3.iterator(); iterator_3.hasNext(); ) {
+      Number i = ((Number) iterator_3.next());
+      if (Utils.equals(((Transaction) Utils.get(ts, i)).date, date)) {
+        seqCompResult_1.add(((Transaction) Utils.get(ts, i)).amount);
+      }
+    }
+    return Sum(seqCompResult_1);
+  }
+
+  private static Number Sum(final VDMSeq rs) {
+
+    if (Utils.empty(rs)) {
+      return 0L;
+
+    } else {
+      return ((Number) rs.get(0)).doubleValue() + Sum(SeqUtil.tail(rs)).doubleValue();
+    }
+  }
+
+  public String toString() {
+
+    return "Account{"
+        + "cards := "
+        + Utils.toString(cards)
+        + ", balance := "
+        + Utils.toString(balance)
+        + ", transactions := "
+        + Utils.toString(transactions)
+        + ", dailyLimit = "
+        + Utils.toString(dailyLimit)
+        + "}";
+  }
+
+  public static class Transaction implements Record {
+    public VDMSeq date;
+    public Number cardId;
+    public Number amount;
+
+    public Transaction(final VDMSeq _date, final Number _cardId, final Number _amount) {
+
+      date = _date != null ? _date : null;
+      cardId = _cardId;
+      amount = _amount;
     }
 
-    public Account Create(final VDMMap cs, final Number b) {
-        cards = cs;
-        balance = b;
+    public boolean equals(final Object obj) {
 
-        return this;
+      if (!(obj instanceof Transaction)) {
+        return false;
+      }
+
+      Transaction other = ((Transaction) obj);
+
+      return (Utils.equals(date, other.date))
+          && (Utils.equals(cardId, other.cardId))
+          && (Utils.equals(amount, other.amount));
     }
 
-    public Number GetBalance() {
-        return balance;
+    public int hashCode() {
+
+      return Utils.hashCode(date, cardId, amount);
     }
 
-    public Boolean Withdrawal(final Number cardId, final Number amount,
-        final VDMSeq date) {
-        final Transaction transaction = new Transaction(date, cardId, amount);
-        Boolean andResult_1 = false;
+    public Transaction copy() {
 
-        if ((balance.longValue() - amount.longValue()) >= 0L) {
-            if (DateTotal(date,
-                        SeqUtil.conc(transactions, SeqUtil.seq(transaction)))
-                        .longValue() <= Account.dailyLimit.longValue()) {
-                andResult_1 = true;
-            }
-        }
-
-        if (andResult_1) {
-            balance = balance.longValue() - amount.longValue();
-            transactions = SeqUtil.conc(transactions, SeqUtil.seq(transaction));
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public Letter MakeStatement(final Number cardId, final VDMSeq date) {
-        final VDMSeq nm = ((Cardholder) Utils.get(cards, cardId)).GetName();
-        final VDMSeq addr = ((Cardholder) Utils.get(cards, cardId)).GetAddress();
-
-        {
-            Letter letter = new Letter();
-
-            return letter.Create(nm, addr, date, transactions, balance);
-        }
-    }
-
-    public VDMSet GetCardIds() {
-        return MapUtil.dom(cards);
-    }
-
-    public void AddCard(final Number cId, final Cardholder ch) {
-        cards = MapUtil.munion(cards, MapUtil.map(new Maplet(cId, ch)));
-    }
-
-    public void RemoveCard(final Number cId) {
-        cards = MapUtil.domResBy(SetUtil.set(cId), cards);
-    }
-
-    private static Boolean TransactionsInvariant(final VDMSeq ts) {
-        Boolean forAllExpResult_1 = true;
-        VDMSet setCompResult_1 = SetUtil.set();
-        VDMSet set_2 = SeqUtil.inds(ts);
-
-        for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
-            Number i = ((Number) iterator_2.next());
-            setCompResult_1.add(((Transaction) Utils.get(ts, i)).date);
-        }
-
-        VDMSet set_1 = setCompResult_1;
-
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && forAllExpResult_1;) {
-            VDMSeq date = ((VDMSeq) iterator_1.next());
-            forAllExpResult_1 = DateTotal(date, ts).longValue() <= Account.dailyLimit.longValue();
-        }
-
-        return forAllExpResult_1;
-    }
-
-    private static Number DateTotal(final VDMSeq date, final VDMSeq ts) {
-        VDMSeq seqCompResult_1 = SeqUtil.seq();
-        VDMSet set_3 = SeqUtil.inds(ts);
-
-        for (Iterator iterator_3 = set_3.iterator(); iterator_3.hasNext();) {
-            Number i = ((Number) iterator_3.next());
-
-            if (Utils.equals(((Transaction) Utils.get(ts, i)).date, date)) {
-                seqCompResult_1.add(((Transaction) Utils.get(ts, i)).amount);
-            }
-        }
-
-        return Sum(seqCompResult_1);
-    }
-
-    private static Number Sum(final VDMSeq rs) {
-        if (Utils.empty(rs)) {
-            return 0L;
-        } else {
-            return ((Number) rs.get(0)).doubleValue() +
-            Sum(SeqUtil.tail(rs)).doubleValue();
-        }
+      return new Transaction(date, cardId, amount);
     }
 
     public String toString() {
-        return "Account{" + "cards := " + Utils.toString(cards) +
-        ", balance := " + Utils.toString(balance) + ", transactions := " +
-        Utils.toString(transactions) + ", dailyLimit = " +
-        Utils.toString(dailyLimit) + "}";
+
+      return "mk_Account`Transaction" + Utils.formatFields(date, cardId, amount);
     }
-
-    public static class Transaction implements Record {
-        public VDMSeq date;
-        public Number cardId;
-        public Number amount;
-
-        public Transaction(final VDMSeq _date, final Number _cardId,
-            final Number _amount) {
-            date = (_date != null) ? _date : null;
-            cardId = _cardId;
-            amount = _amount;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Transaction)) {
-                return false;
-            }
-
-            Transaction other = ((Transaction) obj);
-
-            return (Utils.equals(date, other.date)) &&
-            (Utils.equals(cardId, other.cardId)) &&
-            (Utils.equals(amount, other.amount));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(date, cardId, amount);
-        }
-
-        public Transaction copy() {
-            return new Transaction(date, cardId, amount);
-        }
-
-        public String toString() {
-            return "mk_Account`Transaction" +
-            Utils.formatFields(date, cardId, amount);
-        }
-    }
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Card {
-    private Number code;
-    private Number cardId;
-    private Number accountId;
+  private Number code;
+  private Number cardId;
+  private Number accountId;
 
-    public Card(final Number c, final Number cid, final Number a) {
-        cg_init_Card_1(c, cid, a);
-    }
+  public void cg_init_Card_1(final Number c, final Number cid, final Number a) {
 
-    public Card() {
-    }
+    code = c;
+    cardId = cid;
+    accountId = a;
+  }
 
-    public void cg_init_Card_1(final Number c, final Number cid, final Number a) {
-        code = c;
-        cardId = cid;
-        accountId = a;
-    }
+  public Card(final Number c, final Number cid, final Number a) {
 
-    public Number GetCode() {
-        return code;
-    }
+    cg_init_Card_1(c, cid, a);
+  }
 
-    public Number GetAccountId() {
-        return accountId;
-    }
+  public Number GetCode() {
 
-    public Number GetCardId() {
-        return cardId;
-    }
+    return code;
+  }
 
-    public String toString() {
-        return "Card{" + "code := " + Utils.toString(code) + ", cardId := " +
-        Utils.toString(cardId) + ", accountId := " + Utils.toString(accountId) +
-        "}";
-    }
+  public Number GetAccountId() {
+
+    return accountId;
+  }
+
+  public Number GetCardId() {
+
+    return cardId;
+  }
+
+  public Card() {}
+
+  public String toString() {
+
+    return "Card{"
+        + "code := "
+        + Utils.toString(code)
+        + ", cardId := "
+        + Utils.toString(cardId)
+        + ", accountId := "
+        + Utils.toString(accountId)
+        + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Cardholder {
-    private VDMSeq name;
-    private VDMSeq address;
+  private VDMSeq name;
+  private VDMSeq address;
 
-    public Cardholder() {
-    }
+  public Cardholder Create(final VDMSeq nm, final VDMSeq addr) {
 
-    public Cardholder Create(final VDMSeq nm, final VDMSeq addr) {
-        name = nm;
-        address = addr;
+    name = nm;
+    address = addr;
+    return this;
+  }
 
-        return this;
-    }
+  public VDMSeq GetName() {
 
-    public VDMSeq GetName() {
-        return name;
-    }
+    return name;
+  }
 
-    public VDMSeq GetAddress() {
-        return address;
-    }
+  public VDMSeq GetAddress() {
 
-    public String toString() {
-        return "Cardholder{" + "name := " + Utils.toString(name) +
-        ", address := " + Utils.toString(address) + "}";
-    }
+    return address;
+  }
+
+  public Cardholder() {}
+
+  public String toString() {
+
+    return "Cardholder{"
+        + "name := "
+        + Utils.toString(name)
+        + ", address := "
+        + Utils.toString(address)
+        + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class CentralResource {
-    private static final Number maxNumberOfTries = 3L;
-    private VDMMap accounts = MapUtil.map();
-    private VDMMap numberOfTries = MapUtil.map();
-    private VDMSet illegalCards = SetUtil.set();
-    private Letterbox letterbox;
-    private Clock clock;
+  private VDMMap accounts = MapUtil.map();
+  private VDMMap numberOfTries = MapUtil.map();
+  private VDMSet illegalCards = SetUtil.set();
+  private Letterbox letterbox;
+  private Clock clock;
+  private static final Number maxNumberOfTries = 3L;
 
-    public CentralResource() {
+  public void AddLetterbox(final Clock c, final Letterbox l) {
+
+    clock = c;
+    letterbox = l;
+  }
+
+  public Number GetBalance(final Number accountId) {
+
+    if (SetUtil.inSet(accountId, MapUtil.dom(accounts))) {
+      return ((Account) Utils.get(accounts, accountId)).GetBalance();
+    } else {
+      return null;
     }
+  }
 
-    public void AddLetterbox(final Clock c, final Letterbox l) {
-        clock = c;
-        letterbox = l;
+  public Boolean Withdrawal(final Number accountId, final Number cardId, final Number amount) {
+
+    if (IsLegalCard(accountId, cardId)) {
+      return ((Account) Utils.get(accounts, accountId)).Withdrawal(cardId, amount, clock.GetDate());
+    } else {
+      return false;
     }
+  }
 
-    public Number GetBalance(final Number accountId) {
-        if (SetUtil.inSet(accountId, MapUtil.dom(accounts))) {
-            return ((Account) Utils.get(accounts, accountId)).GetBalance();
-        } else {
-            return null;
+  public Boolean PostStatement(final Number accountId, final Number cardId) {
+
+    if (IsLegalCard(accountId, cardId)) {
+      letterbox.PostStatement(
+          ((Account) Utils.get(accounts, accountId)).MakeStatement(cardId, clock.GetDate()));
+      return true;
+
+    } else {
+      return false;
+    }
+  }
+
+  public Boolean IsLegalCard(final Number accountId, final Number cardId) {
+
+    Boolean andResult_2 = false;
+
+    if (!(SetUtil.inSet(cardId, illegalCards))) {
+      Boolean andResult_3 = false;
+
+      if (SetUtil.inSet(accountId, MapUtil.dom(accounts))) {
+        if (SetUtil.inSet(cardId, ((Account) Utils.get(accounts, accountId)).GetCardIds())) {
+          andResult_3 = true;
         }
+      }
+
+      if (andResult_3) {
+        andResult_2 = true;
+      }
     }
 
-    public Boolean Withdrawal(final Number accountId, final Number cardId,
-        final Number amount) {
-        if (IsLegalCard(accountId, cardId)) {
-            return ((Account) Utils.get(accounts, accountId)).Withdrawal(cardId,
-                amount, clock.GetDate());
-        } else {
-            return false;
-        }
+    return andResult_2;
+  }
+
+  public Boolean NumberOfTriesExceeded(final Number cardId) {
+
+    return ((Number) Utils.get(numberOfTries, cardId)).longValue()
+        >= CentralResource.maxNumberOfTries.longValue();
+  }
+
+  public void ResetNumberOfTries(final Number cardId) {
+
+    Utils.mapSeqUpdate(numberOfTries, cardId, 0L);
+  }
+
+  public void IncrNumberOfTries(final Number cardId) {
+
+    Utils.mapSeqUpdate(
+        numberOfTries, cardId, ((Number) Utils.get(numberOfTries, cardId)).longValue() + 1L);
+  }
+
+  public void AddAccount(final Number accId, final Account acc) {
+
+    VDMMap atomicTmp_1 = MapUtil.override(accounts, MapUtil.map(new Maplet(accId, acc)));
+    VDMMap mapCompResult_1 = MapUtil.map();
+    VDMSet set_4 = acc.GetCardIds();
+    for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext(); ) {
+      Number cId = ((Number) iterator_4.next());
+      MapUtil.mapAdd(mapCompResult_1, new Maplet(cId, 0L));
     }
+    VDMMap atomicTmp_2 = MapUtil.override(numberOfTries, mapCompResult_1);
+    {
+        /* Start of atomic statement */
+      accounts = atomicTmp_1;
+      numberOfTries = atomicTmp_2;
+    } /* End of atomic statement */
+  }
 
-    public Boolean PostStatement(final Number accountId, final Number cardId) {
-        if (IsLegalCard(accountId, cardId)) {
-            letterbox.PostStatement(((Account) Utils.get(accounts, accountId)).MakeStatement(
-                    cardId, clock.GetDate()));
+  public void AddIllegalCard(final Number cId) {
 
-            return true;
-        } else {
-            return false;
-        }
-    }
+    illegalCards = SetUtil.union(illegalCards, SetUtil.set(cId));
+  }
 
-    public Boolean IsLegalCard(final Number accountId, final Number cardId) {
-        Boolean andResult_2 = false;
+  public CentralResource() {}
 
-        if (!(SetUtil.inSet(cardId, illegalCards))) {
-            Boolean andResult_3 = false;
+  public String toString() {
 
-            if (SetUtil.inSet(accountId, MapUtil.dom(accounts))) {
-                if (SetUtil.inSet(cardId,
-                            ((Account) Utils.get(accounts, accountId)).GetCardIds())) {
-                    andResult_3 = true;
-                }
-            }
-
-            if (andResult_3) {
-                andResult_2 = true;
-            }
-        }
-
-        return andResult_2;
-    }
-
-    public Boolean NumberOfTriesExceeded(final Number cardId) {
-        return ((Number) Utils.get(numberOfTries, cardId)).longValue() >= CentralResource.maxNumberOfTries.longValue();
-    }
-
-    public void ResetNumberOfTries(final Number cardId) {
-        Utils.mapSeqUpdate(numberOfTries, cardId, 0L);
-    }
-
-    public void IncrNumberOfTries(final Number cardId) {
-        Utils.mapSeqUpdate(numberOfTries, cardId,
-            ((Number) Utils.get(numberOfTries, cardId)).longValue() + 1L);
-    }
-
-    public void AddAccount(final Number accId, final Account acc) {
-        VDMMap atomicTmp_1 = MapUtil.override(accounts,
-                MapUtil.map(new Maplet(accId, acc)));
-        VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_4 = acc.GetCardIds();
-
-        for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
-            Number cId = ((Number) iterator_4.next());
-            MapUtil.mapAdd(mapCompResult_1, new Maplet(cId, 0L));
-        }
-
-        VDMMap atomicTmp_2 = MapUtil.override(numberOfTries, mapCompResult_1);
-        accounts = atomicTmp_1;
-        numberOfTries = atomicTmp_2;
-    }
-
-    public void AddIllegalCard(final Number cId) {
-        illegalCards = SetUtil.union(illegalCards, SetUtil.set(cId));
-    }
-
-    public String toString() {
-        return "CentralResource{" + "accounts := " + Utils.toString(accounts) +
-        ", numberOfTries := " + Utils.toString(numberOfTries) +
-        ", illegalCards := " + Utils.toString(illegalCards) +
-        ", letterbox := " + Utils.toString(letterbox) + ", clock := " +
-        Utils.toString(clock) + ", maxNumberOfTries = " +
-        Utils.toString(maxNumberOfTries) + "}";
-    }
+    return "CentralResource{"
+        + "accounts := "
+        + Utils.toString(accounts)
+        + ", numberOfTries := "
+        + Utils.toString(numberOfTries)
+        + ", illegalCards := "
+        + Utils.toString(illegalCards)
+        + ", letterbox := "
+        + Utils.toString(letterbox)
+        + ", clock := "
+        + Utils.toString(clock)
+        + ", maxNumberOfTries = "
+        + Utils.toString(maxNumberOfTries)
+        + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Clock {
-    private VDMSeq date = SeqUtil.seq();
+  private VDMSeq date = SeqUtil.seq();
 
-    public Clock() {
-    }
+  public void SetDate(final VDMSeq d) {
 
-    public void SetDate(final VDMSeq d) {
-        date = d;
-    }
+    date = d;
+  }
 
-    public VDMSeq GetDate() {
-        return date;
-    }
+  public VDMSeq GetDate() {
 
-    public String toString() {
-        return "Clock{" + "date := " + Utils.toString(date) + "}";
-    }
+    return date;
+  }
+
+  public Clock() {}
+
+  public String toString() {
+
+    return "Clock{" + "date := " + Utils.toString(date) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Letter {
-    public VDMSeq name;
-    public VDMSeq address;
-    public VDMSeq date;
-    public VDMSeq transactions;
-    public Number balance;
+  public VDMSeq name;
+  public VDMSeq address;
+  public VDMSeq date;
+  public VDMSeq transactions;
+  public Number balance;
 
-    public Letter() {
-    }
+  public Letter Create(
+      final VDMSeq nm, final VDMSeq addr, final VDMSeq d, final VDMSeq ts, final Number b) {
 
-    public Letter Create(final VDMSeq nm, final VDMSeq addr, final VDMSeq d,
-        final VDMSeq ts, final Number b) {
-        name = nm;
-        address = addr;
-        date = d;
-        transactions = ts;
-        balance = b;
+    name = nm;
+    address = addr;
+    date = d;
+    transactions = ts;
+    balance = b;
+    return this;
+  }
 
-        return this;
-    }
+  public Letter() {}
 
-    public String toString() {
-        return "Letter{" + "name := " + Utils.toString(name) + ", address := " +
-        Utils.toString(address) + ", date := " + Utils.toString(date) +
-        ", transactions := " + Utils.toString(transactions) + ", balance := " +
-        Utils.toString(balance) + "}";
-    }
+  public String toString() {
+
+    return "Letter{"
+        + "name := "
+        + Utils.toString(name)
+        + ", address := "
+        + Utils.toString(address)
+        + ", date := "
+        + Utils.toString(date)
+        + ", transactions := "
+        + Utils.toString(transactions)
+        + ", balance := "
+        + Utils.toString(balance)
+        + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Letterbox {
-    private VDMSeq statements = SeqUtil.seq();
+  private VDMSeq statements = SeqUtil.seq();
 
-    public Letterbox() {
-    }
+  public void PostStatement(final Letter letter) {
 
-    public void PostStatement(final Letter letter) {
-        statements = SeqUtil.conc(statements, SeqUtil.seq(letter));
-    }
+    statements = SeqUtil.conc(statements, SeqUtil.seq(letter));
+  }
 
-    public Letter GetLastStatement() {
-        return ((Letter) Utils.get(statements, statements.size()));
-    }
+  public Letter GetLastStatement() {
 
-    public String toString() {
-        return "Letterbox{" + "statements := " + Utils.toString(statements) +
-        "}";
-    }
+    return ((Letter) Utils.get(statements, statements.size()));
+  }
+
+  public Letterbox() {}
+
+  public String toString() {
+
+    return "Letterbox{" + "statements := " + Utils.toString(statements) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Till {
-    private Card curCard = null;
-    private Boolean cardOk = false;
-    private VDMSet retainedCards = SetUtil.set();
-    private CentralResource resource;
+  private Card curCard = null;
+  private Boolean cardOk = false;
+  private VDMSet retainedCards = SetUtil.set();
+  private CentralResource resource;
 
-    public Till(final CentralResource res) {
-        cg_init_Till_1(res);
-    }
+  public void cg_init_Till_1(final CentralResource res) {
 
-    public Till() {
-    }
+    resource = res;
+  }
 
-    public void cg_init_Till_1(final CentralResource res) {
-        resource = res;
-    }
+  public Till(final CentralResource res) {
 
-    public void InsertCard(final Card c) {
-        curCard = c;
-    }
+    cg_init_Till_1(res);
+  }
 
-    public Object Validate(final Number pin) {
-        final Number cardId = curCard.GetCardId();
-        final Boolean codeOk = Utils.equals(curCard.GetCode(), Encode(pin));
-        final Boolean cardLegal = IsLegalCard();
+  public void InsertCard(final Card c) {
 
-        {
-            Boolean andResult_5 = false;
+    curCard = c;
+  }
 
-            if (codeOk) {
-                if (cardLegal) {
-                    andResult_5 = true;
-                }
-            }
+  public Object Validate(final Number pin) {
 
-            cardOk = andResult_5;
+    final Number cardId = curCard.GetCardId();
+    final Boolean codeOk = Utils.equals(curCard.GetCode(), Encode(pin));
+    final Boolean cardLegal = IsLegalCard();
+    {
+      Boolean andResult_5 = false;
 
-            if (!(cardLegal)) {
-                retainedCards = SetUtil.union(retainedCards,
-                        SetUtil.set(curCard));
-                curCard = null;
-
-                return quotes.RetainedQuote.getInstance();
-            } else if (codeOk) {
-                resource.ResetNumberOfTries(cardId);
-            } else {
-                resource.IncrNumberOfTries(cardId);
-
-                if (resource.NumberOfTriesExceeded(cardId)) {
-                    retainedCards = SetUtil.union(retainedCards,
-                            SetUtil.set(curCard));
-                    cardOk = false;
-                    curCard = null;
-
-                    return quotes.RetainedQuote.getInstance();
-                }
-            }
-
-            if (cardOk) {
-                return quotes.PinOkQuote.getInstance();
-            } else {
-                return quotes.PinNotOkQuote.getInstance();
-            }
+      if (codeOk) {
+        if (cardLegal) {
+          andResult_5 = true;
         }
-    }
+      }
 
-    public void ReturnCard() {
-        cardOk = false;
+      cardOk = andResult_5;
+
+      if (!(cardLegal)) {
+        retainedCards = SetUtil.union(retainedCards, SetUtil.set(curCard));
         curCard = null;
-    }
+        return quotes.RetainedQuote.getInstance();
 
-    public Number GetBalance() {
-        return resource.GetBalance(curCard.GetAccountId());
-    }
-
-    public Boolean MakeWithdrawal(final Number amount) {
-        return resource.Withdrawal(curCard.GetAccountId(), curCard.GetCardId(),
-            amount);
-    }
-
-    public Boolean RequestStatement() {
-        return resource.PostStatement(curCard.GetAccountId(),
-            curCard.GetCardId());
-    }
-
-    public Boolean IsLegalCard() {
-        return resource.IsLegalCard(curCard.GetAccountId(), curCard.GetCardId());
-    }
-
-    public Boolean CardValidated() {
-        Boolean andResult_6 = false;
-
-        if (!(Utils.equals(curCard, null))) {
-            if (cardOk) {
-                andResult_6 = true;
-            }
+      } else if (codeOk) {
+        resource.ResetNumberOfTries(cardId);
+      } else {
+        resource.IncrNumberOfTries(cardId);
+        if (resource.NumberOfTriesExceeded(cardId)) {
+          retainedCards = SetUtil.union(retainedCards, SetUtil.set(curCard));
+          cardOk = false;
+          curCard = null;
+          return quotes.RetainedQuote.getInstance();
         }
+      }
 
-        return andResult_6;
+      if (cardOk) {
+        return quotes.PinOkQuote.getInstance();
+
+      } else {
+        return quotes.PinNotOkQuote.getInstance();
+      }
+    }
+  }
+
+  public void ReturnCard() {
+
+    cardOk = false;
+    curCard = null;
+  }
+
+  public Number GetBalance() {
+
+    return resource.GetBalance(curCard.GetAccountId());
+  }
+
+  public Boolean MakeWithdrawal(final Number amount) {
+
+    return resource.Withdrawal(curCard.GetAccountId(), curCard.GetCardId(), amount);
+  }
+
+  public Boolean RequestStatement() {
+
+    return resource.PostStatement(curCard.GetAccountId(), curCard.GetCardId());
+  }
+
+  public Boolean IsLegalCard() {
+
+    return resource.IsLegalCard(curCard.GetAccountId(), curCard.GetCardId());
+  }
+
+  public Boolean CardValidated() {
+
+    Boolean andResult_6 = false;
+
+    if (!(Utils.equals(curCard, null))) {
+      if (cardOk) {
+        andResult_6 = true;
+      }
     }
 
-    public Boolean CardInside() {
-        return !(Utils.equals(curCard, null));
-    }
+    return andResult_6;
+  }
 
-    private static Number Encode(final Number pin) {
-        return pin;
-    }
+  public Boolean CardInside() {
 
-    public String toString() {
-        return "Till{" + "curCard := " + Utils.toString(curCard) +
-        ", cardOk := " + Utils.toString(cardOk) + ", retainedCards := " +
-        Utils.toString(retainedCards) + ", resource := " +
-        Utils.toString(resource) + "}";
-    }
+    return !(Utils.equals(curCard, null));
+  }
+
+  public Till() {}
+
+  private static Number Encode(final Number pin) {
+
+    return pin;
+  }
+
+  public String toString() {
+
+    return "Till{"
+        + "curCard := "
+        + Utils.toString(curCard)
+        + ", cardOk := "
+        + Utils.toString(cardOk)
+        + ", retainedCards := "
+        + Utils.toString(retainedCards)
+        + ", resource := "
+        + Utils.toString(resource)
+        + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 abstract public class Event {
-    public Event() {
-    }
+  public abstract Object execute(final System system);
 
-    public abstract Object execute(final System system);
+  public Event() {}
 
-    public String toString() {
-        return "Event{}";
-    }
+  public String toString() {
+
+    return "Event{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class GetBalance extends Event {
-    private Number tillid;
+  private Number tillid;
 
-    public GetBalance() {
+  public GetBalance Init(final Number tid) {
+
+    tillid = tid;
+    return this;
+  }
+
+  public Object execute(final System sys) {
+
+    final Till till = sys.GetTill(tillid);
+    if (till.CardValidated()) {
+      return till.GetBalance();
+    } else {
+      return false;
     }
+  }
 
-    public GetBalance Init(final Number tid) {
-        tillid = tid;
+  public GetBalance() {}
 
-        return this;
-    }
+  public String toString() {
 
-    public Object execute(final System sys) {
-        final Till till = sys.GetTill(tillid);
-
-        if (till.CardValidated()) {
-            return till.GetBalance();
-        } else {
-            return false;
-        }
-    }
-
-    public String toString() {
-        return "GetBalance{" + "tillid := " + Utils.toString(tillid) + "}";
-    }
+    return "GetBalance{" + "tillid := " + Utils.toString(tillid) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class IllegalCard extends Event {
-    private Number mycard;
+  private Number mycard;
 
-    public IllegalCard() {
-    }
+  public IllegalCard Init(final Number c) {
 
-    public IllegalCard Init(final Number c) {
-        mycard = c;
+    mycard = c;
+    return this;
+  }
 
-        return this;
-    }
+  public Object execute(final System sys) {
 
-    public Object execute(final System sys) {
-        sys.GetResource().AddIllegalCard(mycard);
+    sys.GetResource().AddIllegalCard(mycard);
+    return true;
+  }
 
-        return true;
-    }
+  public IllegalCard() {}
 
-    public String toString() {
-        return "IllegalCard{" + "mycard := " + Utils.toString(mycard) + "}";
-    }
+  public String toString() {
+
+    return "IllegalCard{" + "mycard := " + Utils.toString(mycard) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class InsertCard extends Event {
-    private Number tillid;
-    private Card mycard;
+  private Number tillid;
+  private Card mycard;
 
-    public InsertCard() {
-    }
+  public InsertCard Init(final Number tid, final Card c) {
 
-    public InsertCard Init(final Number tid, final Card c) {
-        tillid = tid;
-        mycard = c;
+    tillid = tid;
+    mycard = c;
+    return this;
+  }
 
-        return this;
-    }
+  public Object execute(final System sys) {
 
-    public Object execute(final System sys) {
-        sys.GetTill(tillid).InsertCard(mycard);
+    sys.GetTill(tillid).InsertCard(mycard);
+    return true;
+  }
 
-        return true;
-    }
+  public InsertCard() {}
 
-    public String toString() {
-        return "InsertCard{" + "tillid := " + Utils.toString(tillid) +
-        ", mycard := " + Utils.toString(mycard) + "}";
-    }
+  public String toString() {
+
+    return "InsertCard{"
+        + "tillid := "
+        + Utils.toString(tillid)
+        + ", mycard := "
+        + Utils.toString(mycard)
+        + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class ReturnCard extends Event {
-    private Number tillid;
+  private Number tillid;
 
-    public ReturnCard() {
+  public ReturnCard Init(final Number tid) {
+
+    tillid = tid;
+    return this;
+  }
+
+  public Object execute(final System sys) {
+
+    {
+      final Till till = sys.GetTill(tillid);
+      if (till.CardInside()) {
+        till.ReturnCard();
+      } else {
+        return false;
+      }
     }
 
-    public ReturnCard Init(final Number tid) {
-        tillid = tid;
+    return true;
+  }
 
-        return this;
-    }
+  public ReturnCard() {}
 
-    public Object execute(final System sys) {
-        {
-            final Till till = sys.GetTill(tillid);
+  public String toString() {
 
-            if (till.CardInside()) {
-                till.ReturnCard();
-            } else {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public String toString() {
-        return "ReturnCard{" + "tillid := " + Utils.toString(tillid) + "}";
-    }
+    return "ReturnCard{" + "tillid := " + Utils.toString(tillid) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class SendStatement extends Event {
-    private Number tillid;
+  private Number tillid;
 
-    public SendStatement() {
+  public SendStatement Init(final Number tid) {
+
+    tillid = tid;
+    return this;
+  }
+
+  public Object execute(final System sys) {
+
+    final Till till = sys.GetTill(tillid);
+    if (till.CardValidated()) {
+      return till.RequestStatement();
+    } else {
+      return false;
     }
+  }
 
-    public SendStatement Init(final Number tid) {
-        tillid = tid;
+  public SendStatement() {}
 
-        return this;
-    }
+  public String toString() {
 
-    public Object execute(final System sys) {
-        final Till till = sys.GetTill(tillid);
-
-        if (till.CardValidated()) {
-            return till.RequestStatement();
-        } else {
-            return false;
-        }
-    }
-
-    public String toString() {
-        return "SendStatement{" + "tillid := " + Utils.toString(tillid) + "}";
-    }
+    return "SendStatement{" + "tillid := " + Utils.toString(tillid) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class System {
-    private static final Card c1 = new Card(123456L, 1L, 1L);
-    private static final Card c2 = new Card(123457L, 2L, 2L);
-    private static final Card c3 = new Card(123458L, 3L, 3L);
-    private static final Card c4 = new Card(123459L, 4L, 4L);
-    private static final Card c5 = new Card(123460L, 5L, 5L);
-    private static final Card c6 = new Card(123461L, 6L, 5L);
-    private static final Card c7 = new Card(123462L, 7L, 5L);
-    private static final VDMSet cards = SetUtil.set(System.c1, System.c2,
-            System.c3, System.c4, System.c5, System.c6, System.c7);
-    private static final CentralResource resource = new CentralResource();
-    private static final VDMMap tills = MapUtil.map(new Maplet(1L,
-                new Till(System.resource)),
-            new Maplet(2L, new Till(System.resource)),
-            new Maplet(3L, new Till(System.resource)));
-    private Clock clock = new Clock();
-    private Letterbox letterbox = new Letterbox();
+  private static final Card c1 = new Card(123456L, 1L, 1L);
+  private static final Card c2 = new Card(123457L, 2L, 2L);
+  private static final Card c3 = new Card(123458L, 3L, 3L);
+  private static final Card c4 = new Card(123459L, 4L, 4L);
+  private static final Card c5 = new Card(123460L, 5L, 5L);
+  private static final Card c6 = new Card(123461L, 6L, 5L);
+  private static final Card c7 = new Card(123462L, 7L, 5L);
+  private static final VDMSet cards =
+      SetUtil.set(System.c1, System.c2, System.c3, System.c4, System.c5, System.c6, System.c7);
+  private static final CentralResource resource = new CentralResource();
+  private static final VDMMap tills =
+      MapUtil.map(
+          new Maplet(1L, new Till(System.resource)),
+          new Maplet(2L, new Till(System.resource)),
+          new Maplet(3L, new Till(System.resource)));
+  private Clock clock = new Clock();
+  private Letterbox letterbox = new Letterbox();
 
-    public System() {
-        cg_init_System_1();
-    }
+  public void cg_init_System_1() {
 
-    public void cg_init_System_1() {
-        clock.SetDate(SeqUtil.seq('1', '5', '0', '9', '9', '9'));
-
+    clock.SetDate(SeqUtil.seq('1', '5', '0', '9', '9', '9'));
+    {
+      final Cardholder peter =
+          new Cardholder()
+              .Create(
+                  SeqUtil.seq(
+                      'P', 'e', 't', 'e', 'r', ' ', 'G', 'o', 'r', 'm', ' ', 'L', 'a', 'r', 's',
+                      'e', 'n'),
+                  SeqUtil.seq('G', 'r', 'a', 'n', 'v', 'e', 'j', ' ', '2', '4'));
+      final Cardholder paul =
+          new Cardholder()
+              .Create(
+                  SeqUtil.seq('P', 'a', 'u', 'l', ' ', 'M', 'u', 'k', 'h', 'e', 'r', 'j', 'e', 'e'),
+                  SeqUtil.seq(
+                      'R', 'u', 'g', 'a', 'a', 'r', 'd', 's', 'v', 'e', 'j', ' ', '4', '7'));
+      final Cardholder sten =
+          new Cardholder()
+              .Create(
+                  SeqUtil.seq('S', 't', 'e', 'n', ' ', 'A', 'g', 'e', 'r', 'h', 'o', 'l', 'm'),
+                  SeqUtil.seq('T', 'e', 'i', 's', 'e', 'n', 's', 'v', 'e', 'j', ' ', '?', '?'));
+      final Cardholder kim =
+          new Cardholder()
+              .Create(
+                  SeqUtil.seq('K', 'i', 'm', ' ', 'S', 'u', 'n', 'e', 's', 'e', 'n'),
+                  SeqUtil.seq('?', '?'));
+      final Cardholder CSK =
+          new Cardholder()
+              .Create(
+                  SeqUtil.seq('C', 'S', 'K'),
+                  SeqUtil.seq(
+                      'F', 'o', 'r', 's', 'k', 'e', 'r', 'p', 'a', 'r', 'k', 'e', 'n', ' ', '1',
+                      '0', 'A'));
+      {
+        final Account pglacc1 = new Account().Create(MapUtil.map(new Maplet(1L, peter)), 5000L);
+        final Account saacc1 = new Account().Create(MapUtil.map(new Maplet(2L, sten)), 0L);
+        final Account ksacc1 = new Account().Create(MapUtil.map(new Maplet(3L, kim)), 9000L);
+        final Account pmacc1 = new Account().Create(MapUtil.map(new Maplet(4L, paul)), 6000L);
+        final Account ifacc1 =
+            new Account()
+                .Create(
+                    MapUtil.map(new Maplet(5L, peter), new Maplet(6L, sten), new Maplet(7L, CSK)),
+                    70000L);
+        final Number pglid1 = 1L;
+        final Number said1 = 2L;
+        final Number ksid1 = 3L;
+        final Number pmid1 = 4L;
+        final Number ifid1 = 5L;
         {
-            final Cardholder peter = new Cardholder().Create(SeqUtil.seq('P',
-                        'e', 't', 'e', 'r', ' ', 'G', 'o', 'r', 'm', ' ', 'L',
-                        'a', 'r', 's', 'e', 'n'),
-                    SeqUtil.seq('G', 'r', 'a', 'n', 'v', 'e', 'j', ' ', '2', '4'));
-            final Cardholder paul = new Cardholder().Create(SeqUtil.seq('P',
-                        'a', 'u', 'l', ' ', 'M', 'u', 'k', 'h', 'e', 'r', 'j',
-                        'e', 'e'),
-                    SeqUtil.seq('R', 'u', 'g', 'a', 'a', 'r', 'd', 's', 'v',
-                        'e', 'j', ' ', '4', '7'));
-            final Cardholder sten = new Cardholder().Create(SeqUtil.seq('S',
-                        't', 'e', 'n', ' ', 'A', 'g', 'e', 'r', 'h', 'o', 'l',
-                        'm'),
-                    SeqUtil.seq('T', 'e', 'i', 's', 'e', 'n', 's', 'v', 'e',
-                        'j', ' ', '?', '?'));
-            final Cardholder kim = new Cardholder().Create(SeqUtil.seq('K',
-                        'i', 'm', ' ', 'S', 'u', 'n', 'e', 's', 'e', 'n'),
-                    SeqUtil.seq('?', '?'));
-            final Cardholder CSK = new Cardholder().Create(SeqUtil.seq('C',
-                        'S', 'K'),
-                    SeqUtil.seq('F', 'o', 'r', 's', 'k', 'e', 'r', 'p', 'a',
-                        'r', 'k', 'e', 'n', ' ', '1', '0', 'A'));
-
-            {
-                final Account pglacc1 = new Account().Create(MapUtil.map(
-                            new Maplet(1L, peter)), 5000L);
-                final Account saacc1 = new Account().Create(MapUtil.map(
-                            new Maplet(2L, sten)), 0L);
-                final Account ksacc1 = new Account().Create(MapUtil.map(
-                            new Maplet(3L, kim)), 9000L);
-                final Account pmacc1 = new Account().Create(MapUtil.map(
-                            new Maplet(4L, paul)), 6000L);
-                final Account ifacc1 = new Account().Create(MapUtil.map(
-                            new Maplet(5L, peter), new Maplet(6L, sten),
-                            new Maplet(7L, CSK)), 70000L);
-                final Number pglid1 = 1L;
-                final Number said1 = 2L;
-                final Number ksid1 = 3L;
-                final Number pmid1 = 4L;
-                final Number ifid1 = 5L;
-                System.resource.AddAccount(pglid1, pglacc1);
-                System.resource.AddAccount(said1, saacc1);
-                System.resource.AddAccount(ksid1, ksacc1);
-                System.resource.AddAccount(pmid1, pmacc1);
-                System.resource.AddAccount(ifid1, ifacc1);
-                System.resource.AddLetterbox(clock, new Letterbox());
-            }
+          System.resource.AddAccount(pglid1, pglacc1);
+          System.resource.AddAccount(said1, saacc1);
+          System.resource.AddAccount(ksid1, ksacc1);
+          System.resource.AddAccount(pmid1, pmacc1);
+          System.resource.AddAccount(ifid1, ifacc1);
+          System.resource.AddLetterbox(clock, new Letterbox());
         }
+      }
     }
+  }
 
-    public Till GetTill(final Number tid) {
-        return ((Till) Utils.get(tills, tid));
-    }
+  public Till GetTill(final Number tid) {
 
-    public CentralResource GetResource() {
-        return System.resource;
-    }
+    return ((Till) Utils.get(tills, tid));
+  }
 
-    public String toString() {
-        return "System{" + "c1 = " + Utils.toString(c1) + ", c2 = " +
-        Utils.toString(c2) + ", c3 = " + Utils.toString(c3) + ", c4 = " +
-        Utils.toString(c4) + ", c5 = " + Utils.toString(c5) + ", c6 = " +
-        Utils.toString(c6) + ", c7 = " + Utils.toString(c7) + ", cards = " +
-        Utils.toString(cards) + ", resource = " + Utils.toString(resource) +
-        ", tills = " + Utils.toString(tills) + ", clock := " +
-        Utils.toString(clock) + ", letterbox := " + Utils.toString(letterbox) +
-        "}";
-    }
+  public CentralResource GetResource() {
+
+    return System.resource;
+  }
+
+  public System() {
+
+    cg_init_System_1();
+  }
+
+  public String toString() {
+
+    return "System{"
+        + "c1 = "
+        + Utils.toString(c1)
+        + ", c2 = "
+        + Utils.toString(c2)
+        + ", c3 = "
+        + Utils.toString(c3)
+        + ", c4 = "
+        + Utils.toString(c4)
+        + ", c5 = "
+        + Utils.toString(c5)
+        + ", c6 = "
+        + Utils.toString(c6)
+        + ", c7 = "
+        + Utils.toString(c7)
+        + ", cards = "
+        + Utils.toString(cards)
+        + ", resource = "
+        + Utils.toString(resource)
+        + ", tills = "
+        + Utils.toString(tills)
+        + ", clock := "
+        + Utils.toString(clock)
+        + ", letterbox := "
+        + Utils.toString(letterbox)
+        + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Validate extends Event {
-    private Number tillid;
-    private Number code;
+  private Number tillid;
+  private Number code;
 
-    public Validate() {
-    }
+  public Validate Init(final Number tid, final Number pin) {
 
-    public Validate Init(final Number tid, final Number pin) {
-        tillid = tid;
-        code = pin;
+    tillid = tid;
+    code = pin;
+    return this;
+  }
 
-        return this;
-    }
+  public Object execute(final System sys) {
 
-    public Object execute(final System sys) {
-        return sys.GetTill(tillid).Validate(code);
-    }
+    return sys.GetTill(tillid).Validate(code);
+  }
 
-    public String toString() {
-        return "Validate{" + "tillid := " + Utils.toString(tillid) +
-        ", code := " + Utils.toString(code) + "}";
-    }
+  public Validate() {}
+
+  public String toString() {
+
+    return "Validate{"
+        + "tillid := "
+        + Utils.toString(tillid)
+        + ", code := "
+        + Utils.toString(code)
+        + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Withdrawal extends Event {
-    private Number tillid;
-    private Number amount;
+  private Number tillid;
+  private Number amount;
 
-    public Withdrawal() {
+  public Withdrawal Init(final Number t, final Number a) {
+
+    tillid = t;
+    amount = a;
+    return this;
+  }
+
+  public Object execute(final System sys) {
+
+    final Till till = sys.GetTill(tillid);
+    if (till.CardValidated()) {
+      return till.MakeWithdrawal(amount);
+    } else {
+      return false;
     }
+  }
 
-    public Withdrawal Init(final Number t, final Number a) {
-        tillid = t;
-        amount = a;
+  public Withdrawal() {}
 
-        return this;
-    }
+  public String toString() {
 
-    public Object execute(final System sys) {
-        final Till till = sys.GetTill(tillid);
-
-        if (till.CardValidated()) {
-            return till.MakeWithdrawal(amount);
-        } else {
-            return false;
-        }
-    }
-
-    public String toString() {
-        return "Withdrawal{" + "tillid := " + Utils.toString(tillid) +
-        ", amount := " + Utils.toString(amount) + "}";
-    }
+    return "Withdrawal{"
+        + "tillid := "
+        + Utils.toString(tillid)
+        + ", amount := "
+        + Utils.toString(amount)
+        + "}";
+  }
 }
 
 ##########

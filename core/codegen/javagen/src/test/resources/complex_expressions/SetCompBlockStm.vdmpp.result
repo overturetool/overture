@@ -1,39 +1,36 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final VDMSeq s = SeqUtil.seq(4L, 5L, 6L);
+  private static final VDMSeq s = SeqUtil.seq(4L, 5L, 6L);
 
-    public Entry() {
+  public static Object Run() {
+
+    return Test();
+  }
+
+  public static VDMSet Test() {
+
+    VDMSet setCompResult_1 = SetUtil.set();
+    VDMSet set_1 = SeqUtil.elems(Utils.copy(Entry.s));
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Number x = ((Number) iterator_1.next());
+      if (Utils.equals(1L, 1L)) {
+        setCompResult_1.add(x);
+      }
     }
+    VDMSet a = Utils.copy(setCompResult_1);
+    return Utils.copy(a);
+  }
 
-    public static Object Run() {
-        return Test();
-    }
+  public Entry() {}
 
-    public static VDMSet Test() {
-        VDMSet setCompResult_1 = SetUtil.set();
-        VDMSet set_1 = SeqUtil.elems(Utils.copy(Entry.s));
+  public String toString() {
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Number x = ((Number) iterator_1.next());
-
-            if (Utils.equals(1L, 1L)) {
-                setCompResult_1.add(x);
-            }
-        }
-
-        VDMSet a = Utils.copy(setCompResult_1);
-
-        return Utils.copy(a);
-    }
-
-    public String toString() {
-        return "Entry{" + "s = " + Utils.toString(s) + "}";
-    }
+    return "Entry{" + "s = " + Utils.toString(s) + "}";
+  }
 }
 
 ##########

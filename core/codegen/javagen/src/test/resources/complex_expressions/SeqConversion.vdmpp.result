@@ -1,87 +1,108 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final VDMSeq x = SeqUtil.conc(SeqUtil.seq('x'), SeqUtil.seq());
+  private static final VDMSeq x = SeqUtil.conc(SeqUtil.seq('x'), SeqUtil.seq());
 
-    public Entry() {
+  public static VDMSeq op1() {
+
+    if (Utils.equals(1L, 1L)) {
+      return SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq('a', 'b'));
+
+    } else {
+      return SeqUtil.seq('b');
     }
+  }
 
-    public static VDMSeq op1() {
-        if (Utils.equals(1L, 1L)) {
-            return SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq('a', 'b'));
-        } else {
-            return SeqUtil.seq('b');
-        }
+  public static VDMSeq op2() {
+
+    if (Utils.equals(1L, 1L)) {
+      return SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq());
+
+    } else {
+      return SeqUtil.seq('b');
     }
+  }
 
-    public static VDMSeq op2() {
-        if (Utils.equals(1L, 1L)) {
-            return SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq());
-        } else {
-            return SeqUtil.seq('b');
-        }
+  public static VDMSeq op3() {
+
+    if (Utils.equals(1L, 1L)) {
+      return SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(), SeqUtil.seq()));
+
+    } else {
+      return SeqUtil.seq('b');
     }
+  }
 
-    public static VDMSeq op3() {
-        if (Utils.equals(1L, 1L)) {
-            return SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(), SeqUtil.seq()));
-        } else {
-            return SeqUtil.seq('b');
-        }
+  public static VDMSeq op4() {
+
+    final VDMSeq a = SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq('a'));
+    return Utils.copy(a);
+  }
+
+  public static VDMSeq op5() {
+
+    if (Utils.equals(1L, 1L)) {
+      return SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(), SeqUtil.seq(), SeqUtil.seq('a')));
+
+    } else {
+      return SeqUtil.seq('b');
     }
+  }
 
-    public static VDMSeq op4() {
-        final VDMSeq a = SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq('a'));
+  public static VDMSeq op6() {
 
-        return Utils.copy(a);
+    return SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq('a'));
+  }
+
+  public static VDMSeq op7() {
+
+    if (Utils.equals(1L, 1L)) {
+      return SeqUtil.conc(
+          SeqUtil.conc(
+              SeqUtil.conc(
+                  SeqUtil.conc(SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq('x', 'y')), SeqUtil.seq()),
+                  SeqUtil.seq()),
+              SeqUtil.seq('m', 'm')),
+          SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(), SeqUtil.seq())));
+
+    } else {
+      return SeqUtil.seq('b');
     }
+  }
 
-    public static VDMSeq op5() {
-        if (Utils.equals(1L, 1L)) {
-            return SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(), SeqUtil.seq(),
-                    SeqUtil.seq('a')));
-        } else {
-            return SeqUtil.seq('b');
-        }
-    }
+  public static VDMSeq Run() {
 
-    public static VDMSeq op6() {
-        return SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq('a'));
-    }
+    return SeqUtil.conc(
+        SeqUtil.conc(
+            SeqUtil.conc(
+                SeqUtil.conc(
+                    SeqUtil.conc(
+                        SeqUtil.conc(SeqUtil.conc(Utils.copy(Entry.x), f()), op1()), op2()),
+                    op3()),
+                op5()),
+            op6()),
+        op7());
+  }
 
-    public static VDMSeq op7() {
-        if (Utils.equals(1L, 1L)) {
-            return SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(
-                            SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq('x', 'y')),
-                            SeqUtil.seq()), SeqUtil.seq()),
-                    SeqUtil.seq('m', 'm')),
-                SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(), SeqUtil.seq())));
-        } else {
-            return SeqUtil.seq('b');
-        }
-    }
+  public Entry() {}
 
-    public static VDMSeq Run() {
-        return SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(
-                            SeqUtil.conc(SeqUtil.conc(Utils.copy(Entry.x), f()),
-                                op1()), op2()), op3()), op5()), op6()), op7());
-    }
+  public static VDMSeq f() {
 
-    public static VDMSeq f() {
-        if (Utils.equals(1L, 1L)) {
-            return SeqUtil.seq();
-        } else {
-            return SeqUtil.seq('a');
-        }
-    }
+    if (Utils.equals(1L, 1L)) {
+      return SeqUtil.seq();
 
-    public String toString() {
-        return "Entry{" + "x = " + Utils.toString(x) + "}";
+    } else {
+      return SeqUtil.seq('a');
     }
+  }
+
+  public String toString() {
+
+    return "Entry{" + "x = " + Utils.toString(x) + "}";
+  }
 }
 
 ##########

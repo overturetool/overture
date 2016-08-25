@@ -14,7 +14,8 @@ import org.overture.codegen.merging.TemplateManager;
 public class TemplateManagerTest
 {
 	public static final String TEST_ROOT = "myRoot";
-	private static final String TEST_TEMPLATE = TEST_ROOT + File.separator + "TestTemplate.vm";
+	private static final String TEST_TEMPLATE = TEST_ROOT + File.separator
+			+ "TestTemplate.vm";
 
 	@Test
 	public void derivePath()
@@ -23,7 +24,8 @@ public class TemplateManagerTest
 
 		String relPath = TemplateManager.derivePath(TEST_ROOT, nodeClass);
 
-		Assert.assertEquals("Got unexpected relative path for " + nodeClass, nodePath(nodeClass), relPath);
+		Assert.assertEquals("Got unexpected relative path for "
+				+ nodeClass, nodePath(nodeClass), relPath);
 	}
 
 	@Test
@@ -42,7 +44,7 @@ public class TemplateManagerTest
 		{
 			Assert.fail(expectNoTemplate);
 		}
-		
+
 		manager.setUserTemplatePath(manager.getTemplateLoaderRef(), nodeClass, TEST_TEMPLATE);
 
 		String expectTemplate = "Expected template to be found";
@@ -67,8 +69,8 @@ public class TemplateManagerTest
 
 		manager.setUserTemplatePath(manager.getTemplateLoaderRef(), clazz, TEST_TEMPLATE);
 
-		Assert.assertTrue("Expected a user-defined template file for node " + clazz
-				+ " by now", manager.isUserDefined(clazz));
+		Assert.assertTrue("Expected a user-defined template file for node "
+				+ clazz + " by now", manager.isUserDefined(clazz));
 
 		Class<APlusNumericBinaryExpIR> plus = APlusNumericBinaryExpIR.class;
 
@@ -76,7 +78,7 @@ public class TemplateManagerTest
 				+ plus, manager.isUserDefined(plus));
 
 		TemplateData t = manager.getTemplateData(clazz);
-		
+
 		manager.setUserTemplatePath(manager.getTemplateLoaderRef(), plus, t.getTemplatePath());
 
 		Assert.assertTrue("Expected node " + plus + " to have reused " + clazz
@@ -85,7 +87,8 @@ public class TemplateManagerTest
 
 	private String nodePath(Class<? extends INode> node)
 	{
-		return TEST_ROOT + File.separator + node.getName().replace('.', File.separatorChar)
+		return TEST_ROOT + File.separator
+				+ node.getName().replace('.', File.separatorChar)
 				+ TemplateManager.TEMPLATE_FILE_EXTENSION;
 	}
 }

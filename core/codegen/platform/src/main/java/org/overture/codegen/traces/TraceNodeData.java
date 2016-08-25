@@ -8,8 +8,9 @@ public class TraceNodeData
 	private AIdentifierVarExpIR nodeVar;
 	private ABlockStmIR stms;
 	private ABlockStmIR nodeVarScope;
-	
-	public TraceNodeData(AIdentifierVarExpIR nodeVar, ABlockStmIR stms, ABlockStmIR nodeVarScope)
+
+	public TraceNodeData(AIdentifierVarExpIR nodeVar, ABlockStmIR stms,
+			ABlockStmIR nodeVarScope)
 	{
 		this.nodeVar = nodeVar;
 		this.stms = stms;

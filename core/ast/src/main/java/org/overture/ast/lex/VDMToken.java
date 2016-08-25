@@ -138,8 +138,8 @@ public enum VDMToken implements Serializable
 			VDM_PP, VDM_RT), DCL("dcl", "dcl", VDM_SL, VDM_PP, VDM_RT), DEF(
 			"def", "def", VDM_SL, VDM_PP, VDM_RT), IS("is", "is", VDM_SL,
 			VDM_PP, VDM_RT), YET("yet", "yet", VDM_SL, VDM_PP, VDM_RT), SPECIFIED(
-			"specified", "specified", VDM_SL, VDM_PP, VDM_RT),
-			PURE("pure", "pure", VDM_SL, VDM_PP, VDM_RT),
+			"specified", "specified", VDM_SL, VDM_PP, VDM_RT), PURE("pure", "pure",
+			VDM_SL, VDM_PP, VDM_RT), SET1("set1", "set1", VDM_SL, VDM_PP, VDM_RT),
 
 	// Expressions
 	LET("let", "let", VDM_SL, VDM_PP, VDM_RT), IN("in", "in", VDM_SL, VDM_PP,

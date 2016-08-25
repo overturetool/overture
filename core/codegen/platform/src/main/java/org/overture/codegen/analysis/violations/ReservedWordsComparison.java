@@ -27,8 +27,8 @@ import org.overture.codegen.ir.IRInfo;
 
 public class ReservedWordsComparison extends NamingComparison
 {
-	public ReservedWordsComparison(String[] names,
-			IRInfo irInfo, String correctionPrefix)
+	public ReservedWordsComparison(String[] names, IRInfo irInfo,
+			String correctionPrefix)
 	{
 		super(names, irInfo, correctionPrefix);
 	}

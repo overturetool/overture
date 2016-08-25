@@ -1,92 +1,94 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public A() {}
 
-    public static Tuple f() {
-        return Tuple.mk_(1L, 2L);
-    }
+  public static Tuple f() {
 
-    public String toString() {
-        return "A{}";
-    }
+    return Tuple.mk_(1L, 2L);
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public B() {
-    }
+  public B() {}
 
-    public static Tuple f() {
-        return Tuple.mk_(1L, 1L);
-    }
+  public static Tuple f() {
 
-    public String toString() {
-        return "B{}";
-    }
+    return Tuple.mk_(1L, 1L);
+  }
+
+  public String toString() {
+
+    return "B{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    final VDMMap m = MapUtil.map(new Maplet(1L, new A()), new Maplet(2L, new B()));
+    if (Utils.equals(1L, 2L)) {
+      return false;
+
+    } else if (Utils.equals(2L, 3L)) {
+      return false;
+
+    } else {
+      Object obj_1 = Utils.get(m, 1L);
+      Tuple apply_1 = null;
+      if (obj_1 instanceof A) {
+        apply_1 = ((A) obj_1).f();
+      } else if (obj_1 instanceof B) {
+        apply_1 = ((B) obj_1).f();
+      } else {
+        throw new RuntimeException("Missing member: f");
+      }
+
+      if (Utils.equals(apply_1, Tuple.mk_(1L, 2L))) {
+        return true;
+
+      } else if (Utils.equals(4L, 5L)) {
+        return false;
+
+      } else {
+        return false;
+      }
     }
+  }
 
-    public static Object Run() {
-        final VDMMap m = MapUtil.map(new Maplet(1L, new A()),
-                new Maplet(2L, new B()));
+  public Entry() {}
 
-        if (Utils.equals(1L, 2L)) {
-            return false;
-        } else if (Utils.equals(2L, 3L)) {
-            return false;
-        } else {
-            Object obj_1 = Utils.get(m, 1L);
+  public String toString() {
 
-            Tuple apply_1 = null;
-
-            if (obj_1 instanceof A) {
-                apply_1 = ((A) obj_1).f();
-            } else if (obj_1 instanceof B) {
-                apply_1 = ((B) obj_1).f();
-            } else {
-                throw new RuntimeException("Missing member: f");
-            }
-
-            if (Utils.equals(apply_1, Tuple.mk_(1L, 2L))) {
-                return true;
-            } else if (Utils.equals(4L, 5L)) {
-                return false;
-            } else {
-                return false;
-            }
-        }
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########
+
+
 public interface Func_1<T_1> {
-    public abstract T_1 eval();
+  public abstract T_1 eval();
 }
 
 ##########

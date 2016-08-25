@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -51,6 +52,8 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.ClonableString;
+import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
@@ -77,12 +80,11 @@ import org.overture.codegen.ir.statements.ANotImplementedStmIR;
 import org.overture.codegen.ir.traces.ATraceDeclTermIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.types.ATemplateTypeIR;
-import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 
 public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 {
+	private Logger log = Logger.getLogger(this.getClass().getName());
+
 	@Override
 	public SDeclIR caseAStateDefinition(AStateDefinition node, IRInfo question)
 			throws AnalysisException
@@ -98,17 +100,19 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 
 		String accessCg = access.getAccess().toString();
 		String nameCg = name != null ? name.getName() : null;
-		SDeclIR initDeclCg = initdef != null ? initdef.apply(question.getDeclVisitor(), question)
+		SDeclIR initDeclCg = initdef != null
+				? initdef.apply(question.getDeclVisitor(), question) : null;
+		SExpIR initExpCg = initExp != null
+				? initExp.apply(question.getExpVisitor(), question) : null;
+		SPatternIR initPatternCg = initPattern != null
+				? initPattern.apply(question.getPatternVisitor(), question)
 				: null;
-		SExpIR initExpCg = initExp != null ? initExp.apply(question.getExpVisitor(), question)
-				: null;
-		SPatternIR initPatternCg = initPattern != null ? initPattern.apply(question.getPatternVisitor(), question)
-				: null;
-		SDeclIR invDeclCg = invdef != null ? invdef.apply(question.getDeclVisitor(), question)
-				: null;
-		SExpIR invExpCg = invExp != null ? invExp.apply(question.getExpVisitor(), question)
-				: null;
-		SPatternIR invPatternCg = invPattern != null ? invPattern.apply(question.getPatternVisitor(), question)
+		SDeclIR invDeclCg = invdef != null
+				? invdef.apply(question.getDeclVisitor(), question) : null;
+		SExpIR invExpCg = invExp != null
+				? invExp.apply(question.getExpVisitor(), question) : null;
+		SPatternIR invPatternCg = invPattern != null
+				? invPattern.apply(question.getPatternVisitor(), question)
 				: null;
 
 		AStateDeclIR stateDeclCg = new AStateDeclIR();
@@ -145,11 +149,10 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 
 		return stateDeclCg;
 	}
-	
+
 	@Override
-	public SDeclIR caseAClassInvariantDefinition(
-			AClassInvariantDefinition node, IRInfo question)
-			throws AnalysisException
+	public SDeclIR caseAClassInvariantDefinition(AClassInvariantDefinition node,
+			IRInfo question) throws AnalysisException
 	{
 		// Do not report the node as unsupported and generate nothing
 		return null;
@@ -167,36 +170,37 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 	public SDeclIR caseANamedTraceDefinition(ANamedTraceDefinition node,
 			IRInfo question) throws AnalysisException
 	{
-		if(!question.getSettings().generateTraces())
+		if (!question.getSettings().generateTraces())
 		{
 			return null;
 		}
-		
+
 		ANamedTraceDeclIR namedTraceDecl = new ANamedTraceDeclIR();
 
-		for(ClonableString cloStr : node.getPathname())
+		for (ClonableString cloStr : node.getPathname())
 		{
 			ATokenNameIR name = new ATokenNameIR();
 			name.setName(cloStr.value);
-			
+
 			namedTraceDecl.getPathname().add(name);
 		}
-		
-		for(ATraceDefinitionTerm term : node.getTerms())
+
+		for (ATraceDefinitionTerm term : node.getTerms())
 		{
 			STermIR termCg = term.apply(question.getTermVisitor(), question);
-			
-			if(termCg instanceof ATraceDeclTermIR)
+
+			if (termCg instanceof ATraceDeclTermIR)
 			{
 				namedTraceDecl.getTerms().add((ATraceDeclTermIR) termCg);
-			}
-			else
+			} else
 			{
-				Logger.getLog().printErrorln("Expected term to be of type ATraceDeclTermIR. Got: " + termCg);
+				log.error("Expected term to be of type "
+						+ ATraceDeclTermIR.class.getName() + ". Got: "
+						+ termCg);
 				return null;
 			}
 		}
-		
+
 		return namedTraceDecl;
 	}
 
@@ -205,17 +209,17 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 			IRInfo question) throws AnalysisException
 	{
 		PType type = node.getType();
-		
+
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
-		
+
 		ATypeNameIR typeName = new ATypeNameIR();
 		typeName.setDefiningClass(node.getName().getModule());
 		typeName.setName(node.getName().getName());
-		
+
 		ANamedTypeDeclIR namedTypeDecl = new ANamedTypeDeclIR();
 		namedTypeDecl.setName(typeName);
 		namedTypeDecl.setType(typeCg);
-		
+
 		return namedTypeDecl;
 	}
 
@@ -228,8 +232,8 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 
 		ARecordDeclIR record = new ARecordDeclIR();
 		record.setName(name.getName());
-		
-		if(node.getInvDef() != null)
+
+		if (node.getInvDef() != null)
 		{
 			SDeclIR invCg = node.getInvDef().apply(question.getDeclVisitor(), question);
 			record.setInvariant(invCg);
@@ -274,18 +278,18 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 	{
 		String access = node.getAccess().getAccess().toString();
 		PType type = node.getType();
-		
+
 		SDeclIR declCg = type.apply(question.getDeclVisitor(), question);
 
-		SDeclIR invCg = node.getInvdef() != null ?
-				node.getInvdef().apply(question.getDeclVisitor(), question)
+		SDeclIR invCg = node.getInvdef() != null
+				? node.getInvdef().apply(question.getDeclVisitor(), question)
 				: null;
-		
+
 		ATypeDeclIR typeDecl = new ATypeDeclIR();
 		typeDecl.setAccess(access);
 		typeDecl.setDecl(declCg);
 		typeDecl.setInv(invCg);
-		
+
 		return typeDecl;
 	}
 
@@ -391,20 +395,22 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 			templateType.setName(typeParam.getName());
 			method.getTemplateTypes().add(templateType);
 		}
-		
+
 		AExplicitFunctionDefinition preCond = node.getPredef();
-		SDeclIR preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
+		SDeclIR preCondCg = preCond != null
+				? preCond.apply(question.getDeclVisitor(), question) : null;
 		method.setPreCond(preCondCg);
-		
+
 		AExplicitFunctionDefinition postCond = node.getPostdef();
-		SDeclIR postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
+		SDeclIR postCondCg = postCond != null
+				? postCond.apply(question.getDeclVisitor(), question) : null;
 		method.setPostCond(postCondCg);
 
 		method.setImplicit(false);
-		
+
 		return method;
 	}
-	
+
 	@Override
 	public SDeclIR caseAImplicitFunctionDefinition(
 			AImplicitFunctionDefinition node, IRInfo question)
@@ -412,9 +418,9 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 	{
 		String accessCg = node.getAccess().getAccess().toString();
 		String funcNameCg = node.getName().getName();
-		
+
 		STypeIR typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		
+
 		if (!(typeCg instanceof AMethodTypeIR))
 		{
 			question.addUnsupportedNode(node, "Expected method type for implicit function. Got: "
@@ -424,13 +430,14 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 
 		AFuncDeclIR func = new AFuncDeclIR();
 		AExplicitFunctionDefinition preCond = node.getPredef();
-		SDeclIR preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
+		SDeclIR preCondCg = preCond != null
+				? preCond.apply(question.getDeclVisitor(), question) : null;
 		func.setPreCond(preCondCg);
-		
-		AExplicitFunctionDefinition postCond = node.getPostdef();
-		SDeclIR postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
-		func.setPostCond(postCondCg);
 
+		AExplicitFunctionDefinition postCond = node.getPostdef();
+		SDeclIR postCondCg = postCond != null
+				? postCond.apply(question.getDeclVisitor(), question) : null;
+		func.setPostCond(postCondCg);
 
 		// If the function uses any type parameters they will be
 		// registered as part of the method declaration
@@ -447,42 +454,41 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		func.setAccess(accessCg);
 		func.setImplicit(true);
 		func.setBody(new ANotImplementedExpIR());
-		func.setFormalParams(question.getDeclAssistant().
-				consFormalParams(node.getParamPatterns(), question));
+		func.setFormalParams(question.getDeclAssistant().consFormalParams(node.getParamPatterns(), question));
 		func.setMethodType((AMethodTypeIR) typeCg);
 		func.setName(funcNameCg);
-		
-		// The implicit function is currently constructed without the result information:
-		//SPatternIR resPatternCg = node.getResult().getPattern().apply(question.getPatternVisitor(), question);
-		//STypeIR resTypeCg = node.getResult().getType().apply(question.getTypeVisitor(), question);
 
-		
+		// The implicit function is currently constructed without the result information:
+		// SPatternIR resPatternCg = node.getResult().getPattern().apply(question.getPatternVisitor(), question);
+		// STypeIR resTypeCg = node.getResult().getType().apply(question.getTypeVisitor(), question);
+
 		return func;
 	}
-	
+
 	@Override
 	public SDeclIR caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		AMethodDeclIR method = question.getDeclAssistant().initMethod(node, question);
-		
-		if(method == null)
+
+		if (method == null)
 		{
 			question.addUnsupportedNode(node, "Expected method type for explicit operation. Got: "
 					+ node.getType());
 			return null;
 		}
-		
-		if(!(node.getType() instanceof AOperationType))
+
+		if (!(node.getType() instanceof AOperationType))
 		{
-			question.addUnsupportedNode(node, "Node type should be an operation type. Got: " + node.getType());
+			question.addUnsupportedNode(node, "Node type should be an operation type. Got: "
+					+ node.getType());
 			return null;
 		}
-		
+
 		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
 		LinkedList<PPattern> paramPatterns = node.getParameterPatterns();
-		
+
 		LinkedList<AFormalParamLocalParamIR> formalParameters = method.getFormalParams();
 
 		for (int i = 0; i < ptypes.size(); i++)
@@ -499,15 +505,15 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 
 		return method;
 	}
-	
+
 	@Override
 	public SDeclIR caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		AMethodDeclIR method = question.getDeclAssistant().initMethod(node, question);
-		
-		if(method == null)
+
+		if (method == null)
 		{
 			question.addUnsupportedNode(node, "Expected method type for explicit operation. Got: "
 					+ node.getType());
@@ -522,10 +528,9 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		// LinkedList<AExternalClause> externals = node.getExternals();
 		// Exceptions thrown:
 		// LinkedList<AErrorCase> errors = node.getErrors();
-		
+
 		method.setBody(new ANotImplementedStmIR());
-		method.setFormalParams(question.getDeclAssistant().
-				consFormalParams(node.getParameterPatterns(), question));
+		method.setFormalParams(question.getDeclAssistant().consFormalParams(node.getParameterPatterns(), question));
 		return method;
 	}
 
@@ -560,25 +565,23 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 
 		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, typeCg, expCg);
 	}
-	
+
 	@Override
-	public SDeclIR caseAThreadDefinition(AThreadDefinition node, IRInfo question)
-			throws AnalysisException
+	public SDeclIR caseAThreadDefinition(AThreadDefinition node,
+			IRInfo question) throws AnalysisException
 	{
 
 		PStm stm = node.getOperationDef().getBody();
-		
+
 		SStmIR stmIR = stm.apply(question.getStmVisitor(), question);
-		
+
 		AThreadDeclIR threaddcl = new AThreadDeclIR();
-	
+
 		threaddcl.setStm(stmIR);
 
-		
 		return threaddcl;
 	}
-	
-	
+
 	@Override
 	public SDeclIR caseAPerSyncDefinition(APerSyncDefinition node,
 			IRInfo question) throws AnalysisException
@@ -587,29 +590,28 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		ILexNameToken opname = node.getOpname();
 
 		APersyncDeclIR predicate = new APersyncDeclIR();
-		
+
 		predicate.setPred(guard.apply(question.getExpVisitor(), question));
 		predicate.setOpname(opname.getName());
-		
-		
+
 		return predicate;
 	}
-	
+
 	@Override
 	public SDeclIR caseAMutexSyncDefinition(AMutexSyncDefinition node,
 			IRInfo question) throws AnalysisException
 	{
 		LinkedList<ILexNameToken> operations = node.getOperations();
-		
+
 		AMutexSyncDeclIR mutexdef = new AMutexSyncDeclIR();
-		
-		for(ILexNameToken opname : operations)
+
+		for (ILexNameToken opname : operations)
 		{
 			ATokenNameIR token = new ATokenNameIR();
 			token.setName(opname.getName());
 			mutexdef.getOpnames().add(token);
 		}
-		
+
 		return mutexdef;
 	}
 }

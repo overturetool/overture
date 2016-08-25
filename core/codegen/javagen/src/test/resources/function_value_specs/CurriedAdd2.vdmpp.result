@@ -1,53 +1,60 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return f(1L).eval(2L).eval(3L, 4L).eval(5L, 6L);
-    }
+    return f(1L).eval(2L).eval(3L, 4L).eval(5L, 6L);
+  }
 
-    public static Func_2<Number, Func_1<Number, Number, Func_1<Number, Number, Number>>> f(
-        final Number a) {
-        return new Func_2<Number, Func_1<Number, Number, Func_1<Number, Number, Number>>>() {
-                public Func_1<Number, Number, Func_1<Number, Number, Number>> eval(
-                    final Number b) {
-                    return new Func_1<Number, Number, Func_1<Number, Number, Number>>() {
-                            public Func_1<Number, Number, Number> eval(
-                                final Number c1, final Number c2) {
-                                return new Func_1<Number, Number, Number>() {
-                                        public Number eval(final Number d1,
-                                            final Number d2) {
-                                            return a.longValue() +
-                                            b.longValue() + c1.longValue() +
-                                            c2.longValue() + d1.longValue() +
-                                            d2.longValue();
-                                        }
-                                    };
-                            }
-                        };
-                }
+  public Entry() {}
+
+  public static Func_2<Number, Func_1<Number, Number, Func_1<Number, Number, Number>>> f(
+      final Number a) {
+
+    return new Func_2<Number, Func_1<Number, Number, Func_1<Number, Number, Number>>>() {
+      public Func_1<Number, Number, Func_1<Number, Number, Number>> eval(final Number b) {
+
+        return new Func_1<Number, Number, Func_1<Number, Number, Number>>() {
+          public Func_1<Number, Number, Number> eval(final Number c1, final Number c2) {
+
+            return new Func_1<Number, Number, Number>() {
+              public Number eval(final Number d1, final Number d2) {
+
+                return a.longValue()
+                    + b.longValue()
+                    + c1.longValue()
+                    + c2.longValue()
+                    + d1.longValue()
+                    + d2.longValue();
+              }
             };
-    }
+          }
+        };
+      }
+    };
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########
+
+
 public interface Func_1<T_1, T_2, T_3> {
-    public abstract T_3 eval(final T_1 param_1, final T_2 param_2);
+  public abstract T_3 eval(final T_1 param_1, final T_2 param_2);
 }
 
 ##########
+
+
 public interface Func_2<T_1, T_2> {
-    public abstract T_2 eval(final T_1 param_1);
+  public abstract T_2 eval(final T_1 param_1);
 }
 
 ##########

@@ -27,7 +27,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.ASet1SetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 
@@ -146,9 +147,14 @@ public class SetValue extends Value
 	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
-		if (to instanceof ASetType)
+		if (to instanceof SSetType)
 		{
-			ASetType setto = (ASetType) to;
+			if (to instanceof ASet1SetType && values.isEmpty())
+			{
+				abort(4170, "Cannot convert empty set to set1", ctxt);
+			}
+			
+			SSetType setto = (SSetType) to;
 			ValueSet ns = new ValueSet();
 
 			for (Value v : values)

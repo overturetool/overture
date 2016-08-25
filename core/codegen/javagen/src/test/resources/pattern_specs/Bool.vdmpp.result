@@ -1,78 +1,75 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public Boolean boolPatternOp(final Boolean boolPattern_1) {
+
+    Boolean success_1 = Utils.equals(boolPattern_1, false);
+    if (!(success_1)) {
+      throw new RuntimeException("Bool pattern match failed");
     }
 
-    public Boolean boolPatternOp(final Boolean boolPattern_1) {
-        Boolean success_1 = Utils.equals(boolPattern_1, false);
-
-        if (!(success_1)) {
-            throw new RuntimeException("Bool pattern match failed");
-        }
-
-        final Boolean boolPattern_2 = true;
-        Boolean success_2 = Utils.equals(boolPattern_2, true);
-
-        if (!(success_2)) {
-            throw new RuntimeException("Bool pattern match failed");
-        }
-
-        return false;
+    final Boolean boolPattern_2 = true;
+    Boolean success_2 = Utils.equals(boolPattern_2, true);
+    if (!(success_2)) {
+      throw new RuntimeException("Bool pattern match failed");
     }
 
-    public static Boolean boolPatternFun(final Boolean boolPattern_3) {
-        Boolean success_3 = Utils.equals(boolPattern_3, true);
+    return false;
+  }
 
-        if (!(success_3)) {
-            throw new RuntimeException("Bool pattern match failed");
-        }
+  public A() {}
 
-        final Boolean boolPattern_4 = true;
-        Boolean success_4 = Utils.equals(boolPattern_4, true);
+  public static Boolean boolPatternFun(final Boolean boolPattern_3) {
 
-        if (!(success_4)) {
-            throw new RuntimeException("Bool pattern match failed");
-        }
-
-        return false;
+    Boolean success_3 = Utils.equals(boolPattern_3, true);
+    if (!(success_3)) {
+      throw new RuntimeException("Bool pattern match failed");
     }
 
-    public String toString() {
-        return "A{}";
+    final Boolean boolPattern_4 = true;
+    Boolean success_4 = Utils.equals(boolPattern_4, true);
+    if (!(success_4)) {
+      throw new RuntimeException("Bool pattern match failed");
     }
+
+    return false;
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    Boolean andResult_1 = false;
+
+    if (new A().boolPatternOp(false)) {
+      if (A.boolPatternFun(true)) {
+        andResult_1 = true;
+      }
     }
 
-    public static Object Run() {
-        Boolean andResult_1 = false;
+    return andResult_1;
+  }
 
-        if (new A().boolPatternOp(false)) {
-            if (A.boolPatternFun(true)) {
-                andResult_1 = true;
-            }
-        }
+  public Entry() {}
 
-        return andResult_1;
-    }
+  public String toString() {
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

@@ -1,70 +1,66 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public Number x = 1L;
+  public Number x = 1L;
 
-    public B() {
-    }
+  public B() {}
 
-    public String toString() {
-        return "B{" + "x := " + Utils.toString(x) + "}";
-    }
+  public String toString() {
+
+    return "B{" + "x := " + Utils.toString(x) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public Number x = 1L;
+  public Number x = 1L;
 
-    public A() {
-    }
+  public A() {}
 
-    public String toString() {
-        return "A{" + "x := " + Utils.toString(x) + "}";
-    }
+  public String toString() {
+
+    return "A{" + "x := " + Utils.toString(x) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static VDMSeq hr = SeqUtil.seq(new A());
+  private static VDMSeq hr = SeqUtil.seq(new A());
 
-    public Entry() {
+  public static Object Run() {
+
+    Object obj_1 = Utils.get(hr, Entry.hr.size());
+    Number apply_1 = null;
+    if (obj_1 instanceof A) {
+      apply_1 = ((A) obj_1).x;
+    } else if (obj_1 instanceof B) {
+      apply_1 = ((B) obj_1).x;
+    } else {
+      throw new RuntimeException("Missing member: x");
     }
 
-    public static Object Run() {
-        Object obj_1 = Utils.get(hr, Entry.hr.size());
+    return apply_1;
+  }
 
-        Number apply_1 = null;
+  public Entry() {}
 
-        if (obj_1 instanceof A) {
-            apply_1 = ((A) obj_1).x;
-        } else if (obj_1 instanceof B) {
-            apply_1 = ((B) obj_1).x;
-        } else {
-            throw new RuntimeException("Missing member: x");
-        }
+  public String toString() {
 
-        return apply_1;
-    }
-
-    public String toString() {
-        return "Entry{" + "hr := " + Utils.toString(hr) + "}";
-    }
+    return "Entry{" + "hr := " + Utils.toString(hr) + "}";
+  }
 }
 
 ##########

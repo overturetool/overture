@@ -1,96 +1,111 @@
 package project.Entrytypes;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class St implements Record {
-    public Object x;
+  public Object x;
 
-    public St(final Object _x) {
-        //@ assert (((((_x == null) || Utils.is_nat(_x)) && inv_Entry_PossiblyOne(_x)) || (Utils.is_bool(_x) && inv_Entry_True(_x))) && inv_Entry_PT(_x));
-        x = (_x != null) ? _x : null;
+  public St(final Object _x) {
 
-        //@ assert (((((x == null) || Utils.is_nat(x)) && inv_Entry_PossiblyOne(x)) || (Utils.is_bool(x) && inv_Entry_True(x))) && inv_Entry_PT(x));
+    //@ assert (((((_x == null) || Utils.is_nat(_x)) && inv_Entry_PossiblyOne(_x)) || (Utils.is_bool(_x) && inv_Entry_True(_x))) && inv_Entry_PT(_x));
+
+    x = _x != null ? _x : null;
+    //@ assert (((((x == null) || Utils.is_nat(x)) && inv_Entry_PossiblyOne(x)) || (Utils.is_bool(x) && inv_Entry_True(x))) && inv_Entry_PT(x));
+
+  }
+  /*@ pure @*/
+
+  public boolean equals(final Object obj) {
+
+    if (!(obj instanceof project.Entrytypes.St)) {
+      return false;
     }
 
-    /*@ pure @*/
-    public boolean equals(final Object obj) {
-        if (!(obj instanceof project.Entrytypes.St)) {
-            return false;
-        }
+    project.Entrytypes.St other = ((project.Entrytypes.St) obj);
 
-        project.Entrytypes.St other = ((project.Entrytypes.St) obj);
+    return Utils.equals(x, other.x);
+  }
+  /*@ pure @*/
 
-        return Utils.equals(x, other.x);
+  public int hashCode() {
+
+    return Utils.hashCode(x);
+  }
+  /*@ pure @*/
+
+  public project.Entrytypes.St copy() {
+
+    return new project.Entrytypes.St(x);
+  }
+  /*@ pure @*/
+
+  public String toString() {
+
+    return "mk_Entry`St" + Utils.formatFields(x);
+  }
+  /*@ pure @*/
+
+  public Object get_x() {
+
+    Object ret_1 = x;
+    //@ assert project.Entry.invChecksOn ==> ((((((ret_1 == null) || Utils.is_nat(ret_1)) && inv_Entry_PossiblyOne(ret_1)) || (Utils.is_bool(ret_1) && inv_Entry_True(ret_1))) && inv_Entry_PT(ret_1)));
+
+    return ret_1;
+  }
+
+  public void set_x(final Object _x) {
+
+    //@ assert project.Entry.invChecksOn ==> ((((((_x == null) || Utils.is_nat(_x)) && inv_Entry_PossiblyOne(_x)) || (Utils.is_bool(_x) && inv_Entry_True(_x))) && inv_Entry_PT(_x)));
+
+    x = _x;
+    //@ assert project.Entry.invChecksOn ==> ((((((x == null) || Utils.is_nat(x)) && inv_Entry_PossiblyOne(x)) || (Utils.is_bool(x) && inv_Entry_True(x))) && inv_Entry_PT(x)));
+
+  }
+  /*@ pure @*/
+
+  public Boolean valid() {
+
+    return true;
+  }
+
+  /*@ pure @*/
+  /*@ helper @*/
+
+  public static Boolean inv_Entry_PT(final Object check_elem) {
+
+    return true;
+  }
+
+  /*@ pure @*/
+  /*@ helper @*/
+
+  public static Boolean inv_Entry_PossiblyOne(final Object check_p) {
+
+    Number p = ((Number) check_p);
+
+    Boolean orResult_1 = false;
+
+    if (!(!(Utils.equals(p, null)))) {
+      orResult_1 = true;
+    } else {
+      orResult_1 = Utils.equals(p, 1L);
     }
 
-    /*@ pure @*/
-    public int hashCode() {
-        return Utils.hashCode(x);
-    }
+    return orResult_1;
+  }
 
-    /*@ pure @*/
-    public project.Entrytypes.St copy() {
-        return new project.Entrytypes.St(x);
-    }
+  /*@ pure @*/
+  /*@ helper @*/
 
-    /*@ pure @*/
-    public String toString() {
-        return "mk_Entry`St" + Utils.formatFields(x);
-    }
+  public static Boolean inv_Entry_True(final Object check_b) {
 
-    /*@ pure @*/
-    public Object get_x() {
-        Object ret_1 = x;
+    Boolean b = ((Boolean) check_b);
 
-        //@ assert project.Entry.invChecksOn ==> ((((((ret_1 == null) || Utils.is_nat(ret_1)) && inv_Entry_PossiblyOne(ret_1)) || (Utils.is_bool(ret_1) && inv_Entry_True(ret_1))) && inv_Entry_PT(ret_1)));
-        return ret_1;
-    }
-
-    public void set_x(final Object _x) {
-        //@ assert project.Entry.invChecksOn ==> ((((((_x == null) || Utils.is_nat(_x)) && inv_Entry_PossiblyOne(_x)) || (Utils.is_bool(_x) && inv_Entry_True(_x))) && inv_Entry_PT(_x)));
-        x = _x;
-
-        //@ assert project.Entry.invChecksOn ==> ((((((x == null) || Utils.is_nat(x)) && inv_Entry_PossiblyOne(x)) || (Utils.is_bool(x) && inv_Entry_True(x))) && inv_Entry_PT(x)));
-    }
-
-    /*@ pure @*/
-    public Boolean valid() {
-        return true;
-    }
-
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_Entry_PT(final Object check_elem) {
-        return true;
-    }
-
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_Entry_PossiblyOne(final Object check_p) {
-        Number p = ((Number) check_p);
-
-        Boolean orResult_1 = false;
-
-        if (!(!(Utils.equals(p, null)))) {
-            orResult_1 = true;
-        } else {
-            orResult_1 = Utils.equals(p, 1L);
-        }
-
-        return orResult_1;
-    }
-
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_Entry_True(final Object check_b) {
-        Boolean b = ((Boolean) check_b);
-
-        return b;
-    }
+    return b;
+  }
 }

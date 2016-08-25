@@ -73,7 +73,6 @@ import org.overture.ast.lex.LexStringToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.node.NodeList;
-import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -954,7 +953,7 @@ public class ExpressionReader extends SyntaxReader
 				return readTimeExpression(token.location);
 
 			default:
-				throwMessage(2034, "Unexpected token in expression");
+				throwMessage(2034, "Unexpected token in expression: " + token.type);
 				return null;
 		}
 	}
@@ -1353,7 +1352,7 @@ public class ExpressionReader extends SyntaxReader
 		{
 			nextToken();
 			BindReader br = getBindReader();
-			ASetBind setbind = br.readSetBind();
+			PBind setbind = br.readSetSeqBind();
 			PExp exp = null;
 
 			if (lastToken().is(VDMToken.AMPERSAND))
@@ -1364,7 +1363,8 @@ public class ExpressionReader extends SyntaxReader
 
 			checkFor(VDMToken.SEQ_CLOSE, 2142, "Expecting ']' after list comprehension");
 			result = AstFactory.newASeqCompSeqExp(start, first, setbind, exp);
-		} else
+		}
+		else
 		{
 			List<PExp> members = new NodeList<PExp>(null);
 			members.add(first);

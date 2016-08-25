@@ -16,7 +16,8 @@ public abstract class AbstractSetSeqInfo extends AbstractCollectionInfo
 	}
 
 	@Override
-	public String consElementCheck(String enclosingClass, String javaRootPackage, String arg, NameGen nameGen, String iteVar)
+	public String consElementCheck(String enclosingClass,
+			String javaRootPackage, String arg, NameGen nameGen, String iteVar)
 	{
 		String elementArg = consSubjectCheckExtraArg(V2J.class.getSimpleName(), GET_METHOD, arg, iteVar);
 		return elementType.consCheckExp(enclosingClass, javaRootPackage, elementArg, nameGen);

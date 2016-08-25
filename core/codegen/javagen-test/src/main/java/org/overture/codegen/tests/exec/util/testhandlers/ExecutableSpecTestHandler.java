@@ -46,14 +46,16 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 
 	public String getFullyQualifiedEntry(String rootPackage)
 	{
-		return rootPackage != null ? (rootPackage  + "." + getJavaEntry()) : getJavaEntry();
+		return rootPackage != null ? rootPackage + "." + getJavaEntry()
+				: getJavaEntry();
 	}
-	
+
 	public String toFullName(String rootPackage, String relativeName)
 	{
-		return rootPackage != null ? (rootPackage  + "." + relativeName) : relativeName;
+		return rootPackage != null ? rootPackage + "." + relativeName
+				: relativeName;
 	}
-	
+
 	@Override
 	public String getJavaEntry()
 	{

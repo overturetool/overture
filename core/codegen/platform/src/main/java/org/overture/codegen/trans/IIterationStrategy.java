@@ -33,9 +33,8 @@ import org.overture.codegen.ir.statements.ALocalPatternAssignmentStmIR;
 
 public interface IIterationStrategy
 {
-	public List<AVarDeclIR> getOuterBlockDecls(
-			AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
-			throws AnalysisException;
+	public List<AVarDeclIR> getOuterBlockDecls(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns) throws AnalysisException;
 
 	public List<SStmIR> getPreForLoopStms(AIdentifierVarExpIR setVar,
 			List<SPatternIR> patterns, SPatternIR pattern);

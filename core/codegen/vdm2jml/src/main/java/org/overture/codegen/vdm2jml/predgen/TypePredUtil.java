@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.log4j.Logger;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.assistant.TypeAssistantIR;
 import org.overture.codegen.ir.INode;
@@ -21,7 +22,6 @@ import org.overture.codegen.ir.types.ASetSetTypeIR;
 import org.overture.codegen.ir.types.ATupleTypeIR;
 import org.overture.codegen.ir.types.AUnionTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.vdm2jml.JmlGenUtil;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.codegen.vdm2jml.data.RecClassInfo;
@@ -40,23 +40,25 @@ import org.overture.codegen.vdm2jml.util.NameGen;
 public class TypePredUtil
 {
 	private TypePredHandler handler;
-	
+
+	private Logger log = Logger.getLogger(this.getClass().getName());
+
 	public TypePredUtil(TypePredHandler handler)
 	{
 		this.handler = handler;
 	}
-	
-	public List<String> consJmlCheck(ADefaultClassDeclIR encClass, String jmlVisibility,
-			String annotationType, boolean invChecksGuard, AbstractTypeInfo typeInfo,
-			SVarExpIR var)
+
+	public List<String> consJmlCheck(ADefaultClassDeclIR encClass,
+			String jmlVisibility, String annotationType, boolean invChecksGuard,
+			AbstractTypeInfo typeInfo, SVarExpIR var)
 	{
 		List<String> predStrs = new LinkedList<>();
-		
-		if(handler.getDecorator().buildRecValidChecks())
+
+		if (handler.getDecorator().buildRecValidChecks())
 		{
 			appendRecValidChecks(invChecksGuard, typeInfo, var, predStrs, encClass);
 		}
-		
+
 		StringBuilder inv = new StringBuilder();
 		inv.append("//@ ");
 
@@ -68,37 +70,36 @@ public class TypePredUtil
 
 		inv.append(annotationType);
 		inv.append(' ');
-		
-		if(invChecksGuard)
+
+		if (invChecksGuard)
 		{
 			inv.append(consInvChecksGuard(encClass));
 			inv.append('(');
 		}
 
 		String javaPackage = handler.getJmlGen().getJavaSettings().getJavaRootPackage();
-		
+
 		NameGen nameGen = new NameGen(encClass);
 		String consCheckExp = typeInfo.consCheckExp(encClass.getName(), javaPackage, var.getName(), nameGen);
-		
+
 		if (consCheckExp != null)
 		{
 			inv.append(consCheckExp);
 		} else
 		{
-			Logger.getLog().printErrorln("Expression could not be checked in '" + this.getClass().getSimpleName()
-					+ "'");
+			log.error("Expression could not be checked");
 			// TODO: Consider better handling
 			inv.append("true");
 		}
-		if(invChecksGuard)
+		if (invChecksGuard)
 		{
 			inv.append(')');
 		}
-		
+
 		inv.append(';');
-		
+
 		predStrs.add(inv.toString());
-		
+
 		return predStrs;
 	}
 
@@ -107,13 +108,13 @@ public class TypePredUtil
 		StringBuilder sb = new StringBuilder();
 		sb.append(handler.getJmlGen().getAnnotator().consInvChecksOnNameEncClass(encClass));
 		sb.append(JmlGenerator.JML_IMPLIES);
-		
+
 		return sb.toString();
 	}
 
 	private void appendRecValidChecks(boolean invChecksGuard,
-			AbstractTypeInfo typeInfo, SVarExpIR var,
-			List<String> predStrs, ADefaultClassDeclIR encClass)
+			AbstractTypeInfo typeInfo, SVarExpIR var, List<String> predStrs,
+			ADefaultClassDeclIR encClass)
 	{
 		List<ARecordTypeIR> recordTypes = getRecTypes(typeInfo);
 
@@ -135,15 +136,14 @@ public class TypePredUtil
 
 				if (var.getType() instanceof ARecordTypeIR)
 				{
-					if(handler.getJmlGen().getJmlSettings().genInvariantFor())
+					if (handler.getJmlGen().getJmlSettings().genInvariantFor())
 					{
 						inv.append(JmlGenerator.JML_INVARIANT_FOR);
 						inv.append('(');
 						inv.append(var.getName());
 						inv.append(')');
 						// e.g. invariant_for(r1)
-					}
-					else
+					} else
 					{
 						inv.append(var.getName());
 						inv.append('.');
@@ -156,20 +156,20 @@ public class TypePredUtil
 					inv.append(JmlGenerator.JAVA_INSTANCEOF);
 					inv.append(fullyQualifiedRecType);
 					inv.append(JmlGenerator.JML_IMPLIES);
-					
+
 					// So far we have:
 					// e.g. r1 instanceof project.Entrytypes.R3
-					
-					if(handler.getJmlGen().getJmlSettings().genInvariantFor())
+
+					if (handler.getJmlGen().getJmlSettings().genInvariantFor())
 					{
 						inv.append(JmlGenerator.JML_INVARIANT_FOR);
 						inv.append('(');
-						inv.append(consRecVarCast(var, fullyQualifiedRecType));;
+						inv.append(consRecVarCast(var, fullyQualifiedRecType));
+						;
 						inv.append(')');
-						
+
 						// e.g. r1 instanceof project.Entrytypes.R3 ==> \invariant_for((project.Entrytypes.R3) r1);
-					}
-					else
+					} else
 					{
 						inv.append(consRecVarCast(var, fullyQualifiedRecType));
 						inv.append('.');
@@ -197,7 +197,7 @@ public class TypePredUtil
 				+ rt.getName().getName();
 		return fullyQualifiedRecType;
 	}
-	
+
 	private List<ARecordTypeIR> getRecTypes(AbstractTypeInfo typeInfo)
 	{
 		List<ARecordTypeIR> recTypes = new LinkedList<>();
@@ -216,14 +216,16 @@ public class TypePredUtil
 	}
 
 	public List<AMetaStmIR> consAssertStm(AbstractTypeInfo invTypes,
-			ADefaultClassDeclIR encClass, SVarExpIR var, INode node, RecClassInfo recInfo)
+			ADefaultClassDeclIR encClass, SVarExpIR var, INode node,
+			RecClassInfo recInfo)
 	{
-		boolean inAccessor = node != null && recInfo != null && recInfo.inAccessor(node);
+		boolean inAccessor = node != null && recInfo != null
+				&& recInfo.inAccessor(node);
 
 		List<AMetaStmIR> asserts = new LinkedList<>();
 		List<String> assertStrs = consJmlCheck(encClass, null, JmlGenerator.JML_ASSERT_ANNOTATION, inAccessor, invTypes, var);
-		
-		for(String a : assertStrs)
+
+		for (String a : assertStrs)
 		{
 			AMetaStmIR assertStm = new AMetaStmIR();
 			List<ClonableString> assertMetaData = handler.getJmlGen().getAnnotator().consMetaData(a);
@@ -233,20 +235,21 @@ public class TypePredUtil
 
 		return asserts;
 	}
-	
+
 	public AMetaStmIR consVarNotNullAssert(String varName)
 	{
 		AMetaStmIR assertStm = new AMetaStmIR();
-		List<ClonableString> assertMetaData = handler.getJmlGen().getAnnotator().consMetaData("//@ assert " + varName + " != null;");
+		List<ClonableString> assertMetaData = handler.getJmlGen().getAnnotator().consMetaData("//@ assert "
+				+ varName + " != null;");
 		handler.getJmlGen().getAnnotator().appendMetaData(assertStm, assertMetaData);
 
 		return assertStm;
 	}
-	
+
 	public AbstractTypeInfo findTypeInfo(STypeIR type)
 	{
 		TypeAssistantIR assist = handler.getJmlGen().getJavaGen().getInfo().getTypeAssistant();
-		
+
 		if (type.getNamedInvType() != null)
 		{
 			ANamedTypeDeclIR namedInv = type.getNamedInvType();
@@ -255,19 +258,18 @@ public class TypePredUtil
 			String typeName = namedInv.getName().getName();
 
 			NamedTypeInfo info = NamedTypeInvDepCalculator.findTypeInfo(handler.getJmlGen().getTypeInfoList(), defModule, typeName);
-			
-			if(assist.isOptional(type))
+
+			if (assist.isOptional(type))
 			{
 				info = new NamedTypeInfo(info.getTypeName(), info.getDefModule(), info.hasInv(), true, info.getDomainType());
 			}
 
 			if (info == null)
 			{
-				Logger.getLog().printErrorln("Could not find info for named type '"
-						+ typeName + "' defined in module '" + defModule
-						+ "' in '" + this.getClass().getSimpleName() + "'");
+				log.error("Could not find info for named type '" + typeName
+						+ "' defined in module '" + defModule);
 			}
-			
+
 			return info;
 
 			// We do not need to collect sub named invariant types
@@ -276,57 +278,53 @@ public class TypePredUtil
 			if (type instanceof AUnionTypeIR)
 			{
 				List<AbstractTypeInfo> types = new LinkedList<>();
-				
+
 				for (STypeIR t : ((AUnionTypeIR) type).getTypes())
 				{
 					types.add(findTypeInfo(t));
 				}
-				
+
 				return new UnionInfo(assist.isOptional(type), types);
-			}
-			else if(type instanceof ATupleTypeIR)
+			} else if (type instanceof ATupleTypeIR)
 			{
 				List<AbstractTypeInfo> types = new LinkedList<>();
-				
-				for(STypeIR t : ((ATupleTypeIR) type).getTypes())
+
+				for (STypeIR t : ((ATupleTypeIR) type).getTypes())
 				{
 					types.add(findTypeInfo(t));
 				}
-				
+
 				return new TupleInfo(assist.isOptional(type), types);
-			}
-			else if(type instanceof ASeqSeqTypeIR)
+			} else if (type instanceof ASeqSeqTypeIR)
 			{
-				ASeqSeqTypeIR seqType = ((ASeqSeqTypeIR) type);
+				ASeqSeqTypeIR seqType = (ASeqSeqTypeIR) type;
 				STypeIR elementType = seqType.getSeqOf();
-				
+
 				return new SeqInfo(assist.isOptional(seqType), findTypeInfo(elementType), BooleanUtils.isTrue(seqType.getSeq1()));
-			}
-			else if(type instanceof ASetSetTypeIR)
+			} else if (type instanceof ASetSetTypeIR)
 			{
 				ASetSetTypeIR setType = (ASetSetTypeIR) type;
 				STypeIR elementType = setType.getSetOf();
-				
+
 				return new SetInfo(assist.isOptional(setType), findTypeInfo(elementType));
-			}
-			else if(type instanceof AMapMapTypeIR)
+			} else if (type instanceof AMapMapTypeIR)
 			{
 				AMapMapTypeIR mapType = (AMapMapTypeIR) type;
-				
+
 				AbstractTypeInfo domInfo = findTypeInfo(mapType.getFrom());
 				AbstractTypeInfo rngInfo = findTypeInfo(mapType.getTo());
-				
+
 				boolean injective = BooleanUtils.isTrue(mapType.getInjective());
-				
+
 				return new MapInfo(assist.isOptional(mapType), domInfo, rngInfo, injective);
-				
-			}
-			else if(type instanceof AUnknownTypeIR || type instanceof AClassTypeIR || type instanceof AExternalTypeIR)
+
+			} else if (type instanceof AUnknownTypeIR
+					|| type instanceof AClassTypeIR
+					|| type instanceof AExternalTypeIR)
 			{
 				// Iterators are class types for instance
 				return new UnknownLeaf();
-			}
-			else
+			} else
 			{
 				return new LeafTypeInfo(type, assist.isOptional(type));
 			}

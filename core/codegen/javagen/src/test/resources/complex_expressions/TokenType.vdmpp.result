@@ -1,22 +1,22 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final Token x = new Token(null);
+  private static final Token x = new Token(null);
 
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return Entry.x;
-    }
+    return Entry.x;
+  }
 
-    public String toString() {
-        return "Entry{" + "x = " + Utils.toString(x) + "}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{" + "x = " + Utils.toString(x) + "}";
+  }
 }
 
 ##########

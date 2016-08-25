@@ -1,20 +1,20 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class StringType {
-    public StringType() {
-    }
+  public VDMSeq op1() {
 
-    public VDMSeq op1() {
-        return SeqUtil.seq('k', 'a', 't', 't', 'e', 'b', 'a', 'k', 'k', 'e');
-    }
+    return SeqUtil.seq('k', 'a', 't', 't', 'e', 'b', 'a', 'k', 'k', 'e');
+  }
 
-    public String toString() {
-        return "StringType{}";
-    }
+  public StringType() {}
+
+  public String toString() {
+
+    return "StringType{}";
+  }
 }
 
 ##########

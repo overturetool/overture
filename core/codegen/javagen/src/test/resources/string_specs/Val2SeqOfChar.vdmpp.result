@@ -1,24 +1,23 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final String a = VDMUtil.val2seq_of_char(SetUtil.set());
-        final String b = VDMUtil.val2seq_of_char(SeqUtil.seq(2L, 3L));
-        final String c = VDMUtil.val2seq_of_char(Tuple.mk_(1L, true));
+    final String a = VDMUtil.val2seq_of_char(SetUtil.set());
+    final String b = VDMUtil.val2seq_of_char(SeqUtil.seq(2L, 3L));
+    final String c = VDMUtil.val2seq_of_char(Tuple.mk_(1L, true));
+    return a + " " + b + " " + c;
+  }
 
-        return a + " " + b + " " + c;
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

@@ -25,125 +25,137 @@ public class IsValChecker extends AnswerAdaptor<Boolean>
 		// Return false for all other cases
 		return false;
 	}
-	
+
 	@Override
-	public Boolean caseAIdentifierVarExpIR(AIdentifierVarExpIR node) throws AnalysisException {
+	public Boolean caseAIdentifierVarExpIR(AIdentifierVarExpIR node)
+			throws AnalysisException
+	{
 
 		return true;
 	}
-	
+
 	@Override
-	public Boolean defaultSLiteralExpIR(SLiteralExpIR node) throws AnalysisException
+	public Boolean defaultSLiteralExpIR(SLiteralExpIR node)
+			throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
-	public Boolean caseAMkBasicExpIR(AMkBasicExpIR node) throws AnalysisException
+	public Boolean caseAMkBasicExpIR(AMkBasicExpIR node)
+			throws AnalysisException
 	{
 		// Token value
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseANullExpIR(ANullExpIR node) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseANewExpIR(ANewExpIR node) throws AnalysisException
 	{
 		return true;
 	}
-	
-	@Override
-	public Boolean caseAEnumMapExpIR(AEnumMapExpIR node) throws AnalysisException {
 
-		for(AMapletExpIR m : node.getMembers())
+	@Override
+	public Boolean caseAEnumMapExpIR(AEnumMapExpIR node)
+			throws AnalysisException
+	{
+
+		for (AMapletExpIR m : node.getMembers())
 		{
-			if(!m.apply(this))
+			if (!m.apply(this))
 			{
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
-	@Override
-	public Boolean caseAEnumSeqExpIR(AEnumSeqExpIR node) throws AnalysisException {
 
-		for(SExpIR m : node.getMembers())
+	@Override
+	public Boolean caseAEnumSeqExpIR(AEnumSeqExpIR node)
+			throws AnalysisException
+	{
+
+		for (SExpIR m : node.getMembers())
 		{
-			if(!m.apply(this))
+			if (!m.apply(this))
 			{
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
-	@Override
-	public Boolean caseAEnumSetExpIR(AEnumSetExpIR node) throws AnalysisException {
 
-		for(SExpIR m : node.getMembers())
+	@Override
+	public Boolean caseAEnumSetExpIR(AEnumSetExpIR node)
+			throws AnalysisException
+	{
+
+		for (SExpIR m : node.getMembers())
 		{
-			if(!m.apply(this))
+			if (!m.apply(this))
 			{
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
-	public Boolean caseAMapletExpIR(AMapletExpIR node) throws AnalysisException {
+	public Boolean caseAMapletExpIR(AMapletExpIR node) throws AnalysisException
+	{
 
 		return node.getLeft().apply(this) && node.getRight().apply(this);
 	}
-	
+
 	@Override
-	public Boolean defaultSNumericBinaryExpIR(SNumericBinaryExpIR node) throws AnalysisException
+	public Boolean defaultSNumericBinaryExpIR(SNumericBinaryExpIR node)
+			throws AnalysisException
 	{
-		if(node.getLeft() == null || node.getRight() == null)
+		if (node.getLeft() == null || node.getRight() == null)
 		{
 			return false;
 		}
-		
+
 		return node.getLeft().apply(this) && node.getRight().apply(this);
 	}
-	
+
 	@Override
-	public Boolean caseAMinusUnaryExpIR(AMinusUnaryExpIR node) throws AnalysisException
+	public Boolean caseAMinusUnaryExpIR(AMinusUnaryExpIR node)
+			throws AnalysisException
 	{
-		if(node.getExp() == null)
+		if (node.getExp() == null)
 		{
 			return false;
-		}
-		else
+		} else
 		{
 			return node.getExp().apply(this);
 		}
 	}
-	
+
 	@Override
-	public Boolean caseAPlusUnaryExpIR(APlusUnaryExpIR node) throws AnalysisException
+	public Boolean caseAPlusUnaryExpIR(APlusUnaryExpIR node)
+			throws AnalysisException
 	{
-		if(node.getExp() == null)
+		if (node.getExp() == null)
 		{
 			return false;
-		}
-		else
+		} else
 		{
 			return node.getExp().apply(this);
 		}
 	}
 
 	// Do not expect to hit the cases below:
-	
+
 	@Override
 	public Boolean createNewReturnValue(INode node) throws AnalysisException
 	{
@@ -155,5 +167,5 @@ public class IsValChecker extends AnswerAdaptor<Boolean>
 	{
 		return false;
 	}
-	
+
 }

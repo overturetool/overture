@@ -35,14 +35,15 @@ public class TypeDependencyTests extends AnnotationTestsBase
 			files.add(new File(TEST_RES_TYPE_DEP_ROOT + filename));
 
 			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
-			
-			if(GeneralCodeGenUtils.hasErrors(tcResult))
+
+			if (GeneralCodeGenUtils.hasErrors(tcResult))
 			{
-				Assert.fail("Could not parse/type check VDM model:\n" + GeneralCodeGenUtils.errorStr(tcResult));
+				Assert.fail("Could not parse/type check VDM model:\n"
+						+ GeneralCodeGenUtils.errorStr(tcResult));
 			}
 
 			List<AModuleModules> modules = tcResult.result;
-			
+
 			Assert.assertTrue("Expected a single module but got "
 					+ modules.size(), modules.size() == 1);
 
@@ -50,7 +51,7 @@ public class TypeDependencyTests extends AnnotationTestsBase
 
 			JmlGenerator jmlGen = new JmlGenerator();
 			initJmlGen(jmlGen);
-			
+
 			NamedTypeInvDepCalculator depCalc = new NamedTypeInvDepCalculator(jmlGen.getJavaGen().getInfo());
 
 			module.apply(depCalc);
@@ -66,13 +67,15 @@ public class TypeDependencyTests extends AnnotationTestsBase
 		} catch (Exception e)
 		{
 			e.printStackTrace();
-			Assert.assertFalse("Problems loading test data: " + e.getMessage(), true);
+			Assert.assertFalse("Problems loading test data: "
+					+ e.getMessage(), true);
 		}
 	}
 
 	private void assertTypeName(String typeName, NamedTypeInfo info)
 	{
-		Assert.assertEquals("Expected type name to be '" + typeName + "'", typeName, info.getTypeName());
+		Assert.assertEquals("Expected type name to be '" + typeName
+				+ "'", typeName, info.getTypeName());
 	}
 
 	private String infoStr(NamedTypeInfo info)
@@ -244,15 +247,15 @@ public class TypeDependencyTests extends AnnotationTestsBase
 		assertNotOptional(getInfo("N"));
 		assertNotOptional(getInfo("C"));
 	}
-	
+
 	@Test
 	public void optionalNamed()
 	{
 		load("OptionalNamedType.vdmsl");
-		//CN = [C]|N;
-		//N = nat;
-		//C = char;
-		
+		// CN = [C]|N;
+		// N = nat;
+		// C = char;
+
 		assertNotOptional(getInfo("CN"));
 		assertNotOptional(getInfo("C"));
 		assertNotOptional(getInfo("N"));
@@ -290,15 +293,15 @@ public class TypeDependencyTests extends AnnotationTestsBase
 		assertNoOfLeafs(info, 1);
 		assertLeafType(info, ANatNumericBasicTypeIR.class, false);
 	}
-	
+
 	@Test
 	public void unionWithoutNull()
 	{
 		load("UnionWithoutNull.vdmsl");
-		//CN = C|N;
-		//N = nat;
-		//C = char;
-		
+		// CN = C|N;
+		// N = nat;
+		// C = char;
+
 		assertNotOptional(getInfo("CN"));
 	}
 }

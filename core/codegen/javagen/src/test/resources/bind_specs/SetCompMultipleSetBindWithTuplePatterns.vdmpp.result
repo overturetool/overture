@@ -1,68 +1,61 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return fun();
-    }
+    return fun();
+  }
 
-    public static VDMSet fun() {
-        VDMSet setCompResult_1 = SetUtil.set();
-        VDMSet set_1 = SetUtil.set(Tuple.mk_(1L, 5L), Tuple.mk_(2L, 5L),
-                Tuple.mk_(2L, 60L));
+  public Entry() {}
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Tuple tuplePattern_1 = ((Tuple) iterator_1.next());
-            Boolean success_1 = tuplePattern_1.compatible(Number.class,
-                    Number.class);
-            Number a = null;
+  public static VDMSet fun() {
 
-            if (success_1) {
-                Number intPattern_1 = ((Number) tuplePattern_1.get(0));
-                success_1 = Utils.equals(intPattern_1, 2L);
+    VDMSet setCompResult_1 = SetUtil.set();
+    VDMSet set_1 = SetUtil.set(Tuple.mk_(1L, 5L), Tuple.mk_(2L, 5L), Tuple.mk_(2L, 60L));
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Tuple tuplePattern_1 = ((Tuple) iterator_1.next());
+      Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);
+      Number a = null;
+      if (success_1) {
+        Number intPattern_1 = ((Number) tuplePattern_1.get(0));
+        success_1 = Utils.equals(intPattern_1, 2L);
 
-                if (success_1) {
-                    a = ((Number) tuplePattern_1.get(1));
-                }
-            }
+        if (success_1) {
+          a = ((Number) tuplePattern_1.get(1));
+        }
+      }
 
-            if (!(success_1)) {
-                continue;
-            }
+      if (!(success_1)) {
+        continue;
+      }
 
-            for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext();) {
-                Tuple tuplePattern_2 = ((Tuple) iterator_2.next());
-                Boolean success_2 = tuplePattern_2.compatible(Number.class,
-                        Number.class);
-                Number b = null;
-
-                if (success_2) {
-                    b = ((Number) tuplePattern_2.get(0));
-
-                    Number intPattern_2 = ((Number) tuplePattern_2.get(1));
-                    success_2 = Utils.equals(intPattern_2, 5L);
-                }
-
-                if (!(success_2)) {
-                    continue;
-                }
-
-                setCompResult_1.add(a.longValue() + b.longValue());
-            }
+      for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext(); ) {
+        Tuple tuplePattern_2 = ((Tuple) iterator_2.next());
+        Boolean success_2 = tuplePattern_2.compatible(Number.class, Number.class);
+        Number b = null;
+        if (success_2) {
+          b = ((Number) tuplePattern_2.get(0));
+          Number intPattern_2 = ((Number) tuplePattern_2.get(1));
+          success_2 = Utils.equals(intPattern_2, 5L);
         }
 
-        return Utils.copy(setCompResult_1);
-    }
+        if (!(success_2)) {
+          continue;
+        }
 
-    public String toString() {
-        return "Entry{}";
+        setCompResult_1.add(a.longValue() + b.longValue());
+      }
     }
+    return Utils.copy(setCompResult_1);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

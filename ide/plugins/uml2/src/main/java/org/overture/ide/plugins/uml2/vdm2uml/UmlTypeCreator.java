@@ -52,7 +52,7 @@ import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARationalNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -166,9 +166,9 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		{
 			createSeqType(class_, (SSeqType) type);
 			return;
-		} else if (type instanceof ASetType)
+		} else if (type instanceof SSetType)
 		{
-			createSetType(class_, (ASetType) type);
+			createSetType(class_, (SSetType) type);
 			return;
 		} else if (type instanceof AUnknownType)
 		{
@@ -215,7 +215,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		createTemplateType(class_, type, templateOptionalName, new String[] { "T" }, type.getType());
 	}
 
-	private void createSetType(Class class_, ASetType type)
+	private void createSetType(Class class_, SSetType type)
 	{
 		createTemplateType(class_, type, templateSetName, new String[] { "T" }, type.getSetof());
 	}

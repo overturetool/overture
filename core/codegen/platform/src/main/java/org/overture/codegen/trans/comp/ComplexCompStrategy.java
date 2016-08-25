@@ -23,6 +23,7 @@ package org.overture.codegen.trans.comp;
 
 import java.util.List;
 
+import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.SStmIR;
@@ -30,25 +31,23 @@ import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.AVarDeclIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
-import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public abstract class ComplexCompStrategy extends CompStrategy
 {
-	public ComplexCompStrategy(
-			TransAssistantIR transformationAssitant, SExpIR predicate,
-			String var, STypeIR compType, ILanguageIterator langIterator,
-			ITempVarGen tempGen, IterationVarPrefixes iteVarPrefixes)
+	public ComplexCompStrategy(TransAssistantIR transformationAssitant,
+			SExpIR predicate, String var, STypeIR compType,
+			ILanguageIterator langIterator, ITempVarGen tempGen,
+			IterationVarPrefixes iteVarPrefixes)
 	{
 		super(transformationAssitant, predicate, var, compType, langIterator, tempGen, iteVarPrefixes);
 	}
 
 	@Override
-	public List<AVarDeclIR> getOuterBlockDecls(
-			AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
-			throws AnalysisException
+	public List<AVarDeclIR> getOuterBlockDecls(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns) throws AnalysisException
 	{
 		return firstBind ? super.getOuterBlockDecls(setVar, patterns) : null;
 	}

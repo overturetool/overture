@@ -1,6 +1,7 @@
 package org.overture.codegen.traces;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.log4j.Logger;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
@@ -13,7 +14,6 @@ import org.overture.codegen.ir.expressions.ANewExpIR;
 import org.overture.codegen.ir.expressions.ASelfExpIR;
 import org.overture.codegen.ir.expressions.SVarExpIR;
 import org.overture.codegen.ir.types.AObjectTypeIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class CallObjTraceLocalizer extends AnswerAdaptor<SExpIR>
@@ -22,7 +22,10 @@ public class CallObjTraceLocalizer extends AnswerAdaptor<SExpIR>
 	private TraceNames tracePrefixes;
 	private String traceEnclosingClass;
 
-	public CallObjTraceLocalizer(TransAssistantIR transAssistant, TraceNames tracePrefixes, String traceEnclosingClass)
+	private Logger log = Logger.getLogger(this.getClass().getName());
+
+	public CallObjTraceLocalizer(TransAssistantIR transAssistant,
+			TraceNames tracePrefixes, String traceEnclosingClass)
 	{
 		this.assist = transAssistant;
 		this.tracePrefixes = tracePrefixes;
@@ -42,7 +45,8 @@ public class CallObjTraceLocalizer extends AnswerAdaptor<SExpIR>
 	}
 
 	@Override
-	public SExpIR caseAIdentifierVarExpIR(AIdentifierVarExpIR node) throws AnalysisException
+	public SExpIR caseAIdentifierVarExpIR(AIdentifierVarExpIR node)
+			throws AnalysisException
 	{
 		if (node instanceof SVarExpIR)
 		{
@@ -65,8 +69,7 @@ public class CallObjTraceLocalizer extends AnswerAdaptor<SExpIR>
 			return node;
 		}
 
-		Logger.getLog().printErrorln("Expected variable expression at this point in '" + this.getClass().getSimpleName()
-				+ "'. Got: " + node);
+		log.error("Expected variable expression at this point. Got: " + node);
 
 		return null;
 	}
@@ -89,7 +92,7 @@ public class CallObjTraceLocalizer extends AnswerAdaptor<SExpIR>
 	private ACastUnaryExpIR consObjId()
 	{
 		String paramName = tracePrefixes.callStmMethodParamName();
-		
+
 		AIdentifierVarExpIR idVar = assist.getInfo().getExpAssistant().consIdVar(paramName, new AObjectTypeIR());
 
 		ACastUnaryExpIR castVar = new ACastUnaryExpIR();

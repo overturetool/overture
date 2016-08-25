@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Assume;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.tests.exec.util.ProcessResult;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2jml.JmlGenMain;
@@ -21,18 +21,18 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 	public static final String OPENJML_ENV_VAR = "OPENJML";
 
 	public static final String OPEN_JML = "openjml.jar";
-	
+
 	public static final String JML_RUNTIME = "jmlruntime.jar";
 
 	public static final String TEST_EXEC_LIB_FOLDER_PATH = TEST_EXEC_FOLDER_PATH
 			+ File.separatorChar + "lib";
-	
-	public static final String CODEGEN_RUNTIME = TEST_EXEC_LIB_FOLDER_PATH + File.separatorChar
-			+ "codegen-runtime.jar";
-	
-	public static final String VDM_TO_JML_RUNTIME = TEST_EXEC_LIB_FOLDER_PATH + File.separatorChar
-			+ "vdm2jml-runtime.jar";
-	
+
+	public static final String CODEGEN_RUNTIME = TEST_EXEC_LIB_FOLDER_PATH
+			+ File.separatorChar + "codegen-runtime.jar";
+
+	public static final String VDM_TO_JML_RUNTIME = TEST_EXEC_LIB_FOLDER_PATH
+			+ File.separatorChar + "vdm2jml-runtime.jar";
+
 	public static final String EXEC_PROPERTY = "tests.vdm2jml.openjml";
 
 	public static final int EXIT_OK = 0;
@@ -41,12 +41,15 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 	protected File jmlRuntime;
 	protected File cgRuntime;
 	protected File vdm2jmlRuntime;
+
+	protected static Logger log = Logger.getLogger(OpenJmlValidationBase.class.getName());
+
 	public OpenJmlValidationBase(File inputFile)
 	{
 		super(inputFile);
 		this.cgRuntime = new File(CODEGEN_RUNTIME);
 		this.vdm2jmlRuntime = new File(VDM_TO_JML_RUNTIME);
-		
+
 		setOpenJmlTools();
 	}
 
@@ -57,7 +60,7 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 		openJml = new File(openJmlDir, OPEN_JML);
 		jmlRuntime = new File(openJmlDir, JML_RUNTIME);
 	}
-	
+
 	public void assumeOpenJml()
 	{
 		assumeFile(OPEN_JML, openJml);
@@ -67,7 +70,7 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 	{
 		assumeFile(JML_RUNTIME, jmlRuntime);
 	}
-	
+
 	public static void assumeFile(String fileName, File file)
 	{
 		Assume.assumeTrue("Could not find " + fileName, file != null
@@ -95,13 +98,14 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 		}
 	}
 
-	public static ProcessResult runProcess(String[] openJmlArgs) throws IOException, InterruptedException
+	public static ProcessResult runProcess(String[] openJmlArgs)
+			throws IOException, InterruptedException
 	{
 		String s;
 		Process p;
 		int exitCode = 1;
 		StringBuilder processOutput = new StringBuilder();
-		
+
 		ProcessBuilder pb = new ProcessBuilder(openJmlArgs);
 
 		p = pb.start();
@@ -131,12 +135,12 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 
 		if (VERBOSE)
 		{
-			Logger.getLog().println(processOutput.toString());
-			Logger.getLog().println("Exit value: " + p.exitValue());
+			log.info(processOutput.toString());
+			log.info("Exit value: " + p.exitValue());
 		}
 
 		p.destroy();
-		
+
 		return new ProcessResult(exitCode, processOutput);
 	}
 
@@ -144,19 +148,19 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 	{
 		return s.startsWith(SKIPPING_A_SPECIFICATION_CLAUSE_FILTER_MSG);
 	}
-	
+
 	public void clearCodeFolder()
 	{
 		// Just make sure that the folder we are using is empty
 		GeneralUtils.deleteFolderContents(genJavaFolder, true);
 
 	}
-	
+
 	protected void generateJavaJml()
 	{
 		JmlGenMain.main(getJmlGenMainProcessArgs(genJavaFolder));
 	}
-	
+
 	abstract public void beforeRunningOpenJmlProcess();
 
 	abstract public String[] getProcessArgs();

@@ -2,6 +2,8 @@ package org.overture.codegen.traces;
 
 import java.util.IdentityHashMap;
 
+import org.apache.log4j.Logger;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
@@ -29,13 +31,13 @@ import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.types.ATupleTypeIR;
 import org.overture.codegen.ir.types.AUnionTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 
 public class PatternTypeFinder extends QuestionAdaptor<STypeIR>
 {
 	private IRInfo info;
 	private IdentityHashMap<SPatternIR, STypeIR> typeTable;
+
+	private static Logger log = Logger.getLogger(PatternTypeFinder.class.getName());
 
 	public PatternTypeFinder(IRInfo info)
 	{
@@ -44,39 +46,44 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeIR>
 	}
 
 	@Override
-	public void defaultSPatternIR(SPatternIR node, STypeIR question) throws AnalysisException
+	public void defaultSPatternIR(SPatternIR node, STypeIR question)
+			throws AnalysisException
 	{
 		storeType(node, question);
-		Logger.getLog().printErrorln("Got unexpected pattern " + node + " in '" + this.getClass().getSimpleName()
-				+ "'");
+		log.error("Got unexpected pattern: " + node);
 	}
 
 	@Override
-	public void caseAIdentifierPatternIR(AIdentifierPatternIR node, STypeIR question) throws AnalysisException
-	{
-		storeType(node, question);
-	}
-
-	@Override
-	public void caseAIgnorePatternIR(AIgnorePatternIR node, STypeIR question) throws AnalysisException
+	public void caseAIdentifierPatternIR(AIdentifierPatternIR node,
+			STypeIR question) throws AnalysisException
 	{
 		storeType(node, question);
 	}
 
 	@Override
-	public void caseABoolPatternIR(ABoolPatternIR node, STypeIR question) throws AnalysisException
+	public void caseAIgnorePatternIR(AIgnorePatternIR node, STypeIR question)
+			throws AnalysisException
+	{
+		storeType(node, question);
+	}
+
+	@Override
+	public void caseABoolPatternIR(ABoolPatternIR node, STypeIR question)
+			throws AnalysisException
 	{
 		storeType(node, new ABoolBasicTypeIR());
 	}
 
 	@Override
-	public void caseACharPatternIR(ACharPatternIR node, STypeIR question) throws AnalysisException
+	public void caseACharPatternIR(ACharPatternIR node, STypeIR question)
+			throws AnalysisException
 	{
 		storeType(node, new ACharBasicTypeIR());
 	}
 
 	@Override
-	public void caseAIntPatternIR(AIntPatternIR node, STypeIR question) throws AnalysisException
+	public void caseAIntPatternIR(AIntPatternIR node, STypeIR question)
+			throws AnalysisException
 	{
 		long value = node.getValue();
 
@@ -93,13 +100,15 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeIR>
 	}
 
 	@Override
-	public void caseANullPatternIR(ANullPatternIR node, STypeIR question) throws AnalysisException
+	public void caseANullPatternIR(ANullPatternIR node, STypeIR question)
+			throws AnalysisException
 	{
 		storeType(node, new AUnknownTypeIR());
 	}
 
 	@Override
-	public void caseAQuotePatternIR(AQuotePatternIR node, STypeIR question) throws AnalysisException
+	public void caseAQuotePatternIR(AQuotePatternIR node, STypeIR question)
+			throws AnalysisException
 	{
 		AQuoteTypeIR quoteTypeCg = new AQuoteTypeIR();
 		quoteTypeCg.setValue(node.getValue());
@@ -108,19 +117,22 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeIR>
 	}
 
 	@Override
-	public void caseARealPatternIR(ARealPatternIR node, STypeIR question) throws AnalysisException
+	public void caseARealPatternIR(ARealPatternIR node, STypeIR question)
+			throws AnalysisException
 	{
 		storeType(node, new ARealNumericBasicTypeIR());
 	}
 
 	@Override
-	public void caseAStringPatternIR(AStringPatternIR node, STypeIR question) throws AnalysisException
+	public void caseAStringPatternIR(AStringPatternIR node, STypeIR question)
+			throws AnalysisException
 	{
 		storeType(node, question);
 	}
 
 	@Override
-	public void caseATuplePatternIR(ATuplePatternIR node, STypeIR question) throws AnalysisException
+	public void caseATuplePatternIR(ATuplePatternIR node, STypeIR question)
+			throws AnalysisException
 	{
 		ATupleTypeIR tupType = null;
 
@@ -149,20 +161,18 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeIR>
 				}
 			} else
 			{
-				Logger.getLog().printErrorln("Problem encountered when determining the "
-						+ "type of a tuple pattern. Patterns and types do not match in terms of size in '"
-						+ this.getClass().getSimpleName() + "'");
+				log.error("Problem encountered when determining the type of a tuple pattern. Patterns and types do not match in terms of size");
 			}
 
 		} else
 		{
-			Logger.getLog().printErrorln("Expected tuple type or union type in '" + this.getClass().getSimpleName()
-					+ "'.  Got: " + question);
+			log.error("Expected tuple type or union type. Got: " + question);
 		}
 	}
 
 	@Override
-	public void caseARecordPatternIR(ARecordPatternIR node, STypeIR question) throws AnalysisException
+	public void caseARecordPatternIR(ARecordPatternIR node, STypeIR question)
+			throws AnalysisException
 	{
 		STypeIR type = node.getType();
 		storeType(node, type);
@@ -184,14 +194,13 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeIR>
 				}
 			} else
 			{
-				Logger.getLog().printErrorln("Record patterns and record fields do not match in terms of size in '"
-						+ this.getClass().getSimpleName() + "'");
+				log.error("Record patterns and record fields do not match in terms of size");
 			}
 
 		} else
 		{
-			Logger.getLog().printErrorln("Expected record pattern to have a record type in '"
-					+ this.getClass().getSimpleName() + "'. Got: " + type);
+			log.error("Expected record pattern to have a record type. Got: "
+					+ type);
 		}
 	}
 
@@ -205,14 +214,14 @@ public class PatternTypeFinder extends QuestionAdaptor<STypeIR>
 		return this.typeTable.get(pattern);
 	}
 
-	public static STypeIR getType(PatternTypeFinder typeFinder, AIdentifierPatternIR occ)
+	public static STypeIR getType(PatternTypeFinder typeFinder,
+			AIdentifierPatternIR occ)
 	{
 		STypeIR occType = typeFinder.getPatternType(occ);
 
 		if (occType == null)
 		{
-			Logger.getLog().printErrorln("Could not find type of identifier pattern " + occ + " in '"
-					+ PatternTypeFinder.class.getSimpleName() + "'");
+			log.error("Could not find type of identifier pattern " + occ);
 			occType = new AUnknownTypeIR();
 		} else
 		{

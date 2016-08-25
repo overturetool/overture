@@ -1,50 +1,48 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    return Test();
+  }
+
+  public static Boolean pick() {
+
+    return true;
+  }
+
+  public static VDMSet Op() {
+
+    VDMSet setCompResult_1 = SetUtil.set();
+    VDMSet set_1 = SeqUtil.elems(SeqUtil.seq(1L, 2L, 3L));
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Number x = ((Number) iterator_1.next());
+      if (pick()) {
+        setCompResult_1.add(x.longValue() * 2L);
+      }
     }
+    return Utils.copy(setCompResult_1);
+  }
 
-    public static Object Run() {
-        return Test();
+  public static Number Test() {
+
+    Number sum = 0L;
+    for (Iterator iterator_2 = Op().iterator(); iterator_2.hasNext(); ) {
+      Number e = (Number) iterator_2.next();
+      sum = sum.longValue() + e.longValue();
     }
+    return sum;
+  }
 
-    public static Boolean pick() {
-        return true;
-    }
+  public Entry() {}
 
-    public static VDMSet Op() {
-        VDMSet setCompResult_1 = SetUtil.set();
-        VDMSet set_1 = SeqUtil.elems(SeqUtil.seq(1L, 2L, 3L));
+  public String toString() {
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Number x = ((Number) iterator_1.next());
-
-            if (pick()) {
-                setCompResult_1.add(x.longValue() * 2L);
-            }
-        }
-
-        return Utils.copy(setCompResult_1);
-    }
-
-    public static Number Test() {
-        Number sum = 0L;
-
-        for (Iterator iterator_2 = Op().iterator(); iterator_2.hasNext();) {
-            Number e = (Number) iterator_2.next();
-            sum = sum.longValue() + e.longValue();
-        }
-
-        return sum;
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

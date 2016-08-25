@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.ParseTcFacade;
+import org.overture.core.testing.ParseTcFacade;
 
 public class ThyWriteTest {
 

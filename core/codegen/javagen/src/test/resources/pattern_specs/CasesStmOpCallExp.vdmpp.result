@@ -1,127 +1,140 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    Object casesExp_1 = rec();
+    Boolean success_1 = true;
+    if (casesExp_1 instanceof A) {
+      A recordPattern_1 = ((A) Utils.copy(casesExp_1));
+      Number intPattern_1 = recordPattern_1.a;
+      success_1 = Utils.equals(intPattern_1, 9L);
+
+    } else {
+      success_1 = false;
     }
 
-    public static Object Run() {
-        Object casesExp_1 = rec();
-        Boolean success_1 = true;
+    if (!(success_1)) {
+      if (casesExp_1 instanceof B) {
+        B recordPattern_2 = ((B) Utils.copy(casesExp_1));
+        success_1 = true;
+        Number intPattern_2 = recordPattern_2.b;
+        success_1 = Utils.equals(intPattern_2, 9L);
 
-        if (casesExp_1 instanceof A) {
-            A recordPattern_1 = ((A) Utils.copy(casesExp_1));
-            Number intPattern_1 = recordPattern_1.a;
-            success_1 = Utils.equals(intPattern_1, 9L);
+      } else {
+        success_1 = false;
+      }
+
+      if (!(success_1)) {
+        if (casesExp_1 instanceof B) {
+          B recordPattern_3 = ((B) Utils.copy(casesExp_1));
+          success_1 = true;
+          Number intPattern_3 = recordPattern_3.b;
+          success_1 = Utils.equals(intPattern_3, 10L);
+
         } else {
-            success_1 = false;
+          success_1 = false;
         }
 
-        if (!(success_1)) {
-            if (casesExp_1 instanceof B) {
-                B recordPattern_2 = ((B) Utils.copy(casesExp_1));
-                success_1 = true;
-
-                Number intPattern_2 = recordPattern_2.b;
-                success_1 = Utils.equals(intPattern_2, 9L);
-            } else {
-                success_1 = false;
-            }
-
-            if (!(success_1)) {
-                if (casesExp_1 instanceof B) {
-                    B recordPattern_3 = ((B) Utils.copy(casesExp_1));
-                    success_1 = true;
-
-                    Number intPattern_3 = recordPattern_3.b;
-                    success_1 = Utils.equals(intPattern_3, 10L);
-                } else {
-                    success_1 = false;
-                }
-
-                if (success_1) {
-                    return 1111L;
-                }
-            } else {
-                return 111L;
-            }
-        } else {
-            return 11L;
+        if (success_1) {
+          return 1111L;
         }
 
-        return -1L;
+      } else {
+        return 111L;
+      }
+
+    } else {
+      return 11L;
     }
 
-    public static Object rec() {
-        return new B(10L);
+    return -1L;
+  }
+
+  public static Object rec() {
+
+    return new B(10L);
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  public static class A implements Record {
+    public Number a;
+
+    public A(final Number _a) {
+
+      a = _a;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof A)) {
+        return false;
+      }
+
+      A other = ((A) obj);
+
+      return Utils.equals(a, other.a);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(a);
+    }
+
+    public A copy() {
+
+      return new A(a);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`A" + Utils.formatFields(a);
+    }
+  }
+
+  public static class B implements Record {
+    public Number b;
+
+    public B(final Number _b) {
+
+      b = _b;
     }
 
-    public static class A implements Record {
-        public Number a;
+    public boolean equals(final Object obj) {
 
-        public A(final Number _a) {
-            a = _a;
-        }
+      if (!(obj instanceof B)) {
+        return false;
+      }
 
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof A)) {
-                return false;
-            }
+      B other = ((B) obj);
 
-            A other = ((A) obj);
-
-            return Utils.equals(a, other.a);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(a);
-        }
-
-        public A copy() {
-            return new A(a);
-        }
-
-        public String toString() {
-            return "mk_Entry`A" + Utils.formatFields(a);
-        }
+      return Utils.equals(b, other.b);
     }
 
-    public static class B implements Record {
-        public Number b;
+    public int hashCode() {
 
-        public B(final Number _b) {
-            b = _b;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof B)) {
-                return false;
-            }
-
-            B other = ((B) obj);
-
-            return Utils.equals(b, other.b);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(b);
-        }
-
-        public B copy() {
-            return new B(b);
-        }
-
-        public String toString() {
-            return "mk_Entry`B" + Utils.formatFields(b);
-        }
+      return Utils.hashCode(b);
     }
+
+    public B copy() {
+
+      return new B(b);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`B" + Utils.formatFields(b);
+    }
+  }
 }
 
 ##########

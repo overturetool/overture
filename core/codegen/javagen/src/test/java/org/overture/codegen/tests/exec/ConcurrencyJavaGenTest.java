@@ -28,13 +28,13 @@ public class ConcurrencyJavaGenTest extends JavaGenTestBase
 	{
 		return collectTests(new File(ConcurrencyOutputTest.ROOT), new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
-	
+
 	@Override
 	public IRSettings getIrSettings()
 	{
 		IRSettings irSettings = super.getIrSettings();
 		irSettings.setGenerateConc(true);
-		
+
 		return irSettings;
 	}
 

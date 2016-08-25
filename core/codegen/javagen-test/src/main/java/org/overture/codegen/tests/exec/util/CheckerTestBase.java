@@ -48,7 +48,8 @@ public abstract class CheckerTestBase extends JavaCodeGenTestCase
 		for (int i = 0; i < testCount; i++)
 		{
 			File vdmSource = vdmSources.get(i);
-			String name = vdmSource.getAbsolutePath().substring(root.getAbsolutePath().length() + 1);
+			String name = vdmSource.getAbsolutePath().substring(root.getAbsolutePath().length()
+					+ 1);
 
 			tests.add(new Object[] { name, vdmSource, handler });
 		}
@@ -75,16 +76,17 @@ public abstract class CheckerTestBase extends JavaCodeGenTestCase
 	{
 		return EXEC_TEST_PROPERTY;
 	}
-	
+
 	abstract public void genSourcesAndCompile();
-	
+
 	@Test
 	public void test() throws Exception
 	{
-		Assume.assumeTrue("Pass property -D" + getExecProperty() + " to run test", runTest());
-		
+		Assume.assumeTrue("Pass property -D" + getExecProperty()
+				+ " to run test", runTest());
+
 		assumeTest();
-		
+
 		configureResultGeneration();
 		try
 		{
@@ -100,7 +102,7 @@ public abstract class CheckerTestBase extends JavaCodeGenTestCase
 			unconfigureResultGeneration();
 		}
 	}
-	
+
 	public void assumeTest()
 	{
 		/* Allow all tests to run by default */
@@ -108,11 +110,12 @@ public abstract class CheckerTestBase extends JavaCodeGenTestCase
 
 	public static <T extends TypeCheckResult<?>> T checkTcResult(T tcResult)
 	{
-		if(GeneralCodeGenUtils.hasErrors(tcResult))
+		if (GeneralCodeGenUtils.hasErrors(tcResult))
 		{
-			Assert.fail("Problems parsing/type checking VDM model:\n" + GeneralCodeGenUtils.errorStr(tcResult));
+			Assert.fail("Problems parsing/type checking VDM model:\n"
+					+ GeneralCodeGenUtils.errorStr(tcResult));
 		}
-		
+
 		return tcResult;
 	}
 
@@ -137,7 +140,7 @@ public abstract class CheckerTestBase extends JavaCodeGenTestCase
 
 			// Note that the classes returned in javaResult may be loaded by another class loader. This is the case for
 			// classes representing VDM classes, Quotes etc. that's not part of the cg-runtime
-			
+
 			ExecutionResult javaResult = executableTestHandler.runJava(outputDir);
 
 			if (javaResult == null)
@@ -155,16 +158,17 @@ public abstract class CheckerTestBase extends JavaCodeGenTestCase
 		return new Result<Object>(null, new Vector<IMessage>(), new Vector<IMessage>());
 	}
 
-	public  File[] consCpFiles()
+	public File[] consCpFiles()
 	{
 		File cgRuntime = new File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
-		return new File[]{cgRuntime};
+		return new File[] { cgRuntime };
 	}
 
 	public void compile(File[] cpJars)
 	{
 		ProcessResult result = JavaCommandLineCompiler.compile(outputDir, cpJars);
-		Assert.assertTrue("Generated Java code did not compile: " + result.getOutput().toString(), result.getExitCode() == 0);
+		Assert.assertTrue("Generated Java code did not compile: "
+				+ result.getOutput().toString(), result.getExitCode() == 0);
 	}
 
 	/**

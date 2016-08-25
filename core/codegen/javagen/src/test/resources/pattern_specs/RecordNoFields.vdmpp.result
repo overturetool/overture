@@ -1,68 +1,71 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public A() {}
+
+  public static Number recPatternFun() {
+
+    final Rec recordPattern_1 = new Rec();
+    Boolean success_1 = true;
+    if (!(success_1)) {
+      throw new RuntimeException("Record pattern match failed");
     }
 
-    public static Number recPatternFun() {
-        final Rec recordPattern_1 = new Rec();
-        Boolean success_1 = true;
+    return 5L;
+  }
 
-        if (!(success_1)) {
-            throw new RuntimeException("Record pattern match failed");
-        }
+  public String toString() {
 
-        return 5L;
+    return "A{}";
+  }
+
+  public static class Rec implements Record {
+
+    public Rec() {}
+
+    public boolean equals(final Object obj) {
+
+      return obj instanceof Rec;
+    }
+
+    public int hashCode() {
+
+      return 0;
+    }
+
+    public Rec copy() {
+
+      return new Rec();
     }
 
     public String toString() {
-        return "A{}";
+
+      return "mk_A`Rec()";
     }
-
-    public static class Rec implements Record {
-        public Rec() {
-        }
-
-        public boolean equals(final Object obj) {
-            return obj instanceof Rec;
-        }
-
-        public int hashCode() {
-            return 0;
-        }
-
-        public Rec copy() {
-            return new Rec();
-        }
-
-        public String toString() {
-            return "mk_A`Rec()";
-        }
-    }
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return A.recPatternFun();
-    }
+    return A.recPatternFun();
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

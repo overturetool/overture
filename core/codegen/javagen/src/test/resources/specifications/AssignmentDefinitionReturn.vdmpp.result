@@ -1,22 +1,21 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class C {
-    public C() {
-    }
+  public Number CalcProbCrossed(final Number n) {
 
-    public Number CalcProbCrossed(final Number n) {
-        Number retVal = 0L;
+    Number retVal = 0L;
+    return retVal;
+  }
 
-        return retVal;
-    }
+  public C() {}
 
-    public String toString() {
-        return "C{}";
-    }
+  public String toString() {
+
+    return "C{}";
+  }
 }
 
 ##########

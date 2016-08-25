@@ -1,32 +1,34 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public void op(final Object v) {
 
-    public void op(final Object v) {
-        if (Utils.equals(v, quotes.RedQuote.getInstance())) {
-            /* skip */
-        }
+    if (Utils.equals(v, quotes.RedQuote.getInstance())) {
+      /* skip */
     }
+  }
 
-    public void op2(final Object v) {
-        if (Utils.equals(v, quotes.AQuote.getInstance())) {
-            /* skip */
-        }
-    }
+  public void op2(final Object v) {
 
-    public Object op3() {
-        return quotes.RedQuote.getInstance();
+    if (Utils.equals(v, quotes.AQuote.getInstance())) {
+      /* skip */
     }
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public Object op3() {
+
+    return quotes.RedQuote.getInstance();
+  }
+
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########

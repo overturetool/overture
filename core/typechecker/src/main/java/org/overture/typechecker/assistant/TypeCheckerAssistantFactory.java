@@ -43,7 +43,7 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
@@ -63,6 +63,7 @@ import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
+import org.overture.typechecker.assistant.module.AModuleExportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
@@ -378,11 +379,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 //		return new AFromModuleImportsAssistantTC(this);
 //	}
 
-//	@Override
-//	public AModuleExportsAssistantTC createAModuleExportsAssistant()
-//	{
-//		return new AModuleExportsAssistantTC(this);
-//	}
+	@Override
+	public AModuleExportsAssistantTC createAModuleExportsAssistant()
+	{
+		return new AModuleExportsAssistantTC(this);
+	}
 
 	@Override
 	public AModuleImportsAssistantTC createAModuleImportsAssistant()
@@ -847,7 +848,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public IAnswer<ASetType> getSetTypeFinder()
+	public IAnswer<SSetType> getSetTypeFinder()
 	{
 		return new SetTypeFinder(this);
 	}

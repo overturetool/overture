@@ -1,12 +1,10 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class S {
-    public S() {
-    }
+  public S() {}
 }
 
 ##########

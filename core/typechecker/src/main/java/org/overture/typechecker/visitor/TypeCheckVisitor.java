@@ -27,6 +27,7 @@ import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.modules.PExport;
 import org.overture.ast.modules.PImport;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PMultipleBind;
@@ -48,6 +49,7 @@ public class TypeCheckVisitor extends AbstractTypeCheckVisitor
 	private AbstractTypeCheckVisitor tcDefinition = new TypeCheckerDefinitionVisitor(this);
 	private AbstractTypeCheckVisitor patternDefinition = new TypeCheckerPatternVisitor(this);
 	private AbstractTypeCheckVisitor tcImports = new TypeCheckerImportsVisitor(this);
+	private AbstractTypeCheckVisitor tcExports = new TypeCheckerExportsVisitor(this);
 	private AbstractTypeCheckVisitor tcOthers = new TypeCheckerOthersVisitor(this);
 
 	public TypeCheckerErrors tcErrors = new TypeCheckerErrors();
@@ -78,6 +80,13 @@ public class TypeCheckVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		return node.apply(tcImports, question);
+	}
+
+	@Override
+	public PType defaultPExport(PExport node, TypeCheckInfo question)
+			throws AnalysisException
+	{
+		return node.apply(tcExports, question);
 	}
 
 	@Override

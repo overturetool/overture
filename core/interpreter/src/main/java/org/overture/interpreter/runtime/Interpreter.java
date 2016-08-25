@@ -34,9 +34,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
@@ -45,9 +47,11 @@ import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.debug.BreakpointManager;
@@ -58,6 +62,7 @@ import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.interpreter.traces.CallSequence;
 import org.overture.interpreter.traces.TestSequence;
 import org.overture.interpreter.traces.TraceReductionType;
+import org.overture.interpreter.traces.TraceVariableStatement;
 import org.overture.interpreter.traces.Verdict;
 import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexException;
@@ -66,6 +71,9 @@ import org.overture.parser.messages.VDMErrorsException;
 import org.overture.parser.syntax.ParserException;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.typechecker.Environment;
+import org.overture.typechecker.FlatEnvironment;
+import org.overture.typechecker.ModuleEnvironment;
+import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
@@ -688,7 +696,44 @@ abstract public class Interpreter
 				n++;
 				continue;
 			}
+			
+			INode traceContainer;
+			Environment rootEnv;
+			if (this instanceof ClassInterpreter)
+			{
+				traceContainer = tracedef.getClassDefinition();
+				rootEnv = new PrivateClassEnvironment(getAssistantFactory(), tracedef.getClassDefinition(), getGlobalEnvironment());
+			} else
+			{
+				traceContainer = tracedef.parent();
+				
+				if(((AModuleModules)traceContainer).getIsFlat())
+				{
+					//search for the combined module
+					for(AModuleModules m : ((ModuleInterpreter)this).modules)
+					{
+						if(m instanceof CombinedDefaultModule)
+						{
+							traceContainer = m;
+							break;
+						}
+					}
+				}
+				rootEnv = new ModuleEnvironment(getAssistantFactory(), (AModuleModules) traceContainer);
+			}
 
+			List<Object> result = new Vector<>();
+			try
+			{
+				typeCheck(traceContainer, this, test, rootEnv);
+			}
+			catch (Exception e)
+			{
+				result.add(e);
+				result.add(Verdict.FAILED);
+				failed = true;
+			}
+			
 			// Bodge until we figure out how to not have explicit op names.
 			String clean = test.toString().replaceAll("\\.\\w+`", ".");
 
@@ -699,11 +744,14 @@ abstract public class Interpreter
 						+ test.getFilter());
 			} else
 			{
-				// Initialize completely between every run...
-				init(ctxt.threadState.dbgp);
-				List<Object> result = runOneTrace(tracedef, test, debug);
-				tests.filter(result, test, n);
+				if(!failed)
+				{
+					// Initialize completely between every run...
+					init(ctxt.threadState.dbgp);
+					result = runOneTrace(tracedef, test, debug);
+				}
 
+				tests.filter(result, test, n);
 				writer.println("Test " + n + " = " + clean);
 				writer.println("Result = " + result);
 
@@ -721,6 +769,52 @@ abstract public class Interpreter
 		Settings.usingDBGP = wasDBGP;
 
 		return !failed;
+	}
+	
+	/**
+	 * type check a test
+	 * 
+	 * @param classdef
+	 * @param interpreter
+	 * @param test
+	 * @throws AnalysisException
+	 * @throws Exception
+	 */
+	public static void typeCheck(INode classdef, Interpreter interpreter,
+			CallSequence test, Environment outer) throws AnalysisException,
+			Exception
+	{
+		FlatEnvironment env = null;
+
+		if (classdef instanceof SClassDefinition)
+		{
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), outer);
+		} else
+		{
+			List<PDefinition> defs = new Vector<>();
+			
+			if(classdef instanceof AModuleModules)
+			{
+				defs.addAll(((AModuleModules) classdef).getDefs());
+			}
+			
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), defs, outer);
+		}
+
+		for (int i = 0; i < test.size(); i++)
+		{
+			PStm statement = test.get(i);
+
+			if (statement instanceof TraceVariableStatement)
+			{
+				((TraceVariableStatement) statement).typeCheck(env, NameScope.NAMESANDSTATE);
+			} else
+			{
+				statement = statement.clone();
+				test.set(i, statement);
+				interpreter.typeCheck(statement, env);
+			}
+		}
 	}
 
 	abstract public List<Object> runOneTrace(ANamedTraceDefinition tracedef,

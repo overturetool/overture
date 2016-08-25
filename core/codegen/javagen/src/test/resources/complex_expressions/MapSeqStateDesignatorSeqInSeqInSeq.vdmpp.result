@@ -1,35 +1,31 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        VDMSeq xs = SeqUtil.seq(SeqUtil.seq(SeqUtil.seq('a', 'b'),
-                    SeqUtil.seq('c', 'd')),
-                SeqUtil.seq(SeqUtil.seq('e', 'f'), SeqUtil.seq('g', 'h')));
-        Utils.mapSeqUpdate(((VDMSeq) Utils.get(((VDMSeq) Utils.get(xs, 2L)), 1L)),
-            1L, 'x');
+    VDMSeq xs =
+        SeqUtil.seq(
+            SeqUtil.seq(SeqUtil.seq('a', 'b'), SeqUtil.seq('c', 'd')),
+            SeqUtil.seq(SeqUtil.seq('e', 'f'), SeqUtil.seq('g', 'h')));
+    Utils.mapSeqUpdate(((VDMSeq) Utils.get(((VDMSeq) Utils.get(xs, 2L)), 1L)), 1L, 'x');
+    if (Utils.equals(
+        ((Character) Utils.get(((VDMSeq) Utils.get(((VDMSeq) Utils.get(xs, 2L)), 1L)), 1L)), 'x')) {
+      return ((Character) Utils.get(((VDMSeq) Utils.get(((VDMSeq) Utils.get(xs, 2L)), 2L)), 2L));
 
-        if (Utils.equals(
-                    ((Character) Utils.get(
-                        ((VDMSeq) Utils.get(((VDMSeq) Utils.get(xs, 2L)), 1L)),
-                        1L)), 'x')) {
-            return ((Character) Utils.get(((VDMSeq) Utils.get(
-                    ((VDMSeq) Utils.get(xs, 2L)), 2L)), 2L));
-        } else {
-            return ((Character) Utils.get(((VDMSeq) Utils.get(
-                    ((VDMSeq) Utils.get(xs, 1L)), 2L)), 1L));
-        }
+    } else {
+      return ((Character) Utils.get(((VDMSeq) Utils.get(((VDMSeq) Utils.get(xs, 1L)), 2L)), 1L));
     }
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

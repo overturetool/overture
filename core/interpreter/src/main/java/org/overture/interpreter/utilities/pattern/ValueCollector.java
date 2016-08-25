@@ -3,6 +3,7 @@ package org.overture.interpreter.utilities.pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.ASeqMultipleBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -30,6 +31,13 @@ public class ValueCollector extends
 			ObjectContext ctxt) throws AnalysisException
 	{
 		return af.createPExpAssistant().getValues(node.getSet(), ctxt);
+	}
+
+	@Override
+	public ValueList caseASeqMultipleBind(ASeqMultipleBind node,
+			ObjectContext ctxt) throws AnalysisException
+	{
+		return af.createPExpAssistant().getValues(node.getSeq(), ctxt);
 	}
 
 	@Override

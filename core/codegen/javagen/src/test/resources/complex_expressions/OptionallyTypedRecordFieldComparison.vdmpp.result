@@ -1,62 +1,77 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    final NatList a = new NatList(1L, null);
+    final NatList b = new NatList(1L, new NatList(2L, null));
+    final NatList c = new NatList(1L, new NatList(2L, new NatList(3L, null)));
+    final NatList d = new NatList(1L, new NatList(2L, new NatList(3L, null)));
+    return SeqUtil.seq(
+        Utils.equals(a, a),
+        Utils.equals(a, b),
+        Utils.equals(a, c),
+        Utils.equals(a, d),
+        Utils.equals(b, b),
+        Utils.equals(b, c),
+        Utils.equals(b, d),
+        Utils.equals(c, c),
+        Utils.equals(c, d),
+        Utils.equals(d, d),
+        Utils.equals(b, a),
+        Utils.equals(c, a),
+        Utils.equals(d, a),
+        Utils.equals(c, b),
+        Utils.equals(d, b),
+        Utils.equals(d, c));
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  private static class NatList implements Record {
+    public Number e;
+    public NatList t;
+
+    public NatList(final Number _e, final NatList _t) {
+
+      e = _e;
+      t = _t != null ? Utils.copy(_t) : null;
     }
 
-    public static Object Run() {
-        final NatList a = new NatList(1L, null);
-        final NatList b = new NatList(1L, new NatList(2L, null));
-        final NatList c = new NatList(1L, new NatList(2L, new NatList(3L, null)));
-        final NatList d = new NatList(1L, new NatList(2L, new NatList(3L, null)));
+    public boolean equals(final Object obj) {
 
-        return SeqUtil.seq(Utils.equals(a, a), Utils.equals(a, b),
-            Utils.equals(a, c), Utils.equals(a, d), Utils.equals(b, b),
-            Utils.equals(b, c), Utils.equals(b, d), Utils.equals(c, c),
-            Utils.equals(c, d), Utils.equals(d, d), Utils.equals(b, a),
-            Utils.equals(c, a), Utils.equals(d, a), Utils.equals(c, b),
-            Utils.equals(d, b), Utils.equals(d, c));
+      if (!(obj instanceof NatList)) {
+        return false;
+      }
+
+      NatList other = ((NatList) obj);
+
+      return (Utils.equals(e, other.e)) && (Utils.equals(t, other.t));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(e, t);
+    }
+
+    public NatList copy() {
+
+      return new NatList(e, t);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`NatList" + Utils.formatFields(e, t);
     }
-
-    private static class NatList implements Record {
-        public Number e;
-        public NatList t;
-
-        public NatList(final Number _e, final NatList _t) {
-            e = _e;
-            t = (_t != null) ? Utils.copy(_t) : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof NatList)) {
-                return false;
-            }
-
-            NatList other = ((NatList) obj);
-
-            return (Utils.equals(e, other.e)) && (Utils.equals(t, other.t));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(e, t);
-        }
-
-        public NatList copy() {
-            return new NatList(e, t);
-        }
-
-        public String toString() {
-            return "mk_Entry`NatList" + Utils.formatFields(e, t);
-        }
-    }
+  }
 }
 
 ##########

@@ -33,6 +33,7 @@ import org.overture.ast.statements.AIdentifierObjectDesignator;
 import org.overture.ast.statements.ANewObjectDesignator;
 import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.PObjectDesignator;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SObjectDesignatorIR;
 import org.overture.codegen.ir.expressions.ANewExpIR;
@@ -42,10 +43,9 @@ import org.overture.codegen.ir.statements.AFieldObjectDesignatorIR;
 import org.overture.codegen.ir.statements.AIdentifierObjectDesignatorIR;
 import org.overture.codegen.ir.statements.ANewObjectDesignatorIR;
 import org.overture.codegen.ir.statements.ASelfObjectDesignatorIR;
-import org.overture.codegen.ir.IRInfo;
 
-public class ObjectDesignatorVisitorIR extends
-		AbstractVisitorIR<IRInfo, SObjectDesignatorIR>
+public class ObjectDesignatorVisitorIR
+		extends AbstractVisitorIR<IRInfo, SObjectDesignatorIR>
 {
 	@Override
 	public SObjectDesignatorIR caseAApplyObjectDesignator(
@@ -62,7 +62,7 @@ public class ObjectDesignatorVisitorIR extends
 		for (PExp arg : node.getArgs())
 		{
 			SExpIR argCg = arg.apply(question.getExpVisitor(), question);
-			
+
 			if (argCg != null)
 			{
 				newExpArgs.add(argCg);
@@ -85,16 +85,16 @@ public class ObjectDesignatorVisitorIR extends
 		String fieldCg = null;
 		String fieldModuleCg = null;
 
-		if(node.getField() != null)
+		if (node.getField() != null)
 		{
 			fieldCg = node.getField().getName();
 			fieldModuleCg = node.getField().getModule();
-		}
-		else
+		} else
 		{
-			fieldCg = node.getFieldName() != null ? node.getFieldName().getName() : null;
+			fieldCg = node.getFieldName() != null
+					? node.getFieldName().getName() : null;
 		}
-		
+
 		SObjectDesignatorIR objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
 
 		AFieldObjectDesignatorIR fieldObjDesignator = new AFieldObjectDesignatorIR();
@@ -130,8 +130,7 @@ public class ObjectDesignatorVisitorIR extends
 
 	@Override
 	public SObjectDesignatorIR caseANewObjectDesignator(
-			ANewObjectDesignator node, IRInfo question)
-			throws AnalysisException
+			ANewObjectDesignator node, IRInfo question) throws AnalysisException
 	{
 		ANewExp exp = node.getExpression();
 
@@ -147,7 +146,7 @@ public class ObjectDesignatorVisitorIR extends
 		}
 
 		newObjDesignator.setExp((ANewExpIR) expCg);
-		
+
 		return newObjDesignator;
 	}
 

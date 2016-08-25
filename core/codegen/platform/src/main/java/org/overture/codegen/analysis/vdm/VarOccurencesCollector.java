@@ -8,12 +8,11 @@ import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.intf.lex.ILexLocation;
 
-
 public class VarOccurencesCollector extends DepthFirstAnalysisAdaptor
 {
 	private ILexLocation defLoc;
 	private Set<AVariableExp> varOccurences;
-	
+
 	public VarOccurencesCollector(ILexLocation defLoc)
 	{
 		this.defLoc = defLoc;
@@ -24,16 +23,16 @@ public class VarOccurencesCollector extends DepthFirstAnalysisAdaptor
 	{
 		return varOccurences;
 	}
-	
+
 	@Override
 	public void caseAVariableExp(AVariableExp node) throws AnalysisException
 	{
-		if(node.getVardef() == null)
+		if (node.getVardef() == null)
 		{
 			return;
 		}
-		
-		if(node.getVardef().getLocation().equals(defLoc))
+
+		if (node.getVardef().getLocation().equals(defLoc))
 		{
 			varOccurences.add(node);
 		}

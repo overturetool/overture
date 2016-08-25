@@ -1,202 +1,222 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Entry implements java.io.Serializable {
-    /*@ public ghost static boolean invChecksOn = true; @*/
-    private Entry() {
+  /*@ public ghost static boolean invChecksOn = true; @*/
+
+  private Entry() {}
+
+  /*@ pure @*/
+
+  public static Number f(final Number x) {
+
+    //@ assert Utils.is_nat(x);
+
+    Number ret_1 = x;
+    //@ assert Utils.is_nat(ret_1);
+
+    return ret_1;
+  }
+
+  public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    {
+      final Number ID_1 = gen.inc();
+      store.staticReg(ID_1, Entry.class);
     }
 
-    /*@ pure @*/
-    public static Number f(final Number x) {
-        //@ assert Utils.is_nat(x);
-        Number ret_1 = x;
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    {
+      final project.Entrytypes.R recordPattern_1 = new project.Entrytypes.R(1L, 2L);
+      Boolean success_1 = true;
+      Number a = null;
+      Number b = null;
+      a = recordPattern_1.get_x();
+      b = recordPattern_1.get_y();
 
-        //@ assert Utils.is_nat(ret_1);
-        return ret_1;
-    }
+      if (!(success_1)) {
+        throw new RuntimeException("Record pattern match failed");
+      }
 
-    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
+      SequenceTraceNode sequence_2 = new SequenceTraceNode();
+      final Number arg_1 = a;
+      CallStatement callStm_1 =
+          new CallStatement() {
+            public Boolean isTypeCorrect() {
 
-        {
-            final Number ID_1 = gen.inc();
-            store.staticReg(ID_1, Entry.class);
-        }
+              try {
+                //@ assert Utils.is_nat(arg_1);
 
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+              } catch (AssertionError e) {
+                return false;
+              }
 
-        {
-            final project.Entrytypes.R recordPattern_1 = new project.Entrytypes.R(1L,
-                    2L);
-            Boolean success_1 = true;
-            Number a = null;
-            Number b = null;
-            a = recordPattern_1.get_x();
-            b = recordPattern_1.get_y();
-
-            if (!(success_1)) {
-                throw new RuntimeException("Record pattern match failed");
+              return true;
             }
 
-            SequenceTraceNode sequence_2 = new SequenceTraceNode();
-            final Number arg_1 = a;
-            CallStatement callStm_1 = new CallStatement() {
-                    public Boolean isTypeCorrect() {
-                        try {
-                            //@ assert Utils.is_nat(arg_1);
-                        } catch (AssertionError e) {
-                            return false;
-                        }
+            public Object execute() {
 
-                        return true;
-                    }
+              return f(arg_1);
+            }
 
-                    public Object execute() {
-                        return f(arg_1);
-                    }
+            public String toString() {
 
-                    public String toString() {
-                        return "f(" + Utils.toString(arg_1) + ")";
-                    }
-                };
+              return "f(" + Utils.toString(arg_1) + ")";
+            }
+          };
+      StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+      sequence_2.add(apply_1);
 
-            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-            sequence_2.add(apply_1);
+      final Number arg_2 = b;
+      CallStatement callStm_2 =
+          new CallStatement() {
+            public Boolean isTypeCorrect() {
 
-            final Number arg_2 = b;
-            CallStatement callStm_2 = new CallStatement() {
-                    public Boolean isTypeCorrect() {
-                        try {
-                            //@ assert Utils.is_nat(arg_2);
-                        } catch (AssertionError e) {
-                            return false;
-                        }
+              try {
+                //@ assert Utils.is_nat(arg_2);
 
-                        return true;
-                    }
+              } catch (AssertionError e) {
+                return false;
+              }
 
-                    public Object execute() {
-                        return f(arg_2);
-                    }
+              return true;
+            }
 
-                    public String toString() {
-                        return "f(" + Utils.toString(arg_2) + ")";
-                    }
-                };
+            public Object execute() {
 
-            StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-            sequence_2.add(apply_2);
+              return f(arg_2);
+            }
 
-            sequence_2.addVarFirst(new TraceVariable("b", "int",
-                    Utils.toString(b)));
-            sequence_2.addVarFirst(new TraceVariable("a", "int",
-                    Utils.toString(a)));
-            sequence_1.add(sequence_2);
-        }
+            public String toString() {
 
-        TraceNode.executeTests(sequence_1, testAccumulator, store);
+              return "f(" + Utils.toString(arg_2) + ")";
+            }
+          };
+      StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+      sequence_2.add(apply_2);
+
+      sequence_2.addVarFirst(new TraceVariable("b", "int", Utils.toString(b)));
+      sequence_2.addVarFirst(new TraceVariable("a", "int", Utils.toString(a)));
+      sequence_1.add(sequence_2);
     }
 
-    public String toString() {
-        return "Entry{}";
-    }
+    TraceNode.executeTests(sequence_1, testAccumulator, store);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########
 package project.Entrytypes;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class R implements Record, java.io.Serializable {
-    public Number x;
-    public Number y;
+  public Number x;
+  public Number y;
 
-    public R(final Number _x, final Number _y) {
-        //@ assert Utils.is_int(_x);
+  public R(final Number _x, final Number _y) {
 
-        //@ assert Utils.is_int(_y);
-        x = _x;
-        //@ assert Utils.is_int(x);
-        y = _y;
+    //@ assert Utils.is_int(_x);
 
-        //@ assert Utils.is_int(y);
+    //@ assert Utils.is_int(_y);
+
+    x = _x;
+    //@ assert Utils.is_int(x);
+
+    y = _y;
+    //@ assert Utils.is_int(y);
+
+  }
+  /*@ pure @*/
+
+  public boolean equals(final Object obj) {
+
+    if (!(obj instanceof project.Entrytypes.R)) {
+      return false;
     }
 
-    /*@ pure @*/
-    public boolean equals(final Object obj) {
-        if (!(obj instanceof project.Entrytypes.R)) {
-            return false;
-        }
+    project.Entrytypes.R other = ((project.Entrytypes.R) obj);
 
-        project.Entrytypes.R other = ((project.Entrytypes.R) obj);
+    return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
+  }
+  /*@ pure @*/
 
-        return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
-    }
+  public int hashCode() {
 
-    /*@ pure @*/
-    public int hashCode() {
-        return Utils.hashCode(x, y);
-    }
+    return Utils.hashCode(x, y);
+  }
+  /*@ pure @*/
 
-    /*@ pure @*/
-    public project.Entrytypes.R copy() {
-        return new project.Entrytypes.R(x, y);
-    }
+  public project.Entrytypes.R copy() {
 
-    /*@ pure @*/
-    public String toString() {
-        return "mk_Entry`R" + Utils.formatFields(x, y);
-    }
+    return new project.Entrytypes.R(x, y);
+  }
+  /*@ pure @*/
 
-    /*@ pure @*/
-    public Number get_x() {
-        Number ret_2 = x;
+  public String toString() {
 
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(ret_2));
-        return ret_2;
-    }
+    return "mk_Entry`R" + Utils.formatFields(x, y);
+  }
+  /*@ pure @*/
 
-    public void set_x(final Number _x) {
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(_x));
-        x = _x;
+  public Number get_x() {
 
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(x));
-    }
+    Number ret_2 = x;
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_int(ret_2));
 
-    /*@ pure @*/
-    public Number get_y() {
-        Number ret_3 = y;
+    return ret_2;
+  }
 
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(ret_3));
-        return ret_3;
-    }
+  public void set_x(final Number _x) {
 
-    public void set_y(final Number _y) {
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(_y));
-        y = _y;
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_int(_x));
 
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_int(y));
-    }
+    x = _x;
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_int(x));
 
-    /*@ pure @*/
-    public Boolean valid() {
-        return true;
-    }
+  }
+  /*@ pure @*/
+
+  public Number get_y() {
+
+    Number ret_3 = y;
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_int(ret_3));
+
+    return ret_3;
+  }
+
+  public void set_y(final Number _y) {
+
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_int(_y));
+
+    y = _y;
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_int(y));
+
+  }
+  /*@ pure @*/
+
+  public Boolean valid() {
+
+    return true;
+  }
 }
 
 ##########

@@ -24,6 +24,7 @@ package org.overture.codegen.trans;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.SStmIR;
@@ -31,7 +32,6 @@ import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.AVarDeclIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.statements.ALocalPatternAssignmentStmIR;
-import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
@@ -49,8 +49,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 
 	protected AVarDeclIR nextElementDeclared = null;
 
-	public AbstractIterationStrategy(
-			TransAssistantIR transformationAssistant,
+	public AbstractIterationStrategy(TransAssistantIR transformationAssistant,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			IterationVarPrefixes iteVarPrefixes)
 	{
@@ -61,9 +60,8 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	}
 
 	@Override
-	public List<AVarDeclIR> getOuterBlockDecls(
-			AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
-			throws AnalysisException
+	public List<AVarDeclIR> getOuterBlockDecls(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns) throws AnalysisException
 	{
 		return null;
 	}

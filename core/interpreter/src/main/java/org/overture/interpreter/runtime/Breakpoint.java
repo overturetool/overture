@@ -94,7 +94,7 @@ public class Breakpoint implements Serializable
 
 		if (trace != null)
 		{
-			LexTokenReader ltr = new LexTokenReader(trace, Dialect.VDM_SL);
+			LexTokenReader ltr = new LexTokenReader(trace, Settings.dialect);
 
 			ltr.push();
 			LexToken tok = ltr.nextToken();

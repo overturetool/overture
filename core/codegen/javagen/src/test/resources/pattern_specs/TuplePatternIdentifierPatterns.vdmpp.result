@@ -1,119 +1,117 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public Tuple tuplePatternOp(final Tuple tuplePattern_1) {
+
+    Boolean success_1 =
+        tuplePattern_1.compatible(Number.class, Boolean.class, Character.class, Number.class);
+    Number n1 = null;
+    Boolean b1 = null;
+    Character c1 = null;
+    Number r1 = null;
+    if (success_1) {
+      n1 = ((Number) tuplePattern_1.get(0));
+      b1 = ((Boolean) tuplePattern_1.get(1));
+      c1 = ((Character) tuplePattern_1.get(2));
+      r1 = ((Number) tuplePattern_1.get(3));
     }
 
-    public Tuple tuplePatternOp(final Tuple tuplePattern_1) {
-        Boolean success_1 = tuplePattern_1.compatible(Number.class,
-                Boolean.class, Character.class, Number.class);
-        Number n1 = null;
-        Boolean b1 = null;
-        Character c1 = null;
-        Number r1 = null;
-
-        if (success_1) {
-            n1 = ((Number) tuplePattern_1.get(0));
-            b1 = ((Boolean) tuplePattern_1.get(1));
-            c1 = ((Character) tuplePattern_1.get(2));
-            r1 = ((Number) tuplePattern_1.get(3));
-        }
-
-        if (!(success_1)) {
-            throw new RuntimeException("Tuple pattern match failed");
-        }
-
-        final Tuple tuplePattern_2 = Tuple.mk_(5L, true, 'g', 2.5);
-        Boolean success_2 = tuplePattern_2.compatible(Number.class,
-                Boolean.class, Character.class, Number.class);
-        Number n2 = null;
-        Boolean b2 = null;
-        Character c2 = null;
-        Number r2 = null;
-
-        if (success_2) {
-            n2 = ((Number) tuplePattern_2.get(0));
-            b2 = ((Boolean) tuplePattern_2.get(1));
-            c2 = ((Character) tuplePattern_2.get(2));
-            r2 = ((Number) tuplePattern_2.get(3));
-        }
-
-        if (!(success_2)) {
-            throw new RuntimeException("Tuple pattern match failed");
-        }
-
-        return Tuple.mk_(n1, b2, c1, r2);
+    if (!(success_1)) {
+      throw new RuntimeException("Tuple pattern match failed");
     }
 
-    public static Tuple tuplePatternFun(final Tuple tuplePattern_3) {
-        Boolean success_3 = tuplePattern_3.compatible(Number.class,
-                Boolean.class, Character.class, Number.class);
-        Number n1 = null;
-        Boolean b1 = null;
-        Character c1 = null;
-        Number r1 = null;
-
-        if (success_3) {
-            n1 = ((Number) tuplePattern_3.get(0));
-            b1 = ((Boolean) tuplePattern_3.get(1));
-            c1 = ((Character) tuplePattern_3.get(2));
-            r1 = ((Number) tuplePattern_3.get(3));
-        }
-
-        if (!(success_3)) {
-            throw new RuntimeException("Tuple pattern match failed");
-        }
-
-        final Tuple tuplePattern_4 = Tuple.mk_(5L, true, 'g', 2.5);
-        Boolean success_4 = tuplePattern_4.compatible(Number.class,
-                Boolean.class, Character.class, Number.class);
-        Number n2 = null;
-        Boolean b2 = null;
-        Character c2 = null;
-        Number r2 = null;
-
-        if (success_4) {
-            n2 = ((Number) tuplePattern_4.get(0));
-            b2 = ((Boolean) tuplePattern_4.get(1));
-            c2 = ((Character) tuplePattern_4.get(2));
-            r2 = ((Number) tuplePattern_4.get(3));
-        }
-
-        if (!(success_4)) {
-            throw new RuntimeException("Tuple pattern match failed");
-        }
-
-        return Tuple.mk_(n1, b2, c1, r2);
+    final Tuple tuplePattern_2 = Tuple.mk_(5L, true, 'g', 2.5);
+    Boolean success_2 =
+        tuplePattern_2.compatible(Number.class, Boolean.class, Character.class, Number.class);
+    Number n2 = null;
+    Boolean b2 = null;
+    Character c2 = null;
+    Number r2 = null;
+    if (success_2) {
+      n2 = ((Number) tuplePattern_2.get(0));
+      b2 = ((Boolean) tuplePattern_2.get(1));
+      c2 = ((Character) tuplePattern_2.get(2));
+      r2 = ((Number) tuplePattern_2.get(3));
     }
 
-    public String toString() {
-        return "A{}";
+    if (!(success_2)) {
+      throw new RuntimeException("Tuple pattern match failed");
     }
+
+    return Tuple.mk_(n1, b2, c1, r2);
+  }
+
+  public A() {}
+
+  public static Tuple tuplePatternFun(final Tuple tuplePattern_3) {
+
+    Boolean success_3 =
+        tuplePattern_3.compatible(Number.class, Boolean.class, Character.class, Number.class);
+    Number n1 = null;
+    Boolean b1 = null;
+    Character c1 = null;
+    Number r1 = null;
+    if (success_3) {
+      n1 = ((Number) tuplePattern_3.get(0));
+      b1 = ((Boolean) tuplePattern_3.get(1));
+      c1 = ((Character) tuplePattern_3.get(2));
+      r1 = ((Number) tuplePattern_3.get(3));
+    }
+
+    if (!(success_3)) {
+      throw new RuntimeException("Tuple pattern match failed");
+    }
+
+    final Tuple tuplePattern_4 = Tuple.mk_(5L, true, 'g', 2.5);
+    Boolean success_4 =
+        tuplePattern_4.compatible(Number.class, Boolean.class, Character.class, Number.class);
+    Number n2 = null;
+    Boolean b2 = null;
+    Character c2 = null;
+    Number r2 = null;
+    if (success_4) {
+      n2 = ((Number) tuplePattern_4.get(0));
+      b2 = ((Boolean) tuplePattern_4.get(1));
+      c2 = ((Character) tuplePattern_4.get(2));
+      r2 = ((Number) tuplePattern_4.get(3));
+    }
+
+    if (!(success_4)) {
+      throw new RuntimeException("Tuple pattern match failed");
+    }
+
+    return Tuple.mk_(n1, b2, c1, r2);
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return SeqUtil.seq(new A().tuplePatternOp(Tuple.mk_(77L, false, 'e', 4.4)),
-            A.tuplePatternFun(Tuple.mk_(77L, false, 'e', 4.4)));
-    }
+    return SeqUtil.seq(
+        new A().tuplePatternOp(Tuple.mk_(77L, false, 'e', 4.4)),
+        A.tuplePatternFun(Tuple.mk_(77L, false, 'e', 4.4)));
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

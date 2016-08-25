@@ -1,0 +1,7 @@
+class Entry
+
+operations
+public Run: () ==> set of int
+Run() == return { x | {x} in set  { {1}, {2} } & true };
+
+end Entry

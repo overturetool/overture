@@ -1,28 +1,28 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public Boolean op(final Number n, final Character c) {
 
-    public Boolean op(final Number n, final Character c) {
-        return true;
-    }
+    return true;
+  }
 
-    public static Boolean Run() {
-        final Entry e = new Entry();
-        final Object x = 1L;
-        final Object y = 'a';
+  public static Boolean Run() {
 
-        return e.op(((Number) x), ((Character) y));
-    }
+    final Entry e = new Entry();
+    final Object x = 1L;
+    final Object y = 'a';
+    return e.op(((Number) x), ((Character) y));
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

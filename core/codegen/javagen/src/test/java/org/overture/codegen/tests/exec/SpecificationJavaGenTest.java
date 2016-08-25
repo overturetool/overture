@@ -24,7 +24,7 @@ public class SpecificationJavaGenTest extends JavaGenTestBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(SpecificationOutputTest.ROOT), new TestHandler(Release.VDM_10,Dialect.VDM_PP));
+		return collectTests(new File(SpecificationOutputTest.ROOT), new TestHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
 	@Override

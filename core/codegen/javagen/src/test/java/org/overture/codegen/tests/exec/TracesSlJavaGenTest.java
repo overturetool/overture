@@ -26,9 +26,9 @@ public class TracesSlJavaGenTest extends JavaGenTestBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(TracesSlOutputTest.ROOT),new TraceHandler(Release.VDM_10, Dialect.VDM_SL));
+		return collectTests(new File(TracesSlOutputTest.ROOT), new TraceHandler(Release.VDM_10, Dialect.VDM_SL));
 	}
-	
+
 	@Override
 	public IRSettings getIrSettings()
 	{
@@ -38,7 +38,7 @@ public class TracesSlJavaGenTest extends JavaGenTestBase
 		irSettings.setGeneratePreConds(true);
 		irSettings.setMakePreCondsPublic(true);
 		irSettings.setMakePostCondsPublic(true);
-		
+
 		return irSettings;
 	}
 

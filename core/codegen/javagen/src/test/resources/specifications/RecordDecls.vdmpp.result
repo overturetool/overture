@@ -1,78 +1,87 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
+
+  private static class Vector2D implements Record {
+    public Number x;
+    public Number y;
+
+    public Vector2D(final Number _x, final Number _y) {
+
+      x = _x;
+      y = _y;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof Vector2D)) {
+        return false;
+      }
+
+      Vector2D other = ((Vector2D) obj);
+
+      return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x, y);
+    }
+
+    public Vector2D copy() {
+
+      return new Vector2D(x, y);
     }
 
     public String toString() {
-        return "A{}";
+
+      return "mk_A`Vector2D" + Utils.formatFields(x, y);
+    }
+  }
+
+  public static class Real implements Record {
+    public Number r;
+
+    public Real(final Number _r) {
+
+      r = _r;
     }
 
-    private static class Vector2D implements Record {
-        public Number x;
-        public Number y;
+    public boolean equals(final Object obj) {
 
-        public Vector2D(final Number _x, final Number _y) {
-            x = _x;
-            y = _y;
-        }
+      if (!(obj instanceof Real)) {
+        return false;
+      }
 
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Vector2D)) {
-                return false;
-            }
+      Real other = ((Real) obj);
 
-            Vector2D other = ((Vector2D) obj);
-
-            return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x, y);
-        }
-
-        public Vector2D copy() {
-            return new Vector2D(x, y);
-        }
-
-        public String toString() {
-            return "mk_A`Vector2D" + Utils.formatFields(x, y);
-        }
+      return Utils.equals(r, other.r);
     }
 
-    public static class Real implements Record {
-        public Number r;
+    public int hashCode() {
 
-        public Real(final Number _r) {
-            r = _r;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Real)) {
-                return false;
-            }
-
-            Real other = ((Real) obj);
-
-            return Utils.equals(r, other.r);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(r);
-        }
-
-        public Real copy() {
-            return new Real(r);
-        }
-
-        public String toString() {
-            return "mk_A`Real" + Utils.formatFields(r);
-        }
+      return Utils.hashCode(r);
     }
+
+    public Real copy() {
+
+      return new Real(r);
+    }
+
+    public String toString() {
+
+      return "mk_A`Real" + Utils.formatFields(r);
+    }
+  }
 }
 
 ##########

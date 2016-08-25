@@ -1,87 +1,91 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public void op() {
 
-    public void op() {
-        final B b = new B();
-        final C c = new C();
-        b.op();
-        c.op();
+    final B b = new B();
+    final C c = new C();
+    {
+      b.op();
+      c.op();
     }
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public B() {
-    }
+  public void op() {
 
-    public void op() {
-        /* skip */
-    }
+    /* skip */
 
-    public String toString() {
-        return "B{}";
-    }
+  }
+
+  public B() {}
+
+  public String toString() {
+
+    return "B{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class C {
-    public C() {
-    }
+  public void op() {
 
-    public void op() {
-        /* skip */
-    }
+    /* skip */
 
-    public String toString() {
-        return "C{}";
-    }
+  }
+
+  public C() {}
+
+  public String toString() {
+
+    return "C{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class S {
-    public static A a = new A();
-    public static B b = new B();
-    public static C c = new C();
-    private CPU CPU1 = new CPU(quotes.FPQuote.getInstance(), 2.2E7);
-    private CPU CPU2 = new CPU(quotes.FPQuote.getInstance(), 1.1E7);
-    private CPU CPU3 = new CPU(quotes.FPQuote.getInstance(), 1.1E7);
-    private BUS BUS1 = new BUS(quotes.CSMACDQuote.getInstance(), 72000.0,
-            SetUtil.set(CPU1, CPU2, CPU3));
+  public static A a = new A();
+  private CPU CPU1 = new CPU(quotes.FPQuote.getInstance(), 2.2E7);
+  public static B b = new B();
+  private CPU CPU2 = new CPU(quotes.FPQuote.getInstance(), 1.1E7);
+  public static C c = new C();
+  private CPU CPU3 = new CPU(quotes.FPQuote.getInstance(), 1.1E7);
+  private BUS BUS1 =
+      new BUS(quotes.CSMACDQuote.getInstance(), 72000.0, SetUtil.set(CPU1, CPU2, CPU3));
 
-    public S() {
-        CPU1.deploy(S.a, SeqUtil.seq('A'));
-        CPU2.deploy(S.b, SeqUtil.seq('B'));
-        CPU1.setPriority(SeqUtil.seq('B', '`', 'o', 'p'), 4L);
-    }
+  public S() {
+
+    CPU1.deploy(S.a, SeqUtil.seq('A'));
+    CPU2.deploy(S.b, SeqUtil.seq('B'));
+    CPU1.setPriority(SeqUtil.seq('B', '`', 'o', 'p'), 4L);
+  }
 }
 
 ##########

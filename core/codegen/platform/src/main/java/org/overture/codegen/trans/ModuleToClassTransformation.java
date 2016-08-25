@@ -3,6 +3,9 @@ package org.overture.codegen.trans;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.SExpIR;
@@ -30,21 +33,21 @@ import org.overture.codegen.ir.expressions.ANewExpIR;
 import org.overture.codegen.ir.expressions.AUndefinedExpIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.types.ARecordTypeIR;
-import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		implements ITotalTransformation
 {
 	private ADefaultClassDeclIR clazz = null;
-	
+
 	private IRInfo info;
 	private TransAssistantIR transAssistant;
 	private List<AModuleDeclIR> allModules;
 
-	public ModuleToClassTransformation(IRInfo info, TransAssistantIR transAssistant, List<AModuleDeclIR> allModules)
+	private Logger log = Logger.getLogger(this.getClass().getName());
+
+	public ModuleToClassTransformation(IRInfo info,
+			TransAssistantIR transAssistant, List<AModuleDeclIR> allModules)
 	{
 		this.info = info;
 		this.transAssistant = transAssistant;
@@ -63,10 +66,10 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		AMethodDeclIR privConstructor = info.getDeclAssistant().consDefaultContructor(node.getName());
 		privConstructor.setAccess(IRConstants.PRIVATE);
 		clazz.getMethods().add(privConstructor);
-		
+
 		makeStateAccessExplicit(node);
 		handleImports(node.getImport(), clazz);
-		
+
 		// Wrap declarations in a new list to avoid a concurrent modifications
 		// exception when moving the module declarations to the class
 		for (SDeclIR decl : new LinkedList<>(node.getDecls()))
@@ -111,12 +114,10 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 				clazz.getFields().add(field);
 			} else
 			{
-				Logger.getLog().printErrorln("Got unexpected declaration: "
-						+ decl + " in '" + this.getClass().getSimpleName()
-						+ "'");
+				log.error("Got unexpected declaration: " + decl);
 			}
 		}
-		
+
 		AStateDeclIR stateDecl = getStateDecl(node);
 
 		if (stateDecl != null)
@@ -125,10 +126,10 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			record.setSourceNode(stateDecl.getSourceNode());
 			record.setName(stateDecl.getName());
 
-			if(stateDecl.getInvDecl() != null)
+			if (stateDecl.getInvDecl() != null)
 			{
 				// The state invariant constrains the type of the state
-				// see https://github.com/overturetool/overture/issues/459 
+				// see https://github.com/overturetool/overture/issues/459
 				record.setInvariant(stateDecl.getInvDecl().clone());
 			}
 
@@ -154,27 +155,28 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			// VDM-SL, e.g. St := mk_St(...)
 			clazz.getFields().add(transAssistant.consField(IRConstants.PRIVATE, stateType, stateDecl.getName(), getInitExp(stateDecl)));
 		}
-		
+
 		info.removeModule(node.getName());
 		info.addClass(clazz);
 	}
 
-	private void handleImports(final AModuleImportsIR moduleImports, final ADefaultClassDeclIR clazz) throws AnalysisException
+	private void handleImports(final AModuleImportsIR moduleImports,
+			final ADefaultClassDeclIR clazz) throws AnalysisException
 	{
-		//name = moduleImports.getName();
-		
-		if(moduleImports == null)
+		// name = moduleImports.getName();
+
+		if (moduleImports == null)
 		{
 			return;
 		}
-		
-		for(AFromModuleImportsIR fromImports : moduleImports.getImports())
+
+		for (AFromModuleImportsIR fromImports : moduleImports.getImports())
 		{
-			//String fromName = fromImports.getName();
-			
-			for(List<SImportIR> sig : fromImports.getSignatures())
+			// String fromName = fromImports.getName();
+
+			for (List<SImportIR> sig : fromImports.getSignatures())
 			{
-				for(SImportIR imp : sig)
+				for (SImportIR imp : sig)
 				{
 					// TODO Implement the import analysis cases
 					imp.apply(new DepthFirstAnalysisAdaptor()
@@ -184,50 +186,41 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 								throws AnalysisException
 						{
 						}
-						
+
 						@Override
 						public void caseATypeImportIR(ATypeImportIR node)
 								throws AnalysisException
 						{
 						}
-						
+
 						@Override
 						public void caseAFunctionValueImportIR(
 								AFunctionValueImportIR node)
 								throws AnalysisException
 						{
 						}
-						
+
 						@Override
 						public void caseAOperationValueImportIR(
 								AOperationValueImportIR node)
 								throws AnalysisException
 						{
 						}
-						
+
 						@Override
 						public void caseAValueValueImportIR(
 								AValueValueImportIR node)
 								throws AnalysisException
 						{
 							/*
-							String renamed = node.getRenamed();
-							
-							if (renamed != null)
-							{
-								//STypeIR impType = node.getImportType();
-								String from = node.getFromModuleName();
-								String name = node.getName();
-
-								AFieldDeclIR impFieldCopy = getValue(name, from).clone();
-								impFieldCopy.setAccess(IRConstants.PUBLIC);
-								impFieldCopy.setName(renamed);
-
-								clazz.getFields().add(impFieldCopy);
-								
-								//clazz.getFields().add(transAssistant.consConstField(access, type, fromName, initExp));
-
-							}*/
+							 * String renamed = node.getRenamed(); if (renamed != null) { //STypeIR impType =
+							 * node.getImportType(); String from = node.getFromModuleName(); String name =
+							 * node.getName(); AFieldDeclIR impFieldCopy = getValue(name, from).clone();
+							 * impFieldCopy.setAccess(IRConstants.PUBLIC); impFieldCopy.setName(renamed);
+							 * clazz.getFields().add(impFieldCopy);
+							 * //clazz.getFields().add(transAssistant.consConstField(access, type, fromName, initExp));
+							 * }
+							 */
 						}
 					});
 				}
@@ -283,7 +276,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			return defaultRecInit;
 		}
 	}
-	
+
 	@SuppressWarnings("unused")
 	private AFieldDeclIR getValue(String fieldName, String moduleName)
 	{
@@ -305,9 +298,8 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 			}
 		}
 
-		Logger.getLog().printErrorln("Could not find field " + fieldName
-				+ " in module " + moduleName + " in '"
-				+ this.getClass().getSimpleName() + "'");
+		log.error("Could not find field " + fieldName + " in module "
+				+ moduleName);
 
 		return null;
 	}

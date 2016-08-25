@@ -23,16 +23,15 @@ package org.overture.codegen.ir;
 
 import java.util.HashMap;
 
-import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.expressions.AAddrEqualsBinaryExpIR;
 import org.overture.codegen.ir.expressions.AAddrNotEqualsBinaryExpIR;
 import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
 import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
-import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpIR;
 import org.overture.codegen.ir.expressions.ADivideNumericBinaryExpIR;
 import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
 import org.overture.codegen.ir.expressions.AGreaterEqualNumericBinaryExpIR;
 import org.overture.codegen.ir.expressions.AGreaterNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpIR;
 import org.overture.codegen.ir.expressions.ALessEqualNumericBinaryExpIR;
 import org.overture.codegen.ir.expressions.ALessNumericBinaryExpIR;
 import org.overture.codegen.ir.expressions.AMinusUnaryExpIR;

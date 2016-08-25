@@ -25,7 +25,7 @@ public class ComplexExpJavaGenTest extends JavaGenTestBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(ComplexExpOutputTest.ROOT),new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
+		return collectTests(new File(ComplexExpOutputTest.ROOT), new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
 	@Override

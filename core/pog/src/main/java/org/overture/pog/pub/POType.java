@@ -46,7 +46,7 @@ public enum POType
 			"state invariant satisfiable"), TYPE_COMP("type compatibility"), TYPE_INV_SAT(
 			"type invariant satisfiable"), TUPLE_SELECT("tuple selection"), UNIQUE_EXISTENCE(
 			"unique existence binding"), VALUE_BINDING("value binding"), WHILE_LOOP(
-			"while loop termination");
+			"while loop termination"), SET_MEMBER("set membership"), SEQ_MEMBER("sequence membership");
 
 	private String kind;
 

@@ -19,7 +19,8 @@ public class RecursiveLeaf extends AbstractTypeInfo
 	}
 
 	@Override
-	public String consCheckExp(String enclosingClass, String javaRootPackage, String arg, NameGen nameGen)
+	public String consCheckExp(String enclosingClass, String javaRootPackage,
+			String arg, NameGen nameGen)
 	{
 		return "false";
 	}

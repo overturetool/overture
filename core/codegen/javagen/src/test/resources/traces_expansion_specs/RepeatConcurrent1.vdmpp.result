@@ -1,70 +1,76 @@
+
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 
-import java.util.*;
-
-
 @SuppressWarnings("all")
 public class Entry implements java.io.Serializable {
-    public Entry() {
-    }
+  private void op1() {
 
-    private void op1() {
-        /* skip */
-    }
+    /* skip */
 
-    private void op2() {
-        /* skip */
-    }
+  }
 
-    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        SequenceTraceNode sequence_2 = new SequenceTraceNode();
-        ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
-        CallStatementPp callStm_1 = new CallStatementPp() {
-                public Object execute() {
-                    ((Entry) instance).op1();
+  private void op2() {
 
-                    return Utils.VOID_VALUE;
-                }
+    /* skip */
 
-                public String toString() {
-                    return "op1()";
-                }
-            };
+  }
 
-        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-        concurrent_1.add(apply_1);
+  public Entry() {}
 
-        CallStatementPp callStm_2 = new CallStatementPp() {
-                public Object execute() {
-                    ((Entry) instance).op2();
+  public void Entry_T1_Run(final TestAccumulator testAccumulator) {
 
-                    return Utils.VOID_VALUE;
-                }
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    SequenceTraceNode sequence_2 = new SequenceTraceNode();
+    ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
+    CallStatementPp callStm_1 =
+        new CallStatementPp() {
+          public Object execute() {
 
-                public String toString() {
-                    return "op2()";
-                }
-            };
+            ((Entry) instance).op1();
+            return Utils.VOID_VALUE;
+          }
 
-        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-        concurrent_1.add(apply_2);
+          public String toString() {
 
-        sequence_2.add(concurrent_1);
+            return "op1()";
+          }
+        };
+    StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+    concurrent_1.add(apply_1);
 
-        RepeatTraceNode repeat_1 = new RepeatTraceNode(sequence_2, 1L, 2L);
+    CallStatementPp callStm_2 =
+        new CallStatementPp() {
+          public Object execute() {
 
-        sequence_1.add(repeat_1);
+            ((Entry) instance).op2();
+            return Utils.VOID_VALUE;
+          }
 
-        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
-    }
+          public String toString() {
 
-    public String toString() {
-        return "Entry{}";
-    }
+            return "op2()";
+          }
+        };
+    StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+    concurrent_1.add(apply_2);
+
+    sequence_2.add(concurrent_1);
+
+    RepeatTraceNode repeat_1 = new RepeatTraceNode(sequence_2, 1L, 2L);
+
+    sequence_1.add(repeat_1);
+
+    TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

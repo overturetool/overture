@@ -1,0 +1,31 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Object Run() {
+
+    return f();
+  }
+
+  public Entry() {}
+
+  private static VDMSeq f() {
+
+    VDMSeq seqCompResult_1 = SeqUtil.seq();
+    VDMSeq set_1 = SeqUtil.seq(1L, 3L, 2L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Number x = ((Number) iterator_1.next());
+      seqCompResult_1.add(x);
+    }
+    return Utils.copy(seqCompResult_1);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########

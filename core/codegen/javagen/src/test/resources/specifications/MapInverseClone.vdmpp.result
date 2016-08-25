@@ -1,25 +1,31 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    private static final VDMMap a = MapUtil.map(new Maplet(1L, 2L));
-    private static final VDMMap b = MapUtil.inverse(Utils.copy(A.a));
-    private static final VDMMap c = MapUtil.inverse(op());
+  private static final VDMMap a = MapUtil.map(new Maplet(1L, 2L));
+  private static final VDMMap b = MapUtil.inverse(Utils.copy(A.a));
+  private static final VDMMap c = MapUtil.inverse(op());
 
-    public A() {
-    }
+  public static VDMMap op() {
 
-    public static VDMMap op() {
-        return MapUtil.map(new Maplet(1L, 2L), new Maplet(3L, 4L));
-    }
+    return MapUtil.map(new Maplet(1L, 2L), new Maplet(3L, 4L));
+  }
 
-    public String toString() {
-        return "A{" + "a = " + Utils.toString(a) + ", b = " +
-        Utils.toString(b) + ", c = " + Utils.toString(c) + "}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{"
+        + "a = "
+        + Utils.toString(a)
+        + ", b = "
+        + Utils.toString(b)
+        + ", c = "
+        + Utils.toString(c)
+        + "}";
+  }
 }
 
 ##########

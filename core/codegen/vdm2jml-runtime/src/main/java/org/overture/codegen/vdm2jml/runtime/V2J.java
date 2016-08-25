@@ -17,13 +17,13 @@ import org.overture.codegen.runtime.VDMSet;
  */
 public class V2J
 {
-    /*@ pure @*/
-    /*@ helper @*/
+	/* @ pure @ */
+	/* @ helper @ */
 	public static boolean isMap(Object subject)
 	{
 		return subject instanceof VDMMap;
 	}
-	
+
 	/* @ pure @ */
 	/* @ helper @ */
 	public static boolean isInjMap(Object subject)
@@ -33,30 +33,30 @@ public class V2J
 			VDMMap map = (VDMMap) subject;
 			@SuppressWarnings("unchecked")
 			HashSet<Object> values = new HashSet<>(map.values());
-			
+
 			return map.keySet().size() == values.size();
 		} else
 		{
 			return false;
 		}
 	}
-	
-    /*@ pure @*/
-    /*@ helper @*/
+
+	/* @ pure @ */
+	/* @ helper @ */
 	public static boolean isSet(Object subject)
 	{
 		return subject instanceof VDMSet;
 	}
-	
-    /*@ pure @*/
-    /*@ helper @*/
+
+	/* @ pure @ */
+	/* @ helper @ */
 	public static boolean isSeq(Object subject)
 	{
 		return subject instanceof VDMSeq;
 	}
-	
-    /*@ pure @*/
-    /*@ helper @*/
+
+	/* @ pure @ */
+	/* @ helper @ */
 	public static boolean isSeq1(Object subject)
 	{
 		if (subject instanceof VDMSeq)
@@ -68,9 +68,9 @@ public class V2J
 			return false;
 		}
 	}
-	
-    /*@ pure @*/
-    /*@ helper @*/
+
+	/* @ pure @ */
+	/* @ helper @ */
 	public static boolean isTup(Object subject, int size)
 	{
 		if (subject instanceof Tuple)
@@ -83,43 +83,45 @@ public class V2J
 			return false;
 		}
 	}
-	
-    /*@ pure @*/
-    /*@ helper @*/
+
+	/* @ pure @ */
+	/* @ helper @ */
 	public static Object field(Object subject, int fieldNo)
 	{
 		if (subject instanceof Tuple)
 		{
 			Tuple tuple = (Tuple) subject;
-			
+
 			return tuple.get(fieldNo);
 		} else
 		{
-			throw new IllegalArgumentException("Method is only supported for " + Tuple.class);
+			throw new IllegalArgumentException("Method is only supported for "
+					+ Tuple.class);
 		}
 	}
-	
-    /*@ pure @*/
-    /*@ helper @*/
+
+	/* @ pure @ */
+	/* @ helper @ */
 	public static Object get(Object col, int index)
 	{
 		if (col instanceof VDMSeq)
 		{
 			VDMSeq seq = (VDMSeq) col;
-			
+
 			return seq.get(index);
 		} else if (col instanceof VDMSet)
 		{
 			VDMSeq seq = set2seq(col);
-			
+
 			return seq.get(index);
 		}
 
-		throw new IllegalArgumentException("Method is only supported for " + VDMSeq.class + " and " + VDMSet.class);
+		throw new IllegalArgumentException("Method is only supported for "
+				+ VDMSeq.class + " and " + VDMSet.class);
 	}
-	
-    /*@ pure @*/
-    /*@ helper @*/
+
+	/* @ pure @ */
+	/* @ helper @ */
 	@SuppressWarnings("unchecked")
 	public static Object getDom(Object subject, int index)
 	{
@@ -130,15 +132,16 @@ public class V2J
 
 			VDMSeq seq = SeqUtil.seq();
 			seq.addAll(map.keySet());
-			
+
 			return seq.get(index);
 		}
 
-		throw new IllegalArgumentException("Method is only supported for " + VDMMap.class);
+		throw new IllegalArgumentException("Method is only supported for "
+				+ VDMMap.class);
 	}
-	
-    /*@ pure @*/
-    /*@ helper @*/
+
+	/* @ pure @ */
+	/* @ helper @ */
 	@SuppressWarnings("unchecked")
 	public static Object getRng(Object subject, int index)
 	{
@@ -148,22 +151,23 @@ public class V2J
 
 			VDMSeq seq = SeqUtil.seq();
 			seq.addAll(map.values());
-			
+
 			return seq.get(index);
 		}
 
-		throw new IllegalArgumentException("Method is only supported for " + VDMMap.class);
+		throw new IllegalArgumentException("Method is only supported for "
+				+ VDMMap.class);
 	}
-	
-    /*@ pure @*/
-    /*@ helper @*/
+
+	/* @ pure @ */
+	/* @ helper @ */
 	public static int size(Object vdmCol)
 	{
 		// Covers sequences and sets
 		if (vdmCol instanceof Collection)
 		{
 			Collection<?> setSeq = (Collection<?>) vdmCol;
-			
+
 			return setSeq.size();
 		}
 
@@ -171,15 +175,16 @@ public class V2J
 		if (vdmCol instanceof VDMMap)
 		{
 			VDMMap map = (VDMMap) vdmCol;
-			
+
 			return map.size();
 		}
 
-		throw new IllegalArgumentException("Method is only supported for " + Collection.class + " and " + VDMMap.class);
+		throw new IllegalArgumentException("Method is only supported for "
+				+ Collection.class + " and " + VDMMap.class);
 	}
 
-    /*@ pure @*/
-    /*@ helper @*/
+	/* @ pure @ */
+	/* @ helper @ */
 	@SuppressWarnings("unchecked")
 	public static VDMSeq set2seq(Object set)
 	{
@@ -187,10 +192,11 @@ public class V2J
 		{
 			VDMSeq seq = SeqUtil.seq();
 			seq.addAll((VDMSet) set);
-			
+
 			return seq;
 		}
 
-		throw new IllegalArgumentException("Method is only supported for " + VDMSet.class);
+		throw new IllegalArgumentException("Method is only supported for "
+				+ VDMSet.class);
 	}
 }

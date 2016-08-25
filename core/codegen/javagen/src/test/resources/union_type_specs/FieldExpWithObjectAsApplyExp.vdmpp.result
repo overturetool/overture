@@ -1,39 +1,38 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Number x = 10L;
+  public Number x = 10L;
 
-    public Entry() {
+  public static Entry S(final Entry p) {
+
+    return p;
+  }
+
+  public static Object Run() {
+
+    VDMSeq ternaryIfExp_1 = null;
+
+    if (Utils.equals(1L, 1L)) {
+      ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq(new Entry()));
+    } else {
+      ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq());
     }
 
-    public static Entry S(final Entry p) {
-        return p;
-    }
+    final VDMSeq ss = Utils.copy(ternaryIfExp_1);
+    final VDMSeq s = Utils.copy(((VDMSeq) Utils.get(ss, 1L)));
+    final Number y = Entry.S(((Entry) Utils.get(s, s.size()))).x;
+    return y;
+  }
 
-    public static Object Run() {
-        VDMSeq ternaryIfExp_1 = null;
+  public Entry() {}
 
-        if (Utils.equals(1L, 1L)) {
-            ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq(new Entry()));
-        } else {
-            ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq());
-        }
+  public String toString() {
 
-        final VDMSeq ss = Utils.copy(ternaryIfExp_1);
-        final VDMSeq s = Utils.copy(((VDMSeq) Utils.get(ss, 1L)));
-
-        final Number y = Entry.S(((Entry) Utils.get(s, s.size()))).x;
-
-        return y;
-    }
-
-    public String toString() {
-        return "Entry{" + "x := " + Utils.toString(x) + "}";
-    }
+    return "Entry{" + "x := " + Utils.toString(x) + "}";
+  }
 }
 
 ##########

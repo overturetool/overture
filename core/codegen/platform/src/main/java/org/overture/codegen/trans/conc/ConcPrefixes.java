@@ -36,42 +36,42 @@ public class ConcPrefixes
 	{
 		return "function_sum";
 	}
-	
+
 	public String nativeIntTypeName()
 	{
 		return "int";
 	}
-	
+
 	public String enteringMethodName()
 	{
 		return "entering";
 	}
-	
+
 	public String leavingMethodName()
 	{
-		return "leaving"; 
+		return "leaving";
 	}
-	
+
 	public String funcNumberParamName()
 	{
 		return "fnr";
 	}
-	
+
 	public String sentinelInstanceName()
 	{
 		return "sentinel";
 	}
-	
+
 	public String evalPpMethodName()
 	{
 		return "evaluatePP";
 	}
-	
+
 	public String activeHistOpTypeName()
 	{
-		return "active"; 
+		return "active";
 	}
-	
+
 	public String stateChangedMethodName()
 	{
 		return "stateChanged";

@@ -1,72 +1,75 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Entry {
-    /*@ public ghost static boolean invChecksOn = true; @*/
-    private Entry() {
-    }
+  /*@ public ghost static boolean invChecksOn = true; @*/
 
-    public static Object Run() {
-        VDMMap m = MapUtil.map(new Maplet('a', 1L), new Maplet(1L, 2L));
-        //@ assert ((V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); true && true)) && inv_Entry_M(m));
+  private Entry() {}
 
-        //@ assert m != null;
-        Utils.mapSeqUpdate(m, 'a', 2L);
-        //@ assert ((V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); true && true)) && inv_Entry_M(m));
+  public static Object Run() {
 
-        //@ assert m != null;
-        Utils.mapSeqUpdate(m, 1L, 2L);
-        //@ assert ((V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); true && true)) && inv_Entry_M(m));
-        IO.println("Breaking named type invariant for sequence");
-        //@ assert m != null;
-        Utils.mapSeqUpdate(m, 2L, 10L);
+    VDMMap m = MapUtil.map(new Maplet('a', 1L), new Maplet(1L, 2L));
+    //@ assert ((V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); true && true)) && inv_Entry_M(m));
 
-        //@ assert ((V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); true && true)) && inv_Entry_M(m));
-        return 0L;
-    }
+    //@ assert m != null;
 
-    public String toString() {
-        return "Entry{}";
-    }
+    Utils.mapSeqUpdate(m, 'a', 2L);
+    //@ assert ((V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); true && true)) && inv_Entry_M(m));
 
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_Entry_M(final Object check_m) {
-        VDMMap m = ((VDMMap) check_m);
+    //@ assert m != null;
 
-        Boolean forAllExpResult_1 = true;
-        VDMSet set_1 = MapUtil.dom(Utils.copy(m));
+    Utils.mapSeqUpdate(m, 1L, 2L);
+    //@ assert ((V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); true && true)) && inv_Entry_M(m));
 
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && forAllExpResult_1;) {
-            Object x = ((Object) iterator_1.next());
-            Boolean orResult_1 = false;
+    IO.println("Breaking named type invariant for sequence");
+    //@ assert m != null;
 
-            Boolean andResult_1 = false;
+    Utils.mapSeqUpdate(m, 2L, 10L);
+    //@ assert ((V2J.isMap(m) && (\forall int i; 0 <= i && i < V2J.size(m); true && true)) && inv_Entry_M(m));
 
-            if (Utils.is_nat(x)) {
-                if (Utils.is_nat(Utils.get(m, x))) {
-                    andResult_1 = true;
-                }
-            }
+    return 0L;
+  }
 
-            if (!(andResult_1)) {
-                orResult_1 = true;
-            } else {
-                orResult_1 = Utils.equals(((Number) x).doubleValue() + 1L,
-                        Utils.get(m, x));
-            }
+  public String toString() {
 
-            forAllExpResult_1 = orResult_1;
+    return "Entry{}";
+  }
+
+  /*@ pure @*/
+  /*@ helper @*/
+
+  public static Boolean inv_Entry_M(final Object check_m) {
+
+    VDMMap m = ((VDMMap) check_m);
+
+    Boolean forAllExpResult_1 = true;
+    VDMSet set_1 = MapUtil.dom(Utils.copy(m));
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && forAllExpResult_1; ) {
+      Object x = ((Object) iterator_1.next());
+      Boolean orResult_1 = false;
+
+      Boolean andResult_1 = false;
+
+      if (Utils.is_nat(x)) {
+        if (Utils.is_nat(Utils.get(m, x))) {
+          andResult_1 = true;
         }
+      }
 
-        return forAllExpResult_1;
+      if (!(andResult_1)) {
+        orResult_1 = true;
+      } else {
+        orResult_1 = Utils.equals(((Number) x).doubleValue() + 1L, Utils.get(m, x));
+      }
+
+      forAllExpResult_1 = orResult_1;
     }
+    return forAllExpResult_1;
+  }
 }

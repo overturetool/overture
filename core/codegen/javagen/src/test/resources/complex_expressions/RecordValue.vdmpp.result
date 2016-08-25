@@ -1,75 +1,78 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public Node op() {
+
+    return new Node(1L, new Node(2L, new Node(3L, new Node(4L, new Node(5L, null)))));
+  }
+
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
+
+  public static class Node implements Record {
+    public Number e;
+    public Node r;
+
+    public Node(final Number _e, final Node _r) {
+
+      e = _e;
+      r = _r != null ? Utils.copy(_r) : null;
     }
 
-    public Node op() {
-        return new Node(1L,
-            new Node(2L, new Node(3L, new Node(4L, new Node(5L, null)))));
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof Node)) {
+        return false;
+      }
+
+      Node other = ((Node) obj);
+
+      return (Utils.equals(e, other.e)) && (Utils.equals(r, other.r));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(e, r);
+    }
+
+    public Node copy() {
+
+      return new Node(e, r);
     }
 
     public String toString() {
-        return "A{}";
+
+      return "mk_A`Node" + Utils.formatFields(e, r);
     }
-
-    public static class Node implements Record {
-        public Number e;
-        public Node r;
-
-        public Node(final Number _e, final Node _r) {
-            e = _e;
-            r = (_r != null) ? Utils.copy(_r) : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Node)) {
-                return false;
-            }
-
-            Node other = ((Node) obj);
-
-            return (Utils.equals(e, other.e)) && (Utils.equals(r, other.r));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(e, r);
-        }
-
-        public Node copy() {
-            return new Node(e, r);
-        }
-
-        public String toString() {
-            return "mk_A`Node" + Utils.formatFields(e, r);
-        }
-    }
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final A.Node r = new A().op();
+    final A.Node r = new A().op();
+    return r.r.r.r.r.e;
+  }
 
-        return r.r.r.r.r.e;
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

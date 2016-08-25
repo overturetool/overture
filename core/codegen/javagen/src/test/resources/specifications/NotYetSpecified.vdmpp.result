@@ -1,24 +1,25 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public void op() {
 
-    public void op() {
-        throw new UnsupportedOperationException();
-    }
+    throw new UnsupportedOperationException();
+  }
 
-    public static Number f() {
-        throw new UnsupportedOperationException();
-    }
+  public A() {}
 
-    public String toString() {
-        return "A{}";
-    }
+  public static Number f() {
+
+    throw new UnsupportedOperationException();
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########

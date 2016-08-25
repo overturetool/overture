@@ -23,6 +23,7 @@ package org.overture.codegen.trans.quantifier;
 
 import java.util.List;
 
+import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.SStmIR;
@@ -30,7 +31,6 @@ import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.AVarDeclIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
-import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
@@ -38,33 +38,28 @@ import org.overture.codegen.trans.iterator.ILanguageIterator;
 public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 {
 	protected Exists1CounterData counterData;
-	
-	public Exists1QuantifierStrategy(
-			TransAssistantIR transformationAssistant,
+
+	public Exists1QuantifierStrategy(TransAssistantIR transformationAssistant,
 			SExpIR predicate, String resultVarName,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			IterationVarPrefixes iteVarPrefixes, Exists1CounterData counterData)
 	{
 		super(transformationAssistant, predicate, resultVarName, langIterator, tempGen, iteVarPrefixes);
-		
+
 		this.counterData = counterData;
 	}
 
 	@Override
-	public List<AVarDeclIR> getOuterBlockDecls(
-			AIdentifierVarExpIR setVar, List<SPatternIR> patterns)
-			throws AnalysisException
+	public List<AVarDeclIR> getOuterBlockDecls(AIdentifierVarExpIR setVar,
+			List<SPatternIR> patterns) throws AnalysisException
 	{
-		if(firstBind)
+		if (firstBind)
 		{
 			AIdentifierPatternIR name = new AIdentifierPatternIR();
 			name.setName(resultVarName);
-			
-			return packDecl(transAssist.getInfo().getDeclAssistant().
-					consLocalVarDecl(counterData.getType().clone(), name, 
-							counterData.getExp().clone()));
-		}
-		else
+
+			return packDecl(transAssist.getInfo().getDeclAssistant().consLocalVarDecl(counterData.getType().clone(), name, counterData.getExp().clone()));
+		} else
 		{
 			return null;
 		}
@@ -85,7 +80,8 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 	public List<SStmIR> getForLoopStms(AIdentifierVarExpIR setVar,
 			List<SPatternIR> patterns, SPatternIR pattern)
 	{
-		return lastBind ? packStm(transAssist.consConditionalIncrement(resultVarName, predicate))
+		return lastBind
+				? packStm(transAssist.consConditionalIncrement(resultVarName, predicate))
 				: null;
 	}
 }

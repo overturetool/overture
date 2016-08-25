@@ -16,8 +16,7 @@ import org.overture.config.Release;
 @RunWith(value = Parameterized.class)
 public class ExpJavaGenTest extends JavaGenTestBase
 {
-	public ExpJavaGenTest(String name,File vdmSpec,
-			TestHandler testHandler)
+	public ExpJavaGenTest(String name, File vdmSpec, TestHandler testHandler)
 	{
 		super(vdmSpec, testHandler);
 	}
@@ -25,7 +24,7 @@ public class ExpJavaGenTest extends JavaGenTestBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(ExpOutputTest.ROOT),new ExpressionTestHandler(Release.VDM_10, Dialect.VDM_PP));
+		return collectTests(new File(ExpOutputTest.ROOT), new ExpressionTestHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
 	@Override

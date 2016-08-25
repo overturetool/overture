@@ -210,14 +210,14 @@ public class IO implements Serializable
 
 	public static Value print(Value v)
 	{
-		Console.out.printf("%s", v);
+		Console.out.printf("%s", stringOf(v));
 		Console.out.flush();
 		return new VoidValue();
 	}
 
 	public static Value println(Value v)
 	{
-		Console.out.printf("%s", v);
+		Console.out.printf("%s", stringOf(v));
 		Console.out.printf("%s", "\n");
 		Console.out.flush();
 		return new VoidValue();

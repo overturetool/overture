@@ -25,7 +25,7 @@ public class Maplet
 {
 	private Object left;
 	private Object right;
-	
+
 	public Maplet(Object left, Object right)
 	{
 		super();
@@ -42,53 +42,64 @@ public class Maplet
 	{
 		return right;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
 		int hash = 0;
-		
-		if(left != null)
+
+		if (left != null)
+		{
 			hash += left.hashCode();
-		
-		if(right != null)
+		}
+
+		if (right != null)
+		{
 			hash += right.hashCode();
-		
+		}
+
 		return hash;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
-		if(obj == null)
+		if (obj == null)
+		{
 			return false;
-		
-		if(this == obj)
+		}
+
+		if (this == obj)
+		{
 			return true;
-		
-		if(!(obj instanceof Maplet))
+		}
+
+		if (!(obj instanceof Maplet))
+		{
 			return false;
-		
+		}
+
 		final Maplet other = (Maplet) obj;
-		
-		if ((this.left == null && other.left != null)
-				|| (this.left != null && !this.left.equals(other.left)))
+
+		if (this.left == null && other.left != null
+				|| this.left != null && !this.left.equals(other.left))
 		{
 			return false;
 		}
-		
-		if ((this.right == null && other.right != null)
-				|| (this.right != null && !this.right.equals(other.right)))
+
+		if (this.right == null && other.right != null
+				|| this.right != null && !this.right.equals(other.right))
 		{
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public String toString()
 	{
-		return "{" + Utils.toString(left) + " |-> " + Utils.toString(right) + "}";
+		return "{" + Utils.toString(left) + " |-> " + Utils.toString(right)
+				+ "}";
 	}
 }

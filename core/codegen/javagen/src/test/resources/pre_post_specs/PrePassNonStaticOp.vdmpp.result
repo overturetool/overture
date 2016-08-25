@@ -1,35 +1,36 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public Number op(final Number x) {
+
+    if (!(pre_op(x))) {
+      throw new RuntimeException("Precondition failure: pre_op");
     }
 
-    public Number op(final Number x) {
-        if (!(pre_op(x))) {
-            throw new RuntimeException("Precondition failure: pre_op");
-        }
+    return x;
+  }
 
-        return x;
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final Entry e = new Entry();
-        final Number r = e.op(42L);
+    final Entry e = new Entry();
+    final Number r = e.op(42L);
+    return r;
+  }
 
-        return r;
-    }
+  public Entry() {}
 
-    private Boolean pre_op(final Number x) {
-        return x.longValue() > 1L;
-    }
+  private Boolean pre_op(final Number x) {
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return x.longValue() > 1L;
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

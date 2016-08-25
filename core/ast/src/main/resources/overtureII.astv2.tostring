@@ -118,7 +118,8 @@ import org.overture.ast.util.ToStringUtil;
 %type->quote = [value] 
 %type->#seq->seq = ""+ $($[empty]$ ? "[]" : "seq of (" + $  [seqof] $+ ")" )$ 
 %type->#seq->seq1 = "seq1 of (" + [seqof] + ")"
-%type->set = ""+ $($[empty]$ ? "{}" : "set of (" +$ [setof]$ + ")")$
+%type->#set->set = ""+ $($[empty]$ ? "{}" : "set of (" +$ [setof]$ + ")")$
+%type->#set->set1 = "set1 of (" + [setof] + ")"
 %type->undefined = "(undefined)"
 %type->union = ""+$($[types]$.size() == 1?$ [types]$.iterator().next().toString() : Utils.setToString($[types]$, " | "))$
 %type->unknown = "?"
@@ -261,6 +262,7 @@ import org.overture.ast.util.ToStringUtil;
 %multipleBind->type = "" + $Utils.listToString($[plist]$)$ + ":" [type]
 %bind->set = ""+ [pattern] + " in set " [set];
 %bind->type = "" + [pattern] + ":" + [type];
+%bind->seq = ""+ [pattern] + " in seq " [seq];
 
 // Modifiers
 %modifier->record = [tag] " |-> " [value];

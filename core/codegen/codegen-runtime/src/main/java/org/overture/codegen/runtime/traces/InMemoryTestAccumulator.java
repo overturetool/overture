@@ -8,7 +8,7 @@ public class InMemoryTestAccumulator implements TestAccumulator
 	private static final long serialVersionUID = 1898551533520957210L;
 
 	private List<TraceTest> tests;
-	
+
 	private int nextIdx;
 
 	public InMemoryTestAccumulator()

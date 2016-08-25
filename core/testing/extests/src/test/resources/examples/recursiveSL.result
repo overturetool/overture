@@ -1,1 +1,0 @@
-{"exampleName":"recursiveSL","defNames":["Graph","ASyncGraph","Path","Id","Paths","measureTransClos","LinearPath","TransClos","TransClosAux","measureGraphReached","AsycDescendents","Descendents","AllDesc","AcyclicGraph","LabGraph","AcyclicLabGraph","NodeId","ArcId","AllLabDesc","measureLabGraphReached","LabDescendents","UniqueArcIds"]}

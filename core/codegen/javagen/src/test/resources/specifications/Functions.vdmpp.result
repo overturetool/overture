@@ -1,44 +1,50 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Functions {
-    public Functions() {
-    }
+  public Functions() {}
 
-    public static Number f1() {
-        if (Utils.equals(1L, 1L)) {
-            return 1L;
+  public static Number f1() {
+
+    if (Utils.equals(1L, 1L)) {
+      return 1L;
+
+    } else {
+      return 2L;
+    }
+  }
+
+  public static Number f2() {
+
+    if (Utils.equals(1L, 1L)) {
+      if (Utils.equals(2L, 2L)) {
+        return 3L;
+
+      } else {
+        if (Utils.equals(3L, 3L)) {
+          return 4L;
+
         } else {
-            return 2L;
+          return 5L;
         }
-    }
+      }
 
-    public static Number f2() {
-        if (Utils.equals(1L, 1L)) {
-            if (Utils.equals(2L, 2L)) {
-                return 3L;
-            } else {
-                if (Utils.equals(3L, 3L)) {
-                    return 4L;
-                } else {
-                    return 5L;
-                }
-            }
-        } else {
-            return 6L;
-        }
+    } else {
+      return 6L;
     }
+  }
 
-    public static Number f3() {
-        return 5L;
-    }
+  public static Number f3() {
 
-    public String toString() {
-        return "Functions{}";
-    }
+    return 5L;
+  }
+
+  public String toString() {
+
+    return "Functions{}";
+  }
 }
 
 ##########

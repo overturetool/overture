@@ -6,17 +6,17 @@ public class FuncValPrefixes
 	{
 		return "Func_";
 	}
-	
+
 	public String templateType()
 	{
 		return "T_";
 	}
-	
+
 	public String evalMethod()
 	{
 		return "eval";
 	}
-	
+
 	public String param()
 	{
 		return "param_";

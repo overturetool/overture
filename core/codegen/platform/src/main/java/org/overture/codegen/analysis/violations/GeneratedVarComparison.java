@@ -31,8 +31,8 @@ import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class GeneratedVarComparison extends NamingComparison
 {
-	public GeneratedVarComparison(String[] names,
-			IRInfo info, String correctionPrefix)
+	public GeneratedVarComparison(String[] names, IRInfo info,
+			String correctionPrefix)
 	{
 		super(names, info, correctionPrefix);
 	}
@@ -41,7 +41,7 @@ public class GeneratedVarComparison extends NamingComparison
 	public boolean mustHandleNameToken(ILexNameToken nameToken)
 	{
 		PDefinitionAssistantTC defAssistant = irInfo.getTcFactory().createPDefinitionAssistant();
-		
+
 		if (irInfo.getAssistantManager().getTypeAssistant().getTypeDef(nameToken, defAssistant) != null)
 		{
 			return false;

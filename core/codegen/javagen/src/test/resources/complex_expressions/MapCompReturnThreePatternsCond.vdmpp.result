@@ -1,43 +1,38 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static VDMMap Run() {
 
-    public static VDMMap Run() {
-        VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
-
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Number x = ((Number) iterator_1.next());
-
-            for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext();) {
-                Number y = ((Number) iterator_2.next());
-
-                for (Iterator iterator_3 = set_1.iterator();
-                        iterator_3.hasNext();) {
-                    Number z = ((Number) iterator_3.next());
-
-                    if (Utils.equals(1L, 1L)) {
-                        MapUtil.mapAdd(mapCompResult_1,
-                            new Maplet(x.longValue() + y.longValue() +
-                                z.longValue(),
-                                x.longValue() + y.longValue() + z.longValue()));
-                    }
-                }
-            }
+    VDMMap mapCompResult_1 = MapUtil.map();
+    VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Number x = ((Number) iterator_1.next());
+      for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext(); ) {
+        Number y = ((Number) iterator_2.next());
+        for (Iterator iterator_3 = set_1.iterator(); iterator_3.hasNext(); ) {
+          Number z = ((Number) iterator_3.next());
+          if (Utils.equals(1L, 1L)) {
+            MapUtil.mapAdd(
+                mapCompResult_1,
+                new Maplet(
+                    x.longValue() + y.longValue() + z.longValue(),
+                    x.longValue() + y.longValue() + z.longValue()));
+          }
         }
-
-        return Utils.copy(mapCompResult_1);
+      }
     }
+    return Utils.copy(mapCompResult_1);
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

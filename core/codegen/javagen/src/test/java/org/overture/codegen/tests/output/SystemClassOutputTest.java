@@ -13,7 +13,7 @@ import org.overture.codegen.tests.output.util.OutputTestUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.PathsProvider;
 
 @RunWith(Parameterized.class)
 public class SystemClassOutputTest extends JavaOutputTestBase
@@ -27,22 +27,22 @@ public class SystemClassOutputTest extends JavaOutputTestBase
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
-	
+
 	@Before
 	public void init()
 	{
 		super.init();
-		
+
 		Settings.release = Release.VDM_10;
 		Settings.dialect = Dialect.VDM_RT;
 	}
-	
+
 	@Override
 	public JavaSettings getJavaSettings()
 	{
 		JavaSettings javaSettings = super.getJavaSettings();
 		javaSettings.setGenSystemClass(true);
-		
+
 		return javaSettings;
 	}
 

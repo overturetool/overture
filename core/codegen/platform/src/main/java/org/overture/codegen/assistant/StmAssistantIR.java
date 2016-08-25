@@ -36,6 +36,7 @@ import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
@@ -51,7 +52,6 @@ import org.overture.codegen.ir.statements.AForLoopStmIR;
 import org.overture.codegen.ir.statements.AIfStmIR;
 import org.overture.codegen.ir.statements.AMetaStmIR;
 import org.overture.codegen.ir.statements.ASuperCallStmIR;
-import org.overture.codegen.ir.IRInfo;
 
 public class StmAssistantIR extends AssistantBase
 {
@@ -80,7 +80,7 @@ public class StmAssistantIR extends AssistantBase
 		}
 
 		PType expType = question.getTypeAssistant().resolve(exp.getType());
-		
+
 		if (expType instanceof AUnionType)
 		{
 			AUnionType unionType = ((AUnionType) expType).clone();
@@ -105,24 +105,24 @@ public class StmAssistantIR extends AssistantBase
 			}
 		}
 	}
-	
+
 	public boolean inAtomic(SStmIR stm)
 	{
 		return stm.getAncestor(AAtomicStmIR.class) != null;
 	}
-	
+
 	public String getSuperClassName(ASuperCallStmIR stm)
 	{
 		ADefaultClassDeclIR enclosingClass = stm.getAncestor(ADefaultClassDeclIR.class);
-		
+
 		return enclosingClass.getName();
 	}
-	
+
 	public boolean isScoped(ABlockSimpleBlockStm block)
 	{
 		return appearsInRightContext(block);
 	}
-	
+
 	public boolean isScoped(ALetStm let)
 	{
 		return appearsInRightContext(let);
@@ -130,41 +130,41 @@ public class StmAssistantIR extends AssistantBase
 
 	private boolean appearsInRightContext(PStm block)
 	{
-		return !(block.parent() instanceof SOperationDefinition) && 
-				!(block.parent() instanceof AElseIfStm) && 
-				!(block.parent() instanceof AIfStm) &&
-				!(block.parent() instanceof AForAllStm) &&
-				!(block.parent() instanceof AForIndexStm);
+		return !(block.parent() instanceof SOperationDefinition)
+				&& !(block.parent() instanceof AElseIfStm)
+				&& !(block.parent() instanceof AIfStm)
+				&& !(block.parent() instanceof AForAllStm)
+				&& !(block.parent() instanceof AForIndexStm);
 	}
-	
+
 	public boolean isScoped(ABlockStmIR block)
 	{
-		return !(block.parent() instanceof AMethodDeclIR) &&
-				!(block.parent() instanceof AElseIfStmIR) &&
-				!(block.parent() instanceof AIfStmIR) &&
-				!(block.parent() instanceof AForAllStmIR) &&
-				!(block.parent() instanceof AForIndexStmIR) &&
-				!(block.parent() instanceof AForLoopStmIR);
+		return !(block.parent() instanceof AMethodDeclIR)
+				&& !(block.parent() instanceof AElseIfStmIR)
+				&& !(block.parent() instanceof AIfStmIR)
+				&& !(block.parent() instanceof AForAllStmIR)
+				&& !(block.parent() instanceof AForIndexStmIR)
+				&& !(block.parent() instanceof AForLoopStmIR);
 	}
-	
+
 	public boolean equal(AMetaStmIR left, AMetaStmIR right)
 	{
-		if(left.getMetaData().size() != right.getMetaData().size())
+		if (left.getMetaData().size() != right.getMetaData().size())
 		{
 			return false;
 		}
-		
-		for(int i = 0; i < left.getMetaData().size(); i++)
+
+		for (int i = 0; i < left.getMetaData().size(); i++)
 		{
 			String currentLeft = left.getMetaData().get(i).value;
 			String currentRight = right.getMetaData().get(i).value;
-			
-			if(!currentLeft.equals(currentRight))
+
+			if (!currentLeft.equals(currentRight))
 			{
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 }

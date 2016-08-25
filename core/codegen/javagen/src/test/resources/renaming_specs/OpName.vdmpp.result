@@ -1,42 +1,41 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final A_X_ a = new A_X_();
+    final A_X_ a = new A_X_();
+    return a.op_X_();
+  }
 
-        return a.op_X_();
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A_X_ {
-    public A_X_() {
-    }
+  public Number op_X_() {
 
-    public Number op_X_() {
-        return 98L;
-    }
+    return 98L;
+  }
 
-    public String toString() {
-        return "A_X_{}";
-    }
+  public A_X_() {}
+
+  public String toString() {
+
+    return "A_X_{}";
+  }
 }
 
 ##########

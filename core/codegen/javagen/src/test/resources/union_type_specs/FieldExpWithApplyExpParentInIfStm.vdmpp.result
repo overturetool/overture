@@ -1,84 +1,79 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public VDMSeq s() {
 
-    public VDMSeq s() {
-        return SeqUtil.seq();
-    }
+    return SeqUtil.seq();
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public B() {
-    }
+  public VDMSeq s() {
 
-    public VDMSeq s() {
-        return SeqUtil.seq();
-    }
+    return SeqUtil.seq();
+  }
 
-    public String toString() {
-        return "B{}";
-    }
+  public B() {}
+
+  public String toString() {
+
+    return "B{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Number Run() {
 
-    public static Number Run() {
-        final VDMSeq xs = SeqUtil.seq(new A(), new B());
-
-        {
-            Number counter = 0L;
-
-            for (Iterator iterator_1 = SeqUtil.elems(Utils.copy(xs)).iterator();
-                    iterator_1.hasNext();) {
-                Object x = (Object) iterator_1.next();
-                VDMSeq apply_1 = null;
-
-                if (x instanceof A) {
-                    apply_1 = ((A) x).s();
-                } else if (x instanceof B) {
-                    apply_1 = ((B) x).s();
-                } else {
-                    throw new RuntimeException("Missing member: s");
-                }
-
-                if (Utils.equals(apply_1.size(), 0L)) {
-                    counter = counter.longValue() + 1L;
-                }
-            }
-
-            return counter;
+    final VDMSeq xs = SeqUtil.seq(new A(), new B());
+    {
+      Number counter = 0L;
+      for (Iterator iterator_1 = SeqUtil.elems(Utils.copy(xs)).iterator(); iterator_1.hasNext(); ) {
+        Object x = (Object) iterator_1.next();
+        VDMSeq apply_1 = null;
+        if (x instanceof A) {
+          apply_1 = ((A) x).s();
+        } else if (x instanceof B) {
+          apply_1 = ((B) x).s();
+        } else {
+          throw new RuntimeException("Missing member: s");
         }
-    }
 
-    public String toString() {
-        return "Entry{}";
+        if (Utils.equals(apply_1.size(), 0L)) {
+          counter = counter.longValue() + 1L;
+        }
+      }
+      return counter;
     }
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

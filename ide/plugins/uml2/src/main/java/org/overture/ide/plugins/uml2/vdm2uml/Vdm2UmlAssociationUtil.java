@@ -45,7 +45,7 @@ import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -171,9 +171,9 @@ public class Vdm2UmlAssociationUtil
 		{
 			SSeqType seqType = (SSeqType) type;
 			return isSimpleType(seqType.getSeqof());
-		} else if (type instanceof ASetType)
+		} else if (type instanceof SSetType)
 		{
-			ASetType setType = (ASetType) type;
+			SSetType setType = (SSetType) type;
 			return isSimpleType(setType.getSetof());
 		} else if (type instanceof AUndefinedType || type instanceof AUnionType
 				|| type instanceof AUnknownType
@@ -203,9 +203,9 @@ public class Vdm2UmlAssociationUtil
 		{
 			SSeqType seqType = (SSeqType) type;
 			return isSimpleType(seqType.getSeqof());
-		} else if (type instanceof ASetType)
+		} else if (type instanceof SSetType)
 		{
-			ASetType setType = (ASetType) type;
+			SSetType setType = (SSetType) type;
 			return isSimpleType(setType.getSetof());
 		} else
 		{
@@ -222,9 +222,9 @@ public class Vdm2UmlAssociationUtil
 			{
 				return true;
 			}
-		} else if (type instanceof ASetType)
+		} else if (type instanceof SSetType)
 		{
-			ASetType setType = (ASetType) type;
+			SSetType setType = (SSetType) type;
 			if (setType.getSetof() instanceof SBasicType)
 			{
 				return true;
@@ -281,9 +281,9 @@ public class Vdm2UmlAssociationUtil
 		{
 			SSeqType seqType = (SSeqType) type;
 			return getType(classes, seqType.getSeqof());
-		} else if (type instanceof ASetType)
+		} else if (type instanceof SSetType)
 		{
-			ASetType setType = (ASetType) type;
+			SSetType setType = (SSetType) type;
 			return getType(classes, setType.getSetof());
 		} else if (type instanceof AUndefinedType)
 		{
@@ -342,9 +342,9 @@ public class Vdm2UmlAssociationUtil
 		if (type instanceof SSeqType)
 		{
 			type = ((SSeqType) type).getSeqof();
-		} else if (type instanceof ASetType)
+		} else if (type instanceof SSetType)
 		{
-			type = ((ASetType) type).getSetof();
+			type = ((SSetType) type).getSetof();
 		}else if(type instanceof AOptionalType)
 		{
 			type = ((AOptionalType) type).getType();
@@ -427,9 +427,9 @@ public class Vdm2UmlAssociationUtil
 		if (type instanceof SSeqType)
 		{
 			return ((SSeqType) type).getSeqof();
-		} else if (type instanceof ASetType)
+		} else if (type instanceof SSetType)
 		{
-			return ((ASetType) type).getSetof();
+			return ((SSetType) type).getSetof();
 		}
 		return type;
 	}

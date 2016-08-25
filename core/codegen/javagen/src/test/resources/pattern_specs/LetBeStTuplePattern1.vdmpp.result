@@ -1,52 +1,45 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        Object tuplePattern_1 = null;
-        Boolean success_1 = false;
-        VDMSet set_1 = SetUtil.set(1L, 2L, Tuple.mk_(3L, 4L), 5L, 6L,
-                Tuple.mk_(7L, 8L));
-        Number a = null;
-        Number b = null;
-
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && !(success_1);) {
-            tuplePattern_1 = ((Object) iterator_1.next());
-
-            if (tuplePattern_1 instanceof Tuple) {
-                success_1 = ((Tuple) tuplePattern_1).compatible(Number.class,
-                        Number.class);
-
-                if (success_1) {
-                    a = ((Number) ((Tuple) tuplePattern_1).get(0));
-                    b = ((Number) ((Tuple) tuplePattern_1).get(1));
-                }
-            }
-
-            if (!(success_1)) {
-                continue;
-            }
-
-            success_1 = Utils.equals(a.longValue() + b.longValue(), 7L);
+    Object tuplePattern_1 = null;
+    Boolean success_1 = false;
+    VDMSet set_1 = SetUtil.set(1L, 2L, Tuple.mk_(3L, 4L), 5L, 6L, Tuple.mk_(7L, 8L));
+    Number a = null;
+    Number b = null;
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && !(success_1); ) {
+      tuplePattern_1 = ((Object) iterator_1.next());
+      if (tuplePattern_1 instanceof Tuple) {
+        success_1 = ((Tuple) tuplePattern_1).compatible(Number.class, Number.class);
+        if (success_1) {
+          a = ((Number) ((Tuple) tuplePattern_1).get(0));
+          b = ((Number) ((Tuple) tuplePattern_1).get(1));
         }
+      }
 
-        if (!(success_1)) {
-            throw new RuntimeException("Let Be St found no applicable bindings");
-        }
+      if (!(success_1)) {
+        continue;
+      }
 
-        return a.longValue() + b.longValue();
+      success_1 = Utils.equals(a.longValue() + b.longValue(), 7L);
+    }
+    if (!(success_1)) {
+      throw new RuntimeException("Let Be St found no applicable bindings");
     }
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return a.longValue() + b.longValue();
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########
